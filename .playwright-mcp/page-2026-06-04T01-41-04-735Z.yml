@@ -1,0 +1,62 @@
+- main [ref=e305]:
+  - complementary "Navegação principal" [ref=e306]:
+    - generic [ref=e307]:
+      - generic [ref=e308]: CD
+      - generic [ref=e309]:
+        - strong [ref=e310]: codexDojo
+        - generic [ref=e311]: agent learning lab
+    - navigation [ref=e312]:
+      - button "Painel" [ref=e313] [cursor=pointer]
+      - button "Agentes" [ref=e314] [cursor=pointer]
+      - button "Ciclo" [ref=e315] [cursor=pointer]
+      - button "Roadmap" [ref=e316] [cursor=pointer]
+      - button "Projeto 01" [ref=e317] [cursor=pointer]
+  - region "Ciclo operacional" [ref=e319]:
+    - generic [ref=e320]:
+      - paragraph [ref=e321]: Loop contínuo
+      - heading "Pequenos passos, evidência antes de avanço" [level=2] [ref=e322]
+    - generic [ref=e323]:
+      - generic [ref=e324]:
+        - button "01 Diagnosticar nível" [ref=e325] [cursor=pointer]:
+          - generic [ref=e326]: "01"
+          - text: Diagnosticar nível
+        - button "02 Escolher conceito" [ref=e327] [cursor=pointer]:
+          - generic [ref=e328]: "02"
+          - text: Escolher conceito
+        - button "03 Criar mini-projeto" [ref=e329] [cursor=pointer]:
+          - generic [ref=e330]: "03"
+          - text: Criar mini-projeto
+        - button "04 Implementar versão 1" [ref=e331] [cursor=pointer]:
+          - generic [ref=e332]: "04"
+          - text: Implementar versão 1
+        - button "05 Criar testes" [ref=e333] [cursor=pointer]:
+          - generic [ref=e334]: "05"
+          - text: Criar testes
+        - button "06 Rodar métricas" [ref=e335] [cursor=pointer]:
+          - generic [ref=e336]: "06"
+          - text: Rodar métricas
+        - button "07 Revisar código" [ref=e337] [cursor=pointer]:
+          - generic [ref=e338]: "07"
+          - text: Revisar código
+        - button "08 Refatorar" [ref=e339] [cursor=pointer]:
+          - generic [ref=e340]: "08"
+          - text: Refatorar
+        - button "09 Comparar alternativa" [ref=e341] [cursor=pointer]:
+          - generic [ref=e342]: "09"
+          - text: Comparar alternativa
+        - button "10 Registrar aprendizado" [ref=e343] [cursor=pointer]:
+          - generic [ref=e344]: "10"
+          - text: Registrar aprendizado
+      - article [ref=e345]:
+        - generic [ref=e346]:
+          - generic [ref=e347]: Mentor
+          - generic [ref=e348]: 20% validado
+        - heading "Diagnosticar nível" [level=3] [ref=e349]
+        - generic [ref=e350]:
+          - generic [ref=e351]:
+            - term [ref=e352]: Evidência exigida
+            - definition [ref=e353]: tentativa curta avaliada
+          - generic [ref=e354]:
+            - term [ref=e355]: Artefato gerado
+            - definition [ref=e356]: perfil Dreyfus x Bloom
+        - button "Concluir etapa" [ref=e357] [cursor=pointer]

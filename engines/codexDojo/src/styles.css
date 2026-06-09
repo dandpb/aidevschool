@@ -1,0 +1,550 @@
+:root {
+  color-scheme: dark;
+  --ink: #11110f;
+  --charcoal: #1b1b18;
+  --panel: #24241f;
+  --panel-strong: #2f3028;
+  --paper: #f5efe1;
+  --muted: #b7b09d;
+  --line: #474235;
+  --brass: #d8aa35;
+  --mint: #80e2a8;
+  --cyan: #63d5df;
+  --coral: #f16d4f;
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+  font-family: "Avenir Next", "Trebuchet MS", Verdana, sans-serif;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(115deg, rgba(216, 170, 53, 0.12), transparent 34%),
+    linear-gradient(285deg, rgba(99, 213, 223, 0.12), transparent 42%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 80px),
+    var(--ink);
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 28px 22px;
+  border-right: 1px solid var(--line);
+  background: rgba(17, 17, 15, 0.88);
+  backdrop-filter: blur(18px);
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid var(--brass);
+  background: #211d12;
+  color: var(--brass);
+  font-weight: 800;
+}
+
+.brand-block strong,
+h1,
+h2,
+h3 {
+  font-family: "Iowan Old Style", Georgia, serif;
+  letter-spacing: 0;
+}
+
+.brand-block small {
+  display: block;
+  color: var(--muted);
+}
+
+.nav-stack {
+  display: grid;
+  gap: 8px;
+}
+
+.nav-button,
+.filter-button,
+.stage-chip,
+.agent-row,
+.timeline-step,
+.action-button,
+.icon-button,
+.agent-node {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(36, 36, 31, 0.82);
+  color: var(--paper);
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.nav-button,
+.filter-button {
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.nav-button:hover,
+.filter-button:hover,
+.stage-chip:hover,
+.agent-row:hover,
+.timeline-step:hover,
+.action-button:hover,
+.icon-button:hover,
+.agent-node:hover {
+  transform: translateY(-1px);
+  border-color: var(--brass);
+}
+
+.is-active {
+  border-color: var(--mint);
+  background: rgba(128, 226, 168, 0.12);
+}
+
+.content-shell {
+  padding: 28px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 18px;
+}
+
+.command-panel,
+.status-console,
+.topology,
+.next-project,
+.metric-strip,
+.cycle-strip,
+.workbench,
+.agent-detail,
+.stage-detail,
+.quality-card,
+.briefing-main,
+.project-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(36, 36, 31, 0.88);
+  box-shadow: var(--shadow);
+}
+
+.command-panel {
+  min-height: 360px;
+  padding: clamp(28px, 5vw, 58px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--brass);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 14px;
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  line-height: 0.88;
+}
+
+h2 {
+  margin-bottom: 14px;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1;
+}
+
+h3 {
+  font-size: 1.45rem;
+}
+
+.lead {
+  max-width: 720px;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.6;
+}
+
+.primary-actions,
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.action-button,
+.icon-button {
+  padding: 10px 14px;
+  font-weight: 800;
+}
+
+.action-button {
+  background: var(--brass);
+  color: #17130a;
+}
+
+.action-button.secondary,
+.icon-button {
+  background: transparent;
+  color: var(--paper);
+}
+
+.status-console,
+.next-project,
+.metric-strip,
+.cycle-strip,
+.workbench {
+  padding: 22px;
+}
+
+.console-header,
+.project-meta,
+.detail-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.meter {
+  height: 10px;
+  margin: 18px 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #151511;
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--mint), var(--brass), var(--coral));
+}
+
+.stat-grid,
+.project-card dl,
+.evidence-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.stat-grid div,
+.project-card dl div,
+.evidence-list div {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(17, 17, 15, 0.42);
+}
+
+dt {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+dd {
+  margin: 4px 0 0;
+  font-weight: 800;
+}
+
+.topology {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(216, 170, 53, 0.18), transparent 34%),
+    rgba(36, 36, 31, 0.88);
+}
+
+.topology::before,
+.topology::after {
+  position: absolute;
+  inset: 18%;
+  content: "";
+  border: 1px dashed rgba(245, 239, 225, 0.22);
+  border-radius: 50%;
+}
+
+.topology::after {
+  inset: 34%;
+  border-color: rgba(99, 213, 223, 0.28);
+}
+
+.agent-node {
+  position: absolute;
+  z-index: 1;
+  width: 124px;
+  min-height: 54px;
+  padding: 8px;
+  background: rgba(17, 17, 15, 0.9);
+}
+
+.node-1 { left: 42%; top: 6%; }
+.node-2 { left: 66%; top: 16%; }
+.node-3 { left: 76%; top: 42%; }
+.node-4 { left: 64%; top: 68%; }
+.node-5 { left: 38%; top: 76%; }
+.node-6 { left: 14%; top: 66%; }
+.node-7 { left: 6%; top: 38%; }
+.node-8 { left: 16%; top: 14%; }
+.node-9 { left: 42%; top: 42%; }
+.node-10 { left: 4%; top: 82%; }
+
+.next-project ul,
+.quality-card ul,
+.briefing-main ul,
+.agent-detail ul {
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.metric-strip,
+.cycle-strip {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cycle-strip {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.metric-item,
+.stage-chip {
+  padding: 14px;
+}
+
+.metric-item span,
+.stage-chip span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.workbench {
+  min-height: calc(100vh - 56px);
+}
+
+.section-heading {
+  max-width: 980px;
+  margin-bottom: 24px;
+}
+
+.agents-view,
+.cycle-board,
+.briefing-grid {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.agent-list,
+.timeline {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.agent-row,
+.timeline-step {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  text-align: left;
+}
+
+.agent-row small,
+.timeline-step span {
+  color: var(--muted);
+}
+
+.agent-detail,
+.stage-detail,
+.briefing-main,
+.quality-card {
+  padding: 24px;
+}
+
+.detail-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.gate-box,
+.prompt-box {
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(17, 17, 15, 0.62);
+}
+
+.gate-box span {
+  color: var(--coral);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.prompt-box {
+  overflow: auto;
+  color: var(--cyan);
+  white-space: pre-wrap;
+}
+
+.cycle-board {
+  display: grid;
+  grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
+}
+
+.timeline-step {
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+}
+
+.timeline-step.is-complete span {
+  color: var(--mint);
+}
+
+.evidence-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 18px;
+}
+
+.filter-row {
+  margin-bottom: 18px;
+}
+
+.filter-button {
+  width: auto;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.project-card {
+  padding: 18px;
+}
+
+.project-card p,
+.briefing-main p,
+.quality-card,
+.agent-detail p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+  }
+
+  .nav-stack {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .overview-grid,
+  .agents-view,
+  .cycle-board,
+  .briefing-grid,
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-strip,
+  .cycle-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .content-shell {
+    padding: 14px;
+  }
+
+  .nav-stack,
+  .metric-strip,
+  .cycle-strip,
+  .stat-grid,
+  .detail-columns,
+  .evidence-list {
+    grid-template-columns: 1fr;
+  }
+
+  .topology {
+    min-height: auto;
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .topology::before,
+  .topology::after {
+    display: none;
+  }
+
+  .agent-node {
+    position: static;
+    width: 100%;
+  }
+}

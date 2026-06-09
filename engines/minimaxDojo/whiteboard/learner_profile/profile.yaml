@@ -1,0 +1,37 @@
+version: 1
+learner_id: daniel-barreto
+created_at: "2026-06-03T22:18:00-03:00"
+last_session: null
+
+self_reported:
+  level: intermediate
+  goal: write robust, professional-quality TypeScript with tests, refactoring, and code review autonomy
+  known_baseline:
+    - comfortable with TS syntax, types, async/await
+    - uses Vitest or Jest at basic level
+    - reads code, has not internalized refactoring patterns
+    - weak on: adversarial tests, mutation testing, design patterns, error contract design
+
+system_classification:
+  dreyfus_per_concept: {}        # populated by Sonda after diagnostic attempt
+  bloom_per_concept: {}          # populated by Sonda after diagnostic attempt
+  ai_dependency_index: 0.0       # 0 = no AI assistance; 1 = every keystroke
+  reflection_quality: null       # last reflection evaluation by Atena
+
+current_active_focus: TypeScript
+weekly_time_hours: 5
+human_instructor: none
+
+session_log:
+  - session_id: null
+    started_at: null
+    ended_at: null
+    cycle: 0
+    unit: U0-sonda-rate-limiter-robustness
+    outcome: pending
+    notes: null
+
+trap_patterns: []                 # populated by Mneme from repeated mistakes
+candidate_skills: []              # populated by Ouroboros from successful patterns
+
+sla_log: []                       # Seneca's open decisions with timestamps

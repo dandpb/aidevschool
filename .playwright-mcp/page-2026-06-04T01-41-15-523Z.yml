@@ -1,0 +1,155 @@
+- main [ref=e411]:
+  - complementary "Navegação principal" [ref=e412]:
+    - generic [ref=e413]:
+      - generic [ref=e414]: CD
+      - generic [ref=e415]:
+        - strong [ref=e416]: codexDojo
+        - generic [ref=e417]: agent learning lab
+    - navigation [ref=e418]:
+      - button "Painel" [ref=e419] [cursor=pointer]
+      - button "Agentes" [ref=e420] [cursor=pointer]
+      - button "Ciclo" [ref=e421] [cursor=pointer]
+      - button "Roadmap" [ref=e422] [cursor=pointer]
+      - button "Projeto 01" [ref=e423] [cursor=pointer]
+  - region "Roadmap de projetos" [ref=e425]:
+    - generic [ref=e426]:
+      - paragraph [ref=e427]: Trilha viva
+      - heading "Projetos incrementais que viram sistemas robustos" [level=2] [ref=e428]
+    - generic [ref=e429]:
+      - button "Todos" [ref=e430] [cursor=pointer]
+      - button "Fundamentos" [ref=e431] [cursor=pointer]
+      - button "Aplicações" [ref=e432] [cursor=pointer]
+      - button "Dados" [ref=e433] [cursor=pointer]
+      - button "Escala" [ref=e434] [cursor=pointer]
+      - button "IA" [ref=e435] [cursor=pointer]
+    - generic [ref=e436]:
+      - article [ref=e437]:
+        - generic [ref=e438]:
+          - generic [ref=e439]: P01
+          - generic [ref=e440]: Nível 1
+        - heading "CLI de tarefas em Python" [level=3] [ref=e441]
+        - paragraph [ref=e442]: Separar entrada, domínio e persistência sem framework.
+        - generic [ref=e443]:
+          - generic [ref=e444]:
+            - term [ref=e445]: Linguagem
+            - definition [ref=e446]: Python
+          - generic [ref=e447]:
+            - term [ref=e448]: Arquitetura
+            - definition [ref=e449]: módulos simples + persistência em arquivo
+      - article [ref=e450]:
+        - generic [ref=e451]:
+          - generic [ref=e452]: P02
+          - generic [ref=e453]: Nível 2
+        - heading "API REST de tarefas com FastAPI" [level=3] [ref=e454]
+        - paragraph [ref=e455]: Transformar domínio local em contrato HTTP testável.
+        - generic [ref=e456]:
+          - generic [ref=e457]:
+            - term [ref=e458]: Linguagem
+            - definition [ref=e459]: Python
+          - generic [ref=e460]:
+            - term [ref=e461]: Arquitetura
+            - definition [ref=e462]: HTTP boundary + validação + service layer
+      - article [ref=e463]:
+        - generic [ref=e464]:
+          - generic [ref=e465]: P03
+          - generic [ref=e466]: Nível 2
+        - heading "Mesma API em Node.js/TypeScript" [level=3] [ref=e467]
+        - paragraph [ref=e468]: Comparar tipagem, ergonomia e async entre Python e TS.
+        - generic [ref=e469]:
+          - generic [ref=e470]:
+            - term [ref=e471]: Linguagem
+            - definition [ref=e472]: TypeScript
+          - generic [ref=e473]:
+            - term [ref=e474]: Arquitetura
+            - definition [ref=e475]: Hono + Zod + service layer
+      - article [ref=e476]:
+        - generic [ref=e477]:
+          - generic [ref=e478]: P04
+          - generic [ref=e479]: Nível 3
+        - heading "PostgreSQL e migrations" [level=3] [ref=e480]
+        - paragraph [ref=e481]: Aprender consistência, schema evolution e testes com banco real.
+        - generic [ref=e482]:
+          - generic [ref=e483]:
+            - term [ref=e484]: Linguagem
+            - definition [ref=e485]: TypeScript
+          - generic [ref=e486]:
+            - term [ref=e487]: Arquitetura
+            - definition [ref=e488]: monólito modular + repositórios
+      - article [ref=e489]:
+        - generic [ref=e490]:
+          - generic [ref=e491]: P05
+          - generic [ref=e492]: Nível 3
+        - heading "Autenticação e autorização" [level=3] [ref=e493]
+        - paragraph [ref=e494]: Separar identidade, sessão, permissão e auditoria.
+        - generic [ref=e495]:
+          - generic [ref=e496]:
+            - term [ref=e497]: Linguagem
+            - definition [ref=e498]: TypeScript
+          - generic [ref=e499]:
+            - term [ref=e500]: Arquitetura
+            - definition [ref=e501]: auth boundary + policies explícitas
+      - article [ref=e502]:
+        - generic [ref=e503]:
+          - generic [ref=e504]: P06
+          - generic [ref=e505]: Nível 3
+        - heading "Testes e CI/CD" [level=3] [ref=e506]
+        - paragraph [ref=e507]: Criar portões de qualidade automáticos e reproduzíveis.
+        - generic [ref=e508]:
+          - generic [ref=e509]:
+            - term [ref=e510]: Linguagem
+            - definition [ref=e511]: Bash + YAML
+          - generic [ref=e512]:
+            - term [ref=e513]: Arquitetura
+            - definition [ref=e514]: pipeline determinístico
+      - article [ref=e515]:
+        - generic [ref=e516]:
+          - generic [ref=e517]: P07
+          - generic [ref=e518]: Nível 4
+        - heading "Cache com Redis" [level=3] [ref=e519]
+        - paragraph [ref=e520]: Medir latência, staleness e custo de invalidação.
+        - generic [ref=e521]:
+          - generic [ref=e522]:
+            - term [ref=e523]: Linguagem
+            - definition [ref=e524]: TypeScript
+          - generic [ref=e525]:
+            - term [ref=e526]: Arquitetura
+            - definition [ref=e527]: cache-aside + invalidação explícita
+      - article [ref=e528]:
+        - generic [ref=e529]:
+          - generic [ref=e530]: P08
+          - generic [ref=e531]: Nível 4
+        - heading "Filas assíncronas" [level=3] [ref=e532]
+        - paragraph [ref=e533]: Aprender retry, DLQ, concorrência e backpressure.
+        - generic [ref=e534]:
+          - generic [ref=e535]:
+            - term [ref=e536]: Linguagem
+            - definition [ref=e537]: Go
+          - generic [ref=e538]:
+            - term [ref=e539]: Arquitetura
+            - definition [ref=e540]: worker queue + idempotência
+      - article [ref=e541]:
+        - generic [ref=e542]:
+          - generic [ref=e543]: P09
+          - generic [ref=e544]: Nível 4
+        - heading "Observabilidade" [level=3] [ref=e545]
+        - paragraph [ref=e546]: Diagnosticar falhas pela superfície operacional.
+        - generic [ref=e547]:
+          - generic [ref=e548]:
+            - term [ref=e549]: Linguagem
+            - definition [ref=e550]: OpenTelemetry
+          - generic [ref=e551]:
+            - term [ref=e552]: Arquitetura
+            - definition [ref=e553]: logs + métricas + tracing
+      - article [ref=e554]:
+        - generic [ref=e555]:
+          - generic [ref=e556]: P10
+          - generic [ref=e557]: Nível 5
+        - heading "Agente de IA para análise das tarefas" [level=3] [ref=e558]
+        - paragraph [ref=e559]: Usar IA como par de revisão com avaliação objetiva.
+        - generic [ref=e560]:
+          - generic [ref=e561]:
+            - term [ref=e562]: Linguagem
+            - definition [ref=e563]: TypeScript
+          - generic [ref=e564]:
+            - term [ref=e565]: Arquitetura
+            - definition [ref=e566]: workflow com ferramentas + memória curta

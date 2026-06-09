@@ -1,0 +1,71 @@
+- main [ref=e161]:
+  - complementary "Navegação principal" [ref=e162]:
+    - generic [ref=e163]:
+      - generic [ref=e164]: CD
+      - generic [ref=e165]:
+        - strong [ref=e166]: codexDojo
+        - generic [ref=e167]: agent learning lab
+    - navigation [ref=e168]:
+      - button "Painel" [ref=e169] [cursor=pointer]
+      - button "Agentes" [ref=e170] [cursor=pointer]
+      - button "Ciclo" [ref=e171] [cursor=pointer]
+      - button "Roadmap" [ref=e172] [cursor=pointer]
+      - button "Projeto 01" [ref=e173] [cursor=pointer]
+  - region "Agentes do codexDojo" [ref=e175]:
+    - generic [ref=e176]:
+      - paragraph [ref=e177]: Equipe multiagente
+      - heading "Responsabilidades claras, saídas verificáveis" [level=2] [ref=e178]
+    - generic [ref=e179]:
+      - button "Mentor Adapta o aprendizado ao nível atual" [ref=e180] [cursor=pointer]:
+        - generic [ref=e181]: Mentor
+        - generic [ref=e182]: Adapta o aprendizado ao nível atual
+      - button "Currículo Constrói a trilha progressiva" [ref=e183] [cursor=pointer]:
+        - generic [ref=e184]: Currículo
+        - generic [ref=e185]: Constrói a trilha progressiva
+      - button "Arquiteto Explica trade-offs e define arquitetura" [ref=e186] [cursor=pointer]:
+        - generic [ref=e187]: Arquiteto
+        - generic [ref=e188]: Explica trade-offs e define arquitetura
+      - button "Implementador Escreve código com boas práticas" [ref=e189] [cursor=pointer]:
+        - generic [ref=e190]: Implementador
+        - generic [ref=e191]: Escreve código com boas práticas
+      - button "Revisor de Código Revisa como engenheiro sênior" [ref=e192] [cursor=pointer]:
+        - generic [ref=e193]: Revisor de Código
+        - generic [ref=e194]: Revisa como engenheiro sênior
+      - button "Testes Cria testes e benchmarks" [ref=e195] [cursor=pointer]:
+        - generic [ref=e196]: Testes
+        - generic [ref=e197]: Cria testes e benchmarks
+      - button "Métricas Mede evolução e compara soluções" [ref=e198] [cursor=pointer]:
+        - generic [ref=e199]: Métricas
+        - generic [ref=e200]: Mede evolução e compara soluções
+      - button "DevOps Ensina entrega e operação" [ref=e201] [cursor=pointer]:
+        - generic [ref=e202]: DevOps
+        - generic [ref=e203]: Ensina entrega e operação
+      - button "Pesquisador Busca práticas e docs oficiais" [ref=e204] [cursor=pointer]:
+        - generic [ref=e205]: Pesquisador
+        - generic [ref=e206]: Busca práticas e docs oficiais
+      - button "Memória Preserva histórico e decisões" [ref=e207] [cursor=pointer]:
+        - generic [ref=e208]: Memória
+        - generic [ref=e209]: Preserva histórico e decisões
+    - article [ref=e210]:
+      - generic [ref=e211]:
+        - generic [ref=e212]: quality
+        - button "Copiar prompt" [ref=e213] [cursor=pointer]
+      - heading "Testes" [level=3] [ref=e214]
+      - paragraph [ref=e215]: Converter requisitos em provas unitárias, integração, carga e regressão.
+      - generic [ref=e216]:
+        - generic [ref=e217]:
+          - heading "Entradas" [level=4] [ref=e218]
+          - list [ref=e219]:
+            - listitem [ref=e220]: spec
+            - listitem [ref=e221]: contratos
+            - listitem [ref=e222]: riscos do revisor
+        - generic [ref=e223]:
+          - heading "Saídas" [level=4] [ref=e224]
+          - list [ref=e225]:
+            - listitem [ref=e226]: suite de testes
+            - listitem [ref=e227]: cenários E2E
+            - listitem [ref=e228]: benchmark reproduzível
+      - generic [ref=e229]:
+        - text: Gate
+        - paragraph [ref=e230]: Um caminho feliz e um caminho de erro devem passar pela superfície real.
+      - code [ref=e232]: Você é o agente de Testes. Escreva provas observáveis, injete relógio/aleatoriedade e bloqueie claims sem execução.

@@ -1,0 +1,156 @@
+-- allium: 3
+-- ecosystem.allium
+
+-- Scope: AI DevSchool Ecosystem learning loop and agent pipeline
+-- Excludes:
+--   - Specific platform tooling (.Codex, .opencode, .playwright-mcp, .mavis)
+
+-- Value Types
+value Level { name: String }
+value ProgrammingLanguage { name: String }
+
+-- Main Entities
+entity Learner {
+    level: Level
+    focus: String
+    languages: Set<ProgrammingLanguage>
+}
+
+entity Project {
+    id: String
+    title: String
+    complexity: Integer
+}
+
+entity Unit {
+    learner: Learner
+    project: Project
+    status: presenting | practicing | evaluating | mastered
+    retry_count: Integer
+    retry_limit: Integer
+    required_before_implementation: Boolean
+    min_coverage: Float
+
+    transitions status {
+        presenting -> practicing
+        practicing -> evaluating
+        evaluating -> mastered
+        evaluating -> practicing
+        terminal: mastered
+    }
+}
+
+entity Diagnostic {
+    unit: Unit
+    is_evaluated: Boolean
+}
+
+entity ExecutableEvidence {
+    unit: Unit
+    coverage: Float
+    mutation_score: Float
+    is_valid: Boolean
+}
+
+-- Agent Pipeline Entities
+entity Pipeline {
+    unit: Unit
+    phase: spec | diagnostic | impl | review | benchmark | optimize | cycle_complete
+    
+    transitions phase {
+        spec -> diagnostic
+        diagnostic -> impl
+        impl -> review
+        review -> benchmark
+        benchmark -> optimize
+        optimize -> cycle_complete
+        terminal: cycle_complete
+    }
+}
+
+entity AgentTask {
+    pipeline: Pipeline
+    agent_role: curator | developer | reviewer | tester | evolution
+    status: pending | in_progress | done
+    language: ProgrammingLanguage? when agent_role = developer
+}
+
+-- Triggers & Rules
+
+rule LearnerAttemptsUnit {
+    when: AttemptStarted(learner, project)
+    ensures: Unit.created(
+        learner: learner,
+        project: project,
+        status: presenting,
+        retry_count: 0,
+        retry_limit: 3,
+        required_before_implementation: true,
+        min_coverage: 0.8
+    )
+}
+
+rule PipelineStarts {
+    when: unit: Unit.created
+    ensures: Pipeline.created(
+        unit: unit,
+        phase: spec
+    )
+}
+
+rule DiagnosticEvaluated {
+    when: DiagnosticCompleted(unit)
+    requires: unit.status = presenting | practicing
+    ensures: Diagnostic.created(
+        unit: unit,
+        is_evaluated: true
+    )
+    ensures: unit.status = evaluating
+}
+
+rule PipelineAdvancesToImpl {
+    when: diagnostic: Diagnostic.is_evaluated becomes true
+    for p in Pipeline where unit = diagnostic.unit:
+        requires: p.phase = diagnostic
+        ensures: p.phase = impl
+}
+
+rule AgentCompletesTask {
+    when: task: AgentTask.status transitions_to done
+    -- Agent transition logic could chain here, omitted for brevity
+}
+
+rule ProvideExecutableEvidence {
+    when: EvidenceGathered(unit, coverage, mutation_score, is_valid)
+    requires: unit.status = evaluating
+    ensures: ExecutableEvidence.created(
+        unit: unit,
+        coverage: coverage,
+        mutation_score: mutation_score,
+        is_valid: is_valid
+    )
+}
+
+rule MasterUnit {
+    when: evidence: ExecutableEvidence.is_valid becomes true
+    let u = evidence.unit
+    requires: u.status = evaluating
+    requires: evidence.coverage >= u.min_coverage
+    ensures: u.status = mastered
+}
+
+rule FailEvaluation {
+    when: evidence: ExecutableEvidence.is_valid becomes false
+    let u = evidence.unit
+    requires: u.status = evaluating
+    requires: u.retry_count < u.retry_limit
+    ensures: u.status = practicing
+    ensures: u.retry_count = u.retry_count + 1
+}
+
+rule AdvanceToReviewPhase {
+    when: p: Pipeline.phase becomes impl
+    let impl_tasks = AgentTask where pipeline = p and agent_role = developer
+    requires: impl_tasks.all(t => t.status = done)
+    ensures: p.phase = review
+}

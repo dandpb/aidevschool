@@ -1,0 +1,89 @@
+---
+# minimaxDojo — Configuração do Aluno
+# Preencha ANTES de iniciar o primeiro ciclo
+---
+
+aluno:
+  id: aluno-001
+  criado: 2025-XX-XX
+  objetivo_3meses: "escrever código de qualidade profissional com autonomia"
+
+perfil_pedagogico:
+  nivel_autodeclarado: intermediario
+  tempo_semanal: 5h         # horas por semana
+  cadencia: 25-40 min       # por sessão
+  sessoes_por_semana: 4-5
+
+foco:
+  linguagem: ""             # ⟨LINGUAGEM_FOCO⟩: Python | Go | Rust | TypeScript
+  estilo_aprendizado: balanced
+  trilha: robustez          # entry-point intermediário
+
+gates:
+  mutation_score_min: 0.65
+  cobertura_nucleo_min: 0.80
+  suíte_verde_min: 1.0
+  lints_erros_max: 0
+  cc_mediana_max: 10
+  cc_max_revisar: 15
+  duplicacao_max_pct: 7
+  td_ratio_max_pct: 5
+  pr_loc_max: 300
+
+retries:
+  max_por_unidade: 3
+
+socrates:
+  quota_dia: 15
+
+mneme:
+  duracao_max_min: 20
+  min_interleaving_pct: 30
+  horarios_sugeridos: ["08:00", "20:00"]
+
+galileu:
+  samples_min: 10
+  warmup_min: 500
+  cv_max_pct: 20
+  reportar: [mediana, media, minimo, cv_pct, p50, p99]
+
+atena:
+  aidi_alerta_amarelo: 0.60
+  aidi_alerta_vermelho: 0.75
+  refletir_dora_velocity: false   # PROIBIDO usar como proxy
+
+seneca:
+  sla_horas: 24
+  sla_reduzido_horas: 4
+  modo: auto-escala
+  conservador_por_default: true
+
+cronos:
+  plataforma_suporta_cron: true   # false → gera fallback em cron_fallback.md
+  modo_padrao: lightning
+  tasks_background: [mneme.daily, seneca.audit, mnemosyne.compact]
+
+state_machine:
+  estados: [APRESENTANDO, PRATICANDO, AVALIANDO, DOMINADO, FALHA_BLOQUEIO]
+  transicoes_permitidas: auto   # carregado de 02_state_machine.md
+
+seguranca:
+  sandbox: true
+  escopo_minimo_credencial: true
+  auditavel: true
+
+whiteboard:
+  raiz: "whiteboard/"
+  nucleo_curado_max_pegadinhas: 5
+  nucleo_curado_max_skills: 5
+
+modelos:
+  raciocinio_profundo: opus       # curator, reviewer, optimizer, verifier
+  geracao_alto_volume: sonnet    # devs, benchmarker, sonda
+  diversidade_cross_model: true   # VERIFIER usa modelo de tier diferente do gerador
+
+bootstrap:
+  cold_start: true
+  sonda_obrigatoria: true
+  cartografo_obrigatorio: true
+  trilha_inicia: "primeira lacuna comprovada"

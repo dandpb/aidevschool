@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+.pnpm/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+out/
+**/target/
+
+# Test / coverage artifacts
+coverage/
+*.profraw
+*.profdata
+*.lcov
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Raw k6 benchmark sample dumps (regenerable; ~82MB each).
+# Keep the aggregates: *_summary.json, *_stats.json, *.log, aggregated.json.
+*_run[0-9].json
+*_run[0-9][0-9].json
+
+# Tool caches
+.opencode/tmp/

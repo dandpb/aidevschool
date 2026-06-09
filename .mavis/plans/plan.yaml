@@ -1,0 +1,537 @@
+version: 1
+plan:
+  name: 'AI DevSchool — Project 01 (Token-Bucket Rate Limiter) full cycle'
+  max_concurrency: 4
+  max_consecutive_failures: 2
+  max_cycles: 8
+  auto_reject_retries: 1
+  verifier_config:
+    default_verifiers: [verifier]
+    audit_sample_rate: 0.0
+learning_gate:
+  system: agora-continuum
+  state_file: .mavis/learning_state.yaml
+  required_before_implementation: true
+  active_unit: U0-sonda-rate-limiter-robustness
+  unblock_condition: learner_attempt_evaluated
+  diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
+tasks:
+  - id: sonda-diagnostic
+    title: 'Sonda diagnostic: learner attempt before implementation'
+    assigned_to: sonda
+    verified_by: verifier
+    timeout_ms: 600000
+    prompt: |
+      You are Sonda for AI DevSchool Project 01.
+
+      ## Inputs
+      - Operating model: docs/PROMPTS/IDEIAS/codexDojo/06_agora_continuum_operating_model.md
+      - Learning state: .mavis/learning_state.yaml
+      - Diagnostic: projects/01_rate_limiter/docs/diagnostic.md
+
+      ## Rules
+      - Do not implement the rate limiter.
+      - Do not provide finished solutions before a learner attempt exists.
+      - If no learner attempt exists yet, report `awaiting: learner_attempt` and leave the implementation tasks blocked.
+      - After a learner attempt exists, classify tests, refactoring, and code-reading ability using Dreyfus/Bloom language, then update `.mavis/learning_state.yaml`.
+
+      ## Completion gate
+      PASS only when the learner attempt has been evaluated and Prometor has defined executable verification for the first implementation task.
+    verify_prompt: |
+      Verify that Sonda did not provide finished solutions, that a learner attempt exists, and that `.mavis/learning_state.yaml` moved past `awaiting: learner_attempt`.
+
+  - id: impl-go
+    title: 'Go implementation: token-bucket rate limiter'
+    assigned_to: dev-go
+    depends_on: [sonda-diagnostic]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are implementing the **Go** version of the Token-Bucket Rate Limiter for
+      AI DevSchool Project 01. The spec and skeleton are pre-scaffolded by the user;
+      your job is to fill in the TODOs with production-grade, idiomatic Go.
+
+      ## Workspace
+      - Project root: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+      - Spec:  projects/01_rate_limiter/docs/spec.md  **READ THIS FIRST, IN FULL**
+      - Skeleton: projects/01_rate_limiter/go-impl/main.go  (fill in the TODOs)
+      - Existing: go.mod, Dockerfile (do not modify the Dockerfile unless necessary)
+
+      ## Required deliverables
+      1. **go-impl/main.go** — implement all TODOs:
+         - Thread-safe `RateLimiter` (use `sync.Mutex` + `map[string]*ClientBucket`, NOT `sync.Map` for read-heavy writes with mutation)
+         - Lazy token refill: `tokens = min(C, lastTokens + (now - lastRefill) * r)`
+         - Middleware that returns HTTP 429 with `Retry-After` header when bucket empty
+         - Rate-limit headers on every limited response:
+           `X-RateLimit-Limit`, `X-RateLimit-Remaining` (integer), `X-RateLimit-Reset` (Unix epoch seconds)
+         - `/status` endpoint returning client_ip, tokens_remaining, max_capacity, refill_rate_per_second
+         - Background cleanup goroutine that deletes buckets idle >1h (use `time.Ticker` + a separate mutex or sharded map)
+         - Graceful shutdown on SIGINT/SIGTERM (close idle conns, drain in-flight)
+         - Use `slog` (stdlib) for structured JSON logging
+         - NEVER `panic` in prod code
+      2. **go-impl/main_test.go** (or split into multiple `*_test.go`) with table-driven tests:
+         - Token consumption under limit (200 OK)
+         - 429 response with correct Retry-After value
+         - Lazy refill after time.Sleep (or use a clock interface you can inject for determinism)
+         - Concurrency safety: run with `go test -race`
+         - Cover all 7 functional requirements from the spec
+         - Target: >=80% coverage (`go test -cover`)
+      3. **go-impl/README.md** — build/run/test instructions, expected port 8080
+      4. **Verification before declaring done**:
+         - `cd go-impl && go build ./...`  — must succeed with no warnings
+         - `go test -race -cover ./...`    — must pass, >=80% coverage
+         - `docker build -t rl-go .` (from go-impl/) — must succeed
+         - Smoke test: `docker run --rm -p 8080:8080 rl-go` + `curl localhost:8080/` returns 200 JSON
+
+      ## Idiomatic Go rules
+      - `errors.Is` / `errors.As` for error handling, never `panic`
+      - No `os.Getenv` scattered — define a `Config` struct loaded once in main
+      - Small interfaces (1-2 methods)
+      - Document WHY, not WHAT, in comments
+      - No `TODO`/`FIXME` in shipped code
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` with:
+        `phase: impl-done, lang: go, last_update: <ISO timestamp>, updated_by: dev-go`
+      - Write `projects/01_rate_limiter/deliverable-impl-go.md` summarizing:
+        what you built, lines of code (use `wc -l`), test coverage %, build size, and confirmation of all checks passing.
+
+      Do NOT wait for other languages to finish. Do NOT poll CI. Build, test, exit.
+    verify_prompt: |
+      Independently verify the Go implementation. Do NOT just re-read the producer's
+      deliverable. Re-derive correctness from first principles.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter/go-impl
+
+      Re-run and check:
+      1. `go build ./...` succeeds with no warnings
+      2. `go test -race -cover ./...` passes; coverage >= 80%
+      3. `go vet ./...` and `gofmt -l .` produce no output
+      4. Spot-check 3 random tests by reading their assertions and confirming they actually test the behavior
+      5. Read main.go and confirm:
+         - No `panic()` calls in non-test code paths
+         - No `time.Sleep` busy-loops in hot path (the refill must be lazy, not ticker-based)
+         - Mutex is held only for the duration of map lookup + arithmetic, not the HTTP write
+         - `/status` returns the spec's exact JSON shape: `client_ip`, `tokens_remaining`, `max_capacity`, `refill_rate_per_second`
+         - Cleanup goroutine uses a ticker (not a per-request check)
+         - 429 response includes `Retry-After` header
+      6. Try to break it: write a small concurrent burst test (50 goroutines, 20 reqs each)
+         and confirm the bucket is never over-consumed (sum of granted + 429 = total reqs).
+
+      PASS only if all 6 checks succeed. FAIL with concrete file:line evidence otherwise.
+
+  - id: impl-rust
+    title: 'Rust implementation: token-bucket rate limiter'
+    assigned_to: dev-rust
+    depends_on: [sonda-diagnostic]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are implementing the **Rust** version of the Token-Bucket Rate Limiter
+      for AI DevSchool Project 01. Spec and skeleton pre-scaffolded; fill the TODOs
+      with idiomatic Rust.
+
+      ## Workspace
+      - Project root: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+      - Spec:  projects/01_rate_limiter/docs/spec.md  **READ THIS FIRST, IN FULL**
+      - Skeleton: projects/01_rate_limiter/rust-impl/src/main.rs  (fill in the TODOs)
+      - Existing: Cargo.toml (axum 0.7, tokio, serde, tower), Dockerfile (multi-stage)
+
+      ## Required deliverables
+      1. **rust-impl/src/main.rs** — implement all TODOs:
+         - Shared `AppState` wrapped in `Arc<tokio::sync::Mutex<HashMap<IpAddr, ClientBucket>>>` (or `DashMap` if you add it as a dep — your call)
+         - `ClientBucket { tokens: f64, last_refill: Instant }`
+         - Lazy refill math
+         - axum middleware (`from_fn_with_state`) that:
+           - Returns 200 with welcome JSON when allowed
+           - Returns 429 + `Retry-After` when denied
+           - Sets `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` on every limited response
+         - `/status` handler returning `client_ip`, `tokens_remaining`, `max_capacity`, `refill_rate_per_second`
+         - Background tokio task that prunes idle buckets (>1h) every 5 min
+         - `Result<T, E>` everywhere; `thiserror` for error types; NEVER `unwrap()` in non-test code
+         - `tracing` + `tracing-subscriber` for structured JSON logs
+         - Graceful shutdown on SIGINT/SIGTERM (`tokio::signal::ctrl_c`)
+      2. **rust-impl/tests/** (integration) or inline `#[cfg(test)]` (unit):
+         - Token consumption under limit
+         - 429 + Retry-After correctness
+         - Lazy refill (inject a `Clock` trait so tests can advance time without `tokio::time::sleep`)
+         - Concurrency: spawn 50 tasks × 20 requests; verify no over-consumption
+         - Cleanup of idle buckets
+         - Target: >=80% coverage (`cargo tarpaulin` if available, else `cargo test` showing all tests pass)
+      3. **rust-impl/README.md** — build/run/test instructions, port 8082
+      4. **Verification**:
+         - `cargo fmt --check` and `cargo clippy --all-targets -- -D warnings` — clean
+         - `cargo build --release` — succeeds
+         - `cargo test` — all pass
+         - `docker build -t rl-rust .` — succeeds
+         - Smoke test: `docker run --rm -p 8082:8082 rl-rust` + `curl localhost:8082/` returns 200 JSON
+
+      ## Idiomatic Rust rules
+      - `Result<T, E>` with `thiserror` for libs/bins
+      - `Arc<Mutex<...>>` or `DashMap` for shared state; prefer `parking_lot::Mutex` if you swap it in
+      - Avoid `clone()` where a reference would do
+      - `&str` for read-only strings, `String` only when ownership is needed
+      - Document WHY, not WHAT
+      - No `unwrap()` in prod paths
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` with:
+        `phase: impl-done, lang: rust, last_update: <ISO>, updated_by: dev-rust`
+      - Write `projects/01_rate_limiter/deliverable-impl-rust.md` summarizing what you built, LoC, test pass count, and confirmation of all checks.
+    verify_prompt: |
+      Independently verify the Rust implementation. Re-derive correctness.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter/rust-impl
+
+      Re-run and check:
+      1. `cargo fmt --check` clean
+      2. `cargo clippy --all-targets -- -D warnings` clean
+      3. `cargo build --release` succeeds
+      4. `cargo test` all pass
+      5. Search for `unwrap()` in src/main.rs (excluding `#[cfg(test)]` modules and `expect` with messages) — must be zero in prod paths
+      6. Read src/main.rs and confirm:
+         - Shared state behind `Arc<Mutex<...>>` (or DashMap), not raw `RefCell`
+         - Refill is lazy (computed on request, not via background ticker that mutates state)
+         - `/status` returns the exact JSON shape: `client_ip`, `tokens_remaining`, `max_capacity`, `refill_rate_per_second`
+         - 429 path includes `Retry-After` header
+         - Cleanup task is on a tokio interval, not a tight loop
+         - Graceful shutdown wired
+      7. Try to break it: write a quick concurrency test in tests/ and run it — confirm no over-consumption.
+
+      PASS only if all 7 checks succeed. FAIL with file:line evidence otherwise.
+
+  - id: impl-node
+    title: 'Node.js/TypeScript implementation: token-bucket rate limiter'
+    assigned_to: dev-node
+    depends_on: [sonda-diagnostic]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are implementing the **Node.js/TypeScript** version of the Token-Bucket
+      Rate Limiter for AI DevSchool Project 01. Spec and skeleton pre-scaffolded;
+      fill the TODOs with idiomatic TypeScript.
+
+      ## Workspace
+      - Project root: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+      - Spec:  projects/01_rate_limiter/docs/spec.md  **READ THIS FIRST, IN FULL**
+      - Skeleton: projects/01_rate_limiter/node-impl/src/index.ts  (fill in the TODOs)
+      - Existing: package.json (express), tsconfig.json (strict:true), Dockerfile (multi-stage)
+
+      ## Required deliverables
+      1. **node-impl/src/index.ts** — implement all TODOs:
+         - In-memory `Map<string, ClientBucket>` for client state
+         - Lazy refill math
+         - Express middleware that:
+           - Returns 200 + welcome JSON when allowed
+           - Returns 429 + `Retry-After` when denied
+           - Sets `X-RateLimit-Limit`, `X-RateLimit-Remaining` (integer), `X-RateLimit-Reset` (Unix seconds) on every limited response
+         - `/status` endpoint returning `client_ip`, `tokens_remaining`, `max_capacity`, `refill_rate_per_second`
+         - Background `setInterval` cleanup of buckets idle >1h (use `unref()` so it doesn't keep the process alive)
+         - Graceful shutdown on SIGINT/SIGTERM (`server.close()` + drain)
+         - `pino` for structured JSON logs
+         - Use `zod` to validate env (PORT, CAPACITY, REFILL_RATE)
+         - Extract client IP correctly: `req.ip` (behind a proxy needs `app.set('trust proxy', ...)` — note in README if you assume a direct connection)
+      2. **node-impl/src/__tests__/rateLimiter.test.ts** (or co-located):
+         - Token consumption under limit
+         - 429 + Retry-After
+         - Lazy refill (inject a clock to avoid `setTimeout` in tests)
+         - Cleanup of idle buckets
+         - Header correctness
+         - Use `vitest` (preferred — add to devDependencies if you switch the runner) or stay with `ts-node` for tests; either way, target >=80% coverage
+      3. **node-impl/README.md** — build/run/test instructions, port 8081, note that it's single-process (no cluster) unless you add it
+      4. **Verification**:
+         - `npm run build` (tsc) — succeeds, no errors
+         - `npm test` — all pass, >=80% coverage
+         - `npm run lint` (if you add eslint) — clean
+         - `docker build -t rl-node .` — succeeds
+         - Smoke test: `docker run --rm -p 8081:8081 rl-node` + `curl localhost:8081/` returns 200 JSON
+
+      ## Idiomatic TS rules
+      - `strict: true` is already on; honor it
+      - No `any` without a justification comment
+      - Async/await (no callbacks)
+      - Custom `Error` subclasses per domain
+      - Never swallow errors (no empty `.catch(() => {})`)
+      - `process.on('unhandledRejection')` and `uncaughtException` handlers
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` with:
+        `phase: impl-done, lang: node, last_update: <ISO>, updated_by: dev-node`
+      - Write `projects/01_rate_limiter/deliverable-impl-node.md` summarizing what you built, LoC, test pass count, and confirmation of all checks.
+    verify_prompt: |
+      Independently verify the Node/TypeScript implementation. Re-derive correctness.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter/node-impl
+
+      Re-run and check:
+      1. `npm run build` (tsc) succeeds with no errors
+      2. `npm test` all pass; coverage >= 80%
+      3. Search `src/index.ts` for `any` — must be zero (or only with justification comment)
+      4. Search for empty `.catch(` — must be zero
+      5. Search for `process.on('unhandledRejection'` — should exist
+      6. Read src/index.ts and confirm:
+         - In-memory Map for state, refill lazy
+         - `/status` returns the exact JSON shape: `client_ip`, `tokens_remaining`, `max_capacity`, `refill_rate_per_second`
+         - 429 includes `Retry-After` header
+         - Cleanup is on `setInterval` with `unref()`
+         - Graceful shutdown wired
+         - Refill is in O(1) (not scanning all keys)
+      7. Try to break it: write a quick concurrent burst test (Promise.all of 200 requests) and confirm no over-consumption.
+
+      PASS only if all 7 checks succeed. FAIL with file:line evidence otherwise.
+
+  - id: code-review
+    title: 'Cross-language code review, pedagogy, and quiz'
+    assigned_to: reviewer
+    depends_on: [impl-go, impl-rust, impl-node]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are reviewing all 3 implementations of the Token-Bucket Rate Limiter
+      and producing didactic material. The 3 implementations are now in
+      projects/01_rate_limiter/{go,rust,node}-impl/.
+
+      ## Inputs
+      - Spec: projects/01_rate_limiter/docs/spec.md
+      - Code: projects/01_rate_limiter/{go,rust,node}-impl/
+      - Skeleton TODOs were filled by dev-go, dev-rust, dev-node
+
+      ## Required deliverables in projects/01_rate_limiter/docs/
+      1. **code_review.md**:
+         - Summary table at top: per-implementation count of Critical/Major/Minor/Educational
+         - Per-implementation issues, each formatted as:
+           ```
+           ### [SEVERITY-NNN] Title
+           - File: path:line
+           - Category: Security | Performance | Readability | Maintainability | Idiomaticity | Error Handling | Testing
+           - Description: ...
+           - Impact: ...
+           - Remediation: (concrete steps)
+           - Reference: link/doc/CWE
+           - Aprendizado: (the general concept to internalize)
+           ```
+         - Severities: Critical (blocker) / Major / Minor / Educational
+         - Cover ALL 7 categories at least once across the report
+         - Cross-language comparison: a dedicated section comparing how concurrency, error handling, and state management were solved in each language
+      2. **learning_notes.md**:
+         - One section per language with: idioms used, strengths in this domain, weaknesses in this domain, when to pick this language for this kind of problem
+         - One section "Concepts you should be able to answer after this project":
+           1. What problem does this project solve and why does it matter?
+           2. What is the reference architecture for an in-memory rate limiter?
+           3. Why pick Go, Rust, or Node for this case? (use the data you have, not opinions)
+           4. What real tradeoffs emerged in each language?
+           5. How would you scale this from 100 to 1M users?
+           6. What anti-patterns did you find and fix?
+      3. **quiz.md**:
+         - Exactly 5 questions
+         - Mix of multiple-choice and short-answer/essay
+         - Answer key with detailed explanation
+         - Tests **comprehension**, not memorization (e.g., "Why is the lazy refill better than a background ticker?" not "What is capacity C set to?")
+      4. Append at least 1 new generalization to **/Users/danielbarreto/Development/aidevschool/learning_journal.md** in the appropriate section (concurrency / HTTP idioms / anti-patterns).
+
+      ## Posture
+      - **Sem piedade técnica, máxima generosidade pedagógica** — rigorous but kind.
+      - Praise what is well done. Don't only bug-hunt.
+      - Don't repeat the same feedback in every cycle — check the journal first.
+      - Don't call educational observations "Critical" (it scares learners).
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` to:
+        `phase: review-done, awaiting: benchmark, last_update: <ISO>, updated_by: reviewer`
+      - Write `projects/01_rate_limiter/deliverable-review.md` summarizing the top 3 issues per impl, the top 3 cross-language insights, and the top 3 quiz takeaways.
+    verify_prompt: |
+      Independently verify the review. Re-derive — do not just trust the producer.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+
+      Re-check:
+      1. Read all 3 implementations in full. Pick 3 issues from code_review.md at random and confirm:
+         - The file:line is correct (open the file and jump to the line)
+         - The description accurately describes what the code does
+         - The remediation is concrete and would actually fix the issue
+      2. Confirm severity assignments are consistent: no "Critical" for a naming nit; no "Minor" for a security hole
+      3. Confirm the 7 audit categories (Security/Performance/Readability/Maintainability/Idiomaticity/Error Handling/Testing) each appear at least once across the report
+      4. Read quiz.md: 5 questions, mixed formats, answer key present, explanations test comprehension (open one question, decide if a junior dev who memorized the spec would ace it — if yes, the question is bad)
+      5. Read learning_notes.md: the 6 pedagogical questions are each answered concretely
+      6. Confirm learning_journal.md was actually appended to (new entry visible)
+
+      PASS only if all 6 checks succeed. FAIL with file:line evidence otherwise.
+
+  - id: benchmark
+    title: 'Load testing: k6 scenarios + Docker build + perf report'
+    assigned_to: benchmarker
+    depends_on: [code-review]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are running load tests against the 3 implementations of the Token-Bucket
+      Rate Limiter and producing a reproducible performance report.
+
+      ## Workspace
+      - Project: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+      - Spec: projects/01_rate_limiter/docs/spec.md  (defines ports 8080/8081/8082)
+      - Dockerfiles: projects/01_rate_limiter/{go,rust,node}-impl/Dockerfile
+      - Existing k6 script: projects/01_rate_limiter/benchmarks/k6_load_test.js  (review it; you may evolve it)
+
+      ## Tools (paths)
+      - k6: /opt/homebrew/bin/k6  (add `/opt/homebrew/bin` to PATH if needed: `export PATH=/opt/homebrew/bin:$PATH`)
+      - autocannon: `$(npm root -g)/autocannon/bin/autocannon.js` — fallback if k6 has issues
+      - `ab` (Apache Bench): `which ab` — final fallback (already installed)
+      - `tokei` for LoC counting (try `cargo install tokei` if not present, else fall back to `cloc` or `wc -l`)
+
+      ## Workflow
+      1. **Build images** — from project root, for each impl:
+         - `cd go-impl && docker build -t rl-go .` (and analogously for rust/node)
+         - On Apple Silicon, the Go and Node base images are fine; for Rust, the Dockerfile already uses `rust:1.69-alpine` + musl.
+      2. **Run containers** in background, one at a time per scenario to avoid resource contention:
+         - `docker run -d --name rl-go -p 8080:8080 rl-go`
+         - `docker run -d --name rl-rust -p 8082:8082 rl-rust`
+         - `docker run -d --name rl-node -p 8081:8081 rl-node`
+         - Confirm each with `curl -s localhost:PORT/` (should return welcome JSON, possibly 429 if you've already hammered it).
+      3. **Smoke test** each impl with a short k6 run (10s, 5 VUs) before the real scenarios. Fix any port/protocol mismatch.
+      4. **Write 4 scenarios** in `projects/01_rate_limiter/benchmarks/scenarios/`:
+         - `baseline.js` — ~70% capacity, 60s
+         - `stress.js` — 50% → 200% over 90s
+         - `spike.js` — 10x → 1x → 10x, 60s
+         - `endurance.js` — 80% capacity, **300s (5 min)** (NOT 30 min — budget)
+         Each scenario must read `TARGET_PORT` from `__ENV` so the same script works for all 3 langs.
+      5. **Run all 4 scenarios on all 3 impls**, N=3 runs each. Capture:
+         - RPS (avg, peak)
+         - Latency: avg, p50, p95, p99
+         - Error rate %
+         - CPU % (via `docker stats --no-stream` snapshot)
+         - RAM MB (via `docker stats --no-stream` snapshot)
+         - Image size: `docker images rl-{go,rust,node} --format '{{.Size}}'`
+         - Cold start: `time docker run --rm -p PORT:PORT rl-{lang}` (do this once)
+         - LoC: `tokei` (or `cloc`/`wc -l` fallback) for the source directory
+      6. **Save raw results** in `projects/01_rate_limiter/benchmarks/results/{go,rust,node}/` — one JSON per scenario per run (k6 has `--out json=...`).
+      7. **Write `projects/01_rate_limiter/docs/benchmark_results.md`** with:
+         - **Section 1 — Environment & Methodology**: machine specs, Docker version, macOS thermal/load notes, k6 version, how warmup was handled, N runs
+         - **Section 2 — Summary table (Baseline scenario)**:
+
+           | Metric | Go | Rust | Node.js | Winner |
+           |--------|----|------|---------|--------|
+           | RPS (avg) | ... | ... | ... | ... |
+           | Latency p50 (ms) | ... | ... | ... | ... |
+           | Latency p95 (ms) | ... | ... | ... | ... |
+           | Latency p99 (ms) | ... | ... | ... | ... |
+           | Error rate (%) | ... | ... | ... | ... |
+           | RAM (MB) | ... | ... | ... | ... |
+           | CPU (%) | ... | ... | ... | ... |
+           | Image size (MB) | ... | ... | ... | ... |
+           | Cold start (s) | ... | ... | ... | ... |
+           | LoC | ... | ... | ... | ... |
+
+         - **Section 3 — Per-scenario analysis** (Baseline / Stress / Spike / Endurance): one subsection each with mini-table, key observations, ASCII chart (use `gnuplot` if available, else simple text bars)
+         - **Section 4 — Bottlenecks identified per implementation** (this is critical input for the optimizer)
+         - **Section 5 — Recommendations for the optimizer agent**: list the top 2-3 optimizations the data suggests
+         - **Section 6 — Limitations & caveats**: Docker Desktop CPU throttling on macOS, single-machine, container-to-container network noise, etc.
+      8. **Append a methodology entry** to `/Users/danielbarreto/Development/aidevschool/learning_journal.md` under "Benchmark methodology".
+
+      ## Honesty rules
+      - N>=3 runs, report median + stddev
+      - If a number is wildly variable across runs, say so — don't claim a winner on noisy data
+      - Acknowledge that running 3 containers concurrently on a single macOS box will produce CPU contention; the relative ordering is still meaningful, absolute numbers are not
+      - Don't claim a lang "wins" on a metric where the difference is < 10% AND p > 0.05
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` to:
+        `phase: benchmark-done, awaiting: optimization, last_update: <ISO>, updated_by: benchmarker`
+      - Write `projects/01_rate_limiter/deliverable-benchmark.md` summarizing the headline numbers, the winner per metric, and the top 3 recommendations for the optimizer.
+    verify_prompt: |
+      Independently verify the benchmark. Re-derive — do not just read the report.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+
+      Re-check:
+      1. Pick the smallest k6 scenario (baseline) and re-run it once against ONE of the implementations (whichever is currently running). Confirm the reported RPS is within ±20% of what you observe.
+      2. Open `docs/benchmark_results.md` and confirm:
+         - All 4 scenarios are present (Baseline / Stress / Spike / Endurance)
+         - The summary table has all 10 metrics × 3 langs populated
+         - The "Limitations" section is non-empty and honest
+         - Bottlenecks are evidence-based (cite the data, don't speculate)
+         - The recommendations section actually lists 2-3 concrete optimizations
+      3. Confirm `benchmarks/results/{go,rust,node}/` contains raw JSON files (at least 4 per lang)
+      4. Confirm raw data matches the report's claims — pick one cell, open the corresponding JSON, confirm the value.
+      5. Confirm N>=3 (e.g., 3 files per scenario per lang)
+      6. Confirm tokei/cloc was actually used (not just guessed)
+      7. Confirm learning_journal.md was appended to (methodology entry present)
+
+      PASS only if all 7 checks succeed. FAIL with specific evidence otherwise.
+
+  - id: optimize
+    title: 'Apply optimizations, re-measure, write evolution report'
+    assigned_to: optimizer
+    depends_on: [benchmark]
+    verified_by: verifier
+    timeout_ms: 1800000
+    prompt: |
+      You are optimizing the 3 implementations based on the benchmark findings and
+      producing the evolution report that closes the cycle.
+
+      ## Workspace
+      - Project: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+      - Benchmark: projects/01_rate_limiter/docs/benchmark_results.md
+      - Review: projects/01_rate_limiter/docs/code_review.md
+      - Code: projects/01_rate_limiter/{go,rust,node}-impl/
+
+      ## Workflow
+      1. Read both reports. Identify the **TOP 2-3 bottlenecks** across the 3 implementations. Form a hypothesis with evidence for each (cite the benchmark numbers).
+      2. Pick **ONE optimization pattern per implementation** from the catalog:
+         - Memory allocation: pre-allocated buffers, object pools, sharded maps to reduce mutex contention
+         - Caching layer: keep parsed config in atomic.Value
+         - Lock-free / sharded state: per-bucket mutex instead of global map mutex
+         - Async batching: batch cleanup instead of per-key check
+         - Connection pooling: only relevant if any impl added external HTTP calls (probably not here)
+         - Protocol upgrade: only if the bottleneck is HTTP parsing
+         - Per-IP token bucket pre-warming
+      3. **Apply ONE optimization per language**. Keep changes minimal and focused. Tests must still pass after each change.
+      4. **Re-run the benchmark** with the EXACT same scripts and N>=3 runs. Compute deltas (before/after) for RPS, p99, RAM, CPU. Note statistical significance.
+      5. **Document rejected optimizations** too — at least one attempt you made that didn't work, and why. This is anti-knowledge that's just as valuable.
+
+      ## Deliverables
+      1. Updated code in `{go,rust,node}-impl/` (one optimization each)
+      2. **projects/01_rate_limiter/docs/evolution_report.md** with these sections:
+         - **Context**: project, language optimized, baseline date
+         - **Top 3 bottlenecks** (with evidence: numbers, profiler output, or reasoning chain)
+         - **Optimizations applied** — for each language:
+           - Pattern name
+           - Problem
+           - Solution (concrete code change)
+           - Risk (low/med/high)
+           - Risk mitigation
+         - **Before/After table** (same 10 metrics × 3 langs as the benchmark)
+         - **Rejected optimizations** (at least 1 per language if applicable, or note "no failed attempts in this cycle")
+         - **Lessons for the next cycle / curator**
+         - **Next steps** checklist
+      3. Append new patterns/anti-patterns to `/Users/danielbarreto/Development/aidevschool/learning_journal.md` under the appropriate sections.
+
+      ## Discipline
+      - **Measure before, measure after.** No claims of improvement without data.
+      - **Tests must still pass** after every change. Run them between steps.
+      - **No premature optimization** — if the benchmark already shows a language winning on p99, don't optimize the wrong thing.
+      - **No metric gaming** — don't optimize for RPS by trading away p99 stability.
+      - **Document tradeoffs** — every optimization has a cost (complexity, memory, maintainability). Be explicit.
+
+      ## When done
+      - Update `/Users/danielbarreto/Development/aidevschool/docs/status.md` to:
+        `phase: cycle-complete, awaiting: next-curator, last_update: <ISO>, updated_by: optimizer`
+      - Write `projects/01_rate_limiter/deliverable-evolution.md` with: the headline before/after deltas, the single most impactful optimization across all 3 langs, and one question for the curator about what the next project should teach.
+    verify_prompt: |
+      Independently verify the optimization. Re-derive — do not just trust the report.
+
+      Working dir: /Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter
+
+      Re-check:
+      1. For each language, run its test suite and confirm it still passes (`go test ./...`, `cargo test`, `npm test`).
+      2. Pick ONE optimization claim from evolution_report.md and re-verify it:
+         - Read the diff (or the optimized file)
+         - Confirm the change matches the description (e.g., if it says "sharded the map into N shards", the code should show that)
+         - Re-run the corresponding k6 scenario once; confirm the new number is within ±20% of what the report claims
+      3. Confirm Before/After table has all 10 metrics × 3 langs, with real numbers (not TBDs)
+      4. Confirm "Rejected optimizations" section is present and non-empty (or has an explicit "none this cycle" note with reason)
+      5. Confirm learning_journal.md gained at least 1 new entry in a relevant section
+      6. Confirm status.md is updated to `cycle-complete`
+      7. Open the optimized code and confirm it's actually a meaningful change, not a variable rename or comment-only edit
+
+      PASS only if all 7 checks succeed. FAIL with file:line evidence otherwise.

@@ -1,0 +1,1254 @@
+{
+  "per_run": {
+    "go": {
+      "baseline": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 4201,
+            "duration_avg": 2.4185274934539396,
+            "duration_min": 0.542,
+            "duration_max": 24.793,
+            "p50": 1.937,
+            "p90": 4.422,
+            "p95": 5.786,
+            "p99": 9.959,
+            "failed": 4072,
+            "checks_pass": 4201,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 7.496,
+            "mem_pct": 0.03,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 4200,
+            "duration_avg": 2.4992140476190476,
+            "duration_min": 0.524,
+            "duration_max": 23.617,
+            "p50": 2.143,
+            "p90": 4.453,
+            "p95": 5.603,
+            "p99": 9.723,
+            "failed": 4071,
+            "checks_pass": 4200,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.04,
+            "mem_mb": 8.023,
+            "mem_pct": 0.03,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 4200,
+            "duration_avg": 2.546270952380952,
+            "duration_min": 0.565,
+            "duration_max": 40.994,
+            "p50": 2.248,
+            "p90": 4.369,
+            "p95": 5.42,
+            "p99": 9.172,
+            "failed": 4071,
+            "checks_pass": 4200,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 8.094,
+            "mem_pct": 0.03,
+            "container": "rl-go-bench"
+          }
+        }
+      ],
+      "stress": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 12375,
+            "duration_avg": 2.38536905050505,
+            "duration_min": 0.388,
+            "duration_max": 142.836,
+            "p50": 1.431,
+            "p90": 4.367,
+            "p95": 6.093,
+            "p99": 12.802,
+            "failed": 12186,
+            "checks_pass": 12375,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 11.27,
+            "mem_pct": 0.05,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 1.9530560045256184,
+            "duration_min": 0.385,
+            "duration_max": 36.395,
+            "p50": 1.448,
+            "p90": 3.528,
+            "p95": 4.573,
+            "p99": 8.544,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 10.48,
+            "mem_pct": 0.04,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 1.57181840956845,
+            "duration_min": 0.366,
+            "duration_max": 29.809,
+            "p50": 1.303,
+            "p90": 2.512,
+            "p95": 3.399,
+            "p99": 6.633,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.01,
+            "mem_mb": 10.19,
+            "mem_pct": 0.04,
+            "container": "rl-go-bench"
+          }
+        }
+      ],
+      "spike": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 5759,
+            "duration_avg": 1.525892342420559,
+            "duration_min": 0.366,
+            "duration_max": 41.8,
+            "p50": 1.143,
+            "p90": 2.658,
+            "p95": 4.009,
+            "p99": 7.41,
+            "failed": 5678,
+            "checks_pass": 5759,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 10.37,
+            "mem_pct": 0.04,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 5760,
+            "duration_avg": 1.431552777777778,
+            "duration_min": 0.296,
+            "duration_max": 30.6,
+            "p50": 1.094,
+            "p90": 2.537,
+            "p95": 3.57,
+            "p99": 6.589,
+            "failed": 5679,
+            "checks_pass": 5760,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 10.67,
+            "mem_pct": 0.04,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 5759,
+            "duration_avg": 1.872515367251259,
+            "duration_min": 0.269,
+            "duration_max": 80.95,
+            "p50": 1.158,
+            "p90": 3.485,
+            "p95": 4.873,
+            "p99": 10.886,
+            "failed": 5678,
+            "checks_pass": 5759,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 9.867,
+            "mem_pct": 0.04,
+            "container": "rl-go-bench"
+          }
+        }
+      ],
+      "endurance": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 24001,
+            "duration_avg": 45.81011616182659,
+            "duration_min": 0.34,
+            "duration_max": 1028641.725,
+            "p50": 1.537,
+            "p90": 4.679,
+            "p95": 7.459,
+            "p99": 23.812,
+            "failed": 23392,
+            "checks_pass": 24001,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 10.88,
+            "mem_pct": 0.05,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 24001,
+            "duration_avg": 83.90396604308154,
+            "duration_min": 0.407,
+            "duration_max": 984480.943,
+            "p50": 1.34,
+            "p90": 3.134,
+            "p95": 4.318,
+            "p99": 8.098,
+            "failed": 23391,
+            "checks_pass": 24001,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 10.8,
+            "mem_pct": 0.05,
+            "container": "rl-go-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 23996,
+            "duration_avg": 51.20689414902483,
+            "duration_min": 0.446,
+            "duration_max": 977744.274,
+            "p50": 1.518,
+            "p90": 4.101,
+            "p95": 5.922,
+            "p99": 16.756,
+            "failed": 23387,
+            "checks_pass": 23996,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.01,
+            "mem_mb": 10.93,
+            "mem_pct": 0.05,
+            "container": "rl-go-bench"
+          }
+        }
+      ]
+    },
+    "rust": {
+      "baseline": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 4200,
+            "duration_avg": 2.291298333333333,
+            "duration_min": 0.433,
+            "duration_max": 94.625,
+            "p50": 1.453,
+            "p90": 4.042,
+            "p95": 6.217,
+            "p99": 18.3,
+            "failed": 4071,
+            "checks_pass": 4200,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.082,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 4200,
+            "duration_avg": 2.283585,
+            "duration_min": 0.444,
+            "duration_max": 55.672,
+            "p50": 1.458,
+            "p90": 4.151,
+            "p95": 5.901,
+            "p99": 15.712,
+            "failed": 4071,
+            "checks_pass": 4200,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.117,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 4188,
+            "duration_avg": 3.402519818529131,
+            "duration_min": 0.466,
+            "duration_max": 181.522,
+            "p50": 1.663,
+            "p90": 5.202,
+            "p95": 7.894,
+            "p99": 50.666,
+            "failed": 4059,
+            "checks_pass": 4188,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.168,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        }
+      ],
+      "stress": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 12355,
+            "duration_avg": 2.9027295022258195,
+            "duration_min": 0.338,
+            "duration_max": 361.242,
+            "p50": 1.295,
+            "p90": 3.638,
+            "p95": 5.315,
+            "p99": 15.822,
+            "failed": 12166,
+            "checks_pass": 12355,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.148,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 12375,
+            "duration_avg": 1.7577770505050507,
+            "duration_min": 0.297,
+            "duration_max": 26.107,
+            "p50": 1.385,
+            "p90": 2.998,
+            "p95": 3.998,
+            "p99": 7.885,
+            "failed": 12186,
+            "checks_pass": 12375,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.145,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 1.7636383546145142,
+            "duration_min": 0.401,
+            "duration_max": 31.171,
+            "p50": 1.409,
+            "p90": 3.018,
+            "p95": 3.916,
+            "p99": 7.503,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.07,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        }
+      ],
+      "spike": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 5759,
+            "duration_avg": 1.5284384441743357,
+            "duration_min": 0.354,
+            "duration_max": 19.538,
+            "p50": 1.157,
+            "p90": 2.615,
+            "p95": 3.623,
+            "p99": 6.74,
+            "failed": 5678,
+            "checks_pass": 5759,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 3.102,
+            "mem_pct": 0.01,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 5759,
+            "duration_avg": 1.7849130057301617,
+            "duration_min": 0.254,
+            "duration_max": 61.959,
+            "p50": 1.12,
+            "p90": 3.308,
+            "p95": 4.757,
+            "p99": 11.497,
+            "failed": 5678,
+            "checks_pass": 5759,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.133,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 5760,
+            "duration_avg": 1.7033171875,
+            "duration_min": 0.338,
+            "duration_max": 25.352,
+            "p50": 1.109,
+            "p90": 3.307,
+            "p95": 4.779,
+            "p99": 9.473,
+            "failed": 5679,
+            "checks_pass": 5760,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.156,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        }
+      ],
+      "endurance": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 24001,
+            "duration_avg": 2.210851964501479,
+            "duration_min": 0.409,
+            "duration_max": 42.79,
+            "p50": 1.709,
+            "p90": 3.987,
+            "p95": 5.251,
+            "p99": 10.275,
+            "failed": 23392,
+            "checks_pass": 24001,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.078,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 24000,
+            "duration_avg": 2.1502983333333336,
+            "duration_min": 0.362,
+            "duration_max": 42.205,
+            "p50": 1.814,
+            "p90": 3.65,
+            "p95": 4.915,
+            "p99": 9.051,
+            "failed": 23391,
+            "checks_pass": 24000,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.078,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 23458,
+            "duration_avg": 52.47862051325774,
+            "duration_min": 0.3,
+            "duration_max": 809521.728,
+            "p50": 1.619,
+            "p90": 4.068,
+            "p95": 6.418,
+            "p99": 38.338,
+            "failed": 22849,
+            "checks_pass": 23458,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 1.152,
+            "mem_pct": 0.0,
+            "container": "rl-rust-bench"
+          }
+        }
+      ]
+    },
+    "node": {
+      "baseline": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 4201,
+            "duration_avg": 2.8304479885741487,
+            "duration_min": 0.647,
+            "duration_max": 92.911,
+            "p50": 2.023,
+            "p90": 4.775,
+            "p95": 6.903,
+            "p99": 14.274,
+            "failed": 4072,
+            "checks_pass": 4201,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.01,
+            "mem_mb": 54.93,
+            "mem_pct": 0.23,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 4200,
+            "duration_avg": 2.919925238095238,
+            "duration_min": 0.647,
+            "duration_max": 104.099,
+            "p50": 2.004,
+            "p90": 4.959,
+            "p95": 6.984,
+            "p99": 15.291,
+            "failed": 4071,
+            "checks_pass": 4200,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.02,
+            "mem_mb": 54.34,
+            "mem_pct": 0.23,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 4201,
+            "duration_avg": 2.6611787669602474,
+            "duration_min": 0.579,
+            "duration_max": 43.309,
+            "p50": 1.968,
+            "p90": 4.743,
+            "p95": 6.327,
+            "p99": 12.796,
+            "failed": 4072,
+            "checks_pass": 4201,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.02,
+            "mem_mb": 55.04,
+            "mem_pct": 0.23,
+            "container": "rl-node-bench"
+          }
+        }
+      ],
+      "stress": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 2.2338366736705995,
+            "duration_min": 0.353,
+            "duration_max": 63.148,
+            "p50": 1.541,
+            "p90": 4.042,
+            "p95": 5.641,
+            "p99": 12.256,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.02,
+            "mem_mb": 70.64,
+            "mem_pct": 0.3,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 2.1766845805721675,
+            "duration_min": 0.464,
+            "duration_max": 73.828,
+            "p50": 1.529,
+            "p90": 3.792,
+            "p95": 5.174,
+            "p99": 11.321,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 69.91,
+            "mem_pct": 0.29,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 12374,
+            "duration_avg": 2.434518425731372,
+            "duration_min": 0.468,
+            "duration_max": 177.112,
+            "p50": 1.519,
+            "p90": 4.027,
+            "p95": 5.729,
+            "p99": 14.2,
+            "failed": 12185,
+            "checks_pass": 12374,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.04,
+            "mem_mb": 69.66,
+            "mem_pct": 0.29,
+            "container": "rl-node-bench"
+          }
+        }
+      ],
+      "spike": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 5760,
+            "duration_avg": 2.676267013888889,
+            "duration_min": 0.422,
+            "duration_max": 99.225,
+            "p50": 1.337,
+            "p90": 4.242,
+            "p95": 6.764,
+            "p99": 34.926,
+            "failed": 5679,
+            "checks_pass": 5760,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.02,
+            "mem_mb": 54.06,
+            "mem_pct": 0.23,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 5760,
+            "duration_avg": 2.3290552083333336,
+            "duration_min": 0.442,
+            "duration_max": 84.098,
+            "p50": 1.312,
+            "p90": 4.088,
+            "p95": 6.558,
+            "p99": 16.062,
+            "failed": 5679,
+            "checks_pass": 5760,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.07,
+            "mem_mb": 67.7,
+            "mem_pct": 0.29,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 5760,
+            "duration_avg": 1.8939614583333335,
+            "duration_min": 0.357,
+            "duration_max": 24.814,
+            "p50": 1.256,
+            "p90": 3.755,
+            "p95": 5.133,
+            "p99": 9.42,
+            "failed": 5679,
+            "checks_pass": 5760,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.01,
+            "mem_mb": 54.45,
+            "mem_pct": 0.23,
+            "container": "rl-node-bench"
+          }
+        }
+      ],
+      "endurance": [
+        {
+          "run": 1,
+          "metrics": {
+            "n_requests": 24000,
+            "duration_avg": 2.7550607499999997,
+            "duration_min": 0.457,
+            "duration_max": 82.654,
+            "p50": 2.144,
+            "p90": 4.941,
+            "p95": 6.546,
+            "p99": 11.675,
+            "failed": 23391,
+            "checks_pass": 24000,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.27,
+            "mem_mb": 70.21,
+            "mem_pct": 0.3,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 2,
+          "metrics": {
+            "n_requests": 24001,
+            "duration_avg": 2.659086788050498,
+            "duration_min": 0.441,
+            "duration_max": 83.985,
+            "p50": 1.913,
+            "p90": 4.643,
+            "p95": 6.557,
+            "p99": 14.46,
+            "failed": 23392,
+            "checks_pass": 24001,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.0,
+            "mem_mb": 69.78,
+            "mem_pct": 0.29,
+            "container": "rl-node-bench"
+          }
+        },
+        {
+          "run": 3,
+          "metrics": {
+            "n_requests": 24001,
+            "duration_avg": 2.600686596391817,
+            "duration_min": 0.49,
+            "duration_max": 41.729,
+            "p50": 2.138,
+            "p90": 4.534,
+            "p95": 5.778,
+            "p99": 10.733,
+            "failed": 23392,
+            "checks_pass": 24001,
+            "checks_fail": 0
+          },
+          "stats": {
+            "cpu_pct": 0.01,
+            "mem_mb": 69.94,
+            "mem_pct": 0.29,
+            "container": "rl-node-bench"
+          }
+        }
+      ]
+    }
+  },
+  "aggregated": {
+    "go": {
+      "baseline": {
+        "n_runs": 3,
+        "duration_avg_median": 2.4992,
+        "duration_avg_stddev": 0.0528,
+        "duration_min_median": 0.542,
+        "duration_min_stddev": 0.0168,
+        "duration_max_median": 24.793,
+        "duration_max_stddev": 7.929,
+        "p50_median": 2.143,
+        "p50_stddev": 0.1292,
+        "p90_median": 4.422,
+        "p90_stddev": 0.0347,
+        "p95_median": 5.603,
+        "p95_stddev": 0.1494,
+        "p99_median": 9.723,
+        "p99_stddev": 0.3298,
+        "failed_median": 4071,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 4200,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 4200,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 12601,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 96.92857142857143,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.02,
+        "mem_mb_median": 8.02,
+        "mem_mb_stddev": 0.27,
+        "mem_pct_median": 0.03,
+        "mem_pct_stddev": 0.0
+      },
+      "stress": {
+        "n_runs": 3,
+        "duration_avg_median": 1.9531,
+        "duration_avg_stddev": 0.3323,
+        "duration_min_median": 0.385,
+        "duration_min_stddev": 0.0097,
+        "duration_max_median": 36.395,
+        "duration_max_stddev": 51.7989,
+        "p50_median": 1.431,
+        "p50_stddev": 0.0647,
+        "p90_median": 3.528,
+        "p90_stddev": 0.7584,
+        "p95_median": 4.573,
+        "p95_stddev": 1.1028,
+        "p99_median": 8.544,
+        "p99_stddev": 2.5785,
+        "failed_median": 12185,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 12374,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 12374,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 37123,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.4726038467755,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 10.48,
+        "mem_mb_stddev": 0.46,
+        "mem_pct_median": 0.04,
+        "mem_pct_stddev": 0.0
+      },
+      "spike": {
+        "n_runs": 3,
+        "duration_avg_median": 1.5259,
+        "duration_avg_stddev": 0.1896,
+        "duration_min_median": 0.296,
+        "duration_min_stddev": 0.0409,
+        "duration_max_median": 41.8,
+        "duration_max_stddev": 21.5852,
+        "p50_median": 1.143,
+        "p50_stddev": 0.0273,
+        "p90_median": 2.658,
+        "p90_stddev": 0.4213,
+        "p95_median": 4.009,
+        "p95_stddev": 0.5413,
+        "p99_median": 7.41,
+        "p99_stddev": 1.8625,
+        "failed_median": 5678,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 5759,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 5759,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 17278,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.59350581698212,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 10.37,
+        "mem_mb_stddev": 0.33,
+        "mem_pct_median": 0.04,
+        "mem_pct_stddev": 0.0
+      },
+      "endurance": {
+        "n_runs": 3,
+        "duration_avg_median": 51.2069,
+        "duration_avg_stddev": 16.8304,
+        "duration_min_median": 0.407,
+        "duration_min_stddev": 0.0438,
+        "duration_max_median": 984480.943,
+        "duration_max_stddev": 22573.6028,
+        "p50_median": 1.518,
+        "p50_stddev": 0.0887,
+        "p90_median": 4.101,
+        "p90_stddev": 0.6374,
+        "p95_median": 5.922,
+        "p95_stddev": 1.2824,
+        "p99_median": 16.756,
+        "p99_stddev": 6.4263,
+        "failed_median": 23391,
+        "failed_stddev": 2.1602,
+        "n_requests_median": 24001,
+        "n_requests_stddev": 2.357,
+        "checks_pass_median": 24001,
+        "checks_pass_stddev": 2.357,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 71998,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 97.45843923169868,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 10.88,
+        "mem_mb_stddev": 0.05,
+        "mem_pct_median": 0.05,
+        "mem_pct_stddev": 0.0
+      }
+    },
+    "rust": {
+      "baseline": {
+        "n_runs": 3,
+        "duration_avg_median": 2.2913,
+        "duration_avg_stddev": 0.5257,
+        "duration_min_median": 0.444,
+        "duration_min_stddev": 0.0137,
+        "duration_max_median": 94.625,
+        "duration_max_stddev": 52.6061,
+        "p50_median": 1.458,
+        "p50_stddev": 0.0978,
+        "p90_median": 4.151,
+        "p90_stddev": 0.523,
+        "p95_median": 6.217,
+        "p95_stddev": 0.8746,
+        "p99_median": 18.3,
+        "p99_stddev": 15.9026,
+        "failed_median": 4071,
+        "failed_stddev": 5.6569,
+        "n_requests_median": 4200,
+        "n_requests_stddev": 5.6569,
+        "checks_pass_median": 4200,
+        "checks_pass_stddev": 5.6569,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 12588,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 96.92857142857143,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 1.12,
+        "mem_mb_stddev": 0.04,
+        "mem_pct_median": 0.0,
+        "mem_pct_stddev": 0.0
+      },
+      "stress": {
+        "n_runs": 3,
+        "duration_avg_median": 1.7636,
+        "duration_avg_stddev": 0.5384,
+        "duration_min_median": 0.338,
+        "duration_min_stddev": 0.0428,
+        "duration_max_median": 31.171,
+        "duration_max_stddev": 156.8042,
+        "p50_median": 1.385,
+        "p50_stddev": 0.0491,
+        "p90_median": 3.018,
+        "p90_stddev": 0.2971,
+        "p95_median": 3.998,
+        "p95_stddev": 0.641,
+        "p99_median": 7.885,
+        "p99_stddev": 3.8347,
+        "failed_median": 12185,
+        "failed_stddev": 9.2014,
+        "n_requests_median": 12374,
+        "n_requests_stddev": 9.2014,
+        "checks_pass_median": 12374,
+        "checks_pass_stddev": 9.2014,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 37104,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.4726038467755,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 1.15,
+        "mem_mb_stddev": 0.04,
+        "mem_pct_median": 0.0,
+        "mem_pct_stddev": 0.0
+      },
+      "spike": {
+        "n_runs": 3,
+        "duration_avg_median": 1.7033,
+        "duration_avg_stddev": 0.107,
+        "duration_min_median": 0.338,
+        "duration_min_stddev": 0.0439,
+        "duration_max_median": 25.352,
+        "duration_max_stddev": 18.7777,
+        "p50_median": 1.12,
+        "p50_stddev": 0.0205,
+        "p90_median": 3.307,
+        "p90_stddev": 0.3264,
+        "p95_median": 4.757,
+        "p95_stddev": 0.5398,
+        "p99_median": 9.473,
+        "p99_stddev": 1.9492,
+        "failed_median": 5678,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 5759,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 5759,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 17278,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.59350581698212,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 1.16,
+        "mem_mb_stddev": 0.92,
+        "mem_pct_median": 0.0,
+        "mem_pct_stddev": 0.0
+      },
+      "endurance": {
+        "n_runs": 3,
+        "duration_avg_median": 2.2109,
+        "duration_avg_stddev": 23.7107,
+        "duration_min_median": 0.362,
+        "duration_min_stddev": 0.0446,
+        "duration_max_median": 42.79,
+        "duration_max_stddev": 381592.1687,
+        "p50_median": 1.709,
+        "p50_stddev": 0.0797,
+        "p90_median": 3.987,
+        "p90_stddev": 0.181,
+        "p95_median": 5.251,
+        "p95_stddev": 0.6441,
+        "p99_median": 10.275,
+        "p99_stddev": 13.5268,
+        "failed_median": 23391,
+        "failed_stddev": 255.7373,
+        "n_requests_median": 24000,
+        "n_requests_stddev": 255.7373,
+        "checks_pass_median": 24000,
+        "checks_pass_stddev": 255.7373,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 71459,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 97.4625,
+        "cpu_pct_median": 0.0,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 1.08,
+        "mem_mb_stddev": 0.03,
+        "mem_pct_median": 0.0,
+        "mem_pct_stddev": 0.0
+      }
+    },
+    "node": {
+      "baseline": {
+        "n_runs": 3,
+        "duration_avg_median": 2.8304,
+        "duration_avg_stddev": 0.1073,
+        "duration_min_median": 0.647,
+        "duration_min_stddev": 0.0321,
+        "duration_max_median": 92.911,
+        "duration_max_stddev": 26.4175,
+        "p50_median": 2.004,
+        "p50_stddev": 0.0228,
+        "p90_median": 4.775,
+        "p90_stddev": 0.0952,
+        "p95_median": 6.903,
+        "p95_stddev": 0.2925,
+        "p99_median": 14.274,
+        "p99_stddev": 1.0244,
+        "failed_median": 4072,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 4201,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 4201,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 12602,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 96.92930254701261,
+        "cpu_pct_median": 0.02,
+        "cpu_pct_stddev": 0.0,
+        "mem_mb_median": 54.93,
+        "mem_mb_stddev": 0.31,
+        "mem_pct_median": 0.23,
+        "mem_pct_stddev": 0.0
+      },
+      "stress": {
+        "n_runs": 3,
+        "duration_avg_median": 2.2338,
+        "duration_avg_stddev": 0.1106,
+        "duration_min_median": 0.464,
+        "duration_min_stddev": 0.0533,
+        "duration_max_median": 73.828,
+        "duration_max_stddev": 51.3911,
+        "p50_median": 1.529,
+        "p50_stddev": 0.009,
+        "p90_median": 4.027,
+        "p90_stddev": 0.1145,
+        "p95_median": 5.641,
+        "p95_stddev": 0.2436,
+        "p99_median": 12.256,
+        "p99_stddev": 1.1992,
+        "failed_median": 12185,
+        "failed_stddev": 0.0,
+        "n_requests_median": 12374,
+        "n_requests_stddev": 0.0,
+        "checks_pass_median": 12374,
+        "checks_pass_stddev": 0.0,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 37122,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.4726038467755,
+        "cpu_pct_median": 0.02,
+        "cpu_pct_stddev": 0.02,
+        "mem_mb_median": 69.91,
+        "mem_mb_stddev": 0.42,
+        "mem_pct_median": 0.29,
+        "mem_pct_stddev": 0.0
+      },
+      "spike": {
+        "n_runs": 3,
+        "duration_avg_median": 2.3291,
+        "duration_avg_stddev": 0.32,
+        "duration_min_median": 0.422,
+        "duration_min_stddev": 0.0363,
+        "duration_max_median": 84.098,
+        "duration_max_stddev": 32.1116,
+        "p50_median": 1.312,
+        "p50_stddev": 0.0339,
+        "p90_median": 4.088,
+        "p90_stddev": 0.2032,
+        "p95_median": 6.558,
+        "p95_stddev": 0.7252,
+        "p99_median": 16.062,
+        "p99_stddev": 10.8039,
+        "failed_median": 5679,
+        "failed_stddev": 0.0,
+        "n_requests_median": 5760,
+        "n_requests_stddev": 0.0,
+        "checks_pass_median": 5760,
+        "checks_pass_stddev": 0.0,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 17280,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 98.59375,
+        "cpu_pct_median": 0.02,
+        "cpu_pct_stddev": 0.03,
+        "mem_mb_median": 54.45,
+        "mem_mb_stddev": 6.34,
+        "mem_pct_median": 0.23,
+        "mem_pct_stddev": 0.03
+      },
+      "endurance": {
+        "n_runs": 3,
+        "duration_avg_median": 2.6591,
+        "duration_avg_stddev": 0.0636,
+        "duration_min_median": 0.457,
+        "duration_min_stddev": 0.0204,
+        "duration_max_median": 82.654,
+        "duration_max_stddev": 19.6135,
+        "p50_median": 2.138,
+        "p50_stddev": 0.1075,
+        "p90_median": 4.643,
+        "p90_stddev": 0.172,
+        "p95_median": 6.546,
+        "p95_stddev": 0.3647,
+        "p99_median": 11.675,
+        "p99_stddev": 1.5823,
+        "failed_median": 23392,
+        "failed_stddev": 0.4714,
+        "n_requests_median": 24001,
+        "n_requests_stddev": 0.4714,
+        "checks_pass_median": 24001,
+        "checks_pass_stddev": 0.4714,
+        "checks_fail_median": 0,
+        "checks_fail_stddev": 0.0,
+        "checks_total_passes": 72002,
+        "checks_total_fails": 0,
+        "checks_pass_rate": 1.0,
+        "error_rate_pct": 97.46260572476147,
+        "cpu_pct_median": 0.01,
+        "cpu_pct_stddev": 0.12,
+        "mem_mb_median": 69.94,
+        "mem_mb_stddev": 0.18,
+        "mem_pct_median": 0.29,
+        "mem_pct_stddev": 0.0
+      }
+    }
+  }
+}

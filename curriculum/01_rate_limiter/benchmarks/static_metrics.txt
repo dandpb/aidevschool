@@ -1,0 +1,48 @@
+=== STATIC METRICS (image size, cold start, LoC) ===
+Date: 2026-06-04 (UTC) / 2026-06-03 23:xx (BRT)
+
+=== Image sizes (docker images) ===
+rl-go   13.1 MB
+rl-rust 11.3 MB
+rl-node 135 MB
+
+=== Image layer breakdown (key layer only) ===
+rl-go   : 4.72 MB binary + 7.73 MB alpine minirootfs + 619 KB ca-certs = 13.1 MB
+rl-rust : 2.04 MB binary + 8.7 MB alpine minirootfs + 605 KB ca-certs = 11.3 MB
+rl-node : 9.29 MB npm prod-deps + 83.8 KB built dist + 189 KB package.json = 135 MB (node:18-alpine base ~125 MB)
+
+=== LoC (production source only, no tests) ===
+Go:    598 LoC
+       - main.go                              221
+       - ratelimit/ratelimit.go               211
+       - ratelimit/middleware.go               86
+       - ratelimit/cleanup.go                  61
+       - ratelimit/clock.go                    19
+Rust: 1044 LoC
+       - src/rate_limiter.rs                  561
+       - src/lib.rs                           254
+       - src/middleware.rs                     84
+       - src/clock.rs                          94
+       - src/handlers.rs                       36
+       - src/main.rs                           15
+Node:  649 LoC
+       - src/index.ts                         213
+       - src/rateLimiter.ts                   197
+       - src/config.ts                        119
+       - src/main.ts                           64
+       - src/errors.ts                         34
+       - src/logger.ts                         22
+
+
+=== Cold start (docker run -> first 200/429 response, from host) ===
+rl-go   : 0.639s   (compiled Go binary, alpine base)
+rl-rust : 0.351s   (compiled Rust binary, alpine base) - fastest
+rl-node : 0.679s   (npm start + node:18-alpine base, slowest due to npm overhead)
+
+Notes on cold start methodology:
+  - Single measurement, single host
+  - Includes: docker exec, layer mount, runtime init, port-bind, first request
+  - For Node, the "first request" includes Express listening + first middleware chain
+  - For Go/Rust, the binary starts faster but Docker layer mount dominates
+  - M1 Pro / Docker Desktop 29.5.2
+

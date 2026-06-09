@@ -1,0 +1,83 @@
+version: 3
+system: agora-continuum
+updated_at: "2026-06-03T22:25:30-03:00"
+workspace: /Users/danielbarreto/Development/aidevschool
+change_log:
+  - at: "2026-06-03T22:18:00-03:00"
+    by: maestro
+    reason: "Learner picked TypeScript as the focus language. State set to TS-active with Go/Rust retained as reference for diagnostic Task 3 code reading."
+  - at: "2026-06-03T22:25:30-03:00"
+    by: maestro (mvs_74fc370d)
+    reason: "Reconciled peer-session divergence. Peer session mvs_b73e655ac1704a8e807843feb57c2be9 had set weekly_time_hours=3 and cadence=1hx3 from a stale read; the learner's actual intake answers were 5h/week and 25-40min x 4-5x/week. Peer also advanced phase to impl-done before diagnostic; that decision is kept as 'ungated outside the ÁGORA flow' and Prometor will re-validate before any 'dominado' state. Active Maestro session is mvs_74fc370d; peer is parked as Maestro-espelho / backup."
+
+learner_profile:
+  level: intermediate
+  goal: robust professional-quality code without AI dependency
+  active_focus: TypeScript
+  focus_languages:
+    - TypeScript
+  reference_languages:
+    - Go
+    - Rust
+  reference_purpose: "Code-reading breadth — diagnostic Task 3 spans all three impls in projects/01_rate_limiter/. Practice, mutation testing, and refactoring work stays in TypeScript."
+  weekly_time_hours: 5
+  cadence: "25-40 min sessions, 4-5x/week"
+  human_instructor: none
+  hitl_sla_hours: 24
+  hitl_fallback: auto_reject_or_self_escalate
+  budget:
+    hint_queries_per_day: 15
+
+state_machine:
+  learning_states:
+    - apresentando
+    - praticando
+    - avaliando
+    - dominado
+  artifact_states:
+    - producing
+    - verifying
+    - done
+  retry_limit: 3
+  current_retry: 0
+
+active_unit:
+  id: U0-sonda-rate-limiter-robustness
+  project: projects/01_rate_limiter
+  title: "Sonda diagnostic: token-bucket robustness"
+  state: apresentando
+  diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
+  awaiting: learner_attempt
+  promotion_gate:
+    - learner submits an attempt before receiving solutions
+    - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
+    - Cartografo updates the first concrete robustness gap
+    - Prometor defines executable verification for the first implementation task
+
+agent_ownership:
+  leader: Maestro
+  diagnostic: Sonda
+  path: Cartografo
+  producer: Mestre-Conteudo
+  tutor: Socrates
+  verifier: Prometor
+  reviewer: Critico
+  metrics: Atena
+  memory: Mnemosyne
+  governance: Seneca
+
+empirical_gates:
+  code:
+    core_coverage_target: ">=80%"
+    mutation_score_target: "60-70% when tooling is available"
+    verifier_context: isolated
+    benchmark_rule: ">=10 samples plus warmup; block speed claims when CV >=20%"
+  learning:
+    requires_attempt_before_solution: true
+    hint_budget_per_day: 15
+    mastery_source: executable_evidence
+
+next_action:
+  owner: learner
+  action: "Complete the diagnostic in projects/01_rate_limiter/docs/diagnostic.md."
+

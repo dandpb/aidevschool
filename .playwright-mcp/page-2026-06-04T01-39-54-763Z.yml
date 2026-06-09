@@ -1,0 +1,90 @@
+- main [ref=e3]:
+  - complementary "Navegação principal" [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: CD
+      - generic [ref=e7]:
+        - strong [ref=e8]: codexDojo
+        - generic [ref=e9]: agent learning lab
+    - navigation [ref=e10]:
+      - button "Painel" [ref=e11] [cursor=pointer]
+      - button "Agentes" [ref=e12] [cursor=pointer]
+      - button "Ciclo" [ref=e13] [cursor=pointer]
+      - button "Roadmap" [ref=e14] [cursor=pointer]
+      - button "Projeto 01" [ref=e15] [cursor=pointer]
+  - region "Painel operacional" [ref=e17]:
+    - article [ref=e18]:
+      - paragraph [ref=e19]: Laboratório contínuo
+      - heading "codexDojo" [level=1] [ref=e20]
+      - paragraph [ref=e21]: Um painel para conduzir uma escola prática de engenharia de software com agentes, projetos incrementais, revisão, testes, métricas e memória de aprendizado.
+      - generic [ref=e22]:
+        - button "Avançar ciclo" [ref=e23] [cursor=pointer]
+        - button "Ver agentes" [ref=e24] [cursor=pointer]
+    - article [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: Estado do dojo
+        - generic [ref=e28]: 20% do ciclo
+      - generic "Progresso do ciclo" [ref=e29]
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - term [ref=e33]: Agentes
+          - definition [ref=e34]: "10"
+        - generic [ref=e35]:
+          - term [ref=e36]: Etapas
+          - definition [ref=e37]: "10"
+        - generic [ref=e38]:
+          - term [ref=e39]: Projetos
+          - definition [ref=e40]: "10"
+    - article "Mapa visual dos agentes" [ref=e41]:
+      - button "Mentor" [ref=e42] [cursor=pointer]
+      - button "Currículo" [ref=e43] [cursor=pointer]
+      - button "Arquiteto" [ref=e44] [cursor=pointer]
+      - button "Implementador" [ref=e45] [cursor=pointer]
+      - button "Revisor de Código" [ref=e46] [cursor=pointer]
+      - button "Testes" [ref=e47] [cursor=pointer]
+      - button "Métricas" [ref=e48] [cursor=pointer]
+      - button "DevOps" [ref=e49] [cursor=pointer]
+      - button "Pesquisador" [ref=e50] [cursor=pointer]
+      - button "Memória" [ref=e51] [cursor=pointer]
+    - article [ref=e52]:
+      - paragraph [ref=e53]: Primeiro projeto prático
+      - heading "CLI de tarefas em Python" [level=2] [ref=e54]
+      - paragraph [ref=e55]: Separar entrada, domínio e persistência sem framework.
+      - list [ref=e56]:
+        - listitem [ref=e57]: comandos create/list/done
+        - listitem [ref=e58]: testes unitários
+        - listitem [ref=e59]: README de uso
+    - article [ref=e60]:
+      - generic [ref=e61]:
+        - generic [ref=e62]: Tempo de execução
+        - strong [ref=e63]: mediana + p95
+      - generic [ref=e64]:
+        - generic [ref=e65]: Cobertura do núcleo
+        - strong [ref=e66]: ">=80%"
+      - generic [ref=e67]:
+        - generic [ref=e68]: Mutation score
+        - strong [ref=e69]: 60-70%
+      - generic [ref=e70]:
+        - generic [ref=e71]: Complexidade ciclomática
+        - strong [ref=e72]: mediana <10
+      - generic [ref=e73]:
+        - generic [ref=e74]: Dependência de IA
+        - strong [ref=e75]: queda por ciclo
+    - article [ref=e76]:
+      - button "Mentor Diagnosticar nível" [ref=e77] [cursor=pointer]:
+        - generic [ref=e78]: Mentor
+        - text: Diagnosticar nível
+      - button "Currículo Escolher conceito" [ref=e79] [cursor=pointer]:
+        - generic [ref=e80]: Currículo
+        - text: Escolher conceito
+      - button "Arquiteto Criar mini-projeto" [ref=e81] [cursor=pointer]:
+        - generic [ref=e82]: Arquiteto
+        - text: Criar mini-projeto
+      - button "Implementador Implementar versão 1" [ref=e83] [cursor=pointer]:
+        - generic [ref=e84]: Implementador
+        - text: Implementar versão 1
+      - button "Testes Criar testes" [ref=e85] [cursor=pointer]:
+        - generic [ref=e86]: Testes
+        - text: Criar testes
+      - button "Métricas Rodar métricas" [ref=e87] [cursor=pointer]:
+        - generic [ref=e88]: Métricas
+        - text: Rodar métricas

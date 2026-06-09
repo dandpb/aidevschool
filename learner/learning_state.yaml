@@ -1,0 +1,30 @@
+# Ágora Continuum — estado do learning gate (sistema "agora-continuum").
+# Contrato: o APRENDIZ tenta e é avaliado (com evidência executável) ANTES de a IA
+# implementar a unidade. Espelha .mavis/plans/plan.yaml > learning_gate.
+version: 1
+system: agora-continuum
+
+learner:
+  level: intermediario          # iniciante | intermediario | avancado
+  focus: robustness             # foco pedagógico atual
+  languages: [go, rust, node]
+
+active_unit:
+  id: U0-sonda-rate-limiter-robustness
+  project: 01_rate_limiter
+  state: presenting             # presenting -> practicing -> evaluating -> mastered
+  retry_count: 0
+  retry_limit: 3
+  unblock_condition: learner_attempt_evaluated
+  required_before_implementation: true
+  diagnostic_file: curriculum/01_rate_limiter/docs/diagnostic.md
+  empirical_gate:
+    require_executable_evidence: true
+    min_coverage: 0.80          # cobertura mínima do núcleo
+    mutation_min: 0.60          # mutation score mínimo quando aplicável
+
+gate:
+  implementation_blocked: true  # vira false quando unblock_condition for satisfeita
+
+# Append {id, mastered_at, evidence} conforme unidades são concluídas.
+units_log: []

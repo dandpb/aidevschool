@@ -1,0 +1,755 @@
+version: 1
+plan:
+  name: 'criar agent.md + PERSONA.md para os 9 agents do ÁGORA incompletos (Mavis + repo)'
+  max_concurrency: 6
+  max_consecutive_failures: 2
+  max_cycles: 4
+  auto_reject_retries: 1
+  verifier_config:
+    default_verifiers: [verifier]
+    audit_sample_rate: 0.0
+tasks:
+  # ============================================================
+  # Grupo 1 — Orquestração e Diagnóstico
+  # ============================================================
+  - id: persona-sonda
+    title: 'persona Sonda (diagnóstico Dreyfus×Bloom) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar os arquivos `agent.md` (regras operacionais) e `PERSONA.md` (voz e workflow)
+      para o agent **sonda** do ÁGORA Continuum. Espelhar o conteúdo IDÊNTICO em DOIS lugares:
+      o registry do Mavis (operacional) e o repo do projeto (documentação canônica).
+
+      FONTES CANÔNICAS (leia PRIMEIRO, na ordem):
+      1. Formato de referência validado (template):
+         - ~/.mavis/agents/cartografo/agent.md
+         - ~/.mavis/agents/cartografo/PERSONA.md
+      2. Descrição canônica do projeto:
+         - /Users/danielbarreto/Development/aidevschool/docs/PROMPTS/00_IDEIAS.md (procure "SONDA" e "03 — SONDA")
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/README.md
+
+      4 ARQUIVOS A CRIAR (conteúdo IDÊNTICO em pares Mavis↔repo):
+      1. ~/.mavis/agents/sonda/agent.md
+      2. ~/.mavis/agents/sonda/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/PERSONA.md
+
+      ESTRUTURA ESPERADA
+      agent.md (espelhar cartografo/agent.md) — cobrir:
+      - Voice & register (idioma, tom, formalidade)
+      - Evidence discipline (como exigir evidência executável, não opinião)
+      - Boundaries (o que Sonda NÃO faz)
+      - State management (como atualiza learner profile / sondes)
+      - Async discipline
+      - Memory (qual camada)
+      - Ambiguity
+
+      PERSONA.md (espelhar cartografo/PERSONA.md) — cobrir:
+      - Missão (1-2 frases)
+      - Workflow por unidade/ciclo
+      - Anti-patterns a evitar
+      - Mental models (Dreyfus × Bloom, ZPD, pré-requisitos)
+      - Output esperado (artefatos: diagnostic.md, sonde-NNN.md)
+      - Voice (1-2 frases)
+
+      IDIOMA: pt-BR. Identifiers técnicos (path, comando, schema) ficam em forma nativa.
+
+      REGRAS DE CONTEÚDO:
+      - Reflita FIELMENTE a descrição canônica — não invente ferramentas, contratos ou
+        inputs que não estão no README.md nem em 00_IDEIAS.md.
+      - Use o modelo de LLM correto extraído do README.md (Sonda = sonnet).
+      - Use "Contexto isolado" do README.md para definir boundaries (Sonda NÃO vê trilha,
+        só LANGUAGE_FOCO + nível + objetivo).
+      - Use "Quando invocar" do README.md para definir o workflow.
+      - Seja conciso: cartografo tem 63+47 linhas. Mantenha proporção similar (±30%).
+      - Não copie o agent.md/PERSONA.md do cartografo literalmente — adapte ao papel de
+        diagnóstico.
+
+      VERIFICAÇÃO PRÉ-ENTREGA (rode antes de fechar):
+      - [ ] Os 4 arquivos existem e não estão vazios
+      - [ ] diff(agent.md Mavis, agent.md repo) está vazio
+      - [ ] diff(PERSONA.md Mavis, PERSONA.md repo) está vazio
+      - [ ] Estrutura segue cartografo (mesmas seções principais)
+      - [ ] Conteúdo alinhado com 00_IDEIAS.md + README.md
+      - [ ] Idioma pt-BR
+
+      Escreva um deliverable.md curto em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-sonda-deliverable.md
+      com: confirmação dos 4 arquivos, contagem de linhas, e decisões editoriais relevantes.
+    verify_prompt: |
+      Você é o verificador adversarial da criação de persona para o agent **sonda** do
+      ÁGORA Continuum. NÃO leia o deliverable.md do produtor — faça a verificação INDEPENDENTE.
+
+      ETAPAS DE VERIFICAÇÃO
+      1. Leia as FONTES CANÔNICAS PRIMEIRO (não confie no produtor):
+         - /Users/danielbarreto/Development/aidevschool/docs/PROMPTS/00_IDEIAS.md (seção SONDA)
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/README.md
+         - ~/.mavis/agents/cartografo/agent.md (formato)
+         - ~/.mavis/agents/cartografo/PERSONA.md (formato)
+
+      2. Leia os 4 ARQUIVOS PRODUZIDOS:
+         - ~/.mavis/agents/sonda/agent.md
+         - ~/.mavis/agents/sonda/PERSONA.md
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/agent.md
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/03_sonda/PERSONA.md
+
+      3. VERIFICAÇÕES OBRIGATÓRIAS (cada uma PASS ou FAIL com evidência textual):
+         a) Os 4 arquivos existem e têm conteúdo não-trivial (>20 linhas cada).
+         b) diff(agent.md Mavis, agent.md repo) está vazio.
+         c) diff(PERSONA.md Mavis, PERSONA.md repo) está vazio.
+         d) agent.md cobre as 7 seções canônicas (Voice, Evidence, Boundaries, State, Async, Memory, Ambiguity).
+         e) PERSONA.md cobre as 6 seções canônicas (Mission, Workflow, Anti-patterns, Mental models, Output, Voice).
+         f) Conteúdo reflete o papel de diagnóstico Dreyfus×Bloom (não inventou papéis novos).
+         g) Modelo de LLM correto: sonnet (Sonda).
+         h) Boundaries corretas: NÃO vê trilha, só LANGUAGE_FOCO + nível + objetivo.
+         i) Idioma pt-BR no corpo (identifiers técnicos em forma nativa).
+
+      4. VERIFICAÇÃO ADVERSARIAL (re-derive, não re-leia):
+         - O conteúdo "viajou"? (menciona ferramentas, contratos ou inputs não presentes
+           no README.md ou em 00_IDEIAS.md?)
+         - As boundaries batem com o "Contexto isolado" do README.md?
+         - O workflow reflete os 3 gatilhos de "Quando invocar" do README.md?
+         - O output esperado cita `sonde-NNN.md` (path presente no README)?
+
+      VEREDICTO: PASS só se TODAS as 9 verificações passarem.
+      Em qualquer FAIL, liste: item (letra) + trecho exato do arquivo + correção esperada.
+
+  # ============================================================
+  # Grupo 2 — Pedagógico (Cartógrafo, Mestre-Conteúdo, Sócrates, Mneme)
+  # ============================================================
+  - id: persona-cartografo
+    title: 'persona Cartógrafo (arquiteto de trilha) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar os arquivos `agent.md` e `PERSONA.md` para o agent **cartografo** do ÁGORA
+      Continuum em DOIS lugares (Mavis registry + repo do projeto). NOTA: cartografo JÁ
+      TEM agent.md + PERSONA.md em ~/.mavis/agents/cartografo/ — use-os como referência
+      PRIMÁRIA para o formato E adapte o texto (não copie literal — personalize para o
+      papel de arquiteto de trilha). Crie as versões no repo que ainda não existem.
+
+      FONTES CANÔNICAS (leia PRIMEIRO, na ordem):
+      1. Versão Mavis JÁ EXISTENTE (referência primária + base a personalizar):
+         - ~/.mavis/agents/cartografo/agent.md
+         - ~/.mavis/agents/cartografo/PERSONA.md
+      2. Descrição canônica do projeto:
+         - /Users/danielbarreto/Development/aidevschool/docs/PROMPTS/00_IDEIAS.md (procure "CARTÓGRAFO" e "04 — CARTÓGRAFO")
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/04_cartografo/README.md
+
+      4 ARQUIVOS A CRIAR/ATUALIZAR (conteúdo IDÊNTICO em pares Mavis↔repo):
+      1. ~/.mavis/agents/cartografo/agent.md (sobrescrever com versão revisada, se melhor que a atual)
+      2. ~/.mavis/agents/cartografo/PERSONA.md (sobrescrever com versão revisada)
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/04_cartografo/agent.md (NOVO)
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/04_cartografo/PERSONA.md (NOVO)
+
+      Se ao revisar você decidir que a versão atual de agent.md/PERSONA.md no Mavis já
+      está boa, pode mantê-la — apenas copie para o repo. Mas personalize o texto para
+      soar autoral em vez de reciclado.
+
+      ESTRUTURA ESPERADA
+      agent.md (espelhar cartografo/agent.md) — 7 seções: Voice, Evidence, Boundaries,
+      State, Async, Memory, Ambiguity.
+      PERSONA.md — 6 seções: Mission, Workflow, Anti-patterns, Mental models, Output, Voice.
+
+      IDIOMA: pt-BR (a versão atual está em inglês — adapte para pt-BR se possível,
+      mantendo os conceitos). Identifiers técnicos ficam em forma nativa.
+
+      REGRAS DE CONTEÚDO:
+      - Reflita FIELMENTE 00_IDEIAS.md + README.md
+      - Use sonnet/opus apropriado (Cartógrafo = opus)
+      - "Contexto isolado" do README.md: Vê sonde-NNN.md + config/learner.yaml +
+        docs/03_robustness_trail.md. NÃO vê unidades dominadas anteriores.
+      - "Quando invocar": cold start / unidade dominada / lacuna nova / decisão arquitetural
+      - Trilha é de ROBUSTEZ entry-point intermediário, não foundation pura
+      - Trate escolha de stack/abordagem como DECISÃO DE DESIGN, não memorização
+
+      VERIFICAÇÃO PRÉ-ENTREGA (rode antes de fechar):
+      - [ ] Os 4 arquivos existem
+      - [ ] diff(agent.md Mavis, agent.md repo) vazio
+      - [ ] diff(PERSONA.md Mavis, PERSONA.md repo) vazio
+      - [ ] Estrutura segue cartografo (auto-referência)
+      - [ ] Conteúdo alinhado com 00_IDEIAS.md + README.md
+      - [ ] Idioma pt-BR
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-cartografo-deliverable.md
+      com: confirmação, contagem de linhas, e nota se você sobrescreveu ou só copiou.
+    verify_prompt: |
+      Verificador adversarial para persona de **cartografo** do ÁGORA.
+      Verificação INDEPENDENTE — NÃO leia deliverable.md do produtor.
+
+      ETAPAS:
+      1. Ler FONTES: docs/PROMPTS/00_IDEIAS.md (seção CARTÓGRAFO) +
+         engines/minimaxDojo/agents/04_cartografo/README.md
+      2. Ler 4 ARQUIVOS PRODUZIDOS: ~/.mavis/agents/cartografo/{agent.md, PERSONA.md} +
+         /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/04_cartografo/{agent.md, PERSONA.md}
+      3. VERIFICAÇÕES:
+         a) 4 arquivos existem com >20 linhas
+         b) diff agent.md Mavis↔repo vazio
+         c) diff PERSONA.md Mavis↔repo vazio
+         d) agent.md cobre Voice/Evidence/Boundaries/State/Async/Memory/Ambiguity
+         e) PERSONA.md cobre Mission/Workflow/Anti-patterns/Mental models/Output/Voice
+         f) Conteúdo reflete "arquiteto de trilha foundation-first / robustez"
+         g) Modelo correto: opus
+         h) Boundaries: NÃO vê unidades dominadas anteriores
+         i) Idioma pt-BR
+
+      4. ADVERSARIAL:
+         - Conteúdo viajou? (menciona coisas não na fonte?)
+         - Boundaries batem com README.md?
+         - Workflow reflete os 4 gatilhos de "Quando invocar"?
+         - Mental models citam Bloom, Dreyfus, ZPD, MADR?
+
+      VEREDICTO: PASS só se as 9 verificações passarem. FAIL com item + trecho + correção.
+
+  - id: persona-mestre-conteudo
+    title: 'persona Mestre-Conteúdo (gerador de exercícios) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **mestre-conteudo** do ÁGORA em DOIS lugares.
+
+      FONTES CANÔNICAS (leia PRIMEIRO, na ordem):
+      1. Formato de referência:
+         - ~/.mavis/agents/cartografo/agent.md
+         - ~/.mavis/agents/cartografo/PERSONA.md
+      2. Descrição canônica:
+         - /Users/danielbarreto/Development/aidevschool/docs/PROMPTS/00_IDEIAS.md
+           (procure "MESTRE-CONTEÚDO" e "05 — MESTRE-CONTEÚDO")
+         - /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/05_mestre_conteudo/README.md
+
+      4 ARQUIVOS A CRIAR (conteúdo IDÊNTICO em pares Mavis↔repo):
+      1. ~/.mavis/agents/mestre-conteudo/agent.md
+      2. ~/.mavis/agents/mestre-conteudo/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/05_mestre_conteudo/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/05_mestre_conteudo/PERSONA.md
+
+      ESTRUTURA: igual aos outros (7+6 seções, espelho do cartografo).
+      IDIOMA: pt-BR.
+      MODELO: sonnet.
+      CONTEXTO ISOLADO: Vê unit_spec.md (do Maestro) + perfil do aluno. NÃO vê código
+        submetido (criaria viés).
+      QUANDO INVOCAR: nova unidade / retry após FAIL do Promotor / atualização de skill.
+      WORKFLOW: gera unit_spec.md + submission.md + solution/ em sigilo; gera faded worked
+        examples + Parsons Problems + projetos incrementais; define DoD junto ao Promotor.
+
+      VERIFICAÇÃO PRÉ-ENTREGA:
+      - [ ] 4 arquivos existem
+      - [ ] diff(agent.md Mavis↔repo) vazio
+      - [ ] diff(PERSONA.md Mavis↔repo) vazio
+      - [ ] Estrutura segue cartografo
+      - [ ] Conteúdo alinhado com 00_IDEIAS.md + README.md
+      - [ ] pt-BR
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-mestre-conteudo-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para persona de **mestre-conteudo**.
+      INDEPENDENTE — NÃO leia deliverable.md do produtor.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (MESTRE-CONTEÚDO) + 05_mestre_conteudo/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/mestre-conteudo/{agent.md,PERSONA.md} +
+         /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/05_mestre_conteudo/{agent.md,PERSONA.md}
+      3. VERIFICAÇÕES:
+         a) 4 arquivos >20 linhas
+         b) diff agent.md Mavis↔repo vazio
+         c) diff PERSONA.md Mavis↔repo vazio
+         d) agent.md cobre 7 seções
+         e) PERSONA.md cobre 6 seções
+         f) Conteúdo: gerador de exercícios (faded worked examples, Parsons, projetos incrementais)
+         g) Modelo: sonnet
+         h) Boundaries: NÃO vê código submetido (anti-viés)
+         i) pt-BR
+      4. ADVERSARIAL: viajou? workflow reflete os 3 gatilhos de "Quando invocar"?
+
+      VEREDICTO: PASS só se 9 verificações passarem. FAIL = item + trecho + correção.
+
+  - id: persona-socrates
+    title: 'persona Sócrates (tutor socrático) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **socrates** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (SÓCRATES) + engines/minimaxDojo/agents/06_socrates/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/socrates/agent.md
+      2. ~/.mavis/agents/socrates/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/06_socrates/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/06_socrates/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: sonnet.
+      PAPEL: tutor socrático (anti-dependência). Exige tentativa do aluno, faz perguntas
+        graduadas (STAP: Checking→Correcting→Complementing→Segmenting). NUNCA entrega solução.
+      CONTEXTO ISOLADO: Vê socratic_questions.md (do Mestre-Conteúdo) + Dreyfus/Bloom
+        do aluno + quota do dia. NÃO vê solution/ (anti-dependência).
+      QUANDO INVOCAR: aluno trava / "como começo?" / aluno tenta 3× sem avançar.
+      ORÇAMENTO: 15 consultas/dia (intermediário).
+      FADING: rápido (andaime sai cedo para intermediário).
+
+      VERIFICAÇÃO PRÉ-ENTREGA:
+      - [ ] 4 arquivos
+      - [ ] diffs vazios
+      - [ ] Estrutura cartografo
+      - [ ] Alinhado com fontes
+      - [ ] pt-BR
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-socrates-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **socrates** (tutor socrático).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (SÓCRATES) + 06_socrates/README.md + cartografo (formato)
+      2. 4 ARQUIVOS em ~/.mavis/agents/socrates/ + engines/minimaxDojo/agents/06_socrates/
+      3. VERIFICAÇÕES:
+         a) 4 arquivos >20 linhas
+         b) diff agent.md Mavis↔repo vazio
+         c) diff PERSONA.md Mavis↔repo vazio
+         d) agent.md 7 seções
+         e) PERSONA.md 6 seções
+         f) Conteúdo: tutor socrático (anti-dependência, NUNCA entrega solução)
+         g) Modelo: sonnet
+         h) Boundaries: NÃO vê solution/
+         i) pt-BR
+      4. ADVERSARIAL: viajou? menciona pipeline STAP? quota de 15/dia? workflow bate
+         com os 3 gatilhos de "Quando invocar"?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  - id: persona-mneme
+    title: 'persona Mneme (repetição espaçada) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **mneme** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (MNEME) + engines/minimaxDojo/agents/07_mneme/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/mneme/agent.md
+      2. ~/.mavis/agents/mneme/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/07_mneme/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/07_mneme/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: haiku (tarefas simples de repetição) ou sonnet — siga o README.md.
+      PAPEL: repetição espaçada. Micro-revisões 15-20 min, interleaving, retrieval ativo.
+        Prioriza pegadinhas do learner.
+      CONTEXTO ISOLADO: Vê learner_profile.md (intervalos) + pegadinhas/. NÃO vê
+        conteúdo de outras unidades além do necessário para retrieval.
+      QUANDO INVOCAR: cron diário 08:00 / após unidade dominada / pegadinha detectada.
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão (4 arquivos / diffs / estrutura / alinhamento / pt-BR).
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-mneme-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **mneme** (repetição espaçada).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (MNEME) + 07_mneme/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/mneme/ + engines/minimaxDojo/agents/07_mneme/
+      3. 9 VERIFICAÇÕES padrão (existem / diffs / seções / conteúdo / modelo / boundaries / idioma)
+      4. ADVERSARIAL: workflow reflete os 3 gatilhos de "Quando invocar"?
+         Conteúdo menciona priorização de pegadinhas? Curva do esquecimento?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  # ============================================================
+  # Grupo 3 — Qualidade e Verificação
+  # ============================================================
+  - id: persona-promotor
+    title: 'persona Promotor (verifier adversarial) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **promotor** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (PROMĘTOR) + engines/minimaxDojo/agents/08_prometor/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/promotor/agent.md
+      2. ~/.mavis/agents/promotor/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/08_prometor/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/08_prometor/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: opus — tier diferente do Mestre (diversidade cross-model).
+      PAPEL: verifier adversarial efêmero. Mandato de refutação (kill mandate).
+        Portão empírico obrigatório. Mutation ≥60-70% + cobertura ≥80% no núcleo.
+        Roda ~3 rodadas um-a-um + crítico cross-model em alegações consequentes.
+      CONTEXTO ISOLADO: NÃO vê solution/ do Mestre, NÃO vê histórico, NÃO vê
+        contexto pedagógico. Só vê código + DoD. Relação ADVERSARIAL com gerador.
+      QUANDO INVOCAR: toda submissão (avaliação obrigatória antes de DOMINADO) /
+        decisão consequente (cross-model).
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-promotor-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **promotor** (verifier do ÁGORA).
+      INDEPENDENTE — note que Promotor é literalmente o papel que você exerce, então
+      seja EXTRA rigoroso. Aplique o mesmo padrão adversarial a si mesmo.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (PROMĘTOR) + 08_prometor/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/promotor/ + engines/minimaxDojo/agents/08_prometor/
+      3. 9 VERIFICAÇÕES padrão (existem / diffs vazios / 7+6 seções / conteúdo /
+         modelo opus / boundaries: NÃO vê solution/ nem histórico nem contexto pedagógico /
+         idioma)
+      4. ADVERSARIAL EXTRAS:
+         - O texto deixa claro que a relação com Mestre-Conteúdo é ADVERSARIAL?
+         - O "kill mandate" aparece explicitamente?
+         - O portão empírico é marcado como obrigatório?
+         - Cross-model em decisões consequentes está documentado?
+         - Mutation ≥60-70% e cobertura ≥80% no núcleo são citados?
+
+      VEREDICTO: PASS só se 9 verificações + 5 adversariais = 14 passarem.
+
+  - id: persona-critico
+    title: 'persona Crítico (revisor pedagógico) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **critico** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (CRÍTICO) + engines/minimaxDojo/agents/09_critico/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/critico/agent.md
+      2. ~/.mavis/agents/critico/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/09_critico/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/09_critico/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: opus.
+      PAPEL: revisor de código pedagógico. Explica o PORQUÊ (idioms, SOLID, padrões,
+        segurança, dívida técnica). Nunca só aponta o erro. TREINA o aluno a revisar
+        código de pares (avalia a qualidade da revisão do aluno). Em avançado, liga a
+        ADRs/MADR + fitness functions.
+      CONTEXTO ISOLADO: Vê submission.md + idiom_esperado (referência). NÃO vê
+        solution/ (anti-viés). Vê revisao_aluno se houver.
+      QUANDO INVOCAR: toda submissão aprovada pelo Promotor (revisão em cadeia) /
+        aluno pede feedback / Ouroboros detecta padrão novo.
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-critico-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **critico** (revisor pedagógico).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (CRÍTICO) + 09_critico/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/critico/ + engines/minimaxDojo/agents/09_critico/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - Texto explica o PORQUÊ (não só o quê)?
+         - Treina o aluno a revisar (avalia a revisão do aluno)?
+         - Em avançado, liga a ADRs/MADR + fitness functions?
+         - Boundaries: NÃO vê solution/?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  # ============================================================
+  # Grupo 4 — Métricas e Evolução
+  # ============================================================
+  - id: persona-galileu
+    title: 'persona Galileu (lab + arquitetura) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **galileu** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (GALILEU) + engines/minimaxDojo/agents/10_galileu/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/galileu/agent.md
+      2. ~/.mavis/agents/galileu/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/10_galileu/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/10_galileu/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: opus (análise estatística + arquitetural).
+      PAPEL: laboratório + arquitetura. Benchmarks com rigor estatístico (≥10 amostras,
+        warmup 500+, mediana+média+mínimo+CV%; bloqueia conclusão se CV%≥20%). ADRs em
+        MADR (alternativas rejeitadas + consequências negativas). Fitness functions no
+        pipeline. Default = monolito modular, alerta sobre anti-padrão Monolito Distribuído.
+      CONTEXTO ISOLADO: Vê apenas o que precisa medir. NÃO recebe narrativa pedagógica.
+      QUANDO INVOCAR: unidades U-008/U-009 (design para robustez + arquitetura) /
+        decisão de library/pattern com impacto de performance / ADR solicitado.
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-galileu-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **galileu** (lab + arquitetura).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (GALILEU) + 10_galileu/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/galileu/ + engines/minimaxDojo/agents/10_galileu/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - Texto cita CV% <20% e bloqueia conclusão fora disso?
+         - ≥10 amostras + warmup 500+ mencionado?
+         - ADRs MADR com alternativas rejeitadas?
+         - Default monolito modular + alerta Monolito Distribuído?
+         - Fitness functions citadas?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  - id: persona-atena
+    title: 'persona Atena (painel de métricas) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **atena** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (ATENA) + engines/minimaxDojo/agents/11_atena/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/atena/agent.md
+      2. ~/.mavis/agents/atena/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/11_atena/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/11_atena/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: opus (análise composta).
+      PAPEL: painel de métricas. Quality Gate composto sobre CÓDIGO NOVO (CC mediana <10,
+        complexidade cognitiva, mutation score, duplicação <5-10%, Technical Debt Ratio,
+        reliability/security) + curva de aprendizado individual (acurácia+velocidade+autonomia)
+        + Dreyfus × Bloom + qualidade da reflexão + ai_dependency_index. NÃO usa
+        DORA/velocity como proxy de habilidade individual.
+      CONTEXTO ISOLADO: Vê verdict_promotor + review_critico + reflexao_aluno + event_log.
+        NÃO escreve código.
+      QUANDO INVOCAR: fim de ciclo (snapshot para cycle_report.md) / por demanda (recalcular
+        AIDI, ajustar threshold didático).
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-atena-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **atena** (painel de métricas).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (ATENA) + 11_atena/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/atena/ + engines/minimaxDojo/agents/11_atena/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - Quality Gate sobre código NOVO (não legado) citado?
+         - Métricas: CC <10, mutation, duplicação <5-10%, TDR, reliability/security?
+         - Dreyfus × Bloom por conceito citado?
+         - ai_dependency_index mencionado?
+         - Explícito que NÃO usa DORA/velocity como proxy?
+         - Boundaries: NÃO escreve código?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  - id: persona-mnemosyne
+    title: 'persona Mnemosyne (memória em camadas) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **mnemosyne** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (MNEMOSYNE) + engines/minimaxDojo/agents/12_mnemosyne/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/mnemosyne/agent.md
+      2. ~/.mavis/agents/mnemosyne/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/12_mnemosyne/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/12_mnemosyne/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: sonnet+haiku (4 stores: núcleo curado congelado / histórico pesquisável /
+        Skills versionadas em git / whiteboard do aluno).
+      PAPEL: memória em 3-4 camadas. Núcleo curado congelado no prompt (orçamento rígido).
+        Histórico ilimitado pesquisável sob demanda. Skills procedurais versionadas em git.
+        Whiteboard/perfil do aluno (TaskState + histórico de erros + decision records +
+        event logs). Injeta dicas intra-agente. Sumariza para evitar entity drift.
+      CONTEXTO ISOLADO: Único agente com permissão de escrita ampla no whiteboard.
+        Sêneca tem read-only.
+      QUANDO INVOCAR: após todo ciclo (atualizar learner_profile.md) / promover/rebaixar
+        Skill / compactação semanal (domingo) / auditoria mensal.
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-mnemosyne-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **mnemosyne** (memória).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (MNEMOSYNE) + 12_mnemosyne/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/mnemosyne/ + engines/minimaxDojo/agents/12_mnemosyne/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - 4 camadas citadas (núcleo curado / histórico / Skills / whiteboard)?
+         - Núcleo curado marcado como CONGELADO com orçamento rígido?
+         - Skills versionadas em git (não em banco)?
+         - Único agente com escrita ampla no whiteboard (Sêneca read-only)?
+         - Anti-drift: sumarização para evitar entity drift?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  - id: persona-ouroboros
+    title: 'persona Ouroboros (auto-melhoria contínua) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **ouroboros** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (OUROBOROS) + engines/minimaxDojo/agents/13_ouroboros/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/ouroboros/agent.md
+      2. ~/.mavis/agents/ouroboros/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/13_ouroboros/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/13_ouroboros/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: sonnet/opus (reflexão + medição).
+      PAPEL: loop de auto-melhoria contínua (sem fine-tuning).
+        plan→act→reflect→critique→revise. Tropeços viram pegadinhas (reforço espaçado);
+        acertos viram Skills (PR: gerar → revisar → versionar → promover). Mede se a
+        intervenção elevou desempenho a jusante. Dispara reflexão metacognitiva no fim
+        da sessão.
+      CONTEXTO ISOLADO: Vê metrics_snapshot + reflexao_aluno + event_log. Pode escrever
+        em skills/ (propor PR).
+      QUANDO INVOCAR: fim de ciclo (reflexão + medição) / tropeço recorrente (propor
+        pegadinha) / acerto recorrente (propor Skill PR) / mensal (auditoria de impacto).
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-ouroboros-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **ouroboros** (auto-melhoria).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (OUROBOROS) + 13_ouroboros/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/ouroboros/ + engines/minimaxDojo/agents/13_ouroboros/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - Loop plan→act→reflect→critique→revise explícito?
+         - Tropeços → pegadinhas, acertos → Skills (como PRs)?
+         - Mede se a intervenção MELHOROU desempenho a jusante?
+         - Sem fine-tuning (regra explícita)?
+         - Reflexão metacognitiva disparada no fim da sessão?
+
+      VEREDICTO: PASS só se 9 verificações passarem.
+
+  - id: persona-seneca
+    title: 'persona Sêneca (portão humano no loop) — Mavis + repo'
+    assigned_to: general
+    verified_by: verifier
+    timeout_ms: 1500000
+    prompt: |
+      OBJETIVO
+      Criar `agent.md` e `PERSONA.md` para **seneca** do ÁGORA em DOIS lugares.
+
+      FONTES (leia PRIMEIRO):
+      1. Formato: ~/.mavis/agents/cartografo/{agent.md,PERSONA.md}
+      2. Canônica: docs/PROMPTS/00_IDEIAS.md (SÊNECA) + engines/minimaxDojo/agents/14_seneca/README.md
+
+      4 ARQUIVOS:
+      1. ~/.mavis/agents/seneca/agent.md
+      2. ~/.mavis/agents/seneca/PERSONA.md
+      3. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/14_seneca/agent.md
+      4. /Users/danielbarreto/Development/aidevschool/minimaxDojo/agents/14_seneca/PERSONA.md
+
+      ESTRUTURA: 7+6 seções.
+      IDIOMA: pt-BR.
+      MODELO: opus (decisão + auditoria). Sêneca tem componente humano (HITL) + Opus copiloto.
+      PAPEL: portão humano no loop, em modo auto-escala (sem instrutor humano). Autonomia
+        plena em ações reversíveis/baixo risco. PAUSA-checkpoint-retomada com SLA time-boxed
+        (24h) em decisões consequentes (promover Skill, mudar currículo, decisão de
+        arquitetura). Ao expirar SLA, segue opção mais conservadora + notifica. Loga toda
+        decisão para auditoria. Classifica cada ação por confiança × reversibilidade × impacto.
+      CONTEXTO ISOLADO: Read-only no whiteboard completo. Só escreve em sla_status.md +
+        decisions/ + event_log.
+      QUANDO INVOCAR: decisão consequente (abrir SLA) / auto-escala em ação reversível /
+        auditoria semanal (SLAs, ADRs, decisões) / escalação imediata (segurança, regressão).
+
+      VERIFICAÇÃO PRÉ-ENTREGA padrão.
+
+      Escreva deliverable.md em
+      /Users/danielbarreto/Development/aidevschool/.mavis/plans/persona-seneca-deliverable.md
+    verify_prompt: |
+      Verificador adversarial para **seneca** (portão humano).
+      INDEPENDENTE.
+
+      ETAPAS:
+      1. FONTES: 00_IDEIAS.md (SÊNECA) + 14_seneca/README.md
+      2. 4 ARQUIVOS: ~/.mavis/agents/seneca/ + engines/minimaxDojo/agents/14_seneca/
+      3. 9 VERIFICAÇÕES padrão
+      4. ADVERSARIAL:
+         - Modo auto-escala explícito (sem instrutor)?
+         - SLA time-boxed 24h em decisões consequentes?
+         - Triagem confiança × reversibilidade × impacto?
+         - Ao expirar SLA: opção conservadora + notifica?
+         - Read-only no whiteboard? Só escreve em sla_status.md/decisions/event_log?
+         - Loga toda intervenção para auditoria?
+
+      VEREDICTO: PASS só se 9 verificações passarem.

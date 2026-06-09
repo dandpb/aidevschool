@@ -1,0 +1,37 @@
+- main [ref=e567]:
+  - complementary "Navegação principal" [ref=e568]:
+    - generic [ref=e569]:
+      - generic [ref=e570]: CD
+      - generic [ref=e571]:
+        - strong [ref=e572]: codexDojo
+        - generic [ref=e573]: agent learning lab
+    - navigation [ref=e574]:
+      - button "Painel" [ref=e575] [cursor=pointer]
+      - button "Agentes" [ref=e576] [cursor=pointer]
+      - button "Ciclo" [ref=e577] [cursor=pointer]
+      - button "Roadmap" [ref=e578] [cursor=pointer]
+      - button "Projeto 01" [ref=e579] [cursor=pointer]
+  - region "Roadmap de projetos" [ref=e581]:
+    - generic [ref=e582]:
+      - paragraph [ref=e583]: Trilha viva
+      - heading "Projetos incrementais que viram sistemas robustos" [level=2] [ref=e584]
+    - generic [ref=e585]:
+      - button "Todos" [ref=e586] [cursor=pointer]
+      - button "Fundamentos" [ref=e587] [cursor=pointer]
+      - button "Aplicações" [ref=e588] [cursor=pointer]
+      - button "Dados" [ref=e589] [cursor=pointer]
+      - button "Escala" [ref=e590] [cursor=pointer]
+      - button "IA" [ref=e591] [cursor=pointer]
+    - article [ref=e593]:
+      - generic [ref=e594]:
+        - generic [ref=e595]: P10
+        - generic [ref=e596]: Nível 5
+      - heading "Agente de IA para análise das tarefas" [level=3] [ref=e597]
+      - paragraph [ref=e598]: Usar IA como par de revisão com avaliação objetiva.
+      - generic [ref=e599]:
+        - generic [ref=e600]:
+          - term [ref=e601]: Linguagem
+          - definition [ref=e602]: TypeScript
+        - generic [ref=e603]:
+          - term [ref=e604]: Arquitetura
+          - definition [ref=e605]: workflow com ferramentas + memória curta

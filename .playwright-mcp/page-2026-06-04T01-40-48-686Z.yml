@@ -1,0 +1,71 @@
+- main [ref=e89]:
+  - complementary "Navegação principal" [ref=e90]:
+    - generic [ref=e91]:
+      - generic [ref=e92]: CD
+      - generic [ref=e93]:
+        - strong [ref=e94]: codexDojo
+        - generic [ref=e95]: agent learning lab
+    - navigation [ref=e96]:
+      - button "Painel" [ref=e97] [cursor=pointer]
+      - button "Agentes" [ref=e98] [cursor=pointer]
+      - button "Ciclo" [ref=e99] [cursor=pointer]
+      - button "Roadmap" [ref=e100] [cursor=pointer]
+      - button "Projeto 01" [ref=e101] [cursor=pointer]
+  - region "Agentes do codexDojo" [ref=e103]:
+    - generic [ref=e104]:
+      - paragraph [ref=e105]: Equipe multiagente
+      - heading "Responsabilidades claras, saídas verificáveis" [level=2] [ref=e106]
+    - generic [ref=e107]:
+      - button "Mentor Adapta o aprendizado ao nível atual" [ref=e108] [cursor=pointer]:
+        - generic [ref=e109]: Mentor
+        - generic [ref=e110]: Adapta o aprendizado ao nível atual
+      - button "Currículo Constrói a trilha progressiva" [ref=e111] [cursor=pointer]:
+        - generic [ref=e112]: Currículo
+        - generic [ref=e113]: Constrói a trilha progressiva
+      - button "Arquiteto Explica trade-offs e define arquitetura" [ref=e114] [cursor=pointer]:
+        - generic [ref=e115]: Arquiteto
+        - generic [ref=e116]: Explica trade-offs e define arquitetura
+      - button "Implementador Escreve código com boas práticas" [ref=e117] [cursor=pointer]:
+        - generic [ref=e118]: Implementador
+        - generic [ref=e119]: Escreve código com boas práticas
+      - button "Revisor de Código Revisa como engenheiro sênior" [ref=e120] [cursor=pointer]:
+        - generic [ref=e121]: Revisor de Código
+        - generic [ref=e122]: Revisa como engenheiro sênior
+      - button "Testes Cria testes e benchmarks" [ref=e123] [cursor=pointer]:
+        - generic [ref=e124]: Testes
+        - generic [ref=e125]: Cria testes e benchmarks
+      - button "Métricas Mede evolução e compara soluções" [ref=e126] [cursor=pointer]:
+        - generic [ref=e127]: Métricas
+        - generic [ref=e128]: Mede evolução e compara soluções
+      - button "DevOps Ensina entrega e operação" [ref=e129] [cursor=pointer]:
+        - generic [ref=e130]: DevOps
+        - generic [ref=e131]: Ensina entrega e operação
+      - button "Pesquisador Busca práticas e docs oficiais" [ref=e132] [cursor=pointer]:
+        - generic [ref=e133]: Pesquisador
+        - generic [ref=e134]: Busca práticas e docs oficiais
+      - button "Memória Preserva histórico e decisões" [ref=e135] [cursor=pointer]:
+        - generic [ref=e136]: Memória
+        - generic [ref=e137]: Preserva histórico e decisões
+    - article [ref=e138]:
+      - generic [ref=e139]:
+        - generic [ref=e140]: strategy
+        - button "Copiar prompt" [ref=e141] [cursor=pointer]
+      - heading "Mentor" [level=3] [ref=e142]
+      - paragraph [ref=e143]: Transformar cada entrega em explicação, pergunta e próximo desafio.
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - heading "Entradas" [level=4] [ref=e146]
+          - list [ref=e147]:
+            - listitem [ref=e148]: perfil vivo
+            - listitem [ref=e149]: histórico de erros
+            - listitem [ref=e150]: artefatos do projeto
+        - generic [ref=e151]:
+          - heading "Saídas" [level=4] [ref=e152]
+          - list [ref=e153]:
+            - listitem [ref=e154]: briefing de estudo
+            - listitem [ref=e155]: perguntas socráticas
+            - listitem [ref=e156]: lacunas priorizadas
+      - generic [ref=e157]:
+        - text: Gate
+        - paragraph [ref=e158]: Não entrega solução pronta antes de uma tentativa do aluno.
+      - code [ref=e160]: Você é o Mentor do codexDojo. Explique decisões, force raciocínio ativo e gere o próximo desafio menor que comprove a lacuna atual.

@@ -1,0 +1,90 @@
+---
+aluno_id: aluno-001
+criado: 2025-XX-XX
+agente_owner: cronos
+---
+
+# Cron Registry
+
+> **CRONOS** mantém este registro. Cada cron tem 1 dono, 1 gatilho, 1 output esperado.
+
+```yaml
+crons:
+  - id: mneme.daily
+    frequencia: "0 8 * * *"
+    modo: pro
+    dono: mneme
+    sessao: fresh
+    output: whiteboard/mneme_session.md
+    ultima_execucao: null
+    proxima_execucao: 2025-XX-XX 08:00 UTC
+    ativo: true
+
+  - id: ouroboros.reflect
+    frequencia: "fim de cada sessão"
+    modo: lightning
+    dono: ouroboros
+    sessao: same
+    output: cycle_report.md (pergunta de reflexão)
+    ultima_execucao: null
+    ativo: true
+
+  - id: seneca.audit
+    frequencia: "0 20 * * 0"  # domingo 20:00
+    modo: pro
+    dono: seneca
+    sessao: fresh
+    output: whiteboard/cron_audit.md
+    ultima_execucao: null
+    proxima_execucao: 2025-XX-XX 20:00 UTC
+    ativo: true
+
+  - id: mnemosyne.compact
+    frequencia: "0 21 * * 0"  # domingo 21:00
+    modo: pro
+    dono: mnemosyne
+    sessao: fresh
+    output: event_log/events-<semana>.ndjson (consolidado)
+    ultima_execucao: null
+    proxima_execucao: 2025-XX-XX 21:00 UTC
+    ativo: true
+
+  - id: atena.snapshot
+    frequencia: "por ciclo"
+    modo: lightning
+    dono: atena
+    sessao: same
+    output: whiteboard/metrics_snapshot.md
+    ultima_execucao: null
+    ativo: true
+
+  - id: promotor.audit
+    frequencia: "por unidade"
+    modo: pro
+    dono: promotor
+    sessao: fresh
+    output: whiteboard/handoffs/U-NNN.verdict.md
+    ultima_execucao: null
+    ativo: true
+
+  - id: galileu.bench
+    frequencia: "quando unidade exige"
+    modo: pro
+    dono: galileu
+    sessao: fresh
+    output: whiteboard/benchmarks/U-NNN.bench.md
+    ultima_execucao: null
+    ativo: false    # só ativa em U-008/U-009
+```
+
+## Auditoria (CRONOS — semanal)
+
+> Verificar:
+> - Crons ativos vs total
+> - Crons duplicados (0)
+> - Crons órfãos (sem output)
+> - Crons atrasados
+
+---
+
+*Ver [`prompts/per_agent/cronos.md`](../../prompts/per_agent/cronos.md) para o system prompt.*

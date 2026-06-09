@@ -1,0 +1,62 @@
+- main [ref=e358]:
+  - complementary "Navegação principal" [ref=e359]:
+    - generic [ref=e360]:
+      - generic [ref=e361]: CD
+      - generic [ref=e362]:
+        - strong [ref=e363]: codexDojo
+        - generic [ref=e364]: agent learning lab
+    - navigation [ref=e365]:
+      - button "Painel" [ref=e366] [cursor=pointer]
+      - button "Agentes" [ref=e367] [cursor=pointer]
+      - button "Ciclo" [ref=e368] [cursor=pointer]
+      - button "Roadmap" [ref=e369] [cursor=pointer]
+      - button "Projeto 01" [ref=e370] [cursor=pointer]
+  - region "Ciclo operacional" [ref=e372]:
+    - generic [ref=e373]:
+      - paragraph [ref=e374]: Loop contínuo
+      - heading "Pequenos passos, evidência antes de avanço" [level=2] [ref=e375]
+    - generic [ref=e376]:
+      - generic [ref=e377]:
+        - button "01 Diagnosticar nível" [ref=e378] [cursor=pointer]:
+          - generic [ref=e379]: "01"
+          - text: Diagnosticar nível
+        - button "02 Escolher conceito" [ref=e380] [cursor=pointer]:
+          - generic [ref=e381]: "02"
+          - text: Escolher conceito
+        - button "03 Criar mini-projeto" [ref=e382] [cursor=pointer]:
+          - generic [ref=e383]: "03"
+          - text: Criar mini-projeto
+        - button "04 Implementar versão 1" [ref=e384] [cursor=pointer]:
+          - generic [ref=e385]: "04"
+          - text: Implementar versão 1
+        - button "05 Criar testes" [ref=e386] [cursor=pointer]:
+          - generic [ref=e387]: "05"
+          - text: Criar testes
+        - button "06 Rodar métricas" [ref=e388] [cursor=pointer]:
+          - generic [ref=e389]: "06"
+          - text: Rodar métricas
+        - button "07 Revisar código" [ref=e390] [cursor=pointer]:
+          - generic [ref=e391]: "07"
+          - text: Revisar código
+        - button "08 Refatorar" [ref=e392] [cursor=pointer]:
+          - generic [ref=e393]: "08"
+          - text: Refatorar
+        - button "09 Comparar alternativa" [ref=e394] [cursor=pointer]:
+          - generic [ref=e395]: "09"
+          - text: Comparar alternativa
+        - button "10 Registrar aprendizado" [ref=e396] [cursor=pointer]:
+          - generic [ref=e397]: "10"
+          - text: Registrar aprendizado
+      - article [ref=e398]:
+        - generic [ref=e399]:
+          - generic [ref=e400]: Currículo
+          - generic [ref=e401]: 20% validado
+        - heading "Escolher conceito" [level=3] [ref=e402]
+        - generic [ref=e403]:
+          - generic [ref=e404]:
+            - term [ref=e405]: Evidência exigida
+            - definition [ref=e406]: lacuna priorizada
+          - generic [ref=e407]:
+            - term [ref=e408]: Artefato gerado
+            - definition [ref=e409]: unidade desbloqueada
+        - button "Concluir etapa" [ref=e410] [cursor=pointer]

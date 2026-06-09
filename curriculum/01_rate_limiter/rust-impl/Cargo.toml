@@ -1,0 +1,30 @@
+[package]
+name = "rate-limiter-rust"
+version = "0.1.0"
+edition = "2021"
+description = "AI DevSchool Project 01: Token-Bucket Rate Limiter in Rust (axum)"
+license = "MIT"
+
+[lib]
+name = "rate_limiter_rust"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rate-limiter-rust"
+path = "src/main.rs"
+
+[dependencies]
+axum = { version = "0.7.5", features = ["macros", "json"] }
+tokio = { version = "1.38.0", features = ["full"] }
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0.117"
+tower = { version = "0.4.13", features = ["util"] }
+tower-http = { version = "0.5.0", features = ["trace"] }
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+strip = true

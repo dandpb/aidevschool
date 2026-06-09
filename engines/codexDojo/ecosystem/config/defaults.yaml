@@ -1,0 +1,27 @@
+version: 1
+project: codexDojo
+learner:
+  active_focus: TypeScript
+  weekly_time_hours: 5
+  session_cadence: "25-40 min, 4-5x/week"
+learning_gate:
+  requires_attempt_before_solution: true
+  retry_limit: 3
+  mastery_requires_verifier_pass: true
+quality_gates:
+  core_coverage_min: 0.8
+  mutation_score_min: 0.65
+  cyclomatic_complexity_median_max: 10
+  duplication_percent_max: 7
+benchmarks:
+  samples_min: 10
+  warmup_min: 500
+  coefficient_variation_max_percent: 20
+agents:
+  producer_verifier_isolation: true
+  prompt_source: engines/codexDojo/ecosystem/AGENT_PROMPTS.md
+state:
+  agora: learner/learning_state.yaml
+  mavis: .mavis/learning_state.yaml
+  pipeline: learner/pipeline_status.md
+  manifest: engines/codexDojo/ecosystem/MANIFEST.md

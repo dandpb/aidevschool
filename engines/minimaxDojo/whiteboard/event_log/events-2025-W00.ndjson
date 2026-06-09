@@ -1,0 +1,4 @@
+{"ts":"2025-XX-XXT00:00:00Z","agente":"sistema","ev":"whiteboard.created","aluno_id":"aluno-001","payload":{"config":"config/learner.yaml"}}
+{"ts":"2025-XX-XXT00:00:01Z","agente":"mnemosyne","ev":"learner_profile.created","aluno_id":"aluno-001","estado_inicial":{"dreyfus_global":"advanced_beginner","bloom_global":"apply","aidi":0.50}}
+{"ts":"2025-XX-XXT00:00:02Z","agente":"cartografo","ev":"trail.created","unidades_ativas":["U-001","U-002","U-003","U-004","U-005","U-006","U-007","U-008","U-009"],"proxima_unidade":"U-001"}
+{"ts":"2025-XX-XXT00:00:03Z","agente":"cronos","ev":"cron_registry.created","crons_ativos":7}
