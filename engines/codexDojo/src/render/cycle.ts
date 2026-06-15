@@ -1,10 +1,10 @@
-import { cycleStages } from "../data/cycle"
-import { findStage, getCompletionPercent } from "../progress"
+import { getCycleCompletionPercent } from "../cycle"
+import { getCurrentStage, getStages, isStageCompleted } from "../progress"
 import type { AppState } from "../state"
 
 export function renderCycle(state: AppState): string {
-  const selectedStage = findStage(state.selectedStageId)
-  const progress = getCompletionPercent(state.completedStageIds)
+  const selectedStage = getCurrentStage(state)
+  const progress = getCycleCompletionPercent(state.completedStageIds)
 
   return `
     <section class="workbench cycle-view" aria-label="Ciclo operacional">
@@ -15,10 +15,10 @@ export function renderCycle(state: AppState): string {
 
       <div class="cycle-board">
         <div class="timeline">
-          ${cycleStages
+          ${getStages()
             .map((stage, index) => {
               const selected = stage.id === selectedStage.id ? "is-active" : ""
-              const completed = state.completedStageIds.includes(stage.id) ? "is-complete" : ""
+              const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
               return `
                 <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${stage.id}">
                   <span>${String(index + 1).padStart(2, "0")}</span>

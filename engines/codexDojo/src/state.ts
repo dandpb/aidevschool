@@ -1,7 +1,6 @@
-import { agents } from "./data/agents"
-import { cycleStages } from "./data/cycle"
-import { projects } from "./data/projects"
+import { advanceCycle } from "./cycle"
 import { assertNever, type ProjectPhase, type View } from "./domain"
+import { getAgents, getStages } from "./progress"
 
 export type ProjectFilter = ProjectPhase | "all"
 
@@ -22,8 +21,8 @@ export type AppAction =
   | { readonly kind: "setProjectFilter"; readonly filter: ProjectFilter }
   | { readonly kind: "markCopied"; readonly agentId: string | null }
 
-const firstAgent = agents[0]
-const firstStage = cycleStages[0]
+const firstAgent = getAgents()[0]
+const firstStage = getStages()[0]
 
 if (firstAgent === undefined || firstStage === undefined) {
   throw new Error("codexDojo needs at least one agent and one cycle stage.")
@@ -47,7 +46,7 @@ export function reduceState(state: AppState, action: AppAction): AppState {
     case "selectStage":
       return { ...state, selectedStageId: action.stageId, view: "cycle" }
     case "advanceStage":
-      return advanceStage(state)
+      return { ...state, ...advanceCycle(state), view: "cycle" }
     case "setProjectFilter":
       return { ...state, projectFilter: action.filter, view: "roadmap" }
     case "markCopied":
@@ -55,33 +54,4 @@ export function reduceState(state: AppState, action: AppAction): AppState {
     default:
       return assertNever(action)
   }
-}
-
-function advanceStage(state: AppState): AppState {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
-  const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
-  const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
-
-  if (nextStage === undefined) {
-    return state
-  }
-
-  const completed = state.completedStageIds.includes(state.selectedStageId)
-    ? state.completedStageIds
-    : [...state.completedStageIds, state.selectedStageId]
-
-  return {
-    ...state,
-    selectedStageId: nextStage.id,
-    completedStageIds: completed,
-    view: "cycle",
-  }
-}
-
-export function getFilteredProjects(filter: ProjectFilter): readonly (typeof projects)[number][] {
-  if (filter === "all") {
-    return projects
-  }
-
-  return projects.filter((project) => project.phase === filter)
 }

@@ -1,12 +1,6 @@
-import type { View } from "../domain"
-import { assertNever } from "../domain"
 import type { AppState } from "../state"
-import { renderAgents } from "./agents"
-import { renderCycle } from "./cycle"
 import { renderNav } from "./nav"
-import { renderOverview } from "./overview"
-import { renderProject } from "./project"
-import { renderRoadmap } from "./roadmap"
+import { renderView } from "./registry"
 
 export function renderShell(state: AppState): string {
   return `
@@ -26,23 +20,4 @@ export function renderShell(state: AppState): string {
       </div>
     </main>
   `
-}
-
-function renderView(state: AppState): string {
-  const view: View = state.view
-
-  switch (view) {
-    case "overview":
-      return renderOverview(state)
-    case "agents":
-      return renderAgents(state)
-    case "cycle":
-      return renderCycle(state)
-    case "roadmap":
-      return renderRoadmap(state)
-    case "project":
-      return renderProject()
-    default:
-      return assertNever(view)
-  }
 }

@@ -1,14 +1,66 @@
+import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
-import { cycleStages } from "./data/cycle"
+import { cycleStages, metrics } from "./data/cycle"
 import { projects } from "./data/projects"
-import type { Agent, CycleStage, DojoProject } from "./domain"
-import type { AppState } from "./state"
+import type { Agent, CycleStage, DojoProject, Metric } from "./domain"
+import type { AppState, ProjectFilter } from "./state"
 
 export type DashboardStats = {
   readonly agents: number
   readonly stages: number
   readonly projects: number
   readonly completionPercent: number
+}
+
+export function getSelectedAgent(state: AppState): Agent {
+  return findAgent(state.selectedAgentId)
+}
+
+export function getCurrentStage(state: AppState): CycleStage {
+  return findStage(state.selectedStageId)
+}
+
+export function getAgents(): readonly Agent[] {
+  return agents
+}
+
+export function getStages(): readonly CycleStage[] {
+  return cycleStages
+}
+
+export function getMetrics(): readonly Metric[] {
+  return metrics
+}
+
+export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
+  if (filter === "all") {
+    return projects
+  }
+
+  return projects.filter((project) => project.phase === filter)
+}
+
+export function getCurrentProject(): DojoProject {
+  const project = projects[0]
+
+  if (project === undefined) {
+    throw new Error("No codexDojo project configured.")
+  }
+
+  return project
+}
+
+export function getDashboardStats(state: AppState): DashboardStats {
+  return {
+    agents: agents.length,
+    stages: cycleStages.length,
+    projects: projects.length,
+    completionPercent: getCycleCompletionPercent(state.completedStageIds),
+  }
+}
+
+export function isStageCompleted(state: AppState, stageId: string): boolean {
+  return state.completedStageIds.includes(stageId)
 }
 
 export function findAgent(agentId: string): Agent {
@@ -29,32 +81,4 @@ export function findStage(stageId: string): CycleStage {
   }
 
   return stage
-}
-
-export function getCurrentProject(): DojoProject {
-  const project = projects[0]
-
-  if (project === undefined) {
-    throw new Error("No codexDojo project configured.")
-  }
-
-  return project
-}
-
-export function getDashboardStats(state: AppState): DashboardStats {
-  return {
-    agents: agents.length,
-    stages: cycleStages.length,
-    projects: projects.length,
-    completionPercent: getCompletionPercent(state.completedStageIds),
-  }
-}
-
-export function getCompletionPercent(completedStageIds: readonly string[]): number {
-  if (cycleStages.length === 0) {
-    return 0
-  }
-
-  const completed = cycleStages.filter((stage) => completedStageIds.includes(stage.id))
-  return Math.round((completed.length / cycleStages.length) * 100)
 }

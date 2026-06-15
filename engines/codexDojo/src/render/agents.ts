@@ -1,9 +1,8 @@
-import { agents } from "../data/agents"
-import { findAgent } from "../progress"
+import { getAgents, getSelectedAgent } from "../progress"
 import type { AppState } from "../state"
 
 export function renderAgents(state: AppState): string {
-  const selectedAgent = findAgent(state.selectedAgentId)
+  const selectedAgent = getSelectedAgent(state)
 
   return `
     <section class="workbench agents-view" aria-label="Agentes do codexDojo">
@@ -13,7 +12,7 @@ export function renderAgents(state: AppState): string {
       </div>
 
       <div class="agent-list">
-        ${agents
+        ${getAgents()
           .map((agent) => {
             const activeClass = agent.id === selectedAgent.id ? "is-active" : ""
             return `

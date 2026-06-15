@@ -1,51 +1,33 @@
-import { agents } from "../data/agents"
-import type { View } from "../domain"
-import { projectPhases, views } from "../domain"
+import { projectPhases, type View, views } from "../domain"
+import { getAgents } from "../progress"
 import type { AppAction, ProjectFilter } from "../state"
 
 export type Dispatch = (action: AppAction) => void
 
+type Intent = {
+  attr: string
+  value?: string
+  decode: (raw: string | null) => AppAction | null
+}
+
+// The pure intents: each data-* attribute is one adapter at the DOM seam,
+// declared as a single row instead of a hand-rolled query→listen→dispatch block.
+const intents: readonly Intent[] = [
+  { attr: "data-view", decode: (v) => (isView(v) ? { kind: "changeView", view: v } : null) },
+  { attr: "data-agent", decode: (v) => (v !== null ? { kind: "selectAgent", agentId: v } : null) },
+  { attr: "data-stage", decode: (v) => (v !== null ? { kind: "selectStage", stageId: v } : null) },
+  {
+    attr: "data-filter",
+    decode: (v) => (isProjectFilter(v) ? { kind: "setProjectFilter", filter: v } : null),
+  },
+  { attr: "data-action", value: "advance-stage", decode: () => ({ kind: "advanceStage" }) },
+]
+
 export function bindEvents(root: HTMLElement, dispatch: Dispatch): void {
-  root.querySelectorAll("[data-view]").forEach((element) => {
-    element.addEventListener("click", () => {
-      const view = element.getAttribute("data-view")
-      if (isView(view)) {
-        dispatch({ kind: "changeView", view })
-      }
-    })
-  })
+  bindIntents(root, dispatch, intents)
 
-  root.querySelectorAll("[data-agent]").forEach((element) => {
-    element.addEventListener("click", () => {
-      const agentId = element.getAttribute("data-agent")
-      if (agentId !== null) {
-        dispatch({ kind: "selectAgent", agentId })
-      }
-    })
-  })
-
-  root.querySelectorAll("[data-stage]").forEach((element) => {
-    element.addEventListener("click", () => {
-      const stageId = element.getAttribute("data-stage")
-      if (stageId !== null) {
-        dispatch({ kind: "selectStage", stageId })
-      }
-    })
-  })
-
-  root.querySelectorAll("[data-filter]").forEach((element) => {
-    element.addEventListener("click", () => {
-      const filter = element.getAttribute("data-filter")
-      if (isProjectFilter(filter)) {
-        dispatch({ kind: "setProjectFilter", filter })
-      }
-    })
-  })
-
-  root.querySelectorAll("[data-action='advance-stage']").forEach((element) => {
-    element.addEventListener("click", () => dispatch({ kind: "advanceStage" }))
-  })
-
+  // The one effectful handler: clipboard write is async and dispatches on
+  // success/failure, so it stays out of the declarative intent table.
   root.querySelectorAll("[data-copy-agent]").forEach((element) => {
     element.addEventListener("click", () => {
       const agentId = element.getAttribute("data-copy-agent")
@@ -56,8 +38,22 @@ export function bindEvents(root: HTMLElement, dispatch: Dispatch): void {
   })
 }
 
+function bindIntents(root: HTMLElement, dispatch: Dispatch, table: readonly Intent[]): void {
+  for (const { attr, value, decode } of table) {
+    const selector = value === undefined ? `[${attr}]` : `[${attr}='${value}']`
+    root.querySelectorAll(selector).forEach((element) => {
+      element.addEventListener("click", () => {
+        const action = decode(element.getAttribute(attr))
+        if (action !== null) {
+          dispatch(action)
+        }
+      })
+    })
+  }
+}
+
 function copyAgentPrompt(agentId: string, dispatch: Dispatch): void {
-  const agent = agents.find((candidate) => candidate.id === agentId)
+  const agent = getAgents().find((candidate) => candidate.id === agentId)
 
   if (agent === undefined) {
     return

@@ -1,6 +1,4 @@
-import { agents } from "../data/agents"
-import { cycleStages, metrics } from "../data/cycle"
-import { getCurrentProject, getDashboardStats } from "../progress"
+import { getAgents, getCurrentProject, getDashboardStats, getMetrics, getStages } from "../progress"
 import type { AppState } from "../state"
 
 export function renderOverview(state: AppState): string {
@@ -38,7 +36,7 @@ export function renderOverview(state: AppState): string {
       </article>
 
       <article class="topology" aria-label="Mapa visual dos agentes">
-        ${agents
+        ${getAgents()
           .slice(0, 10)
           .map(
             (agent, index) =>
@@ -59,7 +57,7 @@ export function renderOverview(state: AppState): string {
       </article>
 
       <article class="metric-strip">
-        ${metrics
+        ${getMetrics()
           .map(
             (metric) => `
               <div class="metric-item">
@@ -72,7 +70,7 @@ export function renderOverview(state: AppState): string {
       </article>
 
       <article class="cycle-strip">
-        ${cycleStages
+        ${getStages()
           .slice(0, 6)
           .map(
             (stage) => `

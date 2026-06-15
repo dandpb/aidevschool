@@ -1,6 +1,6 @@
 import { type ProjectPhase, projectPhases } from "../domain"
-import type { AppState } from "../state"
-import { getFilteredProjects, type ProjectFilter } from "../state"
+import { getProjects } from "../progress"
+import type { AppState, ProjectFilter } from "../state"
 
 const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
   fundamentos: "Fundamentos",
@@ -11,7 +11,7 @@ const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
 }
 
 export function renderRoadmap(state: AppState): string {
-  const projects = getFilteredProjects(state.projectFilter)
+  const projects = getProjects(state.projectFilter)
 
   return `
     <section class="workbench roadmap-view" aria-label="Roadmap de projetos">
