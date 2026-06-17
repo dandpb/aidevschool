@@ -15,7 +15,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/codexDojo/ecosystem/` | Canonical manifest, completion audit, prompts, runbooks, memory, evaluation, and templates. |
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
 | `engines/minimaxDojo/config/learner.yaml` | Single seam for numeric thresholds referenced by prompts/docs via `⟨config: path⟩`. |
-| `engines/pixelDojo/` | 8-bit learning-game engine (prototype; not yet tracked in this branch). |
+| `engines/pixelDojo/` | 8-bit learning-game engine prototype. |
 | `docs/` | Existing polyglot MiniMax/OpenClaw/Hermes documentation. |
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
@@ -37,7 +37,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/*/README.md` (thin index) |
 | 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
-| 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/` (not yet tracked in this branch). |
+| 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/`. |
 
 ## Requested Scope Coverage
 
@@ -50,7 +50,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Code review and quality | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md` |
 | Tests and metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Professional AI integration | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md` |
-| Ludic practice and evidence capture | Prototype work in `engines/pixelDojo/` (not yet tracked in this branch). |
+| Ludic practice and evidence capture | Prototype work in `engines/pixelDojo/`. |
 
 ## Core Principles
 
@@ -76,9 +76,9 @@ probe.
 | **Threshold seam** | `engines/minimaxDojo/config/learner.yaml` | Every numeric threshold the tutor uses. Prompts and docs reference values via the `⟨config: path⟩` marker instead of hardcoding them. |
 | **Canonical agent prompt** | `engines/minimaxDojo/prompts/per_agent/<name>.md` | The single system prompt for an agent. The matching `engines/minimaxDojo/agents/<id>/README.md` is a thin index that links to it. |
 | **Cycle domain module** | `engines/codexDojo/src/cycle.ts` | Stage advancement and completion rules. `state.ts` reducer is a shallow adapter over `advanceCycle(snapshot)`. Characterization tests in `state.test.ts` + `render.test.ts` are the parity oracle. |
-| **ResponseComposer** | `curriculum/01_rate_limiter/` (not yet tracked in this branch) | HTTP response contract: header names, 429 body shape, status codes, content type. Cross-language parity enforced by shared test vectors. |
-| **ClientKeyStrategy** | `curriculum/01_rate_limiter/` (not yet tracked in this branch) | Trust-boundary logic: which header/socket field to trust, IPv4/IPv6 normalization, X-Forwarded-For parsing. Production uses `ConnectInfo`/`RemoteAddr`; tests inject a fixed key. |
-| **AppState (Rust)** | `curriculum/01_rate_limiter/rust-impl/src/lib.rs` (not yet tracked in this branch) | The three injected seams bundled for axum's `State`: `key_strategy` + `limiter` + `composer`. Constructed once in `router(limiter)`; passed to both middleware and `/status` handler. |
+| **ResponseComposer** | `curriculum/01_rate_limiter/node-impl/` · `curriculum/01_rate_limiter/go-impl/` · `curriculum/01_rate_limiter/rust-impl/` | HTTP response contract: header names, 429 body shape, status codes, content type. Cross-language parity enforced by shared test vectors. |
+| **ClientKeyStrategy** | `curriculum/01_rate_limiter/node-impl/` · `curriculum/01_rate_limiter/go-impl/` · `curriculum/01_rate_limiter/rust-impl/` | Trust-boundary logic: which header/socket field to trust, IPv4/IPv6 normalization, X-Forwarded-For parsing. Production uses `ConnectInfo`/`RemoteAddr`; tests inject a fixed key. |
+| **AppState (Rust)** | `curriculum/01_rate_limiter/rust-impl/src/lib.rs` | The three injected seams bundled for axum's `State`: `key_strategy` + `limiter` + `composer`. Constructed once in `router(limiter)`; passed to both middleware and `/status` handler. |
 
 ## Validation Commands
 
