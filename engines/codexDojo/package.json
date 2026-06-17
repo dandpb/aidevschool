@@ -10,9 +10,9 @@
     "test": "vitest run",
     "lint": "biome check src"
   },
-  "dependencies": {},
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
+    "jsdom": "^29.1.1",
     "typescript": "^5.9.3",
     "vite": "^7.2.7",
     "vitest": "^4.0.15"
