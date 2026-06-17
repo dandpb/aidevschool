@@ -21,7 +21,7 @@ agents:
   producer_verifier_isolation: true
   prompt_source: engines/codexDojo/ecosystem/AGENT_PROMPTS.md
 state:
-  agora: learner/learning_state.yaml
-  mavis: .mavis/learning_state.yaml
+  agora: learner/learning_state.yaml       # canonical source of truth
+  mavis: .mavis/learning_state.yaml        # derived view via learner/substrate/
   pipeline: learner/pipeline_status.md
   manifest: engines/codexDojo/ecosystem/MANIFEST.md
