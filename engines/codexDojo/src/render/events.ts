@@ -60,7 +60,13 @@ function copyAgentPrompt(agentId: string, dispatch: Dispatch): void {
     return
   }
 
-  void navigator.clipboard
+  const clipboard = navigator.clipboard
+  if (clipboard === undefined) {
+    dispatch({ kind: "markCopied", agentId: null })
+    return
+  }
+
+  void clipboard
     .writeText(agent.prompt)
     .then(() => dispatch({ kind: "markCopied", agentId }))
     .catch((error: unknown) => {

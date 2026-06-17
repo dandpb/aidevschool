@@ -61,4 +61,63 @@ describe("bindEvents", () => {
     expect(() => button.click()).not.toThrow()
     expect(dispatch).not.toHaveBeenCalled()
   })
+
+  it("copies the agent prompt and dispatches markCopied on success", async () => {
+    // Given
+    const root = document.createElement("div")
+    const button = document.createElement("button")
+    button.setAttribute("data-copy-agent", "mentor")
+    root.appendChild(button)
+
+    const writeText = vi.fn(() => Promise.resolve(undefined))
+    vi.stubGlobal("navigator", { clipboard: { writeText } })
+
+    const dispatch = vi.fn()
+    bindEvents(root, dispatch)
+
+    // When
+    button.click()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    // Then
+    expect(writeText).toHaveBeenCalledTimes(1)
+    expect(dispatch).toHaveBeenCalledWith({ kind: "markCopied", agentId: "mentor" })
+  })
+
+  it("dispatches markCopied with null when clipboard write fails", async () => {
+    // Given
+    const root = document.createElement("div")
+    const button = document.createElement("button")
+    button.setAttribute("data-copy-agent", "mentor")
+    root.appendChild(button)
+
+    const writeText = vi.fn(() => Promise.reject(new Error("Clipboard denied")))
+    vi.stubGlobal("navigator", { clipboard: { writeText } })
+
+    const dispatch = vi.fn()
+    bindEvents(root, dispatch)
+
+    // When
+    button.click()
+    await new Promise((resolve) => setTimeout(resolve, 0))
+
+    // Then
+    expect(dispatch).toHaveBeenCalledWith({ kind: "markCopied", agentId: null })
+  })
+
+  it("does not crash when navigator.clipboard is unavailable", () => {
+    // Given
+    const root = document.createElement("div")
+    const button = document.createElement("button")
+    button.setAttribute("data-copy-agent", "mentor")
+    root.appendChild(button)
+
+    vi.stubGlobal("navigator", {})
+
+    const dispatch = vi.fn()
+    bindEvents(root, dispatch)
+
+    // When / Then
+    expect(() => button.click()).not.toThrow()
+  })
 })

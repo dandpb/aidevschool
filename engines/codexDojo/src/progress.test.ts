@@ -116,6 +116,18 @@ describe("Cycle module", () => {
     expect(next.selectedStageId).toBeDefined()
     expect(cycleStages.some((stage) => stage.id === next.selectedStageId)).toBe(true)
   })
+
+  it("does not append an unknown selectedStageId to completedStageIds", () => {
+    // Given
+    const snapshot = { selectedStageId: "nonexistent", completedStageIds: [] }
+
+    // When
+    const next = advanceCycle(snapshot)
+
+    // Then
+    expect(next.completedStageIds).not.toContain("nonexistent")
+    expect(next.completedStageIds).toHaveLength(0)
+  })
 })
 
 describe("DojoQuery seam", () => {

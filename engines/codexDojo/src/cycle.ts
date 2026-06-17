@@ -32,9 +32,11 @@ export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
     return snapshot
   }
 
-  const completed = snapshot.completedStageIds.includes(snapshot.selectedStageId)
-    ? snapshot.completedStageIds
-    : [...snapshot.completedStageIds, snapshot.selectedStageId]
+  const selectedStage = cycleStages[selectedIndex]
+  const completed =
+    selectedStage === undefined || snapshot.completedStageIds.includes(selectedStage.id)
+      ? snapshot.completedStageIds
+      : [...snapshot.completedStageIds, selectedStage.id]
 
   return {
     selectedStageId: nextStage.id,
