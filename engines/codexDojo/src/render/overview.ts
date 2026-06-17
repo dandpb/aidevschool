@@ -1,9 +1,37 @@
-import { getAgents, getCurrentProject, getDashboardStats, getMetrics, getStages } from "../progress"
+import type { Agent, CycleStage, DojoProject, Metric } from "../domain"
+import {
+  type DashboardStats,
+  getAgents,
+  getCurrentProject,
+  getDashboardStats,
+  getMetrics,
+  getStages,
+} from "../progress"
 import type { AppState } from "../state"
 
+const OVERVIEW_AGENT_LIMIT = 10
+const OVERVIEW_STAGE_LIMIT = 6
+
+type OverviewModel = {
+  readonly stats: DashboardStats
+  readonly visibleAgents: readonly Agent[]
+  readonly currentProject: DojoProject
+  readonly metrics: readonly Metric[]
+  readonly visibleStages: readonly CycleStage[]
+}
+
+function getOverviewModel(state: AppState): OverviewModel {
+  return {
+    stats: getDashboardStats(state),
+    visibleAgents: getAgents().slice(0, OVERVIEW_AGENT_LIMIT),
+    currentProject: getCurrentProject(),
+    metrics: getMetrics(),
+    visibleStages: getStages().slice(0, OVERVIEW_STAGE_LIMIT),
+  }
+}
+
 export function renderOverview(state: AppState): string {
-  const stats = getDashboardStats(state)
-  const currentProject = getCurrentProject()
+  const model = getOverviewModel(state)
 
   return `
     <section class="overview-grid" aria-label="Painel operacional">
@@ -23,21 +51,20 @@ export function renderOverview(state: AppState): string {
       <article class="status-console">
         <div class="console-header">
           <span>Estado do dojo</span>
-          <span>${stats.completionPercent}% do ciclo</span>
+          <span>${model.stats.completionPercent}% do ciclo</span>
         </div>
         <div class="meter" aria-label="Progresso do ciclo">
-          <span style="width: ${stats.completionPercent}%"></span>
+          <span style="width: ${model.stats.completionPercent}%"></span>
         </div>
         <dl class="stat-grid">
-          <div><dt>Agentes</dt><dd>${stats.agents}</dd></div>
-          <div><dt>Etapas</dt><dd>${stats.stages}</dd></div>
-          <div><dt>Projetos</dt><dd>${stats.projects}</dd></div>
+          <div><dt>Agentes</dt><dd>${model.stats.agents}</dd></div>
+          <div><dt>Etapas</dt><dd>${model.stats.stages}</dd></div>
+          <div><dt>Projetos</dt><dd>${model.stats.projects}</dd></div>
         </dl>
       </article>
 
       <article class="topology" aria-label="Mapa visual dos agentes">
-        ${getAgents()
-          .slice(0, 10)
+        ${model.visibleAgents
           .map(
             (agent, index) =>
               `<button class="agent-node node-${index + 1}" type="button" data-agent="${agent.id}">
@@ -49,15 +76,15 @@ export function renderOverview(state: AppState): string {
 
       <article class="next-project">
         <p class="eyebrow">Primeiro projeto prático</p>
-        <h2>${currentProject.title}</h2>
-        <p>${currentProject.learningGoal}</p>
+        <h2>${model.currentProject.title}</h2>
+        <p>${model.currentProject.learningGoal}</p>
         <ul>
-          ${currentProject.evidence.map((item) => `<li>${item}</li>`).join("")}
+          ${model.currentProject.evidence.map((item) => `<li>${item}</li>`).join("")}
         </ul>
       </article>
 
       <article class="metric-strip">
-        ${getMetrics()
+        ${model.metrics
           .map(
             (metric) => `
               <div class="metric-item">
@@ -70,8 +97,7 @@ export function renderOverview(state: AppState): string {
       </article>
 
       <article class="cycle-strip">
-        ${getStages()
-          .slice(0, 6)
+        ${model.visibleStages
           .map(
             (stage) => `
               <button class="stage-chip" type="button" data-stage="${stage.id}">
