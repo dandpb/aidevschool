@@ -13,7 +13,6 @@ export type AppState = {
    * but it lives in the global AppState/reducer on purpose: keeping it here preserves
    * a single, unidirectional state source for the whole dashboard and avoids introducing
    * a second, view-local state channel that would have to be kept in sync with the reducer.
-   * See the thermo-nuclear review for the structural rationale.
    */
   readonly projectFilter: ProjectFilter
   readonly copiedAgentId: string | null

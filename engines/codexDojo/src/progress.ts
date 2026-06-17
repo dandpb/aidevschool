@@ -23,12 +23,10 @@ export function getCurrentStage(state: AppState): CycleStage {
 /**
  * Deliberate query seam: returns the canonical agent roster.
  *
- * Call sites read agents through this function (rather than importing
- * `data/agents` directly) so that the data source can migrate — e.g. from a
- * static module export to an async loader, a remote fetch, or a domain store —
- * without touching any consumer. Keep as a thin passthrough; do not add logic
- * here. Preserved as part of the structural cleanup that introduced typed
- * query seams in `src/progress.ts`.
+ * Call sites read agents through this function rather than importing
+ * `data/agents` directly, so the data source can move (static module, runtime
+ * config, domain store) without scattering imports across renderers and stats
+ * aggregators. Keep as a thin passthrough; do not add logic here.
  */
 export function getAgents(): readonly Agent[] {
   return agents
@@ -37,12 +35,10 @@ export function getAgents(): readonly Agent[] {
 /**
  * Deliberate query seam: returns the canonical cycle-stage definitions.
  *
- * Stages are the spine of the dashboard's progress model. Funneling access
- * through this getter means the source of truth for stages can move (static
- * module, runtime config, persisted learner state) without rewriting the
- * views or stats aggregators that consume the list. Keep as a thin
- * passthrough; do not add logic here. Preserved as part of the structural
- * cleanup that introduced typed query seams in `src/progress.ts`.
+ * Funneling access through this getter means the source of truth for stages
+ * can move (static module, runtime config, persisted learner state) without
+ * rewriting the views or stats aggregators that consume the list. Keep as a
+ * thin passthrough; do not add logic here.
  */
 export function getStages(): readonly CycleStage[] {
   return cycleStages
@@ -55,8 +51,7 @@ export function getStages(): readonly CycleStage[] {
  * `getDashboardStats` aggregator. Indirection through this getter lets the
  * metric catalogue evolve (additions, deprecations, tenant overrides)
  * without scattering imports of `data/cycle` across the renderer. Keep as a
- * thin passthrough; do not add logic here. Preserved as part of the
- * structural cleanup that introduced typed query seams in `src/progress.ts`.
+ * thin passthrough; do not add logic here.
  */
 export function getMetrics(): readonly Metric[] {
   return metrics
