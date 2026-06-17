@@ -10,6 +10,21 @@ export const projects: readonly DojoProject[] = [
     architecture: "módulos simples + persistência em arquivo",
     learningGoal: "Separar entrada, domínio e persistência sem framework.",
     evidence: ["comandos create/list/done", "testes unitários", "README de uso"],
+    functionalRequirements: [
+      "Criar tarefas com título e prioridade.",
+      "Listar tarefas pendentes e concluídas.",
+      "Marcar uma tarefa como concluída por identificador.",
+      "Persistir o estado localmente em arquivo JSON.",
+    ],
+    nonFunctionalRequirements: [
+      "Comandos previsíveis, mensagens de erro claras e testes rápidos.",
+      "Domínio separado da interface de linha de comando.",
+      "Sem IA escrevendo a solução antes da tentativa inicial.",
+    ],
+    extraDoneCriteria: [
+      "Relatório de revisão com uma melhoria aplicada.",
+      "Comparação curta com uma API HTTP futura.",
+    ],
   },
   {
     id: "p02",

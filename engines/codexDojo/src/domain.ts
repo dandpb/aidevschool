@@ -36,6 +36,9 @@ export type DojoProject = {
   readonly architecture: string
   readonly learningGoal: string
   readonly evidence: readonly string[]
+  readonly functionalRequirements?: readonly string[]
+  readonly nonFunctionalRequirements?: readonly string[]
+  readonly extraDoneCriteria?: readonly string[]
 }
 
 export type Metric = {
