@@ -1,11 +1,14 @@
 import { describe, expect, it } from "vitest"
 import { cycleStages } from "./data/cycle"
-import { type AppState, initialState, reduceState } from "./state"
+import { type AppState, buildInitialState, reduceState } from "./state"
 
 // Characterization tests for the reducer — they capture current behavior so
 // later structure-only refactors can be proven safe (snapshots for state).
 
-const stateWith = (overrides: Partial<AppState>): AppState => ({ ...initialState, ...overrides })
+const stateWith = (overrides: Partial<AppState>): AppState => ({
+  ...buildInitialState("mentor", "diagnosticar"),
+  ...overrides,
+})
 
 describe("reduceState — changeView", () => {
   it("sets the view and clears any ephemeral copied-agent state", () => {

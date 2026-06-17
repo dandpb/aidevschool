@@ -1,6 +1,5 @@
 import { advanceCycle } from "./cycle"
 import { assertNever, type ProjectPhase, type View } from "./domain"
-import { getAgents, getStages } from "./progress"
 
 export type ProjectFilter = ProjectPhase | "all"
 
@@ -9,6 +8,13 @@ export type AppState = {
   readonly selectedAgentId: string
   readonly selectedStageId: string
   readonly completedStageIds: readonly string[]
+  /**
+   * Roadmap-only filter (phase selector). It is consumed solely by the roadmap view,
+   * but it lives in the global AppState/reducer on purpose: keeping it here preserves
+   * a single, unidirectional state source for the whole dashboard and avoids introducing
+   * a second, view-local state channel that would have to be kept in sync with the reducer.
+   * See the thermo-nuclear review for the structural rationale.
+   */
   readonly projectFilter: ProjectFilter
   readonly copiedAgentId: string | null
 }
@@ -21,20 +27,15 @@ export type AppAction =
   | { readonly kind: "setProjectFilter"; readonly filter: ProjectFilter }
   | { readonly kind: "markCopied"; readonly agentId: string | null }
 
-const firstAgent = getAgents()[0]
-const firstStage = getStages()[0]
-
-if (firstAgent === undefined || firstStage === undefined) {
-  throw new Error("codexDojo needs at least one agent and one cycle stage.")
-}
-
-export const initialState: AppState = {
-  view: "overview",
-  selectedAgentId: firstAgent.id,
-  selectedStageId: firstStage.id,
-  completedStageIds: ["diagnosticar", "escolher"],
-  projectFilter: "all",
-  copiedAgentId: null,
+export function buildInitialState(firstAgentId: string, firstStageId: string): AppState {
+  return {
+    view: "overview",
+    selectedAgentId: firstAgentId,
+    selectedStageId: firstStageId,
+    completedStageIds: ["diagnosticar", "escolher"],
+    projectFilter: "all",
+    copiedAgentId: null,
+  }
 }
 
 export function reduceState(state: AppState, action: AppAction): AppState {
