@@ -77,8 +77,8 @@ probe.
 | **Threshold seam** | `engines/minimaxDojo/config/learner.yaml` | Every numeric threshold the tutor uses. Prompts and docs reference values via the `⟨config: path⟩` marker instead of hardcoding them. |
 | **Canonical agent prompt** | `engines/minimaxDojo/prompts/per_agent/<name>.md` | The single system prompt for an agent. The matching `engines/minimaxDojo/agents/<id>/README.md` is a thin index that links to it. |
 | **Cycle domain module** | `engines/codexDojo/src/cycle.ts` | Stage advancement and completion rules. `state.ts` reducer is a shallow adapter over `advanceCycle(snapshot)`. Characterization tests in `state.test.ts` + `render.test.ts` are the parity oracle. |
-| **ResponseComposer** | `node-impl/src/responseComposer.ts` · `go-impl/ratelimit/composer.go` · `rust-impl/src/response.rs` | HTTP response contract: header names, 429 body shape, status codes, content type. Cross-language parity enforced by `SPEC.md` shared test vectors. |
-| **ClientKeyStrategy** | `node-impl/src/clientKeyStrategy.ts` · `go-impl/ratelimit/clientkey.go` · `rust-impl/src/client_key.rs` | Trust-boundary logic: which header/socket field to trust, IPv4/IPv6 normalization, X-Forwarded-For parsing. Production uses `ConnectInfo`/`RemoteAddr`; tests inject a fixed key. |
+| **ResponseComposer** | `curriculum/01_rate_limiter/` (not yet tracked in this branch) | HTTP response contract: header names, 429 body shape, status codes, content type. Cross-language parity enforced by `SPEC.md` shared test vectors. |
+| **ClientKeyStrategy** | `curriculum/01_rate_limiter/` (not yet tracked in this branch) | Trust-boundary logic: which header/socket field to trust, IPv4/IPv6 normalization, X-Forwarded-For parsing. Production uses `ConnectInfo`/`RemoteAddr`; tests inject a fixed key. |
 | **AppState (Rust)** | `rust-impl/src/lib.rs` (`AppState`) | The three injected seams bundled for axum's `State`: `key_strategy` + `limiter` + `composer`. Constructed once in `router(limiter)`; passed to both middleware and `/status` handler. |
 
 ## Validation Commands
