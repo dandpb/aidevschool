@@ -1,7 +1,16 @@
 import { getCurrentProject } from "../progress"
+import type { AppState } from "../state"
 
-export function renderProject(): string {
+export function renderProject(_state: AppState): string {
   const project = getCurrentProject()
+
+  const functionalItems =
+    project.functionalRequirements?.map((item) => `<li>${item}</li>`).join("") ?? ""
+
+  const nonFunctionalItems =
+    project.nonFunctionalRequirements?.map((item) => `<li>${item}</li>`).join("") ?? ""
+
+  const extraDoneItems = project.extraDoneCriteria?.map((item) => `<li>${item}</li>`).join("") ?? ""
 
   return `
     <section class="workbench project-view" aria-label="Primeiro projeto prático">
@@ -14,27 +23,15 @@ export function renderProject(): string {
         <article class="briefing-main">
           <h3>Objetivo de aprendizado</h3>
           <p>${project.learningGoal}</p>
-          <h3>Requisitos funcionais</h3>
-          <ul>
-            <li>Criar tarefas com título e prioridade.</li>
-            <li>Listar tarefas pendentes e concluídas.</li>
-            <li>Marcar uma tarefa como concluída por identificador.</li>
-            <li>Persistir o estado localmente em arquivo JSON.</li>
-          </ul>
-          <h3>Requisitos não funcionais</h3>
-          <ul>
-            <li>Comandos previsíveis, mensagens de erro claras e testes rápidos.</li>
-            <li>Domínio separado da interface de linha de comando.</li>
-            <li>Sem IA escrevendo a solução antes da tentativa inicial.</li>
-          </ul>
+          ${functionalItems ? `<h3>Requisitos funcionais</h3><ul>${functionalItems}</ul>` : ""}
+          ${nonFunctionalItems ? `<h3>Requisitos não funcionais</h3><ul>${nonFunctionalItems}</ul>` : ""}
         </article>
 
         <aside class="quality-card">
           <h3>Definition of Done</h3>
           <ul>
             ${project.evidence.map((item) => `<li>${item}</li>`).join("")}
-            <li>Relatório de revisão com uma melhoria aplicada.</li>
-            <li>Comparação curta com uma API HTTP futura.</li>
+            ${extraDoneItems}
           </ul>
         </aside>
       </div>
