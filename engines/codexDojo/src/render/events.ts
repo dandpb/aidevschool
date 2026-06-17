@@ -1,5 +1,5 @@
-import { projectPhases, type View, views } from "../domain"
-import { getAgents } from "../progress"
+import { type Agent, projectPhases, type View, views } from "../domain"
+import { findAgent } from "../progress"
 import type { AppAction, ProjectFilter } from "../state"
 
 export type Dispatch = (action: AppAction) => void
@@ -24,38 +24,39 @@ const intents: readonly Intent[] = [
 ]
 
 export function bindEvents(root: HTMLElement, dispatch: Dispatch): void {
-  bindIntents(root, dispatch, intents)
+  root.addEventListener("click", (event) => {
+    const target = event.target
+    if (!(target instanceof Element)) {
+      return
+    }
 
-  // The one effectful handler: clipboard write is async and dispatches on
-  // success/failure, so it stays out of the declarative intent table.
-  root.querySelectorAll("[data-copy-agent]").forEach((element) => {
-    element.addEventListener("click", () => {
-      const agentId = element.getAttribute("data-copy-agent")
-      if (agentId !== null) {
-        copyAgentPrompt(agentId, dispatch)
-      }
-    })
-  })
-}
-
-function bindIntents(root: HTMLElement, dispatch: Dispatch, table: readonly Intent[]): void {
-  for (const { attr, value, decode } of table) {
-    const selector = value === undefined ? `[${attr}]` : `[${attr}='${value}']`
-    root.querySelectorAll(selector).forEach((element) => {
-      element.addEventListener("click", () => {
+    for (const { attr, value, decode } of intents) {
+      const selector = value === undefined ? `[${attr}]` : `[${attr}='${value}']`
+      const element = target.closest(selector)
+      if (element !== null) {
         const action = decode(element.getAttribute(attr))
         if (action !== null) {
           dispatch(action)
+          return
         }
-      })
-    })
-  }
+      }
+    }
+
+    const copyElement = target.closest("[data-copy-agent]")
+    if (copyElement !== null) {
+      const agentId = copyElement.getAttribute("data-copy-agent")
+      if (agentId !== null) {
+        copyAgentPrompt(agentId, dispatch)
+      }
+    }
+  })
 }
 
 function copyAgentPrompt(agentId: string, dispatch: Dispatch): void {
-  const agent = getAgents().find((candidate) => candidate.id === agentId)
-
-  if (agent === undefined) {
+  let agent: Agent
+  try {
+    agent = findAgent(agentId)
+  } catch {
     return
   }
 

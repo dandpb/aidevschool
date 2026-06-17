@@ -1,0 +1,64 @@
+// @vitest-environment jsdom
+import { describe, expect, it, vi } from "vitest"
+import type { AppAction } from "../state"
+import { bindEvents } from "./events"
+
+describe("bindEvents", () => {
+  it("clicking a [data-view] button inside root dispatches the correct AppAction once", () => {
+    // Given
+    const root = document.createElement("div")
+    const button = document.createElement("button")
+    button.setAttribute("data-view", "agents")
+    root.appendChild(button)
+
+    const dispatched: AppAction[] = []
+    const dispatch = (action: AppAction) => {
+      dispatched.push(action)
+    }
+
+    bindEvents(root, dispatch)
+
+    // When
+    button.click()
+
+    // Then
+    expect(dispatched).toHaveLength(1)
+    expect(dispatched[0]).toEqual({ kind: "changeView", view: "agents" })
+  })
+
+  it("clicking an element with no intent does nothing", () => {
+    // Given
+    const root = document.createElement("div")
+    const span = document.createElement("span")
+    span.textContent = "innocent"
+    root.appendChild(span)
+
+    const dispatched: AppAction[] = []
+    const dispatch = (action: AppAction) => {
+      dispatched.push(action)
+    }
+
+    bindEvents(root, dispatch)
+
+    // When
+    span.click()
+
+    // Then
+    expect(dispatched).toHaveLength(0)
+  })
+
+  it("clicking [data-copy-agent] with unknown id does not throw", () => {
+    // Given
+    const root = document.createElement("div")
+    const button = document.createElement("button")
+    button.setAttribute("data-copy-agent", "nonexistent-agent")
+    root.appendChild(button)
+
+    const dispatch = vi.fn()
+    bindEvents(root, dispatch)
+
+    // When / Then
+    expect(() => button.click()).not.toThrow()
+    expect(dispatch).not.toHaveBeenCalled()
+  })
+})

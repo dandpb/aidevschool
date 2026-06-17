@@ -34,8 +34,8 @@ export function mountCodexDojo(root: HTMLElement): void {
 
   const render = (): void => {
     root.innerHTML = renderShell(state)
-    bindEvents(root, dispatch)
   }
 
+  bindEvents(root, dispatch)
   render()
 }
