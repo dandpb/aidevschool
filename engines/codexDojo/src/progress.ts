@@ -20,14 +20,44 @@ export function getCurrentStage(state: AppState): CycleStage {
   return findStage(state.selectedStageId)
 }
 
+/**
+ * Deliberate query seam: returns the canonical agent roster.
+ *
+ * Call sites read agents through this function (rather than importing
+ * `data/agents` directly) so that the data source can migrate — e.g. from a
+ * static module export to an async loader, a remote fetch, or a domain store —
+ * without touching any consumer. Keep as a thin passthrough; do not add logic
+ * here. Preserved as part of the structural cleanup that introduced typed
+ * query seams in `src/progress.ts`.
+ */
 export function getAgents(): readonly Agent[] {
   return agents
 }
 
+/**
+ * Deliberate query seam: returns the canonical cycle-stage definitions.
+ *
+ * Stages are the spine of the dashboard's progress model. Funneling access
+ * through this getter means the source of truth for stages can move (static
+ * module, runtime config, persisted learner state) without rewriting the
+ * views or stats aggregators that consume the list. Keep as a thin
+ * passthrough; do not add logic here. Preserved as part of the structural
+ * cleanup that introduced typed query seams in `src/progress.ts`.
+ */
 export function getStages(): readonly CycleStage[] {
   return cycleStages
 }
 
+/**
+ * Deliberate query seam: returns the canonical metric definitions.
+ *
+ * Metrics shape the dashboard's evaluation cards and feed the
+ * `getDashboardStats` aggregator. Indirection through this getter lets the
+ * metric catalogue evolve (additions, deprecations, tenant overrides)
+ * without scattering imports of `data/cycle` across the renderer. Keep as a
+ * thin passthrough; do not add logic here. Preserved as part of the
+ * structural cleanup that introduced typed query seams in `src/progress.ts`.
+ */
 export function getMetrics(): readonly Metric[] {
   return metrics
 }

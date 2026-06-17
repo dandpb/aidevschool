@@ -10,7 +10,7 @@ import {
   getSelectedAgent,
   isStageCompleted,
 } from "./progress"
-import { initialState, reduceState } from "./state"
+import { buildInitialState, reduceState } from "./state"
 
 describe("codexDojo progress model", () => {
   it("computes completion percent when known stages are completed", () => {
@@ -26,7 +26,11 @@ describe("codexDojo progress model", () => {
 
   it("advances the selected stage and records the prior stage as completed", () => {
     // Given
-    const state = { ...initialState, selectedStageId: "projetar", completedStageIds: [] }
+    const state = {
+      ...buildInitialState("mentor", "diagnosticar"),
+      selectedStageId: "projetar",
+      completedStageIds: [],
+    }
 
     // When
     const nextState = reduceState(state, { kind: "advanceStage" })
@@ -101,12 +105,26 @@ describe("Cycle module", () => {
   it("reports full completion when all stages are completed", () => {
     expect(getCycleCompletionPercent(cycleStages.map((stage) => stage.id))).toBe(100)
   })
+
+  it("does not throw and returns a defined stage when selectedStageId is unknown", () => {
+    // Given
+    const snapshot = { selectedStageId: "nonexistent", completedStageIds: [] }
+
+    // When / Then
+    expect(() => advanceCycle(snapshot)).not.toThrow()
+    const next = advanceCycle(snapshot)
+    expect(next.selectedStageId).toBeDefined()
+    expect(cycleStages.some((stage) => stage.id === next.selectedStageId)).toBe(true)
+  })
 })
 
 describe("DojoQuery seam", () => {
   it("returns the selected agent", () => {
     // Given
-    const state = { ...initialState, selectedAgentId: "arquiteto" }
+    const state = {
+      ...buildInitialState("mentor", "diagnosticar"),
+      selectedAgentId: "arquiteto",
+    }
 
     // When
     const agent = getSelectedAgent(state)
@@ -117,7 +135,10 @@ describe("DojoQuery seam", () => {
 
   it("returns the current stage", () => {
     // Given
-    const state = { ...initialState, selectedStageId: "revisar" }
+    const state = {
+      ...buildInitialState("mentor", "diagnosticar"),
+      selectedStageId: "revisar",
+    }
 
     // When
     const stage = getCurrentStage(state)
@@ -146,7 +167,10 @@ describe("DojoQuery seam", () => {
 
   it("reports a stage as completed only when it is in the completed list", () => {
     // Given
-    const state = { ...initialState, completedStageIds: ["diagnosticar"] }
+    const state = {
+      ...buildInitialState("mentor", "diagnosticar"),
+      completedStageIds: ["diagnosticar"],
+    }
 
     // Then
     expect(isStageCompleted(state, "diagnosticar")).toBe(true)
