@@ -54,6 +54,13 @@ For EACH of `{go-impl,rust-impl,node-impl}/`:
 - [ ] Cross-language comparison section
 - [ ] `docs/learning_notes.md` — pedagogical insights and patterns discovered
 
+### Characterization Tests (required for legacy/refactor work)
+
+- [ ] `docs/characterization_tests.md` — current observable behavior before changes
+- [ ] Happy path, bad input, and side-effect/stateful behavior covered
+- [ ] Tests run before and after the refactor/migration
+- [ ] Any behavior intentionally changed is documented as a new requirement, not hidden in the refactor
+
 ### Benchmarks (N≥3, reproducible)
 
 - [ ] `docs/benchmark_results.md` — 4 scenarios × 3 languages × N≥3 samples:
@@ -75,6 +82,8 @@ For EACH of `{go-impl,rust-impl,node-impl}/`:
       - Before/after metrics with delta and significance
       - Rejected optimizations documented (anti-knowledge)
       - Lessons fed back to Curator for next cycle
+- [ ] For refactor/migration cycles, before/after metrics include characterization pass rate,
+      coverage, complexity, coupling/touched files, duplication, build/test time, and regression count
 
 ### Verification Gate
 
@@ -142,5 +151,6 @@ Link to `technology_comparison.md`.
 3. Code review covers all 7 categories with severity-classified findings.
 4. Benchmarks ran 4 scenarios × 3 languages × N≥3 with CV% reported.
 5. Evolution report documents at least one measured optimization.
-6. Status file reflects `cycle-complete`.
-7. Verifier (separate context) confirmed PASS from zero.
+6. Legacy/refactor work includes characterization tests and before/after metrics.
+7. Status file reflects `cycle-complete`.
+8. Verifier (separate context) confirmed PASS from zero.

@@ -66,3 +66,21 @@ Every comparison must use the same problem, same contract, and same measurement 
 | Learning value | 10 | 0-5 | Reflection and next challenge. |
 
 Weighted score is useful only as a trend. A blocker in correctness, security, or verifier evidence fails the gate regardless of total score.
+
+## Refactor and Migration Metrics
+
+Legacy/refactor work uses the same empirical standard, but the primary question changes from "did it add capability?" to "did it preserve behavior while reducing future risk?"
+
+| Metric | Gate |
+| --- | --- |
+| Characterization pass rate | 100% before and after the change. |
+| Public-surface smoke test | Must pass through the real user/API/CLI surface. |
+| Core coverage | Must rise or remain stable with stronger assertions. |
+| Cyclomatic/cognitive complexity | Hotspots should decrease; median remains below 10. |
+| Coupling / touched files | Same behavior change should require fewer or clearer touch points. |
+| Duplication | Duplicate behavior decreases without speculative abstraction. |
+| Build and test time | Must not regress without an explicit trade-off. |
+| Runtime/latency/memory | Required when performance motivated the refactor; CV% must be below 20% for comparative claims. |
+| Regression count | Zero accepted regressions. |
+
+The full legacy/refactor workflow and code-smell catalog live in `LEGACY_MIGRATION.md`.

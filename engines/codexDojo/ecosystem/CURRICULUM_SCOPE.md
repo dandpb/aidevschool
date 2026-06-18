@@ -38,6 +38,19 @@ This file maps the requested learning scope to concrete tracks. It prevents the 
 | Cloud | Deployment and observability track once local gates are stable. |
 | AI tools | Prompt tests, evals, RAG, function calling, embeddings, workflows. |
 
+## Legacy Modernization Track
+
+| Requested capability | How codexDojo teaches it |
+| --- | --- |
+| Understand undocumented code | Map entry points, dependencies, side effects, and risk before editing. |
+| Add tests to legacy systems | Require characterization tests that preserve current behavior. |
+| Refactor safely | Use one small behavior-preserving move at a time, then verify parity. |
+| Migrate incrementally | Prefer Strangler Fig, Branch by Abstraction, Parallel Run, Feature Flags, Expand/Contract, and anti-corruption layers. |
+| Modernize without regressions | Measure before/after coverage, complexity, coupling, build/test time, runtime, and regression count. |
+| Practice legacy drills | Add script-to-module, JS-to-TS, callback-to-async, framework-boundary, and monolith-extraction variants. |
+
+Canonical contract: `LEGACY_MIGRATION.md`.
+
 ## Application Construction Track
 
 | Requested app type | Roadmap coverage |

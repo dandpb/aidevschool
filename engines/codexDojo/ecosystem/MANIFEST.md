@@ -13,6 +13,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/codexDojo/` | User-facing app and product-facing ecosystem spec. |
 | `engines/codexDojo/src/` | Local dashboard for agents, cycle, roadmap, and first project. |
 | `engines/codexDojo/ecosystem/` | Canonical manifest, completion audit, prompts, runbooks, memory, evaluation, and templates. |
+| `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` | Legacy/refactoring contract: characterization tests, code-smell catalog, migration strategies, and before/after metrics. |
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
 | `engines/minimaxDojo/config/learner.yaml` | Single seam for numeric thresholds referenced by prompts/docs via `⟨config: path⟩`. |
 | `engines/pixelDojo/` | 8-bit learning-game engine prototype. |
@@ -38,6 +39,10 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/*/README.md` (thin index) |
 | 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
 | 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/`. |
+| 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
+| 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
+| 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md` |
+| 16 | Metrics for real refactor improvement | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
 
 ## Requested Scope Coverage
 
@@ -51,6 +56,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Tests and metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Professional AI integration | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md` |
 | Ludic practice and evidence capture | Prototype work in `engines/pixelDojo/`. |
+| Legacy refactoring, modernization, and migration | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md` |
 
 ## Core Principles
 
