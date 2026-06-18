@@ -60,6 +60,8 @@ export type Metric = {
   readonly label: string
   readonly target: string
   readonly signal: string
+  readonly measurement?: string
+  readonly evidencePath?: string
 }
 
 export type EcosystemStatus = {

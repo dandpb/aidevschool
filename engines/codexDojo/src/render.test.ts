@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { projects } from "./data/projects"
-import { getCurrentProject, getSelectedProject } from "./progress"
+import { getCurrentProject, getMetrics, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
 
@@ -32,6 +32,22 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain("Legacy/refactor")
     expect(html).toContain("ecosystem/LEGACY_MIGRATION.md")
     expect(html).toContain("Mostra se o design ou runtime virou gargalo.")
+  })
+
+  it("overview: renders broad honest metrics without fake measurements", () => {
+    const html = renderShell(stateWith({ view: "overview" }))
+    const metricCards = html.match(/<div class="metric-item">[\s\S]*?<\/div>/g) ?? []
+
+    expect(metricCards).toHaveLength(getMetrics().length)
+    expect(metricCards.length).toBeGreaterThanOrEqual(8)
+    expect(metricCards.some((card) => card.includes("não medido ainda"))).toBe(true)
+
+    for (const card of metricCards) {
+      const strongValue = card.match(/<strong>([^<]+)<\/strong>/)?.[1]?.trim()
+      expect(strongValue).toBe("não medido ainda")
+      expect(strongValue).not.toMatch(/\d/)
+      expect(card).toContain("<small>Meta:")
+    }
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {

@@ -92,8 +92,10 @@ export function renderOverview(state: AppState): string {
             (metric) => `
               <div class="metric-item">
                 <span>${metric.label}</span>
-                <strong>${metric.target}</strong>
+                <strong>${metric.measurement ?? "não medido ainda"}</strong>
+                <small>Meta: ${metric.target}</small>
                 <small>${metric.signal}</small>
+                ${metric.evidencePath ? `<code>${metric.evidencePath}</code>` : ""}
               </div>
             `,
           )

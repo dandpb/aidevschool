@@ -104,4 +104,34 @@ export const metrics: readonly Metric[] = [
     target: "queda por ciclo",
     signal: "Mede autonomia, não volume de código gerado.",
   },
+  {
+    id: "correctness",
+    label: "Corretude",
+    target: "casos críticos cobertos",
+    signal: "Confirma comportamento funcional, bordas e falhas esperadas.",
+  },
+  {
+    id: "type-api-safety",
+    label: "Segurança de tipos e API",
+    target: "sem fugas não verificadas",
+    signal: "Valida tipos estritos, parsing nas fronteiras e contratos estáveis.",
+  },
+  {
+    id: "security",
+    label: "Segurança",
+    target: "sem riscos conhecidos",
+    signal: "Observa validação de entrada, limites de auth e manuseio de segredos.",
+  },
+  {
+    id: "operability",
+    label: "Operabilidade e observabilidade",
+    target: "logs, métricas e runbook",
+    signal: "Mostra se o sistema é fácil de observar, operar e reverter.",
+  },
+  {
+    id: "benchmark-cv",
+    label: "Variância do benchmark (CV%)",
+    target: "CV <20%",
+    signal: "Indica se a comparação é estável o bastante para confiança.",
+  },
 ] as const
