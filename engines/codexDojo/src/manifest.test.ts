@@ -23,12 +23,33 @@ function extractSection(manifestText: string, heading: string): string {
 }
 
 function extractWorkspacePaths(tableSection: string): string[] {
-  return tableSection
-    .split("\n")
-    .filter((line) => line.startsWith("|"))
-    .flatMap((line) => Array.from(line.matchAll(/`([^`]+)`/g), (match) => match[1]))
-    .filter((entry) => entry.includes("/"))
-    .filter((entry) => /(?:\.md|\.ya?ml|\.json|\/)$/u.test(entry))
+  const paths: string[] = []
+
+  for (const line of tableSection.split("\n")) {
+    if (!line.startsWith("|")) {
+      continue
+    }
+
+    for (const match of line.matchAll(/`([^`]+)`/g)) {
+      const entry = match[1]
+
+      if (entry === undefined) {
+        continue
+      }
+
+      if (!entry.includes("/")) {
+        continue
+      }
+
+      if (!/(?:\.md|\.ya?ml|\.json|\/)$/u.test(entry)) {
+        continue
+      }
+
+      paths.push(entry)
+    }
+  }
+
+  return paths
 }
 
 describe("codexDojo MANIFEST coverage", () => {
