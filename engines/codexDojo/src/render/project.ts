@@ -1,17 +1,14 @@
-import { getCurrentProject } from "../progress"
+import { getSelectedProject } from "../progress"
 import type { AppState } from "../state"
 
 /**
  * Render the active project view.
  *
- * `state` is accepted so the view registry can treat every renderer uniformly
- * (`(state: AppState) => string`). The current project is still read through
- * `getCurrentProject()` because the dashboard has a single active project and
- * we want one query seam for catalog lookups. If project selection becomes
- * state-driven later, `state` will be used to pick the project.
+ * The selected project is read through a query seam so roadmap clicks and future
+ * persisted learner state can choose the same briefing surface.
  */
-export function renderProject(_state: AppState): string {
-  const project = getCurrentProject()
+export function renderProject(state: AppState): string {
+  const project = getSelectedProject(state)
 
   const functionalItems =
     project.functionalRequirements?.map((item) => `<li>${item}</li>`).join("") ?? ""
@@ -22,9 +19,9 @@ export function renderProject(_state: AppState): string {
   const extraDoneItems = project.extraDoneCriteria?.map((item) => `<li>${item}</li>`).join("") ?? ""
 
   return `
-    <section class="workbench project-view" aria-label="Primeiro projeto prático">
+    <section class="workbench project-view" aria-label="Projeto selecionado">
       <div class="section-heading">
-        <p class="eyebrow">Projeto 01</p>
+        <p class="eyebrow">${project.id.toUpperCase()}</p>
         <h2>${project.title}</h2>
       </div>
 

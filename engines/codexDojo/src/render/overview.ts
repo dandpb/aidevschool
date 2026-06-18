@@ -1,9 +1,10 @@
-import type { Agent, CycleStage, DojoProject, Metric } from "../domain"
+import type { Agent, CycleStage, DojoProject, EcosystemStatus, Metric } from "../domain"
 import {
   type DashboardStats,
   getAgents,
   getCurrentProject,
   getDashboardStats,
+  getEcosystemStatuses,
   getMetrics,
   getStages,
 } from "../progress"
@@ -17,6 +18,7 @@ type OverviewModel = {
   readonly visibleAgents: readonly Agent[]
   readonly currentProject: DojoProject
   readonly metrics: readonly Metric[]
+  readonly ecosystemStatuses: readonly EcosystemStatus[]
   readonly visibleStages: readonly CycleStage[]
 }
 
@@ -26,6 +28,7 @@ function getOverviewModel(state: AppState): OverviewModel {
     visibleAgents: getAgents().slice(0, OVERVIEW_AGENT_LIMIT),
     currentProject: getCurrentProject(),
     metrics: getMetrics(),
+    ecosystemStatuses: getEcosystemStatuses(),
     visibleStages: getStages().slice(0, OVERVIEW_STAGE_LIMIT),
   }
 }
@@ -90,6 +93,22 @@ export function renderOverview(state: AppState): string {
               <div class="metric-item">
                 <span>${metric.label}</span>
                 <strong>${metric.target}</strong>
+                <small>${metric.signal}</small>
+              </div>
+            `,
+          )
+          .join("")}
+      </article>
+
+      <article class="ecosystem-strip" aria-label="Contratos do ecossistema">
+        ${model.ecosystemStatuses
+          .map(
+            (status) => `
+              <div class="ecosystem-card">
+                <span>${status.label}</span>
+                <strong>${status.state}</strong>
+                <p>${status.evidence}</p>
+                <small>${status.nextStep}</small>
               </div>
             `,
           )

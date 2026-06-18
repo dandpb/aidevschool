@@ -16,7 +16,7 @@ const viewMeta: Readonly<Record<View, { label: string; render: ViewRenderer }>> 
   agents: { label: "Agentes", render: renderAgents },
   cycle: { label: "Ciclo", render: renderCycle },
   roadmap: { label: "Roadmap", render: renderRoadmap },
-  project: { label: "Projeto 01", render: renderProject },
+  project: { label: "Projeto", render: renderProject },
 }
 
 // Ordered to match the `views` array — drives nav rendering and view dispatch

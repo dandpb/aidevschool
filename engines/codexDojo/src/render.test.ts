@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { projects } from "./data/projects"
-import { getCurrentProject } from "./progress"
+import { getCurrentProject, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
 
@@ -23,6 +23,15 @@ describe("renderShell — targeted assertions", () => {
 
     const stageChips = html.match(/class="stage-chip/g)
     expect(stageChips).toHaveLength(6)
+  })
+
+  it("overview: surfaces ecosystem contracts and metric signals", () => {
+    const html = renderShell(stateWith({ view: "overview" }))
+
+    expect(html).toContain("Learning gate")
+    expect(html).toContain("Legacy/refactor")
+    expect(html).toContain("ecosystem/LEGACY_MIGRATION.md")
+    expect(html).toContain("Mostra se o design ou runtime virou gargalo.")
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {
@@ -81,6 +90,7 @@ describe("renderShell — targeted assertions", () => {
 
     for (const project of concurrencyProjects) {
       expect(html).toContain(project.title)
+      expect(html).toContain(`data-project="${project.id}"`)
     }
   })
 
@@ -101,5 +111,17 @@ describe("renderShell — targeted assertions", () => {
     for (const criterion of project.extraDoneCriteria ?? []) {
       expect(html).toContain(criterion)
     }
+  })
+
+  it("project: renders the selected project instead of always project 01", () => {
+    const selectedProjectId = "p08"
+    const html = renderShell(stateWith({ view: "project", selectedProjectId }))
+    const project = getSelectedProject(stateWith({ selectedProjectId }))
+
+    expect(html).toContain(project.title)
+    expect(html).toContain(selectedProjectId.toUpperCase())
+    expect(html).toContain('data-view="project"')
+    expect(html).toContain(">Projeto</button>")
+    expect(html).not.toContain(getCurrentProject().title)
   })
 })

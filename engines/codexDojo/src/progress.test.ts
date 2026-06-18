@@ -3,11 +3,14 @@ import { advanceCycle, getCycleCompletionPercent } from "./cycle"
 import { cycleStages } from "./data/cycle"
 import {
   findAgent,
+  findProject,
   findStage,
   getAgents,
   getCurrentStage,
+  getEcosystemStatuses,
   getProjects,
   getSelectedAgent,
+  getSelectedProject,
   isStageCompleted,
 } from "./progress"
 import { buildInitialState, reduceState } from "./state"
@@ -52,6 +55,14 @@ describe("codexDojo progress model", () => {
     // Then
     expect(agent.name).toBe("CARTÓGRAFO")
     expect(stage.owner).toBe("Revisor")
+  })
+
+  it("loads configured projects by id", () => {
+    // When
+    const project = findProject("p04")
+
+    // Then
+    expect(project.title).toBe("Concurrent Task Queue")
   })
 })
 
@@ -159,6 +170,20 @@ describe("DojoQuery seam", () => {
     expect(stage.owner).toBe("Revisor")
   })
 
+  it("returns the selected project", () => {
+    // Given
+    const state = {
+      ...buildInitialState("maestro", "diagnosticar"),
+      selectedProjectId: "p08",
+    }
+
+    // When
+    const project = getSelectedProject(state)
+
+    // Then
+    expect(project.id).toBe("p08")
+  })
+
   it("returns all projects by default", () => {
     // When
     const all = getProjects()
@@ -196,5 +221,14 @@ describe("DojoQuery seam", () => {
     // Then
     expect(roster).toHaveLength(14)
     expect(roster.some((agent) => agent.id === "maestro")).toBe(true)
+  })
+
+  it("exposes ecosystem status cards for dashboard contract coverage", () => {
+    // When
+    const statuses = getEcosystemStatuses()
+
+    // Then
+    expect(statuses.some((status) => status.id === "legacy-refactor")).toBe(true)
+    expect(statuses.every((status) => status.evidence.length > 0)).toBe(true)
   })
 })

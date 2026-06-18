@@ -6,6 +6,7 @@ vi.mock(import("./progress"), async (importOriginal) => {
   return {
     ...actual,
     getAgents: vi.fn(actual.getAgents),
+    getProjects: vi.fn(actual.getProjects),
     getStages: vi.fn(actual.getStages),
   }
 })
@@ -27,6 +28,7 @@ describe("mountCodexDojo", () => {
     const root = {} as HTMLElement
     vi.mocked(progress.getAgents).mockReturnValueOnce([])
     vi.mocked(progress.getStages).mockReturnValueOnce([])
+    vi.mocked(progress.getProjects).mockReturnValueOnce([])
     expect(() => mountCodexDojo(root)).toThrow(AppMountError)
   })
 

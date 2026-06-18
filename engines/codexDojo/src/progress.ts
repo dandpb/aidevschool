@@ -1,8 +1,9 @@
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { cycleStages, metrics } from "./data/cycle"
+import { ecosystemStatuses } from "./data/ecosystem"
 import { projects } from "./data/projects"
-import type { Agent, CycleStage, DojoProject, Metric } from "./domain"
+import type { Agent, CycleStage, DojoProject, EcosystemStatus, Metric } from "./domain"
 import type { AppState, ProjectFilter } from "./state"
 
 export type DashboardStats = {
@@ -57,6 +58,10 @@ export function getMetrics(): readonly Metric[] {
   return metrics
 }
 
+export function getEcosystemStatuses(): readonly EcosystemStatus[] {
+  return ecosystemStatuses
+}
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
@@ -73,6 +78,10 @@ export function getCurrentProject(): DojoProject {
   }
 
   return project
+}
+
+export function getSelectedProject(state: AppState): DojoProject {
+  return findProject(state.selectedProjectId)
 }
 
 export function getDashboardStats(state: AppState): DashboardStats {
@@ -106,4 +115,14 @@ export function findStage(stageId: string): CycleStage {
   }
 
   return stage
+}
+
+export function findProject(projectId: string): DojoProject {
+  const project = projects.find((candidate) => candidate.id === projectId)
+
+  if (project === undefined) {
+    throw new Error(`Unknown project: ${projectId}`)
+  }
+
+  return project
 }

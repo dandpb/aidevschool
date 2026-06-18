@@ -55,6 +55,14 @@ export type Metric = {
   readonly signal: string
 }
 
+export type EcosystemStatus = {
+  readonly id: string
+  readonly label: string
+  readonly state: string
+  readonly evidence: string
+  readonly nextStep: string
+}
+
 export function assertNever(value: never): never {
   throw new Error(`Unhandled variant: ${String(value)}`)
 }

@@ -53,6 +53,20 @@ describe("reduceState — selectStage", () => {
   })
 })
 
+describe("reduceState — selectProject", () => {
+  it("selects the project and jumps to the project view", () => {
+    // Given
+    const state = stateWith({ view: "roadmap", selectedProjectId: "p01" })
+
+    // When
+    const next = reduceState(state, { kind: "selectProject", projectId: "p08" })
+
+    // Then
+    expect(next.selectedProjectId).toBe("p08")
+    expect(next.view).toBe("project")
+  })
+})
+
 describe("reduceState — setProjectFilter", () => {
   it("sets the filter and jumps to the roadmap view", () => {
     // Given

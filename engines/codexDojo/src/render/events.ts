@@ -17,6 +17,10 @@ const intents: readonly Intent[] = [
   { attr: "data-agent", decode: (v) => (v !== null ? { kind: "selectAgent", agentId: v } : null) },
   { attr: "data-stage", decode: (v) => (v !== null ? { kind: "selectStage", stageId: v } : null) },
   {
+    attr: "data-project",
+    decode: (v) => (v !== null ? { kind: "selectProject", projectId: v } : null),
+  },
+  {
     attr: "data-filter",
     decode: (v) => (isProjectFilter(v) ? { kind: "setProjectFilter", filter: v } : null),
   },

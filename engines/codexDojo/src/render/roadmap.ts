@@ -43,6 +43,7 @@ export function renderRoadmap(state: AppState): string {
                   <div><dt>Linguagem</dt><dd>${project.language}</dd></div>
                   <div><dt>Arquitetura</dt><dd>${project.architecture}</dd></div>
                 </dl>
+                <button class="inline-link" type="button" data-project="${project.id}">Abrir briefing</button>
               </article>
             `,
           )

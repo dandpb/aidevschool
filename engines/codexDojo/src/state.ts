@@ -7,6 +7,7 @@ export type AppState = {
   readonly view: View
   readonly selectedAgentId: string
   readonly selectedStageId: string
+  readonly selectedProjectId: string
   readonly completedStageIds: readonly string[]
   /**
    * Roadmap-only filter (phase selector). It is consumed solely by the roadmap view,
@@ -22,15 +23,21 @@ export type AppAction =
   | { readonly kind: "changeView"; readonly view: View }
   | { readonly kind: "selectAgent"; readonly agentId: string }
   | { readonly kind: "selectStage"; readonly stageId: string }
+  | { readonly kind: "selectProject"; readonly projectId: string }
   | { readonly kind: "advanceStage" }
   | { readonly kind: "setProjectFilter"; readonly filter: ProjectFilter }
   | { readonly kind: "markCopied"; readonly agentId: string | null }
 
-export function buildInitialState(firstAgentId: string, firstStageId: string): AppState {
+export function buildInitialState(
+  firstAgentId: string,
+  firstStageId: string,
+  firstProjectId = "p01",
+): AppState {
   return {
     view: "overview",
     selectedAgentId: firstAgentId,
     selectedStageId: firstStageId,
+    selectedProjectId: firstProjectId,
     completedStageIds: ["diagnosticar", "escolher"],
     projectFilter: "all",
     copiedAgentId: null,
@@ -45,6 +52,8 @@ export function reduceState(state: AppState, action: AppAction): AppState {
       return { ...state, selectedAgentId: action.agentId, view: "agents", copiedAgentId: null }
     case "selectStage":
       return { ...state, selectedStageId: action.stageId, view: "cycle" }
+    case "selectProject":
+      return { ...state, selectedProjectId: action.projectId, view: "project" }
     case "advanceStage":
       return { ...state, ...advanceCycle(state), view: "cycle" }
     case "setProjectFilter":

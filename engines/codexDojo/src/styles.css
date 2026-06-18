@@ -149,13 +149,15 @@ h3 {
 .topology,
 .next-project,
 .metric-strip,
+.ecosystem-strip,
 .cycle-strip,
 .workbench,
 .agent-detail,
 .stage-detail,
 .quality-card,
 .briefing-main,
-.project-card {
+.project-card,
+.ecosystem-card {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: rgba(36, 36, 31, 0.88);
@@ -348,6 +350,7 @@ dd {
 }
 
 .metric-strip,
+.ecosystem-strip,
 .cycle-strip {
   grid-column: 1 / -1;
   display: grid;
@@ -359,17 +362,32 @@ dd {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
+.ecosystem-strip {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .metric-item,
-.stage-chip {
+.stage-chip,
+.ecosystem-card {
   padding: 14px;
 }
 
 .metric-item span,
-.stage-chip span {
+.stage-chip span,
+.ecosystem-card span {
   display: block;
   color: var(--muted);
   font-size: 0.75rem;
   text-transform: uppercase;
+}
+
+.metric-item small,
+.ecosystem-card small,
+.ecosystem-card p {
+  display: block;
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .workbench {
@@ -471,6 +489,21 @@ dd {
   width: auto;
 }
 
+.inline-link {
+  margin-top: 14px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--brass);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.inline-link:hover {
+  color: var(--mint);
+}
+
 .project-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -512,6 +545,7 @@ dd {
   }
 
   .metric-strip,
+  .ecosystem-strip,
   .cycle-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -524,6 +558,7 @@ dd {
 
   .nav-stack,
   .metric-strip,
+  .ecosystem-strip,
   .cycle-strip,
   .stat-grid,
   .detail-columns,
