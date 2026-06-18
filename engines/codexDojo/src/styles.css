@@ -153,6 +153,7 @@ h3 {
 .cycle-strip,
 .workbench,
 .agent-detail,
+.surface-map,
 .stage-detail,
 .quality-card,
 .briefing-main,
@@ -407,6 +408,59 @@ dd {
   gap: 18px;
 }
 
+.agents-view {
+  align-items: start;
+}
+
+.agents-view > .section-heading,
+.surface-map,
+.core-heading {
+  grid-column: 1 / -1;
+}
+
+.surface-map,
+.surface-summary,
+.user-agent-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.surface-map {
+  padding: 18px;
+}
+
+.surface-summary,
+.user-agent-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.surface-summary div,
+.user-agent-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(17, 17, 15, 0.42);
+}
+
+.surface-summary span,
+.user-agent-card small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.surface-summary strong {
+  display: block;
+  font-size: 2rem;
+}
+
+.user-agent-card p {
+  margin: 8px 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
 .agent-list,
 .timeline {
   display: grid;
@@ -546,6 +600,8 @@ dd {
 
   .metric-strip,
   .ecosystem-strip,
+  .surface-summary,
+  .user-agent-grid,
   .cycle-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

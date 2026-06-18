@@ -37,6 +37,11 @@ describe("renderShell — targeted assertions", () => {
   it("agents (selected=critico): critico row is active, others are not", () => {
     const html = renderShell(stateWith({ view: "agents", selectedAgentId: "critico" }))
 
+    expect(html).toContain("10</strong><small>agentes user-facing")
+    expect(html).toContain("14</strong><small>sub-agentes especializados")
+    expect(html).toContain("Mentor")
+    expect(html).toContain("Expande para: maestro, sonda, socrates")
+
     const criticoRow = html.match(/<button[^>]*data-agent="critico"[^>]*>/)
     expect(criticoRow?.[0]).toContain("is-active")
 

@@ -1,9 +1,16 @@
 import { getCycleCompletionPercent } from "./cycle"
-import { agents } from "./data/agents"
+import { agents, userFacingAgents } from "./data/agents"
 import { cycleStages, metrics } from "./data/cycle"
 import { ecosystemStatuses } from "./data/ecosystem"
 import { projects } from "./data/projects"
-import type { Agent, CycleStage, DojoProject, EcosystemStatus, Metric } from "./domain"
+import type {
+  Agent,
+  CycleStage,
+  DojoProject,
+  EcosystemStatus,
+  Metric,
+  UserFacingAgent,
+} from "./domain"
 import type { AppState, ProjectFilter } from "./state"
 
 export type DashboardStats = {
@@ -31,6 +38,10 @@ export function getCurrentStage(state: AppState): CycleStage {
  */
 export function getAgents(): readonly Agent[] {
   return agents
+}
+
+export function getUserFacingAgents(): readonly UserFacingAgent[] {
+  return userFacingAgents
 }
 
 /**

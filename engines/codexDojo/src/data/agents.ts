@@ -1,4 +1,68 @@
-import type { Agent } from "../domain"
+import type { Agent, UserFacingAgent } from "../domain"
+
+export const userFacingAgents: readonly UserFacingAgent[] = [
+  {
+    id: "mentor",
+    name: "Mentor",
+    responsibility: "Adapta explicação e desafio ao nível atual do aprendiz.",
+    expandsTo: ["maestro", "sonda", "socrates"],
+  },
+  {
+    id: "curriculo",
+    name: "Curriculo",
+    responsibility: "Mantém trilha progressiva, pré-requisitos e unidades desbloqueadas.",
+    expandsTo: ["cartografo", "mestre_conteudo", "mneme"],
+  },
+  {
+    id: "arquiteto",
+    name: "Arquiteto",
+    responsibility: "Propõe arquitetura, alternativas rejeitadas e trade-offs verificáveis.",
+    expandsTo: ["cartografo", "galileu"],
+  },
+  {
+    id: "implementador",
+    name: "Implementador",
+    responsibility: "Constrói o menor incremento correto com testes e instruções de execução.",
+    expandsTo: ["mestre_conteudo", "maestro"],
+  },
+  {
+    id: "revisor_codigo",
+    name: "Revisor de Codigo",
+    responsibility: "Revisa legibilidade, segurança, performance, manutenção e riscos.",
+    expandsTo: ["critico", "prometor"],
+  },
+  {
+    id: "testes",
+    name: "Testes",
+    responsibility: "Converte requisitos em testes unitários, integração, regressão e benchmark.",
+    expandsTo: ["prometor", "galileu"],
+  },
+  {
+    id: "metricas",
+    name: "Metricas",
+    responsibility: "Mede qualidade, performance, custo, complexidade e progresso de aprendizado.",
+    expandsTo: ["atena", "galileu"],
+  },
+  {
+    id: "devops",
+    name: "DevOps",
+    responsibility: "Ensina versionamento, CI/CD, containers, deploy, observabilidade e rollback.",
+    expandsTo: ["cronos", "galileu"],
+  },
+  {
+    id: "pesquisador",
+    name: "Pesquisador",
+    responsibility: "Pesquisa fontes primárias, melhores práticas, bibliotecas e experimentos.",
+    expandsTo: ["cartografo", "galileu"],
+  },
+  {
+    id: "memoria",
+    name: "Memoria",
+    responsibility:
+      "Preserva histórico, decisões, erros frequentes, próximos passos e revisão espaçada.",
+    expandsTo: ["mnemosyne", "ouroboros", "mneme"],
+  },
+] as const
 
 export const agents: readonly Agent[] = [
   {

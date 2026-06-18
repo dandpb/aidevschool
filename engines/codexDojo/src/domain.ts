@@ -26,6 +26,13 @@ export type Agent = {
   readonly prompt: string
 }
 
+export type UserFacingAgent = {
+  readonly id: string
+  readonly name: string
+  readonly responsibility: string
+  readonly expandsTo: readonly string[]
+}
+
 export type CycleStage = {
   readonly id: string
   readonly label: string

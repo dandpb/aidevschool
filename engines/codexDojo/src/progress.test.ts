@@ -11,6 +11,7 @@ import {
   getProjects,
   getSelectedAgent,
   getSelectedProject,
+  getUserFacingAgents,
   isStageCompleted,
 } from "./progress"
 import { buildInitialState, reduceState } from "./state"
@@ -221,6 +222,16 @@ describe("DojoQuery seam", () => {
     // Then
     expect(roster).toHaveLength(14)
     expect(roster.some((agent) => agent.id === "maestro")).toBe(true)
+  })
+
+  it("exposes the user-facing 10-agent product surface", () => {
+    // When
+    const surface = getUserFacingAgents()
+
+    // Then
+    expect(surface).toHaveLength(10)
+    expect(surface.map((agent) => agent.name)).toContain("Mentor")
+    expect(surface.every((agent) => agent.expandsTo.length > 0)).toBe(true)
   })
 
   it("exposes ecosystem status cards for dashboard contract coverage", () => {

@@ -1,18 +1,49 @@
-import { getAgents, getSelectedAgent } from "../progress"
+import { getAgents, getSelectedAgent, getUserFacingAgents } from "../progress"
 import type { AppState } from "../state"
 
 export function renderAgents(state: AppState): string {
   const selectedAgent = getSelectedAgent(state)
+  const userFacingAgents = getUserFacingAgents()
+  const coreAgents = getAgents()
 
   return `
     <section class="workbench agents-view" aria-label="Agentes do codexDojo">
       <div class="section-heading">
         <p class="eyebrow">Equipe multiagente</p>
         <h2>Responsabilidades claras, saídas verificáveis</h2>
+        <p>
+          A superfície de produto expõe 10 agentes para o aprendiz. O tutor core expande essa
+          frente em 14 sub-agentes especializados para execução longa, memória e verificação adversarial.
+        </p>
+      </div>
+
+      <article class="surface-map" aria-label="Camadas de agentes">
+        <div class="surface-summary">
+          <div><span>Produto</span><strong>${userFacingAgents.length}</strong><small>agentes user-facing</small></div>
+          <div><span>Tutor core</span><strong>${coreAgents.length}</strong><small>sub-agentes especializados</small></div>
+        </div>
+        <div class="user-agent-grid">
+          ${userFacingAgents
+            .map(
+              (agent) => `
+                <div class="user-agent-card">
+                  <strong>${agent.name}</strong>
+                  <p>${agent.responsibility}</p>
+                  <small>Expande para: ${agent.expandsTo.join(", ")}</small>
+                </div>
+              `,
+            )
+            .join("")}
+        </div>
+      </article>
+
+      <div class="section-heading core-heading">
+        <p class="eyebrow">Tutor core</p>
+        <h3>14 papéis operacionais</h3>
       </div>
 
       <div class="agent-list">
-        ${getAgents()
+        ${coreAgents
           .map((agent) => {
             const activeClass = agent.id === selectedAgent.id ? "is-active" : ""
             return `
