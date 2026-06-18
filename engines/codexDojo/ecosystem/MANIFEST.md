@@ -23,6 +23,16 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | Phase commands for Claude Code orchestration. |
 | `curriculum/` | Real implementation projects and evidence. |
 
+## Status Vocabulary
+
+| Status | Meaning |
+| --- | --- |
+| `implemented` | code/artifact exists and passes verification |
+| `scaffolded` | folder/boilerplate exists but no verified behavior |
+| `planned` | documented intent, no code yet |
+| `proposal` | design material only, no runtime commitment |
+| `blocked` | cannot proceed due to external dependency |
+
 ## Requested Deliverables Coverage
 
 | # | Requested deliverable | Evidence in this workspace |
@@ -36,7 +46,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/technology-comparison.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
 | 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
-| 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/*/README.md` (thin index) |
+| 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/` (thin index) |
 | 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
 | 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/`. |
 | 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
