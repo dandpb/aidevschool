@@ -660,6 +660,43 @@ dated today.
   spec is the contract; the impls are the
   translations.
 
+### Status vocabulary is the honesty layer for spec-vs-implementation gaps (2026-06-18)
+- **Context**: Ecosystem-level audit of
+  `engines/codexDojo/ecosystem/`. A prompt-to-
+  implementation gap audit found six contract gaps
+  where docs implied behavior the code did not yet
+  provide. The MANIFEST listed deliverables as
+  "covered" without saying whether each was real,
+  scaffolded, or only proposed.
+- **Application**: Add a five-value status
+  vocabulary to the manifest (`implemented`,
+  `scaffolded`, `planned`, `proposal`, `blocked`)
+  and tag every deliverable and curation step with
+  its current status. Treat the audit as evidence,
+  not as a transcript: record the count of gaps,
+  the vocabulary added, and the verification
+  command, not the chat that produced them.
+- **Result**: A future agent can read any row of
+  the manifest and tell immediately whether the
+  evidence is executable code, a folder, an
+  intention, or a blocked item. No mastery is
+  claimed from the docs work itself; Dreyfus/Bloom
+  levels stay unchanged because no programming
+  concept was verified by a learner attempt.
+- **Generalization**: For any living spec that
+  mixes real code, scaffolds, and proposals,
+  status labels are cheaper and more honest than
+  prose caveats. The label travels with the
+  artifact, so the audit stays correct as files
+  move. Pair the vocabulary with a single rule:
+  documentation work never moves a learning level;
+  only executable verifier evidence does.
+- **Where to apply**: any multi-artifact ecosystem
+  where the manifest maps requirements to files.
+  Also the curation contract, the metrics surface,
+  and any roadmap that needs to distinguish "done"
+  from "intended".
+
 ---
 
 ## How to add an entry

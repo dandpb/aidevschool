@@ -1,0 +1,105 @@
+# Memory Curation Substrate Evidence
+Date: 2026-06-18T21:56:00Z
+Host: Darwin 25.5.0
+Python: Python 3.12.2
+Repo root: /Users/danielbarreto/Development/aidevschool
+
+## Command 1: python3 -m learner.substrate
+```
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/__main__.py", line 6, in <module>
+    sync()
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/__init__.py", line 112, in sync
+    state = load_and_validate()
+            ^^^^^^^^^^^^^^^^^^^
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/__init__.py", line 100, in load_and_validate
+    raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+ValueError: invalid learner state: learner.id is required; learner.level must be one of {'advanced', 'intermediate', 'beginner'}; empirical_gates.learning.requires_attempt_before_solution must be true
+exit_code=1
+```
+
+## Command 2: python3 -m unittest discover -s learner/substrate/tests -t .
+```
+EE...FF...
+======================================================================
+ERROR: test_mavis_view_is_derived_and_translated (learner.substrate.tests.test_substrate.TestMavisAdapter.test_mavis_view_is_derived_and_translated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/tests/test_substrate.py", line 81, in test_mavis_view_is_derived_and_translated
+    view = derive_mavis_view(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/adapters/mavis.py", line 32, in derive_mavis_view
+    focus_languages = [learner["active_language"]]
+                       ~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'active_language'
+
+======================================================================
+ERROR: test_rendered_mavis_yaml_contains_header (learner.substrate.tests.test_substrate.TestMavisAdapter.test_rendered_mavis_yaml_contains_header)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/tests/test_substrate.py", line 92, in test_rendered_mavis_yaml_contains_header
+    text = render_mavis_yaml(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/adapters/mavis.py", line 88, in render_mavis_yaml
+    view = derive_mavis_view(state)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/adapters/mavis.py", line 32, in derive_mavis_view
+    focus_languages = [learner["active_language"]]
+                       ~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'active_language'
+
+======================================================================
+FAIL: test_validate_passes_for_canonical_state (learner.substrate.tests.test_substrate.TestSubstrateInterface.test_validate_passes_for_canonical_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/tests/test_substrate.py", line 36, in test_validate_passes_for_canonical_state
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: ['learner.id is required', "learner.level [126 chars]rue'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'learner.id is required'
+
++ []
+- ['learner.id is required',
+-  "learner.level must be one of {'intermediate', 'beginner', 'advanced'}",
+-  'empirical_gates.learning.requires_attempt_before_solution must be true']
+
+======================================================================
+FAIL: test_profile_core_derived_from_canonical (learner.substrate.tests.test_substrate.TestWhiteboardAdapter.test_profile_core_derived_from_canonical)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/danielbarreto/Development/aidevschool/learner/substrate/tests/test_substrate.py", line 106, in test_profile_core_derived_from_canonical
+    self.assertEqual(profile["core"]["aluno"]["linguagem_foco"], "TypeScript")
+AssertionError: '' != 'TypeScript'
++ TypeScript
+
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.014s
+
+FAILED (failures=2, errors=2)
+exit_code=1
+```
+
+## Interpretation
+
+Both commands failed with learner-state validation errors, NOT missing Python
+dependencies. The substrate validates `learner/learning_state.yaml` and rejects
+it because required fields are absent:
+  - learner.id is required
+  - learner.level must be one of {advanced, intermediate, beginner}
+  - empirical_gates.learning.requires_attempt_before_solution must be true
+
+These failures are PRE-EXISTING. This task's scope is documentation/contract
+work (MEMORY_CURATION.md, MEMORY_MODEL.md, MANIFEST.md, learner/*.md prose).
+No Python source, no YAML state, and no substrate logic was modified, so these
+results are independent of this task's changes.
+
+Per task instructions, the exact output is recorded and the task does not block
+on substrate failures. The curation contract's "Regenerate derived views" step
+is therefore honest about the gap: the substrate command does not currently
+succeed against the canonical state file, which is itself a curation finding to
+track separately (status: blocked on learning_state.yaml schema fix).

@@ -80,3 +80,7 @@ Write memory only after a cycle creates evidence:
 - Unverified claims.
 - Private credentials.
 - Large logs that can be regenerated.
+
+## Curation Loop
+
+Active curation is defined in [MEMORY_CURATION.md](./MEMORY_CURATION.md). The curation contract distinguishes documented memory layers (this document) from the operational curation loop that keeps learner state fresh.
