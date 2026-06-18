@@ -7,3 +7,5 @@
 - Memory curation needs an operational contract (owner, trigger, input, output, verification) separate from the descriptive memory model, so curation is auditable rather than ad hoc.
 - Never move Dreyfus/Bloom levels from documentation, dashboard, or contract work; only executable verifier evidence moves a learning level. Record this as a spaced-review pitfall.
 - The learner substrate (`python3 -m learner.substrate`) currently fails validation against `learner/learning_state.yaml` (missing `learner.id`, `learner.level`, `requires_attempt_before_solution=true`); this is a pre-existing schema gap, blocked separately from any docs task.
+- OpenClaw/Hermes orchestration is documented as a manual workflow boundary; the runbook should say so plainly and keep continuous automation marked `planned` until an event bridge or scheduler actually exists.
+- For orchestration docs, add deterministic path-existence tests for every artifact path in the checklist and skip command-only entries that are not filesystem paths.

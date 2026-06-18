@@ -82,3 +82,18 @@ Stop and request human decision only when:
 - The learner asks to skip a gate.
 - A verifier fails the same unit three times.
 - Two platform states disagree and no file evidence resolves it.
+
+## Current Automation Boundary
+
+| Layer | Status | Artifact |
+| --- | --- | --- |
+| Documented manual workflow | `implemented` | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md` |
+| Phase commands (Claude Code) | `implemented` | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` |
+| Engine contract | `implemented` | `engines/miniMaxEvolutionEngine/CLAUDE.md` |
+| Phase runner command | `implemented` | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/phaserunner.md` |
+| Platform state | `implemented` | `.mavis/plans/plan.yaml` |
+| Learner substrate regeneration | `implemented` | `python3 -m learner.substrate` |
+| Automated event bridge (OpenClaw ↔ Hermes) | `planned` | Not yet implemented |
+| Continuous scheduler | `planned` | Not yet implemented |
+
+The current ecosystem runs as a documented manual workflow with phase commands. No production event bus, scheduler, or continuous OpenClaw/Hermes integration is deployed. The phase runner is a Claude Code command, not a background daemon.

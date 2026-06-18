@@ -47,7 +47,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/` (thin index) |
-| 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
+| 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` (documented manual workflow; continuous automation is `planned`) |
 | 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/`. |
 | 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
 | 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
