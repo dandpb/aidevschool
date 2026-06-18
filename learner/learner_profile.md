@@ -23,3 +23,8 @@
 ## Lacunas detectadas
 
 - _(preenchido pelo `sonda`)_
+
+## Profile Note (2026-06-18)
+No Dreyfus/Bloom level changes from prompt-gap implementation work. Documentation, dashboard,
+and ecosystem contract work does not count as executable learning evidence. See
+`learner/pitfalls.md` and `learner/journal.md` for curated process lessons from this cycle.

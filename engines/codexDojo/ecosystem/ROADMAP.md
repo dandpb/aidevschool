@@ -8,8 +8,10 @@
 
 ## 18-Project Curriculum
 
-The curriculum follows a 6-level progression. Each project is implemented polyglot
-(Go, Rust, Node.js/TypeScript) with full benchmarks, code reviews, and evolution reports.
+The curriculum follows a 6-level progression. Each project is designed for polyglot
+implementation (Go, Rust, Node.js/TypeScript) with benchmarks, code reviews, and evolution
+reports. Current implementation status varies — see `curriculum/BACKLOG_STATUS.md` for which
+projects are verified vs planned.
 
 ### Level 1 — Fundamentals
 

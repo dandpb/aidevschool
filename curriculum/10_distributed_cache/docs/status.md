@@ -18,13 +18,13 @@ The major remaining caveat is distributed completeness. Gossip membership, live/
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Local cache API | Complete | GET/PUT/DELETE plus invalidation and metrics are implemented/tested. |
-| TTL and eviction | Complete | LRU/LFU and expiry behavior exist in all languages. |
-| Consistent hashing | Partial | Virtual-node ring exists; real owner routing/migration is absent. |
-| Cache-aside/write-through | Partial | Happy path and write failure covered; loader timeout/cancellation is missing. |
-| Gossip membership | Missing | No real gossip loop or liveness state. |
-| Stampede prevention | Partial | Successful per-key coalescing exists; failure/timeout stress coverage is weak. |
-| Observability | Partial | Counters exist; latency histograms and shard ownership metrics are minimal. |
+| Local cache API | implemented | GET/PUT/DELETE plus invalidation and metrics are implemented/tested. |
+| TTL and eviction | implemented | LRU/LFU and expiry behavior exist in all languages. |
+| Consistent hashing | scaffolded | Virtual-node ring exists; real owner routing/migration is absent. |
+| Cache-aside/write-through | scaffolded | Happy path and write failure covered; loader timeout/cancellation is missing. |
+| Gossip membership | planned | No real gossip loop or liveness state. |
+| Stampede prevention | scaffolded | Successful per-key coalescing exists; failure/timeout stress coverage is weak. |
+| Observability | scaffolded | Counters exist; latency histograms and shard ownership metrics are minimal. |
 
 ## Remaining Multi-Node Gaps
 
