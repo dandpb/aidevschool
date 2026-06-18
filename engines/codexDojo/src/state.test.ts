@@ -6,14 +6,14 @@ import { type AppState, buildInitialState, reduceState } from "./state"
 // later structure-only refactors can be proven safe (snapshots for state).
 
 const stateWith = (overrides: Partial<AppState>): AppState => ({
-  ...buildInitialState("mentor", "diagnosticar"),
+  ...buildInitialState("maestro", "diagnosticar"),
   ...overrides,
 })
 
 describe("reduceState — changeView", () => {
   it("sets the view and clears any ephemeral copied-agent state", () => {
     // Given
-    const state = stateWith({ copiedAgentId: "arquiteto" })
+    const state = stateWith({ copiedAgentId: "critico" })
 
     // When
     const next = reduceState(state, { kind: "changeView", view: "agents" })
@@ -27,13 +27,13 @@ describe("reduceState — changeView", () => {
 describe("reduceState — selectAgent", () => {
   it("selects the agent, jumps to the agents view, and clears copied state", () => {
     // Given
-    const state = stateWith({ view: "overview", copiedAgentId: "arquiteto" })
+    const state = stateWith({ view: "overview", copiedAgentId: "critico" })
 
     // When
-    const next = reduceState(state, { kind: "selectAgent", agentId: "revisor" })
+    const next = reduceState(state, { kind: "selectAgent", agentId: "cartografo" })
 
     // Then
-    expect(next.selectedAgentId).toBe("revisor")
+    expect(next.selectedAgentId).toBe("cartografo")
     expect(next.view).toBe("agents")
     expect(next.copiedAgentId).toBeNull()
   })
@@ -59,10 +59,10 @@ describe("reduceState — setProjectFilter", () => {
     const state = stateWith({ view: "overview" })
 
     // When
-    const next = reduceState(state, { kind: "setProjectFilter", filter: "apps" })
+    const next = reduceState(state, { kind: "setProjectFilter", filter: "concorrencia" })
 
     // Then
-    expect(next.projectFilter).toBe("apps")
+    expect(next.projectFilter).toBe("concorrencia")
     expect(next.view).toBe("roadmap")
   })
 })
@@ -73,15 +73,15 @@ describe("reduceState — markCopied", () => {
     const state = stateWith({ copiedAgentId: null })
 
     // When
-    const next = reduceState(state, { kind: "markCopied", agentId: "arquiteto" })
+    const next = reduceState(state, { kind: "markCopied", agentId: "critico" })
 
     // Then
-    expect(next.copiedAgentId).toBe("arquiteto")
+    expect(next.copiedAgentId).toBe("critico")
   })
 
   it("clears the copied agent id when given null", () => {
     // Given
-    const state = stateWith({ copiedAgentId: "arquiteto" })
+    const state = stateWith({ copiedAgentId: "critico" })
 
     // When
     const next = reduceState(state, { kind: "markCopied", agentId: null })

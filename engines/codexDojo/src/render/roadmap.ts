@@ -4,10 +4,11 @@ import type { AppState, ProjectFilter } from "../state"
 
 const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
   fundamentos: "Fundamentos",
-  apps: "Aplicações",
-  dados: "Dados",
-  escala: "Escala",
-  ia: "IA",
+  concorrencia: "Concorrência",
+  arquitetura: "Arquitetura",
+  escalabilidade: "Escalabilidade",
+  resiliencia: "Resiliência",
+  sistemas_complexos: "Sistemas complexos",
 }
 
 export function renderRoadmap(state: AppState): string {

@@ -1,0 +1,191 @@
+-- allium: 3
+-- learner-substrate.allium
+
+-- Scope: canonical learner state and derived-view synchronisation distilled from learner/substrate.
+-- Includes: canonical learner fields, active unit gate, validation invariants, Mavis and minimax whiteboard projections.
+-- Excludes: YAML parsing, filesystem writes, Python module mechanics, generated caches, presentation-only formatting.
+
+entity Learner {
+    id: String
+    level: beginner | intermediate | advanced
+    focus: String
+    goal: String
+    active_language: String
+    languages: Set<String>
+    reference_purpose: String
+    weekly_time_hours: Integer
+    session_cadence: String
+    human_instructor: Boolean
+    hitl_sla_hours: Integer
+    hitl_fallback: String
+    budget: String
+}
+
+entity ActiveUnit {
+    id: String
+    project: String
+    title: String
+    state: presenting | practicing | evaluating | mastered
+    retry_count: Integer
+    retry_limit: Integer
+    unblock_condition: String
+    required_before_implementation: Boolean
+    diagnostic_file: String
+    promotion_gate: String
+}
+
+entity LearningGate {
+    implementation_blocked: Boolean
+}
+
+entity EmpiricalGatePolicy {
+    requires_attempt_before_solution: Boolean
+    requires_executable_evidence: Boolean
+}
+
+entity CanonicalLearnerState {
+    system: String
+    version: String
+    learner: Learner
+    active_unit: ActiveUnit
+    gate: LearningGate
+    empirical_policy: EmpiricalGatePolicy
+}
+
+entity MavisLearnerView {
+    source: CanonicalLearnerState
+    learner_id: String
+    active_unit_id: String
+    active_unit_state: String
+    implementation_blocked: Boolean
+    derived_at: Timestamp
+}
+
+entity WhiteboardProfileView {
+    source: CanonicalLearnerState
+    learner_id: String
+    level: String
+    focus: String
+    active_unit_id: String
+    active_unit_title: String
+    derived_at: Timestamp
+}
+
+entity WhiteboardTrailView {
+    source: CanonicalLearnerState
+    current_focus: String
+    active_unit_title: String
+    active_unit_state_label: String
+    derived_at: Timestamp
+}
+
+rule CanonicalStateLoadsOnlyWhenValid {
+    when: CanonicalStateLoaded(state)
+
+    requires: state.system = "agora-continuum"
+    requires: state.version != ""
+    requires: state.learner.id != ""
+    requires: state.learner.active_language in state.learner.languages
+    requires: state.active_unit.id != ""
+    requires: state.active_unit.retry_count <= state.active_unit.retry_limit
+    requires: state.empirical_policy.requires_attempt_before_solution = true
+}
+
+rule CanonicalStateProjectsToMavis {
+    when: CanonicalStateSynced(state)
+
+    ensures: MavisLearnerView.created(
+        source: state,
+        learner_id: state.learner.id,
+        active_unit_id: state.active_unit.id,
+        active_unit_state: state.active_unit.state,
+        implementation_blocked: state.gate.implementation_blocked,
+        derived_at: now
+    )
+}
+
+rule CanonicalStateProjectsToWhiteboardProfile {
+    when: CanonicalStateSynced(state)
+
+    ensures: WhiteboardProfileView.created(
+        source: state,
+        learner_id: state.learner.id,
+        level: state.learner.level,
+        focus: state.learner.focus,
+        active_unit_id: state.active_unit.id,
+        active_unit_title: state.active_unit.title,
+        derived_at: now
+    )
+}
+
+rule CanonicalStateProjectsToWhiteboardTrail {
+    when: CanonicalStateSynced(state)
+
+    ensures: WhiteboardTrailView.created(
+        source: state,
+        current_focus: state.learner.focus,
+        active_unit_title: state.active_unit.title,
+        active_unit_state_label: state.active_unit.state,
+        derived_at: now
+    )
+}
+
+surface LearnerSubstrateReadSurface {
+    facing consumer: CanonicalLearnerState
+
+    context state: CanonicalLearnerState
+
+    exposes:
+        state.system
+        state.version
+        state.learner.id
+        state.learner.level
+        state.learner.active_language
+        state.learner.languages
+        state.active_unit.id
+        state.active_unit.state
+        state.active_unit.retry_count
+        state.active_unit.retry_limit
+        state.gate.implementation_blocked
+        state.empirical_policy.requires_attempt_before_solution
+
+    provides:
+        CanonicalStateLoaded(state)
+}
+
+surface LearnerSubstrateSyncSurface {
+    facing consumer: CanonicalLearnerState
+
+    context state: CanonicalLearnerState
+
+    exposes:
+        state.learner.id
+        state.active_unit.id
+        state.gate.implementation_blocked
+
+    provides:
+        CanonicalStateSynced(state)
+
+    @guarantee DerivedViewsAreMirrors
+        -- Mavis and whiteboard views are derived from canonical learner state;
+        -- canonical learner state remains the source of truth.
+}
+
+invariant ActiveLanguageIsKnown {
+    for state in CanonicalLearnerStates:
+        state.learner.active_language in state.learner.languages
+}
+
+invariant RetryLimitIsRespected {
+    for state in CanonicalLearnerStates:
+        state.active_unit.retry_count <= state.active_unit.retry_limit
+}
+
+invariant AttemptPrecedesSolution {
+    for state in CanonicalLearnerStates:
+        state.empirical_policy.requires_attempt_before_solution = true
+}
+
+open question "Should trail.md and learner_profile.md be regenerated by the same sync rule as Mavis/profile.yaml?"
+open question "Is gate.implementation_blocked canonical input, or should it be derived from active unit and attempt evidence?"
+open question "Should units_log become part of the substrate contract?"

@@ -1,284 +1,318 @@
-# MiniMax Agent Team: Master System Bootstrap Prompt
+# Curriculum Catalog — Canonical Project List
 
-> Cole este prompt inteiro no **OpenClaw** ou **Hermes** para iniciar o ecossistema de agentes.  
-> Os agentes rodarão em loop contínuo, evoluindo projetos e ensinando princípios de engenharia de software.
-
----
-
-## SYSTEM IDENTITY
-
-Você é o **MiniMax Agent Team**, um ecossistema de agentes especializados que opera em loop contínuo. Sua missão é **ensinar engenharia de software de qualidade** através da prática: projetar, implementar, revisar, testar e evoluir aplicações em múltiplas stacks, documentando cada decisão com clareza pedagógica.
-
-Você incorpora 5 personas de agente que colaboram em cada iteração:
-
-| Agente | Papel | Responsabilidades |
-|--------|-------|-------------------|
-| **Curator** | Arquiteto & Designer | Escreve specs, define APIs, escolhe design patterns, desenha arquitetura. Decide escopo do projeto. |
-| **Developer** | Implementador poliglota | Codifica a mesma feature em **Go**, **Rust** e **Node.js/TypeScript**, respeitando idioms de cada linguagem. |
-| **Reviewer** | Crítico & Educador | Revisa código, compara implementações entre linguagens, prepara tutoriais e quizzes. |
-| **Tester** | Engenheiro de performance | Conteineriza, roda benchmarks (RPS, latência, RAM, CPU), gera relatórios comparativos. |
-| **Evolution** | Otimizador & Escalador | Corrige gargalos, aplica padrões de escala, refatora, documenta a evolução e lições aprendidas. |
+> **Source of truth** for the aidevschool curriculum. All engines, dashboards, and roadmaps
+> MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
+> `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
+>
+> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 1 (Project 01)
 
 ---
 
-## LOOP PRINCIPAL (executado continuamente, projeto por projeto)
+## Overview
 
+The curriculum follows a **6-level progression** from fundamentals to complex distributed
+systems. Each project is implemented **polyglot** (Go, Rust, Node.js/TypeScript) to teach
+comparative engineering through real benchmarks, code reviews, and evolution reports.
+
+Every project follows the same lifecycle:
 ```
-[Curator] → spec.md, architecture.md
-     ↓
-[Developer:Go] [Developer:Rust] [Developer:Node] → implementações paralelas
-     ↓
-[Reviewer] → code_review.md, language_comparison.md, tutorial.md, quiz.md
-     ↓
-[Tester] → Dockerfiles, benchmark_results.md, flamegraphs
-     ↓
-[Evolution] → refatoração, scale_patterns.md, evolution_report.md
-     ↓
-[Curator] → próximo projeto (complexidade incremental)
+spec → polyglot implementation → code review → benchmark (N≥3) → evolution → verify
 ```
 
 ---
 
-## CURRÍCULO DE APRENDIZAGEM (Progressão de Projetos)
+## Level 1 — Fundamentals
 
-Cada projeto introduz novos conceitos com complexidade crescente. O **Curator** seleciona o próximo baseado no domínio coberto.
+**Focus:** data structures, HTTP servers, error handling, basic concurrency.
 
-### Fase 1 — Fundamentos de Sistemas
-| # | Projeto | Conceitos-chave | Pergunta central |
-|---|---------|-----------------|------------------|
-| 01 | **Distributed Token-Bucket Rate Limiter** | Concorrência, atomicidade, Redis, middleware HTTP | Go (goroutines + channels) vs Rust (tokio + Arc<Mutex>) vs Node (event loop + clusters) |
-| 02 | **WebSocket Chat Server** | Conexões persistentes, broadcast, rooms, heartbeats | Como cada runtime lida com 10k+ conexões simultâneas? |
-| 03 | **Job Queue / Task Scheduler** | Filas, retry policies, idempotência, dead-letter queues | Qual linguagem oferece melhor throughput em processamento assíncrono? |
+### 01. Rate Limiter (Token Bucket)
 
-### Fase 2 — Dados e Persistência
-| # | Projeto | Conceitos-chave |
-|---|---------|-----------------|
-| 04 | **URL Shortener + Analytics** | CRUD, caching (Redis), analytics pipeline, id generation (snowflake/ulid) |
-| 05 | **Event Sourcing + CQRS Microservice** | Event store, projections, separação read/write, consistência eventual |
-| 06 | **Full-Text Search Engine** | Índice invertido, tokenização, ranking TF-IDF, query parsing |
+| Field | Value |
+|-------|-------|
+| **Slug** | `01_rate_limiter` |
+| **Status** | ✅ Implemented |
+| **Concepts** | Token bucket algorithm, concurrency primitives, atomic refills, shared state |
+| **Key question** | Go (goroutines + channels) vs Rust (tokio + Arc&lt;Mutex&gt;) vs Node (event loop + clusters) — which handles rate limiting best? |
+| **Directory** | `01_rate_limiter/` |
+| **Go coverage** | 99% (ratelimit) / 86% (main) |
+| **Rust tests** | 19 pass, clippy clean |
+| **Node coverage** | 91.86%, 40 tests |
+| **Benchmark** | 4 scenarios × 3 langs × N=1 (needs N≥3 re-run) |
+| **Dependencies** | None (entry point) |
 
-### Fase 3 — Arquitetura Distribuída
-| # | Projeto | Conceitos-chave |
-|---|---------|-----------------|
-| 07 | **Distributed Key-Value Store** (estilo etcd) | Raft/Paxos consensus, leader election, gRPC, WAL |
-| 08 | **API Gateway + Service Mesh** | Rate limiting, auth, circuit breaker, observability, retry, timeout |
-| 09 | **Real-time Collaborative Editor** (estilo Google Docs) | CRDTs, OT, WebSocket sync, conflito e merge |
+### 02. Key-Value Store (in-memory)
 
-### Fase 4 — Plataforma e Operações
-| # | Projeto | Conceitos-chave |
-|---|---------|-----------------|
-| 10 | **CI/CD Pipeline Engine** | DAG execution, plugins, sandboxing, artifact storage |
-| 11 | **Observability Platform** | Métricas (Prometheus), tracing (OpenTelemetry), logging estruturado, alertas |
-| 12 | **Feature Flag Service** | Targeting rules, gradual rollout, A/B testing, SDK design |
+| Field | Value |
+|-------|-------|
+| **Slug** | `02_key_value_store` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics |
+| **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? |
+| **Directory** | `02_key_value_store/` |
+| **Dependencies** | Project 01 (concurrency basics) |
 
----
+### 03. URL Shortener
 
-## PROTOCOLO DE IMPLEMENTAÇÃO
-
-### Regras para o Developer Agent
-
-1. **Toda implementação parte do zero** — sem copiar código entre linguagens. Cada implementação deve ser idiomática.
-2. **Estrutura comum por linguagem:**
-   ```
-   <projeto>/go-impl/     # go.mod, cmd/, internal/, pkg/
-   <projeto>/rust-impl/   # Cargo.toml, src/main.rs, src/lib.rs, src/bin/
-   <projeto>/node-impl/   # package.json, tsconfig.json, src/, tests/
-   ```
-3. **Princípios não-negociáveis:**
-   - Testes unitários e de integração em todas as implementações
-   - Tratamento de erros idiomático (Go: `if err != nil`, Rust: `Result<T,E>`, Node: custom error classes)
-   - Graceful shutdown em todas as implementações
-   - Logging estruturado (JSON)
-   - Health check endpoint (`/health`, `/ready`)
-   - Métricas expostas (`/metrics` em formato Prometheus)
-
-### Regras para o Reviewer Agent
-
-Para cada projeto, produza:
-
-1. **code_review.md** — Análise por implementação com severidade (blocker/major/minor/nit)
-2. **language_comparison.md** — Tabela comparativa:
-   | Dimensão | Go | Rust | Node/TS |
-   |----------|----|------|---------|
-   | Linhas de código | X | Y | Z |
-   | Complexidade ciclomática | X | Y | Z |
-   | Tempo de build | X | Y | Z |
-   | Tamanho do binário/imagem | X | Y | Z |
-   | Idioms usados | channels, context | Arc, tokio, borrow checker | EventEmitter, Promise.all |
-   | Pontos fortes neste caso | ... | ... | ... |
-   | Pontos fracos neste caso | ... | ... | ... |
-   |**Quando usar esta linguagem para este tipo de problema** | ... | ... | ... |
-3. **tutorial.md** — Explicação didática passo a passo do que foi construído, com trechos de código comentados.
-4. **quiz.md** — 5 questões de múltipla escolha sobre os conceitos do projeto, com gabarito e explicação.
-
-### Regras para o Tester Agent
-
-1. Gere `Dockerfile` e `docker-compose.yml` para cada implementação.
-2. Use **k6**, **wrk** ou **oha** para load testing.
-3. Colete métricas com `docker stats` + Prometheus.
-4. Produza `benchmark_results.md` com:
-
-```
-| Métrica               | Go      | Rust    | Node.js  |
-|-----------------------|---------|---------|----------|
-| RPS (médio)           | X       | Y       | Z        |
-| Latência p50          | X       | Y       | Z        |
-| Latência p95          | X       | Y       | Z        |
-| Latência p99          | X       | Y       | Z        |
-| RAM em idle           | X       | Y       | Z        |
-| RAM sob carga (1k RPS)| X       | Y       | Z        |
-| CPU sob carga (1k RPS)| X       | Y       | Z        |
-| Tempo de inicialização| X       | Y       | Z        |
-| Tamanho da imagem     | X       | Y       | Z        |
-```
-
-5. Gere gráficos comparativos (ASCII charts ou PNGs com matplotlib/gnuplot).
-
-### Regras para o Evolution Agent
-
-1. Analise os resultados do benchmark e o code review.
-2. Identifique o **maior gargalo** em cada implementação.
-3. Aplique **UM** padrão de otimização/escala por iteração (para isolar o impacto):
-   - Connection pooling
-   - Caching layer (in-memory, Redis)
-   - Database indexing
-   - Batch processing / batching writes
-   - Parallelism / concurrency tuning
-   - Memory allocation optimization
-   - Protocol upgrade (HTTP/1.1 → HTTP/2 → gRPC)
-4. Documente em `evolution_report.md`:
-   - O que foi mudado e por quê
-   - Antes/depois (benchmark delta)
-   - Trade-offs introduzidos
-   - Quando essa otimização é recomendada (e quando NÃO é)
+| Field | Value |
+|-------|-------|
+| **Slug** | `03_url_shortener` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Hashing (base62, SHA-256 trunc), relational DB design, HTTP redirects (301/302), unique ID generation, analytics pipeline |
+| **Key question** | How do ID generation strategies (snowflake, ULID, auto-increment) compare across languages for collision resistance and throughput? |
+| **Directory** | `03_url_shortener/` |
+| **Dependencies** | Project 02 (storage basics) |
 
 ---
 
-## FORMATO DE SAÍDA DO BOOTSTRAP
+## Level 2 — Concurrency and Performance
 
-Quando receber este prompt, o **Curator Agent** deve iniciar imediatamente produzindo:
+**Focus:** concurrency patterns, async I/O, thread safety.
 
-### 1. Project Selection
-```
-📋 PROJETO SELECIONADO: [Número] — [Nome]
+### 04. Concurrent Task Queue
 
-Motivo da escolha: [por que este é o próximo passo lógico no currículo]
-```
+| Field | Value |
+|-------|-------|
+| **Slug** | `04_concurrent_task_queue` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Worker pools, job scheduling, backpressure, priorities, timeouts, retry policies, dead-letter queues, idempotency |
+| **Key question** | Which language's concurrency model delivers the best throughput for async job processing? |
+| **Directory** | `04_concurrent_task_queue/` |
+| **Dependencies** | Projects 01-03 |
 
-### 2. Specification (`spec.md`)
-```markdown
-# [Nome do Projeto] — Especificação
+### 05. WebSocket Chat Server
 
-## Visão Geral
-[2-3 parágrafos explicando o que vamos construir e por quê]
+| Field | Value |
+|-------|-------|
+| **Slug** | `05_websocket_chat` |
+| **Status** | 🔲 Not started |
+| **Concepts** | WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats |
+| **Key question** | How does each runtime handle 10k+ concurrent persistent connections? |
+| **Directory** | `05_websocket_chat/` |
+| **Dependencies** | Projects 01-03 |
 
-## Requisitos Funcionais
-- RF01: ...
-- RF02: ...
+### 06. File Upload/Processing Pipeline
 
-## Requisitos Não-Funcionais
-- RNF01: Latência p95 < Xms sob Y RPS
-- RNF02: ...
-
-## API / Contrato
-[Endpoints, schemas, exemplos de request/response]
-
-## Arquitetura
-[Diagrama ASCII ou descritivo, componentes, fluxo de dados]
-
-## Decisões de Design
-| Decisão | Alternativas consideradas | Justificativa |
-|---------|--------------------------|---------------|
-| ...     | ...                      | ...           |
-```
-
-### 3. Architecture (`architecture.md`)
-```markdown
-# [Nome do Projeto] — Arquitetura
-
-## Stack por linguagem
-- Go: [bibliotecas, padrões]
-- Rust: [bibliotecas, padrões]
-- Node/TS: [bibliotecas, padrões]
-
-## Pontos de divergência esperados entre linguagens
-[Onde cada linguagem vai naturalmente divergir em abordagem]
-
-## Perguntas que este projeto busca responder
-[Quais hipóteses serão testadas nos benchmarks?]
-```
+| Field | Value |
+|-------|-------|
+| **Slug** | `06_file_upload_pipeline` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Streaming I/O, chunked processing, multipart upload, memory management, parallel processing, bounded memory |
+| **Key question** | How do streaming vs buffering approaches compare for large file handling? |
+| **Directory** | `06_file_upload_pipeline/` |
+| **Dependencies** | Projects 01-03 |
 
 ---
 
-## CICLO DE ITERAÇÃO E MELHORIA CONTÍNUA
+## Level 3 — Architecture and Design Patterns
 
-1. **Frequência**: O loop executa 1 ciclo completo (Curator → Developer → Reviewer → Tester → Evolution) por projeto, depois avança.
-2. **Critério de conclusão de projeto**: Evolution Report publicado + todas as perguntas do quiz respondidas com explicação.
-3. **Handoff entre projetos**: O Curator lê o `evolution_report.md` do projeto anterior e decide se reaplica alguma lição no próximo design.
-4. **Base de conhecimento**: Todos os `tutorial.md`, `language_comparison.md` e `evolution_report.md` acumulam-se como uma biblioteca de referência consultável.
-5. **Feedback loop**: Se o benchmark revelar que uma linguagem performa significativamente pior em um caso de uso onde deveria ser forte, o Evolution Agent investiga e documenta o motivo — isso vira lição para projetos futuros.
+**Focus:** Clean Architecture, design patterns, separation of concerns.
 
----
+### 07. REST API with Auth
 
-## OBJETIVOS PEDAGÓGICOS POR PROJETO
+| Field | Value |
+|-------|-------|
+| **Slug** | `07_rest_api_auth` |
+| **Status** | 🔲 Not started |
+| **Concepts** | JWT (sign/verify), RBAC, middleware chains, layered architecture, dependency injection, input validation, versioning |
+| **Key question** | How does auth middleware composition differ across frameworks in each language? |
+| **Directory** | `07_rest_api_auth/` |
+| **Dependencies** | Projects 04-06 |
 
-Ao final de cada projeto, você (o humano) deve conseguir responder:
+### 08. Event-Driven Order System
 
-1. **Qual problema este projeto resolve e por que ele importa?**
-2. **Qual é a arquitetura de referência para este tipo de sistema?**
-3. **Por que escolher Go, Rust ou Node para este caso específico?** (com dados de benchmark!)
-4. **Quais foram os trade-offs reais encontrados em cada linguagem?**
-5. **Como escalar este sistema de 100 para 1M de usuários?**
-6. **Quais anti-patterns foram identificados e corrigidos?**
+| Field | Value |
+|-------|-------|
+| **Slug** | `08_event_driven_order_system` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Pub/sub, event sourcing, eventual consistency, projections, sagas (orchestrated + choreographed), outbox pattern |
+| **Key question** | How do event replay and projection rebuild times compare across language runtimes? |
+| **Directory** | `08_event_driven_order_system/` |
+| **Dependencies** | Projects 04-06 |
 
----
+### 09. Plugin System
 
-## INSTRUÇÕES DE EXECUÇÃO
-
-```
-[Copie este prompt inteiro e cole no OpenClaw ou Hermes]
-
-Inicie o MiniMax Agent Team.
-Comece pelo Projeto 01: Distributed Token-Bucket Rate Limiter.
-Execute o loop completo: Curator → Developer → Reviewer → Tester → Evolution.
-Ao final do ciclo, apresente o relatório de evolução e a síntese pedagógica.
-Prossiga automaticamente para o próximo projeto.
-```
-
----
-
-## APÊNDICE: GLOSSÁRIO DE PADRÕES E TECNOLOGIAS QUE O ECOSSISTEMA DEVE COBRIR
-
-### Design Patterns
-- [ ] Circuit Breaker
-- [ ] Bulkhead
-- [ ] Retry with Exponential Backoff
-- [ ] CQRS / Event Sourcing
-- [ ] Saga (orquestrada e coreografada)
-- [ ] Outbox Pattern
-- [ ] Strangler Fig (migração)
-- [ ] Sidecar / Ambassador
-- [ ] Backpressure / Load Shedding
-- [ ] Idempotency Key
-- [ ] Sharding / Partitioning
-- [ ] Consistent Hashing
-- [ ] Leader Election
-- [ ] Gossip Protocol
-- [ ] CRDT / OT
-
-### Tecnologias
-- [ ] Redis (cache, lock distribuído, pub/sub, streams)
-- [ ] PostgreSQL (indexes, window functions, CTEs, locks)
-- [ ] Kafka / NATS (event streaming)
-- [ ] gRPC / Protobuf
-- [ ] Docker + Docker Compose
-- [ ] Kubernetes (conceitos: Pod, Service, Ingress, HPA)
-- [ ] Prometheus + Grafana
-- [ ] OpenTelemetry (tracing distribuído)
-- [ ] k6 / wrk / oha (load testing)
-- [ ] GitHub Actions (CI/CD)
+| Field | Value |
+|-------|-------|
+| **Slug** | `09_plugin_system` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Dynamic loading, interfaces/traits, plugin lifecycle, sandboxing, WASM/FFI/JS sandboxing, API versioning |
+| **Key question** | How does each language's FFI/WASM/dynamic-loading story compare for safe plugin isolation? |
+| **Directory** | `09_plugin_system/` |
+| **Dependencies** | Projects 04-06 |
 
 ---
 
-**Versão do prompt:** 1.0  
-**Próxima evolução sugerida:** Adicionar agente de **segurança** (SAST, dependency scanning, secret detection) como 6º membro do time.
+## Level 4 — Scalability and Distribution
+
+**Focus:** distributed systems, caching, load balancing, consensus.
+
+### 10. Distributed Cache
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `10_distributed_cache` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Cache invalidation, TTL, LRU/LFU eviction, consistent hashing, gossip protocol, cache-aside vs write-through, cache stampede prevention, sharding |
+| **Key question** | How do eviction policies and sharding strategies interact under skewed access patterns? |
+| **Directory** | `10_distributed_cache/` |
+| **Dependencies** | Projects 07-09 |
+
+### 11. Load Balancer
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `11_load_balancer` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Reverse proxy, health checks, round-robin, least-connections, consistent hashing, TLS termination, sticky sessions, circuit breaker per backend |
+| **Key question** | How does connection pooling and health-check frequency affect failover speed? |
+| **Directory** | `11_load_balancer/` |
+| **Dependencies** | Projects 07-09 |
+
+### 12. Distributed Job Scheduler
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `12_distributed_job_scheduler` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry |
+| **Key question** | How do leader election implementations compare in split-brain scenarios? |
+| **Directory** | `12_distributed_job_scheduler/` |
+| **Dependencies** | Projects 07-09 |
+
+---
+
+## Level 5 — Resilience and Observability
+
+**Focus:** circuit breakers, retries, structured logging, metrics, tracing.
+
+### 13. API Gateway with Circuit Breaker
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `13_api_gateway_circuit_breaker` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Fault tolerance, circuit breaker states (closed/open/half-open), retry with exponential backoff + jitter, fallbacks, bulkheading, rate limit per tenant, request coalescing |
+| **Key question** | How do circuit breaker recovery times compare across language concurrency models? |
+| **Directory** | `13_api_gateway_circuit_breaker/` |
+| **Dependencies** | Projects 10-12 |
+
+### 14. Log Aggregator
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `14_log_aggregator` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Structured logging (JSON), log levels, aggregation pipelines, compression, indexing, retention, distributed tracing (OpenTelemetry), correlation IDs |
+| **Key question** | How does ingestion throughput compare for JSON vs protobuf log formats? |
+| **Directory** | `14_log_aggregator/` |
+| **Dependencies** | Projects 10-12 |
+
+### 15. Metrics Collector & Dashboard
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `15_metrics_collector` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Time-series data, counters/gauges/histograms, aggregation (sum/avg/p95), downsampling, retention, Prometheus-compatible format, alerting |
+| **Key question** | How do histogram bucket strategies affect p99 accuracy across runtimes? |
+| **Directory** | `15_metrics_collector/` |
+| **Dependencies** | Projects 10-12 |
+
+---
+
+## Level 6 — Complex Systems
+
+**Focus:** production-grade distributed systems, real-world complexity.
+
+### 16. Mini Message Queue (like Kafka)
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `16_mini_message_queue` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Topics, partitions, consumer groups, offsets, log-structured storage, replication, exactly-once semantics, log compaction |
+| **Key question** | How do partition assignment and consumer rebalancing strategies affect throughput stability? |
+| **Directory** | `16_mini_message_queue/` |
+| **Dependencies** | Projects 13-15 |
+
+### 17. Distributed Configuration Service
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `17_distributed_config_service` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Consensus (Raft/Paxos simplified), watch/notify, versioning, linearizability, ACL per key, audit, rollback, multi-region replication, feature flags |
+| **Key question** | How do watch-notification latency and consensus overhead compare? |
+| **Directory** | `17_distributed_config_service/` |
+| **Dependencies** | Projects 13-15 |
+
+### 18. Search Engine
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `18_search_engine` |
+| **Status** | 🔲 Not started |
+| **Concepts** | Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence |
+| **Key question** | How do inverted index build times and query latencies compare for different corpus sizes? |
+| **Directory** | `18_search_engine/` |
+| **Dependencies** | Projects 13-15 |
+
+---
+
+## Concept Coverage Matrix
+
+| Project | Concurrency | Networking | Persistence | Architecture | Scalability | Resilience |
+|---------|:-----------:|:----------:|:-----------:|:------------:|:-----------:|:----------:|
+| 01. Rate Limiter | ✅ | ✅ | — | — | — | — |
+| 02. Key-Value Store | — | ✅ | ✅ | — | — | — |
+| 03. URL Shortener | — | ✅ | ✅ | — | — | — |
+| 04. Task Queue | ✅ | — | ✅ | — | — | ✅ |
+| 05. WebSocket Chat | ✅ | ✅ | — | — | ✅ | — |
+| 06. File Upload | ✅ | ✅ | ✅ | — | — | — |
+| 07. REST API + Auth | — | ✅ | ✅ | ✅ | — | — |
+| 08. Event-Driven | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 09. Plugin System | — | — | — | ✅ | — | — |
+| 10. Distributed Cache | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 11. Load Balancer | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| 12. Job Scheduler | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 13. API Gateway + CB | ✅ | ✅ | — | ✅ | ✅ | ✅ |
+| 14. Log Aggregator | ✅ | ✅ | ✅ | — | ✅ | ✅ |
+| 15. Metrics Collector | ✅ | ✅ | ✅ | — | ✅ | — |
+| 16. Message Queue | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 17. Config Service | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 18. Search Engine | ✅ | — | ✅ | ✅ | ✅ | — |
+
+---
+
+## Language Suitability Guide
+
+| Language | Ideal Projects | Strengths |
+|----------|---------------|-----------|
+| **Go** | 01, 04, 05, 07, 10, 11, 13 | Fast compilation, goroutines, small binaries, excellent stdlib for networking |
+| **Rust** | 01, 02, 06, 10, 16, 18 | Memory safety without GC, fearless concurrency, zero-cost abstractions, best raw performance |
+| **Node/TS** | 05, 07, 08, 09, 14, 15 | Async-first, largest ecosystem, JSON-native, rapid prototyping, full-stack capable |
+
+---
+
+## Required Artifacts Per Project
+
+Every project must produce:
+
+| Artifact | Path | Owner |
+|----------|------|-------|
+| Specification | `docs/spec.md` | Curator |
+| Go implementation | `go-impl/` | dev-go |
+| Rust implementation | `rust-impl/` | dev-rust |
+| Node implementation | `node-impl/` | dev-node |
+| Code review | `docs/code_review.md` | Reviewer |
+| Learning notes | `docs/learning_notes.md` | Reviewer |
+| Benchmark results | `docs/benchmark_results.md` | Benchmarker |
+| Raw benchmark data | `benchmarks/results/` | Benchmarker |
+| Evolution report | `docs/evolution_report.md` | Optimizer |
+| Pipeline status | `docs/status.md` | All (updated per phase) |
+
+See `engines/codexDojo/ecosystem/templates/project-package.md` for the full completion checklist.
+
+---
+
+*This catalog is the canonical source of truth. Last updated: 2026-06-17.*

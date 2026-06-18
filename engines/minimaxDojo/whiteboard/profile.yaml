@@ -1,0 +1,23 @@
+# Perfil Vivo do Aluno — derived view from learner/learning_state.yaml
+# Não edite diretamente; altere o estado canônico e rode o adapter.
+id: aluno-001
+learner_id: daniel-barreto
+derived_from: ../../learner/learning_state.yaml
+updated: '2026-06-15'
+agente_owner: mnemosyne
+core:
+  aluno:
+    id: daniel-barreto
+    linguagem_foco: TypeScript
+    tempo_semanal: 5h
+    nivel_autodeclado: intermediario
+    dreyfus_global: advanced_beginner
+    bloom_global: apply
+    ai_dependency_index: 0.5
+    socrates_quota_today: 0 / 15
+    human_instructor: none
+  trilha:
+    proxima_unidade: U0-sonda-rate-limiter-robustness
+    ultima_dominada: null
+  pegadinhas_top_3: []
+  skills_ativas_top_3: []

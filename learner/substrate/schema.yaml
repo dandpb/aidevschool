@@ -1,0 +1,44 @@
+# Canonical learner-state schema for the Agora Continuum substrate.
+# This file defines the types and invariants enforced by learner/substrate/.
+system: agora-continuum
+version: 2
+
+types:
+  LearnerLevel: beginner | intermediate | advanced
+  LearningState: presenting | practicing | evaluating | mastered
+  ArtifactState: producing | verifying | done
+  Language: TypeScript | Go | Rust | Python | Node | node
+
+invariants:
+  - learner.id is non-empty
+  - learner.level in LearnerLevel
+  - learner.active_language in learner.languages
+  - active_unit.id is non-empty
+  - active_unit.state in LearningState
+  - active_unit.retry_count <= active_unit.retry_limit
+  - gate.implementation_blocked is boolean
+  - empirical_gates.learning.requires_attempt_before_solution is true
+
+adapters:
+  mavis:
+    description: "Derived view consumed by the Mavis planner."
+    state_language: pt
+    maps:
+      presenting: apresentando
+      practicing: praticando
+      evaluating: avaliando
+      mastered: dominado
+    generated_file: .mavis/learning_state.yaml
+
+  whiteboard:
+    description: "Derived views consumed by the minimaxDojo whiteboard / Mnemosyne."
+    state_language: pt
+    maps:
+      presenting: APRESENTANDO
+      practicing: PRATICANDO
+      evaluating: AVALIANDO
+      mastered: DOMINADO
+    generated_files:
+      - engines/minimaxDojo/whiteboard/profile.yaml
+      - engines/minimaxDojo/whiteboard/learner_profile.md
+      - engines/minimaxDojo/whiteboard/trail.md

@@ -1,0 +1,98 @@
+{
+  "id": "core",
+  "version": "0.1.0",
+  "title": "Core Learning Regions",
+  "regions": [
+    {
+      "id": "rate-limiter-lab",
+      "name": "Laboratorio 01: Rate Limiter",
+      "project": "01_rate_limiter",
+      "start": { "x": 7, "y": 9 },
+      "map": {
+        "width": 16,
+        "height": 12,
+        "tiles": [
+          "################",
+          "#LLLL....TT...G#",
+          "#LLLL.........G#",
+          "#..............#",
+          "#....######....#",
+          "#....#....#....#",
+          "#....#....#....#",
+          "#......T.......#",
+          "#..............#",
+          "#..............#",
+          "#WWWW......WWWW#",
+          "################"
+        ]
+      },
+      "npcs": [
+        {
+          "id": "sonda",
+          "name": "SONDA",
+          "role": "diagnostico",
+          "position": { "x": 7, "y": 8 },
+          "dialogueRef": "dialogues/sonda.md",
+          "encounterId": "encounter-token-bucket-01"
+        }
+      ],
+      "gates": [
+        {
+          "id": "gate-next-region",
+          "position": { "x": 14, "y": 2 },
+          "requiresUnitId": "U0-sonda-rate-limiter-robustness",
+          "lockedLabel": "Gate bloqueado: gere evidencia valida no duelo.",
+          "unlockedLabel": "Gate aberto: evidencia emitida para o verificador."
+        }
+      ]
+    }
+  ],
+  "units": [
+    {
+      "unit_id": "U0-sonda-rate-limiter-robustness",
+      "project": "01_rate_limiter",
+      "concept": "Token bucket: capacidade, refill e rejeicao 429",
+      "prerequisites": [],
+      "encounter_ids": ["encounter-token-bucket-01"],
+      "evidence_contract": {
+        "kind": "pixelquest-token-bucket",
+        "minGoodAdmits": 8,
+        "maxAbusiveAdmitted": 0,
+        "maxObservedRateMultiplier": 1.35
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "encounter-token-bucket-01",
+      "kind": "token_bucket",
+      "title": "Duelo Token Bucket",
+      "unit_id": "U0-sonda-rate-limiter-robustness",
+      "capacity": 6,
+      "refillRate": 1.5,
+      "targetRate": 1.5,
+      "heatMax": 100,
+      "heatPerLegitAdmit": 7,
+      "heatPerAbuseAdmit": 28,
+      "requests": [
+        { "type": "legit", "at": 0 },
+        { "type": "legit", "at": 0.8 },
+        { "type": "abuse", "at": 1.6 },
+        { "type": "legit", "at": 2.4 },
+        { "type": "legit", "at": 3.2 },
+        { "type": "abuse", "at": 4.2 },
+        { "type": "legit", "at": 5.2 },
+        { "type": "legit", "at": 6.3 },
+        { "type": "abuse", "at": 7.4 },
+        { "type": "legit", "at": 8.6 },
+        { "type": "legit", "at": 9.8 },
+        { "type": "abuse", "at": 11.0 }
+      ]
+    }
+  ],
+  "assets": {
+    "tiles": ["procedural-floor", "procedural-wall", "procedural-lab", "procedural-gate"],
+    "sprites": ["procedural-learner", "procedural-sonda", "procedural-request"],
+    "audio": []
+  }
+}

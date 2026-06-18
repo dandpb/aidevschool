@@ -21,21 +21,6 @@ func ClientKey(r *http.Request) string {
 	return host
 }
 
-// rateLimitResponse is the JSON body of a 429.
-type rateLimitResponse struct {
-	Error             string `json:"error"`
-	RetryAfterSeconds int    `json:"retry_after_seconds"`
-}
-
-// statusResponse is the JSON body of /status. Field names match the spec
-// verbatim (snake_case) so cross-language clients see the same shape.
-type statusResponse struct {
-	ClientIP            string  `json:"client_ip"`
-	TokensRemaining     float64 `json:"tokens_remaining"`
-	MaxCapacity         float64 `json:"max_capacity"`
-	RefillRatePerSecond float64 `json:"refill_rate_per_second"`
-}
-
 // Middleware returns an http.Handler middleware that enforces the limiter on
 // every incoming request. If the bucket has a token, the wrapped handler is
 // invoked and rate-limit headers are set. If not, a 429 is returned with

@@ -9,7 +9,7 @@ import {
 } from "../progress"
 import type { AppState } from "../state"
 
-const OVERVIEW_AGENT_LIMIT = 10
+const OVERVIEW_AGENT_LIMIT = 14
 const OVERVIEW_STAGE_LIMIT = 6
 
 type OverviewModel = {

@@ -1,0 +1,19 @@
+# aidevschool — Domain Context
+
+Tight definitions for architecture-deepening work in this repo.
+
+## Threshold seam
+
+`engines/minimaxDojo/config/learner.yaml` is the **single seam** for numeric thresholds used by the tutor core. Prompts and docs must reference values here instead of hardcoding them.
+
+## `⟨config: path⟩` reference
+
+Substitution marker used in Markdown prompts and docs. It resolves to the scalar value at `path` inside `engines/minimaxDojo/config/learner.yaml`, where `path` is a dotted YAML key (e.g., `gates.mutation_score_min`). A runner or agent expands the marker before consuming the prompt.
+
+## Canonical agent prompt
+
+`engines/minimaxDojo/prompts/per_agent/<name>.md` is the single system prompt for an agent. `engines/minimaxDojo/agents/<id>/README.md` is only a thin index that links to it.
+
+## Empirical gate
+
+A unit is `DOMINADO` only after the PROMĘTOR verifies real execution against the thresholds in the threshold seam.

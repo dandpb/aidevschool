@@ -27,7 +27,7 @@ describe("codexDojo progress model", () => {
   it("advances the selected stage and records the prior stage as completed", () => {
     // Given
     const state = {
-      ...buildInitialState("mentor", "diagnosticar"),
+      ...buildInitialState("maestro", "diagnosticar"),
       selectedStageId: "projetar",
       completedStageIds: [],
     }
@@ -42,7 +42,7 @@ describe("codexDojo progress model", () => {
 
   it("loads configured agents and stages by id", () => {
     // Given
-    const agentId = "arquiteto"
+    const agentId = "cartografo"
     const stageId = "revisar"
 
     // When
@@ -50,7 +50,7 @@ describe("codexDojo progress model", () => {
     const stage = findStage(stageId)
 
     // Then
-    expect(agent.name).toBe("Arquiteto")
+    expect(agent.name).toBe("CARTÓGRAFO")
     expect(stage.owner).toBe("Revisor")
   })
 })
@@ -134,21 +134,21 @@ describe("DojoQuery seam", () => {
   it("returns the selected agent", () => {
     // Given
     const state = {
-      ...buildInitialState("mentor", "diagnosticar"),
-      selectedAgentId: "arquiteto",
+      ...buildInitialState("maestro", "diagnosticar"),
+      selectedAgentId: "cartografo",
     }
 
     // When
     const agent = getSelectedAgent(state)
 
     // Then
-    expect(agent.name).toBe("Arquiteto")
+    expect(agent.name).toBe("CARTÓGRAFO")
   })
 
   it("returns the current stage", () => {
     // Given
     const state = {
-      ...buildInitialState("mentor", "diagnosticar"),
+      ...buildInitialState("maestro", "diagnosticar"),
       selectedStageId: "revisar",
     }
 
@@ -165,22 +165,22 @@ describe("DojoQuery seam", () => {
 
     // Then
     expect(all.length).toBeGreaterThan(0)
-    expect(all.length).toBeGreaterThanOrEqual(getProjects("apps").length)
+    expect(all.length).toBeGreaterThanOrEqual(getProjects("concorrencia").length)
   })
 
   it("filters projects by phase", () => {
     // When
-    const appsProjects = getProjects("apps")
+    const concurrencyProjects = getProjects("concorrencia")
 
     // Then
-    expect(appsProjects.every((project) => project.phase === "apps")).toBe(true)
-    expect(appsProjects.length).toBeGreaterThan(0)
+    expect(concurrencyProjects.every((project) => project.phase === "concorrencia")).toBe(true)
+    expect(concurrencyProjects.length).toBeGreaterThan(0)
   })
 
   it("reports a stage as completed only when it is in the completed list", () => {
     // Given
     const state = {
-      ...buildInitialState("mentor", "diagnosticar"),
+      ...buildInitialState("maestro", "diagnosticar"),
       completedStageIds: ["diagnosticar"],
     }
 
@@ -194,7 +194,7 @@ describe("DojoQuery seam", () => {
     const roster = getAgents()
 
     // Then
-    expect(roster.length).toBeGreaterThan(0)
-    expect(roster.some((agent) => agent.id === "arquiteto")).toBe(true)
+    expect(roster).toHaveLength(14)
+    expect(roster.some((agent) => agent.id === "maestro")).toBe(true)
   })
 })

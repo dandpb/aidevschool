@@ -1,0 +1,229 @@
+-- allium: 3
+-- codexdojo-dashboard.allium
+
+-- Scope: user-facing codexDojo dashboard behaviour distilled from engines/codexDojo/src.
+-- Includes: dashboard session state, view navigation, cycle advancement, agent prompt copy, roadmap filtering.
+-- Excludes: CSS/layout, Vite/browser mounting mechanics, DOM event delegation details, snapshot formatting.
+
+entity Agent {
+    id: String
+    name: String
+    group: strategy | build | quality | memory | ops
+    role: String
+    mission: String
+    inputs: Set<String>
+    outputs: Set<String>
+    gate: String
+    prompt: String
+}
+
+entity CycleStage {
+    id: String
+    label: String
+    owner: String
+    evidence: String
+    output: String
+}
+
+entity DojoProject {
+    id: String
+    title: String
+    phase: fundamentos | apps | dados | escala | ia
+    level: Integer
+    language: String
+    architecture: String
+    learning_goal: String
+    evidence: Set<String>
+}
+
+entity Metric {
+    id: String
+    label: String
+    target: String
+    signal: String
+}
+
+entity DashboardSession {
+    view: overview | agents | cycle | roadmap | project
+    selected_agent: Agent
+    selected_stage: CycleStage
+    completed_stages: Set<CycleStage>
+    project_filter: all | fundamentos | apps | dados | escala | ia
+    copied_agent: Agent?
+
+    completion_percent: (completed_stages.count * 100) / CycleStages.count
+}
+
+given {
+    session: DashboardSession
+}
+
+rule DashboardStartsAtOverview {
+    when: session: DashboardSession.created
+
+    ensures: session.view = overview
+    ensures: session.selected_agent = Agents.first
+    ensures: session.selected_stage = CycleStages.first
+    ensures: session.project_filter = all
+    ensures: session.copied_agent = null
+}
+
+rule UserChangesView {
+    when: UserChangesView(session, view)
+
+    ensures: session.view = view
+    ensures: session.copied_agent = null
+}
+
+rule UserSelectsAgent {
+    when: UserSelectsAgent(session, agent)
+    requires: agent in Agents
+
+    ensures: session.selected_agent = agent
+    ensures: session.view = agents
+    ensures: session.copied_agent = null
+}
+
+rule UserSelectsCycleStage {
+    when: UserSelectsCycleStage(session, stage)
+    requires: stage in CycleStages
+
+    ensures: session.selected_stage = stage
+    ensures: session.view = cycle
+}
+
+rule UserAdvancesCycleStage {
+    when: UserAdvancesCycleStage(session)
+    let previous = session.selected_stage
+    let next = CycleStages.after(previous) ?? CycleStages.first
+
+    ensures: session.selected_stage = next
+    ensures: session.completed_stages = session.completed_stages + { previous }
+    ensures: session.view = cycle
+}
+
+rule UserFiltersRoadmap {
+    when: UserFiltersRoadmap(session, filter)
+
+    ensures: session.project_filter = filter
+    ensures: session.view = roadmap
+}
+
+rule UserCopiesAgentPrompt {
+    when: UserCopiesAgentPrompt(session, agent)
+    requires: agent in Agents
+
+    ensures: session.copied_agent = agent
+}
+
+rule AgentPromptCopyFails {
+    when: AgentPromptCopyFails(session, agent)
+    requires: session.copied_agent = agent
+
+    ensures: session.copied_agent = null
+}
+
+surface OverviewDashboard {
+    facing viewer: DashboardSession
+
+    context session: DashboardSession
+
+    exposes:
+        session.completion_percent
+        Agents.count
+        CycleStages.count
+        DojoProjects.count
+        for agent in Agents.first(10):
+            agent.name
+        DojoProjects.first.title
+        DojoProjects.first.learning_goal
+        for metric in Metrics:
+            metric.label
+            metric.target
+        for stage in CycleStages.first(6):
+            stage.owner
+            stage.label
+
+    provides:
+        UserChangesView(session, cycle)
+        UserChangesView(session, agents)
+        UserSelectsAgent(session, agent)
+        UserSelectsCycleStage(session, stage)
+}
+
+surface AgentsDashboard {
+    facing viewer: DashboardSession
+
+    context session: DashboardSession
+
+    exposes:
+        for agent in Agents:
+            agent.name
+            agent.role
+        session.selected_agent.group
+        session.selected_agent.name
+        session.selected_agent.mission
+        session.selected_agent.inputs
+        session.selected_agent.outputs
+        session.selected_agent.gate
+        session.selected_agent.prompt
+
+    provides:
+        UserSelectsAgent(session, agent)
+            when agent in Agents
+        UserCopiesAgentPrompt(session, session.selected_agent)
+}
+
+surface CycleDashboard {
+    facing viewer: DashboardSession
+
+    context session: DashboardSession
+
+    exposes:
+        session.completion_percent
+        for stage in CycleStages:
+            stage.label
+            stage.owner
+        session.selected_stage.evidence
+        session.selected_stage.output
+
+    provides:
+        UserSelectsCycleStage(session, stage)
+            when stage in CycleStages
+        UserAdvancesCycleStage(session)
+}
+
+surface RoadmapDashboard {
+    facing viewer: DashboardSession
+
+    context session: DashboardSession
+
+    exposes:
+        for project in DojoProjects where session.project_filter = all or project.phase = session.project_filter:
+            project.id
+            project.title
+            project.level
+            project.language
+            project.architecture
+            project.learning_goal
+
+    provides:
+        UserFiltersRoadmap(session, all)
+        UserFiltersRoadmap(session, fundamentos)
+        UserFiltersRoadmap(session, apps)
+        UserFiltersRoadmap(session, dados)
+        UserFiltersRoadmap(session, escala)
+        UserFiltersRoadmap(session, ia)
+}
+
+invariant SelectedAgentIsConfigured {
+    for session in DashboardSessions:
+        session.selected_agent in Agents
+}
+
+invariant SelectedStageIsConfigured {
+    for session in DashboardSessions:
+        session.selected_stage in CycleStages
+}
+
+open question "Should the current project always be the first configured project, or should it be selected from learner state?"

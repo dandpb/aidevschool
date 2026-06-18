@@ -7,31 +7,31 @@ import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
 
 const stateWith = (overrides: Partial<AppState>): AppState => ({
-  ...buildInitialState("mentor", "diagnosticar"),
+  ...buildInitialState("maestro", "diagnosticar"),
   ...overrides,
 })
 
 describe("renderShell — targeted assertions", () => {
-  it("overview: contains brand, completion percent, 10 agent nodes, 6 stage chips", () => {
+  it("overview: contains brand, completion percent, 14 agent nodes, 6 stage chips", () => {
     const html = renderShell(stateWith({ view: "overview" }))
 
     expect(html).toContain("codexDojo")
     expect(html).toContain("20% do ciclo")
 
     const agentNodes = html.match(/class="agent-node/g)
-    expect(agentNodes).toHaveLength(10)
+    expect(agentNodes).toHaveLength(14)
 
     const stageChips = html.match(/class="stage-chip/g)
     expect(stageChips).toHaveLength(6)
   })
 
-  it("agents (selected=revisor): revisor row is active, others are not", () => {
-    const html = renderShell(stateWith({ view: "agents", selectedAgentId: "revisor" }))
+  it("agents (selected=critico): critico row is active, others are not", () => {
+    const html = renderShell(stateWith({ view: "agents", selectedAgentId: "critico" }))
 
-    const revisorRow = html.match(/<button[^>]*data-agent="revisor"[^>]*>/)
-    expect(revisorRow?.[0]).toContain("is-active")
+    const criticoRow = html.match(/<button[^>]*data-agent="critico"[^>]*>/)
+    expect(criticoRow?.[0]).toContain("is-active")
 
-    const otherAgents = agents.filter((a) => a.id !== "revisor")
+    const otherAgents = agents.filter((a) => a.id !== "critico")
     for (const agent of otherAgents) {
       const row = html.match(new RegExp(`<button[^>]*data-agent="${agent.id}"[^>]*>`))
       expect(row?.[0]).not.toContain("is-active")
@@ -40,11 +40,11 @@ describe("renderShell — targeted assertions", () => {
 
   it("agents copied state: shows Copiado when copiedAgentId matches selected agent", () => {
     const html = renderShell(
-      stateWith({ view: "agents", selectedAgentId: "arquiteto", copiedAgentId: "arquiteto" }),
+      stateWith({ view: "agents", selectedAgentId: "cartografo", copiedAgentId: "cartografo" }),
     )
 
     expect(html).toContain("Copiado")
-    const buttonMatch = html.match(/data-copy-agent="arquiteto"[^>]*>[\s\n]*([^<]+)/)
+    const buttonMatch = html.match(/data-copy-agent="cartografo"[^>]*>[\s\n]*([^<]+)/)
     expect(buttonMatch?.[1]?.trim()).toBe("Copiado")
   })
 
@@ -71,15 +71,15 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain(`${progress}% validado`)
   })
 
-  it("roadmap (filter=apps): every card matches an apps-phase project from data", () => {
-    const html = renderShell(stateWith({ view: "roadmap", projectFilter: "apps" }))
+  it("roadmap (filter=concorrencia): every card matches a concorrencia-phase project from data", () => {
+    const html = renderShell(stateWith({ view: "roadmap", projectFilter: "concorrencia" }))
 
-    const appsProjects = projects.filter((p) => p.phase === "apps")
+    const concurrencyProjects = projects.filter((p) => p.phase === "concorrencia")
     const cardTitles = html.match(/<h3>([^<]+)<\/h3>/g) ?? []
 
-    expect(cardTitles).toHaveLength(appsProjects.length)
+    expect(cardTitles).toHaveLength(concurrencyProjects.length)
 
-    for (const project of appsProjects) {
+    for (const project of concurrencyProjects) {
       expect(html).toContain(project.title)
     }
   })

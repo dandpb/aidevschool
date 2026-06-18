@@ -1,0 +1,220 @@
+-- allium: 3
+-- rate-limiter.allium
+
+-- Scope: observable rate limiter behaviour distilled from curriculum/01_rate_limiter docs and Node/Go/Rust implementations.
+-- Includes: per-client token buckets, limited request decisions, status snapshots, response guarantees, idle cleanup.
+-- Excludes: HTTP framework details, server lifecycle, environment parsing, health checks, benchmark machinery, numeric rounding choices.
+
+config {
+    bucket_capacity: Integer = 10
+    refill_rate_per_second: Integer = 2
+    idle_timeout: Duration = 1.hours
+}
+
+entity ClientIdentity {
+    address: String
+}
+
+entity RateLimitBucket {
+    client: ClientIdentity
+    tokens: Decimal
+    capacity: Integer
+    refill_rate_per_second: Integer
+    last_seen_at: Timestamp
+    last_refilled_at: Timestamp
+
+    is_full: tokens >= capacity
+    is_stale: last_seen_at + config.idle_timeout <= now
+    has_available_token: tokens >= 1
+}
+
+entity LimitedRequest {
+    client: ClientIdentity
+    endpoint: String
+    received_at: Timestamp
+    status: allowed | denied
+    retry_after_seconds: Integer?
+
+    transitions status {
+        terminal: allowed, denied
+    }
+}
+
+entity StatusSnapshot {
+    client: ClientIdentity
+    tokens_remaining: Decimal
+    max_capacity: Integer
+    refill_rate_per_second: Integer
+    observed_at: Timestamp
+}
+
+entity RateLimitResponse {
+    request: LimitedRequest
+    status_code: Integer
+    body_kind: welcome | too_many_requests
+    retry_after_seconds: Integer?
+    rate_limit_limit: Integer
+    rate_limit_remaining: Decimal
+    rate_limit_reset: Timestamp
+}
+
+rule NewClientBucketStartsFull {
+    when: UnknownClientRequestArrives(client, endpoint)
+
+    ensures: RateLimitBucket.created(
+        client: client,
+        tokens: config.bucket_capacity,
+        capacity: config.bucket_capacity,
+        refill_rate_per_second: config.refill_rate_per_second,
+        last_seen_at: now,
+        last_refilled_at: now
+    )
+}
+
+rule BucketRefillsOnObservation {
+    when: BucketObserved(bucket)
+    let elapsed_seconds = now - bucket.last_refilled_at
+    let refilled_tokens = bucket.tokens + elapsed_seconds * bucket.refill_rate_per_second
+
+    ensures: bucket.tokens = min(bucket.capacity, refilled_tokens)
+    ensures: bucket.last_refilled_at = now
+}
+
+rule LimitedRequestAllowed {
+    when: RequestArrives(client, "/")
+    let bucket = RateLimitBuckets where client = client
+    requires: bucket.has_available_token
+
+    ensures: LimitedRequest.created(client: client, endpoint: "/", received_at: now, status: allowed)
+    ensures: bucket.tokens = bucket.tokens - 1
+    ensures: bucket.last_seen_at = now
+    ensures: RateLimitResponse.created(
+        request: default,
+        status_code: 200,
+        body_kind: welcome,
+        retry_after_seconds: null,
+        rate_limit_limit: bucket.capacity,
+        rate_limit_remaining: bucket.tokens,
+        rate_limit_reset: now + (bucket.capacity - bucket.tokens) / bucket.refill_rate_per_second
+    )
+}
+
+rule LimitedRequestDenied {
+    when: RequestArrives(client, "/")
+    let bucket = RateLimitBuckets where client = client
+    requires: not bucket.has_available_token
+    let wait_seconds = max(1, ceil((1 - bucket.tokens) / bucket.refill_rate_per_second))
+
+    ensures: LimitedRequest.created(
+        client: client,
+        endpoint: "/",
+        received_at: now,
+        status: denied,
+        retry_after_seconds: wait_seconds
+    )
+    ensures: bucket.last_seen_at = now
+    ensures: RateLimitResponse.created(
+        request: default,
+        status_code: 429,
+        body_kind: too_many_requests,
+        retry_after_seconds: wait_seconds,
+        rate_limit_limit: bucket.capacity,
+        rate_limit_remaining: bucket.tokens,
+        rate_limit_reset: now + wait_seconds.seconds
+    )
+}
+
+rule StatusIsObservedWithoutConsumingToken {
+    when: RequestArrives(client, "/status")
+    let bucket = RateLimitBuckets where client = client
+
+    ensures: StatusSnapshot.created(
+        client: client,
+        tokens_remaining: bucket.tokens,
+        max_capacity: bucket.capacity,
+        refill_rate_per_second: bucket.refill_rate_per_second,
+        observed_at: now
+    )
+}
+
+rule IdleBucketsArePruned {
+    when: CleanupTick(now)
+    for bucket in RateLimitBuckets where bucket.is_stale:
+        ensures: not exists bucket
+}
+
+surface LimitedEndpoint {
+    facing client: ClientIdentity
+
+    context request: LimitedRequest where request.client = client and request.endpoint = "/"
+
+    exposes:
+        request.status
+        request.retry_after_seconds
+
+    provides:
+        RequestArrives(client, "/")
+
+    @guarantee RateLimitHeaders
+        -- Every response from the limited endpoint includes the configured limit,
+        -- remaining tokens, and reset time.
+}
+
+surface StatusEndpoint {
+    facing client: ClientIdentity
+
+    context snapshot: StatusSnapshot where snapshot.client = client
+
+    exposes:
+        snapshot.client.address
+        snapshot.tokens_remaining
+        snapshot.max_capacity
+        snapshot.refill_rate_per_second
+
+    provides:
+        RequestArrives(client, "/status")
+
+    @guarantee DoesNotConsumeToken
+        -- Inspecting status does not spend a token.
+}
+
+surface BucketLifecycle {
+    facing client: ClientIdentity
+
+    context bucket: RateLimitBucket where bucket.client = client
+
+    exposes:
+        bucket.tokens
+        bucket.last_seen_at
+        bucket.last_refilled_at
+
+    provides:
+        UnknownClientRequestArrives(client, "/")
+        BucketObserved(bucket)
+}
+
+surface CleanupSchedule {
+    facing bucket: RateLimitBucket
+
+    context bucket: RateLimitBucket
+
+    exposes:
+        bucket.is_stale
+
+    provides:
+        CleanupTick(now)
+            when bucket.is_stale
+}
+
+invariant BucketNeverExceedsCapacity {
+    for bucket in RateLimitBuckets:
+        bucket.tokens <= bucket.capacity
+}
+
+invariant BucketTokensAreNonNegative {
+    for bucket in RateLimitBuckets:
+        bucket.tokens >= 0
+}
+
+open question "Should status inspection update bucket last_seen_at for cleanup purposes? Current implementations differ."
+open question "Should tokens_remaining precision be specified, or remain implementation-defined?"

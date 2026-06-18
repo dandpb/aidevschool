@@ -1,10 +1,17 @@
 export const views = ["overview", "agents", "cycle", "roadmap", "project"] as const
 export type View = (typeof views)[number]
 
-export const agentGroups = ["strategy", "build", "quality", "memory", "ops"] as const
+export const agentGroups = ["leader", "pedagogia", "qualidade", "memoria", "governanca"] as const
 export type AgentGroup = (typeof agentGroups)[number]
 
-export const projectPhases = ["fundamentos", "apps", "dados", "escala", "ia"] as const
+export const projectPhases = [
+  "fundamentos",
+  "concorrencia",
+  "arquitetura",
+  "escalabilidade",
+  "resiliencia",
+  "sistemas_complexos",
+] as const
 export type ProjectPhase = (typeof projectPhases)[number]
 
 export type Agent = {

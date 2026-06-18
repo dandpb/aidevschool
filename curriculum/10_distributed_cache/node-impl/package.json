@@ -1,0 +1,16 @@
+{
+  "name": "distributed-cache-node",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test dist/**/*.test.js",
+    "coverage": "npm run build && node --test --experimental-test-coverage dist/**/*.test.js",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "typescript": "^5.9.0"
+  }
+}

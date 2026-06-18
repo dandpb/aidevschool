@@ -1,0 +1,165 @@
+:root {
+  color: #edf4f8;
+  background: #070a10;
+  font-family: "Courier New", Courier, monospace;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+button {
+  border: 2px solid #cfa64a;
+  background: #172333;
+  color: #f6dd88;
+  font: inherit;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+button:focus-visible {
+  outline: 2px solid #74d4ff;
+  outline-offset: 2px;
+}
+
+.game-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 520px;
+  display: grid;
+  place-items: center;
+  background: #070a10;
+}
+
+.game-canvas {
+  width: min(100vw, calc(100vh * 4 / 3));
+  height: min(100vh, calc(100vw * 3 / 4));
+  max-width: 1120px;
+  max-height: 840px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border: 2px solid #20283a;
+  background: #080b12;
+}
+
+.hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.objective-chip,
+.status-strip,
+.prompt-chip {
+  position: absolute;
+  min-height: 32px;
+  max-width: min(88vw, 560px);
+  border: 2px solid #263a4e;
+  background: rgba(8, 11, 18, 0.88);
+  color: #edf4f8;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.objective-chip {
+  top: 14px;
+  left: 14px;
+}
+
+.status-strip {
+  top: 14px;
+  right: 14px;
+  color: #f6dd88;
+}
+
+.prompt-chip {
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  color: #9ee0ff;
+}
+
+.panel {
+  pointer-events: auto;
+  position: absolute;
+  left: 50%;
+  bottom: 72px;
+  width: min(720px, calc(100vw - 32px));
+  transform: translateX(-50%);
+  border: 2px solid #cfa64a;
+  background: #101827;
+  color: #edf4f8;
+  padding: 16px;
+  box-shadow: 0 12px 0 rgba(0, 0, 0, 0.32);
+}
+
+.panel.hidden {
+  display: none;
+}
+
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  color: #f6dd88;
+}
+
+.panel p {
+  margin: 0 0 14px;
+  line-height: 1.45;
+}
+
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.encounter-panel {
+  top: 78px;
+  bottom: auto;
+}
+
+.request-line {
+  color: #9ee0ff;
+}
+
+.token-meter {
+  margin: 0 0 14px;
+  color: #f6dd88;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 720px) {
+  .game-shell {
+    min-height: 100%;
+  }
+
+  .objective-chip,
+  .status-strip,
+  .prompt-chip {
+    max-width: calc(100vw - 28px);
+    font-size: 12px;
+  }
+
+  .status-strip {
+    top: 58px;
+    left: 14px;
+    right: auto;
+  }
+}

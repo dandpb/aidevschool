@@ -1,7 +1,12 @@
 # Trilha de Aprendizagem e Catálogo de Projetos
 
+> **⚠️ DERIVED DOCUMENT** — This file is preserved for historical reference.
+> The canonical curriculum catalog is now **`curriculum/catalog.md`** (18 projects, 6 levels).
+> All engines, dashboards, and roadmaps MUST reference `curriculum/catalog.md` as the source of truth.
+> Update this file only when `curriculum/catalog.md` changes and you need to keep the narrative aligned.
+>
 > Documento vivo — evolui junto com o ecossistema MiniMax Agent Team.
-> Última atualização: 2026-06-03
+> Última atualização: 2026-06-03 (historical)
 
 ---
 
