@@ -17,6 +17,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
 | `engines/minimaxDojo/config/learner.yaml` | Single seam for numeric thresholds referenced by prompts/docs via `⟨config: path⟩`. |
 | `engines/pixelDojo/` | 8-bit learning-game engine prototype. |
+| `engines/polyglotEvolutionArena/` | Polyglot evolution arena: `proposal`-stage design material only. See `engines/polyglotEvolutionArena/STATUS.md`. |
 | `docs/` | Existing polyglot MiniMax/OpenClaw/Hermes documentation. |
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
@@ -44,7 +45,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/codexDojo/ecosystem/MEMORY_CURATION.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
 | 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
 | 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/technology-comparison.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
-| 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
+| 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/` (thin index) |
 | 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` (documented manual workflow; continuous automation is `planned`) |

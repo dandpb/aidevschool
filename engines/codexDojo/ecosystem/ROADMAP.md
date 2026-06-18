@@ -4,6 +4,8 @@
 > This file is the product-facing summary. For full project details, concepts, dependencies,
 > and status, always reference `curriculum/catalog.md`.
 
+> **Implementation status**: This roadmap is a derived product summary. For actual implementation status of each project, see [curriculum/BACKLOG_STATUS.md](../../../curriculum/BACKLOG_STATUS.md).
+
 ## 18-Project Curriculum
 
 The curriculum follows a 6-level progression. Each project is implemented polyglot
