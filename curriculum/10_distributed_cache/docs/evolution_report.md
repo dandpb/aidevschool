@@ -36,3 +36,5 @@ Maintain policy-specific metadata incrementally: for LRU, a doubly-linked recenc
 ## Cross-Language Evolution Note
 
 Before optimizing micro-latency, each language should add a minimal liveness/routing layer so benchmarks can separate local hits, remote hits, owner-unavailable misses, and loader-backed misses. Without that, optimization work risks improving a single-node cache rather than the distributed cache described by the spec.
+
+> **Multi-node update**: See [multinode_verification.md](./multinode_verification.md) for the planned verification slice and gap status.

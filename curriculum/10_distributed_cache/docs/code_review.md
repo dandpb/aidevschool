@@ -61,3 +61,5 @@ All three implementations deliver a useful local in-memory cache with TTL expiry
 2. Add owner enforcement: local hit only when this node owns the key; otherwise proxy/return `503` in the current single-process curriculum mode.
 3. Add singleflight failure/timeout tests in all languages, especially the Rust notification path.
 4. Add removal/remapping tests and a benchmark that distinguishes local hits, remote hits, and loader-backed misses.
+
+> **Multi-node update**: See [multinode_verification.md](./multinode_verification.md) for the planned verification slice and gap status.

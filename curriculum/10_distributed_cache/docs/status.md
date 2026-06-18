@@ -26,6 +26,16 @@ The major remaining caveat is distributed completeness. Gossip membership, live/
 | Stampede prevention | Partial | Successful per-key coalescing exists; failure/timeout stress coverage is weak. |
 | Observability | Partial | Counters exist; latency histograms and shard ownership metrics are minimal. |
 
+## Remaining Multi-Node Gaps
+
+| Gap | Status | Current Evidence | Next Step |
+| --- | --- | --- | --- |
+| Gossip membership | `planned` | No real gossip loop or liveness state | Implement gossip protocol with join/leave/suspect/failed states |
+| Remote shard routing | `planned` | Virtual-node ring exists but no real owner routing | Add cross-node GET routing to owning shard |
+| Node removal | `planned` | Not implemented | Implement graceful node departure and data migration |
+| Data migration | `planned` | Not implemented | Implement rebalancing on membership change |
+| Failure simulation | `planned` | Not implemented | Add chaos testing harness for node failure scenarios |
+
 ## Next Recommended Phase
 
 Move to a distributed-correctness hardening pass before benchmarking language performance. Otherwise benchmark results will mostly compare local map/lock overhead rather than the spec's intended interaction between eviction, sharding, membership, and hot-key behavior.
