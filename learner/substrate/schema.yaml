@@ -9,6 +9,18 @@ types:
   ArtifactState: producing | verifying | done
   Language: TypeScript | Go | Rust | Python | Node | node
 
+  # Spaced-repetition + streak layer (ADR: docs/design/spaced-repetition-streak/README.md)
+  UnitKind: concept | smell | architecture | pitfall
+  # The rating vocabulary is the FSRS subset. A rating is produced ONLY by the
+  # executable-evidence gate via rating_from_gate_outcome() — never self-report.
+  Rating: again | hard | good | easy
+  GateOutcome: fail | pass_retried | pass_first_try | pass_exceeds
+  ReviewEvent:
+    date: date            # when the event happened
+    event: presented | gate
+    rating: Rating        # present iff event = gate
+    gate_outcome: GateOutcome  # present iff event = gate
+
 invariants:
   - learner.id is non-empty
   - learner.level in LearnerLevel
@@ -18,6 +30,14 @@ invariants:
   - active_unit.retry_count <= active_unit.retry_limit
   - gate.implementation_blocked is boolean
   - empirical_gates.learning.requires_attempt_before_solution is true
+
+  # Spaced-repetition + streak invariants
+  - when present, units_log[*].reviews[*].rating in {again, hard, good, easy}
+  - when present, units_log[*].reviews[*].rating is consistent with gate_outcome
+    via rating_from_gate_outcome (the gate is the only rating producer)
+  - streak.freezes.equipped <= streak.freezes.max <= 2  (cap 2: research says 3 ≈ 2)
+  - streak.current is non-negative
+  - a unit with mastered = true must have >= 1 gate review event in its reviews
 
 adapters:
   mavis:

@@ -1,0 +1,10 @@
+# Python dependencies for the learner substrate.
+# The substrate was historically dependency-light (stdlib + pyyaml, undeclared).
+# Phase 1 of the spaced-repetition layer (ADR: docs/design/spaced-repetition-streak/)
+# adds FSRS as the scheduler.
+#
+# Install before running the substrate or its tests:
+#   python3 -m pip install -r learner/substrate/requirements.txt
+
+pyyaml>=6.0
+fsrs>=6.0

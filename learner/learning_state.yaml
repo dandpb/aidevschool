@@ -1,30 +1,107 @@
-# Ágora Continuum — estado do learning gate (sistema "agora-continuum").
-# Contrato: o APRENDIZ tenta e é avaliado (com evidência executável) ANTES de a IA
-# implementar a unidade. Espelha .mavis/plans/plan.yaml > learning_gate.
-version: 1
+version: 2
 system: agora-continuum
 
 learner:
-  level: intermediario          # iniciante | intermediario | avancado
-  focus: robustness             # foco pedagógico atual
-  languages: [go, rust, node]
+  id: daniel-barreto
+  level: intermediate
+  goal: robust professional-quality code without AI dependency
+  active_language: TypeScript
+  focus: robustness
+  languages:
+    - TypeScript
+    - Go
+    - Rust
+  reference_purpose: Code-reading breadth across Go/Rust/TypeScript while practice stays in TypeScript.
+  weekly_time_hours: 5
+  session_cadence: 25-40 min sessions, 4-5x/week
+  human_instructor: none
+  hitl_sla_hours: 24
+  hitl_fallback: auto_reject_or_self_escalate
+  budget:
+    hint_queries_per_day: 15
+
+state_machine:
+  learning_states:
+    - presenting
+    - practicing
+    - evaluating
+    - mastered
+  artifact_states:
+    - producing
+    - verifying
+    - done
 
 active_unit:
   id: U0-sonda-rate-limiter-robustness
   project: 01_rate_limiter
-  state: presenting             # presenting -> practicing -> evaluating -> mastered
+  title: "Sonda diagnostic: token-bucket robustness"
+  state: presenting
   retry_count: 0
   retry_limit: 3
   unblock_condition: learner_attempt_evaluated
   required_before_implementation: true
   diagnostic_file: curriculum/01_rate_limiter/docs/diagnostic.md
+  promotion_gate:
+    - learner submits an attempt before receiving solutions
+    - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
+    - Cartografo updates the first concrete robustness gap
+    - Prometor defines executable verification for the first implementation task
   empirical_gate:
     require_executable_evidence: true
-    min_coverage: 0.80          # cobertura mínima do núcleo
-    mutation_min: 0.60          # mutation score mínimo quando aplicável
+    min_coverage: 0.80
+    mutation_min: 0.60
 
 gate:
-  implementation_blocked: true  # vira false quando unblock_condition for satisfeita
+  implementation_blocked: true
 
-# Append {id, mastered_at, evidence} conforme unidades são concluídas.
-units_log: []
+agent_ownership:
+  leader: Maestro
+  diagnostic: Sonda
+  path: Cartografo
+  producer: Mestre-Conteudo
+  tutor: Socrates
+  verifier: Prometor
+  reviewer: Critico
+  metrics: Atena
+  memory: Mnemosyne
+  governance: Seneca
+
+empirical_gates:
+  code:
+    core_coverage_target: ">=80%"
+    mutation_score_target: 60-70% when tooling is available
+    verifier_context: isolated
+    benchmark_rule: ">=10 samples plus warmup; block speed claims when CV >=20%"
+  learning:
+    requires_attempt_before_solution: true
+    hint_budget_per_day: 15
+    mastery_source: executable_evidence
+
+next_action:
+  owner: learner
+  action: Complete the diagnostic in curriculum/01_rate_limiter/docs/diagnostic.md.
+
+# Spaced-repetition review history (ADR: docs/design/spaced-repetition-streak/README.md).
+# Each record is the FSRS input. Ratings come ONLY from gate outcomes, never
+# self-report. The active unit below is still `presenting` (gate blocked), so it
+# has a `presented` exposure but no gate review yet.
+units_log:
+  - unit_id: U0-sonda-rate-limiter-robustness
+    concept: "token-bucket robustness"
+    kind: concept
+    project: 01_rate_limiter
+    mastered: false
+    reviews:
+      - { date: 2026-06-19, event: presented }
+
+# Streak + freeze (ADR: docs/design/spaced-repetition-streak/README.md). The
+# streak grows ONLY when an executable-evidence gate is passed; a missed day
+# consumes a freeze (cap 2) or breaks the streak. No gate has been passed yet
+# (gate is blocked), so current = 0 honestly — it activates on the first pass.
+streak:
+  current: 0
+  longest: 0
+  last_gate_date: null
+  freezes:
+    equipped: 2
+    max: 2

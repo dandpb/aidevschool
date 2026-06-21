@@ -72,6 +72,60 @@ export type EcosystemStatus = {
   readonly nextStep: string
 }
 
+/**
+ * Learner snapshot, derived from `learner/learning_state.yaml` + `learner/learner_profile.md`
+ * + `learner/pitfalls.md` + `learner/journal.md` by `learner/substrate/dashboard_snapshot.py`.
+ * Re-run the script after any learner-state change; the dashboard is read-only here.
+ */
+export type LearnerSnapshot = {
+  readonly activeUnit: {
+    readonly id: string
+    readonly title: string
+    readonly project: string
+    readonly state: "presenting" | "practicing" | "evaluating" | "mastered"
+    readonly retryCount: number
+    readonly retryLimit: number
+  }
+  readonly gate: {
+    readonly implementationBlocked: boolean
+    readonly unblockCondition: string
+  }
+  readonly profile: {
+    readonly dreyfus: "novice" | "advanced_beginner" | "competent" | "proficient" | "expert"
+    readonly bloom: "remember" | "understand" | "apply" | "analyze" | "evaluate" | "create"
+    readonly activeLanguage: string
+    readonly weeklyTimeHours: number
+  }
+  readonly aidi: {
+    readonly current: number
+    readonly thresholdAmber: number
+    readonly thresholdRed: number
+    readonly trend: ReadonlyArray<{ readonly date: string; readonly value: number }>
+  }
+  readonly topPitfalls: ReadonlyArray<{
+    readonly id: string
+    readonly description: string
+    readonly occurrences: number
+    readonly lastSeen: string
+  }>
+  readonly nextReviews: ReadonlyArray<{
+    readonly unitId: string
+    readonly title: string
+    readonly dueIn: string
+    readonly reason: "overdue" | "due" | "interleaving" | "recurring-trap"
+  }>
+  readonly masteredCount: number
+  readonly scaffoldedCount: number
+  readonly streak: {
+    readonly current: number
+    readonly longest: number
+    readonly lastGateDate: string | null
+    readonly freezesEquipped: number
+    readonly freezesMax: number
+  }
+  readonly curr: number
+}
+
 export function assertNever(value: never): never {
   throw new Error(`Unhandled variant: ${String(value)}`)
 }

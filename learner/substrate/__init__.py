@@ -1,7 +1,7 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
@@ -14,7 +14,18 @@ from learner.substrate.adapters.whiteboard import (
     render_trail_md,
 )
 
+if TYPE_CHECKING:
+    from learner.substrate.dashboard_snapshot import sync as sync_dashboard_snapshot
+
 ROOT = Path(__file__).resolve().parent.parent.parent
+
+# Lazy-imported to avoid circular dependency (dashboard_snapshot resolves ROOT locally).
+def __getattr__(name: str):
+    if name == "sync_dashboard_snapshot":
+        from learner.substrate.dashboard_snapshot import sync as _sync
+
+        return _sync
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [
     "ROOT",
@@ -29,6 +40,7 @@ __all__ = [
     "render_profile_yaml",
     "render_trail_md",
     "sync",
+    "sync_dashboard_snapshot",
 ]
 
 
@@ -89,6 +101,84 @@ def validate(state: dict[str, Any]) -> list[str]:
     if learning_gate.get("requires_attempt_before_solution") is not True:
         errors.append("empirical_gates.learning.requires_attempt_before_solution must be true")
 
+    errors.extend(_validate_units_log(state))
+    errors.extend(_validate_streak(state))
+
+    return errors
+
+
+def _validate_units_log(state: dict[str, Any]) -> list[str]:
+    """Validate the spaced-repetition review history (ADR: spaced-repetition-streak).
+
+    The rating vocabulary and the freeze cap are the load-bearing invariants:
+    a corrupted rating poisons the scheduler, and a freeze cap > 2 contradicts
+    the research (3 freezes performed no better than 2). Both are checked
+    defensively so states without a ``units_log`` still validate.
+    """
+    from learner.substrate.scheduling import RATING_FROM_GATE, RATINGS
+
+    errors: list[str] = []
+    units_log = state.get("units_log")
+    if not isinstance(units_log, list):
+        return errors
+
+    for index, unit in enumerate(units_log):
+        if not isinstance(unit, dict):
+            errors.append(f"units_log[{index}] must be a mapping")
+            continue
+
+        reviews = unit.get("reviews") or []
+        has_gate_review = False
+        for r_index, review in enumerate(reviews):
+            if not isinstance(review, dict):
+                errors.append(f"units_log[{index}].reviews[{r_index}] must be a mapping")
+                continue
+            rating = review.get("rating")
+            if rating is not None and rating not in RATINGS:
+                errors.append(
+                    f"units_log[{index}].reviews[{r_index}].rating must be one of "
+                    f"{sorted(RATINGS)}, got {rating!r}"
+                )
+            outcome = review.get("gate_outcome")
+            if outcome is not None and outcome in RATING_FROM_GATE:
+                has_gate_review = True
+                expected = RATING_FROM_GATE[outcome]
+                if rating is not None and rating != expected:
+                    errors.append(
+                        f"units_log[{index}].reviews[{r_index}].rating {rating!r} is "
+                        f"inconsistent with gate_outcome {outcome!r} (expected {expected!r}); "
+                        "the gate is the only rating producer"
+                    )
+
+        if unit.get("mastered") is True and not has_gate_review:
+            errors.append(
+                f"units_log[{index}] is mastered but has no gate review; mastery "
+                "requires executable evidence (a gate review), never docs alone"
+            )
+
+    return errors
+
+
+def _validate_streak(state: dict[str, Any]) -> list[str]:
+    """Validate the streak/freeze block (ADR: spaced-repetition-streak)."""
+    errors: list[str] = []
+    streak = state.get("streak")
+    if not isinstance(streak, dict):
+        return errors
+
+    current = streak.get("current", 0)
+    if not isinstance(current, int) or current < 0:
+        errors.append(f"streak.current must be a non-negative integer, got {current!r}")
+
+    freezes = streak.get("freezes", {})
+    equipped = freezes.get("equipped", 0)
+    maximum = freezes.get("max", 2)
+    if not (0 <= equipped <= maximum <= 2):
+        errors.append(
+            f"streak.freezes must satisfy 0 <= equipped({equipped}) <= max({maximum}) <= 2 "
+            "(research: 3 freezes performed no better than 2)"
+        )
+
     return errors
 
 
@@ -108,13 +198,37 @@ def sync() -> None:
     human-readable derived views: their frontmatter carries `derived_from`, and
     their body is maintained by the tutoring agents with the substrate as the
     source of truth.
+
+    Also regenerates `engines/codexDojo/src/data/learner.ts` (the codexDojo dashboard's
+    learner snapshot) via `dashboard_snapshot.sync`.
     """
+    # Imported inside the function to break the circular dependency:
+    # `dashboard_snapshot` resolves `ROOT` independently and would loop otherwise.
+    from learner.substrate.dashboard_snapshot import (
+        build_snapshot as _build_snapshot,
+        sync as _sync_dashboard_snapshot,
+        sync_pixel_review_slice as _sync_pixel_review_slice,
+    )
+
     state = load_and_validate()
 
     mavis_path = ROOT / ".mavis" / "learning_state.yaml"
     mavis_path.write_text(render_mavis_yaml(state), encoding="utf-8")
 
+    whiteboard = ROOT / "engines" / "minimaxDojo" / "whiteboard"
     profile = derive_whiteboard_profile(state)
-    (ROOT / "engines" / "minimaxDojo" / "whiteboard" / "profile.yaml").write_text(
-        render_profile_yaml(profile), encoding="utf-8"
-    )
+    (whiteboard / "profile.yaml").write_text(render_profile_yaml(profile), encoding="utf-8")
+    (whiteboard / "learner_profile.md").write_text(render_profile_md(profile), encoding="utf-8")
+
+    trail = derive_whiteboard_trail(state)
+    (whiteboard / "trail.md").write_text(render_trail_md(trail), encoding="utf-8")
+
+    # Build the snapshot once and share it across both renderers so the canonical
+    # inputs (learning_state.yaml, journal.md, pitfalls.md, BACKLOG_STATUS.md)
+    # and the FSRS replay are not re-read twice per sync.
+    snapshot = _build_snapshot()
+    dashboard_path = _sync_dashboard_snapshot(snapshot)
+    print(f"Dashboard snapshot regenerated: {dashboard_path.relative_to(ROOT)}")
+
+    pixel_path = _sync_pixel_review_slice(snapshot)
+    print(f"PixelDojo review slice regenerated: {pixel_path.relative_to(ROOT)}")
