@@ -1,152 +1,412 @@
 -- allium: 3
 -- pixeldojo-teaching-game.allium
 
--- Scope: pixelDojo teaching-game behaviour distilled from engines/pixelDojo.
--- Includes: concept-to-mechanic mapping, playable attempt surfaces, evidence emission, verifier boundary, current rate-limiter and codexDojo manifest game loops.
--- Excludes: Phaser/canvas rendering mechanics, sprite/audio generation, local browser APIs, screenshots, static-server details, and polishing backlog.
+-- Scope: pixelDojo teaching-game behaviour distilled from engines/pixelDojo/pixel-quest.
+-- Includes: content-pack loading, world navigation, mentor dialogue, practice/duel loop,
+--            encounter kinds (token_bucket, sequence_flow, route_health, policy_gate),
+--            evidence emission, verifier boundary.
+-- Excludes: Three.js rendering, asset generation, browser APIs, screenshots,
+--            local server details, and polishing backlog.
+
+config {
+    default_min_good_admits: Integer = 8
+    default_max_abusive_admitted: Integer = 0
+    default_max_observed_rate_multiplier: Decimal = 1.35
+}
+
+entity ContentPack {
+    id: String
+    version: String
+    title: String
+    regions: Set<Region>
+    units: Set<Unit>
+    encounters: Set<Encounter>
+}
+
+entity Region {
+    id: String
+    name: String
+    project: String
+    start: Position
+    npcs: Set<RegionNpc>
+    gates: Set<RegionGate>
+}
+
+entity RegionNpc {
+    id: String
+    name: String
+    role: String
+    position: Position
+    dialogueRef: String
+    encounter: Encounter
+}
+
+entity RegionGate {
+    id: String
+    position: Position
+    requiresUnit: Unit
+    nextRegion: Region?
+    lockedLabel: String
+    unlockedLabel: String
+}
+
+entity Unit {
+    unit_id: String
+    project: String
+    concept: String
+    prerequisites: Set<Unit>
+    encounters: Set<Encounter>
+    evidenceContract: EvidenceContract
+}
+
+entity EvidenceContract {
+    minGoodAdmits: Integer
+    maxAbusiveAdmitted: Integer
+    maxObservedRateMultiplier: Decimal
+}
+
+entity Encounter {
+    id: String
+    kind: token_bucket | sequence_flow | route_health | policy_gate
+    title: String
+    unit: Unit
+    project: String
+    concept: String
+    mechanicName: String
+    resourceName: String
+    goodRequestLabel: String
+    badRequestLabel: String
+    admitActionLabel: String
+    rejectActionLabel: String
+    practiceTitle: String
+    practiceText: String
+}
+
+entity Position {
+    x: Integer
+    y: Integer
+}
 
 entity TeachingGame {
-    id: String
-    curriculum_project: String
-    concept: String
-    status: planned | playable | verified
-    evidence_only: Boolean
+    pack: ContentPack
+    region: Region
+    player: PlayerState
+    progress: QuestProgress
+    mode: briefing | world | dialogue | practice | encounter | journal | help
+    activeEncounter: EncounterState?
 }
 
-entity GameLevel {
-    game: TeachingGame
-    label: String
-    state: locked | available | in_progress | cleared | failed
-
-    transitions state {
-        locked -> available
-        available -> in_progress
-        in_progress -> cleared
-        in_progress -> failed
-        failed -> in_progress
-        terminal: cleared
-    }
+entity PlayerState {
+    position: Position
+    facing: north | south | east | west
 }
 
-entity GameMechanic {
-    game: TeachingGame
-    concept_element: String
-    arcade_action: String
-    proves: String
+entity QuestProgress {
+    completedUnits: Set<Unit>
+    phase: briefing | map | practice | duel | evidence | review | gate
+    reviewTrack: ReviewTrack
+    latestEvidence: EvidenceRecord?
 }
 
-entity PlaythroughEvidence {
-    game: TeachingGame
-    unit_id: String
-    level: GameLevel
+entity ReviewTrack {
+    active: ReviewProjection
+    streak: StreakProjection
+    schedulerSource: learner_substrate
+    verifierRequired: true
+}
+
+entity ReviewProjection {
+    unitId: String
+    title: String
+    dueIn: String
+    reason: due | overdue | interleaving | recurring_trap
+    status: due | verifier_pending | retry_due
+}
+
+entity StreakProjection {
+    current: Integer
+    longest: Integer
+    freezesEquipped: Integer
+    freezesMax: Integer
+    daysToBreak: Integer?
+    pendingGateDelta: 0 | 1
+}
+
+entity EncounterState {
+    encounter: Encounter
+    index: Integer
+    complete: Boolean
+    evidence: EvidenceRecord?
+    signalsAccepted: Integer
+    trapsRejected: Integer
+    signalsRejected: Integer
+    trapsAdmitted: Integer
+    heatPeak: Decimal
+    overheated: Boolean
+}
+
+entity EvidenceRecord {
+    source: String
+    unit: Unit
+    project: String
+    encounter: Encounter
+    game: String
+    ts: Timestamp
     pass: Boolean
-    metrics: String
-    path: String
+    metrics: EvidenceMetrics
+    reviewContext: ReviewContext?
+    curriculumContext: CurriculumContext?
 }
 
-entity GameVerifierDecision {
-    evidence: PlaythroughEvidence
-    result: accepted | rejected
+entity EvidenceMetrics {
+    target_rate: Decimal
+    observed_admit_rate: Decimal
+    max_burst_1s: Integer
+    good_admits: Integer
+    legit_rejected: Integer
+    abusive_admitted: Integer
+    abusive_rejected: Integer
+    heat_peak: Decimal
+    overheated: Boolean
 }
 
-rule GameDefinitionRequiresOneConcept {
+entity ReviewContext {
+    unit_kind: concept
+    scheduled_review: Boolean
+    review_reason: due | overdue | interleaving | recurring_trap
+    streak_candidate: Boolean
+    scheduler_source: learner_substrate
+    verifier_required: true
+}
+
+entity CurriculumContext {
+    concept: String
+    mechanic: String
+    accepted_signal: String
+    rejected_trap: String
+}
+
+rule GameStartsInBriefing {
     when: game: TeachingGame.created
 
-    requires: game.curriculum_project != ""
-    requires: game.concept != ""
-
-    ensures: game.evidence_only = true
-    ensures: game.status = planned
+    ensures: game.mode = briefing
+    ensures: game.progress.phase = briefing
+    ensures: game.progress.completedUnits = {}
 }
 
-rule PlayerStartsAvailableLevel {
-    when: PlayerStartsLevel(level)
-    requires: level.state = available
+rule PlayerStartsQuest {
+    when: StartQuest(game)
+    requires: game.mode = briefing
 
-    ensures: level.state = in_progress
+    ensures: game.mode = world
+    ensures: game.progress.phase = map
 }
 
-rule PlayerClearsLevelWithEvidence {
-    when: PlayerClearsLevel(game, level, metrics)
-    requires: level.game = game
-    requires: level.state = in_progress
+rule PlayerMoves {
+    when: MovePlayer(game, direction)
+    requires: game.mode = world
 
-    ensures: level.state = cleared
-    ensures: PlaythroughEvidence.created(game: game, unit_id: default, level: level, pass: true, metrics: metrics, path: default)
+    ensures: game.player.facing = direction
+    ensures:
+        if isWalkable(game, destination(game.player.position, direction)):
+            game.player.position = destination(game.player.position, direction)
 }
 
-rule PlayerFailsLevelWithoutMastery {
-    when: PlayerFailsLevel(level)
-    requires: level.state = in_progress
+rule PlayerTalksToMentor {
+    when: Interact(game)
+    requires: game.mode = world
+    requires: npcInFront(game) != null
 
-    ensures: level.state = failed
+    ensures: game.mode = dialogue
 }
 
-rule VerifierAcceptsEvidence {
-    when: VerifierReviewsEvidence(evidence, accepted)
+rule PlayerOpensPractice {
+    when: OpenPractice(game)
+    requires: game.mode = dialogue
+
+    ensures: game.mode = practice
+    ensures: game.progress.phase = practice
+}
+
+rule PlayerStartsDuel {
+    when: StartEncounter(game)
+    requires: game.mode = practice
+    let encounter = activeNpcEncounter(game)
+
+    ensures: game.mode = encounter
+    ensures: game.progress.phase = duel
+    ensures: game.activeEncounter = EncounterState.created(
+        encounter: encounter,
+        index: 0,
+        complete: false,
+        signalsAccepted: 0,
+        trapsRejected: 0,
+        signalsRejected: 0,
+        trapsAdmitted: 0,
+        heatPeak: 0,
+        overheated: false
+    )
+}
+
+rule PlayerAdmitsSignal {
+    when: ApplyEncounterAction(game, admit)
+    requires: game.mode = encounter
+    requires: game.activeEncounter != null
+    requires: not game.activeEncounter.complete
+
+    ensures: game.activeEncounter advances by encounter kind with admit action
+}
+
+rule PlayerRejectsSignal {
+    when: ApplyEncounterAction(game, reject)
+    requires: game.mode = encounter
+    requires: game.activeEncounter != null
+    requires: not game.activeEncounter.complete
+
+    ensures: game.activeEncounter advances by encounter kind with reject action
+}
+
+rule EncounterFinishesAndEmitsEvidence {
+    when: game: TeachingGame.activeEncounter.complete transitions_to true
+    let encounter = game.activeEncounter.encounter
+    let evidence = game.activeEncounter.evidence
+
+    ensures: game.progress.phase = evidence
+    ensures: game.progress.latestEvidence = evidence
+    ensures: evidence.source = "pixelquest"
+    ensures: evidence.game = "PixelDojo Quest"
+    ensures: evidence.unit = encounter.unit
+    ensures: evidence.encounter = encounter
+    ensures: evidence.reviewContext.scheduler_source = "learner-substrate"
+    ensures: evidence.reviewContext.verifier_required = true
+}
+
+rule PassedEvidenceCompletesUnit {
+    when: evidence: EvidenceRecord.created
     requires: evidence.pass = true
 
-    ensures: GameVerifierDecision.created(evidence: evidence, result: accepted)
+    ensures: evidence.unit in QuestProgress.completedUnits
 }
 
-rule VerifierRejectsEvidence {
-    when: VerifierReviewsEvidence(evidence, rejected)
+rule PlayerReturnsToWorld {
+    when: ClosePanel(game)
 
-    ensures: GameVerifierDecision.created(evidence: evidence, result: rejected)
+    ensures: game.mode = world
+    ensures: game.progress.phase = map
+    ensures: game.activeEncounter = null
 }
 
-surface GamePlaySurface {
+rule PlayerOpensJournal {
+    when: OpenJournal(game)
+    requires: game.mode in {world, dialogue, practice, encounter}
+
+    ensures: game.mode = journal
+    ensures: game.progress.phase = review
+}
+
+rule PlayerOpensHelp {
+    when: OpenHelp(game)
+    requires: game.mode != encounter
+
+    ensures: game.mode = help
+}
+
+rule UnlockedGateOpensNextRegion {
+    when: Interact(game)
+    requires: game.mode = world
+    requires: gateInFront(game) != null
+    requires: gateInFront(game).requiresUnit in game.progress.completedUnits
+    requires: gateInFront(game).nextRegion != null
+
+    ensures: game.region = gateInFront(game).nextRegion
+    ensures: game.player.position = game.region.start
+    ensures: game.progress.phase = map
+}
+
+surface PlayerSurface {
     facing player: TeachingGame
 
-    context level: GameLevel
-
     exposes:
-        level.game.concept
-        level.state
-        for mechanic in GameMechanics where mechanic.game = level.game:
-            mechanic.concept_element
-            mechanic.arcade_action
-            mechanic.proves
+        player.region.name
+        player.region.project
+        player.progress.phase
+        player.progress.completedUnits
+        player.progress.reviewTrack.active.unitId
+        player.progress.reviewTrack.active.status
+        player.progress.latestEvidence.pass
+        player.progress.latestEvidence.metrics
+        player.activeEncounter.encounter.mechanicName
+        player.activeEncounter.encounter.resourceName
+        player.activeEncounter.encounter.goodRequestLabel
+        player.activeEncounter.encounter.badRequestLabel
+        player.activeEncounter.index
+        player.activeEncounter.complete
 
     provides:
-        PlayerStartsLevel(level)
-            when level.state = available
-        PlayerClearsLevel(level.game, level, default)
-            when level.state = in_progress
-        PlayerFailsLevel(level)
-            when level.state = in_progress
+        StartQuest(player)
+            when player.mode = briefing
+        MovePlayer(player, direction)
+            when player.mode = world
+        Interact(player)
+            when player.mode = world
+        OpenPractice(player)
+            when player.mode = dialogue
+        StartEncounter(player)
+            when player.mode = practice
+        ApplyEncounterAction(player, admit)
+            when player.mode = encounter and not player.activeEncounter.complete
+        ApplyEncounterAction(player, reject)
+            when player.mode = encounter and not player.activeEncounter.complete
+        ClosePanel(player)
+            when player.mode in {dialogue, practice, encounter, journal, help}
+        OpenJournal(player)
+            when player.mode in {world, dialogue, practice, encounter}
+        OpenHelp(player)
+            when player.mode != encounter
 }
 
 surface EvidenceVerifierSurface {
-    facing verifier: PlaythroughEvidence
-
-    context evidence: PlaythroughEvidence
+    facing verifier: TeachingGame
 
     exposes:
-        evidence.game.id
-        evidence.unit_id
-        evidence.level.label
-        evidence.pass
-        evidence.metrics
-        evidence.path
-
-    provides:
-        VerifierReviewsEvidence(evidence, accepted)
-        VerifierReviewsEvidence(evidence, rejected)
+        verifier.progress.latestEvidence.source
+        verifier.progress.latestEvidence.unit.unit_id
+        verifier.progress.latestEvidence.project
+        verifier.progress.latestEvidence.encounter.id
+        verifier.progress.latestEvidence.game
+        verifier.progress.latestEvidence.ts
+        verifier.progress.latestEvidence.pass
+        verifier.progress.latestEvidence.metrics
+        verifier.progress.latestEvidence.reviewContext
+        verifier.progress.latestEvidence.curriculumContext
 
     @guarantee ProducerVerifierSeparation
-        -- A game emits raw evidence only; a separate verifier decides whether it can close a learner gate.
+        -- The game emits raw evidence only; a separate verifier decides whether it closes a learner gate.
 }
 
 invariant GameNeverMarksMastery {
     for game in TeachingGames:
-        game.evidence_only = true
+        game.progress.completedUnits.count = 0
+        or game.progress.latestEvidence != null
 }
 
-invariant ClearedLevelEmitsEvidence {
-    for level in GameLevels:
-        level.state = cleared implies PlaythroughEvidences.any(e => e.level = level and e.pass = true)
+invariant EvidenceAlwaysIdentifiesPixelQuest {
+    for game in TeachingGames:
+        game.progress.latestEvidence != null
+        implies game.progress.latestEvidence.source = "pixelquest"
 }
 
-open question "Should codexDojo ecosystem-manifest game evidence use learner units, or remain a separate product-explanation prototype until it emits verifier-ready JSON?"
-open question "Should pixelDojo status be per-game rather than one engine-wide status?"
+invariant EvidenceAlwaysNamesGame {
+    for game in TeachingGames:
+        game.progress.latestEvidence != null
+        implies game.progress.latestEvidence.game = "PixelDojo Quest"
+}
+
+invariant CompletedUnitRequiresPassingEvidence {
+    for game in TeachingGames:
+        for unit in game.progress.completedUnits:
+            exists evidence in EvidenceRecords:
+                evidence.unit = unit and evidence.pass = true
+}
+
+open question "Should the verifier surface be expanded into a separate allium spec that governs evidence acceptance and units_log append?"

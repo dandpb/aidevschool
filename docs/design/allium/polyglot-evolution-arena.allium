@@ -6,17 +6,30 @@
 -- Includes: proposal status, promotion criteria, current non-goals.
 -- Excludes: runnable app behaviour, deployment, learning-cycle integration, comparison-runner details not yet built.
 
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
+
 entity ArenaProposal {
-    status: proposal | scaffolded | implemented
+    status: proposal | scaffolded
+
+    transitions status {
+        proposal -> scaffolded
+        terminal: scaffolded
+    }
+
     has_project_proposal: Boolean
     has_bootstrap_prompt: Boolean
     has_executable_scaffold: Boolean
     has_test_harness: Boolean
     has_comparison_runner: Boolean
-    integrated_with_learning_cycle: Boolean
 
     ready_for_scaffold: has_executable_scaffold and has_test_harness and has_comparison_runner
 }
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
 
 rule ArenaStartsAsProposal {
     when: arena: ArenaProposal.created
@@ -42,10 +55,21 @@ rule ArenaCannotBeImplementedFromDocsOnly {
     ensures: arena.status = proposal
 }
 
-surface ArenaStatusSurface {
-    facing reader: ArenaProposal
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
-    context arena: ArenaProposal
+invariant ScaffoldRequiresVerificationSurface {
+    for arena in ArenaProposals:
+        arena.status = scaffolded implies arena.ready_for_scaffold = true
+}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface ArenaStatusSurface {
+    facing arena: ArenaProposal
 
     exposes:
         arena.status
@@ -54,20 +78,13 @@ surface ArenaStatusSurface {
         arena.has_executable_scaffold
         arena.has_test_harness
         arena.has_comparison_runner
-        arena.integrated_with_learning_cycle
 
     provides:
         ArenaPromotionReviewed(arena)
 }
 
-invariant ProposalArenaIsNotRunnable {
-    for arena in ArenaProposals:
-        arena.status = proposal implies arena.has_executable_scaffold = false
-}
-
-invariant ScaffoldRequiresVerificationSurface {
-    for arena in ArenaProposals:
-        arena.status = scaffolded implies arena.ready_for_scaffold = true
-}
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
 
 open question "Should the arena become part of codexDojo, or remain a separate engine once it gains an executable scaffold?"

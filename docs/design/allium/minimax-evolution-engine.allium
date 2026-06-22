@@ -5,9 +5,23 @@
 -- Includes: five-phase pipeline, learning gate, producer/verifier separation, phase artifacts, manual continuous-operation boundary.
 -- Excludes: Claude Code tool mechanics, shell syntax, cloud scheduling, model provider routing, exact command prompt text.
 
-config {
-    retry_limit: Integer = 3
+------------------------------------------------------------
+-- Given
+------------------------------------------------------------
+
+given {
+    gate: LearningGateState
 }
+
+------------------------------------------------------------
+-- External Entities
+------------------------------------------------------------
+
+external entity Operator {}
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
 
 entity LearningGateState {
     implementation_blocked: Boolean
@@ -18,6 +32,7 @@ entity PipelineCycle {
     project_path: String
     phase: spec_pending | spec_done | impl_done | review_done | benchmark_done | cycle_complete
     verifier_passed: Boolean
+    retry_count: Integer
 
     transitions phase {
         spec_pending -> spec_done
@@ -35,6 +50,8 @@ entity PhaseArtifact {
     path: String
     producer: curator | dev_go | dev_rust | dev_node | reviewer | benchmarker | optimizer | sonda
     verified: Boolean
+
+    verification: VerificationResult with artifact = this
 }
 
 entity VerificationResult {
@@ -44,12 +61,23 @@ entity VerificationResult {
 }
 
 entity DevschoolCommand {
-    name: status | diagnose | cycle | spec | implement | review | benchmark | optimize | verify | next
-    requires_gate_clear: Boolean
+    name: status | diagnose | cycle | spec | implement | review | benchmark | optimize | verify | next | socratic | recall | mnemosyne_compact | cron_list | decide | audit
 }
 
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    retry_limit: Integer = 3
+}
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
 rule DiagnoseMustPrecedeBlockedImplementation {
-    when: DevschoolCommandInvoked(command, cycle, gate)
+    when: DevschoolCommandInvoked(command, cycle)
     requires: command.name = diagnose
     requires: gate.implementation_blocked = true
 
@@ -57,7 +85,7 @@ rule DiagnoseMustPrecedeBlockedImplementation {
 }
 
 rule SpecPhaseProducesSpecArtifact {
-    when: DevschoolCommandInvoked(command, cycle, gate)
+    when: DevschoolCommandInvoked(command, cycle)
     requires: command.name = spec
     requires: cycle.phase = spec_pending
 
@@ -65,7 +93,7 @@ rule SpecPhaseProducesSpecArtifact {
 }
 
 rule ImplementationRequiresLearningGateClear {
-    when: DevschoolCommandInvoked(command, cycle, gate)
+    when: DevschoolCommandInvoked(command, cycle)
     requires: command.name = implement
     requires: cycle.phase = spec_done
     requires: gate.implementation_blocked = false
@@ -74,6 +102,32 @@ rule ImplementationRequiresLearningGateClear {
     ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_go, verified: false)
     ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_rust, verified: false)
     ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_node, verified: false)
+}
+
+rule ReviewPhaseProducesReviewArtifacts {
+    when: DevschoolCommandInvoked(command, cycle)
+    requires: command.name = review
+    requires: cycle.phase = impl_done
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: code_review, path: default, producer: reviewer, verified: false)
+    ensures: PhaseArtifact.created(cycle: cycle, kind: learning_notes, path: default, producer: reviewer, verified: false)
+    ensures: PhaseArtifact.created(cycle: cycle, kind: quiz, path: default, producer: reviewer, verified: false)
+}
+
+rule BenchmarkPhaseProducesBenchmarkArtifact {
+    when: DevschoolCommandInvoked(command, cycle)
+    requires: command.name = benchmark
+    requires: cycle.phase = review_done
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: benchmark_results, path: default, producer: benchmarker, verified: false)
+}
+
+rule OptimizePhaseProducesEvolutionReport {
+    when: DevschoolCommandInvoked(command, cycle)
+    requires: command.name = optimize
+    requires: cycle.phase = benchmark_done
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: evolution_report, path: default, producer: optimizer, verified: false)
 }
 
 rule VerifierPassAdvancesPhase {
@@ -100,28 +154,16 @@ rule VerifierFailureKeepsPhaseOpen {
     ensures: result.artifact.cycle.verifier_passed = false
 }
 
-surface DevschoolCommandSurface {
-    facing operator: PipelineCycle
+rule VerifierFailureIncrementsRetryCount {
+    when: VerifierPublishes(result)
+    requires: result.result = fail
 
-    context cycle: PipelineCycle
-
-    exposes:
-        cycle.project_path
-        cycle.phase
-        cycle.verifier_passed
-
-    provides:
-        DevschoolCommandInvoked(default, cycle, default)
-        VerifierPublishes(result)
-        AdvancePipeline(cycle, spec_done)
-        AdvancePipeline(cycle, impl_done)
-        AdvancePipeline(cycle, review_done)
-        AdvancePipeline(cycle, benchmark_done)
-        AdvancePipeline(cycle, cycle_complete)
-
-    @guarantee ManualWorkflowBoundary
-        -- The current engine is a documented manual workflow with phase commands, not a deployed daemon.
+    ensures: result.artifact.cycle.retry_count = result.artifact.cycle.retry_count + 1
 }
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
 invariant ImplementationDoesNotBypassLearningGate {
     for artifact in PhaseArtifacts:
@@ -132,6 +174,39 @@ invariant UnverifiedArtifactsDoNotAdvancePipeline {
     for artifact in PhaseArtifacts:
         artifact.verified = false implies artifact.cycle.verifier_passed = false
 }
+
+------------------------------------------------------------
+-- Actor Declarations
+------------------------------------------------------------
+
+actor Operator {}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface DevschoolCommandSurface {
+    facing operator: Operator
+
+    context cycle: PipelineCycle
+
+    exposes:
+        cycle.project_path
+        cycle.phase
+        cycle.verifier_passed
+
+    provides:
+        DevschoolCommandInvoked(command, cycle)
+        VerifierPublishes(result)
+        AdvancePipeline(cycle, next_phase)
+
+    @guarantee ManualWorkflowBoundary
+        -- The current engine is a documented manual workflow with phase commands, not a deployed daemon.
+}
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
 
 open question "Should the engine spec model each dev language artifact separately or keep a single implementation artifact kind?"
 open question "When OpenClaw/Hermes event bridge exists, should it be a separate integration spec or a surface on this one?"

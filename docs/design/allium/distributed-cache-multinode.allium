@@ -1,24 +1,27 @@
 -- allium: 3
 -- distributed-cache-multinode.allium
 
--- Scope: planned multi-node verification behaviour distilled from curriculum/10_distributed_cache docs.
--- Includes: known multi-node gaps, 3-node verification slice, owner routing, node removal/remap reporting.
--- Excludes: production gossip implementation, consensus, network protocol details, benchmark performance claims.
+-- Scope: multi-node verification plan and known gaps for curriculum/10_distributed_cache.
+-- Current implementation: local in-memory cache with virtual-node consistent hashing.
+-- Multi-node features (gossip membership, remote shard routing, node removal, data
+-- migration, failure simulation) are not implemented; they are tracked as gaps below.
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
 
 entity CacheNode {
     id: String
-    status: live | suspect | failed | removed
-    owns_keys: Set<CacheKey>
+    address: String
 }
 
 entity CacheKey {
     value: String
-    owner: CacheNode
 }
 
 entity MultiNodeGap {
     kind: gossip_membership | remote_shard_routing | node_removal | data_migration | failure_simulation
-    status: implemented | scaffolded | planned | proposal | blocked
+    status: planned | implemented
 }
 
 entity MultiNodeVerificationSlice {
@@ -29,46 +32,65 @@ entity MultiNodeVerificationSlice {
     false_local_hit_detected: Boolean
 }
 
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    required_nodes: Integer = 3
+}
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
 rule MultiNodeGapsStartPlanned {
     when: gap: MultiNodeGap.created
-
     ensures: gap.status = planned
+}
+
+rule GapClosesWhenFeatureImplemented {
+    when: FeatureImplemented(gap)
+    requires: gap.status = planned
+    ensures: gap.status = implemented
 }
 
 rule VerificationSliceRequiresThreeNodes {
     when: MultiNodeVerificationStarted(slice)
-
-    requires: slice.nodes.count = 3
+    requires: slice.nodes.count = config.required_nodes
     requires: slice.status = planned
 }
 
-rule ReadThroughNonOwnerMustRouteToOwner {
+rule VerificationSliceImplementedWhenGapsClosed {
+    when: VerificationPassed(slice)
+    requires: slice.status = planned
+    requires: MultiNodeGaps.all(g => g.status = implemented)
+    ensures:
+        slice.status = implemented
+        slice.remap_reported = true
+        slice.false_local_hit_detected = false
+}
+
+rule LocalCacheServesReadRegardlessOfOwner {
     when: ReadRequested(node, key)
-    requires: key.owner != node
-    requires: key.owner.status = live
-
-    ensures: OwnerRoutedRead(node, key.owner, key)
+    requires: node in CacheNodes
+    ensures: LocalServedRead(node, key)
 }
 
-rule RemovingNodeReportsRemap {
-    when: NodeRemoved(slice, node)
-    requires: node in slice.nodes
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
-    ensures: node.status = removed
-    ensures: slice.remap_reported = true
+invariant ImplementedSliceRequiresAllGapsClosed {
+    for slice in MultiNodeVerificationSlices:
+        slice.status = implemented implies MultiNodeGaps.all(g => g.status = implemented)
 }
 
-rule UnavailableOwnerMustNotSilentlyHitLocalCache {
-    when: ReadRequested(slice, node, key)
-    requires: key.owner.status = failed
-
-    ensures: slice.false_local_hit_detected = false
-    ensures: OwnerUnavailable(key.owner, key)
-}
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
 
 surface MultiNodeVerificationPlan {
-    facing verifier: MultiNodeVerificationSlice
-
     context slice: MultiNodeVerificationSlice
 
     exposes:
@@ -80,18 +102,13 @@ surface MultiNodeVerificationPlan {
 
     provides:
         MultiNodeVerificationStarted(slice)
-        NodeRemoved(slice, node)
         ReadRequested(slice, node, key)
+        FeatureImplemented(gap)
+        VerificationPassed(slice)
 }
 
-invariant PlannedGapsMustNotImplyCompletion {
-    for gap in MultiNodeGaps:
-        gap.status = planned implies gap.status != implemented
-}
-
-invariant ImplementedSliceRequiresAllGapsClosed {
-    for slice in MultiNodeVerificationSlices:
-        slice.status = implemented implies MultiNodeGaps.all(g => g.status = implemented)
-}
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
 
 open question "Should the first executable slice report migration as pending, or require data copy before it can pass?"

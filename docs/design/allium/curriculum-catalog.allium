@@ -1,17 +1,47 @@
 -- allium: 3
 -- curriculum-catalog.allium
+--
+-- Scope: canonical curriculum/backlog behaviour distilled from
+--         curriculum/catalog.md and curriculum/BACKLOG_STATUS.md.
+-- Includes: 18-project catalog, status vocabulary, dependencies,
+--           lifecycle evidence, certification boundary.
+-- Excludes: per-language implementation internals, benchmark runner
+--           mechanics, generated coverage files.
 
--- Scope: canonical curriculum/backlog behaviour distilled from curriculum/catalog.md and curriculum/BACKLOG_STATUS.md.
--- Includes: 18-project catalog, status vocabulary, dependencies, lifecycle evidence, certification boundary.
--- Excludes: per-language implementation internals, benchmark runner mechanics, generated coverage files.
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum ProjectLevel {
+    fundamentals
+    | concurrency_performance
+    | architecture_patterns
+    | scalability_distribution
+    | resilience_observability
+    | complex_systems
+}
+
+enum ProjectStatus {
+    implemented
+    | scaffolded
+    | planned
+    | proposal
+    | blocked
+}
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
 
 entity CurriculumProject {
     slug: String
-    level: fundamentals | concurrency_performance | architecture_patterns | scalability_distribution | resilience_observability | complex_systems
-    status: implemented | scaffolded | planned | proposal | blocked
+    level: ProjectLevel
+    status: ProjectStatus
     dependencies: Set<CurriculumProject>
     folder_exists: Boolean
     catalog_verified: Boolean
+
+    evidence_reviews: ProjectEvidencePackage with project = this
 }
 
 entity ProjectEvidencePackage {
@@ -22,13 +52,29 @@ entity ProjectEvidencePackage {
     has_code_review: Boolean
     has_benchmarks: Boolean
     has_evolution_report: Boolean
+    has_verifier_pass: Boolean
 }
 
 entity CurriculumBacklog {
     projects: Set<CurriculumProject>
-    implemented_count: Integer
-    total_count: Integer
+
+    implemented_projects: projects where status = implemented
+    scaffolded_projects: projects where status = scaffolded
+    planned_projects: projects where status = planned
+    proposal_projects: projects where status = proposal
+    blocked_projects: projects where status = blocked
+
+    implemented_count: implemented_projects.count
+    scaffolded_count: scaffolded_projects.count
+    planned_count: planned_projects.count
+    proposal_count: proposal_projects.count
+    blocked_count: blocked_projects.count
+    total_count: projects.count
 }
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
 
 rule CatalogContainsEighteenProjects {
     when: CurriculumCatalogLoaded(backlog)
@@ -38,42 +84,93 @@ rule CatalogContainsEighteenProjects {
 
 rule VerifiedEvidenceMarksProjectImplemented {
     when: ProjectCertificationReviewed(project, evidence)
+
     requires: evidence.project = project
+    requires: project.folder_exists = true
     requires: evidence.has_spec = true
     requires: evidence.has_polyglot_code = true
     requires: evidence.has_tests = true
     requires: evidence.has_code_review = true
     requires: evidence.has_benchmarks = true
     requires: evidence.has_evolution_report = true
+    requires: evidence.has_verifier_pass = true
 
     ensures: project.catalog_verified = true
     ensures: project.status = implemented
 }
 
-rule ExistingButUncertifiedProjectStaysPlanned {
+rule ExistingFolderWithIncompleteEvidenceMarksProjectScaffolded {
     when: ProjectCertificationReviewed(project, evidence)
-    requires: evidence.project = project
-    requires: project.catalog_verified = false
-    requires: project.folder_exists = true
 
-    ensures: project.status = planned
+    requires: evidence.project = project
+    requires: project.folder_exists = true
+    requires: project.status != implemented
+    requires:
+        evidence.has_spec = false
+        or evidence.has_polyglot_code = false
+        or evidence.has_tests = false
+        or evidence.has_code_review = false
+        or evidence.has_benchmarks = false
+        or evidence.has_evolution_report = false
+        or evidence.has_verifier_pass = false
+
+    ensures: project.status = scaffolded
 }
 
 rule MissingProjectFolderStaysPlanned {
     when: ProjectCertificationReviewed(project, evidence)
+
     requires: project.folder_exists = false
+    requires: project.status != implemented
 
     ensures: project.status = planned
 }
 
-surface CurriculumStatusSurface {
-    facing consumer: CurriculumBacklog
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
+invariant CurriculumHasOneCanonicalImplementedProjectToday {
+    for backlog in CurriculumBacklogs:
+        backlog.implemented_count = 1
+}
+
+invariant OnlyImplementedProjectsAreCatalogVerified {
+    for project in CurriculumProjects:
+        project.status != implemented implies project.catalog_verified = false
+}
+
+invariant ImplementedProjectsAreVerified {
+    for project in CurriculumProjects:
+        project.status = implemented implies project.catalog_verified = true
+}
+
+invariant ScaffoldedProjectsHaveFolders {
+    for project in CurriculumProjects:
+        project.status = scaffolded implies project.folder_exists = true
+}
+
+invariant CatalogCountsAreConsistent {
+    for backlog in CurriculumBacklogs:
+        backlog.implemented_count + backlog.scaffolded_count
+            + backlog.planned_count + backlog.proposal_count + backlog.blocked_count
+            = backlog.total_count
+}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface CurriculumStatusSurface {
     context backlog: CurriculumBacklog
 
     exposes:
         backlog.total_count
         backlog.implemented_count
+        backlog.scaffolded_count
+        backlog.planned_count
+        backlog.proposal_count
+        backlog.blocked_count
         for project in backlog.projects:
             project.slug
             project.level
@@ -84,15 +181,3 @@ surface CurriculumStatusSurface {
         CurriculumCatalogLoaded(backlog)
         ProjectCertificationReviewed(project, evidence)
 }
-
-invariant CurriculumHasOneCanonicalImplementedProjectToday {
-    for backlog in CurriculumBacklogs:
-        backlog.implemented_count = 1
-}
-
-invariant PlannedProjectsMustNotBePresentedAsImplemented {
-    for project in CurriculumProjects:
-        project.status = planned implies project.catalog_verified = false
-}
-
-open question "Should projects 02-18 move from planned to scaffolded because folders with code exist, or remain planned until catalog verification completes?"

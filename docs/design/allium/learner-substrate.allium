@@ -3,12 +3,245 @@
 
 -- Scope: canonical learner state and derived-view synchronisation distilled from learner/substrate.
 -- Includes: canonical learner fields, active unit gate, validation invariants, Mavis + minimax whiteboard projections,
---          codexDojo dashboard snapshot (engines/codexDojo/src/data/learner.ts, regenerated 2026-06-21).
+--          codexDojo dashboard snapshot + pixelDojo review slice (engines/codexDojo/src/data/learner.ts,
+--          engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts, regenerated 2026-06-21).
 -- Excludes: YAML parsing, filesystem writes, Python module mechanics, generated caches, presentation-only formatting.
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    system_name: String = "agora-continuum"
+    default_retry_limit: Integer = 3
+    max_streak_freezes: Integer = 2
+    default_aidi_current: Decimal = 0.34
+    default_aidi_threshold_amber: Decimal = 0.6
+    default_aidi_threshold_red: Decimal = 0.75
+}
+
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+value Budget {
+    hint_queries_per_day: Integer
+}
+
+value AidiConfig {
+    current: Decimal
+    threshold_amber: Decimal
+    threshold_red: Decimal
+}
+
+value ActiveUnitGate {
+    require_executable_evidence: Boolean
+    min_coverage: Decimal
+    mutation_min: Decimal
+}
+
+value CodeGatePolicy {
+    core_coverage_target: String
+    mutation_score_target: String
+    verifier_context: String
+    benchmark_rule: String
+}
+
+value LearningGatePolicy {
+    requires_attempt_before_solution: Boolean
+    hint_budget_per_day: Integer
+    mastery_source: String
+}
+
+value Review {
+    date: Timestamp
+    event: ReviewEventType
+    rating: Rating?
+    gate_outcome: GateOutcome?
+}
+
+value StreakFreezes {
+    equipped: Integer
+    max: Integer
+}
+
+value Streak {
+    current: Integer
+    longest: Integer
+    last_gate_date: Timestamp?
+    freezes: StreakFreezes
+}
+
+value StateMachine {
+    learning_states: List<LearningState>
+    artifact_states: List<ArtifactState>
+}
+
+value AgentOwnership {
+    leader: String
+    diagnostic: String
+    path: String
+    producer: String
+    tutor: String
+    verifier: String
+    reviewer: String
+    metrics: String
+    memory: String
+    governance: String
+}
+
+value NextAction {
+    owner: String
+    action: String
+}
+
+value MavisChangeLogEntry {
+    at: Timestamp
+    by: String
+    reason: String
+}
+
+value MavisLearnerProfile {
+    level: String
+    goal: String
+    active_focus: String
+    focus_languages: List<String>
+    reference_languages: List<String>
+    reference_purpose: String
+    weekly_time_hours: Integer
+    cadence: String
+    human_instructor: String
+    hitl_sla_hours: Integer
+    hitl_fallback: String
+    budget: Budget
+}
+
+value MavisStateMachine {
+    learning_states: List<String>
+    artifact_states: List<String>
+    retry_limit: Integer
+    current_retry: Integer
+}
+
+value MavisActiveUnit {
+    id: String
+    project: String
+    title: String
+    state: String
+    diagnostic_file: String
+    awaiting: String
+    promotion_gate: List<String>
+}
+
+value WhiteboardAluno {
+    id: String
+    linguagem_foco: String
+    tempo_semanal: String
+    nivel_autodeclado: String
+    dreyfus_global: String
+    bloom_global: String
+    ai_dependency_index: Decimal
+    socrates_quota_today: String
+    human_instructor: String
+}
+
+value WhiteboardTrilha {
+    proxima_unidade: String
+    ultima_dominada: String?
+}
+
+value WhiteboardProfileCore {
+    aluno: WhiteboardAluno
+    trilha: WhiteboardTrilha
+    pegadinhas_top_3: List<String>
+    skills_ativas_top_3: List<String>
+}
+
+value ProfileLevels {
+    dreyfus: String
+    bloom: String
+}
+
+value TrendPoint {
+    date: Timestamp
+    value: Decimal
+}
+
+value Pitfall {
+    id: String
+    description: String
+    occurrences: Integer
+    last_seen: String
+}
+
+value NextReview {
+    unit_id: String
+    title: String
+    due_in: String
+    reason: ReviewReason
+}
+
+value DashboardActiveUnit {
+    id: String
+    title: String
+    project: String
+    state: LearningState
+    retry_count: Integer
+    retry_limit: Integer
+}
+
+value DashboardGate {
+    implementation_blocked: Boolean
+    unblock_condition: String
+}
+
+value DashboardProfile {
+    dreyfus: String
+    bloom: String
+    active_language: String
+    weekly_time_hours: Integer
+}
+
+value DashboardAidi {
+    current: Decimal
+    threshold_amber: Decimal
+    threshold_red: Decimal
+    trend: List<TrendPoint>
+}
+
+value DashboardStreak {
+    current: Integer
+    longest: Integer
+    last_gate_date: String?
+    freezes_equipped: Integer
+    freezes_max: Integer
+}
+
+value PixelDojoReviewSlice {
+    next_reviews: List<NextReview>
+    streak: DashboardStreak
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum Level { beginner | intermediate | advanced }
+enum LearningState { presenting | practicing | evaluating | mastered }
+enum ArtifactState { producing | verifying | done }
+enum UnitKind { concept | smell | architecture | pitfall }
+enum Rating { again | hard | good | easy }
+enum GateOutcome { fail | pass_retried | pass_first_try | pass_exceeds }
+enum ReviewEventType { presented | gate }
+enum ReviewReason { overdue | due | `recurring-trap` }
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
 
 entity Learner {
     id: String
-    level: beginner | intermediate | advanced
+    level: Level
     focus: String
     goal: String
     active_language: String
@@ -16,32 +249,43 @@ entity Learner {
     reference_purpose: String
     weekly_time_hours: Integer
     session_cadence: String
-    human_instructor: Boolean
+    human_instructor: String
     hitl_sla_hours: Integer
     hitl_fallback: String
-    budget: String
+    budget: Budget
+    aidi: AidiConfig?
 }
 
 entity ActiveUnit {
     id: String
     project: String
     title: String
-    state: presenting | practicing | evaluating | mastered
+    state: LearningState
     retry_count: Integer
     retry_limit: Integer
     unblock_condition: String
     required_before_implementation: Boolean
     diagnostic_file: String
-    promotion_gate: String
+    promotion_gate: List<String>
+    empirical_gate: ActiveUnitGate
 }
 
 entity LearningGate {
     implementation_blocked: Boolean
 }
 
-entity EmpiricalGatePolicy {
-    requires_attempt_before_solution: Boolean
-    requires_executable_evidence: Boolean
+entity EmpiricalGates {
+    code: CodeGatePolicy
+    learning: LearningGatePolicy
+}
+
+entity UnitLog {
+    unit_id: String
+    concept: String
+    kind: UnitKind
+    project: String
+    mastered: Boolean
+    reviews: List<Review>
 }
 
 entity CanonicalLearnerState {
@@ -50,79 +294,132 @@ entity CanonicalLearnerState {
     learner: Learner
     active_unit: ActiveUnit
     gate: LearningGate
-    empirical_policy: EmpiricalGatePolicy
+    empirical_gates: EmpiricalGates
+    state_machine: StateMachine
+    agent_ownership: AgentOwnership
+    next_action: NextAction
+    units_log: List<UnitLog>
+    streak: Streak
 }
 
 entity MavisLearnerView {
-    source: CanonicalLearnerState
-    learner_id: String
-    active_unit_id: String
-    active_unit_state: String
-    implementation_blocked: Boolean
-    derived_at: Timestamp
+    version: Integer
+    system: String
+    derived_from: String
+    updated_at: Timestamp
+    workspace: String
+    change_log: List<MavisChangeLogEntry>
+    learner_profile: MavisLearnerProfile
+    state_machine: MavisStateMachine
+    active_unit: MavisActiveUnit
+    agent_ownership: AgentOwnership
+    empirical_gates: EmpiricalGates
+    next_action: NextAction
 }
 
 entity WhiteboardProfileView {
-    source: CanonicalLearnerState
+    id: String
     learner_id: String
-    level: String
-    focus: String
-    active_unit_id: String
-    active_unit_title: String
-    derived_at: Timestamp
+    derived_from: String
+    updated: Timestamp
+    agente_owner: String
+    core: WhiteboardProfileCore
 }
 
 entity WhiteboardTrailView {
-    source: CanonicalLearnerState
-    current_focus: String
-    active_unit_title: String
-    active_unit_state_label: String
-    derived_at: Timestamp
+    aluno_id: String
+    derived_from: String
+    atualizado: Timestamp
+    agente_owner: String
+    focus: String
+    active_unit: String
+    active_state: String
 }
 
 entity CodexDojoDashboardSnapshot {
-    source: CanonicalLearnerState
-    active_unit_id: String
-    active_unit_title: String
-    active_unit_state: String
-    gate_implementation_blocked: Boolean
-    dreyfus: String
-    bloom: String
-    active_language: String
-    weekly_time_hours: Integer
-    aidi_current: Decimal
-    aidi_threshold_amber: Decimal
-    aidi_threshold_red: Decimal
-    aidi_trend_points: Integer
-    top_pitfalls: List<String>
-    next_reviews: List<String>
+    active_unit: DashboardActiveUnit
+    gate: DashboardGate
+    profile: DashboardProfile
+    aidi: DashboardAidi
+    top_pitfalls: List<Pitfall>
+    next_reviews: List<NextReview>
     mastered_count: Integer
     scaffolded_count: Integer
-    derived_at: Timestamp
+    streak: DashboardStreak
+    curr: Decimal
 }
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
 
 rule CanonicalStateLoadsOnlyWhenValid {
     when: CanonicalStateLoaded(state)
 
-    requires: state.system = "agora-continuum"
-    requires: state.version != ""
+    requires: state.system = config.system_name
+    requires: state.version != null
     requires: state.learner.id != ""
-    requires: state.learner.active_language in state.learner.languages
+    requires: state.learner.level in Level
+    requires: state.learner.active_language = null
+        or state.learner.active_language in state.learner.languages
     requires: state.active_unit.id != ""
+    requires: state.active_unit.state in LearningState
     requires: state.active_unit.retry_count <= state.active_unit.retry_limit
-    requires: state.empirical_policy.requires_attempt_before_solution = true
+    requires: state.gate.implementation_blocked in {true, false}
+    requires: state.empirical_gates.learning.requires_attempt_before_solution = true
 }
 
 rule CanonicalStateProjectsToMavis {
     when: CanonicalStateSynced(state)
 
+    let focus_languages = {state.learner.active_language}
+    let reference_languages = state.learner.languages - focus_languages
+
     ensures: MavisLearnerView.created(
-        source: state,
-        learner_id: state.learner.id,
-        active_unit_id: state.active_unit.id,
-        active_unit_state: state.active_unit.state,
-        implementation_blocked: state.gate.implementation_blocked,
-        derived_at: now
+        version: 3,
+        system: state.system,
+        derived_from: "learner/learning_state.yaml",
+        updated_at: now,
+        workspace: repo_root(),
+        change_log: [
+            {
+                at: now,
+                by: "substrate",
+                reason: "Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py."
+            }
+        ],
+        learner_profile: {
+            level: state.learner.level,
+            goal: state.learner.goal,
+            active_focus: state.learner.active_language,
+            focus_languages: focus_languages,
+            reference_languages: reference_languages,
+            reference_purpose: state.learner.reference_purpose,
+            weekly_time_hours: state.learner.weekly_time_hours,
+            cadence: state.learner.session_cadence,
+            human_instructor: state.learner.human_instructor,
+            hitl_sla_hours: state.learner.hitl_sla_hours,
+            hitl_fallback: state.learner.hitl_fallback,
+            budget: state.learner.budget
+        },
+        state_machine: {
+            learning_states: translate_learning_states(state.state_machine.learning_states),
+            artifact_states: state.state_machine.artifact_states,
+            retry_limit: state.active_unit.retry_limit,
+            current_retry: state.active_unit.retry_count
+        },
+        active_unit: {
+            id: state.active_unit.id,
+            project: "projects/" + state.active_unit.project,
+            title: state.active_unit.title,
+            state: translate_learning_state(state.active_unit.state),
+            diagnostic_file: remap_diagnostic_path(state.active_unit.diagnostic_file),
+            awaiting: await_for_state(state.active_unit.state),
+            promotion_gate: state.active_unit.promotion_gate
+        },
+        agent_ownership: state.agent_ownership,
+        empirical_gates: state.empirical_gates,
+        next_action: state.next_action
     )
 }
 
@@ -130,13 +427,30 @@ rule CanonicalStateProjectsToWhiteboardProfile {
     when: CanonicalStateSynced(state)
 
     ensures: WhiteboardProfileView.created(
-        source: state,
+        id: "aluno-001",
         learner_id: state.learner.id,
-        level: state.learner.level,
-        focus: state.learner.focus,
-        active_unit_id: state.active_unit.id,
-        active_unit_title: state.active_unit.title,
-        derived_at: now
+        derived_from: "../../learner/learning_state.yaml",
+        updated: now,
+        agente_owner: "mnemosyne",
+        core: {
+            aluno: {
+                id: state.learner.id,
+                linguagem_foco: state.learner.active_language,
+                tempo_semanal: format_weekly_hours(state.learner.weekly_time_hours),
+                nivel_autodeclado: translate_level(state.learner.level),
+                dreyfus_global: "advanced_beginner",
+                bloom_global: "apply",
+                ai_dependency_index: 0.50,
+                socrates_quota_today: format_quota(state.learner.budget.hint_queries_per_day),
+                human_instructor: state.learner.human_instructor
+            },
+            trilha: {
+                proxima_unidade: state.active_unit.id,
+                ultima_dominada: null
+            },
+            pegadinhas_top_3: [],
+            skills_ativas_top_3: []
+        }
     )
 }
 
@@ -144,34 +458,136 @@ rule CanonicalStateProjectsToWhiteboardTrail {
     when: CanonicalStateSynced(state)
 
     ensures: WhiteboardTrailView.created(
-        source: state,
-        current_focus: state.learner.focus,
-        active_unit_title: state.active_unit.title,
-        active_unit_state_label: state.active_unit.state,
-        derived_at: now
+        aluno_id: "aluno-001",
+        derived_from: "../../learner/learning_state.yaml",
+        atualizado: now,
+        agente_owner: "cartografo",
+        focus: state.learner.focus,
+        active_unit: state.active_unit.id,
+        active_state: translate_state_upper(state.active_unit.state)
     )
 }
 
 rule CanonicalStateProjectsToCodexDojoDashboard {
     when: CanonicalStateSynced(state)
 
-    ensures: CodexDojoDashboardSnapshot.created(
-        source: state,
-        active_unit_id: state.active_unit.id,
-        active_unit_title: state.active_unit.title,
-        active_unit_state: state.active_unit.state,
-        gate_implementation_blocked: state.gate.implementation_blocked,
-        active_language: state.learner.active_language,
-        weekly_time_hours: state.learner.weekly_time_hours,
-        mastered_count: count_projects_with_status("implemented"),
-        scaffolded_count: count_projects_with_status("scaffolded"),
-        derived_at: now
-    )
+    let profile_levels = profile_matrix(state)
+    let aidi_cfg = state.learner.aidi
+    let aidi_history = aidi_trend(state)
+    let pitfalls = derive_top_pitfalls(state)
+    let dashboard_streak = dashboard_streak_view(state.streak, today())
+
+    ensures:
+        let dashboard = CodexDojoDashboardSnapshot.created(
+            active_unit: {
+                id: state.active_unit.id,
+                title: state.active_unit.title,
+                project: state.active_unit.project,
+                state: state.active_unit.state,
+                retry_count: state.active_unit.retry_count,
+                retry_limit: state.active_unit.retry_limit
+            },
+            gate: {
+                implementation_blocked: state.gate.implementation_blocked,
+                unblock_condition: state.active_unit.unblock_condition
+            },
+            profile: {
+                dreyfus: profile_levels.dreyfus,
+                bloom: profile_levels.bloom,
+                active_language: state.learner.active_language,
+                weekly_time_hours: state.learner.weekly_time_hours
+            },
+            aidi: {
+                current: aidi_cfg?.current ?? config.default_aidi_current,
+                threshold_amber: aidi_cfg?.threshold_amber ?? config.default_aidi_threshold_amber,
+                threshold_red: aidi_cfg?.threshold_red ?? config.default_aidi_threshold_red,
+                trend: aidi_history
+            },
+            top_pitfalls: pitfalls,
+            next_reviews: derive_next_reviews(state),
+            mastered_count: count_backlog_status("implemented"),
+            scaffolded_count: count_backlog_status("scaffolded"),
+            streak: dashboard_streak,
+            curr: current_retention_rate(state.units_log, today())
+        )
+        PixelDojoReviewSlice.created(
+            next_reviews: dashboard.next_reviews,
+            streak: dashboard.streak
+        )
 }
 
-surface LearnerSubstrateReadSurface {
-    facing consumer: CanonicalLearnerState
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
+invariant ActiveLanguageIsKnown {
+    for state in CanonicalLearnerStates:
+        state.learner.active_language = null
+            or state.learner.active_language in state.learner.languages
+}
+
+invariant LevelIsKnown {
+    for state in CanonicalLearnerStates:
+        state.learner.level in Level
+}
+
+invariant ActiveUnitStateIsKnown {
+    for state in CanonicalLearnerStates:
+        state.active_unit.state in LearningState
+}
+
+invariant RetryLimitIsRespected {
+    for state in CanonicalLearnerStates:
+        state.active_unit.retry_count <= state.active_unit.retry_limit
+}
+
+invariant GateBlockedIsBoolean {
+    for state in CanonicalLearnerStates:
+        state.gate.implementation_blocked in {true, false}
+}
+
+invariant AttemptPrecedesSolution {
+    for state in CanonicalLearnerStates:
+        state.empirical_gates.learning.requires_attempt_before_solution = true
+}
+
+invariant MasteredUnitsHaveGateReview {
+    for state in CanonicalLearnerStates:
+        for unit in state.units_log:
+            unit.mastered = true implies unit.reviews.any(r => r.event = gate)
+}
+
+invariant StreakFreezeCap {
+    for state in CanonicalLearnerStates:
+        state.streak.freezes.equipped <= state.streak.freezes.max
+            and state.streak.freezes.max <= config.max_streak_freezes
+}
+
+invariant StreakCurrentNonNegative {
+    for state in CanonicalLearnerStates:
+        state.streak.current >= 0
+}
+
+invariant RatingComesFromGate {
+    for state in CanonicalLearnerStates:
+        for unit in state.units_log:
+            for review in unit.reviews where review.event = gate:
+                review.rating != null
+                    and review.gate_outcome != null
+                    and review.rating = rating_from_gate_outcome(review.gate_outcome)
+}
+
+------------------------------------------------------------
+-- Actor Declarations
+------------------------------------------------------------
+
+-- The substrate is consumed by the local runtime/engines; no human actor boundary is modelled here.
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface LearnerSubstrateReadSurface {
     context state: CanonicalLearnerState
 
     exposes:
@@ -186,15 +602,13 @@ surface LearnerSubstrateReadSurface {
         state.active_unit.retry_count
         state.active_unit.retry_limit
         state.gate.implementation_blocked
-        state.empirical_policy.requires_attempt_before_solution
+        state.empirical_gates.learning.requires_attempt_before_solution
 
     provides:
         CanonicalStateLoaded(state)
 }
 
 surface LearnerSubstrateSyncSurface {
-    facing consumer: CanonicalLearnerState
-
     context state: CanonicalLearnerState
 
     exposes:
@@ -206,24 +620,13 @@ surface LearnerSubstrateSyncSurface {
         CanonicalStateSynced(state)
 
     @guarantee DerivedViewsAreMirrors
-        -- Mavis, whiteboard, and codexDojo dashboard views are derived from canonical
-        -- learner state; canonical learner state remains the source of truth.
+        -- Mavis, whiteboard, codexDojo dashboard and pixelDojo review slice views are derived from
+        -- canonical learner state; canonical learner state remains the source of truth.
 }
 
-invariant ActiveLanguageIsKnown {
-    for state in CanonicalLearnerStates:
-        state.learner.active_language in state.learner.languages
-}
-
-invariant RetryLimitIsRespected {
-    for state in CanonicalLearnerStates:
-        state.active_unit.retry_count <= state.active_unit.retry_limit
-}
-
-invariant AttemptPrecedesSolution {
-    for state in CanonicalLearnerStates:
-        state.empirical_policy.requires_attempt_before_solution = true
-}
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
 
 open question "Should trail.md and learner_profile.md be regenerated by the same sync rule as Mavis/profile.yaml?"
 open question "Is gate.implementation_blocked canonical input, or should it be derived from active unit and attempt evidence?"

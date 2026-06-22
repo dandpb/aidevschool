@@ -5,14 +5,45 @@
 -- Excludes:
 --   - Specific platform tooling (.Codex, .opencode, .playwright-mcp, .mavis)
 
+------------------------------------------------------------
 -- Value Types
-value Level { name: String }
-value ProgrammingLanguage { name: String }
+------------------------------------------------------------
 
--- Main Entities
+value Level {
+    name: String
+}
+
+value ProgrammingLanguage {
+    name: String
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum LearningState {
+    presenting
+    | practicing
+    | evaluating
+    | mastered
+    | failure_blocked
+}
+
+enum ArtifactState {
+    producing
+    | verifying
+    | done
+}
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
+
 entity Learner {
+    id: String
     level: Level
     focus: String
+    active_language: ProgrammingLanguage
     languages: Set<ProgrammingLanguage>
 }
 
@@ -25,132 +56,175 @@ entity Project {
 entity Unit {
     learner: Learner
     project: Project
-    status: presenting | practicing | evaluating | mastered
+    status: LearningState
     retry_count: Integer
     retry_limit: Integer
     required_before_implementation: Boolean
-    min_coverage: Float
+    min_coverage: Decimal
+    mutation_min: Decimal
 
     transitions status {
         presenting -> practicing
         practicing -> evaluating
         evaluating -> mastered
-        evaluating -> practicing
-        terminal: mastered
+        evaluating -> presenting
+        evaluating -> failure_blocked
+        failure_blocked -> presenting
+        terminal: mastered, failure_blocked
     }
 }
 
-entity Diagnostic {
+entity Evaluation {
     unit: Unit
-    is_evaluated: Boolean
+    artifact_state: ArtifactState
+
+    transitions artifact_state {
+        producing -> verifying
+        verifying -> producing
+        verifying -> done
+        terminal: done
+    }
 }
 
 entity ExecutableEvidence {
     unit: Unit
-    coverage: Float
-    mutation_score: Float
+    coverage: Decimal
+    mutation_score: Decimal
     is_valid: Boolean
 }
 
--- Agent Pipeline Entities
-entity Pipeline {
-    unit: Unit
-    phase: spec | diagnostic | impl | review | benchmark | optimize | cycle_complete
-    
-    transitions phase {
-        spec -> diagnostic
-        diagnostic -> impl
-        impl -> review
-        review -> benchmark
-        benchmark -> optimize
-        optimize -> cycle_complete
-        terminal: cycle_complete
-    }
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    retry_limit: Integer = 3
+    min_coverage: Decimal = 0.8
+    mutation_min: Decimal = 0.6
 }
 
-entity AgentTask {
-    pipeline: Pipeline
-    agent_role: curator | developer | reviewer | tester | evolution
-    status: pending | in_progress | done
-    language: ProgrammingLanguage? when agent_role = developer
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
+rule LearnerAcceptsUnit {
+    when: LearnerAccepts(unit)
+    requires: unit.status = presenting
+    ensures: unit.status = practicing
 }
 
--- Triggers & Rules
-
-rule LearnerAttemptsUnit {
-    when: AttemptStarted(learner, project)
-    ensures: Unit.created(
-        learner: learner,
-        project: project,
-        status: presenting,
-        retry_count: 0,
-        retry_limit: 3,
-        required_before_implementation: true,
-        min_coverage: 0.8
-    )
+rule LearnerSubmitsAttempt {
+    when: LearnerSubmits(unit)
+    requires: unit.status = practicing
+    ensures:
+        unit.status = evaluating
+        Evaluation.created(unit: unit, artifact_state: producing)
 }
 
-rule PipelineStarts {
-    when: unit: Unit.created
-    ensures: Pipeline.created(
-        unit: unit,
-        phase: spec
-    )
+rule PracticeTimesOut {
+    when: PracticeTimeout(unit)
+    requires: unit.status = practicing
+    ensures:
+        unit.status = evaluating
+        Evaluation.created(unit: unit, artifact_state: producing)
 }
 
-rule DiagnosticEvaluated {
-    when: DiagnosticCompleted(unit)
-    requires: unit.status = presenting | practicing
-    ensures: Diagnostic.created(
-        unit: unit,
-        is_evaluated: true
-    )
-    ensures: unit.status = evaluating
+rule MestreDone {
+    when: MestreDone(evaluation)
+    requires: evaluation.unit.status = evaluating
+    requires: evaluation.artifact_state = producing
+    ensures: evaluation.artifact_state = verifying
 }
 
-rule PipelineAdvancesToImpl {
-    when: diagnostic: Diagnostic.is_evaluated becomes true
-    for p in Pipeline where unit = diagnostic.unit:
-        requires: p.phase = diagnostic
-        ensures: p.phase = impl
+rule PrometorPasses {
+    when: PrometorPass(evaluation, coverage, mutation_score)
+    requires: evaluation.unit.status = evaluating
+    requires: evaluation.artifact_state = verifying
+    requires: coverage >= evaluation.unit.min_coverage
+    requires: mutation_score >= evaluation.unit.mutation_min
+    ensures:
+        evaluation.artifact_state = done
+        evaluation.unit.status = mastered
+        ExecutableEvidence.created(
+            unit: evaluation.unit,
+            coverage: coverage,
+            mutation_score: mutation_score,
+            is_valid: true
+        )
 }
 
-rule AgentCompletesTask {
-    when: task: AgentTask.status transitions_to done
-    -- Agent transition logic could chain here, omitted for brevity
+rule PrometorFails {
+    when: PrometorFail(evaluation, coverage, mutation_score)
+    requires: evaluation.unit.status = evaluating
+    requires: evaluation.artifact_state = verifying
+    ensures:
+        evaluation.unit.retry_count = evaluation.unit.retry_count + 1
+        ExecutableEvidence.created(
+            unit: evaluation.unit,
+            coverage: coverage,
+            mutation_score: mutation_score,
+            is_valid: false
+        )
+    ensures:
+        if evaluation.unit.retry_count < config.retry_limit:
+            evaluation.unit.status = presenting
+            evaluation.artifact_state = producing
+        else:
+            evaluation.unit.status = failure_blocked
 }
 
-rule ProvideExecutableEvidence {
-    when: EvidenceGathered(unit, coverage, mutation_score, is_valid)
-    requires: unit.status = evaluating
-    ensures: ExecutableEvidence.created(
-        unit: unit,
-        coverage: coverage,
-        mutation_score: mutation_score,
-        is_valid: is_valid
-    )
+rule SenecaPasses {
+    when: SenecaPass(unit)
+    requires: unit.status = failure_blocked
+    ensures:
+        unit.status = presenting
+        unit.retry_count = 0
 }
 
-rule MasterUnit {
-    when: evidence: ExecutableEvidence.is_valid becomes true
-    let u = evidence.unit
-    requires: u.status = evaluating
-    requires: evidence.coverage >= u.min_coverage
-    ensures: u.status = mastered
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+invariant RetryCountBounded {
+    for unit in Units:
+        unit.retry_count <= unit.retry_limit
 }
 
-rule FailEvaluation {
-    when: evidence: ExecutableEvidence.is_valid becomes false
-    let u = evidence.unit
-    requires: u.status = evaluating
-    requires: u.retry_count < u.retry_limit
-    ensures: u.status = practicing
-    ensures: u.retry_count = u.retry_count + 1
+invariant ActiveLanguageInLearnerLanguages {
+    for learner in Learners:
+        learner.active_language in learner.languages
 }
 
-rule AdvanceToReviewPhase {
-    when: p: Pipeline.phase becomes impl
-    let impl_tasks = AgentTask where pipeline = p and agent_role = developer
-    requires: impl_tasks.all(t => t.status = done)
-    ensures: p.phase = review
+invariant MasteredEvidenceMeetsThresholds {
+    for evidence in ExecutableEvidences:
+        evidence.unit.status = mastered implies
+            evidence.coverage >= evidence.unit.min_coverage
+            and evidence.mutation_score >= evidence.unit.mutation_min
+}
+
+------------------------------------------------------------
+-- Actor Declarations
+------------------------------------------------------------
+
+actor Orquestrador {
+    identified_by: Learner where id != ""
+}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface UnitLifecycle {
+    facing maestro: Orquestrador
+
+    provides:
+        LearnerAccepts(unit) when unit.status = presenting
+        LearnerSubmits(unit) when unit.status = practicing
+        PracticeTimeout(unit) when unit.status = practicing
+        MestreDone(evaluation) when evaluation.unit.status = evaluating
+        PrometorPass(evaluation, coverage, mutation_score)
+            when evaluation.unit.status = evaluating
+        PrometorFail(evaluation, coverage, mutation_score)
+            when evaluation.unit.status = evaluating
+        SenecaPass(unit) when unit.status = failure_blocked
 }
