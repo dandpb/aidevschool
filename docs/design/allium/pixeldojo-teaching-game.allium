@@ -1,0 +1,152 @@
+-- allium: 3
+-- pixeldojo-teaching-game.allium
+
+-- Scope: pixelDojo teaching-game behaviour distilled from engines/pixelDojo.
+-- Includes: concept-to-mechanic mapping, playable attempt surfaces, evidence emission, verifier boundary, current rate-limiter and codexDojo manifest game loops.
+-- Excludes: Phaser/canvas rendering mechanics, sprite/audio generation, local browser APIs, screenshots, static-server details, and polishing backlog.
+
+entity TeachingGame {
+    id: String
+    curriculum_project: String
+    concept: String
+    status: planned | playable | verified
+    evidence_only: Boolean
+}
+
+entity GameLevel {
+    game: TeachingGame
+    label: String
+    state: locked | available | in_progress | cleared | failed
+
+    transitions state {
+        locked -> available
+        available -> in_progress
+        in_progress -> cleared
+        in_progress -> failed
+        failed -> in_progress
+        terminal: cleared
+    }
+}
+
+entity GameMechanic {
+    game: TeachingGame
+    concept_element: String
+    arcade_action: String
+    proves: String
+}
+
+entity PlaythroughEvidence {
+    game: TeachingGame
+    unit_id: String
+    level: GameLevel
+    pass: Boolean
+    metrics: String
+    path: String
+}
+
+entity GameVerifierDecision {
+    evidence: PlaythroughEvidence
+    result: accepted | rejected
+}
+
+rule GameDefinitionRequiresOneConcept {
+    when: game: TeachingGame.created
+
+    requires: game.curriculum_project != ""
+    requires: game.concept != ""
+
+    ensures: game.evidence_only = true
+    ensures: game.status = planned
+}
+
+rule PlayerStartsAvailableLevel {
+    when: PlayerStartsLevel(level)
+    requires: level.state = available
+
+    ensures: level.state = in_progress
+}
+
+rule PlayerClearsLevelWithEvidence {
+    when: PlayerClearsLevel(game, level, metrics)
+    requires: level.game = game
+    requires: level.state = in_progress
+
+    ensures: level.state = cleared
+    ensures: PlaythroughEvidence.created(game: game, unit_id: default, level: level, pass: true, metrics: metrics, path: default)
+}
+
+rule PlayerFailsLevelWithoutMastery {
+    when: PlayerFailsLevel(level)
+    requires: level.state = in_progress
+
+    ensures: level.state = failed
+}
+
+rule VerifierAcceptsEvidence {
+    when: VerifierReviewsEvidence(evidence, accepted)
+    requires: evidence.pass = true
+
+    ensures: GameVerifierDecision.created(evidence: evidence, result: accepted)
+}
+
+rule VerifierRejectsEvidence {
+    when: VerifierReviewsEvidence(evidence, rejected)
+
+    ensures: GameVerifierDecision.created(evidence: evidence, result: rejected)
+}
+
+surface GamePlaySurface {
+    facing player: TeachingGame
+
+    context level: GameLevel
+
+    exposes:
+        level.game.concept
+        level.state
+        for mechanic in GameMechanics where mechanic.game = level.game:
+            mechanic.concept_element
+            mechanic.arcade_action
+            mechanic.proves
+
+    provides:
+        PlayerStartsLevel(level)
+            when level.state = available
+        PlayerClearsLevel(level.game, level, default)
+            when level.state = in_progress
+        PlayerFailsLevel(level)
+            when level.state = in_progress
+}
+
+surface EvidenceVerifierSurface {
+    facing verifier: PlaythroughEvidence
+
+    context evidence: PlaythroughEvidence
+
+    exposes:
+        evidence.game.id
+        evidence.unit_id
+        evidence.level.label
+        evidence.pass
+        evidence.metrics
+        evidence.path
+
+    provides:
+        VerifierReviewsEvidence(evidence, accepted)
+        VerifierReviewsEvidence(evidence, rejected)
+
+    @guarantee ProducerVerifierSeparation
+        -- A game emits raw evidence only; a separate verifier decides whether it can close a learner gate.
+}
+
+invariant GameNeverMarksMastery {
+    for game in TeachingGames:
+        game.evidence_only = true
+}
+
+invariant ClearedLevelEmitsEvidence {
+    for level in GameLevels:
+        level.state = cleared implies PlaythroughEvidences.any(e => e.level = level and e.pass = true)
+}
+
+open question "Should codexDojo ecosystem-manifest game evidence use learner units, or remain a separate product-explanation prototype until it emits verifier-ready JSON?"
+open question "Should pixelDojo status be per-game rather than one engine-wide status?"

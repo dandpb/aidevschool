@@ -35,13 +35,18 @@
 - All 7 categories covered
 
 ## Benchmarks
-- 4 scenarios × 3 langs × N=1 (N≥3 re-run pending)
-- p99 leaders: Go 6.79ms / Rust 8.98ms / Node 9.24ms
+- 4 scenarios × 3 langs × **N=3** (see `benchmarks/results-N3-optimized/aggregated.json`; analysis script: `benchmarks/render_n3_summary.py`)
+- p99 leaders (median of N=3):
+  - baseline: Go 9.72ms (±0.33, CV 3.39%)
+  - stress: Rust 7.88ms (±3.83, CV 48.63%) — noisy
+  - spike: Go 7.41ms (±1.86, CV 25.13%) — CV borderline
+  - endurance: Rust 10.28ms (±13.53, CV 131.5%) — very noisy, requires re-run
 
 ## Evolution
 - 3 optimizations shipped (Go shard mutex, Rust shard mutex, Node pre-allocate)
+- Re-benchmarked post-optimization (N=3 above); only the stress CV% is acceptable; spike and endurance are noisy and need re-runs.
 
 ## Known Limitations
-1. Benchmarks at N=1 (need N≥3)
+1. **Endurance CV% > 20% on Rust + Node** — variance too high to claim winners; needs re-run.
 2. Mutation testing pending
 3. Node single-process limitation

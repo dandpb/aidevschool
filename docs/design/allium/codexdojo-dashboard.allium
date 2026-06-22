@@ -2,7 +2,7 @@
 -- codexdojo-dashboard.allium
 
 -- Scope: user-facing codexDojo dashboard behaviour distilled from engines/codexDojo/src.
--- Includes: dashboard session state, view navigation, cycle advancement, agent prompt copy, roadmap filtering.
+-- Includes: dashboard session state, view navigation, cycle advancement, agent prompt copy, roadmap filtering, honest metric status, ecosystem contract status.
 -- Excludes: CSS/layout, Vite/browser mounting mechanics, DOM event delegation details, snapshot formatting.
 
 entity Agent {
@@ -15,6 +15,13 @@ entity Agent {
     outputs: Set<String>
     gate: String
     prompt: String
+}
+
+entity UserFacingAgent {
+    id: String
+    name: String
+    responsibility: String
+    expands_to: Set<Agent>
 }
 
 entity CycleStage {
@@ -41,6 +48,18 @@ entity Metric {
     label: String
     target: String
     signal: String
+    measurement: String?
+    evidence_path: String?
+
+    is_measured: measurement != null
+}
+
+entity EcosystemStatus {
+    id: String
+    label: String
+    state: implemented | scaffolded | planned | proposal | blocked
+    evidence: String
+    next_step: String
 }
 
 entity DashboardSession {
@@ -133,13 +152,21 @@ surface OverviewDashboard {
         Agents.count
         CycleStages.count
         DojoProjects.count
-        for agent in Agents.first(10):
+        for agent in UserFacingAgents:
             agent.name
         DojoProjects.first.title
         DojoProjects.first.learning_goal
         for metric in Metrics:
             metric.label
+            metric.measurement
             metric.target
+            metric.signal
+            metric.evidence_path
+        for status in EcosystemStatuses:
+            status.label
+            status.state
+            status.evidence
+            status.next_step
         for stage in CycleStages.first(6):
             stage.owner
             stage.label
@@ -157,9 +184,10 @@ surface AgentsDashboard {
     context session: DashboardSession
 
     exposes:
-        for agent in Agents:
+        for agent in UserFacingAgents:
             agent.name
-            agent.role
+            agent.responsibility
+            agent.expands_to
         session.selected_agent.group
         session.selected_agent.name
         session.selected_agent.mission
@@ -172,6 +200,7 @@ surface AgentsDashboard {
         UserSelectsAgent(session, agent)
             when agent in Agents
         UserCopiesAgentPrompt(session, session.selected_agent)
+        AgentPromptCopyFails(session, session.selected_agent)
 }
 
 surface CycleDashboard {
@@ -224,6 +253,15 @@ invariant SelectedAgentIsConfigured {
 invariant SelectedStageIsConfigured {
     for session in DashboardSessions:
         session.selected_stage in CycleStages
+}
+
+invariant UnmeasuredMetricsDoNotPretendToHaveValues {
+    for metric in Metrics:
+        (not metric.is_measured) implies metric.measurement = null
+}
+
+invariant DashboardDistinguishesUserFacingAgentsFromTutorCore {
+    UserFacingAgents.count = 10 and Agents.count = 14
 }
 
 open question "Should the current project always be the first configured project, or should it be selected from learner state?"

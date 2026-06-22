@@ -9,6 +9,7 @@ import {
   getStages,
 } from "../progress"
 import type { AppState } from "../state"
+import { renderLearnerDashboard } from "./learner"
 
 const OVERVIEW_AGENT_LIMIT = 14
 const OVERVIEW_STAGE_LIMIT = 6
@@ -129,6 +130,8 @@ export function renderOverview(state: AppState): string {
           )
           .join("")}
       </article>
+
+      ${renderLearnerDashboard()}
     </section>
   `
 }

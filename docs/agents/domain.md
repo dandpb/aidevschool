@@ -28,9 +28,10 @@ If any of these files don't exist for the context you're exploring, **proceed si
 │   ├── miniMaxEvolutionEngine/
 │   │   ├── CONTEXT.md
 │   │   └── docs/adr/
-│   └── polyglotEvolutionArena/
+│   └── pixelDojo/
 │       ├── CONTEXT.md
 │       └── docs/adr/
+├── docs/design/polyglot-arena/  # demoted 2026-06-21; lazy CONTEXT/adr when material graduates
 ├── curriculum/
 │   ├── CONTEXT.md
 │   └── docs/adr/

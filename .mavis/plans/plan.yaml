@@ -1,4 +1,4 @@
-version: 1
+version: 2
 plan:
   name: 'AI DevSchool — Project 01 (Token-Bucket Rate Limiter) full cycle'
   max_concurrency: 4
@@ -6,8 +6,14 @@ plan:
   max_cycles: 8
   auto_reject_retries: 1
   verifier_config:
+    # `default_verifiers` is the family that runs after every producer phase.
+    # `audit_verifiers` is a separate family that re-verifies a sampled
+    # fraction of completed units; cross-model disagreement is escalated to
+    # Sêneca via the audit command.
     default_verifiers: [verifier]
-    audit_sample_rate: 0.0
+    audit_verifiers: [verifier-haiku]
+    audit_sample_rate: 0.2
+    audit_escalate_on_disagreement: true
 learning_gate:
   system: agora-continuum
   state_file: .mavis/learning_state.yaml

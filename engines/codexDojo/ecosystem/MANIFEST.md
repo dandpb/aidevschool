@@ -13,11 +13,12 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/codexDojo/` | User-facing app and product-facing ecosystem spec. |
 | `engines/codexDojo/src/` | Local dashboard for agents, cycle, roadmap, and first project. |
 | `engines/codexDojo/ecosystem/` | Canonical manifest, completion audit, prompts, runbooks, memory, evaluation, and templates. |
+| `docs/design/allium/` | Formal domain-level Allium specs for dashboard, learner substrate, tutor core, orchestration, curriculum, pixelDojo games, arena, and distributed-cache verification behaviour. |
 | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` | Legacy/refactoring contract: characterization tests, code-smell catalog, migration strategies, and before/after metrics. |
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
 | `engines/minimaxDojo/config/learner.yaml` | Single seam for numeric thresholds referenced by prompts/docs via `⟨config: path⟩`. |
-| `engines/pixelDojo/` | 8-bit learning-game engine prototype. |
-| `engines/polyglotEvolutionArena/` | Polyglot evolution arena: `proposal`-stage design material only. See `engines/polyglotEvolutionArena/STATUS.md`. |
+| `engines/pixelDojo/` | Teaching-game engine: one curriculum concept becomes one playable arcade mechanic and emits evidence for a separate verifier; `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts` is the playable smoke contract. `arcadeAcademy/` merged here on 2026-06-21; the obsolete prototypes `codexdojo-ecosystem-manifest/` and `game-01-rate-limiter/` (siblings of `pixel-quest/` from the same scaffold commit) were removed 2026-06-21 — pixel-quest is the canonical teaching-game surface. |
+| `docs/design/polyglot-arena/` | Demoted design material for the polyglot evolution arena; was `engines/polyglotEvolutionArena/` at `proposal` status with no executable scaffold. The loop itself lives in `engines/miniMaxEvolutionEngine/`. |
 | `docs/` | Existing polyglot MiniMax/OpenClaw/Hermes documentation. |
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
@@ -38,18 +39,18 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 
 | # | Requested deliverable | Evidence in this workspace |
 | --- | --- | --- |
-| 1 | Architecture of the multi-agent ecosystem | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md`, `docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md` |
+| 1 | Architecture of the multi-agent ecosystem | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md`, `docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md`, `docs/design/allium/minimax-agora-continuum.allium`, `docs/design/allium/minimax-evolution-engine.allium` |
 | 2 | List of agents and responsibilities | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/docs/01_agent_roster.md` |
 | 3 | Continuous execution workflow | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `.mavis/plans/plan.yaml` |
 | 4 | Project folder structure | `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `curriculum/01_rate_limiter/` |
 | 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/codexDojo/ecosystem/MEMORY_CURATION.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
 | 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
 | 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/technology-comparison.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
-| 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
+| 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts`, `docs/design/allium/curriculum-catalog.allium` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/` (thin index) |
 | 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` (documented manual workflow; continuous automation is `planned`) |
-| 12 | Ludic learning surface with extensible content | Prototype work in `engines/pixelDojo/`. |
+| 12 | Ludic learning surface with extensible content | `engines/pixelDojo/pixel-quest/` playable token-bucket slice, with Playwright evidence contract in `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts`. |
 | 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
 | 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
 | 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md` |
@@ -66,7 +67,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Code review and quality | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md` |
 | Tests and metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Professional AI integration | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md` |
-| Ludic practice and evidence capture | Prototype work in `engines/pixelDojo/`. |
+| Ludic practice and evidence capture | `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts` verifies playthrough, evidence emission, journal visibility, and no mastery side effects. |
 | Legacy refactoring, modernization, and migration | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md` |
 
 ## Core Principles
@@ -88,7 +89,9 @@ probe.
 
 | Seam | Files | What it concentrates |
 | --- | --- | --- |
-| **PhaseRunner** | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | The repeated read-state → check-gate → dispatch producer → dispatch verifier → update status → retry pattern. Every `/devschool-*` command is a thin invocation of the phase runner seam. |
+| **PhaseRunner** | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | The repeated read-state → check-gate → dispatch producer → dispatch verifier → update status → retry pattern. Every `/devschool-*` command is a thin invocation of the phase runner seam. Includes the 5 tutor-core commands (`socratic`, `recall`, `mnemosyne-compact`, `cron-list`, `decide`) added 2026-06-21 to wire the missing 14-agent roles. |
+| **Socratic guardrail** | `engines/miniMaxEvolutionEngine/.claude/agents/socrates.md` + `commands/devschool/socratic.md` | Anti-dependency seam. Every learner question routes through here: STAP pipeline, 15/dia quota, Dreyfus-graded fading, forbids finished solutions before attempt. |
+| **Learner snapshot** | `engines/codexDojo/src/data/learner.ts` (regenerated by `learner/substrate/dashboard_snapshot.py`) | Live learner panel: active unit, Dreyfus/Bloom, AIDI trendline, top pitfalls, next reviews, mastered/scaffolded counts. The Python substrate is the source of truth; the .ts file is regenerated on every `python3 -m learner.substrate`. |
 | **Learner substrate** | `learner/` | Canonical learner state in `learner/learning_state.yaml` with derived views for `.mavis/`, `engines/minimaxDojo/whiteboard/`, and the Markdown profile. |
 | **Threshold seam** | `engines/minimaxDojo/config/learner.yaml` | Every numeric threshold the tutor uses. Prompts and docs reference values via the `⟨config: path⟩` marker instead of hardcoding them. |
 | **Canonical agent prompt** | `engines/minimaxDojo/prompts/per_agent/<name>.md` | The single system prompt for an agent. The matching `engines/minimaxDojo/agents/<id>/README.md` is a thin index that links to it. |
@@ -115,6 +118,12 @@ cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --a
 # Learner substrate (Python)
 python3 -m learner.substrate                                  # regenerate derived views
 python3 -m unittest discover -s learner/substrate/tests -t .  # validate invariants
+
+# Engine contracts
+python3 -m unittest engines.minimaxDojo.tests.test_learning_unit_e2e_contract
+python3 engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py
+python3 -m unittest engines.test_engine_contracts
+cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 ```
 
 ## Completion Standard

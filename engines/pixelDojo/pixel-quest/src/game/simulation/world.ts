@@ -1,5 +1,7 @@
 import { type ContentPack, type Position, type Region, tileLegend } from "../../content/types"
 import type { PixelQuestEvidenceRecord } from "../evidence/types"
+import type { GamePhase } from "../phases/types"
+import { createReviewTrack, updateReviewTrackFromEvidence } from "../review/reviewTrack"
 import type { Direction, Interaction, TileView, WorldState } from "./types"
 
 export function createWorld(pack: ContentPack, regionId: string): WorldState {
@@ -16,8 +18,10 @@ export function createWorld(pack: ContentPack, regionId: string): WorldState {
     },
     progress: {
       completedUnitIds: [],
+      phase: "briefing",
+      reviewTrack: createReviewTrack(),
     },
-    mode: "world",
+    mode: "briefing",
   }
 }
 
@@ -45,6 +49,56 @@ export function setMode(world: WorldState, mode: WorldState["mode"]): WorldState
   return { ...world, mode }
 }
 
+export function setPhase(world: WorldState, phase: GamePhase): WorldState {
+  return {
+    ...world,
+    progress: {
+      ...world.progress,
+      phase,
+    },
+  }
+}
+
+export function enterWorld(world: WorldState): WorldState {
+  return setPhase(setMode(world, "world"), "map")
+}
+
+export function enterPractice(world: WorldState): WorldState {
+  return setPhase(setMode(world, "practice"), "practice")
+}
+
+export function enterDuel(world: WorldState): WorldState {
+  return setPhase(setMode(world, "encounter"), "duel")
+}
+
+export function enterJournal(world: WorldState): WorldState {
+  return setPhase(setMode(world, "journal"), "review")
+}
+
+export function enterGate(world: WorldState): WorldState {
+  return setPhase(setMode(world, "dialogue"), "gate")
+}
+
+export function enterRegion(world: WorldState, regionId: string): WorldState {
+  const region = world.pack.regions.find((candidate) => candidate.id === regionId)
+  if (region === undefined) {
+    throw new Error(`Unknown region ${regionId}`)
+  }
+  return {
+    ...world,
+    region,
+    player: {
+      position: region.start,
+      facing: "north",
+    },
+    mode: "world",
+    progress: {
+      ...world.progress,
+      phase: "map",
+    },
+  }
+}
+
 export function recordEvidence(world: WorldState, evidence: PixelQuestEvidenceRecord): WorldState {
   const nextCompleted = evidence.pass
     ? addUnique(world.progress.completedUnitIds, evidence.unit_id)
@@ -53,6 +107,8 @@ export function recordEvidence(world: WorldState, evidence: PixelQuestEvidenceRe
     ...world,
     progress: {
       completedUnitIds: nextCompleted,
+      phase: "evidence",
+      reviewTrack: updateReviewTrackFromEvidence(world.progress.reviewTrack, evidence),
       latestEvidence: evidence,
     },
   }

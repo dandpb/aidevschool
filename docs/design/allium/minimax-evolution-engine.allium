@@ -1,0 +1,137 @@
+-- allium: 3
+-- minimax-evolution-engine.allium
+
+-- Scope: Claude Code orchestration behaviour distilled from engines/miniMaxEvolutionEngine/CLAUDE.md and devschool commands.
+-- Includes: five-phase pipeline, learning gate, producer/verifier separation, phase artifacts, manual continuous-operation boundary.
+-- Excludes: Claude Code tool mechanics, shell syntax, cloud scheduling, model provider routing, exact command prompt text.
+
+config {
+    retry_limit: Integer = 3
+}
+
+entity LearningGateState {
+    implementation_blocked: Boolean
+    learner_attempt_evaluated: Boolean
+}
+
+entity PipelineCycle {
+    project_path: String
+    phase: spec_pending | spec_done | impl_done | review_done | benchmark_done | cycle_complete
+    verifier_passed: Boolean
+
+    transitions phase {
+        spec_pending -> spec_done
+        spec_done -> impl_done
+        impl_done -> review_done
+        review_done -> benchmark_done
+        benchmark_done -> cycle_complete
+        terminal: cycle_complete
+    }
+}
+
+entity PhaseArtifact {
+    cycle: PipelineCycle
+    kind: spec | implementation | code_review | learning_notes | quiz | benchmark_results | evolution_report | diagnostic | deliverable
+    path: String
+    producer: curator | dev_go | dev_rust | dev_node | reviewer | benchmarker | optimizer | sonda
+    verified: Boolean
+}
+
+entity VerificationResult {
+    artifact: PhaseArtifact
+    result: pass | fail
+    evidence_path: String
+}
+
+entity DevschoolCommand {
+    name: status | diagnose | cycle | spec | implement | review | benchmark | optimize | verify | next
+    requires_gate_clear: Boolean
+}
+
+rule DiagnoseMustPrecedeBlockedImplementation {
+    when: DevschoolCommandInvoked(command, cycle, gate)
+    requires: command.name = diagnose
+    requires: gate.implementation_blocked = true
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: diagnostic, path: default, producer: sonda, verified: false)
+}
+
+rule SpecPhaseProducesSpecArtifact {
+    when: DevschoolCommandInvoked(command, cycle, gate)
+    requires: command.name = spec
+    requires: cycle.phase = spec_pending
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: spec, path: default, producer: curator, verified: false)
+}
+
+rule ImplementationRequiresLearningGateClear {
+    when: DevschoolCommandInvoked(command, cycle, gate)
+    requires: command.name = implement
+    requires: cycle.phase = spec_done
+    requires: gate.implementation_blocked = false
+    requires: gate.learner_attempt_evaluated = true
+
+    ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_go, verified: false)
+    ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_rust, verified: false)
+    ensures: PhaseArtifact.created(cycle: cycle, kind: implementation, path: default, producer: dev_node, verified: false)
+}
+
+rule VerifierPassAdvancesPhase {
+    when: VerifierPublishes(result)
+    requires: result.result = pass
+
+    ensures: result.artifact.verified = true
+    ensures: result.artifact.cycle.verifier_passed = true
+}
+
+rule PhaseAdvanceRequiresVerifierPass {
+    when: AdvancePipeline(cycle, next_phase)
+    requires: cycle.verifier_passed = true
+
+    ensures: cycle.phase = next_phase
+    ensures: cycle.verifier_passed = false
+}
+
+rule VerifierFailureKeepsPhaseOpen {
+    when: VerifierPublishes(result)
+    requires: result.result = fail
+
+    ensures: result.artifact.verified = false
+    ensures: result.artifact.cycle.verifier_passed = false
+}
+
+surface DevschoolCommandSurface {
+    facing operator: PipelineCycle
+
+    context cycle: PipelineCycle
+
+    exposes:
+        cycle.project_path
+        cycle.phase
+        cycle.verifier_passed
+
+    provides:
+        DevschoolCommandInvoked(default, cycle, default)
+        VerifierPublishes(result)
+        AdvancePipeline(cycle, spec_done)
+        AdvancePipeline(cycle, impl_done)
+        AdvancePipeline(cycle, review_done)
+        AdvancePipeline(cycle, benchmark_done)
+        AdvancePipeline(cycle, cycle_complete)
+
+    @guarantee ManualWorkflowBoundary
+        -- The current engine is a documented manual workflow with phase commands, not a deployed daemon.
+}
+
+invariant ImplementationDoesNotBypassLearningGate {
+    for artifact in PhaseArtifacts:
+        artifact.kind = implementation implies artifact.cycle.phase != spec_pending
+}
+
+invariant UnverifiedArtifactsDoNotAdvancePipeline {
+    for artifact in PhaseArtifacts:
+        artifact.verified = false implies artifact.cycle.verifier_passed = false
+}
+
+open question "Should the engine spec model each dev language artifact separately or keep a single implementation artifact kind?"
+open question "When OpenClaw/Hermes event bridge exists, should it be a separate integration spec or a surface on this one?"

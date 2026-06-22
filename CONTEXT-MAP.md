@@ -10,7 +10,8 @@ This repo has multiple contexts. Each has its own `CONTEXT.md` (domain language)
 | `engines/codexDojo/` | `engines/codexDojo/CONTEXT.md` | `engines/codexDojo/docs/adr/` |
 | `engines/minimaxDojo/` | `engines/minimaxDojo/CONTEXT.md` | `engines/minimaxDojo/docs/adr/` |
 | `engines/miniMaxEvolutionEngine/` | `engines/miniMaxEvolutionEngine/CONTEXT.md` | `engines/miniMaxEvolutionEngine/docs/adr/` |
-| `engines/polyglotEvolutionArena/` | `engines/polyglotEvolutionArena/CONTEXT.md` | `engines/polyglotEvolutionArena/docs/adr/` |
+| `engines/pixelDojo/` | `engines/pixelDojo/CONTEXT.md` | `engines/pixelDojo/docs/adr/` |
+| `docs/design/polyglot-arena/` | (lazy) | (lazy) |
 | `curriculum/` | `curriculum/CONTEXT.md` | `curriculum/docs/adr/` |
 | `learner/` | `learner/CONTEXT.md` | `learner/docs/adr/` |
 | `docs/` | `docs/CONTEXT.md` | `docs/adr/` |

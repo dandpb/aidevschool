@@ -1,0 +1,200 @@
+-- allium: 3
+-- minimax-agora-continuum.allium
+
+-- Scope: 14-agent tutor-core behaviour distilled from engines/minimaxDojo docs/core.
+-- Includes: learning-unit state machine, isolated producer/verifier handoffs, empirical gates, memory curation, governance escalation.
+-- Excludes: MiniMax platform internals, exact model routing, Markdown formatting, filesystem mechanics, generated caches.
+
+config {
+    retry_limit: Integer = 3
+    mutation_score_min: Decimal = 0.65
+    core_coverage_min: Decimal = 0.80
+    governance_sla: Duration = 24.hours
+}
+
+entity TutorAgent {
+    name: maestro | cronos | sonda | cartografo | mestre_conteudo | socrates | mneme | prometor | critico | galileu | atena | mnemosyne | ouroboros | seneca
+    layer: leader | pedagogy | quality | memory | governance
+    verifier: Boolean
+    producer: Boolean
+}
+
+entity LearningUnit {
+    id: String
+    title: String
+    state: presenting | practicing | evaluating | mastered
+    retry_count: Integer
+    learner_attempt_submitted: Boolean
+
+    transitions state {
+        presenting -> practicing
+        practicing -> evaluating
+        evaluating -> practicing
+        evaluating -> mastered
+        terminal: mastered
+    }
+}
+
+entity EmpiricalVerdict {
+    unit: LearningUnit
+    verifier: TutorAgent
+    result: approved | rejected
+    mutation_score: Decimal?
+    core_coverage: Decimal?
+    evidence_path: String
+}
+
+entity HandoffArtifact {
+    unit: LearningUnit
+    kind: unit_spec | submission | verdict | review | metrics_snapshot | learner_context
+    producer: TutorAgent
+    consumer: TutorAgent
+    path: String
+}
+
+entity SkillPromotion {
+    title: String
+    status: draft | review | versioned | promoted | active | rolled_back
+    evidence_path: String
+}
+
+entity GovernanceDecision {
+    unit: LearningUnit
+    reason: retry_exhausted | credential_required | destructive_action | gate_bypass_requested | state_conflict
+    status: pending | resolved
+    due_at: Timestamp
+}
+
+rule UnitStartsInPresentation {
+    when: unit: LearningUnit.created
+
+    ensures: unit.state = presenting
+    ensures: unit.retry_count = 0
+    ensures: unit.learner_attempt_submitted = false
+}
+
+rule LearnerBeginsPractice {
+    when: LearnerStartsPractice(unit)
+    requires: unit.state = presenting
+
+    ensures: unit.state = practicing
+}
+
+rule LearnerAttemptUnlocksEvaluation {
+    when: LearnerSubmitsAttempt(unit)
+    requires: unit.state = practicing
+
+    ensures: unit.learner_attempt_submitted = true
+    ensures: unit.state = evaluating
+}
+
+rule ProducerCreatesSubmissionHandoff {
+    when: ProducerCompletesArtifact(unit, producer, consumer, kind)
+    requires: unit.state = evaluating
+    requires: producer.producer = true
+    requires: consumer.verifier = true
+
+    ensures: HandoffArtifact.created(unit: unit, kind: kind, producer: producer, consumer: consumer, path: default)
+}
+
+rule VerifierApprovesUnit {
+    when: VerifierPublishesVerdict(unit, verifier, approved)
+    requires: unit.state = evaluating
+    requires: verifier.verifier = true
+    requires: unit.learner_attempt_submitted = true
+
+    ensures: EmpiricalVerdict.created(unit: unit, verifier: verifier, result: approved, evidence_path: default)
+    ensures: unit.state = mastered
+}
+
+rule VerifierRejectsUnitForRetry {
+    when: VerifierPublishesVerdict(unit, verifier, rejected)
+    requires: unit.state = evaluating
+    requires: verifier.verifier = true
+    requires: unit.retry_count < config.retry_limit
+
+    ensures: EmpiricalVerdict.created(unit: unit, verifier: verifier, result: rejected, evidence_path: default)
+    ensures: unit.retry_count = unit.retry_count + 1
+    ensures: unit.state = practicing
+}
+
+rule RetryExhaustionEscalatesToSeneca {
+    when: VerifierPublishesVerdict(unit, verifier, rejected)
+    requires: unit.state = evaluating
+    requires: unit.retry_count >= config.retry_limit
+
+    ensures: GovernanceDecision.created(unit: unit, reason: retry_exhausted, status: pending, due_at: now + config.governance_sla)
+}
+
+rule SkillPromotesOnlyAfterReview {
+    when: SkillReviewApproves(skill)
+    requires: skill.status = review
+
+    ensures: skill.status = versioned
+}
+
+rule VersionedSkillBecomesActive {
+    when: SkillPromotionAccepted(skill)
+    requires: skill.status = versioned
+
+    ensures: skill.status = promoted
+    ensures: SkillActivated(skill)
+}
+
+surface MaestroCycleControl {
+    facing leader: TutorAgent
+
+    context unit: LearningUnit
+
+    exposes:
+        unit.state
+        unit.retry_count
+        unit.learner_attempt_submitted
+
+    provides:
+        LearnerStartsPractice(unit)
+            when unit.state = presenting
+        LearnerSubmitsAttempt(unit)
+            when unit.state = practicing
+}
+
+surface EmpiricalGateSurface {
+    facing verifier: TutorAgent
+
+    context unit: LearningUnit
+
+    exposes:
+        unit.state
+        unit.retry_count
+
+    provides:
+        ProducerCompletesArtifact(unit, producer, verifier, kind)
+            when unit.state = evaluating and verifier.verifier = true
+        VerifierPublishesVerdict(unit, verifier, approved)
+            when verifier.verifier = true and unit.state = evaluating
+        VerifierPublishesVerdict(unit, verifier, rejected)
+            when verifier.verifier = true and unit.state = evaluating
+        SkillReviewApproves(skill)
+        SkillPromotionAccepted(skill)
+
+    @guarantee ProducerVerifierIsolation
+        -- A verifier starts from handoff artifacts and does not share producer context.
+}
+
+invariant MasteryRequiresApprovedVerdict {
+    for unit in LearningUnits:
+        unit.state = mastered implies EmpiricalVerdicts.any(v => v.unit = unit and v.result = approved)
+}
+
+invariant LearnerAttemptPrecedesMastery {
+    for unit in LearningUnits:
+        unit.state = mastered implies unit.learner_attempt_submitted = true
+}
+
+invariant RetryLimitIsBounded {
+    for unit in LearningUnits:
+        unit.retry_count <= config.retry_limit
+}
+
+open question "Should mutation score and core coverage be mandatory for every unit, or only for coding units with executable submissions?"
+open question "Which agent owns reconciling root learner state with minimaxDojo whiteboard when the two diverge?"

@@ -6,6 +6,17 @@ argument-hint: "[projeto opcional]"
 Dispare o subagent **`optimizer`** (via Task) para a Fase 5 do projeto `$ARGUMENTS` (ou o
 `current_project`). Pré-condição: `learner/pipeline_status.md` em `benchmark-done`.
 
+```yaml
+phase: optimize
+producer: optimizer
+verifier_phase: optimize
+next_status: cycle-complete
+pre_condition: benchmark-done
+artefact: curriculum/{project}/docs/evolution_report.md
+```
+
+Invoque `run_phase(spec)` usando a declaração acima.
+
 Instrua-o a: identificar top 2–3 gargalos (com evidência dos números), aplicar **UMA** otimização por
 linguagem (isolar impacto), garantir que os testes continuam passando, re-rodar o benchmark (mesmos
 scripts, N≥3) e calcular deltas, documentar ≥1 otimização **rejeitada**, e escrever `evolution_report.md`

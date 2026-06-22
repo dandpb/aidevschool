@@ -1,6 +1,11 @@
 # PixelDojo Quest content packs
 
-Each content pack is versioned data under `src/content/packs/<pack-id>/`.
+Each content pack is versioned data under `src/content/packs/<pack-id>/` or a typed pack module such
+as `src/content/curriculumPack.ts`.
+
+The runtime currently loads `curriculumPack.ts`, which maps all numbered projects in
+`../../curriculum/` into 18 playable labs. Each lab owns one unit, one mentor, one encounter, and one
+gate to the next lab. The compact JSON core pack remains a fixture for validator coverage.
 
 ## Pack shape
 
@@ -16,11 +21,22 @@ Each content pack is versioned data under `src/content/packs/<pack-id>/`.
 Dialogue text is referenced by path, for example `dialogues/sonda.md`, and loaded through an explicit
 dialogue registry.
 
+Curriculum encounters also carry game-facing concept metadata: `concept`, `mechanicName`,
+`resourceName`, request labels, action labels, and practice copy. The runtime currently supports:
+
+- `token_bucket`: timed classifier for accepting good traffic/signals and rejecting traps.
+- `sequence_flow`: ordered-flow puzzle for advancing valid pipeline steps and guarding invalid or
+  out-of-order steps.
+- `route_health`: routing puzzle for sending traffic to healthy targets and isolating degraded
+  targets before they cascade.
+- `policy_gate`: authorization/isolation puzzle for permitting allowed calls or plugins and denying
+  policy violations.
+
 ## Encounter policy
 
-Packs are data only. They do not ship arbitrary JavaScript. If a pack needs a new mechanic, add a typed
-definition to `src/content/types.ts`, validation in `src/content/packValidator.ts`, and an approved
-factory in `src/game/encounters/registry.ts`.
+Packs are data only. They do not ship arbitrary JavaScript. If a pack needs a new mechanic, add a
+typed definition to `src/content/types.ts`, validation in `src/content/packValidator.ts`, and an
+approved factory in `src/game/encounters/registry.ts`.
 
 ## Evidence policy
 
@@ -45,6 +61,20 @@ Encounters emit raw evidence only:
     "abusive_rejected": 4,
     "heat_peak": 56,
     "overheated": false
+  },
+  "review_context": {
+    "unit_kind": "concept",
+    "scheduled_review": true,
+    "review_reason": "due",
+    "streak_candidate": true,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  },
+  "curriculum_context": {
+    "concept": "Token bucket: capacidade, refill e rejeicao 429",
+    "mechanic": "Token Bucket",
+    "accepted_signal": "trafego legitimo",
+    "rejected_trap": "rajada abusiva"
   }
 }
 ```

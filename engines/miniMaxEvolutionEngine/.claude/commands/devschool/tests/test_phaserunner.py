@@ -22,6 +22,20 @@ OPTIONAL_SPEC_FIELDS = {
 }
 PHASE_COMMANDS = ("spec.md", "implement.md", "review.md", "benchmark.md", "optimize.md")
 
+# Tutor-core commands (added 2026-06-21) — each one is a thin invocation of a subagent
+# that backs a specific Ágora Continuum role. They don't go through the PhaseRunner
+# (they're not phase producers), but they share the same frontmatter discipline and
+# must reference the canonical subagent prompt under `engines/miniMaxEvolutionEngine/.claude/agents/`.
+TUTOR_CORE_COMMANDS = {
+    "socratic.md": "socrates",
+    "recall.md": "mneme",
+    "mnemosyne-compact.md": "mnemosyne",
+    "decide.md": "seneca",
+    "audit.md": "verifier-haiku",
+    "cron-list.md": "cronos",
+}
+TUTOR_CORE_AGENTS_DIR = COMMANDS_DIR.parent.parent / "agents"
+
 
 def parse_frontmatter_and_body(path: Path) -> tuple[dict, str]:
     text = path.read_text(encoding="utf-8")
@@ -113,6 +127,52 @@ def test_no_inline_orchestration_duplication() -> None:
         )
 
 
+def test_tutor_core_commands_have_frontmatter() -> None:
+    """Every tutor-core command (added 2026-06-21) must declare its `description`
+    and `argument-hint` (when applicable), and reference the canonical subagent
+    prompt file under `engines/miniMaxEvolutionEngine/.claude/agents/`.
+    """
+    for name, subagent in TUTOR_CORE_COMMANDS.items():
+        path = COMMANDS_DIR / name
+        assert path.exists(), f"tutor-core command missing: {name}"
+        fm, body = parse_frontmatter_and_body(path)
+        assert "description" in fm, f"{name} must have frontmatter description"
+        # The command body must dispatch the named subagent via the Task tool.
+        assert f"`{subagent}`" in body, (
+            f"{name} must dispatch the `{subagent}` subagent"
+        )
+        # The canonical subagent prompt must exist.
+        agent_path = TUTOR_CORE_AGENTS_DIR / f"{subagent}.md"
+        assert agent_path.exists(), (
+            f"{name} dispatches `{subagent}` but no agent file at {agent_path}"
+        )
+
+
+def test_tutor_core_commands_do_not_invoke_phaserunner() -> None:
+    """Tutor-core commands route through subagents, not the PhaseRunner seam.
+    They are not phase producers; they sit outside the 5-phase cycle.
+    """
+    for name in TUTOR_CORE_COMMANDS:
+        _, body = parse_frontmatter_and_body(COMMANDS_DIR / name)
+        assert "run_phase(spec)" not in body, (
+            f"{name} is a tutor-core command; it must not invoke the PhaseRunner"
+        )
+
+
+def test_diagnose_references_canonical_sonda_prompt() -> None:
+    """The diagnose command is the entry point for the learning gate. It must
+    read the canonical Sonda prompt (not inline the protocol).
+    """
+    _, body = parse_frontmatter_and_body(COMMANDS_DIR / "diagnose.md")
+    assert "sonda" in body, "diagnose.md must dispatch sonda"
+    assert (
+        "learning_state.yaml" in body
+    ), "diagnose.md must read learner/learning_state.yaml"
+    assert (
+        "diagnostic" in body.lower()
+    ), "diagnose.md must reference the diagnostic file"
+
+
 def main() -> int:
     tests = [
         test_phaserunner_interface,
@@ -121,6 +181,9 @@ def main() -> int:
         test_cycle_enumerates_all_phases,
         test_verify_references_phaserunner_discipline,
         test_no_inline_orchestration_duplication,
+        test_tutor_core_commands_have_frontmatter,
+        test_tutor_core_commands_do_not_invoke_phaserunner,
+        test_diagnose_references_canonical_sonda_prompt,
     ]
     failures = 0
     for test in tests:

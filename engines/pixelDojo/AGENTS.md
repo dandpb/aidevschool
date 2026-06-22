@@ -106,7 +106,9 @@ pnpm run dev      # then drive it with Playwright MCP: browser_navigate http://l
 pnpm run build
 ```
 
-(Use `pnpm`, matching `../codexDojo`. Keep each game in its own subfolder.)
+(Use `pnpm`, matching `../codexDojo`. Keep each game in its own subfolder.
+For the canonical Game 01 implementation today, see `pixel-quest/` —
+`pnpm run dev` and `pnpm run smoke` from that subfolder.)
 
 ## ANTI-PATTERNS
 

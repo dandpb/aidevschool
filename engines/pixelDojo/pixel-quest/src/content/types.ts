@@ -26,6 +26,7 @@ export type RegionGate = {
   readonly id: string
   readonly position: Position
   readonly requiresUnitId: string
+  readonly nextRegionId?: string
   readonly lockedLabel: string
   readonly unlockedLabel: string
 }
@@ -61,6 +62,7 @@ export type TokenBucketRequestType = "legit" | "abuse"
 export type TokenBucketRequest = {
   readonly type: TokenBucketRequestType
   readonly at: number
+  readonly label?: string
 }
 
 export type TokenBucketEncounter = {
@@ -68,6 +70,16 @@ export type TokenBucketEncounter = {
   readonly kind: "token_bucket"
   readonly title: string
   readonly unit_id: string
+  readonly project: string
+  readonly concept: string
+  readonly mechanicName: string
+  readonly resourceName: string
+  readonly goodRequestLabel: string
+  readonly badRequestLabel: string
+  readonly admitActionLabel: string
+  readonly rejectActionLabel: string
+  readonly practiceTitle: string
+  readonly practiceText: string
   readonly capacity: number
   readonly refillRate: number
   readonly targetRate: number
@@ -77,7 +89,93 @@ export type TokenBucketEncounter = {
   readonly requests: readonly TokenBucketRequest[]
 }
 
-export type EncounterDefinition = TokenBucketEncounter
+export type SequenceStepType = "advance" | "guard"
+
+export type SequenceStep = {
+  readonly type: SequenceStepType
+  readonly label: string
+}
+
+export type SequenceEncounter = {
+  readonly id: string
+  readonly kind: "sequence_flow"
+  readonly title: string
+  readonly unit_id: string
+  readonly project: string
+  readonly concept: string
+  readonly mechanicName: string
+  readonly resourceName: string
+  readonly goodRequestLabel: string
+  readonly badRequestLabel: string
+  readonly admitActionLabel: string
+  readonly rejectActionLabel: string
+  readonly practiceTitle: string
+  readonly practiceText: string
+  readonly steps: readonly SequenceStep[]
+  readonly minAdvanced: number
+  readonly maxGuardsMissed: number
+}
+
+export type RouteCheckType = "healthy" | "unhealthy"
+
+export type RouteCheck = {
+  readonly type: RouteCheckType
+  readonly label: string
+}
+
+export type RouteHealthEncounter = {
+  readonly id: string
+  readonly kind: "route_health"
+  readonly title: string
+  readonly unit_id: string
+  readonly project: string
+  readonly concept: string
+  readonly mechanicName: string
+  readonly resourceName: string
+  readonly goodRequestLabel: string
+  readonly badRequestLabel: string
+  readonly admitActionLabel: string
+  readonly rejectActionLabel: string
+  readonly practiceTitle: string
+  readonly practiceText: string
+  readonly checks: readonly RouteCheck[]
+  readonly minRouted: number
+  readonly maxBadRoutes: number
+}
+
+export type PolicyCheckType = "allowed" | "denied"
+
+export type PolicyCheck = {
+  readonly type: PolicyCheckType
+  readonly label: string
+  readonly scope: string
+}
+
+export type PolicyGateEncounter = {
+  readonly id: string
+  readonly kind: "policy_gate"
+  readonly title: string
+  readonly unit_id: string
+  readonly project: string
+  readonly concept: string
+  readonly mechanicName: string
+  readonly resourceName: string
+  readonly goodRequestLabel: string
+  readonly badRequestLabel: string
+  readonly admitActionLabel: string
+  readonly rejectActionLabel: string
+  readonly practiceTitle: string
+  readonly practiceText: string
+  readonly checks: readonly PolicyCheck[]
+  readonly minAllowed: number
+  readonly maxPolicyLeaks: number
+}
+
+export type EncounterDefinition =
+  | TokenBucketEncounter
+  | SequenceEncounter
+  | RouteHealthEncounter
+  | PolicyGateEncounter
 
 export type AssetManifest = {
   readonly tiles: readonly string[]

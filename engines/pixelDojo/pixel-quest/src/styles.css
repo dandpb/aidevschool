@@ -1,6 +1,23 @@
 :root {
-  color: #edf4f8;
-  background: #070a10;
+  --surface-primary: #070a10;
+  --surface-canvas: #080b12;
+  --surface-panel: #101827;
+  --surface-button: #172333;
+  --surface-overlay: rgba(8, 11, 18, 0.88);
+  --text-primary: #edf4f8;
+  --text-accent: #f6dd88;
+  --text-info: #9ee0ff;
+  --border-default: #263a4e;
+  --border-strong: #cfa64a;
+  --border-canvas: #20283a;
+  --focus-default: #74d4ff;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  color: var(--text-primary);
+  background: var(--surface-primary);
   font-family: "Courier New", Courier, monospace;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -23,16 +40,16 @@ body {
 }
 
 button {
-  border: 2px solid #cfa64a;
-  background: #172333;
-  color: #f6dd88;
+  border: 2px solid var(--border-strong);
+  background: var(--surface-button);
+  color: var(--text-accent);
   font: inherit;
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
 }
 
 button:focus-visible {
-  outline: 2px solid #74d4ff;
+  outline: 2px solid var(--focus-default);
   outline-offset: 2px;
 }
 
@@ -43,7 +60,7 @@ button:focus-visible {
   min-height: 520px;
   display: grid;
   place-items: center;
-  background: #070a10;
+  background: var(--surface-primary);
 }
 
 .game-canvas {
@@ -53,8 +70,8 @@ button:focus-visible {
   max-height: 840px;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  border: 2px solid #20283a;
-  background: #080b12;
+  border: 2px solid var(--border-canvas);
+  background: var(--surface-canvas);
 }
 
 .hud {
@@ -65,14 +82,14 @@ button:focus-visible {
 
 .objective-chip,
 .status-strip,
+.phase-strip,
 .prompt-chip {
   position: absolute;
   min-height: 32px;
-  max-width: min(88vw, 560px);
-  border: 2px solid #263a4e;
-  background: rgba(8, 11, 18, 0.88);
-  color: #edf4f8;
-  padding: 8px 10px;
+  border: 2px solid var(--border-default);
+  background: var(--surface-overlay);
+  color: var(--text-primary);
+  padding: var(--space-2) 10px;
   font-size: 13px;
   line-height: 1.2;
 }
@@ -80,19 +97,30 @@ button:focus-visible {
 .objective-chip {
   top: 14px;
   left: 14px;
+  max-width: min(42vw, 520px);
 }
 
 .status-strip {
   top: 14px;
   right: 14px;
-  color: #f6dd88;
+  max-width: min(34vw, 380px);
+  color: var(--text-accent);
+}
+
+.phase-strip {
+  top: 78px;
+  left: 50%;
+  max-width: min(88vw, 420px);
+  transform: translateX(-50%);
+  color: var(--text-info);
 }
 
 .prompt-chip {
   left: 50%;
   bottom: 18px;
+  max-width: min(88vw, 560px);
   transform: translateX(-50%);
-  color: #9ee0ff;
+  color: var(--text-info);
 }
 
 .panel {
@@ -102,10 +130,10 @@ button:focus-visible {
   bottom: 72px;
   width: min(720px, calc(100vw - 32px));
   transform: translateX(-50%);
-  border: 2px solid #cfa64a;
-  background: #101827;
-  color: #edf4f8;
-  padding: 16px;
+  border: 2px solid var(--border-strong);
+  background: var(--surface-panel);
+  color: var(--text-primary);
+  padding: var(--space-4);
   box-shadow: 0 12px 0 rgba(0, 0, 0, 0.32);
 }
 
@@ -116,7 +144,7 @@ button:focus-visible {
 .panel h2 {
   margin: 0 0 10px;
   font-size: 17px;
-  color: #f6dd88;
+  color: var(--text-accent);
 }
 
 .panel p {
@@ -131,18 +159,28 @@ button:focus-visible {
 }
 
 .encounter-panel {
-  top: 78px;
+  top: 132px;
   bottom: auto;
 }
 
 .request-line {
-  color: #9ee0ff;
+  color: var(--text-info);
 }
 
 .token-meter {
   margin: 0 0 14px;
-  color: #f6dd88;
+  color: var(--text-accent);
   letter-spacing: 2px;
+}
+
+@media (min-width: 721px) and (max-width: 900px) {
+  .phase-strip {
+    top: 112px;
+  }
+
+  .encounter-panel {
+    top: 164px;
+  }
 }
 
 @media (max-width: 720px) {
@@ -152,14 +190,29 @@ button:focus-visible {
 
   .objective-chip,
   .status-strip,
+  .phase-strip,
   .prompt-chip {
     max-width: calc(100vw - 28px);
     font-size: 12px;
   }
 
   .status-strip {
-    top: 58px;
+    top: 86px;
     left: 14px;
     right: auto;
+  }
+
+  .phase-strip {
+    top: 158px;
+    left: 14px;
+    transform: none;
+  }
+
+  .panel {
+    bottom: 58px;
+  }
+
+  .encounter-panel {
+    top: 214px;
   }
 }

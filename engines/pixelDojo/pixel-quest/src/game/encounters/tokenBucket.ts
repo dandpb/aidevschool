@@ -152,7 +152,7 @@ function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestE
   return {
     source: "pixelquest",
     unit_id: state.definition.unit_id,
-    project: "01_rate_limiter",
+    project: state.definition.project,
     encounter_id: state.definition.id,
     game: "PixelDojo Quest",
     ts: now.toISOString(),
@@ -167,6 +167,12 @@ function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestE
       abusive_rejected: state.abusiveRejected,
       heat_peak: Math.round(state.heatPeak),
       overheated,
+    },
+    curriculum_context: {
+      concept: state.definition.concept,
+      mechanic: state.definition.mechanicName,
+      accepted_signal: state.definition.goodRequestLabel,
+      rejected_trap: state.definition.badRequestLabel,
     },
   }
 }

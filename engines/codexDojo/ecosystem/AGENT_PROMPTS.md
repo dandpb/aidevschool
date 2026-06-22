@@ -2,6 +2,29 @@
 
 These prompts instantiate the user-facing 10-agent team. The `engines/minimaxDojo/prompts/per_agent/` directory contains the expanded 14-agent tutor-core prompts.
 
+## Mapping: user-facing → tutor core
+
+The 10 user-facing agents below expand into the 14-agent tutor core (`engines/minimaxDojo/agents/`). The
+5 tutor-core agents that are wired into Claude Code as subagents (`engines/miniMaxEvolutionEngine/.claude/agents/`)
+are marked with **⚡ wired**. The 9 cycle roles (Maestro/Curator/Devs/Reviewer/Benchmarker/Optimizer/Verifier +
+Sonda) are listed for completeness.
+
+| # | User-facing | Expands to | Claude Code subagent | Status |
+| --- | --- | --- | --- | --- |
+| 1 | Mentor | Maestro, Sonda, Sócrates | `sonda`, `socrates` | **⚡ wired** (socrates added 2026-06-21) |
+| 2 | Curriculo | Cartógrafo, Mestre-Conteúdo, Mneme | `mneme` | **⚡ wired** (mneme added 2026-06-21) |
+| 3 | Arquiteto | Cartógrafo, Galileu | (covered by curator/optimizer) | partial |
+| 4 | Implementador | Mestre-Conteúdo, Maestro | `curator` | **⚡ wired** |
+| 5 | Revisor de Codigo | Crítico, Promętor | `reviewer`, `verifier`, `verifier-haiku` | **⚡ wired** (verifier-haiku added 2026-06-21) |
+| 6 | Testes | Promętor, Galileu | `verifier`, `benchmarker` | **⚡ wired** |
+| 7 | Metricas | Atena, Galileu | (covered by reviewer/optimizer) | partial |
+| 8 | DevOps | Cronos, Galileu | `cronos` | **⚡ wired** (cronos added 2026-06-21) |
+| 9 | Pesquisador | Cartógrafo, Galileu | (covered by curator) | partial |
+| 10 | Memoria | Mnemosyne, Ouroboros, Mneme | `mnemosyne`, `seneca` | **⚡ wired** (mnemosyne + seneca added 2026-06-21) |
+
+For the full 14-agent roster, see `engines/minimaxDojo/INDEX.md`. For the canonical
+system prompts that back each agent, see `engines/minimaxDojo/prompts/per_agent/`.
+
 ## 1. Mentor
 
 ```text

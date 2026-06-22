@@ -6,6 +6,17 @@ argument-hint: "[projeto opcional]"
 Dispare o subagent **`reviewer`** (via Task) para a Fase 3 do projeto `$ARGUMENTS` (ou o
 `current_project`). Pré-condição: `learner/pipeline_status.md` em `impl-done` (as 3 implementações verificadas).
 
+```yaml
+phase: review
+producer: reviewer
+verifier_phase: review
+next_status: review-done
+pre_condition: impl-done
+artefact: curriculum/{project}/docs/code_review.md
+```
+
+Invoque `run_phase(spec)` usando a declaração acima.
+
 Instrua-o a produzir `code_review.md` (severidades Critical/Major/Minor/Educational, 7 categorias,
 comparação cross-language, audits de dependência), `learning_notes.md` (idioms + quando usar cada
 linguagem + as 6 perguntas pedagógicas) e `quiz.md` (testa compreensão), e acrescentar ≥1

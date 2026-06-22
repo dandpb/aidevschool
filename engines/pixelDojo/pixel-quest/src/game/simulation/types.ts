@@ -7,10 +7,19 @@ import type {
   TileKind,
 } from "../../content/types"
 import type { PixelQuestEvidenceRecord } from "../evidence/types"
+import type { GamePhase } from "../phases/types"
+import type { ReviewTrack } from "../review/types"
 
 export type Direction = "north" | "south" | "east" | "west"
 
-export type WorldMode = "world" | "dialogue" | "encounter" | "journal"
+export type WorldMode =
+  | "briefing"
+  | "world"
+  | "dialogue"
+  | "practice"
+  | "encounter"
+  | "journal"
+  | "help"
 
 export type Interaction =
   | {
@@ -33,6 +42,8 @@ export type PlayerState = {
 
 export type QuestProgress = {
   readonly completedUnitIds: readonly string[]
+  readonly phase: GamePhase
+  readonly reviewTrack: ReviewTrack
   readonly latestEvidence?: PixelQuestEvidenceRecord
 }
 

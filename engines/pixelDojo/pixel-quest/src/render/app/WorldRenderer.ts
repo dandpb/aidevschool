@@ -32,6 +32,8 @@ export class WorldRenderer {
   private readonly playerMesh: Mesh
   private readonly npcMeshes = new Map<string, Mesh>()
   private readonly gateMeshes = new Map<string, Mesh>()
+  private readonly staticMeshes: Mesh[] = []
+  private activeRegionId: string
 
   constructor(host: HTMLElement, initialWorld: WorldState) {
     this.renderer = new WebGLRenderer({ antialias: false, alpha: false })
@@ -47,12 +49,16 @@ export class WorldRenderer {
     this.scene.background = new Color("#080b12")
     this.camera = createCamera(initialWorld.region.map.width, initialWorld.region.map.height)
     this.playerMesh = makeSprite("#f0d56b", "#3a2f0a", 0.34)
+    this.activeRegionId = initialWorld.region.id
     this.scene.add(this.playerMesh)
     this.buildStaticWorld(initialWorld)
     this.sync(initialWorld)
   }
 
   sync(world: WorldState): void {
+    if (world.region.id !== this.activeRegionId) {
+      this.rebuildWorld(world)
+    }
     placeMesh(this.playerMesh, world.player.position.x, world.player.position.y, 0.24, world)
     for (const npc of world.region.npcs) {
       const mesh = this.getNpcMesh(npc)
@@ -85,13 +91,33 @@ export class WorldRenderer {
         0,
       )
       this.scene.add(mesh)
+      this.staticMeshes.push(mesh)
     }
     for (const gate of world.region.gates) {
       const mesh = makeGate(gate)
       placeMesh(mesh, gate.position.x, gate.position.y, 0.12, world)
       this.gateMeshes.set(gate.id, mesh)
       this.scene.add(mesh)
+      this.staticMeshes.push(mesh)
     }
+  }
+
+  private rebuildWorld(world: WorldState): void {
+    for (const mesh of this.staticMeshes) {
+      this.scene.remove(mesh)
+      mesh.geometry.dispose()
+      disposeMaterial(mesh)
+    }
+    this.staticMeshes.length = 0
+    for (const mesh of this.npcMeshes.values()) {
+      this.scene.remove(mesh)
+      mesh.geometry.dispose()
+      disposeMaterial(mesh)
+    }
+    this.npcMeshes.clear()
+    this.gateMeshes.clear()
+    this.activeRegionId = world.region.id
+    this.buildStaticWorld(world)
   }
 
   private getNpcMesh(npc: RegionNpc): Mesh {
@@ -103,6 +129,17 @@ export class WorldRenderer {
     this.npcMeshes.set(npc.id, mesh)
     this.scene.add(mesh)
     return mesh
+  }
+}
+
+function disposeMaterial(mesh: Mesh): void {
+  const material = mesh.material
+  if (Array.isArray(material)) {
+    for (const entry of material) {
+      entry.dispose()
+    }
+  } else {
+    material.dispose()
   }
 }
 

@@ -23,7 +23,7 @@ docs/
 | Primary goal | `PROMPTS/-01_GOAL.md` | Main ecosystem intention. |
 | Original idea seed | `PROMPTS/00_IDEIAS.md` | Broad project ideation. |
 | codexDojo prompt set | `PROMPTS/IDEIAS/codexDojo/` | Architecture, agents, metrics, bootstrap prompts. |
-| Polyglot arena ideas | `PROMPTS/IDEIAS/polyglotEvolutionArena/` | Design/proposal material. |
+| Polyglot arena ideas | `docs/design/polyglot-arena/` | Demoted from `PROMPTS/IDEIAS/polyglotEvolutionArena/` on 2026-06-21. Proposal-stage. |
 | Design examples | `design/` | Reference artifacts. |
 
 ## CONVENTIONS

@@ -1,4 +1,8 @@
-import type { PixelQuestEvidenceRecord } from "./types"
+import type {
+  PixelQuestCurriculumContext,
+  PixelQuestEvidenceRecord,
+  PixelQuestReviewContext,
+} from "./types"
 
 export class EvidenceValidationError extends Error {
   constructor(message: string) {
@@ -42,7 +46,7 @@ export function validateEvidenceRecord(raw: unknown): PixelQuestEvidenceRecord {
   if (!isRecord(metrics)) {
     throw new EvidenceValidationError("evidence.metrics must be an object")
   }
-  return {
+  const evidenceRecord: PixelQuestEvidenceRecord = {
     source: "pixelquest",
     unit_id: unitId,
     project,
@@ -62,12 +66,80 @@ export function validateEvidenceRecord(raw: unknown): PixelQuestEvidenceRecord {
       overheated: readBoolean(metrics, "overheated"),
     },
   }
+  const reviewContext = readReviewContext(raw["review_context"])
+  const curriculumContext = readCurriculumContext(raw["curriculum_context"])
+  return {
+    ...evidenceRecord,
+    ...(reviewContext === undefined ? {} : { review_context: reviewContext }),
+    ...(curriculumContext === undefined ? {} : { curriculum_context: curriculumContext }),
+  }
+}
+
+function readCurriculumContext(raw: unknown): PixelQuestCurriculumContext | undefined {
+  if (raw === undefined) {
+    return undefined
+  }
+  if (!isRecord(raw)) {
+    throw new EvidenceValidationError("evidence.curriculum_context must be an object")
+  }
+  return {
+    concept: readNonEmptyString(raw, "curriculum_context.concept"),
+    mechanic: readNonEmptyString(raw, "curriculum_context.mechanic"),
+    accepted_signal: readNonEmptyString(raw, "curriculum_context.accepted_signal"),
+    rejected_trap: readNonEmptyString(raw, "curriculum_context.rejected_trap"),
+  }
+}
+
+function readReviewContext(raw: unknown): PixelQuestReviewContext | undefined {
+  if (raw === undefined) {
+    return undefined
+  }
+  if (!isRecord(raw)) {
+    throw new EvidenceValidationError("evidence.review_context must be an object")
+  }
+  if (raw["unit_kind"] !== "concept") {
+    throw new EvidenceValidationError("evidence.review_context.unit_kind must be concept")
+  }
+  const reviewReason = raw["review_reason"]
+  if (
+    reviewReason !== "due" &&
+    reviewReason !== "overdue" &&
+    reviewReason !== "interleaving" &&
+    reviewReason !== "recurring-trap"
+  ) {
+    throw new EvidenceValidationError("evidence.review_context.review_reason is invalid")
+  }
+  if (raw["scheduler_source"] !== "learner-substrate") {
+    throw new EvidenceValidationError(
+      "evidence.review_context.scheduler_source must be learner-substrate",
+    )
+  }
+  if (raw["verifier_required"] !== true) {
+    throw new EvidenceValidationError("evidence.review_context.verifier_required must be true")
+  }
+  return {
+    unit_kind: "concept",
+    scheduled_review: readBoolean(raw, "scheduled_review"),
+    review_reason: reviewReason,
+    streak_candidate: readBoolean(raw, "streak_candidate"),
+    scheduler_source: "learner-substrate",
+    verifier_required: true,
+  }
 }
 
 function readNumber(source: Record<string, unknown>, key: string): number {
   const value = source[key]
   if (typeof value !== "number" || !Number.isFinite(value)) {
     throw new EvidenceValidationError(`evidence.metrics.${key} must be a finite number`)
+  }
+  return value
+}
+
+function readNonEmptyString(source: Record<string, unknown>, key: string): string {
+  const property = key.split(".").at(-1)
+  const value = property === undefined ? undefined : source[property]
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new EvidenceValidationError(`evidence.${key} must be a non-empty string`)
   }
   return value
 }

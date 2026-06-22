@@ -12,8 +12,11 @@ engines/
 ├── codexDojo/              # pnpm dashboard + product-facing ecosystem contract
 ├── minimaxDojo/            # 14-agent tutor core, docs, prompts, whiteboard
 ├── miniMaxEvolutionEngine/ # Claude Code motor with .claude agents/commands/skills
-└── polyglotEvolutionArena/ # proposal/prompt docs only for now
+└── pixelDojo/              # 8-bit teaching-game engine (Playwright evidence contract). arcadeAcademy/ merged here 2026-06-21.
 ```
+
+The polyglot evolution arena design material is archived at `docs/design/polyglot-arena/`
+(proposal-stage; was `engines/polyglotEvolutionArena/` until 2026-06-21).
 
 ## WHERE TO LOOK
 
@@ -22,7 +25,8 @@ engines/
 | App UI or ecosystem manifest | `codexDojo/` | The only runnable app under `engines/`. |
 | Long-running tutor protocol | `minimaxDojo/` | Use `INDEX.md` as the map. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
-| Polyglot arena idea | `polyglotEvolutionArena/` | Treat as design material until code appears. |
+| Teaching games + evidence | `pixelDojo/` | `pixel-quest/` has the Playwright smoke contract. |
+| Polyglot arena design (read-only) | `docs/design/polyglot-arena/` | Archived proposal material. |
 
 ## CONVENTIONS
 
@@ -35,4 +39,4 @@ engines/
 
 - Do not copy `learner/` or `curriculum/` into a new engine.
 - Do not assume a command works from `engines/`; commands are engine-local.
-- Do not treat `polyglotEvolutionArena/` as executable until it gains code/config.
+- Do not resurrect `polyglotEvolutionArena/` as an engine root — its design material lives at `docs/design/polyglot-arena/` and the loop lives in `miniMaxEvolutionEngine/`.

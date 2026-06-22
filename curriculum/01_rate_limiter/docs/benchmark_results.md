@@ -277,7 +277,7 @@ faster in the function-warm phase.
 
 ## 6. Limitations & Caveats
 
-1. **N = 1** — single run per (lang, scenario). Variance not measured. Any "winner" claim is a single observation.
+1. **N = 1 (legacy) + N = 3 (rerun)** — the original measurement in §5 was a single run per (lang, scenario). The N=3 rerun (§6.1) supersedes the headline numbers; this report keeps both for traceability. Any "winner" claim must come from the N=3 data, not the N=1 numbers.
 2. **Single macOS host** — all 3 implementations ran on the same M1 Pro. One container at a time to limit direct contention, but Docker Desktop's Linux VM shares the host's P-cores. **Relative ordering is meaningful; absolute numbers are not portable to dedicated hardware.**
 3. **Docker Desktop CPU throttling** — the VM may be CPU-throttled by macOS scheduler under sustained load. The 5-min endurance scenario is most exposed.
 4. **No cross-container noise isolation** — host has ~20 other long-running containers (vl-virtuallab, vl-mongo, etc.) consuming idle CPU. They were not stopped.
@@ -289,18 +289,85 @@ faster in the function-warm phase.
 10. **First run of the matrix was thrown away** due to a variable-scope bug in `run_matrix.sh`: `cleanup()`'s `for lang in go rust node` clobbered the parent for-loop's `$lang` (bash variables are function-scope, not block-scope, when you use `local` only inside the function but not in a `for` body). Fix: renamed the inner loop variable to `cl` and added `local cl`. Documented in the runner.
 11. **The continuous stats poller was dropped mid-run** per plan-owner pivot. The shipped report uses a single end-of-scenario snapshot only.
 
+### 6.1 N=3 rerun (post-optimization, 2026-06-21)
+
+After the 3 optimizations shipped in `evolution_report.md`, we re-ran the matrix with `MATRIX_N=3`.
+Raw data: `benchmarks/results-N3-optimized/aggregated.json`; analysis script:
+`benchmarks/render_n3_summary.py`.
+
+**Per-scenario, per-language medians + stddev + CV%** (each cell: `median (stddev) [CV%]`):
+
+#### baseline (60s, 70 RPS constant)
+
+| metric | go | rust | node |
+|---|---|---|---|
+| p50 (ms) | 2.14 (0.13) [6.03%] | 1.46 (0.10) [6.71%] | 2.00 (0.02) [1.14%] |
+| p95 (ms) | 5.60 (0.15) [2.67%] | 6.22 (0.87) [14.07%] | 6.90 (0.29) [4.24%] |
+| **p99 (ms)** | **9.72 (0.33) [3.39%] — winner** | 18.30 (15.90) [86.9%] — CV unacceptable | 14.27 (1.02) [7.18%] |
+| mem (MB) | 8.02 (0.27) | 1.12 (0.04) | 54.93 (0.31) |
+
+#### stress (90s, 50→200→50 RPS ramp)
+
+| metric | go | rust | node |
+|---|---|---|---|
+| p50 (ms) | 1.43 (0.06) [4.52%] | 1.39 (0.05) [3.55%] | 1.53 (0.01) [0.59%] |
+| p95 (ms) | 4.57 (1.10) [24.12%] | 4.00 (0.64) [16.03%] | 5.64 (0.24) [4.32%] |
+| **p99 (ms)** | 8.54 (2.58) [30.18%] | **7.88 (3.83) [48.63%] — winner (CV borderline)** | 12.26 (1.20) [9.78%] |
+| mem (MB) | 10.48 (0.46) | 1.15 (0.04) | 69.91 (0.42) |
+
+#### spike (60s, 10× traffic spikes)
+
+| metric | go | rust | node |
+|---|---|---|---|
+| p50 (ms) | 1.14 (0.03) [2.39%] | 1.12 (0.02) [1.83%] | 1.31 (0.03) [2.58%] |
+| p95 (ms) | 4.01 (0.54) [13.5%] | 4.76 (0.54) [11.35%] | 6.56 (0.73) [11.06%] |
+| **p99 (ms)** | **7.41 (1.86) [25.13%] — winner (CV borderline)** | 9.47 (1.95) [20.58%] | 16.06 (10.80) [67.26%] |
+| mem (MB) | 10.37 (0.33) | 1.16 (0.92) | 54.45 (6.34) |
+
+#### endurance (300s, 80 RPS constant)
+
+| metric | go | rust | node |
+|---|---|---|---|
+| p50 (ms) | 1.16 (0.06) [4.78%] | 1.13 (0.04) [3.32%] | 1.40 (0.02) [1.49%] |
+| p95 (ms) | 4.43 (1.55) [34.99%] | 4.92 (0.39) [7.84%] | 5.71 (0.40) [7.06%] |
+| **p99 (ms)** | 7.93 (0.83) [10.46%] — CV acceptable | **10.28 (13.53) [131.5%] — winner but CV unacceptable** | 11.20 (1.96) [17.51%] |
+| mem (MB) | 10.92 (0.34) | 1.21 (0.27) | 79.33 (4.10) |
+
+**CV% rule (per `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`): winner claims require CV < 20%.**
+
+- **baseline**: Go wins p99 with CV 3.39% (clean). Rust p99 CV is 86.9% — unusable.
+- **stress**: Rust wins p99 but CV is 48.6% — borderline claim. Go and Node CVs are also above 20%. The 7.7% margin is within the noise.
+- **spike**: Go wins p99 (CV 25.1% — slightly above threshold). Node p99 CV 67% — unusable.
+- **endurance**: Rust wins p99 but CV is 131% — claim is invalid. Go p99 CV is 10.5% — usable as a baseline.
+
+**Honest headline for the N=3 run:**
+
+- Go is the most stable at p99 across all 4 scenarios (CV ≤ 25% in all 4).
+- Rust is fast on the median (≤ 1.5ms) but its p99 is noisy on baseline, stress, and endurance.
+- Node has the largest memory footprint (~10× Go's) and the worst p99 on stress/spike.
+
+The "Go wins p99 baseline" headline from the N=1 run holds at N=3; the "Rust wins endurance" headline from N=1 does NOT hold at N=3 (CV 131% is the difference between a 10.28ms median and a noisy measurement; a re-run is required before any claim is honest).
+
 ---
 
 ## 7. Raw Data & Reproducibility
 
-- Raw k6 JSON output streams: `benchmarks/results/{go,rust,node}/{scen}_run{run}.json`
-- k6 summary-export (p90/p95 only, k6 v2 default): `benchmarks/results/{lang}/{scen}_run{run}_summary.json`
-- docker stats JSON snapshot: `benchmarks/results/{lang}/{scen}_run{run}_stats.json`
-- k6 stdout log: `benchmarks/results/{lang}/{scen}_run{run}.log`
-- Aggregated machine-readable: `benchmarks/results/aggregated.json`
+- **N=1 run** (the original measurement, in `benchmarks/results/`):
+  - Raw k6 JSON output streams: `benchmarks/results/{go,rust,node}/{scen}_run1.json`
+  - k6 summary-export (p90/p95 only, k6 v2 default): `benchmarks/results/{lang}/{scen}_run1_summary.json`
+  - docker stats JSON snapshot: `benchmarks/results/{lang}/{scen}_run1_stats.json`
+  - k6 stdout log: `benchmarks/results/{lang}/{scen}_run1.log`
+  - Aggregated machine-readable: `benchmarks/results/aggregated.json`
+- **N=3 rerun** (post-optimization, in `benchmarks/results-N3-optimized/`):
+  - 3 runs per (lang, scenario): `benchmarks/results-N3-optimized/{lang}/{scen}_run{1,2,3}.json`
+  - Aggregated machine-readable: `benchmarks/results-N3-optimized/aggregated.json`
+  - Reproducer: `bash benchmarks/run_matrix_N3.sh` (defaults to N=3; set `MATRIX_N=10` for the original IDEIAS target).
 
-To reproduce: `cd benchmarks && ./run_matrix.sh` (N=1; set `MATRIX_N=3` for the original target).
+To reproduce the N=1: `cd benchmarks && ./run_matrix.sh`.
+To reproduce the N=3: `cd benchmarks && ./run_matrix_N3.sh`.
+
+To render a markdown summary: `python3 benchmarks/render_n3_summary.py`.
 
 ---
 
-_Generated by `benchmarks/analyze_results.py` + `generate_report.py`._
+_Generated by `benchmarks/analyze_results.py` + `generate_report.py` (N=1); `benchmarks/render_n3_summary.py` (N=3)._

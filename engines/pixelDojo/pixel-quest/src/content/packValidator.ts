@@ -3,11 +3,17 @@ import type {
   ContentPack,
   EncounterDefinition,
   EvidenceContract,
+  PolicyCheck,
+  PolicyGateEncounter,
   Position,
   Region,
   RegionGate,
   RegionMap,
   RegionNpc,
+  RouteCheck,
+  RouteHealthEncounter,
+  SequenceEncounter,
+  SequenceStep,
   TileCode,
   TokenBucketEncounter,
   TokenBucketRequest,
@@ -100,8 +106,17 @@ function readEvidenceContract(raw: unknown, path: string, issues: string[]): Evi
 function readEncounter(raw: unknown, path: string, issues: string[]): EncounterDefinition {
   const value = readRecord(raw, path, issues)
   const kind = readString(value, `${path}.kind`, issues)
+  if (kind === "sequence_flow") {
+    return readSequenceEncounter(value, path, issues)
+  }
+  if (kind === "route_health") {
+    return readRouteHealthEncounter(value, path, issues)
+  }
+  if (kind === "policy_gate") {
+    return readPolicyGateEncounter(value, path, issues)
+  }
   if (kind !== "token_bucket") {
-    issues.push(`${path}.kind must be token_bucket`)
+    issues.push(`${path}.kind must be token_bucket, sequence_flow, route_health, or policy_gate`)
   }
   return readTokenBucketEncounter(value, path, issues)
 }
@@ -112,10 +127,7 @@ function readTokenBucketEncounter(
   issues: string[],
 ): TokenBucketEncounter {
   return {
-    id: readString(value, `${path}.id`, issues),
-    kind: "token_bucket",
-    title: readString(value, `${path}.title`, issues),
-    unit_id: readString(value, `${path}.unit_id`, issues),
+    ...readBaseEncounter(value, path, "token_bucket", issues),
     capacity: readNumber(value, `${path}.capacity`, issues),
     refillRate: readNumber(value, `${path}.refillRate`, issues),
     targetRate: readNumber(value, `${path}.targetRate`, issues),
@@ -128,15 +140,162 @@ function readTokenBucketEncounter(
   }
 }
 
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "token_bucket",
+  issues: string[],
+): Omit<
+  TokenBucketEncounter,
+  | "capacity"
+  | "refillRate"
+  | "targetRate"
+  | "heatMax"
+  | "heatPerLegitAdmit"
+  | "heatPerAbuseAdmit"
+  | "requests"
+>
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "sequence_flow",
+  issues: string[],
+): Omit<SequenceEncounter, "steps" | "minAdvanced" | "maxGuardsMissed">
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "route_health",
+  issues: string[],
+): Omit<RouteHealthEncounter, "checks" | "minRouted" | "maxBadRoutes">
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "policy_gate",
+  issues: string[],
+): Omit<PolicyGateEncounter, "checks" | "minAllowed" | "maxPolicyLeaks">
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "token_bucket" | "sequence_flow" | "route_health" | "policy_gate",
+  issues: string[],
+) {
+  return {
+    id: readString(value, `${path}.id`, issues),
+    kind,
+    title: readString(value, `${path}.title`, issues),
+    unit_id: readString(value, `${path}.unit_id`, issues),
+    project: readString(value, `${path}.project`, issues),
+    concept: readString(value, `${path}.concept`, issues),
+    mechanicName: readString(value, `${path}.mechanicName`, issues),
+    resourceName: readString(value, `${path}.resourceName`, issues),
+    goodRequestLabel: readString(value, `${path}.goodRequestLabel`, issues),
+    badRequestLabel: readString(value, `${path}.badRequestLabel`, issues),
+    admitActionLabel: readString(value, `${path}.admitActionLabel`, issues),
+    rejectActionLabel: readString(value, `${path}.rejectActionLabel`, issues),
+    practiceTitle: readString(value, `${path}.practiceTitle`, issues),
+    practiceText: readString(value, `${path}.practiceText`, issues),
+  }
+}
+
 function readRequest(raw: unknown, path: string, issues: string[]): TokenBucketRequest {
   const value = readRecord(raw, path, issues)
   const type = readString(value, `${path}.type`, issues)
   if (type !== "legit" && type !== "abuse") {
     issues.push(`${path}.type must be legit or abuse`)
   }
-  return {
+  const request: TokenBucketRequest = {
     type: type === "abuse" ? "abuse" : "legit",
     at: readNumber(value, `${path}.at`, issues),
+  }
+  const label = readOptionalString(value, `${path}.label`, issues)
+  if (label === undefined) {
+    return request
+  }
+  return {
+    ...request,
+    label,
+  }
+}
+
+function readSequenceEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  issues: string[],
+): SequenceEncounter {
+  return {
+    ...readBaseEncounter(value, path, "sequence_flow", issues),
+    steps: readArray(value, "steps", issues, path).map((step, index) =>
+      readSequenceStep(step, `${path}.steps[${index}]`, issues),
+    ),
+    minAdvanced: readNumber(value, `${path}.minAdvanced`, issues),
+    maxGuardsMissed: readNumber(value, `${path}.maxGuardsMissed`, issues),
+  }
+}
+
+function readSequenceStep(raw: unknown, path: string, issues: string[]): SequenceStep {
+  const value = readRecord(raw, path, issues)
+  const type = readString(value, `${path}.type`, issues)
+  if (type !== "advance" && type !== "guard") {
+    issues.push(`${path}.type must be advance or guard`)
+  }
+  return {
+    type: type === "guard" ? "guard" : "advance",
+    label: readString(value, `${path}.label`, issues),
+  }
+}
+
+function readRouteHealthEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  issues: string[],
+): RouteHealthEncounter {
+  return {
+    ...readBaseEncounter(value, path, "route_health", issues),
+    checks: readArray(value, "checks", issues, path).map((check, index) =>
+      readRouteCheck(check, `${path}.checks[${index}]`, issues),
+    ),
+    minRouted: readNumber(value, `${path}.minRouted`, issues),
+    maxBadRoutes: readNumber(value, `${path}.maxBadRoutes`, issues),
+  }
+}
+
+function readRouteCheck(raw: unknown, path: string, issues: string[]): RouteCheck {
+  const value = readRecord(raw, path, issues)
+  const type = readString(value, `${path}.type`, issues)
+  if (type !== "healthy" && type !== "unhealthy") {
+    issues.push(`${path}.type must be healthy or unhealthy`)
+  }
+  return {
+    type: type === "unhealthy" ? "unhealthy" : "healthy",
+    label: readString(value, `${path}.label`, issues),
+  }
+}
+
+function readPolicyGateEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  issues: string[],
+): PolicyGateEncounter {
+  return {
+    ...readBaseEncounter(value, path, "policy_gate", issues),
+    checks: readArray(value, "checks", issues, path).map((check, index) =>
+      readPolicyCheck(check, `${path}.checks[${index}]`, issues),
+    ),
+    minAllowed: readNumber(value, `${path}.minAllowed`, issues),
+    maxPolicyLeaks: readNumber(value, `${path}.maxPolicyLeaks`, issues),
+  }
+}
+
+function readPolicyCheck(raw: unknown, path: string, issues: string[]): PolicyCheck {
+  const value = readRecord(raw, path, issues)
+  const type = readString(value, `${path}.type`, issues)
+  if (type !== "allowed" && type !== "denied") {
+    issues.push(`${path}.type must be allowed or denied`)
+  }
+  return {
+    type: type === "denied" ? "denied" : "allowed",
+    label: readString(value, `${path}.label`, issues),
+    scope: readString(value, `${path}.scope`, issues),
   }
 }
 
@@ -154,12 +313,20 @@ function readNpc(raw: unknown, path: string, issues: string[]): RegionNpc {
 
 function readGate(raw: unknown, path: string, issues: string[]): RegionGate {
   const value = readRecord(raw, path, issues)
-  return {
+  const nextRegionId = readOptionalString(value, `${path}.nextRegionId`, issues)
+  const gate = {
     id: readString(value, `${path}.id`, issues),
     position: readPosition(value["position"], `${path}.position`, issues),
     requiresUnitId: readString(value, `${path}.requiresUnitId`, issues),
     lockedLabel: readString(value, `${path}.lockedLabel`, issues),
     unlockedLabel: readString(value, `${path}.unlockedLabel`, issues),
+  }
+  if (nextRegionId === undefined) {
+    return gate
+  }
+  return {
+    ...gate,
+    nextRegionId,
   }
 }
 
@@ -231,6 +398,12 @@ function validateReferences(pack: ContentPack, issues: string[]): void {
       if (!unitIds.has(gate.requiresUnitId)) {
         issues.push(`gate ${gate.id} points to unknown unit ${gate.requiresUnitId}`)
       }
+      if (
+        gate.nextRegionId !== undefined &&
+        !pack.regions.some((candidate) => candidate.id === gate.nextRegionId)
+      ) {
+        issues.push(`gate ${gate.id} points to unknown next region ${gate.nextRegionId}`)
+      }
     }
   }
 }
@@ -263,6 +436,23 @@ function readString(raw: Record<string, unknown>, path: string, issues: string[]
   if (typeof value !== "string" || value.trim() === "") {
     issues.push(`${path} must be a non-empty string`)
     return ""
+  }
+  return value
+}
+
+function readOptionalString(
+  raw: Record<string, unknown>,
+  path: string,
+  issues: string[],
+): string | undefined {
+  const key = path.split(".").at(-1)
+  const value = key === undefined ? undefined : raw[key]
+  if (value === undefined) {
+    return undefined
+  }
+  if (typeof value !== "string" || value.trim() === "") {
+    issues.push(`${path} must be a non-empty string when provided`)
+    return undefined
   }
   return value
 }

@@ -2,12 +2,14 @@ import { getCycleCompletionPercent } from "./cycle"
 import { agents, userFacingAgents } from "./data/agents"
 import { cycleStages, metrics } from "./data/cycle"
 import { ecosystemStatuses } from "./data/ecosystem"
+import { learnerSnapshot } from "./data/learner"
 import { projects } from "./data/projects"
 import type {
   Agent,
   CycleStage,
   DojoProject,
   EcosystemStatus,
+  LearnerSnapshot,
   Metric,
   UserFacingAgent,
 } from "./domain"
@@ -71,6 +73,17 @@ export function getMetrics(): readonly Metric[] {
 
 export function getEcosystemStatuses(): readonly EcosystemStatus[] {
   return ecosystemStatuses
+}
+
+/**
+ * Deliberate query seam for the learner snapshot.
+ *
+ * Mirrors `getAgents`/`getMetrics` — keeps the source-of-truth location flexible
+ * (a future change can swap the static module for a substrate-derived JSON load
+ * without rewriting the renderer). Keep as a thin passthrough.
+ */
+export function getLearnerSnapshot(): LearnerSnapshot {
+  return learnerSnapshot
 }
 
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {

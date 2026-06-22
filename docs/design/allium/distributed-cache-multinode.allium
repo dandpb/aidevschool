@@ -1,0 +1,97 @@
+-- allium: 3
+-- distributed-cache-multinode.allium
+
+-- Scope: planned multi-node verification behaviour distilled from curriculum/10_distributed_cache docs.
+-- Includes: known multi-node gaps, 3-node verification slice, owner routing, node removal/remap reporting.
+-- Excludes: production gossip implementation, consensus, network protocol details, benchmark performance claims.
+
+entity CacheNode {
+    id: String
+    status: live | suspect | failed | removed
+    owns_keys: Set<CacheKey>
+}
+
+entity CacheKey {
+    value: String
+    owner: CacheNode
+}
+
+entity MultiNodeGap {
+    kind: gossip_membership | remote_shard_routing | node_removal | data_migration | failure_simulation
+    status: implemented | scaffolded | planned | proposal | blocked
+}
+
+entity MultiNodeVerificationSlice {
+    status: planned | implemented
+    nodes: Set<CacheNode>
+    seeded_keys: Set<CacheKey>
+    remap_reported: Boolean
+    false_local_hit_detected: Boolean
+}
+
+rule MultiNodeGapsStartPlanned {
+    when: gap: MultiNodeGap.created
+
+    ensures: gap.status = planned
+}
+
+rule VerificationSliceRequiresThreeNodes {
+    when: MultiNodeVerificationStarted(slice)
+
+    requires: slice.nodes.count = 3
+    requires: slice.status = planned
+}
+
+rule ReadThroughNonOwnerMustRouteToOwner {
+    when: ReadRequested(node, key)
+    requires: key.owner != node
+    requires: key.owner.status = live
+
+    ensures: OwnerRoutedRead(node, key.owner, key)
+}
+
+rule RemovingNodeReportsRemap {
+    when: NodeRemoved(slice, node)
+    requires: node in slice.nodes
+
+    ensures: node.status = removed
+    ensures: slice.remap_reported = true
+}
+
+rule UnavailableOwnerMustNotSilentlyHitLocalCache {
+    when: ReadRequested(slice, node, key)
+    requires: key.owner.status = failed
+
+    ensures: slice.false_local_hit_detected = false
+    ensures: OwnerUnavailable(key.owner, key)
+}
+
+surface MultiNodeVerificationPlan {
+    facing verifier: MultiNodeVerificationSlice
+
+    context slice: MultiNodeVerificationSlice
+
+    exposes:
+        slice.status
+        slice.nodes.count
+        slice.seeded_keys
+        slice.remap_reported
+        slice.false_local_hit_detected
+
+    provides:
+        MultiNodeVerificationStarted(slice)
+        NodeRemoved(slice, node)
+        ReadRequested(slice, node, key)
+}
+
+invariant PlannedGapsMustNotImplyCompletion {
+    for gap in MultiNodeGaps:
+        gap.status = planned implies gap.status != implemented
+}
+
+invariant ImplementedSliceRequiresAllGapsClosed {
+    for slice in MultiNodeVerificationSlices:
+        slice.status = implemented implies MultiNodeGaps.all(g => g.status = implemented)
+}
+
+open question "Should the first executable slice report migration as pending, or require data copy before it can pass?"

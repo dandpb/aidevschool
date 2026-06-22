@@ -4,7 +4,7 @@
 
 | Layer | Path | Purpose |
 | --- | --- | --- |
-| Engines (apps) | `engines/` | Agent-team implementations, each a separate project: `miniMaxEvolutionEngine` (Claude Code), `minimaxDojo` (14-agent core), `codexDojo` (pnpm app), `polyglotEvolutionArena`. |
+| Engines (apps) | `engines/` | Agent-team implementations, each a separate project: `miniMaxEvolutionEngine` (Claude Code), `minimaxDojo` (14-agent core), `codexDojo` (pnpm app), `pixelDojo` (8-bit teaching-game engine with Playwright evidence contract). The polyglot arena design material is archived at `docs/design/polyglot-arena/` (proposal-stage, was `engines/polyglotEvolutionArena/` until 2026-06-21). |
 | Curriculum (shared) | `curriculum/` | Real coding challenges plus `catalog.md`. |
 | Learner (shared) | `learner/` | Learner journey: learning gate, profile, pitfalls, journal, pipeline status. |
 | Platform tooling | `.mavis/`, `.opencode/`, `.Codex/`, `docs/` | Orchestration plans, platform adapters, ecosystem docs/ideas. |

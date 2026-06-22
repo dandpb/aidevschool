@@ -14,7 +14,8 @@ aidevschool/                 # ECOSSISTEMA
 │   ├── miniMaxEvolutionEngine/   # motor no Claude Code: .claude/ + CLAUDE.md (loop 5 fases + verifier + gate)
 │   ├── minimaxDojo/              # tutoring-core (14 agentes)
 │   ├── codexDojo/                # app user-facing (pnpm)
-│   └── polyglotEvolutionArena/
+│   └── pixelDojo/                # teaching-game engine (8-bit arcade games que emitem evidência executável)
+├── docs/design/polyglot-arena/   # design archive (proposal-stage, demoted de engines/polyglotEvolutionArena/ em 2026-06-21)
 ├── curriculum/              # COMPARTILHADO: desafios + catalog.md
 ├── learner/                 # COMPARTILHADO: jornada do aprendiz (state, profile, pitfalls, journal, pipeline_status)
 ├── docs/PROMPTS/            # metas, ideias, seeds do ecossistema

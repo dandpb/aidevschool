@@ -85,6 +85,11 @@ encadeia. Os 3 `dev-*` rodam **em paralelo** (despache as 3 chamadas Task na mes
 | Subagent | Modelo | Quando usar |
 |----------|--------|-------------|
 | `sonda` | sonnet | Learning gate: diagnostica o nível do aprendiz e gera `diagnostic.md` antes da implementação |
+| `socrates` | sonnet | Tutor socrático anti-dependência (STAP, 15/dia, fading por Dreyfus) — exige tentativa + confusão antes de qualquer hint |
+| `cronos` | haiku | Agendador de longa duração — gerencia crons, audita duplicações/órfãos (NÃO executa o trabalho) |
+| `mneme` | haiku | Repetição espaçada (15-20 min, interleaving ≥30%, prioriza pegadinhas) — gera `mneme_session.md` |
+| `mnemosyne` | sonnet | Memória em 3 camadas — compactar/rotacionar/promover Skill, núcleo curado ≤500 tokens |
+| `seneca` | opus | Portão humano no loop — auto-escala para reversíveis, SLA 24h para decisões consequentes |
 | `curator` | opus | Fase 1 — escreve/revisa `spec.md` (arquitetura, ADRs, plano de teste e benchmark) |
 | `dev-go` | sonnet | Fase 2 — implementação idiomática em Go |
 | `dev-rust` | sonnet | Fase 2 — implementação idiomática em Rust |
@@ -93,6 +98,7 @@ encadeia. Os 3 `dev-*` rodam **em paralelo** (despache as 3 chamadas Task na mes
 | `benchmarker` | sonnet | Fase 4 — load testing reprodutível (k6), métricas comparativas |
 | `optimizer` | opus | Fase 5 — gargalos → otimização → re-medição → `evolution_report.md` |
 | `verifier` | opus | Portão adversarial: re-deriva a correção de qualquer fase do **zero**. Não modifica código — só julga (PASS/FAIL com evidência) |
+| `verifier-haiku` | haiku | Verifier cross-model para auditoria amostral (`audit_sample_rate` do plan.yaml, default 0.2). Mesmo contrato que `verifier`, tier diferente. Discordância com o `verifier` padrão escapa a Sêneca. |
 
 Roteamento de modelo (de [docs/00 §6.5](docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md)): raciocínio profundo
 (curator/reviewer/optimizer/verifier) → **opus**; geração/execução de alto volume
@@ -107,6 +113,11 @@ para diversidade tipo cross-model.
 |---------|-----------|
 | `/devschool-status` | Lê `learner/pipeline_status.md` + `learner/learning_state.yaml` e diz onde estamos / próxima ação |
 | `/devschool-diagnose` | Roda o learning gate: invoca `sonda` para a unidade ativa |
+| `/devschool-socratic` | Tutor socrático (anti-dependência) — exige a tentativa antes de qualquer hint |
+| `/devschool-recall` | Micro-sessão de repetição espaçada (15-20 min) — invoca `mneme` |
+| `/devschool-mnemosyne-compact` | Compactação semanal da memória — invoca `mnemosyne` |
+| `/devschool-cron-list` | Lista/audita os crons ativos — invoca `cronos` (use `[acao: auditar]` para auditoria semanal) |
+| `/devschool-decide` | Abre SLA 24h para decisão consequente — invoca `seneca` (lista negra no prompt) |
 | `/devschool-cycle` | Roda o loop completo de 5 fases para o projeto atual/indicado, com portão do verificador |
 | `/devschool-spec` | Fase 1 — invoca `curator` |
 | `/devschool-implement` | Fase 2 — invoca `dev-go`/`dev-rust`/`dev-node` em paralelo (se o gate permitir) + `verifier` |
@@ -114,6 +125,7 @@ para diversidade tipo cross-model.
 | `/devschool-benchmark` | Fase 4 — invoca `benchmarker` + `verifier` |
 | `/devschool-optimize` | Fase 5 — invoca `optimizer` + `verifier` |
 | `/devschool-verify` | Roda o `verifier` numa fase/artefato específico |
+| `/devschool-audit` | Auditoria amostral cross-model — dispara `verifier-haiku` numa fração `audit_sample_rate` das fases já completadas |
 | `/devschool-next` | Fecha o ciclo: feedback do optimizer → curator escolhe o próximo projeto do catálogo |
 
 ---

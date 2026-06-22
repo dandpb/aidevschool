@@ -15,6 +15,9 @@ export type InputAction =
       readonly kind: "journal"
     }
   | {
+      readonly kind: "help"
+    }
+  | {
       readonly kind: "admit"
     }
   | {
@@ -43,6 +46,9 @@ export function actionFromKey(key: string): InputAction | undefined {
   }
   if (normalized === "j" || normalized === "keyj") {
     return { kind: "journal" }
+  }
+  if (normalized === "h" || normalized === "keyh") {
+    return { kind: "help" }
   }
   if (normalized === "z" || normalized === "keyz") {
     return { kind: "admit" }

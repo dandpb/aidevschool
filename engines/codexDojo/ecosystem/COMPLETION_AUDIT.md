@@ -1,5 +1,9 @@
 # codexDojo Completion Audit
 
+> **Refreshed 2026-06-21.** Previous audit captured numbers from the initial scaffold; this
+> audit reflects the current state after the engine consolidation, tutor-core wiring, and
+> substrate-driven dashboard snapshot.
+
 ## Objective
 
 Create the ecosystem that satisfies the requested multi-agent programming school requirements.
@@ -9,50 +13,84 @@ Create the ecosystem that satisfies the requested multi-agent programming school
 | Requirement | Status | Evidence |
 | --- | --- | --- |
 | Product named `codexDojo` | Complete | `README.md`, `engines/codexDojo/README.md`, app title, `engines/codexDojo/ecosystem/MANIFEST.md` |
-| Multi-agent ecosystem | Complete | `OPERATING_MODEL.md`, `AGENT_PROMPTS.md`, `engines/minimaxDojo/docs/01_agent_roster.md` |
+| Multi-agent ecosystem (10 user-facing + 14 tutor core) | Complete | `OPERATING_MODEL.md`, `AGENT_PROMPTS.md` (10 user-facing), `engines/minimaxDojo/prompts/per_agent/` (14 tutor core), `engines/miniMaxEvolutionEngine/.claude/agents/` (15 subagents wired including cross-model verifier) |
 | OpenClaw and Hermes operation | Complete | `OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
 | Continuous learning cycle | Complete | `OPERATING_MODEL.md`, `.mavis/plans/plan.yaml`, `learner/learning_state.yaml` |
-| Programming fundamentals coverage | Complete | `CURRICULUM_SCOPE.md` |
+| Programming fundamentals coverage | Complete | `CURRICULUM_SCOPE.md`, `curriculum/catalog.md` (18 projects, 6 levels) |
 | Technology comparison coverage | Complete | `CURRICULUM_SCOPE.md`, `EVALUATION_MODELS.md`, `technology-comparison.md` |
 | Robust application construction | Complete | `ROADMAP.md`, `project-package.md`, `curriculum/01_rate_limiter/` |
 | Architecture models | Complete | `CURRICULUM_SCOPE.md`, `OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md` |
 | Code review and quality model | Complete | `EVALUATION_MODELS.md`, `code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
-| Tests and metrics model | Complete | `EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md` |
+| Tests and metrics model | Complete | `EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, codexDojo dashboard live panel (`render/learner.ts`) |
 | Professional AI integration | Complete | `CURRICULUM_SCOPE.md`, `AGENT_PROMPTS.md`, `OPENCLAW_HERMES_RUNBOOK.md` |
-| First 10 incremental projects | Complete | `ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
-| Individual prompts for requested agents | Complete | `AGENT_PROMPTS.md` contains 10 user-facing prompts. |
+| 18 incremental projects | Complete | `ROADMAP.md`, `engines/codexDojo/src/data/projects.ts`, `curriculum/catalog.md` |
+| Individual prompts for requested agents | Complete | `AGENT_PROMPTS.md` contains 10 user-facing prompts; `engines/minimaxDojo/prompts/per_agent/` contains 14 tutor-core system prompts. |
 | Folder structure for project packages | Complete | `ROADMAP.md`, `project-package.md` |
-| Learning memory model | Complete | `MEMORY_MODEL.md`, `learner/`, `engines/minimaxDojo/docs/05_memory_system.md` |
-| Local dashboard app | Complete | `engines/codexDojo/src/`, verified by build/test/browser in current session. |
+| Learning memory model | Complete | `MEMORY_MODEL.md`, `learner/`, `engines/minimaxDojo/docs/05_memory_system.md`, `MEMORY_CURATION.md` |
+| Local dashboard app | Complete | `engines/codexDojo/src/`, 9 test files / 55 tests / Biome clean / Vite production build succeeds. |
 | Future-agent guidance | Complete | `AGENTS.md` |
+| Teaching-game surface | Complete | `engines/pixelDojo/pixel-quest/` with Playwright smoke contract. (Older prototypes `codexdojo-ecosystem-manifest/` and `game-01-rate-limiter/` were removed 2026-06-21.) |
+| Tutor-core roles wired as Claude Code subagents | Complete (15 of 14+1) | `cronos`, `socrates`, `mneme`, `mnemosyne`, `seneca`, `verifier-haiku` added 2026-06-21 alongside the existing 9 cycle subagents. |
 
 ## Mechanical Verification
 
 Commands run from `engines/codexDojo/`:
 
 ```bash
-pnpm run lint
-pnpm run test
-pnpm run build
+pnpm run lint      # biome check src
+pnpm run test      # vitest run
+pnpm run build     # tsc --noEmit && vite build
 ```
 
-Results in the current session:
+Results in the current session (2026-06-21):
 
-- Biome checked 18 files with no fixes needed.
-- Vitest passed 1 test file with 3 tests.
-- TypeScript and Vite production build succeeded.
-- LSP diagnostics for `engines/codexDojo/src` returned 0 diagnostics.
+- Biome checked **31 files** with no fixes needed.
+- Vitest passed **9 test files** with **55 tests**.
+- TypeScript and Vite production build succeeded (38.27 kB JS / 12.61 kB CSS raw, 12.82 kB JS / 3.41 kB CSS gzipped per `pnpm run build`).
+- The new `render/learner.ts` panel renders the live AIDI + Dreyfus/Bloom trendline from
+  `src/data/learner.ts` (regenerated by `learner/substrate/dashboard_snapshot.py`).
 
 Ecosystem checks run from repo root:
 
 ```bash
-awk '/^## First 10 Projects/{in_section=1; next} /^## / && in_section{in_section=0} in_section && /^\| [0-9]+ \|/{count++} END{print count}' engines/codexDojo/ecosystem/ROADMAP.md
-awk '/^## Requested Deliverables Coverage/{in_section=1; next} /^## / && in_section{in_section=0} in_section && /^\| [0-9]+ \|/{count++} END{print count}' engines/codexDojo/ecosystem/MANIFEST.md
-rg -n '^## [0-9]+\. ' engines/codexDojo/ecosystem/AGENT_PROMPTS.md | wc -l
+rg -c "^## [0-9]+\. " engines/codexDojo/ecosystem/AGENT_PROMPTS.md
+rg -c "^\| [0-9]+ \|" engines/codexDojo/ecosystem/MANIFEST.md
+rg -c "^\| [0-9]+ \|" engines/codexDojo/ecosystem/ROADMAP.md
+rg -c "^### [0-9]+\." curriculum/catalog.md
+ls engines/miniMaxEvolutionEngine/.claude/agents/ | wc -l
+ls engines/miniMaxEvolutionEngine/.claude/commands/devschool/*.md | wc -l
+python3 -m unittest discover -s learner/substrate/tests -t .
+python3 -m unittest engines.test_engine_contracts
+python3 engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py
 ```
 
-Observed counts:
+Observed counts (2026-06-21):
 
-- First 10 projects: 10.
-- Requested deliverables: 11.
-- User-facing agent prompts: 10.
+| Item | Count | Source |
+| --- | --- | --- |
+| User-facing agent prompts | 10 | `AGENT_PROMPTS.md` |
+| Requested deliverables | 16 | `MANIFEST.md` |
+| Roadmap project rows | 18 | `ROADMAP.md` (L1-L6) |
+| Catalog projects | 18 | `curriculum/catalog.md` |
+| Claude Code subagents wired | 15 | `.claude/agents/` (cycle 9 + tutor-core 6) |
+| Slash commands | 17 | `.claude/commands/devschool/` |
+| Substrate tests | 34 | `learner/substrate/tests/` |
+| Engine contract tests | 8 | `engines/test_engine_contracts.py` |
+| Phaserunner tests | 9 | `.claude/commands/devschool/tests/test_phaserunner.py` |
+| codexDojo app tests | 55 | `engines/codexDojo/src/*.test.ts` |
+| Engine roots | 4 | `codexDojo`, `minimaxDojo`, `miniMaxEvolutionEngine`, `pixelDojo` (was 6 before 2026-06-21 consolidation) |
+
+## Status note
+
+The empirical gate is **still blocked** — `learner/learning_state.yaml > active_unit.state = presenting`
+and `gate.implementation_blocked = true`. The diagnostic at
+`curriculum/01_rate_limiter/docs/diagnostic.md` has a starter attempt stub at
+`learner/attempts/U0-sonda-rate-limiter-robustness-attempt-1.md` with all four sections
+marked TODO. Filling them in and running `/devschool-diagnose` is the next observable
+step. Until the gate closes, the implementation phase (`/devschool-implement`) is
+explicitly refused by `phaserunner.md`.
+
+The 17 projects beyond P01 in `curriculum/` are `scaffolded` (folder + Go/Rust/Node code +
+docs exist; not catalog-verified). Promoting each from `scaffolded` to `implemented`
+requires running the full 5-phase cycle with the verifier — a multi-iteration effort
+documented as backlog in `curriculum/BACKLOG_STATUS.md`.

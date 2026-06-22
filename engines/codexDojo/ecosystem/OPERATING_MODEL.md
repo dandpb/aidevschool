@@ -36,20 +36,29 @@ The user-facing agent set matches the request: Mentor, Curriculo, Arquiteto, Imp
 
 Every unit follows this loop:
 
-1. Diagnose current level.
+1. Diagnose current level. (See `/devschool-diagnose` — invokes Sonda.)
 2. Pick one concept or technology.
-3. Create a small practical project.
+3. Create a small practical project. (See `/devschool-spec` — invokes Curator.)
 4. Define functional and non-functional requirements.
 5. Propose architecture and alternatives.
-6. Implement version 1.
+6. Implement version 1. (See `/devschool-implement` — invokes dev-go/dev-rust/dev-node in parallel.)
 7. Write tests.
-8. Run metrics.
-9. Review code.
-10. Refactor.
+8. Run metrics. (See `/devschool-benchmark` — invokes Benchmarker.)
+9. Review code. (See `/devschool-review` — invokes Reviewer + Verifier.)
+10. Refactor. (See `/devschool-optimize` — invokes Optimizer.)
 11. Compare against another language, framework, architecture, or implementation.
-12. Register lessons learned.
-13. Update the study plan.
-14. Select the next challenge.
+12. Register lessons learned. (See `/devschool-mnemosyne-compact` — invokes Mnemosyne.)
+13. Update the study plan. (See `/devschool-socratic` for graded hints.)
+14. Select the next challenge. (See `/devschool-next`.)
+
+**Cross-cutting commands** (run alongside any phase):
+
+- `/devschool-socratic` — anti-dependency guardrail; routes learner questions through the STAP pipeline.
+- `/devschool-recall` — generates a 15-20 min Mneme session for spaced review.
+- `/devschool-mnemosyne-compact` — weekly memory compaction (handoffs >7d archived; pegadinhas rotated).
+- `/devschool-decide <tipo>` — opens an Sêneca SLA 24h for consequential decisions (promote Skill, change prereq, etc).
+- `/devschool-audit` — cross-model audit sample (default 20% of completed units); re-verifies with verifier-haiku.
+- `/devschool-cron-list [auditar]` — lists or audits the Crons registry.
 
 ## State Machine
 

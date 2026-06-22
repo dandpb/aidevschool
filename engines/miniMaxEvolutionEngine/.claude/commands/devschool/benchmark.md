@@ -6,6 +6,17 @@ argument-hint: "[projeto opcional]"
 Dispare o subagent **`benchmarker`** (via Task) para a Fase 4 do projeto `$ARGUMENTS` (ou o
 `current_project`). Pré-condição: `learner/pipeline_status.md` em `review-done`.
 
+```yaml
+phase: benchmark
+producer: benchmarker
+verifier_phase: benchmark
+next_status: benchmark-done
+pre_condition: review-done
+artefact: curriculum/{project}/docs/benchmark_results.md
+```
+
+Invoque `run_phase(spec)` usando a declaração acima.
+
 Confirme que isto roda em **ambiente isolado** (Docker). Instrua-o a: buildar as 3 imagens, escrever
 os 4 cenários (baseline/stress/spike/endurance, lendo `TARGET_PORT` de `__ENV`), rodar N≥3 por
 cenário × impl, salvar JSONs brutos em `benchmarks/results/{lang}/`, e escrever `benchmark_results.md`

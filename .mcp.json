@@ -1,0 +1,47 @@
+{
+  "mcpServers": {
+
+    "mongodb": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server",
+        "--connectionString=mongodb://admin:77HY9bSmPk@localhost:27017/admin?authSource=admin&directConnection=true"
+      ],
+      "env": {},
+      "disabled": true,
+      "alwaysAllow": [],
+      "directTools": true
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp",
+        "--api-key",
+        "ctx7sk-c5563ca9-a62f-4b5a-8778-fa7049226079"
+      ],
+      "env": {},
+      "disabled": true,
+      "alwaysAllow": [],
+      "directTools": true
+    },
+    "chrome-devtools": {
+      "command": "/Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "disabled": false,
+      "alwaysAllow": [],
+      "directTools": true
+    },
+    "ai-memory": {
+      "type": "http",
+      "url": "http://127.0.0.1:49374/mcp",
+      "directTools": true
+    }
+  }
+}

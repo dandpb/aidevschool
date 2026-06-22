@@ -6,7 +6,7 @@
 
 | Se você quer... | Vá para... |
 |------------------|------------|
-| **Começar agora** | [`QUICK_START.md`](QUICK_START.md) |
+| **Começar agora** | [`docs/QUICK_START.md`](docs/QUICK_START.md) |
 | **Entender a missão** | [`README.md`](README.md) |
 | **Configurar o learner** | [`config/learner.yaml`](config/learner.yaml) |
 | **Carregar no MiniMax** | [`prompts/bootstrap/00_system.md`](prompts/bootstrap/00_system.md) + [`01_first_cycle.md`](prompts/bootstrap/01_first_cycle.md) |

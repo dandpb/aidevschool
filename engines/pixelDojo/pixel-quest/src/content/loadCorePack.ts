@@ -1,12 +1,11 @@
-import { coreDialogues } from "./dialogues"
-import corePackData from "./packs/core/pack.json"
+import { curriculumDialogues, curriculumPack } from "./curriculumPack"
 import { validateContentPack } from "./packValidator"
 import type { LoadedContentPack } from "./types"
 
 export function loadCorePack(): LoadedContentPack {
-  const pack = validateContentPack(corePackData)
+  const pack = validateContentPack(curriculumPack)
   return {
     pack,
-    dialogues: coreDialogues,
+    dialogues: curriculumDialogues,
   }
 }

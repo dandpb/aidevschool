@@ -59,6 +59,9 @@ only `01` exists on disk so far.)
    cd game-01-rate-limiter && pnpm add phaser && pnpm install && pnpm run dev
    ```
 
+   (For the canonical Game 01 implementation today, see `pixel-quest/` —
+   `pnpm run dev` from that subfolder; the scaffold above is the *template* path for new games.)
+
 4. Drive it with Playwright MCP (`browser_navigate http://localhost:5173`), generate assets with
    MiniMax (save prompts to `.prompts/`), and emit evidence to `../../learner/`.
 
@@ -72,6 +75,7 @@ pixelDojo/
 ├── PLAN.md              # game-definition template + worked Rate Limiter example
 ├── .prompts/            # reusable MiniMax 8-bit asset prompts (image + audio)
 ├── .logs/               # append-only work log
+├── pixel-quest/         # canonical Game 01 implementation (token-bucket RPG; see its own docs/)
 └── docs/                # space for per-game design notes / evidence artifacts
 ```
 

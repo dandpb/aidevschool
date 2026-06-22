@@ -27,5 +27,36 @@ Sequência:
 - Fase 5 → `optimizer` → `verifier(optimize)` → `cycle-complete`
 - Ao fechar: acrescente um resumo ao `learner/journal.md` e sugira `/devschool-next`.
 
+```yaml
+phase: spec
+producer: curator
+verifier_phase: spec
+next_status: spec-done
+---
+phase: impl
+producer: [dev-go, dev-rust, dev-node]
+verifier_phase: impl
+next_status: impl-done
+parallel: true
+learning_gate_check: true
+---
+phase: review
+producer: reviewer
+verifier_phase: review
+next_status: review-done
+---
+phase: benchmark
+producer: benchmarker
+verifier_phase: benchmark
+next_status: benchmark-done
+---
+phase: optimize
+producer: optimizer
+verifier_phase: optimize
+next_status: cycle-complete
+```
+
+Para cada declaração, invoque `run_phase(spec)`.
+
 Pare entre fases se um quality gate falhar 2x seguidas (registre o bloqueio em `learner/pipeline_status.md`).
 Não rode benchmarks pesados sem confirmar ambiente isolado.

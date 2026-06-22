@@ -6,6 +6,16 @@ argument-hint: "[projeto, ex. 02_websocket_chat]"
 Dispare o subagent **`curator`** (via Task) para a Fase 1 do projeto `$ARGUMENTS` (ou o
 `current_project` de `learner/pipeline_status.md`).
 
+```yaml
+phase: spec
+producer: curator
+verifier_phase: spec
+next_status: spec-done
+artefact: curriculum/{project}/docs/spec.md
+```
+
+Invoque `run_phase(spec)` usando a declaração acima.
+
 Instrua-o a: ler `curriculum/catalog.md` (catálogo) e o `evolution_report.md`/`learner/journal.md`
 anteriores; produzir `curriculum/{NN}_{nome}/docs/spec.md` com as 13 seções + diagramas Mermaid + ADRs;
 e passar o quality gate (todo FR com critério de aceitação, API com exemplos, ≥8 edge cases,

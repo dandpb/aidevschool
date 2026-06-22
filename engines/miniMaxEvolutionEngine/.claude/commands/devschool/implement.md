@@ -11,6 +11,23 @@ Learning gate:
 
 Se liberado: dispare os 3 subagents **na mesma mensagem** (3 chamadas Task em paralelo) para o
 projeto `$ARGUMENTS` (ou o `current_project`):
+
+```yaml
+phase: impl
+producer:
+  - dev-go
+  - dev-rust
+  - dev-node
+verifier_phase: impl
+next_status: impl-done
+pre_condition: spec-done
+parallel: true
+learning_gate_check: true
+artefact: curriculum/{project}/{language}-impl/
+```
+
+Invoque `run_phase(spec)` usando a declaração acima.
+
 - `dev-go` → `go-impl/`
 - `dev-rust` → `rust-impl/`
 - `dev-node` → `node-impl/`
