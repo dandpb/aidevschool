@@ -8,19 +8,6 @@
 -- Excludes: YAML parsing, filesystem writes, Python module mechanics, generated caches, presentation-only formatting.
 
 ------------------------------------------------------------
--- Config
-------------------------------------------------------------
-
-config {
-    system_name: String = "agora-continuum"
-    default_retry_limit: Integer = 3
-    max_streak_freezes: Integer = 2
-    default_aidi_current: Decimal = 0.34
-    default_aidi_threshold_amber: Decimal = 0.6
-    default_aidi_threshold_red: Decimal = 0.75
-}
-
-------------------------------------------------------------
 -- Value Types
 ------------------------------------------------------------
 
@@ -73,8 +60,8 @@ value Streak {
 }
 
 value StateMachine {
-    learning_states: List<LearningState>
-    artifact_states: List<ArtifactState>
+    learning_states: Set<LearningState>
+    artifact_states: Set<ArtifactState>
 }
 
 value AgentOwnership {
@@ -105,8 +92,8 @@ value MavisLearnerProfile {
     level: String
     goal: String
     active_focus: String
-    focus_languages: List<String>
-    reference_languages: List<String>
+    focus_languages: Set<String>
+    reference_languages: Set<String>
     reference_purpose: String
     weekly_time_hours: Integer
     cadence: String
@@ -117,8 +104,8 @@ value MavisLearnerProfile {
 }
 
 value MavisStateMachine {
-    learning_states: List<String>
-    artifact_states: List<String>
+    learning_states: Set<String>
+    artifact_states: Set<String>
     retry_limit: Integer
     current_retry: Integer
 }
@@ -130,7 +117,7 @@ value MavisActiveUnit {
     state: String
     diagnostic_file: String
     awaiting: String
-    promotion_gate: List<String>
+    promotion_gate: Set<String>
 }
 
 value WhiteboardAluno {
@@ -153,13 +140,8 @@ value WhiteboardTrilha {
 value WhiteboardProfileCore {
     aluno: WhiteboardAluno
     trilha: WhiteboardTrilha
-    pegadinhas_top_3: List<String>
-    skills_ativas_top_3: List<String>
-}
-
-value ProfileLevels {
-    dreyfus: String
-    bloom: String
+    pegadinhas_top_3: Set<String>
+    skills_ativas_top_3: Set<String>
 }
 
 value TrendPoint {
@@ -206,7 +188,7 @@ value DashboardAidi {
     current: Decimal
     threshold_amber: Decimal
     threshold_red: Decimal
-    trend: List<TrendPoint>
+    trend: Set<TrendPoint>
 }
 
 value DashboardStreak {
@@ -218,7 +200,7 @@ value DashboardStreak {
 }
 
 value PixelDojoReviewSlice {
-    next_reviews: List<NextReview>
+    next_reviews: Set<NextReview>
     streak: DashboardStreak
 }
 
@@ -266,7 +248,7 @@ entity ActiveUnit {
     unblock_condition: String
     required_before_implementation: Boolean
     diagnostic_file: String
-    promotion_gate: List<String>
+    promotion_gate: Set<String>
     empirical_gate: ActiveUnitGate
 }
 
@@ -285,7 +267,7 @@ entity UnitLog {
     kind: UnitKind
     project: String
     mastered: Boolean
-    reviews: List<Review>
+    reviews: Set<Review>
 }
 
 entity CanonicalLearnerState {
@@ -298,7 +280,7 @@ entity CanonicalLearnerState {
     state_machine: StateMachine
     agent_ownership: AgentOwnership
     next_action: NextAction
-    units_log: List<UnitLog>
+    units_log: Set<UnitLog>
     streak: Streak
 }
 
@@ -308,7 +290,7 @@ entity MavisLearnerView {
     derived_from: String
     updated_at: Timestamp
     workspace: String
-    change_log: List<MavisChangeLogEntry>
+    change_log: Set<MavisChangeLogEntry>
     learner_profile: MavisLearnerProfile
     state_machine: MavisStateMachine
     active_unit: MavisActiveUnit
@@ -321,7 +303,7 @@ entity WhiteboardProfileView {
     id: String
     learner_id: String
     derived_from: String
-    updated: Timestamp
+    updated: String
     agente_owner: String
     core: WhiteboardProfileCore
 }
@@ -329,7 +311,7 @@ entity WhiteboardProfileView {
 entity WhiteboardTrailView {
     aluno_id: String
     derived_from: String
-    atualizado: Timestamp
+    atualizado: String
     agente_owner: String
     focus: String
     active_unit: String
@@ -341,12 +323,25 @@ entity CodexDojoDashboardSnapshot {
     gate: DashboardGate
     profile: DashboardProfile
     aidi: DashboardAidi
-    top_pitfalls: List<Pitfall>
-    next_reviews: List<NextReview>
+    top_pitfalls: Set<Pitfall>
+    next_reviews: Set<NextReview>
     mastered_count: Integer
     scaffolded_count: Integer
     streak: DashboardStreak
     curr: Decimal
+}
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    system_name: String = "agora-continuum"
+    default_retry_limit: Integer = 3
+    max_streak_freezes: Integer = 2
+    default_aidi_current: Decimal = 0.34
+    default_aidi_threshold_amber: Decimal = 0.6
+    default_aidi_threshold_red: Decimal = 0.75
 }
 
 ------------------------------------------------------------
@@ -381,13 +376,13 @@ rule CanonicalStateProjectsToMavis {
         derived_from: "learner/learning_state.yaml",
         updated_at: now,
         workspace: repo_root(),
-        change_log: [
-            {
+        change_log: {
+            MavisChangeLogEntry{
                 at: now,
                 by: "substrate",
                 reason: "Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py."
             }
-        ],
+        },
         learner_profile: {
             level: state.learner.level,
             goal: state.learner.goal,
@@ -430,7 +425,7 @@ rule CanonicalStateProjectsToWhiteboardProfile {
         id: "aluno-001",
         learner_id: state.learner.id,
         derived_from: "../../learner/learning_state.yaml",
-        updated: now,
+        updated: today(),
         agente_owner: "mnemosyne",
         core: {
             aluno: {
@@ -441,15 +436,15 @@ rule CanonicalStateProjectsToWhiteboardProfile {
                 dreyfus_global: "advanced_beginner",
                 bloom_global: "apply",
                 ai_dependency_index: 0.50,
-                socrates_quota_today: format_quota(state.learner.budget.hint_queries_per_day),
+                socrates_quota_today: "0 / 15",
                 human_instructor: state.learner.human_instructor
             },
             trilha: {
                 proxima_unidade: state.active_unit.id,
                 ultima_dominada: null
             },
-            pegadinhas_top_3: [],
-            skills_ativas_top_3: []
+            pegadinhas_top_3: {},
+            skills_ativas_top_3: {}
         }
     )
 }
@@ -460,7 +455,7 @@ rule CanonicalStateProjectsToWhiteboardTrail {
     ensures: WhiteboardTrailView.created(
         aluno_id: "aluno-001",
         derived_from: "../../learner/learning_state.yaml",
-        atualizado: now,
+        atualizado: today(),
         agente_owner: "cartografo",
         focus: state.learner.focus,
         active_unit: state.active_unit.id,
@@ -622,6 +617,73 @@ surface LearnerSubstrateSyncSurface {
     @guarantee DerivedViewsAreMirrors
         -- Mavis, whiteboard, codexDojo dashboard and pixelDojo review slice views are derived from
         -- canonical learner state; canonical learner state remains the source of truth.
+}
+
+surface MavisLearnerViewSurface {
+    context view: MavisLearnerView
+
+    exposes:
+        view.version
+        view.system
+        view.derived_from
+        view.updated_at
+        view.workspace
+        view.change_log
+        view.learner_profile
+        view.state_machine
+        view.active_unit
+        view.agent_ownership
+        view.empirical_gates
+        view.next_action
+}
+
+surface WhiteboardProfileSurface {
+    context view: WhiteboardProfileView
+
+    exposes:
+        view.id
+        view.learner_id
+        view.derived_from
+        view.updated
+        view.agente_owner
+        view.core
+}
+
+surface WhiteboardTrailSurface {
+    context view: WhiteboardTrailView
+
+    exposes:
+        view.aluno_id
+        view.derived_from
+        view.atualizado
+        view.agente_owner
+        view.focus
+        view.active_unit
+        view.active_state
+}
+
+surface CodexDojoDashboardSurface {
+    context snapshot: CodexDojoDashboardSnapshot
+
+    exposes:
+        snapshot.active_unit
+        snapshot.gate
+        snapshot.profile
+        snapshot.aidi
+        snapshot.top_pitfalls
+        snapshot.next_reviews
+        snapshot.mastered_count
+        snapshot.scaffolded_count
+        snapshot.streak
+        snapshot.curr
+}
+
+surface PixelDojoReviewSliceSurface {
+    context slice: PixelDojoReviewSlice
+
+    exposes:
+        slice.next_reviews
+        slice.streak
 }
 
 ------------------------------------------------------------

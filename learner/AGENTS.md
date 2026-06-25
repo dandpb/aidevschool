@@ -11,6 +11,7 @@ journey, not engine-specific progress.
 | --- | --- | --- |
 | Gate state | `learning_state.yaml` | `presenting -> practicing -> evaluating -> mastered`. |
 | Pipeline state | `pipeline_status.md` | Current software-cycle phase and next action. |
+| Substrate implementation | `substrate/AGENTS.md` | Python validator/adapters for generated views. |
 | Learner profile | `learner_profile.md` | Dreyfus/Bloom, prerequisites, gaps. |
 | Recurring traps | `pitfalls.md` | Append concise, reusable learning traps. |
 | Learning journal | `journal.md` | Append-only knowledge base. |

@@ -8,11 +8,80 @@
 -- Excludes: Three.js rendering, asset generation, browser APIs, screenshots,
 --            local server details, and polishing backlog.
 
-config {
-    default_min_good_admits: Integer = 8
-    default_max_abusive_admitted: Integer = 0
-    default_max_observed_rate_multiplier: Decimal = 1.35
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+value Position {
+    x: Integer
+    y: Integer
 }
+
+value RegionMap {
+    width: Integer
+    height: Integer
+    tiles: List<String>
+}
+
+value AssetManifest {
+    tiles: List<String>
+    sprites: List<String>
+    audio: List<String>
+}
+
+value TokenBucketRequest {
+    type: RequestType
+    at: Decimal
+    label: String?
+}
+
+value SequenceStep {
+    type: SequenceStepType
+    label: String
+}
+
+value RouteCheck {
+    type: RouteCheckType
+    label: String
+}
+
+value PolicyCheck {
+    type: PolicyCheckType
+    label: String
+    scope: String
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum Direction { north | south | east | west }
+
+enum WorldMode { briefing | world | dialogue | practice | encounter | journal | help }
+
+enum GamePhase { briefing | map | practice | duel | evidence | review | gate }
+
+enum EncounterKind { token_bucket | sequence_flow | route_health | policy_gate }
+
+enum EncounterAction { admit | reject }
+
+enum RequestType { legit | abuse }
+
+enum SequenceStepType { advance | guard }
+
+enum RouteCheckType { healthy | unhealthy }
+
+enum PolicyCheckType { allowed | denied }
+
+enum ReviewReason { due | overdue | interleaving | `recurring-trap` }
+
+enum ReviewStatus { due | verifier_pending | retry_due }
+
+enum TileKind { floor | wall | lab | gate | terminal | water }
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
 
 entity ContentPack {
     id: String
@@ -21,6 +90,7 @@ entity ContentPack {
     regions: Set<Region>
     units: Set<Unit>
     encounters: Set<Encounter>
+    assets: AssetManifest
 }
 
 entity Region {
@@ -28,6 +98,7 @@ entity Region {
     name: String
     project: String
     start: Position
+    map: RegionMap
     npcs: Set<RegionNpc>
     gates: Set<RegionGate>
 }
@@ -38,14 +109,14 @@ entity RegionNpc {
     role: String
     position: Position
     dialogueRef: String
-    encounter: Encounter
+    encounterId: String
 }
 
 entity RegionGate {
     id: String
     position: Position
-    requiresUnit: Unit
-    nextRegion: Region?
+    requiresUnitId: String
+    nextRegionId: String?
     lockedLabel: String
     unlockedLabel: String
 }
@@ -54,12 +125,13 @@ entity Unit {
     unit_id: String
     project: String
     concept: String
-    prerequisites: Set<Unit>
-    encounters: Set<Encounter>
+    prerequisites: Set<String>
+    encounterIds: Set<String>
     evidenceContract: EvidenceContract
 }
 
 entity EvidenceContract {
+    kind: String
     minGoodAdmits: Integer
     maxAbusiveAdmitted: Integer
     maxObservedRateMultiplier: Decimal
@@ -67,9 +139,9 @@ entity EvidenceContract {
 
 entity Encounter {
     id: String
-    kind: token_bucket | sequence_flow | route_health | policy_gate
+    kind: EncounterKind
     title: String
-    unit: Unit
+    unit_id: String
     project: String
     concept: String
     mechanicName: String
@@ -82,9 +154,32 @@ entity Encounter {
     practiceText: String
 }
 
-entity Position {
-    x: Integer
-    y: Integer
+variant TokenBucketEncounter : Encounter {
+    capacity: Integer
+    refillRate: Decimal
+    targetRate: Decimal
+    heatMax: Decimal
+    heatPerLegitAdmit: Decimal
+    heatPerAbuseAdmit: Decimal
+    requests: List<TokenBucketRequest>
+}
+
+variant SequenceFlowEncounter : Encounter {
+    steps: List<SequenceStep>
+    minAdvanced: Integer
+    maxGuardsMissed: Integer
+}
+
+variant RouteHealthEncounter : Encounter {
+    checks: List<RouteCheck>
+    minRouted: Integer
+    maxBadRoutes: Integer
+}
+
+variant PolicyGateEncounter : Encounter {
+    checks: List<PolicyCheck>
+    minAllowed: Integer
+    maxPolicyLeaks: Integer
 }
 
 entity TeachingGame {
@@ -92,18 +187,19 @@ entity TeachingGame {
     region: Region
     player: PlayerState
     progress: QuestProgress
-    mode: briefing | world | dialogue | practice | encounter | journal | help
+    mode: WorldMode
     activeEncounter: EncounterState?
+    activeNpc: RegionNpc?
 }
 
 entity PlayerState {
     position: Position
-    facing: north | south | east | west
+    facing: Direction
 }
 
 entity QuestProgress {
-    completedUnits: Set<Unit>
-    phase: briefing | map | practice | duel | evidence | review | gate
+    completedUnitIds: Set<String>
+    phase: GamePhase
     reviewTrack: ReviewTrack
     latestEvidence: EvidenceRecord?
 }
@@ -111,16 +207,16 @@ entity QuestProgress {
 entity ReviewTrack {
     active: ReviewProjection
     streak: StreakProjection
-    schedulerSource: learner_substrate
-    verifierRequired: true
+    schedulerSource: String
+    verifierRequired: Boolean
 }
 
 entity ReviewProjection {
     unitId: String
     title: String
     dueIn: String
-    reason: due | overdue | interleaving | recurring_trap
-    status: due | verifier_pending | retry_due
+    reason: ReviewReason
+    status: ReviewStatus
 }
 
 entity StreakProjection {
@@ -137,19 +233,50 @@ entity EncounterState {
     index: Integer
     complete: Boolean
     evidence: EvidenceRecord?
-    signalsAccepted: Integer
-    trapsRejected: Integer
-    signalsRejected: Integer
-    trapsAdmitted: Integer
+    kind: EncounterKind
+}
+
+variant TokenBucketEncounterState : EncounterState {
+    tokens: Integer
+    lastAt: Decimal
+    goodAdmits: Integer
+    legitRejected: Integer
+    abusiveAdmitted: Integer
+    abusiveRejected: Integer
+    heat: Decimal
     heatPeak: Decimal
-    overheated: Boolean
+    admitTimes: List<Decimal>
+}
+
+variant SequenceFlowEncounterState : EncounterState {
+    advanced: Integer
+    held: Integer
+    skippedRequired: Integer
+    guardsMissed: Integer
+    heatPeak: Decimal
+}
+
+variant RouteHealthEncounterState : EncounterState {
+    routed: Integer
+    isolated: Integer
+    badRoutes: Integer
+    goodRejected: Integer
+    heatPeak: Decimal
+}
+
+variant PolicyGateEncounterState : EncounterState {
+    allowed: Integer
+    denied: Integer
+    policyLeaks: Integer
+    falseDenies: Integer
+    heatPeak: Decimal
 }
 
 entity EvidenceRecord {
     source: String
-    unit: Unit
+    unit_id: String
     project: String
-    encounter: Encounter
+    encounter_id: String
     game: String
     ts: Timestamp
     pass: Boolean
@@ -171,12 +298,12 @@ entity EvidenceMetrics {
 }
 
 entity ReviewContext {
-    unit_kind: concept
+    unit_kind: String
     scheduled_review: Boolean
-    review_reason: due | overdue | interleaving | recurring_trap
+    review_reason: ReviewReason
     streak_candidate: Boolean
-    scheduler_source: learner_substrate
-    verifier_required: true
+    scheduler_source: String
+    verifier_required: Boolean
 }
 
 entity CurriculumContext {
@@ -186,12 +313,28 @@ entity CurriculumContext {
     rejected_trap: String
 }
 
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    default_min_good_admits: Integer = 8
+    default_max_abusive_admitted: Integer = 0
+    default_max_observed_rate_multiplier: Decimal = 1.35
+}
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
+
 rule GameStartsInBriefing {
     when: game: TeachingGame.created
 
     ensures: game.mode = briefing
     ensures: game.progress.phase = briefing
-    ensures: game.progress.completedUnits = {}
+    ensures: game.progress.completedUnitIds = {}
+    ensures: game.player.position = game.region.start
+    ensures: game.player.facing = north
 }
 
 rule PlayerStartsQuest {
@@ -216,13 +359,16 @@ rule PlayerTalksToMentor {
     when: Interact(game)
     requires: game.mode = world
     requires: npcInFront(game) != null
+    requires: gateInFront(game) = null
 
     ensures: game.mode = dialogue
+    ensures: game.activeNpc = npcInFront(game)
 }
 
 rule PlayerOpensPractice {
     when: OpenPractice(game)
     requires: game.mode = dialogue
+    requires: game.activeNpc != null
 
     ensures: game.mode = practice
     ensures: game.progress.phase = practice
@@ -231,61 +377,69 @@ rule PlayerOpensPractice {
 rule PlayerStartsDuel {
     when: StartEncounter(game)
     requires: game.mode = practice
-    let encounter = activeNpcEncounter(game)
+    requires: game.activeNpc != null
+    let encounter = Encounter{id: game.activeNpc.encounterId}
 
     ensures: game.mode = encounter
     ensures: game.progress.phase = duel
-    ensures: game.activeEncounter = EncounterState.created(
-        encounter: encounter,
-        index: 0,
-        complete: false,
-        signalsAccepted: 0,
-        trapsRejected: 0,
-        signalsRejected: 0,
-        trapsAdmitted: 0,
-        heatPeak: 0,
-        overheated: false
-    )
+    ensures: game.activeEncounter = createEncounterFromPack(encounter)
 }
 
 rule PlayerAdmitsSignal {
-    when: ApplyEncounterAction(game, admit)
+    when: ApplyEncounterAction(game, action)
     requires: game.mode = encounter
     requires: game.activeEncounter != null
     requires: not game.activeEncounter.complete
+    requires: action = admit
 
-    ensures: game.activeEncounter advances by encounter kind with admit action
+    ensures: game.activeEncounter = applyEncounterAction(game.activeEncounter, action)
 }
 
 rule PlayerRejectsSignal {
-    when: ApplyEncounterAction(game, reject)
+    when: ApplyEncounterAction(game, action)
     requires: game.mode = encounter
     requires: game.activeEncounter != null
     requires: not game.activeEncounter.complete
+    requires: action = reject
 
-    ensures: game.activeEncounter advances by encounter kind with reject action
+    ensures: game.activeEncounter = applyEncounterAction(game.activeEncounter, action)
 }
 
 rule EncounterFinishesAndEmitsEvidence {
     when: game: TeachingGame.activeEncounter.complete transitions_to true
+    requires: game.activeEncounter != null
     let encounter = game.activeEncounter.encounter
-    let evidence = game.activeEncounter.evidence
+    let evidenceRecord = game.activeEncounter.evidence
+    requires: evidenceRecord != null
+    requires: evidenceRecord.unit_id = game.progress.reviewTrack.active.unitId
 
     ensures: game.progress.phase = evidence
-    ensures: game.progress.latestEvidence = evidence
-    ensures: evidence.source = "pixelquest"
-    ensures: evidence.game = "PixelDojo Quest"
-    ensures: evidence.unit = encounter.unit
-    ensures: evidence.encounter = encounter
-    ensures: evidence.reviewContext.scheduler_source = "learner-substrate"
-    ensures: evidence.reviewContext.verifier_required = true
+    ensures: game.progress.latestEvidence = evidenceRecord
+    ensures:
+        game.progress.completedUnitIds =
+            if evidenceRecord.pass:
+                game.progress.completedUnitIds + {evidenceRecord.unit_id}
+            else:
+                game.progress.completedUnitIds
+    ensures: game.progress.reviewTrack.active.status = if evidenceRecord.pass: verifier_pending else: retry_due
+    ensures: game.progress.reviewTrack.active.dueIn = if evidenceRecord.pass: "gate pending" else: "retry due now"
+    ensures: game.progress.reviewTrack.streak.pendingGateDelta = if evidenceRecord.pass: 1 else: 0
+    ensures: evidenceRecord.source = "pixelquest"
+    ensures: evidenceRecord.game = "PixelDojo Quest"
+    ensures: evidenceRecord.unit_id = encounter.unit_id
+    ensures: evidenceRecord.encounter_id = encounter.id
+    ensures: evidenceRecord.reviewContext.unit_kind = "concept"
+    ensures: evidenceRecord.reviewContext.scheduled_review = true
+    ensures: evidenceRecord.reviewContext.review_reason = game.progress.reviewTrack.active.reason
+    ensures: evidenceRecord.reviewContext.streak_candidate = evidenceRecord.pass
+    ensures: evidenceRecord.reviewContext.scheduler_source = "learner-substrate"
+    ensures: evidenceRecord.reviewContext.verifier_required = true
 }
 
-rule PassedEvidenceCompletesUnit {
-    when: evidence: EvidenceRecord.created
-    requires: evidence.pass = true
+rule ReviewProjectionStartsDue {
+    when: projection: ReviewProjection.created
 
-    ensures: evidence.unit in QuestProgress.completedUnits
+    ensures: projection.status = due
 }
 
 rule PlayerReturnsToWorld {
@@ -294,11 +448,12 @@ rule PlayerReturnsToWorld {
     ensures: game.mode = world
     ensures: game.progress.phase = map
     ensures: game.activeEncounter = null
+    ensures: game.activeNpc = null
 }
 
 rule PlayerOpensJournal {
     when: OpenJournal(game)
-    requires: game.mode in {world, dialogue, practice, encounter}
+    requires: game.mode in {briefing, world, practice, encounter}
 
     ensures: game.mode = journal
     ensures: game.progress.phase = review
@@ -306,22 +461,72 @@ rule PlayerOpensJournal {
 
 rule PlayerOpensHelp {
     when: OpenHelp(game)
-    requires: game.mode != encounter
+    requires: game.mode != encounter or (game.activeEncounter != null and game.activeEncounter.complete)
 
     ensures: game.mode = help
+}
+
+rule LockedOrFinalGateShowsDialogue {
+    when: Interact(game)
+    requires: game.mode = world
+    requires: gateInFront(game) != null
+    requires: npcInFront(game) = null
+    requires:
+        gateInFront(game).nextRegionId = null
+        or gateInFront(game).requiresUnitId not in game.progress.completedUnitIds
+
+    ensures: game.mode = dialogue
+    ensures: game.progress.phase = gate
 }
 
 rule UnlockedGateOpensNextRegion {
     when: Interact(game)
     requires: game.mode = world
     requires: gateInFront(game) != null
-    requires: gateInFront(game).requiresUnit in game.progress.completedUnits
-    requires: gateInFront(game).nextRegion != null
+    requires: npcInFront(game) = null
+    let gate = gateInFront(game)
+    requires: gate.requiresUnitId in game.progress.completedUnitIds
+    requires: gate.nextRegionId != null
+    let nextRegion = Region{id: gate.nextRegionId}
 
-    ensures: game.region = gateInFront(game).nextRegion
-    ensures: game.player.position = game.region.start
+    ensures: game.region = nextRegion
+    ensures: game.player.position = nextRegion.start
     ensures: game.progress.phase = map
+    ensures: game.activeEncounter = null
+    ensures: game.activeNpc = null
 }
+
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
+
+invariant GameNeverMarksMastery {
+    for game in TeachingGames:
+        game.progress.completedUnitIds.count = 0
+        or game.progress.latestEvidence != null
+}
+
+invariant EvidenceAlwaysIdentifiesPixelQuest {
+    for game in TeachingGames:
+        game.progress.latestEvidence != null
+        implies game.progress.latestEvidence.source = "pixelquest"
+}
+
+invariant EvidenceAlwaysNamesGame {
+    for game in TeachingGames:
+        game.progress.latestEvidence != null
+        implies game.progress.latestEvidence.game = "PixelDojo Quest"
+}
+
+invariant CompletedUnitRequiresPassingEvidence {
+    for game in TeachingGames:
+        for unitId in game.progress.completedUnitIds:
+            EvidenceRecords.any(e => e.unit_id = unitId and e.pass = true)
+}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
 
 surface PlayerSurface {
     facing player: TeachingGame
@@ -330,7 +535,7 @@ surface PlayerSurface {
         player.region.name
         player.region.project
         player.progress.phase
-        player.progress.completedUnits
+        player.progress.completedUnitIds
         player.progress.reviewTrack.active.unitId
         player.progress.reviewTrack.active.status
         player.progress.latestEvidence.pass
@@ -350,19 +555,17 @@ surface PlayerSurface {
         Interact(player)
             when player.mode = world
         OpenPractice(player)
-            when player.mode = dialogue
+            when player.mode = dialogue and player.activeNpc != null
         StartEncounter(player)
-            when player.mode = practice
-        ApplyEncounterAction(player, admit)
-            when player.mode = encounter and not player.activeEncounter.complete
-        ApplyEncounterAction(player, reject)
-            when player.mode = encounter and not player.activeEncounter.complete
+            when player.mode = practice and player.activeNpc != null
+        ApplyEncounterAction(player, action)
+            when player.mode = encounter and player.activeEncounter != null and not player.activeEncounter.complete
         ClosePanel(player)
             when player.mode in {dialogue, practice, encounter, journal, help}
         OpenJournal(player)
-            when player.mode in {world, dialogue, practice, encounter}
+            when player.mode in {briefing, world, practice, encounter}
         OpenHelp(player)
-            when player.mode != encounter
+            when player.mode != encounter or (player.activeEncounter != null and player.activeEncounter.complete)
 }
 
 surface EvidenceVerifierSurface {
@@ -370,9 +573,9 @@ surface EvidenceVerifierSurface {
 
     exposes:
         verifier.progress.latestEvidence.source
-        verifier.progress.latestEvidence.unit.unit_id
+        verifier.progress.latestEvidence.unit_id
         verifier.progress.latestEvidence.project
-        verifier.progress.latestEvidence.encounter.id
+        verifier.progress.latestEvidence.encounter_id
         verifier.progress.latestEvidence.game
         verifier.progress.latestEvidence.ts
         verifier.progress.latestEvidence.pass
@@ -384,29 +587,8 @@ surface EvidenceVerifierSurface {
         -- The game emits raw evidence only; a separate verifier decides whether it closes a learner gate.
 }
 
-invariant GameNeverMarksMastery {
-    for game in TeachingGames:
-        game.progress.completedUnits.count = 0
-        or game.progress.latestEvidence != null
-}
-
-invariant EvidenceAlwaysIdentifiesPixelQuest {
-    for game in TeachingGames:
-        game.progress.latestEvidence != null
-        implies game.progress.latestEvidence.source = "pixelquest"
-}
-
-invariant EvidenceAlwaysNamesGame {
-    for game in TeachingGames:
-        game.progress.latestEvidence != null
-        implies game.progress.latestEvidence.game = "PixelDojo Quest"
-}
-
-invariant CompletedUnitRequiresPassingEvidence {
-    for game in TeachingGames:
-        for unit in game.progress.completedUnits:
-            exists evidence in EvidenceRecords:
-                evidence.unit = unit and evidence.pass = true
-}
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
 
 open question "Should the verifier surface be expanded into a separate allium spec that governs evidence acceptance and units_log append?"

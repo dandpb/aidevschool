@@ -2,8 +2,8 @@
 
 ## OVERVIEW
 
-`engines/` contains separate machines for the same school; engine code and prompts live here,
-while learner state and curriculum evidence stay at the root.
+`engines/` contains separate machines for the same school; app code, game code, prompts, and
+orchestration live here, while learner state and curriculum evidence stay at the root.
 
 ## STRUCTURE
 
@@ -12,7 +12,7 @@ engines/
 ├── codexDojo/              # pnpm dashboard + product-facing ecosystem contract
 ├── minimaxDojo/            # 14-agent tutor core, docs, prompts, whiteboard
 ├── miniMaxEvolutionEngine/ # Claude Code motor with .claude agents/commands/skills
-└── pixelDojo/              # 8-bit teaching-game engine (Playwright evidence contract). arcadeAcademy/ merged here 2026-06-21.
+└── pixelDojo/              # 8-bit teaching-game engine; pixel-quest/ is the runnable app
 ```
 
 The polyglot evolution arena design material is archived at `docs/design/polyglot-arena/`
@@ -22,10 +22,11 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 
 | Need | Location | Notes |
 | --- | --- | --- |
-| App UI or ecosystem manifest | `codexDojo/` | The only runnable app under `engines/`. |
+| Dashboard UI or ecosystem manifest | `codexDojo/` | Vite/TypeScript dashboard. |
+| Teaching game app | `pixelDojo/pixel-quest/` | Vite/TypeScript/Three.js app with Playwright smoke evidence. |
 | Long-running tutor protocol | `minimaxDojo/` | Use `INDEX.md` as the map. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
-| Teaching games + evidence | `pixelDojo/` | `pixel-quest/` has the Playwright smoke contract. |
+| Teaching-game engine rules | `pixelDojo/` | Parent rules; app-local rules are in `pixel-quest/AGENTS.md`. |
 | Polyglot arena design (read-only) | `docs/design/polyglot-arena/` | Archived proposal material. |
 
 ## CONVENTIONS
@@ -34,6 +35,7 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 - Engine-local docs may reference root `learner/`, `curriculum/`, and `docs/`.
 - If an engine changes the learning gate, memory contract, roadmap, or prompts, update the
   codexDojo manifest mapping at `codexDojo/ecosystem/MANIFEST.md`.
+- Engine-local commands run from the owning engine directory; there is no `engines/` root command.
 
 ## ANTI-PATTERNS
 

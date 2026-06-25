@@ -104,7 +104,7 @@ entity UserFacingAgent {
     id: String
     name: String
     responsibility: String
-    expands_to: Set<Agent>
+    expands_to: Set<String>
 }
 
 entity CycleStage {
@@ -210,6 +210,14 @@ rule UserFiltersRoadmap {
 
     ensures: session.project_filter = filter
     ensures: session.view = roadmap
+}
+
+rule UserSelectsProject {
+    when: UserSelectsProject(session, project)
+    requires: project in DojoProjects
+
+    ensures: session.selected_project = project
+    ensures: session.view = project
 }
 
 rule UserCopiesAgentPrompt {
@@ -323,10 +331,13 @@ surface RoadmapDashboard {
     provides:
         UserFiltersRoadmap(session, all)
         UserFiltersRoadmap(session, fundamentos)
-        UserFiltersRoadmap(session, apps)
-        UserFiltersRoadmap(session, dados)
-        UserFiltersRoadmap(session, escala)
-        UserFiltersRoadmap(session, ia)
+        UserFiltersRoadmap(session, concorrencia)
+        UserFiltersRoadmap(session, arquitetura)
+        UserFiltersRoadmap(session, escalabilidade)
+        UserFiltersRoadmap(session, resiliencia)
+        UserFiltersRoadmap(session, sistemas_complexos)
+        UserSelectsProject(session, project)
+            when project in DojoProjects
 }
 
 invariant SelectedAgentIsConfigured {

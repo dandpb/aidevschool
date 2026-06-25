@@ -2,7 +2,7 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md
-// Generated: 2026-06-21T21:05:13.615290Z
+// Generated: 2026-06-25T18:00:28.474722Z
 
 import type { LearnerSnapshot } from "../domain"
 

@@ -1,25 +1,41 @@
 -- allium: 3
 -- polyglot-evolution-arena.allium
 
--- Scope: proposal-stage Polyglot Evolution Arena behaviour distilled from docs/design/polyglot-arena/
---          (demoted from engines/polyglotEvolutionArena/ on 2026-06-21).
--- Includes: proposal status, promotion criteria, current non-goals.
--- Excludes: runnable app behaviour, deployment, learning-cycle integration, comparison-runner details not yet built.
+-- Scope: proposal-stage Polyglot Evolution Arena behaviour distilled from docs/design/polyglot-arena/.
+--          Demoted from engines/polyglotEvolutionArena/ on 2026-06-21.
+--          The continuous-evolution loop itself lives in engines/miniMaxEvolutionEngine/.
+-- Includes: proposal status, promotion criteria, demotion to archived design history, current non-goals.
+-- Excludes: runnable app behaviour, deployment, learning-cycle integration, comparison-runner implementation details.
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum ArenaStatus {
+    proposal
+    | scaffolded
+    | archived
+}
 
 ------------------------------------------------------------
 -- Entities and Variants
 ------------------------------------------------------------
 
 entity ArenaProposal {
-    status: proposal | scaffolded
+    status: ArenaStatus
 
     transitions status {
         proposal -> scaffolded
+        proposal -> archived
+        archived -> proposal
         terminal: scaffolded
     }
 
+    -- Historical design artifacts. Presence is tracked but does not satisfy promotion criteria.
     has_project_proposal: Boolean
     has_bootstrap_prompt: Boolean
+
+    -- Executable evidence required for promotion per MANIFEST status vocabulary.
     has_executable_scaffold: Boolean
     has_test_harness: Boolean
     has_comparison_runner: Boolean
@@ -37,20 +53,32 @@ rule ArenaStartsAsProposal {
     ensures: arena.status = proposal
 }
 
-rule ArenaPromotesToScaffoldedOnlyWithExecutableSurface {
+rule ArenaPromotesWhenReady {
     when: ArenaPromotionReviewed(arena)
     requires: arena.status = proposal
-    requires: arena.has_executable_scaffold = true
-    requires: arena.has_test_harness = true
-    requires: arena.has_comparison_runner = true
+    requires: arena.ready_for_scaffold = true
 
     ensures: arena.status = scaffolded
 }
 
-rule ArenaCannotBeImplementedFromDocsOnly {
+rule ArenaStaysProposalWhenNotReady {
     when: ArenaPromotionReviewed(arena)
     requires: arena.status = proposal
     requires: not arena.ready_for_scaffold
+
+    ensures: arena.status = proposal
+}
+
+rule ArenaDemotedToDesignHistory {
+    when: ArenaDemotionReviewed(arena)
+    requires: arena.status = proposal
+
+    ensures: arena.status = archived
+}
+
+rule ArenaResurrectedFromArchive {
+    when: ArenaResurrectionReviewed(arena)
+    requires: arena.status = archived
 
     ensures: arena.status = proposal
 }
@@ -81,6 +109,8 @@ surface ArenaStatusSurface {
 
     provides:
         ArenaPromotionReviewed(arena)
+        ArenaDemotionReviewed(arena)
+        ArenaResurrectionReviewed(arena)
 }
 
 ------------------------------------------------------------

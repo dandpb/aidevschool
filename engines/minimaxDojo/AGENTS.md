@@ -3,7 +3,7 @@
 ## OVERVIEW
 
 `minimaxDojo/` is the 14-agent tutoring core for the Agora Continuum: state machine,
-empirical gates, prompts, docs, whiteboard, and governance.
+empirical gates, prompts, docs, whiteboard, and governance. It is not the runnable dashboard.
 
 ## WHERE TO LOOK
 
@@ -14,8 +14,9 @@ empirical gates, prompts, docs, whiteboard, and governance.
 | Agent contracts | `agents/*/`, `prompts/per_agent/` | Keep persona and prompt changes aligned. |
 | State machine | `docs/02_state_machine.md`, `core/state_machine/` | Docs are canonical; core is spec surface. |
 | Empirical gates | `docs/04_empirical_gates.md`, `core/gates/` | Verification threshold source. |
-| Learner config | `config/learner.yaml` | Local tutor-core defaults and thresholds. |
+| Learner config | `config/learner.yaml` | Single seam for numeric tutor-core thresholds. |
 | Whiteboard | `whiteboard/` | Local profile, trail, event log, decisions. |
+| Tests | `tests/` | Contract checks for config seam, gates, events, state machine. |
 
 ## CONVENTIONS
 
@@ -24,6 +25,9 @@ empirical gates, prompts, docs, whiteboard, and governance.
 - `core/`, `src/`, `tests/`, `exercises/`, and `reports/` are mostly spec/reserved surfaces unless
   files inside them say otherwise.
 - Agent changes usually require touching both `agents/<id>/` and `prompts/per_agent/<name>.md`.
+- `prompts/per_agent/<name>.md` is the canonical prompt; `agents/<id>/README.md` is only an index.
+- Prompts and docs must reference numeric thresholds with `⟨config: path⟩`; do not hardcode values
+  that live in `config/learner.yaml`.
 - Event/log artifacts are audit records. Append when recording new events; do not rewrite history
   unless explicitly correcting a bad local note.
 - Prometor/verifier closes gates; content-producing agents do not.
@@ -34,3 +38,4 @@ empirical gates, prompts, docs, whiteboard, and governance.
 - Do not let Socrates-style help skip the learner's attempt and exact confusion point.
 - Do not change gate thresholds without checking `docs/04_empirical_gates.md` and
   `config/learner.yaml` together.
+- Do not duplicate prompt bodies inside `agents/*/README.md`.

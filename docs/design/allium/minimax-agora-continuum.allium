@@ -5,16 +5,59 @@
 -- Includes: learning-unit state machine, isolated producer/verifier handoffs, empirical gates, memory curation, governance escalation.
 -- Excludes: MiniMax platform internals, exact model routing, Markdown formatting, filesystem mechanics, generated caches.
 
-config {
-    retry_limit: Integer = 3
-    mutation_score_min: Decimal = 0.65
-    core_coverage_min: Decimal = 0.80
-    governance_sla: Duration = 24.hours
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum TutorAgentName {
+    maestro | cronos | sonda | cartografo | mestre_conteudo | socrates | mneme
+    | prometor | critico | galileu | atena | mnemosyne | ouroboros | seneca
 }
 
+enum TutorAgentLayer {
+    leader | pedagogy | quality | memory | governance
+}
+
+enum LearningUnitState {
+    apresentando | praticando | avaliando | dominado | falha_bloqueio
+}
+
+enum EvaluationGateState {
+    producing | verifying | done
+}
+
+enum EmpiricalVerdictResult {
+    pass | fail
+}
+
+enum HandoffArtifactKind {
+    unit_spec | submission | verdict | review | trail | metrics_snapshot | learner_context
+}
+
+enum SkillPromotionStatus {
+    draft | review | versioned | promoted | deprecated
+}
+
+enum GovernanceDecisionStatus {
+    pendente | aprovada_auto | aprovada_aluno | rejeitada
+}
+
+enum GovernanceDecisionReason {
+    retry_exhausted | promote_skill | change_prerequisite | architecture_decision
+    | skip_unit | new_unit | change_language | socrates_quota | career_decision
+}
+
+enum CriticoReviewOutcome {
+    ok | change_requested
+}
+
+------------------------------------------------------------
+-- Entities and Variants
+------------------------------------------------------------
+
 entity TutorAgent {
-    name: maestro | cronos | sonda | cartografo | mestre_conteudo | socrates | mneme | prometor | critico | galileu | atena | mnemosyne | ouroboros | seneca
-    layer: leader | pedagogy | quality | memory | governance
+    name: TutorAgentName
+    layer: TutorAgentLayer
     verifier: Boolean
     producer: Boolean
 }
@@ -22,23 +65,39 @@ entity TutorAgent {
 entity LearningUnit {
     id: String
     title: String
-    state: presenting | practicing | evaluating | mastered
+    state: LearningUnitState
     retry_count: Integer
     learner_attempt_submitted: Boolean
 
     transitions state {
-        presenting -> practicing
-        practicing -> evaluating
-        evaluating -> practicing
-        evaluating -> mastered
-        terminal: mastered
+        apresentando -> praticando
+        praticando -> avaliando
+        avaliando -> apresentando
+        avaliando -> dominado
+        avaliando -> falha_bloqueio
+        falha_bloqueio -> apresentando
+        terminal: dominado
+    }
+
+    verdicts: EmpiricalVerdict with unit = this
+}
+
+entity EvaluationGate {
+    unit: LearningUnit
+    state: EvaluationGateState
+
+    transitions state {
+        producing -> verifying
+        verifying -> done
+        verifying -> producing
+        done -> producing
     }
 }
 
 entity EmpiricalVerdict {
     unit: LearningUnit
     verifier: TutorAgent
-    result: approved | rejected
+    result: EmpiricalVerdictResult
     mutation_score: Decimal?
     core_coverage: Decimal?
     evidence_path: String
@@ -46,7 +105,7 @@ entity EmpiricalVerdict {
 
 entity HandoffArtifact {
     unit: LearningUnit
-    kind: unit_spec | submission | verdict | review | metrics_snapshot | learner_context
+    kind: HandoffArtifactKind
     producer: TutorAgent
     consumer: TutorAgent
     path: String
@@ -54,141 +113,270 @@ entity HandoffArtifact {
 
 entity SkillPromotion {
     title: String
-    status: draft | review | versioned | promoted | active | rolled_back
+    status: SkillPromotionStatus
     evidence_path: String
+
+    transitions status {
+        draft -> review
+        review -> versioned
+        versioned -> promoted
+        promoted -> deprecated
+        terminal: deprecated
+    }
 }
 
 entity GovernanceDecision {
     unit: LearningUnit
-    reason: retry_exhausted | credential_required | destructive_action | gate_bypass_requested | state_conflict
-    status: pending | resolved
+    reason: GovernanceDecisionReason
+    status: GovernanceDecisionStatus
     due_at: Timestamp
+
+    transitions status {
+        pendente -> aprovada_auto
+        pendente -> aprovada_aluno
+        pendente -> rejeitada
+        terminal: aprovada_auto, aprovada_aluno, rejeitada
+    }
 }
+
+------------------------------------------------------------
+-- Config
+------------------------------------------------------------
+
+config {
+    retry_limit: Integer = 3
+    mutation_score_min: Decimal = 0.65
+    core_coverage_min: Decimal = 0.80
+    governance_sla: Duration = 24.hours
+    reduced_governance_sla: Duration = 4.hours
+}
+
+------------------------------------------------------------
+-- Rules
+------------------------------------------------------------
 
 rule UnitStartsInPresentation {
     when: unit: LearningUnit.created
 
-    ensures: unit.state = presenting
+    ensures: unit.state = apresentando
     ensures: unit.retry_count = 0
     ensures: unit.learner_attempt_submitted = false
 }
 
 rule LearnerBeginsPractice {
-    when: LearnerStartsPractice(unit)
-    requires: unit.state = presenting
+    when: LearnerStartsPractice(leader, unit)
+    requires: unit.state = apresentando
 
-    ensures: unit.state = practicing
+    ensures: unit.state = praticando
 }
 
 rule LearnerAttemptUnlocksEvaluation {
     when: LearnerSubmitsAttempt(unit)
-    requires: unit.state = practicing
+    requires: unit.state = praticando
 
     ensures: unit.learner_attempt_submitted = true
-    ensures: unit.state = evaluating
+    ensures: unit.state = avaliando
+}
+
+rule PracticeTimeoutSubmitsForEvaluation {
+    when: PracticeTimerExpires(unit)
+    requires: unit.state = praticando
+
+    ensures: unit.learner_attempt_submitted = true
+    ensures: unit.state = avaliando
+}
+
+rule UnitEntersEvaluationCreatesGate {
+    when: unit: LearningUnit.state transitions_to avaliando
+
+    ensures: EvaluationGate.created(unit: unit, state: producing)
+}
+
+rule EvaluationGateRemovedOnRetry {
+    when: unit: LearningUnit.state transitions_to apresentando
+    requires: exists EvaluationGate{unit: unit}
+
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        not exists gate
+}
+
+rule EvaluationGateRemovedOnMastery {
+    when: unit: LearningUnit.state transitions_to dominado
+
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        not exists gate
 }
 
 rule ProducerCreatesSubmissionHandoff {
-    when: ProducerCompletesArtifact(unit, producer, consumer, kind)
-    requires: unit.state = evaluating
+    when: ProducerCompletesArtifact(unit, producer, verifier, kind)
+    requires: unit.state = avaliando
     requires: producer.producer = true
-    requires: consumer.verifier = true
+    requires: verifier.verifier = true
 
-    ensures: HandoffArtifact.created(unit: unit, kind: kind, producer: producer, consumer: consumer, path: default)
+    ensures: HandoffArtifact.created(
+        unit: unit, kind: kind, producer: producer, consumer: verifier, path: default
+    )
 }
 
-rule VerifierApprovesUnit {
-    when: VerifierPublishesVerdict(unit, verifier, approved)
-    requires: unit.state = evaluating
-    requires: verifier.verifier = true
-    requires: unit.learner_attempt_submitted = true
+rule MaestroDispatchesVerifier {
+    when: MaestroDispatchesVerifier(unit)
+    requires: unit.state = avaliando
+    requires: exists EvaluationGate{unit: unit, state: producing}
 
-    ensures: EmpiricalVerdict.created(unit: unit, verifier: verifier, result: approved, evidence_path: default)
-    ensures: unit.state = mastered
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        gate.state = verifying
 }
 
-rule VerifierRejectsUnitForRetry {
-    when: VerifierPublishesVerdict(unit, verifier, rejected)
-    requires: unit.state = evaluating
+rule VerifierPublishesPassVerdict {
+    when: VerifierPublishesVerdict(unit, verifier, pass)
+    requires: unit.state = avaliando
     requires: verifier.verifier = true
+    requires: exists EvaluationGate{unit: unit, state: verifying}
+
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        gate.state = done
+    ensures: EmpiricalVerdict.created(
+        unit: unit, verifier: verifier, result: pass, evidence_path: default
+    )
+}
+
+rule VerifierPublishesFailVerdict {
+    when: VerifierPublishesVerdict(unit, verifier, fail)
+    requires: unit.state = avaliando
+    requires: verifier.verifier = true
+    requires: exists EvaluationGate{unit: unit, state: verifying}
     requires: unit.retry_count < config.retry_limit
 
-    ensures: EmpiricalVerdict.created(unit: unit, verifier: verifier, result: rejected, evidence_path: default)
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        not exists gate
+    ensures: EmpiricalVerdict.created(
+        unit: unit, verifier: verifier, result: fail, evidence_path: default
+    )
     ensures: unit.retry_count = unit.retry_count + 1
-    ensures: unit.state = practicing
+    ensures: unit.state = apresentando
 }
 
 rule RetryExhaustionEscalatesToSeneca {
-    when: VerifierPublishesVerdict(unit, verifier, rejected)
-    requires: unit.state = evaluating
+    when: VerifierPublishesVerdict(unit, verifier, fail)
+    requires: unit.state = avaliando
+    requires: verifier.verifier = true
+    requires: exists EvaluationGate{unit: unit, state: verifying}
     requires: unit.retry_count >= config.retry_limit
 
-    ensures: GovernanceDecision.created(unit: unit, reason: retry_exhausted, status: pending, due_at: now + config.governance_sla)
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        not exists gate
+    ensures: EmpiricalVerdict.created(
+        unit: unit, verifier: verifier, result: fail, evidence_path: default
+    )
+    ensures: unit.state = falha_bloqueio
+    ensures: GovernanceDecision.created(
+        unit: unit, reason: retry_exhausted, status: pendente,
+        due_at: now + config.governance_sla
+    )
 }
 
-rule SkillPromotesOnlyAfterReview {
+rule CriticoApprovesUnit {
+    when: CriticoPublishesReview(unit, critico, ok)
+    requires: unit.state = avaliando
+    requires: exists EvaluationGate{unit: unit, state: done}
+    requires: unit.verdicts.any(v => v.result = pass)
+
+    ensures: unit.state = dominado
+}
+
+rule CriticoRequestsChange {
+    when: CriticoPublishesReview(unit, critico, change_requested)
+    requires: unit.state = avaliando
+    requires: exists EvaluationGate{unit: unit, state: done}
+
+    ensures:
+        let gate = EvaluationGate{unit: unit}
+        gate.state = producing
+}
+
+rule GovernanceDecisionSlaExpires {
+    when: decision: GovernanceDecision.due_at <= now
+    requires: decision.status = pendente
+
+    ensures: decision.status = aprovada_auto
+}
+
+rule GovernanceDecisionApprovedByStudent {
+    when: SenecaResolvesDecision(decision, aprovada_aluno)
+    requires: decision.status = pendente
+
+    ensures: decision.status = aprovada_aluno
+}
+
+rule GovernanceDecisionAutoResolved {
+    when: SenecaResolvesDecision(decision, aprovada_auto)
+    requires: decision.status = pendente
+
+    ensures: decision.status = aprovada_auto
+}
+
+rule GovernanceDecisionRejected {
+    when: SenecaResolvesDecision(decision, rejeitada)
+    requires: decision.status = pendente
+
+    ensures: decision.status = rejeitada
+}
+
+rule SenecaStudentApprovalReOpensUnit {
+    when: decision: GovernanceDecision.status transitions_to aprovada_aluno
+    requires: decision.reason = retry_exhausted
+    requires: decision.unit.state = falha_bloqueio
+
+    ensures: decision.unit.state = apresentando
+}
+
+rule SkillDraftSubmittedForReview {
+    when: SkillSubmittedForReview(skill)
+    requires: skill.status = draft
+
+    ensures: skill.status = review
+}
+
+rule SkillReviewApproves {
     when: SkillReviewApproves(skill)
     requires: skill.status = review
 
     ensures: skill.status = versioned
 }
 
-rule VersionedSkillBecomesActive {
-    when: SkillPromotionAccepted(skill)
+rule SkillPromotesAfterEvidence {
+    when: SkillPromotedAfterEvidence(skill)
     requires: skill.status = versioned
 
     ensures: skill.status = promoted
-    ensures: SkillActivated(skill)
 }
 
-surface MaestroCycleControl {
-    facing leader: TutorAgent
+rule SkillDeprecatedOnRegression {
+    when: SkillRegressionDetected(skill)
+    requires: skill.status = promoted
 
-    context unit: LearningUnit
-
-    exposes:
-        unit.state
-        unit.retry_count
-        unit.learner_attempt_submitted
-
-    provides:
-        LearnerStartsPractice(unit)
-            when unit.state = presenting
-        LearnerSubmitsAttempt(unit)
-            when unit.state = practicing
+    ensures: skill.status = deprecated
 }
 
-surface EmpiricalGateSurface {
-    facing verifier: TutorAgent
+------------------------------------------------------------
+-- Invariants
+------------------------------------------------------------
 
-    context unit: LearningUnit
-
-    exposes:
-        unit.state
-        unit.retry_count
-
-    provides:
-        ProducerCompletesArtifact(unit, producer, verifier, kind)
-            when unit.state = evaluating and verifier.verifier = true
-        VerifierPublishesVerdict(unit, verifier, approved)
-            when verifier.verifier = true and unit.state = evaluating
-        VerifierPublishesVerdict(unit, verifier, rejected)
-            when verifier.verifier = true and unit.state = evaluating
-        SkillReviewApproves(skill)
-        SkillPromotionAccepted(skill)
-
-    @guarantee ProducerVerifierIsolation
-        -- A verifier starts from handoff artifacts and does not share producer context.
-}
-
-invariant MasteryRequiresApprovedVerdict {
+invariant MasteryRequiresPassVerdict {
     for unit in LearningUnits:
-        unit.state = mastered implies EmpiricalVerdicts.any(v => v.unit = unit and v.result = approved)
+        unit.state = dominado implies
+            unit.verdicts.any(v => v.result = pass)
 }
 
 invariant LearnerAttemptPrecedesMastery {
     for unit in LearningUnits:
-        unit.state = mastered implies unit.learner_attempt_submitted = true
+        unit.state = dominado implies unit.learner_attempt_submitted = true
 }
 
 invariant RetryLimitIsBounded {
@@ -196,5 +384,103 @@ invariant RetryLimitIsBounded {
         unit.retry_count <= config.retry_limit
 }
 
+invariant BlockedUnitHasGovernanceDecision {
+    for unit in LearningUnits:
+        unit.state = falha_bloqueio implies
+            GovernanceDecisions.any(d => d.unit = unit)
+}
+
+------------------------------------------------------------
+-- Actor Declarations
+------------------------------------------------------------
+
+actor Leader {
+    identified_by: TutorAgent where layer = leader
+}
+
+actor Producer {
+    identified_by: TutorAgent where producer = true
+}
+
+actor Verifier {
+    identified_by: TutorAgent where verifier = true
+}
+
+actor Critic {
+    identified_by: TutorAgent where layer = quality
+}
+
+actor Governance {
+    identified_by: TutorAgent where layer = governance
+}
+
+------------------------------------------------------------
+-- Surfaces
+------------------------------------------------------------
+
+surface MaestroCycleControl {
+    facing leader: Leader
+
+    context unit: LearningUnit
+        where state = apresentando or state = praticando
+
+    exposes:
+        unit.state
+        unit.retry_count
+        unit.learner_attempt_submitted
+
+    provides:
+        LearnerStartsPractice(leader, unit)
+            when unit.state = apresentando
+        LearnerSubmitsAttempt(unit)
+            when unit.state = praticando
+        PracticeTimerExpires(unit)
+            when unit.state = praticando
+}
+
+surface EmpiricalGateSurface {
+    facing producer: Producer
+    facing verifier: Verifier
+
+    context unit: LearningUnit where state = avaliando
+
+    exposes:
+        unit.state
+        unit.retry_count
+
+    provides:
+        ProducerCompletesArtifact(unit, producer, verifier, kind)
+            when unit.state = avaliando and verifier.verifier = true
+        MaestroDispatchesVerifier(unit)
+            when unit.state = avaliando
+        VerifierPublishesVerdict(unit, verifier, result)
+            when unit.state = avaliando and verifier.verifier = true
+        CriticoPublishesReview(unit, critico, outcome)
+            when unit.state = avaliando
+
+    @guarantee ProducerVerifierIsolation
+        -- A verifier starts from handoff artifacts and does not share producer context.
+}
+
+surface SenecaGovernanceSurface {
+    facing governance: Governance
+
+    context decision: GovernanceDecision where status = pendente
+
+    exposes:
+        decision.unit.state
+        decision.reason
+        decision.due_at
+
+    provides:
+        SenecaResolvesDecision(decision, status)
+            when decision.status = pendente
+}
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
+
 open question "Should mutation score and core coverage be mandatory for every unit, or only for coding units with executable submissions?"
 open question "Which agent owns reconciling root learner state with minimaxDojo whiteboard when the two diverge?"
+open question "Should a LearningUnit in falha_bloqueio remain in that state indefinitely when Sêneca rejects, or should there be a terminal suspended state?"

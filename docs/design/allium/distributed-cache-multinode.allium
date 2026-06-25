@@ -28,6 +28,7 @@ entity MultiNodeVerificationSlice {
     status: planned | implemented
     nodes: Set<CacheNode>
     seeded_keys: Set<CacheKey>
+    gaps: Set<MultiNodeGap>
     remap_reported: Boolean
     false_local_hit_detected: Boolean
 }
@@ -64,7 +65,7 @@ rule VerificationSliceRequiresThreeNodes {
 rule VerificationSliceImplementedWhenGapsClosed {
     when: VerificationPassed(slice)
     requires: slice.status = planned
-    requires: MultiNodeGaps.all(g => g.status = implemented)
+    requires: slice.gaps.all(g => g.status = implemented)
     ensures:
         slice.status = implemented
         slice.remap_reported = true
@@ -83,7 +84,7 @@ rule LocalCacheServesReadRegardlessOfOwner {
 
 invariant ImplementedSliceRequiresAllGapsClosed {
     for slice in MultiNodeVerificationSlices:
-        slice.status = implemented implies MultiNodeGaps.all(g => g.status = implemented)
+        slice.status = implemented implies slice.gaps.all(g => g.status = implemented)
 }
 
 ------------------------------------------------------------
@@ -105,6 +106,17 @@ surface MultiNodeVerificationPlan {
         ReadRequested(slice, node, key)
         FeatureImplemented(gap)
         VerificationPassed(slice)
+}
+
+surface MultiNodeGapSurface {
+    context gap: MultiNodeGap
+
+    exposes:
+        gap.kind
+        gap.status
+
+    provides:
+        FeatureImplemented(gap)
 }
 
 ------------------------------------------------------------

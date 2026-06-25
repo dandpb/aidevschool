@@ -1,32 +1,126 @@
 -- allium: 3
 -- ecosystem.allium
 
--- Scope: AI DevSchool Ecosystem learning loop and agent pipeline
+-- Scope: AI DevSchool Ecosystem learning loop and agent pipeline.
+-- Includes:
+--   - Canonical learner state (learner/learning_state.yaml, learner/substrate/)
+--   - Derived views (.mavis/, engines/minimaxDojo/whiteboard/, engines/codexDojo/src/data/learner.ts,
+--     engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts)
+--   - Ágora Continuum engine state machine (engines/minimaxDojo/core/state_machine/)
 -- Excludes:
---   - Specific platform tooling (.Codex, .opencode, .playwright-mcp, .mavis)
+--   - Specific platform tooling mechanics (.Codex, .opencode, .playwright-mcp)
+--   - YAML parsing, filesystem writes, generated caches
+
+------------------------------------------------------------
+-- External Entities
+------------------------------------------------------------
+
+external entity Project {
+    id: String
+    title: String
+    complexity: Integer
+}
+
+-- Derived views produced by learner-substrate and consumed as read-only snapshots here.
+external entity MavisLearnerView {}
+external entity WhiteboardProfileView {}
+external entity WhiteboardTrailView {}
+external entity CodexDojoDashboardSnapshot {}
+external entity PixelDojoReviewSlice {}
 
 ------------------------------------------------------------
 -- Value Types
 ------------------------------------------------------------
 
-value Level {
-    name: String
+value Budget {
+    hint_queries_per_day: Integer
 }
 
-value ProgrammingLanguage {
-    name: String
+value AidiConfig {
+    current: Decimal
+    threshold_amber: Decimal
+    threshold_red: Decimal
+}
+
+value ActiveUnitGate {
+    require_executable_evidence: Boolean
+    min_coverage: Decimal
+    mutation_min: Decimal
+}
+
+value CodeGatePolicy {
+    core_coverage_target: String
+    mutation_score_target: String
+    verifier_context: String
+    benchmark_rule: String
+}
+
+value LearningGatePolicy {
+    requires_attempt_before_solution: Boolean
+    hint_budget_per_day: Integer
+    mastery_source: String
+}
+
+value Review {
+    date: Timestamp
+    event: ReviewEventType
+    rating: Rating?
+    gate_outcome: GateOutcome?
+}
+
+value StreakFreezes {
+    equipped: Integer
+    max: Integer
+}
+
+value Streak {
+    current: Integer
+    longest: Integer
+    last_gate_date: Timestamp?
+    freezes: StreakFreezes
+}
+
+value NextAction {
+    owner: String
+    action: String
+}
+
+value AgentOwnership {
+    leader: String
+    diagnostic: String
+    path: String
+    producer: String
+    tutor: String
+    verifier: String
+    reviewer: String
+    metrics: String
+    memory: String
+    governance: String
+}
+
+value NextReview {
+    unit_id: String
+    title: String
+    due_in: String
+    reason: ReviewReason
+}
+
+value DashboardGate {
+    implementation_blocked: Boolean
+    unblock_condition: String
 }
 
 ------------------------------------------------------------
 -- Enumerations
 ------------------------------------------------------------
 
+enum Level { beginner | intermediate | advanced }
+
 enum LearningState {
     presenting
     | practicing
     | evaluating
     | mastered
-    | failure_blocked
 }
 
 enum ArtifactState {
@@ -34,6 +128,31 @@ enum ArtifactState {
     | verifying
     | done
 }
+
+-- Runtime state-machine values used by engines/minimaxDojo/core/state_machine/__init__.py.
+enum EngineUnitState {
+    `APRESENTANDO`
+    | `PRATICANDO`
+    | `AVALIANDO`
+    | `DOMINADO`
+    | `FALHA_BLOQUEIO`
+}
+
+enum EngineSubState {
+    `PRODUCING`
+    | `VERIFYING`
+    | `DONE`
+}
+
+enum UnitKind { concept | smell | architecture | pitfall }
+
+enum Rating { again | hard | good | easy }
+
+enum GateOutcome { fail | pass_retried | pass_first_try | pass_exceeds }
+
+enum ReviewEventType { presented | gate }
+
+enum ReviewReason { overdue | due | `recurring-trap` }
 
 ------------------------------------------------------------
 -- Entities and Variants
@@ -43,54 +162,76 @@ entity Learner {
     id: String
     level: Level
     focus: String
-    active_language: ProgrammingLanguage
-    languages: Set<ProgrammingLanguage>
+    goal: String
+    active_language: String
+    languages: Set<String>
+    reference_purpose: String
+    weekly_time_hours: Integer
+    session_cadence: String
+    human_instructor: String
+    hitl_sla_hours: Integer
+    hitl_fallback: String
+    budget: Budget
+    aidi: AidiConfig?
 }
 
-entity Project {
+entity ActiveUnit {
     id: String
+    project: String
     title: String
-    complexity: Integer
-}
-
-entity Unit {
-    learner: Learner
-    project: Project
-    status: LearningState
+    state: LearningState
     retry_count: Integer
     retry_limit: Integer
+    unblock_condition: String
     required_before_implementation: Boolean
-    min_coverage: Decimal
-    mutation_min: Decimal
-
-    transitions status {
-        presenting -> practicing
-        practicing -> evaluating
-        evaluating -> mastered
-        evaluating -> presenting
-        evaluating -> failure_blocked
-        failure_blocked -> presenting
-        terminal: mastered, failure_blocked
-    }
+    diagnostic_file: String
+    promotion_gate: Set<String>
+    empirical_gate: ActiveUnitGate
 }
 
-entity Evaluation {
-    unit: Unit
-    artifact_state: ArtifactState
-
-    transitions artifact_state {
-        producing -> verifying
-        verifying -> producing
-        verifying -> done
-        terminal: done
-    }
+entity LearningGate {
+    implementation_blocked: Boolean
 }
 
-entity ExecutableEvidence {
-    unit: Unit
-    coverage: Decimal
-    mutation_score: Decimal
-    is_valid: Boolean
+entity EmpiricalGates {
+    code: CodeGatePolicy
+    learning: LearningGatePolicy
+}
+
+entity UnitLog {
+    unit_id: String
+    concept: String
+    kind: UnitKind
+    project: String
+    mastered: Boolean
+    reviews: Set<Review>
+}
+
+entity StateMachine {
+    learning_states: Set<LearningState>
+    artifact_states: Set<ArtifactState>
+}
+
+entity CanonicalLearnerState {
+    system: String
+    version: Integer
+    learner: Learner
+    active_unit: ActiveUnit
+    gate: LearningGate
+    empirical_gates: EmpiricalGates
+    state_machine: StateMachine
+    agent_ownership: AgentOwnership
+    next_action: NextAction
+    units_log: Set<UnitLog>
+    streak: Streak
+}
+
+-- Runtime learning-unit state machine used by the minimaxDojo engine.
+entity EngineUnit {
+    unit_id: String
+    state: EngineUnitState
+    sub_state: EngineSubState?
+    retries: Integer
 }
 
 ------------------------------------------------------------
@@ -98,133 +239,358 @@ entity ExecutableEvidence {
 ------------------------------------------------------------
 
 config {
-    retry_limit: Integer = 3
+    system_name: String = "agora-continuum"
+    default_retry_limit: Integer = 3
+    max_streak_freezes: Integer = 2
+    default_aidi_current: Decimal = 0.34
+    default_aidi_threshold_amber: Decimal = 0.6
+    default_aidi_threshold_red: Decimal = 0.75
     min_coverage: Decimal = 0.8
     mutation_min: Decimal = 0.6
+    core_coverage_min: Decimal = 0.8
+    mutation_score_min: Decimal = 0.65
+    curr_window_days: Integer = 7
 }
 
 ------------------------------------------------------------
 -- Rules
 ------------------------------------------------------------
 
+-- Canonical-state validation / projection
+
+rule CanonicalStateLoadsOnlyWhenValid {
+    when: CanonicalStateLoaded(state)
+
+    requires: state.system = config.system_name
+    requires: state.version != null
+    requires: state.learner.id != ""
+    requires: state.learner.level in Level
+    requires: state.learner.active_language = null
+        or state.learner.active_language in state.learner.languages
+    requires: state.active_unit.id != ""
+    requires: state.active_unit.state in LearningState
+    requires: state.active_unit.retry_count <= state.active_unit.retry_limit
+    requires: state.gate.implementation_blocked in {true, false}
+    requires: state.empirical_gates.learning.requires_attempt_before_solution = true
+}
+
+rule CanonicalStateSyncsDerivedViews {
+    when: CanonicalStateSynced(state)
+
+    requires: state in CanonicalLearnerStates
+
+    ensures:
+        MavisLearnerView.created(state: state)
+        WhiteboardProfileView.created(state: state)
+        WhiteboardTrailView.created(state: state)
+        CodexDojoDashboardSnapshot.created(state: state)
+        PixelDojoReviewSlice.created(state: state)
+}
+
+-- Engine state machine (engines/minimaxDojo/core/state_machine/__init__.py)
+
+rule EngineUnitCreated {
+    when: unit: EngineUnit.created
+
+    ensures:
+        unit.state = `APRESENTANDO`
+        unit.retries = 0
+        unit.sub_state = null
+}
+
 rule LearnerAcceptsUnit {
     when: LearnerAccepts(unit)
-    requires: unit.status = presenting
-    ensures: unit.status = practicing
+    requires: unit.state = `APRESENTANDO`
+
+    ensures: unit.state = `PRATICANDO`
+}
+
+rule LearnerDeclinesUnit {
+    when: LearnerDeclines(unit)
+    requires: unit.state = `APRESENTANDO`
+
+    ensures: unit.state = `APRESENTANDO`
 }
 
 rule LearnerSubmitsAttempt {
     when: LearnerSubmits(unit)
-    requires: unit.status = practicing
+    requires: unit.state = `PRATICANDO`
+
     ensures:
-        unit.status = evaluating
-        Evaluation.created(unit: unit, artifact_state: producing)
+        unit.state = `AVALIANDO`
+        unit.sub_state = `PRODUCING`
 }
 
 rule PracticeTimesOut {
     when: PracticeTimeout(unit)
-    requires: unit.status = practicing
+    requires: unit.state = `PRATICANDO`
+
     ensures:
-        unit.status = evaluating
-        Evaluation.created(unit: unit, artifact_state: producing)
+        unit.state = `AVALIANDO`
+        unit.sub_state = `PRODUCING`
 }
 
 rule MestreDone {
-    when: MestreDone(evaluation)
-    requires: evaluation.unit.status = evaluating
-    requires: evaluation.artifact_state = producing
-    ensures: evaluation.artifact_state = verifying
+    when: MestreDone(unit)
+    requires: unit.state = `AVALIANDO`
+    requires: unit.sub_state = `PRODUCING`
+
+    ensures: unit.sub_state = `VERIFYING`
 }
 
 rule PrometorPasses {
-    when: PrometorPass(evaluation, coverage, mutation_score)
-    requires: evaluation.unit.status = evaluating
-    requires: evaluation.artifact_state = verifying
-    requires: coverage >= evaluation.unit.min_coverage
-    requires: mutation_score >= evaluation.unit.mutation_min
+    when: PrometorPass(unit, coverage, mutation_score)
+    requires: unit.state = `AVALIANDO`
+
     ensures:
-        evaluation.artifact_state = done
-        evaluation.unit.status = mastered
-        ExecutableEvidence.created(
-            unit: evaluation.unit,
-            coverage: coverage,
-            mutation_score: mutation_score,
-            is_valid: true
-        )
+        unit.state = `DOMINADO`
+        unit.sub_state = `DONE`
 }
 
-rule PrometorFails {
-    when: PrometorFail(evaluation, coverage, mutation_score)
-    requires: evaluation.unit.status = evaluating
-    requires: evaluation.artifact_state = verifying
+rule PrometorFailsWithRetriesLeft {
+    when: PrometorFail(unit, coverage, mutation_score)
+    requires: unit.state = `AVALIANDO`
+    requires: unit.retries < config.default_retry_limit
+
     ensures:
-        evaluation.unit.retry_count = evaluation.unit.retry_count + 1
-        ExecutableEvidence.created(
-            unit: evaluation.unit,
-            coverage: coverage,
-            mutation_score: mutation_score,
-            is_valid: false
-        )
+        unit.retries = unit.retries + 1
+        unit.state = `APRESENTANDO`
+        unit.sub_state = `PRODUCING`
+}
+
+rule PrometorFailsWithRetriesExhausted {
+    when: PrometorFail(unit, coverage, mutation_score)
+    requires: unit.state = `AVALIANDO`
+    requires: unit.retries >= config.default_retry_limit
+
     ensures:
-        if evaluation.unit.retry_count < config.retry_limit:
-            evaluation.unit.status = presenting
-            evaluation.artifact_state = producing
-        else:
-            evaluation.unit.status = failure_blocked
+        unit.state = `FALHA_BLOQUEIO`
+        unit.sub_state = null
 }
 
 rule SenecaPasses {
     when: SenecaPass(unit)
-    requires: unit.status = failure_blocked
+    requires: unit.state = `FALHA_BLOQUEIO`
+
     ensures:
-        unit.status = presenting
-        unit.retry_count = 0
+        unit.state = `APRESENTANDO`
+        unit.retries = 0
+        unit.sub_state = null
+}
+
+-- Spaced-repetition / streak scheduling (learner/substrate/scheduling.py)
+
+rule GatePassedRecordsStreak {
+    when: GatePassed(unit, outcome)
+    requires: outcome in {pass_first_try, pass_exceeds}
+
+    ensures:
+        unit.streak.current = unit.streak.current + 1
+        unit.streak.longest = max(unit.streak.longest, unit.streak.current + 1)
+        unit.streak.last_gate_date = today()
+}
+
+rule GateFailedDoesNotBreakStreak {
+    when: GatePassed(unit, outcome)
+    requires: outcome = fail
+
+    ensures: unit.streak = unit.streak
+}
+
+rule ReconcileStreakForMissedDays {
+    when: StreakReconciliationDue(streak, today)
+    requires: streak.last_gate_date != null
+    requires: (today - streak.last_gate_date).days > 1
+
+    ensures:
+        if streak.freezes.equipped > 0:
+            streak.freezes.equipped = streak.freezes.equipped - 1
+        else:
+            streak.current = 0
 }
 
 ------------------------------------------------------------
 -- Invariants
 ------------------------------------------------------------
 
-invariant RetryCountBounded {
-    for unit in Units:
-        unit.retry_count <= unit.retry_limit
+invariant ActiveLanguageIsKnown {
+    for state in CanonicalLearnerStates:
+        state.learner.active_language = null
+            or state.learner.active_language in state.learner.languages
 }
 
-invariant ActiveLanguageInLearnerLanguages {
-    for learner in Learners:
-        learner.active_language in learner.languages
+invariant LevelIsKnown {
+    for state in CanonicalLearnerStates:
+        state.learner.level in Level
 }
 
-invariant MasteredEvidenceMeetsThresholds {
-    for evidence in ExecutableEvidences:
-        evidence.unit.status = mastered implies
-            evidence.coverage >= evidence.unit.min_coverage
-            and evidence.mutation_score >= evidence.unit.mutation_min
+invariant ActiveUnitStateIsKnown {
+    for state in CanonicalLearnerStates:
+        state.active_unit.state in LearningState
+}
+
+invariant RetryLimitIsRespected {
+    for state in CanonicalLearnerStates:
+        state.active_unit.retry_count <= state.active_unit.retry_limit
+}
+
+invariant GateBlockedIsBoolean {
+    for state in CanonicalLearnerStates:
+        state.gate.implementation_blocked in {true, false}
+}
+
+invariant AttemptPrecedesSolution {
+    for state in CanonicalLearnerStates:
+        state.empirical_gates.learning.requires_attempt_before_solution = true
+}
+
+invariant MasteredUnitsHaveGateReview {
+    for state in CanonicalLearnerStates:
+        for unit in state.units_log:
+            unit.mastered = true implies unit.reviews.any(r => r.event = gate)
+}
+
+invariant StreakFreezeCap {
+    for state in CanonicalLearnerStates:
+        state.streak.freezes.equipped <= state.streak.freezes.max
+            and state.streak.freezes.max <= config.max_streak_freezes
+}
+
+invariant StreakCurrentNonNegative {
+    for state in CanonicalLearnerStates:
+        state.streak.current >= 0
+}
+
+invariant RatingComesFromGate {
+    for state in CanonicalLearnerStates:
+        for unit in state.units_log:
+            for review in unit.reviews where review.event = gate:
+                review.rating != null
+                    and review.gate_outcome != null
+                    and review.rating = rating_from_gate_outcome(review.gate_outcome)
+}
+
+invariant EngineRetryLimitIsBounded {
+    for unit in EngineUnits:
+        unit.retries <= config.default_retry_limit
+}
+
+invariant EngineSubStateRequiresEvaluating {
+    for unit in EngineUnits:
+        unit.sub_state != null implies unit.state = `AVALIANDO`
 }
 
 ------------------------------------------------------------
 -- Actor Declarations
 ------------------------------------------------------------
 
-actor Orquestrador {
-    identified_by: Learner where id != ""
-}
+-- The ecosystem is driven by tutor agents and the learner; no fine-grained actor
+-- model is enforced at the spec boundary.
 
 ------------------------------------------------------------
 -- Surfaces
 ------------------------------------------------------------
 
-surface UnitLifecycle {
-    facing maestro: Orquestrador
+surface LearnerSubstrateReadSurface {
+    context state: CanonicalLearnerState
+
+    exposes:
+        state.system
+        state.version
+        state.learner.id
+        state.learner.level
+        state.learner.active_language
+        state.learner.languages
+        state.active_unit.id
+        state.active_unit.state
+        state.active_unit.retry_count
+        state.active_unit.retry_limit
+        state.gate.implementation_blocked
+        state.empirical_gates.learning.requires_attempt_before_solution
 
     provides:
-        LearnerAccepts(unit) when unit.status = presenting
-        LearnerSubmits(unit) when unit.status = practicing
-        PracticeTimeout(unit) when unit.status = practicing
-        MestreDone(evaluation) when evaluation.unit.status = evaluating
-        PrometorPass(evaluation, coverage, mutation_score)
-            when evaluation.unit.status = evaluating
-        PrometorFail(evaluation, coverage, mutation_score)
-            when evaluation.unit.status = evaluating
-        SenecaPass(unit) when unit.status = failure_blocked
+        CanonicalStateLoaded(state)
 }
+
+surface LearnerSubstrateSyncSurface {
+    context state: CanonicalLearnerState
+
+    exposes:
+        state.learner.id
+        state.active_unit.id
+        state.gate.implementation_blocked
+
+    provides:
+        CanonicalStateSynced(state)
+
+    @guarantee DerivedViewsAreMirrors
+        -- Mavis, whiteboard, codexDojo dashboard and pixelDojo review slice views are derived from
+        -- canonical learner state; canonical learner state remains the source of truth.
+}
+
+surface MaestroCycleControl {
+    facing learner: Learner
+    context unit: EngineUnit
+
+    exposes:
+        unit.state
+        unit.retries
+        unit.sub_state
+
+    provides:
+        LearnerAccepts(unit) when unit.state = `APRESENTANDO`
+        LearnerDeclines(unit) when unit.state = `APRESENTANDO`
+        LearnerSubmits(unit) when unit.state = `PRATICANDO`
+        PracticeTimeout(unit) when unit.state = `PRATICANDO`
+}
+
+surface EmpiricalGateSurface {
+    facing verifier: AgentOwnership
+    context unit: EngineUnit
+
+    exposes:
+        unit.state
+        unit.retries
+        unit.sub_state
+
+    provides:
+        MestreDone(unit) when unit.state = `AVALIANDO` and unit.sub_state = `PRODUCING`
+        PrometorPass(unit, coverage, mutation_score) when unit.state = `AVALIANDO`
+        PrometorFail(unit, coverage, mutation_score) when unit.state = `AVALIANDO`
+        SenecaPass(unit) when unit.state = `FALHA_BLOQUEIO`
+
+    @guarantee ProducerVerifierIsolation
+        -- A verifier starts from handoff artifacts and does not share producer context.
+}
+
+surface CodexDojoDashboardSurface {
+    context snapshot: CodexDojoDashboardSnapshot
+
+    exposes:
+        snapshot.active_unit
+        snapshot.gate
+        snapshot.profile
+        snapshot.aidi
+        snapshot.top_pitfalls
+        snapshot.next_reviews
+        snapshot.mastered_count
+        snapshot.scaffolded_count
+        snapshot.streak
+        snapshot.curr
+}
+
+surface PixelDojoReviewSliceSurface {
+    context slice: PixelDojoReviewSlice
+
+    exposes:
+        slice.next_reviews
+        slice.streak
+}
+
+------------------------------------------------------------
+-- Open Questions
+------------------------------------------------------------
+
+open question "Should gate.implementation_blocked be canonical input, or derived from active unit and attempt evidence?"
+open question "Should units_log become part of the substrate read/write contract?"
+open question "How is the engine runtime state machine (Portuguese states) synchronised with the canonical learner state (English states)?"
