@@ -1,11 +1,14 @@
 -- allium: 3
 -- polyglot-evolution-arena.allium
 
--- Scope: proposal-stage Polyglot Evolution Arena behaviour distilled from docs/design/polyglot-arena/.
---          Demoted from engines/polyglotEvolutionArena/ on 2026-06-21.
---          The continuous-evolution loop itself lives in engines/miniMaxEvolutionEngine/.
--- Includes: proposal status, promotion criteria, demotion to archived design history, current non-goals.
--- Excludes: runnable app behaviour, deployment, learning-cycle integration, comparison-runner implementation details.
+-- Scope: Polyglot Evolution Arena lifecycle and the shared runtime evidence contract.
+--          The former engines/polyglotEvolutionArena/ app was demoted on 2026-06-21.
+--          Runnable comparison seams now live in curriculum/_shared/arena/ and
+--          curriculum/_shared/benchmarks/; the continuous-evolution loop itself
+--          lives in engines/miniMaxEvolutionEngine/.
+-- Includes: proposal status, promotion criteria, demotion to archived design history,
+--           strict report reveal gate, and prediction calibration storage.
+-- Excludes: deployment and language-specific benchmark implementation details.
 
 ------------------------------------------------------------
 -- Enumerations
@@ -15,6 +18,11 @@ enum ArenaStatus {
     proposal
     | scaffolded
     | archived
+}
+
+enum ArenaReportGate {
+    locked
+    | revealed
 }
 
 ------------------------------------------------------------
@@ -41,6 +49,14 @@ entity ArenaProposal {
     has_comparison_runner: Boolean
 
     ready_for_scaffold: has_executable_scaffold and has_test_harness and has_comparison_runner
+}
+
+entity ArenaRun {
+    gate: ArenaReportGate
+    all_decision_metrics_trustworthy: Boolean
+    verifier_confirmed: Boolean
+    predictions_logged: Boolean
+    dashboard_refreshed: Boolean
 }
 
 ------------------------------------------------------------
@@ -83,6 +99,28 @@ rule ArenaResurrectedFromArchive {
     ensures: arena.status = proposal
 }
 
+rule ArenaReportRevealsOnlyAfterStrictGate {
+    when: ArenaRunCompleted(run)
+    requires: run.all_decision_metrics_trustworthy = true
+    requires: run.verifier_confirmed = true
+
+    ensures: run.gate = revealed
+}
+
+rule ArenaReportStaysLockedWithoutStrictGate {
+    when: ArenaRunCompleted(run)
+    requires: not (run.all_decision_metrics_trustworthy and run.verifier_confirmed)
+
+    ensures: run.gate = locked
+}
+
+rule ArenaPredictionsMayCalibrateLockedRuns {
+    when: ArenaRunCompleted(run)
+    requires: run.predictions_logged = true
+
+    ensures: run.dashboard_refreshed = true
+}
+
 ------------------------------------------------------------
 -- Invariants
 ------------------------------------------------------------
@@ -90,6 +128,13 @@ rule ArenaResurrectedFromArchive {
 invariant ScaffoldRequiresVerificationSurface {
     for arena in ArenaProposals:
         arena.status = scaffolded implies arena.ready_for_scaffold = true
+}
+
+invariant RevealedReportRequiresTrustAndVerifier {
+    for run in ArenaRuns:
+        run.gate = revealed implies
+            run.all_decision_metrics_trustworthy = true and
+            run.verifier_confirmed = true
 }
 
 ------------------------------------------------------------
@@ -113,8 +158,22 @@ surface ArenaStatusSurface {
         ArenaResurrectionReviewed(arena)
 }
 
+surface ArenaRunSurface {
+    facing run: ArenaRun
+
+    exposes:
+        run.gate
+        run.all_decision_metrics_trustworthy
+        run.verifier_confirmed
+        run.predictions_logged
+        run.dashboard_refreshed
+
+    provides:
+        ArenaRunCompleted(run)
+}
+
 ------------------------------------------------------------
 -- Open Questions
 ------------------------------------------------------------
 
-open question "Should the arena become part of codexDojo, or remain a separate engine once it gains an executable scaffold?"
+open question "Should the shared arena runtime stay curriculum-local, or graduate into codexDojo once multiple projects have verifier-confirmed revealed reports?"

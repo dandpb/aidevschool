@@ -30,8 +30,10 @@ pixelDojo/
 ## CONVENTIONS
 
 - Keep `curriculum/` and `learner/` at the root. Read them via `../../...`; do not copy them here.
-- The game is an attempt surface. It emits raw evidence through `window.__pixelQuestEvidence` and
+- Every game targets exactly one concept.
+- The game is an attempt surface. It emits **raw evidence only** through `window.__pixelQuestEvidence` and
   `EVIDENCE <json>` console records, then stops.
+- The game never writes `mastered`; the verifier owns that transition.
 - The Python substrate owns scheduling and derived review projections; the game only renders them.
 - Use `pnpm`, strict TypeScript, Biome, Vitest, Playwright, and plain Three.js. Do not reintroduce
   Phaser guidance unless the app actually migrates.

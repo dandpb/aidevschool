@@ -1,0 +1,26 @@
+# Benchmark configuration for 05_websocket_chat (WebSocket chat server).
+# Consumed by curriculum/_shared/benchmarks/runner.py (ADR-003).
+#
+# Ports confirmed from each impl's Dockerfile EXPOSE (all three serve on 8085
+# internally; runner maps each to a distinct host port — containers run
+# sequentially so this only avoids host-side collisions). Scenarios are
+# WebSocket (k6/ws), not HTTP.
+
+container_prefix: ws
+
+images:
+  go: ws-go
+  rust: ws-rust
+  node: ws-node
+
+ports:
+  go: 8085
+  rust: 8085
+  node: 8085
+
+host_ports:
+  go: 18085
+  rust: 18086
+  node: 18087
+
+scenarios: [baseline, stress, spike, endurance]

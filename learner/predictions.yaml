@@ -1,0 +1,4 @@
+# Per-metric Polyglot Arena predictions (append-only). See ADR-004.
+# Each record: {project, run, metric, predicted, actual, correct, reason?}.
+# Appended by curriculum/_shared/arena/predictions.py; read by the substrate.
+predictions:

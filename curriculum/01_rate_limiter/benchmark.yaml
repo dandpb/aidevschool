@@ -1,0 +1,20 @@
+# Benchmark configuration for 01_rate_limiter.
+# Consumed by curriculum/_shared/benchmarks/runner.py (see ADR-003).
+# Per-project metadata that replaces the values hardcoded in run_matrix.sh.
+
+container_prefix: rl            # container name = {prefix}-{lang}-bench
+
+images:                         # docker image per language
+  go: rl-go
+  rust: rl-rust
+  node: rl-node
+
+ports:                          # container-internal port per language
+  go: 8080
+  rust: 8082
+  node: 8081
+
+host_ports:                     # optional host-port overrides (dev-machine conflicts);
+  go: 18080                     # any lang omitted here uses its container port
+
+scenarios: [baseline, stress, spike, endurance]

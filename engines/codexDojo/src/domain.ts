@@ -124,6 +124,15 @@ export type LearnerSnapshot = {
     readonly freezesMax: number
   }
   readonly curr: number
+  // Polyglot Arena per-metric prediction calibration (additive, optional). See ADR-004.
+  readonly predictions?: {
+    readonly count: number
+    readonly byMetric: {
+      readonly latency: { readonly correct: number; readonly total: number }
+      readonly memory: { readonly correct: number; readonly total: number }
+      readonly throughput: { readonly correct: number; readonly total: number }
+    }
+  }
 }
 
 export function assertNever(value: never): never {

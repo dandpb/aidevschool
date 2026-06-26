@@ -1,29 +1,29 @@
 {
   "mcpServers": {
-
     "mongodb": {
       "type": "stdio",
-      "command": "npx",
+      "command": "sh",
       "args": [
-        "-y",
-        "mongodb-mcp-server",
-        "--connectionString=mongodb://admin:77HY9bSmPk@localhost:27017/admin?authSource=admin&directConnection=true"
+        "-lc",
+        "exec npx -y mongodb-mcp-server --connectionString=\"$MONGODB_MCP_CONNECTION_STRING\""
       ],
-      "env": {},
+      "env": {
+        "MONGODB_MCP_CONNECTION_STRING": "${MONGODB_MCP_CONNECTION_STRING}"
+      },
       "disabled": true,
       "alwaysAllow": [],
       "directTools": true
     },
     "context7": {
       "type": "stdio",
-      "command": "npx",
+      "command": "sh",
       "args": [
-        "-y",
-        "@upstash/context7-mcp",
-        "--api-key",
-        "ctx7sk-c5563ca9-a62f-4b5a-8778-fa7049226079"
+        "-lc",
+        "exec npx -y @upstash/context7-mcp --api-key \"$CONTEXT7_API_KEY\""
       ],
-      "env": {},
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      },
       "disabled": true,
       "alwaysAllow": [],
       "directTools": true

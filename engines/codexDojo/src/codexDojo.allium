@@ -1,0 +1,377 @@
+-- allium: 3
+-- codexDojo.allium
+
+-- Scope: codexDojo dashboard surface
+-- The learner's command post in the AI DevSchool ecosystem:
+--   monitor learner state, operate the learning cycle,
+--   browse the agent roster, and explore the project roadmap.
+--
+-- Includes: Views, CycleStage lifecycle, Agent catalog, ProjectRoadmap
+--           Metric and EcosystemStatus display, LearnerSnapshot read-out
+--           Clipboard copy of agent prompts
+--
+-- Excludes:
+--   - learner/substrate state derivation (external data source)
+--   - pixelDojo game surface (separate spec)
+--   - miniMaxDojo tutor core orchestration (separate spec)
+--   - CSS/visual presentation and DOM event routing
+--   - Agent prompt text and group membership (configuration)
+
+config {
+    totalStages: 10
+    totalProjects: 18
+    totalCoreAgents: 13
+    totalUserFacingAgents: 10
+    totalMetrics: 10
+    totalEcosystemStatuses: 4
+    initialStageIndex: 0
+    preCompletedStageCount: 2
+}
+
+-- ============================================================
+-- Entities
+-- ============================================================
+
+entity View {
+    id: overview | agents | cycle | roadmap | project
+}
+
+entity ProjectPhase {
+    id: fundamentos | concorrencia | arquitetura
+        | escalabilidade | resiliencia | sistemas_complexos
+}
+
+entity ProjectFilter {
+    scope: all | specificPhase(phase: ProjectPhase)
+}
+
+entity SkillLevel {
+    level: 1 | 2 | 3 | 4 | 5 | 6
+}
+
+entity AgentGroup {
+    id: leader | pedagogia | qualidade | memoria | governanca
+}
+
+entity DojoProject {
+    id: String
+    title: String
+    phase: ProjectPhase
+    level: SkillLevel
+    learningGoal: String
+    stack: String
+}
+
+entity UserFacingAgent {
+    id: String
+    name: String
+    responsibility: String
+}
+
+entity CoreAgent {
+    id: String
+    name: String
+    group: AgentGroup
+    role: String
+    mission: String
+    gate: String
+}
+
+entity AgentRoster {
+    core: Set<CoreAgent>
+    userFacing: Set<UserFacingAgent>
+}
+
+entity CycleStage {
+    id: String
+    label: String
+    owner: String           -- references UserFacingAgent.name
+    evidence: String
+    output: String
+    index: Integer
+}
+
+entity CycleTimeline {
+    stages: List<CycleStage>
+    currentStageId: String
+    completedStageIds: Set<String>
+
+    derived {
+        completionPercent: Integer = |completedStageIds| * 100 / |stages|
+    }
+}
+
+entity Metric {
+    id: String
+    label: String
+    target: String
+    signal: String
+    measurement: String?
+    evidencePath: String?
+}
+
+entity EcosystemStatus {
+    id: String
+    label: String
+    state: String
+    evidence: String
+    nextStep: String
+}
+
+entity DashboardStats {
+    agentCount: Integer
+    stageCount: Integer
+    projectCount: Integer
+    completionPercent: Integer
+}
+
+entity LearnerSnapshot {
+    activeUnit: ActiveUnit
+    gate: LearningGate
+    profile: LearnerProfile
+    aidi: AidiSnapshot
+    topPitfalls: Set<Pitfall>
+    nextReviews: List<Review>
+    streak: Streak
+    masteredCount: Integer
+    scaffoldedCount: Integer
+    curr: Decimal
+
+    -- Source: learner/learning_state.yaml via python3 -m learner.substrate
+    -- Read-only from the dashboard perspective.
+}
+
+entity ActiveUnit {
+    id: String
+    title: String
+    project: String
+    state: presenting | practicing | evaluating | mastered
+    retryCount: Integer
+    retryLimit: Integer
+}
+
+entity LearningGate {
+    implementationBlocked: Boolean
+    unblockCondition: String
+}
+
+entity LearnerProfile {
+    dreyfus: novice | advanced_beginner | competent | proficient | expert
+    bloom: remember | understand | apply | analyze | evaluate | create
+    activeLanguage: String
+    weeklyTimeHours: Integer
+}
+
+entity AidiSnapshot {
+    current: Decimal
+    thresholdAmber: Decimal
+    thresholdRed: Decimal
+    trend: List<AidiDataPoint>
+
+    derived {
+        signal: String = current < thresholdAmber
+            ? "green" : current < thresholdRed ? "amber" : "red"
+    }
+}
+
+entity AidiDataPoint {
+    date: String
+    value: Decimal
+}
+
+entity Pitfall {
+    id: String
+    description: String
+    occurrences: Integer
+    lastSeen: String
+}
+
+entity Review {
+    unitId: String
+    title: String
+    dueIn: String
+    reason: overdue | due | interleaving | recurring_trap
+}
+
+entity Streak {
+    current: Integer
+    longest: Integer
+    lastGateDate: String?
+    freezesEquipped: Integer
+    freezesMax: Integer
+}
+
+entity AgentDetail {
+    selectedAgent: CoreAgent?
+    promptCopied: Boolean
+    promptError: Boolean
+}
+
+-- ============================================================
+-- Rules
+-- ============================================================
+
+rule ChangeView {
+    when: UserRequestsView(id: View)
+
+    ensures: currentView = id
+    ensures: agentDetail.promptCopied = false
+    ensures: agentDetail.promptError = false
+}
+
+rule SelectAgent {
+    when: UserRequestsAgentDetail(agentId: String)
+
+    requires: agentId in roster.core.*.id
+
+    ensures: currentView = agents
+    ensures: agentDetail.selectedAgent.id = agentId
+    ensures: agentDetail.promptCopied = false
+    ensures: agentDetail.promptError = false
+}
+
+rule AdvanceCycleStage {
+    when: UserCompletesStage()
+
+    requires: selectedStageId in timeline.stages.*.id
+
+    let currentIndex = indexOf(timeline.stages,
+        stage -> stage.id = selectedStageId)
+    let nextIndex = (currentIndex + 1) % |timeline.stages|
+
+    ensures: selectedStageId in timeline.completedStageIds
+        => unchanged(completedStageIds)
+    ensures: selectedStageId in timeline.completedStageIds
+        => completedStageIds = timeline.completedStageIds ++ {selectedStageId}
+    ensures: selectedStageId = timeline.stages[nextIndex].id
+    ensures: currentView = cycle
+}
+
+rule SelectCycleStage {
+    when: UserSelectsStage(stageId: String)
+
+    requires: stageId in timeline.stages.*.id
+
+    ensures: selectedStageId = stageId
+    ensures: currentView = cycle
+}
+
+rule SelectProject {
+    when: UserOpensProjectBriefing(projectId: String)
+
+    requires: projectId in catalog.projects.*.id
+
+    ensures: currentView = project
+    ensures: selectedProjectId = projectId
+}
+
+rule FilterProjects {
+    when: UserFiltersByPhase(phase: ProjectPhase)
+
+    ensures: projectFilter = specificPhase(phase)
+    ensures: currentView = roadmap
+}
+
+rule ResetProjectFilter {
+    when: UserClearsFilter()
+
+    ensures: projectFilter = all
+    ensures: currentView = roadmap
+}
+
+rule CopyAgentPrompt {
+    when: UserCopiesPrompt(agentId: String)
+
+    requires: agentId in roster.core.*.id
+
+    ensures: agentDetail.promptCopied = true
+    ensures: agentDetail.promptError = false
+
+    on clipboardUnavailable:
+    ensures: agentDetail.promptCopied = false
+    ensures: agentDetail.promptError = true
+
+    on agentNotFound:
+    (no effect — action silently ignored)
+}
+
+rule DisplayDashboardStats {
+    when: DashboardRenders()
+
+    ensures: stats.agentCount = |roster.core|
+    ensures: stats.stageCount = |timeline.stages|
+    ensures: stats.projectCount = |catalog.projects|
+    ensures: stats.completionPercent = timeline.completionPercent
+}
+
+rule MountGuard {
+    when: DashboardMounts()
+
+    requires: |roster.core| > 0
+    requires: |timeline.stages| > 0
+    requires: |catalog.projects| > 0
+
+    ensures: currentView = overview
+    ensures: selectedStageId = timeline.stages[config.initialStageIndex].id
+    ensures: selectedProjectId = catalog.projects[config.initialStageIndex].id
+    ensures: projectFilter = all
+
+    on dataEmpty:
+    ensures: MountRejected(reason: insufficient data)
+}
+
+-- ============================================================
+-- Surfaces
+-- ============================================================
+
+surface NavigationBar {
+    label: "Navegação principal"
+    mode: operate
+
+    action changeView {
+        trigger: click
+        intent: data-view
+        targets: [overview, agents, cycle, roadmap, project]
+        active: currentView matches view id
+    }
+}
+
+surface ViewSurface {
+    mode: operate
+
+    action selectAgent {
+        trigger: click
+        intent: data-agent
+        effect: SelectAgent
+    }
+
+    action selectStage {
+        trigger: click
+        intent: data-stage
+        effect: SelectCycleStage
+    }
+
+    action selectProject {
+        trigger: click
+        intent: data-project
+        effect: SelectProject
+    }
+
+    action advanceStage {
+        trigger: click
+        intent: data-action=advance-stage
+        effect: AdvanceCycleStage
+    }
+
+    action filterProjects {
+        trigger: click
+        intent: data-filter
+        effect: FilterProjects | ResetProjectFilter
+    }
+
+    action copyPrompt {
+        trigger: click
+        intent: data-copy-agent
+        effect: CopyAgentPrompt
+    }
+}

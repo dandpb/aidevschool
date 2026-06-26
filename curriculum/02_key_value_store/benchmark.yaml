@@ -1,0 +1,21 @@
+# Benchmark configuration for 02_key_value_store (HTTP KV store).
+# Consumed by curriculum/_shared/benchmarks/runner.py (ADR-003).
+#
+# Ports confirmed from each impl's Dockerfile EXPOSE (go 8080, rust 8082, node 8081).
+
+container_prefix: kv
+
+images:
+  go: kv-go
+  rust: kv-rust
+  node: kv-node
+
+ports:
+  go: 8080
+  rust: 8082
+  node: 8081
+
+host_ports:
+  go: 18080
+
+scenarios: [baseline, stress, spike, endurance]

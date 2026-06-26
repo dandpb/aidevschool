@@ -24,7 +24,7 @@ aidevschool/
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
 ├── docs/                      # ecosystem prompts, ideas, and design reference material
 ├── learn/                     # placeholder learning-workspace shell; no active files yet
-└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .serena/ # platform/tool state
+└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .serena/ .compozy/ # platform/tool state
 ```
 
 Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
@@ -140,7 +140,7 @@ cargo test
 ## Tooling root convention
 
 - `.mavis/` is the canonical derived runtime view; `learner/substrate/` regenerates it.
-- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.serena/`, and `.commandcode/` are
+- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.serena/`, `.commandcode/`, and `.compozy/` are
   platform/session state unless a tracked file says otherwise.
 - Durable shared state belongs in `.mavis/`, `learner/`, or `curriculum/`. Codex-specific runbooks
   belong in `.codex/napkin.md` or the global `napkin` skill. Document new `.X/` roots here first.
