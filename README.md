@@ -175,6 +175,7 @@ python3 -m unittest learner.substrate.tests.test_substrate   # from the repo roo
 
 | Need | File |
 | --- | --- |
+| **Full documentation handbook** | [`docs/handbook/`](docs/handbook/README.md) |
 | Ecosystem conventions & rules | [`AGENTS.md`](AGENTS.md) |
 | Multi-context index | [`CONTEXT-MAP.md`](CONTEXT-MAP.md) |
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](engines/codexDojo/ecosystem/MANIFEST.md) |

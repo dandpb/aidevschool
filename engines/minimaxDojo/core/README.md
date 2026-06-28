@@ -6,13 +6,18 @@
 
 ```
 core/
-├── state_machine/   # Especificação da máquina de estados (determinística)
-├── gates/           # Portão empírico (DoD + PROMĘTOR)
-├── memory/          # Whiteboard + handoff + Skills (curadoria)
-└── scheduler/       # Cronos (Pro vs Lightning)
+├── state_machine/   # Máquina de estados — espec + implementação de referência (__init__.py)
+├── gates/           # Portão empírico (DoD + PROMĘTOR) — espec + __init__.py
+├── memory/          # Whiteboard + handoff + Skills — espec + __init__.py
+└── scheduler/       # Cronos (Pro vs Lightning) — apenas especificação
 ```
 
-> **Não há código executável** aqui — o Ágora Continuum opera **sobre arquivos markdown** + **sub-agentes efêmeros** com contexto isolado. O "runtime" é o MiniMax + a disciplina de state machine (definida em [`../docs/02_state_machine.md`](../docs/02_state_machine.md)).
+> **Implementação de referência (Python).** `state_machine/`, `gates/` e `memory/` trazem uma
+> implementação de referência **determinística** em Python (`__init__.py`), coberta por testes de
+> contrato em [`../tests/`](../tests/). `scheduler/` permanece apenas especificação. O **runtime de
+> produção** continua sendo o MiniMax Agent Team + a disciplina de state machine (definida em
+> [`../docs/02_state_machine.md`](../docs/02_state_machine.md)): o Python serve de **espec executável
+> e oráculo de testes**, não de servidor.
 
 ## Princípio
 

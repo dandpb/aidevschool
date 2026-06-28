@@ -8,4 +8,7 @@
 > - **State machine** → [`../docs/02_state_machine.md`](../docs/02_state_machine.md)
 > - **Whiteboard (perfil vivo)** → [`../whiteboard/`](../whiteboard/)
 
-> Se for implementar uma **versão programática** (Python/TS) da state machine ou dos gates, este seria o lugar. Por ora, a "implementação" é a disciplina do Maestro + tabelas declarativas.
+> Uma **implementação de referência** em Python da state machine, dos gates e da memória já existe em
+> [`../core/`](../core/) (com testes de contrato em [`../tests/`](../tests/)). `src/` permanece
+> reservado para uma eventual aplicação maior (ex.: um runner/servidor) — por ora, o runtime de
+> produção é a disciplina do Maestro + o MiniMax Agent Team.
