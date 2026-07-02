@@ -1,42 +1,54 @@
-# Benchmark Results: 04 Concurrent Task Queue
+# Benchmark Results: 04_concurrent_task_queue
 
 ## Methodology
 
-Go measurements were collected from `curriculum/04_concurrent_task_queue/go-impl/` on macOS arm64 with Go 1.26.4. The benchmark command was run first with `go test -bench=. -benchmem -count=5 ./... 2>&1`. No `Benchmark*` functions were present, so the fallback command `go test -count=5 -v ./... 2>&1` was run and its package/test timings are recorded below.
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/healthz read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-The shared load-test methodology covers four scenarios:
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-| Scenario | Intended tool | Purpose |
-| --- | --- | --- |
-| Baseline | k6 + autocannon | Establish steady-state latency and throughput at normal concurrency. |
-| Stress | k6 + autocannon | Increase load until saturation to identify bottlenecks and error thresholds. |
-| Spike | k6 + autocannon | Apply sudden traffic bursts to observe recovery and queueing behavior. |
-| Endurance | k6 + autocannon | Run sustained traffic to detect memory growth, leaks, and latency drift. |
+## Build & Test Status
 
-Full Docker-based load tests with k6 are configured per the shared benchmark harness at curriculum/_shared/benchmarks/. Execute in a dedicated benchmarking environment for reproducible p50/p95/p99 latency data.
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	concurrent-task-queue-go	(cached) ok  	concurrent-task-queue-go/taskqueue	(cached) |
+| rust | ✅ | ✅ | ignored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored |
+| node | ✅ | ✅ | ts__/server.test.ts > HTTP API > maps backpressure to 429 {"event":"task_transition","task_id":"093a290a-5079-4d5f-857d- |
 
-## Go Benchmark Data
+## Comparative Results
 
-| Command | Package/Test | Samples | Result |
-| --- | --- | ---: | --- |
-| `go test -bench=. -benchmem -count=5 ./...` | `concurrent-task-queue-go` | 5 test iterations, no benchmark rows | `ok ... 0.739s` |
-| `go test -bench=. -benchmem -count=5 ./...` | `concurrent-task-queue-go/taskqueue` | 5 test iterations, no benchmark rows | `ok ... 26.151s` |
-| `go test -count=5 -v ./...` | `concurrent-task-queue-go` | 5 test iterations | `ok ... 1.162s` |
-| `go test -count=5 -v ./...` | `concurrent-task-queue-go/taskqueue` | 5 test iterations | `ok ... 26.169s` |
-| fallback per-test timing | `TestMainStartsAndStopsOnSignal` | 5 | `0.03s` each |
-| fallback per-test timing | `TestPoisonTimeoutAndInvalidBranches` | 5 | `5.02s, 5.03s, 5.04s, 5.03s, 5.03s` |
-| fallback per-test timing | `TestWorkerPoolRetriesBackoffDeadLetterAndStats` | 5 | `0.06s, 0.09s, 0.05s, 0.07s, 0.05s` |
-| fallback per-test timing | `TestConcurrentWorkersRespectLimitAndGracefulDrain` | 5 | `0.01s, 0.02s, 0.01s, 0.02s, 0.02s` |
-| fallback per-test timing | other taskqueue tests | 5 each | `0.00s` to `0.02s` as emitted |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2349 | 2.2 | 1.5 | 6.0 | 9.0 | 0.000 | 19.9 |
+| rust | 2350 | 2.2 | 1.6 | 5.7 | 8.9 | 0.000 | 10.8 |
+| node | 2371 | 2.9 | 2.7 | 6.1 | 9.2 | 0.000 | 88.0 |
 
-## Rust Benchmarks
+## Per-language Detail
 
-Rust benchmarks require `cargo bench` execution.
+### go
+- Throughput: **2349 req/s**
+- Latency: avg 2.20 ms · p50 1.47 ms · p95 6.03 ms · p99 8.99 ms
+- Error rate: 0.000
+- Peak RSS: 19.9 MB
+- Iterations: 58755
 
-## Node Benchmarks
+### rust
+- Throughput: **2350 req/s**
+- Latency: avg 2.24 ms · p50 1.65 ms · p95 5.70 ms · p99 8.93 ms
+- Error rate: 0.000
+- Peak RSS: 10.8 MB
+- Iterations: 58804
 
-Node benchmarks require `vitest bench` execution.
+### node
+- Throughput: **2371 req/s**
+- Latency: avg 2.91 ms · p50 2.73 ms · p95 6.13 ms · p99 9.23 ms
+- Error rate: 0.000
+- Peak RSS: 88.0 MB
+- Iterations: 59295
 
-## Comparative Analysis
-
-Placeholder: compare Go, Rust, and Node after the Rust `cargo bench`, Node `vitest bench`, and Docker-based k6/autocannon runs are collected in the same environment.
+_Generated 2026-07-02 20:19 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

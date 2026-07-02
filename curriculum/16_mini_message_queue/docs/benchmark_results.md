@@ -1,72 +1,54 @@
-# Benchmark Results
-
-## Environment
-
-- OS/architecture: macOS darwin/arm64
-- CPU: Apple M1 Pro
-- Go: go1.26.4 darwin/arm64
-- Date: 2026-06-18
+# Benchmark Results: 16_mini_message_queue
 
 ## Methodology
 
-Go measurements were collected from `curriculum/16_mini_message_queue/go-impl/` with:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/topics read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-The broader service benchmark plan uses four HTTP/load scenarios, executed with k6 and autocannon when endpoint-level load testing is available:
+## Build & Test Status
 
-| Scenario | Intent | Tooling |
-| --- | --- | --- |
-| Baseline | Steady low-concurrency reference run | k6 + autocannon |
-| Stress | Sustained high-concurrency throughput and latency pressure | k6 + autocannon |
-| Spike | Sudden traffic burst and recovery behavior | k6 + autocannon |
-| Endurance | Longer-duration stability and allocation drift check | k6 + autocannon |
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	mini-message-queue-go	(cached) ok  	mini-message-queue-go/broker	(cached) |
+| rust | ✅ | ✅ | running 16 tests ................ test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished  |
+| node | ✅ | ✅ | broker.ts \|   90.32 \|    73.01 \|   92.85 \|   90.19 \| 65,117,168,183,198,206,220,242,263,279,291,312,318,325,355   i |
 
-This file records only the Go command output requested above; Rust and Node sections remain placeholders until those implementations are measured separately.
+## Comparative Results
 
-## Go Benchmark Data
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2288 | 2.1 | 1.1 | 6.7 | 11.2 | 0.000 | 21.0 |
+| rust | 2325 | 2.0 | 1.1 | 6.2 | 9.7 | 0.000 | 10.9 |
+| node | 2280 | 2.7 | 2.0 | 7.4 | 11.8 | 0.000 | 84.4 |
 
-Benchmark command package summary:
+## Per-language Detail
 
-```text
-PASS
-ok  mini-message-queue-go         14.498s
-PASS
-ok  mini-message-queue-go/broker  17.181s
-```
+### go
+- Throughput: **2288 req/s**
+- Latency: avg 2.11 ms · p50 1.08 ms · p95 6.75 ms · p99 11.20 ms
+- Error rate: 0.000
+- Peak RSS: 21.0 MB
+- Iterations: 57250
 
-Raw Go benchmark samples:
+### rust
+- Throughput: **2325 req/s**
+- Latency: avg 2.01 ms · p50 1.10 ms · p95 6.24 ms · p99 9.71 ms
+- Error rate: 0.000
+- Peak RSS: 10.9 MB
+- Iterations: 58151
 
-| Package | Benchmark | Sample | Iterations | ns/op | B/op | allocs/op |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| `mini-message-queue-go` | BenchmarkProduceHandler-10 | 1 | 158,313 | 8,900 | 8,774 | 51 |
-| `mini-message-queue-go` | BenchmarkProduceHandler-10 | 2 | 109,460 | 11,435 | 8,850 | 51 |
-| `mini-message-queue-go` | BenchmarkProduceHandler-10 | 3 | 93,212 | 10,771 | 8,811 | 51 |
-| `mini-message-queue-go` | BenchmarkProduceHandler-10 | 4 | 134,516 | 9,992 | 8,741 | 51 |
-| `mini-message-queue-go` | BenchmarkProduceHandler-10 | 5 | 170,194 | 7,468 | 8,738 | 51 |
-| `mini-message-queue-go/broker` | BenchmarkProduce-10 | 1 | 2,569,308 | 795.1 | 680 | 1 |
-| `mini-message-queue-go/broker` | BenchmarkProduce-10 | 2 | 3,460,862 | 430.3 | 638 | 1 |
-| `mini-message-queue-go/broker` | BenchmarkProduce-10 | 3 | 4,028,820 | 371.1 | 678 | 1 |
-| `mini-message-queue-go/broker` | BenchmarkProduce-10 | 4 | 4,823,232 | 323.4 | 582 | 1 |
-| `mini-message-queue-go/broker` | BenchmarkProduce-10 | 5 | 3,835,754 | 321.7 | 585 | 1 |
+### node
+- Throughput: **2280 req/s**
+- Latency: avg 2.75 ms · p50 2.00 ms · p95 7.36 ms · p99 11.79 ms
+- Error rate: 0.000
+- Peak RSS: 84.4 MB
+- Iterations: 57044
 
-Summary:
-
-| Benchmark | Mean ns/op | CV% | Allocation note |
-| --- | ---: | ---: | --- |
-| BenchmarkProduceHandler-10 | 9,713.20 | 16.17% | 51 allocs/op; B/op ranged from 8,738 to 8,850 |
-| BenchmarkProduce-10 | 448.32 | 44.36% | 1 alloc/op; B/op ranged from 582 to 680 |
-
-## Rust Benchmark Data
-
-Placeholder. Rust benchmark data has not been collected in this run.
-
-## Node Benchmark Data
-
-Placeholder. Node benchmark data has not been collected in this run.
-
-## Analysis
-
-The HTTP handler benchmark is roughly an order of magnitude slower than direct broker production because it includes request handling overhead. CV% is high for the broker benchmark (44.36%), mainly because the first sample was much slower than later samples; treat the broker mean as noisy and prefer another longer run before comparing implementations. Handler CV% is also non-trivial at 16.17%.
+_Generated 2026-07-02 20:53 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

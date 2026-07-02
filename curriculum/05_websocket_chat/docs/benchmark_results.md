@@ -1,41 +1,50 @@
-# Benchmark Results: 05 WebSocket Chat
+# Benchmark Results: 05_websocket_chat
 
 ## Methodology
 
-Go measurements were collected from `curriculum/05_websocket_chat/go-impl/` on macOS arm64 with Go 1.26.4. The benchmark command was run first with `go test -bench=. -benchmem -count=5 ./... 2>&1`. No `Benchmark*` functions were present, so the fallback command `go test -count=5 -v ./... 2>&1` was run and its package/test timings are recorded below.
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/healthz read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-The shared load-test methodology covers four scenarios:
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-| Scenario | Intended tool | Purpose |
-| --- | --- | --- |
-| Baseline | k6 + autocannon | Establish steady-state latency and throughput at normal concurrency. |
-| Stress | k6 + autocannon | Increase load until saturation to identify bottlenecks and error thresholds. |
-| Spike | k6 + autocannon | Apply sudden traffic bursts to observe recovery and queueing behavior. |
-| Endurance | k6 + autocannon | Run sustained traffic to detect memory growth, leaks, and latency drift. |
+## Build & Test Status
 
-Full Docker-based load tests with k6 are configured per the shared benchmark harness at curriculum/_shared/benchmarks/. Execute in a dedicated benchmarking environment for reproducible p50/p95/p99 latency data.
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	websocket-chat-go	[no test files] ok  	websocket-chat-go/chat	(cached) |
+| rust | ✅ | ✅ | ignored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored |
+| node | ✅ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/05_websocket_chat/node-impl   ✓ tests/config.test.ts |
 
-## Go Benchmark Data
+## Comparative Results
 
-| Command | Package/Test | Samples | Result |
-| --- | --- | ---: | --- |
-| `go test -bench=. -benchmem -count=5 ./...` | `websocket-chat-go` | 1 package report | `[no test files]` |
-| `go test -bench=. -benchmem -count=5 ./...` | `websocket-chat-go/chat` | 5 test iterations, no benchmark rows | `ok ... 0.502s` |
-| `go test -count=5 -v ./...` | `websocket-chat-go` | 1 package report | `[no test files]` |
-| `go test -count=5 -v ./...` | `websocket-chat-go/chat` | 5 test iterations | `ok ... 0.628s` |
-| fallback per-test timing | `TestConnectJoinHistoryAndBroadcast` | 5 | `0.00s` each |
-| fallback per-test timing | `TestPrivateTypingErrorsLeaveAndHeartbeat` | 5 | `0.00s` each |
-| fallback per-test timing | `TestValidationCapacityHeartbeatAndMetricsBranches` | 5 | `0.00s` each |
-| fallback per-test timing | `TestDefaultsDisconnectAndDroppedDelivery` | 5 | `0.00s` each |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2267 | 2.1 | 1.0 | 7.1 | 11.8 | 0.000 | 21.2 |
+| rust | — | — | — | — | — | — | _did not become ready: no response on any candidate port (wrong port or blocked). log: _ |
+| node | 2355 | 2.5 | 1.9 | 6.1 | 8.5 | 0.000 | 87.2 |
 
-## Rust Benchmarks
+## Per-language Detail
 
-Rust benchmarks require `cargo bench` execution.
+### go
+- Throughput: **2267 req/s**
+- Latency: avg 2.10 ms · p50 1.03 ms · p95 7.08 ms · p99 11.83 ms
+- Error rate: 0.000
+- Peak RSS: 21.2 MB
+- Iterations: 56717
 
-## Node Benchmarks
+### rust
+Not benchmarked: did not become ready: no response on any candidate port (wrong port or blocked).
 
-Node benchmarks require `vitest bench` execution.
+### node
+- Throughput: **2355 req/s**
+- Latency: avg 2.49 ms · p50 1.91 ms · p95 6.15 ms · p99 8.47 ms
+- Error rate: 0.000
+- Peak RSS: 87.2 MB
+- Iterations: 58893
 
-## Comparative Analysis
-
-Placeholder: compare Go, Rust, and Node after the Rust `cargo bench`, Node `vitest bench`, and Docker-based k6/autocannon runs are collected in the same environment.
+_Generated 2026-07-02 20:45 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

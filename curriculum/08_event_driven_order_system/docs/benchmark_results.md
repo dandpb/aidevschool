@@ -1,80 +1,54 @@
-# Benchmark Results - Project 08: Event-Driven Order System
+# Benchmark Results: 08_event_driven_order_system
 
 ## Methodology
 
-Benchmark evidence is collected per runtime with repeatable command lines and at least three samples before cross-runtime comparison. The target scenario set is:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-1. Unit/runtime microbenchmarks for core domain operations.
-2. HTTP/API scenario load using `k6` or `autocannon` against lifecycle endpoints.
-3. Concurrency and idempotency stress for duplicate commands and invalid transitions.
-4. Recovery/observability scenario for replay, projection lag, and health reporting.
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-Acceptance for comparable benchmark claims requires N >= 3 samples and coefficient of variation (CV) < 20%. This run used N=5 for Go. No Go `Benchmark*` functions were present, so Go benchmark execution fell back to verbose test timing as required. Service-level `k6`/`autocannon` scenarios remain pending and should be run without Docker unless a future task explicitly allows it.
+## Build & Test Status
 
-## Environment
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	event-driven-order-go	(cached) |
+| rust | ✅ | ✅ | ored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored; 0 |
+| node | ✅ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/08_event_driven_order_system/node-impl   ✓ src/order |
 
-- OS/arch: macOS arm64
-- Go: go1.26.4 darwin/arm64
-- Working directory: `curriculum/08_event_driven_order_system/go-impl/`
-- Date: 2026-06-18
+## Comparative Results
 
-## Go Results
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2729 | 1.1 | 0.7 | 2.1 | 5.4 | 0.000 | 20.2 |
+| rust | 2781 | 0.8 | 0.7 | 1.5 | 2.8 | 0.000 | 6.9 |
+| node | 2732 | 1.4 | 1.0 | 3.6 | 7.8 | 0.000 | 79.3 |
 
-### Benchmark command
+## Per-language Detail
 
-Command:
+### go
+- Throughput: **2729 req/s**
+- Latency: avg 1.06 ms · p50 0.73 ms · p95 2.06 ms · p99 5.40 ms
+- Error rate: 0.000
+- Peak RSS: 20.2 MB
+- Iterations: 68267
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+### rust
+- Throughput: **2781 req/s**
+- Latency: avg 0.82 ms · p50 0.74 ms · p95 1.55 ms · p99 2.78 ms
+- Error rate: 0.000
+- Peak RSS: 6.9 MB
+- Iterations: 69573
 
-Result: no `Benchmark*` rows were emitted; tests passed.
+### node
+- Throughput: **2732 req/s**
+- Latency: avg 1.37 ms · p50 0.97 ms · p95 3.65 ms · p99 7.83 ms
+- Error rate: 0.000
+- Peak RSS: 79.3 MB
+- Iterations: 68349
 
-```text
-PASS
-ok  event-driven-order-go  1.251s
-```
-
-### Fallback verbose timing command
-
-Command:
-
-```bash
-go test -count=5 -v ./... 2>&1
-```
-
-Result: tests passed across five repetitions.
-
-```text
-PASS
-ok  event-driven-order-go  2.197s
-```
-
-Selected real test timings observed in the verbose output:
-
-| Test | Observed timings |
-| --- | --- |
-| `TestCreateOrderAppendsPublishesProjectsAndIsIdempotent` | 0.00s |
-| `TestValidationConcurrencyAndInvalidTransitions` | 0.00s |
-| `TestSagaConfirmsAndCancelsIdempotently` | 0.00s |
-| `TestReplayRebuildsProjectionsAndHealthReportsLag` | 0.00s |
-| `TestHTTPContract` | 0.07s, 0.03s, 0.01s, 0.02s, 0.02s |
-| `TestFullLifecycleAndReadAPIs` | 0.00s |
-| `TestPubSubAndHTTPErrorPaths` | 0.06s, 0.05s, 0.01s, 0.03s, 0.02s |
-| `TestIdempotencyConflictAndInventoryCompensation` | 0.00s |
-| `TestStateMachineHelpersAndReplayIntegrity` | 0.00s |
-| `TestHTTPLifecycleCommands` | 0.08s, 0.05s, 0.02s, 0.04s, 0.04s |
-
-## Rust Results
-
-Pending execution. No Rust benchmark/test numbers were collected in this run.
-
-## Node Results
-
-Pending execution. No Node benchmark/test numbers were collected in this run.
-
-## Analysis and Recommendations
-
-The Go implementation passes its N=5 test-timing fallback, but it currently has no Go benchmark functions, so the result is functional timing evidence rather than microbenchmark evidence. HTTP-oriented tests dominate the visible elapsed time, especially `TestHTTPContract`, `TestPubSubAndHTTPErrorPaths`, and `TestHTTPLifecycleCommands`.
-
-Recommended next steps: add targeted Go `BenchmarkCreateOrder`, `BenchmarkLifecycleCommands`, and `BenchmarkReplayProjection` functions; then run the four service scenarios with `k6` or `autocannon` using N >= 3 and require CV < 20% before comparing against Rust or Node.
+_Generated 2026-07-02 20:29 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

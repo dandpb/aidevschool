@@ -1,79 +1,54 @@
-# Benchmark Results - Project 11: Load Balancer
+# Benchmark Results: 11_load_balancer
 
 ## Methodology
 
-Benchmark evidence is collected per runtime with repeatable command lines and at least three samples before cross-runtime comparison. The target scenario set is:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/__lb/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-1. Unit/runtime microbenchmarks for backend selection algorithms.
-2. HTTP/API scenario load using `k6` or `autocannon` through the reverse proxy.
-3. Failure scenario for circuit opening, backend errors, and health transitions.
-4. Admin/observability scenario for metrics, pool management, and shutdown.
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-Acceptance for comparable benchmark claims requires N >= 3 samples and coefficient of variation (CV) < 20%. This run used N=5 for Go. No Go `Benchmark*` functions were present, so Go benchmark execution fell back to verbose test timing as required. Service-level `k6`/`autocannon` scenarios remain pending and should be run without Docker unless a future task explicitly allows it.
+## Build & Test Status
 
-## Environment
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	loadbalancer	(cached) ?   	loadbalancer/cmd/server	[no test files] |
+| rust | ✅ | ✅ | ored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored; 0 |
+| node | ✅ | ✅ | ts > Node load balancer > proxies method, path, query, headers, and exposes admin metrics {"event":"proxy_request","back |
 
-- OS/arch: macOS arm64
-- Go: go1.26.4 darwin/arm64
-- Working directory: `curriculum/11_load_balancer/go-impl/`
-- Date: 2026-06-18
+## Comparative Results
 
-## Go Results
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2762 | 0.9 | 0.7 | 1.8 | 3.6 | 0.000 | 20.8 |
+| rust | 2787 | 0.8 | 0.7 | 1.5 | 3.4 | 0.000 | 6.5 |
+| node | 2784 | 1.0 | 0.8 | 1.8 | 3.2 | 0.000 | 84.9 |
 
-### Benchmark command
+## Per-language Detail
 
-Command:
+### go
+- Throughput: **2762 req/s**
+- Latency: avg 0.86 ms · p50 0.72 ms · p95 1.84 ms · p99 3.61 ms
+- Error rate: 0.000
+- Peak RSS: 20.8 MB
+- Iterations: 69092
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+### rust
+- Throughput: **2787 req/s**
+- Latency: avg 0.76 ms · p50 0.66 ms · p95 1.49 ms · p99 3.42 ms
+- Error rate: 0.000
+- Peak RSS: 6.5 MB
+- Iterations: 69723
 
-Result: no `Benchmark*` rows were emitted; tests passed.
+### node
+- Throughput: **2784 req/s**
+- Latency: avg 0.97 ms · p50 0.84 ms · p95 1.84 ms · p99 3.23 ms
+- Error rate: 0.000
+- Peak RSS: 84.9 MB
+- Iterations: 69650
 
-```text
-PASS
-ok  loadbalancer  3.367s
-?   loadbalancer/cmd/server  [no test files]
-```
-
-### Fallback verbose timing command
-
-Command:
-
-```bash
-go test -count=5 -v ./... 2>&1
-```
-
-Result: tests passed across five repetitions.
-
-```text
-PASS
-ok  loadbalancer  1.698s
-?   loadbalancer/cmd/server  [no test files]
-```
-
-Selected real test timings observed in the verbose output:
-
-| Test | Observed timings |
-| --- | --- |
-| `TestRoundRobinWeightedEligibility` | 0.00s |
-| `TestLeastConnectionsAndPoolManagement` | 0.00s |
-| `TestHealthChecksAndCircuitBreaker` | 0.03s, 0.00s, 0.00s, 0.00s, 0.00s |
-| `TestSuccessfulHealthCheckMarksHealthyAndClosesHalfOpenCircuit` | 0.02s, 0.00s, 0.01s, 0.00s, 0.00s |
-| `TestReverseProxyForwardsRequestAndAdminMetrics` | 0.06s, 0.06s, 0.02s, 0.04s, 0.03s |
-| `TestProxyFailureAdminVariantsAndBasePathJoining` | 0.07s, 0.06s, 0.02s, 0.03s, 0.04s |
-| `TestShutdownStopsHealthLoop` | 0.00s |
-
-## Rust Results
-
-Pending execution. No Rust benchmark/test numbers were collected in this run.
-
-## Node Results
-
-Pending execution. No Node benchmark/test numbers were collected in this run.
-
-## Analysis and Recommendations
-
-The Go implementation passes its N=5 fallback run. Reverse-proxy and proxy-failure tests are the measurable scenarios, while selection and pool-management tests complete below visible timer resolution.
-
-Recommended next steps: add Go benchmarks for round-robin, least-connections selection, reverse-proxy forwarding, and circuit-breaker state transitions; then run proxy load with `k6` or `autocannon` using N >= 3 and CV < 20% before comparing with Rust or Node.
+_Generated 2026-07-02 20:32 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

@@ -1,78 +1,54 @@
-# Benchmark Results - Project 12: Distributed Job Scheduler
+# Benchmark Results: 12_distributed_job_scheduler
 
 ## Methodology
 
-Benchmark evidence is collected per runtime with repeatable command lines and at least three samples before cross-runtime comparison. The target scenario set is:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-1. Unit/runtime microbenchmarks for job submission and priority ordering.
-2. HTTP/API scenario load using `k6` or `autocannon` against scheduler endpoints.
-3. Coordination scenario for leader election, distributed locks, and fencing tokens.
-4. Workflow scenario for DAG dependencies, retries, backoff, cancellation, and health reporting.
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-Acceptance for comparable benchmark claims requires N >= 3 samples and coefficient of variation (CV) < 20%. This run used N=5 for Go. No Go `Benchmark*` functions were present, so Go benchmark execution fell back to verbose test timing as required. Service-level `k6`/`autocannon` scenarios remain pending and should be run without Docker unless a future task explicitly allows it.
+## Build & Test Status
 
-## Environment
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	distributed-job-scheduler/cmd/scheduler	[no test files] ok  	distributed-job-scheduler/internal/scheduler	(cached) |
+| rust | ✅ | ✅ | running 7 tests ....... test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s    |
+| node | ✅ | ✅ | \| % Stmts \| % Branch \| % Funcs \| % Lines \| Uncovered Line #s       --------------\|---------\|----------\|--------- |
 
-- OS/arch: macOS arm64
-- Go: go1.26.4 darwin/arm64
-- Working directory: `curriculum/12_distributed_job_scheduler/go-impl/`
-- Date: 2026-06-18
+## Comparative Results
 
-## Go Results
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2355 | 2.5 | 2.1 | 5.7 | 10.1 | 0.000 | 20.4 |
+| rust | 2402 | 2.2 | 1.9 | 5.3 | 7.8 | 0.000 | 6.1 |
+| node | 2442 | 2.3 | 2.1 | 4.8 | 7.2 | 0.000 | 77.1 |
 
-### Benchmark command
+## Per-language Detail
 
-Command:
+### go
+- Throughput: **2355 req/s**
+- Latency: avg 2.49 ms · p50 2.11 ms · p95 5.71 ms · p99 10.06 ms
+- Error rate: 0.000
+- Peak RSS: 20.4 MB
+- Iterations: 58909
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+### rust
+- Throughput: **2402 req/s**
+- Latency: avg 2.24 ms · p50 1.89 ms · p95 5.27 ms · p99 7.76 ms
+- Error rate: 0.000
+- Peak RSS: 6.1 MB
+- Iterations: 60092
 
-Result: no `Benchmark*` rows were emitted; tests passed.
+### node
+- Throughput: **2442 req/s**
+- Latency: avg 2.34 ms · p50 2.15 ms · p95 4.84 ms · p99 7.17 ms
+- Error rate: 0.000
+- Peak RSS: 77.1 MB
+- Iterations: 61084
 
-```text
-?   distributed-job-scheduler/cmd/scheduler  [no test files]
-PASS
-ok  distributed-job-scheduler/internal/scheduler  0.741s
-```
-
-### Fallback verbose timing command
-
-Command:
-
-```bash
-go test -count=5 -v ./... 2>&1
-```
-
-Result: tests passed across five repetitions.
-
-```text
-?   distributed-job-scheduler/cmd/scheduler  [no test files]
-PASS
-ok  distributed-job-scheduler/internal/scheduler  1.241s
-```
-
-Selected real test timings observed in the verbose output:
-
-| Test | Observed timings |
-| --- | --- |
-| `TestSubmitValidatesIntervalAndTracksStatus` | 0.00s |
-| `TestLeaderElectionUsesHighestProcessIDWithLease` | 0.00s |
-| `TestDispatchOrdersByPriorityDueTimeAndCreation` | 0.00s |
-| `TestDistributedLockRejectsConcurrentAndStaleTokens` | 0.00s |
-| `TestDAGDependenciesRetryBackoffAndCancellation` | 0.00s |
-| `TestHealthReportsLeaderQueuesAndRunningJobs` | 0.00s |
-
-## Rust Results
-
-Pending execution. No Rust benchmark/test numbers were collected in this run.
-
-## Node Results
-
-Pending execution. No Node benchmark/test numbers were collected in this run.
-
-## Analysis and Recommendations
-
-The Go implementation passes its N=5 fallback run. All scheduler unit tests complete below the verbose timer's visible resolution, so package elapsed time is the only useful timing signal from this run.
-
-Recommended next steps: add Go benchmarks for job submission, dispatch ordering, lock acquisition/fencing, and dependency retry processing; then run API-level scheduler load with `k6` or `autocannon` using N >= 3 and CV < 20% before comparing with Rust or Node.
+_Generated 2026-07-02 20:15 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

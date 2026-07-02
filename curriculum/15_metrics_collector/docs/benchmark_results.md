@@ -1,71 +1,54 @@
-# Benchmark Results
-
-## Environment
-
-- OS/architecture: macOS darwin/arm64
-- CPU: Apple M1 Pro
-- Go: go1.26.4 darwin/arm64
-- Date: 2026-06-18
+# Benchmark Results: 15_metrics_collector
 
 ## Methodology
 
-Go measurements were collected from `curriculum/15_metrics_collector/go-impl/` with:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-The broader service benchmark plan uses four HTTP/load scenarios, executed with k6 and autocannon when endpoint-level load testing is available:
+## Build & Test Status
 
-| Scenario | Intent | Tooling |
-| --- | --- | --- |
-| Baseline | Steady low-concurrency reference run | k6 + autocannon |
-| Stress | Sustained high-concurrency throughput and latency pressure | k6 + autocannon |
-| Spike | Sudden traffic burst and recovery behavior | k6 + autocannon |
-| Endurance | Longer-duration stability and allocation drift check | k6 + autocannon |
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	metrics-collector-go	[no test files] ok  	metrics-collector-go/metrics	(cached) |
+| rust | ✅ | ✅ | 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored; 0 measu |
+| node | ❌ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/15_metrics_collector/node-impl   ✓ src/__tests__/sto |
 
-This file records only the Go command output requested above; Rust and Node sections remain placeholders until those implementations are measured separately.
+## Comparative Results
 
-## Go Benchmark Data
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2292 | 2.2 | 1.2 | 6.7 | 10.3 | 0.000 | 21.3 |
+| rust | 2347 | 2.1 | 1.1 | 6.4 | 10.6 | 0.000 | 12.9 |
+| node | 2338 | 2.7 | 2.1 | 7.1 | 10.4 | 0.000 | 88.4 |
 
-Benchmark command package summary:
+## Per-language Detail
 
-```text
-?    metrics-collector-go  [no test files]
-PASS
-ok   metrics-collector-go/metrics  19.276s
-```
+### go
+- Throughput: **2292 req/s**
+- Latency: avg 2.20 ms · p50 1.20 ms · p95 6.70 ms · p99 10.26 ms
+- Error rate: 0.000
+- Peak RSS: 21.3 MB
+- Iterations: 57347
 
-Raw Go benchmark samples:
+### rust
+- Throughput: **2347 req/s**
+- Latency: avg 2.09 ms · p50 1.13 ms · p95 6.44 ms · p99 10.58 ms
+- Error rate: 0.000
+- Peak RSS: 12.9 MB
+- Iterations: 58697
 
-| Package | Benchmark | Sample | Iterations | ns/op | B/op | allocs/op |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| `metrics-collector-go/metrics` | BenchmarkStoreRecord-10 | 1 | 4,546,256 | 334.9 | 162 | 1 |
-| `metrics-collector-go/metrics` | BenchmarkStoreRecord-10 | 2 | 3,408,957 | 389.6 | 162 | 1 |
-| `metrics-collector-go/metrics` | BenchmarkStoreRecord-10 | 3 | 4,296,759 | 354.3 | 162 | 1 |
-| `metrics-collector-go/metrics` | BenchmarkStoreRecord-10 | 4 | 3,441,510 | 309.7 | 162 | 1 |
-| `metrics-collector-go/metrics` | BenchmarkStoreRecord-10 | 5 | 4,870,286 | 341.0 | 162 | 1 |
-| `metrics-collector-go/metrics` | BenchmarkStoreQuery-10 | 1 | 64,215 | 17,207 | 25,169 | 10 |
-| `metrics-collector-go/metrics` | BenchmarkStoreQuery-10 | 2 | 71,510 | 18,722 | 25,169 | 10 |
-| `metrics-collector-go/metrics` | BenchmarkStoreQuery-10 | 3 | 68,373 | 19,201 | 25,169 | 10 |
-| `metrics-collector-go/metrics` | BenchmarkStoreQuery-10 | 4 | 66,918 | 17,958 | 25,169 | 10 |
-| `metrics-collector-go/metrics` | BenchmarkStoreQuery-10 | 5 | 59,929 | 17,602 | 25,169 | 10 |
+### node
+- Throughput: **2338 req/s**
+- Latency: avg 2.70 ms · p50 2.08 ms · p95 7.05 ms · p99 10.42 ms
+- Error rate: 0.000
+- Peak RSS: 88.4 MB
+- Iterations: 58490
 
-Summary:
-
-| Benchmark | Mean ns/op | CV% | Allocation note |
-| --- | ---: | ---: | --- |
-| BenchmarkStoreRecord-10 | 345.90 | 8.47% | Stable at 162 B/op and 1 alloc/op |
-| BenchmarkStoreQuery-10 | 18,138.00 | 4.49% | Stable at 25,169 B/op and 10 allocs/op |
-
-## Rust Benchmark Data
-
-Placeholder. Rust benchmark data has not been collected in this run.
-
-## Node Benchmark Data
-
-Placeholder. Node benchmark data has not been collected in this run.
-
-## Analysis
-
-`BenchmarkStoreQuery-10` is materially slower and allocates more than `BenchmarkStoreRecord-10`, as expected for query work over stored metrics. CV% is moderate for record writes (8.47%) and lower for queries (4.49%), so the five-sample run is reasonably stable for query timing while write timing shows more run-to-run variance.
+_Generated 2026-07-02 20:51 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

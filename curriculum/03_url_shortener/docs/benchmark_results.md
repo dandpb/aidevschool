@@ -1,43 +1,54 @@
-# Benchmark Results: 03 URL Shortener
+# Benchmark Results: 03_url_shortener
 
 ## Methodology
 
-Go measurements were collected from `curriculum/03_url_shortener/go-impl/` on macOS arm64 with Go 1.26.4. The benchmark command was run first with `go test -bench=. -benchmem -count=5 ./... 2>&1`. No `Benchmark*` functions were present, so the fallback command `go test -count=5 -v ./... 2>&1` was run and its package/test timings are recorded below.
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-The shared load-test methodology covers four scenarios:
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-| Scenario | Intended tool | Purpose |
-| --- | --- | --- |
-| Baseline | k6 + autocannon | Establish steady-state latency and throughput at normal concurrency. |
-| Stress | k6 + autocannon | Increase load until saturation to identify bottlenecks and error thresholds. |
-| Spike | k6 + autocannon | Apply sudden traffic bursts to observe recovery and queueing behavior. |
-| Endurance | k6 + autocannon | Run sustained traffic to detect memory growth, leaks, and latency drift. |
+## Build & Test Status
 
-Full Docker-based load tests with k6 are configured per the shared benchmark harness at curriculum/_shared/benchmarks/. Execute in a dedicated benchmarking environment for reproducible p50/p95/p99 latency data.
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	url-shortener-go/cmd/server	(cached) ok  	url-shortener-go/internal/shortener	(cached) |
+| rust | ✅ | ✅ | running 5 tests ..... test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s   ru |
+| node | ✅ | ✅ | local","code":"one","msg":"short_url_created"} {"level":30,"time":1783023428586,"pid":68471,"hostname":"Daniels-MacBook- |
 
-## Go Benchmark Data
+## Comparative Results
 
-| Command | Package/Test | Samples | Result |
-| --- | --- | ---: | --- |
-| `go test -bench=. -benchmem -count=5 ./...` | `url-shortener-go/cmd/server` | 5 test iterations, no benchmark rows | `ok ... 0.729s` |
-| `go test -bench=. -benchmem -count=5 ./...` | `url-shortener-go/internal/shortener` | 5 test iterations, no benchmark rows | `ok ... 0.798s` |
-| `go test -count=5 -v ./...` | `url-shortener-go/cmd/server` | 5 test iterations | `ok ... 0.755s` |
-| `go test -count=5 -v ./...` | `url-shortener-go/internal/shortener` | 5 test iterations | `ok ... 0.907s` |
-| fallback per-test timing | `TestRunStopsWhenContextIsCanceled` | 5 | `0.02s` each |
-| fallback per-test timing | `TestExitCodeReturnsZeroAfterContextCancel` | 5 | `0.02s` each |
-| fallback per-test timing | `TestExitCodeReturnsOneWhenListenFails` | 5 | `0.02s, 0.00s, 0.00s, 0.01s, 0.00s` |
-| fallback per-test timing | `TestHTTPContract` | 5 | `0.00s, 0.01s, 0.03s, 0.01s, 0.01s` |
-| fallback per-test timing | `TestRunStartsAndStops` | 5 | `0.02s` each |
-| fallback per-test timing | other shortener tests | 5 each | `0.00s` each |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2362 | 2.5 | 2.1 | 6.0 | 9.6 | 0.000 | 20.2 |
+| rust | 2376 | 2.4 | 2.1 | 5.4 | 7.3 | 0.000 | 10.8 |
+| node | 2377 | 3.0 | 2.8 | 6.4 | 8.9 | 0.000 | 89.3 |
 
-## Rust Benchmarks
+## Per-language Detail
 
-Rust benchmarks require `cargo bench` execution.
+### go
+- Throughput: **2362 req/s**
+- Latency: avg 2.52 ms · p50 2.12 ms · p95 5.97 ms · p99 9.61 ms
+- Error rate: 0.000
+- Peak RSS: 20.2 MB
+- Iterations: 59104
 
-## Node Benchmarks
+### rust
+- Throughput: **2376 req/s**
+- Latency: avg 2.38 ms · p50 2.05 ms · p95 5.36 ms · p99 7.30 ms
+- Error rate: 0.000
+- Peak RSS: 10.8 MB
+- Iterations: 59457
 
-Node benchmarks require `vitest bench` execution.
+### node
+- Throughput: **2377 req/s**
+- Latency: avg 3.04 ms · p50 2.79 ms · p95 6.42 ms · p99 8.90 ms
+- Error rate: 0.000
+- Peak RSS: 89.3 MB
+- Iterations: 59464
 
-## Comparative Analysis
-
-Placeholder: compare Go, Rust, and Node after the Rust `cargo bench`, Node `vitest bench`, and Docker-based k6/autocannon runs are collected in the same environment.
+_Generated 2026-07-02 20:17 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

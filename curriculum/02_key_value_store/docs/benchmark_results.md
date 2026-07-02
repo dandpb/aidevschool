@@ -1,47 +1,54 @@
-# Benchmark Results: 02 Key Value Store
+# Benchmark Results: 02_key_value_store
 
 ## Methodology
 
-Go measurements were collected from `curriculum/02_key_value_store/go-impl/` on macOS arm64 with Go 1.26.4. The benchmark command was run first with `go test -bench=. -benchmem -count=5 ./... 2>&1`. No `Benchmark*` functions were present, so the fallback command `go test -count=5 -v ./... 2>&1` was run and its package/test timings are recorded below.
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/v1/kv/k0_0 read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-The shared load-test methodology covers four scenarios:
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-| Scenario | Intended tool | Purpose |
-| --- | --- | --- |
-| Baseline | k6 + autocannon | Establish steady-state latency and throughput at normal concurrency. |
-| Stress | k6 + autocannon | Increase load until saturation to identify bottlenecks and error thresholds. |
-| Spike | k6 + autocannon | Apply sudden traffic bursts to observe recovery and queueing behavior. |
-| Endurance | k6 + autocannon | Run sustained traffic to detect memory growth, leaks, and latency drift. |
+## Build & Test Status
 
-Full Docker-based load tests with k6 are configured per the shared benchmark harness at curriculum/_shared/benchmarks/. Execute in a dedicated benchmarking environment for reproducible p50/p95/p99 latency data.
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	key-value-store-go/cmd/kvstore	[no test files] ok  	key-value-store-go/internal/kvstore	(cached) |
+| rust | ✅ | ✅ | running 6 tests ...... test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s   r |
+| node | ✅ | ✅ | GET","path":"/health","msg":"request"} {"level":30,"time":1783019414021,"pid":61843,"hostname":"Daniels-MacBook-Pro.loca |
 
-## Go Benchmark Data
+## Comparative Results
 
-| Command | Package/Test | Samples | Result |
-| --- | --- | ---: | --- |
-| `go test -bench=. -benchmem -count=5 ./...` | `key-value-store-go/cmd/kvstore` | 1 package report | `[no test files]` |
-| `go test -bench=. -benchmem -count=5 ./...` | `key-value-store-go/internal/kvstore` | 5 test iterations, no benchmark rows | `ok ... 3.554s` |
-| `go test -count=5 -v ./...` | `key-value-store-go/cmd/kvstore` | 1 package report | `[no test files]` |
-| `go test -count=5 -v ./...` | `key-value-store-go/internal/kvstore` | 5 test iterations | `ok ... 0.273s` |
-| fallback per-test timing | `TestHTTPAPI` | 5 | `0.00s` each |
-| fallback per-test timing | `TestHTTPInvalidJSONAndNotFound` | 5 | `0.00s` each |
-| fallback per-test timing | `TestHTTPRemainingCommands` | 5 | `0.00s` each |
-| fallback per-test timing | `TestHTTPValidationBranches` | 5 | `0.00s` each |
-| fallback per-test timing | `TestStoreSetGetAndReplaceTTL` | 5 | `0.00s` each |
-| fallback per-test timing | `TestStoreExpiryTTLDelPersistAndKeys` | 5 | `0.00s` each |
-| fallback per-test timing | `TestStoreMGetMSetAtomicAndFlush` | 5 | `0.00s` each |
-| fallback per-test timing | `TestStoreCapacityMemoryAndListSemantics` | 5 | `0.00s` each |
-| fallback per-test timing | `TestStoreExpirePersistErrorBranches` | 5 | `0.00s` each |
-| fallback per-test timing | `TestValidationAndConcurrency` | 5 | `0.00s` each |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2101 | 2.3 | 1.5 | 6.3 | 14.2 | 0.000 | 10.6 |
+| rust | 2425 | 2.3 | 1.8 | 5.9 | 8.7 | 0.000 | 2.6 |
+| node | 2649 | 2.0 | 1.7 | 4.5 | 6.3 | 0.000 | 67.8 |
 
-## Rust Benchmarks
+## Per-language Detail
 
-Rust benchmarks require `cargo bench` execution.
+### go
+- Throughput: **2101 req/s**
+- Latency: avg 2.31 ms · p50 1.46 ms · p95 6.31 ms · p99 14.23 ms
+- Error rate: 0.000
+- Peak RSS: 10.6 MB
+- Iterations: 52590
 
-## Node Benchmarks
+### rust
+- Throughput: **2425 req/s**
+- Latency: avg 2.33 ms · p50 1.83 ms · p95 5.86 ms · p99 8.73 ms
+- Error rate: 0.000
+- Peak RSS: 2.6 MB
+- Iterations: 60672
 
-Node benchmarks require `vitest bench` execution.
+### node
+- Throughput: **2649 req/s**
+- Latency: avg 1.99 ms · p50 1.72 ms · p95 4.45 ms · p99 6.31 ms
+- Error rate: 0.000
+- Peak RSS: 67.8 MB
+- Iterations: 66285
 
-## Comparative Analysis
-
-Placeholder: compare Go, Rust, and Node after the Rust `cargo bench`, Node `vitest bench`, and Docker-based k6/autocannon runs are collected in the same environment.
+_Generated 2026-07-02 19:10 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

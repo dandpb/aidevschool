@@ -1,41 +1,54 @@
-# Benchmark Results: 07 REST API Auth
+# Benchmark Results: 07_rest_api_auth
 
 ## Methodology
 
-Go measurements were collected from `curriculum/07_rest_api_auth/go-impl/` on macOS arm64 with Go 1.26.4. The benchmark command was run first with `go test -bench=. -benchmem -count=5 ./... 2>&1`. No `Benchmark*` functions were present, so the fallback command `go test -count=5 -v ./... 2>&1` was run and its package/test timings are recorded below.
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/healthz read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-The shared load-test methodology covers four scenarios:
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-| Scenario | Intended tool | Purpose |
-| --- | --- | --- |
-| Baseline | k6 + autocannon | Establish steady-state latency and throughput at normal concurrency. |
-| Stress | k6 + autocannon | Increase load until saturation to identify bottlenecks and error thresholds. |
-| Spike | k6 + autocannon | Apply sudden traffic bursts to observe recovery and queueing behavior. |
-| Endurance | k6 + autocannon | Run sustained traffic to detect memory growth, leaks, and latency drift. |
+## Build & Test Status
 
-Full Docker-based load tests with k6 are configured per the shared benchmark harness at curriculum/_shared/benchmarks/. Execute in a dedicated benchmarking environment for reproducible p50/p95/p99 latency data.
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	rest-api-auth-go/cmd/server	[no test files] ok  	rest-api-auth-go/internal/authapi	(cached) |
+| rust | ✅ | ✅ | running 3 tests ... test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.20s   runn |
+| node | ✅ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/07_rest_api_auth/node-impl   ✓ src/__tests__/app.tes |
 
-## Go Benchmark Data
+## Comparative Results
 
-| Command | Package/Test | Samples | Result |
-| --- | --- | ---: | --- |
-| `go test -bench=. -benchmem -count=5 ./...` | `rest-api-auth-go/cmd/server` | 1 package report | `[no test files]` |
-| `go test -bench=. -benchmem -count=5 ./...` | `rest-api-auth-go/internal/authapi` | 5 test iterations, no benchmark rows | `ok ... 1.456s` |
-| `go test -count=5 -v ./...` | `rest-api-auth-go/cmd/server` | 1 package report | `[no test files]` |
-| `go test -count=5 -v ./...` | `rest-api-auth-go/internal/authapi` | 5 test iterations | `ok ... 1.258s` |
-| fallback per-test timing | `TestRegisterValidationHashingAndAudit` | 5 | `0.01s, 0.04s, 0.02s, 0.03s, 0.04s` |
-| fallback per-test timing | `TestLoginJwtAndCredentialFailure` | 5 | `0.04s, 0.07s, 0.04s, 0.05s, 0.06s` |
-| fallback per-test timing | `TestRBACAndOwnership` | 5 | `0.08s, 0.09s, 0.04s, 0.09s, 0.07s` |
-| fallback per-test timing | `TestRefreshRotationReplayHealthAndVersion` | 5 | `0.04s, 0.05s, 0.06s, 0.03s, 0.04s` |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2358 | 2.5 | 1.9 | 6.3 | 10.7 | 0.000 | 21.3 |
+| rust | 2411 | 2.0 | 1.3 | 5.0 | 8.8 | 0.000 | 10.7 |
+| node | 2691 | 1.5 | 0.8 | 3.8 | 11.2 | 0.000 | 80.3 |
 
-## Rust Benchmarks
+## Per-language Detail
 
-Rust benchmarks require `cargo bench` execution.
+### go
+- Throughput: **2358 req/s**
+- Latency: avg 2.50 ms · p50 1.88 ms · p95 6.28 ms · p99 10.72 ms
+- Error rate: 0.000
+- Peak RSS: 21.3 MB
+- Iterations: 58980
 
-## Node Benchmarks
+### rust
+- Throughput: **2411 req/s**
+- Latency: avg 1.99 ms · p50 1.28 ms · p95 4.99 ms · p99 8.82 ms
+- Error rate: 0.000
+- Peak RSS: 10.7 MB
+- Iterations: 60296
 
-Node benchmarks require `vitest bench` execution.
+### node
+- Throughput: **2691 req/s**
+- Latency: avg 1.47 ms · p50 0.85 ms · p95 3.82 ms · p99 11.16 ms
+- Error rate: 0.000
+- Peak RSS: 80.3 MB
+- Iterations: 67305
 
-## Comparative Analysis
-
-Placeholder: compare Go, Rust, and Node after the Rust `cargo bench`, Node `vitest bench`, and Docker-based k6/autocannon runs are collected in the same environment.
+_Generated 2026-07-02 20:27 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

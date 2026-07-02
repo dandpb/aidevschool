@@ -1,62 +1,54 @@
-# Benchmark Results
-
-## Environment
-
-- OS/architecture: macOS darwin/arm64
-- CPU: Apple M1 Pro
-- Go: go1.26.4 darwin/arm64
-- Date: 2026-06-18
+# Benchmark Results: 14_log_aggregator
 
 ## Methodology
 
-Go measurements were collected from `curriculum/14_log_aggregator/go-impl/` with:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-No Go benchmark functions emitted benchmark rows for this project, so fallback timing was collected with:
+## Build & Test Status
 
-```bash
-go test -count=5 -v ./... 2>&1
-```
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ?   	log-aggregator-go	[no test files] ok  	log-aggregator-go/logaggregator	(cached) |
+| rust | ✅ | ✅ | ignored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored |
+| node | ✅ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/14_log_aggregator/node-impl   ✓ src/__tests__/store. |
 
-The broader service benchmark plan uses four HTTP/load scenarios, executed with k6 and autocannon when endpoint-level load testing is available:
+## Comparative Results
 
-| Scenario | Intent | Tooling |
-| --- | --- | --- |
-| Baseline | Steady low-concurrency reference run | k6 + autocannon |
-| Stress | Sustained high-concurrency throughput and latency pressure | k6 + autocannon |
-| Spike | Sudden traffic burst and recovery behavior | k6 + autocannon |
-| Endurance | Longer-duration stability and allocation drift check | k6 + autocannon |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2786 | 0.8 | 0.7 | 1.5 | 2.4 | 0.000 | 25.1 |
+| rust | 2787 | 0.8 | 0.7 | 1.5 | 2.6 | 0.000 | 11.2 |
+| node | 2775 | 1.1 | 0.9 | 1.9 | 5.1 | 0.000 | 88.1 |
 
-This file records only the Go command output requested above; Rust and Node sections remain placeholders until those implementations are measured separately.
+## Per-language Detail
 
-## Go Benchmark Data
+### go
+- Throughput: **2786 req/s**
+- Latency: avg 0.77 ms · p50 0.70 ms · p95 1.45 ms · p99 2.41 ms
+- Error rate: 0.000
+- Peak RSS: 25.1 MB
+- Iterations: 69655
 
-The benchmark command completed but produced no `Benchmark*` rows:
+### rust
+- Throughput: **2787 req/s**
+- Latency: avg 0.79 ms · p50 0.71 ms · p95 1.51 ms · p99 2.56 ms
+- Error rate: 0.000
+- Peak RSS: 11.2 MB
+- Iterations: 69706
 
-```text
-?   log-aggregator-go  [no test files]
-PASS
-ok  log-aggregator-go/logaggregator  3.043s
-```
+### node
+- Throughput: **2775 req/s**
+- Latency: avg 1.12 ms · p50 0.95 ms · p95 1.91 ms · p99 5.10 ms
+- Error rate: 0.000
+- Peak RSS: 88.1 MB
+- Iterations: 69391
 
-Fallback test timing from `go test -count=5 -v ./...`:
-
-| Package | Result | Count | Elapsed |
-| --- | --- | ---: | ---: |
-| `log-aggregator-go` | no test files | 5 | n/a |
-| `log-aggregator-go/logaggregator` | PASS | 5 | 0.880s |
-
-## Rust Benchmark Data
-
-Placeholder. Rust benchmark data has not been collected in this run.
-
-## Node Benchmark Data
-
-Placeholder. Node benchmark data has not been collected in this run.
-
-## Analysis
-
-No Go microbenchmark samples were available, so ns/op, B/op, allocs/op, and CV% are not applicable. The fallback package test suite completed five repetitions in 0.880s. CV% should be reported once at least two successful benchmark samples exist for a comparable metric.
+_Generated 2026-07-02 20:35 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

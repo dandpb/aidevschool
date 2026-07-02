@@ -1,79 +1,54 @@
-# Benchmark Results
-
-## Environment
-
-- OS/architecture: macOS darwin/arm64
-- CPU: Apple M1 Pro
-- Go: go1.26.4 darwin/arm64
-- Date: 2026-06-18
+# Benchmark Results: 17_distributed_config_service
 
 ## Methodology
 
-Go measurements were collected from `curriculum/17_distributed_config_service/go-impl/` with:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/__config/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-The benchmark command found a benchmark function, but it failed before producing ns/op samples. To capture non-benchmark timing without modifying code, regular tests were also run with:
+## Build & Test Status
 
-```bash
-go test -count=5 -v ./... 2>&1
-```
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	distributed-config-service-go	(cached) ok  	distributed-config-service-go/config	(cached) |
+| rust | ✅ | ✅ | running 7 tests ....... test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s |
+| node | ✅ | ✅ | --------- File      \| % Stmts \| % Branch \| % Funcs \| % Lines \| Uncovered Line #s        ----------\|---------\|---- |
 
-The broader service benchmark plan uses four HTTP/load scenarios, executed with k6 and autocannon when endpoint-level load testing is available:
+## Comparative Results
 
-| Scenario | Intent | Tooling |
-| --- | --- | --- |
-| Baseline | Steady low-concurrency reference run | k6 + autocannon |
-| Stress | Sustained high-concurrency throughput and latency pressure | k6 + autocannon |
-| Spike | Sudden traffic burst and recovery behavior | k6 + autocannon |
-| Endurance | Longer-duration stability and allocation drift check | k6 + autocannon |
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2708 | 1.0 | 0.7 | 3.0 | 5.2 | 0.000 | 20.7 |
+| rust | 2419 | 2.0 | 1.4 | 4.8 | 7.4 | 0.000 | 11.0 |
+| node | 2378 | 2.8 | 2.7 | 5.4 | 8.9 | 0.000 | 89.8 |
 
-This file records only the Go command output requested above; Rust and Node sections remain placeholders until those implementations are measured separately.
+## Per-language Detail
 
-## Go Benchmark Data
+### go
+- Throughput: **2708 req/s**
+- Latency: avg 1.01 ms · p50 0.75 ms · p95 2.95 ms · p99 5.22 ms
+- Error rate: 0.000
+- Peak RSS: 20.7 MB
+- Iterations: 67763
 
-The benchmark command failed in the root package before producing usable benchmark samples:
+### rust
+- Throughput: **2419 req/s**
+- Latency: avg 1.99 ms · p50 1.44 ms · p95 4.81 ms · p99 7.37 ms
+- Error rate: 0.000
+- Peak RSS: 11.0 MB
+- Iterations: 60488
 
-```text
-goos: darwin
-goarch: arm64
-pkg: distributed-config-service-go
-cpu: Apple M1 Pro
-BenchmarkPutConfig-10    --- FAIL: BenchmarkPutConfig-10
-    main_test.go:324: unexpected status: 200
-BenchmarkPutConfig-10    --- FAIL: BenchmarkPutConfig-10
-    main_test.go:324: unexpected status: 200
-BenchmarkPutConfig-10    --- FAIL: BenchmarkPutConfig-10
-    main_test.go:324: unexpected status: 200
-BenchmarkPutConfig-10    --- FAIL: BenchmarkPutConfig-10
-    main_test.go:324: unexpected status: 200
-BenchmarkPutConfig-10    --- FAIL: BenchmarkPutConfig-10
-    main_test.go:324: unexpected status: 200
-FAIL
-exit status 1
-FAIL  distributed-config-service-go  3.630s
-PASS
-ok    distributed-config-service-go/config  0.729s
-FAIL
-```
+### node
+- Throughput: **2378 req/s**
+- Latency: avg 2.83 ms · p50 2.69 ms · p95 5.40 ms · p99 8.92 ms
+- Error rate: 0.000
+- Peak RSS: 89.8 MB
+- Iterations: 59481
 
-Fallback regular test timing from `go test -count=5 -v ./...`:
-
-| Package | Result | Count | Elapsed |
-| --- | --- | ---: | ---: |
-| `distributed-config-service-go` | PASS | 5 | 0.772s |
-| `distributed-config-service-go/config` | PASS | 5 | 1.260s |
-
-## Rust Benchmark Data
-
-Placeholder. Rust benchmark data has not been collected in this run.
-
-## Node Benchmark Data
-
-Placeholder. Node benchmark data has not been collected in this run.
-
-## Analysis
-
-No successful Go benchmark ns/op samples are available because `BenchmarkPutConfig-10` failed all five benchmark attempts with `unexpected status: 200`. CV% is therefore not applicable for Go benchmark timing in this run. Regular tests pass across both packages, so the failure appears isolated to the benchmark expectation rather than the whole test suite.
+_Generated 2026-07-02 20:39 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

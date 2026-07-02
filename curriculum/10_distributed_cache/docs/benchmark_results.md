@@ -1,78 +1,57 @@
-# Benchmark Results - Project 10: Distributed Cache
+# Benchmark Results: 10_distributed_cache
 
 ## Methodology
 
-Benchmark evidence is collected per runtime with repeatable command lines and at least three samples before cross-runtime comparison. The target scenario set is:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-1. Unit/runtime microbenchmarks for cache set/get/delete operations.
-2. HTTP/API scenario load using `k6` or `autocannon` against cache endpoints.
-3. Concurrency scenario for singleflight/cache-aside and write-through paths.
-4. Eviction/invalidation scenario for LRU, LFU, TTL, ring mapping, and graceful shutdown.
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-Acceptance for comparable benchmark claims requires N >= 3 samples and coefficient of variation (CV) < 20%. This run used N=5 for Go. No Go `Benchmark*` functions were present, so Go benchmark execution fell back to verbose test timing as required. Service-level `k6`/`autocannon` scenarios remain pending and should be run without Docker unless a future task explicitly allows it.
+## Build & Test Status
 
-## Environment
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	distributedcache	(cached) ?   	distributedcache/cmd/server	[no test files] |
+| rust | ✅ | ✅ | gnored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored; |
+| node | ✅ | ✅ | "cache_set","key":"hello","nodeId":"node-a","evicted":0} {"level":"info","event":"shutdown"}   ✔ coalesces cache-aside l |
 
-- OS/arch: macOS arm64
-- Go: go1.26.4 darwin/arm64
-- Working directory: `curriculum/10_distributed_cache/go-impl/`
-- Date: 2026-06-18
+## Comparative Results
 
-## Go Results
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2512 | 1.7 | 1.1 | 4.7 | 7.6 | 0.000 | 20.0 |
+| rust | — | — | — | — | — | — | _did not become ready: process exited (impl is a demo/library, not a long-running server). log: 0  messages received
+                   1  voluntary context switches
+            16189801  instructions retired
+             1016120  peak memory footprint_ |
+| node | — | — | — | — | — | — | _build failed or no server binary_ |
 
-### Benchmark command
+## Per-language Detail
 
-Command:
+### go
+- Throughput: **2512 req/s**
+- Latency: avg 1.74 ms · p50 1.06 ms · p95 4.74 ms · p99 7.60 ms
+- Error rate: 0.000
+- Peak RSS: 20.0 MB
+- Iterations: 62837
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+### rust
+Not benchmarked as an HTTP server: did not become ready: process exited (impl is a demo/library, not a long-running server).
 
-Result: no `Benchmark*` rows were emitted; tests passed.
+This implementation builds and its unit tests pass, but it does not
+expose a long-running HTTP endpoint (it is a demo/library that runs to
+completion). Re-run against a server variant for throughput data.
 
-```text
-PASS
-ok  distributedcache  3.457s
-?   distributedcache/cmd/server  [no test files]
-```
+### node
+Not benchmarked as an HTTP server: build failed or no server binary.
 
-### Fallback verbose timing command
+This implementation builds and its unit tests pass, but it does not
+expose a long-running HTTP endpoint (it is a demo/library that runs to
+completion). Re-run against a server variant for throughput data.
 
-Command:
-
-```bash
-go test -count=5 -v ./... 2>&1
-```
-
-Result: tests passed across five repetitions.
-
-```text
-PASS
-ok  distributedcache  1.939s
-?   distributedcache/cmd/server  [no test files]
-```
-
-Selected real test timings observed in the verbose output:
-
-| Test | Observed timings |
-| --- | --- |
-| `TestSetGetDeleteTTLAndInvalidation` | 0.04s, 0.04s, 0.04s, 0.04s, 0.04s |
-| `TestLRUAndLFUEviction` | 0.00s |
-| `TestConsistentHashingRemapsBoundedSubset` | 0.00s |
-| `TestCacheAsideSingleflightWriteThroughAndCapacityErrors` | 0.02s, 0.03s, 0.03s, 0.02s, 0.02s |
-| `TestHTTPHealthMetricsAndGracefulShutdown` | 0.00s, 0.01s, 0.00s, 0.00s, 0.00s |
-| `TestValidationRingAndInvalidationHTTPEdges` | 0.00s |
-
-## Rust Results
-
-Pending execution. No Rust benchmark/test numbers were collected in this run.
-
-## Node Results
-
-Pending execution. No Node benchmark/test numbers were collected in this run.
-
-## Analysis and Recommendations
-
-The Go implementation passes its N=5 fallback run. TTL/invalidation and cache-aside/singleflight paths are the measurable unit-test scenarios, while eviction, hashing, and validation tests complete below visible timer resolution.
-
-Recommended next steps: add Go benchmarks for hot-key get/set, cache-aside miss coalescing, eviction pressure, and consistent-hash remapping; then run HTTP cache load with `k6` or `autocannon` using N >= 3 and CV < 20% before comparing with Rust or Node.
+_Generated 2026-07-02 20:30 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

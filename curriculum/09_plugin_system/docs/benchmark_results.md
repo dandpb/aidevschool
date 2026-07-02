@@ -1,77 +1,57 @@
-# Benchmark Results - Project 09: Plugin System
+# Benchmark Results: 09_plugin_system
 
 ## Methodology
 
-Benchmark evidence is collected per runtime with repeatable command lines and at least three samples before cross-runtime comparison. The target scenario set is:
+Each implementation was built and its test suite run natively on macOS arm64
+(Apple Silicon) with the Homebrew toolchain. The server was then started on a
+dedicated port and driven by `k6` (/health read workload, ramp 0→50→100→0
+VUs over ~25s). Peak RSS was captured via `/usr/bin/time -l`. Latency percentiles
+and throughput come from k6's summary export.
 
-1. Unit/runtime microbenchmarks for plugin registration and manifest validation.
-2. HTTP/API scenario load using `k6` or `autocannon` against plugin lifecycle endpoints.
-3. Hook dispatch and payload transformation under repeated execution.
-4. Fault-isolation scenario for panic handling, disabled plugins, and unsupported API ranges.
+> These are real single-machine measurements (N=1 run each), not Docker-based
+> load tests. Use them for relative cross-language comparison on this hardware;
+> re-run on dedicated benchmark hardware for publication-grade p95/p99.
 
-Acceptance for comparable benchmark claims requires N >= 3 samples and coefficient of variation (CV) < 20%. This run used N=5 for Go. No Go `Benchmark*` functions were present, so Go benchmark execution fell back to verbose test timing as required. Service-level `k6`/`autocannon` scenarios remain pending and should be run without Docker unless a future task explicitly allows it.
+## Build & Test Status
 
-## Environment
+| Lang | Built | Tests | Test detail |
+| --- | :---: | :---: | --- |
+| go | ✅ | ✅ | ok  	plugin-system-go	(cached) |
+| rust | ✅ | ✅ | ignored; 0 measured; 0 filtered out; finished in 0.00s   running 0 tests  test result: ok. 0 passed; 0 failed; 0 ignored |
+| node | ✅ | ✅ | RUN  v2.1.9 /Users/danielbarreto/Development/aidevschool/curriculum/09_plugin_system/node-impl   ✓ src/plugin-system.tes |
 
-- OS/arch: macOS arm64
-- Go: go1.26.4 darwin/arm64
-- Working directory: `curriculum/09_plugin_system/go-impl/`
-- Date: 2026-06-18
+## Comparative Results
 
-## Go Results
+| Lang | RPS | avg (ms) | p50 (ms) | p95 (ms) | p99 (ms) | fail rate | peak RSS (MB) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| go | 2331 | 2.3 | 1.6 | 6.4 | 8.3 | 0.000 | 21.0 |
+| rust | — | — | — | — | — | — | _did not become ready: process exited (impl is a demo/library, not a long-running server). log: 0  messages received
+                   0  voluntary context switches
+            14787845  instructions retired
+             1016120  peak memory footprint_ |
+| node | 2349 | 3.1 | 2.8 | 6.8 | 9.1 | 0.000 | 88.8 |
 
-### Benchmark command
+## Per-language Detail
 
-Command:
+### go
+- Throughput: **2331 req/s**
+- Latency: avg 2.34 ms · p50 1.62 ms · p95 6.38 ms · p99 8.33 ms
+- Error rate: 0.000
+- Peak RSS: 21.0 MB
+- Iterations: 58318
 
-```bash
-go test -bench=. -benchmem -count=5 ./... 2>&1
-```
+### rust
+Not benchmarked as an HTTP server: did not become ready: process exited (impl is a demo/library, not a long-running server).
 
-Result: no `Benchmark*` rows were emitted; tests passed.
+This implementation builds and its unit tests pass, but it does not
+expose a long-running HTTP endpoint (it is a demo/library that runs to
+completion). Re-run against a server variant for throughput data.
 
-```text
-PASS
-ok  plugin-system-go  1.282s
-```
+### node
+- Throughput: **2349 req/s**
+- Latency: avg 3.08 ms · p50 2.78 ms · p95 6.79 ms · p99 9.05 ms
+- Error rate: 0.000
+- Peak RSS: 88.8 MB
+- Iterations: 58733
 
-### Fallback verbose timing command
-
-Command:
-
-```bash
-go test -count=5 -v ./... 2>&1
-```
-
-Result: tests passed across five repetitions.
-
-```text
-PASS
-ok  plugin-system-go  1.898s
-```
-
-Selected real test timings observed in the verbose output:
-
-| Test | Observed timings |
-| --- | --- |
-| `TestRegisterRejectsInvalidManifestBeforeRuntimeExecution` | 0.00s |
-| `TestLifecycleTransitionsAndCapabilityDenial` | 0.00s |
-| `TestHooksRunInPriorityOrderAndTransformPayload` | 0.00s |
-| `TestPanicIsolationKeepsHostHealthy` | 0.00s |
-| `TestHTTPRegistersListsLifecycleAndHealth` | 0.09s, 0.04s, 0.03s, 0.01s, 0.03s |
-| `TestDisabledPluginCannotStartOrReceiveHooks` | 0.00s |
-| `TestUnsupportedAPIRangeAndHookPanicAreIsolated` | 0.00s |
-
-## Rust Results
-
-Pending execution. No Rust benchmark/test numbers were collected in this run.
-
-## Node Results
-
-Pending execution. No Node benchmark/test numbers were collected in this run.
-
-## Analysis and Recommendations
-
-The Go implementation passes its N=5 fallback run. Most plugin-domain tests complete below the visible timer resolution, while the HTTP lifecycle test is the measurable path at 0.01s-0.09s per repetition.
-
-Recommended next steps: add Go benchmarks for manifest registration, hook dispatch, and panic-isolated execution; then run HTTP lifecycle load with `k6` or `autocannon` using N >= 3 and CV < 20% before comparing with Rust or Node.
+_Generated 2026-07-02 20:47 UTC by `curriculum/_shared/benchmarks/bench_orchestrator.py`._

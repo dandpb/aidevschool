@@ -25,19 +25,18 @@ export class LogStore {
 
   constructor(private maxSize: number) {}
 
-  ingest(entry: LogEntry): void {
-    if (!entry.log_id) {
-      entry.log_id = `${Date.now()}`;
-    }
-    if (!entry.timestamp) {
-      entry.timestamp = new Date().toISOString();
-    }
-    entry.ingested_at = new Date().toISOString();
+  ingest(entry: Omit<LogEntry, 'ingested_at'> & Partial<Pick<LogEntry, 'ingested_at'>>): void {
+    const stored: LogEntry = {
+      ...entry,
+      log_id: entry.log_id || `${Date.now()}`,
+      timestamp: entry.timestamp || new Date().toISOString(),
+      ingested_at: entry.ingested_at ?? new Date().toISOString(),
+    };
 
     if (this.logs.length >= this.maxSize) {
       this.logs.shift();
     }
-    this.logs.push(entry);
+    this.logs.push(stored);
   }
 
   query(
