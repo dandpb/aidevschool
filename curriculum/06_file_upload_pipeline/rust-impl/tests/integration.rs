@@ -154,6 +154,23 @@ async fn rejects_invalid_type_size_checksum_and_malformed() {
 }
 
 #[tokio::test]
+async fn rejects_path_capable_upload_id() {
+    let app = app(1 << 20).await;
+    let (ct, body) = multipart("safe.txt", "text/plain", b"safe", &[]);
+    let res = app
+        .oneshot(
+            Request::post("/upload")
+                .header("content-type", ct)
+                .header("x-upload-id", "../escape")
+                .body(Body::from(body))
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(res.status(), StatusCode::BAD_REQUEST);
+}
+
+#[tokio::test]
 async fn image_upload_and_missing_file_paths_are_reported() {
     let app = app(1 << 20).await;
     let data = b"\x89PNG\r\n\x1a\n";

@@ -285,6 +285,14 @@ async fn upload(
         .and_then(|v| v.to_str().ok())
         .map(str::to_string)
         .unwrap_or_else(|| state.registry.next_id());
+    if !is_safe_upload_id(&id) {
+        return Err(ApiError::new(
+            StatusCode::BAD_REQUEST,
+            "invalid_upload_id",
+            "upload id must be a non-path identifier",
+            false,
+        ));
+    }
     let flag = Arc::new(AtomicBool::new(false));
     state
         .registry
@@ -633,6 +641,13 @@ fn sanitize(name: &str) -> String {
         .and_then(|n| n.to_str())
         .unwrap_or("upload.bin")
         .to_string()
+}
+fn is_safe_upload_id(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 64
+        && id
+            .bytes()
+            .all(|b| b.is_ascii_alphanumeric() || b == b'_' || b == b'-')
 }
 fn extension(name: &str) -> String {
     PathBuf::from(name)

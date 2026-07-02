@@ -50,6 +50,10 @@ export class PluginHost {
   }
 
   async registerFromManifest(manifest: PluginManifest): Promise<PluginRecord> {
+    validateManifest(manifest);
+    const apiCompatibility = negotiate(this.hostApiVersion, manifest.apiVersionRange);
+    if (!apiCompatibility.compatible) throw makeError('incompatible_api', 'registration', apiCompatibility.reason ?? 'unsupported API range');
+    if (this.plugins.has(manifest.id)) throw makeError('invalid_manifest', 'registration', 'duplicate plugin id');
     const runtime = this.entrypointRuntimes.get(manifest.entrypoint) ?? await loadRuntimeFromEntrypoint(manifest.entrypoint);
     return this.register(manifest, runtime);
   }

@@ -1,15 +1,19 @@
 use axum::{
-    routing::{get, post},
-    extract::{Path, State},
-    http::StatusCode,
-    response::sse::{Event, Sse},
     Json, Router,
+    extract::{Path, Request, State},
+    http::{StatusCode, header},
+    middleware::{self, Next},
+    response::{
+        Response,
+        sse::{Event, Sse},
+    },
+    routing::{get, post},
 };
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
-use tokio::sync::{broadcast, RwLock};
+use tokio::sync::{RwLock, broadcast};
 use tower_http::trace::TraceLayer;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -88,6 +92,28 @@ impl AppState {
     }
 }
 
+async fn require_auth(req: Request, next: Next) -> Result<Response, StatusCode> {
+    let authorized = req
+        .headers()
+        .get(header::AUTHORIZATION)
+        .and_then(|value| value.to_str().ok())
+        .is_some_and(|value| !value.trim().is_empty());
+    if authorized {
+        Ok(next.run(req).await)
+    } else {
+        Err(StatusCode::UNAUTHORIZED)
+    }
+}
+
+fn protected_routes() -> Router<Arc<AppState>> {
+    Router::new()
+        .route("/config/:key", get(get_config).put(put_config))
+        .route("/config/:key/watch", get(watch_config))
+        .route("/flags/:key", get(get_flag).put(put_flag))
+        .route("/flags/:key/evaluate", post(evaluate_flag))
+        .route_layer(middleware::from_fn(require_auth))
+}
+
 async fn get_config(
     State(state): State<Arc<AppState>>,
     Path(key): Path<String>,
@@ -105,7 +131,7 @@ async fn put_config(
     Json(req): Json<CreateConfigRequest>,
 ) -> Result<StatusCode, StatusCode> {
     let mut configs = state.configs.write().await;
-    
+
     if let Some(expected) = req.expected_version {
         if let Some(existing) = configs.get(&key) {
             if existing.version != expected {
@@ -115,7 +141,7 @@ async fn put_config(
     }
 
     let new_version = configs.get(&key).map(|c| c.version + 1).unwrap_or(1);
-    
+
     let config = ConfigValue {
         value: req.value,
         content_type: req.content_type,
@@ -127,12 +153,15 @@ async fn put_config(
     };
 
     configs.insert(key.clone(), config.clone());
-    
+
     let mut history = state.history.write().await;
-    history.entry(key.clone()).or_insert_with(Vec::new).push(config.clone());
-    
+    history
+        .entry(key.clone())
+        .or_insert_with(Vec::new)
+        .push(config.clone());
+
     let _ = state.tx.send((key, config));
-    
+
     Ok(StatusCode::CREATED)
 }
 
@@ -193,7 +222,7 @@ async fn evaluate_flag(
                 }
                 _ => false,
             };
-            
+
             if matches {
                 return Ok(Json(EvaluationResult {
                     flag_key: key,
@@ -207,14 +236,14 @@ async fn evaluate_flag(
     // Check rollout percentage using deterministic hashing
     if flag.rollout_percentage < 100 {
         if let Some(user_id) = req.subject.get("id").and_then(|v| v.as_str()) {
-            use sha2::{Sha256, Digest};
+            use sha2::{Digest, Sha256};
             let mut hasher = Sha256::new();
             hasher.update(user_id.as_bytes());
             hasher.update(key.as_bytes());
             let result = hasher.finalize();
             let hash_val = u32::from_be_bytes([result[0], result[1], result[2], result[3]]);
             let percentage = (hash_val % 100) as u8;
-            
+
             if percentage >= flag.rollout_percentage {
                 return Ok(Json(EvaluationResult {
                     flag_key: key,
@@ -236,29 +265,28 @@ async fn health_check() -> StatusCode {
     StatusCode::OK
 }
 
-use std::convert::Infallible;
 use futures::StreamExt;
+use std::convert::Infallible;
 
 async fn watch_config(
     State(state): State<Arc<AppState>>,
     Path(key): Path<String>,
 ) -> Sse<impl futures::Stream<Item = Result<Event, Infallible>>> {
     let rx = state.tx.subscribe();
-    
-    let stream = tokio_stream::wrappers::BroadcastStream::new(rx)
-        .filter_map(move |result| {
-            let k = key.clone();
-            async move {
-                match result {
-                    Ok((event_key, config)) if event_key == k => {
-                        Some(Ok::<_, Infallible>(Event::default()
-                            .event("config.changed")
-                            .data(serde_json::to_string(&config).unwrap())))
-                    }
-                    _ => None,
-                }
+
+    let stream = tokio_stream::wrappers::BroadcastStream::new(rx).filter_map(move |result| {
+        let k = key.clone();
+        async move {
+            match result {
+                Ok((event_key, config)) if event_key == k => Some(Ok::<_, Infallible>(
+                    Event::default()
+                        .event("config.changed")
+                        .data(serde_json::to_string(&config).unwrap()),
+                )),
+                _ => None,
             }
-        });
+        }
+    });
 
     Sse::new(stream)
 }
@@ -269,11 +297,7 @@ async fn main() {
 
     let state = Arc::new(AppState::new());
 
-    let app = Router::new()
-        .route("/config/:key", get(get_config).put(put_config))
-        .route("/config/:key/watch", get(watch_config))
-        .route("/flags/:key", get(get_flag).put(put_flag))
-        .route("/flags/:key/evaluate", post(evaluate_flag))
+    let app = protected_routes()
         .route("/__config/health", get(health_check))
         .layer(TraceLayer::new_for_http())
         .with_state(state);
@@ -291,11 +315,7 @@ mod tests {
 
     fn app() -> Router {
         let state = Arc::new(AppState::new());
-        Router::new()
-            .route("/config/:key", get(get_config).put(put_config))
-            .route("/config/:key/watch", get(watch_config))
-            .route("/flags/:key", get(get_flag).put(put_flag))
-            .route("/flags/:key/evaluate", post(evaluate_flag))
+        protected_routes()
             .route("/__config/health", get(health_check))
             .with_state(state)
     }
@@ -303,7 +323,11 @@ mod tests {
     #[tokio::test]
     async fn test_health_check() {
         let response = app()
-            .oneshot(Request::get("/__config/health").body(Body::empty()).unwrap())
+            .oneshot(
+                Request::get("/__config/health")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
             .await
             .unwrap();
         assert_eq!(response.status(), StatusCode::OK);
@@ -312,13 +336,16 @@ mod tests {
     #[tokio::test]
     async fn test_put_and_get_config() {
         let app = app();
-        
+
         let put_response = app
             .clone()
             .oneshot(
                 Request::put("/config/test-key")
                     .header("content-type", "application/json")
-                    .body(Body::from(r#"{"value":{"maxRetries":3},"contentType":"application/json"}"#))
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::from(
+                        r#"{"value":{"maxRetries":3},"contentType":"application/json"}"#,
+                    ))
                     .unwrap(),
             )
             .await
@@ -326,7 +353,12 @@ mod tests {
         assert_eq!(put_response.status(), StatusCode::CREATED);
 
         let get_response = app
-            .oneshot(Request::get("/config/test-key").body(Body::empty()).unwrap())
+            .oneshot(
+                Request::get("/config/test-key")
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
             .await
             .unwrap();
         assert_eq!(get_response.status(), StatusCode::OK);
@@ -335,21 +367,53 @@ mod tests {
     #[tokio::test]
     async fn test_get_config_not_found() {
         let response = app()
-            .oneshot(Request::get("/config/nonexistent").body(Body::empty()).unwrap())
+            .oneshot(
+                Request::get("/config/nonexistent")
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
             .await
             .unwrap();
         assert_eq!(response.status(), StatusCode::NOT_FOUND);
     }
 
     #[tokio::test]
+    async fn test_protected_routes_require_authorization() {
+        let config_response = app()
+            .oneshot(
+                Request::get("/config/test-key")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(config_response.status(), StatusCode::UNAUTHORIZED);
+
+        let flag_response = app()
+            .oneshot(
+                Request::post("/flags/test-flag/evaluate")
+                    .header("content-type", "application/json")
+                    .body(Body::from(
+                        r#"{"subject":{"id":"user-123"},"defaultTreatment":"off"}"#,
+                    ))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(flag_response.status(), StatusCode::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
     async fn test_put_flag_and_evaluate() {
         let app = app();
-        
+
         let put_response = app
             .clone()
             .oneshot(
                 Request::put("/flags/test-flag")
                     .header("content-type", "application/json")
+                    .header("authorization", "Bearer test-operator")
                     .body(Body::from(r#"{"key":"test-flag","enabled":true,"defaultTreatment":"off","treatments":["on","off"],"targetingRules":[],"rolloutPercentage":100}"#))
                     .unwrap(),
             )
@@ -361,7 +425,10 @@ mod tests {
             .oneshot(
                 Request::post("/flags/test-flag/evaluate")
                     .header("content-type", "application/json")
-                    .body(Body::from(r#"{"subject":{"id":"user-123"},"defaultTreatment":"off"}"#))
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::from(
+                        r#"{"subject":{"id":"user-123"},"defaultTreatment":"off"}"#,
+                    ))
                     .unwrap(),
             )
             .await
@@ -375,7 +442,10 @@ mod tests {
             .oneshot(
                 Request::post("/flags/nonexistent/evaluate")
                     .header("content-type", "application/json")
-                    .body(Body::from(r#"{"subject":{"id":"user-123"},"defaultTreatment":"off"}"#))
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::from(
+                        r#"{"subject":{"id":"user-123"},"defaultTreatment":"off"}"#,
+                    ))
                     .unwrap(),
             )
             .await
@@ -386,13 +456,16 @@ mod tests {
     #[tokio::test]
     async fn test_version_conflict() {
         let app = app();
-        
+
         let put_response = app
             .clone()
             .oneshot(
                 Request::put("/config/version-test")
                     .header("content-type", "application/json")
-                    .body(Body::from(r#"{"value":{"data":"v1"},"contentType":"application/json"}"#))
+                    .header("authorization", "Bearer test-operator")
+                    .body(Body::from(
+                        r#"{"value":{"data":"v1"},"contentType":"application/json"}"#,
+                    ))
                     .unwrap(),
             )
             .await
@@ -403,6 +476,7 @@ mod tests {
             .oneshot(
                 Request::put("/config/version-test")
                     .header("content-type", "application/json")
+                    .header("authorization", "Bearer test-operator")
                     .body(Body::from(r#"{"value":{"data":"v2"},"contentType":"application/json","expectedVersion":99}"#))
                     .unwrap(),
             )

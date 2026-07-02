@@ -23,10 +23,20 @@ func NewServer(service *config.Service, logger *slog.Logger) *Server {
 }
 
 func (s *Server) RegisterRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/config/", s.handleConfig)
-	mux.HandleFunc("/flags/", s.handleFlags)
+	mux.HandleFunc("/config/", s.requireAuth(s.handleConfig))
+	mux.HandleFunc("/flags/", s.requireAuth(s.handleFlags))
 	mux.HandleFunc("/__config/health", s.handleHealth)
 	mux.HandleFunc("/__config/metrics", s.handleMetrics)
+}
+
+func (s *Server) requireAuth(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if strings.TrimSpace(r.Header.Get("Authorization")) == "" {
+			s.writeError(w, http.StatusUnauthorized, "unauthenticated", "Authorization header required")
+			return
+		}
+		next(w, r)
+	}
 }
 
 func (s *Server) handleConfig(w http.ResponseWriter, r *http.Request) {
@@ -98,9 +108,6 @@ func (s *Server) handlePutConfig(w http.ResponseWriter, r *http.Request, key str
 	}
 
 	author := r.Header.Get("Authorization")
-	if author == "" {
-		author = "anonymous"
-	}
 
 	entry, err := s.service.Put(key, req.Value, req.ContentType, req.ExpectedVersion, author, req.Reason)
 	if err != nil {
@@ -134,9 +141,9 @@ func (s *Server) handlePutConfig(w http.ResponseWriter, r *http.Request, key str
 
 func (s *Server) handleRollback(w http.ResponseWriter, r *http.Request, key string) {
 	var req struct {
-		TargetVersion        int    `json:"targetVersion"`
-		ExpectedCurrentVersion *int `json:"expectedCurrentVersion"`
-		Reason               string `json:"reason"`
+		TargetVersion          int    `json:"targetVersion"`
+		ExpectedCurrentVersion *int   `json:"expectedCurrentVersion"`
+		Reason                 string `json:"reason"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -145,9 +152,6 @@ func (s *Server) handleRollback(w http.ResponseWriter, r *http.Request, key stri
 	}
 
 	author := r.Header.Get("Authorization")
-	if author == "" {
-		author = "anonymous"
-	}
 
 	entry, err := s.service.Rollback(key, req.TargetVersion, req.ExpectedCurrentVersion, author, req.Reason)
 	if err != nil {
@@ -168,12 +172,12 @@ func (s *Server) handleRollback(w http.ResponseWriter, r *http.Request, key stri
 	}
 
 	s.writeJSON(w, http.StatusOK, map[string]interface{}{
-		"key":                entry.Key,
-		"version":            entry.Version,
+		"key":                   entry.Key,
+		"version":               entry.Version,
 		"rolledBackFromVersion": entry.Version - 1,
 		"rolledBackToVersion":   req.TargetVersion,
-		"logIndex":           entry.LogIndex,
-		"committed":          true,
+		"logIndex":              entry.LogIndex,
+		"committed":             true,
 	})
 }
 

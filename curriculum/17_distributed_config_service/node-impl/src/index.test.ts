@@ -1,6 +1,8 @@
 import request from 'supertest';
 import { createApp, ConfigService } from './index';
 
+const AUTHORIZATION = 'Bearer test-operator';
+
 describe('ConfigService', () => {
   let service: ConfigService;
 
@@ -152,22 +154,34 @@ describe('HTTP API', () => {
     expect(res.body.status).toBe('ok');
   });
 
+  test('protected config and flag routes require authorization', async () => {
+    const { app } = createApp();
+    const configRes = await request(app).get('/config/test-key');
+    expect(configRes.status).toBe(401);
+
+    const flagRes = await request(app)
+      .post('/flags/test-flag/evaluate')
+      .send({ subject: { id: 'user-123' }, defaultTreatment: 'off' });
+    expect(flagRes.status).toBe(401);
+  });
+
   test('put and get config', async () => {
     const { app } = createApp();
     
     const putRes = await request(app)
       .put('/config/test-key')
+      .set('Authorization', AUTHORIZATION)
       .send({ value: { maxRetries: 3 }, contentType: 'application/json' });
     expect(putRes.status).toBe(201);
 
-    const getRes = await request(app).get('/config/test-key');
+    const getRes = await request(app).get('/config/test-key').set('Authorization', AUTHORIZATION);
     expect(getRes.status).toBe(200);
     expect(getRes.body.version).toBe(1);
   });
 
   test('get config not found', async () => {
     const { app } = createApp();
-    const res = await request(app).get('/config/nonexistent');
+    const res = await request(app).get('/config/nonexistent').set('Authorization', AUTHORIZATION);
     expect(res.status).toBe(404);
   });
 
@@ -176,10 +190,12 @@ describe('HTTP API', () => {
     
     await request(app)
       .put('/config/version-test')
+      .set('Authorization', AUTHORIZATION)
       .send({ value: { data: 'v1' }, contentType: 'application/json' });
 
     const res = await request(app)
       .put('/config/version-test')
+      .set('Authorization', AUTHORIZATION)
       .send({ value: { data: 'v2' }, contentType: 'application/json', expectedVersion: 99 });
     expect(res.status).toBe(409);
   });
@@ -189,6 +205,7 @@ describe('HTTP API', () => {
     
     const putRes = await request(app)
       .put('/flags/test-flag')
+      .set('Authorization', AUTHORIZATION)
       .send({
         key: 'test-flag',
         enabled: true,
@@ -201,6 +218,7 @@ describe('HTTP API', () => {
 
     const evalRes = await request(app)
       .post('/flags/test-flag/evaluate')
+      .set('Authorization', AUTHORIZATION)
       .send({ subject: { id: 'user-123' }, defaultTreatment: 'off' });
     expect(evalRes.status).toBe(200);
     expect(evalRes.body.treatment).toBe('off');
@@ -210,6 +228,7 @@ describe('HTTP API', () => {
     const { app } = createApp();
     const res = await request(app)
       .post('/flags/nonexistent/evaluate')
+      .set('Authorization', AUTHORIZATION)
       .send({ subject: { id: 'user-123' }, defaultTreatment: 'off' });
     expect(res.status).toBe(404);
   });
@@ -219,6 +238,7 @@ describe('HTTP API', () => {
     
     await request(app)
       .put('/flags/get-flag')
+      .set('Authorization', AUTHORIZATION)
       .send({
         key: 'get-flag',
         enabled: true,
@@ -228,14 +248,14 @@ describe('HTTP API', () => {
         rolloutPercentage: 100,
       });
 
-    const res = await request(app).get('/flags/get-flag');
+    const res = await request(app).get('/flags/get-flag').set('Authorization', AUTHORIZATION);
     expect(res.status).toBe(200);
     expect(res.body.key).toBe('get-flag');
   });
 
   test('get flag not found', async () => {
     const { app } = createApp();
-    const res = await request(app).get('/flags/nonexistent');
+    const res = await request(app).get('/flags/nonexistent').set('Authorization', AUTHORIZATION);
     expect(res.status).toBe(404);
   });
 

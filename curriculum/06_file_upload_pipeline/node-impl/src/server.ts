@@ -14,6 +14,7 @@ import type { Chunk, Upload, UploadError } from './types';
 interface StreamFailure { statusCode: number; error: UploadError }
 type UploadResult = { ok: true; upload: Upload } | { ok: false; error: unknown };
 const streamFailure = (statusCode: number, code: string, message: string, retryable: boolean): StreamFailure => ({ statusCode, error: { code, message, retryable } });
+const safeUploadId = /^[A-Za-z0-9_-]{1,64}$/;
 
 export class UploadService {
   readonly registry = new UploadRegistry();
@@ -30,6 +31,10 @@ export class UploadService {
   }
 
   async processFile(upload: Upload, file: NodeJS.ReadableStream, info: Busboy.FileInfo, expectedChecksum: string | undefined, signal: AbortSignal): Promise<Upload> {
+    if (!isSafeUploadId(upload.id)) {
+      file.resume();
+      throw streamFailure(400, 'invalid_upload_id', 'upload id must be a non-path identifier', false);
+    }
     const filename = sanitizeFilename(info.filename || 'upload.bin');
     const extension = path.extname(filename).toLowerCase();
     const mimeType = info.mimeType || guessMime(extension);
@@ -136,6 +141,7 @@ export async function buildApp(cfg: Config = loadConfig(), logger: Logger = pino
 async function handleUpload(service: UploadService, req: Request, res: Response): Promise<void> {
   const controller = new AbortController();
   const id = req.header('x-upload-id') ?? service.registry.nextId();
+  if (!isSafeUploadId(id)) throw streamFailure(400, 'invalid_upload_id', 'upload id must be a non-path identifier', false);
   service.registry.setCancel(id, controller);
   const upload = service.createInitialUpload(id);
   service.registry.save(upload);
@@ -177,5 +183,6 @@ function isStreamFailure(error: unknown): error is StreamFailure {
 }
 
 function stringQuery(value: unknown): string | undefined { return typeof value === 'string' ? value : undefined; }
+export function isSafeUploadId(id: string): boolean { return safeUploadId.test(id); }
 export function sanitizeFilename(filename: string): string { return path.basename(filename) || 'upload.bin'; }
 export function guessMime(extension: string): string { return extension === '.txt' ? 'text/plain' : extension === '.png' ? 'image/png' : extension === '.jpg' || extension === '.jpeg' ? 'image/jpeg' : extension === '.gif' ? 'image/gif' : 'application/octet-stream'; }

@@ -88,6 +88,18 @@ describe('PluginHost', () => {
     expect(result.finalPayload).toEqual({ dynamic: true });
   });
 
+  it('rejects incompatible dynamic manifests before importing their entrypoint', async () => {
+    const host = new PluginHost('1.2.0');
+    const probeKey = 'pluginImportProbe';
+    Reflect.deleteProperty(globalThis, probeKey);
+    const source = 'Reflect.set(globalThis,"pluginImportProbe","loaded"); export default { load(){}, init(){}, start(){}, stop(){}, unload(){}, handleHook(){ return {}; } };';
+    const dynamicManifest = { ...manifest('plugin.future'), apiVersionRange: '>=2.0.0 <3.0.0', entrypoint: `data:text/javascript,${encodeURIComponent(source)}` };
+
+    await expect(host.registerFromManifest(dynamicManifest)).rejects.toThrow('incompatible_api');
+
+    expect(Reflect.get(globalThis, probeKey)).toBeUndefined();
+  });
+
   it('prevents disabled plugins from starting or receiving hooks', async () => {
     const host = new PluginHost('1.2.0');
     await host.register(manifest('plugin.disabled'), new ScriptedPlugin());

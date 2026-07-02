@@ -1,3 +1,9 @@
+# Status: 06_file_upload_pipeline
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 06 · File Upload/Processing Pipeline
 
 > Phase: **cycle-complete**

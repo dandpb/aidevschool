@@ -1,3 +1,9 @@
+# Status: 15_metrics_collector
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 15 Metrics Collector
 
 > Cycle status: **cycle-complete**  

@@ -22,11 +22,16 @@ func setupTestServer() (*Server, *http.ServeMux) {
 	return server, mux
 }
 
+func authed(req *http.Request) *http.Request {
+	req.Header.Set("Authorization", "Bearer test-operator")
+	return req
+}
+
 func TestPutAndGetConfig(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"value":{"maxRetries":3},"contentType":"application/json","reason":"Initial config"}`
-	req := httptest.NewRequest(http.MethodPut, "/config/payments.retry_limit", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPut, "/config/payments.retry_limit", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -34,7 +39,7 @@ func TestPutAndGetConfig(t *testing.T) {
 		t.Fatalf("expected 201, got %d: %s", w.Code, w.Body.String())
 	}
 
-	req = httptest.NewRequest(http.MethodGet, "/config/payments.retry_limit", nil)
+	req = authed(httptest.NewRequest(http.MethodGet, "/config/payments.retry_limit", nil))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -52,7 +57,7 @@ func TestPutAndGetConfig(t *testing.T) {
 func TestGetConfigNotFound(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodGet, "/config/nonexistent", nil)
+	req := authed(httptest.NewRequest(http.MethodGet, "/config/nonexistent", nil))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -65,17 +70,17 @@ func TestRollback(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"value":{"maxRetries":3},"contentType":"application/json"}`
-	req := httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
 	body = `{"value":{"maxRetries":4},"contentType":"application/json"}`
-	req = httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader(body))
+	req = authed(httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader(body)))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
 	body = `{"targetVersion":1,"reason":"Rollback"}`
-	req = httptest.NewRequest(http.MethodPost, "/config/test/rollback", strings.NewReader(body))
+	req = authed(httptest.NewRequest(http.MethodPost, "/config/test/rollback", strings.NewReader(body)))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -88,7 +93,7 @@ func TestCreateAndGetFlag(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"enabled":true,"defaultTreatment":"off","treatments":["on","off"],"rolloutPercentage":0,"rolloutSeed":"seed-1"}`
-	req := httptest.NewRequest(http.MethodPost, "/flags/feature-x", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPost, "/flags/feature-x", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -96,7 +101,7 @@ func TestCreateAndGetFlag(t *testing.T) {
 		t.Fatalf("expected 201, got %d: %s", w.Code, w.Body.String())
 	}
 
-	req = httptest.NewRequest(http.MethodGet, "/flags/feature-x", nil)
+	req = authed(httptest.NewRequest(http.MethodGet, "/flags/feature-x", nil))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -109,12 +114,12 @@ func TestEvaluateFlag(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"enabled":true,"defaultTreatment":"off","treatments":["on","off"],"targetingRules":[{"ruleId":"rule-1","priority":1,"attribute":"role","operator":"equals","values":["admin"],"treatment":"on","enabled":true}],"rolloutPercentage":0,"rolloutSeed":"seed-1"}`
-	req := httptest.NewRequest(http.MethodPost, "/flags/feature-y", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPost, "/flags/feature-y", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
 	body = `{"subject":{"id":"user-123","role":"admin"},"defaultTreatment":"off"}`
-	req = httptest.NewRequest(http.MethodPost, "/flags/feature-y/evaluate", strings.NewReader(body))
+	req = authed(httptest.NewRequest(http.MethodPost, "/flags/feature-y/evaluate", strings.NewReader(body)))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -156,7 +161,7 @@ func TestMetrics(t *testing.T) {
 func TestInvalidMethod(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodDelete, "/config/test", nil)
+	req := authed(httptest.NewRequest(http.MethodDelete, "/config/test", nil))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -168,7 +173,7 @@ func TestInvalidMethod(t *testing.T) {
 func TestPutInvalidJSON(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader("invalid json"))
+	req := authed(httptest.NewRequest(http.MethodPut, "/config/test", strings.NewReader("invalid json")))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -180,7 +185,7 @@ func TestPutInvalidJSON(t *testing.T) {
 func TestRollbackInvalidJSON(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodPost, "/config/test/rollback", strings.NewReader("invalid json"))
+	req := authed(httptest.NewRequest(http.MethodPost, "/config/test/rollback", strings.NewReader("invalid json")))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -192,7 +197,7 @@ func TestRollbackInvalidJSON(t *testing.T) {
 func TestEvaluateFlagInvalidJSON(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodPost, "/flags/test/evaluate", strings.NewReader("invalid json"))
+	req := authed(httptest.NewRequest(http.MethodPost, "/flags/test/evaluate", strings.NewReader("invalid json")))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -204,7 +209,7 @@ func TestEvaluateFlagInvalidJSON(t *testing.T) {
 func TestFlagNotFound(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodGet, "/flags/nonexistent", nil)
+	req := authed(httptest.NewRequest(http.MethodGet, "/flags/nonexistent", nil))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -217,12 +222,12 @@ func TestVersionMismatch(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"value":{"maxRetries":3},"contentType":"application/json"}`
-	req := httptest.NewRequest(http.MethodPut, "/config/version-test", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPut, "/config/version-test", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
 	body = `{"value":{"maxRetries":4},"contentType":"application/json","expectedVersion":99}`
-	req = httptest.NewRequest(http.MethodPut, "/config/version-test", strings.NewReader(body))
+	req = authed(httptest.NewRequest(http.MethodPut, "/config/version-test", strings.NewReader(body)))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -235,12 +240,12 @@ func TestRollbackVersionNotFound(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"value":{"maxRetries":3},"contentType":"application/json"}`
-	req := httptest.NewRequest(http.MethodPut, "/config/rollback-test", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPut, "/config/rollback-test", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
 	body = `{"targetVersion":99,"reason":"Rollback"}`
-	req = httptest.NewRequest(http.MethodPost, "/config/rollback-test/rollback", strings.NewReader(body))
+	req = authed(httptest.NewRequest(http.MethodPost, "/config/rollback-test/rollback", strings.NewReader(body)))
 	w = httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -253,7 +258,7 @@ func TestEvaluateFlagNotFound(t *testing.T) {
 	_, mux := setupTestServer()
 
 	body := `{"subject":{"id":"user-123"},"defaultTreatment":"off"}`
-	req := httptest.NewRequest(http.MethodPost, "/flags/nonexistent/evaluate", strings.NewReader(body))
+	req := authed(httptest.NewRequest(http.MethodPost, "/flags/nonexistent/evaluate", strings.NewReader(body)))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -265,7 +270,7 @@ func TestEvaluateFlagNotFound(t *testing.T) {
 func TestInvalidURL(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodGet, "/config/", nil)
+	req := authed(httptest.NewRequest(http.MethodGet, "/config/", nil))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -277,7 +282,7 @@ func TestInvalidURL(t *testing.T) {
 func TestInvalidFlagURL(t *testing.T) {
 	_, mux := setupTestServer()
 
-	req := httptest.NewRequest(http.MethodGet, "/flags/", nil)
+	req := authed(httptest.NewRequest(http.MethodGet, "/flags/", nil))
 	w := httptest.NewRecorder()
 	mux.ServeHTTP(w, req)
 
@@ -310,6 +315,26 @@ func TestMetricsMethodNotAllowed(t *testing.T) {
 	}
 }
 
+func TestProtectedRoutesRequireAuthorization(t *testing.T) {
+	_, mux := setupTestServer()
+
+	req := httptest.NewRequest(http.MethodGet, "/config/payments.retry_limit", nil)
+	w := httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+
+	if w.Code != http.StatusUnauthorized {
+		t.Fatalf("expected 401, got %d", w.Code)
+	}
+
+	req = httptest.NewRequest(http.MethodPost, "/flags/feature-y/evaluate", strings.NewReader(`{"subject":{"id":"user-123"},"defaultTreatment":"off"}`))
+	w = httptest.NewRecorder()
+	mux.ServeHTTP(w, req)
+
+	if w.Code != http.StatusUnauthorized {
+		t.Fatalf("expected 401, got %d", w.Code)
+	}
+}
+
 func BenchmarkPutConfig(b *testing.B) {
 	_, mux := setupTestServer()
 
@@ -317,7 +342,7 @@ func BenchmarkPutConfig(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		req := httptest.NewRequest(http.MethodPut, "/config/bench", bytes.NewReader(payload))
+		req := authed(httptest.NewRequest(http.MethodPut, "/config/bench", bytes.NewReader(payload)))
 		w := httptest.NewRecorder()
 		mux.ServeHTTP(w, req)
 		if w.Code != http.StatusCreated {

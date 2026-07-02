@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import fsp from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { Readable } from 'node:stream';
@@ -37,6 +38,19 @@ describe('file upload pipeline', () => {
     await request(server).post('/upload').send('bad').expect(400);
     await request(server).get('/files/nope').expect(404);
     await request(server).delete('/files/nope').expect(404);
+  });
+
+  it('rejects path-capable upload ids before writing storage files', async () => {
+    const storageDir = path.join(os.tmpdir(), `node-upload-test-${crypto.randomUUID()}`);
+    const server = await buildApp({ ...loadConfig({}), storageDir });
+
+    await request(server)
+      .post('/upload')
+      .set('x-upload-id', '../escape')
+      .attach('file', Buffer.from('safe'), { filename: 'safe.txt', contentType: 'text/plain' })
+      .expect(400);
+
+    await expect(fsp.access(path.join(storageDir, 'escape.txt'))).rejects.toThrow();
   });
 
   it('keeps helper logic bounded and cancellable', async () => {

@@ -1,3 +1,9 @@
+# Status: 12_distributed_job_scheduler
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 12 · Distributed Job Scheduler
 
 | Field | Value |

@@ -5,6 +5,8 @@
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
 > **Status:** Canonical · **Total projects:** 18 · **Implemented:** 1 (Project 01)
+>
+> ℹ️ Per-project build status (02–18 are *scaffolded*, not "not started") is tracked authoritatively in [BACKLOG_STATUS.md](BACKLOG_STATUS.md); on conflict, BACKLOG_STATUS wins. The per-project "Status" rows below may lag.
 
 ---
 
@@ -45,10 +47,14 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `02_key_value_store` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
 | **Concepts** | Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics |
 | **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? |
 | **Directory** | `02_key_value_store/` |
+| **Go coverage** | tests pass |
+| **Rust tests** | 6 pass |
+| **Node coverage** | 6 tests pass |
+| **Benchmark** | Full benchmark pending |
 | **Dependencies** | Project 01 (concurrency basics) |
 
 ### 03. URL Shortener
@@ -56,7 +62,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `03_url_shortener` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Hashing (base62, SHA-256 trunc), relational DB design, HTTP redirects (301/302), unique ID generation, analytics pipeline |
 | **Key question** | How do ID generation strategies (snowflake, ULID, auto-increment) compare across languages for collision resistance and throughput? |
 | **Directory** | `03_url_shortener/` |
@@ -73,7 +80,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `04_concurrent_task_queue` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Worker pools, job scheduling, backpressure, priorities, timeouts, retry policies, dead-letter queues, idempotency |
 | **Key question** | Which language's concurrency model delivers the best throughput for async job processing? |
 | **Directory** | `04_concurrent_task_queue/` |
@@ -84,7 +92,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `05_websocket_chat` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats |
 | **Key question** | How does each runtime handle 10k+ concurrent persistent connections? |
 | **Directory** | `05_websocket_chat/` |
@@ -95,7 +104,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `06_file_upload_pipeline` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Streaming I/O, chunked processing, multipart upload, memory management, parallel processing, bounded memory |
 | **Key question** | How do streaming vs buffering approaches compare for large file handling? |
 | **Directory** | `06_file_upload_pipeline/` |
@@ -112,7 +122,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `07_rest_api_auth` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | JWT (sign/verify), RBAC, middleware chains, layered architecture, dependency injection, input validation, versioning |
 | **Key question** | How does auth middleware composition differ across frameworks in each language? |
 | **Directory** | `07_rest_api_auth/` |
@@ -123,7 +134,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `08_event_driven_order_system` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Pub/sub, event sourcing, eventual consistency, projections, sagas (orchestrated + choreographed), outbox pattern |
 | **Key question** | How do event replay and projection rebuild times compare across language runtimes? |
 | **Directory** | `08_event_driven_order_system/` |
@@ -134,7 +146,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `09_plugin_system` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Dynamic loading, interfaces/traits, plugin lifecycle, sandboxing, WASM/FFI/JS sandboxing, API versioning |
 | **Key question** | How does each language's FFI/WASM/dynamic-loading story compare for safe plugin isolation? |
 | **Directory** | `09_plugin_system/` |
@@ -151,7 +164,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `10_distributed_cache` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Cache invalidation, TTL, LRU/LFU eviction, consistent hashing, gossip protocol, cache-aside vs write-through, cache stampede prevention, sharding |
 | **Key question** | How do eviction policies and sharding strategies interact under skewed access patterns? |
 | **Directory** | `10_distributed_cache/` |
@@ -162,7 +176,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `11_load_balancer` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Reverse proxy, health checks, round-robin, least-connections, consistent hashing, TLS termination, sticky sessions, circuit breaker per backend |
 | **Key question** | How does connection pooling and health-check frequency affect failover speed? |
 | **Directory** | `11_load_balancer/` |
@@ -173,7 +188,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `12_distributed_job_scheduler` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry |
 | **Key question** | How do leader election implementations compare in split-brain scenarios? |
 | **Directory** | `12_distributed_job_scheduler/` |
@@ -190,7 +206,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `13_api_gateway_circuit_breaker` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Fault tolerance, circuit breaker states (closed/open/half-open), retry with exponential backoff + jitter, fallbacks, bulkheading, rate limit per tenant, request coalescing |
 | **Key question** | How do circuit breaker recovery times compare across language concurrency models? |
 | **Directory** | `13_api_gateway_circuit_breaker/` |
@@ -201,7 +218,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `14_log_aggregator` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Structured logging (JSON), log levels, aggregation pipelines, compression, indexing, retention, distributed tracing (OpenTelemetry), correlation IDs |
 | **Key question** | How does ingestion throughput compare for JSON vs protobuf log formats? |
 | **Directory** | `14_log_aggregator/` |
@@ -212,7 +230,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `15_metrics_collector` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Time-series data, counters/gauges/histograms, aggregation (sum/avg/p95), downsampling, retention, Prometheus-compatible format, alerting |
 | **Key question** | How do histogram bucket strategies affect p99 accuracy across runtimes? |
 | **Directory** | `15_metrics_collector/` |
@@ -229,7 +248,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `16_mini_message_queue` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Topics, partitions, consumer groups, offsets, log-structured storage, replication, exactly-once semantics, log compaction |
 | **Key question** | How do partition assignment and consumer rebalancing strategies affect throughput stability? |
 | **Directory** | `16_mini_message_queue/` |
@@ -240,7 +260,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `17_distributed_config_service` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Consensus (Raft/Paxos simplified), watch/notify, versioning, linearizability, ACL per key, audit, rollback, multi-region replication, feature flags |
 | **Key question** | How do watch-notification latency and consensus overhead compare? |
 | **Directory** | `17_distributed_config_service/` |
@@ -251,7 +272,8 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `18_search_engine` |
-| **Status** | 🔲 Not started |
+| **Status** | ✅ Implemented |
+
 | **Concepts** | Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence |
 | **Key question** | How do inverted index build times and query latencies compare for different corpus sizes? |
 | **Directory** | `18_search_engine/` |

@@ -1,3 +1,9 @@
+# Status: 05_websocket_chat
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 05 · WebSocket Chat Server
 
 > Phase: **cycle-complete**

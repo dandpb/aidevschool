@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { type NextFunction, type Request, type Response } from 'express';
 import crypto from 'crypto';
 
 interface ConfigValue {
@@ -184,10 +184,11 @@ function createApp() {
   const service = new ConfigService();
 
   app.use(express.json());
+  app.use(['/config', '/flags'], requireAuthorization);
 
   app.put('/config/:key', (req: Request, res: Response) => {
     try {
-      const config = service.put(req.params.key, req.body);
+      const config = service.put(req.params.key, { ...req.body, author: req.body.author ?? principalFrom(req) });
       res.status(201).json(config);
     } catch (err) {
       if ((err as Error).message === 'VersionConflict') {
@@ -254,6 +255,19 @@ function createApp() {
   });
 
   return { app, service };
+}
+
+function requireAuthorization(req: Request, res: Response, next: NextFunction): void {
+  const authorization = req.header('authorization');
+  if (!authorization?.trim()) {
+    res.status(401).json({ error: 'Unauthenticated' });
+    return;
+  }
+  next();
+}
+
+function principalFrom(req: Request): string {
+  return req.header('authorization') ?? 'authenticated';
 }
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8080;

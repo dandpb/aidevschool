@@ -1,3 +1,9 @@
+# Status: 07_rest_api_auth
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 07 · REST API with Auth
 
 > Phase: **cycle-complete**

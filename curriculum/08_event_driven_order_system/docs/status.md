@@ -1,3 +1,9 @@
+# Status: 08_event_driven_order_system
+
+## Phase
+
+phase: cycle-complete
+
 # Status — Project 08 Event-Driven Order System
 
 ## Cycle status
