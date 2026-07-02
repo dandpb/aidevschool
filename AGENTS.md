@@ -1,8 +1,8 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-06-25
-**Commit:** 44ec2af
-**Branch:** architecture-deepening
+**Generated:** 2026-06-30
+**Commit:** 2630c82
+**Branch:** main
 
 ## OVERVIEW
 
@@ -35,11 +35,13 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 
 | Task | Location | Notes |
 | --- | --- | --- |
+| Get repo-wide orientation | `docs/handbook/README.md` | Read this first for architecture, onboarding, per-engine refs, substrate, and glossary. |
+| Share a mixed-audience overview | `docs/AI_DevSchool_Overview.docx` | Standalone ecosystem overview for handoffs or non-implementers. |
 | Validate the dashboard | `engines/codexDojo/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`. |
 | Validate the game | `engines/pixelDojo/pixel-quest/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`, `pnpm run smoke`. |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/` | Keep `MANIFEST.md` mapped to concrete files. |
-| Work on the tutor core | `engines/minimaxDojo/` | Start with `INDEX.md`, `README.md`, `docs/`, `prompts/`. |
-| Run Claude Code orchestration | `engines/miniMaxEvolutionEngine/` | Local `CLAUDE.md` defines agents, commands, and the 5-phase loop. |
+| Work on the tutor core | `engines/minimaxDojo/` | Start with `INDEX.md`, `README.md`, `docs/`, `prompts/`, then `core/` and `tests/` for the Python reference implementation and contract tests. |
+| Run Claude Code orchestration | `engines/miniMaxEvolutionEngine/` | Start with `README.md` and `CLAUDE.md`; SessionStart injects pipeline + gate state via `.claude/hooks/briefing.sh`. |
 | Change learner state | `learner/` | Shared source of truth for gates, profile, pitfalls, journal, pipeline. |
 | Change learner-state adapters | `learner/substrate/` | Edit canonical YAML first, then run `python3 -m learner.substrate`. |
 | Change project evidence | `curriculum/` | Shared challenge specs, implementations, reviews, benchmarks. |
@@ -86,6 +88,8 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 ```bash
 # User-facing dashboard
 cd engines/codexDojo
+pnpm install
+pnpm run dev
 pnpm run lint
 pnpm run test
 pnpm run build
@@ -94,10 +98,20 @@ pnpm run build
 ```bash
 # Teaching game
 cd engines/pixelDojo/pixel-quest
+pnpm install
+pnpm run dev
 pnpm run lint
 pnpm run test
 pnpm run build
 pnpm run smoke
+```
+
+```text
+# Claude Code motor
+Open Claude Code rooted at engines/miniMaxEvolutionEngine/
+/devschool-status
+/devschool-diagnose
+/devschool-cycle
 ```
 
 ```bash

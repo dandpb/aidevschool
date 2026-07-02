@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aidevschool"
+version = "0.1.0"
+description = "AI DevSchool ecosystem — shared Python substrate, tutor core, and learner pipeline."
+requires-python = ">=3.9"
+# Runtime dependency the test suites and substrate actually import (was previously
+# undeclared — see TECH_DEBT_AUDIT_2026-06-28.md, D12).
+dependencies = [
+  "pyyaml>=6,<7",
+  # FSRS spaced-repetition scheduler imported by learner/substrate/scheduling.py.
+  # Also previously undeclared — surfaced by the D5 test-runnability pass.
+  "fsrs>=6,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<9",
+]
+
+# Don't auto-discover packages from the polyglot tree; this project exists only to
+# declare deps and centralise the pytest config. Imports during tests resolve via
+# the `pythonpath` setting below (repo root on sys.path).
+[tool.setuptools]
+packages = []
+
+[tool.pytest.ini_options]
+# Run both Python test islands from the repo root with a single command (D5).
+pythonpath = ["."]
+testpaths = [
+  "engines/minimaxDojo/tests",
+  "learner/substrate/tests",
+]
+python_files = ["test_*.py"]

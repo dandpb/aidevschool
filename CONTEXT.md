@@ -1,5 +1,7 @@
 # aidevschool — Domain Context
 
+> **Scope:** domain glossary for the tutor core (threshold seam, gate, agent prompts) — not a status doc. For project/build status see [curriculum/BACKLOG_STATUS.md](curriculum/BACKLOG_STATUS.md).
+
 Tight definitions for architecture-deepening work in this repo.
 
 ## Threshold seam

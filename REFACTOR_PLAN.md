@@ -1,5 +1,7 @@
 # Refactor & Modernization Plan — AI DevSchool
 
+> ⚠️ **SUPERSEDED (2026-06-28).** Kept for history only. Key claims here are now false — e.g. "no safety net — no git anywhere in the tree" (§1): the repo is under git with 1,200+ tracked files, and the "2.9 GB / ~1,067 LOC / only 01_rate_limiter" figures are stale. For current status see [curriculum/BACKLOG_STATUS.md](curriculum/BACKLOG_STATUS.md) (per-project) and [TECH_DEBT_AUDIT_2026-06-28.md](TECH_DEBT_AUDIT_2026-06-28.md) (debt + remediation).
+
 > Scope: **everything, prioritized** (one sequenced plan across all three layers).
 > Constraint: **preserve behavior** unless a functional change is explicitly requested.
 > Method: small reviewable passes — each names *current behavior*, *structural improvement*, and *validation check*.

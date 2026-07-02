@@ -1,0 +1,91 @@
+name: CI
+
+# Enforcement spine (TECH_DEBT_AUDIT_2026-06-28.md, D2): lint + test + build on
+# every push / PR. The project's "no claims without evidence" rule needs a
+# machine that actually runs the suites. TS engines and the Python substrate are
+# blocking; the polyglot curriculum jobs are informational until D13 (parity
+# vectors + stub completion) lands.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  codexdojo:
+    name: codexDojo (TS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/codexDojo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: engines/codexDojo/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+
+  pixeldojo:
+    name: pixelDojo (TS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/pixelDojo/pixel-quest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: engines/pixelDojo/pixel-quest/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build
+
+  python:
+    name: Python (tutor core + substrate)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest
+
+  curriculum-go:
+    name: curriculum Go (informational)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+      - name: go test (every go.mod under curriculum)
+        run: |
+          set -e
+          find curriculum -name go.mod -execdir go test ./... \;
+
+  curriculum-rust:
+    name: curriculum Rust (informational)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo test (every Cargo.toml under curriculum)
+        run: |
+          set -e
+          find curriculum -name Cargo.toml -execdir cargo test \;
