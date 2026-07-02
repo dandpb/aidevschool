@@ -1,4 +1,4 @@
-import type { TokenBucketEncounter } from "../../content/types"
+import { TOKEN_BUCKET_CONTRACT, type TokenBucketEncounter } from "../../content/types"
 import type { PixelQuestEvidenceRecord } from "../evidence/types"
 
 export type EncounterAction = "admit" | "reject"
@@ -146,9 +146,9 @@ function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestE
   const overheated = state.heatPeak >= state.definition.heatMax
   const pass =
     !overheated &&
-    state.goodAdmits >= 8 &&
-    state.abusiveAdmitted === 0 &&
-    observedRate <= state.definition.targetRate * 1.35
+    state.goodAdmits >= TOKEN_BUCKET_CONTRACT.minGoodAdmits &&
+    state.abusiveAdmitted <= TOKEN_BUCKET_CONTRACT.maxAbusiveAdmitted &&
+    observedRate <= state.definition.targetRate * TOKEN_BUCKET_CONTRACT.maxObservedRateMultiplier
   return {
     source: "pixelquest",
     unit_id: state.definition.unit_id,

@@ -5,11 +5,7 @@ import { validateEvidenceRecord } from "../game/evidence/evidence"
 
 describe("token bucket encounter", () => {
   it("emits passing evidence when legit traffic is admitted and abuse is rejected", () => {
-    const { pack } = loadCorePack()
-    const encounter = pack.encounters[0]
-    if (encounter === undefined || encounter.kind !== "token_bucket") {
-      throw new Error("expected core encounter")
-    }
+    const encounter = tokenBucketEncounter()
     let state = createTokenBucketState(encounter)
     for (const request of encounter.requests) {
       state = applyEncounterAction(
@@ -22,24 +18,20 @@ describe("token bucket encounter", () => {
     expect(state.complete).toBe(true)
     expect(state.evidence?.pass).toBe(true)
     expect(validateEvidenceRecord(state.evidence)).toMatchObject({
-      project: "01_rate_limiter",
-      unit_id: "U0-sonda-rate-limiter-robustness",
+      project: "03_url_shortener",
+      unit_id: "U-03_url_shortener",
       pass: true,
       curriculum_context: {
-        concept: "Token bucket: capacidade, refill e rejeicao 429",
-        mechanic: "Token Bucket",
-        accepted_signal: "trafego legitimo",
-        rejected_trap: "rajada abusiva",
+        concept: "Codigos curtos, colisao e redirecionamento confiavel",
+        mechanic: "Slug Router",
+        accepted_signal: "slug unico",
+        rejected_trap: "colisao de slug",
       },
     })
   })
 
   it("emits failing evidence when abuse is admitted", () => {
-    const { pack } = loadCorePack()
-    const encounter = pack.encounters[0]
-    if (encounter === undefined || encounter.kind !== "token_bucket") {
-      throw new Error("expected core encounter")
-    }
+    const encounter = tokenBucketEncounter()
     let state = createTokenBucketState(encounter)
     for (let index = 0; index < encounter.requests.length; index += 1) {
       state = applyEncounterAction(state, "admit", new Date("2026-06-11T12:00:00.000Z"))
@@ -50,3 +42,12 @@ describe("token bucket encounter", () => {
     expect(state.evidence?.metrics.abusive_admitted).toBeGreaterThan(0)
   })
 })
+
+function tokenBucketEncounter() {
+  const { pack } = loadCorePack()
+  const encounter = pack.encounters.find((candidate) => candidate.project === "03_url_shortener")
+  if (encounter === undefined || encounter.kind !== "token_bucket") {
+    throw new Error("expected curriculum token bucket encounter")
+  }
+  return encounter
+}

@@ -215,5 +215,28 @@ class TestGateResult(unittest.TestCase):
         self.assertEqual(len(result.gaps), 4)
 
 
+class TestGateConfigSeam(unittest.TestCase):
+    """The gate's live thresholds must come from config/learner.yaml (the seam),
+    not hardcoded constants. Guards the D8 wiring against regressions."""
+
+    def test_from_config_reads_threshold_seam(self):
+        from engines.minimaxDojo.core.gates import EmpiricalGate
+        gate = EmpiricalGate.from_config()
+        # Values declared in engines/minimaxDojo/config/learner.yaml.
+        self.assertAlmostEqual(gate.mutation_threshold, 0.65)
+        self.assertAlmostEqual(gate.coverage_threshold, 0.80)
+
+    def test_from_config_overrides_drive_behavior(self):
+        from engines.minimaxDojo.core.gates import EmpiricalGate
+        lenient = EmpiricalGate.from_config(
+            {"gates": {"mutation_score_min": 0.50, "cobertura_nucleo_min": 0.50}}
+        )
+        result = lenient.evaluate(
+            mutation_score=0.55, coverage_core=0.55, tests_pass=True, lint_clean=True
+        )
+        # 0.55 would FAIL the default 0.65/0.80 gate but PASSES the config-driven one.
+        self.assertTrue(result.passed)
+
+
 if __name__ == "__main__":
     unittest.main()

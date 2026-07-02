@@ -1,12 +1,13 @@
-import type {
-  ContentPack,
-  EncounterDefinition,
-  PolicyCheck,
-  Region,
-  RouteCheck,
-  SequenceStep,
-  TokenBucketRequest,
-  UnitDefinition,
+import {
+  type ContentPack,
+  type EncounterDefinition,
+  type PolicyCheck,
+  type Region,
+  type RouteCheck,
+  type SequenceStep,
+  TOKEN_BUCKET_CONTRACT,
+  type TokenBucketRequest,
+  type UnitDefinition,
 } from "./types"
 
 type CurriculumModule = {
@@ -31,18 +32,31 @@ type CurriculumModule = {
 const modules: readonly CurriculumModule[] = [
   {
     project: "01_rate_limiter",
-    title: "Rate Limiter",
-    concept: "Token bucket: capacidade, refill e rejeicao 429",
-    verb: "admitir trafego legitimo e rejeitar abuso",
-    mechanicName: "Token Bucket",
-    resourceName: "Tokens",
-    goodRequestLabel: "trafego legitimo",
-    badRequestLabel: "rajada abusiva",
-    admitActionLabel: "Admitir",
-    rejectActionLabel: "Rejeitar",
-    practiceTitle: "Treino de ritmo",
+    title: "Agent Quest: Rate Limiter",
+    concept: "Orquestracao agentica para provar robustez de token bucket",
+    verb: "acionar agentes com evidencia e bloquear atalhos sem gate",
+    mechanicName: "Agent Quest",
+    resourceName: "Gates",
+    goodRequestLabel: "acao agentica correta",
+    badRequestLabel: "atalho sem evidencia",
+    admitActionLabel: "Acionar",
+    rejectActionLabel: "Bloquear",
+    practiceTitle: "Simulacao de orquestracao",
     practiceText:
-      "Admitir trafego legitimo consome tokens. Rejeitar abuso evita heat. Venca sem admitir abuso e mantendo a taxa observada sob controle.",
+      "Conduza Sonda, Mestre-Conteudo e Prometor pelo ciclo plan-act-observe-verify. Acione passos com evidencia; bloqueie solucoes antes da tentativa, self-verification e mastery sem gate.",
+    encounterKind: "sequence_flow",
+    sequenceSteps: [
+      { type: "advance", label: "PLAN: Sonda diagnostica sua tentativa no rate limiter" },
+      { type: "guard", label: "TRAP: Socrates entrega solucao sem tentativa sua" },
+      { type: "advance", label: "PLAN: Mestre-Conteudo define DoD e teste minimo" },
+      { type: "guard", label: "TRAP: Implementador codifica antes do criterio" },
+      { type: "advance", label: "ACT: Implementador aplica a menor mudanca verificavel" },
+      { type: "guard", label: "TRAP: Produtor verifica o proprio patch" },
+      { type: "advance", label: "OBSERVE: Testes rodam lint, suite focada e evidencia" },
+      { type: "guard", label: "TRAP: Metricas celebra score sem comando executado" },
+      { type: "advance", label: "VERIFY: Prometor isolado decide PASS ou FAIL" },
+      { type: "guard", label: "TRAP: Memoria marca DOMINADO antes do gate" },
+    ],
   },
   {
     project: "02_key_value_store",
@@ -500,9 +514,9 @@ function makeUnit(module: CurriculumModule, index: number): UnitDefinition {
     encounter_ids: [encounterId(module)],
     evidence_contract: {
       kind: "pixelquest-token-bucket",
-      minGoodAdmits: 8,
-      maxAbusiveAdmitted: 0,
-      maxObservedRateMultiplier: 1.35,
+      minGoodAdmits: TOKEN_BUCKET_CONTRACT.minGoodAdmits,
+      maxAbusiveAdmitted: TOKEN_BUCKET_CONTRACT.maxAbusiveAdmitted,
+      maxObservedRateMultiplier: TOKEN_BUCKET_CONTRACT.maxObservedRateMultiplier,
     },
   }
 }
@@ -582,7 +596,7 @@ function unitId(module: CurriculumModule): string {
 
 function encounterId(module: CurriculumModule): string {
   if (module.project === "01_rate_limiter") {
-    return "encounter-token-bucket-01"
+    return "encounter-agent-quest-01"
   }
   return `encounter-${module.project}`
 }

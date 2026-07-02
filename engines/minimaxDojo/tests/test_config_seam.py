@@ -50,24 +50,39 @@ class TestConfigSeam(unittest.TestCase):
         self.assertEqual(self.config["gates"]["mutation_score_min"], 0.65)
 
     def _assert_config_references_resolve(self, text, label):
+        """Assert every ⟨config: path⟩ in `text` resolves; return how many were checked."""
+        checked = 0
         for match in CONFIG_REF_RE.finditer(text):
             path = match.group(1).strip()
             if path in CONFIG_REF_PLACEHOLDERS:
                 continue
+            checked += 1
             with self.subTest(source=label, ref=path):
                 try:
                     resolve_path(self.config, path)
                 except Exception as exc:  # pragma: no cover
                     self.fail(f"could not resolve ⟨config: {path}⟩: {exc}")
+        return checked
 
     def test_per_agent_prompts_only_use_valid_config_refs(self):
+        checked = 0
         for prompt_path in sorted(PROMPT_DIR.glob("*.md")):
             text = prompt_path.read_text(encoding="utf-8")
-            self._assert_config_references_resolve(text, prompt_path.name)
+            checked += self._assert_config_references_resolve(text, prompt_path.name)
+        if checked == 0:
+            self.skipTest(
+                "config-ref convention not yet adopted: 0 ⟨config:⟩ references found in "
+                "prompts/per_agent/. This guard cannot give a green signal until the "
+                "convention is actually used (TECH_DEBT_AUDIT_2026-06-28.md, D9)."
+            )
 
     def test_empirical_gates_doc_only_uses_valid_config_refs(self):
         text = EMPIRICAL_GATES_PATH.read_text(encoding="utf-8")
-        self._assert_config_references_resolve(text, EMPIRICAL_GATES_PATH.name)
+        if self._assert_config_references_resolve(text, EMPIRICAL_GATES_PATH.name) == 0:
+            self.skipTest(
+                "0 ⟨config:⟩ references in docs/04_empirical_gates.md — this guard would "
+                "otherwise pass vacuously (D9)."
+            )
 
     def test_agent_directories_are_thin_indexes(self):
         """The collapse removes agent.md and PERSONA.md, leaving only README.md."""

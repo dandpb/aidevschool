@@ -3,7 +3,7 @@
 id: aluno-001
 learner_id: daniel-barreto
 derived_from: ../../learner/learning_state.yaml
-updated: '2026-06-26'
+updated: '2026-07-01'
 agente_owner: mnemosyne
 core:
   aluno:
@@ -17,7 +17,7 @@ core:
     socrates_quota_today: 0 / 15
     human_instructor: none
   trilha:
-    proxima_unidade: U0-sonda-rate-limiter-robustness
+    proxima_unidade: U17-search-engine
     ultima_dominada: null
   pegadinhas_top_3: []
   skills_ativas_top_3: []

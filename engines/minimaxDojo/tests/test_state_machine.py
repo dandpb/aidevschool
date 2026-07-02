@@ -85,6 +85,14 @@ class TestUnitStateMachine(unittest.TestCase):
         with self.assertRaises(DeterminismError):
             sm.transition("prometor.PASS")  # can't verify before practicing
 
+    def test_max_retries_is_configurable(self):
+        """max_retries is injectable (sourced from the config seam by default, D8)."""
+        sm = self.sm_class(unit_id="U-001", max_retries=1)
+        sm.transition("aluno.aceita")
+        sm.transition("aluno.submete")
+        sm.transition("prometor.FAIL")  # first failure already hits the cap of 1
+        self.assertEqual(sm.state, "FALHA_BLOQUEIO")
+
     def test_transition_logs_event(self):
         sm = self.sm_class(unit_id="U-001")
         sm.transition("aluno.aceita")

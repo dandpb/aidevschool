@@ -34,6 +34,15 @@ describe("content pack validation", () => {
     expect(pack.regions[0]?.gates[0]?.nextRegionId).toBe("lab-02_key_value_store")
     expect(pack.regions.at(-1)?.gates[0]?.nextRegionId).toBeUndefined()
     expect(
+      pack.encounters.find((encounter) => encounter.project === "01_rate_limiter"),
+    ).toMatchObject({
+      kind: "sequence_flow",
+      id: "encounter-agent-quest-01",
+      mechanicName: "Agent Quest",
+      goodRequestLabel: "acao agentica correta",
+      badRequestLabel: "atalho sem evidencia",
+    })
+    expect(
       pack.encounters.find((encounter) => encounter.project === "02_key_value_store"),
     ).toMatchObject({
       kind: "sequence_flow",

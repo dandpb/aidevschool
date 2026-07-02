@@ -29,12 +29,15 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await page.keyboard.press("e")
   await expect(page.getByRole("button", { name: "Abrir treino" })).toBeVisible()
   await page.keyboard.press("Enter")
-  await expect(page.getByText("Treino de ritmo")).toBeVisible()
+  await expect(page.getByText("Simulacao de orquestracao")).toBeVisible()
+  await expect(page.getByText(/Sonda, Mestre-Conteudo e Prometor/)).toBeVisible()
   await expect(page.locator(".phase-strip")).toContainText("Treino")
+  await expect(page.locator(".prompt-chip")).toContainText("Z Acionar")
+  await expect(page.locator(".prompt-chip")).toContainText("X Bloquear")
   await page.keyboard.press("Enter")
   await expect(page.locator(".phase-strip")).toContainText("Duelo")
 
-  const actions = ["z", "z", "x", "z", "z", "x", "z", "z", "x", "z", "z", "x"]
+  const actions = ["z", "x", "z", "x", "z", "x", "z", "x", "z", "x"]
   for (const action of actions) {
     await page.keyboard.press(action)
   }
@@ -44,12 +47,14 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   const evidence = await page.evaluate(() => window.__pixelQuestEvidence)
   expect(evidence?.unit_id).toBe("U0-sonda-rate-limiter-robustness")
   expect(evidence?.project).toBe("01_rate_limiter")
+  expect(evidence?.encounter_id).toBe("encounter-agent-quest-01")
   expect(evidence?.pass).toBe(true)
+  expect(evidence?.metrics.good_admits).toBe(5)
   expect(evidence?.metrics.abusive_admitted).toBe(0)
   expect(evidence?.curriculum_context).toMatchObject({
-    mechanic: "Token Bucket",
-    accepted_signal: "trafego legitimo",
-    rejected_trap: "rajada abusiva",
+    mechanic: "Agent Quest",
+    accepted_signal: "acao agentica correta",
+    rejected_trap: "atalho sem evidencia",
   })
   expect(evidence?.review_context).toMatchObject({
     scheduled_review: true,

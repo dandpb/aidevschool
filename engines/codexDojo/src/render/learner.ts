@@ -1,5 +1,6 @@
 import type { LearnerSnapshot } from "../domain"
 import { getLearnerSnapshot } from "../progress"
+import { escapeHtml } from "./escape"
 
 const AIDI_HISTORY_POINTS = 30
 
@@ -32,13 +33,13 @@ function renderUnitState(snapshot: LearnerSnapshot): string {
   return `
     <div class="learner-unit">
       <p class="eyebrow">Unidade ativa</p>
-      <h3>${snapshot.activeUnit.title}</h3>
+      <h3>${escapeHtml(snapshot.activeUnit.title)}</h3>
       <div class="learner-unit-meta">
-        <span class="state-pill state-${snapshot.activeUnit.state}">${snapshot.activeUnit.state}</span>
+        <span class="state-pill state-${snapshot.activeUnit.state}">${escapeHtml(snapshot.activeUnit.state)}</span>
         <span class="gate-pill ${gateClass}">${gateLabel}</span>
         <span class="retry-pill">${snapshot.activeUnit.retryCount}/${snapshot.activeUnit.retryLimit} retries</span>
       </div>
-      <p class="learner-unit-unblock">Desbloqueio: <code>${gate.unblockCondition}</code></p>
+      <p class="learner-unit-unblock">Desbloqueio: <code>${escapeHtml(gate.unblockCondition)}</code></p>
     </div>
   `
 }
@@ -48,9 +49,9 @@ function renderProfile(snapshot: LearnerSnapshot): string {
     <div class="learner-profile">
       <p class="eyebrow">Perfil</p>
       <dl class="profile-grid">
-        <div><dt>Dreyfus</dt><dd>${snapshot.profile.dreyfus}</dd></div>
-        <div><dt>Bloom</dt><dd>${snapshot.profile.bloom}</dd></div>
-        <div><dt>Linguagem ativa</dt><dd>${snapshot.profile.activeLanguage}</dd></div>
+        <div><dt>Dreyfus</dt><dd>${escapeHtml(snapshot.profile.dreyfus)}</dd></div>
+        <div><dt>Bloom</dt><dd>${escapeHtml(snapshot.profile.bloom)}</dd></div>
+        <div><dt>Linguagem ativa</dt><dd>${escapeHtml(snapshot.profile.activeLanguage)}</dd></div>
         <div><dt>Tempo semanal</dt><dd>${snapshot.profile.weeklyTimeHours}h</dd></div>
       </dl>
     </div>
@@ -93,9 +94,9 @@ function renderPitfalls(snapshot: LearnerSnapshot): string {
           .map(
             (pitfall) => `
               <li>
-                <span class="pitfall-id">${pitfall.id}</span>
-                <span class="pitfall-desc">${pitfall.description}</span>
-                <span class="pitfall-occ">${pitfall.occurrences}× · ${pitfall.lastSeen}</span>
+                <span class="pitfall-id">${escapeHtml(pitfall.id)}</span>
+                <span class="pitfall-desc">${escapeHtml(pitfall.description)}</span>
+                <span class="pitfall-occ">${pitfall.occurrences}× · ${escapeHtml(pitfall.lastSeen)}</span>
               </li>
             `,
           )
@@ -118,10 +119,10 @@ function renderNextReviews(snapshot: LearnerSnapshot): string {
           .map(
             (review) => `
               <li class="review-row review-${review.reason}">
-                <span class="review-due">${review.dueIn}</span>
-                <span class="review-unit">${review.unitId}</span>
-                <span class="review-title">${review.title}</span>
-                <span class="review-reason">${review.reason}</span>
+                <span class="review-due">${escapeHtml(review.dueIn)}</span>
+                <span class="review-unit">${escapeHtml(review.unitId)}</span>
+                <span class="review-title">${escapeHtml(review.title)}</span>
+                <span class="review-reason">${escapeHtml(review.reason)}</span>
               </li>
             `,
           )
@@ -138,13 +139,13 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
       <div class="coverage-grid">
         <div class="coverage-cell coverage-mastered">
           <strong>${snapshot.masteredCount}</strong>
-          <span>dominado</span>
+          <span>projeto verificado</span>
         </div>
         <div class="coverage-cell coverage-scaffolded">
           <strong>${snapshot.scaffoldedCount}</strong>
           <span>com scaffold</span>
         </div>
-        <p class="coverage-hint">A cat. <code>curriculum/catalog.md</code> mantém 18 projetos; o dashboard reflete <code>learner/learning_state.yaml</code>.</p>
+        <p class="coverage-hint">A cat. <code>curriculum/catalog.md</code> mantém 18 projetos; domínio do learner vem só de <code>learner/learning_state.yaml</code>.</p>
       </div>
     </div>
   `
@@ -155,7 +156,7 @@ function renderStreak(snapshot: LearnerSnapshot): string {
   const filled = "❄".repeat(s.freezesEquipped)
   const empty = "·".repeat(Math.max(0, s.freezesMax - s.freezesEquipped))
   const lastLabel = s.lastGateDate
-    ? `último portão em ${s.lastGateDate}`
+    ? `último portão em ${escapeHtml(s.lastGateDate)}`
     : "nenhum portão passado ainda"
 
   return `

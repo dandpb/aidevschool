@@ -1,7 +1,7 @@
 ---
 aluno_id: aluno-001
 derived_from: ../../learner/learning_state.yaml
-atualizado: '2026-06-26'
+atualizado: '2026-07-01'
 agente_owner: cartografo
 ---
 
@@ -12,7 +12,7 @@ agente_owner: cartografo
 ## Foco atual
 
 - **Robustness**
-- **Unidade ativa:** U0-sonda-rate-limiter-robustness (APRESENTANDO)
+- **Unidade ativa:** U17-search-engine (DOMINADO)
 
 ## Template canônico
 

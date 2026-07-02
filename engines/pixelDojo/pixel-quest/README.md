@@ -18,6 +18,9 @@ evidence, review, and gate. The encounter registry now supports a timed classifi
 an ordered-flow puzzle (`sequence_flow`), a health-routing puzzle (`route_health`), and an
 authorization/isolation puzzle (`policy_gate`). Every curriculum lab supplies its own mechanic name,
 resource meter, action labels, signal/trap labels, practice copy, and `curriculum_context` evidence.
+The first lab is `Agent Quest: Rate Limiter`, a sequence-flow simulation where the learner activates
+Sonda, Mestre-Conteudo, Implementador, Testes, and Prometor while blocking shortcuts that skip
+attempts, verification, or the mastery gate.
 Future work can keep adding richer module-specific mechanics through the typed encounter registry.
 
 ## Run

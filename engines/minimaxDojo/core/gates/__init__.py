@@ -7,8 +7,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-DEFAULT_MUTATION_THRESHOLD = 0.65
-DEFAULT_COVERAGE_THRESHOLD = 0.80
+from ..config import (
+    FALLBACK_COVERAGE,
+    FALLBACK_MUTATION,
+    gate_thresholds,
+)
+
+# Single-sourced fallbacks (used only when config/learner.yaml is unavailable).
+# The live values come from the threshold seam via EmpiricalGate.from_config()
+# (see TECH_DEBT_AUDIT_2026-06-28.md, D8).
+DEFAULT_MUTATION_THRESHOLD = FALLBACK_MUTATION
+DEFAULT_COVERAGE_THRESHOLD = FALLBACK_COVERAGE
 
 ANTI_PATTERN_BLACKLIST = frozenset({
     "assert_true_in_test", "mock_returns_expected", "testing_the_mock_not_code",
@@ -35,6 +44,12 @@ class GateResult:
 class EmpiricalGate:
     mutation_threshold: float = DEFAULT_MUTATION_THRESHOLD
     coverage_threshold: float = DEFAULT_COVERAGE_THRESHOLD
+
+    @classmethod
+    def from_config(cls, config: dict | None = None) -> "EmpiricalGate":
+        """Build a gate whose thresholds come from the config seam (learner.yaml)."""
+        mutation, coverage = gate_thresholds(config)
+        return cls(mutation_threshold=mutation, coverage_threshold=coverage)
 
     def evaluate(
         self,

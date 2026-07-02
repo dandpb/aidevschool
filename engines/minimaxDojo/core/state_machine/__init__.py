@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any
 
+from ..config import max_retries as _config_max_retries
+
 
 class DeterminismError(Exception):
     """Raised when an invalid state transition is attempted."""
@@ -20,7 +22,9 @@ STATES = frozenset({
 
 SUB_STATES = frozenset({"PRODUCING", "VERIFYING", "DONE"})
 
-MAX_RETRIES = 3
+# Sourced from the config seam (retries.max_por_unidade in learner.yaml); falls
+# back to 3 when the config file or PyYAML is unavailable (D8).
+MAX_RETRIES = _config_max_retries()
 
 
 def _now_iso() -> str:
@@ -33,6 +37,7 @@ class UnitStateMachine:
     state: str = "APRESENTANDO"
     sub_state: str | None = None
     retries: int = 0
+    max_retries: int = MAX_RETRIES
     _events: list[dict[str, Any]] = field(default_factory=list)
 
     def transition(self, event: str, payload: dict[str, Any] | None = None) -> str:
@@ -45,8 +50,8 @@ class UnitStateMachine:
         # Handle prometor.FAIL in AVALIANDO
         if event == "prometor.FAIL" and self.state == "AVALIANDO":
             self.retries += 1
-            self._log(event, payload, "APRESENTANDO" if self.retries < MAX_RETRIES else "FALHA_BLOQUEIO")
-            if self.retries >= MAX_RETRIES:
+            self._log(event, payload, "APRESENTANDO" if self.retries < self.max_retries else "FALHA_BLOQUEIO")
+            if self.retries >= self.max_retries:
                 self.state = "FALHA_BLOQUEIO"
                 self.sub_state = None
             else:

@@ -48,6 +48,16 @@ export type EvidenceContract = {
   readonly maxObservedRateMultiplier: number
 }
 
+// Single source of truth for the token-bucket pass thresholds. Referenced by
+// both the declared unit contract (curriculumPack.makeUnit) and the runtime
+// pass-rule (game/encounters/tokenBucket.buildEvidence) so the two cannot drift
+// (see TECH_DEBT_AUDIT_2026-06-28.md, D10).
+export const TOKEN_BUCKET_CONTRACT = {
+  minGoodAdmits: 8,
+  maxAbusiveAdmitted: 0,
+  maxObservedRateMultiplier: 1.35,
+} as const
+
 export type UnitDefinition = {
   readonly unit_id: string
   readonly project: string
