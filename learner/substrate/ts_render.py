@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from typing import Any
 
@@ -77,4 +78,4 @@ def _format_value(value: Any, indent: int) -> str:
         return _format_snapshot(value, indent)
     if value is None:
         return "null"
-    return f"\"{value}\""
+    return json.dumps(str(value), ensure_ascii=False)

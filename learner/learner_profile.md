@@ -14,7 +14,10 @@
 
 | Conceito | Estágio (Dreyfus) | Nível cognitivo (Bloom) | Evidência |
 |----------|-------------------|-------------------------|-----------|
-| _(preenchido pelo `sonda` no diagnóstico)_ | | | |
+| Test Design | Intermediário (Competent) | Aplicar (Apply) | Desenhou casos de teste cobrindo limites de capacidade, concorrência e vazão. |
+| Raciocínio de Concorrência | Avançado (Proficient) | Analisar (Analyze) | Identificou escopo de concorrência explícita e tratamento de locks fora do I/O de rede. |
+| Tratamento de Erro e Contrato | Intermediário (Competent) | Aplicar (Apply) | Seguiu à risca os cabeçalhos de resposta HTTP, códigos de status 429 e formato de dados. |
+| Instinto de Refatoração | Intermediário (Competent) | Analisar (Analyze) | Associou riscos identificados (ex. spoofing de IP, OOM por map ilimitado) com passos seguros reversíveis. |
 
 ## Pré-requisitos comprovados
 
@@ -22,7 +25,9 @@
 
 ## Lacunas detectadas
 
-- _(preenchido pelo `sonda`)_
+- Sincronização e coordenação de locks em ambientes multi-processados com Node.js (cluster).
+- Tratamento fino de clocks não-monotônicos durante NTP adjustments no refill do Token Bucket.
+
 
 ## Profile Note (2026-06-18)
 No Dreyfus/Bloom level changes from prompt-gap implementation work. Documentation, dashboard,

@@ -2,10 +2,10 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-06-26T19:47:15+00:00'
+updated_at: '2026-07-01T17:51:46+00:00'
 workspace: /Users/danielbarreto/Development/aidevschool
 change_log:
-- at: '2026-06-26T19:47:15+00:00'
+- at: '2026-07-01T17:51:46+00:00'
   by: substrate
   reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
@@ -39,17 +39,17 @@ state_machine:
   retry_limit: 3
   current_retry: 0
 active_unit:
-  id: U0-sonda-rate-limiter-robustness
-  project: projects/01_rate_limiter
-  title: 'Sonda diagnostic: token-bucket robustness'
-  state: apresentando
+  id: U17-search-engine
+  project: projects/18_search_engine
+  title: 'Agent Quest 18: search engine'
+  state: dominado
   diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
-  awaiting: learner_attempt
+  awaiting: ''
   promotion_gate:
-  - learner submits an attempt before receiving solutions
+  - learner plays the Agent Quest mission before receiving solutions
+  - learner chooses agent actions and blocks shortcuts that skip attempts or evidence
   - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
-  - Cartografo updates the first concrete robustness gap
-  - Prometor defines executable verification for the first implementation task
+  - Prometor receives executable PixelDojo evidence before any mastery transition
 agent_ownership:
   leader: Maestro
   diagnostic: Sonda
@@ -73,4 +73,4 @@ empirical_gates:
     mastery_source: executable_evidence
 next_action:
   owner: learner
-  action: Complete the diagnostic in curriculum/01_rate_limiter/docs/diagnostic.md.
+  action: All curriculum projects complete.

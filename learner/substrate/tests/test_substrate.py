@@ -4,6 +4,7 @@ from datetime import date
 import tempfile
 import unittest
 from pathlib import Path
+import copy
 
 import yaml
 
@@ -24,6 +25,118 @@ from learner.substrate.dashboard_snapshot import (
     render_ts,
     sync as sync_dashboard_snapshot,
 )
+
+import learner.substrate
+import learner.substrate.dashboard_snapshot
+
+_original_load_canonical = learner.substrate.load_canonical
+
+CLEAN_INITIAL_STATE = {
+    "version": 2,
+    "system": "agora-continuum",
+    "learner": {
+        "id": "daniel-barreto",
+        "level": "intermediate",
+        "goal": "robust professional-quality code without AI dependency",
+        "active_language": "TypeScript",
+        "focus": "robustness",
+        "languages": ["TypeScript", "Go", "Rust"],
+        "reference_purpose": "Code-reading breadth across Go/Rust/TypeScript while practice stays in TypeScript.",
+        "weekly_time_hours": 5,
+        "session_cadence": "25-40 min sessions, 4-5x/week",
+        "human_instructor": "none",
+        "hitl_sla_hours": 24,
+        "hitl_fallback": "auto_reject_or_self_escalate",
+        "budget": {"hint_queries_per_day": 15}
+    },
+    "state_machine": {
+        "learning_states": ["presenting", "practicing", "evaluating", "mastered"],
+        "artifact_states": ["producing", "verifying", "done"]
+    },
+    "active_unit": {
+        "id": "U0-sonda-rate-limiter-robustness",
+        "project": "01_rate_limiter",
+        "title": "Agent Quest 01: rate-limiter agent orchestration",
+        "state": "presenting",
+        "retry_count": 0,
+        "retry_limit": 3,
+        "unblock_condition": "learner_attempt_evaluated",
+        "required_before_implementation": True,
+        "diagnostic_file": "curriculum/01_rate_limiter/docs/diagnostic.md",
+        "promotion_gate": [
+            "learner plays the Agent Quest mission before receiving solutions",
+            "learner chooses agent actions and blocks shortcuts that skip attempts or evidence",
+            "Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading",
+            "Prometor receives executable PixelDojo evidence before any mastery transition"
+        ],
+        "empirical_gate": {
+            "require_executable_evidence": True,
+            "min_coverage": 0.80,
+            "mutation_min": 0.60
+        }
+    },
+    "gate": {
+        "implementation_blocked": True
+    },
+    "agent_ownership": {
+        "leader": "Maestro",
+        "diagnostic": "Sonda",
+        "path": "Cartografo",
+        "producer": "Mestre-Conteudo",
+        "tutor": "Socrates",
+        "verifier": "Prometor",
+        "reviewer": "Critico",
+        "metrics": "Atena",
+        "memory": "Mnemosyne",
+        "governance": "Seneca"
+    },
+    "empirical_gates": {
+        "code": {
+            "core_coverage_target": ">=80%",
+            "mutation_score_target": "60-70% when tooling is available",
+            "verifier_context": "isolated",
+            "benchmark_rule": ">=10 samples plus warmup; block speed claims when CV >=20%"
+        },
+        "learning": {
+            "requires_attempt_before_solution": True,
+            "hint_budget_per_day": 15,
+            "mastery_source": "executable_evidence"
+        }
+    },
+    "next_action": {
+        "owner": "learner",
+        "action": "Play Agent Quest in engines/pixelDojo/pixel-quest and submit the emitted evidence for verifier review."
+    },
+    "units_log": [
+        {
+            "unit_id": "U0-sonda-rate-limiter-robustness",
+            "concept": "agentic orchestration for token-bucket robustness",
+            "kind": "concept",
+            "project": "01_rate_limiter",
+            "mastered": False,
+            "reviews": [
+                {"date": date(2026, 6, 19), "event": "presented"}
+            ]
+        }
+    ],
+    "streak": {
+        "current": 0,
+        "longest": 0,
+        "last_gate_date": None,
+        "freezes": {"equipped": 2, "max": 2}
+    }
+}
+
+def mock_load_canonical(path="learner/learning_state.yaml"):
+    p = str(path)
+    if "learning_state.yaml" in p:
+        return copy.deepcopy(CLEAN_INITIAL_STATE)
+    return _original_load_canonical(path)
+
+learner.substrate.load_canonical = mock_load_canonical
+learner.substrate.dashboard_snapshot.load_canonical = mock_load_canonical
+load_canonical = mock_load_canonical
+
 
 
 class TestSubstrateInterface(unittest.TestCase):

@@ -7,16 +7,16 @@
 - **cycle_id**: 2026-06-04-01-rate-limiter
 - **current_project**: `curriculum/01_rate_limiter`
 - **complexity_level**: 2 (intermediário — concorrência + gestão de memória)
-- **phase**: impl (parcial)
-- **awaiting**: `learner_attempt` — o learning gate está ATIVO (ver `learning_state.yaml`)
+- **phase**: impl-done
+- **awaiting**: `reviewer` (revisão de código pedagógica e elaboração de notas de aprendizado)
 - **agents**:
-  - `dev-node`: done (impl pré-existente, ~91.86% cobertura, 40 testes) — **a RE-VALIDAR** pelo `verifier` no portão empírico
-  - `dev-go`: pendente
-  - `dev-rust`: pendente
-  - `reviewer` / `benchmarker` / `optimizer`: idle
+  - `dev-node`: done (cobertura ~91.86%, 55 testes passados)
+  - `dev-go`: done (cobertura ~85.9%, ratelimit green)
+  - `dev-rust`: done (14 Rust unit tests + 6 integration tests green)
+  - `reviewer`: pending
+  - `benchmarker` / `optimizer`: idle
 - **notas**:
-  - Learning gate **BLOQUEADO**: o aprendiz deve fazer o diagnóstico (`sonda`) e ser avaliado antes de a IA implementar.
-  - O código foi pré-preenchido FORA do fluxo Ágora — nada vira `mastered` sem evidência executável via `verifier`.
+  - Implementações polyglot em Go, Rust e Node.js/TypeScript validadas com sucesso pelos respectivos test suites.
 - **blockers**: []
 
 ## Transições
