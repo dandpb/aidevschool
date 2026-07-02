@@ -70,3 +70,26 @@ Thumbs.db
 # Python bytecode
 __pycache__/
 *.pyc
+
+# --- Added 2026-06-28 (TECH_DEBT_AUDIT D6/D11): stop committing generated/tool state ---
+# Generated graph outputs — only graphify-out/cache/ was ignored before, so the
+# rendered report + call-flow HTML leaked into source. They are all derived.
+graphify-out/*.html
+graphify-out/*.md
+graphify-out/*.json
+# Machine-specific codegraph symlink (absolute path; regenerated per machine).
+.codegraph
+# One-off committed binary snapshot — regenerate from the live dashboard instead.
+codexdojo-dashboard.png
+# NOTE: files already committed stay tracked until you run, from the repo root:
+#   git rm --cached graphify-out/aidevschool-callflow.html graphify-out/GRAPH_REPORT.md codexdojo-dashboard.png
+#   git commit -m "chore: stop tracking generated artifacts (TECH_DEBT_AUDIT D11a)"
+
+# --- Platform/session state (per AGENTS.md): never commit tool/machine state ---
+.commandcode/
+.compozy/agents/
+.omo/
+.serena/
+.opencode/
+.playwright-mcp/
+.codex/
