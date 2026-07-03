@@ -11,6 +11,9 @@ export function phaseLabel(phase: GamePhase): string {
   if (phase === "briefing") {
     return "Briefing"
   }
+  if (phase === "orbit") {
+    return "Orbita 3D"
+  }
   if (phase === "map") {
     return "Mapa"
   }

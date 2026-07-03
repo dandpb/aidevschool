@@ -1,13 +1,10 @@
 import { curriculumUnitCount, firstCurriculumRegionId } from "../content/curriculumPack"
 import { loadCorePack } from "../content/loadCorePack"
-import type { EncounterDefinition, RegionNpc } from "../content/types"
+import type { RegionNpc } from "../content/types"
 import {
   applyEncounterAction,
   autoPassEncounter,
-  createEncounterFromPack,
   type EncounterState,
-  encounterProgress,
-  getCurrentPrompt,
 } from "../game/encounters/registry"
 import type { EncounterAction } from "../game/encounters/tokenBucket"
 import { validateEvidenceRecord } from "../game/evidence/evidence"
@@ -19,20 +16,26 @@ import type { WorldState } from "../game/simulation/types"
 import {
   createWorld,
   enterDuel,
-  enterGate,
   enterJournal,
   enterPractice,
   enterRegion,
+  enterSelectedSkillOrbitRegion,
+  enterSkillOrbit,
   enterWorld,
-  getInteraction,
-  isUnitCompleted,
+  exitSkillOrbit,
   movePlayer,
   recordEvidence,
+  selectSkillOrbit,
   setMode,
 } from "../game/simulation/world"
 import { WorldRenderer } from "../render/app/WorldRenderer"
 import { Hud } from "../ui/Hud"
-import { type RouteCommand, routeAction } from "./actionRouter"
+import { routeAction } from "./actionRouter"
+import { runRouteCommand } from "./commandRunner"
+import { buildEncounterHudState } from "./encounterHud"
+import { applyInteractionFlow } from "./interactionFlow"
+import { createEncounterForNpc, practiceHudForNpc } from "./lessonFlow"
+import { currentEncounterId, findEncounter, skillOrbitHudParams, worldHudParams } from "./worldView"
 
 export class PixelQuestApp {
   private readonly loaded = loadCorePack()
@@ -49,6 +52,10 @@ export class PixelQuestApp {
     this.renderer = new WorldRenderer(shell, this.world)
     this.hud = new Hud(shell, {
       onStartQuest: () => this.startQuest(),
+      onOpenSkillOrbit: () => this.openSkillOrbit(),
+      onOrbitPrevious: () => this.stepSkillOrbit("previous"),
+      onOrbitNext: () => this.stepSkillOrbit("next"),
+      onSelectSkillOrbit: () => this.openSelectedSkillOrbitLab(),
       onOpenPractice: () => this.openPractice(),
       onStartEncounter: () => this.startEncounter(),
       onOpenJournal: () => this.openJournal(),
@@ -93,92 +100,80 @@ export class PixelQuestApp {
   }
 
   private handleAction(action: InputAction): void {
-    this.runCommand(
-      routeAction({
-        action,
-        mode: this.world.mode,
-        encounterComplete: this.activeEncounter?.complete === true,
-      }),
-    )
+    const command = routeAction({
+      action,
+      mode: this.world.mode,
+      encounterComplete: this.activeEncounter?.complete === true,
+    })
+    runRouteCommand(command, this)
   }
 
-  private runCommand(command: RouteCommand): void {
-    if (command.kind === "move") {
-      this.world = movePlayer(this.world, command.action.direction)
-      this.render()
-    } else if (command.kind === "apply-encounter") {
-      this.applyEncounterInput(command.action)
-    } else if (command.kind === "start-quest") {
-      this.startQuest()
-    } else if (command.kind === "interact") {
-      this.interact()
-    } else if (command.kind === "open-help") {
-      this.openHelp()
-    } else if (command.kind === "open-journal") {
-      this.openJournal()
-    } else if (command.kind === "open-practice") {
-      this.openPractice()
-    } else if (command.kind === "start-encounter") {
-      this.startEncounter()
-    } else if (command.kind === "close-panel") {
-      this.closePanel()
-    }
-  }
-
-  private startQuest(): void {
+  startQuest(): void {
     this.world = enterWorld(this.world)
     this.render()
   }
 
-  private interact(): void {
-    const interaction = getInteraction(this.world)
-    if (interaction.kind === "npc") {
-      this.activeNpc = interaction.npc
-      this.world = setMode(this.world, "dialogue")
-      const dialogue = this.loaded.dialogues[interaction.npc.dialogueRef] ?? ""
-      this.hud.showDialogue(interaction.npc.name, dialogue)
-    } else if (interaction.kind === "gate") {
-      if (interaction.unlocked && interaction.gate.nextRegionId !== undefined) {
-        this.activeNpc = undefined
-        this.activeEncounter = undefined
-        this.world = enterRegion(this.world, interaction.gate.nextRegionId)
-        this.render()
-        return
-      }
-      this.world = enterGate(this.world)
-      this.hud.showGateMessage(
-        interaction.unlocked ? interaction.gate.unlockedLabel : interaction.gate.lockedLabel,
-      )
+  move(direction: "north" | "south" | "east" | "west"): void {
+    this.world = movePlayer(this.world, direction)
+    this.render()
+  }
+
+  openSkillOrbit(): void {
+    this.world = enterSkillOrbit(this.world)
+    this.renderSkillOrbit()
+  }
+
+  stepSkillOrbit(direction: "previous" | "next"): void {
+    this.world = selectSkillOrbit(this.world, direction)
+    this.renderSkillOrbit()
+  }
+
+  openSelectedSkillOrbitLab(): void {
+    this.world = enterSelectedSkillOrbitRegion(this.world)
+    this.render()
+  }
+
+  interact(): void {
+    const result = applyInteractionFlow(this.world, this.loaded.dialogues)
+    if (result.kind === "dialogue") {
+      this.activeNpc = result.npc
+      this.world = result.world
+      this.hud.showDialogue(result.npc.name, result.dialogue)
+    } else if (result.kind === "region") {
+      this.activeNpc = undefined
+      this.activeEncounter = undefined
+      this.world = result.world
+      this.render()
+    } else if (result.kind === "gate-message") {
+      this.world = result.world
+      this.hud.showGateMessage(result.label)
     }
   }
 
-  private openPractice(): void {
-    if (this.activeNpc === undefined) {
+  openPractice(): void {
+    const params = practiceHudForNpc(
+      this.activeNpc,
+      this.loaded.pack.encounters,
+      this.world.progress.reviewTrack,
+    )
+    if (params === undefined) {
       return
     }
-    const encounter = this.getEncounterDefinition(this.activeNpc.encounterId)
     this.world = enterPractice(this.world)
-    this.hud.showPractice({
-      reviewTrack: this.world.progress.reviewTrack,
-      title: encounter.title,
-      practiceTitle: encounter.practiceTitle,
-      practiceText: encounter.practiceText,
-      admitActionLabel: encounter.admitActionLabel,
-      rejectActionLabel: encounter.rejectActionLabel,
-    })
+    this.hud.showPractice(params)
   }
 
-  private startEncounter(): void {
-    if (this.activeNpc === undefined) {
+  startEncounter(): void {
+    const encounter = createEncounterForNpc(this.activeNpc, this.loaded.pack.encounters)
+    if (encounter === undefined) {
       return
     }
-    const encounter = this.getEncounterDefinition(this.activeNpc.encounterId)
-    this.activeEncounter = createEncounterFromPack(encounter)
+    this.activeEncounter = encounter
     this.world = enterDuel(this.world)
     this.renderEncounter()
   }
 
-  private applyEncounterInput(action: EncounterAction): void {
+  applyEncounterInput(action: EncounterAction): void {
     if (this.activeEncounter === undefined || this.activeEncounter.complete) {
       return
     }
@@ -190,75 +185,56 @@ export class PixelQuestApp {
     this.renderEncounter()
   }
 
-  private openJournal(): void {
+  openJournal(): void {
     this.world = enterJournal(this.world)
     this.hud.showJournal(this.world.progress.latestEvidence, this.world.progress.reviewTrack)
     this.renderer.sync(this.world)
   }
 
-  private openHelp(): void {
+  openHelp(): void {
     this.world = setMode(this.world, "help")
     this.hud.showHelp(this.world.progress.phase)
     this.renderer.sync(this.world)
   }
 
-  private closePanel(): void {
+  closePanel(): void {
     this.activeNpc = undefined
     this.activeEncounter = undefined
-    this.world = enterWorld(this.world)
+    this.world =
+      this.world.mode === "skill-orbit" ? exitSkillOrbit(this.world) : enterWorld(this.world)
     this.render()
   }
 
   private render(): void {
+    if (this.world.mode === "skill-orbit") {
+      this.renderSkillOrbit()
+      return
+    }
     if (this.world.mode === "briefing") {
       this.hud.showBriefing(this.world.progress.reviewTrack, curriculumUnitCount())
       this.renderer.sync(this.world)
       return
     }
-    const interaction = getInteraction(this.world)
-    const prompt =
-      interaction.kind === "npc"
-        ? "E: falar | J: diario | H: fases"
-        : interaction.kind === "gate"
-          ? "E: inspecionar gate | J: diario | H: fases"
-          : "Setas/WASD: mover | J: diario | H: fases"
-    this.hud.renderWorld({
-      objective: this.currentObjectiveText(),
-      completed: isUnitCompleted(this.world, this.currentUnitId()),
-      phase: this.world.progress.phase,
-      prompt,
-      reviewTrack: this.world.progress.reviewTrack,
-      latestEvidence: this.world.progress.latestEvidence,
-    })
+    this.hud.renderWorld(worldHudParams(this.world, this.loaded.pack.encounters))
+    this.renderer.sync(this.world)
+  }
+
+  private renderSkillOrbit(): void {
+    this.hud.showSkillOrbit(skillOrbitHudParams(this.world, curriculumUnitCount()))
     this.renderer.sync(this.world)
   }
 
   private renderEncounter(): void {
-    if (this.activeEncounter === undefined) {
+    const state = buildEncounterHudState(this.activeEncounter)
+    if (state === undefined) {
       return
     }
-    const progress = encounterProgress(this.activeEncounter)
-    this.hud.showEncounter({
-      title: this.activeEncounter.definition.title,
-      mechanicName: this.activeEncounter.definition.mechanicName,
-      resourceName: this.activeEncounter.definition.resourceName,
-      goodRequestLabel: this.activeEncounter.definition.goodRequestLabel,
-      badRequestLabel: this.activeEncounter.definition.badRequestLabel,
-      admitActionLabel: this.activeEncounter.definition.admitActionLabel,
-      rejectActionLabel: this.activeEncounter.definition.rejectActionLabel,
-      prompt: getCurrentPrompt(this.activeEncounter),
-      index: progress.index,
-      total: progress.total,
-      resourceValue: progress.resourceValue,
-      heatPeak: progress.heatPeak,
-      complete: this.activeEncounter.complete,
-      evidence: this.activeEncounter.evidence,
-    })
+    this.hud.showEncounter(state)
     this.renderer.sync(this.world)
   }
 
   private completeEncounterForDebug(): PixelQuestEvidenceRecord {
-    const encounter = this.getEncounterDefinition(this.currentEncounterId())
+    const encounter = findEncounter(this.loaded.pack.encounters, currentEncounterId(this.world))
     this.activeEncounter = autoPassEncounter(encounter, new Date())
     const evidence = this.activeEncounter.evidence
     if (evidence === undefined) {
@@ -275,41 +251,6 @@ export class PixelQuestApp {
     this.activeEncounter = undefined
     this.world = enterRegion(this.world, regionId)
     this.render()
-  }
-
-  private currentObjectiveText(): string {
-    const unit = this.loaded.pack.units.find(
-      (candidate) => candidate.unit_id === this.currentUnitId(),
-    )
-    if (unit === undefined) {
-      return this.world.region.name
-    }
-    return `${this.world.region.name}: ${unit.concept}`
-  }
-
-  private currentUnitId(): string {
-    const npc = this.world.region.npcs[0]
-    if (npc === undefined) {
-      throw new Error(`Region ${this.world.region.id} has no mentor`)
-    }
-    const encounter = this.getEncounterDefinition(npc.encounterId)
-    return encounter.unit_id
-  }
-
-  private currentEncounterId(): string {
-    const npc = this.world.region.npcs[0]
-    if (npc === undefined) {
-      throw new Error(`Region ${this.world.region.id} has no mentor`)
-    }
-    return npc.encounterId
-  }
-
-  private getEncounterDefinition(encounterId: string): EncounterDefinition {
-    const encounter = this.loaded.pack.encounters.find((candidate) => candidate.id === encounterId)
-    if (encounter === undefined) {
-      throw new Error(`Unknown encounter ${encounterId}`)
-    }
-    return encounter
   }
 
   private publishEvidence(evidence: PixelQuestEvidenceRecord): PixelQuestEvidenceRecord {

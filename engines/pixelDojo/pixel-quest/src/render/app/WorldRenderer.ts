@@ -11,6 +11,7 @@ import {
 import type { RegionGate, RegionNpc, TileKind } from "../../content/types"
 import type { WorldState } from "../../game/simulation/types"
 import { getTileViews, isUnitCompleted } from "../../game/simulation/world"
+import { SkillOrbitScene } from "./SkillOrbitScene"
 
 const internalWidth = 320
 const internalHeight = 240
@@ -30,6 +31,7 @@ export class WorldRenderer {
   private readonly scene: Scene
   private readonly camera: OrthographicCamera
   private readonly playerMesh: Mesh
+  private readonly skillOrbitScene = new SkillOrbitScene()
   private readonly npcMeshes = new Map<string, Mesh>()
   private readonly gateMeshes = new Map<string, Mesh>()
   private readonly staticMeshes: Mesh[] = []
@@ -56,6 +58,10 @@ export class WorldRenderer {
   }
 
   sync(world: WorldState): void {
+    if (world.mode === "skill-orbit") {
+      this.skillOrbitScene.render(this.renderer, world)
+      return
+    }
     if (world.region.id !== this.activeRegionId) {
       this.rebuildWorld(world)
     }
@@ -78,6 +84,7 @@ export class WorldRenderer {
   }
 
   dispose(): void {
+    this.skillOrbitScene.dispose()
     this.renderer.dispose()
   }
 

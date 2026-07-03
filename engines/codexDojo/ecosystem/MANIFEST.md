@@ -23,6 +23,8 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
 | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | Phase commands for Claude Code orchestration. |
+| `engines/openclaw/` | File-based continuous runner: Hermes event bus, scheduler, and agent adapters. |
+| `.mavis/hermes/` | Derived event-log runtime view produced by the OpenClaw runner. |
 | `curriculum/` | Real implementation projects and evidence. |
 | `curriculum/_shared/arena/` | Shared Polyglot Arena runtime: strict fail-closed decision gate, scoreboard, report rendering, and prediction reveal orchestration for curriculum projects. |
 | `curriculum/_shared/benchmarks/` | Shared benchmark runner, k6 scenario execution, result parsing, and per-project `benchmark.yaml` contract. |
@@ -128,6 +130,10 @@ python3 -m unittest engines.minimaxDojo.tests.test_learning_unit_e2e_contract
 python3 engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py
 python3 -m unittest engines.test_engine_contracts
 cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
+
+# OpenClaw/Hermes continuous runner (tracer bullet)
+python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --reset --max-events 20
+python3 -m pytest engines/openclaw/tests/
 ```
 
 ## Completion Standard

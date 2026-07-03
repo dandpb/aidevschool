@@ -93,7 +93,9 @@ Stop and request human decision only when:
 | Phase runner command | `implemented` | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/phaserunner.md` |
 | Platform state | `implemented` | `.mavis/plans/plan.yaml` |
 | Learner substrate regeneration | `implemented` | `python3 -m learner.substrate` |
-| Automated event bridge (OpenClaw ↔ Hermes) | `planned` | Not yet implemented |
-| Continuous scheduler | `planned` | Not yet implemented |
+| Hermes file-based event bus | `implemented` | `engines/openclaw/hermes/bus.py` |
+| OpenClaw scheduler + simulation adapters | `implemented` | `engines/openclaw/runner/scheduler.py`, `engines/openclaw/runner/adapters/` |
+| OpenClaw CLI | `implemented` | `engines/openclaw/__main__.py` |
+| Continuous background daemon | `planned` | Not yet implemented (invoke CLI explicitly or via cron) |
 
-The current ecosystem runs as a documented manual workflow with phase commands. No production event bus, scheduler, or continuous OpenClaw/Hermes integration is deployed. The phase runner is a Claude Code command, not a background daemon.
+The tracer-bullet implementation provides a working file-based event bridge and scheduler that can run the 5-phase cycle for Project 01 end-to-end in simulation mode. Real AI dispatch via Claude Code remains a future override inside the adapter layer.

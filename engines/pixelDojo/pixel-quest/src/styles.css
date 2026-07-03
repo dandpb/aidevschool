@@ -53,6 +53,13 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+button:disabled {
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
 .game-shell {
   position: relative;
   width: 100%;
@@ -163,6 +170,10 @@ button:focus-visible {
   bottom: auto;
 }
 
+.skill-orbit-panel {
+  bottom: 84px;
+}
+
 .request-line {
   color: var(--text-info);
 }
@@ -180,6 +191,10 @@ button:focus-visible {
 
   .encounter-panel {
     top: 164px;
+  }
+
+  .skill-orbit-panel {
+    bottom: 72px;
   }
 }
 
@@ -214,5 +229,9 @@ button:focus-visible {
 
   .encounter-panel {
     top: 214px;
+  }
+
+  .skill-orbit-panel {
+    bottom: 88px;
   }
 }

@@ -5,7 +5,7 @@ import { createReviewTrack, updateReviewTrackFromEvidence } from "../game/review
 describe("review track", () => {
   it("marks a passing scheduled review as verifier pending", () => {
     const track = createReviewTrack()
-    const updated = updateReviewTrackFromEvidence(track, makeEvidence(true))
+    const updated = updateReviewTrackFromEvidence(track, makeEvidence(true, track.active.unitId))
 
     expect(updated.active.status).toBe("verifier_pending")
     expect(updated.active.dueIn).toBe("gate pending")
@@ -14,7 +14,8 @@ describe("review track", () => {
   })
 
   it("keeps a failed scheduled review due for retry", () => {
-    const updated = updateReviewTrackFromEvidence(createReviewTrack(), makeEvidence(false))
+    const track = createReviewTrack()
+    const updated = updateReviewTrackFromEvidence(track, makeEvidence(false, track.active.unitId))
 
     expect(updated.active.status).toBe("retry_due")
     expect(updated.active.dueIn).toBe("retry due now")
@@ -22,10 +23,10 @@ describe("review track", () => {
   })
 })
 
-function makeEvidence(pass: boolean): PixelQuestEvidenceRecord {
+function makeEvidence(pass: boolean, unitId: string): PixelQuestEvidenceRecord {
   return {
     source: "pixelquest",
-    unit_id: "U0-sonda-rate-limiter-robustness",
+    unit_id: unitId,
     project: "01_rate_limiter",
     encounter_id: "encounter-agent-quest-01",
     game: "PixelDojo Quest",

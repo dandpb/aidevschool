@@ -1,4 +1,8 @@
 import { expect, test } from "@playwright/test"
+import { reviewSlice } from "../src/content/reviewSlice"
+
+const firstUnitId = "U0-sonda-rate-limiter-robustness"
+const firstUnitScheduledReview = reviewSlice.nextReviews[0]?.unitId === firstUnitId
 
 test("plays the PixelDojo curriculum quest slice and advances labs", async ({ page }) => {
   const runtimeErrors: string[] = []
@@ -15,6 +19,16 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.locator(".objective-chip")).toContainText("PixelDojo Quest")
   await expect(page.locator(".phase-strip")).toContainText("Briefing")
   await expect(page.locator(".objective-chip")).toContainText("18 labs")
+  await page.getByRole("button", { name: "Orbita 3D" }).click()
+  await expect(page.locator(".objective-chip")).toContainText("Orbita 3D")
+  await expect(page.locator(".phase-strip")).toContainText("Orbita 3D")
+  await expect(page.getByText("Duelo 1: Agent Quest: Rate Limiter")).toBeVisible()
+  await page.keyboard.press("ArrowRight")
+  await expect(page.getByText("Duelo 2: Key Value Store")).toBeVisible()
+  await expect(page.getByRole("button", { name: "Lab bloqueado" })).toBeDisabled()
+  await page.keyboard.press("ArrowLeft")
+  await expect(page.getByText("Duelo 1: Agent Quest: Rate Limiter")).toBeVisible()
+  await page.screenshot({ path: "shots/pixel-quest-skill-orbit-desktop.png", fullPage: true })
 
   const dataUrlLength = await canvas.evaluate((element) => {
     const canvasElement = element as HTMLCanvasElement
@@ -22,8 +36,8 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   })
   expect(dataUrlLength).toBeGreaterThan(1000)
 
+  await page.getByRole("button", { name: "Abrir lab" }).click()
   await canvas.click()
-  await page.keyboard.press("Enter")
   await expect(page.locator(".objective-chip")).toContainText("Rate Limiter")
   await expect(page.locator(".phase-strip")).toContainText("Mapa")
   await page.keyboard.press("e")
@@ -45,7 +59,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
   await expect(page.locator(".phase-strip")).toContainText("Evidencia")
   const evidence = await page.evaluate(() => window.__pixelQuestEvidence)
-  expect(evidence?.unit_id).toBe("U0-sonda-rate-limiter-robustness")
+  expect(evidence?.unit_id).toBe(firstUnitId)
   expect(evidence?.project).toBe("01_rate_limiter")
   expect(evidence?.encounter_id).toBe("encounter-agent-quest-01")
   expect(evidence?.pass).toBe(true)
@@ -57,7 +71,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     rejected_trap: "atalho sem evidencia",
   })
   expect(evidence?.review_context).toMatchObject({
-    scheduled_review: true,
+    scheduled_review: firstUnitScheduledReview,
     streak_candidate: true,
     scheduler_source: "learner-substrate",
     verifier_required: true,
@@ -66,10 +80,16 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
 
   await page.getByRole("button", { name: "Voltar ao mapa" }).click()
   await expect(page.locator(".status-strip")).toContainText("Evidencia PASS")
-  await expect(page.locator(".status-strip")).toContainText("+1 pending")
+  if (firstUnitScheduledReview) {
+    await expect(page.locator(".status-strip")).toContainText("+1 pending")
+  } else {
+    await expect(page.locator(".status-strip")).not.toContainText("+1 pending")
+  }
   await page.keyboard.press("j")
   await expect(page.getByText("Ultima evidencia: PASS")).toBeVisible()
-  await expect(page.getByText("gate pending")).toBeVisible()
+  if (firstUnitScheduledReview) {
+    await expect(page.getByText("gate pending")).toBeVisible()
+  }
   await expect(page.locator(".phase-strip")).toContainText("Revisao")
 
   await page.getByRole("button", { name: "Fechar" }).click()

@@ -1,0 +1,71 @@
+{
+  "generatedAt": "2026-07-03T13:32:56.671Z",
+  "results": [
+    {
+      "viewport": {
+        "name": "mobile",
+        "width": 375,
+        "height": 812
+      },
+      "screenshotPath": "shots/skill-orbit-mobile.png",
+      "canvasDataUrlLength": 3422,
+      "promptBox": {
+        "x": 93.75,
+        "y": 730.828125,
+        "width": 187.5,
+        "height": 63.171875
+      },
+      "panelBox": {
+        "x": 16,
+        "y": 470.4375,
+        "width": 343,
+        "height": 253.5625
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "tablet",
+        "width": 768,
+        "height": 1024
+      },
+      "screenshotPath": "shots/skill-orbit-tablet.png",
+      "canvasDataUrlLength": 3422,
+      "promptBox": {
+        "x": 192,
+        "y": 954.8125,
+        "width": 384,
+        "height": 51.1875
+      },
+      "panelBox": {
+        "x": 24,
+        "y": 788.625,
+        "width": 720,
+        "height": 163.375
+      },
+      "errors": []
+    },
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1280,
+        "height": 900
+      },
+      "screenshotPath": "shots/skill-orbit-desktop.png",
+      "canvasDataUrlLength": 3422,
+      "promptBox": {
+        "x": 393.9609375,
+        "y": 846.40625,
+        "width": 492.078125,
+        "height": 35.59375
+      },
+      "panelBox": {
+        "x": 280,
+        "y": 652.625,
+        "width": 720,
+        "height": 163.375
+      },
+      "errors": []
+    }
+  ]
+}

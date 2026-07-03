@@ -14,6 +14,7 @@ export type Direction = "north" | "south" | "east" | "west"
 
 export type WorldMode =
   | "briefing"
+  | "skill-orbit"
   | "world"
   | "dialogue"
   | "practice"
@@ -47,11 +48,19 @@ export type QuestProgress = {
   readonly latestEvidence?: PixelQuestEvidenceRecord
 }
 
+export type SkillOrbitReturnMode = "briefing" | "world"
+
+export type SkillOrbitState = {
+  readonly selectedUnitId: string
+  readonly returnMode: SkillOrbitReturnMode
+}
+
 export type WorldState = {
   readonly pack: ContentPack
   readonly region: Region
   readonly player: PlayerState
   readonly progress: QuestProgress
+  readonly skillOrbit: SkillOrbitState
   readonly mode: WorldMode
 }
 

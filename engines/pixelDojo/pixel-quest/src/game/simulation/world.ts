@@ -2,6 +2,12 @@ import { type ContentPack, type Position, type Region, tileLegend } from "../../
 import type { PixelQuestEvidenceRecord } from "../evidence/types"
 import type { GamePhase } from "../phases/types"
 import { createReviewTrack, updateReviewTrackFromEvidence } from "../review/reviewTrack"
+import {
+  createSkillOrbitState,
+  type SkillOrbitDirection,
+  selectedSkillOrbitRegionId,
+  selectSkillOrbitStation,
+} from "./skillOrbit"
 import type { Direction, Interaction, TileView, WorldState } from "./types"
 
 export function createWorld(pack: ContentPack, regionId: string): WorldState {
@@ -21,6 +27,7 @@ export function createWorld(pack: ContentPack, regionId: string): WorldState {
       phase: "briefing",
       reviewTrack: createReviewTrack(),
     },
+    skillOrbit: createSkillOrbitState(pack),
     mode: "briefing",
   }
 }
@@ -63,6 +70,27 @@ export function enterWorld(world: WorldState): WorldState {
   return setPhase(setMode(world, "world"), "map")
 }
 
+export function enterSkillOrbit(world: WorldState): WorldState {
+  const currentUnit = world.pack.units.find((unit) => unit.project === world.region.project)
+  const returnMode = world.mode === "briefing" ? "briefing" : "world"
+  return setPhase(
+    {
+      ...setMode(world, "skill-orbit"),
+      skillOrbit: {
+        selectedUnitId: currentUnit?.unit_id ?? world.skillOrbit.selectedUnitId,
+        returnMode,
+      },
+    },
+    "orbit",
+  )
+}
+
+export function exitSkillOrbit(world: WorldState): WorldState {
+  return world.skillOrbit.returnMode === "briefing"
+    ? setPhase(setMode(world, "briefing"), "briefing")
+    : enterWorld(world)
+}
+
 export function enterPractice(world: WorldState): WorldState {
   return setPhase(setMode(world, "practice"), "practice")
 }
@@ -97,6 +125,18 @@ export function enterRegion(world: WorldState, regionId: string): WorldState {
       phase: "map",
     },
   }
+}
+
+export function selectSkillOrbit(world: WorldState, direction: SkillOrbitDirection): WorldState {
+  return {
+    ...world,
+    skillOrbit: selectSkillOrbitStation(world, direction),
+  }
+}
+
+export function enterSelectedSkillOrbitRegion(world: WorldState): WorldState {
+  const regionId = selectedSkillOrbitRegionId(world)
+  return regionId === undefined ? world : enterRegion(world, regionId)
 }
 
 export function recordEvidence(world: WorldState, evidence: PixelQuestEvidenceRecord): WorldState {

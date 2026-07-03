@@ -98,6 +98,17 @@ All spacing derives from a base of 4px.
 - **Accessibility**: buttons use native `button`; focus ring uses `--focus-default`
 - **Motion**: none in the current slice
 
+### Skill Orbit View
+
+- **Structure**: same WebGL canvas as the map, rendered as a low-chrome 3D station orbit with a
+  `section.panel.skill-orbit-panel` DOM control surface
+- **Variants**: selected, completed, unlocked, locked stations
+- **Spacing**: panel follows the base panel rhythm and keeps the center of the orbit readable
+- **States**: selected station is amber, completed station is green, unlocked station is cyan, locked
+  station is muted; locked lab button is disabled
+- **Accessibility**: station details and controls are exposed in DOM; canvas remains visual evidence
+- **Motion**: slow orbit rotation only, tied to spatial orientation rather than decoration
+
 ## 6. Motion & Interaction
 
 ### Timing

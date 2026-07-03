@@ -13,6 +13,10 @@ export type RouteCommand =
   | { readonly kind: "apply-encounter"; readonly action: "admit" | "reject" }
   | { readonly kind: "start-quest" }
   | { readonly kind: "interact" }
+  | { readonly kind: "open-skill-orbit" }
+  | { readonly kind: "orbit-previous" }
+  | { readonly kind: "orbit-next" }
+  | { readonly kind: "select-skill-orbit" }
   | { readonly kind: "open-help" }
   | { readonly kind: "open-journal" }
   | { readonly kind: "open-practice" }
@@ -20,6 +24,9 @@ export type RouteCommand =
   | { readonly kind: "close-panel" }
 
 export function routeAction(state: RouteState): RouteCommand {
+  if (state.action.kind === "orbit") {
+    return routeOrbitShortcut(state.mode, state.encounterComplete)
+  }
   if (state.action.kind === "help") {
     return state.mode === "encounter" && !state.encounterComplete
       ? { kind: "none" }
@@ -37,10 +44,23 @@ export function routeAction(state: RouteState): RouteCommand {
   if (state.mode === "practice") {
     return routePractice(state.action)
   }
+  if (state.mode === "skill-orbit") {
+    return routeSkillOrbit(state.action)
+  }
   if (state.mode === "journal" || state.mode === "help") {
     return routeClose(state.action)
   }
   return routeWorld(state.action)
+}
+
+function routeOrbitShortcut(mode: WorldMode, encounterComplete: boolean): RouteCommand {
+  if (mode === "encounter" && !encounterComplete) {
+    return { kind: "none" }
+  }
+  if (mode === "skill-orbit") {
+    return { kind: "close-panel" }
+  }
+  return mode === "briefing" || mode === "world" ? { kind: "open-skill-orbit" } : { kind: "none" }
 }
 
 function routeBriefing(action: InputAction): RouteCommand {
@@ -72,6 +92,19 @@ function routePractice(action: InputAction): RouteCommand {
   }
   if (action.kind === "journal") {
     return { kind: "open-journal" }
+  }
+  return routeClose(action)
+}
+
+function routeSkillOrbit(action: InputAction): RouteCommand {
+  if (action.kind === "move" && action.direction === "east") {
+    return { kind: "orbit-next" }
+  }
+  if (action.kind === "move" && action.direction === "west") {
+    return { kind: "orbit-previous" }
+  }
+  if (action.kind === "confirm") {
+    return { kind: "select-skill-orbit" }
   }
   return routeClose(action)
 }

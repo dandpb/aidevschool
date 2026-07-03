@@ -25,23 +25,23 @@ intent"; it just hasn't passed the adversarial gate yet.
 | Project | Status | Evidence |
 | --- | --- | --- |
 | `01_rate_limiter` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified: 99% Go, 19 Rust tests, 91.86% Node). N≥3 benchmark rerun pending. |
-| `02_key_value_store` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `03_url_shortener` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `04_concurrent_task_queue` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `05_websocket_chat` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `06_file_upload_pipeline` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `07_rest_api_auth` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `08_event_driven_order_system` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `09_plugin_system` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `10_distributed_cache` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `11_load_balancer` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `12_distributed_job_scheduler` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `13_api_gateway_circuit_breaker` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `14_log_aggregator` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `15_metrics_collector` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `16_mini_message_queue` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `17_distributed_config_service` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
-| `18_search_engine` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified). Full benchmark pending. |
+| `02_key_value_store` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `03_url_shortener` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `04_concurrent_task_queue` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `05_websocket_chat` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `06_file_upload_pipeline` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `07_rest_api_auth` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `08_event_driven_order_system` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `09_plugin_system` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `10_distributed_cache` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `11_load_balancer` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `12_distributed_job_scheduler` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `13_api_gateway_circuit_breaker` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `14_log_aggregator` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `15_metrics_collector` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `16_mini_message_queue` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `17_distributed_config_service` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
+| `18_search_engine` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
 
 ## Reading the table
 

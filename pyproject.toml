@@ -32,6 +32,7 @@ packages = []
 pythonpath = ["."]
 testpaths = [
   "engines/minimaxDojo/tests",
+  "engines/openclaw/tests",
   "learner/substrate/tests",
 ]
 python_files = ["test_*.py"]

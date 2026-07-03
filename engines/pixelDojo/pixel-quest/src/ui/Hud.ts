@@ -2,6 +2,7 @@ import type { EncounterPrompt } from "../game/encounters/registry"
 import type { PixelQuestEvidenceRecord } from "../game/evidence/types"
 import { type GamePhase, gamePhaseOrder } from "../game/phases/types"
 import type { ReviewTrack } from "../game/review/types"
+import type { SkillOrbitStation } from "../game/simulation/skillOrbit"
 import {
   pendingDeltaText,
   phaseLabel,
@@ -10,9 +11,15 @@ import {
   streakText,
   tokenMeterText,
 } from "./labels"
+import { renderDialoguePanel, renderGatePanel, renderPracticePanel } from "./lessonPanels"
+import { renderBriefingPanel, renderSkillOrbitPanel } from "./orbitPanels"
 
 export type HudCallbacks = {
   readonly onStartQuest: () => void
+  readonly onOpenSkillOrbit: () => void
+  readonly onOrbitPrevious: () => void
+  readonly onOrbitNext: () => void
+  readonly onSelectSkillOrbit: () => void
   readonly onOpenPractice: () => void
   readonly onStartEncounter: () => void
   readonly onOpenJournal: () => void
@@ -83,50 +90,43 @@ export class Hud {
   }
 
   showBriefing(reviewTrack: ReviewTrack, totalUnits: number): void {
-    this.objective.textContent = `PixelDojo Quest: ${totalUnits} labs do curriculum`
-    this.status.textContent = `Review ${reviewTrack.active.dueIn} | ${streakText(reviewTrack)}`
-    this.phase.textContent = phaseText("briefing")
-    this.prompt.textContent = "Enter: comecar | H: fases"
-    this.panel.className = "panel"
-    this.panel.innerHTML = ""
-    const title = document.createElement("h2")
-    title.textContent = "Briefing"
-    const body = document.createElement("p")
-    body.textContent =
-      "Complete cada lab do curriculum como pratica, duelo, evidencia e diario. O jogo emite evidencia crua; o verificador separado decide mastery."
-    const actions = document.createElement("div")
-    actions.className = "panel-actions"
-    const start = document.createElement("button")
-    start.type = "button"
-    start.textContent = "Comecar"
-    start.addEventListener("click", this.callbacks.onStartQuest)
-    const journal = document.createElement("button")
-    journal.type = "button"
-    journal.textContent = "Ver diario"
-    journal.addEventListener("click", this.callbacks.onOpenJournal)
-    actions.append(start, journal)
-    this.panel.append(title, body, actions)
+    renderBriefingPanel({
+      panel: this.panel,
+      objective: this.objective,
+      status: this.status,
+      phase: this.phase,
+      prompt: this.prompt,
+      reviewTrack,
+      totalUnits,
+      callbacks: this.callbacks,
+    })
+  }
+
+  showSkillOrbit(params: {
+    readonly station: SkillOrbitStation
+    readonly totalUnits: number
+    readonly reviewTrack: ReviewTrack
+  }): void {
+    renderSkillOrbitPanel({
+      panel: this.panel,
+      objective: this.objective,
+      status: this.status,
+      phase: this.phase,
+      prompt: this.prompt,
+      station: params.station,
+      totalUnits: params.totalUnits,
+      reviewTrack: params.reviewTrack,
+      callbacks: this.callbacks,
+    })
   }
 
   showDialogue(name: string, dialogue: string): void {
-    this.panel.className = "panel"
-    this.panel.innerHTML = ""
-    const title = document.createElement("h2")
-    title.textContent = name
-    const body = document.createElement("p")
-    body.textContent = dialogue.replace(/\s+/g, " ").trim()
-    const actions = document.createElement("div")
-    actions.className = "panel-actions"
-    const start = document.createElement("button")
-    start.type = "button"
-    start.textContent = "Abrir treino"
-    start.addEventListener("click", this.callbacks.onOpenPractice)
-    const close = document.createElement("button")
-    close.type = "button"
-    close.textContent = "Fechar"
-    close.addEventListener("click", this.callbacks.onClosePanel)
-    actions.append(start, close)
-    this.panel.append(title, body, actions)
+    renderDialoguePanel({
+      panel: this.panel,
+      name,
+      dialogue,
+      callbacks: this.callbacks,
+    })
   }
 
   showPractice(params: {
@@ -137,45 +137,29 @@ export class Hud {
     readonly admitActionLabel: string
     readonly rejectActionLabel: string
   }): void {
-    this.objective.textContent = `Treino: ${params.title}`
-    this.status.textContent = `Review ${reviewStatusLabel(
-      params.reviewTrack.active.status,
-    )} | ${streakText(params.reviewTrack)}`
-    this.phase.textContent = phaseText("practice")
-    this.prompt.textContent = `Z ${params.admitActionLabel} | X ${params.rejectActionLabel}`
-    this.panel.className = "panel"
-    this.panel.innerHTML = ""
-    const title = document.createElement("h2")
-    title.textContent = params.practiceTitle
-    const body = document.createElement("p")
-    body.textContent = params.practiceText
-    const actions = document.createElement("div")
-    actions.className = "panel-actions"
-    const start = document.createElement("button")
-    start.type = "button"
-    start.textContent = "Iniciar duelo"
-    start.addEventListener("click", this.callbacks.onStartEncounter)
-    const close = document.createElement("button")
-    close.type = "button"
-    close.textContent = "Voltar"
-    close.addEventListener("click", this.callbacks.onClosePanel)
-    actions.append(start, close)
-    this.panel.append(title, body, actions)
+    renderPracticePanel({
+      panel: this.panel,
+      objective: this.objective,
+      status: this.status,
+      phase: this.phase,
+      prompt: this.prompt,
+      reviewTrack: params.reviewTrack,
+      title: params.title,
+      practiceTitle: params.practiceTitle,
+      practiceText: params.practiceText,
+      admitActionLabel: params.admitActionLabel,
+      rejectActionLabel: params.rejectActionLabel,
+      callbacks: this.callbacks,
+    })
   }
 
   showGateMessage(label: string): void {
-    this.phase.textContent = phaseText("gate")
-    this.panel.className = "panel"
-    this.panel.innerHTML = ""
-    const title = document.createElement("h2")
-    title.textContent = "Gate de regiao"
-    const body = document.createElement("p")
-    body.textContent = label
-    const close = document.createElement("button")
-    close.type = "button"
-    close.textContent = "Fechar"
-    close.addEventListener("click", this.callbacks.onClosePanel)
-    this.panel.append(title, body, close)
+    renderGatePanel({
+      panel: this.panel,
+      phase: this.phase,
+      label,
+      callbacks: this.callbacks,
+    })
   }
 
   showEncounter(state: EncounterHudState): void {
