@@ -1,7 +1,7 @@
 ---
 aluno_id: aluno-001
 derived_from: ../../learner/learning_state.yaml
-atualizado: '2026-06-26'
+atualizado: '2026-07-03'
 agente_owner: cartografo
 ---
 

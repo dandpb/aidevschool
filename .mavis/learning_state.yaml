@@ -2,10 +2,10 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-06-26T19:47:15+00:00'
-workspace: /Users/danielbarreto/Development/aidevschool
+updated_at: '2026-07-03T19:33:46+00:00'
+workspace: /app
 change_log:
-- at: '2026-06-26T19:47:15+00:00'
+- at: '2026-07-03T19:33:46+00:00'
   by: substrate
   reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
