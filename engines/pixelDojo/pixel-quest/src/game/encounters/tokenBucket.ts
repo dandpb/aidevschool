@@ -153,19 +153,34 @@ function tokenBucketOutcome(state: TokenBucketEncounterState): EncounterOutcome 
 
 function maxAdmitsInWindow(times: readonly number[], windowSeconds: number): number {
   let max = 0
-  for (let i = 0; i < times.length; i += 1) {
-    const start = times[i]
-    if (start === undefined) {
+  let startIdx = 0
+  let currentWindowCount = 0
+
+  // ⚡ Bolt: Optimized from O(n^2) nested loop to O(n) sliding window.
+  // This significantly reduces iteration overhead for high-frequency token bursts.
+  for (let endIdx = 0; endIdx < times.length; endIdx += 1) {
+    const current = times[endIdx]
+    if (current === undefined) {
       continue
     }
-    let count = 0
-    for (let j = i; j < times.length; j += 1) {
-      const current = times[j]
-      if (current !== undefined && current - start <= windowSeconds) {
-        count += 1
+
+    currentWindowCount += 1
+
+    while (startIdx <= endIdx) {
+      const start = times[startIdx]
+      if (start === undefined) {
+        startIdx += 1
+        continue
+      }
+
+      if (current - start > windowSeconds) {
+        startIdx += 1
+        currentWindowCount -= 1
+      } else {
+        break
       }
     }
-    max = Math.max(max, count)
+    max = Math.max(max, currentWindowCount)
   }
   return max
 }
