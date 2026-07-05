@@ -1,410 +1,448 @@
-# Graph Report - .  (2026-06-26)
+# Graph Report - .  (2026-07-05)
 
 ## Corpus Check
-- Large corpus: 2735 files · ~1,547,209 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder.
+- Large corpus: 1237 files · ~681,618 words. Semantic extraction will be expensive (many Claude tokens). Consider running on a subfolder.
 
 ## Summary
-- 6664 nodes · 13198 edges · 428 communities (357 shown, 71 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 426 edges (avg confidence: 0.83)
-- Token cost: 60,900 input · 16,700 output
+- 7875 nodes · 16072 edges · 450 communities (365 shown, 85 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 923 edges (avg confidence: 0.78)
+- Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Session & Auth (Node)|Session & Auth (Node)]]
-- [[_COMMUNITY_pixelDojo Curriculum Content|pixelDojo Curriculum Content]]
-- [[_COMMUNITY_Go HTTP Server|Go HTTP Server]]
-- [[_COMMUNITY_Curriculum Roadmap & Gate Docs|Curriculum Roadmap & Gate Docs]]
-- [[_COMMUNITY_Rust BrokerServer|Rust Broker/Server]]
-- [[_COMMUNITY_Node Server & Plugins|Node Server & Plugins]]
-- [[_COMMUNITY_Rust Chat Server|Rust Chat Server]]
-- [[_COMMUNITY_14-Agent Tutor Roster|14-Agent Tutor Roster]]
-- [[_COMMUNITY_Learner Substrate Whiteboard|Learner Substrate Whiteboard]]
-- [[_COMMUNITY_codexDojo Policy Gate|codexDojo Policy Gate]]
-- [[_COMMUNITY_Node Config Loading|Node Config Loading]]
-- [[_COMMUNITY_Node Chat Server|Node Chat Server]]
-- [[_COMMUNITY_Node Server Bootstrap|Node Server Bootstrap]]
-- [[_COMMUNITY_Go Server (concurrency)|Go Server (concurrency)]]
-- [[_COMMUNITY_Go Metrics & Config|Go Metrics & Config]]
-- [[_COMMUNITY_Rust Rate Limiter (atomics)|Rust Rate Limiter (atomics)]]
-- [[_COMMUNITY_Node Server (build)|Node Server (build)]]
-- [[_COMMUNITY_Node Rate Limiter|Node Rate Limiter]]
-- [[_COMMUNITY_Community 18|Community 18]]
-- [[_COMMUNITY_Community 19|Community 19]]
-- [[_COMMUNITY_Community 20|Community 20]]
-- [[_COMMUNITY_Community 21|Community 21]]
-- [[_COMMUNITY_Community 22|Community 22]]
-- [[_COMMUNITY_Community 23|Community 23]]
-- [[_COMMUNITY_Community 24|Community 24]]
-- [[_COMMUNITY_Community 25|Community 25]]
-- [[_COMMUNITY_Community 26|Community 26]]
-- [[_COMMUNITY_Community 27|Community 27]]
-- [[_COMMUNITY_Community 28|Community 28]]
-- [[_COMMUNITY_Community 29|Community 29]]
-- [[_COMMUNITY_Community 30|Community 30]]
-- [[_COMMUNITY_Community 31|Community 31]]
-- [[_COMMUNITY_Community 32|Community 32]]
-- [[_COMMUNITY_Community 33|Community 33]]
-- [[_COMMUNITY_Community 34|Community 34]]
-- [[_COMMUNITY_Community 35|Community 35]]
-- [[_COMMUNITY_Community 36|Community 36]]
-- [[_COMMUNITY_Community 37|Community 37]]
-- [[_COMMUNITY_Community 38|Community 38]]
-- [[_COMMUNITY_Community 39|Community 39]]
-- [[_COMMUNITY_Community 40|Community 40]]
-- [[_COMMUNITY_Community 41|Community 41]]
-- [[_COMMUNITY_Community 42|Community 42]]
-- [[_COMMUNITY_Community 43|Community 43]]
-- [[_COMMUNITY_Community 44|Community 44]]
-- [[_COMMUNITY_Community 45|Community 45]]
-- [[_COMMUNITY_Community 46|Community 46]]
-- [[_COMMUNITY_Community 47|Community 47]]
-- [[_COMMUNITY_Community 48|Community 48]]
-- [[_COMMUNITY_Community 49|Community 49]]
-- [[_COMMUNITY_Community 50|Community 50]]
-- [[_COMMUNITY_Community 51|Community 51]]
-- [[_COMMUNITY_Community 52|Community 52]]
-- [[_COMMUNITY_Community 53|Community 53]]
-- [[_COMMUNITY_Community 54|Community 54]]
-- [[_COMMUNITY_Community 55|Community 55]]
-- [[_COMMUNITY_Community 56|Community 56]]
-- [[_COMMUNITY_Community 57|Community 57]]
-- [[_COMMUNITY_Community 58|Community 58]]
-- [[_COMMUNITY_Community 59|Community 59]]
-- [[_COMMUNITY_Community 60|Community 60]]
-- [[_COMMUNITY_Community 61|Community 61]]
-- [[_COMMUNITY_Community 62|Community 62]]
-- [[_COMMUNITY_Community 63|Community 63]]
-- [[_COMMUNITY_Community 64|Community 64]]
-- [[_COMMUNITY_Community 65|Community 65]]
-- [[_COMMUNITY_Community 66|Community 66]]
-- [[_COMMUNITY_Community 67|Community 67]]
-- [[_COMMUNITY_Community 68|Community 68]]
-- [[_COMMUNITY_Community 69|Community 69]]
-- [[_COMMUNITY_Community 70|Community 70]]
-- [[_COMMUNITY_Community 71|Community 71]]
-- [[_COMMUNITY_Community 72|Community 72]]
-- [[_COMMUNITY_Community 73|Community 73]]
-- [[_COMMUNITY_Community 74|Community 74]]
-- [[_COMMUNITY_Community 75|Community 75]]
-- [[_COMMUNITY_Community 76|Community 76]]
-- [[_COMMUNITY_Community 77|Community 77]]
-- [[_COMMUNITY_Community 78|Community 78]]
-- [[_COMMUNITY_Community 79|Community 79]]
-- [[_COMMUNITY_Community 80|Community 80]]
-- [[_COMMUNITY_Community 81|Community 81]]
-- [[_COMMUNITY_Community 82|Community 82]]
-- [[_COMMUNITY_Community 83|Community 83]]
-- [[_COMMUNITY_Community 84|Community 84]]
-- [[_COMMUNITY_Community 85|Community 85]]
-- [[_COMMUNITY_Community 86|Community 86]]
-- [[_COMMUNITY_Community 87|Community 87]]
-- [[_COMMUNITY_Community 88|Community 88]]
-- [[_COMMUNITY_Community 89|Community 89]]
-- [[_COMMUNITY_Community 90|Community 90]]
-- [[_COMMUNITY_Community 91|Community 91]]
-- [[_COMMUNITY_Community 92|Community 92]]
-- [[_COMMUNITY_Community 93|Community 93]]
-- [[_COMMUNITY_Community 94|Community 94]]
-- [[_COMMUNITY_Community 95|Community 95]]
-- [[_COMMUNITY_Community 96|Community 96]]
-- [[_COMMUNITY_Community 97|Community 97]]
-- [[_COMMUNITY_Community 98|Community 98]]
-- [[_COMMUNITY_Community 99|Community 99]]
-- [[_COMMUNITY_Community 100|Community 100]]
-- [[_COMMUNITY_Community 101|Community 101]]
-- [[_COMMUNITY_Community 102|Community 102]]
-- [[_COMMUNITY_Community 103|Community 103]]
-- [[_COMMUNITY_Community 104|Community 104]]
-- [[_COMMUNITY_Community 105|Community 105]]
-- [[_COMMUNITY_Community 106|Community 106]]
-- [[_COMMUNITY_Community 107|Community 107]]
-- [[_COMMUNITY_Community 108|Community 108]]
-- [[_COMMUNITY_Community 109|Community 109]]
-- [[_COMMUNITY_Community 110|Community 110]]
-- [[_COMMUNITY_Community 111|Community 111]]
-- [[_COMMUNITY_Community 112|Community 112]]
-- [[_COMMUNITY_Community 113|Community 113]]
-- [[_COMMUNITY_Community 114|Community 114]]
-- [[_COMMUNITY_Community 115|Community 115]]
-- [[_COMMUNITY_Community 116|Community 116]]
-- [[_COMMUNITY_Community 117|Community 117]]
-- [[_COMMUNITY_Community 118|Community 118]]
-- [[_COMMUNITY_Community 119|Community 119]]
-- [[_COMMUNITY_Community 120|Community 120]]
-- [[_COMMUNITY_Community 121|Community 121]]
-- [[_COMMUNITY_Community 122|Community 122]]
-- [[_COMMUNITY_Community 123|Community 123]]
-- [[_COMMUNITY_Community 124|Community 124]]
-- [[_COMMUNITY_Community 125|Community 125]]
-- [[_COMMUNITY_Community 126|Community 126]]
-- [[_COMMUNITY_Community 127|Community 127]]
-- [[_COMMUNITY_Community 128|Community 128]]
-- [[_COMMUNITY_Community 129|Community 129]]
-- [[_COMMUNITY_Community 130|Community 130]]
-- [[_COMMUNITY_Community 131|Community 131]]
-- [[_COMMUNITY_Community 132|Community 132]]
-- [[_COMMUNITY_Community 133|Community 133]]
-- [[_COMMUNITY_Community 134|Community 134]]
-- [[_COMMUNITY_Community 135|Community 135]]
-- [[_COMMUNITY_Community 136|Community 136]]
-- [[_COMMUNITY_Community 137|Community 137]]
-- [[_COMMUNITY_Community 138|Community 138]]
-- [[_COMMUNITY_Community 139|Community 139]]
-- [[_COMMUNITY_Community 140|Community 140]]
-- [[_COMMUNITY_Community 141|Community 141]]
-- [[_COMMUNITY_Community 142|Community 142]]
-- [[_COMMUNITY_Community 143|Community 143]]
-- [[_COMMUNITY_Community 144|Community 144]]
-- [[_COMMUNITY_Community 145|Community 145]]
-- [[_COMMUNITY_Community 146|Community 146]]
-- [[_COMMUNITY_Community 147|Community 147]]
-- [[_COMMUNITY_Community 148|Community 148]]
-- [[_COMMUNITY_Community 149|Community 149]]
-- [[_COMMUNITY_Community 150|Community 150]]
-- [[_COMMUNITY_Community 151|Community 151]]
-- [[_COMMUNITY_Community 152|Community 152]]
-- [[_COMMUNITY_Community 153|Community 153]]
-- [[_COMMUNITY_Community 154|Community 154]]
-- [[_COMMUNITY_Community 155|Community 155]]
-- [[_COMMUNITY_Community 156|Community 156]]
-- [[_COMMUNITY_Community 157|Community 157]]
-- [[_COMMUNITY_Community 158|Community 158]]
-- [[_COMMUNITY_Community 159|Community 159]]
-- [[_COMMUNITY_Community 160|Community 160]]
-- [[_COMMUNITY_Community 161|Community 161]]
-- [[_COMMUNITY_Community 162|Community 162]]
-- [[_COMMUNITY_Community 163|Community 163]]
-- [[_COMMUNITY_Community 164|Community 164]]
-- [[_COMMUNITY_Community 165|Community 165]]
-- [[_COMMUNITY_Community 166|Community 166]]
-- [[_COMMUNITY_Community 167|Community 167]]
-- [[_COMMUNITY_Community 168|Community 168]]
-- [[_COMMUNITY_Community 169|Community 169]]
-- [[_COMMUNITY_Community 170|Community 170]]
-- [[_COMMUNITY_Community 171|Community 171]]
-- [[_COMMUNITY_Community 172|Community 172]]
-- [[_COMMUNITY_Community 173|Community 173]]
-- [[_COMMUNITY_Community 174|Community 174]]
-- [[_COMMUNITY_Community 175|Community 175]]
-- [[_COMMUNITY_Community 176|Community 176]]
-- [[_COMMUNITY_Community 177|Community 177]]
-- [[_COMMUNITY_Community 178|Community 178]]
-- [[_COMMUNITY_Community 179|Community 179]]
-- [[_COMMUNITY_Community 180|Community 180]]
-- [[_COMMUNITY_Community 181|Community 181]]
-- [[_COMMUNITY_Community 184|Community 184]]
-- [[_COMMUNITY_Community 185|Community 185]]
-- [[_COMMUNITY_Community 186|Community 186]]
-- [[_COMMUNITY_Community 187|Community 187]]
-- [[_COMMUNITY_Community 188|Community 188]]
-- [[_COMMUNITY_Community 189|Community 189]]
-- [[_COMMUNITY_Community 190|Community 190]]
-- [[_COMMUNITY_Community 191|Community 191]]
-- [[_COMMUNITY_Community 192|Community 192]]
-- [[_COMMUNITY_Community 193|Community 193]]
-- [[_COMMUNITY_Community 194|Community 194]]
-- [[_COMMUNITY_Community 195|Community 195]]
-- [[_COMMUNITY_Community 196|Community 196]]
-- [[_COMMUNITY_Community 197|Community 197]]
-- [[_COMMUNITY_Community 198|Community 198]]
-- [[_COMMUNITY_Community 199|Community 199]]
-- [[_COMMUNITY_Community 200|Community 200]]
-- [[_COMMUNITY_Community 201|Community 201]]
-- [[_COMMUNITY_Community 202|Community 202]]
-- [[_COMMUNITY_Community 203|Community 203]]
-- [[_COMMUNITY_Community 204|Community 204]]
-- [[_COMMUNITY_Community 205|Community 205]]
-- [[_COMMUNITY_Community 206|Community 206]]
-- [[_COMMUNITY_Community 207|Community 207]]
-- [[_COMMUNITY_Community 208|Community 208]]
-- [[_COMMUNITY_Community 209|Community 209]]
-- [[_COMMUNITY_Community 210|Community 210]]
-- [[_COMMUNITY_Community 211|Community 211]]
-- [[_COMMUNITY_Community 212|Community 212]]
-- [[_COMMUNITY_Community 213|Community 213]]
-- [[_COMMUNITY_Community 214|Community 214]]
-- [[_COMMUNITY_Community 215|Community 215]]
-- [[_COMMUNITY_Community 216|Community 216]]
-- [[_COMMUNITY_Community 217|Community 217]]
-- [[_COMMUNITY_Community 219|Community 219]]
-- [[_COMMUNITY_Community 220|Community 220]]
-- [[_COMMUNITY_Community 221|Community 221]]
-- [[_COMMUNITY_Community 222|Community 222]]
-- [[_COMMUNITY_Community 223|Community 223]]
-- [[_COMMUNITY_Community 224|Community 224]]
-- [[_COMMUNITY_Community 225|Community 225]]
-- [[_COMMUNITY_Community 226|Community 226]]
-- [[_COMMUNITY_Community 227|Community 227]]
-- [[_COMMUNITY_Community 228|Community 228]]
-- [[_COMMUNITY_Community 229|Community 229]]
-- [[_COMMUNITY_Community 230|Community 230]]
-- [[_COMMUNITY_Community 231|Community 231]]
-- [[_COMMUNITY_Community 232|Community 232]]
-- [[_COMMUNITY_Community 233|Community 233]]
-- [[_COMMUNITY_Community 234|Community 234]]
-- [[_COMMUNITY_Community 235|Community 235]]
-- [[_COMMUNITY_Community 236|Community 236]]
-- [[_COMMUNITY_Community 237|Community 237]]
-- [[_COMMUNITY_Community 238|Community 238]]
-- [[_COMMUNITY_Community 239|Community 239]]
-- [[_COMMUNITY_Community 240|Community 240]]
-- [[_COMMUNITY_Community 241|Community 241]]
-- [[_COMMUNITY_Community 242|Community 242]]
-- [[_COMMUNITY_Community 244|Community 244]]
-- [[_COMMUNITY_Community 245|Community 245]]
-- [[_COMMUNITY_Community 246|Community 246]]
-- [[_COMMUNITY_Community 247|Community 247]]
-- [[_COMMUNITY_Community 248|Community 248]]
-- [[_COMMUNITY_Community 249|Community 249]]
-- [[_COMMUNITY_Community 250|Community 250]]
-- [[_COMMUNITY_Community 251|Community 251]]
-- [[_COMMUNITY_Community 252|Community 252]]
-- [[_COMMUNITY_Community 253|Community 253]]
-- [[_COMMUNITY_Community 254|Community 254]]
-- [[_COMMUNITY_Community 255|Community 255]]
-- [[_COMMUNITY_Community 256|Community 256]]
-- [[_COMMUNITY_Community 257|Community 257]]
-- [[_COMMUNITY_Community 258|Community 258]]
-- [[_COMMUNITY_Community 259|Community 259]]
-- [[_COMMUNITY_Community 260|Community 260]]
-- [[_COMMUNITY_Community 261|Community 261]]
-- [[_COMMUNITY_Community 262|Community 262]]
-- [[_COMMUNITY_Community 263|Community 263]]
-- [[_COMMUNITY_Community 264|Community 264]]
-- [[_COMMUNITY_Community 265|Community 265]]
-- [[_COMMUNITY_Community 266|Community 266]]
-- [[_COMMUNITY_Community 267|Community 267]]
-- [[_COMMUNITY_Community 269|Community 269]]
-- [[_COMMUNITY_Community 270|Community 270]]
-- [[_COMMUNITY_Community 272|Community 272]]
-- [[_COMMUNITY_Community 273|Community 273]]
-- [[_COMMUNITY_Community 274|Community 274]]
-- [[_COMMUNITY_Community 275|Community 275]]
-- [[_COMMUNITY_Community 276|Community 276]]
-- [[_COMMUNITY_Community 277|Community 277]]
-- [[_COMMUNITY_Community 278|Community 278]]
-- [[_COMMUNITY_Community 279|Community 279]]
-- [[_COMMUNITY_Community 280|Community 280]]
-- [[_COMMUNITY_Community 281|Community 281]]
-- [[_COMMUNITY_Community 282|Community 282]]
-- [[_COMMUNITY_Community 283|Community 283]]
-- [[_COMMUNITY_Community 284|Community 284]]
-- [[_COMMUNITY_Community 285|Community 285]]
-- [[_COMMUNITY_Community 286|Community 286]]
-- [[_COMMUNITY_Community 287|Community 287]]
-- [[_COMMUNITY_Community 288|Community 288]]
-- [[_COMMUNITY_Community 289|Community 289]]
-- [[_COMMUNITY_Community 290|Community 290]]
-- [[_COMMUNITY_Community 291|Community 291]]
-- [[_COMMUNITY_Community 292|Community 292]]
-- [[_COMMUNITY_Community 293|Community 293]]
-- [[_COMMUNITY_Community 294|Community 294]]
-- [[_COMMUNITY_Community 295|Community 295]]
-- [[_COMMUNITY_Community 296|Community 296]]
-- [[_COMMUNITY_Community 297|Community 297]]
-- [[_COMMUNITY_Community 298|Community 298]]
-- [[_COMMUNITY_Community 299|Community 299]]
-- [[_COMMUNITY_Community 300|Community 300]]
-- [[_COMMUNITY_Community 301|Community 301]]
-- [[_COMMUNITY_Community 302|Community 302]]
-- [[_COMMUNITY_Community 303|Community 303]]
-- [[_COMMUNITY_Community 304|Community 304]]
-- [[_COMMUNITY_Community 305|Community 305]]
-- [[_COMMUNITY_Community 306|Community 306]]
-- [[_COMMUNITY_Community 307|Community 307]]
-- [[_COMMUNITY_Community 308|Community 308]]
-- [[_COMMUNITY_Community 309|Community 309]]
-- [[_COMMUNITY_Community 310|Community 310]]
-- [[_COMMUNITY_Community 311|Community 311]]
-- [[_COMMUNITY_Community 312|Community 312]]
-- [[_COMMUNITY_Community 313|Community 313]]
-- [[_COMMUNITY_Community 314|Community 314]]
-- [[_COMMUNITY_Community 315|Community 315]]
-- [[_COMMUNITY_Community 316|Community 316]]
-- [[_COMMUNITY_Community 317|Community 317]]
-- [[_COMMUNITY_Community 318|Community 318]]
-- [[_COMMUNITY_Community 319|Community 319]]
-- [[_COMMUNITY_Community 320|Community 320]]
-- [[_COMMUNITY_Community 321|Community 321]]
-- [[_COMMUNITY_Community 322|Community 322]]
-- [[_COMMUNITY_Community 323|Community 323]]
-- [[_COMMUNITY_Community 324|Community 324]]
-- [[_COMMUNITY_Community 325|Community 325]]
-- [[_COMMUNITY_Community 326|Community 326]]
-- [[_COMMUNITY_Community 327|Community 327]]
-- [[_COMMUNITY_Community 328|Community 328]]
-- [[_COMMUNITY_Community 329|Community 329]]
-- [[_COMMUNITY_Community 330|Community 330]]
-- [[_COMMUNITY_Community 331|Community 331]]
-- [[_COMMUNITY_Community 332|Community 332]]
-- [[_COMMUNITY_Community 333|Community 333]]
-- [[_COMMUNITY_Community 334|Community 334]]
-- [[_COMMUNITY_Community 335|Community 335]]
-- [[_COMMUNITY_Community 336|Community 336]]
-- [[_COMMUNITY_Community 338|Community 338]]
-- [[_COMMUNITY_Community 341|Community 341]]
-- [[_COMMUNITY_Community 342|Community 342]]
-- [[_COMMUNITY_Community 343|Community 343]]
-- [[_COMMUNITY_Community 344|Community 344]]
-- [[_COMMUNITY_Community 363|Community 363]]
-- [[_COMMUNITY_Community 364|Community 364]]
-- [[_COMMUNITY_Community 366|Community 366]]
-- [[_COMMUNITY_Community 367|Community 367]]
-- [[_COMMUNITY_Community 368|Community 368]]
-- [[_COMMUNITY_Community 370|Community 370]]
-- [[_COMMUNITY_Community 399|Community 399]]
-- [[_COMMUNITY_Community 404|Community 404]]
-- [[_COMMUNITY_Community 405|Community 405]]
-- [[_COMMUNITY_Community 406|Community 406]]
-- [[_COMMUNITY_Community 407|Community 407]]
-- [[_COMMUNITY_Community 408|Community 408]]
-- [[_COMMUNITY_Community 409|Community 409]]
-- [[_COMMUNITY_Community 410|Community 410]]
-- [[_COMMUNITY_Community 411|Community 411]]
-- [[_COMMUNITY_Community 412|Community 412]]
-- [[_COMMUNITY_Community 413|Community 413]]
-- [[_COMMUNITY_Community 414|Community 414]]
-- [[_COMMUNITY_Community 415|Community 415]]
-- [[_COMMUNITY_Community 416|Community 416]]
-- [[_COMMUNITY_Community 417|Community 417]]
-- [[_COMMUNITY_Community 418|Community 418]]
-- [[_COMMUNITY_Community 419|Community 419]]
-- [[_COMMUNITY_Community 420|Community 420]]
-- [[_COMMUNITY_Community 421|Community 421]]
-- [[_COMMUNITY_Community 422|Community 422]]
-- [[_COMMUNITY_Community 425|Community 425]]
-- [[_COMMUNITY_Community 426|Community 426]]
-- [[_COMMUNITY_Community 427|Community 427]]
+- [[_COMMUNITY_07_rest_api_auth (request)|07_rest_api_auth (request)]]
+- [[_COMMUNITY_pixelDojo (gate)|pixelDojo (gate)]]
+- [[_COMMUNITY_voxelDojo (reviewslice)|voxelDojo (reviewslice)]]
+- [[_COMMUNITY_17_distributed_config_service (service)|17_distributed_config_service (service)]]
+- [[_COMMUNITY_07_rest_api_auth (auditentry)|07_rest_api_auth (auditentry)]]
+- [[_COMMUNITY_02_key_value_store (default)|02_key_value_store (default)]]
+- [[_COMMUNITY_16_mini_message_queue (broker)|16_mini_message_queue (broker)]]
+- [[_COMMUNITY_04_concurrent_task_queue (default)|04_concurrent_task_queue (default)]]
+- [[_COMMUNITY_08_event_driven_order_system (append)|08_event_driven_order_system (append)]]
+- [[_COMMUNITY_04_concurrent_task_queue (clock)|04_concurrent_task_queue (clock)]]
+- [[_COMMUNITY_06_file_upload_pipeline (registry)|06_file_upload_pipeline (registry)]]
+- [[_COMMUNITY_03_url_shortener (context)|03_url_shortener (context)]]
+- [[_COMMUNITY_10_distributed_cache (metrics)|10_distributed_cache (metrics)]]
+- [[_COMMUNITY_pixelDojo (pixelquestapp)|pixelDojo (pixelquestapp)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (snapshot|13_api_gateway_circuit_breaker (snapshot]]
+- [[_COMMUNITY_02_key_value_store (store)|02_key_value_store (store)]]
+- [[_COMMUNITY_15_metrics_collector (store)|15_metrics_collector (store)]]
+- [[_COMMUNITY_pixelDojo (driver)|pixelDojo (driver)]]
+- [[_COMMUNITY_05_websocket_chat (config)|05_websocket_chat (config)]]
+- [[_COMMUNITY_01_rate_limiter (constructor)|01_rate_limiter (constructor)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_05_websocket_chat (chathub)|05_websocket_chat (chathub)]]
+- [[_COMMUNITY_10_distributed_cache (metrics)|10_distributed_cache (metrics)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (election)|12_distributed_job_scheduler (election)]]
+- [[_COMMUNITY_06_file_upload_pipeline (upload)|06_file_upload_pipeline (upload)]]
+- [[_COMMUNITY_09_plugin_system (capabilitydeclaration)|09_plugin_system (capabilitydeclaration)]]
+- [[_COMMUNITY_openclaw (adapter)|openclaw (adapter)]]
+- [[_COMMUNITY_pixelDojo (reviewslice)|pixelDojo (reviewslice)]]
+- [[_COMMUNITY_11_load_balancer (loadbalancer)|11_load_balancer (loadbalancer)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (scheduler)|12_distributed_job_scheduler (scheduler)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (construc|13_api_gateway_circuit_breaker (construc]]
+- [[_COMMUNITY_16_mini_message_queue (default)|16_mini_message_queue (default)]]
+- [[_COMMUNITY_15_metrics_collector (apierror)|15_metrics_collector (apierror)]]
+- [[_COMMUNITY_04_concurrent_task_queue (constructor)|04_concurrent_task_queue (constructor)]]
+- [[_COMMUNITY_14_log_aggregator (logsource)|14_log_aggregator (logsource)]]
+- [[_COMMUNITY_17_distributed_config_service (targeting|17_distributed_config_service (targeting]]
+- [[_COMMUNITY_08_event_driven_order_system (server)|08_event_driven_order_system (server)]]
+- [[_COMMUNITY_14_log_aggregator (logsource)|14_log_aggregator (logsource)]]
+- [[_COMMUNITY_pixelDojo (lessonflow)|pixelDojo (lessonflow)]]
+- [[_COMMUNITY_Users (queue)|Users (queue)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (scheduler)|12_distributed_job_scheduler (scheduler)]]
+- [[_COMMUNITY_pixelDojo (skillorbitscene)|pixelDojo (skillorbitscene)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_Users (system)|Users (system)]]
+- [[_COMMUNITY_pixelDojo (loadcorepack)|pixelDojo (loadcorepack)]]
+- [[_COMMUNITY_03_url_shortener (constructor)|03_url_shortener (constructor)]]
+- [[_COMMUNITY_06_file_upload_pipeline (config)|06_file_upload_pipeline (config)]]
+- [[_COMMUNITY_18_search_engine (invertedindex)|18_search_engine (invertedindex)]]
+- [[_COMMUNITY__shared (benchmark)|_shared (benchmark)]]
+- [[_COMMUNITY_openclaw (_build_output)|openclaw (_build_output)]]
+- [[_COMMUNITY_learner (whiteboard)|learner (whiteboard)]]
+- [[_COMMUNITY_17_distributed_config_service (verifier)|17_distributed_config_service (verifier)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_10_distributed_cache (constructor)|10_distributed_cache (constructor)]]
+- [[_COMMUNITY_openclaw (inbox)|openclaw (inbox)]]
+- [[_COMMUNITY_05_websocket_chat (default)|05_websocket_chat (default)]]
+- [[_COMMUNITY_08_event_driven_order_system (apierror)|08_event_driven_order_system (apierror)]]
+- [[_COMMUNITY_08_event_driven_order_system (lib)|08_event_driven_order_system (lib)]]
+- [[_COMMUNITY_test_engine_contracts.py (test_engine_do|test_engine_contracts.py (test_engine_do]]
+- [[_COMMUNITY_01_rate_limiter (newratelimiter)|01_rate_limiter (newratelimiter)]]
+- [[_COMMUNITY_learner (slice)|learner (slice)]]
+- [[_COMMUNITY_Users (system)|Users (system)]]
+- [[_COMMUNITY_codexDojo (cycle)|codexDojo (cycle)]]
+- [[_COMMUNITY_Users (agent)|Users (agent)]]
+- [[_COMMUNITY_01_rate_limiter (eslint)|01_rate_limiter (eslint)]]
+- [[_COMMUNITY_17_distributed_config_service (jest)|17_distributed_config_service (jest)]]
+- [[_COMMUNITY__shared (benchmark)|_shared (benchmark)]]
+- [[_COMMUNITY_pixelDojo (packvalidator)|pixelDojo (packvalidator)]]
+- [[_COMMUNITY_learner (validate)|learner (validate)]]
+- [[_COMMUNITY_01_rate_limiter (buildhandler)|01_rate_limiter (buildhandler)]]
+- [[_COMMUNITY_learner (aidi)|learner (aidi)]]
+- [[_COMMUNITY_Users (readme)|Users (readme)]]
+- [[_COMMUNITY_Users (skill)|Users (skill)]]
+- [[_COMMUNITY_06_file_upload_pipeline (benchmark)|06_file_upload_pipeline (benchmark)]]
+- [[_COMMUNITY_03_url_shortener (stats)|03_url_shortener (stats)]]
+- [[_COMMUNITY_02_key_value_store (server)|02_key_value_store (server)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (eslint)|13_api_gateway_circuit_breaker (eslint)]]
+- [[_COMMUNITY_learning_state.yaml (verifier)|learning_state.yaml (verifier)]]
+- [[_COMMUNITY_06_file_upload_pipeline (eslint)|06_file_upload_pipeline (eslint)]]
+- [[_COMMUNITY_TECH_DEBT_AUDIT_2026-06-28.md (curriculu|TECH_DEBT_AUDIT_2026-06-28.md (curriculu]]
+- [[_COMMUNITY_02_key_value_store (eslint)|02_key_value_store (eslint)]]
+- [[_COMMUNITY_04_concurrent_task_queue (eslint)|04_concurrent_task_queue (eslint)]]
+- [[_COMMUNITY_09_plugin_system (eslint)|09_plugin_system (eslint)]]
+- [[_COMMUNITY_14_log_aggregator (eslint)|14_log_aggregator (eslint)]]
+- [[_COMMUNITY_16_mini_message_queue (broker)|16_mini_message_queue (broker)]]
+- [[_COMMUNITY_AGENTS.md (engines)|AGENTS.md (engines)]]
+- [[_COMMUNITY_16_mini_message_queue (brokererror)|16_mini_message_queue (brokererror)]]
+- [[_COMMUNITY_voxelDojo (game)|voxelDojo (game)]]
+- [[_COMMUNITY_03_url_shortener (eslint)|03_url_shortener (eslint)]]
+- [[_COMMUNITY_03_url_shortener (lib)|03_url_shortener (lib)]]
+- [[_COMMUNITY_08_event_driven_order_system (eslint)|08_event_driven_order_system (eslint)]]
+- [[_COMMUNITY_15_metrics_collector (app)|15_metrics_collector (app)]]
+- [[_COMMUNITY_openclaw (python)|openclaw (python)]]
+- [[_COMMUNITY_openclaw (malformed)|openclaw (malformed)]]
+- [[_COMMUNITY_09_plugin_system (host)|09_plugin_system (host)]]
+- [[_COMMUNITY_01_rate_limiter (status)|01_rate_limiter (status)]]
+- [[_COMMUNITY_05_websocket_chat (eslint)|05_websocket_chat (eslint)]]
+- [[_COMMUNITY_07_rest_api_auth (eslint)|07_rest_api_auth (eslint)]]
+- [[_COMMUNITY_09_plugin_system (capabilitydeclaration)|09_plugin_system (capabilitydeclaration)]]
+- [[_COMMUNITY_16_mini_message_queue (eslint)|16_mini_message_queue (eslint)]]
+- [[_COMMUNITY_15_metrics_collector (eslint)|15_metrics_collector (eslint)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (bulkhead|13_api_gateway_circuit_breaker (bulkhead]]
+- [[_COMMUNITY_02_key_value_store (clonejson)|02_key_value_store (clonejson)]]
+- [[_COMMUNITY_11_load_balancer (eslint)|11_load_balancer (eslint)]]
+- [[_COMMUNITY_11_load_balancer (appendforwardedfor)|11_load_balancer (appendforwardedfor)]]
+- [[_COMMUNITY_11_load_balancer (metrics)|11_load_balancer (metrics)]]
+- [[_COMMUNITY_18_search_engine (lib)|18_search_engine (lib)]]
+- [[_COMMUNITY__shared (test_rejects_path_traversal_sce|_shared (test_rejects_path_traversal_sce]]
+- [[_COMMUNITY_miniMaxEvolutionEngine (fase)|miniMaxEvolutionEngine (fase)]]
+- [[_COMMUNITY_openclaw (base)|openclaw (base)]]
+- [[_COMMUNITY_pixelDojo (tsconfig)|pixelDojo (tsconfig)]]
+- [[_COMMUNITY_14_log_aggregator (project)|14_log_aggregator (project)]]
+- [[_COMMUNITY_Users (arena)|Users (arena)]]
+- [[_COMMUNITY_01_rate_limiter (tsconfig)|01_rate_limiter (tsconfig)]]
+- [[_COMMUNITY__shared (gate)|_shared (gate)]]
+- [[_COMMUNITY_codexDojo (tsconfig)|codexDojo (tsconfig)]]
+- [[_COMMUNITY_pixelDojo (actionrouter)|pixelDojo (actionrouter)]]
+- [[_COMMUNITY_learner (gate)|learner (gate)]]
+- [[_COMMUNITY_handbook (gate)|handbook (gate)]]
+- [[_COMMUNITY_09_plugin_system (plugin)|09_plugin_system (plugin)]]
+- [[_COMMUNITY_codexDojo (escape)|codexDojo (escape)]]
+- [[_COMMUNITY_pixelDojo (three)|pixelDojo (three)]]
+- [[_COMMUNITY_01_rate_limiter (addrparseerror)|01_rate_limiter (addrparseerror)]]
+- [[_COMMUNITY_01_rate_limiter (decision)|01_rate_limiter (decision)]]
+- [[_COMMUNITY_01_rate_limiter (default)|01_rate_limiter (default)]]
+- [[_COMMUNITY_10_distributed_cache (cache)|10_distributed_cache (cache)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (config)|13_api_gateway_circuit_breaker (config)]]
+- [[_COMMUNITY_Users (sonda)|Users (sonda)]]
+- [[_COMMUNITY_codexDojo (app)|codexDojo (app)]]
+- [[_COMMUNITY_voxelDojo (three)|voxelDojo (three)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (benchmar|13_api_gateway_circuit_breaker (benchmar]]
+- [[_COMMUNITY_03_url_shortener (with_rate_limit)|03_url_shortener (with_rate_limit)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (eslint)|12_distributed_job_scheduler (eslint)]]
+- [[_COMMUNITY_17_distributed_config_service (index)|17_distributed_config_service (index)]]
+- [[_COMMUNITY_codexDojo (statewith)|codexDojo (statewith)]]
+- [[_COMMUNITY_pixelDojo (loop)|pixelDojo (loop)]]
+- [[_COMMUNITY_Users (cache)|Users (cache)]]
+- [[_COMMUNITY_handbook (handbook)|handbook (handbook)]]
+- [[_COMMUNITY_01_rate_limiter (clock)|01_rate_limiter (clock)]]
+- [[_COMMUNITY_01_rate_limiter (integration)|01_rate_limiter (integration)]]
+- [[_COMMUNITY_06_file_upload_pipeline (tsconfig)|06_file_upload_pipeline (tsconfig)]]
+- [[_COMMUNITY_07_rest_api_auth (app)|07_rest_api_auth (app)]]
+- [[_COMMUNITY__shared (prediction)|_shared (prediction)]]
+- [[_COMMUNITY_codexDojo (projects)|codexDojo (projects)]]
+- [[_COMMUNITY_codexDojo (linuxapps)|codexDojo (linuxapps)]]
+- [[_COMMUNITY_minimaxDojo (tests)|minimaxDojo (tests)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_codexDojo (engine)|codexDojo (engine)]]
+- [[_COMMUNITY_09_plugin_system (allowed)|09_plugin_system (allowed)]]
+- [[_COMMUNITY_14_log_aggregator (server)|14_log_aggregator (server)]]
+- [[_COMMUNITY__shared (metric)|_shared (metric)]]
+- [[_COMMUNITY__shared (setup)|_shared (setup)]]
+- [[_COMMUNITY_codexDojo (package)|codexDojo (package)]]
+- [[_COMMUNITY_Users (load)|Users (load)]]
+- [[_COMMUNITY_11_load_balancer (balancer)|11_load_balancer (balancer)]]
+- [[_COMMUNITY_11_load_balancer (router)|11_load_balancer (router)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (tsconfig|13_api_gateway_circuit_breaker (tsconfig]]
+- [[_COMMUNITY_14_log_aggregator (tsconfig)|14_log_aggregator (tsconfig)]]
+- [[_COMMUNITY_15_metrics_collector (tsconfig)|15_metrics_collector (tsconfig)]]
+- [[_COMMUNITY_16_mini_message_queue (tsconfig)|16_mini_message_queue (tsconfig)]]
+- [[_COMMUNITY_17_distributed_config_service (tsconfig)|17_distributed_config_service (tsconfig)]]
+- [[_COMMUNITY__shared (text)|_shared (text)]]
+- [[_COMMUNITY_openclaw (scheduler)|openclaw (scheduler)]]
+- [[_COMMUNITY_learner (streak)|learner (streak)]]
+- [[_COMMUNITY_11_load_balancer (body_bytes)|11_load_balancer (body_bytes)]]
+- [[_COMMUNITY__shared (trust)|_shared (trust)]]
+- [[_COMMUNITY__shared (returns)|_shared (returns)]]
+- [[_COMMUNITY_minimaxDojo (phase)|minimaxDojo (phase)]]
+- [[_COMMUNITY_pixelDojo (policygatescene)|pixelDojo (policygatescene)]]
+- [[_COMMUNITY_voxelDojo (tsconfig)|voxelDojo (tsconfig)]]
+- [[_COMMUNITY_Users (mutation)|Users (mutation)]]
+- [[_COMMUNITY_11_load_balancer (bytes)|11_load_balancer (bytes)]]
+- [[_COMMUNITY_Users (agent)|Users (agent)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_01_rate_limiter (eslintrc)|01_rate_limiter (eslintrc)]]
+- [[_COMMUNITY_03_url_shortener (tsconfig)|03_url_shortener (tsconfig)]]
+- [[_COMMUNITY_06_file_upload_pipeline (eslintrc)|06_file_upload_pipeline (eslintrc)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (adaptive|13_api_gateway_circuit_breaker (adaptive]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (circuitb|13_api_gateway_circuit_breaker (circuitb]]
+- [[_COMMUNITY_18_search_engine (package)|18_search_engine (package)]]
+- [[_COMMUNITY_minimaxDojo (agent)|minimaxDojo (agent)]]
+- [[_COMMUNITY_minimaxDojo (gate)|minimaxDojo (gate)]]
+- [[_COMMUNITY_openclaw (openclaw)|openclaw (openclaw)]]
+- [[_COMMUNITY_pixelDojo (circuitbreakerscene)|pixelDojo (circuitbreakerscene)]]
+- [[_COMMUNITY_openclaw (learning)|openclaw (learning)]]
+- [[_COMMUNITY_Users (websocket)|Users (websocket)]]
+- [[_COMMUNITY_Users (model)|Users (model)]]
+- [[_COMMUNITY_01_rate_limiter (render)|01_rate_limiter (render)]]
+- [[_COMMUNITY_01_rate_limiter (response)|01_rate_limiter (response)]]
+- [[_COMMUNITY_02_key_value_store (typescript)|02_key_value_store (typescript)]]
+- [[_COMMUNITY_09_plugin_system (http)|09_plugin_system (http)]]
+- [[_COMMUNITY_09_plugin_system (asserttransition)|09_plugin_system (asserttransition)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (tsconfig)|12_distributed_job_scheduler (tsconfig)]]
+- [[_COMMUNITY_18_search_engine (tsconfig)|18_search_engine (tsconfig)]]
+- [[_COMMUNITY_minimaxDojo (config)|minimaxDojo (config)]]
+- [[_COMMUNITY_minimaxDojo (setup)|minimaxDojo (setup)]]
+- [[_COMMUNITY_minimaxDojo (tests)|minimaxDojo (tests)]]
+- [[_COMMUNITY_minimaxDojo (phase)|minimaxDojo (phase)]]
+- [[_COMMUNITY_minimaxDojo (append)|minimaxDojo (append)]]
+- [[_COMMUNITY_14_log_aggregator (req)|14_log_aggregator (req)]]
+- [[_COMMUNITY_05_websocket_chat (chatconfig)|05_websocket_chat (chatconfig)]]
+- [[_COMMUNITY_01_rate_limiter (stryker)|01_rate_limiter (stryker)]]
+- [[_COMMUNITY_03_url_shortener (typescript)|03_url_shortener (typescript)]]
+- [[_COMMUNITY_05_websocket_chat (eslintrc)|05_websocket_chat (eslintrc)]]
+- [[_COMMUNITY_05_websocket_chat (chat_hub)|05_websocket_chat (chat_hub)]]
+- [[_COMMUNITY_08_event_driven_order_system (default)|08_event_driven_order_system (default)]]
+- [[_COMMUNITY_10_distributed_cache (package)|10_distributed_cache (package)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (coalesce|13_api_gateway_circuit_breaker (coalesce]]
+- [[_COMMUNITY_18_search_engine (search)|18_search_engine (search)]]
+- [[_COMMUNITY_minimaxDojo (events)|minimaxDojo (events)]]
+- [[_COMMUNITY_Users (persona)|Users (persona)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_design (project)|design (project)]]
+- [[_COMMUNITY_01_rate_limiter (client_key)|01_rate_limiter (client_key)]]
+- [[_COMMUNITY_01_rate_limiter (middleware)|01_rate_limiter (middleware)]]
+- [[_COMMUNITY_02_key_value_store (tsconfig)|02_key_value_store (tsconfig)]]
+- [[_COMMUNITY_04_concurrent_task_queue (eslintrc)|04_concurrent_task_queue (eslintrc)]]
+- [[_COMMUNITY_04_concurrent_task_queue (tsconfig)|04_concurrent_task_queue (tsconfig)]]
+- [[_COMMUNITY_05_websocket_chat (tsconfig)|05_websocket_chat (tsconfig)]]
+- [[_COMMUNITY_07_rest_api_auth (eslintrc)|07_rest_api_auth (eslintrc)]]
+- [[_COMMUNITY_07_rest_api_auth (tsconfig)|07_rest_api_auth (tsconfig)]]
+- [[_COMMUNITY_08_event_driven_order_system (eslintrc)|08_event_driven_order_system (eslintrc)]]
+- [[_COMMUNITY_08_event_driven_order_system (tsconfig)|08_event_driven_order_system (tsconfig)]]
+- [[_COMMUNITY_09_plugin_system (newhost)|09_plugin_system (newhost)]]
+- [[_COMMUNITY_09_plugin_system (eslintrc)|09_plugin_system (eslintrc)]]
+- [[_COMMUNITY_09_plugin_system (clonerecord)|09_plugin_system (clonerecord)]]
+- [[_COMMUNITY_09_plugin_system (tsconfig)|09_plugin_system (tsconfig)]]
+- [[_COMMUNITY_10_distributed_cache (server)|10_distributed_cache (server)]]
+- [[_COMMUNITY_10_distributed_cache (tsconfig)|10_distributed_cache (tsconfig)]]
+- [[_COMMUNITY__shared (should)|_shared (should)]]
+- [[_COMMUNITY_learner (predictions_summary)|learner (predictions_summary)]]
+- [[_COMMUNITY_learner (next)|learner (next)]]
+- [[_COMMUNITY_02_key_value_store (concurrency)|02_key_value_store (concurrency)]]
+- [[_COMMUNITY_Users (phase)|Users (phase)]]
+- [[_COMMUNITY_01_rate_limiter (composer)|01_rate_limiter (composer)]]
+- [[_COMMUNITY_11_load_balancer (tsconfig)|11_load_balancer (tsconfig)]]
+- [[_COMMUNITY_openclaw (produced)|openclaw (produced)]]
+- [[_COMMUNITY_03_url_shortener (adr)|03_url_shortener (adr)]]
+- [[_COMMUNITY_Users (fairness)|Users (fairness)]]
+- [[_COMMUNITY_Users (gate)|Users (gate)]]
+- [[_COMMUNITY_01_rate_limiter (cleanup)|01_rate_limiter (cleanup)]]
+- [[_COMMUNITY_07_rest_api_auth (addseconds)|07_rest_api_auth (addseconds)]]
+- [[_COMMUNITY_07_rest_api_auth (asobject)|07_rest_api_auth (asobject)]]
+- [[_COMMUNITY_07_rest_api_auth (defaultconfig)|07_rest_api_auth (defaultconfig)]]
+- [[_COMMUNITY_09_plugin_system (port)|09_plugin_system (port)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (typescri|13_api_gateway_circuit_breaker (typescri]]
+- [[_COMMUNITY_14_log_aggregator (typescript)|14_log_aggregator (typescript)]]
+- [[_COMMUNITY_15_metrics_collector (typescript)|15_metrics_collector (typescript)]]
+- [[_COMMUNITY_learner (curr)|learner (curr)]]
+- [[_COMMUNITY_learner (contract)|learner (contract)]]
+- [[_COMMUNITY_learner (curriculum)|learner (curriculum)]]
+- [[_COMMUNITY_18_search_engine (req)|18_search_engine (req)]]
+- [[_COMMUNITY_minimaxDojo (cron)|minimaxDojo (cron)]]
+- [[_COMMUNITY_04_concurrent_task_queue (types)|04_concurrent_task_queue (types)]]
+- [[_COMMUNITY_07_rest_api_auth (auditlogger)|07_rest_api_auth (auditlogger)]]
+- [[_COMMUNITY_07_rest_api_auth (constructor)|07_rest_api_auth (constructor)]]
+- [[_COMMUNITY_11_load_balancer (json_response)|11_load_balancer (json_response)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (bulkhead|13_api_gateway_circuit_breaker (bulkhead]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (ratelimi|13_api_gateway_circuit_breaker (ratelimi]]
+- [[_COMMUNITY_codexDojo (dashboardstats)|codexDojo (dashboardstats)]]
+- [[_COMMUNITY_minimaxDojo (tests)|minimaxDojo (tests)]]
+- [[_COMMUNITY_context7_api_key|context7_api_key]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_Users (spaced)|Users (spaced)]]
+- [[_COMMUNITY_learner (bucket)|learner (bucket)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (circuit)|13_api_gateway_circuit_breaker (circuit)]]
+- [[_COMMUNITY_14_log_aggregator (adr)|14_log_aggregator (adr)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_Users (phase)|Users (phase)]]
+- [[_COMMUNITY_01_rate_limiter (run_matrix)|01_rate_limiter (run_matrix)]]
+- [[_COMMUNITY_01_rate_limiter (run_matrix_cv_strict)|01_rate_limiter (run_matrix_cv_strict)]]
+- [[_COMMUNITY_01_rate_limiter (run_matrix_n3)|01_rate_limiter (run_matrix_n3)]]
+- [[_COMMUNITY_01_rate_limiter (handlers)|01_rate_limiter (handlers)]]
+- [[_COMMUNITY_04_concurrent_task_queue (handler)|04_concurrent_task_queue (handler)]]
+- [[_COMMUNITY_09_plugin_system (plugin_host_tests)|09_plugin_system (plugin_host_tests)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (retry)|13_api_gateway_circuit_breaker (retry)]]
+- [[_COMMUNITY__shared (extracted)|_shared (extracted)]]
+- [[_COMMUNITY_minimaxDojo (test_config_seam)|minimaxDojo (test_config_seam)]]
+- [[_COMMUNITY_learner (must)|learner (must)]]
+- [[_COMMUNITY_threejs-dojo (quest)|threejs-dojo (quest)]]
+- [[_COMMUNITY_Users (learner)|Users (learner)]]
+- [[_COMMUNITY_06_file_upload_pipeline (architecture)|06_file_upload_pipeline (architecture)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (circuits|13_api_gateway_circuit_breaker (circuits]]
+- [[_COMMUNITY_Users (developer)|Users (developer)]]
+- [[_COMMUNITY_Users (benchmark)|Users (benchmark)]]
+- [[_COMMUNITY_Users (learning)|Users (learning)]]
+- [[_COMMUNITY_Users (agora)|Users (agora)]]
+- [[_COMMUNITY_miniMaxEvolutionEngine (gate)|miniMaxEvolutionEngine (gate)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (distribute|12_distributed_job_scheduler (distribute]]
+- [[_COMMUNITY_01_rate_limiter (render_n3_summary)|01_rate_limiter (render_n3_summary)]]
+- [[_COMMUNITY_01_rate_limiter (clientkey)|01_rate_limiter (clientkey)]]
+- [[_COMMUNITY_09_plugin_system (isruntimemodule)|09_plugin_system (isruntimemodule)]]
+- [[_COMMUNITY_09_plugin_system (pluginruntime)|09_plugin_system (pluginruntime)]]
+- [[_COMMUNITY_codexDojo (manifest)|codexDojo (manifest)]]
+- [[_COMMUNITY_minimaxDojo (tests)|minimaxDojo (tests)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_scripts (write_promote_readmes)|scripts (write_promote_readmes)]]
+- [[_COMMUNITY_02_key_value_store (red)|02_key_value_store (red)]]
+- [[_COMMUNITY_04_concurrent_task_queue (queue)|04_concurrent_task_queue (queue)]]
+- [[_COMMUNITY_05_websocket_chat (websocket)|05_websocket_chat (websocket)]]
+- [[_COMMUNITY_minimaxDojo (aluno)|minimaxDojo (aluno)]]
+- [[_COMMUNITY_01_rate_limiter (analyze_results)|01_rate_limiter (analyze_results)]]
+- [[_COMMUNITY_01_rate_limiter (analyze_results_n3)|01_rate_limiter (analyze_results_n3)]]
+- [[_COMMUNITY_01_rate_limiter (decision)|01_rate_limiter (decision)]]
+- [[_COMMUNITY_05_websocket_chat (tsconfig)|05_websocket_chat (tsconfig)]]
+- [[_COMMUNITY_05_websocket_chat (send)|05_websocket_chat (send)]]
+- [[_COMMUNITY_12_distributed_job_scheduler (health)|12_distributed_job_scheduler (health)]]
+- [[_COMMUNITY_Users (evaluation)|Users (evaluation)]]
+- [[_COMMUNITY_Users (codexdojo)|Users (codexdojo)]]
+- [[_COMMUNITY_01_rate_limiter (clock)|01_rate_limiter (clock)]]
+- [[_COMMUNITY_01_rate_limiter (mutex)|01_rate_limiter (mutex)]]
+- [[_COMMUNITY_07_rest_api_auth (now)|07_rest_api_auth (now)]]
+- [[_COMMUNITY_Users (legacy)|Users (legacy)]]
+- [[_COMMUNITY_Users (polyglot)|Users (polyglot)]]
+- [[_COMMUNITY_Users (agent)|Users (agent)]]
+- [[_COMMUNITY_Users (project)|Users (project)]]
+- [[_COMMUNITY_Users (benchmark)|Users (benchmark)]]
+- [[_COMMUNITY_02_key_value_store (spike)|02_key_value_store (spike)]]
+- [[_COMMUNITY_03_url_shortener (tsconfig)|03_url_shortener (tsconfig)]]
+- [[_COMMUNITY_04_concurrent_task_queue|04_concurrent_task_queue]]
+- [[_COMMUNITY__shared (testphase2harness)|_shared (testphase2harness)]]
+- [[_COMMUNITY_pixelDojo (node)|pixelDojo (node)]]
+- [[_COMMUNITY_Users (polyglot)|Users (polyglot)]]
+- [[_COMMUNITY_voxelDojo (principle)|voxelDojo (principle)]]
+- [[_COMMUNITY_16_mini_message_queue (log)|16_mini_message_queue (log)]]
+- [[_COMMUNITY_Users (triage)|Users (triage)]]
+- [[_COMMUNITY_02_key_value_store (baseline)|02_key_value_store (baseline)]]
+- [[_COMMUNITY_02_key_value_store (endurance)|02_key_value_store (endurance)]]
+- [[_COMMUNITY__shared (native_runner)|_shared (native_runner)]]
+- [[_COMMUNITY_Users (memory)|Users (memory)]]
+- [[_COMMUNITY_codexDojo (orchestration)|codexDojo (orchestration)]]
+- [[_COMMUNITY_miniMaxEvolutionEngine (briefing)|miniMaxEvolutionEngine (briefing)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_voxelDojo (hash)|voxelDojo (hash)]]
+- [[_COMMUNITY_Users (polyglot)|Users (polyglot)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (verdict)|13_api_gateway_circuit_breaker (verdict)]]
+- [[_COMMUNITY_Users (context)|Users (context)]]
+- [[_COMMUNITY_codexDojo (brass)|codexDojo (brass)]]
+- [[_COMMUNITY_miniMaxEvolutionEngine (cart)|miniMaxEvolutionEngine (cart)]]
+- [[_COMMUNITY_miniMaxEvolutionEngine (ouroboros)|miniMaxEvolutionEngine (ouroboros)]]
+- [[_COMMUNITY_01_rate_limiter (k6_load_test)|01_rate_limiter (k6_load_test)]]
+- [[_COMMUNITY_01_rate_limiter (matrix_status)|01_rate_limiter (matrix_status)]]
+- [[_COMMUNITY_01_rate_limiter (baseline)|01_rate_limiter (baseline)]]
+- [[_COMMUNITY_01_rate_limiter (endurance)|01_rate_limiter (endurance)]]
+- [[_COMMUNITY_01_rate_limiter (spike)|01_rate_limiter (spike)]]
+- [[_COMMUNITY_01_rate_limiter (stress)|01_rate_limiter (stress)]]
+- [[_COMMUNITY_02_key_value_store (stress)|02_key_value_store (stress)]]
+- [[_COMMUNITY_05_websocket_chat (baseline)|05_websocket_chat (baseline)]]
+- [[_COMMUNITY_05_websocket_chat (endurance)|05_websocket_chat (endurance)]]
+- [[_COMMUNITY_05_websocket_chat (spike)|05_websocket_chat (spike)]]
+- [[_COMMUNITY_05_websocket_chat (stress)|05_websocket_chat (stress)]]
+- [[_COMMUNITY__shared (generic_http_workload)|_shared (generic_http_workload)]]
+- [[_COMMUNITY__shared (kv_workload)|_shared (kv_workload)]]
+- [[_COMMUNITY_codexDojo (vite)|codexDojo (vite)]]
+- [[_COMMUNITY_pixelDojo (dialogues)|pixelDojo (dialogues)]]
+- [[_COMMUNITY_pixelDojo (vite)|pixelDojo (vite)]]
+- [[_COMMUNITY_learner (learner)|learner (learner)]]
+- [[_COMMUNITY_learner (__init__)|learner (__init__)]]
+- [[_COMMUNITY_Users (agent)|Users (agent)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (per)|13_api_gateway_circuit_breaker (per)]]
+- [[_COMMUNITY_18_search_engine (status)|18_search_engine (status)]]
+- [[_COMMUNITY_Users (arena)|Users (arena)]]
+- [[_COMMUNITY_Users (fairness)|Users (fairness)]]
+- [[_COMMUNITY_Users (mem)|Users (mem)]]
+- [[_COMMUNITY_Users (learner)|Users (learner)]]
+- [[_COMMUNITY_Users (arena)|Users (arena)]]
+- [[_COMMUNITY_Users (learner)|Users (learner)]]
+- [[_COMMUNITY_Users (napkin)|Users (napkin)]]
+- [[_COMMUNITY_Users (codexdojo)|Users (codexdojo)]]
+- [[_COMMUNITY_02_key_value_store (ttl)|02_key_value_store (ttl)]]
+- [[_COMMUNITY_Users (context)|Users (context)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_Users (search)|Users (search)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_08_event_driven_order_system (red)|08_event_driven_order_system (red)]]
+- [[_COMMUNITY_handbook (handbook)|handbook (handbook)]]
+- [[_COMMUNITY_misc|misc]]
+- [[_COMMUNITY_Users (pixeldojo)|Users (pixeldojo)]]
+- [[_COMMUNITY_Users (pixeldojo)|Users (pixeldojo)]]
+- [[_COMMUNITY_pyproject.toml (aidevschool)|pyproject.toml (aidevschool)]]
+- [[_COMMUNITY_13_api_gateway_circuit_breaker (api)|13_api_gateway_circuit_breaker (api)]]
+- [[_COMMUNITY_04_concurrent_task_queue (concurrent)|04_concurrent_task_queue (concurrent)]]
+- [[_COMMUNITY_17_distributed_config_service (distribut|17_distributed_config_service (distribut]]
+- [[_COMMUNITY_12_distributed_job_scheduler (distribute|12_distributed_job_scheduler (distribute]]
+- [[_COMMUNITY_10_distributed_cache (distributedcache)|10_distributed_cache (distributedcache)]]
+- [[_COMMUNITY_08_event_driven_order_system (driven)|08_event_driven_order_system (driven)]]
+- [[_COMMUNITY_06_file_upload_pipeline (file)|06_file_upload_pipeline (file)]]
+- [[_COMMUNITY_02_key_value_store (key)|02_key_value_store (key)]]
+- [[_COMMUNITY_11_load_balancer (loadbalancer)|11_load_balancer (loadbalancer)]]
+- [[_COMMUNITY_14_log_aggregator (log)|14_log_aggregator (log)]]
+- [[_COMMUNITY_15_metrics_collector (metrics)|15_metrics_collector (metrics)]]
+- [[_COMMUNITY_16_mini_message_queue (mini)|16_mini_message_queue (mini)]]
+- [[_COMMUNITY_09_plugin_system (plugin)|09_plugin_system (plugin)]]
+- [[_COMMUNITY_01_rate_limiter (rate)|01_rate_limiter (rate)]]
+- [[_COMMUNITY_07_rest_api_auth (rest)|07_rest_api_auth (rest)]]
+- [[_COMMUNITY_18_search_engine (search)|18_search_engine (search)]]
+- [[_COMMUNITY_03_url_shortener (url)|03_url_shortener (url)]]
+- [[_COMMUNITY_05_websocket_chat (websocket)|05_websocket_chat (websocket)]]
+- [[_COMMUNITY_09_plugin_system (red)|09_plugin_system (red)]]
+- [[_COMMUNITY_Users (reports)|Users (reports)]]
+- [[_COMMUNITY_Users (learner)|Users (learner)]]
+- [[_COMMUNITY_Users (learner)|Users (learner)]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `App` - 68 edges
-2. `Cache` - 41 edges
-3. `Queue` - 40 edges
-4. `AppState` - 38 edges
-5. `LoadBalancer` - 38 edges
-6. `Store` - 35 edges
-7. `Upload` - 31 edges
-8. `PixelQuestApp` - 31 edges
-9. `Scheduler` - 30 edges
-10. `Catálogo dos 14 Agentes` - 29 edges
+1. `Result` - 130 edges
+2. `Option` - 116 edges
+3. `State` - 77 edges
+4. `PipelineStatus` - 67 edges
+5. `HermesBus` - 65 edges
+6. `Event` - 43 edges
+7. `AppState` - 38 edges
+8. `BenchmarkAnalyzer` - 36 edges
+9. `Topic` - 33 edges
+10. `NewRateLimiter()` - 32 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `cy-review-round skill (referenced)` --semantically_similar_to--> `Producer != verifier separation`  [INFERRED] [semantically similar]
-  .agents/skills/compozy/references/skills-reference.md → README.md
-- `Question Protocol (cy-idea-factory)` --semantically_similar_to--> `cy-create-prd Skill`  [INFERRED] [semantically similar]
-  .agents/skills/cy-idea-factory/references/question-protocol.md → .claude/skills/cy-create-prd/SKILL.md
-- `PRD Template` --semantically_similar_to--> `Idea Template`  [INFERRED] [semantically similar]
-  .claude/skills/cy-create-prd/references/prd-template.md → .agents/skills/cy-idea-factory/references/idea-template.md
-- `PRD ADR Template` --semantically_similar_to--> `ADR-001: Polyglot Arena V1 — narrative-led projection with a prediction gate`  [INFERRED] [semantically similar]
-  .commandcode/skills/cy-create-prd/references/adr-template.md → .compozy/tasks/polyglot-arena/adrs/adr-001.md
-- `Polyglot Comparison Arena — Task List` --semantically_similar_to--> `Compozy Bundled Skills Reference`  [INFERRED] [semantically similar]
-  .compozy/tasks/polyglot-arena/_tasks.md → .kilocode/skills/compozy/references/skills-reference.md
+- `Task 8: Project 05 benchmark harness + arena run` --semantically_similar_to--> `Strict decision gate (CV<20%, N≥3, fail-closed)`  [INFERRED] [semantically similar]
+  /Users/danielbarreto/Development/aidevschool/.compozy/tasks/polyglot-arena/task_08.md → .compozy/tasks/polyglot-arena/task_07.md
+- `Token Bucket Algorithm` --semantically_similar_to--> `Backpressure (HTTP 429 mapping under overload)`  [INFERRED] [semantically similar]
+  learner/attempts/U0-sonda-rate-limiter-robustness-attempt-1.md → curriculum/04_concurrent_task_queue/docs/benchmark_results.md
+- `Promote 10 Distributed Cache` --references--> `Benchmark Results: Distributed Cache`  [INFERRED]
+  /Users/danielbarreto/Development/aidevschool/curriculum/10_distributed_cache/PROMOTE.md → curriculum/10_distributed_cache/docs/benchmark_results.md
+- `Learning gate (attempt-evaluated-before-solution)` --rationale_for--> `No claims without executable evidence`  [INFERRED]
+  .mavis/learning_state.yaml → AGENTS.md
+- `Producer ≠ Verifier (game attempts, verifier owns state)` --conceptually_related_to--> `Empirical Gates (DoD + Prometor)`  [INFERRED]
+  docs/design/teaching-game-contract.md → engines/minimaxDojo/core/README.md
 
 ## Import Cycles
-- None detected.
+- 1-file cycle: `curriculum/11_load_balancer/rust-impl/tests/load_balancer.rs -> curriculum/11_load_balancer/rust-impl/tests/load_balancer.rs`
 
 ## Hyperedges (group relationships)
-- **** — substrate_readme_md, substrate_interface_md, substrate_schema_yaml, mavis_learning_state_yaml [EXTRACTED 1.00]
-- **Canonical state → substrate adapters → derived views** — agora_learning_state, substrate_schema, agora_continuum_substrate, mavis_adapter, whiteboard_adapter, mavis_learning_state [EXTRACTED 0.95]
+- **Producer≠verifier arena pipeline (auditor → narrator → verifier)** — polyglot_arena_agent_fairness_auditor, polyglot_arena_agent_arena_narrator, polyglot_arena_agent_verifier_prometor [EXTRACTED 1.00]
 - **** — plans_persona_ouroboros_deliverable_md, plans_persona_mnemosyne_deliverable_md, plans_persona_seneca_deliverable_md [INFERRED 0.95]
 - **** — plans_persona_cartografo_deliverable_md, plans_persona_sonda_deliverable_md, plans_persona_socrates_deliverable_md, plans_persona_mneme_deliverable_md, plans_persona_promotor_deliverable_md, plans_persona_critico_deliverable_md, plans_persona_galileu_deliverable_md, plans_persona_atena_deliverable_md, plans_persona_mnemosyne_deliverable_md, plans_persona_mestre_conteudo_deliverable_md, plans_persona_ouroboros_deliverable_md, plans_persona_seneca_deliverable_md [EXTRACTED 1.00]
 - **Project 01 token-bucket 5-phase production cycle** — plans_plan, u0_sonda_diagnostic_unit, go_impl, rust_impl, node_impl, benchmark_matrix, critico_agent, prometor_agent [EXTRACTED 1.00]
@@ -413,1306 +451,1381 @@
 - **Three-language polyglot implementation of Rate Limiter spec** — go_impl_readme_rate_limiter, node_impl_readme_rate_limiter, rust_impl_readme_rate_limiter, docs_spec_rate_limiter [EXTRACTED 1.00]
 - **Devschool 5-phase cycle instantiated across projects 02 and 03** — concept_5phase_cycle, 02_key_value_store_promote, 03_url_shortener_promote, docs_status_rate_limiter, docs_status_key_value_store, docs_status_url_shortener [INFERRED 0.85]
 - **5-phase promote cycle (spec/implement/review/benchmark/optimize)** — 04_concurrent_task_queue_promote, 05_websocket_chat_promote, 06_file_upload_pipeline_promote [INFERRED 0.95]
-- **Shared Baseline/Stress/Spike/Endurance load-test methodology** — docs_benchmark_results_p04, docs_benchmark_results_p05, docs_benchmark_results_p06 [INFERRED 0.95]
 - **Go/Node/Rust trio implementing the P04 task queue spec** — docs_spec_p04, go_impl_readme_ctq_go, node_impl_readme_ctq_node, rust_impl_readme_ctq_rust [EXTRACTED 1.00]
-- **Polyglot Trio: REST API Auth (Go/Rust/Node)** — go_impl_readme_rest_api_auth, node_impl_readme_rest_api_auth, rust_impl_readme_rest_api_auth, docs_spec_rest_api_auth [EXTRACTED 1.00]
-- **Polyglot Trio: Event-Driven Order (Go/Rust/Node)** — go_impl_readme_event_driven_order, node_impl_readme_event_driven_order, rust_impl_readme_event_driven_order, docs_spec_event_driven_order [EXTRACTED 1.00]
-- **Polyglot Trio: Plugin System (Go/Rust/Node)** — go_impl_readme_plugin_system, node_impl_readme_plugin_system, rust_impl_readme_plugin_system, docs_spec_plugin_system [EXTRACTED 1.00]
 - **Distributed Cache Core Architecture** — consistent_hashing, gossip_membership, singleflight_coalescing, lru_lfu_eviction, ttl_expiration, cache_aside_write_through [EXTRACTED 0.90]
 - **DevSchool 5-Phase Promote Cycle (spec/implement/review/benchmark/optimize)** — devschool_5phase_cycle, 11_load_balancer_promote, 12_distributed_job_scheduler_promote, 13_api_gateway_circuit_breaker_promote [EXTRACTED 1.00]
 - **Scheduler Consensus + Dispatch Pipeline** — simplified_raft_election, fencing_tokens_locks, priority_queue_dispatch, dag_dependency_resolution [EXTRACTED 0.90]
 - **Project 13 Resilience Controls Pipeline** — docs_spec_p13_tenant_rate_limiting, docs_spec_p13_route_bulkhead, docs_spec_p13_request_coalescing, docs_spec_p13_circuit_breaker, docs_spec_p13_retry_backoff_jitter, docs_spec_p13_adaptive_concurrency, docs_spec_p13_fallback_response [INFERRED 0.90]
 - **DevSchool 5-Phase Promotion Cycle** — 14_log_aggregator_promote_p14, 15_metrics_collector_promote_p15, 16_mini_message_queue_promote_p16, curriculum_learning_gate [EXTRACTED 0.95]
 - **Polyglot Implementation Trio (Project 15)** — go_impl_readme_p15, node_impl_readme_p15, rust_impl_readme_p15, docs_spec_p15 [INFERRED 0.85]
-- **Distributed Configuration Service polyglot implementation trio** — go-impl_readme_dcs, rust-impl_readme_dcs, docs_spec_dcs [INFERRED 0.95]
-- **Search Engine polyglot implementation trio** — go-impl_readme_se, node-impl_readme_se, rust-impl_readme_se, docs_spec_se [INFERRED 0.95]
 - **Competing LLM ecosystem ideation responses to the master goal** — prompts_01_goal, prompts_00_ideias_claude_opus, prompts_00_ideias_gemini, prompts_00_ideias_minimax, prompts_00_ideias_codex_gpt55, prompts_00_ideias_opencode_gpt55 [EXTRACTED 0.95]
 - **Polyglot 5-phase evolution loop (Spec→Impl→Review→Benchmark→Optimize)** — codexdojo_04_bootstrap_prompts_5_phase_loop, codexdojo_04_bootstrap_prompts_curator_agent, codexdojo_04_bootstrap_prompts_developer_go, codexdojo_04_bootstrap_prompts_reviewer_agent, codexdojo_04_bootstrap_prompts_tester_agent, codexdojo_04_bootstrap_prompts_optimizer_agent, polyglotevolutionarena_project_proposal_curator_loop [EXTRACTED 0.95]
 - **FSRS + streak + CURR stack anchored on the empirical gate** — spaced_repetition_streak_fsrs, spaced_repetition_streak_units_log, spaced_repetition_streak_streak_freeze, spaced_repetition_streak_curr_metric, spaced_repetition_streak_gate_is_scarcity, codexdojo_06_agora_continuum_empirical_gates [INFERRED 0.85]
-- **codexDojo ecosystem contract surface (manifest + audit + prompts + models + runbook)** — ecosystem_manifest_doc, ecosystem_completion_audit_doc, ecosystem_agent_prompts_doc, ecosystem_evaluation_models_doc, ecosystem_curriculum_scope_doc, ecosystem_openclaw_hermes_runbook_doc, ecosystem_memory_model_doc [EXTRACTED 0.85]
-- **Cross-model audit flow: verifier (Opus) vs verifier-haiku, escalated to Sêneca on disagreement** — agents_verifier, agents_verifier_haiku, agents_seneca, devschool_audit [INFERRED 0.85]
-- **/devschool-cycle orchestrates the 5-phase producer→verifier chain** — devschool_cycle, agents_curator, agents_dev_go, agents_dev_rust, agents_dev_node, agents_reviewer, agents_benchmarker, agents_optimizer, agents_verifier [EXTRACTED 0.95]
-- **Learning gate flow: diagnose→sonda→learner attempt→unblock implementation** — devschool_diagnose, agents_sonda, concept_agora_continuum, agents_socrates [INFERRED 0.85]
+- **Cross-model audit flow: verifier (Opus) vs verifier-haiku, escalated to Sêneca on disagreement** — agents_verifier, agents_verifier_haiku, engines_minimaxevolutionengine_claude_agents_seneca, devschool_audit [INFERRED 0.85]
+- **/devschool-cycle orchestrates the 5-phase producer→verifier chain** — devschool_cycle, agents_curator, agents_dev_go, agents_dev_rust, agents_dev_node, agents_reviewer, engines_minimaxevolutionengine_claude_agents_benchmarker, agents_optimizer, agents_verifier [EXTRACTED 0.95]
+- **Learning gate flow: diagnose→sonda→learner attempt→unblock implementation** — devschool_diagnose, engines_minimaxevolutionengine_claude_agents_sonda, concept_agora_continuum, engines_minimaxevolutionengine_claude_agents_socrates [INFERRED 0.85]
 - **AI DevSchool Five-Phase Pipeline** — devschool_spec_command, devschool_implement_command, devschool_review_command, devschool_optimize_command, devschool_phaserunner_protocol, devschool_phaserunner_run_phase [INFERRED 0.85]
 - **Agora Continuum Learning Cycle** — agora_continuum_state_machine, agora_continuum_learning_gate, agora_continuum_empirical_gate, 08_prometor_readme_agent, 06_socrates_readme_agent, mutation_testing_gate [INFERRED 0.85]
-- **** — plans_persona_ouroboros_deliverable_md, plans_persona_mnemosyne_deliverable_md, plans_persona_seneca_deliverable_md [INFERRED 0.95]
-- **** — plans_persona_cartografo_deliverable_md, plans_persona_sonda_deliverable_md, plans_persona_socrates_deliverable_md, plans_persona_mneme_deliverable_md, plans_persona_promotor_deliverable_md, plans_persona_critico_deliverable_md, plans_persona_galileu_deliverable_md, plans_persona_atena_deliverable_md, plans_persona_mnemosyne_deliverable_md, plans_persona_mestre_conteudo_deliverable_md, plans_persona_ouroboros_deliverable_md, plans_persona_seneca_deliverable_md [EXTRACTED 1.00]
-- **Project 01 token-bucket 5-phase production cycle** — plans_plan, u0_sonda_diagnostic_unit, go_impl, rust_impl, node_impl, benchmark_matrix, critico_agent, prometor_agent [EXTRACTED 1.00]
-- **Token-bucket polyglot implementations sharing one spec** — token_bucket_rate_limiter, go_impl, rust_impl, node_impl, 01_rate_limiter_agents [EXTRACTED 1.00]
-- **Project 01 evidence pipeline (spec → review → benchmark → optimize)** — docs_spec_rate_limiter, docs_code_review_rate_limiter, docs_benchmark_results_rate_limiter, docs_evolution_report_rate_limiter, 01_rate_limiter_deliverable_review [EXTRACTED 1.00]
-- **Three-language polyglot implementation of Rate Limiter spec** — go_impl_readme_rate_limiter, node_impl_readme_rate_limiter, rust_impl_readme_rate_limiter, docs_spec_rate_limiter [EXTRACTED 1.00]
-- **Devschool 5-phase cycle instantiated across projects 02 and 03** — concept_5phase_cycle, 02_key_value_store_promote, 03_url_shortener_promote, docs_status_rate_limiter, docs_status_key_value_store, docs_status_url_shortener [INFERRED 0.85]
-- **5-phase promote cycle (spec/implement/review/benchmark/optimize)** — 04_concurrent_task_queue_promote, 05_websocket_chat_promote, 06_file_upload_pipeline_promote [INFERRED 0.95]
-- **Shared Baseline/Stress/Spike/Endurance load-test methodology** — docs_benchmark_results_p04, docs_benchmark_results_p05, docs_benchmark_results_p06 [INFERRED 0.95]
-- **Go/Node/Rust trio implementing the P04 task queue spec** — docs_spec_p04, go_impl_readme_ctq_go, node_impl_readme_ctq_node, rust_impl_readme_ctq_rust [EXTRACTED 1.00]
-- **Polyglot Trio: REST API Auth (Go/Rust/Node)** — go_impl_readme_rest_api_auth, node_impl_readme_rest_api_auth, rust_impl_readme_rest_api_auth, docs_spec_rest_api_auth [EXTRACTED 1.00]
-- **Polyglot Trio: Event-Driven Order (Go/Rust/Node)** — go_impl_readme_event_driven_order, node_impl_readme_event_driven_order, rust_impl_readme_event_driven_order, docs_spec_event_driven_order [EXTRACTED 1.00]
-- **Polyglot Trio: Plugin System (Go/Rust/Node)** — go_impl_readme_plugin_system, node_impl_readme_plugin_system, rust_impl_readme_plugin_system, docs_spec_plugin_system [EXTRACTED 1.00]
-- **Distributed Cache Core Architecture** — consistent_hashing, gossip_membership, singleflight_coalescing, lru_lfu_eviction, ttl_expiration, cache_aside_write_through [EXTRACTED 0.90]
-- **DevSchool 5-Phase Promote Cycle (spec/implement/review/benchmark/optimize)** — devschool_5phase_cycle, 11_load_balancer_promote, 12_distributed_job_scheduler_promote, 13_api_gateway_circuit_breaker_promote [EXTRACTED 1.00]
-- **Scheduler Consensus + Dispatch Pipeline** — simplified_raft_election, fencing_tokens_locks, priority_queue_dispatch, dag_dependency_resolution [EXTRACTED 0.90]
-- **Project 13 Resilience Controls Pipeline** — docs_spec_p13_tenant_rate_limiting, docs_spec_p13_route_bulkhead, docs_spec_p13_request_coalescing, docs_spec_p13_circuit_breaker, docs_spec_p13_retry_backoff_jitter, docs_spec_p13_adaptive_concurrency, docs_spec_p13_fallback_response [INFERRED 0.90]
-- **DevSchool 5-Phase Promotion Cycle** — 14_log_aggregator_promote_p14, 15_metrics_collector_promote_p15, 16_mini_message_queue_promote_p16, curriculum_learning_gate [EXTRACTED 0.95]
-- **Polyglot Implementation Trio (Project 15)** — go_impl_readme_p15, node_impl_readme_p15, rust_impl_readme_p15, docs_spec_p15 [INFERRED 0.85]
-- **Distributed Configuration Service polyglot implementation trio** — go-impl_readme_dcs, rust-impl_readme_dcs, docs_spec_dcs [INFERRED 0.95]
-- **Search Engine polyglot implementation trio** — go-impl_readme_se, node-impl_readme_se, rust-impl_readme_se, docs_spec_se [INFERRED 0.95]
-- **Competing LLM ecosystem ideation responses to the master goal** — prompts_01_goal, prompts_00_ideias_claude_opus, prompts_00_ideias_gemini, prompts_00_ideias_minimax, prompts_00_ideias_codex_gpt55, prompts_00_ideias_opencode_gpt55 [EXTRACTED 0.95]
-- **Polyglot 5-phase evolution loop (Spec→Impl→Review→Benchmark→Optimize)** — codexdojo_04_bootstrap_prompts_5_phase_loop, codexdojo_04_bootstrap_prompts_curator_agent, codexdojo_04_bootstrap_prompts_developer_go, codexdojo_04_bootstrap_prompts_reviewer_agent, codexdojo_04_bootstrap_prompts_tester_agent, codexdojo_04_bootstrap_prompts_optimizer_agent, polyglotevolutionarena_project_proposal_curator_loop [EXTRACTED 0.95]
-- **FSRS + streak + CURR stack anchored on the empirical gate** — spaced_repetition_streak_fsrs, spaced_repetition_streak_units_log, spaced_repetition_streak_streak_freeze, spaced_repetition_streak_curr_metric, spaced_repetition_streak_gate_is_scarcity, codexdojo_06_agora_continuum_empirical_gates [INFERRED 0.85]
-- **** — substrate_readme_md, substrate_interface_md, substrate_schema_yaml, mavis_learning_state_yaml [EXTRACTED 1.00]
-- **Canonical state → substrate adapters → derived views** — agora_learning_state, substrate_schema, agora_continuum_substrate, mavis_adapter, whiteboard_adapter, mavis_learning_state [EXTRACTED 0.95]
 - **minimaxDojo 14-Agent Roster** — 01_maestro_readme_agent, 02_cronos_readme_agent, 03_sonda_readme_agent, 04_cartografo_readme_agent, 05_mestre_conteudo_readme_agent, 06_socrates_readme_agent, 07_mneme_readme_agent, 08_prometor_readme_agent, 09_critico_readme_agent, 10_galileu_readme_agent, 11_atena_readme_agent, 12_mnemosyne_readme_agent, 13_ouroboros_readme_agent, 14_seneca_readme_agent [EXTRACTED 0.95]
 - **Empirical Gate trio (Generator→Adversarial Verifier→Reviewer chain)** — agent_mestre_conteudo, agent_prometor, agent_critico [INFERRED 0.85]
 - **Unit learning cycle (diagnose→trail→generate→verify→memorize)** — agent_sonda, agent_cartografo, agent_mestre_conteudo, agent_mneme, concept_state_machine [INFERRED 0.75]
 - **Skill lifecycle pipeline (propose→store→promote→govern)** — agent_ouroboros, agent_mnemosyne, agent_seneca, concept_skill_versioning [INFERRED 0.85]
 - **Substrate-derived whiteboard view (regenerated from learner state)** — whiteboard_readme_derived_view_pattern, whiteboard_learner_profile_md, whiteboard_profile_yaml, whiteboard_trail_md [INFERRED 0.95]
 - **GATEKEEPER learning-loop closure (plan → play → evidence → verifier)** — pixeldojo_plan_gatekeeper_game, pixeldojo_plan_token_bucket_algorithm, logs_2026_06_08_game01_playwright_evidence, pixeldojo_agents_producer_verifier_split, pixeldojo_agents_learning_gate_wiring [INFERRED 0.85]
-- **PixelDojo Quest typed encounter mechanics** — pixel_quest_readme_encounter_registry, content_packs_token_bucket_encounter, content_packs_sequence_flow_encounter, content_packs_route_health_encounter, content_packs_policy_gate_encounter [EXTRACTED 1.00]
 - **** — substrate_readme_md, substrate_interface_md, substrate_schema_yaml, mavis_learning_state_yaml [EXTRACTED 1.00]
 - **Canonical state → substrate adapters → derived views** — agora_learning_state, substrate_schema, agora_continuum_substrate, mavis_adapter, whiteboard_adapter, mavis_learning_state [EXTRACTED 0.95]
-- **Token-bucket polyglot implementations sharing one spec** — token_bucket_rate_limiter, go_impl, rust_impl, node_impl, 01_rate_limiter_agents [EXTRACTED 1.00]
-- **Project 01 evidence pipeline (spec → review → benchmark → optimize)** — docs_spec_rate_limiter, docs_code_review_rate_limiter, docs_benchmark_results_rate_limiter, docs_evolution_report_rate_limiter, 01_rate_limiter_deliverable_review [EXTRACTED 1.00]
-- **Three-language polyglot implementation of Rate Limiter spec** — go_impl_readme_rate_limiter, node_impl_readme_rate_limiter, rust_impl_readme_rate_limiter, docs_spec_rate_limiter [EXTRACTED 1.00]
-- **Devschool 5-phase cycle instantiated across projects 02 and 03** — concept_5phase_cycle, 02_key_value_store_promote, 03_url_shortener_promote, docs_status_rate_limiter, docs_status_key_value_store, docs_status_url_shortener [INFERRED 0.85]
-- **5-phase promote cycle (spec/implement/review/benchmark/optimize)** — 04_concurrent_task_queue_promote, 05_websocket_chat_promote, 06_file_upload_pipeline_promote [INFERRED 0.95]
-- **Shared Baseline/Stress/Spike/Endurance load-test methodology** — docs_benchmark_results_p04, docs_benchmark_results_p05, docs_benchmark_results_p06 [INFERRED 0.95]
-- **Go/Node/Rust trio implementing the P04 task queue spec** — docs_spec_p04, go_impl_readme_ctq_go, node_impl_readme_ctq_node, rust_impl_readme_ctq_rust [EXTRACTED 1.00]
-- **Polyglot Trio: REST API Auth (Go/Rust/Node)** — go_impl_readme_rest_api_auth, node_impl_readme_rest_api_auth, rust_impl_readme_rest_api_auth, docs_spec_rest_api_auth [EXTRACTED 1.00]
-- **Polyglot Trio: Event-Driven Order (Go/Rust/Node)** — go_impl_readme_event_driven_order, node_impl_readme_event_driven_order, rust_impl_readme_event_driven_order, docs_spec_event_driven_order [EXTRACTED 1.00]
-- **Polyglot Trio: Plugin System (Go/Rust/Node)** — go_impl_readme_plugin_system, node_impl_readme_plugin_system, rust_impl_readme_plugin_system, docs_spec_plugin_system [EXTRACTED 1.00]
-- **Distributed Cache Core Architecture** — consistent_hashing, gossip_membership, singleflight_coalescing, lru_lfu_eviction, ttl_expiration, cache_aside_write_through [EXTRACTED 0.90]
-- **DevSchool 5-Phase Promote Cycle (spec/implement/review/benchmark/optimize)** — devschool_5phase_cycle, 11_load_balancer_promote, 12_distributed_job_scheduler_promote, 13_api_gateway_circuit_breaker_promote [EXTRACTED 1.00]
-- **Scheduler Consensus + Dispatch Pipeline** — simplified_raft_election, fencing_tokens_locks, priority_queue_dispatch, dag_dependency_resolution [EXTRACTED 0.90]
-- **Project 13 Resilience Controls Pipeline** — docs_spec_p13_tenant_rate_limiting, docs_spec_p13_route_bulkhead, docs_spec_p13_request_coalescing, docs_spec_p13_circuit_breaker, docs_spec_p13_retry_backoff_jitter, docs_spec_p13_adaptive_concurrency, docs_spec_p13_fallback_response [INFERRED 0.90]
-- **DevSchool 5-Phase Promotion Cycle** — 14_log_aggregator_promote_p14, 15_metrics_collector_promote_p15, 16_mini_message_queue_promote_p16, curriculum_learning_gate [EXTRACTED 0.95]
-- **Polyglot Implementation Trio (Project 15)** — go_impl_readme_p15, node_impl_readme_p15, rust_impl_readme_p15, docs_spec_p15 [INFERRED 0.85]
-- **Distributed Configuration Service polyglot implementation trio** — go-impl_readme_dcs, rust-impl_readme_dcs, docs_spec_dcs [INFERRED 0.95]
-- **Search Engine polyglot implementation trio** — go-impl_readme_se, node-impl_readme_se, rust-impl_readme_se, docs_spec_se [INFERRED 0.95]
-- **7-Phase Quest Flow (Briefing -> Duelo -> Evidencia)** — pixel_quest_briefing_phase, pixel_quest_duelo_phase, pixel_quest_evidence_phase, pixel_quest_seven_phase_progression [INFERRED 0.85]
-- **Z/X Binary Decision Mechanic Family** — pixel_quest_permit_deny_decision, pixel_quest_route_withdraw_decision, pixel_quest_serve_invalidate_decision, pixel_quest_keyboard_controls [INFERRED 0.85]
-- **Auth Gate Duel Responsive Triplet** — shots_pixel_quest_policy_gate_desktop, shots_pixel_quest_policy_gate_mobile, shots_pixel_quest_policy_gate_tablet, pixel_quest_responsive_layout [INFERRED 0.85]
-- **Compozy planning pipeline (idea->prd->techspec->tasks->execute)** — cy_idea_factory_skill, cy_create_prd_skill, cy_create_techspec_skill, cy_create_tasks_skill, cy_execute_task_skill [INFERRED 0.85]
-- **AI DevSchool four engines under one learner/curriculum** — aidevschool_agents_codexdojo, aidevschool_agents_pixeldojo, aidevschool_agents_minimaxdojo, aidevschool_agents_minimaxevolutionengine [INFERRED 0.75]
-- **Learning gate enforced by producer/verifier split + executable evidence** — aidevschool_learning_gate, aidevschool_producer_verifier, aidevschool_executable_evidence [INFERRED 0.85]
-- **** — idea_factory_council, council_pragmatic_engineer, council_architect_advisor, council_security_advocate, council_product_mind, council_devils_advocate, council_the_thinker, council_run_agent [EXTRACTED 1.00]
-- **** — compozy_pipeline, skill_cy_create_prd, skill_cy_create_techspec, skill_cy_create_tasks, skill_cy_execute_task, skill_cy_review_round, skill_cy_fix_reviews [EXTRACTED 1.00]
-- **Compozy PRD pipeline: idea -> PRD -> TechSpec -> tasks -> execution** — cy_idea_factory_skill, cy_create_prd_skill, cy_create_techspec_skill, cy_create_tasks_skill, cy_execute_task_skill [INFERRED 0.85]
-- **Compozy review-remediation loop: review-round generates issues, fix-reviews remediates, final-verify gates completion** — cy_review_round_skill, cy_fix_reviews_skill, cy_final_verify_skill [INFERRED 0.85]
-- **Producer≠verifier arena pipeline (auditor → narrator → verifier)** —  [EXTRACTED 1.00]
+- **Agora agent ownership mapping (leader→diagnostic→path→producer→tutor→verifier→reviewer→metrics→memory→governance)** — engines_minimaxevolutionengine_claude_agents_maestro, engines_minimaxevolutionengine_claude_agents_sonda, engines_minimaxevolutionengine_claude_agents_cartografo, engines_minimaxevolutionengine_claude_agents_mestre_conteudo, engines_minimaxevolutionengine_claude_agents_socrates, engines_minimaxevolutionengine_claude_agents_prometor, engines_minimaxevolutionengine_claude_agents_critico, engines_minimaxevolutionengine_claude_agents_atena, engines_minimaxevolutionengine_claude_agents_mnemosyne, engines_minimaxevolutionengine_claude_agents_seneca [EXTRACTED 1.00]
+- **Wrapper-runnable pattern: .claude/agents/*.md wraps engines/minimaxDojo/prompts/per_agent/*.md canonical** — engines_minimaxevolutionengine_claude_agents_atena, engines_minimaxevolutionengine_claude_agents_prometor, engines_minimaxdojo_agents_11_atena_readme, engines_minimaxdojo_agents_08_prometor_readme [EXTRACTED 1.00]
+- **Agent Quest didactic chain: PLAN→ACT→OBSERVE→VERIFY over token-bucket target with Prometor verifier handoff** — agent_quest_mechanic, sequence_flow_mechanic, token_bucket_algorithm, loops_threejs_dojo_output_01_rate_limiter_plan, engines_minimaxevolutionengine_claude_agents_prometor [EXTRACTED 1.00]
+- **Critical path to close one learning loop (D5 → D2 → D3)** — d5_python_tests_unrunnable, d2_no_ci, d3_loop_never_closes [EXTRACTED 1.00]
+- **Gate evidence flow: game emits → verifier decides → substrate regenerates views** — pixeldojo_engine, prometor_agent, substrate [EXTRACTED 1.00]
+- **Three-layer refactor scope (codexDojo app, curriculum impls, docs/agent ecosystem)** — codexdojo_engine, curriculum, minimaxdojo_engine [INFERRED 0.75]
+- **Polyglot 5-phase loop (review→benchmark→optimize, each verifier-gated)** — engines_minimaxevolutionengine_claude_commands_devschool_review, engines_minimaxevolutionengine_claude_commands_devschool_benchmark, engines_minimaxevolutionengine_claude_commands_devschool_optimize, concept_verifier_gate [INFERRED 0.95]
+- **Teaching-game evidence pipeline (game emits → verifier judges → substrate regenerates)** — concept_pixel_dojo_engine, concept_voxel_dojo_engine, concept_producer_verifier_separation, concept_substrate_to_game_flow [EXTRACTED 1.00]
+- **Deterministic core pillars (state machine + gates + memory + scheduler)** — concept_state_machine, concept_empirical_gates, concept_whiteboard_memory, concept_cronos_scheduler [EXTRACTED 1.00]
+- **02_key_value_store cycle evaluation flow (ADR → lesson → benchmark → redteam → verdict)** — 02_docs_adr, 02_docs_lesson, 02_docs_benchmark_results, 02_docs_redteam, 02_docs_verdict, 02_docs_arena_report [INFERRED 0.95]
+- **04_concurrent_task_queue cycle evaluation flow** — 04_docs_adr, 04_docs_lesson, 04_docs_benchmark_results, 04_docs_redteam, 04_docs_verdict [INFERRED 0.95]
+- **Polyglot projects sharing the in-memory hash-map + HTTP API archetype (Projects 02/03/04/05)** — 02_docs_adr, 03_docs_adr, 04_docs_adr, 05_docs_adr, concept_hashmap_behind_http_api, concept_behavioral_equivalence [INFERRED 0.95]
+- **Project 06 evaluation flow (ADR→lesson→benchmark→redteam→status→verdict)** — file_upload_pipeline_adr, file_upload_pipeline_lesson, file_upload_pipeline_benchmark_results, file_upload_pipeline_redteam, file_upload_pipeline_status, file_upload_pipeline_verdict [INFERRED 0.95]
+- **Cross-cycle shared architecture: in-memory hash-map pattern across projects 05-09** — websocket_chat_concept, file_upload_pipeline_concept, rest_api_auth_concept, event_driven_order_system_concept, plugin_system_concept, in_memory_hashmap_architecture, behavioral_equivalence_contract [INFERRED 0.85]
+- **Shared k6 + macOS arm64 benchmark methodology across cycles 06-09** — file_upload_pipeline_benchmark_results, rest_api_auth_benchmark_results, event_driven_order_system_benchmark_results, plugin_system_benchmark_results, k6_benchmark_harness, go_runtime, rust_runtime, node_runtime [INFERRED 0.95]
+- **Project 10 DoD evaluation flow** — curriculum_10_distributed_cache_docs_adr_distributed_cache, docs_benchmark_distributed_cache, curriculum_10_distributed_cache_docs_lesson_distributed_cache, curriculum_10_distributed_cache_docs_redteam_distributed_cache, curriculum_10_distributed_cache_docs_status_distributed_cache, curriculum_10_distributed_cache_docs_verdict_distributed_cache [INFERRED 0.95]
+- **Project 11 DoD evaluation flow** — curriculum_11_load_balancer_docs_adr_load_balancer, docs_benchmark_load_balancer, curriculum_11_load_balancer_docs_lesson_load_balancer, curriculum_11_load_balancer_docs_redteam_load_balancer, curriculum_11_load_balancer_docs_status_load_balancer, curriculum_11_load_balancer_docs_verdict_load_balancer [INFERRED 0.95]
+- **Project 12 DoD evaluation flow** — curriculum_12_distributed_job_scheduler_docs_adr_distributed_job_scheduler, docs_benchmark_distributed_job_scheduler, curriculum_12_distributed_job_scheduler_docs_lesson_distributed_job_scheduler, curriculum_12_distributed_job_scheduler_docs_redteam_distributed_job_scheduler, curriculum_12_distributed_job_scheduler_docs_status_distributed_job_scheduler, curriculum_12_distributed_job_scheduler_docs_verdict_distributed_job_scheduler [INFERRED 0.95]
+- **Project 14 evaluation flow (ADR->benchmark->lesson->redteam->status->verdict)** — 14_log_aggregator_adr, 14_log_aggregator_benchmark, 14_log_aggregator_lesson, 14_log_aggregator_redteam, 14_log_aggregator_status, 14_log_aggregator_verdict [EXTRACTED 0.95]
+- **Project 15 evaluation flow (ADR->benchmark->lesson->redteam->status->verdict)** — 15_metrics_collector_adr, 15_metrics_collector_benchmark, 15_metrics_collector_lesson, 15_metrics_collector_redteam, 15_metrics_collector_status, 15_metrics_collector_verdict [EXTRACTED 0.95]
+- **Shared Go/Rust/Node benchmark protocol (k6 + bench_orchestrator.py, single-machine N=1)** — shared_lang_go, shared_lang_rust, shared_lang_node, shared_tool_k6, shared_tool_bench_orchestrator, shared_concept_behavioral_equivalence [INFERRED 0.85]
+- **Cycle 17 distributed_config_service evaluation flow** — 17docs_lesson, 17docs_redteam, 17docs_status, 17docs_verdict [EXTRACTED 1.00]
+- **Cycle 18 search_engine evaluation flow** — 18docs_adr, 18docs_lesson, 18docs_redteam, 18docs_benchmark_results, 18docs_status, 18docs_verdict [EXTRACTED 1.00]
+- **voxelDojo design doc set (style + architecture + gap analysis)** — voxeldocs_3d_style, voxeldocs_architecture, voxeldocs_gap_analysis [INFERRED 0.85]
+- **Handbook chapter set describing the ecosystem** — docs_handbook_readme, handbook_architecture, handbook_onboarding, handbook_codexdojo, handbook_pixeldojo, handbook_minimaxdojo, handbook_mmee, handbook_curriculum, handbook_substrate, handbook_glossary, handbook_voxeldojо [EXTRACTED 1.00]
+- **Learner substrate state model (canonical + derived views)** — learner_learning_state_yaml, learner_learner_profile, learner_pipeline_status, learner_predictions_yaml, learner_journal, concept_substrate_sync [EXTRACTED 1.00]
+- **Engine contract set (four engines + manifest)** — engines_codexdojo_ecosystem_manifest, engines_agents, mmee_claude_md, mmee_readme, engines_minimaxdojo_index, engines_codexdojo_ecosystem_openclaw_hermes_runbook [INFERRED 0.85]
+- **openclaw pipeline: CLI → Scheduler → Adapters → Hermes** — openclaw_cli, openclaw_scheduler, openclaw_adapters, openclaw_hermes_bus [EXTRACTED 1.00]
+- **Hermes event flow: outbox → inbox → log** — openclaw_hermes_bus, openclaw_idempotency_ledger [EXTRACTED 1.00]
+- **5-phase cycle gated by producer≠verifier + learning gate** — openclaw_5phase_cycle, openclaw_verifier_adapter, openclaw_learning_state [INFERRED 0.85]
+- **minimaxDojo agent roster (sample)** — engines_minimaxdojo_prompts_per_agent_atena, engines_minimaxdojo_prompts_per_agent_maestro, engines_minimaxdojo_prompts_per_agent_mnemosyne, engines_minimaxdojo_prompts_per_agent_prometor [INFERRED 0.95]
+- **pixelDojo evidence-contract doc set** — engines_pixeldojo_evidence_contract, engines_pixeldojo_agents, engines_pixeldojo_pixel_quest_agents, engines_pixeldojo_pixel_quest_readme, engines_pixeldojo_readme [INFERRED 0.95]
+- **sandeco-loop specification pattern set** — agents_skills_sandeco_loop_skill, concept_loop_specification, concept_ralph_skeleton, rationale_external_check_no_self_score [INFERRED 0.85]
+- **Reports with clean verdict (no critical findings)** — curriculum_02_key_value_store_docs_security_report_02_kv_store, curriculum_03_url_shortener_docs_security_report_03_url_shortener, curriculum_04_concurrent_task_queue_docs_security_report_04_task_queue, curriculum_06_file_upload_pipeline_docs_security_report_06_file_upload, curriculum_08_event_driven_order_system_docs_security_report_08_event_order, curriculum_09_plugin_system_docs_security_report_09_plugin_system, curriculum_10_distributed_cache_docs_security_report_10_dist_cache, curriculum_11_load_balancer_docs_security_report_11_load_balancer, curriculum_12_distributed_job_scheduler_docs_security_report_12_job_scheduler, curriculum_14_log_aggregator_docs_security_report_14_log_aggregator, curriculum_15_metrics_collector_docs_security_report_15_metrics_collector, curriculum_17_distributed_config_service_docs_security_report_17_config_service [EXTRACTED 1.00]
+- **Reports with flagged findings (verdict ⚠)** — curriculum_05_websocket_chat_docs_security_report_05_ws_chat, curriculum_07_rest_api_auth_docs_security_report_07_rest_api_auth, curriculum_13_api_gateway_circuit_breaker_docs_security_report_13_api_gateway_cb, curriculum_16_mini_message_queue_docs_security_report_16_message_queue, curriculum_18_search_engine_docs_security_report_18_search_engine [EXTRACTED 1.00]
+- **Shared mitigation: validate untrusted client input at serialization boundary** — curriculum_02_key_value_store_docs_security_report_input_validation, curriculum_05_websocket_chat_docs_security_report_display_name_xss, curriculum_05_websocket_chat_docs_security_report_runtime_validation, curriculum_16_mini_message_queue_docs_security_report_mq_schema_validation, curriculum_07_rest_api_auth_docs_security_report_jwt_jti_revocation, curriculum_18_search_engine_docs_security_report_unicode_tokenization [INFERRED 0.85]
+- **HASH RING pilot (voxelDojo pilot implementation)** — voxeldojo_engine, voxeldojo_pilot_hash_ring, game_10_hash_ring, u9_distributed_cache [INFERRED 0.85]
+- **threejs-dojo loop (shape decision + verify + memory)** — claude_skills_threejs_dojo_skill, threejs_dojo_shape_a, threejs_dojo_shape_b, threejs_dojo_verifier, loops_threejs_dojo_memory_doc [EXTRACTED 1.00]
+- **CI enforcement spine (lint+test+build blocking jobs)** — github_workflows_ci_codexdojo_job, github_workflows_ci_pixeldojo_job, github_workflows_ci_python_job, github_workflows_ci_rationale_enforcement_spine [EXTRACTED 1.00]
+- **Didactic chain: encounter → orchestration loop → token-bucket target → evidence gate** — loops_threejs_dojo_output_01_rate_limiter_screenshot_agent_quest_encounter, loops_threejs_dojo_output_01_rate_limiter_screenshot_orchestration_loop, loops_threejs_dojo_output_01_rate_limiter_screenshot_token_bucket_target, loops_threejs_dojo_output_01_rate_limiter_screenshot_evidence_gate [INFERRED 0.95]
+- **PLAN→ACT→OBSERVE→VERIFY cycle participation** — loops_threejs_dojo_output_01_rate_limiter_screenshot_maestro_role, loops_threejs_dojo_output_01_rate_limiter_screenshot_orchestration_loop, loops_threejs_dojo_output_01_rate_limiter_screenshot_anti_shortcut_rationale [EXTRACTED 0.95]
+- **Engine → encounter → evidence capture lifecycle** — loops_threejs_dojo_output_01_rate_limiter_screenshot_pixeldojo_engine, loops_threejs_dojo_output_01_rate_limiter_screenshot_agent_quest_encounter, loops_threejs_dojo_output_01_rate_limiter_screenshot_hud_evidence_chip [INFERRED 0.85]
+- **Hash-ring demonstration triad (ring + server nodes + key distribution)** — engines_voxeldojo_game_10_hash_ring_logs_smoke_l1_cleared_hash_ring, engines_voxeldojo_game_10_hash_ring_logs_smoke_l1_cleared_server_nodes, engines_voxeldojo_game_10_hash_ring_logs_smoke_l1_cleared_key_distribution [INFERRED 0.85]
+- **L2 hash-ring scene participants** — engines_voxeldojo_game_10_hash_ring_logs_smoke_l2_cleared_image, engines_voxeldojo_game_10_hash_ring_logs_smoke_l2_cleared_hash_ring_concept, engines_voxeldojo_game_10_hash_ring_logs_smoke_l2_cleared_level2_rationale [INFERRED 0.75]
 
-## Communities (428 total, 71 thin omitted)
+## Communities (450 total, 85 thin omitted)
 
-### Community 0 - "Session & Auth (Node)"
-Cohesion: 0.07
-Nodes (60): apiError, App, cloneSession(), cloneUser(), decodeBody(), DefaultConfig(), envelope(), hasRole() (+52 more)
-
-### Community 1 - "pixelDojo Curriculum Content"
-Cohesion: 0.06
-Nodes (70): baseMap, curriculumDialogues, CurriculumModule, curriculumPack, curriculumUnitCount(), dialogueRef(), encounterId(), encounterTimeline (+62 more)
-
-### Community 2 - "Go HTTP Server"
-Cohesion: 0.08
-Nodes (42): Duration, Handler, Logger, Mutex, Request, ResponseWriter, Time, apiError (+34 more)
-
-### Community 3 - "Curriculum Roadmap & Gate Docs"
-Cohesion: 0.06
-Nodes (71): Project 14 PROMOTE Checklist, Project 15 PROMOTE Checklist, Project 16 PROMOTE Checklist, Distributed Systems Foundations (Projects 10-12), In-memory Baseline vs Production Pipeline, AI DevSchool Learning Gate / Cycle, Polyglot Go/Rust/Node Cross-runtime Benchmarking, Level 5 Resilience & Observability Theme (+63 more)
-
-### Community 4 - "Rust Broker/Server"
-Cohesion: 0.08
-Nodes (65): AppState, Broker, BrokerError, err(), health_handler(), ok(), health_handler(), AppState (+57 more)
-
-### Community 5 - "Node Server & Plugins"
+### Community 0 - "07_rest_api_auth (request)"
 Cohesion: 0.05
-Nodes (39): port, ApiCompatibility, assertTransition(), AuditEvent, CapabilityDeclaration, CapabilityGrant, cloneRecord(), DispatchDecision (+31 more)
+Nodes (75): apiError, App, AuditAction, AuditEntry, AuditLogger, AuthService, claims, Clock (+67 more)
 
-### Community 6 - "Rust Chat Server"
+### Community 1 - "pixelDojo (gate)"
+Cohesion: 0.06
+Nodes (52): apply_gate(), check_evidence(), decide(), _evidence_date(), GateDecision, _last_gated_evidence_ts(), load_evidence(), load_evidence_ndjson() (+44 more)
+
+### Community 2 - "voxelDojo (reviewslice)"
+Cohesion: 0.06
+Nodes (56): reviewSlice, ReviewReason, ReviewSlice, emitEvidence(), EvidenceRecord, Window, CONTRAST_CORRECT, CONTRAST_OPTIONS (+48 more)
+
+### Community 3 - "17_distributed_config_service (service)"
+Cohesion: 0.06
+Nodes (62): ConfigEntry, EvaluationResult, FeatureFlag, Service, Subject, TargetingRule, Version, Watcher (+54 more)
+
+### Community 4 - "07_rest_api_auth (auditentry)"
 Cohesion: 0.07
-Nodes (40): Box, ChatConfig, Condvar, run(), shutdown_signal(), Config, Inner, router() (+32 more)
+Nodes (86): AuditEntry, ApiError, app(), AppState, audit(), AuditEntry, authenticate(), build_router() (+78 more)
 
-### Community 7 - "14-Agent Tutor Roster"
+### Community 5 - "02_key_value_store (default)"
 Cohesion: 0.07
-Nodes (62): ATENA (Metrics panel + Quality Gate), CARTÓGRAFO (Robustness trail planner), CRÍTICO (Pedagogical code reviewer), CRONOS (Scheduler: Pro vs Lightning), GALILEU (Lab + architecture, statistical benchmarks), MAESTRO (Leader / state machine operator), MESTRE-CONTEÚDO (Exercise generator), MNEME (Spaced repetition) (+54 more)
+Nodes (71): AppState, Config, delete_handler(), domain_capacity_memory_delete_expire_and_health_paths(), EntryView, ErrorCode, expire_handler(), flushdb_handler() (+63 more)
 
-### Community 8 - "Learner Substrate Whiteboard"
-Cohesion: 0.07
-Nodes (55): derive_whiteboard_profile(), derive_whiteboard_trail(), Adapter that derives the minimaxDojo whiteboard views., Render a Markdown whiteboard trail view for tests / regeneration., Return the whiteboard profile core derived from the canonical state., Render the whiteboard profile as a single valid YAML document., Render a Markdown whiteboard profile view for tests / regeneration., Return the whiteboard trail metadata derived from the canonical state. (+47 more)
+### Community 6 - "16_mini_message_queue (broker)"
+Cohesion: 0.06
+Nodes (61): Broker, ConsumerGroup, Message, Partition, Topic, TopicConfig, Partition, RawMessage (+53 more)
 
-### Community 9 - "codexDojo Policy Gate"
-Cohesion: 0.09
-Nodes (50): loadCorePack(), advancePolicyGate(), applyActionForCheck(), applyPolicyGateAction(), autoPassPolicyGate(), buildEvidence(), createPolicyGateState(), finishPolicyGate() (+42 more)
-
-### Community 10 - "Node Config Loading"
+### Community 7 - "04_concurrent_task_queue (default)"
 Cohesion: 0.05
-Nodes (28): loadConfig(), parsePositiveInt(), config, logger, AppConfig, DEFAULTS, parseBoolean(), parsePositiveNumber() (+20 more)
+Nodes (59): AtomicI32, active_count(), cancel_task_handler(), Config, enqueue_handler(), EnqueueRequest, error_response(), get_task_handler() (+51 more)
 
-### Community 11 - "Node Chat Server"
-Cohesion: 0.09
-Nodes (20): loadConfig(), ChatHub, ClientState, CounterIdGenerator, IdGenerator, RoomState, DEFAULT_CONFIG, intFromEnv() (+12 more)
-
-### Community 12 - "Node Server Bootstrap"
+### Community 8 - "08_event_driven_order_system (append)"
 Cohesion: 0.07
-Nodes (22): logger, port, server, expireSchema, jsonValueSchema, mgetSchema, msetSchema, pairSchema (+14 more)
+Nodes (53): canApply(), decode(), domainError(), expected(), fingerprint(), Fold(), Duration, Handler (+45 more)
 
-### Community 13 - "Go Server (concurrency)"
-Cohesion: 0.09
-Nodes (35): Context, Duration, Handler, Logger, Mutex, queuedClick, Request, ResponseWriter (+27 more)
+### Community 9 - "04_concurrent_task_queue (clock)"
+Cohesion: 0.05
+Nodes (52): Cond, env(), envInt(), Config, loadConfig(), main(), T, TestEnvFallback() (+44 more)
 
-### Community 14 - "Go Metrics & Config"
+### Community 10 - "06_file_upload_pipeline (registry)"
 Cohesion: 0.07
-Nodes (33): Context, Duration, entry, flight, Config, Metrics, Handler, HashRing (+25 more)
+Nodes (66): allowed_ext(), allowed_mime(), ApiError, AppError, AppState, build_state(), Chunk, Config (+58 more)
 
-### Community 15 - "Rust Rate Limiter (atomics)"
-Cohesion: 0.10
-Nodes (40): AtomicBool, AtomicU64, ApiError, AppError, AppState, Config, health(), init_tracing() (+32 more)
-
-### Community 16 - "Node Server (build)"
-Cohesion: 0.07
-Nodes (16): port, server, queue, enqueueSchema, Config, EnqueueRequest, ManualClock, PoisonTaskError (+8 more)
-
-### Community 17 - "Node Rate Limiter"
+### Community 11 - "03_url_shortener (context)"
 Cohesion: 0.06
-Nodes (19): Config, app, config, Bulkhead, BulkheadSnapshot, CircuitBreaker, CircuitBreakerPolicy, CircuitSnapshot (+11 more)
+Nodes (57): exitCode(), Context, listenAddr(), main(), run(), T, TestExitCodeReturnsOneWhenListenFails(), TestExitCodeReturnsZeroAfterContextCancel() (+49 more)
 
-### Community 18 - "Community 18"
-Cohesion: 0.10
-Nodes (33): CapabilityDeclaration, HookSubscription, allowed(), ApiCompatibility, AuditEvent, CapabilityDeclaration, CapabilityGrant, DispatchDecision (+25 more)
-
-### Community 19 - "Community 19"
+### Community 12 - "10_distributed_cache (metrics)"
 Cohesion: 0.07
-Nodes (20): BenchmarkAnalyzer, BenchmarkReport, MetricSummary, Benchmark analyzer for aidevschool curriculum projects.  Validates that benchmar, Analyzes benchmark sample data and validates reproducibility., Compute statistical summary for a list of sample values., Analyze raw benchmark JSON data into a report.          Expected format:, Return list of validation errors (empty = valid). (+12 more)
+Nodes (41): BTreeMap, Condvar, Cache, CacheError, CacheInner, compare_for_eviction(), Config, DeleteResult (+33 more)
 
-### Community 20 - "Community 20"
-Cohesion: 0.09
-Nodes (48): Promote 04_concurrent_task_queue, Promote 06_file_upload_pipeline, Backpressure via bounded queue capacity (RNF-003), Bounded priority queue with FIFO tie-break (RF-007), Bounded queue capacity makes backpressure visible, Dead-letter queue for poison/exhausted tasks (RF-010), Graceful shutdown draining workers (RNF-005), Priority-heap + cached-counter optimization (+40 more)
-
-### Community 21 - "Community 21"
-Cohesion: 0.11
-Nodes (27): ApiError, AppState, Inner, router(), run(), Receiver, Sender, can_apply() (+19 more)
-
-### Community 22 - "Community 22"
+### Community 13 - "pixelDojo (pixelquestapp)"
 Cohesion: 0.08
-Nodes (23): BulkheadPolicy, CircuitBreakerPolicy, CircuitState, Config, router(), run(), Display, FallbackPolicy (+15 more)
+Nodes (44): buildEncounterHudState(), applyInteractionFlow(), InteractionFlowResult, isPolicyGateState(), isRouteHealthState(), PixelQuestApp, currentEncounterId(), currentObjectiveText() (+36 more)
 
-### Community 23 - "Community 23"
+### Community 14 - "13_api_gateway_circuit_breaker (snapshot"
+Cohesion: 0.05
+Nodes (44): Bulkhead, BulkheadPolicy, BulkheadSnapshot, CircuitBreaker, CircuitBreakerPolicy, CircuitSnapshot, CircuitState, Config (+36 more)
+
+### Community 15 - "02_key_value_store (store)"
 Cohesion: 0.07
-Nodes (24): { app }, logger, port, server, Aggregate, canApply(), CommandResult, DomainError (+16 more)
+Nodes (44): env(), main(), decodeBody(), Logger, Request, ResponseWriter, Store, NewHandler() (+36 more)
 
-### Community 24 - "Community 24"
+### Community 16 - "15_metrics_collector (store)"
+Cohesion: 0.07
+Nodes (52): main(), formatLabels(), CancelFunc, Context, Duration, Request, ResponseWriter, RWMutex (+44 more)
+
+### Community 17 - "pixelDojo (driver)"
+Cohesion: 0.07
+Nodes (54): TOKEN_BUCKET_CONTRACT, TokenBucketEncounter, TokenBucketRequest, advance(), applyEncounterStep(), autoPassEncounterState(), completeEncounterState(), EncounterAction (+46 more)
+
+### Community 18 - "05_websocket_chat (config)"
+Cohesion: 0.07
+Nodes (43): captureTransport, ClientSnapshot, clientState, Config, Event, Hub, Message, Metrics (+35 more)
+
+### Community 19 - "01_rate_limiter (constructor)"
+Cohesion: 0.05
+Nodes (32): ClientKeyStrategy, createExpressClientKeyStrategy(), AppConfig, DEFAULTS, loadConfig(), parseBoolean(), parsePositiveInt(), parsePositiveNumber() (+24 more)
+
+### Community 20 - "Users (project)"
 Cohesion: 0.06
-Nodes (46): PixelDojo Quest Content Packs doc, Content-pack Evidence Policy (raw only; no mastery), policy_gate encounter (authorization/isolation puzzle), route_health encounter (health-routing puzzle), sequence_flow encounter (ordered-flow puzzle), token_bucket encounter (timed classifier), Cycle-01 Intake Decision: focus narrowed to TypeScript, PixelDojo Quest Color Palette (amber gate / cyan review) (+38 more)
+Nodes (64): Project 14 PROMOTE Checklist, Project 15 PROMOTE Checklist, Project 16 PROMOTE Checklist, Distributed Systems Foundations (Projects 10-12), In-memory Baseline vs Production Pipeline, AI DevSchool Learning Gate / Cycle, Polyglot Go/Rust/Node Cross-runtime Benchmarking, Level 5 Resilience & Observability Theme (+56 more)
 
-### Community 25 - "Community 25"
-Cohesion: 0.11
-Nodes (28): CancelFunc, Context, Config, Server, Handler, Logger, Request, ResponseWriter (+20 more)
-
-### Community 26 - "Community 26"
-Cohesion: 0.10
-Nodes (34): StoreState, QueryParams, ApiError, app(), AppState, QueryParams, DateTime, HashMap (+26 more)
-
-### Community 27 - "Community 27"
+### Community 21 - "05_websocket_chat (chathub)"
 Cohesion: 0.07
-Nodes (45): Rust Implementation Deliverable — Project 01, Deliverable — Phase 3 Code Review (Project 01), Promote 02_key_value_store from scaffolded -> implemented, Promote 03_url_shortener from scaffolded -> implemented, Static Metrics — Image Size / Cold Start / LoC (Project 01), 5-Phase Devschool Cycle (spec → implement → review → benchmark → optimize), Asynchronous Analytics Queue (off redirect critical path), Atomic MSET (all-or-nothing validation+commit) (+37 more)
+Nodes (24): ChatHub, ClientState, CounterIdGenerator, IdGenerator, RoomState, DEFAULT_CONFIG, intFromEnv(), loadConfig() (+16 more)
 
-### Community 28 - "Community 28"
+### Community 22 - "10_distributed_cache (metrics)"
+Cohesion: 0.07
+Nodes (39): Context, Duration, Config, Metrics, Handler, HashRing, Logger, Metrics (+31 more)
+
+### Community 23 - "12_distributed_job_scheduler (election)"
 Cohesion: 0.10
-Nodes (25): Cond, CancelFunc, Clock, Config, Context, Duration, Handler, Logger (+17 more)
+Nodes (32): dag_dependencies_retry_backoff_and_cancellation(), dispatch_orders_by_priority_due_time_and_creation(), distributed_lock_rejects_concurrent_and_stale_tokens(), Election, Health, health_reports_leader_queues_and_running_jobs(), Job, JobRequest (+24 more)
 
-### Community 29 - "Community 29"
-Cohesion: 0.14
-Nodes (34): ApiError, AppState, init_tracing(), ListQuery, ListResponse, router(), stats(), ErrorBody (+26 more)
-
-### Community 30 - "Community 30"
+### Community 24 - "06_file_upload_pipeline (upload)"
 Cohesion: 0.08
-Nodes (22): port, server, shutdown(), scheduler, cloneJob(), compareJobs(), Election, Health (+14 more)
+Nodes (41): Buffer, main(), DefaultConfig(), envInt64(), envString(), CancelFunc, Context, Config (+33 more)
 
-### Community 31 - "Community 31"
-Cohesion: 0.14
-Nodes (28): Default, Partition, RwLock, Broker, BrokerError, ConsumerGroup, default_cleanup_policy(), HistogramBucket (+20 more)
-
-### Community 32 - "Community 32"
-Cohesion: 0.07
-Nodes (44): Promote 07 REST API Auth, Promote 08 Event-Driven Order System, Promote 09 Plugin System, Promote 10 Distributed Cache, Atomic Refresh Rotation Gap, Capability-Based Plugin Access, Consistent Hashing, Event Sourcing (+36 more)
-
-### Community 33 - "Community 33"
-Cohesion: 0.09
-Nodes (27): ApiCompatibility, AuditEvent, CapabilityGrant, Context, Logger, PluginManifest, RWMutex, ErrorCode (+19 more)
-
-### Community 34 - "Community 34"
-Cohesion: 0.07
-Nodes (32): app(), run(), HealthData, IngestData, LogSource, QueryData, QueryInfo, QueryStats (+24 more)
-
-### Community 35 - "Community 35"
-Cohesion: 0.14
-Nodes (38): ApiError, AppState, Config, ListQuery, audit(), authenticate(), Claims, err_id() (+30 more)
-
-### Community 36 - "Community 36"
+### Community 25 - "09_plugin_system (capabilitydeclaration)"
 Cohesion: 0.10
-Nodes (26): Client, Context, Duration, Config, Metrics, Logger, Request, ResponseWriter (+18 more)
+Nodes (41): allowed(), ApiCompatibility, AuditEvent, CapabilityDeclaration, CapabilityGrant, DispatchDecision, ErrorPhase, HealthReport (+33 more)
 
-### Community 37 - "Community 37"
+### Community 26 - "openclaw (adapter)"
+Cohesion: 0.08
+Nodes (38): adr_path(), evolution_report_path(), OpenclawConfig, Central configuration for the OpenClaw tracer-bullet runner.  Every tunable thre, Tunable thresholds for the runner. See each field for its rationale., Architecture decision record accompanying the spec., Report produced by the optimizer phase., Exception hierarchy for the OpenClaw runner.  Deliberately small — OpenClaw is a (+30 more)
+
+### Community 27 - "pixelDojo (reviewslice)"
 Cohesion: 0.09
-Nodes (43): Pixel Quest 8-bit arcade game, REST API Auth Policy Duel, Briefing Phase (Fase 1/7), Duelo Phase (Fase 4/7), Load Balancer Route Duel, Keyboard Control Scheme (Z/X/Enter/H/E/J), learning gate (executable evidence), objective banner (Laboratorio 1: Rate Limiter / Token bucket) (+35 more)
+Nodes (35): evidenceLogPath, reviewSlice, GamePhase, gamePhaseOrder, activeProjectionFromSlice(), createReviewTrack(), updateReviewTrackFromEvidence(), ReviewProjection (+27 more)
 
-### Community 38 - "Community 38"
+### Community 28 - "11_load_balancer (loadbalancer)"
+Cohesion: 0.08
+Nodes (35): main(), addForwardingHeaders(), DefaultConfig(), Client, Context, Duration, Config, Metrics (+27 more)
+
+### Community 29 - "12_distributed_job_scheduler (scheduler)"
+Cohesion: 0.10
+Nodes (34): ResponseWriter, main(), writeJSON(), backoff(), Context, Duration, Election, LockManager (+26 more)
+
+### Community 30 - "13_api_gateway_circuit_breaker (construc"
+Cohesion: 0.07
+Nodes (21): Bulkhead, BulkheadSnapshot, CircuitBreaker, CircuitBreakerPolicy, CircuitSnapshot, WindowEntry, Config, defaultConfig() (+13 more)
+
+### Community 31 - "16_mini_message_queue (default)"
+Cohesion: 0.13
+Nodes (37): Broker, BrokerError, ConsumerGroup, default_cleanup_policy(), Message, Partition, Arc, DateTime (+29 more)
+
+### Community 32 - "15_metrics_collector (apierror)"
+Cohesion: 0.10
+Nodes (42): ApiError, aggregate(), AlertEvent, AlertRule, AlertRulePayload, ApiError, ApiResponse, app() (+34 more)
+
+### Community 33 - "04_concurrent_task_queue (constructor)"
+Cohesion: 0.07
+Nodes (18): port, queue, server, buildServer(), enqueueSchema, writeQueueError(), Config, EnqueueRequest (+10 more)
+
+### Community 34 - "14_log_aggregator (logsource)"
+Cohesion: 0.09
+Nodes (31): contains(), CancelFunc, Context, Duration, LogSource, Request, ResponseWriter, RWMutex (+23 more)
+
+### Community 35 - "17_distributed_config_service (targeting"
+Cohesion: 0.10
+Nodes (48): app(), AppState, ConfigValue, CreateConfigRequest, evaluate_flag(), EvaluationRequest, EvaluationResult, FlagConfig (+40 more)
+
+### Community 36 - "08_event_driven_order_system (server)"
+Cohesion: 0.07
+Nodes (25): { app }, logger, port, server, Aggregate, canApply(), CommandResult, DomainError (+17 more)
+
+### Community 37 - "14_log_aggregator (logsource)"
+Cohesion: 0.09
+Nodes (38): AppState, app(), health_handler(), HealthData, HealthResponse, ingest_handler(), IngestData, IngestResponse (+30 more)
+
+### Community 38 - "pixelDojo (lessonflow)"
+Cohesion: 0.06
+Nodes (43): createEncounterForNpc(), encounterForNpc(), practiceHudForNpc(), PracticeHudParams, baseMap, CurriculumModule, dialogueRef(), encounterId() (+35 more)
+
+### Community 39 - "Users (queue)"
+Cohesion: 0.09
+Nodes (45): Promote 04_concurrent_task_queue, Promote 06_file_upload_pipeline, Backpressure via bounded queue capacity (RNF-003), Bounded priority queue with FIFO tie-break (RF-007), Bounded queue capacity makes backpressure visible, Dead-letter queue for poison/exhausted tasks (RF-010), Graceful shutdown draining workers (RNF-005), Priority-heap + cached-counter optimization (+37 more)
+
+### Community 40 - "12_distributed_job_scheduler (scheduler)"
+Cohesion: 0.07
+Nodes (22): port, scheduler, server, shutdown(), cloneJob(), compareJobs(), Election, Health (+14 more)
+
+### Community 41 - "pixelDojo (skillorbitscene)"
+Cohesion: 0.09
+Nodes (26): RegionGate, RegionNpc, TileKind, mechanicForUnit(), selectedSkillOrbitRegionId(), selectedSkillOrbitStation(), SkillOrbitDirection, skillOrbitStations() (+18 more)
+
+### Community 42 - "Users (project)"
+Cohesion: 0.07
+Nodes (42): Rust Implementation Deliverable — Project 01, Deliverable — Phase 3 Code Review (Project 01), Promote 02_key_value_store from scaffolded -> implemented, Promote 03_url_shortener from scaffolded -> implemented, Static Metrics — Image Size / Cold Start / LoC (Project 01), 5-Phase Devschool Cycle (spec → implement → review → benchmark → optimize), Asynchronous Analytics Queue (off redirect critical path), Atomic MSET (all-or-nothing validation+commit) (+34 more)
+
+### Community 43 - "Users (system)"
+Cohesion: 0.09
+Nodes (42): CARTÓGRAFO (Robustness trail planner), CRONOS (Scheduler: Pro vs Lightning), GALILEU (Lab + architecture, statistical benchmarks), MAESTRO (Leader / state machine operator), MNEME (Spaced repetition), MNEMOSYNE (3-layer memory keeper), OUROBOROS (Continuous self-improvement loop), SÊNECA (Human gate, SLA 24h governance) (+34 more)
+
+### Community 44 - "pixelDojo (loadcorepack)"
+Cohesion: 0.09
+Nodes (29): curriculumDialogues, curriculumPack, loadCorePack(), LoadedContentPack, applyEncounterAction(), EvidenceValidationError, isRecord(), readBoolean() (+21 more)
+
+### Community 45 - "03_url_shortener (constructor)"
+Cohesion: 0.10
+Nodes (21): AnalyticsQueue, AppError, base62(), clickEvent, CreationRateLimiter, headerValue(), ListResponse, maxBatchSizeLimit() (+13 more)
+
+### Community 46 - "06_file_upload_pipeline (config)"
 Cohesion: 0.11
-Nodes (27): Bytes, CircuitState, Config, Metrics, JoinHandle, BackendConfig, BackendRuntime, BackendSnapshot (+19 more)
+Nodes (23): Config, loadConfig(), parsePositiveInt(), main(), progressOf(), UploadRegistry, buildApp(), guessMime() (+15 more)
 
-### Community 39 - "Community 39"
+### Community 47 - "18_search_engine (invertedindex)"
+Cohesion: 0.10
+Nodes (32): RWMutex, NewInvertedIndex(), T, TestDocumentCount(), TestHTTPHealth(), TestHTTPIndexAndSearch(), TestHTTPIndexBadJSON(), TestHTTPIndexMissingContent() (+24 more)
+
+### Community 48 - "_shared (benchmark)"
+Cohesion: 0.10
+Nodes (16): BenchmarkReport, MetricSummary, Benchmark analyzer for aidevschool curriculum projects.  Validates that benchmar, Compute statistical summary for a list of sample values., Analyze raw benchmark JSON data into a report.          Expected format:, Statistical summary of a single metric across N samples., True if CV% < 20% (threshold for valid cross-language comparison)., True if N >= 3 samples. (+8 more)
+
+### Community 49 - "openclaw (_build_output)"
 Cohesion: 0.12
-Nodes (20): Duration, Election, IntoIterator, Item, LockManager, distributed_lock_rejects_concurrent_and_stale_tokens(), Election, health_reports_leader_queues_and_running_jobs() (+12 more)
+Nodes (29): CuratorAdapter, Any, Event, Curator produces the SPEC_READY event after validating the unit selection., DevAdapter, Any, Event, Dev adapter validates spec and emits the IMPL_READY event. (+21 more)
 
-### Community 40 - "Community 40"
+### Community 50 - "learner (whiteboard)"
+Cohesion: 0.09
+Nodes (27): derive_mavis_view(), Any, Adapter that derives the .mavis/learning_state.yaml view., Return the Mavis view derived from the canonical learner state., Render the Mavis view as a YAML string., render_mavis_yaml(), derive_whiteboard_profile(), derive_whiteboard_trail() (+19 more)
+
+### Community 51 - "17_distributed_config_service (verifier)"
+Cohesion: 0.06
+Nodes (39): Lesson: Distributed Configuration Service, Throughput vs correctness tension across runtimes (sync.RWMutex / borrow checker / event loop), Consensus-backed distributed config writes with watch/notify semantics, Red Team: Distributed Configuration Service, CRITICAL: writes do not pass through a real consensus mechanism (all languages), Status: Distributed Configuration Service (cycle-complete), 17 go-impl (done, version history + SSE watches + feature flags), 17 node-impl (done, Express, callback watches) (+31 more)
+
+### Community 52 - "misc"
+Cohesion: 0.08
+Nodes (39): Security Report: Key-Value Store, Authentication / Authorization Logic, Boundary Checks (Threat), DoD §7: security/report.md with no critical findings, Input Validation at Serialization Boundary, Rate Limiting, Secret Management, TLS (+31 more)
+
+### Community 53 - "10_distributed_cache (constructor)"
 Cohesion: 0.07
-Nodes (22): Exception, EmpiricalGate, GateResult, Empirical gate evaluator for Ágora Continuum.  Reference: engines/minimaxDojo/do, EventStore, LockError, Raised when a phase is already locked by another agent., Append-only NDJSON event store.      Events are written atomically (write to tem (+14 more)
+Nodes (20): CacheError, DeleteResult, Entry, EvictionPolicy, Flight, GetResult, HashRing, HttpApp (+12 more)
 
-### Community 41 - "Community 41"
-Cohesion: 0.08
-Nodes (18): AnalyticsQueue, AppError, base62(), clickEvent, CreationRateLimiter, headerValue(), ListResponse, maxBatchSizeLimit() (+10 more)
-
-### Community 42 - "Community 42"
-Cohesion: 0.15
-Nodes (23): Context, Duration, Election, LockManager, Mutex, Time, Clock, Election (+15 more)
-
-### Community 43 - "Community 43"
-Cohesion: 0.12
-Nodes (22): CancelFunc, Context, Duration, Request, ResponseWriter, RWMutex, Time, AlertEvent (+14 more)
-
-### Community 44 - "Community 44"
-Cohesion: 0.06
-Nodes (40): Agent 01 MAESTRO (Leader), Agent 02 CRONOS (Scheduler), Agent 05 MESTRE-CONTEÚDO (Exercise Generator), Agent 06 SÓCRATES (Socratic Tutor), Agent 07 MNEME (Spaced Repetition), Agent 08 PROMĘTOR (Adversarial Verifier), Agent 09 CRÍTICO (Pedagogical Reviewer), Agent 10 GALILEU (Benchmark & Architecture Lab) (+32 more)
-
-### Community 45 - "Community 45"
-Cohesion: 0.14
-Nodes (37): Duration, Handler, Mutex, ResponseRecorder, T, Time, fakeClock, doGet() (+29 more)
-
-### Community 46 - "Community 46"
-Cohesion: 0.14
-Nodes (20): health(), Health, HashSet, Option, ServerEvent, ChatConfig, ChatHub, ClientSnapshot (+12 more)
-
-### Community 47 - "Community 47"
-Cohesion: 0.08
-Nodes (14): port, BackendConfig, BackendRuntime, BackendSnapshot, CircuitState, defaultConfig(), HealthState, LoadBalancer (+6 more)
-
-### Community 48 - "Community 48"
-Cohesion: 0.09
-Nodes (37): Learning journal, Clock injection testability seam, Lazy refill pattern, Pure core thin shell pattern, Learner profile, Learner README.md, Allium SKILL.md, Allium specification language (+29 more)
-
-### Community 49 - "Community 49"
-Cohesion: 0.06
-Nodes (13): _now_iso(), PhaseLock, Acquire a lock for a phase. Raises LockError if already locked., Release the lock for a phase., Check if a phase is currently locked., File-based phase lock to prevent concurrent phase execution.      Each phase (sp, Contract tests for the append-only event store.  The event store is the file-bac, Event store is append-only; no update or delete operations. (+5 more)
-
-### Community 50 - "Community 50"
-Cohesion: 0.10
-Nodes (23): AdaptiveConcurrency, AdaptiveSnapshot, Bulkhead, CircuitBreaker, CircuitSnapshot, Coalescer, BulkheadSnapshot, Client (+15 more)
-
-### Community 51 - "Community 51"
-Cohesion: 0.14
-Nodes (27): firstCurriculumRegionId(), actionFromKey(), InputAction, GamePhase, Direction, Interaction, PlayerState, QuestProgress (+19 more)
-
-### Community 52 - "Community 52"
+### Community 54 - "openclaw (inbox)"
 Cohesion: 0.11
-Nodes (33): Arc, app(), AppState, main(), Event, Flight, HashRing, Infallible (+25 more)
+Nodes (26): EventNotFoundError, An event expected in the Hermes inbox is not there.      Usually means the event, _content_hash(), Event, HermesBus, Any, Path, Topic (+18 more)
 
-### Community 53 - "Community 53"
-Cohesion: 0.12
-Nodes (18): CacheInner, Metrics, Entry, Metrics, Ordering, Cache, CacheError, compare_for_eviction() (+10 more)
-
-### Community 54 - "Community 54"
-Cohesion: 0.14
-Nodes (16): RWMutex, StoredEntry, Time, Config, DomainError, EntryView, Health, MGetItem (+8 more)
-
-### Community 55 - "Community 55"
-Cohesion: 0.09
-Nodes (34): Promote 17_distributed_config_service from scaffolded -> implemented, Promote 18_search_engine from scaffolded -> implemented, Per-key ACL Engine (read/write/watch/rollback/admin/evaluate), At-least-once delivery with explicit offset commit, Boolean query parser (AND/OR/NOT with precedence and parentheses), Consensus-backed config writes with monotonic versioning and log index, ConsensusLog abstraction (propose/commit/apply/lastAppliedLogIndex) — DCS next evolution, Distributed Configuration Service — Benchmark Results (+26 more)
-
-### Community 56 - "Community 56"
-Cohesion: 0.11
-Nodes (16): buildApp(), progressOf(), UploadRegistry, guessMime(), handleUpload(), isStreamFailure(), sanitizeFilename(), StreamFailure (+8 more)
-
-### Community 57 - "Community 57"
-Cohesion: 0.11
-Nodes (23): bindEvents(), copyAgentPrompt(), Dispatch, Intent, intents, phaseLabels, renderFilterButton(), renderRoadmap() (+15 more)
-
-### Community 58 - "Community 58"
-Cohesion: 0.14
-Nodes (16): CancelFunc, Context, Duration, LogSource, Request, ResponseWriter, RWMutex, Time (+8 more)
-
-### Community 59 - "Community 59"
-Cohesion: 0.06
-Nodes (32): dependencies, express, description, devDependencies, jest, supertest, ts-jest, ts-node (+24 more)
-
-### Community 60 - "Community 60"
-Cohesion: 0.15
-Nodes (23): agents, userFacingAgents, metrics, ecosystemStatuses, learnerSnapshot, projects, getOverviewModel(), OverviewModel (+15 more)
-
-### Community 61 - "Community 61"
-Cohesion: 0.06
-Nodes (10): Contract tests for the Ágora Continuum state machine.  These tests define the RE, Tests for the AVALIANDO sub-machine: PRODUCING → VERIFYING → DONE., Tests for the formal invariants (I1-I5) from the spec., I1: Transition to DOMINADO REQUIRES positive verdict from PROMĘTOR., Tests for the main unit state machine transitions., I3: retries ≤ 3 per unit; at exhaustion, SÊNECA decides., I5: Every decision is logged in event_log., TestEvaluationSubMachine (+2 more)
-
-### Community 62 - "Community 62"
-Cohesion: 0.22
-Nodes (13): clientState, Hub, NewHub(), validRoomID(), roomState, ClientSnapshot, Config, Event (+5 more)
-
-### Community 63 - "Community 63"
-Cohesion: 0.22
-Nodes (22): Clock, IpAddr, concurrent_requests_never_overconsume(), consumes_one_token_per_request(), denied_decision_carries_retry_after(), denied_then_refill_eventually_allows_again(), different_ips_have_independent_buckets(), floor_u64() (+14 more)
-
-### Community 64 - "Community 64"
+### Community 55 - "05_websocket_chat (default)"
 Cohesion: 0.17
-Nodes (27): AppState, Config, Health, health_handler(), init_tracing(), ok(), router(), run() (+19 more)
+Nodes (17): ChatConfig, ChatHub, ClientSnapshot, ClientState, MessageRecord, Metrics, RoomState, Default (+9 more)
 
-### Community 65 - "Community 65"
-Cohesion: 0.12
-Nodes (11): Config, F, Into, LoaderFn, Self, dag_dependencies_retry_backoff_and_cancellation(), dispatch_orders_by_priority_due_time_and_creation(), EvictionPolicy (+3 more)
+### Community 56 - "08_event_driven_order_system (apierror)"
+Cohesion: 0.15
+Nodes (22): ApiError, can_apply(), CommandResult, CreateRequest, EventType, fold(), IdempotencyEntry, Inner (+14 more)
 
-### Community 66 - "Community 66"
-Cohesion: 0.12
-Nodes (30): Repo Review Baseline, Final Evidence Coverage Matrix, Final Review Packet, Task 1 Findings, Task 1 Status Compare, codexDojo browser proof, pixel-quest browser proof, minimaxDojo executable-vs-docs audit (+22 more)
+### Community 57 - "08_event_driven_order_system (lib)"
+Cohesion: 0.17
+Nodes (33): AppState, cancel_handler(), CancelRequest, create_handler(), deliver_handler(), DeliverRequest, err(), events_handler() (+25 more)
 
-### Community 67 - "Community 67"
-Cohesion: 0.12
-Nodes (15): ConfigEntry, EvaluationResult, FeatureFlag, Service, Subject, TargetingRule, Version, Watcher (+7 more)
+### Community 58 - "test_engine_contracts.py (test_engine_do"
+Cohesion: 0.05
+Nodes (15): codexDojo is the user-facing pnpm dashboard: a read-only view of the shared, minimaxDojo is the tutoring core: a tested Python reference implementation     (, openclaw is the file-based continuous-runner tracer bullet: Hermes bus +     sch, Real AI dispatch is an explicit future override, never a silent default., voxelDojo is the 3D teaching-simulation engine. Its pilot     (game-10-hash-ring, The polyglot arena was demoted from `engines/polyglotEvolutionArena/` to     `do, arcadeAcademy/ was merged into pixelDojo/ on 2026-06-21 (duplicate root).     Th, Deletion test for the duplicate engine root. (+7 more)
 
-### Community 68 - "Community 68"
-Cohesion: 0.07
-Nodes (29): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+21 more)
-
-### Community 69 - "Community 69"
-Cohesion: 0.07
-Nodes (29): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+21 more)
-
-### Community 70 - "Community 70"
-Cohesion: 0.12
-Nodes (28): B, T, BenchmarkStoreQuery(), BenchmarkStoreRecord(), TestFormatLabels(), TestMetricSeriesKey(), TestNewShutdownContext(), TestServerCreateAlert() (+20 more)
-
-### Community 71 - "Community 71"
-Cohesion: 0.13
-Nodes (26): aggregate(), BenchmarkConfig, build_raw_data(), compute_percentiles(), docker_run_args(), k6_args(), _latency_dict(), load_benchmark_config() (+18 more)
-
-### Community 72 - "Community 72"
-Cohesion: 0.13
-Nodes (20): reviewSlice, EvidenceValidationError, isRecord(), readBoolean(), readCurriculumContext(), readNonEmptyString(), readNumber(), readReviewContext() (+12 more)
-
-### Community 73 - "Community 73"
-Cohesion: 0.07
-Nodes (28): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+20 more)
-
-### Community 74 - "Community 74"
-Cohesion: 0.07
-Nodes (27): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+19 more)
-
-### Community 75 - "Community 75"
+### Community 59 - "01_rate_limiter (newratelimiter)"
 Cohesion: 0.19
-Nodes (10): Store, StoreState, MutexGuard, ErrorCode, is_expired(), remove_key(), StoreError, validate_ttl() (+2 more)
+Nodes (34): NewRateLimiter(), doGet(), Duration, Handler, ResponseRecorder, T, newFakeClock(), TestCleanupIdle_RemovesOnlyIdleBuckets() (+26 more)
 
-### Community 76 - "Community 76"
+### Community 60 - "learner (slice)"
+Cohesion: 0.10
+Nodes (25): build_pixel_review_slice(), _pitfalls_from_md(), Any, Path, Dashboard snapshot: derive `engines/codexDojo/src/data/learner.ts` from canonica, Regenerate `engines/codexDojo/src/data/learner.ts`. Returns the file path., Project the read-only review slice pixelDojo consumes.      pixelDojo reads sche, Regenerate the pixelDojo review slice. Returns the file path. (+17 more)
+
+### Community 61 - "Users (system)"
+Cohesion: 0.08
+Nodes (35): Promote 07 REST API Auth, Promote 08 Event-Driven Order System, Promote 09 Plugin System, Promote 10 Distributed Cache, Atomic Refresh Rotation Gap, Capability-Based Plugin Access, Event Sourcing, In-Memory Durability Gap (+27 more)
+
+### Community 62 - "codexDojo (cycle)"
+Cohesion: 0.15
+Nodes (24): CycleSnapshot, getCycleCompletionPercent(), cycleStages, metrics, ecosystemStatuses, learnerSnapshot, CycleStage, EcosystemStatus (+16 more)
+
+### Community 63 - "Users (agent)"
+Cohesion: 0.07
+Nodes (33): Agent 01 MAESTRO (Leader), Agent 02 CRONOS (Scheduler), Agent 05 MESTRE-CONTEÚDO (Exercise Generator), Agent 06 SÓCRATES (Socratic Tutor), Agent 07 MNEME (Spaced Repetition), Agent 10 GALILEU (Benchmark & Architecture Lab), Agent 12 MNEMOSYNE (3-Layer Memory), Agent 13 OUROBOROS (Self-Improvement Loop) (+25 more)
+
+### Community 64 - "01_rate_limiter (eslint)"
+Cohesion: 0.06
+Nodes (32): dependencies, express, pino, zod, description, devDependencies, eslint, @stryker-mutator/core (+24 more)
+
+### Community 65 - "17_distributed_config_service (jest)"
+Cohesion: 0.06
+Nodes (32): global, dependencies, express, description, devDependencies, jest, supertest, ts-jest (+24 more)
+
+### Community 66 - "_shared (benchmark)"
+Cohesion: 0.13
+Nodes (29): Regression for the Phase-2 (project 02 + 05) benchmark harness artifacts: config, aggregate(), BenchmarkConfig, build_raw_data(), compute_percentiles(), docker_run_args(), k6_args(), _latency_dict() (+21 more)
+
+### Community 67 - "pixelDojo (packvalidator)"
+Cohesion: 0.20
+Nodes (30): isRecord(), isTileCode(), PackValidationError, readArray(), readAssets(), readBaseEncounter(), readEncounter(), readEvidenceContract() (+22 more)
+
+### Community 68 - "learner (validate)"
+Cohesion: 0.10
+Nodes (18): load_and_validate(), load_canonical(), Any, Path, Validate the spaced-repetition review history (ADR: spaced-repetition-streak)., Validate the streak/freeze block (ADR: spaced-repetition-streak)., Load the canonical state and raise on invariant violations., Load the canonical learner state from YAML. (+10 more)
+
+### Community 69 - "01_rate_limiter (buildhandler)"
+Cohesion: 0.14
+Nodes (29): buildHandler(), DefaultConfig(), Context, Duration, Config, Handler, Logger, RateLimiter (+21 more)
+
+### Community 70 - "learner (aidi)"
+Cohesion: 0.07
+Nodes (20): _aidi_trend_from_journal(), build_snapshot(), _counts_from_backlog(), _profile_matrix(), date, Scrape AIDI mentions from journal.md. Pattern: `AIDI: 0.34` or `aidi=0.34` lines, Return (mastered_count, scaffolded_count) from BACKLOG_STATUS.md.      Mastered, Render the streak as a dashboard view, reconciled for missed days.      ``reconc (+12 more)
+
+### Community 71 - "Users (readme)"
+Cohesion: 0.09
+Nodes (31): Promote 17_distributed_config_service from scaffolded -> implemented, Promote 18_search_engine from scaffolded -> implemented, Per-key ACL Engine (read/write/watch/rollback/admin/evaluate), At-least-once delivery with explicit offset commit, Boolean query parser (AND/OR/NOT with precedence and parentheses), Consensus-backed config writes with monotonic versioning and log index, ConsensusLog abstraction (propose/commit/apply/lastAppliedLogIndex) — DCS next evolution, Distributed Configuration Service — Code Review (+23 more)
+
+### Community 72 - "Users (skill)"
+Cohesion: 0.12
+Nodes (31): Allium SKILL.md, Allium specification language, Contract construct, Entity construct, Rule construct, Surface construct, Distill SKILL.md, Abstraction level judgment (+23 more)
+
+### Community 73 - "06_file_upload_pipeline (benchmark)"
+Cohesion: 0.09
+Nodes (31): Capability Grants & Audited Denials, Status: 09 Plugin System, Verdict: Plugin System, Verdict: Load Balancer, Benchmark Results: 08_event_driven_order_system, Event-Driven Order System (cycle 08), Lesson: Event-Driven Order System, Status: 08_event_driven_order_system (+23 more)
+
+### Community 74 - "03_url_shortener (stats)"
+Cohesion: 0.16
+Nodes (23): ApiError, AppState, delete_code(), health(), list_urls(), redirect_code(), Arc, AtomicU64 (+15 more)
+
+### Community 75 - "02_key_value_store (server)"
+Cohesion: 0.10
+Nodes (22): logger, port, server, buildApp(), expireSchema, jsonValueSchema, mgetSchema, msetSchema (+14 more)
+
+### Community 76 - "13_api_gateway_circuit_breaker (eslint)"
+Cohesion: 0.07
+Nodes (29): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+21 more)
+
+### Community 77 - "learning_state.yaml (verifier)"
+Cohesion: 0.15
+Nodes (29): Ágora Continuum — long-running tutor team with deterministic state machine and adversarial verifier, AIDI (AI Dependency Index, red alert >0.75 → Sêneca), Cross-model verifier diversity (verifier on different tier than producer), /devschool-cron-list Command, /devschool-decide Command (Sêneca HITL Gate), minimaxDojo 08 PROMĘTOR README, minimaxDojo 11 ATENA README, ATENA agent wrapper (miniMaxEvolutionEngine) (+21 more)
+
+### Community 78 - "06_file_upload_pipeline (eslint)"
+Cohesion: 0.07
+Nodes (28): dependencies, busboy, express, pino, description, devDependencies, eslint, supertest (+20 more)
+
+### Community 79 - "TECH_DEBT_AUDIT_2026-06-28.md (curriculu"
+Cohesion: 0.09
+Nodes (26): curriculum/ (18 polyglot challenges + catalog.md), D10 — pixelDojo encounter dup + evidence-contract drift, D11 — Committed generated artifacts + tool state, D13 — Curriculum 3× duplication, mislabeled stubs, D1 — Stale/false roadmap + competing status docs, D2 — No CI/CD; evidence gate unenforced, D3 — Learning loop never closes (strategic blocker), D5 — Python tests unrunnable by default (+18 more)
+
+### Community 80 - "02_key_value_store (eslint)"
 Cohesion: 0.07
 Nodes (27): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+19 more)
 
-### Community 77 - "Community 77"
+### Community 81 - "04_concurrent_task_queue (eslint)"
+Cohesion: 0.07
+Nodes (27): dependencies, express, pino, zod, description, devDependencies, eslint, supertest (+19 more)
+
+### Community 82 - "09_plugin_system (eslint)"
 Cohesion: 0.07
 Nodes (27): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+19 more)
 
-### Community 78 - "Community 78"
+### Community 83 - "14_log_aggregator (eslint)"
 Cohesion: 0.07
 Nodes (27): dependencies, express, description, devDependencies, eslint, supertest, ts-node, @types/express (+19 more)
 
-### Community 79 - "Community 79"
-Cohesion: 0.16
-Nodes (15): EncounterPrompt, gamePhaseOrder, ReviewReason, ReviewStatus, ReviewTrack, StreakProjection, EncounterHudState, Hud (+7 more)
-
-### Community 80 - "Community 80"
-Cohesion: 0.13
-Nodes (20): AppError, init_tracing(), router(), run(), shutdown_signal(), test_backend(), RateLimiter, RateLimiterConfig (+12 more)
-
-### Community 81 - "Community 81"
-Cohesion: 0.07
-Nodes (26): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+18 more)
-
-### Community 82 - "Community 82"
-Cohesion: 0.07
-Nodes (26): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+18 more)
-
-### Community 83 - "Community 83"
-Cohesion: 0.13
-Nodes (25): CapabilityDeclaration, HookSubscription, Time, ApiCompatibility, AuditEvent, CapabilityDeclaration, CapabilityGrant, DispatchDecision (+17 more)
-
-### Community 84 - "Community 84"
-Cohesion: 0.10
-Nodes (13): app, app(), createServer(), aggregate(), AlertEvent, AlertRule, HistogramBucket, HistogramData (+5 more)
-
-### Community 85 - "Community 85"
+### Community 84 - "16_mini_message_queue (broker)"
 Cohesion: 0.11
-Nodes (9): app, Broker, BrokerError, ConsumerGroup, Message, Partition, Topic, TopicConfig (+1 more)
+Nodes (9): Broker, BrokerError, ConsumerGroup, Message, Partition, Topic, TopicConfig, app (+1 more)
 
-### Community 86 - "Community 86"
-Cohesion: 0.20
-Nodes (26): ADR-001: Polyglot Arena V1 — narrative-led projection with a prediction gate, ADR-002: V1 experience — reveal-time per-metric prediction gate, CLI-triggered, ADR-003: Arena orchestration — /devschool-arena command + extracted runner seam, ADR-004: Prediction + outcome storage — dedicated learner/predictions.yaml, ADR-005: Agent topology — fairness-auditor + arena-narrator, verifier reused, arena-narrator agent (producer), fairness-auditor agent (judge, no Write), verifier / PROMĘTOR (adversarial claim-check) (+18 more)
-
-### Community 88 - "Community 88"
+### Community 85 - "AGENTS.md (engines)"
 Cohesion: 0.12
-Nodes (22): Card, date, apply_gate_review(), build_card_from_reviews(), compute_curr(), derive_next_reviews(), _format_due_in(), rating_from_gate_outcome() (+14 more)
+Nodes (27): AGENTS.md (project knowledge base), CLAUDE.md (raiz Claude Code context), engines/codexDojo (Vite/TS dashboard app), ⟨config: path⟩ substitution marker, CONTEXT.md (domain glossary), D8 — Gate thresholds hardcoded vs config seam, AI DevSchool ecosystem, Empirical Gate (portão empírico) — mastery only via real tests, mutation, statistical benchmark (+19 more)
 
-### Community 89 - "Community 89"
-Cohesion: 0.10
-Nodes (26): architect-advisor council advisor, devils-advocate council advisor, pragmatic-engineer council advisor, product-mind council advisor, security-advocate council advisor, the-thinker council advisor, Reusable agents / council debate pattern, Compozy home-scoped daemon and global.db catalog (+18 more)
+### Community 86 - "16_mini_message_queue (brokererror)"
+Cohesion: 0.19
+Nodes (25): BrokerError, AppState, commit_offsets(), CommitOffsetsRequest, create_consumer_group(), create_topic(), CreateConsumerGroupRequest, CreateTopicRequest (+17 more)
 
-### Community 90 - "Community 90"
+### Community 87 - "voxelDojo (game)"
+Cohesion: 0.09
+Nodes (27): threejs-dojo skill (loop), consistent hashing (the ONE concept taught), voxelDojo AGENTS.md (engine rules), voxelDojo CLAUDE.md (thin pointer), voxelDojo PLAN.md (game-definition template + HASH RING spec), voxelDojo 13-section PLAN template, voxelDojo README (big idea + 18 seeds), Game 10: HASH RING (+19 more)
+
+### Community 88 - "03_url_shortener (eslint)"
+Cohesion: 0.07
+Nodes (26): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+18 more)
+
+### Community 89 - "03_url_shortener (lib)"
+Cohesion: 0.18
+Nodes (25): base62(), batch_list_health_and_expiry_work(), BatchRequest, BatchResult, body_text(), click_from_headers(), ClickEvent, client_key() (+17 more)
+
+### Community 90 - "08_event_driven_order_system (eslint)"
+Cohesion: 0.07
+Nodes (26): dependencies, express, pino, description, devDependencies, eslint, supertest, ts-node (+18 more)
+
+### Community 91 - "15_metrics_collector (app)"
+Cohesion: 0.12
+Nodes (14): app, createServer(), jsonResponse(), aggregate(), AlertEvent, AlertRule, HistogramBucket, HistogramData (+6 more)
+
+### Community 92 - "openclaw (python)"
+Cohesion: 0.17
+Nodes (11): Compatibility helpers for older Python versions.  The ecosystem ``pyproject.toml, Minimal stand-in for ``enum.StrEnum`` on Python < 3.11., StrEnum, PhaseRule, Any, Topic, Event-driven scheduler for the 5-phase learning cycle., Scheduler (+3 more)
+
+### Community 93 - "openclaw (malformed)"
+Cohesion: 0.19
+Nodes (26): A state or event file on disk is unreadable or malformed.      Raised for corrup, StateCorruptionError, _load_learning_state(), _parse_status(), Path, make_scheduler(), Path, Scheduler (+18 more)
+
+### Community 94 - "09_plugin_system (host)"
+Cohesion: 0.12
+Nodes (17): ApiCompatibility, AuditEvent, CapabilityGrant, Logger, PluginManifest, RWMutex, negotiate(), pluginErr() (+9 more)
+
+### Community 95 - "01_rate_limiter (status)"
+Cohesion: 0.26
+Nodes (21): concurrent_requests_never_overconsume(), consumes_one_token_per_request(), denied_decision_carries_retry_after(), denied_then_refill_eventually_allows_again(), different_ips_have_independent_buckets(), floor_u64(), ip(), lazy_refill_restores_tokens() (+13 more)
+
+### Community 96 - "05_websocket_chat (eslint)"
 Cohesion: 0.08
-Nodes (25): dependencies, pino, description, devDependencies, eslint, tsx, @types/node, typescript (+17 more)
+Nodes (25): dependencies, pino, ws, description, devDependencies, eslint, tsx, @types/node (+17 more)
 
-### Community 91 - "Community 91"
+### Community 97 - "07_rest_api_auth (eslint)"
 Cohesion: 0.08
-Nodes (25): dependencies, pino, description, devDependencies, eslint, ts-node, @types/node, typescript (+17 more)
+Nodes (25): dependencies, fastify, jsonwebtoken, pino, description, devDependencies, eslint, ts-node (+17 more)
 
-### Community 92 - "Community 92"
+### Community 98 - "09_plugin_system (capabilitydeclaration)"
+Cohesion: 0.14
+Nodes (24): CapabilityDeclaration, HookSubscription, Time, ApiCompatibility, AuditEvent, CapabilityDeclaration, CapabilityGrant, DispatchDecision (+16 more)
+
+### Community 99 - "16_mini_message_queue (eslint)"
 Cohesion: 0.08
 Nodes (25): dependencies, express, description, devDependencies, eslint, jest, supertest, ts-jest (+17 more)
 
-### Community 93 - "Community 93"
-Cohesion: 0.19
-Nodes (25): B, setupTestServer(), TestInvalidMethod(), ServeMux, Server, T, BenchmarkPutConfig(), TestCreateAndGetFlag() (+17 more)
-
-### Community 94 - "Community 94"
-Cohesion: 0.10
-Nodes (9): make_cfg(), Tests for the generic benchmark runner.  Covers config parsing (host-port overri, Exercise the live pipeline with docker/k6 stubbed out., The extracted parsers must produce exact, stable output for a known k6 stream, TestBridge, TestConfig, TestParserFaithfulness, TestPathsAndArgs (+1 more)
-
-### Community 95 - "Community 95"
-Cohesion: 0.15
-Nodes (25): Architecture Decision Record (ADR), YAGNI Principle, PRD ADR Template, PRD Template, PRD Question Protocol, cy-create-prd skill, cy-create-prd, ADR Template (techspec) (+17 more)
-
-### Community 96 - "Community 96"
+### Community 100 - "15_metrics_collector (eslint)"
 Cohesion: 0.08
 Nodes (24): dependencies, express, description, devDependencies, eslint, supertest, tsx, @types/express (+16 more)
 
-### Community 97 - "Community 97"
-Cohesion: 0.15
-Nodes (14): Instant, Clock, mock_clock_advance_and_set(), MockClock, system_clock_advances(), SystemClock, EntryView, format_system_time() (+6 more)
+### Community 101 - "13_api_gateway_circuit_breaker (bulkhead"
+Cohesion: 0.16
+Nodes (12): Bulkhead, CircuitBreaker, Client, Duration, Mutex, Request, ResponseWriter, RouteConfig (+4 more)
 
-### Community 98 - "Community 98"
+### Community 102 - "02_key_value_store (clonejson)"
+Cohesion: 0.17
+Nodes (6): cloneJson(), KeyValueStore, remainingSeconds(), validateTtl(), EntryView, JsonValue
+
+### Community 103 - "11_load_balancer (eslint)"
 Cohesion: 0.08
-Nodes (23): dependencies, description, devDependencies, eslint, ts-node, @types/node, typescript, @typescript-eslint/eslint-plugin (+15 more)
+Nodes (23): dependencies, http-proxy, description, devDependencies, eslint, ts-node, @types/http-proxy, @types/node (+15 more)
 
-### Community 99 - "Community 99"
+### Community 104 - "11_load_balancer (appendforwardedfor)"
+Cohesion: 0.15
+Nodes (4): appendForwardedFor(), LoadBalancer, writeJson(), backend()
+
+### Community 105 - "11_load_balancer (metrics)"
+Cohesion: 0.17
+Nodes (20): admin_backends(), admin_health(), admin_metrics(), BackendRuntime, BackendSnapshot, CircuitState, Config, HealthBody (+12 more)
+
+### Community 106 - "18_search_engine (lib)"
+Cohesion: 0.13
+Nodes (12): InvertedIndex, Posting, HashMap, Self, String, Vec, SearchResult, tokenize() (+4 more)
+
+### Community 107 - "_shared (test_rejects_path_traversal_sce"
+Cohesion: 0.12
+Nodes (9): assert_rejects_path_traversal_scenario_names(), make_cfg(), Tests for the generic benchmark runner.  Covers config parsing (host-port overri, Exercise the live pipeline with docker/k6 stubbed out., TestBenchmarkRunner, TestBridge, TestConfig, TestPathsAndArgs (+1 more)
+
+### Community 108 - "miniMaxEvolutionEngine (fase)"
+Cohesion: 0.19
+Nodes (23): extract_spec_block(), main(), parse_frontmatter_and_body(), Path, Fase 4: native no-Docker harness, N>=3 raw runs, median+stdev honesty., Fase 5: consumes review+benchmark evidence, re-measures, closes the cycle., Phase commands must not repeat the full PhaseRunner step sequence inline., Every tutor-core command (added 2026-06-21) must declare its `description`     a (+15 more)
+
+### Community 109 - "openclaw (base)"
+Cohesion: 0.14
+Nodes (12): OpenclawError, Base class for all OpenClaw runner errors.      Catch this at the CLI boundary t, BaseAdapter, ProducerAdapter, Any, Event, Path, Template method for producer adapters.      Every producer follows the same flow (+4 more)
+
+### Community 110 - "pixelDojo (tsconfig)"
 Cohesion: 0.08
 Nodes (23): compilerOptions, allowImportingTsExtensions, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution (+15 more)
 
-### Community 100 - "Community 100"
-Cohesion: 0.20
-Nodes (11): Broker, hashKey(), ConsumerGroup, Message, Partition, Topic, TopicConfig, Partition (+3 more)
+### Community 111 - "14_log_aggregator (project)"
+Cohesion: 0.13
+Nodes (23): code_review.md (project 14, 23 findings), Batch ingestion {items:[...]} with idempotency, Correlation IDs / trace reconstruction, Retention policies + compression metrics, In-memory ring buffer with eviction, Project 14: Log Aggregator, Red Team: Log Aggregator, Status: 14 Log Aggregator (cycle-complete, partial) (+15 more)
 
-### Community 101 - "Community 101"
-Cohesion: 0.09
-Nodes (22): compilerOptions, allowImportingTsExtensions, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution (+14 more)
+### Community 112 - "Users (arena)"
+Cohesion: 0.21
+Nodes (23): ADR-001: Polyglot Arena V1 — narrative-led projection with a prediction gate, ADR-002: V1 experience — reveal-time per-metric prediction gate, CLI-triggered, ADR-003: Arena orchestration — /devschool-arena command + extracted runner seam, ADR-004: Prediction + outcome storage — dedicated learner/predictions.yaml, ADR-005: Agent topology — fairness-auditor + arena-narrator, verifier reused, arena-narrator agent (producer), fairness-auditor agent (judge, no Write), verifier / PROMĘTOR (adversarial claim-check) (+15 more)
 
-### Community 102 - "Community 102"
+### Community 113 - "01_rate_limiter (tsconfig)"
 Cohesion: 0.09
 Nodes (22): compilerOptions, declaration, esModuleInterop, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, lib, module, noFallthroughCasesInSwitch (+14 more)
 
-### Community 103 - "Community 103"
-Cohesion: 0.13
-Nodes (19): asObject(), assertKnown(), AuditAction, AuditEntry, Config, FastifyRequest, isEmail(), Outcome (+11 more)
-
-### Community 104 - "Community 104"
-Cohesion: 0.30
-Nodes (8): main(), NewServer(), Server, Logger, Request, ResponseWriter, ServeMux, Service
-
-### Community 105 - "Community 105"
-Cohesion: 0.18
-Nodes (13): Clock, Duration, Mutex, RateLimiter, RWMutex, Time, ClientBucket, Decision (+5 more)
-
-### Community 106 - "Community 106"
-Cohesion: 0.10
-Nodes (21): AdaptiveConcurrencyPolicy, BulkheadPolicy, CancelFunc, CircuitBreakerPolicy, CoalescingPolicy, Context, Duration, FallbackPolicy (+13 more)
-
-### Community 107 - "Community 107"
-Cohesion: 0.22
-Nodes (21): B, setupTestServer(), TestInvalidMethod(), ServeMux, Server, T, BenchmarkProduceHandler(), TestCommitOffsetsInvalid() (+13 more)
-
-### Community 108 - "Community 108"
-Cohesion: 0.20
-Nodes (17): Body, ConnectInfo, err(), health(), ok(), Debug, Next, Request (+9 more)
-
-### Community 109 - "Community 109"
+### Community 114 - "_shared (gate)"
 Cohesion: 0.17
-Nodes (20): BenchmarkProduce(), TestCommitOffsetsInvalidPartition(), TestConcurrentProduce(), TestConsumerGroup(), TestConsumerGroupOffsetRetention(), TestConsumerGroupStartFromInvalid(), TestCreateTopic(), TestFetchMessagesInvalidLimit() (+12 more)
+Nodes (13): _k6_stream(), make_cfg(), Path, Tests for arena orchestration: fail-closed gate, scoreboard winners, and locked-, Seed 3 stable runs per lang/scenario so the analyzer gate passes (N=3, CV~0)., seed_all_pass(), _stats(), TestFailClosed (+5 more)
 
-### Community 110 - "Community 110"
-Cohesion: 0.13
-Nodes (21): cy-final-verify (evidence before claims), cy-idea-factory extension skill, cy-workflow-memory (two-tier memory), Compozy Bundled Skills Reference, Compozy Workflow Memory, Compozy Workflow System, Task Frontmatter Schema, ParseTaskFile() Parser (+13 more)
+### Community 115 - "codexDojo (tsconfig)"
+Cohesion: 0.09
+Nodes (22): compilerOptions, allowImportingTsExtensions, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution (+14 more)
 
-### Community 111 - "Community 111"
+### Community 116 - "pixelDojo (actionrouter)"
+Cohesion: 0.17
+Nodes (17): routeAction(), routeBriefing(), routeClose(), RouteCommand, routeEncounter(), routeOrbitShortcut(), routePractice(), routeSkillOrbit() (+9 more)
+
+### Community 117 - "learner (gate)"
+Cohesion: 0.15
+Nodes (13): Card, apply_gate_review(), build_card_from_reviews(), datetime, rating_from_gate_outcome(), Spaced-repetition scheduling for the learner substrate.  This module owns the *s, Replay a unit's gate-rated reviews through FSRS to reconstruct its card.      Re, Map a gate outcome to an FSRS rating name.      The gate (executable evidence: c (+5 more)
+
+### Community 118 - "handbook (gate)"
+Cohesion: 0.14
+Nodes (22): 14 agents (Maestro/Cronos/Sonda/Cartógrafo/Mestre-Conteúdo/Sócrates/Mneme/Promętor/Crítico/Galileu/Atena/Mnemosyne/Ouroboros/Sêneca), 17 Claude Code subagents (.claude/agents/*.md), 5-phase loop (Spec→Impl→Review→Benchmark→Optimize), Agora Continuum, 18 /devschool-* slash commands, verifier + verifier-haiku adversarial gate, Learning gate (executable-evidence mastery), Unit state machine (APRESENTANDO/PRATICANDO/AVALIANDO/DOMINADO/FALHA_BLOQUEIO) (+14 more)
+
+### Community 119 - "09_plugin_system (plugin)"
+Cohesion: 0.09
+Nodes (21): ApiCompatibility, AuditEvent, CapabilityDeclaration, CapabilityGrant, DispatchDecision, ErrorPhase, HealthReport, HookDispatchResult (+13 more)
+
+### Community 120 - "codexDojo (escape)"
+Cohesion: 0.19
+Nodes (18): getLearnerSnapshot(), getProjects(), escapeHtml(), HTML_ESCAPES, aidiSignalClass(), renderAidi(), renderCoverage(), renderCurr() (+10 more)
+
+### Community 121 - "pixelDojo (three)"
+Cohesion: 0.09
+Nodes (21): dependencies, three, devDependencies, @biomejs/biome, @playwright/test, @types/node, @types/three, typescript (+13 more)
+
+### Community 122 - "01_rate_limiter (addrparseerror)"
+Cohesion: 0.19
+Nodes (20): AddrParseError, AppError, build_limiter(), env_f64(), env_u64(), init_tracing(), init_tracing_is_idempotent(), listen_addr() (+12 more)
+
+### Community 123 - "01_rate_limiter (decision)"
+Cohesion: 0.19
+Nodes (12): fnvHash(), Clock, Duration, Mutex, RateLimiter, RWMutex, Time, resetEpoch() (+4 more)
+
+### Community 124 - "01_rate_limiter (default)"
+Cohesion: 0.14
+Nodes (12): ClientBucket, RateLimiter, RateLimiterConfig, Debug, Default, Duration, Formatter, HashMap (+4 more)
+
+### Community 126 - "13_api_gateway_circuit_breaker (config)"
+Cohesion: 0.12
+Nodes (18): DefaultConfig(), CancelFunc, Context, Duration, RouteConfig, NewShutdownContext(), Config, New() (+10 more)
+
+### Community 127 - "Users (sonda)"
+Cohesion: 0.12
+Nodes (21): Cycle-01 Intake Decision: focus narrowed to TypeScript, Sonda Cold-Start Diagnostic Template, Sonda in-game dialogue (Robustness Lab gate), daniel-barreto (Learner Profile YAML), Canvas2D vs Phaser choice (dependency-free slice), GATEKEEPER M1–M5 Vertical Slice log, Playwright headless evidence verification, Append-only .logs Entry Format (+13 more)
+
+### Community 128 - "codexDojo (app)"
+Cohesion: 0.16
+Nodes (12): AppMountError, mountCodexDojo(), projectPhases, root, findAgent(), getStages(), bindEvents(), copyAgentPrompt() (+4 more)
+
+### Community 129 - "voxelDojo (three)"
 Cohesion: 0.10
 Nodes (20): dependencies, three, devDependencies, @biomejs/biome, @playwright/test, @types/three, typescript, vite (+12 more)
 
-### Community 112 - "Community 112"
-Cohesion: 0.18
-Nodes (6): addSeconds(), AuditLogger, AuthService, InMemoryStore, normalizeEmail(), TokenService
+### Community 130 - "13_api_gateway_circuit_breaker (benchmar"
+Cohesion: 0.15
+Nodes (20): API Gateway (proxy upstream services), Circuit Breaker State Transitions, ADR-0001: Distributed Cache Core Architecture, Lesson: Distributed Cache, Verdict: Distributed Cache, ADR-0001: Load Balancer Core Architecture, Lesson: Load Balancer, ADR-0001: Distributed Job Scheduler Core Architecture (+12 more)
 
-### Community 113 - "Community 113"
+### Community 131 - "03_url_shortener (with_rate_limit)"
+Cohesion: 0.13
+Nodes (18): creates_redirects_records_stats_and_deletes(), init_tracing(), json_request(), pure_validation_and_encoding_helpers_are_deterministic(), rejects_invalid_inputs_conflicts_and_rate_limits(), router(), Body, Box (+10 more)
+
+### Community 132 - "12_distributed_job_scheduler (eslint)"
 Cohesion: 0.10
-Nodes (19): dependencies, devDependencies, eslint, typescript, vitest, @vitest/coverage-v8, name, scripts (+11 more)
+Nodes (19): dependencies, tsx, @types/node, devDependencies, eslint, @eslint/js, typescript, typescript-eslint (+11 more)
 
-### Community 114 - "Community 114"
-Cohesion: 0.32
-Nodes (8): Broker, main(), NewServer(), Server, Logger, Request, ResponseWriter, ServeMux
+### Community 133 - "17_distributed_config_service (index)"
+Cohesion: 0.15
+Nodes (11): { app }, ConfigService, ConfigValue, createApp(), CreateConfigRequest, EvaluationRequest, EvaluationResult, FlagConfig (+3 more)
 
-### Community 115 - "Community 115"
+### Community 134 - "codexDojo (statewith)"
+Cohesion: 0.19
+Nodes (15): advanceCycle(), assertNever(), View, views, renderNav(), renderView(), viewMeta, viewRegistry (+7 more)
+
+### Community 135 - "pixelDojo (loop)"
+Cohesion: 0.13
+Nodes (19): sandeco-loop Skill — Loop Specification Interview, Evidence NDJSON contract (window.__pixelQuestEvidence → .logs/evidence.ndjson), Loop Library specification pattern (<nome>-loop.md), Producer ≠ Verifier principle, Ralph skeleton (fresh-context shell loop), Sequence-flow encounter mechanic, Maestro — Team Leader / Orchestrator Agent, Prometor — Adversarial Verifier Agent (+11 more)
+
+### Community 136 - "Users (cache)"
+Cohesion: 0.15
+Nodes (19): Cache-Aside vs Write-Through Pattern, Consistent Hashing with Virtual Nodes, Red Team: Distributed Cache, Status: Distributed Cache, Distributed Cache (consistent hashing, TTL, eviction), Project 10 Distributed Cache Code Review, Project 10 Distributed Cache Evolution Report, Project 10 Multi-Node Verification Plan (+11 more)
+
+### Community 137 - "handbook (handbook)"
 Cohesion: 0.12
-Nodes (19): 01_rate_limiter benchmark.yaml, 02_key_value_store benchmark.yaml, 05_websocket_chat benchmark.yaml, ADR-003, curriculum/_shared/benchmarks/runner.py, catalog.md (18-project progression), Curriculum AGENTS.md, codexDojo ecosystem MANIFEST.md (+11 more)
+Nodes (19): Cronos Scheduler (Pro vs Lightning), Empirical Gates (DoD + Prometor), FSRS/streak review scheduling, Layered view (surface/orchestration/substrate), pixel-quest evidence emission (window.__pixelQuestEvidence), Streak + freeze (max 2 freezes), substrate sync() regeneration (1 canonical → 4 derived), token_bucket encounter mechanic (+11 more)
 
-### Community 116 - "Community 116"
-Cohesion: 0.18
-Nodes (18): ArenaResult, assemble_report(), decision_gate(), _median_by_lang(), metric_trust(), Arena orchestration: drive the benchmark runner, gate on statistical trust, and, Write a locked arena_report.md from the template; return (path, winners)., Benchmark, gate, and assemble a locked report.      When ``live`` is True, execu (+10 more)
+### Community 138 - "01_rate_limiter (clock)"
+Cohesion: 0.19
+Nodes (12): Clock, mock_clock_advance_and_set(), MockClock, Debug, Duration, Instant, Mutex, Self (+4 more)
 
-### Community 117 - "Community 117"
-Cohesion: 0.12
-Nodes (19): Cron Schedules and Recurring Run Records, DAG Dependency Resolution, Project 12 Job Scheduler Benchmark Results, Project 12 Job Scheduler Code Review, Project 12 Job Scheduler Evolution Report, Distributed Job Scheduler Specification (Project 12), Project 12 Job Scheduler Status, Critical: Dispatch ignores due time, runs future jobs early (Project 12) (+11 more)
+### Community 139 - "01_rate_limiter (integration)"
+Cohesion: 0.23
+Nodes (18): app_with_clock(), body_json(), different_ips_have_independent_buckets(), eleventh_request_returns_429_with_retry_after(), idle_bucket_cleanup_via_router(), ip(), refill_under_mock_clock_lets_request_through(), req_with_ip() (+10 more)
 
-### Community 118 - "Community 118"
+### Community 140 - "06_file_upload_pipeline (tsconfig)"
 Cohesion: 0.11
 Nodes (18): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, lib, module, noFallthroughCasesInSwitch, noImplicitAny, noImplicitReturns (+10 more)
 
-### Community 119 - "Community 119"
-Cohesion: 0.17
-Nodes (18): Agent roster (Mentor, Currículo, Arquiteto, Implementador, Revisor de Código, Testes, Métricas, DevOps, Pesquisador, Memória), codexDojo agent learning lab, Dashboard navigation (Painel, Agentes, Ciclo, Roadmap, Projeto 01), Estado do Dojo (Agentes 10, Etapas 10, Projetos 10, 20% do ciclo), Primeiro projeto prático: CLI de tarefas em Python, Metrics (tempo execução mediana+p95, cobertura >=80%, mutation score 60-70%, complexidade ciclomática mediana <10, dependência de IA), codexDojo mobile dashboard (fixed layout), codexDojo mobile dashboard (+10 more)
+### Community 141 - "07_rest_api_auth (app)"
+Cohesion: 0.12
+Nodes (16): ApiError, AuditAction, AuditEntry, Config, fastify, FastifyRequest, isEmail(), Outcome (+8 more)
 
-### Community 120 - "Community 120"
+### Community 142 - "_shared (prediction)"
+Cohesion: 0.15
+Nodes (12): commit_predictions(), _prediction_table(), Path, Hard prediction gate + reveal for the Polyglot Arena (ADR-002).  The ``arena_rep, Hard gate: require all three per-metric predictions, then reveal.      Raises Va, append_prediction(), Path, Append-only writer for the arena prediction log (``learner/predictions.yaml``). (+4 more)
+
+### Community 143 - "codexDojo (projects)"
+Cohesion: 0.18
+Nodes (12): button(), click(), copyButtonLabel(), agents, userFacingAgents, projects, Agent, AgentGroup (+4 more)
+
+### Community 144 - "codexDojo (linuxapps)"
+Cohesion: 0.19
+Nodes (16): getLinuxApp(), getLinuxAppsForCategory(), LinuxApp, LinuxAppCatalogError, linuxAppCategories, LinuxAppCategory, LinuxAppCategoryFilter, linuxAppCategoryLabels (+8 more)
+
+### Community 145 - "minimaxDojo (tests)"
+Cohesion: 0.12
+Nodes (6): DeterminismError, Raised when an invalid state transition is attempted., Contract tests for the Ágora Continuum state machine.  These tests define the RE, Tests for the main unit state machine transitions., max_retries is injectable (sourced from the config seam by default, D8)., TestUnitStateMachine
+
+### Community 146 - "Users (project)"
+Cohesion: 0.21
+Nodes (18): Project 01 AGENTS.md contract, Project 01 benchmark deliverable (N=1), Project 01 evolution deliverable (N=3 optimized), Project 01 Go implementation deliverable, Project 01 Node/TS implementation deliverable, k6 benchmark matrix (3 langs × 4 scenarios × N runs), 5-phase cycle: sonda→impl→review→benchmark→optimize (+verifier), Go implementation (stdlib HTTP + slog + sync.Mutex map) (+10 more)
+
+### Community 147 - "codexDojo (engine)"
+Cohesion: 0.16
+Nodes (18): Engine: codexDojo (runnable dashboard), Engine: minimaxDojo (spec/prompt agent core), Engine: miniMaxEvolutionEngine (Claude Code motor), Engine: pixelDojo (8-bit teaching game), Engine: voxelDojo (3D teaching simulation), HASH RING pilot (consistent hashing 3D sim), progress.ts query seam between data and renderers, codexDojo unidirectional reducer-driven architecture (+10 more)
+
+### Community 148 - "09_plugin_system (allowed)"
+Cohesion: 0.21
+Nodes (10): allowed(), Context, phaseFor(), safeCall(), ErrorPhase, ScriptedPlugin, HookDispatchResult, HookInvocation (+2 more)
+
+### Community 149 - "14_log_aggregator (server)"
+Cohesion: 0.14
+Nodes (6): app, server, Server, LogEntry, LogSource, LogStore
+
+### Community 150 - "_shared (metric)"
+Cohesion: 0.17
+Nodes (17): ArenaResult, assemble_report(), decision_gate(), _median_by_lang(), metric_trust(), Path, Arena orchestration: drive the benchmark runner, gate on statistical trust, and, Write a locked arena_report.md from the template; return (path, winners). (+9 more)
+
+### Community 151 - "_shared (setup)"
+Cohesion: 0.14
+Nodes (7): frontmatter(), Path, Contract tests for the arena agent specs.  These are structural checks on the Ma, TestArenaNarrator, TestEffortBudgetRubric, TestFairnessAuditor, tool_list()
+
+### Community 152 - "codexDojo (package)"
 Cohesion: 0.11
 Nodes (17): devDependencies, @biomejs/biome, jsdom, @types/node, typescript, vite, vitest, name (+9 more)
 
-### Community 121 - "Community 121"
-Cohesion: 0.16
-Nodes (18): Compozy (Go CLI orchestrator), architect-advisor advisor, devils-advocate advisor, pragmatic-engineer advisor, product-mind advisor, run_agent dispatch tool, security-advocate advisor, the-thinker advisor (+10 more)
-
-### Community 122 - "Community 122"
-Cohesion: 0.20
-Nodes (16): Context, Duration, Config, LoadConfig(), main(), Handler, Logger, RateLimiter (+8 more)
-
-### Community 123 - "Community 123"
-Cohesion: 0.16
-Nodes (9): { app }, ConfigService, ConfigValue, createApp(), CreateConfigRequest, EvaluationRequest, EvaluationResult, FlagConfig (+1 more)
-
-### Community 125 - "Community 125"
-Cohesion: 0.18
-Nodes (11): _k6_stream(), make_cfg(), Tests for arena orchestration: fail-closed gate, scoreboard winners, and locked-, Seed 3 stable runs per lang/scenario so the analyzer gate passes (N=3, CV~0)., seed_all_pass(), _stats(), TestFailClosed, TestScoreboardAndAssembly (+3 more)
-
-### Community 126 - "Community 126"
-Cohesion: 0.18
-Nodes (17): Arena Report — 02_key_value_store, arena-narrator agent, fairness-auditor agent, ADR-005 (arena), Effort-Budget Rubric, fairness-auditor agent, Polyglot Comparison Arena, Arena Report template (+9 more)
-
-### Community 127 - "Community 127"
-Cohesion: 0.20
-Nodes (17): Promote 05_websocket_chat, Benchmark Results: 05 WebSocket Chat, Code Review — Project 05 · WebSocket Chat Server, Evolution Report — Project 05 · WebSocket Chat Server, WebSocket Chat Server — Specification, Status — Project 05 · WebSocket Chat Server, WebSocket Chat Server — Go README, WebSocket Chat Server — Node/TS README (+9 more)
-
-### Community 128 - "Community 128"
-Cohesion: 0.15
-Nodes (17): codexDojo agent learning lab (brand/product surface), codexDojo Ciclo view screenshot (10-step learning loop), 10-step continuous learning loop (Diagnosticar->Registrar aprendizado), Mentor step detail panel (evidence required, artifact generated, Concluir etapa), codexDojo operational dashboard (dark theme, agents/cycle/learner panels), codexDojo dashboard browser screenshot (repo review task 2), Estado real do learning gate (Aprende ao vivo section), Rate Limiter (Token Bucket) practical project card (+9 more)
-
-### Community 129 - "Community 129"
-Cohesion: 0.16
-Nodes (10): commit_predictions(), _prediction_table(), Hard prediction gate + reveal for the Polyglot Arena (ADR-002).  The ``arena_rep, Hard gate: require all three per-metric predictions, then reveal.      Raises Va, append_prediction(), Append-only writer for the arena prediction log (``learner/predictions.yaml``)., Append one prediction record under the ``predictions:`` key.      Required keys:, Tests for the append-only arena prediction log writer. (+2 more)
-
-### Community 130 - "Community 130"
-Cohesion: 0.18
-Nodes (11): AtomicI32, Task, TaskFailure, TaskHandler, BlockingHandler, FailingHandler, poison_invalid_terminal_and_shutdown_timeout_paths(), SucceedingHandler (+3 more)
-
-### Community 131 - "Community 131"
+### Community 153 - "Users (load)"
 Cohesion: 0.13
-Nodes (17): Major: Consistent-hash routing missing in all Load Balancer implementations, Consistent Hashing with Virtual Nodes, Project 11 Load Balancer Benchmark Results, Project 11 Load Balancer Code Review, Project 11 Load Balancer Evolution Report, Load Balancer Specification (Project 11), Project 11 Load Balancer Status, Load Balancer Go Implementation README (+9 more)
+Nodes (17): Major: Consistent-hash routing missing in all Load Balancer implementations, Red Team: Load Balancer, Status: Load Balancer, Project 11 Load Balancer Code Review, Project 11 Load Balancer Evolution Report, Load Balancer Specification (Project 11), Load Balancer Go Implementation README, Critical: Rust LB only handles http:// upstreams despite accepting https:// config (+9 more)
 
-### Community 132 - "Community 132"
-Cohesion: 0.38
-Nodes (11): Logger, Request, ResponseWriter, Store, DomainError, Handler, decodeBody(), NewHandler() (+3 more)
-
-### Community 133 - "Community 133"
-Cohesion: 0.12
-Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
-
-### Community 134 - "Community 134"
-Cohesion: 0.12
-Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
-
-### Community 135 - "Community 135"
-Cohesion: 0.12
-Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
-
-### Community 136 - "Community 136"
-Cohesion: 0.12
-Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
-
-### Community 137 - "Community 137"
-Cohesion: 0.12
-Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
-
-### Community 138 - "Community 138"
-Cohesion: 0.22
-Nodes (16): T, TestDocumentCount(), TestHTTPHealth(), TestHTTPIndexAndSearch(), TestHTTPIndexBadJSON(), TestHTTPIndexMissingContent(), TestHTTPSearchEmpty(), TestIndexAndSearch() (+8 more)
-
-### Community 139 - "Community 139"
-Cohesion: 0.23
-Nodes (13): cycleStages, renderAgents(), renderCycle(), CycleSnapshot, getCycleCompletionPercent(), findAgent(), findStage(), getAgents() (+5 more)
-
-### Community 140 - "Community 140"
-Cohesion: 0.15
-Nodes (6): frontmatter(), Contract tests for the arena agent specs.  These are structural checks on the Ma, TestArenaNarrator, TestEffortBudgetRubric, TestFairnessAuditor, tool_list()
-
-### Community 141 - "Community 141"
-Cohesion: 0.20
-Nodes (15): extract_spec_block(), parse_frontmatter_and_body(), Phase commands must not repeat the full PhaseRunner step sequence inline., Every tutor-core command (added 2026-06-21) must declare its `description`     a, Tutor-core commands route through subagents, not the PhaseRunner seam.     They, The diagnose command is the entry point for the learning gate. It must     read, test_cycle_enumerates_all_phases(), test_diagnose_references_canonical_sonda_prompt() (+7 more)
-
-### Community 142 - "Community 142"
-Cohesion: 0.25
-Nodes (16): Project 01 AGENTS.md contract, Project 01 benchmark deliverable (N=1), Project 01 evolution deliverable (N=3 optimized), Project 01 Go implementation deliverable, Project 01 Node/TS implementation deliverable, U0-sonda-rate-limiter-robustness stub attempt (TODO), k6 benchmark matrix (3 langs × 4 scenarios × N runs), Curriculum catalog.md (canonical 18-project list) (+8 more)
-
-### Community 143 - "Community 143"
-Cohesion: 0.18
-Nodes (16): Ágora Continuum — long-running tutor team with deterministic state machine and adversarial verifier, Characterization / Golden Master testing before refactoring legacy, Polyglot Evolution Arena — Ecosystem Architecture, Polyglot Evolution Arena — Agent Definitions, docs/ AGENTS.md — Ecosystem Docs Conventions, File-based event sourcing with lock files and checksum artifacts, Polyglot comparison rationale — Go vs Rust vs Node trade-offs, Polyglot 5-phase evolution loop (Curator→Developers→Reviewer→Tester→Optimizer) (+8 more)
-
-### Community 144 - "Community 144"
-Cohesion: 0.25
-Nodes (9): createCamera(), disposeMaterial(), makeGate(), makeSprite(), placeMesh(), tileColors, WorldRenderer, TileKind (+1 more)
-
-### Community 145 - "Community 145"
+### Community 154 - "11_load_balancer (balancer)"
 Cohesion: 0.14
-Nodes (12): Conn, Config, Event, Handler, Hub, Logger, Request, ResponseWriter (+4 more)
+Nodes (13): BackendConfig, BackendRuntime, BackendSnapshot, CircuitState, defaultConfig(), HealthState, LoadBalancerConfig, RoutingAlgorithm (+5 more)
 
-### Community 146 - "Community 146"
-Cohesion: 0.18
-Nodes (9): app(), Method, Router, build_router(), call(), login_issues_jwt_and_hides_failures(), rbac_ownership_refresh_health_and_version(), register_validates_hashes_and_audits() (+1 more)
+### Community 155 - "11_load_balancer (router)"
+Cohesion: 0.16
+Nodes (8): LoadBalancer, Error, JoinHandle, Router, RwLock, Self, SocketAddr, serve()
 
-### Community 147 - "Community 147"
+### Community 156 - "13_api_gateway_circuit_breaker (tsconfig"
 Cohesion: 0.12
-Nodes (6): The polyglot arena was demoted from `engines/polyglotEvolutionArena/` to     `do, arcadeAcademy/ was merged into pixelDojo/ on 2026-06-21 (duplicate root).     Th, Deletion test for the duplicate engine root., TestMiniMaxEvolutionEngineContract, TestPixelDojoContract, TestPolyglotArenaDesignContract
+Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
 
-### Community 148 - "Community 148"
+### Community 157 - "14_log_aggregator (tsconfig)"
 Cohesion: 0.12
-Nodes (3): Specific anti-patterns from the spec that must fail the gate., Tests for the empirical gate evaluator., TestEmpiricalGate
+Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
 
-### Community 149 - "Community 149"
-Cohesion: 0.13
-Nodes (8): Edge cases for the dashboard snapshot adapter.      Each test isolates one input, Write a minimal learning_state.yaml that the snapshot builder needs., An empty pitfalls.md should yield topPitfalls == [] (no fallback)., A journal with no AIDI lines should still produce a trend of >=3 points, A minimal BACKLOG_STATUS.md with only the vocabulary table and no         projec, A learner_profile.md with no Dreyfus/Bloom matrix should default         dreyfus, render_ts({}) must not crash and must produce a string containing a         vali, TestDashboardSnapshotEdgeCases
+### Community 158 - "15_metrics_collector (tsconfig)"
+Cohesion: 0.12
+Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
 
-### Community 150 - "Community 150"
-Cohesion: 0.29
-Nodes (15): Benchmarker Agent (Phase 4), Curator Agent (Phase 1, Spec & Architecture), Developer Agent - Go (Phase 2), Developer Agent - Node.js/TypeScript (Phase 2), Developer Agent - Rust (Phase 2), Optimizer Agent (Phase 5), Reviewer Agent (Phase 3, Review & Pedagogy), Sócrates Agent (Anti-Dependency Socratic Tutor) (+7 more)
+### Community 159 - "16_mini_message_queue (tsconfig)"
+Cohesion: 0.12
+Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
 
-### Community 151 - "Community 151"
+### Community 160 - "17_distributed_config_service (tsconfig)"
+Cohesion: 0.12
+Nodes (16): compilerOptions, declaration, declarationMap, esModuleInterop, forceConsistentCasingInFileNames, lib, module, outDir (+8 more)
+
+### Community 161 - "_shared (text)"
+Cohesion: 0.26
+Nodes (13): extract_section(), first_sentence(), gen_adr(), gen_lesson(), gen_redteam(), gen_security(), gen_verdict(), generate_for() (+5 more)
+
+### Community 162 - "openclaw (scheduler)"
+Cohesion: 0.21
+Nodes (13): Any, Event, Reviewer validates implementations and emits the REVIEW_READY event., ReviewerAdapter, _write_status(), Path, Scheduler, Tests for the OpenClaw scheduler. (+5 more)
+
+### Community 163 - "learner (streak)"
+Cohesion: 0.24
+Nodes (8): Any, date, Record a gate outcome against the streak.      A passed gate extends the streak, Apply missed-day consequences, idempotent within a day.      If a full day elaps, reconcile_streak(), record_gate_outcome(), Gate-anchored streak + freeze transitions (ADR: spaced-repetition-streak)., TestStreak
+
+### Community 164 - "11_load_balancer (body_bytes)"
+Cohesion: 0.25
+Nodes (15): body_bytes(), default_config(), admin_backends_and_metrics_routes_are_json(), health_checks_open_backend_circuit(), http_request(), json_error_when_no_backend_is_eligible(), least_connections_tie_breaks_by_backend_id_and_pool_changes_work(), rejects_invalid_duplicate_and_missing_pool_changes() (+7 more)
+
+### Community 165 - "_shared (trust)"
+Cohesion: 0.17
+Nodes (7): The trust gate evaluates only decision metrics (p99/n_requests/mem_mb)., TestDecisionGate, BenchmarkAnalyzer, Path, Analyzes benchmark sample data and validates reproducibility., Return list of validation errors (empty = valid)., Export report as JSON file.
+
+### Community 166 - "_shared (returns)"
+Cohesion: 0.28
+Nodes (15): benchmark_lang(), build_and_test(), BuildResult, main(), peak_rss_mb(), probe_ready(), Path, Probe candidate ports until one responds. Returns the live port or None. (+7 more)
+
+### Community 167 - "minimaxDojo (phase)"
+Cohesion: 0.17
+Nodes (8): _now_iso(), PhaseLock, Path, Append-only event store and phase locks for Ágora Continuum.  Reference: engines, Acquire a lock for a phase. Raises LockError if already locked., Release the lock for a phase., Check if a phase is currently locked., File-based phase lock to prevent concurrent phase execution.      Each phase (sp
+
+### Community 168 - "pixelDojo (policygatescene)"
+Cohesion: 0.24
+Nodes (4): ContentPack, PolicyGateEncounterState, disposeMaterial(), PolicyGateScene
+
+### Community 169 - "voxelDojo (tsconfig)"
+Cohesion: 0.12
+Nodes (15): compilerOptions, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, lib, module, moduleResolution, noEmit, noFallthroughCasesInSwitch (+7 more)
+
+### Community 170 - "Users (mutation)"
+Cohesion: 0.20
+Nodes (15): Empirical Mutation Gate — Project 01 Node impl, CRÍTICO (Pedagogical code reviewer), MESTRE-CONTEÚDO (Exercise generator), PROMĘTOR (Adversarial verifier / empirical gate), Adversarial Verifier Principle (consensus ≠ correctness; verifier has zero generator context), Context Isolation (Worker & Verifier never share context), Empirical Gate (mutation ≥0.65, coverage ≥0.80, real execution), Mutation Testing (preferred over raw coverage) (+7 more)
+
+### Community 171 - "11_load_balancer (bytes)"
+Cohesion: 0.27
+Nodes (13): Bytes, BackendConfig, forward(), HeaderMapLite, is_hop_header(), parse_http_response(), parse_http_url(), ParsedUrl (+5 more)
+
+### Community 172 - "Users (agent)"
+Cohesion: 0.19
+Nodes (15): Characterization / Golden Master testing before refactoring legacy, Polyglot Evolution Arena — Ecosystem Architecture, Polyglot Evolution Arena — Agent Definitions, docs/ AGENTS.md — Ecosystem Docs Conventions, File-based event sourcing with lock files and checksum artifacts, Polyglot comparison rationale — Go vs Rust vs Node trade-offs, Polyglot 5-phase evolution loop (Curator→Developers→Reviewer→Tester→Optimizer), Productive struggle principle — learner must attempt before scaffold/hint (+7 more)
+
+### Community 173 - "Users (project)"
 Cohesion: 0.15
-Nodes (15): The Architect, The Devil's Advocate, Idea: Polyglot Comparison Arena, Polyglot Comparison Arena, Learning Gate, Prediction Gate (active recall), PRD: Polyglot Comparison Arena, The Pragmatic Engineer (+7 more)
+Nodes (15): Cron Schedules and Recurring Run Records, Project 12 Job Scheduler Code Review, Project 12 Job Scheduler Evolution Report, Distributed Job Scheduler Specification (Project 12), Critical: Dispatch ignores due time, runs future jobs early (Project 12), Major: No durable state for jobs/locks/election (Project 12), Exponential Backoff Retry with Jitter, Distributed Lock Leases with Fencing Tokens (+7 more)
 
-### Community 152 - "Community 152"
-Cohesion: 0.15
-Nodes (15): Cache-Aside vs Write-Through Pattern, Project 10 Distributed Cache Code Review, Project 10 Distributed Cache Evolution Report, Project 10 Multi-Node Verification Plan, Distributed Cache Specification (Project 10), Project 10 Distributed Cache Status, Distributed Cache Go Implementation README, Planned Local Simulated 3-Node Verification Harness (+7 more)
-
-### Community 153 - "Community 153"
-Cohesion: 0.18
-Nodes (15): Four benchmark scenarios (baseline/stress/spike/endurance), 5-phase evolution loop (Spec→Impl→Review→Benchmark→Optimize), Curator Agent (Phase 1 spec), Bootstrap Prompts for OpenClaw & Hermes (doc 04), Hermes-flavored bootstrap (MCP topology, topic pub/sub, idempotency), OpenClaw System Bootstrap master prompt, Optimizer Agent (Phase 5 evolution), Reviewer Agent (Phase 3, severity-tagged + quiz) (+7 more)
-
-### Community 154 - "Community 154"
+### Community 174 - "01_rate_limiter (eslintrc)"
 Cohesion: 0.13
 Nodes (14): env, es2022, node, extends, ignorePatterns, parser, parserOptions, ecmaVersion (+6 more)
 
-### Community 155 - "Community 155"
+### Community 175 - "03_url_shortener (tsconfig)"
 Cohesion: 0.13
 Nodes (14): compilerOptions, esModuleInterop, exactOptionalPropertyTypes, forceConsistentCasingInFileNames, module, moduleResolution, noUncheckedIndexedAccess, outDir (+6 more)
 
-### Community 156 - "Community 156"
+### Community 176 - "06_file_upload_pipeline (eslintrc)"
 Cohesion: 0.13
 Nodes (14): env, es2022, node, extends, ignorePatterns, parser, parserOptions, ecmaVersion (+6 more)
 
-### Community 157 - "Community 157"
-Cohesion: 0.21
-Nodes (9): CircuitBreakerPolicy, RWMutex, Time, CircuitBreaker, NewCircuitBreaker(), CircuitSnapshot, CircuitState, windowEntry (+1 more)
+### Community 177 - "13_api_gateway_circuit_breaker (adaptive"
+Cohesion: 0.16
+Nodes (11): Mutex, NewAdaptiveConcurrency(), BulkheadPolicy, CircuitBreakerPolicy, FallbackPolicy, RetryPolicy, TenantLimitPolicy, AdaptiveConcurrency (+3 more)
 
-### Community 158 - "Community 158"
-Cohesion: 0.25
-Nodes (14): T, TestLogStoreFullTextSearch(), TestLogStoreIngestAndQuery(), TestLogStoreQueryByCorrelationID(), TestLogStoreQueryByLevel(), TestLogStoreQueryBySource(), TestLogStoreRetention(), TestLogStoreRingBuffer() (+6 more)
+### Community 178 - "13_api_gateway_circuit_breaker (circuitb"
+Cohesion: 0.23
+Nodes (8): CircuitBreakerPolicy, RWMutex, Time, NewCircuitBreaker(), CircuitBreaker, CircuitSnapshot, CircuitState, windowEntry
 
-### Community 159 - "Community 159"
+### Community 179 - "18_search_engine (package)"
 Cohesion: 0.13
 Nodes (14): dependencies, devDependencies, tsx, @types/node, typescript, vitest, name, scripts (+6 more)
 
-### Community 160 - "Community 160"
-Cohesion: 0.24
-Nodes (11): renderNav(), renderProject(), renderView(), viewMeta, viewRegistry, ViewRenderer, renderShell(), views (+3 more)
+### Community 180 - "minimaxDojo (agent)"
+Cohesion: 0.17
+Nodes (7): load_config(), Tests for the centralised threshold seam and collapsed agent index.  The new mod, Each thin README links to the matching per_agent system prompt., Assert every ⟨config: path⟩ in `text` resolves; return how many were checked., The collapse removes agent.md and PERSONA.md, leaving only README.md., resolve_path(), TestConfigSeam
 
-### Community 161 - "Community 161"
+### Community 181 - "minimaxDojo (gate)"
+Cohesion: 0.13
+Nodes (3): Specific anti-patterns from the spec that must fail the gate., Tests for the empirical gate evaluator., TestEmpiricalGate
+
+### Community 182 - "openclaw (openclaw)"
+Cohesion: 0.19
+Nodes (10): build_adapters(), main(), Path, CLI entrypoint for the OpenClaw continuous runner., BenchmarkerAdapter, Any, Event, Benchmarker validates review artifacts and emits the METRICS_READY event. (+2 more)
+
+### Community 183 - "pixelDojo (circuitbreakerscene)"
+Cohesion: 0.27
+Nodes (3): RouteHealthEncounterState, CircuitBreakerScene, disposeMaterial()
+
+### Community 184 - "openclaw (learning)"
+Cohesion: 0.16
+Nodes (15): 5-Phase Learning Cycle (spec→impl→review→benchmark→optimize), Agent Adapters (producers + verifier), openclaw CLI (__main__.py), HermesBus (file-backed pub/sub), Hermes Idempotency Ledger (log/), learner/learning_state.yaml (learning gate), learner/pipeline_status.md, Producer ≠ Verifier rule (+7 more)
+
+### Community 185 - "Users (websocket)"
+Cohesion: 0.23
+Nodes (14): Promote 05_websocket_chat, Code Review — Project 05 · WebSocket Chat Server, Evolution Report — Project 05 · WebSocket Chat Server, WebSocket Chat Server — Specification, WebSocket Chat Server — Go README, WebSocket Chat Server — Node/TS README, WebSocket Chat Server — Rust README, 10k+ concurrent WebSocket connections target (RNF-001) (+6 more)
+
+### Community 186 - "Users (model)"
+Cohesion: 0.16
+Nodes (14): Verifier Agent (Adversarial Gate, Opus), Verifier-Haiku Agent (Cross-model Audit), Cross-Model Verification (Opus vs Haiku Diversity), Polyglot 3-Language Curriculum (Go, Rust, Node), Producer-Verifier Isolation Principle, Project Completion Contract (No Partial Completions), codexDojo defaults.yaml Configuration, /devschool-audit Command (Cross-model Sample Audit) (+6 more)
+
+### Community 187 - "01_rate_limiter (render)"
 Cohesion: 0.22
 Nodes (12): ascii_bar(), compute_percentiles(), load_all_data(), main(), mini_table(), parse_raw_k6_json(), parse_stats_json(), Load all available data and return a nested dict. (+4 more)
 
-### Community 162 - "Community 162"
-Cohesion: 0.16
-Nodes (7): BTreeMap, HashRingState, HashRing, HashRingState, MemoryStore, Node, StoreState
+### Community 188 - "01_rate_limiter (response)"
+Cohesion: 0.31
+Nodes (10): compose_allowed_adds_rate_limit_headers(), compose_denied_returns_429_with_body_and_headers(), ResponseComposer, Decision, HeaderMap, Response, Self, sample_allowed() (+2 more)
 
-### Community 163 - "Community 163"
-Cohesion: 0.33
-Nodes (12): captureTransport, hasType(), hasTypingFrom(), lastOfType(), TestConnectJoinHistoryAndBroadcast(), TestDefaultsDisconnectAndDroppedDelivery(), testHub(), TestPrivateTypingErrorsLeaveAndHeartbeat() (+4 more)
-
-### Community 164 - "Community 164"
-Cohesion: 0.21
-Nodes (10): coalescedEntry, CoalescedResult, CoalescingPolicy, Request, RWMutex, Time, coalescedEntry, CoalescedResult (+2 more)
-
-### Community 165 - "Community 165"
-Cohesion: 0.22
-Nodes (14): Compozy development pipeline (idea->PRD->techspec->tasks->exec->review->fix->archive), Compozy workflow guide (8-phase pipeline), Issue File Template, Review Criteria (severity + evaluation areas), reviews-NNN review round directory, cy-create-tasks Skill, cy-create-techspec Skill, cy-execute-task Skill (+6 more)
-
-### Community 166 - "Community 166"
-Cohesion: 0.26
-Nodes (13): TestDefaultConfig(), T, TestBuildHandler_HealthAlwaysOK(), TestBuildHandler_Routes(), TestLoadConfig_BadValuesFallBackToDefault(), TestLoadConfig_Defaults(), TestLoadConfig_Overrides(), TestLoggingHandler_EmitsLine() (+5 more)
-
-### Community 167 - "Community 167"
+### Community 189 - "02_key_value_store (typescript)"
 Cohesion: 0.14
 Nodes (13): env, es2022, node, extends, parser, parserOptions, project, plugins (+5 more)
 
-### Community 168 - "Community 168"
-Cohesion: 0.18
-Nodes (11): { app }, buildApp(), defaultConfig, bodyOf(), Failure, LoginData, PublicUser, RefreshData (+3 more)
-
-### Community 169 - "Community 169"
-Cohesion: 0.14
-Nodes (13): compilerOptions, exactOptionalPropertyTypes, module, moduleResolution, noUncheckedIndexedAccess, outDir, rootDir, skipLibCheck (+5 more)
-
-### Community 170 - "Community 170"
+### Community 190 - "09_plugin_system (http)"
 Cohesion: 0.15
-Nodes (4): Server, LogEntry, LogSource, LogStore
+Nodes (6): Handler, ResponseWriter, NewHTTPHandler(), writeJSON(), main(), LifecycleTransition
 
-### Community 171 - "Community 171"
+### Community 191 - "09_plugin_system (asserttransition)"
+Cohesion: 0.21
+Nodes (5): assertTransition(), messageFrom(), nextState(), phaseFor(), ScriptedPlugin
+
+### Community 192 - "12_distributed_job_scheduler (tsconfig)"
+Cohesion: 0.14
+Nodes (13): compilerOptions, exactOptionalPropertyTypes, module, moduleResolution, noImplicitOverride, noUncheckedIndexedAccess, outDir, rootDir (+5 more)
+
+### Community 193 - "18_search_engine (tsconfig)"
 Cohesion: 0.14
 Nodes (13): compilerOptions, declaration, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir (+5 more)
 
-### Community 172 - "Community 172"
+### Community 194 - "minimaxDojo (config)"
 Cohesion: 0.19
-Nodes (6): load_config(), Tests for the centralised threshold seam and collapsed agent index.  The new mod, The collapse removes agent.md and PERSONA.md, leaving only README.md., Each thin README links to the matching per_agent system prompt., resolve_path(), TestConfigSeam
+Nodes (11): gate_thresholds(), load_learner_config(), max_retries(), Path, Config seam loader for Ágora Continuum thresholds.  The single source of truth f, Load the learner config YAML. Returns {} if PyYAML or the file is absent., Return (mutation_threshold, coverage_threshold) from the seam, with fallbacks., Return retries.max_por_unidade from the seam, with fallback. (+3 more)
 
-### Community 173 - "Community 173"
+### Community 195 - "minimaxDojo (setup)"
 Cohesion: 0.22
-Nodes (13): Adaptive Concurrency Limiting, Bulkhead Isolation, Finding: Go coalescing is cache-after-response, not in-flight sharing, Deadline-Aware Retry Policy, Project 13 API Gateway Benchmark Results, Project 13 API Gateway Code Review, Project 13 API Gateway Evolution Report, High: Half-open probe accounting allows max_probes+1 (Project 13) (+5 more)
+Nodes (4): EmpiricalGate, Any, UnitStateMachine, TestLearningUnitE2EContract
 
-### Community 174 - "Community 174"
-Cohesion: 0.24
-Nodes (13): pixelDojo engine (8-bit teaching game), Executable evidence over self-report, Learning gate (mastery requires attempt + separate verifier evidence), Producer != verifier separation, Iron Law: no completion claims without fresh verification evidence, Verification Report Template, cy-final-verify skill, cy-fix-reviews skill (+5 more)
+### Community 196 - "minimaxDojo (tests)"
+Cohesion: 0.18
+Nodes (7): GateResult, Build a gate whose thresholds come from the config seam (learner.yaml)., Contract tests for the empirical gates.  These tests define the REQUIRED behavio, Tests for the GateResult dataclass., The gate's live thresholds must come from config/learner.yaml (the seam),     no, TestGateConfigSeam, TestGateResult
 
-### Community 175 - "Community 175"
-Cohesion: 0.36
-Nodes (10): App, registerAndLogin(), request(), testApp(), TestLoginJwtAndCredentialFailure(), TestRBACAndOwnership(), TestRefreshRotationReplayHealthAndVersion(), TestRegisterValidationHashingAndAudit() (+2 more)
+### Community 197 - "minimaxDojo (phase)"
+Cohesion: 0.15
+Nodes (6): LockError, Raised when a phase is already locked by another agent., Contract tests for the append-only event store.  The event store is the file-bac, Tests for phase lock files (prevent concurrent phase execution)., TestPhaseLock, Exception
 
-### Community 176 - "Community 176"
-Cohesion: 0.40
-Nodes (12): Buffer, Server, T, multipartBody(), TestChecksumSuccessImageMetadataPaginationAndMethods(), TestFilesStatusDeleteAndHealth(), TestMalformedMissingAndMemoryBounded(), TestProgressRegistryConfigAndRunHelpers() (+4 more)
+### Community 198 - "minimaxDojo (append)"
+Cohesion: 0.14
+Nodes (4): Event store is append-only; no update or delete operations., Tests for the append-only event store., Append should not corrupt existing data on failure., TestEventStore
 
-### Community 177 - "Community 177"
-Cohesion: 0.28
-Nodes (12): TestServiceEvaluateFlagDisabled(), TestServiceEvaluateFlagRollout(), TestServiceEvaluateFlagTargetingRule(), TestServiceFeatureFlag(), TestServiceHealth(), TestServiceMetrics(), TestServicePutAndGet(), TestServiceRollback() (+4 more)
+### Community 199 - "14_log_aggregator (req)"
+Cohesion: 0.19
+Nodes (13): Benchmark Results: 14_log_aggregator (rust 2787, go 2786, node 2775 req/s), Lesson: Log Aggregator (intuition/formal/practical), Verdict: Log Aggregator (rust leads 2787 req/s), Benchmark Results: 15_metrics_collector (rust 2347 req/s), Lesson: Metrics Collector & Dashboard, Verdict: Metrics Collector (rust leads 2347 req/s), Benchmark Results: 16_mini_message_queue (rust 2325 req/s), Lesson: Mini Message Queue (+5 more)
 
-### Community 178 - "Community 178"
-Cohesion: 0.28
-Nodes (12): Store, T, TestBatchListHealthAndErrors(), TestConcurrentCustomAliasAllowsExactlyOneWinner(), TestGeneratedCodesExpiryPaginationAndErrorBranches(), TestHTTPContract(), TestHTTPErrorBranchesAndRateLimit(), TestRateLimiterRejectsExcessCreates() (+4 more)
+### Community 200 - "05_websocket_chat (chatconfig)"
+Cohesion: 0.26
+Nodes (12): ChatConfig, handle_connection(), now_ms(), Arc, Box, ChatHub, Error, Mutex (+4 more)
 
-### Community 179 - "Community 179"
+### Community 201 - "01_rate_limiter (stryker)"
+Cohesion: 0.15
+Nodes (12): coverageAnalysis, mutate, packageManager, plugins, reporters, $schema, testRunner, thresholds (+4 more)
+
+### Community 202 - "03_url_shortener (typescript)"
 Cohesion: 0.15
 Nodes (12): env, es2022, node, extends, parser, parserOptions, project, plugins (+4 more)
 
-### Community 180 - "Community 180"
+### Community 203 - "05_websocket_chat (eslintrc)"
 Cohesion: 0.15
 Nodes (12): env, es2022, node, extends, ignorePatterns, parser, parserOptions, project (+4 more)
 
-### Community 181 - "Community 181"
+### Community 204 - "05_websocket_chat (chat_hub)"
+Cohesion: 0.29
+Nodes (12): connect_join_history_and_room_broadcast_work(), drain(), has_type(), private_typing_errors_leave_and_heartbeat_work(), ChatHub, String, Value, Vec (+4 more)
+
+### Community 205 - "08_event_driven_order_system (default)"
+Cohesion: 0.17
+Nodes (6): router(), Self, run(), http_contract_exposes_commands_events_and_health(), http_lifecycle_and_error_routes(), idempotency_conflict_and_inventory_rejection_compensation()
+
+### Community 206 - "10_distributed_cache (package)"
 Cohesion: 0.15
-Nodes (12): devDependencies, @types/node, typescript, name, scripts, build, lint, start (+4 more)
+Nodes (12): devDependencies, @types/node, typescript, name, scripts, build, coverage, lint (+4 more)
 
-### Community 184 - "Community 184"
-Cohesion: 0.22
-Nodes (7): server, idx, InvertedIndex, Posting, SearchResult, STOP_WORDS, tokenize()
+### Community 207 - "13_api_gateway_circuit_breaker (coalesce"
+Cohesion: 0.26
+Nodes (8): Request, RWMutex, Time, NewCoalescer(), coalescedEntry, CoalescedResult, Coalescer, CoalescingPolicy
 
-### Community 185 - "Community 185"
+### Community 209 - "18_search_engine (search)"
+Cohesion: 0.23
+Nodes (7): idx, server, InvertedIndex, Posting, SearchResult, STOP_WORDS, tokenize()
+
+### Community 210 - "minimaxDojo (events)"
+Cohesion: 0.26
+Nodes (8): EventStore, Any, Append-only NDJSON event store.      Events are written atomically (write to tem, Append a single event atomically. Raises on unserializable data., Read all events from the store., Filter events by unit_id., Filter events by agent name., Filter events by event type.
+
+### Community 211 - "Users (persona)"
 Cohesion: 0.36
 Nodes (13): Deliverable — persona Atena (painel de métricas), Deliverable — persona Cartógrafo (arquiteto de trilha), Deliverable — persona Crítico (revisor pedagógico), Deliverable — persona Galileu (laboratório + arquitetura), Deliverable — persona Mestre-Conteúdo (gerador de exercícios), Deliverable — persona Mneme (repetição espaçada), Deliverable — persona Mnemosyne (memory keeper), Deliverable — persona Ouroboros (auto-melhoria contínua) (+5 more)
 
-### Community 186 - "Community 186"
-Cohesion: 0.29
-Nodes (12): aidiSignalClass(), aidiSparklinePath(), renderAidi(), renderCoverage(), renderCurr(), renderLearnerDashboard(), renderNextReviews(), renderPitfalls() (+4 more)
-
-### Community 187 - "Community 187"
-Cohesion: 0.17
-Nodes (13): Top-down 8-bit arcade tilemap with player avatar, Learning gate (executable evidence before mastery), Controls: E falar, J diario, Objective: talk to SONDA and win the duel, Review due now, streak 3, freeze 2/2 (spaced repetition HUD), Pixel Quest mobile gameplay screenshot, Controls: Z Roteiar, X Retirar, Dialog actions: Voltar ao mapa, Abrir diario (+5 more)
-
-### Community 188 - "Community 188"
-Cohesion: 0.18
-Nodes (5): Invalidation, json(), numberOrUndefined(), parseJson(), stringOrUndefined()
-
-### Community 189 - "Community 189"
-Cohesion: 0.26
-Nodes (12): Sonda Agent (Learning Gate Diagnostic), Ágora Continuum Learning Gate, FSRS/streak review scheduling, Learning gate (executable-evidence mastery), /devschool-diagnose Command (Learning Gate), Learner shared-state substrate, minimaxDojo 14-agent tutoring core, pixelDojo teaching-game engine (+4 more)
-
-### Community 190 - "Community 190"
-Cohesion: 0.17
-Nodes (12): Before-and-After active-learning technique, Bug Hunter technique, AI Integration in Learning (doc 05), Personal learning portfolio (journal, predictions, cheat sheet), Predict-and-Verify learning technique, AI as sensei (amplifier), not substitute, 14 Agora Continuum agents (Maestro, Cronos, Sonda, Cartógrafo, Mestre-Conteúdo, Sócrates, Mneme, Prometor, Crítico, Galileu, Atena, Mnemosyne, Ouroboros, Seneca), Anti-dependency rules (Sócrates hints progressive, never first solution) (+4 more)
-
-### Community 191 - "Community 191"
-Cohesion: 0.26
-Nodes (12): Compozy CLI Command Reference, Compozy CLI Reference Skill, Council reusable agents pattern, Compozy home-scoped daemon (global.db), Compozy Development Pipeline, Compozy Configuration Reference (config.toml), Compozy Workflow Guide, Compozy (+4 more)
-
-### Community 192 - "Community 192"
-Cohesion: 0.47
-Nodes (11): MockClock, app_with_clock(), body_json(), different_ips_have_independent_buckets(), eleventh_request_returns_429_with_retry_after(), idle_bucket_cleanup_via_router(), ip(), refill_under_mock_clock_lets_request_through() (+3 more)
-
-### Community 193 - "Community 193"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 194 - "Community 194"
-Cohesion: 0.17
-Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
-
-### Community 195 - "Community 195"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 196 - "Community 196"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 197 - "Community 197"
-Cohesion: 0.17
-Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
-
-### Community 198 - "Community 198"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 199 - "Community 199"
-Cohesion: 0.30
-Nodes (11): T, TestCreateOrderAppendsPublishesProjectsAndIsIdempotent(), TestFullLifecycleAndReadAPIs(), TestHTTPContract(), TestHTTPLifecycleCommands(), TestIdempotencyConflictAndInventoryCompensation(), TestPubSubAndHTTPErrorPaths(), TestReplayRebuildsProjectionsAndHealthReportsLag() (+3 more)
-
-### Community 200 - "Community 200"
-Cohesion: 0.17
-Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
-
-### Community 201 - "Community 201"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 202 - "Community 202"
-Cohesion: 0.17
-Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
-
-### Community 203 - "Community 203"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 204 - "Community 204"
-Cohesion: 0.17
-Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
-
-### Community 205 - "Community 205"
-Cohesion: 0.39
-Nodes (8): Decision, Response, compose_allowed_adds_rate_limit_headers(), compose_denied_returns_429_with_body_and_headers(), ResponseComposer, sample_allowed(), sample_denied(), stamp_headers()
-
-### Community 206 - "Community 206"
-Cohesion: 0.17
-Nodes (10): DeleteResult, Entry, Flight, GetResult, HttpResponse, Loader, Metrics, SetOptions (+2 more)
-
-### Community 207 - "Community 207"
-Cohesion: 0.17
-Nodes (4): CacheError, EvictionPolicy, MemoryStore, NodeInfo
-
-### Community 209 - "Community 209"
+### Community 212 - "Users (project)"
 Cohesion: 0.24
-Nodes (11): ULW Loop Brief, Final Artifact and Live-Status Checks, Final Evidence Coverage Matrix, Final Review Packet, G009 Final Manual QA Matrix, Repo Architecture Review Notepad, aidevschool Repo Review Work Plan, aidevschool Repo Review ULW Brief (+3 more)
+Nodes (12): Adaptive Concurrency Limiting, Bulkhead Isolation, Finding: Go coalescing is cache-after-response, not in-flight sharing, Deadline-Aware Retry Policy, Project 13 API Gateway Code Review, Project 13 API Gateway Evolution Report, High: Half-open probe accounting allows max_probes+1 (Project 13), Per-Backend Circuit Breaker (closed/open/half_open) (+4 more)
 
-### Community 210 - "Community 210"
-Cohesion: 0.18
-Nodes (11): Canonical learner/learning_state.yaml (agora-continuum v2), Learner Attempts convention, Cartografo (path/gap agent), Root CLAUDE.md ecosystem context (PT), Dreyfus × Bloom skill classification, Empirical gate (executable evidence required for mastery), Filesystem is the source of truth (Markdown/YAML/NDJSON), Maestro (leader agent) (+3 more)
+### Community 213 - "design (project)"
+Cohesion: 0.21
+Nodes (12): Evidence Emission (window global + EVIDENCE console log), pixelDojo (8-bit arcade RPG engine), Polyglot Project Lifecycle (spec→impl→review→benchmark→evolution→verify), Producer ≠ Verifier (game attempts, verifier owns state), Project 01 Rate Limiter (catalog), Required Artifacts Per Project (spec/3 impls/review/notes/benchmark/evolution/status), Project Status Vocabulary (implemented/scaffolded/planned/proposal/blocked), Scheduling Truth: substrate → game (one-way) (+4 more)
 
-### Community 211 - "Community 211"
-Cohesion: 0.31
-Nodes (9): routeAction(), routeBriefing(), routeClose(), RouteCommand, routeEncounter(), routePractice(), RouteState, routeWorld() (+1 more)
+### Community 214 - "01_rate_limiter (client_key)"
+Cohesion: 0.23
+Nodes (9): ClientKeyStrategy, connect_info_key_extracts_ip(), ConnectInfoClientKey, Body, Debug, IpAddr, Request, Send (+1 more)
 
-### Community 212 - "Community 212"
-Cohesion: 0.29
-Nodes (6): Context, Duration, RateLimiter, Time, cleanupShardLocked(), shard
+### Community 215 - "01_rate_limiter (middleware)"
+Cohesion: 0.26
+Nodes (11): rate_limit_middleware(), Arc, Body, ConnectInfo, HeaderMap, Next, RateLimiter, Request (+3 more)
 
-### Community 213 - "Community 213"
+### Community 216 - "02_key_value_store (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 217 - "04_concurrent_task_queue (eslintrc)"
+Cohesion: 0.17
+Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
+
+### Community 218 - "04_concurrent_task_queue (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 219 - "05_websocket_chat (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 220 - "07_rest_api_auth (eslintrc)"
+Cohesion: 0.17
+Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
+
+### Community 221 - "07_rest_api_auth (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 222 - "08_event_driven_order_system (eslintrc)"
+Cohesion: 0.17
+Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
+
+### Community 223 - "08_event_driven_order_system (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 224 - "09_plugin_system (newhost)"
+Cohesion: 0.44
+Nodes (11): NewHost(), PluginManifest, T, TestDisabledPluginCannotStartOrReceiveHooks(), TestHooksRunInPriorityOrderAndTransformPayload(), TestHTTPRegistersListsLifecycleAndHealth(), TestLifecycleTransitionsAndCapabilityDenial(), TestPanicIsolationKeepsHostHealthy() (+3 more)
+
+### Community 225 - "09_plugin_system (eslintrc)"
+Cohesion: 0.17
+Nodes (11): env, es2022, node, extends, parser, parserOptions, project, plugins (+3 more)
+
+### Community 227 - "09_plugin_system (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 228 - "10_distributed_cache (server)"
+Cohesion: 0.17
+Nodes (4): Config, app, cache, server
+
+### Community 229 - "10_distributed_cache (tsconfig)"
+Cohesion: 0.17
+Nodes (11): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, module, moduleResolution, outDir, rootDir, skipLibCheck (+3 more)
+
+### Community 231 - "learner (predictions_summary)"
+Cohesion: 0.20
+Nodes (6): Any, Path, summarize_predictions(), Tests for the substrate's prediction-summary aggregation (ADR-004).  Verifies pe, rec(), TestPredictionsSummary
+
+### Community 232 - "learner (next)"
+Cohesion: 0.24
+Nodes (6): derive_next_reviews(), _format_due_in(), Human-readable delta for the dashboard, e.g. 'today', 'overdue 2d'., Derive the next-review queue from real ``units_log`` history using FSRS.      Ea, The next-review queue is DERIVED from real units_log history via FSRS,     with, TestNextReviewsDerivation
+
+### Community 233 - "02_key_value_store (concurrency)"
+Cohesion: 0.25
+Nodes (11): Arena Report — 02_key_value_store, Benchmark Results: 02_key_value_store, Lesson: Key-Value Store, Verdict: Key-Value Store, Rust borrow checker + tokio async concurrency model, Decision trust gate (CV threshold for arena metrics), DoD §7 (per-cycle deliverables contract), Node single-threaded event-loop concurrency model (+3 more)
+
+### Community 234 - "Users (phase)"
+Cohesion: 0.20
+Nodes (11): Curator Agent (Phase 1, Spec & Architecture), Developer Agent - Go (Phase 2), Developer Agent - Node.js/TypeScript (Phase 2), Developer Agent - Rust (Phase 2), Optimizer Agent (Phase 5), Reviewer Agent (Phase 3, Review & Pedagogy), /devschool-cycle Command (Full 5-Phase Loop), benchmarker agent (Fase 4) (+3 more)
+
+### Community 235 - "01_rate_limiter (composer)"
 Cohesion: 0.25
 Nodes (7): Decision, ResponseWriter, JSONComposer, rateLimitResponse, ResponseComposer, StatusInfo, statusResponse
 
-### Community 214 - "Community 214"
-Cohesion: 0.29
-Nodes (9): T, Time, fakeClock, TestStoreCapacityMemoryAndListSemantics(), TestStoreExpirePersistErrorBranches(), TestStoreExpiryTTLDelPersistAndKeys(), TestStoreMGetMSetAtomicAndFlush(), TestStoreSetGetAndReplaceTTL() (+1 more)
-
-### Community 215 - "Community 215"
-Cohesion: 0.40
-Nodes (10): PluginManifest, T, TestDisabledPluginCannotStartOrReceiveHooks(), TestHooksRunInPriorityOrderAndTransformPayload(), TestHTTPRegistersListsLifecycleAndHealth(), TestLifecycleTransitionsAndCapabilityDenial(), TestPanicIsolationKeepsHostHealthy(), TestRegisterRejectsInvalidManifestBeforeRuntimeExecution() (+2 more)
-
-### Community 216 - "Community 216"
+### Community 236 - "11_load_balancer (tsconfig)"
 Cohesion: 0.18
 Nodes (10): compilerOptions, esModuleInterop, module, moduleResolution, outDir, rootDir, skipLibCheck, strict (+2 more)
 
-### Community 217 - "Community 217"
-Cohesion: 0.22
-Nodes (6): RWMutex, NewInvertedIndex(), InvertedIndex, Posting, SearchResult, SearchResult
+### Community 237 - "openclaw (produced)"
+Cohesion: 0.18
+Nodes (11): artifact_path_for_topic(), benchmark_results_path(), code_review_path(), impl_path(), Topic, Spec produced by the curator phase., Implementation directory for one language., Findings document produced by the reviewer phase. (+3 more)
 
-### Community 219 - "Community 219"
-Cohesion: 0.31
-Nodes (11): Curriculum BACKLOG_STATUS.md (18 projects), F4 Scope Fidelity evidence (APPROVE), Substrate failure evidence (validation errors), Honest metrics surface (measurement vs target distinction), MANIFEST path-existence assertion test, Memory curation operational contract (trigger/owner/input/output), OpenClaw/Hermes orchestration boundary (planned, not deployed), Prompt-gap implementation plan (6 tasks + 4-wave verify) (+3 more)
+### Community 238 - "03_url_shortener (adr)"
+Cohesion: 0.29
+Nodes (10): ADR-0001: Core architecture for Key-Value Store, ADR-0001: Core architecture for URL Shortener, Benchmark Results: 03_url_shortener, Lesson: URL Shortener, Verdict: URL Shortener, ADR-0001: Core architecture for Concurrent Task Queue, ADR-0001: Core architecture for WebSocket Chat Server, Behavioral equivalence across go/rust/node (shared characterization contract) (+2 more)
 
-### Community 220 - "Community 220"
+### Community 239 - "Users (fairness)"
+Cohesion: 0.20
+Nodes (10): ADR-005 (effort-budget fairness), Effort-Budget Rubric (Polyglot Arena), 18 polyglot curriculum projects (6 levels), fairness-auditor agent, Polyglot Arena (prediction gate + fairness rubric), ECO-01..ECO-10 requirements, Handbook: Curriculum, predictions.yaml (Polyglot Arena predictions) (+2 more)
+
+### Community 240 - "Users (gate)"
 Cohesion: 0.24
-Nodes (11): codexDojo Agent Prompts (10 user-facing), codexDojo Completion Audit, codexDojo Curriculum Scope (tracks), Legacy Modernization track (characterization tests, strangler fig), Code-smell catalog (large script, framework-bound domain, conditional maze, hidden side effect, shotgun coupling, untyped boundary, dead path), Legacy Migration & Refactoring Contract, Migration strategies (Strangler Fig, Branch by Abstraction, Parallel Run, Feature Flags, Expand/Contract, Anti-corruption Layer), codexDojo Ecosystem Manifest (+3 more)
+Nodes (10): ATENA (Metrics panel + Quality Gate), Task 07 — Project 02 KV Benchmark Harness (blocked), Polyglot Arena Task List, ai_dependency_index (AIDI, [0,1] anti-AI-dependency metric), Strict decision gate (CV<20%, N≥3, fail-closed), Dreyfus × Bloom (per-concept learner classification), Quality Gate (mutation/coverage/CC/TDR/security), Painel de Métricas (Atena) + Quality Gate (+2 more)
 
-### Community 222 - "Community 222"
-Cohesion: 0.24
-Nodes (10): ADR-002 (prediction gate), ADR-004 (per-metric predictions), ADR-005 (effort-budget fairness), Effort-Budget Rubric (Polyglot Arena), Arena Report template, fairness-auditor agent, Polyglot Comparison Arena, Arena Report 02_key_value_store (+2 more)
-
-### Community 223 - "Community 223"
-Cohesion: 0.27
-Nodes (10): Cronos Agent (Long-running Scheduler), Mneme Agent (Spaced Repetition), Mnemosyne Agent (3-Layer Memory), Sêneca Agent (Human-in-the-Loop Gate), Verifier-Haiku Agent (Cross-model Audit), 3-Layer Memory (intra-agent, handoff, whiteboard), Cross-Model Verification (Opus vs Haiku Diversity), /devschool-audit Command (Cross-model Sample Audit) (+2 more)
-
-### Community 224 - "Community 224"
-Cohesion: 0.40
-Nodes (9): ChatHub, connect_join_history_and_room_broadcast_work(), drain(), has_type(), private_typing_errors_leave_and_heartbeat_work(), setup(), validates_room_capacity_size_and_history_request(), validation_heartbeat_defaults_disconnect_and_drop_paths_work() (+1 more)
-
-### Community 225 - "Community 225"
-Cohesion: 0.22
-Nodes (10): Polyglot 3-Language Curriculum (Go, Rust, Node), Producer-Verifier Isolation Principle, Project Completion Contract (No Partial Completions), codexDojo defaults.yaml Configuration, codexDojo Operating Model, codexDojo Roadmap (18-Project Curriculum), Code Review Scorecard Template, Cycle Report Template (+2 more)
-
-### Community 226 - "Community 226"
+### Community 241 - "01_rate_limiter (cleanup)"
 Cohesion: 0.33
-Nodes (7): Duration, Mutex, Time, Clock, NewManualClock(), ManualClock, RealClock
+Nodes (5): cleanupShardLocked(), Context, Duration, RateLimiter, Time
 
-### Community 227 - "Community 227"
-Cohesion: 0.38
-Nodes (9): T, Time, fixedTime(), TestDAGDependenciesRetryBackoffAndCancellation(), TestDispatchOrdersByPriorityDueTimeAndCreation(), TestDistributedLockRejectsConcurrentAndStaleTokens(), TestHealthReportsLeaderQueuesAndRunningJobs(), TestLeaderElectionUsesHighestProcessIDWithLease() (+1 more)
+### Community 242 - "07_rest_api_auth (addseconds)"
+Cohesion: 0.29
+Nodes (4): addSeconds(), AuthService, InMemoryStore, normalizeEmail()
 
-### Community 228 - "Community 228"
+### Community 243 - "07_rest_api_auth (asobject)"
 Cohesion: 0.24
-Nodes (6): RWMutex, Time, NewTenantLimiter(), TenantLimiter, tokenBucket, tokenBucket
+Nodes (6): asObject(), assertKnown(), UserService, validateLogin(), validateRefresh(), validateUpdate()
 
-### Community 229 - "Community 229"
+### Community 244 - "07_rest_api_auth (defaultconfig)"
+Cohesion: 0.24
+Nodes (9): defaultConfig, bodyOf(), Failure, LoginData, PublicUser, RefreshData, registered(), Success (+1 more)
+
+### Community 245 - "09_plugin_system (port)"
+Cohesion: 0.33
+Nodes (6): port, HookInvocation, LifecycleTransition, PluginManifest, createApp(), errorBody()
+
+### Community 246 - "13_api_gateway_circuit_breaker (typescri"
 Cohesion: 0.20
 Nodes (9): env, es2022, node, extends, parser, plugins, rules, @typescript-eslint/no-explicit-any (+1 more)
 
-### Community 230 - "Community 230"
+### Community 247 - "14_log_aggregator (typescript)"
 Cohesion: 0.20
 Nodes (9): env, es2022, node, extends, parser, plugins, rules, @typescript-eslint/no-explicit-any (+1 more)
 
-### Community 231 - "Community 231"
+### Community 248 - "15_metrics_collector (typescript)"
 Cohesion: 0.20
 Nodes (9): env, es2022, node, extends, parser, plugins, rules, @typescript-eslint/no-explicit-any (+1 more)
 
-### Community 232 - "Community 232"
+### Community 249 - "learner (curr)"
+Cohesion: 0.40
+Nodes (4): compute_curr(), Compute the CURR retention proxy in [0, 1].      CURR = (units with a gate revie, CURR is an UNVALIDATED retention proxy (ADR open question). It must never     dr, TestCurr
+
+### Community 250 - "learner (contract)"
 Cohesion: 0.20
 Nodes (6): Verify the operational contract in `engines/codexDojo/ecosystem/MEMORY_CURATION., The curation checklist requires `python3 -m learner.substrate` to         succee, Journal entries must be generalizations with a future use, not raw         chat, Pitfalls file carries append-only pegadinhas. Assert that the         section-he, The contract: a concept never reaches `mastered` from documentation         work, TestMemoryCurationContract
 
-### Community 233 - "Community 233"
+### Community 251 - "learner (curriculum)"
 Cohesion: 0.27
 Nodes (4): Walk `curriculum/02..18/` and verify BACKLOG_STATUS.md claims match reality., Parse project slugs out of curriculum/catalog.md `**Slug**` fields.          The, Return {project_slug: status} from BACKLOG_STATUS.md.          Markdown table ce, TestBacklogStatusDrift
 
-### Community 235 - "Community 235"
-Cohesion: 0.28
-Nodes (9): Agora-continuum learner-state substrate, FSRS spaced-repetition scheduler, Learning gate state machine (presenting→practicing→evaluating→mastered), Mavis adapter (derives .mavis/learning_state.yaml, pt-BR), .mavis learning_state.yaml, Streak + freeze layer (cap 2 freezes), Substrate python deps (pyyaml, fsrs), Canonical learner-state schema.yaml (types + invariants) (+1 more)
+### Community 252 - "18_search_engine (req)"
+Cohesion: 0.22
+Nodes (9): go: 2357 req/s, p99 8.55ms, RSS 21.4MB, node: 2348 req/s, p99 9.41ms, RSS 78.8MB, Benchmark Results: 18_search_engine (rust leads), rust: 2549 req/s, p99 4.41ms, RSS 1.7MB, Red Team: Search Engine, CRITICAL: no query parser; bag-of-words only (AND/OR/NOT/phrase unsupported), CRITICAL: index persistence absent (re-index/restart semantics broken), Verdict: Search Engine (rust leads 2549 req/s) (+1 more)
 
-### Community 236 - "Community 236"
+### Community 253 - "minimaxDojo (cron)"
 Cohesion: 0.25
-Nodes (8): ClientSnapshot, Config, Event, Message, Metrics, Transport, DefaultConfig(), Duration
+Nodes (9): atena.snapshot cron (per cycle, lightning), galileu.bench cron (when unit requires, INACTIVE), mneme.daily cron (08:00 UTC, fresh, pro), mnemosyne.compact cron (Sun 21:00, pro), ouroboros.reflect cron (end of session, lightning), prometor.audit cron (per unit, fresh, pro), seneca.audit cron (Sun 20:00, pro), CRONOS agent (cron registry owner) (+1 more)
 
-### Community 237 - "Community 237"
-Cohesion: 0.53
-Nodes (8): Handler, ResponseRecorder, T, postJSON(), postRaw(), TestHTTPHandlerBackpressureAndTerminalConflict(), TestHTTPHandlerCoversCreateReadCancelStatsAndErrors(), TestPoisonTimeoutAndInvalidBranches()
-
-### Community 238 - "Community 238"
+### Community 254 - "04_concurrent_task_queue (types)"
 Cohesion: 0.28
 Nodes (8): Duration, Time, Config, EnqueueRequest, Handler, QueueStats, Status, Task
 
-### Community 239 - "Community 239"
-Cohesion: 0.39
-Nodes (8): T, TestHealthChecksAndCircuitBreaker(), TestLeastConnectionsAndPoolManagement(), TestProxyFailureAdminVariantsAndBasePathJoining(), TestReverseProxyForwardsRequestAndAdminMetrics(), TestRoundRobinWeightedEligibility(), TestShutdownStopsHealthLoop(), TestSuccessfulHealthCheckMarksHealthyAndClosesHalfOpenCircuit()
+### Community 255 - "07_rest_api_auth (auditlogger)"
+Cohesion: 0.22
+Nodes (5): AuditLogger, buildApp(), publicUser(), sendError(), { app }
 
-### Community 240 - "Community 240"
-Cohesion: 0.31
-Nodes (5): AdaptiveConcurrencyPolicy, Mutex, NewAdaptiveConcurrency(), AdaptiveConcurrency, AdaptiveSnapshot
+### Community 257 - "11_load_balancer (json_response)"
+Cohesion: 0.28
+Nodes (8): json_response(), proxy_handler(), record_failure_locked(), Body, IntoResponse, Request, Response, StatusCode
 
-### Community 241 - "Community 241"
+### Community 258 - "13_api_gateway_circuit_breaker (bulkhead"
 Cohesion: 0.25
-Nodes (8): npx, /Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx, ai-memory, chrome-devtools, context7, mongodb, mongodb-mcp-server, @upstash/context7-mcp
+Nodes (5): BulkheadSnapshot, Mutex, NewBulkhead(), Bulkhead, BulkheadSnapshot
 
-### Community 242 - "Community 242"
+### Community 259 - "13_api_gateway_circuit_breaker (ratelimi"
+Cohesion: 0.31
+Nodes (5): RWMutex, Time, NewTenantLimiter(), TenantLimiter, tokenBucket
+
+### Community 260 - "codexDojo (dashboardstats)"
+Cohesion: 0.36
+Nodes (8): DashboardStats, getCurrentProject(), getDashboardStats(), getEcosystemStatuses(), getMetrics(), getOverviewModel(), OverviewModel, renderOverview()
+
+### Community 261 - "minimaxDojo (tests)"
+Cohesion: 0.22
+Nodes (5): Tests for the formal invariants (I1-I5) from the spec., I1: Transition to DOMINADO REQUIRES positive verdict from PROMĘTOR., I3: retries ≤ 3 per unit; at exhaustion, SÊNECA decides., I5: Every decision is logged in event_log., TestStateMachineInvariants
+
+### Community 262 - "context7_api_key"
+Cohesion: 0.25
+Nodes (8): CONTEXT7_API_KEY, MONGODB_MCP_CONNECTION_STRING, sh, /Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx, ai-memory, chrome-devtools, context7, mongodb
+
+### Community 263 - "misc"
+Cohesion: 0.33
+Nodes (9): PixelDojo Quest — Agent Quest: Rate Limiter screenshot, sequence_flow encounter (Agent Quest: Rate Limiter), Order-of-evidence discipline: reject traps that skip evidence (Socrates-before-attempt, implementer-before-criterion, producer self-verify, metrics-without-command, memory-before-gate), Evidence-gated learning transition (5 advance / 0 guards-missed), HUD 'Evidência PASS emitida' chip + 'Gates' meter, Maestro role: learner orchestrates Sonda / Mestre-Conteúdo / Prometor agents, PLAN→ACT→OBSERVE→VERIFY agent orchestration loop, PixelDojo Quest (8-bit NES-style teaching game engine) (+1 more)
+
+### Community 264 - "Users (spaced)"
 Cohesion: 0.22
 Nodes (9): CURR (Current User Retention Rate) Markov metric, unvalidated proxy, Duolingo Growth Model / CURR (4.5× DAU), FSRS (Free Spaced Repetition Scheduler) in Python substrate, Gate is the only scarcity (hearts/leagues/gems/R-value excluded), Spaced-Repetition + Streak implementation PLAN, ADR: Spaced-Repetition + Streak Layer, Settles & Meeder ACL 2016 (+12% retention, HLR scheduler), units_log review-record model (FSRS input feed) (+1 more)
 
-### Community 245 - "Community 245"
+### Community 265 - "learner (bucket)"
 Cohesion: 0.32
-Nodes (8): AI DevSchool ecosystem knowledge base (AGENTS.md), codexDojo engine (user-facing dashboard), Shared curriculum (18 polyglot challenges), Shared learner journey/state, minimaxDojo engine (14-agent tutoring core), miniMaxEvolutionEngine (Claude Code 5-phase loop motor), learner.substrate (Python canonical-state generator), AI DevSchool ecosystem README
+Nodes (8): Quiz — Project 01 Token-Bucket Rate Limiter, Clock Drift / Refill Starvation, Concurrency Race Safety (Mutex on Bucket), Lazy Refill Math, Token Bucket Algorithm, Unbounded Map Growth (Memory Leak), X-Forwarded-For IP Spoofing Risk, U0 Sonda Rate Limiter Robustness Attempt 1
 
-### Community 246 - "Community 246"
-Cohesion: 0.32
-Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, snapshot_stats(), run_matrix.sh script
+### Community 266 - "13_api_gateway_circuit_breaker (circuit)"
+Cohesion: 0.25
+Nodes (8): Project 13: API Gateway with Circuit Breaker, Red Team: API Gateway with Circuit Breaker, Status: 13 API Gateway with Circuit Breaker (cycle-complete, partial), code_review.md (project 13, referenced), Adaptive concurrency based on latency/failure, Bulkhead concurrency isolation, Circuit breaker state machine (open/half_open/closed), In-flight request coalescing
 
-### Community 247 - "Community 247"
-Cohesion: 0.32
-Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, snapshot_stats(), run_matrix_cv_strict.sh script
+### Community 267 - "14_log_aggregator (adr)"
+Cohesion: 0.46
+Nodes (8): ADR-0001: Core architecture for Log Aggregator (MADR), ADR-0001: Core architecture for Metrics Collector & Dashboard (MADR), ADR-0001: Core architecture for Mini Message Queue (MADR), ADR-0001: Core architecture for Distributed Configuration Service (MADR), Behavioral equivalence across Go/Rust/Node (shared characterization contract), Hash-map behind synchronous HTTP API (chosen Option 1), Rejected: persistent/disk-backed store (out of scope for fundamentals), Rejected: event-sourced model (reserved for Project 08)
 
-### Community 248 - "Community 248"
-Cohesion: 0.32
-Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, snapshot_stats(), run_matrix_N3.sh script
-
-### Community 249 - "Community 249"
+### Community 268 - "Users (project)"
 Cohesion: 0.25
 Nodes (8): 18-project / 6-level curriculum, Learning Path & Project Catalog (doc 02), Metrics-Guided Understanding principle, 6-step pedagogical cycle (spec→impl→review→bench→optimize→quiz), Progressive Complexity principle, Project 01: Token-Bucket Rate Limiter, Cycle 01 rate-limiter status: 3 impls + reviewer + benchmarker + optimizer done, Polyglot Evolution Arena Pipeline Status (legacy IDEIAS copy)
 
-### Community 250 - "Community 250"
+### Community 269 - "Users (phase)"
+Cohesion: 0.39
+Nodes (8): 5-phase evolution loop (Spec→Impl→Review→Benchmark→Optimize), Curator Agent (Phase 1 spec), Bootstrap Prompts for OpenClaw & Hermes (doc 04), Hermes-flavored bootstrap (MCP topology, topic pub/sub, idempotency), OpenClaw System Bootstrap master prompt, Optimizer Agent (Phase 5 evolution), Reviewer Agent (Phase 3, severity-tagged + quiz), Tester Agent (Phase 4 benchmarks)
+
+### Community 270 - "01_rate_limiter (run_matrix)"
+Cohesion: 0.32
+Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, run_matrix.sh script, snapshot_stats()
+
+### Community 271 - "01_rate_limiter (run_matrix_cv_strict)"
+Cohesion: 0.32
+Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, run_matrix_cv_strict.sh script, snapshot_stats()
+
+### Community 272 - "01_rate_limiter (run_matrix_n3)"
+Cohesion: 0.32
+Nodes (7): C_NAME, cleanup(), HOST_PORT, IMGS, PATH, run_matrix_N3.sh script, snapshot_stats()
+
+### Community 273 - "01_rate_limiter (handlers)"
+Cohesion: 0.43
+Nodes (7): Arc, ConnectInfo, IntoResponse, RateLimiter, SocketAddr, status_handler(), welcome_handler()
+
+### Community 274 - "04_concurrent_task_queue (handler)"
 Cohesion: 0.46
 Nodes (6): Handler, ResponseWriter, Queue, writeError(), writeJSON(), writeQueueError()
 
-### Community 251 - "Community 251"
+### Community 275 - "09_plugin_system (plugin_host_tests)"
 Cohesion: 0.43
-Nodes (7): T, TestCacheAsideSingleflightWriteThroughAndCapacityErrors(), TestConsistentHashingRemapsBoundedSubset(), TestHTTPHealthMetricsAndGracefulShutdown(), TestLRUAndLFUEviction(), TestSetGetDeleteTTLAndInvalidation(), TestValidationRingAndInvalidationHTTPEdges()
+Nodes (7): disabled_plugin_cannot_start_or_receive_hooks(), hooks_are_ordered_and_can_transform_payload(), lifecycle_transitions_and_capability_denial_are_explicit(), manifest(), plugin_panic_is_caught_and_host_stays_healthy(), rejects_invalid_manifest_and_unsupported_api_without_runtime(), PluginManifest
 
-### Community 252 - "Community 252"
-Cohesion: 0.29
-Nodes (4): BulkheadSnapshot, Mutex, Bulkhead, BulkheadSnapshot
-
-### Community 253 - "Community 253"
+### Community 276 - "13_api_gateway_circuit_breaker (retry)"
 Cohesion: 0.46
-Nodes (7): Duration, Response, RetryPolicy, DoWithRetry(), IsRetryableMethod(), RetryDelay(), ShouldRetry()
+Nodes (7): DoWithRetry(), Duration, Response, RetryPolicy, IsRetryableMethod(), RetryDelay(), ShouldRetry()
 
-### Community 254 - "Community 254"
-Cohesion: 0.43
-Nodes (7): PluginManifest, disabled_plugin_cannot_start_or_receive_hooks(), hooks_are_ordered_and_can_transform_payload(), lifecycle_transitions_and_capability_denial_are_explicit(), manifest(), plugin_panic_is_caught_and_host_stays_healthy(), rejects_invalid_manifest_and_unsupported_api_without_runtime()
+### Community 278 - "minimaxDojo (test_config_seam)"
+Cohesion: 0.29
+Nodes (8): core/ reference implementation pointer, minimaxDojo src/ README, minimaxDojo tests/ README, test_config_seam.py (config/learner.yaml marker), test_empirical_gates.py (mutation/coverage thresholds), test_event_store.py (append-only NDJSON log), test_learning_unit_e2e_contract.py, test_state_machine.py (UnitStateMachine transitions)
 
-### Community 256 - "Community 256"
+### Community 279 - "learner (must)"
 Cohesion: 0.25
 Nodes (4): The minimaxDojo/whiteboard/ directory must stay a derived view, never     silent, Run the full sync and verify all three derived files exist and contain         a, Sync must leave cron_registry.yaml and decisions/ alone — those are         hand, TestWhiteboardDerivedViews
 
-### Community 259 - "Community 259"
+### Community 280 - "threejs-dojo (quest)"
+Cohesion: 0.38
+Nodes (7): Agent Quest (PLAN/ACT/OBSERVE/VERIFY orchestration), Decision: 01_rate_limiter = Shape A (existing Agent Quest lab is canonical), PLAN slice: Agent Quest Rate Limiter (sequence_flow), Decision: 16_mini_message_queue = Shape B (sibling 3D app), Append-only log + partition routing + consumer-group offsets + replay, sequence_flow encounter mechanic (pixel-quest), Token bucket algorithm (rate limiter concept)
+
+### Community 281 - "Users (learner)"
+Cohesion: 0.38
+Nodes (7): Agora-continuum learner-state substrate, FSRS spaced-repetition scheduler, Mavis adapter (derives .mavis/learning_state.yaml, pt-BR), Streak + freeze layer (cap 2 freezes), Substrate python deps (pyyaml, fsrs), Canonical learner-state schema.yaml (types + invariants), Whiteboard adapter (minimaxDojo profile/trail derived views)
+
+### Community 282 - "06_file_upload_pipeline (architecture)"
+Cohesion: 0.57
+Nodes (7): Behavioral equivalence across runtimes (shared characterization contract), ADR-0001: Core architecture for Event-Driven Order System, Event-sourced model (rejected option, reserved for Project 08), ADR-0001: Core architecture for File Upload/Processing Pipeline, In-memory hash-map behind synchronous HTTP API (chosen architecture), ADR-0001: Core architecture for Plugin System, ADR-0001: Core architecture for REST API with Auth
+
+### Community 283 - "13_api_gateway_circuit_breaker (circuits"
 Cohesion: 0.29
-Nodes (7): Atena (metrics agent), Critico (reviewer agent), 5-phase cycle: sonda→impl→review→benchmark→optimize (+verifier), Mavis plan.yaml Project 01 cycle (5-phase tasks), .mavis/plans registry README, Seneca (governance agent), Client-IP extraction via X-Forwarded-For + trust proxy
+Nodes (6): CircuitSnapshot, generateRequestID(), BulkheadSnapshot, sortedHeaders(), ErrorResponse, RouteStatus
 
-### Community 260 - "Community 260"
-Cohesion: 0.48
-Nodes (6): cv_pct(), load_aggregated(), main(), Coefficient of variation as a percentage; 0 if median is 0., render_full_table(), render_p99_leaders()
-
-### Community 261 - "Community 261"
+### Community 284 - "Users (developer)"
 Cohesion: 0.29
 Nodes (7): Comparative (polyglot) Learning principle, Go: goroutines, fast compile, small binaries, Node.js/TS: async-by-default, npm ecosystem, Rust: memory safety, fearless concurrency, ownership, Developer Agent — Go (Phase 2), Developer Agent — Node.js/TS (Phase 2), Developer Agent — Rust (Phase 2)
 
-### Community 262 - "Community 262"
+### Community 285 - "Users (benchmark)"
+Cohesion: 0.29
+Nodes (7): autocannon benchmark script template, Metrics & Benchmarking Framework (doc 03), Evolution Scoring System (weighted 0-100 composite), Four benchmark scenarios (baseline/stress/spike/endurance), Interpreting Results learning guide (low RPS / high p99 / high mem / high CPU), k6 parametrized benchmark script template, Ten primary metrics (RPS, p50/p95/p99, RAM, CPU, error rate, LoC, build time, binary size)
+
+### Community 286 - "Users (learning)"
+Cohesion: 0.29
+Nodes (7): Before-and-After active-learning technique, Bug Hunter technique, AI Integration in Learning (doc 05), Personal learning portfolio (journal, predictions, cheat sheet), Predict-and-Verify learning technique, AI as sensei (amplifier), not substitute, Anti-dependency rules (Sócrates hints progressive, never first solution)
+
+### Community 287 - "Users (agora)"
+Cohesion: 0.29
+Nodes (7): 14 Agora Continuum agents (Maestro, Cronos, Sonda, Cartógrafo, Mestre-Conteúdo, Sócrates, Mneme, Prometor, Crítico, Galileu, Atena, Mnemosyne, Ouroboros, Seneca), Completion certainty never lives in the LLM (deterministic state machine + empirical gate), Agora Continuum Operating Model (doc 06), Learning-unit state machine (apresentando→praticando→avaliando→dominado), 10 user-facing agents (Mentor, Currículo, Arquiteto, Implementador, Revisor, Testes, Métricas, DevOps, Pesquisador, Memória), codexDojo Agent Prompts (10 user-facing), codexDojo Completion Audit
+
+### Community 288 - "miniMaxEvolutionEngine (gate)"
+Cohesion: 0.48
+Nodes (7): Native (no-Docker) Benchmark Harness (native_runner.sh + bench_orchestrator.py), Prediction Gate (ADR-002, gate: locked → revealed), Verifier Adversarial Gate (PASS/FAIL per phase), /devschool-arena command (Polyglot Comparison Arena), /devschool-benchmark command (Fase 4 native harness), /devschool-optimize command (Fase 5 optimizer), /devschool-review command (Fase 3 reviewer)
+
+### Community 289 - "12_distributed_job_scheduler (distribute"
+Cohesion: 0.29
+Nodes (7): Cron Parsing, Lesson: Distributed Job Scheduler, Status: Distributed Job Scheduler, DAG Dependency Resolution, Distributed Job Scheduler (leader election, locks, dispatch), Fencing-token Distributed Lock Leases, Simplified Raft Leader Election
+
+### Community 290 - "01_rate_limiter (render_n3_summary)"
+Cohesion: 0.48
+Nodes (6): cv_pct(), load_aggregated(), main(), Coefficient of variation as a percentage; 0 if median is 0., render_full_table(), render_p99_leaders()
+
+### Community 291 - "01_rate_limiter (clientkey)"
 Cohesion: 0.38
 Nodes (4): Request, ClientKeyStrategy, ForwardedHeaderKeyStrategy, RemoteAddrKeyStrategy
 
-### Community 263 - "Community 263"
-Cohesion: 0.38
-Nodes (4): Handler, RateLimiter, Request, ClientKey()
-
-### Community 264 - "Community 264"
+### Community 293 - "09_plugin_system (isruntimemodule)"
 Cohesion: 0.52
-Nodes (6): Context, main(), exitCode(), listenAddr(), run(), Writer
+Nodes (5): isRuntimeModule(), loadRuntimeFromEntrypoint(), makeError(), negotiate(), validateManifest()
 
-### Community 265 - "Community 265"
-Cohesion: 0.52
-Nodes (6): T, TestCapacityCancellationSchedulingAndShutdown(), TestConcurrentWorkersRespectLimitAndGracefulDrain(), TestEnqueueDequeuePriorityFIFOAndIdempotency(), TestWorkerPoolRetriesBackoffDeadLetterAndStats(), waitUntil()
-
-### Community 266 - "Community 266"
-Cohesion: 0.33
-Nodes (6): main(), ServeMux, IndexRequest, buildMux(), SearchRequest, InvertedIndex
-
-### Community 267 - "Community 267"
-Cohesion: 0.52
-Nodes (7): Compaction Rules, Compozy, cy-workflow-memory skill, Promotion Decision Test, Shared Workflow Memory (MEMORY.md), Current Task Memory, Workflow Memory Guidelines
-
-### Community 269 - "Community 269"
-Cohesion: 0.24
-Nodes (3): Clock, FixedClock, PasswordHasher
-
-### Community 270 - "Community 270"
+### Community 296 - "codexDojo (manifest)"
 Cohesion: 0.29
 Nodes (4): manifest, manifestPath, repoRoot, statusLabels
 
-### Community 273 - "Community 273"
+### Community 298 - "misc"
+Cohesion: 0.38
+Nodes (7): smoke-L1-cleared.png (voxelDojo hash-ring Level 1 screenshot), Consistent hashing (concept being demonstrated), Hash ring (circular key-space topology), Key-to-node distribution via nearest clockwise hash, "Level 1 cleared" HUD status (learning gate evidence), Server nodes (cyan/green/orange voxels on ring), Smoke-test captures playable evidence that Level 1 (basic hash-ring placement) renders and clears
+
+### Community 299 - "misc"
+Cohesion: 0.43
+Nodes (7): .github/workflows/ci.yml, CI job: codexDojo (TS, lint/test/build), CI job: curriculum Go (informational, continue-on-error), CI job: curriculum Rust (informational, continue-on-error), CI job: pixelDojo (TS, lint/test/build), CI job: Python (tutor core + substrate, pytest), rationale: enforcement spine - lint+test+build on every push/PR (TECH_DEBT_AUDIT_2026-06-28 D2)
+
+### Community 300 - "scripts (write_promote_readmes)"
+Cohesion: 0.43
+Nodes (6): discover_projects(), main(), Path, Return curriculum project dirs matching NN_name for NN in 02..18., Return 'created' | 'skipped'., write_promote()
+
+### Community 301 - "02_key_value_store (red)"
 Cohesion: 0.33
-Nodes (3): Tests for the substrate's prediction-summary aggregation (ADR-004).  Verifies pe, rec(), TestPredictionsSummary
+Nodes (6): Red Team: Key-Value Store, Red Team: URL Shortener, Red Team: Concurrent Task Queue, Concurrency correctness under shared mutable state / read-write pressure, Cross-language behavioral drift risk (mitigated by shared characterization tests), TTL expiry race (reader vs. expirer invariant)
 
-### Community 274 - "Community 274"
-Cohesion: 0.40
-Nodes (5): derive_mavis_view(), Adapter that derives the .mavis/learning_state.yaml view., Return the Mavis view derived from the canonical learner state., Render the Mavis view as a YAML string., render_mavis_yaml()
-
-### Community 275 - "Community 275"
-Cohesion: 0.53
-Nodes (5): compute_percentiles(), main(), parse_raw_k6_json(), parse_stats_json(), Read the streaming JSON output and collect http_req_duration points.
-
-### Community 276 - "Community 276"
-Cohesion: 0.53
-Nodes (5): compute_percentiles(), main(), parse_raw_k6_json(), parse_stats_json(), Read the streaming JSON output and collect http_req_duration points.
-
-### Community 277 - "Community 277"
-Cohesion: 0.33
-Nodes (6): autocannon benchmark script template, Metrics & Benchmarking Framework (doc 03), Evolution Scoring System (weighted 0-100 composite), Interpreting Results learning guide (low RPS / high p99 / high mem / high CPU), k6 parametrized benchmark script template, Ten primary metrics (RPS, p50/p95/p99, RAM, CPU, error rate, LoC, build time, binary size)
-
-### Community 278 - "Community 278"
-Cohesion: 0.60
-Nodes (6): AI DevSchool, codexDojo, pixelDojo, AI DevSchool Design Brief, codexDojo Checkup Report, codexDojo Checkup Report (HTML)
-
-### Community 279 - "Community 279"
-Cohesion: 0.53
-Nodes (5): T, TestHTTPAPI(), TestHTTPInvalidJSONAndNotFound(), TestHTTPRemainingCommands(), TestHTTPValidationBranches()
-
-### Community 280 - "Community 280"
-Cohesion: 0.53
-Nodes (5): T, TestExitCodeReturnsOneWhenListenFails(), TestExitCodeReturnsZeroAfterContextCancel(), TestListenAddrUsesDefaultAndPortEnv(), TestRunStopsWhenContextIsCanceled()
-
-### Community 281 - "Community 281"
-Cohesion: 0.53
-Nodes (5): Config, loadConfig(), main(), env(), envInt()
-
-### Community 282 - "Community 282"
-Cohesion: 0.33
-Nodes (5): extends, include, compilerOptions, noEmit, rootDir
-
-### Community 283 - "Community 283"
-Cohesion: 0.73
-Nodes (5): app(), image_upload_and_missing_file_paths_are_reported(), multipart(), rejects_invalid_type_size_checksum_and_malformed(), upload_lists_status_and_deletes()
-
-### Community 284 - "Community 284"
-Cohesion: 0.40
-Nodes (5): Handler, ResponseWriter, NewHTTPHandler(), writeJSON(), Host
-
-### Community 285 - "Community 285"
-Cohesion: 0.33
-Nodes (4): server, HttpApp, app, cache
-
-### Community 286 - "Community 286"
+### Community 302 - "04_concurrent_task_queue (queue)"
 Cohesion: 0.47
-Nodes (5): discover_projects(), main(), Return curriculum project dirs matching NN_name for NN in 02..18., Return 'created' | 'skipped'., write_promote()
+Nodes (6): Benchmark Results: 04_concurrent_task_queue, Lesson: Concurrent Task Queue, Verdict: Concurrent Task Queue, Backpressure (HTTP 429 mapping under overload), Dead-letter queue for poison/exhausted tasks, Bounded worker pool with retry+exponential backoff
 
-### Community 294 - "Community 294"
+### Community 303 - "05_websocket_chat (websocket)"
+Cohesion: 0.47
+Nodes (6): Benchmark Results: 05_websocket_chat, Lesson: WebSocket Chat Server, Red Team: WebSocket Chat Server, Status: 05_websocket_chat, Heartbeat ping/pong presence detection, WebSocket connection lifecycle + broadcast fan-out
+
+### Community 304 - "minimaxDojo (aluno)"
+Cohesion: 0.47
+Nodes (6): aluno-001 (aluno id), Cartografo agent (trail regenerator), daniel-barreto learner (TypeScript, advanced_beginner, 5h/wk), whiteboard profile.yaml (derived view), whiteboard trail.md (derived view), U0-sonda-rate-limiter-robustness (active unit, APRESENTANDO)
+
+### Community 305 - "01_rate_limiter (analyze_results)"
+Cohesion: 0.53
+Nodes (5): compute_percentiles(), main(), parse_raw_k6_json(), parse_stats_json(), Read the streaming JSON output and collect http_req_duration points.
+
+### Community 306 - "01_rate_limiter (analyze_results_n3)"
+Cohesion: 0.53
+Nodes (5): compute_percentiles(), main(), parse_raw_k6_json(), parse_stats_json(), Read the streaming JSON output and collect http_req_duration points.
+
+### Community 308 - "05_websocket_chat (tsconfig)"
+Cohesion: 0.33
+Nodes (5): compilerOptions, noEmit, rootDir, extends, include
+
+### Community 309 - "05_websocket_chat (send)"
+Cohesion: 0.33
+Nodes (5): main(), Box, Error, Send, Sync
+
+### Community 310 - "12_distributed_job_scheduler (health)"
 Cohesion: 0.40
-Nodes (5): Learner shared state substrate (overview), FSRS / streak gate-derived scheduling, Learning gate (presenting->practicing->evaluating->mastered), Polyglot Arena per-metric predictions, Learner Substrate (Python read/write seam)
+Nodes (5): health(), main(), IntoResponse, shutdown_signal(), SharedScheduler
 
-### Community 295 - "Community 295"
+### Community 311 - "Users (evaluation)"
 Cohesion: 0.40
-Nodes (5): Empirical Gates (≥80% coverage, 60-70% mutation, CV<20% benchmark claims), codexDojo Evaluation Models, Seven code-evaluation dimensions (correctness, type safety, test quality, maintainability, security, performance, operability), Architectural seams (PhaseRunner, Socratic guardrail, Learner snapshot, Threshold seam, Cycle domain module, ResponseComposer, ClientKeyStrategy), Streak + freeze layer (gate-anchored, cap 2 freezes)
+Nodes (5): Empirical Gates (≥80% coverage, 60-70% mutation, CV<20% benchmark claims), codexDojo Evaluation Models, Seven code-evaluation dimensions (correctness, type safety, test quality, maintainability, security, performance, operability), Review severity taxonomy (Blocker/Major/Minor/Educational), Streak + freeze layer (gate-anchored, cap 2 freezes)
 
-### Community 296 - "Community 296"
+### Community 312 - "Users (codexdojo)"
 Cohesion: 0.40
 Nodes (5): codexDojo AGENTS.md (conventions), codexDojo CLAUDE.md (root context), codexDojo stack: Vite + strict TS + Biome + Vitest, vanilla DOM, pure reducer state, codexDojo index.html entry, codexDojo README
 
-### Community 297 - "Community 297"
-Cohesion: 0.60
-Nodes (5): Compozy CLI Command Reference, Compozy Configuration Reference (config.toml), Compozy Bundled Skills Reference, Compozy Workflow Guide, Compozy Reference Guide (SKILL)
-
-### Community 298 - "Community 298"
-Cohesion: 0.60
-Nodes (4): T, TestEnvFallback(), TestLoadConfigFromEnv(), TestMainStartsAndStopsOnSignal()
-
-### Community 299 - "Community 299"
+### Community 313 - "01_rate_limiter (clock)"
 Cohesion: 0.40
-Nodes (5): Status vocabulary (implemented/scaffolded/planned/proposal/blocked), Polyglot Arena Bootstrap Prompts (demoted design copy), Demotion: engines/polyglotEvolutionArena/ → docs/design/polyglot-arena/ (2026-06-21), Polyglot Arena demotion notice (STATUS.md), Polyglot Evolution Arena Bootstrap Prompts (legacy IDEIAS copy)
+Nodes (3): Time, Clock, RealClock
 
-### Community 300 - "Community 300"
+### Community 314 - "01_rate_limiter (mutex)"
+Cohesion: 0.50
+Nodes (4): Mutex, Time, TestRealClock_NowIsRecent(), fakeClock
+
+### Community 316 - "Users (legacy)"
+Cohesion: 0.50
+Nodes (5): codexDojo Curriculum Scope (tracks), Legacy Modernization track (characterization tests, strangler fig), Code-smell catalog (large script, framework-bound domain, conditional maze, hidden side effect, shotgun coupling, untyped boundary, dead path), Legacy Migration & Refactoring Contract, Migration strategies (Strangler Fig, Branch by Abstraction, Parallel Run, Feature Flags, Expand/Contract, Anti-corruption Layer)
+
+### Community 317 - "Users (polyglot)"
 Cohesion: 0.60
-Nodes (3): button(), click(), copyButtonLabel()
+Nodes (5): Idea: Polyglot Comparison Arena, Polyglot Comparison Arena, Learning Gate, Prediction Gate (active recall), PRD: Polyglot Comparison Arena
 
-### Community 302 - "Community 302"
+### Community 318 - "Users (agent)"
 Cohesion: 0.50
 Nodes (4): Agent 03 SONDA (Diagnostic), Agent 04 CARTÓGRAFO (Trail Architect), Robustness Trail (TDD→mutation→patterns→architecture), Dreyfus × Bloom Competence Matrix
 
-### Community 303 - "Community 303"
+### Community 319 - "Users (project)"
 Cohesion: 0.50
 Nodes (4): Project 11 Load Balancer Promotion Checklist, Project 12 Job Scheduler Promotion Checklist, Project 13 API Gateway Promotion Checklist, DevSchool 5-Phase Curriculum Cycle (spec/implement/review/benchmark/optimize)
 
-### Community 304 - "Community 304"
+### Community 320 - "Users (benchmark)"
 Cohesion: 0.50
-Nodes (4): AuditEntry, Store, Session, User
+Nodes (4): ADR-003 (benchmark runner config), 02_key_value_store benchmark config, 01_rate_limiter benchmark config, 05_websocket_chat benchmark config
 
-### Community 305 - "Community 305"
-Cohesion: 0.67
-Nodes (4): ⟨config: path⟩ substitution marker, Root CONTEXT.md domain context, CONTEXT-MAP.md multi-context layout, Threshold seam (engines/minimaxDojo/config/learner.yaml)
-
-### Community 306 - "Community 306"
-Cohesion: 0.67
-Nodes (3): Time, Clock, RealClock
-
-### Community 307 - "Community 307"
+### Community 321 - "02_key_value_store (spike)"
 Cohesion: 0.50
-Nodes (3): options, BIG_VALUE, HEADERS
+Nodes (3): BIG_VALUE, HEADERS, options
 
-### Community 308 - "Community 308"
+### Community 322 - "03_url_shortener (tsconfig)"
 Cohesion: 0.50
-Nodes (3): extends, include, exclude
+Nodes (3): exclude, extends, include
 
-### Community 309 - "Community 309"
+### Community 323 - "04_concurrent_task_queue"
 Cohesion: 0.50
-Nodes (3): app, config, logger
+Nodes (3): main(), Box, Error
 
-### Community 310 - "Community 310"
-Cohesion: 0.67
-Nodes (3): Config, loadConfig(), parsePositiveInt()
-
-### Community 311 - "Community 311"
-Cohesion: 0.67
-Nodes (3): ResponseWriter, main(), writeJSON()
-
-### Community 312 - "Community 312"
-Cohesion: 0.67
-Nodes (3): TestDefaultConfig(), T, TestNewGateway()
-
-### Community 313 - "Community 313"
-Cohesion: 0.67
-Nodes (4): Workflow Memory Guidelines, Promotion Rules, MEMORY.md (shared workflow memory), Task memory (memory/<task filename>)
-
-### Community 314 - "Community 314"
+### Community 325 - "pixelDojo (node)"
 Cohesion: 0.50
-Nodes (3): dependencies, @kilocode/plugin, @opencode-ai/plugin
+Nodes (3): node:fs, node:path, node:url
 
-### Community 316 - "Community 316"
+### Community 326 - "Users (polyglot)"
+Cohesion: 0.50
+Nodes (4): Polyglot Arena Bootstrap Prompts (demoted design copy), Demotion: engines/polyglotEvolutionArena/ → docs/design/polyglot-arena/ (2026-06-21), Polyglot Arena demotion notice (STATUS.md), Polyglot Evolution Arena Bootstrap Prompts (legacy IDEIAS copy)
+
+### Community 327 - "voxelDojo (principle)"
+Cohesion: 0.50
+Nodes (4): voxelDojo 3D style guide, Principle: InstancedMesh above ~100 entities (60fps/500 instances budget), Principle: one hero object per game (concept lives in single dominant structure), Principle: procedural low-poly geometry only (flatShading, no GLTF)
+
+### Community 328 - "16_mini_message_queue (log)"
+Cohesion: 0.67
+Nodes (3): Log compaction with tombstones, Restart durability (segment store + fsync + checkpoint), Red Team: Mini Message Queue
+
+### Community 329 - "Users (triage)"
 Cohesion: 0.67
 Nodes (3): Local-markdown issue tracker under .scratch/, Five canonical triage labels, Triage roles (needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix)
 
-### Community 317 - "Community 317"
+### Community 333 - "Users (memory)"
 Cohesion: 0.67
-Nodes (3): Pipeline Status — MiniMax Evolution Engine, Memória de Pegadinhas — Ágora Continuum, Napkin Runbook (.claude)
+Nodes (3): Memory Curation Contract, codexDojo Memory Model, Three memory layers (in-agent, handoff files, whiteboard)
 
-### Community 318 - "Community 318"
+### Community 338 - "Users (polyglot)"
 Cohesion: 0.67
-Nodes (3): ApiError, ApiResponse, T
+Nodes (3): Polyglot Arena Project Proposal (demoted design copy), Curator→Developers→Reviewer→Tester→Refactorer loop (mermaid), Polyglot Evolution Arena Project Proposal (legacy IDEIAS copy)
 
 ## Ambiguous Edges - Review These
-- `Status — Project 05 · WebSocket Chat Server` → `WebSocket Chat Server — Rust README`  [AMBIGUOUS]
-  /Users/danielbarreto/Development/aidevschool/curriculum/05_websocket_chat/docs/status.md · relation: references
 - `Load Balancer Specification (Project 11)` → `Project 13 API Gateway Code Review`  [AMBIGUOUS]
   /Users/danielbarreto/Development/aidevschool/curriculum/13_api_gateway_circuit_breaker/docs/code_review.md · relation: conceptually_related_to
-- `Project 13 Status` → `Project 13 Rust Impl README`  [AMBIGUOUS]
-  /Users/danielbarreto/Development/aidevschool/curriculum/13_api_gateway_circuit_breaker/docs/status.md · relation: references
 - `Cold Segment Compression` → `Log Compaction (latest-per-key)`  [AMBIGUOUS]
   /Users/danielbarreto/Development/aidevschool/curriculum/14_log_aggregator/docs/spec.md · relation: semantically_similar_to
-- `Project 14 Status` → `Project 14 Rust Impl README`  [AMBIGUOUS]
-  /Users/danielbarreto/Development/aidevschool/curriculum/14_log_aggregator/docs/status.md · relation: references
 - `Mini Message Queue — Node.js/TypeScript README` → `Distributed Configuration Service — Specification`  [AMBIGUOUS]
   /Users/danielbarreto/Development/aidevschool/curriculum/16_mini_message_queue/node-impl/README.md · relation: references
 - `Cycle-01 Intake Decision: focus narrowed to TypeScript` → `Token-Bucket Algorithm (capacity C, refill R)`  [AMBIGUOUS]
   /Users/danielbarreto/Development/aidevschool/engines/pixelDojo/PLAN.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **1525 isolated node(s):** `mongodb-mcp-server`, `@upstash/context7-mcp`, `/Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx`, `ai-memory`, `@kilocode/plugin` (+1520 more)
+- **1481 isolated node(s):** `MONGODB_MCP_CONNECTION_STRING`, `CONTEXT7_API_KEY`, `/Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx`, `ai-memory`, `options` (+1476 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **71 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **85 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What is the exact relationship between `Status — Project 05 · WebSocket Chat Server` and `WebSocket Chat Server — Rust README`?**
-  _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
 - **What is the exact relationship between `Load Balancer Specification (Project 11)` and `Project 13 API Gateway Code Review`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **What is the exact relationship between `Project 13 Status` and `Project 13 Rust Impl README`?**
-  _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
 - **What is the exact relationship between `Cold Segment Compression` and `Log Compaction (latest-per-key)`?**
   _Edge tagged AMBIGUOUS (relation: semantically_similar_to) - confidence is low._
-- **What is the exact relationship between `Project 14 Status` and `Project 14 Rust Impl README`?**
-  _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
 - **What is the exact relationship between `Mini Message Queue — Node.js/TypeScript README` and `Distributed Configuration Service — Specification`?**
   _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
 - **What is the exact relationship between `Cycle-01 Intake Decision: focus narrowed to TypeScript` and `Token-Bucket Algorithm (capacity C, refill R)`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
+- **Why does `Option` connect `05_websocket_chat (default)` to `07_rest_api_auth (auditentry)`, `02_key_value_store (default)`, `04_concurrent_task_queue (default)`, `04_concurrent_task_queue (clock)`, `06_file_upload_pipeline (registry)`, `10_distributed_cache (metrics)`, `13_api_gateway_circuit_breaker (snapshot`, `12_distributed_job_scheduler (election)`, `09_plugin_system (capabilitydeclaration)`, `16_mini_message_queue (default)`, `15_metrics_collector (apierror)`, `17_distributed_config_service (targeting`, `14_log_aggregator (logsource)`, `01_rate_limiter (decision)`, `08_event_driven_order_system (apierror)`, `08_event_driven_order_system (lib)`, `03_url_shortener (stats)`, `01_rate_limiter (client_key)`, `01_rate_limiter (middleware)`, `16_mini_message_queue (brokererror)`, `03_url_shortener (lib)`, `11_load_balancer (metrics)`?**
+  _High betweenness centrality (0.055) - this node is a cross-community bridge._
+- **Why does `HandlerFunc` connect `07_rest_api_auth (request)` to `17_distributed_config_service (service)`, `01_rate_limiter (buildhandler)`, `04_concurrent_task_queue (clock)`, `06_file_upload_pipeline (upload)`, `11_load_balancer (loadbalancer)`?**
+  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+- **Why does `Result` connect `03_url_shortener (stats)` to `03_url_shortener (with_rate_limit)`, `07_rest_api_auth (auditentry)`, `02_key_value_store (default)`, `04_concurrent_task_queue (default)`, `06_file_upload_pipeline (registry)`, `10_distributed_cache (metrics)`, `13_api_gateway_circuit_breaker (snapshot`, `12_distributed_job_scheduler (election)`, `09_plugin_system (capabilitydeclaration)`, `11_load_balancer (router)`, `12_distributed_job_scheduler (scheduler)`, `16_mini_message_queue (default)`, `17_distributed_config_service (targeting`, `11_load_balancer (bytes)`, `18_search_engine (invertedindex)`, `05_websocket_chat (send)`, `08_event_driven_order_system (apierror)`, `08_event_driven_order_system (lib)`, `04_concurrent_task_queue`, `05_websocket_chat (chatconfig)`, `16_mini_message_queue (brokererror)`, `01_rate_limiter (addrparseerror)`, `01_rate_limiter (default)`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._

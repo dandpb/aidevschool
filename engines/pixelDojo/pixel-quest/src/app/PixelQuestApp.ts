@@ -2,7 +2,6 @@ import { curriculumUnitCount, firstCurriculumRegionId } from "../content/curricu
 import { loadCorePack } from "../content/loadCorePack"
 import type { RegionNpc } from "../content/types"
 import type { EncounterAction } from "../game/encounters/encounterCore"
-import type { PolicyGateEncounterState } from "../game/encounters/policyGate"
 import {
   applyEncounterAction,
   autoPassEncounter,

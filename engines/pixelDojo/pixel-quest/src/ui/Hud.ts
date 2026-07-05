@@ -226,15 +226,14 @@ export class Hud {
     const streakLine = `Streak ${reviewTrack.streak.current}${pendingDeltaText(reviewTrack)} | freeze ${
       reviewTrack.streak.freezesEquipped
     }/${reviewTrack.streak.freezesMax}`
-    const summary = evidence === undefined ? null : evidenceMetricsSummary(evidence.metrics)
-    body.textContent =
-      evidence === undefined
-        ? `${reviewLine}. ${streakLine}. Sem evidencia ainda.`
-        : `${reviewLine}. ${streakLine}. Ultima evidencia: ${
-            evidence.pass ? "PASS" : "FAIL"
-          }, accepts ${
-            summary.accepted
-          }, leaks ${summary.leaked}.`
+    if (evidence === undefined) {
+      body.textContent = `${reviewLine}. ${streakLine}. Sem evidencia ainda.`
+    } else {
+      const { accepted, leaked } = evidenceMetricsSummary(evidence.metrics)
+      body.textContent = `${reviewLine}. ${streakLine}. Ultima evidencia: ${
+        evidence.pass ? "PASS" : "FAIL"
+      }, accepts ${accepted}, leaks ${leaked}.`
+    }
     const close = document.createElement("button")
     close.type = "button"
     close.textContent = "Fechar"

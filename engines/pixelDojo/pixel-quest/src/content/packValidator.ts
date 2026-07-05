@@ -128,13 +128,11 @@ function readEvidenceContract(raw: unknown, path: string, issues: string[]): Evi
   const kind = readString(value, `${path}.kind`, issues)
   const reader = EVIDENCE_CONTRACT_READERS[kind]
   if (reader === undefined) {
-    issues.push(
-      `${path}.kind must be ${Object.keys(EVIDENCE_CONTRACT_READERS).join(", ")}`,
-    )
+    issues.push(`${path}.kind must be ${Object.keys(EVIDENCE_CONTRACT_READERS).join(", ")}`)
     // Return a token-bucket-shaped placeholder so the rest of validation
     // still runs (we want every issue surfaced in one pass); the caller
     // already sees the unknown-kind issue and will throw.
-    return EVIDENCE_CONTRACT_READERS["pixelquest-token-bucket"](value, path, issues)
+    return EVIDENCE_CONTRACT_READERS["pixelquest-token-bucket"]!(value, path, issues)
   }
   return reader(value, path, issues)
 }
