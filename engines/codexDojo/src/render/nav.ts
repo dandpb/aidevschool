@@ -6,7 +6,8 @@ export function renderNav(state: AppState): string {
   return viewRegistry
     .map(({ id, label }) => {
       const activeClass = state.view === id ? "is-active" : ""
-      return `<button class="nav-button ${activeClass}" type="button" data-view="${escapeHtml(id)}">${escapeHtml(label)}</button>`
+      const ariaCurrent = state.view === id ? ' aria-current="page"' : ""
+      return `<button class="nav-button ${activeClass}" type="button" data-view="${escapeHtml(id)}"${ariaCurrent}>${escapeHtml(label)}</button>`
     })
     .join("")
 }
