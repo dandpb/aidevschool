@@ -141,7 +141,7 @@ export class WorldRenderer {
       if (material !== undefined) {
         mesh = new Mesh(this.sharedTileGeometry, material)
         // Mark as shared so we don't dispose the shared material in rebuildWorld
-        mesh.userData.isSharedTile = true
+        mesh.userData["isSharedTile"] = true
       } else {
         mesh = new Mesh(
           this.sharedTileGeometry,
@@ -169,7 +169,7 @@ export class WorldRenderer {
   private rebuildWorld(world: WorldState): void {
     for (const mesh of this.staticMeshes) {
       this.scene.remove(mesh)
-      if (!mesh.userData.isSharedTile) {
+      if (!mesh.userData["isSharedTile"]) {
         // Fallback mesh using its own material
         disposeMaterial(mesh)
       }

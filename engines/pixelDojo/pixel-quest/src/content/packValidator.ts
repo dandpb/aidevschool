@@ -95,17 +95,19 @@ type EvidenceContractReader = (
   issues: string[],
 ) => EvidenceContract
 
+const readTokenBucketEvidenceContract: EvidenceContractReader = (value, path, issues) => ({
+  kind: "pixelquest-token-bucket",
+  minGoodAdmits: readNumber(value, `${path}.minGoodAdmits`, issues),
+  maxAbusiveAdmitted: readNumber(value, `${path}.maxAbusiveAdmitted`, issues),
+  maxObservedRateMultiplier: readNumber(value, `${path}.maxObservedRateMultiplier`, issues),
+})
+
 // One reader per EvidenceContract["kind"] tag. Adding a new kind = one entry
 // here. Unknown kinds fall through to the issue push below — they no longer
 // silently substitute the token-bucket shape (which would have validated as
 // "well-formed" with all-zero thresholds, a free PASS).
 const EVIDENCE_CONTRACT_READERS: Record<string, EvidenceContractReader> = {
-  "pixelquest-token-bucket": (value, path, issues) => ({
-    kind: "pixelquest-token-bucket",
-    minGoodAdmits: readNumber(value, `${path}.minGoodAdmits`, issues),
-    maxAbusiveAdmitted: readNumber(value, `${path}.maxAbusiveAdmitted`, issues),
-    maxObservedRateMultiplier: readNumber(value, `${path}.maxObservedRateMultiplier`, issues),
-  }),
+  "pixelquest-token-bucket": readTokenBucketEvidenceContract,
   "pixelquest-route-health": (value, path, issues) => ({
     kind: "pixelquest-route-health",
     minRouted: readNumber(value, `${path}.minRouted`, issues),
@@ -132,7 +134,7 @@ function readEvidenceContract(raw: unknown, path: string, issues: string[]): Evi
     // Return a token-bucket-shaped placeholder so the rest of validation
     // still runs (we want every issue surfaced in one pass); the caller
     // already sees the unknown-kind issue and will throw.
-    return EVIDENCE_CONTRACT_READERS["pixelquest-token-bucket"]!(value, path, issues)
+    return readTokenBucketEvidenceContract(value, path, issues)
   }
   return reader(value, path, issues)
 }
