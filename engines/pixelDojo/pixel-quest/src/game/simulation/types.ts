@@ -19,8 +19,19 @@ export type WorldMode =
   | "dialogue"
   | "practice"
   | "encounter"
+  | "circuit-breaker"
+  | "auth-gate"
   | "journal"
   | "help"
+
+/**
+ * Modes that project a 3D encounter scene. Adding a new duel-style mode
+ * (e.g. another 3D encounter) means adding it here — every router check
+ * keys off this predicate.
+ */
+export function isEncounterMode(mode: WorldMode): boolean {
+  return mode === "encounter" || mode === "circuit-breaker" || mode === "auth-gate"
+}
 
 export type Interaction =
   | {

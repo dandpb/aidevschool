@@ -4,6 +4,7 @@ import { type GamePhase, gamePhaseOrder } from "../game/phases/types"
 import type { ReviewTrack } from "../game/review/types"
 import type { SkillOrbitStation } from "../game/simulation/skillOrbit"
 import {
+  evidenceMetricsSummary,
   pendingDeltaText,
   phaseLabel,
   phaseText,
@@ -225,12 +226,15 @@ export class Hud {
     const streakLine = `Streak ${reviewTrack.streak.current}${pendingDeltaText(reviewTrack)} | freeze ${
       reviewTrack.streak.freezesEquipped
     }/${reviewTrack.streak.freezesMax}`
+    const summary = evidence === undefined ? null : evidenceMetricsSummary(evidence.metrics)
     body.textContent =
       evidence === undefined
         ? `${reviewLine}. ${streakLine}. Sem evidencia ainda.`
         : `${reviewLine}. ${streakLine}. Ultima evidencia: ${
             evidence.pass ? "PASS" : "FAIL"
-          }, admits ${evidence.metrics.good_admits}, abuso ${evidence.metrics.abusive_admitted}.`
+          }, accepts ${
+            summary.accepted
+          }, leaks ${summary.leaked}.`
     const close = document.createElement("button")
     close.type = "button"
     close.textContent = "Fechar"

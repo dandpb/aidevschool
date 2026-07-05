@@ -41,17 +41,44 @@ export type Region = {
   readonly gates: readonly RegionGate[]
 }
 
-export type EvidenceContract = {
+export type TokenBucketContract = {
   readonly kind: "pixelquest-token-bucket"
   readonly minGoodAdmits: number
   readonly maxAbusiveAdmitted: number
   readonly maxObservedRateMultiplier: number
 }
 
-// Single source of truth for the token-bucket pass thresholds. Referenced by
-// both the declared unit contract (curriculumPack.makeUnit) and the runtime
-// pass-rule (game/encounters/tokenBucket.buildEvidence) so the two cannot drift
-// (see TECH_DEBT_AUDIT_2026-06-28.md, D10).
+export type RouteHealthContract = {
+  readonly kind: "pixelquest-route-health"
+  readonly minRouted: number
+  readonly maxBadRoutes: number
+}
+
+export type PolicyGateContract = {
+  readonly kind: "pixelquest-policy-gate"
+  readonly minAllowed: number
+  readonly maxPolicyLeaks: number
+}
+
+export type SequenceContract = {
+  readonly kind: "pixelquest-sequence-flow"
+  readonly minAdvanced: number
+  readonly maxGuardsMissed: number
+}
+
+export type EvidenceContract =
+  | TokenBucketContract
+  | RouteHealthContract
+  | PolicyGateContract
+  | SequenceContract
+
+// Single source of truth for each encounter kind's pass thresholds. Each
+// constant is referenced by both the declared unit contract
+// (curriculumPack.makeUnit) and the runtime pass-rule (the matching
+// buildEvidence) so the two cannot drift (see TECH_DEBT_AUDIT_2026-06-28.md,
+// D10). Previously only token-bucket had a contract; the other three kinds
+// hardcoded thresholds inside their buildEvidence. Centralizing them is the
+// anti-drift invariant extended to all kinds.
 export const TOKEN_BUCKET_CONTRACT = {
   minGoodAdmits: 8,
   maxAbusiveAdmitted: 0,

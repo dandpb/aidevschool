@@ -9,8 +9,12 @@ import {
   WebGLRenderer,
 } from "three"
 import type { RegionGate, RegionNpc, TileKind } from "../../content/types"
+import type { PolicyGateEncounterState } from "../../game/encounters/policyGate"
+import type { RouteHealthEncounterState } from "../../game/encounters/routeHealth"
 import type { WorldState } from "../../game/simulation/types"
 import { getTileViews, isUnitCompleted } from "../../game/simulation/world"
+import { CircuitBreakerScene } from "./CircuitBreakerScene"
+import { PolicyGateScene } from "./PolicyGateScene"
 import { SkillOrbitScene } from "./SkillOrbitScene"
 
 const internalWidth = 320
@@ -32,6 +36,8 @@ export class WorldRenderer {
   private readonly camera: OrthographicCamera
   private readonly playerMesh: Mesh
   private readonly skillOrbitScene = new SkillOrbitScene()
+  private readonly circuitBreakerScene = new CircuitBreakerScene()
+  private readonly authGateScene = new PolicyGateScene()
   private readonly npcMeshes = new Map<string, Mesh>()
   private readonly gateMeshes = new Map<string, Mesh>()
   private readonly staticMeshes: Mesh[] = []
@@ -62,6 +68,14 @@ export class WorldRenderer {
       this.skillOrbitScene.render(this.renderer, world)
       return
     }
+    if (world.mode === "circuit-breaker") {
+      this.circuitBreakerScene.render(this.renderer, world)
+      return
+    }
+    if (world.mode === "auth-gate") {
+      this.authGateScene.render(this.renderer, world)
+      return
+    }
     if (world.region.id !== this.activeRegionId) {
       this.rebuildWorld(world)
     }
@@ -85,7 +99,25 @@ export class WorldRenderer {
 
   dispose(): void {
     this.skillOrbitScene.dispose()
+    this.circuitBreakerScene.dispose()
+    this.authGateScene.dispose()
     this.renderer.dispose()
+  }
+
+  // The circuit-breaker scene projects a route_health encounter state. The
+  // encounter truth lives in PixelQuestApp.activeEncounter (kept out of the
+  // pure WorldState per the AGENTS.md invariant); the app pushes it here via
+  // this setter whenever it enters / mutates / closes the duel.
+  setCircuitBreakerEncounter(state: RouteHealthEncounterState | undefined): void {
+    this.circuitBreakerScene.setEncounter(state)
+  }
+
+  // The auth-gate scene projects a policy_gate encounter state. Same invariant
+  // as the circuit-breaker setter: the encounter truth lives in
+  // PixelQuestApp.activeEncounter (kept out of the pure WorldState per the
+  // AGENTS.md invariant); the app pushes it here on enter / mutate / close.
+  setAuthGateEncounter(state: PolicyGateEncounterState | undefined): void {
+    this.authGateScene.setEncounter(state)
   }
 
   private buildStaticWorld(world: WorldState): void {

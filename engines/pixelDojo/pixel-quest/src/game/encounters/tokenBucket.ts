@@ -1,7 +1,16 @@
-import { TOKEN_BUCKET_CONTRACT, type TokenBucketEncounter } from "../../content/types"
+import {
+  TOKEN_BUCKET_CONTRACT,
+  type TokenBucketEncounter,
+  type TokenBucketRequest,
+} from "../../content/types"
+import type { EncounterOutcome } from "../evidence/emitter"
 import type { PixelQuestEvidenceRecord } from "../evidence/types"
-
-export type EncounterAction = "admit" | "reject"
+import {
+  applyEncounterStep,
+  autoPassEncounterState,
+  type EncounterAction,
+  type EncounterDriver,
+} from "./encounterCore"
 
 export type TokenBucketEncounterState = {
   readonly definition: TokenBucketEncounter
@@ -38,18 +47,39 @@ export function createTokenBucketState(
   }
 }
 
+const driver: EncounterDriver<TokenBucketEncounterState, TokenBucketRequest> = {
+  itemsOf: (state) => state.definition.requests,
+  correctAction: (request) => (request.type === "legit" ? "admit" : "reject"),
+  applyAction: applyRequestAction,
+  outcomeOf: tokenBucketOutcome,
+}
+
 export function applyEncounterAction(
   state: TokenBucketEncounterState,
   action: EncounterAction,
   now: Date,
 ): TokenBucketEncounterState {
-  if (state.complete) {
-    return state
-  }
-  const request = state.definition.requests[state.index]
-  if (request === undefined) {
-    return finishEncounter(state, now)
-  }
+  return applyEncounterStep(state, action, now, driver)
+}
+
+export function getCurrentRequest(
+  state: TokenBucketEncounterState,
+): TokenBucketRequest | undefined {
+  return state.definition.requests[state.index]
+}
+
+export function autoPassEncounter(
+  definition: TokenBucketEncounter,
+  now: Date,
+): TokenBucketEncounterState {
+  return autoPassEncounterState(createTokenBucketState(definition), now, driver)
+}
+
+function applyRequestAction(
+  state: TokenBucketEncounterState,
+  request: TokenBucketRequest,
+  action: EncounterAction,
+): TokenBucketEncounterState {
   const elapsed = Math.max(0, request.at - state.lastAt)
   const tokens = Math.min(
     state.definition.capacity,
@@ -61,85 +91,40 @@ export function applyEncounterAction(
     lastAt: request.at,
   }
   if (action === "reject") {
-    const rejectedState =
-      request.type === "abuse"
-        ? { ...baseState, abusiveRejected: baseState.abusiveRejected + 1 }
-        : { ...baseState, legitRejected: baseState.legitRejected + 1 }
-    return advanceEncounter(rejectedState, now)
+    return request.type === "abuse"
+      ? { ...baseState, abusiveRejected: baseState.abusiveRejected + 1 }
+      : { ...baseState, legitRejected: baseState.legitRejected + 1 }
   }
   if (tokens < 1) {
-    const missedState =
-      request.type === "legit"
-        ? { ...baseState, legitRejected: baseState.legitRejected + 1 }
-        : { ...baseState, abusiveRejected: baseState.abusiveRejected + 1 }
-    return advanceEncounter(missedState, now)
+    return request.type === "legit"
+      ? { ...baseState, legitRejected: baseState.legitRejected + 1 }
+      : { ...baseState, abusiveRejected: baseState.abusiveRejected + 1 }
   }
   const nextTokens = tokens - 1
   const nextHeat =
     request.type === "legit"
       ? baseState.heat + state.definition.heatPerLegitAdmit
       : baseState.heat + state.definition.heatPerAbuseAdmit
-  const admittedState =
-    request.type === "legit"
-      ? {
-          ...baseState,
-          tokens: nextTokens,
-          goodAdmits: baseState.goodAdmits + 1,
-          heat: nextHeat,
-          heatPeak: Math.max(baseState.heatPeak, nextHeat),
-          admitTimes: [...baseState.admitTimes, request.at],
-        }
-      : {
-          ...baseState,
-          tokens: nextTokens,
-          abusiveAdmitted: baseState.abusiveAdmitted + 1,
-          heat: nextHeat,
-          heatPeak: Math.max(baseState.heatPeak, nextHeat),
-          admitTimes: [...baseState.admitTimes, request.at],
-        }
-  return advanceEncounter(admittedState, now)
+  return request.type === "legit"
+    ? {
+        ...baseState,
+        tokens: nextTokens,
+        goodAdmits: baseState.goodAdmits + 1,
+        heat: nextHeat,
+        heatPeak: Math.max(baseState.heatPeak, nextHeat),
+        admitTimes: [...baseState.admitTimes, request.at],
+      }
+    : {
+        ...baseState,
+        tokens: nextTokens,
+        abusiveAdmitted: baseState.abusiveAdmitted + 1,
+        heat: nextHeat,
+        heatPeak: Math.max(baseState.heatPeak, nextHeat),
+        admitTimes: [...baseState.admitTimes, request.at],
+      }
 }
 
-export function getCurrentRequest(state: TokenBucketEncounterState) {
-  return state.definition.requests[state.index]
-}
-
-export function finishEncounter(
-  state: TokenBucketEncounterState,
-  now: Date,
-): TokenBucketEncounterState {
-  const evidence = buildEvidence(state, now)
-  console.log(`EVIDENCE ${JSON.stringify(evidence)}`)
-  return {
-    ...state,
-    complete: true,
-    evidence,
-  }
-}
-
-export function autoPassEncounter(
-  definition: TokenBucketEncounter,
-  now: Date,
-): TokenBucketEncounterState {
-  let state = createTokenBucketState(definition)
-  for (const request of definition.requests) {
-    state = applyEncounterAction(state, request.type === "legit" ? "admit" : "reject", now)
-  }
-  return state.complete ? state : finishEncounter(state, now)
-}
-
-function advanceEncounter(state: TokenBucketEncounterState, now: Date): TokenBucketEncounterState {
-  const next = {
-    ...state,
-    index: state.index + 1,
-  }
-  if (next.index >= next.definition.requests.length) {
-    return finishEncounter(next, now)
-  }
-  return next
-}
-
-function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestEvidenceRecord {
+function tokenBucketOutcome(state: TokenBucketEncounterState): EncounterOutcome {
   const lastRequest = state.definition.requests.at(-1)
   const duration = Math.max(lastRequest?.at ?? 1, 1)
   const observedRate = state.goodAdmits / duration
@@ -150,14 +135,9 @@ function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestE
     state.abusiveAdmitted <= TOKEN_BUCKET_CONTRACT.maxAbusiveAdmitted &&
     observedRate <= state.definition.targetRate * TOKEN_BUCKET_CONTRACT.maxObservedRateMultiplier
   return {
-    source: "pixelquest",
-    unit_id: state.definition.unit_id,
-    project: state.definition.project,
-    encounter_id: state.definition.id,
-    game: "PixelDojo Quest",
-    ts: now.toISOString(),
     pass,
     metrics: {
+      kind: "pixelquest-token-bucket",
       target_rate: state.definition.targetRate,
       observed_admit_rate: Number(observedRate.toFixed(2)),
       max_burst_1s: maxAdmitsInWindow(state.admitTimes, 1),
@@ -167,12 +147,6 @@ function buildEvidence(state: TokenBucketEncounterState, now: Date): PixelQuestE
       abusive_rejected: state.abusiveRejected,
       heat_peak: Math.round(state.heatPeak),
       overheated,
-    },
-    curriculum_context: {
-      concept: state.definition.concept,
-      mechanic: state.definition.mechanicName,
-      accepted_signal: state.definition.goodRequestLabel,
-      rejected_trap: state.definition.badRequestLabel,
     },
   }
 }

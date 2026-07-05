@@ -20,9 +20,10 @@ describe("route health encounter", () => {
       project: "11_load_balancer",
       pass: true,
       metrics: {
-        good_admits: 3,
-        abusive_admitted: 0,
-        abusive_rejected: 2,
+        kind: "pixelquest-route-health",
+        routed: 3,
+        bad_routes: 0,
+        isolated: 2,
       },
       curriculum_context: {
         mechanic: "Health Router",
@@ -41,7 +42,11 @@ describe("route health encounter", () => {
 
     expect(state.complete).toBe(true)
     expect(state.evidence?.pass).toBe(false)
-    expect(state.evidence?.metrics.abusive_admitted).toBeGreaterThan(0)
+    const metrics = state.evidence?.metrics
+    expect(metrics?.kind).toBe("pixelquest-route-health")
+    if (metrics?.kind === "pixelquest-route-health") {
+      expect(metrics.bad_routes).toBeGreaterThan(0)
+    }
   })
 })
 

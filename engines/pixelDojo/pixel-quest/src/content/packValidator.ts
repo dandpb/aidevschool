@@ -89,18 +89,54 @@ function readUnit(raw: unknown, path: string, issues: string[]): UnitDefinition 
   }
 }
 
-function readEvidenceContract(raw: unknown, path: string, issues: string[]): EvidenceContract {
-  const value = readRecord(raw, path, issues)
-  const kind = readString(value, `${path}.kind`, issues)
-  if (kind !== "pixelquest-token-bucket") {
-    issues.push(`${path}.kind must be pixelquest-token-bucket`)
-  }
-  return {
+type EvidenceContractReader = (
+  value: Record<string, unknown>,
+  path: string,
+  issues: string[],
+) => EvidenceContract
+
+// One reader per EvidenceContract["kind"] tag. Adding a new kind = one entry
+// here. Unknown kinds fall through to the issue push below — they no longer
+// silently substitute the token-bucket shape (which would have validated as
+// "well-formed" with all-zero thresholds, a free PASS).
+const EVIDENCE_CONTRACT_READERS: Record<string, EvidenceContractReader> = {
+  "pixelquest-token-bucket": (value, path, issues) => ({
     kind: "pixelquest-token-bucket",
     minGoodAdmits: readNumber(value, `${path}.minGoodAdmits`, issues),
     maxAbusiveAdmitted: readNumber(value, `${path}.maxAbusiveAdmitted`, issues),
     maxObservedRateMultiplier: readNumber(value, `${path}.maxObservedRateMultiplier`, issues),
+  }),
+  "pixelquest-route-health": (value, path, issues) => ({
+    kind: "pixelquest-route-health",
+    minRouted: readNumber(value, `${path}.minRouted`, issues),
+    maxBadRoutes: readNumber(value, `${path}.maxBadRoutes`, issues),
+  }),
+  "pixelquest-policy-gate": (value, path, issues) => ({
+    kind: "pixelquest-policy-gate",
+    minAllowed: readNumber(value, `${path}.minAllowed`, issues),
+    maxPolicyLeaks: readNumber(value, `${path}.maxPolicyLeaks`, issues),
+  }),
+  "pixelquest-sequence-flow": (value, path, issues) => ({
+    kind: "pixelquest-sequence-flow",
+    minAdvanced: readNumber(value, `${path}.minAdvanced`, issues),
+    maxGuardsMissed: readNumber(value, `${path}.maxGuardsMissed`, issues),
+  }),
+}
+
+function readEvidenceContract(raw: unknown, path: string, issues: string[]): EvidenceContract {
+  const value = readRecord(raw, path, issues)
+  const kind = readString(value, `${path}.kind`, issues)
+  const reader = EVIDENCE_CONTRACT_READERS[kind]
+  if (reader === undefined) {
+    issues.push(
+      `${path}.kind must be ${Object.keys(EVIDENCE_CONTRACT_READERS).join(", ")}`,
+    )
+    // Return a token-bucket-shaped placeholder so the rest of validation
+    // still runs (we want every issue surfaced in one pass); the caller
+    // already sees the unknown-kind issue and will throw.
+    return EVIDENCE_CONTRACT_READERS["pixelquest-token-bucket"](value, path, issues)
   }
+  return reader(value, path, issues)
 }
 
 function readEncounter(raw: unknown, path: string, issues: string[]): EncounterDefinition {

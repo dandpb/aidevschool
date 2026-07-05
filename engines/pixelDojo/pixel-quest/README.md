@@ -5,9 +5,13 @@ plain Three.js with an orthographic camera. The current playable catalog maps al
 projects in `../../curriculum/` into PixelDojo labs. Each lab has a mentor, practice panel, duel,
 evidence emission, review journal, and gate to the next curriculum module.
 
-The game is an attempt surface. It emits evidence through `window.__pixelQuestEvidence` and logs
-`EVIDENCE <json>` to the console. It does not write `learner/learning_state.yaml`, append
-`units_log`, or mark mastery. A separate verifier owns that gate.
+The game is an attempt surface. Evidence flows through one typed emitter
+(`src/game/evidence/emitter.ts`): each record is validated, appended to the append-only
+`window.__pixelQuestEvidence` array, and logged as `EVIDENCE <json>` to the console. The Playwright
+smoke run persists the array to `.logs/evidence.ndjson` — the contract input for
+`engines/pixelDojo/verifier` (schema in `../EVIDENCE_CONTRACT.md`). The game does not write
+`learner/learning_state.yaml`, append `units_log`, or mark mastery. A separate verifier owns that
+gate.
 
 The current HUD also renders a read-only scheduled-review projection: due review, streak, freeze
 count, and verifier-pending state. This is session feedback only; the substrate remains the scheduler
@@ -58,7 +62,7 @@ pnpm run smoke
 - `src/game/simulation/`: grid movement, gates, quest progress, and interaction rules.
 - `src/game/phases/`: phase vocabulary for the teaching-game loop.
 - `src/game/encounters/`: approved encounter registry, token-bucket classifier, sequence-flow puzzle, health-routing puzzle, and policy-gate puzzle.
-- `src/game/evidence/`: evidence shape and validation.
+- `src/game/evidence/`: evidence shape, validation, and the single typed emitter (`emitter.ts`).
 - `src/game/review/`: read-only spaced-review and streak projection for the game surface.
 - `src/render/`: Three.js render adapter; it is not the source of gameplay truth.
 - `src/ui/`: DOM HUD, dialogue, journal, and duel controls.

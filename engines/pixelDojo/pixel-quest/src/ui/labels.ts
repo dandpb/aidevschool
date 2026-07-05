@@ -1,3 +1,4 @@
+import type { PixelQuestEvidenceMetrics } from "../game/evidence/types"
 import type { GamePhase } from "../game/phases/types"
 import { gamePhaseOrder } from "../game/phases/types"
 import type { ReviewStatus, ReviewTrack } from "../game/review/types"
@@ -59,4 +60,24 @@ export function tokenMeterText(tokens: number): string {
     cells.push(index < full ? "[]" : "__")
   }
   return cells.join(" ")
+}
+
+// Summarizes the "good accepted" and "abuse leaked" counts from any metrics
+// variant into a short human-readable line for the journal HUD. Each kind names
+// these concepts differently (admits / routed / allowed / advanced), so this
+// switch keeps the HUD decoupled from the metrics schema.
+export function evidenceMetricsSummary(metrics: PixelQuestEvidenceMetrics): {
+  accepted: number
+  leaked: number
+} {
+  if (metrics.kind === "pixelquest-token-bucket") {
+    return { accepted: metrics.good_admits, leaked: metrics.abusive_admitted }
+  }
+  if (metrics.kind === "pixelquest-route-health") {
+    return { accepted: metrics.routed, leaked: metrics.bad_routes }
+  }
+  if (metrics.kind === "pixelquest-policy-gate") {
+    return { accepted: metrics.allowed, leaked: metrics.policy_leaks }
+  }
+  return { accepted: metrics.advanced, leaked: metrics.guards_missed }
 }

@@ -1,5 +1,5 @@
 import type { InputAction } from "../game/input/actions"
-import type { WorldMode } from "../game/simulation/types"
+import { isEncounterMode, type WorldMode } from "../game/simulation/types"
 
 export type RouteState = {
   readonly action: InputAction
@@ -28,14 +28,14 @@ export function routeAction(state: RouteState): RouteCommand {
     return routeOrbitShortcut(state.mode, state.encounterComplete)
   }
   if (state.action.kind === "help") {
-    return state.mode === "encounter" && !state.encounterComplete
+    return isEncounterMode(state.mode) && !state.encounterComplete
       ? { kind: "none" }
       : { kind: "open-help" }
   }
   if (state.mode === "briefing") {
     return routeBriefing(state.action)
   }
-  if (state.mode === "encounter") {
+  if (isEncounterMode(state.mode)) {
     return routeEncounter(state.action, state.encounterComplete)
   }
   if (state.mode === "dialogue") {
@@ -54,7 +54,7 @@ export function routeAction(state: RouteState): RouteCommand {
 }
 
 function routeOrbitShortcut(mode: WorldMode, encounterComplete: boolean): RouteCommand {
-  if (mode === "encounter" && !encounterComplete) {
+  if (isEncounterMode(mode) && !encounterComplete) {
     return { kind: "none" }
   }
   if (mode === "skill-orbit") {

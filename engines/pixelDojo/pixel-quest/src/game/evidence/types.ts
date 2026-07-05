@@ -1,4 +1,10 @@
-export type PixelQuestEvidenceMetrics = {
+// Each encounter kind emits its own metrics variant, discriminated by `kind`.
+// The validator (game/evidence/evidence.ts) dispatches on `metrics.kind` so
+// that adding a new encounter kind only requires extending this union and
+// adding one reader — no central switch over a single fixed schema.
+
+export type TokenBucketMetrics = {
+  readonly kind: "pixelquest-token-bucket"
   readonly target_rate: number
   readonly observed_admit_rate: number
   readonly max_burst_1s: number
@@ -9,6 +15,42 @@ export type PixelQuestEvidenceMetrics = {
   readonly heat_peak: number
   readonly overheated: boolean
 }
+
+export type RouteHealthMetrics = {
+  readonly kind: "pixelquest-route-health"
+  readonly routed: number
+  readonly isolated: number
+  readonly bad_routes: number
+  readonly good_rejected: number
+  readonly heat_peak: number
+  readonly overheated: boolean
+}
+
+export type PolicyGateMetrics = {
+  readonly kind: "pixelquest-policy-gate"
+  readonly allowed: number
+  readonly denied: number
+  readonly policy_leaks: number
+  readonly false_denies: number
+  readonly heat_peak: number
+  readonly overheated: boolean
+}
+
+export type SequenceMetrics = {
+  readonly kind: "pixelquest-sequence-flow"
+  readonly advanced: number
+  readonly held: number
+  readonly skipped_required: number
+  readonly guards_missed: number
+  readonly heat_peak: number
+  readonly overheated: boolean
+}
+
+export type PixelQuestEvidenceMetrics =
+  | TokenBucketMetrics
+  | RouteHealthMetrics
+  | PolicyGateMetrics
+  | SequenceMetrics
 
 export type PixelQuestReviewContext = {
   readonly unit_kind: "concept"

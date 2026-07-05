@@ -39,15 +39,26 @@ pixel-quest/
 | Symbol | Type | Location | Refs | Role |
 | --- | --- | --- | --- | --- |
 | `PixelQuestApp` | Class | `src/app/PixelQuestApp.ts:37` | 3 | Main app coordinator. |
-| `publishEvidence` | Method | `src/app/PixelQuestApp.ts:315` | class-local | Validates and exposes evidence. |
-| `WorldRenderer` | Class | `src/render/app/WorldRenderer.ts` | adapter | Draws state; not gameplay truth. |
+| `publishEvidence` | Method | `src/app/PixelQuestApp.ts` | class-local | Validates and exposes evidence. |
+| `WorldRenderer` | Class | `src/render/app/WorldRenderer.ts` | adapter | Draws state; dispatches to sub-scenes by `world.mode`. Not gameplay truth. |
+| `SkillOrbitScene` | Class | `src/render/app/SkillOrbitScene.ts` | 1 | Self-contained 3D sub-scene (PerspectiveCamera) for the orbit mode. |
+| `CircuitBreakerScene` | Class | `src/render/app/CircuitBreakerScene.ts` | 1 | Self-contained 3D sub-scene that projects a `route_health` encounter state as a circuit-breaker diorama. |
 
 ## CONVENTIONS
 
 - Use `pnpm`; scripts live in `package.json`.
 - Keep gameplay truth in simulation/encounter modules, not in `WorldRenderer` or HUD code.
 - Add mechanics by extending the typed encounter registry and unit tests in `src/tests/`.
-- Evidence goes to `window.__pixelQuestEvidence` and `EVIDENCE <json>` console output only.
+- Evidence is polymorphic by encounter kind: add the metrics variant, matching
+  `EvidenceContract`, reader branches, and `EncounterDriver`; wire it through `encounterCore.ts`
+  and `evidence/emitter.ts:buildEncounterEvidence`. See `docs/content-packs.md`.
+- Isolated 3D sub-scenes live behind `WorldRenderer` (`SkillOrbitScene`, `CircuitBreakerScene`).
+  Reuse the existing `WebGLRenderer`/canvas, keep encounter truth in `PixelQuestApp`, and pass it
+  into the scene via setters.
+- Evidence flows only through `evidence/emitter.ts:emitEvidence`: validated, appended to the
+  `window.__pixelQuestEvidence` array, and echoed as `EVIDENCE <json>` console output. The
+  Playwright smoke run persists the array to `.logs/evidence.ndjson`
+  (contract: `../EVIDENCE_CONTRACT.md`, consumed by `../verifier`).
 - Scheduled-review and streak data are read-only projections from the learner substrate.
 - `shots/` and `test-results/` are generated QA artifacts.
 

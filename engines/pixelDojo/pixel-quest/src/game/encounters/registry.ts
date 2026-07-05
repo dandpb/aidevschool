@@ -1,4 +1,5 @@
 import type { EncounterDefinition } from "../../content/types"
+import type { EncounterAction } from "./encounterCore"
 import {
   applyPolicyGateAction,
   autoPassPolicyGate,
@@ -24,7 +25,6 @@ import {
   applyEncounterAction as applyTokenBucketAction,
   autoPassEncounter as autoPassTokenBucket,
   createTokenBucketState,
-  type EncounterAction,
   getCurrentRequest as getCurrentTokenBucketRequest,
   type TokenBucketEncounterState,
 } from "./tokenBucket"
@@ -170,10 +170,10 @@ function isTokenBucketState(state: EncounterState): state is TokenBucketEncounte
   return state.definition.kind === "token_bucket"
 }
 
-function isRouteHealthState(state: EncounterState): state is RouteHealthEncounterState {
+export function isRouteHealthState(state: EncounterState): state is RouteHealthEncounterState {
   return state.definition.kind === "route_health"
 }
 
-function isPolicyGateState(state: EncounterState): state is PolicyGateEncounterState {
+export function isPolicyGateState(state: EncounterState): state is PolicyGateEncounterState {
   return state.definition.kind === "policy_gate"
 }

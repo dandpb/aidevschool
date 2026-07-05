@@ -1,6 +1,7 @@
 import {
   type ContentPack,
   type EncounterDefinition,
+  type EvidenceContract,
   type PolicyCheck,
   type Region,
   type RouteCheck,
@@ -512,12 +513,46 @@ function makeUnit(module: CurriculumModule, index: number): UnitDefinition {
     concept: module.concept,
     prerequisites: previous === undefined ? [] : [unitId(previous)],
     encounter_ids: [encounterId(module)],
-    evidence_contract: {
-      kind: "pixelquest-token-bucket",
-      minGoodAdmits: TOKEN_BUCKET_CONTRACT.minGoodAdmits,
-      maxAbusiveAdmitted: TOKEN_BUCKET_CONTRACT.maxAbusiveAdmitted,
-      maxObservedRateMultiplier: TOKEN_BUCKET_CONTRACT.maxObservedRateMultiplier,
-    },
+    evidence_contract: evidenceContractFor(module),
+  }
+}
+
+// The evidence contract kind MUST match the encounter kind it gates. Previously
+// every unit carried a token-bucket contract even when its encounter was
+// sequence_flow / route_health / policy_gate — that drift is now eliminated by
+// dispatching on encounterKind. The token-bucket default covers modules that
+// have no explicit encounterKind (they fall back to a token-bucket encounter in
+// makeEncounter).
+function evidenceContractFor(module: CurriculumModule): EvidenceContract {
+  if (module.encounterKind === "sequence_flow") {
+    const steps = module.sequenceSteps ?? []
+    return {
+      kind: "pixelquest-sequence-flow",
+      minAdvanced: steps.filter((step) => step.type === "advance").length,
+      maxGuardsMissed: 0,
+    }
+  }
+  if (module.encounterKind === "route_health") {
+    const checks = module.routeChecks ?? []
+    return {
+      kind: "pixelquest-route-health",
+      minRouted: checks.filter((check) => check.type === "healthy").length,
+      maxBadRoutes: 0,
+    }
+  }
+  if (module.encounterKind === "policy_gate") {
+    const checks = module.policyChecks ?? []
+    return {
+      kind: "pixelquest-policy-gate",
+      minAllowed: checks.filter((check) => check.type === "allowed").length,
+      maxPolicyLeaks: 0,
+    }
+  }
+  return {
+    kind: "pixelquest-token-bucket",
+    minGoodAdmits: TOKEN_BUCKET_CONTRACT.minGoodAdmits,
+    maxAbusiveAdmitted: TOKEN_BUCKET_CONTRACT.maxAbusiveAdmitted,
+    maxObservedRateMultiplier: TOKEN_BUCKET_CONTRACT.maxObservedRateMultiplier,
   }
 }
 

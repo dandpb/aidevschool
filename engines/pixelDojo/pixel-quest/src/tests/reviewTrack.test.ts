@@ -33,6 +33,7 @@ function makeEvidence(pass: boolean, unitId: string): PixelQuestEvidenceRecord {
     ts: "2026-06-11T12:00:00.000Z",
     pass,
     metrics: {
+      kind: "pixelquest-token-bucket",
       target_rate: 5,
       observed_admit_rate: 0.5,
       max_burst_1s: 5,

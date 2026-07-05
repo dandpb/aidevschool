@@ -39,7 +39,11 @@ describe("token bucket encounter", () => {
 
     expect(state.complete).toBe(true)
     expect(state.evidence?.pass).toBe(false)
-    expect(state.evidence?.metrics.abusive_admitted).toBeGreaterThan(0)
+    const metrics = state.evidence?.metrics
+    expect(metrics?.kind).toBe("pixelquest-token-bucket")
+    if (metrics?.kind === "pixelquest-token-bucket") {
+      expect(metrics.abusive_admitted).toBeGreaterThan(0)
+    }
   })
 })
 

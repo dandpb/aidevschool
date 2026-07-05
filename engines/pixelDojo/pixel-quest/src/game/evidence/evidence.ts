@@ -1,5 +1,6 @@
 import type {
   PixelQuestCurriculumContext,
+  PixelQuestEvidenceMetrics,
   PixelQuestEvidenceRecord,
   PixelQuestReviewContext,
 } from "./types"
@@ -54,17 +55,7 @@ export function validateEvidenceRecord(raw: unknown): PixelQuestEvidenceRecord {
     game: "PixelDojo Quest",
     ts,
     pass,
-    metrics: {
-      target_rate: readNumber(metrics, "target_rate"),
-      observed_admit_rate: readNumber(metrics, "observed_admit_rate"),
-      max_burst_1s: readNumber(metrics, "max_burst_1s"),
-      good_admits: readNumber(metrics, "good_admits"),
-      legit_rejected: readNumber(metrics, "legit_rejected"),
-      abusive_admitted: readNumber(metrics, "abusive_admitted"),
-      abusive_rejected: readNumber(metrics, "abusive_rejected"),
-      heat_peak: readNumber(metrics, "heat_peak"),
-      overheated: readBoolean(metrics, "overheated"),
-    },
+    metrics: readMetrics(metrics),
   }
   const reviewContext = readReviewContext(raw["review_context"])
   const curriculumContext = readCurriculumContext(raw["curriculum_context"])
@@ -72,6 +63,74 @@ export function validateEvidenceRecord(raw: unknown): PixelQuestEvidenceRecord {
     ...evidenceRecord,
     ...(reviewContext === undefined ? {} : { review_context: reviewContext }),
     ...(curriculumContext === undefined ? {} : { curriculum_context: curriculumContext }),
+  }
+}
+
+function readMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  const kind = source["kind"]
+  if (kind === "pixelquest-token-bucket") {
+    return readTokenBucketMetrics(source)
+  }
+  if (kind === "pixelquest-route-health") {
+    return readRouteHealthMetrics(source)
+  }
+  if (kind === "pixelquest-policy-gate") {
+    return readPolicyGateMetrics(source)
+  }
+  if (kind === "pixelquest-sequence-flow") {
+    return readSequenceMetrics(source)
+  }
+  throw new EvidenceValidationError("evidence.metrics.kind must be a known evidence kind")
+}
+
+function readTokenBucketMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  return {
+    kind: "pixelquest-token-bucket",
+    target_rate: readNumber(source, "target_rate"),
+    observed_admit_rate: readNumber(source, "observed_admit_rate"),
+    max_burst_1s: readNumber(source, "max_burst_1s"),
+    good_admits: readNumber(source, "good_admits"),
+    legit_rejected: readNumber(source, "legit_rejected"),
+    abusive_admitted: readNumber(source, "abusive_admitted"),
+    abusive_rejected: readNumber(source, "abusive_rejected"),
+    heat_peak: readNumber(source, "heat_peak"),
+    overheated: readBoolean(source, "overheated"),
+  }
+}
+
+function readRouteHealthMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  return {
+    kind: "pixelquest-route-health",
+    routed: readNumber(source, "routed"),
+    isolated: readNumber(source, "isolated"),
+    bad_routes: readNumber(source, "bad_routes"),
+    good_rejected: readNumber(source, "good_rejected"),
+    heat_peak: readNumber(source, "heat_peak"),
+    overheated: readBoolean(source, "overheated"),
+  }
+}
+
+function readPolicyGateMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  return {
+    kind: "pixelquest-policy-gate",
+    allowed: readNumber(source, "allowed"),
+    denied: readNumber(source, "denied"),
+    policy_leaks: readNumber(source, "policy_leaks"),
+    false_denies: readNumber(source, "false_denies"),
+    heat_peak: readNumber(source, "heat_peak"),
+    overheated: readBoolean(source, "overheated"),
+  }
+}
+
+function readSequenceMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  return {
+    kind: "pixelquest-sequence-flow",
+    advanced: readNumber(source, "advanced"),
+    held: readNumber(source, "held"),
+    skipped_required: readNumber(source, "skipped_required"),
+    guards_missed: readNumber(source, "guards_missed"),
+    heat_peak: readNumber(source, "heat_peak"),
+    overheated: readBoolean(source, "overheated"),
   }
 }
 
@@ -129,8 +188,10 @@ function readReviewContext(raw: unknown): PixelQuestReviewContext | undefined {
 
 function readNumber(source: Record<string, unknown>, key: string): number {
   const value = source[key]
-  if (typeof value !== "number" || !Number.isFinite(value)) {
-    throw new EvidenceValidationError(`evidence.metrics.${key} must be a finite number`)
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
+    throw new EvidenceValidationError(
+      `evidence.metrics.${key} must be a finite, non-negative number`,
+    )
   }
   return value
 }

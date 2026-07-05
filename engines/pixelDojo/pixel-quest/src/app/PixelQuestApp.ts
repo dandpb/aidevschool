@@ -1,13 +1,16 @@
 import { curriculumUnitCount, firstCurriculumRegionId } from "../content/curriculumPack"
 import { loadCorePack } from "../content/loadCorePack"
 import type { RegionNpc } from "../content/types"
+import type { EncounterAction } from "../game/encounters/encounterCore"
+import type { PolicyGateEncounterState } from "../game/encounters/policyGate"
 import {
   applyEncounterAction,
   autoPassEncounter,
   type EncounterState,
+  isPolicyGateState,
+  isRouteHealthState,
 } from "../game/encounters/registry"
-import type { EncounterAction } from "../game/encounters/tokenBucket"
-import { validateEvidenceRecord } from "../game/evidence/evidence"
+import { emitEvidence } from "../game/evidence/emitter"
 import type { PixelQuestEvidenceRecord } from "../game/evidence/types"
 import type { InputAction } from "../game/input/actions"
 import { actionFromKey } from "../game/input/actions"
@@ -15,6 +18,8 @@ import { attachReviewContext } from "../game/review/reviewTrack"
 import type { WorldState } from "../game/simulation/types"
 import {
   createWorld,
+  enterAuthGateDuel,
+  enterCircuitBreakerDuel,
   enterDuel,
   enterJournal,
   enterPractice,
@@ -169,7 +174,19 @@ export class PixelQuestApp {
       return
     }
     this.activeEncounter = encounter
-    this.world = enterDuel(this.world)
+    const isCircuitBreaker = encounter.definition.kind === "route_health"
+    const isAuthGate = encounter.definition.kind === "policy_gate"
+    this.world = isCircuitBreaker
+      ? enterCircuitBreakerDuel(this.world)
+      : isAuthGate
+        ? enterAuthGateDuel(this.world)
+        : enterDuel(this.world)
+    if (isCircuitBreaker && isRouteHealthState(encounter)) {
+      this.renderer.setCircuitBreakerEncounter(encounter)
+    }
+    if (isAuthGate && isPolicyGateState(encounter)) {
+      this.renderer.setAuthGateEncounter(encounter)
+    }
     this.renderEncounter()
   }
 
@@ -178,6 +195,18 @@ export class PixelQuestApp {
       return
     }
     this.activeEncounter = applyEncounterAction(this.activeEncounter, action, new Date())
+    if (this.world.mode === "circuit-breaker") {
+      const current = this.activeEncounter
+      if (isRouteHealthState(current)) {
+        this.renderer.setCircuitBreakerEncounter(current)
+      }
+    }
+    if (this.world.mode === "auth-gate") {
+      const current = this.activeEncounter
+      if (isPolicyGateState(current)) {
+        this.renderer.setAuthGateEncounter(current)
+      }
+    }
     const evidence = this.activeEncounter.evidence
     if (evidence !== undefined) {
       this.world = recordEvidence(this.world, this.publishEvidence(evidence))
@@ -200,6 +229,12 @@ export class PixelQuestApp {
   closePanel(): void {
     this.activeNpc = undefined
     this.activeEncounter = undefined
+    if (this.world.mode === "circuit-breaker") {
+      this.renderer.setCircuitBreakerEncounter(undefined)
+    }
+    if (this.world.mode === "auth-gate") {
+      this.renderer.setAuthGateEncounter(undefined)
+    }
     this.world =
       this.world.mode === "skill-orbit" ? exitSkillOrbit(this.world) : enterWorld(this.world)
     this.render()
@@ -253,11 +288,9 @@ export class PixelQuestApp {
     this.render()
   }
 
+  // Single emission point: attach the review projection, then hand off to the
+  // typed emitter (validate + append to window channel + EVIDENCE console line).
   private publishEvidence(evidence: PixelQuestEvidenceRecord): PixelQuestEvidenceRecord {
-    const validEvidence = validateEvidenceRecord(
-      attachReviewContext(evidence, this.world.progress.reviewTrack),
-    )
-    window.__pixelQuestEvidence = validEvidence
-    return validEvidence
+    return emitEvidence(attachReviewContext(evidence, this.world.progress.reviewTrack))
   }
 }

@@ -99,6 +99,22 @@ export function enterDuel(world: WorldState): WorldState {
   return setPhase(setMode(world, "encounter"), "duel")
 }
 
+// The circuit-breaker duel uses the same duel phase as a regular encounter but
+// projects the route_health state through the 3D CircuitBreakerScene instead of
+// the 2.5D world. Phase "duel" keeps the HUD, review-track and evidence flow
+// identical — only the renderer dispatch differs (see WorldRenderer.sync).
+export function enterCircuitBreakerDuel(world: WorldState): WorldState {
+  return setPhase(setMode(world, "circuit-breaker"), "duel")
+}
+
+// The auth-gate duel uses the same duel phase as a regular encounter but
+// projects the policy_gate state through the 3D PolicyGateScene instead of the
+// 2.5D world. Phase "duel" keeps the HUD, review-track and evidence flow
+// identical — only the renderer dispatch differs (see WorldRenderer.sync).
+export function enterAuthGateDuel(world: WorldState): WorldState {
+  return setPhase(setMode(world, "auth-gate"), "duel")
+}
+
 export function enterJournal(world: WorldState): WorldState {
   return setPhase(setMode(world, "journal"), "review")
 }

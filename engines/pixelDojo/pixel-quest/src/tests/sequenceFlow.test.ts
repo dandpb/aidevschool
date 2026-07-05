@@ -22,9 +22,10 @@ describe("sequence flow encounter", () => {
       encounter_id: "encounter-agent-quest-01",
       pass: true,
       metrics: {
-        good_admits: 5,
-        abusive_admitted: 0,
-        legit_rejected: 0,
+        kind: "pixelquest-sequence-flow",
+        advanced: 5,
+        guards_missed: 0,
+        skipped_required: 0,
       },
       curriculum_context: {
         concept: "Orquestracao agentica para provar robustez de token bucket",
@@ -51,9 +52,10 @@ describe("sequence flow encounter", () => {
       project: "02_key_value_store",
       pass: true,
       metrics: {
-        good_admits: 3,
-        abusive_admitted: 0,
-        legit_rejected: 0,
+        kind: "pixelquest-sequence-flow",
+        advanced: 3,
+        guards_missed: 0,
+        skipped_required: 0,
       },
       curriculum_context: {
         mechanic: "TTL Cache",
@@ -73,7 +75,11 @@ describe("sequence flow encounter", () => {
 
     expect(state.complete).toBe(true)
     expect(state.evidence?.pass).toBe(false)
-    expect(state.evidence?.metrics.abusive_admitted).toBeGreaterThan(0)
+    const metrics = state.evidence?.metrics
+    expect(metrics?.kind).toBe("pixelquest-sequence-flow")
+    if (metrics?.kind === "pixelquest-sequence-flow") {
+      expect(metrics.guards_missed).toBeGreaterThan(0)
+    }
   })
 })
 

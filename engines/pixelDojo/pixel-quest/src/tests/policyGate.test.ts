@@ -13,8 +13,12 @@ describe("policy gate encounters", () => {
 
     expect(state.complete).toBe(true)
     expect(state.evidence?.pass).toBe(true)
-    expect(state.evidence?.metrics.good_admits).toBe(3)
-    expect(state.evidence?.metrics.abusive_admitted).toBe(0)
+    const metrics = state.evidence?.metrics
+    expect(metrics?.kind).toBe("pixelquest-policy-gate")
+    if (metrics?.kind === "pixelquest-policy-gate") {
+      expect(metrics.allowed).toBe(3)
+      expect(metrics.policy_leaks).toBe(0)
+    }
     expect(state.evidence?.curriculum_context).toMatchObject({
       mechanic: "Auth Gate",
       accepted_signal: "token autorizado",
@@ -31,8 +35,12 @@ describe("policy gate encounters", () => {
     }
 
     expect(state.evidence?.pass).toBe(false)
-    expect(state.evidence?.metrics.abusive_admitted).toBe(1)
-    expect(state.evidence?.metrics.overheated).toBe(true)
+    const metrics = state.evidence?.metrics
+    expect(metrics?.kind).toBe("pixelquest-policy-gate")
+    if (metrics?.kind === "pixelquest-policy-gate") {
+      expect(metrics.policy_leaks).toBe(1)
+      expect(metrics.overheated).toBe(true)
+    }
   })
 })
 
