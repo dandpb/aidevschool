@@ -7,15 +7,18 @@
 - **cycle_id**: 2026-06-04-01-rate-limiter
 - **current_project**: `curriculum/01_rate_limiter`
 - **complexity_level**: 2 (intermediário — concorrência + gestão de memória)
-- **phase**: review-done
-- **awaiting**: `benchmarker`
+- **phase**: benchmark-done
+- **awaiting**: `optimizer`
 - **agents**:
   - `dev-node`: done (cobertura ~91.86%, 55 testes passados)
   - `dev-go`: done (cobertura ~85.9%, ratelimit green)
   - `dev-rust`: done (14 Rust unit tests + 6 integration tests green)
   - `reviewer`: done (21 issues: 0 Critical / 8 Major / 9 Minor / 4 Educational; 7 categorias
     cobertas; ver `curriculum/01_rate_limiter/docs/{code_review,learning_notes,quiz}.md`)
-  - `benchmarker` / `optimizer`: idle
+  - `benchmarker`: done (Node.js N=10, harness nativo sem k6; Go/Rust não executados — toolchain
+    indisponível no sandbox, ver `curriculum/01_rate_limiter/docs/benchmark_results.md` §1.3;
+    verifier tolerance re-check PASS: RPS dev 4.38%, latência avg dev 5.07%, ambos dentro de ±20%)
+  - `optimizer`: idle
 - **notas**:
   - Implementações polyglot em Go, Rust e Node.js/TypeScript validadas com sucesso pelos respectivos test suites.
   - Review re-derivou achados contra o código atual (não confiou nos artefatos pré-existentes do
@@ -26,6 +29,14 @@
   - Go/Rust não puderam ser re-executados neste sandbox (toolchain indisponível); revisados
     estaticamente. `npm audit`/`cargo audit`/`govulncheck` não executados (sem rede/toolchain) —
     lacuna reportada explicitamente em `code_review.md` §7, não omitida.
+  - Benchmark (fase atual): mesmo sandbox sem rede para toolchains — tentativa real de instalação
+    de go/cargo/k6 falhou (proxy allowlist bloqueia `ports.ubuntu.com`, `go.dev`,
+    `static.rust-lang.org`, `dl.k6.io`; binário Rust pré-buildado no repo é macOS Mach-O, não roda
+    no sandbox Linux). Rodado N=10 real só para Node.js (autocannon como substituto do k6, 100
+    conexões × 25s), RPS médio 18387 (CV 5.6%), p50 4.3ms (CV 11.2%), RSS pico 113.7MB (CV 0.75%);
+    p95/p99 marcados como inconclusivos (CV 16-18%, acima do limiar de 15%). Nenhum vencedor
+    cross-language declarado — só há dado real de 1 das 3 linguagens. Detalhes completos e
+    caveats em `curriculum/01_rate_limiter/docs/benchmark_results.md`.
 - **blockers**: []
 
 ## Transições
