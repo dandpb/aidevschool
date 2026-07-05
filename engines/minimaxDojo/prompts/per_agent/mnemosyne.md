@@ -133,7 +133,7 @@ objetivo: ...
 
 ```yaml
 # submission.md (Mestre → PROMĘTOR)
-para: promotor
+para: prometor
 unit_id: U-NNN
 codigo: <caminho>
 testes: <caminho>

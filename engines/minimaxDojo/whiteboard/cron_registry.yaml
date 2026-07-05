@@ -58,10 +58,10 @@ crons:
     ultima_execucao: null
     ativo: true
 
-  - id: promotor.audit
+  - id: prometor.audit
     frequencia: "por unidade"
     modo: pro
-    dono: promotor
+    dono: prometor
     sessao: fresh
     output: whiteboard/handoffs/U-NNN.verdict.md
     ultima_execucao: null

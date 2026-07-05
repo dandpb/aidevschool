@@ -2,7 +2,7 @@
 
 > **Verifier adversarial efêmero** — parte do ZERO, mandato de refutação. Portão empírico obrigatório.
 
-**System prompt:** [`../../prompts/per_agent/promotor.md`](../../prompts/per_agent/promotor.md)
+**System prompt:** [`../../prompts/per_agent/prometor.md`](../../prompts/per_agent/prometor.md)
 
 **Quando invocar:**
 - Toda submissão (avaliação obrigatória antes de `DOMINADO`)

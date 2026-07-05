@@ -20,10 +20,18 @@ Comece com `[AGENT: Tester]`. Sua resposta final é o retorno ao orquestrador.
 - Escrever: `curriculum/{NN}/docs/benchmark_results.md` + brutos em `benchmarks/results/{go,rust,node}/`.
 
 ## Ferramentas
+- **Harness nativo (default, sem Docker):** `curriculum/_shared/benchmarks/native_runner.sh
+  <project_dir> <lang> <port> <k6_script>` — 1 run por invocação, JSON no stdout (você agrega);
+  workload genérico em `curriculum/_shared/benchmarks/generic_http_workload.js`. Ver
+  `/devschool-benchmark` para o protocolo N≥3 e os paths dos resultados.
 - k6 (`/opt/homebrew/bin/k6` — adicione ao PATH se preciso). Fallbacks: `autocannon`, `ab`.
-- `tokei`/`cloc`/`wc -l` para LoC. `docker stats --no-stream` para CPU/RAM.
+- `tokei`/`cloc`/`wc -l` para LoC. `docker stats --no-stream` para CPU/RAM (só no modo Docker).
 
 ## Workflow
+0. **Sem Docker disponível (default neste ambiente):** pule imagens/containers e use o harness
+   nativo — N≥3 invocações por linguagem (ports go=28080, node=28081, rust=28082), 1 JSON bruto por
+   run em `benchmarks/results/native/{lang}/run-{i}.json`; registre "nativo em macOS" na metodologia.
+   Os passos 1–2 abaixo valem apenas quando houver Docker.
 1. Build das 3 imagens (`docker build`), suba os containers (um por vez por cenário, evite contenção).
 2. Smoke test curto (10s, 5 VUs) antes dos cenários reais; corrija mismatch de port/protocolo.
 3. Escreva os 4 cenários em `benchmarks/scenarios/` lendo `TARGET_PORT` de `__ENV`:
@@ -40,7 +48,8 @@ Comece com `[AGENT: Tester]`. Sua resposta final é o retorno ao orquestrador.
 
 ## Honestidade (regras)
 - N≥3, reporte **mediana + desvio**. Não declare vencedor em dado ruidoso.
-- macOS/Docker Desktop faz throttling de CPU — ordering relativo vale, números absolutos não.
+- macOS/Docker Desktop faz throttling de CPU; no modo nativo a máquina é compartilhada (thermal +
+  processos de fundo) — em ambos, ordering relativo vale, números absolutos não.
 - **Não** declare vencedor em diferença < 10% E p > 0.05. Warmup antes de medir; logs verbosos off.
 - Ao terminar: `learner/pipeline_status.md` → `phase: benchmark-done, awaiting: optimization`; escreva
   `deliverable-benchmark.md` (números headline, vencedor por métrica, top 3 recomendações).

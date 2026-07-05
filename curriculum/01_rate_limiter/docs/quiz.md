@@ -230,7 +230,7 @@ and the `[RUST-EDU-002]` note in `code_review.md`.
 
 ---
 
-## Grading rubric (for the Sonda / Promotor gate)
+## Grading rubric (for the Sonda / Prometor gate)
 
 | Q | Pts | Pass = | Borderline = | Fail = |
 |---|---|---|---|---|

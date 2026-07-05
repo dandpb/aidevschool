@@ -2,7 +2,7 @@
 id: aluno-001
 learner_id: daniel-barreto
 derived_from: ../../learner/learning_state.yaml
-updated: '2026-07-02'
+updated: '2026-07-05'
 agente_owner: mnemosyne
 ---
 
@@ -15,6 +15,6 @@ agente_owner: mnemosyne
 - linguagem_foco: TypeScript
 - tempo_semanal: 5h
 - nivel_autodeclado: intermediario
-- unidade_ativa: U17-search-engine
+- unidade_ativa: U0-sonda-rate-limiter-robustness
 
 *Ver [`docs/05_memory_system.md`](../../docs/05_memory_system.md) para o schema completo.*

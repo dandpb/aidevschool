@@ -36,7 +36,7 @@
 | 5 | MESTRE-CONTEÚDO | [prompts/per_agent/mestre_conteudo.md](prompts/per_agent/mestre_conteudo.md) |
 | 6 | SÓCRATES | [prompts/per_agent/socrates.md](prompts/per_agent/socrates.md) |
 | 7 | MNEME | [prompts/per_agent/mneme.md](prompts/per_agent/mneme.md) |
-| 8 | PROMĘTOR | [prompts/per_agent/promotor.md](prompts/per_agent/promotor.md) |
+| 8 | PROMĘTOR | [prompts/per_agent/prometor.md](prompts/per_agent/prometor.md) |
 | 9 | CRÍTICO | [prompts/per_agent/critico.md](prompts/per_agent/critico.md) |
 | 10 | GALILEU | [prompts/per_agent/galileu.md](prompts/per_agent/galileu.md) |
 | 11 | ATENA | [prompts/per_agent/atena.md](prompts/per_agent/atena.md) |

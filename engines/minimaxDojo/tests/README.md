@@ -23,6 +23,6 @@ python3 -m unittest discover -s engines/minimaxDojo/tests -t .
 ```
 
 > Se você está procurando:
-> - **Como os testes do aluno são rodados** → `prompts/per_agent/promotor.md` (PROMĘTOR)
+> - **Como os testes do aluno são rodados** → `prompts/per_agent/prometor.md` (PROMĘTOR)
 > - **DoD por unidade** → `docs/03_robustness_trail.md`
 > - **Catálogo de ferramentas de teste** → `docs/04_empirical_gates.md` § 7

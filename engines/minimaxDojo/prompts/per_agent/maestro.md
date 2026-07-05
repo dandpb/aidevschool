@@ -100,7 +100,7 @@ contexto_aluno:
 ### 7.2 → PROMĘTOR
 
 ```yaml
-para: promotor
+para: prometor
 unit_id: U-NNN
 submission: <caminho>
 dod: <copia do DoD.md>

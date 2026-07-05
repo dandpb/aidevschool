@@ -21,7 +21,7 @@
 ```
 para: atena
 unit_id: U-NNN
-verdict_promotor: <caminho>
+verdict_prometor: <caminho>
 review_critico: <caminho>
 reflexao_aluno: <texto>
 eventos_recentes: [...]
