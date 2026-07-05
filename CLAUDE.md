@@ -12,9 +12,11 @@
 aidevschool/                 # ECOSSISTEMA
 ├── engines/                 # aplicações (motores) — cada uma um projeto separado
 │   ├── miniMaxEvolutionEngine/   # motor no Claude Code: .claude/ + CLAUDE.md (loop 5 fases + verifier + gate)
-│   ├── minimaxDojo/              # tutoring-core (14 agentes)
-│   ├── codexDojo/                # app user-facing (pnpm)
-│   └── pixelDojo/                # teaching-game engine (8-bit arcade games que emitem evidência executável)
+│   ├── minimaxDojo/              # tutoring-core (14 agentes; spec layer + state machine Python testada)
+│   ├── codexDojo/                # app user-facing (pnpm; dashboard read-only do learner state)
+│   ├── pixelDojo/                # teaching-game engine (arcade 8-bit emite evidência; verifier/ Python faz o gate → units_log)
+│   ├── voxelDojo/                # simulações 3D didáticas (piloto game-10-hash-ring, em construção)
+│   └── openclaw/                 # runner contínuo file-based + Hermes bus (modo simulate)
 ├── docs/design/polyglot-arena/   # design archive (proposal-stage, demoted de engines/polyglotEvolutionArena/ em 2026-06-21)
 ├── curriculum/              # COMPARTILHADO: desafios + catalog.md
 ├── learner/                 # COMPARTILHADO: jornada do aprendiz (state, profile, pitfalls, journal, pipeline_status)
@@ -34,6 +36,11 @@ mantêm plataformas legadas funcionando.
   skill `agora-continuum`, hook de briefing) e o `CLAUDE.md` detalhado do orquestrador. O motor
   acessa o substrato compartilhado via symlinks internos (`curriculum/`, `learner/`, `docs/`, `.mavis/`).
 - **Para o app codexDojo:** trabalhe em `engines/codexDojo/` (`pnpm run lint|test|build`).
+- **Para o runner contínuo openclaw:** `python3 -m engines.openclaw --project 01_rate_limiter --mode simulate`
+  (eventos Hermes em `.mavis/hermes/`; testes: `python3 -m pytest engines/openclaw/tests/`).
+- **Para fechar um gate de aprendizado:** o jogo (pixelDojo/voxelDojo) emite evidência; o verificador
+  decide: `python3 -m engines.pixelDojo.verifier` → depois `python3 -m learner.substrate` (regenera
+  views derivadas: `.mavis/`, dashboard do codexDojo, whiteboard do minimaxDojo).
 
 ## Regras de ouro (ecossistema)
 

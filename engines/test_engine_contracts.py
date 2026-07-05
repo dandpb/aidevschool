@@ -97,5 +97,99 @@ class TestPixelDojoContract(unittest.TestCase):
         self.assertFalse((self.engine / "learner").exists())
 
 
+class TestCodexDojoContract(unittest.TestCase):
+    """codexDojo is the user-facing pnpm dashboard: a read-only view of the shared
+    learner state. It stays a self-contained Node app under engines/codexDojo/."""
+
+    engine = ROOT / "engines" / "codexDojo"
+
+    def test_is_a_pnpm_app_with_lint_test_build(self):
+        package = (self.engine / "package.json").read_text(encoding="utf-8")
+        for script in ('"lint"', '"test"', '"build"'):
+            self.assertIn(script, package, f"package.json must keep a {script} script")
+        self.assertTrue((self.engine / "src").is_dir(), "src/ must exist")
+
+    def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
+        self.assertFalse((self.engine / "curriculum").exists())
+        self.assertFalse((self.engine / "learner").exists())
+
+
+class TestMinimaxDojoContract(unittest.TestCase):
+    """minimaxDojo is the tutoring core: a tested Python reference implementation
+    (core/ + tests/) with numeric thresholds single-sourced in config/learner.yaml."""
+
+    engine = ROOT / "engines" / "minimaxDojo"
+
+    def test_core_and_tests_exist(self):
+        self.assertTrue((self.engine / "core").is_dir(), "core/ must exist")
+        self.assertTrue((self.engine / "tests").is_dir(), "tests/ must exist")
+        self.assertTrue(
+            any((self.engine / "tests").glob("test_*.py")),
+            "tests/ must keep contract tests for the state machine",
+        )
+
+    def test_thresholds_stay_single_sourced_in_config(self):
+        self.assertTrue(
+            (self.engine / "config" / "learner.yaml").is_file(),
+            "config/learner.yaml is the single source for tutor-core numeric thresholds",
+        )
+
+    def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
+        self.assertFalse((self.engine / "curriculum").exists())
+        self.assertFalse((self.engine / "learner").exists())
+
+
+class TestOpenclawContract(unittest.TestCase):
+    """openclaw is the file-based continuous-runner tracer bullet: Hermes bus +
+    scheduler + adapters, simulate mode only, producer/verifier separation."""
+
+    engine = ROOT / "engines" / "openclaw"
+
+    def test_runner_hermes_and_tests_exist(self):
+        self.assertTrue((self.engine / "runner" / "scheduler.py").is_file())
+        self.assertTrue((self.engine / "runner" / "adapters").is_dir())
+        self.assertTrue((self.engine / "hermes" / "bus.py").is_file())
+        self.assertTrue((self.engine / "tests").is_dir())
+
+    def test_cli_stays_simulate_only(self):
+        """Real AI dispatch is an explicit future override, never a silent default."""
+        main = (self.engine / "__main__.py").read_text(encoding="utf-8")
+        self.assertIn('choices=["simulate"]', main)
+        self.assertIn("NotImplementedError", main)
+
+    def test_playbook_preserves_producer_verifier_separation(self):
+        agents = (self.engine / "AGENTS.md").read_text(encoding="utf-8")
+        verifier = (self.engine / "runner" / "adapters" / "verifier.py").read_text(encoding="utf-8")
+
+        self.assertIn("The verifier adapter never shares state with a producer adapter", agents)
+        self.assertIn("never shares producer state", verifier)
+
+    def test_bus_state_lives_under_mavis_hermes(self):
+        bus = (self.engine / "hermes" / "bus.py").read_text(encoding="utf-8")
+        self.assertIn('".mavis" / "hermes"', bus)
+
+    def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
+        self.assertFalse((self.engine / "curriculum").exists())
+        self.assertFalse((self.engine / "learner").exists())
+
+
+class TestVoxelDojoContract(unittest.TestCase):
+    """voxelDojo is the 3D teaching-simulation engine. Its pilot
+    (game-10-hash-ring) is under active construction, so this contract pins only
+    the stable engine surface: the root docs that define the engine's rules."""
+
+    engine = ROOT / "engines" / "voxelDojo"
+
+    def test_stable_engine_surface_exists(self):
+        self.assertTrue(self.engine.is_dir(), "engines/voxelDojo/ must exist")
+        self.assertTrue((self.engine / "README.md").is_file())
+        self.assertTrue((self.engine / "PLAN.md").is_file())
+        self.assertTrue((self.engine / "docs").is_dir())
+
+    def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
+        self.assertFalse((self.engine / "curriculum").exists())
+        self.assertFalse((self.engine / "learner").exists())
+
+
 if __name__ == "__main__":
     unittest.main()

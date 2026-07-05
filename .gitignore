@@ -85,6 +85,13 @@ codexdojo-dashboard.png
 #   git rm --cached graphify-out/aidevschool-callflow.html graphify-out/GRAPH_REPORT.md codexdojo-dashboard.png
 #   git commit -m "chore: stop tracking generated artifacts (TECH_DEBT_AUDIT D11a)"
 
+# --- Added 2026-07-05 (TECH_DEBT_AUDIT E12): stop committing screenshots ---
+# Playwright/design screenshots are regenerable (pnpm run smoke / dev-time captures);
+# keep them on disk, out of git. Untracked via `git rm --cached` on the same date.
+engines/codexDojo/*.png
+engines/codexDojo/shots/
+engines/pixelDojo/pixel-quest/shots/
+
 # --- Platform/session state (per AGENTS.md): never commit tool/machine state ---
 .commandcode/
 .compozy/agents/
