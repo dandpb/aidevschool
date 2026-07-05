@@ -30,8 +30,13 @@ export function mountCodexDojo(root: HTMLElement): void {
   let state: AppState = buildInitialState(firstAgent.id, firstStage.id, firstProject.id)
 
   const dispatch = (action: AppAction): void => {
-    state = reduceState(state, action)
-    render()
+    const nextState = reduceState(state, action)
+    // Performance optimization: prevent unnecessary DOM re-renders
+    // by checking state reference equality
+    if (nextState !== state) {
+      state = nextState
+      render()
+    }
   }
 
   const render = (): void => {

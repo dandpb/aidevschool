@@ -57,16 +57,34 @@ export function buildInitialState(
 export function reduceState(state: AppState, action: AppAction): AppState {
   switch (action.kind) {
     case "changeView":
+      if (state.view === action.view && state.copiedAgentId === null) return state
       return { ...state, view: action.view, copiedAgentId: null }
     case "selectAgent":
+      if (
+        state.selectedAgentId === action.agentId &&
+        state.view === "agents" &&
+        state.copiedAgentId === null
+      )
+        return state
       return { ...state, selectedAgentId: action.agentId, view: "agents", copiedAgentId: null }
     case "selectStage":
+      if (state.selectedStageId === action.stageId && state.view === "cycle") return state
       return { ...state, selectedStageId: action.stageId, view: "cycle" }
     case "selectProject":
+      if (state.selectedProjectId === action.projectId && state.view === "project") return state
       return { ...state, selectedProjectId: action.projectId, view: "project" }
-    case "advanceStage":
-      return { ...state, ...advanceCycle(state), view: "cycle" }
+    case "advanceStage": {
+      const nextCycle = advanceCycle(state)
+      if (
+        nextCycle.selectedStageId === state.selectedStageId &&
+        nextCycle.completedStageIds === state.completedStageIds &&
+        state.view === "cycle"
+      )
+        return state
+      return { ...state, ...nextCycle, view: "cycle" }
+    }
     case "setProjectFilter":
+      if (state.projectFilter === action.filter && state.view === "roadmap") return state
       return { ...state, projectFilter: action.filter, view: "roadmap" }
     case "selectLinuxApp":
       return { ...state, selectedLinuxAppId: action.appId, view: "linuxLab" }
@@ -75,6 +93,7 @@ export function reduceState(state: AppState, action: AppAction): AppState {
     case "runLinuxLab":
       return { ...state, linuxLabRunCount: state.linuxLabRunCount + 1, view: "linuxLab" }
     case "markCopied":
+      if (state.copiedAgentId === action.agentId) return state
       return { ...state, copiedAgentId: action.agentId }
     default:
       return assertNever(action)
