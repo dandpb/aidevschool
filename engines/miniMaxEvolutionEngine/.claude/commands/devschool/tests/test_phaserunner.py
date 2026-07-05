@@ -95,6 +95,63 @@ def test_implement_phase_is_parallel_with_gate() -> None:
     assert set(spec["producer"]) == {"dev-go", "dev-rust", "dev-node"}
 
 
+def test_review_command_is_runnable() -> None:
+    """Fase 3: pre-condition, artefacts, evidence rule, verifier gate, transition."""
+    _, body = parse_frontmatter_and_body(COMMANDS_DIR / "review.md")
+    for anchor in (
+        "code_review.md",
+        "learning_notes.md",
+        "quiz.md",
+        "impl-done",
+        "review-done",
+        "verifier",
+        "arquivo:linha",  # no claims without file:line evidence
+    ):
+        assert anchor in body, f"review.md must reference: {anchor}"
+    spec = extract_spec_block(body)
+    assert spec["pre_condition"] == "impl-done"
+    assert spec["next_status"] == "review-done"
+
+
+def test_benchmark_command_uses_native_harness() -> None:
+    """Fase 4: native no-Docker harness, N>=3 raw runs, median+stdev honesty."""
+    _, body = parse_frontmatter_and_body(COMMANDS_DIR / "benchmark.md")
+    for anchor in (
+        "native_runner.sh",
+        "N≥3",
+        "benchmarks/results/native/",
+        "benchmark_results.md",
+        "mediana",
+        "benchmark-done",
+    ):
+        assert anchor in body, f"benchmark.md must reference: {anchor}"
+    assert "docker build" not in body.lower(), (
+        "benchmark.md must not mandate Docker builds (native harness is the default)"
+    )
+    spec = extract_spec_block(body)
+    assert spec["pre_condition"] == "review-done"
+    assert spec["next_status"] == "benchmark-done"
+
+
+def test_optimize_command_closes_cycle() -> None:
+    """Fase 5: consumes review+benchmark evidence, re-measures, closes the cycle."""
+    _, body = parse_frontmatter_and_body(COMMANDS_DIR / "optimize.md")
+    for anchor in (
+        "evolution_report.md",
+        "code_review.md",
+        "benchmark_results.md",
+        "native_runner.sh",  # re-measure with the SAME harness
+        "N≥3",
+        "rejeitada",
+        "cycle-complete",
+        "/devschool-next",
+    ):
+        assert anchor in body, f"optimize.md must reference: {anchor}"
+    spec = extract_spec_block(body)
+    assert spec["pre_condition"] == "benchmark-done"
+    assert spec["next_status"] == "cycle-complete"
+
+
 def test_cycle_enumerates_all_phases() -> None:
     _, body = parse_frontmatter_and_body(COMMANDS_DIR / "cycle.md")
     for phase in ("spec", "impl", "review", "benchmark", "optimize"):
@@ -178,6 +235,9 @@ def main() -> int:
         test_phaserunner_interface,
         test_phase_commands_use_phaserunner,
         test_implement_phase_is_parallel_with_gate,
+        test_review_command_is_runnable,
+        test_benchmark_command_uses_native_harness,
+        test_optimize_command_closes_cycle,
         test_cycle_enumerates_all_phases,
         test_verify_references_phaserunner_discipline,
         test_no_inline_orchestration_duplication,

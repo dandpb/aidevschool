@@ -143,6 +143,10 @@ para diversidade tipo cross-model.
 - Builds e testes (go/cargo/npm) e `docker build/run` devem rodar em ambiente isolado. Em macOS,
   o Docker Desktop faz throttling de CPU — o `benchmarker` deve registrar isso como caveat e nunca
   declarar vencedor em diferença < 10% sob ruído.
+- **Sem Docker disponível**, a Fase 4 usa o harness nativo do substrato compartilhado
+  (`curriculum/_shared/benchmarks/native_runner.sh`, N≥3 runs por linguagem — ver
+  `/devschool-benchmark`); registre "nativo em macOS, máquina compartilhada" como caveat de
+  metodologia.
 - Não amplie permissões além do necessário. Rode `/fewer-permission-prompts` para criar um allowlist
   enxuto das chamadas read-only/build mais frequentes, se quiser menos prompts.
 
