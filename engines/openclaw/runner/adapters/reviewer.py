@@ -4,45 +4,34 @@ from __future__ import annotations
 
 from typing import Any
 
-from engines.openclaw.hermes.bus import Event, HermesBus
-from engines.openclaw.runner.adapters.base import AdapterResult, BaseAdapter
+from engines.openclaw import config as cfg
+from engines.openclaw.hermes.bus import Event
+from engines.openclaw.hermes.topics import Topic
+from engines.openclaw.runner.adapters.base import ProducerAdapter
 from engines.openclaw.runner.scheduler import PipelineStatus
 
 
-class ReviewerAdapter(BaseAdapter):
+class ReviewerAdapter(ProducerAdapter):
     """Reviewer validates implementations and emits the REVIEW_READY event."""
 
     name = "reviewer"
+    next_topic = Topic.REVIEW_READY.value
 
-    def handle(
-        self,
-        event: Event,
-        bus: HermesBus,
-        status: PipelineStatus,
-        **kwargs: Any,
-    ) -> dict[str, Any]:
-        impl_paths = event.payload.get("implementation_paths", [])
-        missing = [p for p in impl_paths if not self._artifact_exists(p)]
+    def _check_inputs(self, event: Event, status: PipelineStatus) -> str:
+        missing = self._missing(event.payload.get("implementation_paths", []))
         if missing:
-            return AdapterResult(
-                ok=False,
-                reason=f"Implementation paths missing: {missing}",
-            ).to_dict()
+            return f"Implementation paths missing: {missing}"
+        return ""
 
-        review_path = f"{status.current_project}/docs/code_review.md"
-        self._publish_next(
-            bus=bus,
-            event=event,
-            topic="dojo.review.ready",
-            artifact_path=review_path,
-            payload={
-                "findings_path": review_path,
-                "learning_notes_path": f"{status.current_project}/docs/learning_notes.md",
-                "quiz_path": f"{status.current_project}/docs/quiz.md",
-            },
-        )
-        return AdapterResult(
-            ok=True,
-            next_topic="dojo.review.ready",
-            reason="Reviewer validated implementations and emitted review.ready",
-        ).to_dict()
+    def _build_output(
+        self, event: Event, status: PipelineStatus
+    ) -> tuple[str, dict[str, Any]]:
+        review_path = cfg.code_review_path(status.current_project)
+        return review_path, {
+            "findings_path": review_path,
+            "learning_notes_path": f"{status.current_project}/docs/learning_notes.md",
+            "quiz_path": f"{status.current_project}/docs/quiz.md",
+        }
+
+    def _success_reason(self, event: Event, status: PipelineStatus) -> str:
+        return "Reviewer validated implementations and emitted review.ready"

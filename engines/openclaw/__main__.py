@@ -6,6 +6,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from engines.openclaw.errors import OpenclawError
 from engines.openclaw.hermes.bus import HermesBus
 from engines.openclaw.runner.adapters import (
     BenchmarkerAdapter,
@@ -71,19 +72,23 @@ def main(argv: list[str] | None = None) -> int:
     adapters = build_adapters(args.mode, root)
     scheduler = Scheduler(bus=bus, adapters=adapters)
 
-    if args.phase:
+    try:
+        if args.phase:
+            status = scheduler.read_status()
+            status.phase = Phase(args.phase)
+            status.current_project = args.project
+            scheduler.write_status(status)
+
         status = scheduler.read_status()
-        status.phase = Phase(args.phase)
-        status.current_project = args.project
-        scheduler.write_status(status)
+        print(f"OpenClaw runner starting: project={args.project} mode={args.mode}")
+        print(f"  current phase: {status.phase.value}")
+        print(f"  current project: {status.current_project}")
+        print()
 
-    status = scheduler.read_status()
-    print(f"OpenClaw runner starting: project={args.project} mode={args.mode}")
-    print(f"  current phase: {status.phase.value}")
-    print(f"  current project: {status.current_project}")
-    print()
-
-    results = scheduler.run(max_events=args.max_events)
+        results = scheduler.run(max_events=args.max_events)
+    except OpenclawError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 2
 
     for i, result in enumerate(results, 1):
         marker = "HALT" if result.halted else "STEP"

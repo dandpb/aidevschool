@@ -4,43 +4,35 @@ from __future__ import annotations
 
 from typing import Any
 
-from engines.openclaw.hermes.bus import Event, HermesBus
-from engines.openclaw.runner.adapters.base import AdapterResult, BaseAdapter
+from engines.openclaw import config as cfg
+from engines.openclaw.hermes.bus import Event
+from engines.openclaw.hermes.topics import Topic
+from engines.openclaw.runner.adapters.base import ProducerAdapter
 from engines.openclaw.runner.scheduler import PipelineStatus
 
 
-class BenchmarkerAdapter(BaseAdapter):
+class BenchmarkerAdapter(ProducerAdapter):
     """Benchmarker validates review artifacts and emits the METRICS_READY event."""
 
     name = "benchmarker"
+    next_topic = Topic.METRICS_READY.value
 
-    def handle(
-        self,
-        event: Event,
-        bus: HermesBus,
-        status: PipelineStatus,
-        **kwargs: Any,
-    ) -> dict[str, Any]:
-        findings_path = event.payload.get("findings_path", f"{status.current_project}/docs/code_review.md")
-        if not self._artifact_exists(findings_path):
-            return AdapterResult(
-                ok=False,
-                reason=f"Code review missing: {findings_path}",
-            ).to_dict()
-
-        benchmark_path = f"{status.current_project}/docs/benchmark_results.md"
-        self._publish_next(
-            bus=bus,
-            event=event,
-            topic="dojo.metrics.ready",
-            artifact_path=benchmark_path,
-            payload={
-                "scorecard_path": benchmark_path,
-                "benchmark_dir": f"{status.current_project}/benchmarks",
-            },
+    def _check_inputs(self, event: Event, status: PipelineStatus) -> str:
+        findings_path = event.payload.get(
+            "findings_path", cfg.code_review_path(status.current_project)
         )
-        return AdapterResult(
-            ok=True,
-            next_topic="dojo.metrics.ready",
-            reason="Benchmarker validated review and emitted metrics.ready",
-        ).to_dict()
+        if not self._artifact_exists(findings_path):
+            return f"Code review missing: {findings_path}"
+        return ""
+
+    def _build_output(
+        self, event: Event, status: PipelineStatus
+    ) -> tuple[str, dict[str, Any]]:
+        benchmark_path = cfg.benchmark_results_path(status.current_project)
+        return benchmark_path, {
+            "scorecard_path": benchmark_path,
+            "benchmark_dir": f"{status.current_project}/benchmarks",
+        }
+
+    def _success_reason(self, event: Event, status: PipelineStatus) -> str:
+        return "Benchmarker validated review and emitted metrics.ready"

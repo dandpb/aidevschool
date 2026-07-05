@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from engines.openclaw.config import DEFAULT_CONFIG
 from engines.openclaw.hermes.bus import Event, HermesBus
 from engines.openclaw.runner.adapters.base import AdapterResult, BaseAdapter
 from engines.openclaw.runner.scheduler import PipelineStatus
@@ -14,10 +15,13 @@ class VerifierAdapter(BaseAdapter):
 
     name = "verifier"
 
-    MIN_SPEC_SIZE = 100
-    MIN_REVIEW_SIZE = 100
-    MIN_BENCHMARK_SIZE = 50
-    MIN_EVOLUTION_SIZE = 100
+    # Size thresholds are defined (and documented) once in
+    # engines.openclaw.config; mirrored here as class attributes so tests
+    # and subclasses can still override per-instance.
+    MIN_SPEC_SIZE = DEFAULT_CONFIG.min_spec_size
+    MIN_REVIEW_SIZE = DEFAULT_CONFIG.min_review_size
+    MIN_BENCHMARK_SIZE = DEFAULT_CONFIG.min_benchmark_size
+    MIN_EVOLUTION_SIZE = DEFAULT_CONFIG.min_evolution_size
 
     def handle(
         self,

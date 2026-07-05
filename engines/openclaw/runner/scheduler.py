@@ -2,16 +2,21 @@
 
 from __future__ import annotations
 
-import json
 import re
 import time
 from dataclasses import dataclass, field
-from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
-import yaml
-
+from engines.openclaw import config as cfg
+from engines.openclaw._compat import StrEnum
+from engines.openclaw.errors import StateCorruptionError
+from engines.openclaw.fsio import (
+    atomic_write_text,
+    read_json_object,
+    read_yaml_mapping,
+    write_json_atomic,
+)
 from engines.openclaw.hermes.bus import Event, HermesBus
 from engines.openclaw.hermes.topics import Topic
 
@@ -85,21 +90,37 @@ class PipelineStatus:
 
 
 def _parse_status(path: Path = PIPELINE_STATUS) -> PipelineStatus:
-    text = path.read_text(encoding="utf-8") if path.exists() else ""
+    if not path.exists():
+        # Designed cold-start recovery: no status file means a fresh pipeline.
+        return PipelineStatus()
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise StateCorruptionError(
+            f"Cannot read pipeline status at {path}: {exc}"
+        ) from exc
     data: dict[str, Any] = {}
     for line in text.splitlines():
         match = re.match(r"-\s+\*\*(\w+)\*\*:\s+`?(.+?)`?\s*$", line)
         if match:
             key, value = match.groups()
             data[key] = value
-    return PipelineStatus(
-        cycle_id=data.get("cycle_id", ""),
-        current_project=data.get("current_project", ""),
-        complexity_level=int(data.get("complexity_level", "1").split()[0]),
-        phase=Phase(data.get("phase", "spec")),
-        awaiting=data.get("awaiting", ""),
-        blockers=[b.strip() for b in data.get("blockers", "[]").strip("[]").split(",") if b.strip()],
-    )
+    try:
+        return PipelineStatus(
+            cycle_id=data.get("cycle_id", ""),
+            current_project=data.get("current_project", ""),
+            complexity_level=int(data.get("complexity_level", "1").split()[0]),
+            phase=Phase(data.get("phase", "spec")),
+            awaiting=data.get("awaiting", ""),
+            blockers=[b.strip() for b in data.get("blockers", "[]").strip("[]").split(",") if b.strip()],
+        )
+    except (ValueError, IndexError) as exc:
+        raise StateCorruptionError(
+            f"Malformed pipeline status at {path}: {exc}. "
+            "Fix the '**phase**' / '**complexity_level**' lines "
+            "(valid phases: " + ", ".join(p.value for p in Phase) + ") "
+            "or delete the file to reset."
+        ) from exc
 
 
 def _write_status(status: PipelineStatus, path: Path = PIPELINE_STATUS) -> None:
@@ -124,14 +145,13 @@ def _write_status(status: PipelineStatus, path: Path = PIPELINE_STATUS) -> None:
 `spec` → `diagnostic` (learner attempt evaluated · sonda) → `impl` (3 langs green + verifier) →
 `review` → `benchmark` → `optimize` → `cycle-complete`
 """
-    path.write_text(text, encoding="utf-8")
+    atomic_write_text(path, text)
 
 
 def _load_learning_state(path: Path = LEARNING_STATE) -> dict[str, Any]:
     if not path.exists():
         return {}
-    with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+    return read_yaml_mapping(path, what="learning state")
 
 
 @dataclass
@@ -152,12 +172,14 @@ class Scheduler:
         status_path: Path | None = None,
         state_path: Path | None = None,
         scheduler_state_path: Path | None = None,
+        config: cfg.OpenclawConfig | None = None,
     ) -> None:
         self.bus = bus or HermesBus()
         self.adapters = adapters or {}
         self.status_path = status_path or PIPELINE_STATUS
         self.state_path = state_path or LEARNING_STATE
         self.scheduler_state_path = scheduler_state_path or SCHEDULER_STATE
+        self.config = config or cfg.DEFAULT_CONFIG
         self.scheduler_state_path.parent.mkdir(parents=True, exist_ok=True)
 
     def read_status(self) -> PipelineStatus:
@@ -168,11 +190,12 @@ class Scheduler:
 
     def _read_scheduler_state(self) -> dict[str, Any]:
         if not self.scheduler_state_path.exists():
+            # Designed recovery: missing state file means a fresh scheduler.
             return {}
-        return json.loads(self.scheduler_state_path.read_text(encoding="utf-8"))
+        return read_json_object(self.scheduler_state_path, what="scheduler state")
 
     def _write_scheduler_state(self, state: dict[str, Any]) -> None:
-        self.scheduler_state_path.write_text(json.dumps(state, indent=2), encoding="utf-8")
+        write_json_atomic(self.scheduler_state_path, state)
 
     def check_gate(self) -> tuple[bool, str]:
         state = _load_learning_state(self.state_path)
@@ -260,8 +283,14 @@ class Scheduler:
                 event=event.topic.value,
             )
 
-        result = producer.handle(event, self.bus, status)
-        self.bus.ack(event)
+        result, error = self._safe_dispatch(
+            lambda: producer.handle(event, self.bus, status),
+            role=f"Producer {rule.producer}",
+            event=event,
+            phase_after=status.phase,
+        )
+        if error is not None:
+            return error
 
         next_topic = result.get("next_topic")
         if next_topic is None:
@@ -308,12 +337,18 @@ class Scheduler:
             )
 
         event = events[0]
-        result = verifier.handle(event, self.bus, status, phase=rule.verifier)
-        self.bus.ack(event)
+        result, error = self._safe_dispatch(
+            lambda: verifier.handle(event, self.bus, status, phase=rule.verifier),
+            role="Verifier",
+            event=event,
+            phase_after=status.phase,
+        )
+        if error is not None:
+            return error
 
         if result.get("verdict") != "PASS":
             retry_count = self._increment_retry(topic.value)
-            retry_limit = 3
+            retry_limit = self.config.verifier_retry_limit
             if retry_count >= retry_limit:
                 status.blockers.append(f"{topic.value} verifier failed {retry_count}x")
                 self.write_status(status)
@@ -358,6 +393,40 @@ class Scheduler:
             event=topic.value,
         )
 
+    # Dispatch boundary: an adapter bug must halt the step with a clear
+    # reason, not crash the runner loop, so we deliberately catch broadly
+    # here (and only here). Returns (result_dict, error_step) — exactly one
+    # is non-None.
+    def _safe_dispatch(
+        self,
+        handle: Any,
+        *,
+        role: str,
+        event: Event,
+        phase_after: Phase,
+    ) -> tuple[dict[str, Any] | None, StepResult | None]:
+        try:
+            result = handle()
+            self.bus.ack(event)
+        except Exception as exc:
+            return None, StepResult(
+                halted=True,
+                reason=f"{role} failed with {type(exc).__name__}: {exc}",
+                phase_after=phase_after,
+                event=event.topic.value,
+            )
+        if not isinstance(result, dict):
+            return None, StepResult(
+                halted=True,
+                reason=(
+                    f"{role} returned {type(result).__name__} "
+                    "instead of an AdapterResult dict"
+                ),
+                phase_after=phase_after,
+                event=event.topic.value,
+            )
+        return result, None
+
     def _increment_retry(self, topic_value: str) -> int:
         sched_state = self._read_scheduler_state()
         retry_counts = sched_state.setdefault("retry_counts", {})
@@ -375,19 +444,11 @@ class Scheduler:
         return results
 
     def _artifact_path_for_topic(self, topic: Topic, status: PipelineStatus) -> str:
-        project = status.current_project or "curriculum/01_rate_limiter"
-        mapping = {
-            Topic.UNIT_SELECTED: project,
-            Topic.SPEC_READY: f"{project}/docs/spec.md",
-            Topic.IMPL_READY: f"{project}/go-impl",
-            Topic.REVIEW_READY: f"{project}/docs/code_review.md",
-            Topic.METRICS_READY: f"{project}/docs/benchmark_results.md",
-            Topic.MEMORY_UPDATED: "learner/journal.md",
-        }
-        return mapping.get(topic, project)
+        project = status.current_project or cfg.DEFAULT_PROJECT
+        return cfg.artifact_path_for_topic(topic, project)
 
     def _payload_for_topic(self, topic: Topic, status: PipelineStatus) -> dict[str, Any]:
-        project = status.current_project or "curriculum/01_rate_limiter"
+        project = status.current_project or cfg.DEFAULT_PROJECT
         payloads: dict[Topic, dict[str, Any]] = {
             Topic.UNIT_SELECTED: {
                 "unit_id": status.current_project,
@@ -395,21 +456,21 @@ class Scheduler:
                 "prerequisite_evidence": "catalog-verified",
             },
             Topic.SPEC_READY: {
-                "spec_path": f"{project}/docs/spec.md",
-                "adr_path": f"{project}/docs/adr.md",
+                "spec_path": cfg.spec_path(project),
+                "adr_path": cfg.adr_path(project),
             },
             Topic.IMPL_READY: {
-                "implementation_path": f"{project}/{{lang}}-impl",
+                "implementation_path": cfg.impl_path(project, "{lang}"),
                 "test_command": "run-tests",
             },
             Topic.REVIEW_READY: {
-                "findings_path": f"{project}/docs/code_review.md",
+                "findings_path": cfg.code_review_path(project),
             },
             Topic.METRICS_READY: {
-                "scorecard_path": f"{project}/docs/benchmark_results.md",
+                "scorecard_path": cfg.benchmark_results_path(project),
             },
             Topic.MEMORY_UPDATED: {
-                "profile_path": "learner/learning_state.yaml",
+                "profile_path": cfg.LEARNING_STATE_PATH,
                 "next_action": "cycle-complete",
             },
         }

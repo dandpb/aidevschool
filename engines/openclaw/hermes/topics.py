@@ -1,6 +1,6 @@
 """Canonical Hermes topics and payload schemas."""
 
-from enum import StrEnum
+from engines.openclaw._compat import StrEnum
 
 
 class Topic(StrEnum):

@@ -4,53 +4,41 @@ from __future__ import annotations
 
 from typing import Any
 
-from engines.openclaw.hermes.bus import Event, HermesBus
-from engines.openclaw.runner.adapters.base import AdapterResult, BaseAdapter
+from engines.openclaw import config as cfg
+from engines.openclaw.hermes.bus import Event
+from engines.openclaw.hermes.topics import Topic
+from engines.openclaw.runner.adapters.base import ProducerAdapter
 from engines.openclaw.runner.scheduler import PipelineStatus
 
 
-class DevAdapter(BaseAdapter):
+class DevAdapter(ProducerAdapter):
     """Dev adapter validates spec and emits the IMPL_READY event."""
 
     name = "dev"
+    next_topic = Topic.IMPL_READY.value
 
-    LANGUAGES = ("go", "rust", "node")
+    LANGUAGES = cfg.LANGUAGES
 
-    def handle(
-        self,
-        event: Event,
-        bus: HermesBus,
-        status: PipelineStatus,
-        **kwargs: Any,
-    ) -> dict[str, Any]:
-        spec_path = event.payload.get("spec_path", f"{status.current_project}/docs/spec.md")
+    def _impl_paths(self, status: PipelineStatus) -> list[str]:
+        return [cfg.impl_path(status.current_project, lang) for lang in self.LANGUAGES]
+
+    def _check_inputs(self, event: Event, status: PipelineStatus) -> str:
+        spec_path = event.payload.get("spec_path", cfg.spec_path(status.current_project))
         if not self._artifact_exists(spec_path):
-            return AdapterResult(
-                ok=False,
-                reason=f"Spec missing: {spec_path}",
-            ).to_dict()
-
-        project_path = status.current_project
-        impl_paths = [f"{project_path}/{lang}-impl" for lang in self.LANGUAGES]
-        missing = [p for p in impl_paths if not self._artifact_exists(p)]
+            return f"Spec missing: {spec_path}"
+        missing = self._missing(self._impl_paths(status))
         if missing:
-            return AdapterResult(
-                ok=False,
-                reason=f"Implementation directories missing: {missing}",
-            ).to_dict()
+            return f"Implementation directories missing: {missing}"
+        return ""
 
-        self._publish_next(
-            bus=bus,
-            event=event,
-            topic="dojo.impl.ready",
-            artifact_path=impl_paths[0],
-            payload={
-                "implementation_paths": impl_paths,
-                "test_command": "run-tests",
-            },
-        )
-        return AdapterResult(
-            ok=True,
-            next_topic="dojo.impl.ready",
-            reason=f"Dev validated spec and {len(self.LANGUAGES)} implementations",
-        ).to_dict()
+    def _build_output(
+        self, event: Event, status: PipelineStatus
+    ) -> tuple[str, dict[str, Any]]:
+        impl_paths = self._impl_paths(status)
+        return impl_paths[0], {
+            "implementation_paths": impl_paths,
+            "test_command": "run-tests",
+        }
+
+    def _success_reason(self, event: Event, status: PipelineStatus) -> str:
+        return f"Dev validated spec and {len(self.LANGUAGES)} implementations"

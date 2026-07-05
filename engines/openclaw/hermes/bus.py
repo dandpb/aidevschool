@@ -9,6 +9,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from engines.openclaw.errors import EventNotFoundError, OpenclawError, StateCorruptionError
+from engines.openclaw.fsio import atomic_write_text, read_json_object
 from engines.openclaw.hermes.topics import Topic
 
 
@@ -78,8 +80,24 @@ class HermesBus:
         self.inbox = self.root / "inbox"
         self.log = self.root / "log"
         self.conflicts = self.root / "conflicts"
-        for d in (self.outbox, self.inbox, self.log, self.conflicts):
-            d.mkdir(parents=True, exist_ok=True)
+        try:
+            for d in (self.outbox, self.inbox, self.log, self.conflicts):
+                d.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            raise OpenclawError(
+                f"Cannot create Hermes bus directories under {self.root}: {exc}"
+            ) from exc
+
+    def _load_event(self, path: Path) -> Event:
+        """Read one event file, raising StateCorruptionError on any defect."""
+        data = read_json_object(path, what="Hermes event")
+        try:
+            return Event.from_dict(data)
+        except (KeyError, ValueError, TypeError) as exc:
+            raise StateCorruptionError(
+                f"Hermes event at {path} has missing or invalid fields ({exc!r}). "
+                f"Move the file out of {path.parent.name}/ and re-run."
+            ) from exc
 
     def _event_path(self, directory: Path, event: Event) -> Path:
         safe_unit = event.unit_id.replace("/", "__").replace("\\", "__")
@@ -118,11 +136,11 @@ class HermesBus:
             return event, "duplicate"
 
         path = self._event_path(self.outbox, event)
-        path.write_text(json.dumps(event.to_dict(), indent=2), encoding="utf-8")
+        atomic_write_text(path, json.dumps(event.to_dict(), indent=2))
 
         if status == "conflict":
             conflict_path = self._event_path(self.conflicts, event)
-            conflict_path.write_text(json.dumps(event.to_dict(), indent=2), encoding="utf-8")
+            atomic_write_text(conflict_path, json.dumps(event.to_dict(), indent=2))
 
         return event, status
 
@@ -130,9 +148,7 @@ class HermesBus:
         key = event.dedup_key()
         for directory in (self.outbox, self.inbox, self.log):
             for path in directory.glob("*.json"):
-                data = json.loads(path.read_text(encoding="utf-8"))
-                seen_key = f"{data['topic']}:{data['unit_id']}:{data['content_hash']}"
-                if seen_key == key:
+                if self._load_event(path).dedup_key() == key:
                     return "duplicate"
         return "new"
 
@@ -140,8 +156,7 @@ class HermesBus:
         """Move events from outbox to inbox and return them."""
         events: list[tuple[Path, Event]] = []
         for path in sorted(self.outbox.glob("*.json")):
-            data = json.loads(path.read_text(encoding="utf-8"))
-            event = Event.from_dict(data)
+            event = self._load_event(path)
             if topic is None or event.topic == topic:
                 events.append((path, event))
             if limit and len(events) >= limit:
@@ -150,19 +165,29 @@ class HermesBus:
         consumed: list[Event] = []
         for path, event in events:
             dest = self._event_path(self.inbox, event)
-            path.rename(dest)
+            self._move(path, dest)
             consumed.append(event)
         return consumed
+
+    def _move(self, src: Path, dest: Path) -> None:
+        try:
+            src.rename(dest)
+        except OSError as exc:
+            raise OpenclawError(
+                f"Cannot move Hermes event {src} to {dest}: {exc}"
+            ) from exc
 
     def ack(self, event: Event) -> Path:
         """Move an event from inbox to log (idempotency ledger)."""
         for inbox_file in self.inbox.glob("*.json"):
-            data = json.loads(inbox_file.read_text(encoding="utf-8"))
-            if f"{data['topic']}:{data['unit_id']}:{data['content_hash']}" == event.dedup_key():
+            if self._load_event(inbox_file).dedup_key() == event.dedup_key():
                 dest = self._event_path(self.log, event)
-                inbox_file.rename(dest)
+                self._move(inbox_file, dest)
                 return dest
-        raise FileNotFoundError(f"Event not found in inbox: {event.dedup_key()}")
+        raise EventNotFoundError(
+            f"Event not found in Hermes inbox ({self.inbox}): {event.dedup_key()}. "
+            "It may have been acked already or never consumed."
+        )
 
     def list_events(
         self,
@@ -173,8 +198,7 @@ class HermesBus:
         dir_path = getattr(self, directory)
         events: list[Event] = []
         for path in sorted(dir_path.glob("*.json")):
-            data = json.loads(path.read_text(encoding="utf-8"))
-            event = Event.from_dict(data)
+            event = self._load_event(path)
             if topic is None or event.topic == topic:
                 events.append(event)
         return events
