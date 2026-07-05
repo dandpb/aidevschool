@@ -1,6 +1,7 @@
 import type { LearnerSnapshot } from "../domain"
 import { getLearnerSnapshot } from "../progress"
 import { escapeHtml } from "./escape"
+import { sparklinePath } from "./sparkline"
 
 const AIDI_HISTORY_POINTS = 30
 
@@ -8,21 +9,6 @@ function aidiSignalClass(value: number, amber: number, red: number): string {
   if (value >= red) return "aidi-signal aidi-red"
   if (value >= amber) return "aidi-signal aidi-amber"
   return "aidi-signal aidi-green"
-}
-
-function aidiSparklinePath(snapshot: LearnerSnapshot): string {
-  const trend = snapshot.aidi.trend
-  if (trend.length === 0) return ""
-  const max = 1
-  const width = 100
-  const stepX = trend.length === 1 ? width : width / (trend.length - 1)
-  return trend
-    .map((point, index) => {
-      const x = index * stepX
-      const y = (1 - point.value / max) * 24
-      return `${index === 0 ? "M" : "L"} ${x.toFixed(1)} ${y.toFixed(1)}`
-    })
-    .join(" ")
 }
 
 function renderUnitState(snapshot: LearnerSnapshot): string {
@@ -60,7 +46,7 @@ function renderProfile(snapshot: LearnerSnapshot): string {
 
 function renderAidi(snapshot: LearnerSnapshot): string {
   const aidi = snapshot.aidi
-  const path = aidiSparklinePath(snapshot)
+  const path = sparklinePath(aidi.trend)
   const signalClass = aidiSignalClass(aidi.current, aidi.thresholdAmber, aidi.thresholdRed)
 
   return `

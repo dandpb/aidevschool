@@ -1,6 +1,7 @@
 import { type ProjectPhase, projectPhases } from "../domain"
 import { getProjects } from "../progress"
 import type { AppState, ProjectFilter } from "../state"
+import { escapeHtml } from "./escape"
 
 const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
   fundamentos: "Fundamentos",
@@ -34,16 +35,16 @@ export function renderRoadmap(state: AppState): string {
             (project) => `
               <article class="project-card">
                 <div class="project-meta">
-                  <span>${project.id.toUpperCase()}</span>
+                  <span>${escapeHtml(project.id.toUpperCase())}</span>
                   <span>Nível ${project.level}</span>
                 </div>
-                <h3>${project.title}</h3>
-                <p>${project.learningGoal}</p>
+                <h3>${escapeHtml(project.title)}</h3>
+                <p>${escapeHtml(project.learningGoal)}</p>
                 <dl>
-                  <div><dt>Linguagem</dt><dd>${project.language}</dd></div>
-                  <div><dt>Arquitetura</dt><dd>${project.architecture}</dd></div>
+                  <div><dt>Linguagem</dt><dd>${escapeHtml(project.language)}</dd></div>
+                  <div><dt>Arquitetura</dt><dd>${escapeHtml(project.architecture)}</dd></div>
                 </dl>
-                <button class="inline-link" type="button" data-project="${project.id}">Abrir briefing</button>
+                <button class="inline-link" type="button" data-project="${escapeHtml(project.id)}">Abrir briefing</button>
               </article>
             `,
           )
@@ -59,5 +60,5 @@ function renderFilterButton(
   currentFilter: ProjectFilter,
 ): string {
   const activeClass = filter === currentFilter ? "is-active" : ""
-  return `<button class="filter-button ${activeClass}" type="button" data-filter="${filter}">${label}</button>`
+  return `<button class="filter-button ${activeClass}" type="button" data-filter="${escapeHtml(filter)}">${escapeHtml(label)}</button>`
 }

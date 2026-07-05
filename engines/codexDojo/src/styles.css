@@ -31,6 +31,13 @@
   /* layout */
   --nav-width: 200px;
   --radius: 6px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
 
   /* type */
   font-family: "Avenir Next", "Trebuchet MS", Verdana, sans-serif;
@@ -1398,6 +1405,340 @@ button:focus-visible,
   margin: 3px 0 0;
 }
 
+.linux-lab {
+  min-width: 0;
+}
+
+.linux-lab-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.linux-desktop {
+  display: grid;
+  grid-template-areas:
+    "topbar topbar topbar"
+    "launcher window lesson";
+  grid-template-columns: minmax(250px, 340px) minmax(0, 1.25fr) minmax(260px, 0.55fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  height: calc(100dvh - 180px);
+  min-height: calc(100vh - 180px);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(ellipse at 72% 12%, rgba(var(--brass-rgb),0.08), transparent 34%),
+    var(--charcoal);
+}
+
+.linux-topbar {
+  grid-area: topbar;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(var(--ink-rgb),0.72);
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.linux-topbar strong {
+  color: var(--paper);
+}
+
+.linux-topbar span {
+  min-width: 0;
+}
+
+.linux-launcher,
+.linux-window,
+.linux-lesson {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+.linux-launcher {
+  grid-area: launcher;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+  padding: var(--space-3);
+}
+
+.linux-category-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.linux-category {
+  min-height: 32px;
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+
+.linux-category:hover,
+.linux-app-tile:hover {
+  border-color: var(--brass);
+  color: var(--paper);
+}
+
+.linux-category:active,
+.linux-app-tile:active {
+  transform: scale(0.98);
+}
+
+.linux-category.is-active {
+  border-color: var(--mint);
+  background: rgba(128, 226, 168, 0.1);
+  color: var(--mint);
+}
+
+.linux-app-grid {
+  flex: 1;
+  display: grid;
+  align-content: start;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: var(--space-2);
+  min-height: 0;
+  overflow: auto;
+  padding-right: var(--space-1);
+}
+
+.linux-app-tile {
+  display: grid;
+  grid-template-rows: 42px 1fr auto;
+  align-items: center;
+  justify-items: center;
+  gap: var(--space-1);
+  min-height: 112px;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(var(--ink-rgb),0.46);
+  color: var(--paper);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
+}
+
+.linux-app-tile.is-active {
+  border-color: var(--brass);
+  background: rgba(var(--brass-rgb),0.1);
+}
+
+.linux-app-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-strong);
+  color: var(--paper);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.linux-category-system { color: var(--brass); }
+.linux-category-development { color: var(--cyan); }
+.linux-category-network { color: var(--mint); }
+.linux-category-data { color: var(--paper); }
+.linux-category-office { color: var(--muted); }
+.linux-category-media { color: var(--cyan); }
+.linux-category-security { color: var(--coral); }
+.linux-category-learning { color: var(--brass); }
+
+.linux-app-name {
+  display: block;
+  width: 100%;
+  color: var(--paper);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.linux-app-tile small {
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.linux-window {
+  grid-area: window;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+.linux-window-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 42px;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--line);
+  background: rgba(var(--ink-rgb),0.64);
+}
+
+.linux-window-bar span {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-strong);
+}
+
+.linux-window-bar strong {
+  margin-left: var(--space-1);
+  font-size: 0.9rem;
+}
+
+.linux-window-body {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+  overflow: auto;
+  padding: var(--space-4);
+}
+
+.linux-terminal {
+  min-height: 230px;
+  padding: var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(var(--ink-rgb),0.78);
+  color: var(--cyan);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.terminal-prompt {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--mint);
+}
+
+.linux-terminal code,
+.linux-terminal pre {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.linux-terminal pre {
+  margin: var(--space-3) 0 0;
+  color: var(--paper);
+}
+
+.linux-runner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(var(--ink-rgb),0.42);
+}
+
+.linux-runner span,
+.lesson-block span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.linux-runner strong {
+  display: block;
+  margin-top: var(--space-1);
+}
+
+.linux-receipt {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.linux-lesson {
+  grid-area: lesson;
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  overflow: auto;
+  padding: var(--space-4);
+}
+
+.lesson-block {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.lesson-block h2 {
+  margin: var(--space-2) 0;
+  font-size: 1.35rem;
+}
+
+.lesson-block p {
+  margin: var(--space-2) 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.learning-loop {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.learning-loop li {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(var(--ink-rgb),0.38);
+}
+
+.learning-loop span {
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.linux-category:focus-visible,
+.linux-app-tile:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}
+
 /* ============================================================
    Responsive — Tablet (≤980px)
    ============================================================ */
@@ -1441,8 +1782,23 @@ button:focus-visible,
   .cycle-board,
   .briefing-grid,
   .project-grid,
-  .project-view .briefing-grid {
+  .project-view .briefing-grid,
+  .linux-desktop {
     grid-template-columns: 1fr;
+  }
+
+  .linux-desktop {
+    grid-template-areas:
+      "topbar"
+      "launcher"
+      "window"
+      "lesson";
+    height: auto;
+    min-height: 0;
+  }
+
+  .linux-app-grid {
+    max-height: 360px;
   }
 
   .metric-strip,
@@ -1495,6 +1851,16 @@ button:focus-visible,
   .topology {
     grid-template-columns: repeat(3, 1fr);
     min-height: auto;
+  }
+
+  .linux-topbar,
+  .linux-runner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .linux-app-grid {
+    grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
   }
 
   .learner-grid {

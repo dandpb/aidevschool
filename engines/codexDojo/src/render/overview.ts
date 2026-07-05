@@ -9,6 +9,7 @@ import {
   getStages,
 } from "../progress"
 import type { AppState } from "../state"
+import { escapeHtml } from "./escape"
 import { renderLearnerDashboard } from "./learner"
 
 const OVERVIEW_AGENT_LIMIT = 14
@@ -71,8 +72,8 @@ export function renderOverview(state: AppState): string {
         ${model.visibleAgents
           .map(
             (agent, index) =>
-              `<button class="agent-node node-${index + 1}" type="button" data-agent="${agent.id}">
-                <span>${agent.name}</span>
+              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}">
+                <span>${escapeHtml(agent.name)}</span>
               </button>`,
           )
           .join("")}
@@ -80,10 +81,10 @@ export function renderOverview(state: AppState): string {
 
       <article class="next-project">
         <p class="eyebrow">Primeiro projeto prático</p>
-        <h2>${model.currentProject.title}</h2>
-        <p>${model.currentProject.learningGoal}</p>
+        <h2>${escapeHtml(model.currentProject.title)}</h2>
+        <p>${escapeHtml(model.currentProject.learningGoal)}</p>
         <ul>
-          ${model.currentProject.evidence.map((item) => `<li>${item}</li>`).join("")}
+          ${model.currentProject.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
       </article>
 
@@ -92,11 +93,11 @@ export function renderOverview(state: AppState): string {
           .map(
             (metric) => `
               <div class="metric-item">
-                <span>${metric.label}</span>
-                <strong>${metric.measurement ?? "não medido ainda"}</strong>
-                <small>Meta: ${metric.target}</small>
-                <small>${metric.signal}</small>
-                ${metric.evidencePath ? `<code>${metric.evidencePath}</code>` : ""}
+                <span>${escapeHtml(metric.label)}</span>
+                <strong>${escapeHtml(metric.measurement ?? "não medido ainda")}</strong>
+                <small>Meta: ${escapeHtml(metric.target)}</small>
+                <small>${escapeHtml(metric.signal)}</small>
+                ${metric.evidencePath ? `<code>${escapeHtml(metric.evidencePath)}</code>` : ""}
               </div>
             `,
           )
@@ -108,10 +109,10 @@ export function renderOverview(state: AppState): string {
           .map(
             (status) => `
               <div class="ecosystem-card">
-                <span>${status.label}</span>
-                <strong>${status.state}</strong>
-                <p>${status.evidence}</p>
-                <small>${status.nextStep}</small>
+                <span>${escapeHtml(status.label)}</span>
+                <strong>${escapeHtml(status.state)}</strong>
+                <p>${escapeHtml(status.evidence)}</p>
+                <small>${escapeHtml(status.nextStep)}</small>
               </div>
             `,
           )
@@ -122,9 +123,9 @@ export function renderOverview(state: AppState): string {
         ${model.visibleStages
           .map(
             (stage) => `
-              <button class="stage-chip" type="button" data-stage="${stage.id}">
-                <span>${stage.owner}</span>
-                ${stage.label}
+              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}">
+                <span>${escapeHtml(stage.owner)}</span>
+                ${escapeHtml(stage.label)}
               </button>
             `,
           )

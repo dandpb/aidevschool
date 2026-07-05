@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
+import { linuxApps } from "./data/linuxApps"
 import { projects } from "./data/projects"
 import { getCurrentProject, getMetrics, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
@@ -48,6 +49,18 @@ describe("renderShell — targeted assertions", () => {
       expect(strongValue).not.toMatch(/\d/)
       expect(card).toContain("<small>Meta:")
     }
+  })
+
+  it("linuxLab: renders 50+ launchable apps with active learning content", () => {
+    const html = renderShell(stateWith({ view: "linuxLab" }))
+
+    const appTiles = html.match(/class="linux-app-tile/g) ?? []
+    expect(appTiles).toHaveLength(linuxApps.length)
+    expect(appTiles.length).toBeGreaterThanOrEqual(50)
+    expect(html).toContain("Linux Lab")
+    expect(html).toContain("Command line interface")
+    expect(html).toContain("Run Lab")
+    expect(html).toContain("Observe")
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {

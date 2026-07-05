@@ -1,4 +1,5 @@
 import { advanceCycle } from "./cycle"
+import type { LinuxAppCategoryFilter } from "./data/linuxApps"
 import { assertNever, type ProjectPhase, type View } from "./domain"
 
 export type ProjectFilter = ProjectPhase | "all"
@@ -16,6 +17,9 @@ export type AppState = {
    * a second, view-local state channel that would have to be kept in sync with the reducer.
    */
   readonly projectFilter: ProjectFilter
+  readonly selectedLinuxAppId: string
+  readonly linuxAppCategoryFilter: LinuxAppCategoryFilter
+  readonly linuxLabRunCount: number
   readonly copiedAgentId: string | null
 }
 
@@ -26,6 +30,9 @@ export type AppAction =
   | { readonly kind: "selectProject"; readonly projectId: string }
   | { readonly kind: "advanceStage" }
   | { readonly kind: "setProjectFilter"; readonly filter: ProjectFilter }
+  | { readonly kind: "selectLinuxApp"; readonly appId: string }
+  | { readonly kind: "setLinuxAppCategoryFilter"; readonly filter: LinuxAppCategoryFilter }
+  | { readonly kind: "runLinuxLab" }
   | { readonly kind: "markCopied"; readonly agentId: string | null }
 
 export function buildInitialState(
@@ -40,6 +47,9 @@ export function buildInitialState(
     selectedProjectId: firstProjectId,
     completedStageIds: ["diagnosticar", "escolher"],
     projectFilter: "all",
+    selectedLinuxAppId: "terminal",
+    linuxAppCategoryFilter: "all",
+    linuxLabRunCount: 0,
     copiedAgentId: null,
   }
 }
@@ -58,6 +68,12 @@ export function reduceState(state: AppState, action: AppAction): AppState {
       return { ...state, ...advanceCycle(state), view: "cycle" }
     case "setProjectFilter":
       return { ...state, projectFilter: action.filter, view: "roadmap" }
+    case "selectLinuxApp":
+      return { ...state, selectedLinuxAppId: action.appId, view: "linuxLab" }
+    case "setLinuxAppCategoryFilter":
+      return { ...state, linuxAppCategoryFilter: action.filter, view: "linuxLab" }
+    case "runLinuxLab":
+      return { ...state, linuxLabRunCount: state.linuxLabRunCount + 1, view: "linuxLab" }
     case "markCopied":
       return { ...state, copiedAgentId: action.agentId }
     default:

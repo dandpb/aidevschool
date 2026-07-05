@@ -1,4 +1,4 @@
-export const views = ["overview", "agents", "cycle", "roadmap", "project"] as const
+export const views = ["overview", "linuxLab", "agents", "cycle", "roadmap", "project"] as const
 export type View = (typeof views)[number]
 
 export const agentGroups = ["leader", "pedagogia", "qualidade", "memoria", "governanca"] as const

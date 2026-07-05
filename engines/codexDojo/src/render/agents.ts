@@ -1,5 +1,6 @@
 import { getAgents, getSelectedAgent, getUserFacingAgents } from "../progress"
 import type { AppState } from "../state"
+import { escapeHtml } from "./escape"
 
 export function renderAgents(state: AppState): string {
   const selectedAgent = getSelectedAgent(state)
@@ -27,9 +28,9 @@ export function renderAgents(state: AppState): string {
             .map(
               (agent) => `
                 <div class="user-agent-card">
-                  <strong>${agent.name}</strong>
-                  <p>${agent.responsibility}</p>
-                  <small>Expande para: ${agent.expandsTo.join(", ")}</small>
+                  <strong>${escapeHtml(agent.name)}</strong>
+                  <p>${escapeHtml(agent.responsibility)}</p>
+                  <small>Expande para: ${escapeHtml(agent.expandsTo.join(", "))}</small>
                 </div>
               `,
             )
@@ -47,9 +48,9 @@ export function renderAgents(state: AppState): string {
           .map((agent) => {
             const activeClass = agent.id === selectedAgent.id ? "is-active" : ""
             return `
-              <button class="agent-row ${activeClass}" type="button" data-agent="${agent.id}">
-                <span>${agent.name}</span>
-                <small>${agent.role}</small>
+              <button class="agent-row ${activeClass}" type="button" data-agent="${escapeHtml(agent.id)}">
+                <span>${escapeHtml(agent.name)}</span>
+                <small>${escapeHtml(agent.role)}</small>
               </button>
             `
           })
@@ -58,28 +59,28 @@ export function renderAgents(state: AppState): string {
 
       <article class="agent-detail">
         <div class="detail-topline">
-          <span>${selectedAgent.group}</span>
-          <button class="icon-button" type="button" data-copy-agent="${selectedAgent.id}" aria-label="Copiar prompt">
+          <span>${escapeHtml(selectedAgent.group)}</span>
+          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-label="Copiar prompt">
             ${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}
           </button>
         </div>
-        <h3>${selectedAgent.name}</h3>
-        <p>${selectedAgent.mission}</p>
+        <h3>${escapeHtml(selectedAgent.name)}</h3>
+        <p>${escapeHtml(selectedAgent.mission)}</p>
         <div class="detail-columns">
           <div>
             <h4>Entradas</h4>
-            <ul>${selectedAgent.inputs.map((item) => `<li>${item}</li>`).join("")}</ul>
+            <ul>${selectedAgent.inputs.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
           <div>
             <h4>Saídas</h4>
-            <ul>${selectedAgent.outputs.map((item) => `<li>${item}</li>`).join("")}</ul>
+            <ul>${selectedAgent.outputs.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
           </div>
         </div>
         <div class="gate-box">
           <span>Gate</span>
-          <p>${selectedAgent.gate}</p>
+          <p>${escapeHtml(selectedAgent.gate)}</p>
         </div>
-        <pre class="prompt-box"><code>${selectedAgent.prompt}</code></pre>
+        <pre class="prompt-box"><code>${escapeHtml(selectedAgent.prompt)}</code></pre>
       </article>
     </section>
   `

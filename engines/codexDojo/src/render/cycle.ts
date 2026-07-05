@@ -1,6 +1,7 @@
 import { getCycleCompletionPercent } from "../cycle"
 import { getCurrentStage, getStages, isStageCompleted } from "../progress"
 import type { AppState } from "../state"
+import { escapeHtml } from "./escape"
 
 export function renderCycle(state: AppState): string {
   const selectedStage = getCurrentStage(state)
@@ -20,9 +21,9 @@ export function renderCycle(state: AppState): string {
               const selected = stage.id === selectedStage.id ? "is-active" : ""
               const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
               return `
-                <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${stage.id}">
+                <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}">
                   <span>${String(index + 1).padStart(2, "0")}</span>
-                  ${stage.label}
+                  ${escapeHtml(stage.label)}
                 </button>
               `
             })
@@ -31,18 +32,18 @@ export function renderCycle(state: AppState): string {
 
         <article class="stage-detail">
           <div class="console-header">
-            <span>${selectedStage.owner}</span>
+            <span>${escapeHtml(selectedStage.owner)}</span>
             <span>${progress}% validado</span>
           </div>
-          <h3>${selectedStage.label}</h3>
+          <h3>${escapeHtml(selectedStage.label)}</h3>
           <dl class="evidence-list">
             <div>
               <dt>Evidência exigida</dt>
-              <dd>${selectedStage.evidence}</dd>
+              <dd>${escapeHtml(selectedStage.evidence)}</dd>
             </div>
             <div>
               <dt>Artefato gerado</dt>
-              <dd>${selectedStage.output}</dd>
+              <dd>${escapeHtml(selectedStage.output)}</dd>
             </div>
           </dl>
           <button class="action-button" type="button" data-action="advance-stage">Concluir etapa</button>

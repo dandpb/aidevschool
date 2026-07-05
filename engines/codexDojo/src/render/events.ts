@@ -1,3 +1,5 @@
+import type { LinuxAppCategoryFilter } from "../data/linuxApps"
+import { linuxAppCategories } from "../data/linuxApps"
 import { type Agent, projectPhases, type View, views } from "../domain"
 import { findAgent } from "../progress"
 import type { AppAction, ProjectFilter } from "../state"
@@ -24,7 +26,17 @@ const intents: readonly Intent[] = [
     attr: "data-filter",
     decode: (v) => (isProjectFilter(v) ? { kind: "setProjectFilter", filter: v } : null),
   },
+  {
+    attr: "data-linux-app",
+    decode: (v) => (v !== null ? { kind: "selectLinuxApp", appId: v } : null),
+  },
+  {
+    attr: "data-linux-category",
+    decode: (v) =>
+      isLinuxAppCategoryFilter(v) ? { kind: "setLinuxAppCategoryFilter", filter: v } : null,
+  },
   { attr: "data-action", value: "advance-stage", decode: () => ({ kind: "advanceStage" }) },
+  { attr: "data-action", value: "run-linux-lab", decode: () => ({ kind: "runLinuxLab" }) },
 ]
 
 export function bindEvents(root: HTMLElement, dispatch: Dispatch): void {
@@ -90,4 +102,8 @@ function isView(value: string | null): value is View {
 
 function isProjectFilter(value: string | null): value is ProjectFilter {
   return value === "all" || projectPhases.some((phase) => phase === value)
+}
+
+function isLinuxAppCategoryFilter(value: string | null): value is LinuxAppCategoryFilter {
+  return value === "all" || linuxAppCategories.some((category) => category === value)
 }

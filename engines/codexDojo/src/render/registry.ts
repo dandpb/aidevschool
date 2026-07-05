@@ -2,6 +2,7 @@ import { type View, views } from "../domain"
 import type { AppState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
+import { renderLinuxLab } from "./linuxLab"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
@@ -13,6 +14,7 @@ type ViewRenderer = (state: AppState) => string
 // here — stronger than a runtime assertNever in a switch.
 const viewMeta: Readonly<Record<View, { label: string; render: ViewRenderer }>> = {
   overview: { label: "Painel", render: renderOverview },
+  linuxLab: { label: "Linux Lab", render: renderLinuxLab },
   agents: { label: "Agentes", render: renderAgents },
   cycle: { label: "Ciclo", render: renderCycle },
   roadmap: { label: "Roadmap", render: renderRoadmap },
