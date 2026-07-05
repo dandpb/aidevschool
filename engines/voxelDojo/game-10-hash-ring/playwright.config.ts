@@ -1,16 +1,18 @@
 import { defineConfig } from "@playwright/test";
 
+const baseURL = "http://localhost:5175";
+
 export default defineConfig({
   testDir: "./playwright",
   timeout: 60_000,
   use: {
-    baseURL: "http://localhost:5173",
+    baseURL,
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "npx vite --port 5173 --strictPort",
-    url: "http://localhost:5173",
-    reuseExistingServer: true,
+    command: "npx vite --port 5175 --strictPort",
+    url: baseURL,
+    reuseExistingServer: false,
     timeout: 30_000,
   },
 });
