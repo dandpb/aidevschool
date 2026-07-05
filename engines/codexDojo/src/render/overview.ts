@@ -58,7 +58,7 @@ export function renderOverview(state: AppState): string {
           <span>Estado do dojo</span>
           <span>${model.stats.completionPercent}% do ciclo</span>
         </div>
-        <div class="meter" aria-label="Progresso do ciclo">
+        <div class="meter" role="progressbar" aria-label="Progresso do ciclo" aria-valuenow="${model.stats.completionPercent}" aria-valuemin="0" aria-valuemax="100">
           <span style="width: ${model.stats.completionPercent}%"></span>
         </div>
         <dl class="stat-grid">
