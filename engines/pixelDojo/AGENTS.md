@@ -26,6 +26,7 @@ pixelDojo/
 | Screenshot evidence | `pixel-quest/shots/` | Generated QA artifacts, not source. |
 | Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. |
+| Cross-engine game contract | `../../docs/design/teaching-game-contract.md` | Canonical rules shared with voxelDojo; wins on conflict. |
 
 ## CONVENTIONS
 

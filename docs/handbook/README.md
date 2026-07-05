@@ -27,6 +27,7 @@ do not run `npm install` / `pnpm install` at the root.
 | 2 | [Onboarding](02_onboarding.md) | Set up your machine, run the apps, and learn the day-to-day workflow and conventions. |
 | 3 | [Engine — codexDojo](03_engine_codexDojo.md) | Work on the user-facing dashboard (Vite + TypeScript SPA). |
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
+| 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
 | 6 | [Engine — miniMaxEvolutionEngine](06_engine_miniMaxEvolutionEngine.md) | Run the Claude Code orchestration motor (the 5-phase loop). |
 | 7 | [Curriculum](07_curriculum.md) | Understand the 18 polyglot projects and how executable evidence works. |

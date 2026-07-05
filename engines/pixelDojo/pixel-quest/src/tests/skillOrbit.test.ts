@@ -10,6 +10,7 @@ import {
   recordEvidence,
   selectSkillOrbit,
 } from "../game/simulation/world"
+import { makeTokenBucketEvidence } from "./fixtures/evidence"
 
 describe("skill orbit simulation", () => {
   it("builds one station per curriculum unit and starts on the current lab", () => {
@@ -71,25 +72,5 @@ function loadPack(): ReturnType<typeof import("../content/loadCorePack").loadCor
 }
 
 function makeEvidence(pass: boolean): PixelQuestEvidenceRecord {
-  return {
-    source: "pixelquest",
-    unit_id: "U0-sonda-rate-limiter-robustness",
-    project: "01_rate_limiter",
-    encounter_id: "encounter-agent-quest-01",
-    game: "PixelDojo Quest",
-    ts: "2026-06-11T12:00:00.000Z",
-    pass,
-    metrics: {
-      kind: "pixelquest-token-bucket",
-      target_rate: 5,
-      observed_admit_rate: 0.5,
-      max_burst_1s: 5,
-      good_admits: 5,
-      legit_rejected: 0,
-      abusive_admitted: 0,
-      abusive_rejected: 5,
-      heat_peak: 0,
-      overheated: false,
-    },
-  }
+  return makeTokenBucketEvidence(pass)
 }
