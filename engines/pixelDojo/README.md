@@ -9,13 +9,36 @@ environment and to the `aidevschool` golden rules.
 
 A teaching game is the cleanest possible **learning-gate artifact**. Your gate
 (`../../learner/learning_state.yaml`, system `agora-continuum`) requires the *learner to attempt and be
-evaluated on executable evidence before a unit is marked `mastered`* — and `units_log` is still `[]`.
-Closing that first loop is the MVP.
+evaluated on executable evidence before a unit is marked `mastered`*. The first loop was closed on
+2026-07-05: U0 gated from GATEKEEPER evidence via the verifier below.
 
 So each game maps **one curriculum concept → one arcade mechanic**, and a cleared level **emits
 evidence** (NDJSON telemetry: did the player throttle to the right rate, absorb the burst, resolve the
 conflict). A **separate verifier** reads that evidence and appends the unit. The game is the *attempt
 surface*; it never marks mastery itself (producer ≠ verifier).
+
+## The verifier (Prometor context)
+
+`verifier/` is the Python module that owns the `mastered` transition — the piece the game
+deliberately does not have. From the ecosystem root:
+
+```bash
+python3 -m engines.pixelDojo.verifier --dry-run   # decide only, write nothing
+python3 -m engines.pixelDojo.verifier             # gate the active unit from the evidence file
+python3 -m learner.substrate                      # then regenerate derived views
+python3 -m pytest engines/pixelDojo/verifier/tests -q
+```
+
+It refuses to gate unless: the evidence matches `active_unit` (`unit_id` + `project`), the declared
+`attempt_file` exists and is non-empty (attempt-before-solution), `active_unit.state == evaluating`,
+the record's `ts` is strictly newer than the last gated evidence for the unit (anti-replay), and the
+record is internally consistent (a run that admitted abusive traffic cannot claim PASS). A well-formed
+run with `pass: false` gates to `fail` (retry_count++, streak untouched). The gated state is checked
+against the substrate validator before a single byte is written. Default evidence source: the NDJSON
+contract `pixel-quest/.logs/evidence.ndjson` (latest record for the active unit; see
+`EVIDENCE_CONTRACT.md`), falling back to the legacy `.logs/last_run_evidence.json`. When there is
+nothing to grade (no evidence file, no record for the active unit, or the unit is not `evaluating`)
+the CLI says so and exits 0 without writing.
 
 ## How it differs from the Codex playbook (tool map)
 
