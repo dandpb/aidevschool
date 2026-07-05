@@ -43,6 +43,10 @@ export class WorldRenderer {
   private readonly staticMeshes: Mesh[] = []
   private activeRegionId: string
 
+  // Shared geometry and materials to avoid allocating thousands of objects per region
+  private readonly sharedTileGeometry = new PlaneGeometry(tileSize, tileSize)
+  private readonly sharedTileMaterials: Record<string, MeshBasicMaterial> = {}
+
   constructor(host: HTMLElement, initialWorld: WorldState) {
     this.renderer = new WebGLRenderer({ antialias: false, alpha: false })
     this.renderer.setPixelRatio(1)
@@ -59,6 +63,12 @@ export class WorldRenderer {
     this.playerMesh = makeSprite("#f0d56b", "#3a2f0a", 0.34)
     this.activeRegionId = initialWorld.region.id
     this.scene.add(this.playerMesh)
+
+    // Initialize shared materials
+    for (const [kind, colorHex] of Object.entries(tileColors)) {
+      this.sharedTileMaterials[kind] = new MeshBasicMaterial({ color: colorHex })
+    }
+
     this.buildStaticWorld(initialWorld)
     this.sync(initialWorld)
   }
@@ -102,6 +112,10 @@ export class WorldRenderer {
     this.circuitBreakerScene.dispose()
     this.authGateScene.dispose()
     this.renderer.dispose()
+    this.sharedTileGeometry.dispose()
+    for (const material of Object.values(this.sharedTileMaterials)) {
+      material.dispose()
+    }
   }
 
   // The circuit-breaker scene projects a route_health encounter state. The
@@ -121,9 +135,20 @@ export class WorldRenderer {
   }
 
   private buildStaticWorld(world: WorldState): void {
-    const tileGeometry = new PlaneGeometry(tileSize, tileSize)
     for (const tile of getTileViews(world.region)) {
-      const mesh = new Mesh(tileGeometry, new MeshBasicMaterial({ color: tileColors[tile.kind] }))
+      const material = this.sharedTileMaterials[tile.kind]
+      let mesh: Mesh
+      if (material !== undefined) {
+        mesh = new Mesh(this.sharedTileGeometry, material)
+        // Mark as shared so we don't dispose the shared material in rebuildWorld
+        mesh.userData.isSharedTile = true
+      } else {
+        mesh = new Mesh(
+          this.sharedTileGeometry,
+          new MeshBasicMaterial({ color: tileColors[tile.kind] }),
+        )
+      }
+
       mesh.position.set(
         tile.position.x - world.region.map.width / 2 + 0.5,
         -tile.position.y + world.region.map.height / 2 - 0.5,
@@ -144,8 +169,10 @@ export class WorldRenderer {
   private rebuildWorld(world: WorldState): void {
     for (const mesh of this.staticMeshes) {
       this.scene.remove(mesh)
-      mesh.geometry.dispose()
-      disposeMaterial(mesh)
+      if (!mesh.userData.isSharedTile) {
+        // Fallback mesh using its own material
+        disposeMaterial(mesh)
+      }
     }
     this.staticMeshes.length = 0
     for (const mesh of this.npcMeshes.values()) {

@@ -5,3 +5,7 @@
 ## 2026-06-26 - Sliding Window optimization for maxAdmitsInWindow
 **Learning:** Found an O(n²) bottleneck in maxAdmitsInWindow during token bucket validation. The sliding window needed to account for `undefined` elements since `times` array can have gaps. Counting the window size required maintaining a running sum `currentWindowCount` rather than just subtracting indices since indices include undefined elements.
 **Action:** When converting O(n²) to O(n) using a sliding window, always verify if the data structure contains gaps (like undefined elements in an array). If it does, use a running accumulator variable instead of relying purely on index math (`endIdx - startIdx + 1`).
+
+## 2026-07-03 - Optimize Three.js allocations
+**Learning:** In Three.js, instantiating new Materials and Geometries for every object is a massive anti-pattern that bloats memory and kills frame rate, as they cause excessive shader compilations and heap allocations.
+**Action:** Share `PlaneGeometry` and `MeshBasicMaterial` across static tiles (via dictionary) and use `.userData` to differentiate shared vs unique materials for proper cleanup in `.dispose()`.
