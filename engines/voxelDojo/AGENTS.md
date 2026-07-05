@@ -2,7 +2,7 @@
 
 ## OVERVIEW
 
-`voxelDojo/` is the 3D teaching-simulation engine for `aidevschool`. Each game is a Three.js
+`voxelDojo/` is the Three.js dojo / 3D teaching-simulation engine for `aidevschool`. Each game is a Three.js
 simulation for one curriculum concept and emits raw evidence for a separate verifier. The implemented
 pilot is `game-10-hash-ring/`.
 
@@ -26,6 +26,7 @@ voxelDojo/
 | Define a new game | `PLAN.md` | Fill the template before scaffolding. One game = one concept. |
 | Run the pilot | `game-10-hash-ring/` | Vite + strict TypeScript + Three.js + Vitest + Playwright. |
 | Pilot sim core | `game-10-hash-ring/src/sim/` | Deterministic consistent-hash-ring logic. |
+| Pilot module entry | `game-10-hash-ring/src/index.ts` | Headless controller/sim exports for agents and tests; browser bootstrap stays in `src/main.ts`. |
 | Pilot browser proof | `game-10-hash-ring/playwright/hash-ring.spec.ts` | Boots WebGL, clears L1/L2, asserts `EVIDENCE` records. |
 | Engine decisions / data flow | `docs/ARCHITECTURE.md` | Rendering, evidence, verifier handoff. |
 | What's blocking implementation | `docs/GAP_ANALYSIS.md` | Ecosystem-wide gaps and sequence. |
@@ -50,6 +51,8 @@ voxelDojo/
 - Stack: `pnpm`, Vite, strict TypeScript, plain `three` (no react-three-fiber, no physics engine
   unless a concept demands it), Biome, Vitest, Playwright. Match `../codexDojo` and
   `../pixelDojo/pixel-quest` tooling.
+- `threejs-dojo` is a compatibility name for this engine. Keep reusable exports headless in
+  `game-10-hash-ring/src/index.ts`; `src/main.ts` remains the DOM/WebGL bootstrap.
 - Simulation logic is deterministic and headless-testable: pure TypeScript modules with injected
   clocks/RNG, unit-tested without WebGL. The Three.js layer only renders state.
 - Content is data-only packs (typed scenario definitions, no arbitrary JS), mirroring the

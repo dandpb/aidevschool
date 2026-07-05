@@ -1,6 +1,6 @@
 # voxelDojo — Architecture
 
-Decisions, trade-offs, and integration contracts for the 3D teaching-simulation engine.
+Decisions, trade-offs, and integration contracts for the Three.js dojo / 3D teaching-simulation engine.
 Audience: anyone (human or agent) about to implement a voxelDojo game.
 
 ## Context and goals
@@ -21,6 +21,7 @@ photorealism, VR (see GAP_ANALYSIS §later), replacing pixelDojo.
 ../../curriculum/catalog.md ──(concept, slug)──▶ PLAN.md ──▶ game-<NN>-<slug>/
                                                               │
                              ┌────────────────────────────────┤
+                             │  src/index.ts    headless module exports for agents/tests
                              │  src/sim/        headless deterministic core (pure TS,
                              │                  injected clock/RNG, Vitest-tested)
                              │  src/scene/      Three.js render layer (reads sim state only)
@@ -60,6 +61,7 @@ registry approximates.
 | --- | --- | --- | --- |
 | D1 | Plain `three` + Vite + strict TS | react-three-fiber; Babylon; Unity/Godot export | Matches pixel-quest stack and ecosystem tooling (pnpm/Biome/Vitest/Playwright); no React runtime in a game loop; auditable plain TS |
 | D2 | One Vite app per game (`game-<NN>-<slug>/`) | One mega-app with 18 scenes | Games ship and get verified independently; a broken game can't block another; mirrors curriculum project granularity |
+| D2a | `src/index.ts` exports headless controller/sim modules only | Exporting `src/main.ts` or scene graph objects as the module API | Agents and tests can reuse the Three.js dojo logic without mounting `#stage`/`#hud` or changing Playwright hooks |
 | D3 | Procedural low-poly geometry, ≤8-color flat palette | GLTF asset pipeline, MiniMax-generated models | No 3D-model generation available in-toolchain; procedural assets are diffable source, zero licensing risk, tiny bundles |
 | D4 | Data-only scenario packs with typed registry | Packs shipping JS | Same policy as pixel-quest (`content-packs.md`): new mechanics require typed definitions + validator + approved factory — packs stay auditable data |
 | D5 | Evidence schema = pixel-quest schema with `source: "voxeldojo"` | New bespoke schema | Verifier and substrate already consume this shape; one ingestion path, two emitters |

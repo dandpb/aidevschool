@@ -1,6 +1,6 @@
 # voxelDojo
 
-**3D didactic simulation games (Three.js) that teach the `curriculum/` subjects.** Sibling engine to
+**The Three.js dojo: 3D didactic simulation games that teach the `curriculum/` subjects.** Sibling engine to
 `../pixelDojo/`: same learning-gate contract, different genre. Where pixelDojo turns one concept into
 an 8-bit *arcade encounter*, voxelDojo turns one concept into an explorable *3D system simulation* —
 the learner walks (or flies) inside the architecture and operates it.
@@ -93,6 +93,7 @@ voxelDojo/
 │   └── 3d-style.md      # shared visual language for all games
 └── game-10-hash-ring/   # pilot implementation
     ├── src/sim/         # headless deterministic core + Vitest concept proofs
+    ├── src/index.ts     # reusable threejs-dojo module exports (controller + sim, no DOM mount)
     ├── src/game/        # level state machine (controller) + playthrough tests
     ├── src/scene/       # Three.js render layer + DOM HUD
     ├── src/content/     # types + substrate-generated reviewSlice.ts
