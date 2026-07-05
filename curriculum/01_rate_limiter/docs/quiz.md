@@ -1,245 +1,218 @@
 # Quiz — Project 01 · Token-Bucket Rate Limiter
 
-> 5 questions testing **comprehension** (not memorization) of the
-> design, the algorithm, and the cross-language tradeoffs.
-> Mix of multiple-choice and short-answer/essay. Answer key at the
-> end with detailed explanations and cross-references to the code.
+> 7 questions testing **comprehension** (not memorization) of the algorithm, the concurrency
+> design, and the cross-language trade-offs. All questions are calibrated against the current
+> `{go,rust,node}-impl/` source as re-verified in `code_review.md` (cycle `2026-06-04-01-rate-limiter`).
+> Mix of multiple-choice and short-answer. Answer key with explanations at the end.
 
 ---
 
 ## Q1 — Multiple choice (2 pts)
 
-**Why does the project use *lazy* refill (compute tokens on request
-arrival) rather than a background ticker that refills every bucket
-on a fixed cadence?**
+**Why does the project use *lazy* refill (compute tokens on request arrival) rather than a
+background ticker that refills every bucket on a fixed cadence?**
 
-- A) Lazy refill is faster per request because it avoids acquiring
-  the bucket lock twice.
-- B) Lazy refill scales to an unbounded number of clients without
-  per-client background state mutation, which would be O(N) memory
-  and CPU just to keep the buckets "warm".
+- A) Lazy refill is faster per request because it avoids acquiring the bucket lock twice.
+- B) Lazy refill scales to an unbounded number of clients without per-client background state
+  mutation, which would be O(N) memory and CPU just to keep the buckets "warm".
 - C) The spec explicitly forbids background timers.
-- D) Lazy refill avoids a race between the ticker and the request
-  path that would otherwise need its own mutex.
+- D) Lazy refill avoids a race between the ticker and the request path that would otherwise need
+  its own mutex.
 
 ---
 
 ## Q2 — Multiple choice (2 pts)
 
-**In the Go implementation, `RateLimiter.Allow` holds a
-`sync.Mutex` for the duration of the lazy-refill + consume path.
-What is the main consequence of this design under high concurrent
-load with *many distinct client IPs*?**
+**Both the Go and Rust implementations shard their bucket store across multiple independent
+mutex+map pairs (32 shards in Go, 16 in Rust) instead of using one mutex over one big map. What
+problem does sharding solve that a single mutex does not?**
 
-- A) The implementation is unsafe; `go test -race` would catch it.
-- B) All requests for *all* IPs serialize through the same lock,
-  so throughput is bounded by the critical-section time, not the
-  CPU count.
-- C) `sync.Mutex` does not work with `map[string]*ClientBucket` —
-  you must use `sync.Map` for thread safety.
-- D) The implementation is correct only for IPv4; IPv6 keys would
-  race because they are variable-length.
+- A) A single mutex is unsafe under `go test -race` / Rust's borrow checker; sharding is required
+  for memory safety.
+- B) A single mutex serializes every request through the same lock regardless of which client it's
+  for; sharding lets requests for clients that hash to different shards proceed in parallel.
+- C) Sharding reduces the total memory used to store buckets.
+- D) A single mutex cannot be used with `map[string]*ClientBucket` / `HashMap<IpAddr, ClientBucket>`
+  at all — the compiler would reject it.
 
 ---
 
-## Q3 — Multiple choice (2 pts)
+## Q3 — Short answer (3 pts)
 
-**The Node/TS implementation uses `setInterval(...).unref()` for
-the idle-bucket cleanup timer. What would change if the `.unref()`
-were removed?**
-
-- A) The cleanup timer would fire 10× faster.
-- B) The process would not exit on `SIGINT` until the next
-  cleanup tick fired, even if all sockets were closed and no
-  in-flight requests remained.
-- C) The cleanup would crash with an unhandled error.
-- D) The test suite would start to flake.
+**In the Rust implementation, the one test that spawns 50 concurrent tokio tasks against the same
+IP (`concurrent_requests_never_overconsume`) is marked `#[ignore]`. Does this mean the "no
+over-consumption under concurrent access" property is unverified? Explain what evidence does and
+doesn't exist for this property in the current test suite, and propose one way to get a
+non-ignored test for it.**
 
 ---
 
-## Q4 — Short answer (2 pts)
+## Q4 — Multiple choice (2 pts)
 
-**The Rust implementation chose `std::sync::Mutex` over
-`tokio::sync::Mutex` for the bucket map, even though the service
-itself is fully async on tokio. State one (1) advantage and one
-(1) disadvantage of this choice, and explain in one sentence why
-the disadvantage does not apply to this codebase.**
+**All three implementations (Go, Rust, Node) built a `ClientKeyStrategy`-shaped abstraction
+(interface/trait/function) for resolving the client key from a request — with alternate strategies
+like a forwarded-header-aware one. In the *current, running* server, which of these is actually
+used to determine the bucket key for a live request?**
 
-*Answer space: ~3 sentences.*
-
----
-
-## Q5 — Essay (2 pts)
-
-**All three implementations compute `X-RateLimit-Reset` as a Unix
-epoch second. The Rust code does it as
-`start_system_time + (now - start_instant).as_secs_f64()`. Explain
-in 3–5 sentences:**
-
-1. Why is `Instant` (monotonic) used internally and `SystemTime`
-   (wall-clock) used externally?
-2. What would go wrong if the code used `SystemTime::now()`
-   directly in the limiter?
-3. Why is the *anchor* (`start_system_time`) captured at
-   construction rather than recomputed each call?
-
-*Answer space: a short paragraph.*
+- A) All three wire their abstraction into the live request path; only the specific strategy
+  chosen differs.
+- B) None of the three use their abstraction in the live request path — each has an inline
+  duplicate of the same logic that the live code calls instead, leaving the abstraction file
+  exercised only by its own dedicated unit tests.
+- C) Only Node wires it in, via `TRUST_PROXY`.
+- D) Only Go wires it in, via `RL_TRUST_PROXY`.
 
 ---
 
-# Answer key
+## Q5 — Short answer (3 pts)
 
-## A1 — **B**
+**The spec requires `X-RateLimit-Reset` to be "the timestamp (Unix Epoch Seconds) when the bucket
+will be completely full again." The Rust implementation captures both a `start_instant` (monotonic
+`Instant`) and a `start_system_time` (`SystemTime`) once, at construction, and derives every
+subsequent wall-clock timestamp as `start_system_time + (now_instant - start_instant)` rather than
+calling `SystemTime::now()` directly at request time. Why does this matter for testability, and
+what would break if the code called `SystemTime::now()` directly inside a test driven by a
+`MockClock`?**
 
-**Explanation.** Lazy refill means the limiter does no work for
-clients who aren't making requests. A background ticker that
-refills every bucket on a fixed cadence would have to wake up
-*for every tracked client* on every tick, which is O(N) work
-per tick — and clients with no activity don't need the refill
-calculation at all. The lazy approach defers the math to the
-moment the bucket is actually used, and the math itself is
-O(1) (one multiplication, one `min`).
+---
 
-(A) is wrong: lazy refill acquires the lock *once* per request,
-the same as the ticker would, but the ticker would acquire it
-*once per bucket per tick* (so N×ticks locks per second).
-(C) is wrong: the spec does not forbid background timers; the
-spec calls lazy refill out as a deliberate choice because of
-its scaling property. (D) is wrong: a well-designed ticker
-*would* take the same lock, and the race is not avoided by lazy
-refill — it's a non-issue because the lock serializes both
-paths.
+## Q6 — Multiple choice (2 pts)
 
-**Reference**: `go-impl/ratelimit/ratelimit.go:102-109`,
-`rust-impl/src/rate_limiter.rs:65-73`,
-`node-impl/src/rateLimiter.ts:108-131`.
+**The spec doesn't say whether calling the un-throttled `GET /status` endpoint should reset a
+client's "idle" clock (used to decide when to evict their bucket). What did each implementation
+actually do, as verified in this review?**
 
-## A2 — **B**
+- A) All three implementations refresh the idle clock on `/status`, matching each other.
+- B) Go's `Snapshot` updates `lastSeen` on `/status`; Rust's `status()` deliberately does not
+  update `last_seen`; Node's `peek()` doesn't mutate the bucket at all. All three differ.
+- C) None of the three update any idle-related state on `/status`; only the rate-limited `/`
+  endpoint affects eviction timing.
+- D) Only Rust implements idle eviction at all; Go and Node buckets live forever.
 
-**Explanation.** A `sync.Mutex` over the entire `buckets` map
-serializes *all* requests, even those for *different* IPs that
-have no data dependency. The throughput is therefore bounded
-by `1 / (critical-section time)`, not by the number of CPUs.
-For the spec's stated scale (tens of clients, low RPS) this is
-fine — the critical section is ~100 ns, so a single mutex
-handles ~10 M req/s before contention becomes the bottleneck.
-For a production service with thousands of distinct IPs, the
-right answer is a sharded lock (`fnv32(key) % 256` → 256 mutexes)
-or `sync.Map`.
+---
 
-(A) is wrong: the implementation is *correct*; `go test -race`
-verifies this. (C) is wrong: `sync.Mutex` works with any type;
-`sync.Map` is a different abstraction with different
-performance characteristics, not a safety primitive. (D) is
-nonsense — Go maps are typed by key, and `string` keys are
-safe.
+## Q7 — Short answer (3 pts)
 
-**Reference**: `go-impl/ratelimit/ratelimit.go:48-62` and the
-`[GO-MAJOR-002]` issue in `code_review.md`.
+**Node's `TokenBucketRateLimiter` is a plain class with no imports from `express` or `node:http`,
+and its unit tests (`rateLimiter.test.ts`) never spin up an HTTP server. Meanwhile
+`server.test.ts` drives the same class only through real HTTP via `supertest`. What is this
+separation called, why does it let the class reach 98%+ coverage without any HTTP mocking, and
+name one other language in this project that applies the same separation (and how).**
 
-## A3 — **B**
+---
+---
 
-**Explanation.** Node's event loop counts "is there a timer
-pending?" as "is there still work to do?" Without `.unref()`,
-the cleanup timer keeps the event loop alive, so even after
-all sockets are closed and all HTTP handlers have returned,
-the process will not exit on `SIGINT` — it will wait for the
-next tick. With `.unref()`, the timer is *optional* work; if
-nothing else is keeping the event loop busy, the process can
-exit cleanly.
+# Answer Key
 
-(A) is wrong: the interval is set with a fixed `ms` argument;
-`unref()` does not change the cadence. (C) is wrong: a
-synchronous timer callback cannot "crash" in a way the event
-loop doesn't recover from. (D) is wrong: the test suite
-explicitly avoids relying on the timer by setting
-`cleanupIntervalMs: 24 * 60 * 60 * 1000` (24 h).
+## A1 — Answer: **B**
 
-**Reference**: `node-impl/src/index.ts:109-117` and the
-`[NODE-EDU-001]` note in `code_review.md`.
+Lazy refill computes `tokens = min(capacity, tokens + elapsed_since_last_touch × rate)` only when a
+request actually arrives for that specific client. A background ticker, by contrast, would have to
+iterate (or schedule a callback for) every tracked client on every tick regardless of whether that
+client has sent a request recently — O(N) work per tick just to keep idle buckets "current". Lazy
+refill makes an idle client cost exactly zero background work between requests. (C is false — the
+spec doesn't forbid timers, it just asks for the lazy formula. A and D describe real properties of
+some designs but aren't the actual reason lazy refill was chosen here — the docstrings in all three
+codebases give the O(N) background-cost argument as the rationale.)
 
-## A4 — Model answer
+## A2 — Answer: **B**
 
-> **Advantage**: `std::sync::Mutex` is a thin wrapper around a
-> futex/CAS — locking and unlocking are two atomic operations
-> measured in nanoseconds. It holds the *thread*, not a tokio
-> task, so there is no `.await` involved.
->
-> **Disadvantage**: A `std::sync::Mutex` cannot be held across
-> an `.await` — if you lock it and then yield to the runtime
-> (e.g. by making an HTTP call), other tasks block until the
-> holder resumes.
->
-> **Why the disadvantage does not apply here**: the critical
-> section in `RateLimiter::check` is pure CPU (one hash lookup
-> and a few float ops); there is no `.await` between the
-> `lock()` and the unlock. The code never holds the lock while
-> doing I/O.
+A single mutex over one map means every `Allow`/`check` call — regardless of which client it's for
+— must wait for the same lock, so throughput under concurrent load from *many distinct clients* is
+bounded by the critical section's execution time times the number of concurrent callers, not by
+available CPU cores. Sharding (hash the key, route to 1-of-N independent mutex+map pairs) lets
+requests for clients that land in different shards proceed truly in parallel. (A and D are false —
+both `sync.Mutex` over a map and Rust's `Mutex<HashMap<...>>` are perfectly safe and idiomatic
+without sharding; sharding is a scalability optimization, not a correctness requirement. C is false
+— sharding adds a small amount of memory overhead, splitting one map's bookkeeping across N smaller
+maps, not reducing it.)
 
-**Alternative valid answers**:
+## A3 — Model answer
 
-- The disadvantage could be stated as "if a future
-  implementation adds a call to a database inside the
-  critical section, it would deadlock", with the explanation
-  that the current code doesn't.
-- The advantage could be stated as "no async runtime overhead"
-  or "no risk of holding the lock across a cancellation point".
+The property is **not unverified — it's verified by a different kind of evidence than a true
+concurrent-load test.** The synchronous unit tests (e.g. `consumes_one_token_per_request`,
+`different_ips_have_independent_buckets`) prove, by reading the code, that `check()` acquires the
+shard's `Mutex` once and holds it across the full refill → compare → decrement sequence — there is
+no `.await` inside that critical section, so no other task can interleave partway through. This is
+a proof by construction (the lock scope structurally prevents the race), not a proof by
+observation (actually running 1000 concurrent attempts and counting how many were allowed). The gap
+is that a future refactor could narrow the lock scope "for readability" — say, splitting refill and
+consume into two separate lock acquisitions — and every currently-passing synchronous test would
+still pass, silently reintroducing a TOCTOU race, because none of them exercise real concurrent
+callers.
 
-**What we are testing**: the distinction between synchronous
-and async mutexes in tokio, and the discipline of
-"do not hold the lock across `.await`".
+One way to get a non-ignored test: since `RateLimiter::check()` itself is fully synchronous (no
+`.await` anywhere in its body), it doesn't need an async runtime to be called concurrently. Spawn
+real OS threads with `std::thread::scope` (stable since Rust 1.63) instead of `tokio::spawn`, have
+each thread call `limiter.check(ip)` directly some number of times against the same IP, join all
+threads, and assert the total allowed count is exactly `capacity`. This sidesteps the tokio
+multi-thread-runtime teardown hang entirely (there's no tokio runtime involved) while still proving
+the property under genuine concurrent execution, not just by code inspection.
 
-**Reference**: `rust-impl/src/rate_limiter.rs:142-150` and the
-`[RUST-EDU-001]` note in `code_review.md`.
+## A4 — Answer: **B**
+
+Confirmed by direct code reading in this review (`code_review.md` §2, XLANG-MAJOR-001): Go's
+`middleware.go` has its own standalone `ClientKey` function duplicating `clientkey.go`'s
+`RemoteAddrKeyStrategy.ClientKey`; Rust's `middleware.rs`/`handlers.rs` call axum's
+`ConnectInfo<SocketAddr>` extractor directly rather than anything in `client_key.rs`; Node's
+`index.ts` defines its own `resolveClientIp`/`normalizeIp` rather than importing
+`createExpressClientKeyStrategy` from `clientKeyStrategy.ts`. Each abstraction file is covered only
+by its own dedicated unit test — which is precisely why the dead code wasn't caught by a coverage
+gate. (C and D are backwards: Node's `TRUST_PROXY` and a hypothetical Go `RL_TRUST_PROXY` are
+unrelated to whether the `ClientKeyStrategy` type itself is wired in — as of this review, Go has no
+`RL_TRUST_PROXY` at all.)
 
 ## A5 — Model answer
 
-> 1. **`Instant` is monotonic** — it is guaranteed to never go
->    backwards (NTP steps, leap seconds, DST changes, manual
->    clock adjustments). For *measuring* elapsed time within a
->    process, monotonic is the only correct choice. **`SystemTime`
->    is wall-clock** — it can jump, but it is the only one that
->    can be converted to a Unix epoch second, which is what
->    `X-RateLimit-Reset` requires.
-> 2. **Using `SystemTime::now()` directly in the limiter** would
->    make the lazy-refill math vulnerable to clock jumps: if the
->    system clock steps backwards by 30 seconds (NTP correction),
->    `now - last_refill` would be negative, and the clamp
->    `elapsed_secs.max(0.0)` would silently make the bucket
->    stop refilling for 30 seconds of wall time. More subtly,
->    `SystemTime` is also the input to `Duration::from_secs_f64`
->    for the reset-epoch calculation — if the clock jumps, the
->    reset value would be wrong.
-> 3. **The anchor is captured at construction** so that
->    `instant_to_system_time` can compute wall-clock as
->    "what was the system clock when the limiter started,
->    plus how much monotonic time has elapsed since". This
->    gives a deterministic relationship between the monotonic
->    clock (the source of truth for refill math) and the
->    wall-clock clock (the source of truth for the header
->    value). Recomputing it on every call would couple the
->    header to the system clock's instantaneous value, which
->    is exactly the problem the anchor is solving.
+`Instant` is Rust's *monotonic* clock — it only ever moves forward and is immune to NTP
+adjustments, which is exactly what you want to drive with a `MockClock.advance(Duration)` in a
+test: advancing it deterministically simulates "time passing" without any real waiting.
+`SystemTime`, on the other hand, is Rust's *wall-clock* type — the only one that can be converted to
+a Unix epoch second, which is what the spec requires for `X-RateLimit-Reset`. Neither type alone
+gives you both properties (mockable *and* convertible to an epoch second), so the code captures
+one fixed pair — "at construction, `Instant::now()` was paired with `SystemTime::now()`" — and
+derives every later wall-clock instant as `start_system_time + (some_later_instant - start_instant)`.
 
-**What we are testing**: understanding of the "monotonic for
-measuring, wall-clock for reporting" pattern, and why a
-construction-time anchor is the right design.
+If the code called `SystemTime::now()` directly at request time instead, the wall-clock output
+would track the *real* system clock regardless of what the `MockClock` was told to report. A test
+that does `clock.advance(Duration::from_secs(3600))` to simulate an hour passing would see the
+`Instant`-based token math behave correctly (tokens refill as if an hour passed), but
+`X-RateLimit-Reset` would still report a timestamp based on the *actual* wall-clock time the test
+happened to run at — decoupling the header from the simulated scenario and making the test
+either flaky (if it asserts an exact value) or silently wrong (if it doesn't).
 
-**Reference**: `rust-impl/src/rate_limiter.rs:144-150, 305-311`
-and the `[RUST-EDU-002]` note in `code_review.md`.
+## A6 — Answer: **B**
 
----
+Verified directly against the current code in this review (`code_review.md` RUST-MINOR-003): Go's
+`Snapshot` (called by `/status`) does `b.lastSeen = now`, which means repeatedly polling `/status`
+alone keeps an otherwise-idle client's bucket alive indefinitely. Rust's `status()` refills the
+token count for display but intentionally skips updating `last_seen` (documented in a code
+comment). Node's `peek()` doesn't write to the bucket object at all, so `lastRefillMs` (which
+doubles as the idle marker) is left exactly as the last *rate-limited* request set it — coincidentally
+achieving the same outcome as Rust's explicit choice, but as a side effect of `peek`'s
+implementation rather than a deliberate design decision. This is a genuine spec gap: `docs/spec.md`
+doesn't say which behavior is correct, so all three teams guessed independently and landed on two
+different answers.
 
-## Grading rubric (for the Sonda / Prometor gate)
+## A7 — Model answer
 
-| Q | Pts | Pass = | Borderline = | Fail = |
-|---|---|---|---|---|
-| Q1 | 2 | B | (any other letter with a clear rationale) | blank or A |
-| Q2 | 2 | B | (D with a clear rationale about map safety) | blank or A |
-| Q3 | 2 | B | (D with a clear rationale about test isolation) | blank or A |
-| Q4 | 2 | Names *one* pro AND *one* con AND explains the con's non-applicability | Names pro + con but explanation is hand-wavy | Missing one of the three parts |
-| Q5 | 2 | Addresses all 3 sub-points with a coherent thread | Addresses 2 of 3 with clear reasoning | Misses 2+ sub-points |
+This is the **"pure core, thin shell" / "ports and adapters" (hexagonal architecture)** pattern
+applied at the scale of a single class. `TokenBucketRateLimiter` (the "core") depends only on a
+`clock: () => number` function and returns plain data (`ConsumeResult`, `PeekResult`) — it has no
+notion of HTTP requests, responses, status codes, or headers. `index.ts` (the "adapter" / "shell")
+translates between that pure interface and Express's `req`/`res` objects: reading the client IP off
+`req`, calling `tryConsume`, and writing the result back as headers and a JSON body. Because the
+core has no I/O and no framework dependency, `rateLimiter.test.ts` can drive it directly — call
+`tryConsume('some-key')`, inspect the returned object — with zero HTTP server startup cost, which is
+exactly why it can hit 98.05% coverage using only 19 fast, synchronous unit tests, while
+`server.test.ts` separately exercises the *wiring* (does the class's output actually turn into the
+right status code and headers) via real HTTP through `supertest`.
 
-A score of 7/10 or higher = "dominado" for this project, in the
-ÁGORA-Continuum gate. Below 7/10 = the Prometor should re-cycle
-the learner on the missed questions.
+The same separation appears in the other two languages, with more ceremony because the language
+doesn't make privacy/module boundaries as lightweight as TypeScript's `class`/private-field syntax:
+**Rust** puts the algorithm in `rate_limiter.rs` (zero axum imports) as part of the `rate_limiter_rust`
+*library* crate, and wires it to HTTP only in `middleware.rs`/`handlers.rs`, with a separate `main.rs`
+*binary* crate that just calls `rate_limiter_rust::run()`. **Go** achieves the same split via
+packages: the `ratelimit/` package is framework-agnostic apart from using stdlib `net/http` types
+for its `Middleware`/`StatusHandler` return values, while `main.go` (`package main`) owns process
+wiring, env parsing, and the HTTP server lifecycle.

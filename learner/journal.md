@@ -820,3 +820,49 @@ dated today.
 - First evidence-backed gate: `U0-sonda-rate-limiter-robustness` passed via
   `python3 -m engines.pixelDojo.verifier` (GATEKEEPER evidence of 2026-06-09 +
   attempt file), recorded 2026-07-05. `units_log` now has 1 legitimate entry.
+
+### 2026-07-05 - 01_rate_limiter Code Review (cycle 2026-06-04-01-rate-limiter, phase review)
+
+- Ran the `reviewer` phase of `learner/pipeline_status.md` (was `impl-done`,
+  `awaiting: reviewer`) against the current `go-impl/`, `rust-impl/`, `node-impl/`
+  under `curriculum/01_rate_limiter/`.
+- **Provenance check first**: `curriculum/01_rate_limiter/docs/{code_review,learning_notes,quiz,
+  status,evolution_report,mutation_gate}.md` already existed from an earlier, separately-run
+  cycle (`2026-06-03-01-rate-limiter`, commit `3412320` and prior) that completed outside the
+  gated `pipeline_status.md` pipeline. Per `review.md`'s instruction, these were treated as
+  **unverified drafts**, not ground truth — every issue was independently re-derived against the
+  current code before being reused or discarded.
+- **Re-verified as fixed since that draft**: both Go and Rust now implement a sharded-mutex bucket
+  store (32/16 shards respectively) — the draft's "single global mutex" finding no longer applies.
+  Rust's `retry_after` no longer has the dead-code conditional the draft flagged; the current code
+  already matches the draft's own suggested fix.
+- **New finding this pass, missed by the earlier draft**: all three languages built a pluggable
+  `ClientKeyStrategy`-shaped abstraction (Go `clientkey.go`, Rust `client_key.rs`, Node
+  `clientKeyStrategy.ts`) that is **never wired into the running server** — each production code
+  path has its own inline duplicate instead. Each dead file is covered by its own passing unit test
+  (100% coverage in Node's case), which is exactly why it wasn't caught before: a well-tested file
+  is not the same as a used file.
+- Re-ran Node's test suite independently in a clean sandbox install (`npm ci` + `vitest run
+  --coverage`): **55 passed, 1 todo, 93.13% coverage** — consistent with `pipeline_status.md`'s
+  claim of "~91.86% coverage, 55 testes passados". Go/Rust toolchains were unavailable in this
+  sandbox, so their tests were reviewed statically, not re-executed — flagged explicitly as a gap
+  rather than claimed as re-run. `npm audit`/`cargo audit`/`govulncheck` were likewise not run
+  (no network egress / no toolchain) — flagged rather than fabricated.
+- Final tally: 21 issues (0 Critical / 8 Major / 9 Minor / 4 Educational), 7 categories covered,
+  down from the stale draft's 27 because two Major findings are now fixed, not because the bar
+  was relaxed.
+- **New generalization for the shared knowledge base**: *a well-tested abstraction is not the same
+  as a used abstraction.* When a seam (interface/trait/class) exists in a codebase, grep for
+  callers in production code paths before trusting it's load-bearing — a passing, even
+  100%-covered, unit test file only proves the seam works in isolation, not that anything calls it.
+  This generalizes beyond this project: "we have coverage" cultures are specifically vulnerable to
+  dead code that looks alive because its own tests are green.
+- Artifacts written: `curriculum/01_rate_limiter/docs/code_review.md`,
+  `docs/learning_notes.md`, `docs/quiz.md` (all full rewrites, not amendments, since the prior
+  versions' core claims about mutex design were stale).
+- Self-checked gate for phase=review (no separate verifier script exists for this pipeline; checked
+  manually per `review.md`'s stated criteria): all 3 languages reviewed ✓; ≥1 Educational issue per
+  impl ✓ (Go 1, Rust 2, Node 1); 7 categories covered ✓ (see summary table in `code_review.md` §1);
+  severities consistent (no Critical used for a nit) ✓; quiz has answer key with explanations ✓;
+  ≥1 new generalization appended to this journal ✓.
+- `learner/pipeline_status.md` advanced to `phase: review-done`, `awaiting: benchmarker`.
