@@ -3,21 +3,21 @@
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +
 //         learner/predictions.yaml
-// Generated: 2026-07-02T18:02:04.911615Z
+// Generated: 2026-07-05T19:05:34.038844Z
 
 import type { LearnerSnapshot } from "../domain"
 
 export const learnerSnapshot: LearnerSnapshot = {
   activeUnit: {
-    id: "U17-search-engine",
-    title: "Agent Quest 18: search engine",
-    project: "18_search_engine",
-    state: "mastered",
+    id: "U0-sonda-rate-limiter-robustness",
+    title: "Agent Quest 01: rate-limiter agent orchestration",
+    project: "01_rate_limiter",
+    state: "presenting",
     retryCount: 0,
     retryLimit: 3,
   },
   gate: {
-    implementationBlocked: false,
+    implementationBlocked: true,
     unblockCondition: "learner_attempt_evaluated",
   },
   profile: {
@@ -55,6 +55,12 @@ export const learnerSnapshot: LearnerSnapshot = {
   ],
   nextReviews: [
     {
+      unitId: "U0-sonda-rate-limiter-robustness",
+      title: "agentic orchestration for token-bucket robustness",
+      dueIn: "today",
+      reason: "due",
+    },
+    {
       unitId: "P-001",
       title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
       dueIn: "today",
@@ -64,13 +70,13 @@ export const learnerSnapshot: LearnerSnapshot = {
   masteredCount: 1,
   scaffoldedCount: 17,
   streak: {
-    current: 1,
-    longest: 1,
-    lastGateDate: "2026-07-01",
+    current: 0,
+    longest: 0,
+    lastGateDate: null,
     freezesEquipped: 2,
     freezesMax: 2,
   },
-  curr: 1,
+  curr: 0,
   predictions: {
     count: 0,
     byMetric: {

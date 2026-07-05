@@ -208,6 +208,7 @@ def sync() -> None:
         build_snapshot as _build_snapshot,
         sync as _sync_dashboard_snapshot,
         sync_pixel_review_slice as _sync_pixel_review_slice,
+        sync_voxel_review_slice as _sync_voxel_review_slice,
     )
 
     state = load_and_validate()
@@ -232,3 +233,6 @@ def sync() -> None:
 
     pixel_path = _sync_pixel_review_slice(snapshot)
     print(f"PixelDojo review slice regenerated: {pixel_path.relative_to(ROOT)}")
+
+    voxel_path = _sync_voxel_review_slice(snapshot)
+    print(f"voxelDojo review slice regenerated: {voxel_path.relative_to(ROOT)}")

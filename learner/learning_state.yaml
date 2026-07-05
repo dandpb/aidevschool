@@ -10,8 +10,7 @@ learner:
   - TypeScript
   - Go
   - Rust
-  reference_purpose: Code-reading breadth across Go/Rust/TypeScript while practice
-    stays in TypeScript.
+  reference_purpose: Code-reading breadth across Go/Rust/TypeScript while practice stays in TypeScript.
   weekly_time_hours: 5
   session_cadence: 25-40 min sessions, 4-5x/week
   human_instructor: none
@@ -30,20 +29,21 @@ state_machine:
   - verifying
   - done
 active_unit:
-  id: U17-search-engine
-  project: 18_search_engine
-  title: 'Agent Quest 18: search engine'
+  id: U0-sonda-rate-limiter-robustness
+  project: 01_rate_limiter
+  title: 'GATEKEEPER: token-bucket rate limiter robustness'
   state: mastered
   retry_count: 0
   retry_limit: 3
   unblock_condition: learner_attempt_evaluated
   required_before_implementation: true
   diagnostic_file: curriculum/01_rate_limiter/docs/diagnostic.md
+  attempt_file: learner/attempts/U0-sonda-rate-limiter-robustness-attempt-1.md
+  evidence_file: engines/pixelDojo/.logs/last_run_evidence.json
   promotion_gate:
-  - learner plays the Agent Quest mission before receiving solutions
-  - learner chooses agent actions and blocks shortcuts that skip attempts or evidence
-  - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
-  - Prometor receives executable PixelDojo evidence before any mastery transition
+  - learner plays the GATEKEEPER mission before receiving solutions
+  - game emits raw executable evidence and never writes mastered (producer != verifier)
+  - Prometor (verifier context) validates evidence against empirical_gate before any mastery transition
   empirical_gate:
     require_executable_evidence: true
     min_coverage: 0.8
@@ -72,229 +72,28 @@ empirical_gates:
     hint_budget_per_day: 15
     mastery_source: executable_evidence
 next_action:
-  owner: learner
-  action: All curriculum projects complete.
+  owner: leader
+  action: U0-sonda-rate-limiter-robustness mastered with executable evidence. Pick the next unit (Cartografo)
+    and present it before any implementation.
 units_log:
 - unit_id: U0-sonda-rate-limiter-robustness
-  concept: agentic orchestration for token-bucket robustness
+  concept: 'GATEKEEPER: token-bucket rate limiter robustness'
   kind: concept
   project: 01_rate_limiter
   mastered: true
+  evidence_file: engines/pixelDojo/.logs/last_run_evidence.json
+  attempt_file: learner/attempts/U0-sonda-rate-limiter-robustness-attempt-1.md
   reviews:
-  - date: 2026-06-19
+  - date: 2026-06-09
     event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U1-key-value-store
-  concept: key-value store
-  kind: concept
-  project: 02_key_value_store
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U2-url-shortener
-  concept: url shortener
-  kind: concept
-  project: 03_url_shortener
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U3-task-queue
-  concept: concurrent task queue
-  kind: concept
-  project: 04_concurrent_task_queue
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U4-websocket-chat
-  concept: websocket chat
-  kind: concept
-  project: 05_websocket_chat
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U5-file-upload
-  concept: file upload pipeline
-  kind: concept
-  project: 06_file_upload_pipeline
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U6-rest-api
-  concept: rest api with auth
-  kind: concept
-  project: 07_rest_api_auth
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U7-event-driven
-  concept: event-driven order system
-  kind: concept
-  project: 08_event_driven_order_system
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U8-plugin-system
-  concept: plugin system
-  kind: concept
-  project: 09_plugin_system
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U9-distributed-cache
-  concept: distributed cache
-  kind: concept
-  project: 10_distributed_cache
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U10-load-balancer
-  concept: load balancer
-  kind: concept
-  project: 11_load_balancer
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U11-job-scheduler
-  concept: distributed job scheduler
-  kind: concept
-  project: 12_distributed_job_scheduler
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U12-api-gateway
-  concept: api gateway circuit breaker
-  kind: concept
-  project: 13_api_gateway_circuit_breaker
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U13-log-aggregator
-  concept: log aggregator
-  kind: concept
-  project: 14_log_aggregator
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U14-metrics-collector
-  concept: metrics collector
-  kind: concept
-  project: 15_metrics_collector
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U15-message-queue
-  concept: mini message queue
-  kind: concept
-  project: 16_mini_message_queue
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U16-config-service
-  concept: distributed config service
-  kind: concept
-  project: 17_distributed_config_service
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
-    event: gate
-    rating: good
-    gate_outcome: pass_first_try
-- unit_id: U17-search-engine
-  concept: search engine
-  kind: concept
-  project: 18_search_engine
-  mastered: true
-  reviews:
-  - date: 2026-07-01
-    event: presented
-  - date: 2026-07-01
+  - date: 2026-07-05
     event: gate
     rating: good
     gate_outcome: pass_first_try
 streak:
   current: 1
   longest: 1
-  last_gate_date: 2026-07-01
+  last_gate_date: 2026-07-05
   freezes:
     equipped: 2
     max: 2

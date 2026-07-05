@@ -2,10 +2,10 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-07-02T21:02:04+00:00'
-workspace: /Users/danielbarreto/Development/aidevschool
+updated_at: '2026-07-05T22:05:34+00:00'
+workspace: /sessions/funny-youthful-volta/mnt/aidevschool
 change_log:
-- at: '2026-07-02T21:02:04+00:00'
+- at: '2026-07-05T22:05:34+00:00'
   by: substrate
   reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
@@ -39,12 +39,12 @@ state_machine:
   retry_limit: 3
   current_retry: 0
 active_unit:
-  id: U17-search-engine
-  project: projects/18_search_engine
-  title: 'Agent Quest 18: search engine'
-  state: dominado
+  id: U0-sonda-rate-limiter-robustness
+  project: projects/01_rate_limiter
+  title: 'Agent Quest 01: rate-limiter agent orchestration'
+  state: apresentando
   diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
-  awaiting: ''
+  awaiting: learner_attempt
   promotion_gate:
   - learner plays the Agent Quest mission before receiving solutions
   - learner chooses agent actions and blocks shortcuts that skip attempts or evidence
@@ -73,4 +73,5 @@ empirical_gates:
     mastery_source: executable_evidence
 next_action:
   owner: learner
-  action: All curriculum projects complete.
+  action: Play Agent Quest in engines/pixelDojo/pixel-quest and submit the emitted
+    evidence for verifier review.

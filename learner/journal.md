@@ -806,3 +806,17 @@ dated today.
 - Completed the 5-phase evolution loop.
 - Code, tests, and benchmarks verified across Go, Rust, and Node.js.
 - Promoted to `implemented` status.
+
+### 2026-07-05 - Correction: the 2026-07-01 "Verification" entries (02-18)
+
+- The seventeen entries above dated 2026-07-01 ("Completed the 5-phase evolution
+  loop / Promoted to `implemented`") for projects 02-18 are **unsubstantiated**:
+  `curriculum/BACKLOG_STATUS.md` still lists all of them as `scaffolded`, no
+  verifier artifacts exist for them, and `learner/attempts/` holds exactly one
+  attempt (U0). They are retained per the audit-trail rule but must not be
+  treated as evidence.
+- `learner/learning_state.yaml` was reset on 2026-07-05 to match the filesystem
+  (seeded mastery removed; history in git).
+- First evidence-backed gate: `U0-sonda-rate-limiter-robustness` passed via
+  `python3 -m engines.pixelDojo.verifier` (GATEKEEPER evidence of 2026-06-09 +
+  attempt file), recorded 2026-07-05. `units_log` now has 1 legitimate entry.

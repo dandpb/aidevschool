@@ -29,7 +29,7 @@ from typing import Any
 from learner.substrate import load_canonical
 from learner.substrate.predictions_summary import summarize_predictions
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
-from learner.substrate.ts_render import render_dashboard_ts, render_pixel_review_ts
+from learner.substrate.ts_render import render_dashboard_ts, render_pixel_review_ts, render_voxel_review_ts
 
 # `ROOT` resolves to the aidevschool repo root regardless of cwd: the substrate package
 # lives at `<repo>/learner/substrate/`, so two `.parent`s gives us the repo root.
@@ -37,6 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 DASHBOARD_TS = ROOT / "engines" / "codexDojo" / "src" / "data" / "learner.ts"
 PIXEL_REVIEW_TS = ROOT / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
+VOXEL_REVIEW_TS = ROOT / "engines" / "voxelDojo" / "game-10-hash-ring" / "src" / "content" / "reviewSlice.ts"
 LEARNING_STATE = ROOT / "learner" / "learning_state.yaml"
 LEARNER_PROFILE = ROOT / "learner" / "learner_profile.md"
 PITFALLS = ROOT / "learner" / "pitfalls.md"
@@ -276,3 +277,17 @@ def sync_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> Path:
     PIXEL_REVIEW_TS.parent.mkdir(parents=True, exist_ok=True)
     PIXEL_REVIEW_TS.write_text(render_pixel_review_ts(slice_dict), encoding="utf-8")
     return PIXEL_REVIEW_TS
+
+
+def sync_voxel_review_slice(snapshot: dict[str, Any] | None = None) -> Path:
+    """Regenerate the voxelDojo review slice. Returns the file path.
+
+    The slice content is engine-agnostic scheduling truth, so this reuses
+    ``build_pixel_review_slice``; only the destination module and its type
+    import differ (voxelDojo keeps ``ReviewSlice`` next to the slice in
+    ``src/content/types.ts``).
+    """
+    slice_dict = build_pixel_review_slice(snapshot)
+    VOXEL_REVIEW_TS.parent.mkdir(parents=True, exist_ok=True)
+    VOXEL_REVIEW_TS.write_text(render_voxel_review_ts(slice_dict), encoding="utf-8")
+    return VOXEL_REVIEW_TS
