@@ -66,11 +66,21 @@ export type SequenceContract = {
   readonly maxGuardsMissed: number
 }
 
+// task_queue: retry / backpressure / dead-letter-queue. Pass thresholds are
+// centralized here (anti-drift invariant — see TOKEN_BUCKET_CONTRACT comment).
+export type TaskQueueContract = {
+  readonly kind: "pixelquest-task-queue"
+  readonly minProcessed: number
+  readonly maxPoisonRetried: number
+  readonly maxBackpressurePeak: number
+}
+
 export type EvidenceContract =
   | TokenBucketContract
   | RouteHealthContract
   | PolicyGateContract
   | SequenceContract
+  | TaskQueueContract
 
 // Single source of truth for each encounter kind's pass thresholds. Each
 // constant is referenced by both the declared unit contract
@@ -83,6 +93,20 @@ export const TOKEN_BUCKET_CONTRACT = {
   minGoodAdmits: 8,
   maxAbusiveAdmitted: 0,
   maxObservedRateMultiplier: 1.35,
+} as const
+
+// Pass thresholds for the task_queue encounter. Used by both the unit contract
+// (curriculumPack.evidenceContractFor) and the runtime pass-rule
+// (taskQueueOutcome) so the two cannot drift.
+// - minProcessed: minimum legit jobs a passing run must process.
+// - maxPoisonRetried: a poison job must be dead-lettered at/under maxRetries;
+//   this caps how many extra retries beyond maxRetries are tolerated (0 = the
+//   correct play is to DLQ exactly at maxRetries).
+// - maxBackpressurePeak: the queue depth must never exceed this cap.
+export const TASK_QUEUE_CONTRACT = {
+  minProcessed: 8,
+  maxPoisonRetried: 3,
+  maxBackpressurePeak: 4,
 } as const
 
 export type UnitDefinition = {
@@ -208,11 +232,46 @@ export type PolicyGateEncounter = {
   readonly maxPolicyLeaks: number
 }
 
+export type TaskQueueJobType = "legit" | "poison"
+
+export type TaskQueueJob = {
+  readonly type: TaskQueueJobType
+  readonly at: number
+  readonly label?: string
+}
+
+// task_queue encounter: a stream of jobs arrives (legit vs poison). The player
+// chooses process (admit) / dead-letter (reject); retry is modeled as repeated
+// admits of a poison job — the correct play is to retry until retriesForCurrentJob
+// reaches maxRetries, then dead-letter (reject). Backpressure rises when jobs
+// arrive faster than they are processed.
+export type TaskQueueEncounter = {
+  readonly id: string
+  readonly kind: "task_queue"
+  readonly title: string
+  readonly unit_id: string
+  readonly project: string
+  readonly concept: string
+  readonly mechanicName: string
+  readonly resourceName: string
+  readonly goodRequestLabel: string
+  readonly badRequestLabel: string
+  readonly admitActionLabel: string
+  readonly rejectActionLabel: string
+  readonly practiceTitle: string
+  readonly practiceText: string
+  readonly maxRetries: number
+  readonly arrivalRate: number
+  readonly processRate: number
+  readonly jobs: readonly TaskQueueJob[]
+}
+
 export type EncounterDefinition =
   | TokenBucketEncounter
   | SequenceEncounter
   | RouteHealthEncounter
   | PolicyGateEncounter
+  | TaskQueueEncounter
 
 export type AssetManifest = {
   readonly tiles: readonly string[]

@@ -14,6 +14,8 @@ import type {
   RouteHealthEncounter,
   SequenceEncounter,
   SequenceStep,
+  TaskQueueEncounter,
+  TaskQueueJob,
   TileCode,
   TokenBucketEncounter,
   TokenBucketRequest,
@@ -123,6 +125,12 @@ const EVIDENCE_CONTRACT_READERS: Record<string, EvidenceContractReader> = {
     minAdvanced: readNumber(value, `${path}.minAdvanced`, issues),
     maxGuardsMissed: readNumber(value, `${path}.maxGuardsMissed`, issues),
   }),
+  "pixelquest-task-queue": (value, path, issues) => ({
+    kind: "pixelquest-task-queue",
+    minProcessed: readNumber(value, `${path}.minProcessed`, issues),
+    maxPoisonRetried: readNumber(value, `${path}.maxPoisonRetried`, issues),
+    maxBackpressurePeak: readNumber(value, `${path}.maxBackpressurePeak`, issues),
+  }),
 }
 
 function readEvidenceContract(raw: unknown, path: string, issues: string[]): EvidenceContract {
@@ -151,8 +159,13 @@ function readEncounter(raw: unknown, path: string, issues: string[]): EncounterD
   if (kind === "policy_gate") {
     return readPolicyGateEncounter(value, path, issues)
   }
+  if (kind === "task_queue") {
+    return readTaskQueueEncounter(value, path, issues)
+  }
   if (kind !== "token_bucket") {
-    issues.push(`${path}.kind must be token_bucket, sequence_flow, route_health, or policy_gate`)
+    issues.push(
+      `${path}.kind must be token_bucket, sequence_flow, route_health, policy_gate, or task_queue`,
+    )
   }
   return readTokenBucketEncounter(value, path, issues)
 }
@@ -212,7 +225,13 @@ function readBaseEncounter(
 function readBaseEncounter(
   value: Record<string, unknown>,
   path: string,
-  kind: "token_bucket" | "sequence_flow" | "route_health" | "policy_gate",
+  kind: "task_queue",
+  issues: string[],
+): Omit<TaskQueueEncounter, "jobs" | "maxRetries" | "arrivalRate" | "processRate">
+function readBaseEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  kind: "token_bucket" | "sequence_flow" | "route_health" | "policy_gate" | "task_queue",
   issues: string[],
 ) {
   return {
@@ -332,6 +351,42 @@ function readPolicyCheck(raw: unknown, path: string, issues: string[]): PolicyCh
     type: type === "denied" ? "denied" : "allowed",
     label: readString(value, `${path}.label`, issues),
     scope: readString(value, `${path}.scope`, issues),
+  }
+}
+
+function readTaskQueueEncounter(
+  value: Record<string, unknown>,
+  path: string,
+  issues: string[],
+): TaskQueueEncounter {
+  return {
+    ...readBaseEncounter(value, path, "task_queue", issues),
+    maxRetries: readNumber(value, `${path}.maxRetries`, issues),
+    arrivalRate: readNumber(value, `${path}.arrivalRate`, issues),
+    processRate: readNumber(value, `${path}.processRate`, issues),
+    jobs: readArray(value, "jobs", issues, path).map((job, index) =>
+      readTaskQueueJob(job, `${path}.jobs[${index}]`, issues),
+    ),
+  }
+}
+
+function readTaskQueueJob(raw: unknown, path: string, issues: string[]): TaskQueueJob {
+  const value = readRecord(raw, path, issues)
+  const type = readString(value, `${path}.type`, issues)
+  if (type !== "legit" && type !== "poison") {
+    issues.push(`${path}.type must be legit or poison`)
+  }
+  const job: TaskQueueJob = {
+    type: type === "poison" ? "poison" : "legit",
+    at: readNumber(value, `${path}.at`, issues),
+  }
+  const label = readOptionalString(value, `${path}.label`, issues)
+  if (label === undefined) {
+    return job
+  }
+  return {
+    ...job,
+    label,
   }
 }
 

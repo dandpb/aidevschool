@@ -302,6 +302,7 @@ describe("curriculum anti-drift: contract kind matches encounter kind for every 
     sequence_flow: "pixelquest-sequence-flow",
     route_health: "pixelquest-route-health",
     policy_gate: "pixelquest-policy-gate",
+    task_queue: "pixelquest-task-queue",
   }
 
   it("covers all 18 curriculum units", () => {

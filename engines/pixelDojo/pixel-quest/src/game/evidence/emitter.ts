@@ -21,6 +21,7 @@ import type { PixelQuestEvidenceMetrics, PixelQuestEvidenceRecord } from "./type
 //     "metrics": { "kind": string, ... }, // per-kind variant, discriminated by kind:
 //                                         //   pixelquest-token-bucket | pixelquest-route-health
 //                                         //   | pixelquest-policy-gate | pixelquest-sequence-flow
+//                                         //   | pixelquest-task-queue
 //     "review_context"?: { ... },         // scheduled-review projection (optional)
 //     "curriculum_context"?: { ... }      // concept/mechanic/signal/trap labels (optional)
 //   }

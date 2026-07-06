@@ -79,5 +79,8 @@ export function evidenceMetricsSummary(metrics: PixelQuestEvidenceMetrics): {
   if (metrics.kind === "pixelquest-policy-gate") {
     return { accepted: metrics.allowed, leaked: metrics.policy_leaks }
   }
+  if (metrics.kind === "pixelquest-task-queue") {
+    return { accepted: metrics.processed, leaked: metrics.poison_retried }
+  }
   return { accepted: metrics.advanced, leaked: metrics.guards_missed }
 }

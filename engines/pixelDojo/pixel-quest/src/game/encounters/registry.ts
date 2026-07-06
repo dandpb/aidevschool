@@ -22,6 +22,13 @@ import {
   type SequenceEncounterState,
 } from "./sequenceFlow"
 import {
+  applyEncounterAction as applyTaskQueueAction,
+  autoPassEncounter as autoPassTaskQueue,
+  createTaskQueueState,
+  getCurrentJob as getCurrentTaskQueueJob,
+  type TaskQueueEncounterState,
+} from "./taskQueue"
+import {
   applyEncounterAction as applyTokenBucketAction,
   autoPassEncounter as autoPassTokenBucket,
   createTokenBucketState,
@@ -34,6 +41,7 @@ export type EncounterState =
   | SequenceEncounterState
   | RouteHealthEncounterState
   | PolicyGateEncounterState
+  | TaskQueueEncounterState
 
 export type EncounterPrompt = {
   readonly type: "legit" | "abuse"
@@ -50,6 +58,8 @@ export function createEncounterFromPack(definition: EncounterDefinition): Encoun
       return createRouteHealthState(definition)
     case "policy_gate":
       return createPolicyGateState(definition)
+    case "task_queue":
+      return createTaskQueueState(definition)
   }
 }
 
@@ -67,6 +77,9 @@ export function applyEncounterAction(
   if (isPolicyGateState(state)) {
     return applyPolicyGateAction(state, action, now)
   }
+  if (isTaskQueueState(state)) {
+    return applyTaskQueueAction(state, action, now)
+  }
   return applySequenceAction(state, action, now)
 }
 
@@ -80,6 +93,8 @@ export function autoPassEncounter(definition: EncounterDefinition, now: Date): E
       return autoPassRouteHealth(definition, now)
     case "policy_gate":
       return autoPassPolicyGate(definition, now)
+    case "task_queue":
+      return autoPassTaskQueue(definition, now)
   }
 }
 
@@ -116,6 +131,20 @@ export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undef
     return {
       type: check.type === "denied" ? "abuse" : "legit",
       label: `${check.label} [${check.scope}]`,
+    }
+  }
+  if (isTaskQueueState(state)) {
+    const job = getCurrentTaskQueueJob(state)
+    if (job === undefined) {
+      return undefined
+    }
+    return {
+      type: job.type === "poison" ? "abuse" : "legit",
+      label:
+        job.label ??
+        (job.type === "poison"
+          ? state.definition.badRequestLabel
+          : state.definition.goodRequestLabel),
     }
   }
   const step = getCurrentSequenceStep(state)
@@ -158,6 +187,14 @@ export function encounterProgress(state: EncounterState): {
       heatPeak: state.heatPeak,
     }
   }
+  if (isTaskQueueState(state)) {
+    return {
+      index: state.index,
+      total: state.definition.jobs.length,
+      resourceValue: state.processed,
+      heatPeak: state.backpressurePeak,
+    }
+  }
   return {
     index: state.index,
     total: state.definition.steps.length,
@@ -176,4 +213,8 @@ export function isRouteHealthState(state: EncounterState): state is RouteHealthE
 
 export function isPolicyGateState(state: EncounterState): state is PolicyGateEncounterState {
   return state.definition.kind === "policy_gate"
+}
+
+export function isTaskQueueState(state: EncounterState): state is TaskQueueEncounterState {
+  return state.definition.kind === "task_queue"
 }

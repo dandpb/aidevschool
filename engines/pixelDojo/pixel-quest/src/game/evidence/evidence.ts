@@ -80,6 +80,9 @@ function readMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics
   if (kind === "pixelquest-sequence-flow") {
     return readSequenceMetrics(source)
   }
+  if (kind === "pixelquest-task-queue") {
+    return readTaskQueueMetrics(source)
+  }
   throw new EvidenceValidationError("evidence.metrics.kind must be a known evidence kind")
 }
 
@@ -130,6 +133,18 @@ function readSequenceMetrics(source: Record<string, unknown>): PixelQuestEvidenc
     skipped_required: readNumber(source, "skipped_required"),
     guards_missed: readNumber(source, "guards_missed"),
     heat_peak: readNumber(source, "heat_peak"),
+    overheated: readBoolean(source, "overheated"),
+  }
+}
+
+function readTaskQueueMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
+  return {
+    kind: "pixelquest-task-queue",
+    processed: readNumber(source, "processed"),
+    poison_dead_lettered: readNumber(source, "poison_dead_lettered"),
+    poison_retried: readNumber(source, "poison_retried"),
+    legit_retried: readNumber(source, "legit_retried"),
+    backpressure_peak: readNumber(source, "backpressure_peak"),
     overheated: readBoolean(source, "overheated"),
   }
 }

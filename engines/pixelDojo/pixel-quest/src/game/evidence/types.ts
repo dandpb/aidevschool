@@ -46,11 +46,22 @@ export type SequenceMetrics = {
   readonly overheated: boolean
 }
 
+export type TaskQueueMetrics = {
+  readonly kind: "pixelquest-task-queue"
+  readonly processed: number
+  readonly poison_dead_lettered: number
+  readonly poison_retried: number
+  readonly legit_retried: number
+  readonly backpressure_peak: number
+  readonly overheated: boolean
+}
+
 export type PixelQuestEvidenceMetrics =
   | TokenBucketMetrics
   | RouteHealthMetrics
   | PolicyGateMetrics
   | SequenceMetrics
+  | TaskQueueMetrics
 
 export type PixelQuestReviewContext = {
   readonly unit_kind: "concept"

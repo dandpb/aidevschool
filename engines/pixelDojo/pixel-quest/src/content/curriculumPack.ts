@@ -6,6 +6,8 @@ import {
   type Region,
   type RouteCheck,
   type SequenceStep,
+  TASK_QUEUE_CONTRACT,
+  type TaskQueueJob,
   TOKEN_BUCKET_CONTRACT,
   type TokenBucketRequest,
   type UnitDefinition,
@@ -24,10 +26,11 @@ type CurriculumModule = {
   readonly rejectActionLabel: string
   readonly practiceTitle: string
   readonly practiceText: string
-  readonly encounterKind?: "sequence_flow" | "route_health" | "policy_gate"
+  readonly encounterKind?: "sequence_flow" | "route_health" | "policy_gate" | "task_queue"
   readonly sequenceSteps?: readonly SequenceStep[]
   readonly routeChecks?: readonly RouteCheck[]
   readonly policyChecks?: readonly PolicyCheck[]
+  readonly taskQueueJobs?: readonly TaskQueueJob[]
 }
 
 const modules: readonly CurriculumModule[] = [
@@ -105,12 +108,28 @@ const modules: readonly CurriculumModule[] = [
     mechanicName: "Worker Queue",
     resourceName: "Workers",
     goodRequestLabel: "tarefa pronta",
-    badRequestLabel: "sobrecarga sem lease",
-    admitActionLabel: "Despachar",
-    rejectActionLabel: "Segurar",
+    badRequestLabel: "job veneno sem lease",
+    admitActionLabel: "Processar",
+    rejectActionLabel: "Dead-letter",
     practiceTitle: "Treino de backpressure",
     practiceText:
-      "Despache tarefas prontas enquanto houver capacidade. Segure itens sem lease ou rajadas que quebrariam a fila concorrente.",
+      "Despache tarefas prontas enquanto drena a fila. Jobs veneno devem ir para a dead-letter queue apos retries limitados, nao serem reprocessados para sempre.",
+    encounterKind: "task_queue",
+    taskQueueJobs: [
+      { type: "legit", at: 0, label: "checkout order #101" },
+      { type: "legit", at: 1.0, label: "email send batch #5" },
+      { type: "poison", at: 2.0, label: "image OCR null payload" },
+      { type: "legit", at: 3.0, label: "report render #42" },
+      { type: "legit", at: 4.0, label: "webhook fan-out #7" },
+      { type: "legit", at: 5.0, label: "checkout order #102" },
+      { type: "poison", at: 6.0, label: "import csv headers missing" },
+      { type: "legit", at: 7.0, label: "thumbnail resize #200" },
+      { type: "legit", at: 8.0, label: "notification digest" },
+      { type: "legit", at: 9.0, label: "checkout order #103" },
+      { type: "poison", at: 10.0, label: "schema migration bad json" },
+      { type: "legit", at: 11.0, label: "audit log flush" },
+      { type: "legit", at: 12.0, label: "checkout order #104" },
+    ],
   },
   {
     project: "05_websocket_chat",
@@ -548,6 +567,16 @@ function evidenceContractFor(module: CurriculumModule): EvidenceContract {
       maxPolicyLeaks: 0,
     }
   }
+  if (module.encounterKind === "task_queue") {
+    const jobs = module.taskQueueJobs ?? []
+    return {
+      kind: "pixelquest-task-queue",
+      // Pass requires processing every legit job and dead-lettering every poison job.
+      minProcessed: jobs.filter((job) => job.type === "legit").length,
+      maxPoisonRetried: TASK_QUEUE_CONTRACT.maxPoisonRetried,
+      maxBackpressurePeak: TASK_QUEUE_CONTRACT.maxBackpressurePeak,
+    }
+  }
   return {
     kind: "pixelquest-token-bucket",
     minGoodAdmits: TOKEN_BUCKET_CONTRACT.minGoodAdmits,
@@ -600,6 +629,17 @@ function makeEncounter(module: CurriculumModule, index: number): EncounterDefini
       checks,
       minAllowed: checks.filter((check) => check.type === "allowed").length,
       maxPolicyLeaks: 0,
+    }
+  }
+  if (module.encounterKind === "task_queue") {
+    const jobs = module.taskQueueJobs ?? []
+    return {
+      ...base,
+      kind: "task_queue",
+      maxRetries: TASK_QUEUE_CONTRACT.maxPoisonRetried,
+      arrivalRate: 1.0,
+      processRate: 1.0,
+      jobs,
     }
   }
   return {
