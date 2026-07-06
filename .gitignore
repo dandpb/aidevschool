@@ -100,3 +100,6 @@ engines/pixelDojo/pixel-quest/shots/
 .opencode/
 .playwright-mcp/
 .codex/
+
+# Playwright test-results artifacts (regenerable: produced by `pnpm run smoke`).
+**/test-results/

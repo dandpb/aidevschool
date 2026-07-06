@@ -140,7 +140,7 @@ export function liveMembersOfRoom(state: GameState, room: RoomId): Client[] {
 // Cycle the focused room by +1 / -1 (mod ROOM_COUNT). NES-pad friendly.
 export function cycleFocus(state: GameState, direction: 1 | -1): GameState {
   if (state.finished) return state
-  const next = ((state.focusedRoom + direction) % ROOM_COUNT + ROOM_COUNT) % ROOM_COUNT
+  const next = (((state.focusedRoom + direction) % ROOM_COUNT) + ROOM_COUNT) % ROOM_COUNT
   state.focusedRoom = next as RoomId
   return state
 }

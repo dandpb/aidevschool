@@ -31,8 +31,8 @@ import {
   SphereGeometry,
   Sprite,
   SpriteMaterial,
-  CanvasTexture as ThreeCanvasTexture,
   type Texture,
+  CanvasTexture as ThreeCanvasTexture,
   TorusGeometry,
   WebGLRenderer,
 } from "three"

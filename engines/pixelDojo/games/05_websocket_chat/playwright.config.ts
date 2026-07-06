@@ -10,7 +10,6 @@ export default defineConfig({
   webServer: {
     command: "pnpm dev",
     url: "http://127.0.0.1:4405",
-    port: 4405,
     reuseExistingServer: false,
     timeout: 120_000,
   },

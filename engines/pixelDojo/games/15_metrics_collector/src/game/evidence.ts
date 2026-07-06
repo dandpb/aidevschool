@@ -12,6 +12,9 @@ export const PROJECT = "15_metrics_collector"
 export const SCENARIO_ID = "metrics-collector-L1"
 export const SCHEMA = "15_metrics_collector-v1"
 
+// JSON.stringify turns raw Infinity into null — use "Infinity" as the JSON-stable sentinel for the +Inf bucket.
+export type BucketLe = number | "Infinity"
+
 export interface MetricsEvidenceRecord {
   readonly schema: string
   readonly source: "voxeldojo"
@@ -25,7 +28,7 @@ export interface MetricsEvidenceRecord {
   readonly gates: readonly string[]
   readonly metrics: {
     readonly kind: "voxeldojo-metrics-observatory"
-    readonly bucket_plan: readonly number[]
+    readonly bucket_plan: readonly BucketLe[]
     readonly obs_total: number
     readonly obs_bucketed_correct: number
     readonly obs_misbucketed: number
@@ -34,8 +37,8 @@ export interface MetricsEvidenceRecord {
     readonly percentile_queries_wrong: number
     readonly sum_observed: number
     readonly sum_recorded: number
-    readonly alert_threshold_requested_le: number
-    readonly alert_threshold_set_le: number
+    readonly alert_threshold_requested_le: BucketLe
+    readonly alert_threshold_set_le: BucketLe
     readonly alert_threshold_correct: boolean
     readonly alert_lifecycle_observed: readonly string[]
     readonly alert_lifecycle_correct: boolean
@@ -129,7 +132,7 @@ export function buildEvidence(input: BuildInput): MetricsEvidenceRecord {
     gates,
     metrics: {
       kind: "voxeldojo-metrics-observatory",
-      bucket_plan: input.bucketPlan,
+      bucket_plan: input.bucketPlan.map(serializeLe),
       obs_total: s.obsTotal,
       obs_bucketed_correct: s.obsBucketedCorrect,
       obs_misbucketed: s.obsMisbucketed,
@@ -138,8 +141,8 @@ export function buildEvidence(input: BuildInput): MetricsEvidenceRecord {
       percentile_queries_wrong: s.percentileQueriesWrong,
       sum_observed: s.sumObserved,
       sum_recorded: s.sumRecorded,
-      alert_threshold_requested_le: requestedLe,
-      alert_threshold_set_le: setLe,
+      alert_threshold_requested_le: serializeLe(requestedLe),
+      alert_threshold_set_le: serializeLe(setLe),
       alert_threshold_correct: thresholdCorrect,
       alert_lifecycle_observed: s.alertLifecycle,
       alert_lifecycle_correct: lifecycleCorrect,
@@ -172,6 +175,11 @@ function leValueForIdx(idx: number, bucketPlan: readonly number[]): number {
   const v = bucketPlan[idx]
   if (v === undefined) return -1
   return v
+}
+
+/** Map a raw `le` value into the JSON-stable sentinel form. */
+function serializeLe(v: number): BucketLe {
+  return Number.isFinite(v) ? v : "Infinity"
 }
 
 declare global {

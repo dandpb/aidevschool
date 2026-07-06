@@ -1,4 +1,4 @@
-import { mkdirSync } from "node:fs"
+import { mkdirSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
@@ -10,7 +10,9 @@ import { expect, test } from "@playwright/test"
 
 const here = dirname(fileURLToPath(import.meta.url))
 const shotPath = join(here, "..", "shots", "05_websocket_chat.png")
+const evidenceLogPath = join(here, "..", ".logs", "evidence.json")
 mkdirSync(dirname(shotPath), { recursive: true })
+mkdirSync(dirname(evidenceLogPath), { recursive: true })
 
 test("plays the L2 switch-fabric wave and emits a PASS evidence record", async ({ page }) => {
   const runtimeErrors: string[] = []
@@ -102,5 +104,6 @@ test("plays the L2 switch-fabric wave and emits a PASS evidence record", async (
   expect(dataUrlLength).toBeGreaterThan(1000)
 
   await page.screenshot({ path: shotPath, fullPage: true })
+  writeFileSync(evidenceLogPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8")
   expect(runtimeErrors, "no page runtime errors").toEqual([])
 })

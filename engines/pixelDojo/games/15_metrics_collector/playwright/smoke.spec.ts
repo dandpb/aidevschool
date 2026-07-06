@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
+import { type BucketLe } from "../src/game/evidence"
 
 /**
  * Browser smoke contract for the Metrics Observatory. Boots WebGL, drives the
@@ -20,7 +21,7 @@ interface MetricsEvidence {
   gates: string[]
   metrics: {
     kind: string
-    bucket_plan: number[]
+    bucket_plan: BucketLe[]
     obs_total: number
     obs_bucketed_correct: number
     obs_misbucketed: number
@@ -29,8 +30,8 @@ interface MetricsEvidence {
     percentile_queries_wrong: number
     sum_observed: number
     sum_recorded: number
-    alert_threshold_requested_le: number
-    alert_threshold_set_le: number
+    alert_threshold_requested_le: BucketLe
+    alert_threshold_set_le: BucketLe
     alert_threshold_correct: boolean
     alert_lifecycle_observed: string[]
     alert_lifecycle_correct: boolean

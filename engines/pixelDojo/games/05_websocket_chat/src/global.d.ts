@@ -6,5 +6,3 @@ declare global {
     __gameEvidence?: EvidenceRecord
   }
 }
-
-export {}

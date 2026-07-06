@@ -410,7 +410,7 @@ export class LogRiverScene {
       }
       visual.mesh.position.lerp(visual.target, 0.18)
       visual.mesh.scale.setScalar(visual.scale)
-      if (visual.ice !== undefined && visual.ice.visible) {
+      if (visual.ice?.visible) {
         visual.ice.position.copy(visual.mesh.position)
         visual.ice.scale.setScalar(visual.scale)
       }

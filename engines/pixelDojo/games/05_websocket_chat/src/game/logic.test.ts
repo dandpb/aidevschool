@@ -1,15 +1,17 @@
 import { describe, expect, it } from "vitest"
 import {
-  type GameState,
-  type RoomId,
-  WAVE_QUOTA,
   broadcast,
   createState,
   cycleFocus,
+  type GameState,
   isWin,
+  L2_SPAWN_INTERVAL_MS,
   liveMembersOfRoom,
-  maybeSpawn,
   maybeFinish,
+  maybeSpawn,
+  type RoomId,
+  tick,
+  WAVE_QUOTA,
 } from "./logic"
 
 // Drive the deterministic L2 wave manually (no real clock) so the test can
@@ -17,16 +19,20 @@ import {
 // its target room, and assert a clean win with all gates satisfied.
 function playCleanWave(): GameState {
   let state = createState(0)
-  // Spawn + immediately resolve each inbound particle in spawn order.
+  // Spawn + immediately resolve each inbound particle in spawn order. Step time
+  // by L2_SPAWN_INTERVAL_MS so maybeSpawn fires every iteration, and tick between
+  // broadcasts so the slow-consumer buffer drains.
   for (let i = 0; i < WAVE_QUOTA; i += 1) {
-    state = maybeSpawn(state, i * 1000)
+    const t = i * L2_SPAWN_INTERVAL_MS
+    state = maybeSpawn(state, t)
     const active = state.messages.find((m) => !m.broadcast && !m.expired)
     if (active === undefined) throw new Error(`no active message at step ${i}`)
     // Move focus to the message's target room.
     while (state.focusedRoom !== active.targetRoom) {
       state = cycleFocus(state, 1)
     }
-    state = broadcast(state, i * 1000 + 1)
+    state = broadcast(state, t + 1)
+    state = tick(state, t + 2)
   }
   return state
 }
@@ -105,8 +111,8 @@ describe("05_websocket_chat logic", () => {
     const m = state.metrics
     expect(m.messages_inbound).toBe(WAVE_QUOTA)
     expect(m.messages_broadcast).toBe(WAVE_QUOTA)
-    // 6 members per room * 4 messages per room = 24 correct deliveries.
-    expect(m.correct_deliveries).toBe(24)
+    // 8 messages * 6 live members of the matched room = 48 correct deliveries.
+    expect(m.correct_deliveries).toBe(48)
     expect(m.wrong_room_leaks).toBe(0)
     expect(m.missed_disconnects).toBe(0)
     expect(m.deadline_misses).toBe(0)

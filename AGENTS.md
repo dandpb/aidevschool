@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-05
-**Commit:** d7e0992
+**Generated:** 2026-07-06
+**Commit:** 2ccd351
 **Branch:** main
 
 ## OVERVIEW
@@ -45,11 +45,12 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Validate the 3D game | `engines/voxelDojo/game-10-hash-ring/` | Run `pnpm run test`, `pnpm run typecheck`, `pnpm run build`, `pnpm run smoke`. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/` | Keep `MANIFEST.md` mapped to concrete files. |
 | Work on the tutor core | `engines/minimaxDojo/` | Start with `INDEX.md`, `README.md`, `docs/`, `prompts/`, then `core/` and `tests/` for the Python reference implementation and contract tests. |
-| Run Claude Code orchestration | `engines/miniMaxEvolutionEngine/` | Start with `README.md` and `CLAUDE.md`; SessionStart injects pipeline + gate state via `.claude/hooks/briefing.sh`. |
+| Run Claude Code orchestration | `engines/miniMaxEvolutionEngine/` | Start with `README.md` and `CLAUDE.md`; SessionStart injects pipeline + gate state via `.claude/hooks/briefing.sh`, and `.claude/commands/devschool/` is the current `/devschool-*` command surface. |
 | Run the continuous runner tracer bullet | `engines/openclaw/` | Start with `AGENTS.md`, then `__main__.py`, `runner/scheduler.py`, and `tests/`. |
 | Change learner state | `learner/` | Shared source of truth for gates, profile, pitfalls, journal, pipeline. |
 | Change learner-state adapters | `learner/substrate/` | Edit canonical YAML first, then run `python3 -m learner.substrate`. |
 | Change project evidence | `curriculum/` | Shared challenge specs, implementations, reviews, benchmarks. |
+| Work on Project 02's verified implementation | `curriculum/02_key_value_store/node-impl/` | Current verified track is Node-only; start with `README.md`, then use `docs/benchmark_results.md` and `docs/evolution_report.md` for the measured benchmark/optimize workflow. |
 | Update idea/prompt source | `docs/PROMPTS/-01_GOAL.md`, `docs/PROMPTS/00_IDEIAS.md` | Goal and seed ideas. |
 | Read the polyglot-arena design | `docs/design/polyglot-arena/` | Demoted from `engines/polyglotEvolutionArena/`; proposal-stage. |
 
@@ -96,13 +97,16 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 
 ```bash
 # Dashboard
-cd engines/codexDojo && pnpm install && pnpm run lint && pnpm run test && pnpm run build
+cd engines/codexDojo && pnpm install && pnpm run dev
+cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
 
 # 2D teaching game
-cd engines/pixelDojo/pixel-quest && pnpm install && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
+cd engines/pixelDojo/pixel-quest && pnpm install && pnpm run dev
+cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 
 # 3D teaching game
-cd engines/voxelDojo/game-10-hash-ring && pnpm install && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run smoke
+cd engines/voxelDojo/game-10-hash-ring && pnpm install && pnpm run dev
+cd engines/voxelDojo/game-10-hash-ring && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run smoke
 
 # Shared Python suites
 make install && make test && make test-core && make test-substrate
@@ -117,6 +121,10 @@ python3 -m unittest discover -s learner/substrate/tests
 cd curriculum/01_rate_limiter/node-impl && npm run lint && npm run test && npm run build
 cd curriculum/01_rate_limiter/go-impl && go test -race -cover ./...
 cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test
+
+# Project 02 Node reference
+cd curriculum/02_key_value_store/node-impl && npm install && npm run dev
+cd curriculum/02_key_value_store/node-impl && npm run lint && npm run test:coverage && npm run build
 ```
 
 ```text
@@ -125,6 +133,13 @@ Open Claude Code rooted at engines/miniMaxEvolutionEngine/
 /devschool-status
 /devschool-diagnose
 /devschool-cycle
+/devschool-spec
+/devschool-implement
+/devschool-review
+/devschool-benchmark
+/devschool-optimize
+/devschool-verify
+/devschool-next
 /devschool-evolve
 /devschool-trail
 ```

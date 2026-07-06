@@ -28,22 +28,22 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three"
+import { buildEvidence, emitEvidence } from "./game/evidence/emitter"
 import {
-  ROOM_COLORS,
-  ROOM_COUNT,
-  WAVE_QUOTA,
   activeMessage,
   broadcast,
+  type Client,
   createState,
   cycleFocus,
+  type GameState,
   liveMembersOfRoom,
   maybeSpawn,
-  tick,
-  type Client,
-  type GameState,
+  ROOM_COLORS,
+  ROOM_COUNT,
   type RoomId,
+  tick,
+  WAVE_QUOTA,
 } from "./game/logic"
-import { buildEvidence, emitEvidence } from "./game/evidence/emitter"
 import "./styles.css"
 
 // ---------------------------------------------------------------------------
@@ -172,7 +172,10 @@ for (let r = 0; r < ROOM_COUNT; r += 1) {
 // Inbound message particle (lives at the hub while pending)
 // ---------------------------------------------------------------------------
 
-const msgMesh = new Mesh(new IcosahedronGeometry(0.4, 1), new MeshBasicMaterial({ color: 0xffffff }))
+const msgMesh = new Mesh(
+  new IcosahedronGeometry(0.4, 1),
+  new MeshBasicMaterial({ color: 0xffffff }),
+)
 msgMesh.visible = false
 scene.add(msgMesh)
 

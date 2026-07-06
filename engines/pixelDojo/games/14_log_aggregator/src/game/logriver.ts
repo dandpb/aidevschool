@@ -17,14 +17,7 @@
 
 export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal"
 
-export const LEVELS: readonly LogLevel[] = [
-  "trace",
-  "debug",
-  "info",
-  "warn",
-  "error",
-  "fatal",
-]
+export const LEVELS: readonly LogLevel[] = ["trace", "debug", "info", "warn", "error", "fatal"]
 
 export type LogSource = "payments" | "checkout" | "inventory" | "auth"
 
@@ -190,9 +183,10 @@ export type RiverState = {
   bannerKind: "pass" | "fail" | "info" | null
 }
 
-export const TIER_HOT_MS = 1500
-export const TIER_WARM_MS = 3500
-export const TIER_COLD_MS = 5500
+// Hot→warm→cold pacing: a log crosses all three tiers before evaluatePass() freezes the metrics.
+export const TIER_HOT_MS = 500
+export const TIER_WARM_MS = 1000
+export const TIER_COLD_MS = 2000
 // Cold-segment compression: each cold log's raw_bytes is divided by this
 // factor to derive compressed_bytes. Repetitive JSON in the benchmark corpus
 // reaches ≥ 3:1 — the game models that directly so the ratio is verifiable.
@@ -335,15 +329,12 @@ export function tick(state: RiverState, dt_ms: number): void {
   state.metrics.cold_segments = coldCount
   state.metrics.cold_raw_bytes = coldRaw
   state.metrics.cold_compressed_bytes = coldCompressed
-  state.metrics.compression_ratio =
-    coldCompressed === 0 ? 0 : coldRaw / coldCompressed
+  state.metrics.compression_ratio = coldCompressed === 0 ? 0 : coldRaw / coldCompressed
   state.metrics.indexer_lag_peak_ms = peakLag
   // Once all bursts are in and aging, we move to the contract phase once
   // enough logs have crossed into warm (indexing has flushed).
   if (state.phase === "ingesting" && state.currentBurst === null) {
-    const ready = state.indexed.some(
-      (log) => log.age_ms >= INDEXER_FRESHNESS_BUDGET_MS,
-    )
+    const ready = state.indexed.some((log) => log.age_ms >= INDEXER_FRESHNESS_BUDGET_MS)
     if (ready || state.indexed.length > 0) {
       advanceToContract(state)
     }
@@ -384,7 +375,7 @@ function flushUnbatched(state: RiverState, burst: Burst): void {
   // rejected as backpressure.
   let accepted = 0
   let rejected = 0
-  for (const entry of burst.entries) {
+  for (const _entry of burst.entries) {
     if (state.weirSlotsUsed >= state.weirSlotsMax) {
       rejected += 1
     } else {
@@ -588,7 +579,10 @@ function evaluateFilterQuery(
   } else {
     state.metrics.queries_wrong_filter += 1
     state.lastQueryWrong = true
-    flashToast(state, `Wrong filter — query returned ${matches.length}, contract wanted ${contract.expected.length}`)
+    flashToast(
+      state,
+      `Wrong filter — query returned ${matches.length}, contract wanted ${contract.expected.length}`,
+    )
   }
 }
 
@@ -748,7 +742,10 @@ const DYE_PALETTE: readonly (readonly [number, number, number])[] = [
   [0.95, 0.65, 0.4], // amber
 ]
 
-export function correlationDye(correlationId: string, palette: readonly string[]): readonly [number, number, number] {
+export function correlationDye(
+  correlationId: string,
+  palette: readonly string[],
+): readonly [number, number, number] {
   const idx = palette.indexOf(correlationId)
   const safe = idx === -1 ? 0 : idx
   return DYE_PALETTE[safe % DYE_PALETTE.length] ?? [0.6, 0.6, 0.6]

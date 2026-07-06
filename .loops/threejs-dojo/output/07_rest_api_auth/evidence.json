@@ -5,7 +5,7 @@
   "project": "07_rest_api_auth",
   "encounter_id": "encounter-aegis-corridor-01",
   "game": "Aegis Corridor",
-  "ts": "2026-07-05T23:24:57.072Z",
+  "ts": "2026-07-06T11:20:46.405Z",
   "pass": true,
   "gates": [
     "gate_order == [version, validation, authn, authz]",

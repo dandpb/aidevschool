@@ -41,7 +41,7 @@
   ],
   "encounter_id": "kv-warehouse-01",
   "game": "KV Warehouse",
-  "ts": "2026-07-05T23:26:16.757Z",
+  "ts": "2026-07-06T11:10:36.912Z",
   "metrics": {
     "puts_total": 3,
     "puts_correct": 3,

@@ -19,13 +19,7 @@
 //
 // Player drive (smoke): B B B B  → wait for aging → F E×5 Z  → F×2 E Z T.
 
-import type {
-  Burst,
-  Contract,
-  LogEntry,
-  LogLevel,
-  LogSource,
-} from "./logriver"
+import type { Burst, Contract, LogEntry, LogLevel, LogSource } from "./logriver"
 import { SOURCES } from "./logriver"
 
 type EntrySeed = {
@@ -42,6 +36,15 @@ type EntrySeed = {
 
 function makeEntry(seed: EntrySeed, rawBytes: number): LogEntry {
   return { ...seed, raw_bytes: rawBytes }
+}
+
+// Narrow strictly-typed indexed access — throws if `idx` is out of bounds.
+function seedAt(arr: readonly EntrySeed[], idx: number): EntrySeed {
+  const v = arr[idx]
+  if (v === undefined) {
+    throw new Error(`seedAt: missing index ${idx}`)
+  }
+  return { ...v }
 }
 
 // Repetitive JSON payload — repetitive on purpose so cold-segment compression
@@ -156,9 +159,9 @@ const burst2Seeds: EntrySeed[] = [
     message: "auth denied token",
   },
   // 3 duplicates of burst 1 logs (will be deduped).
-  { ...traceSpans[0]! },
-  { ...traceSpans[1]! },
-  { ...fillerEntries("b1", 8, 2000)[0]! },
+  seedAt(traceSpans, 0),
+  seedAt(traceSpans, 1),
+  seedAt(fillerEntries("b1", 8, 2000), 0),
   ...fillerEntries("b2", 7, 4000),
 ]
 
@@ -169,7 +172,7 @@ const burst2Entries: readonly LogEntry[] = burst2Seeds.map((seed) =>
 // === Burst 3: 12 entries, 1 duplicate ===
 
 const burst3Seeds: EntrySeed[] = [
-  { ...traceSpans[2]! }, // duplicate
+  seedAt(traceSpans, 2), // duplicate
   ...fillerEntries("b3", 11, 5000),
 ]
 
@@ -180,7 +183,7 @@ const burst3Entries: readonly LogEntry[] = burst3Seeds.map((seed) =>
 // === Burst 4: 12 entries, 1 duplicate ===
 
 const burst4Seeds: EntrySeed[] = [
-  { ...traceSpans[3]! }, // duplicate
+  seedAt(traceSpans, 3), // duplicate
   ...fillerEntries("b4", 11, 6000),
 ]
 

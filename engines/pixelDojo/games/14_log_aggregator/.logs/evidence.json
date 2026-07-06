@@ -4,7 +4,7 @@
   "project": "14_log_aggregator",
   "encounter_id": "river-delta-L1",
   "game": "Log River Delta",
-  "ts": "2026-07-05T23:57:59.094Z",
+  "ts": "2026-07-06T20:52:23.690Z",
   "pass": true,
   "gates": [
     {
@@ -58,7 +58,7 @@
     "backpressure_rejects": 0,
     "duplicates_detected": 5,
     "duplicates_double_counted": 0,
-    "indexer_lag_peak_ms": 963,
+    "indexer_lag_peak_ms": 952.3000000119209,
     "hot_segments": 0,
     "cold_segments": 43,
     "cold_raw_bytes": 7036,
