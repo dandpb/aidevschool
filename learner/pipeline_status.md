@@ -7,8 +7,8 @@
 - **cycle_id**: 2026-07-06-02-key-value-store
 - **current_project**: `curriculum/02_key_value_store`
 - **complexity_level**: 1 (fundamentos — hash map + TTL + HTTP CRUD)
-- **phase**: review-done
-- **awaiting**: `benchmarker`
+- **phase**: benchmark-done
+- **awaiting**: `optimizer`
 - **agents**:
   - `dev-node`: done (cobertura real medida nesta sessão: 86.15% statements / 80.76% branch /
     96.66% funcs / 86.15% lines — `npx vitest run --coverage`, 6/6 testes passando, 2 arquivos de
@@ -37,6 +37,21 @@
     Tally: 0 Critical / 3 Major / 4 Minor / 4 Educational, 7 categorias cobertas. Artefatos:
     `docs/code_review.md` (rewrite completo), `docs/learning_notes.md`, `docs/quiz.md` (8 questões
     com gabarito), entrada em `learner/journal.md` (2026-07-06).
+  - `benchmarker`: done. N=10 real, Node-only (Go/Rust explicitamente fora de escopo desta fase,
+    não bloqueados — decisão do dono do repo carregada das fases anteriores deste ciclo). Build
+    fresh em `/tmp/kv-node-bench` (node_modules do repo é macOS, não roda no sandbox Linux);
+    `tsc` limpo + `vitest run` 6/6 antes do benchmark. k6 indisponível (mesmo bloqueio de rede já
+    documentado no ciclo `01_rate_limiter`); `autocannon` v8.0.0 usado como fallback sancionado,
+    com script custom (`benchmarks/kv_load_autocannon.js`) cobrindo SET/GET/DEL/EXPIRE/TTL-read
+    (mix 68/15/5/7/5%, keyspace 10k chaves) — não apenas GET como o `01_rate_limiter`. 10 runs de
+    25s/50 conexões: RPS mean 7924.0 (CV 5.3%), latência avg mean 5.82ms (CV 6.1%), peak RSS mean
+    119.26MB (CV 0.8%). p95 (CV 19.2%) e p99 (CV 20.1%) latência flagados como ruidosos (>15%),
+    mesma limitação já vista no ciclo 01. Zero erros de transporte/timeouts/5xx em 1.987.334
+    requisições totais nos 10 runs. Re-check de tolerância (1 run extra): RPS 7429.60 (desvio
+    6.24% da média), latência avg 6.23ms (desvio 7.04%) — **PASS** (banda ±20%). Artefatos:
+    `benchmarks/results/native/node/run-{1..10}.json` + `tolerance-check-run.json`,
+    `benchmarks/kv_load_autocannon.js`, `docs/benchmark_results.md` (substitui o report N=1
+    macOS/k6 de 2026-07-02 do backfill anterior, preservado no histórico do git).
 - **notas**:
   - Escopo desta sessão (Fase 2.1, per `docs/SPEC_plano_execucao.md`): **somente Node.js** recebe
     implementação real e verificada neste ciclo. Go e Rust foram deliberadamente **não iniciados**
