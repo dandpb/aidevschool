@@ -2,10 +2,10 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-07-05T22:09:48+00:00'
+updated_at: '2026-07-06T00:27:04+00:00'
 workspace: /Users/danielbarreto/Development/aidevschool
 change_log:
-- at: '2026-07-05T22:09:48+00:00'
+- at: '2026-07-06T00:27:04+00:00'
   by: substrate
   reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
@@ -41,15 +41,15 @@ state_machine:
 active_unit:
   id: U0-sonda-rate-limiter-robustness
   project: projects/01_rate_limiter
-  title: 'Agent Quest 01: rate-limiter agent orchestration'
-  state: apresentando
+  title: 'GATEKEEPER: token-bucket rate limiter robustness'
+  state: dominado
   diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
-  awaiting: learner_attempt
+  awaiting: ''
   promotion_gate:
-  - learner plays the Agent Quest mission before receiving solutions
-  - learner chooses agent actions and blocks shortcuts that skip attempts or evidence
-  - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
-  - Prometor receives executable PixelDojo evidence before any mastery transition
+  - learner plays the GATEKEEPER mission before receiving solutions
+  - game emits raw executable evidence and never writes mastered (producer != verifier)
+  - Prometor (verifier context) validates evidence against empirical_gate before any
+    mastery transition
 agent_ownership:
   leader: Maestro
   diagnostic: Sonda
@@ -72,6 +72,6 @@ empirical_gates:
     hint_budget_per_day: 15
     mastery_source: executable_evidence
 next_action:
-  owner: learner
-  action: Play Agent Quest in engines/pixelDojo/pixel-quest and submit the emitted
-    evidence for verifier review.
+  owner: leader
+  action: U0-sonda-rate-limiter-robustness mastered with executable evidence. Pick
+    the next unit (Cartografo) and present it before any implementation.

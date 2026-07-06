@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Log Pier — a pixelDojo 3D teaching game for partitioned ordered offsets, consumer-group cursors, lag, replay, and retention (mini message queue / Kafka)."
+    />
+    <title>Log Pier — 16_mini_message_queue</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        display: flex; height: 100vh; background: #07090f; color: #e6e9f2;
+        font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+      }
+      #stage { flex: 1 1 auto; display: block; }
+      #hud {
+        flex: 0 0 380px; padding: 16px; overflow-y: auto; border-left: 1px solid #3d4663;
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      #hud h1 { font-size: 18px; margin: 0; color: #ffd54f; }
+      #hud h2 { font-size: 13px; margin: 0; color: #aab3cc; text-transform: uppercase; letter-spacing: 0.08em; }
+      #hud p { margin: 0; font-size: 12px; color: #aab3cc; }
+      #hud .status { min-height: 2.4em; color: #4fc3f7; font-weight: 600; }
+      #hud button {
+        background: #1a2030; color: #e6e9f2; border: 1px solid #3d4663; border-radius: 6px;
+        padding: 7px 10px; cursor: pointer; font: inherit; text-align: left;
+      }
+      #hud button:hover:not(:disabled) { border-color: #4fc3f7; }
+      #hud button:disabled { opacity: 0.45; cursor: not-allowed; }
+      #hud .lanes { display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
+      #hud .lane { display: grid; grid-template-columns: 14px 1fr auto; gap: 6px; align-items: center; padding: 4px 6px; border-radius: 4px; }
+      #hud .lane.focused { background: #1a2030; }
+      #hud .lane .swatch { width: 12px; height: 12px; border-radius: 2px; }
+      #hud .lane .meta { color: #aab3cc; }
+      #hud .lane .offsets { color: #4fc3f7; font-size: 10px; }
+      #hud .groups { display: flex; flex-direction: column; gap: 6px; font-size: 11px; }
+      #hud .group { display: grid; grid-template-columns: 14px 1fr auto; gap: 6px; align-items: center; padding: 4px 6px; border-radius: 4px; }
+      #hud .group.focused { background: #2a2410; }
+      #hud .group .swatch { width: 12px; height: 12px; border-radius: 6px; }
+      #hud .group .meta { color: #aab3cc; }
+      #hud .group .lag { color: #f06292; font-size: 10px; }
+      #hud .orb { font-size: 12px; color: #ffd54f; }
+      #hud .metric { font-size: 11px; color: #aab3cc; }
+      #hud .metric b { color: #e6e9f2; }
+      #hud .keys { font-size: 10px; color: #7f8ab0; line-height: 1.5; }
+      #hud .keys kbd {
+        background: #1a2030; border: 1px solid #3d4663; border-radius: 3px;
+        padding: 1px 5px; font-family: inherit; font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+    <aside id="hud"></aside>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

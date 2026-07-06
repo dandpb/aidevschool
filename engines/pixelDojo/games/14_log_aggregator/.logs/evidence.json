@@ -1,0 +1,79 @@
+{
+  "schema": "14_log_aggregator-v1",
+  "unit_id": "14_log_aggregator",
+  "project": "14_log_aggregator",
+  "encounter_id": "river-delta-L1",
+  "game": "Log River Delta",
+  "ts": "2026-07-05T23:57:59.094Z",
+  "pass": true,
+  "gates": [
+    {
+      "name": "no_backpressure",
+      "passed": true,
+      "detail": "0 429 ingest_backpressure reject(s)"
+    },
+    {
+      "name": "no_duplicate_double_count",
+      "passed": true,
+      "detail": "5 duplicate(s) detected, 0 double-counted"
+    },
+    {
+      "name": "no_wrong_filter",
+      "passed": true,
+      "detail": "0 wrong-filter query(ies)"
+    },
+    {
+      "name": "no_too_broad",
+      "passed": true,
+      "detail": "0 too-broad scan(s)"
+    },
+    {
+      "name": "all_traces_reconstructed",
+      "passed": true,
+      "detail": "1/1 trace(s) rebuilt"
+    },
+    {
+      "name": "no_out_of_order_spans",
+      "passed": true,
+      "detail": "0 out-of-order span drop(s)"
+    },
+    {
+      "name": "retention_held",
+      "passed": true,
+      "detail": "0 required log(s) expired before query"
+    },
+    {
+      "name": "compression_ratio_ge_3",
+      "passed": true,
+      "detail": "compression ratio 3.20:1 on cold segments"
+    },
+    {
+      "name": "no_starvation",
+      "passed": true,
+      "detail": "0 multi-source starvation event(s)"
+    }
+  ],
+  "metrics": {
+    "logs_accepted": 43,
+    "backpressure_rejects": 0,
+    "duplicates_detected": 5,
+    "duplicates_double_counted": 0,
+    "indexer_lag_peak_ms": 963,
+    "hot_segments": 0,
+    "cold_segments": 43,
+    "cold_raw_bytes": 7036,
+    "cold_compressed_bytes": 2200,
+    "compression_ratio": 3.1981818181818182,
+    "retention_deletes": 0,
+    "required_logs_expired_before_query": 0,
+    "queries_run": 2,
+    "queries_correct": 1,
+    "queries_wrong_filter": 0,
+    "queries_too_broad": 0,
+    "traces_requested": 1,
+    "traces_reconstructed_correctly": 1,
+    "traces_out_of_order": 0,
+    "trace_span_services_spanned": 3,
+    "starvation_events": 0
+  }
+}

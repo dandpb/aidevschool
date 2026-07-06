@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Metrics Observatory — a voxelDojo/pixelDojo 3D teaching game for histogram bucketing, percentile estimation, and alert lifecycle."
+    />
+    <title>Metrics Observatory — 15_metrics_collector</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; }
+      body {
+        display: flex; height: 100vh; background: #07090f; color: #e6e9f2;
+        font-family: ui-monospace, "Cascadia Mono", Menlo, monospace;
+      }
+      #stage { flex: 1 1 auto; min-width: 0; height: 100%; display: block; }
+      #hud {
+        width: 360px; padding: 16px; overflow-y: auto; border-left: 1px solid #3d4663;
+        display: flex; flex-direction: column; gap: 10px;
+      }
+      #hud h1 { font-size: 18px; margin: 0; color: #ffd54f; }
+      #hud h2 { font-size: 13px; margin: 0; color: #aab3cc; text-transform: uppercase; letter-spacing: 0.08em; }
+      #hud p { margin: 0; font-size: 12px; color: #aab3cc; }
+      #hud .status { min-height: 2.4em; color: #4fc3f7; font-weight: 600; }
+      #hud button {
+        background: #1a2030; color: #e6e9f2; border: 1px solid #3d4663; border-radius: 6px;
+        padding: 7px 10px; cursor: pointer; font: inherit; text-align: left;
+      }
+      #hud button:hover:not(:disabled) { border-color: #4fc3f7; }
+      #hud button:disabled { opacity: 0.45; cursor: not-allowed; }
+      #hud .legend { display: grid; grid-template-columns: auto 1fr auto; gap: 4px 8px; font-size: 11px; }
+      #hud .legend .le { color: #ffd54f; }
+      #hud .legend .count { color: #4fc3f7; text-align: right; }
+      #hud .legend .cum { color: #aed581; text-align: right; font-size: 10px; }
+      #hud .ribbon { font-size: 10px; color: #aed581; white-space: pre-wrap; min-height: 1.2em; }
+      #hud .alert { padding: 6px 8px; border-radius: 4px; font-size: 12px; }
+      #hud .alert.inactive { background: #1a2a1a; color: #6b8e6b; }
+      #hud .alert.pending { background: #3a2f1a; color: #ffd54f; }
+      #hud .alert.firing { background: #3a1a1a; color: #f06292; }
+      #hud .alert.resolved { background: #1a2a3a; color: #4fc3f7; }
+      #hud .keys { font-size: 10px; color: #7f8ab0; line-height: 1.5; }
+      #hud .keys kbd {
+        background: #1a2030; border: 1px solid #3d4663; border-radius: 3px;
+        padding: 1px 5px; font-family: inherit; font-size: 10px;
+      }
+      #hud .metric { font-size: 11px; color: #aab3cc; }
+      #hud .metric b { color: #e6e9f2; }
+    </style>
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+    <aside id="hud"></aside>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

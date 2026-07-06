@@ -1,0 +1,48 @@
+{
+  "schema": "07_rest_api_auth-v1",
+  "source": "aegis-corridor",
+  "unit_id": "07_rest_api_auth",
+  "project": "07_rest_api_auth",
+  "encounter_id": "encounter-aegis-corridor-01",
+  "game": "Aegis Corridor",
+  "ts": "2026-07-05T23:24:57.072Z",
+  "pass": true,
+  "gates": [
+    "gate_order == [version, validation, authn, authz]",
+    "forged_admitted == 0",
+    "expired_admitted == 0",
+    "wrong_audience_admitted == 0",
+    "missing_token_admitted == 0",
+    "forbidden_reached_handler == 0",
+    "malformed_admitted == 0",
+    "wrong_version_admitted == 0",
+    "legit_rejected <= 1",
+    "heat_peak < MAX_HEAT"
+  ],
+  "metrics": {
+    "kind": "threejs-middleware-chain",
+    "wave": 1,
+    "gate_order": [
+      "version",
+      "validation",
+      "authn",
+      "authz"
+    ],
+    "correct_order": true,
+    "forged_admitted": 0,
+    "expired_admitted": 0,
+    "wrong_audience_admitted": 0,
+    "missing_token_admitted": 0,
+    "forbidden_reached_handler": 0,
+    "malformed_admitted": 0,
+    "wrong_version_admitted": 0,
+    "legit_admitted": 2,
+    "legit_rejected": 0,
+    "heat_peak": 0,
+    "overheated": false
+  },
+  "concept": "Compose authentication and authorization middleware around a layered REST API",
+  "mechanic": "Aegis Corridor — ordered gate-ring composition",
+  "accepted_signal": "canonical order Version->Validation->AuthN->AuthZ with zero breaches",
+  "rejected_trap": "AuthZ before AuthN lets forged role claims through"
+}

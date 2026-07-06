@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import type { Logger } from 'pino';
 
 import type { AppConfig } from './config';
+import { createExpressClientKeyStrategy } from './clientKeyStrategy';
 import { ServerError } from './errors';
 import { TokenBucketRateLimiter, type ConsumeResult } from './rateLimiter';
 
@@ -63,9 +64,16 @@ export function buildServer(
     app.set('trust proxy', true);
   }
 
+  // Single client-key resolution seam, shared by the rate-limit middleware
+  // and `/status`. Previously each call site re-implemented this inline
+  // (see docs/code_review.md XLANG-MAJOR-001); now there is exactly one
+  // implementation, exercised by both the unit tests in
+  // `clientKeyStrategy.test.ts` and the integration tests below.
+  const clientKeyStrategy = createExpressClientKeyStrategy(config.trustProxy);
+
   // --- Middleware ---------------------------------------------------------
   const rateLimitMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-    const ip = resolveClientIp(req, config.trustProxy);
+    const ip = clientKeyStrategy.resolve(req);
     const result = limiter.tryConsume(ip);
 
     setRateLimitHeaders(res, result);
@@ -93,7 +101,7 @@ export function buildServer(
   });
 
   app.get('/status', (req, res) => {
-    const ip = resolveClientIp(req, config.trustProxy);
+    const ip = clientKeyStrategy.resolve(req);
     const peek = limiter.peek(ip);
     res.status(200).json({
       client_ip: ip,
@@ -176,32 +184,17 @@ function setRateLimitHeaders(res: Response, r: ConsumeResult): void {
 /**
  * Pick a stable client identifier for rate-limit bucketing.
  *
- * - If `trustProxy` is on, `req.ip` already reflects `X-Forwarded-For`.
- * - Otherwise, fall back to the raw socket address (which may be IPv6 or
- *   an IPv4-mapped IPv6 form like `::ffff:127.0.0.1` — we normalize the
- *   latter to its IPv4 representation so the same physical client is
- *   counted once regardless of socket family).
+ * Thin delegator to the single `ClientKeyStrategy` implementation in
+ * `clientKeyStrategy.ts` (see that file for the trust-proxy / IPv6
+ * normalization rules). Kept as a named export so existing callers/tests
+ * that reference `resolveClientIp` directly (rather than constructing a
+ * strategy) don't need to change; there is no duplicate logic behind it
+ * anymore — previously this function and `clientKeyStrategy.ts` each had
+ * their own copy of the same normalization code (docs/code_review.md
+ * XLANG-MAJOR-001).
  */
 export function resolveClientIp(req: Request, trustProxy: boolean): string {
-  const raw = trustProxy
-    ? (req.ip ?? req.socket.remoteAddress ?? 'unknown')
-    : (req.socket.remoteAddress ?? req.ip ?? 'unknown');
-  return normalizeIp(raw);
-}
-
-function normalizeIp(raw: string): string {
-  // Express returns the bracketed IPv6 `[::1]` from `req.ip`; strip the
-  // brackets so the Map key is consistent with raw socket addresses.
-  let ip = raw;
-  if (ip.startsWith('[') && ip.endsWith(']')) {
-    ip = ip.slice(1, -1);
-  }
-  // IPv4-mapped IPv6 (`::ffff:127.0.0.1`) → `127.0.0.1`
-  const mapped = ip.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i);
-  if (mapped) {
-    return mapped[1]!;
-  }
-  return ip;
+  return createExpressClientKeyStrategy(trustProxy).resolve(req);
 }
 
 function roundTo(n: number, places: number): number {

@@ -1,0 +1,77 @@
+{
+  "schema": "11_load_balancer-v1",
+  "unit_id": "11_load_balancer",
+  "project": "11_load_balancer",
+  "encounter_id": "traffic-forge-01",
+  "game": "Traffic Forge",
+  "ts": "2026-07-05T23:50:14.587Z",
+  "pass": true,
+  "gates": [
+    {
+      "name": "all_orbs_landed",
+      "passed": true,
+      "detail": "10/10 orbs reached a healthy backend"
+    },
+    {
+      "name": "no_dead_routes",
+      "passed": true,
+      "detail": "0 dead-route(s)"
+    },
+    {
+      "name": "no_sticky_breaks",
+      "passed": true,
+      "detail": "0 sticky-break(s)"
+    },
+    {
+      "name": "no_heavy_overflows",
+      "passed": true,
+      "detail": "0 heavy-overflow(s)"
+    },
+    {
+      "name": "no_orbs_lost",
+      "passed": true,
+      "detail": "0 orb(s) lost to unrecovered retry"
+    },
+    {
+      "name": "failover_recovered_at_least_once",
+      "passed": true,
+      "detail": "1 failover(s) recovered (RF-013)"
+    },
+    {
+      "name": "all_three_algorithms_used",
+      "passed": true,
+      "detail": "used: round_robin, least_connections, consistent_hash"
+    }
+  ],
+  "metrics": {
+    "orbs_total": 10,
+    "orbs_landed": 10,
+    "dead_routes": 0,
+    "sticky_breaks": 0,
+    "heavy_overflows": 0,
+    "failover_recovered": 1,
+    "orbs_lost": 0,
+    "algorithms_used": [
+      "round_robin",
+      "least_connections",
+      "consistent_hash"
+    ],
+    "rr_skew_max": 0,
+    "wave_cleared": true,
+    "wave_target": 10
+  },
+  "curriculum_context": {
+    "concept": "reverse-proxy load balancing with health-aware request routing",
+    "mechanic": "Traffic Forge (3D dispatcher turret + ring of health-tagged backend pillars)",
+    "accepted_signal": "every request routed to a healthy backend via the right algorithm; failover recovered on mid-flight failure",
+    "rejected_trap": "routing to a dead pillar, breaking sticky-session affinity, or losing an orb to an unrecovered retry"
+  },
+  "review_context": {
+    "unit_kind": "concept",
+    "scheduled_review": false,
+    "review_reason": "deepening",
+    "streak_candidate": false,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  }
+}

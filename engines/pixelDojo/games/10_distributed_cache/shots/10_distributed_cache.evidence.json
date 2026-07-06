@@ -1,0 +1,61 @@
+{
+  "schema": "10_distributed_cache-v1",
+  "unit_id": "10_distributed_cache",
+  "project": "10_distributed_cache",
+  "encounter_id": "ring-keeper-01",
+  "game": "Ring Keeper",
+  "ts": "2026-07-05T23:54:30.757Z",
+  "pass": true,
+  "gates": [
+    {
+      "name": "wave_cleared",
+      "passed": true,
+      "detail": "wave cleared"
+    },
+    {
+      "name": "all_keys_routed",
+      "passed": true,
+      "detail": "6/6 routed, 0 misroutes"
+    },
+    {
+      "name": "survived_churn",
+      "passed": true,
+      "detail": "2 churn event(s) survived"
+    },
+    {
+      "name": "minimal_remap_under_ring",
+      "passed": true,
+      "detail": "3 remapped (budget 5); MOD-N at churn: false"
+    },
+    {
+      "name": "hot_key_balanced",
+      "passed": true,
+      "detail": "hot key balanced by a node split"
+    },
+    {
+      "name": "no_excess_spills",
+      "passed": true,
+      "detail": "0 spill(s) (budget 2)"
+    }
+  ],
+  "metrics": {
+    "kind": "threejs-ring-keeper",
+    "keys_routed": 6,
+    "misroutes": 0,
+    "keys_remapped": 3,
+    "remap_budget": 5,
+    "churn_events_survived": 2,
+    "node_adds": 1,
+    "node_removes": 1,
+    "hot_key_balanced": true,
+    "spills": 0,
+    "spill_budget": 2,
+    "strategies_used": [
+      "ring"
+    ],
+    "modn_used_at_churn": false,
+    "node_count_final": 3,
+    "wave_cleared": true,
+    "wave_target": 6
+  }
+}

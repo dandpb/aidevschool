@@ -1,0 +1,66 @@
+{
+  "schema": "12_distributed_job_scheduler-v1",
+  "unit_id": "12_distributed_job_scheduler",
+  "project": "12_distributed_job_scheduler",
+  "pass": true,
+  "gates": [
+    {
+      "name": "all_jobs_dispatched",
+      "passed": true,
+      "detail": "8/8 jobs dispatched by the canonical leader"
+    },
+    {
+      "name": "no_stale_token_accepted",
+      "passed": true,
+      "detail": "0 worker accepted a stale fencing token (must be 0)"
+    },
+    {
+      "name": "no_duplicate_dispatches",
+      "passed": true,
+      "detail": "0 duplicate dispatch(es)"
+    },
+    {
+      "name": "queue_stall_under_limit",
+      "passed": true,
+      "detail": "0s spent leaderless (limit 5s)"
+    },
+    {
+      "name": "no_non_leader_dispatch_attempts",
+      "passed": true,
+      "detail": "0 non-leader dispatch attempt(s)"
+    }
+  ],
+  "encounter_id": "raft-ring-01",
+  "game": "Raft Ring",
+  "ts": "2026-07-05T23:55:09.373Z",
+  "metrics": {
+    "jobs_queued": 8,
+    "successful_dispatches": 8,
+    "stale_token_rejections": 0,
+    "stale_token_accepted": 0,
+    "duplicate_dispatches": 0,
+    "elections_started": 2,
+    "elections_won_with_quorum": 2,
+    "quorum_failures": 0,
+    "terms_bumped": 2,
+    "max_term_reached": 2,
+    "partitions_injected": 1,
+    "queue_stall_secs": 0,
+    "leader_flip_flops": 1,
+    "non_leader_dispatch_attempts": 0
+  },
+  "curriculum_context": {
+    "concept": "simplified-Raft leader election with quorum + fencing-token dispatch under split-brain",
+    "mechanic": "Raft Ring",
+    "accepted_signal": "leader with majority quorum + latest term dispatches; workers reject stale tokens",
+    "rejected_trap": "minority-side self-promoted leader dispatches past a partition; worker accepts stale token"
+  },
+  "review_context": {
+    "unit_kind": "concept",
+    "scheduled_review": false,
+    "review_reason": "deepening",
+    "streak_candidate": false,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  }
+}

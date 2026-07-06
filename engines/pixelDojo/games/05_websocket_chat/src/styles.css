@@ -1,0 +1,150 @@
+:root {
+  --bg: #05060d;
+  --fg: #e8ecff;
+  --muted: #8a93b8;
+  --cyan: #35e0ff;
+  --magenta: #ff3df0;
+  --panel: rgba(10, 14, 28, 0.78);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.game-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  cursor: grab;
+}
+.game-canvas:active {
+  cursor: grabbing;
+}
+
+.hud {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.hud-objective .chip-room {
+  border-color: var(--cyan);
+}
+.hud-objective .chip-target {
+  border-color: var(--magenta);
+}
+
+.chip {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  backdrop-filter: blur(6px);
+}
+.chip b {
+  color: #fff;
+}
+
+.hud-controls {
+  font-size: 12px;
+  color: var(--muted);
+}
+.hud-controls .key {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  padding: 2px 6px;
+  margin-right: 4px;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.hud-metrics .chip-foot {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 4, 10, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+}
+.overlay.hidden {
+  display: none;
+}
+.overlay-card {
+  background: var(--panel);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  padding: 28px 36px;
+  min-width: 320px;
+  text-align: center;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, 0.5);
+}
+.verdict {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.verdict.pass {
+  color: #6dffb0;
+}
+.verdict.fail {
+  color: #ff6d8d;
+}
+.gate-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  text-align: left;
+  font-size: 14px;
+  color: var(--fg);
+}
+.gate-list li {
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+}
+.overlay-foot {
+  font-size: 12px;
+  color: var(--muted);
+}

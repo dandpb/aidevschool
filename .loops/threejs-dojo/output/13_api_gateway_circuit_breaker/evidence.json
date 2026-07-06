@@ -1,0 +1,93 @@
+{
+  "schema": "13_api_gateway_circuit_breaker-v1",
+  "unit_id": "13_api_gateway_circuit_breaker",
+  "pass": true,
+  "gates": [
+    {
+      "name": "all_closed_admits",
+      "passed": true,
+      "detail": "4/4 CLOSED pulses admitted"
+    },
+    {
+      "name": "trip_on_threshold",
+      "passed": true,
+      "detail": "1 on-cue trip(s), 0 early, 0 late"
+    },
+    {
+      "name": "all_open_rejects",
+      "passed": true,
+      "detail": "3/3 OPEN pulses fail-fasted"
+    },
+    {
+      "name": "no_open_leaks",
+      "passed": true,
+      "detail": "0 upstream leak(s) while OPEN"
+    },
+    {
+      "name": "no_premature_probes",
+      "passed": true,
+      "detail": "0 probe(s) before cooldown"
+    },
+    {
+      "name": "all_probes_correct",
+      "passed": true,
+      "detail": "3/3 probes admitted within budget"
+    },
+    {
+      "name": "no_halfopen_leaks",
+      "passed": true,
+      "detail": "0 over-budget HALF_OPEN admit(s)"
+    },
+    {
+      "name": "closed_on_successes",
+      "passed": true,
+      "detail": "1 close(s) after N consecutive probe successes"
+    },
+    {
+      "name": "no_reactor_overload",
+      "passed": true,
+      "detail": "0 reactor overload(s) from late trips"
+    },
+    {
+      "name": "no_overflow",
+      "passed": true,
+      "detail": "input bus held the queue"
+    }
+  ],
+  "encounter_id": "breaker-grid-01",
+  "game": "Breaker Grid",
+  "ts": "2026-07-05T23:51:38.772Z",
+  "metrics": {
+    "closed_admits_total": 4,
+    "closed_admits_correct": 4,
+    "trips_total": 1,
+    "trips_correct": 1,
+    "trips_late": 0,
+    "trips_early": 0,
+    "open_rejects_total": 3,
+    "open_rejects_correct": 3,
+    "open_leaks": 0,
+    "probes_total": 3,
+    "probes_correct": 3,
+    "probes_premature": 0,
+    "halfopen_admit_leaks": 0,
+    "closes_correct": 1,
+    "fallbacks_served": 5,
+    "reactor_overloads": 0,
+    "overflow": false
+  },
+  "curriculum_context": {
+    "concept": "circuit breaker state machine (closed/open/half-open)",
+    "mechanic": "Breaker Grid",
+    "accepted_signal": "trip on threshold; fail-fast in open; probe after cooldown; close on N consecutive probe successes",
+    "rejected_trap": "leaking a request to the upstream while open, or probing before the cooldown elapsed"
+  },
+  "review_context": {
+    "unit_kind": "concept",
+    "scheduled_review": false,
+    "review_reason": "deepening",
+    "streak_candidate": false,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  }
+}
