@@ -4,54 +4,45 @@
 > `learning_state.yaml`, na mesma pasta.) Caminhos relativos à raiz do ecossistema.
 > Atualizado por cada agente ao fim da sua fase.
 
-- **cycle_id**: 2026-06-04-01-rate-limiter
-- **current_project**: `curriculum/01_rate_limiter`
-- **complexity_level**: 2 (intermediário — concorrência + gestão de memória)
-- **phase**: cycle-complete
-- **awaiting**: `next-curator`
+- **cycle_id**: 2026-07-06-02-key-value-store
+- **current_project**: `curriculum/02_key_value_store`
+- **complexity_level**: 1 (fundamentos — hash map + TTL + HTTP CRUD)
+- **phase**: impl-done
+- **awaiting**: `reviewer`
 - **agents**:
-  - `dev-node`: done (cobertura ~91.86%, 55 testes passados)
-  - `dev-go`: done (cobertura ~85.9%, ratelimit green)
-  - `dev-rust`: done (14 Rust unit tests + 6 integration tests green)
-  - `reviewer`: done (21 issues: 0 Critical / 8 Major / 9 Minor / 4 Educational; 7 categorias
-    cobertas; ver `curriculum/01_rate_limiter/docs/{code_review,learning_notes,quiz}.md`)
-  - `benchmarker`: done (Node.js N=10, harness nativo sem k6; Go/Rust não executados — toolchain
-    indisponível no sandbox, ver `curriculum/01_rate_limiter/docs/benchmark_results.md` §1.3;
-    verifier tolerance re-check PASS: RPS dev 4.38%, latência avg dev 5.07%, ambos dentro de ±20%)
-  - `optimizer`: done (Node.js: 1 otimização aplicada e medida — conectou a abstração morta
-    `clientKeyStrategy.ts` em `index.ts`, removendo a duplicação inline (achado XLANG-MAJOR-001);
-    re-medido N=10 nativo: RPS −5.9% média, latência média +7.3% — regressão real, pequena,
-    reportada honestamente, não maquiada como ganho. Go/Rust: 0 otimizações aplicadas, 2 propostas
-    para Go e 1 para Rust, ambas **não verificadas** — sem toolchain no sandbox para compilar/testar
-    Go/Rust. ≥1 otimização rejeitada documentada. Ver `curriculum/01_rate_limiter/docs/evolution_report.md`.
-    Verifier gate (fase=optimize): PASS para a trilha Node (única execution-verified); Go/Rust
-    ficam fora do gate desta fase — propostas documentadas, não aplicadas/medidas.)
+  - `dev-node`: done (cobertura real medida nesta sessão: 86.15% statements / 80.76% branch /
+    96.66% funcs / 86.15% lines — `npx vitest run --coverage`, 6/6 testes passando, 2 arquivos de
+    teste; build `tsc` limpo; `eslint` limpo. Cobertura ≥ `cobertura_nucleo_min: 0.80` do
+    `engines/minimaxDojo/config/learner.yaml`. Verificado em ambiente Linux isolado — `node_modules`
+    do macOS presente no repo não roda no sandbox (`@rollup/rollup-linux-arm64-gnu` ausente,
+    mismatch de plataforma), reinstalado fresh em `/tmp` para rodar de verdade; `node_modules/`,
+    `dist/`, `coverage/` do repo continuam gitignored, não versionados.)
+  - `dev-go`: not started this cycle (out of scope — repo owner decided Node-only for this ciclo).
+    **Nota:** `go-impl/` já existe no repo (código + testes de um ciclo anterior/ungated), mas não
+    foi tocado, editado, executado nem revalidado nesta sessão.
+  - `dev-rust`: not started this cycle (out of scope — repo owner decided Node-only for this ciclo).
+    **Nota:** `rust-impl/` já existe no repo (código + testes de um ciclo anterior/ungated), mas não
+    foi tocado, editado, executado nem revalidado nesta sessão.
 - **notas**:
-  - Implementações polyglot em Go, Rust e Node.js/TypeScript validadas com sucesso pelos respectivos test suites.
-  - Review re-derivou achados contra o código atual (não confiou nos artefatos pré-existentes do
-    ciclo anterior `2026-06-03-01-rate-limiter`); 2 achados do rascunho antigo já estavam corrigidos
-    (sharded mutex em Go/Rust, dead-code condicional no Rust) e 1 achado novo foi encontrado
-    (abstrações `ClientKeyStrategy` mortas nas 3 linguagens). Detalhes em `learner/journal.md`
-    (entrada 2026-07-05).
-  - Go/Rust não puderam ser re-executados neste sandbox (toolchain indisponível); revisados
-    estaticamente. `npm audit`/`cargo audit`/`govulncheck` não executados (sem rede/toolchain) —
-    lacuna reportada explicitamente em `code_review.md` §7, não omitida.
-  - Benchmark (fase atual): mesmo sandbox sem rede para toolchains — tentativa real de instalação
-    de go/cargo/k6 falhou (proxy allowlist bloqueia `ports.ubuntu.com`, `go.dev`,
-    `static.rust-lang.org`, `dl.k6.io`; binário Rust pré-buildado no repo é macOS Mach-O, não roda
-    no sandbox Linux). Rodado N=10 real só para Node.js (autocannon como substituto do k6, 100
-    conexões × 25s), RPS médio 18387 (CV 5.6%), p50 4.3ms (CV 11.2%), RSS pico 113.7MB (CV 0.75%);
-    p95/p99 marcados como inconclusivos (CV 16-18%, acima do limiar de 15%). Nenhum vencedor
-    cross-language declarado — só há dado real de 1 das 3 linguagens. Detalhes completos e
-    caveats em `curriculum/01_rate_limiter/docs/benchmark_results.md`.
-  - Optimize (fase final): mesma limitação de sandbox carregada adiante — sem toolchain para
-    Go/Rust, o `optimizer` aplicou e mediu exatamente 1 otimização em Node.js (dead-code wiring),
-    honestamente reportando uma pequena regressão (não um ganho), e documentou (sem aplicar) 2
-    propostas para Go e 1 para Rust, rotuladas explicitamente como não verificadas. Achado extra:
-    `rust-impl/src/client_key.rs` não está sequer declarado como módulo em `lib.rs` (mais morto
-    do que o code review original tinha caracterizado). Ciclo encerrado como
-    **Node-only execution-verified; Go/Rust code-reviewed/proposed-only** — não uma paridade de 3
-    linguagens. Detalhes completos em `curriculum/01_rate_limiter/docs/evolution_report.md`.
+  - Escopo desta sessão (Fase 2.1, per `docs/SPEC_plano_execucao.md`): **somente Node.js** recebe
+    implementação real e verificada neste ciclo. Go e Rust foram deliberadamente **não iniciados**
+    — não é "esquecido", é decisão explícita do dono do repo.
+  - Investigação prévia (Step 0) encontrou `curriculum/02_key_value_store/` já com: `docs/spec.md`
+    (13 seções, adequado, cobre hash map/CRUD/TCP-HTTP/TTL/snapshot-persistence-basics conforme
+    `benchmark.yaml`), `node-impl/` completo (store.ts, server.ts, main.ts, 2 arquivos de teste),
+    além de `go-impl/` e `rust-impl/` com código real — todos aparentemente de um "backfill" anterior
+    (`git log`: commit `5d0ee67 feat(curriculum): backfill per-cycle Definition-of-Done
+    deliverables (02-18)`), não de um ciclo gated real. `docs/code_review.md`, `docs/
+    evolution_report.md`, `docs/ADR.md`, `docs/verdict.md`, `docs/redteam.md`, `docs/lesson.md`
+    também já existiam — não foram alterados nesta sessão nem re-verificados; a única verificação
+    execution-based feita agora foi rodar de fato a suíte Node (testes + coverage + lint + build).
+  - O spec pré-existente já era adequado; não foi reescrito, apenas confirmado contra os requisitos
+    do Step 1 (hash maps, CRUD API, TCP/HTTP, TTL, snapshot/persistence). Persistência em disco está
+    explicitamente escopada como "conceptual for later extension" no próprio spec (linha 18 e 207),
+    não um requisito rígido deste ciclo.
+  - `BACKLOG_STATUS.md`/`catalog.md` já rotulavam o projeto 02 como tendo "Go/Rust/Node
+    implementations exist" (`scaffolded`) / "✅ Implemented" — essas linhas não foram alteradas
+    nesta sessão; a certificação formal fica para a fase de review/verify, não para impl-done.
 - **blockers**: []
 
 ## Transições
