@@ -24,7 +24,7 @@ intent"; it just hasn't passed the adversarial gate yet.
 
 | Project | Status | Evidence |
 | --- | --- | --- |
-| `01_rate_limiter` | `implemented` | Go/Rust/Node implementations with tests (catalog-verified: 99% Go, 19 Rust tests, 91.86% Node). N≥3 benchmark rerun pending. |
+| `01_rate_limiter` | `implemented` | 6 evidence artifacts: (1) `docs/spec.md`, (2-4) Go/Rust/Node implementations with tests (Go ~85.9% cov + `-race`, Rust 14 unit + 6 integration tests, Node 92.91% cov / 55 tests + 1 pre-existing `it.todo`), (5) `docs/code_review.md` (21 issues, 7 categories, re-derived against current code), (6) `docs/benchmark_results.md` + `docs/evolution_report.md` + verifier gate. **Certification caveat: benchmark (N=10) and optimize (1 applied + measured optimization) are Node.js-only execution-verified in this sandbox; Go and Rust have no working toolchain here (confirmed unreachable, not skipped) and are carried as code-reviewed/proposed-only for benchmark and optimize — this is NOT a 3-language performance parity certification.** |
 | `02_key_value_store` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
 | `03_url_shortener` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |
 | `04_concurrent_task_queue` | `scaffolded` | Go/Rust/Node implementations exist; pending catalog-verified 5-phase gate. |

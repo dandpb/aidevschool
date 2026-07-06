@@ -866,3 +866,76 @@ dated today.
   severities consistent (no Critical used for a nit) ✓; quiz has answer key with explanations ✓;
   ≥1 new generalization appended to this journal ✓.
 - `learner/pipeline_status.md` advanced to `phase: review-done`, `awaiting: benchmarker`.
+
+### 2026-07-05 - 01_rate_limiter Benchmark (cycle 2026-06-04-01-rate-limiter, phase benchmark)
+
+- Ran the `benchmarker` phase against `docs/code_review.md`'s verified inputs. Attempted a real
+  toolchain installation for Go/Rust/k6 before falling back to "could not execute" (documented in
+  `docs/benchmark_results.md` §1.3): `apt-get download`/direct installer URLs for `go.dev`,
+  `static.rust-lang.org`, `dl.k6.io` all blocked by the sandbox's proxy allowlist. Node.js was
+  benchmarked for real: N=10, `autocannon` v8.0.0 substituting for k6, 100 connections × 25s
+  against `GET /`. RPS mean 18,387.2 (CV 5.6%); p95/p99 flagged inconclusive (CV 16.3%/18.4%,
+  over the 15% honesty threshold). No cross-language winner declared — only one language has
+  real data. `learner/pipeline_status.md` advanced to `phase: benchmark-done`, `awaiting: optimizer`.
+
+### 2026-07-06 - 01_rate_limiter Optimize (cycle 2026-06-04-01-rate-limiter, phase optimize, closes cycle)
+
+- Ran the `optimizer` phase against `docs/code_review.md` and `docs/benchmark_results.md`'s
+  verified inputs. Picked the one concrete, cited defect from the review (XLANG-MAJOR-001 — the
+  dead `ClientKeyStrategy`-style abstraction, unwired in all 3 languages) as the optimization
+  target, per the phase's "pick a real finding, don't invent a perf change" discipline.
+- **Node.js (applied and measured)**: wired `createExpressClientKeyStrategy` from
+  `clientKeyStrategy.ts` into `index.ts`, deleting the duplicate inline
+  `resolveClientIp`/`normalizeIp` logic (kept `resolveClientIp` as a thin delegator so the
+  existing test imports didn't need to change). Verified via a fresh `/tmp` install: `tsc
+  --noEmit` clean, `eslint` clean, `vitest run --coverage` 55/55 passed + 1 pre-existing `it.todo`
+  (coverage rose slightly, 91.86% → 92.91%), clean build. Re-benchmarked N=10, same harness/workload
+  as the benchmark phase: **RPS −5.9% mean, avg latency +7.3% mean — a real, small regression, not
+  an improvement** (both deltas exceed the ~5% CV of either dataset, so not pure noise). Reported
+  honestly rather than reframed as a win; kept anyway because its purpose was maintainability
+  (removing a duplicated implementation), not performance, and the review explicitly flagged the
+  duplication as a defect. Tolerance re-check (1 extra run vs. the N=10 after-mean): RPS deviation
+  0.17%, avg latency deviation 0.4%, both within ±20% — confirms the after-dataset is reproducible.
+- **Go/Rust (proposed, not applied)**: no `go`/`cargo`/`rustc` in this sandbox (same wall as the
+  benchmark phase) — any edit could not be compiled or tested before being committed, so per this
+  cycle's explicit instruction, proposals were documented instead of applied. Go: two candidates —
+  (1, higher value) wire `ForwardedHeaderKeyStrategy` into `main.go` to fix the real trust-proxy
+  security gap (GO-MAJOR-001), or (2, lower value/risk) delete the dead `clientkey.go`, mirroring
+  the Node fix. Rust: delete `client_key.rs`. **New finding while investigating**: `client_key.rs`
+  is not even declared as a module anywhere in `lib.rs`/`main.rs` (`mod client_key;` is absent) —
+  it appears to be excluded from the crate's compiled module tree entirely, a stronger form of
+  "dead" than the original review's "unwired at the call site" framing. Neither Go nor Rust source
+  was touched; both proposals are documented in `docs/evolution_report.md` §4 with an explicit
+  "UNVERIFIED, NOT COMPILE/TEST-CHECKED" label.
+- **Rejected optimization** (§5 of `evolution_report.md`): extending the already-applied
+  pre-allocated-JSON-body pattern (429 path) to the low-traffic 200/`/status` paths — rejected as
+  complexity-for-negligible-value (those paths are ~0.01% of traffic under saturating load) and as
+  a risk of muddying the isolated before/after measurement for the one optimization actually being
+  tested this phase.
+- **New generalization for the shared knowledge base**: *a maintainability refactor is not
+  automatically performance-neutral, even when the two code paths are byte-identical in logic.*
+  Collapsing two identical inline implementations into one call through a strategy-object method
+  measurably slowed the hot path here (small, but larger than the measurement noise) — likely the
+  extra method-dispatch indirection on a path invoked >18,000 times/second. Lesson: benchmark
+  "pure" refactors on the actual hot path before assuming "same logic" means "same speed."
+- **Second generalization**: the dead `ClientKeyStrategy`/`clientkey.go`/`client_key.rs` pattern
+  recurring independently in all three languages (first flagged in the review phase, confirmed
+  again here) is now treated as a named, worked-example anti-pattern ("vestigial abstraction") for
+  the curriculum's pattern catalog, not a one-off code-review nit.
+- Self-checked gate for phase=optimize (`optimize.md`/`verifier.md` criteria, against actual state):
+  tests re-verified ✓ (Node only — Go/Rust N/A, no toolchain); 1 optimization claim re-verified
+  within ±20% ✓; before/after complete and traceable to `benchmarks/results/native-after/node/`
+  raw JSONs ✓; ≥1 rejected optimization documented ✓; honest labeling of unverified Go/Rust work ✓
+  (empty result directories, no fabricated numbers). One literal requirement — "exactly 1 applied
+  optimization per language" — is **not** met for Go/Rust by design (0 applied, proposals only),
+  disclosed explicitly rather than silently short. Overall verdict: **PASS for the Node.js track;
+  Go/Rust explicitly out-of-gate this phase.**
+- Artifacts written/updated: `curriculum/01_rate_limiter/docs/evolution_report.md` (full rewrite,
+  superseding the earlier ungated cycle's version), `docs/status.md`, `curriculum/BACKLOG_STATUS.md`,
+  `curriculum/catalog.md` (all with the Node-only execution-verification caveat stated explicitly,
+  not implying 3-language parity), `curriculum/01_rate_limiter/benchmarks/results/native-after/node/`
+  (11 raw JSONs: 10 runs + 1 tolerance-check).
+- `learner/pipeline_status.md` advanced to `phase: cycle-complete`, `awaiting: next-curator`. This
+  closes cycle `2026-06-04-01-rate-limiter` for Project 01 — with the standing caveat that Go/Rust
+  benchmark and optimize evidence is carried forward from Phase 2 test-pass status, not
+  re-execution-verified in this sandbox family.

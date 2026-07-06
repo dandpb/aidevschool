@@ -1,0 +1,21 @@
+{
+  "lang": "node",
+  "rps": 18362.41,
+  "avg_ms": 4.94,
+  "min_ms": 1,
+  "max_ms": 435,
+  "p50_ms": 5,
+  "p90_ms": 6,
+  "p95_ms": 8,
+  "p99_ms": 9,
+  "fail_rate": 0,
+  "checks_pass": 459041,
+  "checks_fail": 0,
+  "iterations": 459041,
+  "peak_rss_mb": 111.91,
+  "vus_max": 100,
+  "status_2xx": 59,
+  "status_non2xx": 458982,
+  "tool": "autocannon-8.0.0 (k6 unavailable in sandbox)",
+  "duration_s": 25.02
+}

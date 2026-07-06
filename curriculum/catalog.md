@@ -36,10 +36,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | **Concepts** | Token bucket algorithm, concurrency primitives, atomic refills, shared state |
 | **Key question** | Go (goroutines + channels) vs Rust (tokio + Arc&lt;Mutex&gt;) vs Node (event loop + clusters) — which handles rate limiting best? |
 | **Directory** | `01_rate_limiter/` |
-| **Go coverage** | 99% (ratelimit) / 86% (main) |
-| **Rust tests** | 19 pass, clippy clean |
-| **Node coverage** | 91.86%, 40 tests |
-| **Benchmark** | 4 scenarios × 3 langs × N=1 (needs N≥3 re-run) |
+| **Go coverage** | ~85.9% (ratelimit) — Phase 2 result, not re-executed in this sandbox (no toolchain) |
+| **Rust tests** | 14 unit + 6 integration — Phase 2 result, not re-executed in this sandbox (no toolchain) |
+| **Node coverage** | 92.91%, 55 tests + 1 pre-existing `it.todo` (re-verified after Phase 5 optimization) |
+| **Benchmark** | **Node.js only**, N=10, native harness (autocannon substitute for k6). Go/Rust not executed — toolchain unavailable in this sandbox, installation attempted and failed at the network layer (see `docs/benchmark_results.md` §1.3). Not a 3-language comparison. |
+| **Evolution** | **Node.js only** — 1 optimization applied and measured (wired the dead `clientKeyStrategy.ts` abstraction into `index.ts`); honest result: small real regression (RPS −5.9%, avg latency +7.3%), not an improvement, reported as-is. Go/Rust: 2+1 optimizations proposed, code-reviewed, **not applied/measured** — no compiler available to verify. See `docs/evolution_report.md`. |
 | **Dependencies** | None (entry point) |
 
 ### 02. Key-Value Store (in-memory)
