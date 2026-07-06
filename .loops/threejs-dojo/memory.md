@@ -89,3 +89,60 @@ Each entry uses this shape (see SKILL.md §"Output & Memory"):
      no corresponding types. The fix (`+@types/node` + future `types: ["vite/client",
      "node"]` in tsconfig) is general; the parallel agent will need it when they re-add
      the NDJSON code.
+
+## Run 2026-07-05T21:40:00-03:00 (all-18 buildout)
+- mode: OFF (autonomous multi-agent buildout per user request "implement in all modules … use multi agents")
+- inputs: all 18 curriculum modules; routing per `.loops/threejs-dojo/ROUTING_MANIFEST.md`
+  (spatial/structural concepts → voxelDojo Shape B; rules-shaped 01/04 → pixel-quest Shape A);
+  depth: full pilot-quality M1–M6
+- skipped: none (every module built)
+- rerun: **Wave 2 (games 02,03,05,06,07,09) had to be rebuilt from scratch** — the first build
+  was verified green in-agent but a parallel session's clean cycle (`rm` of untracked source,
+  ~3 min cadence, leaves `dist/`+`node_modules/`) wiped all six dirs' source + `package.json`
+  before they could be committed. Confirmed via dist bundles still containing the real game code
+  ("CHECKPOINT CITY", "U7-rest-api-auth", HMAC) — agents did the work, the disk lost it.
+- verification: **15/15 voxelDojo games lint+test+typecheck green from git; smoke green on a
+  per-wave sample (10,12,02,14,18); pixel-quest 112 tests green (107 baseline + 5 task-queue).
+  NOT re-graded by a fresh-context verifier subagent** (the skill's step 5) — this run was a
+  buildout, not a per-concept gate; each game's evidence record is the artifact a future
+  `/threejs-dojo <slug>` verifier run would consume.
+- output: 16 voxelDojo games under `engines/voxelDojo/game-<NN>-<slug>/` (214 tracked src files,
+  37 test files, 15 PLAN slices in `docs/plans/`) + `taskQueue.ts` encounter in pixel-quest.
+  Committed in 3 commits: `90617e3` (02,03,05,06,07,09), `fb87c2a` (14,15,18), `33ca950` (04).
+  Wave 1 (08,11,12,13,16,17) was committed by the parallel session during the run.
+- lessons:
+  1. **Multi-agent drift is now destructive, not just cosmetic.** A parallel session ("Maestro")
+     is running its own all-18 buildout and runs a clean cycle that removes untracked source
+     every ~3 minutes. Memory.md had warned about working-tree drift; this run learned that
+     *uncommitted agent work does not survive between turns* in this environment. Mitigation that
+     worked: commit each wave the instant its agents return (within the same turn), and remove
+     stale `.git/index.lock` files left by the parallel session's interrupted git ops. Add a
+     "commit immediately, never leave agent output uncommitted" rule to the skill for OFF-mode
+     multi-agent runs.
+  2. **The stale `engines/pixelDojo/games/` Shape B path is actively being built into by the
+     parallel session** (02,03,04,05,06,08,09 scaffolded there at low quality — 0-6 src files,
+     no tests, no smoke). This duplicates the canonical `engines/voxelDojo/game-<NN>-<slug>/`
+     work and will confuse future runs. The SKILL.md was already corrected (parallel session,
+     this run confirmed) to point Shape B at voxelDojo; the pixelDojo/games scaffold should be
+     retired/deleted in a cleanup pass once the parallel session stops writing to it. **Do not
+     trust anything in `engines/pixelDojo/games/` as canonical.**
+  3. **The 2-of-18 rules-shaped split (01, 04 → pixel-quest) was the right call and GAP §G8
+     agreed.** Forcing 01/04 into 3D would have produced worse teaching than the existing
+     token-bucket/sequence-flow encounters (01) and the new task-queue encounter (04). The
+     "why 3D" test in §2 of each PLAN slice is load-bearing — seeds that can't answer it
+     should be retired, not built.
+  4. **Per-game `scheduled_review: false` + `review_reason: "deepening"` is the honest default
+     when the unit isn't in the substrate yet.** Only U0 (rate limiter) and U9-distributed-cache
+     are wired in `learning_state.yaml`; the other 14 unit_ids (U2..U18) are conventional and
+     the games emit them for the evidence record only — the substrate must be extended before
+     any of these can serve a real first-mastery gate. This matches the G4 framing correction
+     from the earlier run.
+  5. **The pilot template (game-10-hash-ring) copy-verbatim strategy paid off.** Every agent
+     that copied `package.json`/`tsconfig.json`/`biome.jsonc`/`vite.config.ts`/`playwright.config.ts`
+     literally and only changed name + port produced green games in one shot; agents that
+     improvised config drift were the ones that needed retries. Codify "configs are copied,
+     not authored" harder in the skill.
+  6. **Stale `.git/index.lock` is a recurring blocker in multi-session repos.** The parallel
+     session's git ops leave a zero-byte lock when interrupted; `rm -f .git/index.lock` is
+     safe when `ps` shows no running git process. Worth a preflight check before any commit.
+

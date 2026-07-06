@@ -16,7 +16,7 @@ implementation pass.
 | G5 3D style substrate | **closed** | `docs/3d-style.md` (palette, camera, lighting, HUD rules) |
 | G6 WebGL in verification | **closed with caveat** | Smoke ran green in the Linux sandbox via Playwright chromium headless-shell + a stubbed `libXdamage.so.1` (see §G6 notes); unverified on macOS host — expected to just work there |
 | G7 ecosystem registration | **closed** | Root `AGENTS.md` (tree + validate row), `docs/handbook/README.md` + `10_engine_voxelDojo.md`, codexDojo `MANIFEST.md`; root `CLAUDE.md` already listed the engine |
-| G8 seed map beyond pilot | **open by design** | 17 seeds remain one-line hypotheses; spec one PLAN.md at a time, each must argue "why 3D" |
+| G8 seed map beyond pilot | **closed (spatial concepts) — open (rules-shaped)** | 15 voxelDojo games implemented 2026-07-05 via the threejs-dojo all-18 buildout (games 02, 03, 05, 06, 07, 08, 09, 11, 12, 13, 14, 15, 16, 17, 18 — each full M1–M6: deterministic sim core, Vitest concept proofs, Three.js scene, 4 levels, voxeldojo evidence emit, Playwright smoke). The two rules-shaped seeds (01 rate limiter, 04 task queue) were intentionally routed to the sister pixel-quest engine as Shape A encounters (`tokenBucket`/`sequenceFlow` for 01, new `taskQueue` for 04) because their mental model is a rule, not a shape; GAP_ANALYSIS §G8 had previously flagged these two as retire-from-3D candidates. Pilot `game-10-hash-ring` predates this pass. All 16 voxelDojo games: lint+test+typecheck+build+smoke green (smoke re-verified on a per-wave sample). Each game has a PLAN slice in `docs/plans/` arguing §2 "why 3D". |
 
 ## Notes per gap
 

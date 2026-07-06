@@ -5,10 +5,13 @@
 an 8-bit *arcade encounter*, voxelDojo turns one concept into an explorable *3D system simulation* —
 the learner walks (or flies) inside the architecture and operates it.
 
-> Status: **pilot implemented** (2026-07-05). The pilot (Game 10, HASH RING) lives in
-> [`game-10-hash-ring/`](game-10-hash-ring/): headless sim core with Vitest concept proofs,
-> Three.js scene, levels L1–L4, evidence emission, and a Playwright browser smoke.
-> [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md) is the status ledger; games 02–18 remain seeds.
+> Status: **15 of 18 spatial concepts implemented** (2026-07-05) as full pilot-quality games.
+> Each game in `game-<NN>-<slug>/` ships a deterministic headless sim core with Vitest concept
+> proofs, a Three.js scene, levels L1–L4, voxeldojo evidence emission, and a Playwright browser
+> smoke. Project 01 (rate limiter) and Project 04 (task queue) are rules-shaped and live in the
+> sister pixel-quest engine as Shape A encounters (`tokenBucket`, `sequenceFlow`, `taskQueue`);
+> project 10 (HASH RING) is the original pilot. [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md) is
+> the status ledger; see the **Subjects → games** table below for the full map.
 
 ## The big idea
 
