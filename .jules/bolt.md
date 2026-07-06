@@ -9,3 +9,6 @@
 ## 2026-07-03 - Optimize Three.js allocations
 **Learning:** In Three.js, instantiating new Materials and Geometries for every object is a massive anti-pattern that bloats memory and kills frame rate, as they cause excessive shader compilations and heap allocations.
 **Action:** Share `PlaneGeometry` and `MeshBasicMaterial` across static tiles (via dictionary) and use `.userData` to differentiate shared vs unique materials for proper cleanup in `.dispose()`.
+## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
+**Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
+**Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
