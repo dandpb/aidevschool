@@ -939,3 +939,75 @@ dated today.
   closes cycle `2026-06-04-01-rate-limiter` for Project 01 — with the standing caveat that Go/Rust
   benchmark and optimize evidence is carried forward from Phase 2 test-pass status, not
   re-execution-verified in this sandbox family.
+
+### 2026-07-06 - 02_key_value_store Code Review (cycle 2026-07-06-02-key-value-store, phase review)
+
+- Ran the `reviewer` phase of `learner/pipeline_status.md` (was `impl-done`, `awaiting: reviewer`)
+  against the current `node-impl/` under `curriculum/02_key_value_store/`. **Node-only scope**, per
+  the repo owner's explicit decision recorded in `pipeline_status.md` (`dev-go`/`dev-rust`: "not
+  started this cycle — out of scope"). `go-impl/`/`rust-impl/` were not read, executed, or compared
+  — this entry and the accompanying `code_review.md` make no claim about them either way.
+- **Pre-existing integrity finding acknowledged, not allowed to lower rigor**: `curriculum/catalog.md`
+  claims "✅ Implemented" for Project 02 while `curriculum/BACKLOG_STATUS.md` calls it `scaffolded —
+  pending catalog-verified 5-phase gate" — the two contradict each other, and neither reflected
+  reality (no cycle had completed a real gated review for Project 02 before this session). Reviewed
+  the Node implementation as if the "✅ Implemented" claim didn't exist; noted the contradiction in
+  `code_review.md` for correction in the optimize/certify phase, not fixed here (out of this phase's
+  scope).
+- **Provenance check first**: `curriculum/02_key_value_store/docs/code_review.md` already existed
+  from the same earlier "backfill" commit (`5d0ee67`) that produced Project 01's stale draft — never
+  gated by a verifier. Treated as an unverified draft per `review.md`'s instruction; every issue below
+  was independently re-derived (re-read the code, then re-executed it) before being reused or
+  discarded, the same discipline applied to the 01_rate_limiter draft.
+- **Re-verified via real execution, not static reading**: fresh `npm ci` install in `/tmp` (the
+  documented sandbox workaround — the repo's committed `node_modules` doesn't run here). `npx vitest
+  run --coverage`: **6/6 tests passed**, coverage 86.15%/80.76%/96.66%/86.15% (stmts/branch/funcs/
+  lines) — matches `pipeline_status.md`'s claimed numbers exactly, now independently reproduced.
+  `tsc --noEmit` and `eslint` both clean. `npm audit --omit=dev`: **0 vulnerabilities** in production
+  deps; full audit shows 6 vulnerabilities but all rooted in the `esbuild`/`vite`/`vitest` dev-toolchain
+  (moderate/high/critical, dev-server request-forgery class), not shipped code.
+- **Three real, reproduced Major findings** (not hypothetical — each was confirmed by running the
+  actual store code via `ts-node -e`, not just reading it):
+  1. `expire()` never calls `validateKey()` before touching the map, so an empty or over-long key
+     sent to `POST /v1/kv/{key}/expire` returns `404 KEY_NOT_FOUND` instead of the spec-required
+     `400 INVALID_KEY`/`KEY_TOO_LONG` — reproduced directly against the store class.
+  2. `validateWrite`'s value-size check uses `serialized.length` (UTF-16 code units) instead of
+     `Buffer.byteLength(serialized, 'utf8')` — three lines later, the code correctly uses
+     `Buffer.byteLength` for memory accounting, so the same function measures "size" two different
+     ways. Reproduced: a `maxValueBytes: 100` store accepted a value serializing to 122 UTF-8 bytes
+     (only 62 UTF-16 code units) — the limit was silently bypassed by 22%.
+  3. `main.ts` binds `0.0.0.0` by default (documented as such in `node-impl/README.md`); `docs/spec.md`
+     line 48 requires the default to be `127.0.0.1`. For an unauthenticated read/write/delete API,
+     this is a real exposure difference, not a style nit.
+- **Test-quality assessment**: the 6-test suite is meaningful where it has coverage (real
+  clock-injection state-machine test, real MSET atomicity assertion verifying the rejected key was
+  NOT partially written, real idempotent-delete/lazy-expiry test) but has concrete gaps that are
+  exactly why the three Major findings above shipped unnoticed: no test sends an invalid key to
+  `/expire`, no test uses non-ASCII/multi-byte value content, and no test exercises concurrent/
+  interleaved `mset` calls (RNF-003's non-functional requirement has no regression test guarding it,
+  even though the current single-threaded/no-`await` design does satisfy it today).
+- **New generalization for the shared knowledge base**: *"Node is single-threaded" and "Node is free
+  of race conditions" are not the same claim.* Every method in this store is atomic with respect to
+  other requests specifically because none of them contains `await` between validation and commit —
+  the atomicity is a code-review-enforced discipline (the spec even says so explicitly at
+  `docs/spec.md` line 294: "avoid await between validation and commit"), not a language guarantee.
+  A single `await` added inside `mset` in a future change would silently reintroduce the exact
+  torn-write class of bug that Go/Rust need an explicit mutex to prevent — and no current test would
+  catch that regression. This generalizes the ecosystem's existing "well-tested is not the same as
+  used" lesson (01_rate_limiter journal entry) into a new form: *"single-threaded is not the same as
+  interleaving-safe once `async`/`await` exists in the language."*
+- Final tally: 0 Critical / 3 Major / 4 Minor / 4 Educational, 7 categories covered (Security,
+  Performance, Readability, Maintainability, Idiomaticity, Error Handling, Testing — see summary
+  table in `code_review.md`).
+- Artifacts written: `curriculum/02_key_value_store/docs/code_review.md` (full rewrite, not an
+  amendment — the prior version was an unverified backfill artifact), `docs/learning_notes.md`,
+  `docs/quiz.md` (8 questions with answers/explanations, Node/key-value-store specific).
+- Self-checked gate for phase=review (no separate verifier script exists for this pipeline; checked
+  manually per `review.md`'s stated criteria): implementation reviewed ✓ (Node only, Go/Rust
+  explicitly declared out of scope, not silently skipped) ✓; code_review.md non-trivial and real
+  (every issue cites file:line and was independently reproduced, several via direct code execution,
+  not just static reading) ✓; learning_notes.md and quiz.md present ✓; journal entry appended ✓;
+  7 categories covered ✓; severities consistent (0 Critical used for what are, in fact, real but
+  bounded-blast-radius bugs — correctly tagged Major, not inflated to Critical or downgraded to
+  Minor) ✓.
+- `learner/pipeline_status.md` advanced to `phase: review-done`, `awaiting: benchmarker`.
