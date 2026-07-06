@@ -21,7 +21,7 @@ export function renderCycle(state: AppState): string {
               const selected = stage.id === selectedStage.id ? "is-active" : ""
               const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
               return `
-                <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}">
+                <button class="timeline-step ${selected} ${completed}" type="button" aria-current="${stage.id === selectedStage.id ? "step" : "false"}" data-stage="${escapeHtml(stage.id)}">
                   <span>${String(index + 1).padStart(2, "0")}</span>
                   ${escapeHtml(stage.label)}
                 </button>

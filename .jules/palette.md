@@ -13,3 +13,7 @@
 ## 2024-05-24 - Active Navigation Item Accessibility
 **Learning:** Using `aria-current="page"` on the active item in a navigation list provides crucial context to screen reader users about where they currently are within the application. Visual cues like an 'is-active' class are not enough.
 **Action:** Always add `aria-current="page"` to the active link or button in navigation menus.
+
+## 2024-11-20 - Ensure Selection State Readability with ARIA Attributes
+**Learning:** Visual-only selection indicators (like `.is-active` CSS classes) hide the current state from screen reader users. This creates a confusing experience where users can interact with elements but cannot perceive the result of their actions.
+**Action:** When creating custom interactive elements (like filter buttons, timeline steps, or list items), always pair the visual active class with the semantic ARIA attribute (e.g., `aria-pressed="true|false"` for toggles, `aria-current="step|true"` for current items).

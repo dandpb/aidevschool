@@ -48,7 +48,7 @@ export function renderAgents(state: AppState): string {
           .map((agent) => {
             const activeClass = agent.id === selectedAgent.id ? "is-active" : ""
             return `
-              <button class="agent-row ${activeClass}" type="button" data-agent="${escapeHtml(agent.id)}">
+              <button class="agent-row ${activeClass}" type="button" aria-current="${agent.id === selectedAgent.id ? "true" : "false"}" data-agent="${escapeHtml(agent.id)}">
                 <span>${escapeHtml(agent.name)}</span>
                 <small>${escapeHtml(agent.role)}</small>
               </button>

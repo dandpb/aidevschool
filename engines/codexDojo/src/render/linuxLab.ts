@@ -56,7 +56,7 @@ function renderCategoryFilters(activeFilter: LinuxAppCategoryFilter): string {
         .map((filter) => {
           const activeClass = activeFilter === filter ? "is-active" : ""
           return `
-            <button class="linux-category ${activeClass}" type="button" data-linux-category="${escapeHtml(filter)}">
+            <button class="linux-category ${activeClass}" type="button" aria-pressed="${activeFilter === filter ? "true" : "false"}" data-linux-category="${escapeHtml(filter)}">
               ${escapeHtml(linuxAppCategoryLabels[filter])}
             </button>
           `
@@ -73,7 +73,7 @@ function renderAppGrid(apps: readonly LinuxApp[], activeApp: LinuxApp): string {
         .map((app) => {
           const activeClass = app.id === activeApp.id ? "is-active" : ""
           return `
-            <button class="linux-app-tile ${activeClass}" type="button" data-linux-app="${escapeHtml(app.id)}">
+            <button class="linux-app-tile ${activeClass}" type="button" aria-current="${app.id === activeApp.id ? "true" : "false"}" data-linux-app="${escapeHtml(app.id)}">
               <span class="linux-app-icon linux-category-${escapeHtml(app.category)}">${escapeHtml(appInitials(app.name))}</span>
               <span class="linux-app-name">${escapeHtml(app.name)}</span>
               <small>${escapeHtml(linuxAppCategoryLabels[app.category])}</small>
