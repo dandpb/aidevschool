@@ -7,8 +7,8 @@
 - **cycle_id**: 2026-07-06-02-key-value-store
 - **current_project**: `curriculum/02_key_value_store`
 - **complexity_level**: 1 (fundamentos — hash map + TTL + HTTP CRUD)
-- **phase**: benchmark-done
-- **awaiting**: `optimizer`
+- **phase**: cycle-complete
+- **awaiting**: `next-curator`
 - **agents**:
   - `dev-node`: done (cobertura real medida nesta sessão: 86.15% statements / 80.76% branch /
     96.66% funcs / 86.15% lines — `npx vitest run --coverage`, 6/6 testes passando, 2 arquivos de
@@ -52,6 +52,32 @@
     `benchmarks/results/native/node/run-{1..10}.json` + `tolerance-check-run.json`,
     `benchmarks/kv_load_autocannon.js`, `docs/benchmark_results.md` (substitui o report N=1
     macOS/k6 de 2026-07-02 do backfill anterior, preservado no histórico do git).
+  - `optimizer`: done. **3 achados Major do review corrigidos e regression-testados**: (1)
+    `expire()` agora chama `this.validateKey(key)` antes de tudo, retornando `INVALID_KEY`/
+    `KEY_TOO_LONG` corretamente em vez de `KEY_NOT_FOUND`; (2) checagem de tamanho de valor usa
+    `Buffer.byteLength(serialized, 'utf8')` (era `serialized.length`, UTF-16), reaproveitado no
+    cálculo de `approxBytes`; (3) bind padrão trocado para `127.0.0.1` em `main.ts`, com `HOST`
+    env var como mecanismo de override legítimo (não existia antes; `PORT` era a única env var
+    lida). 4 testes de regressão novos (2 em `store.test.ts`, 1 em `server.test.ts`, mais 1 para
+    a otimização de perf) — suíte agora **10/10 passando** (era 6/6), cobertura **91.45%/82.01%/
+    100%/91.45%** (era 86.15%/80.76%/96.66%/86.15%), `tsc`/`eslint` limpos. Tudo reverificado em
+    `/tmp` fresh install (mesmo workaround do sandbox Linux). **1 otimização de performance
+    aplicada e medida**: rate-limiting do sweep `removeExpired()` em `/health` (MINOR-003 do
+    review) para no máximo 1x/segundo em vez de toda chamada — N=10 + 1 tolerance-check re-run
+    no mesmo harness/workload do benchmark; resultado honesto: **wash** nas métricas principais
+    (RPS mediana −1.5%, latência avg +1.7%, RSS +0.02%, todas dentro do CV de ruído), com
+    melhora real na *estabilidade* de medição da cauda (p95 CV 19.2%→13.7%, p99 CV 20.1%→15.5%,
+    cruzando o limiar de honestidade de 15%) — não reivindicado como causado pela otimização
+    (o código mudado, `/health`, não faz parte do mix de tráfego benchmarkado). **1 otimização
+    rejeitada**: descartar o sweep inteiramente (em vez de rate-limitá-lo) — rejeitado por trocar
+    uma garantia de acurácia real por um ganho hipotético não medido no volume-alvo da spec (10k
+    chaves). Artefatos: `docs/evolution_report.md` (rewrite completo, substitui o placeholder do
+    backfill de 2026-06-18), `benchmarks/results/native-after/node/run-{1..10}.json` +
+    `tolerance-check-run.json`. `/simplify` do diff: nada a simplificar (5 mudanças de código
+    pequenas e de propósito único, sem arquivos redundantes). **`catalog.md`/`BACKLOG_STATUS.md`
+    corrigidos** para refletir "Node.js implementado e certificado; Go/Rust código existe, não
+    verificado" (não mais "✅ Implemented" genérico nem "scaffolded" genérico — ambos
+    contradiziam a realidade antes desta fase).
 - **notas**:
   - Escopo desta sessão (Fase 2.1, per `docs/SPEC_plano_execucao.md`): **somente Node.js** recebe
     implementação real e verificada neste ciclo. Go e Rust foram deliberadamente **não iniciados**
@@ -73,11 +99,18 @@
     implementations exist" (`scaffolded`) / "✅ Implemented" — essas linhas não foram alteradas
     nesta sessão; a certificação formal fica para a fase de review/verify, não para impl-done.
   - **Reconfirmado na fase review**: a contradição `catalog.md` ("✅ Implemented") vs.
-    `BACKLOG_STATUS.md` ("scaffolded... pending catalog-verified 5-phase gate") segue sem correção
-    — nenhum dos dois refletia a realidade antes desta sessão (nenhum ciclo tinha completado um
-    review real e gated para o projeto 02). A revisão desta fase tratou o código como se a claim
-    "✅ Implemented" não existisse, e a correção textual de `catalog.md`/`BACKLOG_STATUS.md` fica
-    para a fase optimize/certify, não para review.
+    `BACKLOG_STATUS.md` ("scaffolded... pending catalog-verified 5-phase gate") seguiu sem
+    correção até a fase optimize — nenhum dos dois refletia a realidade antes desta sessão (nenhum
+    ciclo tinha completado um review real e gated para o projeto 02). A revisão desta fase tratou
+    o código como se a claim "✅ Implemented" não existisse.
+  - **Corrigido na fase optimize (esta sessão)**: `catalog.md` linha do projeto 02 agora diz
+    "Partially implemented (Node.js: gated & certified; Go/Rust: code exists, unverified)" em vez
+    do "✅ Implemented" genérico; `BACKLOG_STATUS.md` agora diz "`implemented` (Node.js only)" com
+    evidência detalhada em vez de "`scaffolded`... pending catalog-verified 5-phase gate". Ambos
+    agora concordam entre si e com a realidade: Node.js está genuinamente spec'd/implementado/
+    revisado/benchmarkado(N=10)/otimizado neste ciclo; Go/Rust têm código no repo (do backfill
+    `5d0ee67`) mas **zero verificação** (nunca compilados/testados/revisados/benchmarkados, nem
+    neste ciclo nem antes) — não reivindicados como "implemented".
 - **blockers**: []
 
 ## Transições

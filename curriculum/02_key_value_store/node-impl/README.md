@@ -11,7 +11,11 @@ npm start
 curl -s http://localhost:8081/health
 ```
 
-The service listens on `0.0.0.0:8081` by default. Override with `PORT=9000`.
+The service listens on `127.0.0.1:8081` by default, per `docs/spec.md`'s
+loopback-only default (no authentication is implemented, so network-wide
+exposure must be an explicit opt-in). Override the port with `PORT=9000` and
+the bind address with `HOST=0.0.0.0` (e.g. for container deployments where the
+host network boundary is enforced elsewhere).
 
 ## How to test
 

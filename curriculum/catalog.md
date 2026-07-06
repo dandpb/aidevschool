@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 1 (Project 01)
+> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; see BACKLOG_STATUS.md for the Go/Rust caveat on each)
 >
 > ℹ️ Per-project build status (02–18 are *scaffolded*, not "not started") is tracked authoritatively in [BACKLOG_STATUS.md](BACKLOG_STATUS.md); on conflict, BACKLOG_STATUS wins. The per-project "Status" rows below may lag.
 
@@ -48,14 +48,15 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `02_key_value_store` |
-| **Status** | ✅ Implemented |
+| **Status** | Partially implemented (Node.js: gated & certified; Go/Rust: code exists, unverified) |
 | **Concepts** | Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics |
-| **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? |
+| **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? (unanswered this cycle — no cross-language data exists) |
 | **Directory** | `02_key_value_store/` |
-| **Go coverage** | tests pass |
-| **Rust tests** | 6 pass |
-| **Node coverage** | 6 tests pass |
-| **Benchmark** | Full benchmark pending |
+| **Go coverage** | Unverified — `go-impl/` exists from an earlier ungated backfill commit; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
+| **Rust tests** | Unverified — `rust-impl/` exists from the same earlier ungated backfill; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
+| **Node coverage** | 91.45% stmts / 82.01% branch / 100% funcs / 91.45% lines — 10/10 tests passing (re-verified this cycle after 3 Major bug fixes + regression tests; `tsc`/`eslint` clean) |
+| **Benchmark** | **Node.js only**, N=10 + tolerance re-check PASS, native harness (autocannon substitute for k6, mixed GET/SET/DELETE/EXPIRE/TTL-read workload). Go/Rust not executed — out of scope this cycle by explicit repo-owner decision, not a toolchain failure. Not a 3-language comparison. |
+| **Evolution** | **Node.js only** — 3 Major code-review bugs fixed (expire() key-validation bypass, UTF-16-vs-UTF-8 value-size check, insecure `0.0.0.0` default bind) with regression tests; 1 measured perf optimization applied (rate-limited `/health` expiry sweep) — honest result: a wash on the benchmarked workload (all deltas within measurement noise), reported as-is, not spun as an improvement; 1 optimization rejected (dropping the sweep entirely) with documented reasoning. See `docs/evolution_report.md`. |
 | **Dependencies** | Project 01 (concurrency basics) |
 
 ### 03. URL Shortener

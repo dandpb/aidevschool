@@ -5,10 +5,11 @@ import { KeyValueStore } from './store';
 
 const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
 const port = Number(process.env.PORT ?? 8081);
+const host = process.env.HOST ?? '127.0.0.1';
 const server = http.createServer(buildApp(new KeyValueStore(), logger));
 
-server.listen(port, '0.0.0.0', () => {
-  logger.info({ port }, 'server_starting');
+server.listen(port, host, () => {
+  logger.info({ port, host }, 'server_starting');
 });
 
 function shutdown(signal: NodeJS.Signals): void {

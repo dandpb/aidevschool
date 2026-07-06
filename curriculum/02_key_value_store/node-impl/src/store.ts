@@ -7,6 +7,15 @@ const DEFAULT_MAX_MEMORY_BYTES = 256 << 20;
 const ENTRY_OVERHEAD_BYTES = 64;
 const MAX_TTL_SECONDS = 30 * 24 * 60 * 60;
 const NANOS_PER_SECOND = 1_000_000_000n;
+// MINOR-003 (docs/code_review.md): /health used to run a full O(n) removeExpired()
+// sweep on every single call. Monitoring systems poll /health frequently (often
+// every few seconds), so this made the cheapest, most-polled endpoint in the
+// service the one deliberately made O(n) in the resident key count. Rate-limiting
+// the sweep keeps keyCount/expiredKeysRemoved accurate to within this window
+// (lazy per-key cleanup on get/delete/etc. already guarantees expired keys are
+// never returned to clients in between sweeps — see RF-011) while making repeat
+// /health polls within the window O(1).
+const HEALTH_SWEEP_MIN_INTERVAL_NANOS = 1_000_000_000n; // 1s
 
 export enum ErrorCode {
   InvalidCommand = 'INVALID_COMMAND',
@@ -63,6 +72,7 @@ export class KeyValueStore {
   private approxMemoryBytes = 0;
   private commandsProcessed = 0;
   private expiredKeysRemoved = 0;
+  private lastHealthSweepNanos: bigint | null = null;
 
   constructor(config: StoreConfig = {}, private readonly nowNanos: () => bigint = process.hrtime.bigint) {
     this.config = {
@@ -117,6 +127,7 @@ export class KeyValueStore {
   }
 
   expire(key: string, ttlSeconds: number): { updated: boolean; ttlSeconds: number; expiresAt: string } {
+    this.validateKey(key);
     validateTtl(ttlSeconds);
     this.commandsProcessed += 1;
     const now = this.nowNanos();
@@ -240,7 +251,11 @@ export class KeyValueStore {
   }
 
   health(): { status: 'ok'; keyCount: number; approxMemoryBytes: number; commandsProcessed: number; expiredKeysRemoved: number } {
-    this.removeExpired(this.nowNanos());
+    const now = this.nowNanos();
+    if (this.lastHealthSweepNanos === null || now - this.lastHealthSweepNanos >= HEALTH_SWEEP_MIN_INTERVAL_NANOS) {
+      this.removeExpired(now);
+      this.lastHealthSweepNanos = now;
+    }
     return {
       status: 'ok',
       keyCount: this.entries.size,
@@ -265,13 +280,14 @@ export class KeyValueStore {
       validateTtl(ttlSeconds);
     }
     const serialized = JSON.stringify(value);
-    if (serialized.length > this.config.maxValueBytes) {
+    const serializedBytes = Buffer.byteLength(serialized, 'utf8');
+    if (serializedBytes > this.config.maxValueBytes) {
       throw new DomainError(ErrorCode.ValueTooLarge, 'value is too large');
     }
     if (!this.entries.has(key) && this.entries.size >= this.config.maxKeys) {
       throw new DomainError(ErrorCode.StoreFull, 'store key limit exceeded');
     }
-    const approxBytes = Buffer.byteLength(key, 'utf8') + Buffer.byteLength(serialized, 'utf8') + ENTRY_OVERHEAD_BYTES;
+    const approxBytes = Buffer.byteLength(key, 'utf8') + serializedBytes + ENTRY_OVERHEAD_BYTES;
     const oldBytes = this.entries.get(key)?.approxBytes ?? 0;
     if (this.approxMemoryBytes + approxBytes - oldBytes > this.config.maxMemoryBytes) {
       throw new DomainError(ErrorCode.MemoryLimitExceeded, 'memory limit exceeded');
