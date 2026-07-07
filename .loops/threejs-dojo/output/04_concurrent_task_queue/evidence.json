@@ -1,45 +1,32 @@
 {
-  "schema": "04_concurrent_task_queue-v1",
-  "unit_id": "04_concurrent_task_queue",
+  "source": "pixelquest",
+  "unit_id": "U-04_concurrent_task_queue",
   "project": "04_concurrent_task_queue",
-  "scenario_id": "task-forge-L1",
-  "game": "TASK FORGE",
-  "ts": "2026-07-05T23:30:51.094Z",
+  "encounter_id": "encounter-04_concurrent_task_queue",
+  "game": "PixelDojo Quest",
+  "ts": "2026-07-07T15:27:50.840Z",
   "pass": true,
-  "gates": [
-    "priority-fifo-dispatch",
-    "retry-backoff",
-    "poison-dlq",
-    "backpressure",
-    "idempotency",
-    "concurrency-invariant"
-  ],
   "metrics": {
-    "kind": "task-forge-task-queue",
-    "dispatch_predictions": 7,
-    "dispatch_correct": 7,
-    "retry_classifications": 1,
-    "retry_correct": 1,
-    "dlq_classifications": 1,
-    "dlq_correct": 1,
-    "poison_requeued": 0,
-    "backpressure_violations": 0,
-    "idempotency_duplicates_enqueued": 0,
-    "queue_overflowed": false,
-    "max_concurrent_running": 3,
-    "worker_count": 3
-  },
-  "curriculum_context": {
-    "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
-    "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute",
-    "accepted_signal": "correct next-dispatch prediction AND correct retry/DLQ classification AND held backpressure + idempotency",
-    "rejected_trap": "requeuing poison / overflowing hopper / enqueuing a duplicate sigil"
+    "kind": "pixelquest-task-queue",
+    "processed": 10,
+    "poison_dead_lettered": 3,
+    "poison_retried": 0,
+    "legit_retried": 0,
+    "backpressure_peak": 0,
+    "overheated": false
   },
   "review_context": {
     "unit_kind": "concept",
     "scheduled_review": false,
-    "review_reason": "deepening",
+    "review_reason": "due",
+    "streak_candidate": true,
     "scheduler_source": "learner-substrate",
     "verifier_required": true
+  },
+  "curriculum_context": {
+    "concept": "Fila concorrente, backpressure e processamento justo",
+    "mechanic": "Worker Queue",
+    "accepted_signal": "tarefa pronta",
+    "rejected_trap": "job veneno sem lease"
   }
 }

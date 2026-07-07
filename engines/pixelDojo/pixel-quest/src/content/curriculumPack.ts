@@ -26,7 +26,12 @@ type CurriculumModule = {
   readonly rejectActionLabel: string
   readonly practiceTitle: string
   readonly practiceText: string
-  readonly encounterKind?: "sequence_flow" | "route_health" | "policy_gate" | "task_queue"
+  readonly encounterKind?:
+    | "sequence_flow"
+    | "route_health"
+    | "policy_gate"
+    | "task_queue"
+    | "token_bucket"
   readonly sequenceSteps?: readonly SequenceStep[]
   readonly routeChecks?: readonly RouteCheck[]
   readonly policyChecks?: readonly PolicyCheck[]
@@ -36,31 +41,19 @@ type CurriculumModule = {
 const modules: readonly CurriculumModule[] = [
   {
     project: "01_rate_limiter",
-    title: "Agent Quest: Rate Limiter",
-    concept: "Orquestracao agentica para provar robustez de token bucket",
-    verb: "acionar agentes com evidencia e bloquear atalhos sem gate",
-    mechanicName: "Agent Quest",
-    resourceName: "Gates",
-    goodRequestLabel: "acao agentica correta",
-    badRequestLabel: "atalho sem evidencia",
-    admitActionLabel: "Acionar",
-    rejectActionLabel: "Bloquear",
-    practiceTitle: "Simulacao de orquestracao",
+    title: "Rate Limiter",
+    concept: "Token bucket: capacidade vs refill, admitir legitimos e rejeitar abusivos",
+    verb: "admitir requisicoes legitimas e rejeitar rajadas abusivas dentro do budget de tokens",
+    mechanicName: "Token Bucket",
+    resourceName: "Tokens",
+    goodRequestLabel: "requisicao legitima",
+    badRequestLabel: "rajada abusiva",
+    admitActionLabel: "Admitir",
+    rejectActionLabel: "Rejeitar",
+    practiceTitle: "Treino de token bucket",
     practiceText:
-      "Conduza Sonda, Mestre-Conteudo e Prometor pelo ciclo plan-act-observe-verify. Acione passos com evidencia; bloqueie solucoes antes da tentativa, self-verification e mastery sem gate.",
-    encounterKind: "sequence_flow",
-    sequenceSteps: [
-      { type: "advance", label: "PLAN: Sonda diagnostica sua tentativa no rate limiter" },
-      { type: "guard", label: "TRAP: Socrates entrega solucao sem tentativa sua" },
-      { type: "advance", label: "PLAN: Mestre-Conteudo define DoD e teste minimo" },
-      { type: "guard", label: "TRAP: Implementador codifica antes do criterio" },
-      { type: "advance", label: "ACT: Implementador aplica a menor mudanca verificavel" },
-      { type: "guard", label: "TRAP: Produtor verifica o proprio patch" },
-      { type: "advance", label: "OBSERVE: Testes rodam lint, suite focada e evidencia" },
-      { type: "guard", label: "TRAP: Metricas celebra score sem comando executado" },
-      { type: "advance", label: "VERIFY: Prometor isolado decide PASS ou FAIL" },
-      { type: "guard", label: "TRAP: Memoria marca DOMINADO antes do gate" },
-    ],
+      "Admita requisicoes legitimas enquanto ha tokens. Rejeite rajadas abusivas para preservar capacidade vs refill e manter a taxa observada abaixo da maxima.",
+    encounterKind: "token_bucket",
   },
   {
     project: "02_key_value_store",
@@ -662,6 +655,10 @@ function regionId(module: CurriculumModule): string {
   return `lab-${module.project}`
 }
 
+// 01_rate_limiter keeps legacy identifiers (U0-sonda-rate-limiter-robustness,
+// encounter-agent-quest-01) as a FROZEN persistence contract: U0 is the substrate's
+// canonical rate-limiter unit (the only unit in learning_state.yaml). Do not rename
+// without migrating the substrate, the verifier done-rule, and the smoke assertions.
 function unitId(module: CurriculumModule): string {
   if (module.project === "01_rate_limiter") {
     return "U0-sonda-rate-limiter-robustness"

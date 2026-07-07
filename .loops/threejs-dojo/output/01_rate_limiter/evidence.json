@@ -1,52 +1,35 @@
 {
-  "source": "playwright-capture",
-  "captured_at": "2026-07-05T21:48:30.336Z",
-  "evidence": [
-    {
-      "source": "pixelquest",
-      "unit_id": "U0-sonda-rate-limiter-robustness",
-      "project": "01_rate_limiter",
-      "encounter_id": "encounter-agent-quest-01",
-      "game": "PixelDojo Quest",
-      "ts": "2026-07-05T21:48:29.775Z",
-      "pass": true,
-      "metrics": {
-        "kind": "pixelquest-sequence-flow",
-        "advanced": 5,
-        "held": 5,
-        "skipped_required": 0,
-        "guards_missed": 0,
-        "heat_peak": 0,
-        "overheated": false
-      },
-      "review_context": {
-        "unit_kind": "concept",
-        "scheduled_review": false,
-        "review_reason": "recurring-trap",
-        "streak_candidate": true,
-        "scheduler_source": "learner-substrate",
-        "verifier_required": true
-      },
-      "curriculum_context": {
-        "concept": "Orquestracao agentica para provar robustez de token bucket",
-        "mechanic": "Agent Quest",
-        "accepted_signal": "acao agentica correta",
-        "rejected_trap": "atalho sem evidencia"
-      }
-    }
-  ],
-  "console_evidence_lines": [
-    {
-      "type": "log",
-      "text": "EVIDENCE {\"source\":\"pixelquest\",\"unit_id\":\"U0-sonda-rate-limiter-robustness\",\"project\":\"01_rate_limiter\",\"encounter_id\":\"encounter-agent-quest-01\",\"game\":\"PixelDojo Quest\",\"ts\":\"2026-07-05T21:48:29.775Z\",\"pass\":true,\"metrics\":{\"kind\":\"pixelquest-sequence-flow\",\"advanced\":5,\"held\":5,\"skipped_required\":0,\"guards_missed\":0,\"heat_peak\":0,\"overheated\":false},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":false,\"review_reason\":\"recurring-trap\",\"streak_candidate\":true,\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"Orquestracao agentica para provar robustez de token bucket\",\"mechanic\":\"Agent Quest\",\"accepted_signal\":\"acao agentica correta\",\"rejected_trap\":\"atalho sem evidencia\"}}",
-      "location": {
-        "url": "http://127.0.0.1:4176/src/game/evidence/emitter.ts",
-        "line": 24,
-        "column": 10,
-        "lineNumber": 24,
-        "columnNumber": 10
-      }
-    }
-  ],
-  "base_url": "http://127.0.0.1:4176"
+  "source": "pixelquest",
+  "unit_id": "U0-sonda-rate-limiter-robustness",
+  "project": "01_rate_limiter",
+  "encounter_id": "encounter-agent-quest-01",
+  "game": "PixelDojo Quest",
+  "ts": "2026-07-07T18:23:22.855Z",
+  "pass": true,
+  "metrics": {
+    "kind": "pixelquest-token-bucket",
+    "target_rate": 1.5,
+    "observed_admit_rate": 0.73,
+    "max_burst_1s": 2,
+    "good_admits": 8,
+    "legit_rejected": 0,
+    "abusive_admitted": 0,
+    "abusive_rejected": 4,
+    "heat_peak": 56,
+    "overheated": false
+  },
+  "review_context": {
+    "unit_kind": "concept",
+    "scheduled_review": true,
+    "review_reason": "due",
+    "streak_candidate": true,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  },
+  "curriculum_context": {
+    "concept": "Token bucket: capacidade vs refill, admitir legitimos e rejeitar abusivos",
+    "mechanic": "Token Bucket",
+    "accepted_signal": "requisicao legitima",
+    "rejected_trap": "rajada abusiva"
+  }
 }

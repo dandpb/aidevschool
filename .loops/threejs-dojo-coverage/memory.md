@@ -77,3 +77,18 @@ Each entry uses this shape (see SKILL.md §"Output & Memory"):
   - **02 PASS@8 with artifact defect:** contract-path screenshot renders 07_rest_api_auth (mislabeled); live smoke shots correct in game-02-warehouse/.logs/. Regenerate contract screenshot.
   - **Manifest plan-path bug (mine):** prompts used <nn>_<slug>.md but real files are <slug>.md; verifiers found real files anyway; on-disk manifest corrected.
   - **Evidence pipeline sound:** all 14 PASS games emit schema-conformant voxeldojo records (verifier_required:true, scheduler_source:learner-substrate, never imports learner state). No verifier wrote learner/learning_state.yaml (producer!=verifier + never-mark-mastered held).
+
+## Batch 2026-07-07 FINAL — run-id 2026-07-07-coverage
+- mode: OFF (autonomous, ultracode) — completion of the 2026-07-07 coverage run
+- scope: 18/18 CLOSED — FULL COVERAGE
+- closed via: initial verify wave (14) + gap-close wave (05) + finalize wave (01 rebuild, 02/04/06 artifacts) + 06 robust re-verify
+- per-slug FINAL scores: 01_rate_limiter:9, 02_key_value_store:9, 03_url_shortener:9, 04_concurrent_task_queue:9, 05_websocket_chat:9, 06_file_upload_pipeline:9, 07_rest_api_auth:9, 08_event_driven_order_system:9, 09_plugin_system:9, 10_distributed_cache:9, 11_load_balancer:9, 12_distributed_job_scheduler:9, 13_api_gateway_circuit_breaker:9, 14_log_aggregator:9, 15_metrics_collector:9, 16_mini_message_queue:9, 17_distributed_config_service:9, 18_search_engine:9
+- coverage: 18/18 — PASS
+- output: .loops/threejs-dojo-coverage/output/2026-07-07-coverage/
+- lessons (FINAL):
+  - **18/18 full coverage achieved.** All 18 modules have a fresh-context verifier PASS>=8 + valid EVIDENCE + PLAN + screenshot. No learner state written by any verifier.
+  - **01 rebuilt from Agent Quest (sequence_flow) to token_bucket** per owner decision — the strict didactic-fit rule was right; tokenBucket.ts already existed as a full encounter, so the fix was a dispatch re-wire (curriculumPack.ts encounterKind union + 01's kind) + spec, not a new encounter. PLAN slice rewritten to match.
+  - **04/05/06 were mechanical:** 04 = missing pixel-quest lab-04 Playwright smoke; 05 = stale controller.test.ts rewritten; 06 = stale controller.test.ts deleted + phantom evidence.json replaced with the real voxeldojo record + screenshot regenerated.
+  - **CRITICAL — `analyze_image` vision tool hallucinates screenshot identity on content-hash collisions.** It falsely read the 06 (and initially 01) screenshot as '07_rest_api_auth'. Slug 01's verifier documented+debunked the identical hallucination via cache-busted crop re-analysis. DECISIVE disproof is MD5: 06 screenshot MD5 != 07 screenshot MD5, and == game-06's own smoke render. **Future runs: verify screenshot identity by MD5 comparison, NEVER by the vision tool alone.** WebGL is non-deterministic (animation loop) — do not pin a canonical screenshot MD5; verify by content/identity.
+  - **Canonical .loops artifact propagation was the recurring failure mode** (phantom evidence.json + mislabeled screenshots from the 2026-07-05 buildout's copy step). The games were correct; the .loops copies were wrong. A preflight that regenerates .loops artifacts from each game's live smoke (rather than trusting stale copies) would have prevented 02/04/06.
+  - **Multi-agent pixel-quest edits must serialize** (shared src/content/curriculumPack.ts + playwright spec). Serialized 01 after 04; no curriculumPack/spec races.

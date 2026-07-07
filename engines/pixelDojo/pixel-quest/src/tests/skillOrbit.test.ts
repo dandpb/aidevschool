@@ -24,7 +24,7 @@ describe("skill orbit simulation", () => {
     expect(world.mode).toBe("skill-orbit")
     expect(world.progress.phase).toBe("orbit")
     expect(selected.project).toBe("01_rate_limiter")
-    expect(selected.title).toBe("Duelo 1: Agent Quest: Rate Limiter")
+    expect(selected.title).toBe("Duelo 1: Rate Limiter")
     expect(selected.completed).toBe(false)
     expect(selected.locked).toBe(false)
   })

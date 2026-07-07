@@ -36,11 +36,11 @@ describe("content pack validation", () => {
     expect(
       pack.encounters.find((encounter) => encounter.project === "01_rate_limiter"),
     ).toMatchObject({
-      kind: "sequence_flow",
+      kind: "token_bucket",
       id: "encounter-agent-quest-01",
-      mechanicName: "Agent Quest",
-      goodRequestLabel: "acao agentica correta",
-      badRequestLabel: "atalho sem evidencia",
+      mechanicName: "Token Bucket",
+      goodRequestLabel: "requisicao legitima",
+      badRequestLabel: "rajada abusiva",
     })
     expect(
       pack.encounters.find((encounter) => encounter.project === "02_key_value_store"),

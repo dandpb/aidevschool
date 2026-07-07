@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest"
-import { deliverySet, liveSet, survivorsAfterSweep } from "../sim/levels"
 import { GameController } from "./controller"
 
 function evidenceLines(spy: ReturnType<typeof vi.spyOn>): string[] {
@@ -13,9 +12,9 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const spy = vi.spyOn(console, "log").mockImplementation(() => {})
     const game = new GameController("L1")
     game.start()
-    const truth = liveSet(game.snapshot.level)
+    const truth = game.truthConnected()
     for (const id of truth) game.togglePredict(id)
-    game.lockIn()
+    game.submit()
     expect(game.snapshot.phase).toBe("cleared")
     const records = evidenceLines(spy).map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
     expect(records).toHaveLength(1)
@@ -33,16 +32,16 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const spy = vi.spyOn(console, "log").mockImplementation(() => {})
     const game = new GameController("L2")
     game.start()
-    const truth = deliverySet(game.snapshot.level)
+    const truth = game.truthDelivery()
     expect(truth.length).toBeGreaterThan(0)
     for (const id of truth) game.togglePredict(id)
-    game.lockIn()
+    game.submit()
     expect(game.snapshot.phase).toBe("cleared")
 
     const game2 = new GameController("L2")
     game2.start()
     // empty prediction (nothing selected) — accuracy 0
-    game2.lockIn()
+    game2.submit()
     expect(game2.snapshot.phase).toBe("failed")
     expect(evidenceLines(spy)).toHaveLength(2)
     spy.mockRestore()
@@ -52,10 +51,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const spy = vi.spyOn(console, "log").mockImplementation(() => {})
     const game = new GameController("L3")
     game.start()
-    const truth = survivorsAfterSweep(game.snapshot.level)
+    const truth = game.truthSurvivors()
     expect(truth.length).toBeGreaterThan(0)
     for (const id of truth) game.togglePredict(id)
-    game.lockIn()
+    game.submit()
     expect(game.snapshot.phase).toBe("cleared")
     spy.mockRestore()
   })
@@ -64,7 +63,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const spy = vi.spyOn(console, "log").mockImplementation(() => {})
     const game = new GameController("L4")
     game.start()
-    const target = game.snapshot.level.recoverClientId
+    const target = game.truthReconnectTarget()
     expect(target).toBeTruthy()
     game.reconnect(target as string)
     expect(game.snapshot.phase).toBe("cleared")
@@ -72,7 +71,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const game2 = new GameController("L4")
     game2.start()
     // reconnect the wrong client
-    const wrong = [...game2.snapshot.relay.clients.keys()].find((id) => id !== target) as string
+    const wrong = [...game2.snapshot.state.clients.keys()].find((id) => id !== target) as string
     game2.reconnect(wrong)
     expect(game2.snapshot.phase).toBe("failed")
     spy.mockRestore()

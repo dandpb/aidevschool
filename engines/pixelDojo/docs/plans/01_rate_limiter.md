@@ -1,104 +1,102 @@
-# PLAN slice — `01_rate_limiter` (Agent Quest: Rate Limiter)
+# PLAN slice — `01_rate_limiter` (Token Bucket)
 
 > PLAN slice for `/threejs-dojo 01_rate_limiter`. The slug's catalog concept is
-> "Token bucket algorithm, concurrency primitives, atomic refills, shared state" — the algorithm
-> itself. The current pixel-quest lab teaches it through a **sequence-flow** encounter called
-> *Agent Quest: Rate Limiter* (per the curriculum pack author's pedagogical frame: the algorithm
-> is the verification object, the agent orchestration is the playable surface).
+> "Token bucket algorithm, concurrency primitives, atomic refills, shared state".
+> The pixel-quest lab teaches it through a **token-bucket** encounter whose playable
+> surface *is* the algorithm: the player admits/rejects requests against a refilling
+> capacity budget.
 >
-> **Path A (accepted)**: this slice is the canonical plan for the slug as it exists. The
-> worked-example "Gatekeeper" game in `../../engines/pixelDojo/PLAN.md` is the **template** for a
-> direct token-bucket mechanic; the actual implementation chose the orchestration wrapper instead.
-> A future run with path B (replace) would re-author the implementation to match Gatekeeper.
+> **Rebuilt 2026-07-07.** An earlier version of this lab dispatched a `sequence_flow`
+> "Agent Quest" orchestration duel where token-bucket was only narrative framing. That
+> was a deliberate-but-partial choice; a fresh-context verifier correctly failed it on
+> didactic fit (the player never touched capacity-vs-refill). The lab now dispatches the
+> `token_bucket` encounter directly, so the mechanic and the concept are the same thing.
 
 ## 1. Subject & concept
 
 - **Curriculum project:** `../../curriculum/01_rate_limiter/`
-- **One concept this lab teaches:** the agent-orchestration protocol (PLAN → ACT → OBSERVE →
-  VERIFY) used to prove **token-bucket robustness** end-to-end. The token-bucket algorithm is the
-  *target under verification*, not the direct arcade mechanic.
+- **One concept this lab teaches:** the **token-bucket algorithm** — a capacity of tokens
+  refills at a fixed rate; each admitted request consumes one token; when the bucket is
+  empty the request is rejected. The player feels capacity vs refill rate directly.
 - **Slug:** `01_rate_limiter`
 - **Region id:** `lab-01_rate_limiter`
 - **Unit id:** `U0-sonda-rate-limiter-robustness`
 - **Encounter id:** `encounter-agent-quest-01`
-- **Mechanic in pack:** `sequence_flow` (see `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts:48`)
+- **Mechanic in pack:** `token_bucket` (see
+  `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts`; `encounterKind: "token_bucket"`,
+  which falls through the default path to the `tokenBucket` factory + the
+  `pixelquest-token-bucket` evidence contract).
 
 ## 2. Player goal
 
-You are the Maestro of an agent team (Sonda, Mestre-Conteúdo, Prometor) running the
-plan-act-observe-verify loop against a token-bucket rate limiter. Admit the orchestration steps
-that move the loop forward; block the traps that would skip the evidence (Socrates giving the
-solution before the learner's attempt, implementer coding before the criterion, producer verifying
-their own patch, metrics celebrating a score without an executed command, memory marking
-`DOMINADO` before the gate).
+You are the gatekeeper of a rate-limited service. A token bucket holds a bounded capacity
+(`capacity = 6`) that refills continuously (`refillRate = 1.5` tokens/sec). Requests arrive
+in a stream — some **legitimate** (`requisição legítima`), some **abusive bursts**
+(`rajada abusiva`). **Admit** the legitimate requests (each costs one token); **reject** the
+abusive ones before they drain the bucket. Keep the observed admit rate at/below the refill
+rate so the bucket never overheats.
 
 ## 3. Concept → mechanic mapping
 
 | Concept element | Arcade mechanic | What "playing it right" proves |
 | --- | --- | --- |
-| Token-bucket robustness must be **proven**, not assumed | Sequence of 5 `advance` steps (PLAN: Sonda, PLAN: Mestre-Conteúdo, ACT: Implementador, OBSERVE: Testes, VERIFY: Prometor) | The learner walks the full protocol instead of skipping to a result |
-| Each transition has a guard against premature shortcuts | 5 `guard` traps between the advance steps (Socrates before attempt, implementer before criterion, producer self-verify, metrics without command, memory before gate) | The learner learns the **order of evidence** and the specific shortcuts that break it |
-| Token-bucket is the algorithmic target, not the playable surface | Concept text in the briefing names "token bucket"; the resource meter in HUD reads "Gates" (the gate to the next lab, opened only after evidence PASS) | The learner associates "token-bucket" with "I had to run the full protocol to clear the gate" |
-| Evidence is the proof artifact | The encounter emits `EVIDENCE {...}` with `pass: true` only when all 5 advance steps fire and no guard is missed | The learner sees the contract between play and proof |
+| **Capacity bounds burst** | Bucket starts full at `capacity`; admits consume 1 token each | The learner feels that a full bucket absorbs a burst but a drained one cannot |
+| **Refill rate bounds sustained rate** | `tokens = min(capacity, tokens + elapsed * refillRate)` per tick | The learner sees that long-run admit rate is capped by refill, not by capacity |
+| **Admit vs reject decision** | `Z` = Admitir (consume 1 token), `X` = Rejeitar; correct action is `legit → admit, abusive → reject` | The learner exercises the core rate-limiter verdict per request |
+| **Auto-reject when empty** | When `tokens < 1`, an admit auto-rejects (no token to spend) | The learner observes the bucket enforcing the limit even if they over-admit |
+| **Burst measurement** | `max_burst_1s` = max admits in any 1s sliding window over `admitTimes` | The learner sees the difference between instantaneous burst and average rate |
 
 ## 4. Main loop
 
 - Player enters `lab-01_rate_limiter` → phase = `Mapa` (overworld with MENTOR 1 NPC).
-- Player presses **E** at the NPC → phase = `Briefing` → `Treino` (`Simulação de orquestração`).
-- Player presses **Enter** → phase = `Duelo` (the actual encounter).
-- Encounter exposes 10 sequence steps; player cycles `Z` (Acionar / advance) and `X`
-  (Bloquear / guard) for 10 inputs.
-- `Duelo` ends with `Evidência PASS emitida` (visible HUD chip) and emits one
-  `EVIDENCE {...}` console record + populates `window.__pixelQuestEvidence`.
-- Phase advances to `Evidência` → `Revisão`; player can return to `Mapa` and the next region's
-  gate opens.
-- Total cycle ≈ 25–40 s (per the catalog's "25–40 min sessions, 4-5x/week" cadence at the lesson
-  level; this is the per-encounter micro-loop).
+- Player presses **E** at the NPC → phase = `Briefing` → `Treino`.
+- Player presses **Enter** → phase = `Duelo` (the token-bucket encounter).
+- The encounter streams **12 requests**; for each the player presses `Z` (Admitir) or
+  `X` (Rejeitar). The correct play is `legit → Z`, `abusive → X`.
+- `Duelo` ends with `Evidência PASS emitida` (HUD chip) and emits one
+  `EVIDENCE {...}` console record (`metrics.kind === "pixelquest-token-bucket"`) +
+  populates `window.__pixelQuestEvidence`.
+- Phase advances to `Evidência` → `Revisão`; the next region's gate opens on PASS.
+- Total cycle ≈ 20–35 s.
 
 ## 5. Inputs & controls
 
-- `←` `→` `↑` `↓` — move learner sprite on the overworld / region map (arrow keys).
+- Arrow keys — move on the overworld / region map.
 - `E` — interact with the MENTOR NPC (open the Briefing).
 - `Enter` — advance Briefing → Treino → Duelo.
-- `Z` — Acionar (advance step; spend 1 token of the orchestration budget).
-- `X` — Bloquear (reject a guard trap; equivalent to a defensive action).
+- `Z` — **Admitir** (admit the current request; spends 1 token).
+- `X` — **Rejeitar** (reject the current request; no token spent).
 - `J` — open the Revisão (spaced-review) panel.
-- ≤ 3 distinct duel actions (`Z`, `X`, plus the implicit cadence) keeps the NES-pad feel.
+- Two duel actions (`Z`, `X`) keep the NES-pad feel.
 
 ## 6. Win / fail states
 
-- **Win the encounter** when all 5 `advance` steps fire and no `guard` is missed:
+- **Win the encounter** when the stream is played correctly (8 legit admitted, 4 abusive
+  rejected, none over-admitted):
   - `evidence.pass === true`
-  - `metrics.kind === "pixelquest-sequence-flow"`
-  - `metrics.advanced === 5`
-  - `metrics.guards_missed === 0`
-  - HUD chip shows `Evidência PASS emitida`
-  - Status strip on the map shows `Evidência PASS`
-  - Gate to `lab-02_key_value_store` opens (`button[Lab bloqueado]` becomes enabled)
-- **Fail the encounter** when any `guard` is missed (a trap is `advance`'d instead of `reject`'d):
+  - `metrics.kind === "pixelquest-token-bucket"`
+  - `metrics.good_admits === 8`
+  - `metrics.abusive_admitted === 0`
+  - `metrics.abusive_rejected === 4`
+  - `metrics.overheated === false`
+  - HUD chip shows `Evidência PASS emitida`; gate to `lab-02_key_value_store` opens.
+- **Fail the encounter** when an abusive request is admitted or the bucket overheats:
   - `evidence.pass === false`
-  - Gate stays locked (`button[Lab bloqueado]` remains disabled)
-  - The next duel replay can re-attempt; no mastery is written.
+  - Gate stays locked; the duel can be replayed. No mastery is written.
 
-Both win and fail are **direct readouts of the protocol discipline** — the token-bucket
-robustness is only "proven" when the full plan-act-observe-verify sequence is walked.
+Both win and fail are **direct readouts of the token-bucket verdicts** — the concept
+(capacity vs refill, admit/reject) is the playable surface, not just framing.
 
 ## 11. Learning-gate hooks
 
 - **Active unit:** `U0-sonda-rate-limiter-robustness` (project `01_rate_limiter`).
-  See `learner/learning_state.yaml` and `src/content/curriculumPack.ts:626-630` for the
-  `unitId(module)` function that derives it.
-- **Encounter id wired:** `encounter-agent-quest-01` (see
-  `src/content/curriculumPack.ts:632-637`).
-- **Evidence contract** (single source of truth, anti-drift invariant
-  `TECH_DEBT_AUDIT_2026-06-28.md` D10):
-  `SEQUENCE_CONTRACT` in `src/content/types.ts:98-101`
-  (`{ minAdvanced: 0, maxGuardsMissed: 0 }`) plus the module-derived thresholds:
-  `minAdvanced = steps.filter(s => s.type === "advance").length` (5),
-  `maxGuardsMissed = 0` (see `evidenceContractFor` in
-  `src/content/curriculumPack.ts:526-533`).
-- **Evidence record fields** (defined in `src/game/evidence/types.ts`, built in
-  `src/game/encounters/sequenceFlow.ts:buildEvidence`):
+  See `learner/learning_state.yaml` and the `unitId(module)` function in
+  `src/content/curriculumPack.ts`.
+- **Encounter id wired:** `encounter-agent-quest-01` (special-cased in `curriculumPack.ts`).
+- **Evidence contract:** the `token_bucket` kind routes to `TOKEN_BUCKET_CONTRACT`
+  (pass rule driven by `good_admits`, `abusive_admitted`, `overheated`); see the encounter
+  factory in `src/game/encounters/registry.ts` and `src/game/encounters/tokenBucket.ts`.
+- **Evidence record fields** (built in `src/game/encounters/tokenBucket.ts`):
   ```json
   {
     "source": "pixelquest",
@@ -109,17 +107,21 @@ robustness is only "proven" when the full plan-act-observe-verify sequence is wa
     "ts": "<iso8601>",
     "pass": true,
     "metrics": {
-      "kind": "pixelquest-sequence-flow",
-      "advanced": 5,
-      "guards_missed": 0,
-      "advances_total": 5,
-      "guards_total": 5
+      "kind": "pixelquest-token-bucket",
+      "target_rate": 1.5,
+      "observed_admit_rate": 0.73,
+      "max_burst_1s": 2,
+      "good_admits": 8,
+      "abusive_admitted": 0,
+      "abusive_rejected": 4,
+      "heat_peak": 56,
+      "overheated": false
     },
     "curriculum_context": {
-      "concept": "Orquestracao agentica para provar robustez de token bucket",
-      "mechanic": "Agent Quest",
-      "accepted_signal": "acao agentica correta",
-      "rejected_trap": "atalho sem evidencia"
+      "concept": "token bucket: capacidade vs reposicao",
+      "mechanic": "Token Bucket",
+      "accepted_signal": "admitir requisicao legitima",
+      "rejected_trap": "rejeitar rajada abusiva"
     },
     "review_context": {
       "scheduled_review": true,
@@ -129,15 +131,18 @@ robustness is only "proven" when the full plan-act-observe-verify sequence is wa
     }
   }
   ```
-- **Pass rule (gate):** `evidence.pass === true` AND `metrics.advanced === 5` AND
-  `metrics.guards_missed === 0`. Anything else keeps the gate locked.
-- **Side-effect contract** (already asserted by the existing smoke spec at
-  `playwright/pixel-quest.spec.ts:169-176`):
+  (Metric values above are from the 2026-07-07 rebuild smoke; the exact numbers are
+  re-emitted on every playthrough.)
+- **Pass rule (gate):** `evidence.pass === true` AND `metrics.kind === "pixelquest-token-bucket"`
+  AND `metrics.abusive_admitted === 0` AND `metrics.overheated === false`. Anything else
+  keeps the gate locked.
+- **Side-effect contract:** the smoke spec asserts
   - `window.__pixelQuestLearningState` is **not** published
   - `localStorage` does **not** contain `learning_state`, `units_log`, or `mastered`
   - The game never marks mastery — `learner/substrate/` owns that transition.
-- **Verifier handoff:** the fresh-context verifier subagent receives the four artifacts (this
-  plan, the smoke spec, the `EVIDENCE` console record, the screenshot) and judges against the
-  done-rule: **"the sequence-flow Agent Quest lab emits a valid `EVIDENCE {...}` with
-  `pass: true` for project `01_rate_limiter`, unit `U0-sonda-rate-limiter-robustness`, and the
-  didactic chain (5 advance / 0 guards-missed) is evidence-backed end-to-end under Playwright."**
+- **Verifier handoff:** the fresh-context verifier subagent receives the four artifacts
+  (this plan, the smoke spec, the `EVIDENCE` console record, the screenshot) and judges
+  against the done-rule: **"the token-bucket lab's playable surface exercises
+  capacity-vs-refill admit/reject and emits a valid `EVIDENCE {...}` with `pass: true`,
+  `metrics.kind === 'pixelquest-token-bucket'`, for project `01_rate_limiter`, unit
+  `U0-sonda-rate-limiter-robustness`, evidence-backed end-to-end under Playwright."**

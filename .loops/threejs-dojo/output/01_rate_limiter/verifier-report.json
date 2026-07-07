@@ -1,10 +1,11 @@
 {
   "slug": "01_rate_limiter",
-  "engine": "pixel-quest (Shape A encounter)",
+  "engine": "pixelquest (pixel-quest / PixelDojo Quest)",
   "unit_id": "U0-sonda-rate-limiter-robustness",
-  "score": 4,
-  "result": "FAIL",
-  "done_rule": "FAIL",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "done_rule_text": "token-bucket capacity vs refill (admit/reject under a refill budget)",
   "confidence": "high",
   "gate": {
     "lint": "pass",
@@ -13,45 +14,30 @@
     "build": "pass",
     "smoke": "pass"
   },
+  "evidence_valid": true,
+  "plan_present": true,
+  "screenshot_present": true,
+  "screenshot_depicts_this_game": true,
+  "primary_mechanic": "token_bucket (NOT sequence-flow)",
+  "evidence_kind": "pixelquest-token-bucket (NOT sequence-flow)",
   "evidence_checked": [
-    "engines/pixelDojo/pixel-quest/src/game/encounters/registry.ts (token_bucket kind registered + dispatched)",
-    "engines/pixelDojo/pixel-quest/src/game/encounters/tokenBucket.ts (genuine token-bucket: capacity/refill/elapsed admit math)",
-    "engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts (01_rate_limiter -> encounterKind='sequence_flow', mechanicName='Agent Quest')",
-    "engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts + types.ts (PixelQuestEvidenceRecord schema + review_context fields)",
-    "engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts (asserts metrics.kind='pixelquest-sequence-flow' for 01_rate_limiter)",
-    "engines/pixelDojo/pixel-quest/.logs/evidence.ndjson (fresh smoke record for 01_rate_limiter)",
-    "engines/pixelDojo/docs/plans/01_rate_limiter.md (PLAN slice)",
-    ".loops/threejs-dojo/output/01_rate_limiter/evidence.json (prior capture, cross-check)",
-    ".loops/threejs-dojo/output/01_rate_limiter/screenshot.png (39KB PNG 1280x900)",
-    "pnpm run lint (biome: 59 files, 0 errors)",
-    "pnpm exec tsc --noEmit (clean)",
-    "pnpm test (vitest: 15 files, 112 tests passed)",
-    "pnpm run build (tsc + vite build 568KB, 0 errors)",
-    "pnpm run smoke (playwright: 1 spec passed in 11.4s)"
+    "src/game/encounters/registry.ts — token_bucket kind registered + dispatched (createTokenBucketState / applyTokenBucketAction / autoPassTokenBucket / getCurrentRequest)",
+    "src/game/encounters/tokenBucket.ts — genuine token bucket: capacity=6, refillRate=1.5, elapsed-time refill (Math.min(capacity, tokens + elapsed*refillRate)), admit consumes 1 token, auto-reject when tokens<1, reject abusive, heat mechanic, sliding-window max_burst_1s, pass contract via TOKEN_BUCKET_CONTRACT",
+    "src/content/curriculumPack.ts — 01_rate_limiter module has explicit encounterKind='token_bucket', mechanicName='Token Bucket'; makeEncounter returns kind 'token_bucket' with capacity/refill/heat/12-request timeline; unit_id factory returns 'U0-sonda-rate-limiter-robustness'",
+    "src/content/packs/core/pack.json — encounter-token-bucket-01 (kind token_bucket) for unit U0-sonda-rate-limiter-robustness / project 01_rate_limiter; evidence_contract.kind pixelquest-token-bucket",
+    "src/game/evidence/emitter.ts + types.ts — PixelQuestEvidenceRecord schema (source/unit_id/project/encounter_id/game/ts/pass/metrics/review_context/curriculum_context); emitEvidence prints 'EVIDENCE <json>' and appends to window.__pixelQuestEvidence",
+    "playwright/pixel-quest.spec.ts — drives lab 01 with z(admit legit)/x(reject abuse), asserts metrics.kind='pixelquest-token-bucket', good_admits=8, abusive_admitted=0, abusive_rejected=4, overheated=false; writes shots/pixel-quest-token-bucket.png",
+    "pnpm run typecheck — tsc --noEmit clean",
+    "pnpm test — vitest: 15 files, 111 tests passed",
+    "pnpm run lint — biome: 59 files, 0 errors",
+    "pnpm run build — tsc + vite build, dist/index-CoBslMt0.js 567.51 kB, 0 errors",
+    "pnpm run smoke — playwright: 1 spec passed",
+    "Fresh EVIDENCE emitted this run (ts 2026-07-07T18:31:46Z): pixelquest-token-bucket, pass=true, good_admits=8, abusive_admitted=0, abusive_rejected=4, observed_admit_rate=0.73, max_burst_1s=2, heat_peak=56, overheated=false",
+    ".loops/threejs-dojo/output/01_rate_limiter/evidence.json — matches the live token-bucket record (pixelquest-token-bucket, unit_id U0-sonda-rate-limiter-robustness, project 01_rate_limiter, pass=true)",
+    ".loops/threejs-dojo/output/01_rate_limiter/screenshot.png — 1280x900 PNG, byte-identical (md5 e18aab522d51188193764119cb7c88a3) to the pixel-quest smoke line-106 shot; cache-busted independent visual analysis confirms 'Duelo 1: Rate Limiter' / 'Treino de token bucket' / 'Tokens 6.0 | Heat 56' / 'Evidencia PASS emitida' — THIS game, not a sibling",
+    "docs/plans/01_rate_limiter.md — PLAN slice present (8170 bytes) [prose stale, see failed_criteria]"
   ],
-  "criteria": {
-    "gate_lint": { "result": "PASS", "reason": "biome check src playwright: 59 files checked, no fixes applied." },
-    "gate_test": { "result": "PASS", "reason": "vitest run: 15 files / 112 tests passed, 0 failed." },
-    "gate_typecheck": { "result": "PASS", "reason": "tsc --noEmit clean." },
-    "gate_build": { "result": "PASS", "reason": "tsc + vite build emitted dist/ (568KB js), 0 errors." },
-    "gate_smoke": { "result": "PASS", "reason": "playwright test: 1 spec passed in 11.4s; drives 01_rate_limiter duel and emits EVIDENCE." },
-    "evidence_schema": { "result": "PASS", "reason": "Fresh .logs/evidence.ndjson line 1 is a schema-conformant PixelQuestEvidenceRecord: source=pixelquest, unit_id=U0-sonda-rate-limiter-robustness, project=01_rate_limiter, encounter_id=encounter-agent-quest-01, pass=true, review_context has all required keys (unit_kind, scheduled_review, review_reason, streak_candidate, scheduler_source=learner-substrate, verifier_required=true)." },
-    "plan_present": { "result": "PASS", "reason": "engines/pixelDojo/docs/plans/01_rate_limiter.md has subject+concept, player goal, concept->mechanic table, main loop, inputs/controls, win/fail states, learning-gate hooks (unit_id + evidence field list + pass rule). NOTE: actual path is 01_rate_limiter.md, the briefed 01_01_rate_limiter.md does not exist." },
-    "screenshot_present": { "result": "PASS", "reason": "screenshot.png exists, 39363 bytes, valid 1280x900 PNG." },
-    "done_rule_playable_mechanic": {
-      "result": "FAIL",
-      "reason": "DONE-RULE requires the playable mechanic to teach 'token-bucket capacity vs refill (admit/reject under a refill budget)'. The 01_rate_limiter slug dispatches encounterKind='sequence_flow' (mechanicName='Agent Quest'), an orchestration duel: the player advances 10 plan-act-observe-verify steps with Z (advance) / X (block guard). No capacity/refill arithmetic, no admit/reject-under-refill decision exists in the playable surface. tokenBucket.ts exists and is registered but is dispatched ONLY for modules without an explicit encounterKind (03_url_shortener, 05_websocket_chat, 10_distributed_cache, 14_log_aggregator, 15_metrics_collector), NOT for 01_rate_limiter. PLAN.md section 3 admits this: 'the token-bucket algorithm is the target under verification, not the direct arcade mechanic'. The connection to 'token bucket' is purely narrative (concept string + briefing text)."
-    },
-    "done_rule_evidence_scenario": {
-      "result": "FAIL",
-      "reason": "DONE-RULE requires EVIDENCE 'for the core scenario' (token-bucket capacity vs refill). The emitted record has metrics.kind='pixelquest-sequence-flow' (advanced=5, guards_missed=0) — orchestration evidence, not token-bucket admit/reject-under-refill evidence. No pixelquest-token-bucket record is emitted for encounter-agent-quest-01. The evidence is real and schema-valid but proves the wrong scenario."
-    }
-  },
-  "failed_criteria": [
-    "DONE-RULE playable mechanic: 01_rate_limiter uses sequence_flow (Agent Quest orchestration: plan/act/observe/verify), NOT token-bucket capacity vs refill. The player never makes an admit/reject-under-refill decision; capacity/refill math is absent from gameplay. tokenBucket.ts is registered but dispatched only for slugs 03/05/10/14/15, not 01_rate_limiter. Token-bucket is narrative framing only.",
-    "DONE-RULE evidence scenario: emitted EVIDENCE has metrics.kind=pixelquest-sequence-flow (orchestration), so it does not evidence the token-bucket core scenario the done-rule names. No pixelquest-token-bucket record exists for encounter-agent-quest-01."
-  ],
-  "retry_target": "Re-author the 01_rate_limiter module in src/content/curriculumPack.ts to dispatch the token_bucket encounter kind (remove/replace encounterKind:'sequence_flow' so it falls through to the token_bucket default, OR set an explicit token-bucket config), so the playable surface exercises capacity-vs-refill admit/reject and the emitted EVIDENCE carries metrics.kind='pixelquest-token-bucket' (with capacity, refillRate, target_rate, good_admits, abusive_admitted, max_burst_1s) for encounter-agent-quest-01. Then re-run this verifier.",
-  "evidence_sample_raw": "{\"source\":\"pixelquest\",\"unit_id\":\"U0-sonda-rate-limiter-robustness\",\"project\":\"01_rate_limiter\",\"encounter_id\":\"encounter-agent-quest-01\",\"game\":\"PixelDojo Quest\",\"ts\":\"2026-07-07T14:48:20.800Z\",\"pass\":true,\"metrics\":{\"kind\":\"pixelquest-sequence-flow\",\"advanced\":5,\"held\":5,\"skipped_required\":0,\"guards_missed\":0,\"heat_peak\":0,\"overheated\":false},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":true,\"review_reason\":\"due\",\"streak_candidate\":true,\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"Orquestracao agentica para provar robustez de token bucket\",\"mechanic\":\"Agent Quest\",\"accepted_signal\":\"acao agentica correta\",\"rejected_trap\":\"atalho sem evidencia\"}}",
-  "notes": "Independent fresh-context verdict. All four gate commands + smoke are GREEN; a schema-conformant EVIDENCE record with full review_context IS emitted and the smoke asserting it passes; PLAN slice and screenshot are present and honest. The failure is purely didactic-fit against the ASSIGNED done-rule: the playable mechanic for 01_rate_limiter is sequence_flow (Agent Quest), not token-bucket capacity vs refill. The prior verifier-report.json (scored 9/10 PASS) used a looser done-rule ('sequence-flow Agent Quest emits valid EVIDENCE') and itself admitted 'no actual token-bucket arithmetic is exercised by the player... the connection to token bucket is purely narrative.' Under the stricter assigned done-rule (playable mechanic must teach token-bucket admit/reject under a refill budget), the mechanic is exactly the 'thematic reskin' the grade penalizes, so result=FAIL and score reflects solid engineering but absent didactic fit for the named concept. Evidence is schema-valid (evidence_valid=true) but evidences the wrong scenario, captured under done_rule=FAIL."
+  "failed_criteria": "None blocking. Non-blocking caveat: PLAN slice docs/plans/01_rate_limiter.md prose is STALE relative to the rebuild — it still frames the lab as a sequence_flow agent-orchestration wrapper ('Path A (accepted)', 'Mechanic in pack: sequence_flow') and says 'the actual implementation chose the orchestration wrapper instead'. The live implementation is token_bucket (confirmed in code, evidence, and screenshot). This is documentation drift only; it does not affect the gate, evidence validity, or screenshot correctness. NOTE on method: an initial analyze_image pass on the output screenshot returned a hallucinated 'API CORRIDOR - 07_rest_api_auth' reading (artifact of an identical CDN URL produced by the matching content hash); it was debunked by an independent cache-busted crop+full re-analysis that shows the token-bucket Rate Limiter screen.",
+  "retry_target": "Refresh PLAN slice prose (docs/plans/01_rate_limiter.md) so the concept->mechanic mapping and 'Mechanic in pack' line reflect the token_bucket implementation (capacity vs refill, admit legit / reject abusive) instead of the retired sequence_flow orchestration wrapper. Documentation-only; no code/evidence/screenshot change required.",
+  "notes": "All four PASS conditions met: gate green (lint/test/typecheck/build/smoke), valid schema-conformant pixelquest-token-bucket EVIDENCE for U0-sonda-rate-limiter-robustness emitted fresh this run, PLAN slice present, screenshot depicts THIS token-bucket game. Primary playable surface is the token_bucket encounter (capacity vs refill) and the EVIDENCE kind is pixelquest-token-bucket — neither is sequence-flow, so the rebuild's hard requirement is satisfied. Learner state / .mavis / mastered were NOT modified (read-only gate contract confirmed: learner/learning_state.yaml units_log already lists U0-sonda-rate-limiter-robustness)."
 }

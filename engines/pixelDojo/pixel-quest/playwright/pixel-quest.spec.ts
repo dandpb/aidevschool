@@ -17,10 +17,16 @@ const evidenceLogPath = join(
 
 test("plays the PixelDojo curriculum quest slice and advances labs", async ({ page }) => {
   const runtimeErrors: string[] = []
+  // Capture every `EVIDENCE <json>` console line the game emits (the durable
+  // stdout channel scraped by harnesses; mirrors window.__pixelQuestEvidence).
+  const evidenceConsoleLines: string[] = []
   page.on("pageerror", (error) => runtimeErrors.push(error.message))
   page.on("console", (message) => {
     if (message.type() === "error") {
       runtimeErrors.push(message.text())
+    }
+    if (message.type() === "log" && message.text().startsWith("EVIDENCE ")) {
+      evidenceConsoleLines.push(message.text())
     }
   })
 
@@ -33,12 +39,12 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await page.getByRole("button", { name: "Orbita 3D" }).click()
   await expect(page.locator(".objective-chip")).toContainText("Orbita 3D")
   await expect(page.locator(".phase-strip")).toContainText("Orbita 3D")
-  await expect(page.getByText("Duelo 1: Agent Quest: Rate Limiter")).toBeVisible()
+  await expect(page.getByText("Duelo 1: Rate Limiter")).toBeVisible()
   await page.keyboard.press("ArrowRight")
   await expect(page.getByText("Duelo 2: Key Value Store")).toBeVisible()
   await expect(page.getByRole("button", { name: "Lab bloqueado" })).toBeDisabled()
   await page.keyboard.press("ArrowLeft")
-  await expect(page.getByText("Duelo 1: Agent Quest: Rate Limiter")).toBeVisible()
+  await expect(page.getByText("Duelo 1: Rate Limiter")).toBeVisible()
   await page.screenshot({ path: "shots/pixel-quest-skill-orbit-desktop.png", fullPage: true })
 
   const dataUrlLength = await canvas.evaluate((element) => {
@@ -54,16 +60,19 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await page.keyboard.press("e")
   await expect(page.getByRole("button", { name: "Abrir treino" })).toBeVisible()
   await page.keyboard.press("Enter")
-  await expect(page.getByText("Simulacao de orquestracao")).toBeVisible()
-  await expect(page.getByText(/Sonda, Mestre-Conteudo e Prometor/)).toBeVisible()
+  await expect(page.getByText("Treino de token bucket")).toBeVisible()
   await expect(page.locator(".phase-strip")).toContainText("Treino")
-  await expect(page.locator(".prompt-chip")).toContainText("Z Acionar")
-  await expect(page.locator(".prompt-chip")).toContainText("X Bloquear")
+  await expect(page.locator(".prompt-chip")).toContainText("Z Admitir")
+  await expect(page.locator(".prompt-chip")).toContainText("X Rejeitar")
   await page.keyboard.press("Enter")
   await expect(page.locator(".phase-strip")).toContainText("Duelo")
 
-  const actions = ["z", "x", "z", "x", "z", "x", "z", "x", "z", "x"]
-  for (const action of actions) {
+  // Lab 01 — Rate Limiter (token_bucket): capacity vs refill is the primary
+  // playable surface. Admit (z) every legit request under the refill budget;
+  // reject (x) every abusive burst so none slips through. 12 requests
+  // alternate per the encounterTimeline (legit, legit, abuse, ...).
+  const rateLimiterActions = ["z", "z", "x", "z", "z", "x", "z", "z", "x", "z", "z", "x"]
+  for (const action of rateLimiterActions) {
     await page.keyboard.press(action)
   }
 
@@ -75,15 +84,17 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   expect(evidence?.encounter_id).toBe("encounter-agent-quest-01")
   expect(evidence?.pass).toBe(true)
   const metrics = evidence?.metrics
-  expect(metrics?.kind).toBe("pixelquest-sequence-flow")
-  if (metrics?.kind === "pixelquest-sequence-flow") {
-    expect(metrics.advanced).toBe(5)
-    expect(metrics.guards_missed).toBe(0)
+  expect(metrics?.kind).toBe("pixelquest-token-bucket")
+  if (metrics?.kind === "pixelquest-token-bucket") {
+    expect(metrics.good_admits).toBe(8)
+    expect(metrics.abusive_admitted).toBe(0)
+    expect(metrics.abusive_rejected).toBe(4)
+    expect(metrics.overheated).toBe(false)
   }
   expect(evidence?.curriculum_context).toMatchObject({
-    mechanic: "Agent Quest",
-    accepted_signal: "acao agentica correta",
-    rejected_trap: "atalho sem evidencia",
+    mechanic: "Token Bucket",
+    accepted_signal: "requisicao legitima",
+    rejected_trap: "rajada abusiva",
   })
   expect(evidence?.review_context).toMatchObject({
     scheduled_review: firstUnitScheduledReview,
@@ -92,6 +103,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     verifier_required: true,
   })
   await expect(page.getByText("O verificador decide mastery")).toBeVisible()
+  await page.screenshot({ path: "shots/pixel-quest-token-bucket.png", fullPage: true })
 
   await page.getByRole("button", { name: "Voltar ao mapa" }).click()
   await expect(page.locator(".status-strip")).toContainText("Evidencia PASS")
@@ -221,10 +233,59 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   })
   await page.screenshot({ path: "shots/pixel-quest-circuit-breaker-3d.png", fullPage: true })
 
+  // Lab 04 — Concurrent Task Queue (task_queue): the playable mechanic teaches
+  // retry / backpressure / dead-letter-queue ordering. Process every legit job
+  // (admit) and dead-letter every poison job (reject) to emit a passing
+  // pixelquest-task-queue evidence record for U-04_concurrent_task_queue.
+  await page.evaluate(() => window.__pixelQuestDebug?.enterRegion("lab-04_concurrent_task_queue"))
+  await expect(page.locator(".objective-chip")).toContainText("Concurrent Task Queue")
+  await page.keyboard.press("e")
+  await page.keyboard.press("Enter")
+  await expect(page.getByText("Treino de backpressure")).toBeVisible()
+  await page.keyboard.press("Enter")
+  const taskQueueMode = await page.evaluate(() => window.__pixelQuestDebug?.getMode())
+  expect(taskQueueMode).toBe("encounter")
+  await expect(page.locator(".objective-chip")).toContainText("Worker Queue")
+  await expect(page.locator(".prompt-chip")).toContainText("Z Processar")
+  await expect(page.locator(".prompt-chip")).toContainText("X Dead-letter")
+  // 13 jobs in arrival order: legit, legit, poison, legit, legit, legit, poison,
+  // legit, legit, legit, poison, legit, legit. Correct dispatch: admit (z) on
+  // legit -> processed; reject (x) on poison -> dead-letter.
+  const taskQueueActions = ["z", "z", "x", "z", "z", "z", "x", "z", "z", "z", "x", "z", "z"]
+  for (const action of taskQueueActions) {
+    await page.keyboard.press(action)
+  }
+  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  const taskQueueEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
+  expect(taskQueueEvidence?.project).toBe("04_concurrent_task_queue")
+  expect(taskQueueEvidence?.unit_id).toBe("U-04_concurrent_task_queue")
+  expect(taskQueueEvidence?.encounter_id).toBe("encounter-04_concurrent_task_queue")
+  expect(taskQueueEvidence?.pass).toBe(true)
+  const taskQueueMetrics = taskQueueEvidence?.metrics
+  expect(taskQueueMetrics?.kind).toBe("pixelquest-task-queue")
+  if (taskQueueMetrics?.kind === "pixelquest-task-queue") {
+    expect(taskQueueMetrics.processed).toBe(10)
+    expect(taskQueueMetrics.poison_dead_lettered).toBe(3)
+    expect(taskQueueMetrics.poison_retried).toBe(0)
+    expect(taskQueueMetrics.legit_retried).toBe(0)
+    expect(taskQueueMetrics.overheated).toBe(false)
+  }
+  expect(taskQueueEvidence?.curriculum_context).toMatchObject({
+    mechanic: "Worker Queue",
+    accepted_signal: "tarefa pronta",
+    rejected_trap: "job veneno sem lease",
+  })
+  expect(taskQueueEvidence?.review_context).toMatchObject({
+    scheduler_source: "learner-substrate",
+    verifier_required: true,
+    streak_candidate: true,
+  })
+  await page.screenshot({ path: "shots/pixel-quest-task-queue.png", fullPage: true })
+
   // Persist the full append-only evidence channel as NDJSON — the contract
   // input consumed by engines/pixelDojo/verifier.
   const evidenceLog = await page.evaluate(() => window.__pixelQuestEvidence ?? [])
-  expect(evidenceLog).toHaveLength(5)
+  expect(evidenceLog).toHaveLength(6)
   for (const record of evidenceLog) {
     expect(record.source).toBe("pixelquest")
     expect(record.unit_id).not.toBe("")
@@ -236,6 +297,33 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     `${evidenceLog.map((record) => JSON.stringify(record)).join("\n")}\n`,
     "utf8",
   )
+
+  // The smoke must emit >=1 valid `EVIDENCE ` console line per completed
+  // encounter, including the token-bucket record for 01_rate_limiter and the
+  // task-queue record for U-04_concurrent_task_queue. Each line is
+  // `EVIDENCE <json>`; parse the payload and assert each record carries the
+  // right metrics.kind and verifier_required=true.
+  expect(evidenceConsoleLines.length).toBeGreaterThanOrEqual(1)
+  const parsedEvidence = evidenceConsoleLines.map((line) =>
+    JSON.parse(line.slice("EVIDENCE ".length)),
+  )
+  const tokenBucketConsoleRecord = parsedEvidence.find(
+    (record) => record.project === "01_rate_limiter",
+  )
+  expect(tokenBucketConsoleRecord).toBeDefined()
+  expect(tokenBucketConsoleRecord).toMatchObject({
+    unit_id: firstUnitId,
+    metrics: { kind: "pixelquest-token-bucket" },
+    review_context: { verifier_required: true, scheduler_source: "learner-substrate" },
+  })
+  const taskQueueConsoleRecord = parsedEvidence.find(
+    (record) => record.unit_id === "U-04_concurrent_task_queue",
+  )
+  expect(taskQueueConsoleRecord).toBeDefined()
+  expect(taskQueueConsoleRecord).toMatchObject({
+    metrics: { kind: "pixelquest-task-queue" },
+    review_context: { verifier_required: true, scheduler_source: "learner-substrate" },
+  })
 
   const learningGateSideEffects = await page.evaluate(() => ({
     learningStatePublished: "__pixelQuestLearningState" in window,
