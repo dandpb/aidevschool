@@ -1,0 +1,32 @@
+{
+  "slug": "07_rest_api_auth",
+  "engine": "voxelDojo",
+  "verifier": "fresh-context independent",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "gate": {
+    "lint": "pass",
+    "test": "pass",
+    "typecheck": "pass",
+    "build": "pass",
+    "smoke": "pass"
+  },
+  "evidence_checked": [
+    "pnpm run lint   -> biome check src playwright: Checked 16 files, no fixes (exit 0)",
+    "pnpm run test   -> vitest run: 4 files / 39 tests passed (exit 0); incl. NIST FIPS 180-4 SHA-256 vectors + RFC 4231 HMAC-SHA256 vectors in src/sim/middleware.test.ts",
+    "pnpm run typecheck -> tsc --noEmit (exit 0)",
+    "pnpm run build  -> tsc --noEmit && vite build: 14 modules transformed, built in 660ms (exit 0)",
+    "pnpm run smoke  -> playwright test: 4 passed (canvas-present, L1 clear, L2 forged clear, L3 rate-limit clear) in 10.9s (exit 0)",
+    "src/evidence/emit.ts: produces voxeldojo-schema record with all required review_context + curriculum_context fields",
+    "src/sim/middleware.ts: REAL self-contained SHA-256 + HMAC-SHA256 + JWT(HS256); makeAuthLayer uses hmacVerify; forgeWithSecret/tamperSignature/tamperPayload helpers",
+    ".logs/live-evidence-raw.txt: captured 'EVIDENCE {...}' line from a live smoke run, voxeldojo schema, all fields present",
+    "docs/plans/07_rest_api_auth.md: complete PLAN slice (sections 1-13 + M0-M6)",
+    ".loops/threejs-dojo/output/07_rest_api_auth/screenshot.png: 141879 bytes, valid 1280x900 PNG (NOTE: shows previous 'WAVE CORRIDOR' iteration, not current 'CHECKPOINT CITY' build — stale but present+non-empty)"
+  ],
+  "evidence_sample": "{\"source\":\"voxeldojo\",\"unit_id\":\"U7-rest-api-auth\",\"project\":\"07_rest_api_auth\",\"scenario_id\":\"checkpoint-city-L1\",\"game\":\"CHECKPOINT CITY\",\"ts\":\"2026-07-06T00:09:24.811Z\",\"pass\":true,\"metrics\":{\"predictions\":8,\"prediction_accuracy\":1,\"correct_predictions\":8,\"reached_handler\":true,\"rejected_at\":\"reaches-handler\"},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":false,\"review_reason\":\"deepening\",\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"middleware layers + JWT verification\",\"mechanic\":\"concentric city walls, badge gates\"}}",
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "PASS. All four gate commands + smoke green. The playable mechanic genuinely exercises 'middleware layers + JWT verify' — NOT a thematic reskin: middleware.ts implements real SHA-256 (NIST FIPS 180-4 vectors) + HMAC-SHA256 (RFC 4231 vectors) + JWT(HS256) sign/verify; makeAuthLayer rejects forged/tampered tokens via constant-time hmacVerify; runPipeline walks layers in order and short-circuits on reject (order-matters is a real L4 mechanic). The Playwright smoke boots WebGL (canvas assertion), drives the deterministic public API to predict each gate for L1/L2/L3, asserts >=1 voxeldojo-schema EVIDENCE record with all required review_context fields (verifier_required=true, scheduler_source=learner-substrate) and curriculum_context (concept+mechanic). PLAN slice complete with subject+concept, player goal, concept->mechanic table, main loop, controls, win/fail states, and learning-gate hooks (unit_id U7-rest-api-auth, evidence field list, pass rule, never-writes-learner-state). Two minor demerits (not PASS-blocking): (1) the screenshot at the canonical output path is STALE — it renders the prior 'WAVE CORRIDOR / Aegis Corridor' iteration (VERSION->VALIDATION->AUTHN->AUTHZ gates) rather than the current 'CHECKPOINT CITY' build (logging->auth->rate-limit walls); the prior evidence.json capture there is likewise from the older aegis-corridor schema. The current smoke writes fresh CHECKPOINT CITY screenshots to .logs/smoke-L{1,2,3}-*.png. (2) bundle-size warning >500kB (three.js inline). Neither breaks the gate. Score 9/10: real cryptographic didactic fit, schema-conformant evidence, complete plan."
+}

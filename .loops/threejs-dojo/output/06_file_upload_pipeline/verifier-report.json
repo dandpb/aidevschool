@@ -1,0 +1,17 @@
+{
+  "slug": "06_file_upload_pipeline",
+  "engine": "voxel",
+  "score": 8,
+  "result": "FAIL",
+  "done_rule": "PASS",
+  "gate": { "lint": "pass", "test": "pass", "typecheck": "pass", "build": "pass", "smoke": "pass" },
+  "evidence_checked": {
+    "emitted_during_smoke": true,
+    "schema_conformant": true,
+    "fields": { "source": "voxeldojo", "unit_id": "U6-file-upload", "project": "06_file_upload_pipeline", "pass": true, "review_context.verifier_required": true, "review_context.unit_kind": "concept" },
+    "proof": "playwright/pipeline-plant.spec.ts L1+L2 tests assert the emitted EVIDENCE records (source/unit_id/project/pass) and passed; src/evidence/emit.ts hard-codes unit_id=U6-file-upload, verifier_required=true. Vitest 21/21 concept proofs in src/sim/pipeline.test.ts."
+  },
+  "failed_criteria": "Canonical screenshot artifact at .loops/threejs-dojo/output/06_file_upload_pipeline/screenshot.png depicts the WRONG game: it renders 'WAVE CORRIDOR - 07_rest_api_auth' (VERSION->VALIDATION->AUTHN->AUTHZ->HANDLER pipeline), NOT the PIPELINE PLANT (06) buffer-tank scene. Independent confirmation: the voxelDojo game's own HUD title is 'L1 - Buffer tank' (captured live), so the persisted screenshot is cross-contaminated from game 07. Secondary issue: the persisted evidence.json at the same path carries a DIVERGENT schema (source=threejs-dojo, unit_id=06_file_upload_pipeline, encounter_id=byte-stream-reactor-wave-1, game='Byte Stream Reactor') originating from the pixelDojo 'Byte Stream Reactor' implementation described in decision.md, NOT from this voxelDojo game's emitter (which emits source=voxeldojo, unit_id=U6-file-upload, scenario_id=pipeline-plant-L1/L2). The voxelDojo game itself is fully functional (all 5 gates green, valid EVIDENCE emitted during its own smoke, concept proven by 21 sim tests) but its evidence PACKAGE at the canonical .loops path is mismatched.",
+  "retry_target": "Re-capture the canonical screenshot from the ACTUAL voxelDojo PIPELINE PLANT game and reconcile the persisted evidence.json. Concretely: (1) copy engines/voxelDojo/game-06-pipeline-plant/.logs/smoke-L1-cleared.png (whose HUD title is 'L1 - Buffer tank') to .loops/threejs-dojo/output/06_file_upload_pipeline/screenshot.png, replacing the 07_rest_api_auth image; (2) overwrite .loops/threejs-dojo/output/06_file_upload_pipeline/evidence.json with a record from this game's actual emitter (source=voxeldojo, unit_id=U6-file-upload, scenario_id=pipeline-plant-L1) instead of the pixelDojo Byte Stream Reactor record. No game code changes needed - the game is correct; only the persisted artifacts are wrong.",
+  "confidence": "high"
+}

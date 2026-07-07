@@ -1,0 +1,43 @@
+{
+  "slug": "03_url_shortener",
+  "engine": "voxelDojo",
+  "game_dir": "/Users/danielbarreto/Development/aidevschool/engines/voxelDojo/game-03-wormhole",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "verdict": "PASS-FLOOR met (gate green + valid EVIDENCE + complete PLAN + screenshot) and score>=8. The playable mechanic genuinely exercises short-code base62 encoding (toBase62/fromBase62, predict-code L1) and collision handling (detectCollision + resolveSalted/resolveIncrement, forced-collision L4). Smoke emits >=1 schema-conformant EVIDENCE record asserted by a green Playwright spec.",
+  "gate": {
+    "lint": "pass",
+    "test": "pass (16/16: 11 shortener + 5 controller)",
+    "typecheck": "pass",
+    "build": "pass (only a benign >500kB chunk-size advisory)",
+    "smoke": "pass (3/3: L1 predict codes, L4 salted resolve, WebGL canvas)"
+  },
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 14 files clean",
+    "pnpm run test (vitest run) -> 2 files / 16 tests passed",
+    "pnpm run typecheck (tsc --noEmit) -> clean",
+    "pnpm run build (tsc --noEmit && vite build) -> built in 818ms",
+    "pnpm run smoke (playwright test) -> 3 passed in 14.3s",
+    "src/evidence/emit.ts -> emits EVIDENCE <json> with source=voxeldojo, unit_id=U3-url-shortener, project=03_url_shortener, scenario_id=wormhole-L{1..4}, review_context{verifier_required:true, scheduler_source:learner-substrate}, curriculum_context{concept, mechanic}",
+    "src/sim/shortener.ts -> toBase62/fromBase62 + hashTruncCode + detectCollision + resolveSalted + resolveIncrement + shorten(strategy)",
+    "playwright/wormhole.spec.ts -> asserts records.length===1 for L1 and finds L4 record with metrics.resolution_chosen=salted, resolved_unique=true",
+    "PLAN slice: engines/voxelDojo/docs/plans/03_url_shortener.md (9303 bytes, all 13 template sections present incl. learning-gate hooks for U3-url-shortener)",
+    "screenshot: .loops/threejs-dojo/output/03_url_shortener/screenshot.png (80815 bytes) + fresh .logs/smoke-L1-cleared.png + smoke-L4-cleared.png"
+  ],
+  "evidence_sample_L1": {
+    "source": "voxeldojo",
+    "unit_id": "U3-url-shortener",
+    "project": "03_url_shortener",
+    "scenario_id": "wormhole-L1",
+    "game": "WORMHOLE",
+    "pass": true,
+    "metrics": {"code_predictions": 12, "code_prediction_accuracy": 1, "strategy": "hash_trunc"},
+    "review_context": {"unit_kind": "concept", "scheduled_review": false, "review_reason": "deepening", "scheduler_source": "learner-substrate", "verifier_required": true},
+    "curriculum_context": {"concept": "short-code generation + collision handling", "mechanic": "wormhole code-gates between planets"}
+  },
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "Minor non-blocking observations: (1) reviewSlice.ts is an auto-generated placeholder (nextReviews=[]), so scheduled_review resolves to false/deepening until the substrate emits a real U3 slice — honestly documented in PLAN section 12. (2) The pre-existing output/03_url_shortener/evidence.json is a STALE artifact from a different/earlier 'Slug Launcher' game (source:threejs-dojo) and does NOT represent this voxeldojo wormhole build; the current game's own EVIDENCE (source:voxeldojo) is the live, schema-conformant record. Neither affects the PASS floor."
+}

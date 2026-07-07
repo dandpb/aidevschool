@@ -1,0 +1,21 @@
+{
+  "slug": "13_api_gateway_circuit_breaker",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 14 files, no fixes",
+    "pnpm run test (vitest run) -> 25/25 passed (src/sim/breaker.test.ts 20 + src/game/controller.test.ts 5)",
+    "pnpm run typecheck (tsc --noEmit) -> clean",
+    "pnpm run build (tsc --noEmit && vite build) -> 14 modules, dist built",
+    "pnpm run smoke (playwright test) -> 3/3 passed (L1 trip, L2 cooldown+probe, WebGL canvas)",
+    "src/evidence/emit.ts -> EvidenceRecord schema {source:voxeldojo, unit_id:U13-circuit-breaker, project, scenario_id, pass, metrics, review_context{verifier_required:true, scheduler_source:learner-substrate}, curriculum_context{concept,mechanic}}",
+    "src/content/reviewSlice.ts -> substrate-generated slice; U13 absent -> scheduled_review=false/review_reason=deepening (correct)",
+    "playwright/breaker-grid.spec.ts -> asserts records.length===1, source, unit_id, project, scenario_id, pass for L1; +L2 record; +WebGL context",
+    "screenshot: .loops/threejs-dojo/output/13_api_gateway_circuit_breaker/screenshot.png (97133 bytes) + game .logs/smoke-L1-cleared.png",
+    "PLAN: engines/voxelDojo/docs/plans/13_api_gateway_circuit_breaker.md present with sections 1-13 incl concept->mechanic table + learning-gate hooks (unit_id U13-circuit-breaker, evidence field list, pass rule)"
+  ],
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high"
+}

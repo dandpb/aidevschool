@@ -1,0 +1,23 @@
+{
+  "slug": "09_plugin_system",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "gate": { "lint": "pass", "test": "pass", "typecheck": "pass", "build": "pass", "smoke": "pass" },
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 15 files, no fixes, exit 0",
+    "pnpm run test (vitest run) -> 15 tests across 3 files all green (plugin.test.ts 10, controller.test.ts 4, index.test.ts 1)",
+    "pnpm run typecheck (tsc --noEmit) -> exit 0",
+    "pnpm run build (tsc --noEmit && vite build) -> built dist, exit 0 (non-fatal chunk-size warning only)",
+    "pnpm run smoke (playwright test) -> 3 tests passed; L1 test asserts exactly 1 EVIDENCE record {source:voxeldojo, unit_id:U9-plugin-system, project:09_plugin_system, scenario_id:docking-bay-L1, pass:true}; L3 test also captures a docking-bay-L3 record; WebGL canvas test green",
+    "src/evidence/emit.ts -> emits single EVIDENCE line per wave clear with full schema (source/unit_id/project/scenario_id/game/ts/pass/metrics/review_context/curriculum_context)",
+    "src/content/reviewSlice.ts -> nextReviews:[] so emitter records scheduled_review:false, review_reason:deepening, scheduler_source:learner-substrate, verifier_required:true",
+    "src/sim/plugin.ts -> pure TS sim core: checkContract, missingMethods, sandboxCapFor (request ∩ contract), dock (records cap), invoke (throws SandboxViolation outside cap)",
+    "PLAN slice: engines/voxelDojo/docs/plans/09_plugin_system.md (13 sections, present & complete)",
+    "Screenshot: .loops/threejs-dojo/output/09_plugin_system/screenshot.png (63215 bytes, real 3D render); fresh smoke captures .logs/smoke-L1-cleared.png & smoke-L3-cleared.png (1280x720 RGB)"
+  ],
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "Didactic fit is strong: the playable mechanic maps 1:1 to the concept (host contract = docking-port connector shape; structural contract check = clamp green/red; sandbox cap = force-field bubble; enforcement = boundary throw). Four levels (L1 dock predict, L2 missing method, L3 allow/block sandbox, L4 minimal capability set) each teach a distinct facet of sandboxing + interface contracts. Sim core is pure WebGL-free TS, exercised identically in Vitest and the browser; invoke() throws SandboxViolation on out-of-cap calls, and capabilities cannot escalate after dock. NOT a thematic reskin. Note: prior .loops/.../evidence.json in the output dir is a stale/alternate-schema record (source:plugindoj, lifecycle metrics) from an earlier pixelDojo design pass — it does NOT match this voxelDojo game; the authoritative EVIDENCE is the console record asserted by the green smoke, whose shape conforms to the voxeldojo schema. decision.md similarly describes a different (5-state lifecycle) design; the built game follows docs/plans/09_plugin_system.md (DOCKING BAY contract+sandbox). All required items hold."
+}

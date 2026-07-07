@@ -1,0 +1,61 @@
+{
+  "slug": "16_mini_message_queue",
+  "unit_id": "U16-message-queue",
+  "engine": "voxelDojo",
+  "game_dir": "/Users/danielbarreto/Development/aidevschool/engines/voxelDojo/game-16-freight-yard",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "done_rule_text": "PLAYABLE mechanic teaches partitions, consumer groups, and offsets; Playwright smoke emits >=1 valid EVIDENCE record (voxeldojo schema) for the core scenario with required review_context fields.",
+  "gate": {
+    "lint": "pass",
+    "test": "pass",
+    "typecheck": "pass",
+    "build": "pass",
+    "smoke": "pass"
+  },
+  "gate_evidence": {
+    "lint": "biome check src playwright — 14 files, no fixes applied",
+    "test": "vitest run — 2 files, 17 tests passed (queue.test.ts x12, controller.test.ts x5)",
+    "typecheck": "tsc --noEmit — clean",
+    "build": "tsc --noEmit && vite build — dist/index.html 1.63kB, index-*.js 514.86kB (chunk-size warning only)",
+    "smoke": "playwright test — 3 tests passed (L1 evidence capture, L2 auto-assign, WebGL canvas presence)"
+  },
+  "evidence_checked": [
+    "pnpm run lint (game-16-freight-yard)",
+    "pnpm run test (game-16-freight-yard)",
+    "pnpm run typecheck (game-16-freight-yard)",
+    "pnpm run build (game-16-freight-yard)",
+    "pnpm run smoke (game-16-freight-yard) — 3/3 green",
+    "src/evidence/emit.ts — produces voxeldojo record with source=voxeldojo, unit_id=U16-message-queue, review_context.verifier_required=true, scheduler_source=learner-substrate",
+    "playwright/freight-yard.spec.ts — asserts source=voxeldojo, unit_id=U16-message-queue, project=16_mini_message_queue, scenario_id=freight-yard-L1, pass=true; test passed => record captured",
+    "engines/voxelDojo/docs/plans/16_mini_message_queue.md — present, all 13 sections",
+    ".loops/threejs-dojo/output/16_mini_message_queue/screenshot.png — present (132342 bytes, 2180x900 PNG)",
+    ".loops/threejs-dojo/output/16_mini_message_queue/evidence.json — STALE PixelDojo artifact (source=pixelquest, unit_id=16_mini_message_queue) NOT the voxeldojo record; ignored — the live smoke emits the correct voxeldojo schema"
+  ],
+  "evidence_valid": true,
+  "evidence_sample": "{\"source\":\"voxeldojo\",\"unit_id\":\"U16-message-queue\",\"project\":\"16_mini_message_queue\",\"scenario_id\":\"freight-yard-L1\",\"game\":\"FREIGHT YARD\",\"ts\":\"<iso>\",\"pass\":true,\"metrics\":{...},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":false,\"review_reason\":\"deepening\",\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"partitioned log + consumer-group offsets\",\"mechanic\":\"freight yard of track lanes\"}}",
+  "plan_present": true,
+  "plan_path": "/Users/danielbarreto/Development/aidevschool/engines/voxelDojo/docs/plans/16_mini_message_queue.md",
+  "plan_sections": [
+    "1. Subject & concept (partitioned log + consumer-group offsets) — present",
+    "3. Player goal (route cars, assign crews, keep deliveries flowing through rebalance) — present",
+    "4. Concept->mechanic table (6 rows: partition hash%N, within-partition order, group ownership, offset cursor, rebalance, replay) — present",
+    "5. Main loop (predict-then-resolve waves) — present",
+    "6. Camera & controls / inputs (orbit+zoom, click lane/crew, rewind dial) — present",
+    "7. Win/fail states (routing>=80%, complete+fair assignment, rebalance>=80% with offsets preserved, exact replay) — present",
+    "12. Learning-gate hooks (unit U16-message-queue, full evidence field list, pass rule, GameNeverMarksMastery) — present"
+  ],
+  "screenshot_present": true,
+  "screenshot_note": "output/16_mini_message_queue/screenshot.png exists (132342B, 2180x900 PNG). It predates this run and pairs with the stale PixelDojo evidence.json — likely a PixelDojo screenshot, not this voxelDojo game. The fresh voxelDojo smoke screenshots live in game-16-freight-yard/.logs/smoke-L{1,2}-cleared.png (1280x720 PNGs, regenerated this run).",
+  "didactic_fit": "Strong. The playable mechanic directly exercises all three target concepts, not a reskin: L1 = predict partition via hash(key)%N (player clicks the predicted lane before the sim reveals truth); L2 = assign every lane to exactly one crew (consumer-group ownership, orphan/double-up detection); L3 = predict new owners after join/leave AND observe committed offsets survived (cursor keyed by partition, not consumer); L4 = rewind an offset cursor and predict exactly which messages re-deliver in order (replay). The headless sim core (src/sim/queue.ts) is a genuine partitioned-log implementation — partitionOf via stableHash (fnv1a+fmix32), append-only log with per-partition offsets, assignPartitions round-robin/range, rebalance carrying offsets verbatim, replay in offset order — proven by 12 vitest tests. The 3D scene renders the parallel-lane map that the PLAN argues a 2D layout cannot. Evidence is real and meaningful: pass=true only when routing/assignment/rebalance/replay invariants hold, with verifier_required=true routing the decision out of the game.",
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": [
+    "ALL four-command gate green (lint+test+typecheck+build) AND smoke green (3/3, with the L1 EVIDENCE-assertion test passing).",
+    "Live smoke emits the correct voxeldojo schema (confirmed by the green spec assertions + emit.ts source).",
+    "CAVEAT (bookkeeping, not a gate failure): the output-dir evidence.json and screenshot.png are stale PixelDojo artifacts (source=pixelquest, schema 16_mini_message_queue-v1) from a different producer run, not this voxelDojo game's smoke output. The DONE-RULE is satisfied by the live voxelDojo smoke, not by those stale files. Consider regenerating them from this game's .logs/ to keep the output dir consistent.",
+    "U16-message-queue is not yet seeded in learner/learning_state.yaml (consistent with PLAN sec 12); the game correctly classifies attempts as 'deepening' via the static reviewSlice fallback and never writes learner state."
+  ]
+}

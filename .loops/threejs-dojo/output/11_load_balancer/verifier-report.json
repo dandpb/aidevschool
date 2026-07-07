@@ -1,0 +1,36 @@
+{
+  "slug": "11_load_balancer",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "gate": {
+    "lint": "pass",
+    "test": "pass",
+    "typecheck": "pass",
+    "build": "pass",
+    "smoke": "pass"
+  },
+  "evidence_valid": true,
+  "evidence_sample": "EVIDENCE {\"source\":\"voxeldojo\",\"unit_id\":\"U11-load-balancer\",\"project\":\"11_load_balancer\",\"scenario_id\":\"air-traffic-L1\",\"game\":\"AIR TRAFFIC\",\"pass\":true,\"metrics\":{\"predictions\":9,\"prediction_accuracy\":1,\"errors\":0,\"policy\":\"round_robin\",\"load_skew\":1},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":false,\"review_reason\":\"deepening\",\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"load-balancer routing + health checks\",\"mechanic\":\"air traffic to landing pads\"}}",
+  "plan_present": true,
+  "screenshot_present": true,
+  "checked": [
+    "ran: pnpm run lint (biome check src playwright) -> exit 0, 15 files clean",
+    "ran: pnpm run test (vitest run) -> exit 0, 20 tests passed (balancer.test.ts 13, controller.test.ts 6, index.test.ts 1)",
+    "ran: pnpm run typecheck (tsc --noEmit) -> exit 0",
+    "ran: pnpm run build (tsc --noEmit && vite build) -> exit 0, dist built",
+    "ran: pnpm run smoke (playwright test) -> exit 0, 3 tests passed (L1 round-robin clears + emits EVIDENCE; L2 health-check probe reveals dead pad, clears 0 errors; WebGL canvas renders)",
+    "read: src/evidence/emit.ts -> conforms to required voxeldojo schema (source, unit_id, project, scenario_id, pass, metrics, review_context{verifier_required:true, scheduler_source:learner-substrate}, curriculum_context{concept, mechanic})",
+    "read: playwright/air-traffic.spec.ts -> asserts scenario_id air-traffic-L1, source voxeldojo, unit_id U11-load-balancer, pass true; L2 asserts metrics.errors==0 && metrics.probe_fired==true",
+    "read: src/sim/balancer.ts + src/sim/levels.ts -> genuine routing-policy + health-check sim (round_robin/least_connections/random, health probe fail/recover, errors for dead routes, load skew); 4 levels L1 round-robin, L2 health-check, L3 least-connections switch, L4 recovery",
+    "read: src/game/controller.ts -> resolveWave emits emitEvidence on wave clear with evaluateRoundRobin/HealthCheck/PolicySwitch/Recovery metrics",
+    "read: docs/plans/11_load_balancer.md -> has subject+concept, player goal, concept->mechanic table, main loop, controls, win/fail states, learning-gate hooks (unit_id U11-load-balancer + evidence field list + pass rule)",
+    "read: src/content/reviewSlice.ts -> real substrate-generated slice; emit derives scheduled_review/review_reason from it (U11 not in nextReviews => deepening)",
+    "verified: .loops/threejs-dojo/output/11_load_balancer/screenshot.png -> valid PNG 1280x900, 128324 bytes",
+    "validated canonical L1 EVIDENCE JSON against required schema: all 10 schema checks PASS"
+  ],
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "Strong didactic fit: the air-traffic metaphor (ships=requests, pads=backends, probe=health probe, red pad=unhealthy) maps cleanly to load-balancer routing + health checks. balancer.ts is a real, substantive pure-TS sim (not a thematic reskin) covering 3 routing policies + health probe fail/recover + error counting for dead routes + load-skew metric, with deterministic seeded RNG. The smoke drives real HUD clicks through the public predictTruthPad hook and asserts the emitted record inside a real browser with a live WebGL canvas. Minor non-blocking note: per-route 'random' policy uses a stableHash fallback rather than seeded rng (routeWave has the proper seeded random path); smoke play is deterministic via the truth hook, which is appropriate for smoke but means prediction skill itself is exercised by hand-play, not the smoke. All required items green (gate 4/4 + smoke + valid EVIDENCE + PLAN + screenshot) and score>=8 => PASS. NOTE: prior .loops evidence.json has a STALE/different schema (gates[], schema, encounter_id, no source field) — do NOT rely on it; the current emit.ts + green smoke are the source of truth."
+}

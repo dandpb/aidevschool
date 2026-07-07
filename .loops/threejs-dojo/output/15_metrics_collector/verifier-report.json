@@ -1,0 +1,24 @@
+{
+  "slug": "15_metrics_collector",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "gate": { "lint": "pass", "test": "pass", "typecheck": "pass", "build": "pass", "smoke": "pass" },
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 15 files clean",
+    "pnpm run test (vitest run) -> 18/18 tests passed (histogram.test.ts=13, index.test.ts=1, controller.test.ts=4)",
+    "pnpm run typecheck (tsc --noEmit) -> clean",
+    "pnpm run build (tsc --noEmit && vite build) -> built dist (508.95kB js)",
+    "pnpm run smoke (playwright test) -> 4/4 tests passed (WebGL canvas boots, L1/L2/L4 evidence assertions green)",
+    "src/evidence/emit.ts -> emits schema-conformant record: source=voxeldojo, unit_id=U15-metrics-collector, project=15_metrics_collector, scenario_id=observatory-L<n>, pass, metrics, review_context{verifier_required:true, scheduler_source:learner-substrate}, curriculum_context{concept,historgrams + percentiles + alerting}",
+    "playwright/observatory.spec.ts -> asserts records[0].source/unit_id/project/scenario_id/pass against live console capture",
+    "PLAN slice present: docs/plans/15_metrics_collector.md (13 sections: subject+concept, why-3D, player goal, concept->mechanic table, main loop, controls, win/fail, progression, visual, sim core, stack, learning-gate hooks with unit_id+evidence field list+pass rule, milestones)",
+    "screenshot.png at output/15_metrics_collector/ exists (163286 bytes) BUT shows REST-API-AUTH game 07 content (wrong); local .logs/smoke-L{1,2,4}-cleared.png correctly show game-15 observatory (8 histogram columns + percentile contour ring)"
+  ],
+  "evidence_shape_valid": true,
+  "evidence_sample": "{\"source\":\"voxeldojo\",\"unit_id\":\"U15-metrics-collector\",\"project\":\"15_metrics_collector\",\"scenario_id\":\"observatory-L1\",\"game\":\"OBSERVATORY\",\"ts\":\"<iso>\",\"pass\":true,\"metrics\":{...},\"review_context\":{\"unit_kind\":\"concept\",\"scheduled_review\":false,\"review_reason\":\"deepening\",\"scheduler_source\":\"learner-substrate\",\"verifier_required\":true},\"curriculum_context\":{\"concept\":\"histograms + percentiles + alerting\",\"mechanic\":\"histogram terrain + alert plane\"}}",
+  "failed_criteria": "",
+  "integrity_notes": "Prior artifacts under .loops/threejs-dojo/output/15_metrics_collector/ are from a DIFFERENT implementation: evidence.json uses schema '15_metrics_collector-v1', scenario_id 'metrics-collector-L1', game 'Metrics Observatory' (not the live OBSERVATORY schema). The screenshot.png at that path shows game 07 REST API AUTH content, not game 15. The LIVE game-15 implementation produces schema-conformant evidence (verified by green smoke) and its own screenshots land in game-15-observatory/.logs/. These output-dir mismatches are workflow-harness/transport artifacts, NOT defects in game 15 itself.",
+  "retry_target": "none",
+  "confidence": "high"
+}

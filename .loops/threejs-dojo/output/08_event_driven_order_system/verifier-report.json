@@ -1,0 +1,21 @@
+{
+  "slug": "08_event_driven_order_system",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 15 files clean, exit 0",
+    "pnpm run test (vitest run) -> 19 tests / 3 files pass, exit 0",
+    "pnpm run typecheck (tsc --noEmit) -> exit 0",
+    "pnpm run build (tsc --noEmit && vite build) -> built dist/index.html + assets, exit 0",
+    "pnpm run smoke (playwright test) -> 3 tests pass (L1 append-order, L2 projection, WebGL canvas), exit 0",
+    "src/evidence/emit.ts -> emits {source:'voxeldojo', unit_id:'U8-event-driven', project:'08_event_driven_order_system', scenario_id, pass, metrics, review_context:{verifier_required:true, scheduler_source:'learner-substrate'}, curriculum_context:{concept,mechanic}}; spec asserts source/unit_id/project/scenario_id/pass",
+    "PLAN slice: /Users/danielbarreto/Development/aidevschool/engines/voxelDojo/docs/plans/08_event_driven_order_system.md (all 13 sections present incl. concept->mechanic table, learning-gate hooks with U8-event-driven + evidence field list + pass rule)",
+    "Screenshot: /Users/danielbarreto/Development/aidevschool/.loops/threejs-dojo/output/08_event_driven_order_system/screenshot.png (59357 bytes, 1280x900 PNG)",
+    "Headless sim: src/sim/sourcing.ts (append/appendAll/fold/replay/project/stableSortByTs/checkpointIndex + order_status & shipment_list projections folding SAME log differently); src/sim/levels.ts (evaluateAppendOrder/Projection/Replay/TwoViews); 19 vitest tests prove determinism/immutability/two-projection fold/checkpoint replay"
+  ],
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "Four-command gate fully green. Smoke emits 2 schema-conformant EVIDENCE records (L1 timeline-tower-L1, L2 timeline-tower-L2) asserted in-test via collectEvidence parsing of 'EVIDENCE {...}' console lines. The playable mechanic genuinely exercises append-only event log (L1 stack floors), projection fold (L2), replay from checkpoint (L3), and one-log-two-views (L4 order_status vs shipment_list) — not a thematic reskin. Headless sourcing.ts is WebGL-free so concept math is identical in vitest and browser. Caveat: the pre-existing .loops/.../evidence.json artifact has stale source:'pixeldojo' (different schema/gate); the live smoke now emits voxeldojo records, which is what the DONE-RULE requires. Game never writes learner state (evidence-only). Score 9 (not 10): build warns of a >500kB chunk (cosmetic, three.js inline) and only L1/L2 are exercised by the smoke (L3/L4 logic proven in vitest but not driven in-browser)."
+}

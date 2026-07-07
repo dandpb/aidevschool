@@ -1,0 +1,22 @@
+{
+  "slug": "05_websocket_chat",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "evidence_checked": [
+    "pnpm run lint -> exit 0 (14 files clean, biome)",
+    "pnpm run test -> exit 0 (21 passed: 17 in src/sim/relay.test.ts + 4 in src/game/controller.test.ts)",
+    "pnpm run typecheck -> exit 0 (tsc --noEmit clean)",
+    "pnpm run build -> exit 0 (tsc --noEmit && vite build; dist 515KB)",
+    "pnpm run smoke -> exit 0 (3 passed: L1 cleared, L2 fan-out cleared, WebGL canvas)",
+    "EVIDENCE emitted during smoke: playwright spec asserts source=voxeldojo, unit_id=U5-websocket-chat, project=05_websocket_chat, scenario_id=relay-station-L1/L2, pass=true; src/evidence/emit.ts hardcodes review_context.verifier_required=true, scheduler_source=learner-substrate -> schema-conformant",
+    "Vitest controller.test.ts also asserts the same voxeldojo EVIDENCE shape (toMatchObject on source/unit_id/project/scenario_id/pass)",
+    "PLAN slice engines/voxelDojo/docs/plans/05_websocket_chat.md EXISTS (142 lines, sections 1-13, L1-L4 progression, sim/relay.ts core)",
+    "screenshot.png present, 1280x900 PNG, 144677 bytes",
+    "concept coverage: L1 persistent link (connected set), L2 broadcast fan-out (live ∩ subscribed delivery set), L3 heartbeat survivor sweep (sweepDead on lastHeartbeatAt), L4 reconnect lifecycle"
+  ],
+  "failed_criteria": "none",
+  "retry_target": "",
+  "confidence": "high",
+  "notes": "Fresh-context re-derivation: all 5 gate commands green; previously-broken src/game/controller.test.ts is now rewritten against the real GameController API (start/togglePredict/submit/snapshot/truthConnected/truthDelivery/truthSurvivors) and passes. Didactic fit is strong (score 9): the 4-level progression (persistent link -> fan-out delivery set -> heartbeat survivor sweep -> reconnect) plus 17 pure-sim relay tests genuinely exercise persistent connections + fan-out broadcast + heartbeat. Minor wart (non-blocking): the .loops/.../evidence.json artifact is STALE (schema 05_websocket_chat-v1, no source/project/review_context, unit_id=05_websocket_chat, mtime Jul 6 17:50) and is NOT what smoke emits; the schema-conformant voxeldojo EVIDENCE is emitted to the browser console and asserted by the passing playwright spec + vitest. Stale artifact does not affect the verdict since >=1 valid record was provably emitted during smoke."
+}

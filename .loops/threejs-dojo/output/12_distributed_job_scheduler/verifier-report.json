@@ -1,0 +1,22 @@
+{
+  "slug": "12_distributed_job_scheduler",
+  "score": 9,
+  "result": "PASS",
+  "done_rule": "PASS",
+  "evidence_checked": [
+    "pnpm run lint (biome check src playwright) -> 14 files, no fixes",
+    "pnpm run test (vitest run) -> 21 tests passed across dag.test.ts (11) + election.test.ts (10)",
+    "pnpm run typecheck (tsc --noEmit) -> clean",
+    "pnpm run build (tsc --noEmit && vite build) -> 15 modules transformed, dist/ written",
+    "pnpm run smoke (playwright test) -> 3 tests passed (WebGL canvas, L1 predict-leader, L2 kill+succession)",
+    "read src/evidence/emit.ts -> EvidenceRecord schema matches DONE-RULE exactly",
+    "read src/sim/election.ts + src/sim/dag.ts -> real leader election (seeded timeouts, majority, monotonic terms, kill->re-elect) + real DAG scheduling (Kahn topo order, cycle detection, readyJobs, canLaunch)",
+    "read src/game/controller.ts -> blocked-launch fails wave, kill-non-leader fails, predict-wrong-successor fails (mechanic is load-bearing, not reskin)",
+    "PLAN slice present at engines/voxelDojo/docs/plans/12_distributed_job_scheduler.md with all 13 sections",
+    "screenshot.png present (160866 bytes, 1280x900 PNG)"
+  ],
+  "failed_criteria": "",
+  "retry_target": "none",
+  "confidence": "high",
+  "notes": "Stale cross-check: output/evidence.json contains an ABANDONED 'Raft Ring' schema (encounter_id raft-ring-01, game 'Raft Ring') left over from the 'shape B' pixelDojo design in decision.md. The ACTUAL built game is 'MISSION CONTROL' (simplified-Raft leader election + DAG scheduling) whose smoke emits the correct voxeldojo/U12-job-scheduler/mission-control-L{n} schema, asserted green. The stale evidence.json is a documentation cross-check artifact, NOT a gate failure; recommend overwriting it with a real MISSION CONTROL capture. Didactic fit is strong: both concept halves are exercised as load-bearing mechanics, proven in 21 vitest tests and 3 browser tests."
+}
