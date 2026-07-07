@@ -144,7 +144,7 @@ test("metrics observatory wave 1 — full lifecycle emits a passing evidence rec
   expect(rec.scenario_id).toBe("metrics-collector-L1")
   expect(rec.pass).toBe(true)
   expect(rec.metrics.kind).toBe("voxeldojo-metrics-observatory")
-  expect(rec.metrics.bucket_plan).toEqual([5, 10, 25, 50, 100, 250, 500, Infinity])
+  expect(rec.metrics.bucket_plan).toEqual([5, 10, 25, 50, 100, 250, 500, "Infinity"])
   expect(rec.metrics.obs_total).toBe(12)
   expect(rec.metrics.obs_bucketed_correct).toBe(12)
   expect(rec.metrics.obs_misbucketed).toBe(0)
