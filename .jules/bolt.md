@@ -9,3 +9,6 @@
 ## 2026-07-03 - Optimize Three.js allocations
 **Learning:** In Three.js, instantiating new Materials and Geometries for every object is a massive anti-pattern that bloats memory and kills frame rate, as they cause excessive shader compilations and heap allocations.
 **Action:** Share `PlaneGeometry` and `MeshBasicMaterial` across static tiles (via dictionary) and use `.userData` to differentiate shared vs unique materials for proper cleanup in `.dispose()`.
+## 2026-07-07 - Prevented Unnecessary Re-renders in Linux Lab
+**Learning:** Found that `selectLinuxApp` and `setLinuxAppCategoryFilter` actions in `reduceState` were returning new state objects even when the app/filter selected were already active, bypassing the reference equality check in `app.ts` (`nextState !== state`) and triggering full DOM re-renders unnecessarily.
+**Action:** Added early returns that check if the target values and view match the current state in the reducer. When modifying reducers that rely on reference equality checks, always ensure actions that don't change state return the exact original state reference.
