@@ -46,9 +46,11 @@ export function renderAgents(state: AppState): string {
       <div class="agent-list">
         ${coreAgents
           .map((agent) => {
-            const activeClass = agent.id === selectedAgent.id ? "is-active" : ""
+            const isActive = agent.id === selectedAgent.id
+            const activeClass = isActive ? "is-active" : ""
+            const ariaCurrent = isActive ? ' aria-current="true"' : ""
             return `
-              <button class="agent-row ${activeClass}" type="button" data-agent="${escapeHtml(agent.id)}">
+              <button class="agent-row ${activeClass}" type="button" data-agent="${escapeHtml(agent.id)}"${ariaCurrent}>
                 <span>${escapeHtml(agent.name)}</span>
                 <small>${escapeHtml(agent.role)}</small>
               </button>
