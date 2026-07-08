@@ -18,9 +18,10 @@ export function renderCycle(state: AppState): string {
         <div class="timeline">
           ${getStages()
             .map((stage, index) => {
-              const selected = stage.id === selectedStage.id ? "is-active" : ""
+              const isSelected = stage.id === selectedStage.id
+              const selected = isSelected ? "is-active" : ""
+              const ariaCurrent = isSelected ? ' aria-current="step"' : ""
               const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
-              const ariaCurrent = stage.id === selectedStage.id ? ' aria-current="step"' : ""
               return `
                 <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${ariaCurrent}>
                   <span>${String(index + 1).padStart(2, "0")}</span>

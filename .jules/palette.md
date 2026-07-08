@@ -16,3 +16,7 @@
 ## 2025-07-08 - Accessible Active States in Vanilla Templates
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates for rendering and relies on `.is-active` CSS classes for visual state. However, interactive elements (like tabs, filters, and list items) often lacked corresponding ARIA attributes for screen readers.
 **Action:** Always pair visual active state classes like `.is-active` with appropriate semantic attributes, such as `aria-pressed="true"` for toggle buttons or `aria-current="step"/"page"` for navigational/sequential elements in raw HTML strings.
+
+## 2025-02-23 - Pairing visual active states with ARIA attributes
+**Learning:** Found multiple places where visual active states (`.is-active`) were implemented using classes without semantic ARIA attributes (e.g. `aria-current="step"`, `aria-current="true"`, or `aria-pressed="true"`) to communicate this state to screen readers. This pattern existed in roadmap filters, cycle timeline steps, linux lab apps/categories, and agent lists.
+**Action:** Always explicitly pair visual active classes on custom interactive elements (buttons acting as tabs/filters/steps) with semantic ARIA attributes (`aria-current` or `aria-pressed`) so that the active state is announced accurately.
