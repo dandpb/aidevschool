@@ -2,3 +2,5 @@ ignoredBuiltDependencies:
   - esbuild
 
 onlyBuiltDependencies: '["esbuild"]'
+packages:
+  - '.'
