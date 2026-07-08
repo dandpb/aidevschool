@@ -47,7 +47,8 @@ active_unit:
   empirical_gate:
     require_executable_evidence: true
     min_coverage: 0.8
-    mutation_min: 0.6
+    # Threshold seam: engines/minimaxDojo/config/learner.yaml → gates.mutation_score_min
+    mutation_min: 0.65
 gate:
   implementation_blocked: false
 agent_ownership:
@@ -63,8 +64,9 @@ agent_ownership:
   governance: Seneca
 empirical_gates:
   code:
+    # Threshold seam: engines/minimaxDojo/config/learner.yaml → gates.*
     core_coverage_target: '>=80%'
-    mutation_score_target: 60-70% when tooling is available
+    mutation_score_target: '>=0.65 (config: gates.mutation_score_min)'
     verifier_context: isolated
     benchmark_rule: '>=10 samples plus warmup; block speed claims when CV >=20%'
   learning:

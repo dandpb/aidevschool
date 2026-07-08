@@ -2,7 +2,7 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for voxelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// Generated: 2026-07-05T19:09:48.881907Z
+// Generated: 2026-07-08T20:40:49.800469Z
 
 import type { ReviewSlice } from "./types"
 

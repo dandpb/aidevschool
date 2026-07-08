@@ -59,7 +59,7 @@
 | Engine | Genre | Evidence `source` | Review slice destination |
 | --- | --- | --- | --- |
 | pixelDojo (`pixel-quest/`) | 8-bit arcade RPG | `pixelquest` | `engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts` |
-| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | `engines/voxelDojo/game-10-hash-ring/src/content/reviewSlice.ts` |
+| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | every `engines/voxelDojo/game-*/src/content/reviewSlice.ts` (fan-out via `sync_voxel_review_slice`) |
 
 Adding an engine: add the row here, a `sync_<engine>_review_slice` target in
 `learner/substrate/dashboard_snapshot.py` (+ tests), and cite this contract from the engine's

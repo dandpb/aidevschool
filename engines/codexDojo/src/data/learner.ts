@@ -3,7 +3,7 @@
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +
 //         learner/predictions.yaml
-// Generated: 2026-07-08T09:47:30.323292Z
+// Generated: 2026-07-08T20:40:49.785569Z
 
 import type { LearnerSnapshot } from "../domain"
 

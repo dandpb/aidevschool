@@ -2,14 +2,25 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for voxelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// As of 2026-07-05, U9-plugin-system is not yet in the substrate's review slice, so the
-// emitter records DOCKING BAY attempts as deepening play (`scheduled_review:false`).
-// Generated: 2026-07-05T20:32:00.000000Z
+// Generated: 2026-07-08T20:40:49.800469Z
 
 import type { ReviewSlice } from "./types"
 
 export const reviewSlice: ReviewSlice = {
-  nextReviews: [],
+  nextReviews: [
+    {
+      unitId: "U0-sonda-rate-limiter-robustness",
+      title: "agentic orchestration for token-bucket robustness",
+      dueIn: "today",
+      reason: "due",
+    },
+    {
+      unitId: "P-001",
+      title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
+      dueIn: "today",
+      reason: "recurring-trap",
+    },
+  ],
   streak: {
     current: 0,
     longest: 0,

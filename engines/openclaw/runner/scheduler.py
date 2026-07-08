@@ -2,38 +2,31 @@
 
 from __future__ import annotations
 
-import re
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from engines.openclaw import config as cfg
-from engines.openclaw._compat import StrEnum
-from engines.openclaw.errors import StateCorruptionError
 from engines.openclaw.fsio import (
-    atomic_write_text,
     read_json_object,
     read_yaml_mapping,
     write_json_atomic,
 )
 from engines.openclaw.hermes.bus import Event, HermesBus
 from engines.openclaw.hermes.topics import Topic
+from engines.openclaw.runner.pipeline_status import (
+    Phase,
+    PipelineStatus,
+    load_status,
+    save_status,
+)
 
 
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PIPELINE_STATUS = ROOT / "learner" / "pipeline_status.md"
 LEARNING_STATE = ROOT / "learner" / "learning_state.yaml"
 SCHEDULER_STATE = ROOT / ".mavis" / "hermes" / "scheduler_state.json"
-
-
-class Phase(StrEnum):
-    SPEC = "spec"
-    SPEC_DONE = "spec-done"
-    IMPL_DONE = "impl-done"
-    REVIEW_DONE = "review-done"
-    BENCHMARK_DONE = "benchmark-done"
-    CYCLE_COMPLETE = "cycle-complete"
 
 
 # Producer phase → topic to emit, adapter name, verifier phase name, next status.
@@ -79,73 +72,14 @@ PHASE_RULES: dict[Phase, PhaseRule] = {
 }
 
 
-@dataclass
-class PipelineStatus:
-    cycle_id: str = ""
-    current_project: str = ""
-    complexity_level: int = 1
-    phase: Phase = Phase.SPEC
-    awaiting: str = ""
-    blockers: list[str] = field(default_factory=list)
-
-
 def _parse_status(path: Path = PIPELINE_STATUS) -> PipelineStatus:
-    if not path.exists():
-        # Designed cold-start recovery: no status file means a fresh pipeline.
-        return PipelineStatus()
-    try:
-        text = path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise StateCorruptionError(
-            f"Cannot read pipeline status at {path}: {exc}"
-        ) from exc
-    data: dict[str, Any] = {}
-    for line in text.splitlines():
-        match = re.match(r"-\s+\*\*(\w+)\*\*:\s+`?(.+?)`?\s*$", line)
-        if match:
-            key, value = match.groups()
-            data[key] = value
-    try:
-        return PipelineStatus(
-            cycle_id=data.get("cycle_id", ""),
-            current_project=data.get("current_project", ""),
-            complexity_level=int(data.get("complexity_level", "1").split()[0]),
-            phase=Phase(data.get("phase", "spec")),
-            awaiting=data.get("awaiting", ""),
-            blockers=[b.strip() for b in data.get("blockers", "[]").strip("[]").split(",") if b.strip()],
-        )
-    except (ValueError, IndexError) as exc:
-        raise StateCorruptionError(
-            f"Malformed pipeline status at {path}: {exc}. "
-            "Fix the '**phase**' / '**complexity_level**' lines "
-            "(valid phases: " + ", ".join(p.value for p in Phase) + ") "
-            "or delete the file to reset."
-        ) from exc
+    """Load pipeline status (YAML seam preferred; Markdown fallback)."""
+    return load_status(path)
 
 
 def _write_status(status: PipelineStatus, path: Path = PIPELINE_STATUS) -> None:
-    text = f"""# Pipeline Status — MiniMax Evolution Engine
-
-> Estado do **pipeline de software** do ciclo atual. (A jornada de aprendizado fica em
-> `learning_state.yaml`, na mesma pasta.) Caminhos relativos à raiz do ecossistema.
-> Atualizado por cada agente ao fim da sua fase.
-
-- **cycle_id**: {status.cycle_id}
-- **current_project**: `{status.current_project}`
-- **complexity_level**: {status.complexity_level}
-- **phase**: {status.phase.value}
-- **awaiting**: `{status.awaiting}`
-- **agents**:
-  - (atualizado pelo runner)
-- **notas**:
-  - Ciclo atualizado automaticamente pelo OpenClaw runner.
-- **blockers**: {status.blockers}
-
-## Transições
-`spec` → `diagnostic` (learner attempt evaluated · sonda) → `impl` (3 langs green + verifier) →
-`review` → `benchmark` → `optimize` → `cycle-complete`
-"""
-    atomic_write_text(path, text)
+    """Persist structured YAML + patch Markdown bullets (preserve agent notes)."""
+    save_status(status, path)
 
 
 def _load_learning_state(path: Path = LEARNING_STATE) -> dict[str, Any]:

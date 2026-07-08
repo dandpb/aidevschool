@@ -27,6 +27,7 @@ from pathlib import Path
 from typing import Any
 
 from learner.substrate import load_canonical
+from learner.substrate.fsio import atomic_write_text
 from learner.substrate.predictions_summary import summarize_predictions
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
 from learner.substrate.ts_render import render_dashboard_ts, render_pixel_review_ts, render_voxel_review_ts
@@ -37,7 +38,9 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 DASHBOARD_TS = ROOT / "engines" / "codexDojo" / "src" / "data" / "learner.ts"
 PIXEL_REVIEW_TS = ROOT / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
+# Pilot destination kept for back-compat; sync fans out to every game-* slice.
 VOXEL_REVIEW_TS = ROOT / "engines" / "voxelDojo" / "game-10-hash-ring" / "src" / "content" / "reviewSlice.ts"
+VOXEL_DOJO_ROOT = ROOT / "engines" / "voxelDojo"
 LEARNING_STATE = ROOT / "learner" / "learning_state.yaml"
 LEARNER_PROFILE = ROOT / "learner" / "learner_profile.md"
 PITFALLS = ROOT / "learner" / "pitfalls.md"
@@ -250,8 +253,7 @@ def sync(snapshot: dict[str, Any] | None = None) -> Path:
     instead of re-reading every canonical input twice.
     """
     snapshot = snapshot or build_snapshot()
-    DASHBOARD_TS.parent.mkdir(parents=True, exist_ok=True)
-    DASHBOARD_TS.write_text(render_ts(snapshot), encoding="utf-8")
+    atomic_write_text(DASHBOARD_TS, render_ts(snapshot))
     return DASHBOARD_TS
 
 
@@ -274,20 +276,32 @@ def build_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str
 def sync_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> Path:
     """Regenerate the pixelDojo review slice. Returns the file path."""
     slice_dict = build_pixel_review_slice(snapshot)
-    PIXEL_REVIEW_TS.parent.mkdir(parents=True, exist_ok=True)
-    PIXEL_REVIEW_TS.write_text(render_pixel_review_ts(slice_dict), encoding="utf-8")
+    atomic_write_text(PIXEL_REVIEW_TS, render_pixel_review_ts(slice_dict))
     return PIXEL_REVIEW_TS
 
 
-def sync_voxel_review_slice(snapshot: dict[str, Any] | None = None) -> Path:
-    """Regenerate the voxelDojo review slice. Returns the file path.
+def discover_voxel_review_slice_paths() -> list[Path]:
+    """Every voxelDojo game's review-slice destination (sorted, deterministic)."""
+    if not VOXEL_DOJO_ROOT.is_dir():
+        return []
+    return sorted(VOXEL_DOJO_ROOT.glob("game-*/src/content/reviewSlice.ts"))
 
-    The slice content is engine-agnostic scheduling truth, so this reuses
-    ``build_pixel_review_slice``; only the destination module and its type
-    import differ (voxelDojo keeps ``ReviewSlice`` next to the slice in
-    ``src/content/types.ts``).
+
+def sync_voxel_review_slice(snapshot: dict[str, Any] | None = None) -> list[Path]:
+    """Regenerate the review slice for every voxelDojo game.
+
+    Scheduling truth is engine-agnostic (same shape as pixelDojo). Contract §4
+    requires substrate → game for all attempt surfaces, not only the game-10 pilot.
+    Returns the list of paths written (empty if no game destinations exist).
     """
     slice_dict = build_pixel_review_slice(snapshot)
-    VOXEL_REVIEW_TS.parent.mkdir(parents=True, exist_ok=True)
-    VOXEL_REVIEW_TS.write_text(render_voxel_review_ts(slice_dict), encoding="utf-8")
-    return VOXEL_REVIEW_TS
+    text = render_voxel_review_ts(slice_dict)
+    paths = discover_voxel_review_slice_paths()
+    if not paths:
+        # Cold start / missing fleet: keep pilot path as sole destination.
+        paths = [VOXEL_REVIEW_TS]
+    written: list[Path] = []
+    for path in paths:
+        atomic_write_text(path, text)
+        written.append(path)
+    return written

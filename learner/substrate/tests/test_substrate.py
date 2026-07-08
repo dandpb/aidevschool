@@ -72,7 +72,7 @@ CLEAN_INITIAL_STATE = {
         "empirical_gate": {
             "require_executable_evidence": True,
             "min_coverage": 0.80,
-            "mutation_min": 0.60
+            "mutation_min": 0.65
         }
     },
     "gate": {

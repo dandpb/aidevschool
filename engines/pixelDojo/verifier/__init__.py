@@ -32,7 +32,12 @@ from typing import Any
 
 import yaml
 
-from learner.substrate import load_and_validate, validate
+from learner.substrate import (
+    is_repo_canonical_path,
+    load_and_validate,
+    save_canonical,
+    validate,
+)
 from learner.substrate.scheduling import RATING_FROM_GATE, record_gate_outcome
 
 #: Fields every evidence record must carry regardless of game.
@@ -42,14 +47,6 @@ REQUIRED_EVIDENCE_FIELDS = ("unit_id", "project", "game", "ts", "pass")
 def _parse_ts(ts: str) -> datetime:
     """Parse an ISO-8601 evidence timestamp (``Z`` suffix tolerated)."""
     return datetime.fromisoformat(ts.replace("Z", "+00:00"))
-
-
-class _NoAliasDumper(yaml.SafeDumper):
-    """safe_dump emits anchors/aliases for shared objects (e.g. the gate date
-    appearing in both units_log and streak); keep the canonical file plain."""
-
-    def ignore_aliases(self, data: Any) -> bool:  # noqa: ARG002
-        return True
 
 
 @dataclass
@@ -317,14 +314,12 @@ def verify_and_gate(
         return decision
 
     new_state = apply_gate(state, evidence, decision, today)
-    (root / "learner" / "learning_state.yaml").write_text(
-        yaml.dump(
-            new_state,
-            Dumper=_NoAliasDumper,
-            sort_keys=False,
-            allow_unicode=True,
-            width=100,
-        ),
-        encoding="utf-8",
+    # Substrate owns the write seam: atomic save + auto-resync of derived views
+    # when persisting the repo-root canonical file (not temp-path tests).
+    state_path = root / "learner" / "learning_state.yaml"
+    save_canonical(
+        new_state,
+        state_path,
+        resync=is_repo_canonical_path(state_path),
     )
     return decision

@@ -2,7 +2,7 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for pixelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// Generated: 2026-07-08T09:47:30.324014Z
+// Generated: 2026-07-08T20:40:49.786163Z
 
 import type { ReviewSlice } from "../game/review/types"
 

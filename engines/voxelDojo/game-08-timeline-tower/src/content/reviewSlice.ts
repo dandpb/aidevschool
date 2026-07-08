@@ -2,14 +2,25 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for voxelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-//
-// Static fallback until the substrate is regenerated for game-08. U8-event-driven
-// is not yet scheduled, so attempts are recorded as deepening play.
+// Generated: 2026-07-08T20:40:49.800469Z
 
 import type { ReviewSlice } from "./types"
 
 export const reviewSlice: ReviewSlice = {
-  nextReviews: [],
+  nextReviews: [
+    {
+      unitId: "U0-sonda-rate-limiter-robustness",
+      title: "agentic orchestration for token-bucket robustness",
+      dueIn: "today",
+      reason: "due",
+    },
+    {
+      unitId: "P-001",
+      title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
+      dueIn: "today",
+      reason: "recurring-trap",
+    },
+  ],
   streak: {
     current: 0,
     longest: 0,

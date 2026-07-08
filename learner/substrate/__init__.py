@@ -13,11 +13,13 @@ from learner.substrate.adapters.whiteboard import (
     render_profile_yaml,
     render_trail_md,
 )
+from learner.substrate.fsio import atomic_write_text
 
 if TYPE_CHECKING:
     from learner.substrate.dashboard_snapshot import sync as sync_dashboard_snapshot
 
 ROOT = Path(__file__).resolve().parent.parent.parent
+CANONICAL_STATE_PATH = ROOT / "learner" / "learning_state.yaml"
 
 # Lazy-imported to avoid circular dependency (dashboard_snapshot resolves ROOT locally).
 def __getattr__(name: str):
@@ -29,9 +31,12 @@ def __getattr__(name: str):
 
 __all__ = [
     "ROOT",
+    "CANONICAL_STATE_PATH",
     "load_canonical",
     "validate",
     "load_and_validate",
+    "save_canonical",
+    "is_repo_canonical_path",
     "derive_mavis_view",
     "render_mavis_yaml",
     "derive_whiteboard_profile",
@@ -44,10 +49,59 @@ __all__ = [
 ]
 
 
+class _NoAliasDumper(yaml.SafeDumper):
+    """Avoid anchors/aliases so the canonical YAML stays plain and greppable."""
+
+    def ignore_aliases(self, data: Any) -> bool:  # noqa: ARG002
+        return True
+
+
+def resolve_canonical_path(path: str | Path = "learner/learning_state.yaml") -> Path:
+    """Resolve a learner-state path relative to the repo root (absolute paths win)."""
+    p = Path(path)
+    return p if p.is_absolute() else ROOT / p
+
+
+def is_repo_canonical_path(path: str | Path) -> bool:
+    """True when ``path`` is the ecosystem's real ``learner/learning_state.yaml``."""
+    return resolve_canonical_path(path).resolve() == CANONICAL_STATE_PATH.resolve()
+
+
 def load_canonical(path: str | Path = "learner/learning_state.yaml") -> dict[str, Any]:
     """Load the canonical learner state from YAML."""
-    with open(ROOT / path, "r", encoding="utf-8") as f:
+    with open(resolve_canonical_path(path), "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
+
+def save_canonical(
+    state: dict[str, Any],
+    path: str | Path = "learner/learning_state.yaml",
+    *,
+    resync: bool = False,
+) -> Path:
+    """Atomically persist canonical learner state. Optional derived-view resync.
+
+    This is the single write seam for ``learning_state.yaml``. Callers (verifier,
+    tools) must not plain-write the file. ``resync=True`` regenerates derived
+    views via :func:`sync` after a successful write — only meaningful for the
+    repo-root canonical path.
+    """
+    errors = validate(state)
+    if errors:
+        raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+
+    target = resolve_canonical_path(path)
+    text = yaml.dump(
+        state,
+        Dumper=_NoAliasDumper,
+        sort_keys=False,
+        allow_unicode=True,
+        width=100,
+    )
+    atomic_write_text(target, text)
+    if resync:
+        sync()
+    return target
 
 
 def validate(state: dict[str, Any]) -> list[str]:
@@ -214,15 +268,15 @@ def sync() -> None:
     state = load_and_validate()
 
     mavis_path = ROOT / ".mavis" / "learning_state.yaml"
-    mavis_path.write_text(render_mavis_yaml(state), encoding="utf-8")
+    atomic_write_text(mavis_path, render_mavis_yaml(state))
 
     whiteboard = ROOT / "engines" / "minimaxDojo" / "whiteboard"
     profile = derive_whiteboard_profile(state)
-    (whiteboard / "profile.yaml").write_text(render_profile_yaml(profile), encoding="utf-8")
-    (whiteboard / "learner_profile.md").write_text(render_profile_md(profile), encoding="utf-8")
+    atomic_write_text(whiteboard / "profile.yaml", render_profile_yaml(profile))
+    atomic_write_text(whiteboard / "learner_profile.md", render_profile_md(profile))
 
     trail = derive_whiteboard_trail(state)
-    (whiteboard / "trail.md").write_text(render_trail_md(trail), encoding="utf-8")
+    atomic_write_text(whiteboard / "trail.md", render_trail_md(trail))
 
     # Build the snapshot once and share it across both renderers so the canonical
     # inputs (learning_state.yaml, journal.md, pitfalls.md, BACKLOG_STATUS.md)
@@ -234,5 +288,8 @@ def sync() -> None:
     pixel_path = _sync_pixel_review_slice(snapshot)
     print(f"PixelDojo review slice regenerated: {pixel_path.relative_to(ROOT)}")
 
-    voxel_path = _sync_voxel_review_slice(snapshot)
-    print(f"voxelDojo review slice regenerated: {voxel_path.relative_to(ROOT)}")
+    voxel_paths = _sync_voxel_review_slice(snapshot)
+    if isinstance(voxel_paths, list):
+        print(f"voxelDojo review slices regenerated: {len(voxel_paths)} games")
+    else:
+        print(f"voxelDojo review slice regenerated: {voxel_paths.relative_to(ROOT)}")

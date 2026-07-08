@@ -2,15 +2,25 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for voxelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// Generated: 2026-07-05T19:09:48.881907Z
+// Generated: 2026-07-08T20:40:49.800469Z
 
 import type { ReviewSlice } from "./types"
 
-// Static fallback for game-16 (U16-message-queue is not yet seeded in the substrate as of
-// 2026-07-05). nextReviews is empty: every FREIGHT YARD attempt is therefore classified as
-// "deepening" play. When the substrate is extended, regenerate this slice to inject the unit.
 export const reviewSlice: ReviewSlice = {
-  nextReviews: [],
+  nextReviews: [
+    {
+      unitId: "U0-sonda-rate-limiter-robustness",
+      title: "agentic orchestration for token-bucket robustness",
+      dueIn: "today",
+      reason: "due",
+    },
+    {
+      unitId: "P-001",
+      title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
+      dueIn: "today",
+      reason: "recurring-trap",
+    },
+  ],
   streak: {
     current: 0,
     longest: 0,

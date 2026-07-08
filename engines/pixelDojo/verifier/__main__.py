@@ -108,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         f"(evidence: {evidence_path})"
     )
     if not args.dry_run:
-        print("Next: python3 -m learner.substrate  (regenerate derived views)")
+        print("Derived views resynced via learner.substrate (when writing repo canonical state).")
     return 0
 
 

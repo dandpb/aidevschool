@@ -19,3 +19,14 @@ Substitution marker used in Markdown prompts and docs. It resolves to the scalar
 ## Empirical gate
 
 A unit is `DOMINADO` only after the PROMĘTOR verifies real execution against the thresholds in the threshold seam.
+
+## Substrate write seam
+
+`learner.substrate.save_canonical` is the single write path for `learner/learning_state.yaml`
+(atomic). The teaching-game verifier decides eligibility/outcome but must not plain-write the
+canonical file; it calls `save_canonical` (and auto-resyncs derived views for the repo path).
+
+## Teaching evidence emitter
+
+`engines/shared/teaching-evidence/emit.ts` (mirrored at `engines/voxelDojo/shared/evidence.ts`)
+is the deep module for dual-channel evidence emission. Games supply unit identity + metrics only.

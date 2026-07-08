@@ -34,7 +34,7 @@ tenta → avaliação → destrava → `/devschool-implement`.
 
 - Nada avança sem **execução real**. Sem números fabricados.
 - Limiares (de `active_unit.empirical_gate`): cobertura do núcleo ≥ `min_coverage` (0.80),
-  mutation score ≥ `mutation_min` (0.60) quando aplicável.
+  mutation score ≥ `mutation_min` (⟨config: gates.mutation_score_min⟩ = 0.65) quando aplicável.
 - A verificação parte **do zero** (subagent `verifier`), sem o contexto de quem produziu — anti-ancoragem.
 
 ## Guardrails anti-dependência (tutoria socrática)

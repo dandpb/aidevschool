@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-07
-**Commit:** fe9ad7f
+**Generated:** 2026-07-08
+**Commit:** 2591bdb
 **Branch:** main
 
 ## OVERVIEW
@@ -39,6 +39,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | --- | --- | --- |
 | Get repo-wide orientation | `docs/handbook/README.md` | Read this first for architecture, onboarding, per-engine refs, substrate, and glossary. |
 | Share a mixed-audience overview | `docs/AI_DevSchool_Overview.docx` | Standalone ecosystem overview for handoffs or non-implementers. |
+| Review current repo hygiene debt | `docs/TECH_DEBT_AUDIT_2026-07-08.md` | Current full-ecosystem debt inventory plus phased remediation notes; use it before broad cleanup. |
 | Run shared Python verification | `Makefile`, `pyproject.toml` | Use repo-root `make install`, `make test`, `make test-core`, and `make test-substrate`. |
 | Validate the dashboard | `engines/codexDojo/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`. |
 | Validate the game | `engines/pixelDojo/pixel-quest/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run typecheck`, `pnpm run build`, `pnpm run smoke`. |
@@ -149,6 +150,9 @@ Open Claude Code rooted at engines/miniMaxEvolutionEngine/
 
 - Broad scans should exclude `node_modules/`, `.opencode/node_modules`, `dist/`, `target/`,
   coverage output, `.codegraph/`, and `graphify-out/`.
+- Smoke screenshots and `**/test-results/` are generated outputs; keep them out of source control,
+  but keep tracked evidence files (`evidence.json`, `evidence.ndjson`, `live-evidence*`) because
+  they are the learning-gate audit trail.
 - Use LSP/codegraph when exposed; `.codegraph` and `graphify-out/` are generated references, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
 - `learn/` currently has placeholder directories but no active files.

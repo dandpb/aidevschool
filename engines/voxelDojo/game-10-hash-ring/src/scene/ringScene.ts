@@ -1,8 +1,8 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
 import type { GameState } from "../game/controller"
 import { ringHash, ringPosition } from "../sim/hash"
 import { type Anchor, anchorsOf, ownerOf } from "../sim/ring"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 
 const RING_RADIUS = 10
 const RING_TILT = Math.PI / 6
@@ -29,69 +29,31 @@ function ringPoint(fraction: number, lift = 0): THREE.Vector3 {
 
 /** Three.js projection of sim state. Renders only — all rules live in src/sim and src/game. */
 export class RingScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private ringGroup = new THREE.Group()
   private stationMeshes = new Map<string, THREE.Mesh>()
   private ghostAnchors: THREE.InstancedMesh | null = null
   private keyMesh: THREE.InstancedMesh | null = null
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onStationClick: ((stationId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 24, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 14, 24)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 60
-    this.controls.minDistance = 8
-
+    this.viewport = createViewport(canvas)
     this.ringGroup.rotation.x = RING_TILT
-    this.scene.add(this.ringGroup)
+    this.viewport.scene.add(this.ringGroup)
     const torus = new THREE.Mesh(
       new THREE.TorusGeometry(RING_RADIUS, 0.06, 8, 128),
       new THREE.MeshBasicMaterial({ color: "#3d4663" }),
     )
     torus.rotation.x = Math.PI / 2
     this.ringGroup.add(torus)
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.7))
-    const key = new THREE.DirectionalLight("#ffffff", 1.2)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects([...this.stationMeshes.values()])
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects([...this.stationMeshes.values()])
     const first = hits[0]
     if (first && this.onStationClick) {
       const id = (first.object.userData as { stationId?: string }).stationId
