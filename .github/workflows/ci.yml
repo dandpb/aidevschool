@@ -22,9 +22,10 @@ jobs:
         working-directory: engines/codexDojo
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 9
+          node-version: 20
+      - run: npm i -g pnpm@9
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -43,9 +44,10 @@ jobs:
         working-directory: engines/pixelDojo/pixel-quest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 9
+          node-version: 20
+      - run: npm i -g pnpm@9
       - uses: actions/setup-node@v4
         with:
           node-version: 20

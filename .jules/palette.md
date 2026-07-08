@@ -13,3 +13,6 @@
 ## 2024-05-24 - Active Navigation Item Accessibility
 **Learning:** Using `aria-current="page"` on the active item in a navigation list provides crucial context to screen reader users about where they currently are within the application. Visual cues like an 'is-active' class are not enough.
 **Action:** Always add `aria-current="page"` to the active link or button in navigation menus.
+## 2025-07-08 - Accessible Active States in Vanilla Templates
+**Learning:** The codexDojo dashboard uses vanilla TypeScript string templates for rendering and relies on `.is-active` CSS classes for visual state. However, interactive elements (like tabs, filters, and list items) often lacked corresponding ARIA attributes for screen readers.
+**Action:** Always pair visual active state classes like `.is-active` with appropriate semantic attributes, such as `aria-pressed="true"` for toggle buttons or `aria-current="step"/"page"` for navigational/sequential elements in raw HTML strings.

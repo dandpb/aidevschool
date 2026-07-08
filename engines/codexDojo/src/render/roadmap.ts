@@ -60,5 +60,6 @@ function renderFilterButton(
   currentFilter: ProjectFilter,
 ): string {
   const activeClass = filter === currentFilter ? "is-active" : ""
-  return `<button class="filter-button ${activeClass}" type="button" data-filter="${escapeHtml(filter)}">${escapeHtml(label)}</button>`
+  const ariaPressed = filter === currentFilter ? ' aria-pressed="true"' : ""
+  return `<button class="filter-button ${activeClass}" type="button" data-filter="${escapeHtml(filter)}"${ariaPressed}>${escapeHtml(label)}</button>`
 }
