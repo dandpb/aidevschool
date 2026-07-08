@@ -12,3 +12,7 @@
 ## 2026-07-07 - Prevented Unnecessary Re-renders in Linux Lab
 **Learning:** Found that `selectLinuxApp` and `setLinuxAppCategoryFilter` actions in `reduceState` were returning new state objects even when the app/filter selected were already active, bypassing the reference equality check in `app.ts` (`nextState !== state`) and triggering full DOM re-renders unnecessarily.
 **Action:** Added early returns that check if the target values and view match the current state in the reducer. When modifying reducers that rely on reference equality checks, always ensure actions that don't change state return the exact original state reference.
+
+## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
+**Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
+**Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
