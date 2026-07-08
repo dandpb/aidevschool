@@ -36,7 +36,7 @@ export function renderRoadmap(state: AppState): string {
               <article class="project-card">
                 <div class="project-meta">
                   <span>${escapeHtml(project.id.toUpperCase())}</span>
-                  <span>Nível ${project.level}</span>
+                  <span>Nível ${escapeHtml(project.level)}</span>
                 </div>
                 <h3>${escapeHtml(project.title)}</h3>
                 <p>${escapeHtml(project.learningGoal)}</p>
