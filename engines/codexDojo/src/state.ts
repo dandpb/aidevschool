@@ -87,8 +87,10 @@ export function reduceState(state: AppState, action: AppAction): AppState {
       if (state.projectFilter === action.filter && state.view === "roadmap") return state
       return { ...state, projectFilter: action.filter, view: "roadmap" }
     case "selectLinuxApp":
+      if (state.selectedLinuxAppId === action.appId && state.view === "linuxLab") return state
       return { ...state, selectedLinuxAppId: action.appId, view: "linuxLab" }
     case "setLinuxAppCategoryFilter":
+      if (state.linuxAppCategoryFilter === action.filter && state.view === "linuxLab") return state
       return { ...state, linuxAppCategoryFilter: action.filter, view: "linuxLab" }
     case "runLinuxLab":
       return { ...state, linuxLabRunCount: state.linuxLabRunCount + 1, view: "linuxLab" }
