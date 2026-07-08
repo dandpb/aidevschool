@@ -15,13 +15,13 @@ aidevschool/                 # ECOSSISTEMA
 │   ├── minimaxDojo/              # tutoring-core (14 agentes; spec layer + state machine Python testada)
 │   ├── codexDojo/                # app user-facing (pnpm; dashboard read-only do learner state)
 │   ├── pixelDojo/                # teaching-game engine (arcade 8-bit emite evidência; verifier/ Python faz o gate → units_log)
-│   ├── voxelDojo/                # simulações 3D didáticas (piloto game-10-hash-ring, em construção)
+│   ├── voxelDojo/                # simulações 3D didáticas (16 games implementados; piloto game-10-hash-ring)
 │   └── openclaw/                 # runner contínuo file-based + Hermes bus (modo simulate)
 ├── docs/design/polyglot-arena/   # design archive (proposal-stage, demoted de engines/polyglotEvolutionArena/ em 2026-06-21)
 ├── curriculum/              # COMPARTILHADO: desafios + catalog.md
 ├── learner/                 # COMPARTILHADO: jornada do aprendiz (state, profile, pitfalls, journal, pipeline_status)
 ├── docs/PROMPTS/            # metas, ideias, seeds do ecossistema
-└── .mavis/ .opencode/ .Codex/ .playwright-mcp/   # tooling de plataforma
+└── .mavis/ .opencode/ .codex/ .playwright-mcp/   # tooling de plataforma
 ```
 
 Princípio: **1 aprendiz, 1 currículo, vários motores.** `curriculum/` e `learner/` vivem só na raiz

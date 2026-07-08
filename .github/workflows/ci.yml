@@ -6,8 +6,11 @@ name: CI
 # blocking; the polyglot curriculum jobs are informational until D13 (parity
 # vectors + stub completion) lands.
 
+# Push runs only on main (agent-generated feature branches were burning the full
+# matrix on every push — TECH_DEBT_AUDIT_2026-07-08 item 15); PRs still run everywhere.
 on:
   push:
+    branches: [main]
   pull_request:
 
 jobs:

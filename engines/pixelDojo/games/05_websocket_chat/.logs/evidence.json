@@ -26,5 +26,5 @@
   "mechanic": "Switch-Fabric Hub (3D)",
   "accepted_signal": "1 inbound -> N room-member deliveries, no leaks, dead peers pruned",
   "rejected_trap": "wrong-room fan-out (leak) or dead peer left on the wire (waste)",
-  "ts": "2026-07-06T20:52:58.333Z"
+  "ts": "2026-07-07T10:27:15.165Z"
 }

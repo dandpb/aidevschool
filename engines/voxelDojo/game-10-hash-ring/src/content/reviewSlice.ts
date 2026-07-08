@@ -2,12 +2,18 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for voxelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// Generated: 2026-07-05T21:27:04.479720Z
+// Generated: 2026-07-08T09:47:30.335562Z
 
 import type { ReviewSlice } from "./types"
 
 export const reviewSlice: ReviewSlice = {
   nextReviews: [
+    {
+      unitId: "U0-sonda-rate-limiter-robustness",
+      title: "agentic orchestration for token-bucket robustness",
+      dueIn: "today",
+      reason: "due",
+    },
     {
       unitId: "P-001",
       title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
@@ -16,9 +22,9 @@ export const reviewSlice: ReviewSlice = {
     },
   ],
   streak: {
-    current: 1,
-    longest: 1,
-    lastGateDate: "2026-07-05",
+    current: 0,
+    longest: 0,
+    lastGateDate: null,
     freezesEquipped: 2,
     freezesMax: 2,
   },

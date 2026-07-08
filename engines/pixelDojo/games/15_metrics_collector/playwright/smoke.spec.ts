@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { expect, test } from "@playwright/test"
-import { type BucketLe } from "../src/game/evidence"
+import type { BucketLe } from "../src/game/evidence"
 
 /**
  * Browser smoke contract for the Metrics Observatory. Boots WebGL, drives the

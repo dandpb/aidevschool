@@ -77,6 +77,7 @@ __pycache__/
 graphify-out/*.html
 graphify-out/*.md
 graphify-out/*.json
+graphify-out/gen_chunk_*.py
 # Machine-specific codegraph symlink (absolute path; regenerated per machine).
 .codegraph
 # One-off committed binary snapshot — regenerate from the live dashboard instead.
@@ -103,3 +104,14 @@ engines/pixelDojo/pixel-quest/shots/
 
 # Playwright test-results artifacts (regenerable: produced by `pnpm run smoke`).
 **/test-results/
+
+# --- Added 2026-07-08 (docs/TECH_DEBT_AUDIT_2026-07-08.md, items 2-3) ---
+# Smoke screenshots are regenerable; evidence files (evidence.json/.ndjson,
+# live-evidence*) stay tracked — they are the learning-gate audit trail.
+engines/voxelDojo/game-*/.logs/*.png
+engines/pixelDojo/games/*/shots/*.png
+# Compiled Go binaries (build output; rebuild with `go build`).
+curriculum/02_key_value_store/go-impl/kvstore
+curriculum/07_rest_api_auth/go-impl/server
+curriculum/08_event_driven_order_system/go-impl/event-driven-order-go
+curriculum/09_plugin_system/go-impl/plugin-system-go

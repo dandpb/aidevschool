@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-06
-**Commit:** 2ccd351
+**Generated:** 2026-07-07
+**Commit:** fe9ad7f
 **Branch:** main
 
 ## OVERVIEW
@@ -41,7 +41,8 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Share a mixed-audience overview | `docs/AI_DevSchool_Overview.docx` | Standalone ecosystem overview for handoffs or non-implementers. |
 | Run shared Python verification | `Makefile`, `pyproject.toml` | Use repo-root `make install`, `make test`, `make test-core`, and `make test-substrate`. |
 | Validate the dashboard | `engines/codexDojo/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`. |
-| Validate the game | `engines/pixelDojo/pixel-quest/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`, `pnpm run smoke`. |
+| Validate the game | `engines/pixelDojo/pixel-quest/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run typecheck`, `pnpm run build`, `pnpm run smoke`. |
+| Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `.loops/threejs-dojo-coverage/` | Read the loop memory first; canonical batch artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/`. |
 | Validate the 3D game | `engines/voxelDojo/game-10-hash-ring/` | Run `pnpm run test`, `pnpm run typecheck`, `pnpm run build`, `pnpm run smoke`. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/` | Keep `MANIFEST.md` mapped to concrete files. |
 | Work on the tutor core | `engines/minimaxDojo/` | Start with `INDEX.md`, `README.md`, `docs/`, `prompts/`, then `core/` and `tests/` for the Python reference implementation and contract tests. |
@@ -102,7 +103,7 @@ cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
 
 # 2D teaching game
 cd engines/pixelDojo/pixel-quest && pnpm install && pnpm run dev
-cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
+cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run smoke
 
 # 3D teaching game
 cd engines/voxelDojo/game-10-hash-ring && pnpm install && pnpm run dev
