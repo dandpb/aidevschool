@@ -17,7 +17,7 @@ A arquitetura é sólida e os componentes estão maduros individualmente, mas **
 | Engine | Papel | Estado | Loop completo hoje? |
 | --- | --- | --- | --- |
 | **miniMaxEvolutionEngine** | Motor Claude Code, loop 5 fases | 25+ agentes, 18 comandos, skill agora-continuum, symlinks OK | Não — pipeline parado em `impl-done` desde ciclo 2026-06-04, aguardando `reviewer` (`learner/pipeline_status.md`) |
-| **minimaxDojo** | Camada de protocolo/spec (14 agentes) | State machine Python implementada e testada (`core/state_machine/`, testes em `tests/`) | Não por design — spec layer; `core/scheduler/` e `src/` são stubs |
+| **minimaxDojo** | Camada de protocolo/spec (14 agentes) | State machine Python implementada e testada (`core/state_machine/`, testes em `tests/`) | Não por design — spec layer; prompts + cron_registry for scheduler |
 | **codexDojo** | Dashboard read-only | Completo: 9 arquivos de teste, build OK, snapshot gerado 2026-07-02 | N/A — superfície de leitura, por contrato não escreve estado |
 | **pixelDojo** | Jogo arcade que emite evidência | Projetos 01–04 jogáveis; 05–18 sem `encounterKind` (só títulos em `curriculumPack.ts`); evidência fica em `window.__pixelQuestEvidence` | Não — **verificador inexistente**; evidência não persiste em `learner/` (último registro: `.logs/last_run_evidence.json`, 2026-06-09) |
 | **openclaw** | Runner contínuo file-based + Hermes bus | `runner/`, `hermes/bus.py`, testes presentes; modo simulate | Não verificado — sem trace de execução real |

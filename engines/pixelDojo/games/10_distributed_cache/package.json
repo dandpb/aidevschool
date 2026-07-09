@@ -7,7 +7,7 @@
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "smoke": "playwright test",
-    "lint": "biome check src playwright"
+    "lint": "biome check --config-path=../.. src playwright"
   },
   "dependencies": {
     "three": "~0.182.0"

@@ -133,7 +133,7 @@ The **`⟨config: path⟩` marker rule:** prompts and docs reference thresholds 
 | `AGENTS.md` | Conventions: where to look, the `⟨config: path⟩` rule, anti-patterns. |
 | `config/learner.yaml` | The numeric-threshold seam (profile + gates + cron + models). |
 | `docs/00_architecture.md` … `07_governance_sla.md` | 8 canonical spec docs + `QUICK_START.md`. |
-| `agents/01_maestro/` … `14_seneca/` | One README index per agent (not the prompt body). |
+| `agents/README.md` | Roster only; prompts in `prompts/per_agent/`. |
 | `prompts/bootstrap/` | `00_system.md` + `01_first_cycle.md` — paste to instantiate the team. |
 | `prompts/per_agent/*.md` | The 14 canonical system prompts (the authoritative prompt bodies). |
 | `prompts/cycles/cycle_report.md` | Learner notification template. |
@@ -155,7 +155,7 @@ UPPERCASE Portuguese (`APRESENTANDO`, …); the Mavis view uses lowercase (`apre
 
 `core/{state_machine,gates,memory}/` ship a deterministic **reference implementation** in Python
 (`__init__.py`, 135 / 74 / 128 lines) covered by ~813 lines of contract tests in `tests/`. Only
-`core/scheduler/`, `src/`, `exercises/`, and `reports/` are genuinely README-only. (The
+`exercises/` and `reports/` are README-only. (The
 `core/`, `tests/`, and `src/` READMEs were corrected to reflect this — earlier versions called the
 code "reserved.")
 

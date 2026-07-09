@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "lint": "biome check src playwright",
+    "lint": "biome check --config-path=.. src playwright",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",

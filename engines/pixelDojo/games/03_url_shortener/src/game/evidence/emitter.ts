@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../../shared/evidence"
 // Slug Launcher evidence emitter (producer side of the gate contract).
 //
 // Schema (one JSON object per EVIDENCE console line):
@@ -109,9 +110,5 @@ export function validateEvidenceRecord(record: unknown): SlugLauncherEvidenceRec
 
 export function emitEvidence(input: EvidenceInput): SlugLauncherEvidenceRecord {
   const record = validateEvidenceRecord(buildSlugLauncherEvidence(input))
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

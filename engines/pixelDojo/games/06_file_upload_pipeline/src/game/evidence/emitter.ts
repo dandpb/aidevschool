@@ -1,6 +1,7 @@
 import type { WaveMetrics } from "../logic"
 import { validateEvidenceRecord } from "./evidence"
 import type { ByteStreamEvidenceRecord } from "./types"
+import { dualEmit } from "../../../../../shared/evidence"
 
 // Byte Stream Reactor evidence emitter (input for engines/pixelDojo/verifier).
 //
@@ -70,10 +71,5 @@ export function buildEvidenceRecord(input: BuildEvidenceInput): ByteStreamEviden
 // appends it to the append-only window channel, sets the single-record slot,
 // and prints the legacy `EVIDENCE <json>` console line for stdout scrapers.
 export function emitEvidence(record: ByteStreamEvidenceRecord): ByteStreamEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__byteStreamEvidence = [...(window.__byteStreamEvidence ?? []), record]
-    window.__gameEvidence = record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

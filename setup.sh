@@ -5,7 +5,7 @@ set -e
 cd "$(dirname "$0")"
 
 echo "Setting up Python environment..."
-python3 -m pip install -r learner/substrate/requirements.txt
+python3 -m pip install -e ".[dev]"
 python3 -m learner.substrate
 
 echo "Setting up pnpm..."

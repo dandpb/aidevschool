@@ -1,14 +1,13 @@
 {
   "name": "04_concurrent_task_queue",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 4404 --strictPort",
     "build": "tsc --noEmit && vite build",
     "test": "vitest run",
     "smoke": "playwright test",
-    "lint": "biome check src playwright"
+    "lint": "biome check --config-path=../.. src playwright"
   },
   "dependencies": {
     "three": "~0.182.0"
@@ -22,9 +21,5 @@
     "vite": "^7.2.7",
     "vitest": "^4.0.15"
   },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
-  }
+  "version": "0.1.0"
 }

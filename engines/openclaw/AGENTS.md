@@ -2,37 +2,25 @@
 
 ## Purpose
 
-OpenClaw is the file-based continuous-runner layer for the AI DevSchool ecosystem. It implements the Hermes pub/sub protocol and a scheduler that drives the 5-phase learning cycle without hidden chat state.
+File-based **checklist runner** for the 5-phase cycle (simulate mode). Advances
+`learner/pipeline_status.yaml` when required artifacts exist and pass size gates.
 
-> **ADR-0002:** OpenClaw is a **tracer-bullet continuous runner**, not the primary
-> owner of the interactive polyglot cycle (that remains miniMaxEvolutionEngine).
-> Adapters are simulate-grade; empirical mastery stays on the teaching-game
-> verifier + substrate path. See `docs/design/adr/0002-openclaw-role.md`.
+> **ADR-0002:** Tracer bullet, not the interactive cycle owner (miniMaxEvolutionEngine).
+> Empirical mastery stays on teaching-game verifier + substrate.
 
 ## Where to Look
 
-| Task | Location | Notes |
-| --- | --- | --- |
-| Hermes event bus | `engines/openclaw/hermes/bus.py` | File-based topics, idempotency, conflicts. |
-| Topic schemas | `engines/openclaw/hermes/topics.py` | Canonical `dojo.*` topic names and payloads. |
-| Scheduler | `engines/openclaw/runner/scheduler.py` | Reads state, dispatches adapters, advances status. |
-| Structured pipeline status | `engines/openclaw/runner/pipeline_status.py` | YAML is machine seam; Markdown is human notes only. |
-| Agent adapters | `engines/openclaw/runner/adapters/` | One adapter per role; simulation mode by default. |
-| CLI | `engines/openclaw/__main__.py` | `python3 -m engines.openclaw --project 01_rate_limiter --mode simulate`. |
-| Tests | `engines/openclaw/tests/` | pytest coverage for bus, scheduler, adapters. |
-
-## Conventions
-
-- Filesystem is the source of truth. All handoffs are events in `.mavis/hermes/`.
-- Events are idempotent by `(topic, unit_id, content_hash)`.
-- The verifier adapter never shares state with a producer adapter.
-- Simulation mode validates artifacts; real AI dispatch is an optional override.
-- Keep the tracer bullet small: no networking, no background daemon, no AI model calls.
-- Machine-readable phase fields: `learner/pipeline_status.yaml` only (runner never rewrites MD).
+| Task | Location |
+| --- | --- |
+| Checklist | `runner/checklist.py` |
+| Scheduler | `runner/scheduler.py` |
+| Pipeline status | `runner/pipeline_status.py` |
+| CLI | `__main__.py` |
+| Tests | `tests/` |
 
 ## Commands
 
 ```bash
-python3 -m engines.openclaw --project 01_rate_limiter --mode simulate
+python3 -m engines.openclaw --project curriculum/01_rate_limiter --mode simulate
 python3 -m pytest engines/openclaw/tests/
 ```

@@ -1,5 +1,6 @@
 import { validateEvidenceRecord } from "./evidence"
 import type { PixelQuestEvidenceMetrics, PixelQuestEvidenceRecord } from "./types"
+import { dualEmit } from "../../../../shared/evidence"
 
 // PixelQuest evidence contract (input for engines/pixelDojo/verifier).
 //
@@ -80,9 +81,5 @@ export function buildEncounterEvidence(
 // `EVIDENCE <json>` console line for stdout-scraping harnesses.
 export function emitEvidence(record: PixelQuestEvidenceRecord): PixelQuestEvidenceRecord {
   const validEvidence = validateEvidenceRecord(record)
-  if (typeof window !== "undefined") {
-    window.__pixelQuestEvidence = [...(window.__pixelQuestEvidence ?? []), validEvidence]
-  }
-  console.log(`EVIDENCE ${JSON.stringify(validEvidence)}`)
-  return validEvidence
+  return dualEmit(validEvidence, "pixelquest")
 }

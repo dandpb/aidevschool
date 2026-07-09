@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence emitter for the Log Pier (16_mini_message_queue) game.
 //
 // Producer-only: the game emits a raw record; a separate verifier owns any
@@ -161,11 +162,5 @@ declare global {
 
 /** Validate then emit: console + in-page channels. Returns the record. */
 export function emitEvidence(record: MessageQueueEvidenceRecord): MessageQueueEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__messageQueueEvidence = window.__messageQueueEvidence ?? []
-    window.__messageQueueEvidence.push(record)
-    window.__gameEvidence = record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

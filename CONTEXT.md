@@ -14,7 +14,7 @@ Substitution marker used in Markdown prompts and docs. It resolves to the scalar
 
 ## Canonical agent prompt
 
-`engines/minimaxDojo/prompts/per_agent/<name>.md` is the single system prompt for an agent. `engines/minimaxDojo/agents/<id>/README.md` is only a thin index that links to it.
+`engines/minimaxDojo/prompts/per_agent/<name>.md` is the single system prompt for an agent. Roster: `engines/minimaxDojo/agents/README.md`.
 
 ## Empirical gate
 

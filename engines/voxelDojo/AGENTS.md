@@ -9,15 +9,17 @@ pilot is `game-10-hash-ring/`.
 ## STRUCTURE
 
 ```text
-voxelDojo/
-├── AGENTS.md            # this file — engine-level rules
-├── CLAUDE.md            # thin pointer for Claude Code contexts
-├── README.md            # big idea + 18-project seed map
-├── PLAN.md              # game-definition template + HASH RING pilot spec
-├── docs/                # ARCHITECTURE.md, GAP_ANALYSIS.md, per-game design notes
-├── game-10-hash-ring/   # pilot Vite app for Project 10 consistent hashing
-└── game-<NN>-<slug>/    # future one-concept Vite apps
+voxelDojo/                 # pnpm workspace (packageManager pnpm@9.15.9)
+├── package.json           # workspace root scripts + shared devDeps
+├── pnpm-workspace.yaml    # packages: game-*
+├── biome.jsonc            # shared lint/format
+├── tsconfig.base.json     # extended by each game
+├── AGENTS.md
+├── game-10-hash-ring/     # pilot Vite app
+└── game-<NN>-<slug>/
 ```
+
+Install once from this directory: `pnpm install`. Per-game: `pnpm --filter game-10-hash-ring test`.
 
 ## WHERE TO LOOK
 

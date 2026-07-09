@@ -1,10 +1,10 @@
 # Domain Docs
 
-How the engineering skills should consume this repo's domain documentation when exploring the codebase. This repo is **multi-context**: it has a `CONTEXT-MAP.md` at the root that points at one `CONTEXT.md` per context.
+How the engineering skills should consume this repo's domain documentation when exploring the codebase. Start with root `CONTEXT.md`; create per-engine `CONTEXT.md` only when a skill crystallizes terms.
 
 ## Before exploring, read these
 
-1. **`CONTEXT-MAP.md`** at the repo root — it lists the contexts in this repo and the path to each context's `CONTEXT.md`.
+1. **`CONTEXT.md`** at the repo root — domain language for the active context.
 2. **`CONTEXT.md`** for the context you're about to work in (e.g. `engines/minimaxDojo/CONTEXT.md`).
 3. **`docs/adr/`** — read ADRs that touch the area you're about to work in. In multi-context repos, also check `<context>/docs/adr/` for context-scoped decisions.
 4. The **root `CONTEXT.md`** if your work crosses contexts.
@@ -15,7 +15,7 @@ If any of these files don't exist for the context you're exploring, **proceed si
 
 ```
 /
-├── CONTEXT-MAP.md                ← multi-context index
+├── CONTEXT.md                    ← domain language
 ├── CONTEXT.md                    ← root / ecosystem context (legacy — see note)
 ├── docs/adr/                     ← system-wide decisions
 ├── engines/

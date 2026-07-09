@@ -32,7 +32,7 @@ learner/
     ├── scheduling.py        # FSRS spaced repetition + streak/freeze + CURR
     ├── dashboard_snapshot.py# derives codexDojo learner.ts + pixelDojo reviewSlice.ts
     ├── ts_render.py         # TypeScript renderers
-    ├── requirements.txt     # pyyaml>=6.0, fsrs>=6.0
+    # deps: repo-root pyproject.toml (pyyaml + fsrs)
     ├── adapters/mavis.py        # → .mavis/learning_state.yaml
     ├── adapters/whiteboard.py   # → minimaxDojo/whiteboard/{profile.yaml, learner_profile.md, trail.md}
     └── tests/               # substrate tests
@@ -183,7 +183,7 @@ Other scheduling logic:
 
 ```bash
 # install deps (pyyaml>=6.0 + fsrs>=6.0)
-python3 -m pip install -r learner/substrate/requirements.txt
+python3 -m pip install -e ".[dev]"   # from repo root
 # regenerate ALL derived views from canonical state
 python3 -m learner.substrate
 # run substrate tests

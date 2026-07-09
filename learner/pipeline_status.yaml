@@ -1,5 +1,5 @@
 cycle_id: 2026-07-06-02-key-value-store
-current_project: curriculum/02_key_value_store
+current_project: curriculum/01_rate_limiter
 complexity_level: 1
 phase: cycle-complete
 awaiting: next-curator

@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence emitter for the Metrics Observatory game.
 //
 // Producer-only: the game emits a raw record; a separate verifier (the
@@ -191,11 +192,5 @@ declare global {
 
 /** Validate then emit: console + in-page channels. Returns the record. */
 export function emitEvidence(record: MetricsEvidenceRecord): MetricsEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__metricsObservatoryEvidence = window.__metricsObservatoryEvidence ?? []
-    window.__metricsObservatoryEvidence.push(record)
-    window.__gameEvidence = record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

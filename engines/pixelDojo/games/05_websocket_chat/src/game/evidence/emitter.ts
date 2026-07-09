@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../../shared/evidence"
 // Evidence emission for 05_websocket_chat.
 //
 // The game emits evidence only; it never writes learner state. A separate
@@ -61,9 +62,5 @@ export function buildEvidence(state: GameState, now: Date): EvidenceRecord {
 }
 
 export function emitEvidence(record: EvidenceRecord): EvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

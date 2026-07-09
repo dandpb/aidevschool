@@ -40,7 +40,7 @@
 ## COMMANDS
 
 ```bash
-python3 -m pip install -r learner/substrate/requirements.txt
+python3 -m pip install -e ".[dev]"   # from repo root
 python3 -m learner.substrate
 python3 -m unittest discover -s learner/substrate/tests
 ```

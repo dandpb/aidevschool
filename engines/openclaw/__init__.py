@@ -1,6 +1,5 @@
-"""OpenClaw — file-based continuous runner for the AI DevSchool ecosystem."""
+"""OpenClaw — checklist runner for the AI DevSchool 5-phase cycle."""
 
-from engines.openclaw.hermes.bus import HermesBus
 from engines.openclaw.runner.scheduler import Scheduler
 
-__all__ = ["HermesBus", "Scheduler"]
+__all__ = ["Scheduler"]

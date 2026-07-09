@@ -77,7 +77,7 @@ from it. Always edit the canonical YAML first, then sync.
 
 ```bash
 # from the repo root
-python3 -m pip install -r learner/substrate/requirements.txt   # pyyaml + fsrs (first time only)
+python3 -m pip install -e ".[dev]"                             # pyyaml + fsrs + pytest
 python3 -m learner.substrate                                   # regenerate all derived views
 ```
 
@@ -164,4 +164,4 @@ Most `.X/` directories at the root are platform/session state, not source:
 - `.codegraph` / `graphify-out/` — generated code-graph references, not source.
 
 Durable shared state belongs in `learner/`, `curriculum/`, or `.mavis/`. Document any new `.X/`
-root in `CONTEXT-MAP.md` first.
+root in `CONTEXT.md` first.

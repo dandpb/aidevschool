@@ -1,26 +1,7 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": false,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "forceConsistentCasingInFileNames": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
-    "types": ["vite/client", "node"]
-  },
-  "include": ["src", "playwright"]
+  "extends": "../../tsconfig.base.json",
+  "include": [
+    "src",
+    "playwright"
+  ]
 }

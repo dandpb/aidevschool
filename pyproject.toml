@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "aidevschool"
 version = "0.1.0"
 description = "AI DevSchool ecosystem — shared Python substrate, tutor core, and learner pipeline."
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 # Runtime dependency the test suites and substrate actually import (was previously
 # undeclared — see TECH_DEBT_AUDIT_2026-06-28.md, D12).
 dependencies = [

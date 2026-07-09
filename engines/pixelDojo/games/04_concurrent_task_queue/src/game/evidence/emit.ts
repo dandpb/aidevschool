@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../../shared/evidence"
 // Evidence emitter — TASK FORGE. The game emits evidence only; it never
 // writes learner state. The verifier owns the gate.
 //
@@ -103,10 +104,5 @@ export function emitEvidence(input: EmitInput): EvidenceRecord {
       verifier_required: true,
     },
   }
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // Stdout-scrape channel — the smoke spec greps for /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

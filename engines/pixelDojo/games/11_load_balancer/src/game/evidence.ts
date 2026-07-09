@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence record + emitter for the Traffic Forge game (project 11_load_balancer).
 //
 // The game emits evidence ONLY. It never writes learner state, never touches
@@ -139,10 +140,5 @@ export function buildEvidence(metrics: Metrics, now: Date): LoadBalancerEvidence
 }
 
 export function emitEvidence(record: LoadBalancerEvidenceRecord): LoadBalancerEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // The smoke spec matches this line on /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

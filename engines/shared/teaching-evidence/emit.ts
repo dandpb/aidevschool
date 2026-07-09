@@ -80,7 +80,32 @@ function pushWindow(key: WindowKey, record: EvidenceRecord): void {
   window.__gameEvidence = [...(Array.isArray(prev) ? prev : prev ? [prev] : []), record]
 }
 
-/** Dual-emit one raw evidence record. Never writes learner state. */
+/**
+ * Dual-channel emit for any record shape.
+ * Console line scraped by Playwright; window channel is in-page.
+ * Never writes learner state.
+ */
+export function dualEmit<T extends object>(
+  record: T,
+  channel: "game" | "pixelquest" | "voxeldojo" = "game",
+): T {
+  if (typeof window !== "undefined") {
+    const w = window as unknown as Record<string, unknown>
+    if (channel === "game") {
+      w["__gameEvidence"] = record
+    } else if (channel === "pixelquest") {
+      const prev = w["__pixelQuestEvidence"]
+      w["__pixelQuestEvidence"] = [...(Array.isArray(prev) ? prev : []), record]
+    } else {
+      const prev = w["__voxelDojoEvidence"]
+      w["__voxelDojoEvidence"] = [...(Array.isArray(prev) ? prev : []), record]
+    }
+  }
+  console.log(`EVIDENCE ${JSON.stringify(record)}`)
+  return record
+}
+
+/** Dual-emit one typed teaching-game evidence record. Never writes learner state. */
 export function emitEvidence(opts: EmitOptions): EvidenceRecord {
   const { meta, pass, metrics } = opts
   const now = opts.now ?? (() => new Date())
@@ -105,7 +130,6 @@ export function emitEvidence(opts: EmitOptions): EvidenceRecord {
     curriculum_context: meta.curriculum,
   }
 
-  pushWindow(windowKeyFor(meta.source, meta.windowKey), record)
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  const channel = meta.source === "pixelquest" ? "pixelquest" : "voxeldojo"
+  return dualEmit(record, meta.windowKey === "__gameEvidence" ? "game" : channel)
 }

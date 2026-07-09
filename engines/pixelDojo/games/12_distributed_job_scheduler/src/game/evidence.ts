@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence record + emitter for the Raft Ring game.
 //
 // The game emits evidence ONLY. It never writes learner state, never touches
@@ -126,10 +127,5 @@ export function buildEvidence(metrics: Metrics, now: Date): RaftRingEvidenceReco
 }
 
 export function emitEvidence(record: RaftRingEvidenceRecord): RaftRingEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // The smoke spec matches this line on /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence record + emitter for the KV Warehouse game.
 //
 // The game emits evidence ONLY. It never writes learner state, never touches
@@ -102,10 +103,5 @@ export function buildEvidence(metrics: KvMetrics, now: Date): KvEvidenceRecord {
 }
 
 export function emitEvidence(record: KvEvidenceRecord): KvEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // The smoke spec matches this line on /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

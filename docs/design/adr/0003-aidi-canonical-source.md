@@ -18,9 +18,8 @@ abaixo.)
 
 Isso viola F2 diretamente — o caso exato que o princípio existe para eliminar — com um ângulo de
 F3/F7: o dashboard apresenta uma trendline sintética como histórico medido, e o `profile.yaml`
-declara derivação de uma fonte que não tem o campo. **Por que agora:** o
-`TECH_DEBT_AUDIT_2026-07-08.md` (item #5, Priority 24) registrou a divergência como aberta, e a
-verificação em HEAD neste run a confirmou viva e mais nítida (3 valores distintos + seed, não 2).
+declara derivação de uma fonte que não tem o campo. (Mais nítida em HEAD do que no audit: 3 valores
+distintos + seed, não 2.)
 
 ## Opções
 
@@ -35,16 +34,13 @@ verificação em HEAD neste run a confirmou viva e mais nítida (3 valores disti
 **Opção A.** `learner/learning_state.yaml` passa a deter o AIDI canônico como um bloco
 `learner.aidi` (`current`, `threshold_amber`, `threshold_red`, `measurement_source`). O dashboard
 já lê esse caminho — só falta o campo existir; o adapter do whiteboard passa a derivar do campo em
-vez de hardcodear; e a trendline sintética do dashboard deixa de ser apresentada como medição (o
-`current` carrega um `measurement_source` honesto; `trend` fica vazia salvo pontos reais do
-journal). O seed congelado e o `event_log` deixam de ser fonte — passam a histórico. O valor
+vez de hardcodear; e a trendline sintética do dashboard deixa de ser apresentada como medição
+(`measurement_source` honesto no `current`). O seed congelado e o `event_log` deixam de ser fonte — passam a histórico. O valor
 `current` inicial é auto-reportado pelo aprendiz no journal, não um número inventado. A Opção C
 (ocultar) foi rejeitada: não resolve F2 — o próximo consumidor de AIDI recria a divergência.
 
-A Opção B (computado por evento) é o destino de longo prazo — alinha-se ao significado da métrica
-("0 = nenhuma IA, 1 = cada tecla") — mas exige um pipeline de gravação de eventos que não existe
-ainda. F5 proíbe construir o pipeline antes de a métrica ter um dono canônico; então B fica como
-**revisitar-quando** abaixo, não como decisão agora.
+A Opção B (computado por evento) é o destino de longo prazo, mas F5 proíbe o pipeline de eventos
+antes do dono canônico — ver **revisitar-quando** abaixo.
 
 ## Consequências
 
@@ -69,9 +65,8 @@ ainda. F5 proíbe construir o pipeline antes de a métrica ter um dono canônico
 
 ## Evidência
 
-- Audit item #5 (`docs/TECH_DEBT_AUDIT_2026-07-08.md:19`) já documentava o desacordo 0.50/0.34 e o
-  campo canônico ausente; a verificação em HEAD (este run) confirmou esses e acrescentou o seed 0.0
-  e o seed 0.50 do event-log. File:line exatos:
+- Audit item #5 (`docs/TECH_DEBT_AUDIT_2026-07-08.md:19`) já tinha o desacordo; este run confirmou
+  e acrescentou os seeds 0.0 e 0.50. File:line:
 - `learner/learning_state.yaml:3-20` — bloco `learner:` sem campo `aidi` (fonte canônica declarada,
   via `engines/codexDojo/ecosystem/MANIFEST.md` seam "Learner substrate").
 - `learner/substrate/dashboard_snapshot.py:201` (`aidi_cfg = learner.get("aidi", {})`),
@@ -86,4 +81,3 @@ ainda. F5 proíbe construir o pipeline antes de a métrica ter um dono canônico
   seed congelado, não regenerado pelo sync).
 - `engines/minimaxDojo/whiteboard/event_log/events-2025-W00.ndjson:2` (`aidi:0.50`).
 - `docs/FUNDAMENTOS.md` F2 (princípio), F3/F7 (ângulos de afirmação-sem-evidência e falha visível).
-- `docs/TECH_DEBT_AUDIT_2026-07-08.md` item #5 (Priority 24, status open — confirmado vivo em HEAD).

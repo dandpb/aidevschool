@@ -71,11 +71,11 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 | --- | --- | --- |
 | Ágora wrapper subagents (14) | `engines/miniMaxEvolutionEngine/.claude/agents/{maestro,cronos,sonda,cartografo,mestre-conteudo,socrates,mneme,prometor,critico,galileu,atena,mnemosyne,ouroboros,seneca}.md` | ⚠️ one of two platforms |
 | Skill wrapper | `engines/miniMaxEvolutionEngine/.claude/skills/agora-continuum/` | ✅ aligned |
-| Canonical agent specs (14 dirs) | `engines/minimaxDojo/agents/01_maestro/` … `14_seneca/` | ✅ aligned (documented canonical spec layer) |
+| Canonical agent specs | `engines/minimaxDojo/prompts/per_agent/` + `agents/README.md` roster | ✅ aligned |
 | Per-agent prompts | `engines/minimaxDojo/prompts/per_agent/` (14 files, all confirmed present) | ✅ aligned |
 | Bootstrap/cycle prompts | `engines/minimaxDojo/prompts/bootstrap/`, `prompts/cycles/` | ✅ aligned |
 | Numeric threshold seam (duplicate) | `engines/minimaxDojo/config/learner.yaml` | ⚠️ diverges from `learner/learning_state.yaml` (0.65 vs 0.60 mutation) |
-| Scheduler | `engines/minimaxDojo/core/scheduler/` | ⚠️ unclear if Cronos/Mneme-specific or generic — verify before moving |
+| Scheduler | `engines/minimaxDojo/prompts/per_agent/cronos.md` + `whiteboard/cron_registry.yaml` | ✅ |
 | Whiteboard (derived view) | `engines/minimaxDojo/whiteboard/` | ✅ aligned (correctly marked `derived_from`) |
 | Governance/ADR records | `docs/design/adr/` | ✅ aligned (shared, neutral location — this one's done right) |
 | Domain spec | `docs/design/allium/minimax-agora-continuum.allium` | ✅ aligned |
@@ -219,7 +219,7 @@ Consolidadas") — update both together.
    produced the "17 vs 25 subagents" mismatch. Either make `prometor.md` a one-line pointer to
    `verifier.md`, or merge them.
 
-10. **Confirm `engines/minimaxDojo/core/scheduler/`'s domain before touching it.**
+10. ~~Confirm `core/scheduler/` domain~~ — removed; Cronos lives in prompt + cron_registry.
     Not yet clearly TutoringAgentContext-specific (Cronos/Mneme) vs. generic scheduling utility —
     read it before deciding whether it needs to move; listed here as a follow-up, not an action.
 

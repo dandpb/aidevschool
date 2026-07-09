@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Timeline Tower — evidence emitter (produces the contract record on win).
 //
 // Durable channel: the Playwright smoke captures the in-page
@@ -166,10 +167,5 @@ export function validateEvidenceRecord(
 // channel, and prints the `EVIDENCE <json>` line for stdout-scraping harnesses.
 export function emitEvidence(record: TimelineTowerEvidenceRecord): TimelineTowerEvidenceRecord {
   const valid = validateEvidenceRecord(record)
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = valid
-    window.__timelineTowerEvidence = [...(window.__timelineTowerEvidence ?? []), valid]
-  }
-  console.log(`EVIDENCE ${JSON.stringify(valid)}`)
-  return valid
+  return dualEmit(valid, "game")
 }

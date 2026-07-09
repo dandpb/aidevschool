@@ -9,11 +9,16 @@ attempts and emits evidence for a separate verifier.
 ## STRUCTURE
 
 ```text
-pixelDojo/
-├── AGENTS.md          # engine-level rules
-├── CLAUDE.md          # thin pointer for Claude Code contexts
-└── pixel-quest/       # canonical runnable game app
+pixelDojo/                 # pnpm workspace (packageManager pnpm@9.15.9)
+├── package.json           # workspace root
+├── pnpm-workspace.yaml    # pixel-quest + games/*
+├── biome.jsonc / tsconfig.base.json
+├── shared/evidence.ts     # dualEmit for all games
+├── pixel-quest/           # canonical multi-encounter app
+└── games/*                # one Vite app per curriculum project
 ```
+
+Install once: `cd engines/pixelDojo && pnpm install`.
 
 ## WHERE TO LOOK
 

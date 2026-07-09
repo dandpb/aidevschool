@@ -24,13 +24,6 @@ export type LinuxApp = {
   readonly exercise: string
 }
 
-export class LinuxAppCatalogError extends Error {
-  constructor() {
-    super("Linux Lab needs at least one app.")
-    this.name = "LinuxAppCatalogError"
-  }
-}
-
 export const linuxAppCategoryLabels: Readonly<Record<LinuxAppCategoryFilter, string>> = {
   all: "All apps",
   system: "System",
@@ -707,12 +700,11 @@ export function getLinuxApp(id: string): LinuxApp {
     return app
   }
 
-  const fallback = linuxApps[0]
-  if (fallback === undefined) {
-    throw new LinuxAppCatalogError()
+  // ponytail: catalog is a static const; empty only if someone deletes the array
+  if (linuxApps[0] === undefined) {
+    throw new Error("Linux Lab needs at least one app.")
   }
-
-  return fallback
+  return linuxApps[0]
 }
 
 export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {

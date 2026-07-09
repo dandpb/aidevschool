@@ -128,8 +128,8 @@ CLEAN_INITIAL_STATE = {
 }
 
 def mock_load_canonical(path="learner/learning_state.yaml"):
-    p = str(path)
-    if "learning_state.yaml" in p:
+    p = Path(path)
+    if not p.is_absolute() and str(p) == "learner/learning_state.yaml":
         return copy.deepcopy(CLEAN_INITIAL_STATE)
     return _original_load_canonical(path)
 
@@ -805,8 +805,11 @@ class TestScheduling(unittest.TestCase):
             {"date": date(2026, 6, 5), "event": "gate", "rating": "good"},
         ]
         card = build_card_from_reviews(reviews)
-        self.assertIsNotNone(card)
+        if card is None:
+            self.fail("expected gate reviews to rebuild a card")
         self.assertIsNotNone(card.due)
+        if card.stability is None:
+            self.fail("expected gate reviews to rebuild stability")
         self.assertGreater(card.stability, 0)
 
 

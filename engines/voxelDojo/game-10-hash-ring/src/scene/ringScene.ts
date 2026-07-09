@@ -2,7 +2,7 @@ import * as THREE from "three"
 import type { GameState } from "../game/controller"
 import { ringHash, ringPosition } from "../sim/hash"
 import { type Anchor, anchorsOf, ownerOf } from "../sim/ring"
-import { createViewport, type Viewport } from "../../../shared/viewport"
+import { createViewport, type Viewport } from "./viewport"
 
 const RING_RADIUS = 10
 const RING_TILT = Math.PI / 6

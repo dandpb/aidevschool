@@ -39,7 +39,12 @@ def derive_whiteboard_profile(state: dict[str, Any]) -> dict[str, Any]:
                 "nivel_autodeclado": LEVEL_MAP_PT.get(level, level),
                 "dreyfus_global": "advanced_beginner",
                 "bloom_global": "apply",
-                "ai_dependency_index": 0.50,
+                # ponytail: same default as dashboard_snapshot
+                "ai_dependency_index": float(
+                    learner["aidi"]["current"]
+                    if isinstance(learner.get("aidi"), dict) and "current" in learner["aidi"]
+                    else 0.34
+                ),
                 "socrates_quota_today": "0 / 15",
                 "human_instructor": learner.get("human_instructor", "none"),
             },

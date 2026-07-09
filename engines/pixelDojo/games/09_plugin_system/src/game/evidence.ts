@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Plugin Docking Bay — evidence builder + emitter.
 //
 // Mirrors the producer pattern from engines/pixelDojo/EVIDENCE_CONTRACT.md:
@@ -105,10 +106,5 @@ export function buildEvidence(wave: Wave, now: Date): PluginLifecycleEvidenceRec
  * the single record at the end of the wave.
  */
 export function emitEvidence(record: PluginLifecycleEvidenceRecord): PluginLifecycleEvidenceRecord {
-  if (typeof window !== "undefined") {
-    ;(window as unknown as { __gameEvidence?: PluginLifecycleEvidenceRecord }).__gameEvidence =
-      record
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

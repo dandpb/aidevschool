@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence record + emitter for the Breaker Grid game.
 //
 // The game emits evidence ONLY. It never writes learner state, never touches
@@ -150,10 +151,5 @@ export function buildEvidence(metrics: BreakerMetrics, now: Date): BreakerEviden
 }
 
 export function emitEvidence(record: BreakerEvidenceRecord): BreakerEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // The smoke spec matches this line on /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Evidence record + emitter for the Log River Delta game.
 //
 // The game emits evidence ONLY. It never writes learner state, never touches
@@ -114,10 +115,5 @@ export function buildEvidence(metrics: Metrics, now: Date): LogAggregatorEvidenc
 }
 
 export function emitEvidence(record: LogAggregatorEvidenceRecord): LogAggregatorEvidenceRecord {
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-  }
-  // The smoke spec matches this line on /^EVIDENCE /.
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }

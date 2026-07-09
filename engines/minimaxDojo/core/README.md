@@ -8,13 +8,13 @@
 core/
 ├── state_machine/   # Máquina de estados — espec + implementação de referência (__init__.py)
 ├── gates/           # Portão empírico (DoD + PROMĘTOR) — espec + __init__.py
-├── memory/          # Whiteboard + handoff + Skills — espec + __init__.py
-└── scheduler/       # Cronos (Pro vs Lightning) — apenas especificação
+└── memory/          # Whiteboard + handoff + Skills — espec + __init__.py
 ```
 
 > **Implementação de referência (Python).** `state_machine/`, `gates/` e `memory/` trazem uma
 > implementação de referência **determinística** em Python (`__init__.py`), coberta por testes de
-> contrato em [`../tests/`](../tests/). `scheduler/` permanece apenas especificação. O **runtime de
+> contrato em [`../tests/`](../tests/). Cronos/scheduler: [`../prompts/per_agent/cronos.md`](../prompts/per_agent/cronos.md)
+> + [`../whiteboard/cron_registry.yaml`](../whiteboard/cron_registry.yaml). O **runtime de
 > produção** continua sendo o MiniMax Agent Team + a disciplina de state machine (definida em
 > [`../docs/02_state_machine.md`](../docs/02_state_machine.md)): o Python serve de **espec executável
 > e oráculo de testes**, não de servidor.
@@ -25,7 +25,7 @@ core/
 > 1. **Eventos explícitos** (ver `state_machine/`)
 > 2. **Portões empíricos** (ver `gates/`)
 > 3. **Curadoria de memória** (ver `memory/`)
-> 4. **Scheduler auditável** (ver `scheduler/`)
+> 4. **Scheduler auditável** (Cronos prompt + `whiteboard/cron_registry.yaml`)
 
 ## Documentos Canônicos
 

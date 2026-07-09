@@ -13,7 +13,7 @@ from typing import Any
 
 import yaml
 
-from engines.openclaw._compat import StrEnum
+from enum import StrEnum
 from engines.openclaw.errors import StateCorruptionError
 from engines.openclaw.fsio import atomic_write_text
 

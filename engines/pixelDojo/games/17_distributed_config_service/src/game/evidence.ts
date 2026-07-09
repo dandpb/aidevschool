@@ -1,3 +1,4 @@
+import { dualEmit } from "../../../../shared/evidence"
 // Quorum Citadel evidence emitter — producer side of the EVIDENCE_CONTRACT.md
 // pattern. Validates, builds, and publishes the evidence record to:
 //
@@ -94,13 +95,7 @@ declare global {
 // Publish the record to every contract channel. Validates that all required
 // fields are present so a malformed record never reaches the verifier.
 export function emitEvidence(record: EvidenceRecord): EvidenceRecord {
-  validateEvidenceRecord(record)
-  if (typeof window !== "undefined") {
-    window.__gameEvidence = record
-    window.__quorumDojoEvidence = [...(window.__quorumDojoEvidence ?? []), record]
-  }
-  console.log(`EVIDENCE ${JSON.stringify(record)}`)
-  return record
+  return dualEmit(record, "game")
 }
 
 export class EvidenceValidationError extends Error {

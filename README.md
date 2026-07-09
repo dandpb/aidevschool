@@ -107,7 +107,7 @@ Always edit the canonical YAML first, then sync.
 
 ```bash
 # from the repo root
-python3 -m pip install -r learner/substrate/requirements.txt   # pyyaml + fsrs (first time only)
+python3 -m pip install -e ".[dev]"                             # pyyaml + fsrs + pytest
 python3 -m learner.substrate                                   # regenerates all derived views
 ```
 
@@ -177,7 +177,7 @@ python3 -m unittest learner.substrate.tests.test_substrate   # from the repo roo
 | --- | --- |
 | **Full documentation handbook** | [`docs/handbook/`](docs/handbook/README.md) |
 | Ecosystem conventions & rules | [`AGENTS.md`](AGENTS.md) |
-| Multi-context index | [`CONTEXT-MAP.md`](CONTEXT-MAP.md) |
+| Domain language | [`CONTEXT.md`](CONTEXT.md) |
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](engines/codexDojo/ecosystem/MANIFEST.md) |
 | Operating architecture | [`engines/codexDojo/ecosystem/OPERATING_MODEL.md`](engines/codexDojo/ecosystem/OPERATING_MODEL.md) |
 | Agent prompts | [`engines/codexDojo/ecosystem/AGENT_PROMPTS.md`](engines/codexDojo/ecosystem/AGENT_PROMPTS.md) |

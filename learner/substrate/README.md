@@ -18,7 +18,7 @@ exposes adapters that derive engine-specific mirrors.
 
 ```bash
 # Install dependencies (pyyaml + fsrs; the spaced-repetition scheduler)
-python3 -m pip install -r learner/substrate/requirements.txt
+python3 -m pip install -e ".[dev]"   # from repo root
 
 # Regenerate all derived views after editing learner/learning_state.yaml
 python3 -m learner.substrate

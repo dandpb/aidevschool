@@ -73,14 +73,13 @@ Append-only run log. Read this file FIRST at the start of every run before touch
   drift.
 - lessons:
   - **Verify the audit before citing it.** `TECH_DEBT_AUDIT_2026-07-08.md` carried 3 high-priority
-    items (#1 P32, #4 P24, #21 P24) as `open` that were already fixed by the same-day commit burst
-    (`b840234`/`3244a86`/`cc2b618`/`52aaf72`). An audit is a snapshot, not a live source. Any future
-    run must re-check audit items against HEAD before treating them as divergences — same F3 rule
-    the loop applies everywhere else.
+    items as `open` that were already fixed by the same-day commit burst (items + SHAs in run-output
+    §Divergence list). An audit is a snapshot, not a live source — re-check against HEAD before
+    treating items as divergences (same F3 rule the loop applies everywhere).
   - **The fresh-context verifier is the loop's keystone** — keep its prompt minimal: Goal +
     Done-Rules + ADR path + principle, never the producer's reasoning.
   - **Raising the threshold to 9/10 for substrate-contract ADRs worked** — ADR-0003 adds a
-    `learner/aidi` field, which is a contract change; 9 held comfortably (9/10, confidence high).
+    `learner/aidi` field, which is a contract change; 9 held comfortably.
   - **Next-run hint (highest value):** execute the ADR-0003 implementation follow-up (steps in
     run-output §Next-run hint); then audit #9 (partial `validate()`) is the next decision-worthy
     divergence.

@@ -25,24 +25,9 @@
 | [07_governance_sla.md](docs/07_governance_sla.md) | Sêneca: auto-escala + SLA 24h |
 | [QUICK_START.md](docs/QUICK_START.md) | 3 passos para começar |
 
-## 🤖 Agentes (14 — agents/ + prompts/per_agent/)
+## 🤖 Agentes (14)
 
-| # | Agente | System Prompt |
-|---|--------|---------------|
-| 1 | MAESTRO | [prompts/per_agent/maestro.md](prompts/per_agent/maestro.md) |
-| 2 | CRONOS | [prompts/per_agent/cronos.md](prompts/per_agent/cronos.md) |
-| 3 | SONDA | [prompts/per_agent/sonda.md](prompts/per_agent/sonda.md) |
-| 4 | CARTÓGRAFO | [prompts/per_agent/cartografo.md](prompts/per_agent/cartografo.md) |
-| 5 | MESTRE-CONTEÚDO | [prompts/per_agent/mestre_conteudo.md](prompts/per_agent/mestre_conteudo.md) |
-| 6 | SÓCRATES | [prompts/per_agent/socrates.md](prompts/per_agent/socrates.md) |
-| 7 | MNEME | [prompts/per_agent/mneme.md](prompts/per_agent/mneme.md) |
-| 8 | PROMĘTOR | [prompts/per_agent/prometor.md](prompts/per_agent/prometor.md) |
-| 9 | CRÍTICO | [prompts/per_agent/critico.md](prompts/per_agent/critico.md) |
-| 10 | GALILEU | [prompts/per_agent/galileu.md](prompts/per_agent/galileu.md) |
-| 11 | ATENA | [prompts/per_agent/atena.md](prompts/per_agent/atena.md) |
-| 12 | MNEMOSYNE | [prompts/per_agent/mnemosyne.md](prompts/per_agent/mnemosyne.md) |
-| 13 | OUROBOROS | [prompts/per_agent/ouroboros.md](prompts/per_agent/ouroboros.md) |
-| 14 | SÊNECA | [prompts/per_agent/seneca.md](prompts/per_agent/seneca.md) |
+Roster: [`agents/README.md`](agents/README.md). Prompts: [`prompts/per_agent/`](prompts/per_agent/). Details: [`docs/01_agent_roster.md`](docs/01_agent_roster.md).
 
 ## 🧠 Whiteboard (perfil vivo)
 
@@ -62,7 +47,7 @@
 | State machine | [core/state_machine/](core/state_machine/) | [docs/02_state_machine.md](docs/02_state_machine.md) |
 | Gates (portão) | [core/gates/](core/gates/) | [docs/04_empirical_gates.md](docs/04_empirical_gates.md) |
 | Memory (whiteboard) | [core/memory/](core/memory/) | [docs/05_memory_system.md](docs/05_memory_system.md) |
-| Scheduler (Cronos) | [core/scheduler/](core/scheduler/) | [prompts/per_agent/cronos.md](prompts/per_agent/cronos.md) |
+| Scheduler (Cronos) | [prompts/per_agent/cronos.md](prompts/per_agent/cronos.md) + [whiteboard/cron_registry.yaml](whiteboard/cron_registry.yaml) | same |
 
 ## 📋 Templates de Saída (prompts/cycles/)
 
@@ -87,7 +72,7 @@ minimaxDojo/
 │   ├── bootstrap/                     # 00_system + 01_first_cycle
 │   ├── per_agent/                     # 14 system prompts
 │   └── cycles/                        # cycle_report template
-├── agents/                            # 14 diretórios (1 README cada)
+├── agents/                            # roster only (prompts in prompts/per_agent/)
 ├── core/                              # state_machine, gates, memory, scheduler
 ├── config/learner.yaml                # perfil do aluno + thresholds
 ├── whiteboard/                        # perfil vivo + handoffs + skills + ADRs

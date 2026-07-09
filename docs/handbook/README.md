@@ -68,7 +68,7 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 | --- | --- |
 | Ecosystem conventions & rules | [`AGENTS.md`](../../AGENTS.md) |
 | Root quick-start README | [`README.md`](../../README.md) |
-| Multi-context index | [`CONTEXT-MAP.md`](../../CONTEXT-MAP.md) |
+| Domain language | [`CONTEXT.md`](../../CONTEXT.md) |
 | Generated knowledge base | [`docs/AGENTS.md`](../AGENTS.md) |
 | Canonical curriculum list | [`curriculum/catalog.md`](../../curriculum/catalog.md) |
 | Canonical learner state | [`learner/learning_state.yaml`](../../learner/learning_state.yaml) |

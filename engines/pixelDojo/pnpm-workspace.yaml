@@ -1,0 +1,5 @@
+packages:
+  - "pixel-quest"
+  - "games/*"
+onlyBuiltDependencies:
+  - esbuild
