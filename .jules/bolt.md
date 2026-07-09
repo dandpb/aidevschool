@@ -16,3 +16,6 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+## 2026-07-09 - Avoided O(n) rendering allocations via caching
+**Learning:** Found that `getLinuxAppsForCategory` was calling `linuxApps.filter(...)` every time the UI updated. In a vanilla TS string-template application, allocating new arrays via `.filter()` inside render functions on static datasets causes unnecessary garbage collection pressure and O(n) repeated scans.
+**Action:** When filtering static arrays for rendering, pre-compute the groupings once into a `Map` to provide O(1) cache lookups, returning a reference to the exact same array instead of generating a new one on every render cycle.
