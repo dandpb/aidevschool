@@ -16,7 +16,7 @@ OpenClaw is the file-based continuous-runner layer for the AI DevSchool ecosyste
 | Hermes event bus | `engines/openclaw/hermes/bus.py` | File-based topics, idempotency, conflicts. |
 | Topic schemas | `engines/openclaw/hermes/topics.py` | Canonical `dojo.*` topic names and payloads. |
 | Scheduler | `engines/openclaw/runner/scheduler.py` | Reads state, dispatches adapters, advances status. |
-| Structured pipeline status | `engines/openclaw/runner/pipeline_status.py` | YAML seam + Markdown narrative twin. |
+| Structured pipeline status | `engines/openclaw/runner/pipeline_status.py` | YAML is machine seam; Markdown is human notes only. |
 | Agent adapters | `engines/openclaw/runner/adapters/` | One adapter per role; simulation mode by default. |
 | CLI | `engines/openclaw/__main__.py` | `python3 -m engines.openclaw --project 01_rate_limiter --mode simulate`. |
 | Tests | `engines/openclaw/tests/` | pytest coverage for bus, scheduler, adapters. |
@@ -28,7 +28,7 @@ OpenClaw is the file-based continuous-runner layer for the AI DevSchool ecosyste
 - The verifier adapter never shares state with a producer adapter.
 - Simulation mode validates artifacts; real AI dispatch is an optional override.
 - Keep the tracer bullet small: no networking, no background daemon, no AI model calls.
-- Machine-readable phase fields live in `learner/pipeline_status.yaml`; Markdown keeps agent notes.
+- Machine-readable phase fields: `learner/pipeline_status.yaml` only (runner never rewrites MD).
 
 ## Commands
 

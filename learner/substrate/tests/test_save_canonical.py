@@ -55,7 +55,7 @@ class TestSaveCanonical(unittest.TestCase):
         self.assertEqual(validate(state), [])
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "learning_state.yaml"
-            save_canonical(state, path, resync=False)
+            save_canonical(state, path)
             loaded = yaml.safe_load(path.read_text(encoding="utf-8"))
             self.assertEqual(loaded["active_unit"]["id"], "U-test")
 

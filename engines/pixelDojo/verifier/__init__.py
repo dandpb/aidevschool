@@ -32,12 +32,7 @@ from typing import Any
 
 import yaml
 
-from learner.substrate import (
-    is_repo_canonical_path,
-    load_and_validate,
-    save_canonical,
-    validate,
-)
+from learner.substrate import commit_canonical, load_and_validate, validate
 from learner.substrate.scheduling import RATING_FROM_GATE, record_gate_outcome
 
 #: Fields every evidence record must carry regardless of game.
@@ -172,12 +167,13 @@ def check_evidence(
             "evidence claims pass but abusive_admitted > 0 — inconsistent record"
         )
 
-    # NDJSON-contract records carry a per-kind metrics variant; if present it
-    # must at least be a discriminated object (the emitter guarantees this,
-    # so anything else is a tampered/hand-written record).
+    # metrics must be a mapping; kind is required only when present (pixel-quest
+    # polymorphism). Flat voxel counters without kind are valid.
     metrics = evidence.get("metrics")
-    if metrics is not None and (not isinstance(metrics, dict) or not metrics.get("kind")):
-        errors.append("evidence.metrics must be an object with a 'kind' discriminator")
+    if metrics is not None and not isinstance(metrics, dict):
+        errors.append("evidence.metrics must be an object")
+    elif isinstance(metrics, dict) and "kind" in metrics and not metrics.get("kind"):
+        errors.append("evidence.metrics.kind must be a non-empty discriminator when set")
 
     # Anti-replay: evidence already consumed by a previous gate (or older than
     # it) cannot be graded again. Gate reviews record the evidence 'ts' they
@@ -314,12 +310,5 @@ def verify_and_gate(
         return decision
 
     new_state = apply_gate(state, evidence, decision, today)
-    # Substrate owns the write seam: atomic save + auto-resync of derived views
-    # when persisting the repo-root canonical file (not temp-path tests).
-    state_path = root / "learner" / "learning_state.yaml"
-    save_canonical(
-        new_state,
-        state_path,
-        resync=is_repo_canonical_path(state_path),
-    )
+    commit_canonical(new_state, root / "learner" / "learning_state.yaml")
     return decision

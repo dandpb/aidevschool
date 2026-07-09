@@ -108,7 +108,7 @@ def main(argv: list[str] | None = None) -> int:
         f"(evidence: {evidence_path})"
     )
     if not args.dry_run:
-        print("Derived views resynced via learner.substrate (when writing repo canonical state).")
+        print("Committed via learner.substrate.commit_canonical (views resynced for repo path).")
     return 0
 
 

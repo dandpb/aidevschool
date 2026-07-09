@@ -1,13 +1,13 @@
 import type { AppState } from "../state"
+import { currentAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 import { viewRegistry } from "./registry"
 
 export function renderNav(state: AppState): string {
   return viewRegistry
     .map(({ id, label }) => {
-      const activeClass = state.view === id ? "is-active" : ""
-      const ariaCurrent = state.view === id ? ' aria-current="page"' : ""
-      return `<button class="nav-button ${activeClass}" type="button" data-view="${escapeHtml(id)}"${ariaCurrent}>${escapeHtml(label)}</button>`
+      const { className, aria } = currentAttrs(state.view === id, "page")
+      return `<button class="nav-button ${className}" type="button" data-view="${escapeHtml(id)}"${aria}>${escapeHtml(label)}</button>`
     })
     .join("")
 }

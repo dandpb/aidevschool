@@ -22,11 +22,11 @@ A unit is `DOMINADO` only after the PROMĘTOR verifies real execution against th
 
 ## Substrate write seam
 
-`learner.substrate.save_canonical` is the single write path for `learner/learning_state.yaml`
-(atomic). The teaching-game verifier decides eligibility/outcome but must not plain-write the
-canonical file; it calls `save_canonical` (and auto-resyncs derived views for the repo path).
+`save_canonical` writes `learner/learning_state.yaml` only (atomic).
+`commit_canonical` writes then regenerates derived views for the repo path.
+The verifier calls `commit_canonical`; it must not plain-write the YAML.
 
 ## Teaching evidence emitter
 
-`engines/shared/teaching-evidence/emit.ts` (mirrored at `engines/voxelDojo/shared/evidence.ts`)
-is the deep module for dual-channel evidence emission. Games supply unit identity + metrics only.
+`engines/shared/teaching-evidence/emit.ts` is the only implementation.
+`engines/voxelDojo/shared/evidence.ts` is a re-export.

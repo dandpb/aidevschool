@@ -36,6 +36,7 @@ __all__ = [
     "validate",
     "load_and_validate",
     "save_canonical",
+    "commit_canonical",
     "is_repo_canonical_path",
     "derive_mavis_view",
     "render_mavis_yaml",
@@ -76,16 +77,8 @@ def load_canonical(path: str | Path = "learner/learning_state.yaml") -> dict[str
 def save_canonical(
     state: dict[str, Any],
     path: str | Path = "learner/learning_state.yaml",
-    *,
-    resync: bool = False,
 ) -> Path:
-    """Atomically persist canonical learner state. Optional derived-view resync.
-
-    This is the single write seam for ``learning_state.yaml``. Callers (verifier,
-    tools) must not plain-write the file. ``resync=True`` regenerates derived
-    views via :func:`sync` after a successful write — only meaningful for the
-    repo-root canonical path.
-    """
+    """Atomically persist canonical learner state (write only; no derived views)."""
     errors = validate(state)
     if errors:
         raise ValueError(f"invalid learner state: {'; '.join(errors)}")
@@ -99,7 +92,19 @@ def save_canonical(
         width=100,
     )
     atomic_write_text(target, text)
-    if resync:
+    return target
+
+
+def commit_canonical(
+    state: dict[str, Any],
+    path: str | Path = "learner/learning_state.yaml",
+) -> Path:
+    """Save canonical state then regenerate derived views (repo path only).
+
+    For temp/test paths, only writes — same as :func:`save_canonical`.
+    """
+    target = save_canonical(state, path)
+    if is_repo_canonical_path(target):
         sync()
     return target
 

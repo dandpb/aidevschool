@@ -1,5 +1,6 @@
 import { getAgents, getSelectedAgent, getUserFacingAgents } from "../progress"
 import type { AppState } from "../state"
+import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 export function renderAgents(state: AppState): string {
@@ -46,11 +47,9 @@ export function renderAgents(state: AppState): string {
       <div class="agent-list">
         ${coreAgents
           .map((agent) => {
-            const isActive = agent.id === selectedAgent.id
-            const activeClass = isActive ? "is-active" : ""
-            const ariaPressed = isActive ? ' aria-pressed="true"' : ' aria-pressed="false"'
+            const { className, aria } = pressedAttrs(agent.id === selectedAgent.id)
             return `
-              <button class="agent-row ${activeClass}" type="button" data-agent="${escapeHtml(agent.id)}"${ariaPressed}>
+              <button class="agent-row ${className}" type="button" data-agent="${escapeHtml(agent.id)}"${aria}>
                 <span>${escapeHtml(agent.name)}</span>
                 <small>${escapeHtml(agent.role)}</small>
               </button>

@@ -1,6 +1,7 @@
 import { type ProjectPhase, projectPhases } from "../domain"
 import { getProjects } from "../progress"
 import type { AppState, ProjectFilter } from "../state"
+import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
@@ -59,8 +60,6 @@ function renderFilterButton(
   label: string,
   currentFilter: ProjectFilter,
 ): string {
-  const isActive = filter === currentFilter
-  const activeClass = isActive ? "is-active" : ""
-  const ariaPressed = isActive ? ' aria-pressed="true"' : ' aria-pressed="false"'
-  return `<button class="filter-button ${activeClass}" type="button" data-filter="${escapeHtml(filter)}"${ariaPressed}>${escapeHtml(label)}</button>`
+  const { className, aria } = pressedAttrs(filter === currentFilter)
+  return `<button class="filter-button ${className}" type="button" data-filter="${escapeHtml(filter)}"${aria}>${escapeHtml(label)}</button>`
 }

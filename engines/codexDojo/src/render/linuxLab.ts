@@ -8,6 +8,7 @@ import {
   linuxApps,
 } from "../data/linuxApps"
 import type { AppState } from "../state"
+import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 const categoryFilters: readonly LinuxAppCategoryFilter[] = ["all", ...linuxAppCategories]
@@ -54,11 +55,9 @@ function renderCategoryFilters(activeFilter: LinuxAppCategoryFilter): string {
     <div class="linux-category-row" aria-label="Filter Linux apps">
       ${categoryFilters
         .map((filter) => {
-          const isActive = activeFilter === filter
-          const activeClass = isActive ? "is-active" : ""
-          const ariaPressed = isActive ? ' aria-pressed="true"' : ' aria-pressed="false"'
+          const { className, aria } = pressedAttrs(activeFilter === filter)
           return `
-            <button class="linux-category ${activeClass}" type="button" data-linux-category="${escapeHtml(filter)}"${ariaPressed}>
+            <button class="linux-category ${className}" type="button" data-linux-category="${escapeHtml(filter)}"${aria}>
               ${escapeHtml(linuxAppCategoryLabels[filter])}
             </button>
           `
@@ -73,11 +72,9 @@ function renderAppGrid(apps: readonly LinuxApp[], activeApp: LinuxApp): string {
     <div class="linux-app-grid">
       ${apps
         .map((app) => {
-          const isActive = app.id === activeApp.id
-          const activeClass = isActive ? "is-active" : ""
-          const ariaPressed = isActive ? ' aria-pressed="true"' : ' aria-pressed="false"'
+          const { className, aria } = pressedAttrs(app.id === activeApp.id)
           return `
-            <button class="linux-app-tile ${activeClass}" type="button" data-linux-app="${escapeHtml(app.id)}"${ariaPressed}>
+            <button class="linux-app-tile ${className}" type="button" data-linux-app="${escapeHtml(app.id)}"${aria}>
               <span class="linux-app-icon linux-category-${escapeHtml(app.category)}">${escapeHtml(appInitials(app.name))}</span>
               <span class="linux-app-name">${escapeHtml(app.name)}</span>
               <small>${escapeHtml(linuxAppCategoryLabels[app.category])}</small>

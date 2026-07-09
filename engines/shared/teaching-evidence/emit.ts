@@ -1,16 +1,12 @@
 /**
- * Deep evidence-emitter module for teaching games (pixelDojo / voxelDojo).
- *
- * Games supply unit identity + metrics + pass; this module owns the envelope,
- * dual channel (window global + EVIDENCE console line), and review_context
- * derived from a substrate review slice.
- *
+ * Deep evidence-emitter for teaching games.
+ * Games supply identity + metrics + pass; this owns envelope + dual channel.
  * Contract: docs/design/teaching-game-contract.md
  */
 
 export type EvidenceSource = "pixelquest" | "voxeldojo"
-
 export type ReviewReason = "due" | "deepening"
+export type WindowKey = "__pixelQuestEvidence" | "__voxelDojoEvidence" | "__gameEvidence"
 
 export interface ReviewSliceLike {
   nextReviews: ReadonlyArray<{ unitId: string }>
@@ -25,12 +21,10 @@ export interface EvidenceMeta {
   source: EvidenceSource
   unitId: string
   project: string
-  /** Scenario / encounter id (stable level key). */
   scenarioId: string
   game: string
   curriculum: CurriculumContext
-  /** Window property that holds the append-only evidence array. */
-  windowKey?: "__pixelQuestEvidence" | "__voxelDojoEvidence" | "__gameEvidence"
+  windowKey?: WindowKey
 }
 
 export interface EvidenceRecord {
@@ -68,24 +62,33 @@ declare global {
   }
 }
 
-function defaultWindowKey(source: EvidenceSource): NonNullable<EvidenceMeta["windowKey"]> {
-  if (source === "pixelquest") return "__pixelQuestEvidence"
-  return "__voxelDojoEvidence"
+function windowKeyFor(source: EvidenceSource, override?: WindowKey): WindowKey {
+  return override ?? (source === "pixelquest" ? "__pixelQuestEvidence" : "__voxelDojoEvidence")
 }
 
-/**
- * Build + dual-emit one raw evidence record. Never writes learner state.
- */
+function pushWindow(key: WindowKey, record: EvidenceRecord): void {
+  if (typeof window === "undefined") return
+  if (key === "__pixelQuestEvidence") {
+    window.__pixelQuestEvidence = [...(window.__pixelQuestEvidence ?? []), record]
+    return
+  }
+  if (key === "__voxelDojoEvidence") {
+    window.__voxelDojoEvidence = [...(window.__voxelDojoEvidence ?? []), record]
+    return
+  }
+  const prev = window.__gameEvidence
+  window.__gameEvidence = [...(Array.isArray(prev) ? prev : prev ? [prev] : []), record]
+}
+
+/** Dual-emit one raw evidence record. Never writes learner state. */
 export function emitEvidence(opts: EmitOptions): EvidenceRecord {
   const { meta, pass, metrics } = opts
   const now = opts.now ?? (() => new Date())
-  const unitId = meta.unitId
-  const scheduled =
-    opts.reviewSlice?.nextReviews.some((r) => r.unitId === unitId) ?? false
+  const scheduled = opts.reviewSlice?.nextReviews.some((r) => r.unitId === meta.unitId) ?? false
 
   const record: EvidenceRecord = {
     source: meta.source,
-    unit_id: unitId,
+    unit_id: meta.unitId,
     project: meta.project,
     scenario_id: meta.scenarioId,
     game: meta.game,
@@ -102,13 +105,7 @@ export function emitEvidence(opts: EmitOptions): EvidenceRecord {
     curriculum_context: meta.curriculum,
   }
 
-  const key = meta.windowKey ?? defaultWindowKey(meta.source)
-  if (typeof window !== "undefined") {
-    const w = window as Window & Record<string, EvidenceRecord[] | undefined>
-    const prev = w[key]
-    const list = Array.isArray(prev) ? prev : []
-    w[key] = [...list, record]
-  }
+  pushWindow(windowKeyFor(meta.source, meta.windowKey), record)
   console.log(`EVIDENCE ${JSON.stringify(record)}`)
   return record
 }

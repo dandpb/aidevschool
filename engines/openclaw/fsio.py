@@ -1,45 +1,22 @@
-"""Guarded filesystem helpers: atomic writes and JSON reads with clear errors.
-
-All OpenClaw state files (scheduler state, pipeline status, Hermes events)
-go through these helpers so that (a) readers never observe a half-written
-file and (b) unreadable files fail with an actionable message instead of a
-bare traceback.
-"""
+"""Guarded filesystem helpers: atomic writes and JSON/YAML reads with clear errors."""
 
 from __future__ import annotations
 
-import contextlib
 import json
-import os
-import tempfile
 from pathlib import Path
 from typing import Any
 
 import yaml
 
 from engines.openclaw.errors import OpenclawError, StateCorruptionError
+from learner.substrate.fsio import atomic_write_text as _atomic_write_text
 
 
 def atomic_write_text(path: Path, text: str) -> None:
-    """Write ``text`` to ``path`` via temp-file-then-``os.replace``.
-
-    The rename is atomic on POSIX, so a crash mid-write leaves the previous
-    file intact instead of a truncated one. Parent directories are created
-    as needed.
-    """
-    tmp_name = ""
+    """Atomic write; map OSError to OpenclawError for engine callers."""
     try:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        fd, tmp_name = tempfile.mkstemp(
-            dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
-        )
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write(text)
-        os.replace(tmp_name, path)
+        _atomic_write_text(path, text)
     except OSError as exc:
-        if tmp_name:
-            with contextlib.suppress(OSError):
-                os.unlink(tmp_name)
         raise OpenclawError(f"Failed to write {path}: {exc}") from exc
 
 

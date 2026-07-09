@@ -305,9 +305,18 @@ class TestGateIntegrity:
         errors = check_evidence(make_evidence(), make_state()["active_unit"], root)
         assert any("stub" in e for e in errors)
 
-    def test_metrics_without_kind_rejected(self, root: Path):
+    def test_metrics_flat_without_kind_allowed(self, root: Path):
+        # Voxel-style flat counters need no kind discriminator.
         errors = check_evidence(
             make_ndjson_record(metrics={"advanced": 5}),
+            make_state()["active_unit"],
+            root,
+        )
+        assert not any("kind" in e for e in errors)
+
+    def test_metrics_empty_kind_rejected(self, root: Path):
+        errors = check_evidence(
+            make_ndjson_record(metrics={"kind": "", "advanced": 5}),
             make_state()["active_unit"],
             root,
         )

@@ -1,6 +1,7 @@
 import { getCycleCompletionPercent } from "../cycle"
 import { getCurrentStage, getStages, isStageCompleted } from "../progress"
 import type { AppState } from "../state"
+import { currentAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 export function renderCycle(state: AppState): string {
@@ -18,12 +19,10 @@ export function renderCycle(state: AppState): string {
         <div class="timeline">
           ${getStages()
             .map((stage, index) => {
-              const isSelected = stage.id === selectedStage.id
-              const selected = isSelected ? "is-active" : ""
-              const ariaCurrent = isSelected ? ' aria-current="step"' : ""
+              const { className, aria } = currentAttrs(stage.id === selectedStage.id, "step")
               const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
               return `
-                <button class="timeline-step ${selected} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${ariaCurrent}>
+                <button class="timeline-step ${className} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${aria}>
                   <span>${String(index + 1).padStart(2, "0")}</span>
                   ${escapeHtml(stage.label)}
                 </button>

@@ -1,4 +1,4 @@
-"""Structured pipeline_status seam tests."""
+"""YAML-first pipeline_status seam tests."""
 
 from __future__ import annotations
 
@@ -13,19 +13,15 @@ from engines.openclaw.runner.pipeline_status import (
 )
 
 
-def test_save_creates_yaml_and_preserves_agent_notes(tmp_path: Path) -> None:
+def test_save_writes_yaml_only_and_leaves_markdown_notes(tmp_path: Path) -> None:
     md = tmp_path / "pipeline_status.md"
+    note = "important human note that must survive"
     md.write_text(
-        """# Pipeline Status
+        f"""# Pipeline Status
 
 - **cycle_id**: old
-- **current_project**: `curriculum/01_rate_limiter`
-- **complexity_level**: 1
-- **phase**: spec
-- **awaiting**: `curator`
 - **agents**:
-  - `dev-node`: important human note that must survive
-- **blockers**: []
+  - `dev-node`: {note}
 """,
         encoding="utf-8",
     )
@@ -39,36 +35,32 @@ def test_save_creates_yaml_and_preserves_agent_notes(tmp_path: Path) -> None:
     )
     save_status(status, md)
 
-    ypath = yaml_path_for(md)
-    assert ypath.exists()
+    assert yaml_path_for(md).exists()
     loaded = load_status(md)
     assert loaded.cycle_id == "new-cycle"
     assert loaded.phase == Phase.IMPL_DONE
     assert loaded.blockers == ["waiting-on-tests"]
-
-    text = md.read_text(encoding="utf-8")
-    assert "important human note that must survive" in text
-    assert "new-cycle" in text
-    assert "impl-done" in text
+    # Machine write must not clobber human narrative.
+    assert note in md.read_text(encoding="utf-8")
 
 
 def test_load_prefers_yaml_over_stale_markdown(tmp_path: Path) -> None:
     md = tmp_path / "pipeline_status.md"
-    md.write_text(
-        "- **phase**: spec\n- **cycle_id**: from-md\n",
-        encoding="utf-8",
-    )
-    status = PipelineStatus(cycle_id="from-yaml", phase=Phase.CYCLE_COMPLETE)
-    save_status(status, md)
-    # Corrupt markdown phase; YAML remains source of truth.
     md.write_text("- **phase**: spec\n- **cycle_id**: from-md\n", encoding="utf-8")
-    # Re-write yaml only
-    ypath = yaml_path_for(md)
-    ypath.write_text(
-        "cycle_id: from-yaml\ncurrent_project: ''\ncomplexity_level: 1\n"
-        "phase: cycle-complete\nawaiting: ''\nblockers: []\n",
-        encoding="utf-8",
-    )
+    save_status(PipelineStatus(cycle_id="from-yaml", phase=Phase.CYCLE_COMPLETE), md)
+    md.write_text("- **phase**: spec\n- **cycle_id**: from-md\n", encoding="utf-8")
     loaded = load_status(md)
     assert loaded.cycle_id == "from-yaml"
     assert loaded.phase == Phase.CYCLE_COMPLETE
+
+
+def test_load_markdown_fallback_when_no_yaml(tmp_path: Path) -> None:
+    md = tmp_path / "pipeline_status.md"
+    md.write_text(
+        "- **phase**: review-done\n- **cycle_id**: cold\n- **complexity_level**: 3\n",
+        encoding="utf-8",
+    )
+    loaded = load_status(md)
+    assert loaded.phase == Phase.REVIEW_DONE
+    assert loaded.cycle_id == "cold"
+    assert loaded.complexity_level == 3

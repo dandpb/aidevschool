@@ -115,13 +115,10 @@ def test_atomic_write_leaves_no_temp_files(tmp_path: Path) -> None:
     status_path = tmp_path / "pipeline_status.md"
     _write_status(PipelineStatus(phase=Phase.SPEC), status_path)
     _write_status(PipelineStatus(phase=Phase.SPEC_DONE), status_path)
-    # YAML twin is expected; only reject leftover *.tmp from atomic writes.
-    leftovers = [
-        p
-        for p in tmp_path.iterdir()
-        if p.name not in {"pipeline_status.md", "pipeline_status.yaml"}
-    ]
+    # Machine state is YAML-only; reject leftover *.tmp from atomic writes.
+    leftovers = [p for p in tmp_path.iterdir() if p.suffix == ".tmp" or ".tmp" in p.name]
     assert leftovers == []
+    assert (tmp_path / "pipeline_status.yaml").exists()
     assert _parse_status(status_path).phase == Phase.SPEC_DONE
 
 
