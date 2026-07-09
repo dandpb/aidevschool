@@ -43,22 +43,25 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: engines/pixelDojo/pixel-quest
+        working-directory: engines/pixelDojo
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           version: 9
-          package_json_file: engines/pixelDojo/pixel-quest/package.json
+          package_json_file: engines/pixelDojo/package.json
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: engines/pixelDojo/pixel-quest/pnpm-lock.yaml
+          cache-dependency-path: engines/pixelDojo/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+        working-directory: engines/pixelDojo/pixel-quest
       - run: pnpm test
+        working-directory: engines/pixelDojo/pixel-quest
       - run: pnpm build
+        working-directory: engines/pixelDojo/pixel-quest
 
   python:
     name: Python (tutor core + substrate)
