@@ -54,31 +54,10 @@ export interface EmitOptions {
   now?: () => Date
 }
 
-declare global {
-  interface Window {
-    __pixelQuestEvidence?: EvidenceRecord[]
-    __voxelDojoEvidence?: EvidenceRecord[]
-    __gameEvidence?: EvidenceRecord[] | EvidenceRecord
-  }
-}
-
-function windowKeyFor(source: EvidenceSource, override?: WindowKey): WindowKey {
-  return override ?? (source === "pixelquest" ? "__pixelQuestEvidence" : "__voxelDojoEvidence")
-}
-
-function pushWindow(key: WindowKey, record: EvidenceRecord): void {
-  if (typeof window === "undefined") return
-  if (key === "__pixelQuestEvidence") {
-    window.__pixelQuestEvidence = [...(window.__pixelQuestEvidence ?? []), record]
-    return
-  }
-  if (key === "__voxelDojoEvidence") {
-    window.__voxelDojoEvidence = [...(window.__voxelDojoEvidence ?? []), record]
-    return
-  }
-  const prev = window.__gameEvidence
-  window.__gameEvidence = [...(Array.isArray(prev) ? prev : prev ? [prev] : []), record]
-}
+// ponytail: no `declare global { interface Window }` augmentation here —
+// each consumer (pixel-quest, voxelDojo) declares its own channel array
+// type, and dualEmit writes through `as unknown as Record<string, unknown>`
+// so it does not need window-typed property names.
 
 /**
  * Dual-channel emit for any record shape.
