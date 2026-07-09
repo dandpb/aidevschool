@@ -50,7 +50,9 @@ class TestSaveCanonical(unittest.TestCase):
             "empirical_gates": {
                 "learning": {"requires_attempt_before_solution": True}
             },
-            "units_log": [],
+            "units_log": [
+                {"unit_id": "U-test", "concept": "test concept", "reviews": []}
+            ],
             "streak": {
                 "current": 0,
                 "longest": 0,

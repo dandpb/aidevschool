@@ -288,6 +288,107 @@ class TestSubstrateInterface(unittest.TestCase):
             f"expected measurement-source error, got {errors}",
         )
 
+    def test_validate_attempt_files_catches_missing_for_mastered_unit(self):
+        state = _minimal_state(
+            units_log=[
+                {"unit_id": "U1", "reviews": []},
+                {
+                    "unit_id": "U-missing-attempt",
+                    "mastered": True,
+                    "reviews": [],
+                },
+            ]
+        )
+        errors = validate(state)
+        self.assertTrue(
+            any("missing attempt_file" in e for e in errors),
+            f"expected missing-attempt error, got {errors}",
+        )
+
+    def test_validate_attempt_files_allows_unmastered_units(self):
+        """An in-flight unit (mastered=false) is not required to have an attempt_file."""
+        state = _minimal_state(
+            units_log=[
+                {"unit_id": "U1", "reviews": []},
+                {
+                    "unit_id": "U-in-flight",
+                    "mastered": False,
+                    "reviews": [],
+                },
+            ]
+        )
+        errors = validate(state)
+        self.assertFalse(
+            any("attempt_file" in e for e in errors),
+            f"in-flight unit should not trip the attempt validator, got {errors}",
+        )
+
+    def test_validate_evidence_files_catches_unparseable_for_gate_review(self):
+        # Point evidence_file at a known existing but non-JSON file.
+        # Include U1 in units_log to satisfy the alignment check (active_unit
+        # defaults to U1 in _minimal_state). Use a recognized gate_outcome
+        # vocabulary (RATING_FROM_GATE); "pass_first_try" is the canonical one.
+        readme = Path(__file__).resolve().parents[2] / "learner" / "attempts" / "README.md"
+        state = _minimal_state(
+            units_log=[
+                {"unit_id": "U1", "reviews": []},
+                {
+                    "unit_id": "U-bad-evidence",
+                    "evidence_file": str(readme.relative_to(Path(__file__).resolve().parents[2])),
+                    "reviews": [
+                        {"date": date(2026, 7, 1), "event": "gate", "gate_outcome": "pass_first_try"}
+                    ],
+                },
+            ]
+        )
+        errors = validate(state)
+        self.assertTrue(
+            any("not parseable JSON" in e for e in errors),
+            f"expected unparseable-JSON error, got {errors}",
+        )
+
+    def test_validate_evidence_files_allows_presented_only_reviews(self):
+        """Pure `presented` events (no gate_outcome) don't need evidence_file."""
+        state = _minimal_state(
+            units_log=[
+                {
+                    "unit_id": "U-presented",
+                    "reviews": [{"date": date(2026, 6, 1), "event": "presented"}],
+                }
+            ]
+        )
+        errors = validate(state)
+        self.assertFalse(
+            any("evidence_file" in e for e in errors),
+            f"presented-only review should not trip the evidence validator, got {errors}",
+        )
+
+    def test_validate_active_unit_alignment_catches_orphan_state(self):
+        # active_unit.id (default "U1" in _minimal_state) is not in units_log.
+        state = _minimal_state(
+            units_log=[
+                {"unit_id": "U-something-else", "reviews": []}
+            ]
+        )
+        errors = validate(state)
+        self.assertTrue(
+            any("not present in units_log" in e for e in errors),
+            f"expected orphan-state error, got {errors}",
+        )
+
+    def test_validate_active_unit_alignment_passes_when_registered(self):
+        # active_unit.id matches an entry in units_log; no orphan error.
+        state = _minimal_state(
+            units_log=[
+                {"unit_id": "U1", "reviews": []}
+            ]
+        )
+        errors = validate(state)
+        self.assertFalse(
+            any("not present in units_log" in e for e in errors),
+            f"registered active unit should pass alignment, got {errors}",
+        )
+
 
 class TestMavisAdapter(unittest.TestCase):
     """Exercise the .mavis/learning_state.yaml adapter."""

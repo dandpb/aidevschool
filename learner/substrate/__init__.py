@@ -1,5 +1,6 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -169,6 +170,8 @@ def validate(state: dict[str, Any]) -> list[str]:
     errors.extend(_validate_units_log(state))
     errors.extend(_validate_streak(state))
     errors.extend(_validate_aidi(state))
+    errors.extend(_validate_attempt_files(state))
+    errors.extend(_validate_evidence_files(state))
 
     return errors
 
@@ -180,6 +183,10 @@ def _validate_units_log(state: dict[str, Any]) -> list[str]:
     a corrupted rating poisons the scheduler, and a freeze cap > 2 contradicts
     the research (3 freezes performed no better than 2). Both are checked
     defensively so states without a ``units_log`` still validate.
+
+    Also asserts ``active_unit.id`` is registered in ``units_log`` —
+    ``units_log`` defines the universe of valid IDs and the gate has no
+    destination if the active unit isn't in it.
     """
     from learner.substrate.scheduling import RATING_FROM_GATE, RATINGS
 
@@ -220,6 +227,17 @@ def _validate_units_log(state: dict[str, Any]) -> list[str]:
             errors.append(
                 f"units_log[{index}] is mastered but has no gate review; mastery "
                 "requires executable evidence (a gate review), never docs alone"
+            )
+
+    active = state.get("active_unit")
+    if isinstance(active, dict):
+        active_id = active.get("id")
+        if active_id and not any(
+            isinstance(u, dict) and u.get("unit_id") == active_id for u in units_log
+        ):
+            errors.append(
+                f"active_unit.id={active_id!r} is not present in units_log; "
+                "register the unit before activating it"
             )
 
     return errors
@@ -298,6 +316,102 @@ def _validate_aidi(state: dict[str, Any]) -> list[str]:
             f"learner.aidi.measurement_source must be one of "
             f"{_AIDI_VALID_SOURCES_SORTED}, got {source!r}"
         )
+
+    return errors
+
+
+def _validate_attempt_files(state: dict[str, Any]) -> list[str]:
+    """Assert that mastered units have an ``attempt_file`` that exists.
+
+    The learning gate requires the attempt to exist before the gate review
+    can fire (``empirical_gates.learning.requires_attempt_before_solution``).
+    A mastered unit pointing at a missing attempt file is the failure mode
+    that produced the 18 false masterizations of 2026-07-01; surfacing the
+    missing path here closes that whole class (F7).
+
+    Only enforced for ``mastered: true`` units — in-flight units may not
+    have a written attempt yet.
+    """
+    errors: list[str] = []
+    units_log = state.get("units_log")
+    if not isinstance(units_log, list):
+        return errors
+
+    for index, unit in enumerate(units_log):
+        if not isinstance(unit, dict) or unit.get("mastered") is not True:
+            continue
+        attempt_path = unit.get("attempt_file")
+        if not attempt_path:
+            errors.append(
+                f"units_log[{index}] is mastered but missing attempt_file; "
+                "the gate requires attempt-before-solution"
+            )
+            continue
+        resolved = ROOT / attempt_path
+        try:
+            size = resolved.stat().st_size
+        except FileNotFoundError:
+            errors.append(
+                f"units_log[{index}].attempt_file points at a missing path: {attempt_path!r}"
+            )
+            continue
+        if size == 0:
+            errors.append(f"units_log[{index}].attempt_file is empty: {attempt_path!r}")
+
+    return errors
+
+
+def _validate_evidence_files(state: dict[str, Any]) -> list[str]:
+    """Assert that units with a gate review have a parseable ``evidence_file``.
+
+    Catches the audit #20 drift: ``learning_state.yaml > evidence_file``
+    historically pointed at a legacy single-record JSON while the verifier
+    prefers NDJSON. A parseable file proves the path is read-able; the
+    producer/consumer format disagreement is a separate concern.
+
+    Only enforced when a review carries a recognized ``gate_outcome`` (the
+    same vocabulary used by ``_validate_units_log`` via
+    ``RATING_FROM_GATE``) — pure ``presented`` events don't need evidence.
+    """
+    from learner.substrate.scheduling import RATING_FROM_GATE
+
+    errors: list[str] = []
+    units_log = state.get("units_log")
+    if not isinstance(units_log, list):
+        return errors
+
+    for index, unit in enumerate(units_log):
+        if not isinstance(unit, dict):
+            continue
+        reviews = unit.get("reviews") or []
+        has_gate_review = any(
+            isinstance(r, dict) and r.get("gate_outcome") in RATING_FROM_GATE
+            for r in reviews
+        )
+        if not has_gate_review:
+            continue
+        evidence_path = unit.get("evidence_file")
+        if not evidence_path:
+            errors.append(
+                f"units_log[{index}] has a gate review but no evidence_file; "
+                "the gate requires parseable evidence"
+            )
+            continue
+        resolved = ROOT / evidence_path
+        try:
+            text = resolved.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            errors.append(
+                f"units_log[{index}].evidence_file points at a missing path: {evidence_path!r}"
+            )
+            continue
+        try:
+            json.loads(text)
+        except json.JSONDecodeError as exc:
+            errors.append(
+                f"units_log[{index}].evidence_file is not parseable JSON "
+                f"({evidence_path!r}): {exc.msg} at line {exc.lineno}"
+            )
 
     return errors
 
