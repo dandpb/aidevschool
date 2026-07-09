@@ -18,6 +18,11 @@ learner:
   hitl_fallback: auto_reject_or_self_escalate
   budget:
     hint_queries_per_day: 15
+  aidi:
+    current: 0.34
+    threshold_amber: 0.6
+    threshold_red: 0.75
+    measurement_source: self_reported
 state_machine:
   learning_states:
   - presenting

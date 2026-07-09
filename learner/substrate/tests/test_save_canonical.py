@@ -34,7 +34,13 @@ class TestSaveCanonical(unittest.TestCase):
         state = {
             "version": 2,
             "system": "agora-continuum",
-            "learner": {"id": "t", "level": "intermediate", "languages": ["go"], "active_language": "go"},
+            "learner": {
+                "id": "t",
+                "level": "intermediate",
+                "languages": ["go"],
+                "active_language": "go",
+                "aidi": {"current": 0.34, "threshold_amber": 0.6, "threshold_red": 0.75},
+            },
             "active_unit": {
                 "id": "U-test",
                 "state": "evaluating",

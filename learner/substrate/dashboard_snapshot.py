@@ -198,13 +198,13 @@ def build_snapshot() -> dict[str, Any]:
     learner = state.get("learner", {})
     active = state.get("active_unit", {})
     gate = state.get("gate", {})
-    aidi_cfg = learner.get("aidi", {}) if isinstance(learner.get("aidi"), dict) else {}
+    aidi = learner["aidi"]  # canonical; validator (ADR-0003) guarantees presence
     profile_levels = _profile_matrix()
 
     # AIDI history: prefer journal-scraped points; fall back to a synthetic 3-point trend.
     aidi_history = _aidi_trend_from_journal()
     if not aidi_history:
-        current = float(aidi_cfg.get("current", 0.34))
+        current = float(aidi["current"])
         aidi_history = [
             {"date": "2026-06-01", "value": round(max(0.0, current - 0.13), 2)},
             {"date": "2026-06-08", "value": round(max(0.0, current - 0.06), 2)},
@@ -234,9 +234,9 @@ def build_snapshot() -> dict[str, Any]:
             "weeklyTimeHours": learner.get("weekly_time_hours", 5),
         },
         "aidi": {
-            "current": float(aidi_cfg.get("current", 0.34)),
-            "thresholdAmber": float(aidi_cfg.get("threshold_amber", 0.6)),
-            "thresholdRed": float(aidi_cfg.get("threshold_red", 0.75)),
+            "current": float(aidi["current"]),
+            "thresholdAmber": float(aidi["threshold_amber"]),
+            "thresholdRed": float(aidi["threshold_red"]),
             "trend": aidi_history,
         },
         "topPitfalls": pitfalls,

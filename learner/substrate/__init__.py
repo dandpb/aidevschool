@@ -21,6 +21,12 @@ if TYPE_CHECKING:
 ROOT = Path(__file__).resolve().parent.parent.parent
 CANONICAL_STATE_PATH = ROOT / "learner" / "learning_state.yaml"
 
+# AIDI (AI Dependency Index) measurement-source allowlist (ADR-0003).
+# Hoisted to module scope so adapters and validators agree on the vocabulary.
+# Sorted for human-readable error messages; the frozenset powers membership checks.
+_AIDI_VALID_SOURCES = frozenset({"self_reported", "event_computed", "derived"})
+_AIDI_VALID_SOURCES_SORTED = tuple(sorted(_AIDI_VALID_SOURCES))
+
 # Lazy-imported to avoid circular dependency (dashboard_snapshot resolves ROOT locally).
 def __getattr__(name: str):
     if name == "sync_dashboard_snapshot":
@@ -162,6 +168,7 @@ def validate(state: dict[str, Any]) -> list[str]:
 
     errors.extend(_validate_units_log(state))
     errors.extend(_validate_streak(state))
+    errors.extend(_validate_aidi(state))
 
     return errors
 
@@ -236,6 +243,60 @@ def _validate_streak(state: dict[str, Any]) -> list[str]:
         errors.append(
             f"streak.freezes must satisfy 0 <= equipped({equipped}) <= max({maximum}) <= 2 "
             "(research: 3 freezes performed no better than 2)"
+        )
+
+    return errors
+
+
+def _validate_aidi(state: dict[str, Any]) -> list[str]:
+    """Validate the AIDI (AI Dependency Index) block (ADR-0003).
+
+    The block is required: ADR-0003 makes it the canonical source for AI
+    dependency, so an absent field is now an invariant violation (F2 — single
+    source of truth, F7 — fail visibly). Load-bearing sub-invariants when
+    present: ``current`` is a probability in [0, 1], the thresholds are
+    ordered, and ``measurement_source`` is one of the documented provenance
+    tags.
+
+    ponytail: ``bool`` deliberately passes the numeric checks (``isinstance``
+    treats ``bool`` as ``int``). Matches ``_validate_streak``; tighten both at
+    once if the contract ever needs to reject booleans.
+    """
+    errors: list[str] = []
+    learner = state.get("learner")
+    if not isinstance(learner, dict):
+        errors.append("learner block is required to validate aidi (ADR-0003)")
+        return errors
+
+    aidi = learner.get("aidi")
+    if aidi is None:
+        errors.append("learner.aidi is required (ADR-0003) — F2 single source of truth")
+        return errors
+    if not isinstance(aidi, dict):
+        errors.append(f"learner.aidi must be a mapping, got {type(aidi).__name__}")
+        return errors
+
+    current = aidi.get("current")
+    if not isinstance(current, (int, float)) or not 0.0 <= current <= 1.0:
+        errors.append(f"learner.aidi.current must be in [0,1], got {current!r}")
+
+    amber = aidi.get("threshold_amber")
+    red = aidi.get("threshold_red")
+    if not isinstance(amber, (int, float)) or not isinstance(red, (int, float)):
+        errors.append(
+            f"learner.aidi.threshold_amber and threshold_red must be numbers, "
+            f"got amber={amber!r} red={red!r}"
+        )
+    elif not 0.0 <= amber < red <= 1.0:
+        errors.append(
+            f"learner.aidi.thresholds must satisfy 0 <= amber({amber}) < red({red}) <= 1"
+        )
+
+    source = aidi.get("measurement_source")
+    if source is not None and source not in _AIDI_VALID_SOURCES:
+        errors.append(
+            f"learner.aidi.measurement_source must be one of "
+            f"{_AIDI_VALID_SOURCES_SORTED}, got {source!r}"
         )
 
     return errors

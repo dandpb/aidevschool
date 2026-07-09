@@ -47,7 +47,13 @@ CLEAN_INITIAL_STATE = {
         "human_instructor": "none",
         "hitl_sla_hours": 24,
         "hitl_fallback": "auto_reject_or_self_escalate",
-        "budget": {"hint_queries_per_day": 15}
+        "budget": {"hint_queries_per_day": 15},
+        "aidi": {
+            "current": 0.34,
+            "threshold_amber": 0.6,
+            "threshold_red": 0.75,
+            "measurement_source": "self_reported",
+        },
     },
     "state_machine": {
         "learning_states": ["presenting", "practicing", "evaluating", "mastered"],
@@ -133,6 +139,47 @@ def mock_load_canonical(path="learner/learning_state.yaml"):
         return copy.deepcopy(CLEAN_INITIAL_STATE)
     return _original_load_canonical(path)
 
+
+# Canonical AIDI block shape (ADR-0003); used as the default for tests that
+# want a complete valid state. Pass ``aidi=None`` to omit the block from the
+# constructed state.
+_DEFAULT_AIDI = {
+    "current": 0.34,
+    "threshold_amber": 0.6,
+    "threshold_red": 0.75,
+    "measurement_source": "self_reported",
+}
+
+
+def _minimal_state(units_log=None, streak=None, aidi=_DEFAULT_AIDI):
+    """Build a minimal valid state for validator tests.
+
+    The AIDI block is included by default (ADR-0003 makes it canonical).
+    Pass ``aidi=None`` to omit the block (exercises the absence path), or
+    pass a custom dict to override the canonical shape.
+    """
+    state = {
+        "version": 2,
+        "system": "agora-continuum",
+        "learner": {
+            "id": "x",
+            "level": "intermediate",
+            "active_language": "Go",
+            "languages": ["Go"],
+        },
+        "active_unit": {"id": "U1", "state": "presenting", "retry_count": 0, "retry_limit": 3},
+        "gate": {"implementation_blocked": True},
+        "empirical_gates": {"learning": {"requires_attempt_before_solution": True}},
+    }
+    if units_log is not None:
+        state["units_log"] = units_log
+    if streak is not None:
+        state["streak"] = streak
+    if aidi is not None:
+        state["learner"]["aidi"] = aidi
+    return state
+
+
 learner.substrate.load_canonical = mock_load_canonical
 learner.substrate.dashboard_snapshot.load_canonical = mock_load_canonical
 load_canonical = mock_load_canonical
@@ -190,6 +237,56 @@ class TestSubstrateInterface(unittest.TestCase):
         )
         self.assertIn("active_unit.id is required", errors)
         self.assertIn("empirical_gates.learning.requires_attempt_before_solution must be true", errors)
+
+    def test_validate_aidi_passes_for_canonical_state(self):
+        """Canonical state has a valid AIDI block (ADR-0003)."""
+        state = load_canonical()
+        errors = validate(state)
+        self.assertFalse(
+            any("aidi" in e.lower() for e in errors),
+            f"expected no AIDI errors in canonical state, got {errors}",
+        )
+
+    def test_validate_aidi_requires_block_when_absent(self):
+        """ADR-0003 mandates the AIDI block; absence is now an invariant violation."""
+        state = _minimal_state(aidi=None)
+        errors = validate(state)
+        self.assertTrue(
+            any("learner.aidi is required (ADR-0003)" in e for e in errors),
+            f"expected AIDI-required error, got {errors}",
+        )
+
+    def test_validate_aidi_catches_out_of_range_current(self):
+        state = _minimal_state(aidi={"current": 1.5, "threshold_amber": 0.6, "threshold_red": 0.75})
+        errors = validate(state)
+        self.assertTrue(
+            any("learner.aidi.current must be in [0,1]" in e for e in errors),
+            f"expected out-of-range error, got {errors}",
+        )
+
+    def test_validate_aidi_catches_inverted_thresholds(self):
+        # amber >= red is invalid; the gate is amber<red by construction.
+        state = _minimal_state(aidi={"current": 0.5, "threshold_amber": 0.8, "threshold_red": 0.6})
+        errors = validate(state)
+        self.assertTrue(
+            any("thresholds must satisfy" in e for e in errors),
+            f"expected threshold-ordering error, got {errors}",
+        )
+
+    def test_validate_aidi_catches_unknown_measurement_source(self):
+        state = _minimal_state(
+            aidi={
+                "current": 0.34,
+                "threshold_amber": 0.6,
+                "threshold_red": 0.75,
+                "measurement_source": "guessed",
+            }
+        )
+        errors = validate(state)
+        self.assertTrue(
+            any("measurement_source must be one of" in e for e in errors),
+            f"expected measurement-source error, got {errors}",
+        )
 
 
 class TestMavisAdapter(unittest.TestCase):
@@ -1078,25 +1175,8 @@ class TestUnitsLogValidation(unittest.TestCase):
     mastery requires a gate review (never docs alone).
     """
 
-    def _state(self, units_log=None, streak=None):
-        state = {
-            "version": 2,
-            "system": "agora-continuum",
-            "learner": {
-                "id": "x",
-                "level": "intermediate",
-                "active_language": "Go",
-                "languages": ["Go"],
-            },
-            "active_unit": {"id": "U1", "state": "presenting", "retry_count": 0, "retry_limit": 3},
-            "gate": {"implementation_blocked": True},
-            "empirical_gates": {"learning": {"requires_attempt_before_solution": True}},
-        }
-        if units_log is not None:
-            state["units_log"] = units_log
-        if streak is not None:
-            state["streak"] = streak
-        return state
+    def _state(self, units_log=None, streak=None, aidi=_DEFAULT_AIDI):
+        return _minimal_state(units_log=units_log, streak=streak, aidi=aidi)
 
     def test_bad_rating_rejected(self):
         state = self._state(

@@ -12,7 +12,7 @@ agente_owner: cartografo
 ## Foco atual
 
 - **Robustness**
-- **Unidade ativa:** U0-sonda-rate-limiter-robustness (APRESENTANDO)
+- **Unidade ativa:** U0-sonda-rate-limiter-robustness (DOMINADO)
 
 ## Template canônico
 
