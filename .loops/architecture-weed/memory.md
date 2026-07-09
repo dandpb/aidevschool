@@ -48,3 +48,41 @@ Append-only run log. Read this file FIRST at the start of every run before touch
     entry's `verification` field is intentionally `pending_verification`
     until that happens — do not graduate Training Mode without a clean
     external PASS.
+
+## Run 2026-07-08T22:05:58-03:00
+
+- mode: ON
+- inputs: `docs/FUNDAMENTOS.md`, `docs/PROMPTS/-01_GOAL.md`, `AGENTS.md` (root),
+  `docs/AGENTS.md`, `engines/codexDojo/ecosystem/MANIFEST.md`, ADRs 0001/0002,
+  `docs/ARCHITECTURE_EVALUATION_2026-07-05.md`, `docs/TECH_DEBT_AUDIT_2026-07-08.md`,
+  `learner/pipeline_status.md`, `learner/learning_state.yaml`, `curriculum/BACKLOG_STATUS.md`,
+  `learner/substrate/{dashboard_snapshot,adapters/whiteboard,__init__}.py`, voxelDojo/pixelDojo
+  evidence surfaces, substrate test suites (drift + voxel slice).
+- skipped: Step 1 could not skip (canonical files changed since last run: ADR-0002 + AGENTS.md
+  regen @2591bdb). Step 5 skipped — this run records the decision only, does not mutate
+  `learner/learning_state.yaml`, so no view regeneration is owed.
+- rerun: none — single iteration; ADR passed verification on first pass.
+- verification: **9/10 — PASS** — fresh-context verifier confirmed every anchor (bar 9:
+  substrate-contract ADR); one post-verify honesty nit ("4 values"→"3 + seed"), details in run-output
+  §Verifier verdict.
+- adr: `docs/design/adr/0003-aidi-canonical-source.md`
+- divergences: 5 found, 5 classified, 3 deferred. GAP 3 + audit items #1/#4/#21 all RESOLVED at
+  HEAD (the 2026-07-08 audit is substantially stale — caught only because F3 verification was
+  applied to its claims). Chosen: audit #5 (AIDI no canonical source — F2). Deferred: audit #9
+  (partial `validate()`), `atomic_write_text` dup, ADR-0002-outside-loop-memory, MANIFEST count
+  drift.
+- lessons:
+  - **Verify the audit before citing it.** `TECH_DEBT_AUDIT_2026-07-08.md` carried 3 high-priority
+    items (#1 P32, #4 P24, #21 P24) as `open` that were already fixed by the same-day commit burst
+    (`b840234`/`3244a86`/`cc2b618`/`52aaf72`). An audit is a snapshot, not a live source. Any future
+    run must re-check audit items against HEAD before treating them as divergences — same F3 rule
+    the loop applies everywhere else.
+  - **The fresh-context verifier is the loop's keystone** — keep its prompt minimal: Goal +
+    Done-Rules + ADR path + principle, never the producer's reasoning.
+  - **Raising the threshold to 9/10 for substrate-contract ADRs worked** — ADR-0003 adds a
+    `learner/aidi` field, which is a contract change; 9 held comfortably (9/10, confidence high).
+  - **Next-run hint (highest value):** execute the ADR-0003 implementation follow-up (steps in
+    run-output §Next-run hint); then audit #9 (partial `validate()`) is the next decision-worthy
+    divergence.
+  - **Training Mode graduation:** clean verifier PASS **#1** (2026-07-05 was
+    `pending_verification`); bar is 3 consecutive — do NOT graduate yet.
