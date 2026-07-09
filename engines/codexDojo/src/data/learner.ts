@@ -3,7 +3,7 @@
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +
 //         learner/predictions.yaml
-// Generated: 2026-07-08T21:10:34.687394Z
+// Generated: 2026-07-08T21:20:23.095820Z
 
 import type { LearnerSnapshot } from "../domain"
 
@@ -61,7 +61,7 @@ export const learnerSnapshot: LearnerSnapshot = {
       reason: "recurring-trap",
     },
   ],
-  masteredCount: 1,
+  masteredCount: 2,
   scaffoldedCount: 16,
   streak: {
     current: 1,
