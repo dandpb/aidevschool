@@ -134,12 +134,25 @@ def _aidi_trend_from_journal() -> list[dict[str, str]]:
     return points[-30:]
 
 
+def _status_token(cell: str) -> str:
+    """Extract the status keyword from a BACKLOG table cell.
+
+    Cells are usually `` `scaffolded` ``. Some notes hang after the token
+    (`` `implemented` (Node.js only) ``); only the first backticked word counts.
+    """
+    cell = cell.strip()
+    match = re.match(r"`([^`]+)`", cell)
+    if match:
+        return match.group(1).strip()
+    bare = cell.strip("`").strip()
+    return bare.split()[0] if bare else ""
+
+
 def _counts_from_backlog() -> tuple[int, int]:
     """Return (mastered_count, scaffolded_count) from BACKLOG_STATUS.md.
 
     Mastered = number of projects currently `implemented` (curriculum-verified). Scaffolded
-    = number currently `scaffolded` (folder + code + docs, not yet verified). Status cells
-    in the markdown are wrapped in backticks (`` `scaffolded` ``), which we strip here.
+    = number currently `scaffolded` (folder + code + docs, not yet verified).
     """
     if not BACKLOG.exists():
         return 0, 0
@@ -148,13 +161,13 @@ def _counts_from_backlog() -> tuple[int, int]:
     for line in BACKLOG.read_text(encoding="utf-8").splitlines():
         if not line.startswith("|"):
             continue
-        cells = [c.strip().strip("`") for c in line.strip("|").split("|")]
+        cells = [c.strip() for c in line.strip("|").split("|")]
         if len(cells) < 3:
             continue
-        status_cell = cells[1]
-        if status_cell == "implemented":
+        status = _status_token(cells[1])
+        if status == "implemented":
             implemented += 1
-        elif status_cell == "scaffolded":
+        elif status == "scaffolded":
             scaffolded += 1
     return implemented, scaffolded
 

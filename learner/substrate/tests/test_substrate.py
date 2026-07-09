@@ -262,9 +262,9 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # BACKLOG_STATUS.md marks 01 as `implemented` and 02-18 as `scaffolded`.
-        self.assertEqual(snapshot["masteredCount"], 1)
-        self.assertEqual(snapshot["scaffoldedCount"], 17)
+        # BACKLOG_STATUS.md: 01 + 02 implemented; 03-18 scaffolded (16).
+        self.assertEqual(snapshot["masteredCount"], 2)
+        self.assertEqual(snapshot["scaffoldedCount"], 16)
 
     def test_render_ts_is_well_formed_typescript(self):
         snapshot = build_snapshot()
@@ -561,61 +561,20 @@ class TestMemoryCurationContract(unittest.TestCase):
 
 
 class TestBacklogStatusDrift(unittest.TestCase):
-    """Walk `curriculum/02..18/` and verify BACKLOG_STATUS.md claims match reality.
+    """Verify BACKLOG_STATUS.md rows match the filesystem for scaffolded projects.
 
-    The catalog says projects 02-18 are `scaffolded` (folder + Go/Rust/Node code + docs
-    exist, not catalog-verified). This test catches drift: if someone promotes a project
-    to `scaffolded` without writing its evidence, or claims a project is `scaffolded`
-    when its folder is missing, the test fails loudly.
-
-    The catalog slug list is parsed from `curriculum/catalog.md` (the canonical source)
-    rather than hardcoded — that's the whole point of the test.
+    Status truth lives in BACKLOG_STATUS.md (01+02 are implemented; 03-18 scaffolded).
+    This suite does not hardcode those counts — it re-reads the backlog and checks
+    that every `scaffolded` row still has the expected skeleton artifacts.
     """
 
     expected_artifacts = ("docs/spec.md", "go-impl", "rust-impl", "node-impl", "docs/status.md")
 
-    @classmethod
-    def setUpClass(cls):
-        cls.scaffolded_projects = cls._read_catalog_slugs()
-
-    @staticmethod
-    def _read_catalog_slugs() -> tuple[str, ...]:
-        """Parse project slugs out of curriculum/catalog.md `**Slug**` fields.
-
-        The catalog is the canonical source of truth; if it changes, this test
-        updates itself automatically instead of going stale. Project 01 is
-        `implemented`; the rest (02-18) are the ones BACKLOG tracks as
-        `scaffolded`.
-        """
-        import re
-
-        catalog = (ROOT / "curriculum" / "catalog.md").read_text(encoding="utf-8")
-        # Match each `### NN. Title` heading, then within its section look for
-        # the `**Slug** | \`NN_name\` ` field. Stop at the next `### ` heading.
-        slug_pattern = re.compile(
-            r"^###\s+\d{2}\.\s+.*?(?=^###\s+\d{2}\.\s+|\Z)",
-            re.MULTILINE | re.DOTALL,
-        )
-        slug_field_pattern = re.compile(r"\*\*Slug\*\*\s*\|\s*`([^`]+)`")
-        slugs: list[str] = []
-        for section in slug_pattern.findall(catalog):
-            match = slug_field_pattern.search(section)
-            if match is None:
-                continue
-            slug = match.group(1).strip()
-            num = slug.split("_", 1)[0]
-            if int(num) >= 2:
-                slugs.append(slug)
-        return tuple(slugs)
-
     def _parse_backlog(self) -> dict[str, str]:
-        """Return {project_slug: status} from BACKLOG_STATUS.md.
-
-        Markdown table cells are `` `01_rate_limiter` `` and `` `scaffolded` ``; after
-        `strip()` and `strip('`')` they collapse to plain text. We detect slugs by shape
-        (NN_word_word) rather than re-checking for backticks.
-        """
+        """Return {project_slug: status_token} from BACKLOG_STATUS.md."""
         import re
+
+        from learner.substrate.dashboard_snapshot import _status_token
 
         text = (ROOT / "curriculum" / "BACKLOG_STATUS.md").read_text(encoding="utf-8")
         statuses: dict[str, str] = {}
@@ -623,23 +582,21 @@ class TestBacklogStatusDrift(unittest.TestCase):
         for line in text.splitlines():
             if not line.startswith("|"):
                 continue
-            cells = [c.strip().strip("`") for c in line.strip("|").split("|")]
+            cells = [c.strip() for c in line.strip("|").split("|")]
             if len(cells) < 3:
                 continue
-            slug = cells[0]
+            slug = cells[0].strip().strip("`")
             if not slug_pattern.match(slug):
                 continue
-            statuses[slug] = cells[1]
+            statuses[slug] = _status_token(cells[1])
         return statuses
 
     def test_every_scaffolded_row_has_the_expected_artifacts(self):
         statuses = self._parse_backlog()
+        scaffolded = [s for s, st in statuses.items() if st == "scaffolded"]
+        self.assertGreaterEqual(len(scaffolded), 1, "expected some scaffolded projects")
         missing_summary: list[str] = []
-        for slug in self.scaffolded_projects:
-            row = statuses.get(slug, "<not-in-backlog>")
-            if row != "scaffolded":
-                missing_summary.append(f"{slug}: BACKLOG says {row!r}, expected 'scaffolded'")
-                continue
+        for slug in scaffolded:
             project = ROOT / "curriculum" / slug
             if not project.exists():
                 missing_summary.append(f"{slug}: BACKLOG says scaffolded but folder missing")
@@ -652,23 +609,39 @@ class TestBacklogStatusDrift(unittest.TestCase):
                 "BACKLOG_STATUS.md drift detected:\n  " + "\n  ".join(missing_summary)
             )
 
-    def test_backlog_contains_every_scaffolded_project(self):
+    def test_backlog_covers_catalog_projects(self):
+        """Every catalog slug NN_* should appear in BACKLOG with a known status."""
+        import re
+
+        catalog = (ROOT / "curriculum" / "catalog.md").read_text(encoding="utf-8")
+        slug_field = re.compile(r"\*\*Slug\*\*\s*\|\s*`([^`]+)`")
+        catalog_slugs = {m.group(1).strip() for m in slug_field.finditer(catalog)}
         statuses = self._parse_backlog()
-        for slug in self.scaffolded_projects:
+        known = {"implemented", "scaffolded", "planned", "proposal"}
+        for slug in catalog_slugs:
+            self.assertIn(slug, statuses, f"{slug} missing from BACKLOG_STATUS.md")
             self.assertIn(
-                slug, statuses,
-                f"{slug} should appear in BACKLOG_STATUS.md (per the 18-project catalog)",
+                statuses[slug],
+                known,
+                f"{slug} has unknown status {statuses[slug]!r}",
             )
 
     def test_scaffolded_count_matches_dashboard_snapshot(self):
         from learner.substrate.dashboard_snapshot import build_snapshot
 
+        statuses = self._parse_backlog()
+        scaffolded_n = sum(1 for st in statuses.values() if st == "scaffolded")
+        implemented_n = sum(1 for st in statuses.values() if st == "implemented")
         snapshot = build_snapshot()
         self.assertEqual(
             snapshot["scaffoldedCount"],
-            len(self.scaffolded_projects),
-            "dashboard snapshot's scaffoldedCount must equal the number of "
-            "projects BACKLOG_STATUS.md marks as scaffolded",
+            scaffolded_n,
+            "dashboard scaffoldedCount must match BACKLOG scaffolded rows",
+        )
+        self.assertEqual(
+            snapshot["masteredCount"],
+            implemented_n,
+            "dashboard masteredCount must match BACKLOG implemented rows",
         )
 
 
