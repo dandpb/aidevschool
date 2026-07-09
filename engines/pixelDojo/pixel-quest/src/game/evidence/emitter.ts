@@ -1,6 +1,6 @@
+import { dualEmit } from "../../../../shared/evidence"
 import { validateEvidenceRecord } from "./evidence"
 import type { PixelQuestEvidenceMetrics, PixelQuestEvidenceRecord } from "./types"
-import { dualEmit } from "../../../../shared/evidence"
 
 // PixelQuest evidence contract (input for engines/pixelDojo/verifier).
 //
