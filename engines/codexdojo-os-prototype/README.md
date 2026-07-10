@@ -37,11 +37,11 @@ keeps each engine in its own runtime and exposes one bounded interaction:
 | Engine | In-OS interaction |
 | --- | --- |
 | `codexDojo` | Open the real dashboard and copy an agent prompt. |
-| `minimaxDojo` | Run the deterministic tutor-core contract. |
-| `miniMaxEvolutionEngine` | Validate the real `PhaseRunner` protocol. |
+| `minimaxDojo` | Prepare the current Socratic tutor entrypoint from canonical learner/config state. |
+| `miniMaxEvolutionEngine` | Prepare the exact next `/devschool-*` command from pipeline and learning-gate state. |
 | `openclaw` | Preview the next checklist without writing pipeline state. |
 | `pixelDojo` | Play PixelQuest and return raw attempt evidence to the Hub. |
-| `voxelDojo` | Operate HASH RING and return raw attempt evidence to the Hub. |
+| `voxelDojo` | Choose any of the 16 game packages; evidence-enabled games return raw attempts to the Hub. |
 
 The three browser engines use these optional production URLs:
 
@@ -49,12 +49,26 @@ The three browser engines use these optional production URLs:
 VITE_CODEXDOJO_URL=https://dashboard.example.test/
 VITE_PIXELDOJO_URL=https://pixel.example.test/
 VITE_VOXELDOJO_URL=https://voxel.example.test/
+VITE_VOXELDOJO_URLS='{"game-02-warehouse":"https://warehouse.example.test/","game-10-hash-ring":"https://hash-ring.example.test/"}'
 ```
 
-Development falls back to ports `5175`, `5176`, and `5177`. The Vite-only
-loopback bridge exposes three fixed, read-only Python actions. A production
-static build doesn't include that bridge and shows local actions as
-unavailable.
+`VITE_VOXELDOJO_URL` is the compatibility URL for HASH RING;
+`VITE_VOXELDOJO_URLS` maps any catalog game ID to its deployed origin.
+Development falls back to `5175`, `5176`, and the 16 fixed voxel catalog ports;
+run `pnpm run dev:catalog` from `../voxelDojo` to start them together.
+
+The local Vite bridge exposes three fixed, read-only Python actions. It is
+loopback-only, bootstraps a per-process token through a same-origin endpoint,
+accepts one JSON action at a time, and never accepts caller-supplied commands or
+paths. A normal static build renders local actions unavailable. To create and
+serve a local production bundle with the bridge enabled, run:
+
+```bash
+npm run preview:integrated
+```
+
+Game builds must set `VITE_CODEXDOJO_OS_ORIGIN` to the exact OS origin. Their
+evidence emitter verifies the embedding referrer and posts only to that origin.
 
 Teaching games continue to append evidence to their engine-owned browser
 channel and console log. When embedded, they also send the same raw record to
@@ -68,8 +82,8 @@ unverified, and never grants mastery.
 - Missions, the catalog, Terminal state, and mentor responses remain local UI
   state.
 - Engine actions and raw game evidence never mark units as `mastered`.
-- The OS has no backend, persistent virtual filesystem, or external mentor
-  provider.
+- The OS has no deployed backend, persistent virtual filesystem, or external
+  mentor provider. The bridge is a local Vite dev/preview adapter only.
 
 ## Implemented surfaces
 
