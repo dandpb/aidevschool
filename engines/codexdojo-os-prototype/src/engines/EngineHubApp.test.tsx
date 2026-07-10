@@ -63,6 +63,32 @@ describe('Engine Hub', () => {
     expect(screen.queryByTitle('PixelDojo Quest integrado')).toBeNull()
   })
 
+  it('routes every voxelDojo game through the in-OS catalog selector', async () => {
+    const user = userEvent.setup()
+    render(
+      <EngineHubApp
+        development={false}
+        configuredVoxelUrls={{
+          'game-02-warehouse': 'https://warehouse.voxel.example/',
+          'game-10-hash-ring': 'https://hash-ring.voxel.example/',
+        }}
+      />,
+    )
+    await user.click(screen.getByRole('button', { name: 'Usar voxelDojo' }))
+    const picker = screen.getByRole('combobox', { name: 'Experiência voxelDojo' })
+
+    expect(picker.querySelectorAll('option')).toHaveLength(16)
+    expect(screen.getByTitle('voxelDojo · HASH RING integrado').getAttribute('src')).toBe(
+      'https://hash-ring.voxel.example/',
+    )
+
+    await user.selectOptions(picker, 'game-02-warehouse')
+
+    expect(screen.getByTitle('voxelDojo · WAREHOUSE integrado').getAttribute('src')).toBe(
+      'https://warehouse.voxel.example/',
+    )
+  })
+
   it('runs the fixed local bridge action and renders its real receipt', async () => {
     // Given
     const user = userEvent.setup()

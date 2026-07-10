@@ -34,9 +34,9 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      name: 'voxelDojo HASH RING',
-      command: 'pnpm exec vite --host 127.0.0.1 --port 5177 --strictPort',
-      cwd: '../voxelDojo/game-10-hash-ring',
+      name: 'voxelDojo catalog',
+      command: 'pnpm run dev:catalog',
+      cwd: '../voxelDojo',
       url: 'http://127.0.0.1:5177',
       reuseExistingServer: true,
       timeout: 120_000,

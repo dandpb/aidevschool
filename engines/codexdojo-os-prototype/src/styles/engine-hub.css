@@ -24,6 +24,8 @@
 .engine-policy-strip strong { color: var(--success); }
 .pipeline-integrity-warning { display: flex; gap: 10px; align-items: center; padding: 8px 18px; border-bottom: 1px solid var(--line); background: var(--panel-soft); color: var(--muted); font-size: 9px; }
 .pipeline-integrity-warning strong { color: var(--coral); }
+.voxel-game-picker { min-height: 38px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 5px 18px; border-bottom: 1px solid var(--line); background: var(--panel-soft); color: var(--muted); font-size: 9px; font-weight: 800; text-transform: uppercase; }
+.voxel-game-picker select { min-width: 190px; height: 28px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel-solid); color: inherit; font: inherit; }
 .embedded-engine { min-width: 0; min-height: 0; width: 100%; flex: 1; display: flex; flex-direction: column; }
 .embedded-engine-toolbar { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 10px; border-bottom: 1px solid var(--line); background: var(--panel-soft); color: var(--muted); font-size: 9px; }
 .embedded-engine-toolbar button { display: flex; align-items: center; gap: 5px; min-height: 26px; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel-solid); color: inherit; font: inherit; cursor: pointer; }
@@ -46,7 +48,7 @@
 .engine-receipt.pass { border-left-color: var(--success); }
 .engine-receipt.fail { border-left-color: var(--coral); }
 .engine-receipt pre { max-height: 180px; overflow: auto; margin: 8px 0 0; color: var(--muted); white-space: pre-wrap; }
-.focused-engine .engine-hub-header, .focused-engine .engine-selector, .focused-engine .engine-detail-header, .focused-engine .engine-policy-strip, .focused-engine .pipeline-integrity-warning { display: none; }
+.focused-engine .engine-hub-header, .focused-engine .engine-selector, .focused-engine .engine-detail-header, .focused-engine .engine-policy-strip, .focused-engine .pipeline-integrity-warning, .focused-engine .voxel-game-picker { display: none; }
 .focused-engine .engine-hub-layout { grid-template-columns: 1fr; }
 
 @media (max-width: 900px) {
@@ -71,4 +73,7 @@
   .engine-detail-icon { width: 32px; height: 32px; }
   .engine-policy-strip { display: grid; gap: 2px; padding: 5px 12px; }
   .pipeline-integrity-warning { display: grid; padding: 7px 12px; }
+  .voxel-game-picker { padding: 5px 12px; }
+  .voxel-game-picker > span { display: none; }
+  .voxel-game-picker select { width: 100%; min-width: 0; }
 }

@@ -4,6 +4,7 @@ interface ImportMetaEnv {
   readonly VITE_CODEXDOJO_URL?: string
   readonly VITE_PIXELDOJO_URL?: string
   readonly VITE_VOXELDOJO_URL?: string
+  readonly VITE_VOXELDOJO_URLS?: string
 }
 
 interface ImportMeta {

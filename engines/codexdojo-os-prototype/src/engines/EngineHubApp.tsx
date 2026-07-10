@@ -13,6 +13,13 @@ import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import type { EngineId } from './protocol'
 import { engineRegistry } from './registry'
+import { VoxelGamePicker } from './VoxelGamePicker'
+import {
+  parseVoxelUrlMap,
+  voxelCatalog,
+  type VoxelGameId,
+  type VoxelUrlMap,
+} from './voxelCatalog'
 
 export type { EngineActionRunner } from './LocalEngineAction'
 
@@ -21,6 +28,7 @@ export type EngineHubAppProps = {
   readonly development?: boolean
   readonly localBridgeAvailable?: boolean
   readonly runAction?: EngineActionRunner
+  readonly configuredVoxelUrls?: VoxelUrlMap
 }
 
 const engineIcons: Readonly<Record<EngineId, ReactNode>> = {
@@ -45,16 +53,21 @@ const defaultUrls: Readonly<Partial<Record<EngineId, string>>> = {
 }
 
 const defaultActionRunner = createEngineActionClient()
+const defaultVoxelUrls = parseVoxelUrlMap(import.meta.env.VITE_VOXELDOJO_URLS)
+const defaultVoxelGameId: VoxelGameId = 'game-10-hash-ring'
 
 export function EngineHubApp({
   configuredUrls = defaultUrls,
   development = import.meta.env.DEV,
   localBridgeAvailable = development,
   runAction = defaultActionRunner,
+  configuredVoxelUrls = defaultVoxelUrls,
 }: EngineHubAppProps) {
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
+  const [voxelGameId, setVoxelGameId] = useState<VoxelGameId>(defaultVoxelGameId)
   const selected = engineRegistry.find((engine) => engine.id === selectedId)
+  const voxelGame = voxelCatalog.find((game) => game.id === voxelGameId) ?? voxelCatalog[7]
 
   const selectEngine = (engineId: EngineId) => {
     setSelectedId(engineId)
@@ -116,12 +129,24 @@ export function EngineHubApp({
                   <span>OpenClaw: learner/pipeline_status.yaml — Project 01</span>
                 </div>
               ) : null}
+              {selected.id === 'voxelDojo' ? (
+                <VoxelGamePicker selectedId={voxelGameId} onSelect={setVoxelGameId} />
+              ) : null}
               {selected.runtime.kind === 'embedded-web' ? (
                 <EmbeddedEngine
-                  key={selected.id}
-                  engineName={selected.name}
-                  configuredUrl={configuredUrls[selected.id]}
-                  developmentUrl={selected.runtime.developmentUrl}
+                  key={selected.id === 'voxelDojo' ? `${selected.id}:${voxelGameId}` : selected.id}
+                  engineName={selected.id === 'voxelDojo' ? `voxelDojo · ${voxelGame.name}` : selected.name}
+                  configuredUrl={
+                    selected.id === 'voxelDojo'
+                      ? configuredVoxelUrls[voxelGameId]
+                        ?? (voxelGameId === defaultVoxelGameId ? configuredUrls.voxelDojo : undefined)
+                      : configuredUrls[selected.id]
+                  }
+                  developmentUrl={
+                    selected.id === 'voxelDojo'
+                      ? voxelGame.developmentUrl
+                      : selected.runtime.developmentUrl
+                  }
                   development={development}
                   focused={focusedEngine}
                   onToggleFocus={() => setFocusedEngine((current) => !current)}
