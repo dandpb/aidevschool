@@ -1,5 +1,4 @@
-🎨 Palette: [CI Fix] Fix CI pipeline failures for pixelDojo
+🎨 Palette: [CI Fix] Resolve pnpm version mismatch in pixelDojo action
 
-* Fixed GitHub Action cache dependency path configuration
-* Fixed biome lint command pathing execution in `pixel-quest` package
-* Fixed biome formatting error in `emitter.ts`
+* Removed explicitly specified `version: 9` in `.github/workflows/ci.yml` for the `pixeldojo` job.
+* This resolves the `ERR_PNPM_BAD_PM_VERSION` error caused by `packageManager: "pnpm@9.15.9"` already being specified in `engines/pixelDojo/package.json`.
