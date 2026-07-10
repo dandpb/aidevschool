@@ -152,7 +152,13 @@ vi.mock("../progress", () => {
     getMetrics: (): readonly Metric[] => [metric],
     getEcosystemStatuses: (): readonly EcosystemStatus[] => [ecosystemStatus],
     getLearnerSnapshot: (): LearnerSnapshot => learnerSnapshot,
-    getDashboardStats: () => ({ agents: 1, stages: 1, projects: 1, completionPercent: 42 }),
+    getDashboardStats: () => ({
+      agents: 1,
+      stages: 1,
+      projects: 1,
+      // biome-ignore lint/suspicious/noExplicitAny: Required to mock injected string payloads into numeric fields
+      completionPercent: `42 ${XSS}` as any,
+    }),
   }
 })
 

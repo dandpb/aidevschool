@@ -43,9 +43,9 @@ function renderTopBar(activeApp: LinuxApp, runCount: number): string {
   return `
     <div class="linux-topbar">
       <strong>Linux Lab</strong>
-      <span>${linuxApps.length} apps installed</span>
+      <span>${escapeHtml(linuxApps.length)} apps installed</span>
       <span>Active: ${escapeHtml(activeApp.name)}</span>
-      <span>${runCount} lab runs</span>
+      <span>${escapeHtml(runCount)} lab runs</span>
     </div>
   `
 }
@@ -90,7 +90,7 @@ function renderActiveWindow(app: LinuxApp, runCount: number): string {
   const receipt =
     runCount === 0
       ? "Run the lab to create your first execution receipt."
-      : `Execution receipt #${runCount}`
+      : `Execution receipt #${escapeHtml(runCount)}`
 
   return `
     <article class="linux-window" aria-labelledby="linux-window-title">

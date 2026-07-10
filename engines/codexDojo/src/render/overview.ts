@@ -56,15 +56,15 @@ export function renderOverview(state: AppState): string {
       <article class="status-console">
         <div class="console-header">
           <span>Estado do dojo</span>
-          <span>${model.stats.completionPercent}% do ciclo</span>
+          <span>${escapeHtml(model.stats.completionPercent)}% do ciclo</span>
         </div>
-        <div class="meter" role="progressbar" aria-label="Progresso do ciclo" aria-valuenow="${model.stats.completionPercent}" aria-valuemin="0" aria-valuemax="100">
-          <span style="width: ${model.stats.completionPercent}%"></span>
+        <div class="meter" role="progressbar" aria-label="Progresso do ciclo" aria-valuenow="${escapeHtml(model.stats.completionPercent)}" aria-valuemin="0" aria-valuemax="100">
+          <span style="width: ${escapeHtml(model.stats.completionPercent)}%"></span>
         </div>
         <dl class="stat-grid">
-          <div><dt>Agentes</dt><dd>${model.stats.agents}</dd></div>
-          <div><dt>Etapas</dt><dd>${model.stats.stages}</dd></div>
-          <div><dt>Projetos</dt><dd>${model.stats.projects}</dd></div>
+          <div><dt>Agentes</dt><dd>${escapeHtml(model.stats.agents)}</dd></div>
+          <div><dt>Etapas</dt><dd>${escapeHtml(model.stats.stages)}</dd></div>
+          <div><dt>Projetos</dt><dd>${escapeHtml(model.stats.projects)}</dd></div>
         </dl>
       </article>
 
@@ -72,7 +72,7 @@ export function renderOverview(state: AppState): string {
         ${model.visibleAgents
           .map(
             (agent, index) =>
-              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}">
+              `<button class="agent-node node-${escapeHtml(index + 1)}" type="button" data-agent="${escapeHtml(agent.id)}">
                 <span>${escapeHtml(agent.name)}</span>
               </button>`,
           )
