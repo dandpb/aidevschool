@@ -11,9 +11,22 @@ import type {
   EcosystemStatus,
   LearnerSnapshot,
   Metric,
+  ProjectPhase,
   UserFacingAgent,
 } from "./domain"
 import type { AppState, ProjectFilter } from "./state"
+
+// Pre-compute groupings of projects by phase to provide O(1) cache lookups
+// and avoid allocating new arrays via .filter() on every render cycle.
+const projectsByPhase = new Map<ProjectPhase, DojoProject[]>()
+for (const project of projects) {
+  const phaseProjects = projectsByPhase.get(project.phase)
+  if (phaseProjects === undefined) {
+    projectsByPhase.set(project.phase, [project])
+  } else {
+    phaseProjects.push(project)
+  }
+}
 
 export type DashboardStats = {
   readonly agents: number
@@ -91,7 +104,7 @@ export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) ?? []
 }
 
 export function getCurrentProject(): DojoProject {
