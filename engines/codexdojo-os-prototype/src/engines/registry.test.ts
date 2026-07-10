@@ -38,8 +38,8 @@ describe('codexDojo OS engine registry', () => {
     // Then
     expect(webKinds).toEqual(['embedded-web', 'embedded-web', 'embedded-web'])
     expect(localKinds).toEqual([
-      { kind: 'local-bridge', action: 'run-reference-contract', sideEffect: 'read-only' },
-      { kind: 'local-bridge', action: 'validate-phase-runner', sideEffect: 'read-only' },
+      { kind: 'local-bridge', action: 'prepare-tutor-session', sideEffect: 'read-only' },
+      { kind: 'local-bridge', action: 'prepare-workflow', sideEffect: 'read-only' },
       { kind: 'local-bridge', action: 'preview-checklist', sideEffect: 'read-only' },
     ])
   })

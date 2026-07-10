@@ -20,19 +20,19 @@ describe('engine bridge allowlist', () => {
     expect(publicContract).toEqual([
       {
         engineId: 'minimaxDojo',
-        action: 'run-reference-contract',
+        action: 'prepare-tutor-session',
         executable: 'python3',
-        args: ['-m', 'unittest', 'engines.minimaxDojo.tests.test_learning_unit_e2e_contract', '-q'],
+        args: ['-m', 'engines.minimaxDojo.os_adapter'],
         cwd: '../..',
-        timeoutMs: 30_000,
+        timeoutMs: 10_000,
       },
       {
         engineId: 'miniMaxEvolutionEngine',
-        action: 'validate-phase-runner',
+        action: 'prepare-workflow',
         executable: 'python3',
-        args: ['engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py'],
+        args: ['-m', 'engines.miniMaxEvolutionEngine.os_adapter'],
         cwd: '../..',
-        timeoutMs: 30_000,
+        timeoutMs: 10_000,
       },
       {
         engineId: 'openclaw',
@@ -66,7 +66,7 @@ describe('engine bridge allowlist', () => {
     const executor = vi.fn().mockResolvedValue({ exitCode: 0, stdout: '1 passed', stderr: '' })
 
     // When
-    const receipt = await executeAllowedAction('minimaxDojo', 'run-reference-contract', executor)
+    const receipt = await executeAllowedAction('minimaxDojo', 'prepare-tutor-session', executor)
 
     // Then
     expect(receipt).toEqual({ exitCode: 0, stdout: '1 passed', stderr: '' })

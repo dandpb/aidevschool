@@ -204,7 +204,7 @@ class TestCodexDojoOsEngineHubContract(unittest.TestCase):
                 self.assertIn(f"id: '{engine_id}'", registry)
         self.assertEqual(registry.count("masteryAuthority: 'never'"), 6)
 
-    def test_local_bridge_is_fixed_and_development_only(self):
+    def test_local_bridge_is_fixed_authenticated_and_available_in_integrated_preview(self):
         actions = (self.engine / "bridge" / "actions.ts").read_text(encoding="utf-8")
         runner = (self.engine / "bridge" / "processRunner.ts").read_text(encoding="utf-8")
         plugin = (self.engine / "bridge" / "plugin.ts").read_text(encoding="utf-8")
@@ -214,8 +214,14 @@ class TestCodexDojoOsEngineHubContract(unittest.TestCase):
 
         self.assertIn("execFile", runner)
         self.assertNotIn("shell:", runner)
-        self.assertIn("apply: 'serve'", plugin)
+        self.assertIn("configureServer: configureBridge", plugin)
+        self.assertIn("configurePreviewServer: configureBridge", plugin)
+        self.assertIn("getSessionAuthorizationError", plugin)
+        self.assertIn("timingSafeEqual", plugin)
         self.assertEqual(actions.count("executable: 'python3'"), 3)
+        self.assertIn("prepare-tutor-session", actions)
+        self.assertIn("prepare-workflow", actions)
+        self.assertIn("preview-checklist", actions)
         self.assertIn("A ponte local não está disponível", hub)
 
 

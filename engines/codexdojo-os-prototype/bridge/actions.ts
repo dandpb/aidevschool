@@ -1,8 +1,8 @@
-import type { EngineId } from '../src/engines/protocol'
+import type { EngineAction, EngineId } from '../src/engines/protocol'
 
 export type AllowedAction = {
   readonly engineId: EngineId
-  readonly action: string
+  readonly action: EngineAction
   readonly executable: string
   readonly args: readonly string[]
   readonly cwd: string
@@ -20,19 +20,19 @@ export type ActionExecutor = (spec: AllowedAction) => Promise<ProcessReceipt>
 export const allowedActions = [
   {
     engineId: 'minimaxDojo',
-    action: 'run-reference-contract',
+    action: 'prepare-tutor-session',
     executable: 'python3',
-    args: ['-m', 'unittest', 'engines.minimaxDojo.tests.test_learning_unit_e2e_contract', '-q'],
+    args: ['-m', 'engines.minimaxDojo.os_adapter'],
     cwd: '../..',
-    timeoutMs: 30_000,
+    timeoutMs: 10_000,
   },
   {
     engineId: 'miniMaxEvolutionEngine',
-    action: 'validate-phase-runner',
+    action: 'prepare-workflow',
     executable: 'python3',
-    args: ['engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py'],
+    args: ['-m', 'engines.miniMaxEvolutionEngine.os_adapter'],
     cwd: '../..',
-    timeoutMs: 30_000,
+    timeoutMs: 10_000,
   },
   {
     engineId: 'openclaw',

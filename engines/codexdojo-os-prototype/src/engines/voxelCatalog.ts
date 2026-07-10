@@ -1,23 +1,20 @@
-export const voxelCatalog = [
-  { id: 'game-02-warehouse', name: 'WAREHOUSE', developmentUrl: 'http://127.0.0.1:5202/' },
-  { id: 'game-03-wormhole', name: 'WORMHOLE', developmentUrl: 'http://127.0.0.1:5203/' },
-  { id: 'game-05-relay-station', name: 'RELAY STATION', developmentUrl: 'http://127.0.0.1:5205/' },
-  { id: 'game-06-pipeline-plant', name: 'PIPELINE PLANT', developmentUrl: 'http://127.0.0.1:5206/' },
-  { id: 'game-07-checkpoint-city', name: 'CHECKPOINT CITY', developmentUrl: 'http://127.0.0.1:5207/' },
-  { id: 'game-08-timeline-tower', name: 'TIMELINE TOWER', developmentUrl: 'http://127.0.0.1:5208/' },
-  { id: 'game-09-docking-bay', name: 'DOCKING BAY', developmentUrl: 'http://127.0.0.1:5209/' },
-  { id: 'game-10-hash-ring', name: 'HASH RING', developmentUrl: 'http://127.0.0.1:5177/' },
-  { id: 'game-11-air-traffic', name: 'AIR TRAFFIC', developmentUrl: 'http://127.0.0.1:5211/' },
-  { id: 'game-12-mission-control', name: 'MISSION CONTROL', developmentUrl: 'http://127.0.0.1:5212/' },
-  { id: 'game-13-breaker-grid', name: 'BREAKER GRID', developmentUrl: 'http://127.0.0.1:5213/' },
-  { id: 'game-14-river-delta', name: 'RIVER DELTA', developmentUrl: 'http://127.0.0.1:5214/' },
-  { id: 'game-15-observatory', name: 'OBSERVATORY', developmentUrl: 'http://127.0.0.1:5215/' },
-  { id: 'game-16-freight-yard', name: 'FREIGHT YARD', developmentUrl: 'http://127.0.0.1:5216/' },
-  { id: 'game-17-lighthouse-network', name: 'LIGHTHOUSE NETWORK', developmentUrl: 'http://127.0.0.1:5217/' },
-  { id: 'game-18-stacks', name: 'STACKS', developmentUrl: 'http://127.0.0.1:5218/' },
-] as const
+import catalog from '../../../voxelDojo/catalog.json' with { type: 'json' }
 
-export type VoxelGameId = (typeof voxelCatalog)[number]['id']
+export type VoxelGameId = `game-${number}-${string}`
+
+function isVoxelGameId(value: string): value is VoxelGameId {
+  return /^game-\d{2}-[a-z0-9-]+$/.test(value)
+}
+
+export const voxelCatalog = catalog.map((game) => {
+  if (!isVoxelGameId(game.id)) throw new Error(`Invalid voxelDojo game ID: ${game.id}`)
+  return {
+    id: game.id,
+    name: game.name,
+    developmentUrl: `http://127.0.0.1:${game.developmentPort}/`,
+  }
+})
+
 export type VoxelUrlMap = Readonly<Partial<Record<VoxelGameId, string>>>
 
 export function parseVoxelUrlMap(serialized: string | undefined): VoxelUrlMap {

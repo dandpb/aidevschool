@@ -1,36 +1,31 @@
 import process from "node:process"
+import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { createServer } from "vite"
 import { dirname, resolve } from "node:path"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
-const games = [
-  ["game-02-warehouse", 5202],
-  ["game-03-wormhole", 5203],
-  ["game-05-relay-station", 5205],
-  ["game-06-pipeline-plant", 5206],
-  ["game-07-checkpoint-city", 5207],
-  ["game-08-timeline-tower", 5208],
-  ["game-09-docking-bay", 5209],
-  ["game-10-hash-ring", 5177],
-  ["game-11-air-traffic", 5211],
-  ["game-12-mission-control", 5212],
-  ["game-13-breaker-grid", 5213],
-  ["game-14-river-delta", 5214],
-  ["game-15-observatory", 5215],
-  ["game-16-freight-yard", 5216],
-  ["game-17-lighthouse-network", 5217],
-  ["game-18-stacks", 5218],
-]
+const catalog = JSON.parse(readFileSync(resolve(root, "catalog.json"), "utf8"))
+if (!Array.isArray(catalog)) throw new Error("voxelDojo catalog must be an array")
+const games = catalog.map((game) => {
+  if (
+    typeof game !== "object" || game === null
+    || typeof game.id !== "string"
+    || typeof game.developmentPort !== "number"
+  ) {
+    throw new Error("voxelDojo catalog contains an invalid game")
+  }
+  return game
+})
 
 process.env.VITE_CODEXDOJO_OS_ORIGIN ??= "http://127.0.0.1:4174"
 const servers = []
 
 try {
-  for (const [game, port] of games) {
+  for (const { id, developmentPort } of games) {
     const server = await createServer({
-      root: resolve(root, game),
-      server: { host: "127.0.0.1", port, strictPort: true },
+      root: resolve(root, id),
+      server: { host: "127.0.0.1", port: developmentPort, strictPort: true },
     })
     await server.listen()
     servers.push(server)

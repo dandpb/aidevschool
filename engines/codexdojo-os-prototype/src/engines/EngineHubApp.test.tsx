@@ -101,10 +101,10 @@ describe('Engine Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
 
     // When
-    await user.click(screen.getByRole('button', { name: 'Executar contrato de referência' }))
+    await user.click(screen.getByRole('button', { name: 'Preparar sessão de tutoria' }))
 
     // Then
-    expect(runAction).toHaveBeenCalledWith('minimaxDojo', 'run-reference-contract')
+    expect(runAction).toHaveBeenCalledWith('minimaxDojo', 'prepare-tutor-session')
     expect(await screen.findByText('Contrato determinístico executado')).toBeTruthy()
     expect(screen.getByText('1 passed in 0.08s')).toBeTruthy()
     expect(screen.getByText(/não concede domínio/i)).toBeTruthy()
@@ -119,9 +119,9 @@ describe('Engine Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Usar OpenClaw' }))
 
     // Then
-    expect(screen.getByText('Fontes de pipeline divergentes')).toBeTruthy()
-    expect(screen.getByText(/pipeline_status\.md.*Project 02/i)).toBeTruthy()
-    expect(screen.getByText(/pipeline_status\.yaml.*Project 01/i)).toBeTruthy()
+    expect(screen.getByText('Fontes de pipeline distintas')).toBeTruthy()
+    expect(screen.getByText(/Evolution: learner\/pipeline_status\.md/i)).toBeTruthy()
+    expect(screen.getByText(/OpenClaw: learner\/pipeline_status\.yaml/i)).toBeTruthy()
   })
 
   it('drops a stale local receipt after the user switches engines', async () => {
@@ -136,12 +136,12 @@ describe('Engine Hub', () => {
     }))
     render(<EngineHubApp development={false} localBridgeAvailable runAction={runAction} />)
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
-    await user.click(screen.getByRole('button', { name: 'Executar contrato de referência' }))
+    await user.click(screen.getByRole('button', { name: 'Preparar sessão de tutoria' }))
 
     await user.click(screen.getByRole('button', { name: 'Usar MiniMax Evolution Engine' }))
     resolveAction?.({ ok: true, summary: 'Stale minimax receipt', output: 'must not render' })
 
-    expect(await screen.findByRole('button', { name: 'Validar PhaseRunner' })).toBeTruthy()
+    expect(await screen.findByRole('button', { name: 'Preparar workflow' })).toBeTruthy()
     expect(screen.queryByText('Stale minimax receipt')).toBeNull()
   })
 
@@ -152,7 +152,7 @@ describe('Engine Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
 
     expect(screen.getByRole('status').textContent).toContain('ponte local não está disponível')
-    expect(screen.queryByRole('button', { name: 'Executar contrato de referência' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Preparar sessão de tutoria' })).toBeNull()
   })
 
   it('renders only source-bound raw evidence as requiring independent verification', async () => {

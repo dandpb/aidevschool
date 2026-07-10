@@ -6,15 +6,18 @@ export type EngineId =
   | 'pixelDojo'
   | 'voxelDojo'
 
+export type EngineAction = 'prepare-tutor-session' | 'prepare-workflow' | 'preview-checklist'
+
 export type EngineRuntime =
   | {
       readonly kind: 'embedded-web'
       readonly environmentKey: string
       readonly developmentUrl: string
+      readonly evidenceSource: 'pixelquest' | null
     }
   | {
       readonly kind: 'local-bridge'
-      readonly action: string
+      readonly action: EngineAction
       readonly sideEffect: 'read-only'
     }
 

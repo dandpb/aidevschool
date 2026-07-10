@@ -1,7 +1,7 @@
 import type { EngineActionResult, EngineId } from './protocol'
 
 export type Fetcher = (input: string, init: RequestInit) => Promise<Response>
-export type BridgeTokenReader = () => string | null
+export type BridgeTokenProvider = () => Promise<string | null>
 
 export class InvalidEngineBridgeResponseError extends Error {
   constructor() {
@@ -17,16 +17,28 @@ export class MissingEngineBridgeTokenError extends Error {
   }
 }
 
-function readDocumentBridgeToken(): string | null {
-  return document.querySelector<HTMLMetaElement>('meta[name="codexdojo-bridge-token"]')?.content ?? null
+function createBridgeTokenProvider(fetcher: Fetcher): BridgeTokenProvider {
+  let request: Promise<string | null> | undefined
+  return () => {
+    request ??= fetcher('/__dojo/bridge/v1/session', {
+      method: 'GET',
+      headers: { accept: 'application/json' },
+    }).then(async (response) => {
+      if (!response.ok) return null
+      const body: unknown = await response.json()
+      if (typeof body !== 'object' || body === null || !('token' in body)) return null
+      return typeof body.token === 'string' && body.token !== '' ? body.token : null
+    })
+    return request
+  }
 }
 
 export function createEngineActionClient(
   fetcher: Fetcher = fetch,
-  readToken: BridgeTokenReader = readDocumentBridgeToken,
+  getToken: BridgeTokenProvider = createBridgeTokenProvider(fetcher),
 ) {
   return async (engineId: EngineId, action: string): Promise<EngineActionResult> => {
-    const token = readToken()
+    const token = await getToken()
     if (token === null || token === '') throw new MissingEngineBridgeTokenError()
     const response = await fetcher(
       `/__dojo/bridge/v1/engines/${encodeURIComponent(engineId)}/actions/${encodeURIComponent(action)}`,

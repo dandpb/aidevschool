@@ -11,15 +11,10 @@ import { type ReactNode, useState } from 'react'
 import { createEngineActionClient } from './client'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
-import type { EngineId } from './protocol'
+import type { EngineAction, EngineId } from './protocol'
 import { engineRegistry } from './registry'
-import { VoxelGamePicker } from './VoxelGamePicker'
-import {
-  parseVoxelUrlMap,
-  voxelCatalog,
-  type VoxelGameId,
-  type VoxelUrlMap,
-} from './voxelCatalog'
+import { VoxelEngine } from './VoxelEngine'
+import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
 
 export type { EngineActionRunner } from './LocalEngineAction'
 
@@ -40,9 +35,9 @@ const engineIcons: Readonly<Record<EngineId, ReactNode>> = {
   voxelDojo: <Boxes />,
 }
 
-const actionLabels: Readonly<Record<string, string>> = {
-  'run-reference-contract': 'Executar contrato de referência',
-  'validate-phase-runner': 'Validar PhaseRunner',
+const actionLabels: Readonly<Record<EngineAction, string>> = {
+  'prepare-tutor-session': 'Preparar sessão de tutoria',
+  'prepare-workflow': 'Preparar workflow',
   'preview-checklist': 'Pré-visualizar checklist',
 }
 
@@ -54,20 +49,17 @@ const defaultUrls: Readonly<Partial<Record<EngineId, string>>> = {
 
 const defaultActionRunner = createEngineActionClient()
 const defaultVoxelUrls = parseVoxelUrlMap(import.meta.env.VITE_VOXELDOJO_URLS)
-const defaultVoxelGameId: VoxelGameId = 'game-10-hash-ring'
 
 export function EngineHubApp({
   configuredUrls = defaultUrls,
   development = import.meta.env.DEV,
-  localBridgeAvailable = development,
+  localBridgeAvailable = development || import.meta.env.VITE_LOCAL_ENGINE_BRIDGE === 'true',
   runAction = defaultActionRunner,
   configuredVoxelUrls = defaultVoxelUrls,
 }: EngineHubAppProps) {
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
-  const [voxelGameId, setVoxelGameId] = useState<VoxelGameId>(defaultVoxelGameId)
   const selected = engineRegistry.find((engine) => engine.id === selectedId)
-  const voxelGame = voxelCatalog.find((game) => game.id === voxelGameId) ?? voxelCatalog[7]
 
   const selectEngine = (engineId: EngineId) => {
     setSelectedId(engineId)
@@ -124,53 +116,43 @@ export function EngineHubApp({
               </div>
               {selected.id === 'miniMaxEvolutionEngine' || selected.id === 'openclaw' ? (
                 <div className="pipeline-integrity-warning" role="note">
-                  <strong>Fontes de pipeline divergentes</strong>
-                  <span>Evolution: learner/pipeline_status.md — Project 02</span>
-                  <span>OpenClaw: learner/pipeline_status.yaml — Project 01</span>
+                  <strong>Fontes de pipeline distintas</strong>
+                  <span>Evolution: learner/pipeline_status.md</span>
+                  <span>OpenClaw: learner/pipeline_status.yaml</span>
                 </div>
               ) : null}
               {selected.id === 'voxelDojo' ? (
-                <VoxelGamePicker selectedId={voxelGameId} onSelect={setVoxelGameId} />
-              ) : null}
-              {selected.runtime.kind === 'embedded-web' ? (
-                <EmbeddedEngine
-                  key={selected.id === 'voxelDojo' ? `${selected.id}:${voxelGameId}` : selected.id}
-                  engineName={selected.id === 'voxelDojo' ? `voxelDojo · ${voxelGame.name}` : selected.name}
-                  configuredUrl={
-                    selected.id === 'voxelDojo'
-                      ? configuredVoxelUrls[voxelGameId]
-                        ?? (voxelGameId === defaultVoxelGameId ? configuredUrls.voxelDojo : undefined)
-                      : configuredUrls[selected.id]
-                  }
-                  developmentUrl={
-                    selected.id === 'voxelDojo'
-                      ? voxelGame.developmentUrl
-                      : selected.runtime.developmentUrl
-                  }
+                <VoxelEngine
+                  configuredUrls={configuredVoxelUrls}
+                  compatibilityUrl={configuredUrls.voxelDojo}
                   development={development}
                   focused={focusedEngine}
                   onToggleFocus={() => setFocusedEngine((current) => !current)}
-                  evidenceSource={
-                    selected.id === 'pixelDojo'
-                      ? 'pixelquest'
-                      : selected.id === 'voxelDojo'
-                        ? 'voxeldojo'
-                        : null
-                  }
+                />
+              ) : selected.runtime.kind === 'embedded-web' ? (
+                <EmbeddedEngine
+                  key={selected.id}
+                  engineName={selected.name}
+                  configuredUrl={configuredUrls[selected.id]}
+                  developmentUrl={selected.runtime.developmentUrl}
+                  development={development}
+                  focused={focusedEngine}
+                  onToggleFocus={() => setFocusedEngine((current) => !current)}
+                  evidenceSource={selected.runtime.evidenceSource}
                 />
               ) : localBridgeAvailable ? (
                 <LocalEngineAction
                   key={selected.id}
                   engineId={selected.id}
                   action={selected.runtime.action}
-                  label={actionLabels[selected.runtime.action] ?? 'Executar ação permitida'}
+                  label={actionLabels[selected.runtime.action]}
                   runAction={runAction}
                 />
               ) : (
                 <div className="engine-unavailable" role="status">
                   <ServerCog />
                   <strong>A ponte local não está disponível</strong>
-                  <p>Use o servidor de desenvolvimento local para executar esta ação fixa.</p>
+                  <p>Use o servidor local de desenvolvimento ou o preview integrado para executar esta ação fixa.</p>
                 </div>
               )}
             </>

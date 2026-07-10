@@ -1,4 +1,20 @@
 import { expect, test, type Page } from '@playwright/test'
+import { voxelCatalog } from '../src/engines/voxelCatalog'
+
+declare global {
+  interface Window {
+    __hashRing?: {
+      readonly game: {
+        readonly snapshot: {
+          readonly keys: readonly string[]
+          readonly pendingKeyIndex: number
+        }
+        readonly ownerOfKey: (key: string) => string
+      }
+    }
+    __voxelDojoEvidence?: readonly unknown[]
+  }
+}
 
 async function openEngineHub(page: Page): Promise<void> {
   await page.goto('/')
@@ -14,18 +30,20 @@ test('executes every allowlisted local engine action inside the OS', async ({ pa
   await openEngineHub(page)
 
   await page.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }).click()
-  await page.getByRole('button', { name: 'Executar contrato de referência' }).click()
-  await expect(page.getByRole('status')).toContainText('Ran 2 tests')
-  await expect(page.getByRole('status')).toContainText('OK')
+  await page.getByRole('button', { name: 'Preparar sessão de tutoria' }).click()
+  await expect(page.getByRole('status')).toContainText('minimaxDojo tutor session')
+  await expect(page.getByRole('status')).toContainText('cannot mark mastery')
 
   await page.getByRole('button', { name: 'Usar MiniMax Evolution Engine' }).click()
-  await page.getByRole('button', { name: 'Validar PhaseRunner' }).click()
-  await expect(page.getByRole('status')).toContainText('PASS test_phaserunner_interface')
+  await page.getByRole('button', { name: 'Preparar workflow' }).click()
+  await expect(page.getByRole('status')).toContainText('Next Claude Code command: /devschool-next')
+  await expect(page.getByRole('status')).toContainText('does not execute a phase or advance state')
 
   await page.getByRole('button', { name: 'Usar OpenClaw' }).click()
   await page.getByRole('button', { name: 'Pré-visualizar checklist' }).click()
   await expect(page.getByRole('status')).toContainText('OpenClaw checklist preview')
   await expect(page.getByRole('status')).toContainText('source: learner/pipeline_status.yaml')
+  await page.screenshot({ path: 'qa/desktop-1280-engine-hub-local-receipt.png', fullPage: true })
 })
 
 test('keeps Engine Hub operable at the configured viewport', async ({ page }, testInfo) => {
@@ -40,7 +58,24 @@ test('keeps Engine Hub operable at the configured viewport', async ({ page }, te
     page.frameLocator('iframe[title="PixelDojo Quest integrado"]').getByRole('button', { name: 'Orbita 3D' }),
   ).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
-  await page.screenshot({ path: `qa/${testInfo.project.name}-engine-hub.png`, fullPage: true })
+  await page.screenshot({ path: `qa/${testInfo.project.name}-engine-hub-layout.png`, fullPage: true })
+  await page.getByRole('button', { name: 'Expandir motor' }).click()
+  await expect(page.getByRole('button', { name: 'Voltar ao Hub' })).toBeVisible()
+  await page.screenshot({ path: `qa/${testInfo.project.name}-engine-hub-focused.png`, fullPage: true })
+})
+
+test('opens every voxelDojo catalog experience inside the OS', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-1280')
+  test.setTimeout(120_000)
+  await openEngineHub(page)
+  await page.getByRole('button', { name: 'Usar voxelDojo' }).click()
+  const picker = page.getByRole('combobox', { name: 'Experiência voxelDojo' })
+
+  for (const game of voxelCatalog) {
+    await picker.selectOption(game.id)
+    const frame = page.frameLocator(`iframe[title="voxelDojo · ${game.name} integrado"]`)
+    await expect(frame.locator('canvas')).toBeVisible({ timeout: 15_000 })
+  }
 })
 
 test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub', async ({ page, context }, testInfo) => {
@@ -74,9 +109,10 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
   await expect(pixel.getByText('Evidencia PASS emitida')).toBeVisible()
   await expect(page.locator('.embedded-evidence')).toContainText('01_rate_limiter')
   await expect(page.locator('.embedded-evidence')).toContainText('Verificação independente obrigatória')
+  await page.screenshot({ path: 'qa/desktop-1280-engine-hub-pixel-receipt.png', fullPage: true })
 
   await page.getByRole('button', { name: 'Usar voxelDojo' }).click()
-  const voxel = page.frameLocator('iframe[title="voxelDojo integrado"]')
+  const voxel = page.frameLocator('iframe[title="voxelDojo · HASH RING integrado"]')
   await expect(voxel.getByTestId('hud-title')).toContainText('L1')
   await voxel.getByTestId('start').click()
   for (let index = 0; index < 12; index += 1) {
@@ -94,5 +130,5 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
   await expect(page.locator('.embedded-evidence')).toContainText('voxeldojo')
   await expect(page.locator('.embedded-evidence')).toContainText('Verificação independente obrigatória')
 
-  await page.screenshot({ path: 'qa/desktop-1280-engine-hub.png', fullPage: true })
+  await page.screenshot({ path: 'qa/desktop-1280-engine-hub-voxel-receipt.png', fullPage: true })
 })

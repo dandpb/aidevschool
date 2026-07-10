@@ -1,0 +1,18 @@
+[
+  { "id": "game-02-warehouse", "name": "WAREHOUSE", "developmentPort": 5202 },
+  { "id": "game-03-wormhole", "name": "WORMHOLE", "developmentPort": 5203 },
+  { "id": "game-05-relay-station", "name": "RELAY STATION", "developmentPort": 5205 },
+  { "id": "game-06-pipeline-plant", "name": "PIPELINE PLANT", "developmentPort": 5206 },
+  { "id": "game-07-checkpoint-city", "name": "CHECKPOINT CITY", "developmentPort": 5207 },
+  { "id": "game-08-timeline-tower", "name": "TIMELINE TOWER", "developmentPort": 5208 },
+  { "id": "game-09-docking-bay", "name": "DOCKING BAY", "developmentPort": 5209 },
+  { "id": "game-10-hash-ring", "name": "HASH RING", "developmentPort": 5177 },
+  { "id": "game-11-air-traffic", "name": "AIR TRAFFIC", "developmentPort": 5211 },
+  { "id": "game-12-mission-control", "name": "MISSION CONTROL", "developmentPort": 5212 },
+  { "id": "game-13-breaker-grid", "name": "BREAKER GRID", "developmentPort": 5213 },
+  { "id": "game-14-river-delta", "name": "RIVER DELTA", "developmentPort": 5214 },
+  { "id": "game-15-observatory", "name": "OBSERVATORY", "developmentPort": 5215 },
+  { "id": "game-16-freight-yard", "name": "FREIGHT YARD", "developmentPort": 5216 },
+  { "id": "game-17-lighthouse-network", "name": "LIGHTHOUSE NETWORK", "developmentPort": 5217 },
+  { "id": "game-18-stacks", "name": "STACKS", "developmentPort": 5218 }
+]

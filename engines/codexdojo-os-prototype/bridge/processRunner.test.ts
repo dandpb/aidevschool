@@ -5,7 +5,7 @@ import { runProcess } from './processRunner'
 function nodeAction(args: readonly string[], timeoutMs: number): AllowedAction {
   return {
     engineId: 'minimaxDojo',
-    action: 'run-reference-contract',
+    action: 'prepare-tutor-session',
     executable: process.execPath,
     args,
     cwd: '.',

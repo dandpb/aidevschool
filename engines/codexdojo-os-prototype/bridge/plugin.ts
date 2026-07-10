@@ -1,14 +1,17 @@
 import { randomBytes, timingSafeEqual } from 'node:crypto'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import type { Plugin } from 'vite'
+import type { Plugin, PreviewServer, ViteDevServer } from 'vite'
 import type { BridgeResponse } from './router'
 import { routeBridgeRequest } from './router'
 import { EngineProcessTimeoutError, runProcess } from './processRunner'
 
-const BRIDGE_PREFIX = '/__dojo/bridge/v1/'
+const BRIDGE_ROOT = '/__dojo/bridge/v1'
+const BRIDGE_PREFIX = `${BRIDGE_ROOT}/`
+const BRIDGE_SESSION_PATH = `${BRIDGE_ROOT}/session`
 const MAX_BODY_BYTES = 4_096
 const BRIDGE_TOKEN_HEADER = 'x-codexdojo-bridge-token'
-const BRIDGE_TOKEN_META = 'codexdojo-bridge-token'
+
+type BridgeServer = Pick<ViteDevServer | PreviewServer, 'middlewares' | 'config'>
 
 export type BridgeAuthorizationInput = {
   readonly remoteAddress: string | undefined
@@ -63,6 +66,17 @@ export function getBridgeAuthorizationError(
   return null
 }
 
+export function getSessionAuthorizationError(request: {
+  readonly remoteAddress: string | undefined
+  readonly method: string | undefined
+  readonly fetchSite: string | undefined
+}): string | null {
+  if (!isLoopbackAddress(request.remoteAddress)) return 'loopback-only'
+  if (request.method !== 'GET') return 'method-not-allowed'
+  if (request.fetchSite !== 'same-origin') return 'origin-forbidden'
+  return null
+}
+
 function tokensEqual(received: string, expected: string): boolean {
   const receivedBytes = Buffer.from(received)
   const expectedBytes = Buffer.from(expected)
@@ -71,63 +85,72 @@ function tokensEqual(received: string, expected: string): boolean {
 
 export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base64url')): Plugin {
   const gate = new BridgeConcurrencyGate(1)
-  return {
-    name: 'codexdojo-engine-bridge',
-    apply: 'serve',
-    transformIndexHtml: {
-      order: 'pre',
-      handler() {
-        return [{
-          tag: 'meta',
-          attrs: { name: BRIDGE_TOKEN_META, content: sessionToken },
-          injectTo: 'head',
-        }]
-      },
-    },
-    configureServer(server) {
-      server.middlewares.use((request, response, next) => {
-        const pathname = new URL(request.url ?? '/', 'http://127.0.0.1').pathname
-        if (!pathname.startsWith(BRIDGE_PREFIX)) {
-          next()
-          return
-        }
-
-        const authorizationError = getBridgeAuthorizationError({
+  const configureBridge = (server: BridgeServer): void => {
+    server.middlewares.use((request, response, next) => {
+      const pathname = new URL(request.url ?? '/', 'http://127.0.0.1').pathname
+      if (pathname === BRIDGE_SESSION_PATH) {
+        const authorizationError = getSessionAuthorizationError({
           remoteAddress: request.socket.remoteAddress,
-          origin: firstHeader(request.headers.origin),
-          host: firstHeader(request.headers.host),
-          contentType: firstHeader(request.headers['content-type']),
-          token: firstHeader(request.headers[BRIDGE_TOKEN_HEADER]),
-        }, sessionToken)
+          method: request.method,
+          fetchSite: firstHeader(request.headers['sec-fetch-site']),
+        })
         if (authorizationError !== null) {
           sendJson(response, {
-            status: authorizationError === 'json-required' ? 415 : 403,
+            status: authorizationError === 'method-not-allowed' ? 405 : 403,
             body: { error: authorizationError },
           })
           return
         }
-        if (!gate.tryAcquire()) {
-          sendJson(response, { status: 429, body: { error: 'bridge-busy' } })
+        response.setHeader('cross-origin-resource-policy', 'same-origin')
+        sendJson(response, { status: 200, body: { token: sessionToken } })
+        return
+      }
+      if (!pathname.startsWith(BRIDGE_PREFIX)) {
+        next()
+        return
+      }
+
+      const authorizationError = getBridgeAuthorizationError({
+        remoteAddress: request.socket.remoteAddress,
+        origin: firstHeader(request.headers.origin),
+        host: firstHeader(request.headers.host),
+        contentType: firstHeader(request.headers['content-type']),
+        token: firstHeader(request.headers[BRIDGE_TOKEN_HEADER]),
+      }, sessionToken)
+      if (authorizationError !== null) {
+        sendJson(response, {
+          status: authorizationError === 'json-required' ? 415 : 403,
+          body: { error: authorizationError },
+        })
+        return
+      }
+      if (!gate.tryAcquire()) {
+        sendJson(response, { status: 429, body: { error: 'bridge-busy' } })
+        return
+      }
+
+      void handleBridgeRequest(request, response, pathname).catch((error: unknown) => {
+        if (error instanceof BridgeBodyTooLargeError) {
+          sendJson(response, { status: 413, body: { error: 'body-too-large' } })
           return
         }
+        if (error instanceof EngineProcessTimeoutError) {
+          sendJson(response, {
+            status: 504,
+            body: { ok: false, summary: 'A ação excedeu o tempo limite', output: error.message },
+          })
+          return
+        }
+        server.config.logger.error('Engine bridge request failed')
+        sendJson(response, { status: 500, body: { error: 'bridge-failure' } })
+      }).finally(() => gate.release())
+    })
+  }
 
-        void handleBridgeRequest(request, response, pathname).catch((error: unknown) => {
-          if (error instanceof BridgeBodyTooLargeError) {
-            sendJson(response, { status: 413, body: { error: 'body-too-large' } })
-            return
-          }
-          if (error instanceof EngineProcessTimeoutError) {
-            sendJson(response, {
-              status: 504,
-              body: { ok: false, summary: 'A ação excedeu o tempo limite', output: error.message },
-            })
-            return
-          }
-          server.config.logger.error('Engine bridge request failed')
-          sendJson(response, { status: 500, body: { error: 'bridge-failure' } })
-        }).finally(() => gate.release())
-      })
-    },
+  return {
+    name: 'codexdojo-engine-bridge',
+    configureServer: configureBridge,
+    configurePreviewServer: configureBridge,
   }
 }
 

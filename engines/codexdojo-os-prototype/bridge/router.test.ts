@@ -9,7 +9,7 @@ describe('engine bridge router', () => {
     // When
     const response = await routeBridgeRequest({
       method: 'POST',
-      pathname: '/__dojo/bridge/v1/engines/miniMaxEvolutionEngine/actions/validate-phase-runner',
+      pathname: '/__dojo/bridge/v1/engines/miniMaxEvolutionEngine/actions/prepare-workflow',
       body: '{}',
     }, executor)
 
@@ -38,4 +38,3 @@ describe('engine bridge router', () => {
     expect(executor).not.toHaveBeenCalled()
   })
 })
-

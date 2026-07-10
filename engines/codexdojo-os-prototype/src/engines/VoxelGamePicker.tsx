@@ -12,7 +12,10 @@ export function VoxelGamePicker({ selectedId, onSelect }: VoxelGamePickerProps) 
       <select
         aria-label="Experiência voxelDojo"
         value={selectedId}
-        onChange={(event) => onSelect(event.target.value as VoxelGameId)}
+        onChange={(event) => {
+          const selected = voxelCatalog.find((game) => game.id === event.target.value)
+          if (selected !== undefined) onSelect(selected.id)
+        }}
       >
         {voxelCatalog.map((game) => (
           <option key={game.id} value={game.id}>{game.name}</option>

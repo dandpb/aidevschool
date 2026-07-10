@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
+    "build:integrated": "tsc -b && VITE_LOCAL_ENGINE_BRIDGE=true vite build",
     "preview": "vite preview --host 0.0.0.0",
+    "preview:integrated": "npm run build:integrated && VITE_LOCAL_ENGINE_BRIDGE=true vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:smoke": "playwright test",
-    "lint": "biome lint src tests vite.config.ts playwright.config.ts"
+    "lint": "biome lint src bridge tests vite.config.ts playwright.config.ts"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
