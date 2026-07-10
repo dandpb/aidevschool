@@ -41,6 +41,8 @@
   },
   "files": {
     "includes": [
+      "src/**/*.ts",
+      "playwright/**/*.ts",
       "pixel-quest/src/**/*.ts",
       "pixel-quest/playwright/**/*.ts",
       "shared/**/*.ts",
