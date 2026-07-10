@@ -63,6 +63,15 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain("Observe")
   })
 
+  it("linuxLab: exposes the promoted OS engine through an accessible launch bridge", () => {
+    const html = renderShell(stateWith({ view: "linuxLab" }))
+
+    expect(html).toContain('data-codexdojo-os-launch="true"')
+    expect(html).toContain("Abrir codexDojo OS")
+    expect(html).toContain('target="_blank"')
+    expect(html).toContain('rel="noreferrer"')
+  })
+
   it("agents (selected=critico): critico row is active, others are not", () => {
     const html = renderShell(stateWith({ view: "agents", selectedAgentId: "critico" }))
 

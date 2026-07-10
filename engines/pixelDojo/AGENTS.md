@@ -11,11 +11,11 @@ attempts and emits evidence for a separate verifier.
 ```text
 pixelDojo/                 # pnpm workspace (packageManager pnpm@9.15.9)
 ├── package.json           # workspace root
-├── pnpm-workspace.yaml    # pixel-quest + games/*
+├── pnpm-workspace.yaml    # pixel-quest workspace package
 ├── biome.jsonc / tsconfig.base.json
-├── shared/evidence.ts     # dualEmit for all games
-├── pixel-quest/           # canonical multi-encounter app
-└── games/*                # one Vite app per curriculum project
+├── shared/evidence.ts     # generic dual-channel evidence envelope
+├── verifier/              # Python trust boundary; owns mastery transitions
+└── pixel-quest/           # canonical multi-encounter app
 ```
 
 Install once: `cd engines/pixelDojo && pnpm install`.
@@ -28,6 +28,7 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 | Game architecture | `pixel-quest/README.md`, `pixel-quest/DESIGN.md` | Current Three.js app, not the older Phaser plan. |
 | Content-pack rules | `pixel-quest/docs/content-packs.md` | Declarative curriculum pack contract. |
 | Browser smoke contract | `pixel-quest/playwright/pixel-quest.spec.ts` | Plays the game and checks evidence/console behavior. |
+| Grade emitted evidence | `verifier/AGENTS.md` | Separate Python context that may commit canonical learner state. |
 | Screenshot evidence | `pixel-quest/shots/` | Generated QA artifacts, not source. |
 | Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. |
@@ -48,9 +49,9 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 ## COMMANDS
 
 ```bash
-cd pixel-quest
 pnpm run lint
 pnpm run test
+pnpm run typecheck
 pnpm run build
 pnpm run smoke
 ```

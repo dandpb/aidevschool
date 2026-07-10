@@ -4,7 +4,8 @@
   "scripts": {
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
-    "lint": "pnpm -r --if-present lint",
+    "lint": "biome check .",
+    "dev:catalog": "node scripts/serve-catalog.mjs",
     "build": "pnpm -r --if-present build",
     "smoke": "pnpm -r --if-present smoke"
   },

@@ -1,6 +1,6 @@
+import { type EvidenceRecord, emitEvidence as emitShared } from "../../../shared/evidence"
 import { reviewSlice } from "../content/reviewSlice"
 import type { LevelId } from "../sim/levels"
-import { emitEvidence as emitShared, type EvidenceRecord } from "../../../shared/evidence"
 
 const META = {
   source: "voxeldojo" as const,

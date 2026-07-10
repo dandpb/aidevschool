@@ -1,4 +1,4 @@
-"""Dashboard snapshot: derive `engines/codexDojo/src/data/learner.ts` from canonical state.
+"""Product snapshots: derive engine-local TypeScript views from canonical learner state.
 
 The codexDojo dashboard reads a TypeScript module at build time. This script is the only
 way that module gets regenerated — manual edits to the .ts file are allowed in a hurry,
@@ -12,8 +12,9 @@ Inputs (all under `learner/`):
 - `curriculum/catalog.md` + `curriculum/BACKLOG_STATUS.md` — mastered vs scaffolded counts
 - `predictions.yaml` — Polyglot Arena per-metric prediction calibration counts
 
-Output:
-- `engines/codexDojo/src/data/learner.ts` — a TypeScript module exporting `learnerSnapshot`.
+Outputs:
+- `engines/codexDojo/src/data/learner.ts` — dashboard learner snapshot.
+- `engines/codexdojo-os-prototype/src/data/learner.ts` — OS learner snapshot.
 
 The TypeScript shape is locked at `engines/codexDojo/src/domain.ts:LearnerSnapshot`. If you
 change the shape, update BOTH this script and the render code together.
@@ -21,7 +22,6 @@ change the shape, update BOTH this script and the render code together.
 
 from __future__ import annotations
 
-import re
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -30,13 +30,28 @@ from learner.substrate import load_canonical
 from learner.substrate.fsio import atomic_write_text
 from learner.substrate.predictions_summary import summarize_predictions
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
-from learner.substrate.ts_render import render_dashboard_ts, render_pixel_review_ts, render_voxel_review_ts
+from learner.substrate.snapshot_sources import (
+    aidi_trend_from_journal,
+    counts_from_backlog,
+    pitfalls_from_markdown,
+    profile_matrix,
+    status_token as _status_token,
+)
+from learner.substrate.ts_render import (
+    render_codexdojo_os_ts,
+    render_dashboard_ts,
+    render_pixel_review_ts,
+    render_voxel_review_ts,
+)
 
 # `ROOT` resolves to the aidevschool repo root regardless of cwd: the substrate package
 # lives at `<repo>/learner/substrate/`, so two `.parent`s gives us the repo root.
 ROOT = Path(__file__).resolve().parent.parent.parent
 
 DASHBOARD_TS = ROOT / "engines" / "codexDojo" / "src" / "data" / "learner.ts"
+CODEXDOJO_OS_SNAPSHOT_TS = (
+    ROOT / "engines" / "codexdojo-os-prototype" / "src" / "data" / "learner.ts"
+)
 PIXEL_REVIEW_TS = ROOT / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
 # Pilot destination kept for back-compat; sync fans out to every game-* slice.
 VOXEL_REVIEW_TS = ROOT / "engines" / "voxelDojo" / "game-10-hash-ring" / "src" / "content" / "reviewSlice.ts"
@@ -46,132 +61,6 @@ LEARNER_PROFILE = ROOT / "learner" / "learner_profile.md"
 PITFALLS = ROOT / "learner" / "pitfalls.md"
 JOURNAL = ROOT / "learner" / "journal.md"
 BACKLOG = ROOT / "curriculum" / "BACKLOG_STATUS.md"
-_DREYFUS_KEYWORDS = ("novice", "advanced beginner", "competent", "proficient", "expert")
-_BLOOM_LEVELS = ("create", "evaluate", "analyze", "apply", "understand", "remember")
-
-
-def _profile_matrix() -> dict[str, str]:
-    """Walk the learner_profile.md Dreyfus×Bloom matrix once and return both cells.
-
-    The matrix table is `| Conceito | Dreyfus | Bloom | Evidência | ... |`. We
-    read the file once and return the first non-empty Dreyfus and Bloom values.
-    Defaults are returned when the file is missing or the matrix is empty.
-    """
-    result: dict[str, str] = {"dreyfus": "competent", "bloom": "apply"}
-    if not LEARNER_PROFILE.exists():
-        return result
-    text = LEARNER_PROFILE.read_text(encoding="utf-8")
-    for line in text.splitlines():
-        if not (line.startswith("|") and "Dreyfus" not in line and "---" not in line and "Conceito" not in line):
-            continue
-        cells = [c.strip() for c in line.strip("|").split("|")]
-        if len(cells) >= 3 and cells[1] and cells[1] != "_":
-            raw = cells[1].lower().strip()
-            for keyword in _DREYFUS_KEYWORDS:
-                if keyword in raw:
-                    result["dreyfus"] = keyword.replace(" ", "_")
-                    break
-        if len(cells) >= 3 and cells[2] and cells[2] != "_":
-            raw = cells[2].lower().strip()
-            for level in _BLOOM_LEVELS:
-                if level in raw:
-                    result["bloom"] = level
-                    break
-        if result["dreyfus"] != "competent" and result["bloom"] != "apply":
-            break
-    return result
-
-
-def _pitfalls_from_md() -> list[dict[str, Any]]:
-    """Return top pitfalls as {id, description, occurrences, last_seen}.
-
-    The pitfalls file uses `## [DATE] Title` headings; each one is a pegadinha. We synthesize
-    an id from the date + first heading word so the dashboard has something stable to display.
-    """
-    if not PITFALLS.exists():
-        return []
-    text = PITFALLS.read_text(encoding="utf-8")
-    pitfalls: list[dict[str, Any]] = []
-    pattern = re.compile(r"^##\s+\[(\d{4}-\d{2}-\d{2})\]\s+(.+?)$", re.MULTILINE)
-    # Read journal once and lowercase once; the loop only checks membership.
-    journal_lines = (
-        JOURNAL.read_text(encoding="utf-8").lower().splitlines() if JOURNAL.exists() else []
-    )
-    for match in pattern.finditer(text):
-        last_seen, title = match.groups()
-        pid = "P-" + str(len(pitfalls) + 1).zfill(3)
-        keyword = title.split()[0].lower()
-        occurrences = 1 + sum(1 for line in journal_lines if keyword in line)
-        pitfalls.append({
-            "id": pid,
-            "description": title.strip(),
-            "occurrences": min(occurrences, 9),
-            "lastSeen": last_seen,
-        })
-    return pitfalls[:5]
-
-
-def _aidi_trend_from_journal() -> list[dict[str, str]]:
-    """Scrape AIDI mentions from journal.md. Pattern: `AIDI: 0.34` or `aidi=0.34` lines.
-
-    Falls back to a synthetic 3-point trend anchored at the current `learner.aidi` value
-    if the journal has no AIDI entries (which is the current state on 2026-06-21).
-    """
-    if not JOURNAL.exists():
-        return []
-    pattern = re.compile(r"(?:AIDI|aidi)[:=]\s*([0-9]+(?:\.[0-9]+)?)")
-    points: list[dict[str, str]] = []
-    date_pattern = re.compile(r"^##\s+\[(\d{4}-\d{2}-\d{2})\]", re.MULTILINE)
-    last_date: str | None = None
-    for line in JOURNAL.read_text(encoding="utf-8").splitlines():
-        if line.startswith("## "):
-            date_match = date_pattern.match(line)
-            if date_match:
-                last_date = date_match.group(1)
-        value_match = pattern.search(line)
-        if value_match and last_date:
-            points.append({"date": last_date, "value": float(value_match.group(1))})
-    return points[-30:]
-
-
-def _status_token(cell: str) -> str:
-    """Extract the status keyword from a BACKLOG table cell.
-
-    Cells are usually `` `scaffolded` ``. Some notes hang after the token
-    (`` `implemented` (Node.js only) ``); only the first backticked word counts.
-    """
-    cell = cell.strip()
-    match = re.match(r"`([^`]+)`", cell)
-    if match:
-        return match.group(1).strip()
-    bare = cell.strip("`").strip()
-    return bare.split()[0] if bare else ""
-
-
-def _counts_from_backlog() -> tuple[int, int]:
-    """Return (mastered_count, scaffolded_count) from BACKLOG_STATUS.md.
-
-    Mastered = number of projects currently `implemented` (curriculum-verified). Scaffolded
-    = number currently `scaffolded` (folder + code + docs, not yet verified).
-    """
-    if not BACKLOG.exists():
-        return 0, 0
-    implemented = 0
-    scaffolded = 0
-    for line in BACKLOG.read_text(encoding="utf-8").splitlines():
-        if not line.startswith("|"):
-            continue
-        cells = [c.strip() for c in line.strip("|").split("|")]
-        if len(cells) < 3:
-            continue
-        status = _status_token(cells[1])
-        if status == "implemented":
-            implemented += 1
-        elif status == "scaffolded":
-            scaffolded += 1
-    return implemented, scaffolded
-
-
 def _streak_view(raw: dict[str, Any], today: date) -> dict[str, Any]:
     """Render the streak as a dashboard view, reconciled for missed days.
 
@@ -199,10 +88,10 @@ def build_snapshot() -> dict[str, Any]:
     active = state.get("active_unit", {})
     gate = state.get("gate", {})
     aidi = learner["aidi"]  # canonical; validator (ADR-0003) guarantees presence
-    profile_levels = _profile_matrix()
+    profile_levels = profile_matrix(LEARNER_PROFILE)
 
     # AIDI history: prefer journal-scraped points; fall back to a synthetic 3-point trend.
-    aidi_history = _aidi_trend_from_journal()
+    aidi_history = aidi_trend_from_journal(JOURNAL)
     if not aidi_history:
         current = float(aidi["current"])
         aidi_history = [
@@ -211,8 +100,8 @@ def build_snapshot() -> dict[str, Any]:
             {"date": "2026-06-15", "value": round(current, 2)},
         ]
 
-    pitfalls = _pitfalls_from_md()
-    mastered, scaffolded = _counts_from_backlog()
+    pitfalls = pitfalls_from_markdown(PITFALLS, JOURNAL)
+    mastered, scaffolded = counts_from_backlog(BACKLOG)
 
     snapshot = {
         "activeUnit": {
@@ -262,12 +151,19 @@ def sync(snapshot: dict[str, Any] | None = None) -> Path:
     """Regenerate `engines/codexDojo/src/data/learner.ts`. Returns the file path.
 
     Accepts an optional prebuilt ``snapshot`` so the top-level substrate ``sync``
-    can build once and share it across both renderers (codexDojo + pixelDojo)
+    can build once and share it across every TypeScript renderer
     instead of re-reading every canonical input twice.
     """
     snapshot = snapshot or build_snapshot()
     atomic_write_text(DASHBOARD_TS, render_ts(snapshot))
     return DASHBOARD_TS
+
+
+def sync_codexdojo_os_snapshot(snapshot: dict[str, Any] | None = None) -> Path:
+    """Regenerate the OS engine's read-only learner snapshot."""
+    snapshot = snapshot or build_snapshot()
+    atomic_write_text(CODEXDOJO_OS_SNAPSHOT_TS, render_codexdojo_os_ts(snapshot))
+    return CODEXDOJO_OS_SNAPSHOT_TS
 
 
 def build_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str, Any]:

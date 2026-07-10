@@ -1,0 +1,31 @@
+.os-engine-bridge {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  padding: var(--space-4);
+}
+
+.os-engine-bridge p {
+  color: var(--muted);
+  margin: var(--space-1) 0 0;
+}
+
+.os-engine-bridge .action-button {
+  flex: 0 0 auto;
+  text-decoration: none;
+}
+
+@media (max-width: 720px) {
+  .os-engine-bridge {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .os-engine-bridge .action-button {
+    text-align: center;
+  }
+}

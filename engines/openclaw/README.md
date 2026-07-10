@@ -23,10 +23,15 @@ runner halts.
 ## CLI
 
 ```bash
+python3 -m engines.openclaw --preview
 python3 -m engines.openclaw --project curriculum/01_rate_limiter --mode simulate
 python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --max-events 20
 python3 -m pytest engines/openclaw/tests/
 ```
+
+Use `--preview` for a read-only receipt of the canonical YAML source, current
+project and phase, gate result, and next checklist. Preview mode doesn't advance
+the scheduler or write `learner/pipeline_status.yaml`.
 
 ## Role (ADR-0002)
 

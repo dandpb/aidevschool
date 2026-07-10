@@ -29,7 +29,7 @@ pixel-quest/
 | Action mapping | `src/app/actionRouter.ts` | Keyboard/action command seam. |
 | Curriculum pack | `src/content/curriculumPack.ts` | Generated/curated lab content for numbered projects. |
 | Pack schema | `src/content/types.ts`, `src/content/packValidator.ts` | Content packs cannot execute arbitrary JS. |
-| Encounter mechanics | `src/game/encounters/` | `token_bucket`, `sequence_flow`, `route_health`, `policy_gate`. |
+| Encounter mechanics | `src/game/encounters/` | `token_bucket`, `sequence_flow`, `route_health`, `policy_gate`, `task_queue`. |
 | Evidence contract | `src/game/evidence/` | Validate before publishing evidence. |
 | Review projection | `src/game/review/` | Read-only spaced-review state for the UI. |
 | Browser proof | `playwright/pixel-quest.spec.ts` | Smoke test plus screenshot/console checks. |
@@ -38,7 +38,7 @@ pixel-quest/
 
 | Symbol | Type | Location | Refs | Role |
 | --- | --- | --- | --- | --- |
-| `PixelQuestApp` | Class | `src/app/PixelQuestApp.ts:37` | 3 | Main app coordinator. |
+| `PixelQuestApp` | Class | `src/app/PixelQuestApp.ts:44` | 3 | Main app coordinator. |
 | `publishEvidence` | Method | `src/app/PixelQuestApp.ts` | class-local | Validates and exposes evidence. |
 | `WorldRenderer` | Class | `src/render/app/WorldRenderer.ts` | adapter | Draws state; dispatches to sub-scenes by `world.mode`. Not gameplay truth. |
 | `SkillOrbitScene` | Class | `src/render/app/SkillOrbitScene.ts` | 1 | Self-contained 3D sub-scene (PerspectiveCamera) for the orbit mode. |
@@ -67,6 +67,7 @@ pixel-quest/
 ```bash
 pnpm run lint
 pnpm run test
+pnpm run typecheck
 pnpm run build
 pnpm run smoke
 ```

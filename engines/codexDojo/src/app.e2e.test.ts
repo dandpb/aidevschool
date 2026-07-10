@@ -75,6 +75,20 @@ describe("codexDojo core dashboard E2E", () => {
     expect(root.querySelector("[data-view='project']")?.className).toContain("is-active")
     expect(agents).toHaveLength(14)
   })
+
+  it("preserves the legacy Linux Lab selection and execution receipt", () => {
+    const root = document.createElement("div")
+
+    mountCodexDojo(root)
+
+    click(root, "[data-view='linuxLab']")
+    click(root, "[data-linux-app='browser']")
+    expect(root.textContent).toContain("Active: Browser")
+    expect(root.textContent).toContain("Run the lab to create your first execution receipt.")
+
+    click(root, "[data-action='run-linux-lab']")
+    expect(root.textContent).toContain("Execution receipt #1")
+  })
 })
 
 function click(root: ParentNode, selector: string): void {

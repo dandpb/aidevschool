@@ -94,9 +94,10 @@ All spacing maps to a 4px base.
 ### Linux Desktop
 
 - **Structure**: top system bar, launcher grid, active app window, terminal output, lesson panel.
-- **Variants**: app tile, category filter, active app window, run receipt.
+- **Ownership**: this compact simulator is a compatibility surface. The sibling `codexdojo-os-prototype` engine owns the full desktop experience and receives learner state through the generated read-only substrate projection.
+- **Variants**: OS launch bridge, app tile, category filter, active app window, run receipt.
 - **States**: selected app, selected category, run count, hover, active, focus.
-- **Accessibility**: app tiles and filters are real buttons; active lesson is visible text, not only color.
+- **Accessibility**: the OS bridge is a descriptive external link; app tiles and filters are real buttons; active lesson is visible text, not only color.
 - **Motion**: transform/opacity only; no layout animation.
 
 ### Data Card

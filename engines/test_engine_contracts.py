@@ -61,7 +61,7 @@ class TestPolyglotArenaDesignContract(unittest.TestCase):
         files = {path.name for path in self.design.iterdir() if path.is_file()}
         self.assertEqual(
             files,
-            {"STATUS.md", "project_proposal.md", "bootstrap_prompt.md"},
+            {"STATUS.md", "CONTEXT.md", "project_proposal.md", "bootstrap_prompt.md"},
             "polyglot-arena archive should hold only design material; no executable code",
         )
 
@@ -140,33 +140,27 @@ class TestMinimaxDojoContract(unittest.TestCase):
 
 
 class TestOpenclawContract(unittest.TestCase):
-    """openclaw is the file-based continuous-runner tracer bullet: Hermes bus +
-    scheduler + adapters, simulate mode only, producer/verifier separation."""
+    """OpenClaw is the file-based checklist tracer bullet, not a Hermes bus."""
 
     engine = ROOT / "engines" / "openclaw"
 
-    def test_runner_hermes_and_tests_exist(self):
+    def test_runner_checklist_status_and_tests_exist(self):
         self.assertTrue((self.engine / "runner" / "scheduler.py").is_file())
-        self.assertTrue((self.engine / "runner" / "adapters").is_dir())
-        self.assertTrue((self.engine / "hermes" / "bus.py").is_file())
+        self.assertTrue((self.engine / "runner" / "checklist.py").is_file())
+        self.assertTrue((self.engine / "runner" / "pipeline_status.py").is_file())
         self.assertTrue((self.engine / "tests").is_dir())
 
-    def test_cli_stays_simulate_only(self):
-        """Real AI dispatch is an explicit future override, never a silent default."""
+    def test_cli_stays_simulate_only_and_offers_read_only_preview(self):
         main = (self.engine / "__main__.py").read_text(encoding="utf-8")
         self.assertIn('choices=["simulate"]', main)
-        self.assertIn("NotImplementedError", main)
+        self.assertIn('"--preview"', main)
+        self.assertIn("preview_checklist", main)
 
-    def test_playbook_preserves_producer_verifier_separation(self):
+    def test_playbook_denies_mastery_authority(self):
         agents = (self.engine / "AGENTS.md").read_text(encoding="utf-8")
-        verifier = (self.engine / "runner" / "adapters" / "verifier.py").read_text(encoding="utf-8")
-
-        self.assertIn("The verifier adapter never shares state with a producer adapter", agents)
-        self.assertIn("never shares producer state", verifier)
-
-    def test_bus_state_lives_under_mavis_hermes(self):
-        bus = (self.engine / "hermes" / "bus.py").read_text(encoding="utf-8")
-        self.assertIn('".mavis" / "hermes"', bus)
+        self.assertIn("They do not compile, test", agents)
+        self.assertIn("or establish mastery", agents)
+        self.assertIn("Do not infer a Hermes/event-bus implementation", agents)
 
     def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
         self.assertFalse((self.engine / "curriculum").exists())
@@ -189,6 +183,40 @@ class TestVoxelDojoContract(unittest.TestCase):
     def test_engine_does_not_copy_shared_curriculum_or_learner_state(self):
         self.assertFalse((self.engine / "curriculum").exists())
         self.assertFalse((self.engine / "learner").exists())
+
+
+class TestCodexDojoOsEngineHubContract(unittest.TestCase):
+    """The OS exposes every external engine without taking mastery authority."""
+
+    engine = ROOT / "engines" / "codexdojo-os-prototype"
+
+    def test_registry_covers_every_external_engine_and_denies_mastery(self):
+        registry = (self.engine / "src" / "engines" / "registry.ts").read_text(encoding="utf-8")
+        for engine_id in (
+            "codexDojo",
+            "minimaxDojo",
+            "miniMaxEvolutionEngine",
+            "openclaw",
+            "pixelDojo",
+            "voxelDojo",
+        ):
+            with self.subTest(engine_id=engine_id):
+                self.assertIn(f"id: '{engine_id}'", registry)
+        self.assertEqual(registry.count("masteryAuthority: 'never'"), 6)
+
+    def test_local_bridge_is_fixed_and_development_only(self):
+        actions = (self.engine / "bridge" / "actions.ts").read_text(encoding="utf-8")
+        runner = (self.engine / "bridge" / "processRunner.ts").read_text(encoding="utf-8")
+        plugin = (self.engine / "bridge" / "plugin.ts").read_text(encoding="utf-8")
+        hub = (self.engine / "src" / "engines" / "EngineHubApp.tsx").read_text(
+            encoding="utf-8",
+        )
+
+        self.assertIn("execFile", runner)
+        self.assertNotIn("shell:", runner)
+        self.assertIn("apply: 'serve'", plugin)
+        self.assertEqual(actions.count("executable: 'python3'"), 3)
+        self.assertIn("A ponte local não está disponível", hub)
 
 
 if __name__ == "__main__":

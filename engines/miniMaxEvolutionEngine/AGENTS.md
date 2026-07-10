@@ -10,7 +10,7 @@ protocol used by the rest of the ecosystem.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Engine contract | `CLAUDE.md` | Authoritative local operating instructions. |
-| Subagents | `.claude/agents/` | Curator, devs, reviewer, benchmarker, optimizer, sonda, verifier. |
+| Subagents | `.claude/agents/` | Live role contracts; inventory this directory instead of copying counts here. |
 | Slash commands | `.claude/commands/devschool/` | `/devschool-*` workflow entrypoints. |
 | Learning gate skill | `.claude/skills/agora-continuum/SKILL.md` | Gate protocol. |
 | Shared curriculum | `curriculum -> ../../curriculum` | Symlink; do not replace with real files. |
@@ -26,6 +26,12 @@ protocol used by the rest of the ecosystem.
 - Respect `learner/learning_state.yaml` and `learner/pipeline_status.md` before advancing phases.
 - This engine should orchestrate; shared artifacts still live under root `curriculum/`, `learner/`,
   and `docs/`.
+
+## COMMANDS
+
+```bash
+python3 -m pytest .claude/commands/devschool/tests/test_phaserunner.py
+```
 
 ## ANTI-PATTERNS
 

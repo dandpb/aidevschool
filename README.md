@@ -21,20 +21,23 @@ Do not try to `npm install` or `pnpm install` at the root.
 
 | Layer | Path | Purpose |
 | --- | --- | --- |
-| **Engines (apps)** | `engines/` | Each engine is a separate project. Two are runnable apps (see below); two are agent/prompt cores. |
+| **Engines and apps** | `engines/` | Each engine is a separate project with its own runtime and package-management surface. |
 | **Curriculum (shared)** | `curriculum/` | 18 polyglot coding challenges + `catalog.md` (the canonical list). |
 | **Learner (shared)** | `learner/` | The learner journey: learning gate, profile, pitfalls, journal, pipeline status, and the Python substrate. |
 | **Ecosystem docs** | `docs/` | Goal, seed ideas, design ADRs, agent domain docs. |
 | **Runtime state** | `.mavis/` | Derived view of `learner/` consumed by the Mavis planner (regenerated, never hand-edited). |
 
-The four engines:
+The engine surfaces:
 
 | Engine | Type | What it is |
 | --- | --- | --- |
 | `engines/codexDojo/` | **Runnable app** | The user-facing dashboard — a Vite/TypeScript SPA showing learner snapshot, agent roster, the cycle, and the 18-project roadmap. |
+| `engines/codexdojo-os-prototype/` | **Runnable app** | Canonical educational OS experience (React/Vite): desktop labs plus a generated, read-only learner projection. |
 | `engines/pixelDojo/` | **Runnable app** | 8-bit teaching games. The canonical game is `pixel-quest/` (Vite + TypeScript + Three.js). One curriculum concept → one arcade mechanic. |
+| `engines/voxelDojo/` | **Runnable app** | Three.js teaching simulations; each `game-*` package covers one curriculum concept. |
 | `engines/minimaxDojo/` | Agent core | The 14-agent "Ágora Continuum" tutoring core — prompts and docs (not a runnable server). |
 | `engines/miniMaxEvolutionEngine/` | Agent core | The Claude Code orchestration motor: the 5-phase loop (`Spec → Implement → Review → Benchmark → Optimize`). |
+| `engines/openclaw/` | Checklist runner | File-based, simulate-grade runner for the 5-phase artifact checklist. |
 
 ---
 
@@ -42,8 +45,8 @@ The four engines:
 
 | Tool | Version | Why |
 | --- | --- | --- |
-| **Node.js** | 18.18+ (20 or 22 LTS recommended) | Required by Vite 7, used by both runnable apps. |
-| **pnpm** | 9+ (enable via `corepack enable`) | Package manager for both apps. All commands in this repo use `pnpm`. |
+| **Node.js** | 20.19+ or 22.12+ | Required by Vite 8 in codexDojo OS; Node 22 LTS is recommended. |
+| **pnpm** | 9+ (enable via `corepack enable`) | Package manager for `codexDojo`, `pixelDojo`, and `voxelDojo`. |
 | **Python 3** | 3.10+ | Only needed to regenerate learner-data views (the substrate). |
 | **Go / Rust** | latest stable | Only needed if you want to build/run the polyglot `curriculum/` implementations. |
 
@@ -53,6 +56,9 @@ Enable pnpm once:
 corepack enable
 corepack prepare pnpm@latest --activate
 ```
+
+`codexdojo-os-prototype` uses npm and its package lock. Do not replace that
+engine-local workflow with a root package manager.
 
 ---
 
@@ -75,6 +81,29 @@ What you'll see: a sidebar of views — **Overview** (status console, agent topo
 > The learner data on the dashboard is **auto-generated**, not hand-written:
 > `engines/codexDojo/src/data/learner.ts` is produced by the Python substrate from
 > `learner/learning_state.yaml`. Edit the YAML, regenerate (§5), never edit the `.ts` by hand.
+
+---
+
+## 3b. Install & run codexDojo OS
+
+The OS engine provides an educational Linux desktop with a window manager,
+terminal, file browser, architecture map, app catalog, Learn Mode, and local
+mentor interaction.
+
+```bash
+cd engines/codexdojo-os-prototype
+npm install
+npm run dev
+```
+
+When both apps run locally, start the dashboard first on `5173`; Vite places the OS on `5174`,
+which is the dashboard bridge's development fallback. Deployed dashboard builds must set
+`VITE_CODEXDOJO_OS_URL` to the OS URL.
+
+The top bar and Dojo status consume `src/data/learner.ts`, regenerated from
+`learner/learning_state.yaml` by `python3 -m learner.substrate`. Local missions,
+catalog, terminal, and mentor interactions do not update canonical state or count as executable
+mastery evidence. See the [OS handbook page](docs/handbook/03b_engine_codexdojo-os-prototype.md).
 
 ---
 
@@ -156,8 +185,13 @@ This is a **school**, not a code generator. The workflow preserves *productive s
 Validate the runnable apps:
 
 ```bash
-# dashboard
-cd engines/codexDojo      && pnpm run lint && pnpm run test && pnpm run build
+# Dashboard
+cd engines/codexDojo && pnpm install && pnpm run dev
+cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
+
+# codexDojo OS
+cd engines/codexdojo-os-prototype && npm install && npm run dev
+cd engines/codexdojo-os-prototype && npm run lint && npm run test && npm run build
 
 # game
 cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build
@@ -175,6 +209,7 @@ python3 -m unittest learner.substrate.tests.test_substrate   # from the repo roo
 
 | Need | File |
 | --- | --- |
+| **Documentation map and classification** | [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md) |
 | **Full documentation handbook** | [`docs/handbook/`](docs/handbook/README.md) |
 | Ecosystem conventions & rules | [`AGENTS.md`](AGENTS.md) |
 | Domain language | [`CONTEXT.md`](CONTEXT.md) |

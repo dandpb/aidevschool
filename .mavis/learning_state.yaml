@@ -2,10 +2,10 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-07-09T19:31:26+00:00'
+updated_at: '2026-07-10T20:08:16+00:00'
 workspace: /Users/danielbarreto/Development/aidevschool
 change_log:
-- at: '2026-07-09T19:31:26+00:00'
+- at: '2026-07-10T20:08:16+00:00'
   by: substrate
   reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
@@ -41,15 +41,15 @@ state_machine:
 active_unit:
   id: U0-sonda-rate-limiter-robustness
   project: projects/01_rate_limiter
-  title: 'GATEKEEPER: token-bucket rate limiter robustness'
-  state: dominado
+  title: 'Agent Quest 01: rate-limiter agent orchestration'
+  state: apresentando
   diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
-  awaiting: ''
+  awaiting: learner_attempt
   promotion_gate:
-  - learner plays the GATEKEEPER mission before receiving solutions
-  - game emits raw executable evidence and never writes mastered (producer != verifier)
-  - Prometor (verifier context) validates evidence against empirical_gate before any
-    mastery transition
+  - learner plays the Agent Quest mission before receiving solutions
+  - learner chooses agent actions and blocks shortcuts that skip attempts or evidence
+  - Sonda classifies Dreyfus/Bloom position for tests, refactoring, and code reading
+  - Prometor receives executable PixelDojo evidence before any mastery transition
 agent_ownership:
   leader: Maestro
   diagnostic: Sonda
@@ -64,7 +64,7 @@ agent_ownership:
 empirical_gates:
   code:
     core_coverage_target: '>=80%'
-    mutation_score_target: '>=0.65 (config: gates.mutation_score_min)'
+    mutation_score_target: 60-70% when tooling is available
     verifier_context: isolated
     benchmark_rule: '>=10 samples plus warmup; block speed claims when CV >=20%'
   learning:
@@ -72,6 +72,6 @@ empirical_gates:
     hint_budget_per_day: 15
     mastery_source: executable_evidence
 next_action:
-  owner: leader
-  action: U0-sonda-rate-limiter-robustness mastered with executable evidence. Pick
-    the next unit (Cartografo) and present it before any implementation.
+  owner: learner
+  action: Play Agent Quest in engines/pixelDojo/pixel-quest and submit the emitted
+    evidence for verifier review.

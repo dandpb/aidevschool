@@ -1,4 +1,5 @@
 import "./styles.css"
+import "./styles/osBridge.css"
 import { AppMountError, mountCodexDojo } from "./app"
 
 const root = document.querySelector("#app")

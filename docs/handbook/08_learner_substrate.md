@@ -10,8 +10,8 @@ view in sync.
 > software-cycle state). Then run `python3 -m learner.substrate`. Never write to a derived view and
 > back-port the change.
 
-`.mavis/learning_state.yaml`, the minimaxDojo whiteboard, `codexDojo/src/data/learner.ts`, and
-`pixelDojo/.../reviewSlice.ts` are all **generated** from the canonical YAML.
+`.mavis/learning_state.yaml`, the minimaxDojo whiteboard, both dashboard/OS `learner.ts` modules,
+and PixelDojo/voxelDojo `reviewSlice.ts` modules are all **generated** from the canonical YAML.
 
 ## Structure
 
@@ -30,7 +30,7 @@ learner/
     ├── interface.md         # the public read/write contract
     ├── schema.yaml          # canonical types + invariants
     ├── scheduling.py        # FSRS spaced repetition + streak/freeze + CURR
-    ├── dashboard_snapshot.py# derives codexDojo learner.ts + pixelDojo reviewSlice.ts
+    ├── dashboard_snapshot.py# derives dashboard/OS learner.ts + game reviewSlice.ts
     ├── ts_render.py         # TypeScript renderers
     # deps: repo-root pyproject.toml (pyyaml + fsrs)
     ├── adapters/mavis.py        # → .mavis/learning_state.yaml
@@ -113,14 +113,15 @@ Plus two helper validators:
 
 ## `sync()` — what gets regenerated
 
-`sync()` calls `load_and_validate()` first (a sync on invalid state raises), then regenerates four
-derived targets from the one canonical file:
+`sync()` calls `load_and_validate()` first (a sync on invalid state raises), then regenerates these
+derived target families from one canonical snapshot:
 
 1. `.mavis/learning_state.yaml` (Mavis planner view, lowercase pt states).
 2. `minimaxDojo/whiteboard/{profile.yaml, learner_profile.md, trail.md}` (consumed by Mnemosyne and
    Cartógrafo).
-3. `codexDojo/src/data/learner.ts` (shape locked at `codexDojo/src/domain.ts:LearnerSnapshot`).
-4. `pixelDojo/pixel-quest/src/content/reviewSlice.ts`.
+3. `codexDojo/src/data/learner.ts` and `codexdojo-os-prototype/src/data/learner.ts` (engine-local,
+   readonly `LearnerSnapshot` modules with the same values).
+4. `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and every voxelDojo game review slice.
 
 For efficiency, `build_snapshot()` runs once and is shared across both TypeScript renderers. Its
 inputs (all read-only) include `learning_state.yaml`, `learner_profile.md`, `pitfalls.md`, `journal.md`

@@ -23,9 +23,10 @@ do not run `npm install` / `pnpm install` at the root.
 
 | # | Document | Read it when you want to… |
 | --- | --- | --- |
-| 1 | [Architecture](01_architecture.md) | Understand how the four engines, the curriculum, and the learner substrate fit together, and how data flows between them. |
+| 1 | [Architecture](01_architecture.md) | Understand the engine roles, shared curriculum, learner substrate, and data flows. |
 | 2 | [Onboarding](02_onboarding.md) | Set up your machine, run the apps, and learn the day-to-day workflow and conventions. |
 | 3 | [Engine — codexDojo](03_engine_codexDojo.md) | Work on the user-facing dashboard (Vite + TypeScript SPA). |
+| 3b | [Engine — codexdojo-os-prototype](03b_engine_codexdojo-os-prototype.md) | Work on the canonical educational OS experience and its read-only learner projection. |
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
@@ -46,11 +47,14 @@ do not run `npm install` / `pnpm install` at the root.
 
 ```text
 aidevschool/                       # ECOSYSTEM umbrella (git repo, no root package manager)
-├── engines/                       # applications & agent cores — each is a separate project
+├── engines/                       # apps, agent cores, and runners — each is a separate project
 │   ├── codexDojo/                 # runnable app: user-facing dashboard (Vite/TS SPA)
+│   ├── codexdojo-os-prototype/    # runnable app: canonical educational OS (React/Vite)
 │   ├── pixelDojo/                 # runnable app: 8-bit teaching games (pixel-quest/)
+│   ├── voxelDojo/                 # runnable apps: 3D teaching simulations (game-*)
 │   ├── minimaxDojo/               # agent core: 14-agent "Ágora Continuum" tutoring spec
-│   └── miniMaxEvolutionEngine/    # agent core: Claude Code motor (5-phase loop)
+│   ├── miniMaxEvolutionEngine/    # agent core: Claude Code motor (5-phase loop)
+│   └── openclaw/                  # file-based checklist runner (simulate mode)
 ├── curriculum/                    # SHARED: 18 polyglot challenges + catalog.md
 ├── learner/                       # SHARED: learner state, profile, pitfalls, journal, substrate
 ├── docs/                          # ecosystem docs (this handbook, design archive, prompts, ideas)

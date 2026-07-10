@@ -7,6 +7,7 @@ import {
   linuxAppCategoryLabels,
   linuxApps,
 } from "../data/linuxApps"
+import { getCodexDojoOsUrl } from "../data/osEngine"
 import type { AppState } from "../state"
 import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
@@ -26,6 +27,7 @@ export function renderLinuxLab(state: AppState): string {
           Launch ${linuxApps.length} learning apps, run a small simulation, then connect the app to a programming principle.
         </p>
       </div>
+      ${renderOsEngineBridge()}
       <div class="linux-desktop" aria-label="Linux Lab desktop">
         ${renderTopBar(activeApp, state.linuxLabRunCount)}
         <aside class="linux-launcher" aria-label="Linux applications">
@@ -36,6 +38,23 @@ export function renderLinuxLab(state: AppState): string {
         ${renderLearningPanel(activeApp)}
       </div>
     </section>
+  `
+}
+
+function renderOsEngineBridge(): string {
+  const osUrl = getCodexDojoOsUrl()
+  const action = osUrl
+    ? `<a class="action-button" data-codexdojo-os-launch="true" href="${escapeHtml(osUrl)}" target="_blank" rel="noreferrer">Abrir codexDojo OS</a>`
+    : `<p role="status">Configure <code>VITE_CODEXDOJO_OS_URL</code> para habilitar o workspace completo.</p>`
+
+  return `
+    <aside class="os-engine-bridge" aria-label="codexDojo OS workspace">
+      <div>
+        <strong>Workspace completo</strong>
+        <p>Continue no engine de desktop com o mesmo snapshot canônico do learner.</p>
+      </div>
+      ${action}
+    </aside>
   `
 }
 

@@ -15,7 +15,7 @@
 | CLI entrypoint | `__main__.py` | Runs `sync()` for `python3 -m learner.substrate`. |
 | Mavis adapter | `adapters/mavis.py` | Derives `.mavis/learning_state.yaml`. |
 | Whiteboard adapter | `adapters/whiteboard.py` | Derives minimaxDojo whiteboard files. |
-| Dashboard snapshot | `dashboard_snapshot.py` | Regenerates `engines/codexDojo/src/data/learner.ts`. |
+| Product snapshots | `dashboard_snapshot.py` | Regenerates dashboard/OS learner modules and game review slices. |
 | Review scheduling | `scheduling.py` | FSRS/streak gate-derived ratings. |
 | Tests | `tests/test_substrate.py` | Invariants, adapters, snapshots, generated markers. |
 
@@ -23,16 +23,16 @@
 
 | Symbol | Type | Location | Role |
 | --- | --- | --- | --- |
-| `validate` | Function | `__init__.py:53` | Enforces canonical learner-state invariants. |
-| `_validate_units_log` | Function | `__init__.py:110` | Rejects mastered units without gate review evidence. |
-| `_validate_streak` | Function | `__init__.py:162` | Checks streak/freeze bounds. |
-| `sync` | Function | `__init__.py:194` | Regenerates Mavis, whiteboard, dashboard, and PixelDojo views. |
+| `validate` | Function | `__init__.py:119` | Enforces canonical learner-state invariants. |
+| `_validate_units_log` | Function | `__init__.py:179` | Rejects mastered units without gate review evidence. |
+| `_validate_streak` | Function | `__init__.py:246` | Checks streak/freeze bounds. |
+| `sync` | Function | `__init__.py:428` | Regenerates Mavis, whiteboard, dashboard, OS, and game views. |
 
 ## CONVENTIONS
 
 - Edit `../learning_state.yaml` first, then run `python3 -m learner.substrate`.
 - Derived files are outputs, not inputs: `.mavis/learning_state.yaml`,
-  `engines/minimaxDojo/whiteboard/*`, `engines/codexDojo/src/data/learner.ts`, and PixelDojo review
+  `engines/minimaxDojo/whiteboard/*`, both `learner.ts` modules, and PixelDojo/voxelDojo review
   slices are regenerated from canonical state.
 - A rating is produced only by executable gate outcome mapping; never from self-report.
 - Keep validation errors explicit. Silent repair hides evidence problems.

@@ -441,6 +441,7 @@ def sync() -> None:
     from learner.substrate.dashboard_snapshot import (
         build_snapshot as _build_snapshot,
         sync as _sync_dashboard_snapshot,
+        sync_codexdojo_os_snapshot as _sync_codexdojo_os_snapshot,
         sync_pixel_review_slice as _sync_pixel_review_slice,
         sync_voxel_review_slice as _sync_voxel_review_slice,
     )
@@ -464,6 +465,9 @@ def sync() -> None:
     snapshot = _build_snapshot()
     dashboard_path = _sync_dashboard_snapshot(snapshot)
     print(f"Dashboard snapshot regenerated: {dashboard_path.relative_to(ROOT)}")
+
+    os_path = _sync_codexdojo_os_snapshot(snapshot)
+    print(f"codexDojo OS snapshot regenerated: {os_path.relative_to(ROOT)}")
 
     pixel_path = _sync_pixel_review_slice(snapshot)
     print(f"PixelDojo review slice regenerated: {pixel_path.relative_to(ROOT)}")

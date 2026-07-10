@@ -1,0 +1,65 @@
+@media (max-width: 1040px) {
+  .topbar { grid-template-columns: 1fr auto; }
+  .topbar-center { display: none; }
+  .topbar-stats > span { display: none; }
+  .learn-toggle { font-size: 0; }
+  .learn-toggle svg { margin: 0; }
+  .window-space.with-learning { right: 0; }
+  .window-space.with-learning .desktop-window:not(.maximized) { max-width: none; }
+  .desktop-window, .desktop-window.maximized { inset: 50px 16px 72px 76px; width: auto; height: auto; min-width: 0; min-height: 0; }
+  .learning-rail { top: auto; right: 8px; bottom: 70px; left: 8px; width: auto; max-height: 44vh; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 -15px 50px rgba(0,0,0,.45); }
+  .learning-rail:focus-within { max-height: calc(100dvh - 86px); }
+  .learning-rail:focus-within .concept-list,
+  .learning-rail:focus-within .mini-challenge { display: none; }
+  .app-grid { grid-template-columns: repeat(3, minmax(130px, 1fr)); }
+  .architecture-flow { grid-template-columns: repeat(3, 1fr); }
+  .architecture-flow button { min-height: 150px; }
+}
+
+@media (max-width: 760px) {
+  .desktop-shortcuts { display: none; }
+  .dock { top: auto; left: 50%; bottom: 8px; transform: translateX(-50%); width: auto; flex-direction: row; border-radius: 14px; }
+  .dock button span { display: none; }
+  .dock button.running::after { left: 50%; bottom: -4px; width: 13px; height: 3px; transform: translateX(-50%); }
+  .dock-separator { width: 1px; height: 30px; margin: 5px 1px; }
+  .desktop-window, .desktop-window.maximized { inset: 46px 8px 72px 8px; width: auto; height: auto; min-width: 0; min-height: 0; border-radius: 12px; }
+  .dojo-app { grid-template-columns: 1fr; }
+  .app-sidebar { display: none; }
+  .dojo-main { padding: 20px 18px; }
+  .dojo-heading { display: block; }
+  .level-badge { margin-top: 13px; width: fit-content; }
+  .path-layout { grid-template-columns: 1fr; }
+  .mission-card { order: -1; }
+  .files-app { grid-template-columns: 1fr; }
+  .files-sidebar { display: none; }
+  .architecture-app { padding: 22px 18px; }
+  .architecture-flow { grid-template-columns: 1fr; }
+  .architecture-flow button { min-height: 110px; }
+  .contract-strip { grid-template-columns: 1fr; }
+  .software-app { padding: 20px 15px; }
+  .software-row { grid-template-columns: 36px 1fr 82px; }
+  .lab-tag { display: none; }
+  .launcher-overlay { padding: 8px; }
+  .launcher-panel { height: calc(100vh - 56px); border-radius: 12px; }
+  .launcher-body { grid-template-columns: 1fr; }
+  .launcher-body > aside { display: none; }
+  .launcher-body > .launcher-main { padding: 14px; }
+  .app-grid { grid-template-columns: repeat(2, minmax(125px, 1fr)); }
+  .learning-rail { top: auto; right: 8px; bottom: 70px; left: 8px; width: auto; max-height: 44vh; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 -15px 50px rgba(0,0,0,.45); }
+  .learning-scroll { padding: 18px; }
+}
+
+@media (max-width: 420px) {
+  .dock { gap: 2px; padding: 6px; }
+  .dock button { width: 36px; height: 36px; }
+  .app-grid { grid-template-columns: 1fr; }
+  .launcher-panel > header { padding-left: 14px; }
+  .launcher-search input { font-size: 14px; }
+  .window-title { max-width: 210px; overflow: hidden; white-space: nowrap; }
+  .software-app > header { align-items: flex-start; }
+  .catalog-count { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}

@@ -54,6 +54,44 @@ export interface EmitOptions {
   now?: () => Date
 }
 
+export const TEACHING_EVIDENCE_MESSAGE = "aidevschool:teaching-evidence"
+let evidenceParentOrigin: string | null = null
+
+export function configureEvidenceParentOrigin(candidate: string | undefined): void {
+  if (candidate === undefined || candidate.trim() === "") {
+    evidenceParentOrigin = null
+    return
+  }
+  try {
+    const url = new URL(candidate)
+    evidenceParentOrigin = url.protocol === "http:" || url.protocol === "https:" ? url.origin : null
+  } catch {
+    evidenceParentOrigin = null
+  }
+}
+
+function forwardToEmbeddingHost<T extends object>(record: T): void {
+  if (typeof window === "undefined" || window.parent === window || typeof document === "undefined") {
+    return
+  }
+  if (evidenceParentOrigin === null || document.referrer === "") return
+  let referrerOrigin: string
+  try {
+    referrerOrigin = new URL(document.referrer).origin
+  } catch {
+    return
+  }
+  if (referrerOrigin !== evidenceParentOrigin) return
+  window.parent.postMessage(
+    {
+      type: TEACHING_EVIDENCE_MESSAGE,
+      version: 1,
+      evidence: record,
+    },
+    evidenceParentOrigin,
+  )
+}
+
 // ponytail: no `declare global { interface Window }` augmentation here —
 // each consumer (pixel-quest, voxelDojo) declares its own channel array
 // type, and dualEmit writes through `as unknown as Record<string, unknown>`
@@ -79,6 +117,7 @@ export function dualEmit<T extends object>(
       const prev = w["__voxelDojoEvidence"]
       w["__voxelDojoEvidence"] = [...(Array.isArray(prev) ? prev : []), record]
     }
+    forwardToEmbeddingHost(record)
   }
   console.log(`EVIDENCE ${JSON.stringify(record)}`)
   return record

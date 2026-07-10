@@ -8,6 +8,9 @@ This interface is the single place where every engine reads and writes learner
 state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 **derived views** produced by adapters; they must not be edited by hand.
 
+The dashboard and codexDojo OS each receive an engine-local generated
+`src/data/learner.ts`. These modules are read models, never write APIs.
+
 ## Read surface
 
 - `load_canonical(path) -> dict`  
@@ -22,7 +25,8 @@ state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 ## Write surface
 
 - `sync()`  
-  Regenerate every derived view from the canonical state.
+  Regenerate every derived view from the canonical state, including the dashboard, codexDojo OS,
+  PixelDojo, and voxelDojo TypeScript projections.
 
 - `derive_mavis_view(state) -> dict`  
   Return the `.mavis/learning_state.yaml` view.

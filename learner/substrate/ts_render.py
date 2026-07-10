@@ -21,6 +21,11 @@ def render_dashboard_ts(snapshot: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def render_codexdojo_os_ts(snapshot: dict[str, Any]) -> str:
+    """Render the same canonical learner contract for the OS engine."""
+    return render_dashboard_ts(snapshot)
+
+
 _REVIEW_SLICE_IMPORTS = {
     "pixel": '"../game/review/types"',
     "voxel": '"./types"',

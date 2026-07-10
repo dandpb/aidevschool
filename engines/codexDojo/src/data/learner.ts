@@ -3,21 +3,21 @@
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +
 //         learner/predictions.yaml
-// Generated: 2026-07-09T16:31:26.896994Z
+// Generated: 2026-07-10T17:08:16.544046Z
 
 import type { LearnerSnapshot } from "../domain"
 
 export const learnerSnapshot: LearnerSnapshot = {
   activeUnit: {
     id: "U0-sonda-rate-limiter-robustness",
-    title: "GATEKEEPER: token-bucket rate limiter robustness",
+    title: "Agent Quest 01: rate-limiter agent orchestration",
     project: "01_rate_limiter",
-    state: "mastered",
+    state: "presenting",
     retryCount: 0,
     retryLimit: 3,
   },
   gate: {
-    implementationBlocked: false,
+    implementationBlocked: true,
     unblockCondition: "learner_attempt_evaluated",
   },
   profile: {
@@ -56,7 +56,7 @@ export const learnerSnapshot: LearnerSnapshot = {
   nextReviews: [
     {
       unitId: "U0-sonda-rate-limiter-robustness",
-      title: "GATEKEEPER: token-bucket rate limiter robustness",
+      title: "agentic orchestration for token-bucket robustness",
       dueIn: "today",
       reason: "due",
     },
@@ -71,12 +71,12 @@ export const learnerSnapshot: LearnerSnapshot = {
   scaffoldedCount: 16,
   streak: {
     current: 0,
-    longest: 1,
-    lastGateDate: "2026-07-05",
-    freezesEquipped: 0,
+    longest: 0,
+    lastGateDate: null,
+    freezesEquipped: 2,
     freezesMax: 2,
   },
-  curr: 1,
+  curr: 0,
   predictions: {
     count: 0,
     byMetric: {
