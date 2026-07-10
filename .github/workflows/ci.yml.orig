@@ -43,17 +43,18 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: engines/pixelDojo
+        working-directory: engines/pixelDojo/pixel-quest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          package_json_file: engines/pixelDojo/package.json
+          version: 9
+          package_json_file: engines/pixelDojo/pixel-quest/package.json
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-          cache-dependency-path: engines/pixelDojo/pnpm-lock.yaml
+          cache-dependency-path: engines/pixelDojo/pixel-quest/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
