@@ -10,7 +10,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "smoke": "playwright test",
-    "lint": "biome check --config-path=.. src playwright"
+    "lint": "cd .. && biome check --config-path=. pixel-quest/src pixel-quest/playwright"
   },
   "dependencies": {
     "three": "~0.182.0"

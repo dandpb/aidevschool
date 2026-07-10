@@ -1,0 +1,5 @@
+🎨 Palette: [CI Fix] Fix CI pipeline failures for pixelDojo
+
+* Fixed GitHub Action cache dependency path configuration
+* Fixed biome lint command pathing execution in `pixel-quest` package
+* Fixed biome formatting error in `emitter.ts`
