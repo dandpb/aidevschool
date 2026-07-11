@@ -91,8 +91,10 @@ vi.mock("../progress", () => {
       title: `unit title ${XSS}`,
       project: `unit project ${XSS}`,
       state: "presenting",
-      retryCount: 0,
-      retryLimit: 3,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      retryCount: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      retryLimit: `3 ${XSS}` as any,
     },
     gate: {
       implementationBlocked: true,
@@ -102,12 +104,16 @@ vi.mock("../progress", () => {
       dreyfus: "novice",
       bloom: "remember",
       activeLanguage: `language ${XSS}`,
-      weeklyTimeHours: 5,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      weeklyTimeHours: `5 ${XSS}` as any,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      current: `0.3 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      thresholdAmber: `0.6 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      thresholdRed: `0.75 ${XSS}` as any,
       measurementSource: "self_reported",
       trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
     },
@@ -115,7 +121,8 @@ vi.mock("../progress", () => {
       {
         id: `pitfall-${XSS}`,
         description: `description ${XSS}`,
-        occurrences: 2,
+        // biome-ignore lint/suspicious/noExplicitAny: xss test
+        occurrences: `2 ${XSS}` as any,
         lastSeen: `last seen ${XSS}`,
       },
     ],
@@ -127,16 +134,23 @@ vi.mock("../progress", () => {
         reason: "due",
       },
     ],
-    masteredCount: 0,
-    scaffoldedCount: 1,
+    // biome-ignore lint/suspicious/noExplicitAny: xss test
+    masteredCount: `0 ${XSS}` as any,
+    // biome-ignore lint/suspicious/noExplicitAny: xss test
+    scaffoldedCount: `1 ${XSS}` as any,
     streak: {
-      current: 0,
-      longest: 0,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      current: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      longest: `0 ${XSS}` as any,
       lastGateDate: `gate date ${XSS}`,
-      freezesEquipped: 1,
-      freezesMax: 2,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      freezesEquipped: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      freezesMax: `2 ${XSS}` as any,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: xss test
+    curr: `0 ${XSS}` as any,
     challenges: [],
   }
 
@@ -153,7 +167,16 @@ vi.mock("../progress", () => {
     getMetrics: (): readonly Metric[] => [metric],
     getEcosystemStatuses: (): readonly EcosystemStatus[] => [ecosystemStatus],
     getLearnerSnapshot: (): LearnerSnapshot => learnerSnapshot,
-    getDashboardStats: () => ({ agents: 1, stages: 1, projects: 1, completionPercent: 42 }),
+    getDashboardStats: () => ({
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      agents: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      stages: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      projects: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: xss test
+      completionPercent: `42 ${XSS}` as any,
+    }),
   }
 })
 
