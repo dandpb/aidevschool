@@ -1,4 +1,9 @@
-## 2025-02-14 - Fix missing escaping on implicitly trusted numeric fields
-**Vulnerability:** XSS vulnerability through conceptually numeric fields.
-**Learning:** Fields conceptually thought of as integers or lengths (like array counts or string lengths) were passed directly to the DOM in innerHTML templates without being run through the escape function. This is a vulnerability because if an external service or attacker injects a string representation where a number was expected, the string payload executes XSS.
-**Prevention:** ALL dynamic template fields, including numbers, need to be escaped using `escapeHtml()`. Additionally, test harnesses should force XSS payloads into conceptually numeric mock properties to ensure this rule is enforced systematically. When numbers invoke `.toFixed()`, we must defensively check `typeof` to prevent `TypeError` when tested against a string.
+## 2024-07-04 - Unsafe Template Interpolation
+**Vulnerability:** The Single Page Application (SPA) dashboard used direct innerHTML assignment with string templates, allowing unescaped data from projects.ts to be rendered directly as HTML. This introduces a Cross-Site Scripting (XSS) risk if the data ever becomes user-controlled or dynamically fetched.
+**Learning:** In vanilla TypeScript applications that rely on string template literals for rendering, there is no automatic context-aware escaping (unlike React or Vue). Every dynamic variable insertion into innerHTML is a potential XSS vector.
+**Prevention:** Always implement and enforce a mandatory `escapeHtml` utility function around any dynamic data variables when constructing HTML string templates, treating all external data as untrusted by default.
+
+## 2024-07-04 - Unsafe Template Interpolation on Numeric Fields
+**Vulnerability:** XSS vulnerability found in `engines/codexDojo/src/render/roadmap.ts` where `project.level` was directly interpolated without escaping.
+**Learning:** Even fields that are conceptually numeric (like `level`) can become XSS vectors if the underlying type is not strictly validated or if the system is fed malicious non-numeric strings masquerading as numbers from external data sources.
+**Prevention:** Apply `escapeHtml` consistently to ALL dynamic fields rendered via innerHTML templates, regardless of their expected data type.
