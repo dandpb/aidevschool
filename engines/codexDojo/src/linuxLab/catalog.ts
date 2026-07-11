@@ -707,10 +707,20 @@ export function getLinuxApp(id: string): LinuxApp {
   return linuxApps[0]
 }
 
+// ⚡ Bolt Optimization: Pre-compute app groupings into O(1) map to avoid O(n) filter allocations during render loops
+const linuxAppsByCategory = linuxApps.reduce((acc, app) => {
+  const category = app.category
+  if (!acc.has(category)) {
+    acc.set(category, [])
+  }
+  acc.get(category)?.push(app)
+  return acc
+}, new Map<string, LinuxApp[]>())
+
 export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
   if (category === "all") {
     return linuxApps
   }
 
-  return linuxApps.filter((app) => app.category === category)
+  return linuxAppsByCategory.get(category) ?? []
 }
