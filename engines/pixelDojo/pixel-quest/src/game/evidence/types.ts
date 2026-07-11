@@ -1,3 +1,5 @@
+import type { CurriculumContext, EvidenceReviewContext } from "@aidevschool/evidence"
+
 // Each encounter kind emits its own metrics variant, discriminated by `kind`.
 // The validator (game/evidence/evidence.ts) dispatches on `metrics.kind` so
 // that adding a new encounter kind only requires extending this union and
@@ -63,21 +65,11 @@ export type PixelQuestEvidenceMetrics =
   | SequenceMetrics
   | TaskQueueMetrics
 
-export type PixelQuestReviewContext = {
-  readonly unit_kind: "concept"
-  readonly scheduled_review: boolean
-  readonly review_reason: "due" | "overdue" | "interleaving" | "recurring-trap"
-  readonly streak_candidate: boolean
-  readonly scheduler_source: "learner-substrate"
-  readonly verifier_required: true
-}
+export type PixelQuestReviewContext = EvidenceReviewContext<
+  "due" | "overdue" | "interleaving" | "recurring-trap"
+>
 
-export type PixelQuestCurriculumContext = {
-  readonly concept: string
-  readonly mechanic: string
-  readonly accepted_signal: string
-  readonly rejected_trap: string
-}
+export type PixelQuestCurriculumContext = CurriculumContext
 
 export type PixelQuestEvidenceRecord = {
   readonly source: "pixelquest"

@@ -1,8 +1,15 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+import re
 from typing import Any
+
+
+_TS_IDENTIFIER = re.compile(r"^[A-Za-z_$][A-Za-z0-9_$]*$")
+
+
+def _render_key(key: str) -> str:
+    return key if _TS_IDENTIFIER.fullmatch(key) else json.dumps(key, ensure_ascii=False)
 
 
 def render_dashboard_ts(snapshot: dict[str, Any]) -> str:
@@ -12,7 +19,6 @@ def render_dashboard_ts(snapshot: dict[str, Any]) -> str:
     lines.append("// Source: learner/learning_state.yaml + learner/learner_profile.md +")
     lines.append("//         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +")
     lines.append("//         learner/predictions.yaml")
-    lines.append(f"// Generated: {datetime.now().isoformat()}Z")
     lines.append("")
     lines.append('import type { LearnerSnapshot } from "../domain"')
     lines.append("")
@@ -21,9 +27,8 @@ def render_dashboard_ts(snapshot: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def render_codexdojo_os_ts(snapshot: dict[str, Any]) -> str:
-    """Render the same canonical learner contract for the OS engine."""
-    return render_dashboard_ts(snapshot)
+# The OS engine consumes the exact same canonical learner contract.
+render_codexdojo_os_ts = render_dashboard_ts
 
 
 _REVIEW_SLICE_IMPORTS = {
@@ -44,7 +49,6 @@ def render_review_slice_ts(slice_dict: dict[str, Any], *, engine: str) -> str:
     lines.append("// DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.")
     lines.append(f"// Read-only review slice for {engine_name}: the game reads scheduling truth here,")
     lines.append("// emits evidence only, and never marks mastery (GameNeverMarksMastery).")
-    lines.append(f"// Generated: {datetime.now().isoformat()}Z")
     lines.append("")
     lines.append(f"import type {{ ReviewSlice }} from {import_path}")
     lines.append("")
@@ -67,19 +71,22 @@ def _format_snapshot(snapshot: dict[str, Any], indent: int) -> str:
     parts: list[str] = ["{"]
     items: list[str] = []
     for key, value in snapshot.items():
+        rendered_key = _render_key(key)
         if isinstance(value, dict):
-            items.append(f"{inner_pad}{key}: {_format_snapshot(value, indent + 1)},")
+            items.append(f"{inner_pad}{rendered_key}: {_format_snapshot(value, indent + 1)},")
         elif isinstance(value, list):
             if not value:
-                items.append(f"{inner_pad}{key}: [],")
+                items.append(f"{inner_pad}{rendered_key}: [],")
                 continue
             list_inner = "  " * (indent + 2)
             list_lines = [f"{list_inner}{_format_value(item, indent + 2)}," for item in value]
             items.append(
-                f"{inner_pad}{key}: [\n" + "\n".join(list_lines) + f"\n{inner_pad}],"
+                f"{inner_pad}{rendered_key}: [\n"
+                + "\n".join(list_lines)
+                + f"\n{inner_pad}],"
             )
         else:
-            items.append(f"{inner_pad}{key}: {_format_value(value, indent + 1)},")
+            items.append(f"{inner_pad}{rendered_key}: {_format_value(value, indent + 1)},")
     if not items:
         return "{}"
     parts.append("\n".join(items))

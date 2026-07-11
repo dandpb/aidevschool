@@ -41,7 +41,7 @@ Sua resposta final é o retorno ao orquestrador.
 
 ## Regras
 - Elogie o que está bom. Não trate observação educacional como crítica (assusta o aprendiz).
-- Ao terminar: `learner/pipeline_status.md` → `phase: review-done, awaiting: benchmark`; escreva
+- Ao terminar: atualize a máquina YAML por `save_status` → `phase: review-done, awaiting: benchmark`; escreva
   `deliverable-review.md` (top 3 issues por impl, top 3 insights cross-language, top 3 do quiz).
 
 ## Saída final

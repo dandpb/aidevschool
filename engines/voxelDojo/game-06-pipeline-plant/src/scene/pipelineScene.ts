@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { bufferedTruth, streamingTruth } from "../sim/levels"
 
@@ -48,10 +48,7 @@ function bytesToLevel(bytes: number, capacity: number): number {
  * Points cloud when size > capacity.
  */
 export class PipelineScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private clock = new THREE.Clock()
 
   // tank parts
@@ -77,22 +74,24 @@ export class PipelineScene {
   // resolved truth the scene is animating toward (set on sync)
   private resolvedOverflow = 0
 
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onTankClick: (() => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(6, 6, 14)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 40
-    this.controls.minDistance = 8
-    this.controls.target.set(0, TANK_CENTER_Y, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 22,
+      fogFar: 60,
+      cameraPosition: [6, 6, 14],
+      controlsTarget: [0, TANK_CENTER_Y, 0],
+      minDistance: 8,
+      maxDistance: 40,
+      ambientIntensity: 0.75,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        const dt = this.clock.getDelta()
+        this.animate(dt, this.clock.getElapsedTime())
+      },
+    })
 
     // tank shell — transparent box (just edges + faint walls)
     const tankGeo = new THREE.BoxGeometry(TANK_W, TANK_H, TANK_D)
@@ -104,14 +103,14 @@ export class PipelineScene {
     })
     const tankShell = new THREE.Mesh(tankGeo, tankMat)
     tankShell.position.y = TANK_CENTER_Y
-    this.scene.add(tankShell)
+    this.viewport.scene.add(tankShell)
     // tank wireframe edges so the box reads as a container
     const edges = new THREE.LineSegments(
       new THREE.EdgesGeometry(tankGeo),
       new THREE.LineBasicMaterial({ color: TANK_CHROME }),
     )
     edges.position.y = TANK_CENTER_Y
-    this.scene.add(edges)
+    this.viewport.scene.add(edges)
 
     // fluid level plane — sits inside the tank, rises with memory
     this.fluidMesh = new THREE.Mesh(
@@ -125,7 +124,7 @@ export class PipelineScene {
       }),
     )
     this.fluidMesh.position.y = TANK_BOTTOM_Y
-    this.scene.add(this.fluidMesh)
+    this.viewport.scene.add(this.fluidMesh)
 
     // capacity rim — a glowing ring at the top of the tank marking the capacity limit
     this.rimMesh = new THREE.Mesh(
@@ -135,7 +134,7 @@ export class PipelineScene {
     this.rimMesh.rotation.x = Math.PI / 2
     this.rimMesh.position.y = TANK_BOTTOM_Y + TANK_H
     this.rimMesh.scale.x = TANK_D / TANK_W
-    this.scene.add(this.rimMesh)
+    this.viewport.scene.add(this.rimMesh)
 
     // capacity marker line inside the tank (the "100%" level)
     this.levelLine = new THREE.Mesh(
@@ -143,7 +142,7 @@ export class PipelineScene {
       new THREE.MeshBasicMaterial({ color: RIM_COLOR, transparent: true, opacity: 0.5 }),
     )
     this.levelLine.position.y = TANK_BOTTOM_Y + TANK_H
-    this.scene.add(this.levelLine)
+    this.viewport.scene.add(this.levelLine)
 
     // pipe feeding the tank from the left
     this.pipe = new THREE.Mesh(
@@ -152,7 +151,7 @@ export class PipelineScene {
     )
     this.pipe.rotation.z = Math.PI / 2
     this.pipe.position.set((PIPE_START_X + PIPE_END_X) / 2, TANK_BOTTOM_Y + TANK_H - 0.6, 0)
-    this.scene.add(this.pipe)
+    this.viewport.scene.add(this.pipe)
     // pipe mouth ring at the tank wall
     const mouth = new THREE.Mesh(
       new THREE.TorusGeometry(PIPE_RADIUS, 0.06, 8, 24),
@@ -160,7 +159,7 @@ export class PipelineScene {
     )
     mouth.rotation.y = Math.PI / 2
     mouth.position.set(PIPE_END_X, this.pipe.position.y, 0)
-    this.scene.add(mouth)
+    this.viewport.scene.add(mouth)
 
     // buffer/stream lever — a pivoting bar to the right of the tank
     this.leverPivot = new THREE.Group()
@@ -189,47 +188,22 @@ export class PipelineScene {
     )
     base.position.y = -1.4
     this.leverPivot.add(base)
-    this.scene.add(this.leverPivot)
+    this.viewport.scene.add(this.leverPivot)
 
-    // lighting + floor grid
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.75))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
+    // floor grid
     const grid = new THREE.GridHelper(40, 40, "#1c2236", "#141a2b")
     grid.position.y = TANK_BOTTOM_Y - 0.01
-    this.scene.add(grid)
+    this.viewport.scene.add(grid)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      const dt = this.clock.getDelta()
-      this.animate(dt, this.clock.getElapsedTime())
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     // the whole tank volume is the click target (shell + fluid)
     const targets = [this.fluidMesh]
-    const hits = this.raycaster.intersectObjects(targets)
+    const hits = this.viewport.raycaster.intersectObjects(targets)
     if (hits.length > 0 && this.onTankClick) this.onTankClick()
   }
 
@@ -269,7 +243,7 @@ export class PipelineScene {
 
   private syncSlugs(state: GameState): void {
     // remove old slugs
-    for (const s of this.slugs) this.scene.remove(s)
+    for (const s of this.slugs) this.viewport.scene.remove(s)
     this.slugs = []
     if (state.level.mode !== "streaming") {
       return
@@ -293,7 +267,7 @@ export class PipelineScene {
       const t = i / Math.max(1, count)
       slug.position.set(PIPE_START_X + t * PIPE_LENGTH, this.pipe.position.y, 0)
       slug.userData = { phase: t }
-      this.scene.add(slug)
+      this.viewport.scene.add(slug)
       this.slugs.push(slug)
     }
   }
@@ -330,18 +304,18 @@ export class PipelineScene {
       opacity: 0.95,
     })
     if (this.overflowPoints) {
-      this.scene.remove(this.overflowPoints)
+      this.viewport.scene.remove(this.overflowPoints)
       this.overflowPoints.geometry.dispose()
       ;(this.overflowPoints.material as THREE.Material).dispose()
     }
     this.overflowPoints = new THREE.Points(geo, mat)
-    this.scene.add(this.overflowPoints)
+    this.viewport.scene.add(this.overflowPoints)
     void capacity
   }
 
   private clearOverflow(): void {
     if (this.overflowPoints) {
-      this.scene.remove(this.overflowPoints)
+      this.viewport.scene.remove(this.overflowPoints)
       this.overflowPoints.geometry.dispose()
       ;(this.overflowPoints.material as THREE.Material).dispose()
       this.overflowPoints = null

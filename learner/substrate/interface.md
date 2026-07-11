@@ -37,6 +37,18 @@ The dashboard and codexDojo OS each receive an engine-local generated
 - `derive_whiteboard_trail(state) -> dict`  
   Return the whiteboard trail metadata used by Cartógrafo.
 
+- `commit_gate_transition(state, decision, ...) -> dict`
+  Validate one independently verified gate transition and persist it atomically.
+  A decision backed by a separate verifier receipt records
+  `evidence_verifier_source` and the canonical `evidence_digest`; later state
+  validation rechecks that digest against the producer artifact.
+
+- `record_prediction(record, path=None) -> Path`
+  Validate and append an Arena prediction through the learner-owned boundary.
+
+- `check() -> list[Path]`
+  Return generated projections that differ from canonical sources without writing.
+
 ## Invariants
 
 1. `learner.id` is non-empty.
@@ -55,5 +67,6 @@ The dashboard and codexDojo OS each receive an engine-local generated
 
 ## Ordering
 
-Always edit the canonical state first, then call `sync()` to regenerate derived
-views. Never write to a derived view and back-port changes.
+Always edit a canonical source first, then call `sync()` to regenerate derived
+views. Use `learner/gate/` for evidence-driven mastery transitions. Never write
+to a derived view and back-port changes.

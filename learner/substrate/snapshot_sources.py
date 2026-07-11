@@ -69,25 +69,6 @@ def pitfalls_from_markdown(pitfalls_path: Path, journal_path: Path) -> list[dict
     return pitfalls[:5]
 
 
-def aidi_trend_from_journal(journal_path: Path) -> list[dict[str, str]]:
-    """Return dated AIDI mentions from the journal."""
-    if not journal_path.exists():
-        return []
-    pattern = re.compile(r"(?:AIDI|aidi)[:=]\s*([0-9]+(?:\.[0-9]+)?)")
-    date_pattern = re.compile(r"^##\s+\[(\d{4}-\d{2}-\d{2})\]", re.MULTILINE)
-    points: list[dict[str, str]] = []
-    last_date: str | None = None
-    for line in journal_path.read_text(encoding="utf-8").splitlines():
-        if line.startswith("## "):
-            date_match = date_pattern.match(line)
-            if date_match:
-                last_date = date_match.group(1)
-        value_match = pattern.search(line)
-        if value_match and last_date:
-            points.append({"date": last_date, "value": float(value_match.group(1))})
-    return points[-30:]
-
-
 def status_token(cell: str) -> str:
     """Extract the leading status token from a backlog table cell."""
     cell = cell.strip()

@@ -14,7 +14,7 @@ Create the ecosystem that satisfies the requested multi-agent programming school
 | --- | --- | --- |
 | Product named `codexDojo` | Complete | `README.md`, `engines/codexDojo/README.md`, app title, `engines/codexDojo/ecosystem/MANIFEST.md` |
 | Multi-agent ecosystem (10 user-facing + 14 tutor core) | Complete | `OPERATING_MODEL.md`, `AGENT_PROMPTS.md` (10 user-facing), `engines/minimaxDojo/prompts/per_agent/` (14 tutor core), `engines/miniMaxEvolutionEngine/.claude/agents/` (15 subagents wired including cross-model verifier) |
-| OpenClaw and Hermes operation | Complete | `OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` |
+| OpenClaw checklist operation | Complete | `OPENCLAW_RUNBOOK.md`, `engines/openclaw/README.md` |
 | Continuous learning cycle | Complete | `OPERATING_MODEL.md`, `.mavis/plans/plan.yaml`, `learner/learning_state.yaml` |
 | Programming fundamentals coverage | Complete | `CURRICULUM_SCOPE.md`, `curriculum/catalog.md` (18 projects, 6 levels) |
 | Technology comparison coverage | Complete | `CURRICULUM_SCOPE.md`, `EVALUATION_MODELS.md`, `technology-comparison.md` |
@@ -22,7 +22,7 @@ Create the ecosystem that satisfies the requested multi-agent programming school
 | Architecture models | Complete | `CURRICULUM_SCOPE.md`, `OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md` |
 | Code review and quality model | Complete | `EVALUATION_MODELS.md`, `code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Tests and metrics model | Complete | `EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, codexDojo dashboard live panel (`render/learner.ts`) |
-| Professional AI integration | Complete | `CURRICULUM_SCOPE.md`, `AGENT_PROMPTS.md`, `OPENCLAW_HERMES_RUNBOOK.md` |
+| Professional AI integration | Complete | `CURRICULUM_SCOPE.md`, `AGENT_PROMPTS.md`, `OPENCLAW_RUNBOOK.md` |
 | 18 incremental projects | Complete | `ROADMAP.md`, `engines/codexDojo/src/data/projects.ts`, `curriculum/catalog.md` |
 | Individual prompts for requested agents | Complete | `AGENT_PROMPTS.md` contains 10 user-facing prompts; `engines/minimaxDojo/prompts/per_agent/` contains 14 tutor-core system prompts. |
 | Folder structure for project packages | Complete | `ROADMAP.md`, `project-package.md` |

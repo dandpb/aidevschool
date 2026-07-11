@@ -6,9 +6,9 @@ view in sync.
 
 ## The golden rule
 
-> Edit only the canonical state — `learner/learning_state.yaml` (and `learner/pipeline_status.md` for
-> software-cycle state). Then run `python3 -m learner.substrate`. Never write to a derived view and
-> back-port the change.
+> Edit learner mastery only through `learner/learning_state.yaml` or the public
+> gate API. Machine cycle state lives in `learner/pipeline_status.yaml`; its
+> Markdown sibling is narrative. Then run `python3 -m learner.substrate`.
 
 `.mavis/learning_state.yaml`, the minimaxDojo whiteboard, both dashboard/OS `learner.ts` modules,
 and PixelDojo/voxelDojo `reviewSlice.ts` modules are all **generated** from the canonical YAML.
@@ -21,7 +21,8 @@ learner/
 ├── learner_profile.md       # Dreyfus × Bloom matrix, proven prerequisites, gaps
 ├── pitfalls.md              # append-only recurring-trap memory (spaced-repetition fuel)
 ├── journal.md               # append-only knowledge base
-├── pipeline_status.md       # software-cycle phase + next action (distinct from the learning gate)
+├── pipeline_status.yaml     # machine software-cycle phase + next action
+├── pipeline_status.md       # human narrative only; never a machine fallback
 ├── predictions.yaml         # append-only Polyglot Arena predictions
 ├── attempts/                # learner diagnostic attempts (append-only learning evidence)
 └── substrate/               # the Python validator + derived-view adapters
@@ -51,7 +52,7 @@ Top: `version: 2`, `system: agora-continuum`. The key blocks:
 - **`active_unit`** — the live gate object: `id`, `project`, `title`, `state`, `retry_count`,
   `retry_limit` (3), `unblock_condition: learner_attempt_evaluated`,
   `required_before_implementation: true`, `diagnostic_file`, a `promotion_gate` list, and an
-  `empirical_gate` (`require_executable_evidence: true`, `min_coverage: 0.80`, `mutation_min: 0.60`).
+  `empirical_gate` (`require_executable_evidence: true`, `min_coverage: 0.80`, `mutation_min: 0.65`).
 - **`gate`** — `implementation_blocked: <bool>` ← the master gate flag.
 - **`agent_ownership`** — the named agents (`leader: Maestro`, `diagnostic: Sonda`, `verifier: Prometor`, …).
 - **`empirical_gates`** — `code` (coverage target ≥ 80%, mutation 60–70% when tooling available,
@@ -88,6 +89,9 @@ Top: `version: 2`, `system: agora-continuum`. The key blocks:
 
 - `sync()` — regenerate every derived view from canonical.
 - `derive_mavis_view(state)`, `derive_whiteboard_profile(state)`, `derive_whiteboard_trail(state)`.
+- `commit_gate_transition(...)` — validate and atomically persist an independently verified gate.
+- `record_prediction(...)` — validate and append an Arena prediction through the learner boundary.
+- `check()` — report canonical or generated-view drift without writing.
 
 **Error modes:** `FileNotFoundError` (missing canonical), `yaml.YAMLError` (malformed),
 `ValueError` (invariant violation).
@@ -119,9 +123,9 @@ derived target families from one canonical snapshot:
 1. `.mavis/learning_state.yaml` (Mavis planner view, lowercase pt states).
 2. `minimaxDojo/whiteboard/{profile.yaml, learner_profile.md, trail.md}` (consumed by Mnemosyne and
    Cartógrafo).
-3. `codexDojo/src/data/learner.ts` and `codexdojo-os-prototype/src/data/learner.ts` (engine-local,
-   readonly `LearnerSnapshot` modules with the same values).
+3. Dashboard/OS learner projections plus codexDojo `projects.ts`, `agents.ts`, and `cycle.ts`.
 4. `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and every voxelDojo game review slice.
+5. `curriculum/BACKLOG_STATUS.md` from the canonical `curriculum/catalog.md`.
 
 For efficiency, `build_snapshot()` runs once and is shared across both TypeScript renderers. Its
 inputs (all read-only) include `learning_state.yaml`, `learner_profile.md`, `pitfalls.md`, `journal.md`

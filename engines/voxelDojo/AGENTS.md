@@ -15,6 +15,7 @@ reference package, not the only implementation.
 | Reference package | `game-10-hash-ring/` | Representative Vite + strict TypeScript + Three.js + Vitest + Playwright package. |
 | Package layout | `game-*/src/` | `sim/` is authoritative; `game/` coordinates; `scene/` and HUD project state. |
 | Runtime vs headless entry | `game-*/src/main.ts`, `game-*/src/index.ts` | Browser composition stays in `main.ts`; reusable/test exports stay headless. |
+| Shared scene kit | `shared/sceneHarness.ts`, `shared/viewport.ts` | Internal browser lifecycle, viewport, resize, and disposal helpers. |
 | Browser proof | `game-*/playwright/` | Boots WebGL, drives the real UI, and asserts evidence records. |
 | Engine decisions / data flow | `docs/ARCHITECTURE.md` | Rendering, evidence, verifier handoff. |
 | What's blocking implementation | `docs/GAP_ANALYSIS.md` | Ecosystem-wide gaps and sequence. |
@@ -22,6 +23,7 @@ reference package, not the only implementation.
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. Read-only here. |
 | **Cross-engine game contract** | `../../docs/design/teaching-game-contract.md` | Canonical rules for evidence, verifier handoff, packs. Wins on conflict. |
 | Evidence record shape | `../pixelDojo/pixel-quest/docs/content-packs.md` | voxelDojo reuses this schema with `"source": "voxeldojo"`. |
+| Shared evidence package | `../shared/teaching-evidence/` | `@aidevschool/evidence`; one envelope and dual-channel emitter. |
 | Visual language | `docs/3d-style.md` | Palette, camera, lighting, HUD conventions for every game. |
 | Sister-engine conventions | `../pixelDojo/AGENTS.md` | Shared golden rules; genre differs, contract doesn't. |
 

@@ -3,16 +3,15 @@
 // Source: learner/learning_state.yaml + learner/learner_profile.md +
 //         learner/pitfalls.md + learner/journal.md + curriculum/BACKLOG_STATUS.md +
 //         learner/predictions.yaml
-// Generated: 2026-07-10T17:40:05.440700Z
 
 import type { LearnerSnapshot } from "../domain"
 
 export const learnerSnapshot: LearnerSnapshot = {
   activeUnit: {
-    id: "U0-sonda-rate-limiter-robustness",
-    title: "GATEKEEPER: token-bucket rate limiter robustness",
-    project: "01_rate_limiter",
-    state: "mastered",
+    id: "U2-key-value-store",
+    title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
+    project: "02_key_value_store",
+    state: "evaluating",
     retryCount: 0,
     retryLimit: 3,
   },
@@ -30,20 +29,8 @@ export const learnerSnapshot: LearnerSnapshot = {
     current: 0.34,
     thresholdAmber: 0.6,
     thresholdRed: 0.75,
-    trend: [
-      {
-        date: "2026-06-01",
-        value: 0.21,
-      },
-      {
-        date: "2026-06-08",
-        value: 0.28,
-      },
-      {
-        date: "2026-06-15",
-        value: 0.34,
-      },
-    ],
+    measurementSource: "self_reported",
+    trend: [],
   },
   topPitfalls: [
     {
@@ -57,8 +44,14 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 1d",
+      dueIn: "overdue 2d",
       reason: "overdue",
+    },
+    {
+      unitId: "U2-key-value-store",
+      title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
+      dueIn: "today",
+      reason: "due",
     },
     {
       unitId: "P-001",
@@ -94,4 +87,114 @@ export const learnerSnapshot: LearnerSnapshot = {
       },
     },
   },
+  challenges: [
+    {
+      id: "01_rate_limiter",
+      phase: "spec",
+      passed: false,
+      attemptPresent: true,
+    },
+    {
+      id: "02_key_value_store",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "03_url_shortener",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "04_concurrent_task_queue",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "05_websocket_chat",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "06_file_upload_pipeline",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "07_rest_api_auth",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "08_event_driven_order_system",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "09_plugin_system",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "10_distributed_cache",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "11_load_balancer",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "12_distributed_job_scheduler",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "13_api_gateway_circuit_breaker",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "14_log_aggregator",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "15_metrics_collector",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "16_mini_message_queue",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "17_distributed_config_service",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+    {
+      id: "18_search_engine",
+      phase: "cycle-complete",
+      passed: false,
+      attemptPresent: false,
+    },
+  ],
 }

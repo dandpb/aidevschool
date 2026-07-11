@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { layers } from "../sim/dag"
 
@@ -58,10 +58,7 @@ function dagPoint(jobId: string, layer: Map<string, number>): THREE.Vector3 {
  * blocked jobs stay dim.
  */
 export class MissionScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private stationGroup = new THREE.Group()
   private dagGroup = new THREE.Group()
   private stationMeshes = new Map<string, THREE.Mesh>()
@@ -69,63 +66,40 @@ export class MissionScene {
   private jobMeshes = new Map<string, THREE.Mesh>()
   private depArrows: THREE.ArrowHelper[] = []
   private clock = new THREE.Clock()
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onStationClick: ((stationId: string) => void) | null = null
   onJobClick: ((jobId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(-2, 4, 22)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 60
-    this.controls.minDistance = 8
-    this.controls.target.set(-2, 0, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 22,
+      fogFar: 60,
+      cameraPosition: [-2, 4, 22],
+      controlsTarget: [-2, 0, 0],
+      minDistance: 8,
+      maxDistance: 60,
+      ambientIntensity: 0.75,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.animateReady(this.clock.getElapsedTime())
+      },
+    })
 
-    this.scene.add(this.stationGroup)
-    this.scene.add(this.dagGroup)
+    this.viewport.scene.add(this.stationGroup)
+    this.viewport.scene.add(this.dagGroup)
     // a faint reference grid floor for spatial anchoring
     const grid = new THREE.GridHelper(40, 40, "#1c2236", "#141a2b")
     grid.position.y = -6
-    this.scene.add(grid)
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.75))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
+    this.viewport.scene.add(grid)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animateReady(this.clock.getElapsedTime())
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     const targets = [...this.stationMeshes.values(), ...this.jobMeshes.values()]
-    const hits = this.raycaster.intersectObjects(targets)
+    const hits = this.viewport.raycaster.intersectObjects(targets)
     const first = hits[0]
     if (!first) return
     const ud = first.object.userData as { stationId?: string; jobId?: string }

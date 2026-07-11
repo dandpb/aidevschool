@@ -13,7 +13,7 @@ verifier gate between phases; it never writes implementation code itself.
 
 ```text
 1. Open Claude Code rooted at this directory (engines/miniMaxEvolutionEngine/).
-2. /devschool-status      # see pipeline_status.md + the learning gate
+2. /devschool-status      # see the YAML-first pipeline status + learning gate
 3. /devschool-diagnose    # if the gate is blocked, run the diagnostic (sonda)
 4. /devschool-cycle       # run the full 5-phase loop once unblocked
 ```
@@ -34,7 +34,9 @@ Before any commit: run `/simplify` on the diff, apply the recommendations, then 
 
 ## Conventions
 
-- Never advance `learner/pipeline_status.md` before the verifier returns `PASS`.
+- `learner/pipeline_status.yaml` is the machine authority; Markdown is human narrative only and is
+  never parsed as a fallback. The adapter reports the YAML source and never writes either file.
+- Never advance the pipeline status before the verifier returns `PASS`.
 - The verifier never shares the producer's context (anti-anchoring).
 - Never replace the symlinks with copied directories — the root stays the source of truth.
 - Recurring cloud schedules are billed — only create them with explicit user confirmation.

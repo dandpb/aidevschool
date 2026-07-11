@@ -1,4 +1,5 @@
-import { GameController } from "./game/controller"
+import { createSceneHarness } from "../../shared/sceneHarness"
+import { GameController, type GameState } from "./game/controller"
 import { DeltaScene } from "./scene/deltaScene"
 import { mountHud } from "./scene/hud"
 
@@ -9,22 +10,20 @@ declare global {
   }
 }
 
-const canvas = document.querySelector<HTMLCanvasElement>("#stage")
-const hudRoot = document.querySelector<HTMLElement>("#hud")
-if (!canvas || !hudRoot) throw new Error("missing #stage or #hud")
-
-const game = new GameController("L1")
-const scene = new DeltaScene(canvas)
-scene.onHeadwaterClick = (sourceId) => {
-  const lvl = game.snapshot.level.id
-  if (lvl === "L1") game.predictSource(sourceId)
-  if (lvl === "L3") {
-    if (game.snapshot.injectSource === null) game.injectDye(sourceId)
-    else game.togglePredictedDyeSource(sourceId)
-  }
-}
-
-game.subscribe((state) => scene.sync(state))
-mountHud(hudRoot, game)
-
-window.__riverDelta = { game }
+createSceneHarness<GameState, GameController, DeltaScene>({
+  createGame: () => new GameController("L1"),
+  createScene: (canvas) => new DeltaScene(canvas),
+  windowKey: "__riverDelta",
+  mountHud,
+  wireInteraction: (game, scene) => {
+    scene.onHeadwaterClick = (sourceId) => {
+      const lvl = game.snapshot.level.id
+      if (lvl === "L1") game.predictSource(sourceId)
+      if (lvl === "L3") {
+        if (game.snapshot.injectSource === null) game.injectDye(sourceId)
+        else game.togglePredictedDyeSource(sourceId)
+      }
+    }
+  },
+  onState: (state, _game, scene) => scene.sync(state),
+})

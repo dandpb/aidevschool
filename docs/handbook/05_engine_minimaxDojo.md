@@ -67,6 +67,12 @@ Organized into five layers (full detail in `docs/01_agent_roster.md`). Model tie
 A **RACI matrix** in the roster assigns R/A/C/I across decision types (e.g. "fail a unit": R=PROMĘTOR,
 A=Maestro, C=Sêneca, I=Crítico).
 
+Prometor and the five-phase Verifier are separate roles. Prometor evaluates
+learning-unit evidence against the empirical gate and may produce a Gate
+Outcome through `learner/gate/`. The phase Verifier checks a producer artifact
+before the software cycle advances and never writes learner state. The two
+wrappers stay separate because their inputs, verdicts, and authority differ.
+
 ## State machine
 
 Unit states (`docs/02_state_machine.md`, mirrored in `config/learner.yaml`):
@@ -123,6 +129,12 @@ clippy/criterion; TS = vitest/stryker/c8/eslint+tsc.
 The **`⟨config: path⟩` marker rule:** prompts and docs reference thresholds symbolically (and use
 `⟨LINGUAGEM_FOCO⟩` for the focus-language seam) instead of hardcoding values that live in
 `config/learner.yaml`.
+
+Dashboard labels and roster projections live in `config/dashboard.yaml`; the
+cross-platform roster contract lives in `config/agent_roster_contract.yaml`.
+Substrate generation emits codexDojo's `agents.ts` and `cycle.ts`, while the
+roster drift test fails when the minimaxDojo contract and the Claude motor
+diverge.
 
 ## Directory map
 

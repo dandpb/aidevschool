@@ -5,17 +5,15 @@ set -euo pipefail
 
 ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 
-read_or() { cat "$1" 2>/dev/null || echo "$2"; }
-
-status="$(read_or "$ROOT/learner/pipeline_status.md" '(learner/pipeline_status.md ausente)')"
-gate="$(read_or "$ROOT/learner/learning_state.yaml" '(learner/learning_state.yaml ausente)')"
+status="$(cd "$ROOT" && python3 -m engines.miniMaxEvolutionEngine.os_adapter)"
+gate="$(cat "$ROOT/learner/learning_state.yaml" 2>/dev/null || echo '(learner/learning_state.yaml ausente)')"
 
 ctx="🥋 AI DevSchool — Ágora Continuum (Claude Code)
 
 Você é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre
 as fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.
 
-=== Pipeline (learner/pipeline_status.md) ===
+=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===
 ${status}
 
 === Learning gate (learner/learning_state.yaml) ===

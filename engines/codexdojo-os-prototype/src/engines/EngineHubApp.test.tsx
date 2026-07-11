@@ -110,7 +110,7 @@ describe('Engine Hub', () => {
     expect(screen.getByText(/não concede domínio/i)).toBeTruthy()
   })
 
-  it('source-labels the divergent Evolution and OpenClaw pipeline views', async () => {
+  it('shows one canonical YAML pipeline source for Evolution and OpenClaw', async () => {
     // Given
     const user = userEvent.setup()
     render(<EngineHubApp development={false} />)
@@ -119,9 +119,12 @@ describe('Engine Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Usar OpenClaw' }))
 
     // Then
-    expect(screen.getByText('Fontes de pipeline distintas')).toBeTruthy()
-    expect(screen.getByText(/Evolution: learner\/pipeline_status\.md/i)).toBeTruthy()
-    expect(screen.getByText(/OpenClaw: learner\/pipeline_status\.yaml/i)).toBeTruthy()
+    expect(screen.getByText('Fonte única de pipeline')).toBeTruthy()
+    expect(screen.getByText('learner/pipeline_status.yaml')).toBeTruthy()
+
+    await user.click(screen.getByRole('button', { name: 'Usar MiniMax Evolution Engine' }))
+    expect(screen.getByText('Fonte única de pipeline')).toBeTruthy()
+    expect(screen.getByText('learner/pipeline_status.yaml')).toBeTruthy()
   })
 
   it('drops a stale local receipt after the user switches engines', async () => {

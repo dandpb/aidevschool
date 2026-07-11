@@ -47,7 +47,7 @@ export interface GameState {
   /** L3 — the player's predicted expired-count before the sweep. */
   predictedSwept: number | null
   /** L4 — current shelf count dial (rehashes the store live). */
-  lastMetrics: Record<string, number | boolean> | null
+  lastMetrics: Record<string, number | boolean | string> | null
 }
 
 export type Listener = (state: GameState) => void
@@ -259,8 +259,9 @@ export class GameController {
   }
 
   private finishWave(outcome: { pass: boolean; metrics: Record<string, number | boolean> }): void {
-    this.state.lastMetrics = outcome.metrics
+    const metrics = { kind: "voxeldoj-kv-warehouse", ...outcome.metrics }
+    this.state.lastMetrics = metrics
     this.state.phase = outcome.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, outcome.pass, outcome.metrics)
+    emitEvidence(this.state.level.id, outcome.pass, metrics)
   }
 }

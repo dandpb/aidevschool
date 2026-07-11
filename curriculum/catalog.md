@@ -4,9 +4,10 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; see BACKLOG_STATUS.md for the Go/Rust caveat on each)
+> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
 >
-> ℹ️ Per-project build status (02–18 are *scaffolded*, not "not started") is tracked authoritatively in [BACKLOG_STATUS.md](BACKLOG_STATUS.md); on conflict, BACKLOG_STATUS wins. The per-project "Status" rows below may lag.
+> `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
+> `python3 -m learner.substrate`; never edit the generated backlog directly.
 
 ---
 
@@ -33,8 +34,10 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 |-------|-------|
 | **Slug** | `01_rate_limiter` |
 | **Status** | ✅ Implemented |
+| **Evidence** | Six executable evidence groups cover the spec, Go/Rust/Node implementations and tests, review, benchmark, evolution, and verifier gate. Certification caveat: benchmark and optimization are Node.js-only execution-verified in this sandbox; Go and Rust are code-reviewed/proposed-only for those phases, not performance-parity certified. |
 | **Concepts** | Token bucket algorithm, concurrency primitives, atomic refills, shared state |
 | **Key question** | Go (goroutines + channels) vs Rust (tokio + Arc&lt;Mutex&gt;) vs Node (event loop + clusters) — which handles rate limiting best? |
+| **Learning goal** | Entender concorrência básica, estado compartilhado e refills atômicos. |
 | **Directory** | `01_rate_limiter/` |
 | **Go coverage** | ~85.9% (ratelimit) — Phase 2 result, not re-executed in this sandbox (no toolchain) |
 | **Rust tests** | 14 unit + 6 integration — Phase 2 result, not re-executed in this sandbox (no toolchain) |
@@ -49,8 +52,10 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 |-------|-------|
 | **Slug** | `02_key_value_store` |
 | **Status** | Partially implemented (Node.js: gated & certified; Go/Rust: code exists, unverified) |
+| **Evidence** | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the Go and Rust directories came from an earlier ungated backfill and have not been compiled, tested, reviewed, or benchmarked in the certified cycle. |
 | **Concepts** | Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics |
 | **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? (unanswered this cycle — no cross-language data exists) |
+| **Learning goal** | Comparar mapas e dicionários sob carga concorrente e persistência simples. |
 | **Directory** | `02_key_value_store/` |
 | **Go coverage** | Unverified — `go-impl/` exists from an earlier ungated backfill commit; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
 | **Rust tests** | Unverified — `rust-impl/` exists from the same earlier ungated backfill; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
@@ -64,10 +69,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `03_url_shortener` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Hashing (base62, SHA-256 trunc), relational DB design, HTTP redirects (301/302), unique ID generation, analytics pipeline |
 | **Key question** | How do ID generation strategies (snowflake, ULID, auto-increment) compare across languages for collision resistance and throughput? |
+| **Learning goal** | Explorar hashing, geração de IDs e redirecionamento seguro. |
 | **Directory** | `03_url_shortener/` |
 | **Dependencies** | Project 02 (storage basics) |
 
@@ -82,10 +88,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `04_concurrent_task_queue` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Worker pools, job scheduling, backpressure, priorities, timeouts, retry policies, dead-letter queues, idempotency |
 | **Key question** | Which language's concurrency model delivers the best throughput for async job processing? |
+| **Learning goal** | Orquestrar jobs concorrentes com prioridades e retry. |
 | **Directory** | `04_concurrent_task_queue/` |
 | **Dependencies** | Projects 01-03 |
 
@@ -94,10 +101,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `05_websocket_chat` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats |
 | **Key question** | How does each runtime handle 10k+ concurrent persistent connections? |
+| **Learning goal** | Gerir conexões persistentes e broadcast em escala. |
 | **Directory** | `05_websocket_chat/` |
 | **Dependencies** | Projects 01-03 |
 
@@ -106,10 +114,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `06_file_upload_pipeline` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Streaming I/O, chunked processing, multipart upload, memory management, parallel processing, bounded memory |
 | **Key question** | How do streaming vs buffering approaches compare for large file handling? |
+| **Learning goal** | Processar uploads grandes sem estourar memória. |
 | **Directory** | `06_file_upload_pipeline/` |
 | **Dependencies** | Projects 01-03 |
 
@@ -124,10 +133,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `07_rest_api_auth` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | JWT (sign/verify), RBAC, middleware chains, layered architecture, dependency injection, input validation, versioning |
 | **Key question** | How does auth middleware composition differ across frameworks in each language? |
+| **Learning goal** | Separar identidade, sessão, autorização e versionamento. |
 | **Directory** | `07_rest_api_auth/` |
 | **Dependencies** | Projects 04-06 |
 
@@ -136,10 +146,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `08_event_driven_order_system` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Pub/sub, event sourcing, eventual consistency, projections, sagas (orchestrated + choreographed), outbox pattern |
 | **Key question** | How do event replay and projection rebuild times compare across language runtimes? |
+| **Learning goal** | Estudar consistência eventual, sagas e replay. |
 | **Directory** | `08_event_driven_order_system/` |
 | **Dependencies** | Projects 04-06 |
 
@@ -148,10 +159,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `09_plugin_system` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Dynamic loading, interfaces/traits, plugin lifecycle, sandboxing, WASM/FFI/JS sandboxing, API versioning |
 | **Key question** | How does each language's FFI/WASM/dynamic-loading story compare for safe plugin isolation? |
+| **Learning goal** | Comparar FFI, WASM e dynamic loading com isolamento. |
 | **Directory** | `09_plugin_system/` |
 | **Dependencies** | Projects 04-06 |
 
@@ -166,10 +178,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `10_distributed_cache` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Cache invalidation, TTL, LRU/LFU eviction, consistent hashing, gossip protocol, cache-aside vs write-through, cache stampede prevention, sharding |
 | **Key question** | How do eviction policies and sharding strategies interact under skewed access patterns? |
+| **Learning goal** | Medir invalidação, TTL e proteção contra stampede. |
 | **Directory** | `10_distributed_cache/` |
 | **Dependencies** | Projects 07-09 |
 
@@ -178,10 +191,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `11_load_balancer` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Reverse proxy, health checks, round-robin, least-connections, consistent hashing, TLS termination, sticky sessions, circuit breaker per backend |
 | **Key question** | How does connection pooling and health-check frequency affect failover speed? |
+| **Learning goal** | Equilibrar tráfego e failover com critérios claros. |
 | **Directory** | `11_load_balancer/` |
 | **Dependencies** | Projects 07-09 |
 
@@ -190,10 +204,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `12_distributed_job_scheduler` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry |
 | **Key question** | How do leader election implementations compare in split-brain scenarios? |
+| **Learning goal** | Coordenar jobs distribuídos sem split-brain. |
 | **Directory** | `12_distributed_job_scheduler/` |
 | **Dependencies** | Projects 07-09 |
 
@@ -208,10 +223,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `13_api_gateway_circuit_breaker` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Fault tolerance, circuit breaker states (closed/open/half-open), retry with exponential backoff + jitter, fallbacks, bulkheading, rate limit per tenant, request coalescing |
 | **Key question** | How do circuit breaker recovery times compare across language concurrency models? |
+| **Learning goal** | Proteger serviços downstream contra falhas em cascata. |
 | **Directory** | `13_api_gateway_circuit_breaker/` |
 | **Dependencies** | Projects 10-12 |
 
@@ -220,10 +236,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `14_log_aggregator` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Structured logging (JSON), log levels, aggregation pipelines, compression, indexing, retention, distributed tracing (OpenTelemetry), correlation IDs |
 | **Key question** | How does ingestion throughput compare for JSON vs protobuf log formats? |
+| **Learning goal** | Coletar, estruturar e consultar logs em grande volume. |
 | **Directory** | `14_log_aggregator/` |
 | **Dependencies** | Projects 10-12 |
 
@@ -232,10 +249,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `15_metrics_collector` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Time-series data, counters/gauges/histograms, aggregation (sum/avg/p95), downsampling, retention, Prometheus-compatible format, alerting |
 | **Key question** | How do histogram bucket strategies affect p99 accuracy across runtimes? |
+| **Learning goal** | Modelar métricas, buckets e alertas com precisão. |
 | **Directory** | `15_metrics_collector/` |
 | **Dependencies** | Projects 10-12 |
 
@@ -250,10 +268,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `16_mini_message_queue` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Topics, partitions, consumer groups, offsets, log-structured storage, replication, exactly-once semantics, log compaction |
 | **Key question** | How do partition assignment and consumer rebalancing strategies affect throughput stability? |
+| **Learning goal** | Entender partições, offsets e consumer groups. |
 | **Directory** | `16_mini_message_queue/` |
 | **Dependencies** | Projects 13-15 |
 
@@ -262,10 +281,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `17_distributed_config_service` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Consensus (Raft/Paxos simplified), watch/notify, versioning, linearizability, ACL per key, audit, rollback, multi-region replication, feature flags |
 | **Key question** | How do watch-notification latency and consensus overhead compare? |
+| **Learning goal** | Praticar consistência, ACLs e feature flags distribuídas. |
 | **Directory** | `17_distributed_config_service/` |
 | **Dependencies** | Projects 13-15 |
 
@@ -274,10 +294,11 @@ spec → polyglot implementation → code review → benchmark (N≥3) → evolu
 | Field | Value |
 |-------|-------|
 | **Slug** | `18_search_engine` |
-| **Status** | ✅ Implemented |
+| **Status** | scaffolded |
 
 | **Concepts** | Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence |
 | **Key question** | How do inverted index build times and query latencies compare for different corpus sizes? |
+| **Learning goal** | Construir busca com tokenização, ranking e autocomplete. |
 | **Directory** | `18_search_engine/` |
 | **Dependencies** | Projects 13-15 |
 

@@ -1,5 +1,10 @@
 # ADR-0001: Adopt `docs/FUNDAMENTOS.md` as canonical principles and `architecture-weed` as the review loop
 
+> **Nota de caminho atual (2026-07-11):** este ADR preserva os caminhos do momento da decisão. O
+> verificador criado originalmente sob o namespace Pixel agora vive em
+> `learner/gate/` e é executado com `python3 -m learner.gate`; persistência passa pela API atômica
+> `learner.substrate.gate`.
+
 - **Status:** Accepted
 - **Date:** 2026-07-05
 - **Decisor:** Daniel (with `architecture-weed` loop, this run)
@@ -16,7 +21,7 @@ estrutural antigo:
    com provas ancoradas no histórico (`docs/ARCHITECTURE_EVALUATION_2026-07-05.md`).
 2. **A correção dos gaps 1, 2, 5, 6** registrada em `ARCHITECTURE_EVALUATION_2026-07-05.md`
    (reversão das 18 masterizações semeadas, criação do verifier em
-   `engines/pixelDojo/verifier/`, primeiro loop real fechado em U0 com 1 entrada legítima em
+   um verifier inicialmente namespaced sob Pixel, primeiro loop real fechado em U0 com 1 entrada legítima em
    `units_log`, atualização do `CLAUDE.md` raiz com 6 engines).
 
 O que ainda falta: o FUNDAMENTOS.md é um documento aceito por Daniel, mas não há (a) um ADR
@@ -95,7 +100,7 @@ A formalização tem três partes:
 - `docs/ARCHITECTURE_EVALUATION_2026-07-05.md` — gap analysis do dia, 4 de 6 gaps
   fechados na mesma sessão (linhas 32–78).
 - `learner/learning_state.yaml` — estado pós-correção (masterizações semeadas removidas).
-- `engines/pixelDojo/verifier/` — verificador criado para fechar GAP 2 (17 testes
+- localização histórica sob Pixel — verificador criado para fechar GAP 2 (17 testes
   passando).
 - `.claude/skills/threejs-dojo/SKILL.md` — convenção de skill já existente que esta
   decisão espelha.

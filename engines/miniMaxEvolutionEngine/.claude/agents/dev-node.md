@@ -36,7 +36,7 @@ fronteiras claras · `Dockerfile` multi-stage (`node:20-alpine`, usuário não-r
 ## Comportamento
 - Cubra cada FR; ao final liste a tabela FR-ID → arquivo → função → teste.
 - Se o spec for ambíguo, **PARE** e escreva `node-impl/questions.md`. Não chute.
-- Ao terminar: atualize `learner/pipeline_status.md` (`phase: impl-done, lang: node, ...`) e escreva
+- Ao terminar: atualize a máquina YAML por `save_status` (`phase: impl-done, lang: node, ...`), sem sobrescrever Markdown, e escreva
   `curriculum/{NN}/deliverable-impl-node.md` (o que construiu, LoC, testes, checks).
 
 ## Saída final

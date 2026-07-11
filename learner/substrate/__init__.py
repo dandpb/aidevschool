@@ -1,8 +1,9 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
-import json
+import re
+from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import yaml
 
@@ -15,11 +16,10 @@ from learner.substrate.adapters.whiteboard import (
     render_trail_md,
 )
 from learner.substrate.fsio import atomic_write_text
-
-if TYPE_CHECKING:
-    from learner.substrate.dashboard_snapshot import sync as sync_dashboard_snapshot
+from learner.substrate.generated_views import check_views, write_views
 
 ROOT = Path(__file__).resolve().parent.parent.parent
+SOURCE_ROOT = Path(__file__).resolve().parent.parent.parent
 CANONICAL_STATE_PATH = ROOT / "learner" / "learning_state.yaml"
 
 # AIDI (AI Dependency Index) measurement-source allowlist (ADR-0003).
@@ -27,14 +27,6 @@ CANONICAL_STATE_PATH = ROOT / "learner" / "learning_state.yaml"
 # Sorted for human-readable error messages; the frozenset powers membership checks.
 _AIDI_VALID_SOURCES = frozenset({"self_reported", "event_computed", "derived"})
 _AIDI_VALID_SOURCES_SORTED = tuple(sorted(_AIDI_VALID_SOURCES))
-
-# Lazy-imported to avoid circular dependency (dashboard_snapshot resolves ROOT locally).
-def __getattr__(name: str):
-    if name == "sync_dashboard_snapshot":
-        from learner.substrate.dashboard_snapshot import sync as _sync
-
-        return _sync
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [
     "ROOT",
@@ -53,7 +45,7 @@ __all__ = [
     "render_profile_yaml",
     "render_trail_md",
     "sync",
-    "sync_dashboard_snapshot",
+    "check",
 ]
 
 
@@ -86,11 +78,21 @@ def save_canonical(
     path: str | Path = "learner/learning_state.yaml",
 ) -> Path:
     """Atomically persist canonical learner state (write only; no derived views)."""
-    errors = validate(state)
+    target = resolve_canonical_path(path)
+    resolved_target = target.resolve()
+    root = (
+        resolved_target.parent.parent
+        if resolved_target.parent.name == "learner"
+        else ROOT
+    )
+    errors = validate(state, root)
     if errors:
         raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+    return _write_canonical(state, target)
 
-    target = resolve_canonical_path(path)
+
+def _write_canonical(state: dict[str, Any], target: Path) -> Path:
+    """Dump and atomically write already-validated state."""
     text = yaml.dump(
         state,
         Dumper=_NoAliasDumper,
@@ -106,18 +108,31 @@ def commit_canonical(
     state: dict[str, Any],
     path: str | Path = "learner/learning_state.yaml",
 ) -> Path:
-    """Save canonical state then regenerate derived views (repo path only).
+    """Build every derived view, then persist canonical state and views.
 
     For temp/test paths, only writes — same as :func:`save_canonical`.
     """
-    target = save_canonical(state, path)
-    if is_repo_canonical_path(target):
-        sync()
+    target = resolve_canonical_path(path)
+    if not is_repo_canonical_path(target):
+        return save_canonical(state, target)
+
+    resolved_target = target.resolve()
+    root = resolved_target.parent.parent
+    errors = validate(state, root)
+    if errors:
+        raise ValueError(f"invalid learner state: {'; '.join(errors)}")
+
+    from learner.substrate.projections import build_generated_views
+
+    views = build_generated_views(SOURCE_ROOT, ROOT, state)
+    _write_canonical(state, target)
+    write_views(views)
     return target
 
 
-def validate(state: dict[str, Any]) -> list[str]:
+def validate(state: dict[str, Any], root: Path | None = None) -> list[str]:
     """Return a list of invariant violations for the canonical state."""
+    root = root or ROOT
     errors: list[str] = []
 
     if state.get("version") is None:
@@ -170,8 +185,8 @@ def validate(state: dict[str, Any]) -> list[str]:
     errors.extend(_validate_units_log(state))
     errors.extend(_validate_streak(state))
     errors.extend(_validate_aidi(state))
-    errors.extend(_validate_attempt_files(state))
-    errors.extend(_validate_evidence_files(state))
+    errors.extend(_validate_attempt_files(state, root))
+    errors.extend(_validate_evidence_files(state, root))
 
     return errors
 
@@ -311,16 +326,61 @@ def _validate_aidi(state: dict[str, Any]) -> list[str]:
         )
 
     source = aidi.get("measurement_source")
-    if source is not None and source not in _AIDI_VALID_SOURCES:
+    if source not in _AIDI_VALID_SOURCES:
         errors.append(
             f"learner.aidi.measurement_source must be one of "
             f"{_AIDI_VALID_SOURCES_SORTED}, got {source!r}"
         )
 
+    history = aidi.get("history")
+    if not isinstance(history, list):
+        errors.append(f"learner.aidi.history must be a list, got {history!r}")
+        return errors
+
+    previous_date: date | None = None
+    for index, point in enumerate(history):
+        prefix = f"learner.aidi.history[{index}]"
+        if not isinstance(point, dict):
+            errors.append(f"{prefix} must be a mapping")
+            continue
+
+        raw_date = point.get("date")
+        point_date: date | None = None
+        if not isinstance(raw_date, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw_date):
+            errors.append(f"{prefix}.date must be an ISO date (YYYY-MM-DD), got {raw_date!r}")
+        else:
+            try:
+                point_date = date.fromisoformat(raw_date)
+            except ValueError:
+                errors.append(f"{prefix}.date must be an ISO date (YYYY-MM-DD), got {raw_date!r}")
+
+        value = point.get("value")
+        if not isinstance(value, (int, float)) or not 0.0 <= value <= 1.0:
+            errors.append(f"{prefix}.value must be in [0,1], got {value!r}")
+
+        point_source = point.get("measurement_source")
+        if point_source not in _AIDI_VALID_SOURCES:
+            errors.append(
+                f"{prefix}.measurement_source must be one of "
+                f"{_AIDI_VALID_SOURCES_SORTED}, got {point_source!r}"
+            )
+
+        if point_date is not None:
+            if previous_date is not None and point_date <= previous_date:
+                errors.append("learner.aidi.history dates must be strictly ascending and unique")
+            previous_date = point_date
+
+    if history and isinstance(current, (int, float)):
+        final_value = history[-1].get("value") if isinstance(history[-1], dict) else None
+        if final_value != current:
+            errors.append(
+                f"learner.aidi.history final value ({final_value!r}) must equal current ({current!r})"
+            )
+
     return errors
 
 
-def _validate_attempt_files(state: dict[str, Any]) -> list[str]:
+def _validate_attempt_files(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     """Assert that mastered units have an ``attempt_file`` that exists.
 
     The learning gate requires the attempt to exist before the gate review
@@ -330,8 +390,11 @@ def _validate_attempt_files(state: dict[str, Any]) -> list[str]:
     missing path here closes that whole class (F7).
 
     Only enforced for ``mastered: true`` units — in-flight units may not
-    have a written attempt yet.
+    have a written attempt yet. Path containment/symlink hardening is shared
+    with the gate via ``learner.gate.security.secure_attempt_path``.
     """
+    from learner.gate.security import secure_attempt_path
+
     errors: list[str] = []
     units_log = state.get("units_log")
     if not isinstance(units_log, list):
@@ -347,32 +410,37 @@ def _validate_attempt_files(state: dict[str, Any]) -> list[str]:
                 "the gate requires attempt-before-solution"
             )
             continue
-        resolved = ROOT / attempt_path
-        try:
-            size = resolved.stat().st_size
-        except FileNotFoundError:
-            errors.append(
-                f"units_log[{index}].attempt_file points at a missing path: {attempt_path!r}"
-            )
+        label = f"units_log[{index}].attempt_file"
+        resolved, path_errors = secure_attempt_path(root, str(attempt_path), label=label)
+        if resolved is None:
+            errors.extend(path_errors)
             continue
-        if size == 0:
-            errors.append(f"units_log[{index}].attempt_file is empty: {attempt_path!r}")
+        if resolved.stat().st_size == 0:
+            errors.append(f"{label} is empty: {attempt_path!r}")
 
     return errors
 
 
-def _validate_evidence_files(state: dict[str, Any]) -> list[str]:
-    """Assert that units with a gate review have a parseable ``evidence_file``.
+def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[str]:
+    """Assert that units with a gate review have evidence that passes the gate.
 
-    Catches the audit #20 drift: ``learning_state.yaml > evidence_file``
-    historically pointed at a legacy single-record JSON while the verifier
-    prefers NDJSON. A parseable file proves the path is read-able; the
-    producer/consumer format disagreement is a separate concern.
+    Delegates to ``curriculum._shared.evidence.check_evidence``, which is
+    shape-detecting: game evidence requires a recognized empirical rubric or a
+    gate review bound to a separate verifier receipt. Bound reviews recheck the
+    canonical producer-evidence digest and reject embedded verifier blocks.
+    Curriculum evidence (a verifier-owned ``verifier`` block) must satisfy
+    ``verdict == "PASS"``, ``mutation_score >= 0.65``, ``coverage_core >= 0.80``,
+    and ``context_isolated is True``. Missing/unparseable files yield a labelled
+    error. The same call replaces the former bare ``json.loads`` parseability
+    check and adds the semantic gate that was previously missing (audit gap:
+    the validator proved the path was readable but never checked the verdict).
 
     Only enforced when a review carries a recognized ``gate_outcome`` (the
     same vocabulary used by ``_validate_units_log`` via
     ``RATING_FROM_GATE``) — pure ``presented`` events don't need evidence.
     """
+    from curriculum._shared.evidence import check_evidence
+    from learner.gate.evidence_io import bound_evidence_violations
     from learner.substrate.scheduling import RATING_FROM_GATE
 
     errors: list[str] = []
@@ -397,21 +465,34 @@ def _validate_evidence_files(state: dict[str, Any]) -> list[str]:
                 "the gate requires parseable evidence"
             )
             continue
-        resolved = ROOT / evidence_path
-        try:
-            text = resolved.read_text(encoding="utf-8")
-        except FileNotFoundError:
-            errors.append(
-                f"units_log[{index}].evidence_file points at a missing path: {evidence_path!r}"
+        receipt_review = next(
+            (
+                review
+                for review in reviews
+                if isinstance(review, dict)
+                and review.get("gate_outcome") in RATING_FROM_GATE
+                and isinstance(review.get("evidence_verifier_source"), str)
+                and review.get("evidence_verifier_source")
+            ),
+            None,
+        )
+        if receipt_review is None:
+            errors.extend(
+                check_evidence(evidence_path, label=f"units_log[{index}]", root=root)
             )
             continue
-        try:
-            json.loads(text)
-        except json.JSONDecodeError as exc:
+        expected_digest = receipt_review.get("evidence_digest")
+        if not isinstance(expected_digest, str):
             errors.append(
-                f"units_log[{index}].evidence_file is not parseable JSON "
-                f"({evidence_path!r}): {exc.msg} at line {exc.lineno}"
+                f"units_log[{index}] has a verifier receipt but no evidence_digest"
             )
+            continue
+        errors.extend(
+            f"units_log[{index}].{error}"
+            for error in bound_evidence_violations(
+                evidence_path, expected_digest, root
+            )
+        )
 
     return errors
 
@@ -419,7 +500,9 @@ def _validate_evidence_files(state: dict[str, Any]) -> list[str]:
 def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[str, Any]:
     """Load the canonical state and raise on invariant violations."""
     state = load_canonical(path)
-    errors = validate(state)
+    state_path = Path(path).resolve()
+    root = state_path.parent.parent if state_path.parent.name == "learner" else ROOT
+    errors = validate(state, root)
     if errors:
         raise ValueError(f"invalid learner state: {'; '.join(errors)}")
     return state
@@ -433,47 +516,20 @@ def sync() -> None:
     their body is maintained by the tutoring agents with the substrate as the
     source of truth.
 
-    Also regenerates `engines/codexDojo/src/data/learner.ts` (the codexDojo dashboard's
-    learner snapshot) via `dashboard_snapshot.sync`.
+    The full set of generated views (dashboard/OS learner.ts, review slices,
+    catalog projections, .mavis mirror) is defined once in
+    `projections.build_generated_views`.
     """
-    # Imported inside the function to break the circular dependency:
-    # `dashboard_snapshot` resolves `ROOT` independently and would loop otherwise.
-    from learner.substrate.dashboard_snapshot import (
-        build_snapshot as _build_snapshot,
-        sync as _sync_dashboard_snapshot,
-        sync_codexdojo_os_snapshot as _sync_codexdojo_os_snapshot,
-        sync_pixel_review_slice as _sync_pixel_review_slice,
-        sync_voxel_review_slice as _sync_voxel_review_slice,
-    )
+    state = load_and_validate()
+    from learner.substrate.projections import build_generated_views
+
+    views = build_generated_views(SOURCE_ROOT, ROOT, state)
+    write_views(views)
+    print(f"Generated projections regenerated: {len(views)}")
+
+
+def check() -> list[Path]:
+    from learner.substrate.projections import build_generated_views
 
     state = load_and_validate()
-
-    mavis_path = ROOT / ".mavis" / "learning_state.yaml"
-    atomic_write_text(mavis_path, render_mavis_yaml(state))
-
-    whiteboard = ROOT / "engines" / "minimaxDojo" / "whiteboard"
-    profile = derive_whiteboard_profile(state)
-    atomic_write_text(whiteboard / "profile.yaml", render_profile_yaml(profile))
-    atomic_write_text(whiteboard / "learner_profile.md", render_profile_md(profile))
-
-    trail = derive_whiteboard_trail(state)
-    atomic_write_text(whiteboard / "trail.md", render_trail_md(trail))
-
-    # Build the snapshot once and share it across both renderers so the canonical
-    # inputs (learning_state.yaml, journal.md, pitfalls.md, BACKLOG_STATUS.md)
-    # and the FSRS replay are not re-read twice per sync.
-    snapshot = _build_snapshot()
-    dashboard_path = _sync_dashboard_snapshot(snapshot)
-    print(f"Dashboard snapshot regenerated: {dashboard_path.relative_to(ROOT)}")
-
-    os_path = _sync_codexdojo_os_snapshot(snapshot)
-    print(f"codexDojo OS snapshot regenerated: {os_path.relative_to(ROOT)}")
-
-    pixel_path = _sync_pixel_review_slice(snapshot)
-    print(f"PixelDojo review slice regenerated: {pixel_path.relative_to(ROOT)}")
-
-    voxel_paths = _sync_voxel_review_slice(snapshot)
-    if isinstance(voxel_paths, list):
-        print(f"voxelDojo review slices regenerated: {len(voxel_paths)} games")
-    else:
-        print(f"voxelDojo review slice regenerated: {voxel_paths.relative_to(ROOT)}")
+    return check_views(build_generated_views(SOURCE_ROOT, ROOT, state))

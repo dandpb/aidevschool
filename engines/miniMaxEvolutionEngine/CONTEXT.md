@@ -33,6 +33,6 @@ A concrete reason the cycle cannot advance — missing Artifact, failed check, o
 dispute.
 _Avoid_: bug, exception, TODO
 
-**Topic**:
-A named event kind on the runner bus that signals cycle work (`dojo.*` family).
-_Avoid_: Kafka topic-as-infrastructure only; chat channel
+**Checklist Step**:
+One explicit phase check performed by OpenClaw against the shared YAML pipeline state.
+_Avoid_: background event, bus topic, hidden daemon work

@@ -12,12 +12,19 @@
 
 2. **The game is an attempt surface, nothing more.** It renders a playable attempt of the concept
    and emits raw evidence. It never writes `mastered`, never appends to `units_log`, never edits
-   anything under `learner/`. A separate verifier (Prometor role; runnable as
-   `python3 -m engines.pixelDojo.verifier`, which is source-agnostic and shared by both engines)
-   owns every learner-state transition. Producer ≠ verifier. Required evidence fields for
-   verifier eligibility: `unit_id`, `project`, `game`, `ts`, `pass`.
+   anything under `learner/`. The separate, engine-neutral Prometor boundary is runnable as
+   `python3 -m learner.gate`; it owns every learner-state transition through
+   `learner.substrate.gate`. Producer ≠ verifier. Required evidence fields for
+   verifier eligibility: `unit_id`, `project`, `game`, `ts`, `pass`. A verifier
+   verdict travels in a separate JSON receipt under `learner/verifier_receipts/`.
+   The receipt carries `verdict`, `context_isolated`, `mutation_score`,
+   `coverage_core`, `source`, and an `evidence_digest` that matches the canonical
+   producer record. The canonical digest excludes `ts` and any producer-embedded
+   `verifier` block. An embedded block never authorizes mastery.
 
-3. **Evidence is raw, structured, and emitted twice.** One JSON record per cleared/failed
+3. **Evidence is raw, structured, and emitted twice.** Both engines consume the
+   `@aidevschool/evidence` package from `engines/shared/teaching-evidence/`.
+   One JSON record per cleared/failed
    wave/encounter, pushed to a browser global (`window.__pixelQuestEvidence` /
    `window.__voxelDojoEvidence`) and logged as an `EVIDENCE <json>` console record. Required fields:
 

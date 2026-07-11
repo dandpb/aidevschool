@@ -116,9 +116,9 @@ export function EngineHubApp({
               </div>
               {selected.id === 'miniMaxEvolutionEngine' || selected.id === 'openclaw' ? (
                 <div className="pipeline-integrity-warning" role="note">
-                  <strong>Fontes de pipeline distintas</strong>
-                  <span>Evolution: learner/pipeline_status.md</span>
-                  <span>OpenClaw: learner/pipeline_status.yaml</span>
+                  <strong>Fonte única de pipeline</strong>
+                  <span>learner/pipeline_status.yaml</span>
+                  <span>Evolution e OpenClaw leem o mesmo estado canônico.</span>
                 </div>
               ) : null}
               {selected.id === 'voxelDojo' ? (

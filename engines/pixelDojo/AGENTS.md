@@ -13,8 +13,7 @@ pixelDojo/                 # pnpm workspace (packageManager pnpm@9.15.9)
 ├── package.json           # workspace root
 ├── pnpm-workspace.yaml    # pixel-quest workspace package
 ├── biome.jsonc / tsconfig.base.json
-├── shared/evidence.ts     # generic dual-channel evidence envelope
-├── verifier/              # Python trust boundary; owns mastery transitions
+├── shared/evidence.ts     # adapter over @aidevschool/evidence
 └── pixel-quest/           # canonical multi-encounter app
 ```
 
@@ -28,7 +27,7 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 | Game architecture | `pixel-quest/README.md`, `pixel-quest/DESIGN.md` | Current Three.js app, not the older Phaser plan. |
 | Content-pack rules | `pixel-quest/docs/content-packs.md` | Declarative curriculum pack contract. |
 | Browser smoke contract | `pixel-quest/playwright/pixel-quest.spec.ts` | Plays the game and checks evidence/console behavior. |
-| Grade emitted evidence | `verifier/AGENTS.md` | Separate Python context that may commit canonical learner state. |
+| Grade emitted evidence | `../../learner/gate/AGENTS.md` | Engine-neutral Prometor boundary; persists only through the substrate. |
 | Screenshot evidence | `pixel-quest/shots/` | Generated QA artifacts, not source. |
 | Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. |
@@ -40,7 +39,9 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 - Every game targets exactly one concept.
 - The game is an attempt surface. It emits **raw evidence only** through `window.__pixelQuestEvidence` and
   `EVIDENCE <json>` console records, then stops.
-- The game never writes `mastered`; the verifier owns that transition.
+- The game never writes `mastered`; `learner/gate/` owns that transition.
+- Emit and validate the shared envelope through `@aidevschool/evidence` from
+  `../shared/teaching-evidence/`; keep Pixel-specific metric decoding local.
 - The Python substrate owns scheduling and derived review projections; the game only renders them.
 - Use `pnpm`, strict TypeScript, Biome, Vitest, Playwright, and plain Three.js. Do not reintroduce
   Phaser guidance unless the app actually migrates.

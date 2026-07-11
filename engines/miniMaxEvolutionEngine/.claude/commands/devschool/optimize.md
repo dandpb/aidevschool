@@ -4,7 +4,7 @@ argument-hint: "[projeto opcional]"
 ---
 
 Dispare o subagent **`optimizer`** (via Task) para a Fase 5 do projeto `$ARGUMENTS` (ou o
-`current_project`). Pré-condição: `learner/pipeline_status.md` em `benchmark-done`.
+`current_project`). Pré-condição: estado YAML-first em `benchmark-done`.
 
 ```yaml
 phase: optimize
@@ -43,7 +43,7 @@ RPS); documente trade-offs.
 Quando o `optimizer` terminar, dispare o subagent **`verifier`** (fase `optimize`) como Task novo,
 sem contexto do produtor: os testes das 3 impls ainda passam (re-rodados do zero), 1 claim de
 otimização re-verificado re-rodando 1 run (tolerância ±20%), Antes/Depois completo e rastreável aos
-JSONs, e ≥1 rejeitada presente. Só em **PASS** atualize `learner/pipeline_status.md`:
+JSONs, e ≥1 rejeitada presente. Só em **PASS** atualize o YAML por `save_status`:
 `phase: cycle-complete`, `awaiting: next-curator`, `agents.optimizer: done`; acrescente
 padrões/anti-padrões ao `learner/journal.md` e sugira `/devschool-next`. Em FAIL, devolva ao
 `optimizer` (respeite `retry_limit`).

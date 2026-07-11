@@ -41,7 +41,7 @@ Every record is validated against this schema at emission time
 
 ## How the verifier consumes this
 
-`python3 -m engines.pixelDojo.verifier` (from the ecosystem root) reads this
+`python3 -m learner.gate` (from the ecosystem root) reads this
 NDJSON file by default (falling back to the legacy single-record
 `engines/pixelDojo/.logs/last_run_evidence.json` if the NDJSON is absent;
 `--evidence PATH` overrides either). Consumption rules:

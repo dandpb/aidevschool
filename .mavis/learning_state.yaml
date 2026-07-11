@@ -2,12 +2,7 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-updated_at: '2026-07-10T20:40:05+00:00'
 workspace: /Users/danielbarreto/Development/aidevschool
-change_log:
-- at: '2026-07-10T20:40:05+00:00'
-  by: substrate
-  reason: Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.
 learner_profile:
   level: intermediate
   goal: robust professional-quality code without AI dependency
@@ -39,14 +34,14 @@ state_machine:
   retry_limit: 3
   current_retry: 0
 active_unit:
-  id: U0-sonda-rate-limiter-robustness
-  project: projects/01_rate_limiter
-  title: 'GATEKEEPER: token-bucket rate limiter robustness'
-  state: dominado
-  diagnostic_file: projects/01_rate_limiter/docs/diagnostic.md
+  id: U2-key-value-store
+  project: projects/02_key_value_store
+  title: 'KV WAREHOUSE: hash-map-backed CRUD with TTL expiration'
+  state: avaliando
+  diagnostic_file: projects/02_key_value_store/docs/spec.md
   awaiting: ''
   promotion_gate:
-  - learner plays the GATEKEEPER mission before receiving solutions
+  - learner plays the KV WAREHOUSE mission before receiving solutions
   - game emits raw executable evidence and never writes mastered (producer != verifier)
   - Prometor (verifier context) validates evidence against empirical_gate before any
     mastery transition
@@ -72,6 +67,7 @@ empirical_gates:
     hint_budget_per_day: 15
     mastery_source: executable_evidence
 next_action:
-  owner: leader
-  action: U0-sonda-rate-limiter-robustness mastered with executable evidence. Pick
-    the next unit (Cartografo) and present it before any implementation.
+  owner: verifier
+  action: U2-key-value-store is in evaluating state with a learner attempt on file.
+    Run learner.gate with fresh KV WAREHOUSE evidence and a separate Prometor receipt
+    to gate the unit.

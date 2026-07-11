@@ -73,7 +73,8 @@ staged pipelines with a gate are a known pattern; what's specific here is *which
 **Key Concepts**: Project/Unit-of-work, Cycle, Phase, Artifact (spec.md, `{lang}-impl/`,
 code_review.md, benchmark_results.md, evolution_report.md), Producer role, Verifier role, Blocker.
 
-**Canonical home**: `learner/pipeline_status.md` (phase state) + `curriculum/NN_name/` (artifacts).
+**Canonical home (current)**: `learner/pipeline_status.yaml` (machine phase state),
+`learner/pipeline_status.md` (human narrative), and `curriculum/NN_name/` (artifacts).
 
 **Suggested Bounded Context**: `PolyglotProjectCycleContext`
 - Linguistic boundary: "phase" here means software-cycle stage — a different state machine from
@@ -82,12 +83,12 @@ code_review.md, benchmark_results.md, evolution_report.md), Producer role, Verif
   documentation.
 - Integration: currently **two independent implementations** of this context —
   `miniMaxEvolutionEngine`'s interactive Claude Code subagents (curator/dev-go/dev-rust/dev-node/
-  reviewer/benchmarker/optimizer/verifier) and `openclaw`'s automated Hermes-event-driven runner
-  (same roles as adapters, `dojo.*` topics, simulate mode only). Unlike the minimaxDojo/
+  reviewer/benchmarker/optimizer/verifier) and OpenClaw's explicit file-based checklist runner.
+  Unlike the minimaxDojo/
   miniMaxEvolutionEngine split (below), this duplication is **not** documented as intentional —
   `openclaw` doesn't even appear in the handbook's 4-engine architecture table.
 
-**Dependencies**: → `curriculum/` (writes artifacts), → `learner/pipeline_status.md` (phase state)
+**Dependencies**: → `curriculum/` (writes artifacts), → `learner/pipeline_status.yaml` (machine phase state)
 
 **Cohesion Score**: 6/10 — clear vocabulary, but split across two unacknowledged parallel
 implementations with no shared config seam between them.
@@ -148,8 +149,8 @@ dependencies, required deliverables) that every engine points learners at.
 **Key Concepts**: Catalog Entry, Project/Challenge (`curriculum/NN_name/`), Deliverable/Artifact,
 Backlog Status.
 
-**Canonical home**: `curriculum/catalog.md` (18-entry canonical list) and `curriculum/
-BACKLOG_STATUS.md` (per-project ground truth — "on conflict, BACKLOG_STATUS wins," confirmed as two
+**Canonical home (current)**: `curriculum/catalog.md` (18-entry canonical identity, metadata, and
+status); `curriculum/BACKLOG_STATUS.md` is its generated per-project projection. The original scan found two
 separate hand-maintained files, 15,640 and 6,850 bytes respectively).
 
 **Suggested Bounded Context**: `CurriculumCatalogContext`
@@ -188,18 +189,16 @@ Learner Journey domain has real "executable evidence" to gate on for game-based 
 **Key Concepts**: Encounter/Scenario, Evidence record (NDJSON envelope: `source`, `unit_id`,
 `project`, `ts`, `pass`, `metrics`, `curriculum_context`), Gate outcome.
 
-**Canonical home**: `engines/pixelDojo/pixel-quest/`, `engines/voxelDojo/game-*/`, shared verifier at
-`engines/pixelDojo/verifier/` (confirmed: this path exists and is explicitly source-agnostic — no
-allowlist distinguishes `pixelquest` from `voxeldojo` records).
+**Canonical home (current)**: `engines/pixelDojo/pixel-quest/`, `engines/voxelDojo/game-*/`, shared
+verifier at `learner/gate/`, and public envelope at `engines/shared/teaching-evidence/`.
 
 **Suggested Bounded Context**: `TeachingGameContext-Pixel` and `TeachingGameContext-Voxel`
 - Integration: Shared Kernel via `teaching-game-contract.md` (Published Language) + one shared
   verifier module (Open Host Service) both engines conform to. This is the **healthiest**
   multi-engine relationship in the repo — a deliberate genre split (rules → pixelDojo,
   structures/dynamics → voxelDojo) documented in `voxelDojo/AGENTS.md` itself.
-- Naming smell: the shared, source-agnostic verifier is physically namespaced
-  `engines.pixelDojo.verifier`, implying pixelDojo ownership of something voxelDojo depends on
-  equally.
+- Resolved naming smell: the shared, source-agnostic verifier now lives at `learner.gate`, making
+  equal Pixel/Voxel ownership explicit.
 
 **Dependencies**: → `LearnerJourneyContext` (writes `units_log` via the shared verifier — the only
 writer), ← `learner.substrate` (reads back `reviewSlice.ts` scheduling)
@@ -281,9 +280,12 @@ data and the bundled Linux Lab pull it down.
 
 ---
 
-### Domain: Event Bus / Runner Infrastructure (Hermes)
+### Historical Domain Finding: Event Bus / Runner Infrastructure (removed)
 
-**Type**: Generic Subdomain
+**Current resolution**: The consumerless runtime described below was removed. OpenClaw is now an
+explicit file-based checklist runner over `learner/pipeline_status.yaml`, with no event bus or daemon.
+
+**Type at scan time**: Generic Subdomain
 
 **Ubiquitous Language**: Hermes bus, topic (`dojo.*`), event, outbox/inbox/log/conflicts, dedup key,
 idempotency, producer/verifier (reused from Polyglot Project Cycle).
@@ -294,17 +296,15 @@ generic job-runner/event-bus infrastructure, not itself AI-DevSchool-specific.
 **Key Concepts**: Event (topic, cycle_id, unit_id, artifact_path, content_hash, payload), Topic,
 Conflict/Duplicate classification.
 
-**Canonical home**: `engines/openclaw/hermes/`, `runner/scheduler.py`; state lands in
-`.mavis/hermes/{outbox,inbox,log,conflicts}/` — confirmed these directories exist but are
-effectively empty (scaffolded, not yet populated by a real run).
+**Historical home**: the removed OpenClaw bus runtime and empty Mavis event directories.
 
 **Suggested Bounded Context**: `EventBusInfraContext`
 - Integration: currently **isolated** — no other engine subscribes to `dojo.*` topics, and
   `openclaw` is absent from the handbook's 4-engine architecture table entirely (root `CLAUDE.md`
   lists 6 engines; the architecture handbook documents 4).
 
-**Dependencies**: → `curriculum/` (verifies artifacts), → `learner/pipeline_status.md` (reads/writes
-phase state) — but not consumed by anything outside itself yet.
+**Current dependencies**: → `curriculum/` (checks artifact presence), →
+`learner/pipeline_status.yaml` (reads/writes machine phase state).
 
 **Cohesion Score**: 3/10 as an integration layer (well-built internally, but a bounded context with
 no consumers is a context in name only); recommend documenting it explicitly as experimental/
@@ -481,8 +481,7 @@ from inventory summaries alone:
 - `.mavis/hermes/{outbox,inbox,log,conflicts}/` confirmed to exist but effectively empty (3
   directory-listing entries each, i.e. no real event files) — corrected from an initial "absent"
   read to "scaffolded but unpopulated," which better supports the "no consumers yet" finding.
-- `engines/pixelDojo/verifier/` confirmed to exist at that path (supporting the naming-smell note
-  about shared-but-namespaced ownership).
+- The historical scan found a Pixel-namespaced verifier; it has since moved to `learner/gate/`.
 - `engines/codexDojo/src/data/` confirmed to contain `learner.ts` alongside `agents.ts`,
   `cycle.ts`, `ecosystem.ts`, `projects.ts`, `linuxApps.ts` — supporting the generated-vs-hand-copied
   distinction.

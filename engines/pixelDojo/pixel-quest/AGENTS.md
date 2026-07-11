@@ -58,7 +58,7 @@ pixel-quest/
 - Evidence flows only through `evidence/emitter.ts:emitEvidence`: validated, appended to the
   `window.__pixelQuestEvidence` array, and echoed as `EVIDENCE <json>` console output. The
   Playwright smoke run persists the array to `.logs/evidence.ndjson`
-  (contract: `../EVIDENCE_CONTRACT.md`, consumed by `../verifier`).
+  (contract: `../EVIDENCE_CONTRACT.md`, consumed by `../../../learner/gate/`).
 - Scheduled-review and streak data are read-only projections from the learner substrate.
 - `shots/` and `test-results/` are generated QA artifacts.
 

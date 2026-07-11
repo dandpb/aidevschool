@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 
 const RING_RADIUS = 8
@@ -43,33 +43,31 @@ interface TowerMeshes {
  * live in src/sim and src/game.
  */
 export class LighthouseScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private root = new THREE.Group()
   private towers = new Map<string, TowerMeshes>()
   private buoys = new Map<string, THREE.Mesh>()
   private partitionArc: THREE.Line | null = null
   private flashIntensity = 0
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onLighthouseClick: ((nodeId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 20, 55)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 12, 22)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 8
-    this.controls.target.set(0, 2, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 20,
+      fogFar: 55,
+      cameraPosition: [0, 12, 22],
+      controlsTarget: [0, 2, 0],
+      minDistance: 8,
+      maxDistance: 50,
+      ambientIntensity: 0.6,
+      keyIntensity: 1.0,
+      onFrame: () => {
+        this.animateBeams()
+      },
+    })
 
-    this.scene.add(this.root)
+    this.viewport.scene.add(this.root)
     // water disc
     const water = new THREE.Mesh(
       new THREE.CircleGeometry(RING_RADIUS + 6, 64),
@@ -86,39 +84,14 @@ export class LighthouseScene {
     coast.rotation.x = Math.PI / 2
     this.root.add(coast)
 
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.6))
-    const key = new THREE.DirectionalLight("#ffffff", 1.0)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
-
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animateBeams()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     const bodies = [...this.towers.values()].map((t) => t.body)
-    const hits = this.raycaster.intersectObjects(bodies)
+    const hits = this.viewport.raycaster.intersectObjects(bodies)
     const first = hits[0]
     if (first && this.onLighthouseClick) {
       const id = (first.object.userData as { nodeId?: string }).nodeId

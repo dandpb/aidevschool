@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { laneMessages } from "../game/controller"
 import { type Message, partitionOf } from "../sim/queue"
@@ -40,35 +40,31 @@ function carPosition(laneZ: number, offset: number, tail: number): THREE.Vector3
 
 /** Three.js projection of sim state. Renders only — all rules live in src/sim and src/game. */
 export class FreightScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private yard = new THREE.Group()
   private laneMeshes = new Map<number, THREE.Group>()
   private carMesh: THREE.InstancedMesh | null = null
   private crewMarkers = new Map<string, THREE.Mesh>()
   private offsetPosts = new Map<string, THREE.Mesh>()
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   /** dispatched when a partition lane is clicked; level decides what to do with it */
   onLaneClick: ((partition: number) => void) | null = null
   onCarClick: ((partition: number, offset: number) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 30, 75)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 14, 22)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 60
-    this.controls.minDistance = 6
-    this.controls.target.set(0, 0, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 30,
+      fogFar: 75,
+      cameraPosition: [0, 14, 22],
+      controlsTarget: [0, 0, 0],
+      minDistance: 6,
+      maxDistance: 60,
+      ambientIntensity: 0.65,
+      keyIntensity: 1.1,
+      keyPosition: [10, 18, 10],
+    })
 
-    this.scene.add(this.yard)
+    this.viewport.scene.add(this.yard)
     // ground plane (the yard floor)
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(60, 60),
@@ -78,39 +74,15 @@ export class FreightScene {
     ground.position.y = -0.05
     this.yard.add(ground)
 
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.65))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(10, 18, 10)
-    this.scene.add(key)
-
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     // cars first (more specific): InstancedMesh hits carry instanceId
     if (this.carMesh) {
-      const carHits = this.raycaster.intersectObject(this.carMesh)
+      const carHits = this.viewport.raycaster.intersectObject(this.carMesh)
       const hit = carHits[0]
       if (hit !== undefined && this.onCarClick) {
         const cars = this.carMesh.userData.cars as Message[]
@@ -122,7 +94,7 @@ export class FreightScene {
       }
     }
     const laneObjects = [...this.laneMeshes.values()].flatMap((g) => g.children)
-    const laneHits = this.raycaster.intersectObjects(laneObjects)
+    const laneHits = this.viewport.raycaster.intersectObjects(laneObjects)
     const first = laneHits[0]
     if (first) {
       const ud = first.object.userData as { partition?: number }

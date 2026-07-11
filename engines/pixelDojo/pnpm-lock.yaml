@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@aidevschool/evidence':
+        specifier: workspace:*
+        version: link:../shared/teaching-evidence
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.3.8
@@ -30,8 +34,13 @@ importers:
         specifier: ^4.0.15
         version: 4.1.10(@types/node@22.20.1)(vite@7.3.6(@types/node@22.20.1))
 
+  ../shared/teaching-evidence: {}
+
   pixel-quest:
     dependencies:
+      '@aidevschool/evidence':
+        specifier: workspace:*
+        version: link:../../shared/teaching-evidence
       three:
         specifier: ~0.182.0
         version: 0.182.0

@@ -7,7 +7,7 @@ Claude Code.
 
 The **runnable Claude Code motor** for the school's file-based protocol: the 5-phase software loop +
 adversarial verifier + learning gate. Claude Code is treated as just one orchestration platform
-(alongside OpenClaw, Hermes, Mavis, OpenCode, Codex) all driving the **same** file-based system —
+(alongside OpenClaw, Mavis, OpenCode, Codex) all driving the **same** file-based system —
 "don't reinvent the protocol; it already exists in `docs/`."
 
 Here the **main Claude Code loop is the Orchestrator (Maestro / Mavis)**: it delegates to specialized
@@ -30,7 +30,8 @@ apply, then commit.
 
 ## The 5-phase loop
 
-State lives in `learner/pipeline_status.md`. The **verifier gate runs between every producer phase**;
+Machine state lives in `learner/pipeline_status.yaml`; `pipeline_status.md` is human narrative only.
+The **verifier gate runs between every producer phase**;
 status advances to the next phase only after the verifier returns `PASS`. On `FAIL`, the orchestrator
 "wakes" the producer with concrete feedback and retries (respecting `retry_limit`).
 
@@ -42,7 +43,8 @@ status advances to the next phase only after the verifier returns `PASS`. On `FA
 | 4 — Benchmark & Profiling | `benchmark-done` | `benchmarker` | `benchmark_results.md`, `benchmarks/results/` |
 | 5 — Evolution & Scale | `cycle-complete` | `optimizer` | `evolution_report.md` |
 
-Root globals: `learner/pipeline_status.md` (pipeline state) + `learner/journal.md` (append-only).
+Root globals: `learner/pipeline_status.yaml` (machine pipeline state), `learner/pipeline_status.md`
+(human narrative), and `learner/journal.md` (append-only).
 
 ## The verifier + gate
 
@@ -115,7 +117,7 @@ single `run_phase(spec)` interface. `spec` fields: `phase`, `producer` (str|list
 | `.claude/agents/*.md` | 17 subagent definitions (YAML frontmatter: name/description/tools/model/color). |
 | `.claude/commands/devschool/*.md` | 18 slash commands + a `tests/` subdir. |
 | `.claude/skills/agora-continuum/SKILL.md` | The learning-gate protocol skill. |
-| `.claude/hooks/briefing.sh` | SessionStart hook — injects `pipeline_status.md` + `learning_state.yaml`. |
+| `.claude/hooks/briefing.sh` | SessionStart hook — injects `pipeline_status.yaml` + `learning_state.yaml`. |
 | `curriculum → ../../curriculum` | Symlink to the shared curriculum. |
 | `learner → ../../learner` | Symlink to the shared learner substrate. |
 | `docs → ../../docs` | Symlink to the shared ecosystem docs. |
@@ -137,7 +139,8 @@ and `curriculum/` and are forbidden from forking global learner state.
 ## Conventions & anti-patterns
 
 - Never replace the symlinks with copied directories — the root stays the source of truth.
-- Never advance `pipeline_status.md` before the verifier returns PASS.
+- Never advance `pipeline_status.yaml` before the verifier returns PASS; do not parse the Markdown
+  narrative as a cold-start fallback.
 - Never create recurring cloud schedules without explicit user confirmation (they are billed).
 - Builds/tests (go/cargo/npm, docker) run sandboxed; the benchmarker must flag macOS Docker CPU
   throttling and never declare a winner on a <10% difference under noise.

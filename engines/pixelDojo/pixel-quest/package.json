@@ -13,6 +13,7 @@
     "lint": "biome check --config-path=.. src playwright"
   },
   "dependencies": {
+    "@aidevschool/evidence": "workspace:*",
     "three": "~0.182.0"
   },
   "devDependencies": {

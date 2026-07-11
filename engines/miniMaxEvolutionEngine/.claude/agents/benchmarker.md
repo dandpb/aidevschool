@@ -51,7 +51,7 @@ Comece com `[AGENT: Tester]`. Sua resposta final é o retorno ao orquestrador.
 - macOS/Docker Desktop faz throttling de CPU; no modo nativo a máquina é compartilhada (thermal +
   processos de fundo) — em ambos, ordering relativo vale, números absolutos não.
 - **Não** declare vencedor em diferença < 10% E p > 0.05. Warmup antes de medir; logs verbosos off.
-- Ao terminar: `learner/pipeline_status.md` → `phase: benchmark-done, awaiting: optimization`; escreva
+- Ao terminar: atualize a máquina YAML por `save_status` → `phase: benchmark-done, awaiting: optimization`; escreva
   `deliverable-benchmark.md` (números headline, vencedor por métrica, top 3 recomendações).
 
 ## Saída final

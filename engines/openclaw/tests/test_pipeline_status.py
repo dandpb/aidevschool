@@ -54,13 +54,11 @@ def test_load_prefers_yaml_over_stale_markdown(tmp_path: Path) -> None:
     assert loaded.phase == Phase.CYCLE_COMPLETE
 
 
-def test_load_markdown_fallback_when_no_yaml(tmp_path: Path) -> None:
+def test_load_ignores_markdown_when_no_yaml(tmp_path: Path) -> None:
     md = tmp_path / "pipeline_status.md"
     md.write_text(
         "- **phase**: review-done\n- **cycle_id**: cold\n- **complexity_level**: 3\n",
         encoding="utf-8",
     )
     loaded = load_status(md)
-    assert loaded.phase == Phase.REVIEW_DONE
-    assert loaded.cycle_id == "cold"
-    assert loaded.complexity_level == 3
+    assert loaded == PipelineStatus()

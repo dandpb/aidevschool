@@ -1,5 +1,6 @@
 packages:
   - "game-*"
+  - "../shared/teaching-evidence"
 allowBuilds:
   esbuild: set this to true or false
 onlyBuiltDependencies:

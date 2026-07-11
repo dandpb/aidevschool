@@ -1,12 +1,7 @@
-"""Machine pipeline status: YAML is the seam; Markdown is human narrative only.
-
-OpenClaw reads YAML first, falls back to Markdown bullets for cold start.
-Writes only YAML — agents keep free-form notes in the Markdown file.
-"""
+"""Machine pipeline status: YAML is the seam; Markdown is human narrative only."""
 
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -64,22 +59,8 @@ def _from_mapping(data: dict[str, Any], *, source: Path) -> PipelineStatus:
         ) from exc
 
 
-def _parse_markdown(path: Path) -> PipelineStatus:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except OSError as exc:
-        raise StateCorruptionError(f"Cannot read pipeline status at {path}: {exc}") from exc
-    data: dict[str, Any] = {}
-    for line in text.splitlines():
-        match = re.match(r"-\s+\*\*(\w+)\*\*:\s+`?(.+?)`?\s*$", line)
-        if match:
-            key, value = match.groups()
-            data[key] = value
-    return _from_mapping(data, source=path)
-
-
 def load_status(path: Path) -> PipelineStatus:
-    """YAML first; Markdown bullets only when no YAML (migration / cold start)."""
+    """Load structured YAML, or return a fresh typed status when it is absent."""
     ypath = yaml_path_for(path)
     if ypath.exists():
         try:
@@ -91,9 +72,7 @@ def load_status(path: Path) -> PipelineStatus:
         if not isinstance(data, dict):
             raise StateCorruptionError(f"pipeline status YAML at {ypath} must be a mapping")
         return _from_mapping(data, source=ypath)
-    if not path.exists():
-        return PipelineStatus()
-    return _parse_markdown(path)
+    return PipelineStatus()
 
 
 def save_status(status: PipelineStatus, path: Path) -> None:

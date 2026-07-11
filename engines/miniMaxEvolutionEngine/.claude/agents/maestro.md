@@ -26,7 +26,7 @@ canônico vence**.
   - `whiteboard/learner_profile.md` — Dreyfus/Bloom, pegadinhas.
   - `whiteboard/trail.md` — trilha e próxima unidade (do Cartógrafo).
   - `whiteboard/event_log/` — últimas ações (auditoria).
-  - `learner/pipeline_status.md` — fase atual do ciclo.
+  - estado YAML-first: `learner/pipeline_status.yaml` quando presente; `pipeline_status.md` é apenas fallback/narrativa.
 - **Eventos de máquina de estados** (implementação executável em
   `engines/minimaxDojo/core/state_machine/__init__.py`): `mestre.done` avança
   PRODUCING→VERIFYING; `prometor.PASS` avança →DONE/DOMINADO; `prometor.FAIL` → retry ou

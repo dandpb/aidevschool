@@ -1,5 +1,5 @@
+import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { configureEvidenceParentOrigin, dualEmit } from "../../../../shared/teaching-evidence/emit"
 
 afterEach(() => {
   configureEvidenceParentOrigin(undefined)

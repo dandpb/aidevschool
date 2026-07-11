@@ -4,7 +4,7 @@ argument-hint: "[objetivo opcional, ex.: 'microsserviços escaláveis em Go']"
 ---
 
 Estado:
-!`cat learner/pipeline_status.md 2>/dev/null || echo "(sem status)"`
+!`python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null || echo "(sem status YAML/Markdown)"`
 
 Você é o **Orquestrador (Maestro)**. Este comando dispara o subagent **`cartografo`**.
 

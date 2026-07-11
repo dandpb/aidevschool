@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { sweepDead } from "../sim/relay"
 
@@ -34,10 +34,7 @@ function orbitPoint(angle: number, lift = 0): THREE.Vector3 {
 
 /** Three.js projection of sim state. Renders only — all rules live in src/sim and src/game. */
 export class RelayScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private world = new THREE.Group()
   private hub: THREE.Mesh
   private stationMeshes = new Map<string, THREE.Mesh>()
@@ -45,24 +42,25 @@ export class RelayScene {
   private fanBeams: THREE.LineSegments | null = null
   private pulses: THREE.InstancedMesh | null = null
   private clock = new THREE.Clock()
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onStationClick: ((stationId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 20, 55)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 10, 20)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 7
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 20,
+      fogFar: 55,
+      cameraPosition: [0, 10, 20],
+      minDistance: 7,
+      maxDistance: 50,
+      ambientIntensity: 0.7,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.frame()
+      },
+    })
 
     this.world.rotation.x = RING_TILT
-    this.scene.add(this.world)
+    this.viewport.scene.add(this.world)
 
     // central relay hub — the single hero object
     this.hub = new THREE.Mesh(
@@ -84,24 +82,7 @@ export class RelayScene {
     guide.rotation.x = Math.PI / 2
     this.world.add(guide)
 
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.7))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
-
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => this.frame())
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private frame(): void {
@@ -116,18 +97,12 @@ export class RelayScene {
     }
     // rebuild links each frame so they track the orbiting stations
     this.rebuildLinks()
-    this.controls.update()
-    this.renderer.render(this.scene, this.camera)
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects([...this.stationMeshes.values()])
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects([...this.stationMeshes.values()])
     const first = hits[0]
     if (first && this.onStationClick) {
       const id = (first.object.userData as { stationId?: string }).stationId

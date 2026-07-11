@@ -130,9 +130,10 @@ pnpm run smoke   # Playwright: plays through labs, asserts evidence shape
 
 ## 5. Regenerate learner data (the substrate)
 
-Canonical learner state lives in `learner/learning_state.yaml`. Derived views — `.mavis/learning_state.yaml`,
-the minimaxDojo whiteboard, and `engines/codexDojo/src/data/learner.ts` — are **regenerated** from it.
-Always edit the canonical YAML first, then sync.
+Canonical learner state lives in `learner/learning_state.yaml`. The substrate
+regenerates `.mavis/`, the minimaxDojo whiteboard, teaching-game review slices,
+and dashboard read models. It also derives `curriculum/BACKLOG_STATUS.md` and
+`codexDojo/src/data/projects.ts` from the canonical curriculum catalog.
 
 ```bash
 # from the repo root
@@ -140,8 +141,9 @@ python3 -m pip install -e ".[dev]"                             # pyyaml + fsrs +
 python3 -m learner.substrate                                   # regenerates all derived views
 ```
 
-The substrate validates invariants (state machine, retry limits, FSRS rating consistency) and will
-raise on violations. See `learner/substrate/interface.md` for the full read/write contract.
+The substrate validates invariants and reports generated-view drift with
+`python3 -m learner.substrate --check`. See `learner/substrate/interface.md` for
+the full read/write contract.
 
 ---
 
@@ -152,8 +154,9 @@ This is a **school**, not a code generator. The workflow preserves *productive s
 1. **The learner attempts the unit** first. The learning gate (`learner/learning_state.yaml`,
    field `gate.implementation_blocked`) blocks AI implementation until a real attempt exists.
 2. **Agents generate or review artifacts** (curriculum implementations, reviews, benchmarks).
-3. **A separate verifier** (`Prometor`) runs executable checks starting from zero context — it
-   tries to *refute* the work. The producer never verifies its own output.
+3. **A separate verifier** (`Prometor`) runs executable checks starting from zero context and
+   tries to *refute* the work. Run `python3 -m learner.gate --dry-run` to inspect a decision, then
+   omit `--dry-run` only when the evidence is eligible. The producer never verifies its own output.
 4. **Metrics and review findings** are recorded (coverage, mutation score, benchmark CV).
 5. **Memory** updates the learner profile, journal, pitfalls, and schedules the next review.
 
@@ -174,9 +177,8 @@ This is a **school**, not a code generator. The workflow preserves *productive s
 ### Current learning state
 
 - Active unit: `U0-sonda-rate-limiter-robustness` (Project 01, token-bucket robustness), state
-  `apresentando`, **gate blocked** — awaiting a learner attempt.
-- Project 01 has a Node/TS implementation shipped *outside* the gate; it is `impl (parcial)` and
-  must be re-validated by the verifier before anything becomes `mastered`.
+  `mastered` — gated `pass_first_try` on 2026-07-05 with executable evidence.
+- Next step: pick the next unit (Cartógrafo) and present it before any implementation.
 
 ---
 

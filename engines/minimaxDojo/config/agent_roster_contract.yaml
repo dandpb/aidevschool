@@ -1,0 +1,15 @@
+canonical_agent_aliases:
+  mestre_conteudo: mestre-conteudo
+
+platform_only_agents:
+  - arena-narrator
+  - benchmarker
+  - curator
+  - dev-go
+  - dev-node
+  - dev-rust
+  - fairness-auditor
+  - optimizer
+  - reviewer
+  - verifier
+  - verifier-haiku

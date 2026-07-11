@@ -1,4 +1,5 @@
-import { GameController } from "./game/controller"
+import { createSceneHarness } from "../../shared/sceneHarness"
+import { GameController, type GameState } from "./game/controller"
 import { mountHud } from "./scene/hud"
 import { WormholeScene } from "./scene/wormholeScene"
 
@@ -9,17 +10,16 @@ declare global {
   }
 }
 
-const canvas = document.querySelector<HTMLCanvasElement>("#stage")
-const hudRoot = document.querySelector<HTMLElement>("#hud")
-if (!canvas || !hudRoot) throw new Error("missing #stage or #hud")
-
-const game = new GameController("L1")
-const scene = new WormholeScene(canvas)
-scene.onGateClick = () => {
-  // Clicking the gate is a soft "confirm" affordance; the real input is the HUD field/buttons.
-  void scene
-}
-game.subscribe((state) => scene.sync(state))
-mountHud(hudRoot, game)
-
-window.__wormhole = { game }
+createSceneHarness<GameState, GameController, WormholeScene>({
+  createGame: () => new GameController("L1"),
+  createScene: (canvas) => new WormholeScene(canvas),
+  windowKey: "__wormhole",
+  mountHud,
+  wireInteraction: (_game, scene) => {
+    // Clicking the gate is a soft "confirm" affordance; the real input is the HUD field/buttons.
+    scene.onGateClick = () => {
+      void scene
+    }
+  },
+  onState: (state, _game, scene) => scene.sync(state),
+})

@@ -44,7 +44,7 @@ aprendiz: implementações Go/Rust/Node dos 18 projetos — 44.934 LOC, 387 arqu
 | learner/substrate | `learner/substrate/` | 2.083 | 14 | 2,9% | ✅ OK |
 | openclaw | `engines/openclaw/` | 1.735 | 24 | 2,4% | ✅ OK |
 | minimaxDojo | `engines/minimaxDojo/` | 1.059 | 12 | 1,5% | ✅ OK (camada de spec; grosso é MD) |
-| pixelDojo/verifier | `engines/pixelDojo/verifier/` | 778 | 4 | 1,1% | 🔍 Pequeno, mas coeso — problema é a **localização** (P3) |
+| verifier compartilhado (snapshot histórico sob Pixel) | movido para `learner/gate/` | 778 | 4 | 1,1% | ✅ Localização corrigida após a medição (P3) |
 | miniMaxEvolutionEngine | `engines/miniMaxEvolutionEngine/` | 224 | 1 | 0,3% | 🔍 Motor de prompts (52 arquivos MD); LOC não é a métrica certa aqui |
 
 **Estatística:** total plataforma ≈ 72.191 LOC; média ≈ 8.021; desvio-padrão ≈ 11.255.
@@ -140,7 +140,7 @@ Learner Journey, Teaching Games. Genéricos (baixa): Hermes, dashboard.
 [games]        --[CONTRACT: NDJSON publicado]--> [verifier]                 🟢
 [adapters openclaw] --[CONTRACT: eventos Hermes idempotentes]--> [bus]      🟢
 [catalog.md]   <--[FUNCTIONAL:symmetric]--> [BACKLOG_STATUS.md]             🟠
-[voxelDojo]    --[CONTRACT, mas naming smell]--> [engines.pixelDojo.verifier] 🟡
+[voxelDojo]    --[CONTRACT compartilhado]--> [learner.gate]                  🟢
 ```
 
 ### Issues por severidade
@@ -241,6 +241,39 @@ Realignment Plan") — atualizar os dois juntos:
 
 > **Próximo passo:** para fases, marcos e ordem de extração detalhada, rodar o skill
 > **decomposition-planning-roadmap** usando este relatório como insumo.
+
+## Fechamento das recomendações — 2026-07-11
+
+As medições e diagnósticos acima registram o estado observado em 2026-07-08 e
+permanecem históricos. A matriz abaixo registra o fechamento no código atual. O
+fechamento inclui decisões explícitas quando a arquitetura implementada tornou a
+forma original da recomendação desnecessária.
+
+| # | Recomendação atômica | Estado em 2026-07-11 | Evidência atual |
+| -: | --- | --- | --- |
+| 1 | Remover a árvore órfã `pixelDojo/games/` | Fechada | A árvore não existe; `pixel-quest/` é o único app Pixel canônico. |
+| 2 | Unificar o emissor de evidência | Fechada | `engines/shared/teaching-evidence/` publica `@aidevschool/evidence`; Pixel e Voxel o consomem pelos workspaces locais. |
+| 3 | Expor escrita atômica do gate no substrato | Fechada | `learner.substrate.gate.commit_gate_transition()` persiste pela API canônica. |
+| 4 | Realocar o verificador compartilhado | Fechada | `learner/gate/` avalia evidência de qualquer engine e chama somente a API do substrato. |
+| 5 | Gerar todos os `reviewSlice.ts` do Voxel | Fechada | `python3 -m learner.substrate` faz fan-out para todos os pacotes `game-*`. |
+| 6 | Gerar `projects.ts`, `agents.ts`, e `cycle.ts` | Fechada | `catalog.py` e `dashboard_data.py` geram os três módulos com cabeçalho de arquivo gerado. |
+| 7 | Tornar catálogo e backlog um único fluxo | Fechada | `curriculum/catalog.md` é canônico; o substrato gera `BACKLOG_STATUS.md` e `projects.ts`. |
+| 8 | Detectar drift de thresholds e roster | Fechada | Configuração de dashboard/roster vive em YAML; testes de drift comparam o contrato do minimaxDojo e o motor Claude. |
+| 9 | Estruturar o estado do ciclo | Fechada | `learner/pipeline_status.yaml` é a fonte de máquina; Markdown contém somente narrativa humana. |
+| 10 | Decidir o papel do OpenClaw | Fechada | ADR-0002 define um checklist runner simulate-grade, não um segundo dono do ciclo. |
+| 11 | Documentar OpenClaw no handbook | Fechada | A tabela de engines e o fluxo de arquitetura incluem o runner e seu limite de autoridade. |
+| 12 | Compartilhar infraestrutura JavaScript | Fechada por decisão | O root permanece agnóstico a package manager; Pixel e Voxel usam workspaces locais e dependências compartilhadas por link. |
+| 13 | Consolidar boilerplate Three.js | Fechada | `voxelDojo/shared/{sceneHarness,viewport}.ts` forma o kit interno usado pelos jogos. |
+| 14 | Separar Linux Lab do dashboard | Fechada | A compatibilidade vive em `codexDojo/src/linuxLab/`; o OS completo continua no bounded context próprio. |
+| 15 | Corrigir higiene da raiz | Fechada | Planos históricos foram arquivados e artefatos gerados estão cobertos pela política de ignore. |
+| 16 | Manter contrato cross-engine no pai | Fechada | `engines/test_engine_contracts.py` verifica fronteiras e exceções compartilhadas. |
+| 17 | Rotear previsões da Arena pelo substrato | Fechada | `curriculum/_shared/arena/predictions.py` delega a `learner.substrate.prediction_store`. |
+| 18 | Resolver o barramento Hermes sem consumidores | Fechada por remoção | Não há runtime Hermes; OpenClaw é somente o checklist runner baseado em arquivos. |
+
+O diretório `engines/codexDojo/ecosystem/` permanece ativo como contrato de produto.
+`Prometor` designa o contexto adversarial do gate de aprendizagem; o `Verifier`
+do ciclo de cinco fases valida a saída de cada fase. Os nomes não representam
+dois arquivos equivalentes nem autorizam o produtor a verificar o próprio trabalho.
 
 ---
 

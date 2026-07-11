@@ -23,15 +23,14 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
 | `engines/minimaxDojo/config/learner.yaml` | Single seam for numeric thresholds referenced by prompts/docs via `⟨config: path⟩`. |
 | `engines/pixelDojo/` | Teaching-game engine: one curriculum concept becomes one playable arcade mechanic and emits evidence for a separate verifier; `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts` is the playable smoke contract. `arcadeAcademy/` merged here on 2026-06-21; the obsolete prototypes `codexdojo-ecosystem-manifest/` and `game-01-rate-limiter/` (siblings of `pixel-quest/` from the same scaffold commit) were removed 2026-06-21 — pixel-quest is the canonical teaching-game surface. |
-| `engines/voxelDojo/` | 3D teaching-simulation engine (Three.js): structures/dynamics concepts become operable 3D systems emitting evidence with `source: "voxeldojo"`. **15 spatial-concept games implemented** (2026-07-05 all-18 buildout): `game-02-warehouse`, `game-03-wormhole`, `game-05-relay-station`, `game-06-pipeline-plant`, `game-07-checkpoint-city`, `game-08-timeline-tower`, `game-09-docking-bay`, `game-10-hash-ring` (pilot), `game-11-air-traffic`, `game-12-mission-control`, `game-13-breaker-grid`, `game-14-river-delta`, `game-15-observatory`, `game-16-freight-yard`, `game-17-lighthouse-network`, `game-18-stacks`. Each ships a deterministic headless sim core + Vitest concept proofs + Three.js scene + 4 levels + voxeldojo evidence emit + Playwright smoke; per-game PLAN slice in `docs/plans/`. The two rules-shaped concepts (01 rate limiter, 04 task queue) live in pixel-quest as Shape A encounters. Cross-engine rules: `docs/design/teaching-game-contract.md`. |
+| `engines/voxelDojo/` | 3D teaching-simulation engine (Three.js): structures/dynamics concepts become operable 3D systems emitting evidence with `source: "voxeldojo"`. **16 spatial-concept games implemented** (2026-07-05 all-18 buildout): `game-02-warehouse`, `game-03-wormhole`, `game-05-relay-station`, `game-06-pipeline-plant`, `game-07-checkpoint-city`, `game-08-timeline-tower`, `game-09-docking-bay`, `game-10-hash-ring` (pilot), `game-11-air-traffic`, `game-12-mission-control`, `game-13-breaker-grid`, `game-14-river-delta`, `game-15-observatory`, `game-16-freight-yard`, `game-17-lighthouse-network`, `game-18-stacks`. Each ships a deterministic headless sim core + Vitest concept proofs + Three.js scene + 4 levels + voxeldojo evidence emit + Playwright smoke; per-game PLAN slice in `docs/plans/`. The two rules-shaped concepts (01 rate limiter, 04 task queue) live in pixel-quest as Shape A encounters. Cross-engine rules: `docs/design/teaching-game-contract.md`. |
 | `docs/design/teaching-game-contract.md` | Canonical cross-engine teaching-game contract (evidence schema, verifier handoff, review-slice flow) shared by pixelDojo and voxelDojo; wins on conflict with engine docs. |
 | `docs/design/polyglot-arena/` | Demoted design material for the polyglot evolution arena; was `engines/polyglotEvolutionArena/` at `proposal` status. The runnable comparison seams now live in shared curriculum tooling, not a separate engine. |
-| `docs/` | Existing polyglot MiniMax/OpenClaw/Hermes documentation. |
+| `docs/` | Existing polyglot MiniMax and OpenClaw documentation. |
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
 | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | Phase commands for Claude Code orchestration. |
-| `engines/openclaw/` | File-based continuous runner: Hermes event bus, scheduler, and agent adapters. |
-| `.mavis/hermes/` | Derived event-log runtime view produced by the OpenClaw runner. |
+| `engines/openclaw/` | File-based checklist runner: scheduler, checklist, and YAML pipeline adapter. No event bus. |
 | `curriculum/` | Real implementation projects and evidence. |
 | `curriculum/_shared/arena/` | Shared Polyglot Arena runtime: strict fail-closed decision gate, scoreboard, report rendering, and prediction reveal orchestration for curriculum projects. |
 | `curriculum/_shared/benchmarks/` | Shared benchmark runner, k6 scenario execution, result parsing, and per-project `benchmark.yaml` contract. |
@@ -53,7 +52,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | --- | --- | --- |
 | 1 | Architecture of the multi-agent ecosystem | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md`, `docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md`, `docs/design/allium/minimax-agora-continuum.allium`, `docs/design/allium/minimax-evolution-engine.allium` |
 | 2 | List of agents and responsibilities | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/docs/01_agent_roster.md` |
-| 3 | Continuous execution workflow | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `.mavis/plans/plan.yaml` |
+| 3 | Continuous execution workflow | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/OPENCLAW_RUNBOOK.md`, `.mavis/plans/plan.yaml` |
 | 4 | Project folder structure | `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `curriculum/01_rate_limiter/` |
 | 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/codexDojo/ecosystem/MEMORY_CURATION.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
 | 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
@@ -61,7 +60,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts`, `docs/design/allium/curriculum-catalog.allium` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/README.md` (roster) |
-| 11 | Plan to run continuously in OpenClaw and Hermes | `engines/codexDojo/ecosystem/OPENCLAW_HERMES_RUNBOOK.md`, `docs/PROMPTS/IDEIAS/codexDojo/04_bootstrap_prompts.md` (documented manual workflow; continuous automation is `planned`) |
+| 11 | Run the OpenClaw checklist explicitly | `engines/codexDojo/ecosystem/OPENCLAW_RUNBOOK.md`, `engines/openclaw/README.md` (simulate-grade workflow; no background daemon or event bus) |
 | 12 | Ludic learning surface with extensible content | `engines/pixelDojo/pixel-quest/` playable token-bucket slice, with Playwright evidence contract in `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts`. |
 | 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
 | 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
@@ -106,7 +105,12 @@ probe.
 | **Learner snapshot** | `engines/codexDojo/src/data/learner.ts` · `engines/codexdojo-os-prototype/src/data/learner.ts` (regenerated by `learner/substrate/dashboard_snapshot.py`) | Engine-local read models built from the same snapshot: active unit, profile, gate, streak, reviews, and curriculum counts. The Python substrate is the source of truth; both modules regenerate on every `python3 -m learner.substrate`. |
 | **Engine adapter registry** | `engines/codexdojo-os-prototype/src/engines/registry.ts` · `engines/voxelDojo/catalog.json` · `engines/codexdojo-os-prototype/src/engines/voxelCatalog.ts` · `engines/codexdojo-os-prototype/bridge/` · `engines/minimaxDojo/os_adapter.py` · `engines/miniMaxEvolutionEngine/os_adapter.py` · `engines/shared/teaching-evidence/emit.ts` | Integrates six external engines: isolated browser origins, all 16 voxel games from the voxel-owned catalog, authenticated loopback-only local workflow briefings, and raw teaching evidence transport without verifier authority. |
 | **Learner substrate** | `learner/` | Canonical learner state in `learner/learning_state.yaml` with derived views for `.mavis/`, `engines/minimaxDojo/whiteboard/`, and the Markdown profile. |
-| **Arena decision gate** | `curriculum/_shared/arena/` · `curriculum/_shared/benchmarks/` · `learner/predictions.yaml` · `learner/substrate/dashboard_snapshot.py` | Cross-language benchmark evidence, strict all-metric trust gating, prediction calibration, and dashboard projection. A report remains locked until every decision metric is trustworthy and verifier-confirmed. |
+| **Learning gate** | `learner/gate/` · `learner/substrate/gate.py` | Engine-neutral Prometor evaluation plus atomic canonical transition. Distinct from the phase Verifier, which only approves software-cycle artifacts. |
+| **Teaching evidence** | `engines/shared/teaching-evidence/` | Public `@aidevschool/evidence` envelope, validation, and dual-channel browser emission used by Pixel and Voxel. |
+| **Generated catalog and dashboard data** | `learner/substrate/catalog.py` · `learner/substrate/dashboard_data.py` | Generates backlog, project, agent, and cycle read models from `curriculum/catalog.md` and minimaxDojo YAML. |
+| **Linux Lab compatibility** | `engines/codexDojo/src/linuxLab/` | Isolated dashboard compatibility module; the full OS remains in `codexdojo-os-prototype/`. |
+| **Voxel internal kit** | `engines/voxelDojo/shared/sceneHarness.ts` · `engines/voxelDojo/shared/viewport.ts` | Shared Three.js lifecycle and viewport behavior within the Voxel engine-local workspace. |
+| **Arena decision gate** | `curriculum/_shared/arena/` · `curriculum/_shared/benchmarks/` · `learner/predictions.yaml` · `learner/substrate/prediction_store.py` | Cross-language benchmark evidence, strict all-metric trust gating, substrate-owned prediction calibration, and dashboard projection. A report remains locked until every decision metric is trustworthy and verifier-confirmed. |
 | **Threshold seam** | `engines/minimaxDojo/config/learner.yaml` | Every numeric threshold the tutor uses. Prompts and docs reference values via the `⟨config: path⟩` marker instead of hardcoding them. |
 | **Canonical agent prompt** | `engines/minimaxDojo/prompts/per_agent/<name>.md` | The single system prompt for an agent. Roster: `engines/minimaxDojo/agents/README.md`. |
 | **Cycle domain module** | `engines/codexDojo/src/cycle.ts` | Stage advancement and completion rules. `state.ts` reducer is a shallow adapter over `advanceCycle(snapshot)`. Characterization tests in `state.test.ts` + `render.test.ts` are the parity oracle. |
@@ -142,7 +146,7 @@ python3 engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_pha
 python3 -m unittest engines.test_engine_contracts
 cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 
-# OpenClaw/Hermes continuous runner (tracer bullet)
+# OpenClaw checklist runner (tracer bullet)
 python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --reset --max-events 20
 python3 -m pytest engines/openclaw/tests/
 python3 -m engines.openclaw --preview
@@ -159,4 +163,4 @@ The ecosystem is complete only when a future agent can:
 5. Produce code/tests/docs/metrics/review.
 6. Verify with an adversarial gate.
 7. Update memory and roadmap.
-8. Repeat the cycle in OpenClaw or Hermes without hidden state.
+8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.

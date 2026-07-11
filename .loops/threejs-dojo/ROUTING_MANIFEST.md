@@ -26,6 +26,14 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 01 | rate_limiter | pixel-quest | encounters/tokenBucket.ts + sequenceFlow.ts | U0-sonda-rate-limiter-robustness | — | token-bucket capacity vs refill | (n/a) | ✅ DONE (prior) |
 | 02 | key_value_store | voxelDojo | game-02-warehouse | U2-key-value-store | 5202 | hash → shelf; TTL decay | warehouse of hash-addressed shelves | ✅ DONE |
+
+> **Note on game-02:** a richer "KV Warehouse" greenfield design (forklift-driven, collision
+> chains, EXPIRE/PERSIST tokens, sweeper drone) exists as an aspirational plan at
+> `engines/pixelDojo/docs/plans/02_key_value_store.md`. The shipped game at `game-02-warehouse/`
+> teaches the same concept (hash→shelf, CRUD, TTL decay) via a prediction-based interaction model
+> with 18 passing tests. The evidence contract aligns: `game: "KV WAREHOUSE"`,
+> `scenarioSlug: "kv-warehouse"`, `metrics.kind: "voxeldoj-kv-warehouse"`. The greenfield rebuild
+> remains a future enhancement; the current game is the gate-eligible producer.
 | 03 | url_shortener | voxelDojo | game-03-wormhole | U3-url-shortener | 5203 | short-code collision; base62 | wormhole gates between planets | ✅ DONE |
 | 04 | concurrent_task_queue | pixel-quest | encounters/taskQueue.ts (NEW) | U4-task-queue | — | retry/backpressure/DLQ ordering | (2D encounter) | ✅ DONE |
 | 05 | websocket_chat | voxelDojo | game-05-relay-station | U5-websocket-chat | 5205 | persistent conns; fan-out; heartbeat | orbiting relay stations, laser links | ✅ DONE |

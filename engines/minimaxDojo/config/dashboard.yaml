@@ -1,0 +1,193 @@
+user_facing_agents:
+  - id: mentor
+    name: Mentor
+    responsibility: Adapta explicação e desafio ao nível atual do aprendiz.
+    expandsTo: [maestro, sonda, socrates]
+  - id: curriculo
+    name: Curriculo
+    responsibility: Mantém trilha progressiva, pré-requisitos e unidades desbloqueadas.
+    expandsTo: [cartografo, mestre_conteudo, mneme]
+  - id: arquiteto
+    name: Arquiteto
+    responsibility: Propõe arquitetura, alternativas rejeitadas e trade-offs verificáveis.
+    expandsTo: [cartografo, galileu]
+  - id: implementador
+    name: Implementador
+    responsibility: Constrói o menor incremento correto com testes e instruções de execução.
+    expandsTo: [mestre_conteudo, maestro]
+  - id: revisor_codigo
+    name: Revisor de Codigo
+    responsibility: Revisa legibilidade, segurança, performance, manutenção e riscos.
+    expandsTo: [critico, prometor]
+  - id: testes
+    name: Testes
+    responsibility: Converte requisitos em testes unitários, integração, regressão e benchmark.
+    expandsTo: [prometor, galileu]
+  - id: metricas
+    name: Metricas
+    responsibility: Mede qualidade, performance, custo, complexidade e progresso de aprendizado.
+    expandsTo: [atena, galileu]
+  - id: devops
+    name: DevOps
+    responsibility: Ensina versionamento, CI/CD, containers, deploy, observabilidade e rollback.
+    expandsTo: [cronos, galileu]
+  - id: pesquisador
+    name: Pesquisador
+    responsibility: Pesquisa fontes primárias, melhores práticas, bibliotecas e experimentos.
+    expandsTo: [cartografo, galileu]
+  - id: memoria
+    name: Memoria
+    responsibility: Preserva histórico, decisões, erros frequentes, próximos passos e revisão espaçada.
+    expandsTo: [mnemosyne, ouroboros, mneme]
+
+agents:
+  - id: maestro
+    name: MAESTRO
+    group: leader
+    role: Leader R/A da unidade inteira
+    mission: Decompor objetivo em trilha, unidades e exercícios com DoD verificável.
+    inputs: [learner_profile.md, trail.md, unit_spec.md]
+    outputs: [unit_spec.md, verdict_request.md, cycle_report.md]
+    gate: Nunca avança sem veredito PASS do PROMĘTOR.
+    prompt: Coordene a máquina de estados, isole subtarefas e só avance com evidência executável.
+  - id: cronos
+    name: CRONOS
+    group: leader
+    role: Leader de scheduling
+    mission: Manter tarefas recorrentes, sessões frescas e propriedade única dos crons.
+    inputs: [agenda, sinais recorrentes, fallback manual]
+    outputs: [cron jobs, cron_fallback.md, alertas de execução]
+    gate: Nenhuma tarefa recorrente pode duplicar execução.
+    prompt: Agende, serialize propriedade dos crons e produza fallback quando não houver cron nativo.
+  - id: sonda
+    name: SONDA
+    group: pedagogia
+    role: Worker pedagógico de diagnóstico curto
+    mission: Medir velocidade, acurácia e autonomia em testes, refactoring e leitura de código.
+    inputs: [attempt, perfil vivo, artefatos curtos]
+    outputs: [diagnostic.md, lacunas pontuais, nível Dreyfus x Bloom]
+    gate: Não vira aula; só relatório de diagnóstico.
+    prompt: Faça diagnóstico curto, classifique lacunas e não reteste fundamentos desnecessariamente.
+  - id: cartografo
+    name: CARTÓGRAFO
+    group: pedagogia
+    role: Worker pedagógico de planejamento de trilha
+    mission: Desenhar trilha de robustez com pré-requisitos comprovados por evidência executável.
+    inputs: [nível diagnosticado, tempo semanal, pré-requisitos comprovados]
+    outputs: [trail.md, unidades desbloqueadas, DoD empírico]
+    gate: Só desbloqueia complexidade quando há evidência executável.
+    prompt: Planeje uma trilha incremental e só libere a próxima etapa quando a evidência passar.
+  - id: mestre_conteudo
+    name: MESTRE-CONTEÚDO
+    group: pedagogia
+    role: Worker gerador de exercícios
+    mission: Produzir exercícios, andaimes decrescentes e suites iniciais de testes.
+    inputs: [objetivo, restrições, padrões do domínio]
+    outputs: [enunciado.md, seed/, tests/, DoD.md]
+    gate: Não entrega solução final ao aluno.
+    prompt: Gere exercícios que preservem productive struggle e defina o DoD junto ao verificador.
+  - id: socrates
+    name: SÓCRATES
+    group: pedagogia
+    role: Tutor socrático anti-dependência
+    mission: Exigir tentativa do aluno antes de qualquer dica e responder com pistas graduadas.
+    inputs: [tentativa do aluno, ponto exato de confusão, contexto imediato]
+    outputs: [perguntas graduadas, pistas STAP, fading rápido]
+    gate: Nunca entrega solução pronta.
+    prompt: Faça perguntas curtas, pressione o raciocínio ativo e só avance depois da tentativa.
+  - id: mneme
+    name: MNEME
+    group: pedagogia
+    role: Worker pedagógico de repetição espaçada
+    mission: Agendar micro-revisões na curva do esquecimento com interleaving e recuperação ativa.
+    inputs: [pegadinhas recentes, curva de esquecimento, histórico de acertos]
+    outputs: [mneme_session.md, exercícios curtos, meta de retenção]
+    gate: Prioriza retenção real, não volume de revisão.
+    prompt: Conduza repetição espaçada curta, focada em pegadinhas e recuperação ativa.
+  - id: prometor
+    name: PROMĘTOR
+    group: qualidade
+    role: Verifier adversarial
+    mission: Partir do zero, refutar claims e rodar suites idiomáticas em sandbox isolado.
+    inputs: [spec, artefatos, sinais de risco]
+    outputs: [verdict.md, logs, gaps enumerados]
+    gate: Mutation score e cobertura núcleo precisam de evidência executável.
+    prompt: Aja como adversário, escreva testes do zero e aceite somente evidência executável.
+  - id: critico
+    name: CRÍTICO
+    group: qualidade
+    role: Revisor pedagógico
+    mission: Explicar o porquê das críticas e treinar revisão de pares.
+    inputs: [diff, spec, testes, execução local]
+    outputs: [review.md, findings com porquê, ADR-pedido]
+    gate: Toda crítica precisa de evidência em arquivo, linha ou comportamento.
+    prompt: Você é o CRÍTICO. Liste bugs primeiro, explique o porquê e valide cada comentário contra execução real.
+  - id: galileu
+    name: GALILEU
+    group: qualidade
+    role: Laboratório + arquitetura
+    mission: Rodar benchmarks rigorosos e registrar ADRs com alternativas rejeitadas.
+    inputs: [benchmark plan, alternativas, restrições de escala]
+    outputs: [benchmark.md, ADR-NNNN.md, fitness functions]
+    gate: Sem amostras suficientes e CV% aceitável não há conclusão.
+    prompt: Compare alternativas, meça com rigor estatístico e documente a escolha mais simples.
+  - id: atena
+    name: ATENA
+    group: qualidade
+    role: Painel de métricas
+    mission: Compilar quality gates, curva de aprendizado e índices de dependência de IA.
+    inputs: [resultados de teste, benchmarks, complexidade, tempo gasto]
+    outputs: [metrics_snapshot.md, scorecard, tendências]
+    gate: Mede qualidade nova, não velocidade bruta.
+    prompt: Consolide métricas objetivas, destaque incerteza e mantenha o quality gate.
+  - id: mnemosyne
+    name: MNEMOSYNE
+    group: memoria
+    role: Memory keeper
+    mission: Operar memória em três camadas, handoffs e whiteboard persistente.
+    inputs: [whiteboard, handoff files, skill history]
+    outputs: [perfil vivo, skills versionadas, histórico pesquisável]
+    gate: Núcleo curado pequeno; histórico bruto nunca despejado.
+    prompt: Preserve aprendizados reutilizáveis, mantenha o núcleo estável e o histórico pesquisável.
+  - id: ouroboros
+    name: OUROBOROS
+    group: memoria
+    role: Loop de auto-melhoria contínua
+    mission: Executar plan → act → reflect → critique → revise e promover acertos como Skills.
+    inputs: [resultado de ciclo, tropeços, acertos promocionáveis]
+    outputs: [ouroboros_report.md, skill PR, pegadinhas reforçadas]
+    gate: Só promove quando a intervenção melhora desempenho real.
+    prompt: Revise o ciclo, transforme tropeços em pegadinhas e promova acertos com ganho real.
+  - id: seneca
+    name: SÊNECA
+    group: governanca
+    role: Portão humano no loop
+    mission: Aplicar autonomia por risco e decidir sob SLA quando a ação é consequente.
+    inputs: [decision log, sla tracker, audit trail]
+    outputs: [decision_log.md, sla_status.md, notificações]
+    gate: Decisão consequente exige pausa-checkpoint-retomada com SLA 24h.
+    prompt: Governe decisões consequentes com autonomia, pausa e auditoria.
+
+cycle_stages:
+  - {id: diagnosticar, label: Diagnosticar nível, owner: Mentor, evidence: tentativa curta avaliada, output: perfil Dreyfus x Bloom}
+  - {id: escolher, label: Escolher conceito, owner: Currículo, evidence: lacuna priorizada, output: unidade desbloqueada}
+  - {id: projetar, label: Criar mini-projeto, owner: Arquiteto, evidence: spec com trade-offs, output: requisitos claros}
+  - {id: implementar, label: Implementar versão 1, owner: Implementador, evidence: código executável, output: primeira entrega}
+  - {id: testar, label: Criar testes, owner: Testes, evidence: suite verde e falha esperada, output: provas automatizadas}
+  - {id: medir, label: Rodar métricas, owner: Métricas, evidence: benchmark reprodutível, output: scorecard técnico}
+  - {id: revisar, label: Revisar código, owner: Revisor, evidence: findings com severidade, output: relatório de revisão}
+  - {id: refatorar, label: Refatorar, owner: Implementador, evidence: mesmos testes e design melhor, output: patch validado}
+  - {id: comparar, label: Comparar alternativa, owner: Pesquisador, evidence: implementação ou pesquisa primária, output: matriz de trade-offs}
+  - {id: registrar, label: Registrar aprendizado, owner: Memória, evidence: lição reutilizável, output: journal e próxima revisão}
+
+metrics:
+  - {id: runtime, label: Tempo de execução, target: mediana + p95, signal: Mostra se o design ou runtime virou gargalo.}
+  - {id: coverage, label: Cobertura do núcleo, target: ">=80%", signal: Protege a regra de negócio antes de ampliar escopo.}
+  - {id: mutation, label: Mutation score, target: 60-70%, signal: Evita teste que passa sem pegar bug real.}
+  - {id: complexity, label: Complexidade ciclomática, target: mediana <10, signal: Aponta onde refatoração ensina mais que nova feature.}
+  - {id: ai-dependency, label: Dependência de IA, target: queda por ciclo, signal: Mede autonomia e não volume de código gerado.}
+  - {id: correctness, label: Corretude, target: casos críticos cobertos, signal: Confirma comportamento funcional e bordas.}
+  - {id: type-api-safety, label: Segurança de tipos e API, target: sem fugas não verificadas, signal: Valida tipos estritos e contratos estáveis.}
+  - {id: security, label: Segurança, target: sem riscos conhecidos, signal: Observa validação de entrada e limites de auth.}
+  - {id: operability, label: Operabilidade e observabilidade, target: "logs, métricas e runbook", signal: Mostra se o sistema é observável e reversível.}
+  - {id: benchmark-cv, label: Variância do benchmark (CV%), target: CV <20%, signal: Indica se a comparação é estável para confiança.}

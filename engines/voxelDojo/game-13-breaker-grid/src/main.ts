@@ -1,4 +1,5 @@
-import { GameController } from "./game/controller"
+import { createSceneHarness } from "../../shared/sceneHarness"
+import { GameController, type GameState } from "./game/controller"
 import { BreakerScene } from "./scene/breakerScene"
 import { mountHud } from "./scene/hud"
 
@@ -9,16 +10,15 @@ declare global {
   }
 }
 
-const canvas = document.querySelector<HTMLCanvasElement>("#stage")
-const hudRoot = document.querySelector<HTMLElement>("#hud")
-if (!canvas || !hudRoot) throw new Error("missing #stage or #hud")
-
-const game = new GameController("L1")
-const scene = new BreakerScene(canvas)
-scene.onDistrictClick = (districtId) => {
-  game.selectDistrict(districtId)
-}
-game.subscribe((state) => scene.sync(state))
-mountHud(hudRoot, game)
-
-window.__breakerGrid = { game }
+createSceneHarness<GameState, GameController, BreakerScene>({
+  createGame: () => new GameController("L1"),
+  createScene: (canvas) => new BreakerScene(canvas),
+  windowKey: "__breakerGrid",
+  mountHud,
+  wireInteraction: (game, scene) => {
+    scene.onDistrictClick = (districtId) => {
+      game.selectDistrict(districtId)
+    }
+  },
+  onState: (state, _game, scene) => scene.sync(state),
+})

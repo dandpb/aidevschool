@@ -4,7 +4,7 @@ argument-hint: "[projeto, ex. 02_websocket_chat]"
 ---
 
 Dispare o subagent **`curator`** (via Task) para a Fase 1 do projeto `$ARGUMENTS` (ou o
-`current_project` de `learner/pipeline_status.md`).
+`current_project` do estado YAML-first).
 
 ```yaml
 phase: spec
@@ -22,4 +22,4 @@ e passar o quality gate (todo FR com critério de aceitação, API com exemplos,
 benchmark plan numérico, Open Questions vazio).
 
 Quando o `curator` terminar, dispare o subagent **`verifier`** na fase `spec` para validar o gate.
-Só atualize `learner/pipeline_status.md` → `spec-done` em **PASS**. Em FAIL, devolva ao curator com o feedback.
+Só atualize o YAML por `save_status` → `spec-done` em **PASS**; nunca sobrescreva Markdown. Em FAIL, devolva ao curator com o feedback.

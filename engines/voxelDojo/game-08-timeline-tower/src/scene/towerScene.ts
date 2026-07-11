@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { OrderEvent } from "../sim/sourcing"
 
@@ -40,10 +40,7 @@ export const PALETTE = [
  * one stack" idea legible.
  */
 export class TowerScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private towerGroup = new THREE.Group()
   private floorMeshes: THREE.Mesh[] = []
   private elevator: THREE.Mesh
@@ -54,19 +51,24 @@ export class TowerScene {
   private readoutTexture: THREE.CanvasTexture
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(10, 8, 14)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 6
-    this.controls.target.set(0, 3, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 22,
+      fogFar: 60,
+      cameraPosition: [10, 8, 14],
+      controlsTarget: [0, 3, 0],
+      minDistance: 6,
+      maxDistance: 50,
+      ambientIntensity: 0.75,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        // animate the elevator toward its target y (the replay head)
+        this.elevator.position.y += (this.elevatorTargetY - this.elevator.position.y) * 0.12
+        this.elevator.rotation.z += 0.01
+      },
+    })
 
-    this.scene.add(this.towerGroup)
+    this.viewport.scene.add(this.towerGroup)
     // foundation slab
     const base = new THREE.Mesh(
       new THREE.BoxGeometry(FLOOR_SIZE + 0.6, 0.4, FLOOR_SIZE + 0.6),
@@ -81,13 +83,10 @@ export class TowerScene {
     )
     this.towerGroup.add(spine)
 
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.75))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
+    // rim fill light (the cyan back-light from the original setup)
     const rim = new THREE.DirectionalLight("#4fc3f7", 0.35)
     rim.position.set(-10, 6, -8)
-    this.scene.add(rim)
+    this.viewport.scene.add(rim)
 
     // elevator — a glowing ring/box that rides up the spine during replay
     this.elevator = new THREE.Mesh(
@@ -113,25 +112,6 @@ export class TowerScene {
     this.readout.scale.set(6, 3, 1)
     this.towerGroup.add(this.readout)
     this.drawReadout("awaiting", "no events yet")
-
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      // animate the elevator toward its target y (the replay head)
-      this.elevator.position.y += (this.elevatorTargetY - this.elevator.position.y) * 0.12
-      this.elevator.rotation.z += 0.01
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   /** Rebuild the tower projection from a sim snapshot. */

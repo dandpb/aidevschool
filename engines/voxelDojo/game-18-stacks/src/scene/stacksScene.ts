@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { Doc, ScoredDoc } from "../sim/index"
 
@@ -93,10 +93,7 @@ export interface SceneView {
 }
 
 export class StacksScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private root = new THREE.Group()
   private shelfGroup = new THREE.Group()
   private cardGroup = new THREE.Group()
@@ -104,8 +101,6 @@ export class StacksScene {
   private bookGroup = new THREE.Group()
   private labelGroup = new THREE.Group()
   private orb!: THREE.Mesh
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   private labels = new LabelCache()
   /** clickable targets: shelf sprites (term) and book meshes (docId). */
   private pickables: THREE.Object3D[] = []
@@ -113,38 +108,29 @@ export class StacksScene {
   onBookClick: ((docId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 6, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 8
-    this.controls.target.set(0, 0, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 22,
+      fogFar: 60,
+      cameraPosition: [0, 6, 18],
+      controlsTarget: [0, 0, 0],
+      minDistance: 8,
+      maxDistance: 50,
+      ambientIntensity: 0.8,
+      keyIntensity: 1.0,
+      keyPosition: [6, 14, 8],
+    })
 
-    this.scene.add(this.root)
+    this.viewport.scene.add(this.root)
     this.root.add(this.shelfGroup, this.cardGroup, this.beamGroup, this.bookGroup, this.labelGroup)
 
     // floor grid for spatial anchoring
     const grid = new THREE.GridHelper(50, 50, "#1c2236", "#141a2b")
     grid.position.y = BOOK_BASE_Y - 0.8
-    this.scene.add(grid)
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.8))
-    const key = new THREE.DirectionalLight("#ffffff", 1.0)
-    key.position.set(6, 14, 8)
-    this.scene.add(key)
+    this.viewport.scene.add(grid)
 
     this.buildOrb()
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
   }
 
   private buildOrb(): void {
@@ -166,23 +152,10 @@ export class StacksScene {
     this.labelGroup.add(label)
   }
 
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
-  }
-
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects(this.pickables, true)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects(this.pickables, true)
     const first = hits[0]
     if (!first) return
     // walk up to find a tagged userData

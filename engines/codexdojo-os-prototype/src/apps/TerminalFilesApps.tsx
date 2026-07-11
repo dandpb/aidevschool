@@ -12,16 +12,17 @@ import {
   Search,
   Star,
 } from 'lucide-react'
-import { type FormEvent, useState } from 'react'
+import { type FormEvent, useRef, useState } from 'react'
 import type { LearningContext } from '../domain'
 import { coreContexts } from '../learning/learningContexts'
 
 export function TerminalApp({ onTeach }: { readonly onTeach: (context: LearningContext) => void }) {
-  const [lines, setLines] = useState<string[]>([
-    'codexDojo Terminal 0.1 — ambiente seguro de aprendizagem',
-    'Digite “help” para ver os comandos disponíveis.',
-    '',
+  const [lines, setLines] = useState([
+    { id: 0, text: 'codexDojo Terminal 0.1 — ambiente seguro de aprendizagem' },
+    { id: 1, text: 'Digite “help” para ver os comandos disponíveis.' },
+    { id: 2, text: '' },
   ])
+  const nextLineId = useRef(3)
   const [command, setCommand] = useState('')
 
   const execute = (event: FormEvent) => {
@@ -39,7 +40,9 @@ export function TerminalApp({ onTeach }: { readonly onTeach: (context: LearningC
     if (normalized === 'clear') {
       setLines([])
     } else {
-      setLines((current) => [...current, `$ ${command}`, ...(responses[normalized] ?? [`comando não encontrado: ${command}`])])
+      const output = [`$ ${command}`, ...(responses[normalized] ?? [`comando não encontrado: ${command}`])]
+      const addedLines = output.map((text) => ({ id: nextLineId.current++, text }))
+      setLines((current) => [...current, ...addedLines])
     }
     if (normalized) onTeach(coreContexts.terminal)
     setCommand('')
@@ -49,7 +52,7 @@ export function TerminalApp({ onTeach }: { readonly onTeach: (context: LearningC
     <div className="terminal-app">
       <div className="terminal-toolbar"><span><i /> sessão local</span><small>bash · modo seguro</small></div>
       <div className="terminal-output" aria-live="polite">
-        {lines.map((line, index) => <div key={`${line}-${index}`} className={line.startsWith('MICROLIÇÃO') ? 'lesson-line' : ''}>{line || '\u00A0'}</div>)}
+        {lines.map((line) => <div key={line.id} className={line.text.startsWith('MICROLIÇÃO') ? 'lesson-line' : ''}>{line.text || '\u00A0'}</div>)}
         <form onSubmit={execute}>
           <label htmlFor="command">daniel@dojo:~$</label>
           <input id="command" value={command} onChange={(event) => setCommand(event.target.value)} autoComplete="off" spellCheck={false} />

@@ -1,6 +1,6 @@
 import unittest
 
-from learner.substrate.dashboard_snapshot import render_ts
+from learner.substrate.ts_render import render_dashboard_ts as render_ts
 
 
 class TestTypeScriptRendering(unittest.TestCase):

@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { HOST_CONTRACT } from "../sim/levels"
 
@@ -47,47 +47,36 @@ interface PodView {
  * clamp torus turns green (lock); on a contract mismatch the clamp turns red and the pod stays back.
  */
 export class DockingScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private stage = new THREE.Group()
   private podMeshes = new Map<string, PodView>()
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   onPodClick: ((podId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 18, 48)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 8, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 40
-    this.controls.minDistance = 6
-    this.controls.target.set(0, 0.5, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 18,
+      fogFar: 48,
+      cameraPosition: [0, 8, 18],
+      controlsTarget: [0, 0.5, 0],
+      minDistance: 6,
+      maxDistance: 40,
+      ambientIntensity: 0.7,
+      keyIntensity: 1.2,
+      keyPosition: [6, 14, 8],
+      onFrame: () => {
+        this.animatePods()
+      },
+    })
 
-    this.scene.add(this.stage)
+    this.viewport.scene.add(this.stage)
     this.buildHost()
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.7))
-    const key = new THREE.DirectionalLight("#ffffff", 1.2)
-    key.position.set(6, 14, 8)
-    this.scene.add(key)
+    // rim fill light (the cyan back-light from the original setup)
     const rim = new THREE.DirectionalLight("#4fc3f7", 0.4)
     rim.position.set(-8, 4, -8)
-    this.scene.add(rim)
+    this.viewport.scene.add(rim)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animatePods()
-      this.renderer.render(this.scene, this.camera)
-    })
   }
 
   private buildHost(): void {
@@ -107,25 +96,12 @@ export class DockingScene {
     this.stage.add(ring)
   }
 
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
-  }
-
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     const targets: THREE.Object3D[] = []
     for (const v of this.podMeshes.values()) targets.push(v.body, v.connector)
-    const hits = this.raycaster.intersectObjects(targets)
+    const hits = this.viewport.raycaster.intersectObjects(targets)
     const first = hits[0]
     if (first && this.onPodClick) {
       const id = (first.object.userData as { podId?: string }).podId

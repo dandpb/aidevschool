@@ -2,7 +2,6 @@
 // DO NOT EDIT BY HAND — run `python3 -m learner.substrate` to regenerate.
 // Read-only review slice for pixelDojo: the game reads scheduling truth here,
 // emits evidence only, and never marks mastery (GameNeverMarksMastery).
-// Generated: 2026-07-10T17:40:05.441923Z
 
 import type { ReviewSlice } from "../game/review/types"
 
@@ -11,8 +10,14 @@ export const reviewSlice: ReviewSlice = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 1d",
+      dueIn: "overdue 2d",
       reason: "overdue",
+    },
+    {
+      unitId: "U2-key-value-store",
+      title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
+      dueIn: "today",
+      reason: "due",
     },
     {
       unitId: "P-001",

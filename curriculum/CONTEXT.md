@@ -36,7 +36,8 @@ notes).
 _Avoid_: file, output, PR
 
 **Backlog Status**:
-Ground-truth progress of a Project in the catalog when status fields disagree.
+Generated progress projection of the canonical Project status in `catalog.md`; regenerate it with
+`python3 -m learner.substrate` after catalog changes.
 _Avoid_: git status, board column
 
 **Polyglot**:

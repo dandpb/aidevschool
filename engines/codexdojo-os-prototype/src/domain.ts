@@ -52,7 +52,12 @@ export type LearnerSnapshot = {
     readonly current: number
     readonly thresholdAmber: number
     readonly thresholdRed: number
-    readonly trend: readonly { readonly date: string; readonly value: number }[]
+    readonly measurementSource: "self_reported" | "event_computed" | "derived"
+    readonly trend: readonly {
+      readonly date: string
+      readonly value: number
+      readonly measurementSource: "self_reported" | "event_computed" | "derived"
+    }[]
   }
   readonly topPitfalls: readonly {
     readonly id: string
@@ -76,6 +81,12 @@ export type LearnerSnapshot = {
     readonly freezesMax: number
   }
   readonly curr: number
+  readonly challenges: readonly {
+    readonly id: string
+    readonly phase: string
+    readonly passed: boolean
+    readonly attemptPresent: boolean
+  }[]
   readonly predictions: {
     readonly count: number
     readonly byMetric: Readonly<

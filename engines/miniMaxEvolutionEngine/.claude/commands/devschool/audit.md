@@ -7,7 +7,7 @@ Audit config:
 !`cat .mavis/plans/plan.yaml 2>/dev/null | grep -A 6 verifier_config || echo "(sem plan.yaml)"`
 
 Estado do ciclo atual:
-!`cat learner/pipeline_status.md 2>/dev/null | head -20 || echo "(sem pipeline_status)"`
+!`python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null || echo "(sem status YAML/Markdown)"`
 
 Lógica de amostragem (do plano):
 - `audit_sample_rate` = 0.2 → 20% das fases já completadas ganham audit.
@@ -17,8 +17,9 @@ Lógica de amostragem (do plano):
 - Se `audit_sample_rate == 1.0` → audita todas; caro, mas útil para milestones.
 
 Se $ARGUMENTS foi passado, audite a fase `$ARGUMENTS` do projeto ativo (força override da
-amostra). Caso contrário, itere sobre todas as fases `cycle-complete` em
-`learner/pipeline_status.md` e dispare o audit nas que cairam na amostra.
+amostra). Caso contrário, itere sobre todas as fases `cycle-complete` no
+estado YAML-first carregado por `load_status(Path("learner/pipeline_status.yaml"))`; Markdown
+é apenas fallback de cold-start/narrativa. Dispare o audit nas que caíram na amostra.
 
 Para cada unidade na amostra:
 

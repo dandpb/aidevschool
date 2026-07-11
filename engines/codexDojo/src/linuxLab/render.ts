@@ -1,3 +1,7 @@
+import { getCodexDojoOsUrl } from "../data/osEngine"
+import { pressedAttrs } from "../render/activeAttrs"
+import { escapeHtml } from "../render/escape"
+import type { AppState } from "../state"
 import {
   getLinuxApp,
   getLinuxAppsForCategory,
@@ -6,11 +10,7 @@ import {
   linuxAppCategories,
   linuxAppCategoryLabels,
   linuxApps,
-} from "../data/linuxApps"
-import { getCodexDojoOsUrl } from "../data/osEngine"
-import type { AppState } from "../state"
-import { pressedAttrs } from "./activeAttrs"
-import { escapeHtml } from "./escape"
+} from "./catalog"
 
 const categoryFilters: readonly LinuxAppCategoryFilter[] = ["all", ...linuxAppCategories]
 

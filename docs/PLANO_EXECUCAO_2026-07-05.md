@@ -1,7 +1,8 @@
 # Plano de Execução — recomendações abertas
 
 **Data:** 2026-07-05 · **Fontes:** `docs/ARCHITECTURE_EVALUATION_2026-07-05.md` (sequência recomendada) + `docs/FUNDAMENTOS.md` (protocolo)
-**Já fechado (não replanejam):** GAP 1 (integridade do estado), GAP 2 (verificador pixelDojo), GAP 5 (voxelDojo mantido), GAP 6 (CLAUDE.md com 6 engines), MVP (1º loop real, U0).
+**Já fechado (não replanejam):** GAP 1 (integridade do estado), GAP 2 (gate compartilhado em
+`learner/gate/`), GAP 5 (voxelDojo mantido), GAP 6 (CLAUDE.md com 6 engines), MVP (1º loop real, U0).
 
 Cada item abaixo vem com o **pedido pronto no formato 5 campos** — copie e cole na sessão indicada. O plano dogfooda o protocolo do FUNDAMENTOS: um objetivo por pedido, aceite executável, prova junto da entrega.
 
@@ -40,10 +41,10 @@ NÃO-META:  reorganizar o handbook
 ### 1.1 Review
 
 ```
-CONTEXTO:  learner/pipeline_status.md em impl-done; 3 impls prontas (node 91.86%, go 85.9%, rust 20 testes)
+CONTEXTO:  learner/pipeline_status.yaml em impl-done; 3 impls prontas (node 91.86%, go 85.9%, rust 20 testes)
 OBJETIVO:  rodar /devschool-review no ciclo 2026-06-04-01-rate-limiter
 RESTRIÇÕES: reviewer ≠ quem implementou (produtor ≠ verificador); não editar as impls durante o review
-ACEITE:    pipeline_status.md avança de impl-done para review-done; notas de review em curriculum/01_rate_limiter/
+ACEITE:    pipeline_status.yaml avança de impl-done para review-done; notas de review em curriculum/01_rate_limiter/
 NÃO-META:  benchmark e optimize
 ```
 
@@ -63,7 +64,7 @@ NÃO-META:  otimizar código com base nos números (próximo pedido)
 CONTEXTO:  benchmark N≥3 concluído
 OBJETIVO:  rodar /devschool-optimize e fechar o ciclo: catálogo confirma 01 como implemented com evidência completa (spec, 3 impls ≥80%, review, benchmark N≥3, evolution report, verifier PASS)
 RESTRIÇÕES: /simplify no diff antes de commitar (regra de ouro 5)
-ACEITE:    curriculum/BACKLOG_STATUS.md e catalog.md consistentes; pipeline_status.md marca ciclo completo
+ACEITE:    catalog.md marca o projeto; substrate regenera BACKLOG_STATUS.md; pipeline_status.yaml marca ciclo completo
 NÃO-META:  iniciar o projeto 02
 ```
 
@@ -86,8 +87,8 @@ NÃO-META:  projetos 03+
 ### 2.2 Gate de aprendizado da próxima unidade (U1)
 
 ```
-CONTEXTO:  U0 gateado 2026-07-05 (única entrada legítima no units_log); verificador em engines/pixelDojo/verifier/
-OBJETIVO:  fechar o 2º gate real: jogar encounter → evidência persistida → python3 -m engines.pixelDojo.verifier → python3 -m learner.substrate
+CONTEXTO:  U0 gateado 2026-07-05 (única entrada legítima no units_log); verificador em learner/gate/
+OBJETIVO:  fechar o 2º gate real: jogar encounter → evidência persistida → python3 -m learner.gate → python3 -m learner.substrate
 RESTRIÇÕES: tentativa real do aprendiz antes de qualquer avaliação (regra de ouro 1)
 ACEITE:    units_log ganha 1 entrada nova com attempt file correspondente em learner/attempts/; views regeneradas
 NÃO-META:  gates em lote — 1 unidade por vez
@@ -122,7 +123,7 @@ NÃO-META:  outros projetos sem gatilho
 ```
 CONTEXTO:  openclaw roda em modo simulate; orquestração das 5 fases é 100% manual
 OBJETIVO:  openclaw orquestra as transições de fase do pipeline (dispara agente da fase seguinte quando pipeline_status muda)
-RESTRIÇÕES: filesystem continua fonte da verdade; eventos Hermes em .mavis/hermes/; começar em modo simulate
+RESTRIÇÕES: filesystem continua fonte da verdade; sem daemon/event bus; começar em modo simulate explícito
 ACEITE:    python3 -m pytest engines/openclaw/tests/ verde + 1 transição de fase real disparada pelo runner com trace auditável
 NÃO-META:  alertas ativos (F7) — registrar como revisão futura
 ```
@@ -139,4 +140,4 @@ NÃO-META:  alertas ativos (F7) — registrar como revisão futura
 3.1 / 3.2 fora da linha crítica — só por gatilho de currículo
 ```
 
-**Regra de acompanhamento:** ao fechar cada item, o aceite executável roda **antes** de marcar concluído — nada de ✓ sem output (F3/F6). Progresso auditável fica em `learner/pipeline_status.md` e no catálogo, não neste doc.
+**Regra de acompanhamento:** ao fechar cada item, o aceite executável roda **antes** de marcar concluído — nada de ✓ sem output (F3/F6). Progresso de máquina fica em `learner/pipeline_status.yaml`; Markdown é narrativa, e o catálogo é canônico.

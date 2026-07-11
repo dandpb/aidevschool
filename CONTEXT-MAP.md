@@ -19,7 +19,7 @@ relationship contract only.
 | [Teaching Game — Voxel](./engines/voxelDojo/CONTEXT.md) | `engines/voxelDojo/CONTEXT.md` | Core | 3D simulation attempt surface and evidence emission |
 | [Polyglot Arena](./docs/design/polyglot-arena/CONTEXT.md) | `docs/design/polyglot-arena/CONTEXT.md` | Supporting (nascent) | Pre-benchmark prediction and fairness calibration |
 | [Learner Dashboard](./engines/codexDojo/CONTEXT.md) | `engines/codexDojo/CONTEXT.md` | Generic | Read-only presentation of other contexts' state |
-| [Event Bus / Runner](./engines/openclaw/CONTEXT.md) | `engines/openclaw/CONTEXT.md` | Generic (incubating) | File-based event bus and automated cycle runner |
+| [Checklist Runner](./engines/openclaw/CONTEXT.md) | `engines/openclaw/CONTEXT.md` | Generic | Explicit file-based checklist runner and YAML pipeline adapter |
 
 ## Relationships
 
@@ -41,8 +41,8 @@ relationship contract only.
 - **Polyglot Arena ↔ Learner Journey**: predictions are about the learner's calibration; the
   write boundary into learner state is still under discipline (must not bypass the journey's
   single writer).
-- **Event Bus / Runner → Polyglot Project Cycle**: openclaw reuses cycle vocabulary (`dojo.*`
-  topics, producer/verifier). Treat as incubating until other contexts subscribe.
+- **Checklist Runner → Polyglot Project Cycle**: OpenClaw previews or executes explicit checklist
+  phases against `learner/pipeline_status.yaml`; it has no background daemon or event bus.
 
 ## Language collisions (do not merge)
 

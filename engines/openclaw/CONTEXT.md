@@ -1,30 +1,25 @@
-# Event Bus / Runner
+# Checklist runner
 
-File-based continuous runner and event bus for automated cycle work. Incubating as an integration
-layer until other contexts are real subscribers.
+File-based, simulate-grade artifact checklist for the five-phase software cycle.
+It has no event bus, AI dispatch, daemon, or empirical-verification authority.
 
 ## Language
 
-**Runner**:
-The process that advances cycle work from events without a human driving each step.
-_Avoid_: cron, CI pipeline (related but not this context's name)
+**Checklist runner**:
+The process that evaluates required artifact paths and minimum sizes, then may
+advance `learner/pipeline_status.yaml`.
+_Avoid_: verifier, tutor, event bus, CI pipeline
 
-**Hermes**:
-The file-based bus that carries cycle events between producers and consumers.
-_Avoid_: message broker product name-drop, Kafka
+**Checklist**:
+The ordered artifact-presence rules for one software-cycle phase.
+_Avoid_: empirical gate, test suite, semantic review
 
-**Event**:
-A durable bus message about cycle work (topic, cycle identity, artifact reference, payload).
-_Avoid_: log line, domain event from Learner Journey (different stream)
+**Preview**:
+A read-only receipt of the YAML source, active project and phase, learning-gate
+result, and next checklist.
+_Avoid_: dry run that secretly persists state
 
-**Topic**:
-The event kind namespace for cycle automation.
-_Avoid_: chat topic, forum thread
-
-**Dedup Key**:
-Identity used to treat equivalent events as one so retries stay idempotent.
-_Avoid_: primary key, content hash alone without the bus rule
-
-**Conflict**:
-Detected clash or duplicate classification when event identity rules disagree.
-_Avoid_: merge conflict (git), race only
+**Simulate grade**:
+A result that proves required artifacts exist and meet size floors. It never
+means the artifact is correct or the learner has mastered a unit.
+_Avoid_: Verifier PASS, Gate Outcome, Mastered

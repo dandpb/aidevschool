@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { PredictionTarget } from "../sim/levels"
 
@@ -44,18 +44,13 @@ function spokePoint(radius: number, lift = 0): THREE.Vector3 {
  * red if a wall rejected it (then thrown back outward).
  */
 export class CheckpointScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private cityGroup = new THREE.Group()
   private wallMeshes = new Map<string, THREE.Mesh>()
   private gateMeshes = new Map<string, THREE.Mesh>()
   private citadel: THREE.Mesh
   private avatar: THREE.Mesh
   private avatarLight: THREE.PointLight
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   private clock = new THREE.Clock()
   /** animation state for the walking/recoiling avatar */
   private anim: {
@@ -71,31 +66,28 @@ export class CheckpointScene {
   onGateClick: ((target: PredictionTarget) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 24, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(6, 11, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 8
-    this.controls.target.set(0, 0.5, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 24,
+      fogFar: 60,
+      cameraPosition: [6, 11, 18],
+      controlsTarget: [0, 0.5, 0],
+      minDistance: 8,
+      maxDistance: 50,
+      ambientIntensity: 0.7,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.animate(this.clock.getDelta())
+      },
+    })
 
     this.cityGroup.rotation.y = 0
-    this.scene.add(this.cityGroup)
+    this.viewport.scene.add(this.cityGroup)
 
     // faint reference floor grid for spatial anchoring
     const grid = new THREE.GridHelper(36, 36, "#1c2236", "#141a2b")
     grid.position.y = -0.6
     this.cityGroup.add(grid)
-
-    // lighting: ambient + one key directional, per the 3d-style guide
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.7))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
 
     // citadel beacon at center (the handler)
     this.citadel = new THREE.Mesh(
@@ -129,33 +121,13 @@ export class CheckpointScene {
     this.cityGroup.add(this.avatarLight)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animate(this.clock.getDelta())
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     const targets = [this.citadel, ...this.wallMeshes.values(), ...this.gateMeshes.values()]
-    const hits = this.raycaster.intersectObjects(targets)
+    const hits = this.viewport.raycaster.intersectObjects(targets)
     const first = hits[0]
     if (!first || !this.onGateClick) return
     const target = (first.object.userData as { predicts?: PredictionTarget }).predicts

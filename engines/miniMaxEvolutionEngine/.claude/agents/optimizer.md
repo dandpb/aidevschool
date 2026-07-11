@@ -38,7 +38,7 @@ números** · Decisão: loop de novo OU projeto maduro (saturação pedagógica)
 ## Disciplina
 - Sem claim de melhoria sem dados. Sem otimização prematura. Sem metric gaming (não troque p99 por RPS).
 - Documente trade-offs (toda otimização custa complexidade/memória/manutenibilidade).
-- Ao terminar: `learner/pipeline_status.md` → `phase: cycle-complete, awaiting: next-curator`; acrescente
+- Ao terminar: atualize a máquina YAML por `save_status` → `phase: cycle-complete, awaiting: next-curator`; acrescente
   padrões/anti-padrões ao `learner/journal.md`; escreva `deliverable-evolution.md` (deltas headline,
   otimização mais impactante, uma pergunta pro curator sobre o próximo projeto).
 

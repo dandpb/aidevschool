@@ -62,7 +62,7 @@ function renderAidi(snapshot: LearnerSnapshot): string {
           ${path ? `<path d="${path}" class="aidi-line" />` : ""}
         </svg>
       </div>
-      <small class="aidi-source">Últimos ${aidi.trend.length} pontos — atualize rodando <code>python3 -m learner.substrate</code></small>
+      <small class="aidi-source">Fonte atual: ${escapeHtml(aidi.measurementSource)} · ${aidi.trend.length} pontos canônicos</small>
     </div>
   `
 }

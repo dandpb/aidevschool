@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import tempfile
 import unittest
-from pathlib import Path
 from unittest.mock import patch
 
 import learner.substrate as substrate
@@ -59,18 +57,12 @@ SNAPSHOT = {
 
 
 class TestCodexDojoOsSnapshot(unittest.TestCase):
-    def test_sync_writes_generated_read_only_module(self) -> None:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            output = Path(temp_dir) / "learner.ts"
+    def test_os_snapshot_module_renders_canonical_values(self) -> None:
+        text = ts_render.render_codexdojo_os_ts(SNAPSHOT)
 
-            with patch.object(dashboard_snapshot, "CODEXDOJO_OS_SNAPSHOT_TS", output, create=True):
-                path = dashboard_snapshot.sync_codexdojo_os_snapshot(SNAPSHOT)
-
-            self.assertEqual(path, output)
-            text = output.read_text(encoding="utf-8")
-            self.assertIn('id: "U-BRIDGE"', text)
-            self.assertIn('state: "evaluating"', text)
-            self.assertIn("current: 3", text)
+        self.assertIn('id: "U-BRIDGE"', text)
+        self.assertIn('state: "evaluating"', text)
+        self.assertIn('current: 3', text)
 
     def test_render_preserves_empty_collections_and_zero_counts(self) -> None:
         empty_snapshot = {
@@ -83,10 +75,26 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
 
         text = ts_render.render_codexdojo_os_ts(empty_snapshot)
 
-        self.assertIn("topPitfalls: []", text)
-        self.assertIn("nextReviews: []", text)
-        self.assertIn("masteredCount: 0", text)
-        self.assertIn("scaffoldedCount: 0", text)
+        self.assertIn('topPitfalls: []', text)
+        self.assertIn('nextReviews: []', text)
+        self.assertIn('masteredCount: 0', text)
+        self.assertIn('scaffoldedCount: 0', text)
+
+    def test_unsafe_snapshot_keys_are_json_quoted_and_cannot_inject_typescript(self) -> None:
+        text = ts_render.render_dashboard_ts(
+            {
+                "punctuated-key": "safe",
+                'key\"; globalThis.compromised = true; //': {"nested.key": True},
+            }
+        )
+
+        self.assertIn('"punctuated-key": "safe"', text)
+        self.assertIn(
+            '"key\\\"; globalThis.compromised = true; //": {',
+            text,
+        )
+        self.assertIn('"nested.key": true', text)
+        self.assertNotIn('\n  key"; globalThis.compromised', text)
 
     def test_generated_module_declares_canonical_source_and_no_write_api(self) -> None:
         text = ts_render.render_codexdojo_os_ts(SNAPSHOT)
@@ -106,35 +114,19 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
         pixel_path = root / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
 
         with (
-            patch.object(substrate, "atomic_write_text"),
             patch.object(substrate, "load_and_validate", return_value={}),
-            patch.object(substrate, "derive_whiteboard_profile", return_value={}),
-            patch.object(substrate, "derive_whiteboard_trail", return_value={}),
-            patch.object(substrate, "render_mavis_yaml", return_value=""),
-            patch.object(substrate, "render_profile_yaml", return_value=""),
-            patch.object(substrate, "render_profile_md", return_value=""),
-            patch.object(substrate, "render_trail_md", return_value=""),
-            patch.object(dashboard_snapshot, "build_snapshot", return_value=SNAPSHOT),
-            patch.object(dashboard_snapshot, "sync", return_value=dashboard_path) as dashboard_sync,
-            patch.object(
-                dashboard_snapshot,
-                "sync_codexdojo_os_snapshot",
-                return_value=os_path,
-                create=True,
-            ) as os_sync,
-            patch.object(
-                dashboard_snapshot,
-                "sync_pixel_review_slice",
-                return_value=pixel_path,
-            ) as pixel_sync,
-            patch.object(dashboard_snapshot, "sync_voxel_review_slice", return_value=[]) as voxel_sync,
+            patch(
+                "learner.substrate.projections.build_generated_views",
+                return_value={dashboard_path: "dashboard", os_path: "os", pixel_path: "pixel"},
+            ) as build_views,
+            patch.object(substrate, "write_views") as write_views,
         ):
             substrate.sync()
 
-        dashboard_sync.assert_called_once_with(SNAPSHOT)
-        os_sync.assert_called_once_with(SNAPSHOT)
-        pixel_sync.assert_called_once_with(SNAPSHOT)
-        voxel_sync.assert_called_once_with(SNAPSHOT)
+        build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
+        write_views.assert_called_once_with(
+            {dashboard_path: "dashboard", os_path: "os", pixel_path: "pixel"}
+        )
 
     def test_os_and_dashboard_renderers_share_contract_values(self) -> None:
         dashboard_text = ts_render.render_dashboard_ts(SNAPSHOT)
@@ -143,10 +135,10 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
         for expected in (
             'id: "U-BRIDGE"',
             'state: "evaluating"',
-            "implementationBlocked: true",
-            "current: 3",
-            "masteredCount: 2",
-            "scaffoldedCount: 16",
+            'implementationBlocked: true',
+            'current: 3',
+            'masteredCount: 2',
+            'scaffoldedCount: 16',
         ):
             self.assertIn(expected, dashboard_text)
             self.assertIn(expected, os_text)

@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 import yaml
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
@@ -21,6 +22,16 @@ def rec(metric, correct, **extra):
 
 
 class TestAppend(unittest.TestCase):
+    def test_writer_delegates_to_learner_substrate(self):
+        record = rec("latency", True)
+        path = Path("custom-predictions.yaml")
+
+        with patch.object(P, "record_prediction", return_value=path) as store:
+            returned = P.append_prediction(record, path)
+
+        store.assert_called_once_with(record, path)
+        self.assertEqual(returned, path)
+
     def test_append_only_preserves_existing_bytes(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "predictions.yaml"

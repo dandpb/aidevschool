@@ -23,7 +23,7 @@ export function LearningRail({ context, onClose }: { readonly context: LearningC
         <p>{context.summary}</p>
         <div className="concept-list">
           {context.concepts.map((concept, index) => (
-            <div key={`${concept.name}-${index}`}><span>0{index + 1}</span><div><strong>{concept.name}</strong><p>{concept.detail}</p></div></div>
+            <div key={`${concept.name}-${concept.detail}`}><span>0{index + 1}</span><div><strong>{concept.name}</strong><p>{concept.detail}</p></div></div>
           ))}
         </div>
         <div className="mini-challenge"><Trophy /><div><span>DESAFIO RÁPIDO</span><p>{context.challenge}</p></div></div>

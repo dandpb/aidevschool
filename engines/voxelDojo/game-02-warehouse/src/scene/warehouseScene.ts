@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameController, GameState } from "../game/controller"
 
 /**
@@ -32,36 +32,34 @@ function shelfX(shelf: number, n: number): number {
 }
 
 export class WarehouseScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private world = new THREE.Group()
   private shelfGroup = new THREE.Group()
   private shelfMeshes = new Map<number, THREE.Mesh>()
   private crateMesh: THREE.InstancedMesh | null = null
   private bot: THREE.Group
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   /** shelf the bot is currently docking at (-1 = idle/home) */
   private botTargetShelf = -1
   onShelfClick: ((shelf: number) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 9, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 6
-    this.controls.target.set(0, 1.5, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 22,
+      fogFar: 60,
+      cameraPosition: [0, 9, 18],
+      controlsTarget: [0, 1.5, 0],
+      minDistance: 6,
+      maxDistance: 50,
+      ambientIntensity: 0.7,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.animateBot()
+      },
+    })
 
     this.world.rotation.x = AISLE_TILT
-    this.scene.add(this.world)
+    this.viewport.scene.add(this.world)
     this.world.add(this.shelfGroup)
 
     // floor
@@ -72,11 +70,6 @@ export class WarehouseScene {
     floor.rotation.x = -Math.PI / 2
     floor.position.y = -0.01
     this.world.add(floor)
-
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.7))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
 
     // picker-bot: a small low-poly body on a wheeled base
     this.bot = new THREE.Group()
@@ -95,33 +88,13 @@ export class WarehouseScene {
     this.world.add(this.bot)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animateBot()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
     if (!this.onShelfClick) return
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects([...this.shelfMeshes.values()])
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects([...this.shelfMeshes.values()])
     const first = hits[0]
     if (first) {
       const shelf = (first.object.userData as { shelf?: number }).shelf

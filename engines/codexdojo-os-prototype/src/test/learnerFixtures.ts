@@ -23,7 +23,8 @@ export const canonicalLearnerFixture = {
     current: 0.34,
     thresholdAmber: 0.6,
     thresholdRed: 0.75,
-    trend: [{ date: '2026-07-08', value: 0.34 }],
+    measurementSource: 'self_reported',
+    trend: [{ date: '2026-07-08', value: 0.34, measurementSource: 'self_reported' }],
   },
   topPitfalls: [],
   nextReviews: [
@@ -44,6 +45,7 @@ export const canonicalLearnerFixture = {
     freezesMax: 2,
   },
   curr: 0,
+  challenges: [],
   predictions: {
     count: 0,
     byMetric: {

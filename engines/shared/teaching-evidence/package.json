@@ -1,0 +1,13 @@
+{
+  "name": "@aidevschool/evidence",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "types": "./emit.ts",
+  "exports": {
+    ".": {
+      "types": "./emit.ts",
+      "import": "./emit.ts"
+    }
+  }
+}

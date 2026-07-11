@@ -1,6 +1,9 @@
 {
   "name": "pixel-dojo",
   "private": true,
+  "dependencies": {
+    "@aidevschool/evidence": "workspace:*"
+  },
   "scripts": {
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",

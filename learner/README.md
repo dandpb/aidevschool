@@ -9,7 +9,14 @@ Princípio: **1 aprendiz, 1 jornada** — o progresso não se fragmenta entre mo
 | `learner_profile.md` | Matriz Dreyfus × Bloom, pré-requisitos comprovados, lacunas |
 | `pitfalls.md` | Memória de pegadinhas (erros recorrentes → revisão espaçada) |
 | `journal.md` | Base de conhecimento append-only (era `learning_journal.md`) |
-| `pipeline_status.md` | Estado do pipeline de software do ciclo atual |
+| `pipeline_status.yaml` | Estado canônico e legível por máquina do pipeline de software atual |
+| `pipeline_status.md` | Narrativa humana do ciclo; não é fonte nem fallback para máquinas |
+| `verifier_receipts/` | Recibos JSON independentes, ligados à evidência do produtor por digest canônico |
+
+O gate compartilhado vive em [`gate/`](gate/README.md). Um bloco `verifier`
+embutido na evidência do produtor não autoriza `mastered`; o verificador escreve
+um recibo separado em `verifier_receipts/`, e `learner.gate` confere o digest antes
+de registrar qualquer resultado.
 
 ## Como os motores acessam
 Cada motor tem um symlink interno para cá — ex.: `engines/miniMaxEvolutionEngine/learner → ../../learner`.

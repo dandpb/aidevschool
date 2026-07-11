@@ -1,36 +1,17 @@
-import { type EvidenceRecord, emitEvidence as emitShared } from "../../../shared/evidence"
+import { type EvidenceRecord, emitEvidenceFor } from "../../../shared/emitEvidenceFor"
 import { reviewSlice } from "../content/reviewSlice"
 import type { LevelId } from "../sim/levels"
 
-const META = {
-  source: "voxeldojo" as const,
+export type { EvidenceRecord }
+
+export const { emitEvidence } = emitEvidenceFor<LevelId>({
   unitId: "U16-message-queue",
   project: "16_mini_message_queue",
   game: "FREIGHT YARD",
+  scenarioSlug: "freight-yard",
   curriculum: {
     concept: "partitioned log + consumer-group offsets",
     mechanic: "freight yard of track lanes",
   },
-}
-
-export type { EvidenceRecord }
-
-/**
- * Emit one raw evidence record. Envelope / dual-channel live in the shared
- * teaching-evidence module; this file only supplies unit identity + metrics.
- */
-export function emitEvidence(
-  level: LevelId,
-  pass: boolean,
-  metrics: Record<string, number | boolean | string>,
-): EvidenceRecord {
-  return emitShared({
-    meta: {
-      ...META,
-      scenarioId: `freight-yard-${level}`,
-    },
-    pass,
-    metrics,
-    reviewSlice,
-  })
-}
+  reviewSlice,
+})

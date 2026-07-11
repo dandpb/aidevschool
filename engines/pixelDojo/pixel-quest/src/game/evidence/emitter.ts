@@ -1,7 +1,4 @@
-import {
-  configureEvidenceParentOrigin,
-  dualEmit,
-} from "../../../../../shared/teaching-evidence/emit"
+import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence"
 import { validateEvidenceRecord } from "./evidence"
 import type { PixelQuestEvidenceMetrics, PixelQuestEvidenceRecord } from "./types"
 
@@ -10,7 +7,7 @@ configureEvidenceParentOrigin(
     (import.meta.env.DEV ? "http://127.0.0.1:4174" : undefined),
 )
 
-// PixelQuest evidence contract (input for engines/pixelDojo/verifier).
+// PixelQuest evidence contract (input for learner/gate).
 //
 // Durable channel: the Playwright smoke run captures the append-only
 // `window.__pixelQuestEvidence` array at the end of the run and persists it to
@@ -36,7 +33,7 @@ configureEvidenceParentOrigin(
 //   }
 //
 // Golden rule: the game emits evidence only. It never writes learner state;
-// engines/pixelDojo/verifier consumes the NDJSON and decides the gate.
+// learner/gate consumes the NDJSON and decides the gate.
 
 // Structural slice of an encounter definition that the shared evidence
 // envelope needs. Every EncounterDefinition variant satisfies it.
