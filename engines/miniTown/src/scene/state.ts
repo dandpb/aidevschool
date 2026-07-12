@@ -7,6 +7,9 @@
  * engine doesn't care how a zone is rendered — only that it can be ticked.
  */
 
+import { BuildingConstruction, type ConstructionStage } from "../sim/construction"
+import { Grid, ROAD_NEIGHBOR_OFFSETS } from "../sim/grid"
+import { recomputeRoads } from "../sim/roads"
 import type { DayNightSystem, DayPhase } from "./dayNight"
 
 export type ZoneType = "residential" | "shop" | "workspace"
@@ -28,7 +31,7 @@ export interface Road {
   readonly cell: Cell
 }
 
-export type ConstructionStage = "plot" | "foundation" | "frame" | "roofed" | "inhabited"
+export type { ConstructionStage }
 
 export interface Building {
   readonly id: string
@@ -53,6 +56,12 @@ export interface Vehicle {
   readonly colorSeed: number
 }
 
+/** Result of a `placeZone` call. */
+export type PlaceZoneResult =
+  | { readonly kind: "placed"; readonly zoneId: string; readonly buildingId: string }
+  | { readonly kind: "out-of-bounds" }
+  | { readonly kind: "occupied" }
+
 /** Lightweight snapshot for the HUD / test contract. */
 export interface WorldSnapshot {
   readonly simTime: number
@@ -62,6 +71,8 @@ export interface WorldSnapshot {
   readonly buildingCount: number
   readonly residentCount: number
   readonly vehicleCount: number
+  /** Number of buildings currently in or past the `roofed` stage. */
+  readonly roofedCount: number
 }
 
 /**
@@ -70,7 +81,7 @@ export interface WorldSnapshot {
  * the `addX` methods and read it through the snapshot.
  *
  * Pure TypeScript: no THREE, no DOM. `tick(dt)` advances the day/night cycle
- * and is a no-op for the (currently empty) entity simulation.
+ * and the per-building construction state machine.
  */
 export class Town {
   readonly zones: Zone[] = []
@@ -78,10 +89,34 @@ export class Town {
   readonly buildings: Building[] = []
   readonly residents: Resident[] = []
   readonly vehicles: Vehicle[] = []
+  /** Fixed 20×20 grid of cells. Source of truth for what's grass / road / zone. */
+  readonly grid: Grid = new Grid()
+  /** One construction state machine per building, keyed by building id. */
+  readonly constructions: Map<string, BuildingConstruction> = new Map()
   /** Per-instance counter — ids stay unique within a Town without any global state. */
   #idCounter = 0
+  #paletteSeedCounter = 0
+  #listeners: Set<() => void> = new Set()
 
   constructor(public readonly dayNight: DayNightSystem) {}
+
+  /** Deterministic, monotonically increasing palette seed (Knuth hash). */
+  nextPaletteSeed(): number {
+    this.#paletteSeedCounter += 1
+    return (this.#paletteSeedCounter * 2654435761) | 0
+  }
+
+  /** Subscribe to *every* state change (addZone, placeZone, tick, ...). */
+  subscribe(listener: () => void): () => void {
+    this.#listeners.add(listener)
+    return () => {
+      this.#listeners.delete(listener)
+    }
+  }
+
+  #notify(): void {
+    for (const listener of this.#listeners) listener()
+  }
 
   addZone(type: ZoneType, x: number, y: number): Zone {
     this.#idCounter += 1
@@ -108,6 +143,7 @@ export class Town {
       stageSeconds: 0,
     }
     this.buildings.push(building)
+    this.constructions.set(building.id, new BuildingConstruction(paletteSeed))
     return building
   }
 
@@ -117,9 +153,7 @@ export class Town {
       id: this.#id("p"),
       homeId,
       workId,
-      // Deterministic per-resident seed derived from the id counter so the same
-      // sim produces the same colour assignment across runs (and tests).
-      colorSeed: this.#idCounter * 2654435761,
+      colorSeed: (this.#idCounter * 2654435761) | 0,
     }
     this.residents.push(resident)
     return resident
@@ -127,27 +161,73 @@ export class Town {
 
   addVehicle(): Vehicle {
     this.#idCounter += 1
-    // 32-bit Knuth multiplicative hash — small enough to avoid precision loss
-    // in JS's float64 and stable across runs.
-    const KNUTH_HASH = 2654435761
     const vehicle: Vehicle = {
       id: this.#id("v"),
-      colorSeed: (this.#idCounter * KNUTH_HASH) | 0,
+      colorSeed: (this.#idCounter * 2654435761) | 0,
     }
     this.vehicles.push(vehicle)
     return vehicle
   }
 
+  /**
+   * Validate → mark cell as zone → create building → recompute roads →
+   * notify listeners. Cells must currently be `grass`; otherwise the call
+   * returns a non-`placed` result and the grid is untouched.
+   */
+  placeZone(type: ZoneType, x: number, y: number, blockId: string | null = null): PlaceZoneResult {
+    if (!this.grid.inBounds(x, y)) return { kind: "out-of-bounds" }
+    const cell = this.grid.cellAt(x, y)
+    const extendsSharedBlock =
+      blockId !== null &&
+      cell?.kind === "road" &&
+      ROAD_NEIGHBOR_OFFSETS.some(([dx, dy]) => {
+        const neighbor = this.grid.cellAt(x + dx, y + dy)
+        return neighbor?.kind === "zone" && neighbor.blockId === blockId
+      })
+    if (cell?.kind !== "grass" && !extendsSharedBlock) return { kind: "occupied" }
+    const zone = this.addZone(type, x, y)
+    this.grid.setCell(x, y, { kind: "zone", type, blockId })
+    const building = this.addBuilding(zone.id, { x, y }, this.nextPaletteSeed())
+    this.recomputeRoads()
+    this.#notify()
+    return { kind: "placed", zoneId: zone.id, buildingId: building.id }
+  }
+
+  /**
+   * Walk the grid and rewrite the `roads` array. Idempotent: calling it
+   * twice in a row leaves `roads` unchanged.
+   */
+  recomputeRoads(): void {
+    recomputeRoads(this.grid)
+    this.roads.length = 0
+    this.grid.forEach((cell, x, y) => {
+      if (cell.kind !== "road") return
+      this.#idCounter += 1
+      this.roads.push({ id: this.#id("r"), cell: { x, y } })
+    })
+  }
+
   /** Advance the simulation by real `dt` seconds. Returns the snapshot AFTER the tick. */
   tick(dt: number): WorldSnapshot {
     this.dayNight.tick(dt)
-    // Future: building construction, traffic, residents walking — all delegated
-    // to other tasks. For now: clock only.
+    for (const building of this.buildings) {
+      const construction = this.constructions.get(building.id)
+      if (!construction) continue
+      construction.tick(dt)
+      const nextStage = construction.getStage()
+      if (building.stage !== nextStage) building.stage = nextStage
+      building.stageSeconds = construction.getProgress() * 8
+    }
+    this.#notify()
     return this.snapshot()
   }
 
   /** Read-only view of the world for HUD / e2e contract. */
   snapshot(): WorldSnapshot {
+    let roofedCount = 0
+    for (const building of this.buildings) {
+      if (building.stage === "roofed" || building.stage === "inhabited") roofedCount++
+    }
     return {
       simTime: this.dayNight.simTime,
       phase: this.dayNight.phase,
@@ -156,6 +236,7 @@ export class Town {
       buildingCount: this.buildings.length,
       residentCount: this.residents.length,
       vehicleCount: this.vehicles.length,
+      roofedCount,
     }
   }
 
