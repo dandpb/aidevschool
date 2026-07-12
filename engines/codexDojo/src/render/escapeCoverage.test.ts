@@ -115,8 +115,13 @@ vi.mock("../progress", () => {
       // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
       thresholdRed: `0.75 ${XSS}` as any,
       measurementSource: "self_reported",
-      trend: [{ date: `2026-01-01 ${XSS}`, // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
-      value: `0.3 ${XSS}` as any, measurementSource: "self_reported" }],
+      trend: [
+        {
+          date: `2026-01-01 ${XSS}`, // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+          value: `0.3 ${XSS}` as any,
+          measurementSource: "self_reported",
+        },
+      ],
     },
     topPitfalls: [
       {
