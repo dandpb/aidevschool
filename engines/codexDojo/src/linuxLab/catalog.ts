@@ -707,10 +707,24 @@ export function getLinuxApp(id: string): LinuxApp {
   return linuxApps[0]
 }
 
+// ⚡ Bolt Optimization: Pre-compute static list filters
+// By grouping linuxApps by category on initialization into a Map, we avoid O(N) array scanning
+// and allocating new filtered arrays on every render cycle when `getLinuxAppsForCategory(category)` is called.
+// This reduces GC pressure and turns an O(N) lookup into an O(1) cache read.
+const linuxAppsByCategory = new Map<LinuxAppCategoryFilter, LinuxApp[]>()
+for (const app of linuxApps) {
+  const category = app.category
+  if (!linuxAppsByCategory.has(category)) {
+    linuxAppsByCategory.set(category, [])
+  }
+  // biome-ignore lint/style/noNonNullAssertion: safe, initialized above
+  linuxAppsByCategory.get(category)!.push(app)
+}
+
 export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
   if (category === "all") {
     return linuxApps
   }
 
-  return linuxApps.filter((app) => app.category === category)
+  return linuxAppsByCategory.get(category) ?? []
 }

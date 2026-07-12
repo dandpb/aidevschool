@@ -86,12 +86,26 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
+// ⚡ Bolt Optimization: Pre-compute static list filters
+// By grouping projects by phase on initialization into a Map, we avoid O(N) array scanning
+// and allocating new filtered arrays on every render cycle when `getProjects(phase)` is called.
+// This reduces GC pressure and speeds up render times as array size increases.
+const projectsByPhase = new Map<ProjectFilter, DojoProject[]>()
+for (const project of projects) {
+  const phase = project.phase
+  if (!projectsByPhase.has(phase)) {
+    projectsByPhase.set(phase, [])
+  }
+  // biome-ignore lint/style/noNonNullAssertion: safe, initialized above
+  projectsByPhase.get(phase)!.push(project)
+}
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) ?? []
 }
 
 export function getCurrentProject(): DojoProject {
