@@ -45,7 +45,7 @@ export function renderRoadmap(state: AppState): string {
                   <div><dt>Linguagem</dt><dd>${escapeHtml(project.language)}</dd></div>
                   <div><dt>Arquitetura</dt><dd>${escapeHtml(project.architecture)}</dd></div>
                 </dl>
-                <button class="inline-link" type="button" data-project="${escapeHtml(project.id)}">Abrir briefing</button>
+                <button class="inline-link" type="button" data-project="${escapeHtml(project.id)}" aria-label="Abrir briefing do projeto ${escapeHtml(project.title)}">Abrir briefing</button>
               </article>
             `,
           )
