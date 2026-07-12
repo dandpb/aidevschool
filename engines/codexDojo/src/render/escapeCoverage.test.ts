@@ -91,8 +91,10 @@ vi.mock("../progress", () => {
       title: `unit title ${XSS}`,
       project: `unit project ${XSS}`,
       state: "presenting",
-      retryCount: 0,
-      retryLimit: 3,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      retryCount: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      retryLimit: `3 ${XSS}` as any,
     },
     gate: {
       implementationBlocked: true,
@@ -102,20 +104,26 @@ vi.mock("../progress", () => {
       dreyfus: "novice",
       bloom: "remember",
       activeLanguage: `language ${XSS}`,
-      weeklyTimeHours: 5,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      weeklyTimeHours: `5 ${XSS}` as any,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      current: `0.3 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      thresholdAmber: `0.6 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      thresholdRed: `0.75 ${XSS}` as any,
       measurementSource: "self_reported",
-      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
+      trend: [{ date: `2026-01-01 ${XSS}`, // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      value: `0.3 ${XSS}` as any, measurementSource: "self_reported" }],
     },
     topPitfalls: [
       {
         id: `pitfall-${XSS}`,
         description: `description ${XSS}`,
-        occurrences: 2,
+        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+        occurrences: `2 ${XSS}` as any,
         lastSeen: `last seen ${XSS}`,
       },
     ],
@@ -127,16 +135,23 @@ vi.mock("../progress", () => {
         reason: "due",
       },
     ],
-    masteredCount: 0,
-    scaffoldedCount: 1,
+    // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+    masteredCount: `0 ${XSS}` as any,
+    // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+    scaffoldedCount: `1 ${XSS}` as any,
     streak: {
-      current: 0,
-      longest: 0,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      current: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      longest: `0 ${XSS}` as any,
       lastGateDate: `gate date ${XSS}`,
-      freezesEquipped: 1,
-      freezesMax: 2,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      freezesEquipped: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+      freezesMax: `2 ${XSS}` as any,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted numerical payload
+    curr: `0 ${XSS}` as any,
     challenges: [],
   }
 
