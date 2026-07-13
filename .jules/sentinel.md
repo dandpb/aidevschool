@@ -11,3 +11,7 @@
 **Vulnerability:** XSS via unescaped numeric fields interpolated directly into `innerHTML` (e.g. `completionPercent`, `retryCount`, `aidi.current`).
 **Learning:** Even fields structurally typed as `number` in TypeScript can contain malicious XSS strings if their underlying source (like JSON or YAML) is unvalidated at runtime.
 **Prevention:** Every dynamic value inserted into `innerHTML` must be run through `escapeHtml()`, and when calling numeric methods like `.toFixed()`, a runtime `typeof value === 'number'` check must be performed to gracefully fallback to returning the escaped payload instead of causing a crash.
+## 2026-07-13 - [pnpm/action-setup Version Mismatch Error]
+**Vulnerability:** Not a direct security vulnerability, but a critical workflow configuration issue that breaks CI testing pipelines.
+**Learning:** `pnpm/action-setup@v4` will crash with `ERR_PNPM_BAD_PM_VERSION` if the GitHub action specifies a `version` field (e.g. `version: 9`) while the target `package.json` already defines the `packageManager` field (e.g. `packageManager: "pnpm@9.15.9"`).
+**Prevention:** Remove the `version: 9` specification from `.github/workflows/ci.yml` when using `package_json_file` so `pnpm/action-setup` can inherit the version defined safely within the project's `package.json`.
