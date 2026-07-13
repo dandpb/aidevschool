@@ -7,3 +7,7 @@
 **Vulnerability:** XSS vulnerability found in `engines/codexDojo/src/render/roadmap.ts` where `project.level` was directly interpolated without escaping.
 **Learning:** Even fields that are conceptually numeric (like `level`) can become XSS vectors if the underlying type is not strictly validated or if the system is fed malicious non-numeric strings masquerading as numbers from external data sources.
 **Prevention:** Apply `escapeHtml` consistently to ALL dynamic fields rendered via innerHTML templates, regardless of their expected data type.
+## 2026-07-13 - [Numeric Fields XSS Vulnerability]
+**Vulnerability:** XSS via unescaped numeric fields interpolated directly into `innerHTML` (e.g. `completionPercent`, `retryCount`, `aidi.current`).
+**Learning:** Even fields structurally typed as `number` in TypeScript can contain malicious XSS strings if their underlying source (like JSON or YAML) is unvalidated at runtime.
+**Prevention:** Every dynamic value inserted into `innerHTML` must be run through `escapeHtml()`, and when calling numeric methods like `.toFixed()`, a runtime `typeof value === 'number'` check must be performed to gracefully fallback to returning the escaped payload instead of causing a crash.
