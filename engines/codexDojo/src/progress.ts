@@ -86,12 +86,23 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
+// ⚡ Bolt optimization: Pre-compute grouping to replace O(N) array filter on every call with O(1) map lookup
+const projectsByPhase = new Map<string, DojoProject[]>()
+for (const project of projects) {
+  let list = projectsByPhase.get(project.phase)
+  if (!list) {
+    list = []
+    projectsByPhase.set(project.phase, list)
+  }
+  list.push(project)
+}
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) ?? []
 }
 
 export function getCurrentProject(): DojoProject {

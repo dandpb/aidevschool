@@ -16,3 +16,7 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+
+## 2026-07-13 - Replace O(N) Array filter with O(1) Map lookup
+**Learning:** In vanilla TS applications, using `.filter()` on static datasets inside functions that are called frequently creates unnecessary O(N) scans and object allocations.
+**Action:** When filtering static arrays by a common property (e.g., category or phase), pre-compute the groupings once into a `Map` during module initialization to provide O(1) lookups and reduce CPU/memory overhead.
