@@ -20,3 +20,7 @@
 ## 2025-02-23 - Pairing visual active states with ARIA attributes
 **Learning:** Found multiple places where visual active states (`.is-active`) were implemented using classes without semantic ARIA attributes (e.g. `aria-current="step"`, `aria-current="true"`, or `aria-pressed="true"`) to communicate this state to screen readers. This pattern existed in roadmap filters, cycle timeline steps, linux lab apps/categories, and agent lists.
 **Action:** Always explicitly pair visual active classes on custom interactive elements (buttons acting as tabs/filters/steps) with semantic ARIA attributes (`aria-current` or `aria-pressed`) so that the active state is announced accurately.
+
+## 2026-07-13 - Add descriptive aria-labels to repeated action buttons
+**Learning:** Found an accessibility anti-pattern where multiple project cards contained identical "Abrir briefing" buttons. While visually distinct due to placement, screen readers hear "Abrir briefing, button" repeatedly without context of *which* project it belongs to.
+**Action:** Always add a descriptive `aria-label` containing the specific item's context (e.g. `aria-label="Abrir briefing: ${escapeHtml(project.title)}"`) to repeated action buttons in lists or grids to disambiguate the action for assistive technologies.
