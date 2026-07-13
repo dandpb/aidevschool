@@ -15,3 +15,7 @@
 **Vulnerability:** Not a direct security vulnerability, but a critical workflow configuration issue that breaks CI testing pipelines.
 **Learning:** `pnpm/action-setup@v4` will crash with `ERR_PNPM_BAD_PM_VERSION` if the GitHub action specifies a `version` field (e.g. `version: 9`) while the target `package.json` already defines the `packageManager` field (e.g. `packageManager: "pnpm@9.15.9"`).
 **Prevention:** Remove the `version: 9` specification from `.github/workflows/ci.yml` when using `package_json_file` so `pnpm/action-setup` can inherit the version defined safely within the project's `package.json`.
+## 2026-07-13 - [pnpm/action-setup Package Manager Error]
+**Vulnerability:** Not a direct security vulnerability, but a critical workflow configuration issue that breaks CI testing pipelines.
+**Learning:** The previous fix removed `version: 9` from `.github/workflows/ci.yml`, assuming `pnpm/action-setup` could read the `packageManager` field natively from `package.json`. However, `engines/codexDojo/package.json` did not have this field, leading to a new CI crash: "Error: No pnpm version is specified."
+**Prevention:** If `version` is removed from `pnpm/action-setup`, the target `package.json` *must* have the `packageManager` field explicitly defined. Added `"packageManager": "pnpm@9.15.9"` to `engines/codexDojo/package.json`.
