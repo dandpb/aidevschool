@@ -20,3 +20,6 @@
 ## 2025-02-23 - Pairing visual active states with ARIA attributes
 **Learning:** Found multiple places where visual active states (`.is-active`) were implemented using classes without semantic ARIA attributes (e.g. `aria-current="step"`, `aria-current="true"`, or `aria-pressed="true"`) to communicate this state to screen readers. This pattern existed in roadmap filters, cycle timeline steps, linux lab apps/categories, and agent lists.
 **Action:** Always explicitly pair visual active classes on custom interactive elements (buttons acting as tabs/filters/steps) with semantic ARIA attributes (`aria-current` or `aria-pressed`) so that the active state is announced accurately.
+## 2025-02-18 - Repeated buttons in lists
+**Learning:** When repeating generic buttons in lists (like "Abrir briefing"), they lose their context for screen reader users who hear the same generic text repeated. A static aria-label on an interactive element that changes its inner state (like a copy button turning to "Copied") overrides the inner dynamic text, causing screen reader users to miss the status update.
+**Action:** When creating lists with repeated actions, add a contextual aria-label using the item's title to disambiguate the action. On interactive elements with dynamic text, use aria-live="polite" and let the inner text provide the status update instead of a static aria-label.
