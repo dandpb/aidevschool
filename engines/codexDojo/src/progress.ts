@@ -86,12 +86,22 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
+const projectsByPhase = new Map<string, DojoProject[]>()
+for (const project of projects) {
+  const phaseProjects = projectsByPhase.get(project.phase)
+  if (phaseProjects) {
+    phaseProjects.push(project)
+  } else {
+    projectsByPhase.set(project.phase, [project])
+  }
+}
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) || []
 }
 
 export function getCurrentProject(): DojoProject {

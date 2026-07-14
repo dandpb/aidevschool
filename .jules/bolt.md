@@ -16,3 +16,7 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+## 2024-05-18 - Pre-computing static data sets with Maps
+
+**Learning:** When performing O(n) `.filter()` lookups in static datasets at runtime (e.g. `getLinuxAppsForCategory` or `getProjects`), pre-computing groups in a `Map` during initialization achieves O(1) time complexity. However, utilizing the spread operator `[...arr, item]` inside the initialization loop is an anti-pattern as it allocates an extra array iteratively, resulting in O(m²) time complexity. Using `.push()` avoids this overhead.
+**Action:** Use `.push()` instead of the spread operator when pre-computing `Map` index arrays from lists at module initialization.

@@ -707,10 +707,20 @@ export function getLinuxApp(id: string): LinuxApp {
   return linuxApps[0]
 }
 
+const linuxAppsByCategory = new Map<string, LinuxApp[]>()
+for (const app of linuxApps) {
+  const categoryApps = linuxAppsByCategory.get(app.category)
+  if (categoryApps) {
+    categoryApps.push(app)
+  } else {
+    linuxAppsByCategory.set(app.category, [app])
+  }
+}
+
 export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
   if (category === "all") {
     return linuxApps
   }
 
-  return linuxApps.filter((app) => app.category === category)
+  return linuxAppsByCategory.get(category) || []
 }
