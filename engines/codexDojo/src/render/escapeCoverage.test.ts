@@ -114,7 +114,8 @@ vi.mock("../progress", () => {
       thresholdAmber: `threshold amber ${XSS}` as any,
       // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
       thresholdRed: `threshold red ${XSS}` as any,
-      measurementSource: `source ${XSS}`,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in enum fields
+      measurementSource: `source ${XSS}` as any,
       // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
       trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }] as any,
     },
