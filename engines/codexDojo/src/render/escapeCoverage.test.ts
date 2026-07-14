@@ -91,8 +91,10 @@ vi.mock("../progress", () => {
       title: `unit title ${XSS}`,
       project: `unit project ${XSS}`,
       state: "presenting",
-      retryCount: 0,
-      retryLimit: 3,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      retryCount: `retry count ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      retryLimit: `retry limit ${XSS}` as any,
     },
     gate: {
       implementationBlocked: true,
@@ -102,20 +104,26 @@ vi.mock("../progress", () => {
       dreyfus: "novice",
       bloom: "remember",
       activeLanguage: `language ${XSS}`,
-      weeklyTimeHours: 5,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      weeklyTimeHours: `weekly time ${XSS}` as any,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
-      measurementSource: "self_reported",
-      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      current: `current ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      thresholdAmber: `threshold amber ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      thresholdRed: `threshold red ${XSS}` as any,
+      measurementSource: `source ${XSS}`,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }] as any,
     },
     topPitfalls: [
       {
         id: `pitfall-${XSS}`,
         description: `description ${XSS}`,
-        occurrences: 2,
+        // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+        occurrences: `occurrences ${XSS}` as any,
         lastSeen: `last seen ${XSS}`,
       },
     ],
@@ -127,16 +135,21 @@ vi.mock("../progress", () => {
         reason: "due",
       },
     ],
-    masteredCount: 0,
-    scaffoldedCount: 1,
+    // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+    masteredCount: `mastered count ${XSS}` as any,
+    // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+    scaffoldedCount: `scaffolded count ${XSS}` as any,
     streak: {
-      current: 0,
-      longest: 0,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      current: `current streak ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      longest: `longest streak ${XSS}` as any,
       lastGateDate: `gate date ${XSS}`,
       freezesEquipped: 1,
       freezesMax: 2,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+    curr: `curr ${XSS}` as any,
     challenges: [],
   }
 
@@ -153,7 +166,16 @@ vi.mock("../progress", () => {
     getMetrics: (): readonly Metric[] => [metric],
     getEcosystemStatuses: (): readonly EcosystemStatus[] => [ecosystemStatus],
     getLearnerSnapshot: (): LearnerSnapshot => learnerSnapshot,
-    getDashboardStats: () => ({ agents: 1, stages: 1, projects: 1, completionPercent: 42 }),
+    getDashboardStats: () => ({
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      agents: `agents ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      stages: `stages ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      projects: `projects ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Simulating XSS in numeric fields
+      completionPercent: `completion percent ${XSS}` as any,
+    }),
   }
 })
 
