@@ -20,3 +20,7 @@
 ## 2025-02-23 - Pairing visual active states with ARIA attributes
 **Learning:** Found multiple places where visual active states (`.is-active`) were implemented using classes without semantic ARIA attributes (e.g. `aria-current="step"`, `aria-current="true"`, or `aria-pressed="true"`) to communicate this state to screen readers. This pattern existed in roadmap filters, cycle timeline steps, linux lab apps/categories, and agent lists.
 **Action:** Always explicitly pair visual active classes on custom interactive elements (buttons acting as tabs/filters/steps) with semantic ARIA attributes (`aria-current` or `aria-pressed`) so that the active state is announced accurately.
+
+## 2025-02-23 - Contextual ARIA labels for repeated grid/list actions
+**Learning:** When rendering repeated buttons or links in lists and grids (like "Read More" or "Abrir briefing"), screen reader users hear the same generic text for every item, making it impossible to know which item they are acting upon when navigating by elements.
+**Action:** Always provide a descriptive `aria-label` containing the specific item's context (e.g., the title of the card or project) to disambiguate repeated actions.
