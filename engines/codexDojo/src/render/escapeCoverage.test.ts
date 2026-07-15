@@ -17,6 +17,7 @@ import { renderCycle } from "./cycle"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
+import { renderLearnerDashboard } from "./learner"
 
 // The app assigns render output to `root.innerHTML` (src/app.ts), so every
 // dynamic value must flow through escapeHtml. This suite is the regression
@@ -105,9 +106,12 @@ vi.mock("../progress", () => {
       weeklyTimeHours: 5,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
+      // biome-ignore lint/suspicious/noExplicitAny: Testing XSS string payloads in numeric fields
+      current: XSS as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Testing XSS string payloads in numeric fields
+      thresholdAmber: XSS as any,
+      // biome-ignore lint/suspicious/noExplicitAny: Testing XSS string payloads in numeric fields
+      thresholdRed: XSS as any,
       measurementSource: "self_reported",
       trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
     },
@@ -136,7 +140,8 @@ vi.mock("../progress", () => {
       freezesEquipped: 1,
       freezesMax: 2,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: Testing XSS string payloads in numeric fields
+    curr: XSS as any,
     challenges: [],
   }
 
@@ -212,6 +217,7 @@ const renderers = [
   ["roadmap", renderRoadmap],
   ["project", renderProject],
   ["linuxLab", renderLinuxLab],
+  ["learner", renderLearnerDashboard],
 ] as const
 
 describe("escape coverage — render modules neutralize injected markup", () => {
