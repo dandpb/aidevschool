@@ -16,3 +16,6 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+## 2024-05-24 - Pre-computing static collections in render cycles
+**Learning:** In vanilla TS string-template applications like codexDojo, allocating new arrays via `.filter()` inside render functions on static datasets causes unnecessary O(n) scans and garbage collection pressure on every render cycle.
+**Action:** Pre-compute groupings once into a `Map` to provide O(1) cache lookups instead of dynamic array filtering.
