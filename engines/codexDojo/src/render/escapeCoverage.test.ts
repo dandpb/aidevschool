@@ -14,10 +14,10 @@ import { type LinuxApp, linuxAppCategoryLabels, linuxApps, renderLinuxLab } from
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
+import { renderLearnerDashboard } from "./learner"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
-import { renderLearnerDashboard } from "./learner"
 
 // The app assigns render output to `root.innerHTML` (src/app.ts), so every
 // dynamic value must flow through escapeHtml. This suite is the regression
