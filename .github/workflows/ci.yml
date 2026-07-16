@@ -48,7 +48,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
           package_json_file: engines/pixelDojo/package.json
       - uses: actions/setup-node@v4
         with:
@@ -70,7 +69,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
           package_json_file: engines/voxelDojo/package.json
       - uses: actions/setup-node@v4
         with:
