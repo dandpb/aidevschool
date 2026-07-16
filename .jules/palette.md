@@ -20,3 +20,6 @@
 ## 2025-02-23 - Pairing visual active states with ARIA attributes
 **Learning:** Found multiple places where visual active states (`.is-active`) were implemented using classes without semantic ARIA attributes (e.g. `aria-current="step"`, `aria-current="true"`, or `aria-pressed="true"`) to communicate this state to screen readers. This pattern existed in roadmap filters, cycle timeline steps, linux lab apps/categories, and agent lists.
 **Action:** Always explicitly pair visual active classes on custom interactive elements (buttons acting as tabs/filters/steps) with semantic ARIA attributes (`aria-current` or `aria-pressed`) so that the active state is announced accurately.
+## 2025-02-12 - ARIA Labels for Repeated Action Buttons
+**Learning:** In vanilla TypeScript applications mapping over arrays to generate identical button text (like "Abrir briefing"), screen readers announce the exact same phrase repeatedly, stripping users of necessary context to understand which item the action belongs to.
+**Action:** Always append contextually specific data, like the item's title, to a visually hidden `aria-label` attribute (e.g. `aria-label="Abrir briefing: ${escapeHtml(project.title)}"`) when creating repeated actionable elements.
