@@ -10,7 +10,7 @@
 > route_health / token_bucket) are all variants of "incoming sprite → admit/reject" — they cannot
 > represent an **ordered chain of separable middleware gates** where AuthN must precede AuthZ,
 > Validation must precede the handler, and a misplaced gate leaks a forged token through. This slice
-> defines a FRESH 3D three.js sibling app at `engines/pixelDojo/games/07_rest_api_auth/` that
+> maps to the canonical 3D app at `engines/voxelDojo/game-07-checkpoint-city/`, which
 > embodies the chain as a physical neon corridor the player composes and then watches execute.
 
 ## 1. Subject & concept
@@ -122,9 +122,9 @@ with the corrected order succeeds, which is the lesson.
 - **Active unit:** `U0-rest-api-auth-middleware-chain` (project `07_rest_api_auth`). The game emits
   evidence only; the verifier (separate context) decides mastery and appends to
   `learner/learning_state.yaml > units_log` via `learner/substrate/`.
-- **Evidence file:** `engines/pixelDojo/games/07_rest_api_auth/.logs/evidence.ndjson` (one JSON line
-  per resolved wave; regenerated each smoke run; not committed). The Playwright smoke captures the
-  in-page channel `window.__aegisEvidence` and appends it.
+- **Evidence channel:** the Playwright smoke captures append-only
+  `window.__voxelDojoEvidence` plus `EVIDENCE` console records. A separate verifier supplies the
+  gate receipt consumed by `learner/gate/`.
 - **Evidence record shape** (new `metrics.kind = "threejs-middleware-chain"` — extends the
   discriminated union in `pixel-quest/src/game/evidence/types.ts`; this game owns its own copy at
   `games/07_rest_api_auth/src/evidence/types.ts` so the sibling is fully self-contained):

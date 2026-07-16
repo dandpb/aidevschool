@@ -45,9 +45,9 @@
   `scheduled_review: false`, `review_reason: "deepening"` until it is added).
 - **Encounter / scene id:** `quorum-citadel-01`
 - **Game name (evidence field):** `"Quorum Citadel"`
-- **Region dir:** `engines/pixelDojo/games/17_distributed_config_service/` (sibling Shape B app,
-  mirroring the producer pattern in `EVIDENCE_CONTRACT.md`; the verifier consumes the NDJSON this app
-  emits, exactly as it does for `pixel-quest/`).
+- **Region dir:** `engines/voxelDojo/game-17-lighthouse-network/` (canonical Shape B app,
+  mirroring the producer pattern in `EVIDENCE_CONTRACT.md`; the verifier consumes a separately
+  captured record, exactly as it does for `pixel-quest/`).
 
 ## 3. Concept → mechanic mapping (the pedagogical core)
 
@@ -95,7 +95,7 @@
     stale_reads_served, rollbacks_committed, leader_failovers_handled, consensus_p95_ms,
     watch_notify_p95_ms, monolith_damage}`.
 7. **Evidence emit.** If the pass rule holds, the scene emits one `EVIDENCE {...}` line to the
-   in-page channel and the NDJSON `.logs/evidence.ndjson`. The citadel's gate-door goes green; the
+   in-page `window.__voxelDojoEvidence` channel and `EVIDENCE` console. The citadel's gate-door goes green; the
    next wave's difficulty (taller write queue, tighter notify budget, partition + leader-loss
    combined) unlocks.
 
@@ -154,8 +154,8 @@
   evidence with `scheduled_review: false` and `review_reason: "deepening"`; the verifier will not
   promote until the substrate registers the unit. The game never writes learner state.
 - **Encounter / scene id:** `quorum-citadel-01`.
-- **Evidence channel (producer side):** append-only `window.__quorumDojoEvidence` plus NDJSON at
-  `engines/pixelDojo/games/17_distributed_config_service/.logs/evidence.ndjson`, mirroring the
+- **Evidence channel (producer side):** append-only `window.__voxelDojoEvidence` plus `EVIDENCE`
+  console records from `engines/voxelDojo/game-17-lighthouse-network/`, mirroring the
   `EVIDENCE_CONTRACT.md` producer pattern (game emits, verifier owns mastery).
 - **Evidence record fields** (this game's metrics variant — `kind: "threejs-quorum-consensus"`):
   ```json

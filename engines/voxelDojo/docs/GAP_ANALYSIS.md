@@ -43,7 +43,7 @@ from the earlier M6 run.
 
 ### G2 + G4 — verifier and scheduling (closed)
 
-Audit findings: the gate verifier (`python3 -m engines.pixelDojo.verifier`) validates
+Audit findings: the gate verifier (`python3 -m learner.gate`) validates
 `unit_id/project/game/ts/pass` against `active_unit` and has **no source allowlist** — voxelDojo
 records are ingestible unchanged. Scheduling truth flows substrate → game via a generated review
 slice; added `sync_voxel_review_slice` (+ `render_voxel_review_ts`, `VOXEL_REVIEW_TS`, 3 new

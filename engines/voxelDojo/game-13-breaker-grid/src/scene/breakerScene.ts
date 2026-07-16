@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { FlowRecord, GameState } from "../game/controller"
 import type { CircuitState, District } from "../sim/breaker"
 
@@ -65,32 +65,33 @@ interface DistrictView {
  * burst red at the breaker instead of reaching the downstream.
  */
 export class BreakerScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private gridGroup = new THREE.Group()
   private districtViews = new Map<string, DistrictView>()
   private pulseMesh: THREE.InstancedMesh | null = null
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   private clock = 0
   onDistrictClick: ((districtId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 30, 70)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(10, 12, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 6
-    this.controls.target.set(0, 1, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 30,
+      fogFar: 70,
+      cameraPosition: [10, 12, 18],
+      controlsTarget: [0, 1, 0],
+      minDistance: 6,
+      maxDistance: 50,
+      ambientIntensity: 0.8,
+      keyIntensity: 1.1,
+      keyPosition: [10, 18, 8],
+      onFrame: () => {
+        this.clock += 0.016
+        this.animateSwitches()
+        this.animatePulses()
+      },
+    })
 
-    this.scene.add(this.gridGroup)
+    this.viewport.scene.add(this.gridGroup)
     // ground plane (the "grid")
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(60, 60),
@@ -102,42 +103,15 @@ export class BreakerScene {
     const grid = new THREE.GridHelper(60, 30, "#2a3148", "#1a2030")
     this.gridGroup.add(grid)
 
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.8))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(10, 18, 8)
-    this.scene.add(key)
-
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.clock += 0.016
-      this.animateSwitches()
-      this.animatePulses()
-      this.controls.update()
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
     const targets: THREE.Object3D[] = []
     for (const v of this.districtViews.values()) targets.push(v.base, v.bulkhead, v.switchBar)
-    const hits = this.raycaster.intersectObjects(targets, false)
+    const hits = this.viewport.raycaster.intersectObjects(targets, false)
     const first = hits[0]
     if (first && this.onDistrictClick) {
       const id = (first.object.userData as { districtId?: string }).districtId

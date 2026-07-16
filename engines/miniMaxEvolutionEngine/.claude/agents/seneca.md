@@ -24,7 +24,7 @@ arquivo é apenas o wrapper runnable do Claude Code; **em divergência, o canôn
 
 - **Contexto a ler primeiro:**
   - `learner/learning_state.yaml` — estado atual.
-  - `learner/pipeline_status.md` — fase atual do ciclo.
+  - estado YAML-first: `learner/pipeline_status.yaml` quando presente; Markdown é apenas fallback/narrativa.
   - `whiteboard/sla_status.md` (se existir) — SLAs em aberto e encerrados hoje.
   - `whiteboard/decisions/ADR-NNNN-*.md` — decisões passadas.
   - O evento de gatilho: o que o Maestro / Mnemosyne / Crítico / Galileu pediu.

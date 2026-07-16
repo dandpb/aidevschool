@@ -78,7 +78,7 @@
     hooks_dispatched_in_order, hooks_out_of_order, panics_contained, panics_vented,
     plugins_unloaded_clean, host_damage}`.
 5. **Evidence emit.** If the pass rule holds, the scene emits one `EVIDENCE {...}` line to the
-   in-page channel and the NDJSON `.logs/evidence.ndjson`. Gate-locked exit door goes green; the
+   in-page `window.__voxelDojoEvidence` channel and `EVIDENCE` console. Gate-locked exit door goes green; the
    next wave's difficulty (more pods, more undeclared demands, higher panic rate, tighter version
    bands) unlocks.
 
@@ -129,8 +129,8 @@
   emits evidence with `scheduled_review: false` and `review_reason: "deepening"`; the verifier
   will not promote until the substrate registers the unit. The game never writes learner state.
 - **Encounter / scene id:** `plugin-docking-bay-01`.
-- **Evidence channel (producer side):** append-only `window.__pluginDojoEvidence` plus NDJSON at
-  `engines/pixelDojo/games/09_plugin_system/.logs/evidence.ndjson`, mirroring the
+- **Evidence channel (producer side):** append-only `window.__voxelDojoEvidence` plus `EVIDENCE`
+  console records from `engines/voxelDojo/game-09-docking-bay/`, following the
   `EVIDENCE_CONTRACT.md` producer pattern (game emits, verifier owns mastery).
 - **Evidence record fields** (this game's metrics variant — `kind: "threejs-plugin-lifecycle"`):
   ```json

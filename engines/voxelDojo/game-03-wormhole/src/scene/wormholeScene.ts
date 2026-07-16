@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { hashTruncCode } from "../sim/shortener"
 
@@ -61,10 +61,7 @@ function makeTextSprite(text: string, color = "#80cbc4"): THREE.Sprite {
 }
 
 export class WormholeScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private group = new THREE.Group()
   private originMesh!: THREE.Mesh
   private destMesh!: THREE.Mesh
@@ -82,34 +79,25 @@ export class WormholeScene {
   onGateClick: (() => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#06080f")
-    this.scene.fog = new THREE.Fog("#06080f", 22, 60)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 6, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 50
-    this.controls.minDistance = 8
+    this.viewport = createViewport(canvas, {
+      background: "#06080f",
+      fogNear: 22,
+      cameraPosition: [0, 6, 18],
+      minDistance: 8,
+      maxDistance: 50,
+      ambientIntensity: 0.6,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.animateTravellers()
+        this.animateFlash()
+      },
+    })
 
-    this.scene.add(this.group)
+    this.viewport.scene.add(this.group)
     this.buildPlanets()
     this.buildGate()
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.6))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animateTravellers()
-      this.animateFlash()
-      this.renderer.render(this.scene, this.camera)
-    })
   }
 
   private buildPlanets(): void {
@@ -169,24 +157,14 @@ export class WormholeScene {
     this.code = code
   }
 
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
-  }
-
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    const pointer = new THREE.Vector2(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    const raycaster = new THREE.Raycaster()
-    raycaster.setFromCamera(pointer, this.camera)
-    const hits = raycaster.intersectObjects([this.gate, this.originMesh, this.destMesh])
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects([
+      this.gate,
+      this.originMesh,
+      this.destMesh,
+    ])
     if (hits.length > 0 && this.onGateClick) this.onGateClick()
   }
 

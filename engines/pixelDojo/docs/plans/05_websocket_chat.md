@@ -20,7 +20,7 @@
   indicators, message history persistence, reconnection logic, cross-language runtime comparison
   (that is the curriculum's job, not the game's).
 - **Slug:** `05_websocket_chat`
-- **App path:** `engines/pixelDojo/games/05_websocket_chat/` (fresh sibling app — Shape B).
+- **App path:** `engines/voxelDojo/game-05-relay-station/` (standalone VoxelDojo app — Shape B).
 - **Unit id:** `U-05_websocket_chat` (per `unitId()` in
   `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts:625-630`).
 - **Encounter id:** `encounter-05_websocket_chat` (per `encounterId()` in same file).
@@ -121,7 +121,7 @@ penalizing prune discipline — that's L3's job). L2 is the MVP close for `U-05_
 ## 10. Stack & hosting
 
 - **Vite + TypeScript + three.js** (no React; raw DOM HUD overlay).
-- Single-page app at `engines/pixelDojo/games/05_websocket_chat/`.
+- Single-page app at `engines/voxelDojo/game-05-relay-station/`.
 - Deterministic seed per level (so the verifier can reproduce the wave).
 - No backend — the entire WebSocket protocol is **simulated in-page**; the player IS the server.
 - Smoke entrypoint: `pnpm --filter pixeldojo-05-websocket-chat smoke` runs a Playwright drive that
@@ -133,10 +133,8 @@ penalizing prune discipline — that's L3's job). L2 is the MVP close for `U-05_
   `unitId(module)` in `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts:625-630` — the
   generic branch returns `U-${module.project}`.
 - **Encounter id wired:** `encounter-05_websocket_chat` (per `encounterId()` in the same file).
-- **Evidence location:** `engines/pixelDojo/games/05_websocket_chat/.logs/evidence.ndjson`
-  (regenerated on every smoke run; not committed).
-- **In-page channel:** `window.__websocketChatEvidence` (NDJSON array; flushed to file by the
-  Playwright smoke driver — mirrors the `pixel-quest` channel pattern).
+- **Evidence channel:** `window.__voxelDojoEvidence`, mirrored as an `EVIDENCE <json>` console
+  record for the Playwright smoke driver.
 - **New metrics kind:** `threejs-websocket-chat` — extends the discriminated union in
   `engines/pixelDojo/pixel-quest/src/game/evidence/types.ts`. Add this variant alongside the
   existing `pixelquest-*` kinds; the validator dispatches on `metrics.kind`.
@@ -213,14 +211,14 @@ metrics.correct_deliveries  >= LEVEL_TARGET[level]        // L2 target = live_me
 ```
 
 Anything else keeps the gate locked. The game emits evidence only — it **never** writes
-`learner/learning_state.yaml`. The verifier (`python3 -m engines.pixelDojo.verifier`) reads the
+`learner/learning_state.yaml`. The gate (`python3 -m learner.gate --evidence PATH`) reads captured
 NDJSON, finds the latest record whose `unit_id === active_unit.id`, checks the pass-rule above
-against the metrics, and only then appends to `units_log` via `learner/substrate/`. The game's
+against the metrics, and only then appends to `units_log` through `learner/substrate/`. The game's
 `pass: true` is **never** mastery by itself.
 
 ### Done-rule (one line, for the verifier subagent)
 
-> A fresh 3D world at `engines/pixelDojo/games/05_websocket_chat/` renders `N` persistent client
+> A 3D world at `engines/voxelDojo/game-05-relay-station/` renders `N` persistent client
 > nodes tethered to a hub, fans each inbound message out to every member of the target color-band
 > room, lets the player prune dead-heartbeat clients, and emits a valid `threejs-websocket-chat`
 > EVIDENCE record with `pass: true` for `unit_id=U-05_websocket_chat` under Playwright on level 2,

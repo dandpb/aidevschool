@@ -1,5 +1,5 @@
 packages:
   - "pixel-quest"
-  - "games/*"
+  - "../shared/teaching-evidence"
 onlyBuiltDependencies:
   - esbuild

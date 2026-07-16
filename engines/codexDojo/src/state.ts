@@ -1,6 +1,6 @@
 import { advanceCycle } from "./cycle"
-import type { LinuxAppCategoryFilter } from "./data/linuxApps"
 import { assertNever, type ProjectPhase, type View } from "./domain"
+import type { LinuxAppCategoryFilter } from "./linuxLab"
 
 export type ProjectFilter = ProjectPhase | "all"
 

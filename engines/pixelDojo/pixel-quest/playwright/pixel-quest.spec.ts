@@ -6,7 +6,7 @@ import { reviewSlice } from "../src/content/reviewSlice"
 
 const firstUnitId = "U0-sonda-rate-limiter-robustness"
 const firstUnitScheduledReview = reviewSlice.nextReviews[0]?.unitId === firstUnitId
-// Durable evidence channel for engines/pixelDojo/verifier: one JSON object per
+// Durable evidence channel for learner/gate: one JSON object per
 // line, schema in ../src/game/evidence/emitter.ts and ../../EVIDENCE_CONTRACT.md.
 const evidenceLogPath = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -283,7 +283,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await page.screenshot({ path: "shots/pixel-quest-task-queue.png", fullPage: true })
 
   // Persist the full append-only evidence channel as NDJSON — the contract
-  // input consumed by engines/pixelDojo/verifier.
+  // input consumed by learner/gate.
   const evidenceLog = await page.evaluate(() => window.__pixelQuestEvidence ?? [])
   expect(evidenceLog).toHaveLength(6)
   for (const record of evidenceLog) {

@@ -152,5 +152,5 @@ justifies a perspective view. Today:
 The browser appends every record to the `window.__pixelQuestEvidence` array (single typed emitter:
 `src/game/evidence/emitter.ts`) and writes each one to console as `EVIDENCE <json>`. The Playwright
 smoke run persists the array to `.logs/evidence.ndjson` — the contract input for
-`engines/pixelDojo/verifier` (schema: `../EVIDENCE_CONTRACT.md`). The game never appends
+`python3 -m learner.gate` (schema: `../EVIDENCE_CONTRACT.md`). The game never appends
 `units_log`.

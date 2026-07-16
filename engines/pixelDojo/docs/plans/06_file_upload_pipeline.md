@@ -7,8 +7,8 @@
 > — "How do streaming vs buffering approaches compare for large file handling?" — is exactly the
 > contrast the playable surface must embody.
 >
-> **Shape B (accepted)**: this slice is the canonical plan for a fresh standalone 3D sibling app
-> under `engines/pixelDojo/games/06_file_upload_pipeline/`. It does NOT reuse any pixel-quest
+> **Shape B (accepted)**: this slice is the canonical plan for a standalone 3D app under
+> `engines/voxelDojo/game-06-pipeline-plant/`. It does NOT reuse any pixel-quest
 > encounter kind (`sequence_flow` / `policy_gate` / `route_health` / `token_bucket`) — those are
 > all "incoming entity → admit/reject" lanes and cannot represent a chunked stream flowing through
 > a bounded buffer into a parallel pipeline. The 3D scene is built straight from this plan.
@@ -23,7 +23,7 @@
 - **Slug:** `06_file_upload_pipeline`
 - **Region id:** `game-06_file_upload_pipeline`
 - **Unit id:** `06_file_upload_pipeline`
-- **Sibling app path:** `engines/pixelDojo/games/06_file_upload_pipeline/`
+- **Sibling app path:** `engines/voxelDojo/game-06-pipeline-plant/`
 - **Out of scope:** multipart parsing internals, Go/Rust/Node comparison, persistence/restart
   semantics, thumbnail generation, metadata extraction. The ONE concept is the
   streaming-with-bounded-memory pattern.
@@ -92,12 +92,9 @@ Both win and fail are **direct readouts of streaming-with-bounded-memory discipl
 
 ## 11. Learning-gate hooks
 
-- **Active unit:** `06_file_upload_pipeline` (project `06_file_upload_pipeline`). The sibling app
-  publishes evidence to an append-only `window.__byteStreamEvidence` channel that the Playwright
-  smoke run captures and persists to
-  `engines/pixelDojo/games/06_file_upload_pipeline/.logs/evidence.ndjson` — one JSON object per
-  line, one line per completed wave attempt, regenerated on every smoke run (generated artifact,
-  not committed).
+- **Active unit:** `06_file_upload_pipeline` (project `06_file_upload_pipeline`). The VoxelDojo app
+  publishes evidence to `window.__voxelDojoEvidence` and an `EVIDENCE <json>` console record that
+  the Playwright smoke run captures.
 - **Evidence contract:** new metrics kind `threejs-byte-stream` (sibling-app local type — added
   to the app's own `src/evidence/types.ts`, NOT to `pixel-quest/src/game/evidence/types.ts`).
   Discriminated by `metrics.kind`, validated at emission time; malformed records never written.
@@ -149,7 +146,7 @@ Both win and fail are **direct readouts of streaming-with-bounded-memory discipl
   `metrics.hasher_match === true`. Anything else keeps the gate locked.
 - **Side-effect contract:** the sibling app emits evidence only; it MUST NOT write to
   `learner/learning_state.yaml` or set `localStorage["learning_state" | "units_log" | "mastered"]`.
-  The verifier (`engines/pixelDojo/verifier`, run from the ecosystem root) reads the NDJSON and
+  The verifier (`learner/gate/`, run from the ecosystem root) reads the NDJSON and
   decides the gate — producer ≠ verifier invariant.
 - **Verifier handoff:** the fresh-context verifier subagent receives (this plan, the smoke spec,
   the `EVIDENCE` console record, the screenshot) and judges against the done-rule:

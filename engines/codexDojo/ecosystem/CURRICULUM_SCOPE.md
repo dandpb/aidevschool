@@ -90,7 +90,7 @@ Canonical contract: `LEGACY_MIGRATION.md`.
 | Create tests | Testes prompt and empirical gate. |
 | Document systems | Project package and cycle report templates. |
 | Plan architecture | Arquiteto prompt, ADRs, and alternatives. |
-| Create agents | Prompt set and OpenClaw/Hermes runbook. |
+| Create agents | Prompt set and OpenClaw checklist-runner runbook. |
 | Use RAG/function calling/embeddings/workflows | AI roadmap extension after project 10. |
 | Evaluate model responses | Prompt tests, evals, and verifier evidence. |
 | Measure generated-solution quality | Code evaluation, metrics, and AI dependency index. |

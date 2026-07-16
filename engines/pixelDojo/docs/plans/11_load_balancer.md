@@ -10,7 +10,7 @@
 > to healthy backends + fail over when one dies**.
 >
 > **Shape B (accepted):** a fresh standalone 3D (three.js) world at
-> `engines/pixelDojo/games/11_load_balancer/`, NOT a pixel-quest encounter. None of pixel-quest's
+> `engines/voxelDojo/game-11-air-traffic/`, NOT a pixel-quest encounter. None of pixel-quest's
 > four encounter kinds (token_bucket / sequence_flow / route_health / policy_gate) can represent
 > *a pool of backends with per-node health, three selectable routing algorithms, and in-flight
 > load* — they are all variants of "incoming sprite → admit/reject at a single gate". Routing across
@@ -79,7 +79,7 @@ another eligible backend** before the orb is lost.
 7. **Wave clear.** When the queue empties, the ring dims and the HUD posts the wave score:
    `{orbs_total, orbs_landed, dead_routes, sticky_breaks, heavy_overflows, failover_recovered, orbs_lost}`.
 8. **Evidence emit.** If the pass rule holds, the scene emits one `EVIDENCE {...}` line to the
-   in-page channel and the NDJSON `.logs/evidence.ndjson`. The gate at the ring's edge goes green
+   in-page `window.__voxelDojoEvidence` channel and `EVIDENCE` console. The gate at the ring's edge goes green
    and the next wave's difficulty unlocks (more orbs, more mid-flight failures to force failover,
    more sticky-session collisions to force CH).
 
@@ -126,8 +126,8 @@ and **H** are context-locked so they don't overload the player.
   the verifier will not promote until the substrate registers the unit. **The game never writes
   learner state.**
 - **Encounter / scene id:** `traffic-forge-01`.
-- **Evidence channel (producer side):** append-only `window.__threejsDojoEvidence` plus NDJSON at
-  `engines/pixelDojo/games/11_load_balancer/.logs/evidence.ndjson`, mirroring the
+- **Evidence channel (producer side):** append-only `window.__voxelDojoEvidence` plus `EVIDENCE`
+  console records from `engines/voxelDojo/game-11-air-traffic/`, mirroring the
   `EVIDENCE_CONTRACT.md` producer pattern (game emits, verifier owns mastery).
 - **Evidence record fields** (this game's metrics variant — `kind: "threejs-traffic-forge"`):
 

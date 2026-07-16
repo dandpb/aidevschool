@@ -23,10 +23,10 @@ surface*; it never marks mastery itself (producer ≠ verifier).
 deliberately does not have. From the ecosystem root:
 
 ```bash
-python3 -m engines.pixelDojo.verifier --dry-run   # decide only, write nothing
-python3 -m engines.pixelDojo.verifier             # gate the active unit from the evidence file
+python3 -m learner.gate --dry-run   # decide only, write nothing
+python3 -m learner.gate             # gate the active unit from eligible evidence
 python3 -m learner.substrate                      # then regenerate derived views
-python3 -m pytest engines/pixelDojo/verifier/tests -q
+python3 -m pytest learner/gate/tests/test_gate.py -q
 ```
 
 It refuses to gate unless: the evidence matches `active_unit` (`unit_id` + `project`), the declared

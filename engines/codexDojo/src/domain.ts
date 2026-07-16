@@ -100,7 +100,12 @@ export type LearnerSnapshot = {
     readonly current: number
     readonly thresholdAmber: number
     readonly thresholdRed: number
-    readonly trend: ReadonlyArray<{ readonly date: string; readonly value: number }>
+    readonly measurementSource: "self_reported" | "event_computed" | "derived"
+    readonly trend: ReadonlyArray<{
+      readonly date: string
+      readonly value: number
+      readonly measurementSource: "self_reported" | "event_computed" | "derived"
+    }>
   }
   readonly topPitfalls: ReadonlyArray<{
     readonly id: string
@@ -124,6 +129,12 @@ export type LearnerSnapshot = {
     readonly freezesMax: number
   }
   readonly curr: number
+  readonly challenges: ReadonlyArray<{
+    readonly id: string
+    readonly phase: string
+    readonly passed: boolean
+    readonly attemptPresent: boolean
+  }>
   // Polyglot Arena per-metric prediction calibration (additive, optional). See ADR-004.
   readonly predictions?: {
     readonly count: number

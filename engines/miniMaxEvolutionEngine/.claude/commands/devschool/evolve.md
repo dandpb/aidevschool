@@ -4,7 +4,7 @@ argument-hint: "(sem args)"
 ---
 
 Estado:
-!`cat learner/pipeline_status.md 2>/dev/null || echo "(sem status)"`
+!`python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null || echo "(sem status YAML/Markdown)"`
 
 Pré-condição: ciclo atual com `prometor.PASS` + `critico.OK` (unidade em DOMINADO ou caminho).
 Você é o **Orquestrador (Maestro)**. Este comando dispara o subagent **`ouroboros`**.

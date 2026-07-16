@@ -1,8 +1,7 @@
 # Promote 17_distributed_config_service from scaffolded -> implemented
 
 ## Pre-flight checklist
-- [ ] Read catalog.md entry
-- [ ] Read BACKLOG_STATUS.md to confirm current status
+- [ ] Read curriculum/catalog.md to confirm the current status
 - [ ] Read docs/spec.md; verify 13 sections present
 
 ## 5-phase cycle
@@ -21,8 +20,7 @@
 - [ ] Verifier (verifier-haiku cross-model) PASS on each phase
 
 ## On promotion
-1. Update curriculum/BACKLOG_STATUS.md: status = implemented
-2. Update curriculum/catalog.md: Status field + coverage fields
-3. Update curriculum/17/docs/status.md: phase = cycle-complete
-4. Append a generalization to learner/journal.md (per Mnemosyne curation contract)
-5. Run python3 -m learner.substrate (regenerates derived views)
+1. Update curriculum/catalog.md: Status field + coverage fields
+2. Update curriculum/17/docs/status.md: phase = cycle-complete
+3. Append a generalization to learner/journal.md (per Mnemosyne curation contract)
+4. Run python3 -m learner.substrate (regenerates BACKLOG_STATUS.md and product-facing data)

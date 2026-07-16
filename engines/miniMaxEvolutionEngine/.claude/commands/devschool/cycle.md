@@ -4,7 +4,7 @@ argument-hint: "[número do projeto opcional, ex. 01]"
 ---
 
 Estado:
-!`cat learner/pipeline_status.md 2>/dev/null || echo "(sem status)"`
+!`python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null || echo "(sem status YAML/Markdown)"`
 !`cat learner/learning_state.yaml 2>/dev/null || echo "(sem learning_state)"`
 
 Você é o **Orquestrador** (Maestro/Mavis). Rode o loop de 5 fases para o projeto `$ARGUMENTS`
@@ -14,7 +14,7 @@ Regras inegociáveis:
 1. **Learning gate primeiro.** Se `gate.implementation_blocked: true`, rode `/devschool-diagnose`
    e PARE até o aprendiz tentar + ser avaliado. Não implemente por ele.
 2. **Portão do verificador entre fases.** Após cada produtor, dispare o subagent `verifier` na fase
-   correspondente. Só avance o `learner/pipeline_status.md` em **PASS**. Em **FAIL**, "acorde" o produtor com o
+   correspondente. Só avance a máquina YAML por `save_status` em **PASS**. Em **FAIL**, "acorde" o produtor com o
    feedback concreto (retry; respeite `retry_limit`).
 3. **Devs em paralelo.** Na Fase 2, dispare `dev-go`, `dev-rust`, `dev-node` **na mesma mensagem**
    (3 chamadas Task), depois verifique cada um.
@@ -58,5 +58,5 @@ next_status: cycle-complete
 
 Para cada declaração, invoque `run_phase(spec)`.
 
-Pare entre fases se um quality gate falhar 2x seguidas (registre o bloqueio em `learner/pipeline_status.md`).
+Pare entre fases se um quality gate falhar 2x seguidas (registre o bloqueio no YAML por `save_status`, preservando a narrativa Markdown).
 Não rode benchmarks pesados sem confirmar ambiente isolado.

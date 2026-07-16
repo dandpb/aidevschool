@@ -34,5 +34,7 @@ testpaths = [
   "engines/minimaxDojo/tests",
   "engines/openclaw/tests",
   "learner/substrate/tests",
+  "learner/gate/tests",
+  "curriculum/_shared/tests",
 ]
 python_files = ["test_*.py"]

@@ -25,8 +25,11 @@ The learning contract is identical to pixelDojo's:
 - Each game maps **one curriculum concept → one 3D mechanic**.
 - The game is an **attempt surface**: it emits raw evidence (NDJSON records, `EVIDENCE <json>` console
   lines, `window.__voxelDojoEvidence`) and stops.
-- A **separate verifier** (Prometor context) checks evidence against `empirical_gate` and owns the
-  `mastered` transition. The game never writes to `../../learner/`. Producer ≠ verifier.
+- A **separate verifier** (Prometor context) runs through `python3 -m learner.gate`, then commits
+  eligible transitions through the atomic substrate API. The game never writes to
+  `../../learner/`. Producer ≠ verifier.
+- All packages use the internal `shared/sceneHarness.ts` and `shared/viewport.ts` kit for browser
+  lifecycle and viewport behavior.
 
 ## How it differs from pixelDojo
 

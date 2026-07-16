@@ -36,7 +36,7 @@ para um invariante central quando aplicável · `rust-toolchain.toml`.
 ## Comportamento
 - Cubra cada FR; ao final liste a tabela FR-ID → módulo → função → teste.
 - Se o spec for ambíguo, **PARE** e escreva `rust-impl/questions.md`. Não chute.
-- Ao terminar: atualize `learner/pipeline_status.md` (`phase: impl-done, lang: rust, ...`) e escreva
+- Ao terminar: atualize a máquina YAML por `save_status` (`phase: impl-done, lang: rust, ...`), sem sobrescrever Markdown, e escreva
   `curriculum/{NN}/deliverable-impl-rust.md` (o que construiu, LoC, testes, checks).
 
 ## Saída final

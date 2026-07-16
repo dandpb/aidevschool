@@ -9,8 +9,10 @@
 
 Two modules encode the 5-phase polyglot project cycle (`spec → impl → review → benchmark → optimize`):
 
-1. **miniMaxEvolutionEngine** — interactive Claude Code commands/subagents; phase advancement is prompt-led; human-auditable `learner/pipeline_status.md`.
-2. **openclaw** — file-based Hermes-event scheduler with shallow producer adapters (path existence) and a byte-size “verifier”, plus a real phase graph in code.
+1. **miniMaxEvolutionEngine** — interactive Claude Code commands/subagents; phase advancement is
+   prompt-led; `learner/pipeline_status.yaml` is the shared machine seam.
+2. **openclaw** — file-based checklist scheduler with path and size checks plus a real phase graph
+   in code.
 
 Domain analysis already noted openclaw as an undocument dual implementation of the polyglot cycle. Maintaining both as equal “owners” causes silent drift (phase vocabulary, thresholds, status format).
 
@@ -20,13 +22,14 @@ Domain analysis already noted openclaw as an undocument dual implementation of t
 | --- | --- | --- | --- |
 | A. Deepen openclaw into full empirical adapters | Alta | Semanas | Duplicates MME quality path |
 | B. Demote openclaw to tracer / continuous runner | Baixa | Doc + seams | Keeps automate-able skeleton |
-| C. Delete openclaw | Baixa | Perda do bus/tracer | Throws away working Hermes bullet |
+| C. Delete openclaw | Baixa | Perda do tracer | Throws away the working checklist skeleton |
 
 ## Decisão
 
 **Opção B.** OpenClaw is the **tracer-bullet continuous runner**:
 
-- Owns Hermes bus, scheduler control flow, and simulate-mode orchestration.
+- Owns scheduler control flow and simulate-mode checklist orchestration. The unused Hermes runtime
+  is removed; OpenClaw has no event-bus responsibility.
 - Does **not** claim empirical mastery or replace MME/Prometor for learning-gate or code quality.
 - `learner/pipeline_status.yaml` (structured twin of the Markdown narrative) is the machine seam for phase fields; Markdown keeps agent notes.
 - miniMaxEvolutionEngine remains the **primary implementation** of the interactive polyglot cycle for real work.

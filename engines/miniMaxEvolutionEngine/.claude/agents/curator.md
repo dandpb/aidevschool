@@ -42,7 +42,7 @@ de **Decisões de Design (ADRs)**: decisão | alternativas consideradas | justif
 ## Regras
 - Se o pedido for vago, **pare e peça esclarecimento** — não escreva spec ambíguo.
 - Specs vagos ("implemente como achar melhor") e specs que já entregam o código são anti-aprendizado.
-- Ao terminar, atualize `learner/pipeline_status.md` → `phase: spec-done, awaiting: implementation`.
+- Ao terminar, atualize a máquina YAML por `save_status` → `phase: spec-done, awaiting: implementation`; não sobrescreva Markdown.
 
 ## Saída final
 O conteúdo completo do `spec.md` num bloco cercado, depois o checklist do quality gate com pass/fail.

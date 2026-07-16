@@ -24,8 +24,8 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       source: "voxeldojo",
       unit_id: "U2-key-value-store",
       project: "02_key_value_store",
-      scenario_id: "warehouse-L1",
-      game: "WAREHOUSE",
+      scenario_id: "kv-warehouse-L1",
+      game: "KV WAREHOUSE",
       pass: true,
     })
     spy.mockRestore()
@@ -46,7 +46,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     expect(game.snapshot.phase).toBe("failed")
     const rec = evidenceLines(spy)
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-      .find((r) => r.scenario_id === "warehouse-L1")
+      .find((r) => r.scenario_id === "kv-warehouse-L1")
     expect(rec?.pass).toBe(false)
     spy.mockRestore()
   })
@@ -63,7 +63,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     expect(game.snapshot.phase).toBe("cleared")
     const rec = evidenceLines(spy)
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-      .find((r) => r.scenario_id === "warehouse-L2")
+      .find((r) => r.scenario_id === "kv-warehouse-L2")
     expect(rec?.pass).toBe(true)
     spy.mockRestore()
   })
@@ -85,7 +85,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     expect(game.snapshot.phase).toBe("cleared")
     const rec = evidenceLines(spy)
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-      .find((r) => r.scenario_id === "warehouse-L3")
+      .find((r) => r.scenario_id === "kv-warehouse-L3")
     expect(rec?.pass).toBe(true)
     spy.mockRestore()
   })
@@ -101,7 +101,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     expect(game.snapshot.phase).toBe("cleared")
     const rec = evidenceLines(spy)
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-      .find((r) => r.scenario_id === "warehouse-L4")
+      .find((r) => r.scenario_id === "kv-warehouse-L4")
     expect(rec?.pass).toBe(true)
     spy.mockRestore()
   })

@@ -80,9 +80,9 @@ registry entry).
 | `domain.ts` | Shared types + const tuples (`views`, `agentGroups`, `projectPhases`), `assertNever`, `LearnerSnapshot`. |
 | `cycle.ts` | Pure cycle algebra: `advanceCycle`, `getCycleCompletionPercent`. |
 | `progress.ts` | Query seams (getters) between data modules and renderers; `getDashboardStats`. |
-| `data/agents.ts` | Static data: `userFacingAgents` (10) + `agents` (14 core, grouped). |
-| `data/cycle.ts` | Static data: `cycleStages` (20) + `metrics` (10). |
-| `data/projects.ts` | Static data: `projects` (18 `DojoProject`s, p01–p18). |
+| `data/agents.ts` | Generated roster read model from `minimaxDojo/config/dashboard.yaml`. |
+| `data/cycle.ts` | Generated cycle/metrics read model from `minimaxDojo/config/dashboard.yaml`. |
+| `data/projects.ts` | Generated 18-project read model from `curriculum/catalog.md`. |
 | `data/ecosystem.ts` | Static data: `ecosystemStatuses` (4). |
 | `data/learner.ts` | **AUTO-GENERATED** `learnerSnapshot`. Do not edit by hand. |
 | `render/shell.ts` | `renderShell(state)` — sidebar + nav + content. |
@@ -95,6 +95,7 @@ registry entry).
 | `render/roadmap.ts` | Roadmap view; phase filter + project cards. |
 | `render/project.ts` | Project briefing view. |
 | `render/events.ts` | DOM event seam: `bindEvents`, `intents` table, clipboard copy. |
+| `linuxLab/` | Compatibility Linux Lab module; the full OS remains a separate bounded context. |
 | `*.test.ts` | ~9 Vitest suites (state, progress, render, events, projects, manifest, links, app, e2e). |
 
 ## Views
@@ -134,14 +135,14 @@ change.
 | `COMPLETION_AUDIT.md` | Requirement-by-requirement audit with evidence files. |
 | `CURRICULUM_SCOPE.md` | Maps requested learning topics to concrete tracks. |
 | `LEGACY_MIGRATION.md` | Behavior-preserving refactoring contract. |
-| `OPENCLAW_HERMES_RUNBOOK.md` | Continuous-operation runbook. |
+| `OPENCLAW_RUNBOOK.md` | Simulate-grade OpenClaw checklist-runner runbook. |
 
-## Generated data: `src/data/learner.ts`
+## Generated data
 
-This file is produced by `learner/substrate/dashboard_snapshot.py` from `learner/learning_state.yaml`
-(plus profile, pitfalls, journal, backlog, predictions). It carries a
-`DO NOT EDIT BY HAND — run python3 -m learner.substrate` header. Edit the canonical YAML, regenerate,
-then `pnpm run build`. The shape is locked at `src/domain.ts:LearnerSnapshot`.
+The substrate generates `learner.ts`, `projects.ts`, `agents.ts`, and `cycle.ts`.
+Edit `learner/learning_state.yaml`, `curriculum/catalog.md`, or
+`engines/minimaxDojo/config/dashboard.yaml`, then run
+`python3 -m learner.substrate`. Never edit these TypeScript projections directly.
 
 ## Conventions & anti-patterns
 

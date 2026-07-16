@@ -22,7 +22,7 @@ verification — `engines/minimaxDojo/config/learner.yaml` exists and is tracked
 | 8 | CI blind spots: no jobs for voxelDojo (16 games), pixelDojo `games/*`, or openclaw. "No claims without evidence" isn't machine-enforced for the most-churned engine | infrastructure | 4 | 2 | 3 | 18 | open |
 | 9 | `learner/substrate.validate()` is partial: no checks on `empirical_gate`, `next_action`, `agent_ownership`, no cross-check `active_unit`↔`units_log`, no existence check for `attempt_file`/`evidence_file` | code | 3 | 3 | 3 | 18 | open |
 | 10 | HermesBus `_classify()` globs+parses every event file (outbox+inbox+log) on each `publish()`; `log/` is append-only so cost grows without bound and one corrupt file blocks all publishes (`hermes/bus.py:147-153`) | code | 3 | 3 | 3 | 18 | open |
-| 11 | `openclaw/runner/scheduler.py:92-123` regex-parses state out of `pipeline_status.md` prose; blockers split naively on `,` | code | 3 | 3 | 3 | 18 | open |
+| 11 | Historical: OpenClaw regex-parsed `pipeline_status.md`; it now reads only canonical `pipeline_status.yaml`, while Markdown is narrative | code | 3 | 3 | 3 | 18 | fixed in decomposition pass |
 | 12 | Stale branches: local `master` (dead default, 2026-06-09) + ~8 remote agent branches never pruned | infrastructure | 2 | 2 | 2 | 16 | user action |
 | 13 | Dated planning-doc sprawl at root (`REFACTOR_PLAN.md`, `REMEDIATION_ROADMAP_2026-06-28.md`, `TECH_DEBT_AUDIT_2026-06-28.md`) — partly executed, reads as current | documentation | 2 | 2 | 2 | 16 | **fixed**: moved to `docs/archive/` |
 | 14 | Docs drift: broken `docs/PROMPTS/00_IDEIAS.md` link in CLAUDE.md+AGENTS.md; `.Codex` case error; `CONTEXT-MAP.md` lists per-context files that don't exist; voxelDojo AGENTS/README describe only the game-10 pilot; spaced filenames (`00_IDEIAS _gemini.md`) | documentation | 2 | 1 | 1 | 15 | **partly fixed in this pass** |
@@ -40,7 +40,7 @@ Two additional test-debt items surfaced while verifying this audit's changes:
 | # | Item | Category | Impact | Risk | Effort | Priority | Status |
 |---|------|----------|--------|------|--------|----------|--------|
 | 21 | 3 substrate drift tests fail **at HEAD** (`TestBacklogStatusDrift` ×2 + `test_build_snapshot_picks_up_backlog_counts`): `BACKLOG_STATUS.md` marks 17 projects scaffolded, dashboard snapshot counts 16, and one scaffolded row is missing expected artifacts. Committed data drift — the drift detectors are doing their job and being ignored | test | 3 | 3 | 2 | 24 | open |
-| 22 | Test-isolation debt: `pytest engines/pixelDojo/verifier engines/minimaxDojo learner` from repo root fails 10 verifier tests that all pass when the suite runs alone (suite ordering/shared-state leakage) | test | 2 | 2 | 2 | 16 | open |
+| 22 | Test-isolation debt (historical): the former Pixel-namespaced verifier exposed suite-order leakage; current coverage runs under `learner/gate/` with the root suites | test | 2 | 2 | 2 | 16 | fixed in decomposition pass |
 
 Fix for item 21: regenerate views (`python3 -m learner.substrate`) or correct
 `BACKLOG_STATUS.md` — decide which side is the truth first (per golden rule 4, filesystem
@@ -53,6 +53,31 @@ minimaxDojo state machine. voxelDojo game code quality is high (strict TS, zero
 `any`/`TODO`/`@ts-ignore`, real headless tests + Playwright evidence smoke per game).
 `learner/substrate/scheduling.py` is thoroughly covered (70 tests). minimaxDojo threshold
 seam (`config/learner.yaml`) exists and works as documented.
+
+## Architecture closeout — July 11, 2026
+
+The prioritized table above is a historical audit snapshot. The architecture
+work completed after that snapshot closes the structural items through these
+current seams:
+
+- `learner/gate/` plus `learner.substrate.gate` replace the Pixel-owned verifier
+  and direct canonical writes.
+- `@aidevschool/evidence` replaces engine-local contract implementations.
+- Substrate generation covers Voxel review slices, dashboard learner/catalog/
+  roster/cycle views, and the catalog-derived backlog.
+- `learner/pipeline_status.yaml` is the machine source for OpenClaw and the
+  miniMaxEvolutionEngine adapters.
+- Pixel and Voxel use engine-local pnpm workspaces. Voxel also centralizes
+  browser composition in its internal scene harness and viewport helpers.
+- Linux Lab compatibility code lives in `codexDojo/src/linuxLab/`; the full OS
+  experience remains in `codexdojo-os-prototype/`.
+- Arena prediction writes route through `learner.substrate.prediction_store`.
+- The unused Hermes runtime was removed. OpenClaw remains a simulate-grade
+  checklist runner, as defined by ADR-0002.
+
+Items about repository history compaction, stale branches, and unverified
+curriculum promotion remain operational concerns rather than architecture
+boundaries. This closeout does not retroactively change the July 8 measurements.
 
 ## Quick wins applied in this pass (2026-07-08)
 

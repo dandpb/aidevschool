@@ -3,7 +3,7 @@
 Ágora Continuum (Claude Code)
 
 > Camada nativa do **Claude Code** para o **MiniMax Evolution Engine** deste repositório.
-> O Claude Code é mais uma plataforma de orquestração ao lado de OpenClaw, Hermes, Mavis,
+> O Claude Code é mais uma plataforma de orquestração ao lado de OpenClaw, Mavis,
 > OpenCode e Codex — todas dirigindo o **mesmo** sistema file-based de 5 fases + verificador
 > adversarial + learning gate. **Não reinvente o protocolo: ele já existe nos `docs/`.**
 
@@ -34,9 +34,9 @@ Regras de ouro do orquestrador:
 
 ---
 
-## O loop de 5 fases (máquina de estados em `learner/pipeline_status.md`)
+## O loop de 5 fases (máquina de estados YAML-first em `learner/pipeline_status.yaml`)
 
-| Fase | `phase` em status.md | Subagent produtor | Artefato | Próximo |
+| Fase | `phase` em status.yaml | Subagent produtor | Artefato | Próximo |
 |------|----------------------|-------------------|----------|---------|
 | 1 — Spec & Arquitetura | `spec-done` | `curator` | `curriculum/NN/docs/spec.md` | implementação |
 | 2 — Implementação poliglota | `impl-done` | `dev-go`, `dev-rust`, `dev-node` (paralelo) | `curriculum/NN/{go,rust,node}-impl/` | review |
@@ -45,14 +45,15 @@ Regras de ouro do orquestrador:
 | 5 — Evolução & Escala | `cycle-complete` | `optimizer` | `evolution_report.md` | próximo projeto |
 
 Entre **cada** fase produtora roda o **portão do verificador** (`verifier`), que re-deriva a
-correção do zero (não confia no produtor). Só atualize `learner/pipeline_status.md` para a próxima fase
+correção do zero (não confia no produtor). Só atualize o status do pipeline para a próxima fase
 **depois** que o verificador retornar PASS. Em FAIL, "acorde" o produtor com o feedback concreto
 (retry, respeitando `retry_limit`).
 
 Nomes de arquivo canônicos (alinhados ao `.mavis/plans/plan.yaml` e `docs/PROMPTS/IDEIAS/codexDojo/01_agent_definitions.md`):
 `spec.md`, `code_review.md`, `learning_notes.md`, `quiz.md`, `benchmark_results.md`,
 `evolution_report.md`, `diagnostic.md`, `deliverable-*.md`. Globais na raiz:
-`learner/pipeline_status.md` (estado do pipeline) e `learner/journal.md` (append-only).
+`learner/pipeline_status.yaml` é sempre a autoridade de máquina; `learner/pipeline_status.md` é
+somente narrativa humana e nunca é parseado como fallback. `learner/journal.md` é append-only.
 
 ---
 
@@ -111,7 +112,7 @@ para diversidade tipo cross-model.
 
 | Comando | O que faz |
 |---------|-----------|
-| `/devschool-status` | Lê `learner/pipeline_status.md` + `learner/learning_state.yaml` e diz onde estamos / próxima ação |
+| `/devschool-status` | Lê `pipeline_status.yaml` (autoridade de máquina) + `learner/learning_state.yaml` e diz onde estamos / próxima ação; Markdown é só narrativa |
 | `/devschool-diagnose` | Roda o learning gate: invoca `sonda` para a unidade ativa |
 | `/devschool-socratic` | Tutor socrático (anti-dependência) — exige a tentativa antes de qualquer hint |
 | `/devschool-recall` | Micro-sessão de repetição espaçada (15-20 min) — invoca `mneme` |
@@ -135,7 +136,7 @@ para diversidade tipo cross-model.
 - Para rodar **constantemente** (estilo MiniMax Agent Team), use o skill `/schedule` para agendar
   `/devschool-cycle` ou `/devschool-diagnose` numa rotina recorrente. **Rotinas rodam na nuvem da
   Anthropic e são faturadas** — peça confirmação ao usuário antes de criar; nunca crie sozinho.
-- Sessões frescas devem começar lendo `learner/pipeline_status.md` + `learner/learning_state.yaml` (o hook
+- Sessões frescas devem começar lendo o status YAML-first + `learner/learning_state.yaml` (o hook
   `SessionStart` já injeta esse briefing).
 
 ## Segurança / sandbox

@@ -4,9 +4,9 @@ argument-hint: "(sem args)"
 ---
 
 Estado:
-!`cat learner/pipeline_status.md 2>/dev/null || echo "(sem status)"`
+!`python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null || echo "(sem status YAML/Markdown)"`
 
-Pré-condição: `learner/pipeline_status.md` em `cycle-complete`. Você é o **Orquestrador**.
+Pré-condição: estado YAML-first em `cycle-complete`. Você é o **Orquestrador**.
 
 1. Leia o `evolution_report.md` do projeto atual (seção "Lições para o curator" / "Feedback para o
    Curator") e o catálogo em `curriculum/catalog.md`.

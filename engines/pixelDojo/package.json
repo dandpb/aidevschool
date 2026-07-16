@@ -1,10 +1,13 @@
 {
   "name": "pixel-dojo",
   "private": true,
+  "dependencies": {
+    "@aidevschool/evidence": "workspace:*"
+  },
   "scripts": {
     "test": "pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
-    "lint": "pnpm -r --if-present lint",
+    "lint": "biome check pixel-quest/src pixel-quest/playwright shared",
     "build": "pnpm -r --if-present build",
     "smoke": "pnpm -r --if-present smoke"
   },

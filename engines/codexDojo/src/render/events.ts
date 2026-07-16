@@ -1,6 +1,5 @@
-import type { LinuxAppCategoryFilter } from "../data/linuxApps"
-import { linuxAppCategories } from "../data/linuxApps"
 import { type Agent, projectPhases, type View, views } from "../domain"
+import { type LinuxAppCategoryFilter, linuxAppCategories } from "../linuxLab"
 import { findAgent } from "../progress"
 import type { AppAction, ProjectFilter } from "../state"
 

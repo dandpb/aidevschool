@@ -1,7 +1,7 @@
 # Architecture
 
-How the four engines, the shared curriculum, and the learner substrate fit together — and why
-the design is shaped the way it is.
+How the engine roles, shared curriculum, and learner substrate fit together — and why the design
+is shaped the way it is.
 
 ## 1. The core idea
 
@@ -25,11 +25,14 @@ filesystem is the source of truth for all of it.
 flowchart TB
     subgraph surface["Product surface (runnable apps)"]
         codex["codexDojo<br/>dashboard / control surface"]
+        os["codexDojo OS<br/>educational desktop bounded context"]
         pixel["pixelDojo<br/>8-bit teaching game"]
+        voxel["voxelDojo<br/>3D teaching simulations"]
     end
     subgraph orchestration["Orchestration & tutoring (agent cores)"]
         mmee["miniMaxEvolutionEngine<br/>Claude Code 5-phase motor"]
         mmd["minimaxDojo<br/>14-agent tutoring spec"]
+        openclaw["openclaw<br/>simulate-grade checklist runner"]
     end
     subgraph substrate["Shared substrate (source of truth)"]
         learner["learner/<br/>learning_state.yaml + substrate"]
@@ -38,32 +41,43 @@ flowchart TB
     derived[".mavis/ + generated views<br/>(regenerated, never hand-edited)"]
 
     codex -->|reads| learner
+    os -->|reads generated projection| learner
     pixel -->|reads| learner
     pixel -->|emits evidence| curriculum
+    voxel -->|reads| learner
+    voxel -->|emits evidence| curriculum
     mmee -->|reads/writes| learner
     mmee -->|produces| curriculum
     mmd -.->|same protocol| mmee
+    openclaw -->|reads/writes pipeline status| learner
+    openclaw -->|checks artifacts| curriculum
     learner -->|python3 -m learner.substrate| derived
-    derived -->|generated learner.ts / reviewSlice.ts| surface
+    derived -->|generated learner.ts| codex
+    derived -->|generated learner.ts| os
+    derived -->|generated reviewSlice.ts| pixel
+    derived -->|generated reviewSlice.ts| voxel
 ```
 
 | Layer | Members | Responsibility |
 | --- | --- | --- |
-| **Product surface** | `codexDojo`, `pixelDojo` | What a human sees and touches. Both are read-only with respect to learner state — they render it, they never mark mastery. |
-| **Orchestration / tutoring** | `miniMaxEvolutionEngine`, `minimaxDojo` | The agent logic: the 5-phase software loop and the learning gate. One is a runnable Claude Code motor; the other is the prompt/spec rendering of the same protocol. |
+| **Product surface** | `codexDojo`, `codexdojo-os-prototype`, `pixelDojo`, `voxelDojo` | What a human sees and touches. Each consumes an engine-local derived learner view; none marks mastery. OS window, catalog, terminal, mission, and mentor interactions remain local UI state. |
+| **Orchestration / tutoring** | `miniMaxEvolutionEngine`, `minimaxDojo`, `openclaw` | Agent logic plus the simulate-grade artifact checklist. The Claude Code motor owns the interactive cycle; OpenClaw does not. |
 | **Shared substrate** | `learner/`, `curriculum/` | The single source of truth. Canonical state in human-readable files; derived views regenerated from it. |
 
-## 3. The four engines
+## 3. Engine roles
 
-Each engine is a **separate project** with its own machine surface. Two are runnable apps; two are
-agent cores. They share one curriculum and one learner — never duplicated, only referenced.
+Each engine is a **separate project** with its own machine surface. They share one curriculum and
+one learner — never duplicated, only projected into engine-local generated views.
 
 | Engine | Type | One-liner | Detail |
 | --- | --- | --- | --- |
 | `engines/codexDojo/` | Runnable app | The user-facing dashboard — a Vite/TypeScript SPA showing the learner snapshot, agent roster, the cycle, and the 18-project roadmap. | [doc](03_engine_codexDojo.md) |
+| `engines/codexdojo-os-prototype/` | Runnable app | The canonical educational OS experience with local apps, Learn Mode, and a generated read-only learner snapshot. | [doc](03b_engine_codexdojo-os-prototype.md) |
 | `engines/pixelDojo/` | Runnable app | 8-bit teaching games. The canonical game `pixel-quest/` turns one curriculum concept into one arcade mechanic and emits executable evidence when a level is cleared. | [doc](04_engine_pixelDojo.md) |
+| `engines/voxelDojo/` | Runnable apps | Three.js teaching simulations with deterministic, headless simulation cores and browser evidence. | [doc](10_engine_voxelDojo.md) |
 | `engines/minimaxDojo/` | Agent core | The 14-agent "Ágora Continuum" tutoring core — the state machine, gates, prompts, governance, and a Python reference implementation. Runs on the MiniMax Agent Team platform. | [doc](05_engine_minimaxDojo.md) |
 | `engines/miniMaxEvolutionEngine/` | Agent core | The runnable Claude Code orchestration motor: the 5-phase loop (Spec → Implement → Review → Benchmark → Optimize), implemented as `.claude/` subagents and `/devschool-*` slash commands. | [doc](06_engine_miniMaxEvolutionEngine.md) |
+| `engines/openclaw/` | Checklist runner | A file-based, simulate-grade runner that advances the 5-phase cycle when required artifacts pass path and size checks. | [engine README](../../engines/openclaw/README.md) |
 
 ### Why two agent cores?
 
@@ -87,8 +101,9 @@ system.
 
 ### 4.1 The software cycle (5 phases)
 
-Tracked in `learner/pipeline_status.md`. Producers create artifacts; the verifier gates each
-transition. Status advances **only** after the verifier returns `PASS`.
+Tracked for machines in `learner/pipeline_status.yaml`; `pipeline_status.md` keeps human notes.
+Producers create artifacts, and the phase Verifier gates each transition. This role is distinct
+from Prometor, the adversarial learning-gate context.
 
 ```mermaid
 flowchart LR
@@ -143,17 +158,14 @@ referenced symbolically elsewhere.
 | Gate | Threshold | Canonical source |
 | --- | --- | --- |
 | Core coverage | ≥ 80% | `learner/learning_state.yaml` (`min_coverage: 0.80`); `minimaxDojo/config/learner.yaml` (`cobertura_nucleo_min: 0.80`) |
-| Mutation score | ≥ 60% (minimaxDojo pins 65%) | `learning_state.yaml` (`mutation_min: 0.60`); `config/learner.yaml` (`mutation_score_min: 0.65`) |
+| Mutation score | ≥ 65% | `learning_state.yaml` (`mutation_min: 0.65`); `config/learner.yaml` (`mutation_score_min: 0.65`) |
 | Benchmark stability | block speed claims when CV ≥ 20%; ≥ 10 samples + warmup | `config/learner.yaml` (`galileu.cv_max_pct: 20`, `samples_min: 10`) |
 | Suite green | 100% | `config/learner.yaml` (`suíte_verde_min: 1.0`) |
 | Lints | 0 errors / 0 warnings | `config/learner.yaml` (`lints_erros_max: 0`) |
 | Retry budget | ≤ 3 per unit, then escalate | `learning_state.yaml` (`retry_limit: 3`) |
 
-> **Doc note:** there are two slightly different mutation thresholds in the repo — `0.60` in the
-> Claude Code engine / learner state, and `0.65` in minimaxDojo's `config/learner.yaml`. The Claude
-> Code engine cites the lower bound of the documented "60–70%" band; minimaxDojo pins the seam at
-> `0.65`. Treat `config/learner.yaml` as authoritative for minimaxDojo and `learning_state.yaml` as
-> authoritative for the gate the runnable apps observe.
+The learner gate and minimaxDojo use the same `0.65` mutation threshold. Drift tests protect this
+shared-kernel contract.
 
 The `⟨config: path⟩` convention: prompts and docs reference these numbers symbolically (for
 example `⟨config: gates.mutation_score_min⟩`) instead of hardcoding them, so the seam stays in one
@@ -172,18 +184,23 @@ flowchart LR
     canon --> sub
     sub --> mavis[".mavis/learning_state.yaml"]
     sub --> wb["minimaxDojo/whiteboard/<br/>profile.yaml, learner_profile.md, trail.md"]
-    sub --> ts["codexDojo/src/data/learner.ts"]
-    sub --> rs["pixelDojo/pixel-quest/src/content/reviewSlice.ts"]
+    sub --> ts["codexDojo generated learner,<br/>projects, agents, cycle"]
+    sub --> rs["Pixel and Voxel<br/>reviewSlice.ts fan-out"]
+    catalog["curriculum/catalog.md<br/>(canonical catalog)"] --> sub
+    sub --> backlog["curriculum/BACKLOG_STATUS.md"]
 ```
 
-`sync()` validates the canonical state first (so a sync on invalid state raises), then regenerates
-four derived targets. The generated TypeScript files carry a `DO NOT EDIT BY HAND` header. The full
+`sync()` validates the canonical state first, then regenerates every registered projection. The
+generated TypeScript and Markdown files carry a `DO NOT EDIT BY HAND` header. The full
 contract is in [Learner substrate](08_learner_substrate.md) and `learner/substrate/interface.md`.
 
 ## 7. Producer ≠ verifier, in practice
 
 This separation shows up at every layer:
 
+- In **codexDojo OS**, learner status is a generated read-only projection. Missions, catalog state,
+  terminal actions, and mentor responses are local demonstrations; the OS does not write canonical
+  learner state or emit verifier-approved mastery evidence.
 - In **pixelDojo**, the game is the *attempt surface*. It produces validated evidence records
   (`window.__pixelQuestEvidence`, plus an `EVIDENCE <json>` console line) and stops. It never writes
   `learning_state.yaml`, never appends `units_log`, never sets `mastered`. The Playwright smoke test
@@ -200,8 +217,11 @@ This separation shows up at every layer:
   an engine; engines use symlinks or root-relative paths.
 - **The filesystem is the source of truth.** No database, no lock file for state. Derived views are
   regenerated, never hand-edited or back-ported.
-- **Runnable apps vs cores.** Treat `codexDojo` and `pixelDojo/pixel-quest` as the runnable apps;
-  `minimaxDojo` is the deeper tutoring core; `miniMaxEvolutionEngine` is the runnable motor.
+- **Runnable apps vs cores.** Treat `codexDojo`, `codexdojo-os-prototype`, `pixelDojo`, and
+  `voxelDojo` as runnable web surfaces. The OS package owns the educational desktop bounded context;
+  `minimaxDojo` is the deeper
+  tutoring core, `miniMaxEvolutionEngine` is the interactive motor, and `openclaw` is the
+  simulate-grade checklist runner.
 - **Simplify before commit.** Run `/simplify` on the diff, apply, then commit.
 
 ## Anti-patterns

@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { StageEvent } from "../sim/pipeline"
 
@@ -51,10 +51,7 @@ function tributaryPoint(srcPos: THREE.Vector3, stagePos: THREE.Vector3, t: numbe
  * blue; the dyed streak is amber. Click a headwater to predict source / inject dye.
  */
 export class DeltaScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private deltaGroup = new THREE.Group()
   private lakeMesh: THREE.Mesh
   private headwaterMeshes = new Map<string, THREE.Mesh>()
@@ -62,25 +59,27 @@ export class DeltaScene {
   private rapidMeshes = new Map<string, THREE.Mesh>()
   private logMesh: THREE.InstancedMesh | null = null
   private logColorAttr: THREE.InstancedBufferAttribute | null = null
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   private clock = new THREE.Clock()
   onHeadwaterClick: ((sourceId: string) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = new THREE.Color("#0b0e14")
-    this.scene.fog = new THREE.Fog("#0b0e14", 26, 64)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 10, 22)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 60
-    this.controls.minDistance = 8
-    this.controls.target.set(0, 0, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 26,
+      fogFar: 64,
+      cameraPosition: [0, 10, 22],
+      controlsTarget: [0, 0, 0],
+      minDistance: 8,
+      maxDistance: 60,
+      ambientIntensity: 0.75,
+      keyIntensity: 1.1,
+      onFrame: () => {
+        this.animateLogs(this.clock.getElapsedTime())
+        this.animateLake(this.clock.getElapsedTime())
+      },
+    })
 
-    this.scene.add(this.deltaGroup)
+    this.viewport.scene.add(this.deltaGroup)
     // lake plane (the sink)
     this.lakeMesh = new THREE.Mesh(
       new THREE.CircleGeometry(LAKE_RADIUS, 48),
@@ -100,39 +99,14 @@ export class DeltaScene {
     const grid = new THREE.GridHelper(40, 40, "#1c2236", "#141a2b")
     grid.position.y = LAKE_CENTER.y - 0.6
     this.deltaGroup.add(grid)
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.75))
-    const key = new THREE.DirectionalLight("#ffffff", 1.1)
-    key.position.set(8, 16, 8)
-    this.scene.add(key)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animateLogs(this.clock.getElapsedTime())
-      this.animateLake(this.clock.getElapsedTime())
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects([...this.headwaterMeshes.values()])
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects([...this.headwaterMeshes.values()])
     const first = hits[0]
     if (first && this.onHeadwaterClick) {
       const id = (first.object.userData as { sourceId?: string }).sourceId

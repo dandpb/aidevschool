@@ -8,6 +8,9 @@ This interface is the single place where every engine reads and writes learner
 state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 **derived views** produced by adapters; they must not be edited by hand.
 
+The dashboard and codexDojo OS each receive an engine-local generated
+`src/data/learner.ts`. These modules are read models, never write APIs.
+
 ## Read surface
 
 - `load_canonical(path) -> dict`  
@@ -22,7 +25,8 @@ state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 ## Write surface
 
 - `sync()`  
-  Regenerate every derived view from the canonical state.
+  Regenerate every derived view from the canonical state, including the dashboard, codexDojo OS,
+  PixelDojo, and voxelDojo TypeScript projections.
 
 - `derive_mavis_view(state) -> dict`  
   Return the `.mavis/learning_state.yaml` view.
@@ -32,6 +36,18 @@ state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 
 - `derive_whiteboard_trail(state) -> dict`  
   Return the whiteboard trail metadata used by Cartógrafo.
+
+- `commit_gate_transition(state, decision, ...) -> dict`
+  Validate one independently verified gate transition and persist it atomically.
+  A decision backed by a separate verifier receipt records
+  `evidence_verifier_source` and the canonical `evidence_digest`; later state
+  validation rechecks that digest against the producer artifact.
+
+- `record_prediction(record, path=None) -> Path`
+  Validate and append an Arena prediction through the learner-owned boundary.
+
+- `check() -> list[Path]`
+  Return generated projections that differ from canonical sources without writing.
 
 ## Invariants
 
@@ -51,5 +67,6 @@ state. `.mavis/learning_state.yaml` and `engines/minimaxDojo/whiteboard/` are
 
 ## Ordering
 
-Always edit the canonical state first, then call `sync()` to regenerate derived
-views. Never write to a derived view and back-port changes.
+Always edit a canonical source first, then call `sync()` to regenerate derived
+views. Use `learner/gate/` for evidence-driven mastery transitions. Never write
+to a derived view and back-port changes.

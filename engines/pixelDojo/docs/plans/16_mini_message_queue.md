@@ -1,7 +1,7 @@
 # PLAN slice — `16_mini_message_queue` (LOG PIER: partitioned offset river)
 
 > PLAN slice for `/threejs-dojo 16_mini_message_queue`. **Shape B** — a fresh standalone 3D
-> (three.js) world, sibling app under `engines/pixelDojo/games/16_mini_message_queue/`. The
+> (three.js) world at `engines/voxelDojo/game-16-freight-yard/`. The
 > pixel-quest encounter kinds (`pixelquest-token-bucket` / `pixelquest-sequence-flow` /
 > `pixelquest-route-health` / `pixelquest-policy-gate`) are all variants of "incoming sprite →
 > admit/reject"; a Kafka-like log needs **parallel partition lanes + numbered offset slots +
@@ -29,7 +29,7 @@
   exactly-once transactions, log compaction tombstones, the Go/Rust/Node throughput comparison
   (the curriculum's job), ISR/follower semantics, cross-region mirroring.
 - **Slug:** `16_mini_message_queue`
-- **App path:** `engines/pixelDojo/games/16_mini_message_queue/` (fresh sibling app — Shape B).
+- **App path:** `engines/voxelDojo/game-16-freight-yard/` (standalone VoxelDojo app — Shape B).
 - **Unit id (evidence):** `16_mini_message_queue` (the task's literal target; matches the active
   unit id the verifier selects on). If the implementing agent finds `curriculumPack.ts > unitId()`
   derives `U-16_mini_message_queue` instead, use that derived value consistently across the
@@ -105,11 +105,8 @@ awareness. The wave cannot be cleared by mashing `Z`.
   `learner/learning_state.yaml > active_unit.id`.
 - **Encounter id wired:** `encounter-16_mini_message_queue` (per `encounterId()` in
   `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts:632-637`).
-- **Evidence location:** `engines/pixelDojo/games/16_mini_message_queue/.logs/evidence.ndjson`
-  (regenerated on every smoke run; not committed).
-- **In-page channel:** `window.__messageQueueEvidence` (NDJSON array; flushed to file by the
-  Playwright smoke driver — mirrors the `pixel-quest` channel pattern at
-  `pixel-quest/src/game/evidence/emitter.ts`).
+- **Evidence channel:** `window.__voxelDojoEvidence`, mirrored as an `EVIDENCE <json>` console
+  record for the Playwright smoke driver.
 - **New metrics kind:** `threejs-message-queue` — extends the discriminated union in
   `engines/pixelDojo/pixel-quest/src/game/evidence/types.ts`. Add this variant alongside the
   existing `pixelquest-*` kinds; the validator (`evidence.ts`) dispatches on `metrics.kind`.
@@ -198,14 +195,14 @@ metrics.commits             >= LEVEL_COMMIT_TARGET[level]    // L2 target = cons
 ```
 
 Anything else keeps the gate locked. The game emits evidence only — it **never** writes
-`learner/learning_state.yaml`. The verifier (`python3 -m engines.pixelDojo.verifier`) reads the
+`learner/learning_state.yaml`. The gate (`python3 -m learner.gate --evidence PATH`) reads captured
 NDJSON, finds the latest record whose `unit_id === active_unit.id`, checks the pass-rule above
-against the metrics, and only then appends to `units_log` via `learner/substrate/`. The game's
+against the metrics, and only then appends to `units_log` through `learner/substrate/`. The game's
 `pass: true` is **never** mastery by itself.
 
 ### Done-rule (one line, for the verifier + implementer subagent)
 
-> A fresh 3D world at `engines/pixelDojo/games/16_mini_message_queue/` renders N parallel
+> A 3D world at `engines/voxelDojo/game-16-freight-yard/` renders N parallel
 > partition lanes of numbered offset slots, routes each inbound message orb to the key-matching
 > lane where it appends at `nextOffset`, lets the player fetch-then-commit independent per-group
 > cursors (with replay via rewind) while a Retention Tide dissolves old slots, and emits a valid

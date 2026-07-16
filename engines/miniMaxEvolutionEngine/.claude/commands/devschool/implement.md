@@ -35,6 +35,6 @@ Invoque `run_phase(spec)` usando a declaração acima.
 Cada um deve ler o `spec.md` inteiro, cobrir todos os FRs, passar build+lint+test (≥80%) e Dockerfile.
 
 Quando os 3 terminarem, dispare o subagent **`verifier`** (fase `impl`) **uma vez por linguagem** —
-ele re-roda build/test do zero e tenta quebrar com burst de concorrência. Só atualize `learner/pipeline_status.md`
+ele re-roda build/test do zero e tenta quebrar com burst de concorrência. Só atualize a máquina YAML via `save_status`
 → `impl-done` quando as 3 derem **PASS**. Em FAIL, "acorde" o dev daquela linguagem com o feedback
 concreto (respeite `retry_limit`).

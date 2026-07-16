@@ -56,10 +56,10 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 
 | Component | Current Path | Status |
 | --- | --- | --- |
-| Software-cycle phase state | `learner/pipeline_status.md` | ✅ aligned (lives in `learner/` by documented design — the "two loops meet at the diagnostic") |
+| Software-cycle phase state | `learner/pipeline_status.yaml` | ✅ canonical machine state; Markdown is narrative only |
 | Interactive subagents (curator/dev/reviewer/benchmarker/optimizer/verifier) | `engines/miniMaxEvolutionEngine/.claude/agents/{curator,dev-go,dev-node,dev-rust,reviewer,benchmarker,optimizer,verifier,verifier-haiku}.md` (9 files) | ⚠️ one of two parallel implementations |
 | Slash-command orchestration | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | ✅ aligned to this context |
-| Automated Hermes-driven runner | `engines/openclaw/runner/`, `engines/openclaw/runner/adapters/` | ❌ second, undocumented parallel implementation |
+| Explicit checklist runner | `engines/openclaw/runner/` | ✅ file-based simulate-grade adapter over pipeline YAML |
 | Shared benchmark tooling | `curriculum/_shared/benchmarks/` | ✅ aligned |
 | Shared cycle tooling | `curriculum/_shared/cycle/` | ✅ aligned |
 | Domain spec | `docs/design/allium/minimax-evolution-engine.allium` | ✅ aligned |
@@ -84,8 +84,8 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 
 | Component | Current Path | Status |
 | --- | --- | --- |
-| Canonical catalog | `curriculum/catalog.md` | ⚠️ dual source of truth |
-| Backlog status | `curriculum/BACKLOG_STATUS.md` | ⚠️ dual source of truth (docs say this one wins) |
+| Canonical catalog | `curriculum/catalog.md` | ✅ canonical identity, metadata, and status |
+| Backlog status | `curriculum/BACKLOG_STATUS.md` | ✅ generated projection of `catalog.md` |
 | Project template | `curriculum/_shared/project_template/` | ✅ aligned |
 | 18 project directories | `curriculum/01_rate_limiter/` … `18_search_engine/` | ✅ aligned (catalog entries; note these dirs *also* hold PolyglotProjectCycleContext artifacts — legitimate co-location, not a misalignment) |
 | codexDojo roadmap mirror | `engines/codexDojo/src/data/projects.ts` | ❌ hand-copied duplicate, no generation |
@@ -97,7 +97,7 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 | Component | Current Path | Status |
 | --- | --- | --- |
 | Canonical arcade game | `engines/pixelDojo/pixel-quest/src/{app,content,game,render,ui}/` | ✅ aligned |
-| Shared verifier (also serves Voxel) | `engines/pixelDojo/verifier/` | ⚠️ naming smell — source-agnostic module namespaced under one of its two consumers |
+| Shared verifier (serves Pixel and Voxel) | `learner/gate/` | ✅ source-agnostic learner trust boundary |
 | Stray duplicate tree | `engines/pixelDojo/games/02_key_value_store/` … `18_search_engine/` (17 dirs) | ❌ confirmed duplicate of TeachingGameContext-Voxel content, wrong engine entirely |
 | Domain spec | `docs/design/allium/pixeldojo-teaching-game.allium` | ✅ aligned |
 
@@ -140,13 +140,13 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 | Linux app catalog | `engines/codexDojo/src/data/linuxApps.ts` | ❌ no shared vocabulary with the dashboard it lives in |
 | Linux Lab render | `engines/codexDojo/src/render/linuxLab.ts` | ❌ same |
 
-### EventBusInfraContext (Generic, incubating)
+### Removed EventBusInfraContext (historical snapshot)
 
 | Component | Current Path | Status |
 | --- | --- | --- |
-| Hermes bus | `engines/openclaw/hermes/` | ✅ internally well-built |
-| Event log directories | `.mavis/hermes/{outbox,inbox,log,conflicts}/` | ✅ correctly isolated (confirmed empty — no real traffic yet) |
-| Tests | `engines/openclaw/tests/` | ✅ aligned |
+| Historical Hermes runtime | removed | ✅ no consumers existed; OpenClaw has no event-bus claim |
+| Current runner | `engines/openclaw/runner/` | ✅ explicit checklist over `pipeline_status.yaml` |
+| Tests | `engines/openclaw/tests/` | ✅ aligned to checklist behavior |
 
 ---
 
@@ -168,11 +168,9 @@ Consolidadas") — update both together.
    against its voxelDojo counterpart; if voxelDojo's version is canonical (it matches the documented
    contract, pixelDojo's doesn't), delete the whole `engines/pixelDojo/games/` tree.
 
-2. **Relocate the shared verifier out of the pixelDojo namespace.**
-   `engines/pixelDojo/verifier/` → e.g. `engines/_shared/teaching_game_verifier/` or
-   `learner/substrate/verifier/`. It's explicitly source-agnostic and voxelDojo depends on it
-   equally; leaving it under `pixelDojo` implies false ownership. Update both engines' `AGENTS.md`
-   import paths after moving.
+2. **Relocate the shared verifier out of the pixelDojo namespace. — Closed**
+   The source-agnostic verifier now lives in `learner/gate/`; both engines depend on the public
+   evidence contract and neither owns the gate.
 
 3. **Route Polyglot Arena predictions through the substrate instead of a direct cross-write.**
    `curriculum/_shared/arena/predictions.py` currently writes `learner/predictions.yaml` directly.
@@ -195,9 +193,9 @@ Consolidadas") — update both together.
    sibling generator reading `curriculum/catalog.md` + the agent roster) to emit these three files,
    closing the gap already closed for learner state.
 
-6. **Collapse `catalog.md` / `BACKLOG_STATUS.md` into one generated pipeline.**
-   Pick `curriculum/BACKLOG_STATUS.md` as canonical (docs already say it wins on conflict) and
-   generate `curriculum/catalog.md`'s status column from it, rather than hand-maintaining both.
+6. **Collapse `catalog.md` / `BACKLOG_STATUS.md` into one generated pipeline. — Closed**
+   `curriculum/catalog.md` is canonical and the substrate generates
+   `curriculum/BACKLOG_STATUS.md`; neither status surface is maintained twice.
 
 7. **Split the Linux Lab out of the Learner Dashboard.**
    `engines/codexDojo/src/data/linuxApps.ts` + `src/render/linuxLab.ts` → move to their own module
@@ -225,7 +223,38 @@ Consolidadas") — update both together.
 
 ---
 
-## Validation
+## Closure status and validation
+
+### Closure matrix — July 11, 2026
+
+The inventory and measurements in this document describe July 8, 2026. This
+matrix records the implemented topology without rewriting that historical
+observation.
+
+| # | July 8 recommendation | Closure | Current boundary |
+| -: | --- | --- | --- |
+| 1 | Remove `pixelDojo/games/` | Closed | `pixel-quest/` is the canonical Pixel app. |
+| 2 | Share evidence emission | Closed | `@aidevschool/evidence` lives in `engines/shared/teaching-evidence/`. |
+| 3 | Add an atomic gate write API | Closed | `learner.substrate.gate` owns gate transitions. |
+| 4 | Move the verifier out of Pixel | Closed | `learner/gate/` is the engine-neutral verifier boundary. |
+| 5 | Generate every Voxel review slice | Closed | Substrate sync fans out to every `game-*` package. |
+| 6 | Generate dashboard projects, agents, and cycle | Closed | Catalog and dashboard YAML generate the TypeScript read models. |
+| 7 | Collapse catalog/backlog drift | Closed | `catalog.md` is canonical; `BACKLOG_STATUS.md` is generated. |
+| 8 | Add threshold and roster drift checks | Closed | YAML contracts and automated drift tests enforce parity. |
+| 9 | Replace prose parsing for pipeline state | Closed | `pipeline_status.yaml` is machine authority. |
+| 10 | Decide OpenClaw ownership | Closed | ADR-0002 limits it to simulate-grade checklist orchestration. |
+| 11 | Add OpenClaw to active architecture docs | Closed | The handbook lists its role and authority boundary. |
+| 12 | Share JavaScript workspace infrastructure | Closed by decision | Workspaces remain engine-local; the repository root stays package-manager agnostic. |
+| 13 | Share Voxel scene infrastructure | Closed | `shared/sceneHarness.ts` and `shared/viewport.ts` are the internal kit. |
+| 14 | Split Linux Lab from dashboard modules | Closed | Compatibility code lives under `codexDojo/src/linuxLab/`. |
+| 15 | Clean root artifacts and plans | Closed | Historical plans are archived; generated outputs are ignored. |
+| 16 | Document the parent engine contract test | Closed | `engines/test_engine_contracts.py` owns cross-engine assertions. |
+| 17 | Route Arena prediction writes through substrate | Closed | `learner.substrate.prediction_store` is the write boundary. |
+| 18 | Resolve the consumerless Hermes context | Closed by removal | The runtime bus was removed; OpenClaw has no event-bus claim. |
+
+The product-facing `codexDojo/ecosystem/` documents remain an intentional
+contract surface. Prometor is the adversarial learning-gate context, while the
+five-phase Verifier checks phase artifacts; they are distinct responsibilities.
 
 - All paths in the tables above were listed directly via filesystem traversal (`find`/`ls`), not
   inferred from prior summaries — engine directory structures, `curriculum/` (18 project dirs +

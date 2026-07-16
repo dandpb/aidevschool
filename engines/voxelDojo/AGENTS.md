@@ -2,40 +2,28 @@
 
 ## OVERVIEW
 
-`voxelDojo/` is the Three.js dojo / 3D teaching-simulation engine for `aidevschool`. Each game is a Three.js
-simulation for one curriculum concept and emits raw evidence for a separate verifier. The implemented
-pilot is `game-10-hash-ring/`.
-
-## STRUCTURE
-
-```text
-voxelDojo/                 # pnpm workspace (packageManager pnpm@9.15.9)
-├── package.json           # workspace root scripts + shared devDeps
-├── pnpm-workspace.yaml    # packages: game-*
-├── biome.jsonc            # shared lint/format
-├── tsconfig.base.json     # extended by each game
-├── AGENTS.md
-├── game-10-hash-ring/     # pilot Vite app
-└── game-<NN>-<slug>/
-```
-
-Install once from this directory: `pnpm install`. Per-game: `pnpm --filter game-10-hash-ring test`.
+`voxelDojo/` is the Three.js dojo / 3D teaching-simulation workspace. Each `game-*` package teaches
+one curriculum concept and emits raw evidence for a separate verifier; `game-10-hash-ring/` is the
+reference package, not the only implementation.
 
 ## WHERE TO LOOK
 
 | Task | Location | Notes |
 | --- | --- | --- |
 | Define a new game | `PLAN.md` | Fill the template before scaffolding. One game = one concept. |
-| Run the pilot | `game-10-hash-ring/` | Vite + strict TypeScript + Three.js + Vitest + Playwright. |
-| Pilot sim core | `game-10-hash-ring/src/sim/` | Deterministic consistent-hash-ring logic. |
-| Pilot module entry | `game-10-hash-ring/src/index.ts` | Headless controller/sim exports for agents and tests; browser bootstrap stays in `src/main.ts`. |
-| Pilot browser proof | `game-10-hash-ring/playwright/hash-ring.spec.ts` | Boots WebGL, clears L1/L2, asserts `EVIDENCE` records. |
+| Workspace/tooling | `package.json`, `pnpm-workspace.yaml`, `biome.jsonc`, `tsconfig.base.json` | Install once here; root scripts recurse across `game-*`. |
+| Reference package | `game-10-hash-ring/` | Representative Vite + strict TypeScript + Three.js + Vitest + Playwright package. |
+| Package layout | `game-*/src/` | `sim/` is authoritative; `game/` coordinates; `scene/` and HUD project state. |
+| Runtime vs headless entry | `game-*/src/main.ts`, `game-*/src/index.ts` | Browser composition stays in `main.ts`; reusable/test exports stay headless. |
+| Shared scene kit | `shared/sceneHarness.ts`, `shared/viewport.ts` | Internal browser lifecycle, viewport, resize, and disposal helpers. |
+| Browser proof | `game-*/playwright/` | Boots WebGL, drives the real UI, and asserts evidence records. |
 | Engine decisions / data flow | `docs/ARCHITECTURE.md` | Rendering, evidence, verifier handoff. |
 | What's blocking implementation | `docs/GAP_ANALYSIS.md` | Ecosystem-wide gaps and sequence. |
 | Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum; slugs must match. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. Read-only here. |
 | **Cross-engine game contract** | `../../docs/design/teaching-game-contract.md` | Canonical rules for evidence, verifier handoff, packs. Wins on conflict. |
 | Evidence record shape | `../pixelDojo/pixel-quest/docs/content-packs.md` | voxelDojo reuses this schema with `"source": "voxeldojo"`. |
+| Shared evidence package | `../shared/teaching-evidence/` | `@aidevschool/evidence`; one envelope and dual-channel emitter. |
 | Visual language | `docs/3d-style.md` | Palette, camera, lighting, HUD conventions for every game. |
 | Sister-engine conventions | `../pixelDojo/AGENTS.md` | Shared golden rules; genre differs, contract doesn't. |
 
@@ -44,6 +32,7 @@ Install once from this directory: `pnpm install`. Per-game: `pnpm --filter game-
 - Keep `curriculum/` and `learner/` at the root. Reference them via `../../...`; never copy them here.
 - Every game targets exactly one concept from one catalog project; name apps `game-<NN>-<slug>` with
   `<NN>` matching the catalog slug number.
+- Use `docs/GAP_ANALYSIS.md` for implementation status; do not infer completion from directory count.
 - The game is an attempt surface. It emits **raw evidence only** via `window.__voxelDojoEvidence` and
   `EVIDENCE <json>` console records, then stops. `"source"` is always `"voxeldojo"`.
 - The game never writes `mastered`, never appends to `units_log`, never touches
@@ -53,8 +42,8 @@ Install once from this directory: `pnpm install`. Per-game: `pnpm --filter game-
 - Stack: `pnpm`, Vite, strict TypeScript, plain `three` (no react-three-fiber, no physics engine
   unless a concept demands it), Biome, Vitest, Playwright. Match `../codexDojo` and
   `../pixelDojo/pixel-quest` tooling.
-- `threejs-dojo` is a compatibility name for this engine. Keep reusable exports headless in
-  `game-10-hash-ring/src/index.ts`; `src/main.ts` remains the DOM/WebGL bootstrap.
+- `threejs-dojo` is a compatibility name for this engine. Keep `src/index.ts` headless in every
+  package; `src/main.ts` remains the DOM/WebGL bootstrap.
 - Simulation logic is deterministic and headless-testable: pure TypeScript modules with injected
   clocks/RNG, unit-tested without WebGL. The Three.js layer only renders state.
 - Content is data-only packs (typed scenario definitions, no arbitrary JS), mirroring the
@@ -65,8 +54,12 @@ Install once from this directory: `pnpm install`. Per-game: `pnpm --filter game-
 ## COMMANDS
 
 ```bash
-cd game-10-hash-ring
-pnpm run lint && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run smoke
+pnpm run lint
+pnpm run test
+pnpm run typecheck
+pnpm run build
+pnpm run smoke
+pnpm --filter game-10-hash-ring dev
 ```
 
 Use `npm` only where `pnpm` is unavailable in Linux verification.

@@ -4,7 +4,7 @@ argument-hint: "[projeto opcional]"
 ---
 
 Dispare o subagent **`reviewer`** (via Task) para a Fase 3 do projeto `$ARGUMENTS` (ou o
-`current_project`). Pré-condição: `learner/pipeline_status.md` em `impl-done` (as 3 implementações verificadas).
+`current_project`). Pré-condição: estado YAML-first em `impl-done` (as 3 implementações verificadas).
 
 ```yaml
 phase: review
@@ -37,6 +37,6 @@ Instruções ao produtor (`reviewer`):
 Quando o `reviewer` terminar, dispare o subagent **`verifier`** (fase `review`) como Task novo, sem
 nenhum contexto do produtor além dos artefatos no filesystem: ele confere 3 issues ao acaso
 (file:line reais no código atual), consistência de severidade, as 7 categorias e a qualidade do quiz.
-Só em **PASS** atualize `learner/pipeline_status.md`: `phase: review-done`, `awaiting: benchmarker`,
+Só em **PASS** atualize o YAML por `save_status`: `phase: review-done`, `awaiting: benchmarker`,
 `agents.reviewer: done` + nota com os artefatos produzidos. Em FAIL, devolva o feedback concreto ao
 `reviewer` (respeite `retry_limit`). Próximo comando: `/devschool-benchmark`.

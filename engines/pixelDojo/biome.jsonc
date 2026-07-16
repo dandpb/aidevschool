@@ -43,8 +43,7 @@
     "includes": [
       "pixel-quest/src/**/*.ts",
       "pixel-quest/playwright/**/*.ts",
-      "games/*/src/**/*.ts",
-      "games/*/playwright/**/*.ts",
+      "shared/**/*.ts",
       "!**/dist",
       "!**/node_modules",
       "!**/coverage"

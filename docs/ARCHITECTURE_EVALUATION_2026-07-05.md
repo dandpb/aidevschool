@@ -71,7 +71,9 @@ Nota: o `CLAUDE.md` raiz lista só 4 engines; `openclaw` e `voxelDojo` estão fo
 ## Registro de correções aplicadas (2026-07-05, mesma sessão)
 
 - **GAP 1 fechado:** `learning_state.yaml` resetado — as 18 masterizações semeadas removidas; correção registrada em `learner/journal.md` (entradas de "Verification" de 2026-07-01 marcadas como não-substanciadas, preservadas pela regra de auditoria).
-- **GAP 2 fechado:** verificador criado em `engines/pixelDojo/verifier/` (Python, 17 testes passando). Valida unit/project match, attempt-before-solution, estado `evaluating`, consistência interna; aplica gate via `learner.substrate.scheduling` e valida invariantes antes de gravar.
+- **GAP 2 fechado:** verificador hoje em `learner/gate/` (Python, source-agnostic). Valida
+  unit/project match, attempt-before-solution, estado `evaluating` e consistência interna; aplica o
+  gate pela API atômica do substrato antes de gravar. A localização original sob Pixel foi removida.
 - **MVP cumprido:** primeiro loop real fechado — U0 gateado a partir da evidência GATEKEEPER real (2026-06-09) + attempt file: `units_log` tem 1 entrada legítima (`pass_first_try`, 2026-07-05); streak 1. Views derivadas regeneradas (`.mavis/`, codexDojo `learner.ts`, whiteboard, review slices).
 - **GAP 5 retratado:** ver acima — voxelDojo mantido.
 - **GAP 6 fechado:** `CLAUDE.md` raiz atualizado com os 6 engines e o fluxo do gate.

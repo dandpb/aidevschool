@@ -1,8 +1,8 @@
 # Pipeline Status — Rate Limiter
 
 > Superseded 2026-07-06 by the gated cycle `2026-06-04-01-rate-limiter` (this file previously
-> reflected the earlier, ungated `2026-06-03-01-rate-limiter` cycle). See
-> `learner/pipeline_status.md` for the canonical, current pipeline state.
+> reflected the earlier, ungated `2026-06-03-01-rate-limiter` cycle). The machine-readable
+> authority is `learner/pipeline_status.yaml`; `learner/pipeline_status.md` is narrative only.
 
 - **project_id:** 01_rate_limiter
 - **project_name:** Rate Limiter (Token Bucket)

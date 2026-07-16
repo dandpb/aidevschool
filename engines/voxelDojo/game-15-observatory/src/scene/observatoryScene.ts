@@ -1,5 +1,5 @@
 import * as THREE from "three"
-import { OrbitControls } from "three/addons/controls/OrbitControls.js"
+import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { percentile } from "../sim/histogram"
 import { N_BUCKETS } from "../sim/levels"
@@ -18,7 +18,6 @@ const WATCH_Y = 1.2 // contour ring floats just above the terrain ridge line
 const CLEAR_COLOR = new THREE.Color("#4fc3f7") // cyan — alert silent
 const FIRING_COLOR = new THREE.Color("#f06292") // red — alert firing
 const CONTOUR_COLOR = new THREE.Color("#ffd54f") // amber percentile ring
-const GROUND_COLOR = new THREE.Color("#0b0e14")
 
 export const PALETTE = [
   "#4fc3f7",
@@ -54,10 +53,7 @@ function countToY(count: number): number {
  * turns red when the percentile value crosses past it.
  */
 export class ObservatoryScene {
-  private renderer: THREE.WebGLRenderer
-  private scene = new THREE.Scene()
-  private camera: THREE.PerspectiveCamera
-  private controls: OrbitControls
+  private readonly viewport: Viewport
   private terrainGroup = new THREE.Group()
   private columnMeshes: THREE.Mesh[] = []
   private contourRing: THREE.Mesh
@@ -67,29 +63,31 @@ export class ObservatoryScene {
   private firingFlash: THREE.Mesh
   private firingMaterial: THREE.MeshBasicMaterial
   private clock = new THREE.Clock()
-  private raycaster = new THREE.Raycaster()
-  private pointer = new THREE.Vector2()
   private firing = false
   onBucketClick: ((bucket: number) => void) | null = null
 
   constructor(canvas: HTMLCanvasElement) {
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    this.scene.background = GROUND_COLOR.clone()
-    this.scene.fog = new THREE.Fog("#0b0e14", 26, 64)
-    this.camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200)
-    this.camera.position.set(0, 7, 18)
-    this.controls = new OrbitControls(this.camera, canvas)
-    this.controls.enableDamping = true
-    this.controls.maxDistance = 60
-    this.controls.minDistance = 8
-    this.controls.target.set(0, 2, 0)
+    this.viewport = createViewport(canvas, {
+      background: "#0b0e14",
+      fogNear: 26,
+      fogFar: 64,
+      cameraPosition: [0, 7, 18],
+      controlsTarget: [0, 2, 0],
+      minDistance: 8,
+      maxDistance: 60,
+      ambientIntensity: 0.8,
+      keyIntensity: 1.0,
+      keyPosition: [6, 14, 8],
+      onFrame: () => {
+        this.animate(this.clock.getElapsedTime())
+      },
+    })
 
-    this.scene.add(this.terrainGroup)
+    this.viewport.scene.add(this.terrainGroup)
     // faint reference grid floor for spatial anchoring
     const grid = new THREE.GridHelper(AXIS_LENGTH * 2.4, 24, "#1c2236", "#141a2b")
     grid.position.y = -0.02
-    this.scene.add(grid)
+    this.viewport.scene.add(grid)
     // value axis line (the floor of the histogram)
     const axis = new THREE.Mesh(
       new THREE.BoxGeometry(AXIS_LENGTH + 0.4, 0.06, 0.4),
@@ -97,11 +95,6 @@ export class ObservatoryScene {
     )
     axis.position.set(0, 0, AXIS_Z)
     this.terrainGroup.add(axis)
-
-    this.scene.add(new THREE.AmbientLight("#ffffff", 0.8))
-    const key = new THREE.DirectionalLight("#ffffff", 1.0)
-    key.position.set(6, 14, 8)
-    this.scene.add(key)
 
     // percentile contour ring (sits at the watched-percentile x value, glows amber)
     this.contourRing = new THREE.Mesh(
@@ -144,35 +137,15 @@ export class ObservatoryScene {
       this.firingMaterial,
     )
     this.firingFlash.position.set(0, 6, AXIS_Z - 1.5)
-    this.scene.add(this.firingFlash)
+    this.viewport.scene.add(this.firingFlash)
 
     canvas.addEventListener("pointerdown", (e) => this.pick(e))
-    window.addEventListener("resize", () => this.resize())
-    this.resize()
-    this.renderer.setAnimationLoop(() => {
-      this.controls.update()
-      this.animate(this.clock.getElapsedTime())
-      this.renderer.render(this.scene, this.camera)
-    })
-  }
-
-  private resize(): void {
-    const el = this.renderer.domElement
-    const w = el.clientWidth || el.parentElement?.clientWidth || 800
-    const h = el.clientHeight || el.parentElement?.clientHeight || 600
-    this.renderer.setSize(w, h, false)
-    this.camera.aspect = w / h
-    this.camera.updateProjectionMatrix()
   }
 
   private pick(e: PointerEvent): void {
-    const rect = this.renderer.domElement.getBoundingClientRect()
-    this.pointer.set(
-      ((e.clientX - rect.left) / rect.width) * 2 - 1,
-      -((e.clientY - rect.top) / rect.height) * 2 + 1,
-    )
-    this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects(this.columnMeshes)
+    this.viewport.setPointerFromEvent(e)
+    this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
+    const hits = this.viewport.raycaster.intersectObjects(this.columnMeshes)
     const first = hits[0]
     if (first && this.onBucketClick) {
       const bucket = (first.object.userData as { bucket?: number }).bucket

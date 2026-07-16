@@ -1,0 +1,25 @@
+:root {
+  font-family: "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #eef3ff;
+  background: #07101f;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #070b14;
+  --panel: rgba(10, 17, 31, 0.92);
+  --panel-solid: #0d1525;
+  --panel-soft: #121d31;
+  --line: rgba(255, 255, 255, 0.1);
+  --muted: #8f9bb0;
+  --coral: #ff755d;
+  --violet: #9b82ff;
+  --blue: #4d8fff;
+  --cyan: #4dd8d0;
+  --success: #63d899;
+}
+
+* { box-sizing: border-box; }
+html { width: 100%; min-width: 320px; height: 100%; margin: 0; overflow: hidden; }
+body, #root { width: 100%; min-width: 320px; height: 100dvh; margin: 0; overflow: hidden; }
+button, input { font: inherit; }
+button { color: inherit; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }

@@ -7,8 +7,8 @@ under five minutes.
 
 | Tool | Version | Why |
 | --- | --- | --- |
-| Node.js | 18.18+ (20 or 22 LTS recommended) | Required by Vite 7; used by both runnable apps. |
-| pnpm | 9+ (`corepack enable`) | Package manager for both apps. Every app command uses `pnpm`. |
+| Node.js | 20.19+ or 22.12+ | Required by Vite 8 in codexDojo OS; Node 22 LTS is recommended. |
+| pnpm | 9+ (`corepack enable`) | Package manager for `codexDojo`, `pixelDojo`, and `voxelDojo`. |
 | Python 3 | 3.10+ | Regenerating learner-data views (the substrate). |
 | Go / Rust | latest stable | Only if you build/run the polyglot `curriculum/` implementations. |
 
@@ -18,6 +18,9 @@ Enable pnpm once:
 corepack enable
 corepack prepare pnpm@latest --activate
 ```
+
+The codexDojo OS engine uses npm and its own `package-lock.json`. Keep package-manager commands
+inside the target engine.
 
 > The repository root has **no** `package.json`. Never run `npm install` or `pnpm install` at the
 > root — install inside an individual engine instead.
@@ -35,9 +38,24 @@ pnpm run dev
 
 You'll see a sidebar of views: **Painel** (Overview), **Learner**, **Agentes** (Agents),
 **Ciclo** (Cycle), and **Roadmap**. The learner data shown is auto-generated from the substrate —
-see §5.
+see §6.
 
-## 3. Run the game (pixelDojo)
+## 3. Run codexDojo OS
+
+This standalone Vite/React app owns the educational Linux desktop and contextual learning UI.
+
+```bash
+cd engines/codexdojo-os-prototype
+npm install
+npm run dev
+```
+
+The app reads its learner status from generated `src/data/learner.ts`. Run
+`python3 -m learner.substrate` after canonical learner changes. Missions, catalog, terminal, and
+mentor interactions remain local React UI state and do not count as executable mastery evidence.
+See the [OS engine doc](03b_engine_codexdojo-os-prototype.md) for the boundary.
+
+## 4. Run the game (pixelDojo)
 
 `pixel-quest` is the canonical teaching game (a top-down RPG where each lab is a curriculum concept).
 
@@ -56,7 +74,7 @@ Run the evidence contract:
 pnpm run smoke   # Playwright: plays through labs, asserts evidence shape, asserts no mastery side-effects
 ```
 
-## 4. Run the Claude Code motor (miniMaxEvolutionEngine)
+## 5. Run the Claude Code motor (miniMaxEvolutionEngine)
 
 This engine is driven from Claude Code, not a dev server.
 
@@ -69,7 +87,7 @@ This engine is driven from Claude Code, not a dev server.
 
 See [the engine doc](06_engine_miniMaxEvolutionEngine.md) for the full command list.
 
-## 5. Regenerate learner data (the substrate)
+## 6. Regenerate learner data (the substrate)
 
 Canonical learner state lives in `learner/learning_state.yaml`. The dashboard's `learner.ts`, the
 game's `reviewSlice.ts`, the `.mavis/` view, and the minimaxDojo whiteboard are all **regenerated**
@@ -85,7 +103,7 @@ The substrate validates invariants (state machine, retry limits, FSRS rating con
 on violation. After regenerating, rebuild the affected app (`pnpm run build`). Full contract:
 `learner/substrate/interface.md` and [Learner substrate](08_learner_substrate.md).
 
-## 6. The learning workflow
+## 7. The learning workflow
 
 This is a school, and the workflow preserves productive struggle:
 
@@ -107,13 +125,15 @@ The rules that make it work:
 - **Producer ≠ verifier.** The verifier sees the spec, not the producer's reasoning.
 - **The filesystem is the source of truth.** Derived views are regenerated, never hand-edited.
 
-## 7. Validate your changes
+## 8. Validate your changes
 
 Runnable apps:
 
 ```bash
 # dashboard
 cd engines/codexDojo               && pnpm run lint && pnpm run test && pnpm run build
+# codexDojo OS
+cd engines/codexdojo-os-prototype  && npm run lint && npm run test && npm run build
 # game
 cd engines/pixelDojo/pixel-quest   && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 ```
@@ -139,7 +159,7 @@ cd curriculum/01_rate_limiter/go-impl   && go test -race -cover ./...
 cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test
 ```
 
-## 8. Where to find what
+## 9. Where to find what
 
 | Task | Location |
 | --- | --- |
@@ -148,13 +168,14 @@ cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --a
 | Change project specs / evidence | `curriculum/<NN_project>/` |
 | Add or edit a curriculum project | start from `curriculum/catalog.md` (canonical list) |
 | Work on the dashboard | `engines/codexDojo/` |
+| Work on the educational OS | `engines/codexdojo-os-prototype/` |
 | Work on the game | `engines/pixelDojo/pixel-quest/` |
 | Work on the tutor core | `engines/minimaxDojo/` (start at `INDEX.md`) |
 | Run Claude Code orchestration | `engines/miniMaxEvolutionEngine/` |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/MANIFEST.md` |
 | Look up a term | [Glossary](09_glossary.md) |
 
-## 9. Tooling roots (the dot-directories)
+## 10. Tooling roots (the dot-directories)
 
 Most `.X/` directories at the root are platform/session state, not source:
 

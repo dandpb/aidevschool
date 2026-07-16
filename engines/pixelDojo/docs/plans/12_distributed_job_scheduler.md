@@ -86,7 +86,7 @@
     terms_bumped, max_term_reached, partitions_injected, queue_stall_secs, leader_flip_flops,
     non_leader_dispatch_attempts}`.
 8. **Evidence emit.** If the pass rule holds, the scene emits one `EVIDENCE {...}` line to the
-   in-page channel and the NDJSON `.logs/evidence.ndjson`. Gate-locked exit door goes green; the
+   in-page `window.__voxelDojoEvidence` channel and `EVIDENCE` console. Gate-locked exit door goes green; the
    next wave's difficulty (more partitions, shorter election timeout, larger job queue, lower
    priority signal-to-noise) unlocks.
 
@@ -135,8 +135,8 @@
   evidence with `scheduled_review: false` and `review_reason: "deepening"`; the verifier will not
   promote until the substrate registers the unit. The game never writes learner state.
 - **Encounter / scene id:** `raft-ring-01`.
-- **Evidence channel (producer side):** append-only `window.__raftDojoEvidence` plus NDJSON at
-  `engines/pixelDojo/games/12_distributed_job_scheduler/.logs/evidence.ndjson`, mirroring the
+- **Evidence channel (producer side):** append-only `window.__voxelDojoEvidence` plus `EVIDENCE`
+  console records from `engines/voxelDojo/game-12-mission-control/`, mirroring the
   `EVIDENCE_CONTRACT.md` producer pattern (game emits, verifier owns mastery).
 - **Evidence record fields** (this game's metrics variant — `kind: "threejs-raft-fencing"`):
   ```json

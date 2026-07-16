@@ -9,9 +9,9 @@ The game is an attempt surface. Evidence flows through one typed emitter
 (`src/game/evidence/emitter.ts`): each record is validated, appended to the append-only
 `window.__pixelQuestEvidence` array, and logged as `EVIDENCE <json>` to the console. The Playwright
 smoke run persists the array to `.logs/evidence.ndjson` — the contract input for
-`engines/pixelDojo/verifier` (schema in `../EVIDENCE_CONTRACT.md`). The game does not write
+`python3 -m learner.gate` (schema in `../EVIDENCE_CONTRACT.md`). The game does not write
 `learner/learning_state.yaml`, append `units_log`, or mark mastery. A separate verifier owns that
-gate.
+gate through the substrate's atomic transition API.
 
 The current HUD also renders a read-only scheduled-review projection: due review, streak, freeze
 count, and verifier-pending state. This is session feedback only; the substrate remains the scheduler

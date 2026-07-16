@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
-import { linuxApps } from "./data/linuxApps"
 import { projects } from "./data/projects"
+import { linuxApps } from "./linuxLab"
 import { getCurrentProject, getMetrics, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
@@ -61,6 +61,15 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain("Command line interface")
     expect(html).toContain("Run Lab")
     expect(html).toContain("Observe")
+  })
+
+  it("linuxLab: exposes the promoted OS engine through an accessible launch bridge", () => {
+    const html = renderShell(stateWith({ view: "linuxLab" }))
+
+    expect(html).toContain('data-codexdojo-os-launch="true"')
+    expect(html).toContain("Abrir codexDojo OS")
+    expect(html).toContain('target="_blank"')
+    expect(html).toContain('rel="noreferrer"')
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {

@@ -1,6 +1,5 @@
 """Adapter that derives the .mavis/learning_state.yaml view."""
 
-import datetime
 from pathlib import Path
 from typing import Any
 
@@ -27,8 +26,6 @@ def derive_mavis_view(state: dict[str, Any]) -> dict[str, Any]:
     """Return the Mavis view derived from the canonical learner state."""
     learner = state["learner"]
     active = state["active_unit"]
-    now = datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0)
-
     focus_languages = [learner["active_language"]]
     reference_languages = [lang for lang in learner.get("languages", []) if lang != learner["active_language"]]
 
@@ -39,15 +36,7 @@ def derive_mavis_view(state: dict[str, Any]) -> dict[str, Any]:
         "version": 3,
         "system": state.get("system", "agora-continuum"),
         "derived_from": "learner/learning_state.yaml",
-        "updated_at": now.isoformat(),
         "workspace": str(ROOT),
-        "change_log": [
-            {
-                "at": now.isoformat(),
-                "by": "substrate",
-                "reason": "Derived from canonical learner/learning_state.yaml via learner/substrate/adapters/mavis.py.",
-            }
-        ],
         "learner_profile": {
             "level": learner["level"],
             "goal": learner.get("goal", ""),

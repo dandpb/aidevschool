@@ -101,8 +101,8 @@ append-only and immutable once emitted.
 
 ### Verifier handoff
 
-The game's responsibility ends at emission. The separate verifier
-(`python3 -m engines.pixelDojo.verifier` — source-agnostic despite its location; Prometor role)
+The game's responsibility ends at emission. The separate, engine-neutral verifier
+(`python3 -m learner.gate`, Prometor role)
 reads captured records (Playwright run output in `.logs/`, or the browser-global dump), validates
 against `empirical_gate` / review-scheduling policy, and appends gate/review events to `units_log`.
 Whether a given attempt is a first-mastery gate or a scheduled review is decided by learner state,

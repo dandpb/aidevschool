@@ -1,7 +1,7 @@
 # PLAN slice — `03_url_shortener` (Slug Launcher)
 
 > PLAN slice for `/threejs-dojo 03_url_shortener`. Shape **B** — a fresh standalone 3D
-> (three.js) sibling app at `engines/pixelDojo/games/03_url_shortener/`, NOT a pixel-quest
+> (three.js) sibling app at `engines/voxelDojo/game-03-wormhole/`, NOT a pixel-quest
 > encounter. The pixel-quest shell (token-meter admit/reject lanes) cannot represent the
 > core mechanic here — code generation is **encode + collision-retry**, not lane gating.
 > The 3D scene embodies the concept: a hash cannon that maps long-URL crates to base62
@@ -94,12 +94,11 @@ and retry (or switch strategy) within the spec's retry budget?
 ## 11. Learning-gate hooks
 
 - **Active unit targeted:** `03_url_shortener` (project `03_url_shortener`). The game emits
-  evidence only; `learner/substrate/` (driven by `engines.pixelDojo.verifier`) owns the
-  `units_log` append and any mastery transition. **The game never writes learner state.**
-- **Evidence channel:** the sibling app writes one NDJSON line per cleared-wave attempt to
-  `engines/pixelDojo/games/03_url_shortener/.logs/evidence.ndjson`, and surfaces the same
-  object on `window.__voxelDojoEvidence` (per the cross-engine evidence schema) for the
-  Playwright smoke to capture.
+  evidence only; `learner/gate/` decides the outcome and persists it through
+  `learner/substrate/`. **The game never writes learner state.**
+- **Evidence channel:** the VoxelDojo app surfaces each cleared-wave attempt on
+  `window.__voxelDojoEvidence` and as an `EVIDENCE <json>` console record for the Playwright
+  smoke to capture.
 - **Evidence record fields (one JSON object per line):**
 
   ```json
@@ -145,7 +144,7 @@ and retry (or switch strategy) within the spec's retry budget?
   `window.__pixelQuestLearningState`, must NOT touch `localStorage.learning_state`,
   `units_log`, or `mastered`, and must NOT call any `learner/` write path. Producer ≠ verifier.
 - **Verifier handoff:** the fresh-context verifier subagent receives the four artifacts
-  (this PLAN slice, the game source under `games/03_url_shortener/`, the captured
+  (this PLAN slice, the game source under `engines/voxelDojo/game-03-wormhole/`, the captured
   EVIDENCE record, the screenshot) plus the one-sentence done-rule and judges whether the
   didactic chain (encode → detect collision → retry per RF-011) is evidenced end-to-end
   under Playwright, with the producer≠verifier invariant intact.

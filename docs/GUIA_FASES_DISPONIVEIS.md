@@ -27,10 +27,10 @@ rodou nada.
 | Engine | Papel | Stack | Última verificação real conhecida | Comando de teste |
 |---|---|---|---|---|
 | `miniMaxEvolutionEngine` | Orquestrador do pipeline de 5 fases (Claude Code) | Markdown + subagents | ✅ hoje: `01_rate_limiter` e `02_key_value_store` fechados (Node), Go/Rust não verificados | `/devschool-cycle` (ver §5) |
-| `pixelDojo` | Jogo + verificador do gate de aprendizado | TS/Vite (jogo) + Python (verifier) | ✅ verifier tem 17 testes passando; ⚠️ proveniência da evidência do U0 nunca confirmada como jogo humano vs. script | `python3 -m pytest engines/pixelDojo/verifier/tests/` |
+| `pixelDojo` | Jogo que emite evidência para o gate compartilhado | TS/Vite (jogo) + Python (`learner.gate`) | ✅ gate source-agnostic coberto por testes; ⚠️ proveniência da evidência do U0 nunca confirmada como jogo humano vs. script | `python3 -m pytest learner/gate/tests/` |
 | `minimaxDojo` | Núcleo de tutoria — state machine + gates empíricos (14 agentes) | Python puro | ✅ verificado nesta sessão: 54 passed, 2 skipped | `python3 -m pytest engines/minimaxDojo/tests/ -v` |
 | `codexDojo` | Dashboard read-only (consumidor, não decide nada) | TS/Vite/pnpm | ⚠️ não verificável neste sandbox (binários nativos macOS/arch); baseline documentado: 55 testes em 9 arquivos, último snapshot real 2026-07-02 | `pnpm run test` (no seu Mac) |
-| `openclaw` | Runner contínuo, 5 fases via bus de eventos em arquivo | Python puro | ✅ verificado nesta sessão: 36 passed; simulate run rodou limpo | `python3 -m pytest engines/openclaw/tests/ -v` |
+| `openclaw` | Checklist runner explícito das 5 fases, baseado em arquivos | Python puro | ✅ suíte e preview validados; não há daemon nem event bus | `python3 -m pytest engines/openclaw/tests/ -v` |
 | `voxelDojo` | Simulações 3D didáticas (18 games) | TS/Vite + Playwright | ✅ os 18 games estão trackeados e têm smoke test próprio rodado localmente; 🔴 nenhum foi revisado pedagogicamente por um humano ainda | ver tabela §9 |
 
 ---
@@ -54,7 +54,7 @@ internos. Os comandos Python (`pytest`, `learner.substrate`, etc.) rodam de qual
 /devschool-status
 ```
 
-Lê `learner/pipeline_status.md` e `learner/learning_state.yaml` e te diz, em 2-3 linhas: em que
+Lê `learner/pipeline_status.yaml` e `learner/learning_state.yaml` e te diz, em 2-3 linhas: em que
 projeto/fase você está, se o `gate.implementation_blocked` está ativo, e qual o próximo comando
 concreto a rodar. Não executa nada — só orienta. Rode isso toda vez que voltar a uma sessão.
 
@@ -105,7 +105,9 @@ Playwright automatizado, que é o teste de regressão do próprio jogo (QA), nã
 
 ```bash
 cd ~/Development/aidevschool
-python3 -m engines.pixelDojo.verifier      # --dry-run para só ver a decisão sem gravar
+python3 -m learner.gate --dry-run          # decide sem gravar; remova --dry-run para aplicar
+# Para Voxel/outro produtor sem rubrica embutida no gate:
+python3 -m learner.gate --evidence CAMINHO --verifier-receipt learner/verifier_receipts/RECIBO --dry-run
 python3 -m learner.substrate
 ```
 
@@ -114,18 +116,18 @@ O verificador procura a evidência (`pixel-quest/.logs/evidence.ndjson`, depois 
 (`min_coverage`, `mutation_min`) e só então escreve em `units_log`. Exit `0` = gate aplicado (ou
 nada a avaliar); `1` = evidência rejeitada/ilegível. `learner.substrate` regenera as views derivadas
 (`.mavis/`, dashboard do codexDojo, whiteboard do minimaxDojo) — nunca edite essas views direto.
+Para Voxel, o verificador grava um recibo JSON separado em `learner/verifier_receipts/`; o gate
+rejeita um bloco `verifier` embutido pelo produtor e confere o `evidence_digest` antes de decidir.
 
 **Ponto em aberto que vale sua atenção:** a evidência que gateou U0 (`last_run_evidence.json`,
 2026-06-09) nunca teve sua proveniência confirmada — ninguém checou se veio de você jogando de fato
 ou de uma execução automatizada anterior. Não é urgente, mas antes de tratar U0 como o "modelo" de
 como U1 deveria ficar, vale abrir esse arquivo e confirmar.
 
-### 4.4 — `engines/pixelDojo/games/` vs. `pixel-quest/` — não confunda os dois
+### 4.4 — Superfície Pixel canônica
 
-`pixel-quest/` é o motor do jogo em si (pnpm/vite, roda no navegador). `games/` é um diretório
-irmão com 17 pastas (`02_key_value_store` … `18_search_engine`) de conteúdo/evidência por desafio,
-trazido por um merge (`a892c1b`) durante esta mesma sessão — separado do que este guia testa e
-comenta. Se for auditar conteúdo pedagógico por projeto, é ali que ele mora.
+`pixel-quest/` é o único app Pixel canônico. A antiga árvore órfã
+`engines/pixelDojo/games/` foi removida; conteúdo 3D pertence ao `voxelDojo`.
 
 ---
 
@@ -230,7 +232,7 @@ tipo), mas `biome` e `vitest` quebraram por binário nativo de arquitetura errad
 macOS/outra arch, não roda neste Linux). **No seu Mac isso deve rodar normal** — o baseline
 documentado no próprio `CLAUDE.md` do engine é "vitest run (55 tests in 9 files)". Vale você rodar
 `pnpm run test` uma vez para confirmar que ainda bate, porque o último snapshot real conhecido é de
-**2026-07-02** — antes de tudo que mudamos hoje em `catalog.md`, `pipeline_status.md` e
+**2026-07-02** — antes de tudo que mudamos hoje em `catalog.md`, `pipeline_status.yaml` e
 `learning_state.yaml`. Rode `python3 -m learner.substrate` primeiro para garantir que o snapshot que
 o dashboard lê está atualizado.
 
@@ -241,11 +243,11 @@ antes de confiar cegamente no estado atual do dashboard.
 
 ---
 
-## 8. `openclaw` — runner contínuo (Hermes bus)
+## 8. `openclaw` — checklist runner explícito
 
-**O que é:** o runner file-based que executa o pipeline de 5 fases (spec→impl→review→benchmark→
-optimize) registrando cada handoff de agente como evento JSON imutável num "bus Hermes" em
-`.mavis/hermes/`. Só o `--mode simulate` está implementado — os adapters verificam artefatos já no
+**O que é:** o runner file-based que percorre explicitamente o checklist de 5 fases
+(spec→impl→review→benchmark→optimize) usando `learner/pipeline_status.yaml` como estado de máquina.
+Não existe daemon em segundo plano nem barramento Hermes; os adapters verificam artefatos já no
 disco em vez de invocar modelos de verdade.
 
 **Rodar de verdade:**
@@ -253,13 +255,12 @@ disco em vez de invocar modelos de verdade.
 ```bash
 cd ~/Development/aidevschool
 python3 -m pytest engines/openclaw/tests/ -v
-python3 -m engines.openclaw --project 01_rate_limiter --mode simulate
+python3 -m engines.openclaw --preview
 ```
 
-**Resultado real, rodado nesta sessão: 36 passed, 0 failed** (`engines/openclaw/tests/`, 4
-arquivos). O simulate run **de fato executou** — criou `.mavis/hermes/{outbox,inbox,log,conflicts}/`
-(não existiam antes) e terminou com "Tracer bullet completed successfully.", exit 0. Não escreveu
-eventos porque `curriculum/02_key_value_store` já estava `cycle-complete` no momento do run.
+O `--preview` valida a próxima ação sem mutar o estado. Para uma execução simulada de fase, use os
+argumentos documentados em `engines/openclaw/README.md`; o fluxo continua explícito e auditável em
+arquivos.
 
 **Modos além de `simulate` lançam `NotImplementedError`** — não tente `--mode real` ou parecido, não
 existe ainda. Isso é a Fase 4 do plano: openclaw só ganha orquestração de verdade depois de 2 loops
@@ -270,7 +271,7 @@ testes de recovery, README. É um commit de hardening genuíno, não só conteú
 
 ---
 
-## 9. `voxelDojo` — simulações 3D didáticas (18 games)
+## 9. `voxelDojo` — simulações 3D didáticas (16 games)
 
 **O que é:** engine de simulações 3D para conceitos de sistemas distribuídos, com um contrato
 cross-engine em `docs/design/teaching-game-contract.md`. Cada "game" é um projeto Vite/TS/Three.js
@@ -278,7 +279,7 @@ independente, com seu próprio smoke test via Playwright.
 
 **Atualização importante desde a nossa conversa anterior:** naquele momento, um processo concorrente
 estava escrevendo games novos ao vivo e vários não tinham nem `.gitignore`. Isso **terminou** — hoje
-(2026-07-06) os 18 games (`game-02` a `game-18`, sem `game-01`/`game-04`) estão todos trackeados no
+(2026-07-06) os 16 games (`game-02` a `game-18`, sem `game-01`/`game-04`) estão todos trackeados no
 git e todos têm infraestrutura de smoke test que já rodou pelo menos uma vez localmente:
 
 | Game | Trackeado | Testes/smoke | Evidência de execução |
@@ -345,12 +346,12 @@ Claude Code para juntar os três idiomas no relatório e remover a ressalva "Nod
 | `/devschool-spec/implement/review/benchmark/optimize` | miniMaxEvolutionEngine | As mesmas 5 fases, uma por vez. |
 | `/devschool-next` | miniMaxEvolutionEngine | Fecha o ciclo, escolhe o próximo projeto, abre a próxima unidade. |
 | `npm run dev` (em `pixel-quest/`) | pixelDojo | Joga o encounter de verdade — gera evidência. |
-| `python3 -m engines.pixelDojo.verifier [--dry-run]` | pixelDojo | Lê a evidência do jogo, gateia `units_log`. |
+| `python3 -m learner.gate [--verifier-receipt PATH] [--dry-run]` | compartilhado | Lê evidência pública de Pixel/Voxel, valida o recibo independente quando necessário e decide o gate via substrato. |
 | `python3 -m learner.substrate` | (compartilhado) | Regenera as views derivadas após qualquer mudança de estado. |
 | `python3 -m pytest engines/minimaxDojo/tests/ -v` | minimaxDojo | 54 passed, 2 skipped (verificado hoje). |
 | `pnpm run test` (em `codexDojo/`) | codexDojo | 55 testes em 9 arquivos, documentado — rode no seu Mac para confirmar. |
 | `python3 -m pytest engines/openclaw/tests/ -v` | openclaw | 36 passed (verificado hoje). |
-| `python3 -m engines.openclaw --project NN --mode simulate` | openclaw | Único modo implementado; roda de verdade, sem gravar eventos se o ciclo já está completo. |
+| `python3 -m engines.openclaw --preview` | openclaw | Mostra a próxima ação do checklist sem mutar estado. |
 | `npm run dev` / `npx playwright test` (em cada `game-NN/`) | voxelDojo | Roda e faz smoke test de um game específico. |
 
 **Regra de ouro em todos os passos:** se algo tentar marcar `mastered`/`implemented`/`done`/

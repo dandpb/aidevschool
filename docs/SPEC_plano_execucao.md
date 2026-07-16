@@ -24,7 +24,7 @@ A avaliação de arquitetura de 2026-07-05 encontrou o ecossistema violando suas
 - **Piloto voxelDojo game-10-hash-ring** (Fase 3.2) — fora de escopo até a unidade de consistent hashing entrar em `practicing`; gatilho de currículo, não de calendário.
 - **Automação via openclaw** (Fase 4) — fora de escopo até 2 loops manuais completos (Fases 1+2) provarem o processo; automatizar um processo não-validado é o erro que este plano evita.
 - **Alertas ativos (F7)** — explicitamente adiado; registrado como revisão futura, não como item deste plano.
-- **Edição direta de `pipeline_status.md` ou do catálogo** — nunca é uma forma válida de avançar fase; é exatamente o anti-padrão que gerou o GAP 1.
+- **Edição direta de `pipeline_status.yaml` ou do catálogo** — nunca é uma forma válida de avançar fase; use os fluxos autorizados.
 
 ## User Stories
 
@@ -56,9 +56,9 @@ A avaliação de arquitetura de 2026-07-05 encontrou o ecossistema violando suas
 - Não inclui: reorganizar o handbook.
 
 **1.1 — Review do ciclo 01_rate_limiter**
-- Contexto: `learner/pipeline_status.md` em `impl-done`; 3 implementações prontas (node 91.86%, go 85.9%, rust 20 testes).
+- Contexto: `learner/pipeline_status.yaml` em `impl-done`; 3 implementações prontas (node 91.86%, go 85.9%, rust 20 testes).
 - Comportamento esperado: rodar `/devschool-review` no ciclo `2026-06-04-01-rate-limiter`; reviewer ≠ quem implementou; sem editar as implementações durante o review.
-- Aceite: `pipeline_status.md` avança de `impl-done` para `review-done`; notas de review em `curriculum/01_rate_limiter/`.
+- Aceite: `pipeline_status.yaml` avança de `impl-done` para `review-done`; notas de review em `curriculum/01_rate_limiter/`.
 - Não inclui: benchmark e optimize (próximos pedidos, não encadear).
 
 **1.2 — Benchmark N≥3**
@@ -70,7 +70,7 @@ A avaliação de arquitetura de 2026-07-05 encontrou o ecossistema violando suas
 **1.3 — Optimize + certificação no catálogo**
 - Contexto: benchmark N≥3 concluído.
 - Comportamento esperado: rodar `/devschool-optimize`; `/simplify` no diff antes de commitar (regra de ouro 5); catálogo confirma 01 como `implemented` com evidência completa (spec, 3 impls ≥80%, review, benchmark N≥3, evolution report, verifier PASS).
-- Aceite: `curriculum/BACKLOG_STATUS.md` e `catalog.md` consistentes; `pipeline_status.md` marca o ciclo completo.
+- Aceite: `catalog.md` marca o projeto, o substrato regenera `BACKLOG_STATUS.md`, e `pipeline_status.yaml` marca o ciclo completo.
 - Não inclui: iniciar o projeto 02 (Fase 2, gatilho separado).
 
 ### Should-Have (P1) — Fase 2 (prova de repetibilidade, depende de P0 completo)
@@ -82,8 +82,10 @@ A avaliação de arquitetura de 2026-07-05 encontrou o ecossistema violando suas
 - Não inclui: projetos 03+.
 
 **2.2 — Gate de aprendizado da próxima unidade (U1)**
-- Contexto: U0 gateado 2026-07-05 (única entrada legítima em `units_log`); verificador em `engines/pixelDojo/verifier/`.
-- Comportamento esperado: jogar encounter → evidência persistida → `python3 -m engines.pixelDojo.verifier` → `python3 -m learner.substrate`; tentativa real do aprendiz antes de qualquer avaliação (regra de ouro 1).
+- Contexto: U0 gateado 2026-07-05 (única entrada legítima em `units_log`); verificador compartilhado
+  em `learner/gate/`.
+- Comportamento esperado: jogar encounter → evidência persistida → `python3 -m learner.gate` →
+  `python3 -m learner.substrate`; tentativa real do aprendiz antes de qualquer avaliação (regra de ouro 1).
 - Aceite: `units_log` ganha 1 entrada nova com attempt file correspondente em `learner/attempts/`; views regeneradas.
 - Não inclui: gates em lote — 1 unidade por vez.
 
@@ -101,7 +103,7 @@ A avaliação de arquitetura de 2026-07-05 encontrou o ecossistema violando suas
 
 **4 — Automação via openclaw**
 - Gatilho: 2 loops manuais completos (Fases 1 + 2).
-- Comportamento esperado: openclaw orquestra as transições de fase do pipeline (dispara agente da fase seguinte quando `pipeline_status` muda); filesystem continua fonte da verdade; eventos Hermes em `.mavis/hermes/`; começar em modo simulate.
+- Comportamento esperado: OpenClaw avalia explicitamente a próxima fase quando `pipeline_status.yaml` muda; filesystem continua fonte da verdade; sem daemon/event bus; começar em modo simulate.
 - Aceite: `python3 -m pytest engines/openclaw/tests/` verde + 1 transição de fase real disparada pelo runner com trace auditável.
 - Não inclui: alertas ativos (F7) — registrado como revisão futura, não como item deste ciclo.
 
@@ -131,4 +133,4 @@ Nenhuma métrica adicional de roadmap foi definida além do ACEITE por item (con
 - Ritmo livre, sem prazo fixo (confirmado com o usuário) — nenhuma data-alvo de calendário para o roadmap completo.
 - Dependências sequenciais dentro de cada fase: 0.1 e 0.2 são independentes entre si; 1.1 → 1.2 → 1.3 é estritamente sequencial (sessão Claude Code em `engines/miniMaxEvolutionEngine/`); 2.1 → 2.2 depende da Fase 1 completa.
 - Fase 4 só começa depois de 2 loops manuais completos (Fases 1+2); Fases 3.1/3.2 ficam fora da linha crítica e só avançam por gatilho de currículo, nunca por agenda.
-- Progresso auditável do dia a dia continua vivendo em `learner/pipeline_status.md` e no catálogo — este documento é a spec, não o tracker.
+- Progresso de máquina continua vivendo em `learner/pipeline_status.yaml`; `pipeline_status.md` é narrativa humana, e `catalog.md` é canônico — este documento é a spec, não o tracker.

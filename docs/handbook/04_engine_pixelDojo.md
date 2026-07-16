@@ -81,10 +81,11 @@ New mechanics are added by extending the typed encounter registry (`game/encount
    `recordEvidence(world, this.publishEvidence(evidence))`.
 3. `publishEvidence` (`PixelQuestApp.ts:315`) runs `attachReviewContext(...)`, then
    `validateEvidenceRecord(...)` (strict gatekeeper), then sets `window.__pixelQuestEvidence`.
-4. That is the end of the game's responsibility. The game **never** writes
+4. The shared `@aidevschool/evidence` package publishes the final envelope. That is the end of the
+   game's responsibility. The game **never** writes
    `learner/learning_state.yaml`, never appends `units_log`, never sets `mastered`, never uses
    `localStorage` for evidence. A separate verifier in a different context reads the evidence and
-   owns the mastery transition.
+   owns the mastery transition. Run that boundary with `python3 -m learner.gate`.
 
 `validateEvidenceRecord` requires: `source: "pixelquest"`, non-empty `unit_id` / `project` /
 `encounter_id`, `game: "PixelDojo Quest"`, ISO `ts`, boolean `pass`, a full numeric `metrics` block,

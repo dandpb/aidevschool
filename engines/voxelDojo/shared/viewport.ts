@@ -12,11 +12,17 @@ export interface ViewportOptions {
   fogNear?: number
   fogFar?: number
   cameraPosition?: [number, number, number]
+  controlsTarget?: [number, number, number]
   minDistance?: number
   maxDistance?: number
   ambientIntensity?: number
   keyIntensity?: number
   keyPosition?: [number, number, number]
+  /**
+   * Per-frame hook invoked after controls.update() and before renderer.render().
+   * Scenes use this for custom animation (e.g. traveller streaks, bot movement).
+   */
+  onFrame?: () => void
 }
 
 export interface Viewport {
@@ -31,11 +37,12 @@ export interface Viewport {
   setPointerFromEvent: (e: PointerEvent) => void
 }
 
-const DEFAULTS: Required<ViewportOptions> = {
+const DEFAULTS: Omit<Required<ViewportOptions>, "onFrame"> = {
   background: "#0b0e14",
   fogNear: 24,
   fogFar: 60,
   cameraPosition: [0, 14, 24],
+  controlsTarget: [0, 0, 0],
   minDistance: 8,
   maxDistance: 60,
   ambientIntensity: 0.7,
@@ -63,6 +70,7 @@ export function createViewport(
   controls.enableDamping = true
   controls.minDistance = opts.minDistance
   controls.maxDistance = opts.maxDistance
+  controls.target.set(...opts.controlsTarget)
 
   scene.add(new THREE.AmbientLight("#ffffff", opts.ambientIntensity))
   const key = new THREE.DirectionalLight("#ffffff", opts.keyIntensity)
@@ -86,6 +94,7 @@ export function createViewport(
 
   renderer.setAnimationLoop(() => {
     controls.update()
+    opts.onFrame?.()
     renderer.render(scene, camera)
   })
 

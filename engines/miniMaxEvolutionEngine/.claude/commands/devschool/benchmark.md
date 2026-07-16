@@ -4,7 +4,7 @@ argument-hint: "[projeto opcional]"
 ---
 
 Dispare o subagent **`benchmarker`** (via Task) para a Fase 4 do projeto `$ARGUMENTS` (ou o
-`current_project`). Pré-condição: `learner/pipeline_status.md` em `review-done`.
+`current_project`). Pré-condição: estado YAML-first em `review-done`.
 
 ```yaml
 phase: benchmark
@@ -30,7 +30,7 @@ Harness **nativo, sem Docker** (vive no substrato compartilhado):
 Instruções ao produtor (`benchmarker`):
 
 - Pré-checagem: `go`, `cargo`, `node` e `k6` no PATH. Se faltar algo, PARE e registre o bloqueio em
-  `learner/pipeline_status.md` (`blockers`) — falha nunca é silenciada.
+  o YAML por `save_status` (`blockers`) — falha nunca é silenciada; não sobrescreva Markdown.
 - Rode **N≥3 runs por linguagem** (ports: go=28080, node=28081, rust=28082), salvando cada JSON
   bruto em `curriculum/{project}/benchmarks/results/native/{lang}/run-{i}.json`. Exemplo de 1 run:
   `bash curriculum/_shared/benchmarks/native_runner.sh curriculum/{project} go 28080 curriculum/_shared/benchmarks/generic_http_workload.js > curriculum/{project}/benchmarks/results/native/go/run-1.json`
@@ -48,6 +48,6 @@ ruído (CV); sem dado, sem claim.
 Quando o `benchmarker` terminar, dispare o subagent **`verifier`** (fase `benchmark`) como Task novo,
 sem contexto do produtor: ele confere N≥3 JSONs por linguagem em `benchmarks/results/native/`,
 re-roda 1 run e compara com a mediana reportada (tolerância ±20%), tabela completa (sem TBD) e a
-seção de limitações. Só em **PASS** atualize `learner/pipeline_status.md`: `phase: benchmark-done`,
+seção de limitações. Só em **PASS** atualize o YAML por `save_status`: `phase: benchmark-done`,
 `awaiting: optimizer`, `agents.benchmarker: done`. Em FAIL, devolva ao `benchmarker` (respeite
 `retry_limit`). Próximo comando: `/devschool-optimize`.

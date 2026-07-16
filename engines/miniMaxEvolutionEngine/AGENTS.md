@@ -10,7 +10,7 @@ protocol used by the rest of the ecosystem.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Engine contract | `CLAUDE.md` | Authoritative local operating instructions. |
-| Subagents | `.claude/agents/` | Curator, devs, reviewer, benchmarker, optimizer, sonda, verifier. |
+| Subagents | `.claude/agents/` | Live role contracts; inventory this directory instead of copying counts here. |
 | Slash commands | `.claude/commands/devschool/` | `/devschool-*` workflow entrypoints. |
 | Learning gate skill | `.claude/skills/agora-continuum/SKILL.md` | Gate protocol. |
 | Shared curriculum | `curriculum -> ../../curriculum` | Symlink; do not replace with real files. |
@@ -23,12 +23,19 @@ protocol used by the rest of the ecosystem.
 - Keep `CLAUDE.md` and `.claude/` in sync when changing engine behavior.
 - The loop is plan -> execute -> verify across five phases; verifier runs between producer phases.
 - Implementation agents may run in parallel, but verification must be isolated from producer context.
-- Respect `learner/learning_state.yaml` and `learner/pipeline_status.md` before advancing phases.
+- Respect `learner/learning_state.yaml` and the YAML pipeline status before advancing phases:
+  `learner/pipeline_status.yaml` is always authoritative; Markdown is human narrative and is never parsed.
 - This engine should orchestrate; shared artifacts still live under root `curriculum/`, `learner/`,
   and `docs/`.
+
+## COMMANDS
+
+```bash
+python3 -m pytest .claude/commands/devschool/tests/test_phaserunner.py
+```
 
 ## ANTI-PATTERNS
 
 - Do not replace symlinks with copied shared directories.
-- Do not update `learner/pipeline_status.md` to a later phase before verifier PASS.
+- Do not update pipeline status to a later phase before verifier PASS.
 - Do not create recurring cloud schedules without explicit user confirmation.

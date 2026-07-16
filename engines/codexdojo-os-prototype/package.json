@@ -1,0 +1,37 @@
+{
+  "name": "codexdojo-os-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "build:integrated": "tsc -b && VITE_LOCAL_ENGINE_BRIDGE=true vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "preview:integrated": "npm run build:integrated && VITE_LOCAL_ENGINE_BRIDGE=true vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:smoke": "playwright test",
+    "lint": "biome lint src bridge tests vite.config.ts playwright.config.ts"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.0.3",
+    "lucide-react": "^1.24.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "vite": "^8.1.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.3",
+    "@playwright/test": "^1.61.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "jsdom": "^29.1.1",
+    "react-grab": "^0.1.48",
+    "react-scan": "^0.5.7",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

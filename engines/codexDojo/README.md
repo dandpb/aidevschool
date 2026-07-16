@@ -37,4 +37,4 @@ pnpm run build
 | Curriculum scope | `ecosystem/CURRICULUM_SCOPE.md` |
 | Memory model | `ecosystem/MEMORY_MODEL.md` |
 | Code and technology evaluation | `ecosystem/EVALUATION_MODELS.md` |
-| OpenClaw and Hermes runbook | `ecosystem/OPENCLAW_HERMES_RUNBOOK.md` |
+| OpenClaw checklist-runner runbook | `ecosystem/OPENCLAW_RUNBOOK.md` |

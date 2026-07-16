@@ -20,6 +20,9 @@ types:
     event: presented | gate
     rating: Rating        # present iff event = gate
     gate_outcome: GateOutcome  # present iff event = gate
+    evidence_ts: ISO-8601 timestamp
+    evidence_digest: lowercase SHA-256
+    evidence_verifier_source: string
 
 invariants:
   - learner.id is non-empty
@@ -38,6 +41,11 @@ invariants:
   - streak.freezes.equipped <= streak.freezes.max <= 2  (cap 2: research says 3 ≈ 2)
   - streak.current is non-negative
   - a unit with mastered = true must have >= 1 gate review event in its reviews
+  - a gate review with evidence_verifier_source must have a matching evidence_digest
+  - producer evidence with a pass field must not embed a verifier block
+  - learner.aidi.history is a list of provenance-bearing points; every point has an ISO date,
+    a value in [0,1], and measurement_source in {self_reported, event_computed, derived}
+  - learner.aidi.history dates are strictly ascending and unique; non-empty history ends at learner.aidi.current
 
 adapters:
   mavis:

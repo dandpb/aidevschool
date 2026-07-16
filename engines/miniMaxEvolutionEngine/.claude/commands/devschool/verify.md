@@ -13,4 +13,4 @@ fase correspondente em `.mavis/plans/plan.yaml` como checklist. Ele **re-roda** 
 de verdade e tenta refutar o trabalho (mandato de refutação). Nada de evidência fabricada.
 
 Apresente o veredicto estruturado (PASS/FAIL + checks + evidência file:line). Em FAIL, liste o que o
-produtor precisa corrigir. **Não** atualize `learner/pipeline_status.md` por conta própria — apenas reporte o veredicto.
+produtor precisa corrigir. **Não** atualize o YAML de máquina por conta própria — apenas reporte o veredicto.

@@ -169,8 +169,8 @@ Every failure is a **misread of the queue contract**, not a twitch failure.
   written by the game.
 - **Side-effect contract:** the game does **not** publish `window.__pixelQuestLearningState` and
   does **not** touch `localStorage` keys `learning_state`, `units_log`, or `mastered`. The
-  verifier (`python3 -m engines.pixelDojo.verifier` or the voxelDojo Prometor context) owns the
-  `units_log` append via `learner/substrate/`.
+  gate (`python3 -m learner.gate`) owns the evidence decision and persists the `units_log`
+  append through `learner/substrate/`.
 - **Verifier handoff:** the fresh-context verifier subagent receives (this plan, the smoke spec,
   the `EVIDENCE` console record, the `.logs/` screenshot) and judges against the done-rule:
   **"TASK FORGE emits a valid `voxeldojo-task-queue` evidence record with `pass: true` for

@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
-import { describe, expect, it, vi } from "vitest"
-import type { LinuxApp } from "../data/linuxApps"
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
 import type {
   Agent,
   CycleStage,
@@ -11,10 +10,10 @@ import type {
   Metric,
   UserFacingAgent,
 } from "../domain"
+import { type LinuxApp, linuxAppCategoryLabels, linuxApps, renderLinuxLab } from "../linuxLab"
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
-import { renderLinuxLab } from "./linuxLab"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
@@ -109,7 +108,8 @@ vi.mock("../progress", () => {
       current: 0.3,
       thresholdAmber: 0.6,
       thresholdRed: 0.75,
-      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3 }],
+      measurementSource: "self_reported",
+      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
     },
     topPitfalls: [
       {
@@ -137,6 +137,7 @@ vi.mock("../progress", () => {
       freezesMax: 2,
     },
     curr: 0,
+    challenges: [],
   }
 
   return {
@@ -156,29 +157,50 @@ vi.mock("../progress", () => {
   }
 })
 
-vi.mock("../data/linuxApps", () => {
-  const app: LinuxApp = {
-    id: `evil-${XSS}`,
-    name: `Evil App ${XSS}`,
-    category: "system",
-    principle: `principle ${XSS}`,
-    concept: `concept ${XSS}`,
-    process: `process ${XSS}`,
-    command: `command ${XSS}`,
-    output: `terminal output ${XSS}`,
-    exercise: `exercise ${XSS}`,
-  }
+const maliciousLinuxApp: LinuxApp = {
+  id: `evil-${XSS}`,
+  name: `Evil App ${XSS}`,
+  category: "system",
+  principle: `principle ${XSS}`,
+  concept: `concept ${XSS}`,
+  process: `process ${XSS}`,
+  command: `command ${XSS}`,
+  output: `terminal output ${XSS}`,
+  exercise: `exercise ${XSS}`,
+}
 
-  return {
-    linuxAppCategories: ["system"] as const,
-    linuxAppCategoryLabels: {
-      all: `All apps ${XSS}`,
-      system: `System ${XSS}`,
-    },
-    linuxApps: [app],
-    getLinuxApp: (): LinuxApp => app,
-    getLinuxAppsForCategory: (): readonly LinuxApp[] => [app],
-  }
+const originalLinuxApp = linuxApps[0]
+const originalAllLabel = linuxAppCategoryLabels.all
+const originalSystemLabel = linuxAppCategoryLabels.system
+
+beforeAll(() => {
+  Object.defineProperty(linuxApps, 0, {
+    ...Object.getOwnPropertyDescriptor(linuxApps, 0),
+    value: maliciousLinuxApp,
+  })
+  Object.defineProperty(linuxAppCategoryLabels, "all", {
+    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "all"),
+    value: `All apps ${XSS}`,
+  })
+  Object.defineProperty(linuxAppCategoryLabels, "system", {
+    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "system"),
+    value: `System ${XSS}`,
+  })
+})
+
+afterAll(() => {
+  Object.defineProperty(linuxApps, 0, {
+    ...Object.getOwnPropertyDescriptor(linuxApps, 0),
+    value: originalLinuxApp,
+  })
+  Object.defineProperty(linuxAppCategoryLabels, "all", {
+    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "all"),
+    value: originalAllLabel,
+  })
+  Object.defineProperty(linuxAppCategoryLabels, "system", {
+    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "system"),
+    value: originalSystemLabel,
+  })
 })
 
 const state = buildInitialState("agent-x", "stage-x", "p99")
@@ -209,7 +231,7 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     "agents.ts",
     "cycle.ts",
     "learner.ts",
-    "linuxLab.ts",
+    "../linuxLab/render.ts",
     "nav.ts",
     "overview.ts",
     "project.ts",
@@ -219,6 +241,6 @@ describe("escape coverage — render modules neutralize injected markup", () => 
   it.each(modulesRequiringEscape)("%s imports escapeHtml from ./escape", (moduleFile) => {
     const source = readFileSync(fileURLToPath(new URL(moduleFile, import.meta.url)), "utf8")
 
-    expect(source).toMatch(/import \{ escapeHtml \} from "\.\/escape"/)
+    expect(source).toMatch(/import \{ escapeHtml \} from "(?:\.\/|\.\.\/render\/)escape"/)
   })
 })

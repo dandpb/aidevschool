@@ -1,4 +1,5 @@
-import { GameController } from "./game/controller"
+import { createSceneHarness } from "../../shared/sceneHarness"
+import { GameController, type GameState } from "./game/controller"
 import { mountHud } from "./scene/hud"
 import { ObservatoryScene } from "./scene/observatoryScene"
 
@@ -9,18 +10,17 @@ declare global {
   }
 }
 
-const canvas = document.querySelector<HTMLCanvasElement>("#stage")
-const hudRoot = document.querySelector<HTMLElement>("#hud")
-if (!canvas || !hudRoot) throw new Error("missing #stage or #hud")
-
-const game = new GameController("L1")
-const scene = new ObservatoryScene(canvas)
-scene.onBucketClick = (bucket) => {
-  const lvl = game.snapshot.level.id
-  if (lvl === "L1") game.predictBucket(bucket)
-  if (lvl === "L2") game.predictPercentileBucket(bucket)
-}
-game.subscribe((state) => scene.sync(state))
-mountHud(hudRoot, game)
-
-window.__observatory = { game }
+createSceneHarness<GameState, GameController, ObservatoryScene>({
+  createGame: () => new GameController("L1"),
+  createScene: (canvas) => new ObservatoryScene(canvas),
+  windowKey: "__observatory",
+  mountHud,
+  wireInteraction: (game, scene) => {
+    scene.onBucketClick = (bucket) => {
+      const lvl = game.snapshot.level.id
+      if (lvl === "L1") game.predictBucket(bucket)
+      if (lvl === "L2") game.predictPercentileBucket(bucket)
+    }
+  },
+  onState: (state, _game, scene) => scene.sync(state),
+})
