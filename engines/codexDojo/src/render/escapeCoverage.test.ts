@@ -14,6 +14,7 @@ import { type LinuxApp, linuxAppCategoryLabels, linuxApps, renderLinuxLab } from
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
+import { renderLearnerDashboard } from "./learner"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
@@ -90,32 +91,51 @@ vi.mock("../progress", () => {
       id: `unit-${XSS}`,
       title: `unit title ${XSS}`,
       project: `unit project ${XSS}`,
-      state: "presenting",
-      retryCount: 0,
-      retryLimit: 3,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      state: `presenting ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      retryCount: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      retryLimit: `3 ${XSS}` as any,
     },
     gate: {
       implementationBlocked: true,
       unblockCondition: `condition ${XSS}`,
     },
     profile: {
-      dreyfus: "novice",
-      bloom: "remember",
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      dreyfus: `novice ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      bloom: `remember ${XSS}` as any,
       activeLanguage: `language ${XSS}`,
-      weeklyTimeHours: 5,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      weeklyTimeHours: `5 ${XSS}` as any,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
-      measurementSource: "self_reported",
-      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      current: `0.3 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      thresholdAmber: `0.6 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      thresholdRed: `0.75 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      measurementSource: `self_reported ${XSS}` as any,
+      trend: [
+        {
+          date: `2026-01-01 ${XSS}`,
+          // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+          value: `0.3 ${XSS}` as any,
+          // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+          measurementSource: `self_reported ${XSS}` as any,
+        },
+      ],
     },
     topPitfalls: [
       {
         id: `pitfall-${XSS}`,
         description: `description ${XSS}`,
-        occurrences: 2,
+        // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+        occurrences: `2 ${XSS}` as any,
         lastSeen: `last seen ${XSS}`,
       },
     ],
@@ -124,19 +144,27 @@ vi.mock("../progress", () => {
         unitId: `review-unit-${XSS}`,
         title: `review title ${XSS}`,
         dueIn: `due ${XSS}`,
-        reason: "due",
+        // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+        reason: `due ${XSS}` as any,
       },
     ],
-    masteredCount: 0,
-    scaffoldedCount: 1,
+    // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+    masteredCount: `0 ${XSS}` as any,
+    // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+    scaffoldedCount: `1 ${XSS}` as any,
     streak: {
-      current: 0,
-      longest: 0,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      current: `0 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      longest: `0 ${XSS}` as any,
       lastGateDate: `gate date ${XSS}`,
-      freezesEquipped: 1,
-      freezesMax: 2,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      freezesEquipped: `1 ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+      freezesMax: `2 ${XSS}` as any,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: testing XSS
+    curr: `0 ${XSS}` as any,
     challenges: [],
   }
 
@@ -212,6 +240,8 @@ const renderers = [
   ["roadmap", renderRoadmap],
   ["project", renderProject],
   ["linuxLab", renderLinuxLab],
+  ["learner", renderLearnerDashboard],
+  ["learner", renderLearnerDashboard],
 ] as const
 
 describe("escape coverage — render modules neutralize injected markup", () => {
