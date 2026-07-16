@@ -56,11 +56,8 @@ jobs:
           cache-dependency-path: engines/pixelDojo/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-        working-directory: engines/pixelDojo/pixel-quest
       - run: pnpm test
-        working-directory: engines/pixelDojo/pixel-quest
       - run: pnpm build
-        working-directory: engines/pixelDojo/pixel-quest
 
   voxeldojo:
     name: voxelDojo (TS)
