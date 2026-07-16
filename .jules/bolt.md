@@ -16,3 +16,6 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+## 2024-05-18 - Pre-computing static array lookups to prevent O(n) rendering bottlenecks
+**Learning:** In string-template applications (like codexDojo) or components that rapidly re-render, placing `.filter()` on static datasets inside the render path triggers an O(n) array scan and allocates a new array on every frame or state change. This not only burns CPU but significantly increases garbage collection (GC) pressure since those arrays are immediately discarded.
+**Action:** Always pre-compute static groupings once into a `Map` during module initialization or via `useMemo` in React. Use the `Map` for an O(1) cache lookup in the render/getter function, which returns the exact same array reference and entirely avoids GC thrashing.

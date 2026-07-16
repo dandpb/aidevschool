@@ -707,10 +707,17 @@ export function getLinuxApp(id: string): LinuxApp {
   return linuxApps[0]
 }
 
-export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
-  if (category === "all") {
-    return linuxApps
-  }
+// ⚡ Bolt Optimization: Pre-compute app groupings by category to prevent O(n)
+// .filter() scans on every render frame when switching categories. This avoids
+// generating GC garbage from allocating a new array every time.
+const linuxAppsByCategory = new Map<LinuxAppCategoryFilter, readonly LinuxApp[]>()
+linuxAppsByCategory.set("all", linuxApps)
 
-  return linuxApps.filter((app) => app.category === category)
+for (const app of linuxApps) {
+  const categoryGroup = linuxAppsByCategory.get(app.category) || []
+  linuxAppsByCategory.set(app.category, [...categoryGroup, app])
+}
+
+export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
+  return linuxAppsByCategory.get(category) || []
 }

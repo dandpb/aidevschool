@@ -86,12 +86,19 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
-export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
-  if (filter === "all") {
-    return projects
-  }
+// ⚡ Bolt Optimization: Pre-compute project groupings to prevent O(n) .filter()
+// scans on every render cycle. This yields O(1) lookups and eliminates garbage
+// collection pressure from throwing away newly allocated arrays on each frame.
+const projectsByPhase = new Map<ProjectFilter, readonly DojoProject[]>()
+projectsByPhase.set("all", projects)
 
-  return projects.filter((project) => project.phase === filter)
+for (const project of projects) {
+  const phaseGroup = projectsByPhase.get(project.phase) || []
+  projectsByPhase.set(project.phase, [...phaseGroup, project])
+}
+
+export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
+  return projectsByPhase.get(filter) || []
 }
 
 export function getCurrentProject(): DojoProject {
