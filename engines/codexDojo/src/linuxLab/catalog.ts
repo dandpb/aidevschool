@@ -707,10 +707,22 @@ export function getLinuxApp(id: string): LinuxApp {
   return linuxApps[0]
 }
 
+// ⚡ Bolt: Pre-compute linux app groupings to provide O(1) cache lookups,
+// preventing unnecessary O(n) scans and garbage collection pressure in `.filter()`.
+const linuxAppsByCategory = new Map<string, LinuxApp[]>()
+for (const app of linuxApps) {
+  let categoryApps = linuxAppsByCategory.get(app.category)
+  if (!categoryApps) {
+    categoryApps = []
+    linuxAppsByCategory.set(app.category, categoryApps)
+  }
+  categoryApps.push(app)
+}
+
 export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): readonly LinuxApp[] {
   if (category === "all") {
     return linuxApps
   }
 
-  return linuxApps.filter((app) => app.category === category)
+  return linuxAppsByCategory.get(category) ?? []
 }

@@ -86,12 +86,24 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
+// ⚡ Bolt: Pre-compute project groupings to provide O(1) cache lookups,
+// preventing unnecessary O(n) scans and garbage collection pressure in `.filter()`.
+const projectsByPhase = new Map<string, DojoProject[]>()
+for (const project of projects) {
+  let phaseProjects = projectsByPhase.get(project.phase)
+  if (!phaseProjects) {
+    phaseProjects = []
+    projectsByPhase.set(project.phase, phaseProjects)
+  }
+  phaseProjects.push(project)
+}
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) ?? []
 }
 
 export function getCurrentProject(): DojoProject {

@@ -16,3 +16,6 @@
 ## 2026-07-06 - Prevent unnecessary DOM re-renders in AppState reducer
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
+## 2026-07-09 - Avoid O(N^2) memory churn when pre-computing Maps
+**Learning:** When creating a grouped `Map` during module initialization (to avoid runtime `.filter()`), using the array spread operator (`[...existing, newItem]`) inside the loop creates unnecessary (N^2)$ memory allocations and garbage collection pressure.
+**Action:** When building grouped arrays in a loop, fetch the existing array or create an empty one, then mutate it directly with `.push(newItem)`.
