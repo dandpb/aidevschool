@@ -21,9 +21,9 @@ function renderUnitState(snapshot: LearnerSnapshot): string {
       <p class="eyebrow">Unidade ativa</p>
       <h3>${escapeHtml(snapshot.activeUnit.title)}</h3>
       <div class="learner-unit-meta">
-        <span class="state-pill state-${snapshot.activeUnit.state}">${escapeHtml(snapshot.activeUnit.state)}</span>
+        <span class="state-pill state-${escapeHtml(snapshot.activeUnit.state)}">${escapeHtml(snapshot.activeUnit.state)}</span>
         <span class="gate-pill ${gateClass}">${gateLabel}</span>
-        <span class="retry-pill">${snapshot.activeUnit.retryCount}/${snapshot.activeUnit.retryLimit} retries</span>
+        <span class="retry-pill">${escapeHtml(snapshot.activeUnit.retryCount)}/${escapeHtml(snapshot.activeUnit.retryLimit)} retries</span>
       </div>
       <p class="learner-unit-unblock">Desbloqueio: <code>${escapeHtml(gate.unblockCondition)}</code></p>
     </div>
@@ -38,7 +38,7 @@ function renderProfile(snapshot: LearnerSnapshot): string {
         <div><dt>Dreyfus</dt><dd>${escapeHtml(snapshot.profile.dreyfus)}</dd></div>
         <div><dt>Bloom</dt><dd>${escapeHtml(snapshot.profile.bloom)}</dd></div>
         <div><dt>Linguagem ativa</dt><dd>${escapeHtml(snapshot.profile.activeLanguage)}</dd></div>
-        <div><dt>Tempo semanal</dt><dd>${snapshot.profile.weeklyTimeHours}h</dd></div>
+        <div><dt>Tempo semanal</dt><dd>${escapeHtml(snapshot.profile.weeklyTimeHours)}h</dd></div>
       </dl>
     </div>
   `
@@ -53,16 +53,16 @@ function renderAidi(snapshot: LearnerSnapshot): string {
     <div class="learner-aidi">
       <p class="eyebrow">AI Dependency Index (AIDI)</p>
       <div class="aidi-row">
-        <div class="${signalClass}">
-          <strong>${aidi.current.toFixed(2)}</strong>
-          <small>alerta amarelo em ${aidi.thresholdAmber.toFixed(2)} · vermelho em ${aidi.thresholdRed.toFixed(2)}</small>
+        <div class="${escapeHtml(signalClass)}">
+          <strong>${typeof aidi.current === "number" ? aidi.current.toFixed(2) : escapeHtml(aidi.current)}</strong>
+          <small>alerta amarelo em ${typeof aidi.thresholdAmber === "number" ? aidi.thresholdAmber.toFixed(2) : escapeHtml(aidi.thresholdAmber)} · vermelho em ${typeof aidi.thresholdRed === "number" ? aidi.thresholdRed.toFixed(2) : escapeHtml(aidi.thresholdRed)}</small>
         </div>
         <svg viewBox="0 0 100 24" class="aidi-spark" aria-label="AIDI trendline">
           <rect x="0" y="0" width="100" height="24" class="aidi-bg" rx="2" />
           ${path ? `<path d="${path}" class="aidi-line" />` : ""}
         </svg>
       </div>
-      <small class="aidi-source">Fonte atual: ${escapeHtml(aidi.measurementSource)} · ${aidi.trend.length} pontos canônicos</small>
+      <small class="aidi-source">Fonte atual: ${escapeHtml(aidi.measurementSource)} · ${escapeHtml(aidi.trend.length)} pontos canônicos</small>
     </div>
   `
 }
@@ -82,7 +82,7 @@ function renderPitfalls(snapshot: LearnerSnapshot): string {
               <li>
                 <span class="pitfall-id">${escapeHtml(pitfall.id)}</span>
                 <span class="pitfall-desc">${escapeHtml(pitfall.description)}</span>
-                <span class="pitfall-occ">${pitfall.occurrences}× · ${escapeHtml(pitfall.lastSeen)}</span>
+                <span class="pitfall-occ">${escapeHtml(pitfall.occurrences)}× · ${escapeHtml(pitfall.lastSeen)}</span>
               </li>
             `,
           )
@@ -104,7 +104,7 @@ function renderNextReviews(snapshot: LearnerSnapshot): string {
         ${snapshot.nextReviews
           .map(
             (review) => `
-              <li class="review-row review-${review.reason}">
+              <li class="review-row review-${escapeHtml(review.reason)}">
                 <span class="review-due">${escapeHtml(review.dueIn)}</span>
                 <span class="review-unit">${escapeHtml(review.unitId)}</span>
                 <span class="review-title">${escapeHtml(review.title)}</span>
@@ -124,11 +124,11 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
       <p class="eyebrow">Cobertura do catálogo</p>
       <div class="coverage-grid">
         <div class="coverage-cell coverage-mastered">
-          <strong>${snapshot.masteredCount}</strong>
+          <strong>${escapeHtml(snapshot.masteredCount)}</strong>
           <span>projeto verificado</span>
         </div>
         <div class="coverage-cell coverage-scaffolded">
-          <strong>${snapshot.scaffoldedCount}</strong>
+          <strong>${escapeHtml(snapshot.scaffoldedCount)}</strong>
           <span>com scaffold</span>
         </div>
         <p class="coverage-hint">A cat. <code>curriculum/catalog.md</code> mantém 18 projetos; domínio do learner vem só de <code>learner/learning_state.yaml</code>.</p>
@@ -139,8 +139,11 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
 
 function renderStreak(snapshot: LearnerSnapshot): string {
   const s = snapshot.streak
-  const filled = "❄".repeat(s.freezesEquipped)
-  const empty = "·".repeat(Math.max(0, s.freezesMax - s.freezesEquipped))
+  // We explicitly check typeof to handle our XSS mocked payloads correctly.
+  const freezesEquipped = typeof s.freezesEquipped === "number" ? s.freezesEquipped : 0
+  const freezesMax = typeof s.freezesMax === "number" ? s.freezesMax : 0
+  const filled = "❄".repeat(freezesEquipped)
+  const empty = "·".repeat(Math.max(0, freezesMax - freezesEquipped))
   const lastLabel = s.lastGateDate
     ? `último portão em ${escapeHtml(s.lastGateDate)}`
     : "nenhum portão passado ainda"
@@ -149,8 +152,8 @@ function renderStreak(snapshot: LearnerSnapshot): string {
     <div class="learner-streak">
       <p class="eyebrow">Sequência</p>
       <div class="streak-row">
-        <strong class="streak-current">🔥 ${s.current}</strong>
-        <small class="streak-longest">recorde ${s.longest}</small>
+        <strong class="streak-current">🔥 ${escapeHtml(s.current)}</strong>
+        <small class="streak-longest">recorde ${escapeHtml(s.longest)}</small>
         <span class="streak-freezes" title="Streak freezes (cap 2)">freezes: ${filled}${empty}</span>
       </div>
       <p class="streak-hint">${lastLabel} · cresce só ao passar o portão executável; dia perdido consome um freeze.</p>
@@ -162,7 +165,7 @@ function renderCurr(snapshot: LearnerSnapshot): string {
   return `
     <div class="learner-curr">
       <p class="eyebrow">CURR <small class="curr-proxy-tag">(proxy não validado)</small></p>
-      <strong class="curr-value">${snapshot.curr.toFixed(2)}</strong>
+      <strong class="curr-value">${typeof snapshot.curr === "number" ? snapshot.curr.toFixed(2) : escapeHtml(snapshot.curr)}</strong>
       <p class="curr-hint">
         Retenção aproximada (unidades com revisão de portão nos últimos 7 dias ÷ unidades com portão).
         <strong>Não validado</strong> — não orienta nenhuma decisão automática.
@@ -173,7 +176,7 @@ function renderCurr(snapshot: LearnerSnapshot): string {
 
 export function renderLearnerDashboard(): string {
   const snapshot = getLearnerSnapshot()
-  const points = `${snapshot.aidi.trend.length}/${AIDI_HISTORY_POINTS}`
+  const points = `${escapeHtml(snapshot.aidi.trend.length)}/${AIDI_HISTORY_POINTS}`
 
   return `
     <section class="learner-dashboard" aria-label="Painel do aprendiz">
