@@ -24,7 +24,7 @@ export function renderLinuxLab(state: AppState): string {
         <p class="eyebrow">Linux desktop simulator</p>
         <h1 id="linux-lab-title">Linux Lab</h1>
         <p class="lead">
-          Launch ${linuxApps.length} learning apps, run a small simulation, then connect the app to a programming principle.
+          Launch ${escapeHtml(linuxApps.length)} learning apps, run a small simulation, then connect the app to a programming principle.
         </p>
       </div>
       ${renderOsEngineBridge()}
@@ -62,9 +62,9 @@ function renderTopBar(activeApp: LinuxApp, runCount: number): string {
   return `
     <div class="linux-topbar">
       <strong>Linux Lab</strong>
-      <span>${linuxApps.length} apps installed</span>
+      <span>${escapeHtml(linuxApps.length)} apps installed</span>
       <span>Active: ${escapeHtml(activeApp.name)}</span>
-      <span>${runCount} lab runs</span>
+      <span>${escapeHtml(runCount)} lab runs</span>
     </div>
   `
 }
@@ -132,7 +132,7 @@ function renderActiveWindow(app: LinuxApp, runCount: number): string {
           </div>
           <button class="action-button" type="button" data-action="run-linux-lab">Run Lab</button>
         </div>
-        <p class="linux-receipt">${receipt}</p>
+        <p class="linux-receipt">${escapeHtml(receipt)}</p>
       </div>
     </article>
   `

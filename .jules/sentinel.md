@@ -8,7 +8,7 @@
 **Learning:** Even fields that are conceptually numeric (like `level`) can become XSS vectors if the underlying type is not strictly validated or if the system is fed malicious non-numeric strings masquerading as numbers from external data sources.
 **Prevention:** Apply `escapeHtml` consistently to ALL dynamic fields rendered via innerHTML templates, regardless of their expected data type.
 
-## 2024-07-04 - Type Coercion Exploits in Unvalidated Numeric Formats
+## 2026-07-17 - Type Coercion Exploits in Unvalidated Numeric Formats
 **Vulnerability:** XSS vulnerability found in `engines/codexDojo/src/render/learner.ts` and `overview.ts` where dynamically retrieved numeric data (including floats using `.toFixed()`) was directly interpolated into innerHTML.
 **Learning:** When string templates handle numbers formatted via `.toFixed()`, directly wrapping them in `escapeHtml` causes runtime crashes during automated XSS payload testing because strings don't have `.toFixed()`. This forces developers to skip escaping or write complex ternary logic, leading to unescaped seams.
 **Prevention:** When escaping numeric fields that require formatting, always use type guarding (e.g., `typeof value === 'number' ? value.toFixed(2) : escapeHtml(value)`) to ensure both safe runtime execution during payload testing and robust XSS protection.

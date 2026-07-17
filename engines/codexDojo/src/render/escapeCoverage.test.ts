@@ -265,6 +265,19 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     expect(renderOverview(state)).toContain('style="width: 0%"')
   })
 
+  it("escapes a malformed Linux Lab run count in every output seam", () => {
+    const malformedState = {
+      ...state,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate corrupted runtime substrate data
+      linuxLabRunCount: XSS as any,
+    }
+    const html = renderLinuxLab(malformedState).toLowerCase()
+
+    expect(html).not.toContain("<script")
+    expect(html).toContain("&lt;script&gt;")
+    expect(html).not.toContain(XSS.toLowerCase())
+  })
+
   // Structural backstop: every render module that interpolates loaded data
   // must import the shared escape util. Catches new modules that assemble
   // HTML without ever reaching for escapeHtml, even before a payload test

@@ -17,10 +17,10 @@
 **Learning:** The codexDojo dashboard uses vanilla TypeScript string templates where `app.ts` relies on object reference equality (`state !== nextState`) to decide if `innerHTML` needs to be replaced. Returning a new object for an unchanged state forces a complete DOM wipe and rebuild.
 **Action:** When adding state mutations to `reduceState`, always check if the dispatched payload differs from the current state. If it is identical, return the original `state` reference to leverage the render bail-out.
 
-## 2026-07-28 - Pre-compute groupings for static datasets to avoid O(n) filter scans
+## 2026-07-17 - Pre-compute groupings for static datasets to avoid O(n) filter scans
 **Learning:** In vanilla TS string-template applications like codexDojo, allocating new arrays via `.filter()` inside render functions on static datasets causes unnecessary O(n) scans and garbage collection pressure.
 **Action:** Pre-compute groupings once into a `Map` to provide O(1) cache lookups, preventing unnecessary O(n) scans and garbage collection pressure.
 
-## 2026-07-09 - Avoid O(n²) memory churn when building grouped Maps
+## 2026-07-17 - Avoid O(n²) memory churn when building grouped Maps
 **Learning:** Repeatedly replacing a grouped array with `[...existing, item]` during module initialization copies the accumulated group on every insertion and creates quadratic allocation pressure.
 **Action:** Build each private group with `.push()`, then expose a frozen readonly snapshot so callers cannot mutate the cached result.
