@@ -9,7 +9,7 @@ and may commit a gate outcome to canonical learner state. It never produces evid
 
 | Task | Location | Notes |
 | --- | --- | --- |
-| Evidence decision | `__init__.py` | Load, select, validate, decide, then call the gate-specific substrate API. |
+| Public gate operation | `__init__.py` | Call `verify_and_gate(...)`; loading, validation, decision, and persistence stay internal. |
 | Gate transition | `../substrate/gate.py` | Pure transition and canonical commit boundary. |
 | CLI behavior | `__main__.py` | Evidence-path fallback, dry-run, output, and exit semantics. |
 | Verifier receipt | `verifier_receipt.py` | Confined receipt loading, typed schema, and digest binding. |
@@ -28,6 +28,7 @@ and may commit a gate outcome to canonical learner state. It never produces evid
   evidence timestamp newer than the last consumed gate record.
 - `pass: false` is still an eligible gate outcome; record it without marking mastery.
 - Persist only through `learner.substrate.gate.commit_gate_transition`.
+- Keep `verify_and_gate(...)` as the single public operation; lower-level helpers are implementation details.
 - `--dry-run` must decide without writing canonical or derived state.
 - Reject producer-embedded `verifier` blocks. Independent verdicts arrive as separate files under
   `learner/verifier_receipts/`, bound to producer evidence by its canonical SHA-256 digest.

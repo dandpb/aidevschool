@@ -41,12 +41,6 @@ REQUIRED_EVIDENCE_FIELDS = ("unit_id", "project", "game", "ts", "pass")
 
 __all__ = [
     "GateDecision",
-    "check_evidence",
-    "check_evidence_semantics",
-    "decide",
-    "load_evidence",
-    "load_evidence_ndjson",
-    "select_evidence",
     "verify_and_gate",
 ]
 
@@ -70,7 +64,7 @@ class GateDecision:
         return not self.errors
 
 
-def check_evidence(
+def _check_evidence(
     evidence: dict[str, Any],
     active_unit: dict[str, Any],
     root: Path,
@@ -83,10 +77,7 @@ def check_evidence(
     a well-formed evidence file with ``pass: false`` is eligible — it gates to
     ``fail``. A malformed or mismatched file is not eligible at all.
     """
-    errors = check_evidence_semantics(evidence, active_unit, verifier_receipt)
-    for fname in REQUIRED_EVIDENCE_FIELDS:
-        if fname not in evidence:
-            break
+    errors = _check_evidence_semantics(evidence, active_unit, verifier_receipt)
     if errors:
         return errors
 
@@ -152,7 +143,7 @@ def check_evidence(
     return errors
 
 
-def check_evidence_semantics(
+def _check_evidence_semantics(
     evidence: dict[str, Any],
     active_unit: dict[str, Any],
     verifier_receipt: VerifierReceipt | None = None,
@@ -212,7 +203,7 @@ def check_evidence_semantics(
     return errors
 
 
-def decide(
+def _decide(
     evidence: dict[str, Any],
     active_unit: dict[str, Any],
     root: Path,
@@ -220,7 +211,7 @@ def decide(
     verifier_receipt: VerifierReceipt | None = None,
 ) -> GateDecision:
     """Check eligibility and map the run result to a gate outcome + rating."""
-    errors = check_evidence(
+    errors = _check_evidence(
         evidence,
         active_unit,
         root,
@@ -270,6 +261,15 @@ def decide(
     )
 
 
+def _load_matching_evidence(
+    evidence_path: str | Path, active_unit: dict[str, Any]
+) -> dict[str, Any] | None:
+    """Load the one evidence record relevant to the active unit."""
+    if Path(evidence_path).suffix != ".ndjson":
+        return load_evidence(evidence_path)
+    return select_evidence(load_evidence_ndjson(evidence_path), active_unit)
+
+
 def verify_and_gate(
     root: str | Path,
     evidence_path: str | Path,
@@ -288,19 +288,17 @@ def verify_and_gate(
     root = Path(root)
     today = today or date.today()
 
-    state = load_and_validate(root / "learner" / "learning_state.yaml")
-    if Path(evidence_path).suffix == ".ndjson":
-        evidence = select_evidence(load_evidence_ndjson(evidence_path), state["active_unit"])
-        if evidence is None:
-            return None
-    else:
-        evidence = load_evidence(evidence_path)
+    state_path = root / "learner" / "learning_state.yaml"
+    state = load_and_validate(state_path)
+    evidence = _load_matching_evidence(evidence_path, state["active_unit"])
+    if evidence is None:
+        return None
     verifier_receipt = (
         load_verifier_receipt(verifier_receipt_path, root)
         if verifier_receipt_path is not None
         else None
     )
-    decision = decide(
+    decision = _decide(
         evidence,
         state["active_unit"],
         root,
@@ -311,24 +309,15 @@ def verify_and_gate(
         return decision
     if decision.receipt is None:
         raise GateIntegrityError("eligible gate decision is missing its evidence receipt")
+    transition_options = {
+        "receipt": decision.receipt,
+        "passed": decision.passed,
+        "gate_outcome": decision.gate_outcome,
+        "rating": decision.rating,
+        "today": today,
+    }
     if dry_run:
-        transition_gate(
-            state,
-            receipt=decision.receipt,
-            passed=decision.passed,
-            gate_outcome=decision.gate_outcome,
-            rating=decision.rating,
-            today=today,
-            root=root,
-        )
+        transition_gate(state, root=root, **transition_options)
         return decision
-    commit_gate_transition(
-        state,
-        receipt=decision.receipt,
-        passed=decision.passed,
-        gate_outcome=decision.gate_outcome,
-        rating=decision.rating,
-        today=today,
-        path=root / "learner" / "learning_state.yaml",
-    )
+    commit_gate_transition(state, path=state_path, **transition_options)
     return decision

@@ -9,9 +9,10 @@ from typing import Any
 import pytest
 import yaml
 
+import learner.gate as gate
 from learner.gate import (
-    check_evidence,
-    decide,
+    _check_evidence,
+    _decide,
     load_evidence,
     load_evidence_ndjson,
     select_evidence,
@@ -24,6 +25,13 @@ from learner.substrate import validate
 from learner.substrate.gate import transition_gate
 
 TODAY = date(2026, 7, 5)
+
+
+def test_public_interface_is_one_gate_operation():
+    assert gate.__all__ == ["GateDecision", "verify_and_gate"]
+    assert not hasattr(gate, "check_evidence")
+    assert not hasattr(gate, "check_evidence_semantics")
+    assert not hasattr(gate, "decide")
 
 
 def make_evidence(**overrides: Any) -> dict[str, Any]:
@@ -165,22 +173,22 @@ class TestCheckEvidence:
         assert errors == []
 
     def test_valid_evidence_is_eligible(self, root: Path):
-        assert check_evidence(make_evidence(), make_state()["active_unit"], root) == []
+        assert _check_evidence(make_evidence(), make_state()["active_unit"], root) == []
 
     def test_missing_required_field_rejected(self, root: Path):
         evidence = make_evidence()
         del evidence["pass"]
-        errors = check_evidence(evidence, make_state()["active_unit"], root)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
         assert any("'pass'" in e for e in errors)
 
     def test_unit_mismatch_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(unit_id="U9-other"), make_state()["active_unit"], root
         )
         assert any("does not match" in e for e in errors)
 
     def test_missing_attempt_file_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(),
             make_state(attempt_file="learner/attempts/nope.md")["active_unit"],
             root,
@@ -188,25 +196,25 @@ class TestCheckEvidence:
         assert any("attempt file not found" in e for e in errors)
 
     def test_no_attempt_declared_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(), make_state(attempt_file=None)["active_unit"], root
         )
         assert any("attempt-before-solution" in e for e in errors)
 
     def test_wrong_state_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(), make_state(state="presenting")["active_unit"], root
         )
         assert any("evaluating" in e for e in errors)
 
     def test_inconsistent_pass_with_abuse_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(abusive_admitted=3), make_state()["active_unit"], root
         )
         assert any("claimed-versus-verified disagreement" in e for e in errors)
 
     def test_nested_disqualifying_metric_overrides_producer_pass(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(metrics={"ordering_violations": 1}),
             make_state()["active_unit"],
             root,
@@ -221,7 +229,7 @@ class TestCheckEvidence:
         )
 
         # When: the independent gate evaluates it
-        errors = check_evidence(evidence, make_state()["active_unit"], root)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
 
         # Then: producer pass is not treated as independent proof
         assert any("independent verifier" in error for error in errors)
@@ -239,7 +247,7 @@ class TestCheckEvidence:
         )
 
         # When: the gate checks eligibility
-        errors = check_evidence(evidence, make_state()["active_unit"], root)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
 
         # Then: an embedded producer-controlled block is not an authority
         assert any("embedded verifier" in error for error in errors)
@@ -248,7 +256,7 @@ class TestCheckEvidence:
         evidence = make_evidence(
             verifier={"verdict": "PASS", "context_isolated": True}
         )
-        errors = check_evidence(evidence, make_state()["active_unit"], root)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
         assert any("embedded verifier" in error for error in errors)
 
     def test_below_threshold_verifier_pass_is_rejected(self, root: Path):
@@ -260,7 +268,7 @@ class TestCheckEvidence:
                 "coverage_core": 0.8,
             }
         )
-        errors = check_evidence(evidence, make_state()["active_unit"], root)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root)
         assert any("embedded verifier" in error for error in errors)
 
     @pytest.mark.parametrize(
@@ -306,7 +314,7 @@ class TestCheckEvidence:
     def test_known_rubric_threshold_violation_rejects_producer_pass(
         self, root: Path, metrics: dict[str, Any]
     ):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(game="PixelDojo Quest", metrics=metrics),
             make_state()["active_unit"],
             root,
@@ -342,7 +350,7 @@ class TestCheckEvidence:
             game=game,
             metrics={"completed": 1},
         )
-        producer_only_errors = check_evidence(base, make_state()["active_unit"], root)
+        producer_only_errors = _check_evidence(base, make_state()["active_unit"], root)
         assert any("independent verifier" in error for error in producer_only_errors)
 
         embedded_only = {
@@ -354,14 +362,14 @@ class TestCheckEvidence:
                 "coverage_core": 0.8,
             },
         }
-        embedded_errors = check_evidence(
+        embedded_errors = _check_evidence(
             embedded_only, make_state()["active_unit"], root
         )
         assert any("embedded verifier" in error for error in embedded_errors)
 
         separate_receipt = make_verifier_receipt(base)
         assert (
-            check_evidence(
+            _check_evidence(
                 base,
                 make_state()["active_unit"],
                 root,
@@ -374,7 +382,7 @@ class TestCheckEvidence:
         evidence = make_evidence(source="voxeldojo", game="WAREHOUSE")
         receipt = make_verifier_receipt(evidence, evidence_digest="0" * 64)
 
-        errors = check_evidence(
+        errors = _check_evidence(
             evidence,
             make_state()["active_unit"],
             root,
@@ -440,7 +448,7 @@ class TestCheckEvidence:
         assert any("producer-controlled 'verifier'" in error for error in errors)
 
     def test_naive_timestamp_is_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(ts="2026-07-05T12:00:00"), make_state()["active_unit"], root
         )
         assert any("timezone" in error for error in errors)
@@ -448,7 +456,7 @@ class TestCheckEvidence:
     def test_attempt_outside_learner_attempts_is_rejected(self, root: Path):
         outside = root / "outside.md"
         outside.write_text("attempt", encoding="utf-8")
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(attempt_id="outside.md"),
             make_state(attempt_file="outside.md")["active_unit"],
             root,
@@ -460,7 +468,7 @@ class TestCheckEvidence:
         outside.write_text("attempt", encoding="utf-8")
         link = root / "learner" / "attempts" / "escape.md"
         link.symlink_to(outside)
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(attempt_id="learner/attempts/escape.md"),
             make_state(attempt_file="learner/attempts/escape.md")["active_unit"],
             root,
@@ -470,7 +478,7 @@ class TestCheckEvidence:
     def test_attempt_directory_is_rejected(self, root: Path):
         directory = root / "learner" / "attempts" / "not-a-file"
         directory.mkdir()
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(attempt_id="learner/attempts/not-a-file"),
             make_state(attempt_file="learner/attempts/not-a-file")["active_unit"],
             root,
@@ -480,16 +488,16 @@ class TestCheckEvidence:
 
 class TestDecide:
     def test_pass_first_try(self, root: Path):
-        d = decide(make_evidence(), make_state()["active_unit"], root)
+        d = _decide(make_evidence(), make_state()["active_unit"], root)
         assert d.ok and d.passed
         assert d.gate_outcome == "pass_first_try" and d.rating == "good"
 
     def test_pass_after_retry(self, root: Path):
-        d = decide(make_evidence(), make_state(retry_count=1)["active_unit"], root)
+        d = _decide(make_evidence(), make_state(retry_count=1)["active_unit"], root)
         assert d.gate_outcome == "pass_retried" and d.rating == "hard"
 
     def test_failed_run_gates_to_fail(self, root: Path):
-        d = decide(make_evidence(**{"pass": False}), make_state()["active_unit"], root)
+        d = _decide(make_evidence(**{"pass": False}), make_state()["active_unit"], root)
         assert d.ok and not d.passed
         assert d.gate_outcome == "fail" and d.rating == "again"
 
@@ -497,7 +505,7 @@ class TestDecide:
         evidence = make_evidence(
             **{"pass": False},
         )
-        decision = decide(
+        decision = _decide(
             evidence,
             make_state()["active_unit"],
             root,
@@ -510,7 +518,7 @@ class TestApplyGate:
     def test_pass_updates_existing_unit_log_and_masters_unit(self, root: Path):
         # Given: the active unit is already registered in the canonical history
         state = make_state(root)
-        decision = decide(make_evidence(), state["active_unit"], root)
+        decision = _decide(make_evidence(), state["active_unit"], root)
         assert decision.receipt is not None
 
         # When: its eligible evidence is gated
@@ -552,7 +560,7 @@ class TestApplyGate:
     def test_fail_increments_retry_and_keeps_evaluating(self, root: Path):
         state = make_state(root)
         evidence = make_evidence(**{"pass": False})
-        decision = decide(evidence, state["active_unit"], root)
+        decision = _decide(evidence, state["active_unit"], root)
         assert decision.receipt is not None
         new_state = transition_gate(
             state,
@@ -755,12 +763,12 @@ class TestSelectEvidence:
 class TestGateIntegrity:
     def test_stub_attempt_rejected(self, root: Path):
         (root / "learner" / "attempts" / "attempt-1.md").write_text("  \n", encoding="utf-8")
-        errors = check_evidence(make_evidence(), make_state()["active_unit"], root)
+        errors = _check_evidence(make_evidence(), make_state()["active_unit"], root)
         assert any("stub" in e for e in errors)
 
     def test_metrics_flat_without_kind_allowed(self, root: Path):
         # Voxel-style flat counters need no kind discriminator.
-        errors = check_evidence(
+        errors = _check_evidence(
             make_ndjson_record(metrics={"advanced": 5}),
             make_state()["active_unit"],
             root,
@@ -768,7 +776,7 @@ class TestGateIntegrity:
         assert not any("kind" in e for e in errors)
 
     def test_metrics_empty_kind_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_ndjson_record(metrics={"kind": "", "advanced": 5}),
             make_state()["active_unit"],
             root,
@@ -776,7 +784,7 @@ class TestGateIntegrity:
         assert any("kind" in e for e in errors)
 
     def test_invalid_ts_rejected(self, root: Path):
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(ts="not-a-timestamp"), make_state()["active_unit"], root
         )
         assert any("ISO-8601" in e for e in errors)
@@ -799,7 +807,7 @@ class TestGateIntegrity:
                 ],
             }
         ]
-        errors = check_evidence(evidence, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(evidence, make_state()["active_unit"], root, gated_log)
         assert any("stale or duplicate" in e for e in errors)
 
     def test_stale_evidence_rejected(self, root: Path):
@@ -810,7 +818,7 @@ class TestGateIntegrity:
                 "reviews": [{"event": "gate", "evidence_ts": "2026-07-01T00:00:00.000Z"}],
             }
         ]
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(ts="2026-06-30T00:00:00.000Z"),
             make_state()["active_unit"],
             root,
@@ -826,7 +834,7 @@ class TestGateIntegrity:
                 "reviews": [{"event": "gate", "evidence_ts": "2026-06-09T01:24:09.038Z"}],
             }
         ]
-        errors = check_evidence(
+        errors = _check_evidence(
             make_evidence(ts="2026-07-05T09:00:00.000Z"),
             make_state()["active_unit"],
             root,
@@ -836,7 +844,7 @@ class TestGateIntegrity:
 
     def test_same_payload_with_bumped_timestamp_is_rejected_by_digest(self, root: Path):
         evidence = make_evidence(ts="2026-07-06T09:00:00.000Z")
-        first = decide(evidence, make_state()["active_unit"], root)
+        first = _decide(evidence, make_state()["active_unit"], root)
         assert first.receipt is not None
         gated_log = [
             {
@@ -853,13 +861,13 @@ class TestGateIntegrity:
             }
         ]
         replay = make_evidence(ts="2026-07-07T09:00:00.000Z")
-        errors = check_evidence(replay, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(replay, make_state()["active_unit"], root, gated_log)
         assert any("digest" in error and "replay" in error for error in errors)
 
     def test_ignored_producer_nonce_cannot_bypass_consumed_evidence(self, root: Path):
         consumed = make_evidence(ts="2026-07-06T09:00:00.000Z")
         consumed.pop("run_id")
-        first = decide(consumed, make_state()["active_unit"], root)
+        first = _decide(consumed, make_state()["active_unit"], root)
         assert first.receipt is not None
         gated_log = [
             {
@@ -885,16 +893,16 @@ class TestGateIntegrity:
             "nonce": "producer-controlled-but-verifier-ignored",
             "metrics": {"nonce": "nested-and-verifier-ignored"},
         }
-        replay_without_history = decide(replay, make_state()["active_unit"], root)
+        replay_without_history = _decide(replay, make_state()["active_unit"], root)
         assert replay_without_history.receipt is not None
         assert replay_without_history.receipt.digest != first.receipt.digest
         assert replay_without_history.receipt.run_id != first.receipt.run_id
 
-        errors = check_evidence(replay, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(replay, make_state()["active_unit"], root, gated_log)
         assert any("attempt/scenario replay" in error for error in errors)
 
     def test_same_run_id_with_changed_payload_is_rejected(self, root: Path):
-        first = decide(make_evidence(), make_state()["active_unit"], root)
+        first = _decide(make_evidence(), make_state()["active_unit"], root)
         assert first.receipt is not None
         gated_log = [
             {
@@ -911,7 +919,7 @@ class TestGateIntegrity:
             }
         ]
         changed = make_evidence(ts="2026-07-08T00:00:00Z", good_admits=19)
-        errors = check_evidence(changed, make_state()["active_unit"], root, gated_log)
+        errors = _check_evidence(changed, make_state()["active_unit"], root, gated_log)
         assert any("run_id" in error and "immutable" in error for error in errors)
 
 

@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 from learner.gate import (
-    check_evidence_semantics,
+    _check_evidence_semantics,
     load_evidence,
     load_evidence_ndjson,
     select_evidence,
@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
             except ValueError as exc:
                 print(f"NOT ELIGIBLE — verifier receipt unreadable: {exc}")
                 return 1
-            semantic_errors = check_evidence_semantics(
+            semantic_errors = _check_evidence_semantics(
                 evidence, unit, verifier_receipt
             )
             if semantic_errors:
