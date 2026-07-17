@@ -23,7 +23,7 @@ export function renderCycle(state: AppState): string {
               const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
               return `
                 <button class="timeline-step ${className} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${aria}>
-                  <span>${String(index + 1).padStart(2, "0")}</span>
+                  <span>${escapeHtml(String(index + 1).padStart(2, "0"))}</span>
                   ${escapeHtml(stage.label)}
                 </button>
               `
@@ -34,7 +34,7 @@ export function renderCycle(state: AppState): string {
         <article class="stage-detail">
           <div class="console-header">
             <span>${escapeHtml(selectedStage.owner)}</span>
-            <span>${progress}% validado</span>
+            <span>${escapeHtml(progress)}% validado</span>
           </div>
           <h3>${escapeHtml(selectedStage.label)}</h3>
           <dl class="evidence-list">

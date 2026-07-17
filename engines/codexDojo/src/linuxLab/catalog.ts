@@ -694,8 +694,29 @@ export const linuxApps = [
   },
 ] as const satisfies readonly LinuxApp[]
 
+// ⚡ Bolt: Pre-compute indexes to convert O(n) lookups and filters to O(1) cache lookups,
+// preventing new array allocations and O(n) scans during every render loop.
+const appsById = new Map<string, LinuxApp>()
+const mutableAppsByCategory = new Map<LinuxAppCategory, LinuxApp[]>()
+const noLinuxApps: readonly LinuxApp[] = Object.freeze([])
+
+for (const app of linuxApps) {
+  appsById.set(app.id, app)
+
+  const categoryApps = mutableAppsByCategory.get(app.category)
+  if (categoryApps === undefined) {
+    mutableAppsByCategory.set(app.category, [app])
+  } else {
+    categoryApps.push(app)
+  }
+}
+
+const appsByCategory = new Map<LinuxAppCategory, readonly LinuxApp[]>(
+  [...mutableAppsByCategory].map(([category, apps]) => [category, Object.freeze(apps)]),
+)
+
 export function getLinuxApp(id: string): LinuxApp {
-  const app = linuxApps.find((candidate) => candidate.id === id)
+  const app = appsById.get(id)
   if (app !== undefined) {
     return app
   }
@@ -712,5 +733,5 @@ export function getLinuxAppsForCategory(category: LinuxAppCategoryFilter): reado
     return linuxApps
   }
 
-  return linuxApps.filter((app) => app.category === category)
+  return appsByCategory.get(category) ?? noLinuxApps
 }

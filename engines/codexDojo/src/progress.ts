@@ -86,12 +86,32 @@ export function getLearnerSnapshot(): LearnerSnapshot {
   return learnerSnapshot
 }
 
+// Pre-compute stable groups once so render-time queries avoid scans and allocations.
+const mutableProjectsByPhase = new Map<DojoProject["phase"], DojoProject[]>()
+const noProjects: readonly DojoProject[] = Object.freeze([])
+
+for (const project of projects) {
+  const phaseProjects = mutableProjectsByPhase.get(project.phase)
+  if (phaseProjects === undefined) {
+    mutableProjectsByPhase.set(project.phase, [project])
+  } else {
+    phaseProjects.push(project)
+  }
+}
+
+const projectsByPhase = new Map<DojoProject["phase"], readonly DojoProject[]>(
+  [...mutableProjectsByPhase].map(([phase, phaseProjects]) => [
+    phase,
+    Object.freeze(phaseProjects),
+  ]),
+)
+
 export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject[] {
   if (filter === "all") {
     return projects
   }
 
-  return projects.filter((project) => project.phase === filter)
+  return projectsByPhase.get(filter) ?? noProjects
 }
 
 export function getCurrentProject(): DojoProject {

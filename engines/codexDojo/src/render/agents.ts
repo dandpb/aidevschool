@@ -21,8 +21,8 @@ export function renderAgents(state: AppState): string {
 
       <article class="surface-map" aria-label="Camadas de agentes">
         <div class="surface-summary">
-          <div><span>Produto</span><strong>${userFacingAgents.length}</strong><small>agentes user-facing</small></div>
-          <div><span>Tutor core</span><strong>${coreAgents.length}</strong><small>sub-agentes especializados</small></div>
+          <div><span>Produto</span><strong>${escapeHtml(userFacingAgents.length)}</strong><small>agentes user-facing</small></div>
+          <div><span>Tutor core</span><strong>${escapeHtml(coreAgents.length)}</strong><small>sub-agentes especializados</small></div>
         </div>
         <div class="user-agent-grid">
           ${userFacingAgents
@@ -61,7 +61,7 @@ export function renderAgents(state: AppState): string {
       <article class="agent-detail">
         <div class="detail-topline">
           <span>${escapeHtml(selectedAgent.group)}</span>
-          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-label="Copiar prompt" aria-live="polite">
+          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-live="polite">
             ${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}
           </button>
         </div>

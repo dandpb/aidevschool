@@ -203,6 +203,13 @@ describe("DojoQuery seam", () => {
     expect(concurrencyProjects.length).toBeGreaterThan(0)
   })
 
+  it("reuses the cached project group for repeated phase queries", () => {
+    const concurrencyProjects = getProjects("concorrencia")
+
+    expect(concurrencyProjects).toBe(getProjects("concorrencia"))
+    expect(Object.isFrozen(concurrencyProjects)).toBe(true)
+  })
+
   it("reports a stage as completed only when it is in the completed list", () => {
     // Given
     const state = {

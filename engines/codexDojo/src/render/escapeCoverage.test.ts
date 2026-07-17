@@ -14,6 +14,7 @@ import { type LinuxApp, linuxAppCategoryLabels, linuxApps, renderLinuxLab } from
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
+import { renderLearnerDashboard } from "./learner"
 import { renderOverview } from "./overview"
 import { renderProject } from "./project"
 import { renderRoadmap } from "./roadmap"
@@ -90,32 +91,51 @@ vi.mock("../progress", () => {
       id: `unit-${XSS}`,
       title: `unit title ${XSS}`,
       project: `unit project ${XSS}`,
-      state: "presenting",
-      retryCount: 0,
-      retryLimit: 3,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      state: `state ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      retryCount: `retryCount ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      retryLimit: `retryLimit ${XSS}` as any,
     },
     gate: {
       implementationBlocked: true,
       unblockCondition: `condition ${XSS}`,
     },
     profile: {
-      dreyfus: "novice",
-      bloom: "remember",
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      dreyfus: `dreyfus ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      bloom: `bloom ${XSS}` as any,
       activeLanguage: `language ${XSS}`,
-      weeklyTimeHours: 5,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      weeklyTimeHours: `weeklyTimeHours ${XSS}` as any,
     },
     aidi: {
-      current: 0.3,
-      thresholdAmber: 0.6,
-      thresholdRed: 0.75,
-      measurementSource: "self_reported",
-      trend: [{ date: `2026-01-01 ${XSS}`, value: 0.3, measurementSource: "self_reported" }],
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      current: `aidi current ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      thresholdAmber: `thresholdAmber ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      thresholdRed: `thresholdRed ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      measurementSource: `measurementSource ${XSS}` as any,
+      trend: [
+        {
+          date: `2026-01-01 ${XSS}`,
+          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+          value: `trend value ${XSS}` as any,
+          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+          measurementSource: `trend measurementSource ${XSS}` as any,
+        },
+      ],
     },
     topPitfalls: [
       {
         id: `pitfall-${XSS}`,
         description: `description ${XSS}`,
-        occurrences: 2,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        occurrences: `occurrences ${XSS}` as any,
         lastSeen: `last seen ${XSS}`,
       },
     ],
@@ -124,19 +144,27 @@ vi.mock("../progress", () => {
         unitId: `review-unit-${XSS}`,
         title: `review title ${XSS}`,
         dueIn: `due ${XSS}`,
-        reason: "due",
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        reason: `reason ${XSS}` as any,
       },
     ],
-    masteredCount: 0,
-    scaffoldedCount: 1,
+    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+    masteredCount: `masteredCount ${XSS}` as any,
+    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+    scaffoldedCount: `scaffoldedCount ${XSS}` as any,
     streak: {
-      current: 0,
-      longest: 0,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      current: `streak current ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      longest: `streak longest ${XSS}` as any,
       lastGateDate: `gate date ${XSS}`,
-      freezesEquipped: 1,
-      freezesMax: 2,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      freezesEquipped: `freezesEquipped ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      freezesMax: `freezesMax ${XSS}` as any,
     },
-    curr: 0,
+    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+    curr: `curr ${XSS}` as any,
     challenges: [],
   }
 
@@ -153,7 +181,16 @@ vi.mock("../progress", () => {
     getMetrics: (): readonly Metric[] => [metric],
     getEcosystemStatuses: (): readonly EcosystemStatus[] => [ecosystemStatus],
     getLearnerSnapshot: (): LearnerSnapshot => learnerSnapshot,
-    getDashboardStats: () => ({ agents: 1, stages: 1, projects: 1, completionPercent: 42 }),
+    getDashboardStats: () => ({
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      agents: `agents ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      stages: `stages ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      projects: `projects ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      completionPercent: `completionPercent ${XSS}` as any,
+    }),
   }
 })
 
@@ -212,6 +249,7 @@ const renderers = [
   ["roadmap", renderRoadmap],
   ["project", renderProject],
   ["linuxLab", renderLinuxLab],
+  ["learner", () => renderLearnerDashboard()],
 ] as const
 
 describe("escape coverage — render modules neutralize injected markup", () => {
@@ -221,6 +259,10 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     expect(lower).not.toContain("<script")
     expect(lower).toContain("&lt;script&gt;")
     expect(lower).not.toContain(XSS.toLowerCase())
+  })
+
+  it("normalizes malformed progress before interpolating it into CSS", () => {
+    expect(renderOverview(state)).toContain('style="width: 0%"')
   })
 
   // Structural backstop: every render module that interpolates loaded data
