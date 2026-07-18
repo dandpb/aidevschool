@@ -64,10 +64,10 @@ export function renderOverview(state: AppState): string {
       <article class="status-console">
         <div class="console-header">
           <span>Estado do dojo</span>
-          <span>${completionPercent}% do ciclo</span>
+          <span>${escapeHtml(completionPercent)}% do ciclo</span>
         </div>
-        <div class="meter" role="progressbar" aria-label="Progresso do ciclo" aria-valuenow="${completionPercent}" aria-valuemin="0" aria-valuemax="100">
-          <span style="width: ${completionPercent}%"></span>
+        <div class="meter" role="progressbar" aria-label="Progresso do ciclo" aria-valuenow="${escapeHtml(completionPercent)}" aria-valuemin="0" aria-valuemax="100">
+          <span style="width: ${escapeHtml(completionPercent)}%"></span>
         </div>
         <dl class="stat-grid">
           <div><dt>Agentes</dt><dd>${escapeHtml(model.stats.agents)}</dd></div>
