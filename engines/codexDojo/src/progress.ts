@@ -141,8 +141,14 @@ export function isStageCompleted(state: AppState, stageId: string): boolean {
   return state.completedStageIds.includes(stageId)
 }
 
+// ⚡ Bolt: Cache lists into Maps for O(1) lookups to prevent O(N) array traversal
+// This speeds up findAgent, findStage, and findProject which are called frequently during rendering
+const agentsById = new Map<string, Agent>(agents.map((a) => [a.id, a]))
+const stagesById = new Map<string, CycleStage>(cycleStages.map((s) => [s.id, s]))
+const projectsById = new Map<string, DojoProject>(projects.map((p) => [p.id, p]))
+
 export function findAgent(agentId: string): Agent {
-  const agent = agents.find((candidate) => candidate.id === agentId)
+  const agent = agentsById.get(agentId)
 
   if (agent === undefined) {
     throw new Error(`Unknown agent: ${agentId}`)
@@ -152,7 +158,7 @@ export function findAgent(agentId: string): Agent {
 }
 
 export function findStage(stageId: string): CycleStage {
-  const stage = cycleStages.find((candidate) => candidate.id === stageId)
+  const stage = stagesById.get(stageId)
 
   if (stage === undefined) {
     throw new Error(`Unknown stage: ${stageId}`)
@@ -162,7 +168,7 @@ export function findStage(stageId: string): CycleStage {
 }
 
 export function findProject(projectId: string): DojoProject {
-  const project = projects.find((candidate) => candidate.id === projectId)
+  const project = projectsById.get(projectId)
 
   if (project === undefined) {
     throw new Error(`Unknown project: ${projectId}`)
