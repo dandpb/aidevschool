@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 18 · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
+> **Status:** Canonical · **Total projects:** 19 (00–18) · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
 >
 > `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
 > `python3 -m learner.substrate`; never edit the generated backlog directly.
@@ -21,6 +21,26 @@ Every project follows the same lifecycle:
 ```
 spec → polyglot implementation → code review → benchmark (N≥3) → evolution → verify
 ```
+
+---
+
+## Level 0 — AI na Prática (entrada não-técnica)
+
+**Focus:** aplicar IA no dia a dia com verificação honesta — para pessoas não tecnológicas.
+Trilha da visão dual-audience (AD-004/AD-005); unidades usam o gate no-code (AD-006), nunca o
+gate de código. Superfície de exploração associada: `engines/miniTown/`.
+
+### 00. AI na Prática
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `00_ai_in_practice` |
+| **Status** | planned |
+| **Concepts** | Pedir bem à IA (contrato do pedido), verificar o que a IA entrega, desconfiança produtiva, aplicar no próprio dia a dia |
+| **Key question** | Uma pessoa não-técnica consegue usar IA com critério — e provar que verificou — sem escrever código? |
+| **Learning goal** | Aplicar IA em tarefas reais com checklist de verificação falsificável (gate no-code). |
+| **Directory** | `00_ai_in_practice/` |
+| **Dependencies** | None (entry point da trilha não-técnica; paralelo ao 01) |
 
 ---
 
