@@ -5,6 +5,23 @@ import type { DojoProject } from "../domain"
 
 export const projects: readonly DojoProject[] = [
   {
+    id: "p00",
+    title: "AI na Prática",
+    phase: "aplicacao_ia",
+    level: 0,
+    language: "Go, Rust, Node",
+    architecture:
+      "Pedir bem à IA (contrato do pedido), verificar o que a IA entrega, desconfiança produtiva, aplicar no próprio dia a dia",
+    learningGoal:
+      "Aplicar IA em tarefas reais com checklist de verificação falsificável (gate no-code).",
+    evidence: [
+      "Project artifacts exist; catalog verification is pending.",
+      "planned",
+      "00_ai_in_practice/",
+      "None (entry point da trilha não-técnica; paralelo ao 01)",
+    ],
+  },
+  {
     id: "p01",
     title: "Rate Limiter (Token Bucket)",
     phase: "fundamentos",

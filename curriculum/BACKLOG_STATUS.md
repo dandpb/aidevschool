@@ -6,6 +6,7 @@ Canonical source: [catalog.md](./catalog.md). This operational view preserves th
 
 | Project | Status | Evidence |
 | --- | --- | --- |
+| `00_ai_in_practice` | `planned` | Project artifacts exist; catalog verification is pending. |
 | `01_rate_limiter` | `implemented` | Six executable evidence groups cover the spec, Go/Rust/Node implementations and tests, review, benchmark, evolution, and verifier gate. Certification caveat: benchmark and optimization are Node.js-only execution-verified in this sandbox; Go and Rust are code-reviewed/proposed-only for those phases, not performance-parity certified. |
 | `02_key_value_store` | `implemented` | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the Go and Rust directories came from an earlier ungated backfill and have not been compiled, tested, reviewed, or benchmarked in the certified cycle. |
 | `03_url_shortener` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
