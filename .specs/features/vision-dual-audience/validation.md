@@ -97,3 +97,11 @@ Baseline: `python3 -m unittest learner.substrate.tests.test_catalog_level0` → 
 ## Veredito
 
 **PASS.** 19/19 ACs com evidência localizada ou pendência Mac explicitamente registrada (17 diretas + 2 pendências); sensor de discriminação 2/2 mutantes mortos; nenhuma alegação de pass sem evidência encontrada no range; escopo (miniTown/src intocado, counts 2/16, 19 projetos, fase `aplicacao_ia`) confirmado contra o resultado definido na spec.
+
+## Addendum pós-verificação (orquestrador, 2026-07-19)
+
+Gaps 2–4 do veredito corrigidos em `fix(docs): resolve verifier consistency gaps`:
+VISION Lacunas §1/§3 + "19 projetos"; catálogo "7-level progression (0–6)"; README miniTown
+cita o fato commitado (14/14) em vez do decision.json do working tree. Gap 1 (onboard não
+executável no sandbox) permanece como pendência Mac registrada acima. Re-checagem: greps de
+aceite verdes + suíte catálogo OK.
