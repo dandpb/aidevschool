@@ -1,0 +1,10 @@
+# Deploy estático do miniTown (Nível 0 — link público para qualquer pessoa)
+# Uso: conecte este diretório (engines/miniTown) como base do site no Netlify,
+# ou rode `netlify deploy --prod` a partir daqui com o CLI autenticado.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

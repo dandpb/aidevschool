@@ -23,6 +23,14 @@ Scripts: `pnpm run test` (vitest) · `typecheck` · `build` · `smoke` (Playwrig
   evidência de mastery — miniTown não marca aprendizado).
 - Trilha pedagógica associada: `curriculum/00_ai_in_practice/` (Nível 0 do catálogo).
 
+## Zero-install
+
+- Setup mínimo (só este engine): `./setup.sh onboard` na raiz do ecossistema.
+- Deploy público estático: `netlify.toml` neste diretório (build `npm run build`, publish
+  `dist/`). Verificado em 2026-07-19: o build estático do estado commitado (HEAD) compila
+  limpo. Nota: o working tree atual tem um erro de tipo em `tests/agents.test.ts`
+  (trabalho não commitado de outra sessão) — o deploy deve partir de um commit limpo.
+
 ## Limites
 
 Este engine é superfície de exploração: ele nunca escreve estado canônico do aprendiz e não
