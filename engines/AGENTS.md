@@ -13,6 +13,7 @@ engines/
 ├── codexdojo-os-prototype/ # React/Vite educational OS bounded context
 ├── minimaxDojo/            # 14-agent tutor core, docs, prompts, whiteboard
 ├── miniMaxEvolutionEngine/ # Claude Code motor with .claude agents/commands/skills
+├── miniTown/               # cozy town-sim: level-0 entry surface for the non-technical audience (AD-004)
 ├── openclaw/               # file-based runner/scheduler tracer bullet
 ├── pixelDojo/              # 2D teaching-game engine; pixel-quest/ is the runnable app
 ├── shared/                 # cross-engine teaching-evidence primitives
@@ -30,6 +31,7 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 | Educational OS experience | `codexdojo-os-prototype/` | React/Vite desktop; reads a generated learner snapshot and keeps interactions local. |
 | Teaching game app | `pixelDojo/pixel-quest/` | Vite/TypeScript/Three.js app with Playwright smoke evidence. |
 | 3D teaching simulations | `voxelDojo/` | Catalog-wide workspace; `game-10-hash-ring/` is the reference package. |
+| Cozy town-sim (level-0 entry) | `miniTown/` | Observational Three.js city sim; start with `README.md`. Never writes canonical learner state. |
 | Shared teaching evidence | `shared/teaching-evidence/` | Dual-channel producer helpers; no mastery writes. |
 | Long-running tutor protocol | `minimaxDojo/` | Start with local `AGENTS.md`, then `INDEX.md`; verify from repo root with `make test-core`. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
