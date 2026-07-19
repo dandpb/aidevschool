@@ -5,6 +5,7 @@ export const agentGroups = ["leader", "pedagogia", "qualidade", "memoria", "gove
 export type AgentGroup = (typeof agentGroups)[number]
 
 export const projectPhases = [
+  "aplicacao_ia",
   "fundamentos",
   "concorrencia",
   "arquitetura",
