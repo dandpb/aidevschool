@@ -24,3 +24,7 @@
 ## 2026-07-17 - Avoid O(n²) memory churn when building grouped Maps
 **Learning:** Repeatedly replacing a grouped array with `[...existing, item]` during module initialization copies the accumulated group on every insertion and creates quadratic allocation pressure.
 **Action:** Build each private group with `.push()`, then expose a frozen readonly snapshot so callers cannot mutate the cached result.
+
+## 2026-07-17 - O(1) Lookups for Array Finds
+**Learning:** Using `Array.find()` on static arrays like `agents`, `cycleStages`, and `projects` in every render function creates an O(N) scan that slows down UI responsiveness when these lists grow.
+**Action:** When searching for entities by ID, pre-compute a `Map` mapping ID to entity during module initialization. This turns the O(N) lookup into an O(1) cache lookup and avoids linear scans in the render loop.

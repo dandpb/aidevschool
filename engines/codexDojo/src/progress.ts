@@ -141,8 +141,24 @@ export function isStageCompleted(state: AppState, stageId: string): boolean {
   return state.completedStageIds.includes(stageId)
 }
 
+// ⚡ Bolt: Pre-compute maps for O(1) lookups instead of O(n) array scans during renders
+const agentsById = new Map<string, Agent>()
+for (const agent of agents) {
+  agentsById.set(agent.id, agent)
+}
+
+const stagesById = new Map<string, CycleStage>()
+for (const stage of cycleStages) {
+  stagesById.set(stage.id, stage)
+}
+
+const projectsById = new Map<string, DojoProject>()
+for (const project of projects) {
+  projectsById.set(project.id, project)
+}
+
 export function findAgent(agentId: string): Agent {
-  const agent = agents.find((candidate) => candidate.id === agentId)
+  const agent = agentsById.get(agentId)
 
   if (agent === undefined) {
     throw new Error(`Unknown agent: ${agentId}`)
@@ -152,7 +168,7 @@ export function findAgent(agentId: string): Agent {
 }
 
 export function findStage(stageId: string): CycleStage {
-  const stage = cycleStages.find((candidate) => candidate.id === stageId)
+  const stage = stagesById.get(stageId)
 
   if (stage === undefined) {
     throw new Error(`Unknown stage: ${stageId}`)
@@ -162,7 +178,7 @@ export function findStage(stageId: string): CycleStage {
 }
 
 export function findProject(projectId: string): DojoProject {
-  const project = projects.find((candidate) => candidate.id === projectId)
+  const project = projectsById.get(projectId)
 
   if (project === undefined) {
     throw new Error(`Unknown project: ${projectId}`)
