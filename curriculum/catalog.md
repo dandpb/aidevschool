@@ -13,9 +13,11 @@
 
 ## Overview
 
-The curriculum follows a **6-level progression** from fundamentals to complex distributed
-systems. Each project is implemented **polyglot** (Go, Rust, Node.js/TypeScript) to teach
-comparative engineering through real benchmarks, code reviews, and evolution reports.
+The curriculum follows a **7-level progression (0–6)**: Level 0 is the non-technical
+AI-in-practice entry track (no-code gate, ADR-0004), and Levels 1–6 go from fundamentals to
+complex distributed systems. Each Level 1–6 project is implemented **polyglot**
+(Go, Rust, Node.js/TypeScript) to teach comparative engineering through real benchmarks,
+code reviews, and evolution reports.
 
 Every project follows the same lifecycle:
 ```

@@ -17,8 +17,9 @@ Scripts: `pnpm run test` (vitest) · `typecheck` · `build` · `smoke` (Playwrig
 
 ## Status e evidência
 
-- Estágio: **MVP** (plano de 5 tasks concluído — `.mavis/plans/miniTown.yaml`,
-  `plan_complete: true` em `.mavis/plans/decision.json`; 31/31 testes verdes na conclusão do plano).
+- Estágio: **MVP** (plano de 5 tasks — `.mavis/plans/miniTown.yaml`). No estado **commitado**
+  (HEAD), a suíte está verde (14/14 na verificação independente de 2026-07-19) e o build
+  estático compila limpo; o working tree tem evolução não commitada de outra sessão.
 - Evidência de runtime exposta em `window.__miniTown` (contrato observacional; não emite
   evidência de mastery — miniTown não marca aprendizado).
 - Trilha pedagógica associada: `curriculum/00_ai_in_practice/` (Nível 0 do catálogo).

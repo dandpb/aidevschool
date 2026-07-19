@@ -31,7 +31,7 @@ ou opinião de modelo. É isso que separa esta escola de um app de trivia.
 - **Mecânica Duolingo com base em pesquisa:** FSRS, streak e freeze confirmados; hearts e
   leaderboards excluídos por evidência
   ([`docs/design/spaced-repetition-streak/`](design/spaced-repetition-streak/README.md)).
-- **Trilha com dependências:** o catálogo de 18 projetos funciona como skill tree honesta.
+- **Trilha com dependências:** o catálogo de 19 projetos (00–18) funciona como skill tree honesta.
 - **Integridade da lição:** learning gate + verificador independente + evidência executável — a
   garantia de que "concluído" significa algo.
 
@@ -39,14 +39,16 @@ ou opinião de modelo. É isso que separa esta escola de um app de trivia.
 
 Registradas como lacunas, não como promessas nem como status:
 
-1. **Trilha de entrada para não-técnicos.** O currículo atual começa em concorrência (Nível 1).
-   Um "Nível 0 — aplicar IA" não existe. A Parte 2 de [`FUNDAMENTOS.md`](FUNDAMENTOS.md)
-   (protocolo de comunicação com IA) é o embrião natural desse conteúdo.
+1. **Trilha de entrada para não-técnicos.** Identidade criada em 2026-07-19:
+   [`curriculum/00_ai_in_practice/`](../curriculum/00_ai_in_practice/docs/spec.md) (Nível 0,
+   status `planned`, gate no-code ADR-0004). O que falta: as unidades reais de lição — a
+   Parte 2 de [`FUNDAMENTOS.md`](FUNDAMENTOS.md) é o embrião do conteúdo.
 2. **Lição de baixa fricção fora dos jogos.** Attempt em Markdown + pytest + gates é um ciclo de
    estudo, não uma micro-lição de 5 minutos. Só os encounters dos jogos chegam perto do formato
    Duolingo hoje.
-3. **Onboarding simples.** Rodar a escola exige Node, pnpm e Python (e Go/Rust para o polyglot).
-   Democratizar implica algo mais próximo de "abre e funciona".
+3. **Onboarding simples.** Primeiro passo: `./setup.sh onboard` prepara só o miniTown
+   (deploy estático: `engines/miniTown/netlify.toml`). Rodar a escola completa ainda exige
+   Node, pnpm e Python (e Go/Rust para o polyglot) — "abre e funciona" segue como meta.
 4. **Replicação da instância.** Hoje é "one learner per ecosystem instance", com o Daniel como
    learner 0. A visão só se cumpre se criar uma instância para outra pessoa for trivial.
 
