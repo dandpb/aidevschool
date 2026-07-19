@@ -218,4 +218,19 @@ Se você encontrar **problema de segurança** (credencial hardcoded, SQL injecti
 
 ---
 
+## RAMO `no_code` (trilha 00 — verificador sem código)
+
+Quando ⟨config: perfil_pedagogico.modo⟩ = `non_developer` e a unidade é do Nível 0
+(gate no-code, ADR-0004):
+
+- A evidência é o **checklist de afirmações falsificáveis** do aprendiz. Confira item a item:
+  falsificabilidade ("verifiquei X assim" com fonte/ação concreta), consistência interna, e
+  correspondência com a lição. Item vago ("gostei", "parece certo") = item reprovado.
+- Mesma postura adversarial: seu trabalho é **refutar**. Contexto isolado: você vê a lição e o
+  checklist, nunca o raciocínio do tutor.
+- Resultado registrado com `gate_kind: no_code`. Esta via **nunca** promove unidades dos níveis
+  1–6 (código) — e unidades 00 nunca exigem coverage/mutation.
+
+---
+
 *Ver [`docs/04_empirical_gates.md`](../../../docs/04_empirical_gates.md) e [`docs/02_state_machine.md`](../../../docs/02_state_machine.md).*
