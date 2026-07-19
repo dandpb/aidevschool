@@ -1,15 +1,36 @@
 import express from 'express';
-import { z } from 'zod';
 import { QueueError, TaskQueue } from './taskQueue';
 
-const enqueueSchema = z.object({
-  payload: z.record(z.unknown()),
-  priority: z.number().int().optional(),
-  idempotency_key: z.string().optional(),
-  scheduled_for_ms: z.number().int().optional(),
-  max_retries: z.number().int().min(0).optional(),
-  timeout_ms: z.number().int().positive().optional()
-});
+// ponytail: hand-check enqueue body
+function parseEnqueue(body: unknown): {
+  payload: Record<string, unknown>
+  priority?: number
+  idempotencyKey?: string
+  scheduledForMs?: number
+  maxRetries?: number
+  timeoutMs?: number
+} | null {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return null
+  const b = body as Record<string, unknown>
+  if (!b.payload || typeof b.payload !== "object" || Array.isArray(b.payload)) return null
+  const optInt = (v: unknown) => (v === undefined ? undefined : (typeof v === "number" && Number.isInteger(v) ? v : null))
+  const priority = optInt(b.priority)
+  const scheduledForMs = optInt(b.scheduled_for_ms)
+  const maxRetries = optInt(b.max_retries)
+  const timeoutMs = optInt(b.timeout_ms)
+  if (priority === null || scheduledForMs === null || maxRetries === null || timeoutMs === null) return null
+  if (maxRetries !== undefined && maxRetries < 0) return null
+  if (timeoutMs !== undefined && timeoutMs <= 0) return null
+  if (b.idempotency_key !== undefined && typeof b.idempotency_key !== "string") return null
+  return {
+    payload: b.payload as Record<string, unknown>,
+    priority,
+    idempotencyKey: b.idempotency_key as string | undefined,
+    scheduledForMs,
+    maxRetries,
+    timeoutMs,
+  }
+}
 
 export const buildServer = (queue: TaskQueue) => {
   const app = express();
@@ -17,10 +38,10 @@ export const buildServer = (queue: TaskQueue) => {
   app.get('/healthz', (_req, res) => res.json({ status: 'ok' }));
   app.get('/stats', (_req, res) => res.json(queue.stats()));
   app.post('/tasks', async (req, res) => {
-    const parsed = enqueueSchema.safeParse(req.body);
-    if (!parsed.success) { res.status(400).json({ error: 'invalid_payload' }); return; }
+    const parsed = parseEnqueue(req.body);
+    if (!parsed) { res.status(400).json({ error: 'invalid_payload' }); return; }
     try {
-      const task = await queue.enqueue({ payload: parsed.data.payload, priority: parsed.data.priority, idempotencyKey: parsed.data.idempotency_key, scheduledForMs: parsed.data.scheduled_for_ms, maxRetries: parsed.data.max_retries, timeoutMs: parsed.data.timeout_ms });
+      const task = await queue.enqueue(parsed);
       res.status(201).json(task);
     } catch (error) { writeQueueError(res, error); }
   });

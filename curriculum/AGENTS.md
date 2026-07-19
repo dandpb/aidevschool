@@ -14,10 +14,9 @@ all engines; they are not owned by a single app.
 | Active/gate reference | `01_rate_limiter/` | Most complete project-local contract and benchmark evidence. |
 | Project spec | `*/docs/spec.md` | Behavior contract before implementation details. |
 | Learner diagnostic | `*/docs/diagnostic.md` | Gate-facing learner artifact when present. |
-| Node implementations | `*/node-impl/package.json` | Scripts differ; read the local package before running. |
-| Go implementations | `*/go-impl/go.mod` | Use project-local docs plus `go test` variants. |
-| Rust implementations | `*/rust-impl/Cargo.toml` | Use project-local docs plus `cargo` checks. |
-| Reviews/benchmarks | `*/docs/`, `*/benchmarks/` | Evidence and comparison material, not source code. |
+| Node implementations | `*/node-impl/package.json` | **Default track** for the learning gate. Scripts differ; read the local package before running. |
+| Go / Rust pilot | `01_rate_limiter/{go,rust}-impl/` | Only project that keeps full polyglot + Dockerfiles. Others are node-only until regenerated on demand. |
+| Reviews/benchmarks | `*/docs/`, `*/docs/benchmark_results.md` | Narrative evidence; raw `benchmarks/results*` dumps are gitignored. |
 
 ## CONVENTIONS
 
@@ -39,3 +38,16 @@ all engines; they are not owned by a single app.
   as if they were source.
 - Do not assume Project 01 command strings apply to every later project; inspect the local
   `package.json`, `go.mod`, or `Cargo.toml` first.
+
+## Polyglot policy (ponytail 2026-07-19)
+
+- **Node-first gate:** only `node-impl/` is required for scaffold/backlog checks.
+- **Pilot:** `01_rate_limiter` keeps go-impl + rust-impl + Dockerfiles as the polyglot reference.
+- Regenerate go/rust on demand via `/devschool-implement --polyglot` or on project `01`; do not re-seed 02–18 empty tracks.
+
+## Install / lockfile policy
+
+- Curriculum `node-impl/` **does not** commit `package-lock.json` (gitignored).
+- Install with `npm install` (or `pnpm install`) from the local `package.json` before running tests.
+- CI and local scripts must not assume a lockfile under `curriculum/**/node-impl/`.
+- Shared logger: `curriculum/_shared/log.ts`, linked as `node-impl/src/logger.ts` per project that logs.

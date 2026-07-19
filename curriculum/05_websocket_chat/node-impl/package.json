@@ -13,7 +13,6 @@
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\""
   },
   "dependencies": {
-    "pino": "^9.5.0",
     "ws": "^8.18.3"
   },
   "devDependencies": {

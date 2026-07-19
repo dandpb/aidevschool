@@ -1,5 +1,5 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
-import pino, { type Logger } from 'pino';
+import { createLogger, type Logger } from './logger';
 import {
   AnalyticsQueue,
   AppError,
@@ -20,7 +20,7 @@ export interface ServerOptions {
 export function buildApp(options: ServerOptions = {}) {
   const app = express();
   const store = options.store ?? new UrlStore();
-  const logger = options.logger ?? pino({ level: process.env.LOG_LEVEL ?? 'info' });
+  const logger = options.logger ?? createLogger(process.env.LOG_LEVEL ?? 'info' );
   const analytics = new AnalyticsQueue(store);
   const limiter = options.rateLimiter ?? new CreationRateLimiter(60, 60_000);
   const baseUrl = options.baseUrl ?? 'http://localhost:8081';

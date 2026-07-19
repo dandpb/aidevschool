@@ -6,10 +6,10 @@ Reference: engines/minimaxDojo/docs/02_state_machine.md
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
 from typing import Any
 
 from ..config import max_retries as _config_max_retries
+from ..timeutil import now_iso as _now_iso
 
 
 class DeterminismError(Exception):
@@ -27,10 +27,6 @@ SUB_STATES = frozenset({"PRODUCING", "VERIFYING", "DONE"})
 MAX_RETRIES = _config_max_retries()
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
-
 @dataclass
 class UnitStateMachine:
     unit_id: str
@@ -41,6 +37,23 @@ class UnitStateMachine:
     _events: list[dict[str, Any]] = field(default_factory=list)
 
     def transition(self, event: str, payload: dict[str, Any] | None = None) -> str:
+        # Handle critico.OK — ONLY valid when sub_state=DONE (meaning prometor.PASS
+        # already happened). Checked BEFORE the DOMINADO-terminal guard: prometor.PASS
+        # already moves the unit to DOMINADO, so the critic's confirmation arrives
+        # while state == DOMINADO and sub_state == DONE (spec §2: DONE + critico.OK).
+        if event == "critico.OK":
+            if self.state not in ("AVALIANDO", "DOMINADO"):
+                raise DeterminismError(
+                    f"critico.OK requires AVALIANDO or DOMINADO state, got {self.state}"
+                )
+            if self.sub_state != "DONE":
+                raise DeterminismError(
+                    f"critico.OK requires sub_state=DONE (prometor.PASS must come first), got {self.sub_state}"
+                )
+            # Already DOMINADO via prometor.PASS; this is just the critic's confirmation
+            self._log(event, payload, self.state)
+            return self.state
+
         # DOMINADO is terminal
         if self.state == "DOMINADO":
             raise DeterminismError(
@@ -77,20 +90,6 @@ class UnitStateMachine:
             self.retries = 0
             self.sub_state = None
             return "APRESENTANDO"
-
-        # Handle critico.OK — ONLY valid when sub_state=DONE (meaning prometor.PASS already happened)
-        if event == "critico.OK":
-            if self.state != "AVALIANDO":
-                raise DeterminismError(
-                    f"critico.OK requires AVALIANDO state, got {self.state}"
-                )
-            if self.sub_state != "DONE":
-                raise DeterminismError(
-                    f"critico.OK requires sub_state=DONE (prometor.PASS must come first), got {self.sub_state}"
-                )
-            # Already DOMINADO via prometor.PASS; this is just the critic's confirmation
-            self._log(event, payload, self.state)
-            return self.state
 
         # Handle mestre.done — advances sub-machine from PRODUCING to VERIFYING
         if event == "mestre.done":

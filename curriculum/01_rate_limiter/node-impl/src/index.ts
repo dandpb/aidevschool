@@ -1,6 +1,6 @@
 import http from 'node:http';
 import express, { NextFunction, Request, Response } from 'express';
-import type { Logger } from 'pino';
+import type { Logger } from './logger';
 
 import type { AppConfig } from './config';
 import { createExpressClientKeyStrategy } from './clientKeyStrategy';

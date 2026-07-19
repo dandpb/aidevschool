@@ -1,9 +1,9 @@
-import pino from 'pino';
+import { createLogger } from './logger';
 import { loadConfig } from './config.js';
 import { buildServer } from './server.js';
 
 const config = loadConfig();
-const logger = pino({ level: config.logLevel });
+const logger = createLogger(config.logLevel );
 const app = buildServer(config, logger);
 
 app.server.listen(config.port, config.host, () => {

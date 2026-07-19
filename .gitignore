@@ -118,3 +118,15 @@ curriculum/02_key_value_store/go-impl/kvstore
 curriculum/07_rest_api_auth/go-impl/server
 curriculum/08_event_driven_order_system/go-impl/event-driven-order-go
 curriculum/09_plugin_system/go-impl/plugin-system-go
+
+# --- ponytail-audit 2026-07-19 ---
+# Experimental engines / concept dumps (not part of the ecosystem map)
+engines/phantasy-codex-adventure/
+engines/phantasyCodexAdventure/
+games/
+# Curriculum lockfiles & raw bench dumps (regenerate when needed)
+curriculum/**/node-impl/package-lock.json
+curriculum/**/benchmarks/results/
+curriculum/**/benchmarks/results-*/
+# miniTown concept art (not runtime)
+engines/miniTown/docs/concepts/*.png

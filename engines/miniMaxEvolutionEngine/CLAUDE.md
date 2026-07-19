@@ -39,7 +39,7 @@ Regras de ouro do orquestrador:
 | Fase | `phase` em status.yaml | Subagent produtor | Artefato | Próximo |
 |------|----------------------|-------------------|----------|---------|
 | 1 — Spec & Arquitetura | `spec-done` | `curator` | `curriculum/NN/docs/spec.md` | implementação |
-| 2 — Implementação poliglota | `impl-done` | `dev-go`, `dev-rust`, `dev-node` (paralelo) | `curriculum/NN/{go,rust,node}-impl/` | review |
+| 2 — Implementação (node-first) | `impl-done` | `dev-node` (default); `dev-go`/`dev-rust` só pilot `01` ou `--polyglot` | `curriculum/NN/node-impl/` (+ go/rust no pilot) | review |
 | 3 — Review & Pedagogia | `review-done` | `reviewer` | `code_review.md`, `learning_notes.md`, `quiz.md` | benchmark |
 | 4 — Benchmark & Profiling | `benchmark-done` | `benchmarker` | `benchmark_results.md` + `benchmarks/results/` | otimização |
 | 5 — Evolução & Escala | `cycle-complete` | `optimizer` | `evolution_report.md` | próximo projeto |
@@ -81,7 +81,8 @@ O propósito do projeto é **o humano aprender**, não a IA fazer por ele. Estad
 ## Subagents disponíveis (`.claude/agents/`)
 
 Invoque via a ferramenta Agent/Task. Subagents **não** chamam outros subagents — **você** os
-encadeia. Os 3 `dev-*` rodam **em paralelo** (despache as 3 chamadas Task na mesma mensagem).
+encadeia. Default de implementação é **só `dev-node`**. Os 3 `dev-*` em paralelo só no pilot
+`01_rate_limiter` ou quando `/devschool-implement --polyglot` for pedido.
 
 | Subagent | Modelo | Quando usar |
 |----------|--------|-------------|
@@ -121,7 +122,7 @@ para diversidade tipo cross-model.
 | `/devschool-decide` | Abre SLA 24h para decisão consequente — invoca `seneca` (lista negra no prompt) |
 | `/devschool-cycle` | Roda o loop completo de 5 fases para o projeto atual/indicado, com portão do verificador |
 | `/devschool-spec` | Fase 1 — invoca `curator` |
-| `/devschool-implement` | Fase 2 — invoca `dev-go`/`dev-rust`/`dev-node` em paralelo (se o gate permitir) + `verifier` |
+| `/devschool-implement` | Fase 2 — invoca `dev-node` (default; polyglot só em `01` ou `--polyglot`) + `verifier` |
 | `/devschool-review` | Fase 3 — invoca `reviewer` + `verifier` |
 | `/devschool-benchmark` | Fase 4 — invoca `benchmarker` + `verifier` |
 | `/devschool-optimize` | Fase 5 — invoca `optimizer` + `verifier` |

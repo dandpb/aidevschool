@@ -76,18 +76,16 @@ describe("codexDojo core dashboard E2E", () => {
     expect(agents).toHaveLength(14)
   })
 
-  it("preserves the legacy Linux Lab selection and execution receipt", () => {
+  it("linuxLab view exposes only the OS launch bridge", () => {
     const root = document.createElement("div")
 
     mountCodexDojo(root)
 
     click(root, "[data-view='linuxLab']")
-    click(root, "[data-linux-app='browser']")
-    expect(root.textContent).toContain("Active: Browser")
-    expect(root.textContent).toContain("Run the lab to create your first execution receipt.")
-
-    click(root, "[data-action='run-linux-lab']")
-    expect(root.textContent).toContain("Execution receipt #1")
+    expect(root.textContent).toContain("Linux Lab")
+    expect(root.querySelector("[data-codexdojo-os-launch]")).not.toBeNull()
+    expect(root.querySelector("[data-linux-app]")).toBeNull()
+    expect(root.querySelector("[data-action='run-linux-lab']")).toBeNull()
   })
 })
 

@@ -892,7 +892,8 @@ class TestBacklogStatusDrift(unittest.TestCase):
     that every `scaffolded` row still has the expected skeleton artifacts.
     """
 
-    expected_artifacts = ("docs/spec.md", "go-impl", "rust-impl", "node-impl", "docs/status.md")
+    # ponytail: node-first gate; go/rust only kept on 01_rate_limiter pilot
+    expected_artifacts = ("docs/spec.md", "node-impl", "docs/status.md")
 
     def _parse_backlog(self) -> dict[str, str]:
         """Return {project_slug: status_token} from BACKLOG_STATUS.md."""

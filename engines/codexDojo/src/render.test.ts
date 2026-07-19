@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { projects } from "./data/projects"
-import { linuxApps } from "./linuxLab"
 import { getCurrentProject, getMetrics, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
@@ -51,21 +50,12 @@ describe("renderShell — targeted assertions", () => {
     }
   })
 
-  it("linuxLab: renders 50+ launchable apps with active learning content", () => {
+  it("linuxLab: is bridge-only (no fake desktop tiles)", () => {
     const html = renderShell(stateWith({ view: "linuxLab" }))
 
-    const appTiles = html.match(/class="linux-app-tile/g) ?? []
-    expect(appTiles).toHaveLength(linuxApps.length)
-    expect(appTiles.length).toBeGreaterThanOrEqual(50)
     expect(html).toContain("Linux Lab")
-    expect(html).toContain("Command line interface")
-    expect(html).toContain("Run Lab")
-    expect(html).toContain("Observe")
-  })
-
-  it("linuxLab: exposes the promoted OS engine through an accessible launch bridge", () => {
-    const html = renderShell(stateWith({ view: "linuxLab" }))
-
+    expect(html).not.toContain("linux-app-tile")
+    expect(html).not.toContain("run-linux-lab")
     expect(html).toContain('data-codexdojo-os-launch="true"')
     expect(html).toContain("Abrir codexDojo OS")
     expect(html).toContain('target="_blank"')
@@ -141,9 +131,11 @@ describe("renderShell — targeted assertions", () => {
     }
   })
 
-  it("project: contains project 01 title and all requirement strings from getCurrentProject()", () => {
-    const html = renderShell(stateWith({ view: "project" }))
-    const project = getCurrentProject()
+  it("project: contains selected project title and requirement strings", () => {
+    const state = stateWith({ view: "project" })
+    const html = renderShell(state)
+    // Project view uses selection (default p01), not projects[0] / level-0 entry.
+    const project = getSelectedProject(state)
 
     expect(html).toContain(project.title)
 
@@ -160,15 +152,17 @@ describe("renderShell — targeted assertions", () => {
     }
   })
 
-  it("project: renders the selected project instead of always project 01", () => {
+  it("project: renders the selected project instead of the default selection", () => {
     const selectedProjectId = "p08"
-    const html = renderShell(stateWith({ view: "project", selectedProjectId }))
-    const project = getSelectedProject(stateWith({ selectedProjectId }))
+    const state = stateWith({ view: "project", selectedProjectId })
+    const html = renderShell(state)
+    const project = getSelectedProject(state)
+    const defaultSelected = getSelectedProject(stateWith({}))
 
     expect(html).toContain(project.title)
     expect(html).toContain(selectedProjectId.toUpperCase())
     expect(html).toContain('data-view="project"')
     expect(html).toContain(">Projeto</button>")
-    expect(html).not.toContain(getCurrentProject().title)
+    expect(html).not.toContain(defaultSelected.title)
   })
 })

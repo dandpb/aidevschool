@@ -1,6 +1,6 @@
 ---
-description: Fase 2 — invoca dev-go/dev-rust/dev-node em PARALELO (só se o learning gate permitir), depois roda o verificador em cada implementação.
-argument-hint: "[projeto opcional]"
+description: Fase 2 — invoca dev-node (default). Polyglot (go+rust+node) só no pilot 01_rate_limiter ou com --polyglot.
+argument-hint: "[projeto opcional] [--polyglot]"
 ---
 
 Learning gate:
@@ -9,32 +9,42 @@ Learning gate:
 **Cheque o gate primeiro.** Se `gate.implementation_blocked: true`, PARE e rode `/devschool-diagnose`
 — a implementação pela IA só é liberada quando o aprendiz tentar e for avaliado. Não fure o gate.
 
-Se liberado: dispare os 3 subagents **na mesma mensagem** (3 chamadas Task em paralelo) para o
-projeto `$ARGUMENTS` (ou o `current_project`):
+## Default: node-first
+
+Se liberado, invoque **só** `dev-node` para o projeto `$ARGUMENTS` (ou `current_project`):
 
 ```yaml
 phase: impl
 producer:
-  - dev-go
-  - dev-rust
   - dev-node
 verifier_phase: impl
 next_status: impl-done
 pre_condition: spec-done
-parallel: true
+parallel: false
 learning_gate_check: true
+artefact: curriculum/{project}/node-impl/
+```
+
+- `dev-node` → `node-impl/`
+- Lê `docs/spec.md`, cobre FRs, build+lint+test (≥80%).
+- **Sem** Dockerfile salvo no pilot `01_rate_limiter` (lá Dockerfiles de referência existem).
+
+Depois dispare **`verifier`** (fase `impl`) uma vez no `node-impl/`. Só atualize via `save_status`
+→ `impl-done` com PASS.
+
+## Polyglot (opt-in)
+
+Use `--polyglot` **ou** projeto `01_rate_limiter` (pilot canônico) para despachar em paralelo:
+
+```yaml
+producer:
+  - dev-go
+  - dev-rust
+  - dev-node
+parallel: true
 artefact: curriculum/{project}/{language}-impl/
 ```
 
-Invoque `run_phase(spec)` usando a declaração acima.
+Verifier uma vez **por linguagem**. `impl-done` só quando todas as linguagens pedidas derem PASS.
 
-- `dev-go` → `go-impl/`
-- `dev-rust` → `rust-impl/`
-- `dev-node` → `node-impl/`
-
-Cada um deve ler o `spec.md` inteiro, cobrir todos os FRs, passar build+lint+test (≥80%) e Dockerfile.
-
-Quando os 3 terminarem, dispare o subagent **`verifier`** (fase `impl`) **uma vez por linguagem** —
-ele re-roda build/test do zero e tenta quebrar com burst de concorrência. Só atualize a máquina YAML via `save_status`
-→ `impl-done` quando as 3 derem **PASS**. Em FAIL, "acorde" o dev daquela linguagem com o feedback
-concreto (respeite `retry_limit`).
+Não re-seed go/rust vazios em 02–18 sem pedido explícito de polyglot.

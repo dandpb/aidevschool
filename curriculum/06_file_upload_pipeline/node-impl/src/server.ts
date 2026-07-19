@@ -5,7 +5,7 @@ import path from 'node:path';
 import { once } from 'node:events';
 import express, { type Request, type Response, type NextFunction } from 'express';
 import Busboy from 'busboy';
-import pino, { type Logger } from 'pino';
+import { createLogger, type Logger } from './logger';
 import type { Config } from './config';
 import { loadConfig } from './config';
 import { progressOf, UploadRegistry } from './registry';
@@ -18,7 +18,7 @@ const safeUploadId = /^[A-Za-z0-9_-]{1,64}$/;
 
 export class UploadService {
   readonly registry = new UploadRegistry();
-  constructor(readonly cfg: Config, readonly logger: Logger = pino({ enabled: false })) {}
+  constructor(readonly cfg: Config, readonly logger: Logger = createLogger('silent')) {}
 
   async ensureStorage(): Promise<void> {
     await fsp.mkdir(path.join(this.cfg.storageDir, 'tmp'), { recursive: true });
@@ -101,7 +101,7 @@ export class UploadService {
   }
 }
 
-export async function buildApp(cfg: Config = loadConfig(), logger: Logger = pino({ enabled: false })): Promise<express.Express> {
+export async function buildApp(cfg: Config = loadConfig(), logger: Logger = createLogger('silent')): Promise<express.Express> {
   const service = new UploadService(cfg, logger);
   await service.ensureStorage();
   const app = express();

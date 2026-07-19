@@ -178,6 +178,22 @@ class TestStateMachineInvariants(unittest.TestCase):
         with self.assertRaises(DeterminismError):
             sm.transition("critico.OK")  # critic alone can't promote
 
+    def test_critico_ok_after_prometor_pass_while_dominado(self):
+        """critico.OK confirms after prometor.PASS (state is already DOMINADO, sub_state DONE)."""
+        sm = self.sm_class(unit_id="U-001")
+        sm.transition("aluno.aceita")
+        sm.transition("aluno.submete")
+        sm.transition("mestre.done")
+        sm.transition(
+            "prometor.PASS",
+            payload={"mutation_score": 0.72, "coverage_core": 0.86},
+        )
+        self.assertEqual(sm.state, "DOMINADO")
+        self.assertEqual(sm.sub_state, "DONE")
+        # Must not raise: critic confirmation arrives after terminal promotion.
+        self.assertEqual(sm.transition("critico.OK"), "DOMINADO")
+        self.assertEqual(sm.state, "DOMINADO")
+
     def test_I3_retries_capped_at_three(self):
         """I3: retries ≤ 3 per unit; at exhaustion, SÊNECA decides."""
         sm = self.sm_class(unit_id="U-001")

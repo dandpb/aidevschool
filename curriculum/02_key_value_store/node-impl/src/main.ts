@@ -1,9 +1,9 @@
 import http from 'node:http';
-import pino from 'pino';
+import { createLogger } from './logger';
 import { buildApp } from './server';
 import { KeyValueStore } from './store';
 
-const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
+const logger = createLogger(process.env.LOG_LEVEL ?? 'info' );
 const port = Number(process.env.PORT ?? 8081);
 const host = process.env.HOST ?? '127.0.0.1';
 const server = http.createServer(buildApp(new KeyValueStore(), logger));

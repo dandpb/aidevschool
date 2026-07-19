@@ -1,27 +1,23 @@
 import { existsSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { getLinuxApp, getLinuxAppsForCategory, linuxApps, renderLinuxLab } from "./index"
+import { renderLinuxLab } from "./index"
+import { buildInitialState } from "../state"
 
-describe("Linux Lab module boundary", () => {
-  it("exposes the compatibility catalog and renderer from one public entry point", () => {
-    expect(linuxApps.length).toBeGreaterThanOrEqual(50)
-    expect(getLinuxApp("terminal").name).toBe("Terminal")
-    expect(typeof renderLinuxLab).toBe("function")
-  })
+const sourceRoot = new URL("..", import.meta.url)
 
-  it("owns the catalog and renderer instead of leaving legacy files behind", () => {
-    const sourceRoot = new URL("../", import.meta.url)
-
+describe("linuxLab module boundary", () => {
+  it("is a bridge-only module (no app catalog)", () => {
+    expect(existsSync(fileURLToPath(new URL("linuxLab/catalog.ts", sourceRoot)))).toBe(false)
     expect(existsSync(fileURLToPath(new URL("data/linuxApps.ts", sourceRoot)))).toBe(false)
     expect(existsSync(fileURLToPath(new URL("render/linuxLab.ts", sourceRoot)))).toBe(false)
   })
 
-  it("reuses cached category groups without allocating on each query", () => {
-    const developerApps = getLinuxAppsForCategory("development")
-
-    expect(developerApps).toBe(getLinuxAppsForCategory("development"))
-    expect(Object.isFrozen(developerApps)).toBe(true)
-    expect(developerApps.every((app) => app.category === "development")).toBe(true)
+  it("renders only the OS launch bridge", () => {
+    const html = renderLinuxLab(buildInitialState("a", "s"))
+    expect(html).toContain("Linux Lab")
+    expect(html).toContain("os-engine-bridge")
+    expect(html).not.toContain("linux-app-tile")
+    expect(html).not.toContain("run-linux-lab")
   })
 })

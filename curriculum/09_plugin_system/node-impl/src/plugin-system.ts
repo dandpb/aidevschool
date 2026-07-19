@@ -1,4 +1,4 @@
-import pino from 'pino';
+import { createLogger, type Logger } from './logger';
 import { Worker } from 'worker_threads';
 
 export type PluginState = 'registered' | 'loaded' | 'initialized' | 'running' | 'stopped' | 'unloaded' | 'failed';
@@ -25,7 +25,7 @@ export interface HookDispatchResult { hookName: string; correlationId: string; m
 export interface PluginList { items: PluginRecord[]; nextCursor: string | null; }
 export interface HealthReport { healthy: boolean; registered: number; running: number; }
 export interface AuditEvent { pluginId: string; capability: string; decision: 'granted' | 'denied'; reason: string; at: string; }
-export interface HostContext { hostApiVersion: string; pluginId: string; logger: pino.Logger; capabilityClient: { use: (name: string) => Promise<CapabilityGrant> }; }
+export interface HostContext { hostApiVersion: string; pluginId: string; logger: Logger; capabilityClient: { use: (name: string) => Promise<CapabilityGrant> }; }
 
 export interface PluginRuntime {
   load(manifest: PluginManifest, context: HostContext): Promise<void> | void;
@@ -41,7 +41,7 @@ export class PluginHost {
   private readonly runtimes = new Map<string, PluginRuntime>();
   private readonly entrypointRuntimes = new Map<string, PluginRuntime>();
   private readonly audit: AuditEvent[] = [];
-  private readonly logger = pino({ level: 'silent' });
+  private readonly logger = createLogger('silent' );
 
   constructor(private readonly hostApiVersion: string) {}
 

@@ -12,17 +12,16 @@ from __future__ import annotations
 import json
 import os
 import tempfile
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+from ..timeutil import now_iso as _now_iso
 
 
 class LockError(Exception):
     """Raised when a phase is already locked by another agent."""
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
 
 
 class EventStore:

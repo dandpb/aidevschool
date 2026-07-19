@@ -47,50 +47,6 @@ describe("bindEvents", () => {
     expect(dispatched).toHaveLength(0)
   })
 
-  it("clicking a Linux app tile dispatches selectLinuxApp", () => {
-    // Given
-    const root = document.createElement("div")
-    const button = document.createElement("button")
-    button.setAttribute("data-linux-app", "terminal")
-    root.appendChild(button)
-
-    const dispatched: AppAction[] = []
-    const dispatch = (action: AppAction) => {
-      dispatched.push(action)
-    }
-
-    bindEvents(root, dispatch)
-
-    // When
-    button.click()
-
-    // Then
-    expect(dispatched).toHaveLength(1)
-    expect(dispatched[0]).toEqual({ kind: "selectLinuxApp", appId: "terminal" })
-  })
-
-  it("clicking Run Lab dispatches runLinuxLab", () => {
-    // Given
-    const root = document.createElement("div")
-    const button = document.createElement("button")
-    button.setAttribute("data-action", "run-linux-lab")
-    root.appendChild(button)
-
-    const dispatched: AppAction[] = []
-    const dispatch = (action: AppAction) => {
-      dispatched.push(action)
-    }
-
-    bindEvents(root, dispatch)
-
-    // When
-    button.click()
-
-    // Then
-    expect(dispatched).toHaveLength(1)
-    expect(dispatched[0]).toEqual({ kind: "runLinuxLab" })
-  })
-
   it("clicking [data-copy-agent] with unknown id does not throw", () => {
     // Given
     const root = document.createElement("div")

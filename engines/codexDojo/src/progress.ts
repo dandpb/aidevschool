@@ -115,7 +115,8 @@ export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject
 }
 
 export function getCurrentProject(): DojoProject {
-  const project = projects[0]
+  // Level-0 (p00) is a parallel non-technical entry; default current is first technical project.
+  const project = projects.find((p) => p.level >= 1) ?? projects[0]
 
   if (project === undefined) {
     throw new Error("No codexDojo project configured.")

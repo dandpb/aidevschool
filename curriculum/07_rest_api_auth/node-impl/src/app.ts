@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import Fastify, { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import pino from 'pino';
+import { createLogger } from './logger';
 
 type Role = 'user' | 'admin';
 type UserStatus = 'active' | 'disabled';
@@ -199,8 +199,9 @@ class AuthService {
     const session = this.store.findSessionByRefreshHash(hash);
     if (!session) throw new ApiError(401, 'INVALID_REFRESH_TOKEN', 'Invalid refresh token.');
     if (session.status !== 'active') {
+      const previousStatus = session.status;
       session.status = 'replayed';
-      this.audit.record({ action: 'refresh_replayed', actorUserId: session.userId, targetUserId: session.userId, sessionId: session.id, requestId, outcome: 'denied', metadata: { previous_status: session.status } });
+      this.audit.record({ action: 'refresh_replayed', actorUserId: session.userId, targetUserId: session.userId, sessionId: session.id, requestId, outcome: 'denied', metadata: { previous_status: previousStatus } });
       throw new ApiError(401, 'REFRESH_TOKEN_REPLAYED', 'Refresh token was already used.');
     }
     if (session.expiresAt <= this.clock.now()) {
@@ -289,7 +290,7 @@ export function buildApp(options: { config?: Partial<Config>; clock?: Clock; sto
   const config = { ...defaultConfig, ...options.config };
   const clock = options.clock ?? new FixedClock();
   const store = options.store ?? new InMemoryStore();
-  const logger = pino({ level: 'silent' });
+  const logger = createLogger('silent' );
   const audit = new AuditLogger(store, clock);
   const tokenService = new TokenService(config, clock);
   const auth = new AuthService(store, new PasswordHasher(config), tokenService, audit, clock, config);

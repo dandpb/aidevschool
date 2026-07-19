@@ -1,5 +1,5 @@
 import http from 'node:http';
-import pino from 'pino';
+import { createLogger } from './logger';
 import { WebSocketServer, type WebSocket } from 'ws';
 import { ChatHub } from './chatHub.js';
 import type { ServerConfig } from './config.js';
@@ -15,7 +15,7 @@ class WebSocketTransport implements ClientTransport {
   }
 }
 
-export function buildServer(config: ServerConfig, logger = pino({ level: config.logLevel })) {
+export function buildServer(config: ServerConfig, logger = createLogger(config.logLevel )) {
   const hub = new ChatHub(config);
   const server = http.createServer((request, response) => {
     if (request.url === '/healthz') {

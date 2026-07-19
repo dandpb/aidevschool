@@ -1,4 +1,4 @@
-import type pino from 'pino';
+import type { Logger } from './logger';
 
 /**
  * A monotonic clock in milliseconds. We accept a function rather than a
@@ -26,7 +26,7 @@ export interface RateLimiterOptions {
   /** Wall-clock millisecond provider. Defaults to `Date.now`. */
   readonly clock?: Clock;
   /** Logger for diagnostics. Optional so unit tests can stay silent. */
-  readonly logger?: pino.Logger;
+  readonly logger?: Logger;
 }
 
 /** Public, pure-TS surface — no Express, no I/O. */
@@ -68,7 +68,7 @@ export class TokenBucketRateLimiter {
   readonly #refillRate: number;
   readonly #clock: Clock;
   readonly #buckets = new Map<string, ClientBucket>();
-  readonly #logger: pino.Logger | undefined;
+  readonly #logger: Logger | undefined;
 
   constructor(opts: RateLimiterOptions) {
     if (!(opts.capacity > 0)) {

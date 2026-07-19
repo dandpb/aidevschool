@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import type {
   Agent,
   CycleStage,
@@ -10,7 +10,7 @@ import type {
   Metric,
   UserFacingAgent,
 } from "../domain"
-import { type LinuxApp, linuxAppCategoryLabels, linuxApps, renderLinuxLab } from "../linuxLab"
+import { renderLinuxLab } from "../linuxLab"
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
@@ -194,51 +194,9 @@ vi.mock("../progress", () => {
   }
 })
 
-const maliciousLinuxApp: LinuxApp = {
-  id: `evil-${XSS}`,
-  name: `Evil App ${XSS}`,
-  category: "system",
-  principle: `principle ${XSS}`,
-  concept: `concept ${XSS}`,
-  process: `process ${XSS}`,
-  command: `command ${XSS}`,
-  output: `terminal output ${XSS}`,
-  exercise: `exercise ${XSS}`,
-}
-
-const originalLinuxApp = linuxApps[0]
-const originalAllLabel = linuxAppCategoryLabels.all
-const originalSystemLabel = linuxAppCategoryLabels.system
-
-beforeAll(() => {
-  Object.defineProperty(linuxApps, 0, {
-    ...Object.getOwnPropertyDescriptor(linuxApps, 0),
-    value: maliciousLinuxApp,
-  })
-  Object.defineProperty(linuxAppCategoryLabels, "all", {
-    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "all"),
-    value: `All apps ${XSS}`,
-  })
-  Object.defineProperty(linuxAppCategoryLabels, "system", {
-    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "system"),
-    value: `System ${XSS}`,
-  })
-})
-
-afterAll(() => {
-  Object.defineProperty(linuxApps, 0, {
-    ...Object.getOwnPropertyDescriptor(linuxApps, 0),
-    value: originalLinuxApp,
-  })
-  Object.defineProperty(linuxAppCategoryLabels, "all", {
-    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "all"),
-    value: originalAllLabel,
-  })
-  Object.defineProperty(linuxAppCategoryLabels, "system", {
-    ...Object.getOwnPropertyDescriptor(linuxAppCategoryLabels, "system"),
-    value: originalSystemLabel,
-  })
-})
+vi.mock("../data/osEngine", () => ({
+  getCodexDojoOsUrl: () => `https://evil.example/?q=${XSS}`,
+}))
 
 const state = buildInitialState("agent-x", "stage-x", "p99")
 

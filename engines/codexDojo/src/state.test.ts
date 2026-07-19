@@ -81,56 +81,6 @@ describe("reduceState — setProjectFilter", () => {
   })
 })
 
-describe("reduceState — selectLinuxApp", () => {
-  it("selects the linux app and jumps to the linuxLab view", () => {
-    // Given
-    const state = stateWith({ view: "overview", selectedLinuxAppId: "terminal" })
-
-    // When
-    const next = reduceState(state, { kind: "selectLinuxApp", appId: "browser" })
-
-    // Then
-    expect(next.selectedLinuxAppId).toBe("browser")
-    expect(next.view).toBe("linuxLab")
-  })
-
-  it("returns exactly the same state reference if the app is already selected and view is linuxLab", () => {
-    // Given
-    const state = stateWith({ view: "linuxLab", selectedLinuxAppId: "browser" })
-
-    // When
-    const next = reduceState(state, { kind: "selectLinuxApp", appId: "browser" })
-
-    // Then
-    expect(next).toBe(state) // Exact reference equality
-  })
-})
-
-describe("reduceState — setLinuxAppCategoryFilter", () => {
-  it("sets the linux app category filter and jumps to the linuxLab view", () => {
-    // Given
-    const state = stateWith({ view: "overview", linuxAppCategoryFilter: "all" })
-
-    // When
-    const next = reduceState(state, { kind: "setLinuxAppCategoryFilter", filter: "media" })
-
-    // Then
-    expect(next.linuxAppCategoryFilter).toBe("media")
-    expect(next.view).toBe("linuxLab")
-  })
-
-  it("returns exactly the same state reference if the filter is already set and view is linuxLab", () => {
-    // Given
-    const state = stateWith({ view: "linuxLab", linuxAppCategoryFilter: "media" })
-
-    // When
-    const next = reduceState(state, { kind: "setLinuxAppCategoryFilter", filter: "media" })
-
-    // Then
-    expect(next).toBe(state) // Exact reference equality
-  })
-})
-
 describe("reduceState — markCopied", () => {
   it("records the copied agent id", () => {
     // Given

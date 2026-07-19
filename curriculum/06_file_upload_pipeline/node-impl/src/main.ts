@@ -1,11 +1,11 @@
 import http from 'node:http';
-import pino from 'pino';
+import { createLogger } from './logger';
 import { loadConfig } from './config';
 import { buildApp } from './server';
 
 async function main(): Promise<void> {
   const cfg = loadConfig();
-  const logger = pino({ level: process.env.LOG_LEVEL ?? 'info' });
+  const logger = createLogger(process.env.LOG_LEVEL ?? 'info' );
   const app = await buildApp(cfg, logger);
   const server = http.createServer(app);
   server.listen(cfg.port, () => logger.info({ port: cfg.port }, 'listening'));

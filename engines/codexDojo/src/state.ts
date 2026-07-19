@@ -1,6 +1,5 @@
 import { advanceCycle } from "./cycle"
 import { assertNever, type ProjectPhase, type View } from "./domain"
-import type { LinuxAppCategoryFilter } from "./linuxLab"
 
 export type ProjectFilter = ProjectPhase | "all"
 
@@ -17,9 +16,6 @@ export type AppState = {
    * a second, view-local state channel that would have to be kept in sync with the reducer.
    */
   readonly projectFilter: ProjectFilter
-  readonly selectedLinuxAppId: string
-  readonly linuxAppCategoryFilter: LinuxAppCategoryFilter
-  readonly linuxLabRunCount: number
   readonly copiedAgentId: string | null
 }
 
@@ -30,9 +26,6 @@ export type AppAction =
   | { readonly kind: "selectProject"; readonly projectId: string }
   | { readonly kind: "advanceStage" }
   | { readonly kind: "setProjectFilter"; readonly filter: ProjectFilter }
-  | { readonly kind: "selectLinuxApp"; readonly appId: string }
-  | { readonly kind: "setLinuxAppCategoryFilter"; readonly filter: LinuxAppCategoryFilter }
-  | { readonly kind: "runLinuxLab" }
   | { readonly kind: "markCopied"; readonly agentId: string | null }
 
 export function buildInitialState(
@@ -47,9 +40,6 @@ export function buildInitialState(
     selectedProjectId: firstProjectId,
     completedStageIds: ["diagnosticar", "escolher"],
     projectFilter: "all",
-    selectedLinuxAppId: "terminal",
-    linuxAppCategoryFilter: "all",
-    linuxLabRunCount: 0,
     copiedAgentId: null,
   }
 }
@@ -86,14 +76,6 @@ export function reduceState(state: AppState, action: AppAction): AppState {
     case "setProjectFilter":
       if (state.projectFilter === action.filter && state.view === "roadmap") return state
       return { ...state, projectFilter: action.filter, view: "roadmap" }
-    case "selectLinuxApp":
-      if (state.selectedLinuxAppId === action.appId && state.view === "linuxLab") return state
-      return { ...state, selectedLinuxAppId: action.appId, view: "linuxLab" }
-    case "setLinuxAppCategoryFilter":
-      if (state.linuxAppCategoryFilter === action.filter && state.view === "linuxLab") return state
-      return { ...state, linuxAppCategoryFilter: action.filter, view: "linuxLab" }
-    case "runLinuxLab":
-      return { ...state, linuxLabRunCount: state.linuxLabRunCount + 1, view: "linuxLab" }
     case "markCopied":
       if (state.copiedAgentId === action.agentId) return state
       return { ...state, copiedAgentId: action.agentId }
