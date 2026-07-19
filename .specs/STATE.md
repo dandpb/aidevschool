@@ -52,11 +52,11 @@
 
 ## Handoff
 
-- **Feature**: ecosystem-goal / `.specs/features/ecosystem-goal/spec.md`
-- **Phase / Task**: Specify complete → next: P1 Execute (learner diagnostic U0)
-- **Completed**: Requirement map, formal spec, STATE decisions AD-001–AD-003
+- **Feature**: vision-dual-audience / `.specs/features/vision-dual-audience/spec.md`
+- **Phase / Task**: Execute complete (T1–T16) + Verifier PASS (validation.md) + gaps de consistência corrigidos
+- **Completed**: 16 commits atômicos `ba771a1..94f7ea8` + `7efb587` (fix) + `b7f7ed4` (addendum). miniTown inventariado/posicionado como Nível 0; catálogo com Level 0 (`00_ai_in_practice`, `planned`); parser do substrato com suporte a Level 0 + testes; modo `non_developer` no config seam e nos 4 prompts; ADR-0004 (gate no-code); `setup.sh onboard`; `netlify.toml`.
 - **In-progress**: None
-- **Next step**: Learner completes `curriculum/01_rate_limiter/docs/diagnostic.md` tasks 1–4, then run `/devschool-diagnose` or `/agora-continuum` for sonda evaluation.
-- **Blockers**: `gate.implementation_blocked: true` · `active_unit.state: presenting` · `awaiting: learner_attempt`
-- **Uncommitted files**: `.specs/features/ecosystem-goal/spec.md`, `.specs/STATE.md` (new)
-- **Branch**: architecture-deepening
+- **Next step (Mac do Daniel)**: rodar as pendências consolidadas em `.specs/features/vision-dual-audience/validation.md` — `cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build`; `python3 -m learner.substrate && python3 -m learner.substrate --check`; `make test-substrate` (Python ≥3.11); `./setup.sh onboard` (2×); deploy Netlify (opcional).
+- **Blockers**: pendências acima não são executáveis no sandbox (Python 3.10/StrEnum; binários JS de outra arch) — registradas, nunca alegadas como pass.
+- **Uncommitted files**: apenas trabalho de outra sessão (engines/miniTown src, phantasy*, games/ etc.) — não tocado.
+- **Branch**: main
