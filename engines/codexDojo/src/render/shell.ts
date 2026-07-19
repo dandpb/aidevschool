@@ -7,7 +7,7 @@ export function renderShell(state: AppState): string {
     <main class="app-shell">
       <aside class="sidebar" aria-label="Navegação principal">
         <div class="brand-block">
-          <span class="brand-mark">CD</span>
+          <span class="brand-mark" aria-hidden="true">CD</span>
           <div>
             <strong>codexDojo</strong>
             <small>agent learning lab</small>

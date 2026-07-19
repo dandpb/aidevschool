@@ -66,7 +66,7 @@ function renderAidi(snapshot: LearnerSnapshot): string {
           <strong>${typeof aidi.current === "number" ? aidi.current.toFixed(2) : escapeHtml(aidi.current)}</strong>
           <small>alerta amarelo em ${typeof aidi.thresholdAmber === "number" ? aidi.thresholdAmber.toFixed(2) : escapeHtml(aidi.thresholdAmber)} · vermelho em ${typeof aidi.thresholdRed === "number" ? aidi.thresholdRed.toFixed(2) : escapeHtml(aidi.thresholdRed)}</small>
         </div>
-        <svg viewBox="0 0 100 24" class="aidi-spark" aria-label="AIDI trendline">
+        <svg viewBox="0 0 100 24" class="aidi-spark" role="img" aria-label="AIDI trendline">
           <rect x="0" y="0" width="100" height="24" class="aidi-bg" rx="2" />
           ${path ? `<path d="${path}" class="aidi-line" />` : ""}
         </svg>
