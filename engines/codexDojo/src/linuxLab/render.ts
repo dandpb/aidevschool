@@ -94,7 +94,7 @@ function renderAppGrid(apps: readonly LinuxApp[], activeApp: LinuxApp): string {
           const { className, aria } = pressedAttrs(app.id === activeApp.id)
           return `
             <button class="linux-app-tile ${className}" type="button" data-linux-app="${escapeHtml(app.id)}"${aria}>
-              <span class="linux-app-icon linux-category-${escapeHtml(app.category)}">${escapeHtml(appInitials(app.name))}</span>
+              <span class="linux-app-icon linux-category-${escapeHtml(app.category)}" aria-hidden="true">${escapeHtml(appInitials(app.name))}</span>
               <span class="linux-app-name">${escapeHtml(app.name)}</span>
               <small>${escapeHtml(linuxAppCategoryLabels[app.category])}</small>
             </button>
