@@ -16,7 +16,7 @@ Dois públicos, uma mecânica:
 
 | Público | O que aprende | Trilha |
 | --- | --- | --- |
-| Pessoas não tecnológicas | Aplicar IA no dia a dia: como pedir, verificar e desconfiar do que a IA entrega | **Ainda não existe** (lacuna declarada abaixo) |
+| Pessoas não tecnológicas | Aplicar IA no dia a dia: como pedir, verificar e desconfiar do que a IA entrega | Nível 0: [`curriculum/00_ai_in_practice/`](../curriculum/00_ai_in_practice/docs/spec.md) (status `planned`) + [`engines/miniTown/`](../engines/miniTown/README.md) |
 | Programadores | Engenharia robusta com IA: testes, review, benchmark, arquitetura | Os 18 projetos de [`curriculum/catalog.md`](../curriculum/catalog.md) |
 
 O que não muda entre públicos: lições pequenas, revisão espaçada, streak — e a regra de ouro do
@@ -75,9 +75,10 @@ vários motores". Unidades dessa trilha usam o gate no-code (AD-006).
 Estas decisões mudam a estrutura do repo. Não estão tomadas. São registradas aqui pra não se
 perderem entre revisões.
 
-3. **Onboarding zero-install.** "Roda com duplo-clique" ainda não é verdade. O setup atual
-   exige Node 20+, pnpm, Python 3.10+ e (opcional) Go/Rust. A democratização depende de
-   alguém conseguir abrir e jogar sem instalar nada além de um browser.
+3. **Onboarding zero-install.** Primeiro passo dado (2026-07-19): `./setup.sh onboard`
+   prepara só o miniTown, e `engines/miniTown/netlify.toml` define o deploy estático (build
+   do HEAD verificado limpo). O que falta decidir: publicar o link público oficial e
+   empacotar as lições junto — "abrir no browser sem instalar nada" ainda não é verdade.
 4. **Replicação da instância.** Hoje "one learner per instance" + setup manual =
    democratização-zero. Visão se cumpre quando uma segunda pessoa roda a escola com um
    comando.
