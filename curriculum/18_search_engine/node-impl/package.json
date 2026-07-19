@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "tsx src/main.ts",
     "test": "vitest run",
-    "lint": "eslint src/",
+    "lint": "tsc --noEmit",
     "build": "tsc"
   },
   "dependencies": {},

@@ -1,0 +1,230 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Regra-mestra: completion certainty never lives in the language model. A máquina de estados do learning gate com retry e escalação."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 03 · A REGRA-MESTRA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: A certeza de conclusão nunca vive no modelo de linguagem
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: rule-quote
+    elementType: text
+    bounds: [56, 118, 848, 36]
+    content:
+      fontSize: 12.5
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, middle]
+      text: |
+        <p>Uma unidade só vira <strong>dominado</strong> quando (1) o aprendiz <strong>tenta</strong> e (2) um <strong>verificador separado</strong>, partindo do zero, produz <strong>evidência executável</strong>. Nenhuma explicação, review ou código entregue encurta esse caminho.</p>
+  - elementId: st1
+    elementType: shape
+    bounds: [56, 190, 150, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: st1-t
+    elementType: text
+    bounds: [56, 190, 150, 56]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:12.5px; color:$slateDark;"><strong>apresentando</strong></span></p>
+        <p><span style="font-size:8.5px; color:$muted;">Sonda apresenta o diagnóstico</span></p>
+  - elementId: sa1
+    elementType: line
+    bounds: [206, 212, 34, 12]
+    viewBox: [34, 12]
+    points: "0,6 34,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: st2
+    elementType: shape
+    bounds: [240, 190, 150, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: st2-t
+    elementType: text
+    bounds: [240, 190, 150, 56]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:12.5px; color:$slateDark;"><strong>praticando</strong></span></p>
+        <p><span style="font-size:8.5px; color:$muted;">aprendiz escreve a tentativa</span></p>
+  - elementId: sa2
+    elementType: line
+    bounds: [390, 212, 34, 12]
+    viewBox: [34, 12]
+    points: "0,6 34,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: st3
+    elementType: shape
+    bounds: [424, 190, 150, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: st3-t
+    elementType: text
+    bounds: [424, 190, 150, 56]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:12.5px; color:$accentDark;"><strong>avaliando</strong></span></p>
+        <p><span style="font-size:8.5px; color:$accentDark;">gate desbloqueado → missão no jogo</span></p>
+  - elementId: gate-box
+    elementType: shape
+    bounds: [596, 174, 136, 88]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: gate-t
+    elementType: text
+    bounds: [604, 180, 120, 76]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:#F2B794;"><strong>GATE EXECUTÁVEL</strong></span></p>
+        <p style="margin-top:4px"><span style="font-size:7.5px; color:#D8DDE3;">verificador isolado: suíte verde · mutation ≥ 0,65 · cobertura ≥ 0,80</span></p>
+  - elementId: sa3
+    elementType: line
+    bounds: [574, 212, 24, 12]
+    viewBox: [24, 12]
+    points: "0,6 24,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$accent"}
+  - elementId: st4
+    elementType: shape
+    bounds: [752, 190, 152, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$greenSoft"}
+    border: {style: solid, width: 1.5, color: "$green"}
+  - elementId: st4-t
+    elementType: text
+    bounds: [752, 190, 152, 56]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:12.5px; color:$green;"><strong>dominado</strong></span></p>
+        <p><span style="font-size:8.5px; color:$muted;">PASS auditado + recibo c/ digest</span></p>
+  - elementId: sa4
+    elementType: line
+    bounds: [728, 212, 24, 12]
+    viewBox: [24, 12]
+    points: "0,6 24,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$green"}
+  - elementId: fail-line
+    elementType: line
+    bounds: [131, 246, 368, 44]
+    viewBox: [368, 44]
+    points: "368,0 368,22 0,22 0,42"
+    curve: sharp
+    arrow: [null, stealth]
+    border: {style: dash, width: 1.5, color: "$red"}
+  - elementId: fail-label
+    elementType: text
+    bounds: [150, 276, 300, 14]
+    content:
+      fontSize: 9.5
+      color: "$red"
+      align: [center, middle]
+      wrap: false
+      text: FAIL → variação e volta a apresentando (retry_count += 1)
+  - elementId: block-box
+    elementType: shape
+    bounds: [560, 288, 190, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$redSoft"}
+    border: {style: solid, width: 1, color: "$red"}
+  - elementId: block-t
+    elementType: text
+    bounds: [568, 292, 174, 48]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$red;"><strong>FALHA_BLOQUEIO</strong></span></p>
+        <p><span style="font-size:7.5px; color:$red;">após 3 retries → escala Sêneca (SLA 24h)</span></p>
+  - elementId: block-arrow
+    elementType: line
+    bounds: [664, 260, 32, 28]
+    viewBox: [32, 28]
+    points: "0,0 32,28"
+    curve: sharp
+    arrow: [null, stealth]
+    border: {style: dash, width: 1.5, color: "$red"}
+  - elementId: notes-head
+    elementType: text
+    bounds: [56, 356, 500, 16]
+    content:
+      fontSize: 11
+      color: "$ink"
+      bold: true
+      letterSpacing: 1.5
+      align: [left, middle]
+      wrap: false
+      text: O QUE O GATE IMPÕE NA PRÁTICA
+  - elementId: notes-rule
+    elementType: line
+    bounds: [56, 376, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: note1
+    elementType: text
+    bounds: [56, 388, 272, 100]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p><strong>IA bloqueada até a tentativa.</strong> Enquanto <span style="color:$accentDark;">gate.implementation_blocked: true</span>, nenhum agente implementa a unidade — productive struggle primeiro.</p>
+  - elementId: note2
+    elementType: text
+    bounds: [344, 388, 272, 100]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p><strong>Diagnóstico nunca basta.</strong> A tentativa avaliada só desbloqueia a implementação; <span style="color:$accentDark;">mastered</span> exige evidência de verificador independente.</p>
+  - elementId: note3
+    elementType: text
+    bounds: [632, 388, 272, 100]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p><strong>Falha não é silenciada.</strong> Esgotado o retry budget (3), a governança humana (Sêneca) decide — nunca vira mastery nem fail silencioso.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "04"}

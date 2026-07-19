@@ -10,7 +10,7 @@ export const reviewSlice: ReviewSlice = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 2d",
+      dueIn: "overdue 10d",
       reason: "overdue",
     },
     {

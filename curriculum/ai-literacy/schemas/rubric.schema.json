@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rubric.schema.json",
+  "title": "LessonRubric",
+  "description": "Rubrica verificável de uma lição da trilha ai-literacy. Rubricas ficam próximas do conteúdo e possuem testes de contrato (ver docs/design/ai-literacy/content-contract.md).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "criteria"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^l[0-9]{2}-rubric$",
+      "description": "ID estável da rubrica, derivado do ID da lição."
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Critério observável e verificável separadamente."
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Peso relativo do critério no score (padrão 1)."
+          }
+        }
+      }
+    }
+  }
+}

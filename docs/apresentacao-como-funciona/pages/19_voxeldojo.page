@@ -1,0 +1,163 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "voxelDojo: simulação 3D com núcleo determinístico headless; a cena é projeção. Caso hash-ring e o bug que tornava a lição falsa."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 18 · ENGINE 3D
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "voxelDojo: a cena é projeção; a verdade é o sim"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: intro
+    elementType: text
+    bounds: [56, 120, 424, 52]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>Onde o pixelDojo gamifica a <strong>regra</strong> ("gaste um token por request"), o voxelDojo torna a <strong>estrutura</strong> tangível ("veja as chaves migrarem quando um nó sai do anel"). 16 pacotes game-*; 15 de 18 conceitos espaciais implementados.</p>
+  - elementId: lay1
+    elementType: shape
+    bounds: [56, 182, 200, 78]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: lay1-t
+    elementType: text
+    bounds: [66, 187, 180, 68]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$accentDark;"><strong>src/sim/</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">núcleo determinístico TS puro — sem three, sem DOM; clock e RNG injetados</span></p>
+  - elementId: lay2
+    elementType: shape
+    bounds: [56, 268, 200, 62]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lay2-t
+    elementType: text
+    bounds: [66, 273, 180, 52]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$slateDark;"><strong>src/game/</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">controller / máquina de níveis (briefing→predicting→resolving)</span></p>
+  - elementId: lay3
+    elementType: shape
+    bounds: [56, 338, 200, 62]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lay3-t
+    elementType: text
+    bounds: [66, 343, 180, 52]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$slateDark;"><strong>src/scene/ + HUD</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">Three.js apenas projeta o estado do sim; input dispara comandos</span></p>
+  - elementId: lay4
+    elementType: shape
+    bounds: [56, 408, 200, 62]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: dash, width: 1, color: "$muted"}
+  - elementId: lay4-t
+    elementType: text
+    bounds: [66, 413, 180, 52]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$ink;"><strong>src/content/</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">packs data-only + reviewSlice.ts gerado (fan-out p/ 16 jogos)</span></p>
+  - elementId: l-facts
+    elementType: text
+    bounds: [276, 182, 204, 288]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p><strong style="color:$ink;">Decisões-chave:</strong></p>
+        <p style="margin-top:5px">· Vitest prova a matemática do conceito <strong>sem GPU</strong> — é o que torna "o jogo ensina" um claim evidenciado, não vibes;</p>
+        <p style="margin-top:6px">· tentativas replayáveis (RNG seedado, clock injetado);</p>
+        <p style="margin-top:6px">· <strong>schema de evidência idêntico ao pixel-quest</strong>, com source "voxeldojo" — um só caminho de ingestão, dois emissores;</p>
+        <p style="margin-top:6px">· sceneHarness compartilhado: o bootstrap idêntico dos 16 jogos (main.ts de 30 linhas);</p>
+        <p style="margin-top:6px">· assets procedurais low-poly (≤8 cores), sem GLTF.</p>
+  - elementId: hr-panel
+    elementType: shape
+    bounds: [512, 120, 392, 250]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: hr-bar
+    elementType: shape
+    bounds: [512, 120, 392, 4]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: hr-head
+    elementType: text
+    bounds: [526, 134, 364, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "PACOTE DE REFERÊNCIA: game-10-hash-ring"}
+  - elementId: hr-body
+    elementType: text
+    bounds: [526, 156, 364, 130]
+    content:
+      style: "$body"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>Ensina <strong>hashing consistente + rebalanceamento</strong> (projeto 10, unidade U9) em 4 níveis: L1 predizer o dono da chave · L2 predizer quem perde mais chaves num join (pass exige moved_ratio ≤ teórico × 1,75) · L3 dial de vnodes para corrigir skew · L4 contraste consistent-hashing (0,2) vs módulo (0,8).</p>
+        <p style="margin-top:6px">Sim com busca binária, vnodes por estação, bound teórico de chaves movidas — <strong>19 testes Vitest</strong> (determinismo por seed, wrap-around, edge cases).</p>
+  - elementId: hr-bug
+    elementType: text
+    bounds: [526, 292, 364, 68]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$red;">O bug que tornava a lição falsa:</strong> FNV-1a puro tinha avalanche fraca → moved-ratio medido ~0,30 vs teórico 0,20. O fix (fmix32, finalizador murmur3) está pinado por testes e registrado no GAP_ANALYSIS — <strong>a matemática da lição precisa ser verdadeira</strong>.</p>
+  - elementId: bottom
+    elementType: text
+    bounds: [512, 388, 392, 60]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p>Smoke Playwright joga L1 via hook determinístico window.__hashRing.game e verifica 1 registro EVIDENCE com scenario_id "hash-ring-L1" e pass: true — mais prova de que o canvas é WebGL real.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "19"}

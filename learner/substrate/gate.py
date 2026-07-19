@@ -6,7 +6,7 @@ from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
-from learner.substrate import commit_canonical, validate
+from learner.substrate import commit_canonical, resolve_canonical_path, validate
 from learner.substrate.scheduling import RATING_FROM_GATE, record_gate_outcome
 
 
@@ -119,7 +119,7 @@ def commit_gate_transition(
     today: date,
     path: str | Path = "learner/learning_state.yaml",
 ) -> dict[str, Any]:
-    target = Path(path).resolve()
+    target = resolve_canonical_path(path).resolve()
     root = target.parent.parent if target.parent.name == "learner" else Path.cwd()
     transitioned = transition_gate(
         state,

@@ -1,0 +1,188 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Princípio norteador: one learner, one curriculum, many engines. As cinco regras de ouro do handbook."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 02 · FILOSOFIA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Um aprendiz, um currículo, muitos engines
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: dia-learner
+    elementType: shape
+    bounds: [56, 136, 190, 102]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1.5, color: "$slate"}
+  - elementId: dia-learner-t
+    elementType: text
+    bounds: [68, 144, 166, 86]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:14px; color:$slateDark;"><strong>1 aprendiz</strong></span></p>
+        <p style="margin-top:5px"><span style="font-size:9px; color:$body;">Uma jornada única: o progresso nunca se fragmenta entre engines.</span></p>
+  - elementId: dia-a1
+    elementType: line
+    bounds: [246, 180, 40, 16]
+    viewBox: [40, 16]
+    points: "0,8 40,8"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: dia-curr
+    elementType: shape
+    bounds: [286, 136, 190, 102]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1.5, color: "$slate"}
+  - elementId: dia-curr-t
+    elementType: text
+    bounds: [298, 144, 166, 86]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:14px; color:$slateDark;"><strong>1 currículo</strong></span></p>
+        <p style="margin-top:5px"><span style="font-size:9px; color:$body;">18 projetos poliglotas (Go · Rust · Node) compartilhados por todos os engines.</span></p>
+  - elementId: dia-a2
+    elementType: line
+    bounds: [476, 180, 40, 16]
+    viewBox: [40, 16]
+    points: "0,8 40,8"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: dia-engines
+    elementType: shape
+    bounds: [516, 122, 388, 124]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: dia-engines-t
+    elementType: text
+    bounds: [530, 130, 360, 110]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:15px; color:$accentDark;"><strong>N engines</strong></span></p>
+        <p style="margin-top:5px"><span style="font-size:9.5px; color:$body;">Dashboards, OS educacional, jogos 2D/3D, tutores e runners — cada um um projeto separado, todos sobre o <strong>mesmo substrato</strong>.</span></p>
+        <p style="margin-top:5px"><span style="font-size:9.5px; color:$muted;">Acessam learner/ e curriculum/ por symlinks e paths relativos — <strong>nunca duplicam nem bifurcam</strong> o estado.</span></p>
+  - elementId: dia-note
+    elementType: text
+    bounds: [56, 252, 848, 16]
+    content:
+      style: "$tiny"
+      align: [left, middle]
+      wrap: false
+      text: |
+        Symlinks de compatibilidade na raiz: projects → curriculum · .agora → learner · project_proposal.md → curriculum/catalog.md · learning_journal.md → learner/journal.md
+  - elementId: rules-head
+    elementType: text
+    bounds: [56, 284, 500, 18]
+    content:
+      fontSize: 11
+      color: "$ink"
+      bold: true
+      letterSpacing: 1.5
+      align: [left, middle]
+      wrap: false
+      text: AS CINCO REGRAS DE OURO (docs/handbook/README.md)
+  - elementId: rules-rule
+    elementType: line
+    bounds: [56, 306, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: r1-n
+    elementType: text
+    bounds: [56, 318, 30, 30]
+    content: {fontSize: 20, color: "$accent", bold: true, align: [left, top], wrap: false, text: "1"}
+  - elementId: r1
+    elementType: text
+    bounds: [88, 318, 368, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p><strong>Learning gate</strong> — tentativa do aprendiz + avaliação com evidência executável antes de qualquer <span style="color:$accentDark;">mastered</span>.</p>
+  - elementId: r2-n
+    elementType: text
+    bounds: [56, 384, 30, 30]
+    content: {fontSize: 20, color: "$accent", bold: true, align: [left, top], wrap: false, text: "2"}
+  - elementId: r2
+    elementType: text
+    bounds: [88, 384, 368, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p><strong>Produtor ≠ verificador</strong> — nada se autoverifica; o verificador trabalha de contexto isolado.</p>
+  - elementId: r3-n
+    elementType: text
+    bounds: [56, 450, 30, 30]
+    content: {fontSize: 20, color: "$accent", bold: true, align: [left, top], wrap: false, text: "3"}
+  - elementId: r3
+    elementType: text
+    bounds: [88, 450, 368, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p><strong>Sem claims sem evidência</strong> — mastery, paridade, benchmark e robustez exigem prova executável.</p>
+  - elementId: r4-n
+    elementType: text
+    bounds: [504, 318, 30, 30]
+    content: {fontSize: 20, color: "$accent", bold: true, align: [left, top], wrap: false, text: "4"}
+  - elementId: r4
+    elementType: text
+    bounds: [536, 318, 368, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p><strong>O filesystem é a fonte da verdade</strong> — estado auditável em Markdown / YAML / NDJSON; não há banco de dados.</p>
+  - elementId: r5-n
+    elementType: text
+    bounds: [504, 384, 30, 30]
+    content: {fontSize: 20, color: "$accent", bold: true, align: [left, top], wrap: false, text: "5"}
+  - elementId: r5
+    elementType: text
+    bounds: [536, 384, 368, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p><strong>Simplificar antes de commitar</strong> — rodar <span style="color:$accentDark;">/simplify</span> no diff, aplicar, só então commitar.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "03"}

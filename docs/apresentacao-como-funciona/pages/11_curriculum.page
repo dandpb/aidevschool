@@ -1,0 +1,246 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Curriculum: catálogo canônico, 6 níveis, ciclo de vida uniforme, anatomia de projeto, status honesto 2/18."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 10 · CURRÍCULO
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "curriculum/: 18 projetos poliglotas em 6 níveis"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: lv-head
+    elementType: text
+    bounds: [56, 120, 300, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "A ESCADA DE NÍVEIS (catalog.md)"}
+  - elementId: lv1
+    elementType: shape
+    bounds: [56, 142, 88, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lv1-t
+    elementType: text
+    bounds: [56, 142, 88, 30]
+    content: {fontSize: 8.5, color: "$slateDark", bold: true, align: [center, middle], text: "1 · Fundamentos"}
+  - elementId: lv2
+    elementType: shape
+    bounds: [102, 182, 88, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lv2-t
+    elementType: text
+    bounds: [102, 182, 88, 30]
+    content: {fontSize: 8.5, color: "$slateDark", bold: true, align: [center, middle], text: "2 · Concorrência"}
+  - elementId: lv3
+    elementType: shape
+    bounds: [148, 222, 88, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lv3-t
+    elementType: text
+    bounds: [148, 222, 88, 30]
+    content: {fontSize: 8.5, color: "$slateDark", bold: true, align: [center, middle], text: "3 · Arquitetura"}
+  - elementId: lv4
+    elementType: shape
+    bounds: [194, 262, 94, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lv4-t
+    elementType: text
+    bounds: [194, 262, 94, 30]
+    content: {fontSize: 8.5, color: "$slateDark", bold: true, align: [center, middle], text: "4 · Escalabilidade"}
+  - elementId: lv5
+    elementType: shape
+    bounds: [240, 302, 88, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lv5-t
+    elementType: text
+    bounds: [240, 302, 88, 30]
+    content: {fontSize: 8.5, color: "$slateDark", bold: true, align: [center, middle], text: "5 · Resiliência"}
+  - elementId: lv6
+    elementType: shape
+    bounds: [286, 342, 108, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: lv6-t
+    elementType: text
+    bounds: [286, 342, 108, 30]
+    content: {fontSize: 8.5, color: "$accentDark", bold: true, align: [center, middle], text: "6 · Sist. Complexos"}
+  - elementId: lv-note
+    elementType: text
+    bounds: [56, 392, 340, 56]
+    content:
+      style: "$small"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>Cada projeto é <strong>poliglota</strong> (Go · Rust · Node.js/TS) para engenharia comparativa, e as dependências formam uma <strong>skill tree</strong> (02 depende de 01, 03 depende de 02…).</p>
+  - elementId: life-head
+    elementType: text
+    bounds: [436, 120, 468, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "CICLO DE VIDA UNIFORME POR PROJETO"}
+  - elementId: lc1
+    elementType: shape
+    bounds: [436, 142, 72, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lc1-t
+    elementType: text
+    bounds: [436, 142, 72, 32]
+    content: {fontSize: 9.5, color: "$slateDark", bold: true, align: [center, middle], wrap: false, text: "spec"}
+  - elementId: lca1
+    elementType: line
+    bounds: [508, 152, 12, 12]
+    viewBox: [12, 12]
+    points: "0,6 12,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: lc2
+    elementType: shape
+    bounds: [520, 142, 72, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lc2-t
+    elementType: text
+    bounds: [520, 142, 72, 32]
+    content: {fontSize: 9, color: "$slateDark", bold: true, align: [center, middle], text: "impl ×3"}
+  - elementId: lca2
+    elementType: line
+    bounds: [592, 152, 12, 12]
+    viewBox: [12, 12]
+    points: "0,6 12,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: lc3
+    elementType: shape
+    bounds: [604, 142, 72, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lc3-t
+    elementType: text
+    bounds: [604, 142, 72, 32]
+    content: {fontSize: 9.5, color: "$slateDark", bold: true, align: [center, middle], wrap: false, text: "review"}
+  - elementId: lca3
+    elementType: line
+    bounds: [676, 152, 12, 12]
+    viewBox: [12, 12]
+    points: "0,6 12,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: lc4
+    elementType: shape
+    bounds: [688, 142, 72, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lc4-t
+    elementType: text
+    bounds: [688, 142, 72, 32]
+    content: {fontSize: 9, color: "$slateDark", bold: true, align: [center, middle], text: "bench N≥3"}
+  - elementId: lca4
+    elementType: line
+    bounds: [760, 152, 12, 12]
+    viewBox: [12, 12]
+    points: "0,6 12,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: lc5
+    elementType: shape
+    bounds: [772, 142, 64, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: lc5-t
+    elementType: text
+    bounds: [772, 142, 64, 32]
+    content: {fontSize: 9, color: "$slateDark", bold: true, align: [center, middle], text: "evolution"}
+  - elementId: lca5
+    elementType: line
+    bounds: [836, 152, 12, 12]
+    viewBox: [12, 12]
+    points: "0,6 12,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: lc6
+    elementType: shape
+    bounds: [848, 142, 56, 32]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: lc6-t
+    elementType: text
+    bounds: [848, 142, 56, 32]
+    content: {fontSize: 9.5, color: "$accentDark", bold: true, align: [center, middle], wrap: false, text: "verify"}
+  - elementId: anat-head
+    elementType: text
+    bounds: [436, 202, 468, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "ANATOMIA DE UM PROJETO (NN_slug/)"}
+  - elementId: anat
+    elementType: text
+    bounds: [436, 224, 468, 120]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>· <strong>docs/spec.md</strong> — contrato comportamental language-neutral (RF/RNF numerados);</p>
+        <p style="margin-top:5px">· <strong>go-impl/ · rust-impl/ · node-impl/</strong> — cada uma dona de build/test próprios;</p>
+        <p style="margin-top:5px">· <strong>docs/</strong> code_review · learning_notes · quiz · benchmark_results · evolution_report · verdict · ADR · redteam;</p>
+        <p style="margin-top:5px">· <strong>benchmarks/</strong> — cenários (baseline, stress, spike, endurance) + results/ brutos;</p>
+        <p style="margin-top:5px">· <strong>PROMOTE.md</strong> — checklist de promoção scaffolded → implemented com gates empíricos.</p>
+  - elementId: status-panel
+    elementType: shape
+    bounds: [436, 356, 468, 92]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: status-t
+    elementType: text
+    bounds: [450, 364, 440, 76]
+    content:
+      fontSize: 10
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, middle]
+      text: |
+        <p><strong style="color:$ink;">Status honesto do catálogo:</strong> <strong style="color:$accentDark;">2 implementados</strong> (01 Rate Limiter, 02 KV Store — ambos com certificação <strong>Node.js-only</strong> e caveats explícitos) e <strong>16 scaffolded</strong>.</p>
+        <p style="margin-top:5px">catalog.md é parseado programaticamente pelo substrate → gera BACKLOG_STATUS.md e o projects.ts do dashboard. Toda afirmação de status carrega evidência ou caveat.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "11"}

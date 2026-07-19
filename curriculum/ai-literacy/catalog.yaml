@@ -1,0 +1,171 @@
+# Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
+# Fonte de verdade do índice: módulos, skills e as 14 lições do MVP.
+# Lições com status "ready" têm arquivo próprio em modules/ e são validadas
+# contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
+# Regras: docs/design/ai-literacy/content-contract.md.
+schemaVersion: 1
+contentVersion: "2026-07-19.1"
+
+track:
+  id: ai-literacy
+  title: "IA com confiança no trabalho"
+  audience: "Profissionais não técnicos que querem usar IA no trabalho"
+  promise: "Aprender a usar IA com confiança em cinco minutos por dia"
+  language: pt-BR
+
+skills:
+  - id: entender
+    title: "Entender"
+    description: "Reconhecer o que uma IA consegue e não consegue fazer."
+  - id: pedir
+    title: "Pedir"
+    description: "Formular objetivo, contexto, público, formato e restrições."
+  - id: avaliar
+    title: "Avaliar"
+    description: "Detectar omissões, invenções, vieses e necessidade de verificação."
+  - id: proteger
+    title: "Proteger"
+    description: "Evitar exposição de dados pessoais, profissionais ou confidenciais."
+  - id: aplicar
+    title: "Aplicar"
+    description: "Usar a IA em uma tarefa real sem terceirizar o próprio julgamento."
+
+modules:
+  - id: mod-01
+    slug: 01-ai-sem-misterio
+    title: "IA sem mistério"
+    order: 1
+    skillIds: [entender]
+  - id: mod-02
+    slug: 02-pedir-bem
+    title: "Aprender a pedir"
+    order: 2
+    skillIds: [pedir]
+  - id: mod-03
+    slug: 03-avaliar-e-verificar
+    title: "Avaliar e verificar"
+    order: 3
+    skillIds: [avaliar]
+  - id: mod-04
+    slug: 04-seguranca-e-aplicacao
+    title: "Segurança e aplicação"
+    order: 4
+    skillIds: [proteger, aplicar]
+
+lessons:
+  # Módulo 1 — IA sem mistério
+  - id: l01
+    moduleId: mod-01
+    title: "Sua primeira conversa com uma IA"
+    objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como um rascunho, não como uma ordem."
+    estimatedMinutes: 3
+    prerequisites: []
+    skillIds: [entender]
+    status: planned
+  - id: l02
+    moduleId: mod-01
+    title: "IA não é uma fonte de verdade"
+    objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
+    estimatedMinutes: 4
+    prerequisites: [l01]
+    skillIds: [entender, avaliar]
+    status: ready
+  - id: l03
+    moduleId: mod-01
+    title: "O que a IA faz bem e onde costuma falhar"
+    objective: "Distinguir tarefas em que a IA costuma ajudar (rascunhos, resumos, ideias) de tarefas em que ela costuma falhar (dados recentes, cálculos exatos, fatos específicos)."
+    estimatedMinutes: 4
+    prerequisites: [l02]
+    skillIds: [entender]
+    status: planned
+  # Módulo 2 — Aprender a pedir
+  - id: l04
+    moduleId: mod-02
+    title: "Dê um objetivo claro"
+    objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
+    estimatedMinutes: 3
+    prerequisites: [l03]
+    skillIds: [pedir]
+    status: planned
+  - id: l05
+    moduleId: mod-02
+    title: "Dê contexto para obter uma resposta útil"
+    objective: "Melhorar um pedido genérico preenchendo campos estruturados de objetivo, contexto, público e formato."
+    estimatedMinutes: 5
+    prerequisites: [l04]
+    skillIds: [pedir]
+    status: ready
+  - id: l06
+    moduleId: mod-02
+    title: "Defina público, tom e formato"
+    objective: "Ajustar público, tom e formato de um pedido para obter uma resposta pronta para usar."
+    estimatedMinutes: 4
+    prerequisites: [l05]
+    skillIds: [pedir]
+    status: planned
+  - id: l07
+    moduleId: mod-02
+    title: "Melhore a resposta em etapas"
+    objective: "Iterar sobre uma resposta da IA com pedidos de ajuste específicos em vez de recomeçar do zero."
+    estimatedMinutes: 4
+    prerequisites: [l06]
+    skillIds: [pedir, avaliar]
+    status: planned
+  # Módulo 3 — Avaliar e verificar
+  - id: l08
+    moduleId: mod-03
+    title: "A primeira resposta não é necessariamente a melhor"
+    objective: "Comparar a primeira resposta da IA com uma alternativa e escolher com critério explícito."
+    estimatedMinutes: 3
+    prerequisites: [l07]
+    skillIds: [avaliar]
+    status: planned
+  - id: l09
+    moduleId: mod-03
+    title: "Como reconhecer uma resposta inventada"
+    objective: "Identificar sinais de alucinação: fontes que não existem, números precisos sem origem, detalhes confiantes demais."
+    estimatedMinutes: 4
+    prerequisites: [l08]
+    skillIds: [avaliar]
+    status: planned
+  - id: l10
+    moduleId: mod-03
+    title: "Quando procurar fontes externas"
+    objective: "Decidir quando uma afirmação da IA exige verificação em fonte externa antes do uso."
+    estimatedMinutes: 3
+    prerequisites: [l09]
+    skillIds: [avaliar]
+    status: planned
+  - id: l11
+    moduleId: mod-03
+    title: "Como comparar alternativas e explicitar critérios"
+    objective: "Explicitar critérios de comparação antes de escolher entre alternativas propostas pela IA."
+    estimatedMinutes: 4
+    prerequisites: [l10]
+    skillIds: [avaliar]
+    status: planned
+  # Módulo 4 — Segurança e aplicação
+  - id: l12
+    moduleId: mod-04
+    title: "Proteja suas informações"
+    objective: "Classificar informações do dia a dia de trabalho como seguras ou sensíveis antes de colá-las em uma IA."
+    estimatedMinutes: 4
+    prerequisites: [l11]
+    skillIds: [proteger]
+    status: ready
+  - id: l13
+    moduleId: mod-04
+    title: "Use IA para uma tarefa real de trabalho"
+    objective: "Aplicar o ciclo pedir-avaliar-melhorar em uma tarefa real da própria rotina, mantendo o julgamento final."
+    estimatedMinutes: 5
+    prerequisites: [l12]
+    skillIds: [aplicar]
+    status: planned
+  - id: l14
+    moduleId: mod-04
+    title: "Desafio final: pedir, avaliar, melhorar e aplicar"
+    objective: "Executar o ciclo completo — pedir com contexto, avaliar com critérios, proteger dados e aplicar — em um cenário integrado."
+    estimatedMinutes: 5
+    prerequisites: [l13]
+    skillIds: [pedir, avaliar, proteger, aplicar]
+    status: planned

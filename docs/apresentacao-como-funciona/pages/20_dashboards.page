@@ -1,0 +1,145 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "codexDojo e codexdojo-os-prototype: janelas e controles sobre a verdade canônica, nunca a fonte dela."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 19 · SUPERFÍCIES DE INTERFACE
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Dois dashboards, zero autoridade sobre mastery
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: cd-head
+    elementType: text
+    bounds: [56, 122, 420, 16]
+    content: {fontSize: 11, color: "$slateDark", bold: true, align: [left, middle], wrap: false, text: "codexDojo — painel operacional"}
+  - elementId: cd-sub
+    elementType: text
+    bounds: [56, 140, 420, 16]
+    content: {fontSize: 8.5, color: "$muted", align: [left, middle], wrap: false, text: "Vite 7 + TS estrito, zero deps de runtime (DOM vanilla) · pnpm"}
+  - elementId: cd-body
+    elementType: text
+    bounds: [56, 164, 420, 158]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p>· <strong>Loop unidirecional estilo Elm</strong>: mountCodexDojo → buildInitialState → reduceState (puro, com assertNever) → render por views puras; um único listener delegado mapeia data-* → ações;</p>
+        <p style="margin-top:6px">· <strong>Query seams</strong> (getAgents/getLearnerSnapshot…): render nunca importa data/* direto — a fonte pode mudar sem reescrever views;</p>
+        <p style="margin-top:6px">· consome <strong>learner.ts gerado pelo substrate</strong> (unidade ativa, gate, Dreyfus×Bloom, AIDI com semáforo, pitfalls, revisões, streak);</p>
+        <p style="margin-top:6px">· Linux Lab compacto + ponte configurável para o OS; ecosystem/MANIFEST.md mapeia requisito → arquivo.</p>
+  - elementId: os-head
+    elementType: text
+    bounds: [516, 122, 388, 16]
+    content: {fontSize: 11, color: "$slateDark", bold: true, align: [left, middle], wrap: false, text: "codexdojo-os-prototype — OS educacional canônico"}
+  - elementId: os-sub
+    elementType: text
+    bounds: [516, 140, 388, 16]
+    content: {fontSize: 8.5, color: "$muted", align: [left, middle], wrap: false, text: "React 19 + Vite 8 · npm · Playwright em 4 webServers × 3 viewports"}
+  - elementId: os-body
+    elementType: text
+    bounds: [516, 164, 388, 158]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p>· Desktop Linux fictício: TopBar (streak/dominadas do snapshot), Dock, janelas, launcher, catálogo de 50+ apps com maturidade explícita;</p>
+        <p style="margin-top:6px">· <strong>Engine Hub</strong>: 6 engines registrados, cada um com learnerAccess tipado e <strong>masteryAuthority: 'never'</strong> — a impossibilidade de conceder domínio é enforced pelo compilador;</p>
+        <p style="margin-top:6px">· <strong>bridge local</strong> (só dev): loopback + token por processo + allowlist fechada de 3 ações argv-fixas — "callers cannot supply paths or commands";</p>
+        <p style="margin-top:6px">· missões, terminal e mentor são <strong>estado local de UI</strong> — demonstrativos, nunca canônicos.</p>
+  - elementId: g-head
+    elementType: text
+    bounds: [56, 340, 600, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "POR QUE NUNCA MARCAM MASTERY — 5 GARANTIAS EM CAMADAS"}
+  - elementId: g-rule
+    elementType: line
+    bounds: [56, 360, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: g1
+    elementType: text
+    bounds: [56, 372, 158, 110]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">1 · Contrato de repo</strong></p>
+        <p style="margin-top:3px">mastery exige tentativa + avaliação executável; produtor não verifica o próprio trabalho</p>
+  - elementId: g2
+    elementType: text
+    bounds: [226, 372, 158, 110]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">2 · Docs de engine</strong></p>
+        <p style="margin-top:3px">anti-padrões explícitos: "do not move learner state into this app"; proibido segundo learner store</p>
+  - elementId: g3
+    elementType: text
+    bounds: [396, 372, 158, 110]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">3 · Tipo</strong></p>
+        <p style="margin-top:3px">masteryAuthority: 'never' é literal obrigatório no EngineDefinition — erro de compilação se ausente</p>
+  - elementId: g4
+    elementType: text
+    bounds: [566, 372, 158, 110]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">4 · Protocolo</strong></p>
+        <p style="margin-top:3px">evidência de jogos só é aceita com verifier_required: true e rotulada "não verificada"; o Hub não persiste nada</p>
+  - elementId: g5
+    elementType: text
+    bounds: [736, 372, 168, 110]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">5 · Testes</strong></p>
+        <p style="margin-top:3px">snapshot serializado antes/depois de interações prova imutabilidade; smoke tests assertam "cannot mark mastery" nos recibos</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "20"}

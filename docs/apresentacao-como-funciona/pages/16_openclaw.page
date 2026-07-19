@@ -1,0 +1,125 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "openclaw: runner de checklist file-based. Simulate grade prova existência, nunca correção. Escrita transacional com rollback."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 15 · RUNNER DE CHECKLIST
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: 'openclaw: o "tracer bullet" simulate-grade das 5 fases'
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: l-body
+    elementType: text
+    bounds: [56, 124, 400, 120]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>Runner de checklist <strong>baseado em arquivos</strong>: avança <span style="color:$accentDark;">learner/pipeline_status.yaml</span> quando os artefatos exigidos <strong>existem e passam pisos mínimos de tamanho</strong> — nada mais.</p>
+        <p style="margin-top:8px"><strong>Sem barramento, sem chamadas de IA, sem daemon, sem autoridade de verificação empírica.</strong> O vocabulário é fixo: "checklist runner", não "verifier/CI pipeline". <strong>Simulate grade prova existência — nunca correção ou maestria.</strong></p>
+  - elementId: arch-panel
+    elementType: shape
+    bounds: [56, 252, 400, 96]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: arch
+    elementType: text
+    bounds: [70, 262, 372, 78]
+    content:
+      fontSize: 9.5
+      color: "#D8DDE3"
+      lineHeight: 1.55
+      align: [left, top]
+      text: |
+        <p><span style="color:#F2B794;">$</span> python3 -m engines.openclaw --phase spec \</p>
+        <p>    --project curriculum/01_rate_limiter --mode simulate</p>
+        <p style="margin-top:6px"><span style="color:#8B9199;">CLI (__main__.py) → scheduler.step()/run() → checklist por fase → pipeline_status (YAML autoridade; MD nunca sobrescrito)</span></p>
+  - elementId: l-note
+    elementType: text
+    bounds: [56, 362, 400, 126]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p><strong>Divisão de papel no ecossistema:</strong> o ciclo interativo poliglota pertence ao miniMaxEvolutionEngine; a maestria empírica pertence ao verificador (learner.gate) + substrate. O openclaw existe para provar que o pipeline de ponta a ponta <strong>flui</strong> — com escrita transacional: qualquer exceção restaura os dois arquivos aos bytes anteriores.</p>
+        <p style="margin-top:8px"><span style="color:$muted;">Cobertura de testes: ciclo end-to-end em tmp_path, rollback nos dois sentidos, anti-traversal de path, gate bloqueado, --preview não altera bytes.</span></p>
+  - elementId: tbl-head
+    elementType: text
+    bounds: [496, 124, 408, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "O CHECKLIST POR FASE"}
+  - elementId: tbl
+    elementType: table
+    bounds: [496, 146, 408, 178]
+    columnWidths: [0.22, 0.52, 0.26]
+    rowHeights: [0.17, 0.166, 0.166, 0.166, 0.166, 0.166]
+    style:
+      cellStyle: {fontSize: 9, color: "$body", border: {style: solid, width: 1, color: "#E3E6EA"}, align: [left, middle]}
+      firstRowStyle: {bold: true, color: "$ink", fill: {type: solid, color: "#F7F5F0"}}
+    rows:
+      - - text: "Fase"
+        - text: "Artefato exigido"
+        - text: "Piso mínimo"
+      - - text: "spec"
+        - text: "docs/spec.md"
+        - text: "≥ 100 bytes"
+      - - text: "impl"
+        - text: "go-impl/ + rust-impl/ + node-impl/"
+        - text: "dirs não-vazios"
+      - - text: "review"
+        - text: "docs/code_review.md"
+        - text: "≥ 100 bytes"
+      - - text: "benchmark"
+        - text: "docs/benchmark_results.md"
+        - text: "≥ 50 bytes"
+      - - text: "optimize"
+        - text: "docs/evolution_report.md"
+        - text: "≥ 100 bytes"
+  - elementId: halt-head
+    elementType: text
+    bounds: [496, 340, 408, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "QUANDO ELE PARA (HALT)"}
+  - elementId: halt-body
+    elementType: text
+    bounds: [496, 362, 408, 126]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p>· <strong>cycle-complete</strong> — ciclo encerrado, aguardando próximo curator;</p>
+        <p style="margin-top:5px">· <strong>blockers</strong> presentes no pipeline_status.yaml;</p>
+        <p style="margin-top:5px">· <strong>learning gate bloqueado</strong> — lê learning_state.yaml e para com a mensagem "run /devschool-diagnose or wait for learner attempt";</p>
+        <p style="margin-top:5px">· path traversal ou estado corrompido → StateCorruptionError (exit 2).</p>
+        <p style="margin-top:8px"><span style="color:$muted;">--preview: recibo read-only com fonte YAML, gate e próximo checklist — sem escrever nada.</span></p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "16"}

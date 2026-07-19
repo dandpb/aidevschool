@@ -108,7 +108,7 @@ export class Broker {
     partition: number | undefined,
     headers: Record<string, string> | undefined
   ): Message {
-    if (!value) {
+    if (value === undefined || value === null) {
       throw new BrokerError('invalid_message', 'value is empty');
     }
 

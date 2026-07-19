@@ -1,0 +1,184 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Caso real: projeto 02 key_value_store. Métricas reais, honestidade empírica, caveats explícitos."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 11 · EVIDÊNCIA NA PRÁTICA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: O caso 02_key_value_store — medido, não declarado
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: m1
+    elementType: shape
+    bounds: [56, 128, 278, 150]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: m1-bar
+    elementType: shape
+    bounds: [56, 128, 278, 4]
+    shapeName: rect
+    fill: {type: solid, color: "$green"}
+  - elementId: m1-h
+    elementType: text
+    bounds: [70, 142, 250, 16]
+    content: {fontSize: 9.5, color: "$muted", letterSpacing: 1.2, bold: true, align: [left, middle], wrap: false, text: "COBERTURA RE-VERIFICADA"}
+  - elementId: m1-n
+    elementType: text
+    bounds: [70, 162, 250, 44]
+    content:
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-size:30px; color:$ink;"><strong>91,45%</strong></span><span style="font-size:11px; color:$muted;"> stmts</span></p>
+  - elementId: m1-d
+    elementType: text
+    bounds: [70, 210, 250, 56]
+    content:
+      style: "$small"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>82,01% branch · 100% funcs · 10/10 testes · tsc e eslint limpos (vitest, threshold mínimo 80% configurado no projeto)</p>
+  - elementId: m2
+    elementType: shape
+    bounds: [348, 128, 278, 150]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: m2-bar
+    elementType: shape
+    bounds: [348, 128, 278, 4]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: m2-h
+    elementType: text
+    bounds: [362, 142, 250, 16]
+    content: {fontSize: 9.5, color: "$muted", letterSpacing: 1.2, bold: true, align: [left, middle], wrap: false, text: "BENCHMARK HONESTO · N = 10"}
+  - elementId: m2-n
+    elementType: text
+    bounds: [362, 162, 250, 44]
+    content:
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-size:30px; color:$ink;"><strong>7.924</strong></span><span style="font-size:11px; color:$muted;"> RPS médio · CV 5,3%</span></p>
+  - elementId: m2-d
+    elementType: text
+    bounds: [362, 210, 250, 56]
+    content:
+      style: "$small"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>~1,99M requisições, 0 erros · workload misto GET/SET/DEL/EXPIRE/TTL (68/15/5/7/5%) · keyspace 10k · tolerance re-check ±20% PASS</p>
+  - elementId: m3
+    elementType: shape
+    bounds: [640, 128, 264, 150]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: m3-bar
+    elementType: shape
+    bounds: [640, 128, 264, 4]
+    shapeName: rect
+    fill: {type: solid, color: "$slate"}
+  - elementId: m3-h
+    elementType: text
+    bounds: [654, 142, 236, 16]
+    content: {fontSize: 9.5, color: "$muted", letterSpacing: 1.2, bold: true, align: [left, middle], wrap: false, text: "EVOLUTION REPORT"}
+  - elementId: m3-n
+    elementType: text
+    bounds: [654, 162, 236, 44]
+    content:
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-size:30px; color:$ink;"><strong>3 bugs</strong></span><span style="font-size:11px; color:$muted;"> Major corrigidos</span></p>
+  - elementId: m3-d
+    elementType: text
+    bounds: [654, 210, 236, 56]
+    content:
+      style: "$small"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>+ testes de regressão · 1 otimização medida = "wash" (dentro do ruído), reportada as-is · 1 otimização rejeitada, documentada</p>
+  - elementId: why-head
+    elementType: text
+    bounds: [56, 300, 500, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "O QUE TORNA ESSA EVIDÊNCIA CRÍVEL"}
+  - elementId: why-rule
+    elementType: line
+    bounds: [56, 320, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: w1
+    elementType: text
+    bounds: [56, 332, 420, 74]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>· O relatório de benchmark <strong>substitui explicitamente</strong> um backfill anterior N=1 não-gated;</p>
+        <p style="margin-top:5px">· p95/p99 são <strong>sinalizados como ruidosos</strong> (CV &gt; 15%) em vez de escondidos;</p>
+        <p style="margin-top:5px">· a otimização que virou regressão/wash foi <strong>reportada como está</strong> — ninguém maquiou o número.</p>
+  - elementId: w2
+    elementType: text
+    bounds: [504, 332, 400, 74]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>· Certificação <strong>Node.js-only por decisão explícita</strong> do dono — não por falha de toolchain;</p>
+        <p style="margin-top:5px">· Go/Rust existem de backfill anterior <strong>não-gated</strong> e o catálogo carrega essa caveat como parte da evidência;</p>
+        <p style="margin-top:5px">· claims de vencedor exigiriam N ≥ 3 e CV &lt; 20% — regra do contrato.</p>
+  - elementId: quote-panel
+    elementType: shape
+    bounds: [56, 424, 848, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: quote
+    elementType: text
+    bounds: [76, 432, 808, 40]
+    content:
+      fontSize: 11
+      color: "$ink"
+      lineHeight: 1.4
+      align: [left, middle]
+      text: |
+        <p><em>"Do not claim mastery, parity, benchmark superiority, or robustness without executable evidence."</em> — anti-padrão raiz do AGENTS.md, aplicado ao próprio ecossistema.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "12"}

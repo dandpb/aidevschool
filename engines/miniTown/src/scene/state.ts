@@ -7,7 +7,7 @@
  * engine doesn't care how a zone is rendered — only that it can be ticked.
  */
 
-import { BuildingConstruction, type ConstructionStage } from "../sim/construction"
+import { BuildingConstruction, type ConstructionStage, STAGE_SECONDS } from "../sim/construction"
 import { Grid, ROAD_NEIGHBOR_OFFSETS } from "../sim/grid"
 import { recomputeRoads } from "../sim/roads"
 import type { DayNightSystem, DayPhase } from "./dayNight"
@@ -216,7 +216,7 @@ export class Town {
       construction.tick(dt)
       const nextStage = construction.getStage()
       if (building.stage !== nextStage) building.stage = nextStage
-      building.stageSeconds = construction.getProgress() * 8
+      building.stageSeconds = construction.getProgress() * STAGE_SECONDS
     }
     this.#notify()
     return this.snapshot()

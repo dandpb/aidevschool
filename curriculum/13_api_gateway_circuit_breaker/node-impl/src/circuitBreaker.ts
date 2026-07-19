@@ -38,7 +38,7 @@ export class CircuitBreaker {
         if (this.openedAt && Date.now() - this.openedAt >= this.policy.openCooldownMs) {
           this.state = 'half_open';
           this.halfOpenSuccesses = 0;
-          this.halfOpenInFlight = 0;
+          this.halfOpenInFlight = 1;
           return true;
         }
         return false;

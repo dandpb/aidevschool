@@ -1,0 +1,87 @@
+# Lição l12 — piloto da vertical slice (seção 17 do plano).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l12
+version: 2
+moduleId: mod-04
+title: "Proteja suas informações"
+objective: "Classificar informações do dia a dia de trabalho como seguras ou sensíveis antes de colá-las em uma IA."
+estimatedMinutes: 4
+skillIds: [proteger]
+prerequisites: [l11]
+
+activities:
+  - id: l12-a1
+    type: safety_classification
+    skillId: proteger
+    instruction: "Para cada informação abaixo, decida: é segura para colar em uma ferramenta de IA ou é sensível e deve ficar de fora?"
+    data:
+      labels:
+        safe: "Seguro para compartilhar"
+        sensitive: "Sensível — não compartilhar"
+      items:
+        - id: i-senha
+          text: "A senha do sistema de vendas da empresa"
+        - id: i-site
+          text: "O texto público da página 'Sobre nós' do site da empresa, que você quer resumir"
+        - id: i-planilha
+          text: "Uma planilha com nome, CPF e salário dos funcionários"
+        - id: i-vaga
+          text: "O anúncio de uma vaga que a empresa publicou no LinkedIn"
+        - id: i-cartao
+          text: "O número do cartão corporativo usado nas viagens"
+        - id: i-ata
+          text: "A ata de uma reunião interna com valores de contrato e nomes de clientes"
+        - id: i-legenda
+          text: "Uma ideia de legenda para o post comemorativo de fim de ano, sem dados internos"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-senha: sensitive
+        i-site: safe
+        i-planilha: sensitive
+        i-vaga: safe
+        i-cartao: sensitive
+        i-ata: sensitive
+        i-legenda: safe
+    feedback:
+      onFailure: "Regra prática: se a informação identifica uma pessoa, abre porta para sistemas ou dinheiro, ou é interna da empresa, trate como sensível. Na dúvida, não cole — ou remova os dados que identificam antes."
+      perCheck:
+        i-senha: "Senhas e credenciais nunca entram em uma IA: com elas, qualquer pessoa acessa os sistemas da empresa."
+        i-site: "Conteúdo já público no site pode ser usado — todo mundo já tem acesso a ele."
+        i-planilha: "Nome, CPF e salário são dados pessoais: colá-los em uma IA expõe pessoas e pode violar a lei de proteção de dados."
+        i-vaga: "Um anúncio público de vaga já foi divulgado pela própria empresa — não há segredo a proteger."
+        i-cartao: "Número de cartão é informação financeira: fora da IA, sempre."
+        i-ata: "Valores de contrato e nomes de clientes são informação interna e confidencial, mesmo sem senhas."
+        i-legenda: "Uma ideia de texto sem dados internos nem pessoais é segura para pedir ajuda à IA."
+      onSuccess: "Muito bem! Credenciais, dados pessoais e informações internas ficam de fora da IA; conteúdo já público pode ser usado."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada item, pergunte: se isso vazar, alguém é identificado, prejudicado, ou expõe dinheiro e sistemas da empresa?"
+      - "Conteúdo que já é público (site, vaga anunciada) não precisa de proteção; o que é interno ou pessoal, precisa."
+      - "Senha, cartão, planilha com CPF e ata com valores de contrato são sensíveis; os demais itens são seguros."
+
+rubric:
+  id: l12-rubric
+  criteria:
+    - id: r-dados-pessoais
+      text: "Classifica dados que identificam pessoas (nome, CPF, salário) como sensíveis."
+      weight: 1
+    - id: r-credenciais-financeiro
+      text: "Classifica credenciais e dados financeiros (senha, cartão) como sensíveis."
+      weight: 1
+    - id: r-conteudo-publico
+      text: "Reconhece que conteúdo já público e ideias sem dados internos são seguros."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l12-a1]

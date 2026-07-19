@@ -1,0 +1,239 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "O fluxo completo de uma unidade, da seleção à projeção — e a trilha de auditoria que sustenta a honestidade do sistema."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 20 · PONTA A PONTA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Uma unidade de aprendizado, do diagnóstico ao dominado
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s1
+    elementType: shape
+    bounds: [56, 128, 158, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: s1-t
+    elementType: text
+    bounds: [66, 136, 138, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$slate;"><strong>1</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>Cartógrafo seleciona a unidade</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">só por pré-requisito comprovado — nunca "do básico"</span></p>
+  - elementId: a1
+    elementType: line
+    bounds: [214, 178, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s2
+    elementType: shape
+    bounds: [230, 128, 158, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: s2-t
+    elementType: text
+    bounds: [240, 136, 138, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$slate;"><strong>2</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>Sonda apresenta o diagnóstico</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">estado: apresentando · Dreyfus × Bloom por conceito</span></p>
+  - elementId: a2
+    elementType: line
+    bounds: [388, 178, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s3
+    elementType: shape
+    bounds: [404, 128, 158, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: s3-t
+    elementType: text
+    bounds: [414, 136, 138, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$slate;"><strong>3</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>Aprendiz tenta</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">learner/attempts/ (append-only; falhas nunca se apagam) → praticando</span></p>
+  - elementId: a3
+    elementType: line
+    bounds: [562, 178, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s4
+    elementType: shape
+    bounds: [578, 128, 158, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: s4-t
+    elementType: text
+    bounds: [588, 136, 138, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$accentDark;"><strong>4</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>Gate desbloqueia</strong></span></p>
+        <p><span style="font-size:8px; color:$accentDark;">tentativa avaliada → implementation_blocked: false → avaliando</span></p>
+  - elementId: a4
+    elementType: line
+    bounds: [736, 178, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s5
+    elementType: shape
+    bounds: [752, 128, 152, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: s5-t
+    elementType: text
+    bounds: [762, 136, 132, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$slate;"><strong>5</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>Missão no jogo</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">pixel/voxel emitem evidência bruta (.logs/evidence.ndjson)</span></p>
+  - elementId: s6
+    elementType: shape
+    bounds: [56, 280, 200, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: s6-t
+    elementType: text
+    bounds: [66, 288, 180, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:#F2B794;"><strong>6</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:#FFFFFF;"><strong>Verificador independente</strong></span></p>
+        <p><span style="font-size:8px; color:#D8DDE3;">learner.gate + recibo separado: digest SHA-256, anti-replay, contexto isolado</span></p>
+  - elementId: a6
+    elementType: line
+    bounds: [256, 330, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s7
+    elementType: shape
+    bounds: [272, 280, 200, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$greenSoft"}
+    border: {style: solid, width: 1.5, color: "$green"}
+  - elementId: s7-t
+    elementType: text
+    bounds: [282, 288, 180, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$green;"><strong>7</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>commit_gate_transition</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">mastered + rating + streak + FSRS; re-valida invariantes e persiste atomicamente</span></p>
+  - elementId: a7
+    elementType: line
+    bounds: [472, 330, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s8
+    elementType: shape
+    bounds: [488, 280, 200, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: s8-t
+    elementType: text
+    bounds: [498, 288, 180, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$accentDark;"><strong>8</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>substrate sync</strong></span></p>
+        <p><span style="font-size:8px; color:$accentDark;">python3 -m learner.substrate regenera as 11+ views numa única fronteira</span></p>
+  - elementId: a8
+    elementType: line
+    bounds: [688, 330, 16, 14]
+    viewBox: [16, 14]
+    points: "0,7 16,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: s9
+    elementType: shape
+    bounds: [704, 280, 200, 116]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: s9-t
+    elementType: text
+    bounds: [714, 288, 180, 100]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:13px; color:$slate;"><strong>9</strong></span></p>
+        <p style="margin-top:2px"><span style="font-size:9.5px; color:$ink;"><strong>O ecossistema reflete</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">dashboard, OS, whiteboard e review slices dos jogos atualizados; revisão espaçada agendada</span></p>
+  - elementId: audit-panel
+    elementType: shape
+    bounds: [56, 424, 848, 58]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: audit
+    elementType: text
+    bounds: [72, 431, 816, 44]
+    content:
+      fontSize: 10
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, middle]
+      text: |
+        <p><strong style="color:$ink;">A trilha de auditoria se provou de verdade:</strong> a primeira unidade (U0) foi dominada em 2026-07-05 a partir de evidência GATEKEEPER via verificador — e uma auditoria posterior <strong style="color:$red;">reverteu 18 "masteries"</strong> semeadas sem evidência em 2026-07-01. O sistema corrige a si mesmo porque o gate é o único caminho.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "21"}

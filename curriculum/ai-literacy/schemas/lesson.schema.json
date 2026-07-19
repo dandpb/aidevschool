@@ -1,0 +1,526 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson.schema.json",
+  "title": "LessonDefinition",
+  "description": "Contrato canônico de uma microlição da trilha ai-literacy (ver docs/design/ai-literacy/content-contract.md). IDs são estáveis e nunca dependem do título exibido. Conteúdo inválido falha o build — não existe fallback silencioso.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "version",
+    "moduleId",
+    "title",
+    "objective",
+    "estimatedMinutes",
+    "skillIds",
+    "prerequisites",
+    "activities",
+    "rubric",
+    "evidence",
+    "review",
+    "completion"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^l[0-9]{2}$",
+      "description": "ID estável da lição (l01..l14 na trilha inicial). Nunca deriva do título."
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Toda alteração de conteúdo incrementa a versão."
+    },
+    "moduleId": {
+      "type": "string",
+      "pattern": "^mod-[0-9]{2}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Objetivo observável: o que a pessoa consegue fazer ao concluir."
+    },
+    "estimatedMinutes": {
+      "enum": [3, 4, 5]
+    },
+    "skillIds": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^l[0-9]{2}$" }
+    },
+    "activities": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/activity" }
+    },
+    "rubric": { "$ref": "rubric.schema.json" },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verifierRequired", "completionClaim", "includesFreeText"],
+      "properties": {
+        "verifierRequired": {
+          "const": true,
+          "description": "A UI emite evidência bruta; nunca promove domínio."
+        },
+        "completionClaim": {
+          "enum": ["lesson_completed", "application_reported"],
+          "description": "Únicos estados que a UI pode registrar localmente. 'mastered' é reservado a verificador independente e proibido aqui."
+        },
+        "includesFreeText": {
+          "const": false,
+          "description": "Respostas abertas não entram na evidência por padrão."
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intervalsDays"],
+      "properties": {
+        "intervalsDays": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimumScore", "requiredActivityIds"],
+      "properties": {
+        "minimumScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "requiredActivityIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["onFailure"],
+      "properties": {
+        "onFailure": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Feedback acionável por falha ('ainda falta X'), não apenas certo/errado."
+        },
+        "onSuccess": { "type": "string" },
+        "perCheck": {
+          "type": "object",
+          "additionalProperties": { "type": "string" },
+          "description": "Feedback específico por check ou campo avaliado."
+        }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy"],
+      "properties": {
+        "policy": {
+          "enum": ["structured_only", "digest_only", "none"],
+          "description": "Política de armazenamento da resposta: structured_only = somente campos/ids estruturados; digest_only = somente digest/categorias; none = não persiste a resposta."
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Dicas progressivas pré-escritas (opcionais), exibidas em ordem crescente de ajuda — a última pode quase resolver. Alimentam o FeedbackProvider determinístico sem chamada externa."
+    },
+    "activity": {
+      "oneOf": [
+        { "$ref": "#/$defs/choiceActivity" },
+        { "$ref": "#/$defs/sortActivity" },
+        { "$ref": "#/$defs/missingContextActivity" },
+        { "$ref": "#/$defs/safetyClassificationActivity" },
+        { "$ref": "#/$defs/promptBuilderActivity" },
+        { "$ref": "#/$defs/outputComparisonActivity" },
+        { "$ref": "#/$defs/rubricReviewActivity" }
+      ]
+    },
+    "choiceActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "choice" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["options"],
+          "properties": {
+            "prompt": { "type": "string" },
+            "multiSelect": { "type": "boolean" },
+            "options": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "correctOptionIds"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "correctOptionIds": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "sortActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "sort" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["items"],
+          "properties": {
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "expectedOrder"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "expectedOrder": { "type": "array", "minItems": 2, "items": { "type": "string" } }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "missingContextActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "missing_context" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["prompt", "contextOptions"],
+          "properties": {
+            "prompt": { "type": "string", "minLength": 1 },
+            "contextOptions": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "requiredContextIds"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "requiredContextIds": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "optionalContextIds": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "safetyClassificationActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "safety_classification" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["labels", "items"],
+          "properties": {
+            "labels": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["safe", "sensitive"],
+              "properties": {
+                "safe": { "type": "string", "minLength": 1 },
+                "sensitive": { "type": "string", "minLength": 1 }
+              }
+            },
+            "items": {
+              "type": "array",
+              "minItems": 3,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "classification"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "classification": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": { "enum": ["safe", "sensitive"] }
+            }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "promptBuilderActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "prompt_builder" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scenario", "genericPrompt", "fields"],
+          "properties": {
+            "scenario": { "type": "string", "minLength": 1 },
+            "genericPrompt": { "type": "string", "minLength": 1 },
+            "fields": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "label", "hint"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "label": { "type": "string", "minLength": 1 },
+                  "hint": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "fields"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "fields": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {
+                "type": "object",
+                "additionalProperties": false,
+                "anyOf": [
+                  { "required": ["minLength"] },
+                  { "required": ["mustIncludeAny"] }
+                ],
+                "properties": {
+                  "minLength": { "type": "integer", "minimum": 1 },
+                  "maxLength": { "type": "integer", "minimum": 1 },
+                  "mustIncludeAny": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": { "type": "string", "minLength": 1 },
+                    "description": "Pelo menos uma das alternativas precisa aparecer no texto do campo (comparação case-insensitive)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "outputComparisonActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "output_comparison" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scenario", "outputs", "criteria"],
+          "properties": {
+            "scenario": { "type": "string", "minLength": 1 },
+            "outputs": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            },
+            "criteria": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "betterOutputId", "requiredCriterionIds"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "betterOutputId": { "type": "string" },
+            "requiredCriterionIds": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    },
+    "rubricReviewActivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "skillId", "instruction", "data", "evaluation", "feedback", "storage"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^l[0-9]{2}-a[0-9]+$" },
+        "type": { "const": "rubric_review" },
+        "skillId": { "type": "string" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["responseText", "criteria"],
+          "properties": {
+            "responseText": { "type": "string", "minLength": 1 },
+            "criteria": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "text"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "text": { "type": "string", "minLength": 1 }
+                }
+              }
+            }
+          }
+        },
+        "evaluation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["strategy", "expectedVerdicts"],
+          "properties": {
+            "strategy": { "const": "deterministic" },
+            "expectedVerdicts": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": { "enum": ["met", "partial", "not_met"] }
+            }
+          }
+        },
+        "feedback": { "$ref": "#/$defs/feedback" },
+        "storage": { "$ref": "#/$defs/storage" },
+        "hints": { "$ref": "#/$defs/hints" }
+      }
+    }
+  }
+}

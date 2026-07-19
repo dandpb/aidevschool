@@ -7,6 +7,7 @@ import type { AppDefinition } from '../domain'
 export function Launcher({ query, onQuery, onClose, onLaunch }: { readonly query: string; readonly onQuery: (value: string) => void; readonly onClose: () => void; readonly onLaunch: (app: AppDefinition) => void }) {
   const [category, setCategory] = useState('Todos')
   const categories = ['Todos', 'Aprender', 'Desenvolver', 'Criar', 'Sistema', 'Utilitários']
+  const availableCount = appCatalog.filter((app) => app.status === 'disponivel').length
   const filtered = useMemo(() => appCatalog.filter((app) => {
     const matchesCategory = category === 'Todos' || app.category === category
     const haystack = `${app.name} ${app.category} ${app.concepts.join(' ')}`.toLowerCase()
@@ -35,7 +36,7 @@ export function Launcher({ query, onQuery, onClose, onLaunch }: { readonly query
           <aside>
             <span>Explorar</span>
             {categories.map((item) => <button type="button" key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}
-            <div className="catalog-summary"><strong>{appCatalog.length}</strong><span>apps no ecossistema</span><small>5 disponíveis agora</small></div>
+            <div className="catalog-summary"><strong>{appCatalog.length}</strong><span>apps no ecossistema</span><small>{availableCount} disponíveis agora</small></div>
           </aside>
           <div className="launcher-main">
             <div className="launcher-heading"><span>{category}</span><small>{filtered.length} resultados</small></div>

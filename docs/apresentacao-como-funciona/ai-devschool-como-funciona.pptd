@@ -1,0 +1,82 @@
+version: v2
+title: AI DevSchool — Como Funciona
+size: [960, 540]
+theme:
+  colors:
+    ink: "#1B1E23"
+    body: "#454A51"
+    muted: "#8B9199"
+    line: "#E3E6EA"
+    accent: "#BC5327"
+    accentDark: "#96401E"
+    accentSoft: "#F8EAE1"
+    slate: "#33506B"
+    slateDark: "#24405A"
+    slateSoft: "#EDF1F5"
+    paper: "#F7F5F0"
+    green: "#2F7D4F"
+    greenSoft: "#E9F3EC"
+    red: "#B4443C"
+    redSoft: "#F9ECEA"
+    amber: "#B07A1F"
+    white: "#FFFFFF"
+  textStyles:
+    kicker:
+      fontSize: 11
+      color: "$accent"
+      letterSpacing: 2.5
+      bold: true
+    title:
+      fontSize: 26
+      color: "$ink"
+      bold: true
+      lineHeight: 1.15
+    subtitle:
+      fontSize: 14
+      color: "$body"
+      lineHeight: 1.45
+    body:
+      fontSize: 12.5
+      color: "$body"
+      lineHeight: 1.45
+    small:
+      fontSize: 10.5
+      color: "$muted"
+      lineHeight: 1.4
+    tiny:
+      fontSize: 9
+      color: "$muted"
+      lineHeight: 1.35
+    nodeTitle:
+      fontSize: 12
+      color: "$ink"
+      bold: true
+    nodeSub:
+      fontSize: 9.5
+      color: "$muted"
+      lineHeight: 1.3
+pages:
+  - pages/01_cover.page
+  - pages/02_problema.page
+  - pages/03_filosofia.page
+  - pages/04_regra_mestra.page
+  - pages/05_mapa.page
+  - pages/06_camadas.page
+  - pages/07_dois_loops.page
+  - pages/08_substrato_sync.page
+  - pages/09_learning_state.page
+  - pages/10_gate.page
+  - pages/11_curriculum.page
+  - pages/12_projeto02.page
+  - pages/13_minimax_agentes.page
+  - pages/14_minimax_maquina.page
+  - pages/15_mme.page
+  - pages/16_openclaw.page
+  - pages/17_contrato_jogos.page
+  - pages/18_pixeldojo.page
+  - pages/19_voxeldojo.page
+  - pages/20_dashboards.page
+  - pages/21_fluxo_endtoend.page
+  - pages/22_thresholds.page
+  - pages/23_comandos.page
+  - pages/24_encerramento.page

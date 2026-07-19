@@ -78,7 +78,7 @@ export function FilesApp({ onTeach }: { readonly onTeach: (context: LearningCont
   ]
   const items = path.endsWith('Projetos') ? projectItems : rootItems
   const openItem = (item: typeof rootItems[number]) => {
-    if (item.type === 'folder') setPath((current) => current.endsWith('Projetos') ? `${current}/${item.name}` : `${current}/${item.name}`)
+    if (item.type === 'folder') setPath((current) => `${current}/${item.name}`)
     onTeach(coreContexts.files)
   }
   return (

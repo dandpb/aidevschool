@@ -1,0 +1,222 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "learner/gate: a fronteira de confiança. Consome evidência, nunca produz. Pipeline de decisão e integridade criptográfica."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 09 · O VERIFICADOR INDEPENDENTE
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "learner/gate: a fronteira de confiança (Prometor executável)"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s1n
+    elementType: shape
+    bounds: [56, 128, 24, 24]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s1num
+    elementType: text
+    bounds: [56, 128, 24, 24]
+    content: {fontSize: 11, color: "$white", bold: true, align: [center, middle], wrap: false, text: "1"}
+  - elementId: s1
+    elementType: text
+    bounds: [92, 126, 400, 50]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Carregar estado + evidência</strong></p>
+        <p><span style="color:$muted; font-size:9px;">valida o canônico; seleciona o último registro do active_unit. Sem registro = "nothing to grade" — não é FAIL.</span></p>
+  - elementId: sl1
+    elementType: line
+    bounds: [64, 158, 8, 20]
+    viewBox: [8, 20]
+    points: "4,0 4,20"
+    border: {style: solid, width: 1.5, color: "$line"}
+  - elementId: s2n
+    elementType: shape
+    bounds: [56, 182, 24, 24]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s2num
+    elementType: text
+    bounds: [56, 182, 24, 24]
+    content: {fontSize: 11, color: "$white", bold: true, align: [center, middle], wrap: false, text: "2"}
+  - elementId: s2
+    elementType: text
+    bounds: [92, 180, 400, 50]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Semântica da evidência</strong></p>
+        <p><span style="color:$muted; font-size:9px;">campos obrigatórios; identidade bate com a unidade ativa; <strong>rejeita bloco verifier embutido</strong>.</span></p>
+  - elementId: sl2
+    elementType: line
+    bounds: [64, 212, 8, 20]
+    viewBox: [8, 20]
+    points: "4,0 4,20"
+    border: {style: solid, width: 1.5, color: "$line"}
+  - elementId: s3n
+    elementType: shape
+    bounds: [56, 236, 24, 24]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s3num
+    elementType: text
+    bounds: [56, 236, 24, 24]
+    content: {fontSize: 11, color: "$white", bold: true, align: [center, middle], wrap: false, text: "3"}
+  - elementId: s3
+    elementType: text
+    bounds: [92, 234, 400, 50]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Eligibilidade</strong></p>
+        <p><span style="color:$muted; font-size:9px;">attempt_file existe e é não-vazio; state == evaluating; ts anti-replay (estritamente mais novo).</span></p>
+  - elementId: sl3
+    elementType: line
+    bounds: [64, 266, 8, 20]
+    viewBox: [8, 20]
+    points: "4,0 4,20"
+    border: {style: solid, width: 1.5, color: "$line"}
+  - elementId: s4n
+    elementType: shape
+    bounds: [56, 290, 24, 24]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: s4num
+    elementType: text
+    bounds: [56, 290, 24, 24]
+    content: {fontSize: 11, color: "$white", bold: true, align: [center, middle], wrap: false, text: "4"}
+  - elementId: s4
+    elementType: text
+    bounds: [92, 288, 400, 50]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Decisão</strong></p>
+        <p><span style="color:$muted; font-size:9px;">PASS só via recibo de verificador ou rubrica empírica independente — <strong>nunca o "pass" do produtor</strong>.</span></p>
+  - elementId: sl4
+    elementType: line
+    bounds: [64, 320, 8, 20]
+    viewBox: [8, 20]
+    points: "4,0 4,20"
+    border: {style: solid, width: 1.5, color: "$line"}
+  - elementId: s5n
+    elementType: shape
+    bounds: [56, 344, 24, 24]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: s5num
+    elementType: text
+    bounds: [56, 344, 24, 24]
+    content: {fontSize: 11, color: "$white", bold: true, align: [center, middle], wrap: false, text: "5"}
+  - elementId: s5
+    elementType: text
+    bounds: [92, 342, 400, 56]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>commit_gate_transition()</strong></p>
+        <p><span style="color:$muted; font-size:9px;">recibo imutável (digest, run_id, attempt, scenario) → units_log append → mastered/retry → re-valida invariantes → persiste atomicamente → regenera views.</span></p>
+  - elementId: cli-note
+    elementType: shape
+    bounds: [56, 424, 436, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: cli
+    elementType: text
+    bounds: [68, 430, 412, 44]
+    content:
+      fontSize: 9.5
+      color: "#D8DDE3"
+      lineHeight: 1.5
+      align: [left, middle]
+      text: |
+        <p><span style="color:#F2B794;">$</span> python3 -m learner.gate --evidence PATH \</p>
+        <p>  --verifier-receipt learner/verifier_receipts/X.json --dry-run</p>
+  - elementId: sec-head
+    elementType: text
+    bounds: [536, 126, 368, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "INTEGRIDADE — POR QUE NÃO DÁ PARA FORJAR"}
+  - elementId: sec-rule
+    elementType: line
+    bounds: [536, 146, 368, 2]
+    viewBox: [368, 2]
+    points: "0,1 368,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: sec1
+    elementType: text
+    bounds: [536, 158, 368, 62]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Digest SHA-256 canônico</strong> cobre o payload estável do produtor <strong>excluindo ts e verifier</strong> — mudar o timestamp não "renova" a evidência; embutir verificador não autoriza.</p>
+  - elementId: sec2
+    elementType: text
+    bounds: [536, 226, 368, 62]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Anti-replay triplo:</strong> digest já consumido → rejeita; attempt_id+scenario repetido → rejeita; run_id reutilizado com payload diferente → erro.</p>
+  - elementId: sec3
+    elementType: text
+    bounds: [536, 294, 368, 62]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Path hardening:</strong> tentativas só dentro de learner/attempts/ (sem atravessar symlinks); recibos só de learner/verifier_receipts/.</p>
+  - elementId: sec4
+    elementType: text
+    bounds: [536, 362, 368, 92]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p><strong>Recibo de verificador (JSON separado):</strong> verdict · context_isolated: true · mutation_score ≥ 0.65 · coverage_core ≥ 0.80 · source · evidence_digest — o digest deve casar com a evidência do produtor.</p>
+        <p style="margin-top:6px"><span style="color:$muted;">Um "PASS mentiroso" com métricas abaixo do limiar falha: verified_pass exige verdict + métricas + isolamento.</span></p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "10"}

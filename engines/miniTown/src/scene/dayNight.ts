@@ -105,7 +105,7 @@ export function sunIntensityFor(simTime: number): number {
   const h = ((simTime % 24) + 24) % 24
   if (h <= 5 || h >= 20) return 0
   if (h <= 7) return THREE.MathUtils.smoothstep(h, 5, 7) * 0.6
-  if (h >= 17) return THREE.MathUtils.smoothstep(h, 17, 19) * 0.7 + 0.3 // 0.3..1.0
+  if (h >= 17) return THREE.MathUtils.lerp(0.6, 0, THREE.MathUtils.smoothstep(h, 17, 19))
   // Daytime ramp: 0.6 at 7, 1.0 at 12, 1.0 at 17
   if (h <= 12) return THREE.MathUtils.lerp(0.6, 1.0, (h - 7) / 5)
   return THREE.MathUtils.lerp(1.0, 0.6, (h - 12) / 5)

@@ -15,8 +15,7 @@ export function shouldRetry(policy: RetryPolicy, attempt: number, statusCode: nu
 export function retryDelay(policy: RetryPolicy, attempt: number): number {
   const backoff = policy.baseDelayMs * Math.pow(2, attempt - 1);
   const clamped = Math.min(backoff, policy.maxDelayMs);
-  const jitter = Math.random() * clamped;
-  return clamped + jitter;
+  return Math.random() * clamped;
 }
 
 export async function doWithRetry<T>(

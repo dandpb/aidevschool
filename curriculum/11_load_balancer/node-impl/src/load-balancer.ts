@@ -137,6 +137,7 @@ export class LoadBalancer {
     if (!selected) { writeJson(res, 503, { error: { code: 'no_eligible_backend' } }); return; }
     const backend = this.backends.get(selected.id);
     if (!backend) { writeJson(res, 503, { error: { code: 'no_eligible_backend' } }); return; }
+    if (backend.circuitState === 'half_open') backend.halfOpenProbeInFlight = true;
     backend.activeConnections += 1;
     backend.totalRequests += 1;
     this.metrics.requestsTotal += 1;
@@ -203,6 +204,7 @@ export class LoadBalancer {
     const backend = this.backends.get(id);
     if (!backend) return;
     backend.consecutiveFailures = 0;
+    backend.halfOpenProbeInFlight = false;
     if (backend.circuitState === 'half_open') backend.circuitState = 'closed';
   }
   private countStatus(status: number): void { const key = `${Math.floor(status / 100)}xx`; this.metrics.responsesByStatusClass.set(key, (this.metrics.responsesByStatusClass.get(key) ?? 0) + 1); }

@@ -86,7 +86,7 @@ export interface RunResult {
   reached: boolean
   /** the stage name that dropped it, if any */
   droppedAt: string | null
-  /** the final record (post-transform/enrich) if reached, else the last live snapshot */
+  /** the final record (post-transform/enrich) if reached, else null (the last live snapshot is in `events`) */
   out: LogRecord | null
 }
 

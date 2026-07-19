@@ -1,0 +1,95 @@
+pageType: final
+background:
+  type: solid
+  color: "$ink"
+notes: "Fechamento: a tese do ecossistema em uma frase, o estado honesto do projeto e para onde ele vai."
+elements:
+  - elementId: accent-bar
+    elementType: shape
+    bounds: [56, 96, 6, 84]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: kicker
+    elementType: text
+    bounds: [80, 92, 700, 16]
+    content: {fontSize: 11, color: "#F2B794", letterSpacing: 2.5, bold: true, align: [left, middle], wrap: false, text: "EM UMA FRASE"}
+  - elementId: big
+    elementType: text
+    bounds: [78, 114, 800, 70]
+    content:
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><span style="font-size:36px; color:#FFFFFF;"><strong>A IA propõe. O gate executável dispõe.</strong></span></p>
+  - elementId: sub
+    elementType: text
+    bounds: [80, 190, 800, 66]
+    content:
+      fontSize: 13
+      color: "#C6CCD3"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        Toda afirmação de progresso — mastered, streak, rating, promoção de projeto — é uma função pura de arquivos auditáveis. A única porta de entrada para "domínio" é um verificador independente que re-executa um contrato empírico.
+  - elementId: st-head
+    elementType: text
+    bounds: [56, 268, 420, 16]
+    content: {fontSize: 10, color: "#F2B794", bold: true, letterSpacing: 1.5, align: [left, middle], wrap: false, text: "ESTADO HONESTO HOJE (2026-07)"}
+  - elementId: st-rule
+    elementType: line
+    bounds: [56, 288, 420, 2]
+    viewBox: [420, 2]
+    points: "0,1 420,1"
+    border: {style: solid, width: 1, color: "#3A4048"}
+  - elementId: st-body
+    elementType: text
+    bounds: [56, 300, 420, 150]
+    content:
+      fontSize: 11
+      color: "#C6CCD3"
+      lineHeight: 1.55
+      align: [left, top]
+      text: |
+        <p>· <strong style="color:#FFFFFF;">2 de 18 projetos</strong> implementados — ambos com certificação Node.js-only e caveats explícitos;</p>
+        <p>· <strong style="color:#FFFFFF;">1 unidade dominada</strong> (U0) com evidência verificada; 18 masteries falsas revertidas por auditoria;</p>
+        <p>· unidade ativa <strong style="color:#FFFFFF;">U2-key-value-store</strong> em avaliação; pipeline em cycle-complete aguardando o próximo curator;</p>
+        <p>· evolução ativa: docs/VISION.md e novos engines em proposta.</p>
+  - elementId: next-head
+    elementType: text
+    bounds: [524, 268, 380, 16]
+    content: {fontSize: 10, color: "#F2B794", bold: true, letterSpacing: 1.5, align: [left, middle], wrap: false, text: "PARA ONDE VAI (docs/VISION.md)"}
+  - elementId: next-rule
+    elementType: line
+    bounds: [524, 288, 380, 2]
+    viewBox: [380, 2]
+    points: "0,1 380,1"
+    border: {style: solid, width: 1, color: "#3A4048"}
+  - elementId: next-body
+    elementType: text
+    bounds: [524, 300, 380, 150]
+    content:
+      fontSize: 11
+      color: "#C6CCD3"
+      lineHeight: 1.55
+      align: [left, top]
+      text: |
+        <p>· trilha <strong style="color:#FFFFFF;">"Nível 0"</strong> para não-técnicos;</p>
+        <p>· micro-lições fora dos jogos, numa pegada Duolingo (lições pequenas, FSRS, streak);</p>
+        <p>· onboarding simples e <strong style="color:#FFFFFF;">replicação da instância</strong> — hoje: piloto single-learner;</p>
+        <p>· visão: democratizar conhecimento e aplicação de IA, sem criar dependência de IA.</p>
+  - elementId: end-line
+    elementType: line
+    bounds: [56, 476, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "#3A4048"}
+  - elementId: end-note
+    elementType: text
+    bounds: [56, 488, 848, 20]
+    content:
+      fontSize: 10
+      color: "#8B9199"
+      align: [left, middle]
+      wrap: false
+      text: |
+        Fontes: docs/handbook/* · AGENTS.md · learner/* · curriculum/* · engines/* — todo número deste deck é verificável no repositório.

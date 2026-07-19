@@ -152,7 +152,7 @@ export class MetricStore {
     }
     if (!h || h.count === 0) return 0;
 
-    const target = Math.floor(h.count * percentile);
+    const target = Math.ceil(h.count * percentile);
     for (const bucket of h.buckets) {
       if (bucket.cumulativeCount >= target) {
         return bucket.upperBound;

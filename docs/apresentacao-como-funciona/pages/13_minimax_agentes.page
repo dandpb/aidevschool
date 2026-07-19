@@ -1,0 +1,146 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "minimaxDojo: os 14 agentes Ágora Continuum organizados em 5 camadas, com roteamento de modelo e RACI."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 12 · NÚCLEO DE TUTORIA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "minimaxDojo: os 14 agentes do Ágora Continuum"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: L5
+    elementType: shape
+    bounds: [56, 124, 560, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$redSoft"}
+    border: {style: solid, width: 1, color: "$red"}
+  - elementId: L5-t
+    elementType: text
+    bounds: [68, 129, 536, 56]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8.5px; color:$red;"><strong>CAMADA 5 · GOVERNANÇA</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:9.5px; color:$ink;"><strong>SÊNECA</strong></span><span style="font-size:8.5px; color:$body;"> — portão humano no loop: auto-escala no reversível, SLA 24h nas decisões consequentes, default conservador ao expirar</span></p>
+  - elementId: L4
+    elementType: shape
+    bounds: [56, 196, 560, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: L4-t
+    elementType: text
+    bounds: [68, 201, 536, 56]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8.5px; color:$slate;"><strong>CAMADA 4 · MEMÓRIA & EVOLUÇÃO</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:9.5px; color:$ink;"><strong>MNEMOSYNE</strong></span><span style="font-size:8.5px; color:$body;"> — memória em 3 camadas, Skills versionadas · </span><span style="font-size:9.5px; color:$ink;"><strong>OUROBOROS</strong></span><span style="font-size:8.5px; color:$body;"> — plan→act→reflect→critique→revise; tropeços viram pegadinhas</span></p>
+  - elementId: L3
+    elementType: shape
+    bounds: [56, 268, 560, 80]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: L3-t
+    elementType: text
+    bounds: [68, 273, 536, 70]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8.5px; color:$accentDark;"><strong>CAMADA 3 · QUALIDADE & MÉTRICAS</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:9.5px; color:$ink;"><strong>PROMETOR</strong></span><span style="font-size:8.5px; color:$body;"> — verifier adversarial efêmero (contexto zero) · </span><span style="font-size:9.5px; color:$ink;"><strong>CRÍTICO</strong></span><span style="font-size:8.5px; color:$body;"> — review pedagógico (o PORQUÊ) · </span><span style="font-size:9.5px; color:$ink;"><strong>GALILEU</strong></span><span style="font-size:8.5px; color:$body;"> — benchmarks (N≥10, CV&lt;20%) · </span><span style="font-size:9.5px; color:$ink;"><strong>ATENA</strong></span><span style="font-size:8.5px; color:$body;"> — quality gate composto + AIDI (DORA proibido como proxy)</span></p>
+  - elementId: L2
+    elementType: shape
+    bounds: [56, 354, 560, 80]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: L2-t
+    elementType: text
+    bounds: [68, 359, 536, 70]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8.5px; color:$slate;"><strong>CAMADA 2 · PEDAGOGIA (WORKERS)</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:9.5px; color:$ink;"><strong>SONDA</strong></span><span style="font-size:8.5px; color:$body;"> — diagnóstico Dreyfus×Bloom · </span><span style="font-size:9.5px; color:$ink;"><strong>CARTÓGRAFO</strong></span><span style="font-size:8.5px; color:$body;"> — trilha em 9 níveis · </span><span style="font-size:9.5px; color:$ink;"><strong>MESTRE-CONTEÚDO</strong></span><span style="font-size:8.5px; color:$body;"> — exercícios (retém solution/) · </span><span style="font-size:9.5px; color:$ink;"><strong>SÓCRATES</strong></span><span style="font-size:8.5px; color:$body;"> — tutor anti-dependência, 15/dia · </span><span style="font-size:9.5px; color:$ink;"><strong>MNEME</strong></span><span style="font-size:8.5px; color:$body;"> — repetição espaçada</span></p>
+  - elementId: L1
+    elementType: shape
+    bounds: [56, 440, 560, 58]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: L1-t
+    elementType: text
+    bounds: [68, 445, 536, 48]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8.5px; color:#F2B794;"><strong>CAMADA 1 · LIDERANÇA</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:9.5px; color:#FFFFFF;"><strong>MAESTRO</strong></span><span style="font-size:8.5px; color:#D8DDE3;"> — opera a state machine e despacha workers; coordena, NÃO produz · </span><span style="font-size:9.5px; color:#FFFFFF;"><strong>CRONOS</strong></span><span style="font-size:8.5px; color:#D8DDE3;"> — scheduler, dono único de cada cron</span></p>
+  - elementId: r-head
+    elementType: text
+    bounds: [648, 124, 256, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "REGRAS DO TIME"}
+  - elementId: r-rule
+    elementType: line
+    bounds: [648, 144, 256, 2]
+    viewBox: [256, 2]
+    points: "0,1 256,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: r-body
+    elementType: text
+    bounds: [648, 156, 256, 250]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p><strong>Roteamento de modelo:</strong> opus → raciocínio profundo (Prometor, Crítico, Sêneca); sonnet → alto volume (Sonda, Sócrates); diversidade cross-model ativa.</p>
+        <p style="margin-top:8px"><strong>Prometor roda em tier diferente do gerador</strong> e nunca recebe o contexto do Mestre-Conteúdo — anti-ancoragem estrutural.</p>
+        <p style="margin-top:8px"><strong>Missão:</strong> levar um programador intermediário a escrever, revisar e verificar código profissional com autonomia — <strong>sem criar dependência de IA</strong>.</p>
+  - elementId: raci-panel
+    elementType: shape
+    bounds: [648, 420, 256, 62]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: raci
+    elementType: text
+    bounds: [660, 426, 232, 50]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, middle]
+      text: |
+        <p><strong>Exemplo RACI — "Reprovar unidade":</strong> R = Prometor · A = Maestro · C = Sêneca · I = Crítico</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "13"}

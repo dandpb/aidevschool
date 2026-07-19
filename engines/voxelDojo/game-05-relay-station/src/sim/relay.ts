@@ -71,7 +71,7 @@ export function remove(state: RelayState, clientId: string): RelayState {
   return next
 }
 
-/** Subscribe a client to a channel (fan-out membership). No-op if not connected. */
+/** Subscribe a client to a channel (fan-out membership). Delivery still requires the client to be live. */
 export function subscribe(state: RelayState, clientId: string, channel: string): RelayState {
   const next = cloneState(state)
   const c = next.clients.get(clientId)

@@ -1,0 +1,174 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Substrato: edite o canônico, validate(), sync() regenera 11+ views derivadas atomicamente. Nunca edite view derivada."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 07 · SUBSTRATO LEARNER/
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Canônico → validação → sync → projeções derivadas
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: src1
+    elementType: shape
+    bounds: [56, 132, 240, 74]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: src1-t
+    elementType: text
+    bounds: [66, 139, 220, 60]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:10.5px; color:$accentDark;"><strong>learner/learning_state.yaml</strong></span></p>
+        <p><span style="font-size:8.5px; color:$body;">fonte canônica do aprendiz: máquina de estados, gate, AIDI, units_log, streak</span></p>
+  - elementId: src2
+    elementType: shape
+    bounds: [56, 218, 240, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: src2-t
+    elementType: text
+    bounds: [66, 224, 220, 44]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$accentDark;"><strong>curriculum/catalog.md</strong></span></p>
+        <p><span style="font-size:8.5px; color:$body;">fonte canônica dos 18 projetos</span></p>
+  - elementId: src3
+    elementType: shape
+    bounds: [56, 286, 240, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: src3-t
+    elementType: text
+    bounds: [66, 292, 220, 44]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$accentDark;"><strong>perfil · pitfalls · journal · predictions</strong></span></p>
+        <p><span style="font-size:8.5px; color:$body;">memória append-only do aprendiz</span></p>
+  - elementId: fa1
+    elementType: line
+    bounds: [296, 224, 34, 14]
+    viewBox: [34, 14]
+    points: "0,7 34,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: val-box
+    elementType: shape
+    bounds: [330, 180, 150, 104]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: val-t
+    elementType: text
+    bounds: [340, 188, 130, 88]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:11px; color:#F2B794;"><strong>validate()</strong></span></p>
+        <p style="margin-top:5px"><span style="font-size:8.5px; color:#D8DDE3;">invariantes duras; estado inválido aborta — nunca repara silenciosamente</span></p>
+  - elementId: fa2
+    elementType: line
+    bounds: [480, 224, 34, 14]
+    viewBox: [34, 14]
+    points: "0,7 34,7"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$accent"}
+  - elementId: sync-box
+    elementType: shape
+    bounds: [514, 180, 150, 104]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: sync-t
+    elementType: text
+    bounds: [522, 188, 134, 88]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:#FFFFFF;"><strong>sync() / commit</strong></span></p>
+        <p style="margin-top:5px"><span style="font-size:8px; color:#FBE3D6;">escrita atômica; regenera as 11+ views numa única fronteira</span></p>
+  - elementId: cmd-note
+    elementType: text
+    bounds: [56, 364, 608, 20]
+    content:
+      fontSize: 10
+      color: "$ink"
+      align: [left, middle]
+      wrap: false
+      text: |
+        <p><strong>python3 -m learner.substrate</strong> <span style="color:$muted;">( regenera ) · </span><strong>--check</strong> <span style="color:$muted;">( reporta drift sem escrever — útil em CI )</span></p>
+  - elementId: views-panel
+    elementType: shape
+    bounds: [688, 126, 216, 300]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: views-head
+    elementType: text
+    bounds: [700, 134, 192, 16]
+    content: {fontSize: 9.5, color: "$ink", bold: true, letterSpacing: 1, align: [left, middle], wrap: false, text: "11+ VIEWS GERADAS"}
+  - elementId: views-list
+    elementType: text
+    bounds: [700, 154, 194, 264]
+    content:
+      fontSize: 8.5
+      color: "$body"
+      lineHeight: 1.42
+      align: [left, top]
+      text: |
+        <p><strong>.mavis/learning_state.yaml</strong> → planner Mavis (estados em PT)</p>
+        <p style="margin-top:4px"><strong>whiteboard/profile.yaml · learner_profile.md · trail.md</strong> → minimaxDojo</p>
+        <p style="margin-top:4px"><strong>learner.ts · projects.ts · agents.ts · cycle.ts</strong> → dashboard codexDojo</p>
+        <p style="margin-top:4px"><strong>learner.ts</strong> → codexdojo-os (projeção própria, mesmo snapshot)</p>
+        <p style="margin-top:4px"><strong>reviewSlice.ts</strong> → pixel-quest</p>
+        <p style="margin-top:4px"><strong>reviewSlice.ts × 16</strong> → voxelDojo (fan-out game-*)</p>
+        <p style="margin-top:4px"><strong>BACKLOG_STATUS.md</strong> → curriculum/</p>
+        <p style="margin-top:8px"><span style="color:$muted;">Todo arquivo gerado traz o cabeçalho "AUTO-GENERATED … DO NOT EDIT BY HAND".</span></p>
+  - elementId: rules-head
+    elementType: text
+    bounds: [56, 404, 608, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "REGRAS DE ORDENAÇÃO (substrate/interface.md)"}
+  - elementId: rules
+    elementType: text
+    bounds: [56, 426, 608, 66]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>1 · Sempre edite a <strong>fonte canônica</strong> primeiro; depois chame <strong>sync()</strong>.</p>
+        <p style="margin-top:5px">2 · <strong>Nunca</strong> escreva numa view derivada nem faça back-port de mudanças para o canônico.</p>
+        <p style="margin-top:5px">3 · O dumper YAML evita anchors/aliases: o arquivo canônico permanece "plain and greppable".</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "08"}

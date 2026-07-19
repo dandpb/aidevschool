@@ -1,0 +1,265 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Os dois loops: ciclo de software de 5 fases (pipeline_status.yaml) e learning gate por unidade (learning_state.yaml). Encontram-se no diagnóstico."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 06 · OS DOIS LOOPS
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "Dois loops entrelaçados: engenharia e aprendizado"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: loop1-head
+    elementType: text
+    bounds: [56, 120, 600, 16]
+    content: {fontSize: 10.5, color: "$slate", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "LOOP 1 · CICLO DE SOFTWARE — learner/pipeline_status.yaml (YAML é autoridade; MD é narrativa)"}
+  - elementId: p1
+    elementType: shape
+    bounds: [56, 142, 142, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: p1-t
+    elementType: text
+    bounds: [62, 148, 130, 54]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$slateDark;"><strong>1 · Spec</strong></span></p>
+        <p><span style="font-size:7.5px; color:$muted;">curator → spec.md (13 seções)</span></p>
+  - elementId: g1
+    elementType: shape
+    bounds: [204, 164, 22, 22]
+    shapeName: diamond
+    fill: {type: solid, color: "$accent"}
+  - elementId: p2
+    elementType: shape
+    bounds: [232, 142, 142, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: p2-t
+    elementType: text
+    bounds: [238, 148, 130, 54]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$slateDark;"><strong>2 · Impl. poliglota</strong></span></p>
+        <p><span style="font-size:7.5px; color:$muted;">dev-go + dev-rust + dev-node (paralelo)</span></p>
+  - elementId: g2
+    elementType: shape
+    bounds: [380, 164, 22, 22]
+    shapeName: diamond
+    fill: {type: solid, color: "$accent"}
+  - elementId: p3
+    elementType: shape
+    bounds: [408, 142, 142, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: p3-t
+    elementType: text
+    bounds: [414, 148, 130, 54]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$slateDark;"><strong>3 · Review</strong></span></p>
+        <p><span style="font-size:7.5px; color:$muted;">reviewer → review + quiz + notas</span></p>
+  - elementId: g3
+    elementType: shape
+    bounds: [556, 164, 22, 22]
+    shapeName: diamond
+    fill: {type: solid, color: "$accent"}
+  - elementId: p4
+    elementType: shape
+    bounds: [584, 142, 142, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: p4-t
+    elementType: text
+    bounds: [590, 148, 130, 54]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$slateDark;"><strong>4 · Benchmark</strong></span></p>
+        <p><span style="font-size:7.5px; color:$muted;">benchmarker → N≥3, mediana+CV</span></p>
+  - elementId: g4
+    elementType: shape
+    bounds: [732, 164, 22, 22]
+    shapeName: diamond
+    fill: {type: solid, color: "$accent"}
+  - elementId: p5
+    elementType: shape
+    bounds: [760, 142, 144, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: p5-t
+    elementType: text
+    bounds: [766, 148, 132, 54]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10px; color:$slateDark;"><strong>5 · Evolução</strong></span></p>
+        <p><span style="font-size:7.5px; color:$muted;">optimizer → evolution_report.md</span></p>
+  - elementId: gate-note
+    elementType: text
+    bounds: [56, 216, 848, 16]
+    content: {fontSize: 9, color: "$accentDark", align: [left, middle], wrap: false, text: "◆ = gate do verifier entre CADA fase (contexto zero, sem ferramentas de escrita) · FAIL → produtor acordado com feedback arquivo:linha · status só avança em PASS"}
+  - elementId: conn-line
+    elementType: line
+    bounds: [120, 236, 20, 70]
+    viewBox: [20, 70]
+    points: "10,0 10,70"
+    arrow: [null, stealth]
+    border: {style: dash, width: 1.5, color: "$accent"}
+  - elementId: conn-label
+    elementType: text
+    bounds: [148, 246, 400, 52]
+    content:
+      fontSize: 9.5
+      color: "$body"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p><strong>Os loops encontram-se no diagnóstico:</strong> o <span style="color:$accentDark;">docs/diagnostic.md</span> de cada projeto é o desafio do learning gate. A tentativa vai para <span style="color:$accentDark;">learner/attempts/</span>, a Sonda avalia, e só então <span style="color:$accentDark;">implementation_blocked</span> vira false.</p>
+  - elementId: status-note
+    elementType: text
+    bounds: [580, 246, 324, 52]
+    content:
+      fontSize: 9
+      color: "$muted"
+      lineHeight: 1.35
+      align: [left, top]
+      text: |
+        <p><strong>Estado real hoje:</strong> pipeline em <span style="color:$accentDark;">cycle-complete</span> (02_key_value_store), aguardando next-curator; unidade ativa U2-key-value-store em <span style="color:$accentDark;">avaliando</span>.</p>
+  - elementId: loop2-head
+    elementType: text
+    bounds: [56, 310, 600, 16]
+    content: {fontSize: 10.5, color: "$slate", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "LOOP 2 · LEARNING GATE POR UNIDADE — learner/learning_state.yaml"}
+  - elementId: q1
+    elementType: shape
+    bounds: [56, 332, 178, 52]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: q1-t
+    elementType: text
+    bounds: [62, 337, 166, 42]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$slateDark;"><strong>apresentando</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">Sonda: diagnóstico 10–15 min</span></p>
+  - elementId: qa1
+    elementType: line
+    bounds: [234, 352, 30, 12]
+    viewBox: [30, 12]
+    points: "0,6 30,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: q2
+    elementType: shape
+    bounds: [264, 332, 178, 52]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: q2-t
+    elementType: text
+    bounds: [270, 337, 166, 42]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$slateDark;"><strong>praticando</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">tentativa do aprendiz (attempts/)</span></p>
+  - elementId: qa2
+    elementType: line
+    bounds: [442, 352, 30, 12]
+    viewBox: [30, 12]
+    points: "0,6 30,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$muted"}
+  - elementId: q3
+    elementType: shape
+    bounds: [472, 332, 178, 52]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: q3-t
+    elementType: text
+    bounds: [478, 337, 166, 42]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$accentDark;"><strong>avaliando</strong></span></p>
+        <p><span style="font-size:8px; color:$accentDark;">evidência executável + verificador</span></p>
+  - elementId: qa3
+    elementType: line
+    bounds: [650, 352, 30, 12]
+    viewBox: [30, 12]
+    points: "0,6 30,6"
+    arrow: [null, stealth]
+    border: {style: solid, width: 2, color: "$green"}
+  - elementId: q4
+    elementType: shape
+    bounds: [680, 332, 178, 52]
+    shapeName: rect
+    fill: {type: solid, color: "$greenSoft"}
+    border: {style: solid, width: 1.5, color: "$green"}
+  - elementId: q4-t
+    elementType: text
+    bounds: [686, 337, 166, 42]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:$green;"><strong>dominado</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">retry_limit: 3 → depois Sêneca</span></p>
+  - elementId: loop2-note
+    elementType: text
+    bounds: [56, 394, 848, 16]
+    content: {fontSize: 9, color: "$muted", align: [left, middle], wrap: false, text: "FAIL com retries → variação e retorno a apresentando · o gate é o único produtor de rating (fail→again, pass_retried→hard, pass_first_try→good, pass_exceeds→easy) → FSRS agenda a revisão"}
+  - elementId: divider
+    elementType: line
+    bounds: [56, 426, 848, 2]
+    viewBox: [848, 2]
+    points: "0,1 848,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: summary
+    elementType: text
+    bounds: [56, 438, 848, 56]
+    content:
+      style: "$body"
+      fontSize: 11.5
+      align: [left, top]
+      text: |
+        <p>O loop de software <strong>produz os artefatos do currículo</strong> sob gates de verificador por fase; o loop de aprendizado <strong>certifica o aprendiz</strong> por unidade. Duas máquinas de estado distintas, dois arquivos canônicos — e vocabulário proibido de misturar: <em>phase</em> é do pipeline, <em>learning state</em> é da jornada.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "07"}

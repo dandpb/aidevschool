@@ -28,7 +28,7 @@ dev = [
 packages = []
 
 [tool.pytest.ini_options]
-# Run both Python test islands from the repo root with a single command (D5).
+# Run the shared Python test islands from the repo root with a single command (D5).
 pythonpath = ["."]
 testpaths = [
   "engines/minimaxDojo/tests",
@@ -36,5 +36,7 @@ testpaths = [
   "learner/substrate/tests",
   "learner/gate/tests",
   "curriculum/_shared/tests",
+  # AI Literacy content-contract suite (unittest-style, also runs standalone).
+  "curriculum/ai-literacy/tools/tests",
 ]
 python_files = ["test_*.py"]

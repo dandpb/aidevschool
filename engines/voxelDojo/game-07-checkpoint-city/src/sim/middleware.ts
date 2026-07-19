@@ -270,8 +270,8 @@ function base64Decode(s: string): Uint8Array {
   let bits = 0
   for (let i = 0; i < clean.length; i++) {
     const code = clean.charCodeAt(i)
-    const val = B64_DECODE[code] ?? 255
-    if (val === 255) continue
+    const val = code < 256 ? (B64_DECODE[code] ?? 255) : 255
+    if (val === 255) throw new Error(`base64Decode: invalid char '${clean.charAt(i)}'`)
     buf = (buf << 6) | val
     bits += 6
     if (bits >= 8) {
@@ -391,10 +391,12 @@ export function tamperSignature(token: string): string {
   if (parts.length !== 3) return token
   const sig = parts[2] ?? ""
   if (sig.length === 0) return token
-  // flip the last base64url char to a different one
-  const last = sig.charAt(sig.length - 1)
-  const swapped = last === "A" ? "B" : "A"
-  return `${parts[0]}.${parts[1]}.${sig.slice(0, -1)}${swapped}`
+  // flip the FIRST base64url char: all 6 of its bits are decoded, so the tamper always
+  // changes the signature bytes (flipping the LAST char could touch only the 2 discarded
+  // padding bits of a 43-char unpadded SHA-256 encoding, leaving verification intact).
+  const first = sig.charAt(0)
+  const swapped = first === "A" ? "B" : "A"
+  return `${parts[0]}.${parts[1]}.${swapped}${sig.slice(1)}`
 }
 
 /** Re-encode the payload with a changed field but keep the OLD signature → verification fails. */

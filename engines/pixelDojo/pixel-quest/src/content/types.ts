@@ -98,10 +98,10 @@ export const TOKEN_BUCKET_CONTRACT = {
 // Pass thresholds for the task_queue encounter. Used by both the unit contract
 // (curriculumPack.evidenceContractFor) and the runtime pass-rule
 // (taskQueueOutcome) so the two cannot drift.
-// - minProcessed: minimum legit jobs a passing run must process.
-// - maxPoisonRetried: a poison job must be dead-lettered at/under maxRetries;
-//   this caps how many extra retries beyond maxRetries are tolerated (0 = the
-//   correct play is to DLQ exactly at maxRetries).
+// - minProcessed: minimum legit jobs a passing run must process (in practice
+//   all of them, since pass also requires legitRetried === 0).
+// - maxPoisonRetried: how many poison-job retries (admits) are tolerated
+//   across the whole stream before the run overheats.
 // - maxBackpressurePeak: the queue depth must never exceed this cap.
 export const TASK_QUEUE_CONTRACT = {
   minProcessed: 8,
@@ -241,10 +241,12 @@ export type TaskQueueJob = {
 }
 
 // task_queue encounter: a stream of jobs arrives (legit vs poison). The player
-// chooses process (admit) / dead-letter (reject); retry is modeled as repeated
-// admits of a poison job — the correct play is to retry until retriesForCurrentJob
-// reaches maxRetries, then dead-letter (reject). Backpressure rises when jobs
-// arrive faster than they are processed.
+// chooses process (admit) / dead-letter (reject); retry is modeled as admitting
+// a poison job, which keeps it in the queue and builds backpressure — each job
+// is ONE dispatch decision because the shared core advances one item per action
+// (see the action-mapping comment in game/encounters/taskQueue.ts). The correct
+// play is to process every legit job and dead-letter every poison job on sight.
+// Backpressure rises when jobs arrive faster than they are processed.
 export type TaskQueueEncounter = {
   readonly id: string
   readonly kind: "task_queue"

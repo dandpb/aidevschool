@@ -1,0 +1,260 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Mapa do ecossistema: engines ao redor, substrato canônico no centro. Setas mostram direção de leitura/escrita."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 04 · MAPA DO ECOSSISTEMA
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Engines ao redor, substrato canônico no centro
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: colL-head
+    elementType: text
+    bounds: [56, 116, 240, 14]
+    content: {fontSize: 9.5, color: "$slate", bold: true, letterSpacing: 1.5, align: [left, middle], wrap: false, text: "SUPERFÍCIE DE PRODUTO"}
+  - elementId: e1
+    elementType: shape
+    bounds: [56, 136, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: e1-t
+    elementType: text
+    bounds: [66, 142, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>codexDojo</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">dashboard operacional (Vite/TS) + contratos de produto (MANIFEST)</span></p>
+  - elementId: e2
+    elementType: shape
+    bounds: [56, 210, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: e2-t
+    elementType: text
+    bounds: [66, 216, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>codexdojo-os-prototype</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">OS educacional canônico (React 19): desktop, terminal, mentor, Engine Hub</span></p>
+  - elementId: e3
+    elementType: shape
+    bounds: [56, 284, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: e3-t
+    elementType: text
+    bounds: [66, 290, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>pixelDojo</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">jogos 2D 8-bit (pixel-quest): 1 conceito = 1 mecânica arcade</span></p>
+  - elementId: e4
+    elementType: shape
+    bounds: [56, 358, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: e4-t
+    elementType: text
+    bounds: [66, 364, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>voxelDojo</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">16 simulações 3D Three.js com núcleo determinístico headless</span></p>
+  - elementId: colC-head
+    elementType: text
+    bounds: [352, 116, 256, 14]
+    content: {fontSize: 8.5, color: "$accentDark", bold: true, letterSpacing: 1.2, align: [center, middle], wrap: false, text: "SUBSTRATO · FONTE DA VERDADE"}
+  - elementId: c1
+    elementType: shape
+    bounds: [352, 136, 256, 126]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: c1-t
+    elementType: text
+    bounds: [364, 144, 232, 110]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:12px; color:$accentDark;"><strong>learner/</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:8.5px; color:$body;">learning_state.yaml (canônico) · pipeline_status.yaml · perfil · pitfalls · journal · attempts/ · verifier_receipts/ · gate/ · substrate/</span></p>
+        <p style="margin-top:3px"><span style="font-size:8px; color:$muted;">estado único do aprendiz — gates e agendamento FSRS</span></p>
+  - elementId: c2
+    elementType: shape
+    bounds: [352, 272, 256, 106]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: c2-t
+    elementType: text
+    bounds: [364, 280, 232, 90]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:12px; color:$accentDark;"><strong>curriculum/</strong></span></p>
+        <p style="margin-top:3px"><span style="font-size:8.5px; color:$body;">catalog.md (18 projetos × 6 níveis) · specs · impls Go/Rust/Node · reviews · benchmarks · evidência</span></p>
+        <p style="margin-top:3px"><span style="font-size:8px; color:$muted;">desafios e trilha de auditoria de engenharia</span></p>
+  - elementId: c3
+    elementType: shape
+    bounds: [352, 388, 256, 44]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: dash, width: 1, color: "$muted"}
+  - elementId: c3-t
+    elementType: text
+    bounds: [364, 392, 232, 36]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:8px; color:$muted;"><strong>.mavis/</strong> — view derivada regenerada; nunca editada à mão</span></p>
+  - elementId: colR-head
+    elementType: text
+    bounds: [664, 116, 240, 14]
+    content: {fontSize: 9.5, color: "$slate", bold: true, letterSpacing: 1.5, align: [left, middle], wrap: false, text: "ORQUESTRAÇÃO & TUTORIA"}
+  - elementId: o1
+    elementType: shape
+    bounds: [664, 136, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: o1-t
+    elementType: text
+    bounds: [674, 142, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>minimaxDojo</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">núcleo de tutoria: 14 agentes, whiteboard, threshold seam, core Python</span></p>
+  - elementId: o2
+    elementType: shape
+    bounds: [664, 210, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: o2-t
+    elementType: text
+    bounds: [674, 216, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>miniMaxEvolutionEngine</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">motor Claude Code: subagents + 18 comandos /devschool-* + PhaseRunner</span></p>
+  - elementId: o3
+    elementType: shape
+    bounds: [664, 284, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: o3-t
+    elementType: text
+    bounds: [674, 290, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>openclaw</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">runner de checklist file-based das 5 fases (simulate, "tracer bullet")</span></p>
+  - elementId: o4
+    elementType: shape
+    bounds: [664, 358, 240, 68]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: o4-t
+    elementType: text
+    bounds: [674, 364, 220, 56]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:11px; color:$slateDark;"><strong>engines/shared</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">@aidevschool/evidence — envelope de evidência cross-engine</span></p>
+  - elementId: ar1
+    elementType: line
+    bounds: [296, 170, 56, 10]
+    viewBox: [56, 10]
+    points: "0,5 56,5"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: ar1-l
+    elementType: text
+    bounds: [298, 146, 52, 26]
+    content: {fontSize: 7, color: "$muted", align: [center, middle], text: "evidência bruta"}
+  - elementId: ar2
+    elementType: line
+    bounds: [296, 232, 56, 10]
+    viewBox: [56, 10]
+    points: "56,5 0,5"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: ar2-l
+    elementType: text
+    bounds: [297, 214, 54, 14]
+    content: {fontSize: 7, color: "$accentDark", align: [center, middle], wrap: false, text: "projeções"}
+  - elementId: ar3
+    elementType: line
+    bounds: [608, 170, 56, 10]
+    viewBox: [56, 10]
+    points: "56,5 0,5"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: ar3-l
+    elementType: text
+    bounds: [609, 152, 54, 14]
+    content: {fontSize: 7, color: "$muted", align: [center, middle], wrap: false, text: "lê o canônico"}
+  - elementId: ar4
+    elementType: line
+    bounds: [608, 232, 56, 10]
+    viewBox: [56, 10]
+    points: "0,5 56,5"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: ar4-l
+    elementType: text
+    bounds: [610, 208, 52, 26]
+    content: {fontSize: 7, color: "$accentDark", align: [center, middle], text: "commit via gate"}
+  - elementId: bottom-note
+    elementType: text
+    bounds: [56, 442, 848, 52]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p><strong>Uma fonte, muitas projeções.</strong> Apps e jogos nunca escrevem o estado do aprendiz: consomem views geradas por <span style="color:$accentDark;">python3 -m learner.substrate</span>. Jogos e produtores emitem evidência bruta; apenas o <strong>gate verificador</strong> (learner.gate) comete transições ao YAML canônico — atomicamente, com digest do verificador.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "05"}

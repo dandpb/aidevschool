@@ -44,7 +44,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 2d",
+      dueIn: "overdue 10d",
       reason: "overdue",
     },
     {
@@ -69,7 +69,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     freezesEquipped: 0,
     freezesMax: 2,
   },
-  curr: 1,
+  curr: 0,
   predictions: {
     count: 0,
     byMetric: {
@@ -88,6 +88,12 @@ export const learnerSnapshot: LearnerSnapshot = {
     },
   },
   challenges: [
+    {
+      id: "00_ai_in_practice",
+      phase: "spec",
+      passed: false,
+      attemptPresent: false,
+    },
     {
       id: "01_rate_limiter",
       phase: "spec",

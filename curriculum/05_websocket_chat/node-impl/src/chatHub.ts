@@ -132,11 +132,14 @@ export class ChatHub extends EventEmitter {
   disconnect(clientId: string, now = new Date()): void {
     const client = this.clients.get(clientId);
     if (!client) return;
+    // Remove the client from the registry BEFORE leaving its rooms so that
+    // removeFromRoom emits the offline presence required by RF-007/RF-011
+    // (its guard only broadcasts once the client is gone from the map).
+    this.clients.delete(clientId);
     const rooms = [...client.rooms];
     for (const roomId of rooms) {
       this.removeFromRoom(client, roomId, now, false);
     }
-    this.clients.delete(clientId);
     this.emit('client_disconnected', { clientId });
   }
 

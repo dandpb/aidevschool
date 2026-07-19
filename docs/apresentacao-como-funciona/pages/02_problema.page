@@ -1,0 +1,122 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "O que é: uma escola, não um gerador de código. IA propõe, máquina de estados e gates executáveis dispõem."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 01 · O QUE É
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Uma escola dirigida por agentes — não um gerador de código
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: quote-panel
+    elementType: shape
+    bounds: [56, 128, 848, 58]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: quote
+    elementType: text
+    bounds: [76, 136, 808, 42]
+    content:
+      fontSize: 13
+      color: "$ink"
+      lineHeight: 1.4
+      align: [left, middle]
+      text: |
+        <p><em>"Driven by a team of AI agents that <strong>propose</strong>, while a deterministic state machine and executable gates <strong>dispose</strong>."</em></p>
+        <p><span style="font-size:9.5px; color:$muted;">— docs/handbook/README.md: agentes de IA propõem; a máquina de estados determinística e os gates executáveis decidem.</span></p>
+  - elementId: col1-head
+    elementType: text
+    bounds: [56, 210, 400, 18]
+    content:
+      fontSize: 11
+      color: "$green"
+      bold: true
+      letterSpacing: 1.5
+      align: [left, middle]
+      wrap: false
+      text: O QUE É
+  - elementId: col1-rule
+    elementType: line
+    bounds: [56, 232, 400, 2]
+    viewBox: [400, 2]
+    points: "0,1 400,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: col1-body
+    elementType: text
+    bounds: [56, 242, 400, 240]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><strong>Uma escola prática e contínua de engenharia de software</strong> que ensina um único aprendiz a escrever código robusto construindo projetos reais — testando, revisando, comparando linguagens e medindo resultados.</p>
+        <p style="margin-top:10px"><strong>Um ecossistema multiagente:</strong> um time de 14 papéis de agentes (tutor, verificador, revisor, scheduler…) operando sobre uma máquina de estados determinística.</p>
+        <p style="margin-top:10px"><strong>Um repositório-guarda-chuva:</strong> a raiz não é uma aplicação — não há <span style="color:$accentDark;">package.json</span> na raiz; cada engine é um projeto independente.</p>
+        <p style="margin-top:10px"><strong>Um piloto single-learner</strong> (Daniel = learner 0) de uma visão maior: lições pequenas com revisão espaçada e streak, "numa pegada Duolingo" (docs/VISION.md).</p>
+  - elementId: col2-head
+    elementType: text
+    bounds: [504, 210, 400, 18]
+    content:
+      fontSize: 11
+      color: "$red"
+      bold: true
+      letterSpacing: 1.5
+      align: [left, middle]
+      wrap: false
+      text: O QUE NÃO É
+  - elementId: col2-rule
+    elementType: line
+    bounds: [504, 232, 400, 2]
+    viewBox: [400, 2]
+    points: "0,1 400,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: col2-body
+    elementType: text
+    bounds: [504, 242, 400, 240]
+    content:
+      style: "$body"
+      align: [left, top]
+      text: |
+        <p><strong>Não é um gerador de código.</strong> Enquanto o learning gate estiver bloqueado, a IA é <em>proibida</em> de implementar a unidade — o aprendiz precisa tentar primeiro.</p>
+        <p style="margin-top:10px"><strong>Não é auto-certificação.</strong> Nenhuma quantidade de explicação, review ou código entregue marca uma unidade como <span style="color:$accentDark;">mastered</span>.</p>
+        <p style="margin-top:10px"><strong>Não é um banco de dados.</strong> Todo o estado vive em arquivos auditáveis (Markdown / YAML / NDJSON) versionados em git.</p>
+        <p style="margin-top:10px"><strong>Não é "confie no modelo".</strong> Consenso entre agentes ≠ correção: só evidência executável (testes, mutation score, benchmarks) promove.</p>
+  - elementId: origin
+    elementType: text
+    bounds: [56, 484, 700, 16]
+    content:
+      style: "$tiny"
+      align: [left, middle]
+      wrap: false
+      text: |
+        Origem: prompt-semente de 2026 inspirado em "MiniMax Agent Team — long-running tasks and continuous evolution" (docs/PROMPTS/-01_GOAL.md).
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "02"}

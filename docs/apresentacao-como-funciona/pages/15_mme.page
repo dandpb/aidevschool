@@ -1,0 +1,144 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "miniMaxEvolutionEngine: motor Claude Code. Orquestrador que nunca escreve código, PhaseRunner, verifier sem escrita, auditoria cross-model."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 14 · MOTOR CLAUDE CODE
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "miniMaxEvolutionEngine: o protocolo, executável"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: l-head
+    elementType: text
+    bounds: [56, 122, 420, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "O ORQUESTRADOR (CLAUDE CODE MAIN LOOP)"}
+  - elementId: l-body
+    elementType: text
+    bounds: [56, 144, 420, 88]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>É o Maestro/Mavis: <strong>delega a subagents e nunca escreve código de implementação</strong>. Separa PLANEJAR → EXECUTAR → VERIFICAR; nunca avança fase sem verifier PASS; respeita o learning gate; falha nunca é silenciada.</p>
+        <p style="margin-top:7px">Hook SessionStart (<span style="color:$accentDark;">briefing.sh</span>) injeta no contexto o estado do pipeline + learning gate a cada abertura de sessão.</p>
+  - elementId: pr-panel
+    elementType: shape
+    bounds: [56, 244, 420, 118]
+    shapeName: rect
+    fill: {type: solid, color: "$paper"}
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: pr-t
+    elementType: text
+    bounds: [70, 254, 392, 98]
+    content:
+      fontSize: 9.5
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, top]
+      text: |
+        <p><strong style="color:$ink;">PhaseRunner — a costura de orquestração</strong> (um protocolo, não um subagent):</p>
+        <p style="margin-top:4px">run_phase(spec) = read-state → check-gate → dispatch producer → dispatch verifier → update status → retry</p>
+        <p style="margin-top:4px"><span style="color:$muted;">Escreve máquina só via pipeline_status.save_status; verifier nunca compartilha contexto do produtor; coberto por 12 testes de contrato.</span></p>
+  - elementId: cmd-head
+    elementType: text
+    bounds: [56, 380, 420, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "18 SLASH COMMANDS /devschool-*"}
+  - elementId: cmd-body
+    elementType: text
+    bounds: [56, 402, 420, 84]
+    content:
+      style: "$body"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p><strong>Fases:</strong> -spec · -implement (paralelo, 3 devs) · -review · -benchmark · -optimize · -verify</p>
+        <p style="margin-top:4px"><strong>Loops:</strong> -cycle (para após 2 gates falhos) · -next (reabre o learning gate) · -audit</p>
+        <p style="margin-top:4px"><strong>Tutor-core:</strong> -diagnose · -socratic · -recall · -decide · -status… · <strong>Arena:</strong> -arena (predição travada até o aprendiz prever o vencedor)</p>
+  - elementId: r-head
+    elementType: text
+    bounds: [516, 122, 388, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "24 SUBAGENTS EM DOIS GRUPOS"}
+  - elementId: r-body
+    elementType: text
+    bounds: [516, 144, 388, 72]
+    content:
+      style: "$body"
+      fontSize: 10
+      align: [left, top]
+      text: |
+        <p>· <strong>14 wrappers canônicos</strong> — cada um aponta para a persona em minimaxDojo/prompts/per_agent/: "leia em sessão fresca e siga integralmente; <strong>em divergência, o canônico vence</strong>";</p>
+        <p style="margin-top:5px">· <strong>platform-only</strong> — curator, dev-go/rust/node, reviewer, benchmarker, optimizer, verifier, verifier-haiku, arena-narrator, fairness-auditor.</p>
+  - elementId: vf-panel
+    elementType: shape
+    bounds: [516, 218, 388, 96]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: vf-t
+    elementType: text
+    bounds: [530, 226, 360, 80]
+    content:
+      fontSize: 9.5
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">verifier — "você julga, não conserta"</strong></p>
+        <p style="margin-top:3px">Tools: Read, Grep, Glob, Bash — <strong>sem ferramentas de escrita, por design</strong>. Parte do zero (anti-ancoragem), re-roda builds/testes/benchmarks de verdade e tenta refutar. Veredicto estruturado: PASS | FAIL + evidência arquivo:linha.</p>
+  - elementId: vh-panel
+    elementType: shape
+    bounds: [516, 322, 388, 88]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: vh-t
+    elementType: text
+    bounds: [530, 330, 360, 72]
+    content:
+      fontSize: 9.5
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, top]
+      text: |
+        <p><strong style="color:$slateDark;">verifier-haiku — auditoria cross-model</strong></p>
+        <p style="margin-top:3px">Mesmo contrato em outro tier de modelo. Amostragem determinística (20%, por hash unit_id+phase). Discordância → verdict: disagree → <strong>escala Sêneca</strong>: sinal de que a evidência depende da família de modelo.</p>
+  - elementId: r-note
+    elementType: text
+    bounds: [516, 424, 388, 62]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p><strong>Distinção sutil:</strong> <strong>Prometor</strong> (verificador do learning gate — avalia evidência do aprendiz, comete em learning_state) ≠ <strong>verifier de fase</strong> (checa artefato de produtor; nunca escreve estado do aprendiz). Roteamento: opus p/ curator/reviewer/optimizer/verifier; sonnet p/ devs/benchmarker.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "15"}

@@ -20,15 +20,29 @@ export class MissingEngineBridgeTokenError extends Error {
 function createBridgeTokenProvider(fetcher: Fetcher): BridgeTokenProvider {
   let request: Promise<string | null> | undefined
   return () => {
-    request ??= fetcher('/__dojo/bridge/v1/session', {
-      method: 'GET',
-      headers: { accept: 'application/json' },
-    }).then(async (response) => {
-      if (!response.ok) return null
-      const body: unknown = await response.json()
-      if (typeof body !== 'object' || body === null || !('token' in body)) return null
-      return typeof body.token === 'string' && body.token !== '' ? body.token : null
-    })
+    if (request === undefined) {
+      const attempt = fetcher('/__dojo/bridge/v1/session', {
+        method: 'GET',
+        headers: { accept: 'application/json' },
+      }).then(async (response) => {
+        if (!response.ok) return null
+        const body: unknown = await response.json()
+        if (typeof body !== 'object' || body === null || !('token' in body)) return null
+        return typeof body.token === 'string' && body.token !== '' ? body.token : null
+      })
+      // A token stays cached for the session, but a failed bootstrap must not
+      // disable the bridge forever: the next action retries the handshake.
+      request = attempt.then(
+        (token) => {
+          if (token === null) request = undefined
+          return token
+        },
+        (error: unknown) => {
+          request = undefined
+          throw error
+        },
+      )
+    }
     return request
   }
 }

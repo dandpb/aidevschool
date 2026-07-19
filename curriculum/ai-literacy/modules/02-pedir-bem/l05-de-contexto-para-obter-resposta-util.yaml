@@ -1,0 +1,86 @@
+# Lição l05 — piloto da vertical slice (seção 17 do plano).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l05
+version: 2
+moduleId: mod-02
+title: "Dê contexto para obter uma resposta útil"
+objective: "Melhorar um pedido genérico preenchendo campos estruturados de objetivo, contexto, público e formato."
+estimatedMinutes: 5
+skillIds: [pedir]
+prerequisites: [l04]
+
+activities:
+  - id: l05-a1
+    type: prompt_builder
+    skillId: pedir
+    instruction: "O pedido abaixo é genérico demais e a resposta da IA sairia igualmente genérica. Melhore-o preenchendo os quatro campos com as informações da situação."
+    data:
+      scenario: "Você trabalha no atendimento de uma clínica odontológica. No próximo mês a clínica vai mudar o horário de funcionamento, e você precisa avisar os clientes com antecedência."
+      genericPrompt: "Escreve um e-mail pra mim."
+      fields:
+        - id: objetivo
+          label: "Objetivo"
+          hint: "O que você quer que a IA produza? Ex.: redigir um e-mail avisando sobre a mudança de horário."
+        - id: contexto
+          label: "Contexto"
+          hint: "O que a IA precisa saber sobre a situação? Ex.: é uma clínica odontológica e o novo horário começa no próximo mês."
+        - id: publico
+          label: "Público"
+          hint: "Quem vai receber a mensagem? Ex.: clientes da clínica, em tom cordial."
+        - id: formato
+          label: "Formato"
+          hint: "Como a resposta deve vir? Ex.: e-mail curto, de até 10 linhas, com assunto."
+    evaluation:
+      strategy: deterministic
+      fields:
+        objetivo:
+          minLength: 15
+          mustIncludeAny: ["avisar", "comunicar", "informar"]
+        contexto:
+          minLength: 25
+          mustIncludeAny: ["horário", "horario"]
+        publico:
+          minLength: 8
+          mustIncludeAny: ["cliente", "paciente"]
+        formato:
+          minLength: 8
+          mustIncludeAny: ["e-mail", "email"]
+    feedback:
+      onFailure: "Ainda falta contexto. Revise os campos destacados: cada um precisa trazer uma informação concreta da situação — não basta repetir o pedido genérico em outras palavras."
+      perCheck:
+        objetivo: "Diga o que a IA deve produzir e para quê, usando verbos como avisar, comunicar ou informar."
+        contexto: "Inclua os fatos que mudam a resposta: é uma clínica odontológica e o assunto é a mudança de horário."
+        publico: "Diga quem recebe a mensagem (clientes ou pacientes) e o tom adequado."
+        formato: "Peça o formato de entrega: um e-mail curto, com tamanho e estrutura definidos."
+      onSuccess: "Muito bem! Com objetivo, contexto, público e formato, a primeira resposta da IA já sai quase pronta para usar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Releia a situação e copie para cada campo um fato concreto: o que produzir, o que mudou, quem recebe e como entregar."
+      - "No campo Objetivo, use um verbo de comunicação; no campo Contexto, conte o que vai mudar na clínica."
+      - "Palavras que precisam aparecer: horário no Contexto, clientes ou pacientes no Público e e-mail no Formato."
+
+rubric:
+  id: l05-rubric
+  criteria:
+    - id: r-campos-especificos
+      text: "Preenche os quatro campos com informação específica da situação, não com repetição do pedido genérico."
+      weight: 1
+    - id: r-contexto-suficiente
+      text: "O contexto informado muda o conteúdo da resposta (tipo de negócio, fato novo, prazo)."
+      weight: 1
+    - id: r-pedido-utilizavel
+      text: "O pedido final, montado a partir dos campos, pode ser enviado a uma IA sem explicação adicional."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l05-a1]

@@ -1,0 +1,114 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Anatomia do learning_state.yaml e as invariantes que o validador impõe — incluindo a regra nascida das 18 masterizações falsas."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 08 · O ESTADO CANÔNICO
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: "learning_state.yaml: 117 linhas que governam tudo"
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: code-panel
+    elementType: shape
+    bounds: [56, 126, 420, 306]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: code-head
+    elementType: text
+    bounds: [72, 136, 380, 14]
+    content: {fontSize: 8.5, color: "#8B9199", letterSpacing: 1.5, align: [left, middle], wrap: false, text: "learner/learning_state.yaml (extrato real, 2026-07)"}
+  - elementId: code
+    elementType: text
+    bounds: [72, 156, 392, 266]
+    content:
+      fontSize: 9.5
+      color: "#D8DDE3"
+      lineHeight: 1.5
+      align: [left, top]
+      text: |
+        <p><span style="color:#F2B794;">learner:</span> id: daniel-barreto · level: intermediate</p>
+        <p>  languages: [TypeScript, Go, Rust] · 5h/semana</p>
+        <p><span style="color:#F2B794;">aidi:</span> current: 0.34 · amber: 0.60 · red: 0.75</p>
+        <p><span style="color:#F2B794;">active_unit:</span></p>
+        <p>  id: U2-key-value-store · state: <span style="color:#F2B794;">evaluating</span></p>
+        <p>  retry_count: 0  <span style="color:#8B9199;"># retry_limit: 3</span></p>
+        <p>  attempt_file: learner/attempts/U2-...-attempt-1.md</p>
+        <p>  evidence_file: engines/voxelDojo/game-02-warehouse/.logs/…</p>
+        <p>  empirical_gate: {min_coverage: 0.80, mutation_min: 0.65}</p>
+        <p><span style="color:#F2B794;">gate:</span> implementation_blocked: false</p>
+        <p><span style="color:#F2B794;">agent_ownership:</span> verifier: Prometor · governance: Seneca …</p>
+        <p><span style="color:#F2B794;">units_log:</span> U0 mastered (pass_first_try) · U2 presented</p>
+        <p><span style="color:#F2B794;">streak:</span> current: 1 · freezes: {equipped: 2, max: 2}</p>
+  - elementId: inv-head
+    elementType: text
+    bounds: [516, 126, 388, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "INVARIANTES IMPOSTAS POR validate()"}
+  - elementId: inv-list
+    elementType: text
+    bounds: [516, 150, 388, 240]
+    content:
+      style: "$body"
+      fontSize: 10.5
+      align: [left, top]
+      text: |
+        <p>· <strong>retry_count ≤ retry_limit</strong> (3) — sem exceções;</p>
+        <p style="margin-top:6px">· <strong>mastered exige review de gate</strong> — "mastery requires executable evidence, never docs alone";</p>
+        <p style="margin-top:6px">· <strong>rating consistente com gate_outcome</strong> — o gate é o único produtor de rating (autoavaliação proibida);</p>
+        <p style="margin-top:6px">· unidade mastered precisa de <strong>attempt_file existente e não-vazio</strong>;</p>
+        <p style="margin-top:6px">· <strong>requires_attempt_before_solution: true</strong> — sempre;</p>
+        <p style="margin-top:6px">· streak: 0 ≤ equipped ≤ max ≤ 2 (cap 2 é "load-bearing": 3 freezes não performam melhor);</p>
+        <p style="margin-top:6px">· AIDI: 0 ≤ amber &lt; red ≤ 1, histórico com datas estritamente ascendentes.</p>
+  - elementId: incident-panel
+    elementType: shape
+    bounds: [516, 398, 388, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$redSoft"}
+    border: {style: solid, width: 1, color: "$red"}
+  - elementId: incident
+    elementType: text
+    bounds: [528, 404, 364, 54]
+    content:
+      fontSize: 9.5
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, middle]
+      text: |
+        <p><strong style="color:$red;">Por que a regra do attempt_file existe:</strong> uma unidade "mastered" apontando para tentativa ausente foi exatamente o modo de falha das <strong>18 masterizações falsas de 2026-07-01</strong> — revertidas por auditoria.</p>
+  - elementId: bottom-note
+    elementType: text
+    bounds: [56, 448, 420, 44]
+    content:
+      style: "$small"
+      align: [left, top]
+      text: |
+        <p>Escrita é atômica e re-validada: <span style="color:$accentDark;">commit_gate_transition()</span> aplica a transição, re-executa todas as invariantes e só então persiste + regenera as views.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "09"}

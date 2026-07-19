@@ -116,6 +116,17 @@ export class WorldRenderer {
     for (const material of Object.values(this.sharedTileMaterials)) {
       material.dispose()
     }
+    for (const mesh of this.staticMeshes) {
+      if (!mesh.userData["isSharedTile"]) {
+        // Gate meshes own their geometry/material; tiles share theirs.
+        disposeMeshTree(mesh)
+      }
+    }
+    for (const mesh of this.npcMeshes.values()) {
+      disposeMeshTree(mesh)
+    }
+    // Player sprite owns its geometry/material plus the outline child.
+    disposeMeshTree(this.playerMesh)
   }
 
   // The circuit-breaker scene projects a route_health encounter state. The
@@ -170,15 +181,15 @@ export class WorldRenderer {
     for (const mesh of this.staticMeshes) {
       this.scene.remove(mesh)
       if (!mesh.userData["isSharedTile"]) {
-        // Fallback mesh using its own material
-        disposeMaterial(mesh)
+        // Gate meshes own their geometry/material; tiles share theirs.
+        disposeMeshTree(mesh)
       }
     }
     this.staticMeshes.length = 0
     for (const mesh of this.npcMeshes.values()) {
       this.scene.remove(mesh)
-      mesh.geometry.dispose()
-      disposeMaterial(mesh)
+      // Sprite meshes carry an outline child with its own geometry/material.
+      disposeMeshTree(mesh)
     }
     this.npcMeshes.clear()
     this.gateMeshes.clear()
@@ -206,6 +217,18 @@ function disposeMaterial(mesh: Mesh): void {
     }
   } else {
     material.dispose()
+  }
+}
+
+// Disposes a mesh's own geometry/material plus any child meshes (sprite
+// outlines own a separate geometry and material).
+function disposeMeshTree(mesh: Mesh): void {
+  mesh.geometry.dispose()
+  disposeMaterial(mesh)
+  for (const child of mesh.children) {
+    if (child instanceof Mesh) {
+      disposeMeshTree(child)
+    }
   }
 }
 

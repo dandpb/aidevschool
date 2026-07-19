@@ -41,7 +41,7 @@ TEMPLATE = """# Promote {slug} from scaffolded -> implemented
 ## On promotion
 1. Update curriculum/BACKLOG_STATUS.md: status = implemented
 2. Update curriculum/catalog.md: Status field + coverage fields
-3. Update curriculum/{nn}/docs/status.md: phase = cycle-complete
+3. Update curriculum/{slug}/docs/status.md: phase = cycle-complete
 4. Append a generalization to learner/journal.md (per Mnemosyne curation contract)
 5. Run python3 -m learner.substrate (regenerates derived views)
 """
@@ -68,9 +68,8 @@ def write_promote(project_dir: Path) -> str:
     target = project_dir / "PROMOTE.md"
     if target.exists():
         return "skipped"
-    nn = project_dir.name.split("_", 1)[0]
     slug = project_dir.name
-    target.write_text(TEMPLATE.format(slug=slug, nn=nn))
+    target.write_text(TEMPLATE.format(slug=slug))
     return "created"
 
 

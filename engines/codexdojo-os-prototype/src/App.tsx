@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AppContent } from './apps/AppContent'
 import { appTitles } from './apps/appCatalog'
 import { learnerSnapshot } from './data/learner'
@@ -43,6 +43,9 @@ export function App({ learner = learnerSnapshot }: AppProps) {
   const [learningContext, setLearningContext] = useState<LearningContext>(coreContexts.dojo)
   const [toast, setToast] = useState<string | null>(null)
   const maxZ = useRef(3)
+  const toastTimer = useRef<number | undefined>(undefined)
+
+  useEffect(() => () => window.clearTimeout(toastTimer.current), [])
 
   const teach = (context: LearningContext) => {
     setLearningContext(context)
@@ -108,7 +111,8 @@ export function App({ learner = learnerSnapshot }: AppProps) {
         ? 'está no próximo ciclo de prototipação'
         : 'está mapeado no roadmap'
     setToast(`${app.name} ${phase}.`)
-    window.setTimeout(() => setToast(null), 2600)
+    window.clearTimeout(toastTimer.current)
+    toastTimer.current = window.setTimeout(() => setToast(null), 2600)
     teach({
       eyebrow: 'Catálogo incremental',
       title: app.name,

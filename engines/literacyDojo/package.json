@@ -1,0 +1,41 @@
+{
+  "name": "literacydojo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "LiteracyDojo — microaprendizagem de IA para pessoas não técnicas (vertical slice, Fase 1 do plano 2026-07-19).",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "biome check src tests playwright",
+    "lint:fix": "biome check --write src tests playwright",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "gen:content": "cd ../.. && /usr/local/bin/python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated",
+    "pretest": "npm run gen:content",
+    "prebuild": "npm run gen:content",
+    "pretest:e2e": "npm run gen:content"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@playwright/test": "1.49.1",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@testing-library/user-event": "14.5.2",
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5",
+    "@vitejs/plugin-react": "4.3.4",
+    "fake-indexeddb": "6.0.0",
+    "jsdom": "25.0.1",
+    "typescript": "5.7.3",
+    "vite": "6.0.11",
+    "vitest": "3.0.5"
+  }
+}

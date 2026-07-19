@@ -48,6 +48,7 @@ export class PixelQuestApp {
   private world: WorldState = createWorld(this.loaded.pack, firstCurriculumRegionId())
   private activeNpc: RegionNpc | undefined
   private activeEncounter: EncounterState | undefined
+  private tickFrame: number | undefined
 
   constructor(host: HTMLElement) {
     const shell = document.createElement("main")
@@ -81,11 +82,15 @@ export class PixelQuestApp {
       getPlayerTile: () => this.world.player.position,
     }
     this.render()
-    requestAnimationFrame(() => this.tick())
+    this.tickFrame = requestAnimationFrame(() => this.tick())
   }
 
   dispose(): void {
     window.removeEventListener("keydown", this.onKeyDown)
+    if (this.tickFrame !== undefined) {
+      cancelAnimationFrame(this.tickFrame)
+      this.tickFrame = undefined
+    }
     this.renderer.dispose()
   }
 
@@ -100,7 +105,7 @@ export class PixelQuestApp {
 
   private tick(): void {
     this.renderer.sync(this.world)
-    requestAnimationFrame(() => this.tick())
+    this.tickFrame = requestAnimationFrame(() => this.tick())
   }
 
   private handleAction(action: InputAction): void {

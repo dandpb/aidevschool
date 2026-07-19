@@ -500,7 +500,7 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
 def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[str, Any]:
     """Load the canonical state and raise on invariant violations."""
     state = load_canonical(path)
-    state_path = Path(path).resolve()
+    state_path = resolve_canonical_path(path).resolve()
     root = state_path.parent.parent if state_path.parent.name == "learner" else ROOT
     errors = validate(state, root)
     if errors:

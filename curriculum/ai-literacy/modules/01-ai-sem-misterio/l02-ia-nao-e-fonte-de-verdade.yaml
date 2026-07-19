@@ -1,0 +1,72 @@
+# Lição l02 — piloto da vertical slice (seção 17 do plano).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l02
+version: 2
+moduleId: mod-01
+title: "IA não é uma fonte de verdade"
+objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
+estimatedMinutes: 4
+skillIds: [entender, avaliar]
+prerequisites: [l01]
+
+activities:
+  - id: l02-a1
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Duas respostas de IA para o mesmo pedido estão abaixo. Escolha qual delas é mais confiável para usar no trabalho e marque os motivos que justificam a sua escolha."
+    data:
+      scenario: "Você pediu à IA: 'Quais são os números do mercado de delivery de comida no Brasil?' para embasar uma apresentação para a diretoria."
+      outputs:
+        - id: out-a
+          text: "O mercado de delivery no Brasil movimentou R$ 48,7 bilhões no último ano, crescendo 23,4% em relação ao ano anterior. São 112 milhões de usuários ativos, com ticket médio de R$ 42,50. A previsão para o próximo ano é de R$ 61,2 bilhões. Pode usar esses números direto na sua apresentação."
+        - id: out-b
+          text: "Não tenho acesso a dados oficiais auditados desse mercado e qualquer número exato que eu der pode estar desatualizado ou inventado. O caminho seguro é checar relatórios de associações do setor (como a ABRASEL) ou de consultorias antes de apresentar. Se quiser, eu monto a estrutura da sua análise com espaços para você preencher com os números verificados."
+      criteria:
+        - id: c-fontes
+          text: "Diz de onde vêm os números ou onde verificá-los"
+        - id: c-limites
+          text: "Deixa claro o que a IA não sabe ou o que é estimativa"
+        - id: c-confianca
+          text: "Apresenta números bem detalhados com total confiança"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-b
+      requiredCriterionIds: [c-fontes, c-limites]
+    feedback:
+      onFailure: "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?"
+      perCheck:
+        betterOutputId: "A resposta A parece ótima, mas nenhum número tem fonte — a IA pode ter inventado valores que só parecem precisos. A resposta B diz o que não sabe e indica onde confirmar."
+        c-fontes: "Faltou este motivo: uma resposta confiável indica a origem dos dados ou onde verificá-los."
+        c-limites: "Faltou este motivo: uma resposta confiável deixa claro o que é estimativa ou desconhecido."
+      onSuccess: "Isso! Resposta útil é a que diz de onde vem a informação e o que precisa ser verificado — não a que soa mais confiante."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare as duas respostas procurando uma coisa só: de onde saíram os números?"
+      - "Uma resposta que admite o que não sabe costuma ser mais confiável do que uma cheia de números exatos."
+      - "A resposta B diz o que não sabe e indica onde confirmar; marque os motivos ligados a fonte e a limites."
+
+rubric:
+  id: l02-rubric
+  criteria:
+    - id: r-identifica-risco
+      text: "Reconhece que uma resposta convincente sem fonte pode estar inventada."
+      weight: 1
+    - id: r-escolhe-verificavel
+      text: "Prefere a resposta que declara limites e indica como verificar."
+      weight: 1
+    - id: r-justifica-criterios
+      text: "Justifica a escolha com critérios de verificação, não com a aparência da resposta."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l02-a1]

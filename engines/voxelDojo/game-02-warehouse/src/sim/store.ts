@@ -77,7 +77,7 @@ export function put<V>(
   return entry
 }
 
-/** Remaining lifetime in ms (`null` ⇒ no expiry), or `-1` if missing / already past deadline. */
+/** Absolute expiry deadline in ms (`null` ⇒ no expiry), or `-1` if missing / already past deadline. */
 export function remainingTtl<V>(store: Store<V>, key: string, now: Clock): number | null {
   const entry = store.entries.get(key)
   if (entry === undefined) return -1

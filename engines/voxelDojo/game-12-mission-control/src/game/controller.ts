@@ -204,6 +204,7 @@ export class GameController {
 
   /** Predict `stationId` as the successor after a kill (L2) or while resuming (L4). */
   predictSuccessor(stationId: string): void {
+    if (this.state.phase !== "predicting") return
     const election = this.state.election
     if (!election || this.state.killedLeaderId === null) return
     if (this.state.level.id === "L2") {

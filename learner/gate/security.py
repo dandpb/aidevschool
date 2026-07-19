@@ -121,11 +121,24 @@ def latest_gated_evidence_timestamp(
     units_log: list[dict[str, Any]], unit_id: str
 ) -> str | None:
     latest: str | None = None
+    latest_parsed: datetime | None = None
     for entry in units_log:
         if entry.get("unit_id") != unit_id:
             continue
         for review in entry.get("reviews") or []:
             timestamp = review.get("evidence_ts")
-            if isinstance(timestamp, str) and (latest is None or timestamp > latest):
+            if not isinstance(timestamp, str):
+                continue
+            try:
+                parsed = parse_aware_timestamp(timestamp)
+            except ValueError:
+                # Unparseable stored value: surface it so the caller flags it.
+                if latest is None:
+                    latest = timestamp
+                continue
+            # Compare instants, not strings: ISO-8601 offsets make lexicographic
+            # order unreliable ("12:00+02:00" sorts after "11:00Z" yet is earlier).
+            if latest_parsed is None or parsed > latest_parsed:
+                latest_parsed = parsed
                 latest = timestamp
     return latest

@@ -10,7 +10,8 @@ protocol used by the rest of the ecosystem.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Engine contract | `CLAUDE.md` | Authoritative local operating instructions. |
-| Subagents | `.claude/agents/` | Live role contracts; inventory this directory instead of copying counts here. |
+| Subagents | `.claude/agents/` | Claude Code wrappers only. Tutor personas live in `engines/minimaxDojo/prompts/per_agent/` (canonical). |
+| Tutor prompt canon | `../minimaxDojo/prompts/per_agent/` | Single source for shared agent personas; evolution agents must point there, not fork bodies. |
 | Slash commands | `.claude/commands/devschool/` | `/devschool-*` workflow entrypoints. |
 | Learning gate skill | `.claude/skills/agora-continuum/SKILL.md` | Gate protocol. |
 | Shared curriculum | `curriculum -> ../../curriculum` | Symlink; do not replace with real files. |
@@ -39,3 +40,4 @@ python3 -m pytest .claude/commands/devschool/tests/test_phaserunner.py
 - Do not replace symlinks with copied shared directories.
 - Do not update pipeline status to a later phase before verifier PASS.
 - Do not create recurring cloud schedules without explicit user confirmation.
+- Do not duplicate full agent system prompts under `.claude/agents/` when a minimaxDojo persona already exists — keep a thin wrapper + operational deltas only.

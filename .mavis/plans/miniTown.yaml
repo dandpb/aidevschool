@@ -1,0 +1,731 @@
+version: 1
+plan:
+  name: 'MiniTown — construir simulador cozy de cidade'
+  max_concurrency: 4
+  max_consecutive_failures: 2
+  max_cycles: 8
+  auto_reject_retries: 1
+  verifier_config:
+    default_verifiers: [verifier]
+    audit_sample_rate: 0.0
+tasks:
+  # =====================================================================
+  # T1: engine skeleton — Three.js + Vite + day/night + camera + explore
+  # Foundation: every other track depends on this and uses its scene API.
+  # =====================================================================
+  - id: engine-skeleton
+    title: 'Esqueleto do engine: Three.js + Vite + câmera top-down + ciclo dia/noite + Explore mode'
+    assigned_to: dev-node
+    max_retries: 2
+    prompt: |
+      Construa o esqueleto do engine MiniTown em `engines/miniTown/`. Este é
+      o alicerce: todas as outras tasks vão plugar sistemas aqui.
+
+      ## Estrutura de diretórios
+      Crie exatamente esta árvore:
+      ```
+      engines/miniTown/
+        package.json
+        index.html
+        vite.config.ts
+        tsconfig.json
+        biome.json
+        playwright.config.ts
+        src/
+          main.ts            # entry: cria canvas, instancia Town, monta HUD stub
+          scene/
+            sceneRoot.ts     # cria THREE.Scene, renderer, fog, céu gradiente
+            camera.ts        # câmera perspectiva slightly top-down (~35°), orbit amortecido
+            dayNight.ts      # ciclo dia/noite 24 sim-hours = 5 min real; expõe tick(dt) + getPhase()
+            ground.ts        # grid 20x20 de tiles de grama com leve variação de cor por célula
+            state.ts         # API pública: WorldState, Town class, addZone(), addRoad(), addBuilding(), addResident(), addVehicle(), tick(dt)
+          game/
+            controller.ts    # TownController que possui a Town e expõe API para HUD/testes
+          evidence/
+            e2e.contract.ts  # exporta window.__miniTown com controller, scene, getSnapshot()
+        tests/
+          unit.test.ts       # vitest: tick() do day/night avança fase, scene adiciona objetos
+      ```
+
+      ## Tech stack (obrigatório)
+      - Three.js ~0.170, TypeScript ~5.7, Vite ~6
+      - biome 2.x para lint
+      - vitest para unit tests
+      - playwright para smoke (config pronto, smoke test vem em outra task)
+      - Node 20+, pnpm
+      - Sem dependências de runtime extras além de three
+
+      ## Comportamento que esta task DEVE entregar
+      1. `pnpm install` e `pnpm run build` rodam sem erro.
+      2. `pnpm run dev` sobe Vite e a página carrega: vê-se um terreno 20x20
+         de grama, câmera orbit levemente top-down (pitch ~35°, distance ~35
+         unidades), céu gradiente, e o ciclo dia/noite avançando suavemente.
+      3. Day/night cycle: expõe `state.dayNight.tick(dt)` que avança
+         `simTime` (em horas 0-24) e retorna fase atual
+         (dawn/morning/noon/afternoon/sunset/dusk/night). O sol (DirectionalLight)
+         se move no céu, o HemisphereLight e o AmbientLight interpolam cores
+         frias↔quentes, a cor de fundo do céu interpola. Inicie simTime=8 (manhã).
+      4. Camera: orbit amortecido em torno do centro (0,0,0). Mouse drag = orbitar,
+         scroll = zoom limitado (min 15, max 60 unidades).
+      5. Estado global mínimo: `Town` mantém arrays de zones, roads, buildings,
+         residents, vehicles (todos vazios por enquanto). Expõe
+         `addZone(t: ZoneType, x, y)`, `addRoad(cell)`, `addBuilding(b)`, `tick(dt)`.
+         `tick(dt)` é chamado via requestAnimationFrame e delega para day/night e
+         simulação (vazio por enquanto, mas já no loop).
+      6. `window.__miniTown = { controller, scene, getSnapshot() }` para testes.
+         `getSnapshot()` retorna `{ simTime, phase, zoneCount, roadCount, buildingCount, residentCount, vehicleCount }`.
+      7. Tests vitest: `simTime` avança ao chamar `tick` repetidamente, e fase
+         muda após acumular horas suficientes. Cubra pelo menos 2 testes
+         determinísticos (não dependem de canvas).
+      8. `pnpm run typecheck` (tsc --noEmit) passa sem erro.
+      9. `pnpm run lint` (biome check src) passa sem erro.
+
+      ## Direção visual
+      Ler `engines/miniTown/docs/concepts/CONCEPTS.md` integralmente. Seguir
+      paleta e estilo descritos. Para a grama use tons sage/musgo (#7fa572,
+      #88b27a, #6f9663) com leve variação per-cell. Céu gradiente: dia
+      (#a3d0e8 → #cfe6f0), noite (#1a2238 → #0d1424), com sun.position
+      movendo em arco de leste a oeste. Fog expõe #c0d5e0 no dia, #1a2238 à
+      noite, com near 30 / far 80.
+
+      ## Padrão de organização
+      Olhe `engines/voxelDojo/game-10-hash-ring/` como referência de layout
+      (src/main.ts, scene/, sim/, evidence/) e de scripts no package.json
+      (dev, build, test, typecheck, lint). Mas este engine é standalone —
+      sem workspace, sem dependência @aidevschool/evidence. Não copie
+      `createSceneHarness` do voxelDojo; o Town aqui é mais simples.
+
+      ## Restrições críticas
+      - NÃO criar zones, roads, buildings, residents, vehicles ainda — apenas
+        a estrutura para que outras tasks preencham. Métodos addX() podem
+        ser no-op ou só guardar no array.
+      - NÃO criar HUD visual ainda. Apenas um `<div id="app"></div>` vazio
+        no `index.html` e um `mountHud()` stub que loga no console.
+      - NÃO usar webfetch / web search nesta task.
+      - NÃO mexer em `engines/voxelDojo/`, `engines/pixelDojo/`,
+        `engines/codexDojo/`, `engines/miniMaxEvolutionEngine/`, `engines/minimaxDojo/`,
+        `engines/openclaw/`, `engines/codexdojo-os-prototype/`, `engines/phantasy-codex-adventure/`,
+        `engines/phantasyCodexAdventure/`, `engines/shared/`, ou arquivos na raiz.
+      - Não criar nada em `engines/miniTown/docs/concepts/`.
+
+      ## Verificação que você mesmo roda antes de reportar
+      1. `cd engines/miniTown && pnpm install && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build` — tudo verde.
+      2. `pnpm run dev` em background, abre `http://127.0.0.1:5173/` via curl ou
+         wget, verifica status 200. Mata o processo.
+
+      ## Reportar
+      Ao final, responda com:
+      - Lista de arquivos criados (paths relativos a `engines/miniTown/`)
+      - Output dos 4 comandos acima
+      - Hash do último commit git
+      - Qualquer desvio deste prompt (com justificativa)
+    verified_by: verifier
+    verify_prompt: |
+      Verifique de forma ADVERSARIAL. NÃO leia só o diff; RODE o engine.
+
+      1. Rode `cd engines/miniSchool && pnpm install` (corrigir path para
+         `engines/miniTown` se necessário) e em seguida:
+         `pnpm run typecheck`, `pnpm run lint`, `pnpm run test`, `pnpm run build`.
+         Todos devem passar. Reporte o exit code de cada um.
+      2. Confirme a existência da árvore de diretórios descrita no prompt
+         (src/scene/, src/game/, src/evidence/, tests/).
+      3. Inspecione `src/scene/dayNight.ts`: confirme que a função `tick(dt)`
+         existe, aceita delta-time em segundos, e avança `simTime` módulo 24.
+         Force um tick grande (ex: tick(7 * 3600) = 7 horas) e verifique que
+         a fase retornada é coerente (ex: 8h → morning, 19h → dusk, 22h → night).
+      4. Inspecione `src/scene/state.ts` ou equivalente: confirme que existe
+         uma classe `Town` com métodos `addZone`, `addRoad`, `addBuilding`,
+         `addResident`, `addVehicle`, `tick`. Confirme que `getSnapshot()`
+         retorna o shape esperado.
+      5. Inicie `pnpm run dev` em background. Aguarde 3 segundos. Faça um
+         `curl -s http://127.0.0.1:5173/` e confirme HTTP 200. Verifique
+         que a resposta HTML referencia o bundle JS do Vite e tem um canvas
+         ou mount point. Mate o processo.
+      6. Confirme que `window.__miniTown` está exposto. Rode um script Node
+         ou use o playwright (se já configurado) para carregar a página,
+         esperar 500ms, e logar `window.__miniTown.getSnapshot()`. O
+         snapshot deve mostrar simTime próximo de 8 e contadores zerados.
+      7. Verifique que o engine NÃO importou de engines/voxelDojo/ ou
+         engines/shared/ ou engines/pixelDojo/ (rg "from ['\"]@?engines/"
+         em engines/miniTown/src/ deve dar zero matches).
+
+      PASS só se todos os 7 pontos passam. FAIL com lista numerada do que falhou.
+    output:
+      files:
+        - engines/miniTown/package.json
+        - engines/miniTown/index.html
+        - engines/miniTown/vite.config.ts
+        - engines/miniTown/tsconfig.json
+        - engines/miniTown/biome.json
+        - engines/miniTown/playwright.config.ts
+        - engines/miniTown/src/main.ts
+        - engines/miniTown/src/scene/sceneRoot.ts
+        - engines/miniTown/src/scene/camera.ts
+        - engines/miniTown/src/scene/dayNight.ts
+        - engines/miniTown/src/scene/ground.ts
+        - engines/miniTown/src/scene/state.ts
+        - engines/miniTown/src/game/controller.ts
+        - engines/miniTown/src/evidence/e2e.contract.ts
+        - engines/miniTown/tests/unit.test.ts
+      minimum_size_kb: 12
+
+  # =====================================================================
+  # T2: world construction — zone placement, auto roads, building stages
+  # Depends on T1 (scene API).
+  # =====================================================================
+  - id: world-construction
+    title: 'Construção do mundo: zone placement, auto-roads, estágios de construção, blocos conectados'
+    assigned_to: dev-node
+    depends_on: [engine-skeleton]
+    max_retries: 2
+    prompt: |
+      Implemente a camada de "world construction" do MiniTown. Você depende
+      do esqueleto criado por `engine-skeleton`. Trabalhe em
+      `engines/miniTown/src/` apenas.
+
+      ## O que você vai criar
+      - `src/sim/grid.ts` — `Grid` class: 20x20 cells, `inBounds(x,y)`,
+        `cellAt(x,y)`, `setCell(x,y, occupant)`. Cell types:
+        'grass' | 'road' | 'zone' (zone tem sub-tipo: residential/shop/workspace).
+      - `src/sim/zones.ts` — `ZoneType = 'residential' | 'shop' | 'workspace'`.
+        Função `placeZone(town, grid, type, x, y)` valida cell é grass e
+        marca como zone.
+      - `src/sim/roads.ts` — `recomputeRoads(grid)`: depois de cada
+        placement, varre a grid. Uma cell vira 'road' se: (a) é gramado
+        adjacente a uma cell zoneada, ou (b) é gramado adjacente a uma
+        outra road E adjacente a uma zone. Para o requisito de
+        "blocos conectados" ver seção dedicada.
+      - `src/scene/zones.ts` — renderiza zones como um placeholder de
+        construção: foundation slab de cor por zone type
+        (residential=azul claro, shop=verde claro, workspace=amarelo claro)
+        até o estágio de construção avançar. Use BoxGeometry achatada.
+      - `src/scene/roads.ts` — renderiza roads como plano cinza escuro
+        com listras brancas de faixa (use PlaneGeometry + textura procedural
+        via canvas, ou BoxGeometry muito fino com material listrado).
+      - `src/sim/construction.ts` — `BuildingConstruction` state machine:
+        'plot' → 'foundation' → 'frame' → 'roofed' → 'inhabited'. Cada
+        estágio dura 8 sim-seconds. Implementa `tick(dt)`, `getStage()`,
+        `getProgress()`. O transition de frame→roofed aplica variação
+        procedural (seed determinístico por building id).
+      - `src/scene/buildings.ts` — renderiza buildings conforme o stage.
+        Plot: dirt + 4 stakes (cilindros pequenos). Foundation: slab cinza.
+        Frame: paredes (BoxGeometry) sem telhado. Roofed: paredes + telhado
+        (prisma inclinado) + janelas (planos escuros). Inhabited: igual a
+        roofed mas com point light amarelo quente por janela (use
+        PointLight por building, intensidade pequena).
+      - `src/sim/variation.ts` — seeded RNG (mulberry32). Dado um building
+        id, retorna `{ wallColor, roofColor, roofStyle (pitched/flat),
+        height (1-3), hasGarden, hasAwning }`. Garanta que dois
+        buildings adjacentes não fiquem idênticos.
+      - `src/game/placementController.ts` — `PlacementController`:
+        recebe o estado do mouse, expõe `onMouseDown/Move/Up`. Implementa
+        click-and-drag para retângulos de zones: ao pressionar botão,
+        começa em (x0,y0); ao arrastar, mostra preview verde translúcido
+        do retângulo (1×1 a 1×3, 2×2, 2×3, 3×3 máx); ao soltar, valida
+        que todas as cells do retângulo são grass e chama `placeZone`
+        para cada cell. Use raycasting contra um invisible plane no chão.
+        Distingue clique simples (1×1) de drag (NxM) pelo movimento
+        entre mousedown e mouseup.
+      - Estenda `src/scene/state.ts` (ou o arquivo equivalente criado
+        pelo engine-skeleton) para que `Town` tenha: lista de `Zone`,
+        lista de `Building` (com construction), referência ao `Grid`.
+        O método `placeZone` deve: (1) marcar a cell, (2) criar um
+        Building novo no stage 'plot', (3) recomputar roads, (4) re-render.
+
+      ## Blocos conectados (requisito crítico)
+      Quando o retângulo tem 2+ cells:
+      - Cada cell ganha seu próprio Building (com seu próprio type se
+        o jogador usou 1 zone type, ou o jogador pode misturar? — não,
+        o retângulo inteiro usa o zone type selecionado no momento do
+        drag, e cada cell vira um building desse type).
+      - As cells ficam fundidas visualmente: paredes compartilhadas
+        (não desenha parede entre cells vizinhas do mesmo bloco).
+      - Roads só aparecem ao redor do PERÍMETRO externo do bloco.
+        Internamente, entre cells do mesmo bloco, NÃO há road.
+      - Implemente isso via um "block id" no Grid: cells com mesmo
+        blockId formam um bloco. `recomputeRoads` ignora adjacências
+        entre cells de mesmo blockId.
+
+      ## Direção visual
+      Ler `engines/miniTown/docs/concepts/CONCEPTS.md` (foco nas seções
+      "Buildings (3 zone types)", "Construction stages", "Multi-building
+      blocks"). Use a paleta e geometria descritas. Cada building ≤ 200 tris.
+
+      ## Restrições críticas
+      - NÃO criar residents, vehicles, ou HUD visual. Você implementa
+        a infra que a próxima task de simulação vai popular.
+      - NÃO modificar arquivos de outras tasks (controller, dayNight,
+        sceneRoot, camera, ground, main). Você só adiciona arquivos novos
+        ou estende state.ts/grid.ts.
+      - NÃO criar nada em `engines/miniTown/docs/concepts/`.
+      - NÃO usar webfetch / web search.
+      - NÃO mexer em outros engines.
+
+      ## Verificação que você mesmo roda antes de reportar
+      1. `cd engines/miniTown && pnpm run typecheck && pnpm run lint && pnpm run test && pnpm run build` — tudo verde.
+      2. Teste manual via window.__miniTown: chame
+         `controller.placeZone('residential', 5, 5)`, depois
+         `controller.placeZone('shop', 6, 5)`, depois
+         `controller.placeZone('workspace', 7, 5)`. Confirme via
+         getSnapshot que zoneCount=3, roadCount>0 (ao menos 6 cells
+         de road ao redor do bloco 1×3). Confirme que cell (5,5),
+         (6,5), (7,5) são zone, mas (6,5) não tem road entre
+         (5,5) e (7,5).
+      3. Force `controller.tick(50)` (50 sim-seconds) e confirme que
+         todos os buildings passaram pelo menos para o estágio 'roofed'.
+
+      ## Reportar
+      Lista de arquivos criados/modificados, output dos 4 comandos, hash
+      do commit, qualquer desvio.
+    verified_by: verifier
+    verify_prompt: |
+      Verificação ADVERSARIAL. RODE o engine e TESTE o comportamento.
+
+      1. `cd engines/miniTown && pnpm install && pnpm run typecheck &&
+         pnpm run lint && pnpm run test && pnpm run build` — todos
+         verdes. Reporte exit code de cada.
+      2. Inicie `pnpm run dev` em background. Aguarde 3s. Use playwright
+         (config já existe) para abrir http://127.0.0.1:5173/.
+      3. Aguarde 500ms. Execute no console do browser:
+         ```js
+         const c = window.__miniTown.controller;
+         c.placeZone('residential', 5, 5);
+         c.placeZone('shop', 6, 5);
+         c.placeZone('workspace', 7, 5);
+         c.placeZone('residential', 10, 10);
+         console.log(JSON.stringify(window.__miniTown.getSnapshot()));
+         ```
+         Capture e relate o snapshot.
+      4. Inspecione o snapshot: zoneCount=4. roadCount >= 10 (perímetro
+         do bloco 1×3 + perímetro do zone 1×1 isolado). Nenhuma cell
+         road está em (5,5), (6,5), (7,5), ou (10,10).
+      5. Force o tempo: `c.tick(60)` (60 sim-seconds). getSnapshot deve
+         mostrar todos os 4 buildings com stage >= 'roofed'.
+      6. Inspecione `src/sim/roads.ts`: confirme que `recomputeRoads`
+         implementa a regra de blockId para não criar roads internas
+         entre cells de mesmo bloco. Procure a string 'blockId' no
+         código.
+      7. Inspecione `src/sim/construction.ts`: confirme que o state
+         machine tem os 5 estágios (plot/foundation/frame/roofed/inhabited)
+         e que cada estágio dura ~8 sim-seconds.
+      8. Teste o drag: simule no playwright `mouse.down` em (x1,y1),
+         `mouse.move` para (x2,y2) com 5 passos intermediários,
+         `mouse.up`. Confirme que o retângulo criado tem o tamanho
+         esperado. Use a API pública para isso, ex: helper de teste
+         `controller.placeZoneRect('residential', x, y, w, h)`.
+
+      PASS só se todos os 8 pontos passam. FAIL com lista numerada.
+    output:
+      files:
+        - engines/miniTown/src/sim/grid.ts
+        - engines/miniTown/src/sim/zones.ts
+        - engines/miniTown/src/sim/roads.ts
+        - engines/miniTown/src/sim/construction.ts
+        - engines/miniTown/src/sim/variation.ts
+        - engines/miniTown/src/scene/zones.ts
+        - engines/miniTown/src/scene/roads.ts
+        - engines/miniTown/src/scene/buildings.ts
+        - engines/miniTown/src/game/placementController.ts
+      minimum_size_kb: 18
+
+  # =====================================================================
+  # T3: agent simulation — residents + cars on roads
+  # Depends on T2 (zones/roads/buildings exist).
+  # =====================================================================
+  - id: agent-simulation
+    title: 'Simulação de agentes: residents com rotinas + carros dirigindo nas roads'
+    assigned_to: dev-node
+    depends_on: [world-construction]
+    max_retries: 2
+    prompt: |
+      Implemente a camada de simulação de agentes do MiniTown. Você
+      depende de `world-construction` que criou zones, roads, e
+      buildings com estágio 'inhabited'. Trabalhe em
+      `engines/miniTown/src/sim/` e `engines/miniTown/src/scene/`.
+
+      ## Residentes
+      - `src/sim/residents.ts` — `Resident`:
+        - Atributos: `id, name (gerado deterministicamente a partir do id,
+          ex: 'Aldo Renoir', 'Beatriz Lima'), home: buildingId,
+          work: buildingId | null, color (4-6 variantes), currentActivity
+          ('home' | 'walking' | 'working' | 'shopping'),
+          currentCell: {x, y}, destination: {x, y, buildingId} | null,
+          speed: 1.5 units/sec.
+        - Métodos: `tick(dt, town)`, `getActivity()`.
+      - `src/sim/schedules.ts` — schedule determinístico baseado em
+        simTime (hora do dia):
+        - 0-6: dormir (home)
+        - 6-8: sair de casa → work (residents com work assigned)
+        - 8-12: working
+        - 12-13: lunch break → shop mais próximo → working
+        - 13-17: working
+        - 17-19: leave work → shop ou home
+        - 19-22: home (loitering, occasional shop)
+        - 22-24: home
+      - `src/sim/paths.ts` — pathfinding simples em grid:
+        `findPath(grid, from, to)` usando BFS no grafo de cells road/zone
+        adjacentes. Retorna array de {x,y} ou null. Distância de Manhattan,
+        com tie-break aleatório. Custo: cells road = 1, cells zone = 2
+        (moradores atravessam zonas devagar). Cache LRU(64) por par
+        (fromHash, toHash).
+      - `src/sim/spawn.ts` — `spawnResidentsForTown(town)`:
+        para cada building no stage 'inhabited' e type === 'residential',
+        sorteie 1-3 residents cuja home = buildingId. Para cada
+        workspace inhabited, atribua work a residents cujo home está
+        a <=8 cells de Manhattan. Para cada shop inhabited, shoppers
+        serão residents visitantes (não persistentes).
+      - `src/scene/residents.ts` — renderiza cada resident como:
+        corpo (cilindro pequeno 0.3 raio, 0.5 altura, cor da shirt),
+        cabeça (esfera 0.15 raio, cor skin), pernas (2 cilindros 0.08
+        raio, 0.3 altura, cor escura). Animação simples de walk:
+        pernas oscilam com `Math.sin(t * 8) * 0.3` rad. Rotação
+        facial sempre olhando para destination.
+
+      ## Veículos (cars)
+      - `src/sim/vehicles.ts` — `Vehicle`:
+        - Atributos: `id, color, currentCell, path: {x,y}[], progressAlongSegment,
+          speed: 4 units/sec (cars são mais rápidos que pedestres).
+        - `tick(dt, town)`: avança ao longo do path. Se traffic ahead
+          (outro veículo na mesma cell ou cell adjacente no path), reduz
+          speed. Quando chega ao destino, escolhe novo destino
+          (workplace/shop aleatório inhabited) e recalcula path.
+      - `src/sim/traffic.ts` — `spawnVehiclesForTown(town)`: 1 car
+        por 3 residents, max 20 cars. Distribuir entre 4 cores.
+      - `src/scene/vehicles.ts` — renderiza cada car como: corpo
+        (BoxGeometry 1.0 x 0.4 x 0.5, cor), capô (BoxGeometry menor
+        em cima, mesma cor), 4 rodas (cilindros 0.15 raio, 0.1 altura,
+        pretos). Rotação alinhada com a direção do path.
+
+      ## Integração com o tick do Town
+      Estenda o método `tick(dt)` da Town (de state.ts) para chamar:
+      1. `dayNight.tick(dt)` (já existe, não modificar)
+      2. `construction.tick(dt)` em cada building (já existe)
+      3. `residents.tick(dt)` em cada resident (você adiciona)
+      4. `vehicles.tick(dt)` em cada vehicle (você adiciona)
+      5. `recomputeRoads(grid)` quando buildings entram em 'inhabited'
+         (já existe, não modificar)
+
+      ## Direção visual
+      Ler seção "People & cars" de `engines/miniTown/docs/concepts/CONCEPTS.md`.
+      Residentes e carros em low-poly com cores limitadas (4-6 variantes).
+      Sem rostos. Animação de pernas oscilando. Sem sprite textures —
+      geometria pura.
+
+      ## Restrições críticas
+      - NÃO criar HUD visual (próxima task).
+      - NÃO modificar arquivos de outras tasks além de state.ts e
+        main.ts (para plugar os ticks).
+      - NÃO criar nada em `engines/miniTown/docs/concepts/`.
+      - NÃO usar webfetch / web search.
+      - Performance: cap residents em 50, vehicles em 20. Se Town
+        tiver mais buildings inhabited, sorteia o subset a popular.
+
+      ## Verificação que você mesmo roda
+      1. `cd engines/miniTown && pnpm run typecheck && pnpm run lint &&
+         pnpm run test && pnpm run build` — verde.
+      2. Inicie dev server em background, abra com playwright:
+         ```js
+         const c = window.__miniTown.controller;
+         for (let i = 5; i < 12; i++) c.placeZone('residential', i, 5);
+         c.placeZone('workspace', 8, 9);
+         c.placeZone('shop', 9, 9);
+         c.tick(120); // 2 min sim para construir tudo
+         console.log(JSON.stringify(window.__miniTown.getSnapshot()));
+         ```
+         Confirme que residentCount > 0 e vehicleCount > 0.
+      3. Após mais `c.tick(60)` (1 min sim = 8h sim avançando),
+         confirme via console que pelo menos 2 residents têm
+         currentActivity === 'working' ou 'shopping'.
+
+      ## Reportar
+      Arquivos criados/modificados, output dos 4 comandos, hash do
+      commit, qualquer desvio.
+    verified_by: verifier
+    verify_prompt: |
+      Verificação ADVERSARIAL.
+
+      1. `cd engines/miniTown && pnpm run typecheck && pnpm run lint &&
+         pnpm run test && pnpm run build` — verde. Reporte exit codes.
+      2. Inicie dev server. Playwright:
+         ```js
+         const c = window.__miniTown.controller;
+         for (let i = 4; i < 13; i++) c.placeZone('residential', i, 5);
+         for (let i = 4; i < 10; i++) c.placeZone('workspace', i, 10);
+         c.placeZone('shop', 12, 7);
+         c.placeZone('shop', 5, 7);
+         c.tick(150);
+         const s1 = window.__miniTown.getSnapshot();
+         ```
+         Confirme s1.residentCount >= 3 e s1.vehicleCount >= 1.
+      3. `c.tick(450)` (7.5 min sim = ~1 dia sim). getSnapshot deve
+         mostrar residents com activities variadas: pelo menos 1
+         'walking', 1 'working', 1 'home' (em horas diferentes).
+         Pegue `c.getResidentsState()` (adicione se não existir)
+         que retorna array com `{id, name, currentActivity,
+         currentCell, destination}` para os primeiros 5 residents.
+      4. Inspecione `src/sim/schedules.ts`: confirme que cobre
+         as 24h (0-6, 6-8, 8-12, 12-13, 13-17, 17-19, 19-22, 22-24).
+      5. Inspecione `src/sim/paths.ts`: confirme BFS com custo
+         road=1, zone=2. Force um path de (0,0) a (5,5) em uma grid
+         parcialmente road e confirme que retorna o caminho.
+      6. Confirme performance: rode `c.tick(600)` (10 min sim) e
+         meça o tempo real. Não pode passar de 2 segundos real.
+
+      PASS só se os 6 pontos passam. FAIL com lista numerada.
+    output:
+      files:
+        - engines/miniTown/src/sim/residents.ts
+        - engines/miniTown/src/sim/schedules.ts
+        - engines/miniTown/src/sim/paths.ts
+        - engines/miniTown/src/sim/spawn.ts
+        - engines/miniTown/src/sim/vehicles.ts
+        - engines/miniTown/src/sim/traffic.ts
+        - engines/miniTown/src/scene/residents.ts
+        - engines/miniTown/src/scene/vehicles.ts
+      minimum_size_kb: 22
+
+  # =====================================================================
+  # T4: UI / HUD — zone palette, time bar, hover tooltips, explore mode
+  # Depends on T3 (residents + buildings exposed).
+  # =====================================================================
+  - id: ui-hud
+    title: 'UI / HUD: zone palette, time bar, hover tooltips, modo Explore'
+    assigned_to: dev-node
+    depends_on: [agent-simulation]
+    max_retries: 2
+    prompt: |
+      Implemente a UI/HUD do MiniTown. Você depende de
+      `agent-simulation` que expõe residents, buildings, vehicles, e
+      TownController. Trabalhe em `engines/miniTown/src/scene/`,
+      `engines/miniTown/src/game/`, e `engines/miniTown/index.html`.
+
+      ## O que você vai criar/estender
+      - `index.html`: adicione um `<div id="hud">` com:
+        - `<aside id="palette">` à esquerda, 4 botões (Explore, Residencial,
+          Loja, Trabalho). Cada botão tem um `<svg>` simples representando
+          o zone. Botão ativo = borda colorida.
+        - `<header id="topbar">` no topo, com hora atual formatada
+          ("08:14") + nome da fase ("Manhã"), barra de progresso fina
+          do dia, e ícone sol/lua que muda com a fase.
+        - `<div id="tooltip" class="hidden">` flutuante que segue o mouse
+          quando hover.
+      - `src/scene/hud.ts` — `mountHud(controller, town)`:
+        - Popula #palette com botões. Clicar num botão troca o modo
+          (variable em controller: 'explore' | 'residential' | 'shop' |
+          'workspace'). Em 'explore' o placementController fica inativo
+          (apenas câmera funciona). Nos outros, ativa placement.
+        - Top bar atualiza a cada 200ms: lê `town.dayNight.getPhase()`
+          e `town.dayNight.getSimTime()`, formata "HH:MM", e atualiza
+          texto e width da barra de progresso (0-100% do dia).
+        - Ícone sol/lua: SVG inline simples (círculo com raios para sol,
+          círculo com meia-lua para night, gradiente para sunset).
+        - Quando o modo é 'explore', cursor = 'grab' (ou 'pointer' em
+          hover de entity). Quando placement, cursor = 'crosshair'.
+      - `src/scene/tooltips.ts` — `wireTooltips(controller, town,
+        scene, camera)`:
+        - Raycast do mouse contra meshes da scene (buildings, residents,
+          vehicles). Use raycaster.setFromCamera(mouse, camera).
+        - Quando hover em building: tooltip mostra:
+          "**{typeLabel}** — {current}/{max} {occupantLabel}" (ex:
+          "**Residencial** — 2/3 moradores" ou "**Loja** — 4 clientes").
+          Para type 'residential' mostra residents que têm home ali.
+          Para 'workspace' mostra workers (residents com work ali).
+          Para 'shop' mostra residentes em currentActivity === 'shopping'
+          e destination === buildingId.
+        - Quando hover em resident: tooltip mostra:
+          "**{name}** — {activityLabel}" (ex: "**Aldo Renoir** —
+          indo trabalhar" / "**Beatriz Lima** — em casa").
+        - Tooltip segue o mouse com offset (+12, +12). Esconde
+          quando nada está sendo hovered. CSS transition 150ms
+          fade-in/out.
+        - Atalho: tecla `E` toggle modo Explore, `R` modo Residencial,
+          `S` modo Loja, `W` modo Trabalho.
+      - `src/scene/icons.ts` (ou inline no hud.ts) — SVGs:
+        - explore.svg: mão ou olho
+        - residential.svg: casa simples (triângulo telhado + quadrado)
+        - shop.svg: prédio com awning
+        - workspace.svg: prédio com janelas em grid
+      - Estilos em `src/scene/hud.css` (importado pelo main.ts):
+        - Fonte sans-serif limpa, peso 500. Cores translúcidas
+          (rgba(20,25,40,0.85)) com backdrop-filter blur. Texto claro
+          (#f4f0e6). Botões com hover state. Active state com borda
+          amarelo quente (#ffc861). Tooltip com padding 8px 12px,
+          max-width 240px.
+        - Responsivo: em telas < 800px largura, palette colapsa para
+          barra inferior com 4 botões horizontais.
+
+      ## Direção visual
+      Ler seção "HUD" de `engines/miniTown/docs/concepts/CONCEPTS.md` e
+      olhar `engines/miniTown/docs/concepts/08-ui-mockup.png` como
+      referência. Não copie o mockup pixel-a-pixel — use a mesma
+      linguagem visual (painel escuro translúcido, fonte sans-serif,
+      ícones simples), mas mantenha flexível.
+
+      ## Textos (pt-BR, conforme perfil do usuário)
+      Use estas strings no HUD:
+      - Modos: "Explorar", "Residencial", "Loja", "Trabalho"
+      - Top bar fases: "Madrugada", "Amanhecer", "Manhã", "Meio-dia",
+        "Tarde", "Entardecer", "Crepúsculo", "Noite"
+      - Tooltips building: "{type} — {n}/{max} {occupants}"
+        ("Residencial — 2/3 moradores", "Loja — 4 clientes",
+        "Trabalho — 5 funcionários")
+      - Tooltips residents: "{name} — {activity}"
+        ("Aldo Renoir — indo trabalhar", "Beatriz Lima — em casa",
+        "Carla Meireles — fazendo compras")
+
+      ## Restrições críticas
+      - NÃO modificar arquivos de outras tasks (state.ts, dayNight,
+        construction, paths, schedules, etc.) exceto o main.ts para
+        montar o HUD no boot.
+      - NÃO usar bibliotecas de UI (React, Vue, Svelte, Lit, etc.).
+        Vanilla TypeScript + DOM + CSS.
+      - NÃO criar nada em `engines/miniTown/docs/concepts/`.
+      - NÃO usar webfetch / web search.
+      - NÃO mexer em outros engines.
+
+      ## Verificação que você mesmo roda
+      1. `cd engines/miniTown && pnpm run typecheck && pnpm run lint &&
+         pnpm run test && pnpm run build` — verde.
+      2. Playwright: abra a página, confirme que
+         `#palette` tem 4 botões visíveis, `#topbar` tem texto de hora,
+         `#tooltip` começa hidden. Capture screenshot.
+      3. Clique no botão "Residencial" via playwright. Confirme que
+         o botão ganha classe 'active' e que o cursor do body vira
+         'crosshair'. Pressione 'E' e confirme volta para Explore
+         (cursor 'grab', botão "Explorar" ativo).
+      4. Após criar uma zone (via API `controller.placeZone(...)`),
+         passe o mouse sobre o building mesh. Confirme que `#tooltip`
+         aparece com texto coerente.
+      5. Capture screenshot de um estado com HUD visível e tooltips
+         aparecendo. Salve em `engines/miniTown/shots/hud-on.png`.
+
+      ## Reportar
+      Arquivos criados/modificados, output dos 4 comandos, hash do
+      commit, screenshots salvos, qualquer desvio.
+    verified_by: verifier
+    verify_prompt: |
+      Verificação ADVERSARIAL.
+
+      1. `cd engines/miniTown && pnpm run typecheck && pnpm run lint &&
+         pnpm run test && pnpm run build` — verde. Reporte exit codes.
+      2. Inicie dev server. Playwright: confirme que
+         `document.querySelectorAll('#palette button').length === 4`.
+         Cada botão tem texto que casa com "Explorar" | "Residencial" |
+         "Loja" | "Trabalho".
+      3. Confirme que `#topbar` mostra hora atual no formato HH:MM
+         (regex /^\d{2}:\d{2}$/) e contém uma das fases em pt-BR.
+      4. Clique em cada botão da palette via playwright e confirme
+         que o controller.mode muda (acesse via
+         `window.__miniTown.controller.mode`). Default é 'explore'.
+      5. Pressione as teclas R/S/W/E e confirme que o mode muda
+         corretamente.
+      6. Coloque 3 zones, espere elas construírem, passe o mouse
+         sobre o centro do primeiro building (via mouse.move com
+         x,y em pixels). Confirme que `#tooltip` perde a classe
+         'hidden' e mostra texto com nome de building type.
+      7. Confirme que NÃO há imports de react/vue/svelte/lit/preact
+         em engines/miniTown/src/. Use rg "from ['\"](react|vue|svelte|lit|preact)".
+      8. Capture screenshot final do HUD funcionando e salve em
+         `/tmp/minitown-hud-verify.png` (use path absoluto). NÃO
+         escreva em engines/miniTown/src/ a partir de verificação.
+
+      PASS só se os 8 pontos passam. FAIL com lista numerada.
+    output:
+      files:
+        - engines/miniTown/src/scene/hud.ts
+        - engines/miniTown/src/scene/tooltips.ts
+        - engines/miniTown/src/scene/hud.css
+        - engines/miniTown/index.html
+      minimum_size_kb: 14
+
+  # =====================================================================
+  # T5: integration verify — run the full game end-to-end
+  # Final gate.
+  # =====================================================================
+  - id: integration-verify
+    title: 'Verificação E2E: rodar o jogo inteiro, validar todos os requisitos do escopo'
+    role: verify-as-task
+    assigned_to: verifier
+    depends_on: [engine-skeleton, world-construction, agent-simulation, ui-hud]
+    max_retries: 1
+    prompt: |
+      Verificação FINAL end-to-end do MiniTown. Você NÃO modifica
+      código de produção. Rode o jogo, exercite todos os requisitos
+      da spec, capture evidências, e emita veredito PASS ou FAIL.
+
+      ## Spec de referência (do pedido do usuário)
+      - Empty land inicial, jogador coloca zones Residential/Shop/Workspace
+      - Roads aparecem automaticamente ao redor das zones
+      - Buildings passam por estágios visíveis, viram inhabited, crescem
+      - Residentes simulados: casa, trabalho, loja, schedules, destinos
+      - Pessoas andando, carros movendo
+      - Hover em building/resident mostra quem está lá e o que faz
+      - Click+drag cria blocos de 1-2-3 buildings, roads só no perímetro
+      - Ciclo dia/noite visível: à noite, ambiente cool + janelas/postes
+        warm/diffuse, resultado legível
+      - Câmera slightly top-down suited a ver a cidade toda
+      - Modo Explore onde o mouse não coloca nada
+      - Variação em buildings, pessoas, veículos (não-repetitivo)
+      - Visual achievable com simple stylized 3D + generated art
+      - $imagegen concepts gerados em engines/miniTown/docs/concepts/
+
+      ## O que você faz
+      1. `cd engines/miniTown && pnpm install && pnpm run typecheck &&
+         pnpm run lint && pnpm run test && pnpm run build`. Reporte
+         cada exit code.
+      2. Inicie `pnpm run dev` em background na porta 5173. Aguarde
+         3s. Confirme HTTP 200 via curl.
+      3. Escreva e rode um script playwright completo em
+         `/tmp/minitown-e2e.mjs` que:
+         a) Abre http://127.0.0.1:5173/
+         b) Aguarda window.__miniTown existir
+         c) Confirma HUD presente (#palette, #topbar)
+         d) Coloca 5 residential em (4-8, 5), 3 shop em (4-6, 9),
+            4 workspace em (10-13, 5-8), 1 bloco 1x3 em (15-17, 10)
+         e) Espera 4 minutos sim (c.tick(240)) — verifica que todos
+            buildings atingiram stage 'inhabited'
+         f) Verifica getSnapshot: residentCount >= 5, vehicleCount >= 2
+         g) Move mouse sobre um building, espera tooltip aparecer
+         h) Move mouse sobre um resident, espera tooltip aparecer
+         i) Captura screenshot daytime em
+            /tmp/minitown-e2e-day.png
+         j) Força tempo para noite: c.setSimTime(22) (adicione ao
+            controller se não existir; c.tick(0.001) para aplicar)
+         k) Captura screenshot nighttime em
+            /tmp/minitown-e2e-night.png
+         l) Verifica que há PointLights ativos na scene
+            (c.getActiveLightsCount() >= 5)
+         m) Pressiona tecla 'E' e confirma que mode === 'explore'
+         n) Tenta colocar zone no modo explore — DEVE falhar
+            (snapshot.zoneCount não muda)
+         o) Mata o dev server
+      4. Escreva o relatório em
+         `engines/miniTown/docs/E2E_REPORT.md` com:
+         - Exit codes dos comandos
+         - JSON completo do snapshot em cada fase
+         - Screenshots inline (use `<media src="/tmp/...png" />`)
+         - Lista numerada de cada requisito da spec acima, com
+           PASS/FAIL + evidência
+         - Veredito final: PASS ou FAIL
+      5. Mate o dev server. Reporte o caminho do relatório.
+
+      ## Critério PASS
+      - Todos os comandos de typecheck/lint/test/build verdes
+      - Todos os 13 passos (a-o) do script passam
+      - Spec de referência: todos os requisitos marcados PASS com
+        evidência objetiva
+      - Screenshot daytime mostra cidade visível com buildings
+      - Screenshot nighttime mostra ambiente cool + janelas warm
+        (pode comparar com `engines/miniTown/docs/concepts/03-night-town.png`
+        conceitualmente; o jogo não precisa ser pixel-perfect,
+        mas a linguagem visual deve ser reconhecível)
+
+      Se qualquer coisa falhar, FAIL com lista numerada dos gaps.
+    verify_prompt: |
+      Self-verify the E2E report. Leia
+      `engines/miniTown/docs/E2E_REPORT.md` integralmente. Confirme:
+      (a) todos os exit codes listados,
+      (b) todos os 13 passos do script documentados com saída real,
+      (c) cada requisito da spec tem veredito PASS/FAIL com evidência,
+      (d) os 2 screenshots existem em /tmp/ com tamanho > 10KB.
+      Se algum item estiver faltando, FAIL.

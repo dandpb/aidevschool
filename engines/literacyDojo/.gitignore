@@ -1,0 +1,10 @@
+# Dependências e build
+node_modules/
+dist/
+
+# Read model gerado por `npm run gen:content` (nunca editar à mão; regenerar sempre)
+src/data/generated/lessons.ts
+
+# Saídas de teste
+test-results/
+playwright-report/

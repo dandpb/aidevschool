@@ -1,0 +1,134 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Três camadas sobre o filesystem. Por que dois núcleos de agentes: mesmo protocolo, plataformas diferentes."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 05 · ARQUITETURA EM CAMADAS
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Três camadas sobre o filesystem — nada acima da verdade
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: l3
+    elementType: shape
+    bounds: [56, 126, 460, 90]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: l3-t
+    elementType: text
+    bounds: [70, 133, 432, 76]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:10.5px; color:$slate;"><strong>CAMADA 3 · SUPERFÍCIE DE PRODUTO</strong> (apps executáveis)</span></p>
+        <p style="margin-top:4px"><span style="font-size:9.5px; color:$body;">codexDojo · codexdojo-os-prototype · pixelDojo · voxelDojo</span></p>
+        <p style="margin-top:3px"><span style="font-size:8.5px; color:$muted;">janelas e controles sobre a verdade — read-only; jogos só emitem evidência</span></p>
+  - elementId: l2
+    elementType: shape
+    bounds: [56, 224, 460, 90]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: l2-t
+    elementType: text
+    bounds: [70, 231, 432, 76]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:10.5px; color:$slate;"><strong>CAMADA 2 · ORQUESTRAÇÃO & TUTORIA</strong> (núcleos de agentes)</span></p>
+        <p style="margin-top:4px"><span style="font-size:9.5px; color:$body;">miniMaxEvolutionEngine (Claude Code) · minimaxDojo (referência Python) · openclaw</span></p>
+        <p style="margin-top:3px"><span style="font-size:8.5px; color:$muted;">propõem trabalho, despacham workers, rodam o verificador entre fases</span></p>
+  - elementId: l1
+    elementType: shape
+    bounds: [56, 322, 460, 84]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: l1-t
+    elementType: text
+    bounds: [70, 329, 432, 70]
+    content:
+      align: [left, top]
+      text: |
+        <p><span style="font-size:10.5px; color:$accentDark;"><strong>CAMADA 1 · SUBSTRATO COMPARTILHADO</strong> (fonte da verdade)</span></p>
+        <p style="margin-top:4px"><span style="font-size:9.5px; color:$body;">learner/ (estado, gate, substrate) · curriculum/ (desafios + evidência)</span></p>
+        <p style="margin-top:3px"><span style="font-size:8.5px; color:$accentDark;">única camada com autoridade de estado — validate() duro antes de escrever</span></p>
+  - elementId: l0
+    elementType: shape
+    bounds: [56, 414, 460, 56]
+    shapeName: rect
+    fill: {type: solid, color: "$ink"}
+  - elementId: l0-t
+    elementType: text
+    bounds: [70, 421, 432, 42]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:10.5px; color:#F2B794;"><strong>BASE · FILESYSTEM + GIT</strong></span></p>
+        <p><span style="font-size:8.5px; color:#D8DDE3;">Markdown · YAML · NDJSON append-only — auditável, versionado, sem banco de dados</span></p>
+  - elementId: r-head
+    elementType: text
+    bounds: [560, 126, 344, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "POR QUE DOIS NÚCLEOS DE AGENTES?"}
+  - elementId: r-body
+    elementType: text
+    bounds: [560, 148, 344, 130]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p>minimaxDojo e miniMaxEvolutionEngine implementam <strong>o mesmo protocolo</strong> — mesma máquina de estados, mesmo verificador adversarial, mesmo gate empírico, mesmos 14 papéis — em <strong>plataformas diferentes</strong>.</p>
+        <p style="margin-top:8px">Cada tutor do motor Claude Code é um <em>wrapper</em> que aponta para a persona canônica em minimaxDojo: <strong>"em divergência, o canônico vence"</strong>.</p>
+  - elementId: r-rule
+    elementType: line
+    bounds: [560, 288, 344, 2]
+    viewBox: [344, 2]
+    points: "0,1 344,1"
+    border: {style: solid, width: 1, color: "$line"}
+  - elementId: r-head2
+    elementType: text
+    bounds: [560, 300, 344, 16]
+    content: {fontSize: 10.5, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "RESTRIÇÕES ESTRUTURAIS"}
+  - elementId: r-body2
+    elementType: text
+    bounds: [560, 322, 344, 160]
+    content:
+      style: "$body"
+      fontSize: 11
+      align: [left, top]
+      text: |
+        <p>· Nenhum engine pode <strong>forkar o estado global do aprendiz</strong> — ambos os núcleos são explicitamente proibidos.</p>
+        <p style="margin-top:7px">· Não existe "segundo learner store" local: o OS prova por teste que o snapshot é imutável sob interação.</p>
+        <p style="margin-top:7px">· Mudanças em prompts, gates, memória ou roadmap atualizam <strong>ecosystem/MANIFEST.md no mesmo commit</strong>.</p>
+        <p style="margin-top:7px">· Anti-drift por teste: thresholds e roster de agentes são travados por testes de contrato cross-engine.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "06"}

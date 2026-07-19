@@ -1,0 +1,119 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "Todos os números vivem num único lugar: config/learner.yaml, referenciado simbolicamente via marcador config e protegido por testes anti-drift."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 21 · GATES EMPÍRICOS
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: Os números que decidem — single-sourced e testados
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: tbl
+    elementType: table
+    bounds: [56, 126, 560, 342]
+    columnWidths: [0.42, 0.30, 0.28]
+    rowHeights: [0.09, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827, 0.0827]
+    style:
+      cellStyle: {fontSize: 9, color: "$body", border: {style: solid, width: 1, color: "#E3E6EA"}, align: [left, middle]}
+      firstRowStyle: {bold: true, color: "$ink", fill: {type: solid, color: "#F7F5F0"}}
+    rows:
+      - - text: "Gate"
+        - text: "Threshold"
+        - text: "Fonte canônica"
+      - - text: "Mutation score"
+        - text: "≥ 0,65"
+        - text: "gates.mutation_score_min"
+      - - text: "Cobertura do núcleo"
+        - text: "≥ 0,80"
+        - text: "gates.cobertura_nucleo_min"
+      - - text: "Suíte verde"
+        - text: "100%"
+        - text: "gates.suíte_verde_min"
+      - - text: "Lints"
+        - text: "0 erros / 0 avisos"
+        - text: "gates.lints_erros_max"
+      - - text: "Benchmark"
+        - text: "N ≥ 10 + warmup; CV < 20%"
+        - text: "galileu.samples_min / cv_max_pct"
+      - - text: "Retry budget por unidade"
+        - text: "≤ 3 (depois Sêneca)"
+        - text: "retries.max_por_unidade"
+      - - text: "Quota Sócrates"
+        - text: "15 consultas/dia"
+        - text: "socrates.quota_dia"
+      - - text: "AIDI (dep. de IA)"
+        - text: "âmbar 0,60 · vermelho 0,75"
+        - text: "atena.aidi_alerta_*"
+      - - text: "SLA de governança"
+        - text: "24h (4h p/ regressão)"
+        - text: "seneca.sla_horas"
+      - - text: "Complexidade / duplicação"
+        - text: "CC mediana < 10 · dup < 7%"
+        - text: "gates.cc_mediana_max / duplicacao_max_pct"
+      - - text: "Tamanho de PR"
+        - text: "≤ 300 LOC"
+        - text: "gates.pr_loc_max"
+  - elementId: seam-head
+    elementType: text
+    bounds: [652, 126, 252, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "O THRESHOLD SEAM"}
+  - elementId: seam-body
+    elementType: text
+    bounds: [652, 148, 252, 180]
+    content:
+      style: "$body"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>Todos os números vivem em <strong>engines/minimaxDojo/config/learner.yaml</strong> (89 linhas).</p>
+        <p style="margin-top:7px">Prompts e docs nunca hardcodam valores: referenciam simbolicamente com o marcador <strong>⟨config: path⟩</strong> — a seam fica num só lugar.</p>
+        <p style="margin-top:7px">O core Python carrega o YAML com fallbacks para permanecer importável sem PyYAML.</p>
+  - elementId: drift-panel
+    elementType: shape
+    bounds: [652, 340, 252, 128]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: drift
+    elementType: text
+    bounds: [664, 348, 228, 112]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.45
+      align: [left, top]
+      text: |
+        <p><strong style="color:$accentDark;">Testes anti-drift travam o contrato:</strong></p>
+        <p style="margin-top:4px">· test_threshold_drift — learning_state.yaml e o skill do motor não podem inventar um segundo threshold (0,60 vs 0,65);</p>
+        <p style="margin-top:4px">· test_config_seam — o marcador config resolve;</p>
+        <p style="margin-top:4px">· test_agent_roster_drift — todo tutor canônico tem wrapper runnable.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "22"}

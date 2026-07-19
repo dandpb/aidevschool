@@ -1,0 +1,229 @@
+pageType: content
+background:
+  type: solid
+  color: "$white"
+notes: "minimaxDojo por dentro: máquina de estados formal, portão empírico com blacklist de anti-padrões, whiteboard de 3 camadas."
+elements:
+  - elementId: kicker
+    elementType: text
+    bounds: [56, 34, 500, 16]
+    content:
+      style: "$kicker"
+      align: [left, middle]
+      wrap: false
+      text: 13 · MINIMAXDOJO POR DENTRO
+  - elementId: title
+    elementType: text
+    bounds: [56, 56, 848, 36]
+    content:
+      style: "$title"
+      align: [left, middle]
+      wrap: false
+      text: State machine, portão empírico e memória whiteboard
+  - elementId: title-rule
+    elementType: shape
+    bounds: [56, 102, 56, 3]
+    shapeName: rect
+    fill: {type: solid, color: "$accent"}
+  - elementId: c1-head
+    elementType: text
+    bounds: [56, 124, 280, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "MÁQUINA DE ESTADOS FORMAL"}
+  - elementId: sm1
+    elementType: shape
+    bounds: [56, 148, 128, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: sm1-t
+    elementType: text
+    bounds: [56, 148, 128, 30]
+    content: {fontSize: 9, color: "$slateDark", bold: true, align: [center, middle], wrap: false, text: "APRESENTANDO"}
+  - elementId: sma1
+    elementType: line
+    bounds: [114, 178, 12, 16]
+    viewBox: [12, 16]
+    points: "6,0 6,16"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: sm2
+    elementType: shape
+    bounds: [56, 194, 128, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$slateSoft"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: sm2-t
+    elementType: text
+    bounds: [56, 194, 128, 30]
+    content: {fontSize: 9, color: "$slateDark", bold: true, align: [center, middle], wrap: false, text: "PRATICANDO"}
+  - elementId: sma2
+    elementType: line
+    bounds: [114, 224, 12, 16]
+    viewBox: [12, 16]
+    points: "6,0 6,16"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$muted"}
+  - elementId: sm3
+    elementType: shape
+    bounds: [56, 240, 128, 52]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: sm3-t
+    elementType: text
+    bounds: [56, 240, 128, 52]
+    content:
+      align: [center, middle]
+      text: |
+        <p><span style="font-size:9px; color:$accentDark;"><strong>AVALIANDO</strong></span></p>
+        <p><span style="font-size:7.5px; color:$accentDark;">sub: PRODUCING→VERIFYING→DONE</span></p>
+  - elementId: sma3
+    elementType: line
+    bounds: [114, 292, 12, 16]
+    viewBox: [12, 16]
+    points: "6,0 6,16"
+    arrow: [null, stealth]
+    border: {style: solid, width: 1.5, color: "$green"}
+  - elementId: sm4
+    elementType: shape
+    bounds: [56, 308, 128, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$greenSoft"}
+    border: {style: solid, width: 1.5, color: "$green"}
+  - elementId: sm4-t
+    elementType: text
+    bounds: [56, 308, 128, 30]
+    content: {fontSize: 9, color: "$green", bold: true, align: [center, middle], wrap: false, text: "DOMINADO (terminal)"}
+  - elementId: sm-fail
+    elementType: shape
+    bounds: [216, 240, 120, 30]
+    shapeName: rect
+    fill: {type: solid, color: "$redSoft"}
+    border: {style: solid, width: 1, color: "$red"}
+  - elementId: sm-fail-t
+    elementType: text
+    bounds: [216, 240, 120, 30]
+    content: {fontSize: 8, color: "$red", bold: true, align: [center, middle], text: "FAIL → retry ≤3 → FALHA_BLOQUEIO"}
+  - elementId: sm-inv
+    elementType: text
+    bounds: [56, 356, 280, 128]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p><strong>Invariantes:</strong> I1 DOMINADO exige veredito Prometor com evidência; I2 Prometor nunca vê contexto do Mestre; I3 retries ≤ 3 → Sêneca; I4 timeout submete parcial mesmo assim; I5 toda decisão logada em event_log/events.ndjson.</p>
+        <p style="margin-top:6px">Implementação de referência em Python (core/state_machine): transição inválida lança DeterminismError — "o Maestro propõe, o runtime confirma".</p>
+  - elementId: c2-head
+    elementType: text
+    bounds: [372, 124, 268, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1.2, align: [left, middle], wrap: false, text: "PORTÃO EMPÍRICO UNIVERSAL"}
+  - elementId: c2-body
+    elementType: text
+    bounds: [372, 148, 268, 120]
+    content:
+      style: "$body"
+      fontSize: 9.5
+      align: [left, top]
+      text: |
+        <p>· execução real em sandbox, exit 0;</p>
+        <p>· suíte 100% verde (happy + bordas + adversariais);</p>
+        <p>· <strong>mutation score ≥ 0,65</strong> (preferível a cobertura bruta);</p>
+        <p>· <strong>cobertura do núcleo ≥ 0,80</strong>;</p>
+        <p>· lint 0 erros / 0 warnings;</p>
+        <p>· código idiomático revisado pelo Crítico + reflexão do aluno.</p>
+  - elementId: c2-panel
+    elementType: shape
+    bounds: [372, 278, 268, 130]
+    shapeName: rect
+    fill: {type: solid, color: "$redSoft"}
+    border: {style: solid, width: 1, color: "$red"}
+  - elementId: c2-panel-t
+    elementType: text
+    bounds: [384, 286, 244, 116]
+    content:
+      fontSize: 9
+      color: "$body"
+      lineHeight: 1.4
+      align: [left, top]
+      text: |
+        <p><strong style="color:$red;">Lista negra — nega DOMINADO mesmo com testes verdes</strong> (16 anti-padrões):</p>
+        <p style="margin-top:4px">assert True · mock que retorna o valor esperado · try/except: pass · sleep em vez de sincronização · any sem justificativa · mutate input · resource leak · swallow de exceção · print em vez de logger · magic numbers…</p>
+  - elementId: c2-note
+    elementType: text
+    bounds: [372, 420, 268, 64]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p>DoD por tipo de unidade: TDD exige testes antes do código (verificável por git log); refactoring: CC mediana &lt;10, duplicação &lt;7%; observabilidade: 0 print, ≥3 métricas.</p>
+  - elementId: c3-head
+    elementType: text
+    bounds: [676, 124, 228, 16]
+    content: {fontSize: 10, color: "$ink", bold: true, letterSpacing: 1, align: [left, middle], wrap: false, text: "WHITEBOARD — 3 CAMADAS"}
+  - elementId: wb1
+    elementType: shape
+    bounds: [676, 148, 228, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: wb1-t
+    elementType: text
+    bounds: [686, 153, 208, 56]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$ink;"><strong>1 · Intra-agente</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">a experiência de uma run vira dica na próxima run do mesmo agente</span></p>
+  - elementId: wb2
+    elementType: shape
+    bounds: [676, 222, 228, 66]
+    shapeName: rect
+    fill: {type: solid, color: "$white"}
+    border: {style: solid, width: 1, color: "$slate"}
+  - elementId: wb2-t
+    elementType: text
+    bounds: [686, 227, 208, 56]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$ink;"><strong>2 · Handoff files</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">unit_spec.md · submission.md · verdict.md — schemas fixos</span></p>
+  - elementId: wb3
+    elementType: shape
+    bounds: [676, 296, 228, 74]
+    shapeName: rect
+    fill: {type: solid, color: "$accentSoft"}
+    border: {style: solid, width: 1.5, color: "$accent"}
+  - elementId: wb3-t
+    elementType: text
+    bounds: [686, 301, 208, 64]
+    content:
+      align: [left, middle]
+      text: |
+        <p><span style="font-size:9.5px; color:$accentDark;"><strong>3 · Whiteboard persistente</strong></span></p>
+        <p><span style="font-size:8px; color:$body;">perfil vivo — <strong>views derivadas</strong> do learner/ raiz, regeneradas pelo substrate</span></p>
+  - elementId: c3-note
+    elementType: text
+    bounds: [676, 382, 228, 106]
+    content:
+      style: "$small"
+      fontSize: 9
+      align: [left, top]
+      text: |
+        <p><strong>Curadoria:</strong> no system prompt só o núcleo curado (3–5 pegadinhas rotativas, 3–5 skills ativas, AIDI); histórico sob demanda — nunca despejar memória bruta.</p>
+        <p style="margin-top:6px">Compactação semanal (Cronos + Mnemosyne). Event log NDJSON append-only com escrita atômica + fsync.</p>
+  - elementId: footer-line
+    elementType: shape
+    bounds: [56, 508, 848, 1]
+    shapeName: rect
+    fill: {type: solid, color: "$line"}
+  - elementId: footer-left
+    elementType: text
+    bounds: [56, 516, 400, 14]
+    content: {style: "$tiny", align: [left, middle], wrap: false, text: "AI DEVSCHOOL — COMO FUNCIONA"}
+  - elementId: footer-page
+    elementType: text
+    bounds: [820, 516, 84, 14]
+    content: {style: "$tiny", align: [right, middle], wrap: false, text: "14"}

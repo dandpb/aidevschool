@@ -80,4 +80,26 @@ describe('Engine Hub bridge client', () => {
     })
     expect(fetcher).toHaveBeenCalledTimes(3)
   })
+
+  it('retries the session bootstrap after a transient failure instead of caching it', async () => {
+    // Given
+    const fetcher = vi.fn()
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+      .mockResolvedValueOnce(new Response('{"token":"session-token"}', { status: 200 }))
+      .mockImplementation(async () => new Response(JSON.stringify({
+        ok: true,
+        summary: 'Ação concluída',
+        output: 'preview',
+      }), { status: 200 }))
+    const runAction = createEngineActionClient(fetcher)
+
+    // When
+    const first = runAction('openclaw', 'preview-checklist')
+
+    // Then
+    await expect(first).rejects.toThrow('Failed to fetch')
+    const retry = await runAction('openclaw', 'preview-checklist')
+    expect(retry.ok).toBe(true)
+    expect(fetcher).toHaveBeenCalledTimes(3)
+  })
 })
