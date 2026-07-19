@@ -181,6 +181,9 @@ export class TownView {
       const moving =
           person.activity === "walking to work" || person.activity === "serving neighbors",
         angle = (now + person.stride * 6) % (Math.PI * 2)
+      // ponytail: shrink when stationary (inside home/building), grow when walking
+      const targetScale = moving ? 1 : 0.5
+      mesh.scale.setScalar(THREE.MathUtils.lerp(mesh.scale.x, targetScale, 0.12))
       mesh.position.set(
         home.cell.x + (moving ? Math.cos(angle) * 0.64 : 0.17),
         0.18,
