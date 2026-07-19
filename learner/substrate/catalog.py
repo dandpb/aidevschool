@@ -9,6 +9,7 @@ from learner.substrate.dashboard_data import DashboardItem, render_ts_value
 
 
 _LEVEL_PHASES: Final = {
+    0: "aplicacao_ia",
     1: "fundamentos",
     2: "concorrencia",
     3: "arquitetura",
@@ -114,8 +115,9 @@ def parse_catalog(text: str) -> tuple[CatalogProject, ...]:
     finish()
 
     numbers = [project.number for project in projects]
-    if numbers != list(range(1, len(projects) + 1)):
-        raise CatalogFormatError(f"project numbers must be contiguous from 01, got {numbers}")
+    first = numbers[0] if numbers else 1
+    if first not in (0, 1) or numbers != list(range(first, first + len(projects))):
+        raise CatalogFormatError(f"project numbers must be contiguous from 00 or 01, got {numbers}")
     return tuple(projects)
 
 
