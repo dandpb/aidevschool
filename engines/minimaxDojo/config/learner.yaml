@@ -9,6 +9,7 @@ aluno:
   objetivo_3meses: "escrever código de qualidade profissional com autonomia"
 
 perfil_pedagogico:
+  modo: developer           # developer | non_developer (trilha 00; gate no-code — ADR-0004)
   nivel_autodeclarado: intermediario
   tempo_semanal: 5h         # horas por semana
   cadencia: 25-40 min       # por sessão
