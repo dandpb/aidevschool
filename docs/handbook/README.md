@@ -29,6 +29,7 @@ do not run `npm install` / `pnpm install` at the root.
 | 3b | [Engine — codexdojo-os-prototype](03b_engine_codexdojo-os-prototype.md) | Work on the canonical educational OS experience and its read-only learner projection. |
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
+| 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the cozy town-sim: the level-0 entry surface for the non-technical audience. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
 | 6 | [Engine — miniMaxEvolutionEngine](06_engine_miniMaxEvolutionEngine.md) | Run the Claude Code orchestration motor (the 5-phase loop). |
 | 7 | [Curriculum](07_curriculum.md) | Understand the 18 polyglot projects and how executable evidence works. |
@@ -78,6 +79,7 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 | Canonical learner state | [`learner/learning_state.yaml`](../../learner/learning_state.yaml) |
 | Learner-state contract | [`learner/substrate/interface.md`](../../learner/substrate/interface.md) |
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](../../engines/codexDojo/ecosystem/MANIFEST.md) |
+| The product vision (central idea) | [`docs/VISION.md`](../VISION.md) |
 | The original goal | [`docs/PROMPTS/-01_GOAL.md`](../PROMPTS/-01_GOAL.md) |
 
 ---
