@@ -8,3 +8,6 @@ src/data/generated/lessons.ts
 # Saídas de teste
 test-results/
 playwright-report/
+
+# Artefatos de build do tsc -b
+*.tsbuildinfo

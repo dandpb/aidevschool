@@ -25,9 +25,10 @@ declare global {
 
 /**
  * Ponte de depuração/teste e2e: espelha cada registro em
- * window.__literacydojo.evidence para o Playwright capturar e validar o
- * envelope. Só é instalada em modo dev (ver src/app/services.ts); os dados
- * permanecem no navegador da pessoa.
+ * window.__literacydojo.evidence e em sessionStorage["literacydojo:evidence"]
+ * (sobrevive a reloads) para o Playwright capturar e validar o envelope.
+ * Só é instalada em modo dev (ver src/app/services.ts); os dados permanecem
+ * no navegador da pessoa.
  */
 export class DevtoolsBridgeEvidenceSink implements EvidenceSink {
   constructor(private readonly delegate: EvidenceSink) {}
@@ -37,6 +38,14 @@ export class DevtoolsBridgeEvidenceSink implements EvidenceSink {
     if (typeof window !== "undefined") {
       window.__literacydojo = window.__literacydojo ?? { evidence: [] };
       window.__literacydojo.evidence.push(record);
+      try {
+        const key = "literacydojo:evidence";
+        const existing = JSON.parse(window.sessionStorage.getItem(key) ?? "[]") as unknown[];
+        existing.push(record);
+        window.sessionStorage.setItem(key, JSON.stringify(existing));
+      } catch {
+        // sessionStorage cheio ou indisponível não pode bloquear a lição.
+      }
     }
   }
 }
