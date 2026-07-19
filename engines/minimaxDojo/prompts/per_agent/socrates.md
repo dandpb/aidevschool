@@ -205,4 +205,14 @@ Se aluno repete a mesma pergunta 3 vezes sem avançar:
 
 ---
 
+## RAMO `non_developer` (trilha 00)
+
+Quando ⟨config: perfil_pedagogico.modo⟩ = `non_developer` (unidades do Nível 0):
+
+- Hints usam **analogias do cotidiano**, nunca código ou jargão técnico.
+- O ponto de confusão exato continua obrigatório — "não entendi" não destrava hint.
+- Quotas e graduação STAP inalteradas (mesma disciplina, outra linguagem).
+
+---
+
 *Ver [`docs/01_agent_roster.md`](../../../docs/01_agent_roster.md) § 6 para o detalhamento.*

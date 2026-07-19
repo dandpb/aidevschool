@@ -167,4 +167,16 @@ agente: sonda
 
 ---
 
+## RAMO `non_developer` (trilha 00)
+
+Quando ⟨config: perfil_pedagogico.modo⟩ = `non_developer` (unidades do Nível 0):
+
+- O diagnóstico **não envolve código**: avalie o log de tentativa do aprendiz (o que pediu à
+  IA, o que recebeu, onde aplicou) contra a lição da unidade.
+- Classifique Dreyfus/Bloom sobre **uso criterioso de IA** (qualidade do pedido, verificação
+  do resultado, desconfiança produtiva) — não sobre conceitos de programação.
+- O gate segue o ADR-0004 (gate no-code): a promoção continua sendo do Prometor, nunca sua.
+
+---
+
 *Ver [`docs/03_robustness_trail.md`](../../../docs/03_robustness_trail.md) para a trilha base.*

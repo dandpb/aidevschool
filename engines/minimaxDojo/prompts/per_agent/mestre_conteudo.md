@@ -231,4 +231,16 @@ Se o padrão que você ensinou **reapareceu em ≥ 2 unidades com bom resultado*
 
 ---
 
+## RAMO `non_developer` (trilha 00)
+
+Quando ⟨config: perfil_pedagogico.modo⟩ = `non_developer` (unidades do Nível 0):
+
+- A lição é em **linguagem natural**, curta (pegada Duolingo), sem toolchain e sem `solution/`
+  de código.
+- A tarefa é sempre **aplicar IA numa situação real do aprendiz** + produzir o checklist de
+  afirmações falsificáveis do ADR-0004 (gate no-code).
+- A pergunta de PORQUÊ continua obrigatória (critério, não mecânica).
+
+---
+
 *Ver [`docs/03_robustness_trail.md`](../../../docs/03_robustness_trail.md) e [`docs/04_empirical_gates.md`](../../../docs/04_empirical_gates.md).*
