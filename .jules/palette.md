@@ -1,0 +1,3 @@
+## 2024-11-20 - Communicating Visual Timelines and Graph Nodes to Screen Readers
+**Learning:** Purely visual states in custom interactive UI elements, such as `.is-complete` on timeline step buttons or spatial position in a visual node graph (like the agent topology map), are opaque to screen readers. If these elements represent steps or specific entities, their full context—including their dynamic status—must be explicitly announced via `aria-label`.
+**Action:** When styling custom UI elements where state is conveyed purely via CSS classes or layout position, compute a dynamic string containing the index, name, and current status, and apply it via `aria-label`. Ensure this is updated synchronously with the visual state changes.
