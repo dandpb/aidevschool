@@ -127,7 +127,10 @@ export function emptyAnswerFor(activity: ActivityDefinition): ActivityAnswer {
     case "choice":
       return { optionIds: [] } satisfies ChoiceAnswer;
     case "sort":
-      return { orderedIds: [] } satisfies SortAnswer;
+      // A resposta inicial espelha a ordem exibida pelo SortView: é essa ordem
+      // que deve ser avaliada quando a pessoa verifica sem mover nada
+      // (isAnswerComplete trata a ordem inicial como resposta completa).
+      return { orderedIds: activity.data.items.map((item) => item.id) } satisfies SortAnswer;
     case "missing_context":
       return { contextIds: [] } satisfies MissingContextAnswer;
     case "output_comparison":
