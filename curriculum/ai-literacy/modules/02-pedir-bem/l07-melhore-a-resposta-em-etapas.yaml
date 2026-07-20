@@ -1,0 +1,64 @@
+# Lição l07 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l07
+version: 1
+moduleId: mod-02
+title: "Melhore a resposta em etapas"
+objective: "Iterar sobre uma resposta da IA com pedidos de ajuste específicos em vez de recomeçar do zero."
+estimatedMinutes: 4
+skillIds: [pedir, avaliar]
+prerequisites: [l06]
+
+activities:
+  - id: l07-a1
+    type: sort
+    skillId: pedir
+    instruction: "Você pediu um texto à IA e a primeira resposta ficou mais ou menos. Ordene as etapas do jeito mais eficiente de chegar a um bom resultado final."
+    data:
+      items:
+        - id: step-ajuste
+          text: "Peça um ajuste específico (ex.: \"deixe mais curto\" ou \"troque o exemplo\")."
+        - id: step-pedido
+          text: "Faça o primeiro pedido com objetivo e contexto claros."
+        - id: step-repita
+          text: "Repita os ajustes até o texto ficar pronto para a sua revisão final."
+        - id: step-leitura
+          text: "Leia a resposta e identifique o que ficou mais fraco."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [step-pedido, step-leitura, step-ajuste, step-repita]
+    feedback:
+      onFailure: "O ciclo eficiente é: pedir bem → ler com critério → ajustar o ponto fraco → repetir. Recomeçar do zero joga fora o que já estava bom."
+      perCheck:
+        step-pedido: "Tudo começa com um pedido claro — sem isso, não há base para ajustar."
+        step-leitura: "Antes de ajustar, leia e aponte o que ficou fraco: ajuste genérico gera resposta genérica."
+        step-ajuste: "O ajuste vem depois da leitura crítica e deve ser específico."
+        step-repita: "Repetir é a última etapa do ciclo — e termina na sua revisão humana, não na da IA."
+      onSuccess: "Perfeito! Pedir → ler → ajustar → repetir: é assim que a resposta melhora em etapas, sem recomeçar."
+    storage:
+      policy: structured_only
+    hints:
+      - "O ciclo começa pelo pedido e termina na repetição — o que vem entre um e outro?"
+      - "Antes de pedir o ajuste, você precisa saber o que ajustar: leitura crítica vem antes do ajuste."
+
+rubric:
+  id: l07-rubric
+  criteria:
+    - id: r-ciclo-iteracao
+      text: "Ordena o ciclo pedir → ler → ajustar → repetir."
+      weight: 1
+    - id: r-ajuste-especifico
+      text: "Entende que ajustes devem ser específicos, não um recomeço do zero."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l07-a1]

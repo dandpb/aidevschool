@@ -1,0 +1,68 @@
+# Lição l10 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l10
+version: 1
+moduleId: mod-03
+title: "Quando procurar fontes externas"
+objective: "Decidir quando uma afirmação da IA exige verificação em fonte externa antes do uso."
+estimatedMinutes: 3
+skillIds: [avaliar]
+prerequisites: [l09]
+
+activities:
+  - id: l10-a1
+    type: choice
+    skillId: avaliar
+    instruction: "A IA escreveu estas frases para o seu relatório mensal. Marque todas as que você precisa conferir em uma fonte externa antes de usar."
+    data:
+      multiSelect: true
+      options:
+        - id: s-inflacao
+          text: "\"A inflação no Brasil ficou em 4,2% no último ano.\""
+        - id: s-paragrafo
+          text: "\"Parágrafos curtos costumam facilitar a leitura de relatórios.\""
+        - id: s-lei
+          text: "\"A lei determina prazo de 30 dias para esse tipo de reembolso.\""
+        - id: s-estrutura
+          text: "\"Uma estrutura de problema-solução funciona bem em propostas comerciais.\""
+        - id: s-concorrente
+          text: "\"Seu concorrente lançou um produto parecido em março deste ano.\""
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [s-inflacao, s-lei, s-concorrente]
+    feedback:
+      onFailure: "Confira sempre: números e estatísticas, afirmações sobre leis e prazos, e fatos específicos sobre empresas e datas. Conselhos gerais de escrita não precisam de fonte."
+      perCheck:
+        s-inflacao: "Estatística com número exato: confira no IBGE ou no Banco Central antes de publicar."
+        s-paragrafo: "Conselho geral de escrita — é opinião razoável, não um fato checável."
+        s-lei: "Afirmação sobre lei e prazo: erro aqui tem consequência real — confira no texto oficial da lei."
+        s-estrutura: "Sugestão de estrutura é conselho de escrita, não fato que exija fonte."
+        s-concorrente: "Fato específico com empresa e data: a IA pode ter inventado — confira em notícia ou no site do concorrente."
+      onSuccess: "Isso! Fato checável (número, lei, data, empresa) pede fonte externa; conselho geral não."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte de cada frase: se estiver errada, causa problema real? Ela afirma um fato com número, lei ou data?"
+      - "Duas frases são conselhos de escrita — essas não precisam de fonte."
+
+rubric:
+  id: l10-rubric
+  criteria:
+    - id: r-fato-checavel
+      text: "Marca para verificação as afirmações factuais (números, leis, datas, empresas)."
+      weight: 1
+    - id: r-conselho-geral
+      text: "Reconhece que conselhos gerais de escrita não exigem fonte externa."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l10-a1]

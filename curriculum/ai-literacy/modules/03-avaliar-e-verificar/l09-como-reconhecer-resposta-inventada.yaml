@@ -1,0 +1,68 @@
+# Lição l09 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l09
+version: 1
+moduleId: mod-03
+title: "Como reconhecer uma resposta inventada"
+objective: "Identificar sinais de alucinação: fontes que não existem, números precisos sem origem, detalhes confiantes demais."
+estimatedMinutes: 4
+skillIds: [avaliar]
+prerequisites: [l08]
+
+activities:
+  - id: l09-a1
+    type: rubric_review
+    skillId: avaliar
+    instruction: "A IA deu a resposta abaixo para embasar uma apresentação interna. Avalie cada critério: foi atendido, parcialmente atendido ou não atendido?"
+    data:
+      responseText: "O home office aumenta a produtividade. Segundo um estudo da Universidade de São Paulo publicado em 2024, 87% das empresas brasileiras que adotaram o home office viram as vendas crescer 35% em um ano. O relatório 'Futuro do Trabalho 2025' confirma essa tendência. Vale dizer que os resultados variam bastante de empresa para empresa, então o efeito pode ser menor no seu caso. Minha recomendação é implementar o quanto antes, pois os dados são claros."
+      criteria:
+        - id: c-fontes
+          text: "As fontes citadas são identificáveis e verificáveis (autor, instituição, link ou data checável)?"
+        - id: c-numeros
+          text: "Os números precisos (87%, 35%) têm origem indicada com clareza?"
+        - id: c-incerteza
+          text: "A resposta distingue o que é fato comprovado do que é opinião ou recomendação?"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-fontes: not_met
+        c-numeros: not_met
+        c-incerteza: partial
+    feedback:
+      onFailure: "Sinais clássicos de invenção: 'estudo da USP' sem título nem link, relatório com nome genérico e números redondos demais. A resposta admite variação, mas chama de 'dados claros' o que não tem fonte."
+      perCheck:
+        c-fontes: "'Um estudo da USP' e 'relatório Futuro do Trabalho 2025' não são verificáveis: sem título completo, autor ou link, não há como checar — provável invenção."
+        c-numeros: "87% e 35% são precisos demais para vir sem origem checável: número redondo e sem fonte é sinal de alerta."
+        c-incerteza: "A resposta oscila: admite que 'os resultados variam', mas conclui que 'os dados são claros' e recomenda agir — parcialmente honesta sobre a incerteza."
+      onSuccess: "Exato! Fonte não verificável + número preciso sem origem + confiança excessiva = resposta para verificar antes de usar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Tente checar mentalmente cada fonte: você conseguiria encontrar esse 'estudo' ou esse 'relatório' com as informações dadas?"
+      - "Um critério aqui não é totalmente falho: a resposta admite alguma variação, mas se contradiz na conclusão."
+
+rubric:
+  id: l09-rubric
+  criteria:
+    - id: r-fontes-verificaveis
+      text: "Exige fontes identificáveis e verificáveis para dados apresentados."
+      weight: 1
+    - id: r-numeros-sem-origem
+      text: "Desconfia de números precisos sem origem indicada."
+      weight: 1
+    - id: r-confianca-excessiva
+      text: "Nota contradição entre admissão de incerteza e conclusão confiante."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l09-a1]

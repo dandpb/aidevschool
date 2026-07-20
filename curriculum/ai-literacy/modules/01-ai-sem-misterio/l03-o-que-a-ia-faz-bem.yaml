@@ -1,0 +1,99 @@
+# Lição l03 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l03
+version: 1
+moduleId: mod-01
+title: "O que a IA faz bem e onde costuma falhar"
+objective: "Distinguir tarefas em que a IA costuma ajudar (rascunhos, resumos, ideias) de tarefas em que ela costuma falhar (dados recentes, cálculos exatos, fatos específicos)."
+estimatedMinutes: 4
+skillIds: [entender]
+prerequisites: [l02]
+
+activities:
+  - id: l03-a1
+    type: choice
+    skillId: entender
+    instruction: "Marque todas as tarefas em que a IA costuma ajudar bem no dia a dia de trabalho."
+    data:
+      multiSelect: true
+      options:
+        - id: t-rascunho
+          text: "Rascunhar e-mails e textos que você vai revisar depois"
+        - id: t-resumo
+          text: "Resumir um documento longo que você mesmo forneceu"
+        - id: t-faturamento
+          text: "Informar o faturamento de ontem da sua empresa"
+        - id: t-ideias
+          text: "Sugerir ideias de nomes para um projeto novo"
+        - id: t-imposto
+          text: "Calcular o valor exato do imposto que você deve este ano"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [t-rascunho, t-resumo, t-ideias]
+    feedback:
+      onFailure: "Regra prática: a IA é forte em texto — rascunhar, resumir, dar ideias. Ela não tem acesso aos dados da sua empresa nem garante cálculos exatos."
+      perCheck:
+        t-rascunho: "Rascunhos de texto são o ponto forte da IA — desde que você revise."
+        t-resumo: "Resumir um texto que você forneceu é seguro: o conteúdo está todo ali, na conversa."
+        t-faturamento: "A IA não tem acesso aos sistemas da sua empresa — um número desses seria inventado."
+        t-ideias: "Brainstorm e ideias iniciais são um ótimo uso: quantidade e variedade ajudam."
+        t-imposto: "Cálculo exato com regras que mudam todo ano é terreno clássico de erro — confira com fonte oficial."
+      onSuccess: "Exato! Texto e ideias, com revisão, são o forte. Dados específicos e cálculos exatos pedem outra fonte."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte de cada item: a resposta depende de um dado que só existe dentro da minha empresa ou que muda com o tempo?"
+      - "Tudo que é produção de texto genérico (rascunho, resumo, ideias) costuma funcionar; número exato e dado interno, não."
+  - id: l03-a2
+    type: choice
+    skillId: entender
+    instruction: "Agora o contrário: marque as situações em que a IA costuma falhar."
+    data:
+      multiSelect: true
+      options:
+        - id: f-noticia
+          text: "Resumir as notícias desta semana sobre o seu setor"
+        - id: f-planilha
+          text: "Somar uma coluna de 200 valores da sua planilha com precisão total"
+        - id: f-email
+          text: "Melhorar o tom de um e-mail que você escreveu"
+        - id: f-lei
+          text: "Citar o artigo exato de uma lei trabalhista com o texto atualizado"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [f-noticia, f-planilha, f-lei]
+    feedback:
+      onFailure: "A IA falha em três terrenos: fatos recentes, cálculos exatos e citações precisas. Melhorar texto que você escreveu continua sendo ponto forte."
+      perCheck:
+        f-noticia: "Notícias recentes podem estar fora do conhecimento da IA — ela pode preencher lacunas com invenções."
+        f-planilha: "Somas longas e exatas são um erro clássico: use a própria planilha ou calculadora."
+        f-email: "Melhorar tom de texto é trabalho de texto — a IA vai bem aqui."
+        f-lei: "Artigos de lei com número e texto exato são frequentemente inventados — confira na fonte oficial."
+      onSuccess: "Muito bem! Recentes, exatos e citáveis: os três terrenos onde a conferência é obrigatória."
+    storage:
+      policy: structured_only
+    hints:
+      - "Procure os itens que exigem precisão absoluta: número exato, texto de lei, fato de hoje."
+      - "São três as situações de falha; a que sobra é trabalho de texto, ponto forte da IA."
+
+rubric:
+  id: l03-rubric
+  criteria:
+    - id: r-pontos-fortes
+      text: "Identifica rascunhos, resumos e ideias como pontos fortes da IA."
+      weight: 1
+    - id: r-pontos-fracos
+      text: "Identifica dados recentes, cálculos exatos e citações precisas como pontos fracos."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l03-a1, l03-a2]

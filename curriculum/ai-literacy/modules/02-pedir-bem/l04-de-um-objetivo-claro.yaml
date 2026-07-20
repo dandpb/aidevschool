@@ -1,0 +1,64 @@
+# Lição l04 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l04
+version: 1
+moduleId: mod-02
+title: "Dê um objetivo claro"
+objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
+estimatedMinutes: 3
+skillIds: [pedir]
+prerequisites: [l03]
+
+activities:
+  - id: l04-a1
+    type: choice
+    skillId: pedir
+    instruction: "Quatro pessoas pediram ajuda à IA para o mesmo e-mail de cobrança. Qual pedido tem o objetivo mais claro?"
+    data:
+      options:
+        - id: opt-melhora
+          text: "\"Melhora esse texto pra mim.\""
+        - id: opt-claro
+          text: "\"Reescreva este e-mail de cobrança deixando o tom mais cordial, mantendo o valor e a data de vencimento.\""
+        - id: opt-negocio
+          text: "\"Faz um negócio de cobrança aí.\""
+        - id: opt-algo
+          text: "\"Escreve algo sobre pagamento atrasado.\""
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-claro]
+    feedback:
+      onFailure: "Um objetivo claro diz o que fazer, com qual material e com quais limites — dá para conferir se a resposta cumpriu ou não."
+      perCheck:
+        opt-melhora: "\"Melhora\" não diz o que mudar: qualquer resposta serve, e nenhuma resolve de verdade."
+        opt-claro: "Esse pedido diz a tarefa (reescrever), o material (e-mail de cobrança), o ajuste (tom cordial) e o que manter (valor e data)."
+        opt-negocio: "Sem tarefa nem material definidos, a IA precisa adivinhar — e vai adivinhar errado."
+        opt-algo: "\"Algo sobre\" é tema, não objetivo: o que a IA deve produzir com esse tema?"
+      onSuccess: "Isso! Objetivo claro = tarefa + material + limites. Dá para verificar a resposta na hora."
+    storage:
+      policy: structured_only
+    hints:
+      - "Teste cada pedido: depois da resposta da IA, você conseguiria dizer se ela cumpriu ou não cumpriu?"
+      - "O melhor pedido diz o que fazer, com qual texto, e o que não pode mudar."
+
+rubric:
+  id: l04-rubric
+  criteria:
+    - id: r-objetivo-verificavel
+      text: "Escolhe o objetivo que pode ser verificado (tarefa, material e limites explícitos)."
+      weight: 1
+    - id: r-reconhece-vago
+      text: "Reconhece por que pedidos vagos produzem respostas genéricas."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l04-a1]

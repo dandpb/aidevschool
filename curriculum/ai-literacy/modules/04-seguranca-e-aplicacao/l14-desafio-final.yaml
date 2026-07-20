@@ -1,0 +1,154 @@
+# Lição l14 — desafio final integrador (Fase 2).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l14
+version: 1
+moduleId: mod-04
+title: "Desafio final: pedir, avaliar, melhorar e aplicar"
+objective: "Executar o ciclo completo — pedir com contexto, avaliar com critérios, proteger dados e aplicar — em um cenário integrado."
+estimatedMinutes: 5
+skillIds: [pedir, avaliar, proteger, aplicar]
+prerequisites: [l13]
+
+activities:
+  - id: l14-a1
+    type: prompt_builder
+    skillId: pedir
+    instruction: "Etapa 1 de 3 — pedir. Você precisa preparar uma proposta comercial para um cliente novo usando IA. Monte o pedido."
+    data:
+      scenario: "Sua empresa vende planos de limpeza para escritórios. Um cliente novo, dono de um prédio comercial com 12 andares, pediu uma proposta até sexta-feira."
+      genericPrompt: "Faz uma proposta pra mim."
+      fields:
+        - id: objetivo
+          label: "Objetivo"
+          hint: "O que a IA deve produzir? Ex.: redigir uma proposta comercial."
+        - id: contexto
+          label: "Contexto"
+          hint: "Os fatos que mudam a proposta: quem é o cliente, o que ele precisa, qual prazo."
+        - id: formato
+          label: "Formato"
+          hint: "Como a proposta deve vir: documento, e-mail, tópicos com preços…"
+    evaluation:
+      strategy: deterministic
+      fields:
+        objetivo:
+          minLength: 15
+          mustIncludeAny: ["proposta", "redigir", "escrever", "montar", "criar"]
+        contexto:
+          minLength: 25
+          mustIncludeAny: ["cliente", "prédio", "predio", "escritório", "escritorio", "limpeza"]
+        formato:
+          minLength: 8
+          mustIncludeAny: ["proposta", "documento", "e-mail", "email", "tópicos", "topicos", "tabela"]
+    feedback:
+      onFailure: "Revise os campos destacados: o pedido precisa dizer o que produzir, os fatos do cenário (cliente, prédio, prazo) e a forma de entrega."
+      perCheck:
+        objetivo: "Diga que quer uma proposta (redigir, montar, criar) — 'faz uma proposta' sozinho não define a tarefa."
+        contexto: "Inclua os fatos do cenário: o cliente novo, o prédio de 12 andares, o prazo de sexta-feira."
+        formato: "Peça a forma de entrega: proposta em documento, e-mail ou tópicos."
+      onSuccess: "Etapa 1 concluída! Pedido completo: tarefa, fatos do cenário e formato de entrega."
+    storage:
+      policy: structured_only
+    hints:
+      - "O objetivo precisa nomear a entrega: uma proposta comercial."
+      - "No contexto, cite os fatos do cenário — cliente, prédio/escritório ou limpeza."
+  - id: l14-a2
+    type: safety_classification
+    skillId: proteger
+    instruction: "Etapa 2 de 3 — proteger. Antes de colar informações no pedido, decida o que pode ir para a IA e o que deve ficar de fora."
+    data:
+      labels:
+        safe: "Pode ir para a IA"
+        sensitive: "Fica de fora"
+      items:
+        - id: i-tabela
+          text: "A tabela de preços pública dos planos de limpeza, já publicada no site"
+        - id: i-margem
+          text: "A margem de lucro interna de cada plano"
+        - id: i-contato
+          text: "O nome, telefone e e-mail do contato do cliente"
+        - id: i-andares
+          text: "O fato de o prédio ter 12 andares e precisar de limpeza diária"
+        - id: i-contrato
+          text: "Os valores de um contrato parecido fechado com outro cliente"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-tabela: safe
+        i-margem: sensitive
+        i-contato: sensitive
+        i-andares: safe
+        i-contrato: sensitive
+    feedback:
+      onFailure: "Regra prática: o que já é público ou descreve a necessidade pode ir; o que é interno (margem, contratos) ou identifica pessoas (contato) fica de fora."
+      perCheck:
+        i-tabela: "Preço público no site não é segredo — pode usar."
+        i-margem: "Margem de lucro é informação interna estratégica: nunca vai para a IA."
+        i-contato: "Nome, telefone e e-mail são dados pessoais: descreva o cliente sem identificá-lo."
+        i-andares: "Descrever a necessidade (12 andares, limpeza diária) não expõe ninguém — pode usar."
+        i-contrato: "Valores de contrato com outro cliente são confidenciais, mesmo sem citar nomes."
+      onSuccess: "Etapa 2 concluída! Público e necessidades podem ir; margens, contratos e dados pessoais ficam de fora."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte de cada item: se vazar, prejudica a empresa ou expõe uma pessoa?"
+      - "São dois itens seguros: o preço já público e a descrição da necessidade."
+  - id: l14-a3
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Etapa 3 de 3 — avaliar. A IA entregou duas versões de proposta. Escolha a mais segura para trabalhar e marque os motivos."
+    data:
+      scenario: "Você pediu a proposta do prédio de 12 andares. Antes de enviar ao cliente, qual versão serve de base de trabalho?"
+      outputs:
+        - id: out-a
+          text: "Prezado cliente, temos o prazer de apresentar a melhor proposta do mercado: R$ 8.470/mês pelo pacote completo para os 12 andares, com desconto exclusivo de 15% válido até sexta-feira. Nossa equipe de 40 profissionais garante qualidade comprovada por 200 clientes satisfeitos. É só assinar e começamos na segunda."
+        - id: out-b
+          text: "Estrutura de proposta para você completar: 1) Apresentação da empresa [2-3 linhas sobre sua empresa]; 2) Entendimento da necessidade [prédio de 12 andares, limpeza diária]; 3) Plano sugerido com itens inclusos [verificar o que seu plano cobre]; 4) Investimento [preencher com seus preços da tabela]; 5) Prazo e próximos passos [ajustar datas]. Revise cada seção antes de enviar."
+      criteria:
+        - id: c-verificar
+          text: "Deixa claro o que você precisa verificar ou preencher"
+        - id: c-ajusta
+          text: "Serve de base para adaptar ao cliente e à sua tabela de preços"
+        - id: c-pronta
+          text: "Parece pronta para enviar sem nenhuma revisão"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-b
+      requiredCriterionIds: [c-verificar, c-ajusta]
+    feedback:
+      onFailure: "Cuidado com a proposta 'pronta': preço, desconto e números de clientes foram inventados pela IA. A versão útil é a que estrutura o trabalho e marca o que você deve verificar."
+      perCheck:
+        betterOutputId: "A versão A inventou preço, desconto e '200 clientes' — enviar isso é prometer o que talvez não exista. A B é estrutura honesta para você completar."
+        c-verificar: "Faltou este motivo: a versão B marca exatamente o que precisa de verificação ou preenchimento."
+        c-ajusta: "Faltou este motivo: a versão B serve de base para você adaptar com seus preços e prazos reais."
+        c-pronta: "'Pronta para enviar sem revisão' é sinal de perigo, não de qualidade: números inventados passam direto."
+      onSuccess: "Desafio completo! Você pediu com contexto, protegeu dados e escolheu a base verificável — o ciclo inteiro."
+    storage:
+      policy: structured_only
+    hints:
+      - "Procure na versão A os números: de onde saíram o preço, o desconto e os '200 clientes'?"
+      - "A melhor base de trabalho é a que diz o que falta você verificar — marque os motivos ligados a isso."
+
+rubric:
+  id: l14-rubric
+  criteria:
+    - id: r-pedido-completo
+      text: "Monta pedido com objetivo, contexto do cenário e formato."
+      weight: 1
+    - id: r-protege-dados
+      text: "Separa corretamente informações públicas, internas e pessoais."
+      weight: 1
+    - id: r-base-verificavel
+      text: "Prefere a saída que marca o que verificar em vez da que parece pronta."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: application_reported
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l14-a1, l14-a2, l14-a3]

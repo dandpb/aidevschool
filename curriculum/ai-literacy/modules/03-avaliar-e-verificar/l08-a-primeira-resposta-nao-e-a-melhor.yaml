@@ -1,0 +1,69 @@
+# Lição l08 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l08
+version: 1
+moduleId: mod-03
+title: "A primeira resposta não é necessariamente a melhor"
+objective: "Comparar a primeira resposta da IA com uma alternativa e escolher com critério explícito."
+estimatedMinutes: 3
+skillIds: [avaliar]
+prerequisites: [l07]
+
+activities:
+  - id: l08-a1
+    type: output_comparison
+    skillId: avaliar
+    instruction: "Você pediu à IA ideias para reduzir as faltas dos clientes nas consultas da clínica. Ela deu duas respostas. Escolha a mais útil para agir esta semana e marque os motivos."
+    data:
+      scenario: "A clínica tem 20% de faltas nas consultas. Você precisa de ações práticas para testar já nesta semana, sem contratar nada."
+      outputs:
+        - id: out-a
+          text: "Reduzir faltas é essencial para clínicas modernas. Recomenda-se melhorar a experiência do paciente, investir em relacionamento, otimizar processos internos, valorizar a equipe, criar uma cultura de pontualidade, acompanhar indicadores e inovar constantemente. Com dedicação e foco no cliente, os resultados aparecem a médio prazo."
+        - id: out-b
+          text: "Três ações para testar esta semana: 1) Enviar lembrete por mensagem 24h antes da consulta com pedido de confirmação. 2) Oferecer encaixe para a lista de espera quando alguém desmarcar. 3) Ligar para quem faltou duas vezes seguidas para entender o motivo. Comece pelo lembrete: é o mais barato e você já mede o resultado na sexta-feira."
+      criteria:
+        - id: c-acoes
+          text: "Traz ações concretas que dá para começar esta semana"
+        - id: c-comeco
+          text: "Indica por onde começar e como medir o resultado"
+        - id: c-extenso
+          text: "É longo e cobre muitos temas de uma vez"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-b
+      requiredCriterionIds: [c-acoes, c-comeco]
+    feedback:
+      onFailure: "Quase lá. Para agir esta semana, o que vale é: ações concretas e um ponto de partida claro. Resposta longa e abrangente parece completa, mas não vira tarefa."
+      perCheck:
+        betterOutputId: "A resposta A soa profissional, mas não diz o que fazer na segunda-feira. A B lista três ações testáveis e por onde começar."
+        c-acoes: "Faltou este motivo: a resposta B traz ações específicas (lembrete, lista de espera, ligação)."
+        c-comeco: "Faltou este motivo: a resposta B diz por onde começar e quando medir o resultado."
+        c-extenso: "Ser longo e cobrir muitos temas não é qualidade aqui — é justamente o que impede a ação."
+      onSuccess: "Isso! Primeira resposta não é sinônimo de melhor resposta: comparar com critério (ação concreta, começo claro) mostra a diferença."
+    storage:
+      policy: structured_only
+    hints:
+      - "Releia o cenário: você precisa agir esta semana, sem contratar nada. Qual resposta vira tarefa na segunda-feira?"
+      - "Marque os motivos ligados a ação concreta e ponto de partida — não à aparência da resposta."
+
+rubric:
+  id: l08-rubric
+  criteria:
+    - id: r-criterio-explicito
+      text: "Compara respostas com critérios explícitos, não com a aparência."
+      weight: 1
+    - id: r-primeira-nao-melhor
+      text: "Reconhece que a primeira resposta mais confiante pode ser a menos útil."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l08-a1]

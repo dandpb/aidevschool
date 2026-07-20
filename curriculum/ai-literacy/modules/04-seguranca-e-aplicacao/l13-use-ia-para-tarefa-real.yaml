@@ -1,0 +1,77 @@
+# Lição l13 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l13
+version: 1
+moduleId: mod-04
+title: "Use IA para uma tarefa real de trabalho"
+objective: "Aplicar o ciclo pedir-avaliar-melhorar em uma tarefa real da própria rotina, mantendo o julgamento final."
+estimatedMinutes: 5
+skillIds: [aplicar]
+prerequisites: [l12]
+
+activities:
+  - id: l13-a1
+    type: prompt_builder
+    skillId: aplicar
+    instruction: "Escolha uma tarefa real da sua semana (responder um cliente, resumir um relatório, planejar uma apresentação…). Monte o pedido completo que você faria à IA para essa tarefa."
+    data:
+      scenario: "Pense em uma tarefa que você realmente precisa entregar nos próximos dias. Você vai montar o pedido como se fosse enviar à IA agora — e depois pode usar de verdade."
+      genericPrompt: "Me ajuda com uma tarefa do trabalho."
+      fields:
+        - id: objetivo
+          label: "Objetivo"
+          hint: "O que a IA deve produzir? Use um verbo: criar, escrever, resumir, planejar, redigir…"
+        - id: contexto
+          label: "Contexto"
+          hint: "Os fatos que a IA precisa saber sobre a sua tarefa (sem dados sensíveis!)."
+        - id: formato
+          label: "Formato"
+          hint: "Como a resposta deve vir: e-mail, lista, tópicos, tabela, mensagem…"
+    evaluation:
+      strategy: deterministic
+      fields:
+        objetivo:
+          minLength: 15
+          mustIncludeAny: ["criar", "escrever", "resumir", "planejar", "redigir", "montar", "revisar", "organizar"]
+        contexto:
+          minLength: 25
+        formato:
+          minLength: 8
+          mustIncludeAny: ["e-mail", "email", "lista", "tópicos", "topicos", "tabela", "mensagem", "relatório", "relatorio", "apresentação", "apresentacao", "texto", "planilha"]
+    feedback:
+      onFailure: "Volte aos campos destacados: o objetivo precisa de um verbo de ação, o contexto precisa de fatos concretos da sua tarefa e o formato precisa dizer como a resposta deve vir."
+      perCheck:
+        objetivo: "Diga o que a IA deve produzir usando um verbo: criar, escrever, resumir, planejar, redigir, montar…"
+        contexto: "Inclua os fatos que mudam a resposta: o que é a tarefa, para quem, qual prazo — sempre sem dados sensíveis."
+        formato: "Peça a forma de entrega: e-mail, lista, tópicos, tabela, mensagem…"
+      onSuccess: "Muito bem! Este pedido já pode ser enviado de verdade. Depois de receber a resposta, lembre: revise, verifique os fatos e ajuste em etapas."
+    storage:
+      policy: digest_only
+    hints:
+      - "Comece pelo objetivo: complete a frase 'Preciso que a IA ___' com um verbo de ação."
+      - "No formato, escreva o nome da entrega: e-mail, lista, tópicos, tabela ou mensagem."
+
+rubric:
+  id: l13-rubric
+  criteria:
+    - id: r-tarefa-real
+      text: "Monta um pedido para uma tarefa real da própria rotina, não um exercício genérico."
+      weight: 1
+    - id: r-campos-completos
+      text: "Preenche objetivo, contexto e formato de forma utilizável."
+      weight: 1
+    - id: r-sem-dados-sensiveis
+      text: "Aplica a regra de proteção: não inclui dados sensíveis no pedido."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: application_reported
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l13-a1]

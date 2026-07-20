@@ -144,8 +144,28 @@ class TestValidContent(TrackFixtureMixin, unittest.TestCase):
     def test_real_track_passes(self):
         errors, ready, catalog = validate.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
-        self.assertEqual(["l02", "l05", "l12"], [lesson["id"] for lesson in ready])
+        self.assertEqual(
+            ["l%02d" % n for n in range(1, 15)],
+            [lesson["id"] for lesson in ready],
+        )
         self.assertEqual(14, len(catalog["lessons"]))
+
+    def test_real_track_covers_all_seven_activity_types(self):
+        errors, ready, _catalog = validate.validate_track(TRACK_DIR)
+        self.assertEqual([], errors)
+        types = {activity["type"] for lesson in ready for activity in lesson["activities"]}
+        self.assertEqual(
+            {
+                "choice",
+                "sort",
+                "missing_context",
+                "safety_classification",
+                "prompt_builder",
+                "output_comparison",
+                "rubric_review",
+            },
+            types,
+        )
 
     def test_planned_lessons_do_not_require_files(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -296,13 +316,20 @@ class TestCompiler(TrackFixtureMixin, unittest.TestCase):
             # `lessons` is the last export in the generated file.
             start = content.index("export const lessons: LessonDefinition[] = ")
             lessons_block = content[start:]
-            for lesson_id in ('"l02"', '"l05"', '"l12"'):
-                self.assertIn('"id": %s' % lesson_id, lessons_block)
-            # As três lições piloto usam tipos de atividade diferentes entre si.
-            for act_type in ("output_comparison", "prompt_builder", "safety_classification"):
+            # Todas as 14 lições estão ready e entram no read model com corpo completo.
+            for n in range(1, 15):
+                self.assertIn('"id": "l%02d"' % n, lessons_block)
+            # A trilha usa os 7 tipos de atividade do contrato.
+            for act_type in (
+                "choice",
+                "sort",
+                "missing_context",
+                "safety_classification",
+                "prompt_builder",
+                "output_comparison",
+                "rubric_review",
+            ):
                 self.assertIn('"type": "%s"' % act_type, lessons_block)
-            # Planned rows may appear in modules catalog; they must not be full lesson bodies.
-            self.assertNotIn('"id": "l01"', lessons_block)
 
     def test_compile_refuses_invalid_content(self):
         with tempfile.TemporaryDirectory() as tmp:

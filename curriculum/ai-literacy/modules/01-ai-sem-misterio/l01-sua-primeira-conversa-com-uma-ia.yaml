@@ -1,0 +1,61 @@
+# Lição l01 — primeira lição da trilha (Fase 2).
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l01
+version: 1
+moduleId: mod-01
+title: "Sua primeira conversa com uma IA"
+objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como um rascunho, não como uma ordem."
+estimatedMinutes: 3
+skillIds: [entender]
+prerequisites: []
+
+activities:
+  - id: l01-a1
+    type: choice
+    skillId: entender
+    instruction: "Você perguntou à IA: 'Como organizo a pauta da reunião semanal da minha equipe?' e ela respondeu com uma pauta pronta. O que você faz com essa resposta?"
+    data:
+      options:
+        - id: opt-rascunho
+          text: "Uso como rascunho: reviso, ajusto à realidade da minha equipe e só então uso."
+        - id: opt-copia
+          text: "Uso exatamente como veio — a IA sabe qual é o melhor formato de pauta."
+        - id: opt-descarta
+          text: "Descarto na hora — IA não entende nada de reunião."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-rascunho]
+    feedback:
+      onFailure: "Quase lá. A resposta da IA é um ponto de partida, não uma decisão final: nem aceitar sem ler, nem jogar fora."
+      perCheck:
+        opt-rascunho: "O melhor caminho é tratar a resposta como rascunho: aproveita o que serve, ajusta o que não serve."
+        opt-copia: "Sem revisão, erros e coisas fora do contexto da sua equipe passam direto."
+        opt-descarta: "Descartar tudo desperdiça um bom rascunho — a economia de tempo está em revisar, não em recomeçar."
+      onSuccess: "Isso! Resposta de IA é rascunho: o julgamento final é sempre seu."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pense na IA como um estagiário esforçado: ele entrega um rascunho rápido, mas quem assina embaixo é você."
+      - "A melhor opção equilibra aproveitar o trabalho da IA e revisar com o seu conhecimento da equipe."
+
+rubric:
+  id: l01-rubric
+  criteria:
+    - id: r-rascunho
+      text: "Interpreta a resposta da IA como rascunho a ser revisado, não como ordem."
+      weight: 1
+    - id: r-julgamento
+      text: "Reconhece que o julgamento final sobre o conteúdo permanece com a pessoa."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l01-a1]

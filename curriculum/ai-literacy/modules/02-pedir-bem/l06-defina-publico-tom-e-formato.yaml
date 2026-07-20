@@ -1,0 +1,68 @@
+# Lição l06 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l06
+version: 1
+moduleId: mod-02
+title: "Defina público, tom e formato"
+objective: "Ajustar público, tom e formato de um pedido para obter uma resposta pronta para usar."
+estimatedMinutes: 4
+skillIds: [pedir]
+prerequisites: [l05]
+
+activities:
+  - id: l06-a1
+    type: missing_context
+    skillId: pedir
+    instruction: "Uma colega pediu à IA: \"Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h.\" A resposta veio formal demais para o grupo de chat da equipe. O que estava faltando no pedido dela?"
+    data:
+      prompt: "Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h."
+      contextOptions:
+        - id: ctx-publico
+          text: "Quem vai receber a mensagem (a equipe no chat interno)"
+        - id: ctx-tom
+          text: "O tom desejado (direto e descontraído)"
+        - id: ctx-formato
+          text: "O formato (mensagem curta de chat, não e-mail formal)"
+        - id: ctx-cor
+          text: "A cor da fonte que a IA deve usar"
+        - id: ctx-historico
+          text: "O histórico completo de reuniões da empresa"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [ctx-publico, ctx-tom, ctx-formato]
+    feedback:
+      onFailure: "A resposta saiu formal demais porque o pedido não dizia para quem era, com qual tom e em qual formato. Cor de fonte e histórico da empresa não mudam essa resposta."
+      perCheck:
+        ctx-publico: "Faltou dizer quem recebe: mensagem para a equipe no chat é diferente de aviso para a diretoria."
+        ctx-tom: "Faltou o tom: sem essa informação, a IA escolhe o mais neutro — e geralmente formal."
+        ctx-formato: "Faltou o formato: uma mensagem curta de chat, não um e-mail com saudação e despedida."
+        ctx-cor: "A IA não controla a cor da fonte — isso não muda o texto da resposta."
+        ctx-historico: "O histórico de reuniões não é necessário para este aviso simples."
+      onSuccess: "Isso! Público, tom e formato são o ajuste fino que faz a resposta sair pronta para usar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare o pedido com a queixa: a resposta veio formal demais. Que três informações teriam evitado isso?"
+      - "Pense em: quem recebe, como deve soar e onde a mensagem vai ser publicada."
+
+rubric:
+  id: l06-rubric
+  criteria:
+    - id: r-identifica-faltantes
+      text: "Identifica público, tom e formato como contextos ausentes do pedido."
+      weight: 1
+    - id: r-descarta-irrelevante
+      text: "Descarta informações que não mudam a resposta (cor de fonte, histórico irrelevante)."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l06-a1]

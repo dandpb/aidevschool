@@ -1,0 +1,64 @@
+# Lição l11 — Fase 2.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l11
+version: 1
+moduleId: mod-03
+title: "Como comparar alternativas e explicitar critérios"
+objective: "Explicitar critérios de comparação antes de escolher entre alternativas propostas pela IA."
+estimatedMinutes: 4
+skillIds: [avaliar]
+prerequisites: [l10]
+
+activities:
+  - id: l11-a1
+    type: sort
+    skillId: avaliar
+    instruction: "Você vai usar a IA para escolher entre três ferramentas de agendamento. Ordene o processo que leva a uma decisão bem fundamentada."
+    data:
+      items:
+        - id: step-compara
+          text: "Compare as alternativas critério por critério, lado a lado."
+        - id: step-criterios
+          text: "Liste os critérios que importam para você (ex.: preço, facilidade, suporte em português)."
+        - id: step-decide
+          text: "Decida você mesmo, registrando o motivo principal da escolha."
+        - id: step-pede
+          text: "Peça à IA as alternativas e peça que avalie cada uma nos seus critérios."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [step-criterios, step-pede, step-compara, step-decide]
+    feedback:
+      onFailure: "Critérios vêm antes das alternativas: sem eles, a comparação vira questão de impressão. E a decisão final — com o motivo registrado — é sua, não da IA."
+      perCheck:
+        step-criterios: "Primeiro defina o que importa: sem critérios explícitos, qualquer alternativa parece boa."
+        step-pede: "Só depois dos critérios definidos é que você pede as alternativas e a avaliação de cada uma."
+        step-compara: "A comparação vem depois de ter alternativas avaliadas nos mesmos critérios."
+        step-decide: "A decisão é o último passo — e é humana, com o motivo registrado."
+      onSuccess: "Perfeito! Critérios primeiro, alternativas depois, comparação lado a lado e decisão sua, registrada."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa existir antes mesmo de pedir as alternativas à IA?"
+      - "A decisão final nunca é da IA — ela fecha o processo, com o motivo anotado."
+
+rubric:
+  id: l11-rubric
+  criteria:
+    - id: r-criterios-primeiro
+      text: "Coloca a definição de critérios antes do pedido de alternativas."
+      weight: 1
+    - id: r-decisao-humana
+      text: "Reserva a decisão final, com motivo registrado, para a pessoa."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l11-a1]
