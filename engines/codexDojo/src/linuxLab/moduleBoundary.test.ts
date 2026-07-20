@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
-import { renderLinuxLab } from "./index"
 import { buildInitialState } from "../state"
+import { renderLinuxLab } from "./index"
 
 const sourceRoot = new URL("..", import.meta.url)
 
