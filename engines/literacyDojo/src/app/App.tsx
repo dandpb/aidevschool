@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { AttemptFeedback } from "../domain/feedback";
-import type { LearnerProgress } from "../domain/progress";
+import type { Achievement, LearnerProgress } from "../domain/progress";
 import { HomeScreen } from "../screens/HomeScreen";
-import { LessonScreen } from "../screens/LessonScreen";
+import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
+import { ProgressScreen } from "../screens/ProgressScreen";
 import { ResultScreen } from "../screens/ResultScreen";
 import { TrackMapScreen } from "../screens/TrackMapScreen";
 import { type Services, ServicesProvider, createServices, loadOrSeedProgress } from "./services";
@@ -20,14 +21,17 @@ export type LessonSummary = {
   lesson: LessonDefinition;
   lessonScore: number;
   activityResults: ActivityResultSummary[];
+  mode?: LessonMode;
   nextLessonId?: string;
+  newlyUnlocked?: Achievement[];
 };
 
 export type Route =
   | { name: "onboarding" }
   | { name: "home" }
   | { name: "map" }
-  | { name: "lesson"; lessonId: string }
+  | { name: "progress" }
+  | { name: "lesson"; lessonId: string; mode?: LessonMode }
   | { name: "result"; summary: LessonSummary };
 
 function AppShell({ services }: { services: Services }) {
@@ -86,7 +90,9 @@ function AppShell({ services }: { services: Services }) {
           <HomeScreen
             progress={progress}
             onContinue={(lessonId) => setRoute({ name: "lesson", lessonId })}
+            onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
             onOpenMap={() => setRoute({ name: "map" })}
+            onOpenProgress={() => setRoute({ name: "progress" })}
             onReset={handleReset}
           />
         )}
@@ -97,10 +103,19 @@ function AppShell({ services }: { services: Services }) {
             onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
           />
         )}
+        {route.name === "progress" && (
+          <ProgressScreen
+            progress={progress}
+            onBack={() => setRoute({ name: "home" })}
+            onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+            onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+          />
+        )}
         {route.name === "lesson" && (
           <LessonScreen
-            key={route.lessonId}
+            key={`${route.lessonId}:${route.mode ?? "initial"}`}
             lessonId={route.lessonId}
+            mode={route.mode ?? "initial"}
             onProgressChange={setProgress}
             onCompleted={(updated, summary) => {
               setProgress(updated);
@@ -112,6 +127,8 @@ function AppShell({ services }: { services: Services }) {
         {route.name === "result" && (
           <ResultScreen
             summary={route.summary}
+            progress={progress}
+            onProgressChange={setProgress}
             onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
             onHome={() => setRoute({ name: "home" })}
             onMap={() => setRoute({ name: "map" })}

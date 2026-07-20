@@ -1,5 +1,6 @@
 import type { OutputComparisonActivity } from "../data/generated/lessons";
 import type { OutputComparisonAnswer } from "../domain/evaluation";
+import { toggleId } from "./toggleId";
 
 export function OutputComparisonView({
   activity,
@@ -19,10 +20,7 @@ export function OutputComparisonView({
   const groupName = `output-${activity.id}`;
 
   const toggleCriterion = (criterionId: string) => {
-    const next = new Set(selectedCriteria);
-    if (next.has(criterionId)) next.delete(criterionId);
-    else next.add(criterionId);
-    onChange({ ...answer, criterionIds: [...next] });
+    onChange({ ...answer, criterionIds: toggleId(answer.criterionIds, criterionId) });
   };
 
   return (

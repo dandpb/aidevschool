@@ -3,6 +3,7 @@ import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "..
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import {
+  type Achievement,
   type LearnerProgress,
   type LessonOutcome,
   type OnboardingConfidence,
@@ -11,11 +12,13 @@ import {
   type SkillPractice,
   XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
+  applyAchievements,
   applyAttemptToSkills,
   applyStreak,
   awardXp,
   evaluateLessonCompletion,
   isLessonUnlocked,
+  recordApplication,
   reviewsDue,
   unlockNextReadyLesson,
 } from "../domain/progress";
@@ -82,6 +85,7 @@ export type CompleteLessonResult = {
   progress: LearnerProgress;
   outcome: LessonOutcome;
   nextLessonId?: string;
+  newlyUnlocked?: Achievement[];
 };
 
 export type ResumeDestination =
@@ -155,6 +159,8 @@ export class LiteracyUseCases {
     lessonId: string;
     activityId: string;
     answer: ActivityAnswer;
+    /** "review" quando a tentativa faz parte de uma revisão espaçada. */
+    context?: "initial" | "review";
   }): Promise<SubmitAttemptResult> {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
@@ -174,7 +180,7 @@ export class LiteracyUseCases {
       lesson.review.intervalsDays,
     );
     next = applyStreak(next, now);
-    if (evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS);
+    if (evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, now);
     await this.deps.progress.save(next);
 
     const record = buildEvidenceRecord({
@@ -184,6 +190,7 @@ export class LiteracyUseCases {
       skillIds: [...lesson.skillIds],
       evaluation,
       timestamp: now.toISOString(),
+      context: input.context ?? "initial",
     });
     this.deps.evidence.emit(record);
 
@@ -251,7 +258,7 @@ export class LiteracyUseCases {
       ...progress,
       lessonStatus: { ...progress.lessonStatus, [input.lessonId]: "completed" },
     };
-    next = awardXp(next, XP_PER_LESSON_COMPLETE);
+    next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
     next = this.applyReviewSchedule(next, lesson, now, 0);
     const unlocked = unlockNextReadyLesson(next, this.deps.content.listModules(), input.lessonId);
     next = unlocked.progress;
@@ -259,6 +266,8 @@ export class LiteracyUseCases {
       ...next,
       currentLessonId: unlocked.unlockedLessonId ?? input.lessonId,
     };
+    const withAchievements = applyAchievements(next, this.deps.content.listModules(), now);
+    next = withAchievements.progress;
     await this.deps.progress.save(next);
 
     this.deps.analytics.track("lesson_completed", {
@@ -266,7 +275,67 @@ export class LiteracyUseCases {
       score: outcome.lessonScore,
       durationSeconds: input.durationSeconds,
     });
-    return { progress: next, outcome, nextLessonId: unlocked.unlockedLessonId };
+    return {
+      progress: next,
+      outcome,
+      nextLessonId: unlocked.unlockedLessonId,
+      newlyUnlocked: withAchievements.newlyUnlocked,
+    };
+  }
+
+  /**
+   * Início de uma revisão espaçada: a lição precisa estar concluída. Não muda
+   * status nem concede XP — apenas registra o evento e devolve o contexto.
+   */
+  async startReview(
+    lessonId: string,
+  ): Promise<{ progress: LearnerProgress; intervalDays: number }> {
+    const lesson = this.requireLesson(lessonId);
+    const progress = await this.requireProgress();
+    if (progress.lessonStatus[lessonId] !== "completed") {
+      throw new LessonLockedError(lessonId);
+    }
+    const bestPasses = Math.max(
+      0,
+      ...lesson.skillIds.map((skillId) => (progress.skills[skillId]?.passes ?? 1) - 1),
+    );
+    const stage = Math.min(lesson.review.intervalsDays.length - 1, bestPasses);
+    const intervalDays = lesson.review.intervalsDays[stage] ?? 1;
+    this.deps.analytics.track("review_started", { lessonId, intervalDays });
+    return { progress, intervalDays };
+  }
+
+  /**
+   * Conclusão de uma revisão espaçada: sem XP de lição e sem desbloqueio; a
+   * agenda seguinte já foi avançada pelas próprias tentativas (passes → estágio).
+   */
+  async completeReview(input: {
+    lessonId: string;
+    bestScores: Record<string, number>;
+  }): Promise<CompleteLessonResult> {
+    const lesson = this.requireLesson(input.lessonId);
+    const outcome = evaluateLessonCompletion(lesson, input.bestScores);
+    const progress = await this.requireProgress();
+    this.deps.analytics.track("review_completed", {
+      lessonId: input.lessonId,
+      score: outcome.lessonScore,
+    });
+    return { progress, outcome };
+  }
+
+  /** Relato de aplicação real (sem texto livre): registra, emite evento e avalia conquistas. */
+  async reportRealWorldApplication(input: {
+    lessonId: string;
+  }): Promise<{ progress: LearnerProgress; newlyUnlocked: Achievement[] }> {
+    this.requireLesson(input.lessonId);
+    const progress = await this.requireProgress();
+    const now = this.deps.clock.now();
+    let next = recordApplication(progress, input.lessonId, now);
+    const withAchievements = applyAchievements(next, this.deps.content.listModules(), now);
+    next = withAchievements.progress;
+    await this.deps.progress.save(next);
+    this.deps.analytics.track("real_world_application_reported", { lessonId: input.lessonId });
+    return { progress: next, newlyUnlocked: withAchievements.newlyUnlocked };
   }
 
   /**

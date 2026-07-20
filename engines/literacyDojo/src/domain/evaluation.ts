@@ -1,16 +1,32 @@
 import type {
   ActivityDefinition,
+  ChoiceActivity,
+  MissingContextActivity,
   OutputComparisonActivity,
   PromptBuilderActivity,
+  RubricReviewActivity,
   SafetyClassificationActivity,
+  SortActivity,
 } from "../data/generated/lessons";
 
 /**
  * Avaliação determinística das atividades — 100% dirigida pelos dados do read
- * model (nenhum texto ou id de conteúdo hardcoded aqui). O vertical slice
- * implementa os três tipos das lições piloto; os demais tipos do contrato
- * entram na Fase 2 e hoje lançam UnsupportedActivityTypeError.
+ * model (nenhum texto ou id de conteúdo hardcoded aqui). Os 7 tipos do
+ * content-contract estão implementados; tipos futuros desconhecidos lançam
+ * UnsupportedActivityTypeError.
  */
+
+export type ChoiceAnswer = {
+  optionIds: string[];
+};
+
+export type SortAnswer = {
+  orderedIds: string[];
+};
+
+export type MissingContextAnswer = {
+  contextIds: string[];
+};
 
 export type OutputComparisonAnswer = {
   outputId?: string;
@@ -25,10 +41,18 @@ export type SafetyClassificationAnswer = {
   labels: Record<string, "safe" | "sensitive">;
 };
 
+export type RubricReviewAnswer = {
+  verdicts: Record<string, "met" | "partial" | "not_met">;
+};
+
 export type ActivityAnswer =
+  | ChoiceAnswer
+  | SortAnswer
+  | MissingContextAnswer
   | OutputComparisonAnswer
   | PromptBuilderAnswer
-  | SafetyClassificationAnswer;
+  | SafetyClassificationAnswer
+  | RubricReviewAnswer;
 
 export type CheckValue = boolean | number | string;
 
@@ -57,7 +81,7 @@ export const ACTIVITY_PASS_THRESHOLD = 0.75;
 
 export class UnsupportedActivityTypeError extends Error {
   constructor(activityType: string) {
-    super(`Tipo de atividade não suportado no vertical slice: ${activityType}`);
+    super(`Tipo de atividade não suportado: ${activityType}`);
     this.name = "UnsupportedActivityTypeError";
   }
 }
@@ -77,35 +101,70 @@ function includesAny(text: string, alternatives: string[]): boolean {
   return alternatives.some((alternative) => haystack.includes(normalizeText(alternative)));
 }
 
+function fractionPassed(checks: CheckResult[]): number {
+  return checks.length === 0 ? 0 : checks.filter((c) => c.passed).length / checks.length;
+}
+
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
+
 function finalize(
   activity: ActivityDefinition,
   checks: CheckResult[],
   pass: boolean,
-  totalWeight?: number,
+  score?: number,
 ): EvaluationResult {
-  const earned = checks
-    .filter((check) => check.passed)
-    .reduce((total, check) => total + weightOf(check.id, activity.type), 0);
-  const total =
-    totalWeight ?? checks.reduce((sum, check) => sum + weightOf(check.id, activity.type), 0);
-  const score = total === 0 ? 0 : Math.round((earned / total) * 100) / 100;
+  const computed = score ?? fractionPassed(checks);
   return {
     activityId: activity.id,
     activityType: activity.type,
     checks,
     deterministicChecks: Object.fromEntries(checks.map((check) => [check.id, check.value])),
-    score,
+    score: round2(computed),
     pass,
   };
 }
 
-function weightOf(checkId: string, activityType: string): number {
-  if (activityType === "output_comparison") {
-    if (checkId === "betterOutputId") return 2;
-    if (checkId === "noExtraCriteria") return 1;
-    return 1;
-  }
-  return 1;
+export function evaluateChoice(activity: ChoiceActivity, answer: ChoiceAnswer): EvaluationResult {
+  const correct = new Set(activity.evaluation.correctOptionIds);
+  const selected = new Set(answer.optionIds);
+  // Um check por opção: acertar é marcar as corretas e NÃO marcar as demais.
+  const checks: CheckResult[] = activity.data.options.map((option) => {
+    const passed = selected.has(option.id) === correct.has(option.id);
+    return { id: option.id, passed, value: passed };
+  });
+  return finalize(activity, checks, fractionPassed(checks) >= ACTIVITY_PASS_THRESHOLD);
+}
+
+export function evaluateSort(activity: SortActivity, answer: SortAnswer): EvaluationResult {
+  const expected = activity.evaluation.expectedOrder;
+  const checks: CheckResult[] = expected.map((itemId, index) => {
+    const passed = answer.orderedIds[index] === itemId;
+    return { id: itemId, passed, value: passed };
+  });
+  return finalize(activity, checks, fractionPassed(checks) >= ACTIVITY_PASS_THRESHOLD);
+}
+
+export function evaluateMissingContext(
+  activity: MissingContextActivity,
+  answer: MissingContextAnswer,
+): EvaluationResult {
+  const required = new Set(activity.evaluation.requiredContextIds);
+  const selected = new Set(answer.contextIds);
+  const extraSelected = [...selected].filter((id) => !required.has(id));
+  const checks: CheckResult[] = [
+    ...activity.evaluation.requiredContextIds.map((contextId) => ({
+      id: contextId,
+      passed: selected.has(contextId),
+      value: selected.has(contextId),
+    })),
+    { id: "noExtraContext", passed: extraSelected.length === 0, value: extraSelected.length },
+  ];
+  const pass =
+    activity.evaluation.requiredContextIds.every((id) => selected.has(id)) &&
+    extraSelected.length === 0;
+  return finalize(activity, checks, pass);
 }
 
 export function evaluateOutputComparison(
@@ -135,12 +194,20 @@ export function evaluateOutputComparison(
     },
   ];
 
+  // Score ponderado: a saída certa vale 2; critérios e "sem extras" valem 1.
+  const weights = new Map<string, number>([["betterOutputId", 2]]);
+  const earned = checks
+    .filter((check) => check.passed)
+    .reduce((total, check) => total + (weights.get(check.id) ?? 1), 0);
+  const total = checks.reduce((sum, check) => sum + (weights.get(check.id) ?? 1), 0);
+  const score = total === 0 ? 0 : earned / total;
+
   const pass =
     answer.outputId === betterOutputId &&
     requiredCriterionIds.every((id) => selected.has(id)) &&
     extraSelected.length === 0;
 
-  return finalize(activity, checks, pass);
+  return finalize(activity, checks, pass, score);
 }
 
 export function evaluatePromptBuilder(
@@ -158,9 +225,7 @@ export function evaluatePromptBuilder(
     }
     return { id: field.id, passed, value: passed };
   });
-  const score = checks.length === 0 ? 0 : checks.filter((c) => c.passed).length / checks.length;
-  const pass = score >= ACTIVITY_PASS_THRESHOLD;
-  return finalize(activity, checks, pass, checks.length);
+  return finalize(activity, checks, fractionPassed(checks) >= ACTIVITY_PASS_THRESHOLD);
 }
 
 export function evaluateSafetyClassification(
@@ -173,9 +238,20 @@ export function evaluateSafetyClassification(
     const passed = given !== undefined && given === expected[item.id];
     return { id: item.id, passed, value: passed };
   });
-  const correct = checks.filter((check) => check.passed).length;
-  const pass = checks.length > 0 && correct / checks.length >= ACTIVITY_PASS_THRESHOLD;
-  return finalize(activity, checks, pass, checks.length);
+  return finalize(activity, checks, fractionPassed(checks) >= ACTIVITY_PASS_THRESHOLD);
+}
+
+export function evaluateRubricReview(
+  activity: RubricReviewActivity,
+  answer: RubricReviewAnswer,
+): EvaluationResult {
+  const expected = activity.evaluation.expectedVerdicts;
+  const checks: CheckResult[] = activity.data.criteria.map((criterion) => {
+    const given = answer.verdicts[criterion.id];
+    const passed = given !== undefined && given === expected[criterion.id];
+    return { id: criterion.id, passed, value: passed };
+  });
+  return finalize(activity, checks, fractionPassed(checks) >= ACTIVITY_PASS_THRESHOLD);
 }
 
 export function evaluateActivity(
@@ -183,13 +259,21 @@ export function evaluateActivity(
   answer: ActivityAnswer,
 ): EvaluationResult {
   switch (activity.type) {
+    case "choice":
+      return evaluateChoice(activity, answer as ChoiceAnswer);
+    case "sort":
+      return evaluateSort(activity, answer as SortAnswer);
+    case "missing_context":
+      return evaluateMissingContext(activity, answer as MissingContextAnswer);
     case "output_comparison":
       return evaluateOutputComparison(activity, answer as OutputComparisonAnswer);
     case "prompt_builder":
       return evaluatePromptBuilder(activity, answer as PromptBuilderAnswer);
     case "safety_classification":
       return evaluateSafetyClassification(activity, answer as SafetyClassificationAnswer);
+    case "rubric_review":
+      return evaluateRubricReview(activity, answer as RubricReviewAnswer);
     default:
-      throw new UnsupportedActivityTypeError(activity.type);
+      throw new UnsupportedActivityTypeError((activity as ActivityDefinition).type);
   }
 }

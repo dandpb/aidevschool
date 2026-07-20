@@ -25,6 +25,11 @@ export type LiteracyEvidenceRecord = {
   pass: boolean;
   timestamp: string;
   verifierRequired: true;
+  /**
+   * Contexto da tentativa (extensão aditiva da Fase 2): "initial" = prática da
+   * lição; "review" = revisão espaçada de lição já concluída.
+   */
+  context?: "initial" | "review";
 };
 
 export function buildEvidenceRecord(input: {
@@ -34,6 +39,7 @@ export function buildEvidenceRecord(input: {
   skillIds: string[];
   evaluation: EvaluationResult;
   timestamp: string;
+  context?: "initial" | "review";
 }): LiteracyEvidenceRecord {
   return {
     schemaVersion: EVIDENCE_SCHEMA_VERSION,
@@ -49,6 +55,7 @@ export function buildEvidenceRecord(input: {
     pass: input.evaluation.pass,
     timestamp: input.timestamp,
     verifierRequired: true,
+    ...(input.context !== undefined ? { context: input.context } : {}),
   };
 }
 
@@ -66,6 +73,7 @@ const ALLOWED_KEYS = new Set([
   "pass",
   "timestamp",
   "verifierRequired",
+  "context",
 ]);
 
 function isCheckValue(value: unknown): value is CheckValue {
@@ -98,6 +106,9 @@ export function isValidEvidenceRecord(value: unknown): value is LiteracyEvidence
   if (typeof record.score !== "number" || record.score < 0 || record.score > 1) return false;
   if (typeof record.pass !== "boolean") return false;
   if (typeof record.timestamp !== "string" || Number.isNaN(Date.parse(record.timestamp))) {
+    return false;
+  }
+  if (record.context !== undefined && record.context !== "initial" && record.context !== "review") {
     return false;
   }
   return record.verifierRequired === true;
