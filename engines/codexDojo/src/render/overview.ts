@@ -78,12 +78,13 @@ export function renderOverview(state: AppState): string {
 
       <article class="topology" aria-label="Mapa visual dos agentes">
         ${model.visibleAgents
-          .map(
-            (agent, index) =>
-              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}">
-                <span>${escapeHtml(agent.name)}</span>
-              </button>`,
-          )
+          .map((agent, index) => {
+            const nodeNumber = index + 1
+            const ariaLabel = `Nó ${nodeNumber}: ${agent.name}`
+            return `<button class="agent-node node-${nodeNumber}" type="button" data-agent="${escapeHtml(agent.id)}" aria-label="${escapeHtml(ariaLabel)}">
+                <span aria-hidden="true">${escapeHtml(agent.name)}</span>
+              </button>`
+          })
           .join("")}
       </article>
 
@@ -129,14 +130,15 @@ export function renderOverview(state: AppState): string {
 
       <article class="cycle-strip">
         ${model.visibleStages
-          .map(
-            (stage) => `
-              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}">
-                <span>${escapeHtml(stage.owner)}</span>
-                ${escapeHtml(stage.label)}
+          .map((stage, index) => {
+            const ariaLabel = `Etapa ${index + 1}: ${stage.label} (Proprietário: ${stage.owner})`
+            return `
+              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}" aria-label="${escapeHtml(ariaLabel)}">
+                <span aria-hidden="true">${escapeHtml(stage.owner)}</span>
+                <span aria-hidden="true">${escapeHtml(stage.label)}</span>
               </button>
-            `,
-          )
+            `
+          })
           .join("")}
       </article>
 

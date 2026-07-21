@@ -19,12 +19,18 @@ export function renderCycle(state: AppState): string {
         <div class="timeline">
           ${getStages()
             .map((stage, index) => {
-              const { className, aria } = currentAttrs(stage.id === selectedStage.id, "step")
-              const completed = isStageCompleted(state, stage.id) ? "is-complete" : ""
+              const isSelected = stage.id === selectedStage.id
+              const { className, aria } = currentAttrs(isSelected, "step")
+              const isCompleted = isStageCompleted(state, stage.id)
+              const completed = isCompleted ? "is-complete" : ""
+              const statusText = isCompleted ? "concluído" : "pendente"
+              const selectionText = isSelected ? ", atual" : ""
+              const ariaLabel = `Etapa ${index + 1}: ${stage.label} (${statusText}${selectionText})`
+
               return `
-                <button class="timeline-step ${className} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${aria}>
+                <button class="timeline-step ${className} ${completed}" type="button" data-stage="${escapeHtml(stage.id)}"${aria} aria-label="${escapeHtml(ariaLabel)}">
                   <span aria-hidden="true">${escapeHtml(String(index + 1).padStart(2, "0"))}</span>
-                  ${escapeHtml(stage.label)}
+                  <span aria-hidden="true">${escapeHtml(stage.label)}</span>
                 </button>
               `
             })
