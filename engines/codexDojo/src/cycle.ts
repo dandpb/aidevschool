@@ -52,7 +52,8 @@ export function getCycleCompletionPercent(completedStageIds: readonly string[]):
   // ⚡ Bolt: Replace array allocation (.filter) with loop counter to reduce GC pressure
   let completedCount = 0
   for (let i = 0; i < cycleStages.length; i++) {
-    if (completedStageIds.includes(cycleStages[i].id)) {
+    const stage = cycleStages[i]
+    if (stage !== undefined && completedStageIds.includes(stage.id)) {
       completedCount++
     }
   }
