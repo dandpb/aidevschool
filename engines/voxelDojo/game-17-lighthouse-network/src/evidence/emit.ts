@@ -4,4 +4,7 @@ import type { LevelId } from "../sim/levels"
 
 export type { EvidenceRecord }
 
-export const { emitEvidence } = createEmitForGame<LevelId>("game-17-lighthouse-network", reviewSlice)
+export const { emitEvidence } = createEmitForGame<LevelId>(
+  "game-17-lighthouse-network",
+  reviewSlice,
+)

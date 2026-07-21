@@ -114,15 +114,15 @@ export function getProjects(filter: ProjectFilter = "all"): readonly DojoProject
   return projectsByPhase.get(filter) ?? noProjects
 }
 
-export function getCurrentProject(): DojoProject {
-  // Level-0 (p00) is a parallel non-technical entry; default current is first technical project.
-  const project = projects.find((p) => p.level >= 1) ?? projects[0]
+// ⚡ Bolt: Extract find to module scope for O(1) return instead of O(n) array scan on each render
+const defaultCurrentProject = projects.find((p) => p.level >= 1) ?? projects[0]
 
-  if (project === undefined) {
+export function getCurrentProject(): DojoProject {
+  if (defaultCurrentProject === undefined) {
     throw new Error("No codexDojo project configured.")
   }
 
-  return project
+  return defaultCurrentProject
 }
 
 export function getSelectedProject(state: AppState): DojoProject {
