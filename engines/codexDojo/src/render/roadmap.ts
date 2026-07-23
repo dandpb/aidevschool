@@ -11,6 +11,7 @@ const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
   escalabilidade: "Escalabilidade",
   resiliencia: "Resiliência",
   sistemas_complexos: "Sistemas complexos",
+  aplicacao_ia: "Aplicação de IA",
 }
 
 export function renderRoadmap(state: AppState): string {
