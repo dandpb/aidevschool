@@ -78,12 +78,12 @@ export function renderOverview(state: AppState): string {
 
       <article class="topology" aria-label="Mapa visual dos agentes">
         ${model.visibleAgents
-          .map(
-            (agent, index) =>
-              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}">
+          .map((agent, index) => {
+            const ariaLabel = `Posição ${index + 1}, Agente: ${agent.name}`
+            return `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}" aria-label="${escapeHtml(ariaLabel)}">
                 <span>${escapeHtml(agent.name)}</span>
-              </button>`,
-          )
+              </button>`
+          })
           .join("")}
       </article>
 
