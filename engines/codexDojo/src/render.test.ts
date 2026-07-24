@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { projects } from "./data/projects"
-import { getCurrentProject, getMetrics, getSelectedProject } from "./progress"
+import { getMetrics, getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
 
