@@ -130,3 +130,13 @@ curriculum/**/benchmarks/results/
 curriculum/**/benchmarks/results-*/
 # miniTown concept art (not runtime)
 engines/miniTown/docs/concepts/*.png
+
+# Riptide artifacts (cloud-synced)
+.humanlayer/tasks/
+
+# Local Netlify folder
+.netlify
+
+# Artefatos regenerados a cada rodada (transcrições de subagentes, build Python)
+.pi-subagents/
+*.egg-info/
