@@ -39,24 +39,18 @@ DEFAULT_EVIDENCE_CANDIDATES = (
 )
 
 
-def _resolve_evidence(
-    root: Path, explicit: str | None, unit: dict | None = None
-) -> Path | None:
-    """Explicit path wins (as given), then the active unit's declared
-    ``evidence_file``, then the first existing default.
+def _resolve_evidence(root: Path, explicit: str | None, unit: dict) -> Path | None:
+    """Explicit path wins (as given); otherwise the first candidate that exists.
 
     The unit declares where its own evidence lands (voxelDojo games write under
-    their own ``.logs/``), so defaulting straight to the pixelDojo paths made the
-    CLI report "nothing to grade" for any non-pixel unit.
+    their own ``.logs/``), so skipping it made the CLI report "nothing to grade"
+    for every non-pixelDojo unit.
     """
     if explicit:
         return Path(explicit)
-    declared = (unit or {}).get("evidence_file")
-    if declared:
-        path = root / declared
-        if path.exists():
-            return path
-    for candidate in DEFAULT_EVIDENCE_CANDIDATES:
+    for candidate in (unit.get("evidence_file"), *DEFAULT_EVIDENCE_CANDIDATES):
+        if not candidate:
+            continue
         path = root / candidate
         if path.exists():
             return path
