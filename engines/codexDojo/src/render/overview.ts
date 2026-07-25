@@ -1,50 +1,11 @@
-import type { Agent, CycleStage, DojoProject, EcosystemStatus, Metric } from "../domain"
-import {
-  type DashboardStats,
-  getAgents,
-  getCurrentProject,
-  getDashboardStats,
-  getEcosystemStatuses,
-  getMetrics,
-  getStages,
-} from "../progress"
 import type { AppState } from "../state"
+import { buildOverviewModel } from "../viewModels/overviewModel"
 import { escapeHtml } from "./escape"
 import { renderLearnerDashboard } from "./learner"
 
-const OVERVIEW_AGENT_LIMIT = 14
-const OVERVIEW_STAGE_LIMIT = 6
-
-type OverviewModel = {
-  readonly stats: DashboardStats
-  readonly visibleAgents: readonly Agent[]
-  readonly currentProject: DojoProject
-  readonly metrics: readonly Metric[]
-  readonly ecosystemStatuses: readonly EcosystemStatus[]
-  readonly visibleStages: readonly CycleStage[]
-}
-
-function getOverviewModel(state: AppState): OverviewModel {
-  return {
-    stats: getDashboardStats(state),
-    visibleAgents: getAgents().slice(0, OVERVIEW_AGENT_LIMIT),
-    currentProject: getCurrentProject(),
-    metrics: getMetrics(),
-    ecosystemStatuses: getEcosystemStatuses(),
-    visibleStages: getStages().slice(0, OVERVIEW_STAGE_LIMIT),
-  }
-}
-
-function normalizePercent(value: unknown): number {
-  if (typeof value !== "number" || !Number.isFinite(value)) {
-    return 0
-  }
-  return Math.min(100, Math.max(0, value))
-}
-
 export function renderOverview(state: AppState): string {
-  const model = getOverviewModel(state)
-  const completionPercent = normalizePercent(model.stats.completionPercent)
+  const model = buildOverviewModel(state)
+  const completionPercent = model.stats.completionPercent
 
   return `
     <section class="overview-grid" aria-label="Painel operacional">

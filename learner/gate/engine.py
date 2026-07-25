@@ -1,8 +1,7 @@
-"""Deterministic engine for the AI DevSchool MVP skill package.
+"""Public deterministic scoring engine for learner-gate skill packages.
 
-Holds the §5 state machine, the §6.3.2 pre-verifier parser, and the §6.2 gate
-verifiers (G1/G2/G3 + the G4 adapter seam, ADR-0006). Imported by the entry
-scripts; never a CLI. All functions are pure: (state, evidence) -> new state.
+Holds the §6.3.2 pre-verifier parser and §6.2 gate verifiers. Imported by the
+entry scripts; never a CLI. All functions are pure.
 """
 
 from __future__ import annotations
@@ -11,13 +10,6 @@ import hashlib
 import random
 import re
 from typing import Any
-
-# ---------------------------------------------------------------------------
-# States (§5.1)
-# ---------------------------------------------------------------------------
-LOCKED, AVAILABLE, IN_PROGRESS, ATTEMPTED, MASTERED, REVIEW_DUE = (
-    "LOCKED", "AVAILABLE", "IN_PROGRESS", "ATTEMPTED", "MASTERED", "REVIEW_DUE",
-)
 
 # ---------------------------------------------------------------------------
 # §6.3.2 pre-verifier parser
@@ -180,13 +172,11 @@ def score_g3(reply: str, key: dict[str, Any], drawn_ids: list[str], gate_progres
     }
 
 
-# ---------------------------------------------------------------------------
-# §6.2 G4 — rubric-anchored scoring via the ADR-0006 verifier-adapter seam.
-# The adapter supplies per-item pass/fail judgments; this function always runs
-# the deterministic misconception screen (teach_back) and assembles the verdict.
-# ---------------------------------------------------------------------------
-def score_g4(reply: str, rubric: dict[str, Any], judge) -> dict[str, Any]:
-    """judge(rubric, reply) -> dict[item_id -> bool]; supplied by the adapter."""
+def score_g4(
+    reply: str,
+    rubric: dict[str, Any],
+    judgments: dict[str, bool],
+) -> dict[str, Any]:
     items = rubric["items"]
     misconception_hits: list[str] = []
     if rubric["task"] == "teach_back":
@@ -194,7 +184,6 @@ def score_g4(reply: str, rubric: dict[str, Any], judge) -> dict[str, Any]:
         misconception_hits = [
             m for m in rubric.get("misconception_strings", []) if m.lower() in low
         ]
-    judgments = judge(rubric, reply)
     per_item = []
     required_true = 0
     required_total = 0

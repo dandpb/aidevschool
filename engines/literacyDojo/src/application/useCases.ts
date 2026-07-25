@@ -13,18 +13,18 @@ import {
   type OnboardingGoal,
   type OnboardingTaskCategory,
   type SkillPractice,
-  XP_PER_ACTIVITY_PASS,
-  XP_PER_LESSON_COMPLETE,
   applyAchievements,
-  applyAttemptToSkills,
-  applyStreak,
-  awardXp,
+  completeLesson as completeLessonInDomain,
+  completeOnboarding,
   evaluateLessonCompletion,
   isLessonUnlocked,
-  mapInitialRoute,
+  recordActivityAttempt,
   recordApplication,
+  recordMapInitialHintRequest,
+  recordMapInitialRetry,
   reviewsDue,
-  unlockNextReadyLesson,
+  scheduleReviewForLesson,
+  startLesson as startLessonInDomain,
 } from "../domain/progress";
 import type {
   AnalyticsSink,
@@ -126,23 +126,7 @@ export class LiteracyUseCases {
     audience: AudienceChoice;
   }): Promise<LearnerProgress> {
     const progress = await this.requireProgress();
-    const next: LearnerProgress = {
-      ...progress,
-      onboarding: {
-        completed: true,
-        goal: input.goal,
-        context: input.context,
-        confidence: input.confidence,
-        taskCategory: input.taskCategory,
-        audience: input.audience,
-      },
-      currentLessonId: MAP_INITIAL_LESSON_ID,
-      lessonStatus: {
-        ...progress.lessonStatus,
-        l01: "locked",
-        [MAP_INITIAL_LESSON_ID]: "available",
-      },
-    };
+    const next = completeOnboarding(progress, input);
     await this.deps.progress.save(next);
     this.deps.analytics.track("onboarding_completed", { context: input.context });
     return next;
@@ -152,15 +136,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(lessonId);
     const progress = await this.requireProgress();
     if (!isLessonUnlocked(progress, lessonId)) throw new LessonLockedError(lessonId);
-    const current = progress.lessonStatus[lessonId];
-    const next: LearnerProgress = {
-      ...progress,
-      currentLessonId: lessonId,
-      lessonStatus: {
-        ...progress.lessonStatus,
-        [lessonId]: current === "completed" ? "completed" : "in_progress",
-      },
-    };
+    const next = startLessonInDomain(progress, lessonId);
     await this.deps.progress.save(next);
     this.deps.analytics.track("lesson_started", {
       lessonId,
@@ -181,44 +157,18 @@ export class LiteracyUseCases {
     const evaluation = evaluateActivity(activity, input.answer);
 
     const progress = await this.requireProgress();
-    const attempts = progress.counters.attempts + 1;
     const now = this.deps.clock.now();
-
-    let next: LearnerProgress = { ...progress, counters: { attempts } };
-    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      const mapInitial = progress.onboarding.mapInitial ?? {
-        attempts: 0,
-        hintRequested: false,
-        retried: false,
-        firstAttemptPassed: false,
-      };
-      next = {
-        ...next,
-        onboarding: {
-          ...next.onboarding,
-          mapInitial: {
-            ...mapInitial,
-            attempts: mapInitial.attempts + 1,
-            firstAttemptPassed:
-              mapInitial.attempts === 0 ? evaluation.pass : mapInitial.firstAttemptPassed,
-          },
-        },
-      };
-    }
-    next = applyAttemptToSkills(
-      next,
-      lesson.skillIds,
-      evaluation.score,
-      evaluation.pass,
+    const next = recordActivityAttempt(progress, {
+      lessonId: lesson.id,
+      evaluation,
+      skillIds: lesson.skillIds,
+      intervalsDays: lesson.review.intervalsDays,
       now,
-      lesson.review.intervalsDays,
-    );
-    next = applyStreak(next, now);
-    if (evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, now);
+    });
     await this.deps.progress.save(next);
 
     const record = buildEvidenceRecord({
-      attemptId: `att-${String(attempts).padStart(6, "0")}`,
+      attemptId: `att-${String(next.counters.attempts).padStart(6, "0")}`,
       lessonId: lesson.id,
       lessonVersion: lesson.version,
       skillIds: [...lesson.skillIds],
@@ -259,19 +209,7 @@ export class LiteracyUseCases {
     const hint = this.deps.feedback.hintFor(activity, input.hintIndex);
     let progress = await this.requireProgress();
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      const mapInitial = progress.onboarding.mapInitial ?? {
-        attempts: 0,
-        hintRequested: false,
-        retried: false,
-        firstAttemptPassed: false,
-      };
-      progress = {
-        ...progress,
-        onboarding: {
-          ...progress.onboarding,
-          mapInitial: { ...mapInitial, hintRequested: true },
-        },
-      };
+      progress = recordMapInitialHintRequest(progress);
       await this.deps.progress.save(progress);
     }
     this.deps.analytics.track("hint_requested", {
@@ -291,19 +229,8 @@ export class LiteracyUseCases {
     const activity = this.requireActivity(lesson, input.activityId);
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
       const progress = await this.requireProgress();
-      const mapInitial = progress.onboarding.mapInitial ?? {
-        attempts: 0,
-        hintRequested: false,
-        retried: false,
-        firstAttemptPassed: false,
-      };
-      await this.deps.progress.save({
-        ...progress,
-        onboarding: {
-          ...progress.onboarding,
-          mapInitial: { ...mapInitial, retried: true },
-        },
-      });
+      const next = recordMapInitialRetry(progress);
+      await this.deps.progress.save(next);
     }
     this.deps.analytics.track("activity_retried", { activityId: activity.id });
   }
@@ -314,49 +241,24 @@ export class LiteracyUseCases {
     durationSeconds?: number;
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
-    const outcome = evaluateLessonCompletion(lesson, input.bestScores);
     const progress = await this.requireProgress();
-    if (!outcome.completed) {
-      return { progress, outcome };
+    const result = completeLessonInDomain(
+      progress,
+      lesson,
+      input.bestScores,
+      this.deps.content.listModules(),
+      this.deps.clock.now(),
+    );
+    if (!result.outcome.completed) {
+      return result;
     }
-
-    const now = this.deps.clock.now();
-    let next: LearnerProgress = {
-      ...progress,
-      lessonStatus: { ...progress.lessonStatus, [input.lessonId]: "completed" },
-    };
-    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
-      next = {
-        ...next,
-        onboarding: {
-          ...next.onboarding,
-          route: mapInitialRoute(next.onboarding.mapInitial),
-        },
-      };
-    }
-    next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
-    next = this.applyReviewSchedule(next, lesson, now, 0);
-    const unlocked = unlockNextReadyLesson(next, this.deps.content.listModules(), input.lessonId);
-    next = unlocked.progress;
-    next = {
-      ...next,
-      currentLessonId: unlocked.unlockedLessonId ?? input.lessonId,
-    };
-    const withAchievements = applyAchievements(next, this.deps.content.listModules(), now);
-    next = withAchievements.progress;
-    await this.deps.progress.save(next);
-
+    await this.deps.progress.save(result.progress);
     this.deps.analytics.track("lesson_completed", {
       lessonId: input.lessonId,
-      score: outcome.lessonScore,
+      score: result.outcome.lessonScore,
       durationSeconds: input.durationSeconds,
     });
-    return {
-      progress: next,
-      outcome,
-      nextLessonId: unlocked.unlockedLessonId,
-      newlyUnlocked: withAchievements.newlyUnlocked,
-    };
+    return result;
   }
 
   /**
@@ -424,7 +326,7 @@ export class LiteracyUseCases {
   }): Promise<LearnerProgress> {
     const lesson = this.requireLesson(input.lessonId);
     const progress = await this.requireProgress();
-    const next = this.applyReviewSchedule(
+    const next = scheduleReviewForLesson(
       progress,
       lesson,
       this.deps.clock.now(),
@@ -434,28 +336,9 @@ export class LiteracyUseCases {
     return next;
   }
 
-  private applyReviewSchedule(
-    progress: LearnerProgress,
-    lesson: LessonDefinition,
-    now: Date,
-    intervalIndex: number,
-  ): LearnerProgress {
-    const intervals = lesson.review.intervalsDays;
-    if (intervals.length === 0) return progress;
-    const stage = Math.min(Math.max(intervalIndex, 0), intervals.length - 1);
-    const nextReviewAt = new Date(now.getTime() + intervals[stage] * 86_400_000).toISOString();
-    const skills = { ...progress.skills };
-    for (const skillId of lesson.skillIds) {
-      const previous: SkillPractice = skills[skillId] ?? {
-        skillId,
-        attempts: 0,
-        passes: 0,
-        lastScore: 0,
-        lastPracticedAt: now.toISOString(),
-      };
-      skills[skillId] = { ...previous, nextReviewAt };
-    }
-    return { ...progress, skills };
+  /** Carrega o progresso bruto (read-only) para consumo de queries e telas. */
+  async loadProgress(): Promise<LearnerProgress | null> {
+    return this.deps.progress.load();
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */

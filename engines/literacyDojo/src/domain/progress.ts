@@ -130,6 +130,11 @@ export const DAILY_GOAL_XP = 10;
 
 const DAY_MS = 86_400_000;
 
+/** Clamp de estágio para repetição espaçada: sempre dentro do intervalo válido. */
+export function clampStage(stage: number, maxStage: number): number {
+  return Math.min(Math.max(stage, 0), maxStage);
+}
+
 /**
  * Estado inicial: somente lições com conteúdo (`hasContent`) recebem status;
  * lições `planned` nunca entram no mapa de status (a UI as mostra como "em breve").
@@ -167,6 +172,47 @@ export function createInitialProgress(
 export function isLessonUnlocked(progress: LearnerProgress, lessonId: string): boolean {
   const status = progress.lessonStatus[lessonId];
   return status === "available" || status === "in_progress" || status === "completed";
+}
+
+export function startLesson(progress: LearnerProgress, lessonId: string): LearnerProgress {
+  const current = progress.lessonStatus[lessonId];
+  return {
+    ...progress,
+    currentLessonId: lessonId,
+    lessonStatus: {
+      ...progress.lessonStatus,
+      [lessonId]: current === "completed" ? "completed" : "in_progress",
+    },
+  };
+}
+
+export function completeOnboarding(
+  progress: LearnerProgress,
+  input: {
+    goal: OnboardingGoal;
+    context: OnboardingContext;
+    confidence: OnboardingConfidence;
+    taskCategory: OnboardingTaskCategory;
+    audience: AudienceChoice;
+  },
+): LearnerProgress {
+  return {
+    ...progress,
+    onboarding: {
+      completed: true,
+      goal: input.goal,
+      context: input.context,
+      confidence: input.confidence,
+      taskCategory: input.taskCategory,
+      audience: input.audience,
+    },
+    currentLessonId: MAP_INITIAL_LESSON_ID,
+    lessonStatus: {
+      ...progress.lessonStatus,
+      l01: "locked",
+      [MAP_INITIAL_LESSON_ID]: "available",
+    },
+  };
 }
 
 export function unlockNextReadyLesson(
@@ -278,7 +324,7 @@ export function applyAttemptToSkills(
       nextReviewAt: previous?.nextReviewAt,
     };
     if (passed && intervalsDays.length > 0) {
-      const stage = Math.min(Math.max(passes - 1, 0), intervalsDays.length - 1);
+      const stage = clampStage(passes - 1, intervalsDays.length - 1);
       next.nextReviewAt = new Date(now.getTime() + intervalsDays[stage] * DAY_MS).toISOString();
     }
     skills[skillId] = next;
@@ -389,5 +435,161 @@ export function recordApplication(
   return {
     ...progress,
     applications: [...progress.applications, { lessonId, reportedAt: now.toISOString() }],
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Ciclo de vida do progresso (consolidado neste módulo)
+// ---------------------------------------------------------------------------
+
+export function emptyMapInitialState(): MapInitialState {
+  return {
+    attempts: 0,
+    hintRequested: false,
+    retried: false,
+    firstAttemptPassed: false,
+  };
+}
+
+function updateMapInitial(
+  progress: LearnerProgress,
+  update: (current: MapInitialState) => MapInitialState,
+): LearnerProgress {
+  const current = progress.onboarding.mapInitial ?? emptyMapInitialState();
+  return {
+    ...progress,
+    onboarding: { ...progress.onboarding, mapInitial: update(current) },
+  };
+}
+
+export function recordMapInitialAttempt(
+  progress: LearnerProgress,
+  evaluation: { pass: boolean },
+): LearnerProgress {
+  return updateMapInitial(progress, (mapInitial) => ({
+    ...mapInitial,
+    attempts: mapInitial.attempts + 1,
+    firstAttemptPassed: mapInitial.attempts === 0 ? evaluation.pass : mapInitial.firstAttemptPassed,
+  }));
+}
+
+export function recordMapInitialHintRequest(progress: LearnerProgress): LearnerProgress {
+  return updateMapInitial(progress, (mapInitial) => ({ ...mapInitial, hintRequested: true }));
+}
+
+export function recordMapInitialRetry(progress: LearnerProgress): LearnerProgress {
+  return updateMapInitial(progress, (mapInitial) => ({ ...mapInitial, retried: true }));
+}
+
+/**
+ * Registra uma tentativa de atividade: contador, metadados do Mapa Inicial,
+ * prática de skills, sequência e XP. Não emite evidência/analytics — isso
+ * continua nos casos de uso (produtor ≠ verificador; side effects isolados).
+ */
+export function recordActivityAttempt(
+  progress: LearnerProgress,
+  input: {
+    lessonId: string;
+    evaluation: { pass: boolean; score: number };
+    skillIds: string[];
+    intervalsDays: number[];
+    now: Date;
+  },
+): LearnerProgress {
+  let next: LearnerProgress = {
+    ...progress,
+    counters: { attempts: progress.counters.attempts + 1 },
+  };
+  if (input.lessonId === MAP_INITIAL_LESSON_ID) {
+    next = recordMapInitialAttempt(next, input.evaluation);
+  }
+  next = applyAttemptToSkills(
+    next,
+    input.skillIds,
+    input.evaluation.score,
+    input.evaluation.pass,
+    input.now,
+    input.intervalsDays,
+  );
+  next = applyStreak(next, input.now);
+  if (input.evaluation.pass) next = awardXp(next, XP_PER_ACTIVITY_PASS, input.now);
+  return next;
+}
+
+/**
+ * Agenda (ou reagenda) a revisão espaçada das skills de uma lição.
+ * Usa o mesmo clampStage de applyAttemptToSkills (única fonte do clamp).
+ */
+export function scheduleReviewForLesson(
+  progress: LearnerProgress,
+  lesson: LessonDefinition,
+  now: Date,
+  intervalIndex = 0,
+): LearnerProgress {
+  const intervals = lesson.review.intervalsDays;
+  if (intervals.length === 0) return progress;
+  const stage = clampStage(intervalIndex, intervals.length - 1);
+  const nextReviewAt = new Date(now.getTime() + intervals[stage] * DAY_MS).toISOString();
+  const skills = { ...progress.skills };
+  for (const skillId of lesson.skillIds) {
+    const previous: SkillPractice = skills[skillId] ?? {
+      skillId,
+      attempts: 0,
+      passes: 0,
+      lastScore: 0,
+      lastPracticedAt: now.toISOString(),
+    };
+    skills[skillId] = { ...previous, nextReviewAt };
+  }
+  return { ...progress, skills };
+}
+
+export type CompleteLessonResult = {
+  progress: LearnerProgress;
+  outcome: LessonOutcome;
+  nextLessonId?: string;
+  newlyUnlocked?: Achievement[];
+};
+
+/**
+ * Conclusão de lição: avalia, marca completo, aplica rota do onboarding no
+ * Mapa Inicial, concede XP, agenda revisão, desbloqueia próxima lição,
+ * muta currentLessonId e desbloqueia conquistas.
+ */
+export function completeLesson(
+  progress: LearnerProgress,
+  lesson: LessonDefinition,
+  bestScores: Record<string, number>,
+  modules: ModuleDefinition[],
+  now: Date,
+): CompleteLessonResult {
+  const outcome = evaluateLessonCompletion(lesson, bestScores);
+  if (!outcome.completed) {
+    return { progress, outcome };
+  }
+
+  let next: LearnerProgress = {
+    ...progress,
+    lessonStatus: { ...progress.lessonStatus, [lesson.id]: "completed" },
+  };
+  if (lesson.id === MAP_INITIAL_LESSON_ID) {
+    next = {
+      ...next,
+      onboarding: { ...next.onboarding, route: mapInitialRoute(next.onboarding.mapInitial) },
+    };
+  }
+  next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
+  next = scheduleReviewForLesson(next, lesson, now, 0);
+  const unlocked = unlockNextReadyLesson(next, modules, lesson.id);
+  next = unlocked.progress;
+  next = { ...next, currentLessonId: unlocked.unlockedLessonId ?? lesson.id };
+  const withAchievements = applyAchievements(next, modules, now);
+  next = withAchievements.progress;
+
+  return {
+    progress: next,
+    outcome,
+    nextLessonId: unlocked.unlockedLessonId,
+    newlyUnlocked: withAchievements.newlyUnlocked,
   };
 }

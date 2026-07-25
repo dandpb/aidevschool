@@ -1,5 +1,10 @@
 # Contrato de evidência — trilha `ai-literacy`
 
+O envelope executável é definido por
+`learner/gate/literacy_evidence.schema.json`. LiteracyDojo e o verificador
+independente validam contra esse mesmo schema; este documento explica o
+contrato, mas não o aplica.
+
 A experiência preserva a separação entre **tentativa**, **feedback** e
 **verificação**. Este contrato é próprio do bounded context AI Literacy: o
 contrato de teaching games (`docs/design/teaching-game-contract.md`) não é
@@ -59,7 +64,8 @@ Notas:
 2. `mastered` é reservado a verificador independente; feedback generativo e
    verificação usam caminhos distintos, e o resultado de um LLM nunca substitui
    os checks determinísticos. O caminho independente no-code está em
-   `learner/gate/literacy_verifier.py` (CLI: `python3 -m learner.gate.literacy`):
+   `learner/gate/literacy_verifier.py`
+   (CLI: `python3 -m learner.gate.literacy_verifier`):
    re-julga `LiteracyEvidenceRecord`, emite recibo com `mastery_eligible` e
    **nunca** deixa a UI do LiteracyDojo escrever `mastered`.
 3. **Sem texto livre em analytics/evidência por padrão.** Quando necessário,

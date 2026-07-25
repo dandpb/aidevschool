@@ -26,7 +26,8 @@
 | `validate` | Function | `__init__.py:119` | Enforces canonical learner-state invariants. |
 | `_validate_units_log` | Function | `__init__.py:179` | Rejects mastered units without gate review evidence. |
 | `_validate_streak` | Function | `__init__.py:246` | Checks streak/freeze bounds. |
-| `sync` | Function | `__init__.py:428` | Regenerates Mavis, whiteboard, dashboard, OS, and game views. |
+| `regenerate_*` | Functions | `__init__.py` | Regenerate Mavis, whiteboard, dashboard, OS, or game views independently. |
+| `sync` | Function | `__init__.py` | Convenience fan-out across every independent view generator. |
 
 ## CONVENTIONS
 

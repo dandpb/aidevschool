@@ -10,19 +10,19 @@ mastery-eligible. Invalid or missing evidence fails closed.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
+import sys
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from learner.gate.security import parse_aware_timestamp
+from learner.gate.evidence_validator import validate_literacy_evidence_structure
 
 #: Matches LiteracyDojo domain evaluation default (MVP threshold).
 PASS_SCORE_MIN = 0.75
 
-EVIDENCE_SCHEMA_VERSION = 1
-EVIDENCE_SOURCE = "literacydojo"
 VERIFIER_SOURCE = "independent-literacy-verifier"
 
 #: The seven activity types from docs/design/ai-literacy/content-contract.md and
@@ -45,29 +45,12 @@ DETERMINISTIC_ACTIVITY_TYPES = frozenset(
 #: mastery-eligible (application stays fail-closed for mastery).
 APPLICATION_ACTIVITY_TYPES = frozenset({"application_report", "real_world_application"})
 
-REQUIRED_KEYS = (
-    "schemaVersion",
-    "source",
-    "attemptId",
-    "lessonId",
-    "lessonVersion",
-    "activityId",
-    "activityType",
-    "skillIds",
-    "deterministicChecks",
-    "score",
-    "pass",
-    "timestamp",
-    "verifierRequired",
-)
-
-ALLOWED_KEYS = frozenset(REQUIRED_KEYS) | frozenset({"context"})
-
 __all__ = [
     "DETERMINISTIC_ACTIVITY_TYPES",
     "LiteracyVerdict",
     "PASS_SCORE_MIN",
     "VERIFIER_SOURCE",
+    "main",
     "verify_literacy_evidence",
     "load_literacy_evidence",
     "write_literacy_receipt",
@@ -147,106 +130,6 @@ def literacy_evidence_digest(evidence: dict[str, Any]) -> str:
         stable["context"] = evidence["context"]
     encoded = json.dumps(stable, sort_keys=True, separators=(",", ":")).encode()
     return hashlib.sha256(encoded).hexdigest()
-
-
-def _structural_errors(evidence: dict[str, Any]) -> list[str]:
-    errors: list[str] = []
-    for key in evidence:
-        if key not in ALLOWED_KEYS:
-            errors.append(f"unknown field {key!r}")
-    for key in REQUIRED_KEYS:
-        if key not in evidence:
-            errors.append(f"missing required field {key!r}")
-    if errors:
-        return errors
-
-    if evidence["schemaVersion"] != EVIDENCE_SCHEMA_VERSION:
-        errors.append(
-            f"schemaVersion must be {EVIDENCE_SCHEMA_VERSION}, got {evidence['schemaVersion']!r}"
-        )
-    if evidence["source"] != EVIDENCE_SOURCE:
-        errors.append(f"source must be {EVIDENCE_SOURCE!r}, got {evidence['source']!r}")
-    if evidence["verifierRequired"] is not True:
-        errors.append("verifierRequired must be literal true")
-    if "verifier" in evidence:
-        errors.append(
-            "embedded verifier is producer-controlled and cannot authorize mastery"
-        )
-
-    for string_field in ("attemptId", "lessonId", "activityId", "activityType"):
-        value = evidence[string_field]
-        if not isinstance(value, str) or not value.strip():
-            errors.append(f"{string_field} must be a non-empty string")
-
-    if not isinstance(evidence["lessonVersion"], int) or isinstance(
-        evidence["lessonVersion"], bool
-    ):
-        errors.append("lessonVersion must be an integer")
-    elif evidence["lessonVersion"] < 1:
-        errors.append("lessonVersion must be >= 1")
-
-    skill_ids = evidence["skillIds"]
-    if not isinstance(skill_ids, list) or not all(
-        isinstance(item, str) and item for item in skill_ids
-    ):
-        errors.append("skillIds must be a list of non-empty strings")
-
-    checks = evidence["deterministicChecks"]
-    if not isinstance(checks, dict):
-        errors.append("deterministicChecks must be an object")
-    else:
-        for check_key, check_value in checks.items():
-            if not isinstance(check_key, str) or not check_key:
-                errors.append("deterministicChecks keys must be non-empty strings")
-            if not isinstance(check_value, (bool, int, float, str)) or (
-                isinstance(check_value, float)
-                and (
-                    check_value != check_value  # NaN
-                    or check_value in (float("inf"), float("-inf"))
-                )
-            ):
-                errors.append(
-                    f"deterministicChecks[{check_key!r}] must be bool|number|string"
-                )
-            # Fail closed on free-text-looking blobs (evidence contract: no free text).
-            if isinstance(check_value, str) and len(check_value) > 200:
-                errors.append(
-                    f"deterministicChecks[{check_key!r}] string too long "
-                    "(free text not allowed in evidence)"
-                )
-
-    score = evidence["score"]
-    if (
-        not isinstance(score, (int, float))
-        or isinstance(score, bool)
-        or not (0.0 <= float(score) <= 1.0)
-    ):
-        errors.append("score must be a number in [0, 1]")
-
-    if not isinstance(evidence["pass"], bool):
-        errors.append("pass must be a boolean")
-
-    try:
-        parse_aware_timestamp(str(evidence["timestamp"]))
-    except (TypeError, ValueError):
-        # Also accept plain ISO with Z via parse; if that fails, try Date-like.
-        ts = evidence["timestamp"]
-        if not isinstance(ts, str) or not ts.strip():
-            errors.append("timestamp must be a non-empty ISO-8601 string")
-        else:
-            # LiteracyDojo uses ISO strings; require parseable via fromisoformat-ish.
-            try:
-                from datetime import datetime
-
-                datetime.fromisoformat(ts.replace("Z", "+00:00"))
-            except ValueError:
-                errors.append(f"timestamp {ts!r} is not a valid ISO-8601 string")
-
-    context = evidence.get("context")
-    if context is not None and context not in {"initial", "review"}:
-        errors.append("context must be 'initial', 'review', or omitted")
-
-    return errors
 
 
 def _independent_judgment(evidence: dict[str, Any]) -> tuple[bool, list[str]]:
@@ -362,7 +245,7 @@ def verify_literacy_evidence(evidence: dict[str, Any] | None) -> LiteracyVerdict
             errors=("evidence must be a JSON object",),
         )
 
-    structural = _structural_errors(evidence)
+    structural = validate_literacy_evidence_structure(evidence)
     if structural:
         return LiteracyVerdict(
             verdict="FAIL",
@@ -439,3 +322,80 @@ def write_literacy_receipt(verdict: LiteracyVerdict, path: str | Path) -> Path:
         encoding="utf-8",
     )
     return out
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="learner-gate-literacy", description=__doc__)
+    parser.add_argument(
+        "--evidence",
+        required=True,
+        help="path to a LiteracyEvidenceRecord JSON object",
+    )
+    parser.add_argument(
+        "--write-receipt",
+        default=None,
+        help="optional path for the independent receipt JSON",
+    )
+    parser.add_argument(
+        "--root",
+        default=".",
+        help="ecosystem root (default: cwd); used only to resolve relative paths",
+    )
+    args = parser.parse_args(argv)
+    root = Path(args.root)
+    evidence_path = Path(args.evidence)
+    if not evidence_path.is_absolute():
+        evidence_path = root / evidence_path
+
+    if not evidence_path.exists():
+        print(f"FAIL CLOSED — evidence file not found: {evidence_path}")
+        missing = verify_literacy_evidence(None)
+        print(json.dumps(missing.to_receipt_dict(), indent=2, sort_keys=True))
+        return 1
+
+    try:
+        evidence = load_literacy_evidence(evidence_path)
+    except ValueError as exc:
+        print(f"FAIL CLOSED — {exc}")
+        print(
+            json.dumps(
+                {
+                    "verdict": "FAIL",
+                    "errors": [str(exc)],
+                    "mastery_eligible": False,
+                    "producer_writes_mastered": False,
+                    "max_producer_claim": "completed",
+                },
+                indent=2,
+            )
+        )
+        return 1
+
+    verdict = verify_literacy_evidence(evidence)
+    receipt = verdict.to_receipt_dict()
+    print(json.dumps(receipt, indent=2, sort_keys=True))
+
+    if args.write_receipt:
+        receipt_path = Path(args.write_receipt)
+        if not receipt_path.is_absolute():
+            receipt_path = root / receipt_path
+        write_literacy_receipt(verdict, receipt_path)
+        print(f"receipt written: {receipt_path}", file=sys.stderr)
+
+    if verdict.passed:
+        print(
+            f"LITERACY VERDICT PASS — mastery_eligible={verdict.mastery_eligible} "
+            f"(producer max claim remains completed; UI cannot write mastered)",
+            file=sys.stderr,
+        )
+        return 0
+
+    print(
+        f"LITERACY VERDICT FAIL — errors={list(verdict.errors)}; mastery_eligible=false",
+        file=sys.stderr,
+    )
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

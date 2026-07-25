@@ -1,12 +1,10 @@
-import { getCycleCompletionPercent } from "../cycle"
-import { getCurrentStage, getStages, isStageCompleted } from "../progress"
 import type { AppState } from "../state"
+import { buildCycleViewModel } from "../viewModels/cycleViewModel"
 import { currentAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 export function renderCycle(state: AppState): string {
-  const selectedStage = getCurrentStage(state)
-  const progress = getCycleCompletionPercent(state.completedStageIds)
+  const model = buildCycleViewModel(state)
 
   return `
     <section class="workbench cycle-view" aria-label="Ciclo operacional">
@@ -17,11 +15,9 @@ export function renderCycle(state: AppState): string {
 
       <div class="cycle-board">
         <div class="timeline">
-          ${getStages()
-            .map((stage, index) => {
-              const isSelected = stage.id === selectedStage.id
+          ${model.stages
+            .map(({ stage, index, isSelected, isCompleted }) => {
               const { className, aria } = currentAttrs(isSelected, "step")
-              const isCompleted = isStageCompleted(state, stage.id)
               const completed = isCompleted ? "is-complete" : ""
               const statusText = isCompleted ? "concluído" : "pendente"
               const selectionText = isSelected ? ", atual" : ""
@@ -39,18 +35,18 @@ export function renderCycle(state: AppState): string {
 
         <article class="stage-detail">
           <div class="console-header">
-            <span>${escapeHtml(selectedStage.owner)}</span>
-            <span>${escapeHtml(progress)}% validado</span>
+            <span>${escapeHtml(model.selectedStage.owner)}</span>
+            <span>${escapeHtml(model.progress)}% validado</span>
           </div>
-          <h3>${escapeHtml(selectedStage.label)}</h3>
+          <h3>${escapeHtml(model.selectedStage.label)}</h3>
           <dl class="evidence-list">
             <div>
               <dt>Evidência exigida</dt>
-              <dd>${escapeHtml(selectedStage.evidence)}</dd>
+              <dd>${escapeHtml(model.selectedStage.evidence)}</dd>
             </div>
             <div>
               <dt>Artefato gerado</dt>
-              <dd>${escapeHtml(selectedStage.output)}</dd>
+              <dd>${escapeHtml(model.selectedStage.output)}</dd>
             </div>
           </dl>
           <button class="action-button" type="button" data-action="advance-stage">Concluir etapa</button>

@@ -1,4 +1,4 @@
-// AUTO-GERADO por tools/gen-today.py — NÃO EDITAR À MÃO.
+// AUTO-GERADO por learner/substrate/adapters/dojotoday.py — NÃO EDITAR À MÃO.
 // Fonte: learner/learning_state.yaml + scheduler learner.substrate.scheduling.
 // Regenerado em 2026-07-25.
 import type { TodaySnapshot } from "../types";

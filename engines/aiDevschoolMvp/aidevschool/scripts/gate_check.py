@@ -7,16 +7,15 @@ updates state.json. The persona never grades; this script disposes (laws L1–L2
 from __future__ import annotations
 
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
-import _core
-import _engine
-import _state
+import learner.gate.core as _core
+import learner.gate.engine as _engine
+import learner.gate.state as _state
 
 
 def _emit(obj: dict[str, Any]) -> None:
@@ -93,18 +92,20 @@ def _primary_mastered(binding, gp, ledger, concept_id, llm_enabled):
     return False
 
 
-def _g4_judge(skill_dir, rubric, artifact_sha):
-    adapter = os.environ.get("AIDEVSCHOOL_G4_ADAPTER", "recorded")
-    if adapter != "recorded":
-        _core.die("G4 platform adapter not configured; set AIDEVSCHOOL_G4_ADAPTER=recorded", 1)
+def _load_g4_recording(
+    skill_dir: Path,
+    rubric: dict[str, Any],
+    artifact_sha: str,
+) -> tuple[dict[str, bool], str | None]:
     p = skill_dir / "keys" / "g4_recordings" / f"{rubric['rubric_id']}.json"
     if not p.is_file():
         _core.die(f"no recorded G4 judgments for rubric {rubric['rubric_id']}", 1)
     data = _load_json(p)
     for entry in data.get("recordings", []):
         if entry["artifact_sha256"] == artifact_sha:
-            return (lambda judgments: (lambda rub, rep: judgments))(entry["judgments"]), entry.get("model")
+            return entry["judgments"], entry.get("model")
     _core.die(f"no recorded G4 judgment for artifact {artifact_sha[:12]}", 1)
+    raise AssertionError
 
 
 def main() -> None:
@@ -143,7 +144,10 @@ def main() -> None:
         review = concept["status"] == _state.REVIEW_DUE
 
         # --- PARSE + SCORE first (pure); only a valid artifact fires attempt_submitted ---
+        artifact_sha = _core.sha256_hex(reply_text)
         drawn_ids: list[str] = []
+        scored: dict[str, Any]
+        recorded_model = None
         if gate_id == "G1":
             scored = _engine.score_g1(reply_text, definition)
         elif gate_id == "G2":
@@ -155,13 +159,13 @@ def main() -> None:
             drawn_ids = _engine.draw_g3(attempt_id, bank_ids, gp["asked_item_ids"])
             scored = _engine.score_g3(reply_text, definition, drawn_ids, gp)
         elif gate_id == "G4":
-            judge, _recorded = _g4_judge(skill_dir, definition, _core.sha256_hex(reply_text))
-            scored = _engine.score_g4(reply_text, definition, judge)
+            judgments, recorded_model = _load_g4_recording(
+                skill_dir, definition, artifact_sha
+            )
+            scored = _engine.score_g4(reply_text, definition, judgments)
         else:
             _core.die(f"unknown gate {gate_id}", 2)
-            raise
-
-        artifact_sha = _core.sha256_hex(reply_text)
+            return
         session = state["session"]
 
         # §6.3.2: a reply the parser cannot normalize is NEVER scored as a wrong
@@ -232,7 +236,6 @@ def main() -> None:
 
         # --- VerdictRecord (ch.6) ---
         gate_version = definition.get("key_version") or definition.get("rubric_version")
-        recorded_model = _recorded_model_for(skill_dir, definition, artifact_sha) if gate_id == "G4" else None
         record = {
             "gate_id": gate_id, "gate_version": gate_version, "attempt_id": attempt_id,
             "concept_id": concept_id, "scores": scores, "verdict": verdict,
@@ -263,16 +266,5 @@ def main() -> None:
         _core.atomic_write_json(state_dir / "state.json", state)
         _emit({"ok": True, "verdict": verdict, "scores": scores,
                "feedback": _feedback(gate_id, scores, verdict), "ledger_event_id": verdict_event_id})
-
-
-def _recorded_model_for(skill_dir, definition, artifact_sha):
-    p = skill_dir / "keys" / "g4_recordings" / f"{definition.get('rubric_id', '')}.json"
-    if p.is_file():
-        for entry in _load_json(p).get("recordings", []):
-            if entry["artifact_sha256"] == artifact_sha:
-                return entry.get("model")
-    return None
-
-
 if __name__ == "__main__":
     main()

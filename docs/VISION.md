@@ -128,7 +128,7 @@ democratização ainda não cobre o ecossistema inteiro.
    `LiteracyEvidenceRecord` e registra no máximo `completed` — nunca
    `mastered` (`LessonStatus` sem o valor). O verificador independente vive em
    `learner/gate/literacy_verifier.py` e CLI
-   `python3 -m learner.gate.literacy --evidence PATH`: re-julga o envelope,
+`python3 -m learner.gate.literacy_verifier --evidence PATH`: re-julga o envelope,
    emite recibo estruturado (`verdict`, `mastery_eligible`,
    `producer_writes_mastered: false`) e falha fechado se a evidência falta ou
    é inválida. Atividades de aplicação aberta podem ser `PASS` como relato, mas
@@ -173,7 +173,7 @@ Decisões estruturais ainda abertas (não bloqueiam o MVP público de microliç�
 1. **miniTown público.** Se/when publicar a entrada cozy zero-install (hoje
    residual local). LiteracyDojo já tem URL de produção.
 2. **Mastery canônico no-code no substrate.** Quando e como um recibo
-   `learner.gate.literacy` promove unidades AI Literacy em
+`learner.gate.literacy_verifier` promove unidades AI Literacy em
    `learner/learning_state.yaml` sem misturar com o gate de código — o
    julgamento independente já existe; a promoção canônica multi-engine não.
 3. **Replicação multi-learner do filesystem.** Contas, sync e segunda instância

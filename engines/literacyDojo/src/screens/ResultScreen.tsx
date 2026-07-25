@@ -35,9 +35,9 @@ export function ResultScreen({
     .map((result) => result.feedback.summary);
 
   useEffect(() => {
-    void services.progressRepo
-      .load()
-      .then((savedProgress) => setTaskCategory(savedProgress?.onboarding.taskCategory));
+    void services.useCases.loadProgress().then((savedProgress) => {
+      setTaskCategory(savedProgress?.onboarding.taskCategory);
+    });
   }, [services]);
 
   return (

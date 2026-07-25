@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from engines.miniMaxEvolutionEngine.supervisor.decision import decide
+from engines.miniMaxEvolutionEngine.supervisor.lifecycle import decide
 from engines.miniMaxEvolutionEngine.supervisor.__main__ import main
 from engines.miniMaxEvolutionEngine.supervisor.ledger import LedgerError, append_event, read_ledger
 from engines.miniMaxEvolutionEngine.supervisor.lease import LeaseHeldError, acquire, recover

@@ -5,9 +5,8 @@
   "type": "module",
   "description": "Lição de hoje do programador — consome o substrato FSRS/streak/gate do DevSchool.",
   "scripts": {
-    "gen:today": "python3 tools/gen-today.py",
-    "selfcheck": "python3 tools/gen-today.py --self-check",
-    "prebuild": "npm run gen:today",
+    "selfcheck": "python3 tools/selfcheck.py",
+    "prebuild": "cd ../.. && python3 -m learner.substrate",
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite build && vite preview",

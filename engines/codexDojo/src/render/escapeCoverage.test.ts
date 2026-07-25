@@ -11,6 +11,7 @@ import type {
   UserFacingAgent,
 } from "../domain"
 import { renderLinuxLab } from "../linuxLab"
+import { normalizeDashboardStats } from "../normalize"
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
@@ -23,182 +24,189 @@ import { renderRoadmap } from "./roadmap"
 // dynamic value must flow through escapeHtml. This suite is the regression
 // guard for audit item E4: it injects a <script> payload through every data
 // seam the render modules read and asserts the markup neutralizes it.
-const { XSS } = vi.hoisted(() => ({
-  XSS: `<script>alert("codexDojo")</script>`,
-}))
+const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, learnerSnapshot } =
+  vi.hoisted(() => {
+    const XSS = `<script>alert("codexDojo")</script>`
 
-vi.mock("../progress", () => {
-  const agent: Agent = {
-    id: `agent-${XSS}`,
-    name: `Sonda ${XSS}`,
-    group: "leader",
-    role: `role ${XSS}`,
-    mission: `mission ${XSS}`,
-    inputs: [`input ${XSS}`],
-    outputs: [`output ${XSS}`],
-    gate: `gate ${XSS}`,
-    prompt: `prompt ${XSS}`,
-  }
+    const agent: Agent = {
+      id: `agent-${XSS}`,
+      name: `Sonda ${XSS}`,
+      group: "leader",
+      role: `role ${XSS}`,
+      mission: `mission ${XSS}`,
+      inputs: [`input ${XSS}`],
+      outputs: [`output ${XSS}`],
+      gate: `gate ${XSS}`,
+      prompt: `prompt ${XSS}`,
+    }
 
-  const userFacingAgent: UserFacingAgent = {
-    id: `mentor-${XSS}`,
-    name: `Mentor ${XSS}`,
-    responsibility: `responsibility ${XSS}`,
-    expandsTo: [`expands ${XSS}`],
-  }
+    const userFacingAgent: UserFacingAgent = {
+      id: `mentor-${XSS}`,
+      name: `Mentor ${XSS}`,
+      responsibility: `responsibility ${XSS}`,
+      expandsTo: [`expands ${XSS}`],
+    }
 
-  const stage: CycleStage = {
-    id: `stage-${XSS}`,
-    label: `label ${XSS}`,
-    owner: `owner ${XSS}`,
-    evidence: `evidence ${XSS}`,
-    output: `output ${XSS}`,
-  }
+    const stage: CycleStage = {
+      id: `stage-${XSS}`,
+      label: `label ${XSS}`,
+      owner: `owner ${XSS}`,
+      evidence: `evidence ${XSS}`,
+      output: `output ${XSS}`,
+    }
 
-  const project: DojoProject = {
-    id: `p99-${XSS}`,
-    title: `title ${XSS}`,
-    phase: "fundamentos",
-    level: 7,
-    language: `language ${XSS}`,
-    architecture: `architecture ${XSS}`,
-    learningGoal: `goal ${XSS}`,
-    evidence: [`evidence ${XSS}`],
-    functionalRequirements: [`functional ${XSS}`],
-    nonFunctionalRequirements: [`non-functional ${XSS}`],
-    extraDoneCriteria: [`done ${XSS}`],
-  }
+    const project: DojoProject = {
+      id: `p99-${XSS}`,
+      title: `title ${XSS}`,
+      phase: "fundamentos",
+      level: 7,
+      language: `language ${XSS}`,
+      architecture: `architecture ${XSS}`,
+      learningGoal: `goal ${XSS}`,
+      evidence: [`evidence ${XSS}`],
+      functionalRequirements: [`functional ${XSS}`],
+      nonFunctionalRequirements: [`non-functional ${XSS}`],
+      extraDoneCriteria: [`done ${XSS}`],
+    }
 
-  const metric: Metric = {
-    id: `metric-${XSS}`,
-    label: `metric label ${XSS}`,
-    target: `target ${XSS}`,
-    signal: `signal ${XSS}`,
-    measurement: `measurement ${XSS}`,
-    evidencePath: `path ${XSS}`,
-  }
+    const metric: Metric = {
+      id: `metric-${XSS}`,
+      label: `metric label ${XSS}`,
+      target: `target ${XSS}`,
+      signal: `signal ${XSS}`,
+      measurement: `measurement ${XSS}`,
+      evidencePath: `path ${XSS}`,
+    }
 
-  const ecosystemStatus: EcosystemStatus = {
-    id: `status-${XSS}`,
-    label: `status label ${XSS}`,
-    state: `state ${XSS}`,
-    evidence: `status evidence ${XSS}`,
-    nextStep: `next step ${XSS}`,
-  }
+    const ecosystemStatus: EcosystemStatus = {
+      id: `status-${XSS}`,
+      label: `status label ${XSS}`,
+      state: `state ${XSS}`,
+      evidence: `status evidence ${XSS}`,
+      nextStep: `next step ${XSS}`,
+    }
 
-  const learnerSnapshot: LearnerSnapshot = {
-    activeUnit: {
-      id: `unit-${XSS}`,
-      title: `unit title ${XSS}`,
-      project: `unit project ${XSS}`,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      state: `state ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      retryCount: `retryCount ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      retryLimit: `retryLimit ${XSS}` as any,
-    },
-    gate: {
-      implementationBlocked: true,
-      unblockCondition: `condition ${XSS}`,
-    },
-    profile: {
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      dreyfus: `dreyfus ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      bloom: `bloom ${XSS}` as any,
-      activeLanguage: `language ${XSS}`,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      weeklyTimeHours: `weeklyTimeHours ${XSS}` as any,
-    },
-    aidi: {
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      current: `aidi current ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      thresholdAmber: `thresholdAmber ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      thresholdRed: `thresholdRed ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      measurementSource: `measurementSource ${XSS}` as any,
-      trend: [
+    const learnerSnapshot: LearnerSnapshot = {
+      activeUnit: {
+        id: `unit-${XSS}`,
+        title: `unit title ${XSS}`,
+        project: `unit project ${XSS}`,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        state: `state ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        retryCount: `retryCount ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        retryLimit: `retryLimit ${XSS}` as any,
+      },
+      gate: {
+        implementationBlocked: true,
+        unblockCondition: `condition ${XSS}`,
+      },
+      profile: {
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        dreyfus: `dreyfus ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        bloom: `bloom ${XSS}` as any,
+        activeLanguage: `language ${XSS}`,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        weeklyTimeHours: `weeklyTimeHours ${XSS}` as any,
+      },
+      aidi: {
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        current: `aidi current ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        thresholdAmber: `thresholdAmber ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        thresholdRed: `thresholdRed ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        measurementSource: `measurementSource ${XSS}` as any,
+        trend: [
+          {
+            date: `2026-01-01 ${XSS}`,
+            // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+            value: `trend value ${XSS}` as any,
+            // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+            measurementSource: `trend measurementSource ${XSS}` as any,
+          },
+        ],
+      },
+      topPitfalls: [
         {
-          date: `2026-01-01 ${XSS}`,
+          id: `pitfall-${XSS}`,
+          description: `description ${XSS}`,
           // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-          value: `trend value ${XSS}` as any,
-          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-          measurementSource: `trend measurementSource ${XSS}` as any,
+          occurrences: `occurrences ${XSS}` as any,
+          lastSeen: `last seen ${XSS}`,
         },
       ],
-    },
-    topPitfalls: [
-      {
-        id: `pitfall-${XSS}`,
-        description: `description ${XSS}`,
+      nextReviews: [
+        {
+          unitId: `review-unit-${XSS}`,
+          title: `review title ${XSS}`,
+          dueIn: `due ${XSS}`,
+          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+          reason: `reason ${XSS}` as any,
+        },
+      ],
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      masteredCount: `masteredCount ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      scaffoldedCount: `scaffoldedCount ${XSS}` as any,
+      streak: {
         // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        occurrences: `occurrences ${XSS}` as any,
-        lastSeen: `last seen ${XSS}`,
-      },
-    ],
-    nextReviews: [
-      {
-        unitId: `review-unit-${XSS}`,
-        title: `review title ${XSS}`,
-        dueIn: `due ${XSS}`,
+        current: `streak current ${XSS}` as any,
         // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        reason: `reason ${XSS}` as any,
+        longest: `streak longest ${XSS}` as any,
+        lastGateDate: `gate date ${XSS}`,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        freezesEquipped: `freezesEquipped ${XSS}` as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+        freezesMax: `freezesMax ${XSS}` as any,
       },
-    ],
-    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-    masteredCount: `masteredCount ${XSS}` as any,
-    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-    scaffoldedCount: `scaffoldedCount ${XSS}` as any,
-    streak: {
       // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      current: `streak current ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      longest: `streak longest ${XSS}` as any,
-      lastGateDate: `gate date ${XSS}`,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      freezesEquipped: `freezesEquipped ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      freezesMax: `freezesMax ${XSS}` as any,
-    },
-    // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-    curr: `curr ${XSS}` as any,
-    challenges: [],
-  }
+      curr: `curr ${XSS}` as any,
+      challenges: [],
+    }
 
-  return {
-    getAgents: (): readonly Agent[] => [agent],
-    getSelectedAgent: (): Agent => agent,
-    getUserFacingAgents: (): readonly UserFacingAgent[] => [userFacingAgent],
-    getStages: (): readonly CycleStage[] => [stage],
-    getCurrentStage: (): CycleStage => stage,
-    isStageCompleted: (): boolean => false,
-    getProjects: (): readonly DojoProject[] => [project],
-    getCurrentProject: (): DojoProject => project,
-    getSelectedProject: (): DojoProject => project,
-    getMetrics: (): readonly Metric[] => [metric],
-    getEcosystemStatuses: (): readonly EcosystemStatus[] => [ecosystemStatus],
-    getLearnerSnapshot: (): LearnerSnapshot => learnerSnapshot,
-    getDashboardStats: () => ({
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      agents: `agents ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      stages: `stages ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      projects: `projects ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      completionPercent: `completionPercent ${XSS}` as any,
-    }),
-  }
-})
+    return {
+      XSS,
+      agent,
+      userFacingAgent,
+      stage,
+      project,
+      metric,
+      ecosystemStatus,
+      learnerSnapshot,
+    }
+  })
+
+vi.mock("../data/agents", () => ({
+  agents: [agent],
+  userFacingAgents: [userFacingAgent],
+}))
+
+vi.mock("../data/cycle", () => ({
+  cycleStages: [stage],
+  metrics: [metric],
+}))
+
+vi.mock("../data/ecosystem", () => ({
+  ecosystemStatuses: [ecosystemStatus],
+}))
+
+vi.mock("../data/learner", () => ({
+  learnerSnapshot,
+}))
+
+vi.mock("../data/projects", () => ({
+  projects: [project],
+}))
 
 vi.mock("../data/osEngine", () => ({
   getCodexDojoOsUrl: () => `https://evil.example/?q=${XSS}`,
 }))
 
-const state = buildInitialState("agent-x", "stage-x", "p99")
+const state = buildInitialState(agent.id, stage.id, project.id)
 
 const renderers = [
   ["overview", renderOverview],
@@ -219,10 +227,6 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     expect(lower).not.toContain(XSS.toLowerCase())
   })
 
-  it("normalizes malformed progress before interpolating it into CSS", () => {
-    expect(renderOverview(state)).toContain('style="width: 0%"')
-  })
-
   it("escapes a malformed Linux Lab run count in every output seam", () => {
     const malformedState = {
       ...state,
@@ -234,6 +238,24 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     expect(html).not.toContain("<script")
     expect(html).toContain("&lt;script&gt;")
     expect(html).not.toContain(XSS.toLowerCase())
+  })
+
+  it("clamps malformed dashboard stats to render-safe values", () => {
+    const normalized = normalizeDashboardStats({
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      agents: `agents ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      stages: `stages ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      projects: `projects ${XSS}` as any,
+      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
+      completionPercent: `completionPercent ${XSS}` as any,
+    })
+
+    expect(normalized.completionPercent).toBe(0)
+    expect(typeof normalized.agents).toBe("number")
+    expect(typeof normalized.stages).toBe("number")
+    expect(typeof normalized.projects).toBe("number")
   })
 
   // Structural backstop: every render module that interpolates loaded data

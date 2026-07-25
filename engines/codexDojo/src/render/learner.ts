@@ -1,16 +1,7 @@
 import type { LearnerSnapshot } from "../domain"
-import { getLearnerSnapshot } from "../progress"
+import { getNormalizedLearnerSnapshot } from "../normalize"
 import { escapeHtml } from "./escape"
 import { sparklinePath } from "./sparkline"
-
-const STREAK_FREEZE_CAP = 2
-
-function normalizeFreezeCount(value: unknown): number {
-  if (typeof value !== "number" || !Number.isFinite(value)) {
-    return 0
-  }
-  return Math.min(STREAK_FREEZE_CAP, Math.max(0, Math.trunc(value)))
-}
 
 const AIDI_HISTORY_POINTS = 30
 
@@ -63,8 +54,8 @@ function renderAidi(snapshot: LearnerSnapshot): string {
       <p class="eyebrow">AI Dependency Index (AIDI)</p>
       <div class="aidi-row">
         <div class="${escapeHtml(signalClass)}">
-          <strong>${typeof aidi.current === "number" ? aidi.current.toFixed(2) : escapeHtml(aidi.current)}</strong>
-          <small>alerta amarelo em ${typeof aidi.thresholdAmber === "number" ? aidi.thresholdAmber.toFixed(2) : escapeHtml(aidi.thresholdAmber)} · vermelho em ${typeof aidi.thresholdRed === "number" ? aidi.thresholdRed.toFixed(2) : escapeHtml(aidi.thresholdRed)}</small>
+          <strong>${aidi.current.toFixed(2)}</strong>
+          <small>alerta amarelo em ${aidi.thresholdAmber.toFixed(2)} · vermelho em ${aidi.thresholdRed.toFixed(2)}</small>
         </div>
         <svg viewBox="0 0 100 24" class="aidi-spark" role="img" aria-label="AIDI trendline">
           <rect x="0" y="0" width="100" height="24" class="aidi-bg" rx="2" />
@@ -148,9 +139,8 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
 
 function renderStreak(snapshot: LearnerSnapshot): string {
   const s = snapshot.streak
-  // Defensively tolerate malformed substrate data without rendering it as markup.
-  const freezesMax = normalizeFreezeCount(s.freezesMax)
-  const freezesEquipped = Math.min(freezesMax, normalizeFreezeCount(s.freezesEquipped))
+  const freezesMax = s.freezesMax
+  const freezesEquipped = Math.min(freezesMax, s.freezesEquipped)
   const filled = "❄".repeat(freezesEquipped)
   const empty = "·".repeat(Math.max(0, freezesMax - freezesEquipped))
   const lastLabel = s.lastGateDate
@@ -174,7 +164,7 @@ function renderCurr(snapshot: LearnerSnapshot): string {
   return `
     <div class="learner-curr">
       <p class="eyebrow">CURR <small class="curr-proxy-tag">(proxy não validado)</small></p>
-      <strong class="curr-value">${typeof snapshot.curr === "number" ? snapshot.curr.toFixed(2) : escapeHtml(snapshot.curr)}</strong>
+      <strong class="curr-value">${snapshot.curr.toFixed(2)}</strong>
       <p class="curr-hint">
         Retenção aproximada (unidades com revisão de portão nos últimos 7 dias ÷ unidades com portão).
         <strong>Não validado</strong> — não orienta nenhuma decisão automática.
@@ -184,7 +174,7 @@ function renderCurr(snapshot: LearnerSnapshot): string {
 }
 
 export function renderLearnerDashboard(): string {
-  const snapshot = getLearnerSnapshot()
+  const snapshot = getNormalizedLearnerSnapshot()
   const points = `${escapeHtml(snapshot.aidi.trend.length)}/${AIDI_HISTORY_POINTS}`
 
   return `

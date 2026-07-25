@@ -1,4 +1,4 @@
-"""Shared deterministic core for the AI DevSchool MVP skill package.
+"""Public deterministic core for learner-gate skill packages.
 
 Implements the §4.2 exit-code convention, the §7.1 hash-chained append-only
 ledger, atomic §8.3 writes, the §8.3.1 lockfile, ULID minting, and the
@@ -16,7 +16,7 @@ import uuid
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Iterator
+from typing import Any, Callable, Iterator, NoReturn
 
 # --- exit-code convention (§4.2) -------------------------------------------
 # 0 success; 1 usage / guard rejection (no mutation); 2 inconsistency.
@@ -34,7 +34,7 @@ class InconsistencyError(Exception):
     code = 2
 
 
-def die(message: str, code: int) -> None:
+def die(message: str, code: int) -> NoReturn:
     """Print exactly one sentence to stderr and exit with code."""
     sys.stderr.write(message.rstrip(".") + ".\n")
     sys.exit(code)

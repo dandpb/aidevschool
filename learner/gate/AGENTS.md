@@ -10,6 +10,10 @@ and may commit a gate outcome to canonical learner state. It never produces evid
 | Task | Location | Notes |
 | --- | --- | --- |
 | Public gate operation | `__init__.py` | Call `verify_and_gate(...)`; loading, validation, decision, and persistence stay internal. |
+| Shared evidence structure | `evidence_validator.py`, `literacy_evidence.schema.json` | Structural enforcement and the cross-language literacy envelope. |
+| Skill verifier runtime | `core.py` | Ledger, atomic I/O, locking, and deterministic runtime helpers. |
+| Skill state machine | `state.py` | Reusable six-state learner machine and plan projection. |
+| Skill gate scoring | `engine.py` | Deterministic G1-G4 parsing and scoring. |
 | Gate transition | `../substrate/gate.py` | Pure transition and canonical commit boundary. |
 | CLI behavior | `__main__.py` | Evidence-path fallback, dry-run, output, and exit semantics. |
 | Verifier receipt | `verifier_receipt.py` | Confined receipt loading, typed schema, and digest binding. |
@@ -28,7 +32,7 @@ and may commit a gate outcome to canonical learner state. It never produces evid
   evidence timestamp newer than the last consumed gate record.
 - `pass: false` is still an eligible gate outcome; record it without marking mastery.
 - Persist only through `learner.substrate.gate.commit_gate_transition`.
-- Keep `verify_and_gate(...)` as the single public operation; lower-level helpers are implementation details.
+- Keep `verify_and_gate(...)` as the single public canonical-state operation. Skill entry scripts may import the public `core`, `state`, and `engine` modules.
 - `--dry-run` must decide without writing canonical or derived state.
 - Reject producer-embedded `verifier` blocks. Independent verdicts arrive as separate files under
   `learner/verifier_receipts/`, bound to producer evidence by its canonical SHA-256 digest.

@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
+import { metrics } from "./data/cycle"
 import { projects } from "./data/projects"
-import { getMetrics, getSelectedProject } from "./progress"
+import { getSelectedProject } from "./progress"
 import { renderShell } from "./render/shell"
 import { type AppState, buildInitialState } from "./state"
 
@@ -38,7 +39,7 @@ describe("renderShell — targeted assertions", () => {
     const html = renderShell(stateWith({ view: "overview" }))
     const metricCards = html.match(/<div class="metric-item">[\s\S]*?<\/div>/g) ?? []
 
-    expect(metricCards).toHaveLength(getMetrics().length)
+    expect(metricCards).toHaveLength(metrics.length)
     expect(metricCards.length).toBeGreaterThanOrEqual(8)
     expect(metricCards.some((card) => card.includes("não medido ainda"))).toBe(true)
 

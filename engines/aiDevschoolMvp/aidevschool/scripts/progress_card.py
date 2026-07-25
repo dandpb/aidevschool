@@ -10,9 +10,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
-import _core
+import learner.gate.core as _core
 
 TRACK_TITLE = "AI Fluency Foundations"
 _WEEKDAY = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]

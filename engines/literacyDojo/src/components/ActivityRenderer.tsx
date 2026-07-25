@@ -123,30 +123,6 @@ export function ActivityRenderer({
   }
 }
 
-export function emptyAnswerFor(activity: ActivityDefinition): ActivityAnswer {
-  switch (activity.type) {
-    case "choice":
-      return { optionIds: [] } satisfies ChoiceAnswer;
-    case "sort":
-      // A resposta inicial espelha a ordem exibida pelo SortView: é essa ordem
-      // que deve ser avaliada quando a pessoa verifica sem mover nada
-      // (isAnswerComplete trata a ordem inicial como resposta completa).
-      return { orderedIds: activity.data.items.map((item) => item.id) } satisfies SortAnswer;
-    case "missing_context":
-      return { contextIds: [] } satisfies MissingContextAnswer;
-    case "output_comparison":
-      return { outputId: undefined, criterionIds: [] } satisfies OutputComparisonAnswer;
-    case "prompt_builder":
-      return { values: {} } satisfies PromptBuilderAnswer;
-    case "safety_classification":
-      return { labels: {} } satisfies SafetyClassificationAnswer;
-    case "rubric_review":
-      return { verdicts: {} } satisfies RubricReviewAnswer;
-    default:
-      return { criterionIds: [] } satisfies OutputComparisonAnswer;
-  }
-}
-
 /** A pessoa só pode verificar quando a resposta está completa o suficiente. */
 export function isAnswerComplete(activity: ActivityDefinition, answer: ActivityAnswer): boolean {
   switch (activity.type) {

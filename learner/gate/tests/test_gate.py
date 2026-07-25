@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import replace
 from datetime import date
 from pathlib import Path
@@ -10,6 +11,7 @@ import pytest
 import yaml
 
 import learner.gate as gate
+from curriculum._shared.evidence import independently_verified_pass
 from learner.gate import (
     _check_evidence,
     _decide,
@@ -1119,3 +1121,121 @@ class TestCli:
         assert cli_main(["--root", str(root), "--dry-run"]) == 0
         assert "would be" in capsys.readouterr().out
         assert state_path.read_text(encoding="utf-8") == original
+
+
+# --- Rubric catalog contract test --------------------------------------------
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+RUBRIC_CATALOG_PATH = REPO_ROOT / "curriculum" / "_shared" / "evidence_rubrics.yaml"
+
+
+def _load_rubric_catalog() -> dict[str, Any]:
+    return yaml.safe_load(RUBRIC_CATALOG_PATH.read_text(encoding="utf-8"))
+
+
+def _ts_pixelquest_kinds() -> set[str]:
+    evidence_ts = (
+        REPO_ROOT
+        / "engines"
+        / "pixelDojo"
+        / "pixel-quest"
+        / "src"
+        / "game"
+        / "evidence"
+        / "evidence.ts"
+    )
+    text = evidence_ts.read_text(encoding="utf-8")
+    return set(re.findall(r'kind === "([^"]+)"', text))
+
+
+def _ts_voxeldojo_games() -> set[str]:
+    meta_ts = REPO_ROOT / "engines" / "voxelDojo" / "shared" / "gameEvidenceMeta.ts"
+    text = meta_ts.read_text(encoding="utf-8")
+    return set(re.findall(r'\bgame:\s*"([^"]+)"', text))
+
+
+def _set_dotted_field(evidence: dict[str, Any], dotted: str, value: Any) -> None:
+    current = evidence
+    parts = dotted.split(".")
+    for part in parts[:-1]:
+        if part not in current:
+            current[part] = {}
+        current = current[part]
+    current[parts[-1]] = value
+
+
+def _value_for_predicate(predicate: dict[str, Any]) -> Any:
+    op = predicate["op"]
+    target = predicate.get("value")
+    if op == "is_false":
+        return False
+    if op == "is_true":
+        return True
+    if op == "eq":
+        return target
+    if op == "gt":
+        return target + 1
+    if op == "gte":
+        return target
+    if op == "lt":
+        return target - 1
+    if op == "lte":
+        return target
+    raise ValueError(f"unknown rubric predicate op: {op!r}")
+
+
+def _make_passing_fixture(rubric: dict[str, Any]) -> dict[str, Any]:
+    evidence: dict[str, Any] = {}
+    for key, expected in rubric.get("selector", {}).items():
+        _set_dotted_field(evidence, key, expected)
+    for predicate in rubric.get("pass_when", []):
+        _set_dotted_field(
+            evidence, predicate["field"], _value_for_predicate(predicate)
+        )
+    return evidence
+
+
+def test_rubric_catalog_loads_and_has_rubrics():
+    catalog = _load_rubric_catalog()
+    assert catalog.get("version") == 1
+    assert len(catalog.get("rubrics", [])) >= 6
+
+
+def test_catalog_covers_all_ts_pixelquest_kinds():
+    catalog = _load_rubric_catalog()
+    catalog_ids = {rubric["id"] for rubric in catalog.get("rubrics", [])}
+    ts_kinds = _ts_pixelquest_kinds()
+    assert ts_kinds, "expected to parse pixelquest kinds from evidence.ts"
+    missing = ts_kinds - catalog_ids
+    assert not missing, f"pixelquest kinds missing from rubric catalog: {missing}"
+
+
+def test_catalog_covers_all_ts_voxeldojo_games():
+    catalog = _load_rubric_catalog()
+    voxel_rubric = next(
+        (r for r in catalog.get("rubrics", []) if r.get("id") == "voxeldojo"),
+        None,
+    )
+    assert voxel_rubric is not None, "expected a voxeldojo rubric entry"
+    catalog_games = set(voxel_rubric.get("games", []))
+    ts_games = _ts_voxeldojo_games()
+    assert ts_games, "expected to parse voxeldojo games from gameEvidenceMeta.ts"
+    missing = ts_games - catalog_games
+    assert not missing, f"voxeldojo games missing from catalog games list: {missing}"
+
+
+def test_python_gate_recognizes_every_catalog_rubric():
+    catalog = _load_rubric_catalog()
+    for rubric in catalog.get("rubrics", []):
+        evidence = _make_passing_fixture(rubric)
+        passed, errors = independently_verified_pass(evidence)
+        if rubric.get("requires_verifier_receipt"):
+            assert passed is None, (
+                f"{rubric['id']}: expected no empirical pass (needs receipt), "
+                f"got {passed}"
+            )
+        else:
+            assert passed is True, (
+                f"{rubric['id']}: expected independent pass, got {passed} "
+                f"with errors {errors}"
+            )

@@ -6,11 +6,10 @@ import os
 from collections.abc import Callable
 from datetime import datetime
 
-from .decision import decide
 from .lease import LeaseHeldError, acquire
 from .ledger import append_event
+from .lifecycle import RequestIds, SupervisorLifecycle, decide
 from .models import Action, Decision, RuntimeSnapshot, SupervisorPaths
-from .outbox import publish
 from .reconcile import reconcile, record_operational_blocker, runtime_state
 from .state import InvalidStateError, load_canonical
 
@@ -105,48 +104,26 @@ def tick(
 
         plan = decision.plan
         assert plan is not None
-        request_id = id_provider()
-        producer_context = id_provider()
-        verifier_context = id_provider()
-        if producer_context == verifier_context:
-            return _invalid("ID provider did not produce a fresh verifier context")
-        request = {
-            "schema_version": 1,
-            "request_id": request_id,
-            "run_id": owner,
-            "created_at": now,
-            "cycle_id": pipeline.cycle_id,
-            "project": pipeline.project,
-            "active_unit": learner.unit_id,
-            "phase": plan.name,
-            "observed_phase": plan.observed_phase.value,
-            "intended_phase": plan.next_phase.value,
-            "command": plan.command,
-            "producer_role": plan.producer_role,
-            "verifier_role": plan.verifier_role,
-            "producer_context_id": producer_context,
-            "verifier_context_id": verifier_context,
-            "fresh_verifier": True,
-            "retry_limit": plan.retry_limit,
-            "attempt": failures + 1,
-        }
-        if before_publish: before_publish()
+        lifecycle = SupervisorLifecycle(paths)
+        request = lifecycle.build_request(
+            plan,
+            pipeline=pipeline,
+            learner=learner,
+            run_id=owner,
+            now=now,
+            ids=RequestIds(
+                request_id=id_provider(),
+                producer_context_id=id_provider(),
+                verifier_context_id=id_provider(),
+            ),
+            attempt=failures + 1,
+        )
+        if before_publish:
+            before_publish()
         current_pipeline, current_learner = load_canonical(paths.pipeline, paths.learner, paths.curriculum)
         if current_pipeline != pipeline or current_learner != learner:
             return _invalid("canonical state changed before request publication")
-        append_event(paths.ledger, {
-            "schema_version": 1, "event": "request_planned", "run_id": owner,
-            "request_id": request_id, "project": pipeline.project,
-            "cycle_id": pipeline.cycle_id, "active_unit": learner.unit_id,
-            "observed_phase": pipeline.phase.value, "intended_phase": plan.next_phase.value,
-            "attempt": failures + 1, "action": Action.RUN_PHASE.value, "at": now,
-        })
-        publish(paths.outbox, request)
-        append_event(paths.ledger, {
-            "schema_version": 1, "event": "request_published", "run_id": owner,
-            "request_id": request_id, "project": pipeline.project,
-            "observed_phase": pipeline.phase.value, "at": now,
-        })
+        lifecycle.publish(request, now)
         return decision
     finally:
         lease.release()

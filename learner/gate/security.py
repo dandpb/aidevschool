@@ -14,25 +14,14 @@ from curriculum._shared.evidence import (
 from learner.gate.evidence_io import (
     canonical_evidence_digest as canonical_evidence_digest,
 )
+from learner.gate.timestamps import GateSecurityError, parse_aware_timestamp
 from learner.substrate.gate import GateEvidenceReceipt
-
-
-class GateSecurityError(ValueError):
-    pass
 
 
 @dataclass(frozen=True, slots=True)
 class AttemptIdentity:
     id: str
     digest: str
-
-
-def parse_aware_timestamp(raw: str) -> datetime:
-    parsed = datetime.fromisoformat(raw.replace("Z", "+00:00"))
-    if parsed.tzinfo is None or parsed.utcoffset() is None:
-        raise GateSecurityError("timestamp must include a timezone offset")
-    return parsed
-
 
 def secure_attempt_path(
     root: Path, declared: str, label: str = "attempt file"

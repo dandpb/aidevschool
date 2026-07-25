@@ -44,6 +44,12 @@ __all__ = [
     "render_profile_md",
     "render_profile_yaml",
     "render_trail_md",
+    "regenerate_mavis",
+    "regenerate_whiteboard",
+    "regenerate_dashboard",
+    "regenerate_learner_snapshot",
+    "regenerate_game_reviews",
+    "regenerate_dojotoday",
     "sync",
     "check",
 ]
@@ -508,6 +514,79 @@ def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[
     return state
 
 
+def _regenerate_views(
+    builder: Any,
+    state: dict[str, Any] | None,
+    *,
+    write: bool,
+) -> dict[Path, str]:
+    current = state if state is not None else load_and_validate()
+    views = builder(SOURCE_ROOT, ROOT, current)
+    if write:
+        write_views(views)
+    return views
+
+
+def regenerate_mavis(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_mavis_views
+
+    return _regenerate_views(build_mavis_views, state, write=write)
+
+
+def regenerate_whiteboard(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_whiteboard_views
+
+    return _regenerate_views(build_whiteboard_views, state, write=write)
+
+
+def regenerate_dashboard(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_dashboard_views
+
+    return _regenerate_views(build_dashboard_views, state, write=write)
+
+
+def regenerate_learner_snapshot(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_learner_snapshot_views
+
+    return _regenerate_views(build_learner_snapshot_views, state, write=write)
+
+
+def regenerate_game_reviews(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_game_review_views
+
+    return _regenerate_views(build_game_review_views, state, write=write)
+
+
+def regenerate_dojotoday(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_dojotoday_views
+
+    return _regenerate_views(build_dojotoday_views, state, write=write)
+
+
 def sync() -> None:
     """Regenerate the machine-readable derived views from the canonical state.
 
@@ -521,9 +600,16 @@ def sync() -> None:
     `projections.build_generated_views`.
     """
     state = load_and_validate()
-    from learner.substrate.projections import build_generated_views
-
-    views = build_generated_views(SOURCE_ROOT, ROOT, state)
+    views: dict[Path, str] = {}
+    for generator in (
+        regenerate_dashboard,
+        regenerate_mavis,
+        regenerate_whiteboard,
+        regenerate_learner_snapshot,
+        regenerate_game_reviews,
+        regenerate_dojotoday,
+    ):
+        views.update(generator(state, write=False))
     write_views(views)
     print(f"Generated projections regenerated: {len(views)}")
 

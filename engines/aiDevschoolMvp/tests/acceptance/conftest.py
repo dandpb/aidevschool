@@ -17,11 +17,15 @@ SCRIPTS = SKILL / "scripts"
 CURRICULUM = json.loads((SKILL / "curriculum.json").read_text(encoding="utf-8"))
 
 
-def run(script: str, args: dict[str, Any], state_dir: Path, fixture_dir: Path | None = None) -> subprocess.CompletedProcess:
+def run(
+    script: str,
+    args: dict[str, Any],
+    state_dir: Path,
+    fixture_dir: Path | None = None,
+) -> subprocess.CompletedProcess[str]:
     env = dict(os.environ)
     if fixture_dir is not None:
         env["AIDEVSCHOOL_FIXTURE_DIR"] = str(fixture_dir)
-    env["AIDEVSCHOOL_G4_ADAPTER"] = "recorded"
     return subprocess.run(
         ["python3", str(SCRIPTS / script)],
         input=json.dumps(args), capture_output=True, text=True, env=env,

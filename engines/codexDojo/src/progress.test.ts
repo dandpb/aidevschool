@@ -1,17 +1,16 @@
 import { describe, expect, it } from "vitest"
 import { advanceCycle, getCycleCompletionPercent } from "./cycle"
+import { agents, userFacingAgents } from "./data/agents"
 import { cycleStages } from "./data/cycle"
+import { ecosystemStatuses } from "./data/ecosystem"
 import {
   findAgent,
   findProject,
   findStage,
-  getAgents,
   getCurrentStage,
-  getEcosystemStatuses,
   getProjects,
   getSelectedAgent,
   getSelectedProject,
-  getUserFacingAgents,
   isStageCompleted,
 } from "./progress"
 import { buildInitialState, reduceState } from "./state"
@@ -224,7 +223,7 @@ describe("DojoQuery seam", () => {
 
   it("exposes the configured agent roster", () => {
     // When
-    const roster = getAgents()
+    const roster = agents
 
     // Then
     expect(roster).toHaveLength(14)
@@ -233,7 +232,7 @@ describe("DojoQuery seam", () => {
 
   it("exposes the user-facing 10-agent product surface", () => {
     // When
-    const surface = getUserFacingAgents()
+    const surface = userFacingAgents
 
     // Then
     expect(surface).toHaveLength(10)
@@ -243,7 +242,7 @@ describe("DojoQuery seam", () => {
 
   it("exposes ecosystem status cards for dashboard contract coverage", () => {
     // When
-    const statuses = getEcosystemStatuses()
+    const statuses = ecosystemStatuses
 
     // Then
     expect(statuses.some((status) => status.id === "legacy-refactor")).toBe(true)

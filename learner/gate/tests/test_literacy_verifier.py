@@ -5,15 +5,16 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 import pytest
 
-from learner.gate.literacy import main as literacy_cli_main
 from learner.gate.literacy_verifier import (
     DETERMINISTIC_ACTIVITY_TYPES,
     PASS_SCORE_MIN,
     VERIFIER_SOURCE,
     load_literacy_evidence,
+    main as literacy_cli_main,
     verify_literacy_evidence,
     write_literacy_receipt,
 )
@@ -21,7 +22,7 @@ from learner.gate.literacy_verifier import (
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 #: Representative deterministicChecks shaped like LiteracyDojo evaluation.ts finalize().
-TYPE_PASS_FIXTURES: dict[str, dict] = {
+TYPE_PASS_FIXTURES: dict[str, dict[str, Any]] = {
     "choice": {
         "activityId": "l01-a1",
         "deterministicChecks": {"opt-correct": True, "opt-wrong": True},
@@ -67,7 +68,7 @@ TYPE_PASS_FIXTURES: dict[str, dict] = {
     },
 }
 
-TYPE_FAIL_FIXTURES: dict[str, dict] = {
+TYPE_FAIL_FIXTURES: dict[str, dict[str, Any]] = {
     "choice": {
         "activityId": "l01-a1",
         "deterministicChecks": {"opt-correct": False, "opt-wrong": False},

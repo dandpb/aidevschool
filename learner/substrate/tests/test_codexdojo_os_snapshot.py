@@ -107,26 +107,67 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
         self.assertNotIn("setState", text)
         self.assertNotIn("save", text)
 
-    def test_substrate_sync_fans_out_one_snapshot_to_dashboard_and_os(self) -> None:
+    def test_substrate_sync_combines_independent_generators_before_write(self) -> None:
         root = dashboard_snapshot.ROOT
         dashboard_path = root / "engines" / "codexDojo" / "src" / "data" / "learner.ts"
         os_path = root / "engines" / "codexdojo-os-prototype" / "src" / "data" / "learner.ts"
         pixel_path = root / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
+        dojotoday_path = root / "engines" / "dojoToday" / "src" / "data" / "today.ts"
 
         with (
             patch.object(substrate, "load_and_validate", return_value={}),
+            patch("learner.substrate.projections.build_mavis_views", return_value={}),
+            patch("learner.substrate.projections.build_whiteboard_views", return_value={}),
             patch(
-                "learner.substrate.projections.build_generated_views",
-                return_value={dashboard_path: "dashboard", os_path: "os", pixel_path: "pixel"},
-            ) as build_views,
+                "learner.substrate.projections.build_dashboard_views",
+                return_value={dashboard_path: "dashboard"},
+            ),
+            patch(
+                "learner.substrate.projections.build_learner_snapshot_views",
+                return_value={os_path: "os"},
+            ),
+            patch(
+                "learner.substrate.projections.build_game_review_views",
+                return_value={pixel_path: "pixel"},
+            ),
+            patch(
+                "learner.substrate.projections.build_dojotoday_views",
+                return_value={dojotoday_path: "dojotoday"},
+            ),
             patch.object(substrate, "write_views") as write_views,
         ):
             substrate.sync()
 
-        build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
         write_views.assert_called_once_with(
-            {dashboard_path: "dashboard", os_path: "os", pixel_path: "pixel"}
+            {
+                dashboard_path: "dashboard",
+                os_path: "os",
+                pixel_path: "pixel",
+                dojotoday_path: "dojotoday",
+            }
         )
+
+    def test_dashboard_can_regenerate_without_other_view_side_effects(self) -> None:
+        dashboard_path = (
+            dashboard_snapshot.ROOT
+            / "engines"
+            / "codexDojo"
+            / "src"
+            / "data"
+            / "learner.ts"
+        )
+        with (
+            patch.object(substrate, "load_and_validate", return_value={}),
+            patch(
+                "learner.substrate.projections.build_dashboard_views",
+                return_value={dashboard_path: "dashboard"},
+            ) as build_views,
+            patch.object(substrate, "write_views") as write_views,
+        ):
+            assert substrate.regenerate_dashboard() == {dashboard_path: "dashboard"}
+
+        build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
+        write_views.assert_called_once_with({dashboard_path: "dashboard"})
 
     def test_os_and_dashboard_renderers_share_contract_values(self) -> None:
         dashboard_text = ts_render.render_dashboard_ts(SNAPSHOT)

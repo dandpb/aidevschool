@@ -69,6 +69,12 @@ _ARTIFACT_PATHS: tuple[tuple[str, str], ...] = (
 
 _PHASE_RE = re.compile(r"phase:\s*`?([\w-]+)`?", re.IGNORECASE)
 
+# Evidence rubric catalog loaded from ``evidence_rubrics.yaml``.
+# Kept module-local so ``independently_verified_pass`` and the contract tests
+# share exactly the same predicates without re-parsing.
+_RUBRICS_PATH = Path(__file__).with_name("evidence_rubrics.yaml")
+_RUBRIC_CATALOG: dict[str, Any] = yaml.safe_load(_RUBRICS_PATH.read_text(encoding="utf-8"))
+
 
 class Phase(StrEnum):
     SPEC = "spec"
@@ -525,6 +531,67 @@ def passes_gate(
     return len(check_evidence(evidence_path, root=root)) == 0
 
 
+def _field_value(source: dict[str, Any], dotted: str) -> Any:
+    """Resolve a dotted path such as ``metrics.good_admits`` against a dict."""
+    current: Any = source
+    for part in dotted.split("."):
+        if not isinstance(current, dict):
+            return None
+        current = current.get(part)
+    return current
+
+
+def _eval_predicate(predicate: dict[str, Any], evidence: dict[str, Any]) -> bool:
+    """Evaluate one catalog predicate against an evidence record."""
+    op = predicate["op"]
+    value = _field_value(evidence, predicate["field"])
+    if op == "is_false":
+        return value is False
+    if op == "is_true":
+        return value is True
+    if not _is_finite_number(value):
+        return False
+    numeric_value = float(value)
+    target = predicate["value"]
+    if op == "eq":
+        return numeric_value == target
+    if op == "gt":
+        return numeric_value > target
+    if op == "gte":
+        return numeric_value >= target
+    if op == "lt":
+        return numeric_value < target
+    if op == "lte":
+        return numeric_value <= target
+    raise ValueError(f"unknown rubric predicate op: {op!r}")
+
+
+def _match_selector(selector: dict[str, Any], evidence: dict[str, Any]) -> bool:
+    """True when every selector key equals the corresponding evidence value."""
+    for key, expected in selector.items():
+        if _field_value(evidence, key) != expected:
+            return False
+    return True
+
+
+def _rubric_for_evidence(evidence: dict[str, Any]) -> dict[str, Any] | None:
+    """Return the first catalog rubric whose selector matches the evidence."""
+    for rubric in _RUBRIC_CATALOG.get("rubrics", []):
+        if _match_selector(rubric.get("selector", {}), evidence):
+            return rubric
+    return None
+
+
+def _rubric_pass(rubric: dict[str, Any], evidence: dict[str, Any]) -> bool:
+    """True when the rubric's predicates pass and failure metrics are clean."""
+    for predicate in rubric.get("pass_when", []):
+        if not _eval_predicate(predicate, evidence):
+            return False
+    if rubric.get("apply_failure_metrics"):
+        return not game_metric_violations(evidence)
+    return True
+
+
 def game_metric_violations(evidence: dict[str, Any]) -> list[str]:
     metrics = evidence.get("metrics")
     sources = [evidence]
@@ -584,70 +651,19 @@ def independently_verified_pass(
             return False, ["independent verifier verdict is 'FAIL', not PASS"]
         return None, ["independent verifier verdict must be PASS or FAIL"]
 
-    metrics = evidence.get("metrics")
-    if isinstance(metrics, dict):
-        kind = metrics.get("kind")
-        if kind == "pixelquest-token-bucket":
-            return (
-                _numeric(metrics, "good_admits") >= 8
-                and _numeric(metrics, "abusive_admitted") == 0
-                and _false(metrics, "overheated")
-                and not game_metric_violations(evidence),
-                [],
-            )
-        if kind == "pixelquest-route-health":
-            return (
-                _numeric(metrics, "routed") > 0
-                and _numeric(metrics, "bad_routes") == 0
-                and _numeric(metrics, "good_rejected") == 0
-                and _false(metrics, "overheated"),
-                [],
-            )
-        if kind == "pixelquest-policy-gate":
-            return (
-                _numeric(metrics, "allowed") > 0
-                and _numeric(metrics, "policy_leaks") == 0
-                and _numeric(metrics, "false_denies") == 0
-                and _false(metrics, "overheated"),
-                [],
-            )
-        if kind == "pixelquest-sequence-flow":
-            return (
-                _numeric(metrics, "advanced") > 0
-                and _numeric(metrics, "skipped_required") == 0
-                and _numeric(metrics, "guards_missed") == 0
-                and _false(metrics, "overheated"),
-                [],
-            )
-        if kind == "pixelquest-task-queue":
-            return (
-                _numeric(metrics, "processed") >= 8
-                and _numeric(metrics, "poison_retried") <= 3
-                and _numeric(metrics, "legit_retried") == 0
-                and _numeric(metrics, "backpressure_peak") <= 4
-                and _false(metrics, "overheated"),
-                [],
-            )
-
-    if evidence.get("game") == "GATEKEEPER":
-        good_admits = evidence.get("good_admits")
-        if isinstance(good_admits, (int, float)) and not isinstance(good_admits, bool):
-            return good_admits >= 8 and not game_metric_violations(evidence), []
+    rubric = _rubric_for_evidence(evidence)
+    if rubric is not None:
+        if rubric.get("requires_verifier_receipt"):
+            return None, [
+                "producer pass has no independent verifier verdict or recognized empirical rubric"
+            ]
+        if _rubric_pass(rubric, evidence):
+            return True, []
+        return False, []
 
     return None, [
         "producer pass has no independent verifier verdict or recognized empirical rubric"
     ]
-
-
-def _numeric(source: dict[str, Any], field: str) -> float:
-    value = source.get(field)
-    if not isinstance(value, (int, float)) or isinstance(value, bool):
-        return float("nan")
-    return float(value)
-
-
-def _false(source: dict[str, Any], field: str) -> bool:
-    return source.get(field) is False
 
 
 def load_verdict(

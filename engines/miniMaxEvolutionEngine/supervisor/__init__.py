@@ -1,6 +1,6 @@
 """Continuous-school supervisor slices 1 and 2."""
 
-from .decision import decide
+from .lifecycle import decide
 from .models import Action, Decision, SupervisorPaths
 from .tick import tick
 

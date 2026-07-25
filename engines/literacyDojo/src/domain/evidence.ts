@@ -1,3 +1,4 @@
+import sharedEvidenceSchema from "../../../../learner/gate/literacy_evidence.schema.json";
 import type { CheckValue, EvaluationResult } from "./evaluation";
 
 /**
@@ -8,8 +9,29 @@ import type { CheckValue, EvaluationResult } from "./evaluation";
  * estruturados dos checks — nunca texto livre do usuário.
  */
 
-export const EVIDENCE_SCHEMA_VERSION = 1;
-export const EVIDENCE_SOURCE = "literacydojo";
+type JsonSchema = {
+  type?: "object" | "array" | "string" | "number" | "integer" | "boolean";
+  const?: unknown;
+  enum?: unknown[];
+  required?: string[];
+  properties?: Record<string, JsonSchema>;
+  additionalProperties?: boolean | JsonSchema;
+  items?: JsonSchema;
+  propertyNames?: JsonSchema;
+  oneOf?: JsonSchema[];
+  minimum?: number;
+  maximum?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  format?: "date-time";
+};
+
+const literacyEvidenceSchema = sharedEvidenceSchema as JsonSchema;
+
+export const EVIDENCE_SCHEMA_VERSION = sharedEvidenceSchema.properties.schemaVersion.const as 1;
+export const EVIDENCE_SOURCE = sharedEvidenceSchema.properties.source.const as "literacydojo";
+const VERIFIER_REQUIRED = sharedEvidenceSchema.properties.verifierRequired.const as true;
 
 export type LiteracyEvidenceRecord = {
   schemaVersion: 1;
@@ -41,7 +63,7 @@ export function buildEvidenceRecord(input: {
   timestamp: string;
   context?: "initial" | "review";
 }): LiteracyEvidenceRecord {
-  return {
+  const record: LiteracyEvidenceRecord = {
     schemaVersion: EVIDENCE_SCHEMA_VERSION,
     source: EVIDENCE_SOURCE,
     attemptId: input.attemptId,
@@ -54,62 +76,75 @@ export function buildEvidenceRecord(input: {
     score: input.evaluation.score,
     pass: input.evaluation.pass,
     timestamp: input.timestamp,
-    verifierRequired: true,
+    verifierRequired: VERIFIER_REQUIRED,
     ...(input.context !== undefined ? { context: input.context } : {}),
   };
+  if (!isValidEvidenceRecord(record)) {
+    throw new Error("LiteracyEvidenceRecord does not match the shared schema");
+  }
+  return record;
 }
 
-const ALLOWED_KEYS = new Set([
-  "schemaVersion",
-  "source",
-  "attemptId",
-  "lessonId",
-  "lessonVersion",
-  "activityId",
-  "activityType",
-  "skillIds",
-  "deterministicChecks",
-  "score",
-  "pass",
-  "timestamp",
-  "verifierRequired",
-  "context",
-]);
+function matchesSchema(value: unknown, schema: JsonSchema): boolean {
+  if (schema.oneOf !== undefined) {
+    return schema.oneOf.filter((candidate) => matchesSchema(value, candidate)).length === 1;
+  }
+  if (schema.const !== undefined && !Object.is(value, schema.const)) return false;
+  if (schema.enum !== undefined && !schema.enum.some((item) => Object.is(value, item))) {
+    return false;
+  }
 
-function isCheckValue(value: unknown): value is CheckValue {
-  return typeof value === "boolean" || typeof value === "number" || typeof value === "string";
+  if (schema.type === "object") {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+    const record = value as Record<string, unknown>;
+    if (schema.required?.some((key) => !(key in record))) return false;
+    for (const [key, item] of Object.entries(record)) {
+      if (schema.propertyNames !== undefined && !matchesSchema(key, schema.propertyNames)) {
+        return false;
+      }
+      const propertySchema = schema.properties?.[key];
+      if (propertySchema !== undefined) {
+        if (!matchesSchema(item, propertySchema)) return false;
+      } else if (schema.additionalProperties === false) {
+        return false;
+      } else if (
+        typeof schema.additionalProperties === "object" &&
+        !matchesSchema(item, schema.additionalProperties)
+      ) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  if (schema.type === "array") {
+    return (
+      Array.isArray(value) &&
+      (schema.items === undefined || value.every((item) => matchesSchema(item, schema.items!)))
+    );
+  }
+  if (schema.type === "string") {
+    if (typeof value !== "string") return false;
+    if (schema.minLength !== undefined && value.length < schema.minLength) return false;
+    if (schema.maxLength !== undefined && value.length > schema.maxLength) return false;
+    if (schema.pattern !== undefined && !new RegExp(schema.pattern).test(value)) return false;
+    return schema.format !== "date-time" || !Number.isNaN(Date.parse(value));
+  }
+  if (schema.type === "number") {
+    if (typeof value !== "number" || !Number.isFinite(value)) return false;
+    if (schema.minimum !== undefined && value < schema.minimum) return false;
+    return schema.maximum === undefined || value <= schema.maximum;
+  }
+  if (schema.type === "integer") {
+    if (typeof value !== "number" || !Number.isInteger(value)) return false;
+    if (schema.minimum !== undefined && value < schema.minimum) return false;
+    return schema.maximum === undefined || value <= schema.maximum;
+  }
+  if (schema.type === "boolean") return typeof value === "boolean";
+  return true;
 }
 
 /** Validação estrutural do envelope — usada por testes unitários e pelo fluxo Playwright. */
 export function isValidEvidenceRecord(value: unknown): value is LiteracyEvidenceRecord {
-  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
-  const record = value as Record<string, unknown>;
-  for (const key of Object.keys(record)) {
-    if (!ALLOWED_KEYS.has(key)) return false;
-  }
-  if (record.schemaVersion !== EVIDENCE_SCHEMA_VERSION) return false;
-  if (record.source !== EVIDENCE_SOURCE) return false;
-  if (typeof record.attemptId !== "string" || record.attemptId.length === 0) return false;
-  if (typeof record.lessonId !== "string" || record.lessonId.length === 0) return false;
-  if (typeof record.lessonVersion !== "number" || !Number.isInteger(record.lessonVersion)) {
-    return false;
-  }
-  if (typeof record.activityId !== "string" || record.activityId.length === 0) return false;
-  if (typeof record.activityType !== "string" || record.activityType.length === 0) return false;
-  if (!Array.isArray(record.skillIds) || !record.skillIds.every((id) => typeof id === "string")) {
-    return false;
-  }
-  if (typeof record.deterministicChecks !== "object" || record.deterministicChecks === null) {
-    return false;
-  }
-  if (!Object.values(record.deterministicChecks).every(isCheckValue)) return false;
-  if (typeof record.score !== "number" || record.score < 0 || record.score > 1) return false;
-  if (typeof record.pass !== "boolean") return false;
-  if (typeof record.timestamp !== "string" || Number.isNaN(Date.parse(record.timestamp))) {
-    return false;
-  }
-  if (record.context !== undefined && record.context !== "initial" && record.context !== "review") {
-    return false;
-  }
-  return record.verifierRequired === true;
+  return matchesSchema(value, literacyEvidenceSchema);
 }

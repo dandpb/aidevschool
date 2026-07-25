@@ -1,20 +1,19 @@
 import { describe, expect, it, vi } from "vitest"
 import type { LearnerSnapshot } from "../domain"
 
-vi.mock("../progress", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../progress")>()
-  const snapshot = actual.getLearnerSnapshot()
+vi.mock("../data/learner", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../data/learner")>()
+  const snapshot = actual.learnerSnapshot
 
   return {
-    ...actual,
-    getLearnerSnapshot: (): LearnerSnapshot => ({
+    learnerSnapshot: {
       ...snapshot,
       streak: {
         ...snapshot.streak,
         freezesEquipped: -1,
         freezesMax: Number.MAX_SAFE_INTEGER,
       },
-    }),
+    } satisfies LearnerSnapshot,
   }
 })
 

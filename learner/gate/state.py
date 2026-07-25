@@ -1,4 +1,4 @@
-"""Learner state machine + plan projection for the AI DevSchool MVP.
+"""Public learner state machine and plan projection.
 
 Holds the §5 state machine (six states, eight transitions), state.json init,
 availability computation, and the §7.2 plan.json projection. Pure functions:
@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import Any
 
-from _core import gap_days, parse_iso, utc_now_iso
+from learner.gate.core import gap_days, parse_iso, utc_now_iso
 
 LOCKED, AVAILABLE, IN_PROGRESS, ATTEMPTED, MASTERED, REVIEW_DUE = (
     "LOCKED", "AVAILABLE", "IN_PROGRESS", "ATTEMPTED", "MASTERED", "REVIEW_DUE",

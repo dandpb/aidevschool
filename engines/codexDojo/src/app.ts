@@ -1,4 +1,6 @@
-import { getAgents, getProjects, getStages } from "./progress"
+import { agents } from "./data/agents"
+import { cycleStages } from "./data/cycle"
+import { getProjects } from "./progress"
 import { bindEvents } from "./render/events"
 import { renderShell } from "./render/shell"
 import { type AppAction, type AppState, buildInitialState, reduceState } from "./state"
@@ -11,16 +13,14 @@ export class AppMountError extends Error {
 }
 
 export function mountCodexDojo(root: HTMLElement): void {
-  const agents = getAgents()
-  const stages = getStages()
   const projects = getProjects()
 
-  if (agents.length === 0 || stages.length === 0 || projects.length === 0) {
+  if (agents.length === 0 || cycleStages.length === 0 || projects.length === 0) {
     throw new AppMountError("codexDojo needs at least one agent, one cycle stage, and one project.")
   }
 
   const firstAgent = agents[0]
-  const firstStage = stages[0]
+  const firstStage = cycleStages[0]
   const firstProject = projects[0]
 
   if (firstAgent === undefined || firstStage === undefined || firstProject === undefined) {

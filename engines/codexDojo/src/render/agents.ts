@@ -1,12 +1,11 @@
-import { getAgents, getSelectedAgent, getUserFacingAgents } from "../progress"
+import { agents, userFacingAgents } from "../data/agents"
+import { getSelectedAgent } from "../progress"
 import type { AppState } from "../state"
 import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 export function renderAgents(state: AppState): string {
   const selectedAgent = getSelectedAgent(state)
-  const userFacingAgents = getUserFacingAgents()
-  const coreAgents = getAgents()
 
   return `
     <section class="workbench agents-view" aria-label="Agentes do codexDojo">
@@ -22,7 +21,7 @@ export function renderAgents(state: AppState): string {
       <article class="surface-map" aria-label="Camadas de agentes">
         <div class="surface-summary">
           <div><span>Produto</span><strong>${escapeHtml(userFacingAgents.length)}</strong><small>agentes user-facing</small></div>
-          <div><span>Tutor core</span><strong>${escapeHtml(coreAgents.length)}</strong><small>sub-agentes especializados</small></div>
+          <div><span>Tutor core</span><strong>${escapeHtml(agents.length)}</strong><small>sub-agentes especializados</small></div>
         </div>
         <div class="user-agent-grid">
           ${userFacingAgents
@@ -45,7 +44,7 @@ export function renderAgents(state: AppState): string {
       </div>
 
       <div class="agent-list">
-        ${coreAgents
+        ${agents
           .map((agent) => {
             const { className, aria } = pressedAttrs(agent.id === selectedAgent.id)
             return `

@@ -9,7 +9,7 @@ LiteracyDojo emits raw `LiteracyEvidenceRecord` envelopes and records at most
 local `completed`. Independent judgment lives here — not in the React UI:
 
 ```bash
-python3 -m learner.gate.literacy \
+python3 -m learner.gate.literacy_verifier \
   --evidence path/to/literacy-evidence.json \
   --write-receipt learner/verifier_receipts/literacy-last.json
 ```
@@ -21,7 +21,7 @@ python3 -m learner.gate.literacy \
 - Receipts set `producer_writes_mastered: false` and `max_producer_claim: "completed"`.
 - This CLI does **not** write `learner/learning_state.yaml` or LiteracyDojo UI state.
 
-Implementation: `learner/gate/literacy_verifier.py` + CLI `learner/gate/literacy.py`.
+Implementation and CLI: `learner/gate/literacy_verifier.py`.
 Contract: `docs/design/ai-literacy/evidence-contract.md`.
 
 ## Run the gate

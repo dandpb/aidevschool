@@ -17,6 +17,7 @@ from learner.gate.evidence_io import (
     load_evidence_ndjson,
     select_evidence,
 )
+from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.substrate.scheduling import RATING_FROM_GATE
 from learner.gate.security import (
     build_attempt_identity,
@@ -35,9 +36,6 @@ from learner.gate.verifier_receipt import (
 from learner.substrate import load_and_validate
 from learner.substrate.gate import commit_gate_transition, transition_gate
 from learner.substrate.gate import GateEvidenceReceipt
-
-#: Fields every evidence record must carry regardless of game.
-REQUIRED_EVIDENCE_FIELDS = ("unit_id", "project", "game", "ts", "pass")
 
 __all__ = [
     "GateDecision",
@@ -148,14 +146,9 @@ def _check_evidence_semantics(
     active_unit: dict[str, Any],
     verifier_receipt: VerifierReceipt | None = None,
 ) -> list[str]:
-    errors: list[str] = []
-    for field_name in REQUIRED_EVIDENCE_FIELDS:
-        if field_name not in evidence:
-            errors.append(f"evidence missing required field {field_name!r}")
+    errors = validate_teaching_evidence_structure(evidence)
     if errors:
         return errors
-    if not isinstance(evidence["pass"], bool):
-        errors.append("evidence field 'pass' must be a boolean")
     if evidence["unit_id"] != active_unit.get("id"):
         errors.append(
             f"evidence unit_id {evidence['unit_id']!r} does not match "
@@ -165,22 +158,6 @@ def _check_evidence_semantics(
         errors.append(
             f"evidence project {evidence['project']!r} does not match "
             f"active_unit project {active_unit.get('project')!r}"
-        )
-    metrics = evidence.get("metrics")
-    if metrics is not None and not isinstance(metrics, dict):
-        errors.append("evidence.metrics must be an object")
-    elif isinstance(metrics, dict) and "kind" in metrics and not metrics.get("kind"):
-        errors.append("evidence.metrics.kind must be a non-empty discriminator when set")
-    try:
-        parse_aware_timestamp(str(evidence["ts"]))
-    except ValueError:
-        errors.append(
-            f"evidence ts {evidence['ts']!r} is not a valid timezone-aware ISO-8601 timestamp"
-        )
-    if "verifier" in evidence:
-        errors.append(
-            "embedded verifier is producer-controlled and cannot authorize mastery; "
-            "provide a separate verifier receipt"
         )
     producer_evidence = {
         field_name: value
@@ -309,15 +286,24 @@ def verify_and_gate(
         return decision
     if decision.receipt is None:
         raise GateIntegrityError("eligible gate decision is missing its evidence receipt")
-    transition_options = {
-        "receipt": decision.receipt,
-        "passed": decision.passed,
-        "gate_outcome": decision.gate_outcome,
-        "rating": decision.rating,
-        "today": today,
-    }
     if dry_run:
-        transition_gate(state, root=root, **transition_options)
+        transition_gate(
+            state,
+            receipt=decision.receipt,
+            passed=decision.passed,
+            gate_outcome=decision.gate_outcome,
+            rating=decision.rating,
+            today=today,
+            root=root,
+        )
         return decision
-    commit_gate_transition(state, path=state_path, **transition_options)
+    commit_gate_transition(
+        state,
+        receipt=decision.receipt,
+        passed=decision.passed,
+        gate_outcome=decision.gate_outcome,
+        rating=decision.rating,
+        today=today,
+        path=state_path,
+    )
     return decision

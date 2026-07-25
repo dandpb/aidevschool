@@ -1,0 +1,141 @@
+# Evidence rubric catalog.
+#
+# Each rubric declares how the learner gate independently judges a producer
+# evidence record without trusting the producer's own ``pass`` claim.
+#
+# A rubric matches when all of its ``selector`` keys equal the corresponding
+# evidence values. Selectors may target:
+#   - ``metrics.kind`` for pixelDojo arcade variants
+#   - ``game`` for legacy top-level shapes (e.g. GATEKEEPER)
+#   - ``source`` for engine-wide defaults (e.g. voxeldojo)
+#
+# ``pass_when`` is a list of predicates that must all be true for the rubric to
+# independently pass. Supported ops: eq, gt, gte, lt, lte, is_false, is_true.
+# Numeric predicates treat booleans as non-numeric (fail closed).
+#
+# ``requires_verifier_receipt: true`` means the engine has no built-in empirical
+# rubric; mastery eligibility depends on a separate verifier receipt.
+
+version: 1
+rubrics:
+  - id: pixelquest-token-bucket
+    source: pixelquest
+    selector:
+      metrics.kind: pixelquest-token-bucket
+    pass_when:
+      - field: metrics.good_admits
+        op: gte
+        value: 8
+      - field: metrics.abusive_admitted
+        op: eq
+        value: 0
+      - field: metrics.overheated
+        op: is_false
+
+  - id: pixelquest-route-health
+    source: pixelquest
+    selector:
+      metrics.kind: pixelquest-route-health
+    pass_when:
+      - field: metrics.routed
+        op: gt
+        value: 0
+      - field: metrics.bad_routes
+        op: eq
+        value: 0
+      - field: metrics.good_rejected
+        op: eq
+        value: 0
+      - field: metrics.overheated
+        op: is_false
+
+  - id: pixelquest-policy-gate
+    source: pixelquest
+    selector:
+      metrics.kind: pixelquest-policy-gate
+    pass_when:
+      - field: metrics.allowed
+        op: gt
+        value: 0
+      - field: metrics.policy_leaks
+        op: eq
+        value: 0
+      - field: metrics.false_denies
+        op: eq
+        value: 0
+      - field: metrics.overheated
+        op: is_false
+
+  - id: pixelquest-sequence-flow
+    source: pixelquest
+    selector:
+      metrics.kind: pixelquest-sequence-flow
+    pass_when:
+      - field: metrics.advanced
+        op: gt
+        value: 0
+      - field: metrics.skipped_required
+        op: eq
+        value: 0
+      - field: metrics.guards_missed
+        op: eq
+        value: 0
+      - field: metrics.overheated
+        op: is_false
+
+  - id: pixelquest-task-queue
+    source: pixelquest
+    selector:
+      metrics.kind: pixelquest-task-queue
+    pass_when:
+      - field: metrics.processed
+        op: gte
+        value: 8
+      - field: metrics.poison_retried
+        op: lte
+        value: 3
+      - field: metrics.legit_retried
+        op: eq
+        value: 0
+      - field: metrics.backpressure_peak
+        op: lte
+        value: 4
+      - field: metrics.overheated
+        op: is_false
+
+  - id: gatekeeper
+    selector:
+      game: GATEKEEPER
+    pass_when:
+      - field: good_admits
+        op: gte
+        value: 8
+    # Legacy GATEKEEPER record carries failure metrics at the top level; keep
+    # the original behavior of rejecting the pass when any are present.
+    apply_failure_metrics: true
+
+  - id: voxeldojo
+    source: voxeldojo
+    selector:
+      source: voxeldojo
+    # VoxelDojo games validate envelope shape only; pass/fail is decided by a
+    # separate independent verifier receipt (mutation_score + coverage_core).
+    pass_when: []
+    requires_verifier_receipt: true
+    games:
+      - KV WAREHOUSE
+      - WORMHOLE
+      - RELAY STATION
+      - PIPELINE PLANT
+      - CHECKPOINT CITY
+      - TIMELINE TOWER
+      - DOCKING BAY
+      - HASH RING
+      - AIR TRAFFIC
+      - MISSION CONTROL
+      - BREAKER GRID
+      - RIVER DELTA
+      - OBSERVATORY
+      - FREIGHT YARD
+      - LIGHTHOUSE NETWORK
+      - STACKS

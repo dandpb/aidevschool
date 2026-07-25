@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aidevschool.local/schemas/literacy-evidence.schema.json",
+  "title": "LiteracyEvidenceRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "source",
+    "attemptId",
+    "lessonId",
+    "lessonVersion",
+    "activityId",
+    "activityType",
+    "skillIds",
+    "deterministicChecks",
+    "score",
+    "pass",
+    "timestamp",
+    "verifierRequired"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "source": {
+      "const": "literacydojo"
+    },
+    "attemptId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "lessonId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "lessonVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "activityId": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "activityType": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "skillIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "deterministicChecks": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "number"
+          },
+          {
+            "type": "string",
+            "maxLength": 200
+          }
+        ]
+      }
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "pass": {
+      "type": "boolean"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "verifierRequired": {
+      "const": true
+    },
+    "context": {
+      "enum": [
+        "initial",
+        "review"
+      ]
+    }
+  }
+}

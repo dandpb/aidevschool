@@ -1,14 +1,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ActivityResultSummary, LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
-import { ActivityRenderer, emptyAnswerFor, isAnswerComplete } from "../components/ActivityRenderer";
+import { ActivityRenderer, isAnswerComplete } from "../components/ActivityRenderer";
 import { FeedbackPanel } from "../components/FeedbackPanel";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
-import type { ActivityAnswer, EvaluationResult } from "../domain/evaluation";
-import type { AttemptFeedback } from "../domain/feedback";
+import type { ActivityAnswer } from "../domain/evaluation";
+import {
+  type AttemptState,
+  type FinishPayload,
+  type LessonMode,
+  type LessonSession,
+  createLessonSession,
+  currentActivity,
+  currentAnswer,
+  dispatch,
+  hintsFor,
+  isLastActivity,
+  latestAttempt,
+  requiredActivitiesPassed,
+  setAnswer,
+} from "../domain/lessonSession";
 import {
   type Achievement,
   type LearnerProgress,
@@ -17,12 +31,7 @@ import {
 } from "../domain/progress";
 import { findModule } from "../domain/track";
 
-type AttemptState = {
-  evaluation: EvaluationResult;
-  feedback: AttemptFeedback;
-};
-
-export type LessonMode = "initial" | "review";
+export type { LessonMode };
 
 /**
  * Player de lição (plano seção 9): uma ideia por tela — introdução curta com a
@@ -31,6 +40,9 @@ export type LessonMode = "initial" | "review";
  * atividades de uma lição concluída como revisão espaçada, emitindo evidência
  * com contexto de revisão. Respostas são transitórias: recarregar retoma no
  * início da lição em andamento (ver resumeSession).
+ *
+ * O estado local da sessão foi extraído para lessonSession.ts: a tela apenas
+ * renderiza o estado e despacha comandos puros.
  */
 export function LessonScreen({
   lessonId,
@@ -49,15 +61,9 @@ export function LessonScreen({
   const lesson = useMemo(() => services.content.getLesson(lessonId), [services, lessonId]);
   const module = lesson ? findModule(services.content.listModules(), lesson.moduleId) : undefined;
 
-  const [stage, setStage] = useState<"intro" | number>("intro");
-  const [answers, setAnswers] = useState<Record<string, ActivityAnswer>>({});
-  const [latest, setLatest] = useState<Record<string, AttemptState>>({});
-  const [best, setBest] = useState<Record<string, AttemptState>>({});
-  const [hintIndexByActivity, setHintIndexByActivity] = useState<Record<string, number>>({});
-  const [hintsShownByActivity, setHintsShownByActivity] = useState<Record<string, string[]>>({});
-  const [submitting, setSubmitting] = useState(false);
   const [onboarding, setOnboarding] = useState<OnboardingState>();
-  const startedAtRef = useRef<Date | null>(null);
+  const [session, setSession] = useState<LessonSession>(() => createLessonSession(lessonId, mode));
+  const [submitting, setSubmitting] = useState(false);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Abertura da lição (status in_progress + lesson_started) ou da revisão (review_started).
@@ -70,6 +76,7 @@ export function LessonScreen({
     void opening.then((progress) => {
       if (!cancelled) {
         setOnboarding(progress.onboarding);
+        setSession((previous) => ({ ...previous, onboarding: progress.onboarding }));
         onProgressChange(progress);
       }
     });
@@ -80,10 +87,10 @@ export function LessonScreen({
 
   // Gerenciamento de foco: o título recebe foco a cada nova tela do player
   // (introdução e cada atividade), orientando teclado e leitor de tela.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de tela (stage), embora não leia o valor.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (phase/currentActivityIndex), embora não leia o valor.
   useEffect(() => {
     headingRef.current?.focus();
-  }, [stage]);
+  }, [session.phase, session.currentActivityIndex]);
 
   if (!lesson) {
     return (
@@ -96,24 +103,43 @@ export function LessonScreen({
     );
   }
 
-  const activities = lesson.activities;
-  const currentIndex = typeof stage === "number" ? stage : 0;
-  const activity = activities[currentIndex];
-  const answer = answers[activity.id] ?? emptyAnswerFor(activity);
-  const attempt = latest[activity.id];
-  const hintsShown = hintsShownByActivity[activity.id] ?? [];
-  const hintIndex = hintIndexByActivity[activity.id] ?? 0;
-  const hasMoreHints = services.feedback.hintCount(activity) > hintIndex;
-  const isLastActivity = currentIndex === activities.length - 1;
-  const requiredPassed = lesson.completion.requiredActivityIds.every(
-    (id) => best[id]?.evaluation.pass,
-  );
+  const activity = currentActivity(session, lesson);
 
-  const updateAnswer = (next: ActivityAnswer) =>
-    setAnswers((previous) => ({ ...previous, [activity.id]: next }));
+  if (!activity) {
+    return (
+      <section className="screen">
+        <p role="alert">Nenhuma atividade encontrada para esta lição.</p>
+        <button type="button" className="btn btn-secondary" onClick={onExit}>
+          Voltar
+        </button>
+      </section>
+    );
+  }
+
+  const answer = currentAnswer(session, activity);
+  const attempt = latestAttempt(session, activity.id);
+  const hints = hintsFor(session, activity.id);
+  const hasMoreHints = services.feedback.hintCount(activity) > hints.index;
+  const lastActivity = isLastActivity(session, lesson);
+  const requiredPassed = requiredActivitiesPassed(session, lesson.completion.requiredActivityIds);
+
+  const applyTransition = (result: { session: LessonSession; finishPayload?: FinishPayload }) => {
+    setSession(result.session);
+    if (result.finishPayload) {
+      void handleFinish(result.finishPayload);
+    }
+  };
+
+  const updateAnswer = (next: ActivityAnswer) => {
+    setSession((previous) => setAnswer(previous, lesson, next));
+  };
+
+  const handleStart = () => {
+    applyTransition(dispatch(session, lesson, { type: "start", now: services.clock.now() }));
+  };
 
   const handleSubmit = async () => {
-    if (submitting) return;
+    if (submitting || !activity) return;
     setSubmitting(true);
     try {
       const result = await services.useCases.submitActivityAttempt({
@@ -122,15 +148,13 @@ export function LessonScreen({
         answer,
         context: mode,
       });
-      const state: AttemptState = { evaluation: result.evaluation, feedback: result.feedback };
-      setLatest((previous) => ({ ...previous, [activity.id]: state }));
-      setBest((previous) => {
-        const previousBest = previous[activity.id];
-        if (!previousBest || result.evaluation.score >= previousBest.evaluation.score) {
-          return { ...previous, [activity.id]: state };
-        }
-        return previous;
-      });
+      applyTransition(
+        dispatch(session, lesson, {
+          type: "submit",
+          evaluation: result.evaluation,
+          feedback: result.feedback,
+        }),
+      );
       onProgressChange(result.progress);
     } finally {
       setSubmitting(false);
@@ -138,62 +162,46 @@ export function LessonScreen({
   };
 
   const handleHint = async () => {
+    if (!activity) return;
     const result = await services.useCases.requestHint({
       lessonId: lesson.id,
       activityId: activity.id,
-      hintIndex,
+      hintIndex: hints.index,
     });
-    setHintIndexByActivity((previous) => ({ ...previous, [activity.id]: result.nextIndex }));
-    if (result.hint !== null) {
-      setHintsShownByActivity((previous) => ({
-        ...previous,
-        [activity.id]: [...(previous[activity.id] ?? []), result.hint as string],
-      }));
-    }
+    applyTransition(dispatch(session, lesson, { type: "hint", hint: result.hint }));
   };
 
   const handleRetry = async () => {
+    if (!activity) return;
     await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
-    setAnswers((previous) => ({ ...previous, [activity.id]: emptyAnswerFor(activity) }));
-    setLatest((previous) => {
-      const next = { ...previous };
-      delete next[activity.id];
-      return next;
-    });
+    applyTransition(dispatch(session, lesson, { type: "retry" }));
   };
 
-  const handleNextActivity = () => setStage(currentIndex + 1);
+  const handleNextActivity = () => {
+    applyTransition(dispatch(session, lesson, { type: "next" }));
+  };
 
-  const handleFinish = async () => {
+  const handleFinish = async (payload: FinishPayload) => {
     if (submitting) return;
     setSubmitting(true);
     try {
-      const bestScores = Object.fromEntries(
-        Object.entries(best).map(([id, state]) => [id, state.evaluation.score]),
-      );
-      const startedAt = startedAtRef.current;
-      const durationSeconds = startedAt
-        ? Math.max(0, Math.round((services.clock.now().getTime() - startedAt.getTime()) / 1000))
-        : undefined;
       if (mode === "review") {
         const result = await services.useCases.completeReview({
           lessonId: lesson.id,
-          bestScores,
+          bestScores: payload.bestScores,
         });
         if (!result.outcome.completed) return;
-        const summary = buildSummary(lesson, best, result.outcome.lessonScore, {
-          mode,
-        });
+        const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, { mode });
         onCompleted(result.progress, summary);
         return;
       }
       const result = await services.useCases.completeLesson({
         lessonId: lesson.id,
-        bestScores,
-        durationSeconds,
+        bestScores: payload.bestScores,
+        durationSeconds: payload.durationSeconds,
       });
       if (!result.outcome.completed) return;
-      const summary = buildSummary(lesson, best, result.outcome.lessonScore, {
+      const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
         mode,
         nextLessonId: result.nextLessonId,
         newlyUnlocked: result.newlyUnlocked,
@@ -204,7 +212,7 @@ export function LessonScreen({
     }
   };
 
-  if (stage === "intro") {
+  if (session.phase === "intro") {
     const taskCategory = onboarding?.taskCategory;
     const showMapContext = mode === "initial" && lesson.id === MAP_INITIAL_LESSON_ID;
     const entryHint =
@@ -259,10 +267,7 @@ export function LessonScreen({
           type="button"
           className="btn btn-primary"
           data-testid="start-lesson"
-          onClick={() => {
-            startedAtRef.current = services.clock.now();
-            setStage(0);
-          }}
+          onClick={handleStart}
         >
           {mode === "review" ? "Começar revisão" : "Começar"}
         </button>
@@ -272,6 +277,20 @@ export function LessonScreen({
       </section>
     );
   }
+
+  if (!activity) {
+    return (
+      <section className="screen">
+        <p role="alert">Nenhuma atividade encontrada para esta lição.</p>
+        <button type="button" className="btn btn-secondary" onClick={onExit}>
+          Voltar
+        </button>
+      </section>
+    );
+  }
+
+  const currentIndex = session.currentActivityIndex;
+  const activities = lesson.activities;
 
   return (
     <section className="screen" data-testid="lesson-player" aria-labelledby="activity-heading">
@@ -293,7 +312,7 @@ export function LessonScreen({
         onChange={updateAnswer}
       />
 
-      {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hintsShown} />}
+      {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
 
       <div className="actions">
         {!attempt?.evaluation.pass && (
@@ -327,7 +346,7 @@ export function LessonScreen({
             Pedir dica
           </button>
         )}
-        {attempt?.evaluation.pass && !isLastActivity && (
+        {attempt?.evaluation.pass && !lastActivity && (
           <button
             type="button"
             className="btn btn-primary"
@@ -337,13 +356,17 @@ export function LessonScreen({
             Próxima atividade
           </button>
         )}
-        {attempt?.evaluation.pass && isLastActivity && (
+        {attempt?.evaluation.pass && lastActivity && (
           <button
             type="button"
             className="btn btn-primary"
             data-testid="finish-lesson"
             disabled={!requiredPassed || submitting}
-            onClick={() => void handleFinish()}
+            onClick={() =>
+              void applyTransition(
+                dispatch(session, lesson, { type: "finish", now: services.clock.now() }),
+              )
+            }
           >
             {mode === "review" ? "Concluir revisão" : "Concluir lição"}
           </button>

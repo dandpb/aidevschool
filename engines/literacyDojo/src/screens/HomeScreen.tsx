@@ -1,14 +1,8 @@
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
-import type { SkillId } from "../data/generated/lessons";
-import {
-  type LearnerProgress,
-  type SkillPractice,
-  dailyGoalStatus,
-  reviewsDue,
-} from "../domain/progress";
-import { readyLessonEntries, trackSummary } from "../domain/track";
+import type { LearnerProgress } from "../domain/progress";
+import { buildTrackQueries } from "../domain/trackQueries";
 
 /**
  * Home (plano seção 9): missão do dia, progresso da trilha, revisão pendente,
@@ -31,31 +25,8 @@ export function HomeScreen({
 }) {
   const services = useServices();
   const track = services.content.getTrack();
-  const modules = services.content.listModules();
-  const ready = readyLessonEntries(modules);
-
-  const { completed: completedCount } = trackSummary(modules, progress);
-  const mission =
-    ready.find(
-      (entry) =>
-        entry.id === progress.currentLessonId && progress.lessonStatus[entry.id] !== "completed",
-    ) ??
-    ready.find((entry) => {
-      const status = progress.lessonStatus[entry.id];
-      return status === "available" || status === "in_progress";
-    });
-
-  const now = services.clock.now();
-  const goal = dailyGoalStatus(progress, now);
-  const due: SkillPractice[] = reviewsDue(progress, now);
-  const reviewLesson =
-    due.length > 0
-      ? ready.find(
-          (entry) =>
-            progress.lessonStatus[entry.id] === "completed" &&
-            entry.skillIds.includes(due[0].skillId as SkillId),
-        )
-      : undefined;
+  const queries = buildTrackQueries(progress, services.content, services.clock);
+  const { mission, reviewLesson, dailyGoal: goal, trackSummary: summary, dueReviews } = queries;
 
   const handleReset = () => {
     if (window.confirm("Apagar todo o progresso deste aparelho e recomeçar do zero?")) {
@@ -126,20 +97,22 @@ export function HomeScreen({
       <div className="card">
         <h2>Sua trilha</h2>
         <p data-testid="track-progress">
-          {completedCount} de {ready.length} lições concluídas
+          {summary.completed} de {summary.total} lições concluídas
         </p>
         <div
           className="progress-track"
           role="progressbar"
           tabIndex={0}
-          aria-valuenow={completedCount}
+          aria-valuenow={summary.completed}
           aria-valuemin={0}
-          aria-valuemax={ready.length}
+          aria-valuemax={summary.total}
           aria-label="Progresso da trilha"
         >
           <div
             className="progress-fill"
-            style={{ width: `${ready.length === 0 ? 0 : (completedCount / ready.length) * 100}%` }}
+            style={{
+              width: `${summary.total === 0 ? 0 : (summary.completed / summary.total) * 100}%`,
+            }}
           />
         </div>
         <button
@@ -160,12 +133,12 @@ export function HomeScreen({
         </button>
       </div>
 
-      {due.length > 0 && reviewLesson && (
+      {dueReviews.length > 0 && reviewLesson && (
         <div className="card card-review">
           <h2>Revisão pendente</h2>
           <p>
             Hora de revisar:{" "}
-            {due.map((skill) => services.content.getSkillTitle(skill.skillId)).join(", ")}.
+            {dueReviews.map((skill) => services.content.getSkillTitle(skill.skillId)).join(", ")}.
           </p>
           <button
             type="button"

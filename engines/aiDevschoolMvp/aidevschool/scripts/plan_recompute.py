@@ -11,10 +11,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
-import _core
-import _state
+import learner.gate.core as _core
+import learner.gate.state as _state
 
 
 def _emit(obj: dict[str, Any]) -> None:

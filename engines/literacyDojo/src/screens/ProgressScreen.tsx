@@ -1,20 +1,8 @@
 import { useServices } from "../app/services";
-import type { SkillId } from "../data/generated/lessons";
-import {
-  ACHIEVEMENT_DEFINITIONS,
-  type LearnerProgress,
-  dailyGoalStatus,
-  reviewsDue,
-  upcomingReviews,
-} from "../domain/progress";
+import type { LearnerProgress } from "../domain/progress";
+import { ACHIEVEMENT_DEFINITIONS } from "../domain/progress";
 import { readyLessonEntries } from "../domain/track";
-
-const STATUS_LABEL: Record<string, string> = {
-  locked: "Bloqueada",
-  available: "Disponível",
-  in_progress: "Em andamento",
-  completed: "Concluída",
-};
+import { buildTrackQueries } from "../domain/trackQueries";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString("pt-BR", {
@@ -41,17 +29,19 @@ export function ProgressScreen({
   onReview: (lessonId: string) => void;
 }) {
   const services = useServices();
-  const modules = services.content.listModules();
-  const ready = readyLessonEntries(modules);
-  const now = services.clock.now();
-  const goal = dailyGoalStatus(progress, now);
-  const due = reviewsDue(progress, now);
-  const upcoming = upcomingReviews(progress, now);
+  const queries = buildTrackQueries(progress, services.content, services.clock);
+  const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
 
-  const lessonForSkill = (skillId: string) =>
-    ready.find((entry) => entry.skillIds.includes(skillId as SkillId));
+  const readyLessons = readyLessonEntries(services.content.listModules());
+  const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
+  for (const entry of readyLessons) {
+    for (const skillId of entry.skillIds) {
+      lessonBySkillId.set(skillId, entry);
+    }
+  }
+  const lessonForSkill = (skillId: string) => lessonBySkillId.get(skillId);
 
   return (
     <section className="screen" data-testid="progress-screen" aria-labelledby="progress-title">
@@ -163,12 +153,12 @@ export function ProgressScreen({
       <div className="card">
         <h2>Trilha</h2>
         <ul className="lesson-list">
-          {ready.map((entry) => {
+          {readyLessons.map((entry) => {
             const status = progress.lessonStatus[entry.id] ?? "locked";
             return (
               <li key={entry.id} className="lesson-row">
                 <span className="lesson-name">{entry.title}</span>
-                <span className={`chip chip-${status}`}>{STATUS_LABEL[status]}</span>
+                <span className={`chip chip-${status}`}>{queries.statusLabel[status]}</span>
                 {(status === "available" || status === "in_progress") && (
                   <button
                     type="button"

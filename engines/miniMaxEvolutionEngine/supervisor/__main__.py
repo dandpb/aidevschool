@@ -13,9 +13,9 @@ from pathlib import Path
 
 from .autonomous import execute_request
 from .config import ConfigError, load_config
-from .decision import decide
 from .lease import acquire, read_lease, recover
 from .ledger import read_ledger
+from .lifecycle import decide
 from .models import RuntimeSnapshot, SupervisorPaths
 from .poll import run_poll
 from .reconcile import (

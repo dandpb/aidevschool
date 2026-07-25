@@ -30,7 +30,7 @@ npm run build && npx netlify deploy --dir=dist --prod
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
 Julgamento independente de evidência bruta (fora deste app):
-`python3 -m learner.gate.literacy --evidence <LiteracyEvidenceRecord.json>`
+`python3 -m learner.gate.literacy_verifier --evidence <LiteracyEvidenceRecord.json>`
 — ver `learner/gate/README.md` e `docs/design/ai-literacy/evidence-contract.md`.
 
 ## Stack
