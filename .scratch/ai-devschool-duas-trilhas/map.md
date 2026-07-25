@@ -62,8 +62,9 @@ lançamento verificável.
 - O formato da especificação integrada e da validação humana final, quando as decisões anteriores
   estiverem resolvidas.
 - Se o gate G4 do ADR-0006 (scoring por LLM ancorado em rubrica, `Proposed`) chega a entrar no
-  mapa — a composição recomendada exclui a skill `aiDevschoolMvp` por maturidade não comprovada,
-  então a ratificação do ADR só vira decisão de mapa se essa exclusão cair.
+  mapa. A skill `aiDevschoolMvp` ganhou suíte de testes depois da auditoria (7 passed), então a
+  exclusão dela já não se sustenta por maturidade — resta que ela não usa `learner/gate` nem
+  `learner/substrate`, ou seja, admiti-la significa herdar um quarto modelo de gate.
 
 ## Out of scope
 

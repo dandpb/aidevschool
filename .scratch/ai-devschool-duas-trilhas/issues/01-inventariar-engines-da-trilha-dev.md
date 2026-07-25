@@ -11,6 +11,16 @@ podem compor a Trilha Dev sem criar uma nova engine?
 
 ## Answer
 
+> **Correção pós-resolução (2026-07-25 16:05).** A linha do `aiDevschoolMvp` abaixo diz
+> "`tests/` vazio (`no tests ran`)". Isso era verdade quando a auditoria rodou (15:29), mas os
+> arquivos de teste e os scripts da engine foram escritos **depois**, entre 15:39 e 16:03.
+> Reexecução: `python3 -m pytest engines/aiDevschoolMvp/tests/ -q` → **7 passed, 1 skipped**.
+> Portanto a exclusão do `aiDevschoolMvp` da composição por "maturidade não comprovada" perdeu
+> essa justificativa. As outras duas permanecem: o ADR-0006 segue `Proposed`, e a engine não usa
+> `learner/gate` nem `learner/substrate` — se ela entrar na Trilha Dev, o mapa herda um quarto
+> modelo de gate com julgamento de LLM. Isso é decisão, não fato: vai para
+> [Definir a topologia das duas trilhas](03-definir-a-topologia-das-duas-trilhas.md).
+
 Levantamento feito em 2026-07-25 no commit de trabalho atual (branch `main`, `d6920fd` + working
 tree sujo). Toda linha de maturidade abaixo vem de arquivo lido ou de comando executado nesta
 sessão. Onde não houve execução, está escrito "não executado".
