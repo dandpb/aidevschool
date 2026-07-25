@@ -94,6 +94,8 @@ def tick(
                     now,
                 )
                 return decision
+            if decision.action is Action.BLOCKED and blocker is not None:
+                return decision
             append_event(paths.ledger, {
                 "schema_version": 1, "event": "decision_recorded", "run_id": owner,
                 "project": pipeline.project, "observed_phase": pipeline.phase.value,

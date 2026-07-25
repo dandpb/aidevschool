@@ -3,12 +3,19 @@
 from __future__ import annotations
 
 import hashlib
-import os
 from pathlib import Path
 
 from .ledger import append_event, read_ledger
 from .models import LearnerState, PipelineState, Reconciliation, SupervisorPaths
-from .outbox import OutboxError, read_request, read_resolution, resolve, valid_id
+from .outbox import (
+    OutboxError,
+    read_request,
+    read_resolution,
+    resolve,
+    retire,
+    valid_id,
+    validate_resolution,
+)
 from .state import load_learner
 
 
@@ -69,24 +76,30 @@ def _append_resolution(
 
 
 def _retire(paths: SupervisorPaths, request_id: str) -> Path:
-    pending = paths.outbox / f"{request_id}.json"
-    retired = paths.retired / f"{request_id}.json"
-    if retired.is_file():
-        if pending.is_file() and read_request(pending) != read_request(retired):
-            raise OutboxError("retired request conflicts with pending request")
-        pending.unlink(missing_ok=True)
-        return retired
-    if not pending.is_file():
-        raise OutboxError("request is neither pending nor retired")
-    retired.parent.mkdir(parents=True, exist_ok=True)
-    os.rename(pending, retired)
-    for directory in {pending.parent, retired.parent}:
-        directory_fd = os.open(directory, os.O_RDONLY)
-        try:
-            os.fsync(directory_fd)
-        finally:
-            os.close(directory_fd)
-    return retired
+    return retire(paths.outbox, paths.retired, request_id)
+
+
+def _receipt_conflict(
+    request: dict,
+    receipt: dict,
+    pipeline: PipelineState,
+) -> str | None:
+    if (
+        request.get("request_id") != receipt.get("request_id")
+        or request.get("cycle_id") != pipeline.cycle_id
+        or request.get("project") != pipeline.project
+    ):
+        return "resolution receipt canonical identity diverged"
+    expected_phase = (
+        request.get("intended_phase")
+        if receipt.get("result") in {"completed", "reconciled"}
+        else request.get("observed_phase")
+    )
+    if receipt.get("canonical_phase") != expected_phase:
+        return "resolution receipt records an unexpected canonical phase"
+    if pipeline.phase.value != expected_phase:
+        return "resolution receipt conflicts with the current canonical phase"
+    return None
 
 
 def runtime_state(
@@ -179,6 +192,17 @@ def reconcile(paths: SupervisorPaths, pipeline: PipelineState, now: str) -> Reco
             if retired.is_file()
             else marker
         )
+        conflict = _receipt_conflict(request, receipt, pipeline)
+        if conflict is not None:
+            record_operational_blocker(
+                paths,
+                pipeline.cycle_id,
+                pipeline.project,
+                pipeline.phase.value,
+                conflict,
+                now,
+            )
+            return Reconciliation("invalid", request, conflict)
         if pending.is_file():
             _retire(paths, request_id)
         _append_resolution(paths, request, receipt, now)
@@ -284,6 +308,8 @@ def resolve_request(
 ) -> Reconciliation:
     if not valid_id(request_id):
         raise OutboxError("unsafe request_id")
+    if result not in {"completed", "failed", "blocked"}:
+        raise OutboxError("invalid operator resolution result")
     pending = paths.outbox / f"{request_id}.json"
     retired = paths.retired / f"{request_id}.json"
     receipt_path = paths.resolutions / f"{request_id}.json"
@@ -324,6 +350,7 @@ def resolve_request(
         receipt["summary"] = detail
     if result == "blocked":
         receipt["reason"] = detail
+    validate_resolution({"schema_version": 1, "request_id": request_id, **receipt})
     if pending.is_file():
         _retire(paths, request_id)
     resolve(paths.resolutions, request_id, receipt)
