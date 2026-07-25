@@ -22,7 +22,7 @@ from engines.miniMaxEvolutionEngine.supervisor.models import (
     RuntimeSnapshot,
     SupervisorPaths,
 )
-from engines.miniMaxEvolutionEngine.supervisor.outbox import OutboxError, publish, resolve
+from engines.miniMaxEvolutionEngine.supervisor.outbox import OutboxError, publish, resolve, retire
 from engines.miniMaxEvolutionEngine.supervisor.reconcile import (
     abandon_unpublished_request,
     pending_request,
@@ -388,6 +388,36 @@ def test_complete_requires_canonical_advancement_and_retires_request(workspace: 
     assert read_ledger(workspace.ledger)[-1]["result"] == "completed"
 
 
+def test_cli_complete_is_leased_and_requires_canonical_advancement(
+    workspace: SupervisorPaths,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    tick(workspace, clock=lambda: NOW, id_provider=_ids("run", "request", "producer", "verifier"))
+    arguments = [
+        "--repo-root",
+        str(workspace.repo_root),
+        "--operations",
+        str(workspace.operations),
+        "complete",
+        "request",
+    ]
+
+    assert main(arguments) == 2
+    failure = json.loads(capsys.readouterr().out)
+    assert failure["action"] == "invalid_state"
+    assert "canonical phase" in failure["reason"]
+    assert (workspace.outbox / "request.json").is_file()
+    assert not workspace.lease.exists()
+
+    _set_phase(workspace, "spec-done")
+    assert main(arguments) == 0
+    completed = json.loads(capsys.readouterr().out)
+    assert completed == {"reason": "request completed", "status": "resolved"}
+    assert (workspace.retired / "request.json").is_file()
+    assert (workspace.resolutions / "request.json").is_file()
+    assert not workspace.lease.exists()
+
+
 def test_failed_requests_exhaust_retries_and_resume_resets_them(workspace: SupervisorPaths) -> None:
     for attempt in range(1, 4):
         request_id = f"request-{attempt}"
@@ -415,6 +445,10 @@ def test_failed_requests_exhaust_retries_and_resume_resets_them(workspace: Super
     assert failures == 3
     assert blocker == "retry limit exhausted (3/3)"
     assert not list(workspace.outbox.glob("*.json"))
+    blocked_events = read_ledger(workspace.ledger)
+    repeated = tick(workspace, clock=lambda: NOW, id_provider=_ids("blocked-run-2"))
+    assert repeated.action is Action.BLOCKED
+    assert read_ledger(workspace.ledger) == blocked_events
 
     pipeline, _ = load_canonical(workspace.pipeline, workspace.learner, workspace.curriculum)
     resume_operations(workspace, pipeline, "resume-run", NOW)
@@ -456,6 +490,59 @@ def test_reconcile_repairs_receipt_without_ledger_event(workspace: SupervisorPat
     assert reconcile(workspace, pipeline, NOW).status == "resolved"
     assert reconcile(workspace, pipeline, NOW).status == "none"
     assert read_ledger(workspace.ledger)[-1]["result"] == "failed"
+
+
+def test_reconcile_blocks_receipt_that_conflicts_with_canonical_phase(
+    workspace: SupervisorPaths,
+) -> None:
+    tick(workspace, clock=lambda: NOW, id_provider=_ids("run", "request", "producer", "verifier"))
+    resolve(
+        workspace.resolutions,
+        "request",
+        {
+            "result": "failed",
+            "resolved_at": NOW,
+            "canonical_phase": "spec-done",
+            "summary": "contradictory receipt",
+        },
+    )
+    pipeline, _ = load_canonical(workspace.pipeline, workspace.learner, workspace.curriculum)
+
+    result = reconcile(workspace, pipeline, NOW)
+
+    assert result.status == "invalid"
+    assert "unexpected canonical phase" in result.reason
+    assert (workspace.outbox / "request.json").is_file()
+    assert not workspace.retired.exists()
+    assert read_ledger(workspace.ledger)[-1]["event"] == "operational_blocked"
+
+
+def test_invalid_resolution_result_does_not_retire_pending_request(
+    workspace: SupervisorPaths,
+) -> None:
+    tick(workspace, clock=lambda: NOW, id_provider=_ids("run", "request", "producer", "verifier"))
+    pipeline, learner = load_canonical(workspace.pipeline, workspace.learner, workspace.curriculum)
+
+    with pytest.raises(OutboxError, match="invalid operator resolution"):
+        resolve_request(workspace, "request", "reconciled", NOW, pipeline, learner)
+
+    assert (workspace.outbox / "request.json").is_file()
+    assert not workspace.retired.exists()
+    assert not workspace.resolutions.exists()
+
+
+def test_retirement_repairs_link_before_pending_unlink_crash(tmp_path: Path) -> None:
+    pending = tmp_path / "pending"
+    retired = tmp_path / "retired"
+    request_path = publish(pending, _request())
+    retired.mkdir()
+    os.link(request_path, retired / request_path.name)
+
+    result = retire(pending, retired, "request-1")
+
+    assert result == retired / "request-1.json"
+    assert not request_path.exists()
+    assert json.loads(result.read_text(encoding="utf-8"))["request_id"] == "request-1"
 
 
 def test_resolution_crash_window_retires_request_before_ledger_completion(

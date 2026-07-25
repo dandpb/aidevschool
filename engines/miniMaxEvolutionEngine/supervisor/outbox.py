@@ -65,6 +65,8 @@ def validate_resolution(value: dict[str, Any]) -> None:
         raise OutboxError("invalid resolution")
     if any(k in value and type(value[k]) is not str for k in ("resolved_at", "canonical_phase", "summary", "reason")):
         raise OutboxError("resolution text fields must be strings")
+    if not value["resolved_at"] or not value["canonical_phase"]:
+        raise OutboxError("resolution identifiers must be non-empty strings")
     if any(len(value[k]) > MAX_DETAIL_LENGTH for k in ("summary", "reason") if k in value):
         raise OutboxError("resolution detail is too long")
 
@@ -113,6 +115,36 @@ def resolve(directory: Path, request_id: str, resolution: dict[str, Any]) -> Pat
     return path
 
 
+def retire(pending_directory: Path, retired_directory: Path, request_id: str) -> Path:
+    if not valid_id(request_id):
+        raise OutboxError("unsafe request_id")
+    pending = pending_directory / f"{request_id}.json"
+    retired = retired_directory / f"{request_id}.json"
+    if retired.is_file():
+        if retired.is_symlink():
+            raise OutboxError("retired request may not be a symlink")
+        if pending.is_file():
+            if read_request(pending) != read_request(retired):
+                raise OutboxError("retired request conflicts with pending request")
+            pending.unlink()
+            _fsync_directory(pending.parent)
+        return retired
+    if not pending.is_file():
+        raise OutboxError("request is neither pending nor retired")
+
+    retired.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        os.link(pending, retired)
+        _fsync_directory(retired.parent)
+        pending.unlink()
+        _fsync_directory(pending.parent)
+    except FileExistsError:
+        return retire(pending_directory, retired_directory, request_id)
+    except OSError as exc:
+        raise OutboxError(f"cannot retire request {request_id}: {exc}") from exc
+    return retired
+
+
 def read_request(path: Path) -> dict[str, Any]:
     value = _read(path, "request")
     validate_request(value)
@@ -126,7 +158,17 @@ def read_resolution(path: Path) -> dict[str, Any]:
 
 
 def _read(path: Path, kind: str) -> dict[str, Any]:
+    if path.is_symlink():
+        raise OutboxError(f"{kind} may not be a symlink: {path}")
     try: value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc: raise OutboxError(f"cannot read {kind} {path}: {exc}") from exc
     if not isinstance(value, dict): raise OutboxError(f"{kind} is not an object: {path}")
     return value
+
+
+def _fsync_directory(path: Path) -> None:
+    directory_fd = os.open(path, os.O_RDONLY)
+    try:
+        os.fsync(directory_fd)
+    finally:
+        os.close(directory_fd)
