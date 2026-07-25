@@ -25,6 +25,8 @@ learning_gate_check: true
 artefact: curriculum/{project}/node-impl/
 ```
 
+Invoque `run_phase(spec)` usando a declaração node-first acima.
+
 - `dev-node` → `node-impl/`
 - Lê `docs/spec.md`, cobre FRs, build+lint+test (≥80%).
 - **Sem** Dockerfile salvo no pilot `01_rate_limiter` (lá Dockerfiles de referência existem).

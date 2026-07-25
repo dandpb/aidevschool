@@ -140,7 +140,7 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
           <strong>${escapeHtml(snapshot.scaffoldedCount)}</strong>
           <span>com scaffold</span>
         </div>
-        <p class="coverage-hint">A cat. <code>curriculum/catalog.md</code> mantém 18 projetos; domínio do learner vem só de <code>learner/learning_state.yaml</code>.</p>
+        <p class="coverage-hint">A cat. <code>curriculum/catalog.md</code> mantém 19 entradas (00–18); domínio do learner vem só de <code>learner/learning_state.yaml</code>.</p>
       </div>
     </div>
   `

@@ -86,13 +86,13 @@ def test_phase_commands_use_phaserunner() -> None:
         assert not missing, f"{name} spec missing fields: {missing}"
 
 
-def test_implement_phase_is_parallel_with_gate() -> None:
+def test_implement_phase_is_node_first_with_gate() -> None:
     _, body = parse_frontmatter_and_body(COMMANDS_DIR / "implement.md")
     spec = extract_spec_block(body)
-    assert spec.get("parallel") is True, "implement must run producers in parallel"
+    assert spec.get("parallel") is False, "default implementation must be sequential"
     assert spec.get("learning_gate_check") is True, "implement must check learning gate"
     assert isinstance(spec.get("producer"), list), "implement producer must be a list"
-    assert set(spec["producer"]) == {"dev-go", "dev-rust", "dev-node"}
+    assert spec["producer"] == ["dev-node"]
 
 
 def test_review_command_is_runnable() -> None:
