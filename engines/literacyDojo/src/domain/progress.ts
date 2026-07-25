@@ -26,6 +26,7 @@ export type OnboardingContext = "work" | "studies" | "business" | "daily_life";
 export type OnboardingConfidence = "low" | "medium" | "high";
 export type OnboardingTaskCategory = "scheduling" | "communication" | "news_research";
 export type LearningRoute = "guided" | "intermediate";
+export type AudienceChoice = "ia_pratica" | "trilha_dev";
 
 export type MapInitialState = {
   attempts: number;
@@ -41,6 +42,7 @@ export type OnboardingState = {
   confidence?: OnboardingConfidence;
   taskCategory?: OnboardingTaskCategory;
   route?: LearningRoute;
+  audience?: AudienceChoice;
   mapInitial?: MapInitialState;
 };
 

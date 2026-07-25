@@ -162,15 +162,15 @@ describe("safety_classification (l12)", () => {
   });
 });
 
-describe("tipos fora do vertical slice", () => {
-  it("lança UnsupportedActivityTypeError (Fase 2)", () => {
+describe("tipos desconhecidos pelo engine", () => {
+  it("lança UnsupportedActivityTypeError para tipo fora do content-contract", () => {
     const fake = {
       id: "l99-a1",
-      type: "choice",
+      type: "future_unknown_type",
       skillId: "entender",
       instruction: "x",
-      data: { options: [{ id: "a", text: "a" }] },
-      evaluation: { strategy: "deterministic", correctOptionIds: ["a"] },
+      data: {},
+      evaluation: { strategy: "deterministic" },
       feedback: { onFailure: "x" },
       storage: { policy: "none" },
     } as unknown as ActivityDefinition;

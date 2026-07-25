@@ -8,8 +8,10 @@ cópia de currículo: os projetos numerados (`01_`…`18_`) e a trilha Nível 0
 
 - **Público:** profissionais não técnicos que querem usar IA no trabalho.
 - **Formato:** 14 microlições de 3–5 minutos em 4 módulos; conteúdo em pt-BR.
-- **Consumidora prevista:** `engines/literacyDojo/` (Fase 1 do plano), que
+- **Consumidora:** `engines/literacyDojo/`, que
   consome **somente o read model tipado gerado** — nunca estes YAMLs direto.
+- **Estado do conteúdo:** 14/14 lições estão `ready` no catálogo. Esse status
+  prova validade de conteúdo, não release do app nem domínio do aprendiz.
 
 ## Estrutura
 
@@ -21,10 +23,10 @@ curriculum/ai-literacy/
 │   ├── lesson.schema.json # contrato LessonDefinition
 │   └── rubric.schema.json # contrato de rubrica verificável
 ├── modules/
-│   ├── 01-ai-sem-misterio/      # l02 (piloto, output_comparison)
-│   ├── 02-pedir-bem/            # l05 (piloto, prompt_builder)
-│   ├── 03-avaliar-e-verificar/  # l08–l11 planned
-│   └── 04-seguranca-e-aplicacao/ # l12 (piloto, safety_classification)
+│   ├── 01-ai-sem-misterio/       # lições l01–l03
+│   ├── 02-pedir-bem/             # lições l04–l07
+│   ├── 03-avaliar-e-verificar/   # lições l08–l11
+│   └── 04-seguranca-e-aplicacao/ # lições l12–l14
 └── tools/
     ├── validate.py      # validador + compilador do read model
     └── tests/           # testes de contrato (unittest; descobertos pelo pytest)

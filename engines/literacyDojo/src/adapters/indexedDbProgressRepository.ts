@@ -2,10 +2,9 @@ import type { ProgressRepository } from "../application/ports";
 import { contentVersion } from "../data/generated/lessons";
 import { migrateProgress } from "../domain/migration";
 import type { LearnerProgress } from "../domain/progress";
+import { DB_NAME, PROGRESS_KEY, STORE_NAME } from "./storageKeys";
 
 const DB_VERSION = 1;
-const STORE_NAME = "progress";
-const PROGRESS_KEY = "learner-progress";
 
 function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -21,7 +20,7 @@ function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
  * a UI, ao contrário de localStorage — ver README ("Decisões").
  */
 export class IndexedDbProgressRepository implements ProgressRepository {
-  constructor(private readonly dbName = "literacydojo") {}
+  constructor(private readonly dbName = DB_NAME) {}
 
   private openDb(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {

@@ -1,4 +1,5 @@
 import type { CatalogLessonEntry, ModuleDefinition } from "../data/generated/lessons";
+import type { LearnerProgress } from "./progress";
 
 /** Helpers de domínio sobre o read model gerado (módulos e lições do catálogo). */
 
@@ -18,6 +19,18 @@ export function findLessonEntry(
   lessonId: string,
 ): CatalogLessonEntry | undefined {
   return modules.flatMap((module) => module.lessons).find((entry) => entry.id === lessonId);
+}
+
+/** Resumo da trilha: lições prontas concluídas e total de lições prontas. */
+export function trackSummary(
+  modules: ModuleDefinition[],
+  progress: LearnerProgress,
+): { completed: number; total: number } {
+  const ready = readyLessonEntries(modules);
+  return {
+    completed: ready.filter((entry) => progress.lessonStatus[entry.id] === "completed").length,
+    total: ready.length,
+  };
 }
 
 export function findModule(

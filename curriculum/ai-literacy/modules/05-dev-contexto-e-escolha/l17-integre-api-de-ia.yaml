@@ -1,0 +1,113 @@
+# Lição l17 — Trilha Dev piloto: integrar API de IA com decisões de arquitetura.
+# Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l17
+version: 1
+moduleId: mod-05
+title: "Integre uma API de IA em um projeto real"
+objective: "Conectar um endpoint de API de IA, tratar erros e decidir o que vai para o cliente e o que vai para o servidor."
+estimatedMinutes: 5
+skillIds: [integrar]
+prerequisites: [l16]
+
+activities:
+  - id: l17-a1
+    type: safety_classification
+    skillId: integrar
+    instruction: "VOCÊ VAI INTEGRAR UMA API DE IA (OPENAI) EM UM APP WEB. CLASSIFIQUE CADA INFORMAÇÃO COMO SEGURA PARA IR AO CLIENTE OU SENSÍVEL (DEVE FICAR SÓ NO BACKEND)."
+    data:
+      labels:
+        safe: "Seguro (pode ir ao cliente)"
+        sensitive: "Sensível (só no backend)"
+      items:
+        - id: api-key
+          text: "Chave de API da OpenAI (sk-...)"
+        - id: prompt-template
+          text: "Template do prompt: 'Resuma o seguinte texto em 3 tópicos: {{texto}}'"
+        - id: model-name
+          text: "Nome do modelo usado: 'gpt-4o'"
+        - id: user-text
+          text: "Texto que o usuário enviou para ser resumido"
+        - id: max-tokens
+          text: "Parâmetro max_tokens: 500"
+        - id: org-id
+          text: "Organization ID da conta OpenAI"
+    evaluation:
+      strategy: deterministic
+      classification:
+        api-key: sensitive
+        prompt-template: safe
+        model-name: safe
+        user-text: safe
+        max-tokens: safe
+        org-id: sensitive
+    feedback:
+      onFailure: "Nem tudo pode ir ao cliente. Chaves de API e IDs de organização são segredos — se vazarem, qualquer um usa sua conta. Templates de prompt e parâmetros de configuração são seguros para expor."
+      onSuccess: "Perfeito! Você separou corretamente: segredos (api-key, org-id) nunca vão ao cliente; configuração (modelo, tokens) e templates de prompt podem ir."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte-se: se isso aparecesse no console do navegador, alguém poderia usar minha conta?"
+      - "Chaves de API e identificadores de organização são equivalentes a senhas."
+      - "O template do prompt e o nome do modelo são escolhas de produto, não segredos."
+
+  - id: l17-a2
+    type: output_comparison
+    skillId: integrar
+    instruction: "DOIS DEVS PROPUSERAM ARQUITETURAS DIFERENTES PARA INTEGRAR A API DE IA. COMPARE E ESCOLHA A MAIS ROBUSTA PARA PRODUÇÃO."
+    data:
+      scenario: "App React + Node/Express. O usuário digita um texto e clica em 'Resumir'. O backend chama a API da OpenAI e devolve o resumo. O app tem 2k usuários ativos."
+      outputs:
+        - id: out-a
+          text: "O frontend chama o backend em POST /api/summarize com { text }. O backend: (1) valida tamanho máximo, (2) chama OpenAI com timeout de 8s, (3) em erro retorna 502 com mensagem amigável, (4) em timeout retorna 504 e agenda retry assíncrono, (5) loga duração e status sem o texto do usuário, (6) retorna { summary, model, tokens }."
+        - id: out-b
+          text: "O frontend chama o backend em POST /api/summarize. O backend chama OpenAI e retorna o que vier. Se der erro, retorna 500 com a mensagem original da API. O endpoint não tem timeout. O texto do usuário é logado para debug."
+      criteria:
+        - id: c-timeout
+          text: "Define timeout e trata timeout vs erro de forma diferente"
+        - id: c-seguranca
+          text: "Não expõe dados sensíveis em logs, respostas de erro ou no cliente"
+        - id: c-resiliencia
+          text: "Lida com falha sem derrubar a experiência do usuário"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-timeout, c-seguranca, c-resiliencia]
+    feedback:
+      onFailure: "A arquitetura A é mais robusta: timeout evita requisições penduradas, logs sem texto do usuário protegem privacidade, e tratamento diferente para timeout vs erro dá informação útil ao usuário sem expor detalhes internos."
+      perCheck:
+        betterOutputId: "A arquitetura A pensa em produção: timeout, retry, logs sanitizados. A B ignora todos esses aspectos — funcionaria no laptop, não em produção."
+        c-timeout: "Sem timeout, uma requisição pendurada bloqueia o pool de conexões e derruba o app."
+        c-seguranca: "Logar o texto do usuário é uma violação de privacidade e pode incluir dados sensíveis."
+        c-resiliencia: "A arquitetura A agenda retry assíncrono e retorna mensagens amigáveis; a B devolve o erro cru da API."
+      onSuccess: "Excelente! Você avaliou a arquitetura com critérios de produção: timeout, segurança de dados, resiliência. É assim que um dev sênior decide."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pense em produção: o que acontece se a OpenAI demorar 30 segundos para responder?"
+      - "Olhe para os logs: qual arquitetura protege os dados do usuário?"
+      - "A arquitetura A menciona timeout, retry e logs sem texto do usuário; a B não menciona nenhum desses."
+
+rubric:
+  id: l17-rubric
+  criteria:
+    - id: r-classifica-segredos
+      text: "Classifica corretamente chaves e identificadores de conta como sensíveis."
+      weight: 1
+    - id: r-avalia-arquitetura
+      text: "Compara arquiteturas com critérios de produção: timeout, segurança, resiliência."
+      weight: 1
+    - id: r-decide-cliente-servidor
+      text: "Decide o que vai ao cliente e o que fica no backend com consciência de segurança."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l17-a1, l17-a2]

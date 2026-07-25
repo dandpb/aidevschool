@@ -1,5 +1,6 @@
 import type { EvidenceSink } from "../application/ports";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
+import { EVIDENCE_SESSION_KEY } from "./storageKeys";
 
 /** Emite a evidência no console (canal padrão do MVP — estruturada, sem texto livre). */
 export class ConsoleEvidenceSink implements EvidenceSink {
@@ -39,10 +40,11 @@ export class DevtoolsBridgeEvidenceSink implements EvidenceSink {
       window.__literacydojo = window.__literacydojo ?? { evidence: [] };
       window.__literacydojo.evidence.push(record);
       try {
-        const key = "literacydojo:evidence";
-        const existing = JSON.parse(window.sessionStorage.getItem(key) ?? "[]") as unknown[];
+        const existing = JSON.parse(
+          window.sessionStorage.getItem(EVIDENCE_SESSION_KEY) ?? "[]",
+        ) as unknown[];
         existing.push(record);
-        window.sessionStorage.setItem(key, JSON.stringify(existing));
+        window.sessionStorage.setItem(EVIDENCE_SESSION_KEY, JSON.stringify(existing));
       } catch {
         // sessionStorage cheio ou indisponível não pode bloquear a lição.
       }

@@ -422,8 +422,15 @@ def validate_track(track_dir):
 # Compilador: read model tipado TypeScript
 # ---------------------------------------------------------------------------
 
-TS_TYPES = """
-export type SkillId = "entender" | "pedir" | "avaliar" | "proteger" | "aplicar"
+def _generate_skill_id_union(skills):
+    """Gera a union type SkillId dinamicamente a partir das skills do catálogo."""
+    ids = sorted(skill['id'] for skill in skills)
+    return ' | '.join(f'"{sid}"' for sid in ids)
+
+
+def _make_ts_types(skills):
+    return ("""
+export type SkillId = %s
 
 export type StoragePolicy = "structured_only" | "digest_only" | "none"
 
@@ -562,7 +569,7 @@ export type Track = {
   promise: string
   language: string
 }
-""".lstrip("\n")
+""" % _generate_skill_id_union(skills)).lstrip("\n")
 
 
 def compile_track(track_dir, outdir):
@@ -601,21 +608,23 @@ def compile_track(track_dir, outdir):
                 "lessons": [entry for entry in entries if entry["moduleId"] == module["id"]],
             }
         )
-    skills_payload = [
-        {"id": skill["id"], "title": skill["title"], "description": skill["description"]}
-        for skill in catalog.get("skills") or []
-    ]
     track_payload = {key: catalog["track"][key] for key in ("id", "title", "audience", "promise", "language")}
 
     def as_ts(payload):
         return json.dumps(payload, ensure_ascii=False, indent=2)
 
+    skills_payload = [
+        {"id": skill["id"], "title": skill["title"], "description": skill["description"]}
+        for skill in catalog.get("skills") or []
+    ]
+    ts_types = _make_ts_types(skills_payload)
+
     content = (
         GENERATED_HEADER
         + "\n// Read model tipado da trilha ai-literacy. Fonte canônica: curriculum/ai-literacy/.\n"
         + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>\n\n"
-        + TS_TYPES
-        + "\nexport const contentVersion: string = "
+        + ts_types
+        + "\nexport const contentVersion: string = " 
         + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
         + "\n\nexport const track: Track = "
         + as_ts(track_payload)

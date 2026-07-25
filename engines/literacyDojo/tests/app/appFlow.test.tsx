@@ -85,6 +85,12 @@ describe("fluxo do app (integração)", () => {
     await user.click(screen.getByTestId("onboarding-option-scheduling"));
     await user.click(screen.getByTestId("onboarding-next"));
 
+    expect(await screen.findByTestId("map-screen")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mapa de mundos" })).toHaveFocus();
+    expect(screen.getByTestId(`map-lesson-${firstLesson.id}`)).toHaveTextContent(firstLesson.title);
+    expect(screen.getByTestId("map-guide")).toHaveTextContent("marcada como Disponível");
+
+    await user.click(screen.getByTestId(`map-start-${firstLesson.id}`));
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
     expect(screen.getByTestId("task-context")).toHaveTextContent("organizar um agendamento");
@@ -99,6 +105,7 @@ describe("fluxo do app (integração)", () => {
       context: "work",
       confidence: "medium",
       taskCategory: "scheduling",
+      audience: "ia_pratica",
     });
   });
 

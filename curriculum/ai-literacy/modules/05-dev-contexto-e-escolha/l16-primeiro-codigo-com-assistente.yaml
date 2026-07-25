@@ -1,0 +1,144 @@
+# Lição l16 — Trilha Dev piloto: formular pedido de código com contexto técnico.
+# Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l16
+version: 1
+moduleId: mod-05
+title: "Seu primeiro código com um assistente de IA"
+objective: "Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia."
+estimatedMinutes: 5
+skillIds: [codificar]
+prerequisites: [l15]
+
+activities:
+  - id: l16-a1
+    type: prompt_builder
+    skillId: codificar
+    instruction: "MONTE UM PEDIDO CLARO PARA A IA GERAR CÓDIGO. PREENCHA OS CAMPOS ABAIXO COM O CONTEXTO TÉCNICO NECESSÁRIO."
+    data:
+      scenario: "Você precisa de uma função que valide e sanitize um payload JSON de webhook vindo de um serviço externo (Stripe). O payload precisa ser validado contra um schema e campos sensíveis (como tokens) precisam ser removidos antes de logar."
+      genericPrompt: "Escreve uma função pra validar payload de webhook."
+      fields:
+        - id: linguagem
+          label: "Linguagem e runtime"
+          hint: "Ex: TypeScript 5.x, Node 20"
+        - id: contrato
+          label: "Contrato de entrada e saída"
+          hint: "Ex: a função recebe unknown, retorna Result<T, ValidationError> ou lança"
+        - id: restricoes
+          label: "Restrições importantes"
+          hint: "Ex: sem dependência externa além de zod, não logar campos com 'token' ou 'secret' no nome"
+        - id: cenario
+          label: "Contexto de uso"
+          hint: "Ex: roda no handler de um webhook Express com 5k req/min"
+    evaluation:
+      strategy: deterministic
+      fields:
+        linguagem:
+          minLength: 5
+          mustIncludeAny: ["TypeScript", "Node", "TS", "JavaScript", "Python", "Go", "Rust", "ts", "js", "node"]
+        contrato:
+          minLength: 5
+          mustIncludeAny: ["retorna", "recebe", "parâmetro", "resultado", "Result", "throws", "lança", "erro", "input", "output", "payload", "unknown", "schema", "valida"]
+        restricoes:
+          minLength: 5
+          mustIncludeAny: ["token", "secret", "log", "dependência", "biblioteca", "lib", "pacote", "zod", "joi", "yup", "ajv", "não", "sem", "remover", "sanitize"]
+        cenario:
+          minLength: 5
+          mustIncludeAny: ["webhook", "api", "express", "fastify", "hono", "lambda", "endpoint", "handler", "servidor", "requisição", "request", "produção", "produção"]
+    feedback:
+      onFailure: "Um bom pedido de código inclui: linguagem, contrato (o que entra e sai), restrições (o que NÃO fazer) e contexto de uso. Tente preencher cada campo com pelo menos 5 caracteres e uma palavra-chave técnica."
+      perCheck:
+        linguagem: "Inclua a linguagem e versão do runtime. Ex: 'TypeScript 5.x, Node 20'"
+        restricoes: "Especifique o que NÃO fazer. Ex: 'não logar campos com token ou secret no nome'"
+      onSuccess: "Excelente! Você montou um pedido com contexto técnico suficiente para a IA gerar código útil de primeira."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pense em cada campo como uma restrição que evita retrabalho depois."
+      - "Um bom pedido técnico responde: em quê? o que entra e sai? o que evitar? onde roda?"
+      - "Para 'restrições': mencione dependências, o que não logar e o que não fazer."
+
+  - id: l16-a2
+    type: rubric_review
+    skillId: codificar
+    instruction: "AVALIE O CÓDIGO GERADO PELA IA USANDO OS CRITÉRIOS ABAIXO. PARA CADA CRITÉRIO, DECIDA SE FOI ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO."
+    data:
+      responseText: |
+        import { z } from 'zod';
+        
+        const WebhookPayload = z.object({
+          id: z.string(),
+          type: z.string(),
+          data: z.object({}).passthrough(),
+        });
+        
+        type SafePayload = z.infer<typeof WebhookPayload>;
+        
+        // Redact sensitive fields before logging
+        type Redacted<T> = Omit<T, 'client_secret' | 'api_key' | 'token'>;
+        
+        export function validateWebhook(input: unknown): SafePayload {
+          return WebhookPayload.parse(input);
+        }
+        
+        export function safeForLogging(payload: SafePayload): Redacted<SafePayload> {
+          const { ...safe } = payload;
+          return safe;
+        }
+      criteria:
+        - id: c-schema
+          text: "Valida o payload contra um schema explícito"
+        - id: c-redact
+          text: "Remove ou omite campos sensíveis antes de logar"
+        - id: c-types
+          text: "Tipos de entrada e saída são explícitos e seguros"
+        - id: c-erros
+          text: "Trata erros de validação de forma previsível (ex: lança ou retorna Result)"
+        - id: c-deps
+          text: "Declara dependências externas e versão"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-schema: met
+        c-redact: partial
+        c-types: met
+        c-erros: not_met
+        c-deps: not_met
+    feedback:
+      onFailure: "Revisar código gerado é tão importante quanto pedir. Compare cada critério com o código acima."
+      perCheck:
+        c-redact: "O tipo Redacted declara a intenção, mas safeForLogging não aplica a omissão de fato — TypeScript não remove campos em runtime."
+        c-erros: "A função usa parse() que lança — não há try/catch nem Result type. O chamador não sabe como tratar o erro."
+        c-deps: "O código importa zod mas não declara a versão. Um bom código gerado inclui a versão exata no comentário ou no package.json sugerido."
+      onSuccess: "Avaliação precisa! Você notou que o código tem intenção correta mas falhas de runtime — exatamente o que um dev sênior revisa antes de mergear."
+    storage:
+      policy: structured_only
+    hints:
+      - "Leia cada linha do código e compare com o critério — não presuma a intenção."
+      - "TypeScript remove tipos em runtime; o que parece redact no tipo pode não acontecer de fato."
+      - "O código usa zod.parse() — o que acontece se o payload for inválido?"
+
+rubric:
+  id: l16-rubric
+  criteria:
+    - id: r-formula-contexto
+      text: "Formula pedido de código com linguagem, contrato, restrições e contexto."
+      weight: 1
+    - id: r-avalia-criticamente
+      text: "Revisa código gerado com critérios objetivos, não pela aparência."
+      weight: 1
+    - id: r-identifica-gaps
+      text: "Identifica lacunas de runtime que o tipo não cobre (erro não tratado, redact falso)."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l16-a1, l16-a2]

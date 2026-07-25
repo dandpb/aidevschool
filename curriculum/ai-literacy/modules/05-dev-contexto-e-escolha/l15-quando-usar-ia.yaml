@@ -1,0 +1,97 @@
+# Lição l15 — Trilha Dev piloto: decisão técnica sobre o uso de IA generativa.
+# Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l15
+version: 1
+moduleId: mod-05
+title: "Quando usar IA e quando não usar"
+objective: "Diante de três situações de desenvolvimento, decidir com critério técnico quando uma IA generativa ajuda e quando a solução certa é outra."
+estimatedMinutes: 4
+skillIds: [decidir]
+prerequisites: []
+
+activities:
+  - id: l15-a1
+    type: choice
+    skillId: decidir
+    instruction: "TRÊS SITUAÇÕES ABAIXO. MARQUE AQUELA EM QUE UMA IA GENERATIVA É A MELHOR ESCOLHA."
+    data:
+      options:
+        - id: opt-a
+          text: "Descobrir qual commit introduziu um bug: o histórico tem 1.200 commits e o erro aparece só em produção com um payload específico."
+        - id: opt-b
+          text: "Escrever o boilerplate de um CRUD REST com validação Zod, autenticação JWT e testes de integração para uma entidade nova."
+        - id: opt-c
+          text: "Garantir que uma função de cálculo de juros compostos está correta até a quarta casa decimal para uma auditoria regulatória."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-b]
+    feedback:
+      onFailure: "Repense: uma IA pode gerar boilerplate bem, mas não é confiável para depuração com estado complexo nem para auditoria com precisão regulatória. Qual tarefa se beneficia de geração guiada por exemplos conhecidos?"
+      onSuccess: "Exato! Boilerplate com padrões conhecidos é onde a IA brilha. Para depuração com estado específico ou auditoria com precisão regulatória, a solução certa é investigação determinística — não geração probabilística."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pense no risco: qual tarefa tolera uma resposta 'quase certa' e qual exige precisão absoluta?"
+      - "Uma IA não conhece o estado do seu repositório nem as regras de negócio do seu domínio."
+      - "Boilerplate segue padrões previsíveis — é a tarefa ideal para geração assistida."
+
+  - id: l15-a2
+    type: output_comparison
+    skillId: decidir
+    instruction: "VOCÊ PEDIU 'COMO IMPLEMENTAR RATE LIMITING EM UMA API NODE'. COMPARE AS DUAS RESPOSTAS E ESCOLHA A MAIS ÚTIL PARA UM DEV SENIOR."
+    data:
+      scenario: "Você está implementando rate limiting em uma API Express em produção com Redis compartilhado entre três instâncias."
+      outputs:
+        - id: out-a
+          text: "Use o pacote 'express-rate-limit' com RedisStore. Aqui está o código: app.use(rateLimit({ windowMs: 60000, max: 100, store: new RedisStore({ client }) })). Configure também o X-RateLimit-* nos headers. Para mais detalhes, veja a documentação do pacote em npm."
+        - id: out-b
+          text: "Rate limiting é importante para proteger sua API. Você pode implementar com um middleware simples que conta requisições por IP em memória. Não esqueça de limpar os contadores periodicamente para não estourar a memória. Segurança é fundamental!"
+      criteria:
+        - id: c-concreto
+          text: "Menciona tecnologia específica e como integrá-la"
+        - id: c-cenario
+          text: "Considera o cenário real (Redis, múltiplas instâncias)"
+        - id: c-ressalvas
+          text: "Indica limitações ou próximos passos para aprofundar"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-concreto, c-cenario]
+    feedback:
+      onFailure: "A resposta A é melhor porque: nomeia a tecnologia exata, considera o Redis compartilhado do cenário e aponta a documentação oficial. A resposta B é genérica demais para ser útil na prática."
+      perCheck:
+        betterOutputId: "A resposta A entrega algo acionável: nome do pacote, como integrar, headers HTTP. A resposta B diz 'implemente um middleware simples' — útil para um tutorial, não para produção."
+        c-concreto: "Faltou este critério: uma boa resposta técnica cita ferramentas reais, não conceitos abstratos."
+        c-cenario: "Faltou este critério: a resposta A considera Redis e múltiplas instâncias; a B ignora o cenário."
+      onSuccess: "Perfeito! Uma resposta técnica útil é concreta (nome do pacote, exemplo), considera o contexto (Redis, instâncias) e aponta onde aprofundar (documentação)."
+    storage:
+      policy: structured_only
+    hints:
+      - "Qual resposta daria para você começar a codificar AGORA, sem pesquisar mais nada?"
+      - "Procure menção a pacotes, configuração e o cenário específico (Redis, três instâncias)."
+      - "A resposta A cita 'express-rate-limit' e o Redis do cenário; a resposta B é genérica."
+
+rubric:
+  id: l15-rubric
+  criteria:
+    - id: r-reconhece-limites
+      text: "Reconhece que IA generativa não é adequada para toda tarefa de engenharia."
+      weight: 1
+    - id: r-avalia-resposta
+      text: "Distingue resposta técnica concreta de resposta genérica usando critérios objetivos."
+      weight: 1
+    - id: r-criterio-tecnico
+      text: "Decide com base em risco, precisão exigida e adequação da ferramenta, não por conveniência."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l15-a1, l15-a2]

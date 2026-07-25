@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useServices } from "../app/services";
+import { MentorGuide } from "../components/MentorGuide";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
+import { VoxelWorld } from "../components/VoxelWorld";
 import type {
   LearnerProgress,
   OnboardingConfidence,
@@ -99,84 +101,136 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
       context,
       confidence,
       taskCategory,
+      // ponytail: MVP só tem a trilha IA na Prática; Trilha Dev é teaser "em breve".
+      audience: "ia_pratica",
     });
     onDone(updated);
   };
 
   return (
-    <section className="screen" data-testid="onboarding-screen" aria-labelledby="onboarding-title">
-      <p className="eyebrow">{track.title}</p>
-      <h1 id="onboarding-title">{currentStep.question}</h1>
+    <section
+      className={`screen onboarding-screen onboarding-step-${currentStep.key}`}
+      data-testid="onboarding-screen"
+      aria-labelledby="onboarding-title"
+    >
+      <div className="onboarding-heading">
+        <div>
+          <p className="eyebrow">{track.title}</p>
+          <h1 id="onboarding-title">{currentStep.question}</h1>
+        </div>
+        <div className="onboarding-progress" aria-label={`Etapa ${step + 1} de ${STEPS.length}`}>
+          {STEPS.map((item, index) => (
+            <span key={item.key} className={index <= step ? "is-active" : ""} aria-hidden="true" />
+          ))}
+        </div>
+      </div>
+
       {currentStep.key === "welcome" ? (
-        <>
-          <div className="assistant-welcome" data-testid="assistant-welcome">
-            <div className="voxel-scene voxel-scene-assistant" aria-hidden="true">
-              <span className="voxel voxel-one" />
-              <span className="voxel voxel-two" />
-              <span className="voxel voxel-three" />
-            </div>
-            <div>
+        <div className="welcome-layout">
+          <VoxelWorld variant="welcome" />
+          <div className="welcome-content">
+            <MentorGuide testId="assistant-welcome">
               <p>
-                Eu sou seu assistente de IA para aprender fazendo. Uma IA geral pode ajudar a
-                organizar, resumir, comparar opções e criar rascunhos.
+                Eu vou acompanhar você em missões curtas: primeiro você tenta, depois recebe uma
+                dica clara e pratica de novo.
               </p>
               <p className="muted">
-                Ela não substitui seu julgamento: você decide o que usar e o que conferir.
+                IA ajuda a criar e organizar. Você continua responsável por decidir e conferir.
+              </p>
+            </MentorGuide>
+
+            <div className="audience-routes" aria-label="Trilhas do AI Dev School">
+              <div className="audience-route audience-route-active">
+                <span className="route-icon" aria-hidden="true">
+                  🌱
+                </span>
+                <div>
+                  <strong>IA para o dia a dia</strong>
+                  <small>Comece do zero e aprenda fazendo.</small>
+                </div>
+                <span className="route-badge">Disponível</span>
+              </div>
+              <div className="audience-route audience-route-coming" data-testid="dev-track-teaser">
+                <span className="route-icon" aria-hidden="true">
+                  ⌁
+                </span>
+                <div>
+                  <strong>Trilha Dev</strong>
+                  <small>Agentes, APIs e apps com IA.</small>
+                </div>
+                <span className="route-badge">Em breve</span>
+              </div>
+            </div>
+
+            <div className="privacy-note">
+              <span aria-hidden="true">◆</span>
+              <p>
+                <strong>Privado por padrão.</strong> Seu progresso fica neste navegador, sem conta e
+                sem registrar detalhes das suas tarefas.
               </p>
             </div>
           </div>
-          <div className="card card-note">
-            <h2>Seu progresso fica neste navegador</h2>
-            <p>Sem conta, sem instalação e sem registrar detalhes das suas tarefas.</p>
-          </div>
-          <div className="dev-teaser" data-testid="dev-track-teaser">
-            <strong>Trilha Dev</strong>
-            <span>Em breve: IA para quem programa.</span>
-          </div>
-        </>
+        </div>
       ) : (
-        <>
-          <p className="muted">
-            Passo {step + 1} de {STEPS.length} — sem cadastro, direto para o seu Mapa Inicial.
-          </p>
-          <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
-            {options.map((option) => {
-              const task = typeof option === "string" ? taskDetails(option) : undefined;
-              const value = typeof option === "string" ? option : option.value;
-              const label = typeof option === "string" ? taskDetails(option).label : option.label;
-              return (
-                <label
-                  key={value}
-                  className={`option-card${currentValue === value ? " is-selected" : ""}${task ? " task-option" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name={`onboarding-${currentStep.key}`}
-                    value={value}
-                    checked={currentValue === value}
-                    data-testid={`onboarding-option-${value}`}
-                    onChange={() => handleSelect(value)}
-                  />
-                  {task && <VoxelTaskArt category={value as OnboardingTaskCategory} />}
-                  <span>
-                    <strong>{label}</strong>
-                    {task && <small>{task.guidance}</small>}
-                  </span>
-                </label>
-              );
-            })}
+        <div className="onboarding-question-layout">
+          <div>
+            <p className="step-copy">
+              Etapa {step + 1} de {STEPS.length} · personalize seu primeiro mundo
+            </p>
+            <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
+              {options.map((option) => {
+                const task = typeof option === "string" ? taskDetails(option) : undefined;
+                const value = typeof option === "string" ? option : option.value;
+                const label = typeof option === "string" ? taskDetails(option).label : option.label;
+                return (
+                  <label
+                    key={value}
+                    className={`option-card${currentValue === value ? " is-selected" : ""}${task ? " task-option" : ""}`}
+                  >
+                    <input
+                      type="radio"
+                      name={`onboarding-${currentStep.key}`}
+                      value={value}
+                      checked={currentValue === value}
+                      data-testid={`onboarding-option-${value}`}
+                      onChange={() => handleSelect(value)}
+                    />
+                    {task && <VoxelTaskArt category={value as OnboardingTaskCategory} />}
+                    <span>
+                      <strong>{label}</strong>
+                      {task && <small>{task.guidance}</small>}
+                    </span>
+                    <span className="option-check" aria-hidden="true">
+                      ✓
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
           </div>
-        </>
+          <MentorGuide compact>
+            <p>Não existe resposta certa aqui. Isso só ajuda a escolher exemplos mais úteis.</p>
+          </MentorGuide>
+        </div>
       )}
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-testid="onboarding-next"
-        disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
-        onClick={() => void handleNext()}
-      >
-        {step < STEPS.length - 1 ? "Continuar" : "Começar meu Mapa Inicial"}
-      </button>
+
+      <div className="onboarding-actions">
+        {step > 0 && (
+          <button type="button" className="btn btn-link btn-back" onClick={() => setStep(step - 1)}>
+            Voltar
+          </button>
+        )}
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-testid="onboarding-next"
+          disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
+          onClick={() => void handleNext()}
+        >
+          {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir meu Mapa Inicial"}
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
     </section>
   );
 }

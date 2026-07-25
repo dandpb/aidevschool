@@ -35,6 +35,7 @@ async function completeMvpOnboarding(services: ReturnType<typeof makeServices>["
     context: "work",
     confidence: "medium",
     taskCategory: "scheduling",
+    audience: "ia_pratica",
   });
 }
 
@@ -302,6 +303,7 @@ describe("completeOnboarding", () => {
       context: "work",
       confidence: "medium",
       taskCategory: "scheduling",
+      audience: "ia_pratica",
     });
     expect(progress.onboarding.completed).toBe(true);
     expect(progress.onboarding.context).toBe("work");

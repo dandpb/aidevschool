@@ -144,11 +144,11 @@ class TestValidContent(TrackFixtureMixin, unittest.TestCase):
     def test_real_track_passes(self):
         errors, ready, catalog = validate.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
+        # Toda lição do catálogo está validada e pronta, na ordem do catálogo.
         self.assertEqual(
-            ["l%02d" % n for n in range(1, 15)],
+            [lesson["id"] for lesson in catalog["lessons"]],
             [lesson["id"] for lesson in ready],
         )
-        self.assertEqual(14, len(catalog["lessons"]))
 
     def test_real_track_covers_all_seven_activity_types(self):
         errors, ready, _catalog = validate.validate_track(TRACK_DIR)

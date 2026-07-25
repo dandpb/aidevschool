@@ -11,3 +11,8 @@ createRoot(container).render(
     <App />
   </StrictMode>,
 );
+
+// Offline só no build: em dev/testes o service worker atrapalharia o HMR.
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  void navigator.serviceWorker.register("/sw.js");
+}

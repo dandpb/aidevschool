@@ -3,6 +3,8 @@ import type { ActivityResultSummary, LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
 import { ActivityRenderer, emptyAnswerFor, isAnswerComplete } from "../components/ActivityRenderer";
 import { FeedbackPanel } from "../components/FeedbackPanel";
+import { MentorGuide } from "../components/MentorGuide";
+import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { ActivityAnswer, EvaluationResult } from "../domain/evaluation";
@@ -210,7 +212,11 @@ export function LessonScreen({
         ? lesson.activities[0]?.hints?.[0]
         : undefined;
     return (
-      <section className="screen" data-testid="lesson-intro" aria-labelledby="lesson-title">
+      <section
+        className="screen lesson-intro-screen"
+        data-testid="lesson-intro"
+        aria-labelledby="lesson-title"
+      >
         {module && <p className="eyebrow">{module.title}</p>}
         <h1 id="lesson-title" ref={headingRef} tabIndex={-1}>
           {mode === "review" ? `Revisão: ${lesson.title}` : lesson.title}
@@ -226,6 +232,7 @@ export function LessonScreen({
               ? "Repetir é o que fixa: refaça a atividade desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
               : lesson.objective}
           </p>
+          <VoxelSkillArt skillId={lesson.skillIds[0]} />
         </div>
         {showMapContext && taskCategory && (
           <div className="card task-context" data-testid="task-context">
@@ -236,12 +243,18 @@ export function LessonScreen({
             </div>
           </div>
         )}
-        {entryHint && (
-          <div className="card card-note" data-testid="confidence-support">
-            <h2>Comece com calma</h2>
-            <p>Dica de partida: {entryHint}</p>
-          </div>
-        )}
+        <MentorGuide
+          compact
+          eyebrow={mode === "review" ? "REVISÃO GUIADA" : "DICA DA LUMI"}
+          title={entryHint ? "Comece com calma" : "Uma missão de cada vez"}
+          testId={entryHint ? "confidence-support" : "lesson-guide"}
+        >
+          <p>
+            {entryHint
+              ? `Dica de partida: ${entryHint}`
+              : "Tente com o que você já sabe. Se travar, peça uma dica — ela ajuda sem entregar a resposta."}
+          </p>
+        </MentorGuide>
         <button
           type="button"
           className="btn btn-primary"
@@ -269,6 +282,8 @@ export function LessonScreen({
       <h1 id="activity-heading" className="activity-instruction" ref={headingRef} tabIndex={-1}>
         {activity.instruction}
       </h1>
+
+      <VoxelSkillArt skillId={lesson.skillIds[0]} />
 
       <ActivityRenderer
         activity={activity}

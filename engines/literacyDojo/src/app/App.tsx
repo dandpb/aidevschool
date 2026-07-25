@@ -58,6 +58,17 @@ function AppShell({ services }: { services: Services }) {
     };
   }, [services]);
 
+  useEffect(() => {
+    if (!route) return;
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    const heading = document.querySelector<HTMLElement>(".app-stage h1");
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus({ preventScroll: true });
+    }
+  }, [route]);
+
   const handleReset = useCallback(async () => {
     await services.useCases.resetProgress();
     const fresh = await loadOrSeedProgress(services);
@@ -77,64 +88,83 @@ function AppShell({ services }: { services: Services }) {
 
   return (
     <ServicesProvider value={services}>
-      <main className="app-shell">
-        {route.name === "onboarding" && (
-          <OnboardingScreen
-            onDone={(updated) => {
-              setProgress(updated);
-              setRoute({ name: "lesson", lessonId: updated.currentLessonId });
-            }}
-          />
-        )}
-        {route.name === "home" && (
-          <HomeScreen
-            progress={progress}
-            onContinue={(lessonId) => setRoute({ name: "lesson", lessonId })}
-            onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
-            onOpenMap={() => setRoute({ name: "map" })}
-            onOpenProgress={() => setRoute({ name: "progress" })}
-            onReset={handleReset}
-          />
-        )}
-        {route.name === "map" && (
-          <TrackMapScreen
-            progress={progress}
-            onBack={() => setRoute({ name: "home" })}
-            onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
-          />
-        )}
-        {route.name === "progress" && (
-          <ProgressScreen
-            progress={progress}
-            onBack={() => setRoute({ name: "home" })}
-            onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
-            onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
-          />
-        )}
-        {route.name === "lesson" && (
-          <LessonScreen
-            key={`${route.lessonId}:${route.mode ?? "initial"}`}
-            lessonId={route.lessonId}
-            mode={route.mode ?? "initial"}
-            onProgressChange={setProgress}
-            onCompleted={(updated, summary) => {
-              setProgress(updated);
-              setRoute({ name: "result", summary });
-            }}
-            onExit={() => setRoute({ name: "home" })}
-          />
-        )}
-        {route.name === "result" && (
-          <ResultScreen
-            summary={route.summary}
-            progress={progress}
-            onProgressChange={setProgress}
-            onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
-            onHome={() => setRoute({ name: "home" })}
-            onMap={() => setRoute({ name: "map" })}
-          />
-        )}
-      </main>
+      <div className="app-shell">
+        <header className="product-bar">
+          <div className="product-brand" aria-label="AI Dev School">
+            <span className="product-mark" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+            <span>
+              <strong>AI Dev School</strong>
+              <small>aprenda IA fazendo</small>
+            </span>
+          </div>
+          {route.name !== "onboarding" && (
+            <div className="product-stats" aria-label="Resumo do progresso">
+              <span>⚡ {progress.xp} XP</span>
+              <span>🔥 {progress.streak.current}</span>
+            </div>
+          )}
+        </header>
+        <main className="app-stage">
+          {route.name === "onboarding" && (
+            <OnboardingScreen
+              onDone={(updated) => {
+                setProgress(updated);
+                setRoute({ name: "map" });
+              }}
+            />
+          )}
+          {route.name === "home" && (
+            <HomeScreen
+              progress={progress}
+              onContinue={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onOpenMap={() => setRoute({ name: "map" })}
+              onOpenProgress={() => setRoute({ name: "progress" })}
+              onReset={handleReset}
+            />
+          )}
+          {route.name === "map" && (
+            <TrackMapScreen
+              progress={progress}
+              onBack={() => setRoute({ name: "home" })}
+              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+            />
+          )}
+          {route.name === "progress" && (
+            <ProgressScreen
+              progress={progress}
+              onBack={() => setRoute({ name: "home" })}
+              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+            />
+          )}
+          {route.name === "lesson" && (
+            <LessonScreen
+              key={`${route.lessonId}:${route.mode ?? "initial"}`}
+              lessonId={route.lessonId}
+              mode={route.mode ?? "initial"}
+              onProgressChange={setProgress}
+              onCompleted={(updated, summary) => {
+                setProgress(updated);
+                setRoute({ name: "result", summary });
+              }}
+              onExit={() => setRoute({ name: "map" })}
+            />
+          )}
+          {route.name === "result" && (
+            <ResultScreen
+              summary={route.summary}
+              onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onHome={() => setRoute({ name: "home" })}
+              onMap={() => setRoute({ name: "map" })}
+            />
+          )}
+        </main>
+      </div>
     </ServicesProvider>
   );
 }

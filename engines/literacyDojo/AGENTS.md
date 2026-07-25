@@ -1,7 +1,8 @@
 # AGENTS.md — engines/literacyDojo
 
-Engine da vertical slice (Fase 1) do LiteracyDojo: microaprendizagem de IA para
-pessoas não técnicas. Autoridade: plano
+Engine de microaprendizagem de IA para pessoas não técnicas. O `README.md`
+deste diretório mantém o status de implementação, os resultados de verificação
+e o gate de release. Autoridade de design: plano
 `docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md`, ADR
 `docs/design/adr/0005-ai-literacy-bounded-context.md` e contratos em
 `docs/design/ai-literacy/`.

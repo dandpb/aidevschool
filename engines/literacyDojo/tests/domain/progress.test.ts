@@ -9,16 +9,19 @@ import {
   createInitialProgress,
   evaluateLessonCompletion,
   isLessonUnlocked,
+  localDateKey,
   reviewsDue,
   unlockNextReadyLesson,
 } from "../../src/domain/progress";
 import { readyLessonEntries } from "../../src/domain/track";
+import { FIXED_NOW } from "../helpers";
 
 const DAY_MS = 86_400_000;
-const NOW = new Date("2026-07-19T12:00:00.000Z");
+const NOW = FIXED_NOW;
 
 const ready = readyLessonEntries(modules);
-const [firstReady, secondReady, thirdReady] = ready;
+const [firstReady, secondReady] = ready;
+const lastReady = ready[ready.length - 1];
 
 describe("createInitialProgress", () => {
   it("primeira lição pronta nasce available; demais locked; planned não recebe status", () => {
@@ -30,7 +33,6 @@ describe("createInitialProgress", () => {
       .flatMap((module) => module.lessons)
       .filter((entry) => !entry.hasContent)
       .map((entry) => entry.id);
-    expect(plannedIds.length).toBe(11);
     for (const id of plannedIds) {
       expect(progress.lessonStatus[id]).toBeUndefined();
     }
@@ -49,7 +51,7 @@ describe("desbloqueio", () => {
     expect(first.unlockedLessonId).toBe(secondReady.id);
     expect(first.progress.lessonStatus[secondReady.id]).toBe("available");
 
-    const last = unlockNextReadyLesson(progress, modules, thirdReady.id);
+    const last = unlockNextReadyLesson(progress, modules, lastReady.id);
     expect(last.unlockedLessonId).toBeUndefined();
   });
 
@@ -125,8 +127,12 @@ describe("conclusão de lição", () => {
 });
 
 describe("xp", () => {
-  it("awardXp acumula", () => {
-    const progress = awardXp(createInitialProgress(modules, "v1"), XP_PER_LESSON_COMPLETE);
+  it("awardXp acumula e registra o XP do dia (meta diária)", () => {
+    const progress = awardXp(createInitialProgress(modules, "v1"), XP_PER_LESSON_COMPLETE, NOW);
     expect(progress.xp).toBe(XP_PER_LESSON_COMPLETE);
+    expect(progress.dailyGoal).toEqual({
+      date: localDateKey(NOW),
+      xpEarned: XP_PER_LESSON_COMPLETE,
+    });
   });
 });

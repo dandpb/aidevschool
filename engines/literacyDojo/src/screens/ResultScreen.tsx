@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
+import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
+import { VoxelWorld } from "../components/VoxelWorld";
 import {
-  type LearnerProgress,
+  ACHIEVEMENT_DEFINITIONS,
   MAP_INITIAL_LESSON_ID,
   type OnboardingTaskCategory,
 } from "../domain/progress";
@@ -16,43 +18,69 @@ import {
  */
 export function ResultScreen({
   summary,
-  progress,
   onNextLesson,
   onHome,
   onMap,
 }: {
   summary: LessonSummary;
-  progress?: LearnerProgress;
   onNextLesson: (lessonId: string) => void;
   onHome: () => void;
   onMap: () => void;
 }) {
   const services = useServices();
-  const [loadedTaskCategory, setLoadedTaskCategory] = useState<OnboardingTaskCategory>();
+  const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
   const { lesson } = summary;
   const successMessages = summary.activityResults
     .filter((result) => result.pass && result.feedback.summary)
     .map((result) => result.feedback.summary);
 
   useEffect(() => {
-    if (progress) return;
     void services.progressRepo
       .load()
-      .then((savedProgress) => setLoadedTaskCategory(savedProgress?.onboarding.taskCategory));
-  }, [services, progress]);
-
-  const taskCategory = progress?.onboarding.taskCategory ?? loadedTaskCategory;
+      .then((savedProgress) => setTaskCategory(savedProgress?.onboarding.taskCategory));
+  }, [services]);
 
   return (
-    <section className="screen" data-testid="result-screen" aria-labelledby="result-title">
-      <p className="eyebrow">Resultado</p>
-      <h1 id="result-title">Lição concluída: {lesson.title}</h1>
-      <p className="muted">Pontuação: {Math.round(summary.lessonScore * 100)}%</p>
+    <section
+      className="screen result-screen"
+      data-testid="result-screen"
+      aria-labelledby="result-title"
+    >
+      <div className="result-hero">
+        <div>
+          <p className="eyebrow">MISSÃO CONCLUÍDA</p>
+          <h1 id="result-title">
+            {summary.mode === "review" ? "Revisão concluída" : "Você avançou"}: {lesson.title}
+          </h1>
+          <p className="result-score">
+            {summary.mode === "review" ? "Revisão registrada" : "XP conquistado"} ·{" "}
+            {Math.round(summary.lessonScore * 100)}% de pontuação
+          </p>
+        </div>
+        <VoxelWorld variant="celebration" />
+      </div>
 
       <div className="card">
         <h2>Habilidade praticada</h2>
         <p>{lesson.skillIds.map((id) => services.content.getSkillTitle(id)).join(", ")}</p>
+        <VoxelSkillArt skillId={lesson.skillIds[0]} />
       </div>
+
+      {summary.newlyUnlocked !== undefined && summary.newlyUnlocked.length > 0 && (
+        <div className="card" data-testid="new-achievements">
+          <h2>Conquista desbloqueada</h2>
+          <ul>
+            {summary.newlyUnlocked.map((achievement) => (
+              <li key={achievement.id}>
+                🏆{" "}
+                {ACHIEVEMENT_DEFINITIONS.find((definition) => definition.id === achievement.id)
+                  ?.title ?? achievement.id}
+              </li>
+            ))}
+          </ul>
+          <p className="muted">Conquistas marcam constância, não competência verificada.</p>
+        </div>
+      )}
 
       {successMessages.length > 0 && (
         <div className="card">

@@ -10,6 +10,7 @@ import {
   type OnboardingConfidence,
   type OnboardingContext,
   type OnboardingGoal,
+  type AudienceChoice,
   type OnboardingTaskCategory,
   type SkillPractice,
   XP_PER_ACTIVITY_PASS,
@@ -122,6 +123,7 @@ export class LiteracyUseCases {
     context: OnboardingContext;
     confidence: OnboardingConfidence;
     taskCategory: OnboardingTaskCategory;
+    audience: AudienceChoice;
   }): Promise<LearnerProgress> {
     const progress = await this.requireProgress();
     const next: LearnerProgress = {
@@ -132,6 +134,7 @@ export class LiteracyUseCases {
         context: input.context,
         confidence: input.confidence,
         taskCategory: input.taskCategory,
+        audience: input.audience,
       },
       currentLessonId: MAP_INITIAL_LESSON_ID,
       lessonStatus: {

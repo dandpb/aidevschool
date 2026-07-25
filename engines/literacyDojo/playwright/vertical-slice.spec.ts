@@ -1,45 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { lessons } from "../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../src/domain/evidence";
-import { MAP_INITIAL_LESSON_ID } from "../src/domain/progress";
-
-const mapInitial = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
-if (!mapInitial || mapInitial.activities[0]?.type !== "output_comparison") {
-  throw new Error("Mapa Inicial precisa ser uma comparação de respostas");
-}
-
-const activity = mapInitial.activities[0];
-const wrongOutput = activity.data.outputs.find(
-  (output) => output.id !== activity.evaluation.betterOutputId,
-);
-if (!wrongOutput) throw new Error("Mapa Inicial sem alternativa incorreta");
-
-async function completeOnboarding(page: import("@playwright/test").Page) {
-  await page.goto("/");
-  await expect(page.getByTestId("assistant-welcome")).toBeVisible();
-  await expect(page.getByTestId("dev-track-teaser")).toContainText("Em breve");
-  await page.getByTestId("onboarding-next").click();
-  await page.getByTestId("onboarding-option-save_time").check();
-  await page.getByTestId("onboarding-next").click();
-  await page.getByTestId("onboarding-option-work").check();
-  await page.getByTestId("onboarding-next").click();
-  await page.getByTestId("onboarding-option-medium").check();
-  await page.getByTestId("onboarding-next").click();
-  await page.getByTestId("onboarding-option-scheduling").check();
-  await page.getByTestId("onboarding-next").click();
-  await expect(page.getByRole("heading", { name: mapInitial.title })).toBeVisible();
-  await page.getByTestId("start-lesson").click();
-}
-
-async function answerRight(page: import("@playwright/test").Page) {
-  await page.getByTestId(`output-${activity.evaluation.betterOutputId}`).check();
-  for (const criterionId of activity.evaluation.requiredCriterionIds) {
-    await page.getByTestId(`criterion-${criterionId}`).check();
-  }
-  await page.getByTestId("submit-attempt").click();
-  await expect(page.getByTestId("feedback-panel")).toContainText(activity.feedback.onSuccess ?? "");
-  await page.getByTestId("finish-lesson").click();
-}
+import {
+  activity,
+  answerRight,
+  completeOnboarding,
+  mapInitial,
+  readEvidence,
+  readProgress,
+  wrongOutput,
+} from "./support";
 
 test("Mapa Inicial: erro, dica ou nova tentativa encaminha para a rota guiada", async ({
   page,
@@ -78,15 +47,13 @@ test("Mapa Inicial: acerto de primeira encaminha para a rota intermediária", as
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
   ).toBeVisible();
 
-  const records = await page.evaluate(() =>
-    JSON.parse(window.sessionStorage.getItem("literacydojo:evidence") ?? "[]"),
-  );
+  const records = await readEvidence(page);
   expect(records).toHaveLength(1);
   expect(records.every(isValidEvidenceRecord)).toBe(true);
 });
 
 test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) => {
-  await page.setViewportSize({ width: 360, height: 720 });
+  await page.setViewportSize({ width: 320, height: 640 });
   const externalRequests: string[] = [];
   page.on("request", (request) => {
     if (new URL(request.url()).origin !== "http://localhost:4173")
@@ -96,7 +63,14 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
 
   await expect(page.getByTestId("assistant-welcome")).toBeVisible();
   await page.getByTestId("onboarding-next").click();
-  await page.getByTestId("onboarding-option-save_time").check();
+  const goalOption = page.getByTestId("onboarding-option-save_time");
+  await goalOption.focus();
+  await expect(goalOption).toBeFocused();
+  const focusOutline = await goalOption
+    .locator("..")
+    .evaluate((element) => getComputedStyle(element).outlineStyle);
+  expect(focusOutline).toBe("solid");
+  await goalOption.check();
   await page.getByTestId("onboarding-next").click();
   await page.getByTestId("onboarding-option-work").check();
   await page.getByTestId("onboarding-next").click();
@@ -105,13 +79,23 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   await page.getByTestId("onboarding-option-news_research").check();
   await page.getByTestId("onboarding-next").click();
 
-  await expect(page.getByTestId("task-context")).toContainText("pesquisar uma notícia");
-  await expect(page.getByTestId("confidence-support")).toBeVisible();
-  const layout = await page.locator(".app-shell").evaluate((element) => ({
+  await expect(page.getByTestId("map-screen")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Mapa de mundos" })).toBeFocused();
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+  const mapLayout = await page.locator(".app-shell").evaluate((element) => ({
     scrollWidth: element.scrollWidth,
     clientWidth: element.clientWidth,
   }));
-  expect(layout.scrollWidth).toBeLessThanOrEqual(layout.clientWidth);
+  expect(mapLayout.scrollWidth).toBeLessThanOrEqual(mapLayout.clientWidth);
+
+  await page.getByTestId(`map-start-${mapInitial.id}`).click();
+  await expect(page.getByTestId("task-context")).toContainText("pesquisar uma notícia");
+  await expect(page.getByTestId("confidence-support")).toBeVisible();
+  const lessonLayout = await page.locator(".app-shell").evaluate((element) => ({
+    scrollWidth: element.scrollWidth,
+    clientWidth: element.clientWidth,
+  }));
+  expect(lessonLayout.scrollWidth).toBeLessThanOrEqual(lessonLayout.clientWidth);
   const nextButton = await page.getByTestId("start-lesson").boundingBox();
   expect(nextButton?.width).toBeGreaterThanOrEqual(44);
   expect(nextButton?.height).toBeGreaterThanOrEqual(44);
@@ -126,22 +110,7 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   await page.getByTestId("finish-lesson").click();
   await expect(page.getByTestId("result-screen")).toBeVisible();
 
-  const progress = await page.evaluate(
-    () =>
-      new Promise<unknown>((resolve, reject) => {
-        const request = indexedDB.open("literacydojo");
-        request.onerror = () => reject(request.error);
-        request.onsuccess = () => {
-          const db = request.result;
-          const read = db
-            .transaction("progress", "readonly")
-            .objectStore("progress")
-            .get("learner-progress");
-          read.onerror = () => reject(read.error);
-          read.onsuccess = () => resolve(read.result);
-        };
-      }),
-  );
+  const progress = await readProgress(page);
   expect(progress).toMatchObject({
     onboarding: {
       completed: true,

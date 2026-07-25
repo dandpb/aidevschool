@@ -29,6 +29,15 @@ skills:
   - id: aplicar
     title: "Aplicar"
     description: "Usar a IA em uma tarefa real sem terceirizar o próprio julgamento."
+  - id: decidir
+    title: "Decidir"
+    description: "Escolher entre IA e solução convencional com critério técnico."
+  - id: integrar
+    title: "Integrar"
+    description: "Conectar APIs de IA e agentes em aplicações reais."
+  - id: codificar
+    title: "Codificar"
+    description: "Escrever, revisar e testar código com assistência de IA."
 
 modules:
   - id: mod-01
@@ -51,6 +60,11 @@ modules:
     title: "Segurança e aplicação"
     order: 4
     skillIds: [proteger, aplicar]
+  - id: mod-05
+    slug: 05-dev-contexto-e-escolha
+    title: "Dev: contexto e decisão"
+    order: 5
+    skillIds: [decidir, integrar, codificar]
 
 lessons:
   # Módulo 1 — IA sem mistério
@@ -168,4 +182,29 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l13]
     skillIds: [pedir, avaliar, proteger, aplicar]
+    status: ready
+  # Módulo 5 — Dev: contexto e decisão (Trilha Dev — piloto de 3 lições)
+  - id: l15
+    moduleId: mod-05
+    title: "Quando usar IA e quando não usar"
+    objective: "Diante de três situações de desenvolvimento, decidir com critério técnico quando uma IA generativa ajuda e quando a solução certa é outra."
+    estimatedMinutes: 4
+    prerequisites: []
+    skillIds: [decidir]
+    status: ready
+  - id: l16
+    moduleId: mod-05
+    title: "Seu primeiro código com um assistente de IA"
+    objective: "Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia."
+    estimatedMinutes: 5
+    prerequisites: [l15]
+    skillIds: [codificar]
+    status: ready
+  - id: l17
+    moduleId: mod-05
+    title: "Integre uma API de IA em um projeto real"
+    objective: "Conectar um endpoint de API de IA, tratar erros e decidir o que vai para o cliente e o que vai para o servidor."
+    estimatedMinutes: 5
+    prerequisites: [l16]
+    skillIds: [integrar]
     status: ready

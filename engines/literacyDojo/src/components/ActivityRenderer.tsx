@@ -114,9 +114,10 @@ export function ActivityRenderer({
         />
       );
     default:
+      // Fallback defensivo para dados fora da union tipada em runtime.
       return (
         <p className="muted" role="note">
-          Este tipo de atividade ({activity.type}) ainda não está disponível.
+          Este tipo de atividade ainda não está disponível.
         </p>
       );
   }

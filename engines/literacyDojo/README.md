@@ -1,12 +1,24 @@
 # LiteracyDojo
 
-Microaprendizagem de IA para pessoas não técnicas — **vertical slice (Fase 1)** do plano
+Microaprendizagem de IA para pessoas não técnicas, com lições de 3–5 minutos,
+tentativa, feedback imediato, dica, nova tentativa e progresso local. O ciclo
+compartilhado está no
+[`contrato de microlição`](../../docs/design/micro-lesson-contract.md).
+
+Este engine nasceu como a **vertical slice da Fase 1** do plano
 [`docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md`](../../docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md),
 sob o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/design/adr/0005-ai-literacy-bounded-context.md).
 
-Três lições piloto navegáveis (output_comparison, prompt_builder, safety_classification),
-onboarding em 3 telas, home, mapa da trilha, player de lição e tela de resultado —
-local-first, sem backend, sem chamada de IA, feedback 100% determinístico.
+## Estado atual
+
+| Parte | Estado |
+| --- | --- |
+| Conteúdo | Quantidade, versões e status pertencem ao [`curriculum/ai-literacy/README.md`](../../curriculum/ai-literacy/README.md) e ao catálogo canônico; valide antes de compilar. |
+| Baseline verificada | Fase 1 no commit `fb624ae`: três lições piloto e três tipos de atividade de ponta a ponta. |
+| Fase 2 | Integração em andamento. `ready` no catálogo não significa que lint, testes, build, E2E, PWA, revisão e acessibilidade estejam todos verificados. |
+
+O app é local-first, sem backend e sem chamada de IA no caminho de
+aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
 
 ## Stack
 
@@ -52,8 +64,8 @@ UI (src/screens, src/components)
 
 - `src/data/generated/lessons.ts` — **read model gerado, DO NOT EDIT BY HAND**.
   O app consome somente ele; conteúdo canônico em `curriculum/ai-literacy/`.
-- `src/domain/` — progresso (`LearnerProgress`), avaliação determinística dos 3
-  tipos de atividade, evidência (`LiteracyEvidenceRecord` + validador de envelope),
+- `src/domain/` — progresso (`LearnerProgress`), avaliação determinística de
+  atividades tipadas, evidência (`LiteracyEvidenceRecord` + validador de envelope),
   migração forward-only, feedback, helpers de trilha. Puro, sem React.
 - `src/application/` — portas (`ContentRepository`, `ProgressRepository`,
   `EvidenceSink`, `FeedbackProvider`, `AnalyticsSink`, `Clock`) e os casos de uso
@@ -93,11 +105,10 @@ UI (src/screens, src/components)
   plano: API assíncrona não bloqueia a UI e o caminho fica pronto para estados
   maiores. `fake-indexeddb` cobre o adapter em testes. Fallback para
   localStorage não foi necessário.
-- **Compilador estendido (mudança aditiva na Fase 0):** o read model passou a
-  exportar `track`, `modules` (com `CatalogLessonEntry[]`, incluindo as 11
-  lições `planned` com `hasContent: false` para o mapa "em breve") e `skills` —
-  sem isso o mapa da trilha exigiria duplicar o catálogo na UI. `lessons`,
-  `contentVersion` e a validação não mudaram de comportamento.
+- **Compilador estendido (mudança aditiva na Fase 0):** o read model exporta
+  `track`, `modules`, `CatalogLessonEntry[]` e `skills`, sem duplicar o catálogo
+  na UI. A estrutura continua aceitando conteúdo `planned`; o catálogo canônico
+  mantém o estado atual.
 - **`hints` opcionais no schema de lição** (1–3 dicas progressivas pré-escritas)
   para o `requestHint` sem provider de IA. Adicionar dicas alterou conteúdo →
   as 3 lições piloto foram para `version: 2` (regra do contrato).
@@ -136,17 +147,21 @@ UI (src/screens, src/components)
 - **`lessons.ts` ausente** (ex.: após clone limpo) — `npm run gen:content`;
   `test` e `build` já o regeneram via hooks `pretest`/`prebuild`.
 
-## O que ficou para a Fase 2 (do plano)
+## Critério para concluir a Fase 2
 
-- 11 lições restantes (hoje `planned`) e os outros 4 tipos de atividade
-  (`choice`, `sort`, `missing_context`, `rubric_review`) — o domínio lança
-  `UnsupportedActivityTypeError` para eles hoje.
-- XP/sequência mais ricos, meta diária, conquistas e revisão espaçada completa
-  (reagendamento por revisão feita, tela de revisão).
-- PWA instalável + funcionamento com conectividade instável.
-- Migrações reais quando `schemaVersion` subir (hoje: 1; incompatível = reset
-  explícito com aviso, nunca fallback silencioso).
-- Adapter de analytics real (após política de dados aprovada), área de
-  progresso com habilidades e revisões futuras.
-- (Fase 3) `FeedbackProvider` generativo opcional — a aprovação continuará
-  determinística por contrato.
+O conteúdo completo e novos componentes podem existir antes de a experiência
+estar pronta. Só anuncie a Fase 2 como verificada quando, no mesmo estado do
+repositório:
+
+- os sete tipos de atividade passarem por lint, testes unitários e build;
+- o fluxo E2E cobrir lição, retomada e revisão;
+- XP, meta diária, conquistas e revisão espaçada tiverem regras de domínio
+  testadas;
+- a PWA e o comportamento offline tiverem evidência de execução;
+- teclado, foco, `aria-live`, contraste e alvos de toque passarem pela revisão
+  de acessibilidade; e
+- analytics e evidência continuarem sem texto livre do usuário.
+
+Fases posteriores ainda incluem feedback generativo opcional e piloto
+multiusuário. Mesmo nessas fases, a aprovação continua determinística e
+`mastered` permanece sob verificador independente.
