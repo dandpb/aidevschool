@@ -7,3 +7,7 @@
 **Learning:** When using custom interactive UI elements, purely visual indicators (such as spatial positions like node-1, node-2, or CSS `.is-complete` classes) must be explicitly announced to screen readers. Relying solely on inner HTML text without descriptive semantic mappings causes screen readers to misread the context (like skipping state or reading elements out of logical order). For accessibility in codexDojo, purely visual states in custom interactive UI elements (such as `.is-complete` classes or spatial node positions) must be explicitly announced by computing a dynamic string containing the index, name, and current status, and applying it via `aria-label`.
 
 **Action:** Before rendering lists, sequences, or spatial maps of buttons, proactively compute an explicit `aria-label` merging the visual layout details (index, state, name, or owner) and apply `aria-hidden="true"` to inner spans to prevent redundant stuttering and noise.
+
+## 2024-07-22 - Explicit ARIA Announcements for Visual States
+**Learning:** Purely visual states in custom interactive UI elements (such as `.is-complete` classes on timeline step nodes) are invisible to screen readers, causing a loss of context.
+**Action:** When a UI element uses visual classes for state that cannot be represented by standard HTML attributes (like `disabled` or `checked`), explicitly compute a dynamic string containing the index, name, and current status, and apply it via `aria-label`. Ensure inner visual text is hidden with `aria-hidden="true"` to prevent redundant reading.
