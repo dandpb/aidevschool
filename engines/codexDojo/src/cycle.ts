@@ -49,6 +49,14 @@ export function getCycleCompletionPercent(completedStageIds: readonly string[]):
     return 0
   }
 
-  const completed = cycleStages.filter((stage) => completedStageIds.includes(stage.id))
-  return Math.round((completed.length / cycleStages.length) * 100)
+  // ⚡ Bolt: Use a simple counter instead of allocating a new array via .filter()
+  // to reduce unnecessary garbage collection pressure during renders.
+  let completedCount = 0
+  for (const stage of cycleStages) {
+    if (completedStageIds.includes(stage.id)) {
+      completedCount++
+    }
+  }
+
+  return Math.round((completedCount / cycleStages.length) * 100)
 }
