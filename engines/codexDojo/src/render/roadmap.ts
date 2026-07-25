@@ -5,7 +5,6 @@ import { pressedAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
 
 const phaseLabels: Readonly<Record<ProjectPhase, string>> = {
-  aplicacao_ia: "Aplicação com IA",
   fundamentos: "Fundamentos",
   concorrencia: "Concorrência",
   arquitetura: "Arquitetura",
