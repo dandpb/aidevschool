@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2024-05-24 - Screen reader experience for purely visual text symbols
+**Learning:** Using purely visual characters or emojis for state representation (like "🔥 5" for a streak or "❄❄··" for remaining freezes) leads to repetitive and confusing readouts for screen readers, breaking the user experience.
+**Action:** Wrap visually styled indicator elements (like text emojis and special characters) in an `aria-hidden="true"` span, and set a clean, descriptive `aria-label` (e.g. "5 days streak", "2 of 3 freezes remaining") on the parent container element to explicitly announce the meaning instead of the visual content.

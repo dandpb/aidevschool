@@ -147,13 +147,16 @@ function renderStreak(snapshot: LearnerSnapshot): string {
     ? `último portão em ${escapeHtml(s.lastGateDate)}`
     : "nenhum portão passado ainda"
 
+  const streakAria = `Sequência atual: ${s.current} dias`
+  const freezesAria = `${freezesEquipped} de ${freezesMax} freezes disponíveis`
+
   return `
     <div class="learner-streak">
       <p class="eyebrow">Sequência</p>
       <div class="streak-row">
-        <strong class="streak-current">🔥 ${escapeHtml(s.current)}</strong>
+        <strong class="streak-current" role="text" aria-label="${escapeHtml(streakAria)}"><span aria-hidden="true">🔥 ${escapeHtml(s.current)}</span></strong>
         <small class="streak-longest">recorde ${escapeHtml(s.longest)}</small>
-        <span class="streak-freezes" title="Streak freezes (cap 2)">freezes: ${filled}${empty}</span>
+        <span class="streak-freezes" title="Streak freezes (cap 2)" role="text" aria-label="${escapeHtml(freezesAria)}"><span aria-hidden="true">freezes: ${filled}${empty}</span></span>
       </div>
       <p class="streak-hint">${lastLabel} · cresce só ao passar o portão executável; dia perdido consome um freeze.</p>
     </div>
