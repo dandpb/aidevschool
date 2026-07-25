@@ -19,7 +19,13 @@ ${status}
 === Learning gate (learner/learning_state.yaml) ===
 ${gate}
 
-Próximo passo? Rode /devschool-status para um resumo e a ação recomendada."
+=== Supervisor status/recovery (read-only first) ===
+Rode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending
+request, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.
+SessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.
+
+Próximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado
+operacional, sem escrever nos arquivos canônicos."
 
 if command -v jq >/dev/null 2>&1; then
   jq -n --arg c "$ctx" '{hookSpecificOutput:{hookEventName:"SessionStart",additionalContext:$c}}'
