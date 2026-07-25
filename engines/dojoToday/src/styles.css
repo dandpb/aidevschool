@@ -623,6 +623,25 @@ body {
   display: none;
 }
 
+/* Jogar inline (iframe do jogo voxel/pixel) */
+.play-inline-row {
+  margin-top: 8px;
+}
+.play-inline-wrap {
+  margin-top: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0b1020;
+}
+.play-inline-frame {
+  display: block;
+  width: 100%;
+  height: 60vh;
+  min-height: 360px;
+  border: none;
+}
+
 /* Footer */
 .note {
   margin-top: 22px;

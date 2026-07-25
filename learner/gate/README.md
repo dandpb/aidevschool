@@ -3,6 +3,27 @@
 `learner.gate` consumes producer evidence and records a gate outcome through
 `learner.substrate.gate`. Producer evidence never authorizes mastery by itself.
 
+## No-code literacy path (AI Literacy / LiteracyDojo)
+
+LiteracyDojo emits raw `LiteracyEvidenceRecord` envelopes and records at most
+local `completed`. Independent judgment lives here — not in the React UI:
+
+```bash
+python3 -m learner.gate.literacy \
+  --evidence path/to/literacy-evidence.json \
+  --write-receipt learner/verifier_receipts/literacy-last.json
+```
+
+- Exit `0` only when the independent verdict is `PASS`.
+- Missing or invalid evidence **fails closed** (exit `1`, `mastery_eligible: false`).
+- Application-report activities may `PASS` as reported completion but never set
+  `mastery_eligible`.
+- Receipts set `producer_writes_mastered: false` and `max_producer_claim: "completed"`.
+- This CLI does **not** write `learner/learning_state.yaml` or LiteracyDojo UI state.
+
+Implementation: `learner/gate/literacy_verifier.py` + CLI `learner/gate/literacy.py`.
+Contract: `docs/design/ai-literacy/evidence-contract.md`.
+
 ## Run the gate
 
 Use a separate verifier receipt for evidence that doesn't have a built-in empirical

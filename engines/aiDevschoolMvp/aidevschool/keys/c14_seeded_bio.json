@@ -1,0 +1,17 @@
+{
+  "key_id": "c14_seeded_bio",
+  "key_version": "1.0.0",
+  "gate_id": "G1",
+  "concept_id": "C14",
+  "kind": "seeded_error",
+  "items": {
+    "claims_total": 9,
+    "planted": [2, 5, 7, 9],
+    "explanations": {
+      "2": "Hopper was born in New York City in 1906, not London.",
+      "5": "COBOL came from a committee Hopper advised; no one invented it single-handedly, and not in 1952.",
+      "7": "The destroyer USS Hopper is real, but it was named for her in the 1990s, not 1971.",
+      "9": "There is no Nobel Prize in Computer Science."
+    }
+  }
+}

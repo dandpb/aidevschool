@@ -1,0 +1,8 @@
+{
+  "tutor_model": "inherit",
+  "verifier_model": "inherit",
+  "channel": "telegram",
+  "install_platform": "openclaw",
+  "skill_version": "1.0.0",
+  "feature_flags": { "llm_gates_enabled": true }
+}

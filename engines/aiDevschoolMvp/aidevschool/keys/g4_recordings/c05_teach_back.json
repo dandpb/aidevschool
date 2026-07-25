@@ -1,0 +1,15 @@
+{
+  "rubric_id": "c05_teach_back",
+  "recordings": [
+    {
+      "artifact_sha256": "e5a4f2b2cd323d2f9deb98f31b9d3c9dcace29886f42a0586a82d4a786d0f16a",
+      "model": "anthropic/claude-sonnet-4-5",
+      "judgments": {
+        "tb1": true,
+        "tb2": true,
+        "tb3": true,
+        "tb4": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "key_id": "c05_quiz_bank",
+  "key_version": "2.0.0",
+  "gate_id": "G3",
+  "concept_id": "C05",
+  "kind": "quiz_bank",
+  "items": {
+    "bank": [
+      { "item_id": "c05_q05", "keyed": "B" },
+      { "item_id": "c05_q02", "keyed": "C" },
+      { "item_id": "c05_q06", "keyed": "A" },
+      { "item_id": "c05_q03", "keyed": "B" },
+      { "item_id": "c05_q07", "keyed": "C" },
+      { "item_id": "c05_q01", "keyed": "C" },
+      { "item_id": "c05_q08", "keyed": "C" },
+      { "item_id": "c05_q09", "keyed": "B" },
+      { "item_id": "c05_q04", "keyed": "A" }
+    ]
+  }
+}

@@ -990,10 +990,28 @@ class TestCli:
         return state_path
 
     def test_no_evidence_file_exits_cleanly(self, root: Path, capsys):
-        self._setup_root(root)
+        # The unit must declare evidence that is absent: the shared `root`
+        # fixture writes a valid artifact and make_state points at it, so
+        # leaving the default here would mean there IS evidence to grade.
+        self._setup_root(root, evidence_file=str(root / "never-played.ndjson"))
         assert cli_main(["--root", str(root)]) == 0
         out = capsys.readouterr().out
         assert "NOTHING TO GRADE" in out and "pnpm run smoke" in out
+
+    def test_declared_evidence_file_is_graded_without_explicit_flag(
+        self, root: Path, capsys
+    ):
+        """A unit whose evidence lands outside the pixelDojo defaults is still
+        graded: the CLI honours ``active_unit.evidence_file``."""
+        declared = root / "engines" / "someEngine" / ".logs" / "evidence.ndjson"
+        declared.parent.mkdir(parents=True, exist_ok=True)
+        declared.write_text(json.dumps(make_evidence()) + "\n", encoding="utf-8")
+        self._setup_root(root, evidence_file=str(declared))
+
+        assert cli_main(["--root", str(root), "--dry-run"]) == 0
+        out = capsys.readouterr().out
+        assert "NOTHING TO GRADE" not in out
+        assert "GATE PASS" in out and str(declared) in out
 
     def test_unit_not_evaluating_exits_cleanly(self, root: Path, capsys):
         self._setup_root(root, state="mastered")

@@ -4,9 +4,10 @@ Run from the ecosystem root:
 
     python3 -m learner.gate [--evidence PATH] [--verifier-receipt PATH] [--dry-run]
 
-Without --evidence the verifier looks for the NDJSON contract first
-(engines/pixelDojo/pixel-quest/.logs/evidence.ndjson), then falls back to the
-legacy single-record file (engines/pixelDojo/.logs/last_run_evidence.json).
+Without --evidence the verifier uses the active unit's declared ``evidence_file``
+when it exists, then the NDJSON contract
+(engines/pixelDojo/pixel-quest/.logs/evidence.ndjson), then the legacy
+single-record file (engines/pixelDojo/.logs/last_run_evidence.json).
 
 Exit codes: 0 = gate applied (pass or fail recorded) OR nothing to grade
 (no evidence / no attempt awaiting verification), 1 = evidence rejected by
@@ -38,10 +39,23 @@ DEFAULT_EVIDENCE_CANDIDATES = (
 )
 
 
-def _resolve_evidence(root: Path, explicit: str | None) -> Path | None:
-    """Explicit path wins (as given); otherwise first existing default."""
+def _resolve_evidence(
+    root: Path, explicit: str | None, unit: dict | None = None
+) -> Path | None:
+    """Explicit path wins (as given), then the active unit's declared
+    ``evidence_file``, then the first existing default.
+
+    The unit declares where its own evidence lands (voxelDojo games write under
+    their own ``.logs/``), so defaulting straight to the pixelDojo paths made the
+    CLI report "nothing to grade" for any non-pixel unit.
+    """
     if explicit:
         return Path(explicit)
+    declared = (unit or {}).get("evidence_file")
+    if declared:
+        path = root / declared
+        if path.exists():
+            return path
     for candidate in DEFAULT_EVIDENCE_CANDIDATES:
         path = root / candidate
         if path.exists():
@@ -76,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     unit = state.get("active_unit", {})
-    evidence_path = _resolve_evidence(root, args.evidence)
+    evidence_path = _resolve_evidence(root, args.evidence, unit)
     if args.dry_run and args.evidence and evidence_path is not None and evidence_path.exists():
         try:
             if evidence_path.suffix == ".ndjson":

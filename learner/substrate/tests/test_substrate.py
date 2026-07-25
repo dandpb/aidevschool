@@ -572,9 +572,9 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # BACKLOG_STATUS.md: 01 + 02 implemented; 03-18 scaffolded (16).
+        # BACKLOG_STATUS.md: 01 + 02 implemented; 00 + 03-18 scaffolded (17).
         self.assertEqual(snapshot["masteredCount"], 2)
-        self.assertEqual(snapshot["scaffoldedCount"], 16)
+        self.assertEqual(snapshot["scaffoldedCount"], 17)
 
     def test_build_snapshot_includes_typed_challenge_statuses(self):
         snapshot = build_snapshot()
@@ -918,7 +918,8 @@ class TestBacklogStatusDrift(unittest.TestCase):
 
     def test_every_scaffolded_row_has_the_expected_artifacts(self):
         statuses = self._parse_backlog()
-        scaffolded = [s for s, st in statuses.items() if st == "scaffolded"]
+        # 00_ai_in_practice is Level 0 no-code; only Level 1-6 programming projects require node-impl.
+        scaffolded = [s for s, st in statuses.items() if st == "scaffolded" and s != "00_ai_in_practice"]
         self.assertGreaterEqual(len(scaffolded), 1, "expected some scaffolded projects")
         missing_summary: list[str] = []
         for slug in scaffolded:

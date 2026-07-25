@@ -12,6 +12,14 @@ lançamento verificável.
 ## Notes
 
 - Domínio: educação prática em IA para dois públicos.
+- **Missão declarada por Daniel:** democratizar o ensino de IA — simples para pessoas não
+  tecnológicas e também para programadores.
+- **Modelo de referência: Duolingo.** Pequenas lições, gameficação e progressão em passos curtos
+  são a pegada de produto pretendida, não apenas um sabor visual. Toda decisão de topologia,
+  progressão e gamificação deve ser julgada contra essa referência — inclusive onde ela NÃO serve
+  (o gate exige evidência executável; Duolingo não tem equivalente disso).
+- **Assistentes de IA e voxel art são meios de explicação**, subordinados às pequenas lições: o
+  design bonito serve à compreensão do conceito, não o contrário.
 - Skills para as sessões: `grilling`, `domain-modeling`; usar `prototype` quando o ticket pedir
   reação a uma experiência visual.
 - **IA na Prática** é a trilha voltada a pessoas não tecnológicas e continua apoiada por AI
@@ -31,22 +39,31 @@ lançamento verificável.
 
 ## Decisions so far
 
-## Not yet specified
+- [Inventariar as engines disponíveis para a Trilha Dev](issues/01-inventariar-engines-da-trilha-dev.md)
+  — 14 engines auditadas com testes executados (438 Python + ~680 JS verdes); a Trilha Dev se monta
+  com 6 peças já comprovadas (Engine Hub do codexdojo-os-prototype, dojoToday, voxelDojo+pixelDojo,
+  learner/gate+substrate, codexDojo, miniMaxEvolutionEngine ao fundo) sem engine nova. Maior lacuna:
+  conteúdo, não superfície — 16 dos 19 projetos são `scaffolded` e a trilha só foi percorrida
+  ponta a ponta uma vez.
+- [Delimitar o contrato pedagógico compartilhado](issues/02-delimitar-o-contrato-pedagogico-compartilhado.md)
+  — o ciclo já é contrato cross-surface (`docs/design/micro-lesson-contract.md`) com 12 invariantes
+  compartilhados pelas duas trilhas (attempt-before-solution, produtor≠verificador, fail-closed,
+  digest sem `ts`, gamificação nunca alimenta o gate). Divergem em: o que conta como evidência,
+  onde mora o estado do aprendiz e **quem promove** — a trilha não-técnica tem verificador
+  implementado e testado, mas nenhum consumidor do veredito.
 
-- A composição concreta da Trilha Dev depois do inventário de capacidades e maturidade das
-  engines existentes.
-- Os pontos de entrada, transição e descoberta entre IA na Prática e Trilha Dev depois da decisão
-  de topologia.
+## Not yet specified
 - A identidade, os poderes, os limites e o uso opcional de modelos generativos pelos assistentes
   pedagógicos.
 - Quais sinais de gamificação são compartilhados e quais permanecem locais a cada experiência.
 - O sistema visual voxel: vocabulário, acessibilidade, produção de assets e quando usar ilustração
   estática ou simulação interativa.
 - O recorte de conteúdo e a jornada completa que formarão o primeiro lançamento público.
-- A evidência independente necessária para competência no-code e sua relação com o progresso
-  local.
 - O formato da especificação integrada e da validação humana final, quando as decisões anteriores
   estiverem resolvidas.
+- Se o gate G4 do ADR-0006 (scoring por LLM ancorado em rubrica, `Proposed`) chega a entrar no
+  mapa — a composição recomendada exclui a skill `aiDevschoolMvp` por maturidade não comprovada,
+  então a ratificação do ADR só vira decisão de mapa se essa exclusão cair.
 
 ## Out of scope
 

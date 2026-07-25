@@ -4,13 +4,13 @@ import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evid
 import type { AttemptFeedback } from "../domain/feedback";
 import {
   type Achievement,
+  type AudienceChoice,
   type LearnerProgress,
   type LessonOutcome,
   MAP_INITIAL_LESSON_ID,
   type OnboardingConfidence,
   type OnboardingContext,
   type OnboardingGoal,
-  type AudienceChoice,
   type OnboardingTaskCategory,
   type SkillPractice,
   XP_PER_ACTIVITY_PASS,

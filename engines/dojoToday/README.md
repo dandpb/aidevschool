@@ -62,9 +62,19 @@ enviada APENAS ao endpoint configurado. Conversas não são persistidas. O camin
 de evidência (verificador independente) nunca passa por aqui. Recurso
 experimental; remova a chave com "Limpar" ou limpando o `localStorage`.
 
+## Jogar inline
+
+A missão ativa pode ser jogada **dentro** do dojoToday (botão "▶ Jogar aqui"), sem
+abrir aba/server separado. O jogo voxel ativo é pré-compilado com base relativa
+(`vite build --base=./`) e copiado para `public/games/<num>/`; o card carrega esse
+bundle num iframe (lazy — só ao abrir).
+
+- Para rebuildar o jogo ativo após mudá-lo no voxelDojo:
+  `cd ../voxelDojo/game-02-warehouse && npm run build -- --base=./ && cp -r dist/. ../../dojoToday/public/games/02/`
+- v1 inclui só o jogo da missão ativa (02). Generalizar para os 18 (build+embed
+  por conceito) é tarefa de infra, não de produto — vive melhor no
+  [`../codexdojo-os-prototype/`](../codexdojo-os-prototype/) (que já embeda por URL).
+
 ## Fora do escopo (v1)
 
-- Não lança o jogo voxel inline (jogos são apps Vite separados); o card mostra o
-  comando de execução. A integração por embed vive em
-  [`../codexdojo-os-prototype/`](../codexdojo-os-prototype/).
 - Sem linha "pegadinha recorrente" (viria do parser de `learner/pitfalls.md`).

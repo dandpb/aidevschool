@@ -1,0 +1,18 @@
+{
+  "key_id": "c17_pii_email",
+  "key_version": "1.1.0",
+  "gate_id": "G2",
+  "concept_id": "C17",
+  "kind": "pii_list",
+  "items": {
+    "seeded_items": [
+      "Marta Kowalska",
+      "14 March 1982",
+      "marta.kowalska@examplemail.com",
+      "+48 601 223 445",
+      "82031455667",
+      "ul. Słoneczna 12/4, 00-789 Warszawa"
+    ],
+    "redaction_token": "[REDACTED]"
+  }
+}

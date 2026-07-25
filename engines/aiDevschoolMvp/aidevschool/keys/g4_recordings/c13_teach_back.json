@@ -1,0 +1,26 @@
+{
+  "rubric_id": "c13_teach_back",
+  "recordations": null,
+  "recordings": [
+    {
+      "artifact_sha256": "f41bbe5782d8769305c1eaa147f94bac710c5da115bf10e93ac456ee8aaf9fc1",
+      "model": "anthropic/claude-sonnet-4-5",
+      "judgments": {
+        "tb1": true,
+        "tb2": false,
+        "tb3": true,
+        "tb4": true
+      }
+    },
+    {
+      "artifact_sha256": "de0afad1fbca9d51bf7cd136f7a67002bb448e2fc11cf4b6bf7efc3b7cc75b65",
+      "model": "anthropic/claude-sonnet-4-5",
+      "judgments": {
+        "tb1": true,
+        "tb2": true,
+        "tb3": true,
+        "tb4": true
+      }
+    }
+  ]
+}

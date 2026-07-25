@@ -110,6 +110,12 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
         <p class="mentor-line">Sua próxima missão é <strong>${a.title ?? a.id}</strong>.</p>
         <p class="muted">${challenge} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
         ${playDetails(a.gameDir)}
+        ${
+          a.num
+            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${a.num}">▶ Jogar aqui (inline)</button></div>
+               <div id="play-inline-wrap" class="play-inline-wrap" hidden><iframe id="play-inline-frame" class="play-inline-frame" title="Jogo da missão"></iframe></div>`
+            : ""
+        }
         <div class="socrates" data-socrates>
           <div class="socrates-talk">
             <input
@@ -277,6 +283,26 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     fill();
     setReply("Assistente limpo. Sócrates voltou ao modo determinístico.");
   });
+
+  // Jogar inline: carrega o jogo estático (build relativo) só ao abrir; descarrega ao recolher.
+  const playBtn = document.getElementById("play-inline-btn") as HTMLButtonElement | null;
+  const playWrap = document.getElementById("play-inline-wrap") as HTMLElement | null;
+  const playFrame = document.getElementById("play-inline-frame") as HTMLIFrameElement | null;
+  if (playBtn && playWrap && playFrame) {
+    playBtn.addEventListener("click", () => {
+      if (playWrap.hidden) {
+        if (!playFrame.getAttribute("src")) {
+          playFrame.setAttribute("src", `/games/${playBtn.dataset.game}/index.html`);
+        }
+        playWrap.hidden = false;
+        playBtn.textContent = "▽ Recolher jogo";
+      } else {
+        playWrap.hidden = true;
+        playFrame.setAttribute("src", "about:blank");
+        playBtn.textContent = "▶ Jogar aqui (inline)";
+      }
+    });
+  }
 
   const ask = async () => {
     const question = q.value.trim();

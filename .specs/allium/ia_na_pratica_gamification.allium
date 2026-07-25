@@ -1,0 +1,136 @@
+-- allium: 3
+-- ia_na_pratica_gamification.allium
+
+-- Scope: Gamified micro-learning experience, streak tracking, Voxel Art visual explanations,
+-- and dual non-technical / developer learning routes for IA na Prática.
+
+------------------------------------------------------------
+-- Value Types
+------------------------------------------------------------
+
+value XPBonus {
+    first_attempt_success: Integer
+    streak_multiplier: Decimal
+    speed_bonus: Integer
+}
+
+value LessonProgress {
+    lesson_id: String
+    module_id: String
+    completed: Boolean
+    attempts_count: Integer
+    hints_requested: Integer
+    xp_earned: Integer
+    completed_at: Timestamp?
+}
+
+value VoxelSceneConfig {
+    diorama_id: String
+    theme: String
+    camera_angle: String
+    interactive_elements: Integer
+    animation_state: String
+}
+
+------------------------------------------------------------
+-- Enumerations
+------------------------------------------------------------
+
+enum AudienceType {
+    non_technical
+    | developer
+}
+
+enum MicroLessonActivityType {
+    choice
+    | prompt_builder
+    | output_comparison
+    | safety_classification
+    | missing_context
+    | code_review_ai
+}
+
+enum GamificationBadge {
+    primeiro_passo
+    | mestre_do_prompt
+    | detetive_de_alucinacao
+    | dev_ia_integrada
+    | guardiao_da_privacidade
+    | streak_7_dias
+}
+
+------------------------------------------------------------
+-- Entities
+------------------------------------------------------------
+
+entity GamifiedLearnerSession {
+    learner_id: String
+    audience: AudienceType
+    current_streak_days: Integer
+    streak_freezes_remaining: Integer
+    total_xp: Integer
+    current_level: Integer
+    unlocked_badges: GamificationBadge[]
+
+    -- Projections
+    has_active_streak: current_streak_days > 0
+    can_protect_streak: streak_freezes_remaining > 0
+
+    -- Invariants
+    invariant valid_streak: current_streak_days >= 0
+    invariant valid_xp: total_xp >= 0
+}
+
+entity MicroLesson {
+    id: String
+    module_id: String
+    title: String
+    estimated_minutes: Integer
+    activity_type: MicroLessonActivityType
+    target_audience: AudienceType
+    voxel_diorama: VoxelSceneConfig?
+
+    -- Invariants
+    invariant fast_completion: estimated_minutes <= 5
+}
+
+entity MicroLessonAttempt {
+    lesson: MicroLesson
+    learner: GamifiedLearnerSession
+    is_correct: Boolean
+    used_hint: Boolean
+    attempt_duration_seconds: Integer
+
+    -- Computed rewards
+    earned_xp: is_correct ? (used_hint ? 50 : 100) : 10
+}
+
+------------------------------------------------------------
+-- Rules & Behavioral Contracts
+------------------------------------------------------------
+
+rule AwardXPOnLessonCompletion {
+    when attempt: MicroLessonAttempt evaluated where attempt.is_correct = true
+
+    then attempt.learner.total_xp = attempt.learner.total_xp + attempt.earned_xp
+    then attempt.learner.current_level = (attempt.learner.total_xp / 500) + 1
+}
+
+rule MaintainDailyStreak {
+    when lesson_completed: MicroLessonAttempt evaluated where lesson_completed.is_correct = true
+
+    then lesson_completed.learner.current_streak_days = lesson_completed.learner.current_streak_days + 1
+}
+
+rule UnlockAudienceAppropriateBadge {
+    when learner: GamifiedLearnerSession completes_module module_id: String
+
+    then where module_id = "05-dev-contexto-e-escolha" and learner.audience = developer
+         learner.unlocked_badges.append(dev_ia_integrada)
+}
+
+rule RenderVoxelDioramaExplanation {
+    when lesson_started: MicroLesson where lesson_started.voxel_diorama != null
+
+    then lesson_started.voxel_diorama.animation_state = "active"
+}

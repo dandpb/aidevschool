@@ -15,6 +15,7 @@ export type ActiveUnit = {
   readonly id: string | null;
   readonly title: string | null;
   readonly project: string | null;
+  readonly num: string | null;
   readonly state: string | null;
   readonly gameDir: string | null;
   readonly diagnosticFile: string | null;

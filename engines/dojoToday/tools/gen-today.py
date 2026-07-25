@@ -157,6 +157,7 @@ def main() -> int:
         "id": active.get("id"),
         "title": active.get("title"),
         "project": active.get("project"),
+        "num": _num_of(active.get("project")),
         "state": active.get("state"),
         "gameDir": _game_dir(active.get("evidence_file"), active.get("project")),
         "diagnosticFile": active.get("diagnostic_file"),

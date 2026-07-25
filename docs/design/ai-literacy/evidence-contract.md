@@ -56,9 +56,12 @@ Notas:
 
 1. **A UI emite evidência bruta e nunca promove domínio.** Nenhum caminho de
    código do app transforma tentativa em competência.
-2. `mastered` é reservado a verificador independente (futuro); feedback
-   generativo e verificação usam caminhos distintos, e o resultado de um LLM
-   nunca substitui os checks determinísticos.
+2. `mastered` é reservado a verificador independente; feedback generativo e
+   verificação usam caminhos distintos, e o resultado de um LLM nunca substitui
+   os checks determinísticos. O caminho independente no-code está em
+   `learner/gate/literacy_verifier.py` (CLI: `python3 -m learner.gate.literacy`):
+   re-julga `LiteracyEvidenceRecord`, emite recibo com `mastery_eligible` e
+   **nunca** deixa a UI do LiteracyDojo escrever `mastered`.
 3. **Sem texto livre em analytics/evidência por padrão.** Quando necessário,
    registrar somente digest, categorias e resultado da rubrica.
 4. Manter separados os três conceitos (progresso, engajamento, competência) em

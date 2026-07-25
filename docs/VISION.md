@@ -4,14 +4,15 @@
 | --- | --- |
 | Status | Canônico para intenção de produto (não é estado operacional) |
 | Criado | 2026-07-19 · **Decisor:** Daniel |
-| Última revisão | 2026-07-19 |
+| Última revisão | 2026-07-25 |
 | Relação | Evolui [`docs/PROMPTS/-01_GOAL.md`](PROMPTS/-01_GOAL.md), que permanece como semente histórica |
 | Regra | Intenção não prova implementação, domínio ou mastery; os links abaixo apontam para as fontes operacionais. |
 
 ## A ideia central
 
-**Democratizar o conhecimento e a aplicação de IA — de forma simples para pessoas não
-tecnológicas e também para programadores — por meio de pequenas lições, numa pegada Duolingo.**
+**Democratizar o ensino de IA — de forma simples para pessoas não tecnológicas e
+também para programadores — por meio de pequenas lições e assistentes de IA, numa
+pegada Duolingo/gamificação, com design em voxel art que ajuda nas explicações.**
 
 Dois públicos, uma mecânica:
 
@@ -86,8 +87,9 @@ O escopo e os critérios de aceite do MVP estão em
   (conceito, smell, padrão —
   [`learner/CONTEXT.md`](../learner/CONTEXT.md)); no LiteracyDojo, uma
   microlição dura 3–5 minutos; nos jogos, um conceito vira uma mecânica.
-- **Mecânica Duolingo com base em pesquisa:** o substrato compartilhado já usa
-  FSRS, streak e freeze; hearts e leaderboards foram excluídos por evidência.
+- **Mecânica Duolingo/gamificação com base em pesquisa:** o substrato compartilhado já usa
+  FSRS, streak, freeze e sinais de XP nas superfícies de microlição; hearts e leaderboards
+  foram excluídos por evidência (não contam como mastery).
   O [design de revisão e streak](design/spaced-repetition-streak/README.md)
   define a direção; o README do LiteracyDojo mantém os critérios atuais de
   release.
@@ -98,21 +100,49 @@ O escopo e os critérios de aceite do MVP estão em
   adequada ao gate. Código exige checks executáveis; Nível 0 usa o checklist
   falsificável rotulado do ADR-0004.
 
-## Lacunas (o que a visão pede e ainda não existe)
+## Lacunas (estado re-verificado em 2026-07-25)
 
-Registradas como lacunas, não como promessas nem como status:
+Cada item abaixo foi re-checado no mesmo estado do repositório. Itens
+**resolvidos** apontam evidência operacional; residual honesto permanece onde a
+democratização ainda não cobre o ecossistema inteiro.
 
-1. **Release completa do LiteracyDojo.** O engine só pode ser anunciado como
-   release quando satisfizer, no mesmo estado do repositório, todos os critérios
-   mantidos em seu README. Esta visão não replica o status operacional.
-2. **Onboarding simples.** O LiteracyDojo e o miniTown ainda exigem preparação
-   local. Não há um link público oficial em que uma pessoa apenas abra o
-   navegador e comece a aprender.
-3. **Evidência no-code independente.** O progresso local do LiteracyDojo para em
-   `completed`; a promoção a `mastered` ainda precisa de um verificador
-   independente adequado às atividades não técnicas.
-4. **Replicação da instância.** Hoje é "one learner per ecosystem instance", com o Daniel como
-   learner 0. A visão só se cumpre se criar uma instância para outra pessoa for trivial.
+1. **Release do LiteracyDojo (MVP IA na Prática) — resolvida para o player.**
+   No estado atual do repo, `engines/literacyDojo/` passa lint, testes unitários,
+   build e E2E (`npm run lint|test|build|test:e2e`). Critérios de release do
+   README do engine e tickets do MVP (`tickets.md`) estão verdes neste corte.
+   Evidência: README operacional do engine + suíte local re-executada. Residual:
+   isto **não** certifica o ecossistema multi-engine inteiro (pixel/voxel/tutor
+   core), só a superfície de microaprendizagem não técnica.
+
+2. **Entrada pública no navegador (sem install/conta) — resolvida para
+   LiteracyDojo.** URL de produção documentada e verificável:
+   <https://aidevschool-literacydojo.netlify.app> (HTTP 200, shell
+   `LiteracyDojo — IA com confiança no trabalho`). Progresso é local
+   (IndexedDB neste navegador), sem conta obrigatória; o limite é comunicado no
+   produto. Residual: **miniTown** e o ecossistema de programadores ainda
+   exigem preparação local (Node/Python) — não são o zero-install do MVP
+   não-técnico.
+
+3. **Evidência no-code independente — caminho resolvido; mastery de aplicação
+   aberta continua falhando fechado.** O producer (LiteracyDojo) emite
+   `LiteracyEvidenceRecord` e registra no máximo `completed` — nunca
+   `mastered` (`LessonStatus` sem o valor). O verificador independente vive em
+   `learner/gate/literacy_verifier.py` e CLI
+   `python3 -m learner.gate.literacy --evidence PATH`: re-julga o envelope,
+   emite recibo estruturado (`verdict`, `mastery_eligible`,
+   `producer_writes_mastered: false`) e falha fechado se a evidência falta ou
+   é inválida. Atividades de aplicação aberta podem ser `PASS` como relato, mas
+   **não** ficam `mastery_eligible`. Residual: promoção automática a
+   `mastered` no estado canônico do aprendiz único (`learner/learning_state.yaml`)
+   para a trilha AI Literacy ainda não é o fluxo diário do app estático; o
+   caminho de julgamento independente existe e é testado.
+
+4. **Segunda pessoa sem setup local — resolvida no path público LiteracyDojo;
+   residual no filesystem multi-learner.** Qualquer pessoa abre o link estático
+   e começa microlições sem clonar o repo (gap 2). A instância completa do
+   ecossistema (substrate + gates de código + `learner/` compartilhado) continua
+   "one learner per ecosystem instance" para o Daniel como learner 0 — multi-tenant
+   de contas e sync entre dispositivos **fora de escopo** desta visão operacional.
 
 ## Como ler o resto da documentação à luz deste doc
 
@@ -138,16 +168,16 @@ vários motores". Unidades dessa trilha usam o gate no-code (AD-006).
 
 ## Próximas decisões pendentes
 
-Estas decisões mudam a estrutura do repo. Não estão tomadas. São registradas aqui pra não se
-perderem entre revisões.
+Decisões estruturais ainda abertas (não bloqueiam o MVP público de microlições):
 
-1. **Entrada pelo navegador.** Definir onde publicar o LiteracyDojo e o
-   miniTown, como versionar conteúdo e como comunicar o status da release.
-2. **Verificação no-code.** Definir o verificador e a evidência mínima para
-   transformar aplicação real em competência verificada.
-3. **Replicação da instância.** Hoje "one learner per instance" + setup manual =
-   democratização-zero. Visão se cumpre quando uma segunda pessoa roda a escola com um
-   comando.
+1. **miniTown público.** Se/when publicar a entrada cozy zero-install (hoje
+   residual local). LiteracyDojo já tem URL de produção.
+2. **Mastery canônico no-code no substrate.** Quando e como um recibo
+   `learner.gate.literacy` promove unidades AI Literacy em
+   `learner/learning_state.yaml` sem misturar com o gate de código — o
+   julgamento independente já existe; a promoção canônica multi-engine não.
+3. **Replicação multi-learner do filesystem.** Contas, sync e segunda instância
+   completa do ecossistema (além do app estático) permanecem fora do MVP.
 
 Para o audit detalhado de engines/curriculum/agents vs. esta visão, ver
 [`docs/AUDIT_ENGINES_CURRICULUM_2026-07-19.md`](AUDIT_ENGINES_CURRICULUM_2026-07-19.md) (draft

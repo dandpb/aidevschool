@@ -17,6 +17,7 @@ export const today: TodaySnapshot = {
     "id": "U2-key-value-store",
     "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
     "project": "02_key_value_store",
+    "num": "02",
     "state": "evaluating",
     "gameDir": "engines/voxelDojo/game-02-warehouse",
     "diagnosticFile": "curriculum/02_key_value_store/docs/spec.md"
