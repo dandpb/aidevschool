@@ -6,7 +6,7 @@ Canonical source: [catalog.md](./catalog.md). This operational view preserves th
 
 | Project | Status | Evidence |
 | --- | --- | --- |
-| `00_ai_in_practice` | `planned` | Project artifacts exist; catalog verification is pending. |
+| `00_ai_in_practice` | `scaffolded` | Catalogue artifacts exist: `curriculum/00_ai_in_practice/docs/spec.md` (spec do no-code gate, AD-004/005/006), `curriculum/ai-literacy/catalog.yaml` (5 módulos · 14 lições · 8 skills · contentVersion 2026-07-25.1), `engines/literacyDojo/` (MVP com voxel world, world map, fluxo de lição guiado, gamificação local-first, PWA — 57 testes + Playwright 5/5 + PWA 1/1, PR-47 mergeado), `engines/miniTown/` (superfície cozy Nível 0, 5-task plan). Verificação executável do no-code gate (Prometor) pendente — mais fraco que evidências de código e nunca promove unidades 1–6. |
 | `01_rate_limiter` | `implemented` | Six executable evidence groups cover the spec, Go/Rust/Node implementations and tests, review, benchmark, evolution, and verifier gate. Certification caveat: benchmark and optimization are Node.js-only execution-verified in this sandbox; Go and Rust are code-reviewed/proposed-only for those phases, not performance-parity certified. |
 | `02_key_value_store` | `implemented` | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the Go and Rust directories came from an earlier ungated backfill and have not been compiled, tested, reviewed, or benchmarked in the certified cycle. |
 | `03_url_shortener` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
