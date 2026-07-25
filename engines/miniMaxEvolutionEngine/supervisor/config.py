@@ -81,11 +81,22 @@ def _strings(data: dict[str, Any], key: str, *, nonempty: bool = True) -> tuple[
 def load_config(repo_root: Path, path: Path | None = None) -> AutonomousConfig:
     root = repo_root.resolve(strict=True)
     candidate = path or root / ".mavis/school-supervisor/autonomous.yaml"
+    if not candidate.is_absolute():
+        candidate = root / candidate
     try:
-        candidate.resolve(strict=False).relative_to(root)
+        lexical = candidate.absolute().relative_to(root)
+        resolved = candidate.resolve(strict=False)
+        resolved.relative_to(root)
     except ValueError as exc:
         raise ConfigError("autonomous config escapes repository root") from exc
-    if not candidate.is_file() or candidate.is_symlink():
+    if ".." in lexical.parts:
+        raise ConfigError("autonomous config escapes repository root")
+    cursor = root
+    for part in lexical.parts:
+        cursor /= part
+        if cursor.is_symlink():
+            raise ConfigError("autonomous config path may not contain symlinks")
+    if not candidate.is_file():
         raise ConfigError("autonomous execution is disabled: local config is missing")
     try:
         data = yaml.safe_load(candidate.read_text(encoding="utf-8"))

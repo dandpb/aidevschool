@@ -7,6 +7,7 @@ import inspect
 import json
 import os
 import re
+import tempfile
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -121,11 +122,17 @@ def _argv(config: AutonomousConfig, request: dict[str, Any], role: str) -> list[
 
 
 def execute_role(config: AutonomousConfig, request: dict[str, Any], paths: SupervisorPaths, role: str, *, cancellation: Callable[[], bool] = lambda: False) -> RoleResult:
+    paths.validate()
     prompt = build_prompt(request, paths, role)
     env = {name: os.environ[name] for name in config.environment_allowlist if name in os.environ}
-    home = paths.operations / "autonomous-home" / request[role + "_context_id"]
-    home.mkdir(parents=True, exist_ok=True, mode=0o700)
-    env["HOME"] = str(home)
+    home_root = paths.operations / "autonomous-home"
+    if home_root.is_symlink():
+        raise AutonomousError("autonomous home root may not be a symlink")
+    home_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+    try:
+        home_root.resolve(strict=True).relative_to(paths.repo_root.resolve(strict=True))
+    except ValueError as exc:
+        raise AutonomousError("autonomous home root escapes repository root") from exc
     timeout = config.producer_timeout_seconds if role == "producer" else config.verifier_timeout_seconds
     curriculum = paths.curriculum.resolve(strict=True)
     project = paths.curriculum / request["project"]
@@ -136,7 +143,10 @@ def execute_role(config: AutonomousConfig, request: dict[str, Any], paths: Super
         raise AutonomousError("canonical project execution directory is invalid") from exc
     if not direct_child or project.is_symlink() or not project.is_dir() or resolved_project != project.absolute():
         raise AutonomousError("canonical project execution directory must be a real direct child of curriculum")
-    process = run_process(_argv(config, request, role), {"type": "user", "message": {"role": "user", "content": prompt}}, cwd=paths.repo_root, env=env, timeout=timeout, grace=config.terminate_grace_seconds, stdout_cap=config.stdout_byte_cap, stderr_cap=config.stderr_byte_cap, cancelled=lambda: cancellation() or os.environ.get("AIDEVSCHOOL_AUTONOMOUS_KILL") == "1")
+    context = request[role + "_context_id"]
+    with tempfile.TemporaryDirectory(prefix=f"{context}-", dir=home_root) as temporary_home:
+        env["HOME"] = temporary_home
+        process = run_process(_argv(config, request, role), {"type": "user", "message": {"role": "user", "content": prompt}}, cwd=paths.repo_root, env=env, timeout=timeout, grace=config.terminate_grace_seconds, stdout_cap=config.stdout_byte_cap, stderr_cap=config.stderr_byte_cap, cancelled=lambda: cancellation() or os.environ.get("AIDEVSCHOOL_AUTONOMOUS_KILL") == "1")
     if (process.timed_out or process.cancelled or process.returncode != 0
             or process.stdout_truncated or process.stderr_truncated):
         raise AutonomousError("model process timed out, was cancelled, failed, or exceeded output limit")
@@ -231,6 +241,7 @@ def _compare_and_advance(paths: SupervisorPaths, request: dict[str, Any], baseli
 
 
 def execute_request(paths: SupervisorPaths, request_id: str, *, config_path: Path | None = None, now: Callable[[], datetime] = lambda: datetime.now(timezone.utc), role_runner: Callable[..., RoleResult] = execute_role, before_advance: Callable[[], None] | None = None, cancellation: Callable[[], bool] = lambda: False) -> dict[str, Any]:
+    paths.validate()
     config = load_config(paths.repo_root, config_path or paths.operations / "autonomous.yaml")
     request = pending_request_document(paths)
     if request is None or request["request_id"] != request_id:

@@ -1,0 +1,26 @@
+# Copy this file to .mavis/school-supervisor/autonomous.yaml for local use.
+# Autonomous execution requires both enabled: true and kill_switch: false.
+# AIDEVSCHOOL_AUTONOMOUS_KILL=1 remains an environment-level emergency stop.
+schema_version: 1
+enabled: false
+kill_switch: true
+executable: /absolute/path/to/claude
+model: claude-sonnet-4-5
+max_concurrency: 1
+allowed_phases: [spec]
+allowed_roles: [curator, verifier]
+permission_mode: dontAsk
+producer_allowed_tools: [Read, Grep, Glob, EditProject]
+verifier_allowed_tools: [Read, Grep, Glob]
+producer_max_turns: 20
+verifier_max_turns: 12
+producer_max_budget_usd: "2.00"
+verifier_max_budget_usd: "1.00"
+producer_timeout_seconds: 900
+verifier_timeout_seconds: 600
+daily_usd_cap: "10.00"
+per_request_usd_cap: "4.00"
+terminate_grace_seconds: 5
+stdout_byte_cap: 1048576
+stderr_byte_cap: 262144
+environment_allowlist: [PATH, TMPDIR]
