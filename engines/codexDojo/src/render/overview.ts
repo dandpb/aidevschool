@@ -80,7 +80,7 @@ export function renderOverview(state: AppState): string {
         ${model.visibleAgents
           .map(
             (agent, index) =>
-              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}">
+              `<button class="agent-node node-${index + 1}" type="button" data-agent="${escapeHtml(agent.id)}" aria-label="Ver detalhes do agente: ${escapeHtml(agent.name)}">
                 <span>${escapeHtml(agent.name)}</span>
               </button>`,
           )
@@ -131,7 +131,7 @@ export function renderOverview(state: AppState): string {
         ${model.visibleStages
           .map(
             (stage) => `
-              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}">
+              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}" aria-label="Ver etapa: ${escapeHtml(stage.label)} (Responsável: ${escapeHtml(stage.owner)})">
                 <span>${escapeHtml(stage.owner)}</span>
                 ${escapeHtml(stage.label)}
               </button>
