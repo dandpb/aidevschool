@@ -45,6 +45,9 @@ export class CameraRig {
   #dragging = false
   #lastX = 0
   #lastY = 0
+  /** When `false`, pointer + wheel events are ignored. Lets the host hand
+   *  the canvas to another interactive layer (e.g. a placement tool). */
+  #enabled = true
 
   constructor(domElement: HTMLElement, options: CameraRigOptions = {}) {
     this.#domElement = options.domElement ?? domElement
@@ -93,6 +96,16 @@ export class CameraRig {
     return this.#polar
   }
 
+  /** Camera input gate. `false` ignores drag/wheel until re-enabled. */
+  get enabled(): boolean {
+    return this.#enabled
+  }
+
+  set enabled(value: boolean) {
+    this.#enabled = value
+    if (!value) this.#dragging = false
+  }
+
   private apply(): void {
     const sinPolar = Math.sin(this.#polar)
     const x = this.#distance * sinPolar * Math.sin(this.#azimuth)
@@ -113,6 +126,7 @@ export class CameraRig {
   }
 
   #onPointerDown = (e: PointerEvent): void => {
+    if (!this.#enabled) return
     this.#dragging = true
     this.#lastX = e.clientX
     this.#lastY = e.clientY
@@ -120,7 +134,7 @@ export class CameraRig {
   }
 
   #onPointerMove = (e: PointerEvent): void => {
-    if (!this.#dragging) return
+    if (!this.#enabled || !this.#dragging) return
     const dx = e.clientX - this.#lastX
     const dy = e.clientY - this.#lastY
     this.#lastX = e.clientX
@@ -138,6 +152,7 @@ export class CameraRig {
   }
 
   #onWheel = (e: WheelEvent): void => {
+    if (!this.#enabled) return
     e.preventDefault()
     const factor = 1 + e.deltaY * ZOOM_SENSITIVITY
     this.#targetDistance = clamp(this.#targetDistance * factor, MIN_DISTANCE, MAX_DISTANCE)

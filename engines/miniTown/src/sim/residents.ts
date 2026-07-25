@@ -253,7 +253,8 @@ export class Resident {
     // the same. Otherwise the pathfinder would refuse (zone cells are
     // walkable but expensive; we still want to enter the cell).
     const fromCell = this.currentCell
-    const path = findPath(town.grid, fromCell, target.cell, town.rng)
+    // Bind once so `this` is the Town when findPath invokes the rng.
+    const path = findPath(town.grid, fromCell, target.cell, town.rng.bind(town))
     if (!path || path.length === 0) {
       this.#clearTrip()
       return

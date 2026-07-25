@@ -17,7 +17,6 @@
 
 import type { Building, Town } from "../scene/state"
 import { manhattan } from "./paths"
-import { Resident } from "./residents"
 
 /** Performance cap from the spec. */
 export const MAX_RESIDENTS = 50
@@ -47,8 +46,6 @@ export function spawnResidentsForTown(town: Town): void {
   if (residentials.length === 0) return
   if (town.residents.length >= MAX_RESIDENTS) return
 
-  // Map homeId -> resident count already spawned for that home, so we
-  // don't double-spawn on repeated ticks.
   const existingPerHome = new Map<string, number>()
   for (const resident of town.residents) {
     existingPerHome.set(resident.homeId, (existingPerHome.get(resident.homeId) ?? 0) + 1)
@@ -61,9 +58,7 @@ export function spawnResidentsForTown(town: Town): void {
     const toSpawn = Math.min(target - existing, MAX_PER_HOME - existing)
     for (let i = 0; i < toSpawn; i++) {
       if (town.residents.length >= MAX_RESIDENTS) return
-      const id = `p-${home.id}-${existing + i + 1}-${town.residents.length + 1}`
-      const resident = new Resident(id, home.id, null, home.cell)
-      town.addResident(resident)
+      town.addResident(home.id, null, home.cell)
     }
   }
 

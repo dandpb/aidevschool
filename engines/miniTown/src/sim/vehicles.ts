@@ -98,8 +98,11 @@ export class Vehicle {
   }
 
   #chooseNewDestination(town: TownView): void {
-    const target = town.pickRandomTrafficTarget(this.currentCell, this.id)
-    const path = target ? findPath(town.grid, this.currentCell, target.cell, town.rng) : null
+    const target = town.pickRandomTrafficTarget(this.currentCell)
+    // Bind once per call so `this` is the Town when findPath invokes it.
+    const path = target
+      ? findPath(town.grid, this.currentCell, target.cell, town.rng.bind(town))
+      : null
     if (!target || !path || path.length === 0) {
       this.path = []
       this.pathIndex = 0
@@ -119,5 +122,5 @@ export interface TownView {
   readonly grid: GridLike
   rng(): number
   isCellOccupiedByVehicle(cell: Cell, excludeId: string): boolean
-  pickRandomTrafficTarget(near: Cell, excludeId: string): { cell: Cell; buildingId: string } | null
+  pickRandomTrafficTarget(near: Cell): { cell: Cell; buildingId: string } | null
 }

@@ -18,7 +18,6 @@
 
 import type { Town } from "../scene/state"
 import { findAdjacentWalkable } from "./paths"
-import { Vehicle } from "./vehicles"
 
 /** Performance cap from the spec. */
 export const MAX_VEHICLES = 20
@@ -62,11 +61,9 @@ export function spawnVehiclesForTown(town: Town): void {
     const seed = seeds[seedIndex % seeds.length]
     if (!seed) return
     seedIndex += 1
-    const id = `v-${town.vehicles.length + 1}`
     const colorIdx = town.vehicles.length % CAR_COLORS.length
     const color = CAR_COLORS[colorIdx] ?? CAR_COLORS[0] ?? "#c0524a"
-    const vehicle = new Vehicle(id, color, seed.cell)
-    town.addVehicle(vehicle)
+    town.addVehicle(color, seed.cell)
   }
 }
 

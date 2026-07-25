@@ -8,17 +8,17 @@
  */
 
 import { BuildingConstruction, type ConstructionStage, STAGE_SECONDS } from "../sim/construction"
-import { Grid, ROAD_NEIGHBOR_OFFSETS } from "../sim/grid"
+import { Grid } from "../sim/grid"
+import type { Cell } from "../sim/paths"
+import { Resident as SimResident } from "../sim/residents"
 import { recomputeRoads } from "../sim/roads"
+import { Vehicle as SimVehicle } from "../sim/vehicles"
 import type { DayNightSystem, DayPhase } from "./dayNight"
 
 export type ZoneType = "residential" | "shop" | "workspace"
 
 /** Grid cell in world units. The town grid is `TILES × TILES` centred at origin. */
-export interface Cell {
-  readonly x: number
-  readonly y: number
-}
+export type { Cell }
 
 export interface Zone {
   readonly id: string
@@ -44,17 +44,15 @@ export interface Building {
   stageSeconds: number
 }
 
-export interface Resident {
-  readonly id: string
-  readonly homeId: string | null
-  readonly workId: string | null
-  readonly colorSeed: number
-}
-
-export interface Vehicle {
-  readonly id: string
-  readonly colorSeed: number
-}
+/**
+ * Convenience aliases: `town.residents[]` holds SIM-class instances (not a
+ * data-only snapshot) so renderers and tests can read `currentCell`,
+ * `currentActivity`, `path`, etc. directly. New code should import the
+ * `Resident` / `Vehicle` types from `sim/residents` / `sim/vehicles` and treat
+ * the arrays as the canonical sim state.
+ */
+export type Resident = SimResident
+export type Vehicle = SimVehicle
 
 /** Result of a `placeZone` call. */
 export type PlaceZoneResult =
@@ -80,8 +78,9 @@ export interface WorldSnapshot {
  * (zones, roads, buildings, residents, vehicles, traffic) push into it via
  * the `addX` methods and read it through the snapshot.
  *
- * Pure TypeScript: no THREE, no DOM. `tick(dt)` advances the day/night cycle
- * and the per-building construction state machine.
+ * Pure TypeScript: no THREE, no DOM. `tick(dt)` advances the day/night cycle,
+ * the per-building construction state machine, and every resident/vehicle
+ * path-marcher.
  */
 export class Town {
   readonly zones: Zone[] = []
@@ -96,6 +95,8 @@ export class Town {
   /** Per-instance counter — ids stay unique within a Town without any global state. */
   #idCounter = 0
   #paletteSeedCounter = 0
+  /** Deterministic 32-bit PRNG used by spawn/sim layers for tie-breaking. */
+  #rngState = 0x9e3779b9
   #listeners: Set<() => void> = new Set()
 
   constructor(public readonly dayNight: DayNightSystem) {}
@@ -116,6 +117,24 @@ export class Town {
 
   #notify(): void {
     for (const listener of this.#listeners) listener()
+  }
+
+  /**
+   * Deterministic 32-bit PRNG — splitmix32. Spawners and sim classes ask for
+   * `town.rng()` rather than calling `Math.random()` so test runs and
+   * rendered sessions stay reproducible.
+   */
+  rng(): number {
+    this.#rngState = (this.#rngState + 0x9e3779b9) >>> 0
+    let z = this.#rngState
+    z = Math.imul(z ^ (z >>> 16), 0x85ebca6b) >>> 0
+    z = Math.imul(z ^ (z >>> 13), 0xc2b2ae35) >>> 0
+    return ((z ^ (z >>> 16)) >>> 0) / 4294967296
+  }
+
+  /** Wall-clock sim time in hours — what the schedule reads to decide activity. */
+  get currentSimTime(): number {
+    return this.dayNight.simTime
   }
 
   addZone(type: ZoneType, x: number, y: number): Zone {
@@ -147,44 +166,96 @@ export class Town {
     return building
   }
 
-  addResident(homeId: string | null = null, workId: string | null = null): Resident {
+  /**
+   * Spawn a resident. The `homeCell` is where they start (and where the
+   * renderer's mesh is placed each frame). `homeId`/`workId` are building
+   * ids — `null` for unassigned. The Town always returns the SIM-class
+   * instance it stored so callers can read live sim state.
+   */
+  addResident(homeId: string | null, workId: string | null, homeCell: Cell): Resident {
     this.#idCounter += 1
-    const resident: Resident = {
-      id: this.#id("p"),
-      homeId,
-      workId,
-      colorSeed: (this.#idCounter * 2654435761) | 0,
-    }
+    const resident = new SimResident(this.#id("p"), homeId ?? "", workId, homeCell)
     this.residents.push(resident)
     return resident
   }
 
-  addVehicle(): Vehicle {
+  /**
+   * Spawn a vehicle. `startCell` must be a road cell — the traffic spawner
+   * is responsible for picking one.
+   */
+  addVehicle(color: string, startCell: Cell): Vehicle {
     this.#idCounter += 1
-    const vehicle: Vehicle = {
-      id: this.#id("v"),
-      colorSeed: (this.#idCounter * 2654435761) | 0,
-    }
+    const vehicle = new SimVehicle(this.#id("v"), color, startCell)
     this.vehicles.push(vehicle)
     return vehicle
   }
 
+  /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
+  findZoneById(id: string): Zone | null {
+    return this.zones.find((z) => z.id === id) ?? null
+  }
+
+  /** Read a building by id — `homeId` / `workId` are passed in by residents. */
+  findBuildingById(id: string | null): Building | null {
+    if (!id) return null
+    return this.buildings.find((b) => b.id === id) ?? null
+  }
+
+  /** Pick a random inhabited shop building. Drives resident shopping trips. */
+  pickRandomShopId(): string | null {
+    const shops = this.buildings.filter(
+      (b) => b.stage === "inhabited" && this.findZoneById(b.zoneId)?.type === "shop",
+    )
+    if (shops.length === 0) return null
+    const idx = Math.floor(this.rng() * shops.length)
+    return shops[idx]?.id ?? null
+  }
+
+  /**
+   * Pick the closest inhabited non-residential target for a car. Sorting by
+   * Manhattan distance keeps traffic local without a global RNG roll —
+   * small enough to evaluate every frame.
+   */
+  pickRandomTrafficTarget(near: Cell): { cell: Cell; buildingId: string } | null {
+    const targets = this.buildings.filter(
+      (b) => b.stage === "inhabited" && this.findZoneById(b.zoneId)?.type !== "residential",
+    )
+    if (targets.length === 0) return null
+    // Stable sort by Manhattan distance — closest first. No RNG so the
+    // result is deterministic for the same buildings set.
+    const sorted = targets
+      .slice()
+      .sort(
+        (a, b) =>
+          Math.abs(a.cell.x - near.x) +
+          Math.abs(a.cell.y - near.y) -
+          (Math.abs(b.cell.x - near.x) + Math.abs(b.cell.y - near.y)),
+      )
+    const target = sorted[0]
+    if (!target) return null
+    return { cell: target.cell, buildingId: target.id }
+  }
+
+  /** True if any vehicle other than `excludeId` currently sits on `cell`. */
+  isCellOccupiedByVehicle(cell: Cell, excludeId: string): boolean {
+    for (const v of this.vehicles) {
+      if (v.id === excludeId) continue
+      if (v.currentCell.x === cell.x && v.currentCell.y === cell.y) return true
+    }
+    return false
+  }
+
   /**
    * Validate → mark cell as zone → create building → recompute roads →
-   * notify listeners. Cells must currently be `grass`; otherwise the call
-   * returns a non-`placed` result and the grid is untouched.
+   * notify listeners. Roads are derived state — placing a zone on a road
+   * cell overwrites the road. Only an existing `zone` cell returns
+   * `occupied`. (blockId-based shared-block extension is preserved for
+   * multi-cell drag placement.)
    */
   placeZone(type: ZoneType, x: number, y: number, blockId: string | null = null): PlaceZoneResult {
     if (!this.grid.inBounds(x, y)) return { kind: "out-of-bounds" }
     const cell = this.grid.cellAt(x, y)
-    const extendsSharedBlock =
-      blockId !== null &&
-      cell?.kind === "road" &&
-      ROAD_NEIGHBOR_OFFSETS.some(([dx, dy]) => {
-        const neighbor = this.grid.cellAt(x + dx, y + dy)
-        return neighbor?.kind === "zone" && neighbor.blockId === blockId
-      })
-    if (cell?.kind !== "grass" && !extendsSharedBlock) return { kind: "occupied" }
+    if (cell?.kind === "zone") return { kind: "occupied" }
     const zone = this.addZone(type, x, y)
     this.grid.setCell(x, y, { kind: "zone", type, blockId })
     const building = this.addBuilding(zone.id, { x, y }, this.nextPaletteSeed())
@@ -218,6 +289,10 @@ export class Town {
       if (building.stage !== nextStage) building.stage = nextStage
       building.stageSeconds = construction.getProgress() * STAGE_SECONDS
     }
+    // Ponytail: walks residents / drives cars each frame. Without this loop
+    // the sim sits frozen even though the renderer animates the meshes.
+    for (const resident of this.residents) resident.tick(dt, this)
+    for (const vehicle of this.vehicles) vehicle.tick(dt, this)
     this.#notify()
     return this.snapshot()
   }
