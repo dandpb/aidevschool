@@ -3,10 +3,16 @@ import type { ActivityResultSummary, LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
 import { ActivityRenderer, emptyAnswerFor, isAnswerComplete } from "../components/ActivityRenderer";
 import { FeedbackPanel } from "../components/FeedbackPanel";
+import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { ActivityAnswer, EvaluationResult } from "../domain/evaluation";
 import type { AttemptFeedback } from "../domain/feedback";
-import type { Achievement, LearnerProgress } from "../domain/progress";
+import {
+  type Achievement,
+  type LearnerProgress,
+  MAP_INITIAL_LESSON_ID,
+  type OnboardingState,
+} from "../domain/progress";
 import { findModule } from "../domain/track";
 
 type AttemptState = {
@@ -48,6 +54,7 @@ export function LessonScreen({
   const [hintIndexByActivity, setHintIndexByActivity] = useState<Record<string, number>>({});
   const [hintsShownByActivity, setHintsShownByActivity] = useState<Record<string, string[]>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [onboarding, setOnboarding] = useState<OnboardingState>();
   const startedAtRef = useRef<Date | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -59,7 +66,10 @@ export function LessonScreen({
         ? services.useCases.startReview(lessonId).then((result) => result.progress)
         : services.useCases.startLesson(lessonId);
     void opening.then((progress) => {
-      if (!cancelled) onProgressChange(progress);
+      if (!cancelled) {
+        setOnboarding(progress.onboarding);
+        onProgressChange(progress);
+      }
     });
     return () => {
       cancelled = true;
@@ -193,6 +203,12 @@ export function LessonScreen({
   };
 
   if (stage === "intro") {
+    const taskCategory = onboarding?.taskCategory;
+    const showMapContext = mode === "initial" && lesson.id === MAP_INITIAL_LESSON_ID;
+    const entryHint =
+      showMapContext && onboarding?.confidence === "low"
+        ? lesson.activities[0]?.hints?.[0]
+        : undefined;
     return (
       <section className="screen" data-testid="lesson-intro" aria-labelledby="lesson-title">
         {module && <p className="eyebrow">{module.title}</p>}
@@ -211,6 +227,21 @@ export function LessonScreen({
               : lesson.objective}
           </p>
         </div>
+        {showMapContext && taskCategory && (
+          <div className="card task-context" data-testid="task-context">
+            <VoxelTaskArt category={taskCategory} />
+            <div>
+              <h2>Aplicação que você escolheu: {taskDetails(taskCategory).label}</h2>
+              <p>{taskDetails(taskCategory).guidance}</p>
+            </div>
+          </div>
+        )}
+        {entryHint && (
+          <div className="card card-note" data-testid="confidence-support">
+            <h2>Comece com calma</h2>
+            <p>Dica de partida: {entryHint}</p>
+          </div>
+        )}
         <button
           type="button"
           className="btn btn-primary"

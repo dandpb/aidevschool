@@ -87,8 +87,36 @@ describe("fluxo do app (integração)", () => {
 
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
-    expect(services.analytics.events.map((event) => event.event)).toContain("onboarding_completed");
-    expect((await services.progressRepo.load())?.onboarding.taskCategory).toBe("scheduling");
+    expect(screen.getByTestId("task-context")).toHaveTextContent("organizar um agendamento");
+    expect(screen.queryByTestId("confidence-support")).not.toBeInTheDocument();
+    expect(services.analytics.events).toContainEqual({
+      event: "onboarding_completed",
+      payload: { context: "work" },
+    });
+    expect((await services.progressRepo.load())?.onboarding).toEqual({
+      completed: true,
+      goal: "save_time",
+      context: "work",
+      confidence: "medium",
+      taskCategory: "scheduling",
+    });
+  });
+
+  it("usa categoria para contextualizar o Mapa Inicial e confiança baixa para oferecer apoio", async () => {
+    const user = userEvent.setup();
+    const { services } = makeServices({
+      progress: seededProgress((draft) => {
+        draft.onboarding.confidence = "low";
+        draft.onboarding.taskCategory = "news_research";
+      }),
+    });
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    await user.click(screen.getByTestId("continue-button"));
+
+    expect(await screen.findByTestId("task-context")).toHaveTextContent("pesquisar uma notícia");
+    expect(screen.getByTestId("confidence-support")).toHaveTextContent("Dica de partida");
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {
@@ -126,6 +154,12 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("completion-distinction")).toHaveTextContent(
       "competência verificada",
     );
+    expect(screen.getByTestId("route-explanation")).toHaveTextContent(
+      "fez uma checagem extra ou pediu apoio",
+    );
+    expect(await screen.findByTestId("result-task-context")).toHaveTextContent(
+      "organizar um agendamento",
+    );
 
     // 6) Evidência: uma por tentativa avaliada, envelope válido.
     expect(services.evidence.records).toHaveLength(2);
@@ -154,6 +188,27 @@ describe("fluxo do app (integração)", () => {
       activity.feedback.perCheck?.[missingId] ?? "",
     );
     expect(screen.queryByTestId("finish-lesson")).not.toBeInTheDocument();
+  });
+
+  it("explica a rota guiada sem atribuir erro a quem pediu dica antes de responder", async () => {
+    const user = userEvent.setup();
+    const { services } = makeServices({ progress: seededProgress() });
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    await user.click(screen.getByTestId("continue-button"));
+    await user.click(screen.getByTestId("start-lesson"));
+    await user.click(screen.getByTestId("hint-button"));
+    await answerActivity(user, firstLesson.activities[0], "right");
+    await user.click(screen.getByTestId("submit-attempt"));
+    await user.click(screen.getByTestId("finish-lesson"));
+
+    expect(await screen.findByTestId("route-explanation")).toHaveTextContent(
+      "fez uma checagem extra ou pediu apoio",
+    );
+    expect(screen.getByTestId("route-explanation")).not.toHaveTextContent(
+      "primeira resposta precisou",
+    );
   });
 
   it("retomada: reload com lição em andamento volta direto ao player", async () => {

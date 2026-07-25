@@ -1,6 +1,12 @@
+import { useEffect, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
-import { MAP_INITIAL_LESSON_ID } from "../domain/progress";
+import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
+import {
+  type LearnerProgress,
+  MAP_INITIAL_LESSON_ID,
+  type OnboardingTaskCategory,
+} from "../domain/progress";
 
 /**
  * Resultado (plano seção 9): habilidade praticada, o que foi bem, o que
@@ -10,20 +16,32 @@ import { MAP_INITIAL_LESSON_ID } from "../domain/progress";
  */
 export function ResultScreen({
   summary,
+  progress,
   onNextLesson,
   onHome,
   onMap,
 }: {
   summary: LessonSummary;
+  progress?: LearnerProgress;
   onNextLesson: (lessonId: string) => void;
   onHome: () => void;
   onMap: () => void;
 }) {
   const services = useServices();
+  const [loadedTaskCategory, setLoadedTaskCategory] = useState<OnboardingTaskCategory>();
   const { lesson } = summary;
   const successMessages = summary.activityResults
     .filter((result) => result.pass && result.feedback.summary)
     .map((result) => result.feedback.summary);
+
+  useEffect(() => {
+    if (progress) return;
+    void services.progressRepo
+      .load()
+      .then((savedProgress) => setLoadedTaskCategory(savedProgress?.onboarding.taskCategory));
+  }, [services, progress]);
+
+  const taskCategory = progress?.onboarding.taskCategory ?? loadedTaskCategory;
 
   return (
     <section className="screen" data-testid="result-screen" aria-labelledby="result-title">
@@ -67,14 +85,25 @@ export function ResultScreen({
       </div>
 
       {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && (
-        <div className="card" data-testid="route-explanation">
-          <h2>Seu próximo passo</h2>
-          <p>
-            {summary.nextLessonId === "l03"
-              ? "Você identificou os sinais de confiança logo de primeira. Vamos avançar para entender onde a IA ajuda e onde ela pode falhar."
-              : "Como você pediu apoio ou precisou tentar de novo, vamos começar com uma conversa simples com IA antes de avançar."}
-          </p>
-        </div>
+        <>
+          {taskCategory && (
+            <div className="card task-context" data-testid="result-task-context">
+              <VoxelTaskArt category={taskCategory} />
+              <div>
+                <h2>Sua próxima aplicação: {taskDetails(taskCategory).label}</h2>
+                <p>{taskDetails(taskCategory).guidance}</p>
+              </div>
+            </div>
+          )}
+          <div className="card" data-testid="route-explanation">
+            <h2>Seu próximo passo</h2>
+            <p>
+              {summary.nextLessonId === "l03"
+                ? "Você identificou os sinais de confiança logo de primeira. Vamos avançar para entender onde a IA ajuda e onde ela pode falhar."
+                : "Como você fez uma checagem extra ou pediu apoio no Mapa Inicial, vamos começar com uma conversa simples com IA antes de avançar."}
+            </p>
+          </div>
+        </>
       )}
 
       <div className="dev-teaser">

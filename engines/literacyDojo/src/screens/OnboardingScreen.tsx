@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useServices } from "../app/services";
+import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type {
   LearnerProgress,
   OnboardingConfidence,
@@ -35,23 +36,7 @@ const CONFIDENCE_OPTIONS: { value: OnboardingConfidence; label: string }[] = [
   { value: "high", label: "Uso bastante e quero refinar" },
 ];
 
-const TASK_OPTIONS: { value: OnboardingTaskCategory; label: string; description: string }[] = [
-  {
-    value: "scheduling",
-    label: "Organizar um agendamento",
-    description: "Transformar compromissos e prioridades em um plano claro.",
-  },
-  {
-    value: "communication",
-    label: "Preparar uma mensagem",
-    description: "Criar um primeiro rascunho de e-mail, aviso ou resposta.",
-  },
-  {
-    value: "news_research",
-    label: "Pesquisar uma notícia",
-    description: "Organizar perguntas e conferir fontes antes de compartilhar.",
-  },
-];
+const TASK_OPTIONS: OnboardingTaskCategory[] = ["scheduling", "communication", "news_research"];
 
 const STEPS = [
   { key: "welcome", question: "Vamos começar com uma conversa" },
@@ -156,24 +141,26 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           </p>
           <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
             {options.map((option) => {
-              const task = "description" in option ? option : undefined;
+              const task = typeof option === "string" ? taskDetails(option) : undefined;
+              const value = typeof option === "string" ? option : option.value;
+              const label = typeof option === "string" ? taskDetails(option).label : option.label;
               return (
                 <label
-                  key={option.value}
-                  className={`option-card${currentValue === option.value ? " is-selected" : ""}${task ? " task-option" : ""}`}
+                  key={value}
+                  className={`option-card${currentValue === value ? " is-selected" : ""}${task ? " task-option" : ""}`}
                 >
                   <input
                     type="radio"
                     name={`onboarding-${currentStep.key}`}
-                    value={option.value}
-                    checked={currentValue === option.value}
-                    data-testid={`onboarding-option-${option.value}`}
-                    onChange={() => handleSelect(option.value)}
+                    value={value}
+                    checked={currentValue === value}
+                    data-testid={`onboarding-option-${value}`}
+                    onChange={() => handleSelect(value)}
                   />
-                  {task && <VoxelTaskArt category={task.value} />}
+                  {task && <VoxelTaskArt category={value as OnboardingTaskCategory} />}
                   <span>
-                    <strong>{option.label}</strong>
-                    {task && <small>{task.description}</small>}
+                    <strong>{label}</strong>
+                    {task && <small>{task.guidance}</small>}
                   </span>
                 </label>
               );
@@ -191,17 +178,5 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
         {step < STEPS.length - 1 ? "Continuar" : "Começar meu Mapa Inicial"}
       </button>
     </section>
-  );
-}
-
-function VoxelTaskArt({ category }: { category: OnboardingTaskCategory }) {
-  const label =
-    category === "scheduling" ? "agenda" : category === "communication" ? "mensagem" : "notícia";
-  return (
-    <span className={`voxel-task voxel-task-${category}`} aria-label={`Ilustração de ${label}`}>
-      <span />
-      <span />
-      <span />
-    </span>
   );
 }

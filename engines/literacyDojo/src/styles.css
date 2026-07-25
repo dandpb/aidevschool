@@ -103,6 +103,12 @@ ol {
   border-color: #c7d2fe;
 }
 
+.task-context {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 .stats-row {
   display: flex;
   gap: 12px;
