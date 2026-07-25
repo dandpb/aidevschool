@@ -15,6 +15,36 @@ Fontes canônicas (leia quando precisar do contrato completo, não duplique aqui
 - [curriculum/catalog.md](curriculum/catalog.md) — catálogo/currículo de projetos
 - [learner/journal.md](learner/journal.md) — base de conhecimento global, append-only
 
+## Local school supervisor
+
+Always inspect the read-only status first. The supervisor can then perform one bounded tick or watch
+local canonical state without installing or creating a service:
+
+```bash
+rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status
+rtk python3 -m engines.miniMaxEvolutionEngine.supervisor tick
+rtk python3 -m engines.miniMaxEvolutionEngine.supervisor poll --interval-seconds 5 --max-interval-seconds 60
+rtk python3 -m engines.miniMaxEvolutionEngine.supervisor poll --autonomous --config .mavis/school-supervisor/autonomous.yaml
+```
+
+Polling is supervised by default. It publishes one local phase request and leaves it pending for
+an operator. `--autonomous` is explicit, disabled unless its existing local config is valid and
+enabled, and remains spec-phase-only. It does not provide cross-phase autonomy.
+
+This is a foreground local wrapper, not a daemon or service installer. It creates no cloud
+schedules, cron entries, launchd jobs, or runtime configuration. Polling and autonomous execution
+never grant mastery: canonical learner gates and independently verified evidence remain required.
+
+Slice 5 is verified with isolated fixtures over the real supervisor composition and injected role
+results. This is not a production daemon and does not certify broad cross-phase autonomy: only the
+`spec` tracer is autonomous, local, foreground, explicitly enabled, and fixture-verified.
+
+SessionStart only recommends the read-only `/devschool-status` and supervisor `status` surfaces. It
+must never invoke `tick`, `poll`, `execute`, recover a lease, resolve a request, clear a blocker, or
+start a model process. After interruption, follow the status `action` and `reason`: reconcile only
+durably authorized canonical advancement, otherwise fail or block the pending request and resume
+only after the recorded cause is repaired.
+
 ---
 
 ## Seu papel no Claude Code: o Orquestrador (Maestro / Mavis)
@@ -28,8 +58,10 @@ Regras de ouro do orquestrador:
 2. **Nunca avance de fase com trabalho não verificado.** Depois de cada produtor, rode o `verifier`.
 3. **Respeite o learning gate** (ver abaixo) — antes de a IA implementar uma unidade, o **aprendiz**
    tenta e é avaliado. Productive struggle vem antes da solução.
-4. **Filesystem é a fonte da verdade.** Todo handoff é um arquivo Markdown em `docs/`/`curriculum/`.
-   Sem estado escondido, sem banco, sem locks.
+4. **Filesystem é a fonte da verdade.** Todo handoff é um arquivo em `docs/`/`curriculum/` ou no
+   outbox operacional documentado. Sem estado escondido e sem banco. O supervisor pode usar uma
+   lease JSON curta e exclusiva apenas para impedir ticks concorrentes; ela nunca é autoridade de
+   domínio e nunca é roubada silenciosamente.
 5. **Falha nunca é silenciada.** Se algo não pode ser feito, documente o bloqueio e pare.
 
 ---
@@ -134,6 +166,58 @@ para diversidade tipo cross-model.
 
 ## Operação contínua (long-running)
 
+- `rtk python3 -m engines.miniMaxEvolutionEngine.supervisor tick` executa uma decisão limitada e pode
+  publicar uma solicitação supervisionada em `.mavis/school-supervisor/outbox/pending/`. Nesta etapa, o
+  supervisor **não executa** slash commands: uma sessão interativa ou operador consome a solicitação.
+  Cada solicitação usa somente o comando e os papéis da tabela de fases e exige um contexto novo
+  para o verifier.
+- `status` combina estado canônico, lease, ledger, tentativa e solicitação pendente sem escrever;
+  `complete`, `fail` e `block` encerram uma solicitação sem avançar estado canônico. `reconcile`
+  reconhece avanço já persistido, `abandon` recupera um planejamento interrompido antes da publicação,
+  e `resume` limpa o bloqueio operacional da fase atual. `recover-lease` só remove uma lease expirada
+  cujo processo não mantém mais o lock; nunca há roubo silencioso.
+- `learner/pipeline_status.yaml` e `learner/learning_state.yaml` continuam sendo a autoridade
+  canônica. Ledger e outbox são histórico operacional e nunca concedem mastery. Somente o adapter,
+  após autorização durável de verifier PASS e nova comparação canônica, pode persistir o próximo
+  `phase`; ele nunca altera estado do aprendiz. Um ciclo completo sem mastery espera evidência e a
+  transição pelo gate canônico.
+- O adapter autônomo é **desabilitado por padrão**. `execute <request-id>` consome exatamente uma
+  solicitação pendente somente com configuração local estrita em
+  `.mavis/school-supervisor/autonomous.yaml` (modelo em `autonomous.example.yaml`). Ele reserva
+  orçamento, mantém a lease durante produtor + verificador em processos/contextos separados, falha
+  fechado em interrupção e só avança uma fase após verifier PASS. `autonomous-status` inspeciona a
+  habilitação e execuções interrompidas. `tick` permanece supervisionado e somente publica.
+- O adapter nunca altera `learner/learning_state.yaml`, concede mastery ou retoma contexto Claude.
+  `poll` apenas repete o tick limitado, relê o estado canônico a cada iteração e pode consumir a
+  solicitação pendente quando `--autonomous` estiver explicitamente habilitado. Recuperação após
+  execução interrompida continua deliberadamente manual via inspeção, `reconcile` ou `fail`; a
+  solicitação pendente permanece disponível e nunca é redisparada automaticamente.
+- Neste slice, execução autônoma é limitada à fase `spec`: não há `Bash` nem comandos de teste.
+  Cada execução usa sessão UUID fresca e determinística por papel, HOME isolado, MCP vazio e
+  capacidades simbólicas convertidas em regras fechadas. Reservas e liquidações de orçamento são
+  duráveis; reserva sem liquidação cobra o máximo. Um PASS fresco autoriza o avanço em evento
+  `advancement_authorized`; reconciliação autônoma sem esse evento cria bloqueio de segurança.
+- Produtor e verificador recebem apenas contratos imutáveis, identidades/contextos e limites da
+  solicitação. O verificador parte dos arquivos do projeto, nunca do resultado do produtor. Os
+  processos rodam na raiz com ferramentas disponíveis explicitamente limitadas; `EditProject` vira
+  apenas `Edit(curriculum/<projeto>/**)`, enquanto `Bash`, agentes aninhados, estado canônico,
+  operações, ambiente e segredos permanecem negados.
+- O avanço compara novamente identidade e digests imediatamente antes da escrita e falha em qualquer
+  divergência. Isso é CAS por cooperação/advisory no filesystem, não uma transação entre arquivos:
+  escritores externos que ignoram o protocolo ainda podem correr no intervalo mínimo da persistência.
+- `poll` aceita intervalos e limite de ticks explícitos para execução/teste delimitado, aplica
+  backoff enquanto a projeção semântica não muda e volta ao intervalo inicial após mudança canônica.
+  `SIGINT`/`SIGTERM` apenas marcam cancelamento; a saída ocorre fora do handler, depois que a operação
+  limitada libera a lease. Estados de espera são read-only para currículo e aprendiz.
+- O runtime operacional fica em `.mavis/school-supervisor/`: ledger NDJSON append-only, lease curta,
+  configuração local e documentos pending/retired/resolved. Nunca edite esses arquivos manualmente.
+  Comece por `status`; use `reconcile` para avanço já autorizado, `fail`/`block` para preservar a fase,
+  `abandon` para planejamento não publicado, `resume` apenas depois do reparo e `recover-lease` apenas
+  para uma lease realmente expirada.
+- Limites conhecidos: um workspace, um projeto atual, polling foreground local e CAS cooperativo no
+  filesystem. Não é daemon, scheduler em nuvem, transação distribuída nem autoridade de mastery.
+  Somente `spec -> spec-done` é autônomo; implementação, review, benchmark e optimize continuam
+  supervisionados até terem sandbox de comandos verificável.
 - Para rodar **constantemente** (estilo MiniMax Agent Team), use o skill `/schedule` para agendar
   `/devschool-cycle` ou `/devschool-diagnose` numa rotina recorrente. **Rotinas rodam na nuvem da
   Anthropic e são faturadas** — peça confirmação ao usuário antes de criar; nunca crie sozinho.

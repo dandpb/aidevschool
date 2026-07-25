@@ -11,6 +11,11 @@ from engines.miniMaxEvolutionEngine.os_adapter import REPO_ROOT, prepare_workflo
 class EvolutionOsAdapterTest(unittest.TestCase):
     def test_session_start_hook_reports_yaml_machine_source(self) -> None:
         hook = REPO_ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        canonical = (
+            REPO_ROOT / "learner/pipeline_status.yaml",
+            REPO_ROOT / "learner/learning_state.yaml",
+        )
+        before = {path: path.read_bytes() for path in canonical}
         result = subprocess.run(
             ["bash", str(hook)],
             cwd=REPO_ROOT,
@@ -24,6 +29,10 @@ class EvolutionOsAdapterTest(unittest.TestCase):
             f"Pipeline source: {REPO_ROOT / 'learner/pipeline_status.yaml'}",
             result.stdout,
         )
+        self.assertIn("Supervisor status/recovery (read-only first)", result.stdout)
+        self.assertIn("SessionStart nunca inicia tick, poll, execute", result.stdout)
+        self.assertIn("Rode /devschool-status", result.stdout)
+        self.assertEqual(before, {path: path.read_bytes() for path in canonical})
 
     def test_prefers_sibling_yaml_status_over_conflicting_markdown(self) -> None:
         with TemporaryDirectory() as directory:
