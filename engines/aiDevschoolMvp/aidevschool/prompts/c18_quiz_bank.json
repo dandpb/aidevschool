@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c18_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C18",
+  "items": [
+    {
+      "item_id": "c18_q01",
+      "stem": "A colleague wants to paste a client's confidential memo into a public chatbot. What should they do first?",
+      "options": {
+        "A": "Paste it — chatbots forget everything",
+        "B": "Paste only the names",
+        "C": "Keep it out unless policy and permission clearly allow it"
+      }
+    },
+    {
+      "item_id": "c18_q02",
+      "stem": "\"Consent\" in this lesson mainly means:",
+      "options": {
+        "A": "Permission from the people or owners who control the data or work",
+        "B": "A thumbs-up emoji from any coworker",
+        "C": "The AI saying the text looks fine"
+      }
+    },
+    {
+      "item_id": "c18_q03",
+      "stem": "Why can AI output still raise copyright problems?",
+      "options": {
+        "A": "Copyright only covers paper books",
+        "B": "The output may copy protected wording or images from somewhere else",
+        "C": "Copyright ends when text is digital"
+      }
+    },
+    {
+      "item_id": "c18_q04",
+      "stem": "Who usually stays responsible when AI-assisted text goes to a client?",
+      "options": {
+        "A": "Only the AI company",
+        "B": "Nobody, if the AI wrote most of it",
+        "C": "The person and organization who send the work"
+      }
+    },
+    {
+      "item_id": "c18_q05",
+      "stem": "A designer feeds a rival's poster into an AI and publishes a near copy. Main issue?",
+      "options": {
+        "A": "They used someone else's protected work without rights",
+        "B": "The colors were too bright",
+        "C": "The file name was too long"
+      }
+    },
+    {
+      "item_id": "c18_q06",
+      "stem": "Your firm buys a research PDF marked \"internal use only.\" Safe AI move?",
+      "options": {
+        "A": "Upload it to any free tool to summarize for social media",
+        "B": "Follow the license and company rules before any AI use or sharing",
+        "C": "Share it widely so the AI can \"learn faster\""
+      }
+    },
+    {
+      "item_id": "c18_q07",
+      "stem": "Open public facts differ from a full news article because:",
+      "options": {
+        "A": "All text online is free to copy forever",
+        "B": "Short facts may be usable, but the article's wording can still be protected",
+        "C": "News sites never use copyright"
+      }
+    },
+    {
+      "item_id": "c18_q08",
+      "stem": "Before you put customer data into any AI tool, you should know:",
+      "options": {
+        "A": "Whether you have the right and the consent to use that data that way",
+        "B": "Only the file size",
+        "C": "Only whether the summary sounds polite"
+      }
+    },
+    {
+      "item_id": "c18_q09",
+      "stem": "An AI writes a poem \"in the style of\" a living author and you sell it. Best reading?",
+      "options": {
+        "A": "Style mimicry always erases every duty",
+        "B": "Selling it can still step on rights and trust — check rules before you publish",
+        "C": "Poems cannot be owned"
+      }
+    }
+  ]
+}

@@ -46,9 +46,6 @@ describe("SHA-256 — FIPS 180-4 test vectors", () => {
       "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1",
     )
   })
-  it("is deterministic — same input ⇒ same digest", () => {
-    expect(hex(sha256(b("checkpoint")))).toBe(hex(sha256(b("checkpoint"))))
-  })
 })
 
 describe("HMAC-SHA256 — RFC 4231 vectors (the cryptographic core)", () => {

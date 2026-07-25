@@ -94,13 +94,12 @@ language is ideal for which project).
 
 ## Per-project layout
 
-The tree below is a **conceptual ecosystem target package** assembled from the
-[project-package checklist](../../engines/codexDojo/ecosystem/templates/project-package.md)
-and current project conventions; it is not a literal scaffold or a claim that
-every project contains every path. The current `_shared/project_template/`
-contains only `docs/spec_template.md` and `docs/status_schema.md`.
-Project-local documentation and package files are authoritative for the layout
-that exists today.
+The tree below is a **conceptual ecosystem target package** assembled from
+current project conventions; it is not a literal scaffold or a claim that every
+project contains every path. The current `_shared/project_template/` contains
+only `docs/spec_template.md` and `docs/status_schema.md`. Project-local
+documentation and package files are authoritative for the layout that exists
+today.
 
 ```text
 NN_project_name/
@@ -187,9 +186,9 @@ alone do not prove learner mastery (see
 ## Shared utilities
 
 `curriculum/_shared/` holds cross-project Python: the arena (`gate.py`, rubric), the benchmark runner,
-contracts, and `project_template/` (the canonical skeleton for a new project). `curriculum/__init__.py`
-makes it importable as `curriculum._shared.*`. The per-project completion checklist lives at
-`engines/codexDojo/ecosystem/templates/project-package.md`.
+contracts, and `project_template/` (a starting skeleton for a new project).
+`curriculum/__init__.py` makes it importable as `curriculum._shared.*`.
+Per-project completion evidence belongs in that project's local contract.
 
 > **Domain language:** [`curriculum/CONTEXT.md`](../../curriculum/CONTEXT.md)
 > defines the bounded-context vocabulary. `catalog.md` remains the data source

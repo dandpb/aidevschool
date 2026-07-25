@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 # Minimal pivot: drop poller, single docker stats JSON snapshot per run.
-# Usage: ./run_matrix.sh
+# Usage: RESULTS_DIR_NAME=results-N3-optimized MATRIX_N=3 ./run_matrix.sh
 set -euo pipefail
 
 PROJ="/Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter"
 SCEN_DIR="$PROJ/benchmarks/scenarios"
-RES_DIR="$PROJ/benchmarks/results"
+RESULTS_DIR_NAME=${RESULTS_DIR_NAME:-results}
+if [[ ! "$RESULTS_DIR_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+  echo "ERROR: RESULTS_DIR_NAME must be a single safe directory name" >&2
+  exit 2
+fi
+RES_DIR="$PROJ/benchmarks/$RESULTS_DIR_NAME"
 export PATH=/opt/homebrew/bin:$PATH
 
 # image, internal-port
@@ -16,8 +21,7 @@ declare -A C_NAME=([go]=rl-go-bench [rust]=rl-rust-bench [node]=rl-node-bench)
 N=${MATRIX_N:-1}
 SCENARIOS=(baseline stress spike endurance)
 
-# Clean all results dirs
-rm -rf "$RES_DIR/go" "$RES_DIR/rust" "$RES_DIR/node"
+rm -rf "$RES_DIR"
 mkdir -p "$RES_DIR"/{go,rust,node}
 
 # Snapshot stats as JSON

@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c08_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C08",
+  "items": [
+    {
+      "item_id": "c08_q01",
+      "stem": "When you send a normal chat message, what is the AI mainly doing?",
+      "options": {
+        "A": "Producing an answer with know-how it already learned",
+        "B": "Rebuilding its entire practice phase from zero",
+        "C": "Hiring a new research team for your question"
+      }
+    },
+    {
+      "item_id": "c08_q02",
+      "stem": "The long phase of learning from many examples is best described as:",
+      "options": {
+        "A": "The wait before the AI answers one chat",
+        "B": "The AI's practice phase, when dials get tuned on examples",
+        "C": "The moment you click \"copy\" on a reply"
+      }
+    },
+    {
+      "item_id": "c08_q03",
+      "stem": "Why is everyday answering usually much faster than the practice phase?",
+      "options": {
+        "A": "Chats always use shorter words than books",
+        "B": "Your phone runs hotter than a data center",
+        "C": "Practice updates huge know-how; answering reuses what is already learned"
+      }
+    },
+    {
+      "item_id": "c08_q04",
+      "stem": "A product team says, \"We finished the practice phase last year; users only ask it now.\" What does that mean?",
+      "options": {
+        "A": "Users rewrite the internal dials with every click",
+        "B": "Practice already happened; people now use the finished know-how",
+        "C": "The system refuses all new questions after one year"
+      }
+    },
+    {
+      "item_id": "c08_q05",
+      "stem": "Which action is part of using the AI, not the big practice phase?",
+      "options": {
+        "A": "Typing instructions and reading the reply in a chat",
+        "B": "Spending weeks adjusting dials on millions of examples",
+        "C": "Building a new computer hall for practice jobs"
+      }
+    },
+    {
+      "item_id": "c08_q06",
+      "stem": "Extra practice on one narrow topic (for example, only medical letters) is:",
+      "options": {
+        "A": "Deleting the original know-how forever",
+        "B": "The same as one casual chat message",
+        "C": "A focused add-on practice step, still separate from daily Q&A"
+      }
+    },
+    {
+      "item_id": "c08_q07",
+      "stem": "Someone claims each set of instructions you type restarts the whole practice phase. What is wrong?",
+      "options": {
+        "A": "Those instructions are illegal in most countries",
+        "B": "Normal use applies existing know-how; full practice is a separate, heavy step",
+        "C": "AI systems cannot read text at all"
+      }
+    },
+    {
+      "item_id": "c08_q08",
+      "stem": "Baking a cake versus serving a slice is a useful picture because:",
+      "options": {
+        "A": "Heavy preparation differs from the quick moment of use",
+        "B": "Both steps always take exactly the same time",
+        "C": "Serving changes the recipe inside the oven"
+      }
+    },
+    {
+      "item_id": "c08_q09",
+      "stem": "You notice a wrong answer in chat. What did *not* just happen by default?",
+      "options": {
+        "A": "The AI may have followed a weak pattern from older practice",
+        "B": "You may need a clearer question or a human check",
+        "C": "Your single message fully rebuilt the AI's practice phase"
+      }
+    }
+  ]
+}

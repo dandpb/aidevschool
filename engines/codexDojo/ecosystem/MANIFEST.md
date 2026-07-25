@@ -24,7 +24,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `engines/codexdojo-os-prototype/src/engines/` | Typed six-engine registry, safe embedded URL resolution, source-bound raw-evidence intake, and honest unavailable states. Production URLs use `VITE_CODEXDOJO_URL`, `VITE_PIXELDOJO_URL`, and `VITE_VOXELDOJO_URL`. |
 | `engines/codexdojo-os-prototype/bridge/` | Vite-development-only loopback bridge. It maps three exact action IDs to fixed commands; callers cannot supply paths, commands, or arguments. |
 | `engines/codexdojo-os-prototype/src/data/learner.ts` | Generated read-only learner view from the shared substrate; never edited by hand. |
-| `engines/codexDojo/ecosystem/` | Canonical manifest, completion audit, prompts, runbooks, memory, evaluation, and templates. |
+| `engines/codexDojo/ecosystem/` | Canonical manifest, completion audit, prompts, runbooks, memory, and evaluation contracts. |
 | `docs/design/allium/` | Formal domain-level Allium specs for dashboard, learner substrate, tutor core, orchestration, curriculum, pixelDojo games, arena, and distributed-cache verification behaviour. |
 | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` | Legacy/refactoring contract: characterization tests, code-smell catalog, migration strategies, and before/after metrics. |
 | `engines/minimaxDojo/` | Deep tutor core: 14-agent Agora Continuum, state machine, gates, whiteboard. |
@@ -67,18 +67,18 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 1 | Architecture of the multi-agent ecosystem | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/minimaxDojo/docs/00_architecture.md`, `docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md`, `docs/design/allium/minimax-agora-continuum.allium`, `docs/design/allium/minimax-evolution-engine.allium` |
 | 2 | List of agents and responsibilities | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/docs/01_agent_roster.md` |
 | 3 | Continuous execution workflow | `engines/codexDojo/ecosystem/OPERATING_MODEL.md`, `engines/codexDojo/ecosystem/OPENCLAW_RUNBOOK.md`, `.mavis/plans/plan.yaml` |
-| 4 | Project folder structure | `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `curriculum/01_rate_limiter/` |
-| 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/codexDojo/ecosystem/MEMORY_CURATION.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
-| 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
-| 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/technology-comparison.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
+| 4 | Project folder structure | `engines/codexDojo/ecosystem/ROADMAP.md`, `curriculum/01_rate_limiter/` |
+| 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
+| 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
+| 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
 | 8 | Canonical 19-entry curriculum (00–18; 18 programming projects) | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/README.md` (roster) |
 | 11 | Run the OpenClaw checklist explicitly | `engines/codexDojo/ecosystem/OPENCLAW_RUNBOOK.md`, `engines/openclaw/README.md` (simulate-grade workflow; no background daemon or event bus) |
 | 12 | Ludic learning surfaces with extensible content | `engines/pixelDojo/pixel-quest/`, `engines/voxelDojo/`, and the explore-only `engines/miniTown/`; mastery boundaries live in their contracts. |
-| 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
+| 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `docs/PROMPTS/00_IDEIAS.md` |
 | 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
-| 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md` |
+| 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
 | 16 | Metrics for real refactor improvement | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
 | 17 | Nontechnical AI microlearning | `docs/VISION.md`, `docs/design/micro-lesson-contract.md`, `docs/design/ai-literacy/`, `curriculum/ai-literacy/`, `engines/literacyDojo/` |
 
@@ -90,7 +90,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Technology use-case comparisons | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
 | Robust application construction | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/ROADMAP.md` |
 | Software architecture models | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/OPERATING_MODEL.md` |
-| Code review and quality | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md` |
+| Code review and quality | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
 | Tests and metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Professional AI integration | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md` |
 | AI literacy for nontechnical people | `curriculum/ai-literacy/`, `engines/literacyDojo/`, `docs/design/ai-literacy/` |
@@ -172,7 +172,7 @@ python3 -m unittest engines.test_engine_contracts
 cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 
 # OpenClaw checklist runner (tracer bullet)
-python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --reset --max-events 20
+python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --mode simulate --max-events 20
 python3 -m pytest engines/openclaw/tests/
 python3 -m engines.openclaw --preview
 ```

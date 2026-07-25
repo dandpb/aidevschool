@@ -88,8 +88,8 @@ elements:
     content:
       align: [left, middle]
       text: |
-        <p><span style="font-size:9.5px; color:$ink;"><strong>src/content/</strong></span></p>
-        <p><span style="font-size:8px; color:$muted;">packs data-only + reviewSlice.ts gerado (fan-out p/ 16 jogos)</span></p>
+        <p><span style="font-size:9.5px; color:$ink;"><strong>shared/content.ts</strong></span></p>
+        <p><span style="font-size:8px; color:$muted;">projeção data-only gerada uma vez e importada pelos jogos</span></p>
   - elementId: l-facts
     elementType: text
     bounds: [276, 182, 204, 288]

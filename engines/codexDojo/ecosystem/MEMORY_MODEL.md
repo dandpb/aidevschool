@@ -81,6 +81,8 @@ Write memory only after a cycle creates evidence:
 - Private credentials.
 - Large logs that can be regenerated.
 
-## Curation Loop
+## Curation Boundary
 
-Active curation is defined in [MEMORY_CURATION.md](./MEMORY_CURATION.md). The curation contract distinguishes documented memory layers (this document) from the operational curation loop that keeps learner state fresh.
+The files above are the durable memory contract. Update them only after
+evidence-bearing work, and regenerate derived views through the substrate; no
+separate curation template is authoritative.

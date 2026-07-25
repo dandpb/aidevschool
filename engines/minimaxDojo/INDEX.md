@@ -44,9 +44,9 @@ Roster: [`agents/README.md`](agents/README.md). Prompts: [`prompts/per_agent/`](
 
 | Componente | Doc | Canônico |
 |------------|-----|----------|
-| State machine | [core/state_machine/](core/state_machine/) | [docs/02_state_machine.md](docs/02_state_machine.md) |
-| Gates (portão) | [core/gates/](core/gates/) | [docs/04_empirical_gates.md](docs/04_empirical_gates.md) |
-| Memory (whiteboard) | [core/memory/](core/memory/) | [docs/05_memory_system.md](docs/05_memory_system.md) |
+| State machine | [core/state_machine.py](core/state_machine.py) | [docs/02_state_machine.md](docs/02_state_machine.md) |
+| Gates (portão) | [core/gates.py](core/gates.py) | [docs/04_empirical_gates.md](docs/04_empirical_gates.md) |
+| Memory (whiteboard) | [core/memory.py](core/memory.py) | [docs/05_memory_system.md](docs/05_memory_system.md) |
 | Scheduler (Cronos) | [prompts/per_agent/cronos.md](prompts/per_agent/cronos.md) + [whiteboard/cron_registry.yaml](whiteboard/cron_registry.yaml) | same |
 
 ## 📋 Templates de Saída (prompts/cycles/)

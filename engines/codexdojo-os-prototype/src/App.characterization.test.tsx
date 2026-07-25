@@ -1,14 +1,14 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
-import App from './App'
+import DesktopApp from './desktop/DesktopApp'
 
 afterEach(cleanup)
 
 describe('codexDojo OS current behavior', () => {
   it('mounts the default desktop with Dojo and Learn Mode visible', () => {
     // Given
-    render(<App />)
+    render(<DesktopApp />)
 
     // When
     const workspace = screen.getByRole('region', { name: 'Área de trabalho' })
@@ -22,7 +22,7 @@ describe('codexDojo OS current behavior', () => {
   it('opens Terminal and completes the learn-process interaction', async () => {
     // Given
     const user = userEvent.setup()
-    render(<App />)
+    render(<DesktopApp />)
 
     // When
     const terminalButtons = screen.getAllByRole('button', { name: 'Terminal' })
@@ -41,7 +41,7 @@ describe('codexDojo OS current behavior', () => {
   it('filters launcher apps by a user query and launches the result', async () => {
     // Given
     const user = userEvent.setup()
-    render(<App />)
+    render(<DesktopApp />)
 
     // When
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
@@ -58,7 +58,7 @@ describe('codexDojo OS current behavior', () => {
   it('closes the launcher when the backdrop is pressed', async () => {
     // Given
     const user = userEvent.setup()
-    render(<App />)
+    render(<DesktopApp />)
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
 
     // When

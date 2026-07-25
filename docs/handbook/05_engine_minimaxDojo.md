@@ -165,19 +165,19 @@ UPPERCASE Portuguese (`APRESENTANDO`, …); the Mavis view uses lowercase (`apre
 
 ## The Python core (it really runs)
 
-`core/{state_machine,gates,memory}/` ship a deterministic **reference implementation** in Python
-(`__init__.py`, 135 / 74 / 128 lines) covered by ~813 lines of contract tests in `tests/`. Only
+`core/{state_machine,gates,memory}.py` ship a deterministic **reference implementation** in Python
+(137 / 67 / 81 lines) covered by the contract tests in `tests/`. Only
 `exercises/` and `reports/` are README-only. (The
 `core/`, `tests/`, and `src/` READMEs were corrected to reflect this — earlier versions called the
 code "reserved.")
 
-`core/state_machine/__init__.py` defines `DeterminismError`, `STATES`, `SUB_STATES`,
-`MAX_RETRIES = 3`, and `UnitStateMachine`. `core/gates/__init__.py` hardcodes
-`DEFAULT_MUTATION_THRESHOLD = 0.65`, `DEFAULT_COVERAGE_THRESHOLD = 0.80`, and a 16-item
-`ANTI_PATTERN_BLACKLIST`. The tests import via absolute paths, so run them **from the repo root**:
+`core/state_machine.py` defines `DeterminismError`, the config-sourced `MAX_RETRIES`, and
+`UnitStateMachine`. `core/gates.py` defines `GateResult` and `EmpiricalGate`; numeric fallbacks live
+in `core/config.py`, while normal operation reads `config/learner.yaml`. Run the core suite from the
+repo root:
 
 ```bash
-python3 -m unittest discover -s engines/minimaxDojo/tests -t .   # 53 tests
+make test-core
 ```
 
 ## Memory system (3 layers)

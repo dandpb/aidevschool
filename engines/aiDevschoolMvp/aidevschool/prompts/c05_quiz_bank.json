@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c05_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C05",
+  "items": [
+    {
+      "item_id": "c05_q05",
+      "stem": "\"I'm 95% sure this note is complete\" is best treated as:",
+      "options": {
+        "A": "Legal proof in court",
+        "B": "An internal estimate you may still verify",
+        "C": "A promise that nothing is missing"
+      }
+    },
+    {
+      "item_id": "c05_q02",
+      "stem": "A weather-style \"70% chance of rain\" on a dry day most nearly means:",
+      "options": {
+        "A": "The app is broken forever",
+        "B": "Rain was impossible",
+        "C": "In many similar days, about 7 in 10 would see rain"
+      }
+    },
+    {
+      "item_id": "c05_q06",
+      "stem": "If ten similar emails were spam and this one scores high, the system is:",
+      "options": {
+        "A": "Estimating from patterns in similar cases",
+        "B": "Reading the sender's mind",
+        "C": "Guaranteeing this email is spam"
+      }
+    },
+    {
+      "item_id": "c05_q03",
+      "stem": "Uncertainty remains in AI answers mainly because they:",
+      "options": {
+        "A": "Always refuse to answer",
+        "B": "Work from patterns, not perfect certainty",
+        "C": "Print random letters only"
+      }
+    },
+    {
+      "item_id": "c05_q07",
+      "stem": "Why is leftover uncertainty normal?",
+      "options": {
+        "A": "AI tools never use data",
+        "B": "Estimates remove all doubt by design",
+        "C": "Real inputs vary, and patterns do not cover every case"
+      }
+    },
+    {
+      "item_id": "c05_q01",
+      "stem": "An AI says \"90% sure\" and is wrong once. What is the fairest reading?",
+      "options": {
+        "A": "The AI lied on purpose",
+        "B": "Percentages are meaningless in all tools",
+        "C": "The score was an estimate, not a guarantee for this one case"
+      }
+    },
+    {
+      "item_id": "c05_q08",
+      "stem": "When stakes are high and the AI is \"fairly sure,\" you should:",
+      "options": {
+        "A": "Publish without reading",
+        "B": "Hide the score from everyone",
+        "C": "Add a human check on the claims that matter"
+      }
+    },
+    {
+      "item_id": "c05_q09",
+      "stem": "A single surprising miss most usefully tells you to:",
+      "options": {
+        "A": "Never use numbers again",
+        "B": "Keep using judgment and allow for uncertainty",
+        "C": "Trust the next score even more blindly"
+      }
+    },
+    {
+      "item_id": "c05_q04",
+      "stem": "A high confidence score should make you:",
+      "options": {
+        "A": "Still judge the stakes before you rely on it",
+        "B": "Skip every check automatically",
+        "C": "Assume the AI has feelings about the topic"
+      }
+    }
+  ]
+}

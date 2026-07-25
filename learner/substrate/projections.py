@@ -22,6 +22,7 @@ from learner.substrate.dashboard_data import (
 from learner.substrate.ts_render import (
     render_codexdojo_os_ts,
     render_dashboard_ts,
+    render_mission_catalog_ts,
     render_pixel_review_ts,
     render_voxel_review_ts,
 )
@@ -102,6 +103,26 @@ def build_learner_snapshot_views(
     }
 
 
+def build_mission_catalog_views(
+    source_root: Path,
+    output_root: Path,
+    state: dict[str, Any],
+    today: date | None = None,
+) -> dict[Path, str]:
+    from learner.substrate.mission_catalog import load_mission_catalog
+
+    del state, today
+    catalog = load_mission_catalog(source_root)
+    return {
+        output_root
+        / "engines"
+        / "codexdojo-os-prototype"
+        / "src"
+        / "data"
+        / "missions.ts": render_mission_catalog_ts(catalog),
+    }
+
+
 def build_game_review_views(
     source_root: Path,
     output_root: Path,
@@ -115,13 +136,9 @@ def build_game_review_views(
     views = {
         output_root / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts": render_pixel_review_ts(review_slice),
     }
-    voxel_root = output_root / "engines" / "voxelDojo"
-    voxel_paths = sorted(voxel_root.glob("game-*/src/content/reviewSlice.ts"))
-    if not voxel_paths:
-        voxel_paths = [voxel_root / "game-10-hash-ring" / "src" / "content" / "reviewSlice.ts"]
-    voxel_content = render_voxel_review_ts(review_slice)
-    for path in voxel_paths:
-        views[path] = voxel_content
+    views[
+        output_root / "engines" / "voxelDojo" / "shared" / "content.ts"
+    ] = render_voxel_review_ts(review_slice)
     return views
 
 
@@ -151,6 +168,7 @@ def build_generated_views(
         build_mavis_views,
         build_whiteboard_views,
         build_learner_snapshot_views,
+        build_mission_catalog_views,
         build_game_review_views,
         build_dojotoday_views,
     ):

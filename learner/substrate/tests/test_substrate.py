@@ -801,19 +801,8 @@ class TestLearningGate(unittest.TestCase):
             self.assertIn(heading, diagnostic, f"diagnostic.md missing required section: {heading!r}")
 
 
-class TestMemoryCurationContract(unittest.TestCase):
-    """Verify the operational contract in `engines/codexDojo/ecosystem/MEMORY_CURATION.md`.
-
-    The contract is owned by Mnemosyne. The substrate (`sync()`) is the only
-    writer of derived views; this test pins the invariants the registrar must
-    not break: append-only journal, no raw chat dumps, no mastery from docs
-    alone, substrate as the writer of derived views.
-    """
-
+class TestMemoryContract(unittest.TestCase):
     def test_substrate_runs_cleanly(self):
-        """The curation checklist requires `python3 -m learner.substrate` to
-        succeed. Run it as the test, asserting no exceptions are raised.
-        """
         from learner.substrate import sync
 
         with isolated_sync_outputs() as root:

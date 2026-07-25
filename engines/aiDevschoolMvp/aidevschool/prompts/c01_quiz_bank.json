@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c01_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C01",
+  "items": [
+    {
+      "item_id": "c01_q01",
+      "stem": "What is AI, in plain terms?",
+      "options": {
+        "A": "Software that learns patterns from many examples",
+        "B": "A human mind living inside a computer",
+        "C": "A perfect encyclopedia that never errs"
+      }
+    },
+    {
+      "item_id": "c01_q02",
+      "stem": "When an AI writes a fluent answer, what is it mainly doing?",
+      "options": {
+        "A": "Checking every fact on the live web first",
+        "B": "Feeling sure about the topic",
+        "C": "Predicting likely next words from patterns it learned"
+      }
+    },
+    {
+      "item_id": "c01_q03",
+      "stem": "Which statement is true?",
+      "options": {
+        "A": "AI always understands your feelings",
+        "B": "AI can be useful without thinking like a person",
+        "C": "AI never makes mistakes"
+      }
+    },
+    {
+      "item_id": "c01_q04",
+      "stem": "How is a simple calculator different from most modern AI?",
+      "options": {
+        "A": "A calculator follows fixed math steps; AI leans on learned patterns",
+        "B": "A calculator has feelings; AI does not",
+        "C": "They work in exactly the same way"
+      }
+    },
+    {
+      "item_id": "c01_q05",
+      "stem": "A colleague says \"the AI knows the answer.\" What is a safer way to say that?",
+      "options": {
+        "A": "The AI has personal memories of your company",
+        "B": "The AI is conscious and careful",
+        "C": "The AI is producing wording that often fits similar requests"
+      }
+    },
+    {
+      "item_id": "c01_q06",
+      "stem": "What is AI not?",
+      "options": {
+        "A": "A tool that can draft text or sort patterns",
+        "B": "A person with goals, beliefs, and life experience",
+        "C": "Software people can use at work"
+      }
+    },
+    {
+      "item_id": "c01_q07",
+      "stem": "Why can an AI sound confident and still be wrong?",
+      "options": {
+        "A": "Smooth wording comes from patterns, not from checked truth",
+        "B": "It always double-checks with a human first",
+        "C": "Confidence means it looked the fact up"
+      }
+    },
+    {
+      "item_id": "c01_q08",
+      "stem": "During the AI's practice phase, what does it mainly learn from?",
+      "options": {
+        "A": "Your private thoughts",
+        "B": "Magic rules no one can describe",
+        "C": "Many examples of text, images, or other data"
+      }
+    },
+    {
+      "item_id": "c01_q09",
+      "stem": "You should treat an AI answer as:",
+      "options": {
+        "A": "Final legal proof",
+        "B": "A helpful draft you still need to judge",
+        "C": "Something only engineers can read"
+      }
+    }
+  ]
+}

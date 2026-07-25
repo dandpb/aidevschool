@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c24_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C24",
+  "items": [
+    {
+      "item_id": "c24_q01",
+      "stem": "AI is changing many jobs. The most balanced view is:",
+      "options": {
+        "A": "All jobs vanish next year",
+        "B": "Nothing will ever change",
+        "C": "Tasks shift; people adapt and oversee AI"
+      }
+    },
+    {
+      "item_id": "c24_q02",
+      "stem": "A healthy attitude toward AI at work is to:",
+      "options": {
+        "A": "Learn to use it well and check it",
+        "B": "Fear it completely",
+        "C": "Ignore it fully"
+      }
+    },
+    {
+      "item_id": "c24_q03",
+      "stem": "Who benefits most when AI is shared fairly?",
+      "options": {
+        "A": "Only big companies",
+        "B": "Workers, customers, and communities",
+        "C": "No one"
+      }
+    },
+    {
+      "item_id": "c24_q04",
+      "stem": "One real risk of AI in society is:",
+      "options": {
+        "A": "It is always free",
+        "B": "It has no impact",
+        "C": "Bias or unfair outcomes if unchecked"
+      }
+    },
+    {
+      "item_id": "c24_q05",
+      "stem": "The best role for people alongside AI is usually:",
+      "options": {
+        "A": "Guiding, checking, and deciding",
+        "B": "Doing nothing",
+        "C": "Competing with it"
+      }
+    },
+    {
+      "item_id": "c24_q06",
+      "stem": "Why talk about AI's impact rather than ignore it?",
+      "options": {
+        "A": "It is fun gossip",
+        "B": "We can shape fair rules and habits",
+        "C": "It slows progress to zero"
+      }
+    },
+    {
+      "item_id": "c24_q07",
+      "stem": "AI in the economy will most likely:",
+      "options": {
+        "A": "End all work",
+        "B": "Create no change",
+        "C": "Change tasks and create new roles"
+      }
+    },
+    {
+      "item_id": "c24_q08",
+      "stem": "A fair way to adopt AI is to:",
+      "options": {
+        "A": "Include the people it affects in decisions",
+        "B": "Let it decide everything",
+        "C": "Keep it secret from staff"
+      }
+    },
+    {
+      "item_id": "c24_q09",
+      "stem": "Your best response to AI change is to:",
+      "options": {
+        "A": "Panic",
+        "B": "Keep learning and use it with judgment",
+        "C": "Opt out of all tools"
+      }
+    }
+  ]
+}

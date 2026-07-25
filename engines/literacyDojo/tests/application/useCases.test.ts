@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { LessonLockedError } from "../../src/application/useCases";
 import type { OutputComparisonActivity } from "../../src/data/generated/lessons";
 import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
@@ -40,19 +39,18 @@ async function completeMvpOnboarding(services: ReturnType<typeof makeServices>["
 }
 
 describe("startLesson", () => {
-  it("lição disponível vira in_progress e emite lesson_started", async () => {
+  it("lição disponível vira in_progress", async () => {
     const { services } = makeServices();
     await completeMvpOnboarding(services);
     const progress = await services.useCases.startLesson(lesson.id);
     expect(progress.lessonStatus[lesson.id]).toBe("in_progress");
     expect(progress.currentLessonId).toBe(lesson.id);
-    expect(services.analytics.events.map((event) => event.event)).toContain("lesson_started");
   });
 
   it("lição bloqueada lança LessonLockedError", async () => {
     const { services } = makeServices();
     await completeMvpOnboarding(services);
-    await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(LessonLockedError);
+    await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(/bloqueada/);
   });
 });
 
@@ -97,7 +95,6 @@ describe("submitActivityAttempt", () => {
 
     const persisted = await services.progressRepo.load();
     expect(persisted?.counters.attempts).toBe(1);
-    expect(services.analytics.events.map((event) => event.event)).toContain("activity_attempted");
   });
 
   it("tentativa certa: XP, pass, revisão agendada e evento activity_passed", async () => {
@@ -119,8 +116,6 @@ describe("submitActivityAttempt", () => {
     expect(skill.nextReviewAt).toBe(
       new Date(FIXED_NOW.getTime() + lesson.review.intervalsDays[0] * 86_400_000).toISOString(),
     );
-    const events = services.analytics.events.map((event) => event.event);
-    expect(events).toContain("activity_passed");
     expect(services.evidence.records).toHaveLength(2);
     expect(services.evidence.records[1].pass).toBe(true);
     expect(services.evidence.records[1].attemptId).toBe("att-000002");
@@ -161,17 +156,6 @@ describe("requestHint", () => {
       hintIndex: total,
     });
     expect(exhausted.hint).toBeNull();
-    expect(
-      services.analytics.events.filter((event) => event.event === "hint_requested"),
-    ).toHaveLength(total + 1);
-  });
-});
-
-describe("retryActivity", () => {
-  it("registra a intenção de tentar novamente", async () => {
-    const { services } = makeServices();
-    await services.useCases.retryActivity({ lessonId: lesson.id, activityId });
-    expect(services.analytics.events.map((event) => event.event)).toContain("activity_retried");
   });
 });
 
@@ -201,7 +185,6 @@ describe("completeLesson", () => {
     expect(skill.nextReviewAt).toBe(
       new Date(FIXED_NOW.getTime() + lesson.review.intervalsDays[0] * 86_400_000).toISOString(),
     );
-    expect(services.analytics.events.map((event) => event.event)).toContain("lesson_completed");
     // Nunca mastered:
     expect(JSON.stringify(result.progress)).not.toContain("mastered");
   });
@@ -245,20 +228,6 @@ describe("completeLesson", () => {
   });
 });
 
-describe("scheduleReview", () => {
-  it("agenda revisão com clamp no último intervalo", async () => {
-    const { services } = makeServices();
-    const progress = await services.useCases.scheduleReview({
-      lessonId: lesson.id,
-      intervalIndex: 99,
-    });
-    const last = lesson.review.intervalsDays[lesson.review.intervalsDays.length - 1];
-    expect(progress.skills[lesson.skillIds[0]].nextReviewAt).toBe(
-      new Date(FIXED_NOW.getTime() + last * 86_400_000).toISOString(),
-    );
-  });
-});
-
 describe("resumeSession", () => {
   it("sem progresso ou sem onboarding → onboarding", async () => {
     const { services, progressRepo } = makeServices();
@@ -287,16 +256,8 @@ describe("resumeSession", () => {
   });
 });
 
-describe("resetProgress", () => {
-  it("apaga o estado persistido", async () => {
-    const { services, progressRepo } = makeServices();
-    await services.useCases.resetProgress();
-    expect(await progressRepo.load()).toBeNull();
-  });
-});
-
 describe("completeOnboarding", () => {
-  it("marca onboarding concluído e emite evento com categoria (sem texto livre)", async () => {
+  it("marca onboarding concluído com categoria (sem texto livre)", async () => {
     const { services } = makeServices();
     const progress = await services.useCases.completeOnboarding({
       goal: "verify_answers",
@@ -308,9 +269,5 @@ describe("completeOnboarding", () => {
     expect(progress.onboarding.completed).toBe(true);
     expect(progress.onboarding.context).toBe("work");
     expect(progress.onboarding.taskCategory).toBe("scheduling");
-    expect(services.analytics.events).toContainEqual({
-      event: "onboarding_completed",
-      payload: { context: "work" },
-    });
   });
 });

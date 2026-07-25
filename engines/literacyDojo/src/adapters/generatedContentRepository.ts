@@ -1,8 +1,6 @@
-import type { ContentRepository } from "../application/ports";
 import {
   type LessonDefinition,
   type ModuleDefinition,
-  type SkillDefinition,
   type Track,
   contentVersion,
   lessons,
@@ -12,36 +10,28 @@ import {
 } from "../data/generated/lessons";
 
 /**
- * Adapter de conteúdo do MVP: lê somente o read model gerado
- * (src/data/generated/lessons.ts — DO NOT EDIT BY HAND). Nenhum componente
- * importa o read model diretamente; tudo passa por esta porta.
+ * Read model de conteúdo do MVP: lê somente o read model gerado
+ * (src/data/generated/lessons.ts — DO NOT EDIT BY HAND). Funções puras,
+ * sem classe nem interface — a porta ContentRepository em ports.ts é
+ * o tipo estrutural que os consumidores usam.
  */
-export class GeneratedContentRepository implements ContentRepository {
-  getTrack(): Track {
-    return track;
-  }
 
-  listModules(): ModuleDefinition[] {
-    return [...modules].sort((a, b) => a.order - b.order);
-  }
+export function getTrack(): Track {
+  return track;
+}
 
-  listSkills(): SkillDefinition[] {
-    return skills;
-  }
+export function listModules(): ModuleDefinition[] {
+  return [...modules].sort((a, b) => a.order - b.order);
+}
 
-  listLessons(): LessonDefinition[] {
-    return lessons;
-  }
+export function getLesson(lessonId: string): LessonDefinition | undefined {
+  return lessons.find((lesson) => lesson.id === lessonId);
+}
 
-  getLesson(lessonId: string): LessonDefinition | undefined {
-    return lessons.find((lesson) => lesson.id === lessonId);
-  }
+export function getSkillTitle(skillId: string): string {
+  return skills.find((skill) => skill.id === skillId)?.title ?? skillId;
+}
 
-  getSkillTitle(skillId: string): string {
-    return skills.find((skill) => skill.id === skillId)?.title ?? skillId;
-  }
-
-  getContentVersion(): string {
-    return contentVersion;
-  }
+export function getContentVersion(): string {
+  return contentVersion;
 }

@@ -134,7 +134,7 @@ derived target families from one canonical snapshot:
 2. `minimaxDojo/whiteboard/{profile.yaml, learner_profile.md, trail.md}` (consumed by Mnemosyne and
    Cartógrafo).
 3. Dashboard/OS learner projections plus codexDojo `projects.ts`, `agents.ts`, and `cycle.ts`.
-4. `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and every voxelDojo game review slice.
+4. `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and `voxelDojo/shared/content.ts`.
 5. `curriculum/BACKLOG_STATUS.md` from the canonical `curriculum/catalog.md`.
 
 For efficiency, `build_snapshot()` runs once and is shared across both TypeScript renderers. Its

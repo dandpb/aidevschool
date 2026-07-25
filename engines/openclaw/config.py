@@ -1,7 +1,5 @@
 """Central configuration for the OpenClaw checklist runner."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 
 
@@ -11,22 +9,15 @@ class OpenclawConfig:
     min_review_size: int = 100
     min_benchmark_size: int = 50
     min_evolution_size: int = 100
-    verifier_retry_limit: int = 3  # unused in checklist; kept for config stability
 
 
 DEFAULT_CONFIG = OpenclawConfig()
 LANGUAGES: tuple[str, ...] = ("go", "rust", "node")
 DEFAULT_PROJECT = "curriculum/01_rate_limiter"
-JOURNAL_PATH = "learner/journal.md"
-LEARNING_STATE_PATH = "learner/learning_state.yaml"
 
 
 def spec_path(project: str) -> str:
     return f"{project}/docs/spec.md"
-
-
-def adr_path(project: str) -> str:
-    return f"{project}/docs/adr.md"
 
 
 def impl_path(project: str, lang: str) -> str:

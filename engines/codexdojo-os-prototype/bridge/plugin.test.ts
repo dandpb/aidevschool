@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  BridgeConcurrencyGate,
   getBridgeAuthorizationError,
   getSessionAuthorizationError,
   isLoopbackAddress,
@@ -44,14 +43,6 @@ describe('engine bridge browser authorization', () => {
     expect(getBridgeAuthorizationError(request, 'session-token')).toBe(expectedError)
   })
 
-  it('allows only one subprocess-backed action at a time', () => {
-    const gate = new BridgeConcurrencyGate(1)
-
-    expect(gate.tryAcquire()).toBe(true)
-    expect(gate.tryAcquire()).toBe(false)
-    gate.release()
-    expect(gate.tryAcquire()).toBe(true)
-  })
 })
 
 describe('engine bridge session bootstrap', () => {

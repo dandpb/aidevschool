@@ -16,12 +16,17 @@ import {
   createLessonSession,
   currentActivity,
   currentAnswer,
-  dispatch,
+  finishLesson,
   hintsFor,
   isLastActivity,
   latestAttempt,
+  nextActivity,
+  recordHint,
   requiredActivitiesPassed,
+  retryCurrentActivity,
   setAnswer,
+  startSession,
+  submitAttempt,
 } from "../domain/lessonSession";
 import {
   type Achievement,
@@ -135,7 +140,7 @@ export function LessonScreen({
   };
 
   const handleStart = () => {
-    applyTransition(dispatch(session, lesson, { type: "start", now: services.clock.now() }));
+    applyTransition({ session: startSession(session, services.clock()) });
   };
 
   const handleSubmit = async () => {
@@ -148,13 +153,9 @@ export function LessonScreen({
         answer,
         context: mode,
       });
-      applyTransition(
-        dispatch(session, lesson, {
-          type: "submit",
-          evaluation: result.evaluation,
-          feedback: result.feedback,
-        }),
-      );
+      applyTransition({
+        session: submitAttempt(session, lesson, result.evaluation, result.feedback),
+      });
       onProgressChange(result.progress);
     } finally {
       setSubmitting(false);
@@ -168,17 +169,17 @@ export function LessonScreen({
       activityId: activity.id,
       hintIndex: hints.index,
     });
-    applyTransition(dispatch(session, lesson, { type: "hint", hint: result.hint }));
+    applyTransition({ session: recordHint(session, lesson, result.hint) });
   };
 
   const handleRetry = async () => {
     if (!activity) return;
     await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
-    applyTransition(dispatch(session, lesson, { type: "retry" }));
+    applyTransition({ session: retryCurrentActivity(session, lesson) });
   };
 
   const handleNextActivity = () => {
-    applyTransition(dispatch(session, lesson, { type: "next" }));
+    applyTransition({ session: nextActivity(session, lesson) });
   };
 
   const handleFinish = async (payload: FinishPayload) => {
@@ -362,11 +363,7 @@ export function LessonScreen({
             className="btn btn-primary"
             data-testid="finish-lesson"
             disabled={!requiredPassed || submitting}
-            onClick={() =>
-              void applyTransition(
-                dispatch(session, lesson, { type: "finish", now: services.clock.now() }),
-              )
-            }
+            onClick={() => void applyTransition(finishLesson(session, lesson, services.clock()))}
           >
             {mode === "review" ? "Concluir revisão" : "Concluir lição"}
           </button>

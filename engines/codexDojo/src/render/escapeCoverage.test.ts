@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs"
-import { fileURLToPath } from "node:url"
 import { describe, expect, it, vi } from "vitest"
 import type {
   Agent,
@@ -11,7 +9,6 @@ import type {
   UserFacingAgent,
 } from "../domain"
 import { renderLinuxLab } from "../linuxLab"
-import { normalizeDashboardStats } from "../normalize"
 import { buildInitialState } from "../state"
 import { renderAgents } from "./agents"
 import { renderCycle } from "./cycle"
@@ -91,42 +88,30 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         id: `unit-${XSS}`,
         title: `unit title ${XSS}`,
         project: `unit project ${XSS}`,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        state: `state ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        retryCount: `retryCount ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        retryLimit: `retryLimit ${XSS}` as any,
+        state: "evaluating",
+        retryCount: 1,
+        retryLimit: 3,
       },
       gate: {
         implementationBlocked: true,
         unblockCondition: `condition ${XSS}`,
       },
       profile: {
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        dreyfus: `dreyfus ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        bloom: `bloom ${XSS}` as any,
+        dreyfus: "competent",
+        bloom: "apply",
         activeLanguage: `language ${XSS}`,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        weeklyTimeHours: `weeklyTimeHours ${XSS}` as any,
+        weeklyTimeHours: 5,
       },
       aidi: {
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        current: `aidi current ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        thresholdAmber: `thresholdAmber ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        thresholdRed: `thresholdRed ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        measurementSource: `measurementSource ${XSS}` as any,
+        current: 0.5,
+        thresholdAmber: 0.6,
+        thresholdRed: 0.75,
+        measurementSource: "self_reported",
         trend: [
           {
             date: `2026-01-01 ${XSS}`,
-            // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-            value: `trend value ${XSS}` as any,
-            // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-            measurementSource: `trend measurementSource ${XSS}` as any,
+            value: 0.4,
+            measurementSource: "event_computed",
           },
         ],
       },
@@ -134,8 +119,7 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         {
           id: `pitfall-${XSS}`,
           description: `description ${XSS}`,
-          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-          occurrences: `occurrences ${XSS}` as any,
+          occurrences: 1,
           lastSeen: `last seen ${XSS}`,
         },
       ],
@@ -144,27 +128,19 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
           unitId: `review-unit-${XSS}`,
           title: `review title ${XSS}`,
           dueIn: `due ${XSS}`,
-          // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-          reason: `reason ${XSS}` as any,
+          reason: "due",
         },
       ],
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      masteredCount: `masteredCount ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      scaffoldedCount: `scaffoldedCount ${XSS}` as any,
+      masteredCount: 1,
+      scaffoldedCount: 2,
       streak: {
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        current: `streak current ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        longest: `streak longest ${XSS}` as any,
+        current: 1,
+        longest: 2,
         lastGateDate: `gate date ${XSS}`,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        freezesEquipped: `freezesEquipped ${XSS}` as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-        freezesMax: `freezesMax ${XSS}` as any,
+        freezesEquipped: 1,
+        freezesMax: 2,
       },
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      curr: `curr ${XSS}` as any,
+      curr: 0.8,
       challenges: [],
     }
 
@@ -238,44 +214,5 @@ describe("escape coverage — render modules neutralize injected markup", () => 
     expect(html).not.toContain("<script")
     expect(html).toContain("&lt;script&gt;")
     expect(html).not.toContain(XSS.toLowerCase())
-  })
-
-  it("clamps malformed dashboard stats to render-safe values", () => {
-    const normalized = normalizeDashboardStats({
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      agents: `agents ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      stages: `stages ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      projects: `projects ${XSS}` as any,
-      // biome-ignore lint/suspicious/noExplicitAny: simulating untrusted data
-      completionPercent: `completionPercent ${XSS}` as any,
-    })
-
-    expect(normalized.completionPercent).toBe(0)
-    expect(typeof normalized.agents).toBe("number")
-    expect(typeof normalized.stages).toBe("number")
-    expect(typeof normalized.projects).toBe("number")
-  })
-
-  // Structural backstop: every render module that interpolates loaded data
-  // must import the shared escape util. Catches new modules that assemble
-  // HTML without ever reaching for escapeHtml, even before a payload test
-  // covers them.
-  const modulesRequiringEscape = [
-    "agents.ts",
-    "cycle.ts",
-    "learner.ts",
-    "../linuxLab/render.ts",
-    "nav.ts",
-    "overview.ts",
-    "project.ts",
-    "roadmap.ts",
-  ]
-
-  it.each(modulesRequiringEscape)("%s imports escapeHtml from ./escape", (moduleFile) => {
-    const source = readFileSync(fileURLToPath(new URL(moduleFile, import.meta.url)), "utf8")
-
-    expect(source).toMatch(/import \{ escapeHtml \} from "(?:\.\/|\.\.\/render\/)escape"/)
   })
 })

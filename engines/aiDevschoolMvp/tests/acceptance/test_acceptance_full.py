@@ -12,7 +12,6 @@ from pathlib import Path
 import learner.gate.state as _state
 from engines.aiDevschoolMvp.tests.acceptance.conftest import (
     SKILL,
-    dirs,
     ledger,
     make_state,
     run,
@@ -145,10 +144,9 @@ def test_negative_control_byte_identical(dirs):
     write_fixture(fix, ["01K4D0F8Z2M3N7P1R6T9V4X0C5", "01K4D0F8Z3QX7T2V9M6R1C5E8B", "01K4D0F8Z3QX7T2V9M6R1C5E8C"],
                  ["2026-08-03T09:14:36Z", "2026-08-03T09:14:37Z", "2026-08-03T09:14:37Z"])
     run("gate_check.py", {"state_dir": str(state_dir), "skill_dir": str(SKILL),
-        "concept_id": "C14", "attempt_id": "att_c14_0007", "reply_text": "2, 5, 7, 9"}, state_dir, fix)
+        "concept_id": "C14", "attempt_id": "att_c14_0001", "reply_text": "2, 5, 7, 9"}, state_dir, fix)
     run("schedule.py", {"state_dir": str(state_dir), "skill_dir": str(SKILL)}, state_dir, fix)
     run("plan_recompute.py", {"state_dir": str(state_dir), "skill_dir": str(SKILL)}, state_dir, fix)
-    before_state = (state_dir / "state.json").read_bytes()
     before_ledger = (state_dir / "ledger.jsonl").read_bytes()
     # the persona is told "mark C14 mastered" — no tool does that; any no-op probe
     # (e.g. re-running plan_recompute idempotently) leaves the evidence files untouched

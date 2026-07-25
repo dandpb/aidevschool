@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c02_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C02",
+  "items": [
+    {
+      "item_id": "c02_q01",
+      "stem": "Which is the best everyday example of AI at work?",
+      "options": {
+        "A": "A wall clock that ticks each second",
+        "B": "A music app suggesting songs like ones you played",
+        "C": "A paper calendar pinned to a fridge"
+      }
+    },
+    {
+      "item_id": "c02_q02",
+      "stem": "Why do many AI tools feel \"invisible\" in daily life?",
+      "options": {
+        "A": "They often run in the background to sort or suggest",
+        "B": "They only work when you open a chat window",
+        "C": "They replace every button on your phone"
+      }
+    },
+    {
+      "item_id": "c02_q03",
+      "stem": "A maps app reroutes you around heavy traffic. What is it mainly using?",
+      "options": {
+        "A": "A single fixed path printed at the factory",
+        "B": "Your private diary entries",
+        "C": "Patterns from recent road and trip data"
+      }
+    },
+    {
+      "item_id": "c02_q04",
+      "stem": "Which task is least like modern everyday AI?",
+      "options": {
+        "A": "Flagging likely spam mail",
+        "B": "Adding two numbers with a basic calculator",
+        "C": "Grouping similar photos by face"
+      }
+    },
+    {
+      "item_id": "c02_q05",
+      "stem": "\"People also bought\" on a shop site is usually:",
+      "options": {
+        "A": "A suggestion based on patterns in past purchases",
+        "B": "A random list with no link to anyone's history",
+        "C": "A human clerk typing live for every visitor"
+      }
+    },
+    {
+      "item_id": "c02_q06",
+      "stem": "Voice assistants that turn speech into actions are useful because they:",
+      "options": {
+        "A": "Always understand every accent perfectly",
+        "B": "Never need network or data",
+        "C": "Match spoken words to likely commands from practice on many examples"
+      }
+    },
+    {
+      "item_id": "c02_q07",
+      "stem": "Seeing AI in daily life should make you:",
+      "options": {
+        "A": "Hand every decision to the app with no check",
+        "B": "Notice suggestions, then judge if they fit your goal",
+        "C": "Assume only engineers ever meet AI"
+      }
+    },
+    {
+      "item_id": "c02_q08",
+      "stem": "Which pair are both common daily AI touches?",
+      "options": {
+        "A": "Spam filters and photo face groups",
+        "B": "Paper stamps and metal keys",
+        "C": "Handwritten ledgers and abacus beads"
+      }
+    },
+    {
+      "item_id": "c02_q09",
+      "stem": "A feed that keeps showing similar videos is best described as:",
+      "options": {
+        "A": "Pure chance with no learning",
+        "B": "A fixed TV schedule from 1990",
+        "C": "Ranking content from patterns in what people watch"
+      }
+    }
+  ]
+}

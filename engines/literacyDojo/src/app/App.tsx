@@ -2,6 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
+import {
+  isHostedMission,
+  LiteracyMissionAdapter,
+} from "../host/LiteracyMissionAdapter";
 import { HomeScreen } from "../screens/HomeScreen";
 import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
@@ -34,7 +38,13 @@ export type Route =
   | { name: "lesson"; lessonId: string; mode?: LessonMode }
   | { name: "result"; summary: LessonSummary };
 
-function AppShell({ services }: { services: Services }) {
+function AppShell({
+  services,
+  hostAdapter,
+}: {
+  services: Services;
+  hostAdapter: LiteracyMissionAdapter | null;
+}) {
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
 
@@ -42,6 +52,11 @@ function AppShell({ services }: { services: Services }) {
     let cancelled = false;
     void (async () => {
       const seeded = await loadOrSeedProgress(services);
+      if (hostAdapter !== null) {
+        if (cancelled) return;
+        setProgress(seeded);
+        return;
+      }
       const destination = await services.useCases.resumeSession();
       if (cancelled) return;
       setProgress(seeded);
@@ -56,7 +71,23 @@ function AppShell({ services }: { services: Services }) {
     return () => {
       cancelled = true;
     };
-  }, [services]);
+  }, [hostAdapter, services]);
+
+  useEffect(() => {
+    if (hostAdapter === null) return;
+    return hostAdapter.start(
+      async (launch) => {
+        const lesson = services.content.getLesson(launch.missionId);
+        if (lesson === undefined || lesson.version !== launch.missionVersion) {
+          throw new Error("Missão hospedada incompatível com o conteúdo local");
+        }
+        const updated = await services.useCases.prepareHostedMission(launch.missionId);
+        setProgress(updated);
+        setRoute({ name: "lesson", lessonId: launch.missionId });
+      },
+      services.content.getContentVersion(),
+    );
+  }, [hostAdapter, services]);
 
   useEffect(() => {
     if (!route) return;
@@ -70,7 +101,7 @@ function AppShell({ services }: { services: Services }) {
   }, [route]);
 
   const handleReset = useCallback(async () => {
-    await services.useCases.resetProgress();
+    await services.progressRepo.reset();
     const fresh = await loadOrSeedProgress(services);
     setProgress(fresh);
     setRoute({ name: "onboarding" });
@@ -151,13 +182,17 @@ function AppShell({ services }: { services: Services }) {
               onCompleted={(updated, summary) => {
                 setProgress(updated);
                 setRoute({ name: "result", summary });
+                hostAdapter?.publishCompleted();
               }}
-              onExit={() => setRoute({ name: "map" })}
+              onExit={() => {
+                if (hostAdapter === null) setRoute({ name: "map" });
+              }}
             />
           )}
           {route.name === "result" && (
             <ResultScreen
               summary={route.summary}
+              hosted={hostAdapter !== null}
               onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
               onHome={() => setRoute({ name: "home" })}
               onMap={() => setRoute({ name: "map" })}
@@ -170,6 +205,9 @@ function AppShell({ services }: { services: Services }) {
 }
 
 export function App({ services }: { services?: Services }) {
-  const [resolved] = useState(() => services ?? createServices());
-  return <AppShell services={resolved} />;
+  const [hostAdapter] = useState(() => (isHostedMission() ? new LiteracyMissionAdapter() : null));
+  const [resolved] = useState(
+    () => services ?? createServices({ hostAdapter: hostAdapter ?? undefined }),
+  );
+  return <AppShell services={resolved} hostAdapter={hostAdapter} />;
 }

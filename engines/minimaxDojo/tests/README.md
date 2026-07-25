@@ -3,7 +3,7 @@
 > Estes testes cobrem a **implementação de referência** em [`../core/`](../core/) (state machine,
 > portões empíricos, memória) — garantem que a espec determinística se comporta como documentado.
 > **Não são** os testes do aluno: esses rodam **por unidade** e **por linguagem foco** via portão
-> empírico (ver [`../core/gates/README.md`](../core/gates/README.md)).
+> empírico (ver [`../docs/04_empirical_gates.md`](../docs/04_empirical_gates.md)).
 
 ## Suítes
 

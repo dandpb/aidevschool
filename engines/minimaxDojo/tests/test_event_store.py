@@ -109,59 +109,5 @@ class TestEventStore(unittest.TestCase):
         self.assertFalse(hasattr(store, "remove"))
 
 
-class TestPhaseLock(unittest.TestCase):
-    """Tests for phase lock files (prevent concurrent phase execution)."""
-
-    def setUp(self):
-        from engines.minimaxDojo.core.memory import PhaseLock
-        self.lock_class = PhaseLock
-        self.tmpdir = tempfile.mkdtemp()
-
-    def tearDown(self):
-        import shutil
-        shutil.rmtree(self.tmpdir, ignore_errors=True)
-
-    def test_acquire_creates_lock_file(self):
-        lock = self.lock_class(Path(self.tmpdir))
-        lock.acquire("spec", agent_id="curator-001")
-        self.assertTrue((Path(self.tmpdir) / "spec.lock").exists())
-
-    def test_lock_contains_metadata(self):
-        lock = self.lock_class(Path(self.tmpdir))
-        lock.acquire("spec", agent_id="curator-001")
-        lock_data = json.loads((Path(self.tmpdir) / "spec.lock").read_text())
-        self.assertEqual(lock_data["phase"], "spec")
-        self.assertEqual(lock_data["agent_id"], "curator-001")
-        self.assertIn("acquired_at", lock_data)
-
-    def test_cannot_acquire_locked_phase(self):
-        from engines.minimaxDojo.core.memory import LockError
-        lock = self.lock_class(Path(self.tmpdir))
-        lock.acquire("spec", agent_id="curator-001")
-        with self.assertRaises(LockError):
-            lock.acquire("spec", agent_id="curator-002")
-
-    def test_release_removes_lock(self):
-        lock = self.lock_class(Path(self.tmpdir))
-        lock.acquire("spec", agent_id="curator-001")
-        lock.release("spec")
-        self.assertFalse((Path(self.tmpdir) / "spec.lock").exists())
-
-    def test_release_allows_reacquire(self):
-        lock = self.lock_class(Path(self.tmpdir))
-        lock.acquire("spec", agent_id="curator-001")
-        lock.release("spec")
-        lock.acquire("spec", agent_id="curator-002")  # should succeed
-        self.assertTrue((Path(self.tmpdir) / "spec.lock").exists())
-
-    def test_is_locked_reports_status(self):
-        lock = self.lock_class(Path(self.tmpdir))
-        self.assertFalse(lock.is_locked("spec"))
-        lock.acquire("spec", agent_id="curator-001")
-        self.assertTrue(lock.is_locked("spec"))
-        lock.release("spec")
-        self.assertFalse(lock.is_locked("spec"))
-
-
 if __name__ == "__main__":
     unittest.main()

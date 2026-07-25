@@ -33,7 +33,7 @@ export function createPolicyGateState(definition: PolicyGateEncounter): PolicyGa
   }
 }
 
-const driver: EncounterDriver<PolicyGateEncounterState, PolicyCheck> = {
+export const driver: EncounterDriver<PolicyGateEncounterState, PolicyCheck> = {
   itemsOf: (state) => state.definition.checks,
   correctAction: (check) => (check.type === "allowed" ? "admit" : "reject"),
   applyAction: applyActionForCheck,

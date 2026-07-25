@@ -264,12 +264,23 @@ function readNonEmptyString(source: Record<string, unknown>, key: string): strin
   return value
 }
 
-function readBoolean(source: Record<string, unknown>, key: string): boolean {
+export function readBoolean(source: Record<string, unknown>, key: string): boolean {
   const parts = key.split(".")
   const property = parts[parts.length - 1]
   const value = property === undefined ? undefined : source[property]
   if (typeof value !== "boolean") {
     throw new EvidenceValidationError(`evidence.${key} must be boolean`)
+  }
+  return value
+}
+
+/** Read a finite, non-negative number from a record — shared by metrics decoders. */
+export function readNumber(source: Record<string, unknown>, key: string): number {
+  const value = source[key]
+  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
+    throw new EvidenceValidationError(
+      `evidence.${key} must be a finite, non-negative number`,
+    )
   }
   return value
 }

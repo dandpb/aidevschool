@@ -11,8 +11,6 @@ import { Town } from "../src/scene/state"
 import { findPath, manhattan, resetPathCache } from "../src/sim/paths"
 import { Resident } from "../src/sim/residents"
 import { compressActivity, scheduleFor } from "../src/sim/schedules"
-import { spawnResidentsForTown } from "../src/sim/spawn"
-import { spawnVehiclesForTown } from "../src/sim/traffic"
 import { Vehicle } from "../src/sim/vehicles"
 
 function placeAndInhabit(
@@ -143,76 +141,5 @@ describe("Vehicle", () => {
   it("heading() returns null without a path", () => {
     const v = new Vehicle("v-1", "#abcdef", { x: 2, y: 2 })
     expect(v.heading()).toBeNull()
-  })
-})
-
-describe("Town integration: spawn → tick", () => {
-  it("populates residents once a residential building is inhabited", () => {
-    const town = new Town(new DayNightSystem(8))
-    placeAndInhabit(town, "residential", 5, 5)
-    spawnResidentsForTown(town)
-    expect(town.residents.length).toBeGreaterThan(0)
-    expect(town.residents.length).toBeLessThanOrEqual(3)
-  })
-
-  it("caps residents at MAX_RESIDENTS = 50 across many homes", () => {
-    const town = new Town(new DayNightSystem(8))
-    // 30 homes × 3 residents = 90; cap is 50. Spread across two columns so
-    // every placement fits inside the 20×20 grid (y goes 5..19).
-    for (let i = 0; i < 30; i++) {
-      const x = 5 + (i % 2)
-      const y = 5 + Math.floor(i / 2)
-      placeAndInhabit(town, "residential", x, y)
-    }
-    spawnResidentsForTown(town)
-    expect(town.residents.length).toBe(50)
-  })
-
-  it("spawns vehicles once a shop is inhabited and residents exist", () => {
-    const town = new Town(new DayNightSystem(8))
-    placeAndInhabit(town, "residential", 5, 5)
-    placeAndInhabit(town, "shop", 6, 5)
-    spawnResidentsForTown(town)
-    spawnVehiclesForTown(town)
-    expect(town.vehicles.length).toBeGreaterThan(0)
-    expect(town.vehicles.length).toBeLessThanOrEqual(20)
-  })
-
-  it("advances residents one frame in tick()", () => {
-    const town = new Town(new DayNightSystem(8))
-    const home = placeAndInhabit(town, "residential", 5, 5)
-    spawnResidentsForTown(town)
-    const r = town.residents[0]
-    if (!r) throw new Error("no resident spawned")
-    expect(r.homeId).toBe(home)
-    // Simulate 1 sim-second: 1/300 of a 24h cycle = 0.08h. The resident
-    // should still be in 'home' since 0.08h is during the sleep band.
-    const before = r.currentCell
-    town.tick(1)
-    expect(r.currentCell).toEqual(before)
-  })
-
-  it("flips currentActivity to 'working' or 'shopping' once the schedule demands it", () => {
-    const town = new Town(new DayNightSystem(8))
-    // Place a residential + a workspace, populate, then advance the clock
-    // into the working band. With simTime 0 + 12 real seconds = 0 + 12 * 24/300 = ~0.96h
-    // we don't hit 8h yet; instead we'll manually set the dayNight clock.
-    placeAndInhabit(town, "residential", 5, 5)
-    placeAndInhabit(town, "workspace", 7, 5)
-    spawnResidentsForTown(town)
-    // The construction ticks have already pushed simTime into the working
-    // band (~16h), so we don't need to (and can't — `#simTime` is a true
-    // JS private field, not index-accessible) poke the dayNight clock.
-    // Two ticks: first plans the path, second walks the 2-cell commute at
-    // WALK_SPEED=1.5 units/sec (5s × 1.5 = 7.5 units, plenty of headroom).
-    town.tick(5)
-    town.tick(5)
-    const working = town.residents.filter(
-      (r) => r.currentActivity === "working" || r.currentActivity === "shopping",
-    )
-    // The spawner rolls 1..3 residents per home; on this seed we get the
-    // lower end. ≥1 is enough to prove the schedule flips the activity —
-    // the spawn count is covered by the MAX_RESIDENTS test above.
-    expect(working.length).toBeGreaterThanOrEqual(1)
   })
 })

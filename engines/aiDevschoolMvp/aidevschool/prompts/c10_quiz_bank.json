@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c10_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C10",
+  "items": [
+    {
+      "item_id": "c10_q01",
+      "stem": "What is a web of tiny linked units that learn patterns from examples?",
+      "options": {
+        "A": "A list of fixed if-then rules written by a person",
+        "B": "A single giant formula that never changes",
+        "C": "A neural network — many tiny units linked together"
+      }
+    },
+    {
+      "item_id": "c10_q02",
+      "stem": "What happens in the AI's practice phase, when it learns from examples?",
+      "options": {
+        "A": "A person types every correct answer by hand each time",
+        "B": "Internal dials get tuned so common patterns fire more strongly",
+        "C": "The AI copies one document and never changes again"
+      }
+    },
+    {
+      "item_id": "c10_q03",
+      "stem": "What does generative AI mainly do?",
+      "options": {
+        "A": "Builds new text, images, or sound that fits learned patterns",
+        "B": "Only sorts old files into folders",
+        "C": "Only checks spelling against a dictionary"
+      }
+    },
+    {
+      "item_id": "c10_q04",
+      "stem": "How does generative AI usually create a new sentence?",
+      "options": {
+        "A": "It opens a private database of true facts and copies one",
+        "B": "It waits for a human to finish every word",
+        "C": "It predicts the next small chunk of text that fits the pattern"
+      }
+    },
+    {
+      "item_id": "c10_q05",
+      "stem": "How is generative AI different from a calculator?",
+      "options": {
+        "A": "A calculator invents new math rules each day",
+        "B": "A calculator follows fixed steps; generative AI builds from patterns",
+        "C": "They work in exactly the same way"
+      }
+    },
+    {
+      "item_id": "c10_q06",
+      "stem": "Why can generative AI invent a beach photo that nobody took?",
+      "options": {
+        "A": "It recombines patterns it saw in many example images",
+        "B": "It traveled to a real beach and took the shot",
+        "C": "It always stores one perfect beach photo forever"
+      }
+    },
+    {
+      "item_id": "c10_q07",
+      "stem": "What are the \"internal dials\" tuned during practice?",
+      "options": {
+        "A": "The volume buttons on your phone",
+        "B": "The Wi-Fi password the AI uses",
+        "C": "Settings inside the system that shape which patterns fire"
+      }
+    },
+    {
+      "item_id": "c10_q08",
+      "stem": "A coworker says: \"The AI must store every sentence it will ever write.\" What is better?",
+      "options": {
+        "A": "Yes — every future sentence is saved in advance",
+        "B": "No — it builds each reply piece by piece from patterns",
+        "C": "Only poems are stored; emails are written by hand"
+      }
+    },
+    {
+      "item_id": "c10_q09",
+      "stem": "You ask an AI for a short product slogan. What is it mainly doing?",
+      "options": {
+        "A": "Predicting likely words that fit slogans it has seen in practice",
+        "B": "Calling your marketing team for the official line",
+        "C": "Rolling a die and ignoring your request"
+      }
+    }
+  ]
+}

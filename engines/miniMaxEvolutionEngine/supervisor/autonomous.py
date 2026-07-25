@@ -23,7 +23,7 @@ from .config import AutonomousConfig, load_config
 from .executor import ProcessResult, run_process
 from .ledger import append_event, read_ledger
 from .models import SupervisorPaths
-from .outbox import OutboxError, read_request
+from .outbox import OutboxError
 from .plans import NEXT_AWAITING, PHASE_PLANS
 from .reconcile import pending_request_document, resolve_request
 from .state import load_canonical

@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import unittest
 from datetime import date
-from pathlib import Path
-from typing import Any
 
 from learner.substrate.adapters.dojotoday import (
     _build_track,
@@ -39,9 +37,9 @@ class TestDojoTodayAdapter(unittest.TestCase):
 
     def test_build_track_statuses_and_next(self):
         games = {
-            "01": {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest", "port": None},
-            "02": {"title": "WAREHOUSE", "gameDir": "engines/voxelDojo/game-02-warehouse", "port": 5202},
-            "03": {"title": "WORMHOLE", "gameDir": "engines/voxelDojo/game-03-wormhole", "port": 5203},
+            "01": {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest"},
+            "02": {"title": "WAREHOUSE", "gameDir": "engines/voxelDojo/game-02-warehouse"},
+            "03": {"title": "WORMHOLE", "gameDir": "engines/voxelDojo/game-03-wormhole"},
         }
         units_log = [
             {"unit_id": "U0", "project": "01_rate_limiter", "concept": "GATEKEEPER", "mastered": True},
@@ -58,6 +56,7 @@ class TestDojoTodayAdapter(unittest.TestCase):
         self.assertEqual(by_num["02"]["status"], "active")
         self.assertEqual(by_num["02"]["title"], active["title"])
         self.assertEqual(by_num["03"]["status"], "available")
+        self.assertNotIn("port", by_num["01"])
         self.assertEqual(next_num, "02")
 
     def test_self_check_passes(self):
@@ -92,7 +91,6 @@ class TestDojoTodayAdapter(unittest.TestCase):
                     "num": "01",
                     "title": "RATE LIMITER",
                     "gameDir": "engines/pixelDojo/pixel-quest",
-                    "port": None,
                     "status": "active",
                 }
             ],
@@ -101,7 +99,9 @@ class TestDojoTodayAdapter(unittest.TestCase):
         self.assertIn("export const today: TodaySnapshot =", text)
         self.assertIn('"asOf": "2026-07-25"', text)
         self.assertIn('"current": 0', text)
-        self.assertTrue(text.endswith(" as TodaySnapshot;\n"))
+        self.assertNotIn('"port"', text)
+        self.assertNotIn(" as TodaySnapshot", text)
+        self.assertTrue(text.endswith(";\n"))
 
     def test_derive_today_snapshot_uses_canonical_state(self):
         from learner.substrate import ROOT, load_canonical

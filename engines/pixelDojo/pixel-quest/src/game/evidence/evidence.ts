@@ -1,4 +1,9 @@
-import { EvidenceValidationError, validateEvidenceEnvelope } from "@aidevschool/evidence"
+import {
+  EvidenceValidationError,
+  readBoolean,
+  readNumber,
+  validateEvidenceEnvelope,
+} from "@aidevschool/evidence"
 import type { PixelQuestEvidenceMetrics, PixelQuestEvidenceRecord } from "./types"
 
 const REVIEW_REASONS = ["due", "overdue", "interleaving", "recurring-trap"] as const
@@ -41,7 +46,6 @@ function readTokenBucketMetrics(source: Record<string, unknown>): PixelQuestEvid
     overheated: readBoolean(source, "overheated"),
   }
 }
-
 function readRouteHealthMetrics(source: Record<string, unknown>): PixelQuestEvidenceMetrics {
   return {
     kind: "pixelquest-route-health",
@@ -88,22 +92,4 @@ function readTaskQueueMetrics(source: Record<string, unknown>): PixelQuestEviden
     backpressure_peak: readNumber(source, "backpressure_peak"),
     overheated: readBoolean(source, "overheated"),
   }
-}
-
-function readNumber(source: Record<string, unknown>, key: string): number {
-  const value = source[key]
-  if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
-    throw new EvidenceValidationError(
-      `evidence.metrics.${key} must be a finite, non-negative number`,
-    )
-  }
-  return value
-}
-
-function readBoolean(source: Record<string, unknown>, key: string): boolean {
-  const value = source[key]
-  if (typeof value !== "boolean") {
-    throw new EvidenceValidationError(`evidence.metrics.${key} must be boolean`)
-  }
-  return value
 }

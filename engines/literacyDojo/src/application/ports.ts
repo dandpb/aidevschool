@@ -2,7 +2,6 @@ import type {
   ActivityDefinition,
   LessonDefinition,
   ModuleDefinition,
-  SkillDefinition,
   Track,
 } from "../data/generated/lessons";
 import type { EvaluationResult } from "../domain/evaluation";
@@ -20,8 +19,6 @@ import type { LearnerProgress } from "../domain/progress";
 export interface ContentRepository {
   getTrack(): Track;
   listModules(): ModuleDefinition[];
-  listSkills(): SkillDefinition[];
-  listLessons(): LessonDefinition[];
   getLesson(lessonId: string): LessonDefinition | undefined;
   getSkillTitle(skillId: string): string;
   getContentVersion(): string;
@@ -33,23 +30,13 @@ export interface ProgressRepository {
   reset(): Promise<void>;
 }
 
-export interface EvidenceSink {
+export type EvidenceSink = {
   emit(record: LiteracyEvidenceRecord): void;
-}
+};
 
 export interface FeedbackProvider {
   feedbackFor(activity: ActivityDefinition, evaluation: EvaluationResult): AttemptFeedback;
   /** Dica pré-escrita de índice `hintIndex`, ou null quando não há mais dicas. */
   hintFor(activity: ActivityDefinition, hintIndex: number): string | null;
   hintCount(activity: ActivityDefinition): number;
-}
-
-export type AnalyticsPayload = Record<string, string | number | boolean | undefined>;
-
-export interface AnalyticsSink {
-  track(event: string, payload?: AnalyticsPayload): void;
-}
-
-export interface Clock {
-  now(): Date;
 }

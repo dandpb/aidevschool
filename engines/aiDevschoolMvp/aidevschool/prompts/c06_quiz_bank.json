@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c06_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C06",
+  "items": [
+    {
+      "item_id": "c06_q01",
+      "stem": "An AI keeps mistaking cats for dogs. What should you check first?",
+      "options": {
+        "A": "Whether the office Wi-Fi is fast enough",
+        "B": "Whether the practice photos were mixed up or poorly labeled",
+        "C": "Whether the screen brightness is too high"
+      }
+    },
+    {
+      "item_id": "c06_q02",
+      "stem": "\"Garbage in, garbage out\" mainly means:",
+      "options": {
+        "A": "Old computers cannot run modern AI",
+        "B": "AI always invents facts when data is large",
+        "C": "Poor or biased examples produce poor or biased results"
+      }
+    },
+    {
+      "item_id": "c06_q03",
+      "stem": "A résumé screener practiced only on past hires from one city. What is the risk?",
+      "options": {
+        "A": "It may unfairly favor people who look like those past hires",
+        "B": "It will refuse to open any new files",
+        "C": "It will always pick the longest résumé"
+      }
+    },
+    {
+      "item_id": "c06_q04",
+      "stem": "Which data set is stronger for teaching a spam filter?",
+      "options": {
+        "A": "Ten emails, all from one person, with no labels",
+        "B": "Thousands of real emails, labeled spam or not by careful reviewers",
+        "C": "Random dictionary words with no inbox context"
+      }
+    },
+    {
+      "item_id": "c06_q05",
+      "stem": "Labels on the practice examples are wrong half the time. What usually happens?",
+      "options": {
+        "A": "The AI magically fixes the labels during use",
+        "B": "The AI becomes slower but always fairer",
+        "C": "The AI learns the wrong patterns and makes more mistakes"
+      }
+    },
+    {
+      "item_id": "c06_q06",
+      "stem": "A hospital tool practiced only on adults. It is used on children. What is the issue?",
+      "options": {
+        "A": "The examples do not match the real cases, so results may be unreliable",
+        "B": "Children type more slowly than adults",
+        "C": "The tool will encrypt every record twice"
+      }
+    },
+    {
+      "item_id": "c06_q07",
+      "stem": "Which change most improves weak data before practice?",
+      "options": {
+        "A": "Adding louder notification sounds",
+        "B": "Fixing labels, filling gaps, and balancing under-shown groups",
+        "C": "Painting the server room a calmer color"
+      }
+    },
+    {
+      "item_id": "c06_q08",
+      "stem": "Why can a huge data set still be a problem?",
+      "options": {
+        "A": "Huge files never fit on any disk",
+        "B": "AI can only learn from ten examples at a time",
+        "C": "Size does not fix bias, missing groups, or wrong labels"
+      }
+    },
+    {
+      "item_id": "c06_q09",
+      "stem": "You spot the same spelling error in every \"approved\" example. What might the AI do?",
+      "options": {
+        "A": "Treat that error as a sign of approval and copy the bad habit",
+        "B": "Delete the company's style guide",
+        "C": "Stop answering until a human reboots it"
+      }
+    }
+  ]
+}

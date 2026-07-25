@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c13_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C13",
+  "items": [
+    {
+      "item_id": "c13_q01",
+      "stem": "The first AI answer is not quite right. What is the best next step?",
+      "options": {
+        "A": "Give up",
+        "B": "Start a brand-new topic",
+        "C": "Refine the instruction with more detail and try again"
+      }
+    },
+    {
+      "item_id": "c13_q02",
+      "stem": "Iterating on an instruction means:",
+      "options": {
+        "A": "Repeating the same words forever",
+        "B": "Improving it step by step from the replies",
+        "C": "Deleting the AI"
+      }
+    },
+    {
+      "item_id": "c13_q03",
+      "stem": "Your draft is too long. What is the best follow-up instruction?",
+      "options": {
+        "A": "Make it shorter, in two sentences",
+        "B": "Good job",
+        "C": "Try a new hobby"
+      }
+    },
+    {
+      "item_id": "c13_q04",
+      "stem": "Why keep the parts of a good instruction while you iterate?",
+      "options": {
+        "A": "It confuses the AI",
+        "B": "It slows you down",
+        "C": "The AI still needs the task, context, and format"
+      }
+    },
+    {
+      "item_id": "c13_q05",
+      "stem": "The AI misunderstood one fact. What should you change first?",
+      "options": {
+        "A": "Nothing, accept it",
+        "B": "The context that gave the wrong fact",
+        "C": "The whole topic"
+      }
+    },
+    {
+      "item_id": "c13_q06",
+      "stem": "A good iteration habit is to:",
+      "options": {
+        "A": "Change one thing at a time and compare",
+        "B": "Change everything at once",
+        "C": "Never re-read the reply"
+      }
+    },
+    {
+      "item_id": "c13_q07",
+      "stem": "After a better reply, what should you do?",
+      "options": {
+        "A": "Delete the good instruction",
+        "B": "Forget what worked",
+        "C": "Note what made it better for next time"
+      }
+    },
+    {
+      "item_id": "c13_q08",
+      "stem": "Your instruction gave a vague answer. The fix is to:",
+      "options": {
+        "A": "Give up on AI",
+        "B": "Add the missing task, context, or format and retry",
+        "C": "Type louder"
+      }
+    },
+    {
+      "item_id": "c13_q09",
+      "stem": "Iterating works because:",
+      "options": {
+        "A": "Each reply shows what to clarify next",
+        "B": "The AI gets tired",
+        "C": "You only need one try ever"
+      }
+    }
+  ]
+}

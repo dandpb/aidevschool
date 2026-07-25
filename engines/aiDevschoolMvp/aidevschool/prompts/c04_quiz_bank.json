@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c04_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C04",
+  "items": [
+    {
+      "item_id": "c04_q01",
+      "stem": "What is a search engine mainly doing for you?",
+      "options": {
+        "A": "Finding existing pages or records that match your query",
+        "B": "Inventing brand-new facts with no source",
+        "C": "Feeling curious about your day"
+      }
+    },
+    {
+      "item_id": "c04_q02",
+      "stem": "What is a generative AI assistant mainly doing when it writes?",
+      "options": {
+        "A": "Opening every website live before each word",
+        "B": "Producing new wording from patterns it learned",
+        "C": "Storing your company's private files by default"
+      }
+    },
+    {
+      "item_id": "c04_q03",
+      "stem": "You need a verified street address from a government site. Best first move?",
+      "options": {
+        "A": "Ask the AI to invent one that sounds right",
+        "B": "Trust the first social post you see",
+        "C": "Search and open the official source"
+      }
+    },
+    {
+      "item_id": "c04_q04",
+      "stem": "AI helps problem solving most when you:",
+      "options": {
+        "A": "Break the task into steps, try options, and check results",
+        "B": "Accept the first paragraph with no review",
+        "C": "Avoid stating the goal so the AI can guess"
+      }
+    },
+    {
+      "item_id": "c04_q05",
+      "stem": "Search is usually stronger than pure generation for:",
+      "options": {
+        "A": "Locating a specific existing document or number",
+        "B": "Brainstorming playful taglines with no fact check needed",
+        "C": "Rewording a paragraph in a friendlier tone"
+      }
+    },
+    {
+      "item_id": "c04_q06",
+      "stem": "Generation is often stronger than plain search for:",
+      "options": {
+        "A": "Proving a legal claim with citations only",
+        "B": "Replacing your own judgment forever",
+        "C": "Drafting a first version of an email or outline"
+      }
+    },
+    {
+      "item_id": "c04_q07",
+      "stem": "A healthy mix looks like:",
+      "options": {
+        "A": "Search for sources, AI for draft structure, you for final check",
+        "B": "AI only, never open another tab",
+        "C": "Search only, never reshape wording"
+      }
+    },
+    {
+      "item_id": "c04_q08",
+      "stem": "If an AI answer and a trusted source disagree on a date, you should:",
+      "options": {
+        "A": "Average the two dates",
+        "B": "Prefer the trusted source and recheck",
+        "C": "Delete the source and keep the AI line"
+      }
+    },
+    {
+      "item_id": "c04_q09",
+      "stem": "\"Solving\" with AI still fails when you:",
+      "options": {
+        "A": "Give a clear goal and constraints",
+        "B": "Compare two drafted options",
+        "C": "Skip checking any claim that must be true"
+      }
+    }
+  ]
+}

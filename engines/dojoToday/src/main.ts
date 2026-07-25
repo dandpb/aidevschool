@@ -21,6 +21,7 @@ import type { DueReview, TodaySnapshot, TrackNode } from "./types";
 const REASON_LABEL: Record<DueReview["reason"], string> = {
   overdue: "Atrasada",
   due: "Devida hoje",
+  deepening: "Aprofundamento",
   interleaving: "Intercalação",
   "recurring-trap": "Pegadinha recorrente",
 };

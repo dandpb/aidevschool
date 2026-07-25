@@ -1,25 +1,11 @@
 import { expect, test } from "@playwright/test"
+import { collectEvidence, type EvidenceRecord } from "../../shared/testHelpers"
 
 /**
  * Browser smoke contract: the page boots WebGL, the HUD drives the sim, and cleared/failed
  * waves emit EVIDENCE console records with the voxeldojo schema. Concept math is proven in
  * Vitest (src/sim/consensus.test.ts); this spec proves the wiring inside a real browser.
  */
-
-interface EvidenceRecord {
-  source: string
-  unit_id: string
-  project: string
-  scenario_id: string
-  pass: boolean
-  metrics: Record<string, number | boolean>
-}
-
-function collectEvidence(lines: string[]): EvidenceRecord[] {
-  return lines
-    .filter((l) => l.startsWith("EVIDENCE "))
-    .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-}
 
 test("boots the network, plays L1 by acking to quorum, emits a passing record", async ({
   page,

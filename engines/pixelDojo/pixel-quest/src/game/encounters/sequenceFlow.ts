@@ -33,7 +33,7 @@ export function createSequenceState(definition: SequenceEncounter): SequenceEnco
   }
 }
 
-const driver: EncounterDriver<SequenceEncounterState, SequenceStep> = {
+export const driver: EncounterDriver<SequenceEncounterState, SequenceStep> = {
   itemsOf: (state) => state.definition.steps,
   correctAction: (step) => (step.type === "advance" ? "admit" : "reject"),
   applyAction: applyActionForStep,

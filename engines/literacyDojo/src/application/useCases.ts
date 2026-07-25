@@ -1,34 +1,27 @@
+import type { Clock } from "../adapters/clock";
 import type { ActivityDefinition, LessonDefinition } from "../data/generated/lessons";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import {
-  type Achievement,
   type AudienceChoice,
+  type CompleteLessonResult,
   type LearnerProgress,
-  type LessonOutcome,
   MAP_INITIAL_LESSON_ID,
   type OnboardingConfidence,
   type OnboardingContext,
   type OnboardingGoal,
   type OnboardingTaskCategory,
-  type SkillPractice,
-  applyAchievements,
   completeLesson as completeLessonInDomain,
   completeOnboarding,
   evaluateLessonCompletion,
   isLessonUnlocked,
   recordActivityAttempt,
-  recordApplication,
   recordMapInitialHintRequest,
   recordMapInitialRetry,
-  reviewsDue,
-  scheduleReviewForLesson,
   startLesson as startLessonInDomain,
 } from "../domain/progress";
 import type {
-  AnalyticsSink,
-  Clock,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
@@ -38,43 +31,14 @@ import type {
 /**
  * Casos de uso do vertical slice (plano seção 8): startLesson,
  * submitActivityAttempt, requestHint, retryActivity, completeLesson,
- * scheduleReview, resumeSession, resetProgress (+ completeOnboarding).
+ * startReview, completeReview, resumeSession (+ completeOnboarding).
  */
-
-export class LessonNotFoundError extends Error {
-  constructor(lessonId: string) {
-    super(`Lição não encontrada no read model: ${lessonId}`);
-    this.name = "LessonNotFoundError";
-  }
-}
-
-export class LessonLockedError extends Error {
-  constructor(lessonId: string) {
-    super(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
-    this.name = "LessonLockedError";
-  }
-}
-
-export class ActivityNotFoundError extends Error {
-  constructor(activityId: string) {
-    super(`Atividade não encontrada: ${activityId}`);
-    this.name = "ActivityNotFoundError";
-  }
-}
-
-export class ProgressNotInitializedError extends Error {
-  constructor() {
-    super("Progresso não inicializado — o boot do app deve semear o estado inicial");
-    this.name = "ProgressNotInitializedError";
-  }
-}
 
 export type UseCaseDeps = {
   content: ContentRepository;
   progress: ProgressRepository;
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
-  analytics: AnalyticsSink;
   clock: Clock;
 };
 
@@ -83,13 +47,6 @@ export type SubmitAttemptResult = {
   evaluation: EvaluationResult;
   feedback: AttemptFeedback;
   record: LiteracyEvidenceRecord;
-};
-
-export type CompleteLessonResult = {
-  progress: LearnerProgress;
-  outcome: LessonOutcome;
-  nextLessonId?: string;
-  newlyUnlocked?: Achievement[];
 };
 
 export type ResumeDestination =
@@ -102,19 +59,20 @@ export class LiteracyUseCases {
 
   private requireLesson(lessonId: string): LessonDefinition {
     const lesson = this.deps.content.getLesson(lessonId);
-    if (!lesson) throw new LessonNotFoundError(lessonId);
+    if (!lesson) throw new Error(`Lição não encontrada no read model: ${lessonId}`);
     return lesson;
   }
 
   private requireActivity(lesson: LessonDefinition, activityId: string): ActivityDefinition {
     const activity = lesson.activities.find((item) => item.id === activityId);
-    if (!activity) throw new ActivityNotFoundError(activityId);
+    if (!activity) throw new Error(`Atividade não encontrada: ${activityId}`);
     return activity;
   }
 
   private async requireProgress(): Promise<LearnerProgress> {
     const progress = await this.deps.progress.load();
-    if (!progress) throw new ProgressNotInitializedError();
+    if (!progress)
+      throw new Error("Progresso não inicializado — o boot do app deve semear o estado inicial");
     return progress;
   }
 
@@ -128,20 +86,36 @@ export class LiteracyUseCases {
     const progress = await this.requireProgress();
     const next = completeOnboarding(progress, input);
     await this.deps.progress.save(next);
-    this.deps.analytics.track("onboarding_completed", { context: input.context });
     return next;
   }
 
   async startLesson(lessonId: string): Promise<LearnerProgress> {
-    const lesson = this.requireLesson(lessonId);
+    this.requireLesson(lessonId);
     const progress = await this.requireProgress();
-    if (!isLessonUnlocked(progress, lessonId)) throw new LessonLockedError(lessonId);
+    if (!isLessonUnlocked(progress, lessonId))
+      throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
     const next = startLessonInDomain(progress, lessonId);
     await this.deps.progress.save(next);
-    this.deps.analytics.track("lesson_started", {
-      lessonId,
-      lessonVersion: lesson.version,
-    });
+    return next;
+  }
+
+  async prepareHostedMission(lessonId: string): Promise<LearnerProgress> {
+    this.requireLesson(lessonId);
+    if (lessonId !== MAP_INITIAL_LESSON_ID) {
+      throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
+    }
+    let progress = await this.requireProgress();
+    if (!progress.onboarding.completed || !isLessonUnlocked(progress, lessonId)) {
+      progress = completeOnboarding(progress, {
+        goal: "verify_answers",
+        context: "work",
+        confidence: "medium",
+        taskCategory: "news_research",
+        audience: "ia_pratica",
+      });
+    }
+    const next = startLessonInDomain(progress, lessonId);
+    await this.deps.progress.save(next);
     return next;
   }
 
@@ -157,7 +131,7 @@ export class LiteracyUseCases {
     const evaluation = evaluateActivity(activity, input.answer);
 
     const progress = await this.requireProgress();
-    const now = this.deps.clock.now();
+    const now = this.deps.clock();
     const next = recordActivityAttempt(progress, {
       lessonId: lesson.id,
       evaluation,
@@ -177,19 +151,6 @@ export class LiteracyUseCases {
       context: input.context ?? "initial",
     });
     this.deps.evidence.emit(record);
-
-    this.deps.analytics.track("activity_attempted", {
-      activityId: activity.id,
-      activityType: activity.type,
-      pass: evaluation.pass,
-      score: evaluation.score,
-    });
-    if (evaluation.pass) {
-      this.deps.analytics.track("activity_passed", {
-        activityId: activity.id,
-        score: evaluation.score,
-      });
-    }
 
     return {
       progress: next,
@@ -212,10 +173,6 @@ export class LiteracyUseCases {
       progress = recordMapInitialHintRequest(progress);
       await this.deps.progress.save(progress);
     }
-    this.deps.analytics.track("hint_requested", {
-      activityId: activity.id,
-      hintIndex: input.hintIndex,
-    });
     return { hint, nextIndex: input.hintIndex + 1 };
   }
 
@@ -226,13 +183,12 @@ export class LiteracyUseCases {
    */
   async retryActivity(input: { lessonId: string; activityId: string }): Promise<void> {
     const lesson = this.requireLesson(input.lessonId);
-    const activity = this.requireActivity(lesson, input.activityId);
+    this.requireActivity(lesson, input.activityId);
     if (input.lessonId === MAP_INITIAL_LESSON_ID) {
       const progress = await this.requireProgress();
       const next = recordMapInitialRetry(progress);
       await this.deps.progress.save(next);
     }
-    this.deps.analytics.track("activity_retried", { activityId: activity.id });
   }
 
   async completeLesson(input: {
@@ -247,17 +203,12 @@ export class LiteracyUseCases {
       lesson,
       input.bestScores,
       this.deps.content.listModules(),
-      this.deps.clock.now(),
+      this.deps.clock(),
     );
     if (!result.outcome.completed) {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    this.deps.analytics.track("lesson_completed", {
-      lessonId: input.lessonId,
-      score: result.outcome.lessonScore,
-      durationSeconds: input.durationSeconds,
-    });
     return result;
   }
 
@@ -271,7 +222,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(lessonId);
     const progress = await this.requireProgress();
     if (progress.lessonStatus[lessonId] !== "completed") {
-      throw new LessonLockedError(lessonId);
+      throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
     }
     const bestPasses = Math.max(
       0,
@@ -279,7 +230,6 @@ export class LiteracyUseCases {
     );
     const stage = Math.min(lesson.review.intervalsDays.length - 1, bestPasses);
     const intervalDays = lesson.review.intervalsDays[stage] ?? 1;
-    this.deps.analytics.track("review_started", { lessonId, intervalDays });
     return { progress, intervalDays };
   }
 
@@ -294,51 +244,7 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
     const progress = await this.requireProgress();
-    this.deps.analytics.track("review_completed", {
-      lessonId: input.lessonId,
-      score: outcome.lessonScore,
-    });
     return { progress, outcome };
-  }
-
-  /** Relato de aplicação real (sem texto livre): registra, emite evento e avalia conquistas. */
-  async reportRealWorldApplication(input: {
-    lessonId: string;
-  }): Promise<{ progress: LearnerProgress; newlyUnlocked: Achievement[] }> {
-    this.requireLesson(input.lessonId);
-    const progress = await this.requireProgress();
-    const now = this.deps.clock.now();
-    let next = recordApplication(progress, input.lessonId, now);
-    const withAchievements = applyAchievements(next, this.deps.content.listModules(), now);
-    next = withAchievements.progress;
-    await this.deps.progress.save(next);
-    this.deps.analytics.track("real_world_application_reported", { lessonId: input.lessonId });
-    return { progress: next, newlyUnlocked: withAchievements.newlyUnlocked };
-  }
-
-  /**
-   * Agenda (ou reagenda) a revisão espaçada das skills da lição.
-   * intervalIndex: estágio dentro de review.intervalsDays (com clamp no último).
-   */
-  async scheduleReview(input: {
-    lessonId: string;
-    intervalIndex?: number;
-  }): Promise<LearnerProgress> {
-    const lesson = this.requireLesson(input.lessonId);
-    const progress = await this.requireProgress();
-    const next = scheduleReviewForLesson(
-      progress,
-      lesson,
-      this.deps.clock.now(),
-      input.intervalIndex ?? 0,
-    );
-    await this.deps.progress.save(next);
-    return next;
-  }
-
-  /** Carrega o progresso bruto (read-only) para consumo de queries e telas. */
-  async loadProgress(): Promise<LearnerProgress | null> {
-    return this.deps.progress.load();
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */
@@ -350,14 +256,5 @@ export class LiteracyUseCases {
       return { kind: "lesson", lessonId: current };
     }
     return { kind: "home" };
-  }
-
-  async pendingReviews(): Promise<SkillPractice[]> {
-    const progress = await this.requireProgress();
-    return reviewsDue(progress, this.deps.clock.now());
-  }
-
-  async resetProgress(): Promise<void> {
-    await this.deps.progress.reset();
   }
 }

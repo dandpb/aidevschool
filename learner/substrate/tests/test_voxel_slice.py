@@ -25,10 +25,6 @@ def isolated_voxel_sync_outputs():
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)
         voxel_root = root / "engines" / "voxelDojo"
-        for index in range(1, 17):
-            path = voxel_root / f"game-{index:02d}-test" / "src" / "content" / "reviewSlice.ts"
-            path.parent.mkdir(parents=True)
-            path.touch()
         with (
             patch.object(learner.substrate, "ROOT", root),
             patch.object(learner.substrate, "load_and_validate", return_value=state),
@@ -44,18 +40,20 @@ class TestVoxelReviewSlice(unittest.TestCase):
         slc = build_pixel_review_slice()
         self.assertEqual(set(slc.keys()), {"nextReviews", "streak"})
 
-    def test_full_sync_regenerates_all_voxel_slices(self):
+    def test_full_sync_regenerates_shared_voxel_slice(self):
         from learner.substrate import sync
+        from learner.substrate.dashboard_snapshot import build_pixel_review_slice
+        from learner.substrate.ts_render import render_voxel_review_ts
 
         with isolated_voxel_sync_outputs() as voxel_root:
             sync()
-            paths = sorted(voxel_root.glob("game-*/src/content/reviewSlice.ts"))
-            self.assertGreaterEqual(len(paths), 16, "fan-out must cover the full voxel fleet")
-            for path in paths:
-                content = path.read_text(encoding="utf-8")
-                self.assertIn("AUTO-GENERATED", content)
-                self.assertIn('import type { ReviewSlice } from "./types"', content)
-                self.assertIn("export const reviewSlice: ReviewSlice =", content)
+            content = (voxel_root / "shared" / "content.ts").read_text(encoding="utf-8")
+            self.assertEqual(content, render_voxel_review_ts(build_pixel_review_slice()))
+            self.assertIn("AUTO-GENERATED", content)
+            self.assertIn('export type ReviewReason = "due" | "overdue" | "interleaving" | "recurring-trap"', content)
+            self.assertIn("export type ReviewSlice = {", content)
+            self.assertIn("export const reviewSlice: ReviewSlice =", content)
+            self.assertFalse(list(voxel_root.glob("game-*/src/content/reviewSlice.ts")))
 
 
 if __name__ == "__main__":

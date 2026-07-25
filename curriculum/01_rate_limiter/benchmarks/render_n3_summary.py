@@ -33,7 +33,10 @@ def cv_pct(stddev: float, median: float) -> float:
 def load_aggregated() -> dict:
     if not AGGREGATED.exists():
         print(
-            f"ERROR: {AGGREGATED} not found. Run benchmarks/run_matrix_N3.sh first.",
+            "ERROR: "
+            f"{AGGREGATED} not found. Run MATRIX_N=3 RESULTS_DIR_NAME=results-N3-optimized "
+            "benchmarks/run_matrix.sh, then RESULTS_DIR_NAME=results-N3-optimized "
+            "python3 benchmarks/analyze_results.py first.",
             file=sys.stderr,
         )
         sys.exit(1)

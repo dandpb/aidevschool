@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c16_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C16",
+  "items": [
+    {
+      "item_id": "c16_q01",
+      "stem": "An AI ranks job applicants. Men score higher than equally skilled women. What is the most likely cause?",
+      "options": {
+        "A": "The AI chose to be unfair on purpose",
+        "B": "The examples it learned from already favored men",
+        "C": "The AI checked each résumé by hand"
+      }
+    },
+    {
+      "item_id": "c16_q02",
+      "stem": "\"Biased data in, biased answers out\" means:",
+      "options": {
+        "A": "Only bad people get bad AI",
+        "B": "More data always removes unfair tilt",
+        "C": "Unfair patterns in the examples show up in the outputs"
+      }
+    },
+    {
+      "item_id": "c16_q03",
+      "stem": "A face tool fails more often on darker skin. What should you check first?",
+      "options": {
+        "A": "Whether the practice examples covered many skin tones fairly",
+        "B": "Whether the camera brand is expensive",
+        "C": "Whether users typed longer names"
+      }
+    },
+    {
+      "item_id": "c16_q04",
+      "stem": "Why can an AI sound neutral and still treat groups differently?",
+      "options": {
+        "A": "It always flips a coin",
+        "B": "It copies patterns from uneven examples, even without a written rule",
+        "C": "It only fails when the power is low"
+      }
+    },
+    {
+      "item_id": "c16_q05",
+      "stem": "Your team wants a fairer hiring helper. Which step helps most?",
+      "options": {
+        "A": "Ask the AI to \"be nice\"",
+        "B": "Hide the scores from applicants",
+        "C": "Review the examples and test results across groups"
+      }
+    },
+    {
+      "item_id": "c16_q06",
+      "stem": "A chat tool gives weaker career advice to one gender. What does that show?",
+      "options": {
+        "A": "Uneven patterns in past text can shape the answers you see",
+        "B": "The tool cannot write long sentences",
+        "C": "Advice tools never need human review"
+      }
+    },
+    {
+      "item_id": "c16_q07",
+      "stem": "When is bias risk highest for a workplace AI?",
+      "options": {
+        "A": "Only when the screen is dark",
+        "B": "When the examples leave out or undervalue some groups",
+        "C": "Only when the AI uses rare words"
+      }
+    },
+    {
+      "item_id": "c16_q08",
+      "stem": "A map of \"safe routes\" avoids one district more than crime data supports. Likely reason?",
+      "options": {
+        "A": "The GPS satellite is broken",
+        "B": "Walkers type too slowly",
+        "C": "Past reports or labels in the examples skewed that area"
+      }
+    },
+    {
+      "item_id": "c16_q09",
+      "stem": "You spot a tilted AI output at work. What is the best first move?",
+      "options": {
+        "A": "Pause, name the uneven pattern, and check the source examples or tests",
+        "B": "Ship it faster so nobody notices",
+        "C": "Assume the AI must be right because it sounds sure"
+      }
+    }
+  ]
+}

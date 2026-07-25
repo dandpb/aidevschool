@@ -1,5 +1,5 @@
+import { learnerSnapshot } from "../data/learner"
 import type { LearnerSnapshot } from "../domain"
-import { getNormalizedLearnerSnapshot } from "../normalize"
 import { escapeHtml } from "./escape"
 import { sparklinePath } from "./sparkline"
 
@@ -139,8 +139,8 @@ function renderCoverage(snapshot: LearnerSnapshot): string {
 
 function renderStreak(snapshot: LearnerSnapshot): string {
   const s = snapshot.streak
-  const freezesMax = s.freezesMax
-  const freezesEquipped = Math.min(freezesMax, s.freezesEquipped)
+  const freezesMax = Math.min(2, Math.max(0, Math.trunc(s.freezesMax)))
+  const freezesEquipped = Math.min(freezesMax, Math.max(0, Math.trunc(s.freezesEquipped)))
   const filled = "❄".repeat(freezesEquipped)
   const empty = "·".repeat(Math.max(0, freezesMax - freezesEquipped))
   const lastLabel = s.lastGateDate
@@ -174,7 +174,7 @@ function renderCurr(snapshot: LearnerSnapshot): string {
 }
 
 export function renderLearnerDashboard(): string {
-  const snapshot = getNormalizedLearnerSnapshot()
+  const snapshot = learnerSnapshot
   const points = `${escapeHtml(snapshot.aidi.trend.length)}/${AIDI_HISTORY_POINTS}`
 
   return `

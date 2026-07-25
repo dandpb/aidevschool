@@ -5,27 +5,18 @@ tentativa, feedback imediato, dica, nova tentativa e progresso local. O ciclo
 compartilhado está no
 [`contrato de microlição`](../../docs/design/micro-lesson-contract.md).
 
-Este engine nasceu como a **vertical slice da Fase 1** do plano
-[`docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md`](../../docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md),
-sob o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/design/adr/0005-ai-literacy-bounded-context.md).
+O bounded context segue o plano
+[`docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md`](../../docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md)
+e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/design/adr/0005-ai-literacy-bounded-context.md).
 
 ## Estado atual
 
 | Parte | Estado |
 | --- | --- |
 | Conteúdo | Quantidade, versões e status pertencem ao [`curriculum/ai-literacy/README.md`](../../curriculum/ai-literacy/README.md) e ao catálogo canônico; valide antes de compilar. |
-| Baseline verificada | Fase 1 no commit `fb624ae`: três lições piloto e três tipos de atividade de ponta a ponta. |
-| Fase 2 | Verificada no commit `1f3d78e`: 57 testes unitários, 19 de contrato, 6 E2E (vertical slice, gamificação, PWA), lint e build verdes. |
-| Produção | <https://aidevschool-literacydojo.netlify.app> — deploy manual via `npm run build && npx netlify deploy --dir=dist --prod`. |
-
-## Deploy
-
-O site está vinculado ao projeto Netlify `aidevschool-literacydojo` (pasta
-`.netlify/`, ignorada no git). Para publicar uma nova versão:
-
-```bash
-npm run build && npx netlify deploy --dir=dist --prod
-```
+| Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
+| Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
+| Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
 
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
@@ -79,18 +70,16 @@ UI (src/screens, src/components)
   O app consome somente ele; conteúdo canônico em `curriculum/ai-literacy/`.
 - `src/domain/` — progresso (`LearnerProgress`), avaliação determinística de
   atividades tipadas, evidência (`LiteracyEvidenceRecord` + validador de envelope),
-  migração forward-only, feedback, helpers de trilha. Puro, sem React.
+  migração forward-only, feedback e regras de trilha. Puro, sem React.
 - `src/application/` — portas (`ContentRepository`, `ProgressRepository`,
-  `EvidenceSink`, `FeedbackProvider`, `AnalyticsSink`, `Clock`) e os casos de uso
-  (`startLesson`, `submitActivityAttempt`, `requestHint`, `retryActivity`,
-  `completeLesson`, `scheduleReview`, `resumeSession`, `resetProgress`,
-  `completeOnboarding`).
-- `src/adapters/` — `GeneratedContentRepository` (lê o read model),
-  `IndexedDbProgressRepository`, `InMemoryProgressRepository` (testes),
-  `ConsoleEvidenceSink` + `InMemoryEvidenceSink` (testes) +
-  `DevtoolsBridgeEvidenceSink` (dev/e2e), `DeterministicFeedbackProvider`,
-  `NoopAnalyticsSink` + `InMemoryAnalyticsSink` (testes), `SystemClock` +
-  `FixedClock` (testes).
+  `EvidenceSink`, `FeedbackProvider`) e os casos de uso (`completeOnboarding`,
+  `startLesson`, `submitActivityAttempt`, `requestHint`, `retryActivity`,
+  `completeLesson`, `startReview`, `completeReview`, `resumeSession`). O relógio
+  é uma função injetada, não uma porta separada.
+- `src/adapters/` — funções de conteúdo gerado, `IndexedDbProgressRepository`,
+  `consoleEvidenceSink`, `DevtoolsBridgeEvidenceSink`,
+  `DeterministicFeedbackProvider` e `systemClock`. As fakes em memória ficam em
+  `tests/fakes.ts`.
 - `src/app/` — raiz de composição (`services.ts`), boot e rotas (`App.tsx`).
 - `tests/` — vitest (domínio, casos de uso, adapters, componentes, fluxo do app).
 - `playwright/` — fluxo e2e completo da vertical slice.
@@ -103,16 +92,16 @@ UI (src/screens, src/components)
    feedback/dicas vêm do read model. Copy de chrome do produto (botões,
    onboarding, avisos) pode viver na UI.
 3. **`completed` é o máximo que a UI registra** — `mastered` não existe em
-   estado, evidência nem analytics (reservado a verificador independente futuro).
+   estado nem evidência (reservado a verificador independente futuro).
 4. **Toda tentativa avaliada emite evidência** com `verifierRequired: true` e
-   `deterministicChecks` estruturados — nunca texto livre do usuário (idem
-   analytics). Respostas não são persistidas (são transitórias na UI).
+   `deterministicChecks` estruturados — nunca texto livre do usuário. Respostas
+   não são persistidas (são transitórias na UI).
 5. **`learner/learning_state.yaml` não é tocado** — progresso do produto vive
    só no IndexedDB do navegador.
 6. **Feedback sem chamada externa** — `DeterministicFeedbackProvider` usa
    `feedback.*` e `hints` do conteúdo.
 
-## Decisões e desvios da Fase 1
+## Decisões de implementação
 
 - **IndexedDB (não localStorage)** como `ProgressRepository`, recomendado pelo
   plano: API assíncrona não bloqueia a UI e o caminho fica pronto para estados
@@ -123,8 +112,8 @@ UI (src/screens, src/components)
   na UI. A estrutura continua aceitando conteúdo `planned`; o catálogo canônico
   mantém o estado atual.
 - **`hints` opcionais no schema de lição** (1–3 dicas progressivas pré-escritas)
-  para o `requestHint` sem provider de IA. Adicionar dicas alterou conteúdo →
-  as 3 lições piloto foram para `version: 2` (regra do contrato).
+  para o `requestHint` sem provider de IA. Alterações em dicas seguem a regra de
+  versão do contrato de conteúdo.
 - **Desbloqueio pela ordem das lições prontas:** a primeira lição `ready` nasce
   `available`; concluir libera a próxima `ready`. Pré-requisitos `planned` não
   bloqueiam (não têm conteúdo — senão a trilha travaria). Regra encapsulada em
@@ -160,21 +149,10 @@ UI (src/screens, src/components)
 - **`lessons.ts` ausente** (ex.: após clone limpo) — `npm run gen:content`;
   `test` e `build` já o regeneram via hooks `pretest`/`prebuild`.
 
-## Critério para concluir a Fase 2
+## Gate de release
 
-O conteúdo completo e novos componentes podem existir antes de a experiência
-estar pronta. Só anuncie a Fase 2 como verificada quando, no mesmo estado do
-repositório:
-
-- os sete tipos de atividade passarem por lint, testes unitários e build;
-- o fluxo E2E cobrir lição, retomada e revisão;
-- XP, meta diária, conquistas e revisão espaçada tiverem regras de domínio
-  testadas;
-- a PWA e o comportamento offline tiverem evidência de execução;
-- teclado, foco, `aria-live`, contraste e alvos de toque passarem pela revisão
-  de acessibilidade; e
-- analytics e evidência continuarem sem texto livre do usuário.
-
-Fases posteriores ainda incluem feedback generativo opcional e piloto
-multiusuário. Mesmo nessas fases, a aprovação continua determinística e
-`mastered` permanece sob verificador independente.
+Antes de anunciar uma alteração local, execute `npm run gen:content`,
+`npm run lint`, `npm run test` e `npm run build` no mesmo checkout. Para uma
+alteração de fluxo, inclua `npm run test:e2e`. Uma publicação pública exige
+verificação separada da rota publicada; ela não muda a fronteira de
+`completed` e `mastered`.

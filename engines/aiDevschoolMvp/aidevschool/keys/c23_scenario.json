@@ -1,0 +1,15 @@
+{
+  "key_id": "c23_scenario",
+  "key_version": "1.0.0",
+  "gate_id": "G2",
+  "concept_id": "C23",
+  "kind": "scenario_key",
+  "items": {
+    "keyed_option": "B",
+    "misconception_strings": [
+      "never disclose",
+      "hide ai use",
+      "no one will notice"
+    ]
+  }
+}

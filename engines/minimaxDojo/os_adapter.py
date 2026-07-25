@@ -1,29 +1,21 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Mapping
+from typing import Any
 
 import yaml
+
+from .core.config import load_learner_config
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
-def _as_mapping(value: object, label: str) -> Mapping[str, object]:
+def _read_yaml(path: Path) -> dict[str, Any]:
+    value = yaml.safe_load(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
-        raise ValueError(f"{label} must be a mapping")
-    return value
-
-
-def _read_yaml(path: Path) -> Mapping[str, object]:
-    documents: list[object] = [
-        value
-        for value in yaml.safe_load_all(path.read_text(encoding="utf-8"))
-        if value is not None
-    ]
-    if len(documents) != 1:
         raise ValueError(f"Expected a YAML mapping in {path}")
-    return _as_mapping(documents[0], str(path))
+    return value
 
 
 def prepare_tutor_session(
@@ -31,11 +23,11 @@ def prepare_tutor_session(
     tutor_config_path: Path = Path(__file__).with_name("config") / "learner.yaml",
 ) -> str:
     learning_state = _read_yaml(learning_state_path)
-    tutor_config = _read_yaml(tutor_config_path)
-    learner = _as_mapping(learning_state.get("learner", {}), "learner")
-    active_unit = _as_mapping(learning_state.get("active_unit", {}), "active_unit")
-    gate = _as_mapping(learning_state.get("gate", {}), "gate")
-    socrates = _as_mapping(tutor_config.get("socrates", {}), "socrates")
+    tutor_config = load_learner_config(tutor_config_path)
+    learner = learning_state.get("learner", {})
+    active_unit = learning_state.get("active_unit", {})
+    gate = learning_state.get("gate", {})
+    socrates = tutor_config.get("socrates", {})
 
     unit_id = str(active_unit.get("id", "unassigned"))
     unit_title = str(active_unit.get("title", "No active unit"))

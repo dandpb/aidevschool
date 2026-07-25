@@ -95,10 +95,6 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
     expect(screen.getByTestId("task-context")).toHaveTextContent("organizar um agendamento");
     expect(screen.queryByTestId("confidence-support")).not.toBeInTheDocument();
-    expect(services.analytics.events).toContainEqual({
-      event: "onboarding_completed",
-      payload: { context: "work" },
-    });
     expect((await services.progressRepo.load())?.onboarding).toEqual({
       completed: true,
       goal: "save_time",

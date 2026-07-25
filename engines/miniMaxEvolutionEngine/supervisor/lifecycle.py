@@ -30,6 +30,7 @@ from .models import (
 )
 from .outbox import OutboxError, publish as _outbox_publish, read_request, read_resolution, validate_request
 from .plans import PHASE_PLANS
+from .reconcile import pending_request_from_events as _pending_request_from_events
 
 
 class LifecycleState(StrEnum):
@@ -151,23 +152,6 @@ class RequestBuilder:
         return request
 
 
-def _pending_marker(events: tuple[dict[str, Any], ...]) -> dict[str, Any] | None:
-    """Return the unresolved planned marker from the ledger events, if any."""
-    resolved = {
-        event["request_id"]
-        for event in events
-        if event["event"] in {"request_resolved", "request_reconciled"}
-    }
-    candidates = [
-        event
-        for event in events
-        if event["event"] == "request_planned" and event["request_id"] not in resolved
-    ]
-    if len(candidates) > 1:
-        raise OutboxError("multiple unresolved supervisor requests")
-    return candidates[0] if candidates else None
-
-
 def _has_unfinished_execution(events: tuple[dict[str, Any], ...], request_id: str) -> bool:
     """True when at least one role started execution but did not finish."""
     started = {
@@ -191,7 +175,7 @@ def current_request_state(paths: SupervisorPaths, pipeline: PipelineState) -> Re
     state instead of leaving the caller to reconstruct it.
     """
     events = read_ledger(paths.ledger)
-    marker = _pending_marker(events)
+    marker = _pending_request_from_events(events)
     if marker is None:
         return RequestState(LifecycleState.NONE)
 

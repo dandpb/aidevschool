@@ -102,8 +102,9 @@ postprocessing, no physics — docking/rewind is parametric repositioning on `sy
 
 - Targets unit **`U16-message-queue`** (project `16_mini_message_queue`). As of 2026-07-05 that
   unit is **not yet seeded** in `learner/learning_state.yaml` (only U0 is honestly gated), so
-  FREIGHT YARD's `src/content/reviewSlice.ts` ships a static fallback with `nextReviews: []`:
-  every attempt is therefore classified as **deepening** play (`scheduled_review: false`,
+  FREIGHT YARD reads the substrate-generated `engines/voxelDojo/shared/content.ts`; U16 is absent
+  from its `nextReviews`, and every attempt is therefore classified as **deepening** play
+  (`scheduled_review: false`,
   `review_reason: "deepening"`) until the substrate is extended. The emitter derives
   `scheduled_review` / `review_reason` dynamically from the slice, so a regenerated slice flips the
   same record to scheduled-review mode without code changes.

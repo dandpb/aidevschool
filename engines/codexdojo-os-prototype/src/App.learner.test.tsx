@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
-import { App } from './App'
+import { DesktopApp } from './desktop/DesktopApp'
 import {
   canonicalLearnerFixture,
   emptyGeneratedLearnerFixture,
@@ -12,7 +12,7 @@ afterEach(cleanup)
 describe('codexDojo OS canonical learner integration', () => {
   it('renders canonical learner progress from the injected read-only snapshot', () => {
     // Given
-    render(<App learner={canonicalLearnerFixture} />)
+    render(<DesktopApp learner={canonicalLearnerFixture} />)
 
     // When
     const desktop = screen.getByRole('main')
@@ -28,7 +28,7 @@ describe('codexDojo OS canonical learner integration', () => {
 
   it('renders a stable zero state when generated collections are empty', () => {
     // Given
-    render(<App learner={emptyGeneratedLearnerFixture} />)
+    render(<DesktopApp learner={emptyGeneratedLearnerFixture} />)
 
     // When
     const desktop = screen.getByRole('main')
@@ -45,7 +45,7 @@ describe('codexDojo OS canonical learner integration', () => {
     // Given
     const user = userEvent.setup()
     const before = JSON.stringify(canonicalLearnerFixture)
-    render(<App learner={canonicalLearnerFixture} />)
+    render(<DesktopApp learner={canonicalLearnerFixture} />)
 
     // When
     const terminalButtons = screen.getAllByRole('button', { name: 'Terminal' })

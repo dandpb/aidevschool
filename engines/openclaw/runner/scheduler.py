@@ -164,12 +164,3 @@ class Scheduler:
             if result.halted:
                 break
         return results
-
-
-# re-exports for tests that imported helpers from here
-def _parse_status(path: Path = PIPELINE_STATUS) -> PipelineStatus:
-    return load_status(path)
-
-
-def _write_status(status: PipelineStatus, path: Path = PIPELINE_STATUS) -> None:
-    save_status(status, path)

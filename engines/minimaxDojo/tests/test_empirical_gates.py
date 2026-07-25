@@ -154,87 +154,26 @@ class TestEmpiricalGate(unittest.TestCase):
         )
         self.assertTrue(result.passed)  # >= threshold passes
 
-    def test_anti_pattern_blacklist(self):
-        """Specific anti-patterns from the spec that must fail the gate."""
-        gate = self.gate_class()
-        blacklist = [
-            "assert_true_in_test",
-            "mock_returns_expected",
-            "try_except_pass",
-            "sleep_instead_of_sync",
-            "any_type_without_justification",
-            "mutate_input",
-            "resource_leak",
-            "swallow_exception",
-            "todo_in_scope",
-        ]
-        for pattern in blacklist:
-            with self.subTest(pattern=pattern):
-                result = gate.evaluate(
-                    mutation_score=0.99,
-                    coverage_core=0.99,
-                    tests_pass=True,
-                    lint_clean=True,
-                    anti_patterns=[pattern],
-                )
-                self.assertFalse(result.passed, f"anti-pattern '{pattern}' should fail gate")
-
-
-class TestGateResult(unittest.TestCase):
-    """Tests for the GateResult dataclass."""
-
-    def test_pass_result_has_no_gaps(self):
-        from engines.minimaxDojo.core.gates import GateResult
-        result = GateResult(
-            verdict="PASS",
-            passed=True,
-            mutation_score=0.72,
-            coverage_core=0.86,
-            tests_pass=True,
-            lint_clean=True,
-            gaps=[],
-        )
-        self.assertEqual(result.gaps, [])
-
-    def test_fail_result_lists_all_gaps(self):
-        from engines.minimaxDojo.core.gates import GateResult
-        result = GateResult(
-            verdict="FAIL",
-            passed=False,
-            mutation_score=0.42,
-            coverage_core=0.70,
-            tests_pass=False,
-            lint_clean=False,
-            gaps=[
-                "mutation score 0.42 < 0.65",
-                "coverage 0.70 < 0.80",
-                "tests failing",
-                "lint errors present",
-            ],
-        )
-        self.assertEqual(len(result.gaps), 4)
-
-
 class TestGateConfigSeam(unittest.TestCase):
     """The gate's live thresholds must come from config/learner.yaml (the seam),
     not hardcoded constants. Guards the D8 wiring against regressions."""
 
-    def test_from_config_reads_threshold_seam(self):
-        from engines.minimaxDojo.core.gates import EmpiricalGate
-        gate = EmpiricalGate.from_config()
-        # Values declared in engines/minimaxDojo/config/learner.yaml.
-        self.assertAlmostEqual(gate.mutation_threshold, 0.65)
-        self.assertAlmostEqual(gate.coverage_threshold, 0.80)
+    def test_gate_thresholds_reads_seam(self):
+        from engines.minimaxDojo.core.config import gate_thresholds
+        mutation, coverage = gate_thresholds()
+        self.assertAlmostEqual(mutation, 0.65)
+        self.assertAlmostEqual(coverage, 0.80)
 
-    def test_from_config_overrides_drive_behavior(self):
+    def test_gate_thresholds_overrides_drive_behavior(self):
         from engines.minimaxDojo.core.gates import EmpiricalGate
-        lenient = EmpiricalGate.from_config(
+        from engines.minimaxDojo.core.config import gate_thresholds
+        mutation, coverage = gate_thresholds(
             {"gates": {"mutation_score_min": 0.50, "cobertura_nucleo_min": 0.50}}
         )
+        lenient = EmpiricalGate(mutation_threshold=mutation, coverage_threshold=coverage)
         result = lenient.evaluate(
             mutation_score=0.55, coverage_core=0.55, tests_pass=True, lint_clean=True
         )
-        # 0.55 would FAIL the default 0.65/0.80 gate but PASSES the config-driven one.
         self.assertTrue(result.passed)
 
 

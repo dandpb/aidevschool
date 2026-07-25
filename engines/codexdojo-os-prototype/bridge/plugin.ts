@@ -21,21 +21,6 @@ export type BridgeAuthorizationInput = {
   readonly token: string | undefined
 }
 
-export class BridgeConcurrencyGate {
-  private active = 0
-
-  constructor(private readonly limit: number) {}
-
-  tryAcquire(): boolean {
-    if (this.active >= this.limit) return false
-    this.active += 1
-    return true
-  }
-
-  release(): void {
-    this.active = Math.max(0, this.active - 1)
-  }
-}
 
 class BridgeBodyTooLargeError extends Error {
   constructor() {
@@ -84,7 +69,7 @@ function tokensEqual(received: string, expected: string): boolean {
 }
 
 export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base64url')): Plugin {
-  const gate = new BridgeConcurrencyGate(1)
+  let bridgeBusy = false
   const configureBridge = (server: BridgeServer): void => {
     server.middlewares.use((request, response, next) => {
       const pathname = new URL(request.url ?? '/', 'http://127.0.0.1').pathname
@@ -124,10 +109,11 @@ export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base
         })
         return
       }
-      if (!gate.tryAcquire()) {
+      if (bridgeBusy) {
         sendJson(response, { status: 429, body: { error: 'bridge-busy' } })
         return
       }
+      bridgeBusy = true
 
       void handleBridgeRequest(request, response, pathname).catch((error: unknown) => {
         if (error instanceof BridgeBodyTooLargeError) {
@@ -143,7 +129,7 @@ export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base
         }
         server.config.logger.error('Engine bridge request failed')
         sendJson(response, { status: 500, body: { error: 'bridge-failure' } })
-      }).finally(() => gate.release())
+      }).finally(() => { bridgeBusy = false })
     })
   }
 

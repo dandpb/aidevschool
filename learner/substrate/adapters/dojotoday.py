@@ -46,12 +46,14 @@ def _build_track(
     rich_title: dict[str, str] = {}
     for unit in units_log:
         num = _num_of(unit.get("project"))
-        if num:
-            rich_title[num] = unit.get("concept") or unit.get("unit_id")
+        title = unit.get("concept") or unit.get("unit_id")
+        if num and isinstance(title, str):
+            rich_title[num] = title
 
     active_num = _num_of(active.get("project"))
-    if active_num:
-        rich_title[active_num] = active.get("title") or active.get("id")
+    active_title = active.get("title") or active.get("id")
+    if active_num and isinstance(active_title, str):
+        rich_title[active_num] = active_title
 
     mastered_nums = {_num_of(unit.get("project")) for unit in units_log if unit.get("mastered")}
     mastered_nums.discard(None)
@@ -72,7 +74,6 @@ def _build_track(
                 "num": num,
                 "title": rich_title.get(num) or game.get("title") or num,
                 "gameDir": game.get("gameDir"),
-                "port": game.get("port"),
                 "status": status,
             }
         )
@@ -96,12 +97,11 @@ def _load_games(source_root: Path) -> dict[str, dict[str, Any]]:
             games[num] = {
                 "title": game.get("name", num),
                 "gameDir": f"engines/voxelDojo/{game_id}",
-                "port": game.get("developmentPort"),
             }
 
     # 01 and 04 are 2D sessions inside pixel-quest (no dedicated voxel game).
-    games.setdefault("01", {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest", "port": None})
-    games.setdefault("04", {"title": "TASK QUEUE", "gameDir": "engines/pixelDojo/pixel-quest", "port": None})
+    games.setdefault("01", {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest"})
+    games.setdefault("04", {"title": "TASK QUEUE", "gameDir": "engines/pixelDojo/pixel-quest"})
     return games
 
 
@@ -123,7 +123,7 @@ def derive_today_snapshot(
     units_log = state.get("units_log") or []
     by_id = {unit.get("unit_id"): unit for unit in units_log if unit.get("unit_id")}
 
-    reviews = derive_next_reviews(units_log, [], today)
+    reviews: list[dict[str, Any]] = [dict(review) for review in derive_next_reviews(units_log, [], today)]
     for review in reviews:
         unit = by_id.get(review["unitId"], {})
         review["gameDir"] = _game_dir(unit.get("evidence_file"), unit.get("project"))
@@ -174,16 +174,16 @@ def render_today_ts(snapshot: dict[str, Any]) -> str:
         "// Fonte: learner/learning_state.yaml + scheduler learner.substrate.scheduling.\n"
         f"// Regenerado em {snapshot['asOf']}.\n"
         'import type { TodaySnapshot } from "../types";\n\n'
-        f"export const today: TodaySnapshot = {payload} as TodaySnapshot;\n"
+        f"export const today: TodaySnapshot = {payload};\n"
     )
 
 
 def _self_check() -> int:
     """Framework-free check for the non-trivial track and game-dir logic."""
     games = {
-        "01": {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest", "port": None},
-        "02": {"title": "WAREHOUSE", "gameDir": "engines/voxelDojo/game-02-warehouse", "port": 5202},
-        "03": {"title": "WORMHOLE", "gameDir": "engines/voxelDojo/game-03-wormhole", "port": 5203},
+        "01": {"title": "RATE LIMITER", "gameDir": "engines/pixelDojo/pixel-quest"},
+        "02": {"title": "WAREHOUSE", "gameDir": "engines/voxelDojo/game-02-warehouse"},
+        "03": {"title": "WORMHOLE", "gameDir": "engines/voxelDojo/game-03-wormhole"},
     }
     units_log = [
         {"unit_id": "U0", "project": "01_rate_limiter", "concept": "GATEKEEPER", "mastered": True},
@@ -200,6 +200,7 @@ def _self_check() -> int:
     assert by_num["02"]["status"] == "active", "02 must be active (active project)"
     assert by_num["02"]["title"] == active["title"], "rich title for 02 must come from active unit"
     assert by_num["03"]["status"] == "available", "03 must be available"
+    assert all("port" not in node for node in track), "track must not expose development ports"
     assert next_num == "02", f"next must be 02 (active), got {next_num}"
 
     assert (

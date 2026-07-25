@@ -111,6 +111,7 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
         root = dashboard_snapshot.ROOT
         dashboard_path = root / "engines" / "codexDojo" / "src" / "data" / "learner.ts"
         os_path = root / "engines" / "codexdojo-os-prototype" / "src" / "data" / "learner.ts"
+        missions_path = root / "engines" / "codexdojo-os-prototype" / "src" / "data" / "missions.ts"
         pixel_path = root / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts"
         dojotoday_path = root / "engines" / "dojoToday" / "src" / "data" / "today.ts"
 
@@ -125,6 +126,10 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
             patch(
                 "learner.substrate.projections.build_learner_snapshot_views",
                 return_value={os_path: "os"},
+            ),
+            patch(
+                "learner.substrate.projections.build_mission_catalog_views",
+                return_value={missions_path: "missions"},
             ),
             patch(
                 "learner.substrate.projections.build_game_review_views",
@@ -142,6 +147,7 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
             {
                 dashboard_path: "dashboard",
                 os_path: "os",
+                missions_path: "missions",
                 pixel_path: "pixel",
                 dojotoday_path: "dojotoday",
             }
@@ -168,6 +174,28 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
 
         build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
         write_views.assert_called_once_with({dashboard_path: "dashboard"})
+
+    def test_mission_catalog_can_regenerate_without_other_view_side_effects(self) -> None:
+        missions_path = (
+            dashboard_snapshot.ROOT
+            / "engines"
+            / "codexdojo-os-prototype"
+            / "src"
+            / "data"
+            / "missions.ts"
+        )
+        with (
+            patch.object(substrate, "load_and_validate", return_value={}),
+            patch(
+                "learner.substrate.projections.build_mission_catalog_views",
+                return_value={missions_path: "missions"},
+            ) as build_views,
+            patch.object(substrate, "write_views") as write_views,
+        ):
+            assert substrate.regenerate_mission_catalog() == {missions_path: "missions"}
+
+        build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
+        write_views.assert_called_once_with({missions_path: "missions"})
 
     def test_os_and_dashboard_renderers_share_contract_values(self) -> None:
         dashboard_text = ts_render.render_dashboard_ts(SNAPSHOT)

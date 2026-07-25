@@ -1,6 +1,7 @@
 /** Contrato do read model "hoje" do programador, gerado por tools/gen-today.py. */
 
-export type ReviewReason = "overdue" | "due" | "interleaving" | "recurring-trap";
+import type { ReviewReason } from "@aidevschool/evidence";
+export type { ReviewReason };
 
 export type DueReview = {
   readonly unitId: string;
@@ -27,7 +28,6 @@ export type TrackNode = {
   readonly num: string;
   readonly title: string;
   readonly gameDir: string | null;
-  readonly port: number | null;
   readonly status: TrackStatus;
 };
 

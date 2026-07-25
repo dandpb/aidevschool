@@ -7,7 +7,6 @@ import {
   findAgent,
   findProject,
   findStage,
-  getCurrentStage,
   getProjects,
   getSelectedAgent,
   getSelectedProject,
@@ -156,20 +155,6 @@ describe("DojoQuery seam", () => {
     expect(agent.name).toBe("CARTÓGRAFO")
   })
 
-  it("returns the current stage", () => {
-    // Given
-    const state = {
-      ...buildInitialState("maestro", "diagnosticar"),
-      selectedStageId: "revisar",
-    }
-
-    // When
-    const stage = getCurrentStage(state)
-
-    // Then
-    expect(stage.owner).toBe("Revisor")
-  })
-
   it("returns the selected project", () => {
     // Given
     const state = {
@@ -200,13 +185,6 @@ describe("DojoQuery seam", () => {
     // Then
     expect(concurrencyProjects.every((project) => project.phase === "concorrencia")).toBe(true)
     expect(concurrencyProjects.length).toBeGreaterThan(0)
-  })
-
-  it("reuses the cached project group for repeated phase queries", () => {
-    const concurrencyProjects = getProjects("concorrencia")
-
-    expect(concurrencyProjects).toBe(getProjects("concorrencia"))
-    expect(Object.isFrozen(concurrencyProjects)).toBe(true)
   })
 
   it("reports a stage as completed only when it is in the completed list", () => {

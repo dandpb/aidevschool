@@ -4,12 +4,17 @@ import {
   canFinish,
   createLessonSession,
   currentActivity,
-  dispatch,
+  finishLesson,
   hintsFor,
   isLastActivity,
   latestAttempt,
+  nextActivity,
+  recordHint,
   requiredActivitiesPassed,
+  retryCurrentActivity,
   setAnswer,
+  startSession,
+  submitAttempt,
 } from "../../src/domain/lessonSession";
 
 const lesson = lessons.find((item) => item.id === "l03");
@@ -56,34 +61,25 @@ describe("createLessonSession", () => {
 describe("start", () => {
   it("transiciona de intro para attempting na primeira atividade e registra startedAt", () => {
     const session = createLessonSession(lesson.id, "initial");
-    const result = dispatch(session, lesson, { type: "start", now: NOW });
-    expect(result.session.phase).toBe("attempting");
-    expect(result.session.currentActivityIndex).toBe(0);
-    expect(result.session.startedAt).toBe(NOW);
-    expect(result.finishPayload).toBeUndefined();
+    const result = startSession(session, NOW);
+    expect(result.phase).toBe("attempting");
+    expect(result.currentActivityIndex).toBe(0);
+    expect(result.startedAt).toBe(NOW);
   });
 });
 
 describe("submit", () => {
   it("registra a tentativa mais recente e a melhor nota", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
+    session = startSession(session, NOW);
 
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(0.5, false),
-      feedback: makeFeedback(),
-    }).session;
+    session = submitAttempt(session, lesson, makeEvaluation(0.5, false), makeFeedback());
     expect(session.phase).toBe("feedback");
     expect(latestAttempt(session, activityA.id)?.evaluation.score).toBe(0.5);
     expect(latestAttempt(session, activityA.id)).toBe(bestAttempt(session, activityA.id));
 
-    session = dispatch(session, lesson, { type: "retry" }).session;
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(1, true),
-      feedback: makeFeedback(),
-    }).session;
+    session = retryCurrentActivity(session, lesson);
+    session = submitAttempt(session, lesson, makeEvaluation(1, true), makeFeedback());
     expect(session.phase).toBe("feedback");
     expect(latestAttempt(session, activityA.id)?.evaluation.score).toBe(1);
     expect(bestAttempt(session, activityA.id)?.evaluation.score).toBe(1);
@@ -91,18 +87,10 @@ describe("submit", () => {
 
   it("mantém a melhor nota quando uma tentativa posterior é pior", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(1, true),
-      feedback: makeFeedback(),
-    }).session;
-    session = dispatch(session, lesson, { type: "retry" }).session;
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(0.5, false),
-      feedback: makeFeedback(),
-    }).session;
+    session = startSession(session, NOW);
+    session = submitAttempt(session, lesson, makeEvaluation(1, true), makeFeedback());
+    session = retryCurrentActivity(session, lesson);
+    session = submitAttempt(session, lesson, makeEvaluation(0.5, false), makeFeedback());
     expect(bestAttempt(session, activityA.id)?.evaluation.score).toBe(1);
   });
 });
@@ -110,12 +98,12 @@ describe("submit", () => {
 describe("hint", () => {
   it("incrementa o índice e registra dicas mostradas", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, lesson, { type: "hint", hint: "dica 1" }).session;
+    session = startSession(session, NOW);
+    session = recordHint(session, lesson, "dica 1");
     expect(hintsFor(session, activityA.id).index).toBe(1);
     expect(hintsFor(session, activityA.id).shown).toEqual(["dica 1"]);
 
-    session = dispatch(session, lesson, { type: "hint", hint: null }).session;
+    session = recordHint(session, lesson, null);
     expect(hintsFor(session, activityA.id).index).toBe(2);
     expect(hintsFor(session, activityA.id).shown).toEqual(["dica 1"]);
   });
@@ -124,15 +112,11 @@ describe("hint", () => {
 describe("retry", () => {
   it("limpa a resposta e a tentativa atual, voltando para attempting", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
+    session = startSession(session, NOW);
     session = setAnswer(session, lesson, { optionIds: ["x"] });
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(0.5, false),
-      feedback: makeFeedback(),
-    }).session;
+    session = submitAttempt(session, lesson, makeEvaluation(0.5, false), makeFeedback());
 
-    session = dispatch(session, lesson, { type: "retry" }).session;
+    session = retryCurrentActivity(session, lesson);
     expect(session.phase).toBe("attempting");
     expect(latestAttempt(session, activityA.id)).toBeUndefined();
     expect(session.answers[activityA.id]).toBeUndefined();
@@ -142,26 +126,18 @@ describe("retry", () => {
 describe("next", () => {
   it("avança para a próxima atividade quando aprovado", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(1, true),
-      feedback: makeFeedback(),
-    }).session;
-    session = dispatch(session, lesson, { type: "next" }).session;
+    session = startSession(session, NOW);
+    session = submitAttempt(session, lesson, makeEvaluation(1, true), makeFeedback());
+    session = nextActivity(session, lesson);
     expect(session.phase).toBe("attempting");
     expect(session.currentActivityIndex).toBe(1);
   });
 
   it("não avança quando a tentativa não passou", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(0.5, false),
-      feedback: makeFeedback(),
-    }).session;
-    session = dispatch(session, lesson, { type: "next" }).session;
+    session = startSession(session, NOW);
+    session = submitAttempt(session, lesson, makeEvaluation(0.5, false), makeFeedback());
+    session = nextActivity(session, lesson);
     expect(session.currentActivityIndex).toBe(0);
   });
 });
@@ -169,34 +145,26 @@ describe("next", () => {
 describe("finish gating", () => {
   it("só permite finish na última atividade com todas as obrigatórias aprovadas", () => {
     let session = createLessonSession(lesson.id, "initial");
-    session = dispatch(session, lesson, { type: "start", now: NOW }).session;
+    session = startSession(session, NOW);
     expect(canFinish(session, lesson)).toBe(false);
 
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: makeEvaluation(1, true),
-      feedback: makeFeedback(),
-    }).session;
+    session = submitAttempt(session, lesson, makeEvaluation(1, true), makeFeedback());
     // Ainda não é a última atividade.
     expect(isLastActivity(session, lesson)).toBe(false);
-    const beforeFinish = dispatch(session, lesson, { type: "finish", now: NOW });
+    const beforeFinish = finishLesson(session, lesson, NOW);
     expect(beforeFinish.session.phase).not.toBe("completed");
     expect(beforeFinish.finishPayload).toBeUndefined();
 
-    session = dispatch(session, lesson, { type: "next" }).session;
+    session = nextActivity(session, lesson);
     const activityBEvaluation = {
       ...makeEvaluation(1, true),
       activityId: activityB.id,
     };
-    session = dispatch(session, lesson, {
-      type: "submit",
-      evaluation: activityBEvaluation,
-      feedback: makeFeedback(),
-    }).session;
+    session = submitAttempt(session, lesson, activityBEvaluation, makeFeedback());
     expect(isLastActivity(session, lesson)).toBe(true);
     expect(canFinish(session, lesson)).toBe(true);
 
-    const finished = dispatch(session, lesson, { type: "finish", now: NOW });
+    const finished = finishLesson(session, lesson, NOW);
     expect(finished.session.phase).toBe("completed");
     expect(finished.finishPayload).toBeDefined();
     expect(finished.finishPayload?.bestScores).toEqual({
@@ -212,9 +180,9 @@ describe("finish gating", () => {
     if (!singleActivityLesson) throw new Error("lição com atividade obrigatória ausente");
     const requiredId = singleActivityLesson.completion.requiredActivityIds[0];
     let session = createLessonSession(singleActivityLesson.id, "initial");
-    session = dispatch(session, singleActivityLesson, { type: "start", now: NOW }).session;
+    session = startSession(session, NOW);
     // Não submete nada, mas tenta finalizar.
-    const finished = dispatch(session, singleActivityLesson, { type: "finish", now: NOW });
+    const finished = finishLesson(session, singleActivityLesson, NOW);
     expect(finished.finishPayload).toBeUndefined();
     expect(requiredActivitiesPassed(session, [requiredId])).toBe(false);
   });
@@ -229,10 +197,11 @@ describe("finish gating", () => {
     if (!activity) throw new Error("atividade ausente");
 
     let session = createLessonSession(singleActivityLesson.id, "initial");
-    session = dispatch(session, singleActivityLesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, singleActivityLesson, {
-      type: "submit",
-      evaluation: {
+    session = startSession(session, NOW);
+    session = submitAttempt(
+      session,
+      singleActivityLesson,
+      {
         activityId: activity.id,
         activityType: activity.type,
         checks: [],
@@ -240,16 +209,13 @@ describe("finish gating", () => {
         score: 1,
         pass: true,
       },
-      feedback: makeFeedback(),
-    }).session;
+      makeFeedback(),
+    );
 
-    const beforeStart = dispatch(session, singleActivityLesson, {
-      type: "finish",
-      now: new Date(NOW.getTime() - 1000),
-    });
+    const beforeStart = finishLesson(session, singleActivityLesson, new Date(NOW.getTime() - 1000));
     expect(beforeStart.finishPayload?.durationSeconds).toBe(0);
 
-    const sameTime = dispatch(session, singleActivityLesson, { type: "finish", now: NOW });
+    const sameTime = finishLesson(session, singleActivityLesson, NOW);
     expect(sameTime.finishPayload?.durationSeconds).toBe(0);
   });
 
@@ -263,10 +229,11 @@ describe("finish gating", () => {
     if (!activity) throw new Error("atividade ausente");
 
     let session = createLessonSession(singleActivityLesson.id, "review");
-    session = dispatch(session, singleActivityLesson, { type: "start", now: NOW }).session;
-    session = dispatch(session, singleActivityLesson, {
-      type: "submit",
-      evaluation: {
+    session = startSession(session, NOW);
+    session = submitAttempt(
+      session,
+      singleActivityLesson,
+      {
         activityId: activity.id,
         activityType: activity.type,
         checks: [],
@@ -274,13 +241,10 @@ describe("finish gating", () => {
         score: 1,
         pass: true,
       },
-      feedback: makeFeedback(),
-    }).session;
+      makeFeedback(),
+    );
 
-    const finished = dispatch(session, singleActivityLesson, {
-      type: "finish",
-      now: new Date(NOW.getTime() + 5000),
-    });
+    const finished = finishLesson(session, singleActivityLesson, new Date(NOW.getTime() + 5000));
     expect(finished.session.mode).toBe("review");
     expect(finished.finishPayload?.durationSeconds).toBe(5);
   });

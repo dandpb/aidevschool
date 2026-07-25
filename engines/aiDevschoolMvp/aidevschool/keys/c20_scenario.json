@@ -1,0 +1,15 @@
+{
+  "key_id": "c20_scenario",
+  "key_version": "1.0.0",
+  "gate_id": "G2",
+  "concept_id": "C20",
+  "kind": "scenario_key",
+  "items": {
+    "keyed_option": "B",
+    "misconception_strings": [
+      "always use ai for everything",
+      "ai is always faster",
+      "no need to check"
+    ]
+  }
+}

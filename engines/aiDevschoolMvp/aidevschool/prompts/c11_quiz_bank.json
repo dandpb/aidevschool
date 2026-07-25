@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c11_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C11",
+  "items": [
+    {
+      "item_id": "c11_q01",
+      "stem": "Why do language AIs often sound so sure of themselves?",
+      "options": {
+        "A": "Fluent, confident wording is what they learned to produce in practice",
+        "B": "They feel emotions the way people do",
+        "C": "A human rewrites every answer before you see it"
+      }
+    },
+    {
+      "item_id": "c11_q02",
+      "stem": "When a language AI writes an answer, what is it mainly doing?",
+      "options": {
+        "A": "Reading your mind through the camera",
+        "B": "Looking up one approved fact sheet for your company",
+        "C": "Predicting the next likely chunk of text from patterns"
+      }
+    },
+    {
+      "item_id": "c11_q03",
+      "stem": "Does a language AI \"know\" things the way a colleague does?",
+      "options": {
+        "A": "Yes — it holds beliefs and can change its mind after reflection",
+        "B": "No — it has no human-style knowledge or beliefs behind the words",
+        "C": "Only on weekdays"
+      }
+    },
+    {
+      "item_id": "c11_q04",
+      "stem": "A smooth, confident sentence from an AI means:",
+      "options": {
+        "A": "The wording fits patterns of fluent text, not that every fact was checked",
+        "B": "Every claim was verified against a trusted source",
+        "C": "The AI is refusing to answer"
+      }
+    },
+    {
+      "item_id": "c11_q05",
+      "stem": "Why can an AI invent a wrong date while sounding certain?",
+      "options": {
+        "A": "It is choosing to lie to trick you",
+        "B": "Someone typed the wrong date into your keyboard",
+        "C": "It predicts likely wording even when the true fact is missing"
+      }
+    },
+    {
+      "item_id": "c11_q06",
+      "stem": "What should you do with an important claim an AI states confidently?",
+      "options": {
+        "A": "Paste it into a report with no changes",
+        "B": "Check it before you rely on it or pass it on",
+        "C": "Assume confidence equals proof"
+      }
+    },
+    {
+      "item_id": "c11_q07",
+      "stem": "\"The AI understands me like a person.\" What is the better view?",
+      "options": {
+        "A": "It matches patterns in wording; that is not human understanding",
+        "B": "It has a private inner life and opinions",
+        "C": "It only understands numbers, never words"
+      }
+    },
+    {
+      "item_id": "c11_q08",
+      "stem": "Where does the confident tone mostly come from?",
+      "options": {
+        "A": "A special \"honesty dial\" set to maximum",
+        "B": "Fear of being wrong",
+        "C": "Practice on huge amounts of fluent text that sounds sure"
+      }
+    },
+    {
+      "item_id": "c11_q09",
+      "stem": "A teammate trusts any AI answer that \"sounds professional.\" What do you say?",
+      "options": {
+        "A": "Professional tone always means the facts are safe",
+        "B": "Tone is not evidence — important claims still need a check",
+        "C": "Only casual answers can be wrong"
+      }
+    }
+  ]
+}

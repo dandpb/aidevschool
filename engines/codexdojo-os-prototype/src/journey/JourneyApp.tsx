@@ -1,0 +1,56 @@
+import { useServices } from '../app/ServicesProvider'
+import { learnerSnapshot } from '../data/learner'
+import type { LearnerSnapshot } from '../domain'
+import { MissionShell } from '../host/MissionShell'
+import { Hub } from './Hub'
+import { Onboarding } from './Onboarding'
+import { useJourneyController } from './useJourneyController'
+
+export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: LearnerSnapshot }) {
+  const services = useServices()
+  const controller = useJourneyController()
+  const { state } = controller
+
+  if (state.kind === 'booting') {
+    return <main className="journey-loading" aria-busy="true">Preparando sua jornada…</main>
+  }
+  if (state.kind === 'failed') {
+    return <main className="journey-loading" role="alert">{state.message}</main>
+  }
+
+  const { route, progress } = state
+  if (route.kind === 'onboarding' || route.kind === 'boot') {
+    return <Onboarding onComplete={(input) => void controller.finishOnboarding(input)} />
+  }
+  if (route.kind === 'hub') {
+    return (
+      <Hub
+        progress={progress}
+        learner={learner}
+        catalog={services.missions}
+        onLaunch={(mission) => void controller.launchMission(mission)}
+      />
+    )
+  }
+  if (route.kind === 'mission') {
+    const mission = services.missions.get(route.trackId, route.missionId)
+    if (mission === undefined) {
+      return <main className="journey-loading" role="alert">Esta missão não está disponível.</main>
+    }
+    return (
+      <MissionShell
+        mission={mission}
+        learner={learner}
+        onComplete={controller.completeMission}
+        onReturn={() => services.navigation.push('/hub')}
+      />
+    )
+  }
+  if (route.kind === 'map') {
+    return <main className="journey-loading"><h1>Mapa da trilha</h1><p>O primeiro capítulo será expandido nas próximas fases.</p><button type="button" onClick={() => services.navigation.push('/hub')}>Voltar ao hub</button></main>
+  }
+  if (route.kind === 'progress') {
+    return <main className="journey-loading"><h1>Progresso</h1><p>Conclusão local e domínio canônico permanecem separados.</p><button type="button" onClick={() => services.navigation.push('/hub')}>Voltar ao hub</button></main>
+  }
+  return <main className="journey-loading" role="alert">Rota não encontrada.</main>
+}

@@ -12,6 +12,9 @@
     "preview": "vite build && vite preview",
     "lint": "biome check src tools"
   },
+  "dependencies": {
+    "@aidevschool/evidence": "file:../shared/teaching-evidence"
+  },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "typescript": "5.7.3",

@@ -1,26 +1,11 @@
 import { expect, test } from "@playwright/test"
+import { collectEvidence, type EvidenceRecord } from "../../shared/testHelpers"
 
 /**
  * Browser smoke contract: the page boots WebGL, the HUD drives the sim, and cleared/failed
  * waves emit EVIDENCE console records with the voxeldojo schema. Concept math is proven in
  * Vitest (src/sim/store.test.ts); this spec proves the wiring inside a real browser.
  */
-
-interface EvidenceRecord {
-  source: string
-  unit_id: string
-  project: string
-  scenario_id: string
-  game: string
-  pass: boolean
-  metrics: Record<string, number | boolean>
-}
-
-function collectEvidence(lines: string[]): EvidenceRecord[] {
-  return lines
-    .filter((l) => l.startsWith("EVIDENCE "))
-    .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-}
 
 test("boots the warehouse, plays L1 by clicking predicted shelves, emits a passing record", async ({
   page,
@@ -58,8 +43,8 @@ test("boots the warehouse, plays L1 by clicking predicted shelves, emits a passi
   expect(first.source).toBe("voxeldojo")
   expect(first.unit_id).toBe("U2-key-value-store")
   expect(first.project).toBe("02_key_value_store")
-  expect(first.scenario_id).toBe("warehouse-L1")
-  expect(first.game).toBe("WAREHOUSE")
+  expect(first.scenario_id).toBe("kv-warehouse-L1")
+  expect(first.game).toBe("KV WAREHOUSE")
   expect(first.pass).toBe(true)
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
@@ -95,7 +80,7 @@ test("L3 TTL: correct decay-probes + swept prediction clear the wave and emit bo
   await page.getByTestId(`swept-${keyCount}`).click()
 
   await expect(page.getByTestId("hud-status")).toContainText("cleared")
-  const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "warehouse-L3")
+  const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "kv-warehouse-L3")
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)
   expect(record?.metrics.expired_swept).toBe(keyCount)

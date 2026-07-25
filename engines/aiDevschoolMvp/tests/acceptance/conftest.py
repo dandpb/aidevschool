@@ -69,8 +69,7 @@ def make_state(active: list[str] | None = None, *, c14="LOCKED", c14_scaffold=No
 def write_state(state_dir: Path, state: dict[str, Any]) -> None:
     (state_dir / "state.json").write_text(json.dumps(state), encoding="utf-8")
     (state_dir / "config.json").write_text(
-        json.dumps({"tutor_model": "inherit", "verifier_model": "inherit", "channel": "telegram",
-                    "install_platform": "openclaw", "skill_version": "1.0.0",
+        json.dumps({"verifier_model": "inherit",
                     "feature_flags": {"llm_gates_enabled": True}}), encoding="utf-8")
 
 

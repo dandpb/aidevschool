@@ -1,7 +1,38 @@
+import { cycleStages } from "../data/cycle"
+import type { CycleStage } from "../domain"
 import type { AppState } from "../state"
-import { buildCycleViewModel } from "../viewModels/cycleViewModel"
 import { currentAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
+
+export type CycleViewModel = {
+  readonly stages: readonly {
+    readonly stage: CycleStage
+    readonly index: number
+    readonly isSelected: boolean
+    readonly isCompleted: boolean
+  }[]
+  readonly selectedStage: CycleStage
+  readonly progress: number
+}
+
+export function buildCycleViewModel(state: AppState): CycleViewModel {
+  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
+  const completedIds = new Set(state.completedStageIds)
+  const stages = cycleStages.map((stage, index) => ({
+    stage,
+    index,
+    isSelected: stage.id === state.selectedStageId,
+    isCompleted: completedIds.has(stage.id),
+  }))
+  const fallbackStage = cycleStages[0]
+  if (fallbackStage === undefined) {
+    throw new Error("cycleStages must not be empty")
+  }
+  const selectedStage = cycleStages[selectedIndex] ?? fallbackStage
+  const progress = Math.round((state.completedStageIds.length / cycleStages.length) * 100)
+
+  return { stages, selectedStage, progress }
+}
 
 export function renderCycle(state: AppState): string {
   const model = buildCycleViewModel(state)

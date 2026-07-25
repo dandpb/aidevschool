@@ -141,7 +141,7 @@ elements:
         <p style="margin-top:4px"><strong>learner.ts · projects.ts · agents.ts · cycle.ts</strong> → dashboard codexDojo</p>
         <p style="margin-top:4px"><strong>learner.ts</strong> → codexdojo-os (projeção própria, mesmo snapshot)</p>
         <p style="margin-top:4px"><strong>reviewSlice.ts</strong> → pixel-quest</p>
-        <p style="margin-top:4px"><strong>reviewSlice.ts × 16</strong> → voxelDojo (fan-out game-*)</p>
+        <p style="margin-top:4px"><strong>shared/content.ts</strong> → voxelDojo (uma projeção compartilhada por game-*)</p>
         <p style="margin-top:4px"><strong>BACKLOG_STATUS.md</strong> → curriculum/</p>
         <p style="margin-top:8px"><span style="color:$muted;">Todo arquivo gerado traz o cabeçalho "AUTO-GENERATED … DO NOT EDIT BY HAND".</span></p>
   - elementId: rules-head

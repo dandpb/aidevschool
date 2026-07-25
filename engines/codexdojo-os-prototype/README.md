@@ -3,8 +3,6 @@
 An educational Linux desktop where each application can become a computing
 fundamentals lab.
 
-![Prévia do codexDojo OS](docs/prototype-preview.png)
-
 ## Run the OS
 
 Use Node.js 20.19+ or 22.12+. The current lock file uses Vite 8.1.4.
@@ -88,7 +86,7 @@ unverified, and never grants mastery.
 ## Implemented surfaces
 
 - Desktop shell, top bar, dock, searchable launcher, and movable windows.
-- Catalog with more than 50 apps and explicit maturity states.
+- Catalog with 11 apps and explicit maturity states.
 - Contextual Learn Mode and a deterministic local mentor prototype.
 - Tracks, local Terminal commands, Files, and an architecture map.
 - Engine Hub with six external engine adapters and raw-evidence receipts.

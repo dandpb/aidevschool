@@ -1,0 +1,22 @@
+{
+  "key_id": "c15_seeded_report",
+  "key_version": "1.0.0",
+  "gate_id": "G1",
+  "concept_id": "C15",
+  "kind": "seeded_error",
+  "items": {
+    "claims_total": 8,
+    "planted": [
+      2,
+      4,
+      6,
+      7
+    ],
+    "explanations": {
+      "2": "Quoting a number without a source is exactly the kind of claim to verify, not to trust.",
+      "4": "A screenshot proves someone shared it, not that the claim is true.",
+      "6": "An AI restating a confident claim is not a new source \u2014 it is the same claim repeated.",
+      "7": "Consensus in a comment thread is opinion, not evidence."
+    }
+  }
+}

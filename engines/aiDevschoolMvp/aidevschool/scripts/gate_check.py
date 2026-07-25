@@ -18,17 +18,15 @@ import learner.gate.engine as _engine
 import learner.gate.state as _state
 
 
-def _emit(obj: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
-
-
 def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _resolve_gate(binding, pending_gate_id, llm_enabled):
+def _resolve_gate(binding, role, llm_enabled):
+    """Resolve by assessment ROLE (primary vs teach_back), not the gate id alone —
+    C13's primary is also G4, so pending_gate_id='G4' is ambiguous without the role."""
     tb = binding.get("teach_back")
-    if pending_gate_id == "G4" and tb is not None:
+    if role == "teach_back" and tb is not None:
         if llm_enabled:
             return "G4", tb["definition"], True
         return "G3", tb["fallback"], True
@@ -119,6 +117,7 @@ def main() -> None:
     curriculum = _load_json(skill_dir / "curriculum.json")
     by_id = {r["id"]: r for r in curriculum}
     registry = _load_json(skill_dir / "gate_registry.json")
+    _core.verify_manifest(skill_dir)  # §9.2 gate-integrity: exit 2 on tampered keys/rubrics
     config = _load_json(state_dir / "config.json")
     llm_enabled = config["feature_flags"]["llm_gates_enabled"]
     binding = registry["concept_bindings"][concept_id]
@@ -134,12 +133,19 @@ def main() -> None:
         # idempotent double-delivery: replay the recorded verdict, no mutation
         for ev in ledger:
             if ev["type"] == "verdict_issued" and ev["payload"].get("attempt_id") == attempt_id:
-                _emit({"ok": True, "idempotent": True, "verdict": ev["payload"]["verdict"],
-                       "scores": ev["payload"]["scores"], "feedback": {}, "ledger_event_id": ev["event_id"]})
+                _core.emit_json({"ok": True, "idempotent": True, "verdict": ev["payload"]["verdict"],
+                                 "scores": ev["payload"]["scores"], "feedback": {}, "ledger_event_id": ev["event_id"]})
                 return
 
-        pending = state["session"].get("pending_gate_id")
-        gate_id, def_path, is_teach_back = _resolve_gate(binding, pending, llm_enabled)
+        # Script-owned draw (law L2): the seeded G3 draw is keyed on the attempt id,
+        # so any caller-supplied id other than the script-derived expected one would
+        # let the persona choose the draw. Reject it before drawing or mutating.
+        expected = _state.expected_attempt_id(concept_id, concept["attempts"] + 1)
+        if attempt_id != expected:
+            _core.die(f"attempt_id {attempt_id} does not match the script-derived expected id {expected}", 1)
+
+        role = _state.assessment_role(state, ledger, registry, skill_dir, concept_id, rec, llm_enabled)
+        gate_id, def_path, is_teach_back = _resolve_gate(binding, role, llm_enabled)
         definition = _load_json(skill_dir / def_path)
         review = concept["status"] == _state.REVIEW_DUE
 
@@ -177,8 +183,8 @@ def main() -> None:
         # that field. Until then every parse_error returns a clarification with
         # zero mutation, preserving the never-scored-as-wrong invariant.
         if scored["verdict"] == "parse_error":
-            _emit({"ok": True, "verdict": "parse_error", "scores": {},
-                   "feedback": {"clarify": True}, "ledger_event_id": None})
+            _core.emit_json({"ok": True, "verdict": "parse_error", "scores": {},
+                             "feedback": {"clarify": True}, "ledger_event_id": None})
             return
 
         # --- valid artifact: fire attempt_submitted (guards first) ---
@@ -198,9 +204,10 @@ def main() -> None:
         # --- gate_progress update + contract completeness ---
         hours_since_prev = None
         if verdict == "pass":
-            if gate_id == "G3":
+            if gate_id == "G3" and not is_teach_back:
                 # G3 streak fields belong ONLY to the primary quiz (§6.2): spacing is
-                # measured between the two quiz passes, never against a teach-back.
+                # measured between the two quiz passes, never against a teach-back or
+                # its llm_gates_enabled=false G3 fallback.
                 prev_ts = gp.get("last_pass_ts")
                 if prev_ts:
                     hours_since_prev = (now_dt - _core.parse_iso(prev_ts)).total_seconds() / 3600.0
@@ -217,7 +224,7 @@ def main() -> None:
                 gp["teach_back_passed"] = True  # teach-back: flag only; never touches the G3 streak
             concept["last_pass_ts"] = now  # most-recent pass of any kind feeds the §5 SR gap
         else:
-            if gate_id == "G3":
+            if gate_id == "G3" and not is_teach_back:
                 gp["consecutive_passes"] = 0
 
         if is_teach_back:
@@ -246,9 +253,16 @@ def main() -> None:
             },
         }
 
-        _core.append_event(state_dir, "attempt_recorded", concept_id, {
+        # Persist the assessment role ONLY on teach-back attempts: primary attempts
+        # keep the §6.4/§7.1 fixture bytes identical, while LLM-off G3-fallback
+        # teach-backs (indistinguishable from a primary quiz later) carry the
+        # discriminator replay needs (§7.2).
+        attempt_payload = {
             "attempt_id": attempt_id, "gate_id": gate_id,
-            "artifact_text": reply_text, "artifact_sha256": artifact_sha, "outcome": "parsed"})
+            "artifact_text": reply_text, "artifact_sha256": artifact_sha, "outcome": "parsed"}
+        if is_teach_back:
+            attempt_payload["assessment_role"] = "teach_back"
+        _core.append_event(state_dir, "attempt_recorded", concept_id, attempt_payload)
         verdict_event_id = _core.append_event(state_dir, "verdict_issued", concept_id, record)
 
         if verdict == "pass":
@@ -264,7 +278,7 @@ def main() -> None:
 
         session["pending_gate_id"] = None
         _core.atomic_write_json(state_dir / "state.json", state)
-        _emit({"ok": True, "verdict": verdict, "scores": scores,
-               "feedback": _feedback(gate_id, scores, verdict), "ledger_event_id": verdict_event_id})
+        _core.emit_json({"ok": True, "verdict": verdict, "scores": scores,
+                         "feedback": _feedback(gate_id, scores, verdict), "ledger_event_id": verdict_event_id})
 if __name__ == "__main__":
     main()

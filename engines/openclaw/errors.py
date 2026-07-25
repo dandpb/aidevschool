@@ -6,9 +6,6 @@ runner failures, so we define one base class and two specific subclasses
 instead of a taxonomy.
 """
 
-from __future__ import annotations
-
-
 class OpenclawError(Exception):
     """Base class for all OpenClaw runner errors.
 
@@ -24,12 +21,4 @@ class StateCorruptionError(OpenclawError):
     ``pipeline_status.md`` / ``learning_state.yaml``, and broken Hermes event
     files. The message always names the offending file and what to do about
     it (usually: inspect, fix, or delete the file and re-run).
-    """
-
-
-class EventNotFoundError(OpenclawError):
-    """An event expected in the Hermes inbox is not there.
-
-    Usually means the event was acked twice or was never consumed before
-    ``ack()`` was called.
     """

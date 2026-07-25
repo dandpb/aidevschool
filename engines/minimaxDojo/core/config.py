@@ -6,16 +6,16 @@ CONTEXT.md). This module loads that file and exposes the values the empirical
 gate and the state machine need, so those modules stop hardcoding their own
 copies (see TECH_DEBT_AUDIT_2026-06-28.md, D8).
 
-Both PyYAML and the config file are optional at import time: if either is
-missing, the FALLBACK_* constants are used so the core stays importable in a
-minimal environment.
+When the config file is missing, the FALLBACK_* constants are used.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
-# Last-resort defaults — used ONLY when learner.yaml or PyYAML is unavailable.
+import yaml
+
+# Last-resort defaults — used ONLY when learner.yaml is unavailable.
 # In normal operation the live values come from the YAML config.
 FALLBACK_MUTATION = 0.65
 FALLBACK_COVERAGE = 0.80
@@ -25,11 +25,7 @@ _DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "lear
 
 
 def load_learner_config(path: str | Path | None = None) -> dict:
-    """Load the learner config YAML. Returns {} if PyYAML or the file is absent."""
-    try:
-        import yaml
-    except ImportError:
-        return {}
+    """Load the learner config YAML. Returns {} if the file is absent."""
     config_path = Path(path) if path is not None else _DEFAULT_CONFIG_PATH
     if not config_path.exists():
         return {}

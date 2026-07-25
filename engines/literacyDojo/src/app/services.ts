@@ -1,17 +1,15 @@
 import { createContext, useContext } from "react";
-import { InMemoryAnalyticsSink, NoopAnalyticsSink } from "../adapters/analyticsSinks";
-import { SystemClock } from "../adapters/clock";
+import type { Clock } from "../adapters/clock";
+import { systemClock } from "../adapters/clock";
 import { DeterministicFeedbackProvider } from "../adapters/deterministicFeedbackProvider";
 import {
-  ConsoleEvidenceSink,
+  CompositeEvidenceSink,
   DevtoolsBridgeEvidenceSink,
-  InMemoryEvidenceSink,
+  consoleEvidenceSink,
 } from "../adapters/evidenceSinks";
-import { GeneratedContentRepository } from "../adapters/generatedContentRepository";
+import * as generatedContent from "../adapters/generatedContentRepository";
 import { IndexedDbProgressRepository } from "../adapters/indexedDbProgressRepository";
 import type {
-  AnalyticsSink,
-  Clock,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
@@ -26,7 +24,6 @@ export type Services = {
   progressRepo: ProgressRepository;
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
-  analytics: AnalyticsSink;
   clock: Clock;
   useCases: LiteracyUseCases;
 };
@@ -36,45 +33,30 @@ export function createServices(overrides?: {
   progressRepo?: ProgressRepository;
   evidence?: EvidenceSink;
   feedback?: FeedbackProvider;
-  analytics?: AnalyticsSink;
   clock?: Clock;
+  hostAdapter?: EvidenceSink;
 }): Services {
-  const content = overrides?.content ?? new GeneratedContentRepository();
+  const content = overrides?.content ?? generatedContent;
   const progressRepo = overrides?.progressRepo ?? new IndexedDbProgressRepository();
-  const baseEvidence = overrides?.evidence ?? new ConsoleEvidenceSink();
+  const primaryEvidence = overrides?.evidence ?? consoleEvidenceSink;
+  const baseEvidence = overrides?.hostAdapter
+    ? new CompositeEvidenceSink([primaryEvidence, overrides.hostAdapter])
+    : primaryEvidence;
   // A ponte window.__literacydojo só existe em dev (usada pelo Playwright para
   // capturar e validar o envelope de evidência).
   const evidence = import.meta.env.DEV
     ? new DevtoolsBridgeEvidenceSink(baseEvidence)
     : baseEvidence;
   const feedback = overrides?.feedback ?? new DeterministicFeedbackProvider();
-  const analytics = overrides?.analytics ?? new NoopAnalyticsSink();
-  const clock = overrides?.clock ?? new SystemClock();
+  const clock = overrides?.clock ?? systemClock;
   const useCases = new LiteracyUseCases({
     content,
     progress: progressRepo,
     evidence,
     feedback,
-    analytics,
     clock,
   });
-  return { content, progressRepo, evidence, feedback, analytics, clock, useCases };
-}
-
-/** Cria serviços 100% em memória para testes de componentes. */
-export function createTestServices(overrides?: {
-  progressRepo?: ProgressRepository;
-  clock?: Clock;
-}): Services & { evidence: InMemoryEvidenceSink; analytics: InMemoryAnalyticsSink } {
-  const evidence = new InMemoryEvidenceSink();
-  const analytics = new InMemoryAnalyticsSink();
-  const base = createServices({
-    progressRepo: overrides?.progressRepo,
-    evidence,
-    analytics,
-    clock: overrides?.clock,
-  });
-  return { ...base, evidence, analytics };
+  return { content, progressRepo, evidence, feedback, clock, useCases };
 }
 
 /**

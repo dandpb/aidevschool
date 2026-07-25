@@ -98,8 +98,6 @@ def main(argv: list[str] | None = None) -> int:
         default=50,
         help="Maximum checklist steps (default: 50)",
     )
-    # --reset kept as no-op for CLI compatibility
-    parser.add_argument("--reset", action="store_true", help="(no-op) former Hermes reset")
     parser.add_argument(
         "--preview",
         action="store_true",

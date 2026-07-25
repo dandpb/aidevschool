@@ -5,26 +5,23 @@ snapshots and compute per-(lang, scenario) metrics including p50/p99
 which k6 v2 doesn't emit in summary-export by default.
 
 Outputs:
-  - benchmarks/results/aggregated.json   (machine-readable)
+  - benchmarks/$RESULTS_DIR_NAME/aggregated.json (machine-readable)
   - markdown table to stdout             (for the report)
 """
 import json
+import os
 import statistics
 import re
 from pathlib import Path
 
 PROJ = Path("/Users/danielbarreto/Development/aidevschool/projects/01_rate_limiter")
-RES = PROJ / "benchmarks" / "results"
+RESULTS_DIR_NAME = os.environ.get("RESULTS_DIR_NAME", "results")
+if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", RESULTS_DIR_NAME):
+    raise SystemExit("RESULTS_DIR_NAME must be a single safe directory name")
+RES = PROJ / "benchmarks" / RESULTS_DIR_NAME
 LANGS = ["go", "rust", "node"]
 SCEN = ["baseline", "stress", "spike", "endurance"]
 N = 3
-
-# Docker stats -> container name -> which language
-NAME_TO_LANG = {
-    "rl-go-bench": "go",
-    "rl-rust-bench": "rust",
-    "rl-node-bench": "node",
-}
 
 def compute_percentiles(values, percentiles=(50, 90, 95, 99)):
     if not values:
@@ -37,7 +34,6 @@ def parse_raw_k6_json(path):
     """Read the streaming JSON output and collect http_req_duration points."""
     durations = []
     failed = 0
-    total = 0
     checks_pass = 0
     checks_fail = 0
     if not path.exists():
@@ -57,7 +53,6 @@ def parse_raw_k6_json(path):
                         v = d.get("data", {}).get("value")
                         if v is not None:
                             if v: failed += 1
-                            total += 1
                     elif m == "checks":
                         v = d.get("data", {}).get("value")
                         if v is not None:

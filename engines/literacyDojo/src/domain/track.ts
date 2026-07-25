@@ -3,22 +3,11 @@ import type { LearnerProgress } from "./progress";
 
 /** Helpers de domínio sobre o read model gerado (módulos e lições do catálogo). */
 
-export function orderedLessonEntries(modules: ModuleDefinition[]): CatalogLessonEntry[] {
-  return [...modules].sort((a, b) => a.order - b.order).flatMap((module) => module.lessons);
-}
-
 export function readyLessonEntries(modules: ModuleDefinition[]): CatalogLessonEntry[] {
   return [...modules]
     .sort((a, b) => a.order - b.order)
     .flatMap((module) => module.lessons)
     .filter((entry) => entry.hasContent);
-}
-
-export function findLessonEntry(
-  modules: ModuleDefinition[],
-  lessonId: string,
-): CatalogLessonEntry | undefined {
-  return modules.flatMap((module) => module.lessons).find((entry) => entry.id === lessonId);
 }
 
 /** Resumo da trilha: lições prontas concluídas e total de lições prontas. */

@@ -131,7 +131,6 @@ change.
 | `ROADMAP.md` | Product summary of the numbered curriculum; `curriculum/catalog.md` is canonical and currently has 19 entries across Levels 0–6. |
 | `EVALUATION_MODELS.md` | Seven-dimension code-evaluation model + review-severity scheme. |
 | `MEMORY_MODEL.md` | Memory architecture: three layers + canonical files. |
-| `MEMORY_CURATION.md` | Operational curation contract (trigger, owner, inputs→outputs). |
 | `COMPLETION_AUDIT.md` | Requirement-by-requirement audit with evidence files. |
 | `CURRICULUM_SCOPE.md` | Maps requested learning topics to concrete tracks. |
 | `LEGACY_MIGRATION.md` | Behavior-preserving refactoring contract. |

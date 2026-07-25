@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c07_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C07",
+  "items": [
+    {
+      "item_id": "c07_q01",
+      "stem": "How does an AI mostly get better at a task?",
+      "options": {
+        "A": "A person rewrites its answers by hand each morning",
+        "B": "It waits for perfect rules typed in legal language",
+        "C": "It finds patterns in many examples during a practice phase"
+      }
+    },
+    {
+      "item_id": "c07_q02",
+      "stem": "After practice, the AI faces a brand-new email. What is it doing?",
+      "options": {
+        "A": "Applying patterns it learned to a case it has not seen",
+        "B": "Opening a private folder of every email ever written",
+        "C": "Asking a random coworker to vote"
+      }
+    },
+    {
+      "item_id": "c07_q03",
+      "stem": "Which everyday picture best matches AI learning?",
+      "options": {
+        "A": "A calculator that only adds numbers you type",
+        "B": "A cook who tastes many dishes and then invents a similar one",
+        "C": "A locked safe that never changes"
+      }
+    },
+    {
+      "item_id": "c07_q04",
+      "stem": "Why do varied examples help more than identical ones?",
+      "options": {
+        "A": "Variety confuses the AI on purpose",
+        "B": "Identical examples make the AI funnier",
+        "C": "Variety shows which patterns still work in new situations"
+      }
+    },
+    {
+      "item_id": "c07_q05",
+      "stem": "\"The know-how the AI has learned from examples\" is another way to say:",
+      "options": {
+        "A": "The patterns and dials it tuned during practice",
+        "B": "The brand logo on the chat window",
+        "C": "The length of the power cable"
+      }
+    },
+    {
+      "item_id": "c07_q06",
+      "stem": "An AI practiced only on sunny beach photos. It fails on snowy streets. Why?",
+      "options": {
+        "A": "Snow disables all cameras worldwide",
+        "B": "The patterns it learned do not cover this new setting",
+        "C": "It refuses outdoor pictures on principle"
+      }
+    },
+    {
+      "item_id": "c07_q07",
+      "stem": "What is a fair description of pattern learning?",
+      "options": {
+        "A": "Guaranteed truth on every future case",
+        "B": "Memorizing one example and ignoring the rest",
+        "C": "Noticing what repeats across examples and reusing it"
+      }
+    },
+    {
+      "item_id": "c07_q08",
+      "stem": "A teacher marks 500 essays as strong or weak. An AI studies them. What did it gain?",
+      "options": {
+        "A": "A sense of which features often appear in strong writing",
+        "B": "The legal right to grade every school forever",
+        "C": "A copy of each student's home address"
+      }
+    },
+    {
+      "item_id": "c07_q09",
+      "stem": "Which statement is safest?",
+      "options": {
+        "A": "Once practiced, an AI never meets a surprising case",
+        "B": "Practice builds useful patterns, but new cases can still break them",
+        "C": "Patterns replace the need for any human judgment"
+      }
+    }
+  ]
+}

@@ -39,8 +39,6 @@ def yaml_path_for(md_path: Path) -> Path:
 def _from_mapping(data: dict[str, Any], *, source: Path) -> PipelineStatus:
     try:
         complexity = data.get("complexity_level", 1)
-        if isinstance(complexity, str):
-            complexity = int(complexity.split()[0])
         blockers = data.get("blockers") or []
         if isinstance(blockers, str):
             blockers = [b.strip() for b in blockers.strip("[]").split(",") if b.strip()]

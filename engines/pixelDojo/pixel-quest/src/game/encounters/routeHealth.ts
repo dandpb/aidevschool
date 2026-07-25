@@ -35,7 +35,7 @@ export function createRouteHealthState(
   }
 }
 
-const driver: EncounterDriver<RouteHealthEncounterState, RouteCheck> = {
+export const driver: EncounterDriver<RouteHealthEncounterState, RouteCheck> = {
   itemsOf: (state) => state.definition.checks,
   correctAction: (check) => (check.type === "healthy" ? "admit" : "reject"),
   applyAction: applyActionForCheck,

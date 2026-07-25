@@ -1,7 +1,34 @@
+import { agents } from "../data/agents"
+import { cycleStages, metrics } from "../data/cycle"
+import { ecosystemStatuses } from "../data/ecosystem"
+import type { Agent, CycleStage, DojoProject, EcosystemStatus, Metric } from "../domain"
+import { type DashboardStats, getCurrentProject, getDashboardStats } from "../progress"
 import type { AppState } from "../state"
-import { buildOverviewModel } from "../viewModels/overviewModel"
 import { escapeHtml } from "./escape"
 import { renderLearnerDashboard } from "./learner"
+
+const OVERVIEW_AGENT_LIMIT = 14
+const OVERVIEW_STAGE_LIMIT = 6
+
+export type OverviewModel = {
+  readonly stats: DashboardStats
+  readonly visibleAgents: readonly Agent[]
+  readonly currentProject: DojoProject
+  readonly metrics: readonly Metric[]
+  readonly ecosystemStatuses: readonly EcosystemStatus[]
+  readonly visibleStages: readonly CycleStage[]
+}
+
+export function buildOverviewModel(state: AppState): OverviewModel {
+  return {
+    stats: getDashboardStats(state),
+    visibleAgents: agents.slice(0, OVERVIEW_AGENT_LIMIT),
+    currentProject: getCurrentProject(),
+    metrics,
+    ecosystemStatuses,
+    visibleStages: cycleStages.slice(0, OVERVIEW_STAGE_LIMIT),
+  }
+}
 
 export function renderOverview(state: AppState): string {
   const model = buildOverviewModel(state)

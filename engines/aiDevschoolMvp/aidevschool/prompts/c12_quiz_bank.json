@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c12_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C12",
+  "items": [
+    {
+      "item_id": "c12_q01",
+      "stem": "What are the three parts of a good instruction to an AI?",
+      "options": {
+        "A": "Speed, length, color",
+        "B": "Task, context, format",
+        "C": "Code, data, memory"
+      }
+    },
+    {
+      "item_id": "c12_q02",
+      "stem": "Which part says what job the AI should do?",
+      "options": {
+        "A": "The task",
+        "B": "The mood",
+        "C": "The password"
+      }
+    },
+    {
+      "item_id": "c12_q03",
+      "stem": "Which part gives the AI the facts it needs?",
+      "options": {
+        "A": "The greeting",
+        "B": "The signature",
+        "C": "The context"
+      }
+    },
+    {
+      "item_id": "c12_q04",
+      "stem": "Which part describes the shape of the answer you want?",
+      "options": {
+        "A": "The version",
+        "B": "The format",
+        "C": "The volume"
+      }
+    },
+    {
+      "item_id": "c12_q05",
+      "stem": "'Summarize this report in three plain sentences.' Which part is 'in three plain sentences'?",
+      "options": {
+        "A": "The format",
+        "B": "The context",
+        "C": "The deadline"
+      }
+    },
+    {
+      "item_id": "c12_q06",
+      "stem": "Why is 'Tell me about marketing' a weak instruction?",
+      "options": {
+        "A": "It is too long",
+        "B": "It uses a big word",
+        "C": "It gives no task, context, or format"
+      }
+    },
+    {
+      "item_id": "c12_q07",
+      "stem": "A good instruction to an AI is most like:",
+      "options": {
+        "A": "A riddle",
+        "B": "A clear brief to a colleague",
+        "C": "A magic spell"
+      }
+    },
+    {
+      "item_id": "c12_q08",
+      "stem": "You want a birthday message for Ana who loves gardening, in two short lines. Which part is 'who loves gardening'?",
+      "options": {
+        "A": "The context",
+        "B": "The task",
+        "C": "The format"
+      }
+    },
+    {
+      "item_id": "c12_q09",
+      "stem": "Which is the strongest instruction?",
+      "options": {
+        "A": "Write something",
+        "B": "Help me",
+        "C": "Task: write a 3-line update. Context: sales rose 10%. Format: plain sentences"
+      }
+    }
+  ]
+}

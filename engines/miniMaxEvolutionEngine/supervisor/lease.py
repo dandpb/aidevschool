@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from .outbox import valid_id
+from .outbox import _fsync_directory, valid_id
 
 
 class LeaseHeldError(RuntimeError):
@@ -78,14 +78,6 @@ def _same_file(fd: int, path: Path) -> bool:
     except FileNotFoundError:
         return False
     return (opened.st_dev, opened.st_ino) == (current.st_dev, current.st_ino)
-
-
-def _fsync_directory(path: Path) -> None:
-    directory_fd = os.open(path, os.O_RDONLY)
-    try:
-        os.fsync(directory_fd)
-    finally:
-        os.close(directory_fd)
 
 
 @dataclass(frozen=True, slots=True)

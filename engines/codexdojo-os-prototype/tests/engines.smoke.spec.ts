@@ -17,7 +17,7 @@ declare global {
 }
 
 async function openEngineHub(page: Page): Promise<void> {
-  await page.goto('/')
+  await page.goto('/desktop')
   await page.getByRole('button', { name: 'Atividades' }).click()
   const launcher = page.getByRole('dialog', { name: 'Lançador de aplicativos' })
   await launcher.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }).fill('Engine Hub')
@@ -88,9 +88,10 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
   await expect(dashboard.getByRole('heading', { name: 'codexDojo' })).toBeVisible()
   await page.evaluate(() => navigator.clipboard.writeText(''))
   await dashboard.getByRole('button', { name: 'Ver agentes' }).click()
-  await dashboard.getByRole('button', { name: 'Copiar prompt' }).click()
-  await expect(dashboard.getByRole('button', { name: 'Copiar prompt' })).toContainText('Copiado')
-  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('MAESTRO')
+  const copyPrompt = dashboard.locator('[data-copy-agent]')
+  await copyPrompt.click()
+  await expect(copyPrompt).toHaveText('Copiado')
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toContain('Coordene a máquina de estados')
 
   await page.getByRole('button', { name: 'Usar PixelDojo Quest' }).click()
   const pixel = page.frameLocator('iframe[title="PixelDojo Quest integrado"]')

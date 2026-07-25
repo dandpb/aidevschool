@@ -1,39 +1,35 @@
 import type { EncounterDefinition } from "../../content/types"
 import type { EncounterAction } from "./encounterCore"
+import { applyEncounterStep, autoPassEncounterState } from "./encounterCore"
 import {
-  applyPolicyGateAction,
-  autoPassPolicyGate,
   createPolicyGateState,
   getCurrentPolicyCheck,
   type PolicyGateEncounterState,
+  driver as policyGateDriver,
 } from "./policyGate"
 import {
-  applyRouteHealthAction,
-  autoPassRouteHealth,
   createRouteHealthState,
   getCurrentRouteCheck,
   type RouteHealthEncounterState,
+  driver as routeHealthDriver,
 } from "./routeHealth"
 import {
-  applySequenceAction,
-  autoPassSequence,
   createSequenceState,
   getCurrentSequenceStep,
   type SequenceEncounterState,
+  driver as sequenceDriver,
 } from "./sequenceFlow"
 import {
-  applyEncounterAction as applyTaskQueueAction,
-  autoPassEncounter as autoPassTaskQueue,
   createTaskQueueState,
   getCurrentJob as getCurrentTaskQueueJob,
   type TaskQueueEncounterState,
+  driver as taskQueueDriver,
 } from "./taskQueue"
 import {
-  applyEncounterAction as applyTokenBucketAction,
-  autoPassEncounter as autoPassTokenBucket,
   createTokenBucketState,
   getCurrentRequest as getCurrentTokenBucketRequest,
   type TokenBucketEncounterState,
+  driver as tokenBucketDriver,
 } from "./tokenBucket"
 
 export type EncounterState =
@@ -69,41 +65,39 @@ export function applyEncounterAction(
   now: Date,
 ): EncounterState {
   if (isTokenBucketState(state)) {
-    return applyTokenBucketAction(state, action, now)
+    return applyEncounterStep(state, action, now, tokenBucketDriver)
   }
   if (isRouteHealthState(state)) {
-    return applyRouteHealthAction(state, action, now)
+    return applyEncounterStep(state, action, now, routeHealthDriver)
   }
   if (isPolicyGateState(state)) {
-    return applyPolicyGateAction(state, action, now)
+    return applyEncounterStep(state, action, now, policyGateDriver)
   }
   if (isTaskQueueState(state)) {
-    return applyTaskQueueAction(state, action, now)
+    return applyEncounterStep(state, action, now, taskQueueDriver)
   }
-  return applySequenceAction(state, action, now)
+  return applyEncounterStep(state, action, now, sequenceDriver)
 }
 
 export function autoPassEncounter(definition: EncounterDefinition, now: Date): EncounterState {
   switch (definition.kind) {
     case "token_bucket":
-      return autoPassTokenBucket(definition, now)
+      return autoPassEncounterState(createTokenBucketState(definition), now, tokenBucketDriver)
     case "sequence_flow":
-      return autoPassSequence(definition, now)
+      return autoPassEncounterState(createSequenceState(definition), now, sequenceDriver)
     case "route_health":
-      return autoPassRouteHealth(definition, now)
+      return autoPassEncounterState(createRouteHealthState(definition), now, routeHealthDriver)
     case "policy_gate":
-      return autoPassPolicyGate(definition, now)
+      return autoPassEncounterState(createPolicyGateState(definition), now, policyGateDriver)
     case "task_queue":
-      return autoPassTaskQueue(definition, now)
+      return autoPassEncounterState(createTaskQueueState(definition), now, taskQueueDriver)
   }
 }
 
 export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undefined {
   if (isTokenBucketState(state)) {
     const request = getCurrentTokenBucketRequest(state)
-    if (request === undefined) {
-      return undefined
-    }
+    if (request === undefined) return undefined
     return {
       type: request.type,
       label:
@@ -115,9 +109,7 @@ export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undef
   }
   if (isRouteHealthState(state)) {
     const check = getCurrentRouteCheck(state)
-    if (check === undefined) {
-      return undefined
-    }
+    if (check === undefined) return undefined
     return {
       type: check.type === "unhealthy" ? "abuse" : "legit",
       label: check.label,
@@ -125,9 +117,7 @@ export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undef
   }
   if (isPolicyGateState(state)) {
     const check = getCurrentPolicyCheck(state)
-    if (check === undefined) {
-      return undefined
-    }
+    if (check === undefined) return undefined
     return {
       type: check.type === "denied" ? "abuse" : "legit",
       label: `${check.label} [${check.scope}]`,
@@ -135,9 +125,7 @@ export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undef
   }
   if (isTaskQueueState(state)) {
     const job = getCurrentTaskQueueJob(state)
-    if (job === undefined) {
-      return undefined
-    }
+    if (job === undefined) return undefined
     return {
       type: job.type === "poison" ? "abuse" : "legit",
       label:
@@ -148,9 +136,7 @@ export function getCurrentPrompt(state: EncounterState): EncounterPrompt | undef
     }
   }
   const step = getCurrentSequenceStep(state)
-  if (step === undefined) {
-    return undefined
-  }
+  if (step === undefined) return undefined
   return {
     type: step.type === "guard" ? "abuse" : "legit",
     label: step.label,
@@ -203,6 +189,8 @@ export function encounterProgress(state: EncounterState): {
   }
 }
 
+// Type guards — isRouteHealthState and isPolicyGateState are also exported
+// for PixelQuestApp's scene routing. The others are internal to the registry.
 function isTokenBucketState(state: EncounterState): state is TokenBucketEncounterState {
   return state.definition.kind === "token_bucket"
 }
@@ -215,6 +203,6 @@ export function isPolicyGateState(state: EncounterState): state is PolicyGateEnc
   return state.definition.kind === "policy_gate"
 }
 
-export function isTaskQueueState(state: EncounterState): state is TaskQueueEncounterState {
+function isTaskQueueState(state: EncounterState): state is TaskQueueEncounterState {
   return state.definition.kind === "task_queue"
 }

@@ -107,9 +107,9 @@ target y. The sim core is WebGL-free so the concept math runs identically in Vit
 **12. Learning-gate hooks**
 
 - Targets unit **`U8-event-driven`** (project `08_event_driven_order_system`). As of 2026-07-05 this
-  unit is **not yet in the substrate's review slice** (`src/content/reviewSlice.ts` ships an empty
-  `nextReviews` static fallback until `python3 -m learner.substrate` is regenerated), so TIMELINE
-  TOWER evidence is recorded as **deepening play** (`scheduled_review:false`,
+  unit is **not yet in the substrate's review slice** (`engines/voxelDojo/shared/content.ts` is the
+  generated read-only module, and U8 is absent from its `nextReviews`), so TIMELINE TOWER evidence
+  is recorded as **deepening play** (`scheduled_review:false`,
   `review_reason:"deepening"`) and can serve the real learning gate for U8 the moment the scheduler
   makes it the active unit — the emitter derives `scheduled_review`/`review_reason` from the slice,
   so both modes work without code changes.

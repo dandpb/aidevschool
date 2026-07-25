@@ -27,8 +27,7 @@ def _resolved_ids(events: tuple[dict, ...]) -> set[str]:
     }
 
 
-def pending_request(paths: SupervisorPaths) -> dict | None:
-    events = read_ledger(paths.ledger)
+def pending_request_from_events(events: tuple[dict, ...]) -> dict | None:
     resolved = _resolved_ids(events)
     candidates = [
         event
@@ -38,6 +37,10 @@ def pending_request(paths: SupervisorPaths) -> dict | None:
     if len(candidates) > 1:
         raise ValueError("multiple unresolved supervisor requests")
     return candidates[0] if candidates else None
+
+
+def pending_request(paths: SupervisorPaths) -> dict | None:
+    return pending_request_from_events(read_ledger(paths.ledger))
 
 
 def pending_request_document(paths: SupervisorPaths) -> dict | None:

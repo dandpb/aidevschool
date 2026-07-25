@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c03_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C03",
+  "items": [
+    {
+      "item_id": "c03_q01",
+      "stem": "A system that always applies \"if X, then Y\" written by people is mainly:",
+      "options": {
+        "A": "Guessing from photos",
+        "B": "Rolling dice each time",
+        "C": "Following fixed rules"
+      }
+    },
+    {
+      "item_id": "c03_q02",
+      "stem": "Learned behavior in AI mainly comes from:",
+      "options": {
+        "A": "One engineer typing every possible case by hand",
+        "B": "Patterns found in many examples during the practice phase",
+        "C": "The AI's personal childhood memories"
+      }
+    },
+    {
+      "item_id": "c03_q03",
+      "stem": "Which is the clearest rules-based example?",
+      "options": {
+        "A": "\"If the badge is valid, unlock the door\"",
+        "B": "A feed that slowly matches your taste",
+        "C": "A tool that invents new song styles from millions of tracks"
+      }
+    },
+    {
+      "item_id": "c03_q04",
+      "stem": "Which is the clearest learned-behavior example?",
+      "options": {
+        "A": "A vending machine price list",
+        "B": "A thermostat fixed at one number",
+        "C": "A spam filter improving after many labeled emails"
+      }
+    },
+    {
+      "item_id": "c03_q05",
+      "stem": "Why might a pure rule system fail on a new case?",
+      "options": {
+        "A": "It feels nervous",
+        "B": "Nobody wrote a rule that covers that case",
+        "C": "It refuses to follow instructions on purpose"
+      }
+    },
+    {
+      "item_id": "c03_q06",
+      "stem": "Why might a learned system make a strange mistake?",
+      "options": {
+        "A": "It copied a weak or biased pattern from its examples",
+        "B": "It always prefers random answers",
+        "C": "Rules forbid it from answering"
+      }
+    },
+    {
+      "item_id": "c03_q07",
+      "stem": "\"The know-how the AI has learned from examples\" is built mainly by:",
+      "options": {
+        "A": "Printing a paper manual each morning",
+        "B": "Ignoring data and using luck",
+        "C": "Practice on many examples, then using those patterns later"
+      }
+    },
+    {
+      "item_id": "c03_q08",
+      "stem": "A checkout rule \"discount 10% on Tuesdays\" is best described as:",
+      "options": {
+        "A": "Learned from customer faces",
+        "B": "A fixed rule people configured",
+        "C": "An AI inventing prices each hour"
+      }
+    },
+    {
+      "item_id": "c03_q09",
+      "stem": "When should you suspect learned behavior rather than simple rules?",
+      "options": {
+        "A": "The tool improves after seeing more labeled examples",
+        "B": "The output never changes for any input",
+        "C": "A person rewrites one clear if-then line"
+      }
+    }
+  ]
+}

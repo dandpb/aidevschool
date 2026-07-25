@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
@@ -57,10 +57,6 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [confidence, setConfidence] = useState<OnboardingConfidence | null>(null);
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    services.analytics.track("onboarding_started");
-  }, [services]);
 
   const currentStep = STEPS[step];
   const currentValue =

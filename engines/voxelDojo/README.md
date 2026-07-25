@@ -97,12 +97,13 @@ voxelDojo/
 │   ├── ARCHITECTURE.md  # decisions, trade-offs, learner/curriculum integration
 │   ├── GAP_ANALYSIS.md  # status ledger: what's closed, what remains
 │   └── 3d-style.md      # shared visual language for all games
+├── shared/
+│   └── content.ts        # substrate-generated review slice shared by every game
 └── game-10-hash-ring/   # pilot implementation
     ├── src/sim/         # headless deterministic core + Vitest concept proofs
     ├── src/index.ts     # reusable threejs-dojo module exports (controller + sim, no DOM mount)
     ├── src/game/        # level state machine (controller) + playthrough tests
     ├── src/scene/       # Three.js render layer + DOM HUD
-    ├── src/content/     # types + substrate-generated reviewSlice.ts
     ├── src/evidence/    # evidence record builder/emitters
     ├── playwright/      # browser smoke: plays L1–L2, asserts EVIDENCE records
     └── .logs/           # Playwright screenshots / evidence artifacts

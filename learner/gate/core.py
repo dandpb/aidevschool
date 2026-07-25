@@ -206,6 +206,11 @@ def read_json(path: Path) -> Any:
         die(f"Invalid JSON in {path}: {exc}", 2)
 
 
+def emit_json(obj: Any) -> None:
+    """Write one JSON line to stdout (§4.2 script output contract)."""
+    sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
+
+
 def atomic_write_json(path: Path, obj: Any) -> None:
     """Write-temp-then-rename (§8.3 atomic commit). state.json/plan.json are
     pretty-printed for audit; only ledger lines are byte-pinned (hash chain)."""
@@ -324,3 +329,42 @@ def idempotency_keys(state_dir: Path) -> set[str]:
                 keys.add(f"{k}|{p[k]}")
         # review_due carries idem_key explicitly
     return keys
+
+
+# --- §9.2 gate-integrity manifest ------------------------------------------
+# A tampered key or rubric silently corrupts verdicts. The manifest hash detects
+# it: install.py writes keys/.manifest.sha256 over keys/ + rubrics/; every script
+# verifies at startup and exits 2 on mismatch (the chain detects tampered
+# evidence; the manifest detects tampered instruments).
+MANIFEST_NAME = ".manifest.sha256"
+
+
+def manifest_hash(skill_dir: Path) -> str:
+    h = hashlib.sha256()
+    for folder in ("keys", "rubrics"):
+        d = skill_dir / folder
+        if not d.is_dir():
+            continue
+        for f in sorted(d.glob("*.json")):
+            if f.name == MANIFEST_NAME:
+                continue
+            h.update(f.name.encode())
+            h.update(f.read_bytes())
+    return h.hexdigest()
+
+
+def write_manifest(skill_dir: Path) -> Path:
+    path = skill_dir / "keys" / MANIFEST_NAME
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(manifest_hash(skill_dir), encoding="utf-8")
+    return path
+
+
+def verify_manifest(skill_dir: Path) -> None:
+    """Exit 2 if keys/ or rubrics/ diverge from the stored manifest (§9.2). A
+    missing manifest is a no-op (pre-install / direct-constructed state)."""
+    path = skill_dir / "keys" / MANIFEST_NAME
+    if not path.is_file():
+        return
+    if manifest_hash(skill_dir) != path.read_text(encoding="utf-8").strip():
+        die("Gate integrity check failed: keys/ or rubrics/ diverge from the install manifest", 2)

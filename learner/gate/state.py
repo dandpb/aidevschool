@@ -28,6 +28,16 @@ MODULE_TITLES = {
 }
 
 
+def expected_attempt_id(cid: str, attempt_no: int) -> str:
+    """The single script-derived attempt id for a concept's next attempt. The
+    seeded G3 draw (DRAW_V1) is keyed on this id, so gate_check MUST reject any
+    caller-supplied id that differs — otherwise the persona could pick a
+    favorable draw, and the script no longer owns the decision (law L2).
+    next_step returns this id; gate_check verifies equality. Parse-error retries
+    reuse the same id because attempts has not advanced (§6.3.2)."""
+    return f"att_{cid.lower()}_{attempt_no:04d}"
+
+
 def _empty_concept(has_content: bool) -> dict[str, Any]:
     gp: dict[str, Any] = {"consecutive_passes": 0, "last_pass_ts": None, "asked_item_ids": []}
     return {
@@ -302,3 +312,49 @@ def schedule_next_review(c: dict[str, Any], last_pass_ts: str) -> str:
     from datetime import timedelta as _td
 
     return (parse_iso(last_pass_ts) + _td(days=gap)).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+# ---------------------------------------------------------------------------
+# Assessment-role resolution (primary vs teach_back), shared by next_step and
+# gate_check. This is the discriminator that keeps C13's G4 prompt-rewrite
+# primary distinct from its G4 teach-back — pending_gate_id alone (G1-G4) cannot.
+# ---------------------------------------------------------------------------
+def primary_pass_count(state, ledger, registry, skill_dir, cid, llm_enabled) -> int:
+    """Passes of the concept's PRIMARY gate so far. In fallback mode
+    (llm_gates_enabled=false) a G4-primary is served as G3, so its pass count is
+    the effective G3 streak (consecutive_passes); otherwise it is a single passing
+    primary verdict (G4 distinguished from the teach-back by rubric id)."""
+    import json as _json
+    binding = registry["concept_bindings"][cid]
+    prim = binding["primary"]
+    served = "G3" if (prim["gate_id"] == "G4" and not llm_enabled) else prim["gate_id"]
+    if served == "G3":
+        return state["concepts"][cid]["gate_progress"]["consecutive_passes"]
+    prim_rubric = None
+    if prim["gate_id"] == "G4":
+        prim_rubric = _json.loads((skill_dir / prim["definition"]).read_text(encoding="utf-8")).get("rubric_id")
+    for ev in ledger:
+        if ev["type"] != "verdict_issued":
+            continue
+        p = ev["payload"]
+        if p.get("concept_id") != cid or p.get("gate_id") != prim["gate_id"] or p.get("verdict") != "pass":
+            continue
+        if prim["gate_id"] == "G4":
+            if p["evidence"]["verifier"].get("rubric_id") == prim_rubric:
+                return 1
+        else:
+            return 1
+    return 0
+
+
+def assessment_role(state, ledger, registry, skill_dir, cid, rec, llm_enabled) -> str:
+    """Whether the concept's next assessment is its PRIMARY gate or its teach-back
+    (§6.4 sequencing): the teach-back is offered only after at least one primary
+    pass and only while unpassed; otherwise the primary gate."""
+    if not rec["teach_back"]:
+        return "primary"
+    if state["concepts"][cid]["gate_progress"].get("teach_back_passed"):
+        return "primary"
+    if primary_pass_count(state, ledger, registry, skill_dir, cid, llm_enabled) >= 1:
+        return "teach_back"
+    return "primary"

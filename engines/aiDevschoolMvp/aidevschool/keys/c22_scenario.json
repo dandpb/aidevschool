@@ -1,0 +1,15 @@
+{
+  "key_id": "c22_scenario",
+  "key_version": "1.0.0",
+  "gate_id": "G2",
+  "concept_id": "C22",
+  "kind": "scenario_key",
+  "items": {
+    "keyed_option": "C",
+    "misconception_strings": [
+      "paste real data",
+      "skip the review",
+      "no approval needed"
+    ]
+  }
+}

@@ -1,4 +1,6 @@
-import sharedEvidenceSchema from "../../../../learner/gate/literacy_evidence.schema.json";
+import sharedEvidenceSchema from "../../../../learner/gate/literacy_evidence.schema.json" with {
+  type: "json",
+};
 import type { CheckValue, EvaluationResult } from "./evaluation";
 
 /**

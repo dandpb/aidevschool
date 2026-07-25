@@ -48,6 +48,7 @@ __all__ = [
     "regenerate_whiteboard",
     "regenerate_dashboard",
     "regenerate_learner_snapshot",
+    "regenerate_mission_catalog",
     "regenerate_game_reviews",
     "regenerate_dojotoday",
     "sync",
@@ -567,6 +568,16 @@ def regenerate_learner_snapshot(
     return _regenerate_views(build_learner_snapshot_views, state, write=write)
 
 
+def regenerate_mission_catalog(
+    state: dict[str, Any] | None = None,
+    *,
+    write: bool = True,
+) -> dict[Path, str]:
+    from learner.substrate.projections import build_mission_catalog_views
+
+    return _regenerate_views(build_mission_catalog_views, state, write=write)
+
+
 def regenerate_game_reviews(
     state: dict[str, Any] | None = None,
     *,
@@ -599,17 +610,10 @@ def sync() -> None:
     catalog projections, .mavis mirror) is defined once in
     `projections.build_generated_views`.
     """
+    from learner.substrate.projections import build_generated_views
+
     state = load_and_validate()
-    views: dict[Path, str] = {}
-    for generator in (
-        regenerate_dashboard,
-        regenerate_mavis,
-        regenerate_whiteboard,
-        regenerate_learner_snapshot,
-        regenerate_game_reviews,
-        regenerate_dojotoday,
-    ):
-        views.update(generator(state, write=False))
+    views = build_generated_views(SOURCE_ROOT, ROOT, state)
     write_views(views)
     print(f"Generated projections regenerated: {len(views)}")
 

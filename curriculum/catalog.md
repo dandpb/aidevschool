@@ -379,7 +379,9 @@ Every project must produce:
 | Evolution report | `docs/evolution_report.md` | Optimizer |
 | Pipeline status | `docs/status.md` | All (updated per phase) |
 
-See `engines/codexDojo/ecosystem/templates/project-package.md` for the full completion checklist.
+Use `curriculum/AGENTS.md` and each project's local contract for the applicable
+completion evidence; the Node track is the default gate unless that project
+states otherwise.
 
 ---
 

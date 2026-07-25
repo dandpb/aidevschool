@@ -46,9 +46,9 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 | Journal | `learner/journal.md` | ✅ aligned |
 | Attempts | `learner/attempts/` | ✅ aligned |
 | Substrate (validator + adapters) | `learner/substrate/`, `learner/substrate/adapters/` | ✅ aligned |
-| Python state machine (canonical impl) | `engines/minimaxDojo/core/state_machine/` | ✅ aligned |
-| Gate evaluator | `engines/minimaxDojo/core/gates/` | ✅ aligned |
-| Memory logic | `engines/minimaxDojo/core/memory/` | ✅ aligned |
+| Python state machine (canonical impl) | `engines/minimaxDojo/core/state_machine.py` | ✅ aligned |
+| Gate evaluator | `engines/minimaxDojo/core/gates.py` | ✅ aligned |
+| Memory logic | `engines/minimaxDojo/core/memory.py` | ✅ aligned |
 | Domain spec | `docs/design/allium/learner-substrate.allium` | ✅ aligned |
 | Streak/FSRS design doc | `docs/design/spaced-repetition-streak/` | ✅ aligned |
 
@@ -61,7 +61,6 @@ repo — this map mainly makes the boundaries executable/concrete rather than in
 | Slash-command orchestration | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | ✅ aligned to this context |
 | Explicit checklist runner | `engines/openclaw/runner/` | ✅ file-based simulate-grade adapter over pipeline YAML |
 | Shared benchmark tooling | `curriculum/_shared/benchmarks/` | ✅ aligned |
-| Shared cycle tooling | `curriculum/_shared/cycle/` | ✅ aligned |
 | Domain spec | `docs/design/allium/minimax-evolution-engine.allium` | ✅ aligned |
 | Per-project artifacts (spec/impl/review/benchmark) | `curriculum/NN_*/{docs,go-impl,node-impl,rust-impl,benchmarks}/` (18 projects) | ✅ aligned (co-located with catalog entries by design) |
 

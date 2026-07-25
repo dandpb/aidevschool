@@ -12,8 +12,8 @@ empirical gates, prompts, docs, whiteboard, and governance. It is not the runnab
 | Start using the dojo | `INDEX.md`, `docs/QUICK_START.md` | Orientation and entry flow. |
 | Architecture | `README.md`, `docs/00_architecture.md` | High-level system model. |
 | Agent roster and prompts | `agents/README.md`, `prompts/per_agent/` | Roster is an index; per-agent prompt files are canonical. |
-| State machine | `docs/02_state_machine.md`, `core/state_machine/` | Docs are canonical; core is spec surface. |
-| Empirical gates | `docs/04_empirical_gates.md`, `core/gates/` | Verification threshold source. |
+| State machine | `docs/02_state_machine.md`, `core/state_machine.py` | Docs are canonical; core is spec surface. |
+| Empirical gates | `docs/04_empirical_gates.md`, `core/gates.py` | Verification threshold source. |
 | Learner config | `config/learner.yaml` | Single seam for numeric tutor-core thresholds. |
 | Whiteboard | `whiteboard/` | Local profile, trail, event log, decisions. |
 | Tests | `tests/` | Contract checks for config seam, gates, events, state machine. |

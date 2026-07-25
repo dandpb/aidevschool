@@ -113,5 +113,5 @@ Future cycles should commit to N=3 (or higher) for both
    has the N=1 baseline results for before/after diff.
 5. `learning_journal.md` (root) has the new patterns and
    anti-patterns from this cycle.
-6. To re-run: `cd benchmarks && MATRIX_N=3 ./run_matrix_N3.sh`
-   and `python3 analyze_results_N3.py`.
+6. To re-run: `cd benchmarks && MATRIX_N=3 RESULTS_DIR_NAME=results-N3-optimized ./run_matrix.sh`
+   and `RESULTS_DIR_NAME=results-N3-optimized python3 analyze_results.py`.

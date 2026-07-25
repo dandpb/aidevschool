@@ -1,0 +1,21 @@
+schemaVersion: 1
+bindings:
+  - missionId: l02
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l02
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l02
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Compare as duas respostas, escolha a mais confiavel e marque os criterios de verificacao."

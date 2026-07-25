@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c09_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C09",
+  "items": [
+    {
+      "item_id": "c09_q01",
+      "stem": "A real invoice is sent to the spam folder. What kind of mistake is that?",
+      "options": {
+        "A": "A perfect catch with no downside",
+        "B": "A false alarm — flagged, but actually fine",
+        "C": "Proof the filter can never err again"
+      }
+    },
+    {
+      "item_id": "c09_q02",
+      "stem": "Fraud slips into the \"safe\" pile. What kind of mistake is that?",
+      "options": {
+        "A": "A missed case — real problem, not flagged",
+        "B": "A false alarm on a healthy payment",
+        "C": "Evidence that practice never happened"
+      }
+    },
+    {
+      "item_id": "c09_q03",
+      "stem": "Why do false alarms and missed cases often move in opposite directions?",
+      "options": {
+        "A": "Computers only allow one error type per year",
+        "B": "Users must delete one type by law",
+        "C": "Catching more real cases usually means flagging more fine ones too"
+      }
+    },
+    {
+      "item_id": "c09_q04",
+      "stem": "A clinic fears missing real disease more than scaring healthy people. What balance fits?",
+      "options": {
+        "A": "Accept almost no flags, even if many cases slip by",
+        "B": "Accept more false alarms to catch more real cases",
+        "C": "Turn the tool off and guess at random"
+      }
+    },
+    {
+      "item_id": "c09_q05",
+      "stem": "Which statement is most honest about systems that sort cases into labels?",
+      "options": {
+        "A": "They make pattern-based mistakes; none is perfect",
+        "B": "A good one has a lifelong zero-error warranty",
+        "C": "Errors only happen when the screen is dirty"
+      }
+    },
+    {
+      "item_id": "c09_q06",
+      "stem": "Why still use a sorter that sometimes errs?",
+      "options": {
+        "A": "Errors prove the tool is free",
+        "B": "Humans never need a second look",
+        "C": "It can still catch many cases faster, if people handle the costly edge cases"
+      }
+    },
+    {
+      "item_id": "c09_q07",
+      "stem": "In hiring screening, a strong candidate is auto-rejected. That is mainly:",
+      "options": {
+        "A": "A missed risk in airport security terms only",
+        "B": "A false alarm on a person who was actually fine to advance",
+        "C": "Proof scores are always fair"
+      }
+    },
+    {
+      "item_id": "c09_q08",
+      "stem": "What is a practical habit after any important automated flag?",
+      "options": {
+        "A": "Let a person review before big action",
+        "B": "Assume the label is final forever",
+        "C": "Hide the result from everyone involved"
+      }
+    },
+    {
+      "item_id": "c09_q09",
+      "stem": "Teaching a colleague the core idea, which line belongs?",
+      "options": {
+        "A": "\"Pick either speed or coffee; errors are unrelated.\"",
+        "B": "\"If it is modern, both error types fall to zero.\"",
+        "C": "\"Two error types trade off, so we choose a balance and still review what matters.\""
+      }
+    }
+  ]
+}

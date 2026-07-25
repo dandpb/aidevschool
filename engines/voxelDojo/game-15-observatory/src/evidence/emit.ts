@@ -1,7 +1,7 @@
+import { reviewSlice } from "../../../shared/content"
 import { createEmitForGame, type EvidenceRecord } from "../../../shared/createEmitForGame"
-import { reviewSlice } from "../content/reviewSlice"
 import type { LevelId } from "../sim/levels"
 
 export type { EvidenceRecord }
 
-export const { emitEvidence } = createEmitForGame<LevelId>("game-15-observatory", reviewSlice)
+export const emitEvidence = createEmitForGame<LevelId>("game-15-observatory", reviewSlice)

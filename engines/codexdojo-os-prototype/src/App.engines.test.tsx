@@ -1,14 +1,14 @@
 import { cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it } from 'vitest'
-import App from './App'
+import DesktopApp from './desktop/DesktopApp'
 
 afterEach(cleanup)
 
 it('launches Engine Hub from the launcher and reuses its existing window', async () => {
   // Given
   const user = userEvent.setup()
-  render(<App />)
+  render(<DesktopApp />)
   await user.click(screen.getByRole('button', { name: 'Atividades' }))
   await user.type(screen.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }), 'Engine Hub')
 

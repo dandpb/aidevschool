@@ -21,11 +21,13 @@ export function ResultScreen({
   onNextLesson,
   onHome,
   onMap,
+  hosted = false,
 }: {
   summary: LessonSummary;
   onNextLesson: (lessonId: string) => void;
   onHome: () => void;
   onMap: () => void;
+  hosted?: boolean;
 }) {
   const services = useServices();
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
@@ -35,7 +37,7 @@ export function ResultScreen({
     .map((result) => result.feedback.summary);
 
   useEffect(() => {
-    void services.useCases.loadProgress().then((savedProgress) => {
+    void services.progressRepo.load().then((savedProgress) => {
       setTaskCategory(savedProgress?.onboarding.taskCategory);
     });
   }, [services]);
@@ -140,7 +142,11 @@ export function ResultScreen({
       </div>
 
       <div className="actions">
-        {summary.nextLessonId ? (
+        {hosted ? (
+          <p className="muted" role="status">
+            Conclusão enviada ao hub. Use o botão Voltar ao hub ao redor da missão.
+          </p>
+        ) : summary.nextLessonId ? (
           <button
             type="button"
             className="btn btn-primary"
@@ -154,9 +160,11 @@ export function ResultScreen({
             Voltar ao início
           </button>
         )}
-        <button type="button" className="btn btn-secondary" data-testid="go-map" onClick={onMap}>
-          Ver mapa da trilha
-        </button>
+        {!hosted && (
+          <button type="button" className="btn btn-secondary" data-testid="go-map" onClick={onMap}>
+            Ver mapa da trilha
+          </button>
+        )}
       </div>
     </section>
   );

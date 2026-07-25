@@ -110,6 +110,6 @@ Each project adds only one main dimension of complexity:
 
 ## Completion Standard
 
-See `engines/codexDojo/ecosystem/templates/project-package.md` for the full completion checklist.
-A project is NOT complete until: spec ✓, 3 implementations ✓ (≥80% coverage each),
-code review ✓, benchmarks N≥3 ✓, evolution report ✓, verifier PASS ✓.
+Each project's local `docs/` and implementation README define its completion
+evidence. Start with `curriculum/AGENTS.md` and the project contract; do not
+infer a polyglot requirement or coverage threshold from this roadmap.

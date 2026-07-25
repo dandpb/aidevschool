@@ -47,7 +47,7 @@ export function createTokenBucketState(
   }
 }
 
-const driver: EncounterDriver<TokenBucketEncounterState, TokenBucketRequest> = {
+export const driver: EncounterDriver<TokenBucketEncounterState, TokenBucketRequest> = {
   itemsOf: (state) => state.definition.requests,
   correctAction: (request) => (request.type === "legit" ? "admit" : "reject"),
   applyAction: applyRequestAction,

@@ -16,10 +16,6 @@ export function getSelectedAgent(state: AppState): Agent {
   return findAgent(state.selectedAgentId)
 }
 
-export function getCurrentStage(state: AppState): CycleStage {
-  return findStage(state.selectedStageId)
-}
-
 // Pre-compute stable groups once so render-time queries avoid scans and allocations.
 const mutableProjectsByPhase = new Map<DojoProject["phase"], DojoProject[]>()
 const noProjects: readonly DojoProject[] = Object.freeze([])

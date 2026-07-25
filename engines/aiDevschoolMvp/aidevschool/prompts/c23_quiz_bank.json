@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c23_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C23",
+  "items": [
+    {
+      "item_id": "c23_q01",
+      "stem": "A report you wrote used an AI draft. The honest step is to:",
+      "options": {
+        "A": "Say which parts the AI helped with",
+        "B": "Hide that you used it",
+        "C": "Delete the draft"
+      }
+    },
+    {
+      "item_id": "c23_q02",
+      "stem": "Why disclose AI use at work?",
+      "options": {
+        "A": "It is fashionable",
+        "B": "People can judge the work fairly and check it",
+        "C": "It makes the AI faster"
+      }
+    },
+    {
+      "item_id": "c23_q03",
+      "stem": "Which is a good disclosure?",
+      "options": {
+        "A": "No one will notice",
+        "B": "I wrote this alone",
+        "C": "Drafted with AI help; I reviewed the final text"
+      }
+    },
+    {
+      "item_id": "c23_q04",
+      "stem": "When is disclosure most important?",
+      "options": {
+        "A": "Never",
+        "B": "When the output affects decisions or other people",
+        "C": "Only for jokes"
+      }
+    },
+    {
+      "item_id": "c23_q05",
+      "stem": "A simple way to be transparent is to:",
+      "options": {
+        "A": "Add one line naming the AI's role",
+        "B": "Use a smaller font",
+        "C": "Say nothing"
+      }
+    },
+    {
+      "item_id": "c23_q06",
+      "stem": "Hiding AI use can hurt trust because:",
+      "options": {
+        "A": "AI is always wrong",
+        "B": "It is illegal everywhere",
+        "C": "People may rely on work they think you checked yourself"
+      }
+    },
+    {
+      "item_id": "c23_q07",
+      "stem": "Who is responsible for the final AI-assisted text you send?",
+      "options": {
+        "A": "The AI company",
+        "B": "You, the person who sends it",
+        "C": "No one"
+      }
+    },
+    {
+      "item_id": "c23_q08",
+      "stem": "Which is a misuse of disclosure?",
+      "options": {
+        "A": "Pretending no AI was used at all",
+        "B": "Naming the AI's role honestly",
+        "C": "Reviewing the AI draft before sending"
+      }
+    },
+    {
+      "item_id": "c23_q09",
+      "stem": "Being transparent about AI use mainly builds:",
+      "options": {
+        "A": "Secrecy",
+        "B": "Speed",
+        "C": "Trust and accountability"
+      }
+    }
+  ]
+}

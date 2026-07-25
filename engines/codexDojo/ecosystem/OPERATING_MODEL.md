@@ -105,4 +105,6 @@ Each project must contain:
 - Lessons learned.
 - Next challenges.
 
-Use `engines/codexDojo/ecosystem/templates/project-package.md` as the canonical shape.
+Project-local `docs/` and implementation READMEs are the canonical package
+contract. `curriculum/AGENTS.md` defines the shared contribution rules, while
+`curriculum/_shared/project_template/` is only a starting point for new work.

@@ -1,5 +1,5 @@
+import type { Clock } from "../adapters/clock";
 import type { ContentRepository } from "../application/ports";
-import type { Clock } from "../application/ports";
 import type { CatalogLessonEntry, ModuleDefinition, SkillId } from "../data/generated/lessons";
 import type { DailyGoalStatus, LearnerProgress, LessonStatus, SkillPractice } from "./progress";
 import { dailyGoalStatus, reviewsDue, upcomingReviews } from "./progress";
@@ -40,7 +40,7 @@ export function buildTrackQueries(
 ): TrackQueries {
   const modules = content.listModules();
   const ready = readyLessonEntries(modules);
-  const now = clock.now();
+  const now = clock();
 
   const mission =
     ready.find(

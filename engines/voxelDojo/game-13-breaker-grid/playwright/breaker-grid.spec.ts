@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { collectEvidence, type EvidenceRecord } from "../../shared/testHelpers"
 
 /**
  * Browser smoke contract: the page boots WebGL, the HUD drives the breaker-grid
@@ -6,21 +7,6 @@ import { expect, test } from "@playwright/test"
  * schema. Concept math is proven in Vitest (src/sim/breaker.test.ts); this spec
  * proves the wiring inside a real browser.
  */
-
-interface EvidenceRecord {
-  source: string
-  unit_id: string
-  project: string
-  scenario_id: string
-  pass: boolean
-  metrics: Record<string, number | boolean>
-}
-
-function collectEvidence(lines: string[]): EvidenceRecord[] {
-  return lines
-    .filter((l) => l.startsWith("EVIDENCE "))
-    .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-}
 
 test("boots the grid, plays L1 by injecting failures + predicting the trip, emits a passing record", async ({
   page,

@@ -24,7 +24,7 @@ gate:
 """,
                 encoding="utf-8",
             )
-            config.write_text("socrates:\n  quota_dia: 12\n", encoding="utf-8")
+            config.write_text("---\n---\nsocrates:\n  quota_dia: 12\n", encoding="utf-8")
             before = {path: path.read_bytes() for path in (state, config)}
 
             receipt = prepare_tutor_session(state, config)

@@ -10,7 +10,7 @@ from typing import Any
 
 import yaml
 
-from .plans import ALLOWED_ROLES, PHASE_PLANS
+from .plans import ALLOWED_ROLES
 
 
 class ConfigError(ValueError):

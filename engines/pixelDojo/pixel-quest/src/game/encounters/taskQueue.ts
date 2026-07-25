@@ -72,7 +72,7 @@ export function createTaskQueueState(definition: TaskQueueEncounter): TaskQueueE
   }
 }
 
-const driver: EncounterDriver<TaskQueueEncounterState, TaskQueueJob> = {
+export const driver: EncounterDriver<TaskQueueEncounterState, TaskQueueJob> = {
   itemsOf: (state) => state.definition.jobs,
   correctAction: (job) => (job.type === "legit" ? "admit" : "reject"),
   applyAction: applyJobAction,

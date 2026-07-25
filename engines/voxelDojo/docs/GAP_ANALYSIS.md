@@ -10,9 +10,9 @@ implementation pass.
 | Gap | Status | Evidence |
 | --- | --- | --- |
 | G1 pilot game code | **closed (M1–M6)** | `game-10-hash-ring/`: 19 Vitest tests green (M1 edge cases added 2026-07-05: single-node ring, anchor-hash collision tie-break, empty ring), tsc clean, vite build ok, lint green (`biome.jsonc` added 2026-07-05 — mirror of pixel-quest, Biome ^2.3.8; lint had previously run configless and failed), 3 Playwright smoke tests green with screenshots in `.logs/` |
-| G2 evidence ingestion | **closed** | Shared verifier is source-agnostic (required fields check passes for a voxeldojo record); substrate now emits a voxelDojo review slice (`sync_voxel_review_slice`, 78 substrate tests green) |
+| G2 evidence ingestion | **closed** | Shared verifier is source-agnostic (required fields check passes for a voxeldojo record); substrate emits the shared voxelDojo review slice at `shared/content.ts` |
 | G3 shared contract | **closed** | `docs/design/teaching-game-contract.md`, cited by both engines' `AGENTS.md` |
-| G4 review-not-gating framing | **closed** | `emit.ts` reads the substrate-generated `reviewSlice.ts`: `scheduled_review`/`review_reason` reflect real scheduling truth |
+| G4 review-not-gating framing | **closed** | `emit.ts` reads the substrate-generated `shared/content.ts`: `scheduled_review`/`review_reason` reflect real scheduling truth |
 | G5 3D style substrate | **closed** | `docs/3d-style.md` (palette, camera, lighting, HUD rules) |
 | G6 WebGL in verification | **closed with caveat** | Smoke ran green in the Linux sandbox via Playwright chromium headless-shell + a stubbed `libXdamage.so.1` (see §G6 notes); unverified on macOS host — expected to just work there |
 | G7 ecosystem registration | **closed** | Root `AGENTS.md` (tree + validate row), `docs/handbook/README.md` + `10_engine_voxelDojo.md`, codexDojo `MANIFEST.md`; root `CLAUDE.md` already listed the engine |
@@ -46,9 +46,8 @@ from the earlier M6 run.
 Audit findings: the gate verifier (`python3 -m learner.gate`) validates
 `unit_id/project/game/ts/pass` against `active_unit` and has **no source allowlist** — voxelDojo
 records are ingestible unchanged. Scheduling truth flows substrate → game via a generated review
-slice; added `sync_voxel_review_slice` (+ `render_voxel_review_ts`, `VOXEL_REVIEW_TS`, 3 new
-tests) so `python3 -m learner.substrate` now regenerates
-`game-10-hash-ring/src/content/reviewSlice.ts` alongside the pixel slice. The game derives
+slice; `render_voxel_review_ts` renders the shared `content.ts` module, so
+`python3 -m learner.substrate` regenerates `shared/content.ts` alongside the pixel slice. The game derives
 `review_context.scheduled_review` from that slice (`"due"` if `U9-distributed-cache` is in
 `nextReviews`, else `"deepening"`). Framing correction (2026-07-05, later the same day): the 18
 masteries dated 2026-07-01 turned out to be seeded without evidence and were reverted — only U0

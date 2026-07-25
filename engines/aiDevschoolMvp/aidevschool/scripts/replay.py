@@ -4,7 +4,13 @@ ledger.jsonl over curriculum.json, rebuilding the per-concept state.json fields
 (status, scaffold_level, attempts, gate_progress, target_days_effective,
 next_review_ts) into a scratch file — never over state.json — and field-compares
 the rebuilt values against live state.json. Any divergence voids the mastery
-claim. Session-ephemeral fields are excluded (rendering cache, §5.1)."""
+claim. Session-ephemeral fields are excluded (rendering cache, §5.1).
+
+The assessment role is resolved per verdict: the discriminator persisted on
+teach-back attempt_recorded events (required for LLM-off G3 fallbacks, which are
+otherwise indistinguishable from a primary quiz), else the G4 rubric task, else
+primary. Teach-back passes set teach_back_passed and never touch the primary
+G3 streak."""
 from __future__ import annotations
 
 import json
@@ -43,6 +49,7 @@ def replay(ledger: list[dict[str, Any]], curriculum: list[dict[str, Any]], skill
             c["status"] = "AVAILABLE"
         concepts[r["id"]] = c
 
+    attempt_roles: dict[str, str] = {}
     for ev in ledger:
         cid = ev.get("concept_id")
         t = ev["type"]
@@ -54,6 +61,9 @@ def replay(ledger: list[dict[str, Any]], curriculum: list[dict[str, Any]], skill
             c["status"] = "IN_PROGRESS"
             c["scaffold_level"] = p.get("scaffold_level")
         elif t == "attempt_recorded":
+            # role persisted only on teach-back attempts
+            if p.get("assessment_role") == "teach_back":
+                attempt_roles[p["attempt_id"]] = "teach_back"
             if p.get("outcome") == "parsed":
                 if c["status"] == "IN_PROGRESS":
                     c["status"] = "ATTEMPTED"
@@ -62,19 +72,20 @@ def replay(ledger: list[dict[str, Any]], curriculum: list[dict[str, Any]], skill
             gate = p["gate_id"]
             verdict = p["verdict"]
             scores = p["scores"]
-            if verdict == "pass":
+            rid = p["evidence"]["verifier"].get("rubric_id") if gate == "G4" else None
+            is_teach_back = (attempt_roles.get(p["attempt_id"]) == "teach_back") or (
+                bool(rid) and _rubric_task(skill_dir, rid) == "teach_back")
+            if is_teach_back:
+                if verdict == "pass":
+                    c["gate_progress"]["teach_back_passed"] = True  # flag only, never the streak
+            elif verdict == "pass":
                 if gate == "G3":
-                    c["gate_progress"]["consecutive_passes"] = scores.get("consecutive_passes", c["gate_progress"]["consecutive_passes"])
+                    c["gate_progress"]["consecutive_passes"] = scores.get(
+                        "consecutive_passes", c["gate_progress"]["consecutive_passes"])
                     drawn = [it["item_id"] for it in scores.get("items", [])]
-                    c["gate_progress"]["asked_item_ids"] = list(dict.fromkeys(c["gate_progress"]["asked_item_ids"] + drawn))
-                    # gate_progress.last_pass_ts is the G3 "last quiz pass" only (§8.2);
-                    # the any-kind pass ts lives in concept.last_pass_ts, not gate_progress
-                    c["gate_progress"]["last_pass_ts"] = ev["ts"]
-                if gate == "G4":
-                    # distinguish teach-back from prompt-rewrite primary via the rubric task
-                    rid = p["evidence"]["verifier"].get("rubric_id")
-                    if rid and _rubric_task(skill_dir, rid) == "teach_back":
-                        c["gate_progress"]["teach_back_passed"] = True
+                    c["gate_progress"]["asked_item_ids"] = list(
+                        dict.fromkeys(c["gate_progress"]["asked_item_ids"] + drawn))
+                    c["gate_progress"]["last_pass_ts"] = ev["ts"]  # G3 "last quiz pass" only
             else:
                 if gate == "G3":
                     c["gate_progress"]["consecutive_passes"] = 0

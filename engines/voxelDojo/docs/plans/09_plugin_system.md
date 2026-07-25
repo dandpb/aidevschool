@@ -133,9 +133,9 @@ WebGL-free so the contract/sandbox math runs identically in Vitest and the brows
 **12. Learning-gate hooks**
 
 - Targets unit **`U9-plugin-system`** (project `09_plugin_system`). As of 2026-07-05 this unit is
-  **not yet in the substrate's review slice** (`src/content/reviewSlice.ts` ships an empty
-  `nextReviews` static fallback until `python3 -m learner.substrate` is regenerated), so DOCKING BAY
-  evidence is recorded as **deepening play** (`scheduled_review:false`,
+  **not yet in the substrate's review slice** (`engines/voxelDojo/shared/content.ts` is the
+  generated read-only module, and U9 is absent from its `nextReviews`), so DOCKING BAY evidence is
+  recorded as **deepening play** (`scheduled_review:false`,
   `review_reason:"deepening"`) and can serve the real learning gate for U9-plugin-system the moment
   the scheduler makes it the active unit — the emitter derives `scheduled_review`/`review_reason`
   from the slice, so both modes work without code changes. (Note: the hash-ring pilot uses a

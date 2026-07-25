@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test"
+import { collectEvidence, type EvidenceRecord } from "../../shared/testHelpers"
 
 /**
  * Browser smoke contract: the page boots WebGL, the HUD drives the sim, and cleared/failed
@@ -6,21 +7,6 @@ import { expect, test } from "@playwright/test"
  * Vitest (src/sim/election.test.ts + src/sim/dag.test.ts); this spec proves the wiring inside a
  * real browser and exercises the deterministic public API via the test hook.
  */
-
-interface EvidenceRecord {
-  source: string
-  unit_id: string
-  project: string
-  scenario_id: string
-  pass: boolean
-  metrics: Record<string, number | boolean | string>
-}
-
-function collectEvidence(lines: string[]): EvidenceRecord[] {
-  return lines
-    .filter((l) => l.startsWith("EVIDENCE "))
-    .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-}
 
 test("renders an actual WebGL canvas (not a blank shell)", async ({ page }) => {
   await page.goto("/")

@@ -3,18 +3,17 @@ import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import { EVIDENCE_SESSION_KEY } from "./storageKeys";
 
 /** Emite a evidência no console (canal padrão do MVP — estruturada, sem texto livre). */
-export class ConsoleEvidenceSink implements EvidenceSink {
-  emit(record: LiteracyEvidenceRecord): void {
+export const consoleEvidenceSink: EvidenceSink = {
+  emit(record: LiteracyEvidenceRecord) {
     console.info("[literacy-evidence]", JSON.stringify(record));
-  }
-}
+  },
+};
 
-/** Coleta a evidência em memória — canal de teste. */
-export class InMemoryEvidenceSink implements EvidenceSink {
-  readonly records: LiteracyEvidenceRecord[] = [];
+export class CompositeEvidenceSink implements EvidenceSink {
+  constructor(private readonly sinks: readonly EvidenceSink[]) {}
 
   emit(record: LiteracyEvidenceRecord): void {
-    this.records.push(record);
+    for (const sink of this.sinks) sink.emit(record);
   }
 }
 

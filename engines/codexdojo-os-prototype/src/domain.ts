@@ -1,5 +1,55 @@
 export type CoreAppId = 'dojo' | 'terminal' | 'files' | 'architecture' | 'software' | 'engines'
-export type AppStatus = 'disponivel' | 'laboratorio' | 'planejado'
+export type AppStatus = 'disponivel' | 'laboratorio'
+
+export type TrackId = 'ai-pratica' | 'dev'
+export type MissionId = string
+export type MissionKey = `${TrackId}:${MissionId}`
+export type MissionStage = 'understand' | 'respond' | 'apply'
+
+export type MissionDefinition = {
+  readonly id: MissionId
+  readonly version: number
+  readonly trackId: TrackId
+  readonly unitId: string
+  readonly projectId: string
+  readonly title: string
+  readonly objective: string
+  readonly estimatedMinutes: number
+  readonly prerequisites: readonly MissionId[]
+  readonly stages: readonly MissionStage[]
+  readonly runtime: {
+    readonly engineId: 'literacyDojo'
+    readonly entrypoint: string
+    readonly environmentKey: string
+    readonly protocolVersion: '1.0'
+  }
+  readonly evidence: {
+    readonly schema: 'literacy-evidence'
+    readonly version: 1
+    readonly verifierRequired: true
+  }
+  readonly fallback: {
+    readonly kind: 'dom' | 'canvas2d'
+    readonly summary: string
+  }
+}
+
+export type MissionCatalogSnapshot = {
+  readonly schemaVersion: 1
+  readonly contentVersion: string
+  readonly missions: readonly MissionDefinition[]
+}
+
+export type LocalProgressDisplay = {
+  readonly missionStatus: 'locked' | 'available' | 'in_progress' | 'completed'
+  readonly evidenceStatus: 'not-submitted' | 'pending'
+}
+
+export type CanonicalProgressDisplay = {
+  readonly activeUnitState: LearnerSnapshot['activeUnit']['state']
+  readonly masteredCount: number
+  readonly source: 'learner-substrate'
+}
 
 export type AppDefinition = {
   readonly name: string

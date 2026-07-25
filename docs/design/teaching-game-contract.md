@@ -41,10 +41,11 @@
    Records are append-only and immutable. `localStorage` is never learning evidence.
 
 4. **Scheduling truth flows one way: substrate → game.** The Python substrate
-   (`learner/substrate/`) generates a read-only review slice per engine
-   (`sync_pixel_review_slice`, `sync_voxel_review_slice`; regenerate with
-   `python3 -m learner.substrate`). Games read which unit is due and the streak from that slice
-   and render it; they never compute or persist scheduling themselves.
+   (`learner/substrate/`) generates read-only review slices at
+   `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and
+   `voxelDojo/shared/content.ts` (regenerate with `python3 -m learner.substrate`). Games read
+   which unit is due and the streak from that slice and render it; they never compute or persist
+   scheduling themselves.
 
 5. **Content is data, mechanics are code.** Packs/scenarios are typed, validated data — no
    arbitrary JavaScript. A new mechanic requires a typed definition, validator coverage, and an
@@ -66,7 +67,7 @@
 | Engine | Genre | Evidence `source` | Review slice destination |
 | --- | --- | --- | --- |
 | pixelDojo (`pixel-quest/`) | 8-bit arcade RPG | `pixelquest` | `engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts` |
-| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | every `engines/voxelDojo/game-*/src/content/reviewSlice.ts` (fan-out via `sync_voxel_review_slice`) |
+| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | `engines/voxelDojo/shared/content.ts` |
 
 Adding an engine: add the row here, a `sync_<engine>_review_slice` target in
 `learner/substrate/dashboard_snapshot.py` (+ tests), and cite this contract from the engine's

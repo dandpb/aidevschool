@@ -16,8 +16,7 @@ import learner.gate.core as _core
 import learner.gate.state as _state
 
 
-def _emit(obj: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
+_emit = _core.emit_json
 
 
 def _in_active_hours(now, active):

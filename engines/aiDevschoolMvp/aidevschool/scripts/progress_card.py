@@ -18,8 +18,7 @@ TRACK_TITLE = "AI Fluency Foundations"
 _WEEKDAY = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 
-def _emit(obj: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
+_emit = _core.emit_json
 
 
 def render_card(plan: dict[str, Any]) -> str:

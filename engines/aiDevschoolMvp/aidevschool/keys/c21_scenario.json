@@ -1,0 +1,15 @@
+{
+  "key_id": "c21_scenario",
+  "key_version": "1.0.0",
+  "gate_id": "G2",
+  "concept_id": "C21",
+  "kind": "scenario_key",
+  "items": {
+    "keyed_option": "A",
+    "misconception_strings": [
+      "the ai decides",
+      "no human needed",
+      "fully automate"
+    ]
+  }
+}

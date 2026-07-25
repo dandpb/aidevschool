@@ -37,15 +37,7 @@ export type FinishPayload = {
   durationSeconds?: number;
 };
 
-export type LessonSessionCommand =
-  | { type: "start"; now: Date }
-  | { type: "submit"; evaluation: EvaluationResult; feedback: AttemptFeedback }
-  | { type: "hint"; hint: string | null }
-  | { type: "retry" }
-  | { type: "next" }
-  | { type: "finish"; now: Date };
-
-export type DispatchResult = {
+export type FinishResult = {
   session: LessonSession;
   finishPayload?: FinishPayload;
 };
@@ -112,28 +104,7 @@ export function canFinish(session: LessonSession, lesson: LessonDefinition): boo
   return requiredActivitiesPassed(session, lesson.completion.requiredActivityIds);
 }
 
-export function dispatch(
-  session: LessonSession,
-  lesson: LessonDefinition,
-  command: LessonSessionCommand,
-): DispatchResult {
-  switch (command.type) {
-    case "start":
-      return { session: startSession(session, command.now) };
-    case "submit":
-      return { session: submitAttempt(session, lesson, command.evaluation, command.feedback) };
-    case "hint":
-      return { session: recordHint(session, lesson, command.hint) };
-    case "retry":
-      return { session: retryCurrentActivity(session, lesson) };
-    case "next":
-      return { session: nextActivity(session, lesson) };
-    case "finish":
-      return finishLesson(session, lesson, command.now);
-  }
-}
-
-function startSession(session: LessonSession, now: Date): LessonSession {
+export function startSession(session: LessonSession, now: Date): LessonSession {
   if (session.phase !== "intro") return session;
   return {
     ...session,
@@ -143,7 +114,7 @@ function startSession(session: LessonSession, now: Date): LessonSession {
   };
 }
 
-function submitAttempt(
+export function submitAttempt(
   session: LessonSession,
   lesson: LessonDefinition,
   evaluation: EvaluationResult,
@@ -166,7 +137,7 @@ function submitAttempt(
   };
 }
 
-function recordHint(
+export function recordHint(
   session: LessonSession,
   lesson: LessonDefinition,
   hint: string | null,
@@ -181,7 +152,10 @@ function recordHint(
   return { ...session, hints: { ...session.hints, [activity.id]: next } };
 }
 
-function retryCurrentActivity(session: LessonSession, lesson: LessonDefinition): LessonSession {
+export function retryCurrentActivity(
+  session: LessonSession,
+  lesson: LessonDefinition,
+): LessonSession {
   if (session.phase !== "feedback" && session.phase !== "attempting") return session;
   const activity = currentActivity(session, lesson);
   if (!activity) return session;
@@ -199,7 +173,7 @@ function retryCurrentActivity(session: LessonSession, lesson: LessonDefinition):
   };
 }
 
-function nextActivity(session: LessonSession, lesson: LessonDefinition): LessonSession {
+export function nextActivity(session: LessonSession, lesson: LessonDefinition): LessonSession {
   if (session.phase !== "feedback") return session;
   const activity = currentActivity(session, lesson);
   if (!activity || !session.attempts[activity.id]?.evaluation.pass) return session;
@@ -212,7 +186,11 @@ function nextActivity(session: LessonSession, lesson: LessonDefinition): LessonS
   };
 }
 
-function finishLesson(session: LessonSession, lesson: LessonDefinition, now: Date): DispatchResult {
+export function finishLesson(
+  session: LessonSession,
+  lesson: LessonDefinition,
+  now: Date,
+): FinishResult {
   if (session.phase !== "feedback") return { session };
   const activity = currentActivity(session, lesson);
   if (!activity || !isLastActivity(session, lesson)) return { session };

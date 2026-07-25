@@ -1,0 +1,47 @@
+{
+  "key_id": "c11_quiz_bank",
+  "key_version": "1.0.0",
+  "gate_id": "G3",
+  "concept_id": "C11",
+  "kind": "quiz_bank",
+  "items": {
+    "bank": [
+      {
+        "item_id": "c11_q01",
+        "keyed": "A"
+      },
+      {
+        "item_id": "c11_q02",
+        "keyed": "C"
+      },
+      {
+        "item_id": "c11_q03",
+        "keyed": "B"
+      },
+      {
+        "item_id": "c11_q04",
+        "keyed": "A"
+      },
+      {
+        "item_id": "c11_q05",
+        "keyed": "C"
+      },
+      {
+        "item_id": "c11_q06",
+        "keyed": "B"
+      },
+      {
+        "item_id": "c11_q07",
+        "keyed": "A"
+      },
+      {
+        "item_id": "c11_q08",
+        "keyed": "C"
+      },
+      {
+        "item_id": "c11_q09",
+        "keyed": "B"
+      }
+    ]
+  }
+}

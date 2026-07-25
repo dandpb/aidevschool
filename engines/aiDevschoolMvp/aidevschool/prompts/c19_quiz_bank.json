@@ -1,0 +1,88 @@
+{
+  "prompt_id": "c19_quiz_bank",
+  "prompt_version": "1.0.0",
+  "concept_id": "C19",
+  "items": [
+    {
+      "item_id": "c19_q01",
+      "stem": "A well-written AI answer states a surprising fact with total confidence. What should you do first?",
+      "options": {
+        "A": "Treat confidence as a reason to check the claim elsewhere",
+        "B": "Trust it, because clear writing means the AI checked sources",
+        "C": "Share it quickly so others can benefit from the news"
+      }
+    },
+    {
+      "item_id": "c19_q02",
+      "stem": "You want to verify a bold claim you just read. What is the best next move?",
+      "options": {
+        "A": "Read the same page two more times for hidden clues",
+        "B": "Leave the page and look for an independent, trustworthy source",
+        "C": "Ask the same site's chatbot to confirm its own article"
+      }
+    },
+    {
+      "item_id": "c19_q03",
+      "stem": "Which check best helps you judge a source?",
+      "options": {
+        "A": "Whether the page uses modern fonts and bright photos",
+        "B": "Whether the article is long enough to feel complete",
+        "C": "Who is behind the source and whether others report the same claim"
+      }
+    },
+    {
+      "item_id": "c19_q04",
+      "stem": "A screenshot of a headline is circulating in your chat. What does it prove?",
+      "options": {
+        "A": "That the headline is true and final",
+        "B": "Only that someone shared that image, not that the claim is true",
+        "C": "That every major outlet has already confirmed the story"
+      }
+    },
+    {
+      "item_id": "c19_q05",
+      "stem": "Before you forward a shocking workplace rumor, what habit should you follow?",
+      "options": {
+        "A": "Verify the claim first with a source you can name",
+        "B": "Forward it with \"not sure if true\" so you are not responsible",
+        "C": "Wait for three friends to react, then forward it"
+      }
+    },
+    {
+      "item_id": "c19_q06",
+      "stem": "An unknown blog and your city's official site disagree on a new rule. Whom do you trust first?",
+      "options": {
+        "A": "The blog, if its tone feels expert",
+        "B": "Whichever page loaded faster on your phone",
+        "C": "The official site, then any second independent report of the same fact"
+      }
+    },
+    {
+      "item_id": "c19_q07",
+      "stem": "Why is \"it went viral\" a weak reason to believe a claim?",
+      "options": {
+        "A": "Viral posts are always jokes, never real news",
+        "B": "Wide sharing shows popularity, not accuracy",
+        "C": "Only unpaid posts can be true"
+      }
+    },
+    {
+      "item_id": "c19_q08",
+      "stem": "A colleague says, \"The AI would not make this up.\" What is the better reply?",
+      "options": {
+        "A": "Smooth AI wording is not evidence; we still need an independent check",
+        "B": "Agree, because AI tools never invent details",
+        "C": "Believe it only if the answer is longer than three paragraphs"
+      }
+    },
+    {
+      "item_id": "c19_q09",
+      "stem": "You find two trustworthy outlets reporting the same date for a policy change. What does that give you?",
+      "options": {
+        "A": "Proof that you can skip any future checks on related topics",
+        "B": "A reason to ignore the original surprising post forever",
+        "C": "Stronger support for that date than one uncredited post alone"
+      }
+    }
+  ]
+}
