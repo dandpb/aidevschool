@@ -15,7 +15,17 @@ sob o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/des
 | --- | --- |
 | Conteúdo | Quantidade, versões e status pertencem ao [`curriculum/ai-literacy/README.md`](../../curriculum/ai-literacy/README.md) e ao catálogo canônico; valide antes de compilar. |
 | Baseline verificada | Fase 1 no commit `fb624ae`: três lições piloto e três tipos de atividade de ponta a ponta. |
-| Fase 2 | Integração em andamento. `ready` no catálogo não significa que lint, testes, build, E2E, PWA, revisão e acessibilidade estejam todos verificados. |
+| Fase 2 | Verificada no commit `1f3d78e`: 57 testes unitários, 19 de contrato, 6 E2E (vertical slice, gamificação, PWA), lint e build verdes. |
+| Produção | <https://aidevschool-literacydojo.netlify.app> — deploy manual via `npm run build && npx netlify deploy --dir=dist --prod`. |
+
+## Deploy
+
+O site está vinculado ao projeto Netlify `aidevschool-literacydojo` (pasta
+`.netlify/`, ignorada no git). Para publicar uma nova versão:
+
+```bash
+npm run build && npx netlify deploy --dir=dist --prod
+```
 
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
