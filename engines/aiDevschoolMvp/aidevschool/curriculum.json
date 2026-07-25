@@ -1,0 +1,608 @@
+[
+  {
+    "id": "C01",
+    "title": "What AI is — and what it is not",
+    "module": "M1",
+    "prerequisites": [],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C01.l1.md",
+      "content/C01.l2.md"
+    ]
+  },
+  {
+    "id": "C02",
+    "title": "AI in daily life",
+    "module": "M1",
+    "prerequisites": [
+      "C01"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C02.l1.md",
+      "content/C02.l2.md"
+    ]
+  },
+  {
+    "id": "C03",
+    "title": "Rules vs. learned behavior",
+    "module": "M1",
+    "prerequisites": [
+      "C01",
+      "C02"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C03.l1.md",
+      "content/C03.l2.md"
+    ]
+  },
+  {
+    "id": "C04",
+    "title": "Search and problem solving",
+    "module": "M1",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C04.l1.md",
+      "content/C04.l2.md"
+    ]
+  },
+  {
+    "id": "C05",
+    "title": "Probability and uncertainty",
+    "module": "M1",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C05.l1.md",
+      "content/C05.l2.md"
+    ]
+  },
+  {
+    "id": "C06",
+    "title": "Data: garbage in, garbage out",
+    "module": "M2",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C06.l1.md",
+      "content/C06.l2.md"
+    ]
+  },
+  {
+    "id": "C07",
+    "title": "Learning patterns from examples",
+    "module": "M2",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C07.l1.md",
+      "content/C07.l2.md"
+    ]
+  },
+  {
+    "id": "C08",
+    "title": "Training vs. using a model",
+    "module": "M2",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C08.l1.md",
+      "content/C08.l2.md"
+    ]
+  },
+  {
+    "id": "C09",
+    "title": "Classification and prediction errors",
+    "module": "M2",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 30,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C09.l1.md",
+      "content/C09.l2.md"
+    ]
+  },
+  {
+    "id": "C10",
+    "title": "Neural networks and generative AI",
+    "module": "M3",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C10.l1.md",
+      "content/C10.l2.md"
+    ]
+  },
+  {
+    "id": "C11",
+    "title": "Why LLMs sound confident but do not \"know\"",
+    "module": "M3",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C11.l1.md",
+      "content/C11.l2.md"
+    ]
+  },
+  {
+    "id": "C12",
+    "title": "Prompts as instructions",
+    "module": "M3",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11"
+    ],
+    "gate_id": "G4",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C12.l1.md",
+      "content/C12.l2.md"
+    ]
+  },
+  {
+    "id": "C13",
+    "title": "Iterating prompts",
+    "module": "M3",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12"
+    ],
+    "gate_id": "G4",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C13.l1.md",
+      "content/C13.l2.md"
+    ]
+  },
+  {
+    "id": "C14",
+    "title": "Hallucinations: why fabricated facts arise",
+    "module": "M4",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13"
+    ],
+    "gate_id": "G1",
+    "target_retention_days": 45,
+    "scaffold_levels": 3,
+    "teach_back": false,
+    "content_refs": [
+      "content/C14.l1.md",
+      "content/C14.l2.md",
+      "content/C14.l3.md"
+    ]
+  },
+  {
+    "id": "C15",
+    "title": "Verification habits",
+    "module": "M4",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14"
+    ],
+    "gate_id": "G1",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C15.l1.md",
+      "content/C15.l2.md"
+    ]
+  },
+  {
+    "id": "C16",
+    "title": "Bias in data, bias in outputs",
+    "module": "M5",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C16.l1.md",
+      "content/C16.l2.md"
+    ]
+  },
+  {
+    "id": "C17",
+    "title": "Privacy: what never goes into a chatbot",
+    "module": "M5",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C16"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C17.l1.md",
+      "content/C17.l2.md"
+    ]
+  },
+  {
+    "id": "C18",
+    "title": "Data ownership, consent, and copyright",
+    "module": "M5",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C16",
+      "C17"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C18.l1.md",
+      "content/C18.l2.md"
+    ]
+  },
+  {
+    "id": "C19",
+    "title": "Source evaluation and misinformation",
+    "module": "M4",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15"
+    ],
+    "gate_id": "G3",
+    "target_retention_days": 45,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C19.l1.md",
+      "content/C19.l2.md"
+    ]
+  },
+  {
+    "id": "C20",
+    "title": "Delegation judgment: when (not) to use AI",
+    "module": "M6",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C19"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C20.l1.md",
+      "content/C20.l2.md"
+    ]
+  },
+  {
+    "id": "C21",
+    "title": "Human oversight and accountability",
+    "module": "M5",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C16",
+      "C17",
+      "C18"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C21.l1.md",
+      "content/C21.l2.md"
+    ]
+  },
+  {
+    "id": "C22",
+    "title": "Workplace use cases and safe workflows",
+    "module": "M6",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C19",
+      "C20"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": false,
+    "content_refs": [
+      "content/C22.l1.md",
+      "content/C22.l2.md"
+    ]
+  },
+  {
+    "id": "C23",
+    "title": "Transparency: disclosing AI use",
+    "module": "M5",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C16",
+      "C17",
+      "C18",
+      "C21"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C23.l1.md",
+      "content/C23.l2.md"
+    ]
+  },
+  {
+    "id": "C24",
+    "title": "Societal and economic implications",
+    "module": "M6",
+    "prerequisites": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C19",
+      "C20",
+      "C22"
+    ],
+    "gate_id": "G2",
+    "target_retention_days": 60,
+    "scaffold_levels": 2,
+    "teach_back": true,
+    "content_refs": [
+      "content/C24.l1.md",
+      "content/C24.l2.md"
+    ]
+  }
+]

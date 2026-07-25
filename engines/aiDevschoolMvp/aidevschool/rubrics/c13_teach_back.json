@@ -1,0 +1,44 @@
+{
+  "rubric_id": "c13_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C13",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that the system produces text by predicting likely next words from patterns in its training data.",
+      "required": true,
+      "feedback_fail": "Start with the mechanism: the AI writes by predicting which words are likely to come next, based on patterns it learned from training text."
+    },
+    {
+      "item_id": "tb2",
+      "text": "States that the system has no human-style knowledge, beliefs, or understanding behind its words.",
+      "required": true,
+      "feedback_fail": "One piece is missing: say plainly that the AI has no knowledge or beliefs like a person's — it produces likely words, not understanding."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Explains why the output sounds confident: fluent, plausible phrasing is exactly what the system is trained to produce.",
+      "required": true,
+      "feedback_fail": "Add the 'why': the AI sounds sure of itself because producing smooth, plausible sentences is precisely what it was trained to do."
+    },
+    {
+      "item_id": "tb4",
+      "text": "Draws a practical consequence: important claims from an AI must be checked before they are relied on.",
+      "required": true,
+      "feedback_fail": "Close with the habit: anything important the AI says needs checking before you rely on it or pass it on."
+    }
+  ],
+  "misconception_strings": [
+    "the ai knows but",
+    "it actually knows",
+    "the ai understands",
+    "it chooses to lie",
+    "the ai is always right"
+  ],
+  "anchors": {
+    "pass_example": "It doesn't know anything the way you and I do. It was trained on huge amounts of text and predicts which words are likely to come next, so the sentences come out smooth and confident even when they are wrong. That's why I double-check anything important it tells me.",
+    "fail_example": "The AI is confident because it has read the whole internet and remembers everything, so it usually knows the answer and you can trust its tone of voice."
+  }
+}

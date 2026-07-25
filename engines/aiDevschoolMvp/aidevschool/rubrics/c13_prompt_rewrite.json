@@ -1,0 +1,37 @@
+{
+  "rubric_id": "c13_prompt_rewrite",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C13",
+  "task": "prompt_rewrite",
+  "items": [
+    {
+      "item_id": "pi1",
+      "text": "Improves the given weak prompt instead of answering it: the reply is a new set of instructions, not the requested content itself.",
+      "required": true,
+      "feedback_fail": "Rewrite the instructions themselves — do not answer the weak prompt, produce a better version of it."
+    },
+    {
+      "item_id": "pi2",
+      "text": "Keeps or sharpens the task: the rewrite still asks for the same kind of output, stated more precisely.",
+      "required": true,
+      "feedback_fail": "Keep the same job, but say it more precisely — same output, sharper instructions."
+    },
+    {
+      "item_id": "pi3",
+      "text": "Adds at least one concrete improvement from the lesson: added context, an explicit format, an example, or a constraint.",
+      "required": true,
+      "feedback_fail": "Add at least one concrete upgrade: more context, a clear format, an example, or a constraint."
+    },
+    {
+      "item_id": "pi4",
+      "text": "Stays usable as instructions: short enough to paste into a chat, with no meta-commentary about prompting.",
+      "required": true,
+      "feedback_fail": "Make it paste-ready: just the improved instructions, no commentary about what you changed."
+    }
+  ],
+  "anchors": {
+    "pass_example": "Task: rewrite our return-policy email in a friendly tone. Context: customers can return items within 30 days with a receipt. Format: three short sentences, no legal words.",
+    "fail_example": "You should make the prompt better by adding more detail and being clearer about what you want."
+  }
+}

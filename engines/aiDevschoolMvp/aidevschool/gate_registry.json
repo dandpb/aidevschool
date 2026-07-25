@@ -1,0 +1,76 @@
+{
+  "registry_version": "1.0.0",
+  "spec_ref": "ai_devschool_mvp_spec ch. 6 (gate registry) + ch. 3 §3.2.5 (gate assignment)",
+  "gates": [
+    {
+      "gate_id": "G1",
+      "type": "seeded_error",
+      "variant": null,
+      "verifier_kind": "deterministic",
+      "concepts": ["C14", "C15"],
+      "pass_rule": "recall = 1.0 AND precision >= 0.8 against the seeded key"
+    },
+    {
+      "gate_id": "G2",
+      "type": "regex_keyed",
+      "variant": "redaction",
+      "verifier_kind": "deterministic",
+      "concepts": ["C17"],
+      "pass_rule": "precision = 1.0 AND recall = 1.0 on the seeded PII list"
+    },
+    {
+      "gate_id": "G2",
+      "type": "regex_keyed",
+      "variant": "keyed_scenario",
+      "verifier_kind": "deterministic",
+      "concepts": ["C20", "C21", "C22", "C23", "C24"],
+      "pass_rule": "keyed option chosen AND no forbidden misconception string in rationale"
+    },
+    {
+      "gate_id": "G3",
+      "type": "keyed_adaptive_quiz",
+      "variant": null,
+      "verifier_kind": "deterministic",
+      "concepts": ["C01", "C02", "C03", "C04", "C05", "C06", "C07", "C08", "C09", "C10", "C11", "C16", "C18", "C19"],
+      "pass_rule": "all 3 drawn items correct; mastery = 2 consecutive passes >= 24 h apart"
+    },
+    {
+      "gate_id": "G4",
+      "type": "rubric_anchored_llm",
+      "variant": null,
+      "verifier_kind": "rubric_llm",
+      "concepts": ["C05", "C09", "C12", "C13", "C19", "C23", "C24"],
+      "pass_rule": "every required binary rubric item true"
+    }
+  ],
+  "concept_bindings": {
+    "C01": { "primary": { "gate_id": "G3", "definition": "keys/c01_quiz_bank.json" }, "teach_back": null },
+    "C02": { "primary": { "gate_id": "G3", "definition": "keys/c02_quiz_bank.json" }, "teach_back": null },
+    "C03": { "primary": { "gate_id": "G3", "definition": "keys/c03_quiz_bank.json" }, "teach_back": null },
+    "C04": { "primary": { "gate_id": "G3", "definition": "keys/c04_quiz_bank.json" }, "teach_back": null },
+    "C05": { "primary": { "gate_id": "G3", "definition": "keys/c05_quiz_bank.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c05_teach_back.json", "fallback": "keys/c05_quiz_bank.json" } },
+    "C06": { "primary": { "gate_id": "G3", "definition": "keys/c06_quiz_bank.json" }, "teach_back": null },
+    "C07": { "primary": { "gate_id": "G3", "definition": "keys/c07_quiz_bank.json" }, "teach_back": null },
+    "C08": { "primary": { "gate_id": "G3", "definition": "keys/c08_quiz_bank.json" }, "teach_back": null },
+    "C09": { "primary": { "gate_id": "G3", "definition": "keys/c09_quiz_bank.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c09_teach_back.json", "fallback": "keys/c09_quiz_bank.json" } },
+    "C10": { "primary": { "gate_id": "G3", "definition": "keys/c10_quiz_bank.json" }, "teach_back": null },
+    "C11": { "primary": { "gate_id": "G3", "definition": "keys/c11_quiz_bank.json" }, "teach_back": null },
+    "C12": { "primary": { "gate_id": "G4", "definition": "rubrics/c12_prompt_rewrite.json", "fallback": "keys/c12_quiz_bank.json" }, "teach_back": null },
+    "C13": { "primary": { "gate_id": "G4", "definition": "rubrics/c13_prompt_rewrite.json", "fallback": "keys/c13_quiz_bank.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c13_teach_back.json", "fallback": "keys/c13_quiz_bank.json" } },
+    "C14": { "primary": { "gate_id": "G1", "definition": "keys/c14_seeded_bio.json" }, "teach_back": null },
+    "C15": { "primary": { "gate_id": "G1", "definition": "keys/c15_seeded_report.json" }, "teach_back": null },
+    "C16": { "primary": { "gate_id": "G3", "definition": "keys/c16_quiz_bank.json" }, "teach_back": null },
+    "C17": { "primary": { "gate_id": "G2", "definition": "keys/c17_pii_email.json" }, "teach_back": null },
+    "C18": { "primary": { "gate_id": "G3", "definition": "keys/c18_quiz_bank.json" }, "teach_back": null },
+    "C19": { "primary": { "gate_id": "G3", "definition": "keys/c19_quiz_bank.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c19_teach_back.json", "fallback": "keys/c19_quiz_bank.json" } },
+    "C20": { "primary": { "gate_id": "G2", "definition": "keys/c20_scenario.json" }, "teach_back": null },
+    "C21": { "primary": { "gate_id": "G2", "definition": "keys/c21_scenario.json" }, "teach_back": null },
+    "C22": { "primary": { "gate_id": "G2", "definition": "keys/c22_scenario.json" }, "teach_back": null },
+    "C23": { "primary": { "gate_id": "G2", "definition": "keys/c23_scenario.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c23_teach_back.json", "fallback": "keys/c23_quiz_bank.json" } },
+    "C24": { "primary": { "gate_id": "G2", "definition": "keys/c24_scenario.json" }, "teach_back": { "gate_id": "G4", "definition": "rubrics/c24_teach_back.json", "fallback": "keys/c24_quiz_bank.json" } }
+  },
+  "notes": [
+    "When config.json feature_flags.llm_gates_enabled is false, gate_check.py serves every G4-mapped assessment from the listed G3-format fallback quiz bank and issues no LLM verdict (spec ch. 6 §6.3.4).",
+    "keys/ and rubrics/ are read by scripts only; the persona never reads, quotes, or paraphrases them (spec ch. 4, ch. 6 §6.3.3)."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "dojotoday",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Lição de hoje do programador — consome o substrato FSRS/streak/gate do DevSchool.",
+  "scripts": {
+    "gen:today": "python3 tools/gen-today.py",
+    "prebuild": "npm run gen:today",
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite build && vite preview",
+    "lint": "biome check src tools"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "typescript": "5.7.3",
+    "vite": "6.0.11"
+  }
+}

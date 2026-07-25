@@ -1,0 +1,43 @@
+{
+  "rubric_id": "c09_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C09",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that a system classifying or predicting things makes two kinds of mistakes: false alarms and missed cases.",
+      "required": true,
+      "feedback_fail": "Name the two mistake types plainly: false alarms (flagged but fine) and missed cases (real but not flagged)."
+    },
+    {
+      "item_id": "tb2",
+      "text": "Explains that reducing one kind of error usually increases the other, so every system chooses a balance.",
+      "required": true,
+      "feedback_fail": "Add the trade-off: catching more real cases usually means more false alarms — every system picks a balance."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Gives a concrete example (e.g., spam filter, medical screening, fraud detection) naming what each error costs there.",
+      "required": true,
+      "feedback_fail": "Use one concrete example and say what each kind of mistake costs in that situation."
+    },
+    {
+      "item_id": "tb4",
+      "text": "Draws a practical consequence: no classifier is perfect, so important flagged or missed cases deserve human judgment.",
+      "required": true,
+      "feedback_fail": "Close with the habit: no classifier is perfect, so important results deserve a person's judgment."
+    }
+  ],
+  "misconception_strings": [
+    "the ai never makes mistakes",
+    "a good model has no errors",
+    "100% accurate",
+    "the filter is always right"
+  ],
+  "anchors": {
+    "pass_example": "A spam filter makes two kinds of mistakes: false alarms, when a real email lands in spam, and missed cases, when spam reaches your inbox. Catching more spam usually means more real mail gets flagged — every system picks a balance. It is like airport security: stricter checks catch more but slow more innocent travelers. So no filter is perfect, and anything important deserves a human look.",
+    "fail_example": "A good AI classifier is basically always right, and if it makes a mistake the engineers just fix it so it never happens again."
+  }
+}

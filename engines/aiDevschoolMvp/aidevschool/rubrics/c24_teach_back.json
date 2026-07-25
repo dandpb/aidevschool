@@ -1,0 +1,43 @@
+{
+  "rubric_id": "c24_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C24",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that AI changes jobs by changing tasks: some tasks are automated, new tasks appear, and most jobs shift rather than vanish overnight.",
+      "required": true,
+      "feedback_fail": "Start with the task view: AI changes jobs task by task — some automated, some new — rather than making whole jobs vanish overnight."
+    },
+    {
+      "item_id": "tb2",
+      "text": "Avoids both extremes: neither 'AI will take all jobs' nor 'AI changes nothing' is presented as fact.",
+      "required": true,
+      "feedback_fail": "Keep it balanced: neither 'AI takes every job' nor 'nothing changes' is a fact — say what is known and what is uncertain."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Mentions at least one wider effect beyond one's own job: inequality, new kinds of work, energy use, or rules like the EU AI Act.",
+      "required": true,
+      "feedback_fail": "Zoom out once: mention a wider effect such as inequality, new kinds of work, energy use, or new rules like the EU AI Act."
+    },
+    {
+      "item_id": "tb4",
+      "text": "Draws a practical consequence: the useful response is learning to work with AI critically, not fear or blind adoption.",
+      "required": true,
+      "feedback_fail": "Close with the takeaway: the useful response is learning to work with AI critically — not fear, and not blind adoption."
+    }
+  ],
+  "misconception_strings": [
+    "ai will take all jobs",
+    "ai changes nothing",
+    "machines will replace everyone",
+    "there is nothing we can do"
+  ],
+  "anchors": {
+    "pass_example": "AI changes jobs task by task: some tasks get automated, new ones appear, and most jobs shift rather than disappear overnight. Nobody honestly knows the full future, so I distrust both 'it takes every job' and 'it changes nothing.' There are wider effects too — inequality, new kinds of work, energy use, and new rules like the EU AI Act. For me the answer is learning to work with AI critically, not fearing it or swallowing it whole.",
+    "fail_example": "AI will obviously take every job within a few years, machines will replace everyone, and there is nothing ordinary people can do about it."
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "rubric_id": "c23_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C23",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that people who receive AI-assisted work deserve to know AI helped produce it, especially when decisions or trust are involved.",
+      "required": true,
+      "feedback_fail": "Start with the principle: people receiving AI-assisted work deserve to know AI helped, especially when trust or decisions are involved."
+    },
+    {
+      "item_id": "tb2",
+      "text": "Explains that disclosure protects the sender too: undisclosed AI use can damage trust far more than admitted use.",
+      "required": true,
+      "feedback_fail": "Add the 'why': hiding AI use risks more trust than admitting it — disclosure protects you as well."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Gives a concrete example of a good disclosure: a short, plain note saying what the AI did and what the person checked.",
+      "required": true,
+      "feedback_fail": "Give one concrete example of a good disclosure line — short, plain, saying what the AI did and what you checked."
+    },
+    {
+      "item_id": "tb4",
+      "text": "States that disclosure never transfers responsibility: the person who sends the work stays accountable for it.",
+      "required": true,
+      "feedback_fail": "Close with accountability: disclosure does not shift responsibility — the sender stays accountable for what they send."
+    }
+  ],
+  "misconception_strings": [
+    "no one needs to know",
+    "disclosure is optional always",
+    "the ai is responsible",
+    "once disclosed the ai is accountable"
+  ],
+  "anchors": {
+    "pass_example": "If AI helped me produce something, the people receiving it deserve to know — especially when decisions or trust are involved. Hiding it risks far more trust than admitting it. I use a short plain line, like 'Drafted with AI help; I checked the facts and figures myself.' And disclosure never moves responsibility: what I send is mine.",
+    "fail_example": "If the AI wrote most of it, there is no need to tell anyone, because mentioning AI just makes people doubt good work — and anyway the tool is responsible for its own output."
+  }
+}

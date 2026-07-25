@@ -1,0 +1,43 @@
+{
+  "rubric_id": "c19_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C19",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that a confident, well-written text (from an AI or a person) is not evidence that its claims are true.",
+      "required": true,
+      "feedback_fail": "Start with the core point: smooth, confident writing is not evidence that the claims are true."
+    },
+    {
+      "item_id": "tb2",
+      "text": "Recommends leaving the page to check a claim: looking for an independent, trustworthy source instead of reading the same page harder.",
+      "required": true,
+      "feedback_fail": "Add the key move: leave the page and look for an independent, trustworthy source that confirms or denies the claim."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Names at least one concrete check: who is behind the source, whether other outlets report it, or whether a date/number can be verified.",
+      "required": true,
+      "feedback_fail": "Name one concrete check: who is behind the source, whether others report the same, or whether a date or number can be verified."
+    },
+    {
+      "item_id": "tb4",
+      "text": "Draws a practical consequence: before forwarding or relying on a surprising claim, verify it first.",
+      "required": true,
+      "feedback_fail": "Close with the habit: before you forward or rely on a surprising claim, verify it first."
+    }
+  ],
+  "misconception_strings": [
+    "if it is well written it is true",
+    "the ai would not lie",
+    "you can trust the source if it looks professional",
+    "fact checking is not needed"
+  ],
+  "anchors": {
+    "pass_example": "A smooth, confident text proves nothing — an AI or a person can write nonsense beautifully. So I don't read the same page harder; I leave it and check what independent, trustworthy sources say about the claim. I look at who is behind it and whether anyone else reliable reports the same fact or date. Before I forward anything surprising, I verify it first.",
+    "fail_example": "You can usually tell misinformation by bad spelling and unprofessional design, so a well-written AI answer from a polished site is safe to trust and share."
+  }
+}

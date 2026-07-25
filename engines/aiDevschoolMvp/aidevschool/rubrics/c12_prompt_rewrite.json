@@ -1,0 +1,31 @@
+{
+  "rubric_id": "c12_prompt_rewrite",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C12",
+  "task": "prompt_rewrite",
+  "items": [
+    {
+      "item_id": "pr1",
+      "text": "States an explicit task: one clear sentence saying what the AI should produce.",
+      "required": true,
+      "feedback_fail": "Name the job first: one clear sentence saying what you want the AI to produce."
+    },
+    {
+      "item_id": "pr2",
+      "text": "Supplies concrete context: who it is for and the facts the AI needs.",
+      "required": true,
+      "feedback_fail": "Add the situation: who it is for and the facts the AI needs."
+    },
+    {
+      "item_id": "pr3",
+      "text": "Specifies the answer's format: length, style, or structure.",
+      "required": true,
+      "feedback_fail": "Close with the shape: how long, what tone, what structure."
+    }
+  ],
+  "anchors": {
+    "pass_example": "Task: write a three-sentence meeting summary. Context: project Alpha, deadline moved to Friday, budget approved. Format: plain sentences, no jargon.",
+    "fail_example": "Tell me about the meeting."
+  }
+}

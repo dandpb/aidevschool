@@ -1,0 +1,43 @@
+{
+  "rubric_id": "c05_teach_back",
+  "rubric_version": "1.0.0",
+  "gate_id": "G4",
+  "concept_id": "C05",
+  "task": "teach_back",
+  "items": [
+    {
+      "item_id": "tb1",
+      "text": "States that an AI's percentage is an estimate of how often it expects to be right in similar cases, not a guarantee.",
+      "required": true,
+      "feedback_fail": "Say what the number means: it is the AI's estimate of how often it would be right in similar cases — never a promise."
+    },
+    {
+      "item_id": "tb2",
+      "text": "Explains that uncertainty remains because the system works from patterns in data, not from certainty.",
+      "required": true,
+      "feedback_fail": "Add the 'why': the AI works from patterns in data, so some uncertainty always remains."
+    },
+    {
+      "item_id": "tb3",
+      "text": "Gives an everyday example where a probabilistic answer is read correctly (e.g., weather, spam, map times).",
+      "required": true,
+      "feedback_fail": "Ground it in one everyday example — weather chances, spam scores, or travel times work well."
+    },
+    {
+      "item_id": "tb4",
+      "text": "Draws a practical consequence: a small stated risk still deserves a human look when the stakes matter.",
+      "required": true,
+      "feedback_fail": "Close with the habit: when it matters, even a small stated risk deserves a person's attention."
+    }
+  ],
+  "misconception_strings": [
+    "90% means it is always right",
+    "the probability is exact",
+    "the ai is certain",
+    "percent means proof"
+  ],
+  "anchors": {
+    "pass_example": "When the AI says 90%, it means it expects to be right about 90 times out of 100 in cases like this — not that it is sure this time. It works from patterns in data, so some doubt always remains. Like a 70% rain forecast: a dry day doesn't make it wrong. So when the stakes are real, even a small stated risk deserves a human look.",
+    "fail_example": "Ninety percent means the AI checked 90% of the information and is basically certain, so you can treat the answer as fact."
+  }
+}
