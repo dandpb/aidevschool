@@ -18,6 +18,28 @@ describe("migrateProgress (forward-only)", () => {
     expect(migrated.lessonStatus[firstReady]).toBe("completed");
   });
 
+  it("progresso da versão 2 recebe os campos do Mapa Inicial sem perder histórico", () => {
+    const progress = createInitialProgress(modules, contentVersion);
+    const legacy = { ...progress, schemaVersion: 2 };
+    const migrated = migrateProgress(legacy, contentVersion);
+    expect(migrated.schemaVersion).toBe(PROGRESS_SCHEMA_VERSION);
+    expect(migrated.onboarding.mapInitial).toBeUndefined();
+    expect(migrated.lessonStatus).toEqual(progress.lessonStatus);
+  });
+
+  it("reabre no Mapa Inicial quando o onboarding legado ainda não teve nenhuma lição", () => {
+    const progress = createInitialProgress(modules, contentVersion);
+    const legacy = {
+      ...progress,
+      schemaVersion: 2,
+      onboarding: { completed: true },
+    };
+    const migrated = migrateProgress(legacy, contentVersion);
+    expect(migrated.currentLessonId).toBe("l02");
+    expect(migrated.lessonStatus.l01).toBe("locked");
+    expect(migrated.lessonStatus.l02).toBe("available");
+  });
+
   it("schemaVersion desconhecida não migra — erro explícito, sem fallback silencioso", () => {
     const progress = createInitialProgress(modules, contentVersion);
     expect(() =>

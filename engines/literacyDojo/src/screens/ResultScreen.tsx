@@ -1,5 +1,6 @@
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
+import { MAP_INITIAL_LESSON_ID } from "../domain/progress";
 
 /**
  * Resultado (plano seção 9): habilidade praticada, o que foi bem, o que
@@ -63,6 +64,22 @@ export function ResultScreen({
           de <strong>competência verificada</strong>, que depende de uma verificação independente —
           e ainda não faz parte deste piloto.
         </p>
+      </div>
+
+      {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && (
+        <div className="card" data-testid="route-explanation">
+          <h2>Seu próximo passo</h2>
+          <p>
+            {summary.nextLessonId === "l03"
+              ? "Você identificou os sinais de confiança logo de primeira. Vamos avançar para entender onde a IA ajuda e onde ela pode falhar."
+              : "Como você pediu apoio ou precisou tentar de novo, vamos começar com uma conversa simples com IA antes de avançar."}
+          </p>
+        </div>
+      )}
+
+      <div className="dev-teaser">
+        <strong>Trilha Dev</strong>
+        <span>Em breve: desafios para quem programa com IA.</span>
       </div>
 
       <div className="actions">

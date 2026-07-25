@@ -5,13 +5,13 @@ import { App } from "../../src/app/App";
 import type { ActivityDefinition } from "../../src/data/generated/lessons";
 import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
-import { createInitialProgress } from "../../src/domain/progress";
+import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
 import { readyLessonEntries } from "../../src/domain/track";
 import { makeServices } from "../helpers";
 
 const ready = readyLessonEntries(modules);
-const firstLesson = lessons.find((lesson) => lesson.id === ready[0].id);
-if (!firstLesson) throw new Error("primeira lição ausente do read model");
+const firstLesson = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
+if (!firstLesson) throw new Error("Mapa Inicial ausente do read model");
 
 type User = ReturnType<typeof userEvent.setup>;
 
@@ -56,13 +56,16 @@ async function answerActivity(
 
 function seededProgress(overrides?: (progress: ReturnType<typeof createInitialProgress>) => void) {
   const progress = createInitialProgress(modules, "test-content-version");
-  progress.onboarding = { completed: true };
+  progress.onboarding = { completed: true, taskCategory: "scheduling" };
+  progress.lessonStatus.l01 = "locked";
+  progress.lessonStatus[MAP_INITIAL_LESSON_ID] = "available";
+  progress.currentLessonId = MAP_INITIAL_LESSON_ID;
   overrides?.(progress);
   return progress;
 }
 
 describe("fluxo do app (integração)", () => {
-  it("onboarding em 3 passos cai direto na primeira lição", async () => {
+  it("onboarding acolhe, coleta contexto estruturado e abre o Mapa Inicial", async () => {
     const user = userEvent.setup();
     const { services } = makeServices();
     render(<App services={services} />);
@@ -70,16 +73,22 @@ describe("fluxo do app (integração)", () => {
     const onboarding = await screen.findByTestId("onboarding-screen");
     expect(onboarding).toBeInTheDocument();
 
+    expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
+    expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
+    await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-save_time"));
     await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-work"));
     await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-medium"));
     await user.click(screen.getByTestId("onboarding-next"));
+    await user.click(screen.getByTestId("onboarding-option-scheduling"));
+    await user.click(screen.getByTestId("onboarding-next"));
 
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
     expect(services.analytics.events.map((event) => event.event)).toContain("onboarding_completed");
+    expect((await services.progressRepo.load())?.onboarding.taskCategory).toBe("scheduling");
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {

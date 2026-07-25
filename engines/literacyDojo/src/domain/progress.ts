@@ -1,7 +1,8 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
 
-export const PROGRESS_SCHEMA_VERSION = 2;
+export const PROGRESS_SCHEMA_VERSION = 3;
+export const MAP_INITIAL_LESSON_ID = "l02";
 
 /**
  * Máximo que a UI registra é `completed`. `mastered` é reservado a uma futura
@@ -23,12 +24,24 @@ export type SkillPractice = {
 export type OnboardingGoal = "write_better" | "save_time" | "verify_answers" | "protect_data";
 export type OnboardingContext = "work" | "studies" | "business" | "daily_life";
 export type OnboardingConfidence = "low" | "medium" | "high";
+export type OnboardingTaskCategory = "scheduling" | "communication" | "news_research";
+export type LearningRoute = "guided" | "intermediate";
+
+export type MapInitialState = {
+  attempts: number;
+  hintRequested: boolean;
+  retried: boolean;
+  firstAttemptPassed: boolean;
+};
 
 export type OnboardingState = {
   completed: boolean;
   goal?: OnboardingGoal;
   context?: OnboardingContext;
   confidence?: OnboardingConfidence;
+  taskCategory?: OnboardingTaskCategory;
+  route?: LearningRoute;
+  mapInitial?: MapInitialState;
 };
 
 export type AchievementId =
@@ -118,7 +131,8 @@ const DAY_MS = 86_400_000;
 /**
  * Estado inicial: somente lições com conteúdo (`hasContent`) recebem status;
  * lições `planned` nunca entram no mapa de status (a UI as mostra como "em breve").
- * A primeira lição pronta da trilha nasce `available`; as demais, `locked`.
+ * A primeira lição pronta nasce `available`; o onboarding a substitui pelo
+ * Mapa Inicial antes de qualquer pessoa abrir a trilha.
  * Pré-requisitos `planned` não bloqueiam: como não têm conteúdo, jamais seriam
  * "completados", o que travaria a trilha inteira — a cadeia de desbloqueio do
  * MVP segue a ordem das lições prontas (ver `unlockNextReadyLesson`).
@@ -158,7 +172,7 @@ export function unlockNextReadyLesson(
   modules: ModuleDefinition[],
   completedLessonId: string,
 ): { progress: LearnerProgress; unlockedLessonId?: string } {
-  const nextId = nextReadyLessonId(modules, completedLessonId);
+  const nextId = nextLessonIdFor(progress, modules, completedLessonId);
   if (!nextId) return { progress };
   if (progress.lessonStatus[nextId] !== "locked") return { progress, unlockedLessonId: nextId };
   return {
@@ -168,6 +182,24 @@ export function unlockNextReadyLesson(
     },
     unlockedLessonId: nextId,
   };
+}
+
+export function mapInitialRoute(mapInitial: MapInitialState | undefined): LearningRoute {
+  return mapInitial?.firstAttemptPassed && !mapInitial.hintRequested && !mapInitial.retried
+    ? "intermediate"
+    : "guided";
+}
+
+function nextLessonIdFor(
+  progress: LearnerProgress,
+  modules: ModuleDefinition[],
+  completedLessonId: string,
+): string | undefined {
+  if (completedLessonId === MAP_INITIAL_LESSON_ID) {
+    return progress.onboarding.route === "intermediate" ? "l03" : "l01";
+  }
+  if (completedLessonId === "l01" && progress.onboarding.route === "guided") return "l03";
+  return nextReadyLessonId(modules, completedLessonId);
 }
 
 export function localDateKey(date: Date): string {

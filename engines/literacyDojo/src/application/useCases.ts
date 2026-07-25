@@ -6,9 +6,11 @@ import {
   type Achievement,
   type LearnerProgress,
   type LessonOutcome,
+  MAP_INITIAL_LESSON_ID,
   type OnboardingConfidence,
   type OnboardingContext,
   type OnboardingGoal,
+  type OnboardingTaskCategory,
   type SkillPractice,
   XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
@@ -18,6 +20,7 @@ import {
   awardXp,
   evaluateLessonCompletion,
   isLessonUnlocked,
+  mapInitialRoute,
   recordApplication,
   reviewsDue,
   unlockNextReadyLesson,
@@ -118,6 +121,7 @@ export class LiteracyUseCases {
     goal: OnboardingGoal;
     context: OnboardingContext;
     confidence: OnboardingConfidence;
+    taskCategory: OnboardingTaskCategory;
   }): Promise<LearnerProgress> {
     const progress = await this.requireProgress();
     const next: LearnerProgress = {
@@ -127,6 +131,13 @@ export class LiteracyUseCases {
         goal: input.goal,
         context: input.context,
         confidence: input.confidence,
+        taskCategory: input.taskCategory,
+      },
+      currentLessonId: MAP_INITIAL_LESSON_ID,
+      lessonStatus: {
+        ...progress.lessonStatus,
+        l01: "locked",
+        [MAP_INITIAL_LESSON_ID]: "available",
       },
     };
     await this.deps.progress.save(next);
@@ -171,6 +182,26 @@ export class LiteracyUseCases {
     const now = this.deps.clock.now();
 
     let next: LearnerProgress = { ...progress, counters: { attempts } };
+    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
+      const mapInitial = progress.onboarding.mapInitial ?? {
+        attempts: 0,
+        hintRequested: false,
+        retried: false,
+        firstAttemptPassed: false,
+      };
+      next = {
+        ...next,
+        onboarding: {
+          ...next.onboarding,
+          mapInitial: {
+            ...mapInitial,
+            attempts: mapInitial.attempts + 1,
+            firstAttemptPassed:
+              mapInitial.attempts === 0 ? evaluation.pass : mapInitial.firstAttemptPassed,
+          },
+        },
+      };
+    }
     next = applyAttemptToSkills(
       next,
       lesson.skillIds,
@@ -223,6 +254,23 @@ export class LiteracyUseCases {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
     const hint = this.deps.feedback.hintFor(activity, input.hintIndex);
+    let progress = await this.requireProgress();
+    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
+      const mapInitial = progress.onboarding.mapInitial ?? {
+        attempts: 0,
+        hintRequested: false,
+        retried: false,
+        firstAttemptPassed: false,
+      };
+      progress = {
+        ...progress,
+        onboarding: {
+          ...progress.onboarding,
+          mapInitial: { ...mapInitial, hintRequested: true },
+        },
+      };
+      await this.deps.progress.save(progress);
+    }
     this.deps.analytics.track("hint_requested", {
       activityId: activity.id,
       hintIndex: input.hintIndex,
@@ -238,6 +286,22 @@ export class LiteracyUseCases {
   async retryActivity(input: { lessonId: string; activityId: string }): Promise<void> {
     const lesson = this.requireLesson(input.lessonId);
     const activity = this.requireActivity(lesson, input.activityId);
+    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
+      const progress = await this.requireProgress();
+      const mapInitial = progress.onboarding.mapInitial ?? {
+        attempts: 0,
+        hintRequested: false,
+        retried: false,
+        firstAttemptPassed: false,
+      };
+      await this.deps.progress.save({
+        ...progress,
+        onboarding: {
+          ...progress.onboarding,
+          mapInitial: { ...mapInitial, retried: true },
+        },
+      });
+    }
     this.deps.analytics.track("activity_retried", { activityId: activity.id });
   }
 
@@ -258,6 +322,15 @@ export class LiteracyUseCases {
       ...progress,
       lessonStatus: { ...progress.lessonStatus, [input.lessonId]: "completed" },
     };
+    if (input.lessonId === MAP_INITIAL_LESSON_ID) {
+      next = {
+        ...next,
+        onboarding: {
+          ...next.onboarding,
+          route: mapInitialRoute(next.onboarding.mapInitial),
+        },
+      };
+    }
     next = awardXp(next, XP_PER_LESSON_COMPLETE, now);
     next = this.applyReviewSchedule(next, lesson, now, 0);
     const unlocked = unlockNextReadyLesson(next, this.deps.content.listModules(), input.lessonId);

@@ -2,9 +2,9 @@ import { type LearnerProgress, PROGRESS_SCHEMA_VERSION } from "./progress";
 
 /**
  * Migração forward-only de LearnerProgress (content-contract regra 4):
- * - schemaVersion 1 → 2: adiciona achievements, dailyGoal e applications
- *   (introduzidos na Fase 2), preservando todo o resto.
- * - schemaVersion atual (2) passa direto; versões desconhecidas lançam
+ * - schemaVersion 1 → 2: adiciona achievements, dailyGoal e applications.
+ * - schemaVersion 2 → 3: acrescenta os campos locais do Mapa Inicial.
+ * - schemaVersion atual passa direto; versões desconhecidas lançam
  *   UnmigratableProgressError — o chamador decide (no boot do app: descarta e
  *   recomeça do estado inicial, nunca migra parcialmente em silêncio).
  * - contentVersion divergente: progresso de experiência (`completed`) é
@@ -45,6 +45,21 @@ function migrateV1toV2(raw: Record<string, unknown>): Record<string, unknown> {
   };
 }
 
+function migrateV2toV3(raw: Record<string, unknown>): Record<string, unknown> {
+  const lessonStatus = isRecord(raw.lessonStatus) ? raw.lessonStatus : {};
+  const onboarding = isRecord(raw.onboarding) ? raw.onboarding : {};
+  const hasCompletedLesson = Object.values(lessonStatus).some((status) => status === "completed");
+  if (onboarding.completed === true && !hasCompletedLesson) {
+    return {
+      ...raw,
+      schemaVersion: 3,
+      currentLessonId: "l02",
+      lessonStatus: { ...lessonStatus, l01: "locked", l02: "available" },
+    };
+  }
+  return { ...raw, schemaVersion: 3 };
+}
+
 export function migrateProgress(
   raw: unknown,
   contentVersion: string,
@@ -54,9 +69,9 @@ export function migrateProgress(
     throw new UnmigratableProgressError("estado salvo não é um objeto");
   }
   const version = raw.schemaVersion;
-  if (version !== PROGRESS_SCHEMA_VERSION && version !== 1) {
+  if (version !== PROGRESS_SCHEMA_VERSION && version !== 1 && version !== 2) {
     throw new UnmigratableProgressError(
-      `schemaVersion ${String(version)} (esperado ${PROGRESS_SCHEMA_VERSION} ou 1 migrável)`,
+      `schemaVersion ${String(version)} (esperado ${PROGRESS_SCHEMA_VERSION}, 1 ou 2 migrável)`,
     );
   }
   checkBaseShape(raw);
@@ -65,6 +80,7 @@ export function migrateProgress(
   if (version === 1) {
     record = migrateV1toV2(record);
   }
+  if (record.schemaVersion === 2) record = migrateV2toV3(record);
 
   let progress = record as unknown as LearnerProgress;
 

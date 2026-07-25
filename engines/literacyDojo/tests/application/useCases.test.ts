@@ -4,17 +4,18 @@ import type { OutputComparisonActivity } from "../../src/data/generated/lessons"
 import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
 import {
+  MAP_INITIAL_LESSON_ID,
   XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
   createInitialProgress,
 } from "../../src/domain/progress";
-import { readyLessonEntries } from "../../src/domain/track";
 import { FIXED_NOW, makeServices } from "../helpers";
 
-const ready = readyLessonEntries(modules);
-const [firstReady, secondReady] = ready;
-const lesson = lessons.find((item) => item.id === firstReady.id);
-if (!lesson) throw new Error("primeira lição ausente do read model");
+const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
+if (!lesson) throw new Error("Mapa Inicial ausente do read model");
+const guidedLesson = lessons.find((item) => item.id === "l01");
+const intermediateLesson = lessons.find((item) => item.id === "l03");
+if (!guidedLesson || !intermediateLesson) throw new Error("rota adaptativa incompleta");
 const activity = lesson.activities[0] as OutputComparisonActivity;
 const activityId = activity.id;
 
@@ -28,18 +29,29 @@ const WRONG_ANSWER = {
   criterionIds: [],
 };
 
+async function completeMvpOnboarding(services: ReturnType<typeof makeServices>["services"]) {
+  await services.useCases.completeOnboarding({
+    goal: "save_time",
+    context: "work",
+    confidence: "medium",
+    taskCategory: "scheduling",
+  });
+}
+
 describe("startLesson", () => {
   it("lição disponível vira in_progress e emite lesson_started", async () => {
     const { services } = makeServices();
-    const progress = await services.useCases.startLesson(firstReady.id);
-    expect(progress.lessonStatus[firstReady.id]).toBe("in_progress");
-    expect(progress.currentLessonId).toBe(firstReady.id);
+    await completeMvpOnboarding(services);
+    const progress = await services.useCases.startLesson(lesson.id);
+    expect(progress.lessonStatus[lesson.id]).toBe("in_progress");
+    expect(progress.currentLessonId).toBe(lesson.id);
     expect(services.analytics.events.map((event) => event.event)).toContain("lesson_started");
   });
 
   it("lição bloqueada lança LessonLockedError", async () => {
     const { services } = makeServices();
-    await expect(services.useCases.startLesson(secondReady.id)).rejects.toThrow(LessonLockedError);
+    await completeMvpOnboarding(services);
+    await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(LessonLockedError);
   });
 });
 
@@ -163,20 +175,27 @@ describe("retryActivity", () => {
 });
 
 describe("completeLesson", () => {
-  it("conclui: status completed, próxima available, XP bônus, revisão agendada", async () => {
+  it("acerto de primeira no Mapa Inicial libera a rota intermediária", async () => {
     const { services } = makeServices();
-    await services.useCases.startLesson(firstReady.id);
+    await completeMvpOnboarding(services);
+    await services.useCases.startLesson(lesson.id);
+    await services.useCases.submitActivityAttempt({
+      lessonId: lesson.id,
+      activityId,
+      answer: RIGHT_ANSWER,
+    });
     const result = await services.useCases.completeLesson({
       lessonId: lesson.id,
       bestScores: { [activityId]: 1 },
       durationSeconds: 180,
     });
     expect(result.outcome.completed).toBe(true);
-    expect(result.nextLessonId).toBe(secondReady.id);
-    expect(result.progress.lessonStatus[firstReady.id]).toBe("completed");
-    expect(result.progress.lessonStatus[secondReady.id]).toBe("available");
-    expect(result.progress.currentLessonId).toBe(secondReady.id);
-    expect(result.progress.xp).toBe(XP_PER_LESSON_COMPLETE);
+    expect(result.nextLessonId).toBe(intermediateLesson.id);
+    expect(result.progress.lessonStatus[lesson.id]).toBe("completed");
+    expect(result.progress.lessonStatus[intermediateLesson.id]).toBe("available");
+    expect(result.progress.currentLessonId).toBe(intermediateLesson.id);
+    expect(result.progress.onboarding.route).toBe("intermediate");
+    expect(result.progress.xp).toBe(XP_PER_ACTIVITY_PASS + XP_PER_LESSON_COMPLETE);
     const skill = result.progress.skills[lesson.skillIds[0]];
     expect(skill.nextReviewAt).toBe(
       new Date(FIXED_NOW.getTime() + lesson.review.intervalsDays[0] * 86_400_000).toISOString(),
@@ -186,16 +205,42 @@ describe("completeLesson", () => {
     expect(JSON.stringify(result.progress)).not.toContain("mastered");
   });
 
-  it("sem todas as atividades obrigatórias, não conclui", async () => {
-    const { services, initial } = makeServices();
-    await services.useCases.startLesson(firstReady.id);
+  it("dica ou nova tentativa no Mapa Inicial libera a rota guiada", async () => {
+    const { services } = makeServices();
+    await completeMvpOnboarding(services);
+    await services.useCases.startLesson(lesson.id);
+    await services.useCases.requestHint({ lessonId: lesson.id, activityId, hintIndex: 0 });
+    await services.useCases.retryActivity({ lessonId: lesson.id, activityId });
     const result = await services.useCases.completeLesson({
       lessonId: lesson.id,
-      bestScores: {},
+      bestScores: { [activityId]: 1 },
     });
-    expect(result.outcome.completed).toBe(false);
-    expect(result.progress.lessonStatus[firstReady.id]).toBe("in_progress");
-    expect(result.progress.lessonStatus[secondReady.id]).toBe(initial.lessonStatus[secondReady.id]);
+    expect(result.outcome.completed).toBe(true);
+    expect(result.nextLessonId).toBe(guidedLesson.id);
+    expect(result.progress.onboarding.route).toBe("guided");
+    expect(result.progress.lessonStatus[guidedLesson.id]).toBe("available");
+  });
+
+  it("erro na primeira tentativa também libera a rota guiada", async () => {
+    const { services } = makeServices();
+    await completeMvpOnboarding(services);
+    await services.useCases.startLesson(lesson.id);
+    await services.useCases.submitActivityAttempt({
+      lessonId: lesson.id,
+      activityId,
+      answer: WRONG_ANSWER,
+    });
+    await services.useCases.submitActivityAttempt({
+      lessonId: lesson.id,
+      activityId,
+      answer: RIGHT_ANSWER,
+    });
+    const result = await services.useCases.completeLesson({
+      lessonId: lesson.id,
+      bestScores: { [activityId]: 1 },
+    });
+    expect(result.progress.onboarding.route).toBe("guided");
+    expect(result.nextLessonId).toBe(guidedLesson.id);
   });
 });
 
@@ -224,11 +269,12 @@ describe("resumeSession", () => {
   it("onboarding feito e lição em andamento → retoma o player", async () => {
     const progress = createInitialProgress(modules, "x");
     progress.onboarding = { completed: true };
-    progress.lessonStatus[firstReady.id] = "in_progress";
+    progress.lessonStatus[lesson.id] = "in_progress";
+    progress.currentLessonId = lesson.id;
     const { services } = makeServices({ progress });
     expect(await services.useCases.resumeSession()).toEqual({
       kind: "lesson",
-      lessonId: firstReady.id,
+      lessonId: lesson.id,
     });
   });
 
@@ -255,9 +301,11 @@ describe("completeOnboarding", () => {
       goal: "verify_answers",
       context: "work",
       confidence: "medium",
+      taskCategory: "scheduling",
     });
     expect(progress.onboarding.completed).toBe(true);
     expect(progress.onboarding.context).toBe("work");
+    expect(progress.onboarding.taskCategory).toBe("scheduling");
     expect(services.analytics.events).toContainEqual({
       event: "onboarding_completed",
       payload: { context: "work" },

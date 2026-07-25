@@ -4,7 +4,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-07-19.1"
+contentVersion: "2026-07-25.1"
 
 track:
   id: ai-literacy
@@ -67,7 +67,7 @@ lessons:
     title: "IA não é uma fonte de verdade"
     objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
     estimatedMinutes: 4
-    prerequisites: [l01]
+    prerequisites: []
     skillIds: [entender, avaliar]
     status: ready
   - id: l03

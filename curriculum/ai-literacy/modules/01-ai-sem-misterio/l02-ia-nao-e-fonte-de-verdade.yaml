@@ -1,13 +1,13 @@
 # Lição l02 — piloto da vertical slice (seção 17 do plano).
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l02
-version: 2
+version: 3
 moduleId: mod-01
 title: "IA não é uma fonte de verdade"
 objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
 estimatedMinutes: 4
 skillIds: [entender, avaliar]
-prerequisites: [l01]
+prerequisites: []
 
 activities:
   - id: l02-a1

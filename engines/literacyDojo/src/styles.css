@@ -246,6 +246,171 @@ a:focus-visible {
   flex-shrink: 0;
 }
 
+.option-card strong,
+.option-card small {
+  display: block;
+}
+
+.option-card small {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.assistant-welcome {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(145deg, #e0e7ff, #f8fafc);
+  border: 1px solid #c7d2fe;
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.voxel-scene {
+  position: relative;
+  width: 88px;
+  height: 72px;
+  flex: 0 0 auto;
+}
+
+.voxel,
+.voxel-task span {
+  position: absolute;
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: #4f46e5;
+  box-shadow: 5px 5px 0 #312e81, 10px 10px 0 #c7d2fe;
+}
+
+.voxel-one {
+  left: 12px;
+  top: 27px;
+}
+.voxel-two {
+  left: 37px;
+  top: 15px;
+  background: #7c3aed;
+}
+.voxel-three {
+  left: 52px;
+  top: 39px;
+  background: #f59e0b;
+}
+
+.task-option {
+  align-items: center;
+}
+
+.voxel-task {
+  position: relative;
+  width: 48px;
+  height: 42px;
+  display: inline-block;
+  flex: 0 0 auto;
+}
+
+.voxel-task span {
+  width: 14px;
+  height: 14px;
+  box-shadow: 3px 3px 0 #1e3a8a;
+}
+.voxel-task span:nth-child(1) {
+  left: 4px;
+  top: 19px;
+}
+.voxel-task span:nth-child(2) {
+  left: 19px;
+  top: 8px;
+  background: #0ea5e9;
+}
+.voxel-task span:nth-child(3) {
+  left: 30px;
+  top: 25px;
+  background: #f59e0b;
+}
+
+.voxel-task-scheduling span:nth-child(1) {
+  left: 6px;
+  top: 4px;
+  width: 34px;
+  height: 8px;
+  background: #7c3aed;
+}
+.voxel-task-scheduling span:nth-child(2) {
+  left: 7px;
+  top: 17px;
+  background: #a78bfa;
+}
+.voxel-task-scheduling span:nth-child(3) {
+  left: 25px;
+  top: 17px;
+  background: #c4b5fd;
+}
+
+.voxel-task-communication span:nth-child(1) {
+  left: 5px;
+  top: 7px;
+  width: 30px;
+  height: 20px;
+  background: #22c55e;
+}
+.voxel-task-communication span:nth-child(2) {
+  left: 29px;
+  top: 25px;
+  width: 8px;
+  height: 8px;
+  background: #16a34a;
+}
+.voxel-task-communication span:nth-child(3) {
+  left: 39px;
+  top: 15px;
+  width: 7px;
+  height: 7px;
+  background: #86efac;
+}
+
+.voxel-task-news_research span:nth-child(1) {
+  left: 5px;
+  top: 5px;
+  width: 34px;
+  height: 28px;
+  background: #f8fafc;
+  box-shadow: 3px 3px 0 #94a3b8, 6px 6px 0 #cbd5e1;
+}
+.voxel-task-news_research span:nth-child(2) {
+  left: 9px;
+  top: 10px;
+  width: 21px;
+  height: 5px;
+  background: #f43f5e;
+  box-shadow: 2px 2px 0 #9f1239;
+}
+.voxel-task-news_research span:nth-child(3) {
+  left: 9px;
+  top: 20px;
+  width: 13px;
+  height: 5px;
+  background: #38bdf8;
+  box-shadow: 2px 2px 0 #0369a1;
+}
+
+.dev-teaser {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px dashed #a5b4fc;
+  border-radius: var(--radius);
+  color: var(--primary-dark);
+  padding: 12px 14px;
+}
+
+.dev-teaser span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
 .option-inline {
   align-items: center;
 }

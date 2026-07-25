@@ -5,6 +5,7 @@ import type {
   OnboardingConfidence,
   OnboardingContext,
   OnboardingGoal,
+  OnboardingTaskCategory,
 } from "../domain/progress";
 
 /**
@@ -34,10 +35,30 @@ const CONFIDENCE_OPTIONS: { value: OnboardingConfidence; label: string }[] = [
   { value: "high", label: "Uso bastante e quero refinar" },
 ];
 
+const TASK_OPTIONS: { value: OnboardingTaskCategory; label: string; description: string }[] = [
+  {
+    value: "scheduling",
+    label: "Organizar um agendamento",
+    description: "Transformar compromissos e prioridades em um plano claro.",
+  },
+  {
+    value: "communication",
+    label: "Preparar uma mensagem",
+    description: "Criar um primeiro rascunho de e-mail, aviso ou resposta.",
+  },
+  {
+    value: "news_research",
+    label: "Pesquisar uma notícia",
+    description: "Organizar perguntas e conferir fontes antes de compartilhar.",
+  },
+];
+
 const STEPS = [
+  { key: "welcome", question: "Vamos começar com uma conversa" },
   { key: "goal", question: "O que você quer melhorar com IA?" },
   { key: "context", question: "Onde você mais pretende usar IA?" },
   { key: "confidence", question: "Como você avalia sua confiança hoje?" },
+  { key: "task", question: "Qual situação você quer explorar primeiro?" },
 ] as const;
 
 export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgress) => void }) {
@@ -47,19 +68,38 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [goal, setGoal] = useState<OnboardingGoal | null>(null);
   const [context, setContext] = useState<OnboardingContext | null>(null);
   const [confidence, setConfidence] = useState<OnboardingConfidence | null>(null);
+  const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     services.analytics.track("onboarding_started");
   }, [services]);
 
-  const currentValue = step === 0 ? goal : step === 1 ? context : confidence;
-  const options = step === 0 ? GOAL_OPTIONS : step === 1 ? CONTEXT_OPTIONS : CONFIDENCE_OPTIONS;
+  const currentStep = STEPS[step];
+  const currentValue =
+    currentStep.key === "goal"
+      ? goal
+      : currentStep.key === "context"
+        ? context
+        : currentStep.key === "confidence"
+          ? confidence
+          : currentStep.key === "task"
+            ? taskCategory
+            : "welcome";
+  const options =
+    currentStep.key === "goal"
+      ? GOAL_OPTIONS
+      : currentStep.key === "context"
+        ? CONTEXT_OPTIONS
+        : currentStep.key === "confidence"
+          ? CONFIDENCE_OPTIONS
+          : TASK_OPTIONS;
 
   const handleSelect = (value: string) => {
-    if (step === 0) setGoal(value as OnboardingGoal);
-    else if (step === 1) setContext(value as OnboardingContext);
-    else setConfidence(value as OnboardingConfidence);
+    if (currentStep.key === "goal") setGoal(value as OnboardingGoal);
+    else if (currentStep.key === "context") setContext(value as OnboardingContext);
+    else if (currentStep.key === "confidence") setConfidence(value as OnboardingConfidence);
+    else if (currentStep.key === "task") setTaskCategory(value as OnboardingTaskCategory);
   };
 
   const handleNext = async () => {
@@ -67,46 +107,101 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
       setStep(step + 1);
       return;
     }
-    if (!goal || !context || !confidence || submitting) return;
+    if (!goal || !context || !confidence || !taskCategory || submitting) return;
     setSubmitting(true);
-    const updated = await services.useCases.completeOnboarding({ goal, context, confidence });
+    const updated = await services.useCases.completeOnboarding({
+      goal,
+      context,
+      confidence,
+      taskCategory,
+    });
     onDone(updated);
   };
 
   return (
     <section className="screen" data-testid="onboarding-screen" aria-labelledby="onboarding-title">
       <p className="eyebrow">{track.title}</p>
-      <h1 id="onboarding-title">{STEPS[step].question}</h1>
-      <p className="muted">
-        Passo {step + 1} de {STEPS.length} — sem cadastro, direto para a primeira lição.
-      </p>
-      <div className="option-list" role="radiogroup" aria-label={STEPS[step].question}>
-        {options.map((option) => (
-          <label
-            key={option.value}
-            className={`option-card${currentValue === option.value ? " is-selected" : ""}`}
-          >
-            <input
-              type="radio"
-              name={`onboarding-${STEPS[step].key}`}
-              value={option.value}
-              checked={currentValue === option.value}
-              data-testid={`onboarding-option-${option.value}`}
-              onChange={() => handleSelect(option.value)}
-            />
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </div>
+      <h1 id="onboarding-title">{currentStep.question}</h1>
+      {currentStep.key === "welcome" ? (
+        <>
+          <div className="assistant-welcome" data-testid="assistant-welcome">
+            <div className="voxel-scene voxel-scene-assistant" aria-hidden="true">
+              <span className="voxel voxel-one" />
+              <span className="voxel voxel-two" />
+              <span className="voxel voxel-three" />
+            </div>
+            <div>
+              <p>
+                Eu sou seu assistente de IA para aprender fazendo. Uma IA geral pode ajudar a
+                organizar, resumir, comparar opções e criar rascunhos.
+              </p>
+              <p className="muted">
+                Ela não substitui seu julgamento: você decide o que usar e o que conferir.
+              </p>
+            </div>
+          </div>
+          <div className="card card-note">
+            <h2>Seu progresso fica neste navegador</h2>
+            <p>Sem conta, sem instalação e sem registrar detalhes das suas tarefas.</p>
+          </div>
+          <div className="dev-teaser" data-testid="dev-track-teaser">
+            <strong>Trilha Dev</strong>
+            <span>Em breve: IA para quem programa.</span>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="muted">
+            Passo {step + 1} de {STEPS.length} — sem cadastro, direto para o seu Mapa Inicial.
+          </p>
+          <div className="option-list" role="radiogroup" aria-label={currentStep.question}>
+            {options.map((option) => {
+              const task = "description" in option ? option : undefined;
+              return (
+                <label
+                  key={option.value}
+                  className={`option-card${currentValue === option.value ? " is-selected" : ""}${task ? " task-option" : ""}`}
+                >
+                  <input
+                    type="radio"
+                    name={`onboarding-${currentStep.key}`}
+                    value={option.value}
+                    checked={currentValue === option.value}
+                    data-testid={`onboarding-option-${option.value}`}
+                    onChange={() => handleSelect(option.value)}
+                  />
+                  {task && <VoxelTaskArt category={task.value} />}
+                  <span>
+                    <strong>{option.label}</strong>
+                    {task && <small>{task.description}</small>}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </>
+      )}
       <button
         type="button"
         className="btn btn-primary"
         data-testid="onboarding-next"
-        disabled={currentValue === null || submitting}
+        disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
         onClick={() => void handleNext()}
       >
-        {step < STEPS.length - 1 ? "Continuar" : "Começar a primeira lição"}
+        {step < STEPS.length - 1 ? "Continuar" : "Começar meu Mapa Inicial"}
       </button>
     </section>
+  );
+}
+
+function VoxelTaskArt({ category }: { category: OnboardingTaskCategory }) {
+  const label =
+    category === "scheduling" ? "agenda" : category === "communication" ? "mensagem" : "notícia";
+  return (
+    <span className={`voxel-task voxel-task-${category}`} aria-label={`Ilustração de ${label}`}>
+      <span />
+      <span />
+      <span />
+    </span>
   );
 }
