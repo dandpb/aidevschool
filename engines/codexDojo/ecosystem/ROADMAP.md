@@ -1,14 +1,16 @@
 # codexDojo Roadmap
 
-> **Canonical source:** `curriculum/catalog.md` (18 projects, 6 levels).
+> **Canonical source:** `curriculum/catalog.md` (19 entries, Levels 0–6).
 > This file is the product-facing summary. For full project details, concepts, dependencies,
 > and status, always reference `curriculum/catalog.md`.
 
 > **Implementation status**: This roadmap is a derived product summary. For actual implementation status of each project, see [curriculum/BACKLOG_STATUS.md](../../../curriculum/BACKLOG_STATUS.md).
 
-## 18-Project Curriculum
+## 18-project programming track
 
-The curriculum follows a 6-level progression. Each project is designed for polyglot
+This summary covers projects 01–18. Project 00 is the separate planned no-code
+entry in the canonical catalog. The programming track follows a 6-level
+progression. Each project is designed for polyglot
 implementation (Go, Rust, Node.js/TypeScript) with benchmarks, code reviews, and evolution
 reports. Current implementation status varies — see `curriculum/BACKLOG_STATUS.md` for which
 projects are verified vs planned.

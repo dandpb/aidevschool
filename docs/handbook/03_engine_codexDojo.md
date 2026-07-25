@@ -82,7 +82,7 @@ registry entry).
 | `progress.ts` | Query seams (getters) between data modules and renderers; `getDashboardStats`. |
 | `data/agents.ts` | Generated roster read model from `minimaxDojo/config/dashboard.yaml`. |
 | `data/cycle.ts` | Generated cycle/metrics read model from `minimaxDojo/config/dashboard.yaml`. |
-| `data/projects.ts` | Generated 18-project read model from `curriculum/catalog.md`. |
+| `data/projects.ts` | Generated 19-entry read model (00–18) from `curriculum/catalog.md`. |
 | `data/ecosystem.ts` | Static data: `ecosystemStatuses` (4). |
 | `data/learner.ts` | **AUTO-GENERATED** `learnerSnapshot`. Do not edit by hand. |
 | `render/shell.ts` | `renderShell(state)` — sidebar + nav + content. |
@@ -128,7 +128,7 @@ change.
 | `MANIFEST.md` | Requirement-coverage manifest; maps every deliverable to concrete files. |
 | `OPERATING_MODEL.md` | The file-based multi-agent operating architecture (10 user-facing agents + layered table). |
 | `AGENT_PROMPTS.md` | Prompts for the 10 user-facing agents + how each expands into the 14-agent core. |
-| `ROADMAP.md` | Product summary of the 18-project / 6-level curriculum (canonical source is `curriculum/catalog.md`). |
+| `ROADMAP.md` | Product summary of the numbered curriculum; `curriculum/catalog.md` is canonical and currently has 19 entries across Levels 0–6. |
 | `EVALUATION_MODELS.md` | Seven-dimension code-evaluation model + review-severity scheme. |
 | `MEMORY_MODEL.md` | Memory architecture: three layers + canonical files. |
 | `MEMORY_CURATION.md` | Operational curation contract (trigger, owner, inputs→outputs). |

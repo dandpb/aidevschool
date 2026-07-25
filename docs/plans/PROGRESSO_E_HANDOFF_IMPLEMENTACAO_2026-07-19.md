@@ -5,10 +5,10 @@
 | Data | 2026-07-19 |
 | Objetivo | Implementar as soluções dos dois planos anexados pelo dono |
 | Planos fonte | `docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md` e `docs/plans/ai_devschool_mvp_spec.agent.final.md` |
-| Status | LiteracyDojo Fases 0 e 1 **concluídas e verificadas**; Fase 2 **parcial (±65%) com testes quebrados**; MVP spec (skill package) **não iniciado**; integração de docs do ecossistema **não iniciada** |
+| Status | LiteracyDojo Fases 0 e 1 **concluídas e verificadas**; Fase 2 **parcial, com build verde e testes ainda quebrados**; MVP spec com **scaffold parcial não rastreado e não verificado**; integração documental do ecossistema **atualizada no working tree** |
 | Como usar | Cole este arquivo no Kimi Code (ou outro agente) junto com o repo; ele contém o estado real, as falhas exatas e os próximos passos acionáveis |
 
-> **Aviso de estado git:** a Fase 2 parcial está **não commitada** no working tree. O último commit verde da Fase 1 é `fb624ae` ("test(literacydojo): add vertical-slice e2e…"). Havia também commits externos paralelos (ex.: `92876f1` minitown) feitos por outra sessão durante o trabalho — não são desta frente.
+> **Aviso de estado git:** a Fase 2 parcial e o scaffold de `engines/aiDevschoolMvp/` estão **não commitados** no working tree. O último commit verde da Fase 1 é `fb624ae` ("test(literacydojo): add vertical-slice e2e…"). Há também mudanças documentais e commits externos paralelos feitos por outras sessões; este handoff descreve o estado observado, não atribui autoria.
 
 ---
 
@@ -45,16 +45,16 @@ O trabalho foi interrompido no meio. **Existe e valida:**
 - **4 novos componentes de atividade:** `src/components/ChoiceView.tsx`, `SortView.tsx`, `MissingContextView.tsx`, `RubricReviewView.tsx` (+ `ProgressScreen.tsx` nova).
 - Domínio alterado: `evaluation.ts`, `evidence.ts`, `migration.ts`, `progress.ts`, `useCases.ts`, `App.tsx`, `ActivityRenderer.tsx`, `LessonScreen.tsx`.
 
-**Está quebrado (estado exato agora):**
+**Estado verificado em 2026-07-19:**
 
-- `npm run test` → **6 failed / 31 passed (37)**.
-- `npm run build` (tsc) → erros:
-  - `src/components/ActivityRenderer.tsx(119,45): TS2339 Property 'type' does not exist on type 'never'` (provável narrowing da union de atividades com os 4 tipos novos);
-  - `tests/domain/progress.test.ts(129,22): TS2554 Expected 3 arguments, but got 2` (assinatura de função de domínio mudou e o teste não foi atualizado).
+- `npm run build` → **verde** (`tsc -b` e `vite build`).
+- `npm run test` → **35 testes passaram; 2 testes falharam e 1 suíte não chegou a coletar testes**:
+  - `tests/application/useCases.test.ts`: `TypeError: activity.evaluation.requiredCriterionIds is not iterable`;
+  - `tests/app/appFlow.test.tsx`: dois cenários ainda pressupõem o tipo piloto antigo (`choice` sem helper e expectativa de `output_comparison`).
 
 **Falta fazer na Fase 2 (brief original resumido):**
 
-1. Consertar os 2 erros de TS e os 6 testes falhando; rode `npm run gen:content && npm run lint && npm run test && npm run build`.
+1. Atualizar os helpers/fixtures dos testes para o catálogo atual e deixar as 37 verificações verdes; rode `npm run gen:content && npm run lint && npm run test && npm run build`.
 2. XP + **meta diária** + **conquistas** (primeira lição, primeiro módulo, trilha completa, 1ª aplicação real relatada, N dias de sequência) — avaliação no domínio com testes (XP parcial existe; verificar o que falta).
 3. **Revisão espaçada** funcional de ponta a ponta: Home lista revisões vencidas (`nextReviewAt`), fluxo de revisão re-executa atividades de lições concluídas emitindo evidência, avança estágio (`passes`) pelos `intervalsDays`.
 4. **Área de progresso** completa na `ProgressScreen` (skills, agenda de revisões, conquistas, histórico sem texto livre).
@@ -66,11 +66,11 @@ O trabalho foi interrompido no meio. **Existe e valida:**
 
 ---
 
-## 4. NÃO INICIADO ⬜
+## 4. PARCIAL E NÃO VERIFICADO ⚠️
 
 ### B — AI DevSchool MVP (spec `ai_devschool_mvp_spec.agent.final.md`)
 
-Nada foi construído. Ler o spec por capítulos; os requisitos executáveis estão principalmente em: cap. 4 (skill package, SKILL.md, duas plataformas), cap. 5 (state machine + scheduler), cap. 6 (gates G1–G4 + exemplos worked), cap. 7 (ledger + living plan + progress card), cap. 8 (data model/schemas + regras operacionais), cap. 9 (segurança/privacidade/deletion), cap. 12 (aceitação — normativa, cada linha é um teste executável).
+Existe um scaffold **não rastreado e não verificado** em `engines/aiDevschoolMvp/aidevschool/`: `SKILL.md`, `curriculum.json`, `gate_registry.json` e oito rubricas JSON. Isso não comprova que o pacote esteja instalável, completo ou conforme o spec. O núcleo determinístico, instalador, persistência, replay, integrações e suíte de aceitação ainda precisam ser localizados ou implementados e verificados. Os requisitos executáveis estão principalmente em: cap. 4 (skill package, SKILL.md, duas plataformas), cap. 5 (state machine + scheduler), cap. 6 (gates G1–G4 + exemplos worked), cap. 7 (ledger + living plan + progress card), cap. 8 (data model/schemas + regras operacionais), cap. 9 (segurança/privacidade/deletion), cap. 12 (aceitação — normativa, cada linha é um teste executável).
 
 Sequência sugerida:
 
@@ -80,8 +80,9 @@ Sequência sugerida:
 
 ### C — Integração do ecossistema
 
-- Atualizar `CONTEXT-MAP.md` (raiz), `docs/handbook/README.md` (+ arquivos numerados), `engines/codexDojo/ecosystem/MANIFEST.md` e `AGENTS.md` (raiz) com: novo engine `engines/literacyDojo/`, trilha `curriculum/ai-literacy/`, ADR 0005, e (quando existir) o skill package do MVP.
-- Rodada final de verificação: todos os suites verdes (root `make test`, engine literacyDojo, aceitação do MVP).
+- A integração documental de `engines/literacyDojo/`, `curriculum/ai-literacy/`, ADR 0005 e das rotas por público foi atualizada no working tree em `CONTEXT-MAP.md`, handbook, manifesto e guias `AGENTS.md`.
+- Ainda falta integrar o MVP como superfície oficial quando o scaffold tiver contrato, implementação e aceitação verificados.
+- A rodada final de produto continua pendente: todas as suítes root, LiteracyDojo e aceitação do MVP precisam ficar verdes.
 
 ---
 
@@ -111,4 +112,27 @@ npm run gen:content && npm run lint && npm run test && npm run build
 npm run test:e2e       # Chromium headless
 ```
 
-**Estado esperado agora:** validador OK (14 lições); 19 testes de contrato OK; engine com **6 testes falhando + 2 erros de TS** (ver seção 3) — começar por aí.
+**Estado observado em 2026-07-19:** validador OK (14 lições); 19 testes de contrato OK; build do engine OK; Vitest com **35 testes passando, 2 falhando e 1 suíte com erro de coleta** (ver seção 3). Começar pelos helpers/fixtures que ainda pressupõem as atividades piloto.
+
+## 7. Atualização 2026-07-25 (Fase 2)
+
+Itens 1–5, 7, 8 e 9 da seção 3 estão feitos e verificados; item 6 (a11y) segue parcial.
+
+- **Verificado nesta data:** `npm run lint` limpo; `npm run test` **57/57**; `npm run build` verde;
+  e2e **6 specs verdes** (projeto `app`: 3 vertical-slice + 2 gamificação; projeto `pwa`: offline).
+- **PWA (item 5):** `public/manifest.webmanifest`, `public/sw.js` (Cache API nativa, sem workbox) e
+  ícones gerados por código em `tools/gen-icons.mjs` (PNG via `node:zlib`, zero dependências;
+  roda no `prebuild`). Registro do SW é PROD-only, então o offline é testado contra `vite preview`
+  no projeto `pwa` do `playwright.config.ts` (porta 4174).
+- **e2e de gamificação (item 9):** `playwright/gamification.spec.ts` cobre XP (35), meta diária,
+  sequência, conquista `first_lesson`, tela de progresso e revisão espaçada vencida (evidência com
+  `context: "review"`, sem XP de conclusão e sem mudar a trilha). Helpers em `playwright/support.ts`.
+- **Arte voxel nas explicações:** `src/components/VoxelSkillArt.tsx` (cena + metáfora por skill)
+  na intro da lição, no player e no resultado; meta diária também aparece na Home.
+- **Bug de raiz corrigido:** a arte voxel decorativa dentro de `<label>` interceptava o clique dos
+  rádios do onboarding (`pointer-events: none` em `.voxel-scene`/`.voxel-task`).
+- **Falta (item 6):** auditoria de a11y completa — foco gerenciado, `aria-live` no feedback e
+  teclado no sort existem, mas contraste AA e alvos ≥44px em todas as telas novas não foram medidos.
+- **Aviso de ambiente:** havia várias sessões de agente editando `engines/literacyDojo` em paralelo
+  nesta data (redesign com `VoxelWorld`/`MentorGuide`). Rodadas e2e simultâneas competem pelas portas
+  4173/4174 e por `test-results/` — rode a suíte com uma sessão só.

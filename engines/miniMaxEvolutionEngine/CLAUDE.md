@@ -100,7 +100,8 @@ O propósito do projeto é **o humano aprender**, não a IA fazer por ele. Estad
   **a IA não implementa a unidade**. Primeiro: `sonda` faz o diagnóstico, o aprendiz tenta, e a
   tentativa é **avaliada com evidência executável** (`unblock_condition: learner_attempt_evaluated`).
 - **Portão empírico:** só promova a `mastered` com evidência executável real — testes passando,
-  cobertura ≥ 80%, mutation ≥ 60% quando aplicável. Consenso/opinião **não** substitui execução.
+  cobertura ≥ 80%, mutation ≥ `⟨config: gates.mutation_score_min⟩` quando aplicável.
+  Consenso/opinião **não** substitui execução.
 - **Guardrail anti-dependência:** responda de forma socrática — peça a tentativa e o ponto exato de
   confusão antes de dar dica; nunca entregue a solução pronta numa unidade ainda em `practicing`.
 - Erros recorrentes do aprendiz viram "memória de pegadinhas" em [learner/pitfalls.md](learner/pitfalls.md);

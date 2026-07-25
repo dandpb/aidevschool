@@ -2,7 +2,10 @@
 
 ## Purpose
 
-`codexDojo` is a practical, continuous programming school operated by agents. Its purpose is to help the learner improve programming, architecture, code quality, testing, scalability, and professional use of AI by building small projects that grow into robust systems.
+AI DevSchool democratizes AI knowledge and application through short,
+practical lessons for nontechnical people and programmers. `codexDojo` remains
+the operational dashboard for the engineering track; it is one surface of the
+school, not the whole product.
 
 The system is not a theory archive. Every cycle must create useful artifacts: code, tests, documentation, metrics, reviews, comparisons, memory updates, and a next challenge.
 
@@ -10,6 +13,10 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 
 | Surface | Role |
 | --- | --- |
+| `docs/VISION.md` | Canonical product intention: two audiences, one short-lesson mechanic. It does not prove implementation status. |
+| `docs/design/micro-lesson-contract.md` | Cross-surface pedagogical lifecycle. It does not merge bounded-context evidence schemas. |
+| `curriculum/ai-literacy/` | Canonical pt-BR content, lesson count/status, schemas, validator, and generated-read-model compiler. `ready` is content status, not mastery. |
+| `engines/literacyDojo/` | Local-first microlearning app for nontechnical people. Local progress stops at `completed`; an independent verifier is required for `mastered`. |
 | `engines/codexDojo/` | User-facing app and product-facing ecosystem spec. |
 | `engines/codexDojo/src/` | Local dashboard for agents, cycle, roadmap, and first project. |
 | `engines/codexDojo/src/data/osEngine.ts` | Configurable, protocol-safe bridge to the canonical OS experience; production URL comes from `VITE_CODEXDOJO_OS_URL`. |
@@ -42,6 +49,12 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Status | Meaning |
 | --- | --- |
 | `implemented` | code/artifact exists and passes verification |
+| `ready` | authored content exists and passes its catalog contract; it does not certify the consuming app |
+| `local` | runnable from this repository; no public deployment is implied |
+| `live` | an official public route is deployed and verified at the cited revision |
+| `generated` | derived projection; regenerate it from its source instead of editing it |
+| `completed` | local experience progress; not a competency claim |
+| `mastered` | independent verification accepted the required evidence |
 | `scaffolded` | folder/boilerplate exists but no verified behavior |
 | `planned` | documented intent, no code yet |
 | `proposal` | design material only, no runtime commitment |
@@ -58,15 +71,16 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 5 | Learning memory model | `engines/codexDojo/ecosystem/MEMORY_MODEL.md`, `engines/codexDojo/ecosystem/MEMORY_CURATION.md`, `engines/minimaxDojo/docs/05_memory_system.md`, `learner/` |
 | 6 | Code evaluation model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md`, `engines/minimaxDojo/docs/04_empirical_gates.md`, `engines/minimaxDojo/config/learner.yaml` (single threshold seam) |
 | 7 | Technology comparison model | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/technology-comparison.md`, `docs/PROMPTS/IDEIAS/codexDojo/03_metrics_framework.md` |
-| 8 | Canonical 18-project curriculum | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts`, `docs/design/allium/curriculum-catalog.allium` |
+| 8 | Canonical 19-entry curriculum (00–18; 18 programming projects) | `curriculum/catalog.md` (canonical source of truth), `curriculum/BACKLOG_STATUS.md`, `engines/codexDojo/ecosystem/ROADMAP.md`, `engines/codexDojo/src/data/projects.ts` |
 | 9 | Evolution metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/06_metrics_quality_gate.md`, `engines/codexDojo/src/data/cycle.ts` |
 | 10 | Individual prompt for every agent | `engines/codexDojo/ecosystem/AGENT_PROMPTS.md`, `engines/minimaxDojo/prompts/per_agent/` (canonical system prompts), `engines/minimaxDojo/agents/README.md` (roster) |
 | 11 | Run the OpenClaw checklist explicitly | `engines/codexDojo/ecosystem/OPENCLAW_RUNBOOK.md`, `engines/openclaw/README.md` (simulate-grade workflow; no background daemon or event bus) |
-| 12 | Ludic learning surface with extensible content | `engines/pixelDojo/pixel-quest/` playable token-bucket slice, with Playwright evidence contract in `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts`. |
+| 12 | Ludic learning surfaces with extensible content | `engines/pixelDojo/pixel-quest/`, `engines/voxelDojo/`, and the explore-only `engines/miniTown/`; mastery boundaries live in their contracts. |
 | 13 | Legacy refactoring and migration plan | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md`, `docs/PROMPTS/00_IDEIAS.md` |
 | 14 | Code-smell catalog and correction techniques | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
 | 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/templates/project-package.md` |
 | 16 | Metrics for real refactor improvement | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
+| 17 | Nontechnical AI microlearning | `docs/VISION.md`, `docs/design/micro-lesson-contract.md`, `docs/design/ai-literacy/`, `curriculum/ai-literacy/`, `engines/literacyDojo/` |
 
 ## Requested Scope Coverage
 
@@ -79,12 +93,13 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Code review and quality | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/codexDojo/ecosystem/templates/code-review-scorecard.md` |
 | Tests and metrics | `engines/codexDojo/ecosystem/EVALUATION_MODELS.md`, `engines/minimaxDojo/docs/04_empirical_gates.md` |
 | Professional AI integration | `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md`, `engines/codexDojo/ecosystem/AGENT_PROMPTS.md` |
+| AI literacy for nontechnical people | `curriculum/ai-literacy/`, `engines/literacyDojo/`, `docs/design/ai-literacy/` |
 | Ludic practice and evidence capture | `engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts` verifies playthrough, evidence emission, journal visibility, and no mastery side effects. |
 | Legacy refactoring, modernization, and migration | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/CURRICULUM_SCOPE.md` |
 
 ## Core Principles
 
-1. Build first principles through projects before tools.
+1. Teach one useful concept at a time through a short attempt-feedback-review loop.
 2. Always explain why a decision was made and what alternative lost.
 3. Compare alternatives with evidence, not preference.
 4. Keep the learner active: AI assists learning, it does not replace reasoning.
@@ -92,6 +107,8 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 6. Preserve memory as curated reusable knowledge, not raw chat history.
 7. Start with the smallest robust architecture, usually a modular monolith.
 8. Add complexity only when a project needs it and a metric can prove the impact.
+9. Keep nontechnical and programming vocabularies distinct while preserving
+   the same integrity boundary.
 
 ## Architectural Seams
 
@@ -124,6 +141,13 @@ probe.
 ```bash
 # codexDojo app (Track A)
 cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
+
+# AI Literacy content + local microlearning app
+python3 curriculum/ai-literacy/tools/validate.py
+python3 -m unittest discover -s curriculum/ai-literacy/tools/tests
+cd engines/literacyDojo && \
+  npm run gen:content && npm run lint && npm run test && npm run build && \
+  npm run test:e2e
 
 # codexDojo OS bounded context
 cd engines/codexdojo-os-prototype && npm run lint && npm run test && npm run build && npm run test:smoke

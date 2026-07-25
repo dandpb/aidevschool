@@ -5,13 +5,21 @@ is shaped the way it is.
 
 ## 1. The core idea
 
-AI DevSchool is a **school**, not a code generator. Its single most important constraint is that
+AI DevSchool is a **school**, not a code generator. It serves nontechnical
+learners and programmers through short lessons, while preserving the same
+evidence boundary. Its single most important constraint is that
 **the certainty of completion never lives in the language model.** A unit of learning is only
 `mastered` when two independent things have happened:
 
 1. The **learner attempts** it (productive struggle is preserved).
-2. A **separate verifier** runs executable checks — tests, coverage, mutation score, benchmarks —
-   from an isolated context, and produces evidence.
+2. A **separate verifier** applies the declared gate from an isolated context
+   and accepts only evidence appropriate to that gate.
+
+Programming units use executable checks such as tests, coverage, mutation and
+benchmarks. Level 0 no-code units use the weaker, explicitly labeled
+falsifiable-checklist gate in
+[ADR-0004](../design/adr/0004-no-code-empirical-gate.md). Neither path allows a
+model or producer to verify itself.
 
 Everything in the architecture exists to enforce that constraint: the deterministic state machine,
 the producer/verifier separation, the file-based audit trail, and the empirical gates.
@@ -26,6 +34,8 @@ flowchart TB
     subgraph surface["Product surface (runnable apps)"]
         codex["codexDojo<br/>dashboard / control surface"]
         os["codexDojo OS<br/>educational desktop bounded context"]
+        literacy["LiteracyDojo<br/>nontechnical micro-lessons"]
+        town["miniTown<br/>explore-only Level 0 entry"]
         pixel["pixelDojo<br/>8-bit teaching game"]
         voxel["voxelDojo<br/>3D teaching simulations"]
     end
@@ -36,12 +46,14 @@ flowchart TB
     end
     subgraph substrate["Shared substrate (source of truth)"]
         learner["learner/<br/>learning_state.yaml + substrate"]
-        curriculum["curriculum/<br/>18 polyglot projects + catalog.md"]
+        curriculum["curriculum/<br/>19 catalog entries + AI Literacy"]
     end
     derived[".mavis/ + generated views<br/>(regenerated, never hand-edited)"]
 
     codex -->|reads| learner
     os -->|reads generated projection| learner
+    literacy -->|reads generated lesson model| curriculum
+    town -.->|explores; no mastery write| curriculum
     pixel -->|reads| learner
     pixel -->|emits evidence| curriculum
     voxel -->|reads| learner
@@ -60,7 +72,7 @@ flowchart TB
 
 | Layer | Members | Responsibility |
 | --- | --- | --- |
-| **Product surface** | `codexDojo`, `codexdojo-os-prototype`, `pixelDojo`, `voxelDojo` | What a human sees and touches. Each consumes an engine-local derived learner view; none marks mastery. OS window, catalog, terminal, mission, and mentor interactions remain local UI state. |
+| **Product surface** | `literacyDojo`, `miniTown`, `codexDojo`, `codexdojo-os-prototype`, `pixelDojo`, `voxelDojo` | What a human sees and touches. LiteracyDojo keeps progress local; miniTown is exploration only; the other apps consume engine-local projections. None marks mastery. |
 | **Orchestration / tutoring** | `miniMaxEvolutionEngine`, `minimaxDojo`, `openclaw` | Agent logic plus the simulate-grade artifact checklist. The Claude Code motor owns the interactive cycle; OpenClaw does not. |
 | **Shared substrate** | `learner/`, `curriculum/` | The single source of truth. Canonical state in human-readable files; derived views regenerated from it. |
 
@@ -71,7 +83,9 @@ one learner — never duplicated, only projected into engine-local generated vie
 
 | Engine | Type | One-liner | Detail |
 | --- | --- | --- | --- |
-| `engines/codexDojo/` | Runnable app | The user-facing dashboard — a Vite/TypeScript SPA showing the learner snapshot, agent roster, the cycle, and the 18-project roadmap. | [doc](03_engine_codexDojo.md) |
+| `engines/literacyDojo/` | Runnable app | Local-first AI microlearning for people without a programming prerequisite. Consumes canonical AI Literacy content and records at most `completed`. | [doc](12_engine_literacyDojo.md) |
+| `engines/miniTown/` | Runnable app | Cozy, explore-only Level 0 entry. It exposes runtime state for inspection but emits no mastery. | [doc](11_engine_miniTown.md) |
+| `engines/codexDojo/` | Runnable app | The user-facing dashboard — a Vite/TypeScript SPA showing the learner snapshot, agent roster, the cycle, and the 19-entry roadmap. | [doc](03_engine_codexDojo.md) |
 | `engines/codexdojo-os-prototype/` | Runnable app | The canonical educational OS experience with local apps, Learn Mode, and a generated read-only learner snapshot. | [doc](03b_engine_codexdojo-os-prototype.md) |
 | `engines/pixelDojo/` | Runnable app | 8-bit teaching games. The canonical game `pixel-quest/` turns one curriculum concept into one arcade mechanic and emits executable evidence when a level is cleared. | [doc](04_engine_pixelDojo.md) |
 | `engines/voxelDojo/` | Runnable apps | Three.js teaching simulations with deterministic, headless simulation cores and browser evidence. | [doc](10_engine_voxelDojo.md) |
@@ -131,41 +145,54 @@ flowchart LR
 ### 4.2 The learning gate (per unit)
 
 Tracked in `learner/learning_state.yaml`. This is the gate that preserves productive struggle.
-While `gate.implementation_blocked: true`, the AI will not implement the unit — the learner must
-attempt the diagnostic first, and that attempt must be evaluated with executable evidence.
+For programming units, while `gate.implementation_blocked: true`, the AI will
+not implement the unit: the learner must attempt the diagnostic first, and that
+attempt must be evaluated by `sonda`. An accepted diagnostic unblocks
+implementation; it does **not** satisfy the later executable mastery gate. After
+implementation, an independent verifier evaluates the programming evidence.
+Level 0 has no software-implementation phase and follows the separate no-code
+checklist contract from
+[ADR-0004](../design/adr/0004-no-code-empirical-gate.md). That branch is a
+product requirement, not a current substrate capability: version 2 does not
+persist a no-code evidence type yet.
 
 ```mermaid
 stateDiagram-v2
     [*] --> presenting
     presenting --> practicing: learner accepts / writes first line
     practicing --> evaluating: learner submits (or timeout submits partial)
-    evaluating --> mastered: verifier PASS + review OK
-    evaluating --> presenting: verifier FAIL, retries < 3 (variation generated)
-    evaluating --> [*]: verifier FAIL, retries = 3 → escalate (Sêneca, 24h SLA)
+    evaluating --> mastered: independent verifier PASS on declared gate
+    evaluating --> presenting: verifier FAIL, retry budget remains
+    evaluating --> [*]: verifier FAIL, retry budget exhausted → escalate to Sêneca
     mastered --> [*]
 ```
 
-The two loops meet at the **diagnostic**: each project's `docs/diagnostic.md` is the learning-gate
-challenge. The learner writes an attempt under `learner/attempts/`, the `sonda` agent grades it, and
-only then does `implementation_blocked` flip to `false`. A unit never becomes `mastered` from a
-diagnostic alone — `mastered` requires Phase-2 verifier evidence.
+For programming projects, the two loops meet at the **diagnostic**:
+`docs/diagnostic.md` is the pre-implementation challenge. The learner writes an
+attempt under `learner/attempts/`, the `sonda` agent grades it, and only then
+does `implementation_blocked` flip to `false`. A programming unit never becomes
+`mastered` from that diagnostic alone; it later requires verifier-backed
+executable evidence. Level 0 is specified to reach evaluation through its
+no-code activity and the ADR-0004 checklist, but it cannot transition to
+`mastered` through the current substrate until that evidence branch is
+implemented.
 
-## 5. The empirical gates (thresholds)
+## 5. The programming empirical gate (thresholds)
 
-"Executable evidence" is concrete and numeric. The thresholds live in two canonical seams and are
-referenced symbolically elsewhere.
+Programming evidence is executable, concrete and numeric. These thresholds do
+not apply to Level 0 no-code units. They live in canonical config seams and are
+referenced symbolically here.
 
 | Gate | Threshold | Canonical source |
 | --- | --- | --- |
-| Core coverage | ≥ 80% | `learner/learning_state.yaml` (`min_coverage: 0.80`); `minimaxDojo/config/learner.yaml` (`cobertura_nucleo_min: 0.80`) |
-| Mutation score | ≥ 65% | `learning_state.yaml` (`mutation_min: 0.65`); `config/learner.yaml` (`mutation_score_min: 0.65`) |
-| Benchmark stability | block speed claims when CV ≥ 20%; ≥ 10 samples + warmup | `config/learner.yaml` (`galileu.cv_max_pct: 20`, `samples_min: 10`) |
-| Suite green | 100% | `config/learner.yaml` (`suíte_verde_min: 1.0`) |
-| Lints | 0 errors / 0 warnings | `config/learner.yaml` (`lints_erros_max: 0`) |
-| Retry budget | ≤ 3 per unit, then escalate | `learning_state.yaml` (`retry_limit: 3`) |
+| Core coverage | `⟨config: gates.cobertura_nucleo_min⟩` | `engines/minimaxDojo/config/learner.yaml` |
+| Mutation score | `⟨config: gates.mutation_score_min⟩` | `engines/minimaxDojo/config/learner.yaml` |
+| Benchmark stability | `⟨config: galileu.cv_max_pct⟩`; samples `⟨config: galileu.samples_min⟩` | `engines/minimaxDojo/config/learner.yaml` |
+| Suite green | `⟨config: gates.suíte_verde_min⟩` | `engines/minimaxDojo/config/learner.yaml` |
+| Lints | `⟨config: gates.lints_erros_max⟩` | `engines/minimaxDojo/config/learner.yaml` |
+| Retry budget | `⟨config: retries.max_por_unidade⟩` | `engines/minimaxDojo/config/learner.yaml` |
 
-The learner gate and minimaxDojo use the same `0.65` mutation threshold. Drift tests protect this
-shared-kernel contract.
+Drift tests protect the shared-kernel threshold contract.
 
 The `⟨config: path⟩` convention: prompts and docs reference these numbers symbolically (for
 example `⟨config: gates.mutation_score_min⟩`) instead of hardcoding them, so the seam stays in one
@@ -217,17 +244,19 @@ This separation shows up at every layer:
   an engine; engines use symlinks or root-relative paths.
 - **The filesystem is the source of truth.** No database, no lock file for state. Derived views are
   regenerated, never hand-edited or back-ported.
-- **Runnable apps vs cores.** Treat `codexDojo`, `codexdojo-os-prototype`, `pixelDojo`, and
-  `voxelDojo` as runnable web surfaces. The OS package owns the educational desktop bounded context;
-  `minimaxDojo` is the deeper
-  tutoring core, `miniMaxEvolutionEngine` is the interactive motor, and `openclaw` is the
-  simulate-grade checklist runner.
+- **Runnable apps vs cores.** Treat `literacyDojo`, `miniTown`, `codexDojo`,
+  `codexdojo-os-prototype`, `pixelDojo`, and `voxelDojo` as runnable web
+  surfaces. The OS package owns the educational desktop bounded context;
+  `minimaxDojo` is the deeper tutoring core, `miniMaxEvolutionEngine` is the
+  interactive motor, and `openclaw` is the simulate-grade checklist runner.
 - **Simplify before commit.** Run `/simplify` on the diff, apply, then commit.
 
 ## Anti-patterns
 
 - Do not treat the root as a single Node/Rust/Go project.
-- Do not claim mastery, parity, benchmark superiority, or robustness without executable evidence.
+- Do not claim mastery without independently verified evidence appropriate to
+  the gate; do not claim parity, benchmark superiority, or robustness without
+  executable evidence.
 - Do not bypass the learning gate because implementation files already exist.
 - Do not merge `codexDojo` and `minimaxDojo`; they are separate layers.
 - Do not scan or edit generated dependency/build output as source (`node_modules`, `dist`, `target`,

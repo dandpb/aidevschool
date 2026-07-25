@@ -25,12 +25,15 @@ docs/
 | Task | Location | Notes |
 | --- | --- | --- |
 | Choose the authoritative document | `DOCUMENTATION.md` | Start here before editing or consolidating docs. |
+| Understand the product audiences | `VISION.md` | Canonical intention for nontechnical people and programmers. |
+| Apply the shared lesson loop | `design/micro-lesson-contract.md` | Cross-surface pedagogy; context-specific evidence schemas stay separate. |
 | Ecosystem orientation | `handbook/README.md` | Architecture, onboarding, engine pages, curriculum, and substrate. |
 | Primary goal | `PROMPTS/-01_GOAL.md` | Main ecosystem intention. |
 | Original idea seed | `PROMPTS/00_IDEIAS.md` | Broad project ideation. |
 | codexDojo prompt set | `PROMPTS/IDEIAS/codexDojo/` | Architecture, agents, metrics, bootstrap prompts. |
 | Polyglot arena ideas | `design/polyglot-arena/` | Demoted from `PROMPTS/IDEIAS/polyglotEvolutionArena/` on 2026-06-21. Proposal-stage. |
 | Design examples | `design/` | Reference artifacts. |
+| AI Literacy contracts | `design/ai-literacy/` | Content, evidence, and bounded-context limits for LiteracyDojo. |
 
 ## CONVENTIONS
 

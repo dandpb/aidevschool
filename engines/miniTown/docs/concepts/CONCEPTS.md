@@ -102,13 +102,11 @@ Roads only appear on the outer ring of cells.
 - **No menus, no settings panel, no pause button** — keep it light and
   observational. Day/night is automatic.
 
-## Reference images in this directory
+## Tracked reference captures
 
-1. `01-morning-town.png` — golden hour morning overview
-2. `02-sunset-town.png` — dusk, windows starting to glow
-3. `03-night-town.png` — full night, warm lights
-4. `04-residential-closeup.png` — house detail
-5. `05-shop-closeup.png` — shop detail
-6. `06-workspace-closeup.png` — workspace detail
-7. `07-connected-block.png` — multi-building block top-down
-8. `08-ui-mockup.png` — HUD layout
+The concept set above is a written direction; only these generated captures are
+currently tracked next to the miniTown documentation:
+
+- [`minitown-empty.png`](../minitown-empty.png) — empty-town HUD state
+- [`minitown-played.png`](../minitown-played.png) — Residential mode after placement
+- [`minitown-playwright.png`](../minitown-playwright.png) — Playwright capture

@@ -8,12 +8,13 @@ English. This glossary maps the terms you'll meet.
 | Term | Meaning |
 | --- | --- |
 | **Ecosystem / umbrella** | The repo root. A collection of engines sharing one curriculum and one learner — not a single app. No root package manager. |
-| **Engine** | A separate project under `engines/`. Two are runnable apps (codexDojo, pixelDojo); two are agent cores (minimaxDojo, miniMaxEvolutionEngine). |
+| **Engine** | A separate project under `engines/`, such as a runnable learner surface, agent core, or orchestration runner. See the architecture handbook for the current inventory. |
 | **Ágora Continuum** | The name of the 14-agent tutoring system / protocol. |
 | **Learning gate** | The block (`gate.implementation_blocked`) that prevents AI implementation until the learner attempts and is evaluated. |
-| **Empirical gate** | The numeric pass/fail bar for mastery: coverage, mutation score, benchmark stability, green suite, clean lints. |
+| **Empirical gate** | The declared, independently verifiable pass/fail bar for mastery. Programming units use executable checks and metrics; Level 0 no-code units use the falsifiable ADR-0004 checklist. |
 | **Producer ≠ verifier** | The rule that nothing verifies its own output; the verifier works from an isolated context. |
-| **Executable evidence** | Real test/coverage/mutation/benchmark output — the only thing that justifies `mastered`. |
+| **Executable evidence** | Real test, coverage, mutation, or benchmark output: the evidence class required by programming gates. |
+| **No-code gate evidence** | A falsifiable application checklist independently reviewed under ADR-0004; local completion or self-report alone is insufficient. |
 | **Substrate** | `learner/substrate/` — the Python validator + adapters that keep derived views in sync with canonical state. |
 | **Derived view** | A generated file (`.mavis/`, whiteboard, `learner.ts`, `reviewSlice.ts`) regenerated from canonical state; never hand-edited. |
 | **Diagnostic** | A project's `docs/diagnostic.md` — the learning-gate challenge the learner attempts. |
@@ -22,7 +23,7 @@ English. This glossary maps the terms you'll meet.
 | **AIDI / `ai_dependency_index`** | A metric tracking how dependent the learner is on the AI; lower is better. |
 | **FSRS** | Free Spaced Repetition Scheduler — the spaced-repetition algorithm; ratings come only from gate outcomes. |
 | **CURR** | Current-user Retention Rate proxy (7-day window). Explicitly unvalidated; drives no automated decision. |
-| **Streak / freeze** | Consecutive days with a passing gate; "freezes" (max 2) absorb missed days. |
+| **Streak / freeze** | Consecutive days with a passing gate; equipped freezes absorb missed days up to canonical `streak.freezes.max`. |
 | **Dreyfus × Bloom** | The two-axis model used to classify the learner's level per concept (skill acquisition × cognitive depth). |
 
 ## State-machine values
@@ -32,8 +33,8 @@ English. This glossary maps the terms you'll meet.
 | `presenting` | `apresentando` | `APRESENTANDO` | The unit is being presented. |
 | `practicing` | `praticando` | `PRATICANDO` | The learner is attempting it. |
 | `evaluating` | `avaliando` | `AVALIANDO` | The verifier is judging the work. |
-| `mastered` | `dominado` | `DOMINADO` | Passed with executable evidence. |
-| — | — | `FALHA_BLOQUEIO` | Failure block after 3 retries → escalated to governance. |
+| `mastered` | `dominado` | `DOMINADO` | Passed the declared gate with appropriate independently verified evidence. |
+| — | — | `FALHA_BLOQUEIO` | Failure block after `⟨config: retries.max_por_unidade⟩` retries → escalated to governance. |
 
 Artifact states: `producing → verifying → done` (the empirical-gate sub-machine).
 
@@ -49,7 +50,7 @@ Portuguese names are used throughout the prompts and the dashboard. In the Claud
 | **Sonda** | `sonda` | Short diagnostic; classifies Dreyfus × Bloom; grades the gate attempt. |
 | **Cartógrafo** | (curator) | Builds the robustness trail; unlocks by proven prerequisite. |
 | **Mestre-Conteúdo** | `curator` | Generates exercises; withholds solutions. |
-| **Sócrates** | `socrates` | Socratic tutor; demands an attempt + confusion point first; 15 hints/day. |
+| **Sócrates** | `socrates` | Socratic tutor; demands an attempt + confusion point first; hint quota from `⟨config: socrates.quota_dia⟩`. |
 | **Mneme** | `mneme` | Spaced-repetition micro-reviews. |
 | **Prometor** | `verifier` | The adversarial verifier / empirical gate; starts from zero. |
 | **Crítico** | `reviewer` | Pedagogical code reviewer (explains the *why*). |
@@ -57,7 +58,7 @@ Portuguese names are used throughout the prompts and the dashboard. In the Claud
 | **Atena** | (metrics) | Metrics panel over new code; AIDI; forbidden DORA-as-skill-proxy. |
 | **Mnemosyne** | `mnemosyne` | Memory keeper (3 layers); curates the whiteboard. |
 | **Ouroboros** | (optimizer) | Continuous self-improvement loop; turns wins into Skills. |
-| **Sêneca** | `seneca` | Human-in-the-loop governance; 24h SLA; conservative on expiry. |
+| **Sêneca** | `seneca` | Human-in-the-loop governance; SLA from `⟨config: seneca.sla_horas⟩`; conservative on expiry. |
 | — | `dev-go` / `dev-rust` / `dev-node` | The three parallel polyglot implementers. |
 | — | `verifier-haiku` | Cross-model auditor; disagreement escalates to Sêneca. |
 | — | `fairness-auditor` | Arena: checks the three impls were at equal effort budget. |
@@ -77,10 +78,10 @@ Portuguese names are used throughout the prompts and the dashboard. In the Claud
 | Abbr. | Expansion |
 | --- | --- |
 | ADR / MADR | Architecture Decision Record / Markdown ADR format. |
-| CV | Coefficient of variation (benchmark stability; ≥ 20% blocks speed claims). |
+| CV | Coefficient of variation (benchmark stability; the blocking threshold is `⟨config: galileu.cv_max_pct⟩`). |
 | DLQ | Dead-letter queue. |
 | DoD | Definition of Done. |
 | HITL | Human-in-the-loop. |
 | RACI | Responsible / Accountable / Consulted / Informed matrix. |
-| SLA | Service-level agreement (Sêneca's 24h decision window). |
+| SLA | Service-level agreement (Sêneca's decision window is `⟨config: seneca.sla_horas⟩`). |
 | NDJSON | Newline-delimited JSON (the evidence/event log format). |

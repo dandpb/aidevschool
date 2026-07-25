@@ -17,7 +17,7 @@ verification — `engines/minimaxDojo/config/learner.yaml` exists and is tracked
 | 3 | 4 compiled Go binaries (~35 MB) tracked under `curriculum/*/go-impl/` — largest blobs in history | infrastructure | 4 | 2 | 2 | 24 | **untracked in this pass** (history rewrite still open) |
 | 4 | voxelDojo `reviewSlice.ts`: 15/16 games are hand-copied stubs falsely headed "AUTO-GENERATED — run learner.substrate"; substrate only syncs game-10. `review_reason` can never be `"due"` in 15 games — contract item 4 silently broken | architecture | 4 | 4 | 3 | 24 | open |
 | 5 | Derived views disagree on AIDI/profile: whiteboard adapter hardcodes `ai_dependency_index: 0.50`, dashboard defaults `0.34`; neither is canonical (`learning_state.yaml` has no `learner.aidi`) | architecture | 3 | 3 | 2 | 24 | open |
-| 6 | `.git` is 222 MB: 18,928 loose objects, zero packfiles, ~73 MB garbage. Needs `git gc --prune=now` (must run on macOS — sandbox cannot unlink) | infrastructure | 3 | 1 | 1 | 20 | user action |
+| 6 | `.git` is 222 MB: 18,928 loose objects, zero packfiles, ~73 MB reported as garbage in this snapshot. Repository maintenance must preserve an intentional recovery window; see `USER_ACTIONS_RUNBOOK.md`. | infrastructure | 3 | 1 | 1 | 20 | user action |
 | 7 | Dependency drift: `pyproject.toml` vs `learner/substrate/requirements.txt` (no upper bounds); `@types/node` ^24 (codexDojo) vs ^22 (pixel-quest); `@types/three` caret vs tilde | dependency | 2 | 2 | 1 | 20 | **partly fixed**: requirements.txt removed; install is `pip install -e ".[dev]"` only. JS pin drift still open |
 | 8 | CI blind spots: no jobs for voxelDojo (16 games), pixelDojo `games/*`, or openclaw. "No claims without evidence" isn't machine-enforced for the most-churned engine | infrastructure | 4 | 2 | 3 | 18 | open |
 | 9 | `learner/substrate.validate()` is partial: no checks on `empirical_gate`, `next_action`, `agent_ownership`, no cross-check `active_unit`↔`units_log`, no existence check for `attempt_file`/`evidence_file` | code | 3 | 3 | 3 | 18 | open |
@@ -116,9 +116,12 @@ structured pipeline status (YAML frontmatter), archive executed planning docs to
 
 ## User actions required (sandbox cannot delete files)
 
-Run on macOS from the repo root: `rm -f .git/index.lock && git gc --prune=now` (item 6,
-~150 MB reclaim); `git branch -d master` and prune merged remote agent branches (item 12);
-`rm _probe_commit_test.txt coverage.out codexdojo-dashboard.png` (root leftovers); delete
-the stray `engines/pixelDojo/games/{04_concurrent_task_queue,15_metrics_collector}/pnpm-workspace.yaml`.
+For item 6, follow [`USER_ACTIONS_RUNBOOK.md`](USER_ACTIONS_RUNBOOK.md): inspect
+the current repository, keep an external backup, and start with retention-aware
+`git gc`. Do not remove an index lock or use `--prune=now` without first
+confirming that no Git process or recovery path needs it. For item 12, review
+and prune only merged branches. Before removing the root leftovers or the two
+stray `pnpm-workspace.yaml` files recorded by this dated audit, confirm that the
+paths still exist and are still unneeded.
 Full history rewrite to purge the 35 MB Go blobs (item 3) is optional; only worth it before
 the repo is shared more widely.

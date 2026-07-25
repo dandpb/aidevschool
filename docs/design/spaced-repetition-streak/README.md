@@ -35,7 +35,9 @@ The `AI Code Dojo` vision (`docs/PROMPTS/00_IDEIAS_opencode_gpt55.md`) wants a D
 - `active_unit.retry_count` / `retry_limit` → streak/freeze seed.
 - `units_log: []` → the FSRS review-history feed, currently empty.
 - `LearnerSnapshot.nextReviews` (`domain.ts`) → the render surface, currently fed by a **hardcoded stub**.
-- `empirical_gates` (coverage ≥80%, mutation ≥60%, benchmark CV<20%) → the gate that streaks reset on.
+- `empirical_gates` (coverage ≥80%, mutation ≥
+  `⟨config: gates.mutation_score_min⟩`, benchmark CV<20%) → the gate that
+  streaks reset on.
 
 So this is not greenfield: it formalizes a stubbed surface into a real layer.
 

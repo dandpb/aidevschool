@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Generated:** 2026-07-10
-**Commit:** d38b3fe
+**Updated:** 2026-07-19
+**Source baseline:** 668a3c2
 **Branch:** main
 
 ## OVERVIEW
@@ -17,6 +17,8 @@ aidevschool/
 ├── engines/                  # separate engines/apps; each has its own machine surface
 │   ├── codexDojo/             # user-facing pnpm dashboard + product-facing ecosystem docs
 │   ├── codexdojo-os-prototype/ # canonical educational OS experience (React/Vite)
+│   ├── literacyDojo/           # local-first AI microlearning for nontechnical people
+│   ├── miniTown/               # cozy, explore-only Level 0 entry surface
 │   ├── minimaxDojo/           # 14-agent tutoring core and whiteboard model
 │   ├── miniMaxEvolutionEngine/ # Claude Code motor: .claude agents/commands/skills
 │   ├── openclaw/              # file-based checklist runner for the simulate-grade 5-phase cycle
@@ -44,6 +46,8 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Run shared Python verification | `Makefile`, `pyproject.toml` | Use repo-root `make install`, `make test`, `make test-core`, and `make test-substrate`. |
 | Validate the dashboard | `engines/codexDojo/` | Run `pnpm run lint`, `pnpm run test`, `pnpm run build`. |
 | Validate the codexDojo OS | `engines/codexdojo-os-prototype/` | Start with `AGENTS.md` and `README.md`; use npm for `lint`, `test`, `build`, and `test:smoke`. Canonical learner data is a generated read-only projection. |
+| Validate AI Literacy content and app | `curriculum/ai-literacy/`, `engines/literacyDojo/` | Validate canonical YAML first, regenerate the read model, then run engine lint, tests, build, and E2E. Local progress never means `mastered`. |
+| Validate the Level 0 exploration surface | `engines/miniTown/` | Run its lint, test, typecheck, build, and smoke commands. It never writes learner state. |
 | Validate the 2D game workspace | `engines/pixelDojo/` | Install once, then use the root `lint`, `test`, `typecheck`, `build`, and `smoke` scripts; use `pnpm --filter pixel-quest dev` for the app. |
 | Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `.loops/threejs-dojo-coverage/` | Read the loop memory first; canonical batch artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/`. |
 | Validate the 3D game workspace | `engines/voxelDojo/` | Run catalog-wide scripts across `game-*`; use `game-10-hash-ring` as the reference package. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
@@ -75,14 +79,17 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 - **One learner, one curriculum, many engines.** Do not duplicate `curriculum/` or `learner/`
   inside an engine; engines use symlinks or root-relative paths to the shared substrate.
 - Learning progress is file-based and auditable: Markdown, YAML, and NDJSON.
-- A learner attempt plus executable evaluation must happen before AI work is marked `mastered`.
+- A learner attempt plus independently verified evidence appropriate to the declared gate must exist
+  before AI work is marked `mastered`. Programming units require executable evidence; Level 0
+  no-code units use the falsifiable verification checklist defined by ADR-0004.
 - A producer does not verify its own work. Keep producer and verifier contexts separate.
 - When changing prompts, roadmap, gates, memory contracts, or deliverable coverage, update
   `engines/codexDojo/ecosystem/MANIFEST.md` in the same change.
 - Repo-root `make` targets are only for the shared Python surfaces (`minimaxDojo`, `openclaw`,
   and `learner/substrate`); do not treat them as a catch-all repo build.
-- Treat `engines/codexDojo/`, `engines/codexdojo-os-prototype/`, and
-  `engines/pixelDojo/pixel-quest/` as runnable apps;
+- Treat `engines/literacyDojo/`, `engines/miniTown/`, `engines/codexDojo/`,
+  `engines/codexdojo-os-prototype/`, and `engines/pixelDojo/pixel-quest/` as
+  runnable apps;
   `engines/minimaxDojo/` is the deeper tutoring core, and `engines/openclaw/` is the file-based
   checklist runner.
 - Treat `engines/codexdojo-os-prototype/` as the canonical OS experience bounded context. It reads
@@ -96,7 +103,8 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 ## ANTI-PATTERNS
 
 - Do not treat the root as a single Node/Rust/Go project.
-- Do not claim mastery, parity, benchmark superiority, or robustness without executable evidence.
+- Do not claim mastery without gate-appropriate independent evidence. Do not claim parity,
+  benchmark superiority, or robustness without executable evidence.
 - Do not bypass the learning gate because implementation files already exist.
 - Do not merge `codexDojo` and `minimaxDojo`; they are separate layers of the same ecosystem.
 - Do not scan or edit generated dependency/build output as source.
@@ -107,6 +115,14 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
 
 cd engines/codexdojo-os-prototype && npm run lint && npm run test && npm run build && npm run test:smoke
+
+cd engines/literacyDojo && \
+  npm run gen:content && npm run lint && npm run test && npm run build && \
+  npm run test:e2e
+
+cd engines/miniTown && \
+  pnpm run lint && pnpm run test && pnpm run typecheck && pnpm run build && \
+  pnpm run smoke
 
 cd engines/pixelDojo && pnpm run lint && pnpm run test && pnpm run typecheck && pnpm run build && pnpm run smoke
 

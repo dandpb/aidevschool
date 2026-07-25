@@ -1,23 +1,39 @@
 # AI DevSchool — Handbook
 
-The complete documentation set for the `aidevschool` ecosystem. Start here.
+AI DevSchool teaches people to apply AI through short, practical lessons. The
+same ecosystem serves nontechnical learners and programmers; the activity and
+evidence differ, while the learning loop stays consistent. Start with the route
+that matches your goal.
 
 > **One rule everything follows:** completion certainty never lives in the language model.
 > A concept is marked `mastered` only after the learner attempts it **and** a separate verifier
-> produces executable evidence. No amount of explanation, review, or shipped code shortcuts this.
+> accepts evidence appropriate to its declared gate. Code uses executable checks; Level 0 uses
+> the falsifiable no-code checklist defined by ADR-0004.
 
 ## What this repo is
 
-`aidevschool/` is a continuous, multi-agent software-engineering **school**. It teaches one
-learner to write robust, professional code by building real projects, testing them, reviewing
-them, comparing languages, measuring outcomes, and updating a living learning plan — all driven
-by a team of AI agents that **propose** while a deterministic state machine and executable gates
-**dispose**.
+`aidevschool/` is a continuous, multi-agent AI learning **school**. A
+nontechnical learner practices using and checking AI through short activities;
+a programmer builds and verifies robust software through real projects. Agents
+propose and explain, while deterministic rules and independent verification
+decide what the evidence supports.
 
-Guiding principle: **one learner, one curriculum, many engines.**
+Guiding principle: **one learner, one curriculum, many engines.** The product
+vision is [documented explicitly](../VISION.md). Lesson players and assessed
+attempt surfaces use the
+[shared micro-lesson lifecycle](../design/micro-lesson-contract.md); miniTown is
+an explore-only orientation surface outside that lifecycle.
 
 The root is an **ecosystem umbrella**, not a single application. There is no root `package.json`;
 do not run `npm install` / `pnpm install` at the root.
+
+## Choose a route
+
+| Audience | First learner surface | Then read |
+| --- | --- | --- |
+| Nontechnical learner | [LiteracyDojo](../../engines/literacyDojo/README.md) for guided micro-lessons; [miniTown](11_engine_miniTown.md) for explore-only orientation | [Onboarding](02_onboarding.md) |
+| Programmer | [Programming curriculum](07_curriculum.md) and the [codexDojo dashboard](03_engine_codexDojo.md) | [Architecture](01_architecture.md) |
+| Contributor | [Documentation map](../DOCUMENTATION.md) | Architecture, onboarding, then the owning engine guide |
 
 ## Read in this order
 
@@ -30,15 +46,16 @@ do not run `npm install` / `pnpm install` at the root.
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
 | 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the cozy town-sim: the level-0 entry surface for the non-technical audience. |
+| 4d | [Engine — LiteracyDojo](12_engine_literacyDojo.md) | Work on the local-first microlearning experience for people who do not code. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
 | 6 | [Engine — miniMaxEvolutionEngine](06_engine_miniMaxEvolutionEngine.md) | Run the Claude Code orchestration motor (the 5-phase loop). |
-| 7 | [Curriculum](07_curriculum.md) | Understand the 18 polyglot projects and how executable evidence works. |
+| 7 | [Curriculum](07_curriculum.md) | Understand Level 0, the programming track, the AI Literacy track, and their evidence boundaries. |
 | 8 | [Learner substrate](08_learner_substrate.md) | Understand the learner state schema, the gates, FSRS spaced repetition, and the read/write contract. |
 | 9 | [Glossary](09_glossary.md) | Look up a term (especially the Portuguese agent names and state values). |
 
 ## The five golden rules
 
-1. **Learning gate.** The learner attempts and is evaluated (executable evidence) before the AI marks anything `mastered`.
+1. **Learning gate.** The learner attempts and is evaluated with the evidence class declared by the unit before anything becomes `mastered`.
 2. **Producer ≠ verifier.** Nothing self-verifies; the verifier works from an isolated context.
 3. **No claims without evidence** (mastery, parity, benchmark, robustness).
 4. **The filesystem is the source of truth.** State is auditable Markdown / YAML / NDJSON. There is no database.
@@ -51,12 +68,14 @@ aidevschool/                       # ECOSYSTEM umbrella (git repo, no root packa
 ├── engines/                       # apps, agent cores, and runners — each is a separate project
 │   ├── codexDojo/                 # runnable app: user-facing dashboard (Vite/TS SPA)
 │   ├── codexdojo-os-prototype/    # runnable app: canonical educational OS (React/Vite)
+│   ├── literacyDojo/              # runnable app: short AI lessons for nontechnical learners
+│   ├── miniTown/                  # runnable app: cozy, explore-only Level 0 entry
 │   ├── pixelDojo/                 # runnable app: 8-bit teaching games (pixel-quest/)
 │   ├── voxelDojo/                 # runnable apps: 3D teaching simulations (game-*)
 │   ├── minimaxDojo/               # agent core: 14-agent "Ágora Continuum" tutoring spec
 │   ├── miniMaxEvolutionEngine/    # agent core: Claude Code motor (5-phase loop)
 │   └── openclaw/                  # file-based checklist runner (simulate mode)
-├── curriculum/                    # SHARED: 18 polyglot challenges + catalog.md
+├── curriculum/                    # SHARED: numbered catalog + ai-literacy lessons
 ├── learner/                       # SHARED: learner state, profile, pitfalls, journal, substrate
 ├── docs/                          # ecosystem docs (this handbook, design archive, prompts, ideas)
 ├── .mavis/                        # derived runtime view of learner/ (regenerated, never hand-edited)
@@ -80,10 +99,11 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 | Learner-state contract | [`learner/substrate/interface.md`](../../learner/substrate/interface.md) |
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](../../engines/codexDojo/ecosystem/MANIFEST.md) |
 | The product vision (central idea) | [`docs/VISION.md`](../VISION.md) |
+| Shared micro-lesson contract | [`docs/design/micro-lesson-contract.md`](../design/micro-lesson-contract.md) |
 | The original goal | [`docs/PROMPTS/-01_GOAL.md`](../PROMPTS/-01_GOAL.md) |
 
 ---
 
-_This handbook was generated on 2026-06-28 from a full read of the codebase. When code and docs
-disagree, the code wins — please open a fix. Known stale-doc spots are flagged inline as
-**Doc note:**._
+_Last reviewed on 2026-07-19. When an explanation conflicts with a canonical
+catalog, contract, learner-state file, or current verification result, the
+canonical source wins; open a documentation fix._

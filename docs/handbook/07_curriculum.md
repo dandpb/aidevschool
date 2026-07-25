@@ -5,24 +5,47 @@ truth is [`curriculum/catalog.md`](../../curriculum/catalog.md).
 
 ## What it is
 
-18 coding challenges, each implemented **polyglot in Go, Rust, and Node.js/TypeScript**, arranged as a
-**6-level progression** from fundamentals to complex distributed systems. The same specification is
-implemented three times so the learner studies comparative engineering through real benchmarks, code
-reviews, and evolution reports. As of the latest catalog: **18 total, 1 implemented (Project 01).**
+The numbered catalog defines a Level 0 no-code AI-in-practice entry followed by
+a six-level programming track. It owns the current entry count, project status,
+and implementation-certification caveats; read
+[`curriculum/catalog.md`](../../curriculum/catalog.md) instead of copying those
+mutable facts here. The programming curriculum is Node-first today. Go and Rust
+remain comparative paths only when a project has executable evidence for those
+implementations; their presence must not be inferred from an empty directory or
+a roadmap promise.
+
+The shared curriculum also contains a separate
+[`ai-literacy`](../../curriculum/ai-literacy/README.md) track of short pt-BR
+lessons consumed by LiteracyDojo. Its own catalog owns the current count and
+status. That lesson track does not duplicate Project 00 and is not counted as
+additional numbered catalog projects.
 
 > `catalog.md` is authoritative. Every engine, dashboard, and roadmap must reference it; other lists
 > (`docs/PROMPTS/IDEIAS/`, `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned.
 
-Every project follows the lifecycle: `spec → polyglot implementation → code review → benchmark (N≥3)
-→ evolution → verify`.
+Programming projects target the lifecycle `spec → implementation → code review
+→ benchmark → evolution → verify`; claims of polyglot comparison require
+evidence for every language compared.
 
-## The 18 projects
+## The numbered catalog
+
+### Level 0 — AI in practice
+
+| # | Slug | Focus |
+| --- | --- | --- |
+| 00 | `00_ai_in_practice` | Apply AI with a falsifiable no-code verification checklist. |
+
+Its explore-only surface is [miniTown](11_engine_miniTown.md). Guided
+micro-lessons currently live in the separate AI Literacy track and
+[LiteracyDojo](12_engine_literacyDojo.md).
+
+## The programming projects
 
 ### Level 1 — Fundamentals
 
 | # | Slug | Title | Focus |
 | --- | --- | --- | --- |
-| 01 | `01_rate_limiter` | Rate Limiter (Token Bucket) | Atomic refills, shared concurrent state. **✅ Implemented.** |
+| 01 | `01_rate_limiter` | Rate Limiter (Token Bucket) | Atomic refills, shared concurrent state. |
 | 02 | `02_key_value_store` | Key-Value Store (in-memory) | Hash-map CRUD over TCP/HTTP, TTL, snapshot/persistence. |
 | 03 | `03_url_shortener` | URL Shortener | base62/SHA-256, relational DB design, 301/302, analytics. |
 
@@ -71,8 +94,13 @@ language is ideal for which project).
 
 ## Per-project layout
 
-Every project directory follows the same pattern (verified across projects 01–03 and the canonical
-`_shared/project_template/`):
+The tree below is a **conceptual ecosystem target package** assembled from the
+[project-package checklist](../../engines/codexDojo/ecosystem/templates/project-package.md)
+and current project conventions; it is not a literal scaffold or a claim that
+every project contains every path. The current `_shared/project_template/`
+contains only `docs/spec_template.md` and `docs/status_schema.md`.
+Project-local documentation and package files are authoritative for the layout
+that exists today.
 
 ```text
 NN_project_name/
@@ -96,8 +124,9 @@ NN_project_name/
 └── PROMOTE.md                 # promotion notes
 ```
 
-Each implementation is independently buildable (own `go.mod` / `package.json` / `Cargo.toml` /
-`Dockerfile`) and configured via environment variables.
+Implementation layout varies by project. The Node track is the default gate;
+Go and Rust are required only where the current project contract and evidence
+say so. Read the local package before assuming a toolchain or command.
 
 ## Example: Project 01 (Rate Limiter)
 
@@ -113,17 +142,18 @@ refill `tokens = min(C, last + (now−last)·r)`. Ports: Go 8080, Node 8081, Rus
 
 ## How executable evidence works
 
-1. **Tests + coverage** — per-language commands above; target ≥ 80% per package (matches the learner
-   empirical gate).
+1. **Tests + coverage** — per-language commands above; the target comes from
+   `⟨config: gates.cobertura_nucleo_min⟩` (the programming learner empirical gate).
 2. **Mutation testing** — `docs/mutation_gate.md` proves the suite catches faults, not just executes
    lines (Project 01: Stryker, 373 mutants, 71.05% score, ≥ 60% break threshold). Owner: the verifier
    (`Prometor`). It documents its scope boundary explicitly: it does **not** unblock the learning gate
    and does **not** mark the unit `mastered` — only the learner's evaluated diagnostic attempt flips
    the gate.
-3. **Benchmarks (N ≥ 3)** — `benchmark.yaml` configures docker images, ports, and the four scenarios
+3. **Benchmarks** — `benchmark.yaml` configures docker images, ports, and the four scenarios
    `[baseline, stress, spike, endurance]`, consumed by `curriculum/_shared/benchmarks/runner.py`. The
-   benchmark rule: ≥ 10 samples + warmup; block speed claims when CV ≥ 20%. Project 01's `status.md`
-   honestly flags noisy scenarios (CV > 20%) as "needs re-run."
+   benchmark rule uses `⟨config: galileu.samples_min⟩`, `⟨config: galileu.warmup_min⟩`, and
+   `⟨config: galileu.cv_max_pct⟩`; unstable measurements block speed claims. Project 01's
+   `status.md` records the observed noisy scenarios as "needs re-run."
 4. **Polyglot Arena prediction gate** — `_shared/arena/gate.py` keeps `arena_report.md` at
    `gate: locked` until the learner commits a per-metric prediction (latency / memory / throughput)
    for all three languages; only then does it reveal a guess-vs-actual table. Predictions are
@@ -135,12 +165,24 @@ refill `tokens = min(C, last + (now−last)·r)`. Ports: Go 8080, Node 8081, Rus
 
 ## How the curriculum connects to the learning gate
 
-Each project's `docs/diagnostic.md` is the learning-gate challenge. The learner writes an attempt at
-`learner/attempts/<unit_id>-attempt-<N>.md` (tasks: Test Design, Algorithm Sketch, Code-Reading Risk
-Scan, Review Judgment). The `sonda` agent grades it and either keeps the gate blocked
-(`retry_count++`) or sets `implementation_blocked: false`. **A unit never reaches `mastered` from a
-diagnostic** — `mastered` requires Phase-2 verifier executable evidence. Project 01's code was
-pre-filled outside the Ágora flow, so nothing is `mastered` yet (see [Learner substrate](08_learner_substrate.md)).
+For a programming project, `docs/diagnostic.md` is the pre-implementation
+learning-gate challenge. The learner writes an attempt at
+`learner/attempts/<unit_id>-attempt-<N>.md` (tasks such as Test Design,
+Algorithm Sketch, Code-Reading Risk Scan, and Review Judgment). The `sonda`
+agent grades it and either keeps implementation blocked or sets
+`implementation_blocked: false`. **A programming unit never reaches `mastered`
+from that diagnostic**; after implementation it requires verifier-backed
+executable evidence.
+
+Project 00 is specified to follow a separate Level 0 branch: the learner
+attempts a no-code application task, and independent verification applies the
+falsifiable
+[ADR-0004 checklist](../design/adr/0004-no-code-empirical-gate.md). That branch
+is not yet represented by the current learner-substrate schema, so local
+completion cannot be promoted to `mastered` today. In both branches, the
+current learner answer lives in `learner/learning_state.yaml`; project files
+alone do not prove learner mastery (see
+[Learner substrate](08_learner_substrate.md)).
 
 ## Shared utilities
 
@@ -149,5 +191,6 @@ contracts, and `project_template/` (the canonical skeleton for a new project). `
 makes it importable as `curriculum._shared.*`. The per-project completion checklist lives at
 `engines/codexDojo/ecosystem/templates/project-package.md`.
 
-> **Doc note:** there is no `curriculum/CONTEXT.md`. The overview/contract content lives in
-> `catalog.md` + `curriculum/AGENTS.md`.
+> **Domain language:** [`curriculum/CONTEXT.md`](../../curriculum/CONTEXT.md)
+> defines the bounded-context vocabulary. `catalog.md` remains the data source
+> of truth, and `curriculum/AGENTS.md` owns contribution rules.

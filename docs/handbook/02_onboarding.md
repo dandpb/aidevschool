@@ -1,14 +1,39 @@
 # Onboarding
 
-Get a working setup, run the apps, and learn the day-to-day workflow. Target: first success in
-under five minutes.
+Get a working setup, run the apps, and learn the day-to-day workflow. A lesson
+targets 3–5 minutes; local installation is still a separate contributor step.
 
-## 1. Prerequisites
+## 1. Choose your route
+
+### I want to use AI without programming
+
+LiteracyDojo is the guided lesson player. It currently runs locally, so a
+facilitator or contributor must prepare it. Follow the
+[LiteracyDojo quick start](../../engines/literacyDojo/README.md); that engine
+guide owns the exact install, generation, and development commands.
+
+The [AI Literacy curriculum](../../curriculum/ai-literacy/README.md) owns
+content status. The [LiteracyDojo README](../../engines/literacyDojo/README.md)
+owns implementation status and the complete release criteria; check both before
+publishing. See also [Engine — LiteracyDojo](12_engine_literacyDojo.md).
+
+For an explore-only introduction, follow the
+[miniTown quick start](../../engines/miniTown/README.md). Its engine guide owns
+the exact setup command and prerequisites. miniTown does not contain the AI
+Literacy lesson track and never marks learning as mastered.
+
+### I want to learn software engineering with AI
+
+Continue with the prerequisites below, then run codexDojo, the educational OS,
+or a teaching game. The canonical catalog owns the programming-project list and
+current status.
+
+## 2. Prerequisites
 
 | Tool | Version | Why |
 | --- | --- | --- |
 | Node.js | 20.19+ or 22.12+ | Required by Vite 8 in codexDojo OS; Node 22 LTS is recommended. |
-| pnpm | 9+ (`corepack enable`) | Package manager for `codexDojo`, `pixelDojo`, and `voxelDojo`. |
+| pnpm | 9+ (`corepack enable`) | Package manager for `miniTown`, `codexDojo`, `pixelDojo`, and `voxelDojo`. |
 | Python 3 | 3.10+ | Regenerating learner-data views (the substrate). |
 | Go / Rust | latest stable | Only if you build/run the polyglot `curriculum/` implementations. |
 
@@ -25,7 +50,7 @@ inside the target engine.
 > The repository root has **no** `package.json`. Never run `npm install` or `pnpm install` at the
 > root — install inside an individual engine instead.
 
-## 2. Run the dashboard (codexDojo)
+## 3. Run the dashboard (codexDojo)
 
 The primary application — the control surface for the whole school.
 
@@ -38,9 +63,9 @@ pnpm run dev
 
 You'll see a sidebar of views: **Painel** (Overview), **Learner**, **Agentes** (Agents),
 **Ciclo** (Cycle), and **Roadmap**. The learner data shown is auto-generated from the substrate —
-see §6.
+see §7.
 
-## 3. Run codexDojo OS
+## 4. Run codexDojo OS
 
 This standalone Vite/React app owns the educational Linux desktop and contextual learning UI.
 
@@ -55,7 +80,7 @@ The app reads its learner status from generated `src/data/learner.ts`. Run
 mentor interactions remain local React UI state and do not count as executable mastery evidence.
 See the [OS engine doc](03b_engine_codexdojo-os-prototype.md) for the boundary.
 
-## 4. Run the game (pixelDojo)
+## 5. Run the game (pixelDojo)
 
 `pixel-quest` is the canonical teaching game (a top-down RPG where each lab is a curriculum concept).
 
@@ -74,7 +99,7 @@ Run the evidence contract:
 pnpm run smoke   # Playwright: plays through labs, asserts evidence shape, asserts no mastery side-effects
 ```
 
-## 5. Run the Claude Code motor (miniMaxEvolutionEngine)
+## 6. Run the Claude Code motor (miniMaxEvolutionEngine)
 
 This engine is driven from Claude Code, not a dev server.
 
@@ -87,7 +112,7 @@ This engine is driven from Claude Code, not a dev server.
 
 See [the engine doc](06_engine_miniMaxEvolutionEngine.md) for the full command list.
 
-## 6. Regenerate learner data (the substrate)
+## 7. Regenerate learner data (the substrate)
 
 Canonical learner state lives in `learner/learning_state.yaml`. The dashboard's `learner.ts`, the
 game's `reviewSlice.ts`, the `.mavis/` view, and the minimaxDojo whiteboard are all **regenerated**
@@ -103,7 +128,7 @@ The substrate validates invariants (state machine, retry limits, FSRS rating con
 on violation. After regenerating, rebuild the affected app (`pnpm run build`). Full contract:
 `learner/substrate/interface.md` and [Learner substrate](08_learner_substrate.md).
 
-## 7. The learning workflow
+## 8. The learning workflow
 
 This is a school, and the workflow preserves productive struggle:
 
@@ -111,25 +136,36 @@ This is a school, and the workflow preserves productive struggle:
    (`learner/learning_state.yaml`, field `gate.implementation_blocked`) blocks AI implementation
    until a real attempt exists.
 2. **Agents generate or review artifacts** (specs, polyglot implementations, reviews, benchmarks).
-3. **A separate verifier** (`Prometor` / `verifier`) runs executable checks from zero context — it
-   tries to refute the work. The producer never verifies its own output.
-4. **Metrics and review findings** are recorded (coverage, mutation score, benchmark CV).
+3. **A separate verifier** (`Prometor` / `verifier`) checks the declared evidence from zero
+   context — executable checks for programming units or the falsifiable ADR-0004 checklist for a
+   Level 0 no-code unit. The producer never verifies its own output.
+4. **Evidence and review findings** are recorded: code metrics where applicable, or checklist
+   results for the no-code gate.
 5. **Memory** updates the learner profile, journal, and pitfalls, and schedules the next review.
 
 The rules that make it work:
 
 - **Attempt before solution.** Direct answers arrive only after an attempt is evaluated. Hints
-  (`Sócrates`) are graded and budgeted (15/day); the learner must state the exact confusion point.
-- **Executable evidence, not self-report.** Spaced-repetition ratings derive from gate outcomes,
-  never from how the learner feels.
+  (`Sócrates`) are graded and budgeted by `⟨config: socrates.quota_dia⟩`; the learner must state
+  the exact confusion point.
+- **Gate evidence, not self-report.** Spaced-repetition ratings derive from independently verified
+  gate outcomes, never from how the learner feels.
 - **Producer ≠ verifier.** The verifier sees the spec, not the producer's reasoning.
 - **The filesystem is the source of truth.** Derived views are regenerated, never hand-edited.
 
-## 8. Validate your changes
+## 9. Validate your changes
 
 Runnable apps:
 
 ```bash
+# nontechnical micro-lessons
+cd engines/literacyDojo && \
+  npm run gen:content && npm run lint && npm run test && npm run build && \
+  npm run test:e2e
+# explore-only Level 0 town
+cd engines/miniTown && \
+  pnpm run lint && pnpm run test && pnpm run typecheck && pnpm run build && \
+  pnpm run smoke
 # dashboard
 cd engines/codexDojo               && pnpm run lint && pnpm run test && pnpm run build
 # codexDojo OS
@@ -159,7 +195,7 @@ cd curriculum/01_rate_limiter/go-impl   && go test -race -cover ./...
 cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --all-targets -- -D warnings && cargo test
 ```
 
-## 9. Where to find what
+## 10. Where to find what
 
 | Task | Location |
 | --- | --- |
@@ -167,6 +203,9 @@ cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --a
 | Change the learner-state adapters | `learner/substrate/` |
 | Change project specs / evidence | `curriculum/<NN_project>/` |
 | Add or edit a curriculum project | start from `curriculum/catalog.md` (canonical list) |
+| Edit nontechnical AI lessons | `curriculum/ai-literacy/` → validate and regenerate the read model |
+| Work on the nontechnical lesson player | `engines/literacyDojo/` |
+| Work on the explore-only Level 0 town | `engines/miniTown/` |
 | Work on the dashboard | `engines/codexDojo/` |
 | Work on the educational OS | `engines/codexdojo-os-prototype/` |
 | Work on the game | `engines/pixelDojo/pixel-quest/` |
@@ -175,7 +214,7 @@ cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --a
 | Update product-facing contracts | `engines/codexDojo/ecosystem/MANIFEST.md` |
 | Look up a term | [Glossary](09_glossary.md) |
 
-## 10. Tooling roots (the dot-directories)
+## 11. Tooling roots (the dot-directories)
 
 Most `.X/` directories at the root are platform/session state, not source:
 

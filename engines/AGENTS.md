@@ -11,6 +11,7 @@ orchestration live here, while learner state and curriculum evidence stay at the
 engines/
 ├── codexDojo/              # pnpm dashboard + product-facing ecosystem contract
 ├── codexdojo-os-prototype/ # React/Vite educational OS bounded context
+├── literacyDojo/           # npm AI microlearning app; generated content, local progress only
 ├── minimaxDojo/            # 14-agent tutor core, docs, prompts, whiteboard
 ├── miniMaxEvolutionEngine/ # Claude Code motor with .claude agents/commands/skills
 ├── miniTown/               # cozy town-sim: level-0 entry surface for the non-technical audience (AD-004)
@@ -29,6 +30,7 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 | --- | --- | --- |
 | Dashboard UI or ecosystem manifest | `codexDojo/` | Vite/TypeScript dashboard. |
 | Educational OS experience | `codexdojo-os-prototype/` | React/Vite desktop; reads a generated learner snapshot and keeps interactions local. |
+| Nontechnical AI microlearning | `literacyDojo/` | Start with local `AGENTS.md` and `README.md`; content is canonical under `curriculum/ai-literacy/`. |
 | Teaching game app | `pixelDojo/pixel-quest/` | Vite/TypeScript/Three.js app with Playwright smoke evidence. |
 | 3D teaching simulations | `voxelDojo/` | Catalog-wide workspace; `game-10-hash-ring/` is the reference package. |
 | Cozy town-sim (level-0 entry) | `miniTown/` | Observational Three.js city sim; start with `README.md`. Never writes canonical learner state. |
@@ -43,6 +45,8 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 ## CONVENTIONS
 
 - Do not put shared learner or curriculum state under an engine.
+- LiteracyDojo may record local `completed`, but never writes canonical learner
+  state or declares `mastered`.
 - Regenerate the OS learner view through `python3 -m learner.substrate`; do not edit its generated
   `src/data/learner.ts` or write canonical learner state from React.
 - Engine-local docs may reference root `learner/`, `curriculum/`, and `docs/`.

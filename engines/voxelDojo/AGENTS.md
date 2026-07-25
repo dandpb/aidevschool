@@ -19,7 +19,7 @@ reference package, not the only implementation.
 | Browser proof | `game-*/playwright/` | Boots WebGL, drives the real UI, and asserts evidence records. |
 | Engine decisions / data flow | `docs/ARCHITECTURE.md` | Rendering, evidence, verifier handoff. |
 | What's blocking implementation | `docs/GAP_ANALYSIS.md` | Ecosystem-wide gaps and sequence. |
-| Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum; slugs must match. |
+| Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project programming track; slugs must match. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. Read-only here. |
 | **Cross-engine game contract** | `../../docs/design/teaching-game-contract.md` | Canonical rules for evidence, verifier handoff, packs. Wins on conflict. |
 | Evidence record shape | `../pixelDojo/pixel-quest/docs/content-packs.md` | voxelDojo reuses this schema with `"source": "voxeldojo"`. |

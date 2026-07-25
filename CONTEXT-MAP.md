@@ -4,15 +4,19 @@ AI DevSchool is one ecosystem with **one learner and one curriculum**, realized 
 bounded contexts. Each context owns its language. When a word appears in two contexts, the
 meanings are different — do not collapse them.
 
-Canonical glossaries live next to the context they describe. This map is the index and the
-relationship contract only.
+Canonical language references live next to the context they describe. Some
+generic surfaces use their local README instead of a dedicated glossary. This
+map is the index and relationship contract only.
 
 ## Contexts
 
-| Context | Glossary | Kind | Owns |
+| Context | Entry | Kind | Owns |
 | --- | --- | --- | --- |
 | [Learner Journey](./learner/CONTEXT.md) | `learner/CONTEXT.md` | Core | Mastery proof, learning-state machine, reviews, streak, profile |
 | [Curriculum Catalog](./curriculum/CONTEXT.md) | `curriculum/CONTEXT.md` | Supporting | Challenge catalog, project identities, backlog truth |
+| [AI Literacy](./docs/design/ai-literacy/README.md) | `docs/design/ai-literacy/` | Core | Nontechnical lesson content, deterministic activities, local progress and raw evidence |
+| [LiteracyDojo](./engines/literacyDojo/README.md) | `engines/literacyDojo/README.md` | Generic | Guided AI microlearning UI; consumes generated content and records at most `completed` |
+| [miniTown](./engines/miniTown/README.md) | `engines/miniTown/README.md` | Generic | Explore-only Level 0 town surface; no lesson or mastery authority |
 | [Tutoring Roster (Ágora)](./engines/minimaxDojo/CONTEXT.md) | `engines/minimaxDojo/CONTEXT.md` | Core | Named pedagogical roles and the protocol they enact |
 | [Polyglot Project Cycle](./engines/miniMaxEvolutionEngine/CONTEXT.md) | `engines/miniMaxEvolutionEngine/CONTEXT.md` | Supporting | 5-phase build loop for one curriculum project |
 | [Teaching Game — Pixel](./engines/pixelDojo/CONTEXT.md) | `engines/pixelDojo/CONTEXT.md` | Core | 2D arcade attempt surface and evidence emission |
@@ -23,6 +27,17 @@ relationship contract only.
 
 ## Relationships
 
+- **AI Literacy → LiteracyDojo**: publishes canonical lesson YAML through a
+  generated, typed read model. LiteracyDojo never edits the source YAML.
+- **LiteracyDojo → AI Literacy**: emits `LiteracyEvidenceRecord` attempts and
+  keeps experience progress local. `completed` is not `mastered`.
+- **LiteracyDojo ↛ Learner Journey**: there is no accepted write adapter into
+  `learner/learning_state.yaml`; an independent no-code verifier is still
+  required before shared mastery can exist.
+- **miniTown ↛ Learner Journey**: miniTown is exploration only. Runtime state
+  is inspectable, but it is neither lesson evidence nor a mastery write.
+- **Micro-lesson contract → learner surfaces**: defines the shared pedagogical
+  lifecycle without merging the AI Literacy and teaching-game schemas.
 - **Teaching Game (Pixel / Voxel) → Learner Journey**: games emit **Executable Evidence**; only the
   **Verifier** (Prometor role) may advance learning state. Games never mark **Mastered**.
 - **Learner Journey → Teaching Game (Pixel / Voxel)**: publishes a read-only **Review Slice**
@@ -51,6 +66,7 @@ relationship contract only.
 | **Gate** | **Learning Gate** (blocks AI until attempt evaluated) or **Empirical Gate** (numeric mastery bar) | Project-cycle transition checks; not the same object |
 | **Phase / state** | **Learning State**: presenting → practicing → evaluating → mastered | **Project Phase**: spec → impl → review → benchmark → cycle-complete |
 | **Unit** | **Active Unit** / logged unit of learning under the gate | Curriculum **Project** slice or game level — clarify before using |
+| **Completed** | Not a canonical Learner Journey mastery state | Local experience progress in LiteracyDojo; never promote it implicitly |
 | **Verifier / Prometor** | Role that alone may pass the empirical bar and record mastery | Same role name in the project cycle, different artifact under test |
 | **Evidence** | **Executable Evidence** justifying mastery | Game **Evidence Record** is raw input; verifier re-judges it |
 

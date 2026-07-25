@@ -45,25 +45,35 @@ Top: `version: 2`, `system: agora-continuum`. The key blocks:
 
 - **`learner`** — `id`, `level` (`beginner|intermediate|advanced`), `goal`, `active_language`,
   `focus`, `languages`, `weekly_time_hours`, `session_cadence`, `hitl_sla_hours`, and
-  `budget.hint_queries_per_day` (15). Reference languages (Go/Rust) are for code-reading breadth;
-  practice stays in the active language.
+  `budget.hint_queries_per_day` (`⟨config: socrates.quota_dia⟩`). Reference languages (Go/Rust)
+  are for code-reading breadth; practice stays in the active language.
 - **`state_machine`** — two enums: `learning_states: [presenting, practicing, evaluating, mastered]`
   and `artifact_states: [producing, verifying, done]`.
 - **`active_unit`** — the live gate object: `id`, `project`, `title`, `state`, `retry_count`,
-  `retry_limit` (3), `unblock_condition: learner_attempt_evaluated`,
-  `required_before_implementation: true`, `diagnostic_file`, a `promotion_gate` list, and an
-  `empirical_gate` (`require_executable_evidence: true`, `min_coverage: 0.80`, `mutation_min: 0.65`).
+  `retry_limit` (`⟨config: retries.max_por_unidade⟩`),
+  `unblock_condition: learner_attempt_evaluated`, `required_before_implementation: true`,
+  `diagnostic_file`, a `promotion_gate` list, and an `empirical_gate`. The current version-2 schema
+  represents a programming unit: its gate requires executable evidence with coverage and mutation
+  targets from `⟨config: gates.cobertura_nucleo_min⟩` and
+  `⟨config: gates.mutation_score_min⟩`. It does not yet have a `gate_kind` or `evidence_type`
+  field for Level 0.
 - **`gate`** — `implementation_blocked: <bool>` ← the master gate flag.
 - **`agent_ownership`** — the named agents (`leader: Maestro`, `diagnostic: Sonda`, `verifier: Prometor`, …).
-- **`empirical_gates`** — `code` (coverage target ≥ 80%, mutation 60–70% when tooling available,
-  `verifier_context: isolated`, benchmark rule "≥10 samples plus warmup; block speed claims when
-  CV ≥ 20%") and `learning` (`requires_attempt_before_solution: true`, `hint_budget_per_day: 15`,
-  `mastery_source: executable_evidence`).
+- **`empirical_gates`** — `code` (coverage target
+  `⟨config: gates.cobertura_nucleo_min⟩`, mutation target
+  `⟨config: gates.mutation_score_min⟩` when tooling is available,
+  `verifier_context: isolated`, and benchmark requirements from
+  `⟨config: galileu.samples_min⟩`, `⟨config: galileu.warmup_min⟩`, and
+  `⟨config: galileu.cv_max_pct⟩`) and `learning` (`requires_attempt_before_solution: true`,
+  `hint_budget_per_day: ⟨config: socrates.quota_dia⟩`,
+  `mastery_source: executable_evidence`). This is the currently implemented executable branch.
+  [ADR-0004](../design/adr/0004-no-code-empirical-gate.md) specifies the future no-code checklist
+  branch, but the substrate cannot persist or validate that evidence type yet.
 - **`units_log`** — the FSRS input (spaced-repetition review history). Each unit: `unit_id`, `concept`,
   `kind`, `project`, `mastered`, and a `reviews` list. Header comment: "ratings come ONLY from gate
   outcomes, never self-report."
 - **`streak`** — `current`, `longest`, `last_gate_date`, `freezes {equipped, max}`. The streak grows
-  only when an executable-evidence gate passes.
+  only when a passing gate outcome is recorded.
 
 ## State-machine values (the canonical vocabulary)
 
@@ -110,10 +120,10 @@ Plus two helper validators:
 
 - **units_log** — each review's `rating` (if present) must be a valid rating; if a `gate_outcome` is
   present, the `rating` must equal `RATING_FROM_GATE[outcome]` ("the gate is the only rating
-  producer"); a unit with `mastered: true` must have ≥ 1 gate review ("mastery requires executable
-  evidence, never docs alone").
-- **streak** — `current` is a non-negative int; `0 ≤ equipped ≤ max ≤ 2` ("research: 3 freezes
-  performed no better than 2").
+  producer"); a unit with `mastered: true` must have at least one independently verified gate
+  review.
+- **streak** — `current` is a non-negative int; `equipped` must stay between zero and the canonical
+  `streak.freezes.max` value enforced by the schema.
 
 ## `sync()` — what gets regenerated
 
@@ -135,8 +145,9 @@ inputs (all read-only) include `learning_state.yaml`, `learner_profile.md`, `pit
 
 ## FSRS spaced repetition (`substrate/scheduling.py`)
 
-The scheduler bridges the executable-evidence gate to concept re-exposure. The non-negotiable rule:
-**the rating that feeds the scheduler comes only from gate outcomes, never from learner self-report.**
+The scheduler bridges an independently verified learning gate to concept re-exposure. The
+non-negotiable rule: **the rating that feeds the scheduler comes only from gate outcomes, never
+from learner self-report.**
 
 Gate outcome → FSRS rating (`RATING_FROM_GATE`, the single mapping):
 
@@ -167,7 +178,7 @@ Other scheduling logic:
 - **Streak + freeze (Phase 2)** — `record_gate_outcome(streak, passed, today)`: a passed gate
   increments the streak; a failed gate is a no-op ("the gate, not the attempt, is the scarcity").
   `reconcile_streak(streak, today)`: each missed full day consumes one freeze; once exhausted the
-  streak breaks. Freeze cap = 2.
+  streak breaks. The cap comes from canonical `streak.freezes.max` and is enforced by the schema.
 - **CURR (Phase 4)** — `compute_curr(...)` is a Current-user Retention Rate proxy over a trailing
   7-day window. It is explicitly **unvalidated** and must not drive any automated decision
   (scheduling, gating, streaks).
@@ -176,13 +187,19 @@ Other scheduling logic:
 
 - **Master gate:** `gate.implementation_blocked: true` blocks AI implementation until the learner's
   diagnostic attempt is evaluated. Flipped to `false` only by the diagnostic agent accepting an
-  attempt. Retry budget ≤ 3.
-- **Empirical gate (for mastery):** `require_executable_evidence: true`, coverage ≥ 80%, mutation ≥
-  60% (when tooling available), benchmark ≥ 10 samples + warmup (CV ≥ 20% blocks speed claims),
-  verifier runs in an isolated context.
-- **Mastery rule (enforced in `validate`):** `mastered: true` is invalid without ≥ 1 gate review.
-  Documentation, dashboards, and static review never count — corroborated by `pitfalls.md` (the
-  2026-06-18 pitfall: "claiming mastery from documentation/dashboard work").
+  attempt. The retry budget is `⟨config: retries.max_por_unidade⟩`.
+- **Programming empirical gate (for mastery):** `require_executable_evidence: true`; coverage,
+  mutation, benchmark samples, warmup, and stability use
+  `⟨config: gates.cobertura_nucleo_min⟩`, `⟨config: gates.mutation_score_min⟩`,
+  `⟨config: galileu.samples_min⟩`, `⟨config: galileu.warmup_min⟩`, and
+  `⟨config: galileu.cv_max_pct⟩`. The verifier runs in an isolated context.
+- **Level 0 no-code gate (planned substrate branch):** ADR-0004 requires an independently verified,
+  falsifiable checklist to replace executable code evidence. The current schema and validator do
+  not encode that evidence class, so local Level 0 completion cannot be promoted to `mastered`
+  through the substrate today.
+- **Current mastery invariant (enforced in `validate`):** `mastered: true` is invalid without at
+  least one gate review. The validator checks the recognized outcome/rating relationship; it does
+  not currently validate an evidence class.
 
 ## Commands & dependencies
 
@@ -195,5 +212,6 @@ python3 -m learner.substrate
 python3 -m unittest discover -s learner/substrate/tests
 ```
 
-> **Doc note:** there is no `learner/CONTEXT.md`. The overview/contract content lives in
-> `learner/README.md` + `learner/AGENTS.md` + `substrate/interface.md`.
+> **Domain language:** [`learner/CONTEXT.md`](../../learner/CONTEXT.md) defines
+> the bounded-context vocabulary. `learner/README.md`, `learner/AGENTS.md`, and
+> `substrate/interface.md` own operational and interface details.

@@ -238,7 +238,8 @@ preservá-las ([CLAUDE.md](../../CLAUDE.md), [AGENTS.md](../../AGENTS.md)):
 2. **Produtor ≠ verificador** — sem auto-verificação; o verificador vê a spec, não o raciocínio do
    produtor. Auditoria de 2026-07-08 encontrou zero violações desta regra.
 3. **Sem afirmações sem evidência** — mastery, paridade, benchmark e robustez exigem artefato
-   executável (coverage core ≥ 80%, mutation ≥ 60%, benchmark CV < 20%, N≥3).
+   executável (coverage core ≥ 80%, mutation ≥
+   `⟨config: gates.mutation_score_min⟩`, benchmark CV < 20%, N≥3).
 4. **Filesystem é a fonte da verdade** — sem DB, sem lock; views derivadas são regeneradas, nunca
    editadas à mão nem retro-portadas para o canônico.
 5. **Ratings FSRS derivam de gate outcomes** — nunca de auto-relato

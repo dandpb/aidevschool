@@ -17,20 +17,22 @@ Scripts: `pnpm run test` (vitest) · `typecheck` · `build` · `smoke` (Playwrig
 
 ## Status e evidência
 
-- Estágio: **MVP** (plano de 5 tasks — `.mavis/plans/miniTown.yaml`). No estado **commitado**
-  (HEAD), a suíte está verde (14/14 na verificação independente de 2026-07-19) e o build
-  estático compila limpo; o working tree tem evolução não commitada de outra sessão.
+- Estágio: **MVP** (plano de 5 tasks — `.mavis/plans/miniTown.yaml`). A
+  verificação independente de 2026-07-19 registrou 14/14 testes e build
+  estático limpo. Rode os comandos abaixo no commit que será publicado; o
+  resultado histórico não certifica mudanças futuras.
 - Evidência de runtime exposta em `window.__miniTown` (contrato observacional; não emite
   evidência de mastery — miniTown não marca aprendizado).
 - Trilha pedagógica associada: `curriculum/00_ai_in_practice/` (Nível 0 do catálogo).
 
-## Zero-install
+## Setup local mínimo
 
 - Setup mínimo (só este engine): `./setup.sh onboard` na raiz do ecossistema.
+  O comando ainda requer Node/Corepack e instala dependências; não é uma rota
+  pública sem instalação.
 - Deploy público estático: `netlify.toml` neste diretório (build `npm run build`, publish
-  `dist/`). Verificado em 2026-07-19: o build estático do estado commitado (HEAD) compila
-  limpo. Nota: o working tree atual tem um erro de tipo em `tests/agents.test.ts`
-  (trabalho não commitado de outra sessão) — o deploy deve partir de um commit limpo.
+  `dist/`). O deploy deve partir de um commit limpo e do resultado atual de
+  lint, testes, typecheck, build e smoke.
 
 ## Limites
 

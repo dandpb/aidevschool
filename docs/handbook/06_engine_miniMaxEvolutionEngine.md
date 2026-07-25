@@ -66,7 +66,8 @@ Per-unit deterministic machine: `presenting → practicing → evaluating → ma
 `gate.implementation_blocked: true` and `required_before_implementation: true`, **the AI does not
 implement the unit** — first `sonda` diagnoses, the learner attempts, and the attempt is evaluated
 with executable evidence (`unblock_condition: learner_attempt_evaluated`). The empirical gate:
-coverage ≥ `min_coverage` (0.80), mutation ≥ `mutation_min` (0.60) when applicable. Errors →
+coverage ≥ `min_coverage` (0.80), mutation ≥
+`⟨config: gates.mutation_score_min⟩` when applicable. Errors →
 `learner/pitfalls.md`; wins → `learner/journal.md`; mastery updates append to `units_log` with
 `{id, mastered_at, evidence}`. This skill must not be skipped.
 

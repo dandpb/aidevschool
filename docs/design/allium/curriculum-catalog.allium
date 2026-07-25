@@ -1,12 +1,12 @@
 -- allium: 3
 -- curriculum-catalog.allium
 --
--- Scope: canonical curriculum/backlog behaviour distilled from
---         curriculum/catalog.md and curriculum/BACKLOG_STATUS.md.
--- Includes: 18-project catalog, status vocabulary, dependencies,
+-- Scope: programming-project curriculum/backlog behaviour distilled from
+--         entries 01-18 in curriculum/catalog.md and curriculum/BACKLOG_STATUS.md.
+-- Includes: 18-project programming subset, status vocabulary, dependencies,
 --           lifecycle evidence, certification boundary.
--- Excludes: per-language implementation internals, benchmark runner
---           mechanics, generated coverage files.
+-- Excludes: Level 0 no-code entry 00, AI Literacy, per-language implementation
+--           internals, benchmark runner mechanics, generated coverage files.
 
 ------------------------------------------------------------
 -- Enumerations
@@ -76,8 +76,8 @@ entity CurriculumBacklog {
 -- Rules
 ------------------------------------------------------------
 
-rule CatalogContainsEighteenProjects {
-    when: CurriculumCatalogLoaded(backlog)
+rule ProgrammingCatalogContainsEighteenProjects {
+    when: ProgrammingCurriculumCatalogLoaded(backlog)
 
     requires: backlog.total_count = 18
 }
@@ -178,6 +178,6 @@ surface CurriculumStatusSurface {
             project.catalog_verified
 
     provides:
-        CurriculumCatalogLoaded(backlog)
+        ProgrammingCurriculumCatalogLoaded(backlog)
         ProjectCertificationReviewed(project, evidence)
 }

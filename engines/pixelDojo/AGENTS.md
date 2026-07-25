@@ -29,7 +29,7 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 | Browser smoke contract | `pixel-quest/playwright/pixel-quest.spec.ts` | Plays the game and checks evidence/console behavior. |
 | Grade emitted evidence | `../../learner/gate/AGENTS.md` | Engine-neutral Prometor boundary; persists only through the substrate. |
 | Screenshot evidence | `pixel-quest/shots/` | Generated QA artifacts, not source. |
-| Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project curriculum. |
+| Subjects to teach | `../../curriculum/catalog.md` | Canonical 18-project programming track; Project 00 is no-code and separate. |
 | Learner gate | `../../learner/learning_state.yaml` | Verifier-owned mastery state. |
 | Cross-engine game contract | `../../docs/design/teaching-game-contract.md` | Canonical rules shared with voxelDojo; wins on conflict. |
 

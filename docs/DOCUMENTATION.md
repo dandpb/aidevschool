@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Canônico para navegação e governança documental |
 | Criado | 2026-07-10 |
-| Última revisão | 2026-07-10 |
+| Última revisão | 2026-07-19 |
 | Escopo | Documentação rastreada do ecossistema; não inclui dependências ou saídas geradas |
 
 ## Contexto
@@ -48,11 +48,22 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 
 ## Solução: mapa canônico de leitura
 
+### Comece pela pessoa
+
+| Público | Entrada | Limite atual |
+| --- | --- | --- |
+| Pessoa não técnica | [LiteracyDojo](../engines/literacyDojo/README.md) + [conteúdo AI Literacy](../curriculum/ai-literacy/README.md) | O currículo ligado mantém o status do conteúdo; o README do engine mantém o status de implementação e release. |
+| Pessoa não técnica, exploração | [miniTown](../engines/miniTown/README.md) | Superfície local de exploração; não contém as microlições e não marca domínio. |
+| Programador | [Currículo de programação](../curriculum/catalog.md) + [codexDojo](../engines/codexDojo/README.md) | Projetos 01–18; status e evidência variam por projeto. |
+| Contribuidor | [Handbook](handbook/README.md) + [AGENTS.md](../AGENTS.md) | Setup e comandos continuam locais a cada engine. |
+
 ### Comece pelo objetivo
 
 | Necessidade | Fonte canônica | Papel |
 | --- | --- | --- |
 | Orientação rápida do repositório | [README raiz](../README.md) | Entrada para pessoas e execução local. |
+| Ideia central e públicos | [Visão do produto](VISION.md) | Intenção canônica; não substitui status operacional. |
+| Ciclo de uma lição curta | [Contrato de microlição](design/micro-lesson-contract.md) | Objetivo, tentativa, feedback, retry, evidência, progresso, revisão e verificação. |
 | Arquitetura, onboarding e superfícies | [Handbook](handbook/README.md) | Guia de navegação do ecossistema. |
 | Regras de contribuição e comandos | [AGENTS.md raiz](../AGENTS.md) | Convenções operacionais para agentes e contribuidores. |
 | Linguagem do domínio | [Mapa de contextos](../CONTEXT-MAP.md) | Direciona para glossários por bounded context. |
@@ -67,7 +78,21 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Contrato do substrato | [`learner/substrate/interface.md`](../learner/substrate/interface.md) | Limites de leitura, escrita, validação e sincronização. |
 | Requisitos para arquivos | [`MANIFEST.md`](../engines/codexDojo/ecosystem/MANIFEST.md) | Rastreabilidade de contrato de produto. |
 | Contrato entre jogos | [Teaching-game contract](design/teaching-game-contract.md) | Evidência e limites de integração Pixel/Voxel. |
+| Conteúdo de AI Literacy | [`curriculum/ai-literacy/`](../curriculum/ai-literacy/README.md) | YAML canônico; `ready` descreve conteúdo válido, não mastery. |
+| Contratos de AI Literacy | [`docs/design/ai-literacy/`](design/ai-literacy/README.md) | Conteúdo, evidência e limites do bounded context. |
 | Evidência de um projeto | `curriculum/<projeto>/docs/` | Permanece local, auditável e não é resumida neste índice. |
+
+### Vocabulário de status
+
+| Termo | Significado |
+| --- | --- |
+| `planned` | Intenção documentada, sem comportamento entregue. |
+| `ready` | Conteúdo autoral existe e passa pelo contrato do catálogo. |
+| `local` | A superfície roda a partir deste repositório; não implica URL pública. |
+| `live` | Uma rota pública foi publicada e verificada na versão citada. Configuração de deploy sozinha não basta. |
+| `generated` | Projeção derivada; deve ser regenerada, nunca editada à mão. |
+| `completed` | Progresso da experiência local; não comprova competência. |
+| `mastered` | Competência promovida apenas por verificador independente e evidência adequada. |
 
 ### Superfícies locais
 
@@ -77,6 +102,8 @@ engine.
 
 | Superfície | Entrada local | Visão do handbook |
 | --- | --- | --- |
+| Microlições de IA | [`engines/literacyDojo/README.md`](../engines/literacyDojo/README.md) | [LiteracyDojo](handbook/12_engine_literacyDojo.md) |
+| Exploração Nível 0 | [`engines/miniTown/README.md`](../engines/miniTown/README.md) | [miniTown](handbook/11_engine_miniTown.md) |
 | Dashboard | [`engines/codexDojo/README.md`](../engines/codexDojo/README.md) | [codexDojo](handbook/03_engine_codexDojo.md) |
 | OS educacional | [`engines/codexdojo-os-prototype/README.md`](../engines/codexdojo-os-prototype/README.md) | [codexdojo OS](handbook/03b_engine_codexdojo-os-prototype.md) |
 | Jogo 2D | [`engines/pixelDojo/README.md`](../engines/pixelDojo/README.md) | [pixelDojo](handbook/04_engine_pixelDojo.md) |
@@ -92,6 +119,7 @@ engine.
 | TDD descritivo do ecossistema | [TDD do ecossistema](design/tdd-ecossistema.md) | Snapshot arquitetural datado; use contratos locais e o handbook para superfícies posteriores à sua revisão. |
 | ADRs | [`docs/design/adr/`](design/adr/) | Decisões pontuais; são históricos imutáveis depois de aceitos. |
 | Designs ativos | [`docs/design/`](design/) | Contratos e propostas com escopo explícito. |
+| Visão do produto | [`docs/VISION.md`](VISION.md) | Intenção dual-audience; validar status nos contratos e engines ligados. |
 | Auditorias e análises | [`docs/TECH_DEBT_AUDIT_2026-07-08.md`](TECH_DEBT_AUDIT_2026-07-08.md) e relatórios datados | Evidência de um recorte temporal; não é guia operacional permanente. |
 | Arquivo | [`docs/archive/`](archive/) | Contexto histórico; não usar como instrução atual. |
 | Prompts e ideias | [`docs/PROMPTS/`](PROMPTS/) | Material de intenção e descoberta; validar contra fontes ativas antes de implementar. |
@@ -117,7 +145,7 @@ engine.
 | --- | --- | --- |
 | Novo engine ou app | README local, handbook e esta tabela de superfícies | Links relativos e comando de validação do engine. |
 | Novo contrato cross-engine | Documento em `docs/design/`, handbook e `MANIFEST.md` quando afetar produto | Consumidores e fontes de verdade apontam para o mesmo contrato. |
-| Alteração de estado/currículo | Fonte em `learner/` ou `curriculum/`; somente os adaptadores necessários | Validador do substrato e evidência executável. |
+| Alteração de estado/currículo | Fonte em `learner/` ou `curriculum/`; somente os adaptadores necessários | Validador do substrato e evidência independente adequada ao gate declarado. |
 | Nova decisão arquitetural | ADR em `docs/design/adr/` e links nas superfícies afetadas | Decisão distingue contexto, consequência e fonte vigente. |
 | Nova auditoria ou plano | Documento datado em `docs/` ou `docs/archive/` conforme vigência | Não substitui instruções atuais sem uma atualização explícita de fontes canônicas. |
 

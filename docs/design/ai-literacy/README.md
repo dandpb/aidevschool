@@ -8,8 +8,10 @@ no ADR `docs/design/adr/0005-ai-literacy-bounded-context.md`.
 - **Promessa:** aprender a usar IA com confiança em cinco minutos por dia.
 - **Formato:** microlições de 3–5 minutos, exercícios interativos, feedback
   imediato, revisão espaçada e progressão visível — PWA mobile-first.
-- **Engine (Fase 1, ainda não criado):** `engines/literacyDojo/`.
-- **Conteúdo canônico (Fase 0, este repositório):** `curriculum/ai-literacy/`.
+- **Engine:** `engines/literacyDojo/`; seu README mantém o status de
+  implementação e os critérios de release.
+- **Conteúdo canônico:** `curriculum/ai-literacy/`; seu catálogo e README
+  mantêm quantidade, versões e status das lições.
 
 O contexto reutiliza os princípios centrais do ecossistema — tentativa antes de
 domínio, produtor diferente de verificador, conteúdo canônico fora da UI e
@@ -23,6 +25,7 @@ programação com o da alfabetização em IA.
 | `content-contract.md` | `LessonDefinition`, os 7 tipos de atividade, pipeline de compilação e regras de versionamento. |
 | `evidence-contract.md` | Envelope `LiteracyEvidenceRecord`, separação progresso/engajamento/competência, eventos de analytics. |
 | `curriculum/ai-literacy/README.md` | Estrutura do conteúdo canônico e como validar/compilar. |
+| `docs/design/micro-lesson-contract.md` | Ciclo pedagógico mínimo compartilhado com as demais superfícies. |
 
 ## Relação com os engines existentes
 
@@ -62,9 +65,13 @@ programação com o da alfabetização em IA.
 - armazenar texto livre sensível em telemetria por padrão;
 - introduzir backend antes de existir hipótese validada que o exija.
 
-## Fases
+## Autoridade de status
 
-Este diretório cobre a **Fase 0** (decisão e contratos): ADR, contratos de
-conteúdo e evidência, três lições piloto, validador e testes de contrato. O
-engine (Fase 1), o MVP de 14 dias (Fase 2), o feedback adaptativo opcional
-(Fase 3) e o piloto multiusuário (Fase 4) seguem o plano.
+| Fato | Fonte vigente |
+| --- | --- |
+| Quantidade, versão e estado do conteúdo | [`curriculum/ai-literacy/README.md`](../../../curriculum/ai-literacy/README.md) e `catalog.yaml` |
+| Implementação, verificação e release do app | [`engines/literacyDojo/README.md`](../../../engines/literacyDojo/README.md) |
+| Sequência e escopo das fases | [`docs/plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md`](../../plans/PLANO_IMPLEMENTACAO_LITERACY_DOJO_2026-07-19.md) |
+
+`ready` descreve conteúdo válido. `completed` descreve progresso local.
+Somente um verificador independente pode declarar `mastered`.
