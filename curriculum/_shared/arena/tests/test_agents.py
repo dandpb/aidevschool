@@ -9,6 +9,7 @@ agent actually flagging an unfair impl) is exercised when the pipeline runs
 
 import unittest
 from pathlib import Path
+from typing import TypedDict
 
 import yaml
 
@@ -17,18 +18,27 @@ AGENTS = REPO / "engines" / "miniMaxEvolutionEngine" / ".claude" / "agents"
 RUBRIC = REPO / "curriculum" / "_shared" / "arena" / "effort_budget_rubric.md"
 
 
-def frontmatter(path: Path):
+class AgentFrontmatter(TypedDict):
+    name: str
+    model: str
+    tools: str
+
+
+def frontmatter(path: Path) -> tuple[AgentFrontmatter, str]:
     text = path.read_text(encoding="utf-8")
     assert text.startswith("---"), f"{path} missing frontmatter"
-    fm = yaml.safe_load(text.split("---", 2)[1])
+    fm: AgentFrontmatter = yaml.safe_load(text.split("---", 2)[1])
     return fm, text
 
 
-def tool_list(fm):
+def tool_list(fm: AgentFrontmatter) -> list[str]:
     return [t.strip() for t in str(fm.get("tools", "")).split(",")]
 
 
 class TestFairnessAuditor(unittest.TestCase):
+    fm: AgentFrontmatter = {"name": "", "model": "", "tools": ""}
+    text = ""
+
     def setUp(self):
         self.fm, self.text = frontmatter(AGENTS / "fairness-auditor.md")
 
@@ -48,6 +58,8 @@ class TestFairnessAuditor(unittest.TestCase):
 
 
 class TestArenaNarrator(unittest.TestCase):
+    fm: AgentFrontmatter = {"name": "", "model": "", "tools": ""}
+    text = ""
     def setUp(self):
         self.fm, self.text = frontmatter(AGENTS / "arena-narrator.md")
 

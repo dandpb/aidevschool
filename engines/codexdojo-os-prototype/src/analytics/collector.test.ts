@@ -4,13 +4,20 @@ import {
   InMemoryInstallationIdentityStore,
   type AnalyticsEventSink,
 } from './collector'
+import { AnalyticsBatcher, InMemoryAnalyticsQueueStore } from './batcher'
 import type { AnalyticsEvent } from './events'
 
 class CapturingSink implements AnalyticsEventSink {
   readonly events: AnalyticsEvent[] = []
+  private sequence = 0
 
   enqueue(event: AnalyticsEvent): void {
     this.events.push(event)
+  }
+
+  nextSequence(): number {
+    this.sequence += 1
+    return this.sequence
   }
 }
 
@@ -86,7 +93,10 @@ describe('AnalyticsCollector', () => {
   it('keeps analytics sink failure independent from application transitions', () => {
     const transition = vi.fn()
     const collector = new AnalyticsCollector(
-      { enqueue: () => { throw new Error('delivery unavailable') } },
+      {
+        enqueue: () => { throw new Error('delivery unavailable') },
+        nextSequence: () => 1,
+      },
       { createId: idFactory(), identityStore: new InMemoryInstallationIdentityStore() },
     )
 
@@ -111,5 +121,35 @@ describe('AnalyticsCollector', () => {
     expect(firstSink.events[0]?.dimensions.sessionId).not.toBe(
       secondSink.events[0]?.dimensions.sessionId,
     )
+  })
+
+  it('continues after the highest sequence restored by its queue', () => {
+    const store = new InMemoryAnalyticsQueueStore()
+    store.save([
+      {
+        schemaVersion: 1,
+        eventId: 'event-restored',
+        name: 'mission.started',
+        occurredAt: '2026-07-25T12:00:00.000Z',
+        sequence: 3,
+        dimensions: { installationId: 'installation-1', sessionId: 'session-1' },
+      },
+    ])
+    const batcher = new AnalyticsBatcher(
+      { send: vi.fn(async () => ({ acceptedEventIds: [] })) },
+      {
+        store,
+        batchSize: 10,
+        pageTarget: { addEventListener: vi.fn(), removeEventListener: vi.fn() },
+      },
+    )
+    const collector = new AnalyticsCollector(batcher, {
+      clock: () => new Date('2026-07-25T12:00:00.000Z'),
+      createId: idFactory(),
+      identityStore: new InMemoryInstallationIdentityStore(),
+    })
+
+    expect(collector.emit({ name: 'mission.started' })).toBe(true)
+    expect(batcher.pendingEvents().map((item) => item.sequence)).toEqual([3, 4])
   })
 })

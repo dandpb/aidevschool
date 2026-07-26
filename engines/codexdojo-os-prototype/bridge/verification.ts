@@ -1,4 +1,4 @@
-import { receiptIsBound } from '../src/verification/receiptContract'
+import { receiptMatchesRecordIdentity } from '../src/verification/receiptContract'
 import type { ActionExecutor, ProcessSpec } from './actions'
 
 const LITERACY_VERIFIER: ProcessSpec = {
@@ -41,7 +41,7 @@ export async function executeFixedVerification(input: {
   } catch {
     return { ok: false, code: 'invalid-verifier-response' }
   }
-  if (!receiptIsBound(receipt, input.record)) {
+  if (!receiptMatchesRecordIdentity(receipt, input.record)) {
     return { ok: false, code: 'invalid-verifier-response' }
   }
   return { ok: true, receipt }

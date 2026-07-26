@@ -1,13 +1,9 @@
 import * as THREE from "three"
-import { PALETTE } from "../../../shared/palette"
-import {
-  disposeObject3D,
-  type MissionProjection,
-  type ProjectionContextHooks,
-} from "../../../shared/projection"
+import type { MissionProjection, ProjectionContextHooks } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { hashTruncCode } from "../sim/shortener"
+import { colorForUrl, DESTINATION_X, ORIGIN_X, WormholePortalVisual } from "./wormholePortalVisual"
 
 /**
  * Three.js projection of the WORMHOLE sim. Renders only — all rules live in src/sim and src/game.
@@ -17,53 +13,10 @@ import { hashTruncCode } from "../sim/shortener"
  * origin side and emerge at the destination. A collision = the gate + a planet flash red.
  */
 
-const PLANET_RADIUS = 1.6
-const GATE_RADIUS = 2.0
-const ORIGIN_POS = new THREE.Vector3(-7, 0, 0)
-const DEST_POS = new THREE.Vector3(7, 0, 0)
-
-/** Stable colour for a URL by hashing it (purely visual). */
-function colorForUrl(url: string): string {
-  let h = 0x811c9dc5
-  for (let i = 0; i < url.length; i++) {
-    h ^= url.charCodeAt(i)
-    h = Math.imul(h, 0x01000193)
-  }
-  return PALETTE[h % PALETTE.length] as string
-}
-
-function makeTextSprite(text: string, color = "#80cbc4"): THREE.Sprite {
-  const canvas = document.createElement("canvas")
-  canvas.width = 256
-  canvas.height = 128
-  const ctx = canvas.getContext("2d")
-  if (!ctx) throw new Error("2d canvas context unavailable")
-  ctx.fillStyle = "rgba(8,10,18,0.78)"
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-  ctx.strokeStyle = color
-  ctx.lineWidth = 4
-  ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4)
-  ctx.font = "bold 64px ui-monospace, Menlo, monospace"
-  ctx.fillStyle = color
-  ctx.textAlign = "center"
-  ctx.textBaseline = "middle"
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2)
-  const tex = new THREE.CanvasTexture(canvas)
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true })
-  const sprite = new THREE.Sprite(mat)
-  sprite.scale.set(4, 2, 1)
-  return sprite
-}
-
 export class WormholeScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
   private readonly canvas: HTMLCanvasElement
-  private group = new THREE.Group()
-  private originMesh!: THREE.Mesh
-  private destMesh!: THREE.Mesh
-  private gate!: THREE.Mesh
-  private gateLabel: THREE.Sprite | null = null
-  private gateLight!: THREE.PointLight
+  private readonly portalVisual: WormholePortalVisual
   private travellers: THREE.InstancedMesh | null = null
   private flashTimer = 0
   /** when true the gate + destination flash red (collision misrouting) */
@@ -92,9 +45,8 @@ export class WormholeScene implements MissionProjection<GameState> {
       ...hooks,
     })
 
-    this.viewport.scene.add(this.group)
-    this.buildPlanets()
-    this.buildGate()
+    this.portalVisual = new WormholePortalVisual(this.destColor)
+    this.viewport.scene.add(this.portalVisual.group)
 
     canvas.addEventListener("pointerdown", this.onPointerDown)
   }
@@ -109,77 +61,16 @@ export class WormholeScene implements MissionProjection<GameState> {
     if (this.disposed) return
     this.disposed = true
     this.canvas.removeEventListener("pointerdown", this.onPointerDown)
-    disposeObject3D(this.group)
+    this.portalVisual.dispose()
     this.viewport.dispose()
   }
 
   private readonly onPointerDown = (event: PointerEvent): void => this.pick(event)
 
-  private buildPlanets(): void {
-    this.originMesh = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(PLANET_RADIUS, 1),
-      new THREE.MeshStandardMaterial({ color: "#4fc3f7", flatShading: true, emissive: "#1a3a4a" }),
-    )
-    this.originMesh.position.copy(ORIGIN_POS)
-    this.originMesh.userData = { kind: "origin" }
-    this.group.add(this.originMesh)
-
-    this.destMesh = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(PLANET_RADIUS, 1),
-      new THREE.MeshStandardMaterial({
-        color: this.destColor,
-        flatShading: true,
-        emissive: "#2a3a1a",
-      }),
-    )
-    this.destMesh.position.copy(DEST_POS)
-    this.destMesh.userData = { kind: "destination" }
-    this.group.add(this.destMesh)
-  }
-
-  private buildGate(): void {
-    this.gate = new THREE.Mesh(
-      new THREE.TorusGeometry(GATE_RADIUS, 0.12, 12, 48),
-      new THREE.MeshStandardMaterial({
-        color: "#80cbc4",
-        emissive: "#80cbc4",
-        emissiveIntensity: 0.8,
-      }),
-    )
-    this.gate.rotation.y = Math.PI / 2
-    this.gate.position.set(0, 0, 0)
-    this.gate.userData = { kind: "gate" }
-    this.group.add(this.gate)
-
-    this.gateLight = new THREE.PointLight("#80cbc4", 2, 18)
-    this.gateLight.position.set(0, 0, 0)
-    this.group.add(this.gateLight)
-  }
-
-  private setGateLabel(code: string): void {
-    if (this.gateLabel) {
-      this.group.remove(this.gateLabel)
-      ;(this.gateLabel.material.map as THREE.Texture | null)?.dispose()
-      this.gateLabel.material.dispose()
-      this.gateLabel = null
-    }
-    if (code && code !== "----") {
-      const sprite = makeTextSprite(code)
-      sprite.position.set(0, GATE_RADIUS + 1.0, 0)
-      this.group.add(sprite)
-      this.gateLabel = sprite
-    }
-    this.code = code
-  }
-
   private pick(e: PointerEvent): void {
     this.viewport.setPointerFromEvent(e)
     this.viewport.raycaster.setFromCamera(this.viewport.pointer, this.viewport.camera)
-    const hits = this.viewport.raycaster.intersectObjects([
-      this.gate,
-      this.originMesh,
-      this.destMesh,
-    ])
+    const hits = this.viewport.raycaster.intersectObjects([...this.portalVisual.pickTargets])
     if (hits.length > 0 && this.onGateClick) this.onGateClick()
   }
 
@@ -222,9 +113,10 @@ export class WormholeScene implements MissionProjection<GameState> {
     }
 
     this.colliding = colliding || state.phase === "failed"
-    this.setGateLabel(code)
+    this.portalVisual.setGateLabel(code)
+    this.code = code
     this.destColor = destColor
-    ;(this.destMesh.material as THREE.MeshStandardMaterial).color.set(destColor)
+    this.portalVisual.setDestinationColor(destColor)
     if (this.colliding) this.flashTimer = 1
 
     this.syncTravellers(state)
@@ -232,7 +124,7 @@ export class WormholeScene implements MissionProjection<GameState> {
 
   private syncTravellers(state: GameState): void {
     if (this.travellers) {
-      this.group.remove(this.travellers)
+      this.portalVisual.group.remove(this.travellers)
       this.travellers.dispose()
       this.travellers = null
     }
@@ -251,7 +143,7 @@ export class WormholeScene implements MissionProjection<GameState> {
       mesh.setMatrixAt(i, m)
     }
     mesh.instanceMatrix.needsUpdate = true
-    this.group.add(mesh)
+    this.portalVisual.group.add(mesh)
     this.travellers = mesh
   }
 
@@ -264,7 +156,7 @@ export class WormholeScene implements MissionProjection<GameState> {
       const phase = (i / count) * Math.PI * 2 + t * (1 + (i % 3) * 0.2)
       // Streaks flow from origin → gate → destination (a wormhole path).
       const span = Math.sin(phase) * 0.5 + 0.5 // 0..1
-      const x = ORIGIN_POS.x + (DEST_POS.x - ORIGIN_POS.x) * span
+      const x = ORIGIN_X + (DESTINATION_X - ORIGIN_X) * span
       const y = Math.sin(span * Math.PI) * 2.2 + Math.sin(phase * 3) * 0.3
       const z = Math.cos(phase * 2) * 1.5
       m.makeTranslation(x, y, z)
@@ -275,21 +167,7 @@ export class WormholeScene implements MissionProjection<GameState> {
 
   private animateFlash(): void {
     if (this.flashTimer > 0) this.flashTimer = Math.max(0, this.flashTimer - 0.02)
-    const mat = this.gate.material as THREE.MeshStandardMaterial
-    const light = this.gateLight
-    if (this.colliding || this.flashTimer > 0) {
-      mat.color.set("#ef5350")
-      mat.emissive.set("#ef5350")
-      mat.emissiveIntensity = 1.2
-      light.color.set("#ef5350")
-      ;(this.destMesh.material as THREE.MeshStandardMaterial).emissive.set("#5a1010")
-    } else {
-      mat.color.set("#80cbc4")
-      mat.emissive.set("#80cbc4")
-      mat.emissiveIntensity = 0.8
-      light.color.set("#80cbc4")
-      ;(this.destMesh.material as THREE.MeshStandardMaterial).emissive.set("#2a3a1a")
-    }
+    this.portalVisual.animateFeedback(this.colliding, this.flashTimer)
   }
 }
 

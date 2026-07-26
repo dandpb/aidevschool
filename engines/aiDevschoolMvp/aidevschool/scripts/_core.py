@@ -7,7 +7,7 @@ import os
 import sys
 import time
 import uuid
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator, NoReturn
@@ -33,7 +33,7 @@ def read_args() -> dict[str, Any]:
     raw = sys.stdin.read()
     try:
         obj = json.loads(raw)
-    except Exception:
+    except json.JSONDecodeError:
         die("Could not read JSON arguments from stdin", 1)
         raise
     if not isinstance(obj, dict):
@@ -218,10 +218,8 @@ def state_lock(state_dir: Path) -> Iterator[None]:
     try:
         yield
     finally:
-        try:
+        with suppress(FileNotFoundError):
             lock.unlink()
-        except FileNotFoundError:
-            pass
 
 
 

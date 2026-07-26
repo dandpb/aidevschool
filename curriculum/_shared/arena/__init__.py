@@ -10,8 +10,11 @@ are filled by later pipeline stages (arena-narrator, the prediction gate).
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
+from types import MappingProxyType
+from typing import TypeAlias
 
 from curriculum._shared.benchmarks import runner as R
 from curriculum._shared.benchmarks.analyzer import BenchmarkReport
@@ -31,6 +34,7 @@ SCOREBOARD_METRICS: dict[str, tuple[str, bool]] = {
 # no winner depends on — is over-strict and inherently high-variance. A winner is
 # trustworthy iff the metric it is based on is stable (CV<20%, N>=3).
 GATE_METRICS: tuple[str, ...] = ("p99", "n_requests", "mem_mb")
+WinnerMap: TypeAlias = Mapping[str, str]
 
 
 def metric_trust(report: BenchmarkReport, sample_key: str) -> bool:
@@ -58,14 +62,17 @@ def decision_gate(report: BenchmarkReport) -> bool:
     return all(metric_trust(report, key) for key in GATE_METRICS)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ArenaResult:
     """Outcome of an arena run."""
 
     report: BenchmarkReport
     gate_passed: bool
     report_path: Path | None  # path to the locked arena_report.md, or None if gate failed
-    winners: dict[str, str]  # metric -> winning language (empty if gate failed)
+    winners: WinnerMap  # metric -> winning language (empty if gate failed)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "winners", MappingProxyType(dict(self.winners)))
 
 
 def _median_by_lang(report: BenchmarkReport, sample_key: str) -> dict[str, float]:
@@ -83,7 +90,7 @@ def _median_by_lang(report: BenchmarkReport, sample_key: str) -> dict[str, float
     }
 
 
-def scoreboard(report: BenchmarkReport) -> tuple[str, dict[str, str], dict[str, bool]]:
+def scoreboard(report: BenchmarkReport) -> tuple[str, WinnerMap, Mapping[str, bool]]:
     """Render the per-metric scoreboard and return (markdown, winners, trust).
 
     A winner is declared ONLY for metrics whose trust gate passes (CV<20%, N>=3);
@@ -108,7 +115,9 @@ def scoreboard(report: BenchmarkReport) -> tuple[str, dict[str, str], dict[str, 
         )
         arrow = "↓" if lower_better else "↑"
         if trustworthy:
-            winner = (min if lower_better else max)(by_lang, key=by_lang.get)
+            winner = min(by_lang, key=by_lang.__getitem__) if lower_better else max(
+                by_lang, key=by_lang.__getitem__
+            )
             winners[metric] = winner
             winner_cell = f"**{winner}**"
         else:
@@ -135,7 +144,7 @@ def assemble_report(
     run_id: str,
     *,
     gate: str = "locked",
-) -> tuple[Path, dict[str, str]]:
+) -> tuple[Path, WinnerMap]:
     """Write a locked arena_report.md from the template; return (path, winners)."""
     board, winners, _trust = scoreboard(report)
     links = (
@@ -158,7 +167,7 @@ def assemble_report(
 
     out = Path(project_dir) / "docs" / "arena_report.md"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(text, encoding="utf-8")
+    _ = out.write_text(text, encoding="utf-8")
     return out, winners
 
 
@@ -184,7 +193,7 @@ def run_arena(
         for lang in R.LANGS:
             for scenario in cfg.scenarios:
                 for run_num in range(1, n + 1):
-                    R.run_benchmark(project_dir, lang, scenario, run_num, cfg)
+                    _ = R.run_benchmark(project_dir, lang, scenario, run_num, cfg)
 
     report = R.aggregate(project_dir, cfg, project_id, n)
     if not decision_gate(report):

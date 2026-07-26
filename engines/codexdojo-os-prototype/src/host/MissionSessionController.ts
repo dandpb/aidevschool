@@ -1,10 +1,5 @@
-import type { MissionDefinition, MissionStage } from '../domain'
-import {
-  createInitialRendererState,
-  type RendererPreference,
-  rendererReducer,
-  type RendererState,
-} from '../rendering/domain'
+import type { MissionDefinition } from '../domain'
+import type { RendererPreference } from '../rendering/domain'
 import type { EvidenceSubmission } from '../verification/ports'
 import {
   createEnvelope,
@@ -13,26 +8,22 @@ import {
   type MissionEventMessage,
   type ProtocolAckMessage,
 } from './protocol'
+import {
+  closeMissionSession,
+  createMissionTransitionState,
+  failMissionSession,
+  type MissionSessionSnapshot,
+  type MissionTransition,
+  type MissionTransitionEffect,
+  type MissionTransitionState,
+  reduceMissionMessage,
+  requestRendererRetry,
+} from './missionSessionTransitions'
 import { decodeEngineMessage } from './validation'
 
 const HANDSHAKE_TIMEOUT_MS = 10_000
 
-export type MissionSessionPhase =
-  | 'handshaking'
-  | 'launching'
-  | 'running'
-  | 'completed'
-  | 'failed'
-  | 'closed'
-
-export type MissionSessionSnapshot = {
-  readonly phase: MissionSessionPhase
-  readonly stage: MissionStage
-  readonly progress: number
-  readonly error?: string
-  readonly nextMissionId?: string
-  readonly renderer: RendererState
-}
+export type { MissionSessionPhase, MissionSessionSnapshot } from './missionSessionTransitions'
 
 export type MissionSessionControllerInput = {
   readonly frame: HTMLIFrameElement
@@ -61,29 +52,16 @@ function uniqueId(prefix: string): string {
 export class MissionSessionController {
   readonly hostSessionId = uniqueId('host')
   readonly missionRunId = uniqueId('run')
-  private revision = -1
-  private eventSequence = 0
-  private rendererRevision = 0
-  private engineVersion: string | null = null
-  private contentVersion: string | null = null
-  private acceptsMissionEvents = false
-  private launchMessageId: string | null = null
   private timeout: number | undefined
   private helloInterval: number | undefined
   private started = false
   private closed = false
-  private snapshot: MissionSessionSnapshot
-  /** Immutable for the controller's life; every message would otherwise re-parse it. */
+  private state: MissionTransitionState
   private readonly frameOrigin: string
 
   constructor(private readonly input: MissionSessionControllerInput) {
     this.frameOrigin = new URL(input.frameUrl).origin
-    this.snapshot = {
-      phase: 'handshaking',
-      stage: 'understand',
-      progress: 0,
-      renderer: createInitialRendererState(input.rendererPreference ?? 'auto'),
-    }
+    this.state = createMissionTransitionState(input.rendererPreference ?? 'auto')
   }
 
   start(): void {
@@ -94,10 +72,10 @@ export class MissionSessionController {
       this.fail('A missão demorou para responder.')
     }, HANDSHAKE_TIMEOUT_MS)
     this.helloInterval = window.setInterval(() => {
-      if (this.snapshot.phase === 'handshaking') this.sendHello()
+      if (this.state.snapshot.phase === 'handshaking') this.sendHello()
     }, 500)
     this.sendHello()
-    this.input.onState(this.snapshot)
+    this.input.onState(this.state.snapshot)
   }
 
   private sendHello(): void {
@@ -118,18 +96,14 @@ export class MissionSessionController {
     this.closed = true
     window.removeEventListener('message', this.onMessage)
     this.stopHandshake()
-    this.update({ ...this.snapshot, phase: 'closed' })
+    this.state = closeMissionSession(this.state)
+    this.input.onState(this.state.snapshot)
   }
 
   retryRenderer(rendererPreference: RendererPreference = 'webgl'): void {
-    if (this.closed || this.snapshot.phase === 'handshaking') return
-    this.update({
-      ...this.snapshot,
-      renderer: rendererReducer(this.snapshot.renderer, {
-        type: 'RETRY_REQUESTED',
-        requested: rendererPreference,
-      }),
-    })
+    if (this.closed || this.state.snapshot.phase === 'handshaking') return
+    this.state = requestRendererRetry(this.state, rendererPreference)
+    this.input.onState(this.state.snapshot)
     this.send(
       createEnvelope({
         type: 'renderer.retry',
@@ -148,13 +122,7 @@ export class MissionSessionController {
   }
 
   private fail(error: string): void {
-    this.stopHandshake()
-    this.update({ ...this.snapshot, phase: 'failed', error })
-  }
-
-  private update(snapshot: MissionSessionSnapshot): void {
-    this.snapshot = snapshot
-    this.input.onState(snapshot)
+    this.applyTransition(failMissionSession(this.state, error))
   }
 
   private send(message: HostToEngineMessage): void {
@@ -198,30 +166,30 @@ export class MissionSessionController {
   }
 
   private handle(message: EngineToHostMessage): void {
-    switch (message.type) {
-      case 'engine.ready': {
-        if (this.snapshot.phase !== 'handshaking') return
-        if (
-          !message.payload.capabilities.includes('mission-state') ||
-          !message.payload.capabilities.includes('evidence')
-        ) {
-          this.fail('O motor não oferece o contrato da missão.')
-          return
-        }
-        if (message.payload.contentVersion !== this.input.mission.runtime.contentVersion) {
-          this.fail('A versão de conteúdo do motor não corresponde à missão.')
-          return
-        }
-        this.engineVersion = message.payload.engineVersion
-        this.contentVersion = message.payload.contentVersion
-        this.acceptsMissionEvents = message.payload.capabilities.includes('mission-events')
-        this.stopHandshake()
-        this.launchMessageId = uniqueId('message')
-        this.update({ ...this.snapshot, phase: 'launching' })
+    this.applyTransition(
+      reduceMissionMessage(this.state, message, {
+        mission: this.input.mission,
+        nextMessageId: () => uniqueId('message'),
+      }),
+    )
+  }
+
+  private applyTransition(transition: MissionTransition): void {
+    this.state = transition.state
+    if (transition.stopHandshake) this.stopHandshake()
+    if (transition.notifyState) this.input.onState(this.state.snapshot)
+    this.applyEffect(transition.effect)
+  }
+
+  private applyEffect(effect: MissionTransitionEffect): void {
+    switch (effect.kind) {
+      case 'none':
+        return
+      case 'launch':
         this.send(
           createEnvelope({
             type: 'mission.launch',
-            messageId: this.launchMessageId,
+            messageId: effect.messageId,
             hostSessionId: this.hostSessionId,
             missionRunId: this.missionRunId,
             engineId: this.input.mission.runtime.engineId,
@@ -236,86 +204,27 @@ export class MissionSessionController {
           }),
         )
         return
-      }
-      case 'protocol.ack':
-        if (message.payload.acknowledgedMessageId !== this.launchMessageId) return
-        if (!message.payload.accepted) {
-          this.fail('O motor recusou a missão.')
-        }
+      case 'acknowledge':
+        this.acknowledge(effect.messageId, effect.accepted, effect.code)
         return
-      case 'mission.state':
-        if (message.payload.revision <= this.revision) return
-        this.revision = message.payload.revision
-        this.update({
-          ...this.snapshot,
-          phase: message.payload.status,
-          stage: message.payload.stage,
-          progress: message.payload.progress,
-          ...(message.payload.nextMissionId === undefined
-            ? {}
-            : { nextMissionId: message.payload.nextMissionId }),
-        })
-        return
-      case 'mission.event':
-        if (
-          !this.acceptsMissionEvents ||
-          this.engineVersion === null ||
-          this.contentVersion === null ||
-          message.payload.sequence <= this.eventSequence
-        ) {
-          return
-        }
-        this.eventSequence = message.payload.sequence
+      case 'mission-event':
         try {
-          this.input.onMissionEvent?.({
-            event: message.payload,
-            missionRunId: message.missionRunId,
-            engineVersion: this.engineVersion,
-            contentVersion: this.contentVersion,
-          })
+          this.input.onMissionEvent?.(effect.delivery)
         } catch {
-          // Best-effort analytics cannot alter mission state.
-        }
-        return
-      case 'renderer.state':
-        if (message.payload.revision <= this.rendererRevision) return
-        this.rendererRevision = message.payload.revision
-        this.update({
-          ...this.snapshot,
-          renderer: {
-            requested: message.payload.requested,
-            active: message.payload.active,
-            status: message.payload.status,
-            ...(message.payload.reason === undefined ? {} : { reason: message.payload.reason }),
-            retryCount: this.snapshot.renderer.retryCount,
-          },
-        })
-        return
-      case 'evidence.submitted':
-        if (
-          message.payload.subject.missionId !== this.input.mission.id ||
-          message.payload.subject.unitId !== this.input.mission.unitId
-        ) {
-          this.acknowledge(message.messageId, false, 'subject-mismatch')
           return
         }
-        void this.input
-          .onEvidence({
-            schemaId: message.payload.schemaId,
-            schemaVersion: message.payload.schemaVersion,
-            engineId: message.engineId,
-            missionRunId: message.missionRunId,
-            subject: message.payload.subject,
-            record: message.payload.record,
-          })
-          .then(
-            (result) => {
-              if (!this.closed) this.acknowledge(message.messageId, result.accepted, result.code)
-            },
-            () => {
-              if (!this.closed) this.acknowledge(message.messageId, false, 'evidence-intake-failed')
-            },
-          )
+        return
+      case 'evidence':
+        void this.input.onEvidence(effect.submission).then(
+          (result) => {
+            if (!this.closed) this.acknowledge(effect.messageId, result.accepted, result.code)
+          },
+          () => {
+            if (!this.closed) {
+              this.acknowledge(effect.messageId, false, 'evidence-intake-failed')
+            }
+          },
+        )
         return
     }
   }

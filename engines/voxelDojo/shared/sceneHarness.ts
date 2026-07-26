@@ -91,8 +91,9 @@ export function createSceneHarness<
   opts.mountHud(hudRoot, game)
   hudRoot.setAttribute("aria-label", "Controles e explicação da missão")
 
-  const w = window as unknown as Record<string, unknown>
-  w[opts.windowKey] = { game }
+  if (!Reflect.set(window, opts.windowKey, { game })) {
+    throw new TypeError(`unable to expose window hook ${opts.windowKey}`)
+  }
 
   if (opts.renderer !== undefined) {
     createRecoverableRendererHarness(canvas, hudRoot, game, opts)

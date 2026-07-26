@@ -158,7 +158,7 @@ cd engines/codexDojo && pnpm run lint && pnpm run test && pnpm run build
 
 # AI Literacy content + local microlearning app
 python3 curriculum/ai-literacy/tools/validate.py
-python3 -m unittest discover -s curriculum/ai-literacy/tools/tests
+python3 -m unittest discover -s curriculum/ai-literacy/tools/tests -t .
 cd engines/literacyDojo && \
   npm run gen:content && npm run lint && npm run test && npm run build && \
   npm run test:e2e
@@ -179,10 +179,10 @@ cd curriculum/01_rate_limiter/rust-impl && cargo fmt --check && cargo clippy --a
 python3 -m learner.substrate                                  # regenerate derived views
 python3 -m unittest discover -s learner/substrate/tests -t .  # validate invariants
 
-# Engine contracts
+# Engine topology (included by default in `python3 -m pytest`)
 python3 -m unittest engines.minimaxDojo.tests.test_learning_unit_e2e_contract
 python3 engines/miniMaxEvolutionEngine/.claude/commands/devschool/tests/test_phaserunner.py
-python3 -m unittest engines.test_engine_contracts
+python3 -m pytest learner/substrate/tests/test_engine_topology.py
 cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run build && pnpm run smoke
 
 # OpenClaw checklist runner (tracer bullet)

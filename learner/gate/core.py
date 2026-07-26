@@ -13,7 +13,7 @@ import os
 import sys
 import time
 import uuid
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator, NoReturn
@@ -23,14 +23,10 @@ from typing import Any, Callable, Iterator, NoReturn
 
 
 class SkillError(Exception):
-    """Guard rejection — exit 1, one plain-language stderr sentence."""
-
     code = 1
 
 
 class InconsistencyError(Exception):
-    """Schema / chain / cycle violation — exit 2."""
-
     code = 2
 
 
@@ -43,7 +39,7 @@ def read_args() -> dict[str, Any]:
     raw = sys.stdin.read()
     try:
         obj = json.loads(raw)
-    except Exception:
+    except json.JSONDecodeError:
         die("Could not read JSON arguments from stdin", 1)
         raise  # unreachable: die() exits; satisfies type checkers
     if not isinstance(obj, dict):
@@ -170,7 +166,6 @@ def round_half_up(x: float) -> int:
 
 
 def gap_days(target_days: int) -> int:
-    """§5.3 gap rule: max(1, round_half_up(0.15 * T))."""
     return max(1, round_half_up(0.15 * target_days))
 
 
@@ -207,7 +202,6 @@ def read_json(path: Path) -> Any:
 
 
 def emit_json(obj: Any) -> None:
-    """Write one JSON line to stdout (§4.2 script output contract)."""
     sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
 
@@ -240,10 +234,8 @@ def state_lock(state_dir: Path) -> Iterator[None]:
     try:
         yield
     finally:
-        try:
+        with suppress(FileNotFoundError):
             lock.unlink()
-        except FileNotFoundError:
-            pass
 
 
 # --- §7.1 hash-chained append-only ledger ----------------------------------

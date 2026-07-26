@@ -1,11 +1,14 @@
 import type { MissionCatalogSnapshot, MissionDefinition, MissionKey, TrackId } from '../domain'
-import { DAILY_GOAL_XP, emptyMissionEngagement, missionKey, recordMissionEngagementCompletion, rewardMissionCompletion } from './engagement'
+import { emptyMissionEngagement, missionKey, recordMissionEngagementCompletion } from './engagement'
+import { DAILY_GOAL_XP, rewardMissionCompletion } from './engagementRewards'
 import type { LocalAchievement, LocalEngagementStreak, LocalMissionStatus, MissionCompletionKind, MissionEngagement, MissionPracticeKind } from './engagement'
 
 export const OS_PROGRESS_SCHEMA_VERSION = 3
 export {
-  DAILY_GOAL_XP, MISSION_COMPLETION_XP, REVIEW_PRACTICE_XP, dailyGoalMet, dailyXp,
-  emptyMissionEngagement, missionKey, recordHintRequest, recordMissionAttempt, toLocalDateKey,
+  DAILY_GOAL_XP, MISSION_COMPLETION_XP, REVIEW_PRACTICE_XP, dailyGoalMet, dailyXp, toLocalDateKey,
+} from './engagementRewards'
+export {
+  emptyMissionEngagement, missionKey, recordHintRequest, recordMissionAttempt,
 } from './engagement'
 export type {
   AchievementId, LocalAchievement, LocalEngagementStreak, LocalMissionStatus,

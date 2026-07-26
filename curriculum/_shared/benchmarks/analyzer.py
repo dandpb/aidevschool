@@ -17,12 +17,64 @@ from __future__ import annotations
 
 import json
 import statistics
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Sequence
+from types import MappingProxyType
+from typing import Final, TypeAlias, TypeGuard, TypedDict
+
+MetricMap: TypeAlias = Mapping[str, "MetricSummary"]
+LanguageResults: TypeAlias = Mapping[str, "ScenarioResult"]
+ScenarioResults: TypeAlias = Mapping[str, LanguageResults]
+RawMetricValue: TypeAlias = int | float | str | bool | None
+RawSample: TypeAlias = Mapping[str, RawMetricValue]
+RawSampleEntry: TypeAlias = RawSample | RawMetricValue
+RawLanguageSamples: TypeAlias = Sequence[RawSampleEntry] | RawMetricValue
+RawBenchmarkData: TypeAlias = Mapping[str, Mapping[str, RawLanguageSamples]]
 
 
-@dataclass(frozen=True)
+class MetricDocument(TypedDict):
+    count: int
+    mean: float
+    median: float
+    min: float
+    max: float
+    stddev: float
+    cv_percent: float
+    passes_cv: bool
+    passes_n: bool
+
+
+class ScenarioDocument(TypedDict):
+    passes: bool
+    metrics: dict[str, MetricDocument]
+
+
+class BenchmarkReportDocument(TypedDict):
+    project_id: str
+    all_pass: bool
+    scenarios: dict[str, dict[str, ScenarioDocument]]
+
+
+@dataclass(frozen=True, slots=True)
+class BenchmarkInputError(ValueError):
+    """A benchmark metric cannot be summarized without samples."""
+
+    metric: str
+
+    def __str__(self) -> str:
+        return f"no samples for metric '{self.metric}'"
+
+
+def _freeze_metrics(metrics: Mapping[str, "MetricSummary"]) -> MetricMap:
+    return MappingProxyType(dict(metrics))
+
+
+def _freeze_scenarios(scenarios: Mapping[str, Mapping[str, "ScenarioResult"]]) -> ScenarioResults:
+    return MappingProxyType({name: MappingProxyType(dict(results)) for name, results in scenarios.items()})
+
+
+@dataclass(frozen=True, slots=True)
 class MetricSummary:
     """Statistical summary of a single metric across N samples."""
 
@@ -47,13 +99,16 @@ class MetricSummary:
         return self.count >= 3
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class ScenarioResult:
     """Results for one scenario (e.g., baseline) across one language."""
 
     scenario: str
     language: str
-    metrics: dict[str, MetricSummary] = field(default_factory=dict)
+    metrics: MetricMap = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "metrics", _freeze_metrics(self.metrics))
 
     @property
     def passes_all_gates(self) -> bool:
@@ -65,17 +120,20 @@ class ScenarioResult:
         )
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class BenchmarkReport:
     """Full benchmark report for a project."""
 
     project_id: str
-    scenarios: dict[str, dict[str, ScenarioResult]] = field(default_factory=dict)
+    scenarios: ScenarioResults = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "scenarios", _freeze_scenarios(self.scenarios))
 
     def add_result(self, result: ScenarioResult) -> None:
-        if result.scenario not in self.scenarios:
-            self.scenarios[result.scenario] = {}
-        self.scenarios[result.scenario][result.language] = result
+        scenarios = {name: dict(results) for name, results in self.scenarios.items()}
+        scenarios.setdefault(result.scenario, {})[result.language] = result
+        object.__setattr__(self, "scenarios", _freeze_scenarios(scenarios))
 
     @property
     def all_pass(self) -> bool:
@@ -85,7 +143,7 @@ class BenchmarkReport:
             for sr in lang_map.values()
         )
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> BenchmarkReportDocument:
         return {
             "project_id": self.project_id,
             "all_pass": self.all_pass,
@@ -118,16 +176,16 @@ class BenchmarkReport:
 class BenchmarkAnalyzer:
     """Analyzes benchmark sample data and validates reproducibility."""
 
-    CV_THRESHOLD = 20.0
-    MIN_SAMPLES = 3
-    REQUIRED_SCENARIOS = ("baseline", "stress", "spike", "endurance")
-    REQUIRED_LANGUAGES = ("go", "rust", "node")
+    CV_THRESHOLD: Final = 20.0
+    MIN_SAMPLES: Final = 3
+    REQUIRED_SCENARIOS: Final = ("baseline", "stress", "spike", "endurance")
+    REQUIRED_LANGUAGES: Final = ("go", "rust", "node")
 
     def summarize(self, samples: Sequence[float], metric: str) -> MetricSummary:
         """Compute statistical summary for a list of sample values."""
         n = len(samples)
         if n == 0:
-            raise ValueError(f"no samples for metric '{metric}'")
+            raise BenchmarkInputError(metric=metric)
 
         s = tuple(float(x) for x in samples)
         mean = statistics.mean(s)
@@ -152,7 +210,7 @@ class BenchmarkAnalyzer:
     def analyze_raw_samples(
         self,
         project_id: str,
-        raw_data: dict,
+        raw_data: RawBenchmarkData,
     ) -> BenchmarkReport:
         """Analyze raw benchmark JSON data into a report.
 
@@ -167,34 +225,26 @@ class BenchmarkAnalyzer:
             ...
         }
         """
-        report = BenchmarkReport(project_id=project_id)
+        # Accumulate first and freeze once: add_result rebuilds the whole map per
+        # call, which is quadratic over a full scenario x language sweep.
+        scenarios: dict[str, dict[str, ScenarioResult]] = {}
 
         for scenario_name, languages in raw_data.items():
-            for lang_name, samples_list in languages.items():
-                if not isinstance(samples_list, list):
+            for lang_name, samples in languages.items():
+                if not isinstance(samples, list):
                     continue
+                mapping_samples = [sample for sample in samples if _is_raw_sample(sample)]
+                metric_keys = {key for sample in mapping_samples for key in sample}
+                metrics = {
+                    key: self.summarize(values, key)
+                    for key in metric_keys
+                    if (values := _numeric_values(mapping_samples, key))
+                }
+                scenarios.setdefault(scenario_name, {})[lang_name] = ScenarioResult(
+                    scenario=scenario_name, language=lang_name, metrics=metrics
+                )
 
-                sr = ScenarioResult(scenario=scenario_name, language=lang_name)
-
-                # Collect all metric keys from samples
-                metric_keys: set[str] = set()
-                for sample in samples_list:
-                    if isinstance(sample, dict):
-                        metric_keys.update(sample.keys())
-
-                # Summarize each metric
-                for key in metric_keys:
-                    values = [
-                        s[key]
-                        for s in samples_list
-                        if isinstance(s, dict) and key in s and isinstance(s[key], (int, float))
-                    ]
-                    if values:
-                        sr.metrics[key] = self.summarize(values, key)
-
-                report.add_result(sr)
-
-        return report
+        return BenchmarkReport(project_id=project_id, scenarios=scenarios)
 
     def validate_report(self, report: BenchmarkReport) -> list[str]:
         """Return list of validation errors (empty = valid)."""
@@ -227,7 +277,19 @@ class BenchmarkAnalyzer:
     def export_json(self, report: BenchmarkReport, output_path: Path) -> None:
         """Export report as JSON file."""
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
+        _ = output_path.write_text(
             json.dumps(report.to_dict(), indent=2, sort_keys=True),
             encoding="utf-8",
         )
+
+
+def _is_raw_sample(value: RawSampleEntry) -> TypeGuard[RawSample]:
+    return isinstance(value, Mapping)
+
+
+def _numeric_values(samples: Sequence[RawSample], metric: str) -> list[float]:
+    return [
+        float(value)
+        for sample in samples
+        if isinstance(value := sample.get(metric), (int, float))
+    ]

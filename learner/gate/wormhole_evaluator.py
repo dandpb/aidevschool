@@ -20,7 +20,6 @@ LEVELS = {"L1": (11, False), "L2": (22, False), "L3": (33, True), "L4": (44, Tru
 CODE_LEN = 4
 CODE_SPACE = 62**CODE_LEN
 
-
 def _urls(seed: int) -> list[str]:
     random = _mulberry32(seed)
     urls: list[str] = []
@@ -54,7 +53,7 @@ def _colliding_pair() -> tuple[str, str]:
         if previous is not None:
             return f"{base}{previous}", f"{base}{index}"
         seen[code] = index
-    raise RuntimeError("no colliding pair found")
+    raise LookupError("no colliding pair found")
 
 
 @lru_cache(maxsize=4)
@@ -127,7 +126,9 @@ def _evaluate_l2(observations: Any):
     )
     if predictions is None or len(codes) != len(urls):
         return None
-    correct = sum(item["predictedUrl"] == short_map[item["code"]] for item in predictions)
+    correct = sum(
+        item["predictedUrl"] == short_map[item["code"]] for item in predictions
+    )
     accuracy = _round2(correct / len(urls))
     return accuracy >= 0.8, {
         "redirect_predictions": len(urls),
@@ -169,13 +170,16 @@ def _resolve_salted(short_map: dict[str, str], url: str) -> str:
 
 
 def _resolve_increment(short_map: dict[str, str], code: str) -> str:
-    value = sum(ALPHABET.index(character) * 62**index for index, character in enumerate(reversed(code)))
+    value = sum(
+        ALPHABET.index(character) * 62**index
+        for index, character in enumerate(reversed(code))
+    )
     for _ in range(CODE_SPACE):
         candidate = _base62(value).rjust(CODE_LEN, "0")[:CODE_LEN]
         if candidate not in short_map:
             return candidate
         value = (value + 1) % CODE_SPACE
-    raise RuntimeError("code space exhausted")
+    raise OverflowError("code space exhausted")
 
 
 def _evaluate_l4(observations: Any):
@@ -199,7 +203,9 @@ def _evaluate_l4(observations: Any):
         if chosen == "salted"
         else _resolve_increment(short_map, colliding_code)
     )
-    resolved = resolved_code not in short_map or short_map[resolved_code] == collider_url
+    resolved = (
+        resolved_code not in short_map or short_map[resolved_code] == collider_url
+    )
     short_map[resolved_code] = collider_url
     redirect_ok = short_map.get(resolved_code) == collider_url
     return resolved and redirect_ok, {
@@ -227,6 +233,8 @@ def evaluate_wormhole(
         return False
     passed, expected_metrics = evaluated
     if not metrics_match(producer_metrics, expected_metrics):
-        errors.append("producer metrics disagree with independently recomputed observations")
+        errors.append(
+            "producer metrics disagree with independently recomputed observations"
+        )
         return False
     return passed

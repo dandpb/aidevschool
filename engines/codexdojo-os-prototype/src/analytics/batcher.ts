@@ -1,4 +1,5 @@
 import { type AnalyticsEvent, analyticsEventIsValid } from './events'
+import type { AnalyticsEventSink } from './collector'
 
 export type AnalyticsFlushReason =
   | 'size'
@@ -56,7 +57,7 @@ export class LocalStorageAnalyticsQueueStore implements AnalyticsQueueStore {
     try {
       window.localStorage.setItem(this.key, JSON.stringify(events))
     } catch {
-      // Delivery remains best effort when browser storage is unavailable.
+      return
     }
   }
 }
@@ -78,8 +79,9 @@ const browserScheduler: AnalyticsScheduler = {
 /** Telemetry is best effort: a sink that stays down must not grow storage without bound. */
 const MAX_QUEUED_EVENTS = 500
 
-export class AnalyticsBatcher {
+export class AnalyticsBatcher implements AnalyticsEventSink {
   private queue: AnalyticsEvent[]
+  private sequence = 0
   private readonly attempts = new Map<string, number>()
   private timer: unknown
   private inFlight = false
@@ -112,6 +114,7 @@ export class AnalyticsBatcher {
     this.queue = [...new Map(
       restored.filter(analyticsEventIsValid).map((event) => [event.eventId, event]),
     ).values()].sort((left, right) => left.sequence - right.sequence)
+    this.sequence = this.queue.reduce((maximum, event) => Math.max(maximum, event.sequence), 0)
     this.dropOverflow()
     this.pageTarget.addEventListener('pagehide', this.onPageHide)
     if (this.queue.length > 0) this.schedule('interval')
@@ -119,6 +122,7 @@ export class AnalyticsBatcher {
 
   enqueue(event: AnalyticsEvent): void {
     if (this.disposed || this.queue.some((queued) => queued.eventId === event.eventId)) return
+    this.sequence = Math.max(this.sequence, event.sequence)
     this.queue.push(event)
     this.dropOverflow()
     this.persist()
@@ -133,6 +137,11 @@ export class AnalyticsBatcher {
 
   pendingEvents(): readonly AnalyticsEvent[] {
     return [...this.queue]
+  }
+
+  nextSequence(): number {
+    this.sequence += 1
+    return this.sequence
   }
 
   async flush(reason: AnalyticsFlushReason = 'manual'): Promise<void> {

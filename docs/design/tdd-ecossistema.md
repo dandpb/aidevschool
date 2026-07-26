@@ -27,8 +27,10 @@ Continuous Evolution" ([docs/PROMPTS/-01_GOAL.md](../PROMPTS/-01_GOAL.md)).
 inteiramente sobre o filesystem local — sem backend, sem banco de dados, single-player.
 
 **Princípio operacional:** *1 aprendiz, 1 currículo, vários motores.* O substrato compartilhado
-(`curriculum/` e `learner/`) vive apenas na raiz; seis engines independentes o consomem via
-symlinks. A certeza de conclusão **nunca vive no modelo de linguagem**: um conceito só vira
+(`curriculum/` e `learner/`) vive apenas na raiz; os engines independentes do checkout os
+consomem via symlinks (inventário atual reproduzível com `find engines -mindepth 1 -maxdepth 1
+-type d ! -name graphify-out ! -name shared ! -name __pycache__ -print | sort`). A certeza de
+conclusão **nunca vive no modelo de linguagem**: um conceito só vira
 `mastered` após tentativa real do aprendiz e evidência executável validada por um verificador
 separado.
 
@@ -73,8 +75,8 @@ derivadas.
 - Substrato compartilhado: `curriculum/` (18 desafios poliglotas) + `learner/` (estado canônico,
   perfil, pitfalls, journal, attempts, pipeline).
 - Gerador de views derivadas: `learner/substrate` (validação de invariantes + `sync()`).
-- Seis engines: miniMaxEvolutionEngine, minimaxDojo, codexDojo, pixelDojo, voxelDojo e openclaw;
-  o verificador compartilhado vive em `learner/gate/`.
+- Engines independentes: inventário atual deve ser derivado pelo comando de raízes acima; o
+  verificador compartilhado vive em `learner/gate/`.
 - Contratos cross-engine: teaching-game contract, pacote público `@aidevschool/evidence` e
   interface do substrato.
 - Gate de aprendizado empírico (evidência → verificador → `units_log`) e repetição espaçada FSRS.
@@ -151,7 +153,7 @@ graph TB
 | **voxelDojo** | 16 simulações 3D didáticas; sim core headless determinístico + cena Three.js + níveis L1–L4 | Vite + TS + Three.js | evidência pública com `source: voxeldojo`, verificada por `learner.gate` |
 | **openclaw** | Checklist runner file-based e explícito do ciclo de 5 fases; sem daemon, event bus ou autoridade semântica | Python puro (CLI `python3 -m engines.openclaw`) | lê/escreve `pipeline_status.yaml`; `--preview` não muta |
 
-Teste de contrato cross-engine: `engines/test_engine_contracts.py`.
+Teste de topologia cross-engine: `learner/substrate/tests/test_engine_topology.py`.
 
 ### 4.3 Fluxo de dados principal (gate de aprendizado)
 
@@ -258,8 +260,11 @@ lá, não aqui. Os três críticos no fechamento deste TDD:
   canônico; mitigar reusando `openclaw.fsio.atomic_write_text`.
 - **15/16 `reviewSlice.ts` do voxelDojo são stubs copiados à mão** rotulados "AUTO-GENERATED"
   (#4, P24) — scheduling falso nos jogos; estender `sync_voxel_review_slice`.
-- **Views derivadas divergem no AIDI** (#5, P24) — whiteboard 0.50 × dashboard 0.34; definir fonte
-  canônica em `learning_state.yaml`.
+- **Views derivadas divergiram no AIDI (histórico de 2026-07-08)** (#5, P24) — a auditoria
+  registrou whiteboard 0.50 × dashboard 0.34. A projeção atual está resolvida: `learner/substrate`
+  gera snapshots byte-idênticos em `engines/codexDojo/src/data/learner.ts` e
+  `engines/codexdojo-os-prototype/src/data/learner.ts` (verificação `sha256sum` + `cmp`, SHA-256
+  atual `d69759bb9c115d6153f511858ea4b8d5796ad3f5657e0fa064e557f0895aa95f`).
 
 Infra (ação do usuário): `.git` com 222 MB (rodar `git gc`), 4 binários Go rastreados (~35 MB),
 branches obsoletas, sprawl de docs de planejamento na raiz.
@@ -268,8 +273,8 @@ branches obsoletas, sprawl de docs de planejamento na raiz.
 
 | Tipo | Escopo | Comando |
 | ---- | ------ | ------- |
-| Contrato cross-engine | registry de engines, regras do contrato | `python3 -m pytest engines/test_engine_contracts.py` |
-| Substrato | invariantes, sync, FSRS (`scheduling.py`: 70 testes) | `python3 -m unittest discover -s learner/substrate/tests` |
+| Topologia cross-engine | links de estado compartilhado e ausência de cópias | `python3 -m pytest learner/substrate/tests/test_engine_topology.py` |
+| Substrato | invariantes, sync, FSRS (quantidade derivada pelo `unittest discover`) | `python3 -m unittest discover -s learner/substrate/tests -t .` |
 | openclaw | bus, scheduler, adapters | `python3 -m pytest engines/openclaw/tests/` |
 | minimaxDojo | state machine determinística (testes de contrato) | suíte em `core/` |
 | codexDojo | lint/test/build | `pnpm run lint\|test\|build` |
@@ -316,9 +321,9 @@ Sem deploy — "rollback" = recuperação de estado:
 | Cobertura core (gate empírico) | ≥ 80% | `empirical_gate.min_coverage` |
 | Mutation score (gate empírico) | ≥ 60% | `empirical_gate.mutation_min` |
 | Estabilidade de benchmark | CV < 20%, N≥3 | `benchmarks/results/` por projeto |
-| AIDI (dependência de IA) | decrescente | ⚠️ hoje inconsistente entre views (Risco #5) |
+| AIDI (dependência de IA) | decrescente | snapshots atuais regenerados pelo substrato; confirmar paridade com `sha256sum` + `cmp` |
 | Currículo certificado | 18/18 projetos | hoje: 2/18 (Node-only) |
-| Conceitos jogáveis | 18/18 | pixelDojo: 17 games + pixel-quest; voxelDojo: 15/18 |
+| Conceitos jogáveis | 18/18 | pixelDojo: 17 games + pixel-quest; voxelDojo: 16/18 |
 
 ## 11. Glossário
 
@@ -351,7 +356,7 @@ Sem deploy — "rollback" = recuperação de estado:
 
 | # | Questão | Contexto | Status |
 | - | ------- | -------- | ------ |
-| 1 | Onde vive o AIDI canônico? | Views divergem (0.50 vs 0.34); precisa de campo em `learning_state.yaml` | 🔴 Aberta (Risco #5) |
+| 1 | Onde vive o AIDI canônico? | Divergência 0.50 vs 0.34 registrada na auditoria de 2026-07-08; snapshots atuais são byte-idênticos (SHA-256 `d69759bb9c115d6153f511858ea4b8d5796ad3f5657e0fa064e557f0895aa95f`, verificação `sha256sum` + `cmp`) | ✅ Resolvida em 2026-07-26 |
 | 2 | Estado do pipeline estruturado | Fechado: `pipeline_status.yaml` é canônico; Markdown é apenas narrativa | ✅ Fechada |
 | 3 | Workspace compartilhado para os ~35 projetos TS? | 33 `biome.jsonc` idênticos, emissor de evidência ×31 | 🔴 Aberta (Riscos #16–18) |
 | 4 | CI mínima por engine — qual plataforma? | voxelDojo/games/openclaw sem jobs | 🔴 Aberta (Risco #8) |

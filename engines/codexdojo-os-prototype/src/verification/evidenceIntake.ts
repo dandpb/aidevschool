@@ -10,7 +10,7 @@ import {
   type VerificationService,
   type VerificationStore,
 } from './ports'
-import { receiptIsBound } from './receiptContract'
+import { receiptMatchesRecordIdentity } from './receiptContract'
 
 type EvidenceIntakeDependencies = {
   readonly store: VerificationStore
@@ -200,7 +200,7 @@ export class EvidenceIntake implements VerificationService {
     onState({ kind: 'pending', storageId: pending.storageId })
     try {
       const receipt = await this.dependencies.gateway.verify(pending)
-      if (!receiptIsBound(receipt, pending.record)) {
+      if (!receiptMatchesRecordIdentity(receipt, pending.record)) {
         const state: EvidenceVerificationState = { kind: 'rejected', code: 'receipt-mismatch' }
         await this.dependencies.store.putRaw({
           ...pending,

@@ -68,7 +68,7 @@ export function receiptShapeIsValid(value: unknown): value is VerificationReceip
 }
 
 /** Identity binding: the receipt describes exactly the record that was submitted. */
-export function receiptIsBound(
+export function receiptMatchesRecordIdentity(
   receipt: unknown,
   record: Readonly<Record<string, unknown>>,
 ): receipt is VerificationReceipt {

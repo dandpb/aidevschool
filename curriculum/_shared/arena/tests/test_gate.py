@@ -16,11 +16,13 @@ from curriculum._shared.arena import gate as G
 from curriculum._shared.arena.tests.test_arena import make_cfg, seed_all_pass
 
 
-def locked_report(tmp: Path) -> tuple[Path, dict]:
+def locked_report(tmp: Path) -> tuple[Path, dict[str, str]]:
     cfg = make_cfg()
     seed_all_pass(tmp, cfg, mem_by_lang={"go": 12, "rust": 8, "node": 40})
     res = A.run_arena(tmp, "02_key_value_store", run_id="2026-06-25T18:00:00Z", n=3, cfg=cfg)
-    return res.report_path, res.winners
+    report_path = res.report_path
+    assert report_path is not None
+    return report_path, dict(res.winners)
 
 
 class TestHardGate(unittest.TestCase):

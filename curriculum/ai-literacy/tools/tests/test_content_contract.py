@@ -1,159 +1,43 @@
-"""Testes de contrato do validador/compilador da trilha ai-literacy.
-
-Padrão do repositório: ``unittest`` com ``tempfile.TemporaryDirectory``
-(cf. curriculum/_shared/tests/test_evidence.py). Os mesmos testes rodam sob
-``python3 -m unittest`` e são descobertos pelo pytest de ``make test``.
-
-Rodar:
-    python3 -m unittest discover -s curriculum/ai-literacy/tools/tests
-"""
-
 from __future__ import annotations
 
-import shutil
-import sys
 import tempfile
 import unittest
-from pathlib import Path
 
-import yaml
-
-TOOLS_DIR = Path(__file__).resolve().parent.parent
-TRACK_DIR = TOOLS_DIR.parent
-sys.path.insert(0, str(TOOLS_DIR))
-
-import validate  # noqa: E402
-
-
-FIVE_SKILLS = ["entender", "pedir", "avaliar", "proteger", "aplicar"]
-
-
-def _base_catalog():
-    return {
-        "schemaVersion": 1,
-        "contentVersion": "test-1",
-        "track": {"id": "ai-literacy", "title": "Trilha de teste", "language": "pt-BR"},
-        "skills": [{"id": s, "title": s, "description": s} for s in FIVE_SKILLS],
-        "modules": [
-            {"id": "mod-01", "slug": "01-ai-sem-misterio", "title": "M1", "order": 1, "skillIds": ["entender"]},
-        ],
-        "lessons": [
-            {
-                "id": "l01",
-                "moduleId": "mod-01",
-                "title": "Lição base",
-                "objective": "Objetivo observável da lição base.",
-                "estimatedMinutes": 3,
-                "prerequisites": [],
-                "skillIds": ["entender"],
-                "status": "ready",
-            },
-            {
-                "id": "l02",
-                "moduleId": "mod-01",
-                "title": "Lição planejada",
-                "objective": "Objetivo da lição planejada.",
-                "estimatedMinutes": 4,
-                "prerequisites": ["l01"],
-                "skillIds": ["entender"],
-                "status": "planned",
-            },
-        ],
-    }
+from .content_contract_fixtures import (
+    TRACK_DIR,
+    TrackFixtureMixin,
+    _base_catalog,
+    array_field,
+    int_field,
+    json_object,
+    json_objects,
+    json_value,
+    required_object,
+    string_field,
+)
 
 
-def _base_lesson():
-    return {
-        "id": "l01",
-        "version": 1,
-        "moduleId": "mod-01",
-        "title": "Lição base",
-        "objective": "Objetivo observável da lição base.",
-        "estimatedMinutes": 3,
-        "skillIds": ["entender"],
-        "prerequisites": [],
-        "activities": [
-            {
-                "id": "l01-a1",
-                "type": "choice",
-                "skillId": "entender",
-                "instruction": "Escolha a melhor opção.",
-                "data": {
-                    "options": [
-                        {"id": "opt-a", "text": "Opção A."},
-                        {"id": "opt-b", "text": "Opção B."},
-                    ]
-                },
-                "evaluation": {"strategy": "deterministic", "correctOptionIds": ["opt-a"]},
-                "feedback": {"onFailure": "Ainda falta revisar o conceito central."},
-                "storage": {"policy": "structured_only"},
-            }
-        ],
-        "rubric": {
-            "id": "l01-rubric",
-            "criteria": [{"id": "r-base", "text": "Critério observável.", "weight": 1}],
-        },
-        "evidence": {
-            "verifierRequired": True,
-            "completionClaim": "lesson_completed",
-            "includesFreeText": False,
-        },
-        "review": {"intervalsDays": [1, 7, 21]},
-        "completion": {"minimumScore": 0.75, "requiredActivityIds": ["l01-a1"]},
-    }
-
-
-def _write_tree(root, catalog, lessons):
-    """Escreve uma árvore mínima de trilha em ``root``.
-
-    ``lessons``: mapeamento lesson_id -> dict da lição (ou None para não criar arquivo).
-    """
-    root = Path(root)
-    shutil.copytree(TRACK_DIR / "schemas", root / "schemas")
-    (root / "catalog.yaml").write_text(yaml.safe_dump(catalog, allow_unicode=True), encoding="utf-8")
-    for lesson_id, lesson in lessons.items():
-        if lesson is None:
-            continue
-        module_dir = root / "modules" / "01-ai-sem-misterio"
-        module_dir.mkdir(parents=True, exist_ok=True)
-        (module_dir / ("%s-licao.yaml" % lesson_id)).write_text(
-            yaml.safe_dump(lesson, allow_unicode=True), encoding="utf-8"
-        )
-
-
-class TrackFixtureMixin:
-    def make_track(self, tmp, catalog=None, lessons=None):
-        catalog = catalog if catalog is not None else _base_catalog()
-        lessons = lessons if lessons is not None else {"l01": _base_lesson()}
-        _write_tree(tmp, catalog, lessons)
-        return Path(tmp)
-
-    def assert_error_containing(self, errors, fragment):
-        joined = "\n".join(errors)
-        self.assertIn(fragment, joined, "esperava erro contendo %r; erros:\n%s" % (fragment, joined))
-
-
-class TestValidContent(TrackFixtureMixin, unittest.TestCase):
+class TestValidContent(TrackFixtureMixin):
     def test_minimal_valid_tree_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
             track = self.make_track(tmp)
-            errors, ready, _catalog = validate.validate_track(track)
+            errors, ready, _catalog = self.validate_track(track)
             self.assertEqual([], errors)
-            self.assertEqual(["l01"], [lesson["id"] for lesson in ready])
+            self.assertEqual(["l01"], [string_field(lesson, "id") for lesson in ready])
 
     def test_real_track_passes(self):
-        errors, ready, catalog = validate.validate_track(TRACK_DIR)
+        errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
         # Toda lição do catálogo está validada e pronta, na ordem do catálogo.
         self.assertEqual(
-            [lesson["id"] for lesson in catalog["lessons"]],
-            [lesson["id"] for lesson in ready],
+            [string_field(lesson, "id") for lesson in json_objects(array_field(required_object(catalog), "lessons"))],
+            [string_field(lesson, "id") for lesson in ready],
         )
 
     def test_real_track_covers_all_seven_activity_types(self):
-        errors, ready, _catalog = validate.validate_track(TRACK_DIR)
+        errors, ready, _catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
-        types = {activity["type"] for lesson in ready for activity in lesson["activities"]}
+        types = {string_field(json_object(activity), "type") for lesson in ready for activity in array_field(lesson, "activities")}
         self.assertEqual(
             {
                 "choice",
@@ -168,27 +52,27 @@ class TestValidContent(TrackFixtureMixin, unittest.TestCase):
         )
 
     def test_first_release_ai_pratica_chapter_is_ready_and_keeps_entry_prerequisites(self):
-        errors, ready, catalog = validate.validate_track(TRACK_DIR)
+        errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
-        entries = {lesson["id"]: lesson for lesson in catalog["lessons"]}
-        ready_by_id = {lesson["id"]: lesson for lesson in ready}
+        entries = {string_field(lesson, "id"): lesson for lesson in json_objects(array_field(required_object(catalog), "lessons"))}
+        ready_by_id = {string_field(lesson, "id"): lesson for lesson in ready}
 
         self.assertEqual(
-            {lesson_id: entries[lesson_id]["status"] for lesson_id in ("l01", "l02", "l03")},
+            {lesson_id: string_field(entries[lesson_id], "status") for lesson_id in ("l01", "l02", "l03")},
             {"l01": "ready", "l02": "ready", "l03": "ready"},
         )
-        self.assertEqual(entries["l01"]["prerequisites"], [])
-        self.assertEqual(entries["l02"]["prerequisites"], [])
-        self.assertEqual(entries["l03"]["prerequisites"], ["l02"])
-        self.assertEqual(set(ready_by_id), {lesson["id"] for lesson in catalog["lessons"]})
+        self.assertEqual(array_field(entries["l01"], "prerequisites"), [])
+        self.assertEqual(array_field(entries["l02"], "prerequisites"), [])
+        self.assertEqual(array_field(entries["l03"], "prerequisites"), ["l02"])
+        self.assertEqual(set(ready_by_id), {string_field(lesson, "id") for lesson in json_objects(array_field(required_object(catalog), "lessons"))})
         for lesson_id in ("l01", "l02", "l03"):
-            self.assertGreaterEqual(ready_by_id[lesson_id]["version"], 1)
+            self.assertGreaterEqual(int_field(ready_by_id[lesson_id], "version"), 1)
 
     def test_planned_lessons_do_not_require_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             catalog = _base_catalog()
-            catalog["lessons"].append(
-                {
+            array_field(catalog, "lessons").append(
+                json_object(json_value({
                     "id": "l03",
                     "moduleId": "mod-01",
                     "title": "Outra planejada",
@@ -197,167 +81,11 @@ class TestValidContent(TrackFixtureMixin, unittest.TestCase):
                     "prerequisites": ["l02"],
                     "skillIds": ["avaliar"],
                     "status": "planned",
-                }
+                }))
             )
             track = self.make_track(tmp, catalog=catalog)
-            errors, _ready, _catalog = validate.validate_track(track)
+            errors, _ready, _catalog = self.validate_track(track)
             self.assertEqual([], errors)
-
-
-class TestInvalidContent(TrackFixtureMixin, unittest.TestCase):
-    def test_duplicate_lesson_id(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            dup = _base_lesson()
-            catalog = _base_catalog()
-            track = self.make_track(tmp, catalog=catalog, lessons={"l01": _base_lesson(), "l02": dup})
-            # l02 no catálogo está planned; o arquivo duplicado usa id l01.
-            errors, _ready, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "id de lição duplicado: l01")
-
-    def test_unknown_module_reference(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            catalog = _base_catalog()
-            catalog["lessons"][0]["moduleId"] = "mod-99"
-            lesson = _base_lesson()
-            lesson["moduleId"] = "mod-99"
-            track = self.make_track(tmp, catalog=catalog, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "módulo inexistente: mod-99")
-
-    def test_unknown_skill_reference(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["skillIds"] = ["voar"]
-            catalog = _base_catalog()
-            catalog["lessons"][0]["skillIds"] = ["voar"]
-            track = self.make_track(tmp, catalog=catalog, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "skill inexistente: voar")
-
-    def test_unknown_prerequisite_reference(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            catalog = _base_catalog()
-            catalog["lessons"][1]["prerequisites"] = ["l99"]
-            track = self.make_track(tmp, catalog=catalog)
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "pré-requisito inexistente: l99")
-
-    def test_lesson_without_rubric_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            del lesson["rubric"]
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "rubric")
-
-    def test_invalid_version_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["version"] = 0
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "$.version")
-
-    def test_prerequisite_cycle_detected(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            catalog = _base_catalog()
-            catalog["lessons"][0]["prerequisites"] = ["l02"]
-            catalog["lessons"][1]["prerequisites"] = ["l01"]
-            lesson = _base_lesson()
-            lesson["prerequisites"] = ["l02"]
-            track = self.make_track(tmp, catalog=catalog, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "ciclo de pré-requisitos")
-
-    def test_activity_without_evaluation_strategy_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            del lesson["activities"][0]["evaluation"]
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "evaluation")
-
-    def test_activity_without_failure_feedback_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["activities"][0]["feedback"] = {"onSuccess": "Só sucesso não basta."}
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "onFailure")
-
-    def test_unknown_required_activity_id(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["completion"]["requiredActivityIds"] = ["l01-a99"]
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "requiredActivityIds")
-
-    def test_invalid_duration_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["estimatedMinutes"] = 7
-            catalog = _base_catalog()
-            catalog["lessons"][0]["estimatedMinutes"] = 7
-            track = self.make_track(tmp, catalog=catalog, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "estimatedMinutes")
-            self.assert_error_containing(errors, "duração fora de {3,4,5}")
-
-    def test_ready_lesson_without_file_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            catalog = _base_catalog()
-            catalog["lessons"][1]["status"] = "ready"
-            track = self.make_track(tmp, catalog=catalog)
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "ready mas sem arquivo")
-
-    def test_evaluation_reference_to_unknown_option_fails(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            lesson["activities"][0]["evaluation"]["correctOptionIds"] = ["opt-zzz"]
-            track = self.make_track(tmp, lessons={"l01": lesson})
-            errors, _r, _c = validate.validate_track(track)
-            self.assert_error_containing(errors, "correctOptionIds")
-
-
-class TestCompiler(TrackFixtureMixin, unittest.TestCase):
-    def test_compile_real_track_generates_typed_read_model(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            errors, out_path = validate.compile_track(TRACK_DIR, tmp)
-            self.assertEqual([], errors)
-            content = Path(out_path).read_text(encoding="utf-8")
-            self.assertIn("DO NOT EDIT BY HAND", content)
-            self.assertIn("LessonDefinition", content)
-            # Full lesson bodies live only in `export const lessons` (ready + hasContent).
-            # `lessons` is the last export in the generated file.
-            start = content.index("export const lessons: LessonDefinition[] = ")
-            lessons_block = content[start:]
-            # Todas as 14 lições estão ready e entram no read model com corpo completo.
-            for n in range(1, 15):
-                self.assertIn('"id": "l%02d"' % n, lessons_block)
-            # A trilha usa os 7 tipos de atividade do contrato.
-            for act_type in (
-                "choice",
-                "sort",
-                "missing_context",
-                "safety_classification",
-                "prompt_builder",
-                "output_comparison",
-                "rubric_review",
-            ):
-                self.assertIn('"type": "%s"' % act_type, lessons_block)
-
-    def test_compile_refuses_invalid_content(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            lesson = _base_lesson()
-            del lesson["rubric"]
-            track = self.make_track(str(Path(tmp) / "track"), lessons={"l01": lesson})
-            errors, out_path = validate.compile_track(track, Path(tmp) / "out")
-            self.assertNotEqual([], errors)
-            self.assertIsNone(out_path)
-            self.assertFalse((Path(tmp) / "out" / "lessons.ts").exists())
-
 
 if __name__ == "__main__":
     unittest.main()

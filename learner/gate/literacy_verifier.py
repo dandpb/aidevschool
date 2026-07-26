@@ -18,7 +18,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from learner.gate.evidence_io import MAX_EVIDENCE_BYTES
+from learner.gate.evidence_io import EvidenceParseError, MAX_EVIDENCE_BYTES
 from learner.gate.evidence_validator import validate_literacy_evidence_structure
 from .literacy_evaluator import recompute_literacy_evidence
 
@@ -26,30 +26,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 VERIFIER_SOURCE = "independent-literacy-verifier"
 
-#: The seven activity types from docs/design/ai-literacy/content-contract.md and
-#: engines/literacyDojo/src/domain/evaluation.ts (evaluateActivity switch).
-#: Invented types are not accepted; unknown types fail closed.
-DETERMINISTIC_ACTIVITY_TYPES = frozenset(
-    {
-        "choice",
-        "sort",
-        "missing_context",
-        "safety_classification",
-        "prompt_builder",
-        "output_comparison",
-        "rubric_review",
-    }
+__all__ = tuple(
+    "LiteracyVerdict VERIFIER_SOURCE main verify_literacy_evidence "
+    "load_literacy_evidence write_literacy_receipt".split()
 )
-
-__all__ = [
-    "DETERMINISTIC_ACTIVITY_TYPES",
-    "LiteracyVerdict",
-    "VERIFIER_SOURCE",
-    "main",
-    "verify_literacy_evidence",
-    "load_literacy_evidence",
-    "write_literacy_receipt",
-]
 
 
 @dataclass(frozen=True, slots=True)
@@ -89,17 +69,17 @@ def load_literacy_evidence(path: str | Path) -> dict[str, Any]:
     try:
         text = raw_path.read_text(encoding="utf-8")
     except OSError as exc:
-        raise ValueError(f"literacy evidence unreadable: {exc}") from exc
+        raise EvidenceParseError(f"literacy evidence unreadable: {exc}") from exc
     if len(text.encode("utf-8")) > MAX_EVIDENCE_BYTES:
-        raise ValueError("literacy evidence exceeds 65536 bytes")
+        raise EvidenceParseError("literacy evidence exceeds 65536 bytes")
     try:
         raw = json.loads(text)
     except json.JSONDecodeError as exc:
-        raise ValueError(
+        raise EvidenceParseError(
             f"literacy evidence is not parseable JSON: {exc.msg} at line {exc.lineno}"
         ) from exc
     if not isinstance(raw, dict):
-        raise ValueError("literacy evidence must be a JSON object")
+        raise EvidenceParseError("literacy evidence must be a JSON object")
     return raw
 
 
@@ -145,17 +125,13 @@ def _failed_verdict(
         verdict="FAIL",
         context_isolated=True,
         source=VERIFIER_SOURCE,
-        evidence_digest=literacy_evidence_digest(raw)
-        if "schemaVersion" in raw
-        else "",
+        evidence_digest=literacy_evidence_digest(raw) if "schemaVersion" in raw else "",
         lesson_id=str(raw.get("lessonId") or ""),
         activity_id=str(raw.get("activityId") or ""),
         attempt_id=str(raw.get("attemptId") or ""),
         activity_type=str(raw.get("activityType") or ""),
         score=score,
-        producer_pass_claim=producer_pass
-        if isinstance(producer_pass, bool)
-        else None,
+        producer_pass_claim=producer_pass if isinstance(producer_pass, bool) else None,
         independent_pass=False,
         mastery_eligible=False,
         errors=errors,
@@ -246,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         evidence = load_literacy_evidence(evidence_path)
-    except ValueError as exc:
+    except EvidenceParseError as exc:
         print(f"FAIL CLOSED — {exc}")
         print(
             json.dumps(

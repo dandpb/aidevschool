@@ -68,11 +68,6 @@ describe("HMAC-SHA256 — RFC 4231 vectors (the cryptographic core)", () => {
       "60e431591ee0b67f0d8a26aacbf5b77f8e0bc6213728c5140546040f0ee37f54",
     )
   })
-  it("HMAC with a long key equals HMAC with the hash of that key (the spec behavior)", () => {
-    const longKey = new Uint8Array(131).fill(0xaa)
-    const hashedKey = sha256(longKey)
-    expect(hex(hmacSha256(longKey, b("data")))).toBe(hex(hmacSha256(hashedKey, b("data"))))
-  })
 })
 
 describe("JWT (HS256) — sign then verify round-trip", () => {

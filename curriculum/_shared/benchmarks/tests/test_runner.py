@@ -11,11 +11,14 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 
 # Repo root on path so ``curriculum._shared...`` imports resolve.
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
+from curriculum._shared.benchmarks import bench_orchestrator as O
+from curriculum._shared.benchmarks.benchmark_build import BuildResult
 from curriculum._shared.benchmarks import runner as R
 from curriculum._shared.benchmarks.analyzer import BenchmarkAnalyzer
 
@@ -118,6 +121,36 @@ class TestPathsAndArgs(unittest.TestCase):
 class TestBenchmarkRunner(unittest.TestCase):
     def test_rejects_path_traversal_scenario_names(self):
         assert_rejects_path_traversal_scenario_names(self)
+
+
+class TestNativeBenchmarkOrchestrator(unittest.TestCase):
+    def test_build_result_is_immutable(self):
+        result = BuildResult(
+            "go", True, True, start_cmd=("server",), cwd=Path("/tmp/project")
+        )
+        with self.assertRaises(FrozenInstanceError):
+            setattr(result, "built", False)
+
+    def test_missing_implementation_keeps_failure_result_shape(self):
+        with tempfile.TemporaryDirectory() as d:
+            result = O.benchmark_lang(Path(d), "go", Path("workload.js"), "/health")
+        self.assertEqual(set(result), {"lang", "built", "tests_passed", "test_detail", "error"})
+        self.assertEqual(result["test_detail"], "impl dir missing")
+        self.assertEqual(result.get("error"), "build failed or no server binary")
+
+    def test_report_keeps_markdown_sections_and_failure_row(self):
+        result: O.BenchmarkResult = {
+            "lang": "go", "built": False, "tests_passed": False,
+            "test_detail": "build | failed", "error": "build failed or no server binary",
+        }
+        report = O.render_report("demo", [result], "/health")
+        self.assertIn("# Benchmark Results: demo", report)
+        self.assertIn("| go | ❌ | ❌ | build \\| failed |", report)
+        self.assertIn(
+            "| go | — | — | — | — | — | — | _build failed or no server binary_ |",
+            report,
+        )
+        self.assertIn("## Per-language Detail", report)
 
 
 class TestBridge(unittest.TestCase):
@@ -232,6 +265,7 @@ class TestParserFaithfulness(unittest.TestCase):
             p = Path(d) / "baseline_run1.json"
             p.write_text(stream)
             m = R.parse_raw_k6_json(p)
+        assert m is not None
         self.assertEqual(m["n_requests"], 3)        # 3 sessions = throughput-equiv
         self.assertEqual(m["duration_avg"], 200.0)  # session-duration latency-equiv
         self.assertEqual(m["p50"], 200.0)
@@ -266,6 +300,7 @@ class TestParserFaithfulness(unittest.TestCase):
                 {"CPUPerc": "12.50%", "MemUsage": "8MiB / 23GiB", "MemPerc": "0.03%", "Name": "rl-go-bench"}
             ))
             s = R.parse_stats_json(p)
+        assert s is not None
         self.assertAlmostEqual(s["cpu_pct"], 12.5)
         self.assertAlmostEqual(s["mem_mb"], 8.0)   # 8 MiB -> 8.0 MB-as-MiB
         self.assertAlmostEqual(s["mem_pct"], 0.03)

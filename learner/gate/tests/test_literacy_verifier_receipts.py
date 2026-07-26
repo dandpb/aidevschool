@@ -1,0 +1,85 @@
+from __future__ import annotations
+
+from io import StringIO
+import json
+from pathlib import Path
+
+import pytest
+
+from learner.gate.literacy_bridge import verify_stream
+from learner.gate.literacy_verifier import (
+    VERIFIER_SOURCE,
+    load_literacy_evidence,
+    main as literacy_cli_main,
+    verify_literacy_evidence,
+    write_literacy_receipt,
+)
+from learner.gate.tests.literacy_verifier_records import make_literacy_record
+
+
+def test_load_and_write_roundtrip(tmp_path: Path):
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(json.dumps(make_literacy_record()), encoding="utf-8")
+    loaded = load_literacy_evidence(evidence_path)
+    verdict = verify_literacy_evidence(loaded)
+    receipt_path = write_literacy_receipt(verdict, tmp_path / "receipt.json")
+    raw = json.loads(receipt_path.read_text(encoding="utf-8"))
+    assert raw["verdict"] == "PASS"
+    assert raw["mastery_eligible"] is True
+    assert raw["producer_writes_mastered"] is False
+
+
+def test_cli_pass_and_fail(tmp_path: Path, capsys):
+    good = tmp_path / "good.json"
+    good.write_text(json.dumps(make_literacy_record()), encoding="utf-8")
+    receipt = tmp_path / "out.json"
+    assert literacy_cli_main(["--evidence", str(good), "--write-receipt", str(receipt)]) == 0
+    assert receipt.is_file()
+    out = json.loads(receipt.read_text(encoding="utf-8"))
+    assert out["verdict"] == "PASS"
+
+    bad = tmp_path / "bad.json"
+    bad.write_text(json.dumps({"nope": True}), encoding="utf-8")
+    assert literacy_cli_main(["--evidence", str(bad)]) == 1
+
+    missing = tmp_path / "does-not-exist.json"
+    assert literacy_cli_main(["--evidence", str(missing)]) == 1
+
+
+def test_cli_unreadable_json_fails_closed(tmp_path: Path):
+    path = tmp_path / "broken.json"
+    path.write_text("{not-json", encoding="utf-8")
+    assert literacy_cli_main(["--evidence", str(path)]) == 1
+
+
+def test_stdin_bridge_emits_one_closed_digest_bound_receipt():
+    source = StringIO(json.dumps(make_literacy_record()))
+    output = StringIO()
+
+    assert verify_stream(source, output) == 0
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "PASS"
+    assert receipt["source"] == VERIFIER_SOURCE
+    assert receipt["context_isolated"] is True
+    assert len(receipt["evidence_digest"]) == 64
+    assert receipt["producer_writes_mastered"] is False
+
+
+@pytest.mark.parametrize("payload", ["{bad", "[]", "null"])
+def test_stdin_bridge_fails_closed_for_malformed_or_non_object_input(payload: str):
+    output = StringIO()
+
+    assert verify_stream(StringIO(payload), output) == 1
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "FAIL"
+    assert receipt["mastery_eligible"] is False
+
+
+def test_stdin_bridge_does_not_accept_browser_process_or_path_controls():
+    record = make_literacy_record(command="rm", path="/etc/passwd")
+    output = StringIO()
+
+    assert verify_stream(StringIO(json.dumps(record)), output) == 1
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "FAIL"
+    assert any("unknown field" in error for error in receipt["errors"])

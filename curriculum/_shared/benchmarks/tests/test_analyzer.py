@@ -8,6 +8,8 @@ Validates:
 """
 
 import unittest
+from collections.abc import MutableMapping
+from dataclasses import FrozenInstanceError
 from pathlib import Path
 
 import sys
@@ -17,14 +19,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from curriculum._shared.benchmarks.analyzer import (
     BenchmarkAnalyzer,
+    BenchmarkInputError,
     BenchmarkReport,
     ScenarioResult,
 )
 
 
 class TestMetricSummary(unittest.TestCase):
-    def setUp(self):
-        self.analyzer = BenchmarkAnalyzer()
+    analyzer = BenchmarkAnalyzer()
 
     def test_summarize_basic_metrics(self):
         samples = [10.0, 12.0, 11.0, 13.0, 10.5]
@@ -68,9 +70,16 @@ class TestMetricSummary(unittest.TestCase):
         summary = self.analyzer.summarize([1.0, 2.0], "x")
         self.assertFalse(summary.passes_sample_count_gate)
 
-    def test_empty_samples_raises_error(self):
-        with self.assertRaises(ValueError):
+    def test_empty_samples_raises_domain_error_with_legacy_message(self):
+        with self.assertRaises(BenchmarkInputError) as context:
             self.analyzer.summarize([], "metric")
+        self.assertEqual(str(context.exception), "no samples for metric 'metric'")
+
+    def test_metric_summary_is_immutable(self):
+        summary = self.analyzer.summarize([42.0], "rps")
+
+        with self.assertRaises(FrozenInstanceError):
+            setattr(summary, "mean", 0.0)
 
     def test_zero_mean_cv_is_zero(self):
         """CV% should be 0 when mean is 0 (not division by zero)."""
@@ -92,6 +101,7 @@ class TestScenarioResult(unittest.TestCase):
             metrics={"rps": good_metric},
         )
         self.assertTrue(sr.passes_all_gates)
+        self.assertNotIsInstance(sr.metrics, MutableMapping)
 
     def test_fails_with_high_cv(self):
         analyzer = BenchmarkAnalyzer()
@@ -105,11 +115,10 @@ class TestScenarioResult(unittest.TestCase):
 
 
 class TestBenchmarkReport(unittest.TestCase):
-    def setUp(self):
-        self.analyzer = BenchmarkAnalyzer()
-        self.good_samples = [100.0, 101.0, 99.0, 100.5]
+    analyzer = BenchmarkAnalyzer()
+    good_samples = [100.0, 101.0, 99.0, 100.5]
 
-    def _make_good_result(self, scenario, language):
+    def _make_good_result(self, scenario: str, language: str) -> ScenarioResult:
         return ScenarioResult(
             scenario=scenario,
             language=language,
@@ -119,6 +128,7 @@ class TestBenchmarkReport(unittest.TestCase):
     def test_empty_report_passes(self):
         report = BenchmarkReport(project_id="test")
         self.assertTrue(report.all_pass)  # vacuously true
+        self.assertNotIsInstance(report.scenarios, MutableMapping)
 
     def test_report_with_all_scenarios_passes(self):
         report = BenchmarkReport(project_id="test")
@@ -138,8 +148,7 @@ class TestBenchmarkReport(unittest.TestCase):
 
 
 class TestBenchmarkAnalyzerValidation(unittest.TestCase):
-    def setUp(self):
-        self.analyzer = BenchmarkAnalyzer()
+    analyzer = BenchmarkAnalyzer()
 
     def test_valid_report_has_no_errors(self):
         good_samples = [100.0, 101.0, 102.0]
@@ -193,8 +202,7 @@ class TestBenchmarkAnalyzerValidation(unittest.TestCase):
 
 
 class TestAnalyzeRawSamples(unittest.TestCase):
-    def setUp(self):
-        self.analyzer = BenchmarkAnalyzer()
+    analyzer = BenchmarkAnalyzer()
 
     def test_analyze_well_formed_data(self):
         raw = {
@@ -227,6 +235,24 @@ class TestAnalyzeRawSamples(unittest.TestCase):
         metrics = report.scenarios["baseline"]["go"].metrics
         self.assertIn("rps", metrics)
         self.assertNotIn("label", metrics)
+
+    def test_analyze_skips_non_list_sample_groups(self):
+        raw = {"baseline": {"go": "not a sample list"}}
+        report = self.analyzer.analyze_raw_samples("test", raw)
+        self.assertNotIn("baseline", report.scenarios)
+
+    def test_analyze_scalar_list_elements_fails_closed(self):
+        raw = {"baseline": {"go": [1, "malformed", None]}}
+        report = self.analyzer.analyze_raw_samples("test", raw)
+        result = report.scenarios["baseline"]["go"]
+        self.assertEqual(result.metrics, {})
+        self.assertFalse(result.passes_all_gates)
+
+    def test_analyze_mixed_list_preserves_mapping_samples(self):
+        raw = {"baseline": {"go": ["malformed", {"rps": 45000}, 0, {"rps": 45100}]}}
+        report = self.analyzer.analyze_raw_samples("test", raw)
+        metrics = report.scenarios["baseline"]["go"].metrics
+        self.assertEqual(metrics["rps"].samples, (45000.0, 45100.0))
 
 
 if __name__ == "__main__":

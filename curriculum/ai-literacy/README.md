@@ -54,9 +54,7 @@ Lições `planned` não entram no read model nem exigem arquivo próprio.
 ## Como rodar os testes
 
 ```bash
-python3 -m unittest discover -s curriculum/ai-literacy/tools/tests
-# ou, com o ambiente do repositório instalado (make install):
-make test-literacy
+python3 -m unittest discover -s curriculum/ai-literacy/tools/tests -t .
 ```
 
 ## Regras de edição (resumo; contrato completo em `docs/design/ai-literacy/content-contract.md`)

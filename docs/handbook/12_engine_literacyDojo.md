@@ -62,7 +62,7 @@ Content can also be checked independently from the repository root:
 
 ```bash
 python3 curriculum/ai-literacy/tools/validate.py
-python3 -m unittest discover -s curriculum/ai-literacy/tools/tests
+python3 -m unittest discover -s curriculum/ai-literacy/tools/tests -t .
 ```
 
 ## Related surfaces

@@ -10,6 +10,7 @@ const INSTALLATION_ID_KEY = 'codexdojo-os.analytics.installation-id.v1'
 
 export interface AnalyticsEventSink {
   enqueue(event: AnalyticsEvent): void
+  nextSequence(): number
 }
 
 export interface InstallationIdentityStore {
@@ -30,7 +31,7 @@ export class BrowserInstallationIdentityStore implements InstallationIdentitySto
     try {
       window.localStorage.setItem(INSTALLATION_ID_KEY, id)
     } catch {
-      // Analytics identity persistence is best effort.
+      return
     }
   }
 }
@@ -62,7 +63,6 @@ function compactContext(context: AnalyticsContext | undefined): Record<string, s
 export class AnalyticsCollector implements AnalyticsPort {
   private readonly installationId: string
   private readonly sessionId: string
-  private sequence = 0
 
   constructor(
     private readonly sink: AnalyticsEventSink,
@@ -81,14 +81,13 @@ export class AnalyticsCollector implements AnalyticsPort {
 
   emit(input: AnalyticsEventInput): boolean {
     if (!analyticsEventInputIsValid(input)) return false
-    this.sequence += 1
     const createId = this.options.createId ?? randomId
     const event: AnalyticsEvent = {
       schemaVersion: 1,
       eventId: createId('event'),
       name: input.name,
       occurredAt: (this.options.clock ?? (() => new Date()))().toISOString(),
-      sequence: this.sequence,
+      sequence: this.sink.nextSequence(),
       dimensions: {
         installationId: this.installationId,
         sessionId: this.sessionId,

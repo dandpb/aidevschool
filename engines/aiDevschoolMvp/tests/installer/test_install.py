@@ -57,6 +57,9 @@ def test_custom_root_is_detection_and_install_target(tmp_path):
     installer.install(SKILL, {"OPENCLAW_HOME": str(root)}, tmp_path / "home", fake_runner)
 
     assert (root / "workspace" / "skills" / "aidevschool" / "SKILL.md").is_file()
+    assert not (
+        root / "workspace" / "skills" / "aidevschool" / "_install_validation.py"
+    ).exists()
     assert not (tmp_path / "home" / ".openclaw").exists()
 
 
@@ -153,6 +156,23 @@ def test_upgrade_replaces_skill_and_preserves_state(tmp_path):
     assert state.read_bytes() == before
     assert (skill / "SKILL.md").read_text().endswith("\nupgrade\n")
     assert not (skill / "stale.txt").exists()
+
+
+def test_upgrade_with_incomplete_runtime_preserves_installed_skill(tmp_path):
+    root = openclaw_root(tmp_path)
+    environ = {"OPENCLAW_HOME": str(root)}
+    installer.install(SKILL, environ, tmp_path / "home", fake_runner)
+    skill = root / "workspace" / "skills" / "aidevschool"
+    (skill / "prior-install-marker.txt").write_bytes(b"working install\n")
+    before = digest_tree(skill)
+    source = tmp_path / "incomplete-upgrade"
+    shutil.copytree(SKILL, source)
+    (source / "scripts" / "_state_transitions.py").unlink()
+
+    with pytest.raises(installer.InstallError, match="bundled deterministic runtime is missing"):
+        installer.install(source, environ, tmp_path / "home", fake_runner)
+
+    assert digest_tree(skill) == before
 
 
 def test_subprocess_failure_prevents_success(tmp_path, capsys):

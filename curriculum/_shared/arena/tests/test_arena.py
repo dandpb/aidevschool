@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+from collections.abc import MutableMapping
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
@@ -73,9 +74,12 @@ class TestScoreboardAndAssembly(unittest.TestCase):
             self.assertEqual(res.winners["latency"], "rust")
             self.assertEqual(res.winners["memory"], "rust")
             self.assertIn(res.winners["throughput"], R.LANGS)
+            self.assertNotIsInstance(res.winners, MutableMapping)
 
             self.assertIsNotNone(res.report_path)
-            text = res.report_path.read_text()
+            report_path = res.report_path
+            assert report_path is not None
+            text = report_path.read_text()
             self.assertIn("gate: locked", text)          # never revealed by run_arena
             self.assertIn("project: 02_key_value_store", text)
             self.assertIn("**rust**", text)              # winner highlighted in scoreboard

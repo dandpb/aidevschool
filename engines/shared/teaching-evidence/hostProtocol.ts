@@ -1,9 +1,15 @@
-export const HOST_ENGINE_PROTOCOL = "aidevschool.host-engine" as const
-export const HOST_ENGINE_PROTOCOL_VERSION = "1.0" as const
+import {
+  decodeHostMessage,
+  HOST_ENGINE_PROTOCOL,
+  HOST_ENGINE_PROTOCOL_VERSION,
+  type HostMessageEnvelope,
+  type UnknownRecord,
+} from "./hostMessageDecoder"
+
+export { HOST_ENGINE_PROTOCOL, HOST_ENGINE_PROTOCOL_VERSION } from "./hostMessageDecoder"
 
 type MissionStage = "understand" | "respond" | "apply"
 type MissionStatus = "running" | "completed" | "failed"
-type UnknownRecord = Readonly<Record<string, unknown>>
 
 export type RendererPreference = "auto" | "webgl" | "accessible"
 export type ActiveRenderer = "webgl" | "canvas2d" | "dom" | "none"
@@ -59,10 +65,6 @@ export function setMissionEvidenceForwarder(forwarder: EvidenceForwarder | null)
 
 export function forwardMissionEvidence(record: UnknownRecord): boolean {
   return evidenceForwarder?.(record) ?? false
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
 function uniqueId(): string {
@@ -182,23 +184,13 @@ export class TeachingGameHostAdapter {
     )
   }
 
-  private envelope(event: MessageEvent<unknown>): Record<string, unknown> | null {
-    if (
-      this.hostOrigin === null
-      || event.source !== window.parent
-      || event.origin !== this.hostOrigin
-      || !isRecord(event.data)
-      || event.data["protocol"] !== HOST_ENGINE_PROTOCOL
-      || event.data["version"] !== HOST_ENGINE_PROTOCOL_VERSION
-      || event.data["engineId"] !== this.options.engineId
-      || typeof event.data["messageId"] !== "string"
-      || typeof event.data["hostSessionId"] !== "string"
-      || typeof event.data["missionRunId"] !== "string"
-      || !isRecord(event.data["payload"])
-    ) {
-      return null
-    }
-    return event.data
+  private envelope(event: MessageEvent<unknown>): HostMessageEnvelope | null {
+    if (this.hostOrigin === null) return null
+    return decodeHostMessage(event, {
+      engineId: this.options.engineId,
+      expectedOrigin: this.hostOrigin,
+      expectedSource: window.parent,
+    })
   }
 
   private acknowledge(messageId: string, accepted: boolean, code?: string): void {
@@ -212,8 +204,8 @@ export class TeachingGameHostAdapter {
   private handleMessage = (event: MessageEvent<unknown>): void => {
     const message = this.envelope(event)
     if (message === null) return
-    const payload = message["payload"] as Record<string, unknown>
-    if (message["type"] === "host.hello") {
+    const payload = message.payload
+    if (message.type === "host.hello") {
       if (
         payload["missionId"] !== this.options.missionId
         || payload["protocolVersion"] !== HOST_ENGINE_PROTOCOL_VERSION
@@ -221,8 +213,8 @@ export class TeachingGameHostAdapter {
         return
       }
       this.correlation = {
-        hostSessionId: message["hostSessionId"] as string,
-        missionRunId: message["missionRunId"] as string,
+        hostSessionId: message.hostSessionId,
+        missionRunId: message.missionRunId,
       }
       this.eventSequence = 0
       this.rendererRevision = 0
@@ -236,9 +228,9 @@ export class TeachingGameHostAdapter {
     }
     if (
       this.correlation !== null
-      && message["hostSessionId"] === this.correlation.hostSessionId
-      && message["missionRunId"] === this.correlation.missionRunId
-      && message["type"] === "renderer.retry"
+      && message.hostSessionId === this.correlation.hostSessionId
+      && message.missionRunId === this.correlation.missionRunId
+      && message.type === "renderer.retry"
       && this.onRendererRetry !== null
     ) {
       const preference = payload["rendererPreference"]
@@ -248,9 +240,9 @@ export class TeachingGameHostAdapter {
     }
     if (
       this.correlation === null
-      || message["hostSessionId"] !== this.correlation.hostSessionId
-      || message["missionRunId"] !== this.correlation.missionRunId
-      || message["type"] !== "mission.launch"
+      || message.hostSessionId !== this.correlation.hostSessionId
+      || message.missionRunId !== this.correlation.missionRunId
+      || message.type !== "mission.launch"
       || this.onLaunch === null
     ) {
       return
@@ -264,19 +256,19 @@ export class TeachingGameHostAdapter {
         && payload["rendererPreference"] !== "webgl"
         && payload["rendererPreference"] !== "accessible")
     ) {
-      this.acknowledge(message["messageId"] as string, false, "mission-unavailable")
+      this.acknowledge(message.messageId, false, "mission-unavailable")
       return
     }
     void Promise.resolve(this.onLaunch({
       locale: "pt-BR",
-      reducedMotion: payload["reducedMotion"] as boolean,
-      rendererPreference: payload["rendererPreference"] as RendererPreference,
+      reducedMotion: payload["reducedMotion"],
+      rendererPreference: payload["rendererPreference"],
     })).then(
       () => {
-        this.acknowledge(message["messageId"] as string, true)
-        this.publishEvent("mission.started", { mode: payload["mode"] as string })
+        this.acknowledge(message.messageId, true)
+        this.publishEvent("mission.started", { mode: payload["mode"] })
       },
-      () => this.acknowledge(message["messageId"] as string, false, "mission-unavailable"),
+      () => this.acknowledge(message.messageId, false, "mission-unavailable"),
     )
   }
 }
