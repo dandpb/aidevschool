@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
-import {
-  isHostedMission,
-  LiteracyMissionAdapter,
-} from "../host/LiteracyMissionAdapter";
+import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
 import { HomeScreen } from "../screens/HomeScreen";
 import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
@@ -47,6 +44,7 @@ function AppShell({
 }) {
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
+  const hostReady = progress !== null;
 
   useEffect(() => {
     let cancelled = false;
@@ -74,20 +72,17 @@ function AppShell({
   }, [hostAdapter, services]);
 
   useEffect(() => {
-    if (hostAdapter === null) return;
-    return hostAdapter.start(
-      async (launch) => {
-        const lesson = services.content.getLesson(launch.missionId);
-        if (lesson === undefined || lesson.version !== launch.missionVersion) {
-          throw new Error("Missão hospedada incompatível com o conteúdo local");
-        }
-        const updated = await services.useCases.prepareHostedMission(launch.missionId);
-        setProgress(updated);
-        setRoute({ name: "lesson", lessonId: launch.missionId });
-      },
-      services.content.getContentVersion(),
-    );
-  }, [hostAdapter, services]);
+    if (hostAdapter === null || !hostReady) return;
+    return hostAdapter.start(async (launch) => {
+      const lesson = services.content.getLesson(launch.missionId);
+      if (lesson === undefined || lesson.version !== launch.missionVersion) {
+        throw new Error("Missão hospedada incompatível com o conteúdo local");
+      }
+      const updated = await services.useCases.prepareHostedMission(launch.missionId);
+      setProgress(updated);
+      setRoute({ name: "lesson", lessonId: launch.missionId });
+    }, services.content.getContentVersion());
+  }, [hostAdapter, hostReady, services]);
 
   useEffect(() => {
     if (!route) return;

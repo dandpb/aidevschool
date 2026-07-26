@@ -1,11 +1,11 @@
 import type { EvidenceSink } from "../application/ports";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import {
+  type HostHelloMessage,
+  type MissionLaunchMessage,
   createEngineEnvelope,
   decodeHostMessage,
   expectedHostOrigin,
-  type HostHelloMessage,
-  type MissionLaunchMessage,
 } from "./protocol";
 
 type Correlation = {
@@ -46,8 +46,8 @@ export class LiteracyMissionAdapter implements EvidenceSink {
     window.addEventListener("message", this.handleMessage);
     return () => {
       window.removeEventListener("message", this.handleMessage);
-      this.onLaunch = null;
       this.correlation = null;
+      this.onLaunch = null;
     };
   }
 
@@ -60,7 +60,7 @@ export class LiteracyMissionAdapter implements EvidenceSink {
         missionId: this.correlation.missionId,
         unitId: `ai-literacy:${this.correlation.missionId}`,
       },
-      record: record as unknown as Readonly<Record<string, unknown>>,
+      record,
     });
     this.publishState("running", "apply", 0.8);
   }

@@ -8,6 +8,10 @@
     ".": {
       "types": "./emit.ts",
       "import": "./emit.ts"
+    },
+    "./host-protocol": {
+      "types": "./hostProtocol.ts",
+      "import": "./hostProtocol.ts"
     }
   }
 }

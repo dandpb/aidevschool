@@ -17,7 +17,7 @@ export class MissingEngineBridgeTokenError extends Error {
   }
 }
 
-function createBridgeTokenProvider(fetcher: Fetcher): BridgeTokenProvider {
+export function createBridgeTokenProvider(fetcher: Fetcher): BridgeTokenProvider {
   let request: Promise<string | null> | undefined
   return () => {
     if (request === undefined) {

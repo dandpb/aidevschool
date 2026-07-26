@@ -1,5 +1,6 @@
 import type { ActionExecutor } from './actions'
 import { executeAllowedAction } from './actions'
+import { executeFixedVerification } from './verification'
 
 export type BridgeRequest = {
   readonly method: string
@@ -16,6 +17,12 @@ export async function routeBridgeRequest(
   request: BridgeRequest,
   executor: ActionExecutor,
 ): Promise<BridgeResponse> {
+  if (Buffer.byteLength(request.body, 'utf8') > 4_096) {
+    return { status: 413, body: { error: 'body-too-large' } }
+  }
+  if (request.pathname === '/__dojo/bridge/v1/verification') {
+    return routeVerification(request, executor)
+  }
   const match = request.pathname.match(
     /^\/__dojo\/bridge\/v1\/engines\/([^/]+)\/actions\/([^/]+)$/,
   )
@@ -52,4 +59,48 @@ export async function routeBridgeRequest(
       output,
     },
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+function hasExactKeys(value: Record<string, unknown>, expected: readonly string[]): boolean {
+  return Object.keys(value).length === expected.length && expected.every((key) => key in value)
+}
+
+function parseJsonObject(request: BridgeRequest): BridgeResponse | Record<string, unknown> {
+  if (request.method !== 'POST') return { status: 405, body: { error: 'method-not-allowed' } }
+  try {
+    const parsed: unknown = JSON.parse(request.body)
+    return isRecord(parsed) ? parsed : { status: 400, body: { error: 'invalid-body' } }
+  } catch {
+    return { status: 400, body: { error: 'malformed-json' } }
+  }
+}
+
+function isBridgeResponse(value: BridgeResponse | Record<string, unknown>): value is BridgeResponse {
+  return 'status' in value && typeof value.status === 'number' && 'body' in value
+}
+
+async function routeVerification(request: BridgeRequest, executor: ActionExecutor): Promise<BridgeResponse> {
+  const parsed = parseJsonObject(request)
+  if (isBridgeResponse(parsed)) return parsed
+  if (
+    !hasExactKeys(parsed, ['schemaId', 'schemaVersion', 'record'])
+    || typeof parsed.schemaId !== 'string'
+    || !Number.isInteger(parsed.schemaVersion)
+    || !isRecord(parsed.record)
+  ) {
+    return { status: 400, body: { error: 'invalid-body' } }
+  }
+  const result = await executeFixedVerification({
+    schemaId: parsed.schemaId,
+    schemaVersion: Number(parsed.schemaVersion),
+    record: parsed.record,
+  }, executor)
+  if (!result.ok) {
+    return { status: result.code === 'unsupported-schema' ? 404 : 422, body: { error: result.code } }
+  }
+  return { status: 200, body: { receipt: result.receipt } }
 }

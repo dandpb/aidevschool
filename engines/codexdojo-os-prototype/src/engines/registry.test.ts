@@ -54,6 +54,16 @@ describe('codexDojo OS engine registry', () => {
     // Then
     expect(authorities).toEqual(expectedEngineIds.map(() => 'never'))
   })
+
+  it('declares voxelDojo mission hosting without granting mastery authority', () => {
+    const voxel = engineRegistry.find((engine) => engine.id === 'voxelDojo')
+
+    expect(voxel?.runtime).toMatchObject({
+      kind: 'embedded-web',
+      missionProtocol: '1.0',
+    })
+    expect(voxel?.masteryAuthority).toBe('never')
+  })
 })
 
 describe('embedded engine URL boundary', () => {

@@ -6,6 +6,7 @@ import {
   createEnvelope,
 } from './protocol'
 import { decodeEngineMessage } from './validation'
+import type { EvidenceSubmission } from '../verification/ports'
 
 const HANDSHAKE_TIMEOUT_MS = 10_000
 
@@ -21,7 +22,6 @@ export type MissionSessionSnapshot = {
   readonly phase: MissionSessionPhase
   readonly stage: MissionStage
   readonly progress: number
-  readonly evidence: 'not-submitted' | 'pending'
   readonly error?: string
 }
 
@@ -30,7 +30,9 @@ export type MissionSessionControllerInput = {
   readonly frameUrl: string
   readonly mission: MissionDefinition
   readonly onState: (snapshot: MissionSessionSnapshot) => void
-  readonly onEvidence: (record: Readonly<Record<string, unknown>>) => void
+  readonly onEvidence: (
+    submission: EvidenceSubmission,
+  ) => Promise<{ readonly accepted: boolean; readonly code?: string }>
 }
 
 function uniqueId(prefix: string): string {
@@ -44,22 +46,32 @@ export class MissionSessionController {
   private revision = -1
   private launchMessageId: string | null = null
   private timeout: number | undefined
+  private helloInterval: number | undefined
+  private started = false
   private closed = false
   private snapshot: MissionSessionSnapshot = {
     phase: 'handshaking',
     stage: 'understand',
     progress: 0,
-    evidence: 'not-submitted',
   }
 
   constructor(private readonly input: MissionSessionControllerInput) {}
 
   start(): void {
-    if (this.closed) return
+    if (this.closed || this.started) return
+    this.started = true
     window.addEventListener('message', this.onMessage)
     this.timeout = window.setTimeout(() => {
-      this.update({ ...this.snapshot, phase: 'failed', error: 'A missão demorou para responder.' })
+      this.fail('A missão demorou para responder.')
     }, HANDSHAKE_TIMEOUT_MS)
+    this.helloInterval = window.setInterval(() => {
+      if (this.snapshot.phase === 'handshaking') this.sendHello()
+    }, 500)
+    this.sendHello()
+    this.input.onState(this.snapshot)
+  }
+
+  private sendHello(): void {
     this.send(
       createEnvelope({
         type: 'host.hello',
@@ -70,15 +82,24 @@ export class MissionSessionController {
         payload: { missionId: this.input.mission.id, protocolVersion: '1.0' },
       }),
     )
-    this.input.onState(this.snapshot)
   }
 
   close(): void {
     if (this.closed) return
     this.closed = true
     window.removeEventListener('message', this.onMessage)
-    window.clearTimeout(this.timeout)
+    this.stopHandshake()
     this.update({ ...this.snapshot, phase: 'closed' })
+  }
+
+  private stopHandshake(): void {
+    window.clearTimeout(this.timeout)
+    window.clearInterval(this.helloInterval)
+  }
+
+  private fail(error: string): void {
+    this.stopHandshake()
+    this.update({ ...this.snapshot, phase: 'failed', error })
   }
 
   private update(snapshot: MissionSessionSnapshot): void {
@@ -89,7 +110,7 @@ export class MissionSessionController {
   private send(message: HostToEngineMessage): void {
     const target = this.input.frame.contentWindow
     if (target === null) {
-      this.update({ ...this.snapshot, phase: 'failed', error: 'O frame da missão não está disponível.' })
+      this.fail('O frame da missão não está disponível.')
       return
     }
     target.postMessage(message, new URL(this.input.frameUrl).origin)
@@ -129,11 +150,12 @@ export class MissionSessionController {
   private handle(message: EngineToHostMessage): void {
     switch (message.type) {
       case 'engine.ready': {
+        if (this.snapshot.phase !== 'handshaking') return
         if (!message.payload.capabilities.includes('mission-state') || !message.payload.capabilities.includes('evidence')) {
-          this.update({ ...this.snapshot, phase: 'failed', error: 'O motor não oferece o contrato da missão.' })
+          this.fail('O motor não oferece o contrato da missão.')
           return
         }
-        window.clearTimeout(this.timeout)
+        this.stopHandshake()
         this.launchMessageId = uniqueId('message')
         this.update({ ...this.snapshot, phase: 'launching' })
         this.send(
@@ -156,7 +178,7 @@ export class MissionSessionController {
       case 'protocol.ack':
         if (message.payload.acknowledgedMessageId !== this.launchMessageId) return
         if (!message.payload.accepted) {
-          this.update({ ...this.snapshot, phase: 'failed', error: 'O motor recusou a missão.' })
+          this.fail('O motor recusou a missão.')
         }
         return
       case 'mission.state':
@@ -177,9 +199,21 @@ export class MissionSessionController {
           this.acknowledge(message.messageId, false, 'subject-mismatch')
           return
         }
-        this.input.onEvidence(message.payload.record)
-        this.update({ ...this.snapshot, evidence: 'pending' })
-        this.acknowledge(message.messageId)
+        void this.input.onEvidence({
+          schemaId: message.payload.schemaId,
+          schemaVersion: message.payload.schemaVersion,
+          engineId: message.engineId,
+          missionRunId: message.missionRunId,
+          subject: message.payload.subject,
+          record: message.payload.record,
+        }).then(
+          (result) => {
+            if (!this.closed) this.acknowledge(message.messageId, result.accepted, result.code)
+          },
+          () => {
+            if (!this.closed) this.acknowledge(message.messageId, false, 'evidence-intake-failed')
+          },
+        )
         return
     }
   }

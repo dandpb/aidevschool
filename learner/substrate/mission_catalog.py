@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -12,9 +13,12 @@ from learner.substrate.catalog import load_catalog
 
 MISSION_SCHEMA_VERSION = 1
 SUPPORTED_TRACKS = frozenset({"ai-pratica", "dev"})
-SUPPORTED_ENGINES = frozenset({"literacyDojo"})
+SUPPORTED_ENGINES = frozenset({"literacyDojo", "voxelDojo"})
 SUPPORTED_PROTOCOL_VERSIONS = frozenset({"1.0"})
-SUPPORTED_EVIDENCE_SCHEMAS = {"literacy-evidence": frozenset({1})}
+SUPPORTED_EVIDENCE_SCHEMAS = {
+    "literacy-evidence": frozenset({1}),
+    "teaching-game-evidence": frozenset({1}),
+}
 SUPPORTED_FALLBACKS = frozenset({"dom", "canvas2d"})
 _ENVIRONMENT_KEY = re.compile(r"^VITE_[A-Z0-9_]+$")
 
@@ -71,7 +75,36 @@ def _load_lessons(ai_literacy_root: Path) -> tuple[dict[str, Any], dict[str, dic
     return catalog, {lesson_id: {"entry": entry, "file": lesson_files.get(lesson_id)} for lesson_id, entry in catalog_lessons.items()}
 
 
-def _validate_runtime(raw: Any, label: str) -> dict[str, Any]:
+def _load_voxel_catalog(path: Path) -> dict[str, dict[str, Any]]:
+    try:
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise MissionCatalogError(f"voxel catalog not found: {path}") from exc
+    except json.JSONDecodeError as exc:
+        raise MissionCatalogError(f"voxel catalog is not valid JSON: {exc}") from exc
+    if not isinstance(loaded, list):
+        raise MissionCatalogError("voxel catalog must be a list")
+    games: dict[str, dict[str, Any]] = {}
+    for index, raw_game in enumerate(loaded):
+        game = _mapping(raw_game, f"voxel catalog[{index}]")
+        game_id = _nonempty_string(game.get("id"), f"voxel catalog[{index}].id")
+        if game_id in games:
+            raise MissionCatalogError(f"duplicate voxel game id {game_id!r}")
+        name = _nonempty_string(game.get("name"), f"voxel catalog[{index}].name")
+        port = game.get("developmentPort")
+        if not isinstance(port, int) or isinstance(port, bool) or not 1 <= port <= 65535:
+            raise MissionCatalogError(
+                f"voxel catalog[{index}].developmentPort must be a valid port"
+            )
+        games[game_id] = {"id": game_id, "name": name, "developmentPort": port}
+    return games
+
+
+def _validate_runtime(
+    raw: Any,
+    label: str,
+    voxel_games: dict[str, dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any] | None]:
     runtime = _mapping(raw, label)
     engine_id = _nonempty_string(runtime.get("engineId"), f"{label}.engineId")
     if engine_id not in SUPPORTED_ENGINES:
@@ -86,15 +119,30 @@ def _validate_runtime(raw: Any, label: str) -> dict[str, Any]:
     environment_key = _nonempty_string(runtime.get("environmentKey"), f"{label}.environmentKey")
     if _ENVIRONMENT_KEY.fullmatch(environment_key) is None:
         raise MissionCatalogError(f"{label}.environmentKey must be a VITE_* identifier")
-    return {
+    runtime_record = {
         "engineId": engine_id,
         "entrypoint": entrypoint,
         "environmentKey": environment_key,
         "protocolVersion": protocol_version,
     }
+    if engine_id != "voxelDojo":
+        return runtime_record, None
+    game_id = _nonempty_string(runtime.get("gameId"), f"{label}.gameId")
+    game = voxel_games.get(game_id)
+    if game is None:
+        raise MissionCatalogError(f"{label} references unknown voxel game {game_id!r}")
+    if parsed.port != game["developmentPort"]:
+        raise MissionCatalogError(
+            f"{label}.entrypoint port must match voxel game {game_id!r}"
+        )
+    return runtime_record, game
 
 
-def _validate_evidence(raw: Any, lesson_file: dict[str, Any], label: str) -> dict[str, Any]:
+def _validate_evidence(
+    raw: Any,
+    label: str,
+    canonical_evidence: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     evidence = _mapping(raw, label)
     schema = _nonempty_string(evidence.get("schema"), f"{label}.schema")
     version = evidence.get("version")
@@ -104,9 +152,10 @@ def _validate_evidence(raw: Any, lesson_file: dict[str, Any], label: str) -> dic
         raise MissionCatalogError(f"{label} uses unsupported schema/version {schema!r}/{version!r}")
     if evidence.get("verifierRequired") is not True:
         raise MissionCatalogError(f"{label}.verifierRequired must be true")
-    canonical_evidence = _mapping(lesson_file.get("evidence"), "canonical lesson evidence")
-    if canonical_evidence.get("verifierRequired") is not True:
-        raise MissionCatalogError("canonical lesson evidence must require a verifier")
+    if canonical_evidence is not None:
+        canonical = _mapping(canonical_evidence, "canonical lesson evidence")
+        if canonical.get("verifierRequired") is not True:
+            raise MissionCatalogError("canonical lesson evidence must require a verifier")
     return {"schema": schema, "version": version, "verifierRequired": True}
 
 
@@ -136,9 +185,13 @@ def load_mission_catalog(
         raise MissionCatalogError("OS mission bindings must contain a non-empty bindings list")
 
     literacy_catalog, lessons = _load_lessons(source_root / "curriculum" / "ai-literacy")
-    projects = {project.slug for project in load_catalog(source_root / "curriculum" / "catalog.md")}
+    projects = {
+        project.slug: project
+        for project in load_catalog(source_root / "curriculum" / "catalog.md")
+    }
+    voxel_games = _load_voxel_catalog(source_root / "engines" / "voxelDojo" / "catalog.json")
 
-    records: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    records: list[tuple[str | None, dict[str, Any]]] = []
     mission_ids: set[str] = set()
     lesson_to_mission: dict[str, str] = {}
     for index, raw_binding in enumerate(raw_bindings):
@@ -153,47 +206,113 @@ def load_mission_catalog(
             raise MissionCatalogError(f"{label}.trackId {track_id!r} is unsupported")
 
         curriculum = _mapping(binding.get("curriculum"), f"{label}.curriculum")
-        if curriculum.get("kind") != "ai-literacy-lesson":
-            raise MissionCatalogError(f"{label}.curriculum.kind is unsupported")
-        lesson_id = _nonempty_string(curriculum.get("lessonId"), f"{label}.curriculum.lessonId")
-        lesson_record = lessons.get(lesson_id)
-        if lesson_record is None:
-            raise MissionCatalogError(f"{label} references unknown curriculum lesson {lesson_id!r}")
-        lesson_entry = lesson_record["entry"]
-        lesson_file = lesson_record["file"]
-        if lesson_entry.get("status") != "ready" or lesson_file is None:
-            raise MissionCatalogError(f"{label} references non-ready curriculum lesson {lesson_id!r}")
-        if mission_id != lesson_id:
-            raise MissionCatalogError(f"{label}.missionId must preserve canonical lesson id {lesson_id!r}")
-        if lesson_id in lesson_to_mission:
-            raise MissionCatalogError(f"curriculum lesson {lesson_id!r} has multiple mission bindings")
-        lesson_to_mission[lesson_id] = mission_id
-
+        curriculum_kind = curriculum.get("kind")
         project_id = _nonempty_string(curriculum.get("projectId"), f"{label}.curriculum.projectId")
         if project_id not in projects:
             raise MissionCatalogError(f"{label} references unknown curriculum project {project_id!r}")
         unit_id = _nonempty_string(curriculum.get("unitId"), f"{label}.curriculum.unitId")
-        if unit_id != f"ai-literacy:{lesson_id}":
-            raise MissionCatalogError(f"{label}.curriculum.unitId must be ai-literacy:{lesson_id}")
-
-        version = lesson_file.get("version")
-        if not isinstance(version, int) or isinstance(version, bool) or version < 1:
-            raise MissionCatalogError(f"canonical lesson {lesson_id!r} has an invalid version")
-        runtime = _validate_runtime(binding.get("runtime"), f"{label}.runtime")
-        evidence = _validate_evidence(binding.get("evidence"), lesson_file, f"{label}.evidence")
+        runtime, voxel_game = _validate_runtime(
+            binding.get("runtime"), f"{label}.runtime", voxel_games
+        )
         fallback = _validate_fallback(binding.get("fallback"), f"{label}.fallback")
+
+        if curriculum_kind == "ai-literacy-lesson":
+            if track_id != "ai-pratica" or runtime["engineId"] != "literacyDojo":
+                raise MissionCatalogError(
+                    f"{label} AI-literacy missions must use the ai-pratica track and literacyDojo"
+                )
+            lesson_id = _nonempty_string(
+                curriculum.get("lessonId"), f"{label}.curriculum.lessonId"
+            )
+            lesson_record = lessons.get(lesson_id)
+            if lesson_record is None:
+                raise MissionCatalogError(
+                    f"{label} references unknown curriculum lesson {lesson_id!r}"
+                )
+            lesson_entry = lesson_record["entry"]
+            lesson_file = lesson_record["file"]
+            if lesson_entry.get("status") != "ready" or lesson_file is None:
+                raise MissionCatalogError(
+                    f"{label} references non-ready curriculum lesson {lesson_id!r}"
+                )
+            if mission_id != lesson_id:
+                raise MissionCatalogError(
+                    f"{label}.missionId must preserve canonical lesson id {lesson_id!r}"
+                )
+            if lesson_id in lesson_to_mission:
+                raise MissionCatalogError(
+                    f"curriculum lesson {lesson_id!r} has multiple mission bindings"
+                )
+            lesson_to_mission[lesson_id] = mission_id
+            if unit_id != f"ai-literacy:{lesson_id}":
+                raise MissionCatalogError(
+                    f"{label}.curriculum.unitId must be ai-literacy:{lesson_id}"
+                )
+            version = lesson_file.get("version")
+            if not isinstance(version, int) or isinstance(version, bool) or version < 1:
+                raise MissionCatalogError(
+                    f"canonical lesson {lesson_id!r} has an invalid version"
+                )
+            evidence = _validate_evidence(
+                binding.get("evidence"),
+                f"{label}.evidence",
+                lesson_file.get("evidence"),
+            )
+            title = _nonempty_string(
+                lesson_entry.get("title"), f"lesson {lesson_id}.title"
+            )
+            objective = _nonempty_string(
+                lesson_entry.get("objective"), f"lesson {lesson_id}.objective"
+            )
+            estimated_minutes = lesson_entry.get("estimatedMinutes")
+        elif curriculum_kind == "project-voxel-game":
+            lesson_id = None
+            if track_id != "dev" or runtime["engineId"] != "voxelDojo" or voxel_game is None:
+                raise MissionCatalogError(
+                    f"{label} project voxel missions must use the dev track and voxelDojo"
+                )
+            if mission_id != voxel_game["id"]:
+                raise MissionCatalogError(
+                    f"{label}.missionId must preserve voxel game id {voxel_game['id']!r}"
+                )
+            project = projects[project_id]
+            game_number = re.match(r"^game-(\d{2})-", mission_id)
+            if game_number is None or int(game_number.group(1)) != project.number:
+                raise MissionCatalogError(
+                    f"{label} voxel game number must match curriculum project {project_id!r}"
+                )
+            version = binding.get("version")
+            if not isinstance(version, int) or isinstance(version, bool) or version < 1:
+                raise MissionCatalogError(f"{label}.version must be a positive integer")
+            estimated_minutes = binding.get("estimatedMinutes")
+            evidence = _validate_evidence(binding.get("evidence"), f"{label}.evidence")
+            if evidence["schema"] != "teaching-game-evidence":
+                raise MissionCatalogError(
+                    f"{label}.evidence must use teaching-game-evidence"
+                )
+            title = f"{voxel_game['name']}: {project.title}"
+            objective = project.learning_goal
+        else:
+            raise MissionCatalogError(f"{label}.curriculum.kind is unsupported")
+
+        if (
+            not isinstance(estimated_minutes, int)
+            or isinstance(estimated_minutes, bool)
+            or estimated_minutes < 1
+        ):
+            raise MissionCatalogError(f"{label}.estimatedMinutes must be a positive integer")
         records.append(
             (
-                binding,
+                lesson_id,
                 {
                     "id": mission_id,
                     "version": version,
                     "trackId": track_id,
                     "unitId": unit_id,
                     "projectId": project_id,
-                    "title": _nonempty_string(lesson_entry.get("title"), f"lesson {lesson_id}.title"),
-                    "objective": _nonempty_string(lesson_entry.get("objective"), f"lesson {lesson_id}.objective"),
-                    "estimatedMinutes": lesson_entry.get("estimatedMinutes"),
+                    "title": title,
+                    "objective": objective,
+                    "estimatedMinutes": estimated_minutes,
                     "prerequisites": [],
                     "stages": ["understand", "respond", "apply"],
                     "runtime": runtime,
@@ -204,17 +323,21 @@ def load_mission_catalog(
         )
 
     missions: list[dict[str, Any]] = []
-    for binding, mission in records:
-        lesson_id = mission["id"]
-        prerequisites = lessons[lesson_id]["entry"].get("prerequisites")
-        if not isinstance(prerequisites, list) or not all(isinstance(item, str) for item in prerequisites):
-            raise MissionCatalogError(f"canonical lesson {lesson_id!r} has invalid prerequisites")
-        missing = [item for item in prerequisites if item not in lesson_to_mission]
-        if missing:
-            raise MissionCatalogError(
-                f"mission {mission['id']!r} has unbound curriculum prerequisites {missing!r}"
-            )
-        mission["prerequisites"] = [lesson_to_mission[item] for item in prerequisites]
+    for lesson_id, mission in records:
+        if lesson_id is not None:
+            prerequisites = lessons[lesson_id]["entry"].get("prerequisites")
+            if not isinstance(prerequisites, list) or not all(
+                isinstance(item, str) for item in prerequisites
+            ):
+                raise MissionCatalogError(
+                    f"canonical lesson {lesson_id!r} has invalid prerequisites"
+                )
+            missing = [item for item in prerequisites if item not in lesson_to_mission]
+            if missing:
+                raise MissionCatalogError(
+                    f"mission {mission['id']!r} has unbound curriculum prerequisites {missing!r}"
+                )
+            mission["prerequisites"] = [lesson_to_mission[item] for item in prerequisites]
         missions.append(mission)
 
     return {

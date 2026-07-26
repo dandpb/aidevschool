@@ -11,6 +11,10 @@
  * games differ: game-10 passes `loads: Map`, warehouse passes the controller,
  * others pass nothing extra. Callers wire `onState` to match their scene's sync.
  */
+import type {
+  TeachingGameHostAdapter,
+  TeachingGameMissionState,
+} from "@aidevschool/evidence/host-protocol"
 
 export interface SceneHarnessController<TState> {
   subscribe(fn: (state: TState) => void): void
@@ -39,6 +43,12 @@ export interface SceneHarnessOptions<
   onState: (state: TState, game: TController, scene: TScene) => void
   /** HUD mount function from the game's scene/hud.ts. */
   mountHud: (root: HTMLElement, game: TController) => void
+  /** Optional mission-host lifecycle; simulation state remains authoritative. */
+  hostedMission?: {
+    readonly adapter: TeachingGameHostAdapter
+    readonly launch: (game: TController) => void | Promise<void>
+    readonly projectState: (state: TState) => TeachingGameMissionState
+  }
 }
 
 /**
@@ -62,6 +72,11 @@ export function createSceneHarness<
 
   opts.wireInteraction?.(game, scene)
   game.subscribe((state) => opts.onState(state, game, scene))
+  if (opts.hostedMission !== undefined) {
+    const hostedMission = opts.hostedMission
+    hostedMission.adapter.start(() => hostedMission.launch(game))
+    game.subscribe((state) => hostedMission.adapter.publishState(hostedMission.projectState(state)))
+  }
   opts.mountHud(hudRoot, game)
 
   const w = window as unknown as Record<string, unknown>

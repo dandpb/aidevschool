@@ -109,8 +109,10 @@ export function ResultScreen({
         <h2>O que isto significa</h2>
         <p>
           <strong>Lição concluída</strong> registra o seu progresso neste aparelho. Isso é diferente
-          de <strong>competência verificada</strong>, que depende de uma verificação independente —
-          e ainda não faz parte deste piloto.
+          de <strong>competência verificada</strong>.{" "}
+          {hosted
+            ? "A evidência seguirá para verificação independente, mas este fluxo não altera o estado canônico."
+            : "Ela depende de uma verificação independente, que ainda não faz parte deste aplicativo."}
         </p>
       </div>
 
@@ -143,9 +145,9 @@ export function ResultScreen({
 
       <div className="actions">
         {hosted ? (
-          <p className="muted" role="status">
-            Conclusão enviada ao hub. Use o botão Voltar ao hub ao redor da missão.
-          </p>
+          <output className="muted">
+            Sinal de conclusão enviado ao hub. Use o botão Voltar ao hub ao redor da missão.
+          </output>
         ) : summary.nextLessonId ? (
           <button
             type="button"

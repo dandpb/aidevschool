@@ -52,7 +52,7 @@ function payloadIsValid(type: unknown, payload: unknown): boolean {
       )
     case 'evidence.submitted':
       return (
-        payload.schemaId === 'literacy-evidence' &&
+        (payload.schemaId === 'literacy-evidence' || payload.schemaId === 'teaching-game-evidence') &&
         payload.schemaVersion === 1 &&
         isRecord(payload.subject) &&
         hasString(payload.subject, 'missionId') &&

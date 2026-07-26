@@ -1,6 +1,6 @@
 # ADR-0006: Contrato de invocação do verificador G4 (skill `aiDevschoolMvp`)
 
-**Status:** Rejected · **Data:** 2026-07-25 · **Decisor:** implementação atual
+**Status:** Accepted · **Data:** 2026-07-25 · **Decisor:** Daniel (ratificação: adapter record/replay para aceitação determinística byte-a-byte; o teste G4 provisional passa por esse fluxo e é agora §12-conforme)
 
 ## Contexto
 

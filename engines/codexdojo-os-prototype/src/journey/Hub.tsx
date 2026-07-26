@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react'
+import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition } from '../domain'
 import type { MissionCatalogRepository } from '../missions/catalog'
 import { recommendMission } from '../missions/recommendation'
 import { missionKey, type OsProgress } from '../progress/domain'
+import type { EvidenceVerificationState } from '../verification/ports'
 
 export function Hub({
   progress,
@@ -14,6 +17,8 @@ export function Hub({
   readonly catalog: MissionCatalogRepository
   readonly onLaunch: (mission: MissionDefinition) => void
 }) {
+  const services = useServices()
+  const [verification, setVerification] = useState<EvidenceVerificationState>({ kind: 'not-submitted' })
   const recommendation = recommendMission(progress, catalog)
   const mission =
     recommendation.kind === 'resume' || recommendation.kind === 'start'
@@ -23,6 +28,17 @@ export function Hub({
   const completedMission = catalog
     .listLaunchable()
     .find((item) => progress.missionStatusByKey[missionKey(item.trackId, item.id)] === 'completed')
+
+  useEffect(() => {
+    if (completedMission === undefined) return
+    let active = true
+    void services.verification.latest(completedMission).then((state) => {
+      if (active) setVerification(state)
+    })
+    return () => { active = false }
+  }, [completedMission, services])
+
+  const independentlyVerified = verification.kind === 'verified'
 
   return (
     <main className="journey-page hub-page">
@@ -46,8 +62,12 @@ export function Hub({
       {completedMission !== undefined ? (
         <section className="honest-progress" aria-label="Estado da missão concluída">
           <div><span>1</span><strong>Atividade concluída</strong><small>Salva neste dispositivo</small></div>
-          <div className="current"><span>2</span><strong>Evidência enviada</strong><small>Verificação pendente</small></div>
-          <div><span>3</span><strong>Competência verificada</strong><small>Ainda não concedida</small></div>
+          <div className={verification.kind === 'not-submitted' ? '' : 'current'}><span>2</span><strong>Evidência preservada</strong><small>{verification.kind === 'not-submitted' ? 'Ainda não enviada' : 'Separada do progresso local'}</small></div>
+          <div className={independentlyVerified ? 'current' : ''}><span>3</span><strong>Verificação independente</strong><small>{independentlyVerified ? `Veredito ${verification.receipt.verdict}` : verification.kind === 'gateway-unavailable' ? 'Temporariamente indisponível' : 'Aguardando verificador'}</small></div>
+          <div><span>4</span><strong>Competência canônica</strong><small>Não alterada por este fluxo</small></div>
+          {verification.kind === 'gateway-unavailable' ? (
+            <button type="button" onClick={() => void services.verification.retry(completedMission, setVerification)}>Tentar verificação novamente</button>
+          ) : null}
         </section>
       ) : null}
 
@@ -81,7 +101,7 @@ export function Hub({
           <article>
             <p className="journey-eyebrow">Progresso honesto</p>
             <h2>Conclusão não é domínio</h2>
-            <p>O jogo e o mentor ajudam a produzir uma tentativa. Só uma verificação independente pode alterar o estado canônico.</p>
+            <p>O jogo e o mentor ajudam a produzir uma tentativa. A verificação independente é um requisito; este fluxo não altera o estado canônico.</p>
             <strong>{learner.masteredCount} competências verificadas</strong>
           </article>
           <article>

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import copy
+import json
 import tempfile
 import unittest
 from pathlib import Path
+from typing import Any, Callable
 
 import yaml
 
@@ -27,10 +29,34 @@ def _project_catalog() -> str:
 | **Learning goal** | Verify before use. |
 | **Directory** | `00_ai_in_practice/` |
 | **Dependencies** | None |
+
+### 01. Rate Limiter
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `01_rate_limiter` |
+| **Status** | implemented |
+| **Concepts** | Concurrency |
+| **Key question** | How are requests limited? |
+| **Learning goal** | Bound concurrent requests. |
+| **Directory** | `01_rate_limiter/` |
+| **Dependencies** | None |
+
+### 02. Key-Value Store
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `02_key_value_store` |
+| **Status** | implemented |
+| **Concepts** | Hash maps and TTL |
+| **Key question** | Where does a key live? |
+| **Learning goal** | Predict hash-map CRUD and TTL behavior. |
+| **Directory** | `02_key_value_store/` |
+| **Dependencies** | Project 01 |
 """
 
 
-def _catalog() -> dict:
+def _catalog() -> dict[str, Any]:
     return {
         "schemaVersion": 1,
         "contentVersion": "test.1",
@@ -56,7 +82,7 @@ def _catalog() -> dict:
     }
 
 
-def _lesson(lesson_id: str, version: int) -> dict:
+def _lesson(lesson_id: str, version: int) -> dict[str, Any]:
     return {
         "id": lesson_id,
         "version": version,
@@ -64,7 +90,7 @@ def _lesson(lesson_id: str, version: int) -> dict:
     }
 
 
-def _binding(lesson_id: str) -> dict:
+def _binding(lesson_id: str) -> dict[str, Any]:
     return {
         "missionId": lesson_id,
         "trackId": "ai-pratica",
@@ -89,14 +115,51 @@ def _binding(lesson_id: str) -> dict:
     }
 
 
+def _dev_binding() -> dict[str, Any]:
+    return {
+        "missionId": "game-02-warehouse",
+        "version": 1,
+        "trackId": "dev",
+        "curriculum": {
+            "kind": "project-voxel-game",
+            "projectId": "02_key_value_store",
+            "unitId": "U2-key-value-store",
+        },
+        "estimatedMinutes": 12,
+        "runtime": {
+            "engineId": "voxelDojo",
+            "gameId": "game-02-warehouse",
+            "entrypoint": "http://127.0.0.1:5202/?hosted=1",
+            "environmentKey": "VITE_WAREHOUSE_URL",
+            "protocolVersion": "1.0",
+        },
+        "evidence": {
+            "schema": "teaching-game-evidence",
+            "version": 1,
+            "verifierRequired": True,
+        },
+        "fallback": {"kind": "dom", "summary": "Semantic warehouse controls."},
+    }
+
+
 class MissionCatalogFixture:
     def __init__(self, root: Path) -> None:
         self.root = root
-        self.catalog = _catalog()
-        self.bindings = {"schemaVersion": 1, "bindings": [_binding("l02")]}
+        self.catalog: dict[str, Any] = _catalog()
+        self.bindings: dict[str, Any] = {
+            "schemaVersion": 1,
+            "bindings": [_binding("l02")],
+        }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
         (root / "engines" / "codexdojo-os-prototype" / "config").mkdir(parents=True)
+        (root / "engines" / "voxelDojo").mkdir(parents=True)
         (root / "curriculum" / "catalog.md").write_text(_project_catalog(), encoding="utf-8")
+        (root / "engines" / "voxelDojo" / "catalog.json").write_text(
+            json.dumps(
+                [{"id": "game-02-warehouse", "name": "WAREHOUSE", "developmentPort": 5202}]
+            ),
+            encoding="utf-8",
+        )
         self.write()
 
     def write(self) -> None:
@@ -141,8 +204,46 @@ class TestMissionCatalog(unittest.TestCase):
 
         self.assertEqual(snapshot["missions"][1]["prerequisites"], ["l02"])
 
+    def test_joins_project_and_voxel_catalog_for_dev_mission(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            fixture.bindings["bindings"].append(_dev_binding())
+            fixture.write()
+
+            snapshot = load_mission_catalog(fixture.root)
+
+        mission = snapshot["missions"][1]
+        self.assertEqual(mission["id"], "game-02-warehouse")
+        self.assertEqual(mission["trackId"], "dev")
+        self.assertEqual(mission["projectId"], "02_key_value_store")
+        self.assertEqual(mission["unitId"], "U2-key-value-store")
+        self.assertEqual(mission["runtime"]["engineId"], "voxelDojo")
+        self.assertEqual(mission["evidence"]["schema"], "teaching-game-evidence")
+        self.assertEqual(mission["fallback"]["kind"], "dom")
+
+    def test_rejects_unknown_voxel_game_and_mismatched_project_number(self) -> None:
+        cases: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
+            (
+                "unknown voxel game",
+                lambda binding: binding["runtime"].update({"gameId": "game-99-unknown"}),
+            ),
+            (
+                "voxel game number must match",
+                lambda binding: binding["curriculum"].update({"projectId": "01_rate_limiter"}),
+            ),
+        ]
+        for expected, mutate in cases:
+            with self.subTest(expected=expected), tempfile.TemporaryDirectory() as tmp:
+                fixture = MissionCatalogFixture(Path(tmp))
+                binding = _dev_binding()
+                mutate(binding)
+                fixture.bindings["bindings"].append(binding)
+                fixture.write()
+                with self.assertRaisesRegex(MissionCatalogError, expected):
+                    load_mission_catalog(fixture.root)
+
     def test_rejects_unknown_non_ready_duplicate_and_unbound_prerequisites(self) -> None:
-        cases: list[tuple[str, callable]] = [
+        cases: list[tuple[str, Callable[[MissionCatalogFixture], None]]] = [
             (
                 "unknown curriculum lesson",
                 lambda fixture: fixture.bindings["bindings"][0]["curriculum"].update(

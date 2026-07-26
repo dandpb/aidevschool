@@ -6,13 +6,10 @@ encouraging sentence but MUST NOT alter any status word, date, or count (law L2)
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-
-import learner.gate.core as _core
+from _runtime import core as _core
 
 TRACK_TITLE = "AI Fluency Foundations"
 _WEEKDAY = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]

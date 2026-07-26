@@ -12,9 +12,9 @@ export default defineConfig({
   webServer: [
     {
       name: 'codexDojo OS',
-      command: 'npm run dev -- --host 127.0.0.1 --port 4174 --strictPort',
+      command: 'VITE_LOCAL_ENGINE_BRIDGE=true npm run dev -- --host 127.0.0.1 --port 4174 --strictPort',
       url: 'http://127.0.0.1:4174',
-      reuseExistingServer: true,
+      reuseExistingServer: false,
       timeout: 120_000,
     },
     {
@@ -30,6 +30,14 @@ export default defineConfig({
       command: 'pnpm exec vite --host 127.0.0.1 --port 5176 --strictPort',
       cwd: '../pixelDojo/pixel-quest',
       url: 'http://127.0.0.1:5176',
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
+      name: 'LiteracyDojo',
+      command: 'npm run dev -- --host 127.0.0.1 --port 5178 --strictPort',
+      cwd: '../literacyDojo',
+      url: 'http://127.0.0.1:5178',
       reuseExistingServer: true,
       timeout: 120_000,
     },

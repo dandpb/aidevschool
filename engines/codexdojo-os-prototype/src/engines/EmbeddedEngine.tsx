@@ -1,6 +1,6 @@
 import { Maximize2, Minimize2, ServerCog } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { type EmbeddedEvidenceReceipt, readEmbeddedEvidenceMessage } from './evidence'
+import { type EmbeddedEvidenceReceipt, readEmbeddedEvidenceMessage } from '../host/legacyEvidenceAdapter'
 import { resolveEngineUrl } from './registry'
 
 export type EmbeddedEngineProps = {

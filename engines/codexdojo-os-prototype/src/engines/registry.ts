@@ -13,6 +13,7 @@ export const engineRegistry = [
       environmentKey: 'VITE_CODEXDOJO_URL',
       developmentUrl: 'http://127.0.0.1:5175/',
       evidenceSource: null,
+      missionProtocol: null,
     },
   },
   {
@@ -66,6 +67,7 @@ export const engineRegistry = [
       environmentKey: 'VITE_PIXELDOJO_URL',
       developmentUrl: 'http://127.0.0.1:5176/',
       evidenceSource: 'pixelquest',
+      missionProtocol: null,
     },
   },
   {
@@ -80,6 +82,7 @@ export const engineRegistry = [
       environmentKey: 'VITE_VOXELDOJO_URL',
       developmentUrl: 'http://127.0.0.1:5177/',
       evidenceSource: null,
+      missionProtocol: '1.0',
     },
   },
 ] as const satisfies readonly EngineDefinition[]

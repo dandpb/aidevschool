@@ -62,13 +62,24 @@ export function getSessionAuthorizationError(request: {
   return null
 }
 
+export function isVerificationRouteEnabled(pathname: string, enabled: boolean): boolean {
+  return enabled || pathname !== `${BRIDGE_ROOT}/verification`
+}
+
+export function bridgeRequestNeedsExclusiveExecution(pathname: string): boolean {
+  return pathname !== `${BRIDGE_ROOT}/verification`
+}
+
 function tokensEqual(received: string, expected: string): boolean {
   const receivedBytes = Buffer.from(received)
   const expectedBytes = Buffer.from(expected)
   return receivedBytes.length === expectedBytes.length && timingSafeEqual(receivedBytes, expectedBytes)
 }
 
-export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base64url')): Plugin {
+export function engineBridgePlugin(
+  sessionToken = randomBytes(32).toString('base64url'),
+  verificationEnabled = process.env.VITE_LOCAL_ENGINE_BRIDGE === 'true',
+): Plugin {
   let bridgeBusy = false
   const configureBridge = (server: BridgeServer): void => {
     server.middlewares.use((request, response, next) => {
@@ -94,6 +105,10 @@ export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base
         next()
         return
       }
+      if (!isVerificationRouteEnabled(pathname, verificationEnabled)) {
+        sendJson(response, { status: 404, body: { error: 'not-found' } })
+        return
+      }
 
       const authorizationError = getBridgeAuthorizationError({
         remoteAddress: request.socket.remoteAddress,
@@ -109,11 +124,12 @@ export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base
         })
         return
       }
-      if (bridgeBusy) {
+      const needsExclusiveExecution = bridgeRequestNeedsExclusiveExecution(pathname)
+      if (needsExclusiveExecution && bridgeBusy) {
         sendJson(response, { status: 429, body: { error: 'bridge-busy' } })
         return
       }
-      bridgeBusy = true
+      if (needsExclusiveExecution) bridgeBusy = true
 
       void handleBridgeRequest(request, response, pathname).catch((error: unknown) => {
         if (error instanceof BridgeBodyTooLargeError) {
@@ -129,7 +145,9 @@ export function engineBridgePlugin(sessionToken = randomBytes(32).toString('base
         }
         server.config.logger.error('Engine bridge request failed')
         sendJson(response, { status: 500, body: { error: 'bridge-failure' } })
-      }).finally(() => { bridgeBusy = false })
+      }).finally(() => {
+        if (needsExclusiveExecution) bridgeBusy = false
+      })
     })
   }
 

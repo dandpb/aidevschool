@@ -7,14 +7,10 @@ diff_summary. Re-running with an already-recorded trigger does not double-apply.
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-
-import learner.gate.core as _core
-import learner.gate.state as _state
+from _runtime import core as _core, state as _state
 
 
 _emit = _core.emit_json

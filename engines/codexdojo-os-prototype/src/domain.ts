@@ -18,13 +18,13 @@ export type MissionDefinition = {
   readonly prerequisites: readonly MissionId[]
   readonly stages: readonly MissionStage[]
   readonly runtime: {
-    readonly engineId: 'literacyDojo'
+    readonly engineId: 'literacyDojo' | 'voxelDojo'
     readonly entrypoint: string
     readonly environmentKey: string
     readonly protocolVersion: '1.0'
   }
   readonly evidence: {
-    readonly schema: 'literacy-evidence'
+    readonly schema: 'literacy-evidence' | 'teaching-game-evidence'
     readonly version: 1
     readonly verifierRequired: true
   }
@@ -38,17 +38,6 @@ export type MissionCatalogSnapshot = {
   readonly schemaVersion: 1
   readonly contentVersion: string
   readonly missions: readonly MissionDefinition[]
-}
-
-export type LocalProgressDisplay = {
-  readonly missionStatus: 'locked' | 'available' | 'in_progress' | 'completed'
-  readonly evidenceStatus: 'not-submitted' | 'pending'
-}
-
-export type CanonicalProgressDisplay = {
-  readonly activeUnitState: LearnerSnapshot['activeUnit']['state']
-  readonly masteredCount: number
-  readonly source: 'learner-substrate'
 }
 
 export type AppDefinition = {

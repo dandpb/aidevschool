@@ -3,6 +3,7 @@
  * Games supply identity + metrics + pass; this owns envelope + dual channel.
  * Contract: docs/design/teaching-game-contract.md
  */
+import { forwardMissionEvidence } from "./hostProtocol"
 
 export type EvidenceSource = "pixelquest" | "voxeldojo"
 export type ReviewReason =
@@ -349,6 +350,7 @@ export function dualEmit<T extends object>(
   record: T,
   channel: "game" | "pixelquest" | "voxeldojo" = "game",
 ): T {
+  const forwarded = forwardMissionEvidence(record as Readonly<Record<string, unknown>>)
   if (typeof window !== "undefined") {
     const w = window as unknown as Record<string, unknown>
     if (channel === "game") {
@@ -360,7 +362,9 @@ export function dualEmit<T extends object>(
       const prev = w["__voxelDojoEvidence"]
       w["__voxelDojoEvidence"] = [...(Array.isArray(prev) ? prev : []), record]
     }
-    forwardToEmbeddingHost(record)
+    if (!forwarded) {
+      forwardToEmbeddingHost(record)
+    }
   }
   console.log(`EVIDENCE ${JSON.stringify(record)}`)
   return record

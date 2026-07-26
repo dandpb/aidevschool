@@ -1,12 +1,16 @@
 import type { EngineAction, EngineId } from '../src/engines/protocol'
 
-export type AllowedAction = {
-  readonly engineId: EngineId
-  readonly action: EngineAction
+export type ProcessSpec = {
+  readonly action: string
   readonly executable: string
   readonly args: readonly string[]
   readonly cwd: string
   readonly timeoutMs: number
+}
+
+export type AllowedAction = ProcessSpec & {
+  readonly engineId: EngineId
+  readonly action: EngineAction
 }
 
 export type ProcessReceipt = {
@@ -15,7 +19,7 @@ export type ProcessReceipt = {
   readonly stderr: string
 }
 
-export type ActionExecutor = (spec: AllowedAction) => Promise<ProcessReceipt>
+export type ActionExecutor = (spec: ProcessSpec, input?: string) => Promise<ProcessReceipt>
 
 export const allowedActions = [
   {

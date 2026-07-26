@@ -1,4 +1,5 @@
-import { describe, expect, it, vi } from "vitest"
+import { setMissionEvidenceForwarder } from "@aidevschool/evidence/host-protocol"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { GameController } from "./controller"
 
 function evidenceLines(spy: ReturnType<typeof vi.spyOn>): string[] {
@@ -6,6 +7,11 @@ function evidenceLines(spy: ReturnType<typeof vi.spyOn>): string[] {
     .map((c: unknown[]) => String(c[0]))
     .filter((l: string) => l.startsWith("EVIDENCE "))
 }
+
+afterEach(() => {
+  setMissionEvidenceForwarder(null)
+  vi.restoreAllMocks()
+})
 
 describe("full headless playthrough (input → sim → evidence wiring)", () => {
   it("L1: perfect shelf predictions clear the wave and emit one passing record", () => {
@@ -49,6 +55,43 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       .find((r) => r.scenario_id === "kv-warehouse-L1")
     expect(rec?.pass).toBe(false)
     spy.mockRestore()
+  })
+
+  it("emits the same canonical inner record once in standalone and hosted modes", () => {
+    const play = () => {
+      const game = new GameController("L1")
+      game.start()
+      while (game.snapshot.phase === "predicting") {
+        const key = game.snapshot.keys[game.snapshot.pendingIndex]
+        if (key === undefined) break
+        game.predictShelf(game.shelfOfKey(key))
+      }
+    }
+    const withoutTimestamp = ({ ts: _timestamp, ...record }: Record<string, unknown>) => record
+
+    const standaloneLog = vi.spyOn(console, "log").mockImplementation(() => {})
+    play()
+    const standalone = evidenceLines(standaloneLog).map((line) =>
+      JSON.parse(line.slice("EVIDENCE ".length)),
+    )
+    standaloneLog.mockRestore()
+
+    const forwarded: Record<string, unknown>[] = []
+    setMissionEvidenceForwarder((record) => {
+      forwarded.push(record)
+      return true
+    })
+    const hostedLog = vi.spyOn(console, "log").mockImplementation(() => {})
+    play()
+    const hosted = evidenceLines(hostedLog).map((line) =>
+      JSON.parse(line.slice("EVIDENCE ".length)),
+    )
+
+    expect(standalone).toHaveLength(1)
+    expect(hosted).toHaveLength(1)
+    expect(forwarded).toHaveLength(1)
+    expect(forwarded[0]).toEqual(hosted[0])
+    expect(withoutTimestamp(hosted[0])).toEqual(withoutTimestamp(standalone[0]))
   })
 
   it("L2: correct get-probes (alive vs missing) clear the wave", () => {

@@ -1,6 +1,6 @@
 import { execFile } from 'node:child_process'
 import { resolve } from 'node:path'
-import type { AllowedAction, ProcessReceipt } from './actions'
+import type { ProcessReceipt, ProcessSpec } from './actions'
 
 export class EngineProcessTimeoutError extends Error {
   constructor(action: string, timeoutMs: number) {
@@ -9,9 +9,9 @@ export class EngineProcessTimeoutError extends Error {
   }
 }
 
-export async function runProcess(spec: AllowedAction): Promise<ProcessReceipt> {
+export async function runProcess(spec: ProcessSpec, input?: string): Promise<ProcessReceipt> {
   return new Promise((resolveReceipt, rejectReceipt) => {
-    execFile(
+    const child = execFile(
       spec.executable,
       [...spec.args],
       {
@@ -37,5 +37,6 @@ export async function runProcess(spec: AllowedAction): Promise<ProcessReceipt> {
         rejectReceipt(error)
       },
     )
+    child.stdin?.end(input)
   })
 }

@@ -3,7 +3,7 @@ import type { MissionStage } from '../domain'
 export const HOST_ENGINE_PROTOCOL = 'aidevschool.host-engine' as const
 export const HOST_ENGINE_PROTOCOL_VERSION = '1.0' as const
 
-export type MissionEngineId = 'literacyDojo'
+export type MissionEngineId = 'literacyDojo' | 'voxelDojo'
 export type MissionRunStatus = 'running' | 'completed' | 'failed'
 
 export type ProtocolEnvelope<TType extends string, TPayload> = {
@@ -55,7 +55,7 @@ export type MissionStateMessage = ProtocolEnvelope<
 export type EvidenceSubmittedMessage = ProtocolEnvelope<
   'evidence.submitted',
   {
-    readonly schemaId: 'literacy-evidence'
+    readonly schemaId: 'literacy-evidence' | 'teaching-game-evidence'
     readonly schemaVersion: 1
     readonly subject: { readonly missionId: string; readonly unitId: string }
     readonly record: Readonly<Record<string, unknown>>

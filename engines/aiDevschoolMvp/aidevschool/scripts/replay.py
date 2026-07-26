@@ -18,9 +18,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
-
-import learner.gate.core as _core
+from _runtime import core as _core
 
 FIELDS = ("status", "scaffold_level", "attempts", "gate_progress", "target_days_effective", "next_review_ts")
 

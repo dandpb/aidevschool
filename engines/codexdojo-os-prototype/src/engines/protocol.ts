@@ -14,6 +14,7 @@ export type EngineRuntime =
       readonly environmentKey: string
       readonly developmentUrl: string
       readonly evidenceSource: 'pixelquest' | null
+      readonly missionProtocol: '1.0' | null
     }
   | {
       readonly kind: 'local-bridge'

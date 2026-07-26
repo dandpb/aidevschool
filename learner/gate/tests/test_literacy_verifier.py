@@ -9,6 +9,8 @@ from typing import Any
 
 import pytest
 
+from learner.gate.literacy_bridge import verify_stream
+
 from learner.gate.literacy_verifier import (
     DETERMINISTIC_ACTIVITY_TYPES,
     PASS_SCORE_MIN,
@@ -372,3 +374,42 @@ def test_cli_accepts_choice_and_rubric_review_fixtures(tmp_path: Path):
             encoding="utf-8",
         )
         assert literacy_cli_main(["--evidence", str(path)]) == 0, activity_type
+
+
+def test_stdin_bridge_emits_one_closed_digest_bound_receipt():
+    from io import StringIO
+
+    source = StringIO(json.dumps(make_record()))
+    output = StringIO()
+
+    assert verify_stream(source, output) == 0
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "PASS"
+    assert receipt["source"] == VERIFIER_SOURCE
+    assert receipt["context_isolated"] is True
+    assert len(receipt["evidence_digest"]) == 64
+    assert receipt["producer_writes_mastered"] is False
+
+
+@pytest.mark.parametrize("payload", ["{bad", "[]", "null"])
+def test_stdin_bridge_fails_closed_for_malformed_or_non_object_input(payload: str):
+    from io import StringIO
+
+    output = StringIO()
+
+    assert verify_stream(StringIO(payload), output) == 1
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "FAIL"
+    assert receipt["mastery_eligible"] is False
+
+
+def test_stdin_bridge_does_not_accept_browser_process_or_path_controls():
+    from io import StringIO
+
+    record = make_record(command="rm", path="/etc/passwd")
+    output = StringIO()
+
+    assert verify_stream(StringIO(json.dumps(record)), output) == 1
+    receipt = json.loads(output.getvalue())
+    assert receipt["verdict"] == "FAIL"
+    assert any("unknown field" in error for error in receipt["errors"])

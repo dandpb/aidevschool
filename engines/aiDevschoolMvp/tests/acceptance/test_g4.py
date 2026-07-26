@@ -15,14 +15,9 @@ from engines.aiDevschoolMvp.tests.acceptance.conftest import (
     write_state,
 )
 
-# PROVISIONAL (ADR-0006 not ratified): G4 acceptance via the recorded adapter is
-# NOT §12-conformant until the verifier contract is ratified. Skipped by default;
-# set ADR_0006_RATIFIED=1 to run. Do not strip this marker — it is the honest
-# split between the §12-conformant deterministic core and provisional G4.
-_G4_PROVISIONAL = "ADR-0006 not ratified; G4 recorded-adapter acceptance is provisional, not §12-conformant"
-pytestmark = pytest.mark.skipif(
-    __import__("os").environ.get("ADR_0006_RATIFIED") != "1", reason=_G4_PROVISIONAL
-)
+# ADR-0006 RATIFIED (2026-07-25, Daniel): the recorded adapter is the §12-conformant
+# G4 acceptance path — it reproduces G4 verdicts byte-for-byte deterministically
+# (faithful to §6.1 "recorded model at temperature 0" + §7.2 replay). Runs by default.
 
 C13_FAIL = ("It's like autocomplete gone to university. It doesn't look things up \u2014 it guesses "
             "the next word based on everything it read, and because fluent sentences are what it was "

@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
+  bridgeRequestNeedsExclusiveExecution,
   getBridgeAuthorizationError,
   getSessionAuthorizationError,
   isLoopbackAddress,
+  isVerificationRouteEnabled,
 } from './plugin'
 
 describe('engine bridge loopback boundary', () => {
@@ -19,6 +21,23 @@ describe('engine bridge loopback boundary', () => {
       expect(isLoopbackAddress(address)).toBe(false)
     },
   )
+})
+
+describe('integrated verification route exposure', () => {
+  it('exposes only independent verification when the integrated bridge is enabled', () => {
+    expect(isVerificationRouteEnabled('/__dojo/bridge/v1/verification', false)).toBe(false)
+    expect(isVerificationRouteEnabled('/__dojo/bridge/v1/verification', true)).toBe(true)
+    expect(isVerificationRouteEnabled('/__dojo/bridge/v1/engines/openclaw/actions/preview-checklist', false)).toBe(true)
+  })
+
+  it('keeps pure verification concurrent while engine actions stay exclusive', () => {
+    expect(bridgeRequestNeedsExclusiveExecution('/__dojo/bridge/v1/verification')).toBe(false)
+    expect(
+      bridgeRequestNeedsExclusiveExecution(
+        '/__dojo/bridge/v1/engines/openclaw/actions/preview-checklist',
+      ),
+    ).toBe(true)
+  })
 })
 
 describe('engine bridge browser authorization', () => {

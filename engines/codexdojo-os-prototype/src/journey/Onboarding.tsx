@@ -54,7 +54,8 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </label>
         </div>
 
-        <div className="track-choice" aria-label="Escolha de trilha">
+        <fieldset className="track-choice">
+          <legend className="journey-sr-only">Escolha de trilha</legend>
           <button
             type="button"
             className={selectedTrackId === 'ai-pratica' ? 'track-option selected' : 'track-option'}
@@ -75,7 +76,7 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
             <strong>Dev</strong>
             <small>Pratique fundamentos e sistemas com desafios executáveis.</small>
           </button>
-        </div>
+        </fieldset>
         <p className="recommendation-note" role="status">
           Recomendação: <strong>{recommendation === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>. Você escolheu <strong>{selectedTrackId === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>.
         </p>

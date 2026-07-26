@@ -25,6 +25,21 @@ describe('engine bridge process runner', () => {
     expect(receipt).toEqual({ exitCode: 0, stdout: 'bridge-ready', stderr: '' })
   })
 
+  it('passes verifier evidence through stdin without adding browser arguments', async () => {
+    const action = nodeAction(
+      ['-e', 'process.stdin.setEncoding("utf8"); process.stdin.on("data", value => process.stdout.write(value))'],
+      2_000,
+    )
+
+    const receipt = await runProcess(action, '{"source":"literacydojo"}')
+
+    expect(receipt).toEqual({
+      exitCode: 0,
+      stdout: '{"source":"literacydojo"}',
+      stderr: '',
+    })
+  })
+
   it('kills a child that exceeds its fixed action timeout', async () => {
     // Given
     const action = nodeAction(['-e', 'setInterval(() => {}, 1000)'], 50)
