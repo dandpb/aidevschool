@@ -82,7 +82,7 @@ function renderPitfalls(snapshot: LearnerSnapshot): string {
               <li>
                 <span class="pitfall-id">${escapeHtml(pitfall.id)}</span>
                 <span class="pitfall-desc">${escapeHtml(pitfall.description)}</span>
-                <span class="pitfall-occ">${escapeHtml(pitfall.occurrences)}× · ${escapeHtml(pitfall.lastSeen)}</span>
+                <span class="pitfall-occ" role="text" aria-label="${escapeHtml(pitfall.occurrences)} ocorrências, última em ${escapeHtml(pitfall.lastSeen)}"><span aria-hidden="true">${escapeHtml(pitfall.occurrences)}× · ${escapeHtml(pitfall.lastSeen)}</span></span>
               </li>
             `,
           )
@@ -151,9 +151,9 @@ function renderStreak(snapshot: LearnerSnapshot): string {
     <div class="learner-streak">
       <p class="eyebrow">Sequência</p>
       <div class="streak-row">
-        <strong class="streak-current">🔥 ${escapeHtml(s.current)}</strong>
+        <strong class="streak-current" role="text" aria-label="Sequência atual: ${escapeHtml(s.current)}"><span aria-hidden="true">🔥 ${escapeHtml(s.current)}</span></strong>
         <small class="streak-longest">recorde ${escapeHtml(s.longest)}</small>
-        <span class="streak-freezes" title="Streak freezes (cap 2)">freezes: ${filled}${empty}</span>
+        <span class="streak-freezes" role="text" aria-label="Freezes: ${freezesEquipped} de ${freezesMax} disponíveis" title="Streak freezes (cap 2)"><span aria-hidden="true">freezes: ${filled}${empty}</span></span>
       </div>
       <p class="streak-hint">${lastLabel} · cresce só ao passar o portão executável; dia perdido consome um freeze.</p>
     </div>
