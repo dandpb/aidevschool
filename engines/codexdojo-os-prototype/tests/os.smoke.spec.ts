@@ -6,7 +6,7 @@ test('renders canonical learner status and operates a desktop lab', async ({ pag
     if (message.type() === 'error') consoleErrors.push(message.text())
   })
 
-  await page.goto('/')
+  await page.goto('/desktop')
   await expect(page).toHaveTitle(/codexDojo OS/)
   await expect(page.getByRole('button', { name: /Atividades/ })).toBeVisible()
   await expect(page.locator('.canonical-unit')).toContainText(/Unidade canônica/i)
@@ -58,7 +58,7 @@ test('renders canonical learner status and operates a desktop lab', async ({ pag
 test('keeps the focused mentor input inside the resized mobile viewport', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-375')
 
-  await page.goto('/')
+  await page.goto('/desktop')
   const viewportPolicy = await page.locator('meta[name="viewport"]').getAttribute('content')
   expect(viewportPolicy).toContain('interactive-widget=resizes-content')
 

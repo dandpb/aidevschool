@@ -64,7 +64,7 @@ def validate_curriculum(skill_dir: Path) -> dict[str, Any]:
 
     # acyclic + topological published order: every prerequisite has a lower id
     for r in curriculum:
-        for p in r["prerequisites"]:
+        for p in r.get("prerequisites", []):
             if p >= r["id"]:
                 _fail(f"topological inversion: {r['id']} lists later prerequisite {p}")
 
@@ -85,6 +85,8 @@ def validate_curriculum(skill_dir: Path) -> dict[str, Any]:
 
     # gate-registry row per gate_id binding
     registry = json.loads((skill_dir / "gate_registry.json").read_text(encoding="utf-8"))
+    if not isinstance(registry.get("concept_bindings"), dict):
+        _fail("gate_registry.json must have a concept_bindings object")
     for cid in ids:
         if cid not in registry["concept_bindings"]:
             _fail(f"{cid}: no gate-registry binding")
