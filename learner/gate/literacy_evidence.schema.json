@@ -29,11 +29,13 @@
     "attemptId": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 120,
       "pattern": "\\S"
     },
     "lessonId": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 120,
       "pattern": "\\S"
     },
     "lessonVersion": {
@@ -43,25 +45,31 @@
     "activityId": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 120,
       "pattern": "\\S"
     },
     "activityType": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 120,
       "pattern": "\\S"
     },
     "skillIds": {
       "type": "array",
+      "maxItems": 50,
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 120
       }
     },
     "deterministicChecks": {
       "type": "object",
+      "maxProperties": 50,
       "propertyNames": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 120
       },
       "additionalProperties": {
         "oneOf": [
@@ -88,16 +96,93 @@
     },
     "timestamp": {
       "type": "string",
+      "maxLength": 64,
       "format": "date-time"
     },
     "verifierRequired": {
       "const": true
+    },
+    "answer": {
+      "description": "Bounded structured answer used by the independent verifier. Free-text activity answers are never included.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["optionIds"],
+          "properties": {
+            "optionIds": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["orderedIds"],
+          "properties": {
+            "orderedIds": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["contextIds"],
+          "properties": {
+            "contextIds": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["criterionIds"],
+          "properties": {
+            "outputId": { "$ref": "#/$defs/id" },
+            "criterionIds": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["labels"],
+          "properties": {
+            "labels": {
+              "type": "object",
+              "maxProperties": 50,
+              "propertyNames": { "$ref": "#/$defs/id" },
+              "additionalProperties": { "enum": ["safe", "sensitive"] }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["verdicts"],
+          "properties": {
+            "verdicts": {
+              "type": "object",
+              "maxProperties": 50,
+              "propertyNames": { "$ref": "#/$defs/id" },
+              "additionalProperties": { "enum": ["met", "partial", "not_met"] }
+            }
+          }
+        }
+      ]
     },
     "context": {
       "enum": [
         "initial",
         "review"
       ]
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "idArray": {
+      "type": "array",
+      "maxItems": 50,
+      "items": { "$ref": "#/$defs/id" }
     }
   }
 }

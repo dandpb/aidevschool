@@ -24,6 +24,8 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       project: "05_websocket_chat",
       scenario_id: "relay-station-L1",
       pass: true,
+      metrics: { kind: "voxeldoj-relay-station" },
+      observations: { kind: "relay-L1", predictions: truth },
     })
     spy.mockRestore()
   })
@@ -43,7 +45,11 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     // empty prediction (nothing selected) — accuracy 0
     game2.submit()
     expect(game2.snapshot.phase).toBe("failed")
-    expect(evidenceLines(spy)).toHaveLength(2)
+    const records = evidenceLines(spy).map((line) => JSON.parse(line.slice("EVIDENCE ".length)))
+    expect(records).toHaveLength(2)
+    expect(records[0].observations).toEqual({ kind: "relay-L2", predictions: truth })
+    expect(records[1].observations).toEqual({ kind: "relay-L2", predictions: [] })
+    expect(records.every((record) => record.metrics.kind === "voxeldoj-relay-station")).toBe(true)
     spy.mockRestore()
   })
 
@@ -56,6 +62,9 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     for (const id of truth) game.togglePredict(id)
     game.submit()
     expect(game.snapshot.phase).toBe("cleared")
+    const record = evidenceLines(spy).map((line) => JSON.parse(line.slice("EVIDENCE ".length)))[0]
+    expect(record.observations).toEqual({ kind: "relay-L3", predictions: truth })
+    expect(record.metrics.kind).toBe("voxeldoj-relay-station")
     spy.mockRestore()
   })
 
@@ -74,6 +83,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     const wrong = [...game2.snapshot.state.clients.keys()].find((id) => id !== target) as string
     game2.reconnect(wrong)
     expect(game2.snapshot.phase).toBe("failed")
+    const records = evidenceLines(spy).map((line) => JSON.parse(line.slice("EVIDENCE ".length)))
+    expect(records[0].observations).toEqual({ kind: "relay-L4", reconnectedId: target })
+    expect(records[1].observations).toEqual({ kind: "relay-L4", reconnectedId: wrong })
+    expect(records.every((record) => record.metrics.kind === "voxeldoj-relay-station")).toBe(true)
     spy.mockRestore()
   })
 })

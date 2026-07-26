@@ -53,6 +53,7 @@ export interface EvidenceRecord {
   ts: string
   pass: boolean
   metrics: Record<string, number | boolean | string>
+  observations?: Readonly<Record<string, unknown>>
   review_context: {
     unit_kind: "concept"
     scheduled_review: boolean
@@ -294,6 +295,7 @@ export interface EmitOptions {
   meta: EvidenceMeta
   pass: boolean
   metrics: Record<string, number | boolean | string>
+  observations?: Readonly<Record<string, unknown>>
   reviewSlice?: ReviewSliceLike
   now?: () => Date
 }
@@ -372,7 +374,7 @@ export function dualEmit<T extends object>(
 
 /** Dual-emit one typed teaching-game evidence record. Never writes learner state. */
 export function emitEvidence(opts: EmitOptions): EvidenceRecord {
-  const { meta, pass, metrics } = opts
+  const { meta, pass, metrics, observations } = opts
   const now = opts.now ?? (() => new Date())
   const scheduled = opts.reviewSlice?.nextReviews.some((r) => r.unitId === meta.unitId) ?? false
 
@@ -385,6 +387,7 @@ export function emitEvidence(opts: EmitOptions): EvidenceRecord {
     ts: now().toISOString(),
     pass,
     metrics,
+    ...(observations === undefined ? {} : { observations }),
     review_context: {
       unit_kind: "concept",
       scheduled_review: scheduled,

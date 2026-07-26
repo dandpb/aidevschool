@@ -1,5 +1,5 @@
+import { PALETTE } from "../../../shared/palette"
 import type { GameController, GameState } from "../game/controller"
-import { PALETTE } from "./relayScene"
 
 /** DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands. */
 export function mountHud(root: HTMLElement, game: GameController): void {

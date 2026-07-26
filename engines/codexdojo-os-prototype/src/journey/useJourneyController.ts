@@ -1,12 +1,16 @@
 import { useCallback, useEffect, useReducer } from 'react'
+import { emitAnalyticsSafely } from '../analytics/events'
 import { encodeRoute, parseRoute } from '../app/routes'
 import type { MissionDefinition } from '../domain'
 import { migrateOsProgress } from '../progress/migration'
 import {
+  type MissionStartOptions,
   type OnboardingInput,
   completeOnboarding,
+  recommendTrack,
   recordMissionCompletion,
   startMission,
+  switchTrack,
 } from '../progress/domain'
 import { useServices } from '../app/ServicesProvider'
 import { journeyReducer } from './journeyReducer'
@@ -28,8 +32,9 @@ export function useJourneyController() {
     let ignore = false
     void (async () => {
       try {
+        const rawProgress = await services.progress.load()
         const migration = migrateOsProgress(
-          await services.progress.load(),
+          rawProgress,
           services.missions.snapshot(),
         )
         if (migration.kind === 'reset') await services.progress.save(migration.progress)
@@ -52,6 +57,11 @@ export function useJourneyController() {
             ? { resetReason: migration.reason }
             : {}),
         })
+        if (route.kind === 'onboarding') {
+          emitAnalyticsSafely(services.analytics, { name: 'onboarding.started' })
+        } else if (route.kind === 'hub' && rawProgress !== null) {
+          emitAnalyticsSafely(services.analytics, { name: 'journey.returned' })
+        }
       } catch (error) {
         if (!ignore) {
           dispatch({
@@ -79,28 +89,71 @@ export function useJourneyController() {
       if (state.kind !== 'ready') return
       const progress = completeOnboarding(state.progress, input)
       await saveProgress(progress)
+      emitAnalyticsSafely(services.analytics, {
+        name: 'onboarding.completed',
+        dimensions: {
+          recommendationChanged: recommendTrack(input) !== input.selectedTrackId,
+        },
+        context: { trackId: input.selectedTrackId },
+      })
       services.navigation.push('/hub')
     },
     [saveProgress, services, state],
   )
 
   const launchMission = useCallback(
-    async (mission: MissionDefinition) => {
+    async (mission: MissionDefinition, options: MissionStartOptions = {}) => {
       if (state.kind !== 'ready') return
-      const progress = startMission(state.progress, mission)
+      const progress = startMission(state.progress, mission, options)
       await saveProgress(progress)
+      if (options.kind === 'review') {
+        emitAnalyticsSafely(services.analytics, {
+          name: 'review.started',
+          dimensions: { reason: 'canonical-review' },
+          context: { trackId: mission.trackId, missionId: mission.id },
+        })
+      } else if (options.kind === 'retry' || options.kind === 'targeted-practice') {
+        emitAnalyticsSafely(services.analytics, {
+          name: 'retry.requested',
+          dimensions: { reason: options.kind },
+          context: { trackId: mission.trackId, missionId: mission.id },
+        })
+      }
       services.navigation.push(encodeRoute({ kind: 'mission', trackId: mission.trackId, missionId: mission.id }))
     },
     [saveProgress, services, state],
   )
 
   const completeMission = useCallback(
-    async (mission: MissionDefinition) => {
+    async (mission: MissionDefinition, preferredNextMissionId?: string) => {
       if (state.kind !== 'ready') return
-      await saveProgress(recordMissionCompletion(state.progress, mission))
+      const completed = recordMissionCompletion(
+        state.progress,
+        mission,
+        services.missions.snapshot(),
+        preferredNextMissionId,
+        { now: services.clock() },
+      )
+      await saveProgress(completed)
+      const previousAchievements = new Set(state.progress.achievements.map((achievement) => achievement.id))
+      return {
+        xpAwarded: completed.xp - state.progress.xp,
+        totalXp: completed.xp,
+        achievementsUnlocked: completed.achievements
+          .filter((achievement) => !previousAchievements.has(achievement.id))
+          .map((achievement) => achievement.id),
+      }
     },
-    [saveProgress, state],
+    [saveProgress, services, state],
   )
 
-  return { state, finishOnboarding, launchMission, completeMission }
+  const selectTrack = useCallback(
+    async (trackId: MissionDefinition['trackId']) => {
+      if (state.kind !== 'ready') return
+      await saveProgress(switchTrack(state.progress, trackId, services.missions.snapshot()))
+    },
+    [saveProgress, services, state],
+  )
+
+  return { state, finishOnboarding, launchMission, completeMission, selectTrack }
 }

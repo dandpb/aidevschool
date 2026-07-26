@@ -4,10 +4,11 @@ import { EvidenceIntake } from './evidenceIntake'
 import {
   EvidenceGatewayRejection,
   type EvidenceSubmission,
+  type LiteracyVerificationReceipt,
   type RawEvidenceEntry,
   type StoredVerificationReceipt,
+  type TeachingGameVerificationReceipt,
   type VerificationGateway,
-  type VerificationReceipt,
   type VerificationStore,
 } from './ports'
 
@@ -21,6 +22,7 @@ const mission: MissionDefinition = {
   title: 'IA não é uma fonte de verdade',
   objective: 'Verificar antes de usar.',
   estimatedMinutes: 4,
+  chapterOrder: 2,
   prerequisites: [],
   stages: ['understand', 'respond', 'apply'],
   runtime: {
@@ -28,6 +30,7 @@ const mission: MissionDefinition = {
     entrypoint: 'http://127.0.0.1:5178',
     environmentKey: 'VITE_LITERACYDOJO_URL',
     protocolVersion: '1.0',
+    contentVersion: 'test.1',
   },
   evidence: { schema: 'literacy-evidence', version: 1, verifierRequired: true },
   fallback: { kind: 'dom', summary: 'Resumo.' },
@@ -42,6 +45,7 @@ const voxelMission: MissionDefinition = {
   title: 'KV Warehouse',
   objective: 'Prever a prateleira.',
   estimatedMinutes: 12,
+  chapterOrder: 1,
   prerequisites: [],
   stages: ['understand', 'respond', 'apply'],
   runtime: {
@@ -49,6 +53,7 @@ const voxelMission: MissionDefinition = {
     entrypoint: 'http://127.0.0.1:5202',
     environmentKey: 'VITE_WAREHOUSE_URL',
     protocolVersion: '1.0',
+    contentVersion: 'game-02-warehouse@0.1.0',
   },
   evidence: { schema: 'teaching-game-evidence', version: 1, verifierRequired: true },
   fallback: { kind: 'dom', summary: 'Resumo.' },
@@ -81,7 +86,9 @@ function submission(overrides: Partial<EvidenceSubmission['record']> = {}): Evid
   }
 }
 
-function receipt(overrides: Partial<VerificationReceipt> = {}): VerificationReceipt {
+function receipt(
+  overrides: Partial<LiteracyVerificationReceipt> = {},
+): LiteracyVerificationReceipt {
   return {
     verdict: 'PASS',
     context_isolated: true,
@@ -98,6 +105,30 @@ function receipt(overrides: Partial<VerificationReceipt> = {}): VerificationRece
     errors: [],
     producer_writes_mastered: false,
     max_producer_claim: 'completed',
+    ...overrides,
+  }
+}
+
+function voxelReceipt(
+  overrides: Partial<TeachingGameVerificationReceipt> = {},
+): TeachingGameVerificationReceipt {
+  return {
+    schema_version: 1,
+    verdict: 'PASS',
+    context_isolated: true,
+    source: 'independent-teaching-game-verifier',
+    evidence_digest: digest,
+    unit_id: 'U2-key-value-store',
+    project: '02_key_value_store',
+    scenario_id: 'kv-warehouse-L1',
+    game: 'KV WAREHOUSE',
+    producer_pass_claim: true,
+    independent_pass: true,
+    errors: [],
+    producer_writes_mastered: false,
+    max_producer_claim: 'completed',
+    canonical_gate_status: 'not-submitted',
+    canonical_gate_reason: 'learner-attempt-and-gate-eligibility-required',
     ...overrides,
   }
 }
@@ -163,7 +194,11 @@ class MemoryVerificationStore implements VerificationStore {
 
 function setup(gateway?: VerificationGateway) {
   const store = new MemoryVerificationStore()
-  const resolvedGateway = gateway ?? { async verify() { return receipt() } }
+  const resolvedGateway = gateway ?? {
+    async verify(request: EvidenceSubmission) {
+      return request.schemaId === 'teaching-game-evidence' ? voxelReceipt() : receipt()
+    },
+  }
   return {
     store,
     gateway: resolvedGateway,
@@ -279,6 +314,59 @@ describe('EvidenceIntake', () => {
     expect(verify).toHaveBeenCalledOnce()
   })
 
+  it('rejects an altered replay without replacing or reverifying the first submission', async () => {
+    const verify = vi.fn(async () => receipt())
+    const { intake, store } = setup({ verify })
+    const first = submission()
+
+    const accepted = await intake.accept(mission, first)
+    const alteredRecord = await intake.accept(mission, submission({ context: 'altered' }))
+    const alteredVersion = await intake.accept(
+      { ...mission, version: 4 },
+      submission({ lessonVersion: 4 }),
+    )
+
+    expect(accepted.kind).toBe('verified')
+    expect(alteredRecord).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
+    expect(alteredVersion).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
+    expect(store.raw.get('run-1')?.record).toEqual(first.record)
+    expect(verify).toHaveBeenCalledOnce()
+  })
+
+  it.each([
+    ['identical', 'initial', 'verified'],
+    ['differing', 'altered', 'rejected'],
+  ] as const)('serializes %s simultaneous submissions with the same run id', async (
+    _delivery,
+    context,
+    expected,
+  ) => {
+    let releaseGateway!: () => void
+    const verify = vi.fn(async () => {
+      await new Promise<void>((resolve) => { releaseGateway = resolve })
+      return receipt()
+    })
+    const { intake, store } = setup({ verify })
+    const firstSubmission = submission()
+
+    const first = intake.accept(mission, firstSubmission)
+    await vi.waitFor(() => expect(verify).toHaveBeenCalledOnce())
+    const replay = intake.accept(mission, submission({ context }))
+    await Promise.resolve()
+
+    expect(verify).toHaveBeenCalledOnce()
+    releaseGateway()
+    const accepted = await first
+    expect(accepted).toMatchObject({ kind: 'verified', evidenceDigest: digest })
+    expect(await replay).toEqual(
+      expected === 'verified'
+        ? accepted
+        : { kind: 'rejected', code: 'storage-id-collision' },
+    )
+    expect(store.raw.get('run-1')?.record).toEqual(firstSubmission.record)
+    expect(verify).toHaveBeenCalledOnce()
+  })
+
   it('preserves raw evidence under a stable opaque id and retries after gateway failure', async () => {
     const verify = vi.fn()
       .mockRejectedValueOnce(new Error('offline'))
@@ -321,22 +409,30 @@ describe('EvidenceIntake', () => {
     expect(JSON.stringify([...store.raw.values()])).not.toMatch(/"mastered"\s*:/)
   })
 
-  it('preserves teaching-game evidence as pending without invoking the literacy verifier', async () => {
-    const verify = vi.fn(async () => receipt())
+  it('independently verifies teaching-game evidence through the schema-selected gateway', async () => {
+    const verify = vi.fn(async () => voxelReceipt())
     const { intake, store } = setup({ verify })
 
     const accepted = await intake.accept(voxelMission, voxelSubmission())
     const restored = await intake.latest(voxelMission)
     const retried = await intake.retry(voxelMission)
 
-    expect(accepted).toEqual({ kind: 'pending', storageId: 'voxel-run-1' })
+    expect(accepted).toMatchObject({
+      kind: 'verified',
+      evidenceDigest: digest,
+      receipt: {
+        source: 'independent-teaching-game-verifier',
+        verdict: 'PASS',
+        canonical_gate_status: 'not-submitted',
+      },
+    })
     expect(restored).toEqual(accepted)
     expect(retried).toEqual(accepted)
     expect(store.raw.get('voxel-run-1')).toMatchObject({
-      status: 'pending',
+      status: 'verified',
       schemaId: 'teaching-game-evidence',
     })
-    expect(verify).not.toHaveBeenCalled()
+    expect(verify).toHaveBeenCalledOnce()
   })
 
   it('rejects malformed teaching-game evidence before persistence', async () => {
@@ -351,7 +447,7 @@ describe('EvidenceIntake', () => {
     expect(store.raw.size).toBe(0)
   })
 
-  it('keeps the first teaching-game record when the same run id is delivered again', async () => {
+  it('keeps the first verified teaching-game record when the same run id is delivered again', async () => {
     const { intake, store } = setup()
     const first = voxelSubmission()
 
@@ -362,7 +458,7 @@ describe('EvidenceIntake', () => {
       voxelSubmission({ scenario_id: 'kv-warehouse-L2' }),
     )
 
-    expect(accepted).toEqual({ kind: 'pending', storageId: 'voxel-run-1' })
+    expect(accepted.kind).toBe('verified')
     expect(duplicate).toEqual(accepted)
     expect(collision).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
     expect(store.raw.get('voxel-run-1')?.record).toEqual(first.record)

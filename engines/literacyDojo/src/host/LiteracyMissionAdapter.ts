@@ -34,6 +34,8 @@ export class LiteracyMissionAdapter implements EvidenceSink {
   private readonly origin = expectedHostOrigin();
   private correlation: Correlation | null = null;
   private revision = 0;
+  private eventSequence = 0;
+  private completionEventSent = false;
   private contentVersion = "unknown";
   private onLaunch: ((launch: LiteracyMissionLaunch) => Promise<void>) | null = null;
 
@@ -53,6 +55,10 @@ export class LiteracyMissionAdapter implements EvidenceSink {
 
   emit(record: LiteracyEvidenceRecord): void {
     if (this.correlation === null) return;
+    this.publishEvent("structured_attempt.submitted", { activityType: record.activityType });
+    if (record.pass) {
+      this.publishEvent("structured_attempt.passed", { activityType: record.activityType });
+    }
     this.post("evidence.submitted", {
       schemaId: "literacy-evidence",
       schemaVersion: 1,
@@ -65,8 +71,26 @@ export class LiteracyMissionAdapter implements EvidenceSink {
     this.publishState("running", "apply", 0.8);
   }
 
-  publishCompleted(): void {
-    this.publishState("completed", "apply", 1);
+  publishCompleted(nextMissionId?: string): void {
+    if (!this.completionEventSent) {
+      this.completionEventSent = true;
+      this.publishEvent("mission.completed", { result: "completed" });
+    }
+    this.publishState("completed", "apply", 1, {
+      ...(nextMissionId === undefined ? {} : { nextMissionId }),
+    });
+  }
+
+  private publishEvent(
+    name:
+      | "mission.started"
+      | "mission.completed"
+      | "structured_attempt.submitted"
+      | "structured_attempt.passed",
+    dimensions: Readonly<Record<string, string | number | boolean>> = {},
+  ): void {
+    this.eventSequence += 1;
+    this.post("mission.event", { sequence: this.eventSequence, name, dimensions });
   }
 
   private post<TType extends string, TPayload>(type: TType, payload: TPayload): void {
@@ -87,12 +111,15 @@ export class LiteracyMissionAdapter implements EvidenceSink {
     status: "running" | "completed" | "failed",
     stage: "understand" | "respond" | "apply",
     progress: number,
+    extra: { nextMissionId?: string } = {},
   ): void {
     this.revision += 1;
-    this.post("mission.state", { revision: this.revision, status, stage, progress });
+    this.post("mission.state", { revision: this.revision, status, stage, progress, ...extra });
   }
 
   private handleHello(message: HostHelloMessage): void {
+    this.eventSequence = 0;
+    this.completionEventSent = false;
     this.correlation = {
       hostSessionId: message.hostSessionId,
       missionRunId: message.missionRunId,
@@ -101,7 +128,7 @@ export class LiteracyMissionAdapter implements EvidenceSink {
     this.post("engine.ready", {
       engineVersion: "0.1.0",
       contentVersion: this.contentVersion,
-      capabilities: ["mission-state", "evidence"],
+      capabilities: ["mission-state", "evidence", "mission-events"],
     });
   }
 
@@ -128,6 +155,7 @@ export class LiteracyMissionAdapter implements EvidenceSink {
           acknowledgedMessageId: message.messageId,
           accepted: true,
         });
+        this.publishEvent("mission.started", { mode: message.payload.mode });
         this.publishState("running", "understand", 0.1);
       })
       .catch(() => {

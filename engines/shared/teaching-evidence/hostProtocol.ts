@@ -5,6 +5,29 @@ type MissionStage = "understand" | "respond" | "apply"
 type MissionStatus = "running" | "completed" | "failed"
 type UnknownRecord = Readonly<Record<string, unknown>>
 
+export type RendererPreference = "auto" | "webgl" | "accessible"
+export type ActiveRenderer = "webgl" | "canvas2d" | "dom" | "none"
+export type RendererStatus = "probing" | "initializing" | "ready" | "degraded" | "failed"
+export type RendererFailureReason =
+  | "unsupported"
+  | "creation-failed"
+  | "context-lost"
+  | "restore-failed"
+  | "load-timeout"
+
+export type TeachingGameLaunch = {
+  readonly locale: "pt-BR"
+  readonly reducedMotion: boolean
+  readonly rendererPreference: RendererPreference
+}
+
+export type TeachingGameRendererState = {
+  readonly requested: RendererPreference
+  readonly active: ActiveRenderer
+  readonly status: RendererStatus
+  readonly reason?: RendererFailureReason
+}
+
 type Correlation = {
   readonly hostSessionId: string
   readonly missionRunId: string
@@ -14,6 +37,7 @@ export type TeachingGameMissionState = {
   readonly status: MissionStatus
   readonly stage: MissionStage
   readonly progress: number
+  readonly nextMissionId?: string
 }
 
 export type TeachingGameHostAdapterOptions = {
@@ -70,13 +94,25 @@ export class TeachingGameHostAdapter {
   private readonly hostOrigin = resolveHostOrigin()
   private correlation: Correlation | null = null
   private revision = 0
-  private onLaunch: (() => void | Promise<void>) | null = null
+  private eventSequence = 0
+  private rendererRevision = 0
+  private completionEventSent = false
+  private onLaunch: ((launch: TeachingGameLaunch) => void | Promise<void>) | null = null
+  private onRendererRetry: ((preference: RendererPreference) => void | Promise<void>) | null = null
 
   constructor(private readonly options: TeachingGameHostAdapterOptions) {}
 
-  start(onLaunch: () => void | Promise<void>): () => void {
+  get hosted(): boolean {
+    return this.hostOrigin !== null
+  }
+
+  start(
+    onLaunch: (launch: TeachingGameLaunch) => void | Promise<void>,
+    onRendererRetry?: (preference: RendererPreference) => void | Promise<void>,
+  ): () => void {
     if (this.hostOrigin === null) return () => {}
     this.onLaunch = onLaunch
+    this.onRendererRetry = onRendererRetry ?? null
     setMissionEvidenceForwarder(this.submitEvidence)
     window.addEventListener("message", this.handleMessage)
     return () => {
@@ -84,17 +120,29 @@ export class TeachingGameHostAdapter {
       if (evidenceForwarder === this.submitEvidence) setMissionEvidenceForwarder(null)
       this.correlation = null
       this.onLaunch = null
+      this.onRendererRetry = null
     }
   }
 
   publishState(state: TeachingGameMissionState): void {
     if (state.progress < 0 || state.progress > 1) return
+    if (state.status === "completed" && !this.completionEventSent) {
+      this.completionEventSent = true
+      this.publishEvent("mission.completed", { result: "completed" })
+    }
     this.revision += 1
     this.post("mission.state", { revision: this.revision, ...state })
   }
 
+  publishRendererState(state: TeachingGameRendererState): void {
+    this.rendererRevision += 1
+    this.post("renderer.state", { revision: this.rendererRevision, ...state })
+  }
+
   private submitEvidence = (record: UnknownRecord): boolean => {
     if (this.correlation === null || record["unit_id"] !== this.options.unitId) return false
+    this.publishEvent("structured_attempt.submitted")
+    if (record["pass"] === true) this.publishEvent("structured_attempt.passed")
     this.post("evidence.submitted", {
       schemaId: "teaching-game-evidence",
       schemaVersion: 1,
@@ -102,6 +150,18 @@ export class TeachingGameHostAdapter {
       record,
     })
     return true
+  }
+
+  private publishEvent(
+    name:
+      | "mission.started"
+      | "mission.completed"
+      | "structured_attempt.submitted"
+      | "structured_attempt.passed",
+    dimensions: UnknownRecord = {},
+  ): void {
+    this.eventSequence += 1
+    this.post("mission.event", { sequence: this.eventSequence, name, dimensions })
   }
 
   private post(type: string, payload: UnknownRecord): void {
@@ -164,11 +224,26 @@ export class TeachingGameHostAdapter {
         hostSessionId: message["hostSessionId"] as string,
         missionRunId: message["missionRunId"] as string,
       }
+      this.eventSequence = 0
+      this.rendererRevision = 0
+      this.completionEventSent = false
       this.post("engine.ready", {
         engineVersion: this.options.engineVersion,
         contentVersion: this.options.contentVersion,
-        capabilities: ["mission-state", "evidence"],
+        capabilities: ["mission-state", "evidence", "mission-events", "renderer-state"],
       })
+      return
+    }
+    if (
+      this.correlation !== null
+      && message["hostSessionId"] === this.correlation.hostSessionId
+      && message["missionRunId"] === this.correlation.missionRunId
+      && message["type"] === "renderer.retry"
+      && this.onRendererRetry !== null
+    ) {
+      const preference = payload["rendererPreference"]
+      if (preference !== "auto" && preference !== "webgl" && preference !== "accessible") return
+      void Promise.resolve(this.onRendererRetry(preference))
       return
     }
     if (
@@ -183,12 +258,24 @@ export class TeachingGameHostAdapter {
     if (
       payload["missionId"] !== this.options.missionId
       || payload["missionVersion"] !== this.options.missionVersion
+      || payload["locale"] !== "pt-BR"
+      || typeof payload["reducedMotion"] !== "boolean"
+      || (payload["rendererPreference"] !== "auto"
+        && payload["rendererPreference"] !== "webgl"
+        && payload["rendererPreference"] !== "accessible")
     ) {
       this.acknowledge(message["messageId"] as string, false, "mission-unavailable")
       return
     }
-    void Promise.resolve(this.onLaunch()).then(
-      () => this.acknowledge(message["messageId"] as string, true),
+    void Promise.resolve(this.onLaunch({
+      locale: "pt-BR",
+      reducedMotion: payload["reducedMotion"] as boolean,
+      rendererPreference: payload["rendererPreference"] as RendererPreference,
+    })).then(
+      () => {
+        this.acknowledge(message["messageId"] as string, true)
+        this.publishEvent("mission.started", { mode: payload["mode"] as string })
+      },
       () => this.acknowledge(message["messageId"] as string, false, "mission-unavailable"),
     )
   }

@@ -7,7 +7,7 @@ import json
 import sys
 from pathlib import Path
 
-from conftest import SKILL, dirs, make_state, run, write_fixture, write_state
+from conftest import SKILL, make_state, run, write_fixture, write_state
 
 SCRIPTS = SKILL / "scripts"
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))

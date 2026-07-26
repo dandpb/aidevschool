@@ -188,7 +188,7 @@ class TestDecisionGate(unittest.TestCase):
 
     def test_fails_on_insufficient_samples(self):
         from curriculum._shared.benchmarks.analyzer import BenchmarkAnalyzer
-        raw = {"baseline": {l: [{"p99": 5.0, "n_requests": 100, "mem_mb": 10.0}] for l in R.LANGS}}
+        raw = {"baseline": {lang: [{"p99": 5.0, "n_requests": 100, "mem_mb": 10.0}] for lang in R.LANGS}}
         rep = BenchmarkAnalyzer().analyze_raw_samples("p", raw)
         self.assertFalse(A.decision_gate(rep))    # N=1 < 3
 

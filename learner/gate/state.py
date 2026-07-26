@@ -38,10 +38,10 @@ def expected_attempt_id(cid: str, attempt_no: int) -> str:
     return f"att_{cid.lower()}_{attempt_no:04d}"
 
 
-def _empty_concept(has_content: bool) -> dict[str, Any]:
+def _empty_concept() -> dict[str, Any]:
     gp: dict[str, Any] = {"consecutive_passes": 0, "last_pass_ts": None, "asked_item_ids": []}
     return {
-        "status": LOCKED if has_content else LOCKED,
+        "status": LOCKED,
         "scaffold_level": None,
         "attempts": 0,
         "failures_this_session": 0,
@@ -58,7 +58,7 @@ def initial_state(curriculum: list[dict[str, Any]], learner: dict[str, Any]) -> 
     else LOCKED (nothing is MASTERED yet). Session idle."""
     concepts: dict[str, Any] = {}
     for rec in curriculum:
-        c = _empty_concept(bool(rec.get("content_refs")))
+        c = _empty_concept()
         if not rec["prerequisites"]:
             c["status"] = AVAILABLE
         concepts[rec["id"]] = c

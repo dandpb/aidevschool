@@ -1,4 +1,10 @@
 import * as THREE from "three"
+import { PALETTE } from "../../../shared/palette"
+import {
+  disposeObject3D,
+  type MissionProjection,
+  type ProjectionContextHooks,
+} from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameController, GameState } from "../game/controller"
 
@@ -10,17 +16,6 @@ import type { GameController, GameState } from "../game/controller"
  */
 
 const AISLE_TILT = -Math.PI / 9
-export const PALETTE = [
-  "#4fc3f7",
-  "#ffb74d",
-  "#aed581",
-  "#f06292",
-  "#ba68c8",
-  "#ffd54f",
-  "#80cbc4",
-  "#e0e0e0",
-] as const
-
 function shelfColor(shelf: number): string {
   return PALETTE[shelf % PALETTE.length] as string
 }
@@ -31,8 +26,10 @@ function shelfX(shelf: number, n: number): number {
   return (shelf - (n - 1) / 2) * spacing
 }
 
-export class WarehouseScene {
+export class WarehouseScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
+  private readonly game: GameController
   private world = new THREE.Group()
   private shelfGroup = new THREE.Group()
   private shelfMeshes = new Map<number, THREE.Mesh>()
@@ -41,8 +38,11 @@ export class WarehouseScene {
   /** shelf the bot is currently docking at (-1 = idle/home) */
   private botTargetShelf = -1
   onShelfClick: ((shelf: number) => void) | null = null
+  private disposed = false
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, game: GameController, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
+    this.game = game
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 22,
@@ -56,6 +56,7 @@ export class WarehouseScene {
       onFrame: () => {
         this.animateBot()
       },
+      ...hooks,
     })
 
     this.world.rotation.x = AISLE_TILT
@@ -87,8 +88,24 @@ export class WarehouseScene {
     this.bot.position.set(0, 0, 4)
     this.world.add(this.bot)
 
-    canvas.addEventListener("pointerdown", (e) => this.pick(e))
+    canvas.addEventListener("pointerdown", this.onPointerDown)
   }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.canvas.removeEventListener("pointerdown", this.onPointerDown)
+    disposeObject3D(this.world)
+    this.viewport.dispose()
+  }
+
+  private readonly onPointerDown = (event: PointerEvent): void => this.pick(event)
 
   private pick(e: PointerEvent): void {
     if (!this.onShelfClick) return
@@ -103,9 +120,9 @@ export class WarehouseScene {
   }
 
   /** Rebuild the projection from a sim snapshot + controller helpers. */
-  sync(state: GameState, game: GameController): void {
-    this.syncShelves(state, game)
-    this.syncCrates(state, game)
+  sync(state: GameState): void {
+    this.syncShelves(state, this.game)
+    this.syncCrates(state, this.game)
   }
 
   private syncShelves(state: GameState, game: GameController): void {

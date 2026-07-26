@@ -7,7 +7,6 @@ Validates:
 - Full report validation (all scenarios, languages, gates)
 """
 
-import math
 import unittest
 from pathlib import Path
 
@@ -19,7 +18,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 from curriculum._shared.benchmarks.analyzer import (
     BenchmarkAnalyzer,
     BenchmarkReport,
-    MetricSummary,
     ScenarioResult,
 )
 

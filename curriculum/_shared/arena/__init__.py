@@ -104,7 +104,7 @@ def scoreboard(report: BenchmarkReport) -> tuple[str, dict[str, str], dict[str, 
         trustworthy = metric_trust(report, key)
         trust[metric] = trustworthy
         cells = " | ".join(
-            f"{by_lang.get(l, float('nan')):.2f}" if l in by_lang else "—" for l in langs
+            f"{by_lang.get(lang, float('nan')):.2f}" if lang in by_lang else "—" for lang in langs
         )
         arrow = "↓" if lower_better else "↑"
         if trustworthy:

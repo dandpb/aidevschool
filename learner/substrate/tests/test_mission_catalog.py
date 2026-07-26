@@ -53,6 +53,42 @@ def _project_catalog() -> str:
 | **Learning goal** | Predict hash-map CRUD and TTL behavior. |
 | **Directory** | `02_key_value_store/` |
 | **Dependencies** | Project 01 |
+
+### 03. URL Shortener
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `03_url_shortener` |
+| **Status** | scaffolded |
+| **Concepts** | Short codes |
+| **Key question** | How are collisions resolved? |
+| **Learning goal** | Predict short-code generation and collision handling. |
+| **Directory** | `03_url_shortener/` |
+| **Dependencies** | Project 02 |
+
+### 04. Concurrent Task Queue
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `04_concurrent_task_queue` |
+| **Status** | scaffolded |
+| **Concepts** | Worker pools |
+| **Key question** | How is work scheduled? |
+| **Learning goal** | Coordinate bounded work. |
+| **Directory** | `04_concurrent_task_queue/` |
+| **Dependencies** | Project 03 |
+
+### 05. WebSocket Chat
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `05_websocket_chat` |
+| **Status** | scaffolded |
+| **Concepts** | Persistent connections |
+| **Key question** | How does fan-out reach subscribers? |
+| **Learning goal** | Predict connection, fan-out, and heartbeat behavior. |
+| **Directory** | `05_websocket_chat/` |
+| **Dependencies** | Project 03 |
 """
 
 
@@ -62,6 +98,14 @@ def _catalog() -> dict[str, Any]:
         "contentVersion": "test.1",
         "track": {"id": "ai-literacy"},
         "lessons": [
+            {
+                "id": "l01",
+                "title": "First conversation",
+                "objective": "Treat an answer as a draft.",
+                "estimatedMinutes": 3,
+                "prerequisites": [],
+                "status": "ready",
+            },
             {
                 "id": "l02",
                 "title": "Truth needs verification",
@@ -91,8 +135,12 @@ def _lesson(lesson_id: str, version: int) -> dict[str, Any]:
 
 
 def _binding(lesson_id: str) -> dict[str, Any]:
+    chapter_order = {"l01": 1, "l02": 2, "l03": 3}[lesson_id]
+    prerequisites = ["l02"] if lesson_id == "l03" else []
     return {
         "missionId": lesson_id,
+        "chapterOrder": chapter_order,
+        "prerequisites": prerequisites,
         "trackId": "ai-pratica",
         "curriculum": {
             "kind": "ai-literacy-lesson",
@@ -105,6 +153,7 @@ def _binding(lesson_id: str) -> dict[str, Any]:
             "entrypoint": "http://127.0.0.1:5178/?hosted=1",
             "environmentKey": "VITE_LITERACYDOJO_URL",
             "protocolVersion": "1.0",
+            "contentVersion": "test.1",
         },
         "evidence": {
             "schema": "literacy-evidence",
@@ -115,30 +164,40 @@ def _binding(lesson_id: str) -> dict[str, Any]:
     }
 
 
-def _dev_binding() -> dict[str, Any]:
+def _dev_binding(
+    mission_id: str = "game-02-warehouse",
+    project_id: str = "02_key_value_store",
+    unit_id: str = "U2-key-value-store",
+    chapter_order: int = 1,
+    prerequisites: list[str] | None = None,
+    port: int = 5202,
+) -> dict[str, Any]:
     return {
-        "missionId": "game-02-warehouse",
+        "missionId": mission_id,
         "version": 1,
+        "chapterOrder": chapter_order,
+        "prerequisites": prerequisites or [],
         "trackId": "dev",
         "curriculum": {
             "kind": "project-voxel-game",
-            "projectId": "02_key_value_store",
-            "unitId": "U2-key-value-store",
+            "projectId": project_id,
+            "unitId": unit_id,
         },
         "estimatedMinutes": 12,
         "runtime": {
             "engineId": "voxelDojo",
-            "gameId": "game-02-warehouse",
-            "entrypoint": "http://127.0.0.1:5202/?hosted=1",
-            "environmentKey": "VITE_WAREHOUSE_URL",
+            "gameId": mission_id,
+            "entrypoint": f"http://127.0.0.1:{port}/?hosted=1",
+            "environmentKey": f"VITE_{mission_id.removeprefix('game-').replace('-', '_').upper()}_URL",
             "protocolVersion": "1.0",
+            "contentVersion": f"{mission_id}@0.1.0",
         },
         "evidence": {
             "schema": "teaching-game-evidence",
             "version": 1,
             "verifierRequired": True,
         },
-        "fallback": {"kind": "dom", "summary": "Semantic warehouse controls."},
+        "fallback": {"kind": "dom", "summary": f"Semantic controls for {mission_id}."},
     }
 
 
@@ -148,7 +207,40 @@ class MissionCatalogFixture:
         self.catalog: dict[str, Any] = _catalog()
         self.bindings: dict[str, Any] = {
             "schemaVersion": 1,
-            "bindings": [_binding("l02")],
+            "tracks": [
+                {
+                    "trackId": "ai-pratica",
+                    "contentVersion": "test.1",
+                    "recommendedEntryMissionId": "l02",
+                },
+                {
+                    "trackId": "dev",
+                    "contentVersion": "test.1",
+                    "recommendedEntryMissionId": "game-02-warehouse",
+                },
+            ],
+            "bindings": [
+                _binding("l01"),
+                _binding("l02"),
+                _binding("l03"),
+                _dev_binding(),
+                _dev_binding(
+                    "game-03-wormhole",
+                    "03_url_shortener",
+                    "U3-url-shortener",
+                    2,
+                    ["game-02-warehouse"],
+                    5203,
+                ),
+                _dev_binding(
+                    "game-05-relay-station",
+                    "05_websocket_chat",
+                    "U5-websocket-chat",
+                    3,
+                    ["game-03-wormhole"],
+                    5205,
+                ),
+            ],
         }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
         (root / "engines" / "codexdojo-os-prototype" / "config").mkdir(parents=True)
@@ -156,7 +248,11 @@ class MissionCatalogFixture:
         (root / "curriculum" / "catalog.md").write_text(_project_catalog(), encoding="utf-8")
         (root / "engines" / "voxelDojo" / "catalog.json").write_text(
             json.dumps(
-                [{"id": "game-02-warehouse", "name": "WAREHOUSE", "developmentPort": 5202}]
+                [
+                    {"id": "game-02-warehouse", "name": "WAREHOUSE", "developmentPort": 5202},
+                    {"id": "game-03-wormhole", "name": "WORMHOLE", "developmentPort": 5203},
+                    {"id": "game-05-relay-station", "name": "RELAY STATION", "developmentPort": 5205},
+                ]
             ),
             encoding="utf-8",
         )
@@ -167,7 +263,7 @@ class MissionCatalogFixture:
         (literacy / "catalog.yaml").write_text(
             yaml.safe_dump(self.catalog, sort_keys=False), encoding="utf-8"
         )
-        for lesson_id, version in (("l02", 3), ("l03", 1)):
+        for lesson_id, version in (("l01", 1), ("l02", 3), ("l03", 1)):
             (literacy / "modules" / "mod-01" / f"{lesson_id}.yaml").write_text(
                 yaml.safe_dump(_lesson(lesson_id, version), sort_keys=False), encoding="utf-8"
             )
@@ -185,7 +281,7 @@ class TestMissionCatalog(unittest.TestCase):
 
         self.assertEqual(snapshot["schemaVersion"], 1)
         self.assertEqual(snapshot["contentVersion"], "test.1")
-        mission = snapshot["missions"][0]
+        mission = next(item for item in snapshot["missions"] if item["id"] == "l02")
         self.assertEqual(mission["id"], "l02")
         self.assertEqual(mission["version"], 3)
         self.assertEqual(mission["unitId"], "ai-literacy:l02")
@@ -197,22 +293,17 @@ class TestMissionCatalog(unittest.TestCase):
     def test_preserves_prerequisites_as_mission_ids(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = MissionCatalogFixture(Path(tmp))
-            fixture.bindings["bindings"].append(_binding("l03"))
-            fixture.write()
-
             snapshot = load_mission_catalog(fixture.root)
 
-        self.assertEqual(snapshot["missions"][1]["prerequisites"], ["l02"])
+        mission = next(item for item in snapshot["missions"] if item["id"] == "l03")
+        self.assertEqual(mission["prerequisites"], ["l02"])
 
     def test_joins_project_and_voxel_catalog_for_dev_mission(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             fixture = MissionCatalogFixture(Path(tmp))
-            fixture.bindings["bindings"].append(_dev_binding())
-            fixture.write()
-
             snapshot = load_mission_catalog(fixture.root)
 
-        mission = snapshot["missions"][1]
+        mission = next(item for item in snapshot["missions"] if item["id"] == "game-02-warehouse")
         self.assertEqual(mission["id"], "game-02-warehouse")
         self.assertEqual(mission["trackId"], "dev")
         self.assertEqual(mission["projectId"], "02_key_value_store")
@@ -235,12 +326,37 @@ class TestMissionCatalog(unittest.TestCase):
         for expected, mutate in cases:
             with self.subTest(expected=expected), tempfile.TemporaryDirectory() as tmp:
                 fixture = MissionCatalogFixture(Path(tmp))
-                binding = _dev_binding()
+                binding = fixture.bindings["bindings"][3]
                 mutate(binding)
-                fixture.bindings["bindings"].append(binding)
                 fixture.write()
                 with self.assertRaisesRegex(MissionCatalogError, expected):
                     load_mission_catalog(fixture.root)
+
+    def test_rejects_planned_dev_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            fixture.write()
+            catalog_path = fixture.root / "curriculum" / "catalog.md"
+            catalog_path.write_text(
+                catalog_path.read_text(encoding="utf-8").replace(
+                    "| **Status** | implemented |\n| **Concepts** | Hash maps and TTL |",
+                    "| **Status** | planned |\n| **Concepts** | Hash maps and TTL |",
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(MissionCatalogError, "non-ready curriculum project"):
+                load_mission_catalog(fixture.root)
+
+    def test_rejects_dev_unit_identity_from_another_project(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            binding = fixture.bindings["bindings"][3]
+            binding["curriculum"]["unitId"] = "U3-url-shortener"
+            fixture.write()
+
+            with self.assertRaisesRegex(MissionCatalogError, "preserve project 2 identity"):
+                load_mission_catalog(fixture.root)
 
     def test_rejects_unknown_non_ready_duplicate_and_unbound_prerequisites(self) -> None:
         cases: list[tuple[str, Callable[[MissionCatalogFixture], None]]] = [
@@ -262,9 +378,7 @@ class TestMissionCatalog(unittest.TestCase):
             ),
             (
                 "unbound curriculum prerequisites",
-                lambda fixture: fixture.bindings.update(
-                    {"bindings": [_binding("l03")]}
-                ),
+                lambda fixture: fixture.bindings["bindings"].pop(1),
             ),
         ]
         for expected, mutate in cases:
@@ -304,6 +418,59 @@ class TestMissionCatalog(unittest.TestCase):
         self.assertIn("DO NOT EDIT", first)
         for forbidden in ("markMastered", "masteryAuthority", "saveCanonical", "setState"):
             self.assertNotIn(forbidden, first)
+
+    def test_first_release_has_six_stably_ordered_missions_without_content_copies(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            snapshot = load_mission_catalog(fixture.root)
+
+        self.assertEqual(
+            [mission["id"] for mission in snapshot["missions"]],
+            [
+                "l01",
+                "l02",
+                "l03",
+                "game-02-warehouse",
+                "game-03-wormhole",
+                "game-05-relay-station",
+            ],
+        )
+        self.assertEqual(
+            {track["id"]: track["recommendedEntryMissionId"] for track in snapshot["tracks"]},
+            {"ai-pratica": "l02", "dev": "game-02-warehouse"},
+        )
+        self.assertEqual(
+            {track_id: sum(1 for mission in snapshot["missions"] if mission["trackId"] == track_id)
+             for track_id in ("ai-pratica", "dev")},
+            {"ai-pratica": 3, "dev": 3},
+        )
+        for mission in snapshot["missions"]:
+            self.assertIn(mission["fallback"]["kind"], {"dom", "canvas2d"})
+            self.assertNotIn("activities", mission)
+            self.assertNotIn("lessonContent", mission)
+            self.assertNotEqual(mission["runtime"]["contentVersion"], "unknown")
+
+    def test_rejects_prerequisite_cycles_and_incomplete_track_counts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            fixture.bindings["bindings"][0]["prerequisites"] = ["l03"]
+            fixture.catalog["lessons"][0]["prerequisites"] = ["l03"]
+            fixture.bindings["bindings"][2]["prerequisites"] = ["l01"]
+            fixture.catalog["lessons"][2]["prerequisites"] = ["l01"]
+            lesson_path = fixture.root / "curriculum" / "ai-literacy" / "modules" / "mod-01" / "l01.yaml"
+            lesson = yaml.safe_load(lesson_path.read_text(encoding="utf-8"))
+            lesson["prerequisites"] = ["l03"]
+            fixture.write()
+            lesson_path.write_text(yaml.safe_dump(lesson, sort_keys=False), encoding="utf-8")
+            with self.assertRaisesRegex(MissionCatalogError, "prerequisite cycle"):
+                load_mission_catalog(fixture.root)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            fixture.bindings["bindings"].pop()
+            fixture.write()
+            with self.assertRaisesRegex(MissionCatalogError, "exactly 3 launchable missions"):
+                load_mission_catalog(fixture.root)
 
 
 if __name__ == "__main__":

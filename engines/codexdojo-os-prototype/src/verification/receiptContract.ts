@@ -1,4 +1,8 @@
-import type { VerificationReceipt } from './ports'
+import type {
+  LiteracyVerificationReceipt,
+  TeachingGameVerificationReceipt,
+  VerificationReceipt,
+} from './ports'
 
 const SHA256_HEX = /^[0-9a-f]{64}$/
 
@@ -10,11 +14,9 @@ function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === 'string')
 }
 
-/** Shape of a verifier receipt, independent of which record produced it. */
-export function receiptShapeIsValid(value: unknown): value is VerificationReceipt {
+function literacyReceiptShapeIsValid(value: Record<string, unknown>): value is LiteracyVerificationReceipt {
   return (
-    isRecord(value)
-    && (value.verdict === 'PASS' || value.verdict === 'FAIL')
+    (value.verdict === 'PASS' || value.verdict === 'FAIL')
     && value.context_isolated === true
     && value.source === 'independent-literacy-verifier'
     && typeof value.evidence_digest === 'string'
@@ -33,18 +35,59 @@ export function receiptShapeIsValid(value: unknown): value is VerificationReceip
   )
 }
 
+function teachingGameReceiptShapeIsValid(
+  value: Record<string, unknown>,
+): value is TeachingGameVerificationReceipt {
+  return (
+    value.schema_version === 1
+    && (value.verdict === 'PASS' || value.verdict === 'FAIL')
+    && value.context_isolated === true
+    && value.source === 'independent-teaching-game-verifier'
+    && typeof value.evidence_digest === 'string'
+    && SHA256_HEX.test(value.evidence_digest)
+    && typeof value.unit_id === 'string'
+    && typeof value.project === 'string'
+    && typeof value.scenario_id === 'string'
+    && typeof value.game === 'string'
+    && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
+    && typeof value.independent_pass === 'boolean'
+    && isStringArray(value.errors)
+    && value.producer_writes_mastered === false
+    && value.max_producer_claim === 'completed'
+    && value.canonical_gate_status === 'not-submitted'
+    && value.canonical_gate_reason === 'learner-attempt-and-gate-eligibility-required'
+  )
+}
+
+/** Shape of a verifier receipt, independent of which record produced it. */
+export function receiptShapeIsValid(value: unknown): value is VerificationReceipt {
+  return (
+    isRecord(value)
+    && (literacyReceiptShapeIsValid(value) || teachingGameReceiptShapeIsValid(value))
+  )
+}
+
 /** Identity binding: the receipt describes exactly the record that was submitted. */
 export function receiptIsBound(
   receipt: unknown,
   record: Readonly<Record<string, unknown>>,
 ): receipt is VerificationReceipt {
+  if (!receiptShapeIsValid(receipt)) return false
+  if (receipt.source === 'independent-literacy-verifier') {
+    return (
+      receipt.lesson_id === record.lessonId
+      && receipt.activity_id === record.activityId
+      && receipt.attempt_id === record.attemptId
+      && receipt.activity_type === record.activityType
+      && receipt.score === record.score
+      && receipt.producer_pass_claim === record.pass
+    )
+  }
   return (
-    receiptShapeIsValid(receipt)
-    && receipt.lesson_id === record.lessonId
-    && receipt.activity_id === record.activityId
-    && receipt.attempt_id === record.attemptId
-    && receipt.activity_type === record.activityType
-    && receipt.score === record.score
+    receipt.unit_id === record.unit_id
+    && receipt.project === record.project
+    && receipt.scenario_id === record.scenario_id
+    && receipt.game === record.game
     && receipt.producer_pass_claim === record.pass
   )
 }

@@ -167,6 +167,23 @@ class TestValidContent(TrackFixtureMixin, unittest.TestCase):
             types,
         )
 
+    def test_first_release_ai_pratica_chapter_is_ready_and_keeps_entry_prerequisites(self):
+        errors, ready, catalog = validate.validate_track(TRACK_DIR)
+        self.assertEqual([], errors)
+        entries = {lesson["id"]: lesson for lesson in catalog["lessons"]}
+        ready_by_id = {lesson["id"]: lesson for lesson in ready}
+
+        self.assertEqual(
+            {lesson_id: entries[lesson_id]["status"] for lesson_id in ("l01", "l02", "l03")},
+            {"l01": "ready", "l02": "ready", "l03": "ready"},
+        )
+        self.assertEqual(entries["l01"]["prerequisites"], [])
+        self.assertEqual(entries["l02"]["prerequisites"], [])
+        self.assertEqual(entries["l03"]["prerequisites"], ["l02"])
+        self.assertEqual(set(ready_by_id), {lesson["id"] for lesson in catalog["lessons"]})
+        for lesson_id in ("l01", "l02", "l03"):
+            self.assertGreaterEqual(ready_by_id[lesson_id]["version"], 1)
+
     def test_planned_lessons_do_not_require_files(self):
         with tempfile.TemporaryDirectory() as tmp:
             catalog = _base_catalog()

@@ -98,11 +98,11 @@ sequenceDiagram
 ```mermaid
 graph TD
     Start([Qual é o seu perfil/objetivo?]) --> Choice{Sou não-técnico ou programador?}
-    
+
     Choice -- "Não-Técnico" --> NonTechPath{O que você deseja fazer?}
     NonTechPath -- "Conceitos rápidos de IA em micro-aulas" --> LiteracyDojoPath["Use o LiteracyDojo (engines/literacyDojo/)"]
     NonTechPath -- "Apenas explorar o mundo sem avaliação" --> MiniTownPath["Use o MiniTown (engines/miniTown/)"]
-    
+
     Choice -- "Programador" --> TechPath{Qual estilo de interface prefere?}
     TechPath -- "Dashboard limpo e direto" --> CodexDojoPath["Use o CodexDojo (engines/codexDojo/)"]
     TechPath -- "Experiência de SO com Terminal e Apps" --> CodexOSPath["Use o CodexDojo OS (engines/codexdojo-os-prototype/)"]

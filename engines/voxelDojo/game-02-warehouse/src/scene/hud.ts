@@ -1,5 +1,5 @@
+import { PALETTE } from "../../../shared/palette"
 import type { GameController, GameState } from "../game/controller"
-import { PALETTE } from "./warehouseScene"
 
 /**
  * DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands.

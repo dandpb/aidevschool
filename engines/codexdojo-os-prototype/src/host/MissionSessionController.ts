@@ -1,12 +1,19 @@
 import type { MissionDefinition, MissionStage } from '../domain'
 import {
+  createInitialRendererState,
+  type RendererPreference,
+  rendererReducer,
+  type RendererState,
+} from '../rendering/domain'
+import type { EvidenceSubmission } from '../verification/ports'
+import {
+  createEnvelope,
   type EngineToHostMessage,
   type HostToEngineMessage,
+  type MissionEventMessage,
   type ProtocolAckMessage,
-  createEnvelope,
 } from './protocol'
 import { decodeEngineMessage } from './validation'
-import type { EvidenceSubmission } from '../verification/ports'
 
 const HANDSHAKE_TIMEOUT_MS = 10_000
 
@@ -23,20 +30,31 @@ export type MissionSessionSnapshot = {
   readonly stage: MissionStage
   readonly progress: number
   readonly error?: string
+  readonly nextMissionId?: string
+  readonly renderer: RendererState
 }
 
 export type MissionSessionControllerInput = {
   readonly frame: HTMLIFrameElement
   readonly frameUrl: string
   readonly mission: MissionDefinition
+  readonly rendererPreference?: RendererPreference
+  readonly reducedMotion?: boolean
   readonly onState: (snapshot: MissionSessionSnapshot) => void
   readonly onEvidence: (
     submission: EvidenceSubmission,
   ) => Promise<{ readonly accepted: boolean; readonly code?: string }>
+  readonly onMissionEvent?: (input: {
+    readonly event: MissionEventMessage['payload']
+    readonly missionRunId: string
+    readonly engineVersion: string
+    readonly contentVersion: string
+  }) => void
 }
 
 function uniqueId(prefix: string): string {
-  const random = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  const random =
+    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
   return `${prefix}-${random}`
 }
 
@@ -44,18 +62,29 @@ export class MissionSessionController {
   readonly hostSessionId = uniqueId('host')
   readonly missionRunId = uniqueId('run')
   private revision = -1
+  private eventSequence = 0
+  private rendererRevision = 0
+  private engineVersion: string | null = null
+  private contentVersion: string | null = null
+  private acceptsMissionEvents = false
   private launchMessageId: string | null = null
   private timeout: number | undefined
   private helloInterval: number | undefined
   private started = false
   private closed = false
-  private snapshot: MissionSessionSnapshot = {
-    phase: 'handshaking',
-    stage: 'understand',
-    progress: 0,
-  }
+  private snapshot: MissionSessionSnapshot
+  /** Immutable for the controller's life; every message would otherwise re-parse it. */
+  private readonly frameOrigin: string
 
-  constructor(private readonly input: MissionSessionControllerInput) {}
+  constructor(private readonly input: MissionSessionControllerInput) {
+    this.frameOrigin = new URL(input.frameUrl).origin
+    this.snapshot = {
+      phase: 'handshaking',
+      stage: 'understand',
+      progress: 0,
+      renderer: createInitialRendererState(input.rendererPreference ?? 'auto'),
+    }
+  }
 
   start(): void {
     if (this.closed || this.started) return
@@ -92,6 +121,27 @@ export class MissionSessionController {
     this.update({ ...this.snapshot, phase: 'closed' })
   }
 
+  retryRenderer(rendererPreference: RendererPreference = 'webgl'): void {
+    if (this.closed || this.snapshot.phase === 'handshaking') return
+    this.update({
+      ...this.snapshot,
+      renderer: rendererReducer(this.snapshot.renderer, {
+        type: 'RETRY_REQUESTED',
+        requested: rendererPreference,
+      }),
+    })
+    this.send(
+      createEnvelope({
+        type: 'renderer.retry',
+        messageId: uniqueId('message'),
+        hostSessionId: this.hostSessionId,
+        missionRunId: this.missionRunId,
+        engineId: this.input.mission.runtime.engineId,
+        payload: { rendererPreference },
+      }),
+    )
+  }
+
   private stopHandshake(): void {
     window.clearTimeout(this.timeout)
     window.clearInterval(this.helloInterval)
@@ -113,7 +163,7 @@ export class MissionSessionController {
       this.fail('O frame da missão não está disponível.')
       return
     }
-    target.postMessage(message, new URL(this.input.frameUrl).origin)
+    target.postMessage(message, this.frameOrigin)
   }
 
   private acknowledge(messageId: string, accepted = true, code?: string): void {
@@ -138,7 +188,7 @@ export class MissionSessionController {
     if (this.closed || this.input.frame.contentWindow === null) return
     const decoded = decodeEngineMessage(event, {
       sourceWindow: this.input.frame.contentWindow,
-      origin: new URL(this.input.frameUrl).origin,
+      origin: this.frameOrigin,
       hostSessionId: this.hostSessionId,
       missionRunId: this.missionRunId,
       engineId: this.input.mission.runtime.engineId,
@@ -151,10 +201,20 @@ export class MissionSessionController {
     switch (message.type) {
       case 'engine.ready': {
         if (this.snapshot.phase !== 'handshaking') return
-        if (!message.payload.capabilities.includes('mission-state') || !message.payload.capabilities.includes('evidence')) {
+        if (
+          !message.payload.capabilities.includes('mission-state') ||
+          !message.payload.capabilities.includes('evidence')
+        ) {
           this.fail('O motor não oferece o contrato da missão.')
           return
         }
+        if (message.payload.contentVersion !== this.input.mission.runtime.contentVersion) {
+          this.fail('A versão de conteúdo do motor não corresponde à missão.')
+          return
+        }
+        this.engineVersion = message.payload.engineVersion
+        this.contentVersion = message.payload.contentVersion
+        this.acceptsMissionEvents = message.payload.capabilities.includes('mission-events')
         this.stopHandshake()
         this.launchMessageId = uniqueId('message')
         this.update({ ...this.snapshot, phase: 'launching' })
@@ -170,6 +230,8 @@ export class MissionSessionController {
               missionVersion: this.input.mission.version,
               mode: 'initial' as const,
               locale: 'pt-BR' as const,
+              reducedMotion: this.input.reducedMotion ?? false,
+              rendererPreference: this.input.rendererPreference ?? 'auto',
             },
           }),
         )
@@ -189,6 +251,44 @@ export class MissionSessionController {
           phase: message.payload.status,
           stage: message.payload.stage,
           progress: message.payload.progress,
+          ...(message.payload.nextMissionId === undefined
+            ? {}
+            : { nextMissionId: message.payload.nextMissionId }),
+        })
+        return
+      case 'mission.event':
+        if (
+          !this.acceptsMissionEvents ||
+          this.engineVersion === null ||
+          this.contentVersion === null ||
+          message.payload.sequence <= this.eventSequence
+        ) {
+          return
+        }
+        this.eventSequence = message.payload.sequence
+        try {
+          this.input.onMissionEvent?.({
+            event: message.payload,
+            missionRunId: message.missionRunId,
+            engineVersion: this.engineVersion,
+            contentVersion: this.contentVersion,
+          })
+        } catch {
+          // Best-effort analytics cannot alter mission state.
+        }
+        return
+      case 'renderer.state':
+        if (message.payload.revision <= this.rendererRevision) return
+        this.rendererRevision = message.payload.revision
+        this.update({
+          ...this.snapshot,
+          renderer: {
+            requested: message.payload.requested,
+            active: message.payload.active,
+            status: message.payload.status,
+            ...(message.payload.reason === undefined ? {} : { reason: message.payload.reason }),
+            retryCount: this.snapshot.renderer.retryCount,
+          },
         })
         return
       case 'evidence.submitted':
@@ -199,21 +299,23 @@ export class MissionSessionController {
           this.acknowledge(message.messageId, false, 'subject-mismatch')
           return
         }
-        void this.input.onEvidence({
-          schemaId: message.payload.schemaId,
-          schemaVersion: message.payload.schemaVersion,
-          engineId: message.engineId,
-          missionRunId: message.missionRunId,
-          subject: message.payload.subject,
-          record: message.payload.record,
-        }).then(
-          (result) => {
-            if (!this.closed) this.acknowledge(message.messageId, result.accepted, result.code)
-          },
-          () => {
-            if (!this.closed) this.acknowledge(message.messageId, false, 'evidence-intake-failed')
-          },
-        )
+        void this.input
+          .onEvidence({
+            schemaId: message.payload.schemaId,
+            schemaVersion: message.payload.schemaVersion,
+            engineId: message.engineId,
+            missionRunId: message.missionRunId,
+            subject: message.payload.subject,
+            record: message.payload.record,
+          })
+          .then(
+            (result) => {
+              if (!this.closed) this.acknowledge(message.messageId, result.accepted, result.code)
+            },
+            () => {
+              if (!this.closed) this.acknowledge(message.messageId, false, 'evidence-intake-failed')
+            },
+          )
         return
     }
   }

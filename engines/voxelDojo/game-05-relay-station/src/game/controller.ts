@@ -33,13 +33,12 @@ export interface GameState {
   state: RelayState
   /** ids the player has toggled into their predicted set */
   predicted: Set<string>
-  /** L4: has the player performed the reconnect yet? */
-  reconnected: boolean
+  reconnectedId: string | null
   /** the channel a broadcast fires on (L2/L4) */
   broadcastChannel: string
   /** the most recent broadcast result (for the scene to animate + the HUD to show) */
   lastBroadcast: BroadcastResult | null
-  lastMetrics: Record<string, number | boolean> | null
+  lastMetrics: Record<string, number | boolean | string> | null
 }
 
 export type Listener = (state: GameState) => void
@@ -59,7 +58,7 @@ export class GameController {
       stations: cfg.stations,
       state: buildState(cfg),
       predicted: new Set<string>(),
-      reconnected: false,
+      reconnectedId: null,
       broadcastChannel: cfg.broadcastChannel,
       lastBroadcast: null,
       lastMetrics: null,
@@ -129,7 +128,7 @@ export class GameController {
   /** L4 — reconnect the dropped station, then confirm it rejoins the fan-out. */
   reconnect(stationId: string): void {
     if (this.state.phase !== "predicting" || this.state.level.id !== "L4") return
-    this.state.reconnected = true
+    this.state.reconnectedId = stationId
     this.state.phase = "resolving"
     const outcome = evaluateRecovery({ cfg: this.state.level, reconnectedId: stationId })
     // reflect the recovery in the live state for the scene
@@ -179,8 +178,13 @@ export class GameController {
   }
 
   private finishWave(outcome: WaveOutcome): void {
-    this.state.lastMetrics = outcome.metrics
+    const metrics = { kind: "voxeldoj-relay-station", ...outcome.metrics }
+    const observations =
+      this.state.level.id === "L4"
+        ? { kind: "relay-L4", reconnectedId: this.state.reconnectedId ?? "" }
+        : { kind: `relay-${this.state.level.id}`, predictions: [...this.state.predicted].sort() }
+    this.state.lastMetrics = metrics
     this.state.phase = outcome.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, outcome.pass, outcome.metrics)
+    emitEvidence(this.state.level.id, outcome.pass, metrics, observations)
   }
 }

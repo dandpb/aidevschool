@@ -33,6 +33,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       scenario_id: "kv-warehouse-L1",
       game: "KV WAREHOUSE",
       pass: true,
+      observations: {
+        kind: "warehouse-L1",
+        predictions: game.snapshot.shelfPredictions,
+      },
     })
     spy.mockRestore()
   })
@@ -108,6 +112,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
       .find((r) => r.scenario_id === "kv-warehouse-L2")
     expect(rec?.pass).toBe(true)
+    expect(rec?.observations).toEqual({
+      kind: "warehouse-L2",
+      probes: game.snapshot.crudProbes,
+    })
     spy.mockRestore()
   })
 
@@ -130,6 +138,11 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
       .find((r) => r.scenario_id === "kv-warehouse-L3")
     expect(rec?.pass).toBe(true)
+    expect(rec?.observations).toEqual({
+      kind: "warehouse-L3",
+      probes: game.snapshot.crudProbes,
+      predictedSwept: game.snapshot.keys.length,
+    })
     spy.mockRestore()
   })
 
@@ -146,6 +159,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
       .find((r) => r.scenario_id === "kv-warehouse-L4")
     expect(rec?.pass).toBe(true)
+    expect(rec?.observations).toEqual({
+      kind: "warehouse-L4",
+      hashStrength: "full",
+    })
     spy.mockRestore()
   })
 })

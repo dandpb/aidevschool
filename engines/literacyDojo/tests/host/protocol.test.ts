@@ -71,4 +71,70 @@ describe("LiteracyDojo hosted mission protocol", () => {
     vi.spyOn(document, "referrer", "get").mockReturnValue("http://other.test/");
     expect(expectedHostOrigin()).toBeNull();
   });
+
+  it.each([
+    ["l01", 1, "l02"],
+    ["l02", 3, "l03"],
+    ["l03", 1, undefined],
+  ] as const)(
+    "launches declared chapter mission %s and publishes its next route",
+    async (missionId, missionVersion, nextMissionId) => {
+      window.history.replaceState(null, "", "/?hosted=1&hostOrigin=http%3A%2F%2Fhost.test");
+      vi.spyOn(document, "referrer", "get").mockReturnValue("http://host.test/");
+      const postMessage = vi
+        .spyOn(window.parent, "postMessage")
+        .mockImplementation(() => undefined);
+      const onLaunch = vi.fn(async () => undefined);
+      const adapter = new LiteracyMissionAdapter();
+      const stop = adapter.start(onLaunch, "test.1");
+      const envelope = (type: string, payload: Record<string, unknown>) => ({
+        protocol: "aidevschool.host-engine",
+        version: "1.0",
+        type,
+        messageId: `${type}-1`,
+        hostSessionId: "host-1",
+        missionRunId: "run-1",
+        engineId: "literacyDojo",
+        sentAt: "2026-07-25T12:00:00.000Z",
+        payload,
+      });
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          source: window.parent,
+          origin: "http://host.test",
+          data: envelope("host.hello", { missionId, protocolVersion: "1.0" }),
+        }),
+      );
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          source: window.parent,
+          origin: "http://host.test",
+          data: envelope("mission.launch", {
+            missionId,
+            missionVersion,
+            mode: "initial",
+            locale: "pt-BR",
+          }),
+        }),
+      );
+
+      await vi.waitFor(() =>
+        expect(onLaunch).toHaveBeenCalledWith({
+          missionId,
+          missionVersion,
+          mode: "initial",
+          locale: "pt-BR",
+        }),
+      );
+      adapter.publishCompleted(nextMissionId);
+      const completed = postMessage.mock.calls
+        .map(([message]) => message as { type?: string; payload?: Record<string, unknown> })
+        .find(
+          (message) => message.type === "mission.state" && message.payload?.status === "completed",
+        );
+      expect(completed?.payload).not.toHaveProperty("checkpoint");
+      expect(completed?.payload?.nextMissionId).toBe(nextMissionId);
+      stop();
+    },
+  );
 });

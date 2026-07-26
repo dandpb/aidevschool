@@ -1,8 +1,9 @@
 import { TeachingGameHostAdapter } from "@aidevschool/evidence/host-protocol"
+import type { MissionProjection } from "../../shared/projection"
 import { createSceneHarness } from "../../shared/sceneHarness"
 import { GameController, type GameState } from "./game/controller"
+import { createWarehouseAccessibleProjection } from "./scene/accessible"
 import { mountHud } from "./scene/hud"
-import { WarehouseScene } from "./scene/warehouseScene"
 
 declare global {
   interface Window {
@@ -11,20 +12,24 @@ declare global {
   }
 }
 
-createSceneHarness<GameState, GameController, WarehouseScene>({
+createSceneHarness<GameState, GameController, MissionProjection<GameState>>({
   createGame: () => new GameController("L1"),
-  createScene: (canvas) => new WarehouseScene(canvas),
   windowKey: "__warehouse",
   mountHud,
-  wireInteraction: (game, scene) => {
-    scene.onShelfClick = (shelf) => {
-      // L1 — clicking a 3D shelf predicts the pending crate's hashed shelf.
-      if (game.snapshot.level.id === "L1" && game.snapshot.phase === "predicting") {
-        game.predictShelf(shelf)
+  renderer: {
+    loadWebgl: async (canvas, game, hooks) => {
+      const { WarehouseScene } = await import("./scene/warehouseScene")
+      const scene = new WarehouseScene(canvas, game, hooks)
+      scene.onShelfClick = (shelf) => {
+        if (game.snapshot.level.id === "L1" && game.snapshot.phase === "predicting") {
+          game.predictShelf(shelf)
+        }
       }
-    }
+      return scene
+    },
+    createAccessible: (_target, game, controlsRoot) =>
+      createWarehouseAccessibleProjection(game, controlsRoot),
   },
-  onState: (state, game, scene) => scene.sync(state, game),
   hostedMission: {
     adapter: new TeachingGameHostAdapter({
       engineId: "voxelDojo",

@@ -29,9 +29,11 @@ export interface GameState {
   /** L1/L3: index of the URL the player is currently predicting */
   pendingIndex: number
   correctPredictions: number
+  codePredictions: ReadonlyArray<{ url: string; predictedCode: string }>
   /** L2: how many redirects the player has answered so far */
   redirectTotal: number
   redirectCorrect: number
+  redirectPredictions: ReadonlyArray<{ code: string; predictedUrl: string }>
   /** L3: collision predictions collected this wave */
   collisionPredictions: CollisionPrediction[]
   /** L4: the constructed colliding pair + the code they fight over */
@@ -67,8 +69,10 @@ export class GameController {
       map,
       pendingIndex: 0,
       correctPredictions: 0,
+      codePredictions: [],
       redirectTotal: 0,
       redirectCorrect: 0,
+      redirectPredictions: [],
       collisionPredictions: [],
       colliderIndex,
       collisionCode: null,
@@ -138,6 +142,7 @@ export class GameController {
     if (url === undefined) return
     const truth = this.predictedCodeForPending()
     if (truth === code) this.state.correctPredictions++
+    this.state.codePredictions = [...this.state.codePredictions, { url, predictedCode: code }]
     this.state.map = shorten(this.state.map, url, this.state.level.strategy).map
     this.state.pendingIndex++
     if (this.state.pendingIndex >= this.state.urls.length) {
@@ -174,6 +179,10 @@ export class GameController {
     if (code === null) return
     const truth = redirect(this.state.map, code).url
     if (truth === url) this.state.redirectCorrect++
+    this.state.redirectPredictions = [
+      ...this.state.redirectPredictions,
+      { code, predictedUrl: url },
+    ]
     this.state.redirectTotal++
     if (this.state.redirectTotal >= this.state.urls.length) {
       this.finishWave(
@@ -254,6 +263,24 @@ export class GameController {
   }): void {
     this.state.lastMetrics = outcome.metrics
     this.state.phase = outcome.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, outcome.pass, outcome.metrics)
+    const observations =
+      this.state.level.id === "L1"
+        ? { kind: "wormhole-L1", predictions: this.state.codePredictions }
+        : this.state.level.id === "L2"
+          ? { kind: "wormhole-L2", predictions: this.state.redirectPredictions }
+          : this.state.level.id === "L3"
+            ? {
+                kind: "wormhole-L3",
+                predictions: this.state.collisionPredictions.map(({ url, predictedCollision }) => ({
+                  url,
+                  predictedCollision,
+                })),
+              }
+            : {
+                kind: "wormhole-L4",
+                colliderUrl: this.colliderUrl(),
+                chosenResolution: this.state.chosenResolution,
+              }
+    emitEvidence(this.state.level.id, outcome.pass, outcome.metrics, observations)
   }
 }

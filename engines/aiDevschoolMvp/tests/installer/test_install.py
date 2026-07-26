@@ -62,14 +62,39 @@ def test_custom_root_is_detection_and_install_target(tmp_path):
 
 def test_installed_copy_runs_outside_repository(tmp_path):
     root = openclaw_root(tmp_path)
-    installer.install(SKILL, {"OPENCLAW_HOME": str(root)}, tmp_path / "home", fake_runner)
+    distribution = tmp_path / "distribution"
+    shutil.copytree(SKILL, distribution)
+    installed = subprocess.run(
+        [
+            "python3",
+            "-c",
+            (
+                "import importlib.util\n"
+                "import subprocess\n"
+                "import sys\n"
+                "from pathlib import Path\n"
+                "source, root, home = map(Path, sys.argv[1:])\n"
+                "spec = importlib.util.spec_from_file_location('isolated_aidevschool_install', source / 'install.py')\n"
+                "installer = importlib.util.module_from_spec(spec)\n"
+                "spec.loader.exec_module(installer)\n"
+                "installer.install(source, {'OPENCLAW_HOME': str(root)}, home, lambda cmd, **_kwargs: subprocess.CompletedProcess(cmd, 0, 'aidevschool\\n' if cmd[-2:] == ['skills', 'list'] else '', ''))\n"
+            ),
+            str(distribution),
+            str(root),
+            str(tmp_path / "home"),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+        env={"PATH": os.environ["PATH"], "PYTHONPATH": ""},
+    )
+
+    assert installed.returncode == 0, installed.stderr
     skill = root / "workspace" / "skills" / "aidevschool"
     state = root / "workspace" / "aidevschool-state"
-    isolated = tmp_path / "isolated"
-    shutil.copytree(skill, isolated)
 
     result = subprocess.run(
-        ["python3", str(isolated / "scripts" / "progress_card.py")],
+        ["python3", str(skill / "scripts" / "progress_card.py")],
         input=json.dumps({"state_dir": str(state)}),
         capture_output=True,
         text=True,
@@ -81,8 +106,8 @@ def test_installed_copy_runs_outside_repository(tmp_path):
     assert json.loads(result.stdout)["counts"]["remaining"] == 24
 
     next_step = subprocess.run(
-        ["python3", str(isolated / "scripts" / "next_step.py")],
-        input=json.dumps({"state_dir": str(state), "skill_dir": str(isolated)}),
+        ["python3", str(skill / "scripts" / "next_step.py")],
+        input=json.dumps({"state_dir": str(state), "skill_dir": str(skill)}),
         capture_output=True,
         text=True,
         cwd=tmp_path,

@@ -177,7 +177,7 @@ function AppShell({
               onCompleted={(updated, summary) => {
                 setProgress(updated);
                 setRoute({ name: "result", summary });
-                hostAdapter?.publishCompleted();
+                hostAdapter?.publishCompleted(summary.nextLessonId);
               }}
               onExit={() => {
                 if (hostAdapter === null) setRoute({ name: "map" });

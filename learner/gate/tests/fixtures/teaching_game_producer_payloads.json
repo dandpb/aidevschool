@@ -1,0 +1,125 @@
+{
+  "WORMHOLE": {
+    "L1": {
+      "observations": {
+        "kind": "wormhole-L1",
+        "predictions": [
+          {"url": "https://delta.app/8ril9k-0", "predictedCode": "35y4"},
+          {"url": "https://delta.app/9rd4jn-1", "predictedCode": "REDI"},
+          {"url": "https://flux.sys/8wbont-2", "predictedCode": "3qEK"},
+          {"url": "https://ada.io/8ruko7-3", "predictedCode": "1buv"},
+          {"url": "https://delta.app/7g40wq-4", "predictedCode": "442O"},
+          {"url": "https://cache.net/dy7kps-5", "predictedCode": "1Nfi"}
+        ]
+      },
+      "metrics": {
+        "code_predictions": 6,
+        "code_prediction_accuracy": 1,
+        "strategy": "hash_trunc"
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "wormhole-L2",
+        "predictions": [
+          {"code": "3B8b", "predictedUrl": "https://delta.app/3wxzra-0"},
+          {"code": "4DF2", "predictedUrl": "https://bytes.dev/3e8o2g-1"},
+          {"code": "1f4R", "predictedUrl": "https://cache.net/eu4mct-2"},
+          {"code": "2vGN", "predictedUrl": "https://cache.net/b4u2g8-3"},
+          {"code": "2PJA", "predictedUrl": "https://edge.run/9u4i7-4"},
+          {"code": "2xqJ", "predictedUrl": "https://ada.io/280dma-5"}
+        ]
+      },
+      "metrics": {
+        "redirect_predictions": 6,
+        "redirect_prediction_accuracy": 1
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "wormhole-L3",
+        "predictions": [
+          {"url": "https://delta.app/c89yjl-0", "predictedCollision": false},
+          {"url": "https://delta.app/9rgfr-1", "predictedCollision": false},
+          {"url": "https://wormhole.collide/133", "predictedCollision": false},
+          {"url": "https://wormhole.collide/163", "predictedCollision": true},
+          {"url": "https://edge.run/fx6tp8-4", "predictedCollision": false},
+          {"url": "https://bytes.dev/ddbqp2-5", "predictedCollision": false}
+        ]
+      },
+      "metrics": {
+        "collision_predictions": 6,
+        "collision_prediction_accuracy": 1,
+        "collisions_present": 1
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "wormhole-L4",
+        "colliderUrl": "https://wormhole.collide/163",
+        "chosenResolution": "salted"
+      },
+      "metrics": {
+        "resolution_chosen": "salted",
+        "resolved_code": "1drY",
+        "resolved_unique": true,
+        "redirect_ok": true
+      }
+    }
+  },
+  "RELAY STATION": {
+    "L1": {
+      "observations": {
+        "kind": "relay-L1",
+        "predictions": ["st-0", "st-2", "st-4"]
+      },
+      "metrics": {
+        "kind": "voxeldoj-relay-station",
+        "connected_accuracy": 1,
+        "connected_predicted": 3,
+        "connected_truth": 3,
+        "connected_total": 5
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "relay-L2",
+        "predictions": ["st-0", "st-3"]
+      },
+      "metrics": {
+        "kind": "voxeldoj-relay-station",
+        "delivery_accuracy": 1,
+        "delivery_predicted": 2,
+        "delivery_truth": 2,
+        "delivery_total": 5
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "relay-L3",
+        "predictions": ["st-0", "st-2", "st-4"]
+      },
+      "metrics": {
+        "kind": "voxeldoj-relay-station",
+        "survivor_accuracy": 1,
+        "survivor_predicted": 3,
+        "survivor_truth": 3,
+        "survivor_total": 5,
+        "missed_heartbeat_dropped": 2
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "relay-L4",
+        "reconnectedId": "st-2"
+      },
+      "metrics": {
+        "kind": "voxeldoj-relay-station",
+        "target_correct": true,
+        "rejoined_fanout": true,
+        "delivered_after": 4,
+        "was_dropped": true
+      }
+    }
+  }
+}

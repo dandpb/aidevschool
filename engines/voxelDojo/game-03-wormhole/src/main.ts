@@ -1,7 +1,9 @@
+import { TeachingGameHostAdapter } from "@aidevschool/evidence/host-protocol"
+import type { MissionProjection } from "../../shared/projection"
 import { createSceneHarness } from "../../shared/sceneHarness"
 import { GameController, type GameState } from "./game/controller"
+import { createWormholeAccessibleProjection } from "./scene/accessible"
 import { mountHud } from "./scene/hud"
-import { WormholeScene } from "./scene/wormholeScene"
 
 declare global {
   interface Window {
@@ -10,16 +12,39 @@ declare global {
   }
 }
 
-createSceneHarness<GameState, GameController, WormholeScene>({
+createSceneHarness<GameState, GameController, MissionProjection<GameState>>({
   createGame: () => new GameController("L1"),
-  createScene: (canvas) => new WormholeScene(canvas),
   windowKey: "__wormhole",
   mountHud,
-  wireInteraction: (_game, scene) => {
-    // Clicking the gate is a soft "confirm" affordance; the real input is the HUD field/buttons.
-    scene.onGateClick = () => {
-      void scene
-    }
+  renderer: {
+    loadWebgl: async (canvas, _game, hooks) => {
+      const { WormholeScene } = await import("./scene/wormholeScene")
+      return new WormholeScene(canvas, hooks)
+    },
+    createAccessible: (_target, game, controlsRoot) =>
+      createWormholeAccessibleProjection(game, controlsRoot),
   },
-  onState: (state, _game, scene) => scene.sync(state),
+  hostedMission: {
+    adapter: new TeachingGameHostAdapter({
+      engineId: "voxelDojo",
+      missionId: "game-03-wormhole",
+      missionVersion: 1,
+      unitId: "U3-url-shortener",
+      engineVersion: "0.1.0",
+      contentVersion: "game-03-wormhole@0.1.0",
+    }),
+    launch: (game) => {
+      if (game.snapshot.phase === "briefing") game.start()
+    },
+    projectState: (state) => {
+      if (state.phase === "cleared") return { status: "completed", stage: "apply", progress: 1 }
+      if (state.phase === "failed") return { status: "failed", stage: "apply", progress: 1 }
+      if (state.phase === "briefing") return { status: "running", stage: "understand", progress: 0 }
+      return {
+        status: "running",
+        stage: "respond",
+        progress: Math.min(0.8, 0.2 + (state.pendingIndex / Math.max(1, state.urls.length)) * 0.6),
+      }
+    },
+  },
 })

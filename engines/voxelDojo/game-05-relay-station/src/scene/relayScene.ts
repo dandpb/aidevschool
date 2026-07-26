@@ -1,4 +1,10 @@
 import * as THREE from "three"
+import { PALETTE } from "../../../shared/palette"
+import {
+  disposeObject3D,
+  type MissionProjection,
+  type ProjectionContextHooks,
+} from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { sweepDead } from "../sim/relay"
@@ -16,25 +22,15 @@ export const LINK_GREEN = "#4caf50"
 export const LINK_GREY = "#5a6378"
 export const LINK_DEAD = "#b34a3a"
 
-export const PALETTE = [
-  "#4fc3f7",
-  "#ffb74d",
-  "#aed581",
-  "#f06292",
-  "#ba68c8",
-  "#ffd54f",
-  "#80cbc4",
-  "#e0e0e0",
-] as const
-
 /** Deterministic orbital position for a station id (mirrors a stable constellation). */
 function orbitPoint(angle: number, lift = 0): THREE.Vector3 {
   return new THREE.Vector3(Math.cos(angle) * RING_RADIUS, lift, Math.sin(angle) * RING_RADIUS)
 }
 
 /** Three.js projection of sim state. Renders only — all rules live in src/sim and src/game. */
-export class RelayScene {
+export class RelayScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private world = new THREE.Group()
   private hub: THREE.Mesh
   private stationMeshes = new Map<string, THREE.Mesh>()
@@ -43,8 +39,10 @@ export class RelayScene {
   private pulses: THREE.InstancedMesh | null = null
   private clock = new THREE.Clock()
   onStationClick: ((stationId: string) => void) | null = null
+  private disposed = false
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 20,
@@ -57,6 +55,7 @@ export class RelayScene {
       onFrame: () => {
         this.frame()
       },
+      ...hooks,
     })
 
     this.world.rotation.x = RING_TILT
@@ -82,8 +81,24 @@ export class RelayScene {
     guide.rotation.x = Math.PI / 2
     this.world.add(guide)
 
-    canvas.addEventListener("pointerdown", (e) => this.pick(e))
+    canvas.addEventListener("pointerdown", this.onPointerDown)
   }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.canvas.removeEventListener("pointerdown", this.onPointerDown)
+    disposeObject3D(this.world)
+    this.viewport.dispose()
+  }
+
+  private readonly onPointerDown = (event: PointerEvent): void => this.pick(event)
 
   private frame(): void {
     const t = this.clock.getElapsedTime()

@@ -1,6 +1,19 @@
 import type { ActionExecutor } from './actions'
 import { executeAllowedAction } from './actions'
+import {
+  acceptAnalyticsBatch,
+  type AnalyticsBatchSink,
+  decodeAnalyticsBatch,
+} from './analytics'
 import { executeFixedVerification } from './verification'
+
+const MAX_ACTION_BODY_BYTES = 4_096
+
+/** Route identity lives here so the plugin middleware and the router cannot disagree. */
+export const BRIDGE_ROOT = '/__dojo/bridge/v1'
+export const BRIDGE_ANALYTICS_PATH = `${BRIDGE_ROOT}/analytics`
+export const BRIDGE_VERIFICATION_PATH = `${BRIDGE_ROOT}/verification`
+export const MAX_ANALYTICS_BODY_BYTES = 65_536
 
 export type BridgeRequest = {
   readonly method: string
@@ -16,11 +29,18 @@ export type BridgeResponse = {
 export async function routeBridgeRequest(
   request: BridgeRequest,
   executor: ActionExecutor,
+  analyticsSink: AnalyticsBatchSink = acceptAnalyticsBatch,
 ): Promise<BridgeResponse> {
-  if (Buffer.byteLength(request.body, 'utf8') > 4_096) {
+  const bodyLimit = request.pathname === BRIDGE_ANALYTICS_PATH
+    ? MAX_ANALYTICS_BODY_BYTES
+    : MAX_ACTION_BODY_BYTES
+  if (Buffer.byteLength(request.body, 'utf8') > bodyLimit) {
     return { status: 413, body: { error: 'body-too-large' } }
   }
-  if (request.pathname === '/__dojo/bridge/v1/verification') {
+  if (request.pathname === BRIDGE_ANALYTICS_PATH) {
+    return routeAnalytics(request, analyticsSink)
+  }
+  if (request.pathname === BRIDGE_VERIFICATION_PATH) {
     return routeVerification(request, executor)
   }
   const match = request.pathname.match(
@@ -103,4 +123,23 @@ async function routeVerification(request: BridgeRequest, executor: ActionExecuto
     return { status: result.code === 'unsupported-schema' ? 404 : 422, body: { error: result.code } }
   }
   return { status: 200, body: { receipt: result.receipt } }
+}
+
+async function routeAnalytics(
+  request: BridgeRequest,
+  analyticsSink: AnalyticsBatchSink,
+): Promise<BridgeResponse> {
+  const parsed = parseJsonObject(request)
+  if (isBridgeResponse(parsed)) return parsed
+  const batch = decodeAnalyticsBatch(parsed)
+  if (batch === null) return { status: 400, body: { error: 'invalid-analytics-batch' } }
+  const result = await analyticsSink(batch)
+  const submitted = new Set(batch.events.map((event) => event.eventId))
+  if (
+    !Array.isArray(result.acceptedEventIds) ||
+    result.acceptedEventIds.some((eventId) => typeof eventId !== 'string' || !submitted.has(eventId))
+  ) {
+    return { status: 502, body: { error: 'invalid-analytics-response' } }
+  }
+  return { status: 202, body: { acceptedEventIds: [...new Set(result.acceptedEventIds)] } }
 }

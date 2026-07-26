@@ -4,8 +4,6 @@ import hashlib
 import json
 import shutil
 
-import pytest
-
 from engines.aiDevschoolMvp.tests.acceptance.conftest import (
     SKILL,
     ledger,

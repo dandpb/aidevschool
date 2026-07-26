@@ -1,8 +1,6 @@
 import { receiptIsBound } from '../src/verification/receiptContract'
 import type { ActionExecutor, ProcessSpec } from './actions'
 
-const LITERACY_SCHEMA_ID = 'literacy-evidence'
-const LITERACY_SCHEMA_VERSION = 1
 const LITERACY_VERIFIER: ProcessSpec = {
   action: 'verify-literacy-evidence',
   executable: 'python3',
@@ -10,6 +8,18 @@ const LITERACY_VERIFIER: ProcessSpec = {
   cwd: '../..',
   timeoutMs: 10_000,
 }
+const TEACHING_GAME_VERIFIER: ProcessSpec = {
+  action: 'verify-teaching-game-evidence',
+  executable: 'python3',
+  args: ['-m', 'learner.gate.teaching_game_bridge'],
+  cwd: '../..',
+  timeoutMs: 10_000,
+}
+
+const FIXED_VERIFIERS = new Map<string, ProcessSpec>([
+  ['literacy-evidence:1', LITERACY_VERIFIER],
+  ['teaching-game-evidence:1', TEACHING_GAME_VERIFIER],
+])
 
 export async function executeFixedVerification(input: {
   readonly schemaId: string
@@ -19,13 +29,9 @@ export async function executeFixedVerification(input: {
   | { readonly ok: true; readonly receipt: Readonly<Record<string, unknown>> }
   | { readonly ok: false; readonly code: string }
 > {
-  if (
-    input.schemaId !== LITERACY_SCHEMA_ID
-    || input.schemaVersion !== LITERACY_SCHEMA_VERSION
-  ) {
-    return { ok: false, code: 'unsupported-schema' }
-  }
-  const processReceipt = await executor(LITERACY_VERIFIER, JSON.stringify(input.record))
+  const verifier = FIXED_VERIFIERS.get(`${input.schemaId}:${input.schemaVersion}`)
+  if (verifier === undefined) return { ok: false, code: 'unsupported-schema' }
+  const processReceipt = await executor(verifier, JSON.stringify(input.record))
   if (processReceipt.exitCode !== 0 && processReceipt.exitCode !== 1) {
     return { ok: false, code: 'verifier-failed' }
   }

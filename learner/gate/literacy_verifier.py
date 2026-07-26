@@ -18,10 +18,11 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from learner.gate.evidence_io import MAX_EVIDENCE_BYTES
 from learner.gate.evidence_validator import validate_literacy_evidence_structure
+from .literacy_evaluator import recompute_literacy_evidence
 
-#: Matches LiteracyDojo domain evaluation default (MVP threshold).
-PASS_SCORE_MIN = 0.75
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 VERIFIER_SOURCE = "independent-literacy-verifier"
 
@@ -40,15 +41,9 @@ DETERMINISTIC_ACTIVITY_TYPES = frozenset(
     }
 )
 
-#: Not real activity types in the content contract. Kept only so any legacy /
-#: mistaken producer that labels open application this way never becomes
-#: mastery-eligible (application stays fail-closed for mastery).
-APPLICATION_ACTIVITY_TYPES = frozenset({"application_report", "real_world_application"})
-
 __all__ = [
     "DETERMINISTIC_ACTIVITY_TYPES",
     "LiteracyVerdict",
-    "PASS_SCORE_MIN",
     "VERIFIER_SOURCE",
     "main",
     "verify_literacy_evidence",
@@ -95,6 +90,8 @@ def load_literacy_evidence(path: str | Path) -> dict[str, Any]:
         text = raw_path.read_text(encoding="utf-8")
     except OSError as exc:
         raise ValueError(f"literacy evidence unreadable: {exc}") from exc
+    if len(text.encode("utf-8")) > MAX_EVIDENCE_BYTES:
+        raise ValueError("literacy evidence exceeds 65536 bytes")
     try:
         raw = json.loads(text)
     except json.JSONDecodeError as exc:
@@ -123,6 +120,7 @@ def literacy_evidence_digest(evidence: dict[str, Any]) -> str:
             "score",
             "pass",
             "verifierRequired",
+            "answer",
         )
         if key in evidence
     }
@@ -132,79 +130,41 @@ def literacy_evidence_digest(evidence: dict[str, Any]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
-def _independent_judgment(evidence: dict[str, Any]) -> tuple[bool, list[str]]:
-    """Re-judge pass eligibility from structured fields only (no LLM)."""
-    errors: list[str] = []
-    activity_type = str(evidence["activityType"])
-    score = float(evidence["score"])
-    claimed_pass = bool(evidence["pass"])
-    checks = evidence["deterministicChecks"]
-
-    if activity_type in APPLICATION_ACTIVITY_TYPES:
-        # Open application is never mastery-eligible; independent pass is only
-        # "application reported with valid envelope", not skill mastery.
-        if claimed_pass and score < PASS_SCORE_MIN:
-            errors.append(
-                f"application activity claims pass with score {score} < {PASS_SCORE_MIN}"
-            )
-        independent_pass = claimed_pass and score >= PASS_SCORE_MIN and not errors
-        return independent_pass, errors
-
-    if activity_type not in DETERMINISTIC_ACTIVITY_TYPES:
-        # Unknown types fail closed for independent pass (envelope may still be valid).
-        errors.append(
-            f"activityType {activity_type!r} is not independently re-judgeable; fail closed"
-        )
-        return False, errors
-
-    if not checks:
-        errors.append("deterministicChecks is empty; fail closed")
-        return False, errors
-
-    # Consistency: a pass claim must meet the MVP score threshold.
-    if claimed_pass and score < PASS_SCORE_MIN:
-        errors.append(
-            f"producer claims pass with score {score} < {PASS_SCORE_MIN} (inconsistent)"
-        )
-
-    # If producer claims fail, independent pass is false (honest fail is valid evidence).
-    if not claimed_pass:
-        return False, errors
-
-    # Boolean checks: if any named *required*/trap-style false is present, fail.
-    # Convention used by LiteracyDojo: trap criteria set to true means user selected trap.
-    trap_true = [
-        key
-        for key, value in checks.items()
-        if isinstance(value, bool)
-        and value is True
-        and ("trap" in key.lower() or "armadilha" in key.lower())
-    ]
-    if trap_true:
-        errors.append(f"trap criteria selected: {', '.join(sorted(trap_true))}")
-
-    bool_failures = [
-        key
-        for key, value in checks.items()
-        if isinstance(value, bool)
-        and value is False
-        and "trap" not in key.lower()
-        and "armadilha" not in key.lower()
-    ]
-    # Not every false is a failure (e.g. optional flags); require majority of bools true
-    # only when producer claims pass — and score already gates. Prefer score + non-empty checks.
-    independent_pass = claimed_pass and score >= PASS_SCORE_MIN and not errors
-    if independent_pass and bool_failures and len(bool_failures) == len(
-        [v for v in checks.values() if isinstance(v, bool)]
-    ):
-        # All boolean checks false while claiming pass → inconsistent.
-        errors.append("all boolean deterministicChecks are false while pass is true")
-        independent_pass = False
-
-    return independent_pass and not errors, errors
+def _failed_verdict(
+    evidence: dict[str, Any] | None, errors: tuple[str, ...]
+) -> LiteracyVerdict:
+    raw = evidence or {}
+    raw_score = raw.get("score")
+    score = (
+        float(raw_score)
+        if isinstance(raw_score, (int, float)) and not isinstance(raw_score, bool)
+        else None
+    )
+    producer_pass = raw.get("pass")
+    return LiteracyVerdict(
+        verdict="FAIL",
+        context_isolated=True,
+        source=VERIFIER_SOURCE,
+        evidence_digest=literacy_evidence_digest(raw)
+        if "schemaVersion" in raw
+        else "",
+        lesson_id=str(raw.get("lessonId") or ""),
+        activity_id=str(raw.get("activityId") or ""),
+        attempt_id=str(raw.get("attemptId") or ""),
+        activity_type=str(raw.get("activityType") or ""),
+        score=score,
+        producer_pass_claim=producer_pass
+        if isinstance(producer_pass, bool)
+        else None,
+        independent_pass=False,
+        mastery_eligible=False,
+        errors=errors,
+    )
 
 
-def verify_literacy_evidence(evidence: dict[str, Any] | None) -> LiteracyVerdict:
+def verify_literacy_evidence(
+    evidence: dict[str, Any] | None, *, root: Path = REPO_ROOT
+) -> LiteracyVerdict:
     """Independently verify one LiteracyEvidenceRecord-shaped dict.
 
     Missing evidence (``None``) and invalid envelopes fail closed with verdict FAIL.
@@ -212,89 +172,20 @@ def verify_literacy_evidence(evidence: dict[str, Any] | None) -> LiteracyVerdict
     The producer surface is never authorized to write ``mastered``.
     """
     if evidence is None:
-        return LiteracyVerdict(
-            verdict="FAIL",
-            context_isolated=True,
-            source=VERIFIER_SOURCE,
-            evidence_digest="",
-            lesson_id="",
-            activity_id="",
-            attempt_id="",
-            activity_type="",
-            score=None,
-            producer_pass_claim=None,
-            independent_pass=False,
-            mastery_eligible=False,
-            errors=("missing evidence",),
-        )
+        return _failed_verdict(None, ("missing evidence",))
 
     if not isinstance(evidence, dict):
-        return LiteracyVerdict(
-            verdict="FAIL",
-            context_isolated=True,
-            source=VERIFIER_SOURCE,
-            evidence_digest="",
-            lesson_id="",
-            activity_id="",
-            attempt_id="",
-            activity_type="",
-            score=None,
-            producer_pass_claim=None,
-            independent_pass=False,
-            mastery_eligible=False,
-            errors=("evidence must be a JSON object",),
-        )
+        return _failed_verdict(None, ("evidence must be a JSON object",))
 
     structural = validate_literacy_evidence_structure(evidence)
     if structural:
-        return LiteracyVerdict(
-            verdict="FAIL",
-            context_isolated=True,
-            source=VERIFIER_SOURCE,
-            evidence_digest=literacy_evidence_digest(evidence)
-            if "schemaVersion" in evidence
-            else "",
-            lesson_id=str(evidence.get("lessonId") or ""),
-            activity_id=str(evidence.get("activityId") or ""),
-            attempt_id=str(evidence.get("attemptId") or ""),
-            activity_type=str(evidence.get("activityType") or ""),
-            score=float(evidence["score"])
-            if isinstance(evidence.get("score"), (int, float))
-            and not isinstance(evidence.get("score"), bool)
-            else None,
-            producer_pass_claim=evidence["pass"]
-            if isinstance(evidence.get("pass"), bool)
-            else None,
-            independent_pass=False,
-            mastery_eligible=False,
-            errors=tuple(structural),
-        )
+        return _failed_verdict(evidence, tuple(structural))
 
-    independent_pass, judgment_errors = _independent_judgment(evidence)
+    recomputed, judgment_errors = recompute_literacy_evidence(evidence, root)
     activity_type = str(evidence["activityType"])
-    mastery_eligible = (
-        independent_pass
-        and activity_type in DETERMINISTIC_ACTIVITY_TYPES
-        and activity_type not in APPLICATION_ACTIVITY_TYPES
-    )
-    verdict = "PASS" if independent_pass and not judgment_errors else "FAIL"
-    if judgment_errors and independent_pass:
-        independent_pass = False
-        mastery_eligible = False
-        verdict = "FAIL"
-
-    # Fail verdict when judgment found inconsistencies even if score looked ok.
-    if judgment_errors:
-        independent_pass = False
-        mastery_eligible = False
-        verdict = "FAIL"
-
-    # Honest fail attempt: valid envelope, producer_pass false → still FAIL verdict
-    # (not mastery), but not a structural rejection — errors may be empty.
-    if not evidence["pass"] and not judgment_errors:
-        verdict = "FAIL"
-        independent_pass = False
-        mastery_eligible = False
+    independent_pass = bool(recomputed and recomputed["pass"] and not judgment_errors)
+    mastery_eligible = independent_pass
+    verdict = "PASS" if independent_pass else "FAIL"
 
     return LiteracyVerdict(
         verdict=verdict,
@@ -305,7 +196,7 @@ def verify_literacy_evidence(evidence: dict[str, Any] | None) -> LiteracyVerdict
         activity_id=str(evidence["activityId"]),
         attempt_id=str(evidence["attemptId"]),
         activity_type=activity_type,
-        score=float(evidence["score"]),
+        score=float(recomputed["score"]) if recomputed else float(evidence["score"]),
         producer_pass_claim=bool(evidence["pass"]),
         independent_pass=independent_pass,
         mastery_eligible=mastery_eligible,
@@ -371,7 +262,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    verdict = verify_literacy_evidence(evidence)
+    verdict = verify_literacy_evidence(evidence, root=root)
     receipt = verdict.to_receipt_dict()
     print(json.dumps(receipt, indent=2, sort_keys=True))
 

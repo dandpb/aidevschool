@@ -31,6 +31,8 @@ function verifiedState(stored: StoredVerificationReceipt): EvidenceVerificationS
 }
 
 export class EvidenceIntake implements VerificationService {
+  private readonly accepts = new Map<string, Promise<void>>()
+
   constructor(private readonly dependencies: EvidenceIntakeDependencies) {}
 
   async accept(
@@ -39,9 +41,47 @@ export class EvidenceIntake implements VerificationService {
     onState: (state: EvidenceVerificationState) => void = () => {},
   ): Promise<EvidenceVerificationState> {
     onState({ kind: 'validating' })
+    const previous = this.accepts.get(submission.missionRunId) ?? Promise.resolve()
+    const result = previous.then(() => this.acceptSerially(mission, submission, onState))
+    const tail = result.then(() => undefined, () => undefined)
+    this.accepts.set(submission.missionRunId, tail)
+    try {
+      return await result
+    } finally {
+      if (this.accepts.get(submission.missionRunId) === tail) {
+        this.accepts.delete(submission.missionRunId)
+      }
+    }
+  }
+
+  private async acceptSerially(
+    mission: MissionDefinition,
+    submission: EvidenceSubmission,
+    onState: (state: EvidenceVerificationState) => void,
+  ): Promise<EvidenceVerificationState> {
     try {
       this.correlate(mission, submission)
       const existing = await this.dependencies.store.getRaw(submission.missionRunId)
+      if (
+        existing !== undefined
+        && (
+          existing.missionVersion !== mission.version
+          || existing.schemaId !== submission.schemaId
+          || existing.schemaVersion !== submission.schemaVersion
+          || existing.engineId !== submission.engineId
+          || existing.missionRunId !== submission.missionRunId
+          || existing.subject.missionId !== submission.subject.missionId
+          || existing.subject.unitId !== submission.subject.unitId
+          || JSON.stringify(existing.record) !== JSON.stringify(submission.record)
+        )
+      ) {
+        const state: EvidenceVerificationState = {
+          kind: 'rejected',
+          code: 'storage-id-collision',
+        }
+        onState(state)
+        return state
+      }
       if (existing?.evidenceDigest !== undefined) {
         const stored = await this.dependencies.store.getReceipt(existing.evidenceDigest)
         if (stored !== undefined) {
@@ -49,41 +89,6 @@ export class EvidenceIntake implements VerificationService {
           onState(state)
           return state
         }
-      }
-      if (submission.schemaId === 'teaching-game-evidence') {
-        if (existing !== undefined) {
-          if (
-            existing.missionVersion !== mission.version
-            || JSON.stringify(existing.record) !== JSON.stringify(submission.record)
-          ) {
-            const state: EvidenceVerificationState = {
-              kind: 'rejected',
-              code: 'storage-id-collision',
-            }
-            onState(state)
-            return state
-          }
-          const state: EvidenceVerificationState = {
-            kind: 'pending',
-            storageId: existing.storageId,
-          }
-          onState(state)
-          return state
-        }
-        const pending: RawEvidenceEntry = {
-          ...submission,
-          storageId: submission.missionRunId,
-          missionVersion: mission.version,
-          acceptedAt: this.dependencies.clock().toISOString(),
-          status: 'pending',
-        }
-        await this.dependencies.store.putRaw(pending)
-        const state: EvidenceVerificationState = {
-          kind: 'pending',
-          storageId: pending.storageId,
-        }
-        onState(state)
-        return state
       }
       return await this.verify({
         ...submission,
@@ -131,11 +136,6 @@ export class EvidenceIntake implements VerificationService {
         kind: 'rejected',
         code: raw.rejectionCode ?? 'verification-rejected',
       }
-      onState(state)
-      return state
-    }
-    if (raw.schemaId === 'teaching-game-evidence') {
-      const state: EvidenceVerificationState = { kind: 'pending', storageId: raw.storageId }
       onState(state)
       return state
     }

@@ -19,7 +19,7 @@ Dois públicos, uma mecânica:
 | Público | O que aprende | Trilha |
 | --- | --- | --- |
 | Pessoas não tecnológicas | Aplicar IA no dia a dia: pedir, verificar e decidir com critério | **IA na Prática**: a experiência de microlições sustentada internamente pela trilha [`AI Literacy`](../curriculum/ai-literacy/README.md) e consumida pelo [`LiteracyDojo`](../engines/literacyDojo/README.md) |
-| Programadores | Engenharia robusta com IA: testes, review, benchmark e arquitetura | Os 18 projetos de código (01–18) em [`curriculum/catalog.md`](../curriculum/catalog.md) |
+| Programadores | Engenharia robusta com IA: testes, review, benchmark e arquitetura | **Trilha Dev**: primeiro capítulo mission-first no codexdojo OS e continuidade nos 18 projetos de código (01–18) em [`curriculum/catalog.md`](../curriculum/catalog.md) |
 
 O que não muda entre públicos está no
 [`contrato de microlição`](design/micro-lesson-contract.md): objetivo curto,
@@ -49,13 +49,17 @@ isso que separa esta escola de um app de trivia.
 5. **Convergência.** A rota guiada segue Mapa Inicial → primeira conversa →
    limites da IA; a intermediária segue Mapa Inicial → limites da IA. Ambas
    convergem em como formular pedidos melhores.
-6. **Trilha Dev.** Ela aparece na entrada como um próximo caminho, marcada como
-   “em breve”; o MVP não cria um segundo fluxo de progresso nem promete acesso
-   antes de estar pronto.
-7. **Lançamento.** O MVP abre por link no navegador, sem instalação nem conta
-   obrigatória, para que pessoas não técnicas possam testá-lo de verdade.
-8. **Progresso.** Sem conta no MVP, o progresso fica neste navegador e esse
-   limite é comunicado claramente à pessoa.
+6. **Trilha Dev.** Ela usa o mesmo onboarding, hub e linguagem de progresso para
+   abrir o capítulo inicial WAREHOUSE → WORMHOLE → RELAY STATION. O restante do
+   catálogo de programação continua como continuidade, não como promessa de
+   missão pronta no primeiro lançamento.
+7. **Lançamento.** O codexdojo OS abre a jornada mission-first na rota raiz e
+   mantém desktop e Engine Hub em `/desktop` como ferramentas secundárias. O
+   host unificado está verificável localmente; uma URL pública oficial para ele
+   ainda não é uma capacidade comprovada.
+8. **Progresso.** Sem conta, onboarding, conclusão, XP, meta diária, sequência e
+   conquistas ficam neste navegador. Esses dados locais não sincronizam entre
+   dispositivos e não podem representar `mastered`.
 9. **Acolhimento.** Antes do Mapa Inicial, a pessoa recebe uma apresentação
    breve, informa onde quer aplicar IA e entende que ela pode ajudar a
    organizar, resumir, criar rascunhos, comparar opções e planejar passos —
@@ -78,6 +82,17 @@ O escopo e os critérios de aceite do MVP estão em
 
 ## O que já existe a serviço da visão
 
+- **Uma entrada mission-first para os dois públicos:** o codexdojo OS recomenda
+  uma trilha ajustável, executa três missões prontas por trilha e preserva a
+  troca de trilha, o retorno e o progresso local no mesmo dispositivo. O
+  desktop e o Engine Hub continuam acessíveis como superfícies secundárias.
+- **Contratos de execução sem autoridade implícita:** LiteracyDojo e os três
+  jogos Dev usam envelopes correlacionados e origin-bound para estado,
+  evidência e renderer. Evidência bruta, recibo independente, gate canônico e
+  analytics permanecem registros separados.
+- **Mentoria e voxel com degradação segura:** o coach contextual não recebe
+  ferramentas e cai para orientação determinística; missões Dev preservam
+  simulação e critérios em uma projeção sem WebGL e com movimento reduzido.
 - **Uma trilha real para pessoas não técnicas:** **IA na Prática** é o nome da
   experiência para o aprendiz; **AI Literacy** mantém o conteúdo canônico e o
   LiteracyDojo oferece o player guiado. O currículo ligado é a
@@ -114,35 +129,43 @@ democratização ainda não cobre o ecossistema inteiro.
    isto **não** certifica o ecossistema multi-engine inteiro (pixel/voxel/tutor
    core), só a superfície de microaprendizagem não técnica.
 
-2. **Entrada pública no navegador (sem install/conta) — resolvida para
+2. **Entrada pública no navegador (sem install/conta) — resolvida apenas para
    LiteracyDojo.** URL de produção documentada e verificável:
    <https://aidevschool-literacydojo.netlify.app> (HTTP 200, shell
    `LiteracyDojo — IA com confiança no trabalho`). Progresso é local
    (IndexedDB neste navegador), sem conta obrigatória; o limite é comunicado no
-   produto. Residual: **miniTown** e o ecossistema de programadores ainda
-   exigem preparação local (Node/Python) — não são o zero-install do MVP
-   não-técnico.
+   produto. Residual: o host mission-first unificado, **miniTown** e o catálogo
+   amplo de programação ainda não têm URL pública oficial verificada neste
+   documento.
 
-3. **Evidência no-code independente — caminho resolvido; mastery de aplicação
-   aberta continua falhando fechado.** O producer (LiteracyDojo) emite
+3. **Evidência no-code independente — julgamento resolvido; promoção canônica
+   pendente.** O producer (LiteracyDojo) emite
    `LiteracyEvidenceRecord` e registra no máximo `completed` — nunca
    `mastered` (`LessonStatus` sem o valor). O verificador independente vive em
    `learner/gate/literacy_verifier.py` e CLI
 `python3 -m learner.gate.literacy_verifier --evidence PATH`: re-julga o envelope,
    emite recibo estruturado (`verdict`, `mastery_eligible`,
-   `producer_writes_mastered: false`) e falha fechado se a evidência falta ou
-   é inválida. Atividades de aplicação aberta podem ser `PASS` como relato, mas
-   **não** ficam `mastery_eligible`. Residual: promoção automática a
-   `mastered` no estado canônico do aprendiz único (`learner/learning_state.yaml`)
-   para a trilha AI Literacy ainda não é o fluxo diário do app estático; o
-   caminho de julgamento independente existe e é testado.
+   `producer_writes_mastered: false`) e falha fechado se a evidência faltar, for
+   inválida ou não ficar `mastery_eligible`. O julgamento independente existe e
+   é testado, mas ainda não promove AI Literacy a `mastered`: qualquer promoção
+   futura deve passar pelo limite canônico `verify_and_gate` /
+   `commit_gate_transition`, que persiste `learner/learning_state.yaml`, em vez
+   de criar outro registro autoritativo.
 
-4. **Segunda pessoa sem setup local — resolvida no path público LiteracyDojo;
-   residual no filesystem multi-learner.** Qualquer pessoa abre o link estático
-   e começa microlições sem clonar o repo (gap 2). A instância completa do
-   ecossistema (substrate + gates de código + `learner/` compartilhado) continua
-   "one learner per ecosystem instance" para o Daniel como learner 0 — multi-tenant
-   de contas e sync entre dispositivos **fora de escopo** desta visão operacional.
+4. **Contas e sincronização entre dispositivos — pendentes.** O host preserva
+   continuidade local no mesmo navegador, mas não oferece conta obrigatória,
+   identidade remota ou sincronização entre dispositivos.
+
+5. **Catálogo amplo — pendente.** O host publica seis missões no primeiro
+   capítulo (três por trilha). As demais lições e projetos continuam canônicos,
+   mas não devem ser descritos como missões integradas antes de receber binding,
+   fallback, evidência e verificação equivalentes.
+
+6. **Estado canônico multi-learner — pendente.** A replicação de uma instância
+   filesystem é automatizada por `python3 -m learner.new_instance --name "Jane"
+   --id jane`, sem herdar mastery e com views regeneradas. Isso não transforma
+   `learner/learning_state.yaml` em um serviço multi-tenant nem conecta o
+   progresso IndexedDB de várias pessoas ao gate canônico.
 
 ## Como ler o resto da documentação à luz deste doc
 
@@ -168,7 +191,7 @@ vários motores". Unidades dessa trilha usam o gate no-code (AD-006).
 
 ## Próximas decisões pendentes
 
-Decisões estruturais ainda abertas (não bloqueiam o MVP público de microlições):
+Decisões estruturais ainda abertas (não bloqueiam o primeiro capítulo local):
 
 1. **miniTown público.** Se/when publicar a entrada cozy zero-install (hoje
    residual local). LiteracyDojo já tem URL de produção.
@@ -176,8 +199,9 @@ Decisões estruturais ainda abertas (não bloqueiam o MVP público de microliç�
 `learner.gate.literacy_verifier` promove unidades AI Literacy em
    `learner/learning_state.yaml` sem misturar com o gate de código — o
    julgamento independente já existe; a promoção canônica multi-engine não.
-3. **Replicação multi-learner do filesystem.** Contas, sync e segunda instância
-   completa do ecossistema (além do app estático) permanecem fora do MVP.
+3. **Replicação multi-learner do filesystem.** Contas, sincronização entre
+   dispositivos e serviço canônico multi-tenant permanecem fora do primeiro
+   lançamento.
 
 Para o audit detalhado de engines/curriculum/agents vs. esta visão, ver
 [`docs/AUDIT_ENGINES_CURRICULUM_2026-07-19.md`](AUDIT_ENGINES_CURRICULUM_2026-07-19.md) (draft

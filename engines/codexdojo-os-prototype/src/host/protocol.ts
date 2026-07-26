@@ -1,10 +1,28 @@
 import type { MissionStage } from '../domain'
+import type {
+  ActiveRenderer,
+  RendererFailureReason,
+  RendererPreference,
+  RendererStatus,
+} from '../rendering/domain'
 
 export const HOST_ENGINE_PROTOCOL = 'aidevschool.host-engine' as const
 export const HOST_ENGINE_PROTOCOL_VERSION = '1.0' as const
 
 export type MissionEngineId = 'literacyDojo' | 'voxelDojo'
 export type MissionRunStatus = 'running' | 'completed' | 'failed'
+export type EngineCapability =
+  | 'mission-state'
+  | 'evidence'
+  | 'mission-events'
+  | 'renderer-state'
+export type EngineMissionEventName =
+  | 'mission.started'
+  | 'mission.completed'
+  | 'structured_attempt.submitted'
+  | 'structured_attempt.passed'
+  | 'retry.requested'
+  | 'review.started'
 
 export type ProtocolEnvelope<TType extends string, TPayload> = {
   readonly protocol: typeof HOST_ENGINE_PROTOCOL
@@ -30,6 +48,8 @@ export type MissionLaunchMessage = ProtocolEnvelope<
     readonly missionVersion: number
     readonly mode: 'initial'
     readonly locale: 'pt-BR'
+    readonly reducedMotion: boolean
+    readonly rendererPreference: RendererPreference
   }
 >
 
@@ -38,7 +58,7 @@ export type EngineReadyMessage = ProtocolEnvelope<
   {
     readonly engineVersion: string
     readonly contentVersion: string
-    readonly capabilities: readonly ('mission-state' | 'evidence')[]
+    readonly capabilities: readonly EngineCapability[]
   }
 >
 
@@ -49,6 +69,7 @@ export type MissionStateMessage = ProtocolEnvelope<
     readonly status: MissionRunStatus
     readonly stage: MissionStage
     readonly progress: number
+    readonly nextMissionId?: string
   }
 >
 
@@ -62,6 +83,31 @@ export type EvidenceSubmittedMessage = ProtocolEnvelope<
   }
 >
 
+export type MissionEventMessage = ProtocolEnvelope<
+  'mission.event',
+  {
+    readonly sequence: number
+    readonly name: EngineMissionEventName
+    readonly dimensions?: Readonly<Record<string, string | number | boolean>>
+  }
+>
+
+export type RendererStateMessage = ProtocolEnvelope<
+  'renderer.state',
+  {
+    readonly revision: number
+    readonly requested: RendererPreference
+    readonly active: ActiveRenderer
+    readonly status: RendererStatus
+    readonly reason?: RendererFailureReason
+  }
+>
+
+export type RendererRetryMessage = ProtocolEnvelope<
+  'renderer.retry',
+  { readonly rendererPreference: RendererPreference }
+>
+
 export type ProtocolAckMessage = ProtocolEnvelope<
   'protocol.ack',
   {
@@ -71,10 +117,16 @@ export type ProtocolAckMessage = ProtocolEnvelope<
   }
 >
 
-export type HostToEngineMessage = HostHelloMessage | MissionLaunchMessage | ProtocolAckMessage
+export type HostToEngineMessage =
+  | HostHelloMessage
+  | MissionLaunchMessage
+  | RendererRetryMessage
+  | ProtocolAckMessage
 export type EngineToHostMessage =
   | EngineReadyMessage
   | MissionStateMessage
+  | MissionEventMessage
+  | RendererStateMessage
   | EvidenceSubmittedMessage
   | ProtocolAckMessage
 

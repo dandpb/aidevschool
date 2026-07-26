@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import {
   bridgeRequestNeedsExclusiveExecution,
+  getAnalyticsAuthorizationError,
   getBridgeAuthorizationError,
   getSessionAuthorizationError,
   isLoopbackAddress,
+  isAnalyticsRouteEnabled,
   isVerificationRouteEnabled,
 } from './plugin'
 
@@ -37,6 +39,30 @@ describe('integrated verification route exposure', () => {
         '/__dojo/bridge/v1/engines/openclaw/actions/preview-checklist',
       ),
     ).toBe(true)
+    expect(bridgeRequestNeedsExclusiveExecution('/__dojo/bridge/v1/analytics')).toBe(false)
+  })
+})
+
+describe('optional analytics route exposure', () => {
+  it('exposes analytics only when its independent route is enabled', () => {
+    expect(isAnalyticsRouteEnabled('/__dojo/bridge/v1/analytics', false)).toBe(false)
+    expect(isAnalyticsRouteEnabled('/__dojo/bridge/v1/analytics', true)).toBe(true)
+    expect(isAnalyticsRouteEnabled('/__dojo/bridge/v1/verification', false)).toBe(true)
+  })
+
+  it('accepts same-origin loopback JSON without verifier credentials', () => {
+    expect(getAnalyticsAuthorizationError({
+      remoteAddress: '127.0.0.1',
+      origin: 'http://127.0.0.1:4174',
+      host: '127.0.0.1:4174',
+      contentType: 'application/json',
+    })).toBeNull()
+    expect(getAnalyticsAuthorizationError({
+      remoteAddress: '127.0.0.1',
+      origin: 'https://attacker.example',
+      host: '127.0.0.1:4174',
+      contentType: 'application/json',
+    })).toBe('origin-forbidden')
   })
 })
 

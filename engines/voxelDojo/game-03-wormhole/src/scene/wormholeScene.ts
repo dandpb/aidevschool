@@ -1,4 +1,10 @@
 import * as THREE from "three"
+import { PALETTE } from "../../../shared/palette"
+import {
+  disposeObject3D,
+  type MissionProjection,
+  type ProjectionContextHooks,
+} from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { hashTruncCode } from "../sim/shortener"
@@ -10,17 +16,6 @@ import { hashTruncCode } from "../sim/shortener"
  * ring-portal gate labelled with the base62 code. Traveller streaks dive into the gate on the
  * origin side and emerge at the destination. A collision = the gate + a planet flash red.
  */
-
-export const PALETTE = [
-  "#4fc3f7",
-  "#ffb74d",
-  "#aed581",
-  "#f06292",
-  "#ba68c8",
-  "#ffd54f",
-  "#80cbc4",
-  "#e0e0e0",
-] as const
 
 const PLANET_RADIUS = 1.6
 const GATE_RADIUS = 2.0
@@ -60,8 +55,9 @@ function makeTextSprite(text: string, color = "#80cbc4"): THREE.Sprite {
   return sprite
 }
 
-export class WormholeScene {
+export class WormholeScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private group = new THREE.Group()
   private originMesh!: THREE.Mesh
   private destMesh!: THREE.Mesh
@@ -77,8 +73,10 @@ export class WormholeScene {
   /** destination url colour (visual hint) */
   destColor = "#aed581"
   onGateClick: (() => void) | null = null
+  private disposed = false
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#06080f",
       fogNear: 22,
@@ -91,14 +89,31 @@ export class WormholeScene {
         this.animateTravellers()
         this.animateFlash()
       },
+      ...hooks,
     })
 
     this.viewport.scene.add(this.group)
     this.buildPlanets()
     this.buildGate()
 
-    canvas.addEventListener("pointerdown", (e) => this.pick(e))
+    canvas.addEventListener("pointerdown", this.onPointerDown)
   }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.canvas.removeEventListener("pointerdown", this.onPointerDown)
+    disposeObject3D(this.group)
+    this.viewport.dispose()
+  }
+
+  private readonly onPointerDown = (event: PointerEvent): void => this.pick(event)
 
   private buildPlanets(): void {
     this.originMesh = new THREE.Mesh(

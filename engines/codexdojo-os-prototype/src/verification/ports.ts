@@ -15,7 +15,7 @@ export type EvidenceSubmission = {
   readonly record: Readonly<Record<string, unknown>>
 }
 
-export type VerificationReceipt = {
+export type LiteracyVerificationReceipt = {
   readonly verdict: 'PASS' | 'FAIL'
   readonly context_isolated: true
   readonly source: 'independent-literacy-verifier'
@@ -32,6 +32,27 @@ export type VerificationReceipt = {
   readonly producer_writes_mastered: false
   readonly max_producer_claim: 'completed'
 }
+
+export type TeachingGameVerificationReceipt = {
+  readonly schema_version: 1
+  readonly verdict: 'PASS' | 'FAIL'
+  readonly context_isolated: true
+  readonly source: 'independent-teaching-game-verifier'
+  readonly evidence_digest: string
+  readonly unit_id: string
+  readonly project: string
+  readonly scenario_id: string
+  readonly game: string
+  readonly producer_pass_claim: boolean | null
+  readonly independent_pass: boolean
+  readonly errors: readonly string[]
+  readonly producer_writes_mastered: false
+  readonly max_producer_claim: 'completed'
+  readonly canonical_gate_status: 'not-submitted'
+  readonly canonical_gate_reason: 'learner-attempt-and-gate-eligibility-required'
+}
+
+export type VerificationReceipt = LiteracyVerificationReceipt | TeachingGameVerificationReceipt
 
 export type EvidenceVerificationState =
   | { readonly kind: 'not-submitted' }

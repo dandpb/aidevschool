@@ -9,18 +9,14 @@ from __future__ import annotations
 
 import json
 import sys
-from typing import Any, TextIO
+from typing import TextIO
 
+from learner.gate.evidence_io import read_bounded_evidence
 from learner.gate.literacy_verifier import verify_literacy_evidence
 
 
 def verify_stream(input_stream: TextIO, output_stream: TextIO) -> int:
-    try:
-        raw: Any = json.load(input_stream)
-    except (json.JSONDecodeError, UnicodeError):
-        raw = None
-    evidence = raw if isinstance(raw, dict) else None
-    verdict = verify_literacy_evidence(evidence)
+    verdict = verify_literacy_evidence(read_bounded_evidence(input_stream))
     output_stream.write(
         json.dumps(verdict.to_receipt_dict(), sort_keys=True, separators=(",", ":"))
         + "\n"

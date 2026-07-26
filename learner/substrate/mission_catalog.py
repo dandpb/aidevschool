@@ -1,44 +1,30 @@
 from __future__ import annotations
 
-import json
-import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 import yaml
 
 from learner.substrate.catalog import load_catalog
+from learner.substrate.mission_catalog_voxel import (
+    MissionCatalogError,
+    _mapping,
+    _nonempty_string,
+    load_voxel_catalog,
+    validate_runtime,
+    validate_project_voxel_binding,
+)
 
 
 MISSION_SCHEMA_VERSION = 1
 SUPPORTED_TRACKS = frozenset({"ai-pratica", "dev"})
-SUPPORTED_ENGINES = frozenset({"literacyDojo", "voxelDojo"})
-SUPPORTED_PROTOCOL_VERSIONS = frozenset({"1.0"})
+TRACK_ORDER = ("ai-pratica", "dev")
+FIRST_RELEASE_MISSIONS_PER_TRACK = 3
 SUPPORTED_EVIDENCE_SCHEMAS = {
     "literacy-evidence": frozenset({1}),
     "teaching-game-evidence": frozenset({1}),
 }
 SUPPORTED_FALLBACKS = frozenset({"dom", "canvas2d"})
-_ENVIRONMENT_KEY = re.compile(r"^VITE_[A-Z0-9_]+$")
-
-
-class MissionCatalogError(ValueError):
-    def __init__(self, detail: str) -> None:
-        self.detail = detail
-        super().__init__(f"invalid OS mission catalog: {detail}")
-
-
-def _mapping(value: Any, label: str) -> dict[str, Any]:
-    if not isinstance(value, dict):
-        raise MissionCatalogError(f"{label} must be a mapping")
-    return value
-
-
-def _nonempty_string(value: Any, label: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise MissionCatalogError(f"{label} must be a non-empty string")
-    return value.strip()
 
 
 def _load_yaml_mapping(path: Path, label: str) -> dict[str, Any]:
@@ -75,69 +61,6 @@ def _load_lessons(ai_literacy_root: Path) -> tuple[dict[str, Any], dict[str, dic
     return catalog, {lesson_id: {"entry": entry, "file": lesson_files.get(lesson_id)} for lesson_id, entry in catalog_lessons.items()}
 
 
-def _load_voxel_catalog(path: Path) -> dict[str, dict[str, Any]]:
-    try:
-        loaded = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError as exc:
-        raise MissionCatalogError(f"voxel catalog not found: {path}") from exc
-    except json.JSONDecodeError as exc:
-        raise MissionCatalogError(f"voxel catalog is not valid JSON: {exc}") from exc
-    if not isinstance(loaded, list):
-        raise MissionCatalogError("voxel catalog must be a list")
-    games: dict[str, dict[str, Any]] = {}
-    for index, raw_game in enumerate(loaded):
-        game = _mapping(raw_game, f"voxel catalog[{index}]")
-        game_id = _nonempty_string(game.get("id"), f"voxel catalog[{index}].id")
-        if game_id in games:
-            raise MissionCatalogError(f"duplicate voxel game id {game_id!r}")
-        name = _nonempty_string(game.get("name"), f"voxel catalog[{index}].name")
-        port = game.get("developmentPort")
-        if not isinstance(port, int) or isinstance(port, bool) or not 1 <= port <= 65535:
-            raise MissionCatalogError(
-                f"voxel catalog[{index}].developmentPort must be a valid port"
-            )
-        games[game_id] = {"id": game_id, "name": name, "developmentPort": port}
-    return games
-
-
-def _validate_runtime(
-    raw: Any,
-    label: str,
-    voxel_games: dict[str, dict[str, Any]],
-) -> tuple[dict[str, Any], dict[str, Any] | None]:
-    runtime = _mapping(raw, label)
-    engine_id = _nonempty_string(runtime.get("engineId"), f"{label}.engineId")
-    if engine_id not in SUPPORTED_ENGINES:
-        raise MissionCatalogError(f"{label}.engineId {engine_id!r} is unsupported")
-    protocol_version = _nonempty_string(runtime.get("protocolVersion"), f"{label}.protocolVersion")
-    if protocol_version not in SUPPORTED_PROTOCOL_VERSIONS:
-        raise MissionCatalogError(f"{label}.protocolVersion {protocol_version!r} is unsupported")
-    entrypoint = _nonempty_string(runtime.get("entrypoint"), f"{label}.entrypoint")
-    parsed = urlparse(entrypoint)
-    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
-        raise MissionCatalogError(f"{label}.entrypoint must be an absolute HTTP(S) URL")
-    environment_key = _nonempty_string(runtime.get("environmentKey"), f"{label}.environmentKey")
-    if _ENVIRONMENT_KEY.fullmatch(environment_key) is None:
-        raise MissionCatalogError(f"{label}.environmentKey must be a VITE_* identifier")
-    runtime_record = {
-        "engineId": engine_id,
-        "entrypoint": entrypoint,
-        "environmentKey": environment_key,
-        "protocolVersion": protocol_version,
-    }
-    if engine_id != "voxelDojo":
-        return runtime_record, None
-    game_id = _nonempty_string(runtime.get("gameId"), f"{label}.gameId")
-    game = voxel_games.get(game_id)
-    if game is None:
-        raise MissionCatalogError(f"{label} references unknown voxel game {game_id!r}")
-    if parsed.port != game["developmentPort"]:
-        raise MissionCatalogError(
-            f"{label}.entrypoint port must match voxel game {game_id!r}"
-        )
-    return runtime_record, game
-
-
 def _validate_evidence(
     raw: Any,
     label: str,
@@ -168,6 +91,66 @@ def _validate_fallback(raw: Any, label: str) -> dict[str, str]:
     return {"kind": kind, "summary": summary}
 
 
+def _validate_tracks(raw: Any, literacy_content_version: str) -> dict[str, dict[str, str]]:
+    if not isinstance(raw, list):
+        raise MissionCatalogError("OS mission bindings tracks must be a list")
+    tracks: dict[str, dict[str, str]] = {}
+    for index, raw_track in enumerate(raw):
+        label = f"tracks[{index}]"
+        track = _mapping(raw_track, label)
+        track_id = _nonempty_string(track.get("trackId"), f"{label}.trackId")
+        if track_id not in SUPPORTED_TRACKS:
+            raise MissionCatalogError(f"{label}.trackId {track_id!r} is unsupported")
+        if track_id in tracks:
+            raise MissionCatalogError(f"duplicate track id {track_id!r}")
+        content_version = _nonempty_string(track.get("contentVersion"), f"{label}.contentVersion")
+        if track_id == "ai-pratica" and content_version != literacy_content_version:
+            raise MissionCatalogError(
+                "ai-pratica contentVersion must match the canonical AI-literacy catalog"
+            )
+        tracks[track_id] = {
+            "id": track_id,
+            "contentVersion": content_version,
+            "recommendedEntryMissionId": _nonempty_string(
+                track.get("recommendedEntryMissionId"),
+                f"{label}.recommendedEntryMissionId",
+            ),
+        }
+    if set(tracks) != SUPPORTED_TRACKS:
+        raise MissionCatalogError("OS mission bindings must declare both first-release tracks")
+    return tracks
+
+
+def _validate_prerequisite_graph(missions: list[dict[str, Any]]) -> None:
+    by_id = {mission["id"]: mission for mission in missions}
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(mission_id: str) -> None:
+        if mission_id in visiting:
+            raise MissionCatalogError(f"mission prerequisite cycle includes {mission_id!r}")
+        if mission_id in visited:
+            return
+        visiting.add(mission_id)
+        mission = by_id[mission_id]
+        for prerequisite in mission["prerequisites"]:
+            target = by_id.get(prerequisite)
+            if target is None:
+                raise MissionCatalogError(
+                    f"mission {mission_id!r} references unknown prerequisite {prerequisite!r}"
+                )
+            if target["trackId"] != mission["trackId"]:
+                raise MissionCatalogError(
+                    f"mission {mission_id!r} has a cross-track prerequisite {prerequisite!r}"
+                )
+            visit(prerequisite)
+        visiting.remove(mission_id)
+        visited.add(mission_id)
+
+    for mission_id in by_id:
+        visit(mission_id)
+
+
 def load_mission_catalog(
     source_root: Path,
     bindings_path: Path | None = None,
@@ -185,11 +168,15 @@ def load_mission_catalog(
         raise MissionCatalogError("OS mission bindings must contain a non-empty bindings list")
 
     literacy_catalog, lessons = _load_lessons(source_root / "curriculum" / "ai-literacy")
+    literacy_content_version = _nonempty_string(
+        literacy_catalog.get("contentVersion"), "AI-literacy contentVersion"
+    )
+    tracks = _validate_tracks(bindings_document.get("tracks"), literacy_content_version)
     projects = {
         project.slug: project
         for project in load_catalog(source_root / "curriculum" / "catalog.md")
     }
-    voxel_games = _load_voxel_catalog(source_root / "engines" / "voxelDojo" / "catalog.json")
+    voxel_games = load_voxel_catalog(source_root / "engines" / "voxelDojo" / "catalog.json")
 
     records: list[tuple[str | None, dict[str, Any]]] = []
     mission_ids: set[str] = set()
@@ -204,6 +191,14 @@ def load_mission_catalog(
         track_id = _nonempty_string(binding.get("trackId"), f"{label}.trackId")
         if track_id not in SUPPORTED_TRACKS:
             raise MissionCatalogError(f"{label}.trackId {track_id!r} is unsupported")
+        chapter_order = binding.get("chapterOrder")
+        if not isinstance(chapter_order, int) or isinstance(chapter_order, bool) or chapter_order < 1:
+            raise MissionCatalogError(f"{label}.chapterOrder must be a positive integer")
+        declared_prerequisites = binding.get("prerequisites")
+        if not isinstance(declared_prerequisites, list) or not all(
+            isinstance(item, str) and item for item in declared_prerequisites
+        ):
+            raise MissionCatalogError(f"{label}.prerequisites must be a list of mission ids")
 
         curriculum = _mapping(binding.get("curriculum"), f"{label}.curriculum")
         curriculum_kind = curriculum.get("kind")
@@ -211,7 +206,7 @@ def load_mission_catalog(
         if project_id not in projects:
             raise MissionCatalogError(f"{label} references unknown curriculum project {project_id!r}")
         unit_id = _nonempty_string(curriculum.get("unitId"), f"{label}.curriculum.unitId")
-        runtime, voxel_game = _validate_runtime(
+        runtime, voxel_game = validate_runtime(
             binding.get("runtime"), f"{label}.runtime", voxel_games
         )
         fallback = _validate_fallback(binding.get("fallback"), f"{label}.fallback")
@@ -258,6 +253,15 @@ def load_mission_catalog(
                 f"{label}.evidence",
                 lesson_file.get("evidence"),
             )
+            if evidence["schema"] != "literacy-evidence":
+                raise MissionCatalogError(
+                    f"{label}.evidence must use literacy-evidence"
+                )
+            canonical_prerequisites = lesson_entry.get("prerequisites")
+            if canonical_prerequisites != declared_prerequisites:
+                raise MissionCatalogError(
+                    f"{label}.prerequisites must match canonical lesson prerequisites"
+                )
             title = _nonempty_string(
                 lesson_entry.get("title"), f"lesson {lesson_id}.title"
             )
@@ -266,32 +270,24 @@ def load_mission_catalog(
             )
             estimated_minutes = lesson_entry.get("estimatedMinutes")
         elif curriculum_kind == "project-voxel-game":
-            lesson_id = None
-            if track_id != "dev" or runtime["engineId"] != "voxelDojo" or voxel_game is None:
-                raise MissionCatalogError(
-                    f"{label} project voxel missions must use the dev track and voxelDojo"
-                )
-            if mission_id != voxel_game["id"]:
-                raise MissionCatalogError(
-                    f"{label}.missionId must preserve voxel game id {voxel_game['id']!r}"
-                )
-            project = projects[project_id]
-            game_number = re.match(r"^game-(\d{2})-", mission_id)
-            if game_number is None or int(game_number.group(1)) != project.number:
-                raise MissionCatalogError(
-                    f"{label} voxel game number must match curriculum project {project_id!r}"
-                )
-            version = binding.get("version")
-            if not isinstance(version, int) or isinstance(version, bool) or version < 1:
-                raise MissionCatalogError(f"{label}.version must be a positive integer")
-            estimated_minutes = binding.get("estimatedMinutes")
-            evidence = _validate_evidence(binding.get("evidence"), f"{label}.evidence")
-            if evidence["schema"] != "teaching-game-evidence":
-                raise MissionCatalogError(
-                    f"{label}.evidence must use teaching-game-evidence"
-                )
-            title = f"{voxel_game['name']}: {project.title}"
-            objective = project.learning_goal
+            voxel_record = validate_project_voxel_binding(
+                binding,
+                label,
+                mission_id,
+                track_id,
+                project_id,
+                unit_id,
+                runtime,
+                voxel_game,
+                projects,
+                _validate_evidence,
+            )
+            lesson_id = voxel_record["lesson_id"]
+            version = voxel_record["version"]
+            estimated_minutes = voxel_record["estimated_minutes"]
+            evidence = voxel_record["evidence"]
+            title = voxel_record["title"]
+            objective = voxel_record["objective"]
         else:
             raise MissionCatalogError(f"{label}.curriculum.kind is unsupported")
 
@@ -313,7 +309,8 @@ def load_mission_catalog(
                     "title": title,
                     "objective": objective,
                     "estimatedMinutes": estimated_minutes,
-                    "prerequisites": [],
+                    "chapterOrder": chapter_order,
+                    "prerequisites": list(declared_prerequisites),
                     "stages": ["understand", "respond", "apply"],
                     "runtime": runtime,
                     "evidence": evidence,
@@ -337,13 +334,47 @@ def load_mission_catalog(
                 raise MissionCatalogError(
                     f"mission {mission['id']!r} has unbound curriculum prerequisites {missing!r}"
                 )
-            mission["prerequisites"] = [lesson_to_mission[item] for item in prerequisites]
+            resolved = [lesson_to_mission[item] for item in prerequisites]
+            if mission["prerequisites"] != resolved:
+                raise MissionCatalogError(
+                    f"mission {mission['id']!r} prerequisites do not preserve curriculum identity"
+                )
         missions.append(mission)
+
+    missions.sort(key=lambda mission: (TRACK_ORDER.index(mission["trackId"]), mission["chapterOrder"]))
+    for track_id in TRACK_ORDER:
+        track_missions = [mission for mission in missions if mission["trackId"] == track_id]
+        if len(track_missions) != FIRST_RELEASE_MISSIONS_PER_TRACK:
+            raise MissionCatalogError(
+                f"track {track_id!r} must declare exactly {FIRST_RELEASE_MISSIONS_PER_TRACK} launchable missions"
+            )
+        orders = [mission["chapterOrder"] for mission in track_missions]
+        if orders != list(range(1, FIRST_RELEASE_MISSIONS_PER_TRACK + 1)):
+            raise MissionCatalogError(
+                f"track {track_id!r} chapterOrder values must be 1..{FIRST_RELEASE_MISSIONS_PER_TRACK}"
+            )
+        recommended = tracks[track_id]["recommendedEntryMissionId"]
+        recommended_mission = next(
+            (mission for mission in track_missions if mission["id"] == recommended), None
+        )
+        if recommended_mission is None:
+            raise MissionCatalogError(
+                f"track {track_id!r} recommended entry {recommended!r} is not launchable"
+            )
+        if recommended_mission["prerequisites"]:
+            raise MissionCatalogError(
+                f"track {track_id!r} recommended entry must not require prerequisites"
+            )
+        for mission in track_missions:
+            if mission["runtime"]["contentVersion"] == "unknown":
+                raise MissionCatalogError(
+                    f"mission {mission['id']!r} must declare a stable runtime content version"
+                )
+    _validate_prerequisite_graph(missions)
 
     return {
         "schemaVersion": MISSION_SCHEMA_VERSION,
-        "contentVersion": _nonempty_string(
-            literacy_catalog.get("contentVersion"), "AI-literacy contentVersion"
-        ),
+        "contentVersion": literacy_content_version,
+        "tracks": [tracks[track_id] for track_id in TRACK_ORDER],
         "missions": missions,
     }

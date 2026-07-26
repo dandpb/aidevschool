@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timedelta, timezone
 
-from conftest import SKILL, dirs, run, write_state
+from conftest import SKILL, run, write_state
 
 SCRIPTS = SKILL / "scripts"
 _B32 = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"

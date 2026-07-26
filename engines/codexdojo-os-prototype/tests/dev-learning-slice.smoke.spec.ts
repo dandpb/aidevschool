@@ -1,0 +1,198 @@
+import { expect, test } from '@playwright/test'
+
+type WarehouseHook = {
+  readonly game: {
+    readonly snapshot: {
+      readonly keys: readonly string[]
+      readonly pendingIndex: number
+    }
+    shelfOfKey(key: string): number
+  }
+}
+
+type WormholeHook = {
+  readonly game: {
+    readonly snapshot: { readonly phase: string }
+    start(): void
+    predictedCodeForPending(): string
+  }
+}
+
+type RelayHook = {
+  readonly game: {
+    start(): void
+    truthConnected(): readonly string[]
+  }
+}
+
+test('independently verifies all three Dev games through the shared mission contract', async ({
+  page,
+}) => {
+  test.setTimeout(60_000)
+  await page.goto('/')
+  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
+  await page.getByRole('button', { name: 'Entrar na escola' }).click()
+
+  await expect(page.getByText('Trilha Dev', { exact: true }).first()).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' }),
+  ).toBeVisible()
+  const canonicalLabel = await page.getByText(/\d+ competências verificadas/).textContent()
+  const canonicalMastery = canonicalLabel?.match(/\d+/)?.[0]
+  expect(canonicalMastery).toBeTruthy()
+  await page.locator('.next-mission-card .journey-primary').click()
+
+  await expect(page.getByText('Trilha Dev · 12 min', { exact: true })).toBeVisible()
+  const mission = page.frameLocator(
+    'iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]',
+  )
+  await expect(mission.getByTestId('shelf-0')).toBeVisible()
+  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5202/'))
+  if (frame === undefined) throw new Error('Warehouse mission frame was not loaded')
+  const keyCount = await frame.evaluate(() => {
+    const hook = (window as Window & { __warehouse?: WarehouseHook }).__warehouse
+    if (hook === undefined) throw new Error('Warehouse test hook is unavailable')
+    return hook.game.snapshot.keys.length
+  })
+  for (let index = 0; index < keyCount; index += 1) {
+    const shelf = await frame.evaluate(() => {
+      const hook = (window as Window & { __warehouse?: WarehouseHook }).__warehouse
+      if (hook === undefined) throw new Error('Warehouse test hook is unavailable')
+      const state = hook.game.snapshot
+      const key = state.keys[state.pendingIndex]
+      return key === undefined ? null : hook.game.shelfOfKey(key)
+    })
+    if (shelf === null) break
+    await mission.getByTestId(`shelf-${shelf}`).click()
+  }
+
+  await expect(mission.getByTestId('hud-status')).toContainText('Wave cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await expect(page.getByText(
+    'O verificador independente aprovou esta evidência. O gate canônico continua separado.',
+    { exact: true },
+  )).toBeVisible()
+  await expect(page.getByText(`${canonicalMastery} verificadas · sem alteração local`)).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
+  await expect(page.getByText('Verificação independente', { exact: true })).toBeVisible()
+  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByText('Não alterada por este fluxo', { exact: true })).toBeVisible()
+
+  await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const wormhole = page.frameLocator('iframe[title="Missão WORMHOLE: URL Shortener"]')
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5203/')),
+  ).toBe(true)
+  const wormholeFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5203/'),
+  )
+  if (wormholeFrame === undefined) throw new Error('Wormhole mission frame was not loaded')
+  await expect.poll(() => wormholeFrame.evaluate(
+    () => (window as Window & { __wormhole?: WormholeHook }).__wormhole !== undefined,
+  )).toBe(true)
+  await wormholeFrame.evaluate(() => {
+    const hook = (window as Window & { __wormhole?: WormholeHook }).__wormhole
+    if (hook === undefined) throw new Error('Wormhole test hook is unavailable')
+    hook.game.start()
+  })
+  for (let index = 0; index < 12; index += 1) {
+    const code = await wormholeFrame.evaluate(() => {
+      const hook = (window as Window & { __wormhole?: WormholeHook }).__wormhole
+      if (hook === undefined || hook.game.snapshot.phase !== 'predicting') return null
+      return hook.game.predictedCodeForPending()
+    })
+    if (code === null) break
+    await wormhole.getByTestId('code-input').fill(code)
+    await wormhole.getByTestId('submit-code').click()
+  }
+  await expect(wormhole.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  await expect(
+    page.getByRole('heading', { name: 'RELAY STATION: WebSocket Chat Server' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const relay = page.frameLocator(
+    'iframe[title="Missão RELAY STATION: WebSocket Chat Server"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5205/')),
+  ).toBe(true)
+  const relayFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5205/'),
+  )
+  if (relayFrame === undefined) throw new Error('Relay mission frame was not loaded')
+  await expect.poll(() => relayFrame.evaluate(
+    () => (window as Window & { __relayStation?: RelayHook }).__relayStation !== undefined,
+  )).toBe(true)
+  await relayFrame.evaluate(() => {
+    const hook = (window as Window & { __relayStation?: RelayHook }).__relayStation
+    if (hook === undefined) throw new Error('Relay test hook is unavailable')
+    hook.game.start()
+  })
+  const connected = await relayFrame.evaluate(() => {
+    const hook = (window as Window & { __relayStation?: RelayHook }).__relayStation
+    if (hook === undefined) throw new Error('Relay test hook is unavailable')
+    return hook.game.truthConnected()
+  })
+  for (const stationId of connected) {
+    await relay.getByTestId(`station-${stationId}`).click()
+  }
+  await relay.getByTestId('submit').click()
+  await expect(relay.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
+    const open = indexedDB.open('codexdojo-os-verification', 2)
+    open.onerror = () => reject(open.error)
+    open.onsuccess = () => {
+      const database = open.result
+      const request = database.transaction('raw-evidence-v2').objectStore('raw-evidence-v2').getAll()
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => {
+        database.close()
+        resolve(request.result)
+      }
+    }
+  }))
+  expect(stored).toHaveLength(3)
+  expect(stored).toEqual(expect.arrayContaining([
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-02-warehouse',
+        unitId: 'U2-key-value-store',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-03-wormhole',
+        unitId: 'U3-url-shortener',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-05-relay-station',
+        unitId: 'U5-websocket-chat',
+      },
+    }),
+  ]))
+
+  await page.reload()
+  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
+  await page.screenshot({
+    path: '../../.omo/evidence/integrate-multigame-verifiers/dev-games-desktop.png',
+    fullPage: true,
+  })
+})

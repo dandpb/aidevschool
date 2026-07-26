@@ -27,12 +27,31 @@ an explore-only orientation surface outside that lifecycle.
 The root is an **ecosystem umbrella**, not a single application. There is no root `package.json`;
 do not run `npm install` / `pnpm install` at the root.
 
+## The canonical learner entry
+
+`engines/codexdojo-os-prototype/` is the canonical mission-first host. Its root
+route opens one onboarding, recommends either **IA Prática** or **Trilha Dev**,
+and returns both audiences to the same hub, map, mentor, and progress
+explanation. The first-release catalog contains three ready missions per track;
+the engine that executes a mission is an implementation detail behind the host.
+
+The host keeps onboarding, mission completion, XP, daily goals, engagement
+streaks, achievements, and opaque checkpoints locally in this browser. That
+IndexedDB continuity is not canonical mastery and does not synchronize between
+devices. Canonical learner state remains the generated, read-only substrate
+snapshot; only the independent learner gate can change `mastered`.
+
+The legacy desktop and Engine Hub remain available at `/desktop` as secondary
+contributor and engine-inspection tools. They are not the default learner entry,
+and launching an engine there does not grant mission, verification, or mastery
+authority.
+
 ## Choose a route
 
 | Audience | First learner surface | Then read |
 | --- | --- | --- |
-| Nontechnical learner | [LiteracyDojo](../../engines/literacyDojo/README.md) for guided micro-lessons; [miniTown](11_engine_miniTown.md) for explore-only orientation | [Onboarding](02_onboarding.md) |
-| Programmer | [Programming curriculum](07_curriculum.md) and the [codexDojo dashboard](03_engine_codexDojo.md) | [Architecture](01_architecture.md) |
+| Nontechnical learner | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **IA Prática**; LiteracyDojo runs the bounded lesson activity | [Onboarding](02_onboarding.md) |
+| Programmer | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **Trilha Dev**; voxelDojo runs the first chapter simulations | [Curriculum](07_curriculum.md) |
 | Contributor | [Documentation map](../DOCUMENTATION.md) | Architecture, onboarding, then the owning engine guide |
 
 ## Read in this order
@@ -58,7 +77,7 @@ do not run `npm install` / `pnpm install` at the root.
 1. **Learning gate.** The learner attempts and is evaluated with the evidence class declared by the unit before anything becomes `mastered`.
 2. **Producer ≠ verifier.** Nothing self-verifies; the verifier works from an isolated context.
 3. **No claims without evidence** (mastery, parity, benchmark, robustness).
-4. **The filesystem is the source of truth.** State is auditable Markdown / YAML / NDJSON. There is no database.
+4. **The filesystem is the canonical source of truth.** Mastery and evidence authority remain auditable Markdown / YAML / NDJSON; browser IndexedDB stores only local continuity.
 5. **Simplify before commit.** Run `/simplify` on the diff, apply the recommendations, then commit.
 
 ## Map of the repository
@@ -104,6 +123,6 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 
 ---
 
-_Last reviewed on 2026-07-19. When an explanation conflicts with a canonical
+_Last reviewed on 2026-07-25. When an explanation conflicts with a canonical
 catalog, contract, learner-state file, or current verification result, the
 canonical source wins; open a documentation fix._

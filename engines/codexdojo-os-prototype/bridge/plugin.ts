@@ -2,10 +2,14 @@ import { randomBytes, timingSafeEqual } from 'node:crypto'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin, PreviewServer, ViteDevServer } from 'vite'
 import type { BridgeResponse } from './router'
-import { routeBridgeRequest } from './router'
+import {
+  BRIDGE_ANALYTICS_PATH,
+  BRIDGE_ROOT,
+  MAX_ANALYTICS_BODY_BYTES,
+  routeBridgeRequest,
+} from './router'
 import { EngineProcessTimeoutError, runProcess } from './processRunner'
 
-const BRIDGE_ROOT = '/__dojo/bridge/v1'
 const BRIDGE_PREFIX = `${BRIDGE_ROOT}/`
 const BRIDGE_SESSION_PATH = `${BRIDGE_ROOT}/session`
 const MAX_BODY_BYTES = 4_096
@@ -51,6 +55,12 @@ export function getBridgeAuthorizationError(
   return null
 }
 
+export function getAnalyticsAuthorizationError(
+  request: Omit<BridgeAuthorizationInput, 'token'>,
+): string | null {
+  return getBridgeAuthorizationError({ ...request, token: 'same-origin-analytics' }, 'same-origin-analytics')
+}
+
 export function getSessionAuthorizationError(request: {
   readonly remoteAddress: string | undefined
   readonly method: string | undefined
@@ -66,8 +76,12 @@ export function isVerificationRouteEnabled(pathname: string, enabled: boolean): 
   return enabled || pathname !== `${BRIDGE_ROOT}/verification`
 }
 
+export function isAnalyticsRouteEnabled(pathname: string, enabled: boolean): boolean {
+  return enabled || pathname !== BRIDGE_ANALYTICS_PATH
+}
+
 export function bridgeRequestNeedsExclusiveExecution(pathname: string): boolean {
-  return pathname !== `${BRIDGE_ROOT}/verification`
+  return pathname !== `${BRIDGE_ROOT}/verification` && pathname !== BRIDGE_ANALYTICS_PATH
 }
 
 function tokensEqual(received: string, expected: string): boolean {
@@ -79,6 +93,7 @@ function tokensEqual(received: string, expected: string): boolean {
 export function engineBridgePlugin(
   sessionToken = randomBytes(32).toString('base64url'),
   verificationEnabled = process.env.VITE_LOCAL_ENGINE_BRIDGE === 'true',
+  analyticsEnabled = process.env.VITE_ANALYTICS_BRIDGE === 'true',
 ): Plugin {
   let bridgeBusy = false
   const configureBridge = (server: BridgeServer): void => {
@@ -109,14 +124,21 @@ export function engineBridgePlugin(
         sendJson(response, { status: 404, body: { error: 'not-found' } })
         return
       }
+      if (!isAnalyticsRouteEnabled(pathname, analyticsEnabled)) {
+        sendJson(response, { status: 404, body: { error: 'not-found' } })
+        return
+      }
 
-      const authorizationError = getBridgeAuthorizationError({
+      const authorizationInput = {
         remoteAddress: request.socket.remoteAddress,
         origin: firstHeader(request.headers.origin),
         host: firstHeader(request.headers.host),
         contentType: firstHeader(request.headers['content-type']),
         token: firstHeader(request.headers[BRIDGE_TOKEN_HEADER]),
-      }, sessionToken)
+      }
+      const authorizationError = pathname === BRIDGE_ANALYTICS_PATH
+        ? getAnalyticsAuthorizationError(authorizationInput)
+        : getBridgeAuthorizationError(authorizationInput, sessionToken)
       if (authorizationError !== null) {
         sendJson(response, {
           status: authorizationError === 'json-required' ? 415 : 403,
@@ -167,7 +189,10 @@ async function handleBridgeRequest(
   response: ServerResponse,
   pathname: string,
 ): Promise<void> {
-  const body = await readBody(request)
+  const body = await readBody(
+    request,
+    pathname === BRIDGE_ANALYTICS_PATH ? MAX_ANALYTICS_BODY_BYTES : MAX_BODY_BYTES,
+  )
   const bridgeResponse = await routeBridgeRequest(
     { method: request.method ?? 'GET', pathname, body },
     runProcess,
@@ -175,7 +200,7 @@ async function handleBridgeRequest(
   sendJson(response, bridgeResponse)
 }
 
-function readBody(request: IncomingMessage): Promise<string> {
+function readBody(request: IncomingMessage, maxBodyBytes: number): Promise<string> {
   return new Promise((resolveBody, rejectBody) => {
     let body = ''
     let oversized = false
@@ -183,7 +208,7 @@ function readBody(request: IncomingMessage): Promise<string> {
     request.on('data', (chunk: string) => {
       if (oversized) return
       body += chunk
-      oversized = Buffer.byteLength(body, 'utf8') > MAX_BODY_BYTES
+      oversized = Buffer.byteLength(body, 'utf8') > maxBodyBytes
     })
     request.on('end', () => {
       if (oversized) {

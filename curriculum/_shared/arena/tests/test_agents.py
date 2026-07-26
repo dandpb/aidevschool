@@ -7,7 +7,6 @@ agent actually flagging an unfair impl) is exercised when the pipeline runs
 (task_06), not in a unit test — an LLM agent cannot run inside unittest.
 """
 
-import sys
 import unittest
 from pathlib import Path
 

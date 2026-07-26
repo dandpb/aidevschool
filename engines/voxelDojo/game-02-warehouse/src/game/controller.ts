@@ -262,6 +262,18 @@ export class GameController {
     const metrics = { kind: "voxeldoj-kv-warehouse", ...outcome.metrics }
     this.state.lastMetrics = metrics
     this.state.phase = outcome.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, outcome.pass, metrics)
+    const observations =
+      this.state.level.id === "L1"
+        ? { kind: "warehouse-L1", predictions: this.state.shelfPredictions }
+        : this.state.level.id === "L2"
+          ? { kind: "warehouse-L2", probes: this.state.crudProbes }
+          : this.state.level.id === "L3"
+            ? {
+                kind: "warehouse-L3",
+                probes: this.state.crudProbes,
+                predictedSwept: this.state.predictedSwept,
+              }
+            : { kind: "warehouse-L4", hashStrength: this.state.store.hashStrength }
+    emitEvidence(this.state.level.id, outcome.pass, metrics, observations)
   }
 }

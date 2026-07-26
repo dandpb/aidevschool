@@ -3,7 +3,9 @@ import { learnerSnapshot } from '../data/learner'
 import type { LearnerSnapshot } from '../domain'
 import { MissionShell } from '../host/MissionShell'
 import { Hub } from './Hub'
+import { MapScreen } from './MapScreen'
 import { Onboarding } from './Onboarding'
+import { ProgressScreen } from './ProgressScreen'
 import { useJourneyController } from './useJourneyController'
 
 export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: LearnerSnapshot }) {
@@ -28,7 +30,10 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
         progress={progress}
         learner={learner}
         catalog={services.missions}
-        onLaunch={(mission) => void controller.launchMission(mission)}
+        onLaunch={(mission, options) => void controller.launchMission(mission, options)}
+        onOpenMap={() => services.navigation.push('/map')}
+        onOpenProgress={() => services.navigation.push('/progress')}
+        onSwitchTrack={(trackId) => void controller.selectTrack(trackId)}
       />
     )
   }
@@ -47,10 +52,26 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
     )
   }
   if (route.kind === 'map') {
-    return <main className="journey-loading"><h1>Mapa da trilha</h1><p>O primeiro capítulo será expandido nas próximas fases.</p><button type="button" onClick={() => services.navigation.push('/hub')}>Voltar ao hub</button></main>
+    return (
+      <MapScreen
+        progress={progress}
+        learner={learner}
+        catalog={services.missions}
+        onLaunch={(mission) => void controller.launchMission(mission)}
+        onSwitchTrack={(trackId) => void controller.selectTrack(trackId)}
+        onBack={() => services.navigation.push('/hub')}
+      />
+    )
   }
   if (route.kind === 'progress') {
-    return <main className="journey-loading"><h1>Progresso</h1><p>Conclusão local e domínio canônico permanecem separados.</p><button type="button" onClick={() => services.navigation.push('/hub')}>Voltar ao hub</button></main>
+    return (
+      <ProgressScreen
+        progress={progress}
+        learner={learner}
+        catalog={services.missions}
+        onBack={() => services.navigation.push('/hub')}
+      />
+    )
   }
   return <main className="journey-loading" role="alert">Rota não encontrada.</main>
 }

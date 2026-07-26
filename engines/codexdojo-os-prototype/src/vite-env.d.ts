@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_VOXELDOJO_URL?: string
   readonly VITE_VOXELDOJO_URLS?: string
   readonly VITE_LOCAL_ENGINE_BRIDGE?: string
+  readonly VITE_ANALYTICS_ENDPOINT?: string
 }
 
 interface ImportMeta {

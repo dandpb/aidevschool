@@ -54,6 +54,8 @@ export type ResumeDestination =
   | { kind: "home" }
   | { kind: "lesson"; lessonId: string };
 
+const HOSTED_FIRST_CHAPTER = new Set(["l01", "l02", "l03"]);
+
 export class LiteracyUseCases {
   constructor(private readonly deps: UseCaseDeps) {}
 
@@ -101,11 +103,11 @@ export class LiteracyUseCases {
 
   async prepareHostedMission(lessonId: string): Promise<LearnerProgress> {
     this.requireLesson(lessonId);
-    if (lessonId !== MAP_INITIAL_LESSON_ID) {
+    if (!HOSTED_FIRST_CHAPTER.has(lessonId)) {
       throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
     }
     let progress = await this.requireProgress();
-    if (!progress.onboarding.completed || !isLessonUnlocked(progress, lessonId)) {
+    if (!progress.onboarding.completed) {
       progress = completeOnboarding(progress, {
         goal: "verify_answers",
         context: "work",
@@ -113,6 +115,12 @@ export class LiteracyUseCases {
         taskCategory: "news_research",
         audience: "ia_pratica",
       });
+    }
+    if (!isLessonUnlocked(progress, lessonId)) {
+      progress = {
+        ...progress,
+        lessonStatus: { ...progress.lessonStatus, [lessonId]: "available" },
+      };
     }
     const next = startLessonInDomain(progress, lessonId);
     await this.deps.progress.save(next);
@@ -147,6 +155,7 @@ export class LiteracyUseCases {
       lessonVersion: lesson.version,
       skillIds: [...lesson.skillIds],
       evaluation,
+      answer: input.answer,
       timestamp: now.toISOString(),
       context: input.context ?? "initial",
     });

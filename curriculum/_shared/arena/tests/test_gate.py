@@ -11,7 +11,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
 from curriculum._shared import arena as A
 from curriculum._shared.arena import gate as G
-from curriculum._shared.benchmarks import runner as R
 
 # Reuse the all-pass seeding helper from the arena module tests.
 from curriculum._shared.arena.tests.test_arena import make_cfg, seed_all_pass

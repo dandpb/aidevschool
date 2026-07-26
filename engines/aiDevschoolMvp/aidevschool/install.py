@@ -141,14 +141,15 @@ def _platform_paths(platform: str, root: Path) -> tuple[Path, Path]:
     return root / "skills" / "aidevschool", root / "aidevschool-state"
 
 
-def _runtime_source() -> Path:
-    source = Path(__file__).resolve().parents[3] / "learner" / "gate"
-    if not all((source / name).is_file() for name in ("core.py", "engine.py", "state.py")):
+def _runtime_source(skill_src: Path) -> Path:
+    source = skill_src / "scripts"
+    if not all((source / name).is_file() for name in ("_core.py", "_engine.py", "_state.py")):
         raise InstallError("bundled deterministic runtime is missing")
     return source
 
 
 def place_skill(skill_src: Path, dest: Path) -> None:
+    _runtime_source(skill_src)
     dest.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".aidevschool-stage-", dir=dest.parent))
     backup: Path | None = None
@@ -159,17 +160,6 @@ def place_skill(skill_src: Path, dest: Path) -> None:
             dirs_exist_ok=True,
             ignore=shutil.ignore_patterns("__pycache__", "install.py", "config.json"),
         )
-        runtime = _runtime_source()
-        scripts = stage / "scripts"
-        for source_name, installed_name in (
-            ("core.py", "_core.py"),
-            ("engine.py", "_engine.py"),
-            ("state.py", "_state.py"),
-        ):
-            text = (runtime / source_name).read_text(encoding="utf-8")
-            if source_name == "state.py":
-                text = text.replace("from learner.gate.core import", "from _core import")
-            (scripts / installed_name).write_text(text, encoding="utf-8")
         validate_curriculum(stage)
         verify_manifest(stage)
         if dest.exists():

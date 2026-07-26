@@ -1,6 +1,37 @@
 schemaVersion: 1
+tracks:
+  - trackId: ai-pratica
+    contentVersion: "2026-07-25.1"
+    recommendedEntryMissionId: l02
+  - trackId: dev
+    contentVersion: "2026-07-25.1"
+    recommendedEntryMissionId: game-02-warehouse
 bindings:
+  - missionId: l01
+    chapterOrder: 1
+    prerequisites: []
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l01
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l01
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-07-25.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Conduza a primeira conversa por controles rotulados e trate a resposta como um rascunho revisavel."
   - missionId: l02
+    chapterOrder: 2
+    prerequisites: []
     trackId: ai-pratica
     curriculum:
       kind: ai-literacy-lesson
@@ -12,6 +43,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
+      contentVersion: "2026-07-25.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -19,8 +51,32 @@ bindings:
     fallback:
       kind: dom
       summary: "Compare as duas respostas, escolha a mais confiavel e marque os criterios de verificacao."
+  - missionId: l03
+    chapterOrder: 3
+    prerequisites: [l02]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l03
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l03
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-07-25.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Classifique tarefas adequadas e arriscadas sem depender de cor, movimento ou ponteiro preciso."
   - missionId: game-02-warehouse
     version: 1
+    chapterOrder: 1
+    prerequisites: []
     trackId: dev
     curriculum:
       kind: project-voxel-game
@@ -33,6 +89,7 @@ bindings:
       entrypoint: http://127.0.0.1:5202/?hosted=1
       environmentKey: VITE_WAREHOUSE_URL
       protocolVersion: "1.0"
+      contentVersion: game-02-warehouse@0.1.0
     evidence:
       schema: teaching-game-evidence
       version: 1
@@ -40,3 +97,51 @@ bindings:
     fallback:
       kind: dom
       summary: "Preveja a prateleira de cada chave e acompanhe a mesma simulacao deterministica por controles rotulados."
+  - missionId: game-03-wormhole
+    version: 1
+    chapterOrder: 2
+    prerequisites: [game-02-warehouse]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 03_url_shortener
+      unitId: U3-url-shortener
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-03-wormhole
+      entrypoint: http://127.0.0.1:5203/?hosted=1
+      environmentKey: VITE_WORMHOLE_URL
+      protocolVersion: "1.0"
+      contentVersion: game-03-wormhole@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Preveja codigos curtos e colisoes com os mesmos dados e criterios da simulacao visual."
+  - missionId: game-05-relay-station
+    version: 1
+    chapterOrder: 3
+    prerequisites: [game-03-wormhole]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 05_websocket_chat
+      unitId: U5-websocket-chat
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-05-relay-station
+      entrypoint: http://127.0.0.1:5205/?hosted=1
+      environmentKey: VITE_RELAY_STATION_URL
+      protocolVersion: "1.0"
+      contentVersion: game-05-relay-station@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Inspecione conexoes, fan-out e heartbeat por uma lista semantica com controles equivalentes."

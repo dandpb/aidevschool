@@ -15,6 +15,7 @@ export type MissionDefinition = {
   readonly title: string
   readonly objective: string
   readonly estimatedMinutes: number
+  readonly chapterOrder: number
   readonly prerequisites: readonly MissionId[]
   readonly stages: readonly MissionStage[]
   readonly runtime: {
@@ -22,6 +23,7 @@ export type MissionDefinition = {
     readonly entrypoint: string
     readonly environmentKey: string
     readonly protocolVersion: '1.0'
+    readonly contentVersion: string
   }
   readonly evidence: {
     readonly schema: 'literacy-evidence' | 'teaching-game-evidence'
@@ -34,9 +36,16 @@ export type MissionDefinition = {
   }
 }
 
+export type MissionTrackDefinition = {
+  readonly id: TrackId
+  readonly contentVersion: string
+  readonly recommendedEntryMissionId: MissionId
+}
+
 export type MissionCatalogSnapshot = {
   readonly schemaVersion: 1
   readonly contentVersion: string
+  readonly tracks: readonly MissionTrackDefinition[]
   readonly missions: readonly MissionDefinition[]
 }
 

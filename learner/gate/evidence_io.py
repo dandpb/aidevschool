@@ -3,10 +3,29 @@ from __future__ import annotations
 import json
 import hashlib
 from pathlib import Path
-from typing import Any
+from typing import Any, TextIO
+
+MAX_EVIDENCE_BYTES = 65_536
+
 
 class EvidenceParseError(ValueError):
     pass
+
+
+def read_bounded_evidence(
+    stream: TextIO, max_bytes: int = MAX_EVIDENCE_BYTES
+) -> dict[str, Any] | None:
+    """Single bounded read for every fixed verifier bridge. The browser supplies
+    the payload, so its size is never trusted; over-long or unparseable input
+    yields None and the caller emits a normal FAIL receipt."""
+    try:
+        payload = stream.read(max_bytes + 1)
+        if len(payload.encode("utf-8")) > max_bytes:
+            return None
+        raw: Any = json.loads(payload)
+    except (json.JSONDecodeError, UnicodeError):
+        return None
+    return raw if isinstance(raw, dict) else None
 
 
 def load_evidence(path: str | Path) -> dict[str, Any]:

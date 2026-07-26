@@ -8,6 +8,13 @@ export interface EvidenceRecord {
   game?: string
   pass: boolean
   metrics: Record<string, number | boolean | string>
+  observations: {
+    kind: string
+    predictions?: ReadonlyArray<{ key: string; shelf: number }>
+    probes?: ReadonlyArray<{ key: string; predictedAlive: boolean }>
+    predictedSwept?: number
+    hashStrength?: number | "full"
+  }
 }
 
 export function collectEvidence(lines: string[]): EvidenceRecord[] {

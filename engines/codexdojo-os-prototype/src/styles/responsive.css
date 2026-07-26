@@ -1,3 +1,9 @@
+@media (max-width: 1280px) {
+  .journey-page { padding-inline: 24px; }
+  .next-mission-card { min-height: 410px; }
+  .progress-missions { overflow-x: auto; }
+}
+
 @media (max-width: 1040px) {
   .topbar { grid-template-columns: 1fr auto; }
   .topbar-center { display: none; }
@@ -14,6 +20,16 @@
   .app-grid { grid-template-columns: repeat(3, minmax(130px, 1fr)); }
   .architecture-flow { grid-template-columns: repeat(3, 1fr); }
   .architecture-flow button { min-height: 150px; }
+}
+
+@media (max-width: 768px) {
+  .journey-page { padding-inline: 16px; }
+  .hub-grid,
+  .chapter-map-grid,
+  .mission-learning-layout { grid-template-columns: 1fr; }
+  .next-mission-card > :not(.hub-voxels) { max-width: 70%; }
+  .progress-explainer { grid-template-columns: 1fr; }
+  .progress-missions article { min-width: 0; grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 760px) {
@@ -58,6 +74,33 @@
   .window-title { max-width: 210px; overflow: hidden; white-space: nowrap; }
   .software-app > header { align-items: flex-start; }
   .catalog-count { display: none; }
+  .journey-page { padding: 10px 10px 28px; }
+  .hub-topbar { align-items: flex-start; }
+  .journey-brand small { max-width: 24ch; }
+  .hub-chips { justify-content: flex-start; }
+  .hub-chips span { min-height: 36px; }
+  .onboarding-card,
+  .next-mission-card,
+  .chapter-track,
+  .mission-result { border-radius: 20px; }
+  .next-mission-card { min-height: 520px; }
+  .mentor-mode,
+  .result-rewards,
+  .progress-summary,
+  .progress-missions article { grid-template-columns: 1fr; }
+  .mission-runtime { min-height: 470px; }
+}
+
+@media (max-width: 375px) {
+  .onboarding-card { padding: 22px 15px; }
+  .onboarding-card h1,
+  .hub-welcome h1 { font-size: clamp(2rem, 12vw, 3rem); }
+  .hub-topbar { display: grid; }
+  .hub-chips { display: grid; grid-template-columns: 1fr 1fr; }
+  .hub-chips span { display: grid; align-items: center; }
+  .mission-header { gap: 12px; }
+  .mission-status div { padding-inline: 12px; }
+  .hub-voxels { transform: scale(0.68); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -14,7 +14,10 @@ const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
 if (!lesson) throw new Error("Mapa Inicial ausente do read model");
 const guidedLesson = lessons.find((item) => item.id === "l01");
 const intermediateLesson = lessons.find((item) => item.id === "l03");
-if (!guidedLesson || !intermediateLesson) throw new Error("rota adaptativa incompleta");
+const promptLesson = lessons.find((item) => item.id === "l05");
+if (!guidedLesson || !intermediateLesson || !promptLesson) {
+  throw new Error("rota adaptativa incompleta");
+}
 const activity = lesson.activities[0] as OutputComparisonActivity;
 const activityId = activity.id;
 
@@ -52,6 +55,21 @@ describe("startLesson", () => {
     await completeMvpOnboarding(services);
     await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(/bloqueada/);
   });
+
+  it.each(["l01", "l02", "l03"])("prepara a missão hospedada declarada %s", async (lessonId) => {
+    const { services } = makeServices();
+    const progress = await services.useCases.prepareHostedMission(lessonId);
+
+    expect(progress.onboarding.completed).toBe(true);
+    expect(progress.lessonStatus[lessonId]).toBe("in_progress");
+    expect(progress.currentLessonId).toBe(lessonId);
+    expect(JSON.stringify(progress)).not.toContain("mastered");
+  });
+
+  it("rejeita lição fora do primeiro capítulo hospedado", async () => {
+    const { services } = makeServices();
+    await expect(services.useCases.prepareHostedMission("l04")).rejects.toThrow(/não autorizada/);
+  });
 });
 
 describe("submitActivityAttempt", () => {
@@ -80,6 +98,7 @@ describe("submitActivityAttempt", () => {
     expect(record.skillIds).toEqual(lesson.skillIds);
     expect(record.verifierRequired).toBe(true);
     expect(record.attemptId).toBe("att-000001");
+    expect(record.answer).toEqual(WRONG_ANSWER);
     // Sem texto livre: deterministicChecks só com primitivos estruturados.
     for (const value of Object.values(record.deterministicChecks)) {
       expect(["boolean", "number", "string"]).toContain(typeof value);
@@ -119,6 +138,26 @@ describe("submitActivityAttempt", () => {
     expect(services.evidence.records).toHaveLength(2);
     expect(services.evidence.records[1].pass).toBe(true);
     expect(services.evidence.records[1].attemptId).toBe("att-000002");
+    expect(services.evidence.records[1].answer).toEqual(RIGHT_ANSWER);
+  });
+
+  it("prompt builder não persiste resposta de texto livre", async () => {
+    const promptActivity = promptLesson.activities[0];
+    const answer = {
+      values: {
+        objetivo: "avisar clientes sobre a mudança",
+        contexto: "a clínica mudará o horário no próximo mês",
+        publico: "clientes da clínica",
+        formato: "e-mail curto",
+      },
+    };
+    const result = await services.useCases.submitActivityAttempt({
+      lessonId: promptLesson.id,
+      activityId: promptActivity.id,
+      answer,
+    });
+    expect(result.record.answer).toBeUndefined();
+    expect(JSON.stringify(result.record)).not.toContain(answer.values.contexto);
   });
 
   it("feedback determinístico vem do conteúdo (onFailure + perCheck)", async () => {

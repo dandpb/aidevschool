@@ -14,7 +14,10 @@ from curriculum._shared.evidence import (
 from learner.gate.evidence_io import (
     canonical_evidence_digest as canonical_evidence_digest,
 )
-from learner.gate.timestamps import GateSecurityError, parse_aware_timestamp
+from learner.gate.timestamps import (
+    GateSecurityError as GateSecurityError,
+    parse_aware_timestamp,
+)
 from learner.substrate.gate import GateEvidenceReceipt
 
 

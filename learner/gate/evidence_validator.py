@@ -79,9 +79,10 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
         if (
             not isinstance(value, str)
             or len(value) < field_schema["minLength"]
+            or len(value) > field_schema["maxLength"]
             or not value.strip()
         ):
-            errors.append(f"{string_field} must be a non-empty string")
+            errors.append(f"{string_field} must be a bounded non-empty string")
 
     if not isinstance(evidence["lessonVersion"], int) or isinstance(
         evidence["lessonVersion"], bool
@@ -95,19 +96,31 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
 
     skill_ids = evidence["skillIds"]
     skill_schema = _LITERACY_PROPERTIES["skillIds"]["items"]
-    if not isinstance(skill_ids, list) or not all(
-        isinstance(item, str) and len(item) >= skill_schema["minLength"]
-        for item in skill_ids
+    if (
+        not isinstance(skill_ids, list)
+        or len(skill_ids) > _LITERACY_PROPERTIES["skillIds"]["maxItems"]
+        or not all(
+            isinstance(item, str)
+            and skill_schema["minLength"] <= len(item) <= skill_schema["maxLength"]
+            for item in skill_ids
+        )
     ):
-        errors.append("skillIds must be a list of non-empty strings")
+        errors.append("skillIds must be a bounded list of non-empty strings")
 
     checks = evidence["deterministicChecks"]
     if not isinstance(checks, dict):
         errors.append("deterministicChecks must be an object")
     else:
+        if len(checks) > _LITERACY_PROPERTIES["deterministicChecks"]["maxProperties"]:
+            errors.append("deterministicChecks has too many entries")
         for check_key, check_value in checks.items():
-            if not isinstance(check_key, str) or not check_key:
-                errors.append("deterministicChecks keys must be non-empty strings")
+            if (
+                not isinstance(check_key, str)
+                or not 1 <= len(check_key) <= 120
+            ):
+                errors.append(
+                    "deterministicChecks keys must be bounded non-empty strings"
+                )
             if not isinstance(check_value, (bool, int, float, str)) or (
                 isinstance(check_value, float)
                 and (
@@ -127,6 +140,11 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
                     "(free text not allowed in evidence)"
                 )
 
+    answer = evidence.get("answer")
+    if answer is not None:
+        answer_errors = _validate_structured_answer(answer)
+        errors.extend(f"answer {error}" for error in answer_errors)
+
     score = evidence["score"]
     if (
         not isinstance(score, (int, float))
@@ -143,6 +161,10 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
         errors.append("pass must be a boolean")
 
     timestamp = evidence["timestamp"]
+    if not isinstance(timestamp, str) or len(timestamp) > _LITERACY_PROPERTIES[
+        "timestamp"
+    ]["maxLength"]:
+        errors.append("timestamp must be a bounded ISO-8601 string")
     try:
         parse_aware_timestamp(str(timestamp))
     except (TypeError, ValueError):
@@ -164,3 +186,48 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
         errors.append("context must be 'initial', 'review', or omitted")
 
     return errors
+
+
+def _validate_structured_answer(answer: Any) -> list[str]:
+    if not isinstance(answer, dict):
+        return ["must be an object"]
+    variants = {
+        "optionIds": "ids",
+        "orderedIds": "ids",
+        "contextIds": "ids",
+        "criterionIds": "output",
+        "labels": "labels",
+        "verdicts": "verdicts",
+    }
+    present = [key for key in variants if key in answer]
+    if len(present) != 1:
+        return ["must have exactly one structured answer discriminator"]
+    discriminator = present[0]
+    allowed = {discriminator, "outputId"} if discriminator == "criterionIds" else {discriminator}
+    if set(answer) - allowed:
+        return ["contains unknown fields"]
+
+    def valid_id(value: Any) -> bool:
+        return isinstance(value, str) and 1 <= len(value) <= 120
+
+    kind = variants[discriminator]
+    value = answer[discriminator]
+    if kind in {"ids", "output"}:
+        if not isinstance(value, list) or len(value) > 50 or not all(
+            valid_id(item) for item in value
+        ):
+            return [f"{discriminator} must be a bounded list of IDs"]
+        output_id = answer.get("outputId")
+        if output_id is not None and not valid_id(output_id):
+            return ["outputId must be a bounded non-empty string"]
+        return []
+    if not isinstance(value, dict) or len(value) > 50 or not all(
+        valid_id(key) for key in value
+    ):
+        return [f"{discriminator} must be a bounded object keyed by IDs"]
+    allowed_values = (
+        {"safe", "sensitive"} if kind == "labels" else {"met", "partial", "not_met"}
+    )
+    if not all(item in allowed_values for item in value.values()):
+        return [f"{discriminator} contains an invalid value"]
+    return []

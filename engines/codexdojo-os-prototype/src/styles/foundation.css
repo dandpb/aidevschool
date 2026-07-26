@@ -1,5 +1,5 @@
 :root {
-  font-family: "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
   color: #eef3ff;
   background: #07101f;
   font-synthesis: none;
@@ -15,11 +15,45 @@
   --blue: #4d8fff;
   --cyan: #4dd8d0;
   --success: #63d899;
+  --school-paper: #f8f4ea;
+  --school-surface: #fffdf8;
+  --school-ink: #17213a;
+  --school-muted: #657089;
+  --school-line: #d9d3c7;
+  --school-primary: #315c4c;
+  --school-primary-dark: #1f4034;
+  --school-primary-soft: #e5f2eb;
+  --school-sun: #ffbf47;
+  --school-coral: #ff7d66;
+  --school-focus: #d56800;
 }
 
 * { box-sizing: border-box; }
 html { width: 100%; min-width: 320px; height: 100%; margin: 0; overflow: hidden; }
 body, #root { width: 100%; min-width: 320px; height: 100dvh; margin: 0; overflow: hidden; }
-button, input { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button { color: inherit; }
-button:focus-visible, input:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.journey-page button,
+.journey-page input,
+.journey-page select,
+.journey-page textarea,
+.journey-loading button {
+  min-height: 44px;
+}
+
+.journey-page :focus-visible,
+.journey-loading :focus-visible {
+  outline: 3px solid var(--school-focus);
+  outline-offset: 3px;
+}
+
+.journey-page [aria-live],
+.journey-page [role="status"],
+.journey-page [role="alert"] {
+  isolation: isolate;
+}

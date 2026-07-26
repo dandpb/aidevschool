@@ -60,5 +60,40 @@ describe('host protocol validation', () => {
       ok: false,
       code: 'invalid-payload',
     })
+    expect(
+      decodeEngineMessage(
+        readyEvent({
+          payload: {
+            engineVersion: '0.1.0',
+            contentVersion: 'test.1',
+            capabilities: ['mission-state', 'evidence', 'checkpoint'],
+          },
+        }),
+        expected,
+      ),
+    ).toEqual({ ok: false, code: 'invalid-payload' })
+  })
+
+  it('accepts only closed renderer lifecycle states', () => {
+    expect(decodeEngineMessage(readyEvent({
+      type: 'renderer.state',
+      payload: {
+        revision: 1,
+        requested: 'auto',
+        active: 'dom',
+        status: 'degraded',
+        reason: 'creation-failed',
+      },
+    }), expected)).toMatchObject({ ok: true, message: { type: 'renderer.state' } })
+    expect(decodeEngineMessage(readyEvent({
+      type: 'renderer.state',
+      payload: {
+        revision: 1,
+        requested: 'auto',
+        active: 'dom',
+        status: 'degraded',
+        reason: 'learner-failed',
+      },
+    }), expected)).toEqual({ ok: false, code: 'invalid-payload' })
   })
 })

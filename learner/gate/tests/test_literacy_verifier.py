@@ -5,15 +5,12 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from typing import Any
-
 import pytest
 
 from learner.gate.literacy_bridge import verify_stream
 
 from learner.gate.literacy_verifier import (
     DETERMINISTIC_ACTIVITY_TYPES,
-    PASS_SCORE_MIN,
     VERIFIER_SOURCE,
     load_literacy_evidence,
     main as literacy_cli_main,
@@ -23,99 +20,30 @@ from learner.gate.literacy_verifier import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-#: Representative deterministicChecks shaped like LiteracyDojo evaluation.ts finalize().
-TYPE_PASS_FIXTURES: dict[str, dict[str, Any]] = {
-    "choice": {
-        "activityId": "l01-a1",
-        "deterministicChecks": {"opt-correct": True, "opt-wrong": True},
-        "score": 1.0,
-    },
-    "sort": {
-        "activityId": "l07-a1",
-        "deterministicChecks": {"step-1": True, "step-2": True, "step-3": True},
-        "score": 1.0,
-    },
-    "missing_context": {
-        "activityId": "l06-a1",
-        "deterministicChecks": {
-            "ctx-audience": True,
-            "ctx-deadline": True,
-            "noExtraContext": 0,
-        },
-        "score": 1.0,
-    },
-    "safety_classification": {
-        "activityId": "l12-a1",
-        "deterministicChecks": {"item-a": True, "item-b": True, "item-c": True},
-        "score": 1.0,
-    },
-    "prompt_builder": {
-        "activityId": "l05-a1",
-        "deterministicChecks": {"field-goal": True, "field-context": True},
-        "score": 1.0,
-    },
-    "output_comparison": {
-        "activityId": "l02-a1",
-        "deterministicChecks": {
-            "betterOutputId": True,
-            "crit-sources": True,
-            "noExtraCriteria": 0,
-        },
-        "score": 1.0,
-    },
-    "rubric_review": {
-        "activityId": "l09-a1",
-        "deterministicChecks": {"crit-claim": True, "crit-evidence": True},
-        "score": 1.0,
-    },
-}
-
-TYPE_FAIL_FIXTURES: dict[str, dict[str, Any]] = {
-    "choice": {
-        "activityId": "l01-a1",
-        "deterministicChecks": {"opt-correct": False, "opt-wrong": False},
-        "score": 0.0,
-    },
-    "sort": {
-        "activityId": "l07-a1",
-        "deterministicChecks": {"step-1": False, "step-2": False},
-        "score": 0.25,
-    },
-    "missing_context": {
-        "activityId": "l06-a1",
-        "deterministicChecks": {
-            "ctx-audience": False,
-            "noExtraContext": 2,
-        },
-        "score": 0.0,
-    },
-    "rubric_review": {
-        "activityId": "l09-a1",
-        "deterministicChecks": {"crit-claim": False, "crit-evidence": False},
-        "score": 0.0,
-    },
-}
-
-
 def make_record(**overrides):
     base = {
         "schemaVersion": 1,
         "source": "literacydojo",
         "attemptId": "att-000001",
         "lessonId": "l02",
-        "lessonVersion": 2,
+        "lessonVersion": 3,
         "activityId": "l02-a1",
         "activityType": "output_comparison",
-        "skillIds": ["avaliar"],
+        "skillIds": ["entender", "avaliar"],
         "deterministicChecks": {
             "betterOutputId": True,
-            "crit-sources": True,
+            "c-fontes": True,
+            "c-limites": True,
             "noExtraCriteria": 0,
         },
         "score": 1.0,
         "pass": True,
         "timestamp": "2026-07-25T12:00:00.000Z",
         "verifierRequired": True,
+        "answer": {
+            "outputId": "out-b",
+            "criterionIds": ["c-fontes", "c-limites"],
+        },
         "context": "initial",
     }
     base.update(overrides)
@@ -165,11 +93,11 @@ def test_verifier_required_must_be_true():
 
 def test_inconsistent_pass_claim_fails():
     verdict = verify_literacy_evidence(
-        make_record(**{"pass": True, "score": 0.2, "deterministicChecks": {"x": True}})
+        make_record(**{"pass": True, "score": 0.2})
     )
     assert verdict.verdict == "FAIL"
     assert verdict.mastery_eligible is False
-    assert any(str(PASS_SCORE_MIN) in e for e in verdict.errors)
+    assert any("score" in e for e in verdict.errors)
 
 
 def test_honest_fail_is_valid_envelope_but_not_mastery():
@@ -177,8 +105,14 @@ def test_honest_fail_is_valid_envelope_but_not_mastery():
         make_record(
             **{
                 "pass": False,
-                "score": 0.4,
-                "deterministicChecks": {"betterOutputChosen": False},
+                "score": 0.2,
+                "deterministicChecks": {
+                    "betterOutputId": False,
+                    "c-fontes": False,
+                    "c-limites": False,
+                    "noExtraCriteria": 0,
+                },
+                "answer": {"outputId": "out-a", "criterionIds": []},
             }
         )
     )
@@ -200,9 +134,64 @@ def test_application_activity_never_mastery_eligible():
             },
         )
     )
-    assert verdict.verdict == "PASS"
-    assert verdict.independent_pass is True
+    assert verdict.verdict == "FAIL"
+    assert verdict.independent_pass is False
     assert verdict.mastery_eligible is False
+
+
+def test_fabricated_checks_cannot_mint_independent_pass():
+    verdict = verify_literacy_evidence(
+        make_record(deterministicChecks={"fabricated": True})
+    )
+    assert verdict.verdict == "FAIL"
+    assert verdict.mastery_eligible is False
+    assert any("deterministicChecks" in error for error in verdict.errors)
+
+
+def test_altered_answer_is_recomputed_and_rejected():
+    verdict = verify_literacy_evidence(
+        make_record(answer={"outputId": "out-a", "criterionIds": []})
+    )
+    assert verdict.verdict == "FAIL"
+    assert verdict.mastery_eligible is False
+    assert {"deterministicChecks", "score", "pass"} <= {
+        field
+        for field in ("deterministicChecks", "score", "pass")
+        if any(field in error for error in verdict.errors)
+    }
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "message"),
+    [
+        ("lessonId", "l99", "canonical lesson"),
+        ("lessonVersion", 999, "lessonVersion"),
+        ("activityId", "l02-a99", "activityId"),
+        ("activityType", "choice", "activityType"),
+        ("skillIds", ["avaliar"], "skillIds"),
+    ],
+)
+def test_canonical_identity_mismatch_fails_closed(field, value, message):
+    verdict = verify_literacy_evidence(make_record(**{field: value}))
+    assert verdict.verdict == "FAIL"
+    assert verdict.mastery_eligible is False
+    assert any(message in error for error in verdict.errors)
+
+
+def test_prompt_builder_fails_closed_without_persisting_free_text():
+    record = make_record(
+        lessonId="l05",
+        lessonVersion=2,
+        activityId="l05-a1",
+        activityType="prompt_builder",
+        skillIds=["pedir"],
+        deterministicChecks={"objetivo": True},
+    )
+    record.pop("answer")
+    verdict = verify_literacy_evidence(record)
+    assert verdict.verdict == "FAIL"
+    assert verdict.mastery_eligible is False
+    assert any("free text" in error for error in verdict.errors)
 
 
 def test_free_text_in_checks_fails_closed():
@@ -311,69 +300,13 @@ def test_deterministic_types_match_shipped_evaluator_and_schema():
         assert invented not in DETERMINISTIC_ACTIVITY_TYPES
 
 
-@pytest.mark.parametrize("activity_type", sorted(TYPE_PASS_FIXTURES))
-def test_all_real_activity_types_pass_when_envelope_valid(activity_type: str):
-    fixture = TYPE_PASS_FIXTURES[activity_type]
-    verdict = verify_literacy_evidence(
-        make_record(
-            activityType=activity_type,
-            activityId=fixture["activityId"],
-            deterministicChecks=fixture["deterministicChecks"],
-            score=fixture["score"],
-            **{"pass": True},
-        )
-    )
-    assert verdict.verdict == "PASS", (activity_type, verdict.errors)
-    assert verdict.independent_pass is True
-    assert verdict.mastery_eligible is True
-    assert verdict.activity_type == activity_type
-    assert verdict.errors == ()
-
-
-@pytest.mark.parametrize("activity_type", sorted(TYPE_FAIL_FIXTURES))
-def test_real_activity_types_honest_fail_not_mastery(activity_type: str):
-    fixture = TYPE_FAIL_FIXTURES[activity_type]
-    verdict = verify_literacy_evidence(
-        make_record(
-            activityType=activity_type,
-            activityId=fixture["activityId"],
-            deterministicChecks=fixture["deterministicChecks"],
-            score=fixture["score"],
-            **{"pass": False},
-        )
-    )
-    assert verdict.verdict == "FAIL"
-    assert verdict.mastery_eligible is False
-    assert verdict.independent_pass is False
-    assert verdict.producer_pass_claim is False
-
-
 def test_invented_activity_type_fails_closed():
     verdict = verify_literacy_evidence(
         make_record(activityType="concept_match", **{"pass": True, "score": 1.0})
     )
     assert verdict.verdict == "FAIL"
     assert verdict.mastery_eligible is False
-    assert any("not independently re-judgeable" in e for e in verdict.errors)
-
-
-def test_cli_accepts_choice_and_rubric_review_fixtures(tmp_path: Path):
-    for activity_type in ("choice", "sort", "missing_context", "rubric_review"):
-        fixture = TYPE_PASS_FIXTURES[activity_type]
-        path = tmp_path / f"{activity_type}.json"
-        path.write_text(
-            json.dumps(
-                make_record(
-                    activityType=activity_type,
-                    activityId=fixture["activityId"],
-                    deterministicChecks=fixture["deterministicChecks"],
-                    score=fixture["score"],
-                    **{"pass": True},
-                )
-            ),
-            encoding="utf-8",
-        )
-        assert literacy_cli_main(["--evidence", str(path)]) == 0, activity_type
+    assert any("activityType" in e for e in verdict.errors)
 
 
 def test_stdin_bridge_emits_one_closed_digest_bound_receipt():

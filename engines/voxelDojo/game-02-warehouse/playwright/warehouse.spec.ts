@@ -46,6 +46,13 @@ test("boots the warehouse, plays L1 by clicking predicted shelves, emits a passi
   expect(first.scenario_id).toBe("kv-warehouse-L1")
   expect(first.game).toBe("KV WAREHOUSE")
   expect(first.pass).toBe(true)
+  expect(first.observations).toMatchObject({
+    kind: "warehouse-L1",
+    predictions: expect.arrayContaining([
+      expect.objectContaining({ key: expect.any(String), shelf: expect.any(Number) }),
+    ]),
+  })
+  expect(first.observations.predictions).toHaveLength(keyCount)
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
   await page.screenshot({ path: ".logs/smoke-L1-cleared.png" })
@@ -84,6 +91,11 @@ test("L3 TTL: correct decay-probes + swept prediction clear the wave and emit bo
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)
   expect(record?.metrics.expired_swept).toBe(keyCount)
+  expect(record?.observations).toMatchObject({
+    kind: "warehouse-L3",
+    predictedSwept: keyCount,
+  })
+  expect(record?.observations.probes).toHaveLength(keyCount)
 
   await page.screenshot({ path: ".logs/smoke-L3-cleared.png" })
 })

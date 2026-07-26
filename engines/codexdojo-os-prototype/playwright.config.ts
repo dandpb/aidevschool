@@ -4,6 +4,8 @@ export default defineConfig({
   testDir: './tests',
   outputDir: './test-results',
   retries: 0,
+  // ponytail: shared fixed-port engine servers require serial specs; use per-worker ports before raising this.
+  workers: 1,
   use: {
     baseURL: 'http://127.0.0.1:4174',
     screenshot: 'only-on-failure',

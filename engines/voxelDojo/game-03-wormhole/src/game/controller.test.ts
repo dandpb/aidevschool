@@ -27,6 +27,13 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       project: "03_url_shortener",
       scenario_id: "wormhole-L1",
       pass: true,
+      observations: {
+        kind: "wormhole-L1",
+        predictions: game.snapshot.urls.map((url) => ({
+          url,
+          predictedCode: hashTruncCode(url),
+        })),
+      },
     })
     spy.mockRestore()
   })
@@ -42,7 +49,17 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     }
     expect(game.snapshot.phase).toBe("cleared")
     const records = evidenceLines(spy).map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-    expect(records[0]).toMatchObject({ scenario_id: "wormhole-L2", pass: true })
+    expect(records[0]).toMatchObject({
+      scenario_id: "wormhole-L2",
+      pass: true,
+      observations: {
+        kind: "wormhole-L2",
+        predictions: [...game.snapshot.map].map(([code, entry]) => ({
+          code,
+          predictedUrl: entry.url,
+        })),
+      },
+    })
     spy.mockRestore()
   })
 
@@ -59,7 +76,20 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     }
     expect(game.snapshot.phase).toBe("cleared")
     const records = evidenceLines(spy).map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
-    expect(records[0]).toMatchObject({ scenario_id: "wormhole-L3", pass: true })
+    expect(records[0]).toMatchObject({
+      scenario_id: "wormhole-L3",
+      pass: true,
+      observations: {
+        kind: "wormhole-L3",
+        predictions: game.snapshot.collisionPredictions.map(({ url, predictedCollision }) => ({
+          url,
+          predictedCollision,
+        })),
+      },
+    })
+    const predictions = records[0].observations.predictions as Array<Record<string, unknown>>
+    expect(predictions).toHaveLength(6)
+    expect(predictions.every((prediction) => !("actualCollision" in prediction))).toBe(true)
     spy.mockRestore()
   })
 
@@ -76,6 +106,11 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       scenario_id: "wormhole-L4",
       pass: true,
       metrics: { resolution_chosen: "salted", resolved_unique: true },
+      observations: {
+        kind: "wormhole-L4",
+        colliderUrl: game.colliderUrl(),
+        chosenResolution: "salted",
+      },
     })
     spy.mockRestore()
   })

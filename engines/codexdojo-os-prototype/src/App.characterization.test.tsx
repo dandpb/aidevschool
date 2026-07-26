@@ -1,14 +1,69 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
-import DesktopApp from './desktop/DesktopApp'
+import App from './App'
+import { createServices } from './app/createServices'
+import type { NavigationPort, OsPath } from './app/routes'
+import type { OsProgress } from './progress/domain'
 
-afterEach(cleanup)
+afterEach(() => {
+  cleanup()
+  window.history.replaceState(null, '', '/')
+})
 
-describe('codexDojo OS current behavior', () => {
-  it('mounts the default desktop with Dojo and Learn Mode visible', () => {
+function navigationAt(initialPath: string): NavigationPort {
+  let path = initialPath
+  const listeners = new Set<(nextPath: string) => void>()
+  const update = (nextPath: OsPath) => {
+    path = nextPath
+    for (const listener of listeners) listener(path)
+  }
+  return {
+    currentPath: () => path,
+    push: update,
+    replace: update,
+    subscribe(listener) {
+      listeners.add(listener)
+      return () => listeners.delete(listener)
+    },
+  }
+}
+
+function renderJourneyAt(path = '/') {
+  let saved: OsProgress | null = null
+  const services = createServices({
+    navigation: navigationAt(path),
+    progress: {
+      load: async () => saved,
+      save: async (progress) => {
+        saved = progress
+      },
+      reset: async () => {
+        saved = null
+      },
+    },
+  })
+  return render(<App services={services} />)
+}
+
+function renderDesktopRoute() {
+  window.history.replaceState(null, '', '/desktop')
+  return render(<App />)
+}
+
+describe('codexDojo OS release behavior', () => {
+  it('mounts the mission-first journey at the default production entry', async () => {
+    renderJourneyAt()
+
+    expect(
+      await screen.findByRole('heading', { name: 'O que você quer conseguir fazer com IA?' }),
+    ).toBeTruthy()
+    expect(screen.queryByRole('region', { name: 'Área de trabalho' })).toBeNull()
+  })
+
+  it('keeps the desktop with Dojo and Learn Mode visible at /desktop', () => {
     // Given
-    render(<DesktopApp />)
+    renderDesktopRoute()
 
     // When
     const workspace = screen.getByRole('region', { name: 'Área de trabalho' })
@@ -22,7 +77,7 @@ describe('codexDojo OS current behavior', () => {
   it('opens Terminal and completes the learn-process interaction', async () => {
     // Given
     const user = userEvent.setup()
-    render(<DesktopApp />)
+    renderDesktopRoute()
 
     // When
     const terminalButtons = screen.getAllByRole('button', { name: 'Terminal' })
@@ -41,7 +96,7 @@ describe('codexDojo OS current behavior', () => {
   it('filters launcher apps by a user query and launches the result', async () => {
     // Given
     const user = userEvent.setup()
-    render(<DesktopApp />)
+    renderDesktopRoute()
 
     // When
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
@@ -58,7 +113,7 @@ describe('codexDojo OS current behavior', () => {
   it('closes the launcher when the backdrop is pressed', async () => {
     // Given
     const user = userEvent.setup()
-    render(<DesktopApp />)
+    renderDesktopRoute()
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
 
     // When

@@ -85,7 +85,7 @@ class TestConfig(unittest.TestCase):
     def test_no_overrides_uses_container_ports_for_all(self):
         cfg = make_cfg(host_ports={})
         self.assertEqual(
-            [cfg.host_port(l) for l in ("go", "rust", "node")], [8080, 8082, 8081]
+            [cfg.host_port(lang) for lang in ("go", "rust", "node")], [8080, 8082, 8081]
         )
 
     def test_container_name(self):
