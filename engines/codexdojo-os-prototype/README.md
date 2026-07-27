@@ -6,8 +6,15 @@ fundamentals lab.
 ## Run the OS
 
 Use Node.js 20.19+ or 22.12+. The current lock file uses Vite 8.1.4.
+The integrated verification bridge also needs the root Python runtime. Prepare
+it once and keep the virtual environment active when running local checks:
 
 ```bash
+cd ../..
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+cd engines/codexdojo-os-prototype
 npm install
 npm run dev
 ```

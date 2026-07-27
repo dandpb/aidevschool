@@ -53,8 +53,10 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Público | Entrada | Limite atual |
 | --- | --- | --- |
 | Pessoa não técnica | [LiteracyDojo](../engines/literacyDojo/README.md) + [conteúdo AI Literacy](../curriculum/ai-literacy/README.md) | O currículo ligado mantém o status do conteúdo; o README do engine mantém o status de implementação e release. |
+| Pessoa não técnica, tutoria em chat | [`aiDevschoolMvp`](../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Skill instalável C01–C24; validação `--check` é read-only, instalação cria estado e revisão recorrente. |
 | Pessoa não técnica, exploração | [miniTown](../engines/miniTown/README.md) | Superfície local de exploração; não contém as microlições e não marca domínio. |
 | Programador | [Currículo de programação](../curriculum/catalog.md) + [codexDojo](../engines/codexDojo/README.md) | Projetos 01–18; status e evidência variam por projeto. |
+| Programador, missão diária | [dojoToday](../engines/dojoToday/README.md) | Projeção read-only do scheduler, streak e gate; não avalia nem promove domínio. |
 | Contribuidor | [Handbook](handbook/README.md) + [AGENTS.md](../AGENTS.md) | Setup e comandos continuam locais a cada engine. |
 
 ### Comece pelo objetivo
@@ -103,7 +105,9 @@ engine.
 | Superfície | Entrada local | Visão do handbook |
 | --- | --- | --- |
 | Microlições de IA | [`engines/literacyDojo/README.md`](../engines/literacyDojo/README.md) | [LiteracyDojo](handbook/12_engine_literacyDojo.md) |
+| Tutoria AI Literacy instalável | [`engines/aiDevschoolMvp/aidevschool/SKILL.md`](../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Contrato local da skill e scripts determinísticos. |
 | Exploração Nível 0 | [`engines/miniTown/README.md`](../engines/miniTown/README.md) | [miniTown](handbook/11_engine_miniTown.md) |
+| Missão diária do programador | [`engines/dojoToday/README.md`](../engines/dojoToday/README.md) | Projeção local do learner substrate. |
 | Dashboard | [`engines/codexDojo/README.md`](../engines/codexDojo/README.md) | [codexDojo](handbook/03_engine_codexDojo.md) |
 | OS educacional | [`engines/codexdojo-os-prototype/README.md`](../engines/codexdojo-os-prototype/README.md) | [codexdojo OS](handbook/03b_engine_codexdojo-os-prototype.md) |
 | Jogo 2D | [`engines/pixelDojo/README.md`](../engines/pixelDojo/README.md) | [pixelDojo](handbook/04_engine_pixelDojo.md) |

@@ -1,5 +1,5 @@
 import http from 'node:http';
-import { createLogger } from './logger';
+import { createLogger } from './logger.js';
 import { WebSocketServer, type WebSocket } from 'ws';
 import { ChatHub } from './chatHub.js';
 import type { ServerConfig } from './config.js';

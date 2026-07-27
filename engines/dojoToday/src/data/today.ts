@@ -1,10 +1,10 @@
 // AUTO-GERADO por learner/substrate/adapters/dojotoday.py — NÃO EDITAR À MÃO.
 // Fonte: learner/learning_state.yaml + scheduler learner.substrate.scheduling.
-// Regenerado em 2026-07-25.
+// Regenerado em 2026-07-27.
 import type { TodaySnapshot } from "../types";
 
 export const today: TodaySnapshot = {
-  "asOf": "2026-07-25",
+  "asOf": "2026-07-27",
   "streak": {
     "current": 0,
     "longest": 1,
@@ -26,7 +26,7 @@ export const today: TodaySnapshot = {
     {
       "unitId": "U0-sonda-rate-limiter-robustness",
       "title": "GATEKEEPER: token-bucket rate limiter robustness",
-      "dueIn": "overdue 16d",
+      "dueIn": "overdue 18d",
       "reason": "overdue",
       "gameDir": "engines/pixelDojo",
       "project": "01_rate_limiter"

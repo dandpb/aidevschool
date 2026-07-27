@@ -73,8 +73,9 @@ test('opens every voxelDojo catalog experience inside the OS', async ({ page }, 
 
   for (const game of voxelCatalog) {
     await picker.selectOption(game.id)
-    const frame = page.frameLocator(`iframe[title="voxelDojo · ${game.name} integrado"]`)
-    await expect(frame.locator('canvas')).toBeVisible({ timeout: 15_000 })
+    const iframe = page.locator(`iframe[title="voxelDojo · ${game.name} integrado"]`)
+    await expect(iframe).toHaveAttribute('src', game.developmentUrl)
+    await expect(iframe.contentFrame().locator('canvas')).toBeVisible({ timeout: 15_000 })
   }
 })
 
