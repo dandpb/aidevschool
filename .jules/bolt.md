@@ -13,3 +13,6 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+## 2026-07-27 - Replace O(N) array search with O(1) Map lookup
+**Learning:** Calling `.findIndex()` or `.find()` on static dataset arrays like `cycleStages` inside highly frequent functions (like Redux reducers, state updates, or render loops) introduces O(N) operations per call. Even for small N, this causes unnecessary performance regressions on constrained devices.
+**Action:** Pre-compute a `Map` storing IDs as keys and element indices (or the elements themselves) as values during module initialization, providing predictable O(1) lookups that can safely default to -1 or undefined.
