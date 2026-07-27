@@ -176,7 +176,7 @@ export class PluginHost {
   }
 
   private contextFor(record: PluginRecord): HostContext {
-    return { hostApiVersion: this.hostApiVersion, pluginId: record.id, logger: this.logger.child(), capabilityClient: { use: (name) => this.useCapability(record.id, name) } };
+    return { hostApiVersion: this.hostApiVersion, pluginId: record.id, logger: this.logger.child({ pluginId: record.id }), capabilityClient: { use: (name) => this.useCapability(record.id, name) } };
   }
 
   private requirePlugin(pluginId: string): PluginRecord {

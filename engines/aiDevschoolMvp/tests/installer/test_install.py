@@ -247,17 +247,14 @@ def test_scheduler_registration_includes_an_explicit_review_payload(platform):
         assert create[:3] == ["hermes", "cron", "create"]
         assert "--skill" in create
         assert "aidevschool" in create
+        assert create[create.index("--deliver") + 1] == "all"
     assert any("schedule.py" in argument for argument in create)
 
 
-def test_allowlist_requires_an_exact_skill_name():
-    calls = []
-
+def test_skill_discovery_requires_an_exact_skill_name():
     def runner(cmd, **_kwargs):
-        calls.append(cmd)
-        stdout = "my-aidevschool-backup\n" if cmd[-2:] == ["skills", "list"] else ""
+        stdout = "my-aidevschool-backup\n"
         return subprocess.CompletedProcess(cmd, 0, stdout, "")
 
-    installer.add_allowlist("openclaw", runner)
-
-    assert ["openclaw", "skills", "allow", "aidevschool"] in calls
+    with pytest.raises(installer.InstallError, match="did not discover"):
+        installer.verify_skill_available("openclaw", runner)

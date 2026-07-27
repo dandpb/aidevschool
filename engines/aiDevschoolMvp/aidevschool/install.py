@@ -161,7 +161,11 @@ def _lists_entry(output: str, name: str) -> bool:
     ) is not None
 
 
-def register_scheduler(platform: str, runner: Runner = subprocess.run) -> None:
+def register_scheduler(
+    platform: str,
+    runner: Runner = subprocess.run,
+    deliver: str = "all",
+) -> None:
     review_prompt = (
         "Use the aidevschool skill to process scheduled reviews. "
         "Call schedule.py first and notify the learner only when a review is due."
@@ -179,6 +183,7 @@ def register_scheduler(platform: str, runner: Runner = subprocess.run) -> None:
         cmd = [
             "hermes", "cron", "create", "30m", review_prompt,
             "--name", job_name, "--skill", "aidevschool",
+            "--deliver", deliver,
         ]
     listed = _run([cli, "cron", "list"], runner)
     if _lists_entry(listed.stdout, job_name):
@@ -189,15 +194,16 @@ def register_scheduler(platform: str, runner: Runner = subprocess.run) -> None:
     print("[aidevschool] scheduler registered ... OK")
 
 
-def add_allowlist(platform: str, runner: Runner = subprocess.run) -> None:
-    """Add 'aidevschool' to the agent's skill allowlist. Idempotent: checks first."""
+def verify_skill_available(platform: str, runner: Runner = subprocess.run) -> None:
+    """Fail closed when the platform does not discover the copied local skill."""
     cli = "openclaw" if platform == "openclaw" else "hermes"
     listed = _run([cli, "skills", "list"], runner)
-    if _lists_entry(listed.stdout, "aidevschool"):
-        print("[aidevschool] allowlist: aidevschool already present (idempotent skip)")
-        return
-    _run([cli, "skills", "allow", "aidevschool"], runner)
-    print("[aidevschool] allowlist: aidevschool added ... OK")
+    if not _lists_entry(listed.stdout, "aidevschool"):
+        raise InstallError(
+            f"{cli} did not discover the copied aidevschool skill; "
+            f"inspect it with '{cli} skills list'"
+        )
+    print("[aidevschool] skill discovery ... OK")
 
 
 def install(
@@ -205,6 +211,7 @@ def install(
     environ: dict[str, str] | os._Environ[str] = os.environ,
     home: Path | None = None,
     runner: Runner = subprocess.run,
+    deliver: str = "all",
 ) -> None:
     detected = detect_platform(environ, home)
     if detected is None:
@@ -213,9 +220,9 @@ def install(
     print(f"[aidevschool] platform detected: {platform}")
     skill_dest, state_dir = _platform_paths(platform, root)
     place_skill(skill_src, skill_dest)
+    verify_skill_available(platform, runner)
     create_state_dir(state_dir, skill_dest, skill_src / "config.json", platform)
-    register_scheduler(platform, runner)
-    add_allowlist(platform, runner)
+    register_scheduler(platform, runner, deliver)
     print("[aidevschool] install complete (re-run any time; every step is idempotent)")
     print("Next steps: send 'start' -> the tutor opens concept C01.")
 
@@ -237,6 +244,11 @@ def main(argv: list[str] | None = None) -> None:
         action="store_true",
         help="validate curriculum and manifests without changing the platform",
     )
+    parser.add_argument(
+        "--deliver",
+        default="all",
+        help="Hermes cron delivery target (default: all connected home channels)",
+    )
     args = parser.parse_args(sys.argv[1:] if argv is None else argv)
     skill_src = args.skill_src.resolve()
 
@@ -248,7 +260,7 @@ def main(argv: list[str] | None = None) -> None:
         if args.check:
             print("[aidevschool] --check: validation passed (no changes)")
             return
-        install(skill_src)
+        install(skill_src, deliver=args.deliver)
     except (InstallError, OSError, ValueError, json.JSONDecodeError) as exc:
         sys.stderr.write(f"[aidevschool] install failed: {exc}.\n")
         raise SystemExit(1) from exc

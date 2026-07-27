@@ -76,6 +76,10 @@ source .venv/bin/activate
 python -m pytest -q
 ```
 
+O script exige `uv`, cria `.venv`, instala o pacote raiz com extras de teste,
+regenera as projeções e prepara CodexDojo/PixelDojo com pnpm `9.15.9`. Ele não
+instala todos os engines; use os comandos locais abaixo conforme necessário.
+
 A raiz não é um workspace Node e não contém `package.json`. Não execute
 `npm install` ou `pnpm install` nela; instale cada engine no próprio diretório.
 
@@ -102,15 +106,15 @@ Use o gerenciador indicado pelo lockfile:
 
 ```bash
 # apps npm
-cd engines/codexdojo-os-prototype && npm ci
-cd engines/literacyDojo && npm ci
-cd engines/dojoToday && npm ci
+(cd engines/codexdojo-os-prototype && npm ci)
+(cd engines/literacyDojo && npm ci)
+(cd engines/dojoToday && npm ci)
 
 # workspaces pnpm
-cd engines/codexDojo && pnpm install --frozen-lockfile
-cd engines/pixelDojo && pnpm install --frozen-lockfile
-cd engines/voxelDojo && pnpm install --frozen-lockfile
-cd engines/miniTown && pnpm install --frozen-lockfile
+(cd engines/codexDojo && pnpm install --frozen-lockfile)
+(cd engines/pixelDojo && pnpm install --frozen-lockfile)
+(cd engines/voxelDojo && pnpm install --frozen-lockfile)
+(cd engines/miniTown && pnpm install --frozen-lockfile)
 ```
 
 Para desenvolvimento cotidiano, `npm install`/`pnpm install` é aceitável quando a
@@ -374,11 +378,16 @@ python -m pytest -q engines/aiDevschoolMvp/tests
 ```
 
 A instalação real copia skill/runtime, cria estado e registra revisão recorrente
-na plataforma detectada:
+na plataforma detectada. No Hermes, o destino é explícito; `all` entrega em todos
+os home channels conectados:
 
 ```bash
-python -m engines.aiDevschoolMvp.aidevschool.install
+python -m engines.aiDevschoolMvp.aidevschool.install --deliver all
 ```
+
+Substitua `all` por `telegram`, `discord`, `local` ou um destino específico como
+`telegram:<chat_id>` quando quiser restringir a entrega. O OpenClaw ignora essa
+opção e usa sua entrega `--announce` própria.
 
 Só rode a instalação após revisar os efeitos. Depois, confirme:
 

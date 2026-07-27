@@ -124,7 +124,7 @@ engine.
 | ADRs | [`docs/design/adr/`](design/adr/) | Decisões pontuais; são históricos imutáveis depois de aceitos. |
 | Designs ativos | [`docs/design/`](design/) | Contratos e propostas com escopo explícito. |
 | Visão do produto | [`docs/VISION.md`](VISION.md) | Intenção dual-audience; validar status nos contratos e engines ligados. |
-| Auditorias e análises | [`docs/TECH_DEBT_AUDIT_2026-07-08.md`](TECH_DEBT_AUDIT_2026-07-08.md) e relatórios datados | Evidência de um recorte temporal; não é guia operacional permanente. |
+| Auditorias e análises | [Auditoria cross-engine de 2026-07-27](AUDIT_2026-07-27.md), [`TECH_DEBT_AUDIT_2026-07-08.md`](TECH_DEBT_AUDIT_2026-07-08.md) e relatórios datados | Evidência de um recorte temporal; não é guia operacional permanente. |
 | Arquivo | [`docs/archive/`](archive/) | Contexto histórico; não usar como instrução atual. |
 | Prompts e ideias | [`docs/PROMPTS/`](PROMPTS/) | Material de intenção e descoberta; validar contra fontes ativas antes de implementar. |
 
