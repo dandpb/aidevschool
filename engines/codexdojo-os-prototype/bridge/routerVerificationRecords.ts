@@ -1,17 +1,21 @@
 export const literacyRecord = {
   schemaVersion: 1,
-  source: 'literacydojo',
-  attemptId: 'attempt-1',
-  lessonId: 'l02',
+  source: "literacydojo",
+  attemptId: "attempt-1",
+  lessonId: "l02",
   lessonVersion: 3,
-  activityId: 'l02-a1',
-  activityType: 'output_comparison',
-  skillIds: ['avaliar'],
-  deterministicChecks: { confidence: 1e-7, better: true },
-  score: 1,
+  activityId: "l02-a1",
+  activityType: "output_comparison",
+  skillIds: ["avaliar"],
+  deterministicChecks: { betterOutputId: true, c3: true, noExtraCriteria: 0 },
+  score: 1.0,
   pass: true,
-  timestamp: '2026-07-25T12:00:00.000Z',
+  timestamp: "2026-07-25T12:00:00.000Z",
   verifierRequired: true,
+  answer: {
+    outputId: "better_output",
+    criterionIds: ["c3"],
+  },
 }
 
 export function literacyReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
