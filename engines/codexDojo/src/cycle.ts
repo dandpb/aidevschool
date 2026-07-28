@@ -12,8 +12,21 @@ type CycleSnapshot = {
   readonly completedStageIds: readonly string[]
 }
 
+// ⚡ Bolt: Pre-compute maps for O(1) lookups instead of O(n) array scans during renders
+const stageIndicesById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage !== undefined) {
+    stageIndicesById.set(stage.id, i)
+  }
+}
+
+export function getCycleStageIndex(stageId: string): number {
+  return stageIndicesById.get(stageId) ?? -1
+}
+
 export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === snapshot.selectedStageId)
+  const selectedIndex = getCycleStageIndex(snapshot.selectedStageId)
   const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
   const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
 
