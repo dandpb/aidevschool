@@ -70,6 +70,7 @@ describe('verification bridge dispatch', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
+      evidence_digest: '58e46ca9a59b3664fbf063c24ca77ddf57c45749cd596b3953dd0a699e68575f',
       source: 'independent-teaching-game-verifier',
       verdict: 'PASS',
       unit_id: 'U2-key-value-store',
@@ -80,9 +81,9 @@ describe('verification bridge dispatch', () => {
   })
 
   it.each([
-    ['WORMHOLE', wormholeRecord],
-    ['RELAY STATION', relayRecord],
-  ])('dispatches %s evidence through the same fixed teaching-game process', async (_, record) => {
+    ['WORMHOLE', wormholeRecord, '3c31c21fba14ac614b54e820ea0f85b60708cdf90eefee56d65604c4887ba7d5'],
+    ['RELAY STATION', relayRecord, '5d2867853d07625411eebc8e7c0719f8c572f3ca77586e4b20c938077c6b4ff8'],
+  ] as const)('dispatches %s evidence through the same fixed teaching-game process', async (_, record, digest) => {
     const response = await routeBridgeRequest({
       method: 'POST',
       pathname: '/__dojo/bridge/v1/verification',
@@ -95,6 +96,7 @@ describe('verification bridge dispatch', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
+      evidence_digest: digest,
       source: 'independent-teaching-game-verifier',
       verdict: 'PASS',
       unit_id: record.unit_id,
