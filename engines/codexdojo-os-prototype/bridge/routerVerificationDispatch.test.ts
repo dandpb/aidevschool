@@ -23,7 +23,7 @@ describe('verification bridge dispatch', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
-      evidence_digest: '4221135d8b71e173858171050381fd38b7843621778c38f7cd84bd3c951e6248',
+      evidence_digest: '7a8ce7a60bb9fbf95140be49b4160c6e9055ac42c1f2967c94de622eadd862f4',
       lesson_id: 'l02',
       producer_pass_claim: true,
     })
