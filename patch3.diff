@@ -1,0 +1,11 @@
+--- engines/codexdojo-os-prototype/bridge/routerVerificationRecords.ts
++++ engines/codexdojo-os-prototype/bridge/routerVerificationRecords.ts
+@@ -41,7 +41,7 @@
+   metrics: {
+     kind: 'voxeldoj-kv-warehouse',
+     shelf_predictions: 12,
+-    shelf_prediction_accuracy: 1,
++    shelf_prediction_accuracy: 1.0,
+   },
+   observations: {
+     kind: 'warehouse-L1',

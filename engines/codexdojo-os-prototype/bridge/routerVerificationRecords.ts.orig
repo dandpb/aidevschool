@@ -46,7 +46,7 @@ export const teachingGameRecord = {
   metrics: {
     kind: 'voxeldoj-kv-warehouse',
     shelf_predictions: 12,
-    shelf_prediction_accuracy: 1.0,
+    shelf_prediction_accuracy: 1,
   },
   observations: {
     kind: 'warehouse-L1',
