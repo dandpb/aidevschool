@@ -83,7 +83,6 @@ export function renderOverview(state: AppState): string {
         <ul>
           ${model.currentProject.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
-        <button class="inline-link" type="button" data-project="${escapeHtml(model.currentProject.id)}" aria-label="Abrir briefing: ${escapeHtml(model.currentProject.title)}">Abrir briefing</button>
       </article>
 
       <article class="metric-strip">
