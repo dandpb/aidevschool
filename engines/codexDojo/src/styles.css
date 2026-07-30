@@ -77,6 +77,34 @@ button {
 }
 
 /* ============================================================
+   Accessibility
+   ============================================================ */
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--brass);
+  color: var(--ink);
+  font-weight: bold;
+  z-index: 9999;
+  text-decoration: none;
+  transition: top 0.2s ease;
+  border-radius: 0 0 var(--radius) 0;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: none;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+/* ============================================================
    Sidebar
    ============================================================ */
 
