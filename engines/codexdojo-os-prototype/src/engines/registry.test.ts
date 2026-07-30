@@ -75,12 +75,7 @@ describe('embedded engine URL boundary', () => {
     const developmentFallback = 'http://127.0.0.1:9999/'
 
     // When
-    const result = resolveEngineUrl(
-      configured,
-      developmentFallback,
-      false,
-      'http://127.0.0.1:4174',
-    )
+    const result = resolveEngineUrl(configured, developmentFallback, false, 'http://127.0.0.1:4174')
 
     // Then
     expect(result).toEqual({ kind: 'ready', url: expected })

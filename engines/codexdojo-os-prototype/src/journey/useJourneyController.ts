@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useReducer } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { encodeRoute, parseRoute } from '../app/routes'
+import { useServices } from '../app/ServicesProvider'
 import type { MissionDefinition } from '../domain'
-import { migrateOsProgress } from '../progress/migration'
 import {
+  completeOnboarding,
   type MissionStartOptions,
   type OnboardingInput,
-  completeOnboarding,
   recommendTrack,
   recordMissionCompletion,
   startMission,
   switchTrack,
 } from '../progress/domain'
-import { useServices } from '../app/ServicesProvider'
+import { migrateOsProgress } from '../progress/migration'
 import { journeyReducer } from './journeyReducer'
 
 export function useJourneyController() {
@@ -33,10 +33,7 @@ export function useJourneyController() {
     void (async () => {
       try {
         const rawProgress = await services.progress.load()
-        const migration = migrateOsProgress(
-          rawProgress,
-          services.missions.snapshot(),
-        )
+        const migration = migrateOsProgress(rawProgress, services.missions.snapshot())
         if (migration.kind === 'reset') await services.progress.save(migration.progress)
         if (ignore) return
         let route = parseRoute(services.navigation.currentPath())
@@ -119,7 +116,9 @@ export function useJourneyController() {
           context: { trackId: mission.trackId, missionId: mission.id },
         })
       }
-      services.navigation.push(encodeRoute({ kind: 'mission', trackId: mission.trackId, missionId: mission.id }))
+      services.navigation.push(
+        encodeRoute({ kind: 'mission', trackId: mission.trackId, missionId: mission.id }),
+      )
     },
     [saveProgress, services, state],
   )
@@ -135,7 +134,9 @@ export function useJourneyController() {
         { now: services.clock() },
       )
       await saveProgress(completed)
-      const previousAchievements = new Set(state.progress.achievements.map((achievement) => achievement.id))
+      const previousAchievements = new Set(
+        state.progress.achievements.map((achievement) => achievement.id),
+      )
       return {
         xpAwarded: completed.xp - state.progress.xp,
         totalXp: completed.xp,

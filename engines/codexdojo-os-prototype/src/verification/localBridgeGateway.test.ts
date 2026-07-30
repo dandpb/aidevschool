@@ -31,9 +31,9 @@ const receipt = {
 
 describe('LocalBridgeGateway', () => {
   it('reuses the shared token provider and never sends a browser digest', async () => {
-    const fetcher = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({ receipt }), { status: 200 }),
-    )
+    const fetcher = vi
+      .fn()
+      .mockResolvedValue(new Response(JSON.stringify({ receipt }), { status: 200 }))
     const getToken = vi.fn().mockResolvedValue('token')
     const gateway = new LocalBridgeGateway(fetcher, getToken)
 
@@ -50,7 +50,9 @@ describe('LocalBridgeGateway', () => {
   it('retries bounded bridge-busy responses before reporting unavailability', async () => {
     const fetcher = vi
       .fn()
-      .mockResolvedValueOnce(new Response(JSON.stringify({ error: 'bridge-busy' }), { status: 429 }))
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ error: 'bridge-busy' }), { status: 429 }),
+      )
       .mockResolvedValueOnce(new Response(JSON.stringify({ receipt }), { status: 200 }))
     const gateway = new LocalBridgeGateway(fetcher, async () => 'token')
 
@@ -60,9 +62,12 @@ describe('LocalBridgeGateway', () => {
 
   it('rejects a non-lowercase SHA-256 receipt at the browser trust boundary', async () => {
     const fetcher = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({
-        receipt: { ...receipt, evidence_digest: 'A'.repeat(64) },
-      }), { status: 200 }),
+      new Response(
+        JSON.stringify({
+          receipt: { ...receipt, evidence_digest: 'A'.repeat(64) },
+        }),
+        { status: 200 },
+      ),
     )
     const gateway = new LocalBridgeGateway(fetcher, async () => 'token')
 
@@ -70,9 +75,11 @@ describe('LocalBridgeGateway', () => {
   })
 
   it('surfaces bridge 4xx validation rejection separately from unavailability', async () => {
-    const fetcher = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify({ error: 'invalid-verifier-response' }), { status: 422 }),
-    )
+    const fetcher = vi
+      .fn()
+      .mockResolvedValue(
+        new Response(JSON.stringify({ error: 'invalid-verifier-response' }), { status: 422 }),
+      )
     const gateway = new LocalBridgeGateway(fetcher, async () => 'token')
 
     await expect(gateway.verify(evidence)).rejects.toMatchObject({
