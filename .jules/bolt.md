@@ -13,3 +13,6 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+## 2025-02-12 - Update Test Mocks When Refactoring Data Modules
+**Learning:** In codexDojo, modules containing static array datasets (like `engines/codexDojo/src/data/cycle.ts`) are frequently mocked in coverage tests (like `escapeCoverage.test.ts`). When adding new exported variables to these data modules—such as a pre-computed `Map` for O(1) lookups—failing to update the `vi.mock()` return object inside the tests will cause immediate runtime crashes due to undefined exports.
+**Action:** Whenever introducing new exports (e.g., `cycleStageIndices`) to a module known to be mocked in `escapeCoverage.test.ts`, always search for and update the corresponding `vi.mock(...)` block to ensure tests run smoothly.

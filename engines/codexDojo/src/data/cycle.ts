@@ -3,6 +3,9 @@
 
 import type { CycleStage, Metric } from "../domain"
 
+// ⚡ Bolt: Pre-compute stage indices to a Map for O(1) lookups during state transitions
+export const cycleStageIndices = new Map<string, number>()
+
 export const cycleStages: readonly CycleStage[] = [
   {
     id: "diagnosticar",
@@ -75,6 +78,13 @@ export const cycleStages: readonly CycleStage[] = [
     output: "journal e próxima revisão",
   },
 ]
+
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) {
+    cycleStageIndices.set(stage.id, i)
+  }
+}
 
 export const metrics: readonly Metric[] = [
   {
