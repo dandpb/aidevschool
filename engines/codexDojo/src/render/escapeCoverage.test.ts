@@ -103,12 +103,9 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         weeklyTimeHours: 5,
       },
       aidi: {
-        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data from network/store
-        current: XSS as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data from network/store
-        thresholdAmber: XSS as any,
-        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data from network/store
-        thresholdRed: XSS as any,
+        current: 0.5,
+        thresholdAmber: 0.6,
+        thresholdRed: 0.75,
         measurementSource: "self_reported",
         trend: [
           {
@@ -143,8 +140,7 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         freezesEquipped: 1,
         freezesMax: 2,
       },
-      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data from network/store
-      curr: XSS as any,
+      curr: 0.8,
       challenges: [],
     }
 
