@@ -1884,8 +1884,7 @@ button:focus-visible,
 
 .skip-link:focus {
   top: 0;
-  outline: 2px solid var(--paper);
-  outline-offset: 2px;
+  outline: none;
 }
 
 #main-content:focus {
