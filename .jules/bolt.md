@@ -16,3 +16,15 @@
 ## 2025-02-12 - Prevent O(n) array scans in renders by using pre-computed Maps
 **Learning:** In string-template applications like codexDojo, using `Array.findIndex()` or `Array.find()` on static arrays (like cycleStages) inside render cycles and state transitions causes unnecessary O(n) lookups that can degrade UI responsiveness when invoked frequently.
 **Action:** When finding elements in static arrays during rendering or state transitions, pre-compute a Map of IDs to indices or entities during module initialization. This provides O(1) cache lookups, reducing O(n) scans.
+
+## 2026-07-26 - Test Dates in CI Runners
+**Learning:** Date-related tests that compare localized boundary limits (like `T23:30:00-03:00` transitioning to `T08:00:00-03:00`) can fail unpredictably when the CI runner operates in UTC instead of the intended timezone.
+**Action:** When writing tests involving dates and local calendar calculations (e.g., verifying streaks), use noon UTC timestamps (e.g., `T12:00:00Z`) instead of timezone offsets (e.g., `-03:00`) to prevent tests from failing on CI runners executing in UTC.
+
+## 2026-07-26 - Test Dates in CI Runners
+**Learning:** Date-related tests that compare localized boundary limits (like `T23:30:00-03:00` transitioning to `T08:00:00-03:00`) can fail unpredictably when the CI runner operates in UTC instead of the intended timezone.
+**Action:** When writing tests involving dates and local calendar calculations (e.g., verifying streaks), use noon UTC timestamps (e.g., `T12:00:00Z`) instead of timezone offsets (e.g., `-03:00`) to prevent tests from failing on CI runners executing in UTC.
+
+## 2026-07-26 - Run dependencies before python Bridge testing
+**Learning:** Python bridge processes spawned by node tests (via `processRunner`) require `fsrs` and `pyyaml` when importing their curriculum validation components. If not installed in the workspace, python subprocesses crash and node tests fail with generic 422s.
+**Action:** To run or test Python verification bridge processes (like `learner.gate.literacy_bridge`) locally in the `aidevschool` project, the required Python dependencies (such as `pyyaml` and `fsrs`) must be installed by executing `python3 -m pip install -e .` from the repository root.

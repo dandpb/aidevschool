@@ -1,0 +1,5 @@
+
+## 2026-07-26 - Bridge Verification Payloads vs Canonical Schemas
+**Vulnerability:** The typescript prototype's mocked verification payload for Python Bridge (`routerVerificationRecords.ts`) did not match the python application's actual canonical schema required by the specific lesson's YAML data structure, causing isolated verifiers to reject correctly signed evidence tests and causing CI verification dispatch tests to fail with a 422 mismatch.
+**Learning:** Python bridge verifiers perform deterministic re-evaluations and structural validation matching the exact `deterministicChecks` specified in the corresponding curriculum module configuration. Out of date mocks or partial data triggers an immediate rejection.
+**Prevention:** In `engines/codexdojo-os-prototype`, when mocking evidence records for python verification bridge tests (e.g., `literacyRecord`), the mock data must strictly align with the canonical lesson structure defined in the `curriculum` YAML files (such as exact `deterministicChecks` fields and validation payload structures) to prevent the isolated verifier subprocesses from rejecting the payload with a 422 error.
