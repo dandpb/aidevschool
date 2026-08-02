@@ -99,14 +99,18 @@ describe('initial mission recommendation', () => {
       dueIn: 'today',
     }
 
-    expect(recommendMission(onboarded, catalog, {
-      learner: { ...learnerSnapshot, nextReviews: [{ ...review, reason: 'due' }] },
-    })).toMatchObject({ kind: 'review', reason: 'due', missionId: 'l02' })
+    expect(
+      recommendMission(onboarded, catalog, {
+        learner: { ...learnerSnapshot, nextReviews: [{ ...review, reason: 'due' }] },
+      }),
+    ).toMatchObject({ kind: 'review', reason: 'due', missionId: 'l02' })
 
     for (const reason of ['interleaving', 'recurring-trap'] as const) {
-      expect(recommendMission(onboarded, catalog, {
-        learner: { ...learnerSnapshot, nextReviews: [{ ...review, reason }] },
-      })).toEqual({ kind: 'start', trackId: 'ai-pratica', missionId: 'l02' })
+      expect(
+        recommendMission(onboarded, catalog, {
+          learner: { ...learnerSnapshot, nextReviews: [{ ...review, reason }] },
+        }),
+      ).toEqual({ kind: 'start', trackId: 'ai-pratica', missionId: 'l02' })
     }
   })
 
@@ -115,7 +119,9 @@ describe('initial mission recommendation', () => {
     const wormhole = missionCatalog.missions.find((mission) => mission.id === 'game-03-wormhole')
     if (warehouse === undefined || wormhole === undefined) throw new Error('Expected Dev missions')
     const canonical = learnerWith({
-      nextReviews: [{ unitId: warehouse.unitId, title: warehouse.title, dueIn: 'today', reason: 'due' }],
+      nextReviews: [
+        { unitId: warehouse.unitId, title: warehouse.title, dueIn: 'today', reason: 'due' },
+      ],
       topPitfalls: [],
     })
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
@@ -125,7 +131,9 @@ describe('initial mission recommendation', () => {
       selectedTrackId: 'dev',
     })
 
-    expect(recommendMission(startMission(progress, warehouse), catalog, { learner: canonical })).toMatchObject({
+    expect(
+      recommendMission(startMission(progress, warehouse), catalog, { learner: canonical }),
+    ).toMatchObject({
       kind: 'resume',
       missionId: warehouse.id,
     })
@@ -163,15 +171,18 @@ describe('initial mission recommendation', () => {
     const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
-    if (l01 === undefined || l02 === undefined || l03 === undefined) throw new Error('Expected IA chapter')
+    if (l01 === undefined || l02 === undefined || l03 === undefined)
+      throw new Error('Expected IA chapter')
     const canonical = learnerWith({
       nextReviews: [],
-      topPitfalls: [{
-        id: 'P-001',
-        description: 'Reivindicar domínio cedo demais',
-        occurrences: 3,
-        lastSeen: '2026-07-25',
-      }],
+      topPitfalls: [
+        {
+          id: 'P-001',
+          description: 'Reivindicar domínio cedo demais',
+          occurrences: 3,
+          lastSeen: '2026-07-25',
+        },
+      ],
     })
     const onboarded = completeOnboarding(createInitialOsProgress(missionCatalog), {
       goal: 'work-better',
@@ -219,11 +230,13 @@ describe('initial mission recommendation', () => {
       'l03',
       { now: new Date('2026-07-25T10:00:00Z') },
     )
-    expect(recommendMission(progress, catalog, {
-      learner: learnerWith({ nextReviews: [], topPitfalls: [] }),
-      verificationByKey: {
-        [missionKey('ai-pratica', 'l02')]: { kind: 'rejected' as const, code: 'digest-mismatch' },
-      },
-    })).toMatchObject({ kind: 'retry', missionId: 'l02', reason: 'rejected-evidence' })
+    expect(
+      recommendMission(progress, catalog, {
+        learner: learnerWith({ nextReviews: [], topPitfalls: [] }),
+        verificationByKey: {
+          [missionKey('ai-pratica', 'l02')]: { kind: 'rejected' as const, code: 'digest-mismatch' },
+        },
+      }),
+    ).toMatchObject({ kind: 'retry', missionId: 'l02', reason: 'rejected-evidence' })
   })
 })

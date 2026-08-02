@@ -44,7 +44,11 @@ describe('EvidenceIntake literacy verification', () => {
     ['score', { score: 0 }],
     ['pass', { producer_pass_claim: false }],
   ] as const)('rejects a receipt with mismatched %s identity', async (_field, override) => {
-    const { intake, store } = setup({ async verify() { return receipt(override) } })
+    const { intake, store } = setup({
+      async verify() {
+        return receipt(override)
+      },
+    })
 
     const state = await intake.accept(mission, submission())
 

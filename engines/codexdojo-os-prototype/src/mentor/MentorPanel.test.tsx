@@ -23,11 +23,19 @@ describe('MentorPanel', () => {
     await user.click(screen.getByRole('button', { name: 'Pedir ajuda' }))
     expect(await screen.findByText(/Antes da pista, mostre o que voce tentou/)).toBeTruthy()
 
-    await user.type(screen.getByLabelText('O que voce tentou'), 'Comparei as duas respostas e escolhi a primeira.')
-    await user.type(screen.getByLabelText('Ponto exato de confusao'), 'Nao sei como avaliar a fonte.')
+    await user.type(
+      screen.getByLabelText('O que voce tentou'),
+      'Comparei as duas respostas e escolhi a primeira.',
+    )
+    await user.type(
+      screen.getByLabelText('Ponto exato de confusao'),
+      'Nao sei como avaliar a fonte.',
+    )
     await user.click(screen.getByRole('button', { name: 'Pedir ajuda' }))
 
-    expect(await screen.findByText('Orientacao local deterministica · sem ferramentas')).toBeTruthy()
+    expect(
+      await screen.findByText('Orientacao local deterministica · sem ferramentas'),
+    ).toBeTruthy()
     expect(screen.getByText('Pistas do provedor: 0/5')).toBeTruthy()
     expect(screen.getByText('Nao cria evidencia nem avalia dominio.')).toBeTruthy()
 

@@ -10,9 +10,15 @@ import type { VerificationService } from '../verification/ports'
 import { ProgressScreen } from './ProgressScreen'
 
 const verification: VerificationService = {
-  async accept() { return { kind: 'not-submitted' } },
-  async retry() { return { kind: 'not-submitted' } },
-  async latest() { return { kind: 'not-submitted' } },
+  async accept() {
+    return { kind: 'not-submitted' }
+  },
+  async retry() {
+    return { kind: 'not-submitted' }
+  },
+  async latest() {
+    return { kind: 'not-submitted' }
+  },
 }
 
 describe('honest progress screen', () => {
@@ -40,7 +46,9 @@ describe('honest progress screen', () => {
       </ServicesProvider>,
     )
 
-    expect(screen.getByRole('heading', { name: 'Esforço local não substitui competência verificada.' })).not.toBeNull()
+    expect(
+      screen.getByRole('heading', { name: 'Esforço local não substitui competência verificada.' }),
+    ).not.toBeNull()
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
     expect(screen.getByText('Fonte: learner/substrate')).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'Evidência preservada' })).not.toBeNull()
@@ -51,7 +59,12 @@ describe('honest progress screen', () => {
   it('keeps local progress visible when verification loading is unavailable', async () => {
     const now = new Date('2026-07-25T10:00:00-03:00')
     const services = createServices({
-      verification: { ...verification, async latest() { throw new Error('verification repository unavailable') } },
+      verification: {
+        ...verification,
+        async latest() {
+          throw new Error('verification repository unavailable')
+        },
+      },
       clock: () => now,
     })
 
@@ -66,7 +79,11 @@ describe('honest progress screen', () => {
       </ServicesProvider>,
     )
 
-    await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Verificação indisponível no momento'))
+    await waitFor(() =>
+      expect(screen.getByRole('status').textContent).toContain(
+        'Verificação indisponível no momento',
+      ),
+    )
     expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(6)
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
   })

@@ -21,7 +21,7 @@ describe('mentor context projection', () => {
       declaredConfusion: 'Nao sei qual criterio comparar.',
       attemptExcerpt: 'Escolhi a resposta A porque parece completa.',
       recentTurns: Array.from({ length: 9 }, (_, index) => ({
-        role: index % 2 === 0 ? 'learner' as const : 'mentor' as const,
+        role: index % 2 === 0 ? ('learner' as const) : ('mentor' as const),
         content: `turn-${index}`,
       })),
       learnerLevel: learnerSnapshot.profile,
@@ -47,7 +47,8 @@ describe('mentor context projection', () => {
       'verifierData',
       'checkpoint',
       'canonicalPath',
-    ]) expect(serialized).not.toContain(forbidden)
+    ])
+      expect(serialized).not.toContain(forbidden)
   })
 
   it('truncates every free-form input at its declared boundary', () => {
