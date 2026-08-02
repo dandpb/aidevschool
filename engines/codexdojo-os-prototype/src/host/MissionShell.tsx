@@ -184,6 +184,7 @@ export function MissionShell({
   }, [analyticsContext, services.analytics, session.renderer])
 
   const verificationFinished =
+    !mission.evidence.verifierRequired ||
     verification.kind === 'verified' ||
     verification.kind === 'rejected' ||
     verification.kind === 'gateway-unavailable'
