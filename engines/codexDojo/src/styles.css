@@ -56,6 +56,28 @@ body {
   background: var(--ink);
 }
 
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--brass);
+  color: var(--ink);
+  padding: 8px;
+  z-index: 100;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
 button {
   font: inherit;
 }
