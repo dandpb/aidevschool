@@ -42,7 +42,7 @@ describe('verification bridge dispatch', () => {
       body: JSON.stringify({
         schemaId: 'literacy-evidence',
         schemaVersion: 1,
-        record: literacyRecord,
+        record: { ...literacyRecord, lessonId: 'l02' },
       }),
     }, executor)
 
@@ -53,7 +53,7 @@ describe('verification bridge dispatch', () => {
         executable: 'python3',
         args: ['-m', 'learner.gate.literacy_bridge'],
       }),
-      JSON.stringify(literacyRecord),
+      JSON.stringify({ ...literacyRecord, lessonId: 'l02' }),
     )
   })
 
