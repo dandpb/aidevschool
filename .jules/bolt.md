@@ -13,3 +13,6 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+## 2025-02-18 - Pre-compute Static State to O(1) Structures for Repeated Renders
+**Learning:** In vanilla string templates apps (like codexDojo), using `.findIndex()` on static data like `cycleStages` during rendering or state derivations causes repeated O(N) array scans, increasing main thread CPU load.
+**Action:** Pre-compute a Map mapping item IDs to their indices at module initialization. Use this Map to resolve indices in O(1) time during renders or actions to prevent CPU bottleneck.
