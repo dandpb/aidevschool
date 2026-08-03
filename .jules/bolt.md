@@ -16,3 +16,11 @@
 ## 2025-02-18 - Pre-compute Static State to O(1) Structures for Repeated Renders
 **Learning:** In vanilla string templates apps (like codexDojo), using `.findIndex()` on static data like `cycleStages` during rendering or state derivations causes repeated O(N) array scans, increasing main thread CPU load.
 **Action:** Pre-compute a Map mapping item IDs to their indices at module initialization. Use this Map to resolve indices in O(1) time during renders or actions to prevent CPU bottleneck.
+
+## 2026-08-03 - Avoid Hardcoded Canonical Mock Breakages
+**Learning:** When using tests that spawn external Python verification scripts (like `literacy_bridge`), the test payload must exactly mirror the canonical `curriculum` YAML (e.g., matching the required `skillIds` or deterministic check boolean casing). Otherwise, the isolated verifier rejects it with a 422 or invalid receipt error because it actually resolves the YAML file against the test payload.
+**Action:** When creating mock verification test data (like `literacyRecord`), always check the corresponding canonical YAML (e.g., `l02-ia-nao-e-fonte-de-verdade.yaml`) to ensure deterministic checks and answers match completely.
+
+## 2026-08-03 - Date Parsing Consistency in Progress Domain
+**Learning:** Using timezone offsets like `-03:00` in tests for daily calculations can fail in CI depending on runner timezone parsing.
+**Action:** Always use noon UTC timestamps (e.g., `T12:00:00Z`) for testing day boundary logic to prevent timezone offset flakiness.
