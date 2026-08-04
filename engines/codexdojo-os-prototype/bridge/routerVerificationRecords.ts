@@ -6,12 +6,22 @@ export const literacyRecord = {
   lessonVersion: 3,
   activityId: 'l02-a1',
   activityType: 'output_comparison',
-  skillIds: ['avaliar'],
-  deterministicChecks: { confidence: 1e-7, better: true },
+  skillIds: ['entender', 'avaliar'],
+  deterministicChecks: {
+    betterOutputId: true,
+    'c-fontes': true,
+    'c-limites': true,
+    noExtraCriteria: 0,
+  },
   score: 1,
   pass: true,
   timestamp: '2026-07-25T12:00:00.000Z',
   verifierRequired: true,
+  answer: {
+    outputId: 'out-b',
+    criterionIds: ['c-fontes', 'c-limites'],
+  },
+  context: 'initial',
 }
 
 export function literacyReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
