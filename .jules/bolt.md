@@ -13,3 +13,6 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+## 2025-02-18 - Pre-compute Stage Indices for Advance Operations
+**Learning:** In the codexDojo cycle rendering and state transitions, looking up the index of the current stage involved calling `cycleStages.findIndex()` which resulted in O(n) array scans.
+**Action:** Replaced `.findIndex()` scans with a pre-computed `Map<string, number>` initialized once at the module level in `src/cycle.ts`. This provides O(1) index lookups, reducing array allocations and eliminating linear scans when advancing cycles or rendering the cycle view.
