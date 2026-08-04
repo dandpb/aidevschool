@@ -80,7 +80,8 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   await page.getByTestId("onboarding-next").click();
 
   await expect(page.getByTestId("map-screen")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Mapa de mundos" })).toBeFocused();
+  await expect(page.getByRole("heading", { name: "Mapa da Vila Lume" })).toBeFocused();
+  await expect(page.getByTestId("vila-lume-scene")).toBeVisible();
   expect(await page.evaluate(() => window.scrollY)).toBe(0);
   const mapLayout = await page.locator(".app-shell").evaluate((element) => ({
     scrollWidth: element.scrollWidth,
@@ -89,6 +90,7 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   expect(mapLayout.scrollWidth).toBeLessThanOrEqual(mapLayout.clientWidth);
 
   await page.getByTestId(`map-start-${mapInitial.id}`).click();
+  await expect(page.getByTestId("village-request")).toBeVisible();
   await expect(page.getByTestId("task-context")).toContainText("pesquisar uma notícia");
   await expect(page.getByTestId("confidence-support")).toBeVisible();
   const lessonLayout = await page.locator(".app-shell").evaluate((element) => ({

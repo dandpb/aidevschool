@@ -38,9 +38,9 @@ export function HomeScreen({
     <section className="screen home-screen" data-testid="home-screen" aria-labelledby="home-title">
       <div className="home-hero">
         <div>
-          <p className="eyebrow">{track.title}</p>
-          <h1 id="home-title">Seu próximo passo está logo ali.</h1>
-          <p>Uma missão curta por vez. Sem jargão, sem pressa e sempre com prática.</p>
+          <p className="eyebrow">VILA LUME · {track.title}</p>
+          <h1 id="home-title">A vila aprende com suas escolhas.</h1>
+          <p>Ajude um morador por vez. Sem jargão, sem pressa e sempre com prática.</p>
         </div>
         <VoxelWorld variant="welcome" />
       </div>
@@ -62,12 +62,12 @@ export function HomeScreen({
       </div>
 
       <MentorGuide compact>
-        <p>Continue de onde parou ou abra o mapa para enxergar toda a jornada.</p>
+        <p>Lumi guarda seu caminho: continue um pedido ou explore os bairros da vila.</p>
       </MentorGuide>
 
       <div className="card mission-card">
-        <p className="card-kicker">MISSÃO DO DIA</p>
-        <h2>Pratique uma habilidade agora</h2>
+        <p className="card-kicker">PEDIDO DA VILA</p>
+        <h2>Um morador precisa da sua ajuda</h2>
         {mission ? (
           <>
             <p className="card-title" data-testid="mission-title">
@@ -83,7 +83,9 @@ export function HomeScreen({
               data-testid="continue-button"
               onClick={() => onContinue(mission.id)}
             >
-              {progress.lessonStatus[mission.id] === "in_progress" ? "Continuar" : "Começar"}
+              {progress.lessonStatus[mission.id] === "in_progress"
+                ? "Continuar pedido"
+                : "Atender pedido"}
             </button>
           </>
         ) : (
@@ -121,7 +123,7 @@ export function HomeScreen({
           data-testid="open-map"
           onClick={onOpenMap}
         >
-          Ver mapa da trilha
+          Explorar Vila Lume
         </button>
         <button
           type="button"

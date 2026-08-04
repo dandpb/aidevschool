@@ -73,6 +73,8 @@ describe("fluxo do app (integração)", () => {
     const onboarding = await screen.findByTestId("onboarding-screen");
     expect(onboarding).toBeInTheDocument();
 
+    expect(screen.getByRole("heading", { name: "Chegue à Vila Lume" })).toBeInTheDocument();
+    expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
     expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
     await user.click(screen.getByTestId("onboarding-next"));
@@ -86,13 +88,14 @@ describe("fluxo do app (integração)", () => {
     await user.click(screen.getByTestId("onboarding-next"));
 
     expect(await screen.findByTestId("map-screen")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Mapa de mundos" })).toHaveFocus();
+    expect(screen.getByRole("heading", { name: "Mapa da Vila Lume" })).toHaveFocus();
     expect(screen.getByTestId(`map-lesson-${firstLesson.id}`)).toHaveTextContent(firstLesson.title);
-    expect(screen.getByTestId("map-guide")).toHaveTextContent("marcada como Disponível");
+    expect(screen.getByTestId("map-guide")).toHaveTextContent("pedido marcado como Disponível");
 
     await user.click(screen.getByTestId(`map-start-${firstLesson.id}`));
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
+    expect(screen.getByTestId("village-request")).toHaveTextContent(firstLesson.objective);
     expect(screen.getByTestId("task-context")).toHaveTextContent("organizar um agendamento");
     expect(screen.queryByTestId("confidence-support")).not.toBeInTheDocument();
     expect((await services.progressRepo.load())?.onboarding).toEqual({
