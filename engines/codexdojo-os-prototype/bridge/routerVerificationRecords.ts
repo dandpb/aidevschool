@@ -6,7 +6,7 @@ export const literacyRecord = {
   lessonVersion: 3,
   activityId: 'l02-a1',
   activityType: 'output_comparison',
-  skillIds: ['avaliar'],
+  skillIds: ['avaliar', 'entender'],
   deterministicChecks: { confidence: 1e-7, better: true },
   score: 1,
   pass: true,
