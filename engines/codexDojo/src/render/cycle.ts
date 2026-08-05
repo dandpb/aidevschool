@@ -15,8 +15,17 @@ export type CycleViewModel = {
   readonly progress: number
 }
 
+// ⚡ Bolt: Pre-compute stage indices at module initialization to avoid O(n) scan in render cycles
+const stageIndexById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) {
+    stageIndexById.set(stage.id, i)
+  }
+}
+
 export function buildCycleViewModel(state: AppState): CycleViewModel {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
+  const selectedIndex = stageIndexById.get(state.selectedStageId) ?? -1
   const completedIds = new Set(state.completedStageIds)
   const stages = cycleStages.map((stage, index) => ({
     stage,
