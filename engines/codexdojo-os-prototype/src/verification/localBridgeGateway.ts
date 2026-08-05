@@ -3,11 +3,7 @@ import {
   type BridgeTokenProvider,
   type Fetcher,
 } from '../engines/client'
-import type {
-  EvidenceSubmission,
-  VerificationGateway,
-  VerificationReceipt,
-} from './ports'
+import type { EvidenceSubmission, VerificationGateway, VerificationReceipt } from './ports'
 import { EvidenceGatewayRejection } from './ports'
 import { receiptShapeIsValid } from './receiptContract'
 
@@ -16,7 +12,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function decodeReceipt(value: unknown): VerificationReceipt {
-  if (!receiptShapeIsValid(value)) throw new EvidenceGatewayRejection('invalid-verification-receipt')
+  if (!receiptShapeIsValid(value))
+    throw new EvidenceGatewayRejection('invalid-verification-receipt')
   return value
 }
 
@@ -63,10 +60,10 @@ export class LocalBridgeGateway implements VerificationGateway {
       if (!isRecord(body)) throw new Error('bridge-request-failed')
       if (!response.ok) {
         if (
-          response.status >= 400
-          && response.status < 500
-          && response.status !== 429
-          && typeof body.error === 'string'
+          response.status >= 400 &&
+          response.status < 500 &&
+          response.status !== 429 &&
+          typeof body.error === 'string'
         ) {
           throw new EvidenceGatewayRejection(body.error)
         }

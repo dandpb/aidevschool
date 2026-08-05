@@ -18,7 +18,9 @@ export function VoxelGamePicker({ selectedId, onSelect }: VoxelGamePickerProps) 
         }}
       >
         {voxelCatalog.map((game) => (
-          <option key={game.id} value={game.id}>{game.name}</option>
+          <option key={game.id} value={game.id}>
+            {game.name}
+          </option>
         ))}
       </select>
     </label>

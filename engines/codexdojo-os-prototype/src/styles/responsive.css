@@ -1,108 +1,316 @@
 @media (max-width: 1280px) {
-  .journey-page { padding-inline: 24px; }
-  .next-mission-card { min-height: 410px; }
-  .progress-missions { overflow-x: auto; }
+  .journey-page {
+    padding-inline: 24px;
+  }
+  .next-mission-card {
+    min-height: 410px;
+  }
+  .progress-missions {
+    overflow-x: auto;
+  }
 }
 
 @media (max-width: 1040px) {
-  .topbar { grid-template-columns: 1fr auto; }
-  .topbar-center { display: none; }
-  .topbar-stats > span { display: none; }
-  .learn-toggle { font-size: 0; }
-  .learn-toggle svg { margin: 0; }
-  .window-space.with-learning { right: 0; }
-  .window-space.with-learning .desktop-window:not(.maximized) { max-width: none; }
-  .desktop-window, .desktop-window.maximized { inset: 50px 16px 72px 76px; width: auto; height: auto; min-width: 0; min-height: 0; }
-  .learning-rail { top: auto; right: 8px; bottom: 70px; left: 8px; width: auto; max-height: 44vh; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 -15px 50px rgba(0,0,0,.45); }
-  .learning-rail:focus-within { max-height: calc(100dvh - 86px); }
+  .topbar {
+    grid-template-columns: 1fr auto;
+  }
+  .topbar-center {
+    display: none;
+  }
+  .topbar-stats > span {
+    display: none;
+  }
+  .learn-toggle {
+    font-size: 0;
+  }
+  .learn-toggle svg {
+    margin: 0;
+  }
+  .window-space.with-learning {
+    right: 0;
+  }
+  .window-space.with-learning .desktop-window:not(.maximized) {
+    max-width: none;
+  }
+  .desktop-window,
+  .desktop-window.maximized {
+    inset: 50px 16px 72px 76px;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+  }
+  .learning-rail {
+    top: auto;
+    right: 8px;
+    bottom: 70px;
+    left: 8px;
+    width: auto;
+    max-height: 44vh;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.45);
+  }
+  .learning-rail:focus-within {
+    max-height: calc(100dvh - 86px);
+  }
   .learning-rail:focus-within .concept-list,
-  .learning-rail:focus-within .mini-challenge { display: none; }
-  .app-grid { grid-template-columns: repeat(3, minmax(130px, 1fr)); }
-  .architecture-flow { grid-template-columns: repeat(3, 1fr); }
-  .architecture-flow button { min-height: 150px; }
+  .learning-rail:focus-within .mini-challenge {
+    display: none;
+  }
+  .app-grid {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
+  .architecture-flow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .architecture-flow button {
+    min-height: 150px;
+  }
 }
 
 @media (max-width: 768px) {
-  .journey-page { padding-inline: 16px; }
+  .journey-page {
+    padding-inline: 16px;
+  }
   .hub-grid,
   .chapter-map-grid,
-  .mission-learning-layout { grid-template-columns: 1fr; }
-  .next-mission-card > :not(.hub-voxels) { max-width: 70%; }
-  .progress-explainer { grid-template-columns: 1fr; }
-  .progress-missions article { min-width: 0; grid-template-columns: 1fr 1fr; }
+  .mission-learning-layout {
+    grid-template-columns: 1fr;
+  }
+  .next-mission-card > :not(.hub-voxels) {
+    max-width: 70%;
+  }
+  .progress-explainer {
+    grid-template-columns: 1fr;
+  }
+  .progress-missions article {
+    min-width: 0;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 760px) {
-  .desktop-shortcuts { display: none; }
-  .dock { top: auto; left: 50%; bottom: 8px; transform: translateX(-50%); width: auto; flex-direction: row; border-radius: 14px; }
-  .dock button span { display: none; }
-  .dock button.running::after { left: 50%; bottom: -4px; width: 13px; height: 3px; transform: translateX(-50%); }
-  .dock-separator { width: 1px; height: 30px; margin: 5px 1px; }
-  .desktop-window, .desktop-window.maximized { inset: 46px 8px 72px 8px; width: auto; height: auto; min-width: 0; min-height: 0; border-radius: 12px; }
-  .dojo-app { grid-template-columns: 1fr; }
-  .app-sidebar { display: none; }
-  .dojo-main { padding: 20px 18px; }
-  .dojo-heading { display: block; }
-  .level-badge { margin-top: 13px; width: fit-content; }
-  .path-layout { grid-template-columns: 1fr; }
-  .mission-card { order: -1; }
-  .files-app { grid-template-columns: 1fr; }
-  .files-sidebar { display: none; }
-  .architecture-app { padding: 22px 18px; }
-  .architecture-flow { grid-template-columns: 1fr; }
-  .architecture-flow button { min-height: 110px; }
-  .contract-strip { grid-template-columns: 1fr; }
-  .software-app { padding: 20px 15px; }
-  .software-row { grid-template-columns: 36px 1fr 82px; }
-  .lab-tag { display: none; }
-  .launcher-overlay { padding: 8px; }
-  .launcher-panel { height: calc(100vh - 56px); border-radius: 12px; }
-  .launcher-body { grid-template-columns: 1fr; }
-  .launcher-body > aside { display: none; }
-  .launcher-body > .launcher-main { padding: 14px; }
-  .app-grid { grid-template-columns: repeat(2, minmax(125px, 1fr)); }
-  .learning-rail { top: auto; right: 8px; bottom: 70px; left: 8px; width: auto; max-height: 44vh; border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 -15px 50px rgba(0,0,0,.45); }
-  .learning-scroll { padding: 18px; }
+  .desktop-shortcuts {
+    display: none;
+  }
+  .dock {
+    top: auto;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    width: auto;
+    flex-direction: row;
+    border-radius: 14px;
+  }
+  .dock button span {
+    display: none;
+  }
+  .dock button.running::after {
+    left: 50%;
+    bottom: -4px;
+    width: 13px;
+    height: 3px;
+    transform: translateX(-50%);
+  }
+  .dock-separator {
+    width: 1px;
+    height: 30px;
+    margin: 5px 1px;
+  }
+  .desktop-window,
+  .desktop-window.maximized {
+    inset: 46px 8px 72px 8px;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    border-radius: 12px;
+  }
+  .dojo-app {
+    grid-template-columns: 1fr;
+  }
+  .app-sidebar {
+    display: none;
+  }
+  .dojo-main {
+    padding: 20px 18px;
+  }
+  .dojo-heading {
+    display: block;
+  }
+  .level-badge {
+    margin-top: 13px;
+    width: fit-content;
+  }
+  .path-layout {
+    grid-template-columns: 1fr;
+  }
+  .mission-card {
+    order: -1;
+  }
+  .files-app {
+    grid-template-columns: 1fr;
+  }
+  .files-sidebar {
+    display: none;
+  }
+  .architecture-app {
+    padding: 22px 18px;
+  }
+  .architecture-flow {
+    grid-template-columns: 1fr;
+  }
+  .architecture-flow button {
+    min-height: 110px;
+  }
+  .contract-strip {
+    grid-template-columns: 1fr;
+  }
+  .software-app {
+    padding: 20px 15px;
+  }
+  .software-row {
+    grid-template-columns: 36px 1fr 82px;
+  }
+  .lab-tag {
+    display: none;
+  }
+  .launcher-overlay {
+    padding: 8px;
+  }
+  .launcher-panel {
+    height: calc(100vh - 56px);
+    border-radius: 12px;
+  }
+  .launcher-body {
+    grid-template-columns: 1fr;
+  }
+  .launcher-body > aside {
+    display: none;
+  }
+  .launcher-body > .launcher-main {
+    padding: 14px;
+  }
+  .app-grid {
+    grid-template-columns: repeat(2, minmax(125px, 1fr));
+  }
+  .learning-rail {
+    top: auto;
+    right: 8px;
+    bottom: 70px;
+    left: 8px;
+    width: auto;
+    max-height: 44vh;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.45);
+  }
+  .learning-scroll {
+    padding: 18px;
+  }
 }
 
 @media (max-width: 420px) {
-  .dock { gap: 2px; padding: 6px; }
-  .dock button { width: 36px; height: 36px; }
-  .app-grid { grid-template-columns: 1fr; }
-  .launcher-panel > header { padding-left: 14px; }
-  .launcher-search input { font-size: 14px; }
-  .window-title { max-width: 210px; overflow: hidden; white-space: nowrap; }
-  .software-app > header { align-items: flex-start; }
-  .catalog-count { display: none; }
-  .journey-page { padding: 10px 10px 28px; }
-  .hub-topbar { align-items: flex-start; }
-  .journey-brand small { max-width: 24ch; }
-  .hub-chips { justify-content: flex-start; }
-  .hub-chips span { min-height: 36px; }
+  .dock {
+    gap: 2px;
+    padding: 6px;
+  }
+  .dock button {
+    width: 36px;
+    height: 36px;
+  }
+  .app-grid {
+    grid-template-columns: 1fr;
+  }
+  .launcher-panel > header {
+    padding-left: 14px;
+  }
+  .launcher-search input {
+    font-size: 14px;
+  }
+  .window-title {
+    max-width: 210px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .software-app > header {
+    align-items: flex-start;
+  }
+  .catalog-count {
+    display: none;
+  }
+  .journey-page {
+    padding: 10px 10px 28px;
+  }
+  .hub-topbar {
+    align-items: flex-start;
+  }
+  .journey-brand small {
+    max-width: 24ch;
+  }
+  .hub-chips {
+    justify-content: flex-start;
+  }
+  .hub-chips span {
+    min-height: 36px;
+  }
   .onboarding-card,
   .next-mission-card,
   .chapter-track,
-  .mission-result { border-radius: 20px; }
-  .next-mission-card { min-height: 520px; }
+  .mission-result {
+    border-radius: 20px;
+  }
+  .next-mission-card {
+    min-height: 520px;
+  }
   .mentor-mode,
   .result-rewards,
   .progress-summary,
-  .progress-missions article { grid-template-columns: 1fr; }
-  .mission-runtime { min-height: 470px; }
+  .progress-missions article {
+    grid-template-columns: 1fr;
+  }
+  .mission-runtime {
+    min-height: 470px;
+  }
 }
 
 @media (max-width: 375px) {
-  .onboarding-card { padding: 22px 15px; }
+  .onboarding-card {
+    padding: 22px 15px;
+  }
   .onboarding-card h1,
-  .hub-welcome h1 { font-size: clamp(2rem, 12vw, 3rem); }
-  .hub-topbar { display: grid; }
-  .hub-chips { display: grid; grid-template-columns: 1fr 1fr; }
-  .hub-chips span { display: grid; align-items: center; }
-  .mission-header { gap: 12px; }
-  .mission-status div { padding-inline: 12px; }
-  .hub-voxels { transform: scale(0.68); }
+  .hub-welcome h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+  .hub-topbar {
+    display: grid;
+  }
+  .hub-chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .hub-chips span {
+    display: grid;
+    align-items: center;
+  }
+  .mission-header {
+    gap: 12px;
+  }
+  .mission-status div {
+    padding-inline: 12px;
+  }
+  .hub-voxels {
+    transform: scale(0.68);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
 }

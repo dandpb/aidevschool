@@ -27,7 +27,11 @@ export function readEmbeddedEvidenceMessage(
   frameUrl: string,
   expectedEvidenceSource: EmbeddedEvidenceReceipt['source'] | null,
 ): EmbeddedEvidenceReceipt | null {
-  if (expectedSource === null || expectedEvidenceSource === null || event.source !== expectedSource) {
+  if (
+    expectedSource === null ||
+    expectedEvidenceSource === null ||
+    event.source !== expectedSource
+  ) {
     return null
   }
   if (event.origin !== new URL(frameUrl, window.location.href).origin) return null
@@ -47,12 +51,21 @@ export function readEmbeddedEvidenceMessage(
   const source = evidence.source
   if (source !== expectedEvidenceSource) return null
   const project = requiredString(evidence, 'project')
-  const attemptId = requiredString(evidence, 'scenario_id') ?? requiredString(evidence, 'encounter_id')
+  const attemptId =
+    requiredString(evidence, 'scenario_id') ?? requiredString(evidence, 'encounter_id')
   const game = requiredString(evidence, 'game')
   const timestamp = requiredString(evidence, 'ts')
   if (project === null || attemptId === null || game === null || timestamp === null) return null
   if (typeof evidence.pass !== 'boolean') return null
-  if (!isRecord(evidence.review_context) || evidence.review_context.verifier_required !== true) return null
+  if (!isRecord(evidence.review_context) || evidence.review_context.verifier_required !== true)
+    return null
 
-  return { source: expectedEvidenceSource, project, attemptId, game, timestamp, pass: evidence.pass }
+  return {
+    source: expectedEvidenceSource,
+    project,
+    attemptId,
+    game,
+    timestamp,
+    pass: evidence.pass,
+  }
 }

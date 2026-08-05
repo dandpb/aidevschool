@@ -1,9 +1,5 @@
 import { sameOriginPath } from '../sameOrigin'
-import type {
-  AnalyticsBatch,
-  AnalyticsBatchTransport,
-  AnalyticsFlushReason,
-} from './batcher'
+import type { AnalyticsBatch, AnalyticsBatchTransport, AnalyticsFlushReason } from './batcher'
 
 type Fetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 type BeaconSender = (url: string | URL, data?: BodyInit | null) => boolean
@@ -28,7 +24,9 @@ function captureDevelopmentBatch(batch: AnalyticsBatch): void {
 export class InMemoryAnalyticsTransport implements AnalyticsBatchTransport {
   readonly batches: AnalyticsBatch[] = []
 
-  constructor(private readonly capture: (batch: AnalyticsBatch) => void = captureDevelopmentBatch) {}
+  constructor(
+    private readonly capture: (batch: AnalyticsBatch) => void = captureDevelopmentBatch,
+  ) {}
 
   async send(
     batch: AnalyticsBatch,
@@ -51,7 +49,9 @@ function acceptedIds(value: unknown): readonly string[] {
     typeof value !== 'object' ||
     value === null ||
     !Array.isArray((value as { acceptedEventIds?: unknown }).acceptedEventIds) ||
-    !(value as { acceptedEventIds: unknown[] }).acceptedEventIds.every((id) => typeof id === 'string')
+    !(value as { acceptedEventIds: unknown[] }).acceptedEventIds.every(
+      (id) => typeof id === 'string',
+    )
   ) {
     throw new Error('invalid-analytics-response')
   }
@@ -64,7 +64,9 @@ export class SameOriginAnalyticsTransport implements AnalyticsBatchTransport {
   constructor(
     endpoint = '/__dojo/bridge/v1/analytics',
     private readonly fetcher: Fetcher = (input, init) => fetch(input, init),
-    private readonly beacon: BeaconSender | undefined = globalThis.navigator?.sendBeacon?.bind(globalThis.navigator),
+    private readonly beacon: BeaconSender | undefined = globalThis.navigator?.sendBeacon?.bind(
+      globalThis.navigator,
+    ),
   ) {
     this.pathname = sameOriginPath(endpoint, 'analytics-endpoint-must-be-same-origin')
   }

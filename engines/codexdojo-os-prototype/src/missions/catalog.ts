@@ -19,7 +19,9 @@ export class GeneratedMissionCatalogRepository implements MissionCatalogReposito
   }
 
   listLaunchable(trackId?: TrackId): readonly MissionDefinition[] {
-    return missionCatalog.missions.filter((mission) => trackId === undefined || mission.trackId === trackId)
+    return missionCatalog.missions.filter(
+      (mission) => trackId === undefined || mission.trackId === trackId,
+    )
   }
 
   get(trackId: TrackId, missionId: string): MissionDefinition | undefined {

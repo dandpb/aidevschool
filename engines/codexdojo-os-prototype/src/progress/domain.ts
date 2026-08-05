@@ -1,18 +1,39 @@
 import type { MissionCatalogSnapshot, MissionDefinition, MissionKey, TrackId } from '../domain'
 import { emptyMissionEngagement, missionKey, recordMissionEngagementCompletion } from './engagement'
 import { DAILY_GOAL_XP, rewardMissionCompletion } from './engagementRewards'
-import type { LocalAchievement, LocalEngagementStreak, LocalMissionStatus, MissionCompletionKind, MissionEngagement, MissionPracticeKind } from './engagement'
+import type {
+  LocalAchievement,
+  LocalEngagementStreak,
+  LocalMissionStatus,
+  MissionCompletionKind,
+  MissionEngagement,
+  MissionPracticeKind,
+} from './engagement'
 
 export const OS_PROGRESS_SCHEMA_VERSION = 3
 export {
-  DAILY_GOAL_XP, MISSION_COMPLETION_XP, REVIEW_PRACTICE_XP, dailyGoalMet, dailyXp, toLocalDateKey,
+  DAILY_GOAL_XP,
+  MISSION_COMPLETION_XP,
+  REVIEW_PRACTICE_XP,
+  dailyGoalMet,
+  dailyXp,
+  toLocalDateKey,
 } from './engagementRewards'
 export {
-  emptyMissionEngagement, missionKey, recordHintRequest, recordMissionAttempt,
+  emptyMissionEngagement,
+  missionKey,
+  recordHintRequest,
+  recordMissionAttempt,
 } from './engagement'
 export type {
-  AchievementId, LocalAchievement, LocalEngagementStreak, LocalMissionStatus,
-  MissionAttemptInput, MissionCompletionKind, MissionEngagement, MissionPracticeKind,
+  AchievementId,
+  LocalAchievement,
+  LocalEngagementStreak,
+  LocalMissionStatus,
+  MissionAttemptInput,
+  MissionCompletionKind,
+  MissionEngagement,
+  MissionPracticeKind,
 } from './engagement'
 
 export type OnboardingGoal = 'work-better' | 'understand-ai' | 'build-systems'
