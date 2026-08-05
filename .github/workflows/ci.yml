@@ -95,6 +95,10 @@ jobs:
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
       - run: npm run lint
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
       - run: npm run test
       - run: npm run build
 
