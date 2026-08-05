@@ -98,10 +98,10 @@ describe('OS local progress', () => {
     if (l01 === undefined || l02 === undefined || l03 === undefined) throw new Error('Expected IA chapter')
     let progress = createInitialOsProgress(missionCatalog)
     progress = recordMissionCompletion(progress, l01, missionCatalog, undefined, {
-      now: new Date('2026-07-25T23:30:00-03:00'),
+      now: new Date('2026-07-25T12:00:00Z'),
     })
     progress = recordMissionCompletion(progress, l02, missionCatalog, undefined, {
-      now: new Date('2026-07-26T08:00:00-03:00'),
+      now: new Date('2026-07-26T12:00:00Z'),
     })
     expect(progress.localEngagementStreak.current).toBe(2)
 
