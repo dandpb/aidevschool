@@ -1,8 +1,8 @@
 import type { CoreAppId, LearnerSnapshot, LearningContext } from '../domain'
-import { ArchitectureApp, SoftwareApp } from './SystemApps'
-import { DojoApp } from './DojoApp'
-import { FilesApp, TerminalApp } from './TerminalFilesApps'
 import { EngineHubApp } from '../engines/EngineHubApp'
+import { DojoApp } from './DojoApp'
+import { ArchitectureApp, SoftwareApp } from './SystemApps'
+import { FilesApp, TerminalApp } from './TerminalFilesApps'
 
 type AppContentProps = {
   readonly appId: CoreAppId

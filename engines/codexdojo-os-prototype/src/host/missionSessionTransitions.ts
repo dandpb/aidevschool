@@ -2,8 +2,8 @@ import type { MissionDefinition, MissionStage } from '../domain'
 import {
   createInitialRendererState,
   type RendererPreference,
-  rendererReducer,
   type RendererState,
+  rendererReducer,
 } from '../rendering/domain'
 import type { EvidenceSubmission } from '../verification/ports'
 import type { EngineToHostMessage, MissionEventMessage } from './protocol'

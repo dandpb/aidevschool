@@ -4,12 +4,19 @@ import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition, MissionStage } from '../domain'
 import { buildMentorContext } from './context'
 import type { MentorMode, MentorStapStage, MentorTurn } from './contracts'
-import { MentorController, type MentorControllerResult, type MentorControllerState } from './mentorController'
+import {
+  MentorController,
+  type MentorControllerResult,
+  type MentorControllerState,
+} from './mentorController'
 
 const HINT_QUOTA = 5
 
 function requestId(): string {
-  return globalThis.crypto?.randomUUID?.() ?? `mentor-${Date.now()}-${Math.random().toString(16).slice(2)}`
+  return (
+    globalThis.crypto?.randomUUID?.() ??
+    `mentor-${Date.now()}-${Math.random().toString(16).slice(2)}`
+  )
 }
 
 function initialPrompt(mode: MentorMode): string {
@@ -103,11 +110,14 @@ export function MentorPanel({
       })
     }
     setLastResult(result)
-    setTurns((current) => [
-      ...current,
-      { role: 'learner', content: prompt },
-      { role: 'mentor', content: result.response.response },
-    ].slice(-6) as readonly MentorTurn[])
+    setTurns(
+      (current) =>
+        [
+          ...current,
+          { role: 'learner', content: prompt },
+          { role: 'mentor', content: result.response.response },
+        ].slice(-6) as readonly MentorTurn[],
+    )
     if (result.consumeHintQuota) setHintQuotaUsed((used) => Math.min(HINT_QUOTA, used + 1))
     if (result.advancePedagogy) setStapStage(result.response.pedagogy.stageAfter)
   }
@@ -128,55 +138,108 @@ export function MentorPanel({
       <header>
         <div>
           <span className="mentor-ai-label">IA</span>
-          <div><strong>Mentor contextual</strong><small>{sourceLabel(lastResult)} · sem ferramentas</small></div>
+          <div>
+            <strong>Mentor contextual</strong>
+            <small>{sourceLabel(lastResult)} · sem ferramentas</small>
+          </div>
         </div>
-        <button type="button" className="mentor-close" aria-label="Fechar Mentor IA" onClick={close}>×</button>
+        <button
+          type="button"
+          className="mentor-close"
+          aria-label="Fechar Mentor IA"
+          onClick={close}
+        >
+          ×
+        </button>
       </header>
 
-      <p className="mentor-mission-context"><strong>{mission.title}</strong><br />Etapa atual: {stage}</p>
+      <p className="mentor-mission-context">
+        <strong>{mission.title}</strong>
+        <br />
+        Etapa atual: {stage}
+      </p>
 
       <fieldset className="mentor-mode">
         <legend className="journey-sr-only">Tipo de ajuda</legend>
-        <button type="button" aria-pressed={mode === 'question'} onClick={() => selectMode('question')}>Pergunta</button>
-        <button type="button" aria-pressed={mode === 'explain'} onClick={() => selectMode('explain')}>Explicar</button>
-        <button type="button" aria-pressed={mode === 'hint'} onClick={() => selectMode('hint')}>Pista</button>
+        <button
+          type="button"
+          aria-pressed={mode === 'question'}
+          onClick={() => selectMode('question')}
+        >
+          Pergunta
+        </button>
+        <button
+          type="button"
+          aria-pressed={mode === 'explain'}
+          onClick={() => selectMode('explain')}
+        >
+          Explicar
+        </button>
+        <button type="button" aria-pressed={mode === 'hint'} onClick={() => selectMode('hint')}>
+          Pista
+        </button>
       </fieldset>
 
       <label className="mentor-field">
         <span>Sua pergunta</span>
-        <textarea value={question} maxLength={500} onChange={(event) => setQuestion(event.target.value)} />
+        <textarea
+          value={question}
+          maxLength={500}
+          onChange={(event) => setQuestion(event.target.value)}
+        />
       </label>
 
       {mode === 'hint' ? (
         <div className="mentor-attempt-fields">
           <label className="mentor-field">
             <span>O que voce tentou</span>
-            <textarea value={attemptExcerpt} maxLength={1_000} onChange={(event) => setAttemptExcerpt(event.target.value)} placeholder="Descreva ou cole apenas o trecho que voce quer discutir." />
+            <textarea
+              value={attemptExcerpt}
+              maxLength={1_000}
+              onChange={(event) => setAttemptExcerpt(event.target.value)}
+              placeholder="Descreva ou cole apenas o trecho que voce quer discutir."
+            />
           </label>
           <label className="mentor-field">
             <span>Ponto exato de confusao</span>
-            <input value={declaredConfusion} maxLength={300} onChange={(event) => setDeclaredConfusion(event.target.value)} placeholder="Onde seu raciocinio travou?" />
+            <input
+              value={declaredConfusion}
+              maxLength={300}
+              onChange={(event) => setDeclaredConfusion(event.target.value)}
+              placeholder="Onde seu raciocinio travou?"
+            />
           </label>
         </div>
       ) : null}
 
-      <button type="button" className="mentor-submit" disabled={busy || question.trim() === ''} onClick={() => void submit()}>
+      <button
+        type="button"
+        className="mentor-submit"
+        disabled={busy || question.trim() === ''}
+        onClick={() => void submit()}
+      >
         {busy ? 'Pensando…' : 'Pedir ajuda'}
       </button>
 
       <div className="mentor-response" aria-live="polite" aria-busy={busy}>
         {busy ? <p>O mentor esta preparando uma pergunta curta.</p> : null}
-        {response === undefined && !busy ? <p>Eu ajudo com perguntas e pistas graduais, sem selecionar a resposta.</p> : null}
+        {response === undefined && !busy ? (
+          <p>Eu ajudo com perguntas e pistas graduais, sem selecionar a resposta.</p>
+        ) : null}
         {response !== undefined && !busy ? (
           <>
-            <strong>{response.outcome === 'answered' ? 'Proximo raciocinio' : 'Antes de continuar'}</strong>
+            <strong>
+              {response.outcome === 'answered' ? 'Proximo raciocinio' : 'Antes de continuar'}
+            </strong>
             <p>{response.response}</p>
           </>
         ) : null}
       </div>
 
       <footer>
-        <span>Pistas do provedor: {hintQuotaUsed}/{HINT_QUOTA}</span>
+        <span>
+          Pistas do provedor: {hintQuotaUsed}/{HINT_QUOTA}
+        </span>
         <span>Nao cria evidencia nem avalia dominio.</span>
       </footer>
     </aside>

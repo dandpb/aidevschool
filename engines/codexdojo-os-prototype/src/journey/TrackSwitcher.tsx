@@ -1,9 +1,10 @@
 import type { TrackId } from '../domain'
 
-const TRACKS: readonly { readonly id: TrackId; readonly label: string; readonly detail: string }[] = [
-  { id: 'ai-pratica', label: 'IA Prática', detail: 'Uso consciente sem exigir código' },
-  { id: 'dev', label: 'Trilha Dev', detail: 'Sistemas por simulações executáveis' },
-]
+const TRACKS: readonly { readonly id: TrackId; readonly label: string; readonly detail: string }[] =
+  [
+    { id: 'ai-pratica', label: 'IA Prática', detail: 'Uso consciente sem exigir código' },
+    { id: 'dev', label: 'Trilha Dev', detail: 'Sistemas por simulações executáveis' },
+  ]
 
 export function TrackSwitcher({
   activeTrackId,

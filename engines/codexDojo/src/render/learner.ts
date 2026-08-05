@@ -49,13 +49,24 @@ function renderAidi(snapshot: LearnerSnapshot): string {
   const path = sparklinePath(aidi.trend)
   const signalClass = aidiSignalClass(aidi.current, aidi.thresholdAmber, aidi.thresholdRed)
 
+  const currentDisplay =
+    typeof aidi.current === "number" ? aidi.current.toFixed(2) : escapeHtml(aidi.current)
+  const amberDisplay =
+    typeof aidi.thresholdAmber === "number"
+      ? aidi.thresholdAmber.toFixed(2)
+      : escapeHtml(aidi.thresholdAmber)
+  const redDisplay =
+    typeof aidi.thresholdRed === "number"
+      ? aidi.thresholdRed.toFixed(2)
+      : escapeHtml(aidi.thresholdRed)
+
   return `
     <div class="learner-aidi">
       <p class="eyebrow">AI Dependency Index (AIDI)</p>
       <div class="aidi-row">
         <div class="${escapeHtml(signalClass)}">
-          <strong>${aidi.current.toFixed(2)}</strong>
-          <small>alerta amarelo em ${aidi.thresholdAmber.toFixed(2)} · vermelho em ${aidi.thresholdRed.toFixed(2)}</small>
+          <strong>${currentDisplay}</strong>
+          <small>alerta amarelo em ${amberDisplay} · vermelho em ${redDisplay}</small>
         </div>
         <svg viewBox="0 0 100 24" class="aidi-spark" role="img" aria-label="AIDI trendline">
           <rect x="0" y="0" width="100" height="24" class="aidi-bg" rx="2" />
@@ -161,10 +172,13 @@ function renderStreak(snapshot: LearnerSnapshot): string {
 }
 
 function renderCurr(snapshot: LearnerSnapshot): string {
+  const currDisplay =
+    typeof snapshot.curr === "number" ? snapshot.curr.toFixed(2) : escapeHtml(snapshot.curr)
+
   return `
     <div class="learner-curr">
       <p class="eyebrow">CURR <small class="curr-proxy-tag">(proxy não validado)</small></p>
-      <strong class="curr-value">${snapshot.curr.toFixed(2)}</strong>
+      <strong class="curr-value">${currDisplay}</strong>
       <p class="curr-hint">
         Retenção aproximada (unidades com revisão de portão nos últimos 7 dias ÷ unidades com portão).
         <strong>Não validado</strong> — não orienta nenhuma decisão automática.

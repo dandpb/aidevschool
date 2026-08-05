@@ -1,5 +1,5 @@
-import { type AnalyticsEvent, analyticsEventIsValid } from './events'
 import type { AnalyticsEventSink } from './collector'
+import { type AnalyticsEvent, analyticsEventIsValid } from './events'
 
 export type AnalyticsFlushReason =
   | 'size'
@@ -111,9 +111,11 @@ export class AnalyticsBatcher implements AnalyticsEventSink {
     this.batchSize = Math.max(1, options.batchSize ?? 10)
     this.maxRetries = Math.max(0, options.maxRetries ?? 2)
     const restored = this.store.load()
-    this.queue = [...new Map(
-      restored.filter(analyticsEventIsValid).map((event) => [event.eventId, event]),
-    ).values()].sort((left, right) => left.sequence - right.sequence)
+    this.queue = [
+      ...new Map(
+        restored.filter(analyticsEventIsValid).map((event) => [event.eventId, event]),
+      ).values(),
+    ].sort((left, right) => left.sequence - right.sequence)
     this.sequence = this.queue.reduce((maximum, event) => Math.max(maximum, event.sequence), 0)
     this.dropOverflow()
     this.pageTarget.addEventListener('pagehide', this.onPageHide)
@@ -221,7 +223,10 @@ export class AnalyticsBatcher implements AnalyticsEventSink {
 
   private schedule(reason: 'interval' | 'retry'): void {
     if (this.disposed || this.timer !== undefined) return
-    const delay = reason === 'retry' ? (this.options.retryDelayMs ?? 1_000) : (this.options.intervalMs ?? 15_000)
+    const delay =
+      reason === 'retry'
+        ? (this.options.retryDelayMs ?? 1_000)
+        : (this.options.intervalMs ?? 15_000)
     this.timer = this.scheduler.setTimeout(() => {
       this.timer = undefined
       void this.flush(reason)
