@@ -18,6 +18,7 @@ describe("renderShell — targeted assertions", () => {
 
     expect(html).toContain("codexDojo")
     expect(html).toContain("20% do ciclo")
+    expect(html).toContain("Abrir briefing")
 
     const agentNodes = html.match(/class="agent-node/g)
     expect(agentNodes).toHaveLength(14)
