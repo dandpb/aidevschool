@@ -8,7 +8,11 @@ import type {
 import { recommendTrack } from '../progress/domain'
 import type { TrackId } from '../domain'
 
-export function Onboarding({ onComplete }: { readonly onComplete: (input: OnboardingInput) => void }) {
+export function Onboarding({
+  onComplete,
+}: {
+  readonly onComplete: (input: OnboardingInput) => void
+}) {
   const [goal, setGoal] = useState<OnboardingGoal>('work-better')
   const [context, setContext] = useState<OnboardingContext>('work')
   const [confidence, setConfidence] = useState<OnboardingConfidence>('low')
@@ -19,18 +23,31 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
   return (
     <main className="journey-page onboarding-page">
       <header className="journey-brand">
-        <span className="journey-cubes" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span><strong>AI DevSchool</strong><small>uma escola, duas trilhas</small></span>
+        <span className="journey-cubes" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+        <span>
+          <strong>AI DevSchool</strong>
+          <small>uma escola, duas trilhas</small>
+        </span>
       </header>
       <section className="onboarding-card" aria-labelledby="onboarding-title">
         <p className="journey-eyebrow">Seu primeiro passo</p>
         <h1 id="onboarding-title">O que você quer conseguir fazer com IA?</h1>
-        <p className="journey-lead">Leva menos de um minuto. Você pode ajustar a recomendação e trocar de trilha depois.</p>
+        <p className="journey-lead">
+          Leva menos de um minuto. Você pode ajustar a recomendação e trocar de trilha depois.
+        </p>
 
         <div className="onboarding-fields">
           <label>
             Objetivo
-            <select value={goal} onChange={(event) => setGoal(event.target.value as OnboardingGoal)}>
+            <select
+              value={goal}
+              onChange={(event) => setGoal(event.target.value as OnboardingGoal)}
+            >
               <option value="work-better">Usar IA melhor no trabalho</option>
               <option value="understand-ai">Entender respostas e riscos</option>
               <option value="build-systems">Construir sistemas com IA</option>
@@ -38,7 +55,10 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </label>
           <label>
             Contexto
-            <select value={context} onChange={(event) => setContext(event.target.value as OnboardingContext)}>
+            <select
+              value={context}
+              onChange={(event) => setContext(event.target.value as OnboardingContext)}
+            >
               <option value="work">Trabalho</option>
               <option value="studies">Estudos</option>
               <option value="personal-project">Projeto pessoal</option>
@@ -46,7 +66,10 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </label>
           <label>
             Confiança atual
-            <select value={confidence} onChange={(event) => setConfidence(event.target.value as OnboardingConfidence)}>
+            <select
+              value={confidence}
+              onChange={(event) => setConfidence(event.target.value as OnboardingConfidence)}
+            >
               <option value="low">Estou começando</option>
               <option value="medium">Já experimentei algumas vezes</option>
               <option value="high">Uso com frequência</option>
@@ -78,7 +101,10 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </button>
         </fieldset>
         <p className="recommendation-note" role="status">
-          Recomendação: <strong>{recommendation === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>. Você escolheu <strong>{selectedTrackId === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>.
+          Recomendação:{' '}
+          <strong>{recommendation === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>. Você
+          escolheu <strong>{selectedTrackId === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>
+          .
         </p>
         <button
           type="button"

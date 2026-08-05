@@ -100,11 +100,11 @@ export type LearnerSnapshot = {
     readonly current: number
     readonly thresholdAmber: number
     readonly thresholdRed: number
-    readonly measurementSource: "self_reported" | "event_computed" | "derived"
+    readonly measurementSource: 'self_reported' | 'event_computed' | 'derived'
     readonly trend: readonly {
       readonly date: string
       readonly value: number
-      readonly measurementSource: "self_reported" | "event_computed" | "derived"
+      readonly measurementSource: 'self_reported' | 'event_computed' | 'derived'
     }[]
   }
   readonly topPitfalls: readonly {
@@ -138,7 +138,10 @@ export type LearnerSnapshot = {
   readonly predictions: {
     readonly count: number
     readonly byMetric: Readonly<
-      Record<'latency' | 'memory' | 'throughput', { readonly correct: number; readonly total: number }>
+      Record<
+        'latency' | 'memory' | 'throughput',
+        { readonly correct: number; readonly total: number }
+      >
     >
   }
 }

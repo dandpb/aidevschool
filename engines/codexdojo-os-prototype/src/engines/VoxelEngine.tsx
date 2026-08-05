@@ -30,7 +30,9 @@ export function VoxelEngine({
       <EmbeddedEngine
         key={gameId}
         engineName={`voxelDojo · ${game.name}`}
-        configuredUrl={configuredUrls[gameId] ?? (gameId === defaultGameId ? compatibilityUrl : undefined)}
+        configuredUrl={
+          configuredUrls[gameId] ?? (gameId === defaultGameId ? compatibilityUrl : undefined)
+        }
         developmentUrl={game.developmentUrl}
         development={development}
         focused={focused}

@@ -19,14 +19,20 @@ const ACHIEVEMENT_LABELS: Readonly<Record<AchievementId, string>> = {
 
 function verificationCopy(verification: EvidenceVerificationState): string {
   switch (verification.kind) {
-    case 'not-submitted': return 'A prática terminou, mas nenhuma evidência foi recebida.'
-    case 'validating': return 'A evidência está sendo validada fora do progresso local.'
-    case 'pending': return 'A evidência está preservada e aguarda o verificador independente.'
-    case 'gateway-unavailable': return 'A evidência está segura. O verificador pode ser tentado novamente.'
-    case 'rejected': return 'A evidência não passou pelo contrato e precisa de uma nova tentativa.'
-    case 'verified': return verification.receipt.verdict === 'PASS'
-      ? 'O verificador independente aprovou esta evidência. O gate canônico continua separado.'
-      : 'O verificador indicou critérios a melhorar. A conclusão local e o XP foram preservados; o gate canônico continua separado.'
+    case 'not-submitted':
+      return 'A prática terminou, mas nenhuma evidência foi recebida.'
+    case 'validating':
+      return 'A evidência está sendo validada fora do progresso local.'
+    case 'pending':
+      return 'A evidência está preservada e aguarda o verificador independente.'
+    case 'gateway-unavailable':
+      return 'A evidência está segura. O verificador pode ser tentado novamente.'
+    case 'rejected':
+      return 'A evidência não passou pelo contrato e precisa de uma nova tentativa.'
+    case 'verified':
+      return verification.receipt.verdict === 'PASS'
+        ? 'O verificador independente aprovou esta evidência. O gate canônico continua separado.'
+        : 'O verificador indicou critérios a melhorar. A conclusão local e o XP foram preservados; o gate canônico continua separado.'
   }
 }
 
@@ -56,12 +62,24 @@ export function ResultScreen({
     <section className="mission-result" aria-labelledby="mission-result-title">
       <p className="journey-eyebrow">Prática concluída neste dispositivo</p>
       <h2 id="mission-result-title">Seu esforço virou um próximo passo claro.</h2>
-      <p>A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.</p>
+      <p>
+        A recompensa local celebra a prática. Evidência, veredito independente e competência
+        canônica continuam registros diferentes.
+      </p>
 
       <section className="result-rewards" aria-label="Recompensas locais">
-        <div><span>XP nesta prática</span><strong>+{summary?.xpAwarded ?? 0} XP</strong></div>
-        <div><span>XP total local</span><strong>{summary?.totalXp ?? 0} XP</strong></div>
-        <div><span>Competências canônicas</span><strong>{canonicalMasteryCount}</strong></div>
+        <div>
+          <span>XP nesta prática</span>
+          <strong>+{summary?.xpAwarded ?? 0} XP</strong>
+        </div>
+        <div>
+          <span>XP total local</span>
+          <strong>{summary?.totalXp ?? 0} XP</strong>
+        </div>
+        <div>
+          <span>Competências canônicas</span>
+          <strong>{canonicalMasteryCount}</strong>
+        </div>
       </section>
 
       {summary !== undefined && summary.achievementsUnlocked.length > 0 ? (
@@ -75,14 +93,18 @@ export function ResultScreen({
         <strong>Resultado da verificação</strong>
         <p>{verificationCopy(verification)}</p>
         {verification.kind === 'gateway-unavailable' ? (
-          <button type="button" onClick={onRetryVerification}>Tentar verificação novamente</button>
+          <button type="button" onClick={onRetryVerification}>
+            Tentar verificação novamente
+          </button>
         ) : null}
       </div>
 
       {completionStatus === 'failed' ? (
         <div className="result-verification" role="alert">
           <strong>A conclusão local não foi salva.</strong>
-          <button type="button" onClick={onRetrySave}>Tentar salvar novamente</button>
+          <button type="button" onClick={onRetrySave}>
+            Tentar salvar novamente
+          </button>
         </div>
       ) : null}
 
