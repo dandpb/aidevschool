@@ -13,3 +13,7 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+
+## 2025-02-13 - Algorithmic micro-optimizations vs practical rendering impact
+**Learning:** While optimizing O(n) `.findIndex()` calls on small static arrays (like `cycleStages`) to O(1) `Map` lookups is algorithmically more sound, modern JS engines are highly optimized for linear scans on small arrays. The actual performance impact is negligible, making it a micro-optimization that shouldn't be prioritized over more substantial DOM/React rendering bottlenecks unless the array is proven to grow significantly.
+**Action:** Focus performance hunts on heavy layout thrashing, large data structure cloning, unnecessary full-DOM re-renders, and N+1 problems instead of pre-computing indices for small (e.g., < 20 elements) static arrays, unless profiling shows they are part of a critical, hyper-frequent hot path.
