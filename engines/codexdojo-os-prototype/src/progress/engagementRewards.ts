@@ -41,11 +41,14 @@ function awardEngagementXp<T extends EngagementProgress>(
   if (progress.rewardedActivityKeys.includes(activityKey)) return progress
   const localDate = toLocalDateKey(now)
   const previousDate = progress.localEngagementStreak.lastActiveLocalDate
-  const current = previousDate === localDate
-    ? progress.localEngagementStreak.current
-    : previousDate !== null && dayDistance(previousDate, localDate) === 1
-      ? progress.localEngagementStreak.current + 1
-      : 1
+  let current = progress.localEngagementStreak.current
+  if (previousDate !== localDate) {
+    if (previousDate !== null && dayDistance(previousDate, localDate) === 1) {
+      current += 1
+    } else {
+      current = 1
+    }
+  }
   return {
     ...progress,
     xp: progress.xp + amount,

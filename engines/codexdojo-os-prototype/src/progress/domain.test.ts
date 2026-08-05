@@ -29,7 +29,7 @@ describe('OS local progress', () => {
 
     const started = startMission(onboarded, mission)
     const completed = recordMissionCompletion(started, mission, missionCatalog, undefined, {
-      now: new Date('2026-07-25T10:00:00-03:00'),
+      now: new Date('2026-07-25T12:00:00Z'),
     })
 
     expect(started.missionStatusByKey[missionKey('ai-pratica', 'l02')]).toBe('in_progress')
@@ -41,7 +41,7 @@ describe('OS local progress', () => {
   it('awards completion and review XP idempotently without repeat inflation', () => {
     const mission = missionCatalog.missions.find((candidate) => candidate.id === 'l02')
     if (mission === undefined) throw new Error('Expected l02')
-    const now = new Date('2026-07-25T10:00:00-03:00')
+    const now = new Date('2026-07-25T12:00:00Z')
     const initial = createInitialOsProgress(missionCatalog)
     const completed = recordMissionCompletion(initial, mission, missionCatalog, undefined, { now })
     const duplicate = recordMissionCompletion(completed, mission, missionCatalog, undefined, { now })
@@ -98,15 +98,15 @@ describe('OS local progress', () => {
     if (l01 === undefined || l02 === undefined || l03 === undefined) throw new Error('Expected IA chapter')
     let progress = createInitialOsProgress(missionCatalog)
     progress = recordMissionCompletion(progress, l01, missionCatalog, undefined, {
-      now: new Date('2026-07-25T23:30:00-03:00'),
+      now: new Date('2026-07-25T12:00:00Z'),
     })
     progress = recordMissionCompletion(progress, l02, missionCatalog, undefined, {
-      now: new Date('2026-07-26T08:00:00-03:00'),
+      now: new Date('2026-07-26T12:00:00Z'),
     })
     expect(progress.localEngagementStreak.current).toBe(2)
 
     progress = recordMissionCompletion(progress, l03, missionCatalog, undefined, {
-      now: new Date('2026-07-29T08:00:00-03:00'),
+      now: new Date('2026-07-29T12:00:00Z'),
     })
     expect(progress.localEngagementStreak.current).toBe(1)
     expect(progress.localEngagementStreak.longest).toBe(2)
