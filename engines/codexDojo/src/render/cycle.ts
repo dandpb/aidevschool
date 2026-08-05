@@ -1,3 +1,4 @@
+import { cycleStageIndices } from "../cycle"
 import { cycleStages } from "../data/cycle"
 import type { CycleStage } from "../domain"
 import type { AppState } from "../state"
@@ -16,7 +17,8 @@ export type CycleViewModel = {
 }
 
 export function buildCycleViewModel(state: AppState): CycleViewModel {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
+  // ⚡ Bolt: Use pre-computed map instead of O(n) .findIndex() array scan
+  const selectedIndex = cycleStageIndices.get(state.selectedStageId) ?? -1
   const completedIds = new Set(state.completedStageIds)
   const stages = cycleStages.map((stage, index) => ({
     stage,
