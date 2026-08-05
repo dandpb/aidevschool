@@ -15,7 +15,7 @@ def _number_metric_matches(actual: Any, expected: Any) -> bool:
         isinstance(actual, (int, float))
         and not isinstance(actual, bool)
         and math.isfinite(actual)
-        and actual == expected
+        and math.isclose(actual, expected)
     )
 
 

@@ -26,6 +26,12 @@ describe("renderShell — targeted assertions", () => {
     expect(stageChips).toHaveLength(6)
   })
 
+  it("overview: contains context-aware call-to-action button for the next project", () => {
+    const html = renderShell(stateWith({ view: "overview" }))
+    const project = getSelectedProject(stateWith({ view: "overview" }))
+    expect(html).toContain(`aria-label="Abrir briefing: ${project.title}"`)
+  })
+
   it("overview: surfaces ecosystem contracts and metric signals", () => {
     const html = renderShell(stateWith({ view: "overview" }))
 
