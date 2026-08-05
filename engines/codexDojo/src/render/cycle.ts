@@ -1,3 +1,4 @@
+import { cycleStageIndexById } from "../cycle"
 import { cycleStages } from "../data/cycle"
 import type { CycleStage } from "../domain"
 import type { AppState } from "../state"
@@ -16,7 +17,7 @@ export type CycleViewModel = {
 }
 
 export function buildCycleViewModel(state: AppState): CycleViewModel {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
+  const selectedIndex = cycleStageIndexById.get(state.selectedStageId) ?? -1
   const completedIds = new Set(state.completedStageIds)
   const stages = cycleStages.map((stage, index) => ({
     stage,
