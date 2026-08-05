@@ -103,9 +103,12 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         weeklyTimeHours: 5,
       },
       aidi: {
-        current: 0.5,
-        thresholdAmber: 0.6,
-        thresholdRed: 0.75,
+        // biome-ignore lint/suspicious/noExplicitAny: inject XSS payload to test formatNumeric escape coverage
+        current: XSS as any,
+        // biome-ignore lint/suspicious/noExplicitAny: inject XSS payload to test formatNumeric escape coverage
+        thresholdAmber: XSS as any,
+        // biome-ignore lint/suspicious/noExplicitAny: inject XSS payload to test formatNumeric escape coverage
+        thresholdRed: XSS as any,
         measurementSource: "self_reported",
         trend: [
           {
@@ -140,7 +143,8 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         freezesEquipped: 1,
         freezesMax: 2,
       },
-      curr: 0.8,
+      // biome-ignore lint/suspicious/noExplicitAny: inject XSS payload to test formatNumeric escape coverage
+      curr: XSS as any,
       challenges: [],
     }
 

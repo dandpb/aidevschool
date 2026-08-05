@@ -1,0 +1,4 @@
+## 2026-07-29 - [Fix XSS crash/vulnerability in supposedly numeric fields]
+**Vulnerability:** XSS and Runtime Application Crash on `.toFixed()` for supposedly numeric data fields inside `learner.ts`.
+**Learning:** Fields like `aidi.current`, `snapshot.curr` that are thought to be purely numeric might ingest untrusted payloads during integration or malformed system states. If string payloads are present, calling `.toFixed()` on a string directly crashes the renderer. If cast or bypassed, it allows an XSS attack because numeric rendering often bypasses `escapeHtml()`.
+**Prevention:** Always validate and fallback to escaping dynamically rendered data, even if conceptually numeric. Use type checks (e.g. `typeof value === "number"`) before applying numeric methods (like `.toFixed`), and wrap the fallback in `escapeHtml()`. Write strict escape regression tests that inject XSS payloads explicitly using `as any`.
