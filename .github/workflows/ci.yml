@@ -3,8 +3,8 @@ name: CI
 # Enforcement spine (TECH_DEBT_AUDIT_2026-06-28.md, D2): lint + test + build on
 # every push / PR. The project's "no claims without evidence" rule needs a
 # machine that actually runs the suites. TS engines and the Python substrate are
-# blocking; the polyglot curriculum jobs are informational until D13 (parity
-# vectors + stub completion) lands.
+# blocking. The remaining Go/Rust implementations are small, active pilots and
+# therefore enforce formatting, static checks, and tests as well.
 
 # Push runs only on main (agent-generated feature branches were burning the full
 # matrix on every push — TECH_DEBT_AUDIT_2026-07-08 item 15); PRs still run everywhere.
@@ -77,8 +77,11 @@ jobs:
           cache-dependency-path: engines/voxelDojo/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm -r --if-present test
-      - run: pnpm -r --if-present build
+      # Root scripts include shared accessibility/evidence checks that a raw
+      # recursive invocation would skip.
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
 
   codexdojo-os:
     name: codexdojo-os (TS)
@@ -88,12 +91,18 @@ jobs:
         working-directory: engines/codexdojo-os-prototype
     steps:
       - uses: actions/checkout@v4
+      # The integrated OS bridge dispatches fixed, independent Python verifiers.
+      # Jobs are isolated, so the Python job cannot prepare this runtime for us.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
+      - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
       - run: npm run build
@@ -109,30 +118,128 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest
 
-  curriculum-go:
-    name: curriculum Go (informational)
+  literacydojo:
+    name: literacyDojo (TS + content)
     runs-on: ubuntu-latest
-    continue-on-error: true
+    defaults:
+      run:
+        working-directory: engines/literacyDojo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: engines/literacyDojo/package-lock.json
+      - run: python -m pip install -e ../..
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  minitown:
+    name: miniTown (TS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/miniTown
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: engines/miniTown/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: engines/miniTown/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+
+  dojotoday:
+    name: dojoToday (TS + substrate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/dojoToday
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: engines/dojoToday/package-lock.json
+      - run: python -m pip install -e ../..
+      - run: npm ci
+      - run: npm run selfcheck
+      - run: npm run lint
+      - run: npm run build
+
+  curriculum-node:
+    name: curriculum Node (18 projects)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: lint, test, and build every Node implementation
+        run: |
+          set -e
+          for dir in curriculum/[0-9][0-9]_*/node-impl; do
+            test -f "$dir/package.json" || continue
+            echo "::group::$dir"
+            (
+              cd "$dir"
+              npm install --no-package-lock --no-audit --no-fund
+              npm run lint
+              npm run test
+              npm run build
+            )
+            echo "::endgroup::"
+          done
+
+  curriculum-go:
+    name: curriculum Go
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-      - name: go test (pilot + any remaining go.mod)
+      - name: format, vet, and test rate-limiter pilot
         run: |
           set -e
-          # Node-first curriculum: only 01_rate_limiter is expected to ship go-impl.
-          find curriculum -name go.mod -execdir go test ./... \;
+          test -z "$(gofmt -l curriculum/01_rate_limiter/go-impl)"
+          cd curriculum/01_rate_limiter/go-impl
+          go vet ./...
+          go test ./...
 
   curriculum-rust:
-    name: curriculum Rust (informational)
+    name: curriculum Rust
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: cargo test (pilot + any remaining Cargo.toml)
+        with:
+          components: rustfmt, clippy
+      - name: format, lint, and test rate-limiter pilot
         run: |
           set -e
-          # Node-first curriculum: only 01_rate_limiter is expected to ship rust-impl.
-          find curriculum -name Cargo.toml -execdir cargo test \;
+          cd curriculum/01_rate_limiter/rust-impl
+          cargo fmt --check
+          cargo clippy --all-targets -- -D warnings
+          cargo test

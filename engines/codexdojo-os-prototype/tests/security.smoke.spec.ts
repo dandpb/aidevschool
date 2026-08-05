@@ -67,6 +67,16 @@ test('rejects hostile mission envelopes without mutating any authority surface',
   const correlated = captured.find((message) => message.protocol === 'aidevschool.host-engine')
   if (correlated === undefined) throw new Error('Expected a correlated host envelope')
 
+  // Mission launch analytics are persisted asynchronously. Wait for the
+  // legitimate event before taking the security baseline, otherwise its late
+  // arrival is indistinguishable from a mutation caused by the hostile input.
+  await expect.poll(async () => page.evaluate(() => {
+    const queue = JSON.parse(localStorage.getItem('codexdojo-os.analytics.queue.v1') ?? '[]') as Array<{
+      name?: string
+    }>
+    return queue.some((event) => event.name === 'mission.started')
+  })).toBe(true)
+
   const beforeVerification = await verificationRecordCount(page)
   const beforeAnalytics = await page.evaluate(
     () => localStorage.getItem('codexdojo-os.analytics.queue.v1'),

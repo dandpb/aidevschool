@@ -27,14 +27,15 @@ do `codexDojo`). O read model `src/data/today.ts` é gerado (DO NOT EDIT).
 
 ```bash
 cd engines/dojoToday
-npm install
-npm run gen:today   # gera src/data/today.ts a partir de learner/learning_state.yaml
+npm ci
+# Para regenerar a projeção explicitamente, volte à raiz e rode:
+# python3 -m learner.substrate
 npm run dev         # http://localhost:5180
 npm run lint && npm run build
 ```
 
-Pré-requisito do `gen:today`: `python3` com `pyyaml` e `fsrs`
-(o mesmo ambiente do substrato — `pip install -e ".[dev]"` na raiz).
+Pré-requisito da geração executada por `prebuild`: `python3` com `pyyaml` e
+`fsrs` (o mesmo ambiente do substrato — `pip install -e ".[dev]"` na raiz).
 
 ## Origem dos dados
 

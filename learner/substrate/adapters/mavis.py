@@ -1,11 +1,8 @@
 """Adapter that derives the .mavis/learning_state.yaml view."""
 
-from pathlib import Path
 from typing import Any
 
 import yaml
-
-ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 STATE_MAP_PT = {
     "presenting": "apresentando",
@@ -36,7 +33,9 @@ def derive_mavis_view(state: dict[str, Any]) -> dict[str, Any]:
         "version": 3,
         "system": state.get("system", "agora-continuum"),
         "derived_from": "learner/learning_state.yaml",
-        "workspace": str(ROOT),
+        # Keep tracked derived output reproducible across checkout locations.
+        # The path is relative to the repository root that owns `.mavis/`.
+        "workspace": ".",
         "learner_profile": {
             "level": learner["level"],
             "goal": learner.get("goal", ""),
