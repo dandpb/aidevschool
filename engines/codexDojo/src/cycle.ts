@@ -5,7 +5,7 @@
  * validates it at mount time (`mountCodexDojo` throws `AppMountError` when
  * there are no stages). Module-level guards are therefore unnecessary here.
  */
-import { cycleStages } from "./data/cycle"
+import { cycleStageIndices, cycleStages } from "./data/cycle"
 
 type CycleSnapshot = {
   readonly selectedStageId: string
@@ -13,7 +13,8 @@ type CycleSnapshot = {
 }
 
 export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === snapshot.selectedStageId)
+  const index = cycleStageIndices.get(snapshot.selectedStageId)
+  const selectedIndex = index !== undefined ? index : -1
   const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
   const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
 

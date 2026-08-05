@@ -161,10 +161,16 @@ vi.mock("../data/agents", () => ({
   userFacingAgents: [userFacingAgent],
 }))
 
-vi.mock("../data/cycle", () => ({
-  cycleStages: [stage],
-  metrics: [metric],
-}))
+vi.mock("../data/cycle", () => {
+  const mockCycleStageIndices = new Map<string, number>()
+  mockCycleStageIndices.set(stage.id, 0)
+
+  return {
+    cycleStages: [stage],
+    metrics: [metric],
+    cycleStageIndices: mockCycleStageIndices,
+  }
+})
 
 vi.mock("../data/ecosystem", () => ({
   ecosystemStatuses: [ecosystemStatus],
