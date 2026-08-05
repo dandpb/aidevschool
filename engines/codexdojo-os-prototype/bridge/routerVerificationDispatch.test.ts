@@ -21,6 +21,8 @@ describe('verification bridge dispatch', () => {
       }),
     }, runProcess)
 
+    console.log(response)
+
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
       evidence_digest: '4e55aa3ff44694bc170974fb7898f9a16e3092aa4cd4b7a1ae38ca2f162e0577',
@@ -67,6 +69,8 @@ describe('verification bridge dispatch', () => {
         record: teachingGameRecord,
       }),
     }, runProcess)
+
+    console.log(response)
 
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
