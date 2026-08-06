@@ -5,6 +5,7 @@ import { renderView } from "./registry"
 export function renderShell(state: AppState): string {
   return `
     <main class="app-shell">
+      <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
       <aside class="sidebar" aria-label="Navegação principal">
         <div class="brand-block">
           <span class="brand-mark" aria-hidden="true">CD</span>
@@ -15,7 +16,7 @@ export function renderShell(state: AppState): string {
         </div>
         <nav class="nav-stack">${renderNav(state)}</nav>
       </aside>
-      <div class="content-shell">
+      <div id="main-content" tabindex="-1" class="content-shell">
         ${renderView(state)}
       </div>
     </main>
