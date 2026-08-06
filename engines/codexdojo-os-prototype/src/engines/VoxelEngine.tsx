@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { VoxelGamePicker } from './VoxelGamePicker'
-import { voxelCatalog, type VoxelGameId, type VoxelUrlMap } from './voxelCatalog'
+import { type VoxelGameId, type VoxelUrlMap, voxelCatalog } from './voxelCatalog'
 
 const defaultGameId: VoxelGameId = 'game-10-hash-ring'
 

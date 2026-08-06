@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { buildMentorContext } from './context'
-import { NO_MENTOR_AUTHORITY, type MentorRequestV1, type MentorResponseV1 } from './contracts'
+import { type MentorRequestV1, type MentorResponseV1, NO_MENTOR_AUTHORITY } from './contracts'
 import { MentorController, type MentorControllerState } from './mentorController'
 import type { MentorProvider } from './provider'
 

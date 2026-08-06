@@ -1,4 +1,4 @@
-import { NO_MENTOR_AUTHORITY, type MentorRequestV1, type MentorResponseV1 } from './contracts'
+import { type MentorRequestV1, type MentorResponseV1, NO_MENTOR_AUTHORITY } from './contracts'
 import type { MentorPolicyDecision } from './policy'
 
 type HelpStep = (request: MentorRequestV1) => string

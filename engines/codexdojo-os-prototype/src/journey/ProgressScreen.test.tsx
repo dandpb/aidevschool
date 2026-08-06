@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
+import { ServicesProvider } from '../app/ServicesProvider'
 import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'

@@ -1,6 +1,6 @@
 import {
-  createBridgeTokenProvider,
   type BridgeTokenProvider,
+  createBridgeTokenProvider,
   type Fetcher,
 } from '../engines/client'
 import type { EvidenceSubmission, VerificationGateway, VerificationReceipt } from './ports'

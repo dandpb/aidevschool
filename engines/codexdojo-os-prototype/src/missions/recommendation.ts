@@ -1,8 +1,8 @@
 import type { LearnerSnapshot, MissionKey, TrackId } from '../domain'
-import type { EvidenceVerificationState } from '../verification/ports'
-import type { MissionCatalogRepository } from './catalog'
 import type { OsProgress } from '../progress/domain'
 import { missionKey } from '../progress/domain'
+import type { EvidenceVerificationState } from '../verification/ports'
+import type { MissionCatalogRepository } from './catalog'
 import { mapCanonicalReviews, mapPitfallPractice } from './reviewMapping'
 
 export type MissionRecommendation =

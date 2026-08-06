@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useReducer } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { encodeRoute, parseRoute } from '../app/routes'
+import { useServices } from '../app/ServicesProvider'
 import type { MissionDefinition } from '../domain'
-import { migrateOsProgress } from '../progress/migration'
 import {
+  completeOnboarding,
   type MissionStartOptions,
   type OnboardingInput,
-  completeOnboarding,
   recommendTrack,
   recordMissionCompletion,
   startMission,
   switchTrack,
 } from '../progress/domain'
-import { useServices } from '../app/ServicesProvider'
+import { migrateOsProgress } from '../progress/migration'
 import { journeyReducer } from './journeyReducer'
 
 export function useJourneyController() {

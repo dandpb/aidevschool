@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition } from '../domain'
-import type { MissionSessionController, MissionSessionSnapshot } from './MissionSessionController'
-import type { EvidenceVerificationState } from '../verification/ports'
-import { ResultScreen, type MissionCompletionSummary } from '../journey/ResultScreen'
+import { type MissionCompletionSummary, ResultScreen } from '../journey/ResultScreen'
 import { MentorPanel } from '../mentor/MentorPanel'
-import { MissionStatusControls } from './MissionStatusControls'
 import { createInitialRendererState, type RendererPreference } from '../rendering/domain'
+import type { EvidenceVerificationState } from '../verification/ports'
+import type { MissionSessionController, MissionSessionSnapshot } from './MissionSessionController'
+import { MissionStatusControls } from './MissionStatusControls'
 
 const INITIAL_SESSION: MissionSessionSnapshot = {
   phase: 'handshaking',

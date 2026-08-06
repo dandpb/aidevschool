@@ -1,8 +1,8 @@
 import type { MissionDefinition } from '../domain'
 import {
   EvidenceGatewayRejection,
-  EvidenceValidationError,
   type EvidenceSubmission,
+  EvidenceValidationError,
   type EvidenceVerificationState,
   type RawEvidenceEntry,
   type StoredVerificationReceipt,

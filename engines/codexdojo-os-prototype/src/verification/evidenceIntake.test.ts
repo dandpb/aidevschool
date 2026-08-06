@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { EvidenceGatewayRejection } from './ports'
 import { digest, mission, receipt, setup, submission } from './evidenceIntakeTestFixtures'
+import { EvidenceGatewayRejection } from './ports'
 
 describe('EvidenceIntake literacy verification', () => {
   it('accepts exponent-valued evidence without computing or sending a browser digest', async () => {

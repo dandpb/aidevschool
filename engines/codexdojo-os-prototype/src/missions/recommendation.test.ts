@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { GeneratedMissionCatalogRepository } from './catalog'
-import { recommendMission } from './recommendation'
 import { learnerSnapshot } from '../data/learner'
+import { missionCatalog } from '../data/missions'
+import type { LearnerSnapshot } from '../domain'
 import {
   completeOnboarding,
   createInitialOsProgress,
@@ -10,8 +10,8 @@ import {
   recordMissionCompletion,
   startMission,
 } from '../progress/domain'
-import { missionCatalog } from '../data/missions'
-import type { LearnerSnapshot } from '../domain'
+import { GeneratedMissionCatalogRepository } from './catalog'
+import { recommendMission } from './recommendation'
 
 function learnerWith(overrides: Partial<LearnerSnapshot>): LearnerSnapshot {
   return { ...learnerSnapshot, ...overrides }

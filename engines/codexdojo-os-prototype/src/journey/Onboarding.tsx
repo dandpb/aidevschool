@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import type { TrackId } from '../domain'
 import type {
   OnboardingConfidence,
   OnboardingContext,
@@ -6,7 +7,6 @@ import type {
   OnboardingInput,
 } from '../progress/domain'
 import { recommendTrack } from '../progress/domain'
-import type { TrackId } from '../domain'
 
 export function Onboarding({
   onComplete,

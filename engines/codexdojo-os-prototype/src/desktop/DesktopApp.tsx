@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { AppContent } from '../apps/AppContent'
 import { appTitles } from '../apps/appCatalog'
 import { learnerSnapshot } from '../data/learner'
-import { DesktopShortcuts, DesktopWindow, Dock, TopBar } from './DesktopChrome'
 import type {
   AppDefinition,
   CoreAppId,
@@ -11,8 +10,9 @@ import type {
   WindowState,
 } from '../domain'
 import { Launcher } from '../launcher/Launcher'
-import { coreContexts } from '../learning/learningContexts'
 import { LearningRail } from '../learning/LearningRail'
+import { coreContexts } from '../learning/learningContexts'
+import { DesktopShortcuts, DesktopWindow, Dock, TopBar } from './DesktopChrome'
 
 type AppProps = {
   readonly learner?: LearnerSnapshot

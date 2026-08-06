@@ -1,4 +1,4 @@
-import { voxelCatalog, type VoxelGameId } from './voxelCatalog'
+import { type VoxelGameId, voxelCatalog } from './voxelCatalog'
 
 export type VoxelGamePickerProps = {
   readonly selectedId: VoxelGameId

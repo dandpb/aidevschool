@@ -1,5 +1,5 @@
-import { type AnalyticsEvent, analyticsEventIsValid } from './events'
 import type { AnalyticsEventSink } from './collector'
+import { type AnalyticsEvent, analyticsEventIsValid } from './events'
 
 export type AnalyticsFlushReason =
   | 'size'

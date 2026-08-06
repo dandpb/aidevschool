@@ -1,6 +1,6 @@
 import {
-  BrainCircuit,
   Boxes,
+  BrainCircuit,
   Gamepad2,
   Gauge,
   LayoutDashboard,

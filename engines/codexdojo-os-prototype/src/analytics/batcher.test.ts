@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  AnalyticsBatcher,
   type AnalyticsBatch,
+  AnalyticsBatcher,
   type AnalyticsBatchTransport,
   type AnalyticsFlushReason,
   InMemoryAnalyticsQueueStore,

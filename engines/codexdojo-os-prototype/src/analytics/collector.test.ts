@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
+import { AnalyticsBatcher, InMemoryAnalyticsQueueStore } from './batcher'
 import {
   AnalyticsCollector,
-  InMemoryInstallationIdentityStore,
   type AnalyticsEventSink,
+  InMemoryInstallationIdentityStore,
 } from './collector'
-import { AnalyticsBatcher, InMemoryAnalyticsQueueStore } from './batcher'
 import type { AnalyticsEvent } from './events'
 
 class CapturingSink implements AnalyticsEventSink {

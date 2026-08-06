@@ -1,7 +1,7 @@
 import type { MissionDefinition } from '../domain'
-import type { MissionSessionSnapshot } from './MissionSessionController'
-import type { EvidenceVerificationState } from '../verification/ports'
 import type { RendererFailureReason, RendererPreference } from '../rendering/domain'
+import type { EvidenceVerificationState } from '../verification/ports'
+import type { MissionSessionSnapshot } from './MissionSessionController'
 
 const STAGE_LABELS = { understand: 'Entender', respond: 'Responder', apply: 'Aplicar' } as const
 

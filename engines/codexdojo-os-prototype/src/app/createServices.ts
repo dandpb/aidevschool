@@ -1,11 +1,11 @@
-import {
-  MissionSessionController,
-  type MissionSessionControllerInput,
-} from '../host/MissionSessionController'
 import { AnalyticsBatcher, LocalStorageAnalyticsQueueStore } from '../analytics/batcher'
 import { AnalyticsCollector } from '../analytics/collector'
 import type { AnalyticsPort } from '../analytics/events'
 import { InMemoryAnalyticsTransport, SameOriginAnalyticsTransport } from '../analytics/transports'
+import {
+  MissionSessionController,
+  type MissionSessionControllerInput,
+} from '../host/MissionSessionController'
 import { createMentorProvider, type MentorProvider } from '../mentor/provider'
 import {
   GeneratedMissionCatalogRepository,

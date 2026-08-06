@@ -1,16 +1,16 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
-import { missionCatalog } from '../data/missions'
+import { ServicesProvider } from '../app/ServicesProvider'
 import { learnerSnapshot } from '../data/learner'
+import { missionCatalog } from '../data/missions'
 import type { MissionDefinition } from '../domain'
+import { createInitialRendererState } from '../rendering/domain'
 import type {
   EvidenceSubmission,
   EvidenceVerificationState,
   VerificationService,
 } from '../verification/ports'
-import { createInitialRendererState } from '../rendering/domain'
 import {
   MissionSessionController,
   type MissionSessionControllerInput,

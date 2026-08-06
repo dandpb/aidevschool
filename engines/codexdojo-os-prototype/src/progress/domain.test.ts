@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { missionCatalog } from '../data/missions'
 import {
-  MISSION_COMPLETION_XP,
-  REVIEW_PRACTICE_XP,
   completeOnboarding,
   createInitialOsProgress,
   dailyGoalMet,
   dailyXp,
+  MISSION_COMPLETION_XP,
   missionKey,
+  REVIEW_PRACTICE_XP,
   recordHintRequest,
   recordMissionAttempt,
   recordMissionCompletion,
