@@ -4,15 +4,29 @@ import { iconFor } from '../apps/AppIcon'
 import { appCatalog } from '../apps/appCatalog'
 import type { AppDefinition } from '../domain'
 
+// ⚡ Bolt: Extract static calculation to module scope to avoid re-running on every keystroke/render
+const availableCount = appCatalog.filter((app) => app.status === 'disponivel').length
+
 export function Launcher({ query, onQuery, onClose, onLaunch }: { readonly query: string; readonly onQuery: (value: string) => void; readonly onClose: () => void; readonly onLaunch: (app: AppDefinition) => void }) {
   const [category, setCategory] = useState('Todos')
   const categories = ['Todos', 'Aprender', 'Desenvolver', 'Criar', 'Sistema', 'Utilitários']
-  const availableCount = appCatalog.filter((app) => app.status === 'disponivel').length
-  const filtered = useMemo(() => appCatalog.filter((app) => {
-    const matchesCategory = category === 'Todos' || app.category === category
-    const haystack = `${app.name} ${app.category} ${app.concepts.join(' ')}`.toLowerCase()
-    return matchesCategory && haystack.includes(query.toLowerCase())
-  }), [category, query])
+  const filtered = useMemo(() => {
+    // ⚡ Bolt: Hoist the query normalization outside the loop so we don't lowercase it for every app
+    const normalizedQuery = query.toLowerCase()
+
+    return appCatalog.filter((app) => {
+      const matchesCategory = category === 'Todos' || app.category === category
+
+      // ⚡ Bolt: Early return for category mismatch to avoid expensive string allocation
+      if (!matchesCategory) return false
+
+      // ⚡ Bolt: Fast path for empty queries - no need to build the haystack string
+      if (!normalizedQuery) return true
+
+      const haystack = `${app.name} ${app.category} ${app.concepts.join(' ')}`.toLowerCase()
+      return haystack.includes(normalizedQuery)
+    })
+  }, [category, query])
   return (
     <section
       className="launcher-overlay"
