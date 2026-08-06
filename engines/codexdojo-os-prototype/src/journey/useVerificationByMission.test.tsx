@@ -8,15 +8,19 @@ import { useVerificationByMission } from './useVerificationByMission'
 
 function deferred<T>() {
   let resolve!: (value: T) => void
-  const promise = new Promise<T>((resolvePromise) => { resolve = resolvePromise })
+  const promise = new Promise<T>((resolvePromise) => {
+    resolve = resolvePromise
+  })
   return { promise, resolve }
 }
 
 function catalog(missions: readonly MissionDefinition[]): MissionCatalogRepository {
   return {
     snapshot: () => missionCatalog,
-    listLaunchable: (trackId?: TrackId) => missions.filter((mission) => trackId === undefined || mission.trackId === trackId),
-    get: (trackId, missionId) => missions.find((mission) => mission.trackId === trackId && mission.id === missionId),
+    listLaunchable: (trackId?: TrackId) =>
+      missions.filter((mission) => trackId === undefined || mission.trackId === trackId),
+    get: (trackId, missionId) =>
+      missions.find((mission) => mission.trackId === trackId && mission.id === missionId),
     runtimeUrl: () => 'http://localhost/',
   }
 }
@@ -33,7 +37,9 @@ describe('useVerificationByMission', () => {
     const verification = {
       accept: async () => noSubmission,
       retry: async () => noSubmission,
-      latest: vi.fn((mission: MissionDefinition) => mission.id === 'l02' ? first.promise : second.promise),
+      latest: vi.fn((mission: MissionDefinition) =>
+        mission.id === 'l02' ? first.promise : second.promise,
+      ),
     } satisfies VerificationService
     const { result, rerender } = renderHook(
       ({ currentCatalog }) => useVerificationByMission(currentCatalog, verification),
@@ -62,9 +68,13 @@ describe('useVerificationByMission', () => {
     const verification = {
       accept: async () => noSubmission,
       retry: async () => noSubmission,
-      latest: async () => { throw new Error('verification repository unavailable') },
+      latest: async () => {
+        throw new Error('verification repository unavailable')
+      },
     } satisfies VerificationService
-    const { result } = renderHook(() => useVerificationByMission(catalog(missionCatalog.missions), verification))
+    const { result } = renderHook(() =>
+      useVerificationByMission(catalog(missionCatalog.missions), verification),
+    )
 
     await waitFor(() => expect(result.current.availability).toBe('unavailable'))
     expect(result.current.verificationByKey).toEqual({})

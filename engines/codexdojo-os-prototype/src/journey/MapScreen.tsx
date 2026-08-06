@@ -7,7 +7,14 @@ import type { EvidenceVerificationState } from '../verification/ports'
 import { TrackSwitcher } from './TrackSwitcher'
 import { useVerificationByMission } from './useVerificationByMission'
 
-type MapOverlay = 'available' | 'in-progress' | 'completed' | 'evidence-pending' | 'verified' | 'canonical-mastery' | 'locked'
+type MapOverlay =
+  | 'available'
+  | 'in-progress'
+  | 'completed'
+  | 'evidence-pending'
+  | 'verified'
+  | 'canonical-mastery'
+  | 'locked'
 
 const OVERLAY_LABEL: Readonly<Record<MapOverlay, string>> = {
   available: 'Disponível',
@@ -31,7 +38,8 @@ function overlayFor(
     verification?.kind === 'validating' ||
     verification?.kind === 'pending' ||
     verification?.kind === 'gateway-unavailable'
-  ) return 'evidence-pending'
+  )
+    return 'evidence-pending'
   const status = progress.missionStatusByKey[missionKey(mission.trackId, mission.id)]
   if (status === 'in_progress') return 'in-progress'
   if (status === 'completed') return 'completed'
@@ -54,28 +62,45 @@ export function MapScreen({
   readonly onBack: () => void
 }) {
   const services = useServices()
-  const { availability: verificationAvailability, verificationByKey } = useVerificationByMission(catalog, services.verification)
-  const activeTrackId = progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
+  const { availability: verificationAvailability, verificationByKey } = useVerificationByMission(
+    catalog,
+    services.verification,
+  )
+  const activeTrackId =
+    progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
 
   return (
     <main className="journey-page chapter-map-page" data-testid="chapter-map">
       <header className="chapter-map-header">
-        <button type="button" className="journey-back" onClick={onBack}>← Hub</button>
+        <button type="button" className="journey-back" onClick={onBack}>
+          ← Hub
+        </button>
         <div>
           <p className="journey-eyebrow">Primeiro capítulo</p>
           <h1>Duas trilhas, seis missões</h1>
-          <p>Troque de trilha sem apagar conclusões, evidências ou verificações da outra jornada.</p>
+          <p>
+            Troque de trilha sem apagar conclusões, evidências ou verificações da outra jornada.
+          </p>
         </div>
       </header>
       <TrackSwitcher activeTrackId={activeTrackId} onSwitch={onSwitchTrack} />
       {verificationAvailability === 'unavailable' ? (
-        <p className="journey-eyebrow" role="status">Verificação indisponível no momento. Seu progresso local continua salvo.</p>
+        <p className="journey-eyebrow" role="status">
+          Verificação indisponível no momento. Seu progresso local continua salvo.
+        </p>
       ) : null}
       <div className="chapter-map-grid">
         {(['ai-pratica', 'dev'] as const).map((trackId) => (
-          <section key={trackId} className={activeTrackId === trackId ? 'chapter-track active' : 'chapter-track'}>
+          <section
+            key={trackId}
+            className={activeTrackId === trackId ? 'chapter-track active' : 'chapter-track'}
+          >
             <p className="journey-eyebrow">{trackId === 'dev' ? 'Trilha Dev' : 'IA Prática'}</p>
-            <h2>{trackId === 'dev' ? 'Sistemas que você pode manipular' : 'Critério para usar IA no trabalho'}</h2>
+            <h2>
+              {trackId === 'dev'
+                ? 'Sistemas que você pode manipular'
+                : 'Critério para usar IA no trabalho'}
+            </h2>
             <ol>
               {catalog.listLaunchable(trackId).map((mission) => {
                 const key = missionKey(trackId, mission.id)
@@ -87,13 +112,19 @@ export function MapScreen({
                     <div>
                       <small>{OVERLAY_LABEL[overlay]}</small>
                       <h3>{mission.title}</h3>
-                      <p>{mission.estimatedMinutes} min · {mission.objective}</p>
+                      <p>
+                        {mission.estimatedMinutes} min · {mission.objective}
+                      </p>
                       {mission.prerequisites.length > 0 ? (
                         <span>Pré-requisito: {mission.prerequisites.join(', ')}</span>
                       ) : null}
                     </div>
                     <button type="button" disabled={!launchable} onClick={() => onLaunch(mission)}>
-                      {overlay === 'in-progress' ? 'Continuar' : overlay === 'completed' ? 'Revisitar' : 'Abrir'}
+                      {overlay === 'in-progress'
+                        ? 'Continuar'
+                        : overlay === 'completed'
+                          ? 'Revisitar'
+                          : 'Abrir'}
                     </button>
                   </li>
                 )

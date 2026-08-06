@@ -1,8 +1,8 @@
 import type { MissionDefinition } from '../domain'
 import {
   EvidenceGatewayRejection,
-  EvidenceValidationError,
   type EvidenceSubmission,
+  EvidenceValidationError,
   type EvidenceVerificationState,
   type RawEvidenceEntry,
   type StoredVerificationReceipt,
@@ -43,7 +43,10 @@ export class EvidenceIntake implements VerificationService {
     onState({ kind: 'validating' })
     const previous = this.accepts.get(submission.missionRunId) ?? Promise.resolve()
     const result = previous.then(() => this.acceptSerially(mission, submission, onState))
-    const tail = result.then(() => undefined, () => undefined)
+    const tail = result.then(
+      () => undefined,
+      () => undefined,
+    )
     this.accepts.set(submission.missionRunId, tail)
     try {
       return await result
@@ -63,17 +66,15 @@ export class EvidenceIntake implements VerificationService {
       this.correlate(mission, submission)
       const existing = await this.dependencies.store.getRaw(submission.missionRunId)
       if (
-        existing !== undefined
-        && (
-          existing.missionVersion !== mission.version
-          || existing.schemaId !== submission.schemaId
-          || existing.schemaVersion !== submission.schemaVersion
-          || existing.engineId !== submission.engineId
-          || existing.missionRunId !== submission.missionRunId
-          || existing.subject.missionId !== submission.subject.missionId
-          || existing.subject.unitId !== submission.subject.unitId
-          || JSON.stringify(existing.record) !== JSON.stringify(submission.record)
-        )
+        existing !== undefined &&
+        (existing.missionVersion !== mission.version ||
+          existing.schemaId !== submission.schemaId ||
+          existing.schemaVersion !== submission.schemaVersion ||
+          existing.engineId !== submission.engineId ||
+          existing.missionRunId !== submission.missionRunId ||
+          existing.subject.missionId !== submission.subject.missionId ||
+          existing.subject.unitId !== submission.subject.unitId ||
+          JSON.stringify(existing.record) !== JSON.stringify(submission.record))
       ) {
         const state: EvidenceVerificationState = {
           kind: 'rejected',
@@ -90,13 +91,16 @@ export class EvidenceIntake implements VerificationService {
           return state
         }
       }
-      return await this.verify({
-        ...submission,
-        storageId: submission.missionRunId,
-        missionVersion: mission.version,
-        acceptedAt: existing?.acceptedAt ?? this.dependencies.clock().toISOString(),
-        status: 'pending',
-      }, onState)
+      return await this.verify(
+        {
+          ...submission,
+          storageId: submission.missionRunId,
+          missionVersion: mission.version,
+          acceptedAt: existing?.acceptedAt ?? this.dependencies.clock().toISOString(),
+          status: 'pending',
+        },
+        onState,
+      )
     } catch (error) {
       const state: EvidenceVerificationState = {
         kind: 'rejected',
@@ -109,7 +113,8 @@ export class EvidenceIntake implements VerificationService {
 
   async latest(mission: MissionDefinition): Promise<EvidenceVerificationState> {
     const raw = await this.dependencies.store.latestForMission(mission.id)
-    if (raw === undefined || raw.missionVersion !== mission.version) return { kind: 'not-submitted' }
+    if (raw === undefined || raw.missionVersion !== mission.version)
+      return { kind: 'not-submitted' }
     if (raw.evidenceDigest !== undefined) {
       const receipt = await this.dependencies.store.getReceipt(raw.evidenceDigest)
       if (receipt !== undefined) return verifiedState(receipt)
@@ -152,19 +157,19 @@ export class EvidenceIntake implements VerificationService {
 
   private correlate(mission: MissionDefinition, submission: EvidenceSubmission): void {
     if (
-      submission.engineId !== mission.runtime.engineId
-      || submission.subject.missionId !== mission.id
-      || submission.subject.unitId !== mission.unitId
-      || submission.schemaId !== mission.evidence.schema
-      || submission.schemaVersion !== mission.evidence.version
-      || submission.missionRunId.trim() === ''
+      submission.engineId !== mission.runtime.engineId ||
+      submission.subject.missionId !== mission.id ||
+      submission.subject.unitId !== mission.unitId ||
+      submission.schemaId !== mission.evidence.schema ||
+      submission.schemaVersion !== mission.evidence.version ||
+      submission.missionRunId.trim() === ''
     ) {
       throw new EvidenceValidationError('correlation-mismatch')
     }
     if (submission.schemaId === 'literacy-evidence') {
       if (
-        submission.record.lessonId !== mission.id
-        || submission.record.lessonVersion !== mission.version
+        submission.record.lessonId !== mission.id ||
+        submission.record.lessonVersion !== mission.version
       ) {
         throw new EvidenceValidationError('subject-record-mismatch')
       }
@@ -173,20 +178,20 @@ export class EvidenceIntake implements VerificationService {
     const record = submission.record
     const reviewContext = record.review_context
     if (
-      submission.schemaId !== 'teaching-game-evidence'
-      || submission.engineId !== 'voxelDojo'
-      || record.source !== 'voxeldojo'
-      || record.unit_id !== mission.unitId
-      || record.project !== mission.projectId
-      || typeof record.scenario_id !== 'string'
-      || record.scenario_id.trim() === ''
-      || typeof record.game !== 'string'
-      || record.game.trim() === ''
-      || typeof record.ts !== 'string'
-      || Number.isNaN(Date.parse(record.ts))
-      || typeof record.pass !== 'boolean'
-      || !isRecord(reviewContext)
-      || reviewContext.verifier_required !== true
+      submission.schemaId !== 'teaching-game-evidence' ||
+      submission.engineId !== 'voxelDojo' ||
+      record.source !== 'voxeldojo' ||
+      record.unit_id !== mission.unitId ||
+      record.project !== mission.projectId ||
+      typeof record.scenario_id !== 'string' ||
+      record.scenario_id.trim() === '' ||
+      typeof record.game !== 'string' ||
+      record.game.trim() === '' ||
+      typeof record.ts !== 'string' ||
+      Number.isNaN(Date.parse(record.ts)) ||
+      typeof record.pass !== 'boolean' ||
+      !isRecord(reviewContext) ||
+      reviewContext.verifier_required !== true
     ) {
       throw new EvidenceValidationError('subject-record-mismatch')
     }

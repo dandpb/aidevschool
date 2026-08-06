@@ -1,8 +1,8 @@
 import {
   AppWindow,
   BookOpen,
-  Code2,
   Boxes,
+  Code2,
   Cpu,
   FolderOpen,
   GraduationCap,
