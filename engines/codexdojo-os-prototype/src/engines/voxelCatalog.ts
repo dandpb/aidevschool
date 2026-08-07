@@ -31,7 +31,8 @@ export function parseVoxelUrlMap(serialized: string | undefined): VoxelUrlMap {
   const knownIds = new Set<string>(voxelCatalog.map((game) => game.id))
   return Object.fromEntries(
     Object.entries(parsed).filter(
-      (entry): entry is [VoxelGameId, string] => knownIds.has(entry[0]) && typeof entry[1] === 'string',
+      (entry): entry is [VoxelGameId, string] =>
+        knownIds.has(entry[0]) && typeof entry[1] === 'string',
     ),
   )
 }

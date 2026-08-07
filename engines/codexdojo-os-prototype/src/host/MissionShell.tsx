@@ -2,15 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition } from '../domain'
-import type { MissionSessionController, MissionSessionSnapshot } from './MissionSessionController'
-import type { EvidenceVerificationState } from '../verification/ports'
-import { ResultScreen, type MissionCompletionSummary } from '../journey/ResultScreen'
+import { type MissionCompletionSummary, ResultScreen } from '../journey/ResultScreen'
 import { MentorPanel } from '../mentor/MentorPanel'
+import { createInitialRendererState, type RendererPreference } from '../rendering/domain'
+import type { EvidenceVerificationState } from '../verification/ports'
+import type { MissionSessionController, MissionSessionSnapshot } from './MissionSessionController'
 import { MissionStatusControls } from './MissionStatusControls'
-import {
-  createInitialRendererState,
-  type RendererPreference,
-} from '../rendering/domain'
 
 const INITIAL_SESSION: MissionSessionSnapshot = {
   phase: 'handshaking',
@@ -52,7 +49,9 @@ export function MissionShell({
   const onCompleteRef = useRef(onComplete)
   const nextMissionIdRef = useRef<string | undefined>(undefined)
   const [session, setSession] = useState(INITIAL_SESSION)
-  const [verification, setVerification] = useState<EvidenceVerificationState>({ kind: 'not-submitted' })
+  const [verification, setVerification] = useState<EvidenceVerificationState>({
+    kind: 'not-submitted',
+  })
   const [completionStatus, setCompletionStatus] = useState<CompletionStatus>('idle')
   const [completionSummary, setCompletionSummary] = useState<MissionCompletionSummary | undefined>()
   const [loadedFrameUrl, setLoadedFrameUrl] = useState<string | null>(null)
@@ -160,7 +159,17 @@ export function MissionShell({
       if (controllerRef.current === controller) controllerRef.current = null
       controller.close()
     }
-  }, [analyticsContext, frameUrl, loadedFrameUrl, mission, reducedMotion, rendererPreference, saveCompletion, services, updateVerification])
+  }, [
+    analyticsContext,
+    frameUrl,
+    loadedFrameUrl,
+    mission,
+    reducedMotion,
+    rendererPreference,
+    saveCompletion,
+    services,
+    updateVerification,
+  ])
 
   useEffect(() => {
     if (session.renderer.status !== 'degraded' || session.renderer.reason === undefined) return
@@ -175,9 +184,9 @@ export function MissionShell({
   }, [analyticsContext, services.analytics, session.renderer])
 
   const verificationFinished =
-    verification.kind === 'verified'
-    || verification.kind === 'rejected'
-    || verification.kind === 'gateway-unavailable'
+    verification.kind === 'verified' ||
+    verification.kind === 'rejected' ||
+    verification.kind === 'gateway-unavailable'
   const canReturn =
     session.phase === 'completed' && completionStatus === 'saved' && verificationFinished
   const returnBlocked = session.phase === 'completed' && !canReturn
@@ -185,9 +194,13 @@ export function MissionShell({
   return (
     <main className="journey-page mission-page">
       <header className="mission-header">
-        <button type="button" className="journey-back" disabled={returnBlocked} onClick={onReturn}>← Hub</button>
+        <button type="button" className="journey-back" disabled={returnBlocked} onClick={onReturn}>
+          ← Hub
+        </button>
         <div>
-          <p className="journey-eyebrow">{trackLabel} · {mission.estimatedMinutes} min</p>
+          <p className="journey-eyebrow">
+            {trackLabel} · {mission.estimatedMinutes} min
+          </p>
           <h1>{mission.title}</h1>
           <p>{mission.objective}</p>
         </div>

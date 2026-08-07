@@ -1,5 +1,6 @@
 import { cycleStages } from "../data/cycle"
 import type { CycleStage } from "../domain"
+import { findStageIndex } from "../progress"
 import type { AppState } from "../state"
 import { currentAttrs } from "./activeAttrs"
 import { escapeHtml } from "./escape"
@@ -16,7 +17,7 @@ export type CycleViewModel = {
 }
 
 export function buildCycleViewModel(state: AppState): CycleViewModel {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === state.selectedStageId)
+  const selectedIndex = findStageIndex(state.selectedStageId)
   const completedIds = new Set(state.completedStageIds)
   const stages = cycleStages.map((stage, index) => ({
     stage,

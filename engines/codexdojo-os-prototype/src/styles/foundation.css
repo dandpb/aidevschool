@@ -28,12 +28,37 @@
   --school-focus: #d56800;
 }
 
-* { box-sizing: border-box; }
-html { width: 100%; min-width: 320px; height: 100%; margin: 0; overflow: hidden; }
-body, #root { width: 100%; min-width: 320px; height: 100dvh; margin: 0; overflow: hidden; }
-button, input, select, textarea { font: inherit; }
-button { color: inherit; }
-button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+* {
+  box-sizing: border-box;
+}
+html {
+  width: 100%;
+  min-width: 320px;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button {
+  color: inherit;
+}
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }

@@ -85,10 +85,12 @@ describe('IndexedDbVerificationStore', () => {
 
     await store.commitVerified(raw, receipt)
 
-    expect(fake.transactions).toEqual([{
-      names: ['raw-evidence-v2', 'verification-receipts'],
-      mode: 'readwrite',
-    }])
+    expect(fake.transactions).toEqual([
+      {
+        names: ['raw-evidence-v2', 'verification-receipts'],
+        mode: 'readwrite',
+      },
+    ])
     expect(fake.values.get('raw-evidence-v2')).toEqual(raw)
     expect(fake.values.get('verification-receipts')).toEqual(receipt)
   })

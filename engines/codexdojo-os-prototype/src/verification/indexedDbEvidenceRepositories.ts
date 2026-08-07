@@ -1,8 +1,4 @@
-import type {
-  RawEvidenceEntry,
-  StoredVerificationReceipt,
-  VerificationStore,
-} from './ports'
+import type { RawEvidenceEntry, StoredVerificationReceipt, VerificationStore } from './ports'
 
 const DB_NAME = 'codexdojo-os-verification'
 const DB_VERSION = 2
@@ -21,8 +17,10 @@ function requestResult<T>(request: IDBRequest<T>): Promise<T> {
 function transactionDone(transaction: IDBTransaction): Promise<void> {
   return new Promise((resolve, reject) => {
     transaction.oncomplete = () => resolve()
-    transaction.onabort = () => reject(transaction.error ?? new Error('IndexedDB transaction aborted'))
-    transaction.onerror = () => reject(transaction.error ?? new Error('IndexedDB transaction failed'))
+    transaction.onabort = () =>
+      reject(transaction.error ?? new Error('IndexedDB transaction aborted'))
+    transaction.onerror = () =>
+      reject(transaction.error ?? new Error('IndexedDB transaction failed'))
   })
 }
 
@@ -39,7 +37,8 @@ function openDatabase(): Promise<IDBDatabase> {
       }
     }
     request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error ?? new Error('Could not open verification storage'))
+    request.onerror = () =>
+      reject(request.error ?? new Error('Could not open verification storage'))
   })
 }
 
@@ -65,18 +64,15 @@ export class IndexedDbVerificationStore implements VerificationStore {
 
   async latestForMission(missionId: string): Promise<RawEvidenceEntry | undefined> {
     const database = await this.open()
-    const entries = await requestResult(
+    const entries = (await requestResult(
       database.transaction(RAW_STORE).objectStore(RAW_STORE).getAll(),
-    ) as RawEvidenceEntry[]
+    )) as RawEvidenceEntry[]
     return entries
       .filter((entry) => entry.subject.missionId === missionId)
       .sort((left, right) => right.acceptedAt.localeCompare(left.acceptedAt))[0]
   }
 
-  async commitVerified(
-    raw: RawEvidenceEntry,
-    receipt: StoredVerificationReceipt,
-  ): Promise<void> {
+  async commitVerified(raw: RawEvidenceEntry, receipt: StoredVerificationReceipt): Promise<void> {
     const database = await this.open()
     const transaction = database.transaction([RAW_STORE, RECEIPT_STORE], 'readwrite')
     transaction.objectStore(RAW_STORE).put(raw)
@@ -95,7 +91,7 @@ export class IndexedDbVerificationStore implements VerificationStore {
 
   private async read<T>(storeName: string, key: string): Promise<T | undefined> {
     const database = await this.open()
-    return await requestResult(database.transaction(storeName).objectStore(storeName).get(key)) as
+    return (await requestResult(database.transaction(storeName).objectStore(storeName).get(key))) as
       | T
       | undefined
   }
