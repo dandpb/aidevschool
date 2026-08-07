@@ -309,8 +309,8 @@
   *,
   *::before,
   *::after {
-    scroll-behavior: auto;
-    transition: none;
-    animation: none;
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
