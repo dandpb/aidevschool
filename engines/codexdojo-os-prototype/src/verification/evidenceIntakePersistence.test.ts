@@ -35,39 +35,39 @@ describe('EvidenceIntake persistence and replay', () => {
   it.each([
     ['identical', 'initial', 'verified'],
     ['differing', 'altered', 'rejected'],
-  ] as const)('serializes %s simultaneous submissions with the same run id', async (
-    _delivery,
-    context,
-    expected,
-  ) => {
-    let releaseGateway!: () => void
-    const verify = vi.fn(async () => {
-      await new Promise<void>((resolve) => { releaseGateway = resolve })
-      return receipt()
-    })
-    const { intake, store } = setup({ verify })
-    const firstSubmission = submission()
+  ] as const)(
+    'serializes %s simultaneous submissions with the same run id',
+    async (_delivery, context, expected) => {
+      let releaseGateway!: () => void
+      const verify = vi.fn(async () => {
+        await new Promise<void>((resolve) => {
+          releaseGateway = resolve
+        })
+        return receipt()
+      })
+      const { intake, store } = setup({ verify })
+      const firstSubmission = submission()
 
-    const first = intake.accept(mission, firstSubmission)
-    await vi.waitFor(() => expect(verify).toHaveBeenCalledOnce())
-    const replay = intake.accept(mission, submission({ context }))
-    await Promise.resolve()
+      const first = intake.accept(mission, firstSubmission)
+      await vi.waitFor(() => expect(verify).toHaveBeenCalledOnce())
+      const replay = intake.accept(mission, submission({ context }))
+      await Promise.resolve()
 
-    expect(verify).toHaveBeenCalledOnce()
-    releaseGateway()
-    const accepted = await first
-    expect(accepted).toMatchObject({ kind: 'verified', evidenceDigest: digest })
-    expect(await replay).toEqual(
-      expected === 'verified'
-        ? accepted
-        : { kind: 'rejected', code: 'storage-id-collision' },
-    )
-    expect(store.raw.get('run-1')?.record).toEqual(firstSubmission.record)
-    expect(verify).toHaveBeenCalledOnce()
-  })
+      expect(verify).toHaveBeenCalledOnce()
+      releaseGateway()
+      const accepted = await first
+      expect(accepted).toMatchObject({ kind: 'verified', evidenceDigest: digest })
+      expect(await replay).toEqual(
+        expected === 'verified' ? accepted : { kind: 'rejected', code: 'storage-id-collision' },
+      )
+      expect(store.raw.get('run-1')?.record).toEqual(firstSubmission.record)
+      expect(verify).toHaveBeenCalledOnce()
+    },
+  )
 
   it('preserves raw evidence under a stable opaque id and retries after gateway failure', async () => {
-    const verify = vi.fn()
+    const verify = vi
+      .fn()
       .mockRejectedValueOnce(new Error('offline'))
       .mockResolvedValueOnce(receipt())
     const { intake, store } = setup({ verify })

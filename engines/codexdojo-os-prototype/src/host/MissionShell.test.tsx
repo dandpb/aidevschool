@@ -1,16 +1,16 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
-import { missionCatalog } from '../data/missions'
+import { ServicesProvider } from '../app/ServicesProvider'
 import { learnerSnapshot } from '../data/learner'
+import { missionCatalog } from '../data/missions'
 import type { MissionDefinition } from '../domain'
+import { createInitialRendererState } from '../rendering/domain'
 import type {
   EvidenceSubmission,
   EvidenceVerificationState,
   VerificationService,
 } from '../verification/ports'
-import { createInitialRendererState } from '../rendering/domain'
 import {
   MissionSessionController,
   type MissionSessionControllerInput,
@@ -119,7 +119,9 @@ describe('MissionShell completion persistence', () => {
   })
 
   it('keeps a completed Literacy mission open until its pending verification reaches a terminal state', async () => {
-    const mission = missionCatalog.missions.find((item) => item.evidence.schema === 'literacy-evidence')
+    const mission = missionCatalog.missions.find(
+      (item) => item.evidence.schema === 'literacy-evidence',
+    )
     if (mission === undefined) throw new Error('Expected Literacy mission')
     let finishVerification: (state: EvidenceVerificationState) => void = () => undefined
     const deferredVerification: VerificationService = {
@@ -178,7 +180,9 @@ describe('MissionShell completion persistence', () => {
   })
 
   it('allows a teaching-game mission to return after its verifier reaches a terminal state', async () => {
-    const mission = missionCatalog.missions.find((item) => item.evidence.schema === 'teaching-game-evidence')
+    const mission = missionCatalog.missions.find(
+      (item) => item.evidence.schema === 'teaching-game-evidence',
+    )
     if (mission === undefined) throw new Error('Expected teaching-game mission')
     const onReturn = vi.fn()
     const services = createServices({
