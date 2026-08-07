@@ -81,8 +81,13 @@ for (const agent of agents) {
 }
 
 const stagesById = new Map<string, CycleStage>()
-for (const stage of cycleStages) {
-  stagesById.set(stage.id, stage)
+export const stageIndicesById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) {
+    stagesById.set(stage.id, stage)
+    stageIndicesById.set(stage.id, i)
+  }
 }
 
 const projectsById = new Map<string, DojoProject>()
@@ -108,6 +113,11 @@ export function findStage(stageId: string): CycleStage {
   }
 
   return stage
+}
+
+export function findStageIndex(stageId: string): number {
+  const index = stageIndicesById.get(stageId)
+  return index ?? -1
 }
 
 export function findProject(projectId: string): DojoProject {

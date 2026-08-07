@@ -6,6 +6,7 @@
  * there are no stages). Module-level guards are therefore unnecessary here.
  */
 import { cycleStages } from "./data/cycle"
+import { findStageIndex } from "./progress"
 
 type CycleSnapshot = {
   readonly selectedStageId: string
@@ -13,7 +14,7 @@ type CycleSnapshot = {
 }
 
 export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === snapshot.selectedStageId)
+  const selectedIndex = findStageIndex(snapshot.selectedStageId)
   const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
   const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
 
