@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { missionCatalog } from '../data/missions'
 import {
+  MISSION_COMPLETION_XP,
+  REVIEW_PRACTICE_XP,
   completeOnboarding,
   createInitialOsProgress,
   dailyGoalMet,
   dailyXp,
-  MISSION_COMPLETION_XP,
   missionKey,
-  REVIEW_PRACTICE_XP,
   recordHintRequest,
   recordMissionAttempt,
   recordMissionCompletion,
@@ -44,9 +44,7 @@ describe('OS local progress', () => {
     const now = new Date('2026-07-25T10:00:00-03:00')
     const initial = createInitialOsProgress(missionCatalog)
     const completed = recordMissionCompletion(initial, mission, missionCatalog, undefined, { now })
-    const duplicate = recordMissionCompletion(completed, mission, missionCatalog, undefined, {
-      now,
-    })
+    const duplicate = recordMissionCompletion(completed, mission, missionCatalog, undefined, { now })
 
     expect(completed.xp).toBe(MISSION_COMPLETION_XP)
     expect(duplicate.xp).toBe(MISSION_COMPLETION_XP)
@@ -54,13 +52,8 @@ describe('OS local progress', () => {
     expect(dailyGoalMet(completed, now)).toBe(true)
 
     const reviewKey = 'ai-literacy:l02:due:today'
-    const reviewStarted = startMission(duplicate, mission, {
-      kind: 'review',
-      canonicalReviewKey: reviewKey,
-    })
-    const reviewed = recordMissionCompletion(reviewStarted, mission, missionCatalog, undefined, {
-      now,
-    })
+    const reviewStarted = startMission(duplicate, mission, { kind: 'review', canonicalReviewKey: reviewKey })
+    const reviewed = recordMissionCompletion(reviewStarted, mission, missionCatalog, undefined, { now })
     const duplicateReview = recordMissionCompletion(
       startMission(reviewed, mission, { kind: 'review', canonicalReviewKey: reviewKey }),
       mission,
@@ -70,9 +63,7 @@ describe('OS local progress', () => {
     )
     expect(reviewed.xp).toBe(MISSION_COMPLETION_XP + REVIEW_PRACTICE_XP)
     expect(duplicateReview.xp).toBe(reviewed.xp)
-    expect(
-      reviewed.missionEngagementByKey[missionKey('ai-pratica', 'l02')].completedReviewKeys,
-    ).toContain(reviewKey)
+    expect(reviewed.missionEngagementByKey[missionKey('ai-pratica', 'l02')].completedReviewKeys).toContain(reviewKey)
   })
 
   it('tracks attempts and hints by id while keeping retry metadata local', () => {
@@ -91,11 +82,7 @@ describe('OS local progress', () => {
       hintsUsed: 2,
       occurredAt: new Date('2026-07-25T10:00:00Z'),
     })
-    const hinted = recordHintRequest(
-      recordHintRequest(duplicate, mission, 'hint-1'),
-      mission,
-      'hint-1',
-    )
+    const hinted = recordHintRequest(recordHintRequest(duplicate, mission, 'hint-1'), mission, 'hint-1')
     const engagement = hinted.missionEngagementByKey[missionKey('ai-pratica', 'l02')]
 
     expect(engagement.attempts).toBe(1)
@@ -108,8 +95,7 @@ describe('OS local progress', () => {
     const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
-    if (l01 === undefined || l02 === undefined || l03 === undefined)
-      throw new Error('Expected IA chapter')
+    if (l01 === undefined || l02 === undefined || l03 === undefined) throw new Error('Expected IA chapter')
     let progress = createInitialOsProgress(missionCatalog)
     progress = recordMissionCompletion(progress, l01, missionCatalog, undefined, {
       now: new Date('2026-07-25T12:00:00Z'),
@@ -124,14 +110,12 @@ describe('OS local progress', () => {
     })
     expect(progress.localEngagementStreak.current).toBe(1)
     expect(progress.localEngagementStreak.longest).toBe(2)
-    expect(progress.achievements.map((achievement) => achievement.id)).toEqual(
-      expect.arrayContaining([
-        'first-mission',
-        'first-practice',
-        'ai-pratica-started',
-        'three-missions',
-      ]),
-    )
+    expect(progress.achievements.map((achievement) => achievement.id)).toEqual(expect.arrayContaining([
+      'first-mission',
+      'first-practice',
+      'ai-pratica-started',
+      'three-missions',
+    ]))
   })
 
   it('unlocks prerequisites and preserves each track while switching', () => {

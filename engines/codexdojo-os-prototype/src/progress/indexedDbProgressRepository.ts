@@ -14,8 +14,7 @@ function openDatabase(): Promise<IDBDatabase> {
       }
     }
     request.onsuccess = () => resolve(request.result)
-    request.onerror = () =>
-      reject(request.error ?? new Error('Unable to open OS progress database'))
+    request.onerror = () => reject(request.error ?? new Error('Unable to open OS progress database'))
   })
 }
 
@@ -43,10 +42,7 @@ export class IndexedDbProgressRepository implements OsProgressRepository {
     const database = await openDatabase()
     try {
       await requestResult(
-        database
-          .transaction(STORE_NAME, 'readwrite')
-          .objectStore(STORE_NAME)
-          .put(progress, PROGRESS_KEY),
+        database.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).put(progress, PROGRESS_KEY),
       )
     } finally {
       database.close()

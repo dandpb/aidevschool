@@ -13,6 +13,7 @@
 ## 2024-05-18 - Avoid array allocations for counting in codexDojo
 **Learning:** Using `.filter(...).length` inside render paths or frequently called getters causes unnecessary intermediate array allocations, increasing garbage collection pressure and potentially causing jank in vanilla JS applications like codexDojo.
 **Action:** Use a simple `for` loop with a counter instead of `.filter(...).length` when counting items based on a dynamic condition, especially in code paths that run often like state derived getters or render loops.
+
 ## 2024-08-08 - Avoid Object.entries on progress dictionaries
 **Learning:** Using `Object.values().filter()` and `Object.entries().some()` to aggregate data from large dictionaries like `missionStatusByKey` allocates large temporary arrays and causes significant memory churn (from ~2.3ms to ~0.4ms overhead in hot paths).
 **Action:** Use simple `for...in` loops to accumulate state when computing multiple aggregates from a single dictionary, rather than doing multiple passes with array allocation methods.

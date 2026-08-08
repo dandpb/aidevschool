@@ -143,8 +143,7 @@ export function recordMissionEngagementCompletion<T extends EngagementProgress>(
 } {
   const key = missionKey(mission.trackId, mission.id)
   const previous = progress.missionEngagementByKey[key] ?? emptyMissionEngagement()
-  const canonicalReviewKey =
-    input.canonicalReviewKey ?? previous.activeCanonicalReviewKey ?? undefined
+  const canonicalReviewKey = input.canonicalReviewKey ?? previous.activeCanonicalReviewKey ?? undefined
   return {
     progress: {
       ...progress,
@@ -158,10 +157,9 @@ export function recordMissionEngagementCompletion<T extends EngagementProgress>(
           applicationCompleted: mission.stages.includes('apply') || previous.applicationCompleted,
           retryRecommended: false,
           lastCompletedAt: input.now.toISOString(),
-          completedReviewKeys:
-            canonicalReviewKey === undefined
-              ? previous.completedReviewKeys
-              : Array.from(new Set([...previous.completedReviewKeys, canonicalReviewKey])),
+          completedReviewKeys: canonicalReviewKey === undefined
+            ? previous.completedReviewKeys
+            : Array.from(new Set([...previous.completedReviewKeys, canonicalReviewKey])),
           activePracticeKind: 'initial',
           activeCanonicalReviewKey: null,
         },
