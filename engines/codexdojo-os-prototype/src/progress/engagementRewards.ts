@@ -71,7 +71,8 @@ function unlockAchievements<T extends EngagementProgress>(progress: T, now: Date
   let hasAiPratica = false
   let hasDev = false
   for (const key in progress.missionStatusByKey) {
-    if (progress.missionStatusByKey[key] === 'completed') {
+    const statusKey = key as keyof typeof progress.missionStatusByKey
+    if (progress.missionStatusByKey[statusKey] === 'completed') {
       completedMissions++
       if (!hasAiPratica && key.startsWith('ai-pratica:')) hasAiPratica = true
       if (!hasDev && key.startsWith('dev:')) hasDev = true
@@ -80,7 +81,8 @@ function unlockAchievements<T extends EngagementProgress>(progress: T, now: Date
 
   let hasPractice = false
   for (const key in progress.missionEngagementByKey) {
-    if (progress.missionEngagementByKey[key].practiceCompleted) {
+    const engagementKey = key as keyof typeof progress.missionEngagementByKey
+    if (progress.missionEngagementByKey[engagementKey].practiceCompleted) {
       hasPractice = true
       break
     }
