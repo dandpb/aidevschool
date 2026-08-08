@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2024-03-24 - Contextual Call-to-Action on Dashboard Entities
+**Learning:** Top-level featured entities on dashboard overview views (like current project) often lack direct call-to-actions, forcing users to manually navigate through menus to interact with the content they are currently reading about.
+**Action:** Provide inline, contextual call-to-action buttons for top-level featured entities on dashboard overview views (e.g., jumping directly to a project briefing via `data-project`) to reduce navigation friction.

@@ -83,6 +83,9 @@ export function renderOverview(state: AppState): string {
         <ul>
           ${model.currentProject.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
+        <div class="primary-actions">
+          <button class="action-button" type="button" data-project="${escapeHtml(model.currentProject.id)}">Ver projeto</button>
+        </div>
       </article>
 
       <article class="metric-strip">
