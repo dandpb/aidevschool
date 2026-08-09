@@ -178,6 +178,9 @@ export function MissionShell({
     verification.kind === 'verified'
     || verification.kind === 'rejected'
     || verification.kind === 'gateway-unavailable'
+    || (verification.kind === 'not-submitted' && session.phase === 'completed' && !mission.evidence)
+    || (verification.kind === 'not-submitted' && session.phase === 'completed' && mission.evidence.schema !== 'literacy-evidence')
+
   const canReturn =
     session.phase === 'completed' && completionStatus === 'saved' && verificationFinished
   const returnBlocked = session.phase === 'completed' && !canReturn
