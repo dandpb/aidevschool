@@ -1867,3 +1867,33 @@ button:focus-visible,
     grid-template-columns: 1fr;
   }
 }
+
+/* ============================================================
+   Accessibility — Skip Link
+   ============================================================ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--brass);
+  color: #17130a;
+  padding: 8px 16px;
+  z-index: 100;
+  font-weight: 800;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius) 0;
+  transition: top 140ms ease;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
