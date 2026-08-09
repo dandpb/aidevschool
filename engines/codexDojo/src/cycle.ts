@@ -7,13 +7,20 @@
  */
 import { cycleStages } from "./data/cycle"
 
+// ⚡ Bolt: Pre-compute stage indices for O(1) lookups instead of O(n) array scans
+export const stageIndexById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) stageIndexById.set(stage.id, i)
+}
+
 type CycleSnapshot = {
   readonly selectedStageId: string
   readonly completedStageIds: readonly string[]
 }
 
 export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === snapshot.selectedStageId)
+  const selectedIndex = stageIndexById.get(snapshot.selectedStageId) ?? -1
   const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
   const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
 
