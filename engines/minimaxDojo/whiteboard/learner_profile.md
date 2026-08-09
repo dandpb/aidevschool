@@ -2,7 +2,7 @@
 id: aluno-001
 learner_id: daniel-barreto
 derived_from: ../../learner/learning_state.yaml
-updated: '2026-07-25'
+updated: '2026-08-09'
 agente_owner: mnemosyne
 ---
 
