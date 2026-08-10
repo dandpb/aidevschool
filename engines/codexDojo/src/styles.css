@@ -61,6 +61,33 @@ button {
 }
 
 /* ============================================================
+   Accessibility — Skip Links
+   ============================================================ */
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--panel);
+  color: var(--paper);
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.2s;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+/* ============================================================
    Shell — fixed-width sidebar + fluid content
    ============================================================ */
 

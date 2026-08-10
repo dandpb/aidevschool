@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2026-08-10 - Programmatic Focus for Skip Links
+**Learning:** When implementing skip-to-content links for accessibility in codexDojo, the target container (e.g., `#main-content`) must have `tabindex="-1"` to receive programmatic focus. Furthermore, its focus outline should be removed (`#main-content:focus { outline: none; }`) to maintain visual polish. The skip link itself needs a visible focus indicator (e.g., `outline: 2px solid var(--paper); outline-offset: 2px;`) rather than using `outline: none;`.
+**Action:** Always include `tabindex="-1"` on skip-link targets and handle focus outlines appropriately for both the link and target.
