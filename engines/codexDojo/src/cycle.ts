@@ -12,8 +12,17 @@ type CycleSnapshot = {
   readonly completedStageIds: readonly string[]
 }
 
+// ⚡ Bolt: Pre-compute stage indices at module initialization for O(1) lookups
+const stageIndexById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) {
+    stageIndexById.set(stage.id, i)
+  }
+}
+
 export function advanceCycle(snapshot: CycleSnapshot): CycleSnapshot {
-  const selectedIndex = cycleStages.findIndex((stage) => stage.id === snapshot.selectedStageId)
+  const selectedIndex = stageIndexById.get(snapshot.selectedStageId) ?? -1
   const nextIndex = selectedIndex >= 0 ? selectedIndex + 1 : 0
   const nextStage = cycleStages[nextIndex] ?? cycleStages[0]
 
