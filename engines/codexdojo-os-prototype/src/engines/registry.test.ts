@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { engineRegistry, engineRegistryById, resolveEngineUrl } from './registry'
+import { engineRegistry, resolveEngineUrl } from './registry'
 
 const expectedEngineIds = [
   'codexDojo',
@@ -56,7 +56,7 @@ describe('codexDojo OS engine registry', () => {
   })
 
   it('declares voxelDojo mission hosting without granting mastery authority', () => {
-    const voxel = engineRegistryById.get('voxelDojo')
+    const voxel = engineRegistry.find((engine) => engine.id === 'voxelDojo')
 
     expect(voxel?.runtime).toMatchObject({
       kind: 'embedded-web',
@@ -75,12 +75,7 @@ describe('embedded engine URL boundary', () => {
     const developmentFallback = 'http://127.0.0.1:9999/'
 
     // When
-    const result = resolveEngineUrl(
-      configured,
-      developmentFallback,
-      false,
-      'http://127.0.0.1:4174',
-    )
+    const result = resolveEngineUrl(configured, developmentFallback, false, 'http://127.0.0.1:4174')
 
     // Then
     expect(result).toEqual({ kind: 'ready', url: expected })

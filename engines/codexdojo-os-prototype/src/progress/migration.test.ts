@@ -62,17 +62,20 @@ describe('OS progress migration', () => {
         mission.id === 'l02' ? { ...mission, version: mission.version + 1 } : mission,
       ),
     }
-    const migrated = migrateOsProgress({
-      ...raw,
-      activeTrackId: 'ai-pratica',
-      activeMissionId: 'l02',
-      missionStatusByKey: {
-        ...raw.missionStatusByKey,
-        [l02Key]: 'in_progress',
-        [removedKey]: 'completed',
+    const migrated = migrateOsProgress(
+      {
+        ...raw,
+        activeTrackId: 'ai-pratica',
+        activeMissionId: 'l02',
+        missionStatusByKey: {
+          ...raw.missionStatusByKey,
+          [l02Key]: 'in_progress',
+          [removedKey]: 'completed',
+        },
+        missionVersionsByKey: { ...raw.missionVersionsByKey, [removedKey]: 1 },
       },
-      missionVersionsByKey: { ...raw.missionVersionsByKey, [removedKey]: 1 },
-    }, changedCatalog)
+      changedCatalog,
+    )
 
     expect(migrated.kind).toBe('loaded')
     expect(migrated.progress.missionStatusByKey[l02Key]).toBe('available')

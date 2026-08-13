@@ -74,11 +74,11 @@ export function createEngineActionClient(
 function isEngineActionResult(value: unknown): value is EngineActionResult {
   if (typeof value !== 'object' || value === null) return false
   return (
-    'ok' in value
-    && typeof value.ok === 'boolean'
-    && 'summary' in value
-    && typeof value.summary === 'string'
-    && 'output' in value
-    && typeof value.output === 'string'
+    'ok' in value &&
+    typeof value.ok === 'boolean' &&
+    'summary' in value &&
+    typeof value.summary === 'string' &&
+    'output' in value &&
+    typeof value.output === 'string'
   )
 }

@@ -49,7 +49,8 @@ export class InMemoryInstallationIdentityStore implements InstallationIdentitySt
 }
 
 function randomId(prefix: string): string {
-  const id = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
+  const id =
+    globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`
   return `${prefix}-${id}`
 }
 

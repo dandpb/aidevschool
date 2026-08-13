@@ -87,10 +87,6 @@ export const engineRegistry = [
   },
 ] as const satisfies readonly EngineDefinition[]
 
-export const engineRegistryById = new Map(
-  engineRegistry.map((engine) => [engine.id, engine]),
-)
-
 export function resolveEngineUrl(
   configuredUrl: string | undefined,
   developmentUrl: string,

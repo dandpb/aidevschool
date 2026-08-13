@@ -1,4 +1,4 @@
-import { voxelCatalog, type VoxelGameId } from './voxelCatalog'
+import { type VoxelGameId, voxelCatalog } from './voxelCatalog'
 
 export type VoxelGamePickerProps = {
   readonly selectedId: VoxelGameId
@@ -18,7 +18,9 @@ export function VoxelGamePicker({ selectedId, onSelect }: VoxelGamePickerProps) 
         }}
       >
         {voxelCatalog.map((game) => (
-          <option key={game.id} value={game.id}>{game.name}</option>
+          <option key={game.id} value={game.id}>
+            {game.name}
+          </option>
         ))}
       </select>
     </label>
