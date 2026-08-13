@@ -104,5 +104,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  *, *::before, *::after { scroll-behavior: auto; transition: none; animation: none; }
+  /* .dock button span keeps a transition from desktop.css at specificity (0,1,2), which beats the
+     universal selector above. Override it here with a higher-specificity selector instead of !important.
+     (journey.css animations only apply under prefers-reduced-motion: no-preference.) */
+  html body .dock button span { transition: none; animation: none; }
 }
