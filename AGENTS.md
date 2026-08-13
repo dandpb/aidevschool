@@ -19,12 +19,15 @@ aidevschool/
 │   ├── codexdojo-os-prototype/ # canonical educational OS experience (React/Vite)
 │   ├── literacyDojo/           # local-first AI microlearning for nontechnical people
 │   ├── miniTown/               # cozy, explore-only Level 0 entry surface
+│   ├── dojoToday/              # read-only "lesson for today" surface for programmers (FSRS reviews, streak, active unit)
+│   ├── aiDevschoolMvp/         # SKILL.md chat-tutor MVP (24-concept track); bundled scripts own gates/scoring
 │   ├── minimaxDojo/           # 14-agent tutoring core and whiteboard model
 │   ├── miniMaxEvolutionEngine/ # Claude Code motor: .claude agents/commands/skills
 │   ├── openclaw/              # file-based checklist runner for the simulate-grade 5-phase cycle
 │   ├── pixelDojo/             # 8-bit teaching-game engine with Playwright evidence contract (arcadeAcademy merged here 2026-06-21)
 │   ├── shared/                # cross-engine teaching-evidence primitives
-│   └── voxelDojo/             # pnpm catalog of Three.js teaching simulations
+│   ├── voxelDojo/             # pnpm catalog of Three.js teaching simulations
+│   └── zai-duolingo-like/     # non-integrated Next.js prototype "Vertical Protocol"; future engine, outside make test
 ├── docs/design/polyglot-arena/ # demoted design archive (proposal-stage; was engines/polyglotEvolutionArena/)
 ├── curriculum/                # shared coding challenges and executable evidence
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
@@ -48,6 +51,9 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Validate the codexDojo OS | `engines/codexdojo-os-prototype/` | Start with `AGENTS.md` and `README.md`; use npm for `lint`, `test`, `build`, and `test:smoke`. Canonical learner data is a generated read-only projection. |
 | Validate AI Literacy content and app | `curriculum/ai-literacy/`, `engines/literacyDojo/` | Validate canonical YAML first, regenerate the read model, then run engine lint, tests, build, and E2E. Local progress never means `mastered`. |
 | Validate the Level 0 exploration surface | `engines/miniTown/` | Run its lint, test, typecheck, build, and smoke commands. It never writes learner state. |
+| See the programmer's daily lesson | `engines/dojoToday/` | Read-only "lesson for today" (FSRS due reviews, streak, active unit); read model generated via `python3 -m learner.substrate` in prebuild. |
+| Run the AI-literacy chat-tutor MVP | `engines/aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring; tests via repo-root `make test`. |
+| Review the Vertical Protocol prototype | `engines/zai-duolingo-like/` | Non-integrated Next.js prototype; future engine; outside `make test`; do not delete. |
 | Validate the 2D game workspace | `engines/pixelDojo/` | Install once, then use the root `lint`, `test`, `typecheck`, `build`, and `smoke` scripts; use `pnpm --filter pixel-quest dev` for the app. |
 | Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `.loops/threejs-dojo-coverage/` | Read the loop memory first; canonical batch artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/`. |
 | Validate the 3D game workspace | `engines/voxelDojo/` | Run catalog-wide scripts across `game-*`; use `game-10-hash-ring` as the reference package. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |

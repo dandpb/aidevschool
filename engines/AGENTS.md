@@ -12,13 +12,16 @@ engines/
 ├── codexDojo/              # pnpm dashboard + product-facing ecosystem contract
 ├── codexdojo-os-prototype/ # React/Vite educational OS bounded context
 ├── literacyDojo/           # npm AI microlearning app; generated content, local progress only
+├── dojoToday/              # read-only "lesson for today" for programmers (FSRS/streak/active unit)
+├── aiDevschoolMvp/         # SKILL.md chat-tutor MVP; bundled scripts own gates/scoring
 ├── minimaxDojo/            # 14-agent tutor core, docs, prompts, whiteboard
 ├── miniMaxEvolutionEngine/ # Claude Code motor with .claude agents/commands/skills
 ├── miniTown/               # cozy town-sim: level-0 entry surface for the non-technical audience (AD-004)
 ├── openclaw/               # file-based runner/scheduler tracer bullet
 ├── pixelDojo/              # 2D teaching-game engine; pixel-quest/ is the runnable app
 ├── shared/                 # cross-engine teaching-evidence primitives
-└── voxelDojo/              # catalog of 3D teaching-simulation packages
+├── voxelDojo/              # catalog of 3D teaching-simulation packages
+└── zai-duolingo-like/      # non-integrated Next.js prototype "Vertical Protocol"; future engine
 ```
 
 The polyglot evolution arena design material is archived at `docs/design/polyglot-arena/`
@@ -34,6 +37,9 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 | Teaching game app | `pixelDojo/pixel-quest/` | Vite/TypeScript/Three.js app with Playwright smoke evidence. |
 | 3D teaching simulations | `voxelDojo/` | Catalog-wide workspace; `game-10-hash-ring/` is the reference package. |
 | Cozy town-sim (level-0 entry) | `miniTown/` | Observational Three.js city sim; start with `README.md`. Never writes canonical learner state. |
+| Programmer's daily lesson | `dojoToday/` | Read-only landing: FSRS due reviews, streak, active unit. Read model `src/data/today.ts` is generated (prebuild runs the substrate); never schedules, grades, or marks mastery. |
+| AI-literacy chat-tutor MVP | `aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring/scheduling; installer tests in `tests/installer` run via repo-root `make test`. |
+| Vertical Protocol prototype | `zai-duolingo-like/` | Non-integrated Next.js prototype (future engine); outside `make test`; do not delete. |
 | Shared teaching evidence | `shared/teaching-evidence/` | Dual-channel producer helpers; no mastery writes. |
 | Long-running tutor protocol | `minimaxDojo/` | Start with local `AGENTS.md`, then `INDEX.md`; verify from repo root with `make test-core`. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
