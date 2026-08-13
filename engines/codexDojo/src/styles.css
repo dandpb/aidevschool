@@ -1867,3 +1867,27 @@ button:focus-visible,
     grid-template-columns: 1fr;
   }
 }
+
+/* Accessibility — Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -1000px;
+  left: var(--space-4);
+  background: var(--panel-strong);
+  color: var(--paper);
+  padding: var(--space-2) var(--space-4);
+  z-index: 9999;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+  outline: 2px solid var(--paper);
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
