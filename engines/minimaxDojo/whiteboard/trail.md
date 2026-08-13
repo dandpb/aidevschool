@@ -12,7 +12,7 @@ agente_owner: cartografo
 ## Foco atual
 
 - **Robustness**
-- **Unidade ativa:** U2-key-value-store (AVALIANDO)
+- **Unidade ativa:** U2-key-value-store (DOMINADO)
 
 ## Template canônico
 

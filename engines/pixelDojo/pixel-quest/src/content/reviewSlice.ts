@@ -14,12 +14,6 @@ export const reviewSlice: ReviewSlice = {
       reason: "overdue",
     },
     {
-      unitId: "U2-key-value-store",
-      title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      dueIn: "today",
-      reason: "due",
-    },
-    {
       unitId: "P-001",
       title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
       dueIn: "today",
@@ -27,10 +21,10 @@ export const reviewSlice: ReviewSlice = {
     },
   ],
   streak: {
-    current: 0,
-    longest: 1,
-    lastGateDate: "2026-07-05",
-    freezesEquipped: 0,
+    current: 2,
+    longest: 2,
+    lastGateDate: "2026-08-13",
+    freezesEquipped: 2,
     freezesMax: 2,
   },
 }

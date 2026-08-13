@@ -11,7 +11,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     id: "U2-key-value-store",
     title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
     project: "02_key_value_store",
-    state: "evaluating",
+    state: "mastered",
     retryCount: 0,
     retryLimit: 3,
   },
@@ -48,12 +48,6 @@ export const learnerSnapshot: LearnerSnapshot = {
       reason: "overdue",
     },
     {
-      unitId: "U2-key-value-store",
-      title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      dueIn: "today",
-      reason: "due",
-    },
-    {
       unitId: "P-001",
       title: "Reivindicar domínio a partir de trabalho de documentação/dashboard",
       dueIn: "today",
@@ -63,13 +57,13 @@ export const learnerSnapshot: LearnerSnapshot = {
   masteredCount: 2,
   scaffoldedCount: 17,
   streak: {
-    current: 0,
-    longest: 1,
-    lastGateDate: "2026-07-05",
-    freezesEquipped: 0,
+    current: 2,
+    longest: 2,
+    lastGateDate: "2026-08-13",
+    freezesEquipped: 2,
     freezesMax: 2,
   },
-  curr: 0,
+  curr: 0.5,
   predictions: {
     count: 0,
     byMetric: {

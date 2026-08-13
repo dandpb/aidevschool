@@ -37,7 +37,7 @@ active_unit:
   id: U2-key-value-store
   project: projects/02_key_value_store
   title: 'KV WAREHOUSE: hash-map-backed CRUD with TTL expiration'
-  state: avaliando
+  state: dominado
   diagnostic_file: projects/02_key_value_store/docs/spec.md
   awaiting: ''
   promotion_gate:
@@ -67,7 +67,6 @@ empirical_gates:
     hint_budget_per_day: 15
     mastery_source: executable_evidence
 next_action:
-  owner: verifier
-  action: U2-key-value-store is in evaluating state with a learner attempt on file.
-    Run learner.gate with fresh KV WAREHOUSE evidence and a separate Prometor receipt
-    to gate the unit.
+  owner: leader
+  action: U2-key-value-store mastered with executable evidence. Pick the next unit
+    (Cartografo) and present it before any implementation.

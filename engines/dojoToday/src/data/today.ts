@@ -6,19 +6,19 @@ import type { TodaySnapshot } from "../types";
 export const today: TodaySnapshot = {
   "asOf": "2026-08-13",
   "streak": {
-    "current": 0,
-    "longest": 1,
-    "freezesEquipped": 0,
+    "current": 2,
+    "longest": 2,
+    "freezesEquipped": 2,
     "freezesMax": 2,
-    "lastGateDate": "2026-07-05"
+    "lastGateDate": "2026-08-13"
   },
-  "curr": 0.0,
+  "curr": 0.5,
   "activeUnit": {
     "id": "U2-key-value-store",
     "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
     "project": "02_key_value_store",
     "num": "02",
-    "state": "evaluating",
+    "state": "mastered",
     "gameDir": "engines/voxelDojo/game-02-warehouse",
     "diagnosticFile": "curriculum/02_key_value_store/docs/spec.md"
   },
@@ -30,19 +30,11 @@ export const today: TodaySnapshot = {
       "reason": "overdue",
       "gameDir": "engines/pixelDojo",
       "project": "01_rate_limiter"
-    },
-    {
-      "unitId": "U2-key-value-store",
-      "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      "dueIn": "today",
-      "reason": "due",
-      "gameDir": "engines/voxelDojo/game-02-warehouse",
-      "project": "02_key_value_store"
     }
   ],
-  "masteredCount": 1,
+  "masteredCount": 2,
   "totalUnits": 2,
-  "nextProjectNum": "02",
+  "nextProjectNum": "03",
   "track": [
     {
       "num": "01",
@@ -54,7 +46,7 @@ export const today: TodaySnapshot = {
       "num": "02",
       "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
       "gameDir": "engines/voxelDojo/game-02-warehouse",
-      "status": "active"
+      "status": "mastered"
     },
     {
       "num": "03",

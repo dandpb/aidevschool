@@ -1,0 +1,8 @@
+{
+  "verdict": "PASS",
+  "context_isolated": true,
+  "mutation_score": 0.7059,
+  "coverage_core": 0.9154,
+  "source": "prometor-warehouse-u2-2026-08-13",
+  "evidence_digest": "e0ce5698aa708bf17a13e34d975930cc15e6a82dd6c84088459067c0ffa32f16"
+}
