@@ -66,11 +66,18 @@ authority.
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
 | 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the cozy town-sim: the level-0 entry surface for the non-technical audience. |
 | 4d | [Engine — LiteracyDojo](12_engine_literacyDojo.md) | Work on the local-first microlearning experience for people who do not code. |
+| 4e | [Engine — dojoToday](13_engine_dojoToday.md) | Work on the read-only "lesson for today" surface for programmers and its generated substrate read model. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
 | 6 | [Engine — miniMaxEvolutionEngine](06_engine_miniMaxEvolutionEngine.md) | Run the Claude Code orchestration motor (the 5-phase loop). |
+| 6b | [Engine — aiDevschoolMvp](../../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Work on the SKILL.md-based AI-fluency tutor MVP and its installer (agent core; installer tests run under root `make test`). |
 | 7 | [Curriculum](07_curriculum.md) | Understand Level 0, the programming track, the AI Literacy track, and their evidence boundaries. |
 | 8 | [Learner substrate](08_learner_substrate.md) | Understand the learner state schema, the gates, FSRS spaced repetition, and the read/write contract. |
 | 9 | [Glossary](09_glossary.md) | Look up a term (especially the Portuguese agent names and state values). |
+
+> **Non-integrated prototype:** `engines/zai-duolingo-like/` ("Vertical Protocol" — a
+> cyberpunk-Tokyo "Duolingo for AI" in Next.js) is a future engine to integrate and a candidate
+> for the gamified nontechnical track. It is outside `make test` and not yet part of the
+> canonical ecosystem; keep it, but do not treat it as a current surface.
 
 ## The five golden rules
 
@@ -87,13 +94,16 @@ aidevschool/                       # ECOSYSTEM umbrella (git repo, no root packa
 ├── engines/                       # apps, agent cores, and runners — each is a separate project
 │   ├── codexDojo/                 # runnable app: user-facing dashboard (Vite/TS SPA)
 │   ├── codexdojo-os-prototype/    # runnable app: canonical educational OS (React/Vite)
+│   ├── dojoToday/                 # runnable app: read-only "lesson for today" for programmers
 │   ├── literacyDojo/              # runnable app: short AI lessons for nontechnical learners
 │   ├── miniTown/                  # runnable app: cozy, explore-only Level 0 entry
 │   ├── pixelDojo/                 # runnable app: 8-bit teaching games (pixel-quest/)
 │   ├── voxelDojo/                 # runnable apps: 3D teaching simulations (game-*)
 │   ├── minimaxDojo/               # agent core: 14-agent "Ágora Continuum" tutoring spec
 │   ├── miniMaxEvolutionEngine/    # agent core: Claude Code motor (5-phase loop)
-│   └── openclaw/                  # file-based checklist runner (simulate mode)
+│   ├── aiDevschoolMvp/            # agent core: SKILL.md AI-fluency tutor MVP + installer
+│   ├── openclaw/                  # file-based checklist runner (simulate mode)
+│   └── zai-duolingo-like/         # non-integrated Next.js prototype (future engine)
 ├── curriculum/                    # SHARED: numbered catalog + ai-literacy lessons
 ├── learner/                       # SHARED: learner state, profile, pitfalls, journal, substrate
 ├── docs/                          # ecosystem docs (this handbook, design archive, prompts, ideas)

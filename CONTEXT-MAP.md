@@ -23,7 +23,14 @@ map is the index and relationship contract only.
 | [Teaching Game — Voxel](./engines/voxelDojo/CONTEXT.md) | `engines/voxelDojo/CONTEXT.md` | Core | 3D simulation attempt surface and evidence emission |
 | [Polyglot Arena](./docs/design/polyglot-arena/CONTEXT.md) | `docs/design/polyglot-arena/CONTEXT.md` | Supporting (nascent) | Pre-benchmark prediction and fairness calibration |
 | [Learner Dashboard](./engines/codexDojo/CONTEXT.md) | `engines/codexDojo/CONTEXT.md` | Generic | Read-only presentation of other contexts' state |
+| [dojoToday](./engines/dojoToday/README.md) | `engines/dojoToday/README.md` | Generic | Read-only "lesson for today" surface for programmers: FSRS due reviews, streak, and active unit |
+| [AI DevSchool MVP tutor](./engines/aiDevschoolMvp/aidevschool/SKILL.md) | `engines/aiDevschoolMvp/aidevschool/SKILL.md` | Supporting | Chat tutor skill for the 24-concept AI Fluency Foundations track; bundled scripts own gates, scoring, and scheduling |
 | [Checklist Runner](./engines/openclaw/CONTEXT.md) | `engines/openclaw/CONTEXT.md` | Generic | Explicit file-based checklist runner and YAML pipeline adapter |
+
+`engines/zai-duolingo-like/` ("Vertical Protocol") is a non-integrated Next.js prototype and a
+future engine to integrate — a candidate for the gamified nontechnical track. It owns no
+canonical language yet and stays out of this map (and out of `make test`) until the integration
+decision lands; do not delete it.
 
 ## Relationships
 
@@ -44,6 +51,9 @@ map is the index and relationship contract only.
   (which unit is due, streak). Scheduling truth flows one way.
 - **Learner Journey → Learner Dashboard**: publishes a **Learner Snapshot** (and related derived
   views). Dashboard is a conformist consumer — it does not invent mastery.
+- **Learner Journey → dojoToday**: publishes the read-only **today snapshot** (due FSRS reviews,
+  streak, active unit) through the generated `src/data/today.ts`. dojoToday never schedules,
+  evaluates, or marks **Mastered**.
 - **Curriculum Catalog → Learner Journey**: supplies **Project** / **Unit** identities and
   **Diagnostics** that the learning gate challenges against.
 - **Curriculum Catalog → Polyglot Project Cycle**: cycle work targets one catalog **Project** and
