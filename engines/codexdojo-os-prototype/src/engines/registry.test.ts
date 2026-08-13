@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { engineRegistry, resolveEngineUrl } from './registry'
+import { engineRegistry, engineRegistryById, resolveEngineUrl } from './registry'
 
 const expectedEngineIds = [
   'codexDojo',
@@ -56,7 +56,7 @@ describe('codexDojo OS engine registry', () => {
   })
 
   it('declares voxelDojo mission hosting without granting mastery authority', () => {
-    const voxel = engineRegistry.find((engine) => engine.id === 'voxelDojo')
+    const voxel = engineRegistryById.get('voxelDojo')
 
     expect(voxel?.runtime).toMatchObject({
       kind: 'embedded-web',

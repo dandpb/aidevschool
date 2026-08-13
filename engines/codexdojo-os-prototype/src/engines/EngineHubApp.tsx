@@ -12,7 +12,7 @@ import { createEngineActionClient } from './client'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import type { EngineAction, EngineId } from './protocol'
-import { engineRegistry } from './registry'
+import { engineRegistry, engineRegistryById } from './registry'
 import { VoxelEngine } from './VoxelEngine'
 import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
 
@@ -59,7 +59,9 @@ export function EngineHubApp({
 }: EngineHubAppProps) {
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
-  const selected = engineRegistry.find((engine) => engine.id === selectedId)
+
+  // ⚡ Bolt: Pre-compute map used for O(1) lookup to avoid O(N) scans on every render
+  const selected = selectedId ? engineRegistryById.get(selectedId) : undefined
 
   const selectEngine = (engineId: EngineId) => {
     setSelectedId(engineId)
