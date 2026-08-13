@@ -105,6 +105,50 @@ def bound_evidence_violations(
     return errors
 
 
+def bound_literacy_evidence_violations(
+    evidence_path: str | Path, expected_digest: str, root: Path
+) -> list[str]:
+    """Bound-check a LiteracyEvidenceRecord against a verifier receipt digest.
+
+    Same contract as ``bound_evidence_violations`` (rejects producer-embedded
+    ``verifier`` blocks, rechecks the canonical digest) but uses the literacy
+    digest (``literacy_evidence_digest``), which excludes ``timestamp`` rather
+    than ``ts`` — the two evidence classes never share a digest function.
+    """
+    prefix = "evidence_file"
+    candidate = Path(evidence_path)
+    candidate = candidate if candidate.is_absolute() else root / candidate
+    try:
+        resolved = candidate.resolve(strict=True)
+        resolved.relative_to(root.resolve())
+    except FileNotFoundError:
+        return [f"{prefix} points at a missing path: {evidence_path!r}"]
+    except ValueError:
+        return [f"{prefix} escapes root: {evidence_path!r}"]
+    try:
+        raw = json.loads(resolved.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return [
+            f"{prefix} is not parseable JSON ({evidence_path!r}): "
+            f"{exc.msg} at line {exc.lineno}"
+        ]
+    if not isinstance(raw, dict):
+        return [f"{prefix} is valid JSON but not an object: {evidence_path!r}"]
+    errors: list[str] = []
+    if "verifier" in raw:
+        errors.append(
+            f"{prefix} embeds a producer-controlled 'verifier' block; "
+            "use a separate verifier receipt"
+        )
+    from learner.gate.literacy_verifier import literacy_evidence_digest
+
+    if literacy_evidence_digest(raw) != expected_digest:
+        errors.append(
+            f"{prefix} does not match the literacy digest recorded by the verifier"
+        )
+    return errors
+
+
 def _canonical_producer_payload(evidence: dict[str, Any]) -> dict[str, Any]:
     return {
         key: value

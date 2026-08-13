@@ -36,6 +36,7 @@ def transition_gate(
     rating: str,
     today: date,
     root: Path | None = None,
+    gate_kind: str | None = None,
 ) -> dict[str, Any]:
     expected_rating = RATING_FROM_GATE.get(gate_outcome)
     if expected_rating is None or expected_rating != rating:
@@ -59,27 +60,34 @@ def transition_gate(
     }
     if receipt.verifier_source is not None:
         gate_review["evidence_verifier_source"] = receipt.verifier_source
+    if gate_kind is not None:
+        # ADR-0004: evidence classes stay labelled (no_code never carries the
+        # code-gate mutation/coverage metrics).
+        gate_review["gate_kind"] = gate_kind
     units_log = new_state.setdefault("units_log", [])
     entry = next((item for item in units_log if item.get("unit_id") == unit["id"]), None)
     if entry is None:
         evidence_date = datetime.fromisoformat(receipt.timestamp.replace("Z", "+00:00")).date()
-        units_log.append(
-            {
-                "unit_id": unit["id"],
-                "concept": unit.get("title", unit["id"]),
-                "kind": "concept",
-                "project": unit["project"],
-                "mastered": passed,
-                "evidence_file": unit.get("evidence_file"),
-                "attempt_file": unit.get("attempt_file"),
-                "reviews": [
-                    {"date": evidence_date, "event": "presented"},
-                    gate_review,
-                ],
-            }
-        )
+        new_entry = {
+            "unit_id": unit["id"],
+            "concept": unit.get("title", unit["id"]),
+            "kind": "concept",
+            "project": unit["project"],
+            "mastered": passed,
+            "evidence_file": unit.get("evidence_file"),
+            "attempt_file": unit.get("attempt_file"),
+            "reviews": [
+                {"date": evidence_date, "event": "presented"},
+                gate_review,
+            ],
+        }
+        if gate_kind is not None:
+            new_entry["gate_kind"] = gate_kind
+        units_log.append(new_entry)
     else:
         entry["mastered"] = passed
+        if gate_kind is not None:
+            entry["gate_kind"] = gate_kind
         entry.setdefault("reviews", []).append(gate_review)
 
     if passed:
@@ -118,6 +126,7 @@ def commit_gate_transition(
     rating: str,
     today: date,
     path: str | Path = "learner/learning_state.yaml",
+    gate_kind: str | None = None,
 ) -> dict[str, Any]:
     target = resolve_canonical_path(path).resolve()
     root = target.parent.parent if target.parent.name == "learner" else Path.cwd()
@@ -129,6 +138,7 @@ def commit_gate_transition(
         rating=rating,
         today=today,
         root=root,
+        gate_kind=gate_kind,
     )
     commit_canonical(transitioned, path)
     return transitioned

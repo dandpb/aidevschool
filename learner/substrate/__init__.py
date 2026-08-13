@@ -494,6 +494,20 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
                 f"units_log[{index}] has a verifier receipt but no evidence_digest"
             )
             continue
+        gate_kind = receipt_review.get("gate_kind") or unit.get("gate_kind")
+        if gate_kind == "no_code":
+            # ADR-0004: the no-code evidence class uses the literacy digest and
+            # never the game/code digest. The bound check stays digest-bound and
+            # rejects producer-embedded verifier blocks the same way.
+            from learner.gate.evidence_io import bound_literacy_evidence_violations
+
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in bound_literacy_evidence_violations(
+                    evidence_path, expected_digest, root
+                )
+            )
+            continue
         errors.extend(
             f"units_log[{index}].{error}"
             for error in bound_evidence_violations(
