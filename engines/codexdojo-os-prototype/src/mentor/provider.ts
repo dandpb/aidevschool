@@ -11,10 +11,7 @@ export class UnavailableMentorProvider implements MentorProvider {
   readonly id = 'deterministic-only'
   readonly available = false
 
-  async answer(
-    _request: MentorRequestV1,
-    _options: { readonly signal: AbortSignal },
-  ): Promise<never> {
+  async answer(_request: MentorRequestV1, _options: { readonly signal: AbortSignal }): Promise<never> {
     throw new Error('mentor-provider-unavailable')
   }
 }

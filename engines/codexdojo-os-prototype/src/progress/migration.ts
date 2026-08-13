@@ -1,15 +1,15 @@
 import type { MissionCatalogSnapshot, MissionKey, TrackId } from '../domain'
 import {
-  type AchievementId,
-  createInitialOsProgress,
   DAILY_GOAL_XP,
-  emptyMissionEngagement,
+  OS_PROGRESS_SCHEMA_VERSION,
+  type AchievementId,
   type LocalAchievement,
   type LocalMissionStatus,
   type MissionEngagement,
-  missionKey,
-  OS_PROGRESS_SCHEMA_VERSION,
   type OsProgress,
+  createInitialOsProgress,
+  emptyMissionEngagement,
+  missionKey,
   reconcileMissionAvailability,
 } from './domain'
 
@@ -36,9 +36,7 @@ function isTrackId(value: unknown): value is TrackId {
 }
 
 function isMissionStatus(value: unknown): value is LocalMissionStatus {
-  return (
-    value === 'locked' || value === 'available' || value === 'in_progress' || value === 'completed'
-  )
+  return value === 'locked' || value === 'available' || value === 'in_progress' || value === 'completed'
 }
 
 function isNonNegativeInteger(value: unknown): value is number {
@@ -52,18 +50,9 @@ function isStringArray(value: unknown): value is string[] {
 function validOnboarding(onboarding: Record<string, unknown>): boolean {
   return (
     typeof onboarding.completed === 'boolean' &&
-    (onboarding.goal === undefined ||
-      onboarding.goal === 'work-better' ||
-      onboarding.goal === 'understand-ai' ||
-      onboarding.goal === 'build-systems') &&
-    (onboarding.context === undefined ||
-      onboarding.context === 'work' ||
-      onboarding.context === 'studies' ||
-      onboarding.context === 'personal-project') &&
-    (onboarding.confidence === undefined ||
-      onboarding.confidence === 'low' ||
-      onboarding.confidence === 'medium' ||
-      onboarding.confidence === 'high') &&
+    (onboarding.goal === undefined || onboarding.goal === 'work-better' || onboarding.goal === 'understand-ai' || onboarding.goal === 'build-systems') &&
+    (onboarding.context === undefined || onboarding.context === 'work' || onboarding.context === 'studies' || onboarding.context === 'personal-project') &&
+    (onboarding.confidence === undefined || onboarding.confidence === 'low' || onboarding.confidence === 'medium' || onboarding.confidence === 'high') &&
     (onboarding.recommendedTrackId === undefined || isTrackId(onboarding.recommendedTrackId)) &&
     (onboarding.selectedTrackId === undefined || isTrackId(onboarding.selectedTrackId))
   )
@@ -120,8 +109,7 @@ function decodeMissionEngagement(value: unknown): MissionEngagement | null {
       value.activePracticeKind !== 'retry' &&
       value.activePracticeKind !== 'targeted-practice') ||
     (value.activeCanonicalReviewKey !== null && typeof value.activeCanonicalReviewKey !== 'string')
-  )
-    return null
+  ) return null
   return {
     attempts: value.attempts,
     attemptIds: value.attemptIds,
@@ -148,17 +136,13 @@ function decodeAchievements(value: unknown): LocalAchievement[] | null {
       typeof item.id !== 'string' ||
       !ACHIEVEMENT_IDS.has(item.id as AchievementId) ||
       typeof item.earnedAt !== 'string'
-    )
-      return null
+    ) return null
     achievements.push({ id: item.id as AchievementId, earnedAt: item.earnedAt })
   }
   return achievements
 }
 
-function decodeProgress(
-  rawInput: Record<string, unknown>,
-  catalog: MissionCatalogSnapshot,
-): OsProgress | null {
+function decodeProgress(rawInput: Record<string, unknown>, catalog: MissionCatalogSnapshot): OsProgress | null {
   const raw = migrateSequentially(rawInput)
   if (raw === null) return null
   if (!isRecord(raw.onboarding) || !validOnboarding(raw.onboarding)) return null
@@ -172,15 +156,12 @@ function decodeProgress(
     !isRecord(raw.localEngagementStreak) ||
     !isRecord(raw.missionEngagementByKey) ||
     !isStringArray(raw.rewardedActivityKeys)
-  )
-    return null
+  ) return null
   if (
     !isNonNegativeInteger(raw.localEngagementStreak.current) ||
     !isNonNegativeInteger(raw.localEngagementStreak.longest) ||
-    (raw.localEngagementStreak.lastActiveLocalDate !== null &&
-      typeof raw.localEngagementStreak.lastActiveLocalDate !== 'string')
-  )
-    return null
+    (raw.localEngagementStreak.lastActiveLocalDate !== null && typeof raw.localEngagementStreak.lastActiveLocalDate !== 'string')
+  ) return null
   for (const value of Object.values(raw.dailyXpByLocalDate)) {
     if (!isNonNegativeInteger(value)) return null
   }
@@ -190,10 +171,7 @@ function decodeProgress(
   const initial = createInitialOsProgress(catalog)
   const previousVersions = isRecord(raw.missionVersionsByKey) ? raw.missionVersionsByKey : {}
   const statuses = { ...initial.missionStatusByKey } as Record<MissionKey, LocalMissionStatus>
-  const missionEngagementByKey = { ...initial.missionEngagementByKey } as Record<
-    MissionKey,
-    MissionEngagement
-  >
+  const missionEngagementByKey = { ...initial.missionEngagementByKey } as Record<MissionKey, MissionEngagement>
   for (const mission of catalog.missions) {
     const key = missionKey(mission.trackId, mission.id)
     const previousStatus = raw.missionStatusByKey[key]
@@ -215,8 +193,7 @@ function decodeProgress(
       if (
         typeof missionId === 'string' &&
         catalog.missions.some((mission) => mission.trackId === trackId && mission.id === missionId)
-      )
-        preferred[trackId] = missionId
+      ) preferred[trackId] = missionId
     }
   }
 
@@ -227,37 +204,34 @@ function decodeProgress(
       (mission) => mission.trackId === raw.activeTrackId && mission.id === raw.activeMissionId,
     )
   const onboarding = raw.onboarding
-  return reconcileMissionAvailability(
-    {
-      schemaVersion: OS_PROGRESS_SCHEMA_VERSION,
-      contentVersionsByTrack: initial.contentVersionsByTrack,
-      onboarding: {
-        completed: onboarding.completed as boolean,
-        goal: onboarding.goal as OsProgress['onboarding']['goal'],
-        context: onboarding.context as OsProgress['onboarding']['context'],
-        confidence: onboarding.confidence as OsProgress['onboarding']['confidence'],
-        recommendedTrackId: onboarding.recommendedTrackId as TrackId | undefined,
-        selectedTrackId: onboarding.selectedTrackId as TrackId | undefined,
-      },
-      activeTrackId: raw.activeTrackId,
-      activeMissionId: activeMissionExists ? (raw.activeMissionId as string) : null,
-      missionStatusByKey: statuses,
-      missionVersionsByKey: initial.missionVersionsByKey,
-      preferredNextMissionByTrack: preferred,
-      xp: raw.xp,
-      dailyGoalXp: raw.dailyGoalXp,
-      dailyXpByLocalDate: raw.dailyXpByLocalDate as Record<string, number>,
-      localEngagementStreak: {
-        current: raw.localEngagementStreak.current,
-        longest: raw.localEngagementStreak.longest,
-        lastActiveLocalDate: raw.localEngagementStreak.lastActiveLocalDate,
-      },
-      achievements,
-      missionEngagementByKey,
-      rewardedActivityKeys: raw.rewardedActivityKeys,
+  return reconcileMissionAvailability({
+    schemaVersion: OS_PROGRESS_SCHEMA_VERSION,
+    contentVersionsByTrack: initial.contentVersionsByTrack,
+    onboarding: {
+      completed: onboarding.completed as boolean,
+      goal: onboarding.goal as OsProgress['onboarding']['goal'],
+      context: onboarding.context as OsProgress['onboarding']['context'],
+      confidence: onboarding.confidence as OsProgress['onboarding']['confidence'],
+      recommendedTrackId: onboarding.recommendedTrackId as TrackId | undefined,
+      selectedTrackId: onboarding.selectedTrackId as TrackId | undefined,
     },
-    catalog,
-  )
+    activeTrackId: raw.activeTrackId,
+    activeMissionId: activeMissionExists ? (raw.activeMissionId as string) : null,
+    missionStatusByKey: statuses,
+    missionVersionsByKey: initial.missionVersionsByKey,
+    preferredNextMissionByTrack: preferred,
+    xp: raw.xp,
+    dailyGoalXp: raw.dailyGoalXp,
+    dailyXpByLocalDate: raw.dailyXpByLocalDate as Record<string, number>,
+    localEngagementStreak: {
+      current: raw.localEngagementStreak.current,
+      longest: raw.localEngagementStreak.longest,
+      lastActiveLocalDate: raw.localEngagementStreak.lastActiveLocalDate,
+    },
+    achievements,
+    missionEngagementByKey,
+    rewardedActivityKeys: raw.rewardedActivityKeys,
+  }, catalog)
 }
 
 export function migrateOsProgress(
@@ -267,11 +241,7 @@ export function migrateOsProgress(
   if (raw === null) {
     return { kind: 'reset', progress: createInitialOsProgress(catalog), reason: 'first-run' }
   }
-  if (
-    isRecord(raw) &&
-    typeof raw.schemaVersion === 'number' &&
-    raw.schemaVersion > OS_PROGRESS_SCHEMA_VERSION
-  ) {
+  if (isRecord(raw) && typeof raw.schemaVersion === 'number' && raw.schemaVersion > OS_PROGRESS_SCHEMA_VERSION) {
     return {
       kind: 'reset',
       progress: createInitialOsProgress(catalog),

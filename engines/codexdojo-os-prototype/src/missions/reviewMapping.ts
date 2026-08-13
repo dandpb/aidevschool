@@ -43,8 +43,7 @@ export function mapCanonicalReviews(
         : [{ mission, review, reviewKey: canonicalReviewKey(review) }]
     })
     .sort((left, right) => {
-      if (left.review.reason !== right.review.reason)
-        return left.review.reason === 'overdue' ? -1 : 1
+      if (left.review.reason !== right.review.reason) return left.review.reason === 'overdue' ? -1 : 1
       return left.mission.chapterOrder - right.mission.chapterOrder
     })
 }
@@ -55,10 +54,7 @@ export function mapPitfallPractice(
   trackId: TrackId,
 ): readonly MappedPitfallPractice[] {
   return [...learner.topPitfalls]
-    .sort(
-      (left, right) =>
-        right.occurrences - left.occurrences || right.lastSeen.localeCompare(left.lastSeen),
-    )
+    .sort((left, right) => right.occurrences - left.occurrences || right.lastSeen.localeCompare(left.lastSeen))
     .flatMap((pitfall) => {
       const declaration = DECLARED_PITFALL_PRACTICE[pitfall.id]
       if (declaration === undefined || declaration.trackId !== trackId) return []

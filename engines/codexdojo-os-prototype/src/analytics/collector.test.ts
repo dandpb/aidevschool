@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
-import { AnalyticsBatcher, InMemoryAnalyticsQueueStore } from './batcher'
 import {
   AnalyticsCollector,
-  type AnalyticsEventSink,
   InMemoryInstallationIdentityStore,
+  type AnalyticsEventSink,
 } from './collector'
+import { AnalyticsBatcher, InMemoryAnalyticsQueueStore } from './batcher'
 import type { AnalyticsEvent } from './events'
 
 class CapturingSink implements AnalyticsEventSink {
@@ -35,21 +35,19 @@ describe('AnalyticsCollector', () => {
       identityStore: new InMemoryInstallationIdentityStore(),
     })
 
-    expect(
-      collector.emit({
-        name: 'mission.started',
-        dimensions: { mode: 'initial' },
-        context: {
-          trackId: 'dev',
-          missionId: 'game-02-warehouse',
-          missionRunId: 'run-1',
-          engineId: 'voxelDojo',
-          engineVersion: '0.1.0',
-          contentVersion: 'game-02-warehouse@0.1.0',
-          rendererMode: 'webgl',
-        },
-      }),
-    ).toBe(true)
+    expect(collector.emit({
+      name: 'mission.started',
+      dimensions: { mode: 'initial' },
+      context: {
+        trackId: 'dev',
+        missionId: 'game-02-warehouse',
+        missionRunId: 'run-1',
+        engineId: 'voxelDojo',
+        engineVersion: '0.1.0',
+        contentVersion: 'game-02-warehouse@0.1.0',
+        rendererMode: 'webgl',
+      },
+    })).toBe(true)
 
     expect(sink.events).toEqual([
       {
@@ -96,9 +94,7 @@ describe('AnalyticsCollector', () => {
     const transition = vi.fn()
     const collector = new AnalyticsCollector(
       {
-        enqueue: () => {
-          throw new Error('delivery unavailable')
-        },
+        enqueue: () => { throw new Error('delivery unavailable') },
         nextSequence: () => 1,
       },
       { createId: idFactory(), identityStore: new InMemoryInstallationIdentityStore() },

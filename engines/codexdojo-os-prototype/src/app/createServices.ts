@@ -1,11 +1,14 @@
-import { AnalyticsBatcher, LocalStorageAnalyticsQueueStore } from '../analytics/batcher'
-import { AnalyticsCollector } from '../analytics/collector'
-import type { AnalyticsPort } from '../analytics/events'
-import { InMemoryAnalyticsTransport, SameOriginAnalyticsTransport } from '../analytics/transports'
 import {
   MissionSessionController,
   type MissionSessionControllerInput,
 } from '../host/MissionSessionController'
+import { AnalyticsBatcher, LocalStorageAnalyticsQueueStore } from '../analytics/batcher'
+import { AnalyticsCollector } from '../analytics/collector'
+import type { AnalyticsPort } from '../analytics/events'
+import {
+  InMemoryAnalyticsTransport,
+  SameOriginAnalyticsTransport,
+} from '../analytics/transports'
 import { createMentorProvider, type MentorProvider } from '../mentor/provider'
 import {
   GeneratedMissionCatalogRepository,
@@ -52,10 +55,9 @@ function createVerification(clock: Clock): VerificationService {
 
 function createAnalytics(clock: Clock): AnalyticsPort {
   const endpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT
-  const transport =
-    endpoint === undefined || endpoint === ''
-      ? new InMemoryAnalyticsTransport()
-      : new SameOriginAnalyticsTransport(endpoint)
+  const transport = endpoint === undefined || endpoint === ''
+    ? new InMemoryAnalyticsTransport()
+    : new SameOriginAnalyticsTransport(endpoint)
   const batcher = new AnalyticsBatcher(transport, {
     store: new LocalStorageAnalyticsQueueStore(),
   })

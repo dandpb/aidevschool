@@ -4,16 +4,11 @@ import { createEngineActionClient } from './client'
 describe('Engine Hub bridge client', () => {
   it('returns a parsed action receipt from the same-origin bridge', async () => {
     // Given
-    const fetcher = vi.fn().mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          ok: true,
-          summary: 'Ação concluída',
-          output: '8 passed',
-        }),
-        { status: 200, headers: { 'content-type': 'application/json' } },
-      ),
-    )
+    const fetcher = vi.fn().mockResolvedValue(new Response(JSON.stringify({
+      ok: true,
+      summary: 'Ação concluída',
+      output: '8 passed',
+    }), { status: 200, headers: { 'content-type': 'application/json' } }))
     const runAction = createEngineActionClient(fetcher, async () => 'session-token')
 
     // When
@@ -67,20 +62,13 @@ describe('Engine Hub bridge client', () => {
   })
 
   it('bootstraps and reuses a same-origin bridge session', async () => {
-    const fetcher = vi
-      .fn()
+    const fetcher = vi.fn()
       .mockResolvedValueOnce(new Response('{"token":"session-token"}', { status: 200 }))
-      .mockImplementation(
-        async () =>
-          new Response(
-            JSON.stringify({
-              ok: true,
-              summary: 'Ação concluída',
-              output: 'preview',
-            }),
-            { status: 200 },
-          ),
-      )
+      .mockImplementation(async () => new Response(JSON.stringify({
+        ok: true,
+        summary: 'Ação concluída',
+        output: 'preview',
+      }), { status: 200 }))
     const runAction = createEngineActionClient(fetcher)
 
     await runAction('openclaw', 'preview-checklist')
@@ -95,21 +83,14 @@ describe('Engine Hub bridge client', () => {
 
   it('retries the session bootstrap after a transient failure instead of caching it', async () => {
     // Given
-    const fetcher = vi
-      .fn()
+    const fetcher = vi.fn()
       .mockRejectedValueOnce(new TypeError('Failed to fetch'))
       .mockResolvedValueOnce(new Response('{"token":"session-token"}', { status: 200 }))
-      .mockImplementation(
-        async () =>
-          new Response(
-            JSON.stringify({
-              ok: true,
-              summary: 'Ação concluída',
-              output: 'preview',
-            }),
-            { status: 200 },
-          ),
-      )
+      .mockImplementation(async () => new Response(JSON.stringify({
+        ok: true,
+        summary: 'Ação concluída',
+        output: 'preview',
+      }), { status: 200 }))
     const runAction = createEngineActionClient(fetcher)
 
     // When

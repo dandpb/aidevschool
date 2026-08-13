@@ -23,38 +23,29 @@ export function useVerificationByMission(
     let cancelled = false
     setLoad(loading)
     void Promise.all(
-      catalog
-        .listLaunchable()
-        .map(
-          async (mission) =>
-            [missionKey(mission.trackId, mission.id), await verification.latest(mission)] as const,
-        ),
-    )
-      .then((entries) => {
-        if (!cancelled) {
-          setLoad({ availability: 'available', verificationByKey: Object.fromEntries(entries) })
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoad({ availability: 'unavailable', verificationByKey: {} })
-        }
-      })
-    return () => {
-      cancelled = true
-    }
+      catalog.listLaunchable().map(async (mission) => [
+        missionKey(mission.trackId, mission.id),
+        await verification.latest(mission),
+      ] as const),
+    ).then((entries) => {
+      if (!cancelled) {
+        setLoad({ availability: 'available', verificationByKey: Object.fromEntries(entries) })
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setLoad({ availability: 'unavailable', verificationByKey: {} })
+      }
+    })
+    return () => { cancelled = true }
   }, [catalog, verification])
 
-  const setVerification = useCallback(
-    (mission: MissionDefinition, state: EvidenceVerificationState) => {
-      const key = missionKey(mission.trackId, mission.id)
-      setLoad((current) => ({
-        ...current,
-        verificationByKey: { ...current.verificationByKey, [key]: state },
-      }))
-    },
-    [],
-  )
+  const setVerification = useCallback((mission: MissionDefinition, state: EvidenceVerificationState) => {
+    const key = missionKey(mission.trackId, mission.id)
+    setLoad((current) => ({
+      ...current,
+      verificationByKey: { ...current.verificationByKey, [key]: state },
+    }))
+  }, [])
 
   return { ...load, setVerification }
 }

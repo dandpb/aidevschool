@@ -14,18 +14,10 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
   const { state } = controller
 
   if (state.kind === 'booting') {
-    return (
-      <main className="journey-loading" aria-busy="true">
-        Preparando sua jornada…
-      </main>
-    )
+    return <main className="journey-loading" aria-busy="true">Preparando sua jornada…</main>
   }
   if (state.kind === 'failed') {
-    return (
-      <main className="journey-loading" role="alert">
-        {state.message}
-      </main>
-    )
+    return <main className="journey-loading" role="alert">{state.message}</main>
   }
 
   const { route, progress } = state
@@ -48,11 +40,7 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
   if (route.kind === 'mission') {
     const mission = services.missions.get(route.trackId, route.missionId)
     if (mission === undefined) {
-      return (
-        <main className="journey-loading" role="alert">
-          Esta missão não está disponível.
-        </main>
-      )
+      return <main className="journey-loading" role="alert">Esta missão não está disponível.</main>
     }
     return (
       <MissionShell
@@ -85,9 +73,5 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
       />
     )
   }
-  return (
-    <main className="journey-loading" role="alert">
-      Rota não encontrada.
-    </main>
-  )
+  return <main className="journey-loading" role="alert">Rota não encontrada.</main>
 }

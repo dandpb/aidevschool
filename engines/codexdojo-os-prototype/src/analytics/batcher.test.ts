@@ -1,18 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  type AnalyticsBatch,
   AnalyticsBatcher,
+  type AnalyticsBatch,
   type AnalyticsBatchTransport,
   type AnalyticsFlushReason,
   InMemoryAnalyticsQueueStore,
 } from './batcher'
 import type { AnalyticsEvent } from './events'
 
-function event(
-  id: string,
-  sequence: number,
-  name: AnalyticsEvent['name'] = 'mission.started',
-): AnalyticsEvent {
+function event(id: string, sequence: number, name: AnalyticsEvent['name'] = 'mission.started'): AnalyticsEvent {
   return {
     schemaVersion: 1,
     eventId: id,
@@ -71,9 +67,7 @@ describe('AnalyticsBatcher', () => {
       clearTimeout: vi.fn(),
     }
     const transport: AnalyticsBatchTransport = {
-      send: vi.fn(async () => {
-        throw new Error('offline')
-      }),
+      send: vi.fn(async () => { throw new Error('offline') }),
     }
     const batcher = new AnalyticsBatcher(transport, {
       store: new InMemoryAnalyticsQueueStore(),

@@ -1,29 +1,19 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { createServices } from '../app/createServices'
 import { ServicesProvider } from '../app/ServicesProvider'
+import { createServices } from '../app/createServices'
 import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
-import {
-  completeOnboarding,
-  createInitialOsProgress,
-  recordMissionCompletion,
-} from '../progress/domain'
+import { completeOnboarding, createInitialOsProgress, recordMissionCompletion } from '../progress/domain'
 import type { VerificationService } from '../verification/ports'
 import { Hub } from './Hub'
 
 const verification: VerificationService = {
-  async accept() {
-    return { kind: 'not-submitted' }
-  },
-  async retry() {
-    return { kind: 'not-submitted' }
-  },
-  async latest() {
-    return { kind: 'not-submitted' }
-  },
+  async accept() { return { kind: 'not-submitted' } },
+  async retry() { return { kind: 'not-submitted' } },
+  async latest() { return { kind: 'not-submitted' } },
 }
 
 describe('mission-first hub progression', () => {
@@ -60,9 +50,7 @@ describe('mission-first hub progression', () => {
     )
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' }),
-      ).not.toBeNull()
+      expect(screen.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).not.toBeNull()
     })
     expect(screen.getByText('25', { selector: '.hub-chips strong' })).not.toBeNull()
     expect(screen.getByText(/Uma pausa não remove XP/)).not.toBeNull()

@@ -11,7 +11,11 @@ export const HOST_ENGINE_PROTOCOL_VERSION = '1.0' as const
 
 export type MissionEngineId = 'literacyDojo' | 'voxelDojo'
 export type MissionRunStatus = 'running' | 'completed' | 'failed'
-export type EngineCapability = 'mission-state' | 'evidence' | 'mission-events' | 'renderer-state'
+export type EngineCapability =
+  | 'mission-state'
+  | 'evidence'
+  | 'mission-events'
+  | 'renderer-state'
 export type EngineMissionEventName =
   | 'mission.started'
   | 'mission.completed'

@@ -25,15 +25,11 @@ describe('voxelDojo OS catalog', () => {
   })
 
   it('accepts only string URLs for known games', () => {
-    expect(
-      parseVoxelUrlMap(
-        JSON.stringify({
-          'game-02-warehouse': 'https://voxel.example/warehouse/',
-          'unknown-game': 'https://attacker.example/',
-          'game-03-wormhole': 42,
-        }),
-      ),
-    ).toEqual({ 'game-02-warehouse': 'https://voxel.example/warehouse/' })
+    expect(parseVoxelUrlMap(JSON.stringify({
+      'game-02-warehouse': 'https://voxel.example/warehouse/',
+      'unknown-game': 'https://attacker.example/',
+      'game-03-wormhole': 42,
+    }))).toEqual({ 'game-02-warehouse': 'https://voxel.example/warehouse/' })
     expect(parseVoxelUrlMap('not-json')).toEqual({})
   })
 })

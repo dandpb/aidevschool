@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { buildMentorContext } from './context'
-import { type MentorRequestV1, type MentorResponseV1, NO_MENTOR_AUTHORITY } from './contracts'
+import { NO_MENTOR_AUTHORITY, type MentorRequestV1, type MentorResponseV1 } from './contracts'
 import { MentorController, type MentorControllerState } from './mentorController'
 import type { MentorProvider } from './provider'
 
@@ -24,10 +24,7 @@ function request(id: string, mode: MentorRequestV1['mode'] = 'question'): Mentor
   })
 }
 
-function answer(
-  input: MentorRequestV1,
-  text = 'Qual criterio voce consegue observar primeiro?',
-): MentorResponseV1 {
+function answer(input: MentorRequestV1, text = 'Qual criterio voce consegue observar primeiro?'): MentorResponseV1 {
   return {
     schemaVersion: 1,
     requestId: input.requestId,
@@ -50,11 +47,7 @@ class DeferredProvider implements MentorProvider {
   answer(input: MentorRequestV1, options: { readonly signal: AbortSignal }): Promise<unknown> {
     return new Promise((resolve, reject) => {
       this.pending.push({ request: input, resolve, reject })
-      options.signal.addEventListener(
-        'abort',
-        () => reject(new DOMException('Aborted', 'AbortError')),
-        { once: true },
-      )
+      options.signal.addEventListener('abort', () => reject(new DOMException('Aborted', 'AbortError')), { once: true })
     })
   }
 }
@@ -65,9 +58,7 @@ describe('MentorController', () => {
     const provider: MentorProvider = {
       id: 'provider',
       available: true,
-      async answer() {
-        return answer(input)
-      },
+      async answer() { return answer(input) },
     }
     const controller = new MentorController({ provider })
 
@@ -94,9 +85,7 @@ describe('MentorController', () => {
     const provider: MentorProvider = {
       id: 'abort-ignoring',
       available: true,
-      answer() {
-        return new Promise((resolve) => resolvers.push(resolve))
-      },
+      answer() { return new Promise((resolve) => resolvers.push(resolve)) },
     }
     const states: MentorControllerState[] = []
     const controller = new MentorController({ provider, onState: (state) => states.push(state) })
@@ -134,13 +123,9 @@ describe('MentorController', () => {
     const malformed: MentorProvider = {
       id: 'malformed',
       available: true,
-      async answer() {
-        return { response: 'missing contract' }
-      },
+      async answer() { return { response: 'missing contract' } },
     }
-    await expect(
-      new MentorController({ provider: malformed }).submit(input),
-    ).resolves.toMatchObject({
+    await expect(new MentorController({ provider: malformed }).submit(input)).resolves.toMatchObject({
       source: 'fallback',
       fallbackReason: 'mentor-response-schema',
     })
@@ -148,9 +133,7 @@ describe('MentorController', () => {
     const unsafe: MentorProvider = {
       id: 'unsafe',
       available: true,
-      async answer() {
-        return answer(input, 'A solucao e copiar e colar este bloco: ```ts const answer = true ```')
-      },
+      async answer() { return answer(input, 'A solucao e copiar e colar este bloco: ```ts const answer = true ```') },
     }
     await expect(new MentorController({ provider: unsafe }).submit(input)).resolves.toMatchObject({
       source: 'fallback',
@@ -175,10 +158,7 @@ describe('MentorController', () => {
 
   it('returns local policy guidance before calling the provider', async () => {
     const provider: MentorProvider = { id: 'spy', available: true, answer: vi.fn() }
-    const blocked = {
-      ...request('blocked', 'hint'),
-      interaction: { ...request('blocked', 'hint').interaction, attemptExcerpt: undefined },
-    }
+    const blocked = { ...request('blocked', 'hint'), interaction: { ...request('blocked', 'hint').interaction, attemptExcerpt: undefined } }
     const controller = new MentorController({ provider })
 
     await expect(controller.submit(blocked)).resolves.toMatchObject({

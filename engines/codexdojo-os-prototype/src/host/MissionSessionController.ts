@@ -2,6 +2,13 @@ import type { MissionDefinition } from '../domain'
 import type { RendererPreference } from '../rendering/domain'
 import type { EvidenceSubmission } from '../verification/ports'
 import {
+  createEnvelope,
+  type EngineToHostMessage,
+  type HostToEngineMessage,
+  type MissionEventMessage,
+  type ProtocolAckMessage,
+} from './protocol'
+import {
   closeMissionSession,
   createMissionTransitionState,
   failMissionSession,
@@ -12,13 +19,6 @@ import {
   reduceMissionMessage,
   requestRendererRetry,
 } from './missionSessionTransitions'
-import {
-  createEnvelope,
-  type EngineToHostMessage,
-  type HostToEngineMessage,
-  type MissionEventMessage,
-  type ProtocolAckMessage,
-} from './protocol'
 import { decodeEngineMessage } from './validation'
 
 const HANDSHAKE_TIMEOUT_MS = 10_000

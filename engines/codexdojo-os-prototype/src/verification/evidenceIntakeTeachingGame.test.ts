@@ -37,7 +37,10 @@ describe('EvidenceIntake teaching-game evidence', () => {
   it('rejects malformed teaching-game evidence before persistence', async () => {
     const { intake, store } = setup()
 
-    const state = await intake.accept(voxelMission, voxelSubmission({ project: 'wrong-project' }))
+    const state = await intake.accept(
+      voxelMission,
+      voxelSubmission({ project: 'wrong-project' }),
+    )
 
     expect(state).toEqual({ kind: 'rejected', code: 'subject-record-mismatch' })
     expect(store.raw.size).toBe(0)

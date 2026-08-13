@@ -7,7 +7,10 @@ type LocalActionState =
   | { readonly kind: 'running' }
   | { readonly kind: 'complete'; readonly result: EngineActionResult }
 
-export type EngineActionRunner = (engineId: EngineId, action: string) => Promise<EngineActionResult>
+export type EngineActionRunner = (
+  engineId: EngineId,
+  action: string,
+) => Promise<EngineActionResult>
 
 export type LocalEngineActionProps = {
   readonly engineId: EngineId
@@ -16,7 +19,12 @@ export type LocalEngineActionProps = {
   readonly runAction: EngineActionRunner
 }
 
-export function LocalEngineAction({ engineId, action, label, runAction }: LocalEngineActionProps) {
+export function LocalEngineAction({
+  engineId,
+  action,
+  label,
+  runAction,
+}: LocalEngineActionProps) {
   const [state, setState] = useState<LocalActionState>({ kind: 'idle' })
 
   const run = async () => {
@@ -45,10 +53,7 @@ export function LocalEngineAction({ engineId, action, label, runAction }: LocalE
       </button>
       <p>Esta execução é isolada e não concede domínio nem grava o estado canônico do aprendiz.</p>
       {state.kind === 'complete' ? (
-        <div
-          className={state.result.ok ? 'engine-receipt pass' : 'engine-receipt fail'}
-          role="status"
-        >
+        <div className={state.result.ok ? 'engine-receipt pass' : 'engine-receipt fail'} role="status">
           <strong>{state.result.summary}</strong>
           <pre>{state.result.output}</pre>
         </div>

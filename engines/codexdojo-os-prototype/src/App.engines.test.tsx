@@ -14,10 +14,7 @@ it('launches Engine Hub from the launcher and reuses its existing window', async
   window.history.replaceState(null, '', '/desktop')
   render(<App />)
   await user.click(screen.getByRole('button', { name: 'Atividades' }))
-  await user.type(
-    screen.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }),
-    'Engine Hub',
-  )
+  await user.type(screen.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }), 'Engine Hub')
 
   // When
   let launcher = screen.getByRole('dialog', { name: 'Lançador de aplicativos' })

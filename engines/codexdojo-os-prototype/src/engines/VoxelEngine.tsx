@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { VoxelGamePicker } from './VoxelGamePicker'
-import { type VoxelGameId, type VoxelUrlMap, voxelCatalog } from './voxelCatalog'
+import { voxelCatalog, type VoxelGameId, type VoxelUrlMap } from './voxelCatalog'
 
 const defaultGameId: VoxelGameId = 'game-10-hash-ring'
 
@@ -30,9 +30,7 @@ export function VoxelEngine({
       <EmbeddedEngine
         key={gameId}
         engineName={`voxelDojo · ${game.name}`}
-        configuredUrl={
-          configuredUrls[gameId] ?? (gameId === defaultGameId ? compatibilityUrl : undefined)
-        }
+        configuredUrl={configuredUrls[gameId] ?? (gameId === defaultGameId ? compatibilityUrl : undefined)}
         developmentUrl={game.developmentUrl}
         development={development}
         focused={focused}

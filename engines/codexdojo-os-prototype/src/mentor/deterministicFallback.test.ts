@@ -22,24 +22,14 @@ describe('deterministic mentor fallback', () => {
       hintQuota: { used: 0, limit: 5 },
     }
     const first = answerWithDeterministicFallback(buildMentorContext(base))
-    const second = answerWithDeterministicFallback(
-      buildMentorContext({
-        ...base,
-        recentTurns: [{ role: 'mentor', content: first.response }],
-      }),
-    )
+    const second = answerWithDeterministicFallback(buildMentorContext({
+      ...base,
+      recentTurns: [{ role: 'mentor', content: first.response }],
+    }))
 
     expect(second.response).not.toBe(first.response)
-    expect(first.pedagogy).toEqual({
-      stageBefore: 'checking',
-      stageAfter: 'checking',
-      solutionWithheld: true,
-    })
-    expect(first.authority).toEqual({
-      canonicalStateWritten: false,
-      evidenceCreated: false,
-      masteryEvaluated: false,
-    })
+    expect(first.pedagogy).toEqual({ stageBefore: 'checking', stageAfter: 'checking', solutionWithheld: true })
+    expect(first.authority).toEqual({ canonicalStateWritten: false, evidenceCreated: false, masteryEvaluated: false })
     expect(`${first.response} ${second.response}`).not.toMatch(/resposta correta|copie e cole|```/i)
   })
 })

@@ -1,9 +1,6 @@
 import { Maximize2, Minimize2, ServerCog } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import {
-  type EmbeddedEvidenceReceipt,
-  readEmbeddedEvidenceMessage,
-} from '../host/legacyEvidenceAdapter'
+import { type EmbeddedEvidenceReceipt, readEmbeddedEvidenceMessage } from '../host/legacyEvidenceAdapter'
 import { resolveEngineUrl } from './registry'
 
 export type EmbeddedEngineProps = {
@@ -80,20 +77,13 @@ export function EmbeddedEngine({
 
 function EmbeddedEvidenceReceiptView({ evidence }: { readonly evidence: EmbeddedEvidenceReceipt }) {
   return (
-    <div
-      className={evidence.pass ? 'embedded-evidence pass' : 'embedded-evidence fail'}
-      role="status"
-    >
+    <div className={evidence.pass ? 'embedded-evidence pass' : 'embedded-evidence fail'} role="status">
       <div>
         <strong>Evidência bruta recebida</strong>
-        <span>
-          {evidence.project} · {evidence.attemptId}
-        </span>
+        <span>{evidence.project} · {evidence.attemptId}</span>
       </div>
       <div>
-        <b>
-          {evidence.pass ? 'PASS produzido' : 'FAIL produzido'} · {evidence.source}
-        </b>
+        <b>{evidence.pass ? 'PASS produzido' : 'FAIL produzido'} · {evidence.source}</b>
         <span>Verificação independente obrigatória</span>
       </div>
     </div>

@@ -101,9 +101,7 @@ function dimensionsAreValid(
 
 function contextIsValid(value: unknown): value is AnalyticsContext {
   if (!isRecord(value) || !hasOnlyKeys(value, CONTEXT_KEYS)) return false
-  if (
-    !Object.values(value).every((item) => typeof item === 'string' && SAFE_IDENTIFIER.test(item))
-  ) {
+  if (!Object.values(value).every((item) => typeof item === 'string' && SAFE_IDENTIFIER.test(item))) {
     return false
   }
   if (value.trackId !== undefined && value.trackId !== 'ai-pratica' && value.trackId !== 'dev') {
@@ -125,90 +123,62 @@ function contextIsValid(value: unknown): value is AnalyticsContext {
   )
 }
 
-function valuesMatchClosedVocabulary(
-  name: AnalyticsEventName,
-  dimensions: AnalyticsDimensions,
-): boolean {
+function valuesMatchClosedVocabulary(name: AnalyticsEventName, dimensions: AnalyticsDimensions): boolean {
   if (name === 'onboarding.completed') {
-    return (
-      dimensions.recommendationChanged === undefined ||
-      typeof dimensions.recommendationChanged === 'boolean'
-    )
+    return dimensions.recommendationChanged === undefined || typeof dimensions.recommendationChanged === 'boolean'
   }
   if (name === 'mission.started') {
-    return (
-      dimensions.mode === undefined ||
-      ['initial', 'review', 'retry', 'targeted-practice'].includes(String(dimensions.mode))
-    )
+    return dimensions.mode === undefined || ['initial', 'review', 'retry', 'targeted-practice'].includes(String(dimensions.mode))
   }
   if (name === 'mission.completed') {
-    return (
-      dimensions.result === undefined || ['completed', 'failed'].includes(String(dimensions.result))
-    )
+    return dimensions.result === undefined || ['completed', 'failed'].includes(String(dimensions.result))
   }
   if (name === 'hint.requested') {
     return (
-      (dimensions.mode === undefined ||
-        ['question', 'explain', 'hint'].includes(String(dimensions.mode))) &&
-      (dimensions.source === undefined ||
-        ['provider', 'fallback', 'policy'].includes(String(dimensions.source))) &&
-      (dimensions.outcome === undefined ||
-        ['answered', 'attempt-required', 'quota-exhausted', 'unavailable'].includes(
-          String(dimensions.outcome),
-        ))
+      (dimensions.mode === undefined || ['question', 'explain', 'hint'].includes(String(dimensions.mode))) &&
+      (dimensions.source === undefined || ['provider', 'fallback', 'policy'].includes(String(dimensions.source))) &&
+      (dimensions.outcome === undefined || ['answered', 'attempt-required', 'quota-exhausted', 'unavailable'].includes(String(dimensions.outcome)))
     )
   }
   if (name === 'structured_attempt.submitted' || name === 'structured_attempt.passed') {
-    return (
-      dimensions.activityType === undefined ||
-      [
-        'choice',
-        'sort',
-        'missing_context',
-        'safety_classification',
-        'prompt_builder',
-        'output_comparison',
-        'rubric_review',
-      ].includes(String(dimensions.activityType))
-    )
+    return dimensions.activityType === undefined || [
+      'choice',
+      'sort',
+      'missing_context',
+      'safety_classification',
+      'prompt_builder',
+      'output_comparison',
+      'rubric_review',
+    ].includes(String(dimensions.activityType))
   }
   if (name === 'retry.requested') {
-    return (
-      dimensions.reason === undefined ||
-      ['retry', 'targeted-practice', 'verification-unavailable', 'engine-retry'].includes(
-        String(dimensions.reason),
-      )
-    )
+    return dimensions.reason === undefined || [
+      'retry',
+      'targeted-practice',
+      'verification-unavailable',
+      'engine-retry',
+    ].includes(String(dimensions.reason))
   }
   if (name === 'review.started') {
-    return (
-      dimensions.reason === undefined ||
-      ['canonical-review', 'due', 'overdue'].includes(String(dimensions.reason))
-    )
+    return dimensions.reason === undefined || ['canonical-review', 'due', 'overdue'].includes(String(dimensions.reason))
   }
   if (name === 'verification.state_changed') {
     return (
-      (dimensions.state === undefined ||
-        ['validating', 'pending', 'verified', 'rejected', 'gateway-unavailable'].includes(
-          String(dimensions.state),
-        )) &&
-      (dimensions.verdict === undefined ||
-        ['PASS', 'FAIL', 'INVALID'].includes(String(dimensions.verdict)))
+      (dimensions.state === undefined || ['validating', 'pending', 'verified', 'rejected', 'gateway-unavailable'].includes(String(dimensions.state))) &&
+      (dimensions.verdict === undefined || ['PASS', 'FAIL', 'INVALID'].includes(String(dimensions.verdict)))
     )
   }
   if (name === 'renderer.degraded') {
     return (
-      (dimensions.reason === undefined ||
-        [
-          'unsupported',
-          'creation-failed',
-          'context-lost',
-          'restore-failed',
-          'load-timeout',
-          'reduced-motion',
-        ].includes(String(dimensions.reason))) &&
-      (dimensions.fallback === undefined ||
-        ['canvas2d', 'dom', 'none'].includes(String(dimensions.fallback)))
+      (dimensions.reason === undefined || [
+        'unsupported',
+        'creation-failed',
+        'context-lost',
+        'restore-failed',
+        'load-timeout',
+        'reduced-motion',
+      ].includes(String(dimensions.reason))) &&
+      (dimensions.fallback === undefined || ['canvas2d', 'dom', 'none'].includes(String(dimensions.fallback)))
     )
   }
   return true
@@ -227,14 +197,7 @@ export function analyticsEventInputIsValid(value: unknown): value is AnalyticsEv
 export function analyticsEventIsValid(value: unknown): value is AnalyticsEvent {
   if (
     !isRecord(value) ||
-    !hasOnlyKeys(value, [
-      'schemaVersion',
-      'eventId',
-      'name',
-      'occurredAt',
-      'sequence',
-      'dimensions',
-    ]) ||
+    !hasOnlyKeys(value, ['schemaVersion', 'eventId', 'name', 'occurredAt', 'sequence', 'dimensions']) ||
     value.schemaVersion !== 1 ||
     typeof value.eventId !== 'string' ||
     value.eventId.length === 0 ||
@@ -260,13 +223,7 @@ export function analyticsEventIsValid(value: unknown): value is AnalyticsEvent {
   ) {
     return false
   }
-  if (
-    !contextIsValid(
-      Object.fromEntries(
-        CONTEXT_KEYS.filter((key) => key in dimensions).map((key) => [key, dimensions[key]]),
-      ),
-    )
-  ) {
+  if (!contextIsValid(Object.fromEntries(CONTEXT_KEYS.filter((key) => key in dimensions).map((key) => [key, dimensions[key]])))) {
     return false
   }
   return valuesMatchClosedVocabulary(name, dimensions)

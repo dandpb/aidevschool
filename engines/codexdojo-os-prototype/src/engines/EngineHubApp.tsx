@@ -1,6 +1,6 @@
 import {
-  Boxes,
   BrainCircuit,
+  Boxes,
   Gamepad2,
   Gauge,
   LayoutDashboard,
@@ -69,9 +69,7 @@ export function EngineHubApp({
   return (
     <div className={focusedEngine ? 'engine-hub-app focused-engine' : 'engine-hub-app'}>
       <header className="engine-hub-header">
-        <div className="engine-host-mark">
-          <ServerCog />
-        </div>
+        <div className="engine-host-mark"><ServerCog /></div>
         <div>
           <span className="section-label">HOST DA EXPERIÊNCIA</span>
           <h1>codexDojo OS</h1>
@@ -92,10 +90,7 @@ export function EngineHubApp({
               onClick={() => selectEngine(engine.id)}
             >
               <span className="engine-selector-icon">{engineIcons[engine.id]}</span>
-              <span>
-                <strong>{engine.name}</strong>
-                <small>{engine.role}</small>
-              </span>
+              <span><strong>{engine.name}</strong><small>{engine.role}</small></span>
               <em>Usar {engine.name}</em>
             </button>
           ))}
@@ -107,27 +102,16 @@ export function EngineHubApp({
               <Boxes />
               <span className="section-label">SEIS MOTORES INTEGRADOS</span>
               <h2>Escolha um motor para começar.</h2>
-              <p>
-                Apps web abrem dentro desta janela. Motores locais usam apenas ações fixas e
-                auditáveis.
-              </p>
+              <p>Apps web abrem dentro desta janela. Motores locais usam apenas ações fixas e auditáveis.</p>
             </div>
           ) : (
             <>
               <header className="engine-detail-header">
                 <span className="engine-detail-icon">{engineIcons[selected.id]}</span>
-                <div>
-                  <span>{selected.role}</span>
-                  <h2>{selected.name}</h2>
-                  <p>{selected.capability}</p>
-                </div>
+                <div><span>{selected.role}</span><h2>{selected.name}</h2><p>{selected.capability}</p></div>
               </header>
               <div className="engine-policy-strip">
-                <span>
-                  {selected.learnerAccess === 'read-only'
-                    ? 'Estado canônico · somente leitura'
-                    : 'Evidência bruta · não verificada'}
-                </span>
+                <span>{selected.learnerAccess === 'read-only' ? 'Estado canônico · somente leitura' : 'Evidência bruta · não verificada'}</span>
                 <strong>Domínio: nunca decidido pelo OS</strong>
               </div>
               {selected.id === 'miniMaxEvolutionEngine' || selected.id === 'openclaw' ? (
@@ -168,10 +152,7 @@ export function EngineHubApp({
                 <div className="engine-unavailable" role="status">
                   <ServerCog />
                   <strong>A ponte local não está disponível</strong>
-                  <p>
-                    Use o servidor local de desenvolvimento ou o preview integrado para executar
-                    esta ação fixa.
-                  </p>
+                  <p>Use o servidor local de desenvolvimento ou o preview integrado para executar esta ação fixa.</p>
                 </div>
               )}
             </>

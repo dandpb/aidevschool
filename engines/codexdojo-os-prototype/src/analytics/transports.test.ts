@@ -26,32 +26,19 @@ describe('analytics transports', () => {
   })
 
   it('delivers only to a same-origin endpoint and validates accepted IDs', async () => {
-    const fetcher = vi.fn(
-      async () =>
-        new Response(
-          JSON.stringify({
-            acceptedEventIds: ['event-1'],
-          }),
-          { status: 202, headers: { 'content-type': 'application/json' } },
-        ),
-    )
-    const transport = new SameOriginAnalyticsTransport(
-      '/__dojo/bridge/v1/analytics',
-      fetcher,
-      undefined,
-    )
+    const fetcher = vi.fn(async () => new Response(JSON.stringify({
+      acceptedEventIds: ['event-1'],
+    }), { status: 202, headers: { 'content-type': 'application/json' } }))
+    const transport = new SameOriginAnalyticsTransport('/__dojo/bridge/v1/analytics', fetcher, undefined)
 
     await expect(transport.send(batch, 'page-hide')).resolves.toEqual({
       acceptedEventIds: ['event-1'],
     })
-    expect(fetcher).toHaveBeenCalledWith(
-      '/__dojo/bridge/v1/analytics',
-      expect.objectContaining({
-        method: 'POST',
-        keepalive: true,
-        body: JSON.stringify(batch),
-      }),
-    )
+    expect(fetcher).toHaveBeenCalledWith('/__dojo/bridge/v1/analytics', expect.objectContaining({
+      method: 'POST',
+      keepalive: true,
+      body: JSON.stringify(batch),
+    }))
     expect(() => new SameOriginAnalyticsTransport('https://attacker.example/events')).toThrow(
       'analytics-endpoint-must-be-same-origin',
     )
@@ -66,6 +53,9 @@ describe('analytics transports', () => {
     )
 
     expect(transport.sendBeacon(batch)).toBe(true)
-    expect(beacon).toHaveBeenCalledWith('/__dojo/bridge/v1/analytics', expect.any(Blob))
+    expect(beacon).toHaveBeenCalledWith(
+      '/__dojo/bridge/v1/analytics',
+      expect.any(Blob),
+    )
   })
 })

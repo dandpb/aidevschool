@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { createServices } from '../app/createServices'
 import { ServicesProvider } from '../app/ServicesProvider'
+import { createServices } from '../app/createServices'
 import { learnerSnapshot } from '../data/learner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
@@ -17,12 +17,8 @@ import { TrackSwitcher } from './TrackSwitcher'
 
 function verificationService(): VerificationService {
   return {
-    async accept() {
-      return { kind: 'not-submitted' }
-    },
-    async retry() {
-      return { kind: 'not-submitted' }
-    },
+    async accept() { return { kind: 'not-submitted' } },
+    async retry() { return { kind: 'not-submitted' } },
     async latest(mission) {
       return mission.id === 'l02'
         ? {
@@ -83,9 +79,7 @@ describe('chapter map and track switching', () => {
     expect(screen.getByRole('heading', { name: 'Duas trilhas, seis missões' })).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'Sistemas que você pode manipular' })).not.toBeNull()
     expect(screen.getAllByText('Bloqueada por pré-requisito').length).toBeGreaterThan(0)
-    await waitFor(() =>
-      expect(screen.getByText('Verificação independente concluída')).not.toBeNull(),
-    )
+    await waitFor(() => expect(screen.getByText('Verificação independente concluída')).not.toBeNull())
     expect(screen.getByText('Competência canônica verificada')).not.toBeNull()
   })
 
@@ -96,8 +90,6 @@ describe('chapter map and track switching', () => {
     await userEvent.click(screen.getByRole('button', { name: /Trilha Dev/ }))
 
     expect(onSwitch).toHaveBeenCalledWith('dev')
-    expect(screen.getByRole('button', { name: /IA Prática/ }).getAttribute('aria-pressed')).toBe(
-      'true',
-    )
+    expect(screen.getByRole('button', { name: /IA Prática/ }).getAttribute('aria-pressed')).toBe('true')
   })
 })

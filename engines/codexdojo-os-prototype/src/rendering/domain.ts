@@ -29,7 +29,9 @@ export type RendererAction =
   | { readonly type: 'CONTEXT_LOST' }
   | { readonly type: 'RETRY_REQUESTED'; readonly requested?: RendererPreference }
 
-export function createInitialRendererState(requested: RendererPreference = 'auto'): RendererState {
+export function createInitialRendererState(
+  requested: RendererPreference = 'auto',
+): RendererState {
   return {
     requested,
     active: 'none',

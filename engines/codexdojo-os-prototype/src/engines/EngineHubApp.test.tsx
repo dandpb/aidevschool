@@ -129,19 +129,14 @@ describe('Engine Hub', () => {
 
   it('drops a stale local receipt after the user switches engines', async () => {
     const user = userEvent.setup()
-    let resolveAction:
-      | ((result: {
-          readonly ok: boolean
-          readonly summary: string
-          readonly output: string
-        }) => void)
-      | undefined
-    const runAction = vi.fn().mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          resolveAction = resolve
-        }),
-    )
+    let resolveAction: ((result: {
+      readonly ok: boolean
+      readonly summary: string
+      readonly output: string
+    }) => void) | undefined
+    const runAction = vi.fn().mockImplementation(() => new Promise((resolve) => {
+      resolveAction = resolve
+    }))
     render(<EngineHubApp development={false} localBridgeAvailable runAction={runAction} />)
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
     await user.click(screen.getByRole('button', { name: 'Preparar sessão de tutoria' }))
@@ -184,13 +179,11 @@ describe('Engine Hub', () => {
     }
 
     act(() => {
-      window.dispatchEvent(
-        new MessageEvent('message', {
-          data: { type: 'aidevschool:teaching-evidence', version: 1, evidence },
-          origin: 'https://pixel.example.test',
-          source: frame.contentWindow,
-        }),
-      )
+      window.dispatchEvent(new MessageEvent('message', {
+        data: { type: 'aidevschool:teaching-evidence', version: 1, evidence },
+        origin: 'https://pixel.example.test',
+        source: frame.contentWindow,
+      }))
     })
 
     expect(await screen.findByText('Evidência bruta recebida')).toBeTruthy()
@@ -198,34 +191,30 @@ describe('Engine Hub', () => {
     expect(screen.getByText('Verificação independente obrigatória')).toBeTruthy()
 
     act(() => {
-      window.dispatchEvent(
-        new MessageEvent('message', {
-          data: {
-            type: 'aidevschool:teaching-evidence',
-            version: 1,
-            evidence: { ...evidence, project: 'attacker_project' },
-          },
-          origin: 'https://attacker.example.test',
-          source: frame.contentWindow,
-        }),
-      )
+      window.dispatchEvent(new MessageEvent('message', {
+        data: {
+          type: 'aidevschool:teaching-evidence',
+          version: 1,
+          evidence: { ...evidence, project: 'attacker_project' },
+        },
+        origin: 'https://attacker.example.test',
+        source: frame.contentWindow,
+      }))
     })
 
     expect(screen.getAllByText('Evidência bruta recebida')).toHaveLength(1)
     expect(screen.queryByText(/attacker_project/)).toBeNull()
 
     act(() => {
-      window.dispatchEvent(
-        new MessageEvent('message', {
-          data: {
-            type: 'aidevschool:teaching-evidence',
-            version: 1,
-            evidence: { ...evidence, source: 'voxeldojo', project: 'wrong_engine' },
-          },
-          origin: 'https://pixel.example.test',
-          source: frame.contentWindow,
-        }),
-      )
+      window.dispatchEvent(new MessageEvent('message', {
+        data: {
+          type: 'aidevschool:teaching-evidence',
+          version: 1,
+          evidence: { ...evidence, source: 'voxeldojo', project: 'wrong_engine' },
+        },
+        origin: 'https://pixel.example.test',
+        source: frame.contentWindow,
+      }))
     })
 
     expect(screen.queryByText(/wrong_engine/)).toBeNull()
