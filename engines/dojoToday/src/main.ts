@@ -16,6 +16,7 @@ import {
   saveConfig,
 } from "./assistant";
 import { today } from "./data/today";
+import { escapeHtml } from "./escape";
 import type { DueReview, TodaySnapshot, TrackNode } from "./types";
 
 const REASON_LABEL: Record<DueReview["reason"], string> = {
@@ -70,8 +71,8 @@ function playDetails(gameDir: string | null): string {
   return `
     <details class="play-how">
       <summary>Como jogar</summary>
-      <code>cd ${gameDir} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code>
-      <p class="muted">O jogo emite evidência bruta; um verificador independente decide o gate. (${rel})</p>
+      <code>cd ${escapeHtml(gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code>
+      <p class="muted">O jogo emite evidência bruta; um verificador independente decide o gate. (${escapeHtml(rel)})</p>
     </details>`;
 }
 
@@ -86,10 +87,10 @@ function reviewCard(r: DueReview, index: number): string {
     <article class="card lesson-card ${tone}" style="--i:${index}">
       <div class="lesson-head">
         <span class="chip">${REASON_LABEL[r.reason]}</span>
-        <span class="due-in">${r.dueIn}</span>
+        <span class="due-in">${escapeHtml(r.dueIn)}</span>
       </div>
-      <h3 class="lesson-title">${r.title}</h3>
-      ${r.project ? `<p class="lesson-project">${r.project}</p>` : ""}
+      <h3 class="lesson-title">${escapeHtml(r.title)}</h3>
+      ${r.project ? `<p class="lesson-project">${escapeHtml(r.project)}</p>` : ""}
       ${playDetails(r.gameDir)}
     </article>`;
 }
@@ -97,7 +98,7 @@ function reviewCard(r: DueReview, index: number): string {
 function missionCard(a: TodaySnapshot["activeUnit"]): string {
   if (!a.id) return "";
   const challenge = a.diagnosticFile
-    ? `Comece pelo desafio em <code class="inline-path">${a.diagnosticFile}</code>.`
+    ? `Comece pelo desafio em <code class="inline-path">${escapeHtml(a.diagnosticFile)}</code>.`
     : "";
   return `
     <section class="card mission-card" aria-label="Missão do dia">
@@ -108,7 +109,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
       </div>
       <div class="mentor-copy">
         <p class="eyebrow">Sócrates · seu tutor</p>
-        <p class="mentor-line">Sua próxima missão é <strong>${a.title ?? a.id}</strong>.</p>
+        <p class="mentor-line">Sua próxima missão é <strong>${escapeHtml(a.title ?? a.id)}</strong>.</p>
         <p class="muted">${challenge} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
         ${playDetails(a.gameDir)}
         ${
@@ -177,13 +178,13 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
       const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
       const play =
         isNext && n.gameDir
-          ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${n.gameDir} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
+          ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
           : "";
       return `
         <li class="${cls}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
           <span class="track-num">${n.num}</span>
-          <span class="track-title">${n.title}</span>
+          <span class="track-title">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
     })
