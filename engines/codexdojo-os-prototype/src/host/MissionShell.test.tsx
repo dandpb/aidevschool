@@ -64,8 +64,9 @@ class CompletingEvidenceSession extends MissionSessionController {
 
 const verification: VerificationService = {
   async accept(_mission, _submission, onState) {
+    onState?.({ kind: 'pending', storageId: 'test-run' })
     const state = { kind: 'rejected', code: 'unused' } as const
-    onState?.(state)
+    setTimeout(() => onState?.(state), 10)
     return state
   },
   async latest() {
