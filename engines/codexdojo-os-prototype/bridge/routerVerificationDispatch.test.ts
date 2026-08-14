@@ -7,6 +7,7 @@ import {
   relayRecord,
   teachingGameRecord,
   wormholeRecord,
+  teachingGameReceipt,
 } from './routerVerificationRecords'
 
 describe('verification bridge dispatch', () => {
@@ -23,7 +24,7 @@ describe('verification bridge dispatch', () => {
 
     expect(response.status).toBe(200)
     expect(response.body.receipt).toMatchObject({
-      evidence_digest: '4e55aa3ff44694bc170974fb7898f9a16e3092aa4cd4b7a1ae38ca2f162e0577',
+      evidence_digest: '6b36e7941c615b7f2a1d0d2c973e54a240dd7607cdea87f7c1b7b301ef9a5805',
       lesson_id: 'l02',
       producer_pass_claim: true,
     })
@@ -69,13 +70,11 @@ describe('verification bridge dispatch', () => {
     }, runProcess)
 
     expect(response.status).toBe(200)
-    expect(response.body.receipt).toMatchObject({
-      source: 'independent-teaching-game-verifier',
-      verdict: 'PASS',
-      unit_id: 'U2-key-value-store',
-      scenario_id: 'kv-warehouse-L1',
-      producer_pass_claim: true,
-      canonical_gate_status: 'not-submitted',
+    expect(response.body.receipt).toEqual({
+      ...teachingGameReceipt({
+        evidence_digest: '58e46ca9a59b3664fbf063c24ca77ddf57c45749cd596b3953dd0a699e68575f',
+        canonical_gate_status: 'not-submitted',
+      }),
     })
   })
 
@@ -94,14 +93,16 @@ describe('verification bridge dispatch', () => {
     }, runProcess)
 
     expect(response.status).toBe(200)
-    expect(response.body.receipt).toMatchObject({
-      source: 'independent-teaching-game-verifier',
-      verdict: 'PASS',
-      unit_id: record.unit_id,
-      project: record.project,
-      scenario_id: record.scenario_id,
-      game: record.game,
-      producer_pass_claim: true,
+    expect(response.body.receipt).toEqual({
+      ...teachingGameReceipt({
+        evidence_digest: record.game === 'WORMHOLE'
+          ? '3c31c21fba14ac614b54e820ea0f85b60708cdf90eefee56d65604c4887ba7d5'
+          : '5d2867853d07625411eebc8e7c0719f8c572f3ca77586e4b20c938077c6b4ff8',
+        unit_id: record.unit_id,
+        project: record.project,
+        scenario_id: record.scenario_id,
+        game: record.game,
+      }),
     })
   })
 })

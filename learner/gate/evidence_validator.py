@@ -121,19 +121,19 @@ def validate_literacy_evidence_structure(evidence: dict[str, Any]) -> list[str]:
                 errors.append(
                     "deterministicChecks keys must be bounded non-empty strings"
                 )
-            if not isinstance(check_value, (bool, int, float, str)) or (
-                isinstance(check_value, float)
-                and (
-                    check_value != check_value
-                    or check_value in (float("inf"), float("-inf"))
-                )
-            ):
-                errors.append(
-                    f"deterministicChecks[{check_key!r}] must be bool|number|string"
-                )
-            max_length = _LITERACY_PROPERTIES["deterministicChecks"][
-                "additionalProperties"
-            ]["oneOf"][2]["maxLength"]
+            if isinstance(check_value, list):
+                if not all(isinstance(item, str) for item in check_value):
+                    errors.append(f"deterministicChecks[{check_key!r}] list items must be strings")
+            else:
+                if not isinstance(check_value, (bool, int, float, str)) or (
+                    isinstance(check_value, float)
+                    and (
+                        check_value != check_value
+                        or check_value in (float("inf"), float("-inf"))
+                    )
+                ):
+                    errors.append(f"deterministicChecks[{check_key!r}] must be bool|number|string|list")
+            max_length = _LITERACY_PROPERTIES["deterministicChecks"].get("additionalProperties", {}).get("oneOf", [{}, {}, {"maxLength": 500}])[2].get("maxLength", 500)
             if isinstance(check_value, str) and len(check_value) > max_length:
                 errors.append(
                     f"deterministicChecks[{check_key!r}] string too long "
