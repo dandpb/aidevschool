@@ -18,13 +18,6 @@ const ZONE_COPY = [
   "Use IA com segurança em situações reais do cotidiano.",
 ];
 
-const ZONE_NAMES = [
-  "Praça do Encontro",
-  "Oficina de Contexto",
-  "Biblioteca da Dúvida",
-  "Correio Seguro",
-];
-
 /**
  * Mapa da trilha: módulos e lições com status. Lições `planned` aparecem
  * bloqueadas como "em breve" — elas existem no catálogo (read model) mas
@@ -47,11 +40,11 @@ export function TrackMapScreen({
     <section className="screen map-screen" data-testid="map-screen" aria-labelledby="map-title">
       <div className="map-hero">
         <div className="map-hero-copy">
-          <p className="eyebrow">VILA LUME</p>
-          <h1 id="map-title">Mapa da Vila Lume</h1>
+          <p className="eyebrow">SUA JORNADA</p>
+          <h1 id="map-title">Mapa de mundos</h1>
           <p>
-            Cada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo
-            caminho.
+            Cada missão leva de 3 a 5 minutos. Tente primeiro, receba feedback e desbloqueie o
+            próximo caminho.
           </p>
           <div className="map-summary" aria-label="Resumo da trilha">
             <span>
@@ -70,7 +63,7 @@ export function TrackMapScreen({
 
       <MentorGuide compact testId="map-guide">
         <p>
-          Comece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você
+          Comece pela missão marcada como Disponível. As ilhas seguintes aparecem conforme você
           pratica.
         </p>
       </MentorGuide>
@@ -87,12 +80,9 @@ export function TrackMapScreen({
                 {module.order}
               </div>
               <div>
-                <p className="world-kicker">BAIRRO {module.order}</p>
-                <h2 id={`module-${module.id}`}>{ZONE_NAMES[moduleIndex] ?? module.title}</h2>
-                <p>
-                  <strong>{module.title}.</strong>{" "}
-                  {ZONE_COPY[moduleIndex] ?? "Pratique uma nova habilidade com IA."}
-                </p>
+                <p className="world-kicker">MUNDO {module.order}</p>
+                <h2 id={`module-${module.id}`}>{module.title}</h2>
+                <p>{ZONE_COPY[moduleIndex] ?? "Pratique uma nova habilidade com IA."}</p>
               </div>
               <span className="world-count">
                 {completedCount}/{totalCount}

@@ -226,7 +226,7 @@ export function LessonScreen({
         data-testid="lesson-intro"
         aria-labelledby="lesson-title"
       >
-        {module && <p className="eyebrow">MISSÃO DA VILA · {module.title}</p>}
+        {module && <p className="eyebrow">{module.title}</p>}
         <h1 id="lesson-title" ref={headingRef} tabIndex={-1}>
           {mode === "review" ? `Revisão: ${lesson.title}` : lesson.title}
         </h1>
@@ -234,8 +234,8 @@ export function LessonScreen({
           {lesson.estimatedMinutes} min ·{" "}
           {lesson.skillIds.map((id) => services.content.getSkillTitle(id)).join(", ")}
         </p>
-        <div className="card village-request" data-testid="village-request">
-          <h2>{mode === "review" ? "Hora de revisar" : "Pedido da Vila Lume"}</h2>
+        <div className="card">
+          <h2>{mode === "review" ? "Hora de revisar" : "Nesta lição"}</h2>
           <p>
             {mode === "review"
               ? "Repetir é o que fixa: refaça a atividade desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
@@ -243,12 +243,6 @@ export function LessonScreen({
           </p>
           <VoxelSkillArt skillId={lesson.skillIds[0]} />
         </div>
-        <ol className="village-loop" aria-label="Ciclo da missão em Vila Lume">
-          <li>Entender</li>
-          <li>Escolher</li>
-          <li>Conferir</li>
-          <li>Aplicar</li>
-        </ol>
         {showMapContext && taskCategory && (
           <div className="card task-context" data-testid="task-context">
             <VoxelTaskArt category={taskCategory} />
@@ -276,7 +270,7 @@ export function LessonScreen({
           data-testid="start-lesson"
           onClick={handleStart}
         >
-          {mode === "review" ? "Começar revisão" : "Começar missão"}
+          {mode === "review" ? "Começar revisão" : "Começar"}
         </button>
         <button type="button" className="btn btn-link" onClick={onExit}>
           {mode === "review" ? "Sair da revisão" : "Sair da lição"}
@@ -302,7 +296,7 @@ export function LessonScreen({
   return (
     <section className="screen" data-testid="lesson-player" aria-labelledby="activity-heading">
       <p className="eyebrow">
-        VILA LUME · {mode === "review" ? "Revisão · " : ""}
+        {mode === "review" ? "Revisão · " : ""}
         {lesson.title} · atividade {currentIndex + 1} de {activities.length}
       </p>
       <h1 id="activity-heading" className="activity-instruction" ref={headingRef} tabIndex={-1}>

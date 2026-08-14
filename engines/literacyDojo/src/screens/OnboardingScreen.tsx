@@ -41,7 +41,7 @@ const CONFIDENCE_OPTIONS: { value: OnboardingConfidence; label: string }[] = [
 const TASK_OPTIONS: OnboardingTaskCategory[] = ["scheduling", "communication", "news_research"];
 
 const STEPS = [
-  { key: "welcome", question: "Chegue à Vila Lume" },
+  { key: "welcome", question: "Vamos começar com uma conversa" },
   { key: "goal", question: "O que você quer melhorar com IA?" },
   { key: "context", question: "Onde você mais pretende usar IA?" },
   { key: "confidence", question: "Como você avalia sua confiança hoje?" },
@@ -127,12 +127,11 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           <div className="welcome-content">
             <MentorGuide testId="assistant-welcome">
               <p>
-                Eu sou a Lumi. Os moradores trazem pedidos curtos e você aprende a usar IA ajudando
-                a vila, uma escolha de cada vez.
+                Eu vou acompanhar você em missões curtas: primeiro você tenta, depois recebe uma
+                dica clara e pratica de novo.
               </p>
               <p className="muted">
-                Aqui não existe pressa nem punição: tente, confira, peça uma dica e ajuste quando
-                precisar.
+                IA ajuda a criar e organizar. Você continua responsável por decidir e conferir.
               </p>
             </MentorGuide>
 
@@ -142,8 +141,8 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                   🌱
                 </span>
                 <div>
-                  <strong>Vila Lume</strong>
-                  <small>Aprenda IA para o dia a dia ajudando moradores.</small>
+                  <strong>IA para o dia a dia</strong>
+                  <small>Comece do zero e aprenda fazendo.</small>
                 </div>
                 <span className="route-badge">Disponível</span>
               </div>
@@ -224,7 +223,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           disabled={(currentStep.key !== "welcome" && currentValue === null) || submitting}
           onClick={() => void handleNext()}
         >
-          {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir mapa da Vila Lume"}
+          {step < STEPS.length - 1 ? "Continuar jornada" : "Abrir meu Mapa Inicial"}
           <span aria-hidden="true">→</span>
         </button>
       </div>

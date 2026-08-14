@@ -50,10 +50,9 @@ export function ResultScreen({
     >
       <div className="result-hero">
         <div>
-          <p className="eyebrow">VILA LUME · MISSÃO CONCLUÍDA</p>
+          <p className="eyebrow">MISSÃO CONCLUÍDA</p>
           <h1 id="result-title">
-            {summary.mode === "review" ? "Revisão concluída" : "A vila ganhou uma nova luz"}:{" "}
-            {lesson.title}
+            {summary.mode === "review" ? "Revisão concluída" : "Você avançou"}: {lesson.title}
           </h1>
           <p className="result-score">
             {summary.mode === "review" ? "Revisão registrada" : "XP conquistado"} ·{" "}
@@ -156,16 +155,16 @@ export function ResultScreen({
             data-testid="next-lesson"
             onClick={() => onNextLesson(summary.nextLessonId as string)}
           >
-            Próximo pedido
+            Próxima lição
           </button>
         ) : (
           <button type="button" className="btn btn-primary" data-testid="go-home" onClick={onHome}>
-            Voltar à vila
+            Voltar ao início
           </button>
         )}
         {!hosted && (
           <button type="button" className="btn btn-secondary" data-testid="go-map" onClick={onMap}>
-            Ver mapa da Vila Lume
+            Ver mapa da trilha
           </button>
         )}
       </div>

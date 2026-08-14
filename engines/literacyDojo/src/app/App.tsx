@@ -124,7 +124,7 @@ function AppShell({
             </span>
             <span>
               <strong>AI Dev School</strong>
-              <small>Vila Lume · aprenda IA fazendo</small>
+              <small>aprenda IA fazendo</small>
             </span>
           </div>
           {route.name !== "onboarding" && (

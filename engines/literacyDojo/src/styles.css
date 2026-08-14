@@ -1301,23 +1301,6 @@ h2 {
   pointer-events: none;
 }
 
-.voxel-village-sign {
-  position: absolute;
-  z-index: 7;
-  left: 20px;
-  bottom: 18px;
-  border: 3px solid #6c4429;
-  border-radius: 4px;
-  background: #f8d69d;
-  color: #55311d;
-  padding: 5px 9px;
-  font-size: 0.68rem;
-  font-weight: 950;
-  letter-spacing: 0.12em;
-  box-shadow: 4px 4px 0 rgba(85, 49, 29, 0.28);
-  transform: rotate(-2deg);
-}
-
 .voxel-sun {
   position: absolute;
   right: 34px;
@@ -1428,63 +1411,6 @@ h2 {
   box-shadow: 40px 0 0 var(--sky), 3px 3px 0 #438bac, 43px 3px 0 #438bac;
 }
 
-.voxel-cottage,
-.voxel-library {
-  position: absolute;
-  z-index: 3;
-  background: #fff0c9;
-  box-shadow: 7px 7px 0 #c9a66d, 12px 12px 0 rgba(23, 33, 58, 0.1);
-}
-
-.voxel-cottage {
-  left: 87px;
-  top: 184px;
-  width: 48px;
-  height: 39px;
-}
-
-.voxel-library {
-  right: 43px;
-  top: 176px;
-  width: 55px;
-  height: 47px;
-  background: #eeeaff;
-  box-shadow: 7px 7px 0 #9b8ff3, 12px 12px 0 rgba(23, 33, 58, 0.1);
-}
-
-.voxel-cottage-roof,
-.voxel-library-roof {
-  position: absolute;
-  left: -5px;
-  top: -14px;
-  width: calc(100% + 10px);
-  height: 17px;
-  background: var(--sun);
-  box-shadow: 5px 5px 0 #c97820;
-}
-
-.voxel-library-roof {
-  background: var(--primary);
-  box-shadow: 5px 5px 0 var(--primary-dark);
-}
-
-.voxel-cottage-door,
-.voxel-library-door {
-  position: absolute;
-  left: 18px;
-  bottom: 0;
-  width: 13px;
-  height: 21px;
-  background: #8a5835;
-  box-shadow: 3px 0 0 #5b3823;
-}
-
-.voxel-library-door {
-  left: 21px;
-  background: var(--mint-dark);
-  box-shadow: 3px 0 0 #176846;
-}
-
 .voxel-tree {
   position: absolute;
   z-index: 4;
@@ -1562,59 +1488,6 @@ h2 {
   background: var(--text);
 }
 
-.voxel-resident {
-  position: absolute;
-  z-index: 6;
-  width: 18px;
-  height: 30px;
-  filter: drop-shadow(3px 4px 0 rgba(23, 33, 58, 0.16));
-}
-
-.voxel-resident-head {
-  position: absolute;
-  left: 2px;
-  width: 14px;
-  height: 13px;
-  border: 2px solid #55311d;
-  border-radius: 3px;
-  background: #c98c65;
-}
-
-.voxel-resident-body {
-  position: absolute;
-  left: 3px;
-  top: 14px;
-  width: 13px;
-  height: 15px;
-  background: var(--coral);
-  box-shadow: 3px 3px 0 #bd4d45;
-}
-
-.voxel-resident-one {
-  left: 76px;
-  top: 232px;
-}
-
-.voxel-resident-two {
-  left: 193px;
-  top: 235px;
-}
-
-.voxel-resident-two .voxel-resident-body {
-  background: var(--sun);
-  box-shadow: 3px 3px 0 #c97820;
-}
-
-.voxel-resident-three {
-  right: 58px;
-  top: 226px;
-}
-
-.voxel-resident-three .voxel-resident-body {
-  background: var(--mint);
-  box-shadow: 3px 3px 0 var(--mint-dark);
-}
-
 .voxel-spark {
   position: absolute;
   z-index: 5;
@@ -1647,10 +1520,6 @@ h2 {
   box-shadow: 8px 8px 0 var(--mint-dark);
 }
 
-.voxel-world-celebration .voxel-resident {
-  animation: voxel-celebrate 760ms ease-in-out infinite alternate;
-}
-
 @keyframes voxel-float {
   0%,
   100% {
@@ -1658,12 +1527,6 @@ h2 {
   }
   50% {
     transform: translateY(-9px) rotate(8deg);
-  }
-}
-
-@keyframes voxel-celebrate {
-  to {
-    transform: translateY(-6px);
   }
 }
 
@@ -1707,50 +1570,7 @@ h2 {
 
 .mission-card {
   border-color: rgba(73, 201, 143, 0.46);
-  background: linear-gradient(135deg, #f2fff8, #fffdf8 72%, #fff0d8);
-}
-
-.village-request {
-  position: relative;
-  overflow: hidden;
-}
-
-.village-request::after {
-  content: "◆";
-  position: absolute;
-  right: 22px;
-  top: 15px;
-  color: var(--sun);
-  font-size: 1.5rem;
-  transform: rotate(12deg);
-}
-
-.village-loop {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 0;
-  list-style: none;
-}
-
-.village-loop li {
-  position: relative;
-  border: 1px solid rgba(73, 201, 143, 0.32);
-  border-radius: 999px;
-  background: rgba(242, 255, 248, 0.86);
-  padding: 8px 12px;
-  color: #176846;
-  font-size: 0.82rem;
-  font-weight: 850;
-  text-align: center;
-}
-
-.village-loop li:not(:last-child)::after {
-  content: "→";
-  position: absolute;
-  z-index: 1;
-  right: -10px;
-  color: var(--primary);
+  background: linear-gradient(135deg, #f2fff8, #fffdf8);
 }
 
 .result-score {
@@ -2155,36 +1975,8 @@ h2 {
     left: 134px;
   }
 
-  .voxel-cottage {
-    left: 52px;
-  }
-
-  .voxel-library {
-    right: 18px;
-  }
-
   .voxel-guide {
     left: 87px;
-  }
-
-  .voxel-resident-one {
-    left: 44px;
-  }
-
-  .voxel-resident-two {
-    left: 164px;
-  }
-
-  .voxel-resident-three {
-    right: 31px;
-  }
-
-  .village-loop {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .village-loop li:nth-child(2)::after {
-    display: none;
   }
 
   .mentor-guide,
