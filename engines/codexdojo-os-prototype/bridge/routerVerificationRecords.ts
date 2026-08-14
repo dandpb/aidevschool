@@ -130,7 +130,7 @@ export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>>
     verdict: 'PASS',
     context_isolated: true,
     source: 'independent-teaching-game-verifier',
-    evidence_digest: 'a'.repeat(64),
+    evidence_digest: '037920ab249ca71a6e9a7e6b0bf5d962057d363b965c490a618fcefe0b3c6ed1',
     unit_id: 'U2-key-value-store',
     project: '02_key_value_store',
     scenario_id: 'kv-warehouse-L1',
