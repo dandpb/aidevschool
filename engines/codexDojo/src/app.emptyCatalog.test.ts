@@ -7,6 +7,7 @@ vi.mock("./data/agents", () => ({
 
 vi.mock("./data/cycle", () => ({
   cycleStages: [],
+  cycleStageIndexById: new Map(),
 }))
 
 vi.mock("./progress", async () => {

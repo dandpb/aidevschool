@@ -163,6 +163,7 @@ vi.mock("../data/agents", () => ({
 
 vi.mock("../data/cycle", () => ({
   cycleStages: [stage],
+  cycleStageIndexById: new Map([[stage.id, 0]]),
   metrics: [metric],
 }))
 

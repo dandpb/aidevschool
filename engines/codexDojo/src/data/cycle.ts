@@ -76,6 +76,15 @@ export const cycleStages: readonly CycleStage[] = [
   },
 ]
 
+// ⚡ Bolt: Pre-compute map for O(1) lookups instead of O(n) array scans during state transitions and renders
+export const cycleStageIndexById = new Map<string, number>()
+for (let i = 0; i < cycleStages.length; i++) {
+  const stage = cycleStages[i]
+  if (stage) {
+    cycleStageIndexById.set(stage.id, i)
+  }
+}
+
 export const metrics: readonly Metric[] = [
   {
     id: "runtime",
