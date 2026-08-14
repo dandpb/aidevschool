@@ -12,10 +12,17 @@ export const MISSION_COMPLETION_XP = 25
 export const REVIEW_PRACTICE_XP = 10
 
 export function toLocalDateKey(date: Date): string {
-  const year = String(date.getFullYear()).padStart(4, '0')
-  const month = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(date)
+
+  const y = parts.find((p) => p.type === 'year')?.value
+  const m = parts.find((p) => p.type === 'month')?.value
+  const d = parts.find((p) => p.type === 'day')?.value
+  return `${y}-${m}-${d}`
 }
 
 export function dailyXp(progress: EngagementProgress, now: Date): number {
