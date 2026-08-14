@@ -103,9 +103,13 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         weeklyTimeHours: 5,
       },
       aidi: {
-        current: 0.5,
-        thresholdAmber: 0.6,
-        thresholdRed: 0.75,
+        // Numeric fields simulated as corrupted (untrusted string payloads).
+        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data in numeric field
+        current: XSS as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data in numeric field
+        thresholdAmber: XSS as any,
+        // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data in numeric field
+        thresholdRed: XSS as any,
         measurementSource: "self_reported",
         trend: [
           {
@@ -140,7 +144,8 @@ const { XSS, agent, userFacingAgent, stage, project, metric, ecosystemStatus, le
         freezesEquipped: 1,
         freezesMax: 2,
       },
-      curr: 0.8,
+      // biome-ignore lint/suspicious/noExplicitAny: simulate untrusted data in numeric field
+      curr: XSS as any,
       challenges: [],
     }
 
@@ -163,6 +168,7 @@ vi.mock("../data/agents", () => ({
 
 vi.mock("../data/cycle", () => ({
   cycleStages: [stage],
+  cycleStageIndexById: new Map([[stage.id, 0]]),
   metrics: [metric],
 }))
 
