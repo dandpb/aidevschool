@@ -16,6 +16,7 @@ import {
   saveConfig,
 } from "./assistant";
 import { today } from "./data/today";
+import { escapeHtml } from "./escape";
 import type { DueReview, TodaySnapshot, TrackNode } from "./types";
 
 const REASON_LABEL: Record<DueReview["reason"], string> = {
@@ -88,8 +89,8 @@ function reviewCard(r: DueReview, index: number): string {
         <span class="chip">${REASON_LABEL[r.reason]}</span>
         <span class="due-in">${r.dueIn}</span>
       </div>
-      <h3 class="lesson-title">${r.title}</h3>
-      ${r.project ? `<p class="lesson-project">${r.project}</p>` : ""}
+      <h3 class="lesson-title">${escapeHtml(r.title)}</h3>
+      ${r.project ? `<p class="lesson-project">${escapeHtml(r.project)}</p>` : ""}
       ${playDetails(r.gameDir)}
     </article>`;
 }
@@ -108,7 +109,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
       </div>
       <div class="mentor-copy">
         <p class="eyebrow">Sócrates · seu tutor</p>
-        <p class="mentor-line">Sua próxima missão é <strong>${a.title ?? a.id}</strong>.</p>
+        <p class="mentor-line">Sua próxima missão é <strong>${escapeHtml(a.title ?? a.id)}</strong>.</p>
         <p class="muted">${challenge} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
         ${playDetails(a.gameDir)}
         ${
@@ -183,7 +184,7 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
         <li class="${cls}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
           <span class="track-num">${n.num}</span>
-          <span class="track-title">${n.title}</span>
+          <span class="track-title">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
     })
