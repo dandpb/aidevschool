@@ -2,7 +2,7 @@
 version: 3
 system: agora-continuum
 derived_from: learner/learning_state.yaml
-workspace: /Users/danielbarreto/Development/aidevschool
+workspace: /app
 learner_profile:
   level: intermediate
   goal: robust professional-quality code without AI dependency
