@@ -16,6 +16,7 @@ import {
   saveConfig,
 } from "./assistant";
 import { today } from "./data/today";
+import { escapeHtml } from "./escape";
 import type { DueReview, TodaySnapshot, TrackNode } from "./types";
 
 const REASON_LABEL: Record<DueReview["reason"], string> = {
@@ -55,10 +56,10 @@ function streakCard(s: TodaySnapshot["streak"]): string {
     <section class="card streak-card" aria-label="Sequência">
       <div class="streak-flame ${s.current > 0 ? "is-lit" : "is-out"}">${flames}</div>
       <div class="streak-body">
-        <p class="streak-current">${headline}</p>
-        <p class="streak-sub">${sub}</p>
-        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${s.freezesMax})">
-          Freezes <span class="freeze-pips">${freezes}<span class="freeze-empty">${frozen}</span></span>
+        <p class="streak-current">${escapeHtml(headline)}</p>
+        <p class="streak-sub">${escapeHtml(sub)}</p>
+        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
+          Freezes <span class="freeze-pips">${escapeHtml(freezes)}<span class="freeze-empty">${escapeHtml(frozen)}</span></span>
         </p>
       </div>
     </section>`;
@@ -70,8 +71,8 @@ function playDetails(gameDir: string | null): string {
   return `
     <details class="play-how">
       <summary>Como jogar</summary>
-      <code>cd ${gameDir} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code>
-      <p class="muted">O jogo emite evidência bruta; um verificador independente decide o gate. (${rel})</p>
+      <code>cd ${escapeHtml(gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code>
+      <p class="muted">O jogo emite evidência bruta; um verificador independente decide o gate. (${escapeHtml(rel)})</p>
     </details>`;
 }
 
@@ -85,11 +86,11 @@ function reviewCard(r: DueReview, index: number): string {
   return `
     <article class="card lesson-card ${tone}" style="--i:${index}">
       <div class="lesson-head">
-        <span class="chip">${REASON_LABEL[r.reason]}</span>
-        <span class="due-in">${r.dueIn}</span>
+        <span class="chip">${escapeHtml(REASON_LABEL[r.reason])}</span>
+        <span class="due-in">${escapeHtml(r.dueIn)}</span>
       </div>
-      <h3 class="lesson-title">${r.title}</h3>
-      ${r.project ? `<p class="lesson-project">${r.project}</p>` : ""}
+      <h3 class="lesson-title">${escapeHtml(r.title)}</h3>
+      ${r.project ? `<p class="lesson-project">${escapeHtml(r.project)}</p>` : ""}
       ${playDetails(r.gameDir)}
     </article>`;
 }
@@ -108,12 +109,12 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
       </div>
       <div class="mentor-copy">
         <p class="eyebrow">Sócrates · seu tutor</p>
-        <p class="mentor-line">Sua próxima missão é <strong>${a.title ?? a.id}</strong>.</p>
-        <p class="muted">${challenge} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
+        <p class="mentor-line">Sua próxima missão é <strong>${escapeHtml(a.title ?? a.id)}</strong>.</p>
+        <p class="muted">${escapeHtml(challenge)} Primeiro você tenta — quem avalia a evidência é o <strong>verificador independente</strong>, não eu.</p>
         ${playDetails(a.gameDir)}
         ${
           a.num
-            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${a.num}">▶ Jogar aqui (inline)</button></div>
+            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}">▶ Jogar aqui (inline)</button></div>
                <div id="play-inline-wrap" class="play-inline-wrap" hidden><iframe id="play-inline-frame" class="play-inline-frame" title="Jogo da missão"></iframe></div>`
             : ""
         }
@@ -159,10 +160,10 @@ function progressCard(s: TodaySnapshot): string {
   return `
     <section class="card progress-card" aria-label="Progresso verificado">
       <div class="progress-row">
-        <span><strong>${s.masteredCount}</strong>/${s.totalUnits} dominadas</span>
+        <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas</span>
         <span class="muted">verificadas por gate</span>
       </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
     </section>`;
 }
 
@@ -181,9 +182,9 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
           : "";
       return `
         <li class="${cls}">
-          <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
-          <span class="track-num">${n.num}</span>
-          <span class="track-title">${n.title}</span>
+          <span class="track-glyph" aria-hidden="true">${escapeHtml(statusGlyph(n.status))}</span>
+          <span class="track-num">${escapeHtml(n.num)}</span>
+          <span class="track-title">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
     })
@@ -210,7 +211,7 @@ function render(s: TodaySnapshot): string {
       ${voxelCore()}
       <p class="eyebrow">DevSchool · programadores</p>
       <h1>Sua lição de hoje</h1>
-      <p class="hero-date">${dateLabel}</p>
+      <p class="hero-date">${escapeHtml(dateLabel)}</p>
     </header>
 
     ${streakCard(s.streak)}

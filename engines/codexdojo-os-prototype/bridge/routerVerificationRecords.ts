@@ -7,7 +7,7 @@ export const literacyRecord = {
   activityId: 'l02-a1',
   activityType: 'output_comparison',
   skillIds: ['avaliar'],
-  deterministicChecks: { confidence: 1e-7, better: true },
+  deterministicChecks: { confidence: 0.0000001, better: true },
   score: 1,
   pass: true,
   timestamp: '2026-07-25T12:00:00.000Z',
