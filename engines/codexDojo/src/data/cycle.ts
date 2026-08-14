@@ -76,8 +76,8 @@ export const cycleStages: readonly CycleStage[] = [
   },
 ]
 
-// O(1) stage-index lookups for state transitions and renders; cycleStages is
-// static, so the map is built once at module init.
+// O(1) stage-index lookups for state transitions and renders; cycleStages
+// is static, so the map is built once at module init.
 export const cycleStageIndexById: ReadonlyMap<string, number> = new Map(
   cycleStages.map((stage, index) => [stage.id, index] as const),
 )
