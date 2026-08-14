@@ -30,10 +30,10 @@ Julgamento independente de evidência bruta (fora deste app):
 | --- | --- |
 | Node | ≥ 20 (desenvolvido em 24.x) |
 | React / React DOM | 18.3.1 |
-| Vite | 6.0.11 |
+| Vite | 6.4.3 |
 | TypeScript | 5.7.3 |
-| Vitest | 3.0.5 (+ Testing Library, jsdom, fake-indexeddb) |
-| Playwright | 1.49.1 (Chromium headless) |
+| Vitest | 3.2.7 (+ Testing Library, jsdom, fake-indexeddb) |
+| Playwright | 1.62.0 (Chromium headless) |
 | Biome | 1.9.4 |
 
 App standalone com **npm** (não faz parte de nenhum workspace pnpm).
@@ -51,8 +51,8 @@ npm run build         # tsc -b && vite build (prebuild roda gen:content antes)
 npm run test:e2e      # playwright (sobe o vite dev sozinho na porta 4173)
 ```
 
-Pré-requisitos do `gen:content`: `/usr/local/bin/python3` com `pyyaml`
-(o `python3` padrão do shell pode não ter — ver seção "Problemas comuns").
+Pré-requisito do `gen:content`: `python3` do ambiente ativo com `pyyaml`.
+Na raiz, prepare e ative `.venv` antes de entrar neste diretório.
 
 Playwright: na primeira vez, `npx playwright install chromium`.
 
@@ -139,10 +139,10 @@ UI (src/screens, src/components)
 
 ## Problemas comuns
 
-- **`ModuleNotFoundError: yaml` no gen:content** — o `python3` do PATH não tem
-  pyyaml; o script usa `/usr/local/bin/python3` (neste ambiente é o que tem
-  pyyaml). Em outra máquina, ajuste o caminho no script `gen:content` do
-  `package.json` ou instale pyyaml no python padrão.
+- **`ModuleNotFoundError: yaml` no gen:content** — ative a `.venv` preparada na
+  raiz (`source .venv/bin/activate`) ou instale o projeto com
+  `python -m pip install -e ".[dev]"`; não edite o script para um caminho
+  absoluto específico da máquina.
 - **Playwright sem browser** — rode `npx playwright install chromium`. O spec
   sobe o vite dev automaticamente (`webServer` no `playwright.config.ts`,
   porta 4173, viewport 360×740) e derruba ao final.

@@ -51,6 +51,25 @@ def test_check_is_read_only(tmp_path):
     assert digest_tree(source) == before
 
 
+def test_help_is_read_only_and_does_not_require_a_platform(tmp_path):
+    source = tmp_path / "source"
+    shutil.copytree(SKILL, source)
+    before = digest_tree(source)
+
+    result = subprocess.run(
+        ["python3", str(source / "install.py"), "--help"],
+        capture_output=True,
+        text=True,
+        env={"HOME": str(tmp_path / "empty-home"), "PATH": os.environ["PATH"]},
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "usage:" in result.stdout
+    assert "--check" in result.stdout
+    assert digest_tree(source) == before
+    assert not (tmp_path / "empty-home").exists()
+
+
 def test_custom_root_is_detection_and_install_target(tmp_path):
     root = openclaw_root(tmp_path)
 
@@ -209,14 +228,33 @@ def test_scheduler_skips_only_the_exact_existing_job():
     assert calls == [["openclaw", "cron", "list"]]
 
 
-def test_allowlist_requires_an_exact_skill_name():
+@pytest.mark.parametrize("platform", ["openclaw", "hermes"])
+def test_scheduler_registration_includes_an_explicit_review_payload(platform):
     calls = []
 
     def runner(cmd, **_kwargs):
         calls.append(cmd)
-        stdout = "my-aidevschool-backup\n" if cmd[-2:] == ["skills", "list"] else ""
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    installer.register_scheduler(platform, runner)
+
+    create = calls[1]
+    if platform == "openclaw":
+        assert create[:3] == ["openclaw", "cron", "add"]
+        assert "--message" in create
+        assert "--name" in create
+    else:
+        assert create[:3] == ["hermes", "cron", "create"]
+        assert "--skill" in create
+        assert "aidevschool" in create
+        assert create[create.index("--deliver") + 1] == "all"
+    assert any("schedule.py" in argument for argument in create)
+
+
+def test_skill_discovery_requires_an_exact_skill_name():
+    def runner(cmd, **_kwargs):
+        stdout = "my-aidevschool-backup\n"
         return subprocess.CompletedProcess(cmd, 0, stdout, "")
 
-    installer.add_allowlist("openclaw", runner)
-
-    assert ["openclaw", "skills", "allow", "aidevschool"] in calls
+    with pytest.raises(installer.InstallError, match="did not discover"):
+        installer.verify_skill_available("openclaw", runner)

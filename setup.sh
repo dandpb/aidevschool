@@ -8,9 +8,9 @@ cd "$(dirname "$0")"
 if [ "${1:-}" = "onboard" ]; then
   echo "Onboard: preparing miniTown (cozy town-sim, no other engines)..."
   corepack enable
-  corepack prepare pnpm@latest --activate
+  corepack prepare pnpm@9.15.9 --activate
   cd engines/miniTown
-  pnpm install
+  CI=1 pnpm install --frozen-lockfile
   echo ""
   echo "Pronto! Para abrir a cidade:"
   echo "  cd engines/miniTown && pnpm run dev"
@@ -19,21 +19,26 @@ if [ "${1:-}" = "onboard" ]; then
 fi
 
 echo "Setting up Python environment..."
-python3 -m pip install -e ".[dev]"
-python3 -m learner.substrate
+if ! command -v uv >/dev/null 2>&1; then
+  echo "uv is required. Install it from https://docs.astral.sh/uv/getting-started/installation/" >&2
+  exit 1
+fi
+uv venv --allow-existing --python 3.11 .venv
+uv pip install --python .venv/bin/python -e ".[dev]"
+.venv/bin/python -m learner.substrate
 
 echo "Setting up pnpm..."
 corepack enable
-corepack prepare pnpm@latest --activate
+corepack prepare pnpm@9.15.9 --activate
 
 echo "Setting up codexDojo..."
 cd engines/codexDojo
-pnpm install
+CI=1 pnpm install --frozen-lockfile
 cd ../..
 
 echo "Setting up pixelDojo..."
 cd engines/pixelDojo/pixel-quest
-pnpm install
+CI=1 pnpm install --frozen-lockfile
 cd ../../..
 
 echo "Setup script finished successfully!"

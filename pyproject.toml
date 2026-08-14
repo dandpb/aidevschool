@@ -36,6 +36,10 @@ testpaths = [
   "learner/substrate/tests",
   "learner/gate/tests",
   "engines/aiDevschoolMvp/tests/installer",
+  "engines/aiDevschoolMvp/tests/acceptance",
+  "engines/miniMaxEvolutionEngine/tests",
+  "engines/test_engine_contracts.py",
+  "learner/tests",
   "curriculum/_shared/tests",
   # AI Literacy content-contract suite (unittest-style, also runs standalone).
   "curriculum/ai-literacy/tools/tests",

@@ -490,6 +490,7 @@ class TestMavisAdapter(unittest.TestCase):
         view = derive_mavis_view(state)
 
         self.assertEqual(view["derived_from"], "learner/learning_state.yaml")
+        self.assertEqual(view["workspace"], ".")
         self.assertEqual(view["learner_profile"]["active_focus"], state["learner"]["active_language"])
         self.assertEqual(view["state_machine"]["learning_states"], ["apresentando", "praticando", "avaliando", "dominado"])
         self.assertEqual(view["active_unit"]["id"], state["active_unit"]["id"])

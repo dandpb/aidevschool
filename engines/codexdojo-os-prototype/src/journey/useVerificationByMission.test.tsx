@@ -64,7 +64,8 @@ describe('useVerificationByMission', () => {
       retry: async () => noSubmission,
       latest: async () => { throw new Error('verification repository unavailable') },
     } satisfies VerificationService
-    const { result } = renderHook(() => useVerificationByMission(catalog(missionCatalog.missions), verification))
+    const repository = catalog(missionCatalog.missions)
+    const { result } = renderHook(() => useVerificationByMission(repository, verification))
 
     await waitFor(() => expect(result.current.availability).toBe('unavailable'))
     expect(result.current.verificationByKey).toEqual({})
