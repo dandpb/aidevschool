@@ -12,7 +12,7 @@ from unittest.mock import patch
 import yaml
 
 import learner.substrate as substrate
-from learner.substrate import commit_canonical, is_repo_canonical_path, save_canonical, validate
+from learner.substrate import _AGENT_OWNERSHIP_ROLES, commit_canonical, is_repo_canonical_path, save_canonical, validate
 from learner.substrate.catalog import CatalogFormatError
 from learner.substrate.fsio import atomic_write_text
 
@@ -152,6 +152,77 @@ class TestSaveCanonical(unittest.TestCase):
             atomic_write_text(path, "hello: world\n")
             self.assertEqual(path.read_text(encoding="utf-8"), "hello: world\n")
 
+    def test_atomic_write_survives_mid_write_failure_on_existing_file(self) -> None:
+        """A crash mid-write must leave the previous file intact (audit #1).
+
+        Mocks the inner write to raise mid-flight and asserts the original
+        file content is unchanged: callers (verifier, substrate, evidence
+        writer) depend on this to avoid leaving a torn YAML/JSON on disk.
+        """
+        import tempfile
+        from io import StringIO
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.yaml"
+            original = "id: canonical\nversion: 2\n"
+            path.write_text(original, encoding="utf-8")
+            original_hash = hashlib.sha256(path.read_bytes()).hexdigest()
+
+            # Inject a failure after the temp file is created but before the
+            # os.replace() publishes it. The test asserts the original file is
+            # untouched and no `.tmp` is left behind.
+            from unittest.mock import patch
+
+            real_write = atomic_write_text
+
+            def _explode_on_write(*args: Any, **kwargs: Any) -> None:
+                # Call the real implementation but force handle.write to raise
+                # *after* the temp file exists; this is the failure mode the
+                # audit called out (plain .write_text vs atomic rename).
+                fake_buffer = StringIO()
+
+                def _boom(_buf: str) -> int:
+                    raise OSError("simulated mid-write crash")
+
+                fake_buffer.write = _boom  # type: ignore[method-assign]
+                with patch("os.fdopen", return_value=fake_buffer):
+                    real_write(*args, **kwargs)
+
+            with self.assertRaises(OSError):
+                _explode_on_write(path, "id: corrupted\nversion: 999\n")
+
+            # Original file is byte-for-byte unchanged.
+            self.assertEqual(
+                hashlib.sha256(path.read_bytes()).hexdigest(),
+                original_hash,
+            )
+            self.assertEqual(path.read_text(encoding="utf-8"), original)
+            # No temp file left behind in the same dir.
+            leftovers = [p for p in path.parent.iterdir() if p.name != path.name]
+            self.assertEqual(leftovers, [], f"temp file leaked: {leftovers}")
+
+    def test_atomic_write_creates_parent_dirs(self) -> None:
+        """A nested path with missing parents is still written atomically."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "deep" / "nest" / "state.yaml"
+            atomic_write_text(path, "ok: yes\n")
+            self.assertEqual(path.read_text(encoding="utf-8"), "ok: yes\n")
+
+    def test_atomic_write_propagates_oserror_without_leaving_tempfile(self) -> None:
+        """A failure to create the temp file surfaces as OSError; nothing leaks."""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "state.yaml"
+            with patch("tempfile.mkstemp", side_effect=OSError("mkstemp failed")):
+                with self.assertRaises(OSError):
+                    atomic_write_text(path, "anything\n")
+            self.assertFalse(path.exists())
+            leftovers = [p for p in path.parent.iterdir()]
+            self.assertEqual(leftovers, [], f"temp file leaked: {leftovers}")
+
     def test_save_canonical_rejects_invalid_state(self) -> None:
         with self.assertRaises(ValueError):
             save_canonical({"version": 1}, path="/tmp/should-not-exist-aidevschool.yaml")
@@ -188,6 +259,8 @@ class TestSaveCanonical(unittest.TestCase):
             "empirical_gates": {
                 "learning": {"requires_attempt_before_solution": True}
             },
+            "agent_ownership": {role: f"agent-{role}" for role in _AGENT_OWNERSHIP_ROLES},
+            "next_action": {"owner": "learner", "action": "Continue the active unit."},
             "units_log": [
                 {"unit_id": "U-test", "concept": "test concept", "reviews": []}
             ],
@@ -233,6 +306,8 @@ class TestSaveCanonical(unittest.TestCase):
             "empirical_gates": {
                 "learning": {"requires_attempt_before_solution": True}
             },
+            "agent_ownership": {role: f"agent-{role}" for role in _AGENT_OWNERSHIP_ROLES},
+            "next_action": {"owner": "learner", "action": "Continue the active unit."},
             "units_log": [
                 {"unit_id": "U-before", "concept": "test concept", "reviews": []}
             ],

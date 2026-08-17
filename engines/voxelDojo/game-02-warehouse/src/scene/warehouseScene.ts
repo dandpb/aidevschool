@@ -6,6 +6,7 @@ import {
   type ProjectionContextHooks,
 } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
+import { L3_CRATE_TTL_MS } from "../config/crateTtlMs"
 import type { GameController, GameState } from "../game/controller"
 
 /**
@@ -218,6 +219,10 @@ function decayScale(entry: { deadline: number | null }, now: number): number {
   if (entry.deadline === null) return 1
   const remaining = entry.deadline - now
   if (remaining <= 0) return 0
-  const window = 350 // matches L3 crateTtlMs; shrinks over the last window of life
+  // The visual scale window must match the L3 crate TTL so the decay ramp
+  // covers the whole lifetime. Previously a literal `350` here with only a
+  // comment pointing at levels.ts — now bound at import time. See
+  // docs/TECH_DEBT_AUDIT_2026-07-08.md item 20.
+  const window = L3_CRATE_TTL_MS
   return Math.max(0.15, Math.min(1, remaining / window))
 }

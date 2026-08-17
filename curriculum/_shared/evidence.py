@@ -23,12 +23,13 @@ import json
 import math
 import re
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, TypeGuard
 
 import yaml
+
+from curriculum._shared.time import utc_now_iso
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -435,7 +436,7 @@ def record_verdict(
     root = _resolve_root(root)
     ndjson_path = _evidence_ndjson_path(project_id, root)
     record = {
-        "ts": datetime.now(timezone.utc).isoformat(),
+        "ts": utc_now_iso(),
         "producer": "verifier",
         "context_isolated": verdict.context_isolated,
         "mutation_score": verdict.mutation_score,

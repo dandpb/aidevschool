@@ -1,3 +1,4 @@
+import { L3_CRATE_TTL_MS } from "../config/crateTtlMs"
 import { bucketOf, type HashStrength } from "./hash"
 import { keyStream, mulberry32 } from "./rng"
 import {
@@ -78,7 +79,7 @@ export const LEVELS: readonly LevelConfig[] = [
     skew: 0,
     startShelves: 6,
     ttlMs: 100,
-    crateTtlMs: 350,
+    crateTtlMs: L3_CRATE_TTL_MS,
     startStrength: "full",
     maxStrength: 32,
     passRule: "Predict get-vs-null after decay, then sweep and predict how many vanish.",

@@ -1,4 +1,4 @@
-import { reviewSlice } from "../../../shared/content"
+import { reviewSlice } from "../reviewSlice"
 import { createEmitForGame, type EvidenceRecord } from "../../../shared/createEmitForGame"
 import type { LevelId } from "../sim/levels"
 

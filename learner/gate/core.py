@@ -18,6 +18,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator, NoReturn
 
+# NOTE: the canonical "now as ISO string" helper lives in
+# ``curriculum._shared.time.utc_now_iso`` (audit ref: item 20). The
+# learner.gate copy here is deliberately self-contained: the SKILL bundle
+# at ``engines/aiDevschoolMvp/aidevschool/scripts/_core.py`` mirrors this
+# file byte-for-byte (enforced by ``test_runtime_parity``) so an installed
+# SKILL can run with the surrounding repo NOT on ``sys.path``. The two are
+# the intentional exception, not drift. See curriculum/_shared/time.py
+# for the canonical helper and the audit reference.
+
 # --- exit-code convention (§4.2) -------------------------------------------
 # 0 success; 1 usage / guard rejection (no mutation); 2 inconsistency.
 

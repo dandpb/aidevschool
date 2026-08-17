@@ -12,6 +12,7 @@ reference package, not the only implementation.
 | --- | --- | --- |
 | Define a new game | `PLAN.md` | Fill the template before scaffolding. One game = one concept. |
 | Workspace/tooling | `package.json`, `pnpm-workspace.yaml`, `biome.jsonc`, `tsconfig.base.json` | Install once here; root scripts recurse across `game-*`. |
+| Game catalog (all 16 `game-*` packages) | `catalog.json` | One entry per implemented game with id, name, and dev port. `game-10-hash-ring/` is the reference, not the only implementation. |
 | Reference package | `game-10-hash-ring/` | Representative Vite + strict TypeScript + Three.js + Vitest + Playwright package. |
 | Package layout | `game-*/src/` | `sim/` is authoritative; `game/` coordinates; `scene/` and HUD project state. |
 | Runtime vs headless entry | `game-*/src/main.ts`, `game-*/src/index.ts` | Browser composition stays in `main.ts`; reusable/test exports stay headless. |

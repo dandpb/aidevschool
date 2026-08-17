@@ -20,6 +20,7 @@ from typing import Any
 
 from learner.gate.evidence_io import EvidenceParseError, MAX_EVIDENCE_BYTES
 from learner.gate.evidence_validator import validate_literacy_evidence_structure
+from learner.substrate.fsio import atomic_write_text
 from .literacy_evaluator import recompute_literacy_evidence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -181,12 +182,18 @@ def verify_literacy_evidence(
 
 
 def write_literacy_receipt(verdict: LiteracyVerdict, path: str | Path) -> Path:
-    """Write the independent receipt JSON (does not touch learning_state or UI)."""
+    """Write the independent receipt JSON (does not touch learning_state or UI).
+
+    Uses the shared atomic-write helper: a crash mid-write leaves the previous
+    receipt (or an absent slot) intact. The receipt is bound to producer
+    evidence by digest, so a torn file would re-validate against the wrong
+    producer block — atomicity is part of the contract, not a nicety.
+    """
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(
+    atomic_write_text(
+        out,
         json.dumps(verdict.to_receipt_dict(), indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
     )
     return out
 

@@ -8,8 +8,9 @@ import os
 import signal
 import threading
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
+
+from curriculum._shared.time import utc_now_iso
 
 from .autonomous import execute_request
 from .config import ConfigError, load_config
@@ -41,8 +42,11 @@ def _default_paths(root: Path) -> SupervisorPaths:
     )
 
 
-def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+# Canonical timestamp helper lives in ``curriculum._shared.time`` (audit ref:
+# docs/TECH_DEBT_AUDIT_2026-07-08.md item 20). The previous private ``_now``
+# one-liner was removed in favour of the shared module so format drift can
+# only happen in one place.
+_now = utc_now_iso
 
 
 def _new_id() -> str:

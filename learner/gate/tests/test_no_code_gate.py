@@ -26,7 +26,7 @@ from learner.gate.literacy_verifier import (
 )
 from learner.gate.no_code import verify_and_gate_no_code
 from learner.gate.tests.literacy_verifier_records import make_literacy_record
-from learner.substrate import load_canonical, validate
+from learner.substrate import _AGENT_OWNERSHIP_ROLES, load_canonical, validate
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -93,6 +93,7 @@ def make_no_code_root(tmp_path: Path, **record_overrides: Any) -> dict[str, Any]
         },
         "active_unit": unit,
         "next_action": {"owner": "verifier", "action": "gate"},
+        "agent_ownership": {role: f"agent-{role}" for role in _AGENT_OWNERSHIP_ROLES},
         "units_log": [
             {
                 "unit_id": unit["id"],

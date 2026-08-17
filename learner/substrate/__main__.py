@@ -2,13 +2,25 @@ from __future__ import annotations
 
 import sys
 
-from learner.substrate import ROOT, check, sync
+from learner.substrate import ROOT, check, load_canonical, sync, validate
 
 
 def main(args: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if args is None else args)
     if arguments == ["--check"]:
-        drift = check()
+        # Audit #9: --check must fail loudly on canonical-state invariant
+        # violations, in addition to the existing drift check. Validation
+        # runs first so a malformed state is reported before any drift
+        # computation (the validator owns the canonical shape; drift only
+        # makes sense once the shape is sound).
+        state = load_canonical()
+        errors = validate(state)
+        if errors:
+            print("INVALID learner state (audit #9):", file=sys.stderr)
+            for error in errors:
+                print(f"  - {error}", file=sys.stderr)
+            return 1
+        drift = check(state)
         if drift:
             for path in drift:
                 print(f"DRIFT: {path.relative_to(ROOT)}")

@@ -41,11 +41,22 @@
    Records are append-only and immutable. `localStorage` is never learning evidence.
 
 4. **Scheduling truth flows one way: substrate → game.** The Python substrate
-   (`learner/substrate/`) generates read-only review slices at
-   `pixelDojo/pixel-quest/src/content/reviewSlice.ts` and
-   `voxelDojo/shared/content.ts` (regenerate with `python3 -m learner.substrate`). Games read
-   which unit is due and the streak from that slice and render it; they never compute or persist
-   scheduling themselves.
+   (`learner/substrate/`) generates read-only review slices. Games read which
+   unit is due and the streak from those slices and render them; they never
+   compute or persist scheduling themselves. Regenerate with
+   `python3 -m learner.substrate` (or check drift with `--check`).
+
+   | Engine | Slice destination |
+   | --- | --- |
+   | pixelDojo (`pixel-quest/`) | `engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts` (one file, all units) |
+   | voxelDojo | `engines/voxelDojo/game-*/src/reviewSlice.ts` (one file per game package, filtered to that game's unit) + the legacy `engines/voxelDojo/shared/content.ts` for backward compatibility |
+
+   The voxelDojo per-game fan-out closes the audit gap (TECH_DEBT_AUDIT_2026-07-08
+   #4) where 15/16 hand-copied stubs were falsely headed "AUTO-GENERATED" while
+   only game-10 was actually synced. Each per-game file's `reason` field is
+   FSRS-computed for that game's unit, never a hardcoded literal; the CI
+   detector in `learner/substrate/tests/test_voxel_slice.py::TestVoxelPerGameStubDetection`
+   fails the build if any file reverts to a stub.
 
 5. **Content is data, mechanics are code.** Packs/scenarios are typed, validated data — no
    arbitrary JavaScript. A new mechanic requires a typed definition, validator coverage, and an
@@ -67,7 +78,7 @@
 | Engine | Genre | Evidence `source` | Review slice destination |
 | --- | --- | --- | --- |
 | pixelDojo (`pixel-quest/`) | 8-bit arcade RPG | `pixelquest` | `engines/pixelDojo/pixel-quest/src/content/reviewSlice.ts` |
-| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | `engines/voxelDojo/shared/content.ts` |
+| voxelDojo | 3D system simulation (Three.js) | `voxeldojo` | `engines/voxelDojo/game-*/src/reviewSlice.ts` (per-game, see contract item 4) |
 
 Adding an engine: add the row here, a `sync_<engine>_review_slice` target in
 `learner/substrate/dashboard_snapshot.py` (+ tests), and cite this contract from the engine's

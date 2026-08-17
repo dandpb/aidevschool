@@ -22,6 +22,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+import json
+
 import yaml
 
 from curriculum._shared.evidence import statuses as challenge_statuses
@@ -168,6 +170,26 @@ def build_snapshot(
     return snapshot
 
 
+#: Canonical voxelDojo game → unit_id mapping, single-sourced from
+#: ``engines/voxelDojo/catalog.json`` (the game registry both the Python
+#: substrate and the TypeScript ``shared/gameEvidenceMeta.ts`` read, so the
+#: two languages cannot drift apart).
+#:
+#: Key: the ``game-*`` directory name in ``engines/voxelDojo/``.
+#: Value: the canonical ``unit_id`` from ``learner/learning_state.yaml`` units_log
+#: and the curriculum catalog. The substrate filters the global review queue
+#: to this unit, so a wrong value here silently drops a game's reviews.
+VOXEL_GAME_UNIT_IDS: dict[str, str] = {
+    entry["id"]: entry["unitId"]
+    for entry in json.loads(
+        (ROOT / "engines" / "voxelDojo" / "catalog.json").read_text(encoding="utf-8")
+    )
+}
+
+#: All 16 voxelDojo game directories under ``engines/voxelDojo/``.
+VOXEL_GAME_IDS: tuple[str, ...] = tuple(VOXEL_GAME_UNIT_IDS.keys())
+
+
 def build_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str, Any]:
     """Project the read-only review slice pixelDojo consumes.
 
@@ -176,6 +198,55 @@ def build_pixel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str
     units_log (GameNeverMarksMastery / evidence_only invariants). The streak is
     passed through unchanged: ``_streak_view`` (via ``build_snapshot``) already
     produces the exact shape pixelDojo needs, so there is nothing to rebuild.
+    """
+    snap = snapshot or build_snapshot()
+    return {
+        "nextReviews": snap.get("nextReviews", []),
+        "streak": snap.get("streak", {}),
+    }
+
+
+def build_voxel_per_game_review_slices(
+    snapshot: dict[str, Any] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Fan out a per-game review slice for every voxelDojo game.
+
+    Each voxelDojo game targets exactly one curriculum unit (one game = one
+    concept, per the teaching-game contract). The global review queue in
+    ``snapshot["nextReviews"]`` mixes all units; for a per-game slice we filter
+    to the unit this game teaches. If that unit is currently due or overdue the
+    slice surfaces the FSRS-computed reason (``"due"`` or ``"overdue"``);
+    otherwise the slice is empty (no scheduled review, the game emits as
+    deepening).
+
+    Returning a per-game map (not a single concatenated slice) is what makes the
+    15/16 "hand-copied stub" failure mode impossible: each game's file is
+    derived from the canonical state with that game's unit as the filter, not
+    copy-pasted from game-10.
+
+    The streak is shared across all games (one learner, one streak) and is
+    passed through unchanged.
+    """
+    snap = snapshot or build_snapshot()
+    by_unit: dict[str, list[dict[str, Any]]] = {}
+    for review in snap.get("nextReviews", []):
+        by_unit.setdefault(review.get("unitId"), []).append(review)
+    streak = snap.get("streak", {})
+    return {
+        game_id: {
+            "nextReviews": by_unit.get(unit_id, []),
+            "streak": streak,
+        }
+        for game_id, unit_id in VOXEL_GAME_UNIT_IDS.items()
+    }
+
+
+def build_voxel_review_slice(snapshot: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Project the read-only voxelDojo review slice (global, all units).
+
+    Kept for backward compatibility with the legacy shared file at
+    ``engines/voxelDojo/shared/content.ts``. New consumers should prefer the
+    per-game slices returned by :func:`build_voxel_per_game_review_slices`.
     """
     snap = snapshot or build_snapshot()
     return {
