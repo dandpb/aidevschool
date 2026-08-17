@@ -105,12 +105,21 @@ jobs:
       - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
+      # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
+      # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
+        env:
+          VITE_LITERACYDOJO_URL: /apps/literacydojo/
+          VITE_WAREHOUSE_URL: /apps/warehouse/
+          VITE_WORMHOLE_URL: /apps/wormhole/
+          VITE_RELAY_STATION_URL: /apps/relay-station/
       # P5: prove the static pilot build mounts missions from its own origin.
-      # test:smoke:pilot runs build:pilot + Playwright against `vite preview`
-      # (no engine dev servers), so a missing bundle or localhost URL fails here.
+      # The build above already produced dist/ (and gates typecheck), so we
+      # bundle the mission runtimes and run Playwright directly instead of
+      # test:smoke:pilot, which would rebuild the OS a second time.
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:smoke:pilot
+      - run: node scripts/bundle-missions.mjs
+      - run: npx playwright test --config=playwright.pilot.config.ts
 
   # The suites of the former monolithic `python` job now run as per-engine
   # split jobs (minimaxDojo / miniMaxEvolutionEngine / aiDevschoolMvp /

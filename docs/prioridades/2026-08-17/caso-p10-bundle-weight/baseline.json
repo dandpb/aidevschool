@@ -20,11 +20,11 @@
     "gzip_bytes": 97365,
     "largest": [
       {
-        "file": "assets/index-CvPJunnF.js",
+        "file": "apps/literacydojo/assets/index-CvPJunnF.js",
         "bytes": 282759
       },
       {
-        "file": "assets/index-CRlacR3p.css",
+        "file": "apps/literacydojo/assets/index-CRlacR3p.css",
         "bytes": 30686
       }
     ]
@@ -35,11 +35,11 @@
     "gzip_bytes": 139084,
     "largest": [
       {
-        "file": "assets/relayScene-Dnbnoqsj.js",
+        "file": "apps/relay-station/assets/relayScene-Dnbnoqsj.js",
         "bytes": 505229
       },
       {
-        "file": "assets/index-DECLWfTt.js",
+        "file": "apps/relay-station/assets/index-DECLWfTt.js",
         "bytes": 31162
       }
     ]
@@ -50,11 +50,11 @@
     "gzip_bytes": 136733,
     "largest": [
       {
-        "file": "assets/warehouseScene-DKSII2X1.js",
+        "file": "apps/warehouse/assets/warehouseScene-DKSII2X1.js",
         "bytes": 495369
       },
       {
-        "file": "assets/index-J95AlGmV.js",
+        "file": "apps/warehouse/assets/index-J95AlGmV.js",
         "bytes": 33036
       }
     ]
@@ -65,11 +65,11 @@
     "gzip_bytes": 145155,
     "largest": [
       {
-        "file": "assets/wormholeScene-C7rcGiqV.js",
+        "file": "apps/wormhole/assets/wormholeScene-C7rcGiqV.js",
         "bytes": 527211
       },
       {
-        "file": "assets/index-vk30wsrn.js",
+        "file": "apps/wormhole/assets/index-vk30wsrn.js",
         "bytes": 33295
       }
     ]

@@ -214,14 +214,19 @@ def emit_json(obj: Any) -> None:
     sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
 
-def atomic_write_json(path: Path, obj: Any) -> None:
-    """Write-temp-then-rename (§8.3 atomic commit). state.json/plan.json are
-    pretty-printed for audit; only ledger lines are byte-pinned (hash chain)."""
+def _atomic_write_text(path: Path, data: str) -> None:
+    """Write-temp-then-rename (§8.3 atomic commit): a crash mid-write leaves the
+    previous file (or an absent slot) intact, never a torn file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    data = json.dumps(obj, ensure_ascii=False, indent=2)
     tmp.write_text(data, encoding="utf-8")
     os.replace(tmp, path)
+
+
+def atomic_write_json(path: Path, obj: Any) -> None:
+    """state.json/plan.json are pretty-printed for audit; only ledger lines are
+    byte-pinned (hash chain)."""
+    _atomic_write_text(path, json.dumps(obj, ensure_ascii=False, indent=2))
 
 
 # --- §8.3.1 lockfile -------------------------------------------------------
@@ -356,13 +361,7 @@ def manifest_hash(skill_dir: Path) -> str:
 
 def write_manifest(skill_dir: Path) -> Path:
     path = skill_dir / "keys" / MANIFEST_NAME
-    path.parent.mkdir(parents=True, exist_ok=True)
-    # Temp-then-rename, same as atomic_write_json above: a crash mid-write must
-    # leave the previous manifest (or an absent slot) intact, never a torn file
-    # that verify_manifest would then reject.
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(manifest_hash(skill_dir), encoding="utf-8")
-    os.replace(tmp, path)
+    _atomic_write_text(path, manifest_hash(skill_dir))
     return path
 
 

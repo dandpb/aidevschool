@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "build:pilot": "npm run build && node scripts/bundle-missions.mjs",
+    "build:pilot": "VITE_LITERACYDOJO_URL=/apps/literacydojo/ VITE_WAREHOUSE_URL=/apps/warehouse/ VITE_WORMHOLE_URL=/apps/wormhole/ VITE_RELAY_STATION_URL=/apps/relay-station/ npm run build && node scripts/bundle-missions.mjs",
     "preview:pilot": "npm run build:pilot && vite preview --host 127.0.0.1",
     "build:integrated": "tsc -b && VITE_LOCAL_ENGINE_BRIDGE=true vite build",
     "preview": "vite preview --host 0.0.0.0",
