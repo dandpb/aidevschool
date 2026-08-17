@@ -27,8 +27,9 @@ Guiding principle: **one learner, one curriculum, many engines.**
 | Learn software engineering with AI | [Programming curriculum](curriculum/catalog.md) and [CodexDojo OS](engines/codexdojo-os-prototype/README.md) | Mission-first journey over 18 coding projects (01–18), with status and evidence recorded per project. |
 | Contribute to the platform | [Documentation map](docs/DOCUMENTATION.md) and [handbook](docs/handbook/README.md) | Engine-local commands and contracts are authoritative. |
 
-There is no public, browser-only learner route yet. All runnable experiences
-currently require local setup.
+The first public, browser-only learner route is [LiteracyDojo](https://aidevschool-literacydojo.netlify.app).
+It is local-first: progress stays in the browser and no account is required. The programming
+track and CodexDojo OS remain separate surfaces with their own setup and release boundaries.
 
 ---
 

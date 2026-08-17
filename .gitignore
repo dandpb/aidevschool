@@ -33,6 +33,16 @@ _probe_commit_test.txt
 # Logs
 *.log
 
+# Local environment, debug sessions, and pilot output
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+kimi-debug-session_*.zip
+**/test-results-pilot/
+
 # OS / editor
 .DS_Store
 Thumbs.db

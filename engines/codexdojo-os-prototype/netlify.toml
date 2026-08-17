@@ -4,11 +4,18 @@
 # Site: aidevschool-codexdojo-os
 
 [build]
-  command = "npm install && npm run build"
+  # build:pilot also bundles the 4 mission runtimes into dist/apps/, so the
+  # deployed OS serves every mission from its own origin. Plain `npm run build`
+  # ships an OS whose mission iframes point at localhost dev servers.
+  command = "npm install && npm run build:pilot"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"
+  VITE_LITERACYDOJO_URL = "/apps/literacydojo/"
+  VITE_WAREHOUSE_URL = "/apps/warehouse/"
+  VITE_WORMHOLE_URL = "/apps/wormhole/"
+  VITE_RELAY_STATION_URL = "/apps/relay-station/"
 
 # SPA fallback: todas as rotas servem index.html
 [[redirects]]

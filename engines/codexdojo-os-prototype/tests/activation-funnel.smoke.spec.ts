@@ -71,7 +71,7 @@ test('records the IA Pratica activation funnel without learner content', async (
   await page.getByRole('button', { name: 'Começar missão' }).click()
 
   const mission = page.frameLocator('iframe[title="Missão IA não é uma fonte de verdade"]')
-  await mission.getByRole('button', { name: 'Começar', exact: true }).click()
+  await mission.getByRole('button', { name: 'Começar missão', exact: true }).click()
   await mission.getByTestId('output-out-b').check()
   await mission.getByTestId('criterion-c-fontes').check()
   await mission.getByTestId('criterion-c-limites').check()
