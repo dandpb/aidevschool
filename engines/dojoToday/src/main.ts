@@ -46,11 +46,11 @@ function streakCard(s: TodaySnapshot["streak"]): string {
   const frozen = "·".repeat(Math.max(0, s.freezesMax - s.freezesEquipped));
   const headline =
     s.current > 0
-      ? `${escapeHtml(s.current)} ${s.current === 1 ? "dia" : "dias"} de sequência`
+      ? `${s.current} ${s.current === 1 ? "dia" : "dias"} de sequência`
       : "Quebre o gelo hoje";
   const sub =
     s.current > 0
-      ? `Recorde: ${escapeHtml(s.longest)}. Passe um gate para manter o fogo.`
+      ? `Recorde: ${s.longest}. Passe um gate para manter o fogo.`
       : "Passe um gate executável para acender a sequência.";
   return `
     <section class="card streak-card" aria-label="Sequência">
@@ -58,7 +58,7 @@ function streakCard(s: TodaySnapshot["streak"]): string {
       <div class="streak-body">
         <p class="streak-current">${headline}</p>
         <p class="streak-sub">${sub}</p>
-        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
+        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${s.freezesMax})">
           Freezes <span class="freeze-pips">${freezes}<span class="freeze-empty">${frozen}</span></span>
         </p>
       </div>
@@ -86,7 +86,7 @@ function reviewCard(r: DueReview, index: number): string {
   return `
     <article class="card lesson-card ${tone}" style="--i:${index}">
       <div class="lesson-head">
-        <span class="chip">${escapeHtml(REASON_LABEL[r.reason])}</span>
+        <span class="chip">${REASON_LABEL[r.reason]}</span>
         <span class="due-in">${escapeHtml(r.dueIn)}</span>
       </div>
       <h3 class="lesson-title">${escapeHtml(r.title)}</h3>
@@ -160,7 +160,7 @@ function progressCard(s: TodaySnapshot): string {
   return `
     <section class="card progress-card" aria-label="Progresso verificado">
       <div class="progress-row">
-        <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas</span>
+        <span><strong>${s.masteredCount}</strong>/${s.totalUnits} dominadas</span>
         <span class="muted">verificadas por gate</span>
       </div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
@@ -175,13 +175,13 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
   const rows = nodes
     .map((n) => {
       const isNext = n.num === nextNum && n.status === "active";
-      const cls = `track-node is-${escapeHtml(n.status)}${isNext ? " is-next" : ""}`;
+      const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
       const play =
         isNext && n.gameDir
           ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
           : "";
       return `
-        <li class="${escapeHtml(cls)}">
+        <li class="${cls}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
           <span class="track-num">${escapeHtml(n.num)}</span>
           <span class="track-title">${escapeHtml(n.title)}</span>
