@@ -357,7 +357,12 @@ def manifest_hash(skill_dir: Path) -> str:
 def write_manifest(skill_dir: Path) -> Path:
     path = skill_dir / "keys" / MANIFEST_NAME
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(manifest_hash(skill_dir), encoding="utf-8")
+    # Temp-then-rename, same as atomic_write_json above: a crash mid-write must
+    # leave the previous manifest (or an absent slot) intact, never a torn file
+    # that verify_manifest would then reject.
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(manifest_hash(skill_dir), encoding="utf-8")
+    os.replace(tmp, path)
     return path
 
 

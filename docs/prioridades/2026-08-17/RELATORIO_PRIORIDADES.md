@@ -41,13 +41,13 @@ Os três primeiros são os casos que receberam RED→GREEN nesta rodada.
 | 1 | Tornar a entrada IA Prática encontrável | `README` em `HEAD` dizia que não havia rota pública; LiteracyDojo respondeu HTTP 200 | Manter link e observar uso real | **corrigida/testada — C03** |
 | 2 | Tornar o piloto OS reproduzível em build estático | `netlify.toml` em `HEAD` não declarava `build:pilot` nem quatro URLs `/apps/*` | Incluir os arquivos de suporte no release e adicionar smoke ao CI | **corrigida/testada localmente — C02; release pendente** |
 | 3 | Impedir versionamento acidental de artefatos locais | `.env*`, zip de debug e `test-results-pilot/` não estavam cobertos no baseline | Manter verificador no caminho de entrega | **corrigida/testada — C01** |
-| 4 | Separar o working tree em entregas revisáveis | Corte atual observado com 76 linhas de status, mudanças de várias frentes e arquivos não rastreados | Classificar e separar por commits/branches antes de publicar | aberta |
-| 5 | Colocar `test:smoke:pilot` no CI | Busca em `.github/workflows/ci.yml` não encontrou esse comando | Criar job de build estático com Playwright | aberta |
-| 6 | Medir ativação e feedback de um aluno real | Existem 3 attempts e 1 receipt, mas isso não prova uso de uma turma | Rodar piloto curto com uma jornada observável e feedback explícito | aberta |
-| 7 | Reconciliar catálogo e evidência curricular | `catalog.md` registra 18 projetos, a maioria `scaffolded`; U2 Go/Rust ainda `unverified` | Certificar por implementação ou manter status honesto com provas | aberta |
-| 8 | Fechar o contrato mínimo de feedback/analytics | ADR existe, mas busca atual não encontrou sink/eventos ativos no LiteracyDojo; mudanças de analytics estão deletadas no working tree herdado | Decidir restaurar o mínimo ou arquivar o contrato, sem texto livre | aberta |
-| 9 | Fazer receipts sobreviverem a crash | `engines/pixelDojo/verifier/__init__.py:320` usa `write_text()` direto; helper atômico existe no substrate | Criar teste de interrupção e usar escrita atômica | aberta |
-| 10 | Medir peso do primeiro carregamento | Build do piloto emitiu warnings de chunks >500 kB em wormhole e relay-station | Medir primeira interação antes de decidir code splitting | aberta |
+| 4 | Separar o working tree em entregas revisáveis | Escopo da rodada commitado em `f4fa2dc` + `a1efd80`; o restante pertence a outras sessões | Manter commits por intenção daqui em diante | **parcialmente fechada** |
+| 5 | Colocar `test:smoke:pilot` no CI | Job `codexdojo-os` agora instala Chromium e roda o smoke | Observar o próximo run do Actions | **corrigida/testada — caso-p5** |
+| 6 | Medir ativação e feedback de um aluno real | Existem 3 attempts e 1 receipt, mas isso não prova uso de uma turma | Executar o plano em `caso-p6-real-student-pilot/PRD.md` com 1–3 alunos | aguardando execução humana |
+| 7 | Reconciliar catálogo e evidência curricular | Projeto 02 dizia "Go/Rust: code exists" mas `1b0a309` removeu os diretórios | Verificador `verify_catalog.py` cobre afirmações de existência | **corrigida/testada — caso-p7** |
+| 8 | Fechar o contrato mínimo de feedback/analytics | ADR existe; deleção de analytics herdada no working tree de outra sessão | Decisão A/B documentada em `caso-p8-analytics-contract/PRD.md` | aguardando decisão do dono |
+| 9 | Fazer receipts sobreviverem a crash | Item histórico obsoleto; o ponto real era `write_manifest` sem tmp+rename | `write_manifest` agora commita via `os.replace`; 2 testes novos | **corrigida/testada — caso-p9** |
+| 10 | Medir peso do primeiro carregamento | Baseline medida: shell ~2.4 MB gzip; missões voxel ~135–142 KB gzip | Otimizar só depois de dados de uso do piloto | **medida — caso-p10; otimização adiada** |
 
 ### O que não subiu para o ranking
 
