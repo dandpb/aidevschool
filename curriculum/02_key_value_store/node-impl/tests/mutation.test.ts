@@ -73,7 +73,7 @@ describe('KeyValueStore mutation hardening', () => {
   });
 
   it('reports ttl -2 for missing, -1 for no-expiry, and a positive value for a live ttl', () => {
-    const now = 0n;
+    let now = 0n;
     const store = new KeyValueStore({}, () => now);
     store.set('live', 'v', 100);
     store.set('perm', 'v');
