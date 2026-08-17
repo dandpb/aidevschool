@@ -44,8 +44,14 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 36d",
+      dueIn: "overdue 39d",
       reason: "overdue",
+    },
+    {
+      unitId: "U2-key-value-store",
+      title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
+      dueIn: "today",
+      reason: "due",
     },
     {
       unitId: "P-001",
@@ -57,10 +63,10 @@ export const learnerSnapshot: LearnerSnapshot = {
   masteredCount: 2,
   scaffoldedCount: 17,
   streak: {
-    current: 2,
+    current: 0,
     longest: 2,
     lastGateDate: "2026-08-13",
-    freezesEquipped: 2,
+    freezesEquipped: 0,
     freezesMax: 2,
   },
   curr: 0.5,
