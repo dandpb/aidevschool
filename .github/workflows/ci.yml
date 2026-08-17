@@ -335,6 +335,11 @@ jobs:
   pixeldojo-games:
     name: pixelDojo games/${{ matrix.game.name }} (TS)
     needs: pixeldojo-games-discover
+    # An empty matrix FAILS the job at evaluation time ("Matrix vector 'game'
+    # does not contain any values") instead of skipping it, and the failure is
+    # invisible in the jobs list — so gate on the discover output to make the
+    # no-games case a clean skip.
+    if: ${{ needs.pixeldojo-games-discover.outputs.matrix != '[]' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
