@@ -35,6 +35,10 @@ for (const { name, cwd, prebuild } of MISSIONS) {
   const outDir = resolve(source, 'dist-hosted')
   console.log(`\n▸ bundling ${name} from ${cwd}`)
   if (prebuild) run(prebuild[0], prebuild[1], source)
+
+  // Install mission dependencies before building to avoid ERR_MODULE_NOT_FOUND in CI/monorepo environments.
+  run('npm', ['install', '--no-package-lock', '--no-audit', '--no-fund'], source)
+
   // --base makes the runtime's own asset URLs resolve under the OS subpath.
   run('npx', ['vite', 'build', `--base=/apps/${name}/`, '--outDir', outDir, '--emptyOutDir'], source)
 
