@@ -43,6 +43,23 @@ def test_fingerprint_paths_ignores_generated_test_results(tmp_path: Path) -> Non
     assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
 
 
+def test_fingerprint_paths_ignores_engine_logs(tmp_path: Path) -> None:
+    # Given a declared engine root before browser evidence is captured
+    engine = tmp_path / "engine"
+    engine.mkdir()
+    (engine / "source.ts").write_text("source", encoding="utf-8")
+    before = fingerprint_paths(tmp_path, (RepoPath("engine"),))
+
+    # When a smoke run writes its evidence log and screenshots
+    output = engine / ".logs"
+    output.mkdir()
+    (output / "evidence.ndjson").write_text("{}\n", encoding="utf-8")
+    (output / "smoke.png").write_bytes(b"generated")
+
+    # Then the source fingerprint remains stable
+    assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
+
+
 def test_fingerprint_paths_ignores_marked_generated_sources(tmp_path: Path) -> None:
     # Given a declared engine root and a marked generated projection
     engine = tmp_path / "engine"

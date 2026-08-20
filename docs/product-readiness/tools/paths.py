@@ -13,6 +13,7 @@ EXCLUDED_PARTS: Final = {
     "coverage",
     "test-results",
     "playwright-report",
+    ".logs",
     ".codegraph",
     "graphify-out",
     "__pycache__",
