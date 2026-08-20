@@ -29,6 +29,7 @@ def test_load_domain_parses_closed_typed_records() -> None:
         "literacy-happy-path",
         "literacy-resume",
         "literacy-retry",
+        "minitown-explore-only",
         "os-literacy-hosted-mission",
         "os-literacy-returning-device",
         "os-onboarding-track-choice",

@@ -127,3 +127,23 @@ useCases:
       facilitator: facilitator-guide.md#programmer-journeys
     sourcePaths: [engines/voxelDojo/catalog.json, engines/voxelDojo/game-02-warehouse/, engines/voxelDojo/shared/]
     owner: voxelDojo
+  - id: minitown-explore-only
+    surface: miniTown
+    audience: nontechnical-learner
+    intendedTier: experimental
+    promise: Explore the local town simulation without a lesson, persistence, progression, evidence, or mastery promise.
+    entry:
+      route: miniTown local route
+      prerequisites:
+        - local-engine-setup
+        - supported-modern-browser
+        - webgl
+    progressSemantics: exploration
+    recovery: Reload the local route once; there is no learner state to restore, so ask a facilitator when the route or renderer remains unavailable.
+    nextAction: Leave miniTown and start the standalone LiteracyDojo journey when you want a guided AI lesson.
+    scenarioIds: [minitown-explore-only]
+    manualRefs:
+      student: student-guide.md#experimental-minitown
+      facilitator: facilitator-guide.md#experimental-minitown
+    sourcePaths: [engines/miniTown/src/, engines/miniTown/playwright/, engines/miniTown/README.md]
+    owner: miniTown

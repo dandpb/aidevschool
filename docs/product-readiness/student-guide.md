@@ -3,7 +3,8 @@
 This guide covers `literacy-standalone-first-lesson`,
 `os-literacy-guided-mission`, `os-voxel-guided-missions`,
 `os-returning-learner`, `dojotoday-daily-guidance`,
-`pixelquest-evidence-encounter`, and `voxel-standalone-learning-loop`. It is
+`pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, and
+`minitown-explore-only`. It is
 organized by learner goal rather than repository component.
 
 ## Standalone LiteracyDojo
@@ -30,6 +31,35 @@ If a page reload interrupts an activity, return to the map and restart that less
 ### Supported next action
 
 Continue to the next available LiteracyDojo lesson on the same device. The standalone route does not automatically transfer progress to another engine or grant canonical mastery.
+
+## Experimental: miniTown
+
+### Choose this journey
+
+Choose miniTown only when you want to look around an experimental town simulation.
+It is an explore-only surface, not a lesson or a customer-ready journey. It makes
+no promise of completion, persistence, progression, evidence, or mastery. Start
+from the local route prepared by a facilitator; technical setup belongs to the
+[miniTown engine README](../../engines/miniTown/README.md).
+
+### Explore without a progress claim
+
+1. Open the local miniTown route in the supported browser provided by your facilitator.
+2. Look around the town and observe its automatic simulation, residents, vehicles,
+   zones, and day/night cycle.
+3. Leave the route when you have finished exploring. There is no lesson result,
+   saved learner progress, evidence record, or next mission to complete here.
+
+Nothing you see in miniTown means `completed`, `verified`, or `mastered`. The
+simulation does not persist a learner journey or transfer progress to another
+engine. Do not use its runtime inspection hook as learner evidence.
+
+### Recover or choose a supported learning route
+
+If the local route does not load, reload once and ask a facilitator to check the
+engine-owned setup. There is no saved session to restore and no completion claim
+to recover. If your goal is guided AI practice, return to
+[standalone LiteracyDojo](#standalone-literacydojo) instead.
 
 ## codexDojo OS guided journey
 
