@@ -11,6 +11,8 @@ EXCLUDED_PARTS: Final = {
     "node_modules",
     "dist",
     "coverage",
+    "test-results",
+    "playwright-report",
     ".codegraph",
     "graphify-out",
     "__pycache__",
