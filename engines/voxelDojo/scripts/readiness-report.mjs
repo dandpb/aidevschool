@@ -28,6 +28,8 @@ const result = spawnSync(
     "engines/voxelDojo",
     "--output",
     "engines/voxelDojo/test-results/readiness",
+    "--scenarios",
+    "voxel-standalone-loop",
   ],
   { cwd: repoRoot, encoding: "utf8", stdio: "inherit" },
 );

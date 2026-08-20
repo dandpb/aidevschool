@@ -3,16 +3,20 @@ from __future__ import annotations
 import hashlib
 from datetime import datetime
 from pathlib import Path
+from typing import assert_never
 
 from .fingerprint import manual_fingerprint, source_fingerprint
 from .models import (
     Assessment,
     DecisionOutcome,
+    EvidenceKind,
+    ExecutorKind,
     ReadinessDecision,
     ReadinessDomain,
     ReadinessTier,
     RunId,
     ScenarioOutcome,
+    Scenario,
     ScenarioResult,
     Severity,
     UseCase,
@@ -20,6 +24,25 @@ from .models import (
 
 
 BLOCKING_SEVERITIES = {Severity.CRITICAL, Severity.HIGH}
+
+
+def _proof_errors(scenario: Scenario, result: ScenarioResult) -> tuple[str, ...]:
+    """Require the result executor to cover every declared evidence boundary."""
+    evidence_kinds = {assertion.evidence for assertion in scenario.assertions}
+    requires_automated = EvidenceKind.PLAYWRIGHT in evidence_kinds
+    requires_independent = bool(evidence_kinds - {EvidenceKind.PLAYWRIGHT})
+    match result.executor:
+        case ExecutorKind.AUTOMATED:
+            if requires_independent:
+                return (f"scenario {scenario.id} lacks independent evidence",)
+        case ExecutorKind.OBSERVED:
+            if requires_automated:
+                return (f"scenario {scenario.id} lacks automated evidence",)
+        case ExecutorKind.MIXED:
+            pass
+        case unreachable:
+            assert_never(unreachable)
+    return ()
 
 
 def _latest_assessment(domain: ReadinessDomain, use_case: UseCase) -> Assessment | None:
@@ -40,6 +63,7 @@ def _result_errors(
     expected_source = source_fingerprint(domain, use_case, repo_root)
     expected_manual = manual_fingerprint(domain, use_case)
     errors: list[str] = []
+    scenarios = {scenario.id: scenario for scenario in domain.scenarios}
     scenario_ids = [result.scenario_id for result in results]
     if len(scenario_ids) != len(set(scenario_ids)):
         errors.append("multiple results were supplied for the same scenario")
@@ -55,6 +79,8 @@ def _result_errors(
             errors.append(f"scenario {scenario_id} source fingerprint is stale")
         if result.manual_fingerprint != expected_manual:
             errors.append(f"scenario {scenario_id} manual fingerprint is stale")
+        scenario = scenarios[scenario_id]
+        errors.extend(_proof_errors(scenario, result))
         if not result.artifacts:
             errors.append(f"scenario {scenario_id} has no artifact digest")
         for artifact in result.artifacts:

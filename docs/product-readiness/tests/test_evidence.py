@@ -75,6 +75,7 @@ def _request() -> AssessmentRequest:
 def test_propose_assessment_binds_all_results_without_writing() -> None:
     # Given independently scoped passing scenario facts
     domain = load_domain(READINESS_ROOT)
+    baseline_results = domain.results
 
     # When an assessment is proposed
     proposal = propose_assessment(domain, _request(), REPO_ROOT)
@@ -82,7 +83,7 @@ def test_propose_assessment_binds_all_results_without_writing() -> None:
     # Then the exact result runs are bound to a passing decision
     assert proposal.assessment.decisions[0].outcome.value == "pass"
     assert len(proposal.assessment.decisions[0].result_run_ids) == 3
-    assert domain.results == ()
+    assert domain.results == baseline_results
 
 
 def test_propose_assessment_rejects_previously_promoted_run_id() -> None:

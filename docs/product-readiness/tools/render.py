@@ -22,14 +22,26 @@ def render_matrix(domain: ReadinessDomain, repo_root: Path | None = None, now: d
         "Regenerate with `python3 docs/product-readiness/tools/cli.py render`.",
         "Readiness is a customer-journey claim; it is not learner completion, evidence, verification, or mastery.",
         "",
-        "| Use case | Surface | Intended tier | Current status | Promise |",
-        "| --- | --- | --- | --- | --- |",
+        "| Use case | Surface | Intended tier | Current outcome | Granted tier | Verified at | Revalidate by | Evidence scope | Reasons/gaps | Promise |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for use_case in sorted(domain.use_cases, key=lambda item: item.id):
         decision = current_decision(domain, use_case, repository, current_time)
+        assessments = tuple(
+            assessment
+            for assessment in domain.assessments
+            if any(item.use_case_id == use_case.id for item in assessment.decisions)
+        )
+        latest = max(assessments, key=lambda item: item.verified_at, default=None)
+        verified_at = "-" if latest is None else latest.verified_at.isoformat()
+        revalidate_by = "-" if latest is None else latest.revalidate_by.isoformat()
+        evidence_scope = ", ".join(f"`{run_id}`" for run_id in decision.result_run_ids) or "-"
+        reasons = "; ".join(decision.reasons) or "-"
+        granted_tier = decision.granted_tier or "-"
         lines.append(
-            f"| `{use_case.id}` | {use_case.surface} | `{use_case.intended_tier}` | "
-            f"`{decision.outcome}` | {use_case.promise} |"
+            f"| `{use_case.id}` | {use_case.surface} | `{use_case.intended_tier}` | `"
+            f"{decision.outcome}` | `{granted_tier}` | `{verified_at}` | `{revalidate_by}` | "
+            f"{evidence_scope} | {reasons} | {use_case.promise} |"
         )
     lines.extend(
         [

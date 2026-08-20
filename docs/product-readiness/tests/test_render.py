@@ -26,6 +26,8 @@ def test_render_matrix_distinguishes_intended_tier_from_current_status() -> None
     assert rendered.startswith(GENERATED_MARKER)
     assert "customer-ready" in rendered
     assert "unassessed" in rendered
+    assert "Granted tier" in rendered
+    assert "Verified at" in rendered
 
 
 def test_cli_check_is_read_only_and_accepts_generated_matrix() -> None:

@@ -94,6 +94,8 @@ def load_assessment_request(path: Path) -> AssessmentRequest:
         raise EvidenceError("assessorContext must be independent-readiness-review")
     if request.revalidate_by < request.verified_at.date():
         raise EvidenceError("revalidateBy must not precede verifiedAt")
+    if any(result.executed_at > request.verified_at for result in request.results):
+        raise EvidenceError("verifiedAt must not precede a promoted result")
     return request
 
 

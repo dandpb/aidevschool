@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .models import ReadinessDomain, ReadinessTier, TierPolicy, UseCase
+from .models import DecisionOutcome, ReadinessDomain, ReadinessTier, TierPolicy, UseCase
 from .paths import markdown_anchor_exists, validate_repo_path
 
 
@@ -114,9 +114,25 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
     for assessment in domain.assessments:
         if assessment.assessor_context != "independent-readiness-review":
             errors.append(f"assessment {assessment.assessment_id} is not independently authored")
+        decision_ids = [decision.use_case_id for decision in assessment.decisions]
+        if len(decision_ids) != len(set(decision_ids)):
+            errors.append(f"assessment {assessment.assessment_id} contains duplicate decisions")
+        if set(decision_ids) != set(use_case_ids):
+            errors.append(f"assessment {assessment.assessment_id} does not cover every use case")
         for decision in assessment.decisions:
             if decision.use_case_id not in use_case_ids:
                 errors.append(f"assessment {assessment.assessment_id} references unknown use case {decision.use_case_id}")
+                continue
+            intended_tier = next(
+                use_case.intended_tier for use_case in domain.use_cases if use_case.id == decision.use_case_id
+            )
+            if decision.outcome in {DecisionOutcome.PASS, DecisionOutcome.CONDITIONAL_FOLLOW_UP}:
+                if decision.granted_tier is None:
+                    errors.append(f"assessment {assessment.assessment_id} grants no tier for {decision.use_case_id}")
+                elif decision.granted_tier is not intended_tier:
+                    errors.append(f"assessment {assessment.assessment_id} grants the wrong tier for {decision.use_case_id}")
+            elif decision.granted_tier is not None:
+                errors.append(f"assessment {assessment.assessment_id} grants a tier for {decision.use_case_id} despite {decision.outcome}")
             for run_id in decision.result_run_ids:
                 if run_id not in known_run_ids:
                     errors.append(f"assessment {assessment.assessment_id} references unknown run {run_id}")

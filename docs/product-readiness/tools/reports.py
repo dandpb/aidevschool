@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Final, TypedDict
 
 from .fingerprint import manual_fingerprint, source_fingerprint
-from .models import ReadinessDomain, Scenario, UseCase
+from .models import ReadinessDomain, Scenario
 
 
 class AssertionFact(TypedDict):
@@ -20,6 +20,14 @@ class AssertionFact(TypedDict):
 class ArtifactFact(TypedDict):
     path: str
     sha256: str
+
+
+class GapFact(TypedDict):
+    id: str
+    severity: str
+    summary: str
+    owner: str | None
+    disposition: str | None
 
 
 class ProducerReport(TypedDict):
@@ -34,12 +42,10 @@ class ProducerReport(TypedDict):
     manualFingerprint: str
     assertions: list[AssertionFact]
     artifacts: list[ArtifactFact]
-    gaps: list[str]
+    gaps: list[GapFact]
 
 
 REPORT_KEYS: Final = frozenset(ProducerReport.__required_keys__)
-
-
 def _git_sha(repo_root: Path) -> str:
     return subprocess.run(
         ["git", "rev-parse", "HEAD"],
@@ -64,6 +70,7 @@ def emit_engine_reports(
     repo_root: Path,
     engine_directory: str,
     output_directory: Path,
+    scenario_ids: tuple[str, ...] | None = None,
 ) -> tuple[Path, ...]:
     output_directory.mkdir(parents=True, exist_ok=True)
     for path in output_directory.glob("*.json"):
@@ -74,10 +81,13 @@ def emit_engine_reports(
         for scenario in domain.scenarios
         if scenario.automation is not None and str(scenario.automation.working_directory) == engine_directory
     )
+    selected_scenario_ids = None if scenario_ids is None else set(scenario_ids)
     git_sha = _git_sha(repo_root)
     executed_at = datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     changed: list[Path] = []
     for scenario in scenarios:
+        if selected_scenario_ids is not None and str(scenario.id) not in selected_scenario_ids:
+            continue
         use_case = use_cases[scenario.use_case_id]
         automated_assertions = tuple(
             assertion for assertion in scenario.assertions if str(assertion.evidence) == "playwright"
@@ -90,7 +100,10 @@ def emit_engine_reports(
             "runId": f"{executed_at}-{scenario.id}-{git_sha[:8]}",
             "gitSha": git_sha,
             "executedAt": executed_at,
-            "executor": str(scenario.execution),
+            # A producer can only assert the browser assertions it just ran.
+            # Mixed scenarios still require an independent observation before
+            # the assessor can grant the intended tier.
+            "executor": "automated",
             "outcome": "pass",
             "sourceFingerprint": str(source_fingerprint(domain, use_case, repo_root)),
             "manualFingerprint": str(manual_fingerprint(domain, use_case)),
@@ -107,34 +120,4 @@ def emit_engine_reports(
     return tuple(changed)
 
 
-def _validate_report(domain: ReadinessDomain, repo_root: Path, path: Path) -> tuple[str, ...]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(raw, dict) or set(raw) != REPORT_KEYS:
-        return (f"producer report has invalid shape: {path}",)
-    scenario = next((item for item in domain.scenarios if str(item.id) == raw["scenarioId"]), None)
-    if scenario is None:
-        return (f"producer report references unknown scenario: {path}",)
-    use_case = next(item for item in domain.use_cases if item.id == scenario.use_case_id)
-    errors: list[str] = []
-    if raw["sourceFingerprint"] != source_fingerprint(domain, use_case, repo_root):
-        errors.append(f"producer report source fingerprint does not match: {path}")
-    if raw["manualFingerprint"] != manual_fingerprint(domain, use_case):
-        errors.append(f"producer report manual fingerprint does not match: {path}")
-    if "grantedTier" in raw or "decision" in raw:
-        errors.append(f"producer report attempts to grant readiness: {path}")
-    return tuple(errors)
-
-
-def validate_report_directories(
-    domain: ReadinessDomain,
-    repo_root: Path,
-    directories: tuple[Path, ...],
-) -> tuple[str, ...]:
-    errors: list[str] = []
-    for directory in directories:
-        if not directory.is_dir():
-            errors.append(f"producer report directory does not exist: {directory}")
-            continue
-        for path in sorted(directory.glob("*.json")):
-            errors.extend(_validate_report(domain, repo_root, path))
-    return tuple(errors)
+from .aggregation import build_candidate_report, validate_report_directories  # noqa: E402,F401

@@ -87,6 +87,22 @@ def test_evaluate_candidate_allows_dispositioned_medium_gap() -> None:
     assert decision.granted_tier == domain.use_cases[0].intended_tier
 
 
+def test_evaluate_candidate_blocks_automated_only_mixed_scenarios() -> None:
+    # Given producer-only results for a journey that also requires observation
+    domain = load_domain(READINESS_ROOT)
+    automated_results = tuple(
+        replace(result, executor=ExecutorKind.AUTOMATED) for result in _passing_results()
+    )
+
+    # When the candidate is evaluated
+    decision = evaluate_candidate(domain, domain.use_cases[0], automated_results, REPO_ROOT)
+
+    # Then missing independent evidence blocks the intended tier
+    assert decision.outcome is DecisionOutcome.BLOCKED
+    assert decision.granted_tier is None
+    assert any("independent" in reason for reason in decision.reasons)
+
+
 def test_current_decision_marks_expired_assessment_stale() -> None:
     # Given an assessment whose explicit expiry has passed
     domain = load_domain(READINESS_ROOT)

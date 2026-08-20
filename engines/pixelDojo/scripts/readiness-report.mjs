@@ -13,6 +13,8 @@ const result = spawnSync(
     "engines/pixelDojo",
     "--output",
     "engines/pixelDojo/test-results/readiness",
+    "--scenarios",
+    "pixelquest-encounter-evidence",
   ],
   { cwd: repoRoot, encoding: "utf8", stdio: "inherit" },
 );
