@@ -1,0 +1,9 @@
+{
+  "name": "tempo-relatorios",
+  "version": "1.0.0",
+  "description": "CLI de time tracking com relatórios — projeto demo do workflow /investigar",
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/duracao.test.js test/relatorio.test.js"
+  }
+}

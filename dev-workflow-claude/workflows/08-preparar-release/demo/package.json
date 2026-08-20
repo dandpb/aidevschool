@@ -1,0 +1,9 @@
+{
+  "name": "tempo-demo-release",
+  "version": "1.1.0",
+  "description": "CLI de time tracking — demo do workflow de portão de release",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

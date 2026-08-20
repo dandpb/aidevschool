@@ -1,0 +1,9 @@
+{
+  "name": "tempo-demo-refatoracao",
+  "version": "1.0.0",
+  "description": "CLI de time tracking — projeto demo do workflow /refatorar (refatoração com rede de segurança)",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
