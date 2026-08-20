@@ -55,3 +55,23 @@ def test_validate_report_directories_rejects_tampered_fingerprint(tmp_path: Path
 
     # Then it rejects the report rather than trusting producer-owned claims
     assert any("source fingerprint" in error for error in errors)
+
+
+def test_emit_engine_reports_covers_programmer_browser_producers(tmp_path: Path) -> None:
+    # Given the canonical programmer journeys and successful browser producers
+    domain = load_domain(READINESS_ROOT)
+
+    # When PixelDojo and voxelDojo normalize their owned results
+    pixel_output = tmp_path / "pixel"
+    voxel_output = tmp_path / "voxel"
+    pixel_output.mkdir()
+    (pixel_output / "stale.json").write_text("{}", encoding="utf-8")
+    emit_engine_reports(domain, REPO_ROOT, "engines/pixelDojo", pixel_output)
+    emit_engine_reports(domain, REPO_ROOT, "engines/voxelDojo", voxel_output)
+
+    # Then each producer reports only scenarios with an exercised browser assertion
+    pixel_ids = {json.loads(path.read_text())["scenarioId"] for path in pixel_output.glob("*.json")}
+    voxel_ids = {json.loads(path.read_text())["scenarioId"] for path in voxel_output.glob("*.json")}
+    assert pixel_ids == {"pixelquest-encounter-evidence"}
+    assert voxel_ids == {"voxel-standalone-loop"}
+    assert not (pixel_output / "stale.json").exists()

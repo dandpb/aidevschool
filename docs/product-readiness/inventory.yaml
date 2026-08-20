@@ -76,3 +76,54 @@ useCases:
       facilitator: facilitator-guide.md#codexdojo-os-guided-journey
     sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/]
     owner: codexdojo-os-prototype
+  - id: dojotoday-daily-guidance
+    surface: dojoToday
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Read the current schedule, understand due reviews and the active unit, and follow the documented next action.
+    entry:
+      route: dojoToday generated daily view
+      prerequisites: [generated-learner-projection, supported-modern-browser]
+    progressSemantics: read-only
+    recovery: Regenerate the learner projection when the view is stale; stop if the canonical learner state cannot be read.
+    nextAction: Open the documented game or follow the next action without expecting dojoToday to evaluate work.
+    scenarioIds: [dojotoday-active-unit-guidance, dojotoday-read-only-boundary]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/dojoToday/src/, engines/dojoToday/tools/, learner/substrate/]
+    owner: dojoToday
+  - id: pixelquest-evidence-encounter
+    surface: PixelQuest
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Complete a documented encounter, locate its raw evidence, and hand it to the independent verifier.
+    entry:
+      route: PixelQuest local app
+      prerequisites: [supported-desktop-browser, keyboard-input]
+    progressSemantics: raw-evidence
+    recovery: Replay the encounter when evidence is missing; stop if a valid evidence record is not emitted.
+    nextAction: Submit the raw evidence to the independent verifier; do not treat the game result as mastery.
+    scenarioIds: [pixelquest-encounter-evidence, pixelquest-evidence-recovery]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/pixelDojo/pixel-quest/src/, engines/pixelDojo/pixel-quest/playwright/]
+    owner: pixelDojo
+  - id: voxel-standalone-learning-loop
+    surface: voxelDojo
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Complete the deterministic loop in each declared standalone game and locate raw evidence for independent verification.
+    entry:
+      route: voxelDojo catalog game package
+      prerequisites: [supported-desktop-browser, keyboard-input, webgl-or-accessible-renderer]
+    progressSemantics: raw-evidence
+    recovery: Use the accessible renderer when supported or stop when the declared core interaction cannot run.
+    nextAction: Submit the selected game's raw evidence to the independent verifier or exit at the documented boundary.
+    scenarioIds: [voxel-standalone-loop, voxel-accessible-renderer]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/voxelDojo/catalog.json, engines/voxelDojo/game-02-warehouse/, engines/voxelDojo/shared/]
+    owner: voxelDojo
