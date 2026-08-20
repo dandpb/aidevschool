@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-voxel-hosted-missions
+useCaseId: os-voxel-guided-missions
+kind: happy-path
+execution: mixed
+startState: fresh-os-dev-track
+steps: [launch-warehouse, launch-wormhole, launch-relay-station, inspect-host-verification-status]
+assertions:
+  - id: all-supported-voxel-missions-mount
+    severity: critical
+    evidence: playwright
+    claim: WAREHOUSE, WORMHOLE, and RELAY STATION render from the OS host origin.
+  - id: learner-distinguishes-evidence-from-mastery
+    severity: high
+    evidence: observation
+    claim: The learner does not interpret a mission result or raw evidence as canonical mastery.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:smoke:pilot]
+sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts]

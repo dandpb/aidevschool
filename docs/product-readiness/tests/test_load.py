@@ -27,6 +27,15 @@ def test_load_domain_parses_closed_typed_records() -> None:
         "literacy-happy-path",
         "literacy-resume",
         "literacy-retry",
+        "os-literacy-hosted-mission",
+        "os-literacy-returning-device",
+        "os-onboarding-track-choice",
+        "os-renderer-accessibility-recovery",
+        "os-returning-device",
+        "os-returning-recovery",
+        "os-verification-recovery",
+        "os-voxel-hosted-missions",
+        "os-voxel-returning-device",
     )
 
 

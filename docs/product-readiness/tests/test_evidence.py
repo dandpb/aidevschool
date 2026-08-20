@@ -1,4 +1,5 @@
 import hashlib
+import subprocess
 from dataclasses import replace
 from datetime import date, datetime, timezone
 from pathlib import Path
@@ -28,7 +29,15 @@ from product_readiness_tools.models import (
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 READINESS_ROOT = REPO_ROOT / "docs" / "product-readiness"
-GIT_SHA = GitSha("c22abf39a8b87715c5254a52b60756bf1fa48d5b")
+GIT_SHA = GitSha(
+    subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+)
 
 
 def _request() -> AssessmentRequest:

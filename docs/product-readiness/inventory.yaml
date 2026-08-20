@@ -25,3 +25,54 @@ useCases:
       - engines/literacyDojo/playwright/
       - curriculum/ai-literacy/
     owner: literacyDojo
+  - id: os-literacy-guided-mission
+    surface: codexDojo OS
+    audience: nontechnical-learner
+    intendedTier: customer-ready
+    promise: Choose an AI track, complete its hosted LiteracyDojo mission, and understand the host result and next action.
+    entry:
+      route: codexdojo-os-prototype static pilot
+      prerequisites: [supported-modern-browser, browser-storage-enabled]
+    progressSemantics: local-completion
+    recovery: Retry a failed hosted load once, then exit safely without claiming completion or verification.
+    nextAction: Continue to the next available OS mission on the same device or ask a facilitator for help.
+    scenarioIds: [os-literacy-hosted-mission, os-verification-recovery, os-literacy-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests-pilot/, engines/literacyDojo/src/]
+    owner: codexdojo-os-prototype
+  - id: os-voxel-guided-missions
+    surface: codexDojo OS
+    audience: programmer-learner
+    intendedTier: customer-ready
+    promise: Launch each supported hosted voxelDojo mission and receive an accurate host status without a false mastery claim.
+    entry:
+      route: codexdojo-os-prototype static pilot Dev track
+      prerequisites: [supported-desktop-browser, keyboard-input]
+    progressSemantics: raw-evidence
+    recovery: Use the accessible renderer or safe exit when WebGL or the hosted mission is unavailable.
+    nextAction: Submit produced evidence to an independent verifier or continue to the next supported mission.
+    scenarioIds: [os-voxel-hosted-missions, os-renderer-accessibility-recovery, os-voxel-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/, engines/codexdojo-os-prototype/tests-pilot/, engines/voxelDojo/]
+    owner: codexdojo-os-prototype
+  - id: os-returning-learner
+    surface: codexDojo OS
+    audience: returning-learner
+    intendedTier: customer-ready
+    promise: Resume the supported local OS state on the same device without repeating completed setup.
+    entry:
+      route: codexdojo-os-prototype static pilot
+      prerequisites: [same-browser-profile, browser-storage-enabled]
+    progressSemantics: local-completion
+    recovery: Return to onboarding after cleared or unavailable local storage without reconstructing prior completion.
+    nextAction: Resume the next available mission shown by the OS.
+    scenarioIds: [os-onboarding-track-choice, os-returning-recovery, os-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/]
+    owner: codexdojo-os-prototype
