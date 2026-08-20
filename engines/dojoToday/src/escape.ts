@@ -16,11 +16,8 @@ const HTML_SPECIAL_CHARS_GLOBAL = /[&<>"']/g;
  * `innerHTML`. O read model é gerado localmente, mas a superfície é
  * vanilla-JS string-templated: escapes aqui são defesa em profundidade.
  *
- * Performance Optimization (Bolt ⚡):
- * In a template-string-based rendering engine, calling `String.replace()`
- * on a high volume of safe strings causes unnecessary garbage collection and regex allocation.
- * `RegExp.test()` is significantly faster (~2.5x) when avoiding the replace step for strings
- * that don't need escaping.
+ * ⚡ Bolt: Fast-path optimization with .test() to avoid memory allocation and GC
+ * overhead for strings that don't need escaping.
  */
 export function escapeHtml(value: unknown): string {
   const str = String(value ?? "");

@@ -65,3 +65,22 @@ def test_assess_dry_run_shows_scope_and_changes_without_mutation(tmp_path: Path)
     assert "Dry run: no tracked files were changed" in result.stdout
     assert (READINESS_ROOT / "evidence" / "results.ndjson").read_bytes() == evidence_before
     assert tuple((READINESS_ROOT / "assessments").iterdir()) == assessments_before
+
+
+def test_enforce_accepts_fail_closed_published_baseline(tmp_path: Path) -> None:
+    # Given a current assessor report whose positive result is narrower than the published baseline
+    report = _current_literacy_report(tmp_path)
+    candidate = tmp_path / "product-readiness-report.json"
+    report.rename(candidate)
+
+    # When CI enforces the published readiness claims against that report
+    result = subprocess.run(
+        [sys.executable, str(READINESS_ROOT / "tools" / "cli.py"), "enforce", "--reports", str(tmp_path)],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    # Then conservative blocked and stale claims remain valid without granting readiness
+    assert result.returncode == 0, result.stderr
