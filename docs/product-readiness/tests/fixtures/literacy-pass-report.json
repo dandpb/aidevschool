@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "assessmentId": "2026-08-20-c22abf3",
+  "assessorContext": "independent-readiness-review",
+  "verifiedAt": "2026-08-20T17:00:00Z",
+  "revalidateBy": "2026-09-20",
+  "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+  "results": [
+    {
+      "schemaVersion": 1,
+      "scenarioId": "literacy-happy-path",
+      "runId": "2026-08-20-literacy-happy-path-c22abf3",
+      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "executedAt": "2026-08-20T14:30:00Z",
+      "executor": "mixed",
+      "outcome": "pass",
+      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
+      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "artifacts": [
+        {
+          "path": "docs/product-readiness/student-guide.md",
+          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "schemaVersion": 1,
+      "scenarioId": "literacy-retry",
+      "runId": "2026-08-20-literacy-retry-c22abf3",
+      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "executedAt": "2026-08-20T14:31:00Z",
+      "executor": "mixed",
+      "outcome": "pass",
+      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
+      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "artifacts": [
+        {
+          "path": "docs/product-readiness/student-guide.md",
+          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "schemaVersion": 1,
+      "scenarioId": "literacy-resume",
+      "runId": "2026-08-20-literacy-resume-c22abf3",
+      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "executedAt": "2026-08-20T14:32:00Z",
+      "executor": "mixed",
+      "outcome": "pass",
+      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
+      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "artifacts": [
+        {
+          "path": "docs/product-readiness/student-guide.md",
+          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

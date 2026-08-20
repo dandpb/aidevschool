@@ -73,6 +73,12 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
         errors.append("inventory contains duplicate use-case IDs")
     if len(scenario_ids) != len(set(scenario_ids)):
         errors.append("scenario directory contains duplicate scenario IDs")
+    run_ids = [result.run_id for result in domain.results]
+    assessment_ids = [assessment.assessment_id for assessment in domain.assessments]
+    if len(run_ids) != len(set(run_ids)):
+        errors.append("evidence log contains duplicate run IDs")
+    if len(assessment_ids) != len(set(assessment_ids)):
+        errors.append("assessment directory contains duplicate assessment IDs")
     if domain.policy.schema_version != 1:
         errors.append("policy supports only schema version 1")
     if {rule.tier for rule in domain.policy.tiers} != set(ReadinessTier):
@@ -97,4 +103,21 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
             error = validate_repo_path(repo_root, scenario.automation.working_directory)
             if error is not None:
                 errors.append(error)
+    known_run_ids = set(run_ids)
+    for result in domain.results:
+        if result.scenario_id not in scenario_ids:
+            errors.append(f"result {result.run_id} references unknown scenario {result.scenario_id}")
+        for artifact in result.artifacts:
+            error = validate_repo_path(repo_root, artifact.path)
+            if error is not None:
+                errors.append(error)
+    for assessment in domain.assessments:
+        if assessment.assessor_context != "independent-readiness-review":
+            errors.append(f"assessment {assessment.assessment_id} is not independently authored")
+        for decision in assessment.decisions:
+            if decision.use_case_id not in use_case_ids:
+                errors.append(f"assessment {assessment.assessment_id} references unknown use case {decision.use_case_id}")
+            for run_id in decision.result_run_ids:
+                if run_id not in known_run_ids:
+                    errors.append(f"assessment {assessment.assessment_id} references unknown run {run_id}")
     return tuple(errors)

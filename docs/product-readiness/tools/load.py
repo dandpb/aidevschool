@@ -7,6 +7,7 @@ from typing import TypeAlias, TypeVar
 
 import yaml
 
+from .history import load_history
 from .models import (
     Automation,
     DecisionOutcome,
@@ -255,9 +256,12 @@ def load_domain(readiness_root: Path) -> ReadinessDomain:
         for index, value in enumerate(_sequence(inventory["useCases"], "inventory.useCases"))
     )
     scenarios = tuple(_parse_scenario(path) for path in sorted((readiness_root / "scenarios").glob("*.yaml")))
+    results, assessments = load_history(readiness_root)
     return ReadinessDomain(
         root=str(readiness_root),
         policy=_parse_policy(readiness_root / "policy.yaml"),
         use_cases=use_cases,
         scenarios=scenarios,
+        results=results,
+        assessments=assessments,
     )

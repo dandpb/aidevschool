@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, datetime
 from enum import StrEnum
 from typing import NewType
 
@@ -8,6 +9,10 @@ from typing import NewType
 UseCaseId = NewType("UseCaseId", str)
 ScenarioId = NewType("ScenarioId", str)
 RepoPath = NewType("RepoPath", str)
+RunId = NewType("RunId", str)
+AssessmentId = NewType("AssessmentId", str)
+GitSha = NewType("GitSha", str)
+Sha256Digest = NewType("Sha256Digest", str)
 
 
 class ReadinessTier(StrEnum):
@@ -55,6 +60,17 @@ class EvidenceKind(StrEnum):
     PLAYWRIGHT = "playwright"
     OBSERVATION = "observation"
     DOCUMENT_REVIEW = "document-review"
+
+
+class ScenarioOutcome(StrEnum):
+    PASS = "pass"
+    FAIL = "fail"
+
+
+class ExecutorKind(StrEnum):
+    AUTOMATED = "automated"
+    OBSERVED = "observed"
+    MIXED = "mixed"
 
 
 @dataclass(frozen=True, slots=True)
@@ -145,8 +161,60 @@ class Scenario:
 
 
 @dataclass(frozen=True, slots=True)
+class ArtifactDigest:
+    path: RepoPath
+    sha256: Sha256Digest
+
+
+@dataclass(frozen=True, slots=True)
+class Gap:
+    id: str
+    severity: Severity
+    summary: str
+    owner: str | None
+    disposition: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class ScenarioResult:
+    schema_version: int
+    scenario_id: ScenarioId
+    run_id: RunId
+    git_sha: GitSha
+    executed_at: datetime
+    executor: ExecutorKind
+    outcome: ScenarioOutcome
+    source_fingerprint: Sha256Digest
+    manual_fingerprint: Sha256Digest
+    artifacts: tuple[ArtifactDigest, ...]
+    gaps: tuple[Gap, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ReadinessDecision:
+    use_case_id: UseCaseId
+    outcome: DecisionOutcome
+    granted_tier: ReadinessTier | None
+    reasons: tuple[str, ...]
+    result_run_ids: tuple[RunId, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class Assessment:
+    schema_version: int
+    assessment_id: AssessmentId
+    assessor_context: str
+    verified_at: datetime
+    revalidate_by: date
+    git_sha: GitSha
+    decisions: tuple[ReadinessDecision, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReadinessDomain:
     root: str
     policy: ReadinessPolicy
     use_cases: tuple[UseCase, ...]
     scenarios: tuple[Scenario, ...]
+    results: tuple[ScenarioResult, ...] = ()
+    assessments: tuple[Assessment, ...] = ()
