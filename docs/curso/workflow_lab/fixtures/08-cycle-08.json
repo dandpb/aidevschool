@@ -1,0 +1,15 @@
+{
+  "cycle_id": "cycle-08",
+  "handler": "summarize-access-log",
+  "requires": ["ndjson-exact-and-filter"],
+  "lesson_id": "validate-all-before-derive",
+  "lesson_text": "Validate every record before deriving a summary.",
+  "artifact_path": "artifacts/cycle-08.json",
+  "lines": [
+    "GET /home 200 100",
+    "POST /login 201 80",
+    "GET /missing 404 400",
+    "POST /login 500 120",
+    "GET /home 200 90"
+  ]
+}

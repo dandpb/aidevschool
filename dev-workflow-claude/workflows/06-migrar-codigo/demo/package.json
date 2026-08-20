@@ -1,0 +1,8 @@
+{
+  "name": "tempo-migracao-demo",
+  "version": "1.0.0",
+  "description": "CLI de time tracking em CommonJS — demo do workflow /migrar (CJS → ESM)",
+  "scripts": {
+    "test": "node --test"
+  }
+}
