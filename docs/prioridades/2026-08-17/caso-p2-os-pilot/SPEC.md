@@ -16,9 +16,8 @@ três missões Dev apoiadas pelos três runtimes voxel.
 
 ## Contrato
 
-1. `netlify.toml` executa `npm install && npm run build:pilot`.
-2. As URLs de runtime são inline no script `build:pilot` do `package.json` (self-contained;
-   o GitHub Actions não lê `netlify.toml` e `.env.production` não é commitado):
+1. `netlify.toml` deve executar `npm install && npm run build:pilot`.
+2. As URLs de runtime devem ser relativas:
    - `/apps/literacydojo/`;
    - `/apps/warehouse/`;
    - `/apps/wormhole/`;

@@ -1,6 +1,0 @@
-interface:
-  display_name: "Construir ciclo do Workflow Lab"
-  short_description: "Evolui ciclos cumulativos com testes"
-  default_prompt: "Use $workflow-lab-build para adicionar um ciclo do Workflow Lab com fixture, handler e teste focado."
-policy:
-  allow_implicit_invocation: true

@@ -7,8 +7,7 @@
     "lint": "biome check .",
     "dev:catalog": "node scripts/serve-catalog.mjs",
     "build": "pnpm -r --if-present build",
-    "smoke": "pnpm -r --if-present smoke && node scripts/readiness-report.mjs",
-    "readiness:report": "node scripts/readiness-report.mjs"
+    "smoke": "pnpm -r --if-present smoke"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",

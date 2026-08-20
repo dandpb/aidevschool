@@ -1,8 +1,0 @@
-{
-  "cycle_id": "cycle-00",
-  "handler": "metadata-only",
-  "requires": [],
-  "artifact_path": "../workflow-exemplo/VALIDACAO.md",
-  "lesson_id": "safe-serialization-explicit-scope",
-  "lesson_text": "Serialize only explicitly selected, validated fields."
-}

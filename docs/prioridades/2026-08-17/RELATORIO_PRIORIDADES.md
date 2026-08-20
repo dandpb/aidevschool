@@ -39,7 +39,7 @@ Os três primeiros são os casos que receberam RED→GREEN nesta rodada.
 | # | Prioridade | Evidência fresca no repo | Próxima ação | Estado |
 |---:|---|---|---|---|
 | 1 | Tornar a entrada IA Prática encontrável | `README` em `HEAD` dizia que não havia rota pública; LiteracyDojo respondeu HTTP 200 | Manter link e observar uso real | **corrigida/testada — C03** |
-| 2 | Tornar o piloto OS reproduzível em build estático | `build:pilot` agora é auto-contido (URLs inline); smoke local passou sem `.env.production` | Observar o próximo run do Actions | **corrigida/testada — C02** |
+| 2 | Tornar o piloto OS reproduzível em build estático | `netlify.toml` em `HEAD` não declarava `build:pilot` nem quatro URLs `/apps/*` | Incluir os arquivos de suporte no release e adicionar smoke ao CI | **corrigida/testada localmente — C02; release pendente** |
 | 3 | Impedir versionamento acidental de artefatos locais | `.env*`, zip de debug e `test-results-pilot/` não estavam cobertos no baseline | Manter verificador no caminho de entrega | **corrigida/testada — C01** |
 | 4 | Separar o working tree em entregas revisáveis | Escopo da rodada commitado em `f4fa2dc` + `a1efd80`; o restante pertence a outras sessões | Manter commits por intenção daqui em diante | **parcialmente fechada** |
 | 5 | Colocar `test:smoke:pilot` no CI | Job `codexdojo-os` agora instala Chromium e roda o smoke | Observar o próximo run do Actions | **corrigida/testada — caso-p5** |

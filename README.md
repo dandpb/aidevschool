@@ -22,19 +22,14 @@ Guiding principle: **one learner, one curriculum, many engines.**
 
 | I want to… | Start here | What is true today |
 | --- | --- | --- |
-| Use AI at work without learning to code | [Student guide — standalone LiteracyDojo](docs/product-readiness/student-guide.md#standalone-literacydojo) | Customer-facing guidance comes first; the linked curriculum owns content status and the engine README owns implementation and release status. |
-| Explore the ecosystem without a coding task | [Student guide — experimental miniTown](docs/product-readiness/student-guide.md#experimental-minitown) | Explicitly experimental, local, and explore-only. It does not teach the 14 lessons or promise persistence, progression, evidence, or mastery. |
-| Learn software engineering with AI | [Student guide — programmer journeys](docs/product-readiness/student-guide.md#programmer-journeys) | Validated learner journeys have bounded setup and evidence handoffs; the guide does not present emitted evidence as verifier acceptance. |
-| Operate or evaluate a learner journey | [Facilitator guide](docs/product-readiness/facilitator-guide.md) and [readiness matrix](docs/product-readiness/README.md) | Preparation, recovery, evaluation, and dated readiness claims are owned by the product-readiness documentation domain. |
+| Use AI at work without learning to code | [LiteracyDojo](engines/literacyDojo/README.md) and the [AI Literacy curriculum](curriculum/ai-literacy/README.md) | Guided local route. The linked curriculum owns content status; the engine README owns implementation and release status. |
+| Explore the ecosystem without a coding task | [miniTown](engines/miniTown/README.md) | A local, explore-only town simulation. It does not teach the 14 lessons or mark mastery. |
+| Learn software engineering with AI | [Programming curriculum](curriculum/catalog.md) and [CodexDojo OS](engines/codexdojo-os-prototype/README.md) | Mission-first journey over 18 coding projects (01–18), with status and evidence recorded per project. |
 | Contribute to the platform | [Documentation map](docs/DOCUMENTATION.md) and [handbook](docs/handbook/README.md) | Engine-local commands and contracts are authoritative. |
 
 The first public, browser-only learner route is [LiteracyDojo](https://aidevschool-literacydojo.netlify.app).
 It is local-first: progress stays in the browser and no account is required. The programming
 track and CodexDojo OS remain separate surfaces with their own setup and release boundaries.
-
-For a customer or learner journey, start with the [student guide](docs/product-readiness/student-guide.md).
-Facilitators should use the [facilitator guide](docs/product-readiness/facilitator-guide.md), and
-readiness reviewers should use the [generated readiness matrix](docs/product-readiness/README.md).
 
 ---
 

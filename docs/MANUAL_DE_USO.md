@@ -137,23 +137,6 @@ intenção é atualizar dependências. Em CI e verificação de release, prefira
 | Orquestrar o ciclo Spec→Optimize | miniMaxEvolutionEngine | `engines/miniMaxEvolutionEngine` |
 | Simular o runner de cinco fases | OpenClaw engine | `engines/openclaw` |
 
-### 4.1 Rotas por público e product readiness
-
-Para uma jornada de cliente ou aprendiz, comece pelos guias de público, não pelo
-README de um engine:
-
-- [Guia do estudante](product-readiness/student-guide.md): escolhe a jornada por
-  objetivo e explica resultado, estado local, recuperação e próxima ação.
-- [Guia do facilitador](product-readiness/facilitator-guide.md): prepara,
-  observa, recupera, avalia e revalida uma sessão.
-- [Matriz gerada](product-readiness/README.md): mostra a promessa, o tier
-  pretendido e a decisão independente atual.
-
-`miniTown` aparece nesses guias somente como superfície **experimental** e
-explore-only. Não o apresente como aula, produto customer-ready, rota de
-progressão, fonte de evidência ou mecanismo de mastery. Os comandos e diagnósticos
-locais continuam pertencendo aos READMEs dos engines.
-
 ## 5. Uso por engine
 
 ### 5.1 Learner Substrate
@@ -457,38 +440,6 @@ git diff --check
 
 No engine alterado, execute sempre `lint + test + build/typecheck` com o comando
 local.
-
-### Gate de product readiness
-
-O domínio em `docs/product-readiness/` é a autoridade para promessas de jornada,
-cenários, guias e decisões de readiness. Ele não altera
-`learner/learning_state.yaml`, `learner/gate/` ou `learner/substrate/`; conclusão
-local, evidência bruta e resultado de produtor nunca concedem tier nem mastery.
-
-Antes de publicar uma mudança que afete uma promessa customer-facing:
-
-1. Rode `python3 docs/product-readiness/tools/cli.py check` para validar as
-   fontes fechadas e o drift da matriz gerada. Rode `render` somente depois de
-   revisar mudanças canônicas; não edite `docs/product-readiness/README.md` à mão.
-2. Execute os comandos da(s) scenario(s) afetada(s), incluindo a smoke do
-   `miniTown` quando a promessa experimental ou suas rotas mudarem. Registre
-   observações de compreensão e recuperação no processo de assessment; CI ou
-   smoke são fatos de produtor, não uma decisão independente.
-3. Trate `revalidateBy` expirado como `stale`. Também revalide imediatamente
-   quando mudar a entry route, onboarding, persistência, semântica de evidência,
-   recuperação, acessibilidade ou procedimento do facilitador. Uma documentação
-   antiga não pode manter a mesma promessa depois de uma dessas mudanças.
-4. A partir de um contexto independente, use
-   `python3 docs/product-readiness/tools/cli.py assess --input REPORT --dry-run`
-   para revisar escopo, SHA, fingerprints, digests, expiry, gaps e mudanças
-   propostas. Só promova com `assess --input REPORT` depois que a revisão
-   independente confirmar os fatos. Nenhum override pode manter um claim com gap
-   crítico ou alto.
-5. Rode `check` novamente e confirme que a matriz, as guias e o assessment
-   publicado descrevem a mesma entry route, resultado, status, recuperação,
-   próxima ação e escopo. Se a evidência estiver ausente, driftada, expirada ou
-   bloqueada, publique o claim como `unassessed`, `stale` ou `blocked`, em vez de
-   descrevê-lo como pronto.
 
 ### Check de release
 
