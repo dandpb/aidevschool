@@ -1,0 +1,26 @@
+{
+  "cycle_id": "cycle-10",
+  "handler": "scan-synthetic-secrets",
+  "requires": [
+    "safe-serialization-explicit-scope",
+    "fail-closed-narrow-policy",
+    "canonical-version-output"
+  ],
+  "artifact_path": "artifacts/cycle-10.json",
+  "lesson_id": "redact-before-reporting",
+  "lesson_text": "Redact recognized synthetic secrets before reporting findings.",
+  "files": [
+    {
+      "path": "src/z.py",
+      "content": "lab_key =LABKEY_ABCDEFGHIJKL"
+    },
+    {
+      "path": "README.md",
+      "content": "This fixture is clean."
+    },
+    {
+      "path": "src/a.py",
+      "content": "Authorization: Bearer LABTOKEN_abcdefghijklmnop"
+    }
+  ]
+}

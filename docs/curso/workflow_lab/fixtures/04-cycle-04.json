@@ -1,0 +1,38 @@
+{
+  "cycle_id": "cycle-04",
+  "handler": "snapshot-ttl-cache",
+  "requires": [
+    "time-is-explicit-input"
+  ],
+  "artifact_path": "artifacts/cycle-04.json",
+  "lesson_id": "eligibility-before-ranking",
+  "lesson_text": "Remove ineligible entries before ranking eligible candidates.",
+  "now": "2026-08-19T12:00:00Z",
+  "max_entries": 2,
+  "entries": [
+    {
+      "key": "alpha",
+      "value": "A",
+      "last_accessed_at": "2026-08-19T11:00:00Z",
+      "expires_at": "2026-08-19T12:00:00Z"
+    },
+    {
+      "key": "beta",
+      "value": "B",
+      "last_accessed_at": "2026-08-19T11:00:00Z",
+      "expires_at": null
+    },
+    {
+      "key": "gamma",
+      "value": "G",
+      "last_accessed_at": "2026-08-19T11:00:00Z",
+      "expires_at": null
+    },
+    {
+      "key": "delta",
+      "value": "D",
+      "last_accessed_at": "2026-08-19T11:30:00Z",
+      "expires_at": null
+    }
+  ]
+}

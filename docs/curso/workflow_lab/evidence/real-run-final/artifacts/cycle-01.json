@@ -1,0 +1,1 @@
+{"counts_by_level": {"error": 2}, "matching_records": [{"level": "error", "message": "first", "request_id": "req-7"}, {"level": "error", "message": "last", "request_id": "req-7"}]}

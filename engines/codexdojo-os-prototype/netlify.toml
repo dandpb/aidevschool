@@ -12,10 +12,6 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  VITE_LITERACYDOJO_URL = "/apps/literacydojo/"
-  VITE_WAREHOUSE_URL = "/apps/warehouse/"
-  VITE_WORMHOLE_URL = "/apps/wormhole/"
-  VITE_RELAY_STATION_URL = "/apps/relay-station/"
 
 # SPA fallback: todas as rotas servem index.html
 [[redirects]]

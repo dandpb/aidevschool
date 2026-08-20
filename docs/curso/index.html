@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Curso prático de engenharia de IA para desenvolver software com previsibilidade.">
     <title>Engenharia de IA para Desenvolvimento</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2307162a'/%3E%3Cpath d='M8 8h6l-3 16H5zm12 0h7l-2 5h-3l-2 11h-6z' fill='%2362c5ff'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -22,7 +23,7 @@
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#workflow">Ir para o workflow real</a>
-            <a class="button button-ghost" href="#modulos">Começar pelos módulos</a>
+            <a class="button button-ghost" href="#fundamentos">Começar pelos módulos</a>
           </div>
           <p class="micro-note"><strong>Promessa:</strong> ao final, você terá um processo que pode levar para Claude Code, Codex, OpenCode ou outro harness.</p>
         </div>
@@ -34,8 +35,8 @@
           <p>O modelo produz uma proposta. O workflow transforma a proposta em uma entrega verificável.</p>
           <div class="mini-stats">
             <div><strong>09</strong><span>módulos</span></div>
-            <div><strong>01</strong><span>caso real</span></div>
-            <div><strong>04</strong><span>ativos finais</span></div>
+            <div><strong>11</strong><span>workflows</span></div>
+            <div><strong>03</strong><span>skills permanentes</span></div>
           </div>
         </aside>
       </div>
@@ -54,8 +55,9 @@
           <a href="#agentes">Agentes</a>
           <a href="#mcp">MCP</a>
           <a href="#loop">Loop</a>
-          <a class="nav-cta" href="#workflow">Caso real</a>
+          <a class="nav-cta" href="#workflows">Workflows</a>
         </div>
+        <span class="nav-hint" aria-hidden="true">Deslize para ver todos →</span>
       </div>
     </nav>
 
@@ -133,7 +135,7 @@
               <div class="concept-card"><strong>Ferramentas</strong><span>Conectam o raciocínio ao mundo: ler, editar, executar e testar.</span></div>
             </div>
             <h3>O ciclo modelo → ferramenta → modelo</h3>
-            <div class="flow-diagram" aria-label="Ciclo entre modelo e ferramenta">
+            <div class="flow-diagram" role="img" aria-label="Ciclo entre modelo e ferramenta">
               <div class="flow-node"><small>entrada</small><b>Objetivo<br>+ contexto</b></div>
               <div class="flow-arrow">→</div>
               <div class="flow-node accent-node"><small>raciocínio</small><b>Modelo<br>propõe ação</b></div>
@@ -206,6 +208,21 @@ Para cada risco: evidência, impacto e sugestão.</code></pre>
                   <tr><td>Validação</td><td>Como saber se funcionou?</td><td>Comando de teste + critério de aceite.</td></tr>
                 </tbody>
               </table>
+            </div>
+            <h3>O mesmo workflow em três harnesses</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Harness</th><th>Como recebe contexto e regras</th><th>Como controla a execução</th></tr></thead>
+                <tbody>
+                  <tr><td>Claude Code</td><td>Instruções do projeto, arquivos selecionados, Skills, hooks e conectores MCP.</td><td>Permissões, ferramentas, subagentes e modos definidos pela configuração ativa.</td></tr>
+                  <tr><td>OpenAI Codex</td><td><code>AGENTS.md</code> por escopo de diretório, conversa, arquivos, Skills e resultados de ferramentas.</td><td>Sandbox/aprovações, Plan Mode conversacional e subagentes quando o harness os disponibiliza.</td></tr>
+                  <tr><td>OpenCode</td><td>Configuração do projeto, regras, agentes personalizados, arquivos e ferramentas MCP.</td><td>Agentes Plan e Build usam permissões diferentes para leitura, escrita, shell e ferramentas.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout callout-blue">
+              <strong>Os nomes não são o contrato</strong>
+              <p>Plan, Build, permissões e subagentes variam por versão e instalação. Preserve PRD, spec, contexto permitido e gates fora do harness para trocar de ferramenta sem redefinir “pronto”.</p>
             </div>
             <div class="example-box">
               <div class="box-label"><span class="icon good">→</span> Configuração mental de um harness</div>
@@ -477,10 +494,11 @@ Saída: findings por severidade + gate.</code></pre>
         <div class="module-layout">
           <div class="module-main">
             <div class="card-grid three compact-cards">
-              <article class="protocol-card"><span class="protocol-mark">MCP</span><h3>Ferramentas e dados</h3><p>Uma forma padronizada de expor ao modelo capacidades como repositório, documentação, banco ou execução.</p></article>
-              <article class="protocol-card"><span class="protocol-mark">ACP</span><h3>Comunicação e controle</h3><p>Neste curso, usamos ACP como a camada de contratos entre agentes: mensagens, identidade, permissões, ack e escalonamento. Confirme a definição específica da sua ferramenta.</p></article>
-              <article class="protocol-card"><span class="protocol-mark">SKILL</span><h3>Comportamento reutilizável</h3><p>Procedimentos versionados que combinam instruções, checklist e, quando necessário, scripts.</p></article>
+              <article class="protocol-card"><span class="protocol-mark">MCP</span><h3>Ferramentas e dados</h3><p>O Model Context Protocol conecta host, cliente e servidor via JSON-RPC. Servidores expõem recursos, prompts e ferramentas com contratos e consentimento explícitos.</p></article>
+              <article class="protocol-card"><span class="protocol-mark">ACP</span><h3>Primeiro, expanda a sigla</h3><p><strong>Agent Client Protocol</strong> liga um agente a um cliente como uma IDE. <strong>Agent Control Protocol</strong> é outro projeto, voltado a operar interfaces. Para agente → agente, cite o protocolo concreto; “ACP” sozinho é ambíguo.</p></article>
+              <article class="protocol-card"><span class="protocol-mark">SKILL</span><h3>Comportamento reutilizável</h3><p>Procedimentos versionados, normalmente em <code>SKILL.md</code> com instruções e recursos. Cada harness pode acrescentar regras próprias de descoberta e execução.</p></article>
             </div>
+            <div class="callout callout-warn"><strong>Não confunda integração com orquestração</strong><p>MCP conecta capacidades; Agent Client Protocol conecta agente e cliente; uma Skill reutiliza comportamento. Nenhum deles substitui spec, autorização, validação ou o contrato entre produtor e verificador.</p></div>
             <div class="example-box">
               <div class="box-label"><span class="icon good">+</span> Exemplo conceitual de ferramenta</div>
               <pre><code>{
@@ -587,6 +605,213 @@ python3 docs/curso/validate_course.py</code></pre></div>
         </div>
       </section>
 
+      <section class="workflow-catalog-section shell" id="workflows" aria-labelledby="workflows-title">
+        <div class="section-kicker">Laboratório cumulativo · ciclos 01–10</div>
+        <div class="section-heading-row">
+          <div>
+            <h2 id="workflows-title">10 workflows reais que deixam a próxima feature melhor</h2>
+            <p class="section-lead">Cada ciclo recebe uma fixture versionada, produz um artefato determinístico e registra uma lição. O ciclo seguinte só pode reutilizá-la se declarar a dependência.</p>
+          </div>
+          <a class="text-link" href="workflow_lab/README.md">Abrir o laboratório →</a>
+        </div>
+
+        <section class="lab-summary" aria-label="Contrato do laboratório">
+          <div><span>Execução</span><strong>10 artefatos JSON a partir de uma CLI pública.</strong></div>
+          <div><span>Memória</span><strong>11 registros append-only, incluindo o caso CSV como ciclo 00.</strong></div>
+          <div><span>Honestidade</span><strong>O relatório é uma projeção derivada; os testes são a evidência executável.</strong></div>
+        </section>
+
+        <section id="resultados-workflow" aria-labelledby="resultados-workflow-title">
+          <div class="section-kicker">Snapshot verificado · 19 de agosto de 2026</div>
+          <div class="section-heading-row">
+            <div>
+              <h3 id="resultados-workflow-title">Resultados observados</h3>
+              <p class="section-lead">Estes números vêm da execução registrada. Eles provam o contrato técnico do laboratório, não adoção ou aprendizado humano.</p>
+            </div>
+            <a class="text-link" href="workflow_lab/VALIDACAO.md">Abrir relatório de validação →</a>
+          </div>
+          <div class="lab-summary">
+            <div><span>61 testes</span><strong>Casos felizes, fronteiras e falhas adversariais do CSV e dos ciclos 01–10.</strong></div>
+            <div><span>11 ciclos concluídos</span><strong>O ciclo 00 e os dez workflows novos aparecem em ordem no ledger.</strong></div>
+            <div><span>10 artefatos JSON</span><strong>Um resultado observável por workflow novo, ligado diretamente em cada card.</strong></div>
+            <div><span>12 arquivos duráveis</span><strong>Dez artefatos, ledger e relatório ficaram byte a byte iguais em duas saídas novas.</strong></div>
+            <div><span>0 recursos externos</span><strong>O curso funciona offline e não depende de JavaScript.</strong></div>
+            <div><span>Gate independente</span><strong>Build produz; Verify confere em outro contexto; Maintain só promove o que passou.</strong></div>
+          </div>
+          <div class="workflow-proof">
+            <div>
+              <span class="proof-label">Relatórios e memória</span>
+              <p><code>learning.ndjson</code> é o registro append-only das lições e dependências resolvidas. <code>report.md</code> é apenas uma projeção legível e declara que não é evidência independente.</p>
+            </div>
+            <div>
+              <span class="proof-label">O que você pode concluir</span>
+              <ul class="check-list"><li>As entradas canônicas reproduzem os mesmos resultados.</li><li>Requisitos ausentes e entradas inseguras falham visivelmente.</li><li>Somente lições declaradas entram no contexto do ciclo.</li><li>Valor humano continua sendo uma hipótese fora deste teste técnico.</li></ul>
+            </div>
+          </div>
+          <div class="workflow-links"><a href="workflow_lab/evidence/full-run-final/learning.ndjson">Inspecionar o ledger →</a><a href="workflow_lab/evidence/full-run-final/report.md">Ler o relatório derivado →</a><a href="workflow_lab/VALIDACAO.md">Conferir comandos, hashes e limites →</a></div>
+
+          <h3>6 conclusões que atravessam os ciclos</h3>
+          <div class="card-grid three">
+            <article class="insight-card"><span>01 · Escopo</span><h3>Selecione antes de serializar</h3><p>Allowlist, filtros exatos e caminhos canônicos reduzem vazamento e tornam a saída auditável.</p></article>
+            <article class="insight-card"><span>02 · Validação</span><h3>Valide tudo antes de derivar</h3><p>Uma linha ruim, um ID duplicado ou uma dependência ausente invalida o conjunto antes da persistência.</p></article>
+            <article class="insight-card"><span>03 · Tempo</span><h3>Relógio é entrada, não ambiente</h3><p>Retry e TTL ficam reproduzíveis quando <code>now</code> e o início da agenda entram na fixture.</p></article>
+            <article class="insight-card"><span>04 · Ordem</span><h3>Elegibilidade vem antes do ranking</h3><p>Primeiro remova o que não pode participar; depois ordene, priorize ou aplique capacidade.</p></article>
+            <article class="insight-card"><span>05 · Forma</span><h3>Uma saída canônica elimina bifurcações</h3><p>Versões, caminhos e ordens estáveis permitem comparar modelos e execuções pelos mesmos bytes.</p></article>
+            <article class="insight-card"><span>06 · Segurança</span><h3>Falhe fechado e redija antes de reportar</h3><p>Políticas estreitas negam o desconhecido; relatórios nunca repetem o segredo que encontraram.</p></article>
+          </div>
+        </section>
+
+        <ol class="workflow-catalog">
+          <li>
+            <article class="workflow-card" data-workflow="cycle-01">
+              <div class="workflow-card-top"><span>ciclo 01</span><b>logs</b></div>
+              <h3>Filtrar NDJSON sem esconder entrada inválida</h3>
+              <p>Isola os erros de uma requisição em logs estruturados, usando filtros exatos combinados por <em>AND</em>.</p>
+              <dl><div><dt>Por que importa</dt><dd>Você investiga um incidente sem aceitar um log parcialmente corrompido como verdade.</dd></div><div><dt>Exemplo</dt><dd>Quatro linhas; filtro <code>req-7 + error</code>.</dd></div><div><dt>Resultado observado</dt><dd>2 registros e <code>counts_by_level.error = 2</code>.</dd></div><div><dt>Gate</dt><dd>Uma linha malformada encerra o ciclo com o número da linha e sem escrita parcial.</dd></div><div><dt>Acumula</dt><dd><code>ndjson-exact-and-filter</code>, reutilizado nos ciclos 05 e 08.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/01-cycle-01.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-01.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-02">
+              <div class="workflow-card-top"><span>ciclo 02</span><b>configuração</b></div>
+              <h3>Aplicar patch JSON com troca atômica</h3>
+              <p>Atualiza somente chaves de primeiro nível; objetos aninhados são substituídos por inteiro e <code>null</code> continua sendo um valor.</p>
+              <dl><div><dt>Por que importa</dt><dd>Evita configurações meio aplicadas e merges profundos que o contrato nunca prometeu.</dd></div><div><dt>Exemplo</dt><dd><code>enabled</code> vira falso; <code>limits</code> é substituído; <code>note</code> recebe <code>null</code>.</dd></div><div><dt>Resultado observado</dt><dd><code>region</code> permanece, <code>burst = 8</code> e <code>steady</code> sai da forma final.</dd></div><div><dt>Gate</dt><dd>Documento e patch precisam ser objetos completos antes de produzir saída.</dd></div><div><dt>Acumula</dt><dd><code>validate-before-atomic-replace</code>, consumido pela migração do ciclo 09.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/02-cycle-02.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-02.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-03">
+              <div class="workflow-card-top"><span>ciclo 03</span><b>confiabilidade</b></div>
+              <h3>Calcular retries sem dormir nem ler o relógio</h3>
+              <p>Transforma horário inicial, tentativas, base e teto em uma agenda de backoff exponencial reproduzível.</p>
+              <dl><div><dt>Por que importa</dt><dd>Backoff vira lógica testável, sem <code>sleep</code>, flake ou relógio escondido.</dd></div><div><dt>Exemplo</dt><dd>5 tentativas, base 3 s, teto 10 s, início às <code>12:00:00Z</code>.</dd></div><div><dt>Resultado observado</dt><dd>Atrasos <code>0, 3, 6, 10, 10</code>; última tentativa às <code>12:00:29Z</code>.</dd></div><div><dt>Gate</dt><dd>Tempo UTC canônico e inteiros positivos; duas execuções geram os mesmos bytes.</dd></div><div><dt>Acumula</dt><dd><code>time-is-explicit-input</code>, aplicado ao cache do ciclo 04.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/03-cycle-03.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-03.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-04">
+              <div class="workflow-card-top"><span>ciclo 04</span><b>cache</b></div>
+              <h3>Expirar TTL antes de decidir a evasão LRU</h3>
+              <p>Produz um snapshot auditável: remove expirados na fronteira <code>expires_at ≤ now</code> e só depois aplica capacidade.</p>
+              <dl><div><dt>Por que importa</dt><dd>Impede expulsar uma entrada viva enquanto uma chave já expirada ainda ocupa capacidade.</dd></div><div><dt>Exemplo</dt><dd><code>now = 12:00Z</code>, capacidade 2 e <code>alpha</code> expira exatamente na fronteira.</dd></div><div><dt>Resultado observado</dt><dd><code>alpha</code> expira, <code>beta</code> é evictada e <code>delta/gamma</code> permanecem.</dd></div><div><dt>Gate</dt><dd>Tempo injetado, chaves únicas e desempate lexical determinístico.</dd></div><div><dt>Acumula</dt><dd><code>eligibility-before-ranking</code>, usado no planejador do ciclo 05.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/04-cycle-04.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-04.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-05">
+              <div class="workflow-card-top"><span>ciclo 05</span><b>planejamento</b></div>
+              <h3>Ordenar tarefas e calcular o caminho crítico</h3>
+              <p>Transforma dependências de implementação em uma ordem executável e mostra a duração da cadeia mais longa.</p>
+              <dl><div><dt>Por que importa</dt><dd>Expõe bloqueios e a sequência mínima antes de vários agentes começarem a editar.</dd></div><div><dt>Exemplo</dt><dd><code>fetch → lint → build → test → package</code>, com duração por tarefa.</dd></div><div><dt>Resultado observado</dt><dd>Ordem topológica igual ao exemplo e caminho crítico de <code>9 minutos</code>.</dd></div><div><dt>Gate</dt><dd>ID duplicado, dependência ausente ou ciclo invalidam o plano inteiro.</dd></div><div><dt>Acumula</dt><dd>Reúne parsing exato e elegibilidade antes de promover <code>validate-complete-plan</code>.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/05-cycle-05.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-05.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-06">
+              <div class="workflow-card-top"><span>ciclo 06</span><b>arquivos</b></div>
+              <h3>Planejar renomes em dry-run</h3>
+              <p>Valida um lote de renomes antes de tocar no filesystem, mantendo fontes e destinos dentro do escopo declarado.</p>
+              <dl><div><dt>Por que importa</dt><dd>Transforma uma mutação em plano revisável e reversível antes de tocar nos arquivos.</dd></div><div><dt>Exemplo</dt><dd><code>docs/a.txt</code> e <code>docs/b.txt</code> são destinados a <code>archive/</code>.</dd></div><div><dt>Resultado observado</dt><dd><code>dry_run: true</code>, 2 operações ordenadas e nenhuma mutação no filesystem.</dd></div><div><dt>Gate</dt><dd>Rejeita traversal, barra invertida, fonte ausente e colisão de destino.</dd></div><div><dt>Acumula</dt><dd><code>canonical-root-relative-paths</code>, reutilizado no review e no scanner.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/06-cycle-06.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-06.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-07">
+              <div class="workflow-card-top"><span>ciclo 07</span><b>review</b></div>
+              <h3>Checar um diff unificado com política estreita</h3>
+              <p>Conta arquivos e linhas alteradas em patches de texto do mesmo caminho, sem fingir ser um parser universal de Git.</p>
+              <dl><div><dt>Por que importa</dt><dd>Um gate estreito é verificável; um “parser universal” improvisado cria falsa confiança.</dd></div><div><dt>Exemplo</dt><dd>2 caminhos permitidos, no máximo 2 arquivos e 4 linhas alteradas.</dd></div><div><dt>Resultado observado</dt><dd><code>allowed: true</code>, <code>changed_lines: 4</code> e <code>reasons: []</code>.</dd></div><div><dt>Gate</dt><dd>Diff malformado falha; caminho ou orçamento fora da política produz negação explícita.</dd></div><div><dt>Acumula</dt><dd><code>fail-closed-narrow-policy</code>, exigido pelo scanner do ciclo 10.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/07-cycle-07.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-07.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-08">
+              <div class="workflow-card-top"><span>ciclo 08</span><b>observabilidade</b></div>
+              <h3>Resumir access logs com quantis declarados</h3>
+              <p>Conta métodos e status e calcula p50/p95 pela regra de posto mais próximo, sem serviço externo.</p>
+              <dl><div><dt>Por que importa</dt><dd>Métricas operacionais só ajudam quando todas as linhas obedecem à mesma gramática e regra de quantil.</dd></div><div><dt>Exemplo</dt><dd>5 requisições GET/POST, status 2xx/4xx/5xx e latências fixas.</dd></div><div><dt>Resultado observado</dt><dd><code>GET = 3</code>, <code>POST = 2</code>, <code>p50 = 100</code> e <code>p95 = 400</code> ms.</dd></div><div><dt>Gate</dt><dd>Todas as linhas passam por uma gramática fechada; até linha vazia interrompe a derivação.</dd></div><div><dt>Acumula</dt><dd><code>validate-all-before-derive</code>, reutilizado na migração do ciclo 09.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/08-cycle-08.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-08.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-09">
+              <div class="workflow-card-top"><span>ciclo 09</span><b>migração</b></div>
+              <h3>Normalizar registros v1 e v2</h3>
+              <p>Aceita dois contratos exatos, rejeita campos ambíguos e produz somente a forma canônica v2 ordenada por ID.</p>
+              <dl><div><dt>Por que importa</dt><dd>Uma forma canônica impede que todo consumidor carregue ramificações para versões antigas.</dd></div><div><dt>Exemplo</dt><dd>Grace entra como v1 e Ada como v2.</dd></div><div><dt>Resultado observado</dt><dd>Ambas saem como v2, ordenadas por <code>u-1</code> e <code>u-2</code>.</dd></div><div><dt>Gate</dt><dd>Versão, campos, strings e IDs são validados antes de migrar a coleção.</dd></div><div><dt>Acumula</dt><dd><code>canonical-version-output</code>, uma das três dependências finais.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/09-cycle-09.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-09.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+          <li>
+            <article class="workflow-card" data-workflow="cycle-10">
+              <div class="workflow-card-top"><span>ciclo 10</span><b>segurança</b></div>
+              <h3>Encontrar segredos sintéticos sem vazá-los no relatório</h3>
+              <p>Escaneia arquivos explicitamente fornecidos, reporta posição e categoria e redige cada ocorrência na prévia.</p>
+              <dl><div><dt>Por que importa</dt><dd>Um relatório de segurança não pode repetir o segredo que acabou de detectar.</dd></div><div><dt>Exemplo</dt><dd>3 arquivos; um <code>LABKEY</code>, um <code>LABTOKEN</code> e um arquivo limpo.</dd></div><div><dt>Resultado observado</dt><dd>2 achados; ambas as prévias contêm <code>[REDACTED]</code> e nenhum valor original.</dd></div><div><dt>Gate</dt><dd>Escopo canônico, caminhos únicos e padrões sintéticos fixos; nenhum valor reconhecido chega ao artefato.</dd></div><div><dt>Acumula</dt><dd>Consome três lições anteriores e promove <code>redact-before-reporting</code>.</dd></div></dl>
+              <div class="workflow-links"><a href="workflow_lab/fixtures/10-cycle-10.json">Ver entrada →</a><a href="workflow_lab/evidence/full-run-final/artifacts/cycle-10.json">Ver resultado JSON →</a></div>
+            </article>
+          </li>
+        </ol>
+
+        <div class="workflow-lab-exercise">
+          <div>
+            <span class="proof-label">Exercício · falhar, corrigir, provar</span>
+            <h3>Veja a memória impedir uma dependência inventada</h3>
+            <ol><li>Copie as fixtures para um diretório temporário.</li><li>Troque uma dependência do ciclo 10 por <code>lesson-not-produced</code>.</li><li>Observe a falha sem artefatos; restaure a fixture e rode novamente.</li></ol>
+          </div>
+          <pre><code>export LAB_EXERCISE="$(mktemp -d)"
+cp -R docs/curso/workflow_lab/fixtures "$LAB_EXERCISE/fixtures"
+python3 -c 'import json, os; from pathlib import Path; p=Path(os.environ["LAB_EXERCISE"])/"fixtures/10-cycle-10.json"; d=json.loads(p.read_text()); d["requires"][-1]="lesson-not-produced"; p.write_text(json.dumps(d))'
+python3 docs/curso/workflow_lab/lab.py --fixtures "$LAB_EXERCISE/fixtures" --output "$LAB_EXERCISE/output"
+cp docs/curso/workflow_lab/fixtures/10-cycle-10.json "$LAB_EXERCISE/fixtures/10-cycle-10.json"
+python3 docs/curso/workflow_lab/lab.py --fixtures "$LAB_EXERCISE/fixtures" --output "$LAB_EXERCISE/output"</code></pre>
+        </div>
+        <div class="workflow-proof">
+          <div><span class="proof-label">Resultado observado · dependência inválida</span><p>O primeiro comando retorna <code>1</code> com <code>missing requirement lesson-not-produced for cycle-10</code>. Nenhum artefato, ledger ou relatório é persistido.</p></div>
+          <div><span class="proof-label">Resultado observado · fixture restaurada</span><p>O segundo comando retorna <code>0</code>, conclui 11 ciclos, cria 10 artefatos JSON e registra 11 linhas no ledger. O relatório continua rotulado como projeção derivada.</p></div>
+        </div>
+        <div class="workflow-links"><a href="workflow_lab/SPEC.md">Comparar os 11 contratos →</a><a href="workflow_lab/VALIDACAO.md">Ver evidência e limites →</a><a href="workflow_lab/skills/executar-workflows-cumulativos.md">Abrir o índice das skills →</a><a href="#skills-workflow">Entender o fluxo permanente →</a></div>
+      </section>
+
+      <section class="workflow-catalog-section shell" id="skills-workflow" aria-labelledby="skills-workflow-title">
+        <div class="section-kicker">Ativos operacionais · três responsabilidades</div>
+        <div class="section-heading-row">
+          <div>
+            <h2 id="skills-workflow-title">Skill pack permanente</h2>
+            <p class="section-lead">O laboratório deixa de depender de uma conversa específica: construir, verificar e promover passam a ter contratos versionados e deliberadamente separados.</p>
+          </div>
+          <a class="text-link" href="workflow_lab/skills/executar-workflows-cumulativos.md">Abrir índice humano →</a>
+        </div>
+
+        <div class="card-grid three">
+          <article class="workflow-card" data-skill="workflow-lab-build">
+            <div class="workflow-card-top"><span>01 · produtor</span><b>Build</b></div>
+            <h3><code>workflow-lab-build</code></h3>
+            <p>Use ao adicionar ou alterar um ciclo. A skill possui fixture, contrato, handler e teste focado em um loop red → green.</p>
+            <dl><div><dt>Por que importa</dt><dd>Limita o produtor à menor mudança executável e impede que ele aprove a própria entrega.</dd></div><div><dt>Gate</dt><dd>Teste focado e suíte do laboratório verdes, diff restrito e grafo de <code>requires</code> válido.</dd></div><div><dt>Stop</dt><dd>Não atualiza evidência final, HTML nem emite veredito independente.</dd></div></dl>
+            <div class="workflow-links"><a href="../../.agents/skills/workflow-lab-build/SKILL.md">Ler a skill canônica →</a></div>
+          </article>
+          <article class="workflow-card" data-skill="workflow-lab-verify">
+            <div class="workflow-card-top"><span>02 · verificador</span><b>Verify</b></div>
+            <h3><code>workflow-lab-verify</code></h3>
+            <p>Use após uma mudança ou antes de publicar resultados. A skill é somente leitura e executa a prova em duas saídas temporárias novas.</p>
+            <dl><div><dt>Por que importa</dt><dd>Separa evidência de produção e detecta regressão, diferença de bytes ou dependência escondida do diretório atual.</dd></div><div><dt>Gate</dt><dd>61 testes, CLI canônico, 12 arquivos idênticos, lições resolvidas, outro <code>cwd</code> e validador do curso.</dd></div><div><dt>Stop</dt><dd>Entrega PASS/FAIL com comandos e divergências; nunca corrige código ou evidência.</dd></div></dl>
+            <div class="workflow-links"><a href="../../.agents/skills/workflow-lab-verify/SKILL.md">Ler a skill canônica →</a></div>
+          </article>
+          <article class="workflow-card" data-skill="workflow-lab-maintain">
+            <div class="workflow-card-top"><span>03 · promotor</span><b>Maintain</b></div>
+            <h3><code>workflow-lab-maintain</code></h3>
+            <p>Use somente depois de um Verify independente em PASS. A skill sincroniza contrato, evidência durável, ensinamentos, índice e manifesto.</p>
+            <dl><div><dt>Por que importa</dt><dd>Evita que página, relatório e skills contem uma história diferente do runtime realmente verificado.</dd></div><div><dt>Gate</dt><dd>Zero divergências entre spec, fixtures, registry, evidência, HTML e documentação; depois, novo Verify independente.</dd></div><div><dt>Stop</dt><dd>Defeito de runtime volta para Build; Maintain não reescreve documentação para esconder uma falha.</dd></div></dl>
+            <div class="workflow-links"><a href="../../.agents/skills/workflow-lab-maintain/SKILL.md">Ler a skill canônica →</a></div>
+          </article>
+        </div>
+
+        <div class="permanent-map" role="img" aria-label="Fluxo permanente das skills"><span>Build produz</span><b>→</b><span>Verify prova em outro contexto</span><b>→</b><span>Maintain promove</span><b>→</b><span>Novo Verify confirma</span></div>
+        <div class="callout callout-warn"><strong>Como manter funcionando</strong><p>As skills não rodam sozinhas nem substituem julgamento. Invoque Build em mudanças de runtime, Verify após qualquer mudança e Maintain apenas para promover um estado que já recebeu PASS independente.</p></div>
+      </section>
+
       <section class="final-section shell" id="passo-a-passo" aria-labelledby="passo-title">
         <div class="section-kicker">Depois da aula</div>
         <h2 id="passo-title">Transforme o aprendizado em capacidade permanente</h2>
@@ -597,7 +822,7 @@ python3 docs/curso/validate_course.py</code></pre></div>
           <article class="final-card"><span>03</span><h3>Montar agentes especializados</h3><ol><li>Extraia uma repetição que já funciona.</li><li>Defina entrada, permissão e saída.</li><li>Dê ao agente somente o contexto necessário.</li><li>Crie um gate de revisão.</li><li>Escalone para humano em decisões consequentes.</li></ol></article>
           <article class="final-card"><span>04</span><h3>Criar ativos permanentes</h3><ol><li>Prompt que se repete vira template.</li><li>Checklist vira skill.</li><li>Decisão vira ADR.</li><li>Erro recorrente vira teste ou regra.</li><li>Spec e evidência ficam versionadas no repositório.</li></ol></article>
         </div>
-        <div class="permanent-map" aria-label="Mapa de ativos permanentes"><span>Ideia</span><b>→</b><span>PRD</span><b>→</b><span>SPEC</span><b>→</b><span>Plano</span><b>→</b><span>Testes</span><b>→</b><span>Skill</span><b>→</b><span>Próxima feature melhor</span></div>
+        <div class="permanent-map" role="img" aria-label="Mapa de ativos permanentes"><span>Ideia</span><b>→</b><span>PRD</span><b>→</b><span>SPEC</span><b>→</b><span>Plano</span><b>→</b><span>Testes</span><b>→</b><span>Skill</span><b>→</b><span>Próxima feature melhor</span></div>
       </section>
 
       <section class="start-section shell" aria-labelledby="start-title">
