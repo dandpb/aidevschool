@@ -36,7 +36,10 @@ class TestFacade(TrackFixtureMixin):
                 f"Read model gerado: {tmp}/lessons.ts\n",
                 result.stdout,
             )
-            self.assertTrue((Path(tmp) / "lessons.ts").is_file())
+            self.assertEqual(
+                (TRACK_DIR.parent.parent / "engines/literacyDojo/src/data/generated/lessons.ts").read_bytes(),
+                (Path(tmp) / "lessons.ts").read_bytes(),
+            )
 
     def test_direct_script_invalid_track_writes_only_stderr(self):
         with tempfile.TemporaryDirectory() as tmp:

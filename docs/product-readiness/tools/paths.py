@@ -13,17 +13,11 @@ EXCLUDED_PARTS: Final = {
     "coverage",
     "test-results",
     "playwright-report",
-    ".logs",
     ".codegraph",
     "graphify-out",
     "__pycache__",
 }
-GENERATED_MARKERS: Final = (
-    "AUTO-GENERATED",
-    "AUTO-GERADO",
-    "@substrate-generated",
-    "DO NOT EDIT BY HAND",
-)
+GENERATED_MARKERS: Final = ("AUTO-GENERATED", "AUTO-GERADO", "@substrate-generated")
 
 
 def is_generated_file(path: Path) -> bool:
