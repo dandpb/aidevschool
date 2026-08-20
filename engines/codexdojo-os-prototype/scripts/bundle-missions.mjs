@@ -23,6 +23,9 @@ const MISSIONS = [
 const run = (cmd, args, cwd) =>
   execFileSync(cmd, args, { cwd, stdio: 'inherit', env: process.env })
 
+run('npm', ['ci', '--no-audit', '--no-fund'], resolve(enginesRoot, 'literacyDojo'))
+run('corepack', ['pnpm', 'install', '--frozen-lockfile'], resolve(enginesRoot, 'voxelDojo'))
+
 for (const { name, cwd, prebuild } of MISSIONS) {
   const source = resolve(enginesRoot, cwd)
   if (!existsSync(source)) throw new Error(`mission runtime not found: ${source}`)
@@ -30,6 +33,7 @@ for (const { name, cwd, prebuild } of MISSIONS) {
   const outDir = resolve(source, 'dist-hosted')
   console.log(`\n▸ bundling ${name} from ${cwd}`)
   if (prebuild) run(prebuild[0], prebuild[1], source)
+
   // --base makes the runtime's own asset URLs resolve under the OS subpath.
   run('npx', ['vite', 'build', `--base=/apps/${name}/`, '--outDir', outDir, '--emptyOutDir'], source)
 
