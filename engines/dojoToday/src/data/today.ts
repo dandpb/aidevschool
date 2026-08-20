@@ -1,10 +1,10 @@
 // AUTO-GERADO por learner/substrate/adapters/dojotoday.py — NÃO EDITAR À MÃO.
 // Fonte: learner/learning_state.yaml + scheduler learner.substrate.scheduling.
-// Regenerado em 2026-08-17.
+// Regenerado em 2026-08-20.
 import type { TodaySnapshot } from "../types";
 
 export const today: TodaySnapshot = {
-  "asOf": "2026-08-17",
+  "asOf": "2026-08-20",
   "streak": {
     "current": 0,
     "longest": 2,
@@ -26,7 +26,7 @@ export const today: TodaySnapshot = {
     {
       "unitId": "U0-sonda-rate-limiter-robustness",
       "title": "GATEKEEPER: token-bucket rate limiter robustness",
-      "dueIn": "overdue 39d",
+      "dueIn": "overdue 42d",
       "reason": "overdue",
       "gameDir": "engines/pixelDojo",
       "project": "01_rate_limiter"
@@ -34,8 +34,8 @@ export const today: TodaySnapshot = {
     {
       "unitId": "U2-key-value-store",
       "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      "dueIn": "today",
-      "reason": "due",
+      "dueIn": "overdue 3d",
+      "reason": "overdue",
       "gameDir": "engines/voxelDojo/game-02-warehouse",
       "project": "02_key_value_store"
     }

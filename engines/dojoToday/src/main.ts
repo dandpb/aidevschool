@@ -114,7 +114,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
         ${playDetails(a.gameDir)}
         ${
           a.num
-            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${a.num}">▶ Jogar aqui (inline)</button></div>
+            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}">▶ Jogar aqui (inline)</button></div>
                <div id="play-inline-wrap" class="play-inline-wrap" hidden><iframe id="play-inline-frame" class="play-inline-frame" title="Jogo da missão"></iframe></div>`
             : ""
         }
@@ -183,7 +183,7 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
       return `
         <li class="${cls}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
-          <span class="track-num">${n.num}</span>
+          <span class="track-num">${escapeHtml(n.num)}</span>
           <span class="track-title">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;

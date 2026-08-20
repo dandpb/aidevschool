@@ -182,6 +182,7 @@ export function MissionShell({
     session.phase === 'completed' && completionStatus === 'saved' && verificationFinished
   const returnBlocked = session.phase === 'completed' && !canReturn
 
+
   return (
     <main className="journey-page mission-page">
       <header className="mission-header">
