@@ -161,33 +161,41 @@ def main(args: list[str] | None = None) -> int:
                 print(f"INVALID: {error}", file=sys.stderr)
             return 1
         candidate = _candidate_path(report_directories)
-        decisions = ()
+        candidate_decisions = ()
         if candidate is not None:
             try:
                 request = load_assessment_request(candidate)
-                decisions = propose_assessment(domain, request, REPO_ROOT).assessment.decisions
+                candidate_decisions = propose_assessment(domain, request, REPO_ROOT).assessment.decisions
             except EvidenceError as error:
                 print(f"INVALID: {error}", file=sys.stderr)
                 return 1
-        else:
-            now = datetime.now(UTC)
-            decisions = tuple(
-                current_decision(domain, use_case, REPO_ROOT, now) for use_case in domain.use_cases
-            )
-        blocked = tuple(
-            decision
-            for decision in decisions
-            if decision.outcome in {DecisionOutcome.BLOCKED, DecisionOutcome.STALE}
+        candidate_by_use_case = {decision.use_case_id: decision for decision in candidate_decisions}
+        claimed_outcomes = {
+            DecisionOutcome.PASS,
+            DecisionOutcome.CONDITIONAL_FOLLOW_UP,
+            DecisionOutcome.DOWNGRADED,
+        }
+        rejected_outcomes = {DecisionOutcome.BLOCKED, DecisionOutcome.STALE}
+        now = datetime.now(UTC)
+        published_decisions = tuple(
+            current_decision(domain, use_case, REPO_ROOT, now) for use_case in domain.use_cases
         )
-        if blocked:
-            for decision in blocked:
+        unsupported = tuple(
+            (published, candidate_by_use_case[published.use_case_id])
+            for published in published_decisions
+            if published.outcome in claimed_outcomes
+            and published.use_case_id in candidate_by_use_case
+            and candidate_by_use_case[published.use_case_id].outcome in rejected_outcomes
+        )
+        if unsupported:
+            for published, evaluated in unsupported:
                 print(
-                    f"BLOCKED: {decision.use_case_id}: {decision.outcome}; "
-                    f"reasons={'; '.join(decision.reasons)}",
+                    f"UNSUPPORTED: {published.use_case_id}: published={published.outcome}; "
+                    f"evaluated={evaluated.outcome}; reasons={'; '.join(evaluated.reasons)}",
                     file=sys.stderr,
                 )
             return 1
-        print("Product-readiness claims have no blocked or stale decisions.")
+        print("Product-readiness claims are fail-closed against the candidate report.")
         return 0
     if len(arguments) >= 5 and arguments[:2] == ["producer-report", "--engine"] and arguments[3] == "--output":
         scenario_ids = ()
