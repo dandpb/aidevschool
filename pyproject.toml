@@ -45,6 +45,8 @@ testpaths = [
   "curriculum/_shared/tests",
   # AI Literacy content-contract suite (unittest-style, also runs standalone).
   "curriculum/ai-literacy/tools/tests",
+  # Product-readiness canonical-source, validation, and generated-view checks.
+  "docs/product-readiness/tests",
 ]
 python_files = ["test_*.py"]
 

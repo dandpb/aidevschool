@@ -1,0 +1,76 @@
+schemaVersion: 1
+assessmentId: 2026-08-20-f1b07bc
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-20T15:30:00Z'
+revalidateBy: '2026-09-20'
+gitSha: f1b07bc854330322a3b2b4f6638a0eb1acd9e02f
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario literacy-happy-path lacks independent evidence
+  - scenario literacy-retry lacks independent evidence
+  - scenario literacy-resume lacks independent evidence
+  resultRunIds:
+  - 2026-08-20T15:26:51Z-literacy-happy-path-f1b07bc8
+  - 2026-08-20T15:26:51Z-literacy-resume-f1b07bc8
+  - 2026-08-20T15:26:51Z-literacy-retry-f1b07bc8
+- useCaseId: os-literacy-guided-mission
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario os-literacy-hosted-mission lacks independent evidence
+  - scenario os-verification-recovery lacks independent evidence
+  - missing promoted result for os-literacy-returning-device
+  resultRunIds:
+  - 2026-08-20T15:27:01Z-os-literacy-hosted-mission-f1b07bc8
+  - 2026-08-20T15:27:01Z-os-verification-recovery-f1b07bc8
+- useCaseId: os-voxel-guided-missions
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario os-voxel-hosted-missions lacks independent evidence
+  - missing promoted result for os-renderer-accessibility-recovery
+  - missing promoted result for os-voxel-returning-device
+  resultRunIds:
+  - 2026-08-20T15:27:01Z-os-voxel-hosted-missions-f1b07bc8
+- useCaseId: os-returning-learner
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario os-onboarding-track-choice lacks independent evidence
+  - missing promoted result for os-returning-recovery
+  - missing promoted result for os-returning-device
+  resultRunIds:
+  - 2026-08-20T15:27:01Z-os-onboarding-track-choice-f1b07bc8
+- useCaseId: dojotoday-daily-guidance
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - missing promoted result for dojotoday-active-unit-guidance
+  - missing promoted result for dojotoday-read-only-boundary
+  resultRunIds: []
+- useCaseId: pixelquest-evidence-encounter
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario pixelquest-encounter-evidence lacks independent evidence
+  - missing promoted result for pixelquest-evidence-recovery
+  resultRunIds:
+  - 2026-08-20T15:23:50Z-pixelquest-encounter-evidence-f1b07bc8
+- useCaseId: voxel-standalone-learning-loop
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario voxel-standalone-loop lacks independent evidence
+  - missing promoted result for voxel-accessible-renderer
+  resultRunIds:
+  - 2026-08-20T15:25:27Z-voxel-standalone-loop-f1b07bc8
+- useCaseId: minitown-explore-only
+  outcome: blocked
+  grantedTier: null
+  reasons:
+  - scenario minitown-explore-only lacks independent evidence
+  resultRunIds:
+  - 2026-08-20T15:26:34Z-minitown-explore-only-f1b07bc8

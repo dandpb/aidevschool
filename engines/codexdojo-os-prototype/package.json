@@ -15,7 +15,8 @@
     "test:analytics:coverage": "vitest run src/analytics/events.test.ts --coverage.provider=v8 --coverage.include=src/analytics/events.ts --coverage.thresholds.lines=100 --coverage.thresholds.branches=100 --coverage.thresholds.functions=100 --coverage.thresholds.statements=100",
     "complexity:analytics": "node --test scripts/check-ts-complexity.test.mjs && node scripts/check-ts-complexity.mjs src/analytics/events.ts scripts/check-ts-complexity.mjs --max 8",
     "test:smoke": "playwright test",
-    "test:smoke:pilot": "npm run build:pilot && playwright test --config=playwright.pilot.config.ts",
+    "test:smoke:pilot": "npm run build:pilot && playwright test --config=playwright.pilot.config.ts && node scripts/readiness-report.mjs",
+    "readiness:report": "node scripts/readiness-report.mjs",
     "lint": "biome lint src bridge tests tests-pilot vite.config.ts playwright.config.ts playwright.pilot.config.ts"
   },
   "dependencies": {
