@@ -27,6 +27,22 @@ def test_fingerprint_paths_changes_with_declared_content(tmp_path: Path) -> None
     assert fingerprint_paths(tmp_path, (RepoPath("declared.txt"),)) != before
 
 
+def test_fingerprint_paths_ignores_generated_test_results(tmp_path: Path) -> None:
+    # Given a declared engine root and no browser output yet
+    engine = tmp_path / "engine"
+    engine.mkdir()
+    (engine / "source.ts").write_text("source", encoding="utf-8")
+    before = fingerprint_paths(tmp_path, (RepoPath("engine"),))
+
+    # When a generated browser result is added under the engine root
+    output = engine / "test-results" / "run.json"
+    output.parent.mkdir()
+    output.write_text("generated", encoding="utf-8")
+
+    # Then the source fingerprint remains stable
+    assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
+
+
 def test_use_case_fingerprints_are_canonical_sha256_values() -> None:
     # Given the standalone LiteracyDojo use case
     domain = load_domain(READINESS_ROOT)
