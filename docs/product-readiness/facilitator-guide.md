@@ -1,11 +1,11 @@
 # Facilitator Guide
 
 This guide covers `literacy-standalone-first-lesson`,
-`os-literacy-guided-mission`, `os-voxel-guided-missions`, and
-`os-returning-learner`. It owns cross-product preparation, observation,
-recovery, and evaluation. Engine-local commands and diagnostics remain owned by
-the [LiteracyDojo README](../../engines/literacyDojo/README.md) and the
-[codexDojo OS README](../../engines/codexdojo-os-prototype/README.md).
+`os-literacy-guided-mission`, `os-voxel-guided-missions`,
+`os-returning-learner`, `dojotoday-daily-guidance`,
+`pixelquest-evidence-encounter`, and `voxel-standalone-learning-loop`. It owns
+cross-product preparation, observation, recovery, and evaluation. Engine-local
+commands and diagnostics remain in the linked engine READMEs.
 
 ## Standalone LiteracyDojo
 
@@ -80,3 +80,50 @@ track, enter and leave the hosted mission boundary, explain the result and next
 action, resume same-device state, and distinguish local completion from
 verification and mastery. Any false status, inaccessible core path, unsupported
 host failure, or undocumented repository intervention is a blocking gap.
+
+## Programmer journeys
+
+### Prepare
+
+- Regenerate the shared learner projection before dojoToday sessions and use
+  the [dojoToday README](../../engines/dojoToday/README.md) for local checks.
+- dojoToday currently has self-check, lint, and build validation rather than a
+  browser producer report. Keep its learner-understanding and stale-projection
+  branches observed/unassessed until that evidence is recorded.
+- Run the canonical PixelQuest browser smoke and use the
+  [PixelDojo runbook](../../engines/pixelDojo/AGENTS.md) for evidence locations
+  and engine diagnostics.
+- Select the exact voxelDojo catalog packages in scope, run each package's
+  browser smoke, and use the [voxelDojo README](../../engines/voxelDojo/README.md)
+  for package-owned launch details.
+- State before the session that guidance is read-only, game output is raw
+  evidence, and only a separate verifier can accept evidence or grant mastery.
+- The producer reports intentionally cover only browser assertions exercised by
+  the smoke commands: the PixelQuest encounter and the voxelDojo catalog loop.
+  Replay/missing-evidence and accessible-renderer branches have no dedicated
+  browser producer report in this phase; record them as observed or
+  document-reviewed and keep them unassessed until that proof exists.
+
+### Observe without leading
+
+Ask the dojoToday learner to identify due reviews, the active unit, and the next
+action. Ask each game learner to complete the loop, locate the emitted record,
+and explain who decides whether it is accepted. Record the exact package,
+browser, renderer, evidence path, recovery attempt, and intervention.
+
+### Recover and escalate
+
+| Visible symptom | Safe recovery | Escalate when |
+| --- | --- | --- |
+| dojoToday view is stale or missing | Regenerate the canonical projection, reload, and retain the read-only boundary. | Canonical learner state cannot be read or the generated view still disagrees. |
+| PixelQuest reports success but evidence is missing | Replay the encounter once and inspect the declared evidence channels. | No valid record appears or the game implies mastery without verification. |
+| A voxel game fails to render | Use its declared accessible projection when that preserves the core interaction. | Neither renderer supports the loop or the fallback changes the evidence contract. |
+| One voxel package passes while another fails | Record results per package and keep the aggregate journey incomplete. | A passing sibling is presented as proof for the failed package. |
+
+### Evaluate
+
+The journey passes observation only when dojoToday remains guidance-only, the
+selected game completes its documented loop, the learner locates raw evidence,
+and the learner names the independent verifier as the next authority. Missing
+evidence, stale guidance, inaccessible core interaction, or any self-granted
+mastery claim is a blocking gap.

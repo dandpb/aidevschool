@@ -1,9 +1,10 @@
 # Student Guide
 
 This guide covers `literacy-standalone-first-lesson`,
-`os-literacy-guided-mission`, `os-voxel-guided-missions`, and
-`os-returning-learner`. It is organized by learner goal rather than repository
-component.
+`os-literacy-guided-mission`, `os-voxel-guided-missions`,
+`os-returning-learner`, `dojotoday-daily-guidance`,
+`pixelquest-evidence-encounter`, and `voxel-standalone-learning-loop`. It is
+organized by learner goal rather than repository component.
 
 ## Standalone LiteracyDojo
 
@@ -71,3 +72,58 @@ projection and keyboard controls. Stop and ask a facilitator when neither the
 Continue to the next mission displayed by the OS on the same device. For a Dev
 mission, submit raw evidence to the separate verifier when that service is
 available. The OS does not accept its own evidence or grant canonical mastery.
+
+## Programmer journeys
+
+These validated journeys help you find today's work or produce raw evidence.
+They are not customer-ready account services, and none of them can verify its
+own output or mark a unit `mastered`.
+
+The current automated proof covers the completed PixelQuest encounter and the
+declared voxelDojo catalog smoke. Replay/recovery and accessible-renderer paths
+remain facilitator-observed or document-review scenarios; treat them as
+unassessed until that proof is recorded.
+
+### Read today's guidance in dojoToday
+
+Open the generated dojoToday view to see due reviews, your active unit, and the
+documented next action. The view reads the canonical learner projection. It
+does not schedule, evaluate, or write learner state.
+
+If the view is stale or missing, ask a facilitator to regenerate the shared
+projection. Stop if the canonical state is unavailable; don't use an old view
+as proof of current progress. Follow the displayed game or next action when the
+projection is current.
+
+dojoToday currently has a self-check and build validation, not a browser
+producer report. Treat the learner-understanding and stale-projection branches
+as unassessed until a facilitator records them separately.
+
+### Produce PixelQuest evidence
+
+Use the [PixelQuest launch instructions](../../engines/pixelDojo/pixel-quest/README.md)
+from a desktop browser with keyboard input. Complete the documented encounter,
+then locate the emitted `EVIDENCE` record or `.logs/evidence.ndjson` artifact.
+That record is raw evidence, not verifier acceptance or mastery.
+
+If evidence is missing, replay the encounter once and inspect the evidence
+channel again. A screenshot or success message is not a substitute. Stop and
+ask a facilitator when the replay still emits no valid record. Your supported
+next action is to hand the record to the independent verifier. The replay
+branch has no dedicated browser producer report in this phase, so do not treat
+the replay itself as validated until a facilitator observes it.
+
+### Complete a standalone voxelDojo loop
+
+Choose a package from the [voxelDojo catalog](../../engines/voxelDojo/README.md),
+follow that package's launch instructions, and complete its deterministic
+learning loop. Locate the emitted raw evidence before you leave the game. A
+passing game validates only that declared package; it says nothing about its
+siblings and does not grant mastery.
+
+If WebGL is unavailable, use the game's declared accessible projection when it
+preserves the core interaction. Stop when neither renderer supports the loop.
+Hand valid raw evidence to the independent verifier, or exit at that unsupported
+boundary without claiming completion. The accessible-renderer branch has no
+dedicated browser producer report in this phase; keep it unassessed until it is
+observed and recorded separately.

@@ -57,7 +57,14 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
+      - run: pnpm typecheck
       - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pixeldojo-readiness-${{ github.sha }}
+          path: engines/pixelDojo/test-results/readiness
 
   voxeldojo:
     name: voxelDojo (TS)
@@ -82,6 +89,12 @@ jobs:
       - run: pnpm test
       - run: pnpm typecheck
       - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voxeldojo-readiness-${{ github.sha }}
+          path: engines/voxelDojo/test-results/readiness
 
   codexdojo-os:
     name: codexdojo-os (TS)
@@ -313,6 +326,9 @@ jobs:
         run: pnpm --filter ${{ matrix.game }} typecheck
       - name: build
         run: pnpm --filter ${{ matrix.game }} build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: smoke
+        run: pnpm --filter ${{ matrix.game }} smoke
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — pixelDojo `games/*` siblings. The
   # canonical `pixel-quest/` is already covered by the root `pixeldojo` job

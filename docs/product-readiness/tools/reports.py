@@ -66,6 +66,8 @@ def emit_engine_reports(
     output_directory: Path,
 ) -> tuple[Path, ...]:
     output_directory.mkdir(parents=True, exist_ok=True)
+    for path in output_directory.glob("*.json"):
+        path.unlink()
     use_cases = {use_case.id: use_case for use_case in domain.use_cases}
     scenarios = tuple(
         scenario
@@ -77,6 +79,11 @@ def emit_engine_reports(
     changed: list[Path] = []
     for scenario in scenarios:
         use_case = use_cases[scenario.use_case_id]
+        automated_assertions = tuple(
+            assertion for assertion in scenario.assertions if str(assertion.evidence) == "playwright"
+        )
+        if not automated_assertions:
+            continue
         report: ProducerReport = {
             "schemaVersion": 1,
             "scenarioId": str(scenario.id),
@@ -89,8 +96,7 @@ def emit_engine_reports(
             "manualFingerprint": str(manual_fingerprint(domain, use_case)),
             "assertions": [
                 {"id": assertion.id, "outcome": "pass", "evidence": str(assertion.evidence)}
-                for assertion in scenario.assertions
-                if str(assertion.evidence) == "playwright"
+                for assertion in automated_assertions
             ],
             "artifacts": _artifact_facts(repo_root, scenario),
             "gaps": [],

@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: dojotoday-active-unit-guidance
+useCaseId: dojotoday-daily-guidance
+kind: happy-path
+execution: mixed
+startState: current-generated-learner-projection
+steps: [open-daily-view, inspect-due-reviews, inspect-active-unit, follow-next-action]
+assertions:
+  - id: schedule-and-active-unit-are-readable
+    severity: high
+    evidence: playwright
+    claim: The generated view presents due reviews, the active unit, and a usable next action.
+  - id: learner-understands-guidance-only
+    severity: high
+    evidence: observation
+    claim: The learner understands that dojoToday guides but does not evaluate work.
+automation:
+  workingDirectory: engines/dojoToday
+  argv: [npm, run, selfcheck]
+sourcePaths: [engines/dojoToday/src/, engines/dojoToday/tools/selfcheck.py]

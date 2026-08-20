@@ -17,13 +17,15 @@ READINESS_ROOT = REPO_ROOT / "docs" / "product-readiness"
 
 
 def test_load_domain_parses_closed_typed_records() -> None:
-    # Given canonical Phase 1 readiness files
+    # Given the canonical readiness files
     # When the domain is loaded
     domain = load_domain(READINESS_ROOT)
 
     # Then the intended tier is represented by the closed enum
     assert domain.use_cases[0].intended_tier is ReadinessTier.CUSTOMER_READY
     assert tuple(scenario.id for scenario in domain.scenarios) == (
+        "dojotoday-active-unit-guidance",
+        "dojotoday-read-only-boundary",
         "literacy-happy-path",
         "literacy-resume",
         "literacy-retry",
@@ -36,6 +38,10 @@ def test_load_domain_parses_closed_typed_records() -> None:
         "os-verification-recovery",
         "os-voxel-hosted-missions",
         "os-voxel-returning-device",
+        "pixelquest-encounter-evidence",
+        "pixelquest-evidence-recovery",
+        "voxel-accessible-renderer",
+        "voxel-standalone-loop",
     )
 
 
