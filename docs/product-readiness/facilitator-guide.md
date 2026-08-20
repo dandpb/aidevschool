@@ -3,7 +3,8 @@
 This guide covers `literacy-standalone-first-lesson`,
 `os-literacy-guided-mission`, `os-voxel-guided-missions`,
 `os-returning-learner`, `dojotoday-daily-guidance`,
-`pixelquest-evidence-encounter`, and `voxel-standalone-learning-loop`. It owns
+`pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, and
+`minitown-explore-only`. It owns
 cross-product preparation, observation, recovery, and evaluation. Engine-local
 commands and diagnostics remain in the linked engine READMEs.
 
@@ -35,6 +36,47 @@ Record the scenario outcome, visible failures, browser/device context, and any i
 ### Evaluate
 
 The journey passes observation only when the learner can start without repository knowledge, use feedback and retry, reach a local completed result, explain that it is not mastery, and name the next supported action. Record any critical or high gap as blocking; documentation is not a workaround for a broken core or recovery journey.
+
+## Experimental: miniTown
+
+### Prepare
+
+- Label miniTown as **experimental** and **explore-only** before launch. It is not
+  a lesson, a progression route, or a customer-ready product promise.
+- Prepare the local route and supported browser with the
+  [miniTown README](../../engines/miniTown/README.md). Do not copy its setup or
+  diagnostic commands into this guide.
+- Tell the learner explicitly that miniTown does not save learner progress,
+  emit learning evidence, provide progression, or mark mastery. If the learner
+  wants guided practice, route them to the [student guide's standalone
+  LiteracyDojo journey](student-guide.md#standalone-literacydojo).
+
+### Observe without leading
+
+Ask the learner to open the prepared route, explore the town, describe what they
+can observe, and say whether anything was completed or saved. Do not prompt them
+to treat the HUD or the `window.__miniTown` inspection contract as evidence.
+Record the browser, renderer outcome, visible runtime failures, and any
+intervention. This observation checks the experimental promise only; it does not
+grant a readiness tier or learner mastery.
+
+### Recover and escalate
+
+| Visible symptom | Safe recovery | Escalate when |
+| --- | --- | --- |
+| Local route does not load | Confirm the prepared route and retry once using the engine README's local checks. | The route remains unavailable or requires undocumented repository intervention. |
+| Canvas or Three.js renderer fails | Confirm the supported browser and record the experiment as unavailable; do not invent a completion path. | The learner cannot explore the declared surface or the failure is reproducible on the supported setup. |
+| Learner asks where progress or evidence went | Explain that miniTown has no learner persistence, progression, evidence, or mastery contract. | Any guide, UI, or facilitator statement implies that exploration was completed, saved, verified, or mastered. |
+| Learner wants a guided outcome | Exit miniTown and route to [standalone LiteracyDojo](student-guide.md#standalone-literacydojo). | The supported learner route or its entry promise is unavailable. |
+
+### Evaluate
+
+The experimental journey passes observation only when the route launches, the
+learner can explore the simulation, and both people understand that miniTown
+offers no completion, persistence, progression, evidence, or mastery promise.
+Keep it explicitly experimental even when the smoke passes. A passing miniTown
+run cannot inherit the customer-ready or validated-journey tier from LiteracyDojo,
+the codexDojo OS, or any other engine.
 
 ## codexDojo OS guided journey
 

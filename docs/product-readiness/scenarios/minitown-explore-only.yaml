@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: minitown-explore-only
+useCaseId: minitown-explore-only
+kind: happy-path
+execution: mixed
+startState: clean-local-route
+steps: [launch-local-route, observe-town-simulation, confirm-explore-only-boundary, exit-without-learner-write]
+assertions:
+  - id: town-renders-and-advances
+    severity: high
+    evidence: playwright
+    claim: The local route renders the miniTown canvas and HUD, and the public simulation advances without runtime errors.
+  - id: experimental-boundary-is-understood
+    severity: high
+    evidence: document-review
+    claim: The student and facilitator routes state that miniTown is explore-only and make no promise of completion, persistence, progression, evidence, or mastery.
+automation:
+  workingDirectory: engines/miniTown
+  argv: [pnpm, run, smoke]
+sourcePaths: [engines/miniTown/src/, engines/miniTown/playwright/, engines/miniTown/README.md]
