@@ -1,0 +1,9 @@
+{
+  "name": "tempo-demo-revisar",
+  "version": "1.0.0",
+  "description": "CLI de time tracking — projeto exemplo do workflow spec-first",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}

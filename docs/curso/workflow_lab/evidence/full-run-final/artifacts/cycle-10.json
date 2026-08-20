@@ -1,0 +1,1 @@
+{"files_scanned":3,"findings":[{"column":23,"line":1,"path":"src/a.py","pattern":"lab-token","preview":"Authorization: Bearer [REDACTED]"},{"column":10,"line":1,"path":"src/z.py","pattern":"lab-key","preview":"lab_key =[REDACTED]"}],"findings_count":2}

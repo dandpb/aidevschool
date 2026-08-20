@@ -46,12 +46,26 @@ contributor and engine-inspection tools. They are not the default learner entry,
 and launching an engine there does not grant mission, verification, or mastery
 authority.
 
+## Audience-first routes
+
+Use the audience guide before opening engine internals:
+
+| Audience | Start with | Then use |
+| --- | --- | --- |
+| Student | [Student guide](../product-readiness/student-guide.md) | The owning engine README only when the selected journey requires local setup. |
+| Facilitator | [Facilitator guide](../product-readiness/facilitator-guide.md) | This handbook and the owning engine README for preparation and technical recovery. |
+| Readiness reviewer | [Generated readiness matrix](../product-readiness/README.md) | The canonical inventory, scenarios, promoted evidence, and independent assessments. |
+
+The guides own the cross-product promise and visible status language. They do not
+replace engine-local setup or grant learner mastery.
+
 ## Choose a route
 
 | Audience | First learner surface | Then read |
 | --- | --- | --- |
-| Nontechnical learner | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **IA Prática**; LiteracyDojo runs the bounded lesson activity | [Onboarding](02_onboarding.md) |
-| Programmer | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **Trilha Dev**; voxelDojo runs the first chapter simulations | [Curriculum](07_curriculum.md) |
+| Nontechnical learner | [Student guide — IA Prática](../product-readiness/student-guide.md#codexdojo-os-guided-journey); LiteracyDojo runs the bounded lesson activity | [Onboarding](02_onboarding.md) and the owning engine README |
+| Programmer | [Student guide — programmer journeys](../product-readiness/student-guide.md#programmer-journeys); dojoToday, PixelQuest, voxelDojo, or the OS provide bounded routes | [Curriculum](07_curriculum.md) and the owning engine README |
+| Facilitator | [Facilitator guide](../product-readiness/facilitator-guide.md) | This handbook for relationships, then the owning engine guide |
 | Contributor | [Documentation map](../DOCUMENTATION.md) | Architecture, onboarding, then the owning engine guide |
 
 ## Read in this order
@@ -64,7 +78,7 @@ authority.
 | 3b | [Engine — codexdojo-os-prototype](03b_engine_codexdojo-os-prototype.md) | Work on the canonical educational OS experience and its read-only learner projection. |
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
-| 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the cozy town-sim: the level-0 entry surface for the non-technical audience. |
+| 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the explicitly experimental, explore-only level-0 surface; use the student guide before engine details. |
 | 4d | [Engine — LiteracyDojo](12_engine_literacyDojo.md) | Work on the local-first microlearning experience for people who do not code. |
 | 4e | [Engine — dojoToday](13_engine_dojoToday.md) | Work on the read-only "lesson for today" surface for programmers and its generated substrate read model. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
@@ -129,6 +143,9 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](../../engines/codexDojo/ecosystem/MANIFEST.md) |
 | The product vision (central idea) | [`docs/VISION.md`](../VISION.md) |
 | Shared micro-lesson contract | [`docs/design/micro-lesson-contract.md`](../design/micro-lesson-contract.md) |
+| Product-readiness contract | [`docs/design/product-readiness.md`](../design/product-readiness.md) |
+| Student guide | [`docs/product-readiness/student-guide.md`](../product-readiness/student-guide.md) |
+| Facilitator guide | [`docs/product-readiness/facilitator-guide.md`](../product-readiness/facilitator-guide.md) |
 | The original goal | [`docs/PROMPTS/-01_GOAL.md`](../PROMPTS/-01_GOAL.md) |
 
 ---

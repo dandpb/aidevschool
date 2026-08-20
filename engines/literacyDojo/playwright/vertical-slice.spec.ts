@@ -10,7 +10,7 @@ import {
   wrongOutput,
 } from "./support";
 
-test("Mapa Inicial: erro, dica ou nova tentativa encaminha para a rota guiada", async ({
+test("readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada", async ({
   page,
 }) => {
   await completeOnboarding(page);
@@ -33,7 +33,9 @@ test("Mapa Inicial: erro, dica ou nova tentativa encaminha para a rota guiada", 
   ).toBeVisible();
 });
 
-test("Mapa Inicial: acerto de primeira encaminha para a rota intermediária", async ({ page }) => {
+test("readiness literacy-happy-path and literacy-resume: acerto de primeira encaminha para a rota intermediária", async ({
+  page,
+}) => {
   await completeOnboarding(page);
   await answerRight(page);
 

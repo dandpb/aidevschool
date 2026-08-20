@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-verification-recovery
+useCaseId: os-literacy-guided-mission
+kind: recovery
+execution: mixed
+startState: hosted-mission-or-verifier-unavailable
+steps: [observe-unavailable-status, avoid-false-completion, retry-once, exit-or-escalate]
+assertions:
+  - id: unavailable-verifier-is-not-completion
+    severity: critical
+    evidence: playwright
+    claim: An unavailable verifier remains visibly not submitted and cannot imply mastery.
+  - id: facilitator-can-recover-without-repository-intervention
+    severity: high
+    evidence: observation
+    claim: The facilitator can guide a safe retry or exit using the visible state and manual.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:smoke:pilot]
+sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/codexdojo-os-prototype/src/verification/]
