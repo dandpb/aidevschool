@@ -23,12 +23,12 @@ Isso confirma que a configuração versionada em `HEAD` não garantia o piloto e
 
 ## Correção aplicada
 
-Nesta rodada, `engines/codexdojo-os-prototype/netlify.toml` recebeu as quatro URLs relativas em
-`[build.environment]`, retirando a dependência de `.env.production` local para esses valores.
-
-O comando `npm install && npm run build:pilot` já estava no `netlify.toml` como mudança não
-commitada quando a rodada começou. Ele foi validado, mas não foi criado nesta rodada. O mesmo vale
-para os arquivos de suporte do bundle e do smoke listados nos limites abaixo.
+Primeira versão desta rodada colocou as URLs no `netlify.toml`. O review posterior
+(simplify-code) encontrou o problema real: o GitHub Actions não lê `netlify.toml` e o
+`.env.production` nunca foi commitado — um checkout limpo cairia no fallback `127.0.0.1` do
+catálogo. A correção definitiva tornou o `build:pilot` auto-contido: as quatro
+`VITE_*_URL=/apps/*` vivem inline no script `build:pilot` do `package.json` (mesmo padrão de
+`build:integrated`). O bloco `[build.environment]` do `netlify.toml` foi removido.
 
 ## GREEN — contrato
 
@@ -41,9 +41,13 @@ Resultado real:
 ```text
 pilot config verification: PASS
 bundled mission runtimes: 4
-relative runtime URLs: 4
-local dev-server dependency in Netlify config: no
+build:pilot is self-contained (inline VITE_*_URL): yes
+external env-file dependency: no
 ```
+
+E a prova decisiva: `npm run test:smoke:pilot` foi executado com `.env.production`
+temporariamente fora do caminho e passou (2 testes), confirmando que um checkout limpo de CI
+produz o bundle correto.
 
 ## GREEN — smoke contra build estático
 

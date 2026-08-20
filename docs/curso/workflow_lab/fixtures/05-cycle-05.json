@@ -1,0 +1,18 @@
+{
+  "cycle_id": "cycle-05",
+  "handler": "plan-task-dependencies",
+  "requires": [
+    "ndjson-exact-and-filter",
+    "eligibility-before-ranking"
+  ],
+  "artifact_path": "artifacts/cycle-05.json",
+  "lesson_id": "validate-complete-plan",
+  "lesson_text": "Validate a complete dependency plan before producing its artifact.",
+  "tasks": [
+    {"id": "package", "depends_on": ["test"], "duration_minutes": 2},
+    {"id": "test", "depends_on": ["build"], "duration_minutes": 3},
+    {"id": "lint", "depends_on": ["fetch"], "duration_minutes": 1},
+    {"id": "fetch", "depends_on": [], "duration_minutes": 1},
+    {"id": "build", "depends_on": ["lint"], "duration_minutes": 2}
+  ]
+}

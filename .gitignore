@@ -34,12 +34,10 @@ _probe_commit_test.txt
 *.log
 
 # Local environment, debug sessions, and pilot output
+# (patterns without a slash already match at any depth — no **/ variants needed)
 .env
 .env.*
 !.env.example
-**/.env
-**/.env.*
-!**/.env.example
 kimi-debug-session_*.zip
 **/test-results-pilot/
 
@@ -111,6 +109,8 @@ engines/pixelDojo/pixel-quest/shots/
 .serena/
 .opencode/
 .playwright-mcp/
+.playwright-cli/
+.kimi-code/
 .codex/
 .notebook/
 .zcode/
@@ -143,6 +143,7 @@ engines/miniTown/docs/concepts/*.png
 
 # Riptide artifacts (cloud-synced)
 .humanlayer/tasks/
+.humanlayer/workspace.json
 
 # Local Netlify folder
 .netlify

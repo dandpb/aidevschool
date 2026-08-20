@@ -10,25 +10,33 @@ DIST = Path("engines/codexdojo-os-prototype/dist")
 
 
 def measure(dist: Path) -> dict:
-    report = {}
-    targets = [dist, *[p for p in sorted((dist / "apps").iterdir()) if p.is_dir()]]
-    for app_dir in targets:
-        name = "os-shell" if app_dir == dist else f"apps/{app_dir.name}"
-        files = [
-            f for f in app_dir.rglob("*") if f.is_file() and not f.name.endswith(".map")
-        ]
-        raw = sum(f.stat().st_size for f in files)
-        gz = sum(len(gzip.compress(f.read_bytes(), compresslevel=6)) for f in files)
-        biggest = sorted(files, key=lambda f: f.stat().st_size, reverse=True)[:2]
-        report[name] = {
-            "files": len(files),
-            "raw_bytes": raw,
-            "gzip_bytes": gz,
+    """Single pass over dist/: compute (raw, gzip) once per file, then bucket by
+    path prefix. The os-shell total includes apps/ (that's the full download)."""
+    files = [f for f in dist.rglob("*") if f.is_file() and not f.name.endswith(".map")]
+    stats = {
+        f: (f.stat().st_size, len(gzip.compress(f.read_bytes(), compresslevel=6)))
+        for f in files
+    }
+
+    def bucket(pred) -> dict:
+        selected = {f: s for f, s in stats.items() if pred(f)}
+        biggest = sorted(selected, key=lambda f: selected[f][0], reverse=True)[:2]
+        return {
+            "files": len(selected),
+            "raw_bytes": sum(s[0] for s in selected.values()),
+            "gzip_bytes": sum(s[1] for s in selected.values()),
             "largest": [
-                {"file": str(f.relative_to(app_dir)), "bytes": f.stat().st_size}
+                {"file": str(f.relative_to(dist)), "bytes": selected[f][0]}
                 for f in biggest
             ],
         }
+
+    apps_root = dist / "apps"
+    report = {"os-shell": bucket(lambda f: True)}
+    for app_dir in sorted(p for p in apps_root.iterdir() if p.is_dir()):
+        report[f"apps/{app_dir.name}"] = bucket(
+            lambda f, d=app_dir: d in f.parents
+        )
     return report
 
 

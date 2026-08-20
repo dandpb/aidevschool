@@ -1,25 +1,30 @@
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 
-EXPECTED = {
-    "VITE_LITERACYDOJO_URL = \"/apps/literacydojo/\"",
-    "VITE_WAREHOUSE_URL = \"/apps/warehouse/\"",
-    "VITE_WORMHOLE_URL = \"/apps/wormhole/\"",
-    "VITE_RELAY_STATION_URL = \"/apps/relay-station/\"",
+EXPECTED_URLS = {
+    "VITE_LITERACYDOJO_URL": "/apps/literacydojo/",
+    "VITE_WAREHOUSE_URL": "/apps/warehouse/",
+    "VITE_WORMHOLE_URL": "/apps/wormhole/",
+    "VITE_RELAY_STATION_URL": "/apps/relay-station/",
 }
 
 
 def main() -> None:
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(
-        "engines/codexdojo-os-prototype/netlify.toml"
+        "engines/codexdojo-os-prototype/package.json"
     )
-    text = path.read_text(encoding="utf-8")
-    missing = sorted(item for item in EXPECTED if item not in text)
-    if "command = \"npm install && npm run build:pilot\"" not in text:
-        missing.append("build command = npm install && npm run build:pilot")
+    pkg = json.loads(path.read_text(encoding="utf-8"))
+    build = pkg["scripts"].get("build:pilot", "")
+    missing = [
+        f"{key}={value}" for key, value in EXPECTED_URLS.items()
+        if f"{key}={value}" not in build
+    ]
+    if "node scripts/bundle-missions.mjs" not in build:
+        missing.append("node scripts/bundle-missions.mjs in build:pilot")
     if missing:
         print("pilot config verification: FAIL")
         for item in missing:
@@ -27,8 +32,8 @@ def main() -> None:
         raise SystemExit(1)
     print("pilot config verification: PASS")
     print("bundled mission runtimes: 4")
-    print("relative runtime URLs: 4")
-    print("local dev-server dependency in Netlify config: no")
+    print("build:pilot is self-contained (inline VITE_*_URL): yes")
+    print("external env-file dependency: no")
 
 
 if __name__ == "__main__":

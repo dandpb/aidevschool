@@ -1,0 +1,14 @@
+{
+  "cycle_id": "cycle-03",
+  "handler": "build-retry-schedule",
+  "requires": [
+    "safe-serialization-explicit-scope"
+  ],
+  "artifact_path": "artifacts/cycle-03.json",
+  "lesson_id": "time-is-explicit-input",
+  "lesson_text": "Make time an explicit input, never an ambient dependency.",
+  "start_at": "2026-08-19T12:00:00Z",
+  "attempts": 5,
+  "base_seconds": 3,
+  "cap_seconds": 10
+}
