@@ -44,6 +44,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | `docs/design/teaching-game-contract.md` | Canonical cross-engine teaching-game contract (evidence schema, verifier handoff, review-slice flow) shared by pixelDojo and voxelDojo; wins on conflict with engine docs. |
 | `docs/design/polyglot-arena/` | Demoted design material for the polyglot evolution arena; was `engines/polyglotEvolutionArena/` at `proposal` status. The runnable comparison seams now live in shared curriculum tooling, not a separate engine. |
 | `docs/` | Existing polyglot MiniMax and OpenClaw documentation. |
+| `docs/curso/` · `.agents/skills/workflow-lab-*` | Curso offline de engenharia de IA, caso CSV executável e laboratório cumulativo com dez workflows. O skill pack separa Build, Verify independente e Maintain; resultados publicados apontam para evidência durável e não alegam aprendizado humano. |
 | `learner/` | Canonical learner-state substrate; single source of truth for all engines. |
 | `.mavis/` | Derived learning-state view generated from `learner/learning_state.yaml`. |
 | `engines/miniMaxEvolutionEngine/.claude/commands/devschool/` | Phase commands for Claude Code orchestration. |
@@ -90,6 +91,7 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | 15 | Characterization test model | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md` |
 | 16 | Metrics for real refactor improvement | `engines/codexDojo/ecosystem/LEGACY_MIGRATION.md`, `engines/codexDojo/ecosystem/EVALUATION_MODELS.md` |
 | 17 | Nontechnical AI microlearning | `docs/VISION.md`, `docs/design/micro-lesson-contract.md`, `docs/design/ai-literacy/`, `curriculum/ai-literacy/`, `engines/literacyDojo/` |
+| 18 | Programmer AI-engineering course and permanent workflow lab | `docs/curso/index.html`, `docs/curso/workflow-exemplo/`, `docs/curso/workflow_lab/`, `.agents/skills/workflow-lab-build/`, `.agents/skills/workflow-lab-verify/`, `.agents/skills/workflow-lab-maintain/` |
 
 ## Requested Scope Coverage
 
@@ -189,6 +191,11 @@ cd engines/pixelDojo/pixel-quest && pnpm run lint && pnpm run test && pnpm run b
 python3 -m engines.openclaw --project curriculum/01_rate_limiter --phase spec --mode simulate --max-events 20
 python3 -m pytest engines/openclaw/tests/
 python3 -m engines.openclaw --preview
+
+# Offline AI-engineering course + cumulative workflow lab
+python3 -m pytest docs/curso/workflow-exemplo/test_export_tasks.py docs/curso/workflow_lab -q
+python3 docs/curso/workflow_lab/lab.py --fixtures docs/curso/workflow_lab/fixtures --output "$(mktemp -d)/workflow-lab"
+python3 docs/curso/validate_course.py
 ```
 
 ## Completion Standard

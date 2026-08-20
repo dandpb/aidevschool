@@ -1,0 +1,12 @@
+{
+  "cycle_id": "cycle-07",
+  "handler": "check-unified-diff",
+  "requires": ["canonical-root-relative-paths"],
+  "lesson_id": "fail-closed-narrow-policy",
+  "lesson_text": "Fail closed with a narrow, deterministic policy.",
+  "artifact_path": "artifacts/cycle-07.json",
+  "allowed_paths": ["docs/guide.md", "src/app.py"],
+  "max_files": 2,
+  "max_changed_lines": 4,
+  "diff": "--- a/docs/guide.md\n+++ b/docs/guide.md\n@@ -1 +1 @@\n-old\n+new\n--- a/src/app.py\n+++ b/src/app.py\n@@ -2 +2 @@\n-old\n+new\n"
+}
