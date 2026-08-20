@@ -1,0 +1,41 @@
+schemaVersion: 1
+policyVersion: 1
+tiers:
+  customer-ready:
+    requiredScenarioKinds: [happy-path, recovery, continuity]
+    requiredEvidenceKinds: [playwright, observation]
+    requiredManuals: [student, facilitator]
+  validated-journey:
+    requiredScenarioKinds: [happy-path, recovery]
+    requiredEvidenceKinds: [playwright, observation]
+    requiredManuals: [student, facilitator]
+  experimental:
+    requiredScenarioKinds: [happy-path]
+    requiredEvidenceKinds: [playwright]
+    requiredManuals: [student, facilitator]
+severities:
+  critical:
+    treatment: block
+  high:
+    treatment: block
+  medium:
+    treatment: disposition-required
+  low:
+    treatment: disposition-required
+outcomes:
+  - pass
+  - conditional-follow-up
+  - downgraded
+  - blocked
+  - stale
+  - unassessed
+freshness:
+  requiresExplicitRevalidateBy: true
+  invalidatingChanges:
+    - entry-route
+    - onboarding
+    - persistence
+    - evidence-semantics
+    - recovery
+    - accessibility
+    - facilitator-procedure

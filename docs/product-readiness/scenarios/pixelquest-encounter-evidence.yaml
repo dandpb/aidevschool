@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: pixelquest-encounter-evidence
+useCaseId: pixelquest-evidence-encounter
+kind: happy-path
+execution: mixed
+startState: built-pixelquest-app
+steps: [launch-pixelquest, complete-encounter, inspect-evidence, identify-verifier-handoff]
+assertions:
+  - id: encounter-emits-valid-raw-evidence
+    severity: critical
+    evidence: playwright
+    claim: A completed encounter emits a valid raw evidence record through the declared channels.
+  - id: learner-distinguishes-evidence-from-mastery
+    severity: high
+    evidence: observation
+    claim: The learner understands that emitted evidence still requires an independent verifier.
+automation:
+  workingDirectory: engines/pixelDojo
+  argv: [pnpm, run, smoke]
+sourcePaths: [engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts, engines/pixelDojo/pixel-quest/src/game/evidence/]

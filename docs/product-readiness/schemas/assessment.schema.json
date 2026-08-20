@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Independent product readiness assessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "assessmentId",
+    "assessorContext",
+    "verifiedAt",
+    "revalidateBy",
+    "gitSha",
+    "decisions"
+  ],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "assessmentId": {"type": "string", "minLength": 1},
+    "assessorContext": {"const": "independent-readiness-review"},
+    "verifiedAt": {"type": "string", "format": "date-time"},
+    "revalidateBy": {"type": "string", "format": "date"},
+    "gitSha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["useCaseId", "outcome", "grantedTier", "reasons", "resultRunIds"],
+        "properties": {
+          "useCaseId": {"type": "string", "minLength": 1},
+          "outcome": {"enum": ["pass", "conditional-follow-up", "downgraded", "blocked", "stale", "unassessed"]},
+          "grantedTier": {"enum": ["customer-ready", "validated-journey", "experimental", null]},
+          "reasons": {"type": "array", "items": {"type": "string"}},
+          "resultRunIds": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    }
+  }
+}

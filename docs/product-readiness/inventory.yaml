@@ -1,0 +1,149 @@
+schemaVersion: 1
+useCases:
+  - id: literacy-standalone-first-lesson
+    surface: literacyDojo
+    audience: nontechnical-learner
+    intendedTier: customer-ready
+    promise: Complete an assigned lesson, recover from an incorrect attempt, and understand the local result.
+    entry:
+      route: https://aidevschool.netlify.app/
+      prerequisites:
+        - supported-modern-browser
+        - browser-storage-enabled
+    progressSemantics: local-completion
+    recovery: Use corrective feedback, request a hint, retry, or restart from the map without a false mastery claim.
+    nextAction: Continue to the next available lesson on the same device or ask a facilitator for help.
+    scenarioIds:
+      - literacy-happy-path
+      - literacy-retry
+      - literacy-resume
+    manualRefs:
+      student: student-guide.md#standalone-literacydojo
+      facilitator: facilitator-guide.md#standalone-literacydojo
+    sourcePaths:
+      - engines/literacyDojo/src/
+      - engines/literacyDojo/playwright/
+      - curriculum/ai-literacy/
+    owner: literacyDojo
+  - id: os-literacy-guided-mission
+    surface: codexDojo OS
+    audience: nontechnical-learner
+    intendedTier: customer-ready
+    promise: Choose an AI track, complete its hosted LiteracyDojo mission, and understand the host result and next action.
+    entry:
+      route: codexdojo-os-prototype static pilot
+      prerequisites: [supported-modern-browser, browser-storage-enabled]
+    progressSemantics: local-completion
+    recovery: Retry a failed hosted load once, then exit safely without claiming completion or verification.
+    nextAction: Continue to the next available OS mission on the same device or ask a facilitator for help.
+    scenarioIds: [os-literacy-hosted-mission, os-verification-recovery, os-literacy-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests-pilot/, engines/literacyDojo/src/]
+    owner: codexdojo-os-prototype
+  - id: os-voxel-guided-missions
+    surface: codexDojo OS
+    audience: programmer-learner
+    intendedTier: customer-ready
+    promise: Launch each supported hosted voxelDojo mission and receive an accurate host status without a false mastery claim.
+    entry:
+      route: codexdojo-os-prototype static pilot Dev track
+      prerequisites: [supported-desktop-browser, keyboard-input]
+    progressSemantics: raw-evidence
+    recovery: Use the accessible renderer or safe exit when WebGL or the hosted mission is unavailable.
+    nextAction: Submit produced evidence to an independent verifier or continue to the next supported mission.
+    scenarioIds: [os-voxel-hosted-missions, os-renderer-accessibility-recovery, os-voxel-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/, engines/codexdojo-os-prototype/tests-pilot/, engines/voxelDojo/]
+    owner: codexdojo-os-prototype
+  - id: os-returning-learner
+    surface: codexDojo OS
+    audience: returning-learner
+    intendedTier: customer-ready
+    promise: Resume the supported local OS state on the same device without repeating completed setup.
+    entry:
+      route: codexdojo-os-prototype static pilot
+      prerequisites: [same-browser-profile, browser-storage-enabled]
+    progressSemantics: local-completion
+    recovery: Return to onboarding after cleared or unavailable local storage without reconstructing prior completion.
+    nextAction: Resume the next available mission shown by the OS.
+    scenarioIds: [os-onboarding-track-choice, os-returning-recovery, os-returning-device]
+    manualRefs:
+      student: student-guide.md#codexdojo-os-guided-journey
+      facilitator: facilitator-guide.md#codexdojo-os-guided-journey
+    sourcePaths: [engines/codexdojo-os-prototype/src/, engines/codexdojo-os-prototype/tests/]
+    owner: codexdojo-os-prototype
+  - id: dojotoday-daily-guidance
+    surface: dojoToday
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Read the current schedule, understand due reviews and the active unit, and follow the documented next action.
+    entry:
+      route: dojoToday generated daily view
+      prerequisites: [generated-learner-projection, supported-modern-browser]
+    progressSemantics: read-only
+    recovery: Regenerate the learner projection when the view is stale; stop if the canonical learner state cannot be read.
+    nextAction: Open the documented game or follow the next action without expecting dojoToday to evaluate work.
+    scenarioIds: [dojotoday-active-unit-guidance, dojotoday-read-only-boundary]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/dojoToday/src/, engines/dojoToday/tools/, learner/substrate/]
+    owner: dojoToday
+  - id: pixelquest-evidence-encounter
+    surface: PixelQuest
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Complete a documented encounter, locate its raw evidence, and hand it to the independent verifier.
+    entry:
+      route: PixelQuest local app
+      prerequisites: [supported-desktop-browser, keyboard-input]
+    progressSemantics: raw-evidence
+    recovery: Replay the encounter when evidence is missing; stop if a valid evidence record is not emitted.
+    nextAction: Submit the raw evidence to the independent verifier; do not treat the game result as mastery.
+    scenarioIds: [pixelquest-encounter-evidence, pixelquest-evidence-recovery]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/pixelDojo/pixel-quest/src/, engines/pixelDojo/pixel-quest/playwright/]
+    owner: pixelDojo
+  - id: voxel-standalone-learning-loop
+    surface: voxelDojo
+    audience: programmer-learner
+    intendedTier: validated-journey
+    promise: Complete the deterministic loop in each declared standalone game and locate raw evidence for independent verification.
+    entry:
+      route: voxelDojo catalog game package
+      prerequisites: [supported-desktop-browser, keyboard-input, webgl-or-accessible-renderer]
+    progressSemantics: raw-evidence
+    recovery: Use the accessible renderer when supported or stop when the declared core interaction cannot run.
+    nextAction: Submit the selected game's raw evidence to the independent verifier or exit at the documented boundary.
+    scenarioIds: [voxel-standalone-loop, voxel-accessible-renderer]
+    manualRefs:
+      student: student-guide.md#programmer-journeys
+      facilitator: facilitator-guide.md#programmer-journeys
+    sourcePaths: [engines/voxelDojo/catalog.json, engines/voxelDojo/game-02-warehouse/, engines/voxelDojo/shared/]
+    owner: voxelDojo
+  - id: minitown-explore-only
+    surface: miniTown
+    audience: nontechnical-learner
+    intendedTier: experimental
+    promise: Explore the local town simulation without a lesson, persistence, progression, evidence, or mastery promise.
+    entry:
+      route: miniTown local route
+      prerequisites:
+        - local-engine-setup
+        - supported-modern-browser
+        - webgl
+    progressSemantics: exploration
+    recovery: Reload the local route once; there is no learner state to restore, so ask a facilitator when the route or renderer remains unavailable.
+    nextAction: Leave miniTown and start the standalone LiteracyDojo journey when you want a guided AI lesson.
+    scenarioIds: [minitown-explore-only]
+    manualRefs:
+      student: student-guide.md#experimental-minitown
+      facilitator: facilitator-guide.md#experimental-minitown
+    sourcePaths: [engines/miniTown/src/, engines/miniTown/playwright/, engines/miniTown/README.md]
+    owner: miniTown
