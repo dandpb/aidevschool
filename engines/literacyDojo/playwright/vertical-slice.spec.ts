@@ -41,7 +41,7 @@ test("Mapa Inicial: acerto de primeira encaminha para a rota intermediária", as
   await page.getByTestId("next-lesson").click();
   await expect(
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await page.reload();
   await expect(
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),

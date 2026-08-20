@@ -1,6 +1,7 @@
 {
   "name": "voxel-dojo",
   "private": true,
+  "type": "module",
   "scripts": {
     "test": "vitest run shared/accessibleProjection.test.ts && pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
