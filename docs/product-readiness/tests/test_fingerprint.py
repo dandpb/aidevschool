@@ -59,6 +59,21 @@ def test_fingerprint_paths_ignores_marked_generated_sources(tmp_path: Path) -> N
     assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
 
 
+def test_fingerprint_paths_ignores_do_not_edit_generated_sources(tmp_path: Path) -> None:
+    # Given a generator-owned source using the repository's standard warning
+    engine = tmp_path / "engine"
+    engine.mkdir()
+    (engine / "source.ts").write_text("source", encoding="utf-8")
+    before = fingerprint_paths(tmp_path, (RepoPath("engine"),))
+
+    # When the generated source appears after a producer build
+    generated = engine / "generated.ts"
+    generated.write_text("// DO NOT EDIT BY HAND\nvalue=generated\n", encoding="utf-8")
+
+    # Then producer and aggregator checkouts keep the same fingerprint
+    assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
+
+
 def test_use_case_fingerprints_are_canonical_sha256_values() -> None:
     # Given the standalone LiteracyDojo use case
     domain = load_domain(READINESS_ROOT)
