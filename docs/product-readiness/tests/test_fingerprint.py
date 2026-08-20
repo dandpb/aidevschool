@@ -43,6 +43,22 @@ def test_fingerprint_paths_ignores_generated_test_results(tmp_path: Path) -> Non
     assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
 
 
+def test_fingerprint_paths_ignores_marked_generated_sources(tmp_path: Path) -> None:
+    # Given a declared engine root and a marked generated projection
+    engine = tmp_path / "engine"
+    engine.mkdir()
+    (engine / "source.ts").write_text("source", encoding="utf-8")
+    generated = engine / "generated.ts"
+    generated.write_text("// AUTO-GENERATED\nvalue=before\n", encoding="utf-8")
+    before = fingerprint_paths(tmp_path, (RepoPath("engine"),))
+
+    # When the substrate changes the generated projection
+    generated.write_text("// AUTO-GENERATED\nvalue=after\n", encoding="utf-8")
+
+    # Then the source fingerprint remains stable
+    assert fingerprint_paths(tmp_path, (RepoPath("engine"),)) == before
+
+
 def test_use_case_fingerprints_are_canonical_sha256_values() -> None:
     # Given the standalone LiteracyDojo use case
     domain = load_domain(READINESS_ROOT)

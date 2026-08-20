@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Iterable
 
 from .models import ReadinessDomain, RepoPath, Scenario, Sha256Digest, UseCase
-from .paths import EXCLUDED_PARTS
+from .paths import EXCLUDED_PARTS, is_generated_file
 
 
 def _files(repo_root: Path, relative_paths: Iterable[RepoPath]) -> tuple[Path, ...]:
@@ -17,7 +17,11 @@ def _files(repo_root: Path, relative_paths: Iterable[RepoPath]) -> tuple[Path, .
             files.add(candidate)
             continue
         for path in candidate.rglob("*"):
-            if path.is_file() and not any(part in EXCLUDED_PARTS for part in path.relative_to(repo_root).parts):
+            if (
+                path.is_file()
+                and not any(part in EXCLUDED_PARTS for part in path.relative_to(repo_root).parts)
+                and not is_generated_file(path)
+            ):
                 files.add(path)
     return tuple(sorted(files, key=lambda path: path.relative_to(repo_root).as_posix()))
 

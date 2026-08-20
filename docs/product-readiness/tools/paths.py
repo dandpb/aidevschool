@@ -17,6 +17,15 @@ EXCLUDED_PARTS: Final = {
     "graphify-out",
     "__pycache__",
 }
+GENERATED_MARKERS: Final = ("AUTO-GENERATED", "AUTO-GERADO", "@substrate-generated")
+
+
+def is_generated_file(path: Path) -> bool:
+    try:
+        prefix = path.read_text(encoding="utf-8")[:512]
+    except UnicodeDecodeError:
+        return False
+    return any(marker in prefix for marker in GENERATED_MARKERS)
 
 
 def validate_repo_path(repo_root: Path, relative: RepoPath) -> str | None:
