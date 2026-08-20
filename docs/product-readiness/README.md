@@ -8,6 +8,9 @@ Readiness is a customer-journey claim; it is not learner completion, evidence, v
 | Use case | Surface | Intended tier | Current status | Promise |
 | --- | --- | --- | --- | --- |
 | `literacy-standalone-first-lesson` | literacyDojo | `customer-ready` | `unassessed` | Complete an assigned lesson, recover from an incorrect attempt, and understand the local result. |
+| `os-literacy-guided-mission` | codexDojo OS | `customer-ready` | `unassessed` | Choose an AI track, complete its hosted LiteracyDojo mission, and understand the host result and next action. |
+| `os-returning-learner` | codexDojo OS | `customer-ready` | `unassessed` | Resume the supported local OS state on the same device without repeating completed setup. |
+| `os-voxel-guided-missions` | codexDojo OS | `customer-ready` | `unassessed` | Launch each supported hosted voxelDojo mission and receive an accurate host status without a false mastery claim. |
 
 ## Status note
 

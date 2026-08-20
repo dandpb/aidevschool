@@ -4,22 +4,22 @@
   "assessorContext": "independent-readiness-review",
   "verifiedAt": "2026-08-20T17:00:00Z",
   "revalidateBy": "2026-09-20",
-  "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+  "gitSha": "15ae643f06690a47e5a78bcf2bf34f4d91471f79",
   "results": [
     {
       "schemaVersion": 1,
       "scenarioId": "literacy-happy-path",
       "runId": "2026-08-20-literacy-happy-path-c22abf3",
-      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "gitSha": "15ae643f06690a47e5a78bcf2bf34f4d91471f79",
       "executedAt": "2026-08-20T14:30:00Z",
       "executor": "mixed",
       "outcome": "pass",
-      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
-      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "sourceFingerprint": "451198ad27d6cae92933faf71fcb585efbdf79b9aa7176bbc511c8a5e1f0df1c",
+      "manualFingerprint": "f7ef8168a45ad142831372fa130c91385d508a11b40f1995f122abbcc63949e3",
       "artifacts": [
         {
           "path": "docs/product-readiness/student-guide.md",
-          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+          "sha256": "b1955f1dde4e0bfbcfc8ccced6dc25a61f830bdc24a1bb00bf9ae9adac6328b4"
         }
       ],
       "gaps": []
@@ -28,16 +28,16 @@
       "schemaVersion": 1,
       "scenarioId": "literacy-retry",
       "runId": "2026-08-20-literacy-retry-c22abf3",
-      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "gitSha": "15ae643f06690a47e5a78bcf2bf34f4d91471f79",
       "executedAt": "2026-08-20T14:31:00Z",
       "executor": "mixed",
       "outcome": "pass",
-      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
-      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "sourceFingerprint": "451198ad27d6cae92933faf71fcb585efbdf79b9aa7176bbc511c8a5e1f0df1c",
+      "manualFingerprint": "f7ef8168a45ad142831372fa130c91385d508a11b40f1995f122abbcc63949e3",
       "artifacts": [
         {
           "path": "docs/product-readiness/student-guide.md",
-          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+          "sha256": "b1955f1dde4e0bfbcfc8ccced6dc25a61f830bdc24a1bb00bf9ae9adac6328b4"
         }
       ],
       "gaps": []
@@ -46,16 +46,16 @@
       "schemaVersion": 1,
       "scenarioId": "literacy-resume",
       "runId": "2026-08-20-literacy-resume-c22abf3",
-      "gitSha": "c22abf39a8b87715c5254a52b60756bf1fa48d5b",
+      "gitSha": "15ae643f06690a47e5a78bcf2bf34f4d91471f79",
       "executedAt": "2026-08-20T14:32:00Z",
       "executor": "mixed",
       "outcome": "pass",
-      "sourceFingerprint": "9bac0bd9397fcbe22b4c86ab9cbc0d4f5a09cdc159629dc9762baba07ee26c0d",
-      "manualFingerprint": "e53315fd67d0397da54b8a2c4ef1974cf7a7f90c1577ebc793d2f56a3cdd4fff",
+      "sourceFingerprint": "451198ad27d6cae92933faf71fcb585efbdf79b9aa7176bbc511c8a5e1f0df1c",
+      "manualFingerprint": "f7ef8168a45ad142831372fa130c91385d508a11b40f1995f122abbcc63949e3",
       "artifacts": [
         {
           "path": "docs/product-readiness/student-guide.md",
-          "sha256": "b4e14c3557f835c78814ad5f1b3432a26cc90f0244c372bc13561224a7713b4c"
+          "sha256": "b1955f1dde4e0bfbcfc8ccced6dc25a61f830bdc24a1bb00bf9ae9adac6328b4"
         }
       ],
       "gaps": []

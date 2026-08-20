@@ -25,6 +25,7 @@ from tools.evidence import (  # noqa: E402
 )
 from tools.models import ReadinessDomain  # noqa: E402
 from tools.render import drift, expected_views, write_views  # noqa: E402
+from tools.reports import emit_engine_reports, validate_report_directories  # noqa: E402
 from tools.validate import validate_domain  # noqa: E402
 
 
@@ -47,13 +48,24 @@ def main(args: list[str] | None = None) -> int:
         return 1
     if domain is None:
         return 1
-    if arguments == ["check"]:
+    if arguments and arguments[0] == "check" and (len(arguments) == 1 or arguments[1] == "--reports"):
+        report_directories = tuple(Path(value) for value in arguments[2:]) if len(arguments) > 1 else ()
+        report_errors = validate_report_directories(domain, REPO_ROOT, report_directories)
+        if report_errors:
+            for error in report_errors:
+                print(f"INVALID: {error}", file=sys.stderr)
+            return 1
         changed = drift(domain)
         if changed:
             for path in changed:
                 print(f"DRIFT: {path.relative_to(REPO_ROOT)}", file=sys.stderr)
             return 1
         print("Product-readiness sources and generated matrix are valid and in sync.")
+        return 0
+    if len(arguments) == 5 and arguments[:2] == ["producer-report", "--engine"] and arguments[3] == "--output":
+        changed = emit_engine_reports(domain, REPO_ROOT, arguments[2], Path(arguments[4]))
+        for path in changed:
+            print(f"Reported {path.relative_to(REPO_ROOT) if path.is_relative_to(REPO_ROOT) else path}")
         return 0
     if arguments == ["render"]:
         changed = write_views(domain)
@@ -102,7 +114,7 @@ def main(args: list[str] | None = None) -> int:
         write_assessment(proposal, READINESS_ROOT)
         write_views(load_domain(READINESS_ROOT))
         return 0
-    print("usage: python3 docs/product-readiness/tools/cli.py {check|render|assess --input REPORT [--dry-run]}", file=sys.stderr)
+    print("usage: python3 docs/product-readiness/tools/cli.py {check [--reports DIR...]|render|producer-report --engine DIR --output DIR|assess --input REPORT [--dry-run]}", file=sys.stderr)
     return 2
 
 

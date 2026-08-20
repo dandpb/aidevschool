@@ -13,7 +13,8 @@
     "preview:integrated": "npm run build:integrated && VITE_LOCAL_ENGINE_BRIDGE=true vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:smoke": "playwright test",
-    "test:smoke:pilot": "npm run build:pilot && playwright test --config=playwright.pilot.config.ts",
+    "test:smoke:pilot": "npm run build:pilot && playwright test --config=playwright.pilot.config.ts && node scripts/readiness-report.mjs",
+    "readiness:report": "node scripts/readiness-report.mjs",
     "lint": "biome lint src bridge tests tests-pilot vite.config.ts playwright.config.ts playwright.pilot.config.ts"
   },
   "dependencies": {
