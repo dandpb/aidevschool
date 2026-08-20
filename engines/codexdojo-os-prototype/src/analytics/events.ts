@@ -1,22 +1,12 @@
 export const ANALYTICS_EVENT_NAMES = [
-  'onboarding.started',
-  'onboarding.completed',
-  'journey.returned',
-  'mission.started',
-  'mission.completed',
-  'structured_attempt.submitted',
-  'structured_attempt.passed',
-  'hint.requested',
-  'retry.requested',
-  'review.started',
-  'verification.state_changed',
-  'renderer.degraded',
+  'onboarding.started', 'onboarding.completed', 'journey.returned',
+  'mission.started', 'mission.completed', 'structured_attempt.submitted',
+  'structured_attempt.passed', 'hint.requested', 'retry.requested',
+  'review.started', 'verification.state_changed', 'renderer.degraded',
 ] as const
-
 export type AnalyticsEventName = (typeof ANALYTICS_EVENT_NAMES)[number]
 export type AnalyticsScalar = string | number | boolean
 export type AnalyticsDimensions = Readonly<Record<string, AnalyticsScalar>>
-
 export type AnalyticsContext = {
   readonly trackId?: 'ai-pratica' | 'dev'
   readonly missionId?: string
@@ -45,22 +35,61 @@ export type AnalyticsEvent = {
   }
 }
 
-const EVENT_DIMENSIONS: Readonly<Record<AnalyticsEventName, readonly string[]>> = {
-  'onboarding.started': [],
-  'onboarding.completed': ['recommendationChanged'],
-  'journey.returned': [],
-  'mission.started': ['mode'],
-  'mission.completed': ['result'],
-  'structured_attempt.submitted': ['activityType'],
-  'structured_attempt.passed': ['activityType'],
-  'hint.requested': ['mode', 'source', 'outcome'],
-  'retry.requested': ['reason'],
-  'review.started': ['reason'],
-  'verification.state_changed': ['state', 'verdict'],
-  'renderer.degraded': ['reason', 'fallback'],
+type EventVocabularies = Readonly<Record<string, readonly AnalyticsScalar[] | undefined>>
+
+type EventPolicy = {
+  readonly dimensions: readonly string[]
+  readonly vocabularies: EventVocabularies
 }
 
-const CONTEXT_KEYS = [
+type NamedEventRecord = Record<string, unknown> & { readonly name: AnalyticsEventName }
+
+const ACTIVITY_TYPES: readonly AnalyticsScalar[] = [
+  'choice', 'sort', 'missing_context', 'safety_classification', 'prompt_builder',
+  'output_comparison', 'rubric_review',
+]
+
+// As dimensões permitidas de cada evento são exatamente as chaves do seu vocabulário.
+const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabularies>> = {
+  'onboarding.started': {},
+  'onboarding.completed': { recommendationChanged: [true, false] },
+  'journey.returned': {},
+  'mission.started': { mode: ['initial', 'review', 'retry', 'targeted-practice'] },
+  'mission.completed': { result: ['completed', 'failed'] },
+  'structured_attempt.submitted': { activityType: ACTIVITY_TYPES },
+  'structured_attempt.passed': { activityType: ACTIVITY_TYPES },
+  'hint.requested': {
+    mode: ['question', 'explain', 'hint'],
+    source: ['provider', 'fallback', 'policy'],
+    outcome: ['answered', 'attempt-required', 'quota-exhausted', 'unavailable'],
+  },
+  'retry.requested': {
+    reason: ['retry', 'targeted-practice', 'verification-unavailable', 'engine-retry'],
+  },
+  'review.started': { reason: ['canonical-review', 'due', 'overdue'] },
+  'verification.state_changed': {
+    state: ['validating', 'pending', 'verified', 'rejected', 'gateway-unavailable'],
+    verdict: ['PASS', 'FAIL', 'INVALID'],
+  },
+  'renderer.degraded': {
+    reason: [
+      'unsupported', 'creation-failed', 'context-lost', 'restore-failed', 'load-timeout',
+      'reduced-motion',
+    ],
+    fallback: ['canvas2d', 'dom', 'none'],
+  },
+}
+
+const EVENT_POLICIES: Readonly<Record<AnalyticsEventName, EventPolicy>> = (() => {
+  const policies = {} as Record<AnalyticsEventName, EventPolicy>
+  for (const name of ANALYTICS_EVENT_NAMES) {
+    const vocabularies = EVENT_VOCABULARIES[name]
+    policies[name] = { dimensions: Object.keys(vocabularies), vocabularies }
+  }
+  return policies
+})()
+
+const CONTEXT_KEYS: readonly string[] = [
   'trackId',
   'missionId',
   'missionRunId',
@@ -68,9 +97,13 @@ const CONTEXT_KEYS = [
   'engineVersion',
   'contentVersion',
   'rendererMode',
-] as const
-
-const ENRICHED_KEYS = ['installationId', 'sessionId', ...CONTEXT_KEYS] as const
+]
+const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly string[] | undefined>> = {
+  trackId: ['ai-pratica', 'dev'],
+  engineId: ['literacyDojo', 'voxelDojo'],
+  rendererMode: ['webgl', 'canvas2d', 'dom', 'none'],
+}
+const ENRICHED_KEYS: readonly string[] = ['installationId', 'sessionId', ...CONTEXT_KEYS]
 const EVENT_NAMES = new Set<string>(ANALYTICS_EVENT_NAMES)
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$/
 
@@ -94,139 +127,86 @@ function dimensionsAreValid(
   allowed: readonly string[],
   required: readonly string[] = [],
 ): value is Record<string, AnalyticsScalar> {
-  if (!isRecord(value) || !hasOnlyKeys(value, allowed)) return false
+  if (!isRecord(value)) return false
+  if (!hasOnlyKeys(value, allowed)) return false
   if (!required.every((key) => key in value)) return false
   return Object.values(value).every(isBoundedScalar)
 }
 
+function contextValueIsValid(key: string, value: unknown): boolean {
+  if (typeof value !== 'string') return false
+  if (!SAFE_IDENTIFIER.test(value)) return false
+  const vocabulary = CONTEXT_VOCABULARIES[key]
+  return vocabulary === undefined || vocabulary.includes(value)
+}
+
 function contextIsValid(value: unknown): value is AnalyticsContext {
-  if (!isRecord(value) || !hasOnlyKeys(value, CONTEXT_KEYS)) return false
-  if (!Object.values(value).every((item) => typeof item === 'string' && SAFE_IDENTIFIER.test(item))) {
-    return false
-  }
-  if (value.trackId !== undefined && value.trackId !== 'ai-pratica' && value.trackId !== 'dev') {
-    return false
-  }
-  if (
-    value.engineId !== undefined &&
-    value.engineId !== 'literacyDojo' &&
-    value.engineId !== 'voxelDojo'
-  ) {
-    return false
-  }
-  return (
-    value.rendererMode === undefined ||
-    value.rendererMode === 'webgl' ||
-    value.rendererMode === 'canvas2d' ||
-    value.rendererMode === 'dom' ||
-    value.rendererMode === 'none'
+  if (!isRecord(value)) return false
+  if (!hasOnlyKeys(value, CONTEXT_KEYS)) return false
+  return Object.entries(value).every(([key, item]) => contextValueIsValid(key, item))
+}
+
+function contextDimensionsAreValid(dimensions: AnalyticsDimensions): boolean {
+  return CONTEXT_KEYS.every(
+    (key) => !(key in dimensions) || contextValueIsValid(key, dimensions[key]),
   )
 }
 
-function valuesMatchClosedVocabulary(name: AnalyticsEventName, dimensions: AnalyticsDimensions): boolean {
-  if (name === 'onboarding.completed') {
-    return dimensions.recommendationChanged === undefined || typeof dimensions.recommendationChanged === 'boolean'
-  }
-  if (name === 'mission.started') {
-    return dimensions.mode === undefined || ['initial', 'review', 'retry', 'targeted-practice'].includes(String(dimensions.mode))
-  }
-  if (name === 'mission.completed') {
-    return dimensions.result === undefined || ['completed', 'failed'].includes(String(dimensions.result))
-  }
-  if (name === 'hint.requested') {
-    return (
-      (dimensions.mode === undefined || ['question', 'explain', 'hint'].includes(String(dimensions.mode))) &&
-      (dimensions.source === undefined || ['provider', 'fallback', 'policy'].includes(String(dimensions.source))) &&
-      (dimensions.outcome === undefined || ['answered', 'attempt-required', 'quota-exhausted', 'unavailable'].includes(String(dimensions.outcome)))
-    )
-  }
-  if (name === 'structured_attempt.submitted' || name === 'structured_attempt.passed') {
-    return dimensions.activityType === undefined || [
-      'choice',
-      'sort',
-      'missing_context',
-      'safety_classification',
-      'prompt_builder',
-      'output_comparison',
-      'rubric_review',
-    ].includes(String(dimensions.activityType))
-  }
-  if (name === 'retry.requested') {
-    return dimensions.reason === undefined || [
-      'retry',
-      'targeted-practice',
-      'verification-unavailable',
-      'engine-retry',
-    ].includes(String(dimensions.reason))
-  }
-  if (name === 'review.started') {
-    return dimensions.reason === undefined || ['canonical-review', 'due', 'overdue'].includes(String(dimensions.reason))
-  }
-  if (name === 'verification.state_changed') {
-    return (
-      (dimensions.state === undefined || ['validating', 'pending', 'verified', 'rejected', 'gateway-unavailable'].includes(String(dimensions.state))) &&
-      (dimensions.verdict === undefined || ['PASS', 'FAIL', 'INVALID'].includes(String(dimensions.verdict)))
-    )
-  }
-  if (name === 'renderer.degraded') {
-    return (
-      (dimensions.reason === undefined || [
-        'unsupported',
-        'creation-failed',
-        'context-lost',
-        'restore-failed',
-        'load-timeout',
-        'reduced-motion',
-      ].includes(String(dimensions.reason))) &&
-      (dimensions.fallback === undefined || ['canvas2d', 'dom', 'none'].includes(String(dimensions.fallback)))
-    )
-  }
+function enrichedIdentityIsValid(dimensions: AnalyticsDimensions): boolean {
+  if (!contextValueIsValid('installationId', dimensions.installationId)) return false
+  return contextValueIsValid('sessionId', dimensions.sessionId)
+}
+
+function valuesMatchPolicy(policy: EventPolicy, dimensions: AnalyticsDimensions): boolean {
+  return Object.entries(dimensions).every(([key, value]) => {
+    const vocabulary = policy.vocabularies[key]
+    return vocabulary === undefined || vocabulary.includes(value)
+  })
+}
+
+function isAnalyticsEventName(value: unknown): value is AnalyticsEventName {
+  return typeof value === 'string' && EVENT_NAMES.has(value)
+}
+
+function eventEnvelopeFieldsAreValid(value: Record<string, unknown>): value is NamedEventRecord {
+  if (value.schemaVersion !== 1) return false
+  if (typeof value.eventId !== 'string') return false
+  if (value.eventId.length === 0 || value.eventId.length > 128) return false
+  if (!isAnalyticsEventName(value.name)) return false
   return true
 }
 
+function eventTimingIsValid(value: Record<string, unknown>): boolean {
+  if (typeof value.occurredAt !== 'string') return false
+  if (Number.isNaN(Date.parse(value.occurredAt))) return false
+  if (!Number.isInteger(value.sequence)) return false
+  return Number(value.sequence) >= 1
+}
+
 export function analyticsEventInputIsValid(value: unknown): value is AnalyticsEventInput {
-  if (!isRecord(value) || !hasOnlyKeys(value, ['name', 'dimensions', 'context'])) return false
-  if (typeof value.name !== 'string' || !EVENT_NAMES.has(value.name)) return false
-  const name = value.name as AnalyticsEventName
+  if (!isRecord(value)) return false
+  if (!hasOnlyKeys(value, ['name', 'dimensions', 'context'])) return false
+  const name = value.name
+  if (!isAnalyticsEventName(name)) return false
   const dimensions = value.dimensions ?? {}
-  if (!dimensionsAreValid(dimensions, EVENT_DIMENSIONS[name])) return false
-  if (!valuesMatchClosedVocabulary(name, dimensions)) return false
+  const policy = EVENT_POLICIES[name]
+  if (!dimensionsAreValid(dimensions, policy.dimensions)) return false
+  if (!valuesMatchPolicy(policy, dimensions)) return false
   return value.context === undefined || contextIsValid(value.context)
 }
 
 export function analyticsEventIsValid(value: unknown): value is AnalyticsEvent {
-  if (
-    !isRecord(value) ||
-    !hasOnlyKeys(value, ['schemaVersion', 'eventId', 'name', 'occurredAt', 'sequence', 'dimensions']) ||
-    value.schemaVersion !== 1 ||
-    typeof value.eventId !== 'string' ||
-    value.eventId.length === 0 ||
-    value.eventId.length > 128 ||
-    typeof value.name !== 'string' ||
-    !EVENT_NAMES.has(value.name) ||
-    typeof value.occurredAt !== 'string' ||
-    Number.isNaN(Date.parse(value.occurredAt)) ||
-    !Number.isInteger(value.sequence) ||
-    Number(value.sequence) < 1
-  ) {
-    return false
-  }
-  const name = value.name as AnalyticsEventName
-  const allowed = [...ENRICHED_KEYS, ...EVENT_DIMENSIONS[name]]
+  if (!isRecord(value)) return false
+  if (!hasOnlyKeys(value, ['schemaVersion', 'eventId', 'name', 'occurredAt', 'sequence', 'dimensions'])) return false
+  if (!eventEnvelopeFieldsAreValid(value)) return false
+  if (!eventTimingIsValid(value)) return false
+  const policy = EVENT_POLICIES[value.name]
+  const allowed = [...ENRICHED_KEYS, ...policy.dimensions]
   if (!dimensionsAreValid(value.dimensions, allowed, ['installationId', 'sessionId'])) return false
   const dimensions = value.dimensions
-  if (
-    typeof dimensions.installationId !== 'string' ||
-    !SAFE_IDENTIFIER.test(dimensions.installationId) ||
-    typeof dimensions.sessionId !== 'string' ||
-    !SAFE_IDENTIFIER.test(dimensions.sessionId)
-  ) {
-    return false
-  }
-  if (!contextIsValid(Object.fromEntries(CONTEXT_KEYS.filter((key) => key in dimensions).map((key) => [key, dimensions[key]])))) {
-    return false
-  }
-  return valuesMatchClosedVocabulary(name, dimensions)
+  if (!enrichedIdentityIsValid(dimensions)) return false
+  if (!contextDimensionsAreValid(dimensions)) return false
+  return valuesMatchPolicy(policy, dimensions)
 }
 
 export type AnalyticsPort = {

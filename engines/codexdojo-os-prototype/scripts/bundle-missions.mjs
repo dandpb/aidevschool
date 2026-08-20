@@ -2,17 +2,22 @@
 // the whole pilot. Without this, a built OS falls back to the dev-server
 // entrypoints in config/mission-bindings.yaml and every mission iframe 404s.
 //
-// Pairs with .env.production, which points the VITE_*_URL keys at /apps/<name>/.
-import { cpSync, existsSync, rmSync } from 'node:fs'
+// Pairs with the inline VITE_*_URL values in the package.json `build:pilot`
+// script, which point the OS at /apps/<name>/ on its own origin.
+import { existsSync, mkdirSync, renameSync, rmSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import process from 'node:process'
 
+// Serial by design: disjoint targets would allow parallel builds, but Netlify/CI
+// build containers are resource-constrained and stdio:inherit keeps logs ordered.
+
 const osRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const enginesRoot = resolve(osRoot, '..')
 
-// name → must match the path in .env.production; cwd → the runtime's package.
+// name → subpath under dist/apps/ (and the inline VITE_*_URL in build:pilot);
+// cwd → the runtime's package.
 const MISSIONS = [
   { name: 'literacydojo', cwd: 'literacyDojo', prebuild: ['npm', ['run', 'gen:content']] },
   { name: 'warehouse', cwd: 'voxelDojo/game-02-warehouse' },
@@ -38,9 +43,11 @@ for (const { name, cwd, prebuild } of MISSIONS) {
   run('npx', ['vite', 'build', `--base=/apps/${name}/`, '--outDir', outDir, '--emptyOutDir'], source)
 
   const target = resolve(osRoot, 'dist', 'apps', name)
+  // Atomic move (same filesystem): no partial-copy window and no double I/O.
+  // renameSync needs the parent to exist; mkdir it once per run.
+  mkdirSync(dirname(target), { recursive: true })
   rmSync(target, { recursive: true, force: true })
-  cpSync(outDir, target, { recursive: true })
-  rmSync(outDir, { recursive: true, force: true })
+  renameSync(outDir, target)
   console.log(`  → dist/apps/${name}`)
 }
 

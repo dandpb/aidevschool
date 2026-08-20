@@ -41,7 +41,7 @@ async function expectMissionMounted(
   ).toContainText(innerContent)
 }
 
-test('IA Prática mission mounts from the bundled build', async ({ page }) => {
+test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build', async ({ page }) => {
   await enterSchool(page)
   await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
   await expectMissionMounted(
@@ -51,7 +51,7 @@ test('IA Prática mission mounts from the bundled build', async ({ page }) => {
   )
 })
 
-test('Dev mission mounts from the bundled build and reports the verifier honestly', async ({
+test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev mission mounts from the bundled build and reports the verifier honestly', async ({
   page,
 }) => {
   await enterSchool(page, /Trilha técnica.*Dev/)

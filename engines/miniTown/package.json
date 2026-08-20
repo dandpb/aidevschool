@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "smoke": "playwright test"
+    "smoke": "playwright test && node scripts/readiness-report.mjs",
+    "readiness:report": "node scripts/readiness-report.mjs"
   },
   "dependencies": {
     "three": "^0.170.0"

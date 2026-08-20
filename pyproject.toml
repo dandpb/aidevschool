@@ -19,6 +19,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest>=8,<9",
+  "coverage[toml]>=7,<8",
+  "radon>=6,<7",
 ]
 
 # Don't auto-discover packages from the polyglot tree; this project exists only to
@@ -43,5 +45,10 @@ testpaths = [
   "curriculum/_shared/tests",
   # AI Literacy content-contract suite (unittest-style, also runs standalone).
   "curriculum/ai-literacy/tools/tests",
+  # Product-readiness canonical-source, validation, and generated-view checks.
+  "docs/product-readiness/tests",
 ]
 python_files = ["test_*.py"]
+
+[tool.coverage.run]
+branch = true

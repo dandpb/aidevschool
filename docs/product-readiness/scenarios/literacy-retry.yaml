@@ -1,0 +1,28 @@
+schemaVersion: 1
+id: literacy-retry
+useCaseId: literacy-standalone-first-lesson
+kind: recovery
+execution: mixed
+startState: fresh-browser-profile
+steps:
+  - complete-onboarding
+  - submit-incorrect-attempt
+  - read-corrective-feedback
+  - request-hint
+  - retry-activity
+  - complete-lesson
+assertions:
+  - id: incorrect-attempt-offers-safe-recovery
+    severity: high
+    evidence: playwright
+    claim: An incorrect attempt offers feedback, a hint, and another attempt without reporting completion.
+  - id: learner-understands-retry
+    severity: high
+    evidence: observation
+    claim: The learner can retry without facilitator explanation or internal product language.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/vertical-slice.spec.ts
+  - engines/literacyDojo/src/domain/lessonSession.ts
