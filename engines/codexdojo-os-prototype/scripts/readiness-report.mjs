@@ -13,6 +13,11 @@ const result = spawnSync(
     'engines/codexdojo-os-prototype',
     '--output',
     'engines/codexdojo-os-prototype/test-results/readiness',
+    '--scenarios',
+    'os-onboarding-track-choice',
+    'os-literacy-hosted-mission',
+    'os-voxel-hosted-missions',
+    'os-verification-recovery',
   ],
   { cwd: repoRoot, encoding: 'utf8', stdio: 'inherit' },
 )

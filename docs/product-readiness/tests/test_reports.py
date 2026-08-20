@@ -6,7 +6,11 @@ from readiness_test_support import register_tools_package
 register_tools_package()
 
 from product_readiness_tools.load import load_domain
-from product_readiness_tools.reports import emit_engine_reports, validate_report_directories
+from product_readiness_tools.reports import (
+    build_candidate_report,
+    emit_engine_reports,
+    validate_report_directories,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -37,6 +41,7 @@ def test_emit_engine_reports_records_only_owned_automated_scenarios(tmp_path: Pa
     }
     assert all(len(report["sourceFingerprint"]) == 64 for report in reports)
     assert all(len(report["manualFingerprint"]) == 64 for report in reports)
+    assert all(report["executor"] == "automated" for report in reports)
     assert all("grantedTier" not in report for report in reports)
 
 
@@ -75,3 +80,47 @@ def test_emit_engine_reports_covers_programmer_browser_producers(tmp_path: Path)
     assert pixel_ids == {"pixelquest-encounter-evidence"}
     assert voxel_ids == {"voxel-standalone-loop"}
     assert not (pixel_output / "stale.json").exists()
+
+
+def test_emit_engine_reports_can_limit_facts_to_exercised_scenarios(tmp_path: Path) -> None:
+    # Given a producer command that exercised only one declared OS scenario
+    domain = load_domain(READINESS_ROOT)
+    output = tmp_path / "os"
+
+    # When the producer normalizes that explicit scenario scope
+    emit_engine_reports(
+        domain,
+        REPO_ROOT,
+        "engines/codexdojo-os-prototype",
+        output,
+        ("os-onboarding-track-choice",),
+    )
+
+    # Then it does not fabricate facts for unexercised sibling scenarios
+    report_ids = {json.loads(path.read_text(encoding="utf-8"))["scenarioId"] for path in output.glob("*.json")}
+    assert report_ids == {"os-onboarding-track-choice"}
+
+
+def test_build_candidate_report_contains_facts_without_a_readiness_grant(tmp_path: Path) -> None:
+    # Given a producer report for a tested checkout
+    domain = load_domain(READINESS_ROOT)
+    output = tmp_path / "pixel"
+    output.mkdir()
+    emit_engine_reports(domain, REPO_ROOT, "engines/pixelDojo", output)
+
+    # When CI aggregates the producer facts
+    report, errors = build_candidate_report(
+        domain,
+        REPO_ROOT,
+        (output,),
+        "2026-08-20-candidate",
+        "2026-08-20T17:00:00Z",
+        "2026-09-20",
+    )
+
+    # Then it creates an assessor input without embedding a decision or grant
+    assert errors == ()
+    assert report is not None
+    assert "decisions" not in report
+    assert report["assessorContext"] == "independent-readiness-review"
+    assert report["results"]
