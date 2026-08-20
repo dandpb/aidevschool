@@ -205,45 +205,6 @@ python3 docs/curso/validate_course.py
 O caso implementa o **núcleo puro** que um endpoint chamaria. A rota HTTP e o banco ficaram
 fora do escopo para que o exemplo seja pequeno, executável offline e verificável de verdade.
 
-## Laboratório cumulativo de workflows
-
-O exemplo CSV vira o ciclo 00 de um laboratório permanente. Os ciclos 01–10 adicionam dez
-casos reais e pequenos para desenvolvimento: filtro de logs, patch atômico de configuração,
-agenda de retry, snapshot TTL/LRU, plano de dependências, renomes seguros, política de diff,
-resumo de access log, migração v1→v2 e varredura de segredos sintéticos. Cada ciclo tem uma
-fixture, um handler, um teste de falha e uma lição promovida que pode ser declarada por ciclos
-posteriores.
-
-Execute a suíte e uma saída limpa assim:
-
-```bash
-python3 -m pytest docs/curso/workflow_lab -q
-python3 docs/curso/workflow_lab/lab.py \
-  --fixtures docs/curso/workflow_lab/fixtures \
-  --output "$(mktemp -d)/workflow-lab"
-```
-
-O CLI completa 11 ciclos, cria dez artefatos JSON em `artifacts/`, acumula 11 registros em
-`learning.ndjson` e gera `report.md` como projeção derivada. O ledger registra somente os
-`requires` declarados por cada ciclo; assim, o aprendizado acumulado é um ativo técnico
-reutilizável, não um resumo implícito de todo o histórico. Falhas que levantam erro no
-preflight ou em um handler acontecem antes das escritas; uma negação de política válida
-permanece observável no artefato do ciclo 07.
-
-Consulte o [README do laboratório](docs/curso/workflow_lab/README.md), a
-[especificação](docs/curso/workflow_lab/SPEC.md), a [validação](docs/curso/workflow_lab/VALIDACAO.md)
-e o [índice humano do skill pack](docs/curso/workflow_lab/skills/executar-workflows-cumulativos.md).
-As instruções canônicas ficam separadas em
-[`workflow-lab-build`](.agents/skills/workflow-lab-build/SKILL.md),
-[`workflow-lab-verify`](.agents/skills/workflow-lab-verify/SKILL.md) e
-[`workflow-lab-maintain`](.agents/skills/workflow-lab-maintain/SKILL.md): Build produz,
-Verify prova em outro contexto e Maintain promove somente o estado aprovado.
-
-Os testes demonstram determinismo, acúmulo e reuso de lições, além de artefatos observáveis.
-Isso não é estudo de adoção, prova de aprendizagem humana ou medição de valor para uma equipe;
-essas conclusões exigiriam uso real e uma avaliação separada. O laboratório também é offline e
-não modifica o estado canônico em `learner/`.
-
 ## Definition of Done
 
 Uma feature só pode ser chamada de pronta quando:

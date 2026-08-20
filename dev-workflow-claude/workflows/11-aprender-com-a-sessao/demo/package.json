@@ -1,9 +1,0 @@
-{
-  "name": "tempo-demo-aprender",
-  "version": "1.0.0",
-  "description": "CLI de time tracking — projeto exemplo do workflow spec-first",
-  "type": "module",
-  "scripts": {
-    "test": "bash tools/checar-regras.sh && node --test"
-  }
-}

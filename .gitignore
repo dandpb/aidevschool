@@ -109,8 +109,6 @@ engines/pixelDojo/pixel-quest/shots/
 .serena/
 .opencode/
 .playwright-mcp/
-.playwright-cli/
-.kimi-code/
 .codex/
 .notebook/
 .zcode/
@@ -143,7 +141,6 @@ engines/miniTown/docs/concepts/*.png
 
 # Riptide artifacts (cloud-synced)
 .humanlayer/tasks/
-.humanlayer/workspace.json
 
 # Local Netlify folder
 .netlify

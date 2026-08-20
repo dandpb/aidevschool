@@ -1,6 +1,0 @@
-interface:
-  display_name: "Manter o Workflow Lab"
-  short_description: "Sincroniza contratos, evidências e índices"
-  default_prompt: "Use $workflow-lab-maintain para sincronizar o Workflow Lab após um verify independente PASS."
-policy:
-  allow_implicit_invocation: true

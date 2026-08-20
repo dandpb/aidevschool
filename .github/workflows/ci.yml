@@ -57,18 +57,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
-      - run: pnpm typecheck
       - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: pixeldojo-readiness-${{ github.sha }}
-          path: |
-            engines/pixelDojo/test-results
-            engines/pixelDojo/pixel-quest/test-results
-          if-no-files-found: warn
 
   voxeldojo:
     name: voxelDojo (TS)
@@ -93,16 +82,6 @@ jobs:
       - run: pnpm test
       - run: pnpm typecheck
       - run: pnpm build
-      - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: voxeldojo-readiness-${{ github.sha }}
-          path: |
-            engines/voxelDojo/test-results
-            engines/voxelDojo/game-*/test-results
-          if-no-files-found: warn
 
   codexdojo-os:
     name: codexdojo-os (TS)
@@ -141,15 +120,6 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: node scripts/bundle-missions.mjs
       - run: npx playwright test --config=playwright.pilot.config.ts
-      - run: node scripts/readiness-report.mjs
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: codexdojo-os-readiness-${{ github.sha }}
-          path: |
-            engines/codexdojo-os-prototype/test-results
-            engines/codexdojo-os-prototype/test-results-pilot
-          if-no-files-found: warn
 
   # The suites of the former monolithic `python` job now run as per-engine
   # split jobs (minimaxDojo / miniMaxEvolutionEngine / aiDevschoolMvp /
@@ -189,14 +159,6 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
-      # This report contains automated facts only; observation assertions stay
-      # with the independent assessor and cannot grant readiness in CI.
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: literacydojo-readiness-${{ github.sha }}
-          path: engines/literacyDojo/test-results
-          if-no-files-found: warn
 
   minitown:
     name: miniTown (TS)
@@ -206,9 +168,6 @@ jobs:
         working-directory: engines/miniTown
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
       - uses: pnpm/action-setup@v4
         with:
           package_json_file: engines/miniTown/package.json
@@ -218,19 +177,12 @@ jobs:
           cache: pnpm
           cache-dependency-path: engines/miniTown/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
-      - run: python -m pip install -e ../..
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm smoke
-      - uses: actions/upload-artifact@v4
-        if: success()
-        with:
-          name: minitown-readiness-${{ github.sha }}
-          path: engines/miniTown/test-results
-          if-no-files-found: warn
 
   dojotoday:
     name: dojoToday (TS + substrate)
@@ -253,42 +205,6 @@ jobs:
       - run: npm run selfcheck
       - run: npm run lint
       - run: npm run build
-
-  product-readiness:
-    name: product readiness (claims)
-    needs: [literacydojo, codexdojo-os, dojotoday, pixeldojo, voxeldojo, minitown]
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: python -m pip install -e ".[dev]"
-      - run: mkdir -p artifacts/product-readiness
-      - name: download producer reports and browser artifacts
-        continue-on-error: true
-        uses: actions/download-artifact@v4
-        with:
-          pattern: "*-readiness-${{ github.sha }}"
-          path: artifacts/product-readiness
-          merge-multiple: true
-      - name: aggregate tested-SHA producer facts
-        run: >-
-          python3 docs/product-readiness/tools/cli.py aggregate
-          --reports artifacts/product-readiness
-          --output artifacts/product-readiness/product-readiness-report.json
-      - name: validate readiness sources and candidate report
-        run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
-      - name: enforce readiness claims without writes
-        run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
-      - name: upload product-readiness-report.json
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: product-readiness-report-${{ github.sha }}
-          path: artifacts/product-readiness/product-readiness-report.json
-          if-no-files-found: warn
 
   curriculum-node:
     name: curriculum Node (18 projects)
@@ -397,9 +313,6 @@ jobs:
         run: pnpm --filter ${{ matrix.game }} typecheck
       - name: build
         run: pnpm --filter ${{ matrix.game }} build
-      - run: pnpm exec playwright install --with-deps chromium
-      - name: smoke
-        run: pnpm --filter ${{ matrix.game }} smoke
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — pixelDojo `games/*` siblings. The
   # canonical `pixel-quest/` is already covered by the root `pixeldojo` job

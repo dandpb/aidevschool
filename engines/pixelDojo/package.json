@@ -9,8 +9,7 @@
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "biome check pixel-quest/src pixel-quest/playwright",
     "build": "pnpm -r --if-present build",
-    "smoke": "pnpm -r --if-present smoke && node scripts/readiness-report.mjs",
-    "readiness:report": "node scripts/readiness-report.mjs"
+    "smoke": "pnpm -r --if-present smoke"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
