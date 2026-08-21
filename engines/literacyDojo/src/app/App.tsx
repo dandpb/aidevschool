@@ -3,6 +3,7 @@ import type { LessonDefinition } from "../data/generated/lessons";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
+import { ErrorRecoveryScreen } from "../screens/ErrorRecoveryScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
@@ -44,12 +45,24 @@ function AppShell({
 }) {
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
+  const [bootError, setBootError] = useState<string | null>(null);
   const hostReady = progress !== null;
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const seeded = await loadOrSeedProgress(services);
+      let seeded: LearnerProgress;
+      try {
+        seeded = await loadOrSeedProgress(services);
+      } catch (error) {
+        if (cancelled) return;
+        setBootError(
+          error instanceof Error
+            ? error.message
+            : "Não foi possível ler o progresso local deste navegador.",
+        );
+        return;
+      }
       if (hostAdapter !== null) {
         if (cancelled) return;
         setProgress(seeded);
@@ -101,6 +114,14 @@ function AppShell({
     setProgress(fresh);
     setRoute({ name: "onboarding" });
   }, [services]);
+
+  if (bootError) {
+    return (
+      <main className="app-shell">
+        <ErrorRecoveryScreen message={bootError} />
+      </main>
+    );
+  }
 
   if (!progress || !route) {
     return (
@@ -166,6 +187,7 @@ function AppShell({
               onBack={() => setRoute({ name: "home" })}
               onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
               onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onProgressImported={setProgress}
             />
           )}
           {route.name === "lesson" && (
