@@ -45,9 +45,11 @@ test("readiness literacy-happy-path and literacy-resume: acerto de primeira enca
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
   ).toBeVisible({ timeout: 15_000 });
   await page.reload();
-  await expect(
-    page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
-  ).toBeVisible();
+  // resumeSession retoma home quando não há lição in_progress; o próximo pedido permanece visível.
+  await expect(page.getByTestId("home-screen")).toBeVisible();
+  await expect(page.getByTestId("mission-title")).toHaveText(
+    "O que a IA faz bem e onde costuma falhar",
+  );
 
   const records = await readEvidence(page);
   expect(records).toHaveLength(1);
