@@ -46,6 +46,7 @@ function AppShell({
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
+  const [lessonOpenError, setLessonOpenError] = useState<string | null>(null);
   const hostReady = progress !== null;
 
   useEffect(() => {
@@ -117,9 +118,16 @@ function AppShell({
 
   const handleOpenLesson = useCallback(
     async (lessonId: string) => {
-      const updated = await services.useCases.startLesson(lessonId);
-      setProgress(updated);
-      setRoute({ name: "lesson", lessonId });
+      setLessonOpenError(null);
+      try {
+        const updated = await services.useCases.startLesson(lessonId);
+        setProgress(updated);
+        setRoute({ name: "lesson", lessonId });
+      } catch {
+        setLessonOpenError(
+          "Não foi possível salvar seu progresso. Tente abrir a missão novamente.",
+        );
+      }
     },
     [services],
   );
@@ -165,6 +173,11 @@ function AppShell({
           )}
         </header>
         <main className="app-stage">
+          {lessonOpenError && (
+            <p className="feedback feedback-fail" role="alert" data-testid="lesson-open-error">
+              {lessonOpenError}
+            </p>
+          )}
           {route.name === "onboarding" && (
             <OnboardingScreen
               onDone={(updated) => {
@@ -204,6 +217,7 @@ function AppShell({
               key={`${route.lessonId}:${route.mode ?? "initial"}`}
               lessonId={route.lessonId}
               mode={route.mode ?? "initial"}
+              onboarding={progress.onboarding}
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);
