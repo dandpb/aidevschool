@@ -44,13 +44,13 @@ export const learnerSnapshot: LearnerSnapshot = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 42d",
+      dueIn: "overdue 43d",
       reason: "overdue",
     },
     {
       unitId: "U2-key-value-store",
       title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      dueIn: "overdue 3d",
+      dueIn: "overdue 4d",
       reason: "overdue",
     },
     {
@@ -69,7 +69,7 @@ export const learnerSnapshot: LearnerSnapshot = {
     freezesEquipped: 0,
     freezesMax: 2,
   },
-  curr: 0.5,
+  curr: 0,
   predictions: {
     count: 0,
     byMetric: {
