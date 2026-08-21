@@ -8,11 +8,13 @@ import { isValidEvidenceRecord } from "../../src/domain/evidence";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
 import { readyLessonEntries } from "../../src/domain/track";
 import { InMemoryProgressRepository, createTestServices } from "../fakes";
-import { makeServices } from "../helpers";
+import { FIXED_NOW, makeServices } from "../helpers";
 
 const ready = readyLessonEntries(modules);
 const firstLesson = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
 if (!firstLesson) throw new Error("Mapa Inicial ausente do read model");
+const firstSkillId = firstLesson.skillIds[0];
+if (!firstSkillId) throw new Error("Mapa Inicial sem habilidade");
 
 type User = ReturnType<typeof userEvent.setup>;
 
@@ -288,5 +290,34 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("track-progress")).toHaveTextContent(
       `1 de ${ready.length} lições concluídas`,
     );
+  });
+
+  it("revisão no Progresso usa somente uma lição concluída e valida a abertura", async () => {
+    const user = userEvent.setup();
+    const progress = seededProgress((draft) => {
+      draft.lessonStatus[firstLesson.id] = "completed";
+      draft.skills[firstSkillId] = {
+        skillId: firstSkillId,
+        attempts: 1,
+        passes: 1,
+        lastScore: 1,
+        lastPracticedAt: new Date(FIXED_NOW.getTime() - 86_400_000).toISOString(),
+        nextReviewAt: new Date(FIXED_NOW.getTime() - 1).toISOString(),
+      };
+    });
+    const { services } = makeServices({ progress });
+    const startReview = vi.spyOn(services.useCases, "startReview");
+    render(<App services={services} />);
+
+    await screen.findByTestId("home-screen");
+    await user.click(screen.getByTestId("open-progress"));
+    const review = await screen.findByTestId(`progress-review-${firstLesson.id}`);
+    expect(screen.queryByTestId("progress-review-l03")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("progress-review-l14")).not.toBeInTheDocument();
+
+    await user.click(review);
+
+    expect(startReview).toHaveBeenCalledWith(firstLesson.id);
+    expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
   });
 });

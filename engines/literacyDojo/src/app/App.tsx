@@ -132,6 +132,20 @@ function AppShell({
     [services],
   );
 
+  const handleOpenReview = useCallback(
+    async (lessonId: string) => {
+      setLessonOpenError(null);
+      try {
+        const { progress: updated } = await services.useCases.startReview(lessonId);
+        setProgress(updated);
+        setRoute({ name: "lesson", lessonId, mode: "review" });
+      } catch {
+        setLessonOpenError("Não foi possível iniciar esta revisão. Tente novamente.");
+      }
+    },
+    [services],
+  );
+
   if (bootError) {
     return (
       <main className="app-shell">
@@ -190,7 +204,7 @@ function AppShell({
             <HomeScreen
               progress={progress}
               onContinue={(lessonId) => void handleOpenLesson(lessonId)}
-              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onReview={(lessonId) => void handleOpenReview(lessonId)}
               onOpenMap={() => setRoute({ name: "map" })}
               onOpenProgress={() => setRoute({ name: "progress" })}
               onReset={handleReset}
@@ -208,7 +222,7 @@ function AppShell({
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
               onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
-              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onReview={(lessonId) => void handleOpenReview(lessonId)}
               onProgressImported={setProgress}
             />
           )}
