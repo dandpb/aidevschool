@@ -22,7 +22,8 @@ useCases:
       facilitator: facilitator-guide.md#standalone-literacydojo
     sourcePaths:
       - engines/literacyDojo/src/
-      - engines/literacyDojo/playwright/
+      - engines/literacyDojo/playwright/vertical-slice.spec.ts
+      - curriculum/ai-literacy/modules/01-ai-sem-misterio/l02-ia-nao-e-fonte-de-verdade.yaml
     owner: literacyDojo
   - id: os-literacy-guided-mission
     surface: codexDojo OS
