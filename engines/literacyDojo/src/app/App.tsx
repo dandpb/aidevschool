@@ -115,6 +115,15 @@ function AppShell({
     setRoute({ name: "onboarding" });
   }, [services]);
 
+  const handleOpenLesson = useCallback(
+    async (lessonId: string) => {
+      const updated = await services.useCases.startLesson(lessonId);
+      setProgress(updated);
+      setRoute({ name: "lesson", lessonId });
+    },
+    [services],
+  );
+
   if (bootError) {
     return (
       <main className="app-shell">
@@ -167,7 +176,7 @@ function AppShell({
           {route.name === "home" && (
             <HomeScreen
               progress={progress}
-              onContinue={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onContinue={(lessonId) => void handleOpenLesson(lessonId)}
               onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
               onOpenMap={() => setRoute({ name: "map" })}
               onOpenProgress={() => setRoute({ name: "progress" })}
@@ -178,14 +187,14 @@ function AppShell({
             <TrackMapScreen
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
             />
           )}
           {route.name === "progress" && (
             <ProgressScreen
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
               onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
               onProgressImported={setProgress}
             />
@@ -210,7 +219,7 @@ function AppShell({
             <ResultScreen
               summary={route.summary}
               hosted={hostAdapter !== null}
-              onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onNextLesson={(lessonId) => void handleOpenLesson(lessonId)}
               onHome={() => setRoute({ name: "home" })}
               onMap={() => setRoute({ name: "map" })}
             />

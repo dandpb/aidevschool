@@ -1,12 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { App } from "../../src/app/App";
 import type { ActivityDefinition } from "../../src/data/generated/lessons";
 import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
 import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
 import { readyLessonEntries } from "../../src/domain/track";
+import { InMemoryProgressRepository, createTestServices } from "../fakes";
 import { makeServices } from "../helpers";
 
 const ready = readyLessonEntries(modules);
@@ -240,6 +241,38 @@ describe("fluxo do app (integração)", () => {
 
     expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: firstLesson.title })).toBeInTheDocument();
+  });
+
+  it("só exibe a lição depois de persistir o estado necessário para retomada", async () => {
+    const user = userEvent.setup();
+    const progressRepo = new InMemoryProgressRepository();
+    progressRepo.seed(seededProgress());
+    let releaseSave = () => {};
+    let signalSaveStarted = () => {};
+    const saveGate = new Promise<void>((resolve) => {
+      releaseSave = resolve;
+    });
+    const saveStarted = new Promise<void>((resolve) => {
+      signalSaveStarted = resolve;
+    });
+    const save = progressRepo.save.bind(progressRepo);
+    vi.spyOn(progressRepo, "save").mockImplementation(async (next) => {
+      if (next.lessonStatus[firstLesson.id] === "in_progress") {
+        signalSaveStarted();
+        await saveGate;
+      }
+      await save(next);
+    });
+    render(<App services={createTestServices({ progressRepo })} />);
+
+    await screen.findByTestId("home-screen");
+    await user.click(screen.getByTestId("continue-button"));
+    await saveStarted;
+    const visibleWhileSaving = screen.queryByTestId("lesson-intro") !== null;
+    releaseSave();
+
+    expect(visibleWhileSaving).toBe(false);
+    expect(await screen.findByTestId("lesson-intro")).toBeInTheDocument();
   });
 
   it("retomada: trilha concluída volta para home com progresso preservado", async () => {
