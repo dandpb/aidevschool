@@ -54,7 +54,7 @@ describe('mission result', () => {
     render(
       <ResultScreen
         completionStatus="saved"
-        verification={{ kind: 'gateway-unavailable' }}
+        verification={{ kind: 'gateway-unavailable', storageId: 'run-1', retryable: true }}
         canonicalMasteryCount={0}
         onRetryVerification={vi.fn()}
         onRetrySave={vi.fn()}
