@@ -12,6 +12,9 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ### Prepare
 
+- For the bounded 1–3 person human pilot, use the
+  [Portuguese operational kit](../PILOTO_PERCURSO_CLIENTE.md); it owns participant criteria,
+  consent, the three-session script, observation records, synthesis, and the pilot exit gate.
 - Confirm the supported public route opens in the learner's intended browser and device.
 - Decide whether the observation needs a fresh profile or a returning profile. Use a separate browser profile for a clean run rather than clearing a learner's existing data.
 - For local operation, content generation, browser installation, and release checks, follow the [LiteracyDojo README](../../engines/literacyDojo/README.md#como-rodar). Do not substitute copied commands from this guide.

@@ -57,7 +57,7 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Pessoa não técnica, exploração experimental | [Guia do estudante — miniTown](product-readiness/student-guide.md#experimental-minitown) | Explore-only; não contém microlições, persistência, progressão, evidência ou mastery. |
 | Programador | [Guia do estudante — jornadas de programação](product-readiness/student-guide.md#programmer-journeys) | O guia conduz ao currículo e aos engines; cada jornada mantém seus próprios limites de evidência. |
 | Programador, missão diária | [Guia do estudante — dojoToday](product-readiness/student-guide.md#programmer-journeys) | A projeção read-only do scheduler, streak e gate não avalia nem promove mastery. |
-| Facilitador | [Guia do facilitador](product-readiness/facilitator-guide.md) | Preparação, observação, recuperação, avaliação e revalidação cross-product; setup técnico continua local. |
+| Facilitador | [Guia do facilitador](product-readiness/facilitator-guide.md); [kit do piloto humano](PILOTO_PERCURSO_CLIENTE.md) | O guia cobre operação cross-product; o kit delimita o piloto LiteracyDojo com 1–3 pessoas. Setup técnico continua local. |
 | Revisor de readiness | [Matriz de product readiness](product-readiness/README.md) | Matriz gerada distingue tier pretendido de decisão independente atual. |
 | Contribuidor | [Handbook](handbook/README.md) + [AGENTS.md](../AGENTS.md) | Setup e comandos continuam locais a cada engine. |
 
