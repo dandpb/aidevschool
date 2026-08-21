@@ -32,7 +32,8 @@ class TestFacade(TrackFixtureMixin):
             self.assertEqual(0, result.returncode)
             self.assertEqual("", result.stderr)
             self.assertEqual(
-                "OK: 17 lição(ões) ready validadas, 0 planned (sem arquivo exigido).\n"
+                "OK: 17 lição(ões) ready validadas: 14 IA na Prática, 3 Dev; "
+                "0 planned (sem arquivo exigido).\n"
                 f"Read model gerado: {tmp}/lessons.ts\n",
                 result.stdout,
             )

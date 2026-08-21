@@ -4,6 +4,12 @@
 browser). Nada foi copiado de doc. Onde um doc do repo contradiz o que rodou, o doc está marcado como errado.
 **Ambiente:** node 22.23.2 · pnpm 9.15.9 · Python 3.11.11 (.venv) · go 1.26.4 · cargo 1.85.0 — toolchain completo.
 
+> **Nota de atualização (2026-08-21):** este relatório preserva o snapshot em
+> que o app expunha 17 missões/5 módulos. O release candidate atual limita a
+> jornada pública a 14 missões/4 módulos; as 3 lições Dev continuam no catálogo
+> como prévia fora do percurso. Consulte `engines/literacyDojo/README.md` para o
+> gate vigente.
+
 ---
 
 ## 1. O que está funcionando

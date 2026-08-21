@@ -9,7 +9,7 @@ if not __package__:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     __package__ = "tools"
 
-from .compiler import compile_track
+from .compiler import PUBLIC_JOURNEY, compile_track
 from .schema import SchemaResolver, validate_against_schema
 from .semantic import validate_track
 
@@ -42,7 +42,17 @@ def main(argv=None):
         return 1
 
     planned = sum(1 for entry in (catalog or {}).get("lessons", []) if entry.get("status") == "planned")
-    print("OK: %d lição(ões) ready validadas, %d planned (sem arquivo exigido)." % (len(ready), planned))
+    journey_by_module = {
+        module["id"]: module["journey"] for module in (catalog or {}).get("modules", [])
+    }
+    public_ready = sum(
+        1 for lesson in ready if journey_by_module[lesson["moduleId"]] == PUBLIC_JOURNEY
+    )
+    print(
+        "OK: %d lição(ões) ready validadas: %d IA na Prática, %d Dev; "
+        "%d planned (sem arquivo exigido)."
+        % (len(ready), public_ready, len(ready) - public_ready, planned)
+    )
     if out_path is not None:
         print("Read model gerado: %s" % out_path)
     return 0

@@ -7,6 +7,7 @@ import yaml
 from .activity_rules import _check_activity_evaluation_references
 from .catalog_rules import (
     VALID_DURATIONS,
+    VALID_JOURNEYS,
     VALID_STATUSES,
     _check_catalog_shape,
     _detect_prereq_cycles,
@@ -57,6 +58,12 @@ class _TrackValidator:
         return True
 
     def check_catalog(self):
+        for module_id, module in self.module_index.items():
+            if module.get("journey") not in VALID_JOURNEYS:
+                self.errors.append(
+                    "catalog.yaml: módulo %s com journey inválida: %r (válidas: %s)"
+                    % (module_id, module.get("journey"), ", ".join(VALID_JOURNEYS))
+                )
         for lesson_id, entry in self.lesson_index.items():
             for key in ("moduleId", "title", "objective", "estimatedMinutes", "prerequisites", "skillIds", "status"):
                 if key not in entry:

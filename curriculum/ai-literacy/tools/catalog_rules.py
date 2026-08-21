@@ -2,6 +2,7 @@ from __future__ import annotations
 
 VALID_STATUSES = ("planned", "ready")
 VALID_DURATIONS = (3, 4, 5)
+VALID_JOURNEYS = ("ia_pratica", "dev")
 
 
 def _check_catalog_shape(catalog, errors):

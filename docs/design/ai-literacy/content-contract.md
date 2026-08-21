@@ -77,12 +77,16 @@ feedback "ainda falta X" e, no futuro, da verificação independente.
 
 ## Catálogo
 
-`catalog.yaml` é o índice canônico: trilha, skills (`entender`, `pedir`,
-`avaliar`, `proteger`, `aplicar`), módulos (`mod-01`…`mod-04`) e as 14 lições
-com `status`:
+`catalog.yaml` é o índice canônico de 17 lições válidas. Cada módulo declara
+uma `journey`: `mod-01`…`mod-04` pertencem a `ia_pratica` (14 lições para
+profissionais não técnicos) e `mod-05` pertence a `dev` (3 lições preservadas
+como prévia, fora da promessa pública enquanto a Trilha Dev estiver “Em
+breve”). As lições usam `status`:
 
-- `ready` — lição completa; exige arquivo próprio válido em `modules/`.
-- `planned` — lição anunciada; **não** exige arquivo e não entra no read model.
+- `ready` — lição completa; exige arquivo próprio válido em `modules/` e entra
+  apenas na projeção correspondente à sua `journey`.
+- `planned` — lição anunciada; **não** exige arquivo nem entra em `lessons`,
+  mas pode continuar no índice do módulo com `hasContent: false`.
 
 Catálogo e arquivo devem concordar em `moduleId`, `title`, `estimatedMinutes`,
 `prerequisites` e `skillIds`; divergência falha o build.
@@ -98,13 +102,16 @@ curriculum/ai-literacy/*
 
 Exports do read model gerado (`lessons.ts`):
 
-- `lessons: LessonDefinition[]` — somente lições `ready` validadas;
+- `lessons: LessonDefinition[]` — as 14 lições `ready` validadas de
+  `ia_pratica`;
 - `contentVersion: string` — versão do catálogo;
 - `track: Track` — metadados da trilha (título, público, promessa, idioma);
-- `modules: ModuleDefinition[]` — módulos ordenados, cada um com suas
+- `modules: ModuleDefinition[]` — os 4 módulos públicos ordenados, cada um com suas
   `CatalogLessonEntry[]` (inclui lições `planned` com `hasContent: false`,
   para o mapa da trilha exibir "em breve" sem duplicar conteúdo na UI);
-- `skills: SkillDefinition[]` — skills com título e descrição em pt-BR.
+- `skills: SkillDefinition[]` — catálogo tipado de skills das duas jornadas,
+  preservado para os assets compartilhados; somente módulos/lições
+  `ia_pratica` aparecem no percurso público.
 
 Comandos (a partir da raiz do repositório):
 
