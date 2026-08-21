@@ -1,302 +1,358 @@
-# Piloto — o percurso do cliente
+# Kit operacional do piloto humano — LiteracyDojo
 
-**Data:** 2026-08-17 · **Para:** Daniel conduzir o primeiro teste com uma pessoa real
-**Superfície do piloto:** `engines/literacyDojo/` (trilha **IA na Prática**, 17 lições)
-**Duração:** 3 sessões de 15–20 min, ao longo de ~1 semana
-
-> **A hipótese que este piloto testa:** uma pessoa não técnica consegue, sozinha, entrar no produto,
-> concluir uma lição e sair com algo que aplica no trabalho — e volta por vontade própria.
->
-> **O que este piloto NÃO testa:** trilha Dev, mastery verificado, contas, sincronização entre
-> dispositivos, retenção de longo prazo. Não prometa nada disso ao cliente.
-
----
-
-## Por que a trilha IA na Prática, e não a Dev
-
-| | IA na Prática | Trilha Dev |
-| --- | --- | --- |
-| Conteúdo | 17 lições prontas e validadas | 3 missões ligadas (de 17 jogos existentes) |
-| Exercício separado da resposta | sim | **não** — as soluções estão no repo |
-| Verificado ponta a ponta | lint + 76 testes + E2E 6/6 (inclui offline) | shell testado; verificador ausente no build estático |
-| Pronto para um estranho usar | **sim** | não |
-
-A trilha Dev entra no piloto só como **demonstração de 5 minutos** (§6), nunca como percurso.
-
----
-
-## 1. Antes do cliente chegar (você, ~15 min)
-
-Escolha **uma** das duas formas de entrega.
-
-### Opção A — local, com a pessoa do seu lado (recomendada para o primeiro piloto)
-
-```bash
-cd engines/literacyDojo
-npm install
-npm run gen:content
-npm run build
-npx vite preview --host 0.0.0.0 --port 4399
-```
-
-O cliente abre no **próprio dispositivo**, na mesma rede: `http://<seu-ip-local>:4399/`
-(descubra o IP com `ipconfig getifaddr en0`). Usar o dispositivo dele importa: o progresso é local
-ao navegador, e é isso que você quer observar na sessão 2.
-
-### Opção B — link público (para piloto remoto)
-
-O engine já tem `netlify.toml`. Publique e **verifique você mesmo o link antes de enviar**:
-
-```bash
-cd engines/literacyDojo
-npx netlify deploy --prod --dir=dist      # exige CLI autenticado
-curl -sI <url> | head -1                  # tem de responder 200
-```
-
-Abra a URL num navegador anônimo e faça o onboarding inteiro antes de mandar para o cliente.
-Nunca envie um link que você não abriu.
-
-### Checagem final antes de chamar a pessoa
-
-- [ ] Abriu a URL num navegador **em aba anônima** e chegou até o mapa da vila.
-- [ ] Testou em celular (a maioria vai abrir no telefone).
-- [ ] Testou o modo offline: carregue a página, desligue o wi-fi, recarregue — tem de continuar
-      funcionando (é PWA e isso está coberto por teste).
-- [ ] Tem papel/planilha aberta para a folha de observação (§4). **Não há instrumentação no
-      produto** — se você não anotar, o dado não existe.
-
----
-
-## 2. O percurso — sessão 1 (~20 min)
-
-O que você entrega ao cliente é **uma frase e um link**. Nada mais:
-
-> "Isso é uma escola curta para usar IA no trabalho. Abre o link e vai até onde der. Eu fico
-> quieto olhando; se travar de verdade, me chama."
-
-Daqui pra frente, é ele. Você observa e cronometra.
-
-### Passo 1 — Entrada (`Chegue à Vila Lume`)
-
-Ele vê: apresentação da vila, a guia **Lumi**, dois cartões — *Vila Lume · DISPONÍVEL* e
-*Trilha Dev · EM BREVE* — e o aviso de privacidade ("seu progresso fica neste navegador, sem conta").
-Botão: **Continuar jornada**.
-
-**Observe:** ele lê o aviso de privacidade ou pula? Pergunta o que é "Vila Lume"? Repara no
-"EM BREVE"?
-
-### Passo 2 — `O que você quer melhorar com IA?`
-
-Quatro opções: escrever textos/e-mails melhores · economizar tempo em tarefas repetitivas ·
-conferir se a resposta da IA está certa · saber o que posso compartilhar com segurança.
-
-**Observe e anote qual ele escolhe.** Essa é a informação mais valiosa da sessão inteira: é o
-problema real dele, com as palavras dele.
-
-### Passo 3 — `Onde você mais pretende usar IA?`
-
-No trabalho · Nos estudos · No meu próprio negócio · Na vida cotidiana.
-
-### Passo 4 — `Como você avalia sua confiança hoje?`
-
-Estou começando do zero · Já usei mas sem método · Uso bastante e quero refinar.
-
-**Observe:** ele se subestima ou se superestima? Compare com o desempenho no passo 6.
-
-### Passo 5 — `Qual situação você quer explorar primeiro?`
-
-Três cenários com ilustração voxel: organizar um agendamento · preparar uma mensagem ·
-pesquisar uma notícia. Botão: **Abrir mapa da Vila Lume**.
-
-**Observe:** as ilustrações ajudam a escolher ou são só enfeite? (Elas deveriam explicar a tarefa.)
-
-### Passo 6 — Mapa da Vila Lume
-
-Ele vê 17 missões em 5 bairros, contador `0/17 missões`, XP e dias de sequência. O bairro 1 é
-*Praça do Encontro · IA sem mistério*. Algumas missões aparecem **Bloqueada**, uma aparece
-**Disponível** com botão **Começar**.
-
-**Observe:** ele entende por onde começar sem você falar nada? Fica incomodado com as bloqueadas?
-
-### Passo 7 — A primeira missão
-
-Primeiro vem um briefing: **Pedido da Vila Lume** com o objetivo da lição, a linha
-*"Aplicação que você escolheu: <a situação do passo 5>"* e uma dica da Lumi. Botão:
-**Começar missão**.
-
-Depois vem a atividade. Exemplo real da lição "IA não é uma fonte de verdade": um cenário
-concreto (você pediu números do mercado de delivery para uma apresentação à diretoria), **duas
-respostas de IA** — uma com números exatos e muita confiança, outra admitindo o limite e dizendo
-onde verificar — e, embaixo, caixas de seleção *"por quê?"* que obrigam a justificar a escolha.
-
-Botões: **Verificar resposta** · **Pedir dica** · **Sair da lição**.
-
-**Observe (o momento mais importante do piloto):**
-- Ele percebe que a resposta cheia de números é a menos confiável?
-- Ele **preenche os "por quê?"** ou tenta verificar só com a escolha? (Muita gente ignora e tira
-  60% — é o comportamento esperado e é dado bom.)
-- Ele usa **Pedir dica**? Quantas vezes?
-- Quanto tempo do clique em "Começar missão" até o primeiro "Verificar resposta"?
-
-### Passo 8 — Feedback e nota
-
-O produto responde com nota da tentativa (ex.: *"Pontuação desta tentativa: 60%"*) e diz
-exatamente o que faltou (*"Faltou este motivo: uma resposta confiável indica a origem dos
-dados…"*). Abaixo de 75% ele oferece **Tentar novamente**.
-
-**Observe:** ele tenta de novo ou desiste? O texto do feedback foi suficiente para ele acertar na
-segunda, ou ele chutou?
-
-A rota se define aqui: acerto de primeira → rota **intermediária**; erro, dica ou nova tentativa →
-rota **guiada** (mais passo a passo). **Anote em qual rota ele caiu** e se o produto explicou isso
-de forma que ele entendeu.
-
-### Passo 9 — Fim da sessão 1
-
-Deixe-o concluir 1 a 3 missões e **pare**. Não peça para continuar.
-
-Então faça exatamente três perguntas, nesta ordem, e anote **as palavras dele**:
-
-1. "O que você faria diferente amanhã por causa disso?"
-2. "Teve algum momento em que você não soube o que fazer?"
-3. "Você voltaria amanhã? Por quê?"
-
-A pergunta 1 é a que mede valor. Se a resposta for vaga ("achei legal"), o produto **não** entregou
-— e isso é o resultado do piloto, não um problema do cliente.
-
----
-
-## 3. As sessões seguintes
-
-### Sessão 2 — 24 a 48 h depois (~15 min)
-
-**Não avise, não lembre.** Se ele voltar sozinho, esse é o sinal mais forte que este piloto pode
-produzir. Se não voltar, pergunte por que — vale mais que qualquer métrica.
-
-Ele deve encontrar: a sequência (streak) preservada, o progresso onde parou e, se já houver revisão
-vencida, uma missão de revisão espaçada (a lição volta para reforço).
-
-**Observe:** o progresso realmente sobreviveu? A sequência fez ele voltar ou passou batido? Ele
-entendeu por que uma lição já feita reapareceu?
-
-### Sessão 3 — mais 2 ou 3 dias (~15 min)
-
-Objetivo: chegar ao bairro 4 (*Segurança e aplicação*), especialmente as lições **"Proteja suas
-informações"** e **"Use IA para uma tarefa real de trabalho"** — é onde o produto pede que ele
-aplique numa tarefa da rotina dele.
-
-**Observe:** ele consegue nomear uma tarefa real? Ele aplicou de fato entre as sessões?
-
-Pergunta final: *"Se isso custasse dinheiro, você pagaria? Quanto?"* — e depois fique calado.
-
----
-
-## 4. Folha de observação (uma linha por sessão)
-
-| Campo | Sessão 1 | Sessão 2 | Sessão 3 |
-| --- | --- | --- | --- |
-| Data / dispositivo / navegador | | | |
-| Quantas vezes ele te chamou | | | |
-| Onde travou (passo exato) | | | |
-| Missões concluídas | | | |
-| Nota da 1ª tentativa | | | |
-| Dicas pedidas | | | |
-| Rota atribuída (guiada / intermediária) | | | |
-| Voltou sozinho? | — | | |
-| Frase literal dele sobre o que faria diferente | | | |
-| Onde ele bocejou / se distraiu | | | |
-
-Guarde em `docs/piloto/<nome-ou-inicial>-<data>.md`. Anote **também** o que deu certo — sem isso
-você só vai lembrar dos problemas.
-
----
-
-## 5. Critérios de sucesso — declare antes, não depois
-
-Pré-declarados de propósito: é o gate de valor que faltava no ecossistema. Todos são falsificáveis.
-
-| # | Critério | Passa se |
-| --- | --- | --- |
-| 1 | **Entra sozinho** | conclui o onboarding e abre a 1ª missão com **zero** intervenção sua |
-| 2 | **Tira algo dali** | responde a pergunta "o que faria diferente amanhã" com uma ação **concreta e específica** |
-| 3 | **Volta** | inicia a sessão 2 em até 48 h **sem** você lembrar |
-| 4 | **Aplica** | até a sessão 3, nomeia uma tarefa real onde usou o que aprendeu |
-
-**1 e 2 falharam → o problema é o produto** (entrada ou conteúdo). Conserte antes de qualquer
-feature nova.
-**1 e 2 passaram, 3 falhou → o produto é bom e falta gancho de retorno** (hoje só existe a
-sequência local, sem notificação, sem e-mail, sem conta).
-**Os 4 passaram → você tem um produto.** Aí sim vale instrumentar (ADR-0009 já tem os 4 eventos
-desenhados), publicar e buscar a pessoa nº 2.
-
-Um piloto com **um** cliente não prova mercado. Prova que o produto funciona nas mãos de alguém
-que não é você — que é exatamente o que nunca foi testado até hoje.
-
----
-
-## 6. Se ele perguntar da trilha Dev (5 min, opcional)
-
-Só mostre se ele pedir, e diga a verdade: **é um preview, não está pronto.**
-
-```bash
-cd engines/codexdojo-os-prototype
-npm install
-npm run test:smoke:pilot     # PRIMEIRO: prova que as missões montam no build estático
-npm run preview:pilot        # build + empacota as 4 missões; serve em 127.0.0.1:4173
-```
-
-`test:smoke:pilot` é o guarda-corpo desta parte: ele roda contra o `dist/` **sem nenhum
-dev-server** e falha se qualquer missão não montar ou se o iframe apontar para fora da origem do
-OS. Se ele passar, o que você vai mostrar funciona; se falhar, não mostre.
-
-Uma URL só, um onboarding, e as duas trilhas com 3 missões cada. A missão Dev **WAREHOUSE** é boa
-de mostrar: simulação 3D, "preveja a prateleira que cada chave vai ocupar", meta observável de 80%.
-
-Diga explicitamente, porque o produto diz também:
-
-- A evidência é **preservada**, mas não há verificador no build estático → a tela mostra
-  *"O verificador local está indisponível"*. Isso é correto: nada é marcado como dominado sem
-  verificação independente.
-- São **3 missões** por trilha, não o catálogo inteiro.
-- O currículo Dev de 18 projetos ainda **não tem exercício separado da resposta** — hoje serve como
-  referência, não como trilha de prática.
-
-Não prometa data.
-
----
-
-## 7. Se algo quebrar durante a sessão
-
-| Sintoma | Causa provável | Ação na hora |
-| --- | --- | --- |
-| Página não abre no dispositivo dele | `--host 0.0.0.0` ausente, ou firewall/rede separada | reconfira o IP; em último caso, use seu notebook |
-| Missão do OS mostra "refused to connect" | build feito com `npm run build` em vez de `build:pilot` | rode `npm run preview:pilot` |
-| Progresso sumiu na sessão 2 | outro navegador, aba anônima, ou limpeza de dados | anote como **falha do produto** — não conserte na frente dele |
-| Ele fica preso numa lição | conteúdo ou UI | espere **60 s** antes de ajudar, e anote onde |
-
-Regra durante a sessão: **você não explica a interface.** Cada explicação sua é um dado que você
-destrói — o produto vai ser usado sem você do lado.
-
----
-
-## Anexo — estado verificado hoje (2026-08-17)
-
-Tudo abaixo foi executado nesta data, não copiado de doc.
-
-| Superfície | Resultado |
+| Campo | Definição |
 | --- | --- |
-| literacyDojo | `gen:content` 17 lições · lint limpo · **76 testes** · build · **E2E 6/6** (inclui PWA offline) · `npm audit` 0 |
-| codexdojo OS | lint limpo · **208 testes** · smoke dev **61 passed / 0 failed** (era 52/9) · smoke do build estático **2/2** · `npm audit` 0 (corrigido `nanoid` high) |
-| Currículo Node | **18/18** projetos passando por exit code (5 estavam quebrados por symlink) |
-| Currículo 01 Go | `gofmt` + `go vet` limpos · `go test -race` · cobertura **85.9% / 99.2%** |
-| Currículo 01 Rust | `fmt` + `clippy -D warnings` limpos · **15 unit + 6 integração, 0 `#[ignore]`d** |
-| Python compartilhado | **693 passed**, 1 skipped · projeções em sync |
-| voxelDojo (16 jogos) | lint · test · typecheck · build · **smoke 16/16 jogos, 50 testes** |
-| pixelDojo | lint · typecheck · build · **113 testes** · smoke 1/1 |
-| codexDojo · miniTown · dojoToday | verdes · `pnpm audit --prod` sem vulnerabilidades |
+| Público | 1–3 profissionais não técnicos, falantes de pt-BR |
+| Superfície | [LiteracyDojo público](https://aidevschool-literacydojo.netlify.app/) |
+| Formato | Três sessões de 15–20 minutos, no mesmo navegador e dispositivo |
+| Registro | Observação manual, sem analytics, gravação ou dado sensível |
+| Responsável | Uma pessoa facilitadora humana; agentes não recrutam nem contatam participantes |
 
-Limites honestos que continuam valendo: **zero instrumentação** (por isso a folha de observação);
-progresso local e não transferível entre dispositivos; benchmarks Go/Rust do projeto 01 ainda não
-executados (é tarefa pendente, não limite de ambiente); nenhuma unidade da trilha 00 tem mastery
-verificado; **duas portas de entrada** concorrentes (literacyDojo e OS) — decisão de produto,
-não bug.
+Este kit testa uma promessa estreita: a pessoa consegue entrar sem ajuda, concluir a primeira
+lição, recuperar-se de um erro quando ele ocorre, explicar uma aplicação concreta e voltar por
+vontade própria.
+
+O piloto **não** testa nem promete trilha Dev, conta, sincronização entre dispositivos,
+certificação, domínio verificado, retenção de longo prazo ou resultado de mercado.
+`completed` significa apenas progresso neste navegador; não significa `mastered`.
+
+Uma amostra de 1–3 pessoas serve para descobrir problemas e produzir exemplos observáveis. Ela
+não sustenta percentuais, comparação de segmentos ou conclusão sobre demanda de mercado.
+
+## Como usar o kit
+
+1. A pessoa responsável preenche o [handoff humano](#handoff-humano) sem registrar nomes dos
+   participantes no repositório.
+2. A facilitadora verifica o link e prepara uma cópia da
+   [folha de observação](piloto/FOLHA_OBSERVACAO.md) para cada código `P01`–`P03`.
+3. O convite e o consentimento abaixo são usados sem adicionar promessas.
+4. A facilitadora conduz as três sessões, registra o que viu e distingue isso do que ouviu.
+5. Ao final, consolida somente material desidentificado no
+   [modelo de síntese](piloto/SINTESE_PILOTO.md) e aplica o [gate de saída](#gate-de-saída).
+
+Não faça deploy, limpe dados do navegador da pessoa ou altere o produto durante uma sessão. O
+detalhe técnico e os comandos de release pertencem ao
+[README do LiteracyDojo](../engines/literacyDojo/README.md).
+
+## 1. Seleção de participantes
+
+### Inclua
+
+- Profissional adulto que se considera não técnico e usa navegador no trabalho ou na rotina.
+- Pessoa capaz de ler e conversar em pt-BR.
+- Pessoa que aceita usar o mesmo navegador e dispositivo nas três sessões.
+- Pessoa disponível para uma primeira sessão e para duas janelas posteriores durante até cinco
+  dias.
+- Pessoa que consegue nomear uma tarefa cotidiana na qual IA poderia ajudar, sem precisar expor
+  dados de cliente, empresa, saúde, finanças ou terceiros.
+
+Busque variação de autoconfiança com IA se isso ocorrer naturalmente. Não transforme três pessoas
+em “segmentos” nem use a amostra como representativa.
+
+### Não inclua
+
+- Integrante do projeto, pessoa que já conhece a interface ou profissional técnico de software.
+- Menor de idade.
+- Pessoa cuja participação dependa de inserir informação confidencial ou sensível.
+- Pessoa que precise de conta, sincronização, certificado ou trilha Dev para considerar a
+  experiência válida.
+- Pessoa que não possa consentir livremente ou prefira não ser observada.
+
+Se um critério só for descoberto depois do início, encerre sem culpa e marque `fora do perfil`;
+não conte a sessão como falha do produto.
+
+## 2. Mensagem de convite
+
+Substitua apenas as janelas de data e o nome da facilitadora:
+
+> Estamos testando o LiteracyDojo, uma experiência curta em português para praticar o uso de IA
+> no dia a dia, sem programação. Procuramos pessoas para três sessões de 15–20 minutos ao longo de
+> até cinco dias. Você usará um link no seu próprio navegador enquanto uma facilitadora observa
+> onde a experiência ajuda ou atrapalha.
+>
+> Não há conta, certificado ou sincronização entre dispositivos. O progresso fica somente nesse
+> navegador. Não pediremos dados pessoais, de clientes ou da empresa, e não faremos gravação. A
+> participação é voluntária e pode ser encerrada a qualquer momento. Se tiver interesse, responda
+> à pessoa responsável para confirmar as janelas [datas].
+
+Não acrescente promessa de benefício profissional, acesso futuro, remuneração, domínio ou
+lançamento. Qualquer condição de compensação deve ser decidida e comunicada por uma pessoa
+responsável antes do convite, sem depender do resultado.
+
+## 3. Consentimento e privacidade
+
+Leia antes de abrir o link:
+
+> Vou observar como você usa o produto e anotar tempos, tentativas, pedidos de ajuda e frases
+> curtas sobre o que entendeu. Suas notas serão identificadas apenas por um código, como P01. Não
+> vamos gravar áudio, vídeo ou tela, nem pedir dados sensíveis. Use exemplos fictícios ou
+> desidentificados e não cole informações reais de clientes, empresa ou outras pessoas.
+>
+> O progresso fica neste navegador e pode desaparecer se os dados do site forem apagados. Não há
+> conta ou sincronização. Você pode pausar, pular uma pergunta ou encerrar a participação sem
+> justificar. Você concorda em participar nessas condições?
+
+Registre apenas `consentimento: sim/não` e o horário. Sem `sim`, não comece. Uma gravação só seria
+possível com autorização humana e consentimento separado e explícito; este protocolo assume
+**nenhuma gravação**.
+
+### Regras de registro
+
+- Identifique a pessoa somente como `P01`, `P02` ou `P03`.
+- Registre apenas categoria de dispositivo e navegador, sem identificador, IP ou conta.
+- Não anote nome, e-mail, telefone, empresa, cargo exato, endereço ou conteúdo de tarefas reais.
+- Se uma fala trouxer dado identificável, substitua-o por `[removido]` antes de compartilhar.
+- Separe “observei” de “a pessoa relatou”. Uso fora da sessão é relato, não observação direta.
+- Não comite folhas preenchidas no repositório. Depois da revisão de privacidade, anexe versões
+  desidentificadas apenas à issue de execução autorizada.
+
+## 4. Preparação da facilitadora
+
+Faça no dia anterior e repita pouco antes da sessão 1:
+
+- [ ] Abrir o [link público](https://aidevschool-literacydojo.netlify.app/) em um perfil de teste e
+      confirmar que a tela inicial carrega.
+- [ ] Confirmar que a primeira lição abre e que feedback, dica e nova tentativa aparecem no perfil
+      de teste. Não usar o perfil do participante.
+- [ ] Confirmar que a pessoa usará navegador atual, armazenamento habilitado e o mesmo
+      dispositivo/perfil nas três sessões.
+- [ ] Criar uma folha por participante e preencher somente código, janelas e contexto técnico.
+- [ ] Preparar cronômetro visível apenas para a facilitadora.
+- [ ] Combinar na sessão 1 a janela de retorno de 24–48 h e dizer que não haverá lembrete.
+- [ ] Ter aberta a tabela de severidade para interromper a sessão se necessário.
+
+Se o link ou o caminho da primeira lição falhar no preflight, não inicie nem recrute substitutos.
+Registre o defeito e aguarde revalidação.
+
+## 5. Protocolo de observação silenciosa
+
+Depois da frase inicial de cada sessão, a facilitadora não explica a interface, não sugere resposta
+e não provoca um erro. Um acerto de primeira deixa a recuperação como `não observada`; não é
+evidência de que a recuperação funciona.
+
+Use estes níveis em toda intervenção:
+
+| Nível | Definição | Exemplo |
+| --- | --- | --- |
+| H0 | Nenhuma ajuda humana | A pessoa lê a tela, usa dica ou tenta de novo por conta própria |
+| H1 | Pergunta neutra após 60 s de impasse | “O que você esperava que acontecesse agora?” |
+| H2 | Orientação de interface ou conteúdo | “Clique em Pedir dica” |
+| H3 | Facilitadora opera, recarrega ou corrige a sessão | Assume o mouse ou muda o navegador |
+
+Qualquer H1–H3 significa que a etapa **não** foi concluída sem ajuda. Ajuda oferecida sem pedido
+também conta. Registre horário, motivo e frase exata da intervenção.
+
+Quando a pessoa disser que travou, espere até 60 segundos, salvo desconforto, risco de privacidade
+ou defeito evidente. Primeiro pergunte o que ela esperava; só então ofereça a menor ajuda
+necessária. Nunca transforme a explicação da facilitadora em evidência de aprendizagem.
+
+## 6. Sessão 1 — entrada e primeira conclusão
+
+**Duração:** 15–20 min.
+
+**Objetivo:** entrar sem ajuda, concluir a primeira lição e interpretar o primeiro feedback.
+
+Frase única de início:
+
+> Abra este link e vá até concluir a primeira lição. Eu vou ficar em silêncio para entender o que
+> funciona sem explicação. Se quiser parar, é só dizer.
+
+### Cronometragem e eventos
+
+1. Inicie `tempo até primeira conclusão` quando a pessoa abrir o link.
+2. Registre separadamente:
+   - fim do onboarding e abertura da primeira lição;
+   - primeira resposta enviada;
+   - cada tentativa avaliada;
+   - cada dica/pista aberta;
+   - cada acionamento de “tentar novamente”;
+   - tela de conclusão, abandono ou fim de 20 minutos.
+3. Em cada feedback, pergunte somente depois da ação da pessoa:
+   “O que essa mensagem está dizendo e o que você faria agora?”
+4. Se houver resposta incorreta, observe se ela entende o feedback e se recupera sem H1–H3.
+5. Pare após a primeira lição concluída; não use número de lições como sinal de aprendizagem.
+
+### Perguntas finais
+
+Anote as palavras da pessoa, desidentificadas:
+
+1. “Explique com suas palavras a ideia principal desta lição.”
+2. “Dê um exemplo concreto, sem dados reais, de onde você usaria isso.”
+3. “O que ficou salvo e o que este produto não promete?”
+4. “Em que momento você não soube o que fazer?”
+
+Uma aplicação é concreta somente quando inclui **tarefa, ação com IA e forma de conferir ou usar o
+resultado**. “Usaria no trabalho” ou “foi legal” é vaga.
+
+Ao encerrar, diga:
+
+> Se você decidir voltar nas próximas 24–48 horas, abra no mesmo navegador e me avise quando
+> entrar. Eu não enviarei lembrete.
+
+## 7. Sessão 2 — retorno e recuperação
+
+**Janela:** 24–48 h após a sessão 1.
+
+**Duração:** 15–20 min.
+
+**Objetivo:** medir retorno sem lembrete, retomada local e uso do feedback.
+
+### Classifique o retorno antes de qualquer contato
+
+- `sim, direto`: a pessoa inicia o retorno e a facilitadora observa a entrada, sem lembrete.
+- `sim, relatado`: a pessoa informa espontaneamente que abriu antes, mas isso não foi observado.
+- `não`: a janela termina e a pessoa só retorna após contato, chamada ou instrução.
+- `inconclusivo`: não é possível estabelecer se houve lembrete ou quando abriu.
+
+Se a janela terminar sem retorno, registre `não` **antes** de fazer um único contato para conduzir
+a sessão 2. Esse contato permite continuar a pesquisa, mas não muda a evidência de retorno.
+
+Frase de início:
+
+> Continue de onde você acha que parou e faça a próxima atividade como faria sozinho.
+
+Observe:
+
+- se a pessoa usa o mesmo navegador e encontra o progresso esperado;
+- se entende onde continuar sem H1–H3;
+- tentativas, dicas, retry e interpretação do feedback;
+- recuperação de um erro natural, se ocorrer;
+- diferença entre o que foi observado e o que a pessoa relata ter feito sozinha.
+
+Pergunte ao final:
+
+1. “Como você soube de onde continuar?”
+2. “O que o feedback fez você mudar na resposta?”
+3. “Se esta atividade reaparecesse, por que isso poderia ser útil?”
+
+Se ainda não ocorreu tentativa incorreta em nenhuma sessão, marque a promessa de recuperação como
+`não observada`. Não peça uma resposta deliberadamente errada.
+
+## 8. Sessão 3 — transferência para uma tarefa
+
+**Janela:** dois a três dias após a sessão 2.
+
+**Duração:** 15–20 min.
+
+**Objetivo:** verificar explicação, transferência e compreensão dos limites.
+
+Frase de início:
+
+> Continue por alguns minutos. Depois vou pedir um exemplo de como você levaria uma ideia daqui
+> para uma tarefa real, sem mostrar informação confidencial.
+
+Não force a pessoa a alcançar uma lição específica. O que importa é se ela transfere uma ideia
+aprendida, não a quantidade de telas percorridas.
+
+Perguntas finais:
+
+1. “Explique uma ideia aprendida como se fosse para uma colega que não fez a lição.”
+2. “Em qual tarefa específica você usaria isso? O que pediria à IA e como conferiria o resultado?”
+3. “Você chegou a usar algo entre as sessões? O que aconteceu?”
+
+   Registre como `relato`, salvo se a ação tiver sido observada.
+4. “Onde está seu progresso? O que mudaria se você trocasse de navegador ou dispositivo?”
+5. “Concluir aqui comprova que você domina o assunto? Por quê?”
+
+Não peça arquivos, prompts, respostas ou exemplos reais. Se a pessoa começar a revelar dado
+sensível, interrompa, peça um exemplo fictício e não registre o conteúdo exposto.
+
+## 9. Definições de resultado
+
+Use um resultado para cada promessa, por participante:
+
+| Resultado | Definição operacional |
+| --- | --- |
+| Sucesso | A etapa observada atinge o critério abaixo dentro da sessão e com H0 |
+| Falha | A pessoa permanece na sessão, mas não atinge o critério por barreira de produto, compreensão ou técnica |
+| Abandono | A pessoa decide encerrar antes do critério; registre momento e motivo literal, sem pressionar |
+| Não observado | O evento necessário não ocorreu, como ausência de tentativa incorreta |
+| Fora do perfil | Um critério de seleção inválido é descoberto após o início |
+
+### Critérios por promessa
+
+| Promessa | Sucesso | Falha |
+| --- | --- | --- |
+| Entrar sem ajuda | Abre o link, termina onboarding e abre a primeira lição com H0 | Precisa H1–H3 ou não chega à lição |
+| Primeira conclusão | Chega ao resultado `completed` em até 20 min com H0 | Não conclui, trava ou precisa de ajuda humana |
+| Recuperar-se de erro | Após erro natural, entende feedback e conclui nova tentativa com H0 | Desiste, repete sem compreender ou precisa H1–H3 |
+| Retornar | Inicia em 24–48 h sem lembrete; diferencie direto de relatado | Só inicia após contato ou não retorna |
+| Aplicar | Nomeia tarefa, ação com IA e forma de conferir/usar o resultado | Resposta vaga, cópia da lição ou não consegue transferir |
+| Entender limites | Explica progresso local, ausência de conta/sync e `completed ≠ mastered` | Atribui conta, sync, certificado ou domínio ao produto |
+
+Tempo, número de tentativas, dicas e ajuda são **evidências**, não metas arbitrárias. Registre os
+valores brutos; não invente média nem threshold depois de ver os dados.
+
+## 10. Severidade e escalonamento
+
+| Severidade | Definição neste piloto | Conduta |
+| --- | --- | --- |
+| Critical | Exposição de dado sensível; gravação sem consentimento; risco de segurança; ou interface afirma conta, sincronização, certificação ou domínio inexistente de forma que possa causar dano | Interromper todas as sessões, preservar apenas evidência desidentificada e abrir defeito antes de novo piloto |
+| High | Link/caminho central indisponível; onboarding ou primeira lição não pode ser concluído; feedback/dica/retry não permite recuperação; progresso some no mesmo perfil; ou caminho essencial é inacessível | Encerrar a sessão afetada, pausar novas sessões e abrir defeito antes de revalidar |
+| Medium | Fricção relevante com contorno simples, sem bloquear conclusão ou corromper a promessa | Registrar para priorização; continuar somente se a pessoa estiver confortável |
+| Low | Problema cosmético, texto secundário ou preferência | Registrar sem interromper |
+
+Para Critical/High:
+
+1. Pare a sessão; não depure na frente da pessoa nem reconstrua progresso.
+2. Registre horário UTC, URL/tela, última ação, mensagem visível, navegador/dispositivo em nível
+   amplo e impacto. Não inclua nome, conteúdo da tarefa ou identificador.
+3. Anexe à issue de execução a folha desidentificada e, se não houver dado pessoal, captura apenas
+   da interface. Nunca anexe gravação.
+4. Abra ou vincule um defeito com severidade, passos mínimos e resultado esperado/observado.
+5. Marque o gate `vermelho` e só retome após correção e revalidação do caminho público.
+
+## 11. Gate de saída
+
+A síntese recebe exatamente um destes estados:
+
+### Verde — promessa observada neste recorte
+
+- Há pelo menos um sucesso direto em cada uma das seis promessas da tabela.
+- A recuperação inclui ao menos um erro natural observado; ausência de erro não conta como passe.
+- Não existe defeito Critical/High aberto.
+- Todas as folhas têm resultado, evidência e fonte (`observado` ou `relatado`).
+- A síntese separa fatos, falas, hipóteses, decisões e bugs.
+
+Verde autoriza somente uma próxima rodada pequena. Não prova mercado, retenção ou domínio.
+
+### Amarelo — evidência inconclusiva
+
+- Falta observar uma promessa, o retorno só foi relatado, ou nenhum erro natural ocorreu; e
+- não há defeito Critical/High aberto.
+
+Faça outra rodada pequena desenhada para cobrir a lacuna, sem alegar que o produto passou ou falhou.
+
+### Vermelho — promessa falhou ou defeito bloqueante
+
+- Uma promessa falha no caminho central; ou
+- existe defeito Critical/High; ou
+- ocorreu abandono ligado à segurança, privacidade ou impossibilidade de prosseguir.
+
+Corrija e revalide antes de nova rodada. Não use documentação ou ajuda da facilitadora como
+contorno para declarar sucesso.
+
+## Handoff humano
+
+Agentes encerram na preparação deste kit. Pessoas autorizadas executam:
+
+| Quem | Quando | O que fazer e registrar |
+| --- | --- | --- |
+| Responsável humano do piloto (nome a preencher) | Até dois dias antes | Escolher 1–3 pessoas pelos critérios, definir facilitadora e janelas, autorizar convite e indicar a issue de execução |
+| Facilitadora (nome a preencher) | Dia anterior e antes da sessão 1 | Fazer preflight, criar códigos P01–P03, obter consentimento e registrar link, horário, navegador/dispositivo amplo e resultado |
+| Participante P01–P03 | Sessões 1–3 | Usar voluntariamente o produto; não deve receber instrução de resposta nem fornecer dados reais |
+| Facilitadora | Em cada sessão e logo depois | Completar a folha, classificar ajuda/resultado, desidentificar falas e escalar Critical/High imediatamente |
+| Responsável humano do piloto | Até um dia após a sessão 3 | Revisar privacidade, preencher a síntese, aplicar gate e anexar evidências desidentificadas à issue de execução |
+
+### Evidências a anexar à issue de execução
+
+- Uma folha desidentificada por participante, com consentimento `sim`, tempos, ajuda, tentativas,
+  dicas, retry, retorno, aplicação, limites e resultados.
+- Síntese única preenchida, com denominadores (`1/1`, `1/2`, nunca percentuais).
+- Links de defeitos Critical/High e estado da revalidação, quando houver.
+- Confirmação textual de que não houve gravação nem inclusão de dado sensível.
+- URL pública usada e datas/horários das sessões.
+
+Não anexe lista de contatos, agenda com nomes, notas brutas identificáveis ou conteúdo real das
+tarefas. A execução humana termina quando outra pessoa consegue auditar o gate apenas com esses
+artefatos, sem precisar reconstruir a sessão.
