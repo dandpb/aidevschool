@@ -2250,3 +2250,30 @@ h2 {
     left: 34px;
   }
 }
+
+/* Backup e escalação de suporte do piloto */
+.backup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.backup-status {
+  color: var(--muted);
+}
+
+.backup-status.is-error {
+  color: var(--error-text);
+}
+
+.support-cta {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.support-cta a {
+  color: var(--primary-dark);
+  font-weight: 700;
+}

@@ -26,7 +26,13 @@ A successful result means `completed` in this browser. It does not mean `mastere
 
 Your onboarding and lesson progress are stored locally in this browser. Reloading or returning on the same device should restore the supported progress and next available lesson. There is no account or cross-device synchronization; another browser or device starts separately, and clearing site data can erase local progress.
 
-If a page reload interrupts an activity, return to the map and restart that lesson; answers in progress are not saved. If the public route does not load, storage is blocked, or progress repeatedly disappears, stop retrying and ask a facilitator. Do not interpret an outage or interrupted attempt as completion.
+#### Back up local progress
+
+A paid or long session should not depend on the browser keeping the data. In **Ver seu progresso**, use **Baixar backup JSON** to save a copy of `LearnerProgress`. The file records at most `completed` lesson status — never `mastered`. To restore the same browser profile after a wipe, use **Restaurar backup** and choose that JSON. Import runs the same forward-only migration used on launch, so an older backup can load, but it cannot grant mastery.
+
+Do this before clearing site data, switching browsers, or handing the device to someone else. A backup cannot sync to another account because there is no account.
+
+If a page reload interrupts an activity, return to the map and restart that lesson; answers in progress are not saved. If the public route does not load, storage is blocked, or progress repeatedly disappears, stop retrying and email [daniel@heropa.com](mailto:daniel@heropa.com). The facilitator aims to reply within 1 business day. Do not interpret an outage or interrupted attempt as completion.
 
 ### Supported next action
 
@@ -90,8 +96,10 @@ starts separately; there is no account or cross-device synchronization.
 
 If a hosted mission does not load, retry once. If verification is unavailable,
 leave the status as not submitted and continue only when the guide presents a
-safe next action. Do not treat a blank frame, unavailable verifier, or browser
-reload as completion.
+safe next action. The recovery screen names the support email
+([daniel@heropa.com](mailto:daniel@heropa.com)); the facilitator aims to reply
+within 1 business day. Do not treat a blank frame, unavailable verifier, or
+browser reload as completion.
 
 If 3D rendering is unavailable or you prefer reduced motion, use the accessible
 projection and keyboard controls. Stop and ask a facilitator when neither the
