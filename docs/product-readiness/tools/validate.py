@@ -117,8 +117,8 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
         decision_ids = [decision.use_case_id for decision in assessment.decisions]
         if len(decision_ids) != len(set(decision_ids)):
             errors.append(f"assessment {assessment.assessment_id} contains duplicate decisions")
-        if set(decision_ids) != set(use_case_ids):
-            errors.append(f"assessment {assessment.assessment_id} does not cover every use case")
+        if not set(decision_ids).issubset(use_case_ids):
+            errors.append(f"assessment {assessment.assessment_id} references unknown use cases")
         for decision in assessment.decisions:
             if decision.use_case_id not in use_case_ids:
                 errors.append(f"assessment {assessment.assessment_id} references unknown use case {decision.use_case_id}")

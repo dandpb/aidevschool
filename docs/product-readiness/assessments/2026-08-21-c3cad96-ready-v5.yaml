@@ -1,0 +1,41 @@
+schemaVersion: 1
+assessmentId: 2026-08-21-c3cad96-ready-v5
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-21T21:00:00Z'
+revalidateBy: '2026-09-21'
+gitSha: c3cad96b804c7b3540e2a5c74efaba158c13cf9c
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-21T20:58:22Z-literacy-happy-path-mixed-c3cad96b
+  - 2026-08-21T20:58:22Z-literacy-retry-mixed-c3cad96b
+  - 2026-08-21T20:58:22Z-literacy-resume-mixed-c3cad96b
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-21T20:59:14Z-os-literacy-hosted-mission-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-literacy-returning-device-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-verification-recovery-mixed-c3cad96b
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-21T20:59:14Z-os-renderer-accessibility-recovery-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-voxel-hosted-missions-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-voxel-returning-device-mixed-c3cad96b
+- useCaseId: os-returning-learner
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-21T20:59:14Z-os-onboarding-track-choice-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-returning-device-mixed-c3cad96b
+  - 2026-08-21T20:59:14Z-os-returning-recovery-mixed-c3cad96b
