@@ -70,11 +70,13 @@ export function LessonScreen({
   const [onboarding, setOnboarding] = useState<OnboardingState>();
   const [session, setSession] = useState<LessonSession>(() => createLessonSession(lessonId, mode));
   const [submitting, setSubmitting] = useState(false);
+  const [lessonOpened, setLessonOpened] = useState(false);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Abertura da lição (status in_progress + lesson_started) ou da revisão (review_started).
   useEffect(() => {
     let cancelled = false;
+    setLessonOpened(false);
     const opening =
       mode === "review"
         ? services.useCases.startReview(lessonId).then((result) => result.progress)
@@ -84,6 +86,7 @@ export function LessonScreen({
         setOnboarding(progress.onboarding);
         setSession((previous) => ({ ...previous, onboarding: progress.onboarding }));
         onProgressChange(progress);
+        setLessonOpened(true);
       }
     });
     return () => {
@@ -100,6 +103,16 @@ export function LessonScreen({
 
   if (!lesson) {
     return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;
+  }
+
+  if (!lessonOpened) {
+    return (
+      <section className="screen lesson-intro-screen" aria-busy="true">
+        <p className="loading" aria-live="polite">
+          Carregando missão…
+        </p>
+      </section>
+    );
   }
 
   const activity = currentActivity(session, lesson);
