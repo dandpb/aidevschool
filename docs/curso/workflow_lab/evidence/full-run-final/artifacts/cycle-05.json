@@ -1,0 +1,1 @@
+{"critical_duration_minutes": 9, "order": ["fetch", "lint", "build", "test", "package"]}

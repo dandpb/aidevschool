@@ -1,0 +1,1 @@
+{"entries": [{"expires_at": null, "key": "delta", "last_accessed_at": "2026-08-19T11:30:00Z", "value": "D"}, {"expires_at": null, "key": "gamma", "last_accessed_at": "2026-08-19T11:00:00Z", "value": "G"}], "evicted_keys": ["beta"], "expired_keys": ["alpha"]}

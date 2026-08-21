@@ -65,3 +65,24 @@ def test_assess_dry_run_shows_scope_and_changes_without_mutation(tmp_path: Path)
     assert "Dry run: no tracked files were changed" in result.stdout
     assert (READINESS_ROOT / "evidence" / "results.ndjson").read_bytes() == evidence_before
     assert tuple((READINESS_ROOT / "assessments").iterdir()) == assessments_before
+
+
+def test_enforce_rejects_report_narrower_than_published_grants(tmp_path: Path) -> None:
+    # Given a current assessor report that omits journeys still granted by the published baseline
+    report = _current_literacy_report(tmp_path)
+    candidate = tmp_path / "product-readiness-report.json"
+    report.rename(candidate)
+
+    # When CI enforces the published readiness claims against that report
+    result = subprocess.run(
+        [sys.executable, str(READINESS_ROOT / "tools" / "cli.py"), "enforce", "--reports", str(tmp_path)],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    # Then enforcement fails closed rather than silently dropping those grants
+    assert result.returncode == 1
+    assert "BLOCKED: pixelquest-evidence-encounter" in result.stderr
+    assert "BLOCKED: minitown-explore-only" in result.stderr

@@ -19,6 +19,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest>=8,<9",
+  "coverage[toml]>=7,<8",
+  "radon>=6,<7",
 ]
 
 # Don't auto-discover packages from the polyglot tree; this project exists only to
@@ -47,3 +49,6 @@ testpaths = [
   "docs/product-readiness/tests",
 ]
 python_files = ["test_*.py"]
+
+[tool.coverage.run]
+branch = true

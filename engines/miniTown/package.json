@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "smoke": "MINITOWN_PORT=5189 playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs"
+    "smoke": "MINITOWN_PORT=5189 playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs",
+    "readiness:report": "node scripts/readiness-report.mjs"
   },
   "dependencies": {
     "three": "^0.170.0"
