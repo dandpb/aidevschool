@@ -1,0 +1,69 @@
+schemaVersion: 1
+assessmentId: 2026-08-20-c8a961c-ready-v4
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-20T22:22:00Z'
+revalidateBy: '2026-09-20'
+gitSha: c8a961cf2bce79faca6fe4c6928c2bc0fb2044a8
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-20T22:21:46Z-literacy-happy-path-mixed-c8a961cf
+  - 2026-08-20T22:21:46Z-literacy-retry-mixed-c8a961cf
+  - 2026-08-20T22:21:46Z-literacy-resume-mixed-c8a961cf
+- useCaseId: os-literacy-guided-mission
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-20T22:16:29Z-os-literacy-hosted-mission-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-literacy-returning-device-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-verification-recovery-mixed-c8a961cf
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-20T22:16:29Z-os-renderer-accessibility-recovery-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-voxel-hosted-missions-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-voxel-returning-device-mixed-c8a961cf
+- useCaseId: os-returning-learner
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-20T22:16:29Z-os-onboarding-track-choice-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-returning-device-mixed-c8a961cf
+  - 2026-08-20T22:16:29Z-os-returning-recovery-mixed-c8a961cf
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-08-20T21:10:00Z-dojotoday-active-unit-guidance-mixed-c8a961cf
+  - 2026-08-20T21:10:00Z-dojotoday-read-only-boundary-observed-c8a961cf
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-08-20T21:10:00Z-pixelquest-encounter-evidence-mixed-c8a961cf
+  - 2026-08-20T21:10:00Z-pixelquest-evidence-recovery-observed-c8a961cf
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-08-20T21:10:00Z-voxel-standalone-loop-mixed-c8a961cf
+  - 2026-08-20T21:10:00Z-voxel-accessible-renderer-observed-c8a961cf
+- useCaseId: minitown-explore-only
+  outcome: pass
+  grantedTier: experimental
+  reasons: []
+  resultRunIds:
+  - 2026-08-20T21:10:00Z-minitown-explore-only-mixed-c8a961cf

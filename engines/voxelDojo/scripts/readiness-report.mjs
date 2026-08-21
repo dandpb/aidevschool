@@ -5,6 +5,9 @@ import { fileURLToPath } from "node:url";
 
 const engineRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = path.resolve(engineRoot, "../..");
+if (process.env.READINESS_TEST_RUN !== "passed") {
+  throw new Error("Run pnpm smoke; readiness reports require passing catalog Playwright runs.");
+}
 const catalog = JSON.parse(readFileSync(path.join(engineRoot, "catalog.json"), "utf8"));
 const missingSmokeScripts = catalog
   .map(({ id }) => id)

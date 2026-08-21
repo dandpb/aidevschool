@@ -1,5 +1,7 @@
 import json
 from pathlib import Path
+import subprocess
+from tempfile import TemporaryDirectory
 
 from readiness_test_support import register_tools_package
 
@@ -7,8 +9,11 @@ register_tools_package()
 
 from product_readiness_tools.load import load_domain
 from product_readiness_tools.reports import (
+    CandidateRequest,
+    ReportSnapshot,
     build_candidate_report,
     emit_engine_reports,
+    snapshot_report_directories,
     validate_report_directories,
 )
 
@@ -101,22 +106,25 @@ def test_emit_engine_reports_can_limit_facts_to_exercised_scenarios(tmp_path: Pa
     assert report_ids == {"os-onboarding-track-choice"}
 
 
-def test_build_candidate_report_contains_facts_without_a_readiness_grant(tmp_path: Path) -> None:
+def test_build_candidate_report_contains_facts_without_a_readiness_grant() -> None:
     # Given a producer report for a tested checkout
     domain = load_domain(READINESS_ROOT)
-    output = tmp_path / "pixel"
-    output.mkdir()
-    emit_engine_reports(domain, REPO_ROOT, "engines/pixelDojo", output)
+    with TemporaryDirectory(dir=READINESS_ROOT / "tests") as temporary:
+        output = Path(temporary) / "pixel"
+        output.mkdir()
+        emit_engine_reports(domain, REPO_ROOT, "engines/pixelDojo", output)
 
-    # When CI aggregates the producer facts
-    report, errors = build_candidate_report(
-        domain,
-        REPO_ROOT,
-        (output,),
-        "2026-08-20-candidate",
-        "2026-08-20T17:00:00Z",
-        "2026-09-20",
-    )
+        # When CI aggregates the producer facts
+        report, errors = build_candidate_report(
+            domain,
+            REPO_ROOT,
+            CandidateRequest(
+                directories=(output,),
+                assessment_id="2026-08-20-candidate",
+                verified_at="2099-08-20T17:00:00Z",
+                revalidate_by="2099-09-20",
+            ),
+        )
 
     # Then it creates an assessor input without embedding a decision or grant
     assert errors == ()
@@ -124,3 +132,72 @@ def test_build_candidate_report_contains_facts_without_a_readiness_grant(tmp_pat
     assert "decisions" not in report
     assert report["assessorContext"] == "independent-readiness-review"
     assert report["results"]
+
+
+def test_build_candidate_report_merges_independent_observations() -> None:
+    # Given automated LiteracyDojo facts and independent proof for each non-browser assertion
+    domain = load_domain(READINESS_ROOT)
+    with TemporaryDirectory(dir=READINESS_ROOT / "tests") as temporary:
+        root = Path(temporary)
+        producers = root / "producers"
+        observations = root / "observations"
+        emit_engine_reports(domain, REPO_ROOT, "engines/literacyDojo", producers)
+        snapshot = root / "evidence" / "producers" / "candidate"
+        snapshot_directories, snapshot_errors = snapshot_report_directories(
+            domain,
+            REPO_ROOT,
+            ReportSnapshot(sources=(producers,), destination=snapshot),
+        )
+        assert snapshot_errors == ()
+        observations.mkdir()
+        git_sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True
+        ).stdout.strip()
+        payload = {
+            "schemaVersion": 1,
+            "observerContext": "independent-readiness-observer",
+            "gitSha": git_sha,
+            "observedAt": "2026-08-20T18:00:00Z",
+            "scenarios": [
+                {
+                    "scenarioId": scenario_id,
+                    "outcome": "pass",
+                    "assertions": [
+                        {
+                            "id": assertion_id,
+                            "evidence": "observation",
+                            "outcome": "pass",
+                            "notes": "A fresh learner completed the declared visible behavior.",
+                        }
+                    ],
+                    "gaps": [],
+                }
+                for scenario_id, assertion_id in (
+                    ("literacy-happy-path", "learner-can-name-next-action"),
+                    ("literacy-retry", "learner-understands-retry"),
+                    ("literacy-resume", "learner-understands-device-boundary"),
+                )
+            ],
+        }
+        (observations / "literacy.json").write_text(json.dumps(payload), encoding="utf-8")
+
+        # When the assessor input is built with both evidence sources
+        report, errors = build_candidate_report(
+            domain,
+            REPO_ROOT,
+            CandidateRequest(
+                directories=snapshot_directories,
+                assessment_id="2026-08-20-mixed-candidate",
+                verified_at="2099-08-20T19:00:00Z",
+                revalidate_by="2099-09-20",
+                observation_directories=(observations,),
+            ),
+        )
+
+    # Then each scenario is mixed and carries the independent observation artifact
+    assert errors == ()
+    assert report is not None
+    results = report["results"]
+    assert all(result["executor"] == "mixed" for result in results)
+    assert all(any("observations" in artifact["path"] for artifact in result["artifacts"]) for result in results)
+    assert all(any("evidence/producers" in artifact["path"] for artifact in result["artifacts"]) for result in results)

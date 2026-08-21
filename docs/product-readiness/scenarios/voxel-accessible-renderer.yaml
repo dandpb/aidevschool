@@ -3,13 +3,13 @@ id: voxel-accessible-renderer
 useCaseId: voxel-standalone-learning-loop
 kind: recovery
 execution: mixed
-startState: constrained-or-unavailable-webgl
-steps: [detect-renderer-failure, use-declared-accessible-projection, complete-core-interaction, stop-if-unsupported]
+startState: unavailable-webgl-with-or-without-a-declared-accessible-projection
+steps: [detect-renderer-failure, use-accessible-projection-when-declared, complete-supported-loop-or-exit-honestly]
 assertions:
   - id: accessible-projection-preserves-supported-interaction
     severity: high
     evidence: document-review
-    claim: The declared accessible projection preserves the supported learning interaction and evidence boundary.
+    claim: Games that declare an accessible projection preserve the supported interaction and evidence boundary; games without one do not claim a fallback.
   - id: unsupported-renderer-has-honest-exit
     severity: high
     evidence: observation

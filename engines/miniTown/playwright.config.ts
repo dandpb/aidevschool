@@ -1,6 +1,7 @@
 import { defineConfig } from "@playwright/test";
 
-const baseURL = "http://127.0.0.1:5173";
+const port = process.env.MINITOWN_PORT ?? "5173";
+const baseURL = `http://127.0.0.1:${port}`;
 
 export default defineConfig({
   testDir: "./playwright",
@@ -10,7 +11,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   webServer: {
-    command: "npx vite --host 127.0.0.1 --port 5173 --strictPort",
+    command: `npx vite --host 127.0.0.1 --port ${port} --strictPort`,
     url: baseURL,
     reuseExistingServer: false,
     timeout: 30_000,

@@ -6,7 +6,7 @@ useCases:
     intendedTier: customer-ready
     promise: Complete an assigned lesson, recover from an incorrect attempt, and understand the local result.
     entry:
-      route: https://aidevschool.netlify.app/
+      route: https://aidevschool-literacydojo.netlify.app/
       prerequisites:
         - supported-modern-browser
         - browser-storage-enabled

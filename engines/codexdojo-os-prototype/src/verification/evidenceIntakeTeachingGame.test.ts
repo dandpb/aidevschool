@@ -8,6 +8,32 @@ import {
 } from './evidenceIntakeTestFixtures'
 
 describe('EvidenceIntake teaching-game evidence', () => {
+  it('verifies the newest teaching-game attempt after a failed attempt in the same mission run', async () => {
+    // Given a failed attempt followed by a corrected attempt in one hosted mission run
+    const { intake, store } = setup({
+      async verify(request) {
+        const pass = request.record.pass === true
+        return voxelReceipt({
+          verdict: pass ? 'PASS' : 'FAIL',
+          evidence_digest: pass ? digest : 'b'.repeat(64),
+          producer_pass_claim: pass,
+          independent_pass: pass,
+        })
+      },
+    })
+    const failed = voxelSubmission({ pass: false })
+    const corrected = voxelSubmission({ pass: true, ts: '2026-07-25T12:02:00.000Z' })
+
+    // When the corrected attempt is accepted
+    await intake.accept(voxelMission, failed)
+    const accepted = await intake.accept(voxelMission, corrected)
+
+    // Then it supersedes the failed attempt for the mission status
+    expect(accepted).toMatchObject({ kind: 'verified', receipt: { verdict: 'PASS' } })
+    expect(await intake.latest(voxelMission)).toEqual(accepted)
+    expect(store.raw.size).toBe(2)
+  })
+
   it('independently verifies teaching-game evidence through the schema-selected gateway', async () => {
     const verify = vi.fn(async () => voxelReceipt())
     const { intake, store } = setup({ verify })
@@ -27,7 +53,7 @@ describe('EvidenceIntake teaching-game evidence', () => {
     })
     expect(restored).toEqual(accepted)
     expect(retried).toEqual(accepted)
-    expect(store.raw.get('voxel-run-1')).toMatchObject({
+    expect(store.raw.get('voxel-run-1:2026-07-25T12:00:00.000Z')).toMatchObject({
       status: 'verified',
       schemaId: 'teaching-game-evidence',
     })
@@ -60,6 +86,6 @@ describe('EvidenceIntake teaching-game evidence', () => {
     expect(accepted.kind).toBe('verified')
     expect(duplicate).toEqual(accepted)
     expect(collision).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
-    expect(store.raw.get('voxel-run-1')?.record).toEqual(first.record)
+    expect(store.raw.get('voxel-run-1:2026-07-25T12:00:00.000Z')?.record).toEqual(first.record)
   })
 })

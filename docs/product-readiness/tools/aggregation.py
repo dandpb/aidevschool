@@ -3,13 +3,13 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-from datetime import date, datetime
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Final, TypeAlias
 
 from .fingerprint import manual_fingerprint, source_fingerprint
-from .history import HistoryParseError, JsonValue, parse_result
-from .models import ReadinessDomain, Scenario, ScenarioResult
+from .history import JsonValue
+from .models import ReadinessDomain, Scenario
 from .paths import validate_repo_path
 
 
@@ -24,6 +24,12 @@ RESULT_KEYS: Final = frozenset(
     REPORT_KEYS - {"assertions"}
 )
 AGGREGATE_REPORT_NAME: Final = "product-readiness-report.json"
+
+
+@dataclass(frozen=True, slots=True)
+class ReportSnapshot:
+    sources: tuple[Path, ...]
+    destination: Path
 
 
 def _git_sha(repo_root: Path) -> str:
@@ -175,6 +181,29 @@ def validate_report_directories(
     return tuple(errors)
 
 
+def snapshot_report_directories(
+    domain: ReadinessDomain,
+    repo_root: Path,
+    snapshot: ReportSnapshot,
+) -> tuple[tuple[Path, ...], tuple[str, ...]]:
+    errors = validate_report_directories(domain, repo_root, snapshot.sources)
+    if errors:
+        return (), errors
+    pending: list[tuple[Path, bytes]] = []
+    for directory in snapshot.sources:
+        for source in _report_paths(domain, directory):
+            target = snapshot.destination / source.name
+            content = source.read_bytes()
+            if target.exists() and target.read_bytes() != content:
+                return (), (f"producer snapshot is immutable and already differs: {target}",)
+            pending.append((target, content))
+    snapshot.destination.mkdir(parents=True, exist_ok=True)
+    for target, content in pending:
+        if not target.exists():
+            target.write_bytes(content)
+    return (snapshot.destination,), ()
+
+
 def _validated_reports(
     domain: ReadinessDomain,
     repo_root: Path,
@@ -190,77 +219,14 @@ def _validated_reports(
             if read_error is not None:
                 return (), (read_error,)
             if raw is not None:
-                reports.append(raw)
+                artifacts = raw["artifacts"]
+                if not isinstance(artifacts, list):
+                    return (), (f"producer report artifacts must be a list: {path}",)
+                relative = path.resolve().relative_to(repo_root.resolve()).as_posix()
+                enriched = dict(raw)
+                enriched["artifacts"] = [
+                    *artifacts,
+                    {"path": relative, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()},
+                ]
+                reports.append(enriched)
     return tuple(reports), ()
-
-
-def _normalise_result(raw: JsonMapping) -> ScenarioResult:
-    normalized = {key: raw[key] for key in RESULT_KEYS}
-    try:
-        return parse_result(normalized, f"producer-report:{raw['runId']}")
-    except HistoryParseError as error:
-        raise ValueError(str(error)) from error
-
-
-def _result_mapping(result: ScenarioResult) -> JsonMapping:
-    return {
-        "schemaVersion": result.schema_version,
-        "scenarioId": result.scenario_id,
-        "runId": result.run_id,
-        "gitSha": result.git_sha,
-        "executedAt": result.executed_at.isoformat().replace("+00:00", "Z"),
-        "executor": result.executor,
-        "outcome": result.outcome,
-        "sourceFingerprint": result.source_fingerprint,
-        "manualFingerprint": result.manual_fingerprint,
-        "artifacts": [{"path": item.path, "sha256": item.sha256} for item in result.artifacts],
-        "gaps": [
-            {
-                "id": gap.id,
-                "severity": gap.severity,
-                "summary": gap.summary,
-                "owner": gap.owner,
-                "disposition": gap.disposition,
-            }
-            for gap in result.gaps
-        ],
-    }
-
-
-def build_candidate_report(
-    domain: ReadinessDomain,
-    repo_root: Path,
-    directories: tuple[Path, ...],
-    assessment_id: str,
-    verified_at: str,
-    revalidate_by: str,
-) -> tuple[JsonMapping | None, tuple[str, ...]]:
-    """Aggregate producer facts into an assessor input without granting readiness."""
-    try:
-        parsed_verified_at = datetime.fromisoformat(verified_at.replace("Z", "+00:00"))
-        parsed_revalidate_by = date.fromisoformat(revalidate_by)
-    except ValueError as error:
-        return None, (f"candidate report has invalid date: {error}",)
-    if parsed_verified_at.tzinfo is None:
-        return None, ("candidate report verifiedAt must include a timezone",)
-    if parsed_revalidate_by < parsed_verified_at.date():
-        return None, ("candidate report revalidateBy must not precede verifiedAt",)
-    raw_reports, errors = _validated_reports(domain, repo_root, directories)
-    if errors:
-        return None, errors
-    try:
-        results = tuple(_normalise_result(raw) for raw in raw_reports)
-    except ValueError as error:
-        return None, (f"producer report cannot be normalized: {error}",)
-    return (
-        {
-            "schemaVersion": 1,
-            "assessmentId": assessment_id,
-            "assessorContext": "independent-readiness-review",
-            "verifiedAt": verified_at,
-            "revalidateBy": revalidate_by,
-            "gitSha": _git_sha(repo_root),
-            "results": [_result_mapping(result) for result in results],
-        },
-        (),
-    )

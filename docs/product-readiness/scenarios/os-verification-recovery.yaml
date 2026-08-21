@@ -16,5 +16,5 @@ assertions:
     claim: The facilitator can guide a safe retry or exit using the visible state and manual.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/codexdojo-os-prototype/src/verification/]

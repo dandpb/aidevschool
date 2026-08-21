@@ -120,4 +120,9 @@ def emit_engine_reports(
     return tuple(changed)
 
 
-from .aggregation import build_candidate_report, validate_report_directories  # noqa: E402,F401
+from .aggregation import (  # noqa: E402,F401
+    ReportSnapshot,
+    snapshot_report_directories,
+    validate_report_directories,
+)
+from .candidate import CandidateRequest, build_candidate_report  # noqa: E402,F401

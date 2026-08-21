@@ -175,7 +175,10 @@ class MemoryVerificationStore implements VerificationStore {
   async latestForMission(missionId: string) {
     return [...this.raw.values()]
       .filter((entry) => entry.subject.missionId === missionId)
-      .sort((left, right) => right.acceptedAt.localeCompare(left.acceptedAt))[0]
+      .sort((left, right) => (
+        right.acceptedAt.localeCompare(left.acceptedAt)
+        || right.storageId.localeCompare(left.storageId)
+      ))[0]
   }
 
   async getReceipt(evidenceDigest: string) {

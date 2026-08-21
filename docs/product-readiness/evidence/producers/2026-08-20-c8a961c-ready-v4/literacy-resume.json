@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+      "sha256": "7edcbd7043e21dd17af1e6fca405df47692eeaa18a3d979d33160718e1ee48d2"
+    },
+    {
+      "path": "engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts",
+      "sha256": "6aeb5dac580377f8f737a25b86d8318005f5e8e75da5c3cb72c0ebe7008e63d9"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "same-device-progress-resumes",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-08-20T20:53:36Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "c8a961cf2bce79faca6fe4c6928c2bc0fb2044a8",
+  "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+  "outcome": "pass",
+  "runId": "2026-08-20T20:53:36Z-literacy-resume-c8a961cf",
+  "scenarioId": "literacy-resume",
+  "schemaVersion": 1,
+  "sourceFingerprint": "0e503203e56f60b1042743595a6ccb30d635264f752f66ee6193ad1d770a6ee3"
+}

@@ -16,5 +16,5 @@ assertions:
     claim: The learner can explain that hosted Literacy continuity is limited to the same browser profile.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]

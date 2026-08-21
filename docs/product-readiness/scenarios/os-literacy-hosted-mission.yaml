@@ -16,5 +16,5 @@ assertions:
     claim: The learner can explain the visible result and supported next action.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/literacyDojo/src/]

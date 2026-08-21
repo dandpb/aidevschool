@@ -31,8 +31,11 @@ from tools.evaluate import current_decision  # noqa: E402
 from tools.models import DecisionOutcome, ReadinessDomain  # noqa: E402
 from tools.render import drift, expected_views, write_views  # noqa: E402
 from tools.reports import (  # noqa: E402
+    CandidateRequest,
+    ReportSnapshot,
     build_candidate_report,
     emit_engine_reports,
+    snapshot_report_directories,
     validate_report_directories,
 )
 from tools.validate import validate_domain  # noqa: E402
@@ -72,14 +75,23 @@ def _print_candidate(proposal: AssessmentProposal) -> None:
         print(f"- {decision.use_case_id}: {decision.outcome}; reasons={reasons}")
 
 
-def _aggregate_arguments(arguments: list[str]) -> tuple[tuple[Path, ...], Path, str, str, str] | None:
+def _aggregate_arguments(
+    arguments: list[str],
+) -> tuple[tuple[Path, ...], tuple[Path, ...], Path, str, str, str] | None:
     if arguments[:1] != ["aggregate"] or "--reports" not in arguments or "--output" not in arguments:
         return None
     reports_start = arguments.index("--reports") + 1
     output_start = arguments.index("--output")
     if reports_start >= output_start:
         return None
-    directories = tuple(Path(value) for value in arguments[reports_start:output_start])
+    observations_start = arguments.index("--observations") if "--observations" in arguments else None
+    reports_end = output_start if observations_start is None else observations_start
+    directories = tuple(Path(value) for value in arguments[reports_start:reports_end])
+    observation_directories = (
+        ()
+        if observations_start is None
+        else tuple(Path(value) for value in arguments[observations_start + 1 : output_start])
+    )
     if not directories or output_start + 1 >= len(arguments):
         return None
     output = Path(arguments[output_start + 1])
@@ -98,6 +110,7 @@ def _aggregate_arguments(arguments: list[str]) -> tuple[tuple[Path, ...], Path, 
     checkout = _checkout_sha()
     return (
         directories,
+        observation_directories,
         output,
         values.get("--assessment-id", f"{now.date().isoformat()}-{checkout[:8]}-candidate"),
         values.get("--verified-at", now.isoformat().replace("+00:00", "Z")),
@@ -116,9 +129,29 @@ def main(args: list[str] | None = None) -> int:
         return 1
     aggregate = _aggregate_arguments(arguments)
     if aggregate is not None:
-        directories, output, assessment_id, verified_at, revalidate_by = aggregate
+        directories, observation_directories, output, assessment_id, verified_at, revalidate_by = aggregate
+        snapshot_directories, snapshot_errors = snapshot_report_directories(
+            domain,
+            REPO_ROOT,
+            ReportSnapshot(
+                sources=directories,
+                destination=READINESS_ROOT / "evidence" / "producers" / assessment_id,
+            ),
+        )
+        if snapshot_errors:
+            for error in snapshot_errors:
+                print(f"INVALID: {error}", file=sys.stderr)
+            return 1
         report, errors = build_candidate_report(
-            domain, REPO_ROOT, directories, assessment_id, verified_at, revalidate_by
+            domain,
+            REPO_ROOT,
+            CandidateRequest(
+                directories=snapshot_directories,
+                assessment_id=assessment_id,
+                verified_at=verified_at,
+                revalidate_by=revalidate_by,
+                observation_directories=observation_directories,
+            ),
         )
         if errors:
             for error in errors:
@@ -250,7 +283,7 @@ def main(args: list[str] | None = None) -> int:
     print(
         "usage: python3 docs/product-readiness/tools/cli.py "
         "{check [--reports DIR...]|enforce --reports DIR...|render|"
-        "aggregate --reports DIR... --output FILE [--assessment-id ID] "
+        "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
         "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
         "[--scenarios ID...]|"
         "assess --input REPORT [--dry-run]}",

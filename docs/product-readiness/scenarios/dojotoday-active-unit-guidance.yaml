@@ -16,5 +16,5 @@ assertions:
     claim: The learner understands that dojoToday guides but does not evaluate work.
 automation:
   workingDirectory: engines/dojoToday
-  argv: [npm, run, selfcheck]
-sourcePaths: [engines/dojoToday/src/, engines/dojoToday/tools/selfcheck.py]
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/dojoToday/playwright/readiness.spec.ts, engines/dojoToday/src/, engines/dojoToday/tools/selfcheck.py]
