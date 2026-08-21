@@ -24,7 +24,7 @@ def test_automated_candidate_may_refresh_an_independently_proven_claim() -> None
     )
 
     # When claim enforcement checks the candidate against its expected scenarios
-    reasons = unsupported_candidate_reasons(decision, (scenario_id,))
+    reasons = unsupported_candidate_reasons(decision, (scenario_id,), (scenario_id,))
 
     # Then it accepts the producer refresh without treating it as a new assessment
     assert reasons == ()
@@ -43,7 +43,25 @@ def test_candidate_cannot_omit_a_published_claim_scenario() -> None:
     )
 
     # When claim enforcement checks the candidate
-    reasons = unsupported_candidate_reasons(decision, (scenario_id,))
+    reasons = unsupported_candidate_reasons(decision, (scenario_id,), (scenario_id,))
 
     # Then the missing producer coverage remains blocking
     assert reasons == (reason,)
+
+
+def test_candidate_may_omit_an_independent_only_scenario() -> None:
+    # Given a published scenario that has no producer automation
+    scenario_id = ScenarioId("independent-only-scenario")
+    decision = ReadinessDecision(
+        use_case_id=UseCaseId("current-claim"),
+        outcome=DecisionOutcome.BLOCKED,
+        granted_tier=None,
+        reasons=(f"missing promoted result for {scenario_id}",),
+        result_run_ids=(),
+    )
+
+    # When CI checks a producer-only candidate
+    reasons = unsupported_candidate_reasons(decision, (scenario_id,), ())
+
+    # Then the unchanged promoted independent evidence remains authoritative
+    assert reasons == ()
