@@ -73,10 +73,11 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   const goalOption = page.getByTestId("onboarding-option-save_time");
   await goalOption.focus();
   await expect(goalOption).toBeFocused();
-  const focusOutline = await goalOption
-    .locator("..")
-    .evaluate((element) => getComputedStyle(element).outlineStyle);
-  expect(focusOutline).toBe("solid");
+  const focusOutline = await goalOption.locator("..").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.outlineColor, style: style.outlineStyle };
+  });
+  expect(focusOutline).toEqual({ color: "rgb(73, 56, 199)", style: "solid" });
   await goalOption.check();
   await page.getByTestId("onboarding-next").click();
   await page.getByTestId("onboarding-option-work").check();

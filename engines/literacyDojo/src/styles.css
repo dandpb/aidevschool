@@ -189,6 +189,12 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+.app-stage h1:focus {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
 /* Opções (onboarding, comparação de saídas) */
 .option-list,
 .fieldset {
@@ -748,7 +754,7 @@ textarea.is-invalid {
   --success-text: #14734d;
   --error-bg: #fff0ed;
   --error-text: #b83a31;
-  --focus: #ff9f1c;
+  --focus: var(--primary-dark);
   --radius: 18px;
   --on-primary: #ffffff;
   --shadow: 0 8px 0 rgba(49, 39, 104, 0.1), 0 18px 42px rgba(39, 33, 67, 0.08);
