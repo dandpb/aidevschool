@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "observerContext": "independent-readiness-observer",
-  "gitSha": "c3cad96b804c7b3540e2a5c74efaba158c13cf9c",
-  "observedAt": "2026-08-21T20:58:22Z",
+  "gitSha": "58caad9c8a7d6aeaf1c43c13825fb833491285b2",
+  "observedAt": "2026-08-21T21:09:20Z",
   "scenarios": [
     {
       "scenarioId": "literacy-happy-path",
@@ -54,16 +54,16 @@
           "id": "learner-understands-device-boundary",
           "evidence": "observation",
           "outcome": "pass",
-          "notes": "Same-browser reload returned to the home screen with XP, streak, and the next pedido title preserved. Observer response: A continuidade fica neste navegador e neste armazenamento local; sem conta ou sincronizacao, ela nao acompanha automaticamente outro navegador, perfil ou dispositivo."
+          "notes": "After opening the next lesson, reload restored the lesson intro with l02 still completed and l03 in progress. Observer response: A continuidade fica neste navegador e neste armazenamento local; sem conta ou sincronizacao, ela nao acompanha automaticamente outro navegador, perfil ou dispositivo."
         }
       ],
       "gaps": [
         {
-          "id": "literacy-resume-home-not-mid-lesson",
+          "id": "literacy-resume-does-not-restore-in-activity-selection",
           "severity": "low",
-          "summary": "Reload resumes at the home pedido card, not inside an in-progress lesson screen.",
+          "summary": "A reload restores mission-level progress at the lesson intro but not an unfinalized answer selection inside the activity.",
           "owner": "LiteracyDojo",
-          "disposition": "Document mission-level resume granularity; progress backup on the progress screen offers optional export/import for the same device."
+          "disposition": "Document the mission-level resume granularity or persist in-activity selections if product research shows it is needed."
         }
       ]
     }

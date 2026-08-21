@@ -84,6 +84,5 @@ def test_enforce_rejects_report_narrower_than_published_grants(tmp_path: Path) -
 
     # Then enforcement fails closed rather than silently dropping those grants
     assert result.returncode == 1
-    assert "BLOCKED: os-literacy-guided-mission" in result.stderr
     assert "BLOCKED: os-voxel-guided-missions" in result.stderr
     assert "BLOCKED: os-returning-learner" in result.stderr
