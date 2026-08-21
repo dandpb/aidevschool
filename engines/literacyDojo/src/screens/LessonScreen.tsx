@@ -35,6 +35,7 @@ import {
   type OnboardingState,
 } from "../domain/progress";
 import { findModule } from "../domain/track";
+import { ErrorRecoveryScreen } from "./ErrorRecoveryScreen";
 
 export type { LessonMode };
 
@@ -98,26 +99,17 @@ export function LessonScreen({
   }, [session.phase, session.currentActivityIndex]);
 
   if (!lesson) {
-    return (
-      <section className="screen">
-        <p role="alert">Lição não encontrada.</p>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          Voltar
-        </button>
-      </section>
-    );
+    return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;
   }
 
   const activity = currentActivity(session, lesson);
 
   if (!activity) {
     return (
-      <section className="screen">
-        <p role="alert">Nenhuma atividade encontrada para esta lição.</p>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          Voltar
-        </button>
-      </section>
+      <ErrorRecoveryScreen
+        message="Nenhuma atividade encontrada para esta lição."
+        onBack={onExit}
+      />
     );
   }
 
