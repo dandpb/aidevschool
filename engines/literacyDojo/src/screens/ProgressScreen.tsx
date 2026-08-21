@@ -196,7 +196,7 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Trilha</h2>
-        <ul className="lesson-list">
+        <ul className="lesson-list progress-lesson-list">
           {readyLessons.map((entry) => {
             const status = progress.lessonStatus[entry.id] ?? "locked";
             return (

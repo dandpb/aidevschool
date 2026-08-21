@@ -28,6 +28,13 @@ test("engajamento após a primeira lição: XP, meta diária, sequência e conqu
   await expect(page.getByTestId("track-progress")).toContainText("1 de");
 
   await page.getByTestId("open-progress").click();
+  const firstLessonTitle = await page.locator(".lesson-list .lesson-name").first().boundingBox();
+  expect(firstLessonTitle?.width).toBeGreaterThanOrEqual(160);
+  const progressLayout = await page.locator(".app-shell").evaluate((element) => ({
+    scrollWidth: element.scrollWidth,
+    clientWidth: element.clientWidth,
+  }));
+  expect(progressLayout.scrollWidth).toBeLessThanOrEqual(progressLayout.clientWidth);
   await expect(page.getByTestId("achievement-first_lesson")).toContainText("🏆");
   await expect(page.getByTestId("achievement-track_complete")).toContainText("🔒");
   await expect(page.getByTestId("skill-list")).toContainText("tentativa");
