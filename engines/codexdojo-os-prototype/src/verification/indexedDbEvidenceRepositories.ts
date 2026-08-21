@@ -70,7 +70,10 @@ export class IndexedDbVerificationStore implements VerificationStore {
     ) as RawEvidenceEntry[]
     return entries
       .filter((entry) => entry.subject.missionId === missionId)
-      .sort((left, right) => right.acceptedAt.localeCompare(left.acceptedAt))[0]
+      .sort((left, right) => (
+        right.acceptedAt.localeCompare(left.acceptedAt)
+        || right.storageId.localeCompare(left.storageId)
+      ))[0]
   }
 
   async commitVerified(

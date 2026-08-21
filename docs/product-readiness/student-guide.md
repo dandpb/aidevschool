@@ -11,7 +11,7 @@ organized by learner goal rather than repository component.
 
 ### Choose this journey
 
-Use standalone LiteracyDojo when you want short, practical AI lessons without programming or an account. Start at [AI DevSchool](https://aidevschool.netlify.app/) in a current desktop or mobile browser with browser storage enabled.
+Use standalone LiteracyDojo when you want short, practical AI lessons without programming or an account. Start at [AI DevSchool](https://aidevschool-literacydojo.netlify.app/) in a current desktop or mobile browser with browser storage enabled.
 
 ### Complete your first lesson
 

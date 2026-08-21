@@ -16,5 +16,5 @@ assertions:
     claim: The learner can state which track was selected and what action comes next.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/codexdojo-os-prototype/src/journey/]

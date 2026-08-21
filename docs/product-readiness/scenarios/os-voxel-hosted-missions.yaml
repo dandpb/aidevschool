@@ -16,5 +16,5 @@ assertions:
     claim: The learner does not interpret a mission result or raw evidence as canonical mastery.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts]

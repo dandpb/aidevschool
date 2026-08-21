@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "c8a961cf2bce79faca6fe4c6928c2bc0fb2044a8",
+  "observedAt": "2026-08-20T21:10:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The live route presents due review, active unit, and next mission. Observer response: dojoToday tells me what to review and do next, but it does not evaluate my work or mark mastery; the independent verifier decides."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "The adapter derives a generated snapshot from canonical state, and dojoToday consumes it without implementing a canonical state writer."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The guides require regeneration and a bounded stop. Observer response: if the projection is stale, I regenerate and reload it; if canonical state is unavailable or still disagrees, I stop and do not present the old guidance as current."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-encounter-evidence",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The browser journey marks the record as requiring a verifier. Observer response: this EVIDENCE record is my raw attempt output, not mastery; I hand it to the independent verifier, who decides whether it is accepted."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-evidence-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "replay-recovers-evidence-without-state-promotion",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Replay appends validated evidence through declared channels, while browser proof checks that no canonical learner-state or mastered write is created."
+        },
+        {
+          "id": "missing-evidence-does-not-count-as-completion",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The guides allow one replay and reject screenshots as substitutes. Observer response: if no valid record appears, I replay once and inspect the evidence channel; if it is still missing, I stop and escalate rather than treating the screenshot or game status as completion."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The guides require package-specific results. Observer response: this result covers only the voxelDojo game I completed; every sibling game needs its own run, and the raw evidence still requires independent verification."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "The scoped claim applies only to games declaring an accessible projection; shared action dispatch and equivalence tests preserve completion and evidence meaning for those integrations."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The clarified scenario requires an honest stop. Observer response: if WebGL fails, I use the accessible projection only when this game declares one; if neither supported renderer works, I exit without claiming completion, evidence, readiness, or mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "minitown-explore-only",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "experimental-boundary-is-understood",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Both guides label miniTown experimental and explore-only and disclaim completion, persistence, progression, learner evidence, and mastery; the corrected public route serves miniTown directly."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

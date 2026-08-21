@@ -3,9 +3,7 @@ from __future__ import annotations
 
 import json
 import sys
-import subprocess
 from dataclasses import replace
-from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Final
 
@@ -19,6 +17,7 @@ if str(READINESS_ROOT) not in sys.path:
 
 from tools.load import DomainParseError, load_domain  # noqa: E402
 from tools.history import HistoryParseError  # noqa: E402
+from tools.arguments import aggregate_arguments  # noqa: E402
 from tools.evidence import (  # noqa: E402
     AssessmentProposal,
     EvidenceError,
@@ -27,12 +26,15 @@ from tools.evidence import (  # noqa: E402
     propose_assessment,
     write_assessment,
 )
-from tools.evaluate import current_decision  # noqa: E402
-from tools.models import DecisionOutcome, ReadinessDomain  # noqa: E402
+from tools.enforcement import blocked_claims, candidate_path  # noqa: E402
+from tools.models import ReadinessDomain  # noqa: E402
 from tools.render import drift, expected_views, write_views  # noqa: E402
 from tools.reports import (  # noqa: E402
+    CandidateRequest,
+    ReportSnapshot,
     build_candidate_report,
     emit_engine_reports,
+    snapshot_report_directories,
     validate_report_directories,
 )
 from tools.validate import validate_domain  # noqa: E402
@@ -48,61 +50,12 @@ def _load_valid_domain() -> ReadinessDomain | None:
     return domain
 
 
-def _checkout_sha() -> str:
-    return subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True
-    ).stdout.strip()
-
-
-def _candidate_path(directories: tuple[Path, ...]) -> Path | None:
-    candidates = tuple(
-        path
-        for directory in directories
-        if directory.is_dir()
-        for path in sorted(directory.rglob("product-readiness-report.json"))
-    )
-    return candidates[0] if candidates else None
-
-
 def _print_candidate(proposal: AssessmentProposal) -> None:
     assessment = proposal.assessment
     print("Readiness candidate evaluated without writes:")
     for decision in sorted(assessment.decisions, key=lambda item: item.use_case_id):
         reasons = "; ".join(decision.reasons) or "-"
         print(f"- {decision.use_case_id}: {decision.outcome}; reasons={reasons}")
-
-
-def _aggregate_arguments(arguments: list[str]) -> tuple[tuple[Path, ...], Path, str, str, str] | None:
-    if arguments[:1] != ["aggregate"] or "--reports" not in arguments or "--output" not in arguments:
-        return None
-    reports_start = arguments.index("--reports") + 1
-    output_start = arguments.index("--output")
-    if reports_start >= output_start:
-        return None
-    directories = tuple(Path(value) for value in arguments[reports_start:output_start])
-    if not directories or output_start + 1 >= len(arguments):
-        return None
-    output = Path(arguments[output_start + 1])
-    options = arguments[output_start + 2 :]
-    values: dict[str, str] = {}
-    index = 0
-    while index < len(options):
-        option = options[index]
-        if option not in {"--assessment-id", "--verified-at", "--revalidate-by"}:
-            return None
-        if index + 1 >= len(options):
-            return None
-        values[option] = options[index + 1]
-        index += 2
-    now = datetime.now(UTC).replace(microsecond=0)
-    checkout = _checkout_sha()
-    return (
-        directories,
-        output,
-        values.get("--assessment-id", f"{now.date().isoformat()}-{checkout[:8]}-candidate"),
-        values.get("--verified-at", now.isoformat().replace("+00:00", "Z")),
-        values.get("--revalidate-by", (now.date() + timedelta(days=30)).isoformat()),
-    )
 
 
 def main(args: list[str] | None = None) -> int:
@@ -114,11 +67,31 @@ def main(args: list[str] | None = None) -> int:
         return 1
     if domain is None:
         return 1
-    aggregate = _aggregate_arguments(arguments)
+    aggregate = aggregate_arguments(arguments, REPO_ROOT)
     if aggregate is not None:
-        directories, output, assessment_id, verified_at, revalidate_by = aggregate
+        directories, observation_directories, output, assessment_id, verified_at, revalidate_by = aggregate
+        snapshot_directories, snapshot_errors = snapshot_report_directories(
+            domain,
+            REPO_ROOT,
+            ReportSnapshot(
+                sources=directories,
+                destination=READINESS_ROOT / "evidence" / "producers" / assessment_id,
+            ),
+        )
+        if snapshot_errors:
+            for error in snapshot_errors:
+                print(f"INVALID: {error}", file=sys.stderr)
+            return 1
         report, errors = build_candidate_report(
-            domain, REPO_ROOT, directories, assessment_id, verified_at, revalidate_by
+            domain,
+            REPO_ROOT,
+            CandidateRequest(
+                directories=snapshot_directories,
+                assessment_id=assessment_id,
+                verified_at=verified_at,
+                revalidate_by=revalidate_by,
+                observation_directories=observation_directories,
+            ),
         )
         if errors:
             for error in errors:
@@ -137,7 +110,7 @@ def main(args: list[str] | None = None) -> int:
             for error in report_errors:
                 print(f"INVALID: {error}", file=sys.stderr)
             return 1
-        candidate = _candidate_path(report_directories)
+        candidate = candidate_path(report_directories)
         if candidate is not None:
             try:
                 request = load_assessment_request(candidate)
@@ -160,8 +133,8 @@ def main(args: list[str] | None = None) -> int:
             for error in report_errors:
                 print(f"INVALID: {error}", file=sys.stderr)
             return 1
-        candidate = _candidate_path(report_directories)
-        candidate_decisions = ()
+        candidate = candidate_path(report_directories)
+        candidate_decisions = None
         if candidate is not None:
             try:
                 request = load_assessment_request(candidate)
@@ -169,33 +142,16 @@ def main(args: list[str] | None = None) -> int:
             except EvidenceError as error:
                 print(f"INVALID: {error}", file=sys.stderr)
                 return 1
-        candidate_by_use_case = {decision.use_case_id: decision for decision in candidate_decisions}
-        claimed_outcomes = {
-            DecisionOutcome.PASS,
-            DecisionOutcome.CONDITIONAL_FOLLOW_UP,
-            DecisionOutcome.DOWNGRADED,
-        }
-        rejected_outcomes = {DecisionOutcome.BLOCKED, DecisionOutcome.STALE}
-        now = datetime.now(UTC)
-        published_decisions = tuple(
-            current_decision(domain, use_case, REPO_ROOT, now) for use_case in domain.use_cases
-        )
-        unsupported = tuple(
-            (published, candidate_by_use_case[published.use_case_id])
-            for published in published_decisions
-            if published.outcome in claimed_outcomes
-            and published.use_case_id in candidate_by_use_case
-            and candidate_by_use_case[published.use_case_id].outcome in rejected_outcomes
-        )
-        if unsupported:
-            for published, evaluated in unsupported:
+        blocked = blocked_claims(domain, candidate_decisions, REPO_ROOT)
+        if blocked:
+            for decision in blocked:
                 print(
-                    f"UNSUPPORTED: {published.use_case_id}: published={published.outcome}; "
-                    f"evaluated={evaluated.outcome}; reasons={'; '.join(evaluated.reasons)}",
+                    f"BLOCKED: {decision.use_case_id}: {decision.outcome}; "
+                    f"reasons={'; '.join(decision.reasons)}",
                     file=sys.stderr,
                 )
             return 1
-        print("Product-readiness claims are fail-closed against the candidate report.")
+        print("Product-readiness claims have no blocked or stale decisions.")
         return 0
     if len(arguments) >= 5 and arguments[:2] == ["producer-report", "--engine"] and arguments[3] == "--output":
         scenario_ids = ()
@@ -258,7 +214,7 @@ def main(args: list[str] | None = None) -> int:
     print(
         "usage: python3 docs/product-readiness/tools/cli.py "
         "{check [--reports DIR...]|enforce --reports DIR...|render|"
-        "aggregate --reports DIR... --output FILE [--assessment-id ID] "
+        "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
         "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
         "[--scenarios ID...]|"
         "assess --input REPORT [--dry-run]}",

@@ -4,6 +4,9 @@ import path from "node:path";
 
 const engineRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repoRoot = path.resolve(engineRoot, "../..");
+if (process.env.READINESS_TEST_RUN !== "passed") {
+  throw new Error("Run npm run test:e2e; readiness reports require a passing Playwright run.");
+}
 const result = spawnSync(
   "python3",
   [

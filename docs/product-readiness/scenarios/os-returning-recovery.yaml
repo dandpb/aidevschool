@@ -16,5 +16,5 @@ assertions:
     claim: The facilitator can explain the loss boundary without undocumented repository intervention.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
-sourcePaths: [engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/readiness-recovery.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]

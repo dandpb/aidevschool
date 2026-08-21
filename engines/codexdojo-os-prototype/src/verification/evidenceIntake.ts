@@ -5,12 +5,11 @@ import {
   type EvidenceSubmission,
   type EvidenceVerificationState,
   type RawEvidenceEntry,
-  type StoredVerificationReceipt,
   type VerificationGateway,
   type VerificationService,
   type VerificationStore,
 } from './ports'
-import { receiptMatchesRecordIdentity } from './receiptContract'
+import { receiptMatchesRecordIdentity, verifiedState } from './receiptContract'
 
 type EvidenceIntakeDependencies = {
   readonly store: VerificationStore
@@ -20,14 +19,6 @@ type EvidenceIntakeDependencies = {
 
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
-}
-
-function verifiedState(stored: StoredVerificationReceipt): EvidenceVerificationState {
-  return {
-    kind: 'verified',
-    evidenceDigest: stored.evidenceDigest,
-    receipt: stored.receipt,
-  }
 }
 
 export class EvidenceIntake implements VerificationService {
@@ -61,7 +52,10 @@ export class EvidenceIntake implements VerificationService {
   ): Promise<EvidenceVerificationState> {
     try {
       this.correlate(mission, submission)
-      const existing = await this.dependencies.store.getRaw(submission.missionRunId)
+      const storageId = submission.schemaId === 'teaching-game-evidence'
+        ? `${submission.missionRunId}:${submission.record.ts}`
+        : submission.missionRunId
+      const existing = await this.dependencies.store.getRaw(storageId)
       if (
         existing !== undefined
         && (
@@ -92,7 +86,7 @@ export class EvidenceIntake implements VerificationService {
       }
       return await this.verify({
         ...submission,
-        storageId: submission.missionRunId,
+        storageId,
         missionVersion: mission.version,
         acceptedAt: existing?.acceptedAt ?? this.dependencies.clock().toISOString(),
         status: 'pending',
@@ -223,7 +217,7 @@ export class EvidenceIntake implements VerificationService {
         onState(state)
         return state
       }
-      const stored: StoredVerificationReceipt = {
+      const stored = {
         storageId: pending.storageId,
         evidenceDigest,
         missionId: pending.subject.missionId,

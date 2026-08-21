@@ -10,13 +10,15 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "preview": "vite build && vite preview",
-    "lint": "biome check src tools"
+    "lint": "biome check src tools playwright playwright.config.ts",
+    "test:readiness": "npm run selfcheck && playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs"
   },
   "dependencies": {
     "@aidevschool/evidence": "file:../shared/teaching-evidence"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@playwright/test": "1.62.0",
     "typescript": "5.7.3",
     "vite": "6.4.3"
   }

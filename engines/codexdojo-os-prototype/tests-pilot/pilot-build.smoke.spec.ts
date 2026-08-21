@@ -3,6 +3,8 @@
 // broken deploy, because it starts each runtime on its own localhost port —
 // which is exactly how a built OS shipped with dead mission iframes.
 import { expect, test } from '@playwright/test'
+import type { FrameLocator } from '@playwright/test'
+import { bucketOf } from '../../voxelDojo/game-02-warehouse/src/sim/hash'
 
 async function enterSchool(page: import('@playwright/test').Page, track?: RegExp) {
   await page.goto('/')
@@ -41,6 +43,23 @@ async function expectMissionMounted(
   ).toContainText(innerContent)
 }
 
+async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<void> {
+  const status = frame.getByTestId('hud-status')
+  const first = await status.textContent()
+  const count = first?.match(/\/(\d+):/)?.[1]
+  if (count === undefined) throw new Error('Warehouse crate count was not visible')
+  const shelfCount = await frame.locator('[data-testid^="shelf-"]').count()
+  for (let index = 0; index < Number(count); index += 1) {
+    const current = await status.textContent()
+    const key = current?.match(/: (.+) — click/)?.[1]
+    if (key === undefined) throw new Error('Warehouse key was not visible')
+    const expected = bucketOf(key, shelfCount)
+    await frame
+      .getByTestId(`shelf-${correct ? expected : (expected + 1) % shelfCount}`)
+      .dispatchEvent('click')
+  }
+}
+
 test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build', async ({ page }) => {
   await enterSchool(page)
   await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
@@ -65,4 +84,21 @@ test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev missi
   // No local verifier bridge exists in a static deploy. The host must say so
   // rather than imply mastery — producer != verifier survives the pilot build.
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
+  await enterSchool(page, /Trilha técnica.*Dev/)
+  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  const frame = page.frameLocator('iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]')
+  await frame.getByTestId('start').dispatchEvent('click')
+
+  await answerWarehouse(frame, false)
+  await expect(frame.getByTestId('hud-status')).toContainText('failed')
+  await frame.getByTestId('retry').dispatchEvent('click')
+  await answerWarehouse(frame, true)
+
+  await expect(page.getByText('Verificador indisponível', { exact: true })).toBeVisible()
+  await expect(page.getByText('Evidência rejeitada', { exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+  await expect(page.getByText('Temporariamente indisponível', { exact: true })).toBeVisible()
 })

@@ -204,7 +204,7 @@ describe('MissionShell completion persistence', () => {
 
     expect(await screen.findByText('Evidência rejeitada')).toBeTruthy()
     const returnButton = screen.getByRole('button', { name: '← Hub' })
-    expect(returnButton).toHaveProperty('disabled', false)
+    await waitFor(() => expect(returnButton).toHaveProperty('disabled', false))
     fireEvent.click(returnButton)
     expect(onReturn).toHaveBeenCalledTimes(1)
   })

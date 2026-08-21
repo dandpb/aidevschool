@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "c8a961cf2bce79faca6fe4c6928c2bc0fb2044a8",
+  "observedAt": "2026-08-20T22:16:29Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The hosted result separated local completion, evidence, and competence. Observer response: I completed this practice on this device; that is not mastery, and my next safe action is to retry verification once or return to the hub."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The live route and guides limit continuity to one browser profile. Observer response: This Literacy progress belongs to this browser profile; another browser, another device, or cleared site data starts separately."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Onboarding allowed a deliberate change from the recommendation and confirmed it. Observer response: I selected Dev rather than the recommended IA Pratica because I want the technical simulations; WAREHOUSE is my next action."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The accessible projection preserved the keyboard-operated core task. Observer response: I stop the journey and escalate when neither the 3D renderer nor the accessible projection lets the learner perform the core interaction."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A full reload restored the selected track and unfinished mission. Observer response: The OS restored my Dev track and unfinished mission in this browser profile; this is not cross-device synchronization."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Clearing the local progress store returned the route to onboarding with no completion. Observer response: The browser-local record was cleared, so the learner must onboard again; I must not reconstruct or claim the previous completion."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-returning-recovery-cause-not-explained-in-product",
+          "severity": "low",
+          "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it.",
+          "owner": "codexDojo OS",
+          "disposition": "Consider a non-authoritative recovery notice without reconstructing progress."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The visible route preserved unavailable verification and offered retry plus a safe hub exit. Observer response: Retry verification once; if it remains unavailable, return to the hub and leave the evidence unverified rather than claiming the verification gate passed."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-verification-recovery-no-visible-escalation-destination",
+          "severity": "low",
+          "summary": "The product offers retry and hub exit but no specific support destination.",
+          "owner": "codexDojo OS",
+          "disposition": "Expose the supported escalation destination while preserving the unverified state."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A fresh browser verified immutable Netlify deploy 6a877a6a68d0cee5f09b3934 at https://6a877a6a68d0cee5f09b3934--aidevschool-codexdojo-os.netlify.app. A failed 0% attempt then 100% retry produced distinct records; the mission showed Verificador indisponivel, the hub showed Temporariamente indisponivel, and neither showed a stale rejection. Observer response: The retry succeeded at 100%; verification is unavailable in both the mission and hub, not rejected, and canonical mastery remains unchanged."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reopen restored completed and unfinished Dev missions. Observer response: These voxel mission states resume only in this browser profile; they do not follow me to another device or browser."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

@@ -67,8 +67,8 @@ def test_assess_dry_run_shows_scope_and_changes_without_mutation(tmp_path: Path)
     assert tuple((READINESS_ROOT / "assessments").iterdir()) == assessments_before
 
 
-def test_enforce_accepts_fail_closed_published_baseline(tmp_path: Path) -> None:
-    # Given a current assessor report whose positive result is narrower than the published baseline
+def test_enforce_rejects_report_narrower_than_published_grants(tmp_path: Path) -> None:
+    # Given a current assessor report that omits journeys still granted by the published baseline
     report = _current_literacy_report(tmp_path)
     candidate = tmp_path / "product-readiness-report.json"
     report.rename(candidate)
@@ -82,5 +82,7 @@ def test_enforce_accepts_fail_closed_published_baseline(tmp_path: Path) -> None:
         text=True,
     )
 
-    # Then conservative blocked and stale claims remain valid without granting readiness
-    assert result.returncode == 0, result.stderr
+    # Then enforcement fails closed rather than silently dropping those grants
+    assert result.returncode == 1
+    assert "BLOCKED: pixelquest-evidence-encounter" in result.stderr
+    assert "BLOCKED: minitown-explore-only" in result.stderr

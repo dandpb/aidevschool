@@ -12,7 +12,7 @@
     "lint:fix": "biome check --write src tests playwright",
     "test": "NODE_ENV=development vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test && node scripts/readiness-report.mjs",
+    "test:e2e": "playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs",
     "readiness:report": "node scripts/readiness-report.mjs",
     "gen:content": "cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated",
     "gen:icons": "node tools/gen-icons.mjs",

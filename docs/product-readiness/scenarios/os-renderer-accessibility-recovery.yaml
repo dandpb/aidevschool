@@ -16,5 +16,5 @@ assertions:
     claim: The facilitator can identify when renderer recovery has failed and the journey must stop.
 automation:
   workingDirectory: engines/codexdojo-os-prototype
-  argv: [npm, run, test:smoke:pilot]
+  argv: [npm, run, test:readiness]
 sourcePaths: [engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts, engines/codexdojo-os-prototype/tests/accessibility.smoke.spec.ts]
