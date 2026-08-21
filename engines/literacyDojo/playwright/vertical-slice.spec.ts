@@ -45,9 +45,14 @@ test("readiness literacy-happy-path and literacy-resume: acerto de primeira enca
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
   ).toBeVisible({ timeout: 15_000 });
   await page.reload();
+  // resumeSession retoma a lição in_progress no intro persistido (ver LessonScreen + useCases).
+  await expect(page.getByTestId("lesson-intro")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
   ).toBeVisible();
+  const progress = await readProgress(page);
+  expect(progress?.lessonStatus?.l02).toBe("completed");
+  expect(progress?.currentLessonId).toBe("l03");
 
   const records = await readEvidence(page);
   expect(records).toHaveLength(1);

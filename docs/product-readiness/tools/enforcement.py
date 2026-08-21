@@ -61,7 +61,18 @@ def blocked_claims(
     for use_case, decision in published:
         if decision.granted_tier is None:
             continue
-        candidate = candidate_by_use_case[use_case.id]
+        candidate = candidate_by_use_case.get(use_case.id)
+        if candidate is None:
+            blocked.append(
+                ReadinessDecision(
+                    use_case.id,
+                    DecisionOutcome.BLOCKED,
+                    None,
+                    ("candidate report omits this use case",),
+                    (),
+                )
+            )
+            continue
         reasons = unsupported_candidate_reasons(candidate, use_case.scenario_ids)
         if reasons:
             blocked.append(

@@ -180,8 +180,24 @@ def propose_assessment(
     if any(result.git_sha != request.git_sha for result in request.results):
         raise EvidenceError("scenario result gitSha does not match the assessment report")
     _verify_artifacts(repo_root, request.results)
+    scenario_ids_in_request = {result.scenario_id for result in request.results}
+    use_cases_in_scope = tuple(
+        use_case
+        for use_case in domain.use_cases
+        if any(scenario_id in scenario_ids_in_request for scenario_id in use_case.scenario_ids)
+    )
+    if not use_cases_in_scope:
+        raise EvidenceError("assessment report does not map to any inventory use case")
+    unknown_scenarios = scenario_ids_in_request - {
+        scenario_id for use_case in use_cases_in_scope for scenario_id in use_case.scenario_ids
+    }
+    if unknown_scenarios:
+        raise EvidenceError(
+            "assessment report references scenarios outside the assessed use cases: "
+            + ", ".join(sorted(unknown_scenarios))
+        )
     decisions: tuple[ReadinessDecision, ...] = tuple(
-        evaluate_candidate(domain, use_case, request.results, repo_root) for use_case in domain.use_cases
+        evaluate_candidate(domain, use_case, request.results, repo_root) for use_case in use_cases_in_scope
     )
     assessment = Assessment(
         schema_version=1,
