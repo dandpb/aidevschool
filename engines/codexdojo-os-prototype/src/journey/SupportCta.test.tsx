@@ -4,12 +4,14 @@ import { PILOT_SUPPORT_EMAIL, supportWhatsAppHref } from '../supportContact'
 import { SupportCta } from './SupportCta'
 
 describe('SupportCta', () => {
-  it('shows the support email and hides WhatsApp while the number slot is empty', () => {
+  it('shows WhatsApp as primary and email as backup', () => {
     render(<SupportCta />)
+    const whatsapp = screen.getByTestId('support-whatsapp')
+    expect(whatsapp.getAttribute('href')).toBe('https://wa.me/5511984363878')
+    expect(whatsapp.textContent).toBe('WhatsApp')
     const email = screen.getByTestId('support-email')
     expect(email.getAttribute('href')).toContain(`mailto:${PILOT_SUPPORT_EMAIL}`)
     expect(email.textContent).toBe(PILOT_SUPPORT_EMAIL)
-    expect(screen.queryByTestId('support-whatsapp')).toBeNull()
-    expect(supportWhatsAppHref()).toBeNull()
+    expect(supportWhatsAppHref()).toBe('https://wa.me/5511984363878')
   })
 })

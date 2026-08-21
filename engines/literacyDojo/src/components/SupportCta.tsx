@@ -15,17 +15,17 @@ export function SupportCta({ compact = false }: { compact?: boolean }) {
     <div className="support-cta" data-testid="support-cta">
       {compact ? null : <p>Precisa de ajuda? O facilitador responde em até {PILOT_SUPPORT_SLA}.</p>}
       <p>
-        <a href={supportMailtoHref()} data-testid="support-email">
-          {PILOT_SUPPORT_EMAIL}
-        </a>
         {whatsappHref ? (
           <>
-            {" · "}
             <a href={whatsappHref} data-testid="support-whatsapp" target="_blank" rel="noreferrer">
               WhatsApp
             </a>
+            {" · "}
           </>
         ) : null}
+        <a href={supportMailtoHref()} data-testid="support-email">
+          {PILOT_SUPPORT_EMAIL}
+        </a>
       </p>
     </div>
   );

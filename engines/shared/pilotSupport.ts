@@ -6,7 +6,7 @@
 export const PILOT_SUPPORT_EMAIL = "daniel@heropa.com";
 
 /** E.164 digits (country code + number, no +). Empty = hidden in the UI. */
-export const PILOT_SUPPORT_WHATSAPP = "";
+export const PILOT_SUPPORT_WHATSAPP = "5511984363878";
 
 /** Informal pilot SLA, communicated in product and guides. */
 export const PILOT_SUPPORT_SLA = "1 dia útil";

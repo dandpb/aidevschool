@@ -17,7 +17,7 @@ commands and diagnostics remain in the linked engine READMEs.
 - For local operation, content generation, browser installation, and release checks, follow the [LiteracyDojo README](../../engines/literacyDojo/README.md#como-rodar). Do not substitute copied commands from this guide.
 - Tell the learner that progress stays in this browser, no account is created, and `completed` is not `mastered`.
 - Show them **Ver seu progresso → Baixar backup JSON** before a long session. Import uses the same `migrateProgress` path and still caps status at `completed`.
-- Pilot support is [daniel@heropa.com](mailto:daniel@heropa.com). Informal SLA: reply within 1 business day. A WhatsApp number will appear in the product only after it is set in `engines/shared/pilotSupport.ts`.
+- Pilot support is [WhatsApp](https://wa.me/5511984363878) (primary) and [daniel@heropa.com](mailto:daniel@heropa.com) (backup). Informal SLA: reply within 1 business day.
 
 ### Observe without leading
 
@@ -95,8 +95,8 @@ the codexDojo OS, or any other engine.
   those instructions.
 - State that host completion is local, raw evidence requires a verifier, and
   canonical mastery remains outside the OS.
-- Pilot support on recovery/error screens is [daniel@heropa.com](mailto:daniel@heropa.com)
-  (SLA: 1 business day). WhatsApp appears only when configured.
+- Pilot support on recovery/error screens is [WhatsApp](https://wa.me/5511984363878)
+  (primary) and [daniel@heropa.com](mailto:daniel@heropa.com) (backup; SLA: 1 business day).
 
 ### Observe without leading
 

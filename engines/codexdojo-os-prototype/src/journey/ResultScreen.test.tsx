@@ -62,9 +62,11 @@ describe('mission result', () => {
       />,
     )
 
+    expect(screen.getByTestId('support-whatsapp').getAttribute('href')).toBe(
+      'https://wa.me/5511984363878',
+    )
     expect(screen.getByTestId('support-email').getAttribute('href')).toContain(
       'mailto:daniel@heropa.com',
     )
-    expect(screen.queryByTestId('support-whatsapp')).toBeNull()
   })
 })
