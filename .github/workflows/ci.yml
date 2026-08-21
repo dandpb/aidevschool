@@ -141,7 +141,10 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: node scripts/bundle-missions.mjs
       - run: npx playwright test --config=playwright.pilot.config.ts
+      - run: npx playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
       - run: node scripts/readiness-report.mjs
+        env:
+          READINESS_TEST_RUN: passed
       - uses: actions/upload-artifact@v4
         if: success()
         with:
