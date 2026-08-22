@@ -224,8 +224,8 @@ export function ProgressScreen({
         <p className="muted">
           O progresso mora só neste navegador: não há conta nem sincronização. Limpar dados do site,
           trocar de aparelho ou de perfil apaga o histórico. Exporte um JSON para guardar uma cópia;
-          ao importar, a migração atualiza o formato antigo e o teto continua sendo lição concluída —
-          nunca domínio verificado.
+          ao importar, a migração atualiza o formato antigo e o teto continua sendo lição concluída
+          — nunca domínio verificado.
         </p>
         <div className="backup-actions">
           <button
