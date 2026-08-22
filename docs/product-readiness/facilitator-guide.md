@@ -1,13 +1,8 @@
 # Guia do facilitador
 
-Este guia cobre a operação de **turma paga** nas superfícies entregues após a
-matriz de readiness (#146): **LiteracyDojo avulso** e **codexDojo OS** (missão
-de IA Prática hospedada, retorno no mesmo aparelho e missões voxel da Trilha
-Dev). Comandos e diagnóstico técnico continuam nos READMEs dos engines.
+Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode ensinar primeira lição e IA Prática no OS. Não venda esses dois como customer-ready: no main, depois do #147, estão stale. O que a matriz ainda concede é retorno no mesmo aparelho e as missões voxel. #143 não está no produto; sem checkout neste guia.
 
-**Comercial ainda não pronto:** Pix, CNPJ, preço e política de cancelamento
-(issue #143) **não** estão no produto. Não há checkout automatizado neste guia.
-Quem opera a turma precisa definir e comunicar esses campos **antes** de cobrar.
+Comandos e diagnóstico técnico continuam nos READMEs dos engines.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).

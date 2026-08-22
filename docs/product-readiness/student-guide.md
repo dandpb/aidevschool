@@ -1,9 +1,6 @@
 # Guia do estudante
 
-Este guia descreve o que você pode usar hoje numa turma paga do AI DevSchool:
-**LiteracyDojo avulso** e **codexDojo OS**. Não cobre conta, sincronização entre
-aparelhos, domínio verificado pela interface, nem a Trilha Dev no LiteracyDojo
-avulso (ela aparece como “em breve”).
+Este guia ensina dois caminhos da turma: o LiteracyDojo avulso e o site do OS (endereço fixo, no navegador). Você pode seguir a primeira lição e as missões de IA Prática. Isso não é certificado, não é ‘pronto para cliente’, e não prova domínio. No OS, o que já foi revalidado para cliente é voltar no mesmo aparelho e as três missões 3D da Trilha Dev. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
 
 ## Standalone LiteracyDojo
 
