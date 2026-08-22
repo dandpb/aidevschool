@@ -28,6 +28,7 @@ import yaml
 
 from curriculum._shared.evidence import statuses as challenge_statuses
 from learner.substrate.predictions_summary import summarize_predictions
+from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
 from learner.substrate.catalog import load_catalog
 from learner.substrate.snapshot_sources import (
@@ -118,7 +119,7 @@ def build_snapshot(
         scaffolded = sum(project.status == "scaffolded" for project in catalog)
         predictions_path = source_root / "learner" / "predictions.yaml"
         challenge_root = source_root
-    snapshot_date = today or date.today()
+    snapshot_date = today or projection_today()
 
     snapshot = {
         "activeUnit": {
