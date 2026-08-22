@@ -17,7 +17,7 @@ declare global {
 }
 
 async function openEngineHub(page: Page): Promise<void> {
-  await page.goto('/desktop')
+  await page.goto('/desktop?operator=1')
   await page.getByRole('button', { name: 'Atividades' }).click()
   const launcher = page.getByRole('dialog', { name: 'Lançador de aplicativos' })
   await launcher.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }).fill('Engine Hub')

@@ -44,7 +44,6 @@ describe('mission-first hub progression', () => {
           onLaunch={vi.fn()}
           onOpenMap={vi.fn()}
           onOpenProgress={onOpenProgress}
-          onSwitchTrack={vi.fn()}
         />
       </ServicesProvider>,
     )
@@ -55,6 +54,8 @@ describe('mission-first hub progression', () => {
     expect(screen.getByText('25', { selector: '.hub-chips strong' })).not.toBeNull()
     expect(screen.getByText(/Uma pausa não remove XP/)).not.toBeNull()
     expect(screen.queryByText(/\bvidas?\b|\benergia\b/i)).toBeNull()
+    expect(screen.queryByText(/Trilha Dev/)).toBeNull()
+    expect(screen.queryByRole('link', { name: /Desktop legado/i })).toBeNull()
 
     await userEvent.click(screen.getByRole('button', { name: 'Entender meu progresso' }))
     expect(onOpenProgress).toHaveBeenCalledOnce()

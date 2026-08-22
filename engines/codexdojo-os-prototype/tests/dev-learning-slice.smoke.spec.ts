@@ -30,19 +30,17 @@ test('independently verifies all three Dev games through the shared mission cont
 }) => {
   test.setTimeout(60_000)
   await page.goto('/')
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
+  await page.goto('/mission/dev/game-02-warehouse')
 
-  await expect(page.getByText('Trilha Dev', { exact: true }).first()).toBeVisible()
   await expect(
     page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' }),
   ).toBeVisible()
   const canonicalLabel = await page.getByText(/\d+ competências verificadas/).textContent()
   const canonicalMastery = canonicalLabel?.match(/\d+/)?.[0]
   expect(canonicalMastery).toBeTruthy()
-  await page.locator('.next-mission-card .journey-primary').click()
 
-  await expect(page.getByText('Trilha Dev · 12 min', { exact: true })).toBeVisible()
+  await expect(page.getByText('Simulação hospedada · 12 min', { exact: true })).toBeVisible()
   const mission = page.frameLocator(
     'iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]',
   )

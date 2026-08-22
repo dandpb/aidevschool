@@ -1,5 +1,5 @@
 import { useServices } from '../app/ServicesProvider'
-import type { LearnerSnapshot, MissionDefinition, TrackId } from '../domain'
+import type { LearnerSnapshot, MissionDefinition } from '../domain'
 import type { MissionCatalogRepository } from '../missions/catalog'
 import { recommendMission } from '../missions/recommendation'
 import {
@@ -10,8 +10,8 @@ import {
   type MissionStartOptions,
   type OsProgress,
 } from '../progress/domain'
-import { TrackSwitcher } from './TrackSwitcher'
 import { MentorPanel } from '../mentor/MentorPanel'
+import { STUDENT_MISSION_CHAPTERS } from './studentPath'
 import { useVerificationByMission } from './useVerificationByMission'
 
 export function Hub({
@@ -21,7 +21,6 @@ export function Hub({
   onLaunch,
   onOpenMap,
   onOpenProgress,
-  onSwitchTrack,
 }: {
   readonly progress: OsProgress
   readonly learner: LearnerSnapshot
@@ -29,7 +28,6 @@ export function Hub({
   readonly onLaunch: (mission: MissionDefinition, options?: MissionStartOptions) => void
   readonly onOpenMap: () => void
   readonly onOpenProgress: () => void
-  readonly onSwitchTrack: (trackId: TrackId) => void
   }) {
   const services = useServices()
   const { availability: verificationAvailability, setVerification, verificationByKey } = useVerificationByMission(
@@ -42,8 +40,9 @@ export function Hub({
       ? catalog.get(recommendation.trackId, recommendation.missionId)
       : undefined
   const status = mission === undefined ? undefined : progress.missionStatusByKey[missionKey(mission.trackId, mission.id)]
-  const activeTrackId = progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
-  const completedMission = [...catalog.listLaunchable(activeTrackId)]
+  const activeTrackId = mission?.trackId ?? progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
+  const studentMissions = STUDENT_MISSION_CHAPTERS.flatMap((chapter) => catalog.listLaunchable(chapter.trackId))
+  const completedMission = [...studentMissions]
     .reverse()
     .find((item) => progress.missionStatusByKey[missionKey(item.trackId, item.id)] === 'completed')
 
@@ -100,7 +99,7 @@ export function Hub({
           <span><strong>AI DevSchool</strong><small>hub de aprendizagem</small></span>
         </div>
         <div className="hub-chips">
-          <span>Trilha <strong>{progress.activeTrackId === 'dev' ? 'Dev' : 'IA Prática'}</strong></span>
+          <span>Capítulo <strong>{activeTrackId === 'dev' ? 'Simulações' : 'IA Prática'}</strong></span>
           <span>XP local <strong>{progress.xp}</strong></span>
           <span>Meta <strong>{todayXp}/{progress.dailyGoalXp}</strong></span>
         </div>
@@ -112,10 +111,6 @@ export function Hub({
         <p>Uma missão em destaque, com prática observável e progresso que não confunde conclusão com competência.</p>
       </section>
 
-      <TrackSwitcher
-        activeTrackId={progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'}
-        onSwitch={onSwitchTrack}
-      />
       {verificationAvailability === 'unavailable' ? (
         <p className="journey-eyebrow" role="status">Verificação indisponível no momento. Seu progresso local continua salvo.</p>
       ) : null}
@@ -193,10 +188,9 @@ export function Hub({
           </article>
           <article>
             <p className="journey-eyebrow">Mapa compartilhado</p>
-            <h2>Veja os dois capítulos</h2>
-            <p>Missões bloqueadas, em andamento e concluídas permanecem separadas por trilha.</p>
+            <h2>Veja o capítulo inteiro</h2>
+            <p>Missões bloqueadas, em andamento e concluídas permanecem visíveis no mapa.</p>
             <button type="button" className="hub-map-link" onClick={onOpenMap}>Abrir mapa</button>
-            <a href="/desktop">Desktop legado</a>
           </article>
         </aside>
       </section>

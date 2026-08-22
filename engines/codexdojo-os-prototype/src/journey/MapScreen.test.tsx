@@ -1,5 +1,4 @@
 import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
@@ -13,7 +12,6 @@ import {
 } from '../progress/domain'
 import type { VerificationService } from '../verification/ports'
 import { MapScreen } from './MapScreen'
-import { TrackSwitcher } from './TrackSwitcher'
 
 function verificationService(): VerificationService {
   return {
@@ -47,8 +45,8 @@ function verificationService(): VerificationService {
   }
 }
 
-describe('chapter map and track switching', () => {
-  it('shows both ordered chapters with lock, completion, verification, and mastery overlays', async () => {
+describe('chapter map', () => {
+  it('shows the student mission sequence without Trilha Dev or track switching', async () => {
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     if (l02 === undefined) throw new Error('Expected l02')
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
@@ -70,26 +68,17 @@ describe('chapter map and track switching', () => {
           }}
           catalog={new GeneratedMissionCatalogRepository()}
           onLaunch={vi.fn()}
-          onSwitchTrack={vi.fn()}
           onBack={vi.fn()}
         />
       </ServicesProvider>,
     )
 
-    expect(screen.getByRole('heading', { name: 'Duas trilhas, seis missões' })).not.toBeNull()
-    expect(screen.getByRole('heading', { name: 'Sistemas que você pode manipular' })).not.toBeNull()
+    expect(screen.getByRole('heading', { name: 'Seis missões, uma sequência' })).not.toBeNull()
+    expect(screen.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)', level: 3 })).not.toBeNull()
+    expect(screen.queryByText(/Trilha Dev/)).toBeNull()
+    expect(screen.queryByRole('button', { name: /Trilha Dev/ })).toBeNull()
     expect(screen.getAllByText('Bloqueada por pré-requisito').length).toBeGreaterThan(0)
     await waitFor(() => expect(screen.getByText('Verificação independente concluída')).not.toBeNull())
     expect(screen.getByText('Competência canônica verificada')).not.toBeNull()
-  })
-
-  it('changes only the active recommendation control', async () => {
-    const onSwitch = vi.fn()
-    render(<TrackSwitcher activeTrackId="ai-pratica" onSwitch={onSwitch} />)
-
-    await userEvent.click(screen.getByRole('button', { name: /Trilha Dev/ }))
-
-    expect(onSwitch).toHaveBeenCalledWith('dev')
-    expect(screen.getByRole('button', { name: /IA Prática/ }).getAttribute('aria-pressed')).toBe('true')
   })
 })

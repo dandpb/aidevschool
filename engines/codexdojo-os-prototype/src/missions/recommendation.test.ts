@@ -70,7 +70,25 @@ describe('initial mission recommendation', () => {
     })
   })
 
-  it('unlocks the Dev chapter from declared prerequisites', () => {
+  it('prioritizes IA Prática before hosted simulations for legacy Dev track selection', () => {
+    const progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'build-systems',
+      context: 'personal-project',
+      confidence: 'high',
+      selectedTrackId: 'dev',
+    })
+    const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
+    if (warehouse === undefined) throw new Error('Expected hosted simulation mission')
+
+    expect(recommendMission(progress, catalog)).toEqual({
+      kind: 'start',
+      trackId: 'ai-pratica',
+      missionId: 'l02',
+    })
+    expect(recommendMission(progress, catalog)).not.toMatchObject({ missionId: warehouse.id })
+  })
+
+  it('unlocks hosted simulations only after IA Prática is complete', () => {
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
       goal: 'build-systems',
       context: 'personal-project',
@@ -79,8 +97,20 @@ describe('initial mission recommendation', () => {
     })
     const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
     const wormhole = missionCatalog.missions.find((mission) => mission.id === 'game-03-wormhole')
-    if (warehouse === undefined || wormhole === undefined) throw new Error('Expected Dev chapter')
+    const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
+    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
+    const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
+    if (
+      warehouse === undefined ||
+      wormhole === undefined ||
+      l01 === undefined ||
+      l02 === undefined ||
+      l03 === undefined
+    ) throw new Error('Expected pilot missions')
 
+    progress = recordMissionCompletion(progress, l02, missionCatalog, 'l03')
+    progress = recordMissionCompletion(progress, l03, missionCatalog)
+    progress = recordMissionCompletion(progress, l01, missionCatalog)
     expect(recommendMission(progress, catalog)).toMatchObject({ missionId: warehouse.id })
     progress = recordMissionCompletion(progress, warehouse, missionCatalog)
     expect(recommendMission(progress, catalog)).toMatchObject({ missionId: wormhole.id })
@@ -113,7 +143,16 @@ describe('initial mission recommendation', () => {
   it('applies resume, canonical review, retry, and new-content precedence', () => {
     const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
     const wormhole = missionCatalog.missions.find((mission) => mission.id === 'game-03-wormhole')
-    if (warehouse === undefined || wormhole === undefined) throw new Error('Expected Dev missions')
+    const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
+    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
+    const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
+    if (
+      warehouse === undefined ||
+      wormhole === undefined ||
+      l01 === undefined ||
+      l02 === undefined ||
+      l03 === undefined
+    ) throw new Error('Expected hosted simulation missions')
     const canonical = learnerWith({
       nextReviews: [{ unitId: warehouse.unitId, title: warehouse.title, dueIn: 'today', reason: 'due' }],
       topPitfalls: [],
@@ -124,6 +163,9 @@ describe('initial mission recommendation', () => {
       confidence: 'high',
       selectedTrackId: 'dev',
     })
+    progress = recordMissionCompletion(progress, l02, missionCatalog, 'l03')
+    progress = recordMissionCompletion(progress, l03, missionCatalog)
+    progress = recordMissionCompletion(progress, l01, missionCatalog)
 
     expect(recommendMission(startMission(progress, warehouse), catalog, { learner: canonical })).toMatchObject({
       kind: 'resume',
@@ -156,6 +198,31 @@ describe('initial mission recommendation', () => {
       kind: 'retry',
       missionId: wormhole.id,
       reason: 'failed-attempt',
+    })
+  })
+
+  it('continues into hosted simulations after IA Prática is complete', () => {
+    const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
+    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
+    const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
+    const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
+    if (l01 === undefined || l02 === undefined || l03 === undefined || warehouse === undefined) {
+      throw new Error('Expected pilot missions')
+    }
+    let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'work-better',
+      context: 'work',
+      confidence: 'low',
+      selectedTrackId: 'ai-pratica',
+    })
+    progress = recordMissionCompletion(progress, l02, missionCatalog, 'l03')
+    progress = recordMissionCompletion(progress, l03, missionCatalog)
+    progress = recordMissionCompletion(progress, l01, missionCatalog)
+
+    expect(recommendMission(progress, catalog, { learner: learnerWith({ nextReviews: [], topPitfalls: [] }) })).toEqual({
+      kind: 'start',
+      trackId: 'dev',
+      missionId: warehouse.id,
     })
   })
 

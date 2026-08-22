@@ -33,7 +33,6 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
         onLaunch={(mission, options) => void controller.launchMission(mission, options)}
         onOpenMap={() => services.navigation.push('/map')}
         onOpenProgress={() => services.navigation.push('/progress')}
-        onSwitchTrack={(trackId) => void controller.selectTrack(trackId)}
       />
     )
   }
@@ -58,7 +57,6 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
         learner={learner}
         catalog={services.missions}
         onLaunch={(mission) => void controller.launchMission(mission)}
-        onSwitchTrack={(trackId) => void controller.selectTrack(trackId)}
         onBack={() => services.navigation.push('/hub')}
       />
     )

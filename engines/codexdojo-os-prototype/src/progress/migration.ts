@@ -1,4 +1,5 @@
 import type { MissionCatalogSnapshot, MissionKey, TrackId } from '../domain'
+import { remapLegacyDevTrackProgress } from '../journey/studentPath'
 import {
   DAILY_GOAL_XP,
   OS_PROGRESS_SCHEMA_VERSION,
@@ -15,6 +16,7 @@ import {
 
 export type ProgressMigrationResult =
   | { readonly kind: 'loaded'; readonly progress: OsProgress }
+  | { readonly kind: 'migrated'; readonly progress: OsProgress }
   | { readonly kind: 'reset'; readonly progress: OsProgress; readonly reason: string }
 
 const ACHIEVEMENT_IDS = new Set<AchievementId>([
@@ -255,5 +257,7 @@ export function migrateOsProgress(
   if (decoded === null) {
     return { kind: 'reset', progress: createInitialOsProgress(catalog), reason: 'malformed-state' }
   }
-  return { kind: 'loaded', progress: decoded }
+  const { progress, changed } = remapLegacyDevTrackProgress(decoded, catalog)
+  if (changed) return { kind: 'migrated', progress }
+  return { kind: 'loaded', progress }
 }
