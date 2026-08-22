@@ -1,167 +1,128 @@
-# Student Guide
+# Guia do estudante
 
-This guide covers `literacy-standalone-first-lesson`,
-`os-literacy-guided-mission`, `os-voxel-guided-missions`,
-`os-returning-learner`, `dojotoday-daily-guidance`,
-`pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, and
-`minitown-explore-only`. It is
-organized by learner goal rather than repository component.
+Este guia descreve o que você pode usar hoje numa turma paga do AI DevSchool:
+**LiteracyDojo avulso** e **codexDojo OS**. Não cobre conta, sincronização entre
+aparelhos, domínio verificado pela interface, nem a Trilha Dev no LiteracyDojo
+avulso (ela aparece como “em breve”).
 
 ## Standalone LiteracyDojo
 
-### Choose this journey
+### Quando usar
 
-Use standalone LiteracyDojo when you want short, practical AI lessons without programming or an account. Start at [AI DevSchool](https://aidevschool-literacydojo.netlify.app/) in a current desktop or mobile browser with browser storage enabled.
+Use o LiteracyDojo avulso para lições curtas de IA no dia a dia, sem programação e
+sem criar conta. Abra [https://aidevschool-literacydojo.netlify.app](https://aidevschool-literacydojo.netlify.app/)
+num navegador atual (celular ou computador) com armazenamento local habilitado.
 
-### Complete your first lesson
+### Primeira lição
 
-1. Meet Lumi and continue through the five short onboarding steps. Choose your goal, context, confidence, and the situation you want to explore.
-2. Open the first available activity from the Vila Lume map and read the resident's request.
-3. Submit an answer. If it is incorrect, read the corrective feedback, request a hint if useful, and choose **Try again**. An incorrect attempt does not complete the lesson.
-4. After a correct attempt, finish the lesson and read the result and suggested next lesson.
+1. Conheça a Lumi e siga os cinco passos de boas-vindas (objetivo, contexto,
+   confiança e situação do dia a dia).
+2. No mapa da Vila Lume, abra a primeira atividade disponível — **“IA não é uma
+   fonte de verdade”** (lição inicial do percurso).
+3. Leia o pedido do morador e envie sua resposta. Se errar, leia o retorno,
+   peça uma dica se ajudar e toque em **Tentar de novo**. Erro não conclui a
+   lição.
+4. Após acertar, finalize e leia o resultado e a sugestão da próxima lição.
 
-A successful result means `completed` in this browser. It does not mean `mastered`. Mastery requires separate evidence and independent verification outside LiteracyDojo.
+**Concluída** significa progresso salvo neste navegador. **Não** significa
+competência verificada ou domínio. Isso exige verificação independente fora do
+app.
 
-### Resume or recover
+### Continuar ou recuperar
 
-Your onboarding and lesson progress are stored locally in this browser. Reloading or returning on the same device should restore the supported progress and next available lesson. There is no account or cross-device synchronization; another browser or device starts separately, and clearing site data can erase local progress.
+O onboarding e o progresso ficam **só neste aparelho e navegador**. Recarregar a
+página no mesmo aparelho deve restaurar o que já foi feito. Outro navegador,
+outro aparelho ou limpar dados do site começa do zero — não há conta nem
+sincronização na nuvem.
 
-#### Back up local progress
+#### Guardar uma cópia do progresso
 
-A paid or long session should not depend on the browser keeping the data. In **Ver seu progresso**, use **Baixar backup JSON** to save a copy of `LearnerProgress`. The file records at most `completed` lesson status — never `mastered`. To restore the same browser profile after a wipe, use **Restaurar backup** and choose that JSON. Import runs the same forward-only migration used on launch, so an older backup can load, but it cannot grant mastery.
+Antes de uma aula longa ou de limpar dados do site, abra **Ver seu progresso** e
+use **Baixar backup JSON**. O arquivo guarda no máximo lições **concluídas** —
+nunca domínio verificado. Para repor o mesmo navegador depois de uma limpeza,
+use **Restaurar backup** e escolha esse arquivo.
 
-Do this before clearing site data, switching browsers, or handing the device to someone else. A backup cannot sync to another account because there is no account.
+Se a página cair no meio de uma atividade, volte ao mapa e recomece essa lição;
+respostas em andamento não são salvas.
 
-If a page reload interrupts an activity, return to the map and restart that lesson; answers in progress are not saved. If the public route does not load, storage is blocked, or progress repeatedly disappears, stop retrying and email [daniel@heropa.com](mailto:daniel@heropa.com). The facilitator aims to reply within 1 business day. Do not interpret an outage or interrupted attempt as completion.
+### Suporte
 
-### Supported next action
+Se o link não abrir, o armazenamento estiver bloqueado ou o progresso sumir de
+novo, pare de tentar e fale com a facilitadora:
 
-Continue to the next available LiteracyDojo lesson on the same device. The standalone route does not automatically transfer progress to another engine or grant canonical mastery.
+- WhatsApp: [+55 11 98436-3878](https://wa.me/5511984363878)
+- E-mail: [daniel@heropa.com](mailto:daniel@heropa.com)
 
-## Experimental: miniTown
+Resposta em até **1 dia útil**. Não interprete queda do site ou tentativa
+interrompida como lição concluída.
 
-### Choose this journey
+### Próximo passo
 
-Choose miniTown only when you want to look around an experimental town simulation.
-It is an explore-only surface, not a lesson or a customer-ready journey. It makes
-no promise of completion, persistence, progression, evidence, or mastery. Start
-from the local route prepared by a facilitator; technical setup belongs to the
-[miniTown engine README](../../engines/miniTown/README.md).
-
-### Explore without a progress claim
-
-1. Open the local miniTown route in the supported browser provided by your facilitator.
-2. Look around the town and observe its automatic simulation, residents, vehicles,
-   zones, and day/night cycle.
-3. Leave the route when you have finished exploring. There is no lesson result,
-   saved learner progress, evidence record, or next mission to complete here.
-
-Nothing you see in miniTown means `completed`, `verified`, or `mastered`. The
-simulation does not persist a learner journey or transfer progress to another
-engine. Do not use its runtime inspection hook as learner evidence.
-
-### Recover or choose a supported learning route
-
-If the local route does not load, reload once and ask a facilitator to check the
-engine-owned setup. There is no saved session to restore and no completion claim
-to recover. If your goal is guided AI practice, return to
-[standalone LiteracyDojo](#standalone-literacydojo) instead.
+Continue a próxima lição disponível no **mesmo aparelho**. O LiteracyDojo avulso
+não transfere progresso para outro produto nem concede domínio verificado.
 
 ## codexDojo OS guided journey
 
-### Choose this journey
+### Quando usar
 
-Use the OS when a facilitator gives you the static pilot entry and you want one
-guided route through hosted AI Literacy or Dev missions. Use a current browser
-with local storage enabled. The OS can recommend a track, but you can change the
-track before you enter the school.
+Use o codexDojo OS quando a facilitadora enviar o link do piloto estático e você
+quiser um percurso guiado com missões hospedadas. Abra
+[https://aidevschool-codexdojo-os.netlify.app](https://aidevschool-codexdojo-os.netlify.app/)
+num navegador atual com armazenamento local habilitado.
 
-### Complete a hosted mission
+### Entrar e escolher trilha
 
-1. Review the recommended track, choose **IA Prática** or **Dev**, and select
-   **Entrar na escola**.
-2. Open the next mission shown by the learning rail.
-3. For **IA Prática**, complete the hosted LiteracyDojo activity and return to
-   the host result. For **Dev**, complete the supported WAREHOUSE, WORMHOLE, or
-   RELAY STATION interaction and return to the host status.
-4. Read the result before continuing. `completed` means local host progress.
-   Produced evidence still requires an independent verifier, and neither state
-   means `mastered`.
+1. Responda às perguntas iniciais e revise a recomendação.
+2. Escolha **IA Prática** (lições de IA hospedadas) ou **Trilha Dev** (missões
+   em 3D: WAREHOUSE, WORMHOLE e RELAY STATION).
+3. Toque em **Entrar na escola**. O hub mostra a próxima missão e o ritmo local.
 
-### Resume or recover
+### Fazer uma missão
 
-The OS saves supported setup and mission state in this browser profile. Reload
-the same device to resume. Another browser, another device, or cleared site data
-starts separately; there is no account or cross-device synchronization.
+1. Abra a missão indicada no painel principal.
+2. **IA Prática:** complete a atividade do LiteracyDojo dentro do OS e volte ao
+   resultado na tela da escola.
+3. **Trilha Dev:** complete a interação da missão 3D e volte ao status na escola.
+4. Leia o resultado antes de seguir. **Concluída** é progresso local no
+   aparelho. A interface **não** concede domínio verificado.
 
-If a hosted mission does not load, retry once. If verification is unavailable,
-leave the status as not submitted and continue only when the guide presents a
-safe next action. The recovery screen names the support email
-([daniel@heropa.com](mailto:daniel@heropa.com)); the facilitator aims to reply
-within 1 business day. Do not treat a blank frame, unavailable verifier, or
-browser reload as completion.
+### Verificador no deploy público
 
-If 3D rendering is unavailable or you prefer reduced motion, use the accessible
-projection and keyboard controls. Stop and ask a facilitator when neither the
-3D nor accessible projection supports the core interaction.
+No link público (site estático), o **verificador independente pode aparecer como
+indisponível** — isso é esperado. Você pode tentar de novo uma vez; se
+continuar indisponível, siga a orientação da facilitadora ou use o contato de
+suporte na tela. **Não** trate “verificador indisponível” como aprovação nem
+como domínio.
 
-### Supported next action
+### Continuar no mesmo aparelho
 
-Continue to the next mission displayed by the OS on the same device. For a Dev
-mission, submit raw evidence to the separate verifier when that service is
-available. The OS does not accept its own evidence or grant canonical mastery.
+O OS guarda configuração e missões neste navegador. Recarregar no **mesmo
+aparelho** deve retomar de onde parou. Outro aparelho, outro navegador ou limpar
+dados começa separado — sem conta nem sincronização.
+
+Se a missão não carregar, tente uma vez. Se o 3D não funcionar, use a projeção
+acessível com teclado quando aparecer. Pare e peça ajuda se nenhuma opção
+permitir concluir a interação principal.
+
+### Suporte
+
+WhatsApp [+55 11 98436-3878](https://wa.me/5511984363878) ou
+[daniel@heropa.com](mailto:daniel@heropa.com) — resposta em até 1 dia útil.
+
+### Próximo passo
+
+Siga a próxima missão mostrada no hub, no mesmo aparelho. O OS não aceita a
+própria evidência nem marca domínio verificado na interface.
 
 ## Programmer journeys
 
-These validated journeys help you find today's work or produce raw evidence.
-They are not customer-ready account services, and none of them can verify its
-own output or mark a unit `mastered`.
+**Fora da oferta paga desta turma.** Rotas para quem programa (dojoToday,
+PixelQuest, voxelDojo avulso) são experimentais ou exigem setup local. Não fazem
+parte do que você compra hoje. Se a facilitadora não enviou link nem instrução
+específica, ignore.
 
-The current automated proof covers the completed PixelQuest encounter and the
-declared voxelDojo catalog smoke. Replay/recovery and accessible-renderer paths
-remain facilitator-observed or document-review scenarios; treat them as
-unassessed until that proof is recorded.
+## Experimental: miniTown
 
-### Read today's guidance in dojoToday
-
-Open the generated dojoToday view to see due reviews, your active unit, and the
-documented next action. The view reads the canonical learner projection. It
-does not schedule, evaluate, or write learner state.
-
-If the view is stale or missing, ask a facilitator to regenerate the shared
-projection. Stop if the canonical state is unavailable; don't use an old view
-as proof of current progress. Follow the displayed game or next action when the
-projection is current.
-
-dojoToday currently has a self-check and build validation, not a browser
-producer report. Treat the learner-understanding and stale-projection branches
-as unassessed until a facilitator records them separately.
-
-### Produce PixelQuest evidence
-
-Use the [PixelQuest launch instructions](../../engines/pixelDojo/pixel-quest/README.md)
-from a desktop browser with keyboard input. Complete the documented encounter,
-then locate the emitted `EVIDENCE` record or `.logs/evidence.ndjson` artifact.
-That record is raw evidence, not verifier acceptance or mastery.
-
-If evidence is missing, replay the encounter once and inspect the evidence
-channel again. A screenshot or success message is not a substitute. Stop and
-ask a facilitator when the replay still emits no valid record. Your supported
-next action is to hand the record to the independent verifier. The replay
-branch has no dedicated browser producer report in this phase, so do not treat
-the replay itself as validated until a facilitator observes it.
-
-### Complete a standalone voxelDojo loop
-
-Choose a package from the [voxelDojo catalog](../../engines/voxelDojo/README.md),
-follow that package's launch instructions, and complete its deterministic
-learning loop. Locate the emitted raw evidence before you leave the game. A
-passing game validates only that declared package; it says nothing about its
-siblings and does not grant mastery.
-
-If WebGL is unavailable, use the game's declared accessible projection when it
-preserves the core interaction. Stop when neither renderer supports the loop.
-Hand valid raw evidence to the independent verifier, or exit at that unsupported
-boundary without claiming completion. The accessible-renderer branch has no
-dedicated browser producer report in this phase; keep it unassessed until it is
-observed and recorded separately.
+**Fora da oferta paga.** O miniTown é exploração local experimental — sem lição,
+sem progresso salvo e sem conclusão. Se você quer prática guiada de IA, use o
+[LiteracyDojo avulso](#standalone-literacydojo).
