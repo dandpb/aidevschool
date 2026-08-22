@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-08-22-d5787ce-os-literacy-v10
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-22T16:45:00Z'
+revalidateBy: '2026-09-22'
+gitSha: d5787ce80652220f0305dc02ea0db9bbdf19bbf3
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-22T16:43:08Z-os-literacy-hosted-mission-mixed-d5787ce8
+  - 2026-08-22T16:43:08Z-os-literacy-returning-device-mixed-d5787ce8
+  - 2026-08-22T16:43:08Z-os-verification-recovery-mixed-d5787ce8
