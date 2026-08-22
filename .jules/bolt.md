@@ -16,3 +16,6 @@
 ## 2026-08-16 - escapeHtml RegExp.test Fast Path
 **Learning:** In a template-string-based rendering engine, calling `String.replace()` on a high volume of safe strings causes unnecessary garbage collection and regex allocation. `RegExp.test()` is significantly faster (~2x) when avoiding the replace step for strings that don't need escaping.
 **Action:** Use `RegExp.test()` to early-return safe strings before applying heavy `.replace()` operations in hot paths.
+## 2026-08-22 - O(N) Array Scans in Simulation Ticks
+**Learning:** In a highly interactive simulation environment like miniTown, methods called during every 'tick' (like target lookups) must be rigorously profiled. An O(N) array scan on `this.zones.find()` inside `pickRandomShopId()` and `pickRandomTrafficTarget()` multiplied by the number of vehicles/residents caused a measurable bottleneck.
+**Action:** Replaced the O(N) array search with an O(1) Map lookup (`this.#zonesById.get()`) populated at zone creation time to significantly speed up the hot loop without sacrificing readability.

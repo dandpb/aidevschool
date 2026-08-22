@@ -84,6 +84,8 @@ export interface WorldSnapshot {
  */
 export class Town {
   readonly zones: Zone[] = []
+  // ⚡ Bolt: Cache zones by ID to avoid O(N) array scans during hot simulation ticks
+  readonly #zonesById: Map<string, Zone> = new Map()
   readonly roads: Road[] = []
   readonly buildings: Building[] = []
   readonly residents: Resident[] = []
@@ -141,6 +143,7 @@ export class Town {
     this.#idCounter += 1
     const zone: Zone = { id: this.#id("z"), type, cell: { x, y } }
     this.zones.push(zone)
+    this.#zonesById.set(zone.id, zone)
     return zone
   }
 
@@ -192,7 +195,7 @@ export class Town {
 
   /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
   findZoneById(id: string): Zone | null {
-    return this.zones.find((z) => z.id === id) ?? null
+    return this.#zonesById.get(id) ?? null
   }
 
   /** Read a building by id — `homeId` / `workId` are passed in by residents. */
