@@ -9,20 +9,20 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-Este guia ensina dois caminhos da turma: o LiteracyDojo avulso (primeira lição) e o site do OS (endereço fixo, no navegador), começando em IA Prática. Esses dois caminhos são a oferta da turma. Isso não é certificado e não prova domínio. Voltar no mesmo aparelho e as três missões 3D existem no percurso, mas não estão prontas para cliente. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
+Este guia ensina dois caminhos da turma: o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador), com **Entrar na escola** → missões de **IA Prática** (catálogo l01–l03). Esses dois caminhos são a oferta da turma. As outras lições do avulso e o progresso do avulso não continuam no OS — quem muda de superfície recomeça. Isso não é certificado: **concluída** não é domínio. Voltar no mesmo aparelho e as três missões 3D existem no percurso do OS, mas não estão prontas para cliente. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS. Não há escolha entre **IA Prática** e **Trilha Dev** nem menu para trocar de trilha. **IA Prática** é o caminho do OS concedido nesta oferta; as três missões 3D seguem no produto, mas não estão prontas para cliente.
+Use esta seção para o piloto no site do OS. Não há Hub nem escolha entre **IA Prática** e **Trilha Dev**. O caminho concedido nesta oferta é **Entrar na escola** → **IA Prática** (catálogo l01–l03); as outras lições do LiteracyDojo avulso não estão no OS. Depois de **IA Prática**, as três missões 3D (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**) aparecem no produto, mas não estão prontas para cliente.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança). A sequência publicada começa em **IA Prática**.
 3. Selecione **Entrar na escola**.
-4. Complete as missões de **IA Prática** hospedadas no OS, na ordem mostrada pelo trilho de aprendizado.
-5. Depois de **IA Prática**, siga as três simulações 3D hospedadas no OS: **WAREHOUSE**, **WORMHOLE** e **RELAY STATION**.
+4. Complete as missões de **IA Prática** hospedadas no OS (l01–l03), na ordem mostrada pelo trilho de aprendizado.
+5. Depois de **IA Prática**, as três simulações 3D hospedadas no OS (**WAREHOUSE**, **WORMHOLE** e **RELAY STATION**) seguem no produto — não estão prontas para cliente.
 6. Leia o resultado de cada missão antes de continuar. `completed` significa progresso local no host; não significa `mastered`.
 
-**Retomar:** recarregar o mesmo aparelho deve restaurar o progresso suportado. Outro navegador, outro aparelho ou dados apagados começam do zero; não há conta nem sincronização entre dispositivos. Se você tinha parado na trilha antiga **Dev**, o OS volta para **IA Prática** até esse capítulo terminar.
+**Retomar:** recarregar o mesmo aparelho pode restaurar progresso no produto, mas retomar não está pronta para cliente. Outro navegador, outro aparelho ou dados apagados começam do zero; não há conta nem sincronização entre dispositivos nem entre o avulso e o OS. Se você tinha parado na trilha antiga **Dev**, o OS volta para **IA Prática** até esse capítulo terminar.
 
 O [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) no Netlify continua sendo uma rota separada, fora do OS.
 
