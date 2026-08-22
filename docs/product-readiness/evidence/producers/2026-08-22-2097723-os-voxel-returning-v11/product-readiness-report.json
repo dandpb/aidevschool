@@ -1,33 +1,33 @@
 {
-  "assessmentId": "2026-08-22-7feba05-os-voxel-returning-v10",
+  "assessmentId": "2026-08-22-2097723-os-voxel-returning-v11",
   "assessorContext": "independent-readiness-review",
-  "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+  "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
   "results": [
     {
       "artifacts": [
         {
           "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
-          "sha256": "21dc4b2a70aedc8a441ddc05d45265bce7822c97adcd88fb7adfbc6e06caf39f"
+          "sha256": "15c8fd427d67972a49cfdee0410999678c55502cefd653a294d8ebabe5908688"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-onboarding-track-choice.json",
-          "sha256": "55855f2605f70449f3f1e5aeedac0628f529973b9dc1403398ef670bdd936592"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-onboarding-track-choice.json",
+          "sha256": "48baca213565647e6b54d57cb7ac4bdff9204f3cc502d551f6c7aa1acaa5c6bf"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-onboarding-track-choice-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-onboarding-track-choice-mixed-2097723c",
       "scenarioId": "os-onboarding-track-choice",
       "schemaVersion": 1,
-      "sourceFingerprint": "3b628e4037fbc0a81590c55d3f23e12115eeacef22253a24ac44d154f060c50a"
+      "sourceFingerprint": "da1ddd665175968545545f229a8956fdadf259334c3e606145c82c227308fc66"
     },
     {
       "artifacts": [
@@ -36,24 +36,24 @@
           "sha256": "5306c9f1fa071fd5d10b8822a2b48e731b83f127c9b5acdea5d48da21f7dd78f"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-returning-device.json",
-          "sha256": "daafc18449051c37fa520e3371b0a776df11f9d9979b9b3c27cf3b93333c549f"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-returning-device.json",
+          "sha256": "fe7df645ea490573a56df73cdad8fa85c0ce225f74177fef38e6ee365738f011"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-returning-device-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-returning-device-mixed-2097723c",
       "scenarioId": "os-returning-device",
       "schemaVersion": 1,
-      "sourceFingerprint": "3b628e4037fbc0a81590c55d3f23e12115eeacef22253a24ac44d154f060c50a"
+      "sourceFingerprint": "da1ddd665175968545545f229a8956fdadf259334c3e606145c82c227308fc66"
     },
     {
       "artifacts": [
@@ -62,15 +62,15 @@
           "sha256": "6a5f97a178d969f1c239be3c80dcb4a06f5c34f27abcc1a8a94da009a86881ec"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-returning-recovery.json",
-          "sha256": "0f87158bd8377814d83c404f6b08dd3e900ec6bcec0e553d552c0fb1e21f9531"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-returning-recovery.json",
+          "sha256": "b6841b7ea56b59ab6f8975cccb17c6b2567e39f7c10dad2b1e260d0d67085368"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [
         {
@@ -81,43 +81,43 @@
           "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it."
         }
       ],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-returning-recovery-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-returning-recovery-mixed-2097723c",
       "scenarioId": "os-returning-recovery",
       "schemaVersion": 1,
-      "sourceFingerprint": "3b628e4037fbc0a81590c55d3f23e12115eeacef22253a24ac44d154f060c50a"
+      "sourceFingerprint": "da1ddd665175968545545f229a8956fdadf259334c3e606145c82c227308fc66"
     },
     {
       "artifacts": [
         {
           "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
-          "sha256": "21dc4b2a70aedc8a441ddc05d45265bce7822c97adcd88fb7adfbc6e06caf39f"
+          "sha256": "15c8fd427d67972a49cfdee0410999678c55502cefd653a294d8ebabe5908688"
         },
         {
           "path": "engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts",
           "sha256": "2950470ec774fff3fcb7788d310020da5c85d717da54f3eb52f909460f0a1aee"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-voxel-hosted-missions.json",
-          "sha256": "13d87a83725fd0515bc996fc06c2ba035c582f3ad63361f3f5e6a8b79d722026"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-voxel-hosted-missions.json",
+          "sha256": "a79d8f5da344e4f7f9d23f3e145cbc2233bdd6a2a8cc77c3bebb918eba0992ee"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-voxel-hosted-missions-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-voxel-hosted-missions-mixed-2097723c",
       "scenarioId": "os-voxel-hosted-missions",
       "schemaVersion": 1,
-      "sourceFingerprint": "38fff46d0ac4650f086afadde002c8abf936cae845beeb41a6cab10ba1773d47"
+      "sourceFingerprint": "6a677a6180fe7db2b4b7bbc548a4563742f083e8354247b73e398b3909fe1038"
     },
     {
       "artifacts": [
@@ -130,24 +130,24 @@
           "sha256": "d071d2aba0fcb439dc046741635f8193b61d6bea201274e579e2b4fa3b9a6a77"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-renderer-accessibility-recovery.json",
-          "sha256": "769a59106e844f68f9b9b4a5247bef73d8aba11d084361caf22c1fa3c696f4ed"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-renderer-accessibility-recovery.json",
+          "sha256": "239452b77e77a9e5902efb0927e2cef630c5ad4f6d9b663b31049a4fbf157ce9"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-renderer-accessibility-recovery-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-renderer-accessibility-recovery-mixed-2097723c",
       "scenarioId": "os-renderer-accessibility-recovery",
       "schemaVersion": 1,
-      "sourceFingerprint": "38fff46d0ac4650f086afadde002c8abf936cae845beeb41a6cab10ba1773d47"
+      "sourceFingerprint": "6a677a6180fe7db2b4b7bbc548a4563742f083e8354247b73e398b3909fe1038"
     },
     {
       "artifacts": [
@@ -156,27 +156,27 @@
           "sha256": "5306c9f1fa071fd5d10b8822a2b48e731b83f127c9b5acdea5d48da21f7dd78f"
         },
         {
-          "path": "docs/product-readiness/evidence/producers/2026-08-22-7feba05-os-voxel-returning-v10/os-voxel-returning-device.json",
-          "sha256": "1c926bbd1d2db76e8b78258e4dfeb8ad994b663e230d0e5480fc0bc308af8a90"
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-2097723-os-voxel-returning-v11/os-voxel-returning-device.json",
+          "sha256": "938fa12a25e89c90252f19da5c192349d32ad50b7d737b7db97946989dd6917e"
         },
         {
           "path": "docs/product-readiness/evidence/observations/2026-08-22-os-voxel-returning-live/observations.json",
-          "sha256": "a9ac88e1c5e67fdba9e347959e070ab4e9375f614b8537b06d7fe1b3ad80adeb"
+          "sha256": "0a3c408ca9dd160cd47d2eeb51029bb31bebafae3b68fe2d60a2ea237c064a9e"
         }
       ],
-      "executedAt": "2026-08-22T15:58:00Z",
+      "executedAt": "2026-08-22T16:22:00Z",
       "executor": "mixed",
       "gaps": [],
-      "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+      "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
       "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
       "outcome": "pass",
-      "runId": "2026-08-22T15:58:00Z-os-voxel-returning-device-mixed-7feba05d",
+      "runId": "2026-08-22T16:22:00Z-os-voxel-returning-device-mixed-2097723c",
       "scenarioId": "os-voxel-returning-device",
       "schemaVersion": 1,
-      "sourceFingerprint": "38fff46d0ac4650f086afadde002c8abf936cae845beeb41a6cab10ba1773d47"
+      "sourceFingerprint": "6a677a6180fe7db2b4b7bbc548a4563742f083e8354247b73e398b3909fe1038"
     }
   ],
   "revalidateBy": "2026-09-22",
   "schemaVersion": 1,
-  "verifiedAt": "2026-08-22T16:00:00Z"
+  "verifiedAt": "2026-08-22T16:24:00Z"
 }

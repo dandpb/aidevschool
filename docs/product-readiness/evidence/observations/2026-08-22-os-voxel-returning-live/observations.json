@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "observerContext": "independent-readiness-observer",
-  "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
-  "observedAt": "2026-08-22T15:58:00Z",
+  "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
+  "observedAt": "2026-08-22T16:22:00Z",
   "scenarios": [
     {
       "scenarioId": "os-onboarding-track-choice",

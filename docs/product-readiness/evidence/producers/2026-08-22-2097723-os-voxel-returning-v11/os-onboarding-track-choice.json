@@ -2,7 +2,7 @@
   "artifacts": [
     {
       "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
-      "sha256": "21dc4b2a70aedc8a441ddc05d45265bce7822c97adcd88fb7adfbc6e06caf39f"
+      "sha256": "15c8fd427d67972a49cfdee0410999678c55502cefd653a294d8ebabe5908688"
     }
   ],
   "assertions": [
@@ -12,14 +12,14 @@
       "outcome": "pass"
     }
   ],
-  "executedAt": "2026-08-22T15:57:02Z",
+  "executedAt": "2026-08-22T16:21:45Z",
   "executor": "automated",
   "gaps": [],
-  "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+  "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
   "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
   "outcome": "pass",
-  "runId": "2026-08-22T15:57:02Z-os-onboarding-track-choice-7feba05d",
+  "runId": "2026-08-22T16:21:45Z-os-onboarding-track-choice-2097723c",
   "scenarioId": "os-onboarding-track-choice",
   "schemaVersion": 1,
-  "sourceFingerprint": "3b628e4037fbc0a81590c55d3f23e12115eeacef22253a24ac44d154f060c50a"
+  "sourceFingerprint": "da1ddd665175968545545f229a8956fdadf259334c3e606145c82c227308fc66"
 }
