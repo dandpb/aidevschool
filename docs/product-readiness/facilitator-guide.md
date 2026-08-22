@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode ensinar primeira lição e IA Prática no OS. Não venda esses dois como customer-ready: no main, depois do #147, estão stale. O que a matriz ainda concede é retorno no mesmo aparelho e as missões voxel. #143 não está no produto; sem checkout neste guia.
+Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode vender como customer-ready só a primeira lição avulsa (Mapa Inicial — l02; condicional, com 3 gaps baixos em aberto) e as missões de **IA Prática** no OS (catálogo l01–l03; pass). Caminho no OS: **Entrar na escola** → **IA Prática**; sem Hub, sem escolher Trilha Dev. Não venda as outras 14 lições avulsas como se existirem no OS, nem sincronização avulso→OS, certificação/domínio (**concluída ≠ domínio**), retorno no mesmo aparelho nem as missões voxel como customer-ready: retorno e voxel estão stale no main após #149. #143 não está no produto; sem checkout neste guia.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -32,18 +32,24 @@ não cobre.
 
 ## Percurso atual no codexDojo OS
 
-No main atual, o OS não mostra escolha entre **IA Prática** e **Trilha Dev** nem
-menu para trocar de trilha. Oriente a turma assim:
+No main atual, o OS não tem Hub nem escolha entre **IA Prática** e **Trilha Dev**.
+O caminho customer-ready é **Entrar na escola** → **IA Prática** (catálogo l01–l03);
+não venda as outras 14 lições avulsas como se existirem no OS. As três missões 3D
+e retorno no mesmo aparelho existem no produto, mas não venda como customer-ready.
+Não prometa sincronização avulso→OS — o aluno recomeça ao mudar de superfície.
+Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.
-2. Missões de **IA Prática** hospedadas, na ordem do trilho.
-3. Depois, as três simulações 3D hospedadas: **WAREHOUSE**, **WORMHOLE**, **RELAY
-   STATION**.
-4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos.
+2. Missões de **IA Prática** hospedadas (l01–l03), na ordem do trilho.
+3. Depois, as três simulações 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY
+   STATION**) seguem no produto — não estão prontas para cliente.
+4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos nem
+   entre avulso e OS.
 
 Se o aprendiz retomar num perfil que tinha parado na trilha antiga **Dev**, o host
-volta para **IA Prática** até esse capítulo terminar. Não peça para escolher
-trilha — essa UI não existe mais no piloto.
+volta para **IA Prática** até esse capítulo terminar. Retorno no mesmo aparelho
+existe no produto, mas está stale — não venda como customer-ready. Não peça para
+escolher trilha — essa UI não existe mais no piloto.
 
 ## Standalone LiteracyDojo
 
