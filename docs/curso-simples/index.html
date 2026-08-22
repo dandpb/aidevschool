@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Curso prático: Fundamentos de LLMs, Harness, Prompt e Context Engineering, PRD/Specs, execução guiada, agentes, MCP/ACP/Skills e Loop Engineering — com um workflow permanente real e testado.">
+<title>Do prompt ao workflow permanente — Engenharia de IA para programadores</title>
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --bg:#070f1d;
+  --bg-2:#0a1526;
+  --surface:#0f1d33;
+  --surface-2:#132640;
+  --surface-3:#183050;
+  --text:#e9f2ff;
+  --muted:#9db2cc;
+  --faint:#6d84a0;
+  --line:rgba(157,178,204,.16);
+  --line-2:rgba(157,178,204,.30);
+  --blue:#5fc4ff;
+  --blue-soft:rgba(95,196,255,.12);
+  --green:#5fe8b0;
+  --green-soft:rgba(95,232,176,.11);
+  --purple:#c6a9ff;
+  --purple-soft:rgba(198,169,255,.12);
+  --yellow:#f7d37e;
+  --yellow-soft:rgba(247,211,126,.11);
+  --red:#ff9d9d;
+  --red-soft:rgba(255,157,157,.10);
+  --code-bg:#050c17;
+  --code-text:#d8e8ff;
+  --radius:14px;
+  --shadow:0 18px 50px rgba(2,8,20,.5);
+}
+/* ============================================================
+   BASE
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:
+    radial-gradient(1100px 500px at 85% -5%, rgba(95,196,255,.10), transparent 60%),
+    radial-gradient(900px 420px at -10% 12%, rgba(198,169,255,.07), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  line-height:1.65;
+  font-size:16px;
+}
+.shell{max-width:1060px;margin:0 auto;padding:0 24px}
+main{display:block}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+strong{color:#fff;font-weight:650}
+::selection{background:rgba(95,196,255,.30)}
+.skip-link{position:absolute;left:-999px;top:0;background:var(--blue);color:#04121f;padding:8px 14px;z-index:99}
+.skip-link:focus{left:12px;top:12px}
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{padding:72px 0 48px;border-bottom:1px solid var(--line)}
+.hero-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:start}
+.eyebrow{
+  display:inline-block;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--blue);border:1px solid rgba(95,196,255,.35);border-radius:999px;
+  padding:6px 14px;margin-bottom:20px;background:var(--blue-soft);
+}
+h1{font-size:clamp(2rem,4.4vw,3.2rem);line-height:1.12;letter-spacing:-.02em;font-weight:800}
+h1 .grad{background:linear-gradient(90deg,var(--blue),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-lead{margin-top:18px;font-size:1.12rem;color:var(--muted);max-width:56ch}
+.hero-actions{display:flex;gap:14px;margin-top:28px;flex-wrap:wrap}
+.button{
+  display:inline-block;padding:12px 22px;border-radius:10px;font-weight:650;
+  font-size:.95rem;transition:transform .15s ease, background .15s ease;
+}
+.button:hover{transform:translateY(-2px);text-decoration:none}
+.button-primary{background:linear-gradient(135deg,#2fa7ee,#5fc4ff);color:#04121f;box-shadow:0 8px 24px rgba(95,196,255,.25)}
+.button-ghost{border:1px solid var(--line-2);color:var(--text);background:var(--surface)}
+.hero-card{
+  background:linear-gradient(160deg,var(--surface-2),var(--surface));
+  border:1px solid var(--line-2);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);
+}
+.hero-card-top{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.equation{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:700;margin-bottom:14px}
+.equation span{background:var(--surface-3);border:1px solid var(--line-2);padding:6px 12px;border-radius:8px;font-size:.9rem}
+.equation b{color:var(--blue)}
+.hero-card p{color:var(--muted);font-size:.92rem}
+.mini-stats{display:flex;gap:22px;margin-top:18px}
+.mini-stats div{display:flex;flex-direction:column}
+.mini-stats strong{font-size:1.5rem;color:var(--blue)}
+.mini-stats span{font-size:.75rem;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+/* ============================================================
+   NAV
+   ============================================================ */
+.top-nav{
+  position:sticky;top:0;z-index:50;background:rgba(7,15,29,.90);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex;align-items:center;gap:22px;padding:12px 24px;max-width:1060px;margin:0 auto}
+.brand{font-weight:800;letter-spacing:.04em;color:#fff;font-size:.95rem;white-space:nowrap}
+.brand span{color:var(--blue)}
+.nav-links{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{
+  color:var(--muted);font-size:.85rem;padding:7px 11px;border-radius:8px;white-space:nowrap;
+}
+.nav-links a:hover{color:#fff;background:var(--surface-2);text-decoration:none}
+.nav-links a.nav-cta{color:#04121f;background:linear-gradient(135deg,#2fa7ee,#5fc4ff);font-weight:700}
+/* ============================================================
+   SEÇÕES
+   ============================================================ */
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.section-kicker{
+  font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);
+  font-weight:700;margin-bottom:10px;
+}
+section h2{font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.015em;line-height:1.2;margin-bottom:14px}
+.section-lead{color:var(--muted);font-size:1.05rem;max-width:70ch}
+h3{font-size:1.18rem;margin:34px 0 12px;letter-spacing:-.01em}
+h4{font-size:.98rem;margin:22px 0 8px;color:var(--blue)}
+p{margin:10px 0;color:#cfe0f4}
+ul,ol{margin:10px 0 10px 22px;color:#cfe0f4}
+li{margin:6px 0}
+/* ============================================================
+   COMPONENTES
+   ============================================================ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:18px 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:18px 0}
+.card{
+  background:linear-gradient(165deg,var(--surface),var(--bg-2));
+  border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+}
+.card h3{margin-top:0}
+.card .num{
+  display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+  border-radius:9px;background:var(--blue-soft);color:var(--blue);font-weight:800;
+  border:1px solid rgba(95,196,255,.3);margin-bottom:12px;font-size:.95rem;
+}
+.callout{
+  border-radius:var(--radius);padding:18px 20px;margin:18px 0;border:1px solid var(--line-2);
+  background:var(--surface);
+}
+.callout .tag{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:750;display:block;margin-bottom:6px}
+.callout-blue{background:var(--blue-soft);border-color:rgba(95,196,255,.35)}
+.callout-blue .tag{color:var(--blue)}
+.callout-green{background:var(--green-soft);border-color:rgba(95,232,176,.35)}
+.callout-green .tag{color:var(--green)}
+.callout-yellow{background:var(--yellow-soft);border-color:rgba(247,211,126,.4)}
+.callout-yellow .tag{color:var(--yellow)}
+.callout-red{background:var(--red-soft);border-color:rgba(255,157,157,.4)}
+.callout-red .tag{color:var(--red)}
+.callout-purple{background:var(--purple-soft);border-color:rgba(198,169,255,.35)}
+.callout-purple .tag{color:var(--purple)}
+/* código */
+pre{
+  background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;overflow-x:auto;margin:14px 0;font-size:.85rem;line-height:1.6;
+}
+code{font-family:"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+pre code{color:var(--code-text)}
+p code,li code,td code{
+  background:var(--surface-3);border:1px solid var(--line);border-radius:6px;
+  padding:1px 7px;font-size:.84em;color:#bcd8f5;
+}
+.code-label{
+  display:inline-block;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--faint);margin-bottom:-8px;font-weight:700;
+}
+/* tabelas */
+.table-wrap{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:520px}
+th{
+  text-align:left;padding:12px 14px;background:var(--surface-2);color:#fff;
+  font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--line-2);
+}
+td{padding:11px 14px;border-bottom:1px solid var(--line);color:#cfe0f4;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(95,196,255,.04)}
+/* badges e pills */
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.pill{
+  font-size:.78rem;padding:5px 12px;border-radius:999px;border:1px solid var(--line-2);
+  background:var(--surface);color:var(--muted);
+}
+.pill-blue{background:var(--blue-soft);border-color:rgba(95,196,255,.4);color:var(--blue)}
+.pill-green{background:var(--green-soft);border-color:rgba(95,232,176,.4);color:var(--green)}
+.pill-yellow{background:var(--yellow-soft);border-color:rgba(247,211,126,.45);color:var(--yellow)}
+.pill-purple{background:var(--purple-soft);border-color:rgba(198,169,255,.4);color:var(--purple)}
+/* diagramas em caixas */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0;padding:18px;background:var(--bg-2);border:1px dashed var(--line-2);border-radius:12px}
+.flow .step{
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:9px;
+  padding:8px 14px;font-size:.85rem;font-weight:650;color:#dceaff;
+}
+.flow .step.hot{background:var(--blue-soft);border-color:rgba(95,196,255,.45);color:var(--blue)}
+.flow .step.ok{background:var(--green-soft);border-color:rgba(95,232,176,.45);color:var(--green)}
+.flow .arrow{color:var(--faint);font-weight:700}
+/* details/summary (exercícios, sem JS) */
+details{
+  border:1px solid var(--line-2);border-radius:12px;margin:14px 0;background:var(--surface);
+  overflow:hidden;
+}
+details summary{
+  cursor:pointer;padding:14px 18px;font-weight:650;color:var(--blue);
+  list-style:none;display:flex;align-items:center;gap:10px;user-select:none;
+}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸";color:var(--faint);transition:transform .15s}
+details[open] summary::before{transform:rotate(90deg)}
+details .body{padding:0 18px 16px;border-top:1px solid var(--line)}
+/* passos numerados grandes */
+.step-list{counter-reset:passo;list-style:none;margin:22px 0;padding:0}
+.step-list li{
+  counter-increment:passo;position:relative;padding:0 0 26px 58px;
+}
+.step-list li::before{
+  content:counter(passo);position:absolute;left:0;top:0;width:38px;height:38px;
+  border-radius:11px;background:var(--blue-soft);border:1px solid rgba(95,196,255,.35);
+  color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;
+}
+.step-list li b{display:block;color:#fff;font-size:1.02rem;margin-bottom:4px}
+.step-list li:last-child{padding-bottom:4px}
+/* comparador antes/depois */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+.vs .col{border-radius:12px;padding:18px;border:1px solid var(--line)}
+.vs .bad{background:var(--red-soft);border-color:rgba(255,157,157,.35)}
+.vs .good{background:var(--green-soft);border-color:rgba(95,232,176,.35)}
+.vs .col .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:750;margin-bottom:8px;display:block}
+.vs .bad .lbl{color:var(--red)}
+.vs .good .lbl{color:var(--green)}
+/* evidência */
+.evidence{
+  border-left:3px solid var(--green);background:var(--green-soft);
+  border-radius:0 12px 12px 0;padding:14px 18px;margin:16px 0;font-size:.9rem;
+}
+.evidence .lbl{color:var(--green);font-weight:750;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;display:block;margin-bottom:4px}
+/* footer */
+footer{padding:44px 0 60px;color:var(--faint);font-size:.85rem}
+footer a{color:var(--muted)}
+/* responsivo */
+@media (max-width:900px){
+  .hero-grid,.grid-2,.vs{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr}
+  section{padding:48px 0}
+}
+/* impressão */
+@media print{
+  :root{--bg:#fff;--bg-2:#fff;--surface:#fff;--surface-2:#f4f6f9;--surface-3:#e9edf3;--text:#111;--muted:#374151;--code-bg:#f3f4f6;--code-text:#111}
+  body{background:#fff}
+  .top-nav,.hero-actions,.skip-link{display:none}
+  section{break-inside:avoid-page}
+  a{color:#0a63a8}
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<header class="hero" id="inicio">
+  <div class="shell hero-grid">
+    <div>
+      <p class="eyebrow">Curso prático · HTML + CSS puros · funciona offline</p>
+      <h1>Use IA para construir software com <span class="grad">previsibilidade</span>.</h1>
+      <p class="hero-lead">
+        Nove conceitos que separam quem <em>conversa</em> com a IA de quem
+        <em>constrói</em> com ela: LLMs, harness, prompt, contexto, specs,
+        execução guiada, agentes, MCP/ACP/skills e loop engineering. No final,
+        um passo a passo e um <strong>workflow permanente real, escrito e testado
+        de verdade</strong> — gerador de notas de release a partir de commits.
+      </p>
+      <div class="hero-actions">
+        <a class="button button-primary" href="#workflow">Ir para o workflow testado</a>
+        <a class="button button-ghost" href="#diagnostico">Ver o que o repo ensinou</a>
+      </div>
+      <p style="margin-top:16px;font-size:.85rem;color:var(--faint)">
+        <strong style="color:var(--muted)">Promessa:</strong> ao final você terá um processo que funciona
+        em Claude Code, Codex, OpenCode ou qualquer outro harness — porque os
+        ativos vivem em arquivos, não no chat.
+      </p>
+    </div>
+    <aside class="hero-card" aria-label="Visão do curso">
+      <div class="hero-card-top"><span class="status-dot"></span> trilha completa em uma página</div>
+      <div class="equation">
+        <span>LLM</span><b>+</b><span>Contexto</span><b>+</b><span>Spec</span><b>+</b><span>Validação</span>
+      </div>
+      <p>O modelo produz uma proposta. O workflow transforma a proposta em uma
+      entrega verificável — e cada entrega melhora a próxima.</p>
+      <div class="mini-stats">
+        <div><strong>09</strong><span>módulos</span></div>
+        <div><strong>22</strong><span>testes verdes</span></div>
+        <div><strong>01</strong><span>workflow real</span></div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<nav class="top-nav" aria-label="Navegação principal">
+  <div class="nav-inner">
+    <a class="brand" href="#inicio">dev<span>/</span>ia</a>
+    <div class="nav-links">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#fundamentos">1·LLMs</a>
+      <a href="#harness">2·Harness</a>
+      <a href="#prompt">3·Prompts</a>
+      <a href="#contexto">4·Contexto</a>
+      <a href="#specs">5·PRD/Specs</a>
+      <a href="#execucao">6·Execução</a>
+      <a href="#agentes">7·Agentes</a>
+      <a href="#mcp">8·MCP/Skills</a>
+      <a href="#loop">9·Loop</a>
+      <a href="#passo-a-passo">Passo a passo</a>
+      <a class="nav-cta" href="#workflow">Workflow real</a>
+    </div>
+  </div>
+</nav>
+
+<main id="conteudo">
+
+<!-- ============================================================
+     DIAGNÓSTICO: O QUE A BASE DE CÓDIGO ENSINOU
+     ============================================================ -->
+<section id="diagnostico">
+  <div class="shell">
+    <div class="section-kicker">Antes de começar · por que este curso existe</div>
+    <h2>O que 10 semanas e 349 commits nos ensinaram</h2>
+    <p class="section-lead">
+      Este curso nasce de uma base de código real — o repositório
+      <code>aidevschool</code> — que passou por um ciclo completo de construção
+      com IA. O diagnóstico honesto desse ciclo é o melhor material didático que
+      existe, porque cada princípio abaixo tem uma cicatriz.
+    </p>
+
+    <div class="grid-2" style="margin-top:26px">
+      <div class="card">
+        <h3 style="font-size:1.05rem">📊 O ciclo em números</h3>
+        <ul style="font-size:.92rem">
+          <li><strong>11 engines</strong>, 16 jogos 3D, 19 projetos de currículo</li>
+          <li><strong>~92 mil linhas de documentação</strong></li>
+          <li><strong>2 unidades de aprendizagem verificadas</strong></li>
+          <li><strong>0 usuários externos medidos</strong></li>
+        </ul>
+        <p style="font-size:.9rem;color:var(--muted)">A máquina de provar
+        <em>honestidade</em> funcionou (gates, verificadores, evidência).
+        A máquina de provar <em>valor</em> — alguém usando — nunca existiu.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1.05rem">🎯 A decisão deste curso</h3>
+        <p style="font-size:.92rem">Recomeçar de um jeito mais simples:</p>
+        <ul style="font-size:.92rem">
+          <li><strong>Uma fatia vertical</strong> de ponta a ponta, não 11 frentes a 80%</li>
+          <li><strong>Uma entrega usável</strong>: uma página + um workflow que qualquer aluno roda offline</li>
+          <li><strong>Simplicidade como etapa obrigatória</strong>, não como intenção</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Os 8 princípios que sobreviveram (cada um com prova no repo)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Princípio</th><th>A cicatriz que o ensinou</th></tr></thead>
+        <tbody>
+          <tr><td>F1</td><td><strong>Contrato antes do código</strong> — defina entradas, saídas e erros antes de implementar</td><td>O pixelDojo emitia evidência perfeita que ninguém lia: contrato de um lado só é produtor mudo</td></tr>
+          <tr><td>F2</td><td><strong>Uma fonte da verdade, várias views</strong> — edite a fonte canônica, regenere projeções</td><td>Métricas mostravam 0.34 / 0.5 / 0.0 ao mesmo tempo porque adapters inventavam número</td></tr>
+          <tr><td>F3</td><td><strong>Produtor não verifica o próprio trabalho</strong> — afirmação exige evidência independente</td><td>Um commit marcou 18 unidades como <code>mastered</code> sem tentativa alguma; todos os dashboards mentiram por 4 dias</td></tr>
+          <tr><td>F4</td><td><strong>Estado auditável</strong> — texto + git; se não dá <code>git log</code>, não dá para saber quando mentiu</td><td>Só o git permitiu achar o commit exato das masterizações falsas</td></tr>
+          <tr><td>F5</td><td><strong>Fatia vertical antes de escala horizontal</strong></td><td>Seis engines a 80% com um loop fechado por mês não é MVP</td></tr>
+          <tr><td>F6</td><td><strong>Gates empíricos, não opinião</strong> — comando, métrica, amostra declarada</td><td>“Parece bom” e N=1 aprovaram benchmark que N=3 reprovou</td></tr>
+          <tr><td>F7</td><td><strong>Falha visível por padrão</strong></td><td>Um loop ficou parado 1 mês em <code>impl-done</code>; o arquivo de status tornou isso um fato, não uma surpresa</td></tr>
+          <tr><td>F8</td><td><strong>Simplificação é etapa obrigatória</strong></td><td>Tentativas de “simplificar” que adicionavam ADR + porta + adapter não eram simplificação</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-green">
+      <span class="tag">Regra do novo ciclo</span>
+      <p style="margin:0"><strong>Uma feature pequena, uma spec, um plano, uma implementação,
+      uma validação e um aprendizado promovido a ativo.</strong> Tudo neste curso
+      segue essa regra — inclusive o caso de uso final, que foi construído assim e
+      deixou uma skill permanente no repo.</p>
+    </div>
+  </div>
+</section>
+<!-- ============================================================
+     MÓDULO 1 — FUNDAMENTOS DE LLMs
+     ============================================================ -->
+<section id="fundamentos">
+  <div class="shell">
+    <div class="section-kicker">Módulo 01</div>
+    <h2>Fundamentos de LLMs: instruções, contexto, tokens e ferramentas</h2>
+    <p class="section-lead">
+      Um LLM não “entende” o seu pedido: ele continua um texto. Quase tudo que
+      dá errado em desenvolvimento com IA vem de tratar o modelo como um
+      colega de equipe que já sabe o contexto. Ele não sabe. Ele só vê o que
+      está na janela de contexto — naquele instante.
+    </p>
+
+    <h3>1.1 — O modelo só vê texto (e só vê o que está na janela)</h3>
+    <p>
+      A cada turno, o harness monta um único texto e o envia ao modelo:
+      <strong>system prompt + histórico da conversa + arquivos anexados +
+      descrição das ferramentas + sua mensagem</strong>. O modelo lê tudo,
+      gera a continuação mais provável e pronto — ele não tem memória entre
+      conversas, não vê o seu disco e não sabe o que você quis dizer.
+    </p>
+    <div class="flow">
+      <span class="step">sua mensagem</span><span class="arrow">→</span>
+      <span class="step hot">janela de contexto (texto montado)</span><span class="arrow">→</span>
+      <span class="step">modelo gera continuação</span><span class="arrow">→</span>
+      <span class="step ok">ferramenta executa</span><span class="arrow">→</span>
+      <span class="step">resultado volta ao contexto</span>
+    </div>
+    <div class="callout callout-blue">
+      <span class="tag">Consequência direta</span>
+      <p style="margin:0">Se uma informação não está no contexto, ela não existe
+      para o modelo. “Eu te falei ontem” não vale: a conversa de ontem é outra
+      janela. Por isso contexto persistente vive em <em>arquivos</em>
+      (regras, specs, skills) e não no chat.</p>
+    </div>
+
+    <h3>1.2 — Tokens: a unidade de medida do contexto</h3>
+    <p>
+      O texto é fatiado em <strong>tokens</strong> — pedaços de ~4 caracteres em
+      inglês (menos em português e código). A janela de contexto é medida em
+      tokens e tem teto. Três implicações práticas:
+    </p>
+    <ul>
+      <li><strong>Custo e latência</strong> crescem com o tamanho do contexto — colar o repo inteiro é caro e lento.</li>
+      <li><strong>Atenção dilui</strong>: quanto mais texto, menor a chance de o modelo usar um detalhe enterrado no meio. Contexto grande ≠ contexto bom.</li>
+      <li><strong>Perda do meio</strong>: modelos prestam mais atenção no começo e no fim do contexto. Regras críticas vão no início; o pedido atual, no fim.</li>
+    </ul>
+    <div class="evidence">
+      <span class="lbl">Regra prática</span>
+      Um contexto de 5 arquivos diretamente relacionados vence um contexto de 50
+      arquivos “por garantia”. Selecionar contexto é medir qualidade — é o
+      Módulo 4 inteiro.
+    </div>
+
+    <h3>1.3 — Instruções: o modelo completa, não obedece</h3>
+    <p>
+      Como o modelo gera a continuação estatisticamente provável, uma instrução
+      ambígua recebe a interpretação <em>mais comum</em>, não a sua. Cada campo
+      que você omite vira uma decisão que o modelo toma sozinho — pelo caminho
+      padrão do treinamento dele.
+    </p>
+    <div class="vs">
+      <div class="col bad">
+        <span class="lbl">Ambíguo → decisão do modelo</span>
+        <p style="font-size:.9rem">“melhora esse código”</p>
+        <ul style="font-size:.88rem">
+          <li>Melhor em quê? performance? legibilidade?</li>
+          <li>Pode reescrever a API? trocar a lib?</li>
+          <li>Onde estão os testes que provam?</li>
+        </ul>
+      </div>
+      <div class="col good">
+        <span class="lbl">Contrato → decisão sua</span>
+        <p style="font-size:.9rem">“em <code>src/limiter.ts</code>, troque o
+        timer por refill lazy; não mude a interface pública;
+        aceite: <code>npm test</code> verde”</p>
+      </div>
+    </div>
+
+    <h3>1.4 — Ferramentas: como o modelo age no mundo</h3>
+    <p>
+      Sozinho, o modelo só gera texto. O harness expõe <strong>ferramentas</strong>
+      (ler arquivo, rodar comando, buscar na web…) como descrições em texto. O
+      fluxo vira um ciclo:
+    </p>
+    <ol>
+      <li>O modelo decide chamar uma ferramenta e emite uma <strong>chamada estruturada</strong> (nome + argumentos).</li>
+      <li>O harness <strong>executa</strong> — é código determinístico, não o modelo.</li>
+      <li>O resultado (ou o erro) volta como texto para o contexto.</li>
+      <li>O modelo continua com a nova informação — corrige, tenta de novo ou responde.</li>
+    </ol>
+    <div class="callout callout-yellow">
+      <span class="tag">O ponto que muda tudo</span>
+      <p style="margin:0">A certeza de que algo funcionou <strong>nunca vive no
+      modelo</strong> — vive na saída do comando que o harness executou.
+      “Fiz e funcionou” dito pelo modelo sem saída de comando não é evidência,
+      é continuação de texto. Este é o princípio F3 aplicado à conversa.</p>
+    </div>
+
+    <h3>1.5 — O ciclo modelo → ferramenta → modelo</h3>
+    <div class="flow">
+      <span class="step hot">especificar (texto)</span><span class="arrow">→</span>
+      <span class="step">modelo planeja</span><span class="arrow">→</span>
+      <span class="step ok">ferramenta executa</span><span class="arrow">→</span>
+      <span class="step">resultado no contexto</span><span class="arrow">→</span>
+      <span class="step hot">modelo corrige ou conclui</span>
+    </div>
+    <p>
+      Todo o resto do curso é sobre como governar esse ciclo: quem escolhe o
+      plano (Módulo 6), o que entra no contexto (Módulo 4), como separar quem
+      faz de quem verifica (Módulo 7) e como transformar cada ciclo concluído em
+      um ativo (Módulo 9).
+    </p>
+
+    <details>
+      <summary>✏️ Exercício — sinta o problema do contexto</summary>
+      <div class="body">
+        <p>Em uma conversa nova, peça: <em>“corrija o bug do rate limiter”</em>
+        sem anexar nada. Anote o que o modelo inventa. Depois repita com o
+        arquivo do código + a saída do teste falhando anexados. Compare: o
+        primeiro pedido forçou o modelo a alucinar contexto; o segundo só
+        precisou raciocinar. Guarde essa diferença — ela é a tese do Módulo 4.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 2 — HARNESS
+     ============================================================ -->
+<section id="harness">
+  <div class="shell">
+    <div class="section-kicker">Módulo 02</div>
+    <h2>Harness: o software ao redor do modelo</h2>
+    <p class="section-lead">
+      Claude Code, Codex e OpenCode não são modelos: são <strong>harnesses</strong> —
+      o programa que monta o contexto, executa ferramentas, aplica permissões e
+      gerencia a conversa. O modelo é o motor; o harness é o carro. Entender
+      essa separação é o que permite trocar de modelo sem perder o workflow.
+    </p>
+
+    <h3>2.1 — O que um harness faz (as 6 responsabilidades)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Responsabilidade</th><th>O que significa</th><th>Onde você mexe</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Montagem de contexto</strong></td><td>Junta system prompt + regras + histórico + arquivos</td><td><code>CLAUDE.md</code>, <code>AGENTS.md</code>, anexos</td></tr>
+          <tr><td><strong>Ferramentas</strong></td><td>Ler/escrever arquivos, terminal, busca — com permissões</td><td>Aprovações, allowlists de comando</td></tr>
+          <tr><td><strong>Execução</strong></td><td>Roda o que o modelo pediu e devolve saída/erro</td><td>Sandbox, timeouts</td></tr>
+          <tr><td><strong>Memória persistente</strong></td><td>Arquivos de regras recarregados em toda sessão</td><td><code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.cursor/rules</code></td></tr>
+          <tr><td><strong>Modos</strong></td><td>Plan (só análise) vs Build (edita) — papéis separados</td><td>Shift+Tab no Claude Code, <code>/plan</code> etc.</td></tr>
+          <tr><td><strong>Extensibilidade</strong></td><td>Skills, comandos slash, subagentes, MCP</td><td>Módulo 8 inteiro</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2.2 — O mesmo workflow em três harnesses</h3>
+    <p>
+      A anatomia é praticamente idêntica entre os harnesses de código. O que
+      muda é nome e caminho de arquivo:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Conceito</th><th>Claude Code</th><th>Codex CLI</th><th>OpenCode</th></tr></thead>
+        <tbody>
+          <tr><td>Regras do projeto</td><td><code>CLAUDE.md</code></td><td><code>AGENTS.md</code></td><td><code>AGENTS.md</code></td></tr>
+          <tr><td>Modo plano</td><td>Shift+Tab / plan mode</td><td>prompt “não edite”</td><td>modo plan</td></tr>
+          <tr><td>Subagentes</td><td><code>.claude/agents/*.md</code></td><td>sessões separadas</td><td><code>agents.json</code></td></tr>
+          <tr><td>Comandos</td><td><code>.claude/commands/*.md</code></td><td>prompts salvos</td><td>comandos próprios</td></tr>
+          <tr><td>MCP</td><td><code>.mcp.json</code></td><td><code>.mcp.json</code> / config</td><td>config própria</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout-blue">
+      <span class="tag">Consequência estratégica</span>
+      <p style="margin:0">Se os seus ativos (specs, templates, skills) vivem em
+      <strong>arquivos neutros</strong> — Markdown, YAML, scripts — eles
+      funcionam em qualquer harness. Se vivem “no chat” ou num formato proprietário,
+      você fica preso. O modelo e o harness podem mudar; a spec, o pacote de
+      contexto e os gates devem permanecer.</p>
+    </div>
+
+    <h3>2.3 — Arquivos que o harness lê sozinho (memória persistente)</h3>
+    <p>
+      Harnesses carregam automaticamente arquivos de regras no início da sessão.
+      É aqui que mora o contexto permanente:
+    </p>
+    <pre><code># AGENTS.md / CLAUDE.md mínimo que funciona
+
+## O que é este projeto
+Uma linha de propósito + onde está cada coisa.
+
+## Regras inegociáveis
+- Não editar arquivos gerados (liste quais)
+- Teste antes de declarar pronto; cole a saída
+- Uma entrega por pedido
+
+## Comandos de validação
+make test        # suíte principal
+npm run lint     # estilo
+npm run build    # smoke</code></pre>
+    <div class="callout callout-yellow">
+      <span class="tag">Aprendizado do repo</span>
+      <p style="margin:0">“Contexto persistente deve morar em arquivos de
+      regras/specs; o chat é volátil.” Reenviar o mesmo contexto a cada conversa
+      é o anti-padrão mais caro desta lista — e o mais comum.</p>
+    </div>
+
+    <h3>2.4 — Permissões: o harness decide o que o modelo pode tocar</h3>
+    <p>
+      Toda ação com efeito colateral (escrever arquivo, rodar comando) passa
+      pela política do harness: aprovar uma a uma, allowlist, ou modo
+      autônomo. A regra segura: <strong>autonomia só dentro de escopo
+      versionado</strong> — um diretório, um branch, uma fatia. Agente sem
+      cerca é só um processo com sorte.
+    </p>
+
+    <details>
+      <summary>✏️ Exercício — descubra o seu harness</summary>
+      <div class="body">
+        <p>Responda para o harness que você usa: (1) qual arquivo ele lê no
+        início da sessão? (2) onde ficam as permissões de comando? (3) como
+        alternar entre modo plano e modo edição? (4) onde ele guarda memória
+        entre sessões? Quem não responde as quatro em 10 minutos ainda está
+        dirigindo de olhos vendados.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 3 — PROMPT ENGINEERING
+     ============================================================ -->
+<section id="prompt">
+  <div class="shell">
+    <div class="section-kicker">Módulo 03</div>
+    <h2>Prompt Engineering: instruções que eliminam retrabalho</h2>
+    <p class="section-lead">
+      Prompt engineering não é encontrar palavras mágicas — é <strong>fechar
+      decisões</strong> antes de o modelo decidir por você. A técnica central
+      deste curso cabe em cinco campos e ~5 linhas.
+    </p>
+
+    <h3>3.1 — O protocolo de pedido em 5 campos</h3>
+    <pre><code>CONTEXTO:    onde mexer — caminhos de arquivo, não descrições
+OBJETIVO:    um resultado observável (um só)
+RESTRIÇÕES:  o que não pode mudar; limites (sem lib nova, não tocar em X)
+ACEITE:      o comando que prova que ficou pronto
+NÃO-META:    o que fica de fora desta entrega</code></pre>
+    <div class="callout callout-blue">
+      <span class="tag">Por que funciona</span>
+      <p style="margin:0">Cada campo omitido vira uma decisão que o modelo toma
+      pelo caminho <em>estatisticamente comum</em>, não pelo seu. O ACEITE é o
+      campo mais importante: ele transforma “pronto” de opinião em fato
+      verificável (F3 e F6 aplicados à conversa).</p>
+    </div>
+
+    <h3>3.2 — Exemplo completo: o pedido ruim e o pedido bom</h3>
+    <div class="vs">
+      <div class="col bad">
+        <span class="lbl">Pedido-romance (anti-padrão real)</span>
+        <p style="font-size:.88rem">“Então, a gente tem aquele sistema de tarefas
+        e eu queria que tivesse um jeito de exportar, porque o pessoal precisa
+        levar pra planilha, e talvez dê pra fazer um botão também, e aproveita
+        e dá uma olhada por que o login tá lento…”</p>
+        <p style="font-size:.85rem;color:var(--muted)">Resultado típico: escopo
+        imprevisível, duas entregas medíocres, zero critério de pronto.</p>
+      </div>
+      <div class="col good">
+        <span class="lbl">Mesma intenção em 5 campos</span>
+        <pre style="margin:8px 0 0"><code>CONTEXTO: docs/curso/.../export_tasks.py;
+  tarefas vêm como lista de dicts
+OBJETIVO: função que devolve CSV das tarefas
+  concluídas do usuário autenticado
+RESTRIÇÕES: stdlib apenas; sem I/O;
+  ordenar por completed_at desc
+ACEITE: pytest -q passa cobrindo autorização,
+  ordenação e escaping CSV
+NÃO-META: endpoint HTTP e persistência</code></pre>
+      </div>
+    </div>
+
+    <h3>3.3 — As 7 regras de conduta</h3>
+    <ol>
+      <li><strong>Uma entrega por pedido.</strong> “Implementa X e aproveita e refatora Y” = duas entregas medíocres. Encadeie pedidos, não escopos.</li>
+      <li><strong>Peça a prova junto.</strong> Termine com “mostre o comando que verifica”. Sem saída de comando, “testes passando” não aconteceu.</li>
+      <li><strong>Decisão grande → opções antes de código.</strong> “Me dê 2–3 opções com trade-offs, não implemente ainda.” Código é a forma mais cara de explorar uma decisão.</li>
+      <li><strong>Corrija com diff, não com “refaz”.</strong> “O campo X deveria vir de Y” converge em 1 iteração; “não gostei” converge nunca.</li>
+      <li><strong>Referencie por caminho.</strong> <code>learner/learning_state.yaml</code>, não “o arquivo de estado”. Ambiguidade de referência é a fonte nº 1 de retrabalho.</li>
+      <li><strong>Desconfie de afirmação sem artefato.</strong> A regra de ouro do ecossistema vale para a conversa.</li>
+      <li><strong>Prompt repetido vira arquivo.</strong> Se você digita a mesma instrução três vezes, ela vira regra (<code>AGENTS.md</code>), template ou skill (Módulo 8).</li>
+    </ol>
+
+    <h3>3.4 — Anti-padrões catalogados (com correção)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Anti-padrão</th><th>Sintoma</th><th>Correção</th></tr></thead>
+        <tbody>
+          <tr><td>Pedido-romance</td><td>20 linhas de história, 0 critério de aceite</td><td>Cortar para os 5 campos</td></tr>
+          <tr><td>Escopo-polvo</td><td>“e também… e já que está aí…”</td><td>1 objetivo por pedido</td></tr>
+          <tr><td>Aceite implícito</td><td>“melhora a performance”</td><td>“p95 &lt; X ms medido por Y”</td></tr>
+          <tr><td>Confiança emprestada</td><td>Aceitar “pronto ✓” sem rodar nada</td><td>Exigir comando de prova</td></tr>
+          <tr><td>Contexto reenviado</td><td>Colar o mesmo bloco em todo chat</td><td>Mover para <code>AGENTS.md</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details>
+      <summary>✏️ Exercício — reescreva um pedido seu</summary>
+      <div class="body">
+        <p>Pegue o último pedido que você fez a uma IA e reescreva-o nos 5
+        campos. Conte quantas decisões estavam implícitas no original
+        (caminhos, limites, critério de pronto). Cada uma delas era uma decisão
+        que o modelo ia tomar por você.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 4 — CONTEXT ENGINEERING
+     ============================================================ -->
+<section id="contexto">
+  <div class="shell">
+    <div class="section-kicker">Módulo 04</div>
+    <h2>Context Engineering: selecionar é medir qualidade</h2>
+    <p class="section-lead">
+      O erro mais caro com IA não é o prompt ruim — é o contexto errado:
+      gigante demais (dilui atenção), incompleto (força invenção) ou com
+      peças contraditórias. Context engineering é montar, para cada tarefa,
+      o menor conjunto de arquivos e regras que torna a tarefa inequívoca.
+    </p>
+
+    <h3>4.1 — As três classes de contexto</h3>
+    <div class="grid-3">
+      <div class="card">
+        <div class="num">1</div>
+        <h3 style="font-size:1rem;margin-top:0">Permanente</h3>
+        <p style="font-size:.9rem">Regras que valem sempre:
+        <code>AGENTS.md</code>, <code>CLAUDE.md</code>, memória do harness.
+        Vive em arquivo, nunca no chat.</p>
+      </div>
+      <div class="card">
+        <div class="num">2</div>
+        <h3 style="font-size:1rem;margin-top:0">Da tarefa</h3>
+        <p style="font-size:.9rem">PRD, spec, os arquivos diretamente
+        relacionados, testes e contratos existentes, o recorte de log/erro
+        que explica o problema.</p>
+      </div>
+      <div class="card">
+        <div class="num">3</div>
+        <h3 style="font-size:1rem;margin-top:0">Gerado</h3>
+        <p style="font-size:.9rem">Saída de ferramentas: diffs, resultados de
+        teste, listagens. Entra no contexto automaticamente a cada ciclo —
+        por isso loops longos precisam de poda.</p>
+      </div>
+    </div>
+
+    <h3>4.2 — Checklist do pacote de contexto</h3>
+    <div class="callout callout-green">
+      <span class="tag">Incluir</span>
+      <p style="margin:0">① regras permanentes · ② PRD e spec · ③ arquivos
+      diretamente relacionados (por caminho) · ④ testes e contratos existentes ·
+      ⑤ logs/erros <strong>recortados</strong> que explicam o problema</p>
+    </div>
+    <div class="callout callout-red">
+      <span class="tag">Excluir</span>
+      <p style="margin:0">Build output, <code>node_modules</code>/dependências,
+      logs sem recorte, segredos, arquivos sem relação com a tarefa, e views
+      geradas (elas podem estar erradas mesmo com o código certo — inclua a
+      fonte).</p>
+    </div>
+
+    <h3>4.3 — O pacote real do nosso caso de uso</h3>
+    <p>
+      O workflow testado no final deste curso usou exatamente essa disciplina.
+      O arquivo <code>CONTEXTO.md</code> declara o que entrou e o que ficou de fora:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Entrou</th><th>Ficou de fora</th></tr></thead>
+        <tbody>
+          <tr><td>PRD.md e SPEC.md da feature</td><td><code>engines/</code>, <code>learner/</code>, <code>curriculum/</code> (sem relação)</td></tr>
+          <tr><td><code>docs/FUNDAMENTOS.md</code> (regras de robustez)</td><td><code>node_modules</code>, lockfiles, builds</td></tr>
+          <tr><td>Um exemplo de “núcleo puro” do curso anterior</td><td>Histórico completo do git (349 commits → 20 bastaram)</td></tr>
+          <tr><td><code>git log</code> recortado (20 commits)</td><td><code>.venv</code> e caches (ambiente ≠ contrato)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4.4 — Armadilhas já pagas (do journal do repo)</h3>
+    <ul>
+      <li><strong>Contexto grande não é contexto bom</strong> — selecionar arquivos, regras, testes e erros diretamente relacionados; o resto é ruído que compete por atenção.</li>
+      <li><strong>Artefato derivado pode mentir</strong> — uma view gerada estava errada com o código-fonte certo; regenere do run vivo e confira por hash quando importar.</li>
+      <li><strong>Faltou um arquivo no contexto?</strong> Registre no <code>AGENTS.md</code> na hora. É assim que o pacote melhora sozinho (Módulo 9).</li>
+      <li><strong>Config copiada de template vence config improvisada</strong> — proximidade com um contexto conhecido é mais confiável que invenção.</li>
+    </ul>
+
+    <details>
+      <summary>✏️ Exercício — escreva um CONTEXTO.md de verdade</summary>
+      <div class="body">
+        <p>Para a sua próxima tarefa, escreva <code>CONTEXTO.md</code> antes de
+        abrir o chat: duas tabelas (incluído / excluído, cada linha com o
+        porquê). Se você não consegue justificar por que um arquivo entra, ele
+        não entra. Esse arquivo vira parte da entrega.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 5 — PRD E SPECS
+     ============================================================ -->
+<section id="specs">
+  <div class="shell">
+    <div class="section-kicker">Módulo 05</div>
+    <h2>PRD e Specs: da ideia vaga ao requisito executável</h2>
+    <p class="section-lead">
+      Uma ideia vaga entregue a um modelo volta como código confiante e errado.
+      A ponte entre os dois é documentação curta e versionada: o <strong>PRD</strong>
+      responde <em>por quê</em>, a <strong>spec</strong> responde <em>como se
+      comporta</em>. Juntas, elas tiram decisões do chat (volátil) e as colocam
+      no repo (auditável).
+    </p>
+
+    <h3>5.1 — PRD mínimo (responde “por quê?”)</h3>
+    <pre><code># PRD — &lt;feature&gt;
+
+## Problema        → dor observável, não opinião
+## Usuário         → quem se beneficia
+## Objetivo        → resultado observável
+## Escopo          → comportamentos, um por linha
+## Fora de escopo  → o que NÃO será resolvido agora
+## Critérios de aceite → checkboxes verificáveis
+## Riscos e decisões abertas</code></pre>
+    <div class="callout callout-blue">
+      <span class="tag">O campo mais subestimado</span>
+      <p style="margin:0"><strong>Fora de escopo.</strong> Sem ele, toda conversa
+      adiciona “e também…”. Foi exatamente isso que o diagnóstico do repo
+      registrou: pedidos com múltiplos “e também” produzem entregas medíocres e
+      92 mil linhas de doc para 2 unidades verificadas.</p>
+    </div>
+
+    <h3>5.2 — Spec técnica (responde “como se comporta?”)</h3>
+    <p>A spec fecha as decisões <em>antes</em> do build:</p>
+    <ul>
+      <li><strong>Interface:</strong> entradas, saídas, erros — assinatura exata, tipos, formatos;</li>
+      <li><strong>Casos de borda</strong> numerados (cada um vira um teste depois);</li>
+      <li><strong>Arquivos permitidos</strong> — o agente não pode “aproveitar e mexer” em outros;</li>
+      <li><strong>Estratégia de teste</strong> e <strong>ordem de implementação</strong>;</li>
+      <li><strong>Não-metas</strong> — o que o código deliberadamente não faz.</li>
+    </ul>
+    <div class="callout callout-yellow">
+      <span class="tag">Teste da spec fechada</span>
+      <p style="margin:0">Se a spec ainda deixa o agente escolher uma decisão
+      importante, ela não está pronta. Registre a decisão como aberta ou
+      resolva-a <em>antes</em> do Build Mode. Não esconda decisões dentro do
+      código — é lá que elas ficam invisíveis para revisão.</p>
+    </div>
+
+    <h3>5.3 — A transformação, com o caso real deste curso</h3>
+    <p>Do PRD real do caso de uso (release notes):</p>
+    <pre><code>## Critérios de aceite (do PRD.md real)
+- [ ] pytest passa cobrindo: agrupamento, breaking change por `!`
+      e por footer, commit fora do padrão, lista vazia, versão no título
+- [ ] CLI roda offline com JSON de exemplo e imprime Markdown válido
+- [ ] Nenhum commit é descartado silenciosamente: soma das seções
+      == número de commits de entrada
+- [ ] Saída determinística: mesma entrada, mesma saída</code></pre>
+    <p>E a spec fechando a interface (trecho do <code>SPEC.md</code> real):</p>
+    <pre><code>parse_subject(message) -> ParsedCommit | None
+generate_release_notes(commits, version=None) -> str  # Markdown
+
+Erros (falha fechada):
+- lista vazia            → ValueError("no commits to release")
+- commit sem hash/message → ValueError citando o índice
+- subject fora do padrão  → seção "Fora do padrão", nunca descarte</code></pre>
+    <p>
+      Cada critério de aceite virou um teste; cada regra de erro virou um
+      <code>pytest.raises</code>. <strong>Critério de aceite é um teste em
+      linguagem humana.</strong> Se você não consegue imaginar o teste, o
+      critério ainda está vago.
+    </p>
+
+    <h3>5.4 — Quando vale a pena escrever?</h3>
+    <ul>
+      <li>Feature com mais de um arquivo ou mais de uma sessão de trabalho: <strong>sempre</strong>.</li>
+      <li>Bug com causa conhecida: spec de 5 linhas basta (estado atual → desejado → teste).</li>
+      <li>Experimento descartável: pule a spec, mas escreva o critério de “o que me faria parar”.</li>
+    </ul>
+
+    <details>
+      <summary>✏️ Exercício — especifique antes de pedir</summary>
+      <div class="body">
+        <p>Escolha uma feature pequena do seu projeto. Escreva PRD + spec (30
+        minutos, máximo). Depois peça a implementação anexando os dois arquivos.
+        Meça quantas perguntas o modelo deixou de fazer e quantas decisões
+        deixaram de ser “surpresa” na revisão do diff. Esse delta é o valor da
+        spec.</p>
+      </div>
+    </details>
+  </div>
+</section>
+<!-- ============================================================
+     MÓDULO 6 — EXECUÇÃO GUIADA
+     ============================================================ -->
+<section id="execucao">
+  <div class="shell">
+    <div class="section-kicker">Módulo 06</div>
+    <h2>Execução guiada: Plan Mode, Build Mode e validações</h2>
+    <p class="section-lead">
+      Planejar, implementar e validar são <strong>papéis diferentes</strong>.
+      Quando os três acontecem misturados na mesma corrida, o plano vira
+      improviso e o texto “parece certo” vira conclusão. A execução guiada
+      separa os papéis em fases com portões humanos entre elas.
+    </p>
+
+    <h3>6.1 — As três fases e seus portões</h3>
+    <div class="flow">
+      <span class="step hot">Plan Mode</span><span class="arrow">→</span>
+      <span class="step" style="background:var(--yellow-soft);border-color:rgba(247,211,126,.45);color:var(--yellow)">🧑 humano aprova o plano</span><span class="arrow">→</span>
+      <span class="step hot">Build Mode (em fatias)</span><span class="arrow">→</span>
+      <span class="step" style="background:var(--yellow-soft);border-color:rgba(247,211,126,.45);color:var(--yellow)">🧑 humano confere a validação</span><span class="arrow">→</span>
+      <span class="step ok">próxima fatia</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">🗺️ Plan Mode — sem edição</h3>
+        <pre style="font-size:.8rem"><code>Você está em Plan Mode. Não altere arquivos.
+Leia somente o pacote de contexto fornecido.
+Entregue: diagnóstico do estado atual,
+arquivos afetados, etapas pequenas, riscos,
+decisões abertas, testes e critérios de aceite.
+Se algo não estiver especificado, pergunte ou
+marque como decisão aberta.</code></pre>
+        <p style="font-size:.88rem">O plano só está aprovado quando: respeita o
+        escopo, não inventa contratos, e <strong>cada etapa tem uma validação
+        associada</strong>. Etapa sem validação é etapa que ninguém consegue
+        conferir.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">🔨 Build Mode — uma fatia por vez</h3>
+        <pre style="font-size:.8rem"><code>Você está em Build Mode.
+Implemente somente a etapa &lt;N&gt; do plano
+aprovado. Não altere arquivos fora do escopo.
+Adicione ou atualize os testes necessários.
+Ao final, liste arquivos, decisões, testes
+executados e pendências.</code></pre>
+        <p style="font-size:.88rem">Uma fatia deve ser pequena o bastante para
+        que <strong>o diff e a falha sejam compreensíveis</strong>. Se a fatia
+        estourou, ela vira duas — sem drama, o plano é editável.</p>
+      </div>
+    </div>
+
+    <h3>6.2 — Validação em camadas (a ordem importa)</h3>
+    <p>Depois de cada fatia, valide de dentro para fora:</p>
+    <div class="flow">
+      <span class="step">teste da fatia</span><span class="arrow">→</span>
+      <span class="step">lint / typecheck</span><span class="arrow">→</span>
+      <span class="step">suíte completa</span><span class="arrow">→</span>
+      <span class="step">build / smoke</span><span class="arrow">→</span>
+      <span class="step ok">aceite no comportamento real</span>
+    </div>
+    <div class="callout callout-red">
+      <span class="tag">A frase proibida</span>
+      <p style="margin:0">“Parece funcionar.” Ela nunca substitui a saída de um
+      comando ou uma observação reproduzível. E cuidado com a camada final: o
+      repo aprendeu do jeito caro que <strong>208 testes podem passar com o
+      produto morto</strong> — o caminho que o usuário vê (o iframe, a rota, o
+      CLI) precisa ser exercitado de verdade, não mockado.</p>
+    </div>
+
+    <h3>6.3 — Teste primeiro quando a spec existe</h3>
+    <p>
+      Com a spec do Módulo 5 fechada, o fluxo natural é: <strong>escrever os
+      testes dos casos de borda antes da implementação</strong> (RED),
+      implementar até o verde (GREEN), simplificar. Foi exatamente assim que o
+      caso de uso deste curso foi construído:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fase</th><th>Comando</th><th>Resultado real</th></tr></thead>
+        <tbody>
+          <tr><td>RED</td><td><code>pytest test_release_notes.py -q</code></td><td>collection error — módulo não existia</td></tr>
+          <tr><td>GREEN (1ª implementação)</td><td><code>pytest -q</code></td><td><strong>1 falhou, 21 passaram</strong> — caso de borda real pego</td></tr>
+          <tr><td>Correção</td><td><code>pytest -q</code></td><td><strong>22 passed</strong></td></tr>
+          <tr><td>Prova final</td><td>CLI + <code>diff</code> de duas execuções</td><td>saída idêntica → determinismo provado</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">
+      A única falha do ciclo foi instrutiva: <code>feat:</code> com descrição
+      vazia caía na seção “fora do padrão” em vez de erro — o parser usava
+      <code>None</code> para duas coisas diferentes. Sem o teste escrito antes,
+      esse bug teria passado silencioso.
+    </p>
+
+    <details>
+      <summary>✏️ Exercício — force os portões</summary>
+      <div class="body">
+        <p>Na próxima feature, proíba explicitamente a edição no primeiro pedido
+        (“Plan Mode: não altere arquivos”) e aprove o plano <em>por escrito</em>
+        antes do build. Depois implemente em fatias de no máximo ~100 linhas de
+        diff. Conte quantas vezes você precisou dizer “não era isso” — e
+        compare com o seu histórico.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 7 — AGENTES E SUBAGENTES
+     ============================================================ -->
+<section id="agentes">
+  <div class="shell">
+    <div class="section-kicker">Módulo 07</div>
+    <h2>Agentes e subagentes: delegue sem perder o controle</h2>
+    <p class="section-lead">
+      Um agente é um modelo com ferramentas, um objetivo e (idealmente) uma
+      cerca. Um subagente é uma sessão isolada que recebe uma tarefa fechada e
+      devolve um resultado. Delegação escala o seu trabalho — mas só depois que
+      o fluxo manual está claro e repetível.
+    </p>
+
+    <div class="callout callout-yellow">
+      <span class="tag">Aprendizado do repo (o mais caro do ciclo)</span>
+      <p style="margin:0">“Agentes especializados só valem a complexidade depois
+      que o fluxo manual está claro e repetível.” O ciclo 1 construiu 14 agentes
+      + 25 subagentes antes de fechar um loop — e ~80% dos commits foram no
+      aparelho, não no currículo. Primeiro o workflow; depois os agentes que o
+      executam.</p>
+    </div>
+
+    <h3>7.1 — Papéis com contrato (extraídos do workflow permanente)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Papel</th><th>Pode fazer</th><th>Deve entregar</th></tr></thead>
+        <tbody>
+          <tr><td>🔍 Investigador</td><td>ler e localizar</td><td>mapa de contexto e riscos</td></tr>
+          <tr><td>🗺️ Planejador</td><td>analisar e propor</td><td>plano <strong>sem editar</strong></td></tr>
+          <tr><td>🔨 Implementador</td><td>editar escopo aprovado</td><td>diff + testes</td></tr>
+          <tr><td>🧪 Testador</td><td>criar/executar verificações</td><td>matriz de cenários + evidências</td></tr>
+          <tr><td>🧐 Revisor</td><td>somente ler e refutar</td><td>findings priorizados</td></tr>
+          <tr><td>📝 Documentador</td><td>registrar resultado</td><td>spec, decisão, aprendizado ou skill</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Comece com <strong>dois</strong> papéis apenas: um implementador e um
+      verificador. A tabela inteira só faz sentido quando o volume exige — e
+      cada papel novo é custo de coordenação permanente.
+    </p>
+
+    <h3>7.2 — Produtor ≠ verificador (a regra inegociável)</h3>
+    <p>
+      O verificador deve começar <strong>do contrato e dos artefatos</strong>,
+      nunca da explicação do produtor. No repo, um verificador de contexto
+      fresco reprovou com 4/10 uma entrega que o produtor tinha auto-avaliado
+      em 9/10 sob regra frouxa. O prompt mínimo do verificador:
+    </p>
+    <pre><code>OBJETIVO: verificar se &lt;artefato&gt; cumpre o contrato em &lt;spec&gt;.
+DONE-RULES: &lt;critérios executáveis, um por linha&gt;.
+ARTEFATO: &lt;caminho&gt;.
+Não receba o raciocínio de quem produziu. Tente refutar.</code></pre>
+
+    <h3>7.3 — Regras de operação com múltiplos agentes</h3>
+    <ul>
+      <li><strong>Paralelismo exige isolamento:</strong> diretórios separados paralelizam; arquivos compartilhados serializam. N agentes no mesmo arquivo = corrida.</li>
+      <li><strong>Trabalho não commitado não sobrevive:</strong> uma sessão paralela apagou o fonte de 6 jogos porque o resultado dos agentes não foi commitado no mesmo turno.</li>
+      <li><strong>Configs se copiam, não se improvisam:</strong> template de projeto (package.json/tsconfig/vite) com nome + porta = verde de primeira; improviso = retry.</li>
+      <li><strong>Prova de identidade é hash, não visão:</strong> um agente confundiu o screenshot do jogo 06 com o 07. Quando identidade importa, confira por conteúdo/hash.</li>
+      <li><strong>Falha visível sempre:</strong> cada agente reporta fase, bloqueio, artefato pendente e próxima ação — não só “terminei”.</li>
+    </ul>
+
+    <h3>7.4 — Anatomia de um subagente em arquivo</h3>
+    <pre><code># .claude/agents/revisor-diff.md (funciona em qualquer harness)
+
+## Papel
+Revisor de diffs. Somente leitura. Nunca edita.
+
+## Entrada
+- caminho do diff ou PR
+- spec/contrato que a mudança deve cumprir
+
+## Método
+1. Leia a spec primeiro; o diff depois.
+2. Tente refutar: escopo violado? teste faltando?
+   caso de borda da spec sem cobertura?
+3. Não receba a narrativa do implementador.
+
+## Saída
+Findings priorizados: bloqueante / importante / nota.
+Cada finding cita arquivo + linha + regra violada.</code></pre>
+
+    <details>
+      <summary>✏️ Exercício — o seu primeiro par produtor/verificador</summary>
+      <div class="body">
+        <p>Pegue uma feature já implementada. Em uma sessão nova (contexto
+        fresco), rode o prompt de verificador acima contra a spec dela. Anote
+        quantos findings aparecem que a sessão produtora nunca mencionou. Se
+        forem zero, ou a spec está perfeita ou o verificador está fraco — os
+        dois casos merecem investigação.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 8 — MCP, ACP E SKILLS
+     ============================================================ -->
+<section id="mcp">
+  <div class="shell">
+    <div class="section-kicker">Módulo 08</div>
+    <h2>MCP, ACP e Skills: conecte ferramentas, dados e comportamentos</h2>
+    <p class="section-lead">
+      Três formas de estender o harness, cada uma resolvendo um problema
+      diferente. Primeiro, as siglas — depois, quando usar cada uma.
+    </p>
+
+    <h3>8.1 — Primeiro, expanda a sigla</h3>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">🔌 MCP</h3>
+        <p style="font-size:.9rem"><strong>Model Context Protocol</strong> —
+        protocolo aberto para conectar o harness a <em>ferramentas e dados
+        externos</em>: banco de dados, APIs, navegador, arquivos remotos.
+        Padrão <em>servidor ↔ cliente</em>: um servidor MCP expõe tools,
+        resources e prompts; o harness conecta e usa.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">🤝 ACP</h3>
+        <p style="font-size:.9rem"><strong>Agent Client Protocol</strong> —
+        protocolo para conectar <em>editores/clientes a agentes</em>:
+        sessões, streaming de saída, aprovações. É o “LSP dos agentes”:
+        desacopla a interface (editor/app) do motor (agente).</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">🧠 Skills</h3>
+        <p style="font-size:.9rem"><strong>Comportamento reutilizável em
+        arquivo</strong>: um procedimento (Markdown + scripts opcionais) que o
+        agente carrega quando a situação casa. Sem servidor, sem rede — é
+        conhecimento versionado.</p>
+      </div>
+    </div>
+
+    <h3>8.2 — Ferramentas e dados (MCP na prática)</h3>
+    <p>
+      Um servidor MCP entra quando a tarefa precisa de algo que arquivos locais
+      não resolvem: consultar um banco, abrir um navegador real, chamar uma API
+      interna. A configuração vive em um JSON no projeto:
+    </p>
+    <pre><code>// .mcp.json (exemplo ilustrativo)
+{
+  "mcpServers": {
+    "banco-prod": {
+      "command": "npx",
+      "args": ["-y", "@example/postgres-mcp",
+               "--read-only", "--schema=public"]
+    }
+  }
+}</code></pre>
+    <div class="callout callout-red">
+      <span class="tag">Segurança primeiro</span>
+      <p style="margin:0">Servidor MCP é código com acesso a dados: instale de
+      fonte confiável, prefira modo somente leitura, restrinja escopo e revise
+      quais tools o agente pode chamar. Um MCP com permissão de escrita num
+      banco de produção é um agente com a chave do cofre.</p>
+    </div>
+
+    <h3>8.3 — Comportamento reutilizável (Skills na prática)</h3>
+    <p>
+      Toda vez que um procedimento se repete, ele vira skill — Markdown com
+      gatilho, passos e armadilhas, opcionalmente com scripts. A skill mínima:
+    </p>
+    <pre><code># Skill — gerar-release-notes
+
+**Quando usar:** transformar lote de commits em notas
+de release sem descartar nada silenciosamente.
+
+## Procedimento
+1. Exporte commits para JSON (lista de {hash, message})
+2. Rode: python3 release_notes.py commits.json --version vX.Y.Z
+3. Revise a seção "Fora do padrão" antes de publicar
+4. Quebre a build se o JSON for inválido — nunca release vazio
+
+## Armadilha já paga
+`feat: ` (descrição vazia) NÃO é "fora do padrão" —
+é erro de entrada. Valide cada classe separadamente.</code></pre>
+    <div class="evidence">
+      <span class="lbl">Esta skill existe de verdade</span>
+      Foi promovida pelo caso de uso deste curso e está em
+      <code>docs/curso-simples/workflow-exemplo/skills/gerar-release-notes.md</code>.
+      Ela codifica uma falha real que aconteceu durante o build — é assim que
+      conhecimento deixa de ser conversa e vira ativo.
+    </div>
+
+    <h3>8.4 — Quando adicionar cada um?</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Situação</th><th>Use</th><th>Não use</th></tr></thead>
+        <tbody>
+          <tr><td>Precisa de dado/ferramenta externa (DB, browser, API)</td><td>MCP</td><td>Copiar dados à mão para o chat</td></tr>
+          <tr><td>Procedimento se repetiu 2–3 vezes</td><td>Skill</td><td>Redigitar o passo a passo</td></tr>
+          <tr><td>Regra vale para o projeto inteiro</td><td><code>AGENTS.md</code></td><td>Skill (gatilho errado: sempre ≠ às vezes)</td></tr>
+          <tr><td>Integrar agente a um app/editor próprio</td><td>ACP</td><td>Acoplar interface e motor</td></tr>
+          <tr><td>Nada acima se repete ainda</td><td>Nada — faça manual</td><td>Infraestrutura antes do uso</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details>
+      <summary>✏️ Exercício — promova a sua primeira skill</summary>
+      <div class="body">
+        <p>Olhe as últimas duas semanas de conversa com IA. Encontre um
+        procedimento que você explicou mais de uma vez (deploy, migração,
+        investigação de erro). Escreva-o como skill: gatilho + passos + uma
+        armadilha real que você já pagou. Guarde em <code>.claude/skills/</code>
+        (ou equivalente do seu harness) e versione.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     MÓDULO 9 — LOOP ENGINEERING
+     ============================================================ -->
+<section id="loop">
+  <div class="shell">
+    <div class="section-kicker">Módulo 09</div>
+    <h2>Loop Engineering: implementação, teste e melhoria contínua</h2>
+    <p class="section-lead">
+      Um workflow não é um fluxo que termina — é um ciclo que acumula. Loop
+      engineering é desenhar o ciclo para que <strong>cada volta deixe um
+      ativo</strong>: a próxima feature começa melhor que a anterior.
+    </p>
+
+    <h3>9.1 — O loop de uma feature</h3>
+    <div class="flow">
+      <span class="step hot">Especificar</span><span class="arrow">→</span>
+      <span class="step">Planejar</span><span class="arrow">→</span>
+      <span class="step">Implementar (fatias)</span><span class="arrow">→</span>
+      <span class="step ok">Provar</span><span class="arrow">→</span>
+      <span class="step" style="background:var(--purple-soft);border-color:rgba(198,169,255,.4);color:var(--purple)">Promover</span><span class="arrow">↩</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">📐 Especificar</h3>
+        <p style="font-size:.9rem">PRD + spec + pacote de contexto (Módulos 4 e 5).
+        A qualidade do loop é decidida aqui: spec vaga = loop inteiro
+        desperdiçado em retrabalho.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">✅ Provar</h3>
+        <p style="font-size:.9rem">Validação em camadas + verificação
+        independente quando o risco exige (Módulos 6 e 7). Saída de comando
+        colada — “parece funcionar” não fecha ciclo.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">📈 Promover</h3>
+        <p style="font-size:.9rem">O passo que quase ninguém faz: transformar o
+        aprendizado da volta em ativo permanente. É o que separa um loop de uma
+        esteira.</p>
+      </div>
+    </div>
+
+    <h3>9.2 — As 5 perguntas da promoção</h3>
+    <p>Depois da validação, responda — por escrito, 5 minutos:</p>
+    <ol>
+      <li>O modelo assumiu algo errado? <em>(vira regra ou spec mais fechada)</em></li>
+      <li>Faltou algum arquivo ou regra no contexto? <em>(vira CONTEXTO.md melhor)</em></li>
+      <li>Qual instrução reduziu retrabalho? <em>(vira prompt versionado)</em></li>
+      <li>Qual falha merece um teste? <em>(vira teste, não promessa)</em></li>
+      <li>O que deve virar template, regra, skill ou decisão?</li>
+    </ol>
+
+    <h3>9.3 — A tabela de promoção (o coração do loop)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Se repetiu…</th><th>…vira</th><th>Onde vive</th></tr></thead>
+        <tbody>
+          <tr><td>Spec com a mesma forma</td><td>Template de spec</td><td><code>docs/templates/</code></td></tr>
+          <tr><td>Prompt / instrução</td><td>Prompt versionado</td><td><code>AGENTS.md</code> ou comando slash</td></tr>
+          <tr><td>Checklist / procedimento</td><td>Skill</td><td><code>.claude/skills/</code> (ou equivalente)</td></tr>
+          <tr><td>Erro recorrente</td><td>Teste / regra / pitfall</td><td>Suíte + <code>pitfalls.md</code></td></tr>
+          <tr><td>Decisão estrutural</td><td>ADR curto</td><td><code>docs/design/adr/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>9.4 — O padrão a evitar: o loop que se auto-verifica</h3>
+    <div class="callout callout-red">
+      <span class="tag">Anti-padrão documentado no repo</span>
+      <p style="margin:0">Um ciclo de melhoria automática quase reescreveu o
+      documento de fundamentos do próprio repo — o loop otimizava a si mesmo sem
+      contato com uso real. Regra: <strong>o loop melhora artefatos; quem decide
+      se o artefato é bom é um humano ou um verificador externo</strong>.
+      Verificação só para dentro converge para verificar-se cada vez melhor —
+      e entregar cada vez menos.</p>
+    </div>
+
+    <details>
+      <summary>✏️ Exercício — feche um loop de verdade</summary>
+      <div class="body">
+        <p>Ao terminar sua próxima feature, responda as 5 perguntas e promova
+        exatamente <strong>um</strong> ativo (nem dois, nem zero). Anote a data
+        e o gatilho. Depois de 5 features, releia seus ativos: eles são a prova
+        de que o loop acumula — e o seu diferencial composto.</p>
+      </div>
+    </details>
+  </div>
+</section>
+<!-- ============================================================
+     PASSO A PASSO FINAL
+     ============================================================ -->
+<section id="passo-a-passo" style="background:linear-gradient(180deg,transparent,rgba(95,196,255,.04),transparent)">
+  <div class="shell">
+    <div class="section-kicker">Do zero ao permanente</div>
+    <h2>Passo a passo: as 4 capacidades que este curso instala</h2>
+    <p class="section-lead">
+      A promessa final: ser capaz de <strong>criar features com
+      previsibilidade</strong>, <strong>trabalhar com diferentes modelos</strong>,
+      <strong>montar agentes especializados</strong> e <strong>transformar
+      specs, instruções e skills em ativos permanentes</strong>. Cada capacidade
+      tem um procedimento — nenhum depende de um modelo específico.
+    </p>
+
+    <h3>Capacidade 1 — Criar features com previsibilidade</h3>
+    <ol class="step-list">
+      <li><b>Escolha uma fatia pequena.</b> Um comportamento observável, poucos
+      arquivos, risco reversível, um usuário claro, pelo menos um teste
+      automatizável. Se não cabe numa sessão, corte de novo.</li>
+      <li><b>Escreva PRD + spec + CONTEXTO.md</b> (Módulos 4 e 5). Trinta
+      minutos. É aqui que a previsibilidade nasce.</li>
+      <li><b>Plan Mode → aprovação por escrito → Build Mode em fatias</b>
+      (Módulo 6), cada fatia com o seu comando de validação.</li>
+      <li><b>Valide em camadas</b> e cole a saída. A feature só existe quando o
+      comando rodou.</li>
+      <li><b>Feche com as 5 perguntas</b> e promova um ativo (Módulo 9).</li>
+    </ol>
+    <div class="evidence"><span class="lbl">Por que é previsível</span>
+    Cada etapa tem portão humano e critério verificável. A surpresa não
+    desaparece — ela aparece no Plan Mode (barata) em vez da revisão do diff
+    (cara).</div>
+
+    <h3>Capacidade 2 — Trabalhar com diferentes modelos</h3>
+    <ol class="step-list">
+      <li><b>Mantenha os invariantes fora do modelo:</b> mesma spec, mesmo
+      pacote de contexto, mesmo formato de plano, mesmos comandos de validação,
+      mesmo critério de aceite.</li>
+      <li><b>Escolha o modelo por tarefa, não por lealdade:</b> raciocínio
+      profundo para arquitetura e trade-offs; modelo rápido para tarefas
+      mecânicas, testes simples e documentação; modelo com ferramentas para
+      exploração e edição incremental.</li>
+      <li><b>Teste a troca:</b> rode a mesma spec em dois modelos diferentes e
+      compare os diffs contra os mesmos critérios. Se “pronto” muda com o
+      modelo, o seu processo ainda mora no chat.</li>
+    </ol>
+
+    <h3>Capacidade 3 — Montar agentes especializados</h3>
+    <ol class="step-list">
+      <li><b>Primeiro o manual:</b> só extraia um agente depois que você já fez
+      o papel à mão pelo menos duas vezes (Módulo 7).</li>
+      <li><b>Defina o papel por escrito:</b> pode fazer / deve entregar / nunca
+      faz. Comece pelo par implementador + verificador.</li>
+      <li><b>Isole o contexto do verificador:</b> ele recebe contrato +
+      artefato, nunca a narrativa do produtor.</li>
+      <li><b>Opere com regras de segurança:</b> diretórios isolados para
+      paralelismo, commit no mesmo turno, falha visível sempre.</li>
+      <li><b>Expanda só com demanda:</b> cada papel novo é custo permanente de
+      coordenação.</li>
+    </ol>
+
+    <h3>Capacidade 4 — Transformar tudo em ativos permanentes</h3>
+    <ol class="step-list">
+      <li><b>Reconheça a repetição:</b> spec repetida, prompt repetido,
+      checklist repetido, erro recorrente — cada um é um ativo pedindo forma.</li>
+      <li><b>Promova na hora:</b> a promoção acontece no fim do loop, não “um
+      dia”. Cinco minutos, um arquivo, git commit.</li>
+      <li><b>Organize por tipo:</b> templates (<code>docs/templates/</code>),
+      skills (<code>.claude/skills/</code>), ADRs (<code>docs/design/adr/</code>),
+      regras (<code>AGENTS.md</code>).</li>
+      <li><b>Use o ativo na próxima feature:</b> ativo que não é usado é doc —
+      e doc não muda comportamento. O teste do ativo é: a próxima feature
+      começou melhor?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============================================================
+     WORKFLOW REAL TESTADO
+     ============================================================ -->
+<section id="workflow">
+  <div class="shell">
+    <div class="section-kicker">Caso de uso real · executado e testado</div>
+    <h2>Workflow permanente: notas de release a partir de commits</h2>
+    <p class="section-lead">
+      Tudo acima foi aplicado de verdade em um caso de uso do dia a dia de um
+      programador: <strong>transformar o histórico de commits em notas de
+      release</strong>, agrupando por tipo, destacando breaking changes e sem
+      descartar commits fora do padrão. Esta seção é o walkthrough — com os
+      resultados reais da execução.
+    </p>
+    <div class="pills">
+      <span class="pill pill-green">22 testes passando</span>
+      <span class="pill pill-blue">commits reais do repo</span>
+      <span class="pill pill-yellow">1 falha real pega e corrigida</span>
+      <span class="pill pill-purple">skill promovida</span>
+      <span class="pill">Python stdlib · offline</span>
+    </div>
+
+    <h3>A tese aplicada</h3>
+    <div class="flow">
+      <span class="step">ideia</span><span class="arrow">→</span>
+      <span class="step hot">PRD</span><span class="arrow">→</span>
+      <span class="step hot">spec</span><span class="arrow">→</span>
+      <span class="step hot">contexto</span><span class="arrow">→</span>
+      <span class="step">plano</span><span class="arrow">→</span>
+      <span class="step">build em fatias</span><span class="arrow">→</span>
+      <span class="step ok">validação</span><span class="arrow">→</span>
+      <span class="step" style="background:var(--purple-soft);border-color:rgba(198,169,255,.4);color:var(--purple)">skill</span>
+    </div>
+    <p style="font-size:.9rem;color:var(--muted)">Uma conversa produz uma
+    resposta. Um workflow produz <strong>ativos que melhoram a próxima
+    conversa</strong>. Os artefatos estão em
+    <code>docs/curso-simples/workflow-exemplo/</code> — cada link abaixo é um
+    arquivo real do repo.</p>
+
+    <h3>Etapa 1 — PRD: o porquê fechado</h3>
+    <p>Trecho real do <code>PRD.md</code>:</p>
+    <pre><code>## Problema
+Montar notas de release manualmente é lento e inconsistente:
+cada pessoa agrupa mudanças de um jeito, esquece breaking changes
+e perde commits.
+
+## Critérios de aceite
+- [ ] pytest passa cobrindo agrupamento, breaking por `!` e por
+      footer, fora do padrão, lista vazia, versão no título
+- [ ] Nenhum commit é descartado silenciosamente
+- [ ] Saída determinística</code></pre>
+
+    <h3>Etapa 2 — Spec: a interface fechada</h3>
+    <pre><code># SPEC.md (trecho real)
+parse_subject(message) -> ParsedCommit | None
+generate_release_notes(commits, version=None) -> str
+
+Ordem fixa de seções (vazias são omitidas):
+  Breaking changes → Novidades → Correções →
+  Outras mudanças → Fora do padrão
+
+Falha fechada: lista vazia, hash/message ausentes
+e descrição vazia → ValueError citando o índice.</code></pre>
+
+    <h3>Etapa 3 — Testes primeiro (RED)</h3>
+    <pre><code>$ python3 -m pytest test_release_notes.py -q
+Interrupted: 1 error during collection
+# os 22 testes existem; o módulo ainda não</code></pre>
+
+    <h3>Etapa 4 — Build em fatias (GREEN… quase)</h3>
+    <pre><code>$ python3 -m pytest test_release_notes.py -q
+1 failed, 21 passed in 0.14s</code></pre>
+    <div class="callout callout-yellow">
+      <span class="tag">A falha real — e o que ela ensinou</span>
+      <p><code>feat:</code> com descrição vazia caía na seção “Fora do padrão”
+      em vez de erro. O parser usava <code>None</code> para duas coisas
+      diferentes: “fora do padrão” e “mal formado”. Correção: distinguir as
+      classes (<em>validador genérico perde semântica</em> — aprendizado do
+      journal aplicado ao vivo).</p>
+    </div>
+    <pre><code>$ python3 -m pytest test_release_notes.py -q
+22 passed in 0.12s</code></pre>
+
+    <h3>Etapa 5 — Validação com commits reais do repo</h3>
+    <p>O <code>demo_commits.json</code> foi gerado do <code>git log</code> real
+    do aidevschool (20 commits, incluindo commits de agentes Sentinel/Bolt/Palette
+    fora do padrão Conventional Commits):</p>
+    <pre><code>$ python3 release_notes.py demo_commits.json --version v2026.08
+# Release v2026.08
+
+## ✨ Novidades
+- **curso:** workflow lab + course page validators and skill pack (`1cf2271`)
+- AI dev workflow teaching page + tested workflow library (`e63f0f0`)
+- **codexdojo-os:** pilot static deploy, repo hygiene guards... (`f4fa2dc`)
+
+## 🐛 Correções
+- priorities round 2 — CI pilot smoke, atomic gate manifest... (`1155dcb`)
+
+## 📦 Outras mudanças
+- **refactor:** table-driven analytics policies + gates (`c82b686`)
+- **docs:** priorities report (top 10 + 3 tested cases)... (`a1efd80`)
+...
+## 🔍 Fora do padrão
+- 🛡️ Sentinel: [HIGH] Fix XSS vulnerabilities in string interpolation (#126) (`301d2bc`)
+- ⚡ Bolt: Optimize escapeHtml with RegExp fast-path (#123) (`177ff58`)
+- Merge branch 'main' of github.com:dandpb/aidevschool (`7aaa182`)</code></pre>
+    <div class="evidence"><span class="lbl">Provas executadas</span>
+    Determinismo: duas execuções, <code>diff</code> vazio. Contagem: 20 commits
+    de entrada → 20 entradas renderizadas (nada descartado). CLI com JSON
+    inválido → exit code ≠ 0 (falha fechada). Tudo em <code>VALIDACAO.md</code>.</div>
+
+    <h3>Etapa 6 — Promoção: a feature deixa um ativo</h3>
+    <p>O aprendizado virou a skill
+    <code>skills/gerar-release-notes.md</code> (procedimento + regras + a
+    armadilha real paga no passo 4). Na próxima release, ninguém rederiva nada:
+    a skill carrega o conhecimento.</p>
+
+    <h3>Como reproduzir este workflow agora</h3>
+    <pre><code>cd docs/curso-simples/workflow-exemplo
+python3 -m pytest test_release_notes.py -q          # 22 passed
+python3 release_notes.py demo_commits.json --version v2026.08
+
+# com o SEU repo:
+git log --pretty=format:'...' -20 > meus_commits.json   # lista [{hash, message}]
+python3 release_notes.py meus_commits.json --version vX.Y.Z</code></pre>
+
+    <h3>Definition of Done (a régua do workflow permanente)</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Critério</th><th>Estado neste caso</th></tr></thead>
+        <tbody>
+          <tr><td>Spec versionada</td><td>✅ <code>SPEC.md</code></td></tr>
+          <tr><td>Contexto usado explícito</td><td>✅ <code>CONTEXTO.md</code></td></tr>
+          <tr><td>Plano revisado</td><td>✅ <code>PLAN.md</code> (4 fatias)</td></tr>
+          <tr><td>Cada mudança com teste</td><td>✅ 22 testes, 4 fatias</td></tr>
+          <tr><td>Comandos de validação passaram</td><td>✅ saídas coladas em <code>VALIDACAO.md</code></td></tr>
+          <tr><td>Limitações escritas</td><td>✅ seção própria na validação</td></tr>
+          <tr><td>Aprendizado promovido a ativo</td><td>✅ skill <code>gerar-release-notes.md</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-green">
+      <span class="tag">O que levar daqui</span>
+      <p style="margin:0">Este caso é pequeno de propósito — e completo de
+      verdade. A mesma sequência (PRD → spec → contexto → plano → build →
+      validação → skill) escala para qualquer feature: o tamanho muda, o
+      workflow não. É isso que “previsibilidade” significa: não é a IA
+      acertando sempre, é o processo tornando o erro visível, barato e
+      convertido em ativo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ENCERRAMENTO
+     ============================================================ -->
+<section id="fechamento" style="border-bottom:none">
+  <div class="shell">
+    <div class="section-kicker">Para fechar</div>
+    <h2>Simples primeiro. Depois, se precisar, maior.</h2>
+    <p class="section-lead" style="max-width:75ch">
+      Este curso inteiro é a aplicação da regra que o repo levou 349 commits
+      para aprender: <strong>uma feature pequena, uma spec, um plano, uma
+      implementação, uma validação e um aprendizado promovido a ativo</strong>.
+      Se o seu fluxo com IA está complicado e sem entrega real, a correção não
+      é mais estrutura — é fechar uma fatia vertical de verdade e deixar que
+      ela puxe a próxima.
+    </p>
+    <div class="grid-3">
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">Hoje</h3>
+        <p style="font-size:.9rem">Rode o workflow de exemplo. Leia os artefatos
+        na ordem PRD → SPEC → CONTEXTO → PLAN → VALIDACAO.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">Esta semana</h3>
+        <p style="font-size:.9rem">Aplique a sequência em uma feature sua, de
+        verdade. Promova um ativo no final.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-top:0">Este mês</h3>
+        <p style="font-size:.9rem">Troque de modelo sem trocar de processo.
+        Extraia o primeiro par produtor/verificador. Só então pense em crescer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="shell">
+    <p><strong style="color:var(--muted)">Do prompt ao workflow permanente</strong> ·
+    curso em HTML + CSS puros, sem JavaScript, funciona offline e imprime bem.</p>
+    <p>Construído sobre os aprendizados do repositório <code>aidevschool</code>:
+    <code>APRENDIZADOS.md</code> · <code>docs/APRENDIZADOS_CICLO_1.md</code> ·
+    <code>docs/FUNDAMENTOS.md</code> · <code>learner/journal.md</code> ·
+    <code>WORKFLOW-PERMANENTE.md</code>. Caso de uso real em
+    <code>docs/curso-simples/workflow-exemplo/</code> (22 testes, executados em 2026-08-21).</p>
+    <p>Regra da casa: a certeza de conclusão nunca vive no modelo — vive na
+    evidência que qualquer um pode reexecutar.</p>
+    <p>📍 <strong style="color:var(--muted)">Para percorrer o curso:</strong>
+    <code>ROADMAP.md</code> (neste diretório) — 6 fases com gates para completar
+    todos os módulos, exercícios e o passo a passo final, com evidência.</p>
+  </div>
+</footer>
+</body>
+</html>
