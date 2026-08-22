@@ -48,17 +48,27 @@ outro limpo no SHA exato do release. Substitua somente os dois caminhos:
 set -euo pipefail
 export PROCEDURE_CHECKOUT="/caminho/para/checkout-limpo-do-runbook"
 export RELEASE_CHECKOUT="/caminho/para/checkout-limpo-de-f4c31513"
-readonly PROCEDURE_SHA="$(git -C "$PROCEDURE_CHECKOUT" rev-parse HEAD)"
+export EXPECTED_PROCEDURE_SHA="<sha-completo-aprovado-na-issue-ou-pr>"
+[[ "$EXPECTED_PROCEDURE_SHA" =~ ^[0-9a-f]{40}$ ]]
+PROCEDURE_SHA="$(git -C "$PROCEDURE_CHECKOUT" rev-parse HEAD)"
+readonly PROCEDURE_SHA
 readonly RELEASE_SHA=f4c31513b3bb4e78a087006f3757a602a19bea5b
 
-test -z "$(git -C "$PROCEDURE_CHECKOUT" status --porcelain --untracked-files=all)"
+test "$PROCEDURE_SHA" = "$EXPECTED_PROCEDURE_SHA"
+procedure_status="$(git -C "$PROCEDURE_CHECKOUT" status \
+  --porcelain --untracked-files=all)"
+test -z "$procedure_status"
 test -f "$PROCEDURE_CHECKOUT/engines/literacyDojo/RELEASE_RUNBOOK.md"
 
 cd "$RELEASE_CHECKOUT"
-test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
-test -z "$(git status --porcelain --untracked-files=all)"
+release_head="$(git rev-parse HEAD)"
+test "$release_head" = "$RELEASE_SHA"
+release_status="$(git status --porcelain --untracked-files=all)"
+test -z "$release_status"
 cd engines/literacyDojo
-test -z "$(find . -maxdepth 1 -type f -name '.env*' -print)"
+env_files="$(find . -path './node_modules' -prune -o \
+  -type f -name '.env*' -print)"
+test -z "$env_files"
 
 node --version
 npm --version
@@ -77,8 +87,10 @@ python3 docs/product-readiness/tools/cli.py check \
   --reports engines/literacyDojo/test-results/readiness
 cd engines/literacyDojo
 
-test "$(git rev-parse HEAD)" = "$RELEASE_SHA"
-test -z "$(git status --porcelain --untracked-files=all)"
+post_build_head="$(git rev-parse HEAD)"
+test "$post_build_head" = "$RELEASE_SHA"
+post_build_status="$(git status --porcelain --untracked-files=all)"
+test -z "$post_build_status"
 test -d dist
 ```
 
@@ -93,30 +105,52 @@ app usa somente os flags `DEV`/`PROD` do Vite e serve assets e service worker na
 mesma origem. Qualquer novo `VITE_*`, iframe, função, edge function ou header
 customizado muda o contrato e exige nova revisão.
 
-Confira `curl`, `jq` e Python antes de disponibilizar qualquer credencial e
-registre suas versões e hashes no diretório de evidência. Autentique com um PAT
+Use os executáveis absolutos e hashes aprovados abaixo, da imagem de release
+avaliada para AIDE-13. Qualquer diferença exige nova revisão antes de
+disponibilizar uma credencial. Autentique com um PAT
 de uma conta que tenha permissão de deploy no projeto existente e obtenha o
 Project ID (`NETLIFY_SITE_ID`) em **Project configuration → General → Project
 information**. Nunca passe o token por argumento, imprima ou grave em arquivo;
-a função abaixo entrega o header à entrada padrão do `curl`.
+a função abaixo o move para uma variável de shell não exportada e entrega o
+header somente à entrada padrão do `curl`. Assim, Python, `jq` e outros filhos
+não herdam o PAT no ambiente.
 
 ```bash
-curl --version
-jq --version
-python3 --version
-sha256sum "$(command -v curl)" "$(command -v jq)" "$(command -v python3)"
+readonly CURL_BIN=/usr/bin/curl
+readonly JQ_BIN=/usr/bin/jq
+readonly PYTHON_BIN=/usr/bin/python3
+test "$(/usr/bin/sha256sum "$CURL_BIN")" = \
+  "d36b655aa8d119ba070413f8552fb26dc68922e1ff06fc80d430002b4c4f7b92  /usr/bin/curl"
+test "$(/usr/bin/sha256sum "$JQ_BIN")" = \
+  "59cfd58d7e470b103aede0e7589cfea929e45ee27f5471f08aa9676ac7bfc566  /usr/bin/jq"
+test "$(/usr/bin/sha256sum "$PYTHON_BIN")" = \
+  "1643dacd9feaedc58f3cc581e4d22577dfe25c09b10282936186ccf0f2e61118  /usr/bin/python3"
+"$CURL_BIN" --version
+"$JQ_BIN" --version
+"$PYTHON_BIN" --version
 
 # Só depois da verificação acima, injete pelo gerenciador de segredos.
 test -n "${NETLIFY_AUTH_TOKEN:-}"
 test -n "${NETLIFY_SITE_ID:-}"
 [[ "$NETLIFY_SITE_ID" =~ ^[A-Za-z0-9-]+$ ]]
 
-netlify_api() {
-  [[ "$NETLIFY_AUTH_TOKEN" != *$'\n'* ]]
-  [[ "$NETLIFY_AUTH_TOKEN" != *$'\r'* ]]
-  printf 'Authorization: Bearer %s\n' "$NETLIFY_AUTH_TOKEN" \
-    | curl --fail --silent --show-error --header @- "$@"
+load_netlify_token() {
+  local injected_token="${NETLIFY_AUTH_TOKEN:-}"
+  unset NETLIFY_AUTH_TOKEN NETLIFY_TOKEN
+  NETLIFY_TOKEN="$injected_token"
+  unset injected_token
+  test -n "$NETLIFY_TOKEN"
+  [[ "$NETLIFY_TOKEN" != *$'\n'* ]]
+  [[ "$NETLIFY_TOKEN" != *$'\r'* ]]
 }
+
+netlify_api() {
+  test -n "${NETLIFY_TOKEN:-}"
+  printf 'Authorization: Bearer %s\n' "$NETLIFY_TOKEN" \
+    | "$CURL_BIN" --fail --silent --show-error --header @- "$@"
+}
+
+load_netlify_token
 ```
 
 Se a API responder 401/403, se o Project ID faltar ou se a conta não enxergar
@@ -138,33 +172,37 @@ printf '%s\n' "$PROCEDURE_SHA" | tee "$release_record/procedure-sha.txt"
 git rev-parse HEAD | tee "$release_record/release-sha.txt"
 git -C "$PROCEDURE_CHECKOUT" show \
   "$PROCEDURE_SHA:engines/literacyDojo/RELEASE_RUNBOOK.md" \
-  | sha256sum > "$release_record/procedure-runbook-sha256.txt"
+  | /usr/bin/sha256sum > "$release_record/procedure-runbook-sha256.txt"
 {
-  curl --version | head -1
-  jq --version
-  python3 --version
-  sha256sum "$(command -v curl)" "$(command -v jq)" "$(command -v python3)"
+  "$CURL_BIN" --version | head -1
+  "$JQ_BIN" --version
+  "$PYTHON_BIN" --version
+  /usr/bin/sha256sum "$CURL_BIN" "$JQ_BIN" "$PYTHON_BIN"
 } > "$release_record/tools.txt"
 
 netlify_api "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID" \
   > "$release_record/site-before.json"
-jq -e --arg id "$NETLIFY_SITE_ID" '
+"$JQ_BIN" -e --arg id "$NETLIFY_SITE_ID" '
   .id == $id and
   .name == "aidevschool-literacydojo" and
   .ssl_url == "https://aidevschool-literacydojo.netlify.app" and
   (.published_deploy.id | type == "string")
 ' "$release_record/site-before.json"
-readonly PUBLISHED_BEFORE="$(jq -er '.published_deploy.id' \
+PUBLISHED_BEFORE="$("$JQ_BIN" -er '.published_deploy.id' \
   "$release_record/site-before.json")"
+readonly PUBLISHED_BEFORE
 
-(cd dist && find . -type f -print0 \
-  | sort -z \
-  | xargs -0 sha256sum) \
+invalid_dist_entry="$(/usr/bin/find dist ! -type f ! -type d -print -quit)"
+test -z "$invalid_dist_entry"
+(cd dist && /usr/bin/find . -type f -print0 \
+  | /usr/bin/sort -z \
+  | /usr/bin/xargs -0 /usr/bin/sha256sum) \
   | tee "$release_record/dist-sha256.txt"
-sha256sum "$release_record/dist-sha256.txt" \
+/usr/bin/sha256sum "$release_record/dist-sha256.txt" \
   | tee "$release_record/dist-tree-sha256.txt"
-readonly DIST_TREE_SHA256="$(cut -d' ' -f1 \
+DIST_TREE_SHA256="$(cut -d' ' -f1 \
   "$release_record/dist-tree-sha256.txt")"
+readonly DIST_TREE_SHA256
 ```
 
 O registro precisa destacar pelo menos `dist/index.html`, o JS e o CSS com nome
@@ -180,7 +218,7 @@ sendo SHA-256.
 
 ```bash
 set -euo pipefail
-python3 - "$release_record" <<'PY'
+"$PYTHON_BIN" - "$release_record" <<'PY'
 import hashlib
 import json
 import re
@@ -188,11 +226,23 @@ import sys
 from pathlib import Path
 
 record = Path(sys.argv[1])
-root = Path("dist")
+raw_root = Path("dist")
+if raw_root.is_symlink():
+    raise SystemExit("dist must not be a symlink")
+root = raw_root.resolve(strict=True)
 files = {}
 uploads = {}
-for path in sorted(item for item in root.rglob("*") if item.is_file()):
-    relative = path.relative_to(root).as_posix()
+for path in sorted(root.rglob("*")):
+    if path.is_symlink():
+        raise SystemExit(f"symlink in dist: {path.relative_to(root)}")
+    resolved = path.resolve(strict=True)
+    if not resolved.is_relative_to(root):
+        raise SystemExit(f"path escapes dist: {path}")
+    if path.is_dir():
+        continue
+    if not path.is_file() or path.stat().st_nlink != 1:
+        raise SystemExit(f"non-regular deploy entry: {path.relative_to(root)}")
+    relative = resolved.relative_to(root).as_posix()
     if not re.fullmatch(r"[A-Za-z0-9._/-]+", relative):
         raise SystemExit(f"unsafe deploy path: {relative}")
     digest = hashlib.sha1(path.read_bytes()).hexdigest()
@@ -216,13 +266,16 @@ netlify_api \
   "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys" \
   > "$release_record/deploy.json"
 
-readonly DEPLOY_ID="$(jq -er --arg site "$NETLIFY_SITE_ID" '
+DEPLOY_ID="$("$JQ_BIN" -er --arg site "$NETLIFY_SITE_ID" '
   select(.site_id == $site and .draft == true and (.required | type == "array"))
   | .id
 ' "$release_record/deploy.json")"
+readonly DEPLOY_ID
 
+"$JQ_BIN" -r '.required[]' "$release_record/deploy.json" \
+  > "$release_record/required-sha1.txt"
 while IFS= read -r digest; do
-  relative_path="$(jq -er --arg digest "$digest" '.[$digest]' \
+  relative_path="$("$JQ_BIN" -er --arg digest "$digest" '.[$digest]' \
     "$release_record/upload-map.json")"
   netlify_api \
     --request PUT \
@@ -230,19 +283,22 @@ while IFS= read -r digest; do
     --data-binary "@dist/$relative_path" \
     "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID/files/$relative_path" \
     > /dev/null
-done < <(jq -r '.required[]?' "$release_record/deploy.json")
+done < "$release_record/required-sha1.txt"
 
 deploy_ready=false
 for _attempt in $(seq 1 20); do
   netlify_api "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID" \
     > "$release_record/deploy-status.json"
-  case "$(jq -er '.state' "$release_record/deploy-status.json")" in
+  deploy_state="$("$JQ_BIN" -er \
+    '.state | select(type == "string")' \
+    "$release_record/deploy-status.json")"
+  case "$deploy_state" in
     ready)
       deploy_ready=true
       break
       ;;
     error)
-      jq '.' "$release_record/deploy-status.json" >&2
+      "$JQ_BIN" '.' "$release_record/deploy-status.json" >&2
       exit 1
       ;;
   esac
@@ -250,7 +306,7 @@ for _attempt in $(seq 1 20); do
 done
 test "$deploy_ready" = true
 
-preview_url="$(jq -er --arg id "$DEPLOY_ID" --arg site "$NETLIFY_SITE_ID" '
+preview_url="$("$JQ_BIN" -er --arg id "$DEPLOY_ID" --arg site "$NETLIFY_SITE_ID" '
   select(.id == $id and .site_id == $site and .draft == true and .state == "ready")
   | .deploy_ssl_url
 ' "$release_record/deploy-status.json")"
@@ -258,12 +314,12 @@ test "$preview_url" = "https://$DEPLOY_ID--aidevschool-literacydojo.netlify.app"
 
 netlify_api "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID" \
   > "$release_record/site-after-draft.json"
-test "$(jq -er '.published_deploy.id' "$release_record/site-after-draft.json")" \
+test "$("$JQ_BIN" -er '.published_deploy.id' "$release_record/site-after-draft.json")" \
   = "$PUBLISHED_BEFORE"
-jq -e --arg id "$DEPLOY_ID" --arg url "$preview_url" \
+"$JQ_BIN" -e --arg id "$DEPLOY_ID" --arg url "$preview_url" \
   '.id == $id and .deploy_ssl_url == $url and .draft == true and .state == "ready"' \
   "$release_record/deploy-status.json"
-unset NETLIFY_AUTH_TOKEN
+NETLIFY_TOKEN=
 ```
 
 Não use alias como evidência imutável: aliases podem apontar para outro deploy.
@@ -278,25 +334,27 @@ falha no primeiro desvio:
 ```bash
 set -euo pipefail
 mkdir -p "$release_record/remote"
+/usr/bin/find dist -type f -print0 | /usr/bin/sort -z \
+  > "$release_record/local-files.txt"
 while IFS= read -r -d '' local_file; do
   relative_path="${local_file#dist/}"
   mkdir -p "$release_record/remote/$(dirname "$relative_path")"
-  curl --fail --silent --show-error \
+  "$CURL_BIN" --fail --silent --show-error \
     "$preview_url/$relative_path" \
     -o "$release_record/remote/$relative_path"
   if ! cmp -s "$local_file" "$release_record/remote/$relative_path"; then
     printf 'Divergência remota: %s\n' "$relative_path" >&2
     exit 1
   fi
-done < <(find dist -type f -print0 | sort -z)
+done < "$release_record/local-files.txt"
 
-(cd "$release_record/remote" && find . -type f -print0 \
-  | sort -z \
-  | xargs -0 sha256sum) \
+(cd "$release_record/remote" && /usr/bin/find . -type f -print0 \
+  | /usr/bin/sort -z \
+  | /usr/bin/xargs -0 /usr/bin/sha256sum) \
   > "$release_record/remote-sha256.txt"
 cmp -s "$release_record/dist-sha256.txt" \
   "$release_record/remote-sha256.txt"
-sha256sum "$release_record/remote-sha256.txt" \
+/usr/bin/sha256sum "$release_record/remote-sha256.txt" \
   | tee "$release_record/remote-tree-sha256.txt"
 ```
 
@@ -351,7 +409,7 @@ Valide antes de pedir aprovação:
 
 ```bash
 set -euo pipefail
-jq -e \
+"$JQ_BIN" -e \
   --arg procedure "$PROCEDURE_SHA" \
   --arg release "$RELEASE_SHA" \
   --arg deploy "$DEPLOY_ID" \
@@ -386,47 +444,103 @@ expunha 17 missões/Trilha Dev e foco com contraste 2,02:1. Se nenhum deploy
 retido for seguro, registre `NO_SAFE_ROLLBACK` e não promova; isso não invalida
 o draft já criado.
 
-Reinjete o PAT pelo gerenciador de segredos somente para consultar o deploy
-escolhido e valide um arquivo de aprovação independente:
+O deploy de rollback deve estar bloqueado contra remoção (`locked`), continuar
+consultável e ter um manifesto SHA-256 aprovado. Reinjete o PAT pelo gerenciador
+de segredos somente para consultá-lo. Valide depois todos os bytes públicos do
+permalink contra `ROLLBACK_MANIFEST_FILE` e a aprovação independente:
 
 ```bash
 set -euo pipefail
 test -n "${ROLLBACK_DEPLOY_ID:-}"
 test -f "${ROLLBACK_APPROVAL_FILE:-}"
+test -f "${ROLLBACK_MANIFEST_FILE:-}"
 test -n "${NETLIFY_AUTH_TOKEN:-}"
+load_netlify_token
 netlify_api "https://api.netlify.com/api/v1/deploys/$ROLLBACK_DEPLOY_ID" \
   > "$release_record/rollback-deploy.json"
-unset NETLIFY_AUTH_TOKEN
+NETLIFY_TOKEN=
 cp "$ROLLBACK_APPROVAL_FILE" "$release_record/rollback-approval.json"
-jq -e --arg id "$ROLLBACK_DEPLOY_ID" --arg site "$NETLIFY_SITE_ID" '
+cp "$ROLLBACK_MANIFEST_FILE" "$release_record/rollback-sha256.txt"
+test -s "$release_record/rollback-sha256.txt"
+"$JQ_BIN" -e --arg id "$ROLLBACK_DEPLOY_ID" --arg site "$NETLIFY_SITE_ID" '
   .id == $id and .site_id == $site and
+  (.state == "old" or .state == "ready" or .state == "current") and
+  .locked == true and
   (.deploy_ssl_url | type == "string" and startswith("https://"))
 ' "$release_record/rollback-deploy.json"
-jq -e --arg id "$ROLLBACK_DEPLOY_ID" '
+rollback_url="$("$JQ_BIN" -er '.deploy_ssl_url' \
+  "$release_record/rollback-deploy.json")"
+test "$rollback_url" = \
+  "https://$ROLLBACK_DEPLOY_ID--aidevschool-literacydojo.netlify.app"
+ROLLBACK_TREE_SHA256="$(/usr/bin/sha256sum \
+  "$release_record/rollback-sha256.txt" | cut -d' ' -f1)"
+readonly ROLLBACK_TREE_SHA256
+"$JQ_BIN" -e \
+  --arg id "$ROLLBACK_DEPLOY_ID" \
+  --arg url "$rollback_url" \
+  --arg tree "$ROLLBACK_TREE_SHA256" '
   .deploy_id == $id and .smoke == "pass" and
+  .permalink == $url and .dist_tree_sha256 == $tree and
   .critical_high_open == 0 and
-  (.dist_tree_sha256 | type == "string" and length == 64) and
   (.artifact | type == "string" and length > 0) and
   (.approved_by | type == "string" and length > 0) and
   (.approved_at | type == "string" and length > 0)
 ' "$release_record/rollback-approval.json"
+
+mkdir -p "$release_record/rollback-remote"
+while read -r expected_hash relative_path extra; do
+  test -z "${extra:-}"
+  [[ "$expected_hash" =~ ^[0-9a-f]{64}$ ]]
+  [[ "$relative_path" =~ ^\./[A-Za-z0-9._/-]+$ ]]
+  [[ "$relative_path" != *'/../'* ]]
+  destination="$release_record/rollback-remote/${relative_path#./}"
+  mkdir -p "$(dirname "$destination")"
+  "$CURL_BIN" --fail --silent --show-error \
+    "$rollback_url/${relative_path#./}" -o "$destination"
+  test "$(/usr/bin/sha256sum "$destination" | cut -d' ' -f1)" \
+    = "$expected_hash"
+done < "$release_record/rollback-sha256.txt"
+(cd "$release_record/rollback-remote" && /usr/bin/find . -type f -print0 \
+  | /usr/bin/sort -z | /usr/bin/xargs -0 /usr/bin/sha256sum) \
+  > "$release_record/rollback-remote-sha256.txt"
+cmp -s "$release_record/rollback-sha256.txt" \
+  "$release_record/rollback-remote-sha256.txt"
 ```
 
 O responsável humano só promove depois que revisões independentes aprovarem o
 mesmo `PROCEDURE_SHA`, `RELEASE_SHA`, `DEPLOY_ID`, permalink, fingerprints e
-`smoke.json`. Ele também deve pausar auto publishing ou estabelecer uma janela
-de freeze para impedir corrida com outro deploy e registrar isso, o rollback e
-zero Critical/High em `promotion-approval.json`. Valide o registro:
+`smoke.json`. Ele deve pausar builds/auto publishing na UI da Netlify. Logo antes
+da promoção, reinjete o PAT, prove pela API que `build_settings.stop_builds` está
+ativo, que produção ainda aponta para `PUBLISHED_BEFORE` e que o draft aprovado
+continua pronto. Depois valide o registro humano:
 
 ```bash
 set -euo pipefail
-jq -e \
+test -n "${NETLIFY_AUTH_TOKEN:-}"
+load_netlify_token
+netlify_api "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID" \
+  > "$release_record/site-pre-promotion.json"
+netlify_api "https://api.netlify.com/api/v1/deploys/$DEPLOY_ID" \
+  > "$release_record/draft-pre-promotion.json"
+NETLIFY_TOKEN=
+"$JQ_BIN" -e --arg id "$NETLIFY_SITE_ID" --arg before "$PUBLISHED_BEFORE" '
+  .id == $id and .name == "aidevschool-literacydojo" and
+  .build_settings.stop_builds == true and
+  .published_deploy.id == $before
+' "$release_record/site-pre-promotion.json"
+"$JQ_BIN" -e --arg id "$DEPLOY_ID" --arg site "$NETLIFY_SITE_ID" \
+  --arg url "$preview_url" '
+  .id == $id and .site_id == $site and .deploy_ssl_url == $url and
+  .draft == true and .state == "ready"
+' "$release_record/draft-pre-promotion.json"
+"$JQ_BIN" -e \
   --arg procedure "$PROCEDURE_SHA" \
   --arg release "$RELEASE_SHA" \
   --arg deploy "$DEPLOY_ID" \
   --arg rollback "$ROLLBACK_DEPLOY_ID" \
   --arg url "$preview_url" \
-  --arg tree "$DIST_TREE_SHA256" '
+  --arg tree "$DIST_TREE_SHA256" \
+  --arg before "$PUBLISHED_BEFORE" '
   .procedure_sha == $procedure and
   .release_sha == $release and
   .deploy_id == $deploy and
@@ -434,14 +548,18 @@ jq -e \
   .dist_tree_sha256 == $tree and
   .rollback_deploy_id == $rollback and
   .smoke == "pass" and .critical_high_open == 0 and
-  .publication_freeze == true and
+  .published_before == $before and
+  .publication_freeze_artifact == "site-pre-promotion.json" and
+  .draft_recheck_artifact == "draft-pre-promotion.json" and
   (.approved_by | type == "string" and length > 0) and
   (.approved_at | type == "string" and length > 0)
 ' "$release_record/promotion-approval.json"
 ```
 
 Na página do draft, use **Publish Deploy** para promover o deploy atômico já
-testado; não dispare rebuild. `site-before.json` sozinho nunca satisfaz o gate.
+testado; não dispare rebuild. Compare na UI o deploy publicado atual com
+`PUBLISHED_BEFORE` uma última vez antes do clique. `site-before.json` ou um
+booleano autodeclarado sozinho nunca satisfazem o gate.
 
 Nos primeiros minutos após a promoção, repita na URL pública:
 
