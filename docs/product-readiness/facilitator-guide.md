@@ -1,4 +1,4 @@
-# Facilitator Guide
+# Guia do facilitador
 
 This guide covers `literacy-standalone-first-lesson`,
 `os-literacy-guided-mission`, `os-voxel-guided-missions`,
@@ -7,6 +7,28 @@ This guide covers `literacy-standalone-first-lesson`,
 `minitown-explore-only`. It owns
 cross-product preparation, observation, recovery, and evaluation. Engine-local
 commands and diagnostics remain in the linked engine READMEs.
+
+## Oferta paga
+
+Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode ensinar primeira lição e IA Prática no OS. Não venda esses dois como customer-ready: no main, depois do #147, estão stale. O que a matriz ainda concede é retorno no mesmo aparelho e as missões voxel. #143 não está no produto; sem checkout neste guia.
+
+Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
+[kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
+
+### Roteiro rápido
+
+| Etapa | O que fazer |
+| --- | --- |
+| Antes | Escolha a superfície (LiteracyDojo avulso **ou** OS). Teste o link no navegador da turma. Combine: mesmo aparelho, sem prometer sincronização nem domínio pela UI. |
+| Abertura (2 min) | Diga que não há conta; progresso fica no navegador; **concluída ≠ competência verificada**; Trilha Dev no LiteracyDojo avulso está “em breve”. |
+| Durante | Observe sem conduzir cada clique. No LiteracyDojo, mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. |
+| Verificador (OS) | No deploy estático, “Verificador indisponível” é honesto — não venda como certificação. |
+| Suporte | WhatsApp [+55 11 98436-3878](https://wa.me/5511984363878) (principal) e [daniel@heropa.com](mailto:daniel@heropa.com) — SLA informal: 1 dia útil. |
+| Fechamento | Pergunte: “O que ficou salvo? O que você faria em seguida?” Registre sintoma visível e contexto (navegador/aparelho). |
+
+**Não inclua na oferta paga:** miniTown, trilha de programador avulsa, PixelQuest
+ou catálogo voxel fora do OS — são experimentais ou exigem setup que este guia
+não cobre.
 
 ## Standalone LiteracyDojo
 

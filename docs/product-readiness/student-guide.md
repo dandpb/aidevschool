@@ -1,4 +1,4 @@
-# Student Guide
+# Guia do estudante
 
 This guide covers `literacy-standalone-first-lesson`,
 `os-literacy-guided-mission`, `os-voxel-guided-missions`,
@@ -6,6 +6,10 @@ This guide covers `literacy-standalone-first-lesson`,
 `pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, and
 `minitown-explore-only`. It is
 organized by learner goal rather than repository component.
+
+## Oferta paga
+
+Este guia ensina dois caminhos da turma: o LiteracyDojo avulso e o site do OS (endereço fixo, no navegador). Você pode seguir a primeira lição e as missões de IA Prática. Isso não é certificado, não é ‘pronto para cliente’, e não prova domínio. No OS, o que já foi revalidado para cliente é voltar no mesmo aparelho e as três missões 3D da Trilha Dev. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
 
 ## Standalone LiteracyDojo
 
