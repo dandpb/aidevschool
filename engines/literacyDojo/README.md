@@ -155,4 +155,6 @@ Antes de anunciar uma alteração local, execute `npm run gen:content`,
 `npm run lint`, `npm run test` e `npm run build` no mesmo checkout. Para uma
 alteração de fluxo, inclua `npm run test:e2e`. Uma publicação pública exige
 verificação separada da rota publicada; ela não muda a fronteira de
-`completed` e `mastered`.
+`completed` e `mastered`. O procedimento operacional de preview imutável,
+promoção humana, saúde pós-deploy e rollback está no
+[`RELEASE_RUNBOOK.md`](RELEASE_RUNBOOK.md).
