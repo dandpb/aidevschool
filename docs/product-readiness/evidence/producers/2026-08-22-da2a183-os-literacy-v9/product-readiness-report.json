@@ -1,0 +1,88 @@
+{
+  "assessmentId": "2026-08-22-da2a183-os-literacy-v9",
+  "assessorContext": "independent-readiness-review",
+  "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+  "results": [
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "21dc4b2a70aedc8a441ddc05d45265bce7822c97adcd88fb7adfbc6e06caf39f"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-da2a183-os-literacy-v9/os-literacy-hosted-mission.json",
+          "sha256": "21de19bd370e78fc02dfc430cae8a5512ee4726769412aad469f118c939661a9"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-os-literacy-live/observations.json",
+          "sha256": "3e8875f9f0d08bd4aed9ba39fceb55ad36413f64ad0b13ce61c85817ab3a81c4"
+        }
+      ],
+      "executedAt": "2026-08-22T15:14:00Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-08-22T15:14:00Z-os-literacy-hosted-mission-mixed-da2a1837",
+      "scenarioId": "os-literacy-hosted-mission",
+      "schemaVersion": 1,
+      "sourceFingerprint": "945d617cff67edafb6b8e4cf896a84256c909e03935a07e06b5f136ea3fde325"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+          "sha256": "5306c9f1fa071fd5d10b8822a2b48e731b83f127c9b5acdea5d48da21f7dd78f"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-da2a183-os-literacy-v9/os-literacy-returning-device.json",
+          "sha256": "90ba42ebcfd8892ccf0ceb917b744b0463e45b0156c4d59b3c5a02628911e4ae"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-os-literacy-live/observations.json",
+          "sha256": "3e8875f9f0d08bd4aed9ba39fceb55ad36413f64ad0b13ce61c85817ab3a81c4"
+        }
+      ],
+      "executedAt": "2026-08-22T15:14:00Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-08-22T15:14:00Z-os-literacy-returning-device-mixed-da2a1837",
+      "scenarioId": "os-literacy-returning-device",
+      "schemaVersion": 1,
+      "sourceFingerprint": "945d617cff67edafb6b8e4cf896a84256c909e03935a07e06b5f136ea3fde325"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+          "sha256": "21dc4b2a70aedc8a441ddc05d45265bce7822c97adcd88fb7adfbc6e06caf39f"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-da2a183-os-literacy-v9/os-verification-recovery.json",
+          "sha256": "52ffa4ed75530907b2a5db7aed20cde682de1aca7175e9a9d75e3a8fcb51137d"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-os-literacy-live/observations.json",
+          "sha256": "3e8875f9f0d08bd4aed9ba39fceb55ad36413f64ad0b13ce61c85817ab3a81c4"
+        }
+      ],
+      "executedAt": "2026-08-22T15:14:00Z",
+      "executor": "mixed",
+      "gaps": [],
+      "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+      "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+      "outcome": "pass",
+      "runId": "2026-08-22T15:14:00Z-os-verification-recovery-mixed-da2a1837",
+      "scenarioId": "os-verification-recovery",
+      "schemaVersion": 1,
+      "sourceFingerprint": "945d617cff67edafb6b8e4cf896a84256c909e03935a07e06b5f136ea3fde325"
+    }
+  ],
+  "revalidateBy": "2026-09-22",
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-22T15:16:00Z"
+}

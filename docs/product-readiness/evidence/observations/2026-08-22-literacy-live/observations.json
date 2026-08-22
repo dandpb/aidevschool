@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+  "observedAt": "2026-08-22T15:13:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After Mapa Inicial (l02) completion, the home screen showed the next pedido title without repository knowledge. Observer response: Eu abriria agora 'O que a IA faz bem e onde costuma falhar' pelo bot\u00e3o Atender pedido."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-happy-path-automatic-starting-hint",
+          "severity": "low",
+          "summary": "The briefing exposes a starting hint before the learner requests one.",
+          "owner": "LiteracyDojo",
+          "disposition": "Review whether the starting hint should be learner-triggered; it did not require facilitator coaching or block the journey."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A wrong answer produced diagnostic feedback and resettable controls. Observer response: Depois de errar, recuperacao significa entender que confianca nao substitui evidencia, identificar os criterios que faltaram e refazer a decisao; o erro nao encerra a missao."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-retry-feedback-reveals-solution",
+          "severity": "low",
+          "summary": "Corrective feedback names the safer answer and required criteria before retry.",
+          "owner": "LiteracyDojo",
+          "disposition": "Treat retry as guided application and review whether a less revealing first feedback step would improve independent discovery."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After opening the next lesson, reload restored the lesson intro of the in-progress lesson (l03) with l02 still completed. Observer response: A continuidade fica neste navegador e neste armazenamento local; sem conta ou sincronizacao, ela nao acompanha automaticamente outro navegador, perfil ou dispositivo."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-resume-does-not-restore-in-activity-selection",
+          "severity": "low",
+          "summary": "A reload restores mission-level progress at the lesson intro but not an unfinalized answer selection inside the activity.",
+          "owner": "LiteracyDojo",
+          "disposition": "Document the mission-level resume granularity or persist in-activity selections if product research shows it is needed."
+        }
+      ]
+    }
+  ]
+}
