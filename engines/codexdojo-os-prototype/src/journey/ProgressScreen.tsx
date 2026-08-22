@@ -67,7 +67,7 @@ export function ProgressScreen({
           const verification = verificationByKey[key]
           return (
             <article key={key}>
-              <div><small>{mission.trackId === 'dev' ? 'Trilha Dev' : 'IA Prática'}</small><strong>{mission.title}</strong></div>
+              <div><small>{mission.trackId === 'dev' ? 'Simulação hospedada' : 'IA Prática'}</small><strong>{mission.title}</strong></div>
               <div><span>Conclusão local</span><strong>{localStatus === 'completed' ? 'Concluída' : localStatus}</strong></div>
               <div><span>Prática</span><strong>{engagement?.practiceCompleted ? 'Realizada' : 'Pendente'}</strong></div>
               <div><span>Verificação</span><strong>{evidenceLabel(verification)}</strong></div>

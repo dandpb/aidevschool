@@ -159,6 +159,31 @@ describe('initial mission recommendation', () => {
     })
   })
 
+  it('continues into hosted simulations after IA Prática is complete', () => {
+    const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
+    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
+    const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
+    const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
+    if (l01 === undefined || l02 === undefined || l03 === undefined || warehouse === undefined) {
+      throw new Error('Expected pilot missions')
+    }
+    let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'work-better',
+      context: 'work',
+      confidence: 'low',
+      selectedTrackId: 'ai-pratica',
+    })
+    progress = recordMissionCompletion(progress, l02, missionCatalog, 'l03')
+    progress = recordMissionCompletion(progress, l03, missionCatalog)
+    progress = recordMissionCompletion(progress, l01, missionCatalog)
+
+    expect(recommendMission(progress, catalog, { learner: learnerWith({ nextReviews: [], topPitfalls: [] }) })).toEqual({
+      kind: 'start',
+      trackId: 'dev',
+      missionId: warehouse.id,
+    })
+  })
+
   it('maps recurring pitfalls only after available chapter content is complete', () => {
     const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')

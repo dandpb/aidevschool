@@ -18,12 +18,14 @@ import type {
 import { Launcher } from '../launcher/Launcher'
 import { coreContexts } from '../learning/learningContexts'
 import { LearningRail } from '../learning/LearningRail'
+import { isOperatorSurface } from '../surface/operatorSurface'
 
 type AppProps = {
   readonly learner?: LearnerSnapshot
 }
 
 export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
+  const operatorSurface = isOperatorSurface()
   const [windows, setWindows] = useState<WindowState[]>([
     {
       id: 'dojo',
@@ -134,11 +136,12 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
         onOpenLauncher={() => setLauncherOpen(true)}
       />
 
-      <DesktopShortcuts onOpen={openApp} />
+      <DesktopShortcuts onOpen={openApp} operatorSurface={operatorSurface} />
       <Dock
         windows={windows}
         onOpen={openApp}
         onLauncher={() => setLauncherOpen((value) => !value)}
+        operatorSurface={operatorSurface}
       />
 
       <section
@@ -173,6 +176,7 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
           onQuery={setLauncherQuery}
           onClose={() => setLauncherOpen(false)}
           onLaunch={launchDefinition}
+          operatorSurface={operatorSurface}
         />
       ) : null}
       {learnMode ? <LearningRail context={learningContext} onClose={() => setLearnMode(false)} /> : null}

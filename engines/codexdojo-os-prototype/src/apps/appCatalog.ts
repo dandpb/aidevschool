@@ -1,5 +1,7 @@
 import type { AppDefinition, CoreAppId } from '../domain'
 
+export type AppCatalogEntry = AppDefinition
+
 export const appCatalog = [
   { name: 'Trilhas Dojo', category: 'Aprender', concepts: ['progressão', 'prática deliberada'], status: 'disponivel', appId: 'dojo' },
   { name: 'Terminal', category: 'Sistema', concepts: ['shell', 'processos'], status: 'disponivel', appId: 'terminal' },

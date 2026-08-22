@@ -57,7 +57,7 @@ export function MissionShell({
   const [completionSummary, setCompletionSummary] = useState<MissionCompletionSummary | undefined>()
   const [loadedFrameUrl, setLoadedFrameUrl] = useState<string | null>(null)
   const frameUrl = useMemo(() => services.missions.runtimeUrl(mission), [mission, services])
-  const trackLabel = mission.trackId === 'dev' ? 'Trilha Dev' : 'IA Prática'
+  const trackLabel = mission.trackId === 'dev' ? 'Simulação hospedada' : 'IA Prática'
   const rendererPreference = useMemo(requestedRenderer, [])
   const reducedMotion = useMemo(prefersReducedMotion, [])
 

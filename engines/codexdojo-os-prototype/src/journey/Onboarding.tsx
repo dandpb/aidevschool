@@ -5,27 +5,30 @@ import type {
   OnboardingGoal,
   OnboardingInput,
 } from '../progress/domain'
-import { recommendTrack } from '../progress/domain'
-import type { TrackId } from '../domain'
+import { STUDENT_TRACK_ID } from './studentPath'
 
 export function Onboarding({ onComplete }: { readonly onComplete: (input: OnboardingInput) => void }) {
   const [goal, setGoal] = useState<OnboardingGoal>('work-better')
   const [context, setContext] = useState<OnboardingContext>('work')
   const [confidence, setConfidence] = useState<OnboardingConfidence>('low')
-  const recommendation = useMemo(() => recommendTrack({ goal, confidence }), [goal, confidence])
-  const [selection, setSelection] = useState<TrackId | null>(null)
-  const selectedTrackId = selection ?? recommendation
+  const selectedTrackId = STUDENT_TRACK_ID
+  const recommendationCopy = useMemo(() => {
+    if (goal === 'build-systems' && confidence !== 'low') {
+      return 'As simulações hospedadas entram depois de IA Prática, sem menu de motores.'
+    }
+    return 'Comece por IA Prática e siga a sequência publicada pelo OS.'
+  }, [confidence, goal])
 
   return (
     <main className="journey-page onboarding-page">
       <header className="journey-brand">
         <span className="journey-cubes" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span><strong>AI DevSchool</strong><small>uma escola, duas trilhas</small></span>
+        <span><strong>AI DevSchool</strong><small>IA Prática no OS</small></span>
       </header>
       <section className="onboarding-card" aria-labelledby="onboarding-title">
         <p className="journey-eyebrow">Seu primeiro passo</p>
         <h1 id="onboarding-title">O que você quer conseguir fazer com IA?</h1>
-        <p className="journey-lead">Leva menos de um minuto. Você pode ajustar a recomendação e trocar de trilha depois.</p>
+        <p className="journey-lead">Leva menos de um minuto. O piloto começa em IA Prática e continua nas simulações hospedadas.</p>
 
         <div className="onboarding-fields">
           <label>
@@ -54,32 +57,12 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </label>
         </div>
 
-        <fieldset className="track-choice">
-          <legend className="journey-sr-only">Escolha de trilha</legend>
-          <button
-            type="button"
-            className={selectedTrackId === 'ai-pratica' ? 'track-option selected' : 'track-option'}
-            aria-pressed={selectedTrackId === 'ai-pratica'}
-            onClick={() => setSelection('ai-pratica')}
-          >
-            <span>Recomendada para começar</span>
-            <strong>IA Prática</strong>
-            <small>Aprenda a pedir, avaliar e aplicar sem precisar programar.</small>
-          </button>
-          <button
-            type="button"
-            className={selectedTrackId === 'dev' ? 'track-option selected' : 'track-option'}
-            aria-pressed={selectedTrackId === 'dev'}
-            onClick={() => setSelection('dev')}
-          >
-            <span>Trilha técnica</span>
-            <strong>Dev</strong>
-            <small>Pratique fundamentos e sistemas com desafios executáveis.</small>
-          </button>
-        </fieldset>
-        <p className="recommendation-note" role="status">
-          Recomendação: <strong>{recommendation === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>. Você escolheu <strong>{selectedTrackId === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>.
-        </p>
+        <article className="track-option selected" aria-label="Trilha do piloto">
+          <span>Sequência do piloto</span>
+          <strong>IA Prática</strong>
+          <small>LiteracyDojo hospedado no OS, depois WAREHOUSE, WORMHOLE e RELAY STATION.</small>
+        </article>
+        <p className="recommendation-note" role="status">{recommendationCopy}</p>
         <button
           type="button"
           className="journey-primary"

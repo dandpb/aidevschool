@@ -6,12 +6,11 @@ import { expect, test } from '@playwright/test'
 import type { FrameLocator } from '@playwright/test'
 import { bucketOf } from '../../voxelDojo/game-02-warehouse/src/sim/hash'
 
-async function enterSchool(page: import('@playwright/test').Page, track?: RegExp) {
+async function enterSchool(page: import('@playwright/test').Page) {
   await page.goto('/')
   await expect(
     page.getByRole('heading', { name: 'O que você quer conseguir fazer com IA?' }),
   ).toBeVisible()
-  if (track) await page.getByRole('button', { name: track }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await expect(page.getByRole('heading', { name: 'Aprenda uma coisa útil agora.' })).toBeVisible()
 }
@@ -70,11 +69,11 @@ test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Pr
   )
 })
 
-test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev mission mounts from the bundled build and reports the verifier honestly', async ({
+test('readiness os-voxel-hosted-missions and os-verification-recovery: hosted simulation mounts from the bundled build and reports the verifier honestly', async ({
   page,
 }) => {
-  await enterSchool(page, /Trilha técnica.*Dev/)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-02-warehouse')
   await expectMissionMounted(
     page,
     'Missão WAREHOUSE: Key-Value Store (in-memory)',
@@ -87,8 +86,8 @@ test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev missi
 })
 
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
-  await enterSchool(page, /Trilha técnica.*Dev/)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-02-warehouse')
   const frame = page.frameLocator('iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]')
   await frame.getByTestId('start').dispatchEvent('click')
 

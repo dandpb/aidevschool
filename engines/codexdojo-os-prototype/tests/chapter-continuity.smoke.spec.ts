@@ -144,7 +144,6 @@ test('preserves both complete three-mission chapters across switches and reloads
   await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeLiteracyMission(page, 'l01')
 
-  await page.getByRole('button', { name: /Trilha Dev/ }).click()
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await page.locator('.next-mission-card .journey-primary').click()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -161,7 +160,6 @@ test('preserves both complete three-mission chapters across switches and reloads
   await completeRelay(await gameFrame(page, 5205))
   await returnFromGame(page)
 
-  await page.getByRole('button', { name: /IA Prática/ }).click()
   await page.reload()
   const progress = await readOsProgress(page)
   for (const key of [

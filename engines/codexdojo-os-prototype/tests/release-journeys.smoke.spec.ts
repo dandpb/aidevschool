@@ -1,10 +1,7 @@
 import { expect, test, type Frame, type Page } from '@playwright/test'
 
-async function openSchool(page: Page, track: 'ai-pratica' | 'dev') {
+async function openSchool(page: Page) {
   await page.goto('/')
-  if (track === 'dev') {
-    await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
-  }
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await expect(page).toHaveURL(/\/hub$/)
 }
@@ -41,8 +38,8 @@ async function completeWarehouse(frame: Frame) {
   })
 }
 
-test('proves the nontechnical release journey through recovery, verification, and track switching', async ({ page }) => {
-  await openSchool(page, 'ai-pratica')
+test('proves the nontechnical release journey through recovery, verification, and map continuity', async ({ page }) => {
+  await openSchool(page)
   const canonicalLabel = await page.getByText(/\d+ competências verificadas/).textContent()
   const canonicalCount = canonicalLabel?.match(/\d+/)?.[0]
   expect(canonicalCount).toBeTruthy()
@@ -79,20 +76,18 @@ test('proves the nontechnical release journey through recovery, verification, an
   await page.reload()
   await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
 
-  await page.getByRole('button', { name: /Trilha Dev/ }).click()
-  await expect(page.getByText(/Revisão do dia/)).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Revisar agora' })).toBeVisible()
-  await page.getByRole('button', { name: /IA Prática/ }).click()
+  await page.getByRole('button', { name: 'Abrir mapa' }).click()
+  await expect(page.getByRole('heading', { name: 'Seis missões, uma sequência' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /WAREHOUSE/i })).toBeVisible()
+  await page.getByRole('button', { name: '← Hub' }).click()
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
 })
 
-test('proves the programmer release entry through accessible evidence and hub return', async ({ page }) => {
+test('proves the hosted simulation entry through accessible evidence and hub return', async ({ page }) => {
   test.setTimeout(60_000)
   await page.emulateMedia({ reducedMotion: 'reduce' })
-  await openSchool(page, 'dev')
-  await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  await expect(page.getByText(/Revisão do dia/)).toBeVisible()
-  await page.getByRole('button', { name: 'Revisar agora' }).click()
+  await openSchool(page)
+  await page.goto('/mission/dev/game-02-warehouse')
 
   await completeWarehouse(await gameFrame(page, 5202))
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible({

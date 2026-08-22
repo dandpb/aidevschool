@@ -8,9 +8,6 @@ test('completes l02 through the mission-first host without changing canonical ma
   await expect(
     page.getByRole('heading', { name: 'O que você quer conseguir fazer com IA?' }),
   ).toBeVisible()
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
-  await expect(page.getByText(/Você escolheu Trilha Dev/)).toBeVisible()
-  await page.getByRole('button', { name: /Recomendada para começar.*IA Prática/ }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
   await expect(page.getByRole('heading', { name: 'Aprenda uma coisa útil agora.' })).toBeVisible()
