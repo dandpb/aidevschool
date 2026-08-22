@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode ensinar primeira lição e IA Prática no OS. Não venda esses dois como customer-ready: no main, depois do #147, estão stale. O que a matriz ainda concede é retorno no mesmo aparelho e as missões voxel. #143 não está no produto; sem checkout neste guia.
+Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode vender como customer-ready a primeira lição (condicional) e a missão de IA Prática no OS. Não venda retorno no mesmo aparelho nem as missões voxel como customer-ready: no main, depois do #149, estão stale. #143 não está no produto; sem checkout neste guia.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -33,7 +33,9 @@ não cobre.
 ## Percurso atual no codexDojo OS
 
 No main atual, o OS não mostra escolha entre **IA Prática** e **Trilha Dev** nem
-menu para trocar de trilha. Oriente a turma assim:
+menu para trocar de trilha. **IA Prática** é o caminho customer-ready no OS; as
+três missões 3D e retorno no mesmo aparelho existem no produto, mas não venda
+como customer-ready. Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.
 2. Missões de **IA Prática** hospedadas, na ordem do trilho.

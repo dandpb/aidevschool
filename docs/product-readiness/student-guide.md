@@ -9,11 +9,11 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-Este guia ensina dois caminhos da turma: o LiteracyDojo avulso e o site do OS (endereço fixo, no navegador). Você pode seguir a primeira lição e as missões de IA Prática. Isso não é certificado, não é ‘pronto para cliente’, e não prova domínio. No OS, o que já foi revalidado para cliente é voltar no mesmo aparelho e as três missões 3D da Trilha Dev. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
+Este guia ensina dois caminhos da turma: o LiteracyDojo avulso (primeira lição) e o site do OS (endereço fixo, no navegador), começando em IA Prática. Esses dois caminhos são a oferta da turma. Isso não é certificado e não prova domínio. Voltar no mesmo aparelho e as três missões 3D existem no percurso, mas não estão prontas para cliente. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS. Não há escolha entre **IA Prática** e **Trilha Dev** nem menu para trocar de trilha.
+Use esta seção para o piloto no site do OS. Não há escolha entre **IA Prática** e **Trilha Dev** nem menu para trocar de trilha. **IA Prática** é o caminho do OS concedido nesta oferta; as três missões 3D seguem no produto, mas não estão prontas para cliente.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança). A sequência publicada começa em **IA Prática**.
