@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode vender como customer-ready a primeira lição avulsa (Mapa Inicial — l02; condicional), as três missões voxel no OS (WAREHOUSE, WORMHOLE, RELAY STATION; pass) e retorno no mesmo aparelho (condicional). Caminho no OS: Entrar na escola → IA Prática (l01–l03) → as 3 missões 3D; sem Hub, sem escolher Trilha Dev. Não venda IA Prática como customer-ready: os-literacy-guided-mission voltou stale no main depois do #156. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio). #143 não está no produto; sem checkout neste guia.
+Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode vender como customer-ready a primeira lição avulsa (Mapa Inicial — l02; condicional), as missões de IA Prática no OS (l01–l03; pass), as três missões voxel (WAREHOUSE, WORMHOLE, RELAY STATION; pass) e retorno no mesmo aparelho (condicional). Caminho no OS: Entrar na escola → IA Prática (l01–l03) → as 3 missões 3D; sem Hub, sem escolher Trilha Dev. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio). #143 não está no produto; sem checkout neste guia.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -33,24 +33,22 @@ não cobre.
 ## Percurso atual no codexDojo OS
 
 No main atual, o OS não tem Hub nem escolha entre **IA Prática** e **Trilha Dev**.
-O caminho no OS é **Entrar na escola** → **IA Prática** (l01–l03) → as três missões 3D
-(**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**). Pode vender como customer-ready as
-três missões voxel e o retorno no mesmo aparelho (condicional). Não venda **IA Prática**
-como customer-ready — o caminho começa nela, mas `os-literacy-guided-mission` está stale.
-Não venda as outras 14 lições avulsas como se existirem no OS. Não prometa sincronização
-avulso→OS — o aluno recomeça ao mudar de superfície.
-Oriente a turma assim:
+O caminho customer-ready é **Entrar na escola** → **IA Prática** (catálogo l01–l03)
+→ as três missões 3D (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); não venda
+as outras 14 lições avulsas como se existirem no OS. **IA Prática**, as três missões
+3D e retorno no mesmo aparelho estão prontas para cliente. Não prometa sincronização
+avulso→OS — o aluno recomeça ao mudar de superfície. Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.
-2. Missões de **IA Prática** hospedadas (l01–l03), na ordem do trilho — caminho, não grant customer-ready.
-3. Depois, as três simulações 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY
-   STATION**), na ordem do trilho — customer-ready (pass).
+2. Missões de **IA Prática** hospedadas (l01–l03), na ordem do trilho.
+3. As três simulações 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY
+   STATION**), na ordem do trilho.
 4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos nem
-   entre avulso e OS — retorno no mesmo aparelho é customer-ready (condicional).
+   entre avulso e OS.
 
 Se o aprendiz retomar num perfil que tinha parado na trilha antiga **Dev**, o host
-volta para **IA Prática** até esse capítulo terminar. Não peça para
-escolher trilha — essa UI não existe mais no piloto.
+volta para **IA Prática** até esse capítulo terminar. Não peça para escolher trilha
+— essa UI não existe mais no piloto.
 
 ## Standalone LiteracyDojo
 
