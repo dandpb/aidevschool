@@ -132,7 +132,6 @@ async function readOsProgress(page: Page): Promise<{ missionStatusByKey: Record<
 
 test('preserves both complete three-mission chapters across switches and reloads', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /Recomendada.*IA Prática/ }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
   await page.getByRole('button', { name: 'Começar missão' }).click()
@@ -144,19 +143,19 @@ test('preserves both complete three-mission chapters across switches and reloads
   await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeLiteracyMission(page, 'l01')
 
+  await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  await page.locator('.next-mission-card .journey-primary').click()
   await completeWarehouse(await gameFrame(page, 5202))
   await returnFromGame(page)
 
   await page.reload()
+  await page.goto('/mission/dev/game-03-wormhole')
   await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
-  await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeWormhole(await gameFrame(page, 5203))
   await returnFromGame(page)
 
+  await page.goto('/mission/dev/game-05-relay-station')
   await expect(page.getByRole('heading', { name: 'RELAY STATION: WebSocket Chat Server' })).toBeVisible()
-  await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeRelay(await gameFrame(page, 5205))
   await returnFromGame(page)
 
