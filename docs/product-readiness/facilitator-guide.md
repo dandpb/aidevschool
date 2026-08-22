@@ -30,6 +30,21 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 ou catálogo voxel fora do OS — são experimentais ou exigem setup que este guia
 não cobre.
 
+## Percurso atual no codexDojo OS
+
+No main atual, o OS não mostra escolha entre **IA Prática** e **Trilha Dev** nem
+menu para trocar de trilha. Oriente a turma assim:
+
+1. Onboarding curto → **Entrar na escola**.
+2. Missões de **IA Prática** hospedadas, na ordem do trilho.
+3. Depois, as três simulações 3D hospedadas: **WAREHOUSE**, **WORMHOLE**, **RELAY
+   STATION**.
+4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos.
+
+Se o aprendiz retomar num perfil que tinha parado na trilha antiga **Dev**, o host
+volta para **IA Prática** até esse capítulo terminar. Não peça para escolher
+trilha — essa UI não existe mais no piloto.
+
 ## Standalone LiteracyDojo
 
 ### Prepare
