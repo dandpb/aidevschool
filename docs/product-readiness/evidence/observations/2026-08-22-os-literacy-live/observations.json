@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "f4c31513b3bb4e78a087006f3757a602a19bea5b",
+  "observedAt": "2026-08-22T13:52:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The bundled pilot build mounted the IA Pratica mission from the OS origin and separated local completion from verification. Observer response: I completed this practice on this device; that is not mastery, and my next safe action is to retry verification once or return to the hub."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Chapter continuity restored IA Pratica missions after reload without cross-device claims. Observer response: This Literacy progress belongs to this browser profile; another browser, another device, or cleared site data starts separately."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The static pilot build showed Verificador indisponivel, offered retry and hub exit, and exposed WhatsApp plus daniel@heropa.com support links without claiming verification passed. Observer response: Retry verification once; if it remains unavailable, use the visible support CTA or return to the hub and leave the evidence unverified rather than claiming the verification gate passed."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
