@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "observerContext": "independent-readiness-observer",
-  "gitSha": "8ea1cba15149fe9c09d475a48cef2fb752d93256",
-  "observedAt": "2026-08-22T15:01:00Z",
+  "gitSha": "da2a18374a5bf9200c0054d86d0a911029b3c2d3",
+  "observedAt": "2026-08-22T15:13:00Z",
   "scenarios": [
     {
       "scenarioId": "literacy-happy-path",
