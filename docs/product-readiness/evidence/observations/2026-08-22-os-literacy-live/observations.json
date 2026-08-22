@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "observerContext": "independent-readiness-observer",
-  "gitSha": "f4c31513b3bb4e78a087006f3757a602a19bea5b",
-  "observedAt": "2026-08-22T13:52:00Z",
+  "gitSha": "8ea1cba15149fe9c09d475a48cef2fb752d93256",
+  "observedAt": "2026-08-22T15:01:00Z",
   "scenarios": [
     {
       "scenarioId": "os-literacy-hosted-mission",

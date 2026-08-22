@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "observerContext": "independent-readiness-observer",
-  "gitSha": "f4c31513b3bb4e78a087006f3757a602a19bea5b",
-  "observedAt": "2026-08-22T13:50:00Z",
+  "gitSha": "8ea1cba15149fe9c09d475a48cef2fb752d93256",
+  "observedAt": "2026-08-22T15:01:00Z",
   "scenarios": [
     {
       "scenarioId": "literacy-happy-path",
@@ -12,7 +12,7 @@
           "id": "learner-can-name-next-action",
           "evidence": "observation",
           "outcome": "pass",
-          "notes": "After Mapa Inicial (l02) completion, the home screen showed the next pedido title without repository knowledge. Observer response: Eu abriria agora 'O que a IA faz bem e onde costuma falhar' pelo botão Atender pedido."
+          "notes": "After Mapa Inicial (l02) completion, the home screen showed the next pedido title without repository knowledge. Observer response: Eu abriria agora 'O que a IA faz bem e onde costuma falhar' pelo bot\u00e3o Atender pedido."
         }
       ],
       "gaps": [
