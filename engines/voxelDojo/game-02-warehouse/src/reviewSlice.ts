@@ -34,7 +34,7 @@ export const reviewSlice: ReviewSlice = {
     {
       unitId: "U2-key-value-store",
       title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      dueIn: "overdue 4d",
+      dueIn: "overdue 5d",
       reason: "overdue",
     },
   ],

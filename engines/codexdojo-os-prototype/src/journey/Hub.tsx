@@ -11,6 +11,7 @@ import {
   type OsProgress,
 } from '../progress/domain'
 import { MentorPanel } from '../mentor/MentorPanel'
+import { STUDENT_MISSION_CHAPTERS } from './studentPath'
 import { useVerificationByMission } from './useVerificationByMission'
 
 export function Hub({
@@ -40,7 +41,8 @@ export function Hub({
       : undefined
   const status = mission === undefined ? undefined : progress.missionStatusByKey[missionKey(mission.trackId, mission.id)]
   const activeTrackId = mission?.trackId ?? progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
-  const completedMission = [...catalog.listLaunchable(activeTrackId)]
+  const studentMissions = STUDENT_MISSION_CHAPTERS.flatMap((chapter) => catalog.listLaunchable(chapter.trackId))
+  const completedMission = [...studentMissions]
     .reverse()
     .find((item) => progress.missionStatusByKey[missionKey(item.trackId, item.id)] === 'completed')
 
