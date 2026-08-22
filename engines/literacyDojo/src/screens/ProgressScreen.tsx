@@ -52,7 +52,7 @@ export function ProgressScreen({
       );
       setBackupStatus({
         kind: "ok",
-        text: "Backup baixado. O arquivo registra no máximo lições concluídas — nunca domínio verificado.",
+        text: "Backup baixado. O arquivo registra no máximo lições concluídas — nunca mastery.",
       });
     } catch (error) {
       setBackupStatus({
@@ -68,7 +68,7 @@ export function ProgressScreen({
       onProgressImported(next);
       setBackupStatus({
         kind: "ok",
-        text: "Backup restaurado neste navegador. Concluída não significa competência verificada.",
+        text: "Backup restaurado neste navegador. completed não significa mastered.",
       });
     } catch (error) {
       setBackupStatus({
@@ -81,8 +81,9 @@ export function ProgressScreen({
   const readyLessons = readyLessonEntries(services.content.listModules());
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
+    if (progress.lessonStatus[entry.id] !== "completed") continue;
     for (const skillId of entry.skillIds) {
-      lessonBySkillId.set(skillId, entry);
+      if (!lessonBySkillId.has(skillId)) lessonBySkillId.set(skillId, entry);
     }
   }
   const lessonForSkill = (skillId: string) => lessonBySkillId.get(skillId);
@@ -196,7 +197,7 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Trilha</h2>
-        <ul className="lesson-list">
+        <ul className="lesson-list progress-lesson-list">
           {readyLessons.map((entry) => {
             const status = progress.lessonStatus[entry.id] ?? "locked";
             return (
@@ -224,8 +225,8 @@ export function ProgressScreen({
         <p className="muted">
           O progresso mora só neste navegador: não há conta nem sincronização. Limpar dados do site,
           trocar de aparelho ou de perfil apaga o histórico. Exporte um JSON para guardar uma cópia;
-          ao importar, a migração atualiza o formato antigo e o teto continua sendo lição concluída
-          — nunca domínio verificado.
+          ao importar, a migração atualiza o formato antigo e o teto continua <code>completed</code>{" "}
+          — nunca <code>mastered</code>.
         </p>
         <div className="backup-actions">
           <button
