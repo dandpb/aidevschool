@@ -11,6 +11,21 @@ organized by learner goal rather than repository component.
 
 Este guia ensina dois caminhos da turma: o LiteracyDojo avulso e o site do OS (endereço fixo, no navegador). Você pode seguir a primeira lição e as missões de IA Prática. Isso não é certificado, não é ‘pronto para cliente’, e não prova domínio. No OS, o que já foi revalidado para cliente é voltar no mesmo aparelho e as três missões 3D da Trilha Dev. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
 
+## Percurso atual no codexDojo OS
+
+Use esta seção para o piloto no site do OS. Não há escolha entre **IA Prática** e **Trilha Dev** nem menu para trocar de trilha.
+
+1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
+2. Responda ao onboarding curto (objetivo, contexto, confiança). A sequência publicada começa em **IA Prática**.
+3. Selecione **Entrar na escola**.
+4. Complete as missões de **IA Prática** hospedadas no OS, na ordem mostrada pelo trilho de aprendizado.
+5. Depois de **IA Prática**, siga as três simulações 3D hospedadas no OS: **WAREHOUSE**, **WORMHOLE** e **RELAY STATION**.
+6. Leia o resultado de cada missão antes de continuar. `completed` significa progresso local no host; não significa `mastered`.
+
+**Retomar:** recarregar o mesmo aparelho deve restaurar o progresso suportado. Outro navegador, outro aparelho ou dados apagados começam do zero; não há conta nem sincronização entre dispositivos. Se você tinha parado na trilha antiga **Dev**, o OS volta para **IA Prática** até esse capítulo terminar.
+
+O [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) no Netlify continua sendo uma rota separada, fora do OS.
+
 ## Standalone LiteracyDojo
 
 ### Choose this journey
