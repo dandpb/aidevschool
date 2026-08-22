@@ -1,4 +1,8 @@
 import type { LearnerSnapshot, MissionKey, TrackId } from '../domain'
+import {
+  HOSTED_SIMULATIONS_TRACK_ID,
+  STUDENT_TRACK_ID,
+} from '../journey/studentPath'
 import type { EvidenceVerificationState } from '../verification/ports'
 import type { MissionCatalogRepository } from './catalog'
 import type { OsProgress } from '../progress/domain'
@@ -36,25 +40,20 @@ export type RecommendationContext = {
   readonly verificationByKey?: Readonly<Partial<Record<MissionKey, EvidenceVerificationState>>>
 }
 
-const STUDENT_TRACK_ORDER: readonly TrackId[] = ['ai-pratica', 'dev']
-
 function isLocallyLaunchable(progress: OsProgress, trackId: TrackId, missionId: string): boolean {
   return progress.missionStatusByKey[missionKey(trackId, missionId)] !== 'locked'
 }
 
-function resumeRecommendation(
+function resumeInProgress(
   progress: OsProgress,
   catalog: MissionCatalogRepository,
+  trackId: TrackId,
 ): MissionRecommendation | null {
-  for (const trackId of STUDENT_TRACK_ORDER) {
-    const inProgress = catalog.listLaunchable(trackId).find(
-      (mission) => progress.missionStatusByKey[missionKey(trackId, mission.id)] === 'in_progress',
-    )
-    if (inProgress !== undefined) {
-      return { kind: 'resume', trackId, missionId: inProgress.id }
-    }
-  }
-  return null
+  const inProgress = catalog.listLaunchable(trackId).find(
+    (mission) => progress.missionStatusByKey[missionKey(trackId, mission.id)] === 'in_progress',
+  )
+  if (inProgress === undefined) return null
+  return { kind: 'resume', trackId, missionId: inProgress.id }
 }
 
 function recommendMissionForTrack(
@@ -147,16 +146,14 @@ export function recommendMission(
 ): MissionRecommendation {
   if (!progress.onboarding.completed) return { kind: 'onboarding' }
 
-  const resumed = resumeRecommendation(progress, catalog)
-  if (resumed !== null) return resumed
+  const literacyResume = resumeInProgress(progress, catalog, STUDENT_TRACK_ID)
+  if (literacyResume !== null) return literacyResume
 
-  const primaryTrackId = progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
-  const primary = recommendMissionForTrack(progress, catalog, context, primaryTrackId)
-  if (primary.kind !== 'none') return primary
+  const literacyRecommendation = recommendMissionForTrack(progress, catalog, context, STUDENT_TRACK_ID)
+  if (literacyRecommendation.kind !== 'none') return literacyRecommendation
 
-  if (primaryTrackId === 'ai-pratica') {
-    return recommendMissionForTrack(progress, catalog, context, 'dev')
-  }
+  const hostedResume = resumeInProgress(progress, catalog, HOSTED_SIMULATIONS_TRACK_ID)
+  if (hostedResume !== null) return hostedResume
 
-  return primary
+  return recommendMissionForTrack(progress, catalog, context, HOSTED_SIMULATIONS_TRACK_ID)
 }

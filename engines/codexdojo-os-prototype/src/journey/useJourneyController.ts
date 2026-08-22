@@ -37,7 +37,9 @@ export function useJourneyController() {
           rawProgress,
           services.missions.snapshot(),
         )
-        if (migration.kind === 'reset') await services.progress.save(migration.progress)
+        if (migration.kind === 'reset' || migration.kind === 'migrated') {
+          await services.progress.save(migration.progress)
+        }
         if (ignore) return
         let route = parseRoute(services.navigation.currentPath())
         if (route.kind === 'boot') {
