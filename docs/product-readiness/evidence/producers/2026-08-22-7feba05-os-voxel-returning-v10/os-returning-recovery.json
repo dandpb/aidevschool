@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests/readiness-recovery.smoke.spec.ts",
+      "sha256": "6a5f97a178d969f1c239be3c80dcb4a06f5c34f27abcc1a8a94da009a86881ec"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "missing-local-state-does-not-create-completion",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-08-22T15:57:02Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "7feba05d6797129fe31f3c4d4de47c727dd16289",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-08-22T15:57:02Z-os-returning-recovery-7feba05d",
+  "scenarioId": "os-returning-recovery",
+  "schemaVersion": 1,
+  "sourceFingerprint": "3b628e4037fbc0a81590c55d3f23e12115eeacef22253a24ac44d154f060c50a"
+}
