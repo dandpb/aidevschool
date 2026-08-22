@@ -151,3 +151,8 @@ engines/miniTown/docs/concepts/*.png
 # Artefatos regenerados a cada rodada (transcrições de subagentes, build Python)
 .pi-subagents/
 *.egg-info/
+
+# --- Added 2026-08-22 (docs reconciliation): scratch/output areas stay untracked ---
+# .scratch/ holds dated drafts and exports; .lavish/ holds generated HTML reports.
+.scratch/
+.lavish/
