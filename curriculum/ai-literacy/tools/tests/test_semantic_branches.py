@@ -70,7 +70,7 @@ class TestSemanticBranches(unittest.TestCase):
     def test_catalog_and_lesson_error_order(self):
         validator = semantic._TrackValidator("track")
         validator.skill_index = {"known": {}}
-        validator.module_index = {"known": {}}
+        validator.module_index = {"known": {"journey": "ia_pratica"}}
         validator.lesson_index = {"known": {}}
         entry = {"skillIds": ["missing"], "prerequisites": ["missing"], "estimatedMinutes": 9, "status": "bad"}
         validator._check_catalog_refs("lesson", entry)

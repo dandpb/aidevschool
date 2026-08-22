@@ -13,7 +13,7 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 
 | Parte | Estado |
 | --- | --- |
-| Conteúdo | Quantidade, versões e status pertencem ao [`curriculum/ai-literacy/README.md`](../../curriculum/ai-literacy/README.md) e ao catálogo canônico; valide antes de compilar. |
+| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. As 3 lições Dev continuam válidas no catálogo, mas não entram no app enquanto a Trilha Dev estiver “Em breve”. |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |

@@ -87,7 +87,7 @@ def _base_catalog() -> JsonObject:
             "contentVersion": "test-1",
             "track": {"id": "ai-literacy", "title": "Trilha de teste", "language": "pt-BR"},
             "skills": [{"id": skill, "title": skill, "description": skill} for skill in FIVE_SKILLS],
-            "modules": [{"id": "mod-01", "slug": "01-ai-sem-misterio", "title": "M1", "order": 1, "skillIds": ["entender"]}],
+            "modules": [{"id": "mod-01", "slug": "01-ai-sem-misterio", "title": "M1", "order": 1, "journey": "ia_pratica", "skillIds": ["entender"]}],
             "lessons": [
                 {"id": "l01", "moduleId": "mod-01", "title": "Lição base", "objective": "Objetivo observável da lição base.", "estimatedMinutes": 3, "prerequisites": [], "skillIds": ["entender"], "status": "ready"},
                 {"id": "l02", "moduleId": "mod-01", "title": "Lição planejada", "objective": "Objetivo da lição planejada.", "estimatedMinutes": 4, "prerequisites": ["l01"], "skillIds": ["entender"], "status": "planned"},

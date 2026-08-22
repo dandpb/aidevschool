@@ -31,6 +31,14 @@ class TestInvalidContent(TrackFixtureMixin):
             errors, _r, _c = self.validate_track(track)
             self.assert_error_containing(errors, "módulo inexistente: mod-99")
 
+    def test_invalid_module_journey_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            catalog = _base_catalog()
+            json_object(array_field(catalog, "modules")[0])["journey"] = "mixed"
+            track = self.make_track(tmp, catalog=catalog)
+            errors, _ready, _catalog = self.validate_track(track)
+            self.assert_error_containing(errors, "journey inválida: 'mixed'")
+
     def test_unknown_skill_reference(self):
         with tempfile.TemporaryDirectory() as tmp:
             lesson = _base_lesson()

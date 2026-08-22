@@ -53,12 +53,14 @@ export type { LessonMode };
 export function LessonScreen({
   lessonId,
   mode = "initial",
+  onboarding,
   onProgressChange,
   onCompleted,
   onExit,
 }: {
   lessonId: string;
   mode?: LessonMode;
+  onboarding: OnboardingState;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -67,33 +69,12 @@ export function LessonScreen({
   const lesson = useMemo(() => services.content.getLesson(lessonId), [services, lessonId]);
   const module = lesson ? findModule(services.content.listModules(), lesson.moduleId) : undefined;
 
-  const [onboarding, setOnboarding] = useState<OnboardingState>();
-  const [session, setSession] = useState<LessonSession>(() => createLessonSession(lessonId, mode));
+  const [session, setSession] = useState<LessonSession>(() => ({
+    ...createLessonSession(lessonId, mode),
+    onboarding,
+  }));
   const [submitting, setSubmitting] = useState(false);
-  const [lessonOpened, setLessonOpened] = useState(false);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-
-  // Abertura da lição (status in_progress + lesson_started) ou da revisão (review_started).
-  useEffect(() => {
-    let cancelled = false;
-    setLessonOpened(false);
-    const opening =
-      mode === "review"
-        ? services.useCases.startReview(lessonId).then((result) => result.progress)
-        : services.useCases.startLesson(lessonId);
-    void opening.then((progress) => {
-      if (!cancelled) {
-        setOnboarding(progress.onboarding);
-        setSession((previous) => ({ ...previous, onboarding: progress.onboarding }));
-        onProgressChange(progress);
-        setLessonOpened(true);
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [services, lessonId, mode, onProgressChange]);
-
   // Gerenciamento de foco: o título recebe foco a cada nova tela do player
   // (introdução e cada atividade), orientando teclado e leitor de tela.
   // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (phase/currentActivityIndex), embora não leia o valor.
@@ -103,16 +84,6 @@ export function LessonScreen({
 
   if (!lesson) {
     return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;
-  }
-
-  if (!lessonOpened) {
-    return (
-      <section className="screen lesson-intro-screen" aria-busy="true">
-        <p className="loading" aria-live="polite">
-          Carregando missão…
-        </p>
-      </section>
-    );
   }
 
   const activity = currentActivity(session, lesson);

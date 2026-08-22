@@ -1,7 +1,7 @@
 schemaVersion: 1
 tracks:
   - trackId: ai-pratica
-    contentVersion: "2026-07-25.1"
+    contentVersion: "2026-08-21.1"
     recommendedEntryMissionId: l02
   - trackId: dev
     contentVersion: "2026-07-25.1"
@@ -21,7 +21,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-07-25.1"
+      contentVersion: "2026-08-21.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -43,7 +43,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-07-25.1"
+      contentVersion: "2026-08-21.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -65,7 +65,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-07-25.1"
+      contentVersion: "2026-08-21.1"
     evidence:
       schema: literacy-evidence
       version: 1

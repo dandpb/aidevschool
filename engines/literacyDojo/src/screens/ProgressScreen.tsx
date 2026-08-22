@@ -81,8 +81,9 @@ export function ProgressScreen({
   const readyLessons = readyLessonEntries(services.content.listModules());
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
+    if (progress.lessonStatus[entry.id] !== "completed") continue;
     for (const skillId of entry.skillIds) {
-      lessonBySkillId.set(skillId, entry);
+      if (!lessonBySkillId.has(skillId)) lessonBySkillId.set(skillId, entry);
     }
   }
   const lessonForSkill = (skillId: string) => lessonBySkillId.get(skillId);
@@ -196,7 +197,7 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Trilha</h2>
-        <ul className="lesson-list">
+        <ul className="lesson-list progress-lesson-list">
           {readyLessons.map((entry) => {
             const status = progress.lessonStatus[entry.id] ?? "locked";
             return (

@@ -102,7 +102,7 @@ Campo omitido = decisão que a IA toma pelo caminho estatisticamente comum. Uma 
 1. **Dois públicos no mesmo host sem uma porta de frente.** LiteracyDojo tem onboarding próprio (Vila Lume). O OS tem outro, para as mesmas trilhas. Duas portas, uma decisão de trilha, zero dono.
 2. **Microlição de 3–5 min com critério articulável funciona.** l02 obriga escolher *por que* uma resposta de IA é mais confiável. Feedback numérico + motivo faltante + retry. Isso é pedagogia, não trivia.
 3. **`completed` local é honesto e insuficiente.** O verificador no-code existe e quase não promoveu ninguém. O aprendiz sai com XP, não com prova.
-4. **Conteúdo curto acaba rápido.** 17 lições × 3–5 min ≈ 70 minutos. Uma semana de uso e o produto encontra o vazio.
+4. **Conteúdo curto acaba rápido.** O catálogo tem 17 lições válidas, mas o release público oferece 14 × 3–5 min (cerca de 1 hora); as 3 Dev são prévia separada. Uma semana de uso e o produto encontra o vazio.
 5. **A trilha Dev distribuiu respostas, não exercícios.** Os 18 `node-impl/` já têm a solução. “Tentativa antes de solução” é inaplicável se o aprendiz clona a resposta. Sem um artefato “desafio” (assinaturas + testes vermelhos + spec) separado de `solution/`, não há trilha Dev — há repositório de referência.
 6. **Jogo de 12 min e ciclo de 5 fases não são a mesma unidade de valor.** Um ensina um conceito; o outro levou semanas por projeto e rendeu 2 unidades em 10 semanas. Apresentar os dois como “a trilha” mistura escalas.
 7. **Jogo é superfície de tentativa, não autoridade.** Emite evidência bruta duas vezes (global + console). Nunca escreve `mastered`. Recibo do verificador é outro arquivo, com digest que ignora `ts`.

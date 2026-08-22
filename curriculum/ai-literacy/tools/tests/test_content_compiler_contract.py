@@ -27,6 +27,17 @@ class TestCompiler(TrackFixtureMixin):
             ):
                 self.assertIn('"type": "%s"' % act_type, content)
 
+    def test_compile_real_track_excludes_dev_preview_from_public_read_model(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            errors, out_path = self.compile_track(TRACK_DIR, tmp)
+            self.assertEqual([], errors)
+            self.assertIsNotNone(out_path)
+            assert out_path is not None
+            content = out_path.read_text(encoding="utf-8")
+            for lesson_id in ("l15", "l16", "l17"):
+                self.assertNotIn('"id": "%s"' % lesson_id, content)
+            self.assertNotIn('"id": "mod-05"', content)
+
     def test_compile_refuses_invalid_content(self):
         with tempfile.TemporaryDirectory() as tmp:
             lesson = _base_lesson()

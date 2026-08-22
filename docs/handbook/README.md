@@ -29,22 +29,21 @@ do not run `npm install` / `pnpm install` at the root.
 
 ## The canonical learner entry
 
-`engines/codexdojo-os-prototype/` is the canonical mission-first host. Its root
-route opens one onboarding, recommends either **IA Prática** or **Trilha Dev**,
-and returns both audiences to the same hub, map, mentor, and progress
-explanation. The first-release catalog contains three ready missions per track;
-the engine that executes a mission is an implementation detail behind the host.
+The first public learner entry is `engines/literacyDojo/`: 14 **IA Prática**
+missions for nontechnical learners, in pt-BR, with no account and progress kept
+in this browser. **Trilha Dev** remains a coming-soon teaser and is not part of
+this release.
 
-The host keeps onboarding, mission completion, XP, daily goals, engagement
+LiteracyDojo keeps onboarding, mission completion, XP, daily goals, engagement
 streaks, achievements, and opaque checkpoints locally in this browser. That
 IndexedDB continuity is not canonical mastery and does not synchronize between
 devices. Canonical learner state remains the generated, read-only substrate
 snapshot; only the independent learner gate can change `mastered`.
 
-The legacy desktop and Engine Hub remain available at `/desktop` as secondary
-contributor and engine-inspection tools. They are not the default learner entry,
-and launching an engine there does not grant mission, verification, or mastery
-authority.
+The CodexDojo OS mission-first host and its `/desktop` tools remain separate
+pilot/contributor surfaces with their own setup and release gates. They are not
+the public entry for this release, and launching an engine there does not grant
+mission, verification, or mastery authority.
 
 ## Audience-first routes
 
@@ -63,7 +62,7 @@ replace engine-local setup or grant learner mastery.
 
 | Audience | First learner surface | Then read |
 | --- | --- | --- |
-| Nontechnical learner | [Student guide — IA Prática](../product-readiness/student-guide.md#codexdojo-os-guided-journey); LiteracyDojo runs the bounded lesson activity | [Onboarding](02_onboarding.md) and the owning engine README |
+| Nontechnical learner | [Student guide — IA Prática](../product-readiness/student-guide.md#standalone-literacydojo) | [LiteracyDojo README](../../engines/literacyDojo/README.md) |
 | Programmer | [Student guide — programmer journeys](../product-readiness/student-guide.md#programmer-journeys); dojoToday, PixelQuest, voxelDojo, or the OS provide bounded routes | [Curriculum](07_curriculum.md) and the owning engine README |
 | Facilitator | [Facilitator guide](../product-readiness/facilitator-guide.md) | This handbook for relationships, then the owning engine guide |
 | Contributor | [Documentation map](../DOCUMENTATION.md) | Architecture, onboarding, then the owning engine guide |

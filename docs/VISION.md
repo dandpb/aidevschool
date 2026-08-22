@@ -4,7 +4,7 @@
 | --- | --- |
 | Status | Canônico para intenção de produto (não é estado operacional) |
 | Criado | 2026-07-19 · **Decisor:** Daniel |
-| Última revisão | 2026-07-25 |
+| Última revisão | 2026-08-21 |
 | Relação | Evolui [`docs/PROMPTS/-01_GOAL.md`](PROMPTS/-01_GOAL.md), que permanece como semente histórica |
 | Regra | Intenção não prova implementação, domínio ou mastery; os links abaixo apontam para as fontes operacionais. |
 
@@ -20,6 +20,11 @@ Dois públicos, uma mecânica:
 | --- | --- | --- |
 | Pessoas não tecnológicas | Aplicar IA no dia a dia: pedir, verificar e decidir com critério | **IA na Prática**: a experiência de microlições sustentada internamente pela trilha [`AI Literacy`](../curriculum/ai-literacy/README.md) e consumida pelo [`LiteracyDojo`](../engines/literacyDojo/README.md) |
 | Programadores | Engenharia robusta com IA: testes, review, benchmark e arquitetura | **Trilha Dev**: primeiro capítulo mission-first no codexdojo OS e continuidade nos 18 projetos de código (01–18) em [`curriculum/catalog.md`](../curriculum/catalog.md) |
+
+Esta tabela descreve o destino do produto, não o escopo do release candidate.
+O primeiro lançamento público entrega somente **IA na Prática** no
+LiteracyDojo: 14 missões em quatro módulos. A Trilha Dev permanece “Em breve”;
+seu conteúdo e o CodexDojo OS continuam como superfícies separadas.
 
 O que não muda entre públicos está no
 [`contrato de microlição`](design/micro-lesson-contract.md): objetivo curto,
@@ -49,14 +54,12 @@ isso que separa esta escola de um app de trivia.
 5. **Convergência.** A rota guiada segue Mapa Inicial → primeira conversa →
    limites da IA; a intermediária segue Mapa Inicial → limites da IA. Ambas
    convergem em como formular pedidos melhores.
-6. **Trilha Dev.** Ela usa o mesmo onboarding, hub e linguagem de progresso para
-   abrir o capítulo inicial WAREHOUSE → WORMHOLE → RELAY STATION. O restante do
-   catálogo de programação continua como continuidade, não como promessa de
-   missão pronta no primeiro lançamento.
-7. **Lançamento.** O codexdojo OS abre a jornada mission-first na rota raiz e
-   mantém desktop e Engine Hub em `/desktop` como ferramentas secundárias. O
-   host unificado está verificável localmente; uma URL pública oficial para ele
-   ainda não é uma capacidade comprovada.
+6. **Trilha Dev.** Aparece como “Em breve” no primeiro lançamento. O capítulo
+   WAREHOUSE → WORMHOLE → RELAY STATION continua no piloto separado do
+   CodexDojo OS, sem integrar a promessa pública do LiteracyDojo.
+7. **Lançamento.** O LiteracyDojo abre a jornada pública de IA na Prática. O
+   CodexDojo OS, seu desktop e o Engine Hub permanecem superfícies separadas,
+   verificáveis localmente e sem lançamento público compartilhado comprovado.
 8. **Progresso.** Sem conta, onboarding, conclusão, XP, meta diária, sequência e
    conquistas ficam neste navegador. Esses dados locais não sincronizam entre
    dispositivos e não podem representar `mastered`.
@@ -82,7 +85,8 @@ O escopo e os critérios de aceite do MVP estão em
 
 ## O que já existe a serviço da visão
 
-- **Uma entrada mission-first para os dois públicos:** o codexdojo OS recomenda
+- **No piloto separado, uma entrada mission-first para os dois públicos:** o
+  codexdojo OS recomenda
   uma trilha ajustável, executa três missões prontas por trilha e preserva a
   troca de trilha, o retorno e o progresso local no mesmo dispositivo. O
   desktop e o Engine Hub continuam acessíveis como superfícies secundárias.

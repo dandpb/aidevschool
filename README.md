@@ -29,8 +29,9 @@ Guiding principle: **one learner, one curriculum, many engines.**
 | Contribute to the platform | [Documentation map](docs/DOCUMENTATION.md) and [handbook](docs/handbook/README.md) | Engine-local commands and contracts are authoritative. |
 
 The first public, browser-only learner route is [LiteracyDojo](https://aidevschool-literacydojo.netlify.app).
-It is local-first: progress stays in the browser and no account is required. The programming
-track and CodexDojo OS remain separate surfaces with their own setup and release boundaries.
+Its release scope is 14 practical AI missions in four modules. It is local-first: progress stays
+in the browser and no account is required. The programming track remains “coming soon”; its
+preview content and CodexDojo OS stay outside this public journey, with separate release boundaries.
 
 For a customer or learner journey, start with the [student guide](docs/product-readiness/student-guide.md).
 Facilitators should use the [facilitator guide](docs/product-readiness/facilitator-guide.md), and

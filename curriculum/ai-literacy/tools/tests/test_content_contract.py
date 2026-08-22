@@ -51,6 +51,25 @@ class TestValidContent(TrackFixtureMixin):
             types,
         )
 
+    def test_real_track_separates_public_and_dev_journeys(self):
+        errors, _ready, catalog = self.validate_track(TRACK_DIR)
+        self.assertEqual([], errors)
+        modules = json_objects(array_field(required_object(catalog), "modules"))
+        journeys = {
+            string_field(module, "id"): string_field(module, "journey")
+            for module in modules
+        }
+        self.assertEqual(
+            {
+                "mod-01": "ia_pratica",
+                "mod-02": "ia_pratica",
+                "mod-03": "ia_pratica",
+                "mod-04": "ia_pratica",
+                "mod-05": "dev",
+            },
+            journeys,
+        )
+
     def test_first_release_ai_pratica_chapter_is_ready_and_keeps_entry_prerequisites(self):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
