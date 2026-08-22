@@ -25,21 +25,21 @@ async function expectMissionMounted(
   innerContent: RegExp,
 ) {
   const frameElement = page.locator(`iframe[title="${iframeTitle}"]`)
-  await expect(frameElement).toBeVisible()
+  const frame = page.frameLocator(`iframe[title="${iframeTitle}"]`)
 
+  await expect(frameElement).toBeVisible({ timeout: 30_000 })
+  // Wait for runtime content before reading iframe attributes. On slower CI
+  // hosts the iframe element can appear while launchMission is still saving
+  // local state and swapping the mission shell.
+  await expect(frame.locator('body')).toContainText(innerContent, { timeout: 30_000 })
+
+  await expect(frameElement).toHaveAttribute('src', /.+/)
   const src = await frameElement.getAttribute('src')
   expect(src, 'mission iframe has a src').toBeTruthy()
   const origin = new URL(src as string, page.url()).origin
   expect(origin, 'mission must be served from the OS origin, not a dev server').toBe(
     new URL(page.url()).origin,
   )
-
-  // Assert on text rather than visibility: a failed load renders Chrome's error
-  // page (no match), while a mounted runtime may keep some nodes visually
-  // hidden or fall back to the non-WebGL projection in headless.
-  await expect(
-    page.frameLocator(`iframe[title="${iframeTitle}"]`).locator('body'),
-  ).toContainText(innerContent)
 }
 
 async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<void> {
@@ -61,7 +61,11 @@ async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<v
 
 test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build', async ({ page }) => {
   await enterSchool(page)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  const startMission = page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ })
+  await startMission.scrollIntoViewIfNeeded()
+  await expect(startMission).toBeVisible()
+  await startMission.click()
+  await expect(page).toHaveURL(/\/mission\//)
   await expectMissionMounted(
     page,
     'Missão IA não é uma fonte de verdade',
