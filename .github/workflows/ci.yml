@@ -324,6 +324,20 @@ jobs:
             echo "::endgroup::"
           done
 
+  openclaw:
+    name: OpenClaw read-only smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - name: OpenClaw read-only smoke
+        run: |
+          python -m engines.openclaw --preview
+          test -z "$(git status --porcelain -- learner/)"
+
   curriculum-go:
     name: curriculum Go
     runs-on: ubuntu-latest
