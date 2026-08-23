@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "3586cb587092abea2c4881b2f6a8b926e9487921",
+  "observedAt": "2026-08-23T19:48:15Z",
+  "scenarios": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The live route presents due review, active unit, and next mission. Observer response: dojoToday tells me what to review and do next, but it does not evaluate my work or mark mastery; the independent verifier decides."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "The adapter derives a generated snapshot from canonical state, and dojoToday consumes it without implementing a canonical state writer."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The guides require regeneration and a bounded stop. Observer response: if the projection is stale, I regenerate and reload it; if canonical state is unavailable or still disagrees, I stop and do not present the old guidance as current."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

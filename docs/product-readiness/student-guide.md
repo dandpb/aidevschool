@@ -136,10 +136,10 @@ These validated journeys help you find today's work or produce raw evidence.
 They are not customer-ready account services, and none of them can verify its
 own output or mark a unit `mastered`.
 
-The current automated proof covers the completed PixelQuest encounter and the
-declared voxelDojo catalog smoke. Replay/recovery and accessible-renderer paths
-remain facilitator-observed or document-review scenarios; treat them as
-unassessed until that proof is recorded.
+The current automated proof covers dojoToday schedule readability, the completed
+PixelQuest encounter, and the declared voxelDojo catalog smoke. Replay/recovery
+and accessible-renderer paths remain facilitator-observed or document-review
+scenarios; treat them as unassessed until that proof is recorded.
 
 ### Read today's guidance in dojoToday
 
@@ -152,9 +152,10 @@ projection. Stop if the canonical state is unavailable; don't use an old view
 as proof of current progress. Follow the displayed game or next action when the
 projection is current.
 
-dojoToday currently has a self-check and build validation, not a browser
-producer report. Treat the learner-understanding and stale-projection branches
-as unassessed until a facilitator records them separately.
+The dojoToday browser producer report (`npm run test:readiness`) covers schedule
+and active-unit readability. Learner-understanding and stale-projection recovery
+still require facilitator observation or document review before the journey is
+assessed.
 
 ### Produce PixelQuest evidence
 

@@ -179,9 +179,10 @@ host failure, or undocumented repository intervention is a blocking gap.
 
 - Regenerate the shared learner projection before dojoToday sessions and use
   the [dojoToday README](../../engines/dojoToday/README.md) for local checks.
-- dojoToday currently has self-check, lint, and build validation rather than a
-  browser producer report. Keep its learner-understanding and stale-projection
-  branches observed/unassessed until that evidence is recorded.
+- Run `npm run test:readiness` in dojoToday for the browser producer report
+  (schedule and active-unit readability). Keep learner-understanding and
+  stale-projection branches observed or document-reviewed until that evidence is
+  recorded.
 - Run the canonical PixelQuest browser smoke and use the
   [PixelDojo runbook](../../engines/pixelDojo/AGENTS.md) for evidence locations
   and engine diagnostics.
@@ -191,10 +192,11 @@ host failure, or undocumented repository intervention is a blocking gap.
 - State before the session that guidance is read-only, game output is raw
   evidence, and only a separate verifier can accept evidence or grant mastery.
 - The producer reports intentionally cover only browser assertions exercised by
-  the smoke commands: the PixelQuest encounter and the voxelDojo catalog loop.
-  Replay/missing-evidence and accessible-renderer branches have no dedicated
-  browser producer report in this phase; record them as observed or
-  document-reviewed and keep them unassessed until that proof exists.
+  the smoke commands: dojoToday schedule readability, the PixelQuest encounter,
+  and the voxelDojo catalog loop. Replay/missing-evidence and accessible-renderer
+  branches have no dedicated browser producer report in this phase; record them
+  as observed or document-reviewed and keep them unassessed until that proof
+  exists.
 
 ### Observe without leading
 
