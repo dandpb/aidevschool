@@ -51,6 +51,7 @@ describe('mission-first hub progression', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).not.toBeNull()
     })
+    expect(screen.getByRole('button', { name: 'Começar missão' })).not.toBeNull()
     expect(screen.getByText('25', { selector: '.hub-chips strong' })).not.toBeNull()
     expect(screen.getByText(/Uma pausa não remove XP/)).not.toBeNull()
     expect(screen.queryByText(/\bvidas?\b|\benergia\b/i)).toBeNull()

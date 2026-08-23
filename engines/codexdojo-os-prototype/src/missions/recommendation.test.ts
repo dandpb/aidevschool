@@ -271,7 +271,7 @@ describe('initial mission recommendation', () => {
     })
   })
 
-  it('directs rejected evidence to recovery before new content', () => {
+  it('continues forward when a completed mission has rejected evidence but the next mission is available', () => {
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     if (l02 === undefined) throw new Error('Expected l02')
     const progress = recordMissionCompletion(
@@ -286,6 +286,37 @@ describe('initial mission recommendation', () => {
       'l03',
       { now: new Date('2026-07-25T10:00:00Z') },
     )
+    expect(recommendMission(progress, catalog, {
+      learner: learnerWith({ nextReviews: [], topPitfalls: [] }),
+      verificationByKey: {
+        [missionKey('ai-pratica', 'l02')]: { kind: 'rejected' as const, code: 'digest-mismatch' },
+      },
+    })).toMatchObject({ kind: 'start', missionId: 'l03' })
+  })
+
+  it('directs rejected evidence to recovery when no forward mission remains available', () => {
+    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
+    const l03 = missionCatalog.missions.find((mission) => mission.id === 'l03')
+    const l01 = missionCatalog.missions.find((mission) => mission.id === 'l01')
+    if (l02 === undefined || l03 === undefined || l01 === undefined) throw new Error('Expected IA chapter')
+    let progress = recordMissionCompletion(
+      completeOnboarding(createInitialOsProgress(missionCatalog), {
+        goal: 'work-better',
+        context: 'work',
+        confidence: 'low',
+        selectedTrackId: 'ai-pratica',
+      }),
+      l02,
+      missionCatalog,
+      'l03',
+      { now: new Date('2026-07-25T10:00:00Z') },
+    )
+    progress = recordMissionCompletion(progress, l03, missionCatalog, undefined, {
+      now: new Date('2026-07-25T10:05:00Z'),
+    })
+    progress = recordMissionCompletion(progress, l01, missionCatalog, undefined, {
+      now: new Date('2026-07-25T10:10:00Z'),
+    })
     expect(recommendMission(progress, catalog, {
       learner: learnerWith({ nextReviews: [], topPitfalls: [] }),
       verificationByKey: {
