@@ -92,6 +92,8 @@ export class Town {
   readonly grid: Grid = new Grid()
   /** One construction state machine per building, keyed by building id. */
   readonly constructions: Map<string, BuildingConstruction> = new Map()
+  readonly #zoneMap: Map<string, Zone> = new Map()
+  readonly #buildingMap: Map<string, Building> = new Map()
   /** Per-instance counter — ids stay unique within a Town without any global state. */
   #idCounter = 0
   #paletteSeedCounter = 0
@@ -141,6 +143,7 @@ export class Town {
     this.#idCounter += 1
     const zone: Zone = { id: this.#id("z"), type, cell: { x, y } }
     this.zones.push(zone)
+    this.#zoneMap.set(zone.id, zone)
     return zone
   }
 
@@ -162,6 +165,7 @@ export class Town {
       stageSeconds: 0,
     }
     this.buildings.push(building)
+    this.#buildingMap.set(building.id, building)
     this.constructions.set(building.id, new BuildingConstruction(paletteSeed))
     return building
   }
@@ -192,13 +196,15 @@ export class Town {
 
   /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
   findZoneById(id: string): Zone | null {
-    return this.zones.find((z) => z.id === id) ?? null
+    // Bolt: Optimize O(N) array scan with O(1) map lookup for frequently called sim loop methods.
+    return this.#zoneMap.get(id) ?? null
   }
 
   /** Read a building by id — `homeId` / `workId` are passed in by residents. */
   findBuildingById(id: string | null): Building | null {
     if (!id) return null
-    return this.buildings.find((b) => b.id === id) ?? null
+    // Bolt: Optimize O(N) array scan with O(1) map lookup for frequently called sim loop methods.
+    return this.#buildingMap.get(id) ?? null
   }
 
   /** Pick a random inhabited shop building. Drives resident shopping trips. */
