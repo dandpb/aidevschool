@@ -1,0 +1,203 @@
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/emitter.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts:1:56
+[PixelDojo Quest]   1  |  import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                           ^
+[PixelDojo Quest]   2  |  import { validateEvidenceRecord } from "./evidence";
+[PixelDojo Quest]   3  |  configureEvidenceParentOrigin(import.meta.env["VITE_CODEXDOJO_OS_ORIGIN"] || (import.meta.env.DEV ? "http://127.0.0.1...
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/WorldRenderer.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/WorldRenderer.ts:10:7
+[PixelDojo Quest]   1  |  ...ographicCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  import { getTileViews, isUnitCompleted } from "../../game/simulation/world";
+[PixelDojo Quest]   3  |  import { CircuitBreakerScene } from "./CircuitBreakerScene";
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/CircuitBreakerScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/CircuitBreakerScene.ts:14:7
+[PixelDojo Quest]   1  |  ...dMaterial, PerspectiveCamera, Scene, SphereGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  // Visualizes a route_health encounter as a 3D circuit-breaker diorama. The
+[PixelDojo Quest]   3  |  // encounter state is the truth; this scene is a pure read-only projection — it
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/evidence.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts:6:7
+[PixelDojo Quest]   1  |  import { EvidenceValidationError, readBoolean, readNumber, validateEvidenceEnvelope } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                                                              ^
+[PixelDojo Quest]   2  |  const REVIEW_REASONS = [
+[PixelDojo Quest]   3  |  	"due",
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/PolicyGateScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/PolicyGateScene.ts:15:7
+[PixelDojo Quest]   1  |  ...pectiveCamera, Scene, SphereGeometry, TorusGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  // Visualizes a policy_gate encounter as a 3D "auth gate" diorama. The encounter
+[PixelDojo Quest]   3  |  // state is the truth; this scene is a pure read-only projection — it never
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/SkillOrbitScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/SkillOrbitScene.ts:14:7
+[PixelDojo Quest]   1  |  ...pectiveCamera, Scene, SphereGeometry, TorusGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  import { selectedSkillOrbitStation, skillOrbitStations } from "../../game/simulation/skillOrbit";
+[PixelDojo Quest]   3  |  const orbitRadius = 3.1;
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/emitter.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts:1:56
+[PixelDojo Quest]   1  |  import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                           ^
+[PixelDojo Quest]   2  |  import { validateEvidenceRecord } from "./evidence";
+[PixelDojo Quest]   3  |  configureEvidenceParentOrigin(import.meta.env["VITE_CODEXDOJO_OS_ORIGIN"] || (import.meta.env.DEV ? "http://127.0.0.1...
+[PixelDojo Quest] 7:55:00 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/evidence.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts:6:7
+[PixelDojo Quest]   1  |  import { EvidenceValidationError, readBoolean, readNumber, validateEvidenceEnvelope } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                                                              ^
+[PixelDojo Quest]   2  |  const REVIEW_REASONS = [
+[PixelDojo Quest]   3  |  	"due",
+
+Running 5 tests using 1 worker
+
+(node:7210) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7210) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:55:02 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+[codexDojo OS] 7:55:06 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✘  1 [desktop-1280] › tests/chapter-continuity.smoke.spec.ts:133:1 › preserves both complete three-mission chapters across switches and reloads (30.4s)
+(node:7287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:55:33 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+[codexDojo OS] 7:55:35 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✓  2 [desktop-1280] › tests/readiness-recovery.smoke.spec.ts:3:1 › readiness os-returning-recovery: cleared local state returns to onboarding without completion (2.2s)
+[codexDojo OS] 7:55:36 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+[codexDojo OS] 7:55:36 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✘  3 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:73:1 › reduced motion selects the keyboard-operable semantic projection (6.9s)
+(node:7396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:55:43 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+[codexDojo OS] 7:55:45 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✘  4 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:95:1 › context loss degrades and retries without resetting simulation or evidence identity (9.0s)
+(node:7471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7471) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:55:53 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+[codexDojo OS] 7:55:54 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✓  5 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:148:1 › forced WebGL unavailability fails over without blocking mission controls (1.8s)
+
+
+  1) [desktop-1280] › tests/chapter-continuity.smoke.spec.ts:133:1 › preserves both complete three-mission chapters across switches and reloads 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.click: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: 'Começar missão' })
+
+
+      139 |   await page.reload()
+      140 |   await expect(page.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).toBeVisible()
+    > 141 |   await page.getByRole('button', { name: 'Começar missão' }).click()
+          |                                                              ^
+      142 |   await completeLiteracyMission(page, 'l03')
+      143 |   await page.getByRole('button', { name: 'Começar missão' }).click()
+      144 |   await completeLiteracyMission(page, 'l01')
+        at /workspace/engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts:141:62
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/chapter-continuity.smoke-p-d9b45-across-switches-and-reloads-desktop-1280/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/chapter-continuity.smoke-p-d9b45-across-switches-and-reloads-desktop-1280/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/chapter-continuity.smoke-p-d9b45-across-switches-and-reloads-desktop-1280/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/chapter-continuity.smoke-p-d9b45-across-switches-and-reloads-desktop-1280/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:73:1 › reduced motion selects the keyboard-operable semantic projection 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Verificação independente aprovada', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Verificação independente aprovada', { exact: true })
+
+
+      82 |   await expect(page.getByText('Acessível', { exact: true })).toBeVisible()
+      83 |   await completeWithAccessibleKeyboard(page)
+    > 84 |   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+         |                                                                                      ^
+      85 |   await expect.poll(() => evidenceIdentity(page)).toEqual({
+      86 |     source: 'voxeldojo',
+      87 |     unit_id: 'U2-key-value-store',
+        at /workspace/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts:84:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/renderer-fallback.smoke-re-48f6d-perable-semantic-projection-desktop-1280/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/renderer-fallback.smoke-re-48f6d-perable-semantic-projection-desktop-1280/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/renderer-fallback.smoke-re-48f6d-perable-semantic-projection-desktop-1280/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/renderer-fallback.smoke-re-48f6d-perable-semantic-projection-desktop-1280/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:95:1 › context loss degrades and retries without resetting simulation or evidence identity 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Verificação independente aprovada', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Verificação independente aprovada', { exact: true })
+
+
+      135 |
+      136 |   await completeWithAccessibleKeyboard(page)
+    > 137 |   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+          |                                                                                      ^
+      138 |   await expect.poll(() => evidenceIdentity(page)).toEqual({
+      139 |     source: 'voxeldojo',
+      140 |     unit_id: 'U2-key-value-store',
+        at /workspace/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts:137:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/renderer-fallback.smoke-co-99327-lation-or-evidence-identity-desktop-1280/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/renderer-fallback.smoke-co-99327-lation-or-evidence-identity-desktop-1280/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/renderer-fallback.smoke-co-99327-lation-or-evidence-identity-desktop-1280/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/renderer-fallback.smoke-co-99327-lation-or-evidence-identity-desktop-1280/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [desktop-1280] › tests/chapter-continuity.smoke.spec.ts:133:1 › preserves both complete three-mission chapters across switches and reloads 
+    [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:73:1 › reduced motion selects the keyboard-operable semantic projection 
+    [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:95:1 › context loss degrades and retries without resetting simulation or evidence identity 
+  2 passed (55.9s)

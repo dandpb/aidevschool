@@ -1,0 +1,36 @@
+
+> literacydojo@0.1.0 pretest:e2e
+> npm run gen:content
+
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated
+
+OK: 17 lição(ões) ready validadas: 14 IA na Prática, 3 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+
+> literacydojo@0.1.0 test:e2e
+> playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+
+Running 6 tests using 1 worker
+
+(node:3275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [app] › playwright/gamification.spec.ts:12:1 › engajamento após a primeira lição: XP, meta diária, sequência e conquista (1.2s)
+  ✓  2 [app] › playwright/gamification.spec.ts:44:1 › revisão espaçada vencida: refaz a lição, emite evidência de revisão e não muda a trilha (1.5s)
+  ✓  3 [app] › playwright/vertical-slice.spec.ts:13:1 › readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada (1.6s)
+  ✓  4 [app] › playwright/vertical-slice.spec.ts:36:1 › readiness literacy-happy-path and literacy-resume: acerto de primeira encaminha para a rota intermediária (1.1s)
+  ✓  5 [app] › playwright/vertical-slice.spec.ts:62:1 › Mapa Inicial continua utilizável em viewport compacto (939ms)
+(node:3406) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:3406) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 [pwa] › playwright/pwa.spec.ts:7:1 › instalável e utilizável offline depois da primeira visita (309ms)
+
+  6 passed (11.4s)
+Reported engines/literacyDojo/test-results/readiness/literacy-happy-path.json
+Reported engines/literacyDojo/test-results/readiness/literacy-resume.json
+Reported engines/literacyDojo/test-results/readiness/literacy-retry.json

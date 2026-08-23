@@ -1,0 +1,153 @@
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/emitter.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts:1:56
+[PixelDojo Quest]   1  |  import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                           ^
+[PixelDojo Quest]   2  |  import { validateEvidenceRecord } from "./evidence";
+[PixelDojo Quest]   3  |  configureEvidenceParentOrigin(import.meta.env["VITE_CODEXDOJO_OS_ORIGIN"] || (import.meta.env.DEV ? "http://127.0.0.1...
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/WorldRenderer.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/WorldRenderer.ts:10:7
+[PixelDojo Quest]   1  |  ...ographicCamera, PlaneGeometry, Scene, WebGLRenderer } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  import { getTileViews, isUnitCompleted } from "../../game/simulation/world";
+[PixelDojo Quest]   3  |  import { CircuitBreakerScene } from "./CircuitBreakerScene";
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/CircuitBreakerScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/CircuitBreakerScene.ts:14:7
+[PixelDojo Quest]   1  |  ...dMaterial, PerspectiveCamera, Scene, SphereGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  // Visualizes a route_health encounter as a 3D circuit-breaker diorama. The
+[PixelDojo Quest]   3  |  // encounter state is the truth; this scene is a pure read-only projection — it
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/PolicyGateScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/PolicyGateScene.ts:15:7
+[PixelDojo Quest]   1  |  ...pectiveCamera, Scene, SphereGeometry, TorusGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  // Visualizes a policy_gate encounter as a 3D "auth gate" diorama. The encounter
+[PixelDojo Quest]   3  |  // state is the truth; this scene is a pure read-only projection — it never
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "three" from "src/render/app/SkillOrbitScene.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/render/app/SkillOrbitScene.ts:14:7
+[PixelDojo Quest]   1  |  ...pectiveCamera, Scene, SphereGeometry, TorusGeometry } from "three";
+[PixelDojo Quest]      |                                                                 ^
+[PixelDojo Quest]   2  |  import { selectedSkillOrbitStation, skillOrbitStations } from "../../game/simulation/skillOrbit";
+[PixelDojo Quest]   3  |  const orbitRadius = 3.1;
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/evidence.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts:6:7
+[PixelDojo Quest]   1  |  import { EvidenceValidationError, readBoolean, readNumber, validateEvidenceEnvelope } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                                                              ^
+[PixelDojo Quest]   2  |  const REVIEW_REASONS = [
+[PixelDojo Quest]   3  |  	"due",
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/emitter.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/emitter.ts:1:56
+[PixelDojo Quest]   1  |  import { configureEvidenceParentOrigin, dualEmit } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                           ^
+[PixelDojo Quest]   2  |  import { validateEvidenceRecord } from "./evidence";
+[PixelDojo Quest]   3  |  configureEvidenceParentOrigin(import.meta.env["VITE_CODEXDOJO_OS_ORIGIN"] || (import.meta.env.DEV ? "http://127.0.0.1...
+[PixelDojo Quest] 7:54:14 PM [vite] (client) Pre-transform error: Failed to resolve import "@aidevschool/evidence" from "src/game/evidence/evidence.ts". Does the file exist?
+[PixelDojo Quest]   Plugin: vite:import-analysis
+[PixelDojo Quest]   File: /workspace/engines/pixelDojo/pixel-quest/src/game/evidence/evidence.ts:6:7
+[PixelDojo Quest]   1  |  import { EvidenceValidationError, readBoolean, readNumber, validateEvidenceEnvelope } from "@aidevschool/evidence";
+[PixelDojo Quest]      |                                                                                              ^
+[PixelDojo Quest]   2  |  const REVIEW_REASONS = [
+[PixelDojo Quest]   3  |  	"due",
+[LiteracyDojo] 7:54:14 PM [vite] warning: `esbuild` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `oxc` instead.
+[LiteracyDojo] 7:54:14 PM [vite] warning: `optimizeDeps.esbuildOptions` option was specified by "vite:react-babel" plugin. This option is deprecated, please use `optimizeDeps.rolldownOptions` instead.
+[LiteracyDojo] You or a plugin you are using have set `optimizeDeps.esbuildOptions` but this option is now deprecated. Vite now uses Rolldown to optimize the dependencies. Please use `optimizeDeps.rolldownOptions` instead.
+
+Running 2 tests using 1 worker
+
+(node:6440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:54:17 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✘  1 [desktop-1280] › tests/learning-slice.smoke.spec.ts:3:1 › completes l02 through the mission-first host without changing canonical mastery (9.3s)
+(node:6793) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:6793) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[codexDojo OS] 7:54:27 PM [vite] (client) [console.warn] [React Grab] v0.1.48 is outdated (latest: v0.2.0). Run `npx grab@latest upgrade` to upgrade.
+  ✘  2 [desktop-1280] › tests/learning-slice.smoke.spec.ts:59:1 › shows independent FAIL separately from local and canonical progress (10.0s)
+
+
+  1) [desktop-1280] › tests/learning-slice.smoke.spec.ts:3:1 › completes l02 through the mission-first host without changing canonical mastery 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Verificação independente aprovada', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Verificação independente aprovada', { exact: true })
+
+
+      33 |
+      34 |   await expect(mission.getByTestId('result-screen')).toBeVisible()
+    > 35 |   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+         |                                                                                      ^
+      36 |   await expect(
+      37 |     page.getByText(
+      38 |       /O verificador independente aprovou esta evidência\. O gate canônico continua separado\./,
+        at /workspace/engines/codexdojo-os-prototype/tests/learning-slice.smoke.spec.ts:35:86
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learning-slice.smoke-compl-27e1d--changing-canonical-mastery-desktop-1280/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learning-slice.smoke-compl-27e1d--changing-canonical-mastery-desktop-1280/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-slice.smoke-compl-27e1d--changing-canonical-mastery-desktop-1280/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-slice.smoke-compl-27e1d--changing-canonical-mastery-desktop-1280/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop-1280] › tests/learning-slice.smoke.spec.ts:59:1 › shows independent FAIL separately from local and canonical progress 
+
+    Error: expect(locator).toBeVisible() failed
+
+    Locator: getByText('Verificação pede nova tentativa', { exact: true })
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeVisible" with timeout 5000ms
+      - waiting for getByText('Verificação pede nova tentativa', { exact: true })
+
+
+      74 |   await mission.getByTestId('submit-attempt').click()
+      75 |
+    > 76 |   await expect(page.getByText('Verificação pede nova tentativa', { exact: true })).toBeVisible()
+         |                                                                                    ^
+      77 |   await expect(page.getByText('Veredito independente: FAIL', { exact: true })).toBeVisible()
+      78 |   await expect(page.getByText('Gate canônico não executado', { exact: false })).toBeVisible()
+      79 |   await expect(
+        at /workspace/engines/codexdojo-os-prototype/tests/learning-slice.smoke.spec.ts:76:84
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/learning-slice.smoke-shows-7f6e0-ocal-and-canonical-progress-desktop-1280/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/learning-slice.smoke-shows-7f6e0-ocal-and-canonical-progress-desktop-1280/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/learning-slice.smoke-shows-7f6e0-ocal-and-canonical-progress-desktop-1280/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/learning-slice.smoke-shows-7f6e0-ocal-and-canonical-progress-desktop-1280/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    [desktop-1280] › tests/learning-slice.smoke.spec.ts:3:1 › completes l02 through the mission-first host without changing canonical mastery 
+    [desktop-1280] › tests/learning-slice.smoke.spec.ts:59:1 › shows independent FAIL separately from local and canonical progress 
