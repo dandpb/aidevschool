@@ -46,8 +46,8 @@ Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há co
 Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
 
 1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
-2. No onboarding, responda objetivo, contexto e confiança. Você verá um cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
-3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. Há uma missão em destaque como próximo passo.
+2. No onboarding, responda objetivo, contexto e confiança. Você pode **ver** menções a **Trilha Dev** nesta tela — essa trilha **não** faz parte da oferta pronta neste piloto. Use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
 4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
 5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
 6. No mapa, o texto é **Seis missões, uma sequência**. O botão voltar mostra **← Hub** (hub de aprendizado). **WAREHOUSE** pode aparecer como **Disponível** antes de terminar IA Prática — a interface pode liberar cedo. No piloto, siga a missão destacada como próximo passo; não pule para o 3D só porque **WAREHOUSE** parece aberto.
@@ -71,7 +71,7 @@ No OS e no LiteracyDojo avulso, o retorno funciona só no **mesmo navegador e ap
 
 **No OS**
 
-1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding.
+1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding. **Trilha Dev** pode ainda aparecer na interface; siga a missão destacada, não essa trilha.
 2. A missão destacada mostra onde continuar — literacy ou 3D, conforme o que já concluiu neste aparelho.
 3. Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding. Não há conta nem sincronização entre dispositivos.
 4. Concluída neste aparelho não é domínio verificado.

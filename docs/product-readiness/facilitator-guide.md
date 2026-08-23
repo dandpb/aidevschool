@@ -81,8 +81,8 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 **O que observar**
 
-1. Entrada em `/` (não `/desktop`), onboarding (objetivo, contexto, confiança), cartão **IA Prática**, **Entrar na escola**, mensagem de progresso neste dispositivo.
-2. Chegada ao **hub de aprendizado** (`/hub`) — missão em destaque; **não** é o Engine Hub do operador.
+1. Entrada em `/` (não `/desktop`), onboarding (objetivo, contexto, confiança). O deploy público ainda **mostra** **Trilha Dev** no onboarding; o aprendiz deve usar o cartão **IA Prática** e **Entrar na escola**, com a mensagem de progresso neste dispositivo — **não** escolher **Trilha Dev** como trilha pronta.
+2. Chegada ao **hub de aprendizado** (`/hub`) — missão em destaque; **Trilha Dev** também pode aparecer na interface. **Não** é o Engine Hub do operador. Caminho do piloto: missão recomendada (l02 primeiro).
 3. Primeira recomendação l02; l01 no mapa sem pré-requisito; l03 após l02.
 4. Três missões literacy completas seguindo a missão destacada.
 5. Mapa **Seis missões, uma sequência**; voltar **← Hub**.
@@ -91,8 +91,8 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 **O que não prometer**
 
+- **Trilha Dev** como trilha selecionável pronta para cliente (pode aparecer na UI do OS, mas não é o caminho desta oferta).
 - Engine Hub, Central de Apps ou laboratório no caminho do estudante (`?operator=1` é só operador — ver abaixo).
-- Escolha de trilha ou Hub antigo de **IA Prática** vs **Trilha Dev**.
 - Domínio, sync entre dispositivos ou avulso→OS.
 - As 14 lições extras do avulso no OS.
 
@@ -124,7 +124,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 **O que observar (OS)**
 
-1. Mesmo navegador/aparelho: `/` redireciona a `/hub` se `onboarding.completed`.
+1. Mesmo navegador/aparelho: `/` redireciona a `/hub` se `onboarding.completed`. **Trilha Dev** pode ainda aparecer no hub; o retorno segue a missão destacada (literacy ou 3D).
 2. Hub mostra a missão destacada conforme progresso local (literacy ou 3D).
 3. Outro navegador, outro aparelho ou dados apagados = onboarding de novo. Sem sync.
 4. Concluída neste aparelho ≠ domínio verificado.
