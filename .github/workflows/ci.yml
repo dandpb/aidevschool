@@ -324,20 +324,6 @@ jobs:
             echo "::endgroup::"
           done
 
-  openclaw:
-    name: OpenClaw read-only smoke
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: python -m pip install -e ".[dev]"
-      - name: OpenClaw read-only smoke
-        run: |
-          python -m engines.openclaw --preview
-          test -z "$(git status --porcelain -- learner/)"
-
   curriculum-go:
     name: curriculum Go
     runs-on: ubuntu-latest
@@ -510,10 +496,8 @@ jobs:
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — openclaw was not CI-enforced. Runs
   # the pytest island (file-based checklist runner, simulate-grade per
-  # ADR-0002) and the simulate CLI to verify the spec artifact exists with
-  # the minimum size floor. The CLI mutates learner/pipeline_status.yaml on
-  # the runner; that's intentional evidence of "checklist ran" but harmless
-  # because each CI run is on a fresh checkout.
+  # ADR-0002) and the read-only preview CLI. The cleanliness assertion guards
+  # the canonical learner source against accidental writes during smoke runs.
   openclaw:
     name: openclaw (checklist runner)
     runs-on: ubuntu-latest
@@ -525,8 +509,10 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - name: openclaw unit tests
         run: python -m pytest engines/openclaw/tests -q
-      - name: openclaw simulate (spec phase, rate-limiter pilot)
-        run: python -m engines.openclaw --phase spec --project curriculum/01_rate_limiter --mode simulate
+      - name: openclaw read-only smoke
+        run: |
+          python -m engines.openclaw --preview
+          test -z "$(git status --porcelain -- learner/)"
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — aiDevschoolMvp installer + acceptance
   # tests were in pyproject.toml testpaths but only ran as part of the
