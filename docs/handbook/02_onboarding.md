@@ -34,7 +34,7 @@ current status.
 | --- | --- | --- |
 | Node.js | 20.19+ or 22.12+ | Required by Vite 8 in codexDojo OS; Node 22 LTS is recommended. |
 | pnpm | 9+ (`corepack enable`) | Package manager for `miniTown`, `codexDojo`, `pixelDojo`, and `voxelDojo`. |
-| Python 3 | 3.10+ | Regenerating learner-data views (the substrate). |
+| Python 3 | 3.11+ | Regenerating learner-data views (the substrate). |
 | Go / Rust | latest stable | Only if you build/run the polyglot `curriculum/` implementations. |
 
 Enable pnpm once:

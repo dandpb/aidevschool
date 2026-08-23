@@ -14,9 +14,10 @@ por FSRS a partir dos gates) e a unidade ativa.
 - **É** uma landing "abra e veja sua lição de hoje" — a cola que faltava entre o
   scheduler FSRS já construído e os jogos voxel.
 - **Não** agenda, **não** avalia, **não** marca `mastered`. Tudo vem do
-  [`learner/`](../../learner/) via `tools/gen-today.py`, que chama o scheduler
-  único (`learner.substrate.scheduling`). Regra de ouro do ecossistema: produtor
-  ≠ verificador.
+  [`learner/`](../../learner/) via substrato (`python3 -m learner.substrate`,
+  adapter `learner/substrate/adapters/dojotoday.py`), que chama o scheduler
+  único (`learner.substrate.scheduling`) no `prebuild`. Regra de ouro do
+  ecossistema: produtor ≠ verificador.
 
 ## Stack
 
@@ -39,7 +40,9 @@ Pré-requisito da geração executada por `prebuild`: `python3` com `pyyaml` e
 
 ## Origem dos dados
 
-`tools/gen-today.py` lê `learner/learning_state.yaml` (fonte da verdade) e chama:
+O read model `src/data/today.ts` é gerado pelo substrato
+(`learner/substrate/adapters/dojotoday.py`, executado no `prebuild`): ele lê
+`learner/learning_state.yaml` (fonte da verdade) e chama:
 
 - `scheduling.derive_next_reviews` → fila de revisões devidas (FSRS);
 - `scheduling.reconcile_streak` → streak + freezes (cap 2);

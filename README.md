@@ -47,7 +47,7 @@ Do not try to `npm install` or `pnpm install` at the root.
 | Layer | Path | Purpose |
 | --- | --- | --- |
 | **Engines and apps** | `engines/` | Each engine is a separate project with its own runtime and package-management surface. |
-| **Curriculum (shared)** | `curriculum/` | 19 numbered entries (00–18), including 18 coding projects, plus the separate `ai-literacy` track. |
+| **Curriculum (shared)** | `curriculum/` | 19 numbered entries (00–18): AI Literacy as the Level 0 entry (project 00) plus 18 coding projects; `curriculum/ai-literacy/` holds the canonical micro-lesson content. |
 | **Learner (shared)** | `learner/` | The learner journey: learning gate, profile, pitfalls, journal, pipeline status, and the Python substrate. |
 | **Ecosystem docs** | `docs/` | Goal, seed ideas, design ADRs, agent domain docs. |
 | **Runtime state** | `.mavis/` | Derived view of `learner/` consumed by the Mavis planner (regenerated, never hand-edited). |

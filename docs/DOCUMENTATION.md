@@ -88,6 +88,9 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Conteúdo de AI Literacy | [`curriculum/ai-literacy/`](../curriculum/ai-literacy/README.md) | YAML canônico; `ready` descreve conteúdo válido, não mastery. |
 | Contratos de AI Literacy | [`docs/design/ai-literacy/`](design/ai-literacy/README.md) | Conteúdo, evidência e limites do bounded context. |
 | Product readiness | [`docs/product-readiness/`](product-readiness/README.md) + [contrato](design/product-readiness.md) | Inventário, cenários, guias e decisões independentes; não altera learner state nem concede mastery. |
+| Documentos legais do piloto | [`docs/legal/piloto/`](legal/piloto/politica-de-privacidade.md) | Rascunhos de Política de Privacidade e Termos de Uso (LGPD, adultos, local-first); **rascunhos pendentes de revisão jurídica**, não publicar como estão. |
+| Curso simples de workflows com IA | [`docs/curso-simples/`](curso-simples/ROADMAP.md) | Curso em HTML + roadmap de conclusão com gates por fase; material de ensino para aluno real, não estado do aprendiz. |
+| Wiki de pesquisa | [`wiki/`](../wiki/index.md) | Sínteses e fontes de pesquisa (readiness, drift docs-vs-código, privacidade); referência datada, não fonte canônica. |
 | Evidência de um projeto | `curriculum/<projeto>/docs/` | Permanece local, auditável e não é resumida neste índice. |
 
 ### Vocabulário de status

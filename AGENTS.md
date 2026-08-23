@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-07-19
-**Source baseline:** 668a3c2
+**Updated:** 2026-08-22
+**Source baseline:** c256a96
 **Branch:** main
 
 ## OVERVIEW
@@ -31,7 +31,10 @@ aidevschool/
 ├── docs/design/polyglot-arena/ # demoted design archive (proposal-stage; was engines/polyglotEvolutionArena/)
 ├── curriculum/                # shared coding challenges and executable evidence
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
-├── docs/                      # ecosystem prompts, ideas, and design reference material
+├── docs/                      # ecosystem prompts, ideas, design reference, course, and legal drafts
+├── dev-workflow-claude/       # tested AI dev workflow library + teaching page (course support)
+├── wiki/                      # research wiki: dated syntheses and sources (readiness, drift, privacy)
+├── miro-tour/                 # architect-career Miro board extraction + learning trails (reference)
 └── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .serena/ .compozy/ # platform/tool state
 ```
 
@@ -67,17 +70,22 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Work on Project 02's verified implementation | `curriculum/02_key_value_store/node-impl/` | Current verified track is Node-only; start with `README.md`, then use `docs/benchmark_results.md` and `docs/evolution_report.md` for the measured benchmark/optimize workflow. |
 | Update idea/prompt source | `docs/PROMPTS/-01_GOAL.md`, `docs/PROMPTS/00_IDEIAS.md` | Goal and seed ideas. |
 | Read the polyglot-arena design | `docs/design/polyglot-arena/` | Demoted from `engines/polyglotEvolutionArena/`; proposal-stage. |
+| Run the simple AI-workflow course | `docs/curso-simples/` | HTML course + completion ROADMAP with per-phase gates; teaching material for a real student, not learner state. |
+| Teach/review AI dev workflows | `dev-workflow-claude/` | Tested workflow library + Claude skills (`auditar-workflows`, `novo-workflow`, `verificar-workflow`) supporting the course. |
+| Consult the research wiki | `wiki/index.md` | Dated research syntheses and sources; reference material, not canonical state. |
+| Browse the architect-roadmap extraction | `miro-tour/INDEX.md` | Miro board extraction and career learning trails; reference material. |
+| Draft legal docs for the pilot | `docs/legal/piloto/` | Privacy policy and terms drafts (LGPD, adults, local-first); pending legal review, do not publish as-is. |
 
 ## CODE MAP
 
 | Symbol / Surface | Type | Location | Refs | Role |
 | --- | --- | --- | --- | --- |
-| `mountCodexDojo` | Function | `engines/codexDojo/src/app.ts:13` | 8 | Dashboard mount, event dispatch, app-shell render loop. |
-| `buildInitialState`, `reduceState` | Functions | `engines/codexDojo/src/state.ts:38`, `:57` | LSP outline | Pure dashboard state seam. |
+| `mountCodexDojo` | Function | `engines/codexDojo/src/app.ts:15` | 8 | Dashboard mount, event dispatch, app-shell render loop. |
+| `buildInitialState`, `reduceState` | Functions | `engines/codexDojo/src/state.ts:31`, `:47` | LSP outline | Pure dashboard state seam. |
 | `PixelQuestApp` | Class | `engines/pixelDojo/pixel-quest/src/app/PixelQuestApp.ts:44` | 3 | Browser game coordinator for input, world state, encounters, evidence. |
 | `RingScene` | Class | `engines/voxelDojo/game-10-hash-ring/src/scene/ringScene.ts:31` | 1 | Three.js projection in the reference HASH RING package. |
-| `learner.substrate.validate` | Function | `learner/substrate/__init__.py:119` | LSP outline | Canonical learner-state invariant gate. |
-| `learner.substrate.sync` | Function | `learner/substrate/__init__.py:428` | CLI | Regenerates `.mavis/`, minimax whiteboard, dashboard, and game review views. |
+| `learner.substrate.validate` | Function | `learner/substrate/__init__.py:140` | LSP outline | Canonical learner-state invariant gate. |
+| `learner.substrate.sync` | Function | `learner/substrate/__init__.py:833` | CLI | Regenerates `.mavis/`, minimax whiteboard, dashboard, and game review views. |
 | `engines/minimaxDojo/config/learner.yaml` | Config seam | `engines/minimaxDojo/config/learner.yaml` | n/a | Single source for tutor-core numeric thresholds. |
 
 ## CONVENTIONS
@@ -154,6 +162,11 @@ python3 -m unittest discover -s learner/substrate/tests
   they are the learning-gate audit trail.
 - Use LSP/codegraph when exposed; `.codegraph` and `graphify-out/` are generated references, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
+- Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
+  runs under `docs/product-readiness/evidence/` (wayfinder rejected 2026-08-22; the
+  `2026-08-22-de49bc9-literacy-revalidation` run was superseded by upstream assessments
+  promoted on 2026-08-22). `wiki/`, `docs/curso-simples/`, `docs/legal/`, and `LICENSE`
+  were tracked on 2026-08-22.
 
 ## Tooling root convention
 
@@ -163,3 +176,5 @@ python3 -m unittest discover -s learner/substrate/tests
   platform/session state unless a tracked file says otherwise.
 - Durable shared state belongs in `.mavis/`, `learner/`, or `curriculum/`. Codex-specific runbooks
   belong in `.codex/napkin.md` or the global `napkin` skill. Document new `.X/` roots here first.
+- `.scratch/` and `.lavish/` are scratch/output areas (drafts, generated HTML reports); keep them
+  untracked and out of source control.

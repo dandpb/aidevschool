@@ -1,5 +1,9 @@
 # Consolidação e aprendizados — primeiros fluxos de desenvolvimento
 
+> ⚠️ **Snapshot datado (2026-08-17).** Inventário e aprendizados daquela data;
+> não reflete o estado corrente. Fontes vivas: `docs/product-readiness/`
+> (matriz gerada), `curriculum/catalog.md` e `learner/learning_state.yaml`.
+
 **Data:** 2026-08-17 · **Escopo:** todo o repo (349 commits, 2026-06-09 → 2026-08-17, ~10 semanas)
 **Método:** cada número abaixo foi lido do filesystem/git nesta sessão. Onde não pude executar, digo que não executei.
 **Por que existe:** decidir se vale recomeçar mais simples. Este doc é o inventário + os aprendizados; não é a decisão.
@@ -28,8 +32,8 @@
 | --- | --- |
 | Unidades de aprendizagem masterizadas | **2** — `U0-rate-limiter` (gate 2026-07-05), `U2-key-value-store` (gate 2026-08-13). Streak 2. |
 | Tentativas do aprendiz no filesystem | **2** arquivos em `learner/attempts/` |
-| Projetos de currículo `implemented` | **2 de 18** — 01 e 02, ambos com ressalva "Node-only; Go/Rust não re-executados" |
-| Projetos `scaffolded` | 17 — pastas + testes locais, sem gate |
+| Projetos de currículo `implemented` | **1 de 18** — 01 fechou o ciclo completo; 02 está parcialmente implementado (Node-only; Go/Rust não re-executados). O total de projetos de programação é 18. |
+| Projetos `scaffolded` | 16 (03–18) — pastas + testes locais, sem gate |
 | Ciclo de 5 fases completo | 2 (`2026-06-04-01-rate-limiter`, `2026-07-06-02-key-value-store`) |
 | Superfície pública | **1** — LiteracyDojo em Netlify (URL documentada em `VISION.md`; não re-verifiquei online) |
 | Instrumentação de uso | **zero** — ADR-0009 (13/08) escreve: *"não sabemos o funil de onboarding, a conclusão de lições nem a retenção — é impossível dizer se as pessoas aprendem"* |
@@ -168,7 +172,7 @@ Não é a decisão — é o inventário para tomá-la.
 
 **Levar (tem valor comprovado, independe do aparato):**
 - `learner/journal.md` — as 20 generalizações da §2. É o único ativo que já pagou seu custo.
-- `curriculum/` — 19 specs + 18 implementações Node. O conteúdo é real, mesmo sem gate.
+- `curriculum/` — 19 specs + 18 diretórios `node-impl/` com código compilável, mas apenas o projeto 01 fechou o ciclo de 5 fases com gate; o projeto 02 está parcialmente implementado; os demais estão `scaffolded` no catálogo. O conteúdo existe, mas 'compilável' não é o mesmo que 'validado pelo gate'.
 - **A ideia mínima do gate**, em 3 arquivos e nenhum framework: um arquivo de tentativa, um arquivo de evidência,
   um verificador em contexto separado que lê os dois. Foi isso que pegou as 18 masterizações falsas.
 - `FUNDAMENTOS.md` §2 (protocolo de pedido à IA) — 1 página, aplicável amanhã em qualquer projeto.

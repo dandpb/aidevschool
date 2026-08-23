@@ -46,7 +46,7 @@ keeps each engine in its own runtime and exposes one bounded interaction:
 | `miniMaxEvolutionEngine` | Prepare the exact next `/devschool-*` command from pipeline and learning-gate state. |
 | `openclaw` | Preview the next checklist without writing pipeline state. |
 | `pixelDojo` | Play PixelQuest and return raw attempt evidence to the Hub. |
-| `voxelDojo` | Choose any of the 16 game packages; evidence-enabled games return raw attempts to the Hub. |
+| `voxelDojo` | The pilot build bundles 4 missions (`literacydojo`, `warehouse`, `wormhole`, `relay-station`). The voxelDojo catalog has 16 games, but the OS does not serve all of them in the current pilot. |
 
 The three browser engines use these optional production URLs:
 
@@ -59,8 +59,7 @@ VITE_VOXELDOJO_URLS='{"game-02-warehouse":"https://warehouse.example.test/","gam
 
 `VITE_VOXELDOJO_URL` is the compatibility URL for HASH RING;
 `VITE_VOXELDOJO_URLS` maps any catalog game ID to its deployed origin.
-Development falls back to `5175`, `5176`, and the 16 fixed voxel catalog ports;
-run `pnpm run dev:catalog` from `../voxelDojo` to start them together.
+Development falls back to the ports configured in `src/data/missions.ts` (currently 5178, 5202, 5203, 5205 for the 4 pilot missions); run `pnpm run dev:catalog` from `../voxelDojo` to start them together.
 
 The local Vite bridge exposes three fixed, read-only Python actions. It is
 loopback-only, bootstraps a per-process token through a same-origin endpoint,
@@ -93,7 +92,7 @@ unverified, and never grants mastery.
 ## Implemented surfaces
 
 - Desktop shell, top bar, dock, searchable launcher, and movable windows.
-- Catalog with 11 apps and explicit maturity states.
+- Catalog with the IA Prática / Dev tracks and the missions bundled in the pilot; secondary apps accessible via `/desktop`.
 - Contextual Learn Mode and a deterministic local mentor prototype.
 - Tracks, local Terminal commands, Files, and an architecture map.
 - Engine Hub with six external engine adapters and raw-evidence receipts.

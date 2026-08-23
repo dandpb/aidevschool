@@ -19,7 +19,7 @@ Scripts: `pnpm run test` (vitest) · `typecheck` · `build` · `smoke` (Playwrig
 
 - Estágio: **MVP** (plano de 5 tasks — `.mavis/plans/miniTown.yaml`). A
   verificação independente de 2026-07-19 registrou 14/14 testes e build
-  estático limpo. Rode os comandos abaixo no commit que será publicado; o
+  estático limpo. O `package.json` atual define 26 testes; re-execute no commit publicado — o
   resultado histórico não certifica mudanças futuras.
 - Evidência de runtime exposta em `window.__miniTown` (contrato observacional; não emite
   evidência de mastery — miniTown não marca aprendizado).

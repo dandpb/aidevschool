@@ -53,8 +53,7 @@ the CLI says so and exits 0 without writing.
 
 ## The 12 subjects → game seeds
 
-One game per curriculum project; each teaches a single concept. (`01` is fully specified in `PLAN.md`;
-only `01` exists on disk so far.)
+One game per curriculum project; each teaches a single concept. The canonical `pixel-quest/` app maps the 18 curriculum projects into labs; the current encounter mechanics cover `tokenBucket`, `sequenceFlow`, `routeHealth`, `policyGate`, and `taskQueue`. The `games/` directory is reserved for future standalone games. The seed table below is the original 12-concept brainstorm from `PLAN.md`; canonical project numbering and concepts live in `../../curriculum/catalog.md`.
 
 | # | Subject | Concept | 8-bit game seed |
 | --- | --- | --- | --- |

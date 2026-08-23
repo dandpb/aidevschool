@@ -149,6 +149,6 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 
 ---
 
-_Last reviewed on 2026-07-25. When an explanation conflicts with a canonical
+_Last reviewed on 2026-08-22. Surface status is canonical in `docs/product-readiness/`; this handbook entry is ecosystem orientation, not operational truth. When an explanation conflicts with a canonical
 catalog, contract, learner-state file, or current verification result, the
 canonical source wins; open a documentation fix._

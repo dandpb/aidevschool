@@ -113,8 +113,9 @@ O escopo e os critérios de aceite do MVP estão em
   define a direção; o README do LiteracyDojo mantém os critérios atuais de
   release.
 - **Trilhas com dependências:** o catálogo numerado tem 19 entradas (00–18),
-  das quais 18 são projetos de programação; AI Literacy mantém sua própria
-  trilha de microlições dentro do currículo compartilhado.
+  das quais 18 são projetos de programação; AI Literacy (projeto 00) faz parte
+  do catálogo compartilhado como Level 0/entrada não-técnica (ADR-0005), não é
+  uma trilha separada fora do catálogo.
 - **Integridade da lição:** learning gate + verificador independente + evidência
   adequada ao gate. Código exige checks executáveis; Nível 0 usa o checklist
   falsificável rotulado do ADR-0004.
@@ -126,7 +127,10 @@ Cada item abaixo foi re-checado no mesmo estado do repositório. Itens
 democratização ainda não cobre o ecossistema inteiro.
 
 1. **Release do LiteracyDojo (MVP IA na Prática) — resolvida para o player.**
-   No estado atual do repo, `engines/literacyDojo/` passa lint, testes unitários,
+   A matriz gerada em `docs/product-readiness/README.md` é a fonte viva do
+   tier: em 2026-08-22 a jornada `literacy-standalone-first-lesson` recebeu
+   `conditional-follow-up` com tier `customer-ready` (gaps medium/low
+   dispositionados). No estado atual do repo, `engines/literacyDojo/` passa lint, testes unitários,
    build e E2E (`npm run lint|test|build|test:e2e`). Critérios de release do
    README do engine e tickets do MVP (`tickets.md`) estão verdes neste corte.
    Evidência: README operacional do engine + suíte local re-executada. Residual:
