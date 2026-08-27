@@ -9,3 +9,8 @@
 **Vulnerability:** XSS in codexDojo learner numeric fields (AIDI, CURR) via `.toFixed()` on non-number values.
 **Learning:** Fields that are "conceptually numeric" can still carry untrusted strings if external data is corrupted; `.toFixed()` throws or templates the raw string.
 **Prevention:** Guard with `typeof value === "number"` before `.toFixed()`, and fall back to `escapeHtml(value)` otherwise. `rel="noopener noreferrer"` on every `target="_blank"` link.
+
+## 2026-08-27 - Insecure BYOK Endpoint Configuration
+**Vulnerability:** The AI assistant feature in dojoToday allowed users to configure a custom endpoint (`baseUrl`) without validating the protocol. A user could configure an `http://` endpoint, causing their API key to be transmitted over the network in plaintext.
+**Learning:** In Bring-Your-Own-Key (BYOK) architectures, user inputs for base URLs must be explicitly validated to ensure they use `https:` (unless targeting local loopback addresses for development) to prevent man-in-the-middle credential interception.
+**Prevention:** Always parse and validate user-provided URLs. Enforce HTTPS for any outbound request that includes sensitive authorization headers.

@@ -91,6 +91,18 @@ export async function askSocrates(
   const base = config.baseUrl.replace(/\/+$/, "");
   const url = `${base}/chat/completions`;
   try {
+    const parsedUrl = new URL(base);
+    if (
+      parsedUrl.protocol !== "https:" &&
+      parsedUrl.hostname !== "localhost" &&
+      parsedUrl.hostname !== "127.0.0.1"
+    ) {
+      return {
+        ok: false,
+        error: "Segurança: O endpoint deve usar HTTPS para proteger a chave da API.",
+      };
+    }
+
     const res = await fetch(url, {
       method: "POST",
       headers: {
