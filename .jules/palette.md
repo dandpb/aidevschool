@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2026-08-27 - Contextual ARIA labels for stateful buttons
+**Learning:** When buttons have generic state text (like 'Copy' / 'Copied'), screen readers lack context on what is being interacted with. Adding a dynamic `aria-label` paired with `aria-live` provides necessary context while hiding the redundant visual text with `aria-hidden='true'`.
+**Action:** Use contextual `aria-label` (e.g., 'Copy prompt for Agent X') and wrap visible text in `<span aria-hidden='true'>` for generic action buttons.

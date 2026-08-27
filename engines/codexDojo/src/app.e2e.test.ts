@@ -50,7 +50,7 @@ describe("codexDojo core dashboard E2E", () => {
     click(root, "[data-copy-agent='critico']")
     await flushMicrotasks()
     expect(warn).toHaveBeenCalledWith("Prompt copy failed: Clipboard denied")
-    expect(copyButtonLabel(root, "critico")).toBe("Copiar prompt")
+    expect(copyButtonLabel(root, "critico")).toBe("Copiar")
 
     click(root, "[data-view='cycle']")
     expect(root.textContent).toContain("Diagnosticar nível")
