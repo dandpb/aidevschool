@@ -92,6 +92,10 @@ export class Town {
   readonly grid: Grid = new Grid()
   /** One construction state machine per building, keyed by building id. */
   readonly constructions: Map<string, BuildingConstruction> = new Map()
+  /** O(1) lookups for performance optimization in hot paths. */
+  readonly #zoneById: Map<string, Zone> = new Map()
+  readonly #buildingById: Map<string, Building> = new Map()
+  readonly #buildingByZoneId: Map<string, Building> = new Map()
   /** Per-instance counter — ids stay unique within a Town without any global state. */
   #idCounter = 0
   #paletteSeedCounter = 0
@@ -141,6 +145,7 @@ export class Town {
     this.#idCounter += 1
     const zone: Zone = { id: this.#id("z"), type, cell: { x, y } }
     this.zones.push(zone)
+    this.#zoneById.set(zone.id, zone)
     return zone
   }
 
@@ -163,6 +168,8 @@ export class Town {
     }
     this.buildings.push(building)
     this.constructions.set(building.id, new BuildingConstruction(paletteSeed))
+    this.#buildingById.set(building.id, building)
+    this.#buildingByZoneId.set(zoneId, building)
     return building
   }
 
@@ -192,13 +199,21 @@ export class Town {
 
   /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
   findZoneById(id: string): Zone | null {
-    return this.zones.find((z) => z.id === id) ?? null
+    // Optimization: Replaced O(N) array scan with O(1) Map lookup
+    return this.#zoneById.get(id) ?? null
   }
 
   /** Read a building by id — `homeId` / `workId` are passed in by residents. */
   findBuildingById(id: string | null): Building | null {
     if (!id) return null
-    return this.buildings.find((b) => b.id === id) ?? null
+    // Optimization: Replaced O(N) array scan with O(1) Map lookup
+    return this.#buildingById.get(id) ?? null
+  }
+
+  /** Find the building occupying a specific zone. */
+  findBuildingByZoneId(zoneId: string): Building | null {
+    // Optimization: Replaced O(N) array scan with O(1) Map lookup
+    return this.#buildingByZoneId.get(zoneId) ?? null
   }
 
   /** Pick a random inhabited shop building. Drives resident shopping trips. */
