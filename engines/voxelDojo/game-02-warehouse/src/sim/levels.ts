@@ -42,8 +42,9 @@ export interface LevelConfig {
 export const LEVELS: readonly LevelConfig[] = [
   {
     id: "L1",
-    title: "Hash → shelf",
-    lesson: "A crate always lands on the shelf its key hashes to. Same key ⇒ same shelf.",
+    title: "Hash → prateleira",
+    lesson:
+      "Uma caixa sempre pousa na prateleira para a qual sua chave é mapeada. Mesma chave ⇒ mesma prateleira.",
     seed: 11,
     keyCount: 12,
     skew: 0,
@@ -52,13 +53,13 @@ export const LEVELS: readonly LevelConfig[] = [
     crateTtlMs: 0,
     startStrength: "full",
     maxStrength: 32,
-    passRule: "Predict the shelf for ≥80% of incoming crates.",
+    passRule: "Preveja a prateleira de ≥80% das caixas que chegam.",
   },
   {
     id: "L2",
     title: "CRUD",
     lesson:
-      "put/get/del operate on the hashed slot — get misses return null, del removes the crate.",
+      "put/get/del operam no slot mapeado por hash — get sem correspondência retorna null, del remove a caixa.",
     seed: 22,
     keyCount: 10,
     skew: 0,
@@ -67,13 +68,13 @@ export const LEVELS: readonly LevelConfig[] = [
     crateTtlMs: 0,
     startStrength: "full",
     maxStrength: 32,
-    passRule: "Answer every get-probe correctly — a missing key returns null, not an error.",
+    passRule: "Responda corretamente a toda sonda get — chave ausente retorna null, não um erro.",
   },
   {
     id: "L3",
-    title: "TTL decay",
+    title: "Decaimento de TTL",
     lesson:
-      "A crate with a deadline is invisible past it. get returns null; sweep reclaims only expired.",
+      "Uma caixa com prazo fica invisível depois dele. get retorna null; a varredura recupera só as expiradas.",
     seed: 33,
     keyCount: 10,
     skew: 0,
@@ -82,13 +83,13 @@ export const LEVELS: readonly LevelConfig[] = [
     crateTtlMs: L3_CRATE_TTL_MS,
     startStrength: "full",
     maxStrength: 32,
-    passRule: "Predict get-vs-null after decay, then sweep and predict how many vanish.",
+    passRule: "Preveja get-vs-null após o decaimento; então varra e preveja quantas somem.",
   },
   {
     id: "L4",
-    title: "Skew",
+    title: "Desequilíbrio",
     lesson:
-      "A weak prefix-only hash collides similar keys on one shelf. Mixing more of the key spreads the load.",
+      "Um hash fraco, só de prefixo, colide chaves parecidas em uma prateleira. Misturar mais da chave espalha a carga.",
     seed: 44,
     keyCount: 400,
     skew: 0.7,
@@ -97,7 +98,7 @@ export const LEVELS: readonly LevelConfig[] = [
     crateTtlMs: 0,
     startStrength: 2,
     maxStrength: 32,
-    passRule: "Dial the hash strength up until load skew ≤ 1.6.",
+    passRule: "Aumente a força do hash até o desequilíbrio de carga ≤ 1,6.",
   },
 ] as const
 

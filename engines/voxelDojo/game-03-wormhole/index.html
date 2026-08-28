@@ -1,43 +1,69 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WORMHOLE — voxelDojo game 03</title>
+    <title>WORMHOLE — voxelDojo · missão 03</title>
     <style>
-      :root { color-scheme: dark; }
+      :root {
+        color-scheme: dark;
+        /* Tokens locais do engine (valores engine-local; papéis semânticos — contrato AID-31). */
+        --bg: #06080f;
+        --bg-accent: #20384a;
+        --bg-shadow: #020308;
+        --surface: #101827;
+        --surface-raised: #1a2030;
+        --text: #e6e9f2;
+        --muted: #aab3cc;
+        --faint: #7f8ab0;
+        --border: #3d4663;
+        --action: #4fc3f7;
+        --action-soft: #80cbc4;
+        --focus: #ffd54f;
+        --status: #ffd54f;
+        --success: #80cbc4;
+        --error: #f06292;
+      }
       * { box-sizing: border-box; }
-      body { margin: 0; display: flex; height: 100vh; background: #06080f; color: #e6e9f2;
+      body { margin: 0; display: flex; height: 100vh; background: var(--bg); color: var(--text);
              font-family: ui-monospace, "Cascadia Mono", Menlo, monospace; }
       #stage { flex: 1; width: 100%; height: 100%; display: block; }
       .accessible-stage { flex: 1; min-width: 0; overflow-y: auto; padding: clamp(20px, 5vw, 64px); background:
-        radial-gradient(circle at 80% 10%, #20384a 0, transparent 34%), #06080f; }
+        radial-gradient(circle at 80% 10%, var(--bg-accent) 0, transparent 34%), var(--bg); }
       .accessible-stage[hidden] { display: none; }
-      .accessible-projection { max-width: 760px; margin: auto; padding: clamp(20px, 4vw, 40px); border: 1px solid #80cbc4;
-        border-radius: 18px; background: #101827; box-shadow: 0 12px 0 #020308; }
-      .accessible-projection__eyebrow { color: #80cbc4; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+      .accessible-projection { max-width: 760px; margin: auto; padding: clamp(20px, 4vw, 40px); border: 1px solid var(--action-soft);
+        border-radius: 18px; background: var(--surface); box-shadow: 0 12px 0 var(--bg-shadow); }
+      .accessible-projection__eyebrow { color: var(--success); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
       .accessible-projection h2 { font-size: clamp(24px, 4vw, 42px); }
-      .accessible-projection li { margin: 8px 0; color: #aab3cc; }
+      .accessible-projection li { margin: 8px 0; color: var(--muted); }
       .accessible-projection__controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
-      .accessible-projection button { min-height: 44px; padding: 9px 12px; border: 1px solid #80cbc4; border-radius: 8px;
-        background: #1a2030; color: #e6e9f2; font: inherit; cursor: pointer; }
-      #hud { width: 360px; padding: 16px; overflow-y: auto; border-left: 1px solid #3d4663;
+      .accessible-projection button { min-height: 44px; min-width: 44px; padding: 9px 12px; border: 1px solid var(--action-soft); border-radius: 8px;
+        background: var(--surface-raised); color: var(--text); font: inherit; cursor: pointer; }
+      #hud { width: 360px; padding: 16px; overflow-y: auto; border-left: 1px solid var(--border);
              display: flex; flex-direction: column; gap: 10px; }
       #hud h1 { font-size: 18px; margin: 0; }
-      #hud .lesson { color: #aab3cc; margin: 0; }
-      #hud .rule { color: #7f8ab0; font-size: 12px; margin: 0; }
-      #hud .status { min-height: 3em; color: #ffd54f; }
-      #hud button { background: #1a2030; color: #e6e9f2; border: 1px solid #3d4663; border-radius: 6px;
-                    padding: 8px 10px; margin: 2px; cursor: pointer; font: inherit; text-align: left; }
-      #hud button:hover { border-color: #4fc3f7; }
-      #hud input[type="text"] { background: #1a2030; color: #e6e9f2; border: 1px solid #3d4663;
+      #hud .lesson { color: var(--muted); margin: 0; }
+      #hud .rule { color: var(--faint); font-size: 12px; margin: 0; }
+      #hud .status { min-height: 3em; color: var(--status); }
+      #hud button { background: var(--surface-raised); color: var(--text); border: 1px solid var(--border); border-radius: 6px;
+                    min-height: 44px; min-width: 44px; padding: 8px 10px; margin: 2px; cursor: pointer; font: inherit; text-align: left; }
+      #hud button:hover { border-color: var(--action); }
+      #hud input[type="text"] { background: var(--surface-raised); color: var(--text); border: 1px solid var(--border);
                                 border-radius: 6px; padding: 8px; font: inherit; width: 100%; }
       #hud .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
-      #hud .incoming { color: #4fc3f7; }
-      #hud .code { color: #80cbc4; font-weight: bold; }
-      #hud .metrics { font-size: 11px; color: #aab3cc; white-space: pre-wrap; }
-      :focus-visible { outline: 3px solid #ffd54f; outline-offset: 3px; }
-      @media (max-width: 720px) { body { flex-direction: column; } #hud { width: 100%; max-height: 48vh; border-left: 0; border-top: 1px solid #3d4663; } }
+      #hud .incoming { color: var(--action); }
+      #hud .code { color: var(--success); font-weight: bold; }
+      #hud .metrics { font-size: 11px; color: var(--muted); white-space: pre-wrap; }
+      :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+      @media (max-width: 720px) { body { flex-direction: column; } #hud { width: 100%; max-height: 48vh; border-left: 0; border-top: 1px solid var(--border); } }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
     </style>
   </head>
   <body>

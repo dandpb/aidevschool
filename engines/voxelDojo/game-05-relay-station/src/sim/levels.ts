@@ -36,8 +36,8 @@ const CH = "alerts"
 export const LEVELS: readonly LevelConfig[] = [
   {
     id: "L1",
-    title: "Persistent link",
-    lesson: "A client holds a persistent connection or it doesn't. Predict the live set.",
+    title: "Link persistente",
+    lesson: "Um cliente mantém a conexão persistente ou não mantém. Preveja o conjunto vivo.",
     broadcastChannel: CH,
     now: 100,
     timeoutMs: 1000,
@@ -49,12 +49,12 @@ export const LEVELS: readonly LevelConfig[] = [
       { id: "st-3", connected: false, channel: "", lastHeartbeatAt: 0 },
       { id: "st-4", connected: true, channel: "", lastHeartbeatAt: 100 },
     ],
-    passRule: "Predict every connected station (the live set) at ≥80% accuracy.",
+    passRule: "Preveja toda estação conectada (o conjunto vivo) com ≥80% de acerto.",
   },
   {
     id: "L2",
-    title: "Broadcast fan-out",
-    lesson: "A broadcast delivers only to clients that are live AND subscribed.",
+    title: "Difusão em fan-out",
+    lesson: "Uma difusão é entregue só a clientes vivos E inscritos.",
     broadcastChannel: CH,
     now: 100,
     timeoutMs: 1000,
@@ -66,12 +66,12 @@ export const LEVELS: readonly LevelConfig[] = [
       { id: "st-3", connected: true, channel: CH, lastHeartbeatAt: 100 }, // delivers
       { id: "st-4", connected: true, channel: "other", lastHeartbeatAt: 100 }, // wrong channel
     ],
-    passRule: "Predict the delivery set — live ∩ subscribed at ≥80% accuracy.",
+    passRule: "Preveja o conjunto de entrega — vivos ∩ inscritos com ≥80% de acerto.",
   },
   {
     id: "L3",
     title: "Heartbeat",
-    lesson: "A link with no heartbeat for timeoutMs goes dark. Predict the survivors.",
+    lesson: "Um link sem heartbeat por timeoutMs apaga. Preveja os sobreviventes.",
     broadcastChannel: CH,
     now: 200,
     timeoutMs: 100,
@@ -83,13 +83,13 @@ export const LEVELS: readonly LevelConfig[] = [
       { id: "st-3", connected: true, channel: CH, lastHeartbeatAt: 0 }, // stale
       { id: "st-4", connected: true, channel: CH, lastHeartbeatAt: 195 }, // fresh → survives
     ],
-    passRule: "Predict every link still live after the sweep at ≥80% accuracy.",
+    passRule: "Preveja todo link ainda vivo após a varredura com ≥80% de acerto.",
   },
   {
     id: "L4",
-    title: "Recovery",
+    title: "Recuperação",
     lesson:
-      "A dropped client reconnects, re-subscribes, and rejoins the next fan-out — the full lifecycle.",
+      "Um cliente caído reconecta, reinscreve e volta ao próximo fan-out — o ciclo de vida completo.",
     broadcastChannel: CH,
     now: 300,
     timeoutMs: 100,
@@ -101,7 +101,7 @@ export const LEVELS: readonly LevelConfig[] = [
       { id: "st-2", connected: false, channel: "", lastHeartbeatAt: 0 },
       { id: "st-3", connected: true, channel: CH, lastHeartbeatAt: 300 }, // live, subscribed
     ],
-    passRule: "Reconnect the dropped station, then confirm it receives the next broadcast.",
+    passRule: "Reconecte a estação caída e confirme que ela recebe a próxima difusão.",
   },
 ] as const
 
