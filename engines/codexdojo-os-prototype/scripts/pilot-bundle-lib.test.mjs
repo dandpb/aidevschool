@@ -25,10 +25,13 @@ test('allows same-origin pilot apps to be framed without allowing external ances
   assert.doesNotMatch(csp, /(?:^|; )frame-ancestors 'none'(?:;|$)/)
 })
 
-test('builds the pilot OS against the public LiteracyDojo origin', async () => {
+test('builds the pilot OS with the same-origin literacydojo app pinned by revision', async () => {
   const script = await readFile(new URL('./build-pilot-bundle.mjs', import.meta.url), 'utf8')
 
-  assert.match(script, /https:\/\/[a-f0-9]+--aidevschool-literacydojo\.netlify\.app\//)
+  // AID-282: the literacy motor must ship inside the OS bundle so its
+  // contentVersion cannot drift from the mission catalog of the same revision.
+  assert.match(script, /const publicLiteracyDojoUrl = '\/apps\/literacydojo\/'/)
+  assert.doesNotMatch(script, /--aidevschool-literacydojo\.netlify\.app/)
   assert.match(script, /VITE_LITERACYDOJO_URL: publicLiteracyDojoUrl/)
 })
 
