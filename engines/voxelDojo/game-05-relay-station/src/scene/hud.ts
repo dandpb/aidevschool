@@ -10,7 +10,7 @@ export function mountHud(root: HTMLElement, game: GameController): void {
     <h1 data-testid="hud-title"></h1>
     <p class="lesson" data-testid="hud-lesson"></p>
     <p class="rule" data-testid="hud-rule"></p>
-    <div class="status" data-testid="hud-status" role="status" aria-live="polite"></div>
+    <div class="status" data-testid="hud-status" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="controls" data-testid="hud-controls"></div>
     <div class="legend" data-testid="hud-legend"></div>
     <pre class="metrics" data-testid="hud-metrics"></pre>
