@@ -33,6 +33,7 @@
    | `source` | Engine tag: `"pixelquest"` or `"voxeldojo"` |
    | `unit_id`, `project` | Must exist in `learning_state.yaml` / `catalog.md` |
    | `scenario_id` / `encounter_id` | Stable id of the level/encounter |
+   | `attempt_id` | Optional stable per-attempt id (e.g. `kv-warehouse-L1-attempt-2`); snake_case like the rest of the envelope, and verifier receipts bind their `attempt_id` to it for identity matching |
    | `ts`, `pass` | ISO timestamp; the game's own judgment (verifier re-judges) |
    | `metrics` | The quantities the pass/fail judgment actually used |
    | `review_context` | `scheduled_review`, `review_reason`, `scheduler_source: "learner-substrate"`, `verifier_required: true` |
