@@ -60,8 +60,10 @@ export function renderAgents(state: AppState): string {
       <article class="agent-detail">
         <div class="detail-topline">
           <span>${escapeHtml(selectedAgent.group)}</span>
-          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-live="polite">
-            ${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}
+          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-live="polite" aria-label="${state.copiedAgentId === selectedAgent.id ? `Prompt do agente ${escapeHtml(selectedAgent.name)} copiado` : `Copiar prompt do agente ${escapeHtml(selectedAgent.name)}`}" title="${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}">
+            <span aria-hidden="true">
+              ${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}
+            </span>
           </button>
         </div>
         <h3>${escapeHtml(selectedAgent.name)}</h3>
