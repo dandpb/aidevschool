@@ -40,6 +40,7 @@ _probe_commit_test.txt
 !.env.example
 kimi-debug-session_*.zip
 **/test-results-pilot/
+**/test-results-remote/
 
 # OS / editor
 .DS_Store

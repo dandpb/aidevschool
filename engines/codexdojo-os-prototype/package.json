@@ -16,9 +16,10 @@
     "complexity:analytics": "node --test scripts/check-ts-complexity.test.mjs && node scripts/check-ts-complexity.mjs src/analytics/events.ts scripts/check-ts-complexity.mjs --max 8",
     "test:smoke": "playwright test",
     "test:smoke:pilot": "npm run build:pilot && playwright test --config=playwright.pilot.config.ts",
+    "test:smoke:remote": "playwright test --config=playwright.remote.config.ts",
     "test:readiness": "npm run test:smoke:pilot && playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs",
     "readiness:report": "node scripts/readiness-report.mjs",
-    "lint": "biome lint src bridge tests tests-pilot vite.config.ts playwright.config.ts playwright.pilot.config.ts"
+    "lint": "biome lint src bridge tests tests-pilot tests-remote vite.config.ts playwright.config.ts playwright.pilot.config.ts playwright.remote.config.ts"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^6.0.3",
