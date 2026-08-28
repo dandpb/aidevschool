@@ -36,7 +36,7 @@ test("boots the warehouse, plays L1 by clicking predicted shelves, emits a passi
     await page.getByTestId(`shelf-${shelfId}`).click()
   }
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("Rodada concluída")
   const records = collectEvidence(consoleLines)
   expect(records.length).toBe(1)
   const first = records[0] as EvidenceRecord
@@ -86,7 +86,7 @@ test("L3 TTL: correct decay-probes + swept prediction clear the wave and emit bo
   // all keys decayed (clock past every deadline) ⇒ the sweep reclaims them all
   await page.getByTestId(`swept-${keyCount}`).click()
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("Rodada concluída")
   const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "kv-warehouse-L3")
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)

@@ -29,7 +29,7 @@ test("boots the wormhole, plays L1 by typing predicted codes, emits a passing re
     await page.getByTestId("submit-code").click()
   }
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("Rodada concluída")
   const records = collectEvidence(consoleLines)
   expect(records.length).toBe(1)
   const first = records[0] as EvidenceRecord
@@ -60,7 +60,7 @@ test("L4 resolve: picking salted resolves the forced collision and emits a passi
 
   await page.getByTestId("resolve-salted").click()
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("Rodada concluída")
   const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "wormhole-L4")
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)
