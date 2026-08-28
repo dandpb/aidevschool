@@ -89,6 +89,21 @@ export async function askSocrates(
   question: string,
 ): Promise<{ ok: true; text: string } | { ok: false; error: string }> {
   const base = config.baseUrl.replace(/\/+$/, "");
+
+  // Sentinel: Validate URL to prevent API key exposure over unencrypted HTTP connections.
+  try {
+    const urlObj = new URL(base);
+    if (
+      urlObj.protocol !== "https:" &&
+      urlObj.hostname !== "localhost" &&
+      urlObj.hostname !== "127.0.0.1"
+    ) {
+      return { ok: false, error: "Segurança: O endpoint deve usar HTTPS (exceto localhost)." };
+    }
+  } catch (err) {
+    return { ok: false, error: "Endpoint inválido." };
+  }
+
   const url = `${base}/chat/completions`;
   try {
     const res = await fetch(url, {
