@@ -5,13 +5,14 @@ import { type GameController, type GameState, RESOLUTION_OPTIONS } from "../game
  * DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands.
  * The L1 code input is a text field; the player types the base62 code they predict. Other levels
  * use buttons (multiple choice on the live set) for accessibility.
+ * Copy é PT-BR, alinhada ao vocabulário da projeção acessível (src/scene/accessible.ts).
  */
 export function mountHud(root: HTMLElement, game: GameController): void {
   root.innerHTML = `
     <h1 data-testid="hud-title"></h1>
     <p class="lesson" data-testid="hud-lesson"></p>
     <p class="rule" data-testid="hud-rule"></p>
-    <div class="status" data-testid="hud-status"></div>
+    <div class="status" data-testid="hud-status" role="status" aria-live="polite"></div>
     <div class="controls" data-testid="hud-controls"></div>
     <div class="legend" data-testid="hud-legend"></div>
     <pre class="metrics" data-testid="hud-metrics"></pre>
@@ -44,32 +45,35 @@ function q(root: HTMLElement, id: string): HTMLElement {
 }
 
 function renderStatus(node: HTMLElement, state: GameState): void {
-  if (state.phase === "briefing") node.textContent = "Press start."
-  else if (state.phase === "cleared") node.textContent = "Wave cleared — evidence emitted."
-  else if (state.phase === "failed") node.textContent = "Wave failed — evidence emitted. Retry?"
+  // Bloqueios urgentes usam role="alert"; demais mudanças são anunciadas educadamente.
+  node.setAttribute("role", state.phase === "failed" ? "alert" : "status")
+  if (state.phase === "briefing") node.textContent = "Pronto para iniciar."
+  else if (state.phase === "cleared") node.textContent = "Missão concluída; evidência emitida."
+  else if (state.phase === "failed")
+    node.textContent = "Critério ainda não atendido; tente novamente."
   else if (state.level.id === "L1") {
     const url = state.urls[state.pendingIndex] ?? ""
-    node.innerHTML = `URL ${state.pendingIndex + 1}/${state.urls.length}: <span class="code">${url}</span> — type the 4-char base62 code, then Submit.`
+    node.innerHTML = `URL ${state.pendingIndex + 1} de ${state.urls.length}: <span class="code">${url}</span> — digite o código base62 e envie.`
   } else if (state.level.id === "L2") {
-    node.innerHTML = `Code ${state.redirectTotal + 1}/${state.urls.length}: predict which planet it exits at.`
+    node.innerHTML = `Código ${state.redirectTotal + 1} de ${state.urls.length}: preveja em qual planeta ele sai.`
   } else if (state.level.id === "L3") {
     const url = state.urls[state.pendingIndex] ?? ""
-    node.innerHTML = `URL ${state.pendingIndex + 1}/${state.urls.length}: <span class="code">${url}</span> — will it collide with an existing code?`
+    node.innerHTML = `URL ${state.pendingIndex + 1} de ${state.urls.length}: <span class="code">${url}</span> — vai colidir com um código existente?`
   } else {
-    node.innerHTML = `Collision on code <span class="code">${state.collisionCode ?? "----"}</span> — pick the fix.`
+    node.innerHTML = `Colisão no código <span class="code">${state.collisionCode ?? "----"}</span> — escolha a correção.`
   }
 }
 
 function renderControls(node: HTMLElement, state: GameState, game: GameController): void {
   node.innerHTML = ""
   if (state.phase === "briefing") {
-    button(node, "start", "Start wave", () => game.start())
+    button(node, "start", "Iniciar onda", () => game.start())
     return
   }
   if (state.phase === "cleared" || state.phase === "failed") {
-    if (state.phase === "failed") button(node, "retry", "Retry level", () => game.retry())
+    if (state.phase === "failed") button(node, "retry", "Tentar novamente", () => game.retry())
     if (state.phase === "cleared" && state.level.id !== "L4")
-      button(node, "next", "Next level", () => game.nextLevel())
+      button(node, "next", "Próximo nível", () => game.nextLevel())
     return
   }
   if (state.level.id === "L1") {
@@ -77,7 +81,8 @@ function renderControls(node: HTMLElement, state: GameState, game: GameControlle
     input.type = "text"
     input.dataset.testid = "code-input"
     input.maxLength = 6
-    input.placeholder = "base62 code"
+    input.placeholder = "código base62"
+    input.setAttribute("aria-label", "código base62 previsto")
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         game.predictCode(input.value)
@@ -85,7 +90,7 @@ function renderControls(node: HTMLElement, state: GameState, game: GameControlle
       }
     })
     node.append(input)
-    button(node, "submit-code", "Submit code", () => {
+    button(node, "submit-code", "Enviar código", () => {
       game.predictCode(input.value)
       input.value = ""
     })
@@ -96,13 +101,18 @@ function renderControls(node: HTMLElement, state: GameState, game: GameControlle
       button(node, `dest-${i}`, url, () => game.predictDestination(url))
     })
   } else if (state.level.id === "L3") {
-    button(node, "predict-collide", "Will collide", () => game.predictCollision(true))
-    button(node, "predict-safe", "Safe — no collision", () => game.predictCollision(false))
+    button(node, "predict-collide", "Vai colidir", () => game.predictCollision(true))
+    button(node, "predict-safe", "Seguro — sem colisão", () => game.predictCollision(false))
   } else {
     for (const opt of RESOLUTION_OPTIONS) {
-      button(node, `resolve-${opt}`, opt, () => game.pickResolution(opt))
+      button(node, `resolve-${opt}`, RESOLUTION_LABELS[opt], () => game.pickResolution(opt))
     }
   }
+}
+
+const RESOLUTION_LABELS: Record<(typeof RESOLUTION_OPTIONS)[number], string> = {
+  salted: "Re-salgar (novo código)",
+  increment: "Incrementar (próximo código livre)",
 }
 
 function renderLegend(node: HTMLElement, state: GameState, game: GameController): void {
@@ -112,7 +122,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     const hint = document.createElement("p")
     hint.className = "code"
     hint.dataset.testid = "code-hint"
-    hint.textContent = `expected code: ${game.predictedCodeForPending()}`
+    hint.textContent = `código esperado: ${game.predictedCodeForPending()}`
     node.append(hint)
   }
   if (state.level.id === "L2" && state.phase === "predicting") {
@@ -121,14 +131,14 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       const hint = document.createElement("p")
       hint.className = "code"
       hint.dataset.testid = "redirect-code"
-      hint.textContent = `redirect code: ${code}`
+      hint.textContent = `código de redirecionamento: ${code}`
       node.append(hint)
     }
   }
   if (state.level.id === "L3" && state.phase === "predicting") {
     const hint = document.createElement("p")
     hint.dataset.testid = "collisions-so-far"
-    hint.textContent = `collisions detected: ${state.collisionPredictions.filter((p) => p.actualCollision).length}`
+    hint.textContent = `colisões detectadas: ${state.collisionPredictions.filter((p) => p.actualCollision).length}`
     node.append(hint)
   }
   const palette = document.createElement("p")

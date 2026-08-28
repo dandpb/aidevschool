@@ -89,6 +89,7 @@ export class AccessibleProjection<TSnapshot> implements MissionProjection<TSnaps
     const status = document.createElement("p")
     status.dataset.testid = "accessible-status"
     status.setAttribute("role", "status")
+    status.setAttribute("aria-live", "polite")
     status.textContent = summary.status
     const description = document.createElement("p")
     description.textContent = summary.description

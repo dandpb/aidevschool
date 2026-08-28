@@ -5,6 +5,7 @@ import {
   type MissionProjection,
   type ProjectionContextHooks,
 } from "../../../shared/projection"
+import { prefersReducedMotion } from "../../../shared/reducedMotion"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameController, GameState } from "../game/controller"
 
@@ -209,7 +210,10 @@ export class WarehouseScene implements MissionProjection<GameState> {
     if (target < 0) return
     const n = this.shelfMeshes.size
     const dest = shelfX(target, n)
-    this.bot.position.x += (dest - this.bot.position.x) * 0.1
+    // Movimento de deslize é decorativo: com reduced motion o bot reposiciona direto.
+    this.bot.position.x = prefersReducedMotion()
+      ? dest
+      : this.bot.position.x + (dest - this.bot.position.x) * 0.1
   }
 }
 

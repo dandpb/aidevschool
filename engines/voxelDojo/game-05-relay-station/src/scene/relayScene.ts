@@ -5,6 +5,7 @@ import {
   type MissionProjection,
   type ProjectionContextHooks,
 } from "../../../shared/projection"
+import { prefersReducedMotion } from "../../../shared/reducedMotion"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { sweepDead } from "../sim/relay"
@@ -101,6 +102,9 @@ export class RelayScene implements MissionProjection<GameState> {
   private readonly onPointerDown = (event: PointerEvent): void => this.pick(event)
 
   private frame(): void {
+    // Giro do hub, órbita das estações e re-construção dos elos são decorativos:
+    // com reduced motion a cena fica estática (posições/cores vêm do estado do sim).
+    if (prefersReducedMotion()) return
     const t = this.clock.getElapsedTime()
     // hub slow spin
     this.hub.rotation.y = t * 0.4

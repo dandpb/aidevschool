@@ -83,13 +83,10 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       game.predictShelf(game.shelfOfKey(key))
     }
 
-    const attempts = evidenceLines(spy).map((line) =>
-      JSON.parse(line.slice("EVIDENCE ".length)).attempt_id,
+    const attempts = evidenceLines(spy).map(
+      (line) => JSON.parse(line.slice("EVIDENCE ".length)).attempt_id,
     )
-    expect(attempts).toEqual([
-      "kv-warehouse-L1-attempt-1",
-      "kv-warehouse-L1-attempt-2",
-    ])
+    expect(attempts).toEqual(["kv-warehouse-L1-attempt-1", "kv-warehouse-L1-attempt-2"])
   })
 
   it("emits the same canonical inner record once in standalone and hosted modes", () => {
