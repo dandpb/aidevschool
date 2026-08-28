@@ -10,9 +10,12 @@ const output = join(osRoot, 'dist')
 // Keep staging beside dist so the final atomic rename stays on one filesystem.
 const stage = await createPilotBundleStage(output)
 const backup = `${output}.previous-${process.pid}`
-// Pin the learner journey to the independently verifiable LiteracyDojo deploy.
-// The mutable alias remains operational, but is never the release identity.
-const publicLiteracyDojoUrl = 'https://6a8ddc9afe6838bdcf19a465--aidevschool-literacydojo.netlify.app/'
+// Serve the learner journey from the bundle's own /apps/literacydojo/ build so
+// the motor contentVersion always ships with the mission catalog of the same
+// revision (external-pin drift broke production: AID-278 D1 / AID-282). The
+// build is hashed into pilot-bundle-manifest.json (surfaces.literacydojo),
+// keeping it independently verifiable, same pattern as the Dev apps below.
+const publicLiteracyDojoUrl = '/apps/literacydojo/'
 // A Dev-cohort candidate must not resolve PixelDojo through a mutable alias or
 // a development fallback. This deploy is raw-evidence only; QA still owns GO.
 const publicPixelDojoUrl = 'https://6a920159a8d5e2dfdd7fbeca--singular-crostata-273e7e.netlify.app/'
