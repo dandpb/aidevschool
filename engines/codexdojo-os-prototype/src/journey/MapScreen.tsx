@@ -53,14 +53,15 @@ export function MapScreen({
 }) {
   const services = useServices()
   const { availability: verificationAvailability, verificationByKey } = useVerificationByMission(catalog, services.verification)
+  const publishedMissionCount = catalog.listLaunchable().length
 
   return (
     <main className="journey-page chapter-map-page" data-testid="chapter-map">
       <header className="chapter-map-header">
         <button type="button" className="journey-back" onClick={onBack}>← Hub</button>
         <div>
-          <p className="journey-eyebrow">Primeiro capítulo</p>
-          <h1>Seis missões, uma sequência</h1>
+          <p className="journey-eyebrow">Mapa de missões</p>
+          <h1>{publishedMissionCount} missões, uma sequência</h1>
           <p>IA Prática e as três simulações hospedadas no OS, sem menu de motores.</p>
         </div>
       </header>

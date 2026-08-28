@@ -130,7 +130,7 @@ async function readOsProgress(page: Page): Promise<{ missionStatusByKey: Record<
   }))
 }
 
-test('preserves both complete three-mission chapters across switches and reloads', async ({ page }) => {
+test('preserves completed first-release missions across switches and reloads', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
@@ -140,7 +140,10 @@ test('preserves both complete three-mission chapters across switches and reloads
   await expect(page.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).toBeVisible()
   await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeLiteracyMission(page, 'l03')
-  await page.getByRole('button', { name: 'Começar missão' }).click()
+  // The hub now recommends the next published lesson (l04+) once l03 is done,
+  // so complete the remaining first-release lesson l01 through its direct
+  // mission URL, exactly like the hosted simulations below.
+  await page.goto('/mission/ai-pratica/l01')
   await completeLiteracyMission(page, 'l01')
 
   await page.goto('/mission/dev/game-02-warehouse')

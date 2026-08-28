@@ -86,7 +86,7 @@ def load_mission_catalog(
 
     records, lesson_to_mission = normalize_bindings(
         raw_bindings,
-        BindingSources(lessons, projects, voxel_games),
+        BindingSources(lessons, projects, voxel_games, literacy_content_version),
     )
     missions = finalize_missions(records, lessons, lesson_to_mission, tracks)
 

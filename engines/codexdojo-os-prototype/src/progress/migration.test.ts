@@ -68,7 +68,9 @@ describe('OS progress migration', () => {
 
   it('keeps hosted simulation pointers when IA Prática is already complete', () => {
     const raw = createInitialOsProgress(missionCatalog)
-    const literacyKeys = (['l01', 'l02', 'l03'] as const).map((id) => missionKey('ai-pratica', id))
+    const literacyKeys = missionCatalog.missions
+      .filter((mission) => mission.trackId === 'ai-pratica')
+      .map((mission) => missionKey('ai-pratica', mission.id))
     const legacy = {
       ...completeOnboarding(raw, {
         goal: 'build-systems',
@@ -115,7 +117,7 @@ describe('OS progress migration', () => {
       longest: 0,
       lastActiveLocalDate: null,
     })
-    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(6)
+    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(17)
   })
 
   it('adds new IDs, drops removed IDs, and resets incompatible in-progress versions', () => {

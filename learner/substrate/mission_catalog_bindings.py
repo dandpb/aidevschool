@@ -25,6 +25,7 @@ class BindingSources:
     lessons: dict[str, dict[str, Any]]
     projects: dict[str, Any]
     voxel_games: dict[str, dict[str, Any]]
+    literacy_content_version: str
 
 
 def validate_tracks(raw: Any, literacy_content_version: str) -> dict[str, dict[str, str]]:
@@ -128,6 +129,12 @@ def normalize_bindings(
             if track_id != "ai-pratica" or runtime["engineId"] != "literacyDojo":
                 raise MissionCatalogError(
                     f"{label} AI-literacy missions must use the ai-pratica track and literacyDojo"
+                )
+            if runtime["contentVersion"] != sources.literacy_content_version:
+                raise MissionCatalogError(
+                    f"{label}.runtime.contentVersion must match the canonical AI-literacy catalog"
+                    f" ({sources.literacy_content_version!r}) — the hosted literacyDojo engine"
+                    " serves exactly that version"
                 )
             lesson_id = _nonempty_string(
                 curriculum.get("lessonId"), f"{label}.curriculum.lessonId"
