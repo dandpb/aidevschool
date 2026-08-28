@@ -32,6 +32,7 @@ function verifiedState(stored: StoredVerificationReceipt): EvidenceVerificationS
 
 export class EvidenceIntake implements VerificationService {
   private readonly accepts = new Map<string, Promise<void>>()
+  private lastAcceptedAtMs = Number.NEGATIVE_INFINITY
 
   constructor(private readonly dependencies: EvidenceIntakeDependencies) {}
 
@@ -41,15 +42,15 @@ export class EvidenceIntake implements VerificationService {
     onState: (state: EvidenceVerificationState) => void = () => {},
   ): Promise<EvidenceVerificationState> {
     onState({ kind: 'validating' })
-    const previous = this.accepts.get(submission.missionRunId) ?? Promise.resolve()
+    const previous = this.accepts.get(submission.evidenceId) ?? Promise.resolve()
     const result = previous.then(() => this.acceptSerially(mission, submission, onState))
     const tail = result.then(() => undefined, () => undefined)
-    this.accepts.set(submission.missionRunId, tail)
+    this.accepts.set(submission.evidenceId, tail)
     try {
       return await result
     } finally {
-      if (this.accepts.get(submission.missionRunId) === tail) {
-        this.accepts.delete(submission.missionRunId)
+      if (this.accepts.get(submission.evidenceId) === tail) {
+        this.accepts.delete(submission.evidenceId)
       }
     }
   }
@@ -61,7 +62,7 @@ export class EvidenceIntake implements VerificationService {
   ): Promise<EvidenceVerificationState> {
     try {
       this.correlate(mission, submission)
-      const existing = await this.dependencies.store.getRaw(submission.missionRunId)
+      const existing = await this.dependencies.store.getRaw(submission.evidenceId)
       if (
         existing !== undefined
         && (
@@ -70,6 +71,7 @@ export class EvidenceIntake implements VerificationService {
           || existing.schemaVersion !== submission.schemaVersion
           || existing.engineId !== submission.engineId
           || existing.missionRunId !== submission.missionRunId
+          || existing.evidenceId !== submission.evidenceId
           || existing.subject.missionId !== submission.subject.missionId
           || existing.subject.unitId !== submission.subject.unitId
           || JSON.stringify(existing.record) !== JSON.stringify(submission.record)
@@ -92,9 +94,9 @@ export class EvidenceIntake implements VerificationService {
       }
       return await this.verify({
         ...submission,
-        storageId: submission.missionRunId,
+        storageId: submission.evidenceId,
         missionVersion: mission.version,
-        acceptedAt: existing?.acceptedAt ?? this.dependencies.clock().toISOString(),
+        acceptedAt: existing?.acceptedAt ?? this.nextAcceptedAt(),
         status: 'pending',
       }, onState)
     } catch (error) {
@@ -105,6 +107,12 @@ export class EvidenceIntake implements VerificationService {
       onState(state)
       return state
     }
+  }
+
+  private nextAcceptedAt(): string {
+    const clockMs = this.dependencies.clock().getTime()
+    this.lastAcceptedAtMs = Math.max(clockMs, this.lastAcceptedAtMs + 1)
+    return new Date(this.lastAcceptedAtMs).toISOString()
   }
 
   async latest(mission: MissionDefinition): Promise<EvidenceVerificationState> {
@@ -158,6 +166,7 @@ export class EvidenceIntake implements VerificationService {
       || submission.schemaId !== mission.evidence.schema
       || submission.schemaVersion !== mission.evidence.version
       || submission.missionRunId.trim() === ''
+      || submission.evidenceId.trim() === ''
     ) {
       throw new EvidenceValidationError('correlation-mismatch')
     }

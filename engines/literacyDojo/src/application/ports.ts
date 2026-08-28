@@ -8,6 +8,7 @@ import type { EvaluationResult } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { LearnerProgress } from "../domain/progress";
+import type { LiteracyVerificationReceipt } from "../domain/verification";
 
 /**
  * Portas do bounded context (plano seção 8). O domínio e os casos de uso
@@ -33,6 +34,10 @@ export interface ProgressRepository {
 export type EvidenceSink = {
   emit(record: LiteracyEvidenceRecord): void;
 };
+
+export interface VerificationClient {
+  verify(record: LiteracyEvidenceRecord): Promise<LiteracyVerificationReceipt>;
+}
 
 export interface FeedbackProvider {
   feedbackFor(activity: ActivityDefinition, evaluation: EvaluationResult): AttemptFeedback;

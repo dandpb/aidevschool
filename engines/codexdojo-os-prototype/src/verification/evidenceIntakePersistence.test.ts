@@ -28,7 +28,7 @@ describe('EvidenceIntake persistence and replay', () => {
     expect(accepted.kind).toBe('verified')
     expect(alteredRecord).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
     expect(alteredVersion).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
-    expect(store.raw.get('run-1')?.record).toEqual(first.record)
+    expect(store.raw.get('evidence-1')?.record).toEqual(first.record)
     expect(verify).toHaveBeenCalledOnce()
   })
 
@@ -62,7 +62,7 @@ describe('EvidenceIntake persistence and replay', () => {
         ? accepted
         : { kind: 'rejected', code: 'storage-id-collision' },
     )
-    expect(store.raw.get('run-1')?.record).toEqual(firstSubmission.record)
+    expect(store.raw.get('evidence-1')?.record).toEqual(firstSubmission.record)
     expect(verify).toHaveBeenCalledOnce()
   })
 
@@ -77,11 +77,11 @@ describe('EvidenceIntake persistence and replay', () => {
 
     expect(unavailable).toEqual({
       kind: 'gateway-unavailable',
-      storageId: 'run-1',
+      storageId: 'evidence-1',
       retryable: true,
     })
-    expect(store.raw.get('run-1')).toMatchObject({
-      storageId: 'run-1',
+    expect(store.raw.get('evidence-1')).toMatchObject({
+      storageId: 'evidence-1',
       status: 'verified',
       evidenceDigest: digest,
     })
@@ -97,7 +97,7 @@ describe('EvidenceIntake persistence and replay', () => {
 
     expect(state.kind).toBe('gateway-unavailable')
     expect(store.receipts.size).toBe(0)
-    expect(store.raw.get('run-1')).toMatchObject({ status: 'gateway-unavailable' })
+    expect(store.raw.get('evidence-1')).toMatchObject({ status: 'gateway-unavailable' })
   })
 
   it('never adds a writable mastered transition to raw local evidence', async () => {

@@ -15,7 +15,7 @@ stack, arquitetura e decisões: `README.md` deste diretório.
 ## Regras duras
 
 1. `src/data/generated/lessons.ts` é gerado por `npm run gen:content`
-   (`/usr/local/bin/python3 curriculum/ai-literacy/tools/validate.py --compile …`
+   (`${PYTHON:-python3} curriculum/ai-literacy/tools/validate.py --compile …`
    a partir da raiz do repo). **Nunca editar à mão**; nunca duplicar conteúdo
    de lição em componentes.
 2. Estado local registra no máximo `completed`. `mastered` é proibido em

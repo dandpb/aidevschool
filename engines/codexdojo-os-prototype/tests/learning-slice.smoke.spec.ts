@@ -26,7 +26,7 @@ test('completes l02 through the mission-first host without changing canonical ma
   await expect(
     mission.getByRole('heading', { name: 'IA não é uma fonte de verdade' }),
   ).toBeVisible()
-  await mission.getByRole('button', { name: 'Começar', exact: true }).click()
+  await mission.getByRole('button', { name: 'Começar missão', exact: true }).click()
   await mission.getByTestId('output-out-b').check()
   await mission.getByTestId('criterion-c-fontes').check()
   await mission.getByTestId('criterion-c-limites').check()
@@ -71,7 +71,7 @@ test('shows independent FAIL separately from local and canonical progress', asyn
   await expect(
     mission.getByRole('heading', { name: 'IA não é uma fonte de verdade' }),
   ).toBeVisible()
-  await mission.getByRole('button', { name: 'Começar', exact: true }).click()
+  await mission.getByRole('button', { name: 'Começar missão', exact: true }).click()
   await mission.getByTestId('output-out-a').check()
   await mission.getByTestId('criterion-c-fontes').check()
   await mission.getByTestId('submit-attempt').click()

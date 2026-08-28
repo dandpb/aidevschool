@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { LessonDefinition } from "../data/generated/lessons";
+import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
@@ -25,6 +26,7 @@ export type LessonSummary = {
   mode?: LessonMode;
   nextLessonId?: string;
   newlyUnlocked?: Achievement[];
+  evidenceRecord?: LiteracyEvidenceRecord;
 };
 
 export type Route =
@@ -194,6 +196,23 @@ function AppShell({
             />
           )}
         </main>
+        <footer className="product-footer" aria-label="Informações do piloto">
+          <p>
+            <strong>Piloto público gratuito · para maiores de 18 anos.</strong> Seu progresso fica
+            somente neste navegador e pode ser perdido ao limpar os dados do site.
+          </p>
+          <nav aria-label="Informações e suporte">
+            <a href="./termos.html">Termos do piloto</a>
+            <a href="./privacidade.html">Privacidade</a>
+            <a
+              href="https://github.com/dandpb/aidevschool/issues/new"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Pedir suporte <span className="sr-only">(abre em nova aba)</span>
+            </a>
+          </nav>
+        </footer>
       </div>
     </ServicesProvider>
   );

@@ -1,0 +1,41 @@
+# Preview estático do Engine Lab. Os runtimes são sites separados e entram
+# somente pelas variáveis VITE_*_URL configuradas no provedor.
+
+[build]
+  command = "npm run build:pilot"
+  publish = "dist"
+  functions = "../../learner/gate/netlify-functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--include=dev"
+
+[[redirects]]
+  from = "/__dojo/bridge/v1/session"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
+
+[[redirects]]
+  from = "/__dojo/bridge/v1/verification"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
+
+[[redirects]]
+  # The OS does not own a root service worker. Keep stale probes out of the SPA
+  # fallback; LiteracyDojo's worker is scoped to /apps/literacydojo/sw.js.
+  from = "/sw.js"
+  to = "/404.html"
+  status = 404
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin"
+    X-Content-Type-Options = "nosniff"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"

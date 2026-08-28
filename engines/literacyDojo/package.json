@@ -2,6 +2,12 @@
   "name": "literacydojo",
   "private": true,
   "version": "0.1.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dandpb/aidevschool.git",
+    "directory": "engines/literacyDojo"
+  },
   "type": "module",
   "description": "LiteracyDojo — microaprendizagem de IA para pessoas não técnicas (vertical slice, Fase 1 do plano 2026-07-19).",
   "scripts": {
@@ -13,7 +19,7 @@
     "test": "NODE_ENV=development vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "gen:content": "cd ../.. && /usr/local/bin/python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated",
+    "gen:content": "cd ../.. && ${PYTHON:-python3} curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated",
     "gen:icons": "node tools/gen-icons.mjs",
     "pretest": "npm run gen:content",
     "prebuild": "npm run gen:content",
@@ -30,6 +36,7 @@
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.1.0",
     "@testing-library/user-event": "14.5.2",
+    "@types/node": "^22.20.1",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "@vitejs/plugin-react": "4.3.4",

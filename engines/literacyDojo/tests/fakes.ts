@@ -1,5 +1,5 @@
 import { createServices } from "../src/app/services";
-import type { ProgressRepository } from "../src/application/ports";
+import type { ProgressRepository, VerificationClient } from "../src/application/ports";
 import type { EvidenceSink } from "../src/application/ports";
 import type { LiteracyEvidenceRecord } from "../src/domain/evidence";
 import type { LearnerProgress } from "../src/domain/progress";
@@ -43,12 +43,14 @@ export class InMemoryEvidenceSink implements EvidenceSink {
 export function createTestServices(overrides?: {
   progressRepo?: ProgressRepository;
   clock?: () => Date;
+  verification?: VerificationClient;
 }) {
   const evidence = new InMemoryEvidenceSink();
   const base = createServices({
     progressRepo: overrides?.progressRepo,
     evidence,
     clock: overrides?.clock,
+    verification: overrides?.verification,
   });
   return { ...base, evidence };
 }

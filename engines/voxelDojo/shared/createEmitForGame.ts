@@ -15,6 +15,7 @@ export function createEmitForGame<TLevel extends string = string>(
     pass: boolean,
     metrics: Record<string, number | boolean | string>,
     observations?: Readonly<Record<string, unknown>>,
+    attemptId?: string,
   ) =>
     emitShared({
       meta: {
@@ -28,6 +29,7 @@ export function createEmitForGame<TLevel extends string = string>(
       pass,
       metrics,
       ...(observations === undefined ? {} : { observations }),
+      ...(attemptId === undefined ? {} : { attemptId }),
       reviewSlice,
     })
 }

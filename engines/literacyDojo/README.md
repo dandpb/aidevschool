@@ -18,11 +18,27 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
 
+O slice público aprovado aceita `VITE_LITERACY_VERIFIER_URL` no build para
+enviar somente o envelope estruturado ao endpoint independente `/verify`. O
+adaptador WSGI proprietário está em `learner/gate/literacy_verifier_http.py` e
+exige a allowlist `LITERACY_ALLOWED_ORIGINS`. Recibos divergentes, malformados
+ou indisponíveis falham fechados e podem ser reenviados; nunca promovem estado
+canônico pelo navegador.
+
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
 Julgamento independente de evidência bruta (fora deste app):
 `python3 -m learner.gate.literacy_verifier --evidence <LiteracyEvidenceRecord.json>`
 — ver `learner/gate/README.md` e `docs/design/ai-literacy/evidence-contract.md`.
+
+## Piloto público gratuito
+
+A superfície pública é um piloto gratuito para pessoas com 18 anos ou mais. O
+progresso fica apenas no navegador usado e não sincroniza entre dispositivos.
+Os textos visíveis de termos e privacidade estão em `public/termos.html` e
+`public/privacidade.html`. O canal público de suporte é o formulário de nova
+issue do repositório; ele não deve ser trocado por um endereço ou contato de
+exemplo.
 
 ## Stack
 
@@ -51,7 +67,7 @@ npm run build         # tsc -b && vite build (prebuild roda gen:content antes)
 npm run test:e2e      # playwright (sobe o vite dev sozinho na porta 4173)
 ```
 
-Pré-requisitos do `gen:content`: `/usr/local/bin/python3` com `pyyaml`
+Pré-requisitos do `gen:content`: `python3` (ou `PYTHON=/caminho/python`) com `pyyaml`
 (o `python3` padrão do shell pode não ter — ver seção "Problemas comuns").
 
 Playwright: na primeira vez, `npx playwright install chromium`.
@@ -139,10 +155,9 @@ UI (src/screens, src/components)
 
 ## Problemas comuns
 
-- **`ModuleNotFoundError: yaml` no gen:content** — o `python3` do PATH não tem
-  pyyaml; o script usa `/usr/local/bin/python3` (neste ambiente é o que tem
-  pyyaml). Em outra máquina, ajuste o caminho no script `gen:content` do
-  `package.json` ou instale pyyaml no python padrão.
+- **`ModuleNotFoundError: yaml` no gen:content** — instale as dependências Python
+  declaradas no `pyproject.toml` ou execute com `PYTHON=/caminho/python npm run
+  gen:content`.
 - **Playwright sem browser** — rode `npx playwright install chromium`. O spec
   sobe o vite dev automaticamente (`webServer` no `playwright.config.ts`,
   porta 4173, viewport 360×740) e derruba ao final.

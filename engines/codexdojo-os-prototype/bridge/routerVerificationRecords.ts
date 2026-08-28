@@ -41,6 +41,7 @@ export const teachingGameRecord = {
   project: '02_key_value_store',
   scenario_id: 'kv-warehouse-L1',
   game: 'KV WAREHOUSE',
+  attempt_id: 'kv-warehouse-L1-attempt-1',
   ts: '2026-07-25T12:00:00.000Z',
   pass: true,
   metrics: {
@@ -135,6 +136,7 @@ export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>>
     project: '02_key_value_store',
     scenario_id: 'kv-warehouse-L1',
     game: 'KV WAREHOUSE',
+    attempt_id: 'kv-warehouse-L1-attempt-1',
     producer_pass_claim: true,
     independent_pass: true,
     errors: [],

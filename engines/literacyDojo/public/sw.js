@@ -1,10 +1,11 @@
 // Service worker do PWA — Cache API nativa, sem workbox.
 // Ativos do Vite têm hash no nome, então cache-first é seguro para eles; a
-// navegação usa network-first com fallback para o shell "/" (offline).
+// navegação usa network-first com fallback para o shell do próprio escopo.
 // ponytail: bump manual do CACHE ao mudar este arquivo — se um dia o cache
 // precisar de invalidação por deploy, gerar o nome no build.
-const CACHE = "literacydojo-v1";
-const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const CACHE = "literacydojo-v2";
+const SCOPE = new URL("./", self.location.href).pathname;
+const SHELL = [SCOPE, `${SCOPE}manifest.webmanifest`, `${SCOPE}icon-192.png`, `${SCOPE}icon-512.png`];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -37,10 +38,10 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           // Renova o shell offline: senão ele apontaria para sempre aos assets do build de instalação.
-          if (response.ok) keep("/", response);
+          if (response.ok) keep(SCOPE, response);
           return response;
         })
-        .catch(() => caches.match("/", { cacheName: CACHE }).then((hit) => hit ?? Response.error())),
+        .catch(() => caches.match(SCOPE, { cacheName: CACHE }).then((hit) => hit ?? Response.error())),
     );
     return;
   }

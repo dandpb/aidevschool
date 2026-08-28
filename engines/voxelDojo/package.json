@@ -1,5 +1,6 @@
 {
   "name": "voxel-dojo",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "test": "vitest run shared/accessibleProjection.test.ts && pnpm -r --if-present test",

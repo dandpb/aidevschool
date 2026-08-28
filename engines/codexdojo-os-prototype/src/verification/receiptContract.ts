@@ -23,7 +23,7 @@ function literacyReceiptShapeIsValid(value: Record<string, unknown>): value is L
     && SHA256_HEX.test(value.evidence_digest)
     && typeof value.lesson_id === 'string'
     && typeof value.activity_id === 'string'
-    && typeof value.attempt_id === 'string'
+    && (value.game !== 'KV WAREHOUSE' || typeof value.attempt_id === 'string')
     && typeof value.activity_type === 'string'
     && (value.score === null || (typeof value.score === 'number' && Number.isFinite(value.score)))
     && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
@@ -49,6 +49,7 @@ function teachingGameReceiptShapeIsValid(
     && typeof value.project === 'string'
     && typeof value.scenario_id === 'string'
     && typeof value.game === 'string'
+    && typeof value.attempt_id === 'string'
     && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
     && typeof value.independent_pass === 'boolean'
     && isStringArray(value.errors)
@@ -88,6 +89,7 @@ export function receiptMatchesRecordIdentity(
     && receipt.project === record.project
     && receipt.scenario_id === record.scenario_id
     && receipt.game === record.game
+    && receipt.attempt_id === record.attempt_id
     && receipt.producer_pass_claim === record.pass
   )
 }

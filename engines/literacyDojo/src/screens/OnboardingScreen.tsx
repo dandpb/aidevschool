@@ -162,8 +162,10 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
             <div className="privacy-note">
               <span aria-hidden="true">◆</span>
               <p>
-                <strong>Privado por padrão.</strong> Seu progresso fica neste navegador, sem conta e
-                sem registrar detalhes das suas tarefas.
+                <strong>Piloto gratuito para maiores de 18 anos.</strong> Seu progresso fica somente
+                neste navegador, sem conta e sem registrar detalhes das suas tarefas. Ao continuar,
+                você concorda com os <a href="./termos.html">termos do piloto</a> e leu o{" "}
+                <a href="./privacidade.html">aviso de privacidade</a>.
               </p>
             </div>
           </div>

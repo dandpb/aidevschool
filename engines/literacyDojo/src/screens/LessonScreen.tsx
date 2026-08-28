@@ -8,6 +8,7 @@ import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { ActivityAnswer } from "../domain/evaluation";
+import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import {
   type AttemptState,
   type FinishPayload,
@@ -69,6 +70,7 @@ export function LessonScreen({
   const [onboarding, setOnboarding] = useState<OnboardingState>();
   const [session, setSession] = useState<LessonSession>(() => createLessonSession(lessonId, mode));
   const [submitting, setSubmitting] = useState(false);
+  const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   // Abertura da lição (status in_progress + lesson_started) ou da revisão (review_started).
@@ -156,6 +158,7 @@ export function LessonScreen({
       applyTransition({
         session: submitAttempt(session, lesson, result.evaluation, result.feedback),
       });
+      if (result.evaluation.pass) latestPassingEvidence.current = result.record;
       onProgressChange(result.progress);
     } finally {
       setSubmitting(false);
@@ -192,7 +195,10 @@ export function LessonScreen({
           bestScores: payload.bestScores,
         });
         if (!result.outcome.completed) return;
-        const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, { mode });
+        const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
+          mode,
+          evidenceRecord: latestPassingEvidence.current,
+        });
         onCompleted(result.progress, summary);
         return;
       }
@@ -206,6 +212,7 @@ export function LessonScreen({
         mode,
         nextLessonId: result.nextLessonId,
         newlyUnlocked: result.newlyUnlocked,
+        evidenceRecord: latestPassingEvidence.current,
       });
       onCompleted(result.progress, summary);
     } finally {
@@ -394,6 +401,7 @@ function buildSummary(
     mode: LessonMode;
     nextLessonId?: string;
     newlyUnlocked?: Achievement[];
+    evidenceRecord?: LiteracyEvidenceRecord;
   },
 ): LessonSummary {
   const activityResults: ActivityResultSummary[] = lesson.completion.requiredActivityIds
@@ -412,5 +420,6 @@ function buildSummary(
     mode: options.mode,
     nextLessonId: options.nextLessonId,
     newlyUnlocked: options.newlyUnlocked,
+    evidenceRecord: options.evidenceRecord,
   };
 }

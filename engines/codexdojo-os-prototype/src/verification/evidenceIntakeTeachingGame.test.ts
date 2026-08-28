@@ -27,7 +27,7 @@ describe('EvidenceIntake teaching-game evidence', () => {
     })
     expect(restored).toEqual(accepted)
     expect(retried).toEqual(accepted)
-    expect(store.raw.get('voxel-run-1')).toMatchObject({
+    expect(store.raw.get('voxel-evidence-1')).toMatchObject({
       status: 'verified',
       schemaId: 'teaching-game-evidence',
     })
@@ -60,6 +60,34 @@ describe('EvidenceIntake teaching-game evidence', () => {
     expect(accepted.kind).toBe('verified')
     expect(duplicate).toEqual(accepted)
     expect(collision).toEqual({ kind: 'rejected', code: 'storage-id-collision' })
-    expect(store.raw.get('voxel-run-1')?.record).toEqual(first.record)
+    expect(store.raw.get('voxel-evidence-1')?.record).toEqual(first.record)
+  })
+
+  it('persists a second WAREHOUSE attempt in the same mission run under its evidence id', async () => {
+    const verify = vi.fn(async (request) => voxelReceipt({
+      evidence_digest: request.record.pass === true ? 'b'.repeat(64) : 'c'.repeat(64),
+      verdict: request.record.pass === true ? 'PASS' : 'FAIL',
+      producer_pass_claim: request.record.pass === true,
+      independent_pass: request.record.pass === true,
+    }))
+    const { intake, store } = setup({ verify })
+
+    await intake.accept(voxelMission, voxelSubmission({ pass: false }))
+    const retried = await intake.accept(voxelMission, {
+      ...voxelSubmission({ pass: true }),
+      evidenceId: 'voxel-evidence-2',
+    })
+
+    expect(retried).toMatchObject({ kind: 'verified', receipt: { verdict: 'PASS' } })
+    expect(store.raw.get('voxel-evidence-1')).toMatchObject({
+      missionRunId: 'voxel-run-1',
+      record: { pass: false },
+    })
+    expect(store.raw.get('voxel-evidence-2')).toMatchObject({
+      missionRunId: 'voxel-run-1',
+      record: { pass: true },
+    })
+    expect(await intake.latest(voxelMission)).toEqual(retried)
+    expect(verify).toHaveBeenCalledTimes(2)
   })
 })
