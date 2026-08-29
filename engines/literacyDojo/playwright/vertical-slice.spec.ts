@@ -133,3 +133,46 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   expect(JSON.stringify(progress)).not.toContain("freeText");
   expect(externalRequests).toEqual([]);
 });
+
+// AID-271: a missão hospedada recebe do shell do host menos que a viewport
+// (iframe interior ~298px com viewport de 320px). Reflow (WCAG 1.4.10) exige
+// que nenhuma largura de documento exceda a largura entregue ao iframe.
+for (const width of [320, 298]) {
+  test(`Reflow: sem scroll horizontal essencial na geometria de iframe @${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 640 });
+    await page.goto("/");
+
+    const measure = () =>
+      page.evaluate(() => ({
+        innerW: window.innerWidth,
+        docScrollW: document.scrollingElement.scrollWidth,
+      }));
+    const expectNoHorizontalOverflow = (
+      stage: string,
+      m: { innerW: number; docScrollW: number },
+    ) => {
+      expect(
+        m.docScrollW,
+        `${stage}@${width}: docScrollW ${m.docScrollW} excede innerW ${m.innerW}`,
+      ).toBeLessThanOrEqual(m.innerW);
+    };
+
+    await expect(page.getByTestId("assistant-welcome")).toBeVisible();
+    expectNoHorizontalOverflow("onboarding", await measure());
+
+    await completeOnboarding(page);
+    expectNoHorizontalOverflow("lesson", await measure());
+
+    await answerRight(page);
+    await expect(page.getByTestId("result-screen")).toBeVisible();
+    expectNoHorizontalOverflow("result", await measure());
+
+    const shell = await page.locator(".app-shell").evaluate((element) => ({
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+    }));
+    expect(shell.scrollWidth).toBeLessThanOrEqual(shell.clientWidth);
+  });
+}
