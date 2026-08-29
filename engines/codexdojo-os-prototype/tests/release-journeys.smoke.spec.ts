@@ -78,7 +78,12 @@ test('proves the nontechnical release journey through recovery, verification, an
 
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
   await expect(page.getByRole('heading', { name: 'Seis missões, uma sequência' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /WAREHOUSE/i })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'WAREHOUSE, WORMHOLE e RELAY STATION no OS' }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 3, name: 'WAREHOUSE: Key-Value Store (in-memory)' }),
+  ).toBeVisible()
   await page.getByRole('button', { name: '← Hub' }).click()
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
 })
@@ -96,5 +101,9 @@ test('proves the hosted simulation entry through accessible evidence and hub ret
   await expect(page.getByText(/gate canônico continua separado/i)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await expect(page).toHaveURL(/\/hub$/)
-  await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
+  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Abrir mapa' }).click()
+  await expect(
+    page.getByRole('heading', { level: 3, name: 'WORMHOLE: URL Shortener' }),
+  ).toBeVisible()
 })

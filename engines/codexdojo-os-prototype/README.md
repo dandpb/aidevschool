@@ -34,6 +34,22 @@ npm run build
 npm run test:smoke
 ```
 
+## Remote promotion pre-check
+
+`npm run test:smoke:remote` runs `tests-remote/` against an already published
+deploy — a Netlify draft or the alias — and never starts a local server:
+
+```bash
+QA_BASE_URL=https://<draft-or-alias>--aidevschool-codexdojo-os.netlify.app/ \
+  npm run test:smoke:remote
+```
+
+It covers both release journeys (IA Prática and Dev) on desktop, tablet, and
+mobile viewports: missions must mount from the deployed origin, and the host
+must keep reporting verification honestly (no local bridge exists in a static
+deploy). The dev-server suite in `tests/` and the static pilot suite in
+`tests-pilot/` stay separate from it.
+
 ## Use the Engine Hub
 
 Depois de instalar as dependências em cada engine, inicie todo o laboratório:
