@@ -1,3 +1,7 @@
+## 2025-03-01 - Avoid O(N) array scans in hot paths
+**Learning:** In miniTown, resolving building or zone lookups via `Array.prototype.find()` in frequent sync loops (like renderer and pathfinding) leads to repeated O(N) array scans causing redundant computation.
+**Action:** Use O(1) `Map` lookups, populated during entity creation, to quickly fetch items by their ID or association, scaling better in hot paths.
+
 ## 2025-02-17 - Pre-compute Static State for Repeated Renders
 **Learning:** In highly dynamic SPA architectures built on vanilla string templates (like codexDojo), operations such as `.filter()` or `.find()` inside rendering or state evaluation loops create unnecessary array allocations or O(n) scans.
 **Action:** When working with static, known-at-boot configuration (like `projects` or `cycleStages`), pre-compute default fallbacks using IIFEs and replace high-frequency array manipulations with fast O(1) structures (like Counters or Maps) to alleviate main thread pressure.

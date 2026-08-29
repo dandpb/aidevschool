@@ -88,6 +88,9 @@ export class Town {
   readonly buildings: Building[] = []
   readonly residents: Resident[] = []
   readonly vehicles: Vehicle[] = []
+  readonly #zoneById = new Map<string, Zone>()
+  readonly #buildingById = new Map<string, Building>()
+  readonly #buildingByZoneId = new Map<string, Building>()
   /** Fixed 20×20 grid of cells. Source of truth for what's grass / road / zone. */
   readonly grid: Grid = new Grid()
   /** One construction state machine per building, keyed by building id. */
@@ -141,6 +144,7 @@ export class Town {
     this.#idCounter += 1
     const zone: Zone = { id: this.#id("z"), type, cell: { x, y } }
     this.zones.push(zone)
+    this.#zoneById.set(zone.id, zone)
     return zone
   }
 
@@ -162,6 +166,8 @@ export class Town {
       stageSeconds: 0,
     }
     this.buildings.push(building)
+    this.#buildingById.set(building.id, building)
+    this.#buildingByZoneId.set(zoneId, building)
     this.constructions.set(building.id, new BuildingConstruction(paletteSeed))
     return building
   }
@@ -190,15 +196,23 @@ export class Town {
     return vehicle
   }
 
-  /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
+  /**
+   * ⚡ Bolt: Use O(1) Map lookups instead of O(N) Array scans for high-frequency pathfinding and renderer resolutions.
+   * Read a zone by id. Used by the spawn layer to look up the zone kind.
+   */
   findZoneById(id: string): Zone | null {
-    return this.zones.find((z) => z.id === id) ?? null
+    return this.#zoneById.get(id) ?? null
   }
 
   /** Read a building by id — `homeId` / `workId` are passed in by residents. */
   findBuildingById(id: string | null): Building | null {
     if (!id) return null
-    return this.buildings.find((b) => b.id === id) ?? null
+    return this.#buildingById.get(id) ?? null
+  }
+
+  /** Retrieve a building by its associated zone ID in O(1) time. */
+  findBuildingByZoneId(zoneId: string): Building | null {
+    return this.#buildingByZoneId.get(zoneId) ?? null
   }
 
   /** Pick a random inhabited shop building. Drives resident shopping trips. */
