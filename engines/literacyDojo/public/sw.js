@@ -3,14 +3,31 @@
 // navegação usa network-first com fallback para o shell do próprio escopo.
 // ponytail: bump manual do CACHE ao mudar este arquivo — se um dia o cache
 // precisar de invalidação por deploy, gerar o nome no build.
-const CACHE = "literacydojo-v2";
+const CACHE = "literacydojo-v3";
 const SCOPE = new URL("./", self.location.href).pathname;
 const SHELL = [SCOPE, `${SCOPE}manifest.webmanifest`, `${SCOPE}icon-192.png`, `${SCOPE}icon-512.png`];
 
+async function precacheShell() {
+  const cache = await caches.open(CACHE);
+  const shellResponse = await fetch(SCOPE);
+  if (!shellResponse.ok) throw new Error(`shell fetch failed: ${shellResponse.status}`);
+  await cache.put(SCOPE, shellResponse.clone());
+
+  // Vite fingerprints JS/CSS filenames at build time. The service worker is a
+  // static public asset, so discover those URLs from the built HTML instead of
+  // hardcoding hashes. This also caches them on the first visit, before the new
+  // worker controls the page's already-started asset requests.
+  const html = await shellResponse.text();
+  const assetUrls = [...html.matchAll(/(?:src|href)=["']([^"']+)["']/g)]
+    .map((match) => new URL(match[1], new URL(SCOPE, self.location.origin)))
+    .filter((url) => url.origin === self.location.origin)
+    .map((url) => `${url.pathname}${url.search}`);
+
+  await cache.addAll([...new Set([...SHELL.slice(1), ...assetUrls])]);
+}
+
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()),
-  );
+  event.waitUntil(precacheShell().then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (event) => {
@@ -47,7 +64,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(request, { cacheName: CACHE }).then(
+    caches.match(request, { cacheName: CACHE, ignoreVary: true }).then(
       (hit) =>
         hit ??
         fetch(request).then((response) => {
