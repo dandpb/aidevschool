@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import test from 'node:test'
-import { deployPilotBundle } from './deploy-pilot-bundle.mjs'
+import { deployPilotBundle, verifyStagedVerifier } from './deploy-pilot-bundle.mjs'
 import { createPilotBundleStage, createPilotManifest, PILOT_SURFACES, promotePilotBundle, verifyPilotBundle } from './pilot-bundle-lib.mjs'
 
 test('keeps the invalid root service-worker probe ahead of the SPA fallback', async () => {
@@ -14,6 +14,45 @@ test('keeps the invalid root service-worker probe ahead of the SPA fallback', as
 
   assert.ok(rootWorker >= 0, 'missing explicit /sw.js route')
   assert.ok(notFound > rootWorker && notFound < spaFallback, '/sw.js must return 404 before the SPA fallback')
+})
+
+test('routes the same-origin Dev verification bridge ahead of the SPA fallback (AID-305)', async () => {
+  const config = await readFile(new URL('../netlify.toml', import.meta.url), 'utf8')
+  const spaFallback = config.indexOf('from = "/*"')
+  const verifier = config.indexOf('to = "/.netlify/functions/dojo-verification-bridge"')
+
+  assert.ok(config.includes('functions = "netlify/functions"'), 'functions dir must live inside the site root')
+  for (const route of ['from = "/__dojo/bridge/v1/session"', 'from = "/__dojo/bridge/v1/verification"']) {
+    const at = config.indexOf(route)
+    assert.ok(at >= 0 && at < spaFallback, `${route} must be routed to the verifier before the SPA fallback`)
+  }
+  assert.ok(verifier >= 0 && verifier < spaFallback, 'bridge routes must target the verifier function')
+})
+
+test('stages the canonical learner/gate verifier into the site root (AID-305)', async () => {
+  const script = await readFile(new URL('./build-pilot-bundle.mjs', import.meta.url), 'utf8')
+
+  assert.match(script, /learner', 'gate', 'netlify-functions/)
+  assert.match(script, /'netlify', 'functions'/)
+  assert.match(script, /verifierFunction = 'dojo-verification-bridge\.mjs'/)
+  assert.match(script, /cp\(join\(canonicalFunctions, verifierFunction\), join\(stagedFunctions, verifierFunction\)\)/)
+})
+
+test('deploys the staged functions directory and rejects verifier drift (AID-305)', async (t) => {
+  const script = await readFile(new URL('./deploy-pilot-bundle.mjs', import.meta.url), 'utf8')
+
+  assert.match(script, /'--functions', 'netlify\/functions'/)
+  assert.match(script, /verifyStagedVerifier\(\)/)
+
+  const dir = await mkdtemp(join(tmpdir(), 'pilot-verifier-drift-'))
+  t.after(() => rm(dir, { recursive: true, force: true }))
+  const canonical = join(dir, 'canonical.mjs')
+  const staged = join(dir, 'staged.mjs')
+  await writeFile(canonical, 'export default () => {}\n')
+  await writeFile(staged, 'export default () => {}\n')
+  assert.equal(await verifyStagedVerifier(canonical, staged), await verifyStagedVerifier(canonical, canonical))
+  await writeFile(staged, 'export default () => 1\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /drifted/)
 })
 
 test('allows same-origin pilot apps to be framed without allowing external ancestors', async () => {
