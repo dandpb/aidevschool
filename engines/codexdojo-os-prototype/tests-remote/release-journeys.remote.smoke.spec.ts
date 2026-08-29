@@ -84,7 +84,7 @@ test('remote IA Prática release journey enters the school, mounts the hosted li
   await expect(page.getByText(/\d+ competências verificadas/)).toBeVisible()
 })
 
-test('remote Dev release journey mounts the hosted warehouse simulation from the deployed origin, completes a round, and reports the verifier honestly', async ({ page }) => {
+test('remote Dev release journey mounts the hosted warehouse simulation from the deployed origin, completes a round, and reports the restored independent verification', async ({ page }) => {
   test.setTimeout(90_000)
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')
@@ -93,8 +93,11 @@ test('remote Dev release journey mounts the hosted warehouse simulation from the
   await expect(warehouse.locator('body')).toContainText(/Hash/i, { timeout: 30_000 })
 
   await completeWarehouse(warehouse)
-  await expect(page.getByText('Verificador indisponível', { exact: true })).toBeVisible()
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible({ timeout: 30_000 })
+  await expect(page.getByText('Verificador indisponível', { exact: true })).toHaveCount(0)
   await expect(page.getByText('Evidência rejeitada', { exact: true })).toHaveCount(0)
+  await expect(page.getByText(/gate canônico continua separado/i)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
-  await expect(page.getByText('Temporariamente indisponível', { exact: true })).toBeVisible()
+  await expect(page).toHaveURL(/\/hub$/)
+  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
 })
