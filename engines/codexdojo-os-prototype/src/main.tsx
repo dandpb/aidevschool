@@ -2,10 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import { createServices } from './app/createServices'
+import { shouldEnableReactInstrumentation } from './devInstrumentation'
 import { requireRootElement } from './root'
 import './styles.css'
 
-if (import.meta.env.DEV && import.meta.env.VITE_DISABLE_REACT_DEVTOOLS !== '1') {
+if (shouldEnableReactInstrumentation(import.meta.env)) {
   void import('react-grab')
   void import('react-scan')
 }

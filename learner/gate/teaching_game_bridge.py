@@ -57,16 +57,24 @@ ALLOWED_KEYS = frozenset(
         "curriculum_context",
     }
 )
+REQUIRED_KEYS = ALLOWED_KEYS
+# Optional identity metadata (teaching-game-contract.md): receipts bind their
+# attempt_id to the record's attempt_id for identity matching. The gate never
+# evaluates it; it only accepts and echoes a non-empty string when present.
+OPTIONAL_KEYS = frozenset({"attempt_id"})
 
 
 def _validate_identity(record: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    unknown = sorted(set(record) - ALLOWED_KEYS)
-    missing = sorted(ALLOWED_KEYS - set(record))
+    unknown = sorted(set(record) - ALLOWED_KEYS - OPTIONAL_KEYS)
+    missing = sorted(REQUIRED_KEYS - set(record))
     if unknown:
         errors.append(f"unknown fields: {', '.join(unknown)}")
     if missing:
         errors.append(f"missing fields: {', '.join(missing)}")
+    attempt_id = record.get("attempt_id")
+    if attempt_id is not None and (not isinstance(attempt_id, str) or not attempt_id):
+        errors.append("attempt_id must be a non-empty string when present")
     game = record.get("game")
     spec = GAME_SPECS.get(game) if isinstance(game, str) else None
     if spec is None:
@@ -114,7 +122,7 @@ def verify_teaching_game_evidence(record: dict[str, Any]) -> dict[str, Any]:
     if producer_claim is not None and producer_claim != independently_passed:
         errors.append("producer pass claim disagrees with the fixed independent evaluator")
     verdict = "PASS" if independently_passed and not errors else "FAIL"
-    return {
+    receipt: dict[str, Any] = {
         "schema_version": 1,
         "verdict": verdict,
         "context_isolated": True,
@@ -132,6 +140,10 @@ def verify_teaching_game_evidence(record: dict[str, Any]) -> dict[str, Any]:
         "canonical_gate_status": "not-submitted",
         "canonical_gate_reason": "learner-attempt-and-gate-eligibility-required",
     }
+    attempt_id = record.get("attempt_id")
+    if isinstance(attempt_id, str) and attempt_id:
+        receipt["attempt_id"] = attempt_id
+    return receipt
 
 
 def main() -> int:

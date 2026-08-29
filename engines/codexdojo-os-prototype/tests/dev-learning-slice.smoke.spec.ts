@@ -64,7 +64,7 @@ test('independently verifies all three Dev games through the shared mission cont
     await mission.getByTestId(`shelf-${shelf}`).click()
   }
 
-  await expect(mission.getByTestId('hud-status')).toContainText('Wave cleared')
+  await expect(mission.getByTestId('hud-status')).toContainText('Missão concluída; evidência emitida.')
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await expect(page.getByText(
     'O verificador independente aprovou esta evidência. O gate canônico continua separado.',

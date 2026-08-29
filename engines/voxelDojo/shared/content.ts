@@ -34,14 +34,14 @@ export const reviewSlice: ReviewSlice = {
     {
       unitId: "U0-sonda-rate-limiter-robustness",
       title: "GATEKEEPER: token-bucket rate limiter robustness",
-      dueIn: "overdue 43d",
+      dueIn: "overdue 27d",
       reason: "overdue",
     },
     {
       unitId: "U2-key-value-store",
       title: "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      dueIn: "overdue 4d",
-      reason: "overdue",
+      dueIn: "today",
+      reason: "due",
     },
     {
       unitId: "P-001",
@@ -52,8 +52,8 @@ export const reviewSlice: ReviewSlice = {
   ],
   streak: {
     current: 0,
-    longest: 2,
-    lastGateDate: "2026-08-13",
+    longest: 1,
+    lastGateDate: "2026-07-05",
     freezesEquipped: 0,
     freezesMax: 2,
   },

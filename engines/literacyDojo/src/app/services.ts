@@ -8,12 +8,17 @@ import {
   consoleEvidenceSink,
 } from "../adapters/evidenceSinks";
 import * as generatedContent from "../adapters/generatedContentRepository";
+import {
+  HttpVerificationClient,
+  UnavailableVerificationClient,
+} from "../adapters/httpVerificationClient";
 import { IndexedDbProgressRepository } from "../adapters/indexedDbProgressRepository";
 import type {
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
   ProgressRepository,
+  VerificationClient,
 } from "../application/ports";
 import { LiteracyUseCases } from "../application/useCases";
 import { type LearnerProgress, createInitialProgress } from "../domain/progress";
@@ -26,6 +31,7 @@ export type Services = {
   feedback: FeedbackProvider;
   clock: Clock;
   useCases: LiteracyUseCases;
+  verification: VerificationClient;
 };
 
 export function createServices(overrides?: {
@@ -35,6 +41,7 @@ export function createServices(overrides?: {
   feedback?: FeedbackProvider;
   clock?: Clock;
   hostAdapter?: EvidenceSink;
+  verification?: VerificationClient;
 }): Services {
   const content = overrides?.content ?? generatedContent;
   const progressRepo = overrides?.progressRepo ?? new IndexedDbProgressRepository();
@@ -42,13 +49,21 @@ export function createServices(overrides?: {
   const baseEvidence = overrides?.hostAdapter
     ? new CompositeEvidenceSink([primaryEvidence, overrides.hostAdapter])
     : primaryEvidence;
-  // A ponte window.__literacydojo só existe em dev (usada pelo Playwright para
-  // capturar e validar o envelope de evidência).
-  const evidence = import.meta.env.DEV
-    ? new DevtoolsBridgeEvidenceSink(baseEvidence)
-    : baseEvidence;
+  // A ponte window.__literacydojo só existe em dev ou no servidor dedicado do
+  // Playwright. A flag explícita evita que o contrato E2E dependa do NODE_ENV
+  // herdado pelo processo que iniciou o Vite.
+  const evidence =
+    import.meta.env.DEV || import.meta.env.VITE_LITERACY_E2E === "1"
+      ? new DevtoolsBridgeEvidenceSink(baseEvidence)
+      : baseEvidence;
   const feedback = overrides?.feedback ?? new DeterministicFeedbackProvider();
   const clock = overrides?.clock ?? systemClock;
+  const verifierEndpoint = import.meta.env.VITE_LITERACY_VERIFIER_URL?.trim();
+  const verification =
+    overrides?.verification ??
+    (verifierEndpoint
+      ? new HttpVerificationClient(verifierEndpoint)
+      : new UnavailableVerificationClient());
   const useCases = new LiteracyUseCases({
     content,
     progress: progressRepo,
@@ -56,7 +71,7 @@ export function createServices(overrides?: {
     feedback,
     clock,
   });
-  return { content, progressRepo, evidence, feedback, clock, useCases };
+  return { content, progressRepo, evidence, feedback, clock, useCases, verification };
 }
 
 /**

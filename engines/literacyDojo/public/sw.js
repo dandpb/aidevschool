@@ -1,16 +1,17 @@
 // Service worker do PWA — Cache API nativa, sem workbox.
 // Ativos do Vite têm hash no nome, então cache-first é seguro para eles; a
-// navegação usa network-first com fallback para o shell "/" (offline).
+// navegação usa network-first com fallback para o shell do próprio escopo.
 // ponytail: bump manual do CACHE ao mudar este arquivo — se um dia o cache
 // precisar de invalidação por deploy, gerar o nome no build.
-const CACHE = "literacydojo-v2";
-const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const CACHE = "literacydojo-v3";
+const SCOPE = new URL("./", self.location.href).pathname;
+const SHELL = [SCOPE, `${SCOPE}manifest.webmanifest`, `${SCOPE}icon-192.png`, `${SCOPE}icon-512.png`];
 
 async function precacheShell() {
   const cache = await caches.open(CACHE);
-  const shellResponse = await fetch("/");
+  const shellResponse = await fetch(SCOPE);
   if (!shellResponse.ok) throw new Error(`shell fetch failed: ${shellResponse.status}`);
-  await cache.put("/", shellResponse.clone());
+  await cache.put(SCOPE, shellResponse.clone());
 
   // Vite fingerprints JS/CSS filenames at build time. The service worker is a
   // static public asset, so discover those URLs from the built HTML instead of
@@ -18,7 +19,7 @@ async function precacheShell() {
   // worker controls the page's already-started asset requests.
   const html = await shellResponse.text();
   const assetUrls = [...html.matchAll(/(?:src|href)=["']([^"']+)["']/g)]
-    .map((match) => new URL(match[1], self.location.origin))
+    .map((match) => new URL(match[1], new URL(SCOPE, self.location.origin)))
     .filter((url) => url.origin === self.location.origin)
     .map((url) => `${url.pathname}${url.search}`);
 
@@ -54,10 +55,10 @@ self.addEventListener("fetch", (event) => {
       fetch(request)
         .then((response) => {
           // Renova o shell offline: senão ele apontaria para sempre aos assets do build de instalação.
-          if (response.ok) keep("/", response);
+          if (response.ok) keep(SCOPE, response);
           return response;
         })
-        .catch(() => caches.match("/", { cacheName: CACHE }).then((hit) => hit ?? Response.error())),
+        .catch(() => caches.match(SCOPE, { cacheName: CACHE }).then((hit) => hit ?? Response.error())),
     );
     return;
   }

@@ -79,6 +79,23 @@ test('opens every voxelDojo catalog experience inside the OS', async ({ page }, 
   }
 })
 
+test('opens the no-code, explore-only, and daily projection surfaces with explicit boundaries', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-1280')
+  await openEngineHub(page)
+
+  for (const engine of [
+    { name: 'LiteracyDojo', frame: 'LiteracyDojo integrado', boundary: 'micro-lesson' },
+    { name: 'miniTown', frame: 'miniTown integrado', boundary: 'explore-only' },
+    { name: 'dojoToday', frame: 'dojoToday integrado', boundary: 'operations' },
+  ]) {
+    await page.getByRole('button', { name: `Usar ${engine.name}` }).click()
+    await expect(page.getByTestId('engine-evaluation-boundary')).toContainText(engine.boundary)
+    await expect(page.getByTitle(engine.frame)).toBeVisible()
+    await expect(page.frameLocator(`iframe[title="${engine.frame}"]`).locator('body')).toBeVisible()
+
+  }
+})
+
 test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub', async ({ page, context }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-1280')
   await context.grantPermissions(['clipboard-read', 'clipboard-write'])

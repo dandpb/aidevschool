@@ -62,6 +62,7 @@ export function submission(
   overrides: Partial<EvidenceSubmission['record']> = {},
 ): EvidenceSubmission {
   return {
+    evidenceId: 'evidence-1',
     schemaId: 'literacy-evidence',
     schemaVersion: 1,
     engineId: 'literacyDojo',
@@ -123,6 +124,7 @@ export function voxelReceipt(
     project: '02_key_value_store',
     scenario_id: 'kv-warehouse-L1',
     game: 'KV WAREHOUSE',
+    attempt_id: 'kv-warehouse-L1-attempt-1',
     producer_pass_claim: true,
     independent_pass: true,
     errors: [],
@@ -138,6 +140,7 @@ export function voxelSubmission(
   overrides: Partial<EvidenceSubmission['record']> = {},
 ): EvidenceSubmission {
   return {
+    evidenceId: 'voxel-evidence-1',
     schemaId: 'teaching-game-evidence',
     schemaVersion: 1,
     engineId: 'voxelDojo',
@@ -151,7 +154,8 @@ export function voxelSubmission(
       unit_id: 'U2-key-value-store',
       project: '02_key_value_store',
       scenario_id: 'kv-warehouse-L1',
-      game: 'KV WAREHOUSE',
+    game: 'KV WAREHOUSE',
+    attempt_id: 'kv-warehouse-L1-attempt-1',
       ts: '2026-07-25T12:00:00.000Z',
       pass: true,
       metrics: { correct: 5 },
@@ -175,10 +179,10 @@ class MemoryVerificationStore implements VerificationStore {
   async latestForMission(missionId: string) {
     return [...this.raw.values()]
       .filter((entry) => entry.subject.missionId === missionId)
-      .sort((left, right) => (
+      .sort((left, right) =>
         right.acceptedAt.localeCompare(left.acceptedAt)
         || right.storageId.localeCompare(left.storageId)
-      ))[0]
+      )[0]
   }
 
   async getReceipt(evidenceDigest: string) {

@@ -53,6 +53,24 @@ the rollback procedure live in `RELEASE.md`.
 
 ## Use the Engine Hub
 
+Depois de instalar as dependências em cada engine, inicie todo o laboratório:
+
+```bash
+cd engines/codexdojo-os-prototype
+npm run engine-lab
+```
+
+Abra `http://127.0.0.1:4174/desktop`, clique em **Atividades**, busque
+**Engine Hub** e escolha uma engine. `Ctrl+C` encerra os processos iniciados
+pelo laboratório. Para o smoke automatizado use `npm run engine-lab:smoke`.
+Use `npm run engine-lab:list` para inspecionar os diretórios e comandos sem
+iniciar processos.
+
+Para publicação web, siga
+[`docs/runbooks/ENGINE_LAB_WEB_PREVIEW.md`](../../docs/runbooks/ENGINE_LAB_WEB_PREVIEW.md).
+O Hub e cada runtime devem usar sites/origens separados; não coloque tokens em
+variáveis `VITE_*`.
+
 Open **Activities**, search for **Engine Hub**, and select an engine. The Hub
 keeps each engine in its own runtime and exposes one bounded interaction:
 
@@ -63,20 +81,26 @@ keeps each engine in its own runtime and exposes one bounded interaction:
 | `miniMaxEvolutionEngine` | Prepare the exact next `/devschool-*` command from pipeline and learning-gate state. |
 | `openclaw` | Preview the next checklist without writing pipeline state. |
 | `pixelDojo` | Play PixelQuest and return raw attempt evidence to the Hub. |
+| `literacyDojo` | Run the no-code micro-lesson loop and inspect its raw evidence boundary. |
+| `miniTown` | Explore the Level 0 hypothesis, explicitly outside assessed learning. |
+| `dojoToday` | Inspect the read-only daily projection produced from the learner substrate. |
 | `voxelDojo` | Choose any of the 16 game packages; evidence-enabled games return raw attempts to the Hub. |
 
-The three browser engines use these optional production URLs:
+The browser engines use these optional production URLs:
 
 ```bash
 VITE_CODEXDOJO_URL=https://dashboard.example.test/
 VITE_PIXELDOJO_URL=https://pixel.example.test/
+VITE_LITERACYDOJO_URL=https://literacy.example.test/
+VITE_MINITOWN_URL=https://town.example.test/
+VITE_DOJOTODAY_URL=https://today.example.test/
 VITE_VOXELDOJO_URL=https://voxel.example.test/
 VITE_VOXELDOJO_URLS='{"game-02-warehouse":"https://warehouse.example.test/","game-10-hash-ring":"https://hash-ring.example.test/"}'
 ```
 
 `VITE_VOXELDOJO_URL` is the compatibility URL for HASH RING;
 `VITE_VOXELDOJO_URLS` maps any catalog game ID to its deployed origin.
-Development falls back to `5175`, `5176`, and the 16 fixed voxel catalog ports;
+Development falls back to `5175`, `5176`, `5178`, `5179`, `5180`, and the 16 fixed voxel catalog ports;
 run `pnpm run dev:catalog` from `../voxelDojo` to start them together.
 
 The local Vite bridge exposes three fixed, read-only Python actions. It is
@@ -113,7 +137,7 @@ unverified, and never grants mastery.
 - Catalog with 11 apps and explicit maturity states.
 - Contextual Learn Mode and a deterministic local mentor prototype.
 - Tracks, local Terminal commands, Files, and an architecture map.
-- Engine Hub with six external engine adapters and raw-evidence receipts.
+- Engine Lab/Hub with nine bounded engine adapters and raw-evidence receipts.
 - Desktop, tablet, and mobile layouts.
 
 See `docs/PLANO_INICIAL.md` for the product plan and
