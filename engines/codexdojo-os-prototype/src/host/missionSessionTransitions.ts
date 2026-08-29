@@ -219,6 +219,7 @@ export function reduceMissionMessage(
         kind: 'evidence',
         messageId: message.messageId,
         submission: {
+          evidenceId: message.messageId,
           schemaId: message.payload.schemaId,
           schemaVersion: message.payload.schemaVersion,
           engineId: message.engineId,

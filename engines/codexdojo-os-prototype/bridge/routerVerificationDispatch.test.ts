@@ -74,6 +74,7 @@ describe('verification bridge dispatch', () => {
       verdict: 'PASS',
       unit_id: 'U2-key-value-store',
       scenario_id: 'kv-warehouse-L1',
+      attempt_id: 'kv-warehouse-L1-attempt-1',
       producer_pass_claim: true,
       canonical_gate_status: 'not-submitted',
     })

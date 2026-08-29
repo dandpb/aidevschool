@@ -80,6 +80,26 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
     expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
+    expect(screen.getByText(/Piloto gratuito para maiores de 18 anos/)).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo", { name: "Informações do piloto" })).toHaveTextContent(
+      "Piloto público gratuito · para maiores de 18 anos",
+    );
+    for (const linkName of [/Termos do piloto/, /termos do piloto/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./termos.html",
+      );
+    }
+    for (const linkName of [/^Privacidade$/, /aviso de privacidade/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./privacidade.html",
+      );
+    }
+    expect(screen.getByRole("link", { name: /Pedir suporte/ })).toHaveAttribute(
+      "href",
+      "https://github.com/dandpb/aidevschool/issues/new",
+    );
     await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-save_time"));
     await user.click(screen.getByTestId("onboarding-next"));

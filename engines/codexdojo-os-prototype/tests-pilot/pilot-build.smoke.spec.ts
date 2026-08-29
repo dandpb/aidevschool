@@ -45,12 +45,12 @@ async function expectMissionMounted(
 async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<void> {
   const status = frame.getByTestId('hud-status')
   const first = await status.textContent()
-  const count = first?.match(/\/(\d+):/)?.[1]
+  const count = first?.match(/de (\d+):/)?.[1]
   if (count === undefined) throw new Error('Warehouse crate count was not visible')
   const shelfCount = await frame.locator('[data-testid^="shelf-"]').count()
   for (let index = 0; index < Number(count); index += 1) {
     const current = await status.textContent()
-    const key = current?.match(/: (.+) — click/)?.[1]
+    const key = current?.match(/: (.+) — clique/)?.[1]
     if (key === undefined) throw new Error('Warehouse key was not visible')
     const expected = bucketOf(key, shelfCount)
     await frame
@@ -96,7 +96,7 @@ test('a corrected WAREHOUSE retry supersedes the failed attempt verification sta
   await frame.getByTestId('start').dispatchEvent('click')
 
   await answerWarehouse(frame, false)
-  await expect(frame.getByTestId('hud-status')).toContainText('failed')
+  await expect(frame.getByTestId('hud-status')).toContainText('ainda não atendido')
   await frame.getByTestId('retry').dispatchEvent('click')
   await answerWarehouse(frame, true)
 

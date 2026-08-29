@@ -22,8 +22,32 @@ describe('Engine Hub', () => {
       'Usar MiniMax Evolution Engine',
       'Usar OpenClaw',
       'Usar PixelDojo Quest',
+      'Usar LiteracyDojo',
+      'Usar miniTown',
+      'Usar dojoToday',
       'Usar voxelDojo',
+      'Usar AiDevSchool MVP',
+      'Usar Z.ai Duolingo-like',
     ])
+  })
+
+  it('registers Z.ai Duolingo-like honestly and requires its own hosted URL', async () => {
+    const user = userEvent.setup()
+    const { rerender } = render(<EngineHubApp development={false} />)
+
+    await user.click(screen.getByRole('button', { name: 'Usar Z.ai Duolingo-like' }))
+    expect(screen.getByRole('status').textContent).toContain('não está configurado')
+    expect(screen.queryByTitle('Z.ai Duolingo-like integrado')).toBeNull()
+
+    rerender(
+      <EngineHubApp
+        development={false}
+        configuredUrls={{ zaiDuolingoLike: 'https://runtime.example.test/zai-duolingo/' }}
+      />,
+    )
+    expect(screen.getByTitle('Z.ai Duolingo-like integrado').getAttribute('src')).toBe(
+      'https://runtime.example.test/zai-duolingo/',
+    )
   })
 
   it('embeds a configured web engine inside the Hub', async () => {
@@ -48,6 +72,18 @@ describe('Engine Hub', () => {
     expect(document.querySelector('.engine-hub-app.focused-engine')).toBeTruthy()
     await user.click(screen.getByRole('button', { name: 'Voltar ao Hub' }))
     expect(document.querySelector('.engine-hub-app.focused-engine')).toBeNull()
+  })
+
+  it('teaches how to access and evaluate the selected engine', async () => {
+    const user = userEvent.setup()
+    render(<EngineHubApp development={false} />)
+
+    await user.click(screen.getByRole('button', { name: 'Usar miniTown' }))
+
+    const guide = screen.getByRole('region', { name: 'Guia de avaliação · miniTown' })
+    expect(guide.textContent).toContain('Testar se uma vila explorável melhora orientação')
+    expect(guide.textContent).toContain('cd engines/miniTown')
+    expect(guide.textContent).toContain('aprendizagem avaliada é NA')
   })
 
   it('shows an honest unavailable state when a production web URL is missing', async () => {
@@ -148,14 +184,31 @@ describe('Engine Hub', () => {
     expect(screen.queryByText('Stale minimax receipt')).toBeNull()
   })
 
-  it('disables local actions when the development-only bridge is absent', async () => {
+  it.each([
+    ['minimaxDojo Tutor Core', 'Tentativa do aprendiz', 'Hipótese de tutoria'],
+    ['MiniMax Evolution Engine', 'Planejar', 'Transição proposta'],
+    ['OpenClaw', 'Inspecionar artefatos', 'Resultado do checklist'],
+    ['AiDevSchool MVP', 'Escolher atividade', 'Tentativa registrada'],
+  ])('offers a read-only web evaluation for %s when the local bridge is absent', async (
+    engineName,
+    firstStep,
+    secondStep,
+  ) => {
     const user = userEvent.setup()
-    render(<EngineHubApp development={false} />)
+    const runAction = vi.fn()
+    render(<EngineHubApp development={false} runAction={runAction} />)
 
-    await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
+    await user.click(screen.getByRole('button', { name: `Usar ${engineName}` }))
 
-    expect(screen.getByRole('status').textContent).toContain('ponte local não está disponível')
-    expect(screen.queryByRole('button', { name: 'Preparar sessão de tutoria' })).toBeNull()
+    const evaluation = screen.getByRole('region', { name: `Avaliação web · ${engineName}` })
+    expect(evaluation.textContent).toContain(firstStep)
+    expect(evaluation.textContent).toContain('somente leitura')
+    expect(evaluation.textContent).toContain('não executa o motor Python')
+
+    await user.click(screen.getByRole('button', { name: 'Avançar simulação' }))
+
+    expect(evaluation.textContent).toContain(secondStep)
+    expect(runAction).not.toHaveBeenCalled()
   })
 
   it('renders only source-bound raw evidence as requiring independent verification', async () => {

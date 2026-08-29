@@ -1,20 +1,46 @@
-# Deploy estático do codexdojo-os-prototype (OS educacional — link público).
-# Uso: conecte este diretório (engines/codexdojo-os-prototype) como base do site no Netlify,
-# ou rode `npx netlify deploy --prod --dir=dist` a partir daqui com o CLI autenticado.
-# Site: aidevschool-codexdojo-os
+# Preview estático do Engine Lab. Os runtimes são sites separados e entram
+# somente pelas variáveis VITE_*_URL configuradas no provedor.
 
 [build]
-  # build:pilot also bundles the 4 mission runtimes into dist/apps/, so the
-  # deployed OS serves every mission from its own origin. Plain `npm run build`
-  # ships an OS whose mission iframes point at localhost dev servers.
-  command = "npm install && npm run build:pilot"
+  command = "npm run build:pilot"
   publish = "dist"
+  # Staged inside the site root by scripts/build-pilot-bundle.mjs from the
+  # canonical learner/gate/netlify-functions source. The verifier function is
+  # a projection: never edit netlify/functions by hand.
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
+  NPM_FLAGS = "--include=dev"
 
-# SPA fallback: todas as rotas servem index.html
+[[redirects]]
+  # Same-origin verification bridge (AID-305): route the Dev-journey verifier
+  # ahead of the SPA fallback so verification stays independent and available.
+  from = "/__dojo/bridge/v1/session"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
+
+[[redirects]]
+  from = "/__dojo/bridge/v1/verification"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
+
+[[redirects]]
+  # The OS does not own a root service worker. Keep stale probes out of the SPA
+  # fallback; LiteracyDojo's worker is scoped to /apps/literacydojo/sw.js.
+  from = "/sw.js"
+  to = "/404.html"
+  status = 404
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin"
+    X-Content-Type-Options = "nosniff"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'"
