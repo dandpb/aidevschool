@@ -4,21 +4,10 @@
 [build]
   command = "npm run build:pilot"
   publish = "dist"
-  functions = "../../learner/gate/netlify-functions"
 
 [build.environment]
   NODE_VERSION = "22"
   NPM_FLAGS = "--include=dev"
-
-[[redirects]]
-  from = "/__dojo/bridge/v1/session"
-  to = "/.netlify/functions/dojo-verification-bridge"
-  status = 200
-
-[[redirects]]
-  from = "/__dojo/bridge/v1/verification"
-  to = "/.netlify/functions/dojo-verification-bridge"
-  status = 200
 
 [[redirects]]
   # The OS does not own a root service worker. Keep stale probes out of the SPA
