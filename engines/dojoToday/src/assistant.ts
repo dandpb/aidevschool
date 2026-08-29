@@ -37,6 +37,16 @@ export function loadConfig(): AiConfig {
 }
 
 export function saveConfig(config: AiConfig): void {
+  // Security: Prevent API key exposure by enforcing HTTPS for custom endpoints.
+  // Exempt localhost/127.0.0.1 for local development and local models (like Ollama).
+  if (
+    config.baseUrl.startsWith("http://") &&
+    !config.baseUrl.startsWith("http://localhost") &&
+    !config.baseUrl.startsWith("http://127.0.0.1")
+  ) {
+    console.warn("Sentinel: Insecure HTTP endpoint blocked. Enforcing HTTPS.");
+    config.baseUrl = config.baseUrl.replace(/^http:\/\//, "https://");
+  }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
 }
 
