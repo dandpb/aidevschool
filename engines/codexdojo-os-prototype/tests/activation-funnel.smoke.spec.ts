@@ -36,6 +36,13 @@ async function capturedEvents(page: Page): Promise<CapturedEvent[]> {
   })
 }
 
+async function expectNoLearnerContent(events: readonly CapturedEvent[]): Promise<void> {
+  const serialized = JSON.stringify(events)
+  for (const field of FORBIDDEN_ANALYTICS_FIELDS) {
+    expect(serialized).not.toContain(`"${field}"`)
+  }
+}
+
 async function expectActivationOrder(page: Page, trackId: 'ai-pratica' | 'dev'): Promise<void> {
   await expect.poll(async () => (await capturedEvents(page)).some(
     (event) => event.name === 'mission.completed' && event.dimensions.trackId === trackId,
@@ -59,10 +66,18 @@ async function expectActivationOrder(page: Page, trackId: 'ai-pratica' | 'dev'):
       expect.objectContaining({ dimensions: expect.objectContaining({ trackId }) }),
     ]),
   )
-  const serialized = JSON.stringify(events)
-  for (const field of FORBIDDEN_ANALYTICS_FIELDS) {
-    expect(serialized).not.toContain(`"${field}"`)
-  }
+  await expectNoLearnerContent(events)
+}
+
+// The single-track shell records technical intent behaviorally: onboarding
+// recommendationChanged is captured without a Dev track selection, and the
+// first Dev chapter is entered from the published map. The funnel keeps the
+// same content-free event vocabulary as the IA Pratica funnel.
+async function expectDevRecommendationSignal(page: Page): Promise<void> {
+  const events = await capturedEvents(page)
+  const onboarding = events.find((event) => event.name === 'onboarding.completed')
+  expect(onboarding?.dimensions.recommendationChanged).toBe(true)
+  expect(onboarding?.dimensions.trackId).toBe('ai-pratica')
 }
 
 test('records the IA Pratica activation funnel without learner content', async ({ page }) => {
@@ -85,9 +100,20 @@ test('records the IA Pratica activation funnel without learner content', async (
 test('records the Dev activation funnel through the same content-free schema', async ({ page }) => {
   test.setTimeout(60_000)
   await page.goto('/')
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
+  // The shell publishes one pilot sequence (IA Prática first). A technical
+  // goal keeps the recommendation signal behavioral: it is recorded in
+  // onboarding.completed.recommendationChanged, never as track selection.
+  await page.getByLabel('Objetivo').selectOption('build-systems')
+  await page.getByLabel('Confiança atual').selectOption('medium')
+  await expect(page.getByRole('status')).toContainText(
+    'As simulações hospedadas entram depois de IA Prática',
+  )
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
-  await page.locator('.next-mission-card .journey-primary').click()
+
+  await page.getByRole('button', { name: 'Abrir mapa' }).click()
+  await page.getByRole('listitem').filter({
+    has: page.getByRole('heading', { level: 3, name: 'WAREHOUSE: Key-Value Store (in-memory)' }),
+  }).getByRole('button', { name: 'Abrir' }).click()
 
   const mission = page.frameLocator(
     'iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]',
@@ -114,4 +140,5 @@ test('records the Dev activation funnel through the same content-free schema', a
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
 
   await expectActivationOrder(page, 'dev')
+  await expectDevRecommendationSignal(page)
 })
