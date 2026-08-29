@@ -171,9 +171,7 @@ test("Missão hospedada em iframe de 298px (paridade host @320): sem scroll hori
   await expectNoHorizontalScroll(frame, "missão hospedada (resultado)");
 });
 
-test("Controle de regressão: piso de largura não pode voltar a travar reflow", async ({
-  page,
-}) => {
+test("Controle de regressão: piso de largura não pode voltar a travar reflow", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByTestId("assistant-welcome")).toBeVisible();
   const blockers = await page.evaluate(() => {
