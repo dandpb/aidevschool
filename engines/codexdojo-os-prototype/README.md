@@ -45,11 +45,12 @@ QA_BASE_URL=https://<draft-or-alias>--aidevschool-codexdojo-os.netlify.app/ \
 ```
 
 It covers both release journeys (IA Prática and Dev) on desktop, tablet, and
-mobile viewports: missions must mount from the deployed origin, and the host
-must keep reporting verification honestly (no local bridge exists in a static
-deploy). The dev-server suite in `tests/` and the static pilot suite in
-`tests-pilot/` stay separate from it. Release metadata, promotion steps, and
-the rollback procedure live in `RELEASE.md`.
+mobile viewports: missions must mount from the deployed origin, and hosted
+verification runs through the same-origin learner-gate function deployed with
+the site (`/__dojo/bridge/v1/*`; see `netlify.toml`). The dev-server suite in
+`tests/` and the static pilot suite in `tests-pilot/` stay separate from it.
+Release metadata, promotion steps, and the rollback procedure live in
+`RELEASE.md`.
 
 ## Use the Engine Hub
 
