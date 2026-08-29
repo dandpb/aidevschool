@@ -133,7 +133,7 @@ export function MissionShell({
       window.removeEventListener('focus', syncFrameFocus)
       frame.classList.remove('mission-frame-focus')
     }
-  }, [loadedFrameUrl, frameUrl])
+  }, [])
 
   useEffect(() => {
     const frame = frameRef.current
