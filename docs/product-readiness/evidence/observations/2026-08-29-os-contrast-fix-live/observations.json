@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "45b824fce8151d827979d67b6e97417a64f27c5e",
+  "observedAt": "2026-08-29T02:30:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Fresh browser profile on the static pilot build: onboarding asked 'O que você quer conseguir fazer com IA?' and published the pilot sequence card 'Sequência do piloto — IA Prática — LiteracyDojo hospedado no OS, depois WAREHOUSE, WORMHOLE e RELAY STATION.' The card's description now renders dark-on-green (computed rgb(31,64,52) on rgb(229,242,235)), the AID-298 contrast fix under verification. Entering the school landed on the IA Prática hub with 'Próxima missão' queued. Observer response: I am in the IA Prática track first; my next supported simulations on this device are WAREHOUSE, WORMHOLE, and RELAY STATION, and 'Sem conta: o progresso fica neste dispositivo.'"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reload of the hub restored 'Capítulo IA Prática', 'XP local 0' and the featured mission state exactly as left ('Retomar missão' after visiting the hosted mission); the paired chapter-continuity run at this SHA restored mission states across reloads and chapter switches. Observer response: the OS restores my unfinished missions only in this browser profile; this is local completion, not cross-device synchronization, and not mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A brand-new browser profile (no storage) returned to the onboarding screen with no reconstructed completion, XP, or mastery language; the surface restates 'Sem conta: o progresso fica neste dispositivo.' and the paired readiness-recovery run confirmed missing local state does not create completion. Observer response: cleared or missing browser storage means onboarding again from zero; I must not claim the prior session was mastered, verified, or synced elsewhere."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-returning-recovery-cause-not-explained-in-product",
+          "severity": "low",
+          "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it.",
+          "owner": "codexDojo OS",
+          "disposition": "Consider a non-authoritative recovery notice without reconstructing progress."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Starting the featured mission framed LiteracyDojo from the OS origin (iframe /apps/literacydojo/?hosted=1) inside the mission shell with visible status columns: 'Estado canônico … 2 verificadas · sem alteração local', 'Motor: running', 'Evidência: Ainda não enviada'. Returning to the hub showed 'Retomar missão' as the supported next action. Observer response: the hosted activity runs inside the OS, my canonical competencies are read-only here, my evidence for this attempt is not sent yet, and my next action is to resume the mission on this device."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing navigation into the hosted LiteracyDojo mission and returning, the same profile resumed the mission state ('Retomar missão · 4 min') and a hub reload restored the chapter without any sync language. Observer response: hosted Literacy continuity follows this browser profile only; it does not follow me to another device or browser and never claims canonical mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The verification panel exposes explicit observable states — 'Ainda não enviada' while unsent and 'Temporariamente indisponível' when the gateway is down — with no completion language in either; the paired pilot-build run verified an unavailable verifier stays not-submitted and a corrected WAREHOUSE retry supersedes the failed attempt. Observer response: with the visible evidence status and the manual I guide one retry or a clean exit; no repository intervention is needed, and no state here implies mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE mounted from the OS origin (iframe /apps/warehouse/?hosted=1) in the mission shell; the hub frames progress as 'uma missão em destaque, com prática observável e progresso que não confunde conclusão com competência' and the shell separates 'Estado canônico … sem alteração local' from 'Evidência: Ainda não enviada'; the paired pilot-build run verified WORMHOLE and RELAY STATION mounts and honest verifier reporting. Observer response: completing a simulation produces evidence for an independent verifier, not mastery; the canonical competencies shown are not changed by this device."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "With reduced motion forced the pilot build presented the full semantic hub and the mission shell exposes 'Usar visualização acessível' alongside 'Visualização 3D WebGL', matching the paired renderer-fallback runs (reduced-motion semantic projection, context-loss retry preserving simulation/evidence identity, forced WebGL unavailability failing over without blocking mission controls). Observer response: I stop and escalate when the renderer stays unavailable after the offered retry/projection switch and the mission controls can no longer present the journey honestly — until then the keyboard-operable projection keeps the journey going without inventing completion."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reload inside WAREHOUSE restored the hosted mission shell (stage 'Responder', 'Motor running', 'Evidência: Ainda não enviada') without re-running setup, and the paired chapter-continuity run restored Dev mission states across chapter switches on the same profile. Observer response: hosted voxel mission continuity is limited to this browser profile; it does not follow me to another device or browser and does not claim mastery."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
