@@ -16,7 +16,7 @@ import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import { StaticEngineEvaluation } from './StaticEngineEvaluation'
 import type { EngineAction, EngineId } from './protocol'
-import { visibleEngineRegistry } from '../apps/studentCatalog'
+import { engineRegistry } from './registry'
 import { isOperatorSurface } from '../surface/operatorSurface'
 import { VoxelEngine } from './VoxelEngine'
 import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
@@ -73,7 +73,7 @@ export function EngineHubApp({
   configuredVoxelUrls = defaultVoxelUrls,
   operatorSurface = isOperatorSurface(),
 }: EngineHubAppProps) {
-  const engines = visibleEngineRegistry(operatorSurface)
+  const engines = engineRegistry
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
   const selected = engines.find((engine) => engine.id === selectedId)

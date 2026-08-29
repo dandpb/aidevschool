@@ -11,6 +11,15 @@ const OPERATOR_ENGINE_IDS = new Set<EngineDefinition['id']>([
   'miniMaxEvolutionEngine',
   'openclaw',
 ])
+// Engine-lab embeds (ec265fab line) are evaluation surfaces inside the Engine
+// Hub only; they never join the desktop catalog for students or operators.
+const LAB_ENGINE_IDS = new Set<EngineDefinition['id']>([
+  'literacyDojo',
+  'miniTown',
+  'dojoToday',
+  'aiDevschoolMvp',
+  'zaiDuolingoLike',
+])
 
 const STUDENT_DOCK_APP_IDS: readonly CoreAppId[] = ['dojo', 'files', 'terminal', 'architecture']
 const STUDENT_SHORTCUT_APP_IDS: readonly CoreAppId[] = ['dojo', 'terminal', 'files']
@@ -32,8 +41,10 @@ export function visibleAppCatalog(operatorSurface = isOperatorSurface()): readon
 }
 
 export function visibleEngineRegistry(operatorSurface = isOperatorSurface()): readonly EngineDefinition[] {
-  if (operatorSurface) return engineRegistry
-  return engineRegistry.filter((engine) => !OPERATOR_ENGINE_IDS.has(engine.id))
+  if (operatorSurface) {
+    return engineRegistry.filter((engine) => !LAB_ENGINE_IDS.has(engine.id))
+  }
+  return engineRegistry.filter((engine) => !OPERATOR_ENGINE_IDS.has(engine.id) && !LAB_ENGINE_IDS.has(engine.id))
 }
 
 export function visibleDockAppIds(operatorSurface = isOperatorSurface()): readonly CoreAppId[] {
