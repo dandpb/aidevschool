@@ -16,6 +16,11 @@ import {
   Zap,
 } from 'lucide-react'
 import { type CSSProperties, type PointerEvent, type ReactNode, useRef } from 'react'
+import { appTitles } from '../apps/appCatalog'
+import {
+  visibleDockAppIds,
+  visibleShortcutAppIds,
+} from '../apps/studentCatalog'
 import type { CoreAppId, LearnerSnapshot, WindowState } from '../domain'
 
 export function TopBar({ learner, learnMode, onToggleLearn, onOpenLauncher }: { readonly learner: LearnerSnapshot; readonly learnMode: boolean; readonly onToggleLearn: () => void; readonly onOpenLauncher: () => void }) {
@@ -33,13 +38,40 @@ export function TopBar({ learner, learnMode, onToggleLearn, onOpenLauncher }: { 
   )
 }
 
-export function DesktopShortcuts({ onOpen }: { readonly onOpen: (id: CoreAppId) => void }) {
-  const shortcuts: readonly { readonly id: CoreAppId; readonly label: string; readonly icon: ReactNode }[] = [
-    { id: 'dojo', label: 'Continuar trilha', icon: <GraduationCap /> },
-    { id: 'terminal', label: 'Terminal', icon: <SquareTerminal /> },
-    { id: 'files', label: 'Projetos', icon: <FolderCode /> },
-    { id: 'engines', label: 'Engine Hub', icon: <Boxes /> },
-  ]
+const shortcutIcons: Readonly<Record<CoreAppId, ReactNode>> = {
+  dojo: <GraduationCap />,
+  terminal: <SquareTerminal />,
+  files: <FolderCode />,
+  architecture: <Layers3 />,
+  software: <PackageCheck />,
+  engines: <Boxes />,
+}
+
+const shortcutLabels: Readonly<Partial<Record<CoreAppId, string>>> = {
+  dojo: 'Continuar trilha',
+}
+
+const dockIcons: Readonly<Record<CoreAppId, ReactNode>> = {
+  dojo: <GraduationCap />,
+  files: <FolderOpen />,
+  terminal: <SquareTerminal />,
+  architecture: <Layers3 />,
+  software: <PackageCheck />,
+  engines: <Boxes />,
+}
+
+export function DesktopShortcuts({
+  onOpen,
+  operatorSurface = false,
+}: {
+  readonly onOpen: (id: CoreAppId) => void
+  readonly operatorSurface?: boolean
+}) {
+  const shortcuts = visibleShortcutAppIds(operatorSurface).map((id) => ({
+    id,
+    label: shortcutLabels[id] ?? appTitles[id],
+    icon: shortcutIcons[id],
+  }))
   return (
     <aside className="desktop-shortcuts" aria-label="Atalhos">
       {shortcuts.map((shortcut) => (
@@ -52,15 +84,22 @@ export function DesktopShortcuts({ onOpen }: { readonly onOpen: (id: CoreAppId) 
   )
 }
 
-export function Dock({ windows, onOpen, onLauncher }: { readonly windows: readonly WindowState[]; readonly onOpen: (id: CoreAppId) => void; readonly onLauncher: () => void }) {
-  const entries: readonly { readonly id: CoreAppId; readonly label: string; readonly icon: ReactNode }[] = [
-    { id: 'dojo', label: 'Trilhas Dojo', icon: <GraduationCap /> },
-    { id: 'files', label: 'Arquivos', icon: <FolderOpen /> },
-    { id: 'terminal', label: 'Terminal', icon: <SquareTerminal /> },
-    { id: 'architecture', label: 'Arquitetura', icon: <Layers3 /> },
-    { id: 'software', label: 'Apps', icon: <PackageCheck /> },
-    { id: 'engines', label: 'Engine Hub', icon: <Boxes /> },
-  ]
+export function Dock({
+  windows,
+  onOpen,
+  onLauncher,
+  operatorSurface = false,
+}: {
+  readonly windows: readonly WindowState[]
+  readonly onOpen: (id: CoreAppId) => void
+  readonly onLauncher: () => void
+  readonly operatorSurface?: boolean
+}) {
+  const entries = visibleDockAppIds(operatorSurface).map((id) => ({
+    id,
+    label: appTitles[id],
+    icon: dockIcons[id],
+  }))
   return (
     <nav className="dock" aria-label="Aplicativos favoritos">
       {entries.map((entry) => (

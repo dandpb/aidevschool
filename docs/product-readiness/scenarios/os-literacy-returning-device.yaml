@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-literacy-returning-device
+useCaseId: os-literacy-guided-mission
+kind: continuity
+execution: mixed
+startState: completed-hosted-literacy-mission-on-same-browser-profile
+steps: [reload-os, retain-literacy-track, resume-visible-mission-state, identify-next-action]
+assertions:
+  - id: hosted-literacy-state-resumes
+    severity: high
+    evidence: playwright
+    claim: The same browser profile restores supported Literacy mission state without claiming cross-device sync.
+  - id: learner-understands-literacy-continuity-boundary
+    severity: high
+    evidence: observation
+    claim: The learner can explain that hosted Literacy continuity is limited to the same browser profile.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]

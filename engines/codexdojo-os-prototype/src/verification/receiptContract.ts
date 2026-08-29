@@ -1,10 +1,20 @@
 import type {
+  EvidenceVerificationState,
   LiteracyVerificationReceipt,
+  StoredVerificationReceipt,
   TeachingGameVerificationReceipt,
   VerificationReceipt,
 } from './ports'
 
 const SHA256_HEX = /^[0-9a-f]{64}$/
+
+export function verifiedState(stored: StoredVerificationReceipt): EvidenceVerificationState {
+  return {
+    kind: 'verified',
+    evidenceDigest: stored.evidenceDigest,
+    receipt: stored.receipt,
+  }
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)

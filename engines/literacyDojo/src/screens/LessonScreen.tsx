@@ -36,6 +36,7 @@ import {
   type OnboardingState,
 } from "../domain/progress";
 import { findModule } from "../domain/track";
+import { ErrorRecoveryScreen } from "./ErrorRecoveryScreen";
 
 export type { LessonMode };
 
@@ -53,12 +54,14 @@ export type { LessonMode };
 export function LessonScreen({
   lessonId,
   mode = "initial",
+  onboarding,
   onProgressChange,
   onCompleted,
   onExit,
 }: {
   lessonId: string;
   mode?: LessonMode;
+  onboarding: OnboardingState;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -67,31 +70,13 @@ export function LessonScreen({
   const lesson = useMemo(() => services.content.getLesson(lessonId), [services, lessonId]);
   const module = lesson ? findModule(services.content.listModules(), lesson.moduleId) : undefined;
 
-  const [onboarding, setOnboarding] = useState<OnboardingState>();
-  const [session, setSession] = useState<LessonSession>(() => createLessonSession(lessonId, mode));
+  const [session, setSession] = useState<LessonSession>(() => ({
+    ...createLessonSession(lessonId, mode),
+    onboarding,
+  }));
   const [submitting, setSubmitting] = useState(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-
-  // Abertura da lição (status in_progress + lesson_started) ou da revisão (review_started).
-  useEffect(() => {
-    let cancelled = false;
-    const opening =
-      mode === "review"
-        ? services.useCases.startReview(lessonId).then((result) => result.progress)
-        : services.useCases.startLesson(lessonId);
-    void opening.then((progress) => {
-      if (!cancelled) {
-        setOnboarding(progress.onboarding);
-        setSession((previous) => ({ ...previous, onboarding: progress.onboarding }));
-        onProgressChange(progress);
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [services, lessonId, mode, onProgressChange]);
-
   // Gerenciamento de foco: o título recebe foco a cada nova tela do player
   // (introdução e cada atividade), orientando teclado e leitor de tela.
   // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (phase/currentActivityIndex), embora não leia o valor.
@@ -100,26 +85,17 @@ export function LessonScreen({
   }, [session.phase, session.currentActivityIndex]);
 
   if (!lesson) {
-    return (
-      <section className="screen">
-        <p role="alert">Lição não encontrada.</p>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          Voltar
-        </button>
-      </section>
-    );
+    return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;
   }
 
   const activity = currentActivity(session, lesson);
 
   if (!activity) {
     return (
-      <section className="screen">
-        <p role="alert">Nenhuma atividade encontrada para esta lição.</p>
-        <button type="button" className="btn btn-secondary" onClick={onExit}>
-          Voltar
-        </button>
-      </section>
+      <ErrorRecoveryScreen
+        message="Nenhuma atividade encontrada para esta lição."
+        onBack={onExit}
+      />
     );
   }
 

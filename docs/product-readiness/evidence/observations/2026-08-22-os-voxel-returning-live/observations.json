@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "2097723cb62451c05ecafcd5bd6c474dc3b8a925",
+  "observedAt": "2026-08-22T16:22:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Onboarding presented the recommended IA Prática track and the learner entered school without selecting a separate Dev track label. Observer response: I followed IA Prática first; after those literacy missions my next supported simulations on this device are WAREHOUSE, WORMHOLE, and RELAY STATION."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Chapter continuity restored IA Prática and Dev mission states after reloads and chapter switches without cross-device claims. Observer response: The OS restored my unfinished missions in this browser profile only; this is not synchronization across devices or browsers."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A fresh browser profile returned to onboarding with no reconstructed completion or mastery language. Observer response: Cleared or missing browser storage means onboarding again; I must not claim the prior session was mastered or synced elsewhere."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-returning-recovery-cause-not-explained-in-product",
+          "severity": "low",
+          "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it.",
+          "owner": "codexDojo OS",
+          "disposition": "Consider a non-authoritative recovery notice without reconstructing progress."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The bundled WAREHOUSE mission mounted from the OS origin; a corrected retry showed Verificador indisponível without Evidência rejeitada. Observer response: Local completion at 100% is not canonical mastery; verification stays unavailable on this static deploy and the hub does not falsely reject evidence."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reduced-motion and WebGL degradation retained a keyboard-operable semantic projection in the integrated dev bridge. Observer response: I stop and escalate when neither the 3D renderer nor the accessible projection lets the learner complete the core WAREHOUSE interaction."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reload restored completed WAREHOUSE, WORMHOLE, and RELAY STATION mission states after chapter switches. Observer response: Hosted voxel mission continuity is limited to this browser profile; it does not follow me to another device or browser."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

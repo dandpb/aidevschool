@@ -46,7 +46,7 @@ export const projects: readonly DojoProject[] = [
       "Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics",
     learningGoal: "Comparar mapas e dicionários sob carga concorrente e persistência simples.",
     evidence: [
-      "Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the Go and Rust directories came from an earlier ungated backfill and have not been compiled, tested, reviewed, or benchmarked in the certified cycle.",
+      "Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the earlier ungated Go/Rust backfill directories were removed in commit `1b0a309` and no longer exist on disk.",
       "implemented (Node.js only)",
       "02_key_value_store/",
       "Project 01 (concurrency basics)",

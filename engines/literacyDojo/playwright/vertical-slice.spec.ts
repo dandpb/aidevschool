@@ -10,7 +10,7 @@ import {
   wrongOutput,
 } from "./support";
 
-test("Mapa Inicial: erro, dica ou nova tentativa encaminha para a rota guiada", async ({
+test("readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada", async ({
   page,
 }) => {
   await completeOnboarding(page);
@@ -33,7 +33,9 @@ test("Mapa Inicial: erro, dica ou nova tentativa encaminha para a rota guiada", 
   ).toBeVisible();
 });
 
-test("Mapa Inicial: acerto de primeira encaminha para a rota intermediária", async ({ page }) => {
+test("readiness literacy-happy-path and literacy-resume: acerto de primeira encaminha para a rota intermediária", async ({
+  page,
+}) => {
   await completeOnboarding(page);
   await answerRight(page);
 
@@ -41,11 +43,16 @@ test("Mapa Inicial: acerto de primeira encaminha para a rota intermediária", as
   await page.getByTestId("next-lesson").click();
   await expect(
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await page.reload();
+  // resumeSession retoma a lição in_progress no intro persistido (ver LessonScreen + useCases).
+  await expect(page.getByTestId("lesson-intro")).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "O que a IA faz bem e onde costuma falhar" }),
   ).toBeVisible();
+  const progress = await readProgress(page);
+  expect(progress?.lessonStatus?.l02).toBe("completed");
+  expect(progress?.currentLessonId).toBe("l03");
 
   const records = await readEvidence(page);
   expect(records).toHaveLength(1);
@@ -66,10 +73,11 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   const goalOption = page.getByTestId("onboarding-option-save_time");
   await goalOption.focus();
   await expect(goalOption).toBeFocused();
-  const focusOutline = await goalOption
-    .locator("..")
-    .evaluate((element) => getComputedStyle(element).outlineStyle);
-  expect(focusOutline).toBe("solid");
+  const focusOutline = await goalOption.locator("..").evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { color: style.outlineColor, style: style.outlineStyle };
+  });
+  expect(focusOutline).toEqual({ color: "rgb(73, 56, 199)", style: "solid" });
   await goalOption.check();
   await page.getByTestId("onboarding-next").click();
   await page.getByTestId("onboarding-option-work").check();

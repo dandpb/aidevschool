@@ -64,23 +64,31 @@ function awardEngagementXp<T extends EngagementProgress>(
 
 function unlockAchievements<T extends EngagementProgress>(progress: T, now: Date): T {
   const existing = new Set(progress.achievements.map((achievement) => achievement.id))
-  const completedMissions = Object.values(progress.missionStatusByKey).filter(
-    (status) => status === 'completed',
-  ).length
-  const engagements = Object.values(progress.missionEngagementByKey)
+  // Single pass over missionStatusByKey: counts completions and tracks the
+  // ai-pratica:/dev: chapter starts without allocating intermediate arrays.
+  let completedMissions = 0
+  let hasAiPraticaStart = false
+  let hasDevStart = false
+  for (const key in progress.missionStatusByKey) {
+    if (progress.missionStatusByKey[key as keyof typeof progress.missionStatusByKey] !== 'completed') {
+      continue
+    }
+    completedMissions++
+    if (!hasAiPraticaStart && key.startsWith('ai-pratica:')) hasAiPraticaStart = true
+    if (!hasDevStart && key.startsWith('dev:')) hasDevStart = true
+  }
+  let hasPractice = false
+  for (const engagement of Object.values(progress.missionEngagementByKey)) {
+    if (engagement.practiceCompleted) {
+      hasPractice = true
+      break
+    }
+  }
   const candidates: AchievementId[] = []
   if (completedMissions >= 1) candidates.push('first-mission')
-  if (engagements.some((engagement) => engagement.practiceCompleted)) candidates.push('first-practice')
-  if (
-    Object.entries(progress.missionStatusByKey).some(
-      ([key, status]) => key.startsWith('ai-pratica:') && status === 'completed',
-    )
-  ) candidates.push('ai-pratica-started')
-  if (
-    Object.entries(progress.missionStatusByKey).some(
-      ([key, status]) => key.startsWith('dev:') && status === 'completed',
-    )
-  ) candidates.push('dev-started')
+  if (hasPractice) candidates.push('first-practice')
+  if (hasAiPraticaStart) candidates.push('ai-pratica-started')
+  if (hasDevStart) candidates.push('dev-started')
   if (completedMissions >= 3) candidates.push('three-missions')
   if (progress.localEngagementStreak.current >= 3) candidates.push('streak-3')
   if (progress.localEngagementStreak.current >= 7) candidates.push('streak-7')

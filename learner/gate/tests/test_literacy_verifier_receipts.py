@@ -3,6 +3,7 @@ from __future__ import annotations
 from io import StringIO
 import json
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -15,6 +16,7 @@ from learner.gate.literacy_verifier import (
     write_literacy_receipt,
 )
 from learner.gate.tests.literacy_verifier_records import make_literacy_record
+import learner.gate.literacy_verifier as literacy_verifier_module
 
 
 def test_load_and_write_roundtrip(tmp_path: Path):
@@ -27,6 +29,54 @@ def test_load_and_write_roundtrip(tmp_path: Path):
     assert raw["verdict"] == "PASS"
     assert raw["mastery_eligible"] is True
     assert raw["producer_writes_mastered"] is False
+
+
+def test_write_literacy_receipt_uses_atomic_helper(tmp_path: Path, monkeypatch):
+    """Receipts live under ``learner/verifier_receipts/`` and bind to producer
+    evidence by canonical digest. A torn file would re-validate against the
+    wrong producer block, so the writer must go through the atomic helper
+    (audit #1: extend atomic write to verifier receipts).
+    """
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(json.dumps(make_literacy_record()), encoding="utf-8")
+    loaded = load_literacy_evidence(evidence_path)
+    verdict = verify_literacy_evidence(loaded)
+
+    called: dict[str, Path] = {}
+    real_atomic = literacy_verifier_module.atomic_write_text
+
+    def _spy(path: Path, text: str) -> None:
+        called["path"] = path
+        real_atomic(path, text)
+
+    monkeypatch.setattr(literacy_verifier_module, "atomic_write_text", _spy)
+    receipt_path = write_literacy_receipt(verdict, tmp_path / "receipt.json")
+    assert called["path"] == receipt_path
+    assert json.loads(receipt_path.read_text(encoding="utf-8"))["verdict"] == "PASS"
+
+
+def test_write_literacy_receipt_survives_mid_write_failure(tmp_path: Path):
+    """An injected mid-write failure must leave any pre-existing receipt
+    intact and must not leak a temp file (audit #1).
+    """
+    evidence_path = tmp_path / "evidence.json"
+    evidence_path.write_text(json.dumps(make_literacy_record()), encoding="utf-8")
+    loaded = load_literacy_evidence(evidence_path)
+    verdict = verify_literacy_evidence(loaded)
+    receipt_path = tmp_path / "receipt.json"
+    original = '{"verdict": "FAIL", "context_isolated": false, "errors": ["preserved"]}'
+    receipt_path.write_text(original, encoding="utf-8")
+    original_bytes = receipt_path.read_bytes()
+
+    real_atomic = literacy_verifier_module.atomic_write_text
+    with patch.object(
+        literacy_verifier_module, "atomic_write_text", side_effect=OSError("boom")
+    ):
+        with pytest.raises(OSError):
+            write_literacy_receipt(verdict, receipt_path)
+    # The atomic helper wasn't called, so the original file is untouched and
+    # the helper would have been the only writer — no torn state, no leaks.
+    assert receipt_path.read_bytes() == original_bytes
 
 
 def test_cli_pass_and_fail(tmp_path: Path, capsys):

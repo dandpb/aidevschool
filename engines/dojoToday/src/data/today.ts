@@ -1,16 +1,16 @@
 // AUTO-GERADO por learner/substrate/adapters/dojotoday.py — NÃO EDITAR À MÃO.
 // Fonte: learner/learning_state.yaml + scheduler learner.substrate.scheduling.
-// Regenerado em 2026-07-25.
+// Regenerado em 2026-08-21.
 import type { TodaySnapshot } from "../types";
 
 export const today: TodaySnapshot = {
-  "asOf": "2026-07-25",
+  "asOf": "2026-08-21",
   "streak": {
     "current": 0,
-    "longest": 1,
+    "longest": 2,
     "freezesEquipped": 0,
     "freezesMax": 2,
-    "lastGateDate": "2026-07-05"
+    "lastGateDate": "2026-08-13"
   },
   "curr": 0.0,
   "activeUnit": {
@@ -18,7 +18,7 @@ export const today: TodaySnapshot = {
     "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
     "project": "02_key_value_store",
     "num": "02",
-    "state": "evaluating",
+    "state": "mastered",
     "gameDir": "engines/voxelDojo/game-02-warehouse",
     "diagnosticFile": "curriculum/02_key_value_store/docs/spec.md"
   },
@@ -26,7 +26,7 @@ export const today: TodaySnapshot = {
     {
       "unitId": "U0-sonda-rate-limiter-robustness",
       "title": "GATEKEEPER: token-bucket rate limiter robustness",
-      "dueIn": "overdue 16d",
+      "dueIn": "overdue 43d",
       "reason": "overdue",
       "gameDir": "engines/pixelDojo",
       "project": "01_rate_limiter"
@@ -34,15 +34,15 @@ export const today: TodaySnapshot = {
     {
       "unitId": "U2-key-value-store",
       "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
-      "dueIn": "today",
-      "reason": "due",
+      "dueIn": "overdue 4d",
+      "reason": "overdue",
       "gameDir": "engines/voxelDojo/game-02-warehouse",
       "project": "02_key_value_store"
     }
   ],
-  "masteredCount": 1,
+  "masteredCount": 2,
   "totalUnits": 2,
-  "nextProjectNum": "02",
+  "nextProjectNum": "03",
   "track": [
     {
       "num": "01",
@@ -54,7 +54,7 @@ export const today: TodaySnapshot = {
       "num": "02",
       "title": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
       "gameDir": "engines/voxelDojo/game-02-warehouse",
-      "status": "active"
+      "status": "mastered"
     },
     {
       "num": "03",

@@ -13,10 +13,10 @@ type WarehouseHook = {
 
 async function launchWarehouse(page: Page): Promise<void> {
   await page.goto('/')
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
+  await expect(page.getByRole('heading', { name: 'Aprenda uma coisa útil agora.' })).toBeVisible()
+  await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  await page.locator('.next-mission-card .journey-primary').click()
   await expect.poll(
     () => page.frames().some((frame) => frame.url().startsWith('http://127.0.0.1:5202/')),
   ).toBe(true)

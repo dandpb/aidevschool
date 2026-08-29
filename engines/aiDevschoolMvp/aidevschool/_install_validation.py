@@ -49,7 +49,7 @@ def validate_curriculum(skill_dir: Path) -> dict[str, Any]:
                 _fail(f"{cid}: bad prerequisite id {prerequisite!r}")
 
     for r in curriculum:
-        for prerequisite in r["prerequisites"]:
+        for prerequisite in r.get("prerequisites", []):
             if prerequisite >= r["id"]:
                 _fail(f"topological inversion: {r['id']} lists later prerequisite {prerequisite}")
 
@@ -70,6 +70,8 @@ def validate_curriculum(skill_dir: Path) -> dict[str, Any]:
             )
 
     registry = json.loads((skill_dir / "gate_registry.json").read_text(encoding="utf-8"))
+    if not isinstance(registry.get("concept_bindings"), dict):
+        _fail("gate_registry.json must have a concept_bindings object")
     for cid in ids:
         if cid not in registry["concept_bindings"]:
             _fail(f"{cid}: no gate-registry binding")

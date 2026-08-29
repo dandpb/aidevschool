@@ -69,7 +69,7 @@ export function renderOverview(state: AppState): string {
           .map((agent, index) => {
             const nodeNumber = index + 1
             const ariaLabel = `Nó ${nodeNumber}: ${agent.name}`
-            return `<button class="agent-node node-${nodeNumber}" type="button" data-agent="${escapeHtml(agent.id)}" aria-label="${escapeHtml(ariaLabel)}">
+            return `<button class="agent-node node-${nodeNumber}" type="button" data-agent="${escapeHtml(agent.id)}" aria-label="${escapeHtml(ariaLabel)}" title="${escapeHtml(agent.role)}">
                 <span aria-hidden="true">${escapeHtml(agent.name)}</span>
               </button>`
           })
@@ -83,6 +83,9 @@ export function renderOverview(state: AppState): string {
         <ul>
           ${model.currentProject.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
+        <div class="primary-actions">
+          <button class="action-button" type="button" data-project="${escapeHtml(model.currentProject.id)}">Ver projeto</button>
+        </div>
       </article>
 
       <article class="metric-strip">
@@ -121,7 +124,7 @@ export function renderOverview(state: AppState): string {
           .map((stage, index) => {
             const ariaLabel = `Etapa ${index + 1}: ${stage.label} (Proprietário: ${stage.owner})`
             return `
-              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}" aria-label="${escapeHtml(ariaLabel)}">
+              <button class="stage-chip" type="button" data-stage="${escapeHtml(stage.id)}" aria-label="${escapeHtml(ariaLabel)}" title="Evidência: ${escapeHtml(stage.evidence)}">
                 <span aria-hidden="true">${escapeHtml(stage.owner)}</span>
                 <span aria-hidden="true">${escapeHtml(stage.label)}</span>
               </button>

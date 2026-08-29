@@ -17,6 +17,8 @@
 ## Domain Behavior Guardrails
 1. **[2026-06-03] Keep the tutoring system evidence-gated**
    Do instead: preserve the presenting/practicing/evaluating/mastered state machine and require executable exercise evidence before marking mastery.
+2. **[2026-08-20] Readiness producer reports cover exercised browser assertions only**
+   Do instead: keep manual-only recovery or renderer claims unassessed until a separate observation or document review records them.
 
 ## User Directives
 1. **[2026-06-03] User expects action from pasted specs**

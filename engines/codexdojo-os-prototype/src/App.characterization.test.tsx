@@ -46,8 +46,8 @@ function renderJourneyAt(path = '/') {
   return render(<App services={services} />)
 }
 
-function renderDesktopRoute() {
-  window.history.replaceState(null, '', '/desktop')
+function renderDesktopRoute(query = '') {
+  window.history.replaceState(null, '', `/desktop${query}`)
   return render(<App />)
 }
 
@@ -63,7 +63,7 @@ describe('codexDojo OS release behavior', () => {
 
   it('keeps the desktop with Dojo and Learn Mode visible at /desktop', () => {
     // Given
-    renderDesktopRoute()
+    renderDesktopRoute('?operator=1')
 
     // When
     const workspace = screen.getByRole('region', { name: 'Área de trabalho' })
@@ -77,7 +77,7 @@ describe('codexDojo OS release behavior', () => {
   it('opens Terminal and completes the learn-process interaction', async () => {
     // Given
     const user = userEvent.setup()
-    renderDesktopRoute()
+    renderDesktopRoute('?operator=0')
 
     // When
     const terminalButtons = screen.getAllByRole('button', { name: 'Terminal' })
@@ -96,7 +96,7 @@ describe('codexDojo OS release behavior', () => {
   it('filters launcher apps by a user query and launches the result', async () => {
     // Given
     const user = userEvent.setup()
-    renderDesktopRoute()
+    renderDesktopRoute('?operator=0')
 
     // When
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
@@ -113,7 +113,7 @@ describe('codexDojo OS release behavior', () => {
   it('closes the launcher when the backdrop is pressed', async () => {
     // Given
     const user = userEvent.setup()
-    renderDesktopRoute()
+    renderDesktopRoute('?operator=0')
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
 
     // When
@@ -121,5 +121,19 @@ describe('codexDojo OS release behavior', () => {
 
     // Then
     expect(screen.queryByLabelText('Buscar aplicativos ou fundamentos')).toBeNull()
+  })
+
+  it('hides Engine Hub and Central de Apps from the student desktop surface', async () => {
+    const user = userEvent.setup()
+    renderDesktopRoute('?operator=0')
+
+    expect(screen.queryByRole('button', { name: 'Engine Hub' })).toBeNull()
+    expect(screen.queryByRole('button', { name: /Apps/ })).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Atividades' }))
+    const launcher = screen.getByRole('dialog', { name: 'Lançador de aplicativos' })
+    expect(launcher.textContent).not.toContain('Engine Hub')
+    expect(launcher.textContent).not.toContain('Central de Apps')
+    expect(launcher.textContent).not.toContain('Fundamentos')
   })
 })

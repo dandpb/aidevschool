@@ -591,3 +591,14 @@
   .journey-page *,
   .journey-loading * { animation: none; transition: none; }
 }
+
+.support-cta {
+  margin-top: 12px;
+  color: var(--journey-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.support-cta a {
+  color: var(--journey-primary-dark);
+  font-weight: 850;
+}

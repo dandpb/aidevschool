@@ -1,3 +1,4 @@
+export { L3_CRATE_TTL_MS } from "./config/crateTtlMs"
 export type { EvidenceRecord } from "./evidence/emit"
 export type { GameState, Listener, Phase } from "./game/controller"
 export { GameController } from "./game/controller"

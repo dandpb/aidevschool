@@ -1,0 +1,18 @@
+# Deploy estático do codexDojo (dashboard do ecossistema — link público).
+# Uso: conecte este diretório (engines/codexDojo) como base do site no Netlify,
+# ou rode `npx netlify deploy --prod --dir=dist` a partir daqui com o CLI autenticado.
+# Site: aidevschool-codexdojo
+# Nota: o dashboard lê VITE_CODEXDOJO_OS_URL em produção; sem a OS deployada a bridge fica inativa.
+
+[build]
+  command = "pnpm install && pnpm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# SPA fallback: todas as rotas servem index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

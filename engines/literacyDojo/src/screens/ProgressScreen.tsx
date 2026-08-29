@@ -1,6 +1,8 @@
+import { useRef, useState } from "react";
+import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
 import type { LearnerProgress } from "../domain/progress";
-import { ACHIEVEMENT_DEFINITIONS } from "../domain/progress";
+import { ACHIEVEMENT_DEFINITIONS, localDateKey } from "../domain/progress";
 import { readyLessonEntries } from "../domain/track";
 import { buildTrackQueries } from "../domain/trackQueries";
 
@@ -22,23 +24,66 @@ export function ProgressScreen({
   onBack,
   onStartLesson,
   onReview,
+  onProgressImported,
 }: {
   progress: LearnerProgress;
   onBack: () => void;
   onStartLesson: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
+  onProgressImported: (progress: LearnerProgress) => void;
 }) {
   const services = useServices();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [backupStatus, setBackupStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(
+    null,
+  );
   const queries = buildTrackQueries(progress, services.content, services.clock);
   const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
   const practicedSkills = Object.values(progress.skills);
 
+  const handleExport = async () => {
+    try {
+      const json = await services.useCases.exportProgress();
+      downloadTextFile(
+        `literacydojo-progress-${localDateKey(services.clock())}.json`,
+        json,
+        "application/json",
+      );
+      setBackupStatus({
+        kind: "ok",
+        text: "Backup baixado. O arquivo registra no máximo lições concluídas — nunca mastery.",
+      });
+    } catch (error) {
+      setBackupStatus({
+        kind: "error",
+        text: error instanceof Error ? error.message : "Não foi possível exportar o progresso.",
+      });
+    }
+  };
+
+  const handleImportFile = async (file: File) => {
+    try {
+      const next = await services.useCases.importProgress(await file.text());
+      onProgressImported(next);
+      setBackupStatus({
+        kind: "ok",
+        text: "Backup restaurado neste navegador. completed não significa mastered.",
+      });
+    } catch (error) {
+      setBackupStatus({
+        kind: "error",
+        text: error instanceof Error ? error.message : "Backup inválido ou não migrável.",
+      });
+    }
+  };
+
   const readyLessons = readyLessonEntries(services.content.listModules());
   const lessonBySkillId = new Map<string, (typeof readyLessons)[number]>();
   for (const entry of readyLessons) {
+    if (progress.lessonStatus[entry.id] !== "completed") continue;
     for (const skillId of entry.skillIds) {
-      lessonBySkillId.set(skillId, entry);
+      if (!lessonBySkillId.has(skillId)) lessonBySkillId.set(skillId, entry);
     }
   }
   const lessonForSkill = (skillId: string) => lessonBySkillId.get(skillId);
@@ -152,7 +197,7 @@ export function ProgressScreen({
 
       <div className="card">
         <h2>Trilha</h2>
-        <ul className="lesson-list">
+        <ul className="lesson-list progress-lesson-list">
           {readyLessons.map((entry) => {
             const status = progress.lessonStatus[entry.id] ?? "locked";
             return (
@@ -173,6 +218,55 @@ export function ProgressScreen({
             );
           })}
         </ul>
+      </div>
+
+      <div className="card" data-testid="progress-backup">
+        <h2>Backup neste aparelho</h2>
+        <p className="muted">
+          O progresso mora só neste navegador: não há conta nem sincronização. Limpar dados do site,
+          trocar de aparelho ou de perfil apaga o histórico. Exporte um JSON para guardar uma cópia;
+          ao importar, a migração atualiza o formato antigo e o teto continua <code>completed</code>{" "}
+          — nunca <code>mastered</code>.
+        </p>
+        <div className="backup-actions">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-testid="export-progress"
+            onClick={() => void handleExport()}
+          >
+            Baixar backup JSON
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-testid="import-progress"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Restaurar backup
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            hidden
+            data-testid="import-progress-file"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (file) void handleImportFile(file);
+            }}
+          />
+        </div>
+        {backupStatus ? (
+          <p
+            className={backupStatus.kind === "error" ? "backup-status is-error" : "backup-status"}
+            data-testid="backup-status"
+            role={backupStatus.kind === "error" ? "alert" : "status"}
+          >
+            {backupStatus.text}
+          </p>
+        ) : null}
       </div>
 
       <button

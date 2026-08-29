@@ -29,29 +29,42 @@ do not run `npm install` / `pnpm install` at the root.
 
 ## The canonical learner entry
 
-`engines/codexdojo-os-prototype/` is the canonical mission-first host. Its root
-route opens one onboarding, recommends either **IA Prática** or **Trilha Dev**,
-and returns both audiences to the same hub, map, mentor, and progress
-explanation. The first-release catalog contains three ready missions per track;
-the engine that executes a mission is an implementation detail behind the host.
+The first public learner entry is `engines/literacyDojo/`: 14 **IA Prática**
+missions for nontechnical learners, in pt-BR, with no account and progress kept
+in this browser. **Trilha Dev** remains a coming-soon teaser and is not part of
+this release.
 
-The host keeps onboarding, mission completion, XP, daily goals, engagement
+LiteracyDojo keeps onboarding, mission completion, XP, daily goals, engagement
 streaks, achievements, and opaque checkpoints locally in this browser. That
 IndexedDB continuity is not canonical mastery and does not synchronize between
 devices. Canonical learner state remains the generated, read-only substrate
 snapshot; only the independent learner gate can change `mastered`.
 
-The legacy desktop and Engine Hub remain available at `/desktop` as secondary
-contributor and engine-inspection tools. They are not the default learner entry,
-and launching an engine there does not grant mission, verification, or mastery
-authority.
+The CodexDojo OS mission-first host and its `/desktop` tools remain separate
+pilot/contributor surfaces with their own setup and release gates. They are not
+the public entry for this release, and launching an engine there does not grant
+mission, verification, or mastery authority.
+
+## Audience-first routes
+
+Use the audience guide before opening engine internals:
+
+| Audience | Start with | Then use |
+| --- | --- | --- |
+| Student | [Student guide](../product-readiness/student-guide.md) | The owning engine README only when the selected journey requires local setup. |
+| Facilitator | [Facilitator guide](../product-readiness/facilitator-guide.md) | This handbook and the owning engine README for preparation and technical recovery. |
+| Readiness reviewer | [Generated readiness matrix](../product-readiness/README.md) | The canonical inventory, scenarios, promoted evidence, and independent assessments. |
+
+The guides own the cross-product promise and visible status language. They do not
+replace engine-local setup or grant learner mastery.
 
 ## Choose a route
 
 | Audience | First learner surface | Then read |
 | --- | --- | --- |
-| Nontechnical learner | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **IA Prática**; LiteracyDojo runs the bounded lesson activity | [Onboarding](02_onboarding.md) |
-| Programmer | [codexdojo OS](03b_engine_codexdojo-os-prototype.md), choosing **Trilha Dev**; voxelDojo runs the first chapter simulations | [Curriculum](07_curriculum.md) |
+| Nontechnical learner | [Student guide — IA Prática](../product-readiness/student-guide.md#standalone-literacydojo) | [LiteracyDojo README](../../engines/literacyDojo/README.md) |
+| Programmer | [Student guide — programmer journeys](../product-readiness/student-guide.md#programmer-journeys); dojoToday, PixelQuest, voxelDojo, or the OS provide bounded routes | [Curriculum](07_curriculum.md) and the owning engine README |
+| Facilitator | [Facilitator guide](../product-readiness/facilitator-guide.md) | This handbook for relationships, then the owning engine guide |
 | Contributor | [Documentation map](../DOCUMENTATION.md) | Architecture, onboarding, then the owning engine guide |
 
 ## Read in this order
@@ -64,13 +77,20 @@ authority.
 | 3b | [Engine — codexdojo-os-prototype](03b_engine_codexdojo-os-prototype.md) | Work on the canonical educational OS experience and its read-only learner projection. |
 | 4 | [Engine — pixelDojo](04_engine_pixelDojo.md) | Work on the 8-bit teaching game and its evidence contract. |
 | 4b | [Engine — voxelDojo](10_engine_voxelDojo.md) | Work on the 3D teaching simulations (Three.js) and the HASH RING pilot. |
-| 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the cozy town-sim: the level-0 entry surface for the non-technical audience. |
+| 4c | [Engine — miniTown](11_engine_miniTown.md) | Explore the explicitly experimental, explore-only level-0 surface; use the student guide before engine details. |
 | 4d | [Engine — LiteracyDojo](12_engine_literacyDojo.md) | Work on the local-first microlearning experience for people who do not code. |
+| 4e | [Engine — dojoToday](13_engine_dojoToday.md) | Work on the read-only "lesson for today" surface for programmers and its generated substrate read model. |
 | 5 | [Engine — minimaxDojo](05_engine_minimaxDojo.md) | Understand the 14-agent tutoring core, its state machine and gates. |
 | 6 | [Engine — miniMaxEvolutionEngine](06_engine_miniMaxEvolutionEngine.md) | Run the Claude Code orchestration motor (the 5-phase loop). |
+| 6b | [Engine — aiDevschoolMvp](../../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Work on the SKILL.md-based AI-fluency tutor MVP and its installer (agent core; installer tests run under root `make test`). |
 | 7 | [Curriculum](07_curriculum.md) | Understand Level 0, the programming track, the AI Literacy track, and their evidence boundaries. |
 | 8 | [Learner substrate](08_learner_substrate.md) | Understand the learner state schema, the gates, FSRS spaced repetition, and the read/write contract. |
 | 9 | [Glossary](09_glossary.md) | Look up a term (especially the Portuguese agent names and state values). |
+
+> **Non-integrated prototype:** `engines/zai-duolingo-like/` ("Vertical Protocol" — a
+> cyberpunk-Tokyo "Duolingo for AI" in Next.js) is a future engine to integrate and a candidate
+> for the gamified nontechnical track. It is outside `make test` and not yet part of the
+> canonical ecosystem; keep it, but do not treat it as a current surface.
 
 ## The five golden rules
 
@@ -87,13 +107,16 @@ aidevschool/                       # ECOSYSTEM umbrella (git repo, no root packa
 ├── engines/                       # apps, agent cores, and runners — each is a separate project
 │   ├── codexDojo/                 # runnable app: user-facing dashboard (Vite/TS SPA)
 │   ├── codexdojo-os-prototype/    # runnable app: canonical educational OS (React/Vite)
+│   ├── dojoToday/                 # runnable app: read-only "lesson for today" for programmers
 │   ├── literacyDojo/              # runnable app: short AI lessons for nontechnical learners
 │   ├── miniTown/                  # runnable app: cozy, explore-only Level 0 entry
 │   ├── pixelDojo/                 # runnable app: 8-bit teaching games (pixel-quest/)
 │   ├── voxelDojo/                 # runnable apps: 3D teaching simulations (game-*)
 │   ├── minimaxDojo/               # agent core: 14-agent "Ágora Continuum" tutoring spec
 │   ├── miniMaxEvolutionEngine/    # agent core: Claude Code motor (5-phase loop)
-│   └── openclaw/                  # file-based checklist runner (simulate mode)
+│   ├── aiDevschoolMvp/            # agent core: SKILL.md AI-fluency tutor MVP + installer
+│   ├── openclaw/                  # file-based checklist runner (simulate mode)
+│   └── zai-duolingo-like/         # non-integrated Next.js prototype (future engine)
 ├── curriculum/                    # SHARED: numbered catalog + ai-literacy lessons
 ├── learner/                       # SHARED: learner state, profile, pitfalls, journal, substrate
 ├── docs/                          # ecosystem docs (this handbook, design archive, prompts, ideas)
@@ -119,6 +142,9 @@ Compatibility symlinks at the root keep legacy tooling working: `projects → cu
 | Requirement → file coverage | [`engines/codexDojo/ecosystem/MANIFEST.md`](../../engines/codexDojo/ecosystem/MANIFEST.md) |
 | The product vision (central idea) | [`docs/VISION.md`](../VISION.md) |
 | Shared micro-lesson contract | [`docs/design/micro-lesson-contract.md`](../design/micro-lesson-contract.md) |
+| Product-readiness contract | [`docs/design/product-readiness.md`](../design/product-readiness.md) |
+| Student guide | [`docs/product-readiness/student-guide.md`](../product-readiness/student-guide.md) |
+| Facilitator guide | [`docs/product-readiness/facilitator-guide.md`](../product-readiness/facilitator-guide.md) |
 | The original goal | [`docs/PROMPTS/-01_GOAL.md`](../PROMPTS/-01_GOAL.md) |
 
 ---

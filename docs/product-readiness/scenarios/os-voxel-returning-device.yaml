@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-voxel-returning-device
+useCaseId: os-voxel-guided-missions
+kind: continuity
+execution: mixed
+startState: completed-hosted-voxel-mission-on-same-browser-profile
+steps: [reload-os, retain-dev-track, resume-visible-mission-state, identify-next-action]
+assertions:
+  - id: hosted-voxel-state-resumes
+    severity: high
+    evidence: playwright
+    claim: The same browser profile restores supported Dev mission state without claiming cross-device sync.
+  - id: learner-understands-voxel-continuity-boundary
+    severity: high
+    evidence: observation
+    claim: The learner can explain that hosted voxel mission continuity is limited to the same browser profile.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]

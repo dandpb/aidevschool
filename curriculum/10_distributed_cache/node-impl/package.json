@@ -5,8 +5,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "tsc -p tsconfig.json --noEmit",
-    "test": "npm run build && node --test dist/**/*.test.js",
-    "coverage": "npm run build && node --test --experimental-test-coverage dist/**/*.test.js",
+    "test": "npm run build && node --test dist/cache.test.js",
+    "coverage": "npm run build && node --test --experimental-test-coverage dist/cache.test.js",
     "start": "node dist/server.js"
   },
   "devDependencies": {

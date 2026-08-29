@@ -16,7 +16,8 @@ import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import { StaticEngineEvaluation } from './StaticEngineEvaluation'
 import type { EngineAction, EngineId } from './protocol'
-import { engineRegistry } from './registry'
+import { visibleEngineRegistry } from '../apps/studentCatalog'
+import { isOperatorSurface } from '../surface/operatorSurface'
 import { VoxelEngine } from './VoxelEngine'
 import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
 
@@ -28,6 +29,7 @@ export type EngineHubAppProps = {
   readonly localBridgeAvailable?: boolean
   readonly runAction?: EngineActionRunner
   readonly configuredVoxelUrls?: VoxelUrlMap
+  readonly operatorSurface?: boolean
 }
 
 const engineIcons: Readonly<Record<EngineId, ReactNode>> = {
@@ -69,10 +71,12 @@ export function EngineHubApp({
   localBridgeAvailable = development || import.meta.env.VITE_LOCAL_ENGINE_BRIDGE === 'true',
   runAction = defaultActionRunner,
   configuredVoxelUrls = defaultVoxelUrls,
+  operatorSurface = isOperatorSurface(),
 }: EngineHubAppProps) {
+  const engines = visibleEngineRegistry(operatorSurface)
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
-  const selected = engineRegistry.find((engine) => engine.id === selectedId)
+  const selected = engines.find((engine) => engine.id === selectedId)
 
   const selectEngine = (engineId: EngineId) => {
     setSelectedId(engineId)
@@ -93,7 +97,7 @@ export function EngineHubApp({
 
       <div className="engine-hub-layout">
         <nav className="engine-selector" aria-label="Motores do ecossistema">
-          {engineRegistry.map((engine) => (
+          {engines.map((engine) => (
             <button
               type="button"
               key={engine.id}

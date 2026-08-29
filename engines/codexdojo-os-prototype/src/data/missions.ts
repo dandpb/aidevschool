@@ -7,11 +7,11 @@ import type { MissionCatalogSnapshot } from "../domain"
 
 export const missionCatalog: MissionCatalogSnapshot = {
   schemaVersion: 1,
-  contentVersion: "2026-07-25.1",
+  contentVersion: "2026-08-21.1",
   tracks: [
     {
       id: "ai-pratica",
-      contentVersion: "2026-07-25.1",
+      contentVersion: "2026-08-21.1",
       recommendedEntryMissionId: "l02",
     },
     {
@@ -42,7 +42,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-07-25.1",
+        contentVersion: "2026-08-21.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -75,7 +75,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-07-25.1",
+        contentVersion: "2026-08-21.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -110,7 +110,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-07-25.1",
+        contentVersion: "2026-08-21.1",
       },
       evidence: {
         schema: "literacy-evidence",

@@ -1,4 +1,8 @@
 import type { LearnerSnapshot, MissionKey, TrackId } from '../domain'
+import {
+  HOSTED_SIMULATIONS_TRACK_ID,
+  STUDENT_TRACK_ID,
+} from '../journey/studentPath'
 import type { EvidenceVerificationState } from '../verification/ports'
 import type { MissionCatalogRepository } from './catalog'
 import type { OsProgress } from '../progress/domain'
@@ -40,20 +44,25 @@ function isLocallyLaunchable(progress: OsProgress, trackId: TrackId, missionId: 
   return progress.missionStatusByKey[missionKey(trackId, missionId)] !== 'locked'
 }
 
-export function recommendMission(
+function resumeInProgress(
   progress: OsProgress,
   catalog: MissionCatalogRepository,
-  context: RecommendationContext = {},
-): MissionRecommendation {
-  if (!progress.onboarding.completed) return { kind: 'onboarding' }
-  const trackId = progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
-  const trackMissions = catalog.listLaunchable(trackId)
-  const inProgress = trackMissions.find(
+  trackId: TrackId,
+): MissionRecommendation | null {
+  const inProgress = catalog.listLaunchable(trackId).find(
     (mission) => progress.missionStatusByKey[missionKey(trackId, mission.id)] === 'in_progress',
   )
-  if (inProgress !== undefined) {
-    return { kind: 'resume', trackId, missionId: inProgress.id }
-  }
+  if (inProgress === undefined) return null
+  return { kind: 'resume', trackId, missionId: inProgress.id }
+}
+
+function recommendMissionForTrack(
+  progress: OsProgress,
+  catalog: MissionCatalogRepository,
+  context: RecommendationContext,
+  trackId: TrackId,
+): MissionRecommendation {
+  const trackMissions = catalog.listLaunchable(trackId)
 
   if (context.learner !== undefined) {
     const review = mapCanonicalReviews(context.learner, catalog, trackId).find((mapped) => {
@@ -63,7 +72,6 @@ export function recommendMission(
         !engagement?.completedReviewKeys.includes(mapped.reviewKey)
       )
     })
-    // mapCanonicalReviews already filters to overdue|due; this narrows the type.
     if (review !== undefined && (review.review.reason === 'overdue' || review.review.reason === 'due')) {
       return {
         kind: 'review',
@@ -129,4 +137,23 @@ export function recommendMission(
   }
 
   return { kind: 'none' }
+}
+
+export function recommendMission(
+  progress: OsProgress,
+  catalog: MissionCatalogRepository,
+  context: RecommendationContext = {},
+): MissionRecommendation {
+  if (!progress.onboarding.completed) return { kind: 'onboarding' }
+
+  const literacyResume = resumeInProgress(progress, catalog, STUDENT_TRACK_ID)
+  if (literacyResume !== null) return literacyResume
+
+  const literacyRecommendation = recommendMissionForTrack(progress, catalog, context, STUDENT_TRACK_ID)
+  if (literacyRecommendation.kind !== 'none') return literacyRecommendation
+
+  const hostedResume = resumeInProgress(progress, catalog, HOSTED_SIMULATIONS_TRACK_ID)
+  if (hostedResume !== null) return hostedResume
+
+  return recommendMissionForTrack(progress, catalog, context, HOSTED_SIMULATIONS_TRACK_ID)
 }

@@ -18,6 +18,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator, NoReturn
 
+# NOTE: the canonical "now as ISO string" helper lives in
+# ``curriculum._shared.time.utc_now_iso`` (audit ref: item 20). The
+# learner.gate copy here is deliberately self-contained: the SKILL bundle
+# at ``engines/aiDevschoolMvp/aidevschool/scripts/_core.py`` mirrors this
+# file byte-for-byte (enforced by ``test_runtime_parity``) so an installed
+# SKILL can run with the surrounding repo NOT on ``sys.path``. The two are
+# the intentional exception, not drift. See curriculum/_shared/time.py
+# for the canonical helper and the audit reference.
+
 # --- exit-code convention (§4.2) -------------------------------------------
 # 0 success; 1 usage / guard rejection (no mutation); 2 inconsistency.
 
@@ -205,14 +214,19 @@ def emit_json(obj: Any) -> None:
     sys.stdout.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
 
-def atomic_write_json(path: Path, obj: Any) -> None:
-    """Write-temp-then-rename (§8.3 atomic commit). state.json/plan.json are
-    pretty-printed for audit; only ledger lines are byte-pinned (hash chain)."""
+def _atomic_write_text(path: Path, data: str) -> None:
+    """Write-temp-then-rename (§8.3 atomic commit): a crash mid-write leaves the
+    previous file (or an absent slot) intact, never a torn file."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
-    data = json.dumps(obj, ensure_ascii=False, indent=2)
     tmp.write_text(data, encoding="utf-8")
     os.replace(tmp, path)
+
+
+def atomic_write_json(path: Path, obj: Any) -> None:
+    """state.json/plan.json are pretty-printed for audit; only ledger lines are
+    byte-pinned (hash chain)."""
+    _atomic_write_text(path, json.dumps(obj, ensure_ascii=False, indent=2))
 
 
 # --- §8.3.1 lockfile -------------------------------------------------------
@@ -347,8 +361,7 @@ def manifest_hash(skill_dir: Path) -> str:
 
 def write_manifest(skill_dir: Path) -> Path:
     path = skill_dir / "keys" / MANIFEST_NAME
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(manifest_hash(skill_dir), encoding="utf-8")
+    _atomic_write_text(path, manifest_hash(skill_dir))
     return path
 
 

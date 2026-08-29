@@ -1,0 +1,77 @@
+{
+  "os-shell": {
+    "files": 20,
+    "raw_bytes": 4226577,
+    "gzip_bytes": 2488987,
+    "largest": [
+      {
+        "file": "dojo-wallpaper.png",
+        "bytes": 1868763
+      },
+      {
+        "file": "apps/wormhole/assets/wormholeScene-C7rcGiqV.js",
+        "bytes": 527211
+      }
+    ]
+  },
+  "apps/literacydojo": {
+    "files": 7,
+    "raw_bytes": 320840,
+    "gzip_bytes": 97365,
+    "largest": [
+      {
+        "file": "apps/literacydojo/assets/index-CvPJunnF.js",
+        "bytes": 282759
+      },
+      {
+        "file": "apps/literacydojo/assets/index-CRlacR3p.css",
+        "bytes": 30686
+      }
+    ]
+  },
+  "apps/relay-station": {
+    "files": 3,
+    "raw_bytes": 539321,
+    "gzip_bytes": 139084,
+    "largest": [
+      {
+        "file": "apps/relay-station/assets/relayScene-Dnbnoqsj.js",
+        "bytes": 505229
+      },
+      {
+        "file": "apps/relay-station/assets/index-DECLWfTt.js",
+        "bytes": 31162
+      }
+    ]
+  },
+  "apps/warehouse": {
+    "files": 3,
+    "raw_bytes": 531309,
+    "gzip_bytes": 136733,
+    "largest": [
+      {
+        "file": "apps/warehouse/assets/warehouseScene-DKSII2X1.js",
+        "bytes": 495369
+      },
+      {
+        "file": "apps/warehouse/assets/index-J95AlGmV.js",
+        "bytes": 33036
+      }
+    ]
+  },
+  "apps/wormhole": {
+    "files": 3,
+    "raw_bytes": 563608,
+    "gzip_bytes": 145155,
+    "largest": [
+      {
+        "file": "apps/wormhole/assets/wormholeScene-C7rcGiqV.js",
+        "bytes": 527211
+      },
+      {
+        "file": "apps/wormhole/assets/index-vk30wsrn.js",
+        "bytes": 33295
+      }
+    ]
+  }
+}

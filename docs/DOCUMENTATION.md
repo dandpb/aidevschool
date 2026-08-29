@@ -52,9 +52,13 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 
 | Público | Entrada | Limite atual |
 | --- | --- | --- |
-| Pessoa não técnica | [LiteracyDojo](../engines/literacyDojo/README.md) + [conteúdo AI Literacy](../curriculum/ai-literacy/README.md) | O currículo ligado mantém o status do conteúdo; o README do engine mantém o status de implementação e release. |
-| Pessoa não técnica, exploração | [miniTown](../engines/miniTown/README.md) | Superfície local de exploração; não contém as microlições e não marca domínio. |
-| Programador | [Currículo de programação](../curriculum/catalog.md) + [codexDojo](../engines/codexDojo/README.md) | Projetos 01–18; status e evidência variam por projeto. |
+| Pessoa não técnica | [Guia do estudante — LiteracyDojo](product-readiness/student-guide.md#standalone-literacydojo) | Comece pela meta e pela jornada; o README do engine mantém os detalhes de implementação e release. |
+| Pessoa não técnica, tutoria em chat | [`aiDevschoolMvp`](../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Skill instalável C01–C24; validação `--check` é read-only, instalação cria estado e revisão recorrente. |
+| Pessoa não técnica, exploração experimental | [Guia do estudante — miniTown](product-readiness/student-guide.md#experimental-minitown) | Explore-only; não contém microlições, persistência, progressão, evidência ou mastery. |
+| Programador | [Guia do estudante — jornadas de programação](product-readiness/student-guide.md#programmer-journeys) | O guia conduz ao currículo e aos engines; cada jornada mantém seus próprios limites de evidência. |
+| Programador, missão diária | [Guia do estudante — dojoToday](product-readiness/student-guide.md#programmer-journeys) | A projeção read-only do scheduler, streak e gate não avalia nem promove mastery. |
+| Facilitador | [Guia do facilitador](product-readiness/facilitator-guide.md); [kit do piloto humano](PILOTO_PERCURSO_CLIENTE.md) | O guia cobre operação cross-product; o kit delimita o piloto LiteracyDojo com 1–3 pessoas. Setup técnico continua local. |
+| Revisor de readiness | [Matriz de product readiness](product-readiness/README.md) | Matriz gerada distingue tier pretendido de decisão independente atual. |
 | Contribuidor | [Handbook](handbook/README.md) + [AGENTS.md](../AGENTS.md) | Setup e comandos continuam locais a cada engine. |
 
 ### Comece pelo objetivo
@@ -65,6 +69,9 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Ideia central e públicos | [Visão do produto](VISION.md) | Intenção canônica; não substitui status operacional. |
 | Ciclo de uma lição curta | [Contrato de microlição](design/micro-lesson-contract.md) | Objetivo, tentativa, feedback, retry, evidência, progresso, revisão e verificação. |
 | Arquitetura, onboarding e superfícies | [Handbook](handbook/README.md) | Guia de navegação do ecossistema. |
+| Jornada do estudante por objetivo | [Guia do estudante](product-readiness/student-guide.md) | Entrada, ações, resultado visível, limites de estado, recuperação e próxima ação. |
+| Operar e avaliar uma jornada | [Guia do facilitador](product-readiness/facilitator-guide.md) | Preparação, observação, recuperação, escalada, avaliação e revalidação. |
+| Ver decisões de readiness | [Matriz gerada](product-readiness/README.md) | Promessas, tiers pretendidos e decisões independentes datadas. |
 | Regras de contribuição e comandos | [AGENTS.md raiz](../AGENTS.md) | Convenções operacionais para agentes e contribuidores. |
 | Linguagem do domínio | [Mapa de contextos](../CONTEXT-MAP.md) | Direciona para glossários por bounded context. |
 | Objetivo fundador | [Meta do ecossistema](PROMPTS/-01_GOAL.md) | Intenção de produto, não estado operacional. |
@@ -80,6 +87,7 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | Contrato entre jogos | [Teaching-game contract](design/teaching-game-contract.md) | Evidência e limites de integração Pixel/Voxel. |
 | Conteúdo de AI Literacy | [`curriculum/ai-literacy/`](../curriculum/ai-literacy/README.md) | YAML canônico; `ready` descreve conteúdo válido, não mastery. |
 | Contratos de AI Literacy | [`docs/design/ai-literacy/`](design/ai-literacy/README.md) | Conteúdo, evidência e limites do bounded context. |
+| Product readiness | [`docs/product-readiness/`](product-readiness/README.md) + [contrato](design/product-readiness.md) | Inventário, cenários, guias e decisões independentes; não altera learner state nem concede mastery. |
 | Evidência de um projeto | `curriculum/<projeto>/docs/` | Permanece local, auditável e não é resumida neste índice. |
 
 ### Vocabulário de status
@@ -93,6 +101,9 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | `generated` | Projeção derivada; deve ser regenerada, nunca editada à mão. |
 | `completed` | Progresso da experiência local; não comprova competência. |
 | `mastered` | Competência promovida apenas por verificador independente e evidência adequada. |
+| `experimental` | Tier pretendido para uma superfície delimitada de exploração; não implica readiness, progressão ou mastery. |
+| `unassessed` | Há uma promessa e cenários canônicos, mas ainda não há decisão independente promovida. |
+| `stale` | Uma decisão publicada perdeu validade por expiração ou mudança invalidante e precisa de revalidação. |
 
 ### Superfícies locais
 
@@ -103,7 +114,9 @@ engine.
 | Superfície | Entrada local | Visão do handbook |
 | --- | --- | --- |
 | Microlições de IA | [`engines/literacyDojo/README.md`](../engines/literacyDojo/README.md) | [LiteracyDojo](handbook/12_engine_literacyDojo.md) |
+| Tutoria AI Literacy instalável | [`engines/aiDevschoolMvp/aidevschool/SKILL.md`](../engines/aiDevschoolMvp/aidevschool/SKILL.md) | Contrato local da skill e scripts determinísticos. |
 | Exploração Nível 0 | [`engines/miniTown/README.md`](../engines/miniTown/README.md) | [miniTown](handbook/11_engine_miniTown.md) |
+| Missão diária do programador | [`engines/dojoToday/README.md`](../engines/dojoToday/README.md) | Projeção local do learner substrate. |
 | Dashboard | [`engines/codexDojo/README.md`](../engines/codexDojo/README.md) | [codexDojo](handbook/03_engine_codexDojo.md) |
 | OS educacional | [`engines/codexdojo-os-prototype/README.md`](../engines/codexdojo-os-prototype/README.md) | [codexdojo OS](handbook/03b_engine_codexdojo-os-prototype.md) |
 | Jogo 2D | [`engines/pixelDojo/README.md`](../engines/pixelDojo/README.md) | [pixelDojo](handbook/04_engine_pixelDojo.md) |
@@ -111,6 +124,7 @@ engine.
 | Motor de evolução | [`engines/miniMaxEvolutionEngine/README.md`](../engines/miniMaxEvolutionEngine/README.md) | [miniMaxEvolutionEngine](handbook/06_engine_miniMaxEvolutionEngine.md) |
 | Runner | [`engines/openclaw/README.md`](../engines/openclaw/README.md) | [Onboarding](handbook/02_onboarding.md) |
 | Simulações 3D | [`engines/voxelDojo/README.md`](../engines/voxelDojo/README.md) | [voxelDojo](handbook/10_engine_voxelDojo.md) |
+| Rotas de audiência e product readiness | [`docs/product-readiness/`](product-readiness/README.md) | [Guia do estudante](product-readiness/student-guide.md) e [guia do facilitador](product-readiness/facilitator-guide.md) |
 
 ### Design, decisões e análises
 
@@ -120,7 +134,7 @@ engine.
 | ADRs | [`docs/design/adr/`](design/adr/) | Decisões pontuais; são históricos imutáveis depois de aceitos. |
 | Designs ativos | [`docs/design/`](design/) | Contratos e propostas com escopo explícito. |
 | Visão do produto | [`docs/VISION.md`](VISION.md) | Intenção dual-audience; validar status nos contratos e engines ligados. |
-| Auditorias e análises | [`docs/TECH_DEBT_AUDIT_2026-07-08.md`](TECH_DEBT_AUDIT_2026-07-08.md) e relatórios datados | Evidência de um recorte temporal; não é guia operacional permanente. |
+| Auditorias e análises | [Auditoria cross-engine de 2026-07-27](AUDIT_2026-07-27.md), [`TECH_DEBT_AUDIT_2026-07-08.md`](TECH_DEBT_AUDIT_2026-07-08.md) e relatórios datados | Evidência de um recorte temporal; não é guia operacional permanente. |
 | Arquivo | [`docs/archive/`](archive/) | Contexto histórico; não usar como instrução atual. |
 | Prompts e ideias | [`docs/PROMPTS/`](PROMPTS/) | Material de intenção e descoberta; validar contra fontes ativas antes de implementar. |
 
@@ -144,6 +158,7 @@ engine.
 | Mudança | Atualize | Verificação |
 | --- | --- | --- |
 | Novo engine ou app | README local, handbook e esta tabela de superfícies | Links relativos e comando de validação do engine. |
+| Nova promessa, cenário ou rota de audiência | [`docs/product-readiness/`](product-readiness/README.md), guias e esta tabela | `python3 docs/product-readiness/tools/cli.py check`; uma mudança invalidante exige revalidação. |
 | Novo contrato cross-engine | Documento em `docs/design/`, handbook e `MANIFEST.md` quando afetar produto | Consumidores e fontes de verdade apontam para o mesmo contrato. |
 | Alteração de estado/currículo | Fonte em `learner/` ou `curriculum/`; somente os adaptadores necessários | Validador do substrato e evidência independente adequada ao gate declarado. |
 | Nova decisão arquitetural | ADR em `docs/design/adr/` e links nas superfícies afetadas | Decisão distingue contexto, consequência e fonte vigente. |

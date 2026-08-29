@@ -9,21 +9,22 @@
 .icon-button svg { width: 16px; }
 .launcher-body { height: calc(100% - 64px); display: grid; grid-template-columns: 170px 1fr; }
 .launcher-body > aside { display: flex; flex-direction: column; padding: 18px 12px; border-right: 1px solid var(--line); background: #0a111e; }
+/* Lower-specificity span/button rules must precede the .launcher-body > aside rules (biome noDescendingSpecificity). */
+.catalog-summary span { color: #b8c2d2; font-size: 9px; }
+.app-grid > button { position: relative; min-height: 92px; display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 10px; padding: 11px; border: 1px solid transparent; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; }
+.app-grid > button:hover { background: #152138; border-color: var(--line); }
 .launcher-body > aside > span { padding: 0 8px 9px; color: #64748d; font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
 .launcher-body > aside > button { height: 34px; border: 0; border-radius: 7px; padding: 0 9px; background: transparent; color: #8f9db2; text-align: left; font-size: 11px; cursor: pointer; }
 .launcher-body > aside > button:hover, .launcher-body > aside > button.active { background: #172238; color: #fff; }
 .catalog-summary { margin-top: auto; padding: 13px; border: 1px solid var(--line); border-radius: 9px; background: #111a2b; }
 .catalog-summary strong, .catalog-summary span, .catalog-summary small { display: block; }
 .catalog-summary strong { color: var(--coral); font-size: 24px; }
-.catalog-summary span { color: #b8c2d2; font-size: 9px; }
 .catalog-summary small { margin-top: 5px; color: #718099; font-size: 8px; }
 .launcher-body > .launcher-main { overflow: auto; padding: 18px 22px; }
 .launcher-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .launcher-heading span { font-size: 12px; font-weight: 800; }
 .launcher-heading small { color: #718099; font-size: 9px; }
 .app-grid { display: grid; grid-template-columns: repeat(4, minmax(130px, 1fr)); gap: 8px; }
-.app-grid > button { position: relative; min-height: 92px; display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 10px; padding: 11px; border: 1px solid transparent; border-radius: 10px; background: transparent; text-align: left; cursor: pointer; }
-.app-grid > button:hover { background: #152138; border-color: var(--line); }
 .catalog-icon { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; background: #1a263d; color: #95a5bd; }
 .catalog-icon.disponivel { background: rgba(99,216,153,.12); color: var(--success); }
 .catalog-icon.laboratorio { background: rgba(155,130,255,.12); color: #b5a5ff; }

@@ -1,0 +1,16 @@
+schemaVersion: 1
+assessmentId: 2026-08-22-f4c3151-literacy-v7
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-22T13:55:00Z'
+revalidateBy: '2026-09-22'
+gitSha: f4c31513b3bb4e78a087006f3757a602a19bea5b
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-22T13:50:00Z-literacy-happy-path-mixed-f4c31513
+  - 2026-08-22T13:50:00Z-literacy-retry-mixed-f4c31513
+  - 2026-08-22T13:50:00Z-literacy-resume-mixed-f4c31513

@@ -4,6 +4,7 @@ import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
+import { ErrorRecoveryScreen } from "../screens/ErrorRecoveryScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
 import { OnboardingScreen } from "../screens/OnboardingScreen";
@@ -46,12 +47,25 @@ function AppShell({
 }) {
   const [progress, setProgress] = useState<LearnerProgress | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
+  const [bootError, setBootError] = useState<string | null>(null);
+  const [lessonOpenError, setLessonOpenError] = useState<string | null>(null);
   const hostReady = progress !== null;
 
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const seeded = await loadOrSeedProgress(services);
+      let seeded: LearnerProgress;
+      try {
+        seeded = await loadOrSeedProgress(services);
+      } catch (error) {
+        if (cancelled) return;
+        setBootError(
+          error instanceof Error
+            ? error.message
+            : "Não foi possível ler o progresso local deste navegador.",
+        );
+        return;
+      }
       if (hostAdapter !== null) {
         if (cancelled) return;
         setProgress(seeded);
@@ -104,6 +118,44 @@ function AppShell({
     setRoute({ name: "onboarding" });
   }, [services]);
 
+  const handleOpenLesson = useCallback(
+    async (lessonId: string) => {
+      setLessonOpenError(null);
+      try {
+        const updated = await services.useCases.startLesson(lessonId);
+        setProgress(updated);
+        setRoute({ name: "lesson", lessonId });
+      } catch {
+        setLessonOpenError(
+          "Não foi possível salvar seu progresso. Tente abrir a missão novamente.",
+        );
+      }
+    },
+    [services],
+  );
+
+  const handleOpenReview = useCallback(
+    async (lessonId: string) => {
+      setLessonOpenError(null);
+      try {
+        const { progress: updated } = await services.useCases.startReview(lessonId);
+        setProgress(updated);
+        setRoute({ name: "lesson", lessonId, mode: "review" });
+      } catch {
+        setLessonOpenError("Não foi possível iniciar esta revisão. Tente novamente.");
+      }
+    },
+    [services],
+  );
+
+  if (bootError) {
+    return (
+      <main className="app-shell">
+        <ErrorRecoveryScreen message={bootError} />
+      </main>
+    );
+  }
+
   if (!progress || !route) {
     return (
       <main className="app-shell" aria-busy="true">
@@ -137,6 +189,11 @@ function AppShell({
           )}
         </header>
         <main className="app-stage">
+          {lessonOpenError && (
+            <p className="feedback feedback-fail" role="alert" data-testid="lesson-open-error">
+              {lessonOpenError}
+            </p>
+          )}
           {route.name === "onboarding" && (
             <OnboardingScreen
               onDone={(updated) => {
@@ -148,8 +205,8 @@ function AppShell({
           {route.name === "home" && (
             <HomeScreen
               progress={progress}
-              onContinue={(lessonId) => setRoute({ name: "lesson", lessonId })}
-              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onContinue={(lessonId) => void handleOpenLesson(lessonId)}
+              onReview={(lessonId) => void handleOpenReview(lessonId)}
               onOpenMap={() => setRoute({ name: "map" })}
               onOpenProgress={() => setRoute({ name: "progress" })}
               onReset={handleReset}
@@ -159,15 +216,16 @@ function AppShell({
             <TrackMapScreen
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
             />
           )}
           {route.name === "progress" && (
             <ProgressScreen
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
-              onStartLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
-              onReview={(lessonId) => setRoute({ name: "lesson", lessonId, mode: "review" })}
+              onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
+              onReview={(lessonId) => void handleOpenReview(lessonId)}
+              onProgressImported={setProgress}
             />
           )}
           {route.name === "lesson" && (
@@ -175,6 +233,7 @@ function AppShell({
               key={`${route.lessonId}:${route.mode ?? "initial"}`}
               lessonId={route.lessonId}
               mode={route.mode ?? "initial"}
+              onboarding={progress.onboarding}
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);
@@ -190,7 +249,7 @@ function AppShell({
             <ResultScreen
               summary={route.summary}
               hosted={hostAdapter !== null}
-              onNextLesson={(lessonId) => setRoute({ name: "lesson", lessonId })}
+              onNextLesson={(lessonId) => void handleOpenLesson(lessonId)}
               onHome={() => setRoute({ name: "home" })}
               onMap={() => setRoute({ name: "map" })}
             />

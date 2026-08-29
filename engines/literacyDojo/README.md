@@ -13,17 +13,10 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 
 | Parte | Estado |
 | --- | --- |
-| Conteúdo | Quantidade, versões e status pertencem ao [`curriculum/ai-literacy/README.md`](../../curriculum/ai-literacy/README.md) e ao catálogo canônico; valide antes de compilar. |
+| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. As 3 lições Dev continuam válidas no catálogo, mas não entram no app enquanto a Trilha Dev estiver “Em breve”. |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
-
-O slice público aprovado aceita `VITE_LITERACY_VERIFIER_URL` no build para
-enviar somente o envelope estruturado ao endpoint independente `/verify`. O
-adaptador WSGI proprietário está em `learner/gate/literacy_verifier_http.py` e
-exige a allowlist `LITERACY_ALLOWED_ORIGINS`. Recibos divergentes, malformados
-ou indisponíveis falham fechados e podem ser reenviados; nunca promovem estado
-canônico pelo navegador.
 
 O app é local-first, sem backend e sem chamada de IA no caminho de
 aprendizagem. A UI registra no máximo `completed`; nunca `mastered`.
@@ -31,25 +24,16 @@ Julgamento independente de evidência bruta (fora deste app):
 `python3 -m learner.gate.literacy_verifier --evidence <LiteracyEvidenceRecord.json>`
 — ver `learner/gate/README.md` e `docs/design/ai-literacy/evidence-contract.md`.
 
-## Piloto público gratuito
-
-A superfície pública é um piloto gratuito para pessoas com 18 anos ou mais. O
-progresso fica apenas no navegador usado e não sincroniza entre dispositivos.
-Os textos visíveis de termos e privacidade estão em `public/termos.html` e
-`public/privacidade.html`. O canal público de suporte é o formulário de nova
-issue do repositório; ele não deve ser trocado por um endereço ou contato de
-exemplo.
-
 ## Stack
 
 | Peça | Versão |
 | --- | --- |
 | Node | ≥ 20 (desenvolvido em 24.x) |
 | React / React DOM | 18.3.1 |
-| Vite | 6.0.11 |
+| Vite | 6.4.3 |
 | TypeScript | 5.7.3 |
-| Vitest | 3.0.5 (+ Testing Library, jsdom, fake-indexeddb) |
-| Playwright | 1.49.1 (Chromium headless) |
+| Vitest | 3.2.7 (+ Testing Library, jsdom, fake-indexeddb) |
+| Playwright | 1.62.0 (Chromium headless) |
 | Biome | 1.9.4 |
 
 App standalone com **npm** (não faz parte de nenhum workspace pnpm).
@@ -67,8 +51,8 @@ npm run build         # tsc -b && vite build (prebuild roda gen:content antes)
 npm run test:e2e      # playwright (sobe o vite dev sozinho na porta 4173)
 ```
 
-Pré-requisitos do `gen:content`: `python3` (ou `PYTHON=/caminho/python`) com `pyyaml`
-(o `python3` padrão do shell pode não ter — ver seção "Problemas comuns").
+Pré-requisito do `gen:content`: `python3` do ambiente ativo com `pyyaml`.
+Na raiz, prepare e ative `.venv` antes de entrar neste diretório.
 
 Playwright: na primeira vez, `npx playwright install chromium`.
 
@@ -155,9 +139,10 @@ UI (src/screens, src/components)
 
 ## Problemas comuns
 
-- **`ModuleNotFoundError: yaml` no gen:content** — instale as dependências Python
-  declaradas no `pyproject.toml` ou execute com `PYTHON=/caminho/python npm run
-  gen:content`.
+- **`ModuleNotFoundError: yaml` no gen:content** — ative a `.venv` preparada na
+  raiz (`source .venv/bin/activate`) ou instale o projeto com
+  `python -m pip install -e ".[dev]"`; não edite o script para um caminho
+  absoluto específico da máquina.
 - **Playwright sem browser** — rode `npx playwright install chromium`. O spec
   sobe o vite dev automaticamente (`webServer` no `playwright.config.ts`,
   porta 4173, viewport 360×740) e derruba ao final.

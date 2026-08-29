@@ -22,13 +22,20 @@ Guiding principle: **one learner, one curriculum, many engines.**
 
 | I want to… | Start here | What is true today |
 | --- | --- | --- |
-| Use AI at work without learning to code | [LiteracyDojo](engines/literacyDojo/README.md) and the [AI Literacy curriculum](curriculum/ai-literacy/README.md) | Guided local route. The linked curriculum owns content status; the engine README owns implementation and release status. |
-| Explore the ecosystem without a coding task | [miniTown](engines/miniTown/README.md) | A local, explore-only town simulation. It does not teach the 14 lessons or mark mastery. |
-| Learn software engineering with AI | [Programming curriculum](curriculum/catalog.md) and [codexDojo](engines/codexDojo/README.md) | 18 coding projects (01–18), with status and evidence recorded per project. |
+| Use AI at work without learning to code | [Student guide — standalone LiteracyDojo](docs/product-readiness/student-guide.md#standalone-literacydojo) | Customer-facing guidance comes first; the linked curriculum owns content status and the engine README owns implementation and release status. |
+| Explore the ecosystem without a coding task | [Student guide — experimental miniTown](docs/product-readiness/student-guide.md#experimental-minitown) | Explicitly experimental, local, and explore-only. It does not teach the 14 lessons or promise persistence, progression, evidence, or mastery. |
+| Learn software engineering with AI | [Student guide — programmer journeys](docs/product-readiness/student-guide.md#programmer-journeys) | Validated learner journeys have bounded setup and evidence handoffs; the guide does not present emitted evidence as verifier acceptance. |
+| Operate or evaluate a learner journey | [Facilitator guide](docs/product-readiness/facilitator-guide.md) and [readiness matrix](docs/product-readiness/README.md) | Preparation, recovery, evaluation, and dated readiness claims are owned by the product-readiness documentation domain. |
 | Contribute to the platform | [Documentation map](docs/DOCUMENTATION.md) and [handbook](docs/handbook/README.md) | Engine-local commands and contracts are authoritative. |
 
-There is no public, browser-only learner route yet. All runnable experiences
-currently require local setup.
+The first public, browser-only learner route is [LiteracyDojo](https://aidevschool-literacydojo.netlify.app).
+Its release scope is 14 practical AI missions in four modules. It is local-first: progress stays
+in the browser and no account is required. The programming track remains “coming soon”; its
+preview content and CodexDojo OS stay outside this public journey, with separate release boundaries.
+
+For a customer or learner journey, start with the [student guide](docs/product-readiness/student-guide.md).
+Facilitators should use the [facilitator guide](docs/product-readiness/facilitator-guide.md), and
+readiness reviewers should use the [generated readiness matrix](docs/product-readiness/README.md).
 
 ---
 
@@ -51,7 +58,7 @@ The engine surfaces:
 | --- | --- | --- |
 | `engines/literacyDojo/` | **Runnable app** | Local-first AI microlearning for nontechnical people; consumes the generated AI Literacy read model and records at most `completed`. |
 | `engines/miniTown/` | **Runnable app** | Cozy, explore-only Level 0 entry surface; no code prerequisite and no mastery writes. |
-| `engines/codexDojo/` | **Runnable app** | The user-facing dashboard — a Vite/TypeScript SPA showing learner snapshot, agent roster, the cycle, and the 19-entry roadmap. |
+| `engines/codexDojo/` | **Runnable app** | Dashboard/control surface — a Vite/TypeScript SPA showing learner snapshot, agent roster, the cycle, and the 19-entry roadmap. |
 | `engines/codexdojo-os-prototype/` | **Runnable app** | Canonical educational OS experience (React/Vite): desktop labs plus a generated, read-only learner projection. |
 | `engines/pixelDojo/` | **Runnable app** | 8-bit teaching games. The canonical game is `pixel-quest/` (Vite + TypeScript + Three.js). One curriculum concept → one arcade mechanic. |
 | `engines/voxelDojo/` | **Runnable app** | Three.js teaching simulations; each `game-*` package covers one curriculum concept. |
@@ -67,7 +74,7 @@ The engine surfaces:
 | --- | --- | --- |
 | **Node.js** | 20.19+ or 22.12+ | Required by Vite 8 in codexDojo OS; Node 22 LTS is recommended. |
 | **pnpm** | 9+ (enable via `corepack enable`) | Package manager for `miniTown`, `codexDojo`, `pixelDojo`, and `voxelDojo`. |
-| **Python 3** | 3.10+ | Validates AI Literacy content and regenerates learner-data views. |
+| **Python 3** | 3.11+ | Validates AI Literacy content and regenerates learner-data views. |
 | **Go / Rust** | latest stable | Only needed if you want to build/run the polyglot `curriculum/` implementations. |
 
 Enable pnpm once:
@@ -103,7 +110,8 @@ result in the [engine README](engines/literacyDojo/README.md).
 
 ## 4. Install & run the dashboard (codexDojo)
 
-`codexDojo` is the primary application — the control surface for the whole school.
+`codexDojo` is the dashboard/control surface. The canonical mission-first learner
+experience is [CodexDojo OS](engines/codexdojo-os-prototype/README.md).
 
 ```bash
 cd engines/codexDojo

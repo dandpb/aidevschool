@@ -24,6 +24,7 @@ from learner.substrate.ts_render import (
     render_dashboard_ts,
     render_mission_catalog_ts,
     render_pixel_review_ts,
+    render_voxel_per_game_review_ts,
     render_voxel_review_ts,
 )
 
@@ -129,16 +130,33 @@ def build_game_review_views(
     state: dict[str, Any],
     today: date | None = None,
 ) -> dict[Path, str]:
-    from learner.substrate.dashboard_snapshot import build_pixel_review_slice
+    from learner.substrate.dashboard_snapshot import (
+        VOXEL_GAME_UNIT_IDS,
+        build_pixel_review_slice,
+        build_voxel_per_game_review_slices,
+    )
 
     _, snapshot = _snapshot(source_root, state, today)
     review_slice = build_pixel_review_slice(snapshot)
-    views = {
+    voxel_per_game = build_voxel_per_game_review_slices(snapshot)
+    views: dict[Path, str] = {
         output_root / "engines" / "pixelDojo" / "pixel-quest" / "src" / "content" / "reviewSlice.ts": render_pixel_review_ts(review_slice),
     }
+    # Legacy shared voxel slice (consumed by emit.ts via `../../../shared/content`).
+    # Kept for backward compatibility; new per-game files below are the canonical
+    # substrate outputs and are the ones the CI stub detector (TECH_DEBT #4) tracks.
     views[
         output_root / "engines" / "voxelDojo" / "shared" / "content.ts"
     ] = render_voxel_review_ts(review_slice)
+    # Per-game fan-out: one slice per voxelDojo package, filtered to that game's
+    # unit. Closes the audit gap where 15/16 hand-copied stubs were falsely
+    # headed "AUTO-GENERATED" while only game-10 was actually synced.
+    voxel_root = output_root / "engines" / "voxelDojo"
+    for game_id, unit_id in VOXEL_GAME_UNIT_IDS.items():
+        per_game_slice = voxel_per_game[game_id]
+        views[
+            voxel_root / game_id / "src" / "reviewSlice.ts"
+        ] = render_voxel_per_game_review_ts(game_id, unit_id, per_game_slice)
     return views
 
 

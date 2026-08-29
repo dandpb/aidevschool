@@ -3,8 +3,8 @@ name: CI
 # Enforcement spine (TECH_DEBT_AUDIT_2026-06-28.md, D2): lint + test + build on
 # every push / PR. The project's "no claims without evidence" rule needs a
 # machine that actually runs the suites. TS engines and the Python substrate are
-# blocking; the polyglot curriculum jobs are informational until D13 (parity
-# vectors + stub completion) lands.
+# blocking. The remaining Go/Rust implementations are small, active pilots and
+# therefore enforce formatting, static checks, and tests as well.
 
 # Push runs only on main (agent-generated feature branches were burning the full
 # matrix on every push — TECH_DEBT_AUDIT_2026-07-08 item 15); PRs still run everywhere.
@@ -57,7 +57,18 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
+      - run: pnpm typecheck
       - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: pixeldojo-readiness-${{ github.sha }}
+          path: |
+            engines/pixelDojo/test-results
+            engines/pixelDojo/pixel-quest/test-results
+          if-no-files-found: warn
 
   voxeldojo:
     name: voxelDojo (TS)
@@ -77,8 +88,21 @@ jobs:
           cache-dependency-path: engines/voxelDojo/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
-      - run: pnpm -r --if-present test
-      - run: pnpm -r --if-present build
+      # Root scripts include shared accessibility/evidence checks that a raw
+      # recursive invocation would skip.
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: voxeldojo-readiness-${{ github.sha }}
+          path: |
+            engines/voxelDojo/test-results
+            engines/voxelDojo/game-*/test-results
+          if-no-files-found: warn
 
   codexdojo-os:
     name: codexdojo-os (TS)
@@ -88,18 +112,61 @@ jobs:
         working-directory: engines/codexdojo-os-prototype
     steps:
       - uses: actions/checkout@v4
+      # The integrated OS bridge dispatches fixed, independent Python verifiers.
+      # Jobs are isolated, so the Python job cannot prepare this runtime for us.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          package_json_file: engines/codexDojo/package.json
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
+      - run: pnpm --dir ../codexDojo install --frozen-lockfile
+      - run: pnpm --dir ../pixelDojo install --frozen-lockfile
+      - run: pnpm --dir ../voxelDojo install --frozen-lockfile
+      - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
+      # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
+      # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
+        env:
+          VITE_LITERACYDOJO_URL: /apps/literacydojo/
+          VITE_WAREHOUSE_URL: /apps/warehouse/
+          VITE_WORMHOLE_URL: /apps/wormhole/
+          VITE_RELAY_STATION_URL: /apps/relay-station/
+      # P5: prove the static pilot build mounts missions from its own origin.
+      # The build above already produced dist/ (and gates typecheck), so we
+      # bundle the mission runtimes and run Playwright directly instead of
+      # test:smoke:pilot, which would rebuild the OS a second time.
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/bundle-missions.mjs
+      - run: npx playwright test --config=playwright.pilot.config.ts
+      - run: npx playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
+      - run: node scripts/readiness-report.mjs
+        env:
+          READINESS_TEST_RUN: passed
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: codexdojo-os-readiness-${{ github.sha }}
+          path: |
+            engines/codexdojo-os-prototype/test-results
+            engines/codexdojo-os-prototype/test-results-pilot
+          if-no-files-found: warn
 
-  python:
-    name: Python (tutor core + substrate)
+  # The suites of the former monolithic `python` job now run as per-engine
+  # split jobs (minimaxDojo / miniMaxEvolutionEngine / aiDevschoolMvp /
+  # openclaw below; TECH_DEBT_AUDIT_2026-07-08 item 8) plus this job for the
+  # shared learner/curriculum remainder, so no suite runs twice.
+  learner:
+    name: Python (learner + curriculum shared)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +174,155 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -e ".[dev]"
-      - run: python -m pytest
+      - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
+
+  literacydojo:
+    name: literacyDojo (TS + content)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/literacyDojo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: engines/literacyDojo/package-lock.json
+      - run: python -m pip install -e ../..
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      # This report contains automated facts only; observation assertions stay
+      # with the independent assessor and cannot grant readiness in CI.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: literacydojo-readiness-${{ github.sha }}
+          path: engines/literacyDojo/test-results
+          if-no-files-found: warn
+
+  minitown:
+    name: miniTown (TS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/miniTown
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: engines/miniTown/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: engines/miniTown/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: python -m pip install -e ../..
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm smoke
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: minitown-readiness-${{ github.sha }}
+          path: engines/miniTown/test-results
+          if-no-files-found: warn
+
+  dojotoday:
+    name: dojoToday (TS + substrate)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/dojoToday
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: engines/dojoToday/package-lock.json
+      - run: python -m pip install -e ../..
+      - run: npm ci
+      - run: npm run selfcheck
+      - run: npm run lint
+      - run: npm run build
+
+  product-readiness:
+    name: product readiness (claims)
+    needs: [literacydojo, codexdojo-os, dojotoday, pixeldojo, voxeldojo, minitown]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: mkdir -p artifacts/product-readiness
+      - name: download producer reports and browser artifacts
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-readiness-${{ github.sha }}"
+          path: artifacts/product-readiness
+          merge-multiple: true
+      - name: aggregate tested-SHA producer facts
+        run: >-
+          python3 docs/product-readiness/tools/cli.py aggregate
+          --reports artifacts/product-readiness
+          --output artifacts/product-readiness/product-readiness-report.json
+      - name: validate readiness sources and candidate report
+        run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+      - name: enforce readiness claims without writes
+        run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
+      - name: upload product-readiness-report.json
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-readiness-report-${{ github.sha }}
+          path: artifacts/product-readiness/product-readiness-report.json
+          if-no-files-found: warn
+
+  curriculum-node:
+    name: curriculum Node (18 projects)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: lint, test, and build every Node implementation
+        run: |
+          set -e
+          for dir in curriculum/[0-9][0-9]_*/node-impl; do
+            test -f "$dir/package.json" || continue
+            echo "::group::$dir"
+            (
+              cd "$dir"
+              npm install --no-package-lock --no-audit --no-fund
+              npm run lint
+              npm run test
+              npm run build
+            )
+            echo "::endgroup::"
+          done
 
   openclaw:
     name: OpenClaw read-only smoke
@@ -124,29 +339,230 @@ jobs:
           test -z "$(git status --porcelain -- learner/)"
 
   curriculum-go:
-    name: curriculum Go (informational)
+    name: curriculum Go
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: "1.22"
-      - name: go test (pilot + any remaining go.mod)
+      - name: format, vet, and test rate-limiter pilot
         run: |
           set -e
-          # Node-first curriculum: only 01_rate_limiter is expected to ship go-impl.
-          find curriculum -name go.mod -execdir go test ./... \;
+          test -z "$(gofmt -l curriculum/01_rate_limiter/go-impl)"
+          cd curriculum/01_rate_limiter/go-impl
+          go vet ./...
+          go test ./...
 
   curriculum-rust:
-    name: curriculum Rust (informational)
+    name: curriculum Rust
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: cargo test (pilot + any remaining Cargo.toml)
+        with:
+          components: rustfmt, clippy
+      - name: format, lint, and test rate-limiter pilot
         run: |
           set -e
-          # Node-first curriculum: only 01_rate_limiter is expected to ship rust-impl.
-          find curriculum -name Cargo.toml -execdir cargo test \;
+          cd curriculum/01_rate_limiter/rust-impl
+          cargo fmt --check
+          cargo clippy --all-targets -- -D warnings
+          cargo test
+
+  # TECH_DEBT_AUDIT_2026-07-08 item 8 — "no claims without evidence" was not
+  # machine-enforced for the voxelDojo game-* packages. The root voxeldojo job
+  # above is workspace-level only; this matrix runs lint/test/typecheck/build
+  # per game so a single regressing game fails the PR with a clear pointer.
+  voxeldojo-games-discover:
+    name: voxelDojo games (discover)
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      # The matrix is generated from the game registry so a new game-* package
+      # is CI-enforced the moment it lands in catalog.json — no second edit.
+      - id: set
+        run: echo "matrix=$(jq -c '[.[].id]' engines/voxelDojo/catalog.json)" >> "$GITHUB_OUTPUT"
+  voxeldojo-games:
+    name: voxelDojo games/${{ matrix.game }} (TS)
+    needs: voxeldojo-games-discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game: ${{ fromJSON(needs.voxeldojo-games-discover.outputs.matrix) }}
+    defaults:
+      run:
+        # Games live in the voxelDojo workspace (pnpm-workspace.yaml packages:
+        # ["game-*"]); install + filter commands are evaluated from the workspace
+        # root so pnpm can resolve the per-game package.
+        working-directory: engines/voxelDojo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: engines/voxelDojo/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: engines/voxelDojo/pnpm-lock.yaml
+      # Single install at the workspace root is hoisted to the pnpm store;
+      # every matrix entry shares the same cache key (lockfile hash) so this
+      # is a no-op on cache hit and the full workspace build on cache miss.
+      - run: pnpm install --frozen-lockfile
+      - name: lint
+        run: pnpm --filter ${{ matrix.game }} lint
+      - name: test
+        run: pnpm --filter ${{ matrix.game }} test
+      - name: typecheck
+        run: pnpm --filter ${{ matrix.game }} typecheck
+      - name: build
+        run: pnpm --filter ${{ matrix.game }} build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: smoke
+        run: pnpm --filter ${{ matrix.game }} smoke
+
+  # TECH_DEBT_AUDIT_2026-07-08 item 8 — pixelDojo `games/*` siblings. The
+  # canonical `pixel-quest/` is already covered by the root `pixeldojo` job
+  # above; the matrix below targets any per-game workspace under `games/`.
+  # As of 2026-07-08 the directory does not exist (only `pixel-quest/` is on
+  # disk); discover emits an empty matrix (dependent job skips) plus a warning
+  # annotation as the visible signal that the gap is open, without failing CI.
+  pixeldojo-games-discover:
+    name: pixelDojo games/* (discover)
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set
+        run: |
+          set -euo pipefail
+          games=()
+          for pkg in engines/pixelDojo/games/*/package.json; do
+            [ -f "$pkg" ] || continue
+            dir=$(dirname "$pkg")
+            name=$(basename "$dir")
+            games+=("{\"dir\":\"$dir\",\"name\":\"$name\"}")
+          done
+          if [ ${#games[@]} -eq 0 ]; then
+            echo "::warning::No engines/pixelDojo/games/* packages found — see TECH_DEBT_AUDIT_2026-07-08 item 8. The matrix enforces per-game lint/test/typecheck/build once the games land."
+            echo "matrix=[]" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          matrix=$(printf '%s,' "${games[@]}")
+          matrix="[${matrix%,}]"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          echo "Discovered ${#games[@]} pixelDojo game(s)."
+  pixeldojo-games:
+    name: pixelDojo games/${{ matrix.game.name }} (TS)
+    needs: pixeldojo-games-discover
+    # An empty matrix FAILS the job at evaluation time ("Matrix vector 'game'
+    # does not contain any values") instead of skipping it, and the failure is
+    # invisible in the jobs list — so gate on the discover output to make the
+    # no-games case a clean skip.
+    if: ${{ needs.pixeldojo-games-discover.outputs.matrix != '[]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        game: ${{ fromJSON(needs.pixeldojo-games-discover.outputs.matrix) }}
+    defaults:
+      run:
+        # Each pixelDojo game is a standalone package today (no shared
+        # workspace); install + scripts run from the game dir.
+        working-directory: ${{ matrix.game.dir }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: ${{ matrix.game.dir }}/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: ${{ matrix.game.dir }}/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      # Per the audit: "run whichever of lint/test/typecheck/build the game's
+      # package.json exposes." Missing scripts emit a warning instead of
+      # silently passing — the audit's "no claims without evidence" rule.
+      # Script presence is probed via package.json (jq), not by running the
+      # script twice.
+      - name: lint (warn if missing)
+        run: |
+          if jq -e '.scripts.lint' package.json >/dev/null; then pnpm run lint
+          else echo "::warning::${{ matrix.game.name }} has no lint script"; fi
+      - name: test (warn if missing)
+        run: |
+          if jq -e '.scripts.test' package.json >/dev/null; then pnpm run test
+          else echo "::warning::${{ matrix.game.name }} has no test script"; fi
+      - name: typecheck (warn if missing)
+        run: |
+          if jq -e '.scripts.typecheck' package.json >/dev/null; then pnpm run typecheck
+          else echo "::warning::${{ matrix.game.name }} has no typecheck script"; fi
+      - name: build (warn if missing)
+        run: |
+          if jq -e '.scripts.build' package.json >/dev/null; then pnpm run build
+          else echo "::warning::${{ matrix.game.name }} has no build script"; fi
+
+  # TECH_DEBT_AUDIT_2026-07-08 item 8 — openclaw was not CI-enforced. Runs
+  # the pytest island (file-based checklist runner, simulate-grade per
+  # ADR-0002) and the simulate CLI to verify the spec artifact exists with
+  # the minimum size floor. The CLI mutates learner/pipeline_status.yaml on
+  # the runner; that's intentional evidence of "checklist ran" but harmless
+  # because each CI run is on a fresh checkout.
+  openclaw:
+    name: openclaw (checklist runner)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - name: openclaw unit tests
+        run: python -m pytest engines/openclaw/tests -q
+      - name: openclaw simulate (spec phase, rate-limiter pilot)
+        run: python -m engines.openclaw --phase spec --project curriculum/01_rate_limiter --mode simulate
+
+  # TECH_DEBT_AUDIT_2026-07-08 item 8 — aiDevschoolMvp installer + acceptance
+  # tests were in pyproject.toml testpaths but only ran as part of the
+  # monolithic `python` job above; this isolates the failure signal.
+  aiDevschoolMvp:
+    name: aiDevschoolMvp (installer + acceptance)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest -q engines/aiDevschoolMvp/tests
+
+  # TECH_DEBT_AUDIT_2026-07-08 item 8 — split out of the monolithic `python`
+  # job above so a regression in the tutor core points at the right engine
+  # without forcing the reviewer to re-run everything.
+  minimaxDojo:
+    name: minimaxDojo (tutor core)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest engines/minimaxDojo/tests -q
+
+  miniMaxEvolutionEngine:
+    name: miniMaxEvolutionEngine (supervisor)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest engines/miniMaxEvolutionEngine/tests -q

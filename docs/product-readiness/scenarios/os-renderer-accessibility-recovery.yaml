@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-renderer-accessibility-recovery
+useCaseId: os-voxel-guided-missions
+kind: recovery
+execution: mixed
+startState: reduced-motion-or-webgl-unavailable
+steps: [detect-renderer-limit, select-accessible-projection, complete-with-keyboard, retry-or-exit]
+assertions:
+  - id: accessible-renderer-preserves-core-journey
+    severity: high
+    evidence: playwright
+    claim: Reduced-motion and renderer degradation retain a keyboard-operable semantic projection.
+  - id: facilitator-can-name-escalation-threshold
+    severity: high
+    evidence: observation
+    claim: The facilitator can identify when renderer recovery has failed and the journey must stop.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts, engines/codexdojo-os-prototype/tests/accessibility.smoke.spec.ts]

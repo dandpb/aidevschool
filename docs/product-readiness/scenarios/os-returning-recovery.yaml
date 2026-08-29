@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-returning-recovery
+useCaseId: os-returning-learner
+kind: recovery
+execution: mixed
+startState: local-storage-cleared-or-unavailable
+steps: [detect-missing-local-state, return-to-onboarding, avoid-reconstructing-completion, ask-for-help]
+assertions:
+  - id: missing-local-state-does-not-create-completion
+    severity: high
+    evidence: playwright
+    claim: Cleared or unavailable local storage returns safely to onboarding without inventing prior completion.
+  - id: facilitator-explains-local-state-loss
+    severity: high
+    evidence: observation
+    claim: The facilitator can explain the loss boundary without undocumented repository intervention.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/readiness-recovery.smoke.spec.ts, engines/codexdojo-os-prototype/src/progress/]

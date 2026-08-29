@@ -1,0 +1,6 @@
+interface:
+  display_name: "Verificar Workflow Lab"
+  short_description: "Prova independente e determinística"
+  default_prompt: "Use $workflow-lab-verify para verificar o Workflow Lab em saídas temporárias e gerar um relatório PASS/FAIL com evidências."
+policy:
+  allow_implicit_invocation: true

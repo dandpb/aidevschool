@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from learner.substrate.dashboard_snapshot import build_snapshot
+from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import derive_next_reviews
 
 
@@ -116,7 +117,7 @@ def derive_today_snapshot(
     :func:`derive_next_reviews` for the review queue, so the same scheduling
     truth feeds every engine-facing view.
     """
-    today = today or date.today()
+    today = today or projection_today()
     canonical_path = source_root / "learner" / "learning_state.yaml"
     snapshot = build_snapshot(canonical_path, state=state, source_root=source_root, today=today)
 

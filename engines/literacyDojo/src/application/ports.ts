@@ -4,6 +4,7 @@ import type {
   ModuleDefinition,
   Track,
 } from "../data/generated/lessons";
+import type { ProductAnalyticsEvent } from "../domain/analytics";
 import type { EvaluationResult } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -37,6 +38,18 @@ export type EvidenceSink = {
 
 export interface VerificationClient {
   verify(record: LiteracyEvidenceRecord): Promise<LiteracyVerificationReceipt>;
+}
+
+/**
+ * Product analytics (ADR-0009). Medido é progresso de experiência e
+ * engajamento — nunca competência. A fronteira de privacidade é inviolável:
+ * os eventos são um vocabulário fechado com props primitivas (ver
+ * `src/domain/analytics.ts`); nenhum texto livre ou dado pessoal sai por
+ * aqui. Implementações degradam silenciosamente (analytics nunca bloqueia a
+ * lição) e o padrão sem backend configurado é no-op.
+ */
+export interface AnalyticsSink {
+  track(event: ProductAnalyticsEvent): void;
 }
 
 export interface FeedbackProvider {

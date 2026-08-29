@@ -7,6 +7,7 @@ from typing import Any
 
 import yaml
 
+from learner.substrate import _AGENT_OWNERSHIP_ROLES
 from learner.substrate.gate import (
     GateEvidenceReceipt,
     commit_gate_transition,
@@ -41,6 +42,11 @@ def make_state(tmp_path: Path) -> dict[str, Any]:
         "retry_limit": 3,
         "attempt_file": str(attempt),
         "evidence_file": str(evidence),
+        "empirical_gate": {
+            "require_executable_evidence": True,
+            "min_coverage": 0.8,
+            "mutation_min": 0.65,
+        },
     }
     return {
         "version": 2,
@@ -64,6 +70,7 @@ def make_state(tmp_path: Path) -> dict[str, Any]:
         },
         "active_unit": unit,
         "next_action": {"owner": "verifier", "action": "gate"},
+        "agent_ownership": {role: f"agent-{role}" for role in _AGENT_OWNERSHIP_ROLES},
         "units_log": [
             {
                 "unit_id": unit["id"],

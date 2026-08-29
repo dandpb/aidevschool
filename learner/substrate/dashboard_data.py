@@ -141,6 +141,12 @@ def render_cycle_ts(data: DashboardData) -> str:
         "",
         *_render_array("cycleStages", "CycleStage", data.cycle_stages),
         "",
+        "// O(1) stage-index lookups for state transitions and renders; cycleStages",
+        "// is static, so the map is built once at module init.",
+        "export const cycleStageIndexById: ReadonlyMap<string, number> = new Map(",
+        "  cycleStages.map((stage, index) => [stage.id, index] as const),",
+        ")",
+        "",
         *_render_array("metrics", "Metric", data.metrics),
         "",
     ]

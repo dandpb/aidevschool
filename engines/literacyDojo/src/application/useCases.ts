@@ -21,6 +21,7 @@ import {
   recordMapInitialRetry,
   startLesson as startLessonInDomain,
 } from "../domain/progress";
+import { parseImportedProgress, serializeProgressForExport } from "../domain/progressBackup";
 import type {
   ContentRepository,
   EvidenceSink,
@@ -265,5 +266,22 @@ export class LiteracyUseCases {
       return { kind: "lesson", lessonId: current };
     }
     return { kind: "home" };
+  }
+
+  /** Serializa o progresso local. O teto do produtor é `completed`, nunca `mastered`. */
+  async exportProgress(): Promise<string> {
+    const progress = await this.requireProgress();
+    return serializeProgressForExport(progress);
+  }
+
+  /** Importa um backup JSON; a migração forward-only roda antes de persistir. */
+  async importProgress(raw: unknown): Promise<LearnerProgress> {
+    const next = parseImportedProgress(
+      raw,
+      this.deps.content.getContentVersion(),
+      this.deps.clock(),
+    );
+    await this.deps.progress.save(next);
+    return next;
   }
 }

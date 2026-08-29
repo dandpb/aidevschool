@@ -13,6 +13,16 @@ function requestToPromise<T>(request: IDBRequest<T>): Promise<T> {
   });
 }
 
+function transactionToPromise(transaction: IDBTransaction): Promise<void> {
+  return new Promise((resolve, reject) => {
+    transaction.addEventListener("complete", () => resolve(), { once: true });
+    const rejectTransaction = () =>
+      reject(transaction.error ?? new Error("Falha ao concluir a transação do IndexedDB"));
+    transaction.addEventListener("error", rejectTransaction, { once: true });
+    transaction.addEventListener("abort", rejectTransaction, { once: true });
+  });
+}
+
 /**
  * Persistência local de progresso em IndexedDB (recomendada pelo plano seção 6).
  * A chave única guarda o LearnerProgress inteiro; a migração forward-only roda
@@ -53,9 +63,9 @@ export class IndexedDbProgressRepository implements ProgressRepository {
   async save(progress: LearnerProgress): Promise<void> {
     const db = await this.openDb();
     try {
-      await requestToPromise(
-        db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).put(progress, PROGRESS_KEY),
-      );
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).put(progress, PROGRESS_KEY);
+      await transactionToPromise(transaction);
     } finally {
       db.close();
     }
@@ -64,9 +74,9 @@ export class IndexedDbProgressRepository implements ProgressRepository {
   async reset(): Promise<void> {
     const db = await this.openDb();
     try {
-      await requestToPromise(
-        db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).delete(PROGRESS_KEY),
-      );
+      const transaction = db.transaction(STORE_NAME, "readwrite");
+      transaction.objectStore(STORE_NAME).delete(PROGRESS_KEY);
+      await transactionToPromise(transaction);
     } finally {
       db.close();
     }

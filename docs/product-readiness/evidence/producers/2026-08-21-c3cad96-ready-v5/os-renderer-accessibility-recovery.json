@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts",
+      "sha256": "c7830261554d78318902addff224a5a80c224d6fa3cf9e6d92d5c9bcf8bfb1e7"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/accessibility.smoke.spec.ts",
+      "sha256": "d071d2aba0fcb439dc046741635f8193b61d6bea201274e579e2b4fa3b9a6a77"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "accessible-renderer-preserves-core-journey",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-08-21T20:59:14Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "c3cad96b804c7b3540e2a5c74efaba158c13cf9c",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-08-21T20:59:14Z-os-renderer-accessibility-recovery-c3cad96b",
+  "scenarioId": "os-renderer-accessibility-recovery",
+  "schemaVersion": 1,
+  "sourceFingerprint": "959cf183c315781d16cfe605fdb6cd311706ace284360f52e90b158fb2ed9f6c"
+}

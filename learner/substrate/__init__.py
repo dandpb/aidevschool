@@ -194,6 +194,10 @@ def validate(state: dict[str, Any], root: Path | None = None) -> list[str]:
     errors.extend(_validate_aidi(state))
     errors.extend(_validate_attempt_files(state, root))
     errors.extend(_validate_evidence_files(state, root))
+    errors.extend(_validate_empirical_gate(state))
+    errors.extend(_validate_next_action(state))
+    errors.extend(_validate_agent_ownership(state))
+    errors.extend(_validate_active_unit_units_log_consistency(state, root))
 
     return errors
 
@@ -494,12 +498,240 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
                 f"units_log[{index}] has a verifier receipt but no evidence_digest"
             )
             continue
+        gate_kind = receipt_review.get("gate_kind") or unit.get("gate_kind")
+        if gate_kind == "no_code":
+            # ADR-0004: the no-code evidence class uses the literacy digest and
+            # never the game/code digest. The bound check stays digest-bound and
+            # rejects producer-embedded verifier blocks the same way.
+            from learner.gate.evidence_io import bound_literacy_evidence_violations
+
+            errors.extend(
+                f"units_log[{index}].{error}"
+                for error in bound_literacy_evidence_violations(
+                    evidence_path, expected_digest, root
+                )
+            )
+            continue
         errors.extend(
             f"units_log[{index}].{error}"
             for error in bound_evidence_violations(
                 evidence_path, expected_digest, root
             )
         )
+
+    return errors
+
+
+# Well-known role names. Sorted for human-readable error messages.
+_AGENT_OWNERSHIP_ROLES: tuple[str, ...] = (
+    "leader",
+    "diagnostic",
+    "path",
+    "producer",
+    "tutor",
+    "verifier",
+    "reviewer",
+    "metrics",
+    "memory",
+    "governance",
+)
+
+
+def _validate_empirical_gate(state: dict[str, Any]) -> list[str]:
+    """Validate the active-unit ``empirical_gate`` block (audit #9).
+
+    The block is optional for in-flight units, but the moment an active unit
+    reaches ``state: mastered`` the gate is the only authority for that
+    transition — the absence of the block at mastery is the failure mode the
+    gate is designed to prevent (auditor wording: "if a unit has
+    ``state: mastered`` but no ``empirical_gate``, that's a violation").
+
+    When present, every numeric threshold must be a probability in [0, 1] and
+    ``require_executable_evidence`` must be a bool — both directly bound the
+    evidence contract.
+    """
+    errors: list[str] = []
+    active = state.get("active_unit")
+    if not isinstance(active, dict):
+        return errors
+
+    gate = active.get("empirical_gate")
+    if active.get("state") == "mastered" and not isinstance(gate, dict):
+        errors.append(
+            "active_unit.state is 'mastered' but active_unit.empirical_gate is missing; "
+            "the empirical gate is the only authority for a mastery transition"
+        )
+        return errors
+
+    if not isinstance(gate, dict):
+        return errors
+
+    prefix = "active_unit.empirical_gate"
+    require_exec = gate.get("require_executable_evidence")
+    if require_exec is not None and not isinstance(require_exec, bool):
+        errors.append(f"{prefix}.require_executable_evidence must be a boolean, got {require_exec!r}")
+
+    for key in ("min_coverage", "mutation_min"):
+        value = gate.get(key)
+        if value is None:
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            errors.append(f"{prefix}.{key} must be a number in [0, 1], got {value!r}")
+            continue
+        if not 0.0 <= float(value) <= 1.0:
+            errors.append(f"{prefix}.{key} must be in [0, 1], got {value!r}")
+
+    return errors
+
+
+def _validate_next_action(state: dict[str, Any]) -> list[str]:
+    """Validate the ``next_action`` block (audit #9).
+
+    Two load-bearing invariants:
+
+    - ``action`` is a non-empty string. An empty action gives the learner no
+      way to advance the cycle.
+    - ``owner`` references something in ``agent_ownership`` (a role key or
+      the matching agent name), or the literal ``"learner"`` (the learner is
+      a legitimate owner of an action that requires their own input, e.g.
+      playing a mission before the verifier can run). The two-layer check
+      keeps the action attributable to a known role in the routing table.
+    """
+    errors: list[str] = []
+    action_block = state.get("next_action")
+    if not isinstance(action_block, dict):
+        return errors
+
+    action_text = action_block.get("action")
+    if not isinstance(action_text, str) or not action_text.strip():
+        errors.append("next_action.action must be a non-empty string")
+
+    owner = action_block.get("owner")
+    if not isinstance(owner, str) or not owner.strip():
+        errors.append("next_action.owner must be a non-empty string")
+        return errors
+
+    ownership = state.get("agent_ownership")
+    if not isinstance(ownership, dict):
+        # If agent_ownership is missing, the agent_ownership validator will
+        # already report it; here we just defer to that and skip the routing
+        # check to avoid double-reporting.
+        return errors
+
+    role_keys = {role for role in ownership if isinstance(role, str)}
+    role_values = {value for value in ownership.values() if isinstance(value, str)}
+    if owner in role_keys or owner in role_values or owner == "learner":
+        return errors
+
+    errors.append(
+        f"next_action.owner={owner!r} is not a known agent name; "
+        f"must be a key or value in agent_ownership (one of "
+        f"{sorted(role_keys | role_values)}) or 'learner'"
+    )
+    return errors
+
+
+def _validate_agent_ownership(state: dict[str, Any]) -> list[str]:
+    """Validate the ``agent_ownership`` routing table (audit #9).
+
+    Every well-known role must be present and map to a non-empty string. The
+    routing table is consumed by ``next_action`` validation and by the
+    tutor/verifier dispatchers; a missing role is silent — the agent is
+    simply never invoked. Surfacing the gap here turns the silent gap into
+    a visible invariant violation (F7 — fail visibly).
+    """
+    errors: list[str] = []
+    ownership = state.get("agent_ownership")
+    if not isinstance(ownership, dict):
+        errors.append("agent_ownership must be a mapping of role -> agent name")
+        return errors
+
+    for role in _AGENT_OWNERSHIP_ROLES:
+        if role not in ownership:
+            errors.append(f"agent_ownership.{role} is required")
+            continue
+        value = ownership[role]
+        if not isinstance(value, str) or not value.strip():
+            errors.append(f"agent_ownership.{role} must map to a non-empty string")
+
+    return errors
+
+
+def _validate_active_unit_units_log_consistency(
+    state: dict[str, Any], root: Path = ROOT
+) -> list[str]:
+    """Cross-check ``active_unit`` against ``units_log`` (audit #9).
+
+    Two invariants:
+
+    1. If ``active_unit.id`` is set, the unit must be registered in
+       ``units_log`` **with a matching state** — mastered in the log iff
+       ``active_unit.state == "mastered"``. A single edge case is allowed:
+       a fresh ``presenting`` unit on first creation may not yet be in
+       ``units_log`` (the log is appended on the first review).
+
+    2. When ``active_unit.state == "mastered"``, both ``active_unit.attempt_file``
+       and ``active_unit.evidence_file`` must exist on disk and be non-empty.
+       The mastery transition is invalid without an attempt and a piece of
+       evidence (a state that points at missing files is the failure mode
+       that produced the 18 false masterizations of 2026-07-01).
+    """
+    errors: list[str] = []
+    active = state.get("active_unit")
+    if not isinstance(active, dict):
+        return errors
+
+    active_id = active.get("id")
+    active_state = active.get("state")
+    units_log = state.get("units_log")
+    if not isinstance(units_log, list):
+        units_log = []
+
+    if active_id:
+        match = next(
+            (
+                unit
+                for unit in units_log
+                if isinstance(unit, dict) and unit.get("unit_id") == active_id
+            ),
+            None,
+        )
+        if match is None:
+            if active_state != "presenting":
+                errors.append(
+                    f"active_unit.id={active_id!r} (state={active_state!r}) is not "
+                    "present in units_log; register the unit before activating it "
+                    "(the only exception is a fresh 'presenting' unit on first creation)"
+                )
+        else:
+            log_mastered = match.get("mastered") is True
+            active_mastered = active_state == "mastered"
+            if log_mastered != active_mastered:
+                errors.append(
+                    f"active_unit.state={active_state!r} disagrees with units_log entry "
+                    f"for {active_id!r} (mastered={log_mastered}); the two views must agree"
+                )
+
+    if active_state == "mastered":
+        for key in ("attempt_file", "evidence_file"):
+            value = active.get(key)
+            if not value:
+                errors.append(
+                    f"active_unit.{key} is required when state is 'mastered'"
+                )
+                continue
+            resolved = (root / value).resolve() if not Path(value).is_absolute() else Path(value)
+            if not resolved.is_file():
+                errors.append(
+                    f"active_unit.{key}={value!r} does not exist on disk; "
+                    "mastery requires a real attempt and a real evidence file"
+                )
+                continue
+            if resolved.stat().st_size == 0:
+                errors.append(
+                    f"active_unit.{key}={value!r} is empty; "
+                    "mastery requires a non-empty attempt and evidence file"
+                )
 
     return errors
 
@@ -618,8 +850,8 @@ def sync() -> None:
     print(f"Generated projections regenerated: {len(views)}")
 
 
-def check() -> list[Path]:
+def check(state: dict[str, Any] | None = None) -> list[Path]:
     from learner.substrate.projections import build_generated_views
 
-    state = load_and_validate()
-    return check_views(build_generated_views(SOURCE_ROOT, ROOT, state))
+    current = state if state is not None else load_and_validate()
+    return check_views(build_generated_views(SOURCE_ROOT, ROOT, current))

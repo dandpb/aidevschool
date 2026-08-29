@@ -17,7 +17,7 @@ declare global {
 }
 
 async function openEngineHub(page: Page): Promise<void> {
-  await page.goto('/desktop')
+  await page.goto('/desktop?operator=1')
   await page.getByRole('button', { name: 'Atividades' }).click()
   const launcher = page.getByRole('dialog', { name: 'Lançador de aplicativos' })
   await launcher.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }).fill('Engine Hub')
@@ -73,8 +73,9 @@ test('opens every voxelDojo catalog experience inside the OS', async ({ page }, 
 
   for (const game of voxelCatalog) {
     await picker.selectOption(game.id)
-    const frame = page.frameLocator(`iframe[title="voxelDojo · ${game.name} integrado"]`)
-    await expect(frame.locator('canvas')).toBeVisible({ timeout: 15_000 })
+    const iframe = page.locator(`iframe[title="voxelDojo · ${game.name} integrado"]`)
+    await expect(iframe).toHaveAttribute('src', game.developmentUrl)
+    await expect(iframe.contentFrame().locator('canvas')).toBeVisible({ timeout: 15_000 })
   }
 })
 

@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-literacy-hosted-mission
+useCaseId: os-literacy-guided-mission
+kind: happy-path
+execution: mixed
+startState: fresh-os-literacy-track
+steps: [launch-literacy-mission, complete-hosted-activity, return-to-host, interpret-result]
+assertions:
+  - id: hosted-literacy-mounts-on-host-origin
+    severity: critical
+    evidence: playwright
+    claim: The bundled LiteracyDojo mission renders from the OS host origin.
+  - id: learner-can-state-result-and-next-action
+    severity: high
+    evidence: observation
+    claim: The learner can explain the visible result and supported next action.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts, engines/literacyDojo/src/]

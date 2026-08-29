@@ -34,6 +34,25 @@ invariants:
   - gate.implementation_blocked is boolean
   - empirical_gates.learning.requires_attempt_before_solution is true
 
+  # Audit #9: canonical-state shape coverage. The previous validate() was
+  # partial (only the units_log and a few top-level keys); these rules close
+  # the audit gap so substrate.sync can rely on the canonical shape.
+  - when active_unit.state == mastered, active_unit.empirical_gate is present
+  - when present, active_unit.empirical_gate.require_executable_evidence is a boolean
+  - when present, active_unit.empirical_gate.min_coverage is a number in [0, 1]
+  - when present, active_unit.empirical_gate.mutation_min is a number in [0, 1]
+  - agent_ownership maps every well-known role (leader, diagnostic, path,
+    producer, tutor, verifier, reviewer, metrics, memory, governance) to a
+    non-empty string
+  - next_action.action is a non-empty string
+  - next_action.owner is a role key or value in agent_ownership, or the literal
+    "learner" (so the routing table stays attributable to a known role)
+  - active_unit.id is present in units_log with matching mastered flag, with
+    one exception: a fresh 'presenting' unit on first creation may not yet be
+    in units_log
+  - when active_unit.state == mastered, active_unit.attempt_file and
+    active_unit.evidence_file both exist on disk and are non-empty
+
   # Spaced-repetition + streak invariants
   - when present, units_log[*].reviews[*].rating in {again, hard, good, easy}
   - when present, units_log[*].reviews[*].rating is consistent with gate_outcome

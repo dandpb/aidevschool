@@ -5,11 +5,8 @@
       "command": "sh",
       "args": [
         "-lc",
-        "exec npx -y mongodb-mcp-server --connectionString=\"$MONGODB_MCP_CONNECTION_STRING\""
+        "export MDB_MCP_CONNECTION_STRING=\"${MDB_MCP_CONNECTION_STRING:-${MONGODB_MCP_CONNECTION_STRING:-${MONGODB_CONNECTION_STRING:-$MONGODB_URL}}}\"; exec npx -y mongodb-mcp-server@latest"
       ],
-      "env": {
-        "MONGODB_MCP_CONNECTION_STRING": "${MONGODB_MCP_CONNECTION_STRING}"
-      },
       "disabled": true,
       "alwaysAllow": [],
       "directTools": true
@@ -41,7 +38,10 @@
     "ai-memory": {
       "type": "http",
       "url": "http://127.0.0.1:49374/mcp",
-      "directTools": true
+      "directTools": true,
+      "disabledTools": [
+        "memory_read_page"
+      ]
     }
   }
 }

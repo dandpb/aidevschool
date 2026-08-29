@@ -1,18 +1,35 @@
 import { Search, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { iconFor } from '../apps/AppIcon'
-import { appCatalog } from '../apps/appCatalog'
+import { visibleAppCatalog } from '../apps/studentCatalog'
 import type { AppDefinition } from '../domain'
 
-export function Launcher({ query, onQuery, onClose, onLaunch }: { readonly query: string; readonly onQuery: (value: string) => void; readonly onClose: () => void; readonly onLaunch: (app: AppDefinition) => void }) {
+export function Launcher({
+  query,
+  onQuery,
+  onClose,
+  onLaunch,
+  operatorSurface = false,
+}: {
+  readonly query: string
+  readonly onQuery: (value: string) => void
+  readonly onClose: () => void
+  readonly onLaunch: (app: AppDefinition) => void
+  readonly operatorSurface?: boolean
+}) {
+  const catalog = useMemo(() => visibleAppCatalog(operatorSurface), [operatorSurface])
+  const availableCount = catalog.filter((app) => app.status === 'disponivel').length
   const [category, setCategory] = useState('Todos')
   const categories = ['Todos', 'Aprender', 'Desenvolver', 'Criar', 'Sistema', 'Utilitários']
-  const availableCount = appCatalog.filter((app) => app.status === 'disponivel').length
-  const filtered = useMemo(() => appCatalog.filter((app) => {
-    const matchesCategory = category === 'Todos' || app.category === category
-    const haystack = `${app.name} ${app.category} ${app.concepts.join(' ')}`.toLowerCase()
-    return matchesCategory && haystack.includes(query.toLowerCase())
-  }), [category, query])
+  const filtered = useMemo(() => {
+    const normalizedQuery = query.toLowerCase()
+    return catalog.filter((app) => {
+      if (category !== 'Todos' && app.category !== category) return false
+      if (normalizedQuery === '') return true
+      const haystack = `${app.name} ${app.category} ${app.concepts.join(' ')}`.toLowerCase()
+      return haystack.includes(normalizedQuery)
+    })
+  }, [catalog, category, query])
   return (
     <section
       className="launcher-overlay"
@@ -36,7 +53,7 @@ export function Launcher({ query, onQuery, onClose, onLaunch }: { readonly query
           <aside>
             <span>Explorar</span>
             {categories.map((item) => <button type="button" key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>)}
-            <div className="catalog-summary"><strong>{appCatalog.length}</strong><span>apps no ecossistema</span><small>{availableCount} disponíveis agora</small></div>
+            <div className="catalog-summary"><strong>{catalog.length}</strong><span>apps no ecossistema</span><small>{availableCount} disponíveis agora</small></div>
           </aside>
           <div className="launcher-main">
             <div className="launcher-heading"><span>{category}</span><small>{filtered.length} resultados</small></div>

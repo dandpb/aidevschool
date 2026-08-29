@@ -13,6 +13,7 @@ import yaml
 
 from learner.substrate import (
     ROOT,
+    _AGENT_OWNERSHIP_ROLES,
     derive_mavis_view,
     derive_whiteboard_profile,
     derive_whiteboard_trail,
@@ -162,12 +163,39 @@ _DEFAULT_AIDI = {
 }
 
 
-def _minimal_state(units_log=None, streak=None, aidi=_DEFAULT_AIDI):
+# Canonical agent_ownership routing table (audit #9). Tests that want a
+# complete valid state get this for free; pass ``agent_ownership=None`` to
+# exercise the absence path.
+_DEFAULT_AGENT_OWNERSHIP = {
+    "leader": "Maestro",
+    "diagnostic": "Sonda",
+    "path": "Cartografo",
+    "producer": "Mestre-Conteudo",
+    "tutor": "Socrates",
+    "verifier": "Prometor",
+    "reviewer": "Critico",
+    "metrics": "Atena",
+    "memory": "Mnemosyne",
+    "governance": "Seneca",
+}
+
+
+def _minimal_state(
+    units_log=None,
+    streak=None,
+    aidi=_DEFAULT_AIDI,
+    agent_ownership=_DEFAULT_AGENT_OWNERSHIP,
+    next_action=None,
+):
     """Build a minimal valid state for validator tests.
 
     The AIDI block is included by default (ADR-0003 makes it canonical).
     Pass ``aidi=None`` to omit the block (exercises the absence path), or
     pass a custom dict to override the canonical shape.
+
+    The agent_ownership routing table is included by default (audit #9
+    makes it canonical). Pass ``agent_ownership=None`` to omit it
+    (exercises the absence path).
     """
     state: dict[str, Any] = {
         "version": 2,
@@ -188,6 +216,18 @@ def _minimal_state(units_log=None, streak=None, aidi=_DEFAULT_AIDI):
         state["streak"] = streak
     if aidi is not None:
         state["learner"]["aidi"] = aidi
+    if agent_ownership is not None:
+        state["agent_ownership"] = agent_ownership
+    if next_action is not None:
+        state["next_action"] = next_action
+    else:
+        # Default to a well-formed next_action so validator-level tests
+        # don't fail on the routing check. Tests that want to exercise the
+        # absence path can pass ``next_action=None`` or a malformed payload.
+        state["next_action"] = {
+            "owner": "learner",
+            "action": "Continue the active unit.",
+        }
     return state
 
 
@@ -490,6 +530,7 @@ class TestMavisAdapter(unittest.TestCase):
         view = derive_mavis_view(state)
 
         self.assertEqual(view["derived_from"], "learner/learning_state.yaml")
+        self.assertEqual(view["workspace"], ".")
         self.assertEqual(view["learner_profile"]["active_focus"], state["learner"]["active_language"])
         self.assertEqual(view["state_machine"]["learning_states"], ["apresentando", "praticando", "avaliando", "dominado"])
         self.assertEqual(view["active_unit"]["id"], state["active_unit"]["id"])
@@ -1446,6 +1487,364 @@ class TestUnitsLogValidation(unittest.TestCase):
     def test_canonical_state_still_validates(self):
         # The seed units_log record (presented, no rating) must not trip any new rule.
         self.assertEqual(validate(load_canonical()), [])
+
+
+class TestEmpiricalGateValidation(unittest.TestCase):
+    """Audit #9: ``active_unit.empirical_gate`` shape + presence on mastery."""
+
+    def _state(self, **unit_overrides: Any) -> dict[str, Any]:
+        return _minimal_state(units_log=[{"unit_id": "U1", "reviews": []}], **unit_overrides)
+
+    def test_empirical_gate_absent_for_inflight_unit_is_allowed(self):
+        state = self._state()
+        self.assertEqual(validate(state), [])
+
+    def test_empirical_gate_required_when_active_unit_state_is_mastered(self):
+        # active_unit.state = mastered, no empirical_gate -> violation.
+        state = self._state()
+        state["active_unit"]["state"] = "mastered"
+        errors = validate(state)
+        self.assertTrue(
+            any("empirical_gate is missing" in e for e in errors),
+            f"expected missing-empirical-gate error, got {errors}",
+        )
+
+    def test_empirical_gate_min_coverage_out_of_range_rejected(self):
+        state = self._state()
+        state["active_unit"]["empirical_gate"] = {
+            "require_executable_evidence": True,
+            "min_coverage": 1.5,
+            "mutation_min": 0.65,
+        }
+        errors = validate(state)
+        self.assertTrue(
+            any("min_coverage must be in [0, 1]" in e for e in errors),
+            f"expected out-of-range min_coverage error, got {errors}",
+        )
+
+    def test_empirical_gate_mutation_min_out_of_range_rejected(self):
+        state = self._state()
+        state["active_unit"]["empirical_gate"] = {
+            "require_executable_evidence": True,
+            "min_coverage": 0.8,
+            "mutation_min": -0.1,
+        }
+        errors = validate(state)
+        self.assertTrue(
+            any("mutation_min must be in [0, 1]" in e for e in errors),
+            f"expected out-of-range mutation_min error, got {errors}",
+        )
+
+    def test_empirical_gate_require_executable_evidence_must_be_bool(self):
+        state = self._state()
+        state["active_unit"]["empirical_gate"] = {
+            "require_executable_evidence": "yes",
+            "min_coverage": 0.8,
+            "mutation_min": 0.65,
+        }
+        errors = validate(state)
+        self.assertTrue(
+            any("require_executable_evidence must be a boolean" in e for e in errors),
+            f"expected bool error, got {errors}",
+        )
+
+    def test_empirical_gate_well_shaped_block_passes(self):
+        state = self._state()
+        state["active_unit"]["state"] = "evaluating"
+        state["active_unit"]["empirical_gate"] = {
+            "require_executable_evidence": True,
+            "min_coverage": 0.8,
+            "mutation_min": 0.65,
+        }
+        self.assertFalse(any("empirical_gate" in e for e in validate(state)))
+
+
+class TestNextActionValidation(unittest.TestCase):
+    """Audit #9: ``next_action`` shape and owner routing."""
+
+    def _state(self, **next_action_overrides: Any) -> dict[str, Any]:
+        state = _minimal_state(units_log=[{"unit_id": "U1", "reviews": []}])
+        state["next_action"] = {"owner": "learner", "action": "Continue."}
+        state["next_action"].update(next_action_overrides)
+        return state
+
+    def test_next_action_empty_action_rejected(self):
+        state = self._state(action="")
+        errors = validate(state)
+        self.assertTrue(
+            any("action must be a non-empty string" in e for e in errors),
+            f"expected empty-action error, got {errors}",
+        )
+
+    def test_next_action_missing_owner_rejected(self):
+        state = _minimal_state(units_log=[{"unit_id": "U1", "reviews": []}])
+        state["next_action"] = {"action": "Continue."}
+        errors = validate(state)
+        self.assertTrue(
+            any("owner must be a non-empty string" in e for e in errors),
+            f"expected missing-owner error, got {errors}",
+        )
+
+    def test_next_action_owner_must_reference_agent_ownership(self):
+        state = self._state(owner="Stranger")
+        errors = validate(state)
+        self.assertTrue(
+            any("not a known agent name" in e for e in errors),
+            f"expected unknown-owner error, got {errors}",
+        )
+
+    def test_next_action_owner_may_be_role_key(self):
+        # The canonical state uses owner=leader (a role key, not a value).
+        state = self._state(owner="leader")
+        self.assertFalse(any("next_action" in e for e in validate(state)))
+
+    def test_next_action_owner_may_be_agent_value(self):
+        state = self._state(owner="Socrates")
+        self.assertFalse(any("next_action" in e for e in validate(state)))
+
+    def test_next_action_owner_may_be_learner_literal(self):
+        state = self._state(owner="learner")
+        self.assertFalse(any("next_action" in e for e in validate(state)))
+
+
+class TestAgentOwnershipValidation(unittest.TestCase):
+    """Audit #9: every well-known role is present and non-empty."""
+
+    REQUIRED_ROLES = _AGENT_OWNERSHIP_ROLES
+
+    def _state(self, **ownership_overrides: Any) -> dict[str, Any]:
+        state = _minimal_state(
+            units_log=[{"unit_id": "U1", "reviews": []}],
+            agent_ownership={role: f"agent-{role}" for role in self.REQUIRED_ROLES},
+        )
+        state["agent_ownership"].update(ownership_overrides)
+        return state
+
+    def test_canonical_agent_ownership_passes(self):
+        state = self._state()
+        self.assertFalse(any("agent_ownership" in e for e in validate(state)))
+
+    def test_missing_role_rejected(self):
+        for role in self.REQUIRED_ROLES:
+            with self.subTest(role=role):
+                state = _minimal_state(
+                    units_log=[{"unit_id": "U1", "reviews": []}],
+                    agent_ownership={
+                        r: f"agent-{r}" for r in self.REQUIRED_ROLES if r != role
+                    },
+                )
+                errors = validate(state)
+                self.assertTrue(
+                    any(f"agent_ownership.{role} is required" in e for e in errors),
+                    f"expected missing-{role} error, got {errors}",
+                )
+
+    def test_empty_value_rejected(self):
+        state = self._state(verifier="")
+        errors = validate(state)
+        self.assertTrue(
+            any("agent_ownership.verifier must map to a non-empty string" in e for e in errors),
+            f"expected empty-value error, got {errors}",
+        )
+
+    def test_non_string_value_rejected(self):
+        state = self._state(reviewer=42)
+        errors = validate(state)
+        self.assertTrue(
+            any("agent_ownership.reviewer must map to a non-empty string" in e for e in errors),
+            f"expected non-string error, got {errors}",
+        )
+
+    def test_missing_ownership_block_rejected(self):
+        state = _minimal_state(units_log=[{"unit_id": "U1", "reviews": []}])
+        state["agent_ownership"] = None
+        errors = validate(state)
+        self.assertTrue(
+            any("agent_ownership must be a mapping" in e for e in errors),
+            f"expected missing-block error, got {errors}",
+        )
+
+
+class TestActiveUnitUnitsLogConsistency(unittest.TestCase):
+    """Audit #9: active_unit ↔ units_log cross-check + existence on mastery."""
+
+    def _state(self, **unit_overrides: Any) -> dict[str, Any]:
+        state = _minimal_state(
+            units_log=[{"unit_id": "U1", "reviews": []}],
+        )
+        state["active_unit"].update(unit_overrides)
+        return state
+
+    def test_state_match_passes(self):
+        state = self._state(state="presenting")
+        self.assertFalse(
+            any("disagrees with units_log" in e for e in validate(state))
+        )
+
+    def test_state_mismatch_rejected(self):
+        # active_unit says "mastered" but units_log says mastered=False.
+        state = self._state(state="mastered")
+        state["active_unit"]["empirical_gate"] = {
+            "require_executable_evidence": True,
+            "min_coverage": 0.8,
+            "mutation_min": 0.65,
+        }
+        # Add a real attempt/evidence + gate review to clear the other rules.
+        attempt = state["active_unit"].setdefault("attempt_file", "learner/attempts/U1.md")
+        evidence = state["active_unit"].setdefault("evidence_file", "evidence.json")
+        state["units_log"][0]["mastered"] = False  # mismatch
+        state["units_log"][0]["reviews"] = [
+            {"date": date(2026, 7, 1), "event": "gate", "gate_outcome": "pass_first_try", "rating": "good"}
+        ]
+        errors = validate(state)
+        self.assertTrue(
+            any("disagrees with units_log" in e for e in errors),
+            f"expected state-mismatch error, got {errors}",
+        )
+
+    def test_fresh_presenting_unit_may_be_missing_from_units_log(self):
+        # The edge case: a brand-new unit, state=presenting, not yet in the log.
+        state = _minimal_state()  # default active_unit.id="U1", state="presenting", no units_log
+        self.assertEqual(validate(state), [])
+
+    def test_evaluating_unit_missing_from_units_log_rejected(self):
+        # Not the fresh-presenting exception: any other state must be registered.
+        state = _minimal_state(units_log=[])
+        state["active_unit"]["state"] = "evaluating"
+        errors = validate(state)
+        self.assertTrue(
+            any("not present in units_log" in e for e in errors),
+            f"expected missing-log-entry error, got {errors}",
+        )
+
+    def test_mastered_unit_requires_attempt_file_on_disk(self):
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            # Real evidence on disk, no attempt file.
+            evidence = root / "evidence.json"
+            evidence.write_text(
+                json.dumps({"verifier": {"verdict": "PASS", "mutation_score": 0.7, "coverage_core": 0.85, "context_isolated": True}}),
+                encoding="utf-8",
+            )
+            state = self._state(
+                state="mastered",
+                evidence_file=str(evidence),
+                attempt_file=str(root / "learner" / "attempts" / "missing.md"),
+                empirical_gate={
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.8,
+                    "mutation_min": 0.65,
+                },
+            )
+            state["units_log"][0]["mastered"] = True
+            state["units_log"][0]["reviews"] = [
+                {"date": date(2026, 7, 1), "event": "gate", "gate_outcome": "pass_first_try", "rating": "good"}
+            ]
+            errors = validate(state, root)
+            self.assertTrue(
+                any("attempt_file" in e and "does not exist" in e for e in errors),
+                f"expected missing-attempt error, got {errors}",
+            )
+
+    def test_mastered_unit_requires_non_empty_evidence_file(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            attempt = root / "learner" / "attempts" / "u1.md"
+            attempt.parent.mkdir(parents=True, exist_ok=True)
+            attempt.write_text("attempt", encoding="utf-8")
+            evidence = root / "evidence.json"
+            evidence.write_text("", encoding="utf-8")
+            state = self._state(
+                state="mastered",
+                attempt_file=str(attempt),
+                evidence_file=str(evidence),
+                empirical_gate={
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.8,
+                    "mutation_min": 0.65,
+                },
+            )
+            state["units_log"][0]["mastered"] = True
+            state["units_log"][0]["reviews"] = [
+                {"date": date(2026, 7, 1), "event": "gate", "gate_outcome": "pass_first_try", "rating": "good"}
+            ]
+            errors = validate(state, root)
+            self.assertTrue(
+                any("evidence_file" in e and "empty" in e for e in errors),
+                f"expected empty-evidence error, got {errors}",
+            )
+
+    def test_mastered_unit_with_all_files_in_place_passes(self):
+        import json
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            attempt = root / "learner" / "attempts" / "u1.md"
+            attempt.parent.mkdir(parents=True, exist_ok=True)
+            attempt.write_text("attempt", encoding="utf-8")
+            evidence = root / "evidence.json"
+            evidence.write_text(
+                json.dumps({"verifier": {"verdict": "PASS", "mutation_score": 0.7, "coverage_core": 0.85, "context_isolated": True}}),
+                encoding="utf-8",
+            )
+            state = self._state(
+                state="mastered",
+                attempt_file=str(attempt),
+                evidence_file=str(evidence),
+                empirical_gate={
+                    "require_executable_evidence": True,
+                    "min_coverage": 0.8,
+                    "mutation_min": 0.65,
+                },
+            )
+            state["units_log"][0]["mastered"] = True
+            state["units_log"][0]["reviews"] = [
+                {"date": date(2026, 7, 1), "event": "gate", "gate_outcome": "pass_first_try", "rating": "good"}
+            ]
+            errors = validate(state, root)
+            self.assertFalse(
+                any(
+                    "disagrees" in e or "does not exist" in e or "is empty" in e
+                    for e in errors
+                ),
+                f"mastered state with real files should be clean, got {errors}",
+            )
+
+
+class TestActiveUnitEvidenceFileCanonical(unittest.TestCase):
+    """Pin the active unit's evidence_file to the canonical NDJSON form.
+
+    Audit ref: ``docs/TECH_DEBT_AUDIT_2026-07-08.md`` item 20 noted that
+    ``learning_state.yaml`` ``evidence_file`` pointed at a legacy ``.json``
+    path while the verifier prefers NDJSON. At the time of the audit the
+    active unit carried the legacy path; the fix is now to assert the
+    canonical YAML (the active unit) stays on the new NDJSON form. The
+    historical ``units_log`` may still reference the legacy path (e.g. U0's
+    ``last_run_evidence.json``) — that is a record, not a policy, and the
+    verifier's shape-detecting ``check_evidence`` accepts both shapes.
+    """
+
+    def test_active_unit_evidence_file_uses_canonical_ndjson(self) -> None:
+        # The canonical substrate is the source of truth (audit golden rule 4).
+        # Asserting it on every test run catches a regression where someone
+        # re-introduces the legacy ``.json`` form into the live active unit.
+        state = load_canonical()
+        evidence_file = state.get("active_unit", {}).get("evidence_file", "")
+        self.assertTrue(
+            evidence_file,
+            "active_unit.evidence_file is required; the canonical YAML must keep it",
+        )
+        self.assertTrue(
+            evidence_file.endswith(".ndjson"),
+            f"active_unit.evidence_file must end with .ndjson (canonical, "
+            f"verifier-preferred); got {evidence_file!r}",
+        )
 
 
 if __name__ == "__main__":

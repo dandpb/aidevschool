@@ -8,14 +8,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from datetime import datetime, timezone
+from curriculum._shared.time import utc_now_iso
 
 from .config import max_retries as _config_max_retries
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
-
+# Canonical timestamp helper lives in ``curriculum._shared.time`` (audit ref:
+# docs/TECH_DEBT_AUDIT_2026-07-08.md item 20). The previous private one-liner
+# was removed in favour of the shared module so format drift can only happen
+# in one place.
 
 class DeterminismError(Exception):
     """Raised when an invalid state transition is attempted."""
@@ -125,7 +126,7 @@ class UnitStateMachine:
 
     def _log(self, event: str, payload: dict[str, Any] | None, new_state: str) -> None:
         self._events.append({
-            "ts": _now_iso(),
+            "ts": utc_now_iso(),
             "unit": self.unit_id,
             "ev": event,
             "from": self.state,

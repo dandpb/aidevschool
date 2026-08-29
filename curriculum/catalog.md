@@ -62,10 +62,10 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | **Key question** | Go (goroutines + channels) vs Rust (tokio + Arc&lt;Mutex&gt;) vs Node (event loop + clusters) — which handles rate limiting best? |
 | **Learning goal** | Entender concorrência básica, estado compartilhado e refills atômicos. |
 | **Directory** | `01_rate_limiter/` |
-| **Go coverage** | ~85.9% (ratelimit) — Phase 2 result, not re-executed in this sandbox (no toolchain) |
-| **Rust tests** | 14 unit + 6 integration — Phase 2 result, not re-executed in this sandbox (no toolchain) |
+| **Go coverage** | 85.9% (root) / 99.2% (ratelimit) — re-executed 2026-08-17 with go 1.26.4: `gofmt` clean, `go vet` clean, `go test -race -cover ./...` pass |
+| **Rust tests** | 15 unit + 6 integration, **0 `#[ignore]`d** — re-executed 2026-08-17 with cargo 1.85.0: `cargo fmt --check` and `cargo clippy --all-targets -- -D warnings` clean. The previously ignored `concurrent_requests_never_overconsume` now runs by default (`std::thread::scope` instead of a tokio runtime, since `check` is synchronous) |
 | **Node coverage** | 92.91%, 55 tests + 1 pre-existing `it.todo` (re-verified after Phase 5 optimization) |
-| **Benchmark** | **Node.js only**, N=10, native harness (autocannon substitute for k6). Go/Rust not executed — toolchain unavailable in this sandbox, installation attempted and failed at the network layer (see `docs/benchmark_results.md` §1.3). Not a 3-language comparison. |
+| **Benchmark** | **Node.js only**, N=10, native harness (autocannon substitute for k6). Go/Rust benchmarks still not executed — the original blocker (no toolchain) no longer applies as of 2026-08-17, so this is now a pending task, not an environment limit. Not a 3-language comparison. |
 | **Evolution** | **Node.js only** — 1 optimization applied and measured (wired the dead `clientKeyStrategy.ts` abstraction into `index.ts`); honest result: small real regression (RPS −5.9%, avg latency +7.3%), not an improvement, reported as-is. Go/Rust: 2+1 optimizations proposed, code-reviewed, **not applied/measured** — no compiler available to verify. See `docs/evolution_report.md`. |
 | **Dependencies** | None (entry point) |
 
@@ -74,14 +74,14 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | Field | Value |
 |-------|-------|
 | **Slug** | `02_key_value_store` |
-| **Status** | Partially implemented (Node.js: gated & certified; Go/Rust: code exists, unverified) |
-| **Evidence** | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the Go and Rust directories came from an earlier ungated backfill and have not been compiled, tested, reviewed, or benchmarked in the certified cycle. |
+| **Status** | Partially implemented (Node.js: gated & certified; Go/Rust: removed in `1b0a309` quality cuts) |
+| **Evidence** | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the earlier ungated Go/Rust backfill directories were removed in commit `1b0a309` and no longer exist on disk. |
 | **Concepts** | Hash maps, CRUD API, TCP/HTTP, serialization, TTL expiration, snapshot/persistence basics |
 | **Key question** | How does each language's map/dictionary implementation compare under concurrent read/write pressure? (unanswered this cycle — no cross-language data exists) |
 | **Learning goal** | Comparar mapas e dicionários sob carga concorrente e persistência simples. |
 | **Directory** | `02_key_value_store/` |
-| **Go coverage** | Unverified — `go-impl/` exists from an earlier ungated backfill commit; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
-| **Rust tests** | Unverified — `rust-impl/` exists from the same earlier ungated backfill; not compiled, tested, reviewed, or benchmarked in this or any gated cycle. |
+| **Go coverage** | N/A — `go-impl/` was removed in `1b0a309` (ungated backfill cleanup); no Go implementation exists for this project. |
+| **Rust tests** | N/A — `rust-impl/` was removed in the same commit; no Rust implementation exists for this project. |
 | **Node coverage** | 91.45% stmts / 82.01% branch / 100% funcs / 91.45% lines — 10/10 tests passing (re-verified this cycle after 3 Major bug fixes + regression tests; `tsc`/`eslint` clean) |
 | **Benchmark** | **Node.js only**, N=10 + tolerance re-check PASS, native harness (autocannon substitute for k6, mixed GET/SET/DELETE/EXPIRE/TTL-read workload). Go/Rust not executed — out of scope this cycle by explicit repo-owner decision, not a toolchain failure. Not a 3-language comparison. |
 | **Evolution** | **Node.js only** — 3 Major code-review bugs fixed (expire() key-validation bypass, UTF-16-vs-UTF-8 value-size check, insecure `0.0.0.0` default bind) with regression tests; 1 measured perf optimization applied (rate-limited `/health` expiry sweep) — honest result: a wash on the benchmarked workload (all deltas within measurement noise), reported as-is, not spun as an improvement; 1 optimization rejected (dropping the sweep entirely) with documented reasoning. See `docs/evolution_report.md`. |

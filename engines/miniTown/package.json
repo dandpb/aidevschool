@@ -2,6 +2,7 @@
   "name": "mini-town",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "pnpm@9.15.9",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
@@ -9,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "smoke": "playwright test"
+    "smoke": "MINITOWN_PORT=5189 playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs",
+    "readiness:report": "node scripts/readiness-report.mjs"
   },
   "dependencies": {
     "three": "^0.170.0"

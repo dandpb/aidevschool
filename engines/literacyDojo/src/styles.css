@@ -201,6 +201,12 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+.app-stage h1:focus {
+  outline: 3px solid var(--primary-dark);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
 /* Opções (onboarding, comparação de saídas) */
 .option-list,
 .fieldset {
@@ -796,7 +802,7 @@ textarea.is-invalid {
   --success-text: #14734d;
   --error-bg: #fff0ed;
   --error-text: #b83a31;
-  --focus: #ff9f1c;
+  --focus: var(--primary-dark);
   --radius: 18px;
   --on-primary: #ffffff;
   --shadow: 0 8px 0 rgba(49, 39, 104, 0.1), 0 18px 42px rgba(39, 33, 67, 0.08);
@@ -2297,4 +2303,58 @@ h2 {
   .lesson-row::before {
     left: 34px;
   }
+}
+
+/* Backup e escalação de suporte do piloto */
+.backup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.backup-status {
+  color: var(--muted);
+}
+
+.backup-status.is-error {
+  color: var(--error-text);
+}
+
+.support-cta {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.support-cta a {
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.progress-lesson-list .lesson-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.progress-lesson-list .lesson-row::before {
+  display: none;
+}
+
+.progress-lesson-list .lesson-name {
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.progress-lesson-list .chip {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: start;
+  width: auto;
+}
+
+.progress-lesson-list .btn {
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+  width: auto;
 }

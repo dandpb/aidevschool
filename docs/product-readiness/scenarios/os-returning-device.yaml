@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: os-returning-device
+useCaseId: os-returning-learner
+kind: continuity
+execution: mixed
+startState: previously-used-browser-profile
+steps: [reload-os, retain-track-choice, resume-visible-mission-state, identify-next-action]
+assertions:
+  - id: same-device-state-resumes
+    severity: high
+    evidence: playwright
+    claim: The same browser profile restores supported local OS state without claiming cross-device sync.
+  - id: learner-understands-local-boundary
+    severity: high
+    evidence: observation
+    claim: The learner can explain that continuity is limited to the same browser profile.
+automation:
+  workingDirectory: engines/codexdojo-os-prototype
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts, engines/codexdojo-os-prototype/src/]

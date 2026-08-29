@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "c3cad96b804c7b3540e2a5c74efaba158c13cf9c",
+  "observedAt": "2026-08-21T20:59:14Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The bundled pilot build mounted the IA Pratica mission from the OS origin and separated local completion from verification. Observer response: I completed this practice on this device; that is not mastery, and my next safe action is to retry verification once or return to the hub."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Chapter continuity restored IA Pratica missions after reload without cross-device claims. Observer response: This Literacy progress belongs to this browser profile; another browser, another device, or cleared site data starts separately."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Onboarding allowed a deliberate Dev track choice and confirmed it. Observer response: I selected Dev rather than the recommended IA Pratica because I want the technical simulations; WAREHOUSE is my next action."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reduced-motion and WebGL degradation retained the keyboard-operable projection and independent verification in the integrated dev bridge. Observer response: I stop the journey and escalate when neither the 3D renderer nor the accessible projection lets the learner perform the core interaction."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A full reload restored the selected track and unfinished missions across both chapters. Observer response: The OS restored my Dev track and unfinished mission in this browser profile; this is not cross-device synchronization."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Clearing the local progress store returned the route to onboarding with no completion. Observer response: The browser-local record was cleared, so the learner must onboard again; I must not reconstruct or claim the previous completion."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-returning-recovery-cause-not-explained-in-product",
+          "severity": "low",
+          "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it.",
+          "owner": "codexDojo OS",
+          "disposition": "Consider a non-authoritative recovery notice without reconstructing progress."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The static pilot build showed Verificador indisponivel, offered retry and hub exit, and exposed WhatsApp plus daniel@heropa.com support links without claiming verification passed. Observer response: Retry verification once; if it remains unavailable, use the visible support CTA or return to the hub and leave the evidence unverified rather than claiming the verification gate passed."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The bundled WAREHOUSE mission mounted from the OS origin; a failed then corrected attempt showed Verificador indisponivel without a stale rejection. Observer response: The retry succeeded at 100%; verification is unavailable in the mission and hub, not rejected, and canonical mastery remains unchanged."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reopen restored completed and unfinished Dev missions after chapter switches and reloads. Observer response: These voxel mission states resume only in this browser profile; they do not follow me to another device or browser."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

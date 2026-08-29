@@ -310,3 +310,26 @@ describe("completeOnboarding", () => {
     expect(progress.onboarding.taskCategory).toBe("scheduling");
   });
 });
+
+describe("export/import progress", () => {
+  it("exporta JSON e reimporta persistindo via migrateProgress", async () => {
+    const { services, progressRepo } = makeServices();
+    await completeMvpOnboarding(services);
+    const exported = await services.useCases.exportProgress();
+    expect(exported).not.toContain("mastered");
+
+    const imported = await services.useCases.importProgress(exported);
+    expect(imported.onboarding.completed).toBe(true);
+    expect(JSON.stringify(imported)).not.toContain("mastered");
+    expect(await progressRepo.load()).toEqual(imported);
+  });
+
+  it("rejeita backup inválido e preserva o progresso atual", async () => {
+    const { services, progressRepo } = makeServices();
+    const before = await progressRepo.load();
+    await expect(services.useCases.importProgress("{")).rejects.toThrow(
+      /não migrável|JSON inválido/,
+    );
+    expect(await progressRepo.load()).toEqual(before);
+  });
+});

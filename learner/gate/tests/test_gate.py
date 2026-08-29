@@ -23,7 +23,7 @@ from learner.gate import (
 from learner.gate.__main__ import main as cli_main
 from learner.gate.security import canonical_evidence_digest
 from learner.gate.verifier_receipt import VerifierReceipt
-from learner.substrate import validate
+from learner.substrate import _AGENT_OWNERSHIP_ROLES, validate
 from learner.substrate.gate import transition_gate
 
 TODAY = date(2026, 7, 5)
@@ -108,8 +108,29 @@ def make_state(root: Path | None = None, **unit_overrides: Any) -> dict[str, Any
         "retry_limit": 3,
         "attempt_file": attempt_file,
         "evidence_file": evidence_file,
+        "empirical_gate": {
+            "require_executable_evidence": True,
+            "min_coverage": 0.8,
+            "mutation_min": 0.65,
+        },
     }
     unit.update(unit_overrides)
+    # The active_unit ↔ units_log cross-check (audit #9) requires the two
+    # views to agree on the mastery flag and on the gate review. Tests that
+    # override ``state`` to ``mastered`` must mirror that into the units_log
+    # entry (with a real gate review); otherwise the validator rejects the
+    # fixture before the gate even runs.
+    log_mastered = unit.get("state") == "mastered"
+    log_reviews: list[dict[str, Any]] = []
+    if log_mastered:
+        log_reviews = [
+            {
+                "date": date(2026, 7, 1),
+                "event": "gate",
+                "rating": "good",
+                "gate_outcome": "pass_first_try",
+            }
+        ]
     return {
         "version": 2,
         "system": "agora-continuum",
@@ -132,14 +153,15 @@ def make_state(root: Path | None = None, **unit_overrides: Any) -> dict[str, Any
         },
         "active_unit": unit,
         "next_action": {"owner": "verifier", "action": "run gate"},
+        "agent_ownership": {role: f"agent-{role}" for role in _AGENT_OWNERSHIP_ROLES},
         "units_log": [
             {
                 "unit_id": unit["id"],
                 "project": unit["project"],
-                "mastered": False,
+                "mastered": log_mastered,
                 "attempt_file": unit["attempt_file"],
                 "evidence_file": unit["evidence_file"],
-                "reviews": [],
+                "reviews": log_reviews,
             }
         ],
         "streak": {

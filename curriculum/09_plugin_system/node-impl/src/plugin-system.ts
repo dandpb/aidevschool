@@ -1,4 +1,4 @@
-import { createLogger, type Logger } from './logger';
+import { createLogger, type Logger } from './logger.js';
 import { Worker } from 'worker_threads';
 
 export type PluginState = 'registered' | 'loaded' | 'initialized' | 'running' | 'stopped' | 'unloaded' | 'failed';

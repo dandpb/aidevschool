@@ -47,5 +47,26 @@ describe('mission result', () => {
     expect(screen.getByText(/gate canônico/i)).not.toBeNull()
     await userEvent.click(screen.getByRole('button', { name: 'Voltar ao hub' }))
     expect(onReturn).toHaveBeenCalledOnce()
+    expect(screen.queryByTestId('support-cta')).toBeNull()
+  })
+
+  it('exposes the support email when verification is unavailable', () => {
+    render(
+      <ResultScreen
+        completionStatus="saved"
+        verification={{ kind: 'gateway-unavailable', storageId: 'run-1', retryable: true }}
+        canonicalMasteryCount={0}
+        onRetryVerification={vi.fn()}
+        onRetrySave={vi.fn()}
+        onReturn={vi.fn()}
+      />,
+    )
+
+    expect(screen.getByTestId('support-whatsapp').getAttribute('href')).toBe(
+      'https://wa.me/5511984363878',
+    )
+    expect(screen.getByTestId('support-email').getAttribute('href')).toContain(
+      'mailto:daniel@heropa.com',
+    )
   })
 })
