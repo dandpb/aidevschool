@@ -4,10 +4,26 @@
 [build]
   command = "npm run build:pilot"
   publish = "dist"
+  # Staged inside the site root by scripts/build-pilot-bundle.mjs from the
+  # canonical learner/gate/netlify-functions source. The verifier function is
+  # a projection: never edit netlify/functions by hand.
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "22"
   NPM_FLAGS = "--include=dev"
+
+[[redirects]]
+  # Same-origin verification bridge (AID-305): route the Dev-journey verifier
+  # ahead of the SPA fallback so verification stays independent and available.
+  from = "/__dojo/bridge/v1/session"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
+
+[[redirects]]
+  from = "/__dojo/bridge/v1/verification"
+  to = "/.netlify/functions/dojo-verification-bridge"
+  status = 200
 
 [[redirects]]
   # The OS does not own a root service worker. Keep stale probes out of the SPA
