@@ -789,6 +789,7 @@ textarea.is-invalid {
   --surface-strong: #ffffff;
   --text: #17213a;
   --muted: #657089;
+  --muted-strong: #4f5a75;
   --primary: #6657e8;
   --primary-dark: #4938c7;
   --primary-soft: #eeeaff;
@@ -1133,7 +1134,7 @@ h2 {
   top: 10px;
   border-radius: 999px;
   background: #edf1f5;
-  color: var(--muted);
+  color: var(--muted-strong);
   padding: 3px 8px;
   font-size: 0.66rem;
   font-weight: 900;
