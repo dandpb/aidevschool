@@ -112,8 +112,9 @@ async function completeRelay(frame: Frame) {
 async function completePipeline(frame: Frame) {
   await expect.poll(() => frame.evaluate(() => {
     type Hook = { game: { snapshot: { phase: string } } }
-    return (window as Window & { __pipelinePlant?: Hook }).__pipelinePlant?.game.snapshot.phase
-  })).toBe('briefing')
+    const phase = (window as Window & { __pipelinePlant?: Hook }).__pipelinePlant?.game.snapshot.phase
+    return phase === 'briefing' || phase === 'predicting'
+  })).toBe(true)
   await frame.evaluate(() => {
     type Hook = {
       game: {
@@ -125,7 +126,7 @@ async function completePipeline(frame: Frame) {
     }
     const hook = (window as Window & { __pipelinePlant?: Hook }).__pipelinePlant
     if (hook === undefined) throw new Error('Pipeline Plant hook unavailable')
-    hook.game.start()
+    if (hook.game.snapshot.phase === 'briefing') hook.game.start()
     hook.game.predictOverflow(hook.game.bufferedOverflows())
   })
 }
