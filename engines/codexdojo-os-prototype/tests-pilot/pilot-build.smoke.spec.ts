@@ -89,6 +89,19 @@ test('readiness os-voxel-hosted-missions and os-verification-recovery: hosted si
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
 })
 
+test('os-voxel-hosted-missions: the published PIPELINE PLANT mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-06-pipeline-plant')
+  await expectMissionMounted(
+    page,
+    'Missão PIPELINE PLANT: File Upload/Processing Pipeline',
+    /L1|tank|PIPELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')

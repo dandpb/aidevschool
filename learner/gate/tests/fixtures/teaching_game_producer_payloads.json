@@ -4,12 +4,30 @@
       "observations": {
         "kind": "wormhole-L1",
         "predictions": [
-          {"url": "https://delta.app/8ril9k-0", "predictedCode": "35y4"},
-          {"url": "https://delta.app/9rd4jn-1", "predictedCode": "REDI"},
-          {"url": "https://flux.sys/8wbont-2", "predictedCode": "3qEK"},
-          {"url": "https://ada.io/8ruko7-3", "predictedCode": "1buv"},
-          {"url": "https://delta.app/7g40wq-4", "predictedCode": "442O"},
-          {"url": "https://cache.net/dy7kps-5", "predictedCode": "1Nfi"}
+          {
+            "url": "https://delta.app/8ril9k-0",
+            "predictedCode": "35y4"
+          },
+          {
+            "url": "https://delta.app/9rd4jn-1",
+            "predictedCode": "REDI"
+          },
+          {
+            "url": "https://flux.sys/8wbont-2",
+            "predictedCode": "3qEK"
+          },
+          {
+            "url": "https://ada.io/8ruko7-3",
+            "predictedCode": "1buv"
+          },
+          {
+            "url": "https://delta.app/7g40wq-4",
+            "predictedCode": "442O"
+          },
+          {
+            "url": "https://cache.net/dy7kps-5",
+            "predictedCode": "1Nfi"
+          }
         ]
       },
       "metrics": {
@@ -22,12 +40,30 @@
       "observations": {
         "kind": "wormhole-L2",
         "predictions": [
-          {"code": "3B8b", "predictedUrl": "https://delta.app/3wxzra-0"},
-          {"code": "4DF2", "predictedUrl": "https://bytes.dev/3e8o2g-1"},
-          {"code": "1f4R", "predictedUrl": "https://cache.net/eu4mct-2"},
-          {"code": "2vGN", "predictedUrl": "https://cache.net/b4u2g8-3"},
-          {"code": "2PJA", "predictedUrl": "https://edge.run/9u4i7-4"},
-          {"code": "2xqJ", "predictedUrl": "https://ada.io/280dma-5"}
+          {
+            "code": "3B8b",
+            "predictedUrl": "https://delta.app/3wxzra-0"
+          },
+          {
+            "code": "4DF2",
+            "predictedUrl": "https://bytes.dev/3e8o2g-1"
+          },
+          {
+            "code": "1f4R",
+            "predictedUrl": "https://cache.net/eu4mct-2"
+          },
+          {
+            "code": "2vGN",
+            "predictedUrl": "https://cache.net/b4u2g8-3"
+          },
+          {
+            "code": "2PJA",
+            "predictedUrl": "https://edge.run/9u4i7-4"
+          },
+          {
+            "code": "2xqJ",
+            "predictedUrl": "https://ada.io/280dma-5"
+          }
         ]
       },
       "metrics": {
@@ -39,12 +75,30 @@
       "observations": {
         "kind": "wormhole-L3",
         "predictions": [
-          {"url": "https://delta.app/c89yjl-0", "predictedCollision": false},
-          {"url": "https://delta.app/9rgfr-1", "predictedCollision": false},
-          {"url": "https://wormhole.collide/133", "predictedCollision": false},
-          {"url": "https://wormhole.collide/163", "predictedCollision": true},
-          {"url": "https://edge.run/fx6tp8-4", "predictedCollision": false},
-          {"url": "https://bytes.dev/ddbqp2-5", "predictedCollision": false}
+          {
+            "url": "https://delta.app/c89yjl-0",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://delta.app/9rgfr-1",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://wormhole.collide/133",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://wormhole.collide/163",
+            "predictedCollision": true
+          },
+          {
+            "url": "https://edge.run/fx6tp8-4",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://bytes.dev/ddbqp2-5",
+            "predictedCollision": false
+          }
         ]
       },
       "metrics": {
@@ -71,7 +125,11 @@
     "L1": {
       "observations": {
         "kind": "relay-L1",
-        "predictions": ["st-0", "st-2", "st-4"]
+        "predictions": [
+          "st-0",
+          "st-2",
+          "st-4"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -84,7 +142,10 @@
     "L2": {
       "observations": {
         "kind": "relay-L2",
-        "predictions": ["st-0", "st-3"]
+        "predictions": [
+          "st-0",
+          "st-3"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -97,7 +158,11 @@
     "L3": {
       "observations": {
         "kind": "relay-L3",
-        "predictions": ["st-0", "st-2", "st-4"]
+        "predictions": [
+          "st-0",
+          "st-2",
+          "st-4"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -119,6 +184,83 @@
         "rejoined_fanout": true,
         "delivered_after": 4,
         "was_dropped": true
+      }
+    }
+  },
+  "PIPELINE PLANT": {
+    "L1": {
+      "observations": {
+        "kind": "pipeline-plant-L1",
+        "predictedOverflow": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 115,
+        "capacity": 100,
+        "mode": "buffered",
+        "overflow_predicted": true,
+        "overflow_actual": true,
+        "peak_mem": 115,
+        "delivered": 100,
+        "overflowed": 15
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "pipeline-plant-L2",
+        "predictedBounded": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 1023,
+        "capacity": 100,
+        "chunk_size": 40,
+        "mode": "streaming",
+        "bounded_predicted": true,
+        "bounded_actual": true,
+        "peak_mem": 40,
+        "delivered": 1023,
+        "overflowed": 0
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "pipeline-plant-L3",
+        "chunkSize": 40,
+        "predictedPeak": 40
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 496,
+        "capacity": 100,
+        "chunk_size": 40,
+        "mode": "streaming",
+        "peak_predicted": 40,
+        "peak_actual": 40,
+        "delivered": 496,
+        "overflowed": 0,
+        "chunk_fits": true
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "pipeline-plant-L4",
+        "predictedOverflow": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 1308,
+        "capacity": 100,
+        "mode": "buffered",
+        "overflow_predicted": true,
+        "overflow_actual": true,
+        "peak_mem": 1308,
+        "delivered": 200,
+        "overflowed": 1108,
+        "stalled": false,
+        "drained": 100,
+        "drain_rate": 0.1,
+        "time_ms": 1000
       }
     }
   }

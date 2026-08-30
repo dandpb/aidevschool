@@ -49,6 +49,7 @@ class TestMissionCatalogReleaseOrder(unittest.TestCase):
                 "l15",
                 "l16",
                 "l17",
+                "game-06-pipeline-plant",
             ],
         )
         self.assertEqual(

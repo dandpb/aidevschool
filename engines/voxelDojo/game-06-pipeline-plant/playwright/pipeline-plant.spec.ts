@@ -36,9 +36,16 @@ test("boots the tank, plays L1 by predicting overflow from the public API truth,
   expect(first.project).toBe("06_file_upload_pipeline")
   expect(first.scenario_id).toBe("pipeline-plant-L1")
   expect(first.pass).toBe(true)
+  expect(first.metrics.kind).toBe("voxeldoj-pipeline-plant")
   expect(first.metrics.mode).toBe("buffered")
   expect(first.metrics.overflow_predicted).toBe(willOverflow)
   expect(first.metrics.overflow_actual).toBe(willOverflow)
+  // Closed observation trace for the independent verifier: the player's bounded
+  // inputs only; every outcome number is recomputed verifier-side.
+  expect(first.observations).toEqual({
+    kind: "pipeline-plant-L1",
+    predictedOverflow: willOverflow,
+  })
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
   await page.screenshot({ path: ".logs/smoke-L1-cleared.png" })
@@ -57,8 +64,13 @@ test("L2 stream: predicting bounded stays flat and clears with no overflow", asy
   const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "pipeline-plant-L2")
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)
+  expect(record?.metrics.kind).toBe("voxeldoj-pipeline-plant")
   expect(record?.metrics.mode).toBe("streaming")
   expect(record?.metrics.overflowed).toBe(0)
+  expect(record?.observations).toEqual({
+    kind: "pipeline-plant-L2",
+    predictedBounded: true,
+  })
   // peak memory = chunk size, flat regardless of the huge total size
   const peak = record?.metrics.peak_mem as number
   const chunk = record?.metrics.chunk_size as number

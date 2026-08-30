@@ -16,6 +16,7 @@ from typing import Any
 
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
+from learner.gate.pipeline_evaluator import evaluate_pipeline
 from learner.gate.relay_evaluator import evaluate_relay
 from learner.gate.warehouse_evaluator import evaluate_warehouse
 from learner.gate.wormhole_evaluator import evaluate_wormhole
@@ -40,6 +41,12 @@ GAME_SPECS = {
         "05_websocket_chat",
         "relay-station-",
         evaluate_relay,
+    ),
+    "PIPELINE PLANT": (
+        "U6-file-upload",
+        "06_file_upload_pipeline",
+        "pipeline-plant-",
+        evaluate_pipeline,
     ),
 }
 ALLOWED_KEYS = frozenset(

@@ -453,3 +453,28 @@ bindings:
     fallback:
       kind: dom
       summary: "Classifique o que vai para o cliente ou para o servidor e trate erros da API por controles rotulados."
+
+  - missionId: game-06-pipeline-plant
+    version: 1
+    chapterOrder: 7
+    prerequisites: [game-05-relay-station]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 06_file_upload_pipeline
+      unitId: U6-file-upload
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-06-pipeline-plant
+      entrypoint: http://127.0.0.1:5206/?hosted=1
+      environmentKey: VITE_PIPELINE_PLANT_URL
+      protocolVersion: "1.0"
+      contentVersion: game-06-pipeline-plant@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Preveja transbordo do tanque, ajuste o chunk e acompanhe a mesma simulacao deterministica por controles rotulados."

@@ -713,5 +713,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Classifique o que vai para o cliente ou para o servidor e trate erros da API por controles rotulados.",
       },
     },
+    {
+      id: "game-06-pipeline-plant",
+      version: 1,
+      trackId: "dev",
+      unitId: "U6-file-upload",
+      projectId: "06_file_upload_pipeline",
+      title: "PIPELINE PLANT: File Upload/Processing Pipeline",
+      objective: "Processar uploads grandes sem estourar memória.",
+      estimatedMinutes: 12,
+      chapterOrder: 7,
+      prerequisites: [
+        "game-05-relay-station",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "voxelDojo",
+        entrypoint: "http://127.0.0.1:5206/?hosted=1",
+        environmentKey: "VITE_PIPELINE_PLANT_URL",
+        protocolVersion: "1.0",
+        contentVersion: "game-06-pipeline-plant@0.1.0",
+      },
+      evidence: {
+        schema: "teaching-game-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Preveja transbordo do tanque, ajuste o chunk e acompanhe a mesma simulacao deterministica por controles rotulados.",
+      },
+    },
   ],
 }
