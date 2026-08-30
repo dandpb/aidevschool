@@ -53,13 +53,15 @@ def _lesson(lesson_id: str, version: int) -> dict[str, Any]:
     }
 
 
-def _binding(lesson_id: str) -> dict[str, Any]:
-    chapter_order = {"l01": 1, "l02": 2, "l03": 3}[lesson_id]
-    prerequisites = ["l02"] if lesson_id == "l03" else []
+def _binding(
+    lesson_id: str,
+    chapter_order: int,
+    prerequisites: list[str] | None = None,
+) -> dict[str, Any]:
     return {
         "missionId": lesson_id,
         "chapterOrder": chapter_order,
-        "prerequisites": prerequisites,
+        "prerequisites": prerequisites or [],
         "trackId": "ai-pratica",
         "curriculum": {
             "kind": "ai-literacy-lesson",
@@ -124,6 +126,7 @@ class MissionCatalogFixture:
     def __init__(self, root: Path) -> None:
         self.root = root
         self.catalog: dict[str, Any] = _catalog()
+        self.lesson_versions: dict[str, int] = {"l01": 1, "l02": 3, "l03": 1}
         self.bindings: dict[str, Any] = {
             "schemaVersion": 1,
             "tracks": [
@@ -139,9 +142,9 @@ class MissionCatalogFixture:
                 },
             ],
             "bindings": [
-                _binding("l01"),
-                _binding("l02"),
-                _binding("l03"),
+                _binding("l01", 1),
+                _binding("l02", 2),
+                _binding("l03", 3, ["l02"]),
                 _dev_binding(),
                 _dev_binding(
                     "game-03-wormhole",
@@ -191,12 +194,45 @@ class MissionCatalogFixture:
         )
         self.write()
 
+    def add_literacy_lesson(
+        self,
+        lesson_id: str,
+        title: str,
+        objective: str,
+        estimated_minutes: int,
+        prerequisites: list[str],
+        version: int = 1,
+    ) -> None:
+        chapter_order = (
+            max(
+                binding["chapterOrder"]
+                for binding in self.bindings["bindings"]
+                if binding["trackId"] == "ai-pratica"
+            )
+            + 1
+        )
+        self.catalog["lessons"].append(
+            {
+                "id": lesson_id,
+                "title": title,
+                "objective": objective,
+                "estimatedMinutes": estimated_minutes,
+                "prerequisites": prerequisites,
+                "status": "ready",
+            }
+        )
+        self.lesson_versions[lesson_id] = version
+        self.bindings["bindings"].insert(
+            chapter_order - 1,
+            _binding(lesson_id, chapter_order, prerequisites),
+        )
+
     def write(self) -> None:
         literacy = self.root / "curriculum" / "ai-literacy"
         (literacy / "catalog.yaml").write_text(
             yaml.safe_dump(self.catalog, sort_keys=False), encoding="utf-8"
         )
-        for lesson_id, version in (("l01", 1), ("l02", 3), ("l03", 1)):
+        for lesson_id, version in self.lesson_versions.items():
             (literacy / "modules" / "mod-01" / f"{lesson_id}.yaml").write_text(
                 yaml.safe_dump(_lesson(lesson_id, version), sort_keys=False),
                 encoding="utf-8",

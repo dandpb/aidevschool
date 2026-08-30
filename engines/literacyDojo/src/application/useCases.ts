@@ -55,7 +55,22 @@ export type ResumeDestination =
   | { kind: "home" }
   | { kind: "lesson"; lessonId: string };
 
-const HOSTED_FIRST_CHAPTER = new Set(["l01", "l02", "l03"]);
+const HOSTED_AI_PRATICA_LESSONS = new Set([
+  "l01",
+  "l02",
+  "l03",
+  "l04",
+  "l05",
+  "l06",
+  "l07",
+  "l08",
+  "l09",
+  "l10",
+  "l11",
+  "l12",
+  "l13",
+  "l14",
+]);
 
 export class LiteracyUseCases {
   constructor(private readonly deps: UseCaseDeps) {}
@@ -104,7 +119,7 @@ export class LiteracyUseCases {
 
   async prepareHostedMission(lessonId: string): Promise<LearnerProgress> {
     this.requireLesson(lessonId);
-    if (!HOSTED_FIRST_CHAPTER.has(lessonId)) {
+    if (!HOSTED_AI_PRATICA_LESSONS.has(lessonId)) {
       throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
     }
     let progress = await this.requireProgress();

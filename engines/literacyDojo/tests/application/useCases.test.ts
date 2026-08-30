@@ -56,19 +56,24 @@ describe("startLesson", () => {
     await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(/bloqueada/);
   });
 
-  it.each(["l01", "l02", "l03"])("prepara a missão hospedada declarada %s", async (lessonId) => {
-    const { services } = makeServices();
-    const progress = await services.useCases.prepareHostedMission(lessonId);
+  it.each(["l01", "l02", "l03", "l04", "l08", "l14"])(
+    "prepara a missão hospedada declarada %s",
+    async (lessonId) => {
+      const { services } = makeServices();
+      const progress = await services.useCases.prepareHostedMission(lessonId);
 
-    expect(progress.onboarding.completed).toBe(true);
-    expect(progress.lessonStatus[lessonId]).toBe("in_progress");
-    expect(progress.currentLessonId).toBe(lessonId);
-    expect(JSON.stringify(progress)).not.toContain("mastered");
-  });
+      expect(progress.onboarding.completed).toBe(true);
+      expect(progress.lessonStatus[lessonId]).toBe("in_progress");
+      expect(progress.currentLessonId).toBe(lessonId);
+      expect(JSON.stringify(progress)).not.toContain("mastered");
+    },
+  );
 
-  it("rejeita lição fora do primeiro capítulo hospedado", async () => {
+  it("rejeita lição fora do conjunto hospedado publicado", async () => {
     const { services } = makeServices();
-    await expect(services.useCases.prepareHostedMission("l04")).rejects.toThrow(/não autorizada/);
+    await expect(services.useCases.prepareHostedMission("l15")).rejects.toThrow(
+      /não encontrada|não autorizada/,
+    );
   });
 });
 
