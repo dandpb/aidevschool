@@ -67,3 +67,45 @@ class TestMissionCatalogGraphRules(unittest.TestCase):
         )
         l05 = next(item for item in snapshot["missions"] if item["id"] == "l05")
         self.assertEqual(l05["prerequisites"], ["l04"])
+
+    def test_binds_dev_journey_lessons_to_the_dev_track(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            snapshot = load_mission_catalog(fixture.root)
+
+        dev_lessons = [
+            mission for mission in snapshot["missions"] if mission["id"].startswith("l1")
+        ]
+        self.assertEqual(
+            [(mission["id"], mission["prerequisites"]) for mission in dev_lessons],
+            [("l15", []), ("l16", ["l15"]), ("l17", ["l16"])],
+        )
+        self.assertTrue(all(mission["trackId"] == "dev" for mission in dev_lessons))
+
+    def test_rejects_lesson_bound_against_its_module_journey_track(self) -> None:
+        # l15 pertence ao módulo dev (mod-05): vinculá-la na trilha ai-pratica
+        # viola a identidade canônica de journey.
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            l15_binding = next(
+                binding
+                for binding in fixture.bindings["bindings"]
+                if binding["missionId"] == "l15"
+            )
+            l15_binding["trackId"] = "ai-pratica"
+            l15_binding["chapterOrder"] = 4
+            fixture.write()
+            with self.assertRaisesRegex(MissionCatalogError, "canonical module journey"):
+                load_mission_catalog(fixture.root)
+
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture = MissionCatalogFixture(Path(tmp))
+            l01_binding = next(
+                binding
+                for binding in fixture.bindings["bindings"]
+                if binding["missionId"] == "l01"
+            )
+            l01_binding["trackId"] = "dev"
+            fixture.write()
+            with self.assertRaisesRegex(MissionCatalogError, "canonical module journey"):
+                load_mission_catalog(fixture.root)

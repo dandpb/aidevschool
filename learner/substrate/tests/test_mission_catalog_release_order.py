@@ -30,7 +30,7 @@ class TestMissionCatalogReleaseOrder(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, first)
 
-    def test_first_release_has_six_stably_ordered_missions_without_content_copies(
+    def test_published_tracks_are_stably_ordered_without_content_copies(
         self,
     ) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -46,6 +46,9 @@ class TestMissionCatalogReleaseOrder(unittest.TestCase):
                 "game-02-warehouse",
                 "game-03-wormhole",
                 "game-05-relay-station",
+                "l15",
+                "l16",
+                "l17",
             ],
         )
         self.assertEqual(

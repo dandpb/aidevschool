@@ -14,8 +14,8 @@ export const STUDENT_MISSION_CHAPTERS = [
   },
   {
     id: 'hosted-simulations' as const,
-    label: 'Simulações hospedadas',
-    detail: 'WAREHOUSE, WORMHOLE e RELAY STATION no OS',
+    label: 'Dev',
+    detail: 'Missões dev e simulações hospedadas no OS',
     trackId: HOSTED_SIMULATIONS_TRACK_ID,
   },
 ] as const

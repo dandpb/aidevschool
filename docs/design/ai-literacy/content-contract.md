@@ -79,12 +79,14 @@ feedback "ainda falta X" e, no futuro, da verificação independente.
 
 `catalog.yaml` é o índice canônico de 17 lições válidas. Cada módulo declara
 uma `journey`: `mod-01`…`mod-04` pertencem a `ia_pratica` (14 lições para
-profissionais não técnicos) e `mod-05` pertence a `dev` (3 lições preservadas
-como prévia, fora da promessa pública enquanto a Trilha Dev estiver “Em
-breve”). As lições usam `status`:
+profissionais não técnicos) e `mod-05` pertence a `dev` (3 lições publicadas
+como missões hospedadas da trilha dev do OS — ver
+`engines/codexdojo-os-prototype/config/mission-bindings.yaml`). O read model
+compila as duas jornadas; o percurso público do app standalone continua só
+`ia_pratica` (filtro por `journey` no adapter). As lições usam `status`:
 
 - `ready` — lição completa; exige arquivo próprio válido em `modules/` e entra
-  apenas na projeção correspondente à sua `journey`.
+  no read model com a `journey` do seu módulo.
 - `planned` — lição anunciada; **não** exige arquivo nem entra em `lessons`,
   mas pode continuar no índice do módulo com `hasContent: false`.
 
@@ -102,16 +104,17 @@ curriculum/ai-literacy/*
 
 Exports do read model gerado (`lessons.ts`):
 
-- `lessons: LessonDefinition[]` — as 14 lições `ready` validadas de
-  `ia_pratica`;
+- `lessons: LessonDefinition[]` — as 17 lições `ready` validadas (`ia_pratica` +
+  `dev`); missões hospedadas do OS servem as duas jornadas;
 - `contentVersion: string` — versão do catálogo;
 - `track: Track` — metadados da trilha (título, público, promessa, idioma);
-- `modules: ModuleDefinition[]` — os 4 módulos públicos ordenados, cada um com suas
-  `CatalogLessonEntry[]` (inclui lições `planned` com `hasContent: false`,
-  para o mapa da trilha exibir "em breve" sem duplicar conteúdo na UI);
+- `modules: ModuleDefinition[]` — os 5 módulos ordenados, cada um com sua
+  `journey` (`"ia_pratica" | "dev"`) e suas `CatalogLessonEntry[]` (inclui
+  lições `planned` com `hasContent: false`, para o mapa da trilha exibir
+  "em breve" sem duplicar conteúdo na UI); o adapter do app standalone expõe
+  em `listModules()` apenas os módulos `ia_pratica`;
 - `skills: SkillDefinition[]` — catálogo tipado de skills das duas jornadas,
-  preservado para os assets compartilhados; somente módulos/lições
-  `ia_pratica` aparecem no percurso público.
+  preservado para os assets compartilhados.
 
 Comandos (a partir da raiz do repositório):
 
