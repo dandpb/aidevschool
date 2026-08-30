@@ -12,9 +12,9 @@ no read model):
 
 ```ts
 type LessonDefinition = {
-  id: string                    // estável: l01..l14; nunca deriva do título
+  id: string                    // estável: lNN — vigentes l01..l20; nunca deriva do título
   version: number               // inteiro >= 1; toda alteração de conteúdo incrementa
-  moduleId: string              // mod-01..mod-04
+  moduleId: string              // mod-01..mod-06
   title: string
   objective: string             // objetivo observável
   estimatedMinutes: 3 | 4 | 5
@@ -77,10 +77,12 @@ feedback "ainda falta X" e, no futuro, da verificação independente.
 
 ## Catálogo
 
-`catalog.yaml` é o índice canônico de 17 lições válidas. Cada módulo declara
-uma `journey`: `mod-01`…`mod-04` pertencem a `ia_pratica` (14 lições para
-profissionais não técnicos) e `mod-05` pertence a `dev` (3 lições publicadas
-como missões hospedadas da trilha dev do OS — ver
+`catalog.yaml` é o índice canônico das lições válidas (20 após a onda
+l18–l20). Cada módulo declara uma `journey`: `mod-01`…`mod-04` e `mod-06`
+pertencem a `ia_pratica` (14 lições dos módulos iniciais + 3 de continuação
+em `mod-06`: reutilização de pedidos, verificação de números e fatos,
+conversas longas) e `mod-05` pertence a `dev` (3 lições publicadas como
+missões hospedadas da trilha dev do OS — ver
 `engines/codexdojo-os-prototype/config/mission-bindings.yaml`). O read model
 compila as duas jornadas; o percurso público do app standalone continua só
 `ia_pratica` (filtro por `journey` no adapter). As lições usam `status`:
@@ -104,11 +106,12 @@ curriculum/ai-literacy/*
 
 Exports do read model gerado (`lessons.ts`):
 
-- `lessons: LessonDefinition[]` — as 17 lições `ready` validadas (`ia_pratica` +
-  `dev`); missões hospedadas do OS servem as duas jornadas;
+- `lessons: LessonDefinition[]` — todas as lições `ready` validadas
+  (20 após a onda l18–l20) (`ia_pratica` + `dev`); missões hospedadas do OS
+  servem as duas jornadas;
 - `contentVersion: string` — versão do catálogo;
 - `track: Track` — metadados da trilha (título, público, promessa, idioma);
-- `modules: ModuleDefinition[]` — os 5 módulos ordenados, cada um com sua
+- `modules: ModuleDefinition[]` — os 6 módulos ordenados, cada um com sua
   `journey` (`"ia_pratica" | "dev"`) e suas `CatalogLessonEntry[]` (inclui
   lições `planned` com `hasContent: false`, para o mapa da trilha exibir
   "em breve" sem duplicar conteúdo na UI); o adapter do app standalone expõe
@@ -142,3 +145,6 @@ python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>  # valida + 
 6. **Conteúdo inválido falha o build** — o validador sai com código não-zero e
    mensagens claras; não existe fallback silencioso nem conteúdo parcial no
    read model.
+7. Extensão ou aposentação de ids de lição/módulo exige emenda deste contrato
+   via issue aprovada pelo board; ids alocados sequencialmente (próximo livre
+   após `l20`: `l21`); ids nunca são reutilizados.
