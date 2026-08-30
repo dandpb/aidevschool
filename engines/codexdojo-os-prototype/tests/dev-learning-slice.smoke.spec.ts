@@ -25,6 +25,14 @@ type RelayHook = {
   }
 }
 
+type PipelineHook = {
+  readonly game: {
+    start(): void
+    bufferedOverflows(): boolean
+    predictOverflow(willOverflow: boolean): void
+  }
+}
+
 test('independently verifies all three Dev games through the shared mission contract', async ({
   page,
 }) => {
@@ -145,6 +153,33 @@ test('independently verifies all three Dev games through the shared mission cont
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
+  await expect(
+    page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const pipeline = page.frameLocator(
+    'iframe[title="Missão PIPELINE PLANT: File Upload/Processing Pipeline"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5206/')),
+  ).toBe(true)
+  const pipelineFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5206/'),
+  )
+  if (pipelineFrame === undefined) throw new Error('Pipeline mission frame was not loaded')
+  await expect.poll(() => pipelineFrame.evaluate(
+    () => (window as Window & { __pipelinePlant?: PipelineHook }).__pipelinePlant !== undefined,
+  )).toBe(true)
+  await pipelineFrame.evaluate(() => {
+    const hook = (window as Window & { __pipelinePlant?: PipelineHook }).__pipelinePlant
+    if (hook === undefined) throw new Error('Pipeline Plant test hook is unavailable')
+    hook.game.start()
+    hook.game.predictOverflow(hook.game.bufferedOverflows())
+  })
+  await expect(pipeline.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
     const open = indexedDB.open('codexdojo-os-verification', 2)
     open.onerror = () => reject(open.error)
@@ -158,7 +193,7 @@ test('independently verifies all three Dev games through the shared mission cont
       }
     }
   }))
-  expect(stored).toHaveLength(3)
+  expect(stored).toHaveLength(4)
   expect(stored).toEqual(expect.arrayContaining([
     expect.objectContaining({
       schemaId: 'teaching-game-evidence',
@@ -182,6 +217,14 @@ test('independently verifies all three Dev games through the shared mission cont
       subject: {
         missionId: 'game-05-relay-station',
         unitId: 'U5-websocket-chat',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-06-pipeline-plant',
+        unitId: 'U6-file-upload',
       },
     }),
   ]))

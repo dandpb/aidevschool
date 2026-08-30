@@ -162,6 +162,14 @@ class MissionCatalogFixture:
                     ["game-03-wormhole"],
                     5205,
                 ),
+                _dev_binding(
+                    "game-06-pipeline-plant",
+                    "06_file_upload_pipeline",
+                    "U6-file-upload",
+                    4,
+                    ["game-05-relay-station"],
+                    5206,
+                ),
             ],
         }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
@@ -187,6 +195,11 @@ class MissionCatalogFixture:
                         "id": "game-05-relay-station",
                         "name": "RELAY STATION",
                         "developmentPort": 5205,
+                    },
+                    {
+                        "id": "game-06-pipeline-plant",
+                        "name": "PIPELINE PLANT",
+                        "developmentPort": 5206,
                     },
                 ]
             ),

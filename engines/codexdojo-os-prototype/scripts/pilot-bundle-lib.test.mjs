@@ -87,6 +87,7 @@ test('keeps launchable Dev missions inside the immutable OS bundle', async () =>
   assert.match(script, /VITE_WAREHOUSE_URL: '\/apps\/warehouse\/'/)
   assert.match(script, /VITE_WORMHOLE_URL: '\/apps\/wormhole\/'/)
   assert.match(script, /VITE_RELAY_STATION_URL: '\/apps\/relay-station\/'/)
+  assert.match(script, /VITE_PIPELINE_PLANT_URL: '\/apps\/pipeline-plant\/'/)
 })
 
 test('builds bundled Dev missions with their deployed subpath as the Vite base', async () => {
@@ -95,6 +96,7 @@ test('builds bundled Dev missions with their deployed subpath as the Vite base',
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/warehouse\/'\]/)
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/wormhole\/'\]/)
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/relay-station\/'\]/)
+  assert.match(script, /args: \['run', 'build', '--base=\/apps\/pipeline-plant\/'\]/)
 })
 
 test('the public LiteracyDojo build cannot omit its independent verifier endpoint', async () => {

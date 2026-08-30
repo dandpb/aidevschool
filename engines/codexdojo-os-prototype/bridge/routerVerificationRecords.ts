@@ -125,6 +125,37 @@ export const relayRecord = {
   },
 }
 
+export const pipelinePlantRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U6-file-upload',
+  project: '06_file_upload_pipeline',
+  scenario_id: 'pipeline-plant-L4',
+  game: 'PIPELINE PLANT',
+  metrics: {
+    kind: 'voxeldoj-pipeline-plant',
+    size: 1308,
+    capacity: 100,
+    mode: 'buffered',
+    overflow_predicted: true,
+    overflow_actual: true,
+    peak_mem: 1308,
+    delivered: 200,
+    overflowed: 1108,
+    stalled: false,
+    drained: 100,
+    drain_rate: 0.1,
+    time_ms: 1000,
+  },
+  observations: {
+    kind: 'pipeline-plant-L4',
+    predictedOverflow: true,
+  },
+  curriculum_context: {
+    concept: 'streaming vs buffering + bounded memory',
+    mechanic: 'fluid tank + pipe + chunked slugs',
+  },
+}
+
 export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
   return {
     schema_version: 1,

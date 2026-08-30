@@ -109,6 +109,27 @@ async function completeRelay(frame: Frame) {
   })
 }
 
+async function completePipeline(frame: Frame) {
+  await expect.poll(() => frame.evaluate(() => {
+    type Hook = { game: { snapshot: { phase: string } } }
+    return (window as Window & { __pipelinePlant?: Hook }).__pipelinePlant?.game.snapshot.phase
+  })).toBe('briefing')
+  await frame.evaluate(() => {
+    type Hook = {
+      game: {
+        snapshot: { phase: string }
+        start(): void
+        bufferedOverflows(): boolean
+        predictOverflow(willOverflow: boolean): void
+      }
+    }
+    const hook = (window as Window & { __pipelinePlant?: Hook }).__pipelinePlant
+    if (hook === undefined) throw new Error('Pipeline Plant hook unavailable')
+    hook.game.start()
+    hook.game.predictOverflow(hook.game.bufferedOverflows())
+  })
+}
+
 async function returnFromGame(page: Page) {
   await expect(page.getByRole('button', { name: 'Voltar ao hub', exact: true })).toBeEnabled({ timeout: 15_000 })
   await page.getByRole('button', { name: 'Voltar ao hub', exact: true }).click()
@@ -170,6 +191,11 @@ test('preserves completed first-release missions across switches and reloads', a
   await completeRelay(await gameFrame(page, 5205))
   await returnFromGame(page)
 
+  await page.goto('/mission/dev/game-06-pipeline-plant')
+  await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
+  await completePipeline(await gameFrame(page, 5206))
+  await returnFromGame(page)
+
   await page.reload()
   const progress = await readOsProgress(page)
   for (const key of [
@@ -179,6 +205,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
+    'dev:game-06-pipeline-plant',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }

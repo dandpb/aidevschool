@@ -4,6 +4,7 @@ import { routeBridgeRequest } from './router'
 import {
   literacyReceipt,
   literacyRecord,
+  pipelinePlantRecord,
   relayRecord,
   teachingGameRecord,
   wormholeRecord,
@@ -83,6 +84,7 @@ describe('verification bridge dispatch', () => {
   it.each([
     ['WORMHOLE', wormholeRecord],
     ['RELAY STATION', relayRecord],
+    ['PIPELINE PLANT', pipelinePlantRecord],
   ])('dispatches %s evidence through the same fixed teaching-game process', async (_, record) => {
     const response = await routeBridgeRequest({
       method: 'POST',

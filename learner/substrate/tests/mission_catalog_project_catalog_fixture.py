@@ -80,5 +80,17 @@ PROJECT_CATALOG: Final = "\n".join(
         "| **Directory** | `05_websocket_chat/` |",
         "| **Dependencies** | Project 03 |",
         "",
+        "### 06. File Upload/Processing Pipeline",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        "| **Slug** | `06_file_upload_pipeline` |",
+        "| **Status** | scaffolded |",
+        "| **Concepts** | Streaming vs buffering |",
+        "| **Key question** | How do streaming and buffering compare for large files? |",
+        "| **Learning goal** | Process large uploads without exhausting memory. |",
+        "| **Directory** | `06_file_upload_pipeline/` |",
+        "| **Dependencies** | Project 03 |",
+        "",
     )
 )
