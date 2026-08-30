@@ -143,6 +143,7 @@ export type ModuleDefinition = {
   slug: string
   title: string
   order: number
+  journey: "ia_pratica" | "dev"
   skillIds: SkillId[]
   lessons: CatalogLessonEntry[]
 }
@@ -189,6 +190,7 @@ def _modules_payload(modules, entries):
                 "slug": module["slug"],
                 "title": module["title"],
                 "order": module["order"],
+                "journey": module["journey"],
                 "skillIds": module.get("skillIds") or [],
                 "lessons": [entry for entry in entries if entry["moduleId"] == module["id"]],
             }
@@ -201,17 +203,14 @@ def _as_ts(payload):
 
 
 def _render_content(catalog, ready_lessons):
-    public_modules = [
-        module
-        for module in catalog.get("modules") or []
-        if module["journey"] == PUBLIC_JOURNEY
+    journey_module_ids = {
+        module["id"] for module in catalog.get("modules") or []
+    }
+    ready_lessons_all = [
+        lesson for lesson in ready_lessons if lesson["moduleId"] in journey_module_ids
     ]
-    public_module_ids = {module["id"] for module in public_modules}
-    public_ready_lessons = [
-        lesson for lesson in ready_lessons if lesson["moduleId"] in public_module_ids
-    ]
-    entries = _catalog_entries(catalog, public_ready_lessons, public_module_ids)
-    modules_payload = _modules_payload(public_modules, entries)
+    entries = _catalog_entries(catalog, ready_lessons_all, journey_module_ids)
+    modules_payload = _modules_payload(catalog.get("modules") or [], entries)
     track_payload = {key: catalog["track"][key] for key in ("id", "title", "audience", "promise", "language")}
     skills_payload = [
         {"id": skill["id"], "title": skill["title"], "description": skill["description"]}
@@ -221,10 +220,13 @@ def _render_content(catalog, ready_lessons):
 
     content = (
         GENERATED_HEADER
-        + "\n// Read model público de IA na Prática. Fonte canônica: curriculum/ai-literacy/.\n"
+        + "\n// Read model de lições validadas das duas jornadas (ia_pratica e dev).\n"
+        + "// O percurso público do app standalone filtra por journey no adapter;\n"
+        + "// missões hospedadas do OS podem servir lições dev (ver content-contract.md).\n"
+        + "// Fonte canônica: curriculum/ai-literacy/.\n"
         + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>\n\n"
         + ts_types
-        + "\nexport const contentVersion: string = " 
+        + "\nexport const contentVersion: string = "
         + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
         + "\n\nexport const track: Track = "
         + _as_ts(track_payload)
@@ -233,7 +235,7 @@ def _render_content(catalog, ready_lessons):
         + "\n\nexport const skills: SkillDefinition[] = "
         + _as_ts(skills_payload)
         + "\n\nexport const lessons: LessonDefinition[] = "
-        + _as_ts(public_ready_lessons)
+        + _as_ts(ready_lessons_all)
         + "\n"
     )
     return content

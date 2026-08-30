@@ -18,6 +18,7 @@ SUPPORTED_EVIDENCE_SCHEMAS = {
     "teaching-game-evidence": frozenset({1}),
 }
 SUPPORTED_FALLBACKS = frozenset({"dom", "canvas2d"})
+LESSON_JOURNEY_TRACKS = {"ia_pratica": "ai-pratica", "dev": "dev"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -126,10 +127,6 @@ def normalize_bindings(
         fallback = _validate_fallback(binding.get("fallback"), f"{label}.fallback")
 
         if curriculum_kind == "ai-literacy-lesson":
-            if track_id != "ai-pratica" or runtime["engineId"] != "literacyDojo":
-                raise MissionCatalogError(
-                    f"{label} AI-literacy missions must use the ai-pratica track and literacyDojo"
-                )
             if runtime["contentVersion"] != sources.literacy_content_version:
                 raise MissionCatalogError(
                     f"{label}.runtime.contentVersion must match the canonical AI-literacy catalog"
@@ -143,6 +140,17 @@ def normalize_bindings(
             if lesson_record is None:
                 raise MissionCatalogError(
                     f"{label} references unknown curriculum lesson {lesson_id!r}"
+                )
+            journey_track = LESSON_JOURNEY_TRACKS.get(lesson_record.get("module_journey"))
+            if (
+                journey_track is None
+                or track_id != journey_track
+                or runtime["engineId"] != "literacyDojo"
+            ):
+                raise MissionCatalogError(
+                    f"{label} AI-literacy missions must use the track declared by their"
+                    f" canonical module journey ({lesson_record.get('module_journey')!r})"
+                    " and the literacyDojo engine"
                 )
             lesson_entry = lesson_record["entry"]
             lesson_file = lesson_record["file"]

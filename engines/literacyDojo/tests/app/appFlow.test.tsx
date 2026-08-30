@@ -10,7 +10,10 @@ import { readyLessonEntries } from "../../src/domain/track";
 import { InMemoryProgressRepository, createTestServices } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
-const ready = readyLessonEntries(modules);
+// O percurso público do app standalone é só ia_pratica; as lições dev
+// (mod-05) existem no read model para missões hospedadas do OS.
+const publicModules = modules.filter((module) => module.journey === "ia_pratica");
+const ready = readyLessonEntries(publicModules);
 const firstLesson = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
 if (!firstLesson) throw new Error("Mapa Inicial ausente do read model");
 const firstSkillId = firstLesson.skillIds[0];

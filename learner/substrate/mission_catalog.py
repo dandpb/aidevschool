@@ -38,6 +38,17 @@ def _load_lessons(ai_literacy_root: Path) -> tuple[dict[str, Any], dict[str, dic
     entries = catalog.get("lessons")
     if not isinstance(entries, list):
         raise MissionCatalogError("AI-literacy catalog lessons must be a list")
+    raw_modules = catalog.get("modules")
+    if not isinstance(raw_modules, list):
+        raise MissionCatalogError("AI-literacy catalog modules must be a list")
+    module_journeys: dict[str, str] = {}
+    for index, raw_module in enumerate(raw_modules):
+        module = _mapping(raw_module, f"AI-literacy catalog modules[{index}]")
+        module_id = _nonempty_string(module.get("id"), f"AI-literacy catalog modules[{index}].id")
+        journey = _nonempty_string(
+            module.get("journey"), f"AI-literacy catalog modules[{index}].journey"
+        )
+        module_journeys[module_id] = journey
 
     lesson_files: dict[str, dict[str, Any]] = {}
     for path in sorted((ai_literacy_root / "modules").rglob("*.yaml")):
@@ -54,7 +65,16 @@ def _load_lessons(ai_literacy_root: Path) -> tuple[dict[str, Any], dict[str, dic
         if lesson_id in catalog_lessons:
             raise MissionCatalogError(f"duplicate curriculum lesson id {lesson_id!r}")
         catalog_lessons[lesson_id] = entry
-    return catalog, {lesson_id: {"entry": entry, "file": lesson_files.get(lesson_id)} for lesson_id, entry in catalog_lessons.items()}
+    return catalog, {
+        lesson_id: {
+            "entry": entry,
+            "file": lesson_files.get(lesson_id),
+            "module_journey": module_journeys.get(entry.get("moduleId"))
+            if isinstance(entry.get("moduleId"), str)
+            else None,
+        }
+        for lesson_id, entry in catalog_lessons.items()
+    }
 
 
 def load_mission_catalog(
