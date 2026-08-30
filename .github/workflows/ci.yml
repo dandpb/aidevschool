@@ -135,6 +135,9 @@ jobs:
       - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
+      # The staged verification bridge is a projection of learner/gate; run its
+      # contract test here so verifier drift fails CI instead of production (AID-415).
+      - run: node --test ../../learner/gate/tests/dojo_verification_bridge_netlify.test.mjs
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
