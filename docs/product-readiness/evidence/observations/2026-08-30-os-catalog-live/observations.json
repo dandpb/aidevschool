@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+  "observedAt": "2026-08-30T18:30:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Fresh browser profiles on BOTH production bindings (alias aidevschool-codexdojo-os.netlify.app and permalink 6a946c865e010af1557561de--...) completed onboarding ('Entrar na escola') and landed on the hub. The chapter map publishes '21 missões, uma sequência' with the IA Prática chapter plus the dev chapter (warehouse, wormhole, relay-station, l15, l16, l17, pipeline-plant). Observer response: I enter the school on the IA Prática route first and the dev track follows in one published sequence on this device."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile full page reloads (goto hub/map/mission) on both bindings restored completion state from local storage: dev:l15 'completed', map overlay for l16 flipped from 'Bloqueada por pré-requisito' to 'Disponível', l17 stayed locked behind l16. Mission header restates 'Estado canônico … sem alteração local'. Observer response: my unfinished/completed missions resume only in this browser profile; this is local completion, not synchronization and not mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Every fresh browser profile on both bindings returned to onboarding with no reconstructed completion, XP, or mastery language; the paired readiness-recovery run at this SHA (green in this assessment cycle) confirms missing local state does not create completion. Observer response: cleared or missing browser storage means onboarding again from zero."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "On both bindings, hosted literacy missions l01 and l14 (controls) and the NEW l15 mounted MOTOR running in same-origin /apps/literacydojo/ iframes (contentVersion 2026-08-21.1). The observer completed l15 end-to-end inside the hosted iframe (choice opt-b; output comparison out-a with criteria c-concreto, c-cenario), returned to the hub, and the map unlocked l16 exactly per the canonical chain. Observer response: I finished 'Quando usar IA e quando não usar' on this device; the next supported action is l16, still without any mastery claim."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Completing the NEW game-06 mission on both bindings kept the journey recoverable: the mission page reported the evidence state honestly ('Evidência rejeitada' after the hosted submission; canonical state header unchanged 'sem alteração local'), local completion persisted, and the hub remained usable without any repository intervention. Direct bridge probes on both bindings: warehouse contract PASS; pipeline/wormhole/relay records return verdict FAIL with 'evidence identity is not the fixed WAREHOUSE L1 verifier contract' — the staged Netlify verifier (sha ce72a04f…, unchanged since the AID-343 pin) implements only the WAREHOUSE L1 evaluator, while the canonical Python bridge at this SHA (learner/gate/teaching_game_bridge.py) verifies all four games (16/16 producer payloads PASS incl. PIPELINE PLANT L1–L4)."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "production-bridge-verifier-scope-warehouse-only",
+          "severity": "medium",
+          "summary": "The staged production bridge verifies only the WAREHOUSE L1 contract, so hosted pipeline/wormhole/relay evidence is rejected in production even though the canonical gate evaluator supports them; pre-existing since the AID-343 pin and reported honestly by the OS (no false approval).",
+          "owner": "codexdojo-os-prototype",
+          "disposition": "Child issue to the producer: extend the staged function to the canonical GAME_SPECS or route hosted evidence to the canonical gate."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing l15, same-profile reloads on both bindings kept dev:l15 'completed' (indexedDB os-progress) and the map overlay consistent; a fresh profile showed no l15 completion. Observer response: literacy mission state resumes only in this browser profile."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE (control) and the NEW PIPELINE PLANT missions mounted MOTOR running in same-origin iframes on both bindings; the observer completed game-06 through the public game API (predictOverflow on the deterministic L1 scenario) and the host kept evidence separate from mastery: header shows 'mastered 2 verificadas · sem alteração local' while the local mission status became completed. Wormhole and relay-station mounts were verified via the published surfaces (manifest hashes + 200s) and the green producer suite at this SHA, not driven individually by this observer this round."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "On both bindings the game-06 mission page offers 'Usar visualização acessível' (labelled DOM projection) while the 3D renderer is active; with the hosted engine blocked at the network level the page still rendered the mission header, the labelled fallback summary ('Preveja transbordo do tanque, ajuste o chunk…') and controls without crashing. The paired renderer-fallback runs at this SHA (reduced-motion projection, context-loss retry, forced WebGL unavailability) are green in this assessment cycle."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After the observer completed game-06, same-profile reloads kept dev:game-06-pipeline-plant 'completed' and the map overlay consistent on both bindings; fresh profiles showed it locked behind game-05-relay-station ('Bloqueada por pré-requisito'). Observer response: voxel mission state resumes only in this browser profile and never as mastery."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
