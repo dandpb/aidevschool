@@ -191,6 +191,18 @@ test('preserves completed first-release missions across switches and reloads', a
   await completeRelay(await gameFrame(page, 5205))
   await returnFromGame(page)
 
+  // The dev track also publishes the Dev-journey literacy lessons (l15-l17,
+  // module 05). Prove the batch hosts on the dev track: the l15 motor
+  // handshake must reach the literacy start screen; l16/l17 stay locked
+  // behind the canonical prerequisite chain (l16: l15, l17: l16).
+  await page.goto('/mission/dev/l15')
+  await expect(page.getByRole('heading', { name: 'Quando usar IA e quando não usar' })).toBeVisible()
+  await expect(page.locator('.mission-runtime iframe')).toBeVisible()
+  await expect(
+    page.frameLocator('.mission-runtime iframe').getByTestId('start-lesson'),
+  ).toBeVisible({ timeout: 20000 })
+  await returnFromGame(page)
+
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
   await completePipeline(await gameFrame(page, 5206))

@@ -73,7 +73,7 @@ describe('chapter map', () => {
       </ServicesProvider>,
     )
 
-    expect(screen.getByRole('heading', { name: '18 missões, uma sequência' })).not.toBeNull()
+    expect(screen.getByRole('heading', { name: '21 missões, uma sequência' })).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)', level: 3 })).not.toBeNull()
     expect(screen.queryByText(/Trilha Dev/)).toBeNull()
     expect(screen.queryByRole('button', { name: /Trilha Dev/ })).toBeNull()

@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import * as generatedContentAdapter from "../../src/adapters/generatedContentRepository";
+import { createServices } from "../../src/app/services";
 import type { OutputComparisonActivity } from "../../src/data/generated/lessons";
 import { lessons, modules } from "../../src/data/generated/lessons";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
@@ -8,6 +10,7 @@ import {
   XP_PER_LESSON_COMPLETE,
   createInitialProgress,
 } from "../../src/domain/progress";
+import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
 const lesson = lessons.find((item) => item.id === MAP_INITIAL_LESSON_ID);
@@ -56,7 +59,7 @@ describe("startLesson", () => {
     await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(/bloqueada/);
   });
 
-  it.each(["l01", "l02", "l03", "l04", "l08", "l14"])(
+  it.each(["l01", "l02", "l03", "l04", "l08", "l14", "l15", "l16", "l17"])(
     "prepara a missão hospedada declarada %s",
     async (lessonId) => {
       const { services } = makeServices();
@@ -69,11 +72,31 @@ describe("startLesson", () => {
     },
   );
 
-  it("rejeita lição fora do conjunto hospedado publicado", async () => {
+  it("registra audiência trilha_dev no onboarding hospedado de lição dev", async () => {
     const { services } = makeServices();
-    await expect(services.useCases.prepareHostedMission("l15")).rejects.toThrow(
-      /não encontrada|não autorizada/,
-    );
+    const progress = await services.useCases.prepareHostedMission("l15");
+
+    expect(progress.onboarding.completed).toBe(true);
+    expect(progress.onboarding.audience).toBe("trilha_dev");
+  });
+
+  it("rejeita lição fora do conjunto hospedado publicado", async () => {
+    const hosted = lessons.find((item) => item.id === "l16");
+    if (!hosted) throw new Error("l16 ausente do read model");
+    const unpublished = { ...hosted, id: "l99" };
+    const progressRepo = new InMemoryProgressRepository();
+    progressRepo.seed(createInitialProgress(generatedContentAdapter.listModules(), "test"));
+    const services = createServices({
+      content: {
+        ...generatedContentAdapter,
+        getLesson: (lessonId: string) =>
+          lessonId === "l99" ? unpublished : generatedContentAdapter.getLesson(lessonId),
+      },
+      progressRepo,
+      evidence: new InMemoryEvidenceSink(),
+      clock: fixedClock(FIXED_NOW),
+    });
+    await expect(services.useCases.prepareHostedMission("l99")).rejects.toThrow(/não autorizada/);
   });
 });
 
