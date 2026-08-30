@@ -89,8 +89,11 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain("Copiado")
     const button = html.match(/<button[^>]*data-copy-agent="cartografo"[^>]*>/)
     expect(button?.[0]).toContain('aria-live="polite"')
-    expect(button?.[0]).not.toContain("aria-label")
-    const buttonMatch = html.match(/data-copy-agent="cartografo"[^>]*>[\s\n]*([^<]+)/)
+    expect(button?.[0]).toContain('aria-label="Prompt de CARTÓGRAFO copiado"')
+    expect(button?.[0]).toContain('title="Prompt de CARTÓGRAFO copiado"')
+    const buttonMatch = html.match(
+      /data-copy-agent="cartografo"[^>]*>[\s\n]*<span[^>]*>([^<]+)<\/span>/,
+    )
     expect(buttonMatch?.[1]?.trim()).toBe("Copiado")
   })
 
