@@ -201,7 +201,6 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(
     page.frameLocator('.mission-runtime iframe').getByTestId('start-lesson'),
   ).toBeVisible({ timeout: 20000 })
-  await returnFromGame(page)
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
