@@ -89,6 +89,25 @@ export async function askSocrates(
   question: string,
 ): Promise<{ ok: true; text: string } | { ok: false; error: string }> {
   const base = config.baseUrl.replace(/\/+$/, "");
+
+  // 🛡️ Sentinel: Enforce HTTPS for Bring-Your-Own-Key endpoint to prevent API key interception,
+  // except for local development loops.
+  try {
+    const urlObj = new URL(base);
+    if (
+      urlObj.protocol !== "https:" &&
+      urlObj.hostname !== "localhost" &&
+      urlObj.hostname !== "127.0.0.1"
+    ) {
+      return {
+        ok: false,
+        error: "Segurança: O endpoint deve usar HTTPS para proteger sua chave API.",
+      };
+    }
+  } catch (err) {
+    return { ok: false, error: "URL do endpoint inválida." };
+  }
+
   const url = `${base}/chat/completions`;
   try {
     const res = await fetch(url, {
