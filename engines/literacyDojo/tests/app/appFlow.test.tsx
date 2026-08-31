@@ -151,18 +151,19 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("confidence-support")).toHaveTextContent("Dica de partida");
   });
 
-  it("mapa público limita IA na Prática ao catálogo ia_pratica (15 com l18) e mantém Dev fora do percurso", async () => {
+  it("mapa público limita IA na Prática ao catálogo ia_pratica (16 com l19) e mantém Dev fora do percurso", async () => {
     const user = userEvent.setup();
     const { services } = makeServices({ progress: seededProgress() });
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
-    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 15 lições concluídas");
+    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 16 lições concluídas");
     await user.click(screen.getByTestId("open-map"));
 
-    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/15 missões");
+    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/16 missões");
     expect(screen.queryByTestId("map-lesson-l15")).not.toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l18")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l19")).toBeInTheDocument();
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {

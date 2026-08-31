@@ -237,7 +237,7 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l07]
     skillIds: [pedir, avaliar]
-    status: planned
+    status: ready
   - id: l20
     moduleId: mod-06
     title: "Números e fatos: verifique antes de usar"
