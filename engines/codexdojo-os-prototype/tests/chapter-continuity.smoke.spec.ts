@@ -2,10 +2,12 @@ import { expect, test, type Frame, type Page } from '@playwright/test'
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-async function completeLiteracyMission(page: Page, lessonId: 'l01' | 'l02' | 'l03') {
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18'
+
+async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   const lesson = chapterLessons.get(lessonId)
   if (lesson === undefined) throw new Error(`Missing generated lesson ${lessonId}`)
   const mission = page.frameLocator('.mission-runtime iframe')
@@ -19,6 +21,15 @@ async function completeLiteracyMission(page: Page, lessonId: 'l01' | 'l02' | 'l0
       await mission.getByTestId(`output-${activity.evaluation.betterOutputId}`).check()
       for (const criterionId of activity.evaluation.requiredCriterionIds) {
         await mission.getByTestId(`criterion-${criterionId}`).check()
+      }
+    } else if (activity.type === 'prompt_builder') {
+      for (const field of activity.data.fields) {
+        const rule = activity.evaluation.fields[field.id]
+        if (rule === undefined) throw new Error(`Missing evaluation rule for field ${field.id}`)
+        const word = rule.mustIncludeAny?.[0]
+        if (word === undefined) throw new Error(`Missing mustIncludeAny for field ${field.id}`)
+        const filler = rule.minLength === undefined ? word : word.repeat(Math.ceil(rule.minLength / word.length) + 1)
+        await mission.getByTestId(`field-${field.id}`).fill(filler)
       }
     } else {
       throw new Error(`Unexpected first-chapter activity ${activity.type}`)
@@ -176,6 +187,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await page.goto('/mission/ai-pratica/l01')
   await completeLiteracyMission(page, 'l01')
 
+  // Wave C1 (spec AID-414): l18 "Biblioteca de pedidos" is published as the
+  // 15th ai-pratica mission (chapterOrder 15, canonical prereq l14). The
+  // direct mission must host the literacy motor and complete end-to-end
+  // through its three activities (prompt_builder, output_comparison, choice).
+  await page.goto('/mission/ai-pratica/l18')
+  await expect(page.getByRole('heading', { name: 'Biblioteca de pedidos: reutilize o que funciona' })).toBeVisible()
+  await completeLiteracyMission(page, 'l18')
+
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -214,6 +233,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l01',
     'ai-pratica:l02',
     'ai-pratica:l03',
+    'ai-pratica:l18',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
