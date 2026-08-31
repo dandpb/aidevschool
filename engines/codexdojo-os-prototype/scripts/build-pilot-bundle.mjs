@@ -17,6 +17,11 @@ const backup = `${output}.previous-${process.pid}`
 const canonicalFunctions = join(repoRoot, 'learner', 'gate', 'netlify-functions')
 const stagedFunctions = join(osRoot, 'netlify', 'functions')
 const verifierFunction = 'dojo-verification-bridge.mjs'
+// Generated verifier corpus for the hosted literacy bridge (AID-449); a
+// projection of curriculum/ai-literacy/ that must ship with the function.
+// The underscore directory is the Netlify shared-code convention: bundled
+// with the importing function, never deployed as a function itself.
+const literacyCorpusModule = '_shared/literacy-corpus.mjs'
 // Serve the learner journey from the bundle's own /apps/literacydojo/ build so
 // the motor contentVersion always ships with the mission catalog of the same
 // revision (external-pin drift broke production: AID-278 D1 / AID-282). The
@@ -73,6 +78,8 @@ try {
   await rm(stagedFunctions, { recursive: true, force: true })
   await mkdir(stagedFunctions, { recursive: true })
   await cp(join(canonicalFunctions, verifierFunction), join(stagedFunctions, verifierFunction))
+  await mkdir(join(stagedFunctions, '_shared'), { recursive: true })
+  await cp(join(canonicalFunctions, literacyCorpusModule), join(stagedFunctions, literacyCorpusModule))
   const revision = process.env.COMMIT_REF || process.env.HEAD || 'local-uncommitted'
   const manifest = await createPilotManifest(stage, revision)
   await writeFile(join(stage, 'pilot-bundle-manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)

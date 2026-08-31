@@ -241,6 +241,66 @@ def _render_content(catalog, ready_lessons):
     return content
 
 
+VERIFIER_CORPUS_FILENAME = "literacy-corpus.mjs"
+
+
+def _verifier_corpus_payload(ready_lessons):
+    """Projeção mínima por lição: exatamente os campos que o verificador
+    independente lê (learner/gate/literacy_evaluator.py). Nada de texto de
+    instrução/feedback/hints entra no trust boundary hospedado."""
+
+    def activity_payload(activity):
+        return {
+            "id": activity["id"],
+            "type": activity["type"],
+            "data": activity["data"],
+            "evaluation": activity["evaluation"],
+        }
+
+    corpus = {}
+    for lesson in sorted(ready_lessons, key=lambda item: item["id"]):
+        corpus[lesson["id"]] = {
+            "version": lesson["version"],
+            "skillIds": lesson["skillIds"],
+            "activities": [activity_payload(a) for a in lesson["activities"]],
+        }
+    return corpus
+
+
+def _render_verifier_corpus(catalog, ready_lessons):
+    payload = _verifier_corpus_payload(ready_lessons)
+    return (
+        GENERATED_HEADER
+        + "\n// Verifier corpus for the staged literacy bridge (AID-449): the exact\n"
+        + "// lesson/activity facts the canonical Python verifier reads from\n"
+        + "// curriculum/ai-literacy/. Do not add producer-facing fields here.\n"
+        + "// Canonical evaluator: learner/gate/literacy_evaluator.py.\n"
+        + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile-verifier <outdir>\n\n"
+        + "export const literacyCorpus = "
+        + json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
+        + "\n\nexport const literacyCorpusVersion = "
+        + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
+        + "\n"
+    )
+
+
+def compile_verifier_corpus(track_dir, outdir, validated=None):
+    """Compila o corpus do verificador hospedado. Retorna (errors, output_path).
+
+    validated: tupla já computada de validate_track(track_dir), para não revalidar.
+    """
+    errors, ready_lessons, catalog = (
+        validated if validated is not None else validate_track(track_dir)
+    )
+    if errors:
+        return errors, None
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    out_path = outdir / VERIFIER_CORPUS_FILENAME
+    out_path.write_text(_render_verifier_corpus(catalog, ready_lessons), encoding="utf-8")
+    return [], out_path
+
+
 def compile_track(track_dir, outdir, validated=None):
     """Compila as lições válidas para o read model tipado. Retorna (errors, output_path).
 
