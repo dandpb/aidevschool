@@ -85,6 +85,7 @@ export const wormholeRecord = {
   project: '03_url_shortener',
   scenario_id: 'wormhole-L4',
   game: 'WORMHOLE',
+  attempt_id: undefined,
   metrics: {
     resolution_chosen: 'salted',
     resolved_code: '1drY',
@@ -108,6 +109,7 @@ export const relayRecord = {
   project: '05_websocket_chat',
   scenario_id: 'relay-station-L4',
   game: 'RELAY STATION',
+  attempt_id: undefined,
   metrics: {
     kind: 'voxeldoj-relay-station',
     target_correct: true,
@@ -131,6 +133,7 @@ export const pipelinePlantRecord = {
   project: '06_file_upload_pipeline',
   scenario_id: 'pipeline-plant-L4',
   game: 'PIPELINE PLANT',
+  attempt_id: undefined,
   metrics: {
     kind: 'voxeldoj-pipeline-plant',
     size: 1308,

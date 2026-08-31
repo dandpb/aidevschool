@@ -148,6 +148,17 @@ test("staged bridge recomputes each official payload across the 4-game x L1-L4 m
   }
 });
 
+test("hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)", () => {
+  for (const game of ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]) {
+    const record = makeTeachingGameRecord(game, "L1");
+    delete record.attempt_id;
+    const receipt = verifyTeachingGameEvidence(record);
+    assert.equal(receipt.verdict, "PASS", game);
+    assert.equal(receipt.errors.length, 0, game);
+    assert.ok(!("attempt_id" in receipt), `${game} receipt must not mint an attempt_id`);
+  }
+});
+
 test("WAREHOUSE retry changes FAIL to independently bound PASS", () => {
   const failed = verifyTeachingGameEvidence(makeWarehouseRecord("L1", false, { attempt_id: "kv-warehouse-L1-attempt-1" }));
   const passed = verifyTeachingGameEvidence(makeWarehouseRecord("L1", true, { attempt_id: "kv-warehouse-L1-attempt-2" }));
@@ -260,4 +271,25 @@ test("verification endpoint returns a bound receipt for a wormhole payload", asy
   assert.equal(receipt.verdict, "PASS");
   assert.equal(receipt.game, "WORMHOLE");
   assert.equal(receipt.attempt_id, record.attempt_id);
+});
+
+test("verification endpoint omits attempt_id for a hosted wormhole record without one (AID-448)", async () => {
+  const session = await (await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    headers: { "sec-fetch-site": "same-origin", "x-nf-original-path": "/__dojo/bridge/v1/session" },
+  }))).json();
+  const record = makeTeachingGameRecord("WORMHOLE", "L1");
+  delete record.attempt_id;
+  const response = await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    method: "POST",
+    headers: {
+      "sec-fetch-site": "same-origin",
+      "x-nf-original-path": "/__dojo/bridge/v1/verification",
+      "x-codexdojo-bridge-token": session.token,
+    },
+    body: JSON.stringify({ schemaId: "teaching-game-evidence", schemaVersion: 1, record }),
+  }));
+  assert.equal(response.status, 200);
+  const { receipt } = await response.json();
+  assert.equal(receipt.verdict, "PASS");
+  assert.ok(!("attempt_id" in receipt));
 });
