@@ -43,7 +43,7 @@ export interface GameState {
   chosenCapabilities: Capability[]
   /** the host station backing the sim (built from the host contract) */
   host: Host
-  lastMetrics: Record<string, number | boolean> | null
+  lastMetrics: Record<string, number | boolean | string> | null
 }
 
 export type Listener = (state: GameState) => void
@@ -291,10 +291,47 @@ export class GameController {
   }
 
   private finish(out: LevelOutcome): void {
-    this.state.lastMetrics = out.metrics
+    this.state.lastMetrics = { kind: "voxeldoj-docking-bay", ...out.metrics }
     this.state.phase = out.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, out.pass, out.metrics)
+    emitEvidence(this.state.level.id, out.pass, this.state.lastMetrics, this.observations())
     this.commit()
+  }
+
+  /** Closed observation trace for the independent verifier: the player's bounded
+   * inputs only. The verifier recomputes every dock/block outcome from the
+   * fixed seeded waves and these picks; producer metrics are never trusted. */
+  private observations(): Record<string, unknown> {
+    switch (this.state.level.id) {
+      case "L1":
+        return {
+          kind: "docking-bay-L1",
+          dockPredictions: this.state.pods.map((pod) => ({
+            podId: pod.id,
+            predictedDock: this.state.dockPredictions.get(pod.id) ?? false,
+          })),
+        }
+      case "L2":
+        return {
+          kind: "docking-bay-L2",
+          missingPredictions: this.state.pods.map((pod) => ({
+            podId: pod.id,
+            predictedMissing: this.state.mismatchPredictions.get(pod.id) ?? "none",
+          })),
+        }
+      case "L3":
+        return {
+          kind: "docking-bay-L3",
+          classifications: (this.state.probe?.invokedMethods ?? []).map((method) => ({
+            method,
+            predictedAllow: this.state.sandboxChoices.get(method) ?? false,
+          })),
+        }
+      case "L4":
+        return {
+          kind: "docking-bay-L4",
+          chosenCapabilities: [...this.state.chosenCapabilities],
+        }
+    }
   }
 }
 

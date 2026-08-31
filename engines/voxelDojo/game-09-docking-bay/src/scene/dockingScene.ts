@@ -1,4 +1,5 @@
 import * as THREE from "three"
+import { disposeObject3D, type ProjectionContextHooks } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { HOST_CONTRACT } from "../sim/levels"
@@ -49,11 +50,14 @@ interface PodView {
  */
 export class DockingScene {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private stage = new THREE.Group()
   private podMeshes = new Map<string, PodView>()
+  private disposed = false
   onPodClick: ((podId: string) => void) | null = null
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 18,
@@ -68,6 +72,7 @@ export class DockingScene {
       onFrame: () => {
         this.animatePods()
       },
+      ...hooks,
     })
 
     this.viewport.scene.add(this.stage)
@@ -120,6 +125,19 @@ export class DockingScene {
       if (state.level.id === "L3" && state.probe) this.syncProbe(state)
       if (state.level.id === "L4" && state.scenario) this.syncCapability(state)
     }
+  }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    disposeObject3D(this.stage)
+    this.viewport.dispose()
   }
 
   private syncPods(state: GameState): void {

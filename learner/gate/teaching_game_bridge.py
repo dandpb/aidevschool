@@ -15,6 +15,7 @@ import sys
 from typing import Any
 
 from learner.gate.checkpoint_evaluator import evaluate_checkpoint
+from learner.gate.docking_evaluator import evaluate_docking
 from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
@@ -61,6 +62,12 @@ GAME_SPECS = {
         "08_event_driven_order_system",
         "timeline-tower-",
         evaluate_timeline,
+    ),
+    "DOCKING BAY": (
+        "U9-plugin-system",
+        "09_plugin_system",
+        "docking-bay-",
+        evaluate_docking,
     ),
 }
 ALLOWED_KEYS = frozenset(

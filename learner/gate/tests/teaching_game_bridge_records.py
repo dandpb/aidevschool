@@ -165,6 +165,12 @@ def make_teaching_game_record(game: str, level: str = "L1", **overrides: Any) ->
             "project": "08_event_driven_order_system",
             "scenario_id": f"timeline-tower-{level}",
         }
+    elif game == "DOCKING BAY":
+        identity = {
+            "unit_id": "U9-plugin-system",
+            "project": "09_plugin_system",
+            "scenario_id": f"docking-bay-{level}",
+        }
     else:
         identity = {
             "unit_id": "U5-websocket-chat",
@@ -191,6 +197,7 @@ SUPPORTED_CASES = [
         "PIPELINE PLANT",
         "CHECKPOINT CITY",
         "TIMELINE TOWER",
+        "DOCKING BAY",
     )
     for level in ("L1", "L2", "L3", "L4")
 ]

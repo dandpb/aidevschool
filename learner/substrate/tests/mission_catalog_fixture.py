@@ -231,6 +231,14 @@ class MissionCatalogFixture:
                     ["game-07-checkpoint-city"],
                     5208,
                 ),
+                _dev_binding(
+                    "game-09-docking-bay",
+                    "09_plugin_system",
+                    "U9-plugin-system",
+                    10,
+                    ["game-08-timeline-tower"],
+                    5209,
+                ),
             ],
         }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
@@ -271,6 +279,11 @@ class MissionCatalogFixture:
                         "id": "game-08-timeline-tower",
                         "name": "TIMELINE TOWER",
                         "developmentPort": 5208,
+                    },
+                    {
+                        "id": "game-09-docking-bay",
+                        "name": "DOCKING BAY",
+                        "developmentPort": 5209,
                     },
                 ]
             ),

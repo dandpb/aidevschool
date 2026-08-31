@@ -39,6 +39,7 @@ export const PILOT_SURFACES = [
   { name: 'pipeline-plant', entry: 'apps/pipeline-plant/index.html' },
   { name: 'checkpoint-city', entry: 'apps/checkpoint-city/index.html' },
   { name: 'timeline-tower', entry: 'apps/timeline-tower/index.html' },
+  { name: 'docking-bay', entry: 'apps/docking-bay/index.html' },
 ]
 
 async function filesBelow(root, current = root) {

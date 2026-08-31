@@ -211,6 +211,32 @@ async function completeTimelineTower(frame: Frame) {
   // is the one the host verifies, so the mission completes on the first level.
 }
 
+async function completeDockingBay(frame: Frame) {
+  await expect.poll(() => frame.evaluate(() => {
+    type Hook = { game: { snapshot: { phase: string } } }
+    const phase = (window as Window & { __dockingBay?: Hook }).__dockingBay?.game.snapshot.phase
+    return phase === 'briefing' || phase === 'predicting'
+  })).toBe(true)
+  await frame.evaluate(() => {
+    type Pod = { id: string }
+    type Hook = {
+      game: {
+        snapshot: { phase: string; pods: readonly Pod[] }
+        start(): void
+        podWouldDock(pod: Pod): boolean
+        predictDock(podId: string, willDock: boolean): void
+      }
+    }
+    const hook = (window as Window & { __dockingBay?: Hook }).__dockingBay
+    if (hook === undefined) throw new Error('Docking Bay hook unavailable')
+    if (hook.game.snapshot.phase === 'briefing') hook.game.start()
+    for (const pod of hook.game.snapshot.pods) {
+      if (hook.game.snapshot.phase !== 'predicting') break
+      hook.game.predictDock(pod.id, hook.game.podWouldDock(pod))
+    }
+  })
+}
+
 async function returnFromGame(page: Page) {
   await expect(page.getByRole('button', { name: 'Voltar ao hub', exact: true })).toBeEnabled({ timeout: 15_000 })
   await page.getByRole('button', { name: 'Voltar ao hub', exact: true }).click()
@@ -329,6 +355,15 @@ test('preserves completed first-release missions across switches and reloads', a
   await completeTimelineTower(await gameFrame(page, 5208))
   await returnFromGame(page)
 
+  // Wave OP-A (AID-462): game-09 DOCKING BAY is published as the 10th dev
+  // mission (chapterOrder 10, prereq game-08-timeline-tower). The hosted mission
+  // must complete end-to-end through the deterministic public API truth; the
+  // dock oracle uses the clamp's contract check (AID-467 fix-forward).
+  await page.goto('/mission/dev/game-09-docking-bay')
+  await expect(page.getByRole('heading', { name: 'DOCKING BAY: Plugin System' })).toBeVisible()
+  await completeDockingBay(await gameFrame(page, 5209))
+  await returnFromGame(page)
+
   await page.reload()
   const progress = await readOsProgress(page)
   for (const key of [
@@ -344,6 +379,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-06-pipeline-plant',
     'dev:game-07-checkpoint-city',
     'dev:game-08-timeline-tower',
+    'dev:game-09-docking-bay',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }

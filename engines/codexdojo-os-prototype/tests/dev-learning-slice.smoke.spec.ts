@@ -51,7 +51,16 @@ type TimelineHook = {
   }
 }
 
-test('independently verifies all six Dev games through the shared mission contract', async ({
+type DockingHook = {
+  readonly game: {
+    snapshot: { phase: string; pods: readonly { id: string }[] }
+    start(): void
+    podWouldDock(pod: { id: string }): boolean
+    predictDock(podId: string, willDock: boolean): void
+  }
+}
+
+test('independently verifies all seven Dev games through the shared mission contract', async ({
   page,
 }) => {
   test.setTimeout(60_000)
@@ -258,6 +267,36 @@ test('independently verifies all six Dev games through the shared mission contra
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
+  await expect(
+    page.getByRole('heading', { name: 'DOCKING BAY: Plugin System' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const docking = page.frameLocator(
+    'iframe[title="Missão DOCKING BAY: Plugin System"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5209/')),
+  ).toBe(true)
+  const dockingFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5209/'),
+  )
+  if (dockingFrame === undefined) throw new Error('Docking Bay mission frame was not loaded')
+  await expect.poll(() => dockingFrame.evaluate(
+    () => (window as Window & { __dockingBay?: DockingHook }).__dockingBay !== undefined,
+  )).toBe(true)
+  await dockingFrame.evaluate(() => {
+    const hook = (window as Window & { __dockingBay?: DockingHook }).__dockingBay
+    if (hook === undefined) throw new Error('Docking Bay test hook is unavailable')
+    hook.game.start()
+    for (const pod of hook.game.snapshot.pods) {
+      if (hook.game.snapshot.phase !== 'predicting') break
+      hook.game.predictDock(pod.id, hook.game.podWouldDock(pod))
+    }
+  })
+  await expect(docking.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
     const open = indexedDB.open('codexdojo-os-verification', 2)
     open.onerror = () => reject(open.error)
@@ -271,7 +310,7 @@ test('independently verifies all six Dev games through the shared mission contra
       }
     }
   }))
-  expect(stored).toHaveLength(6)
+  expect(stored).toHaveLength(7)
   expect(stored).toEqual(expect.arrayContaining([
     expect.objectContaining({
       schemaId: 'teaching-game-evidence',
@@ -319,6 +358,14 @@ test('independently verifies all six Dev games through the shared mission contra
       subject: {
         missionId: 'game-08-timeline-tower',
         unitId: 'U8-event-driven',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-09-docking-bay',
+        unitId: 'U9-plugin-system',
       },
     }),
   ]))

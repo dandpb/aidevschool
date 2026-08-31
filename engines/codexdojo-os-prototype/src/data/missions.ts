@@ -923,5 +923,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Dobre o log de eventos em projeções (status, checkpoint, replay e duas visões) por controles rotulados.",
       },
     },
+    {
+      id: "game-09-docking-bay",
+      version: 1,
+      trackId: "dev",
+      unitId: "U9-plugin-system",
+      projectId: "09_plugin_system",
+      title: "DOCKING BAY: Plugin System",
+      objective: "Comparar FFI, WASM e dynamic loading com isolamento.",
+      estimatedMinutes: 12,
+      chapterOrder: 10,
+      prerequisites: [
+        "game-08-timeline-tower",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "voxelDojo",
+        entrypoint: "http://127.0.0.1:5209/?hosted=1",
+        environmentKey: "VITE_DOCKING_BAY_URL",
+        protocolVersion: "1.0",
+        contentVersion: "game-09-docking-bay@0.1.0",
+      },
+      evidence: {
+        schema: "teaching-game-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Preveja quais pods acoplam no clampe de contrato, nomeie métodos faltantes, classifique invocações na sandbox e conceda o conjunto mínimo de capacidades.",
+      },
+    },
   ],
 }

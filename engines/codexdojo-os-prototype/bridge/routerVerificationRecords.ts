@@ -211,6 +211,36 @@ export const timelineTowerRecord = {
   },
 }
 
+export const dockingBayRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U9-plugin-system',
+  project: '09_plugin_system',
+  scenario_id: 'docking-bay-L1',
+  game: 'DOCKING BAY',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-docking-bay',
+    dock_predictions: 6,
+    dock_prediction_accuracy: 1,
+    contracts_checked: 6,
+  },
+  observations: {
+    kind: 'docking-bay-L1',
+    dockPredictions: [
+      { podId: 'pod-0', predictedDock: true },
+      { podId: 'pod-1', predictedDock: false },
+      { podId: 'pod-2', predictedDock: false },
+      { podId: 'pod-3', predictedDock: true },
+      { podId: 'pod-4', predictedDock: false },
+      { podId: 'pod-5', predictedDock: false },
+    ],
+  },
+  curriculum_context: {
+    concept: 'sandboxing + interface contracts',
+    mechanic: 'docking pods, force-field sandbox',
+  },
+}
+
 export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
   return {
     schema_version: 1,

@@ -414,5 +414,123 @@
         "views_correct": 2
       }
     }
+  },
+  "DOCKING BAY": {
+    "L1": {
+      "observations": {
+        "kind": "docking-bay-L1",
+        "dockPredictions": [
+          {
+            "podId": "pod-0",
+            "predictedDock": true
+          },
+          {
+            "podId": "pod-1",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-2",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-3",
+            "predictedDock": true
+          },
+          {
+            "podId": "pod-4",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-5",
+            "predictedDock": false
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "dock_predictions": 6,
+        "dock_prediction_accuracy": 1.0,
+        "contracts_checked": 6
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "docking-bay-L2",
+        "missingPredictions": [
+          {
+            "podId": "pod-0",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-1",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-2",
+            "predictedMissing": "none"
+          },
+          {
+            "podId": "pod-3",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-4",
+            "predictedMissing": "readState"
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "mismatch_predictions": 5,
+        "mismatch_prediction_accuracy": 1.0,
+        "missing_methods_named": 5
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "docking-bay-L3",
+        "classifications": [
+          {
+            "method": "connect",
+            "predictedAllow": true
+          },
+          {
+            "method": "readState",
+            "predictedAllow": true
+          },
+          {
+            "method": "writeState",
+            "predictedAllow": true
+          },
+          {
+            "method": "log",
+            "predictedAllow": false
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "sandbox_probes": 4,
+        "sandbox_accuracy": 1.0,
+        "capabilities_granted": 3
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "docking-bay-L4",
+        "chosenCapabilities": [
+          "connect",
+          "writeState"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "required_calls_covered": true,
+        "no_overgrant": true,
+        "least_privilege": true,
+        "granted_count": 2,
+        "required_count": 2
+      }
+    }
   }
 }

@@ -128,6 +128,19 @@ test('os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
 })
 
+test('os-voxel-hosted-missions: the published DOCKING BAY mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-09-docking-bay')
+  await expectMissionMounted(
+    page,
+    'Missão DOCKING BAY: Plugin System',
+    /L1|dock|DOCKING/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')

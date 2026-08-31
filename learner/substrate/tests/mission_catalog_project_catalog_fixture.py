@@ -116,5 +116,17 @@ PROJECT_CATALOG: Final = "\n".join(
         "| **Directory** | `08_event_driven_order_system/` |",
         "| **Dependencies** | Project 06 |",
         "",
+        "### 09. Plugin System",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        "| **Slug** | `09_plugin_system` |",
+        "| **Status** | scaffolded |",
+        "| **Concepts** | Dynamic loading, interfaces/traits, plugin lifecycle, sandboxing, WASM/FFI/JS sandboxing, API versioning |",
+        "| **Key question** | How does each language's FFI/WASM/dynamic-loading story compare for safe plugin isolation? |",
+        "| **Learning goal** | Comparar FFI, WASM e dynamic loading com isolamento. |",
+        "| **Directory** | `09_plugin_system/` |",
+        "| **Dependencies** | Project 02 |",
+        "",
     )
 )

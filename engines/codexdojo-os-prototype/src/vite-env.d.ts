@@ -21,6 +21,7 @@ interface ImportMetaEnv {
   readonly VITE_PIPELINE_PLANT_URL?: string
   readonly VITE_CHECKPOINT_CITY_URL?: string
   readonly VITE_TIMELINE_TOWER_URL?: string
+  readonly VITE_DOCKING_BAY_URL?: string
 }
 
 interface ImportMeta {

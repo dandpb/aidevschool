@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "NODE_ENV=development vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "build:pilot": "VITE_LITERACYDOJO_URL=/apps/literacydojo/ VITE_WAREHOUSE_URL=/apps/warehouse/ VITE_WORMHOLE_URL=/apps/wormhole/ VITE_RELAY_STATION_URL=/apps/relay-station/ VITE_PIPELINE_PLANT_URL=/apps/pipeline-plant/ VITE_CHECKPOINT_CITY_URL=/apps/checkpoint-city/ VITE_TIMELINE_TOWER_URL=/apps/timeline-tower/ npm run build && node scripts/bundle-missions.mjs",
+    "build:pilot": "VITE_LITERACYDOJO_URL=/apps/literacydojo/ VITE_WAREHOUSE_URL=/apps/warehouse/ VITE_WORMHOLE_URL=/apps/wormhole/ VITE_RELAY_STATION_URL=/apps/relay-station/ VITE_PIPELINE_PLANT_URL=/apps/pipeline-plant/ VITE_CHECKPOINT_CITY_URL=/apps/checkpoint-city/ VITE_TIMELINE_TOWER_URL=/apps/timeline-tower/ VITE_DOCKING_BAY_URL=/apps/docking-bay/ npm run build && node scripts/bundle-missions.mjs",
     "deploy:pilot": "node scripts/deploy-pilot-bundle.mjs",
     "build:integrated": "tsc -b && VITE_LOCAL_ENGINE_BRIDGE=true vite build",
     "preview": "vite preview --host 0.0.0.0",
