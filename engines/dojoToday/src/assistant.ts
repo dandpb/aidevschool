@@ -89,6 +89,21 @@ export async function askSocrates(
   question: string,
 ): Promise<{ ok: true; text: string } | { ok: false; error: string }> {
   const base = config.baseUrl.replace(/\/+$/, "");
+
+  // Security: enforce HTTPS for BYOK endpoints to prevent API key exposure over plaintext
+  try {
+    const urlObj = new URL(base);
+    if (
+      urlObj.protocol !== "https:" &&
+      urlObj.hostname !== "localhost" &&
+      urlObj.hostname !== "127.0.0.1"
+    ) {
+      return { ok: false, error: "Segurança: O endpoint deve usar HTTPS (exceto localhost)." };
+    }
+  } catch {
+    return { ok: false, error: "URL base inválida." };
+  }
+
   const url = `${base}/chat/completions`;
   try {
     const res = await fetch(url, {
