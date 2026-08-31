@@ -92,6 +92,8 @@ export class Town {
   readonly grid: Grid = new Grid()
   /** One construction state machine per building, keyed by building id. */
   readonly constructions: Map<string, BuildingConstruction> = new Map()
+  /** O(1) lookup map for rendering performance. */
+  #buildingsByZoneId = new Map<string, Building>()
   /** Per-instance counter — ids stay unique within a Town without any global state. */
   #idCounter = 0
   #paletteSeedCounter = 0
@@ -163,6 +165,7 @@ export class Town {
     }
     this.buildings.push(building)
     this.constructions.set(building.id, new BuildingConstruction(paletteSeed))
+    this.#buildingsByZoneId.set(building.zoneId, building)
     return building
   }
 
@@ -193,6 +196,11 @@ export class Town {
   /** Read a zone by id. Used by the spawn layer to look up the zone kind. */
   findZoneById(id: string): Zone | null {
     return this.zones.find((z) => z.id === id) ?? null
+  }
+
+  /** Read a building by zoneId. */
+  findBuildingByZoneId(zoneId: string): Building | null {
+    return this.#buildingsByZoneId.get(zoneId) ?? null
   }
 
   /** Read a building by id — `homeId` / `workId` are passed in by residents. */
