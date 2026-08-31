@@ -15,6 +15,7 @@ import sys
 from typing import Any
 
 from learner.gate.checkpoint_evaluator import evaluate_checkpoint
+from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
 from learner.gate.pipeline_evaluator import evaluate_pipeline
@@ -54,6 +55,12 @@ GAME_SPECS = {
         "07_rest_api_auth",
         "checkpoint-city-",
         evaluate_checkpoint,
+    ),
+    "TIMELINE TOWER": (
+        "U8-event-driven",
+        "08_event_driven_order_system",
+        "timeline-tower-",
+        evaluate_timeline,
     ),
 }
 ALLOWED_KEYS = frozenset(

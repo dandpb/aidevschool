@@ -60,7 +60,7 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
         <article className="track-option selected" aria-label="Trilha do piloto">
           <span>Sequência do piloto</span>
           <strong>IA Prática</strong>
-          <small>IA Prática com a LiteracyDojo hospedada, depois a trilha dev no OS: WAREHOUSE, WORMHOLE, RELAY STATION, PIPELINE PLANT e CHECKPOINT CITY.</small>
+          <small>IA Prática com a LiteracyDojo hospedada, depois a trilha dev no OS: WAREHOUSE, WORMHOLE, RELAY STATION, PIPELINE PLANT, CHECKPOINT CITY e TIMELINE TOWER.</small>
         </article>
         <p className="recommendation-note" role="status">{recommendationCopy}</p>
         <button

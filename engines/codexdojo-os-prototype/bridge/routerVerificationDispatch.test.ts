@@ -6,6 +6,7 @@ import {
   literacyRecord,
   checkpointCityRecord,
   pipelinePlantRecord,
+  timelineTowerRecord,
   relayRecord,
   teachingGameRecord,
   wormholeRecord,
@@ -87,6 +88,7 @@ describe('verification bridge dispatch', () => {
     ['RELAY STATION', relayRecord],
     ['PIPELINE PLANT', pipelinePlantRecord],
     ['CHECKPOINT CITY', checkpointCityRecord],
+    ['TIMELINE TOWER', timelineTowerRecord],
   ])('dispatches %s evidence through the same fixed teaching-game process', async (_, record) => {
     const response = await routeBridgeRequest({
       method: 'POST',

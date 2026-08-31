@@ -115,6 +115,19 @@ test('os-voxel-hosted-missions: the published CHECKPOINT CITY mission mounts fro
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
 })
 
+test('os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-08-timeline-tower')
+  await expectMissionMounted(
+    page,
+    'Missão TIMELINE TOWER: Event-Driven Order System',
+    /L1|tower|TIMELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')

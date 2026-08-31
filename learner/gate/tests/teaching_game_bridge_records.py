@@ -159,6 +159,12 @@ def make_teaching_game_record(game: str, level: str = "L1", **overrides: Any) ->
             "project": "07_rest_api_auth",
             "scenario_id": f"checkpoint-city-{level}",
         }
+    elif game == "TIMELINE TOWER":
+        identity = {
+            "unit_id": "U8-event-driven",
+            "project": "08_event_driven_order_system",
+            "scenario_id": f"timeline-tower-{level}",
+        }
     else:
         identity = {
             "unit_id": "U5-websocket-chat",
@@ -178,6 +184,13 @@ def make_teaching_game_record(game: str, level: str = "L1", **overrides: Any) ->
 
 SUPPORTED_CASES = [
     (game, level)
-    for game in ("KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY")
+    for game in (
+        "KV WAREHOUSE",
+        "WORMHOLE",
+        "RELAY STATION",
+        "PIPELINE PLANT",
+        "CHECKPOINT CITY",
+        "TIMELINE TOWER",
+    )
     for level in ("L1", "L2", "L3", "L4")
 ]

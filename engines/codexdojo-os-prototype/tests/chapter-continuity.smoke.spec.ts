@@ -183,6 +183,34 @@ async function completeCheckpointCity(frame: Frame) {
   })
 }
 
+async function completeTimelineTower(frame: Frame) {
+  await expect.poll(() => frame.evaluate(() => {
+    type Hook = { game: { snapshot: { phase: string } } }
+    const phase = (window as Window & { __timelineTower?: Hook }).__timelineTower?.game.snapshot.phase
+    return phase === 'briefing' || phase === 'playing'
+  })).toBe(true)
+  await frame.evaluate(() => {
+    type Hook = {
+      game: {
+        snapshot: { phase: string; level: { id: string } }
+        start(): void
+        nextCorrectEventType(): string
+        appendNext(type: string): void
+        truthStatus(): string
+        predictStatus(status: string): void
+      }
+    }
+    const hook = (window as Window & { __timelineTower?: Hook }).__timelineTower
+    if (hook === undefined) throw new Error('Timeline Tower hook unavailable')
+    if (hook.game.snapshot.phase === 'briefing') hook.game.start()
+    while (hook.game.snapshot.phase === 'playing' && hook.game.snapshot.level.id === 'L1') {
+      hook.game.appendNext(hook.game.nextCorrectEventType())
+    }
+  })
+  // The L1 wave resolution leaves the tower cleared; the evidence record for L1
+  // is the one the host verifies, so the mission completes on the first level.
+}
+
 async function returnFromGame(page: Page) {
   await expect(page.getByRole('button', { name: 'Voltar ao hub', exact: true })).toBeEnabled({ timeout: 15_000 })
   await page.getByRole('button', { name: 'Voltar ao hub', exact: true }).click()
@@ -293,6 +321,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await completeCheckpointCity(await gameFrame(page, 5207))
   await returnFromGame(page)
 
+  // Wave OP-A (AID-462): game-08 TIMELINE TOWER is published as the 9th dev
+  // mission (chapterOrder 9, prereq game-07-checkpoint-city). The hosted mission
+  // must complete end-to-end through the deterministic public API truth.
+  await page.goto('/mission/dev/game-08-timeline-tower')
+  await expect(page.getByRole('heading', { name: 'TIMELINE TOWER: Event-Driven Order System' })).toBeVisible()
+  await completeTimelineTower(await gameFrame(page, 5208))
+  await returnFromGame(page)
+
   await page.reload()
   const progress = await readOsProgress(page)
   for (const key of [
@@ -307,6 +343,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-05-relay-station',
     'dev:game-06-pipeline-plant',
     'dev:game-07-checkpoint-city',
+    'dev:game-08-timeline-tower',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }

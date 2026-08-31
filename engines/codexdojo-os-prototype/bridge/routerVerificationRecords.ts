@@ -186,6 +186,31 @@ export const checkpointCityRecord = {
   },
 }
 
+export const timelineTowerRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U8-event-driven',
+  project: '08_event_driven_order_system',
+  scenario_id: 'timeline-tower-L4',
+  game: 'TIMELINE TOWER',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-timeline-tower',
+    order_status_view_ok: true,
+    shipment_list_view_ok: true,
+    same_log_two_views: true,
+    views_correct: 2,
+  },
+  observations: {
+    kind: 'timeline-tower-L4',
+    predictedOrderStatus: 'cancelled',
+    predictedShipped: false,
+  },
+  curriculum_context: {
+    concept: 'append-only log + projection replay',
+    mechanic: 'tower of stacked event floors',
+  },
+}
+
 export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
   return {
     schema_version: 1,

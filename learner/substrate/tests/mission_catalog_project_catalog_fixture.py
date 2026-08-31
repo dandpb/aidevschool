@@ -104,5 +104,17 @@ PROJECT_CATALOG: Final = "\n".join(
         "| **Directory** | `07_rest_api_auth/` |",
         "| **Dependencies** | Project 03 |",
         "",
+        "### 08. Event-Driven Order System",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        "| **Slug** | `08_event_driven_order_system` |",
+        "| **Status** | scaffolded |",
+        "| **Concepts** | Append-only log + projection replay |",
+        "| **Key question** | How do projections rebuild state from an immutable event log? |",
+        "| **Learning goal** | Fold an event log into read models and replay them deterministically. |",
+        "| **Directory** | `08_event_driven_order_system/` |",
+        "| **Dependencies** | Project 06 |",
+        "",
     )
 )

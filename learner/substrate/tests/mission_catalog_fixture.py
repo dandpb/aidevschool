@@ -223,6 +223,14 @@ class MissionCatalogFixture:
                     ["game-06-pipeline-plant"],
                     5207,
                 ),
+                _dev_binding(
+                    "game-08-timeline-tower",
+                    "08_event_driven_order_system",
+                    "U8-event-driven",
+                    9,
+                    ["game-07-checkpoint-city"],
+                    5208,
+                ),
             ],
         }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
@@ -258,6 +266,11 @@ class MissionCatalogFixture:
                         "id": "game-07-checkpoint-city",
                         "name": "CHECKPOINT CITY",
                         "developmentPort": 5207,
+                    },
+                    {
+                        "id": "game-08-timeline-tower",
+                        "name": "TIMELINE TOWER",
+                        "developmentPort": 5208,
                     },
                 ]
             ),

@@ -42,7 +42,16 @@ type CheckpointHook = {
   }
 }
 
-test('independently verifies all five Dev games through the shared mission contract', async ({
+type TimelineHook = {
+  readonly game: {
+    snapshot: { phase: string; level: { id: string } }
+    start(): void
+    nextCorrectEventType(): string
+    appendNext(type: string): void
+  }
+}
+
+test('independently verifies all six Dev games through the shared mission contract', async ({
   page,
 }) => {
   test.setTimeout(60_000)
@@ -220,6 +229,35 @@ test('independently verifies all five Dev games through the shared mission contr
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
+  await expect(
+    page.getByRole('heading', { name: 'TIMELINE TOWER: Event-Driven Order System' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const timeline = page.frameLocator(
+    'iframe[title="Missão TIMELINE TOWER: Event-Driven Order System"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5208/')),
+  ).toBe(true)
+  const timelineFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5208/'),
+  )
+  if (timelineFrame === undefined) throw new Error('Timeline Tower mission frame was not loaded')
+  await expect.poll(() => timelineFrame.evaluate(
+    () => (window as Window & { __timelineTower?: TimelineHook }).__timelineTower !== undefined,
+  )).toBe(true)
+  await timelineFrame.evaluate(() => {
+    const hook = (window as Window & { __timelineTower?: TimelineHook }).__timelineTower
+    if (hook === undefined) throw new Error('Timeline Tower test hook is unavailable')
+    hook.game.start()
+    while (hook.game.snapshot.phase === 'playing' && hook.game.snapshot.level.id === 'L1') {
+      hook.game.appendNext(hook.game.nextCorrectEventType())
+    }
+  })
+  await expect(timeline.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
     const open = indexedDB.open('codexdojo-os-verification', 2)
     open.onerror = () => reject(open.error)
@@ -233,7 +271,7 @@ test('independently verifies all five Dev games through the shared mission contr
       }
     }
   }))
-  expect(stored).toHaveLength(5)
+  expect(stored).toHaveLength(6)
   expect(stored).toEqual(expect.arrayContaining([
     expect.objectContaining({
       schemaId: 'teaching-game-evidence',
@@ -273,6 +311,14 @@ test('independently verifies all five Dev games through the shared mission contr
       subject: {
         missionId: 'game-07-checkpoint-city',
         unitId: 'U7-rest-api-auth',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-08-timeline-tower',
+        unitId: 'U8-event-driven',
       },
     }),
   ]))

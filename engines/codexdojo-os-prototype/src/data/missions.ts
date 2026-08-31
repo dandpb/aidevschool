@@ -888,5 +888,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Preveja em qual porta cada pedido e rejeitado (logging, auth HMAC ou rate-limit) e reordene as muralhas por controles rotulados.",
       },
     },
+    {
+      id: "game-08-timeline-tower",
+      version: 1,
+      trackId: "dev",
+      unitId: "U8-event-driven",
+      projectId: "08_event_driven_order_system",
+      title: "TIMELINE TOWER: Event-Driven Order System",
+      objective: "Estudar consistência eventual, sagas e replay.",
+      estimatedMinutes: 12,
+      chapterOrder: 9,
+      prerequisites: [
+        "game-07-checkpoint-city",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "voxelDojo",
+        entrypoint: "http://127.0.0.1:5208/?hosted=1",
+        environmentKey: "VITE_TIMELINE_TOWER_URL",
+        protocolVersion: "1.0",
+        contentVersion: "game-08-timeline-tower@0.1.0",
+      },
+      evidence: {
+        schema: "teaching-game-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Dobre o log de eventos em projeções (status, checkpoint, replay e duas visões) por controles rotulados.",
+      },
+    },
   ],
 }
