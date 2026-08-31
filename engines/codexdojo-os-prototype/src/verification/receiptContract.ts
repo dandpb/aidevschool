@@ -59,7 +59,7 @@ function teachingGameReceiptShapeIsValid(
     && typeof value.project === 'string'
     && typeof value.scenario_id === 'string'
     && typeof value.game === 'string'
-    && typeof value.attempt_id === 'string'
+    && (value.attempt_id === undefined || typeof value.attempt_id === 'string')
     && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
     && typeof value.independent_pass === 'boolean'
     && isStringArray(value.errors)
@@ -78,7 +78,12 @@ export function receiptShapeIsValid(value: unknown): value is VerificationReceip
   )
 }
 
-/** Identity binding: the receipt describes exactly the record that was submitted. */
+/**
+ * Identity binding: the receipt describes exactly the record that was submitted.
+ * `attempt_id` is optional producer metadata: canonical verifiers echo it only
+ * when the record carried one, so absence binds to absence and any present
+ * value must match exactly.
+ */
 export function receiptMatchesRecordIdentity(
   receipt: unknown,
   record: Readonly<Record<string, unknown>>,

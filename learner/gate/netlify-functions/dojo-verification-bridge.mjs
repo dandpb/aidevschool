@@ -826,7 +826,7 @@ function verifyTeachingGameEvidence(record) {
     errors.push("producer pass claim disagrees with the fixed independent evaluator");
   }
   const passed = independentlyPassed && errors.length === 0;
-  return {
+  const receipt = {
     schema_version: 1,
     verdict: passed ? "PASS" : "FAIL",
     context_isolated: true,
@@ -836,7 +836,6 @@ function verifyTeachingGameEvidence(record) {
     project: String(record?.project ?? ""),
     scenario_id: String(record?.scenario_id ?? ""),
     game: String(record?.game ?? ""),
-    attempt_id: String(record?.attempt_id ?? ""),
     producer_pass_claim: producerClaim,
     independent_pass: passed,
     errors,
@@ -845,6 +844,14 @@ function verifyTeachingGameEvidence(record) {
     canonical_gate_status: "not-submitted",
     canonical_gate_reason: "learner-attempt-and-gate-eligibility-required",
   };
+  // Canonical parity with learner/gate/teaching_game_bridge.py: the receipt
+  // echoes attempt_id only when the record carried a non-empty one; the gate
+  // never mints an attempt id. Omitting it keeps client identity binding
+  // exact instead of comparing "" against an absent producer field.
+  if (typeof record?.attempt_id === "string" && record.attempt_id) {
+    receipt.attempt_id = record.attempt_id;
+  }
+  return receipt;
 }
 
 export default async (request) => {
