@@ -29,16 +29,17 @@ class TestValidContent(TrackFixtureMixin):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
         # Toda lição `ready` do catálogo está validada, na ordem do catálogo;
-        # lições `planned` (l19–l20, restante da onda C1–C3) continuam no
-        # índice sem arquivo; l18 pousou `ready` em T1.
+        # a lição `planned` restante (l20, onda C1–C3) continua no índice
+        # sem arquivo; l18 pousou `ready` em T1 e l19 em T2.
         entries = json_objects(array_field(required_object(catalog), "lessons"))
         self.assertEqual(
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
             [string_field(lesson, "id") for lesson in ready],
         )
         self.assertIn("l18", [string_field(lesson, "id") for lesson in ready])
+        self.assertIn("l19", [string_field(lesson, "id") for lesson in ready])
         self.assertEqual(
-            ["l19", "l20"],
+            ["l20"],
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
         )
 

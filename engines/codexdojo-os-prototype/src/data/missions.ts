@@ -543,6 +543,41 @@ export const missionCatalog: MissionCatalogSnapshot = {
       },
     },
     {
+      id: "l19",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l19",
+      projectId: "00_ai_in_practice",
+      title: "Conversas longas: gerencie o contexto",
+      objective: "Em uma conversa multi-turno degradada, identificar qual contexto a IA perdeu, executar a correção mínima que restaura a resposta útil e decidir entre continuar e recomeçar.",
+      estimatedMinutes: 5,
+      chapterOrder: 16,
+      prerequisites: [
+        "l07",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-08-31.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Leia uma conversa longa degradada e restaure o contexto perdido por controles rotulados.",
+      },
+    },
+    {
       id: "game-02-warehouse",
       version: 1,
       trackId: "dev",

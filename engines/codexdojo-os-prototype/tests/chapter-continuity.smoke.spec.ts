@@ -2,10 +2,10 @@ import { expect, test, type Frame, type Page } from '@playwright/test'
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18', 'l19'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18' | 'l19'
 
 async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   const lesson = chapterLessons.get(lessonId)
@@ -30,6 +30,21 @@ async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
         if (word === undefined) throw new Error(`Missing mustIncludeAny for field ${field.id}`)
         const filler = rule.minLength === undefined ? word : word.repeat(Math.ceil(rule.minLength / word.length) + 1)
         await mission.getByTestId(`field-${field.id}`).fill(filler)
+      }
+    } else if (activity.type === 'missing_context') {
+      for (const contextId of activity.evaluation.requiredContextIds) {
+        await mission.getByTestId(`context-${contextId}`).check()
+      }
+    } else if (activity.type === 'sort') {
+      const order = activity.data.items.map((item) => item.id)
+      for (const [target, expectedId] of activity.evaluation.expectedOrder.entries()) {
+        const presses = order.indexOf(expectedId) - target
+        const direction = presses >= 0 ? 'up' : 'down'
+        for (let press = 0; press < Math.abs(presses); press += 1) {
+          await mission.getByTestId(`sort-${direction}-${expectedId}`).click()
+        }
+        order.splice(order.indexOf(expectedId), 1)
+        order.splice(target, 0, expectedId)
       }
     } else {
       throw new Error(`Unexpected first-chapter activity ${activity.type}`)
@@ -164,6 +179,7 @@ async function readOsProgress(page: Page): Promise<{ missionStatusByKey: Record<
 }
 
 test('preserves completed first-release missions across switches and reloads', async ({ page }) => {
+  test.setTimeout(120_000)
   await page.goto('/')
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
@@ -194,6 +210,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await page.goto('/mission/ai-pratica/l18')
   await expect(page.getByRole('heading', { name: 'Biblioteca de pedidos: reutilize o que funciona' })).toBeVisible()
   await completeLiteracyMission(page, 'l18')
+
+  // Wave C2 (spec AID-414): l19 "Conversas longas" is the 16th ai-pratica
+  // mission (chapterOrder 16, canonical prereq l07 — the module-02 iteration
+  // lesson it extends). Completes end-to-end through missing_context, sort,
+  // and choice.
+  await page.goto('/mission/ai-pratica/l19')
+  await expect(page.getByRole('heading', { name: 'Conversas longas: gerencie o contexto' })).toBeVisible()
+  await completeLiteracyMission(page, 'l19')
 
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
@@ -234,6 +258,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l02',
     'ai-pratica:l03',
     'ai-pratica:l18',
+    'ai-pratica:l19',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
