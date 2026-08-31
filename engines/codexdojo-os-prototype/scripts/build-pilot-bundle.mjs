@@ -48,6 +48,9 @@ const builds = [
       VITE_WORMHOLE_URL: '/apps/wormhole/',
       VITE_RELAY_STATION_URL: '/apps/relay-station/',
       VITE_PIPELINE_PLANT_URL: '/apps/pipeline-plant/',
+      VITE_CHECKPOINT_CITY_URL: '/apps/checkpoint-city/',
+      VITE_TIMELINE_TOWER_URL: '/apps/timeline-tower/',
+      VITE_DOCKING_BAY_URL: '/apps/docking-bay/',
     },
     source: null,
     target: '.',
@@ -57,6 +60,9 @@ const builds = [
   { name: 'WORMHOLE', cwd: join(enginesRoot, 'voxelDojo', 'game-03-wormhole'), command: 'pnpm', args: ['run', 'build', '--base=/apps/wormhole/'], source: 'dist', target: 'apps/wormhole' },
   { name: 'RELAY STATION', cwd: join(enginesRoot, 'voxelDojo', 'game-05-relay-station'), command: 'pnpm', args: ['run', 'build', '--base=/apps/relay-station/'], source: 'dist', target: 'apps/relay-station' },
   { name: 'PIPELINE PLANT', cwd: join(enginesRoot, 'voxelDojo', 'game-06-pipeline-plant'), command: 'pnpm', args: ['run', 'build', '--base=/apps/pipeline-plant/'], source: 'dist', target: 'apps/pipeline-plant' },
+  { name: 'CHECKPOINT CITY', cwd: join(enginesRoot, 'voxelDojo', 'game-07-checkpoint-city'), command: 'pnpm', args: ['run', 'build', '--base=/apps/checkpoint-city/'], source: 'dist', target: 'apps/checkpoint-city' },
+  { name: 'TIMELINE TOWER', cwd: join(enginesRoot, 'voxelDojo', 'game-08-timeline-tower'), command: 'pnpm', args: ['run', 'build', '--base=/apps/timeline-tower/'], source: 'dist', target: 'apps/timeline-tower' },
+  { name: 'DOCKING BAY', cwd: join(enginesRoot, 'voxelDojo', 'game-09-docking-bay'), command: 'pnpm', args: ['run', 'build', '--base=/apps/docking-bay/'], source: 'dist', target: 'apps/docking-bay' },
 ]
 
 function run(build) {
