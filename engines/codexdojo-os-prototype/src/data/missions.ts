@@ -578,6 +578,41 @@ export const missionCatalog: MissionCatalogSnapshot = {
       },
     },
     {
+      id: "l20",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l20",
+      projectId: "00_ai_in_practice",
+      title: "Números e fatos: verifique antes de usar",
+      objective: "Diante de uma resposta com números e fatos específicos, marcar quais afirmações exigem verificação externa e escolher a fonte certa — aprofundamento operacional de l09/l10.",
+      estimatedMinutes: 3,
+      chapterOrder: 17,
+      prerequisites: [
+        "l10",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-08-31.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Marque afirmacoes que exigem verificacao e escolha a fonte certa por controles rotulados.",
+      },
+    },
+    {
       id: "game-02-warehouse",
       version: 1,
       trackId: "dev",

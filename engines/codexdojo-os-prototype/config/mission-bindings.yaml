@@ -359,6 +359,28 @@ bindings:
     fallback:
       kind: dom
       summary: "Leia uma conversa longa degradada e restaure o contexto perdido por controles rotulados."
+  - missionId: l20
+    chapterOrder: 17
+    prerequisites: [l10]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l20
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l20
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-08-31.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Marque afirmacoes que exigem verificacao e escolha a fonte certa por controles rotulados."
   - missionId: game-02-warehouse
     version: 1
     chapterOrder: 1

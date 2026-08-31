@@ -245,4 +245,4 @@ lessons:
     estimatedMinutes: 3
     prerequisites: [l10]
     skillIds: [avaliar]
-    status: planned
+    status: ready

@@ -59,7 +59,7 @@ describe("startLesson", () => {
     await expect(services.useCases.startLesson(guidedLesson.id)).rejects.toThrow(/bloqueada/);
   });
 
-  it.each(["l01", "l02", "l03", "l04", "l08", "l14", "l15", "l16", "l17", "l18", "l19"])(
+  it.each(["l01", "l02", "l03", "l04", "l08", "l14", "l15", "l16", "l17", "l18", "l19", "l20"])(
     "prepara a missão hospedada declarada %s",
     async (lessonId) => {
       const { services } = makeServices();

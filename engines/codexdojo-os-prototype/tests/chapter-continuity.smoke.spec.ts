@@ -2,10 +2,10 @@ import { expect, test, type Frame, type Page } from '@playwright/test'
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18', 'l19'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18', 'l19', 'l20'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18' | 'l19'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18' | 'l19' | 'l20'
 
 async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   const lesson = chapterLessons.get(lessonId)
@@ -219,6 +219,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Conversas longas: gerencie o contexto' })).toBeVisible()
   await completeLiteracyMission(page, 'l19')
 
+  // Wave C3 (spec AID-414): l20 "Números e fatos" closes the wave as the
+  // 17th ai-pratica mission (chapterOrder 17, canonical prereq l10 — the
+  // module-03 verification lesson it deepens). Completes end-to-end through
+  // multiSelect choice, sort, and missing_context.
+  await page.goto('/mission/ai-pratica/l20')
+  await expect(page.getByRole('heading', { name: 'Números e fatos: verifique antes de usar' })).toBeVisible()
+  await completeLiteracyMission(page, 'l20')
+
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -259,6 +267,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l03',
     'ai-pratica:l18',
     'ai-pratica:l19',
+    'ai-pratica:l20',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
