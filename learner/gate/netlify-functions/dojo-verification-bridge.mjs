@@ -712,6 +712,370 @@ function evaluatePipeline(level, observations, producerMetrics, errors) {
   return passed;
 }
 
+// --- CHECKPOINT CITY evaluator (parity with learner/gate/checkpoint_evaluator.py) ---
+
+const CHECKPOINT_WAVE_ANSWERS = {
+  L1: ["reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler"],
+  L2: ["auth", "reaches-handler", "reaches-handler", "reaches-handler", "auth", "auth", "auth", "auth"],
+  L3: ["reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "reaches-handler", "rate-limit", "rate-limit", "rate-limit"],
+};
+const CHECKPOINT_TARGETS = new Set(["reaches-handler", "logging", "auth", "rate-limit"]);
+const CHECKPOINT_L4 = {
+  given: ["rate-limit", "logging", "auth"],
+  target: ["logging", "auth", "rate-limit"],
+  probeAnswer: "auth",
+};
+
+function isStringArray(value) {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function checkpointPredictionWave(level, observations) {
+  if (!closedDict(observations, ["kind", "predictions"])) return null;
+  const predictions = observations.predictions;
+  if (observations.kind !== `checkpoint-city-${level}` || !isStringArray(predictions)) return null;
+  const answers = CHECKPOINT_WAVE_ANSWERS[level];
+  if (predictions.length !== answers.length || !predictions.every((p) => CHECKPOINT_TARGETS.has(p))) return null;
+  let correct = 0;
+  for (let i = 0; i < answers.length; i += 1) {
+    if (predictions[i] === answers[i]) correct += 1;
+  }
+  const accuracy = correct / answers.length;
+  const reachedHandler = answers.some((a) => a === "reaches-handler");
+  return [accuracy >= 0.8, {
+    kind: "voxeldoj-checkpoint-city",
+    predictions: answers.length,
+    prediction_accuracy: round2(accuracy),
+    correct_predictions: correct,
+    reached_handler: reachedHandler,
+    rejected_at: answers[answers.length - 1],
+  }];
+}
+
+function checkpointReorder(observations) {
+  if (!closedDict(observations, ["kind", "order", "probePrediction"])) return null;
+  const order = observations.order;
+  const probePrediction = observations.probePrediction;
+  if (observations.kind !== "checkpoint-city-L4"
+    || !isStringArray(order)
+    || typeof probePrediction !== "string"
+    || !CHECKPOINT_TARGETS.has(probePrediction)) {
+    return null;
+  }
+  const orderCorrect = order.join(",") === CHECKPOINT_L4.target.join(",");
+  const probeCorrect = probePrediction === CHECKPOINT_L4.probeAnswer;
+  return [orderCorrect && probeCorrect, {
+    kind: "voxeldoj-checkpoint-city",
+    reorder_correct: orderCorrect,
+    given_order: CHECKPOINT_L4.given.join(","),
+    player_order: order.join(","),
+    target_order: CHECKPOINT_L4.target.join(","),
+    probe_prediction_ok: probeCorrect,
+    probe_answer: CHECKPOINT_L4.probeAnswer,
+  }];
+}
+
+function evaluateCheckpoint(level, observations, producerMetrics, errors) {
+  if (!Object.prototype.hasOwnProperty.call(CHECKPOINT_WAVE_ANSWERS, level) && level !== "L4") {
+    errors.push("unsupported CHECKPOINT CITY level");
+    return false;
+  }
+  if (!isObject(observations)) {
+    errors.push("observations must be a bounded object");
+    return false;
+  }
+  const evaluated = level === "L4"
+    ? checkpointReorder(observations)
+    : checkpointPredictionWave(level, observations);
+  if (evaluated === null) {
+    errors.push(`observations do not match the closed ${level} scenario trace`);
+    return false;
+  }
+  const [passed, expectedMetrics] = evaluated;
+  if (!metricsMatch(producerMetrics, expectedMetrics)) {
+    errors.push("producer metrics disagree with independently recomputed observations");
+    return false;
+  }
+  return passed;
+}
+
+// --- TIMELINE TOWER evaluator (parity with learner/gate/timeline_evaluator.py) ---
+
+const TIMELINE_LIFECYCLE = ["OrderCreated", "PaymentAuthorized", "InventoryReserved", "OrderConfirmed", "OrderShipped", "OrderDelivered"];
+const TIMELINE_STATUS_BY_EVENT = {
+  OrderCreated: "pending",
+  PaymentAuthorized: "payment_authorized",
+  PaymentFailed: "payment_failed",
+  InventoryReserved: "inventory_reserved",
+  InventoryRejected: "inventory_rejected",
+  OrderConfirmed: "confirmed",
+  OrderCancelled: "cancelled",
+  OrderShipped: "shipped",
+  OrderDelivered: "delivered",
+};
+const TIMELINE_STATUS_CHOICES = new Set(Object.values(TIMELINE_STATUS_BY_EVENT));
+const TIMELINE_BASE_LOG = ["OrderCreated", "PaymentAuthorized", "InventoryReserved", "OrderConfirmed", "OrderShipped", "OrderDelivered"];
+const TIMELINE_CHECKPOINT_INDEX = 3;
+const TIMELINE_L4_LOG = ["OrderCreated", "PaymentFailed", "OrderCancelled"];
+
+function foldStatus(eventTypes) {
+  let status = "pending";
+  for (const eventType of eventTypes) {
+    status = TIMELINE_STATUS_BY_EVENT[eventType] ?? status;
+  }
+  return status;
+}
+
+function timelineAppendOrder(observations) {
+  if (!closedDict(observations, ["kind", "appends"])) return null;
+  const appends = observations.appends;
+  if (observations.kind !== "timeline-tower-L1" || !isStringArray(appends)) return null;
+  if (appends.length !== TIMELINE_LIFECYCLE.length || !appends.every((a) => TIMELINE_LIFECYCLE.includes(a))) return null;
+  let correct = 0;
+  for (let i = 0; i < TIMELINE_LIFECYCLE.length; i += 1) {
+    if (appends[i] === TIMELINE_LIFECYCLE[i]) correct += 1;
+  }
+  const accuracy = correct / TIMELINE_LIFECYCLE.length;
+  return [accuracy >= 0.8, {
+    kind: "voxeldoj-timeline-tower",
+    append_predictions: TIMELINE_LIFECYCLE.length,
+    append_order_accuracy: round2(accuracy),
+  }];
+}
+
+function timelineProjection(observations) {
+  if (!closedDict(observations, ["kind", "predictedStatus"])) return null;
+  const predicted = observations.predictedStatus;
+  if (observations.kind !== "timeline-tower-L2" || !TIMELINE_STATUS_CHOICES.has(predicted)) return null;
+  const truth = foldStatus(TIMELINE_BASE_LOG);
+  const passed = predicted === truth;
+  return [passed, {
+    kind: "voxeldoj-timeline-tower",
+    events_folded: TIMELINE_BASE_LOG.length,
+    predicted_status_ok: passed,
+    final_status_correct: passed ? 1 : 0,
+  }];
+}
+
+function timelineReplay(observations) {
+  if (!closedDict(observations, ["kind", "predictedAtCheckpoint", "predictedAfterReplay"])) return null;
+  const atCheckpoint = observations.predictedAtCheckpoint;
+  const afterReplay = observations.predictedAfterReplay;
+  if (observations.kind !== "timeline-tower-L3"
+    || !TIMELINE_STATUS_CHOICES.has(atCheckpoint)
+    || !TIMELINE_STATUS_CHOICES.has(afterReplay)) {
+    return null;
+  }
+  const truthAtCheckpoint = foldStatus(TIMELINE_BASE_LOG.slice(0, TIMELINE_CHECKPOINT_INDEX));
+  const truthAfterReplay = foldStatus(TIMELINE_BASE_LOG);
+  const checkOk = atCheckpoint === truthAtCheckpoint;
+  const replayOk = afterReplay === truthAfterReplay;
+  const passed = checkOk && replayOk;
+  return [passed, {
+    kind: "voxeldoj-timeline-tower",
+    checkpoint_index: TIMELINE_CHECKPOINT_INDEX,
+    status_at_checkpoint_ok: checkOk,
+    status_after_replay_ok: replayOk,
+    replay_deterministic: passed,
+  }];
+}
+
+function timelineTwoViews(observations) {
+  if (!closedDict(observations, ["kind", "predictedOrderStatus", "predictedShipped"])) return null;
+  const predictedStatus = observations.predictedOrderStatus;
+  const predictedShipped = observations.predictedShipped;
+  if (observations.kind !== "timeline-tower-L4"
+    || !TIMELINE_STATUS_CHOICES.has(predictedStatus)
+    || typeof predictedShipped !== "boolean") {
+    return null;
+  }
+  const truthStatus = foldStatus(TIMELINE_L4_LOG);
+  const truthShipped = TIMELINE_L4_LOG.includes("OrderShipped");
+  const statusOk = predictedStatus === truthStatus;
+  const shippedOk = predictedShipped === truthShipped;
+  const passed = statusOk && shippedOk;
+  return [passed, {
+    kind: "voxeldoj-timeline-tower",
+    order_status_view_ok: statusOk,
+    shipment_list_view_ok: shippedOk,
+    same_log_two_views: true,
+    views_correct: (statusOk ? 1 : 0) + (shippedOk ? 1 : 0),
+  }];
+}
+
+function evaluateTimeline(level, observations, producerMetrics, errors) {
+  const table = { L1: timelineAppendOrder, L2: timelineProjection, L3: timelineReplay, L4: timelineTwoViews };
+  if (!Object.prototype.hasOwnProperty.call(table, level)) {
+    errors.push("unsupported TIMELINE TOWER level");
+    return false;
+  }
+  if (!isObject(observations)) {
+    errors.push("observations must be a bounded object");
+    return false;
+  }
+  const evaluated = table[level](observations);
+  if (evaluated === null) {
+    errors.push(`observations do not match the closed ${level} scenario trace`);
+    return false;
+  }
+  const [passed, expectedMetrics] = evaluated;
+  if (!metricsMatch(producerMetrics, expectedMetrics)) {
+    errors.push("producer metrics disagree with independently recomputed observations");
+    return false;
+  }
+  return passed;
+}
+
+// --- DOCKING BAY evaluator (parity with learner/gate/docking_evaluator.py) ---
+
+const DOCKING_HOST_CONTRACT = ["connect", "readState", "writeState", "log"];
+
+function dockingPodClaims(seed, count) {
+  const random = mulberry32(seed);
+  const pods = [];
+  for (let i = 0; i < count; i += 1) {
+    const claims = DOCKING_HOST_CONTRACT.filter((c) => !(random() < 0.5 && c !== "connect"));
+    // The TS wave also draws the (unused) capability flags — consume the same
+    // four draws so the shared rng stream stays aligned per pod.
+    DOCKING_HOST_CONTRACT.forEach(() => random() > 0.35);
+    pods.push(claims.length === 0 ? ["connect"] : claims);
+  }
+  return pods;
+}
+
+const DOCKING_L1_CLAIMS = dockingPodClaims(11, 6);
+const DOCKING_L2_CLAIMS = dockingPodClaims(22, 5);
+// Dock truth is the clamp's own contract check (sim/plugin.ts checkContract,
+// AID-467 D1 fix-forward): the claim must COVER every host method.
+const DOCKING_L1_TRUTH = DOCKING_L1_CLAIMS.map((claims) => DOCKING_HOST_CONTRACT.every((c) => claims.includes(c)));
+const DOCKING_L2_MISSING = DOCKING_L2_CLAIMS.map((claims) => {
+  const missing = DOCKING_HOST_CONTRACT.filter((c) => !claims.includes(c));
+  return missing.length === 0 ? "none" : missing[0];
+});
+function dockingSandboxCap() {
+  const random = mulberry32(33);
+  const requestable = DOCKING_HOST_CONTRACT.filter(() => random() > 0.5);
+  return requestable.length === 0 ? ["readState"] : requestable;
+}
+const DOCKING_L3_CAP = dockingSandboxCap();
+const DOCKING_L3_INVOKED = [...DOCKING_HOST_CONTRACT];
+// L4: the two required calls drawn by the seeded V8 shuffle, cross-checked
+// against the TS sim (sufficient AND minimal = exactly this pair).
+const DOCKING_L4_REQUIRED = ["connect", "writeState"];
+
+function isPodList(value) {
+  return Array.isArray(value)
+    && value.every((item) => isObject(item) && typeof item.podId === "string" && Object.keys(item).length === 2);
+}
+
+function dockingWave(observations) {
+  if (!closedDict(observations, ["kind", "dockPredictions"])) return null;
+  const predictions = observations.dockPredictions;
+  if (observations.kind !== "docking-bay-L1" || !isPodList(predictions)) return null;
+  if (predictions.length !== DOCKING_L1_TRUTH.length) return null;
+  const expectedIds = DOCKING_L1_TRUTH.map((_, i) => `pod-${i}`);
+  if (!predictions.every((item, i) => item.podId === expectedIds[i] && typeof item.predictedDock === "boolean")) return null;
+  let correct = 0;
+  for (let i = 0; i < DOCKING_L1_TRUTH.length; i += 1) {
+    if (predictions[i].predictedDock === DOCKING_L1_TRUTH[i]) correct += 1;
+  }
+  const accuracy = correct / DOCKING_L1_TRUTH.length;
+  return [accuracy >= 0.8, {
+    kind: "voxeldoj-docking-bay",
+    dock_predictions: DOCKING_L1_TRUTH.length,
+    dock_prediction_accuracy: round2(accuracy),
+    contracts_checked: DOCKING_L1_TRUTH.length,
+  }];
+}
+
+function dockingMismatch(observations) {
+  if (!closedDict(observations, ["kind", "missingPredictions"])) return null;
+  const predictions = observations.missingPredictions;
+  if (observations.kind !== "docking-bay-L2" || !isPodList(predictions)) return null;
+  if (predictions.length !== DOCKING_L2_MISSING.length) return null;
+  const expectedIds = DOCKING_L2_MISSING.map((_, i) => `pod-${i}`);
+  if (!predictions.every((item, i) => item.podId === expectedIds[i])) return null;
+  if (!predictions.every((item) => DOCKING_HOST_CONTRACT.includes(item.predictedMissing) || item.predictedMissing === "none")) return null;
+  let correct = 0;
+  for (let i = 0; i < DOCKING_L2_MISSING.length; i += 1) {
+    if (predictions[i].predictedMissing === DOCKING_L2_MISSING[i]) correct += 1;
+  }
+  const accuracy = correct / DOCKING_L2_MISSING.length;
+  return [accuracy === 1, {
+    kind: "voxeldoj-docking-bay",
+    mismatch_predictions: DOCKING_L2_MISSING.length,
+    mismatch_prediction_accuracy: round2(accuracy),
+    missing_methods_named: correct,
+  }];
+}
+
+function dockingSandbox(observations) {
+  if (!closedDict(observations, ["kind", "classifications"])) return null;
+  const classifications = observations.classifications;
+  if (observations.kind !== "docking-bay-L3" || !Array.isArray(classifications)) return null;
+  if (classifications.length !== DOCKING_L3_INVOKED.length) return null;
+  if (!classifications.every((item, i) => isObject(item)
+    && item.method === DOCKING_L3_INVOKED[i]
+    && typeof item.predictedAllow === "boolean"
+    && Object.keys(item).length === 2)) {
+    return null;
+  }
+  let correct = 0;
+  for (let i = 0; i < DOCKING_L3_INVOKED.length; i += 1) {
+    if (classifications[i].predictedAllow === DOCKING_L3_CAP.includes(DOCKING_L3_INVOKED[i])) correct += 1;
+  }
+  const accuracy = correct / DOCKING_L3_INVOKED.length;
+  return [accuracy === 1, {
+    kind: "voxeldoj-docking-bay",
+    sandbox_probes: DOCKING_L3_INVOKED.length,
+    sandbox_accuracy: round2(accuracy),
+    capabilities_granted: DOCKING_L3_CAP.length,
+  }];
+}
+
+function dockingCapability(observations) {
+  if (!closedDict(observations, ["kind", "chosenCapabilities"])) return null;
+  const chosen = observations.chosenCapabilities;
+  if (observations.kind !== "docking-bay-L4" || !isStringArray(chosen)) return null;
+  if (!chosen.every((c) => DOCKING_HOST_CONTRACT.includes(c))) return null;
+  const requiredSet = new Set(DOCKING_L4_REQUIRED);
+  const chosenSet = new Set(chosen);
+  const sufficient = DOCKING_L4_REQUIRED.every((c) => chosenSet.has(c));
+  const minimal = chosen.every((c) => requiredSet.has(c));
+  const passed = sufficient && minimal;
+  return [passed, {
+    kind: "voxeldoj-docking-bay",
+    required_calls_covered: sufficient,
+    no_overgrant: minimal,
+    least_privilege: passed,
+    granted_count: chosen.length,
+    required_count: DOCKING_L4_REQUIRED.length,
+  }];
+}
+
+function evaluateDocking(level, observations, producerMetrics, errors) {
+  const table = { L1: dockingWave, L2: dockingMismatch, L3: dockingSandbox, L4: dockingCapability };
+  if (!Object.prototype.hasOwnProperty.call(table, level)) {
+    errors.push("unsupported DOCKING BAY level");
+    return false;
+  }
+  if (!isObject(observations)) {
+    errors.push("observations must be a bounded object");
+    return false;
+  }
+  const evaluated = table[level](observations);
+  if (evaluated === null) {
+    errors.push(`observations do not match the closed ${level} scenario trace`);
+    return false;
+  }
+  const [passed, expectedMetrics] = evaluated;
+  if (!metricsMatch(producerMetrics, expectedMetrics)) {
+    errors.push("producer metrics disagree with independently recomputed observations");
+    return false;
+  }
+  return passed;
+}
+
 // --- record validation and dispatch (parity with teaching_game_bridge.py) ---
 
 const GAME_SPECS = {
@@ -738,6 +1102,24 @@ const GAME_SPECS = {
     project: "06_file_upload_pipeline",
     scenarioPrefix: "pipeline-plant-",
     evaluator: evaluatePipeline,
+  },
+  "CHECKPOINT CITY": {
+    unitId: "U7-rest-api-auth",
+    project: "07_rest_api_auth",
+    scenarioPrefix: "checkpoint-city-",
+    evaluator: evaluateCheckpoint,
+  },
+  "TIMELINE TOWER": {
+    unitId: "U8-event-driven",
+    project: "08_event_driven_order_system",
+    scenarioPrefix: "timeline-tower-",
+    evaluator: evaluateTimeline,
+  },
+  "DOCKING BAY": {
+    unitId: "U9-plugin-system",
+    project: "09_plugin_system",
+    scenarioPrefix: "docking-bay-",
+    evaluator: evaluateDocking,
   },
 };
 

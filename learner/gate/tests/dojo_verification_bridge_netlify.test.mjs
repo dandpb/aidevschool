@@ -121,6 +121,9 @@ const IDENTITIES = {
   WORMHOLE: { unit_id: "U3-url-shortener", project: "03_url_shortener", scenario: "wormhole" },
   "RELAY STATION": { unit_id: "U5-websocket-chat", project: "05_websocket_chat", scenario: "relay-station" },
   "PIPELINE PLANT": { unit_id: "U6-file-upload", project: "06_file_upload_pipeline", scenario: "pipeline-plant" },
+  "CHECKPOINT CITY": { unit_id: "U7-rest-api-auth", project: "07_rest_api_auth", scenario: "checkpoint-city" },
+  "TIMELINE TOWER": { unit_id: "U8-event-driven", project: "08_event_driven_order_system", scenario: "timeline-tower" },
+  "DOCKING BAY": { unit_id: "U9-plugin-system", project: "09_plugin_system", scenario: "docking-bay" },
 };
 
 function makeTeachingGameRecord(game, level = "L1", overrides = {}) {
@@ -139,10 +142,11 @@ function makeTeachingGameRecord(game, level = "L1", overrides = {}) {
   });
 }
 
-const SUPPORTED_CASES = ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]
+const SUPPORTED_GAMES = ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY", "TIMELINE TOWER", "DOCKING BAY"];
+const SUPPORTED_CASES = SUPPORTED_GAMES
   .flatMap((game) => ["L1", "L2", "L3", "L4"].map((level) => [game, level]));
 
-test("staged bridge recomputes each official payload across the 4-game x L1-L4 matrix", () => {
+test("staged bridge recomputes each official payload across the 7-game x L1-L4 matrix", () => {
   for (const [game, level] of SUPPORTED_CASES) {
     const receipt = verifyTeachingGameEvidence(makeTeachingGameRecord(game, level));
     assert.equal(receipt.verdict, "PASS", `${game} ${level}`);
@@ -158,7 +162,7 @@ test("staged bridge recomputes each official payload across the 4-game x L1-L4 m
 });
 
 test("hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)", () => {
-  for (const game of ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]) {
+  for (const game of SUPPORTED_GAMES) {
     const record = makeTeachingGameRecord(game, "L1");
     delete record.attempt_id;
     const receipt = verifyTeachingGameEvidence(record);
@@ -190,7 +194,7 @@ test("each complete failing WAREHOUSE level stays an honest FAIL without errors"
 });
 
 test("rejects favorable aggregate without observations for every game", () => {
-  for (const game of ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]) {
+  for (const game of SUPPORTED_GAMES) {
     const record = makeTeachingGameRecord(game);
     delete record.observations;
     const receipt = verifyTeachingGameEvidence(record);
@@ -200,7 +204,7 @@ test("rejects favorable aggregate without observations for every game", () => {
 });
 
 test("rejects forged metrics and pass claims for every game", () => {
-  for (const game of ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]) {
+  for (const game of SUPPORTED_GAMES) {
     const metrics = makeTeachingGameRecord(game);
     metrics.metrics = { kind: "forged" };
     const passClaim = makeTeachingGameRecord(game);
