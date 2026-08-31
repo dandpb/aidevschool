@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "69bb67a7800242495bf62542537b2ce0c14dd573",
+  "observedAt": "2026-08-31T04:55:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Fresh browser profiles on BOTH production bindings (alias aidevschool-codexdojo-os.netlify.app and permalink 6a94f023bd87c28fce557045--, manifest sourceRevision 69bb67a7800242495bf62542537b2ce0c14dd573, os surface sha256 549b8149..., literacydojo surface sha256 55e270d2..., byte-identical across bindings; independent re-execution of the 43-check producer precheck passed 43/43 on alias and permalink) completed onboarding ('Entrar na escola') and landed on the hub. The chapter map publishes '24 missoes, uma sequencia' with the wave C1-C3 rows present (l18 'Biblioteca de pedidos' behind l14, l19 'Conversas longas' behind l07, l20 'Numeros e fatos' behind l10 — the intentional non-linear unlock), each honestly 'Bloqueada por pre-requisito' on a fresh profile and unlocked after its prerequisite completed. Observer response: I enter the school on the IA Pratica route, the dev track follows, and the map now shows 24 missions including the three new mod-06 lessons."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reloads on both bindings after completing the full ai-pratica chain (l01-l14, l18-l20), the dev literacy batch (l15-l17) and the four games kept 24/24 missionStatusByKey entries 'completed' in the local os-progress store (indexedDB) and the hub continued to recommend the next step ('SEU PROXIMO PASSO ESTA PRONTO'). Result screens keep the 'Estado canonico / sem alteracao local' boundary language; no screen claims canonical mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Every fresh browser profile on both bindings returned to the onboarding gate ('Entrar na escola'), and a fresh profile opening a locked dev mission URL (game-06) saw 'Bloqueada por pre-requisito' with no approval language — local state loss means starting the browser-local profile again, with no undocumented repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "On both bindings the observer completed hosted literacy missions end-to-end inside the OS: the full ai-pratica chain l01-l14 plus the wave lessons l18 (prompt_builder+output_comparison+choice), l19 (missing_context+sort+choice) and l20 (multiSelect choice+sort+missing_context), plus the dev batch l15-l17. Each finished mission shows the evidence verdict ('Evidencia rejeitada / A evidencia nao passou pelo contrato e precisa de uma nova tentativa' for literacy — the known bridge-scope gap below), the canonical boundary ('Estado canonico / mastered / sem alteracao local'), and 'Voltar ao hub' as the supported next action. No false approval is displayed anywhere."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "production-bridge-literacy-evidence-out-of-scope",
+          "severity": "medium",
+          "summary": "The staged production bridge still verifies only teaching-game-evidence: hosted literacy-evidence (all 20 lessons, schema literacy-evidence v1 with verifierRequired) is honestly rejected in production. Continuation of the v15 gap production-bridge-verifier-scope-warehouse-only, now narrowed: since the AID-415 fix (05ce059, live in previous pin f3762e24) the bridge approves all four GAME_SPECS contracts, so literacy remains the only out-of-scope schema. No false approval; rejection is honest and the retry path works.",
+          "owner": "codexdojo-os-prototype",
+          "disposition": "Child issue to the producer: extend the staged bridge to the literacy verifier or route hosted literacy evidence to the canonical gate."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Completing all four games on the alias (warehouse, wormhole, relay, pipeline-plant) kept every journey recoverable: the mission result screen preserves the evidence, states the verdict, offers retry, and 'Voltar ao hub'. WAREHOUSE displays 'Verificacao independente aprovada' (bridge PASS, receipt accepted). Independent bridge probes with the canonical official L1 producer payloads returned verdict PASS for all four games (kv-warehouse via journey; wormhole, relay-station, pipeline-plant via the staged endpoint with canonical identities U3/U5/U6)."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "production-bridge-receipt-mismatch-non-warehouse-games",
+          "severity": "medium",
+          "summary": "For wormhole/relay-station/pipeline-plant hosted journeys the OS-hosted record carries no attempt_id (the warehouse game is the only one that emits one), so although the staged bridge now returns a shape-valid PASS receipt for those records, the OS client-side identity binding (receipt.attempt_id === record.attempt_id) fails (empty string vs undefined) and the mission is marked rejected with code receipt-mismatch: the learner who played perfectly sees 'Evidencia rejeitada ... a evidencia nao passou pelo contrato' while the independent verifier actually approved it. False negative only — no false approval, no mastery impact, retry/exit paths intact. Pre-existing at pin f3762e24 (fix 05ce059 predates it; the wave diff f3762e24..69bb67a7 touches none of games/bridge/verification intake), newly discovered by this assessment because the v15 observation ran at 72130c6d where the bridge honestly FAILed non-warehouse evidence.",
+          "owner": "codexdojo-os-prototype",
+          "disposition": "Child issue to the producer: synthesize attempt_id (or bind identity on scenario_id) for non-warehouse hosted evidence records so the PASS receipt is accepted and displayed."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing l01-l14 and the wave lessons on both bindings, same-profile reloads kept all ai-pratica missions 'completed' locally (24/24 keys) and the map/hub reflected the next recommendation. Continuity remains browser-local: a fresh profile returns to onboarding with the wave missions locked behind their prerequisites, exactly as documented."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE, WORMHOLE, RELAY STATION and PIPELINE PLANT all mounted MOTOR running in same-origin /apps/* iframes on both bindings; every completion funnelled to the independent verdict panel with the canonical boundary text ('A recompensa local celebra a pratica. Evidencia, veredito independente e competencia canonica continuam registros diferentes'). PIPELINE PLANT launched already in 'predicting' on 3/3 hosted launches (the phase-race journey the 0f75daf fix accommodates). No screen claims mastery; the misleading rejection display for the three non-warehouse games is tracked as the receipt-mismatch gap in os-verification-recovery (false negative, not a mastery claim)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "On the alias the game-06 mission page offers 'Usar visualizacao acessivel' once the WebGL renderer is active (verified with an unlocked profile after the games chain, 30s wait). Blocking the literacy engine at the network level on the three wave missions (l18/l19/l20) kept the mission heading, rendered the fallback DOM summary in the mission footer, and produced no crash — the renderer/recovery escalation boundary (stop at honest degradation, never fabricate a verdict) is visible and respected. Local renderer-fallback + readiness-recovery smokes are green at this pin (5/5)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing the four games, same-profile reloads kept the dev mission statuses in the local store and the hub/map reflected completion (24/24 'completed' keys incl. ai-pratica/l18-l20). A fresh profile sees the dev chain locked from game-02 as documented — continuity is same-browser-profile only."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
