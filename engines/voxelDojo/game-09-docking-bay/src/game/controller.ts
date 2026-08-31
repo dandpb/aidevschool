@@ -18,7 +18,7 @@ import {
   type WavePod,
 } from "../sim/levels"
 import type { Capability, Host, PluginManifest } from "../sim/plugin"
-import { dock, invoke, SandboxViolation, sandboxCapFor } from "../sim/plugin"
+import { checkContract, dock, invoke, SandboxViolation, sandboxCapFor } from "../sim/plugin"
 
 export type Phase =
   | "briefing"
@@ -150,8 +150,7 @@ export class GameController {
     const out = evaluateDockWave(predictions)
     // Dock every pod the truth says docks, so the scene shows the final state.
     for (const pod of this.state.pods) {
-      const truth = pod.claimsContract.every((c) => HOST_CONTRACT.includes(c))
-      if (truth) {
+      if (this.podWouldDock(pod)) {
         dock(this.state.host, {
           id: pod.id,
           claimsContract: pod.claimsContract,
@@ -183,8 +182,7 @@ export class GameController {
     const out = evaluateMismatchWave(predictions)
     // Dock every pod that actually covers the contract (the success cases).
     for (const pod of this.state.pods) {
-      const truth = pod.claimsContract.every((c) => HOST_CONTRACT.includes(c))
-      if (truth) {
+      if (this.podWouldDock(pod)) {
         dock(this.state.host, {
           id: pod.id,
           claimsContract: pod.claimsContract,
@@ -252,9 +250,11 @@ export class GameController {
 
   // ── shared / convenience for the scene + HUD + tests ───────────────────────
 
-  /** Ground truth: does a pod cover the host contract (would it dock)? */
+  /** Ground truth: does a pod cover the host contract (would it dock)? Delegates
+   * to the clamp's own `checkContract` (host ⊆ claims) so predictions, scene
+   * state, and the physical clamp can never disagree. */
   podWouldDock(pod: WavePod): boolean {
-    return pod.claimsContract.every((c) => HOST_CONTRACT.includes(c))
+    return checkContract(pod, HOST_CONTRACT)
   }
 
   /** Ground truth: the first contract method a pod omits, or "none" if it covers the contract. */

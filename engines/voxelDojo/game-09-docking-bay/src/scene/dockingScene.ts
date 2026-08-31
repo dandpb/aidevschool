@@ -2,6 +2,7 @@ import * as THREE from "three"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { HOST_CONTRACT } from "../sim/levels"
+import { checkContract } from "../sim/plugin"
 
 const RING_RADIUS = 6
 export const PALETTE = [
@@ -137,7 +138,9 @@ export class DockingScene {
         this.stage.add(view.group)
       }
       const truth = state.pods.find((p) => p.id === pod.id)
-      const docked = truth ? truth.claimsContract.every((c) => HOST_CONTRACT.includes(c)) : false
+      // Same dock truth as the clamp itself (host ⊆ claims) — the scene must
+      // never seat a pod the clamp would reject.
+      const docked = truth ? checkContract(truth, HOST_CONTRACT) : false
       const predicted = state.dockPredictions.get(pod.id)
       // Approach eases toward the port as the wave progresses / resolves.
       const seated = state.phase === "cleared" || state.phase === "failed"
