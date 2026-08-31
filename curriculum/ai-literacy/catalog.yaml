@@ -6,7 +6,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-08-21.1"
+contentVersion: "2026-08-31.1"
 
 track:
   id: ai-literacy
@@ -229,7 +229,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l14]
     skillIds: [pedir, aplicar]
-    status: planned
+    status: ready
   - id: l19
     moduleId: mod-06
     title: "Conversas longas: gerencie o contexto"
