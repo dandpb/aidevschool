@@ -1,14 +1,23 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
-import handler, { verifyTeachingGameEvidence } from "../netlify-functions/dojo-verification-bridge.mjs";
+import { dirname, join, resolve } from "node:path";
+import handler, {
+  verifyLiteracyEvidence,
+  verifyTeachingGameEvidence,
+} from "../netlify-functions/dojo-verification-bridge.mjs";
 
 const PRODUCER_PAYLOADS = JSON.parse(readFileSync(
   join(dirname(fileURLToPath(import.meta.url)), "fixtures", "teaching_game_producer_payloads.json"),
   "utf8",
 ));
+
+const LITERACY_PAYLOADS = JSON.parse(readFileSync(
+  join(dirname(fileURLToPath(import.meta.url)), "fixtures", "literacy_producer_payloads.json"),
+  "utf8",
+)).records;
 
 const L1 = [
   ["key:8gl33c:0", 2], ["key:8ril9k:1", 4], ["key:a223ac:2", 2],
@@ -148,6 +157,17 @@ test("staged bridge recomputes each official payload across the 4-game x L1-L4 m
   }
 });
 
+test("hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)", () => {
+  for (const game of ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]) {
+    const record = makeTeachingGameRecord(game, "L1");
+    delete record.attempt_id;
+    const receipt = verifyTeachingGameEvidence(record);
+    assert.equal(receipt.verdict, "PASS", game);
+    assert.equal(receipt.errors.length, 0, game);
+    assert.ok(!("attempt_id" in receipt), `${game} receipt must not mint an attempt_id`);
+  }
+});
+
 test("WAREHOUSE retry changes FAIL to independently bound PASS", () => {
   const failed = verifyTeachingGameEvidence(makeWarehouseRecord("L1", false, { attempt_id: "kv-warehouse-L1-attempt-1" }));
   const passed = verifyTeachingGameEvidence(makeWarehouseRecord("L1", true, { attempt_id: "kv-warehouse-L1-attempt-2" }));
@@ -260,4 +280,237 @@ test("verification endpoint returns a bound receipt for a wormhole payload", asy
   assert.equal(receipt.verdict, "PASS");
   assert.equal(receipt.game, "WORMHOLE");
   assert.equal(receipt.attempt_id, record.attempt_id);
+});
+
+test("verification endpoint omits attempt_id for a hosted wormhole record without one (AID-448)", async () => {
+  const session = await (await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    headers: { "sec-fetch-site": "same-origin", "x-nf-original-path": "/__dojo/bridge/v1/session" },
+  }))).json();
+  const record = makeTeachingGameRecord("WORMHOLE", "L1");
+  delete record.attempt_id;
+  const response = await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    method: "POST",
+    headers: {
+      "sec-fetch-site": "same-origin",
+      "x-nf-original-path": "/__dojo/bridge/v1/verification",
+      "x-codexdojo-bridge-token": session.token,
+    },
+    body: JSON.stringify({ schemaId: "teaching-game-evidence", schemaVersion: 1, record }),
+  }));
+  assert.equal(response.status, 200);
+  const { receipt } = await response.json();
+  assert.equal(receipt.verdict, "PASS");
+  assert.ok(!("attempt_id" in receipt));
+});
+
+// --- literacy staged verifier (AID-449) ---
+
+const literacyRecords = [];
+for (const [lessonId, activities] of Object.entries(LITERACY_PAYLOADS)) {
+  for (const [activityId, variants] of Object.entries(activities)) {
+    for (const [variant, record] of Object.entries(variants)) {
+      literacyRecords.push({ label: `${lessonId}/${activityId}/${variant}`, variant, record });
+    }
+  }
+}
+
+const LITERACY_EDGE_CASES = [
+  {
+    label: "prompt_builder fails closed without free text",
+    variant: "fail",
+    record: {
+      schemaVersion: 1,
+      source: "literacydojo",
+      attemptId: "att-l05-pb",
+      lessonId: "l05",
+      lessonVersion: 2,
+      activityId: "l05-a1",
+      activityType: "prompt_builder",
+      skillIds: ["pedir"],
+      deterministicChecks: { hash: "deadbeef" },
+      score: 1,
+      pass: true,
+      timestamp: "2026-08-31T00:00:00.000Z",
+      verifierRequired: true,
+    },
+  },
+  {
+    label: "unknown lesson",
+    variant: "fail",
+    record: {
+      ...LITERACY_PAYLOADS.l02["l02-a1"].pass,
+      lessonId: "l99",
+      attemptId: "att-unknown-lesson",
+    },
+  },
+  {
+    label: "stale lessonVersion",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, lessonVersion: 2 },
+  },
+  {
+    label: "skillIds drift",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, skillIds: ["entender"] },
+  },
+  {
+    label: "forged score claim",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].fail, score: 1, pass: true },
+  },
+  {
+    label: "unknown field",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, verifier: { verdict: "PASS" } },
+  },
+  {
+    label: "missing required field",
+    variant: "fail",
+    record: (() => { const copy = { ...LITERACY_PAYLOADS.l02["l02-a1"].pass }; delete copy.deterministicChecks; return copy; })(),
+  },
+  {
+    label: "score out of range",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, score: 1.5 },
+  },
+  {
+    label: "invalid timestamp",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, timestamp: "not-a-timestamp" },
+  },
+  {
+    label: "naive timestamp accepted like the canonical verifier",
+    variant: "pass",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, timestamp: "2026-08-31T12:00:00" },
+  },
+  {
+    label: "invalid context",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, context: "retake" },
+  },
+  {
+    label: "answer with two discriminators",
+    variant: "fail",
+    record: {
+      ...LITERACY_PAYLOADS.l02["l02-a1"].pass,
+      answer: { optionIds: ["opt-a"], orderedIds: ["opt-a"] },
+    },
+  },
+  {
+    label: "blank attemptId",
+    variant: "fail",
+    record: { ...LITERACY_PAYLOADS.l02["l02-a1"].pass, attemptId: " " },
+  },
+];
+
+function canonicalLiteracyReceipts(records) {
+  const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "..");
+  const program = [
+    "import json, sys",
+    "from learner.gate.literacy_verifier import verify_literacy_evidence",
+    "for line in sys.stdin:",
+    "    receipt = verify_literacy_evidence(json.loads(line)).to_receipt_dict()",
+    "    print(json.dumps(receipt, sort_keys=True))",
+  ].join("\n");
+  const result = spawnSync("python3", ["-c", program], {
+    cwd: repoRoot,
+    input: `${records.map((item) => JSON.stringify(item.record)).join("\n")}\n`,
+    encoding: "utf8",
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  assert.equal(result.status, 0, `canonical verifier failed: ${result.stderr}`);
+  return result.stdout.trim().split("\n").map((line) => JSON.parse(line));
+}
+
+test("staged literacy verifier matches the canonical Python verifier receipt-for-receipt (AID-449)", () => {
+  const cases = [
+    ...literacyRecords.map(({ label, record }) => ({ label, record })),
+    ...LITERACY_EDGE_CASES.map(({ label, record }) => ({ label, record })),
+  ];
+  const canonical = canonicalLiteracyReceipts(cases);
+  assert.equal(cases.length, canonical.length);
+  for (let index = 0; index < cases.length; index += 1) {
+    const staged = verifyLiteracyEvidence(cases[index].record);
+    assert.deepEqual(staged, canonical[index], cases[index].label);
+  }
+});
+
+test("staged literacy verifier recomputes every canonical activity across the 20 hosted lessons", () => {
+  const byType = {};
+  for (const { label, variant, record } of literacyRecords) {
+    const receipt = verifyLiteracyEvidence(record);
+    assert.equal(receipt.verdict, variant === "pass" ? "PASS" : "FAIL", label);
+    assert.deepEqual(receipt.errors, [], label);
+    assert.equal(receipt.source, "independent-literacy-verifier");
+    assert.equal(receipt.lesson_id, record.lessonId, label);
+    assert.equal(receipt.activity_id, record.activityId, label);
+    assert.equal(receipt.attempt_id, record.attemptId, label);
+    assert.equal(receipt.producer_pass_claim, record.pass, label);
+    assert.equal(receipt.independent_pass, variant === "pass", label);
+    assert.equal(receipt.mastery_eligible, variant === "pass", label);
+    assert.equal(receipt.producer_writes_mastered, false, label);
+    assert.match(receipt.evidence_digest, /^[a-f0-9]{64}$/, label);
+    byType[record.activityType] = (byType[record.activityType] ?? 0) + 1;
+  }
+  for (const type of ["choice", "sort", "missing_context", "output_comparison", "safety_classification", "rubric_review"]) {
+    assert.ok(byType[type] >= 2, `activity type ${type} must be covered`);
+  }
+});
+
+test("staged literacy verifier fails closed on prompt_builder and drift without false approval", () => {
+  const expectedFail = LITERACY_EDGE_CASES.filter(({ label }) => label !== "naive timestamp accepted like the canonical verifier");
+  for (const { label, record } of expectedFail) {
+    const receipt = verifyLiteracyEvidence(record);
+    assert.equal(receipt.verdict, "FAIL", label);
+    if (label === "prompt_builder fails closed without free text") {
+      assert.ok(receipt.errors.some((error) => error.includes("prompt_builder")), label);
+    }
+    if (label.startsWith("forged") || label === "skillIds drift" || label === "stale lessonVersion") {
+      assert.ok(receipt.errors.length > 0, label);
+    }
+  }
+  const naive = verifyLiteracyEvidence(
+    LITERACY_EDGE_CASES.find(({ label }) => label.startsWith("naive timestamp")).record,
+  );
+  assert.equal(naive.verdict, "PASS");
+});
+
+test("verification endpoint returns a bound literacy receipt (AID-449)", async () => {
+  const session = await (await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    headers: { "sec-fetch-site": "same-origin", "x-nf-original-path": "/__dojo/bridge/v1/session" },
+  }))).json();
+  const record = structuredClone(LITERACY_PAYLOADS.l02["l02-a1"].pass);
+  const response = await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    method: "POST",
+    headers: {
+      "sec-fetch-site": "same-origin",
+      "x-nf-original-path": "/__dojo/bridge/v1/verification",
+      "x-codexdojo-bridge-token": session.token,
+    },
+    body: JSON.stringify({ schemaId: "literacy-evidence", schemaVersion: 1, record }),
+  }));
+  assert.equal(response.status, 200);
+  const { receipt } = await response.json();
+  assert.equal(receipt.verdict, "PASS");
+  assert.equal(receipt.source, "independent-literacy-verifier");
+  assert.equal(receipt.attempt_id, record.attemptId);
+  assert.equal(receipt.mastery_eligible, true);
+  assert.equal(receipt.producer_writes_mastered, false);
+});
+
+test("verification endpoint still rejects unknown schemas with 422", async () => {
+  const session = await (await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    headers: { "sec-fetch-site": "same-origin", "x-nf-original-path": "/__dojo/bridge/v1/session" },
+  }))).json();
+  const response = await handler(new Request("https://example.test/.netlify/functions/dojo-verification-bridge", {
+    method: "POST",
+    headers: {
+      "sec-fetch-site": "same-origin",
+      "x-nf-original-path": "/__dojo/bridge/v1/verification",
+      "x-codexdojo-bridge-token": session.token,
+    },
+    body: JSON.stringify({ schemaId: "literacy-evidence", schemaVersion: 2, record: {} }),
+  }));
+  assert.equal(response.status, 422);
+  assert.equal((await response.json()).error, "unsupported-schema");
 });

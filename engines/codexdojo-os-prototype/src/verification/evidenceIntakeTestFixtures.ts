@@ -167,6 +167,54 @@ export function voxelSubmission(
   }
 }
 
+export const wormholeMission: MissionDefinition = {
+  ...voxelMission,
+  id: 'game-03-wormhole',
+  unitId: 'U3-url-shortener',
+  projectId: '03_url_shortener',
+  title: 'Wormhole',
+  runtime: {
+    ...voxelMission.runtime,
+    entrypoint: 'http://127.0.0.1:5203',
+    environmentKey: 'VITE_WORMHOLE_URL',
+    contentVersion: 'game-03-wormhole@0.1.0',
+  },
+}
+
+export function wormholeReceipt(
+  overrides: Partial<TeachingGameVerificationReceipt> = {},
+): TeachingGameVerificationReceipt {
+  const { attempt_id: _echoed, ...rest } = voxelReceipt()
+  return {
+    ...rest,
+    unit_id: 'U3-url-shortener',
+    project: '03_url_shortener',
+    scenario_id: 'wormhole-L1',
+    game: 'WORMHOLE',
+    ...overrides,
+  }
+}
+
+/** Matches the hosted game-03 record: teaching games except KV WAREHOUSE emit no attempt_id. */
+export function wormholeSubmission(
+  overrides: Partial<EvidenceSubmission['record']> = {},
+): EvidenceSubmission {
+  const voxel = voxelSubmission()
+  const { attempt_id: _attemptId, ...warehouseRest } = voxel.record
+  return {
+    ...voxel,
+    subject: { missionId: 'game-03-wormhole', unitId: 'U3-url-shortener' },
+    record: {
+      ...warehouseRest,
+      unit_id: 'U3-url-shortener',
+      project: '03_url_shortener',
+      scenario_id: 'wormhole-L1',
+      game: 'WORMHOLE',
+      ...overrides,
+    },
+  }
+}
+
 class MemoryVerificationStore implements VerificationStore {
   readonly raw = new Map<string, RawEvidenceEntry>()
   readonly receipts = new Map<string, StoredVerificationReceipt>()

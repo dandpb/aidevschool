@@ -45,7 +45,8 @@ export type TeachingGameVerificationReceipt = {
   readonly project: string
   readonly scenario_id: string
   readonly game: string
-  readonly attempt_id: string
+  /** Present only when the verified record carried one; verifiers never mint ids. */
+  readonly attempt_id?: string
   readonly producer_pass_claim: boolean | null
   readonly independent_pass: boolean
   readonly errors: readonly string[]

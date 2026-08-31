@@ -105,6 +105,8 @@ describe('verification bridge dispatch', () => {
       scenario_id: record.scenario_id,
       game: record.game,
       producer_pass_claim: true,
+      canonical_gate_status: 'not-submitted',
     })
+    expect(response.body.receipt.attempt_id).toBeUndefined()
   })
 })
