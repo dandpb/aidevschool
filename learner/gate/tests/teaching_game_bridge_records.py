@@ -153,6 +153,12 @@ def make_teaching_game_record(game: str, level: str = "L1", **overrides: Any) ->
             "project": "06_file_upload_pipeline",
             "scenario_id": f"pipeline-plant-{level}",
         }
+    elif game == "CHECKPOINT CITY":
+        identity = {
+            "unit_id": "U7-rest-api-auth",
+            "project": "07_rest_api_auth",
+            "scenario_id": f"checkpoint-city-{level}",
+        }
     else:
         identity = {
             "unit_id": "U5-websocket-chat",
@@ -172,6 +178,6 @@ def make_teaching_game_record(game: str, level: str = "L1", **overrides: Any) ->
 
 SUPPORTED_CASES = [
     (game, level)
-    for game in ("KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT")
+    for game in ("KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY")
     for level in ("L1", "L2", "L3", "L4")
 ]

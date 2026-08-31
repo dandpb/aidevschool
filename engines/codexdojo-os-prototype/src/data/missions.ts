@@ -853,5 +853,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Preveja transbordo do tanque, ajuste o chunk e acompanhe a mesma simulacao deterministica por controles rotulados.",
       },
     },
+    {
+      id: "game-07-checkpoint-city",
+      version: 1,
+      trackId: "dev",
+      unitId: "U7-rest-api-auth",
+      projectId: "07_rest_api_auth",
+      title: "CHECKPOINT CITY: REST API with Auth",
+      objective: "Separar identidade, sessão, autorização e versionamento.",
+      estimatedMinutes: 12,
+      chapterOrder: 8,
+      prerequisites: [
+        "game-06-pipeline-plant",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "voxelDojo",
+        entrypoint: "http://127.0.0.1:5207/?hosted=1",
+        environmentKey: "VITE_CHECKPOINT_CITY_URL",
+        protocolVersion: "1.0",
+        contentVersion: "game-07-checkpoint-city@0.1.0",
+      },
+      evidence: {
+        schema: "teaching-game-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Preveja em qual porta cada pedido e rejeitado (logging, auth HMAC ou rate-limit) e reordene as muralhas por controles rotulados.",
+      },
+    },
   ],
 }

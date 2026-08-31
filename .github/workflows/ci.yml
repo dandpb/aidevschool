@@ -147,6 +147,7 @@ jobs:
           VITE_WORMHOLE_URL: /apps/wormhole/
           VITE_RELAY_STATION_URL: /apps/relay-station/
           VITE_PIPELINE_PLANT_URL: /apps/pipeline-plant/
+          VITE_CHECKPOINT_CITY_URL: /apps/checkpoint-city/
       # P5: prove the static pilot build mounts missions from its own origin.
       # The build above already produced dist/ (and gates typecheck), so we
       # bundle the mission runtimes and run Playwright directly instead of

@@ -14,6 +14,7 @@ import json
 import sys
 from typing import Any
 
+from learner.gate.checkpoint_evaluator import evaluate_checkpoint
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
 from learner.gate.pipeline_evaluator import evaluate_pipeline
@@ -47,6 +48,12 @@ GAME_SPECS = {
         "06_file_upload_pipeline",
         "pipeline-plant-",
         evaluate_pipeline,
+    ),
+    "CHECKPOINT CITY": (
+        "U7-rest-api-auth",
+        "07_rest_api_auth",
+        "checkpoint-city-",
+        evaluate_checkpoint,
     ),
 }
 ALLOWED_KEYS = frozenset(

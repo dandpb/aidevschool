@@ -92,5 +92,17 @@ PROJECT_CATALOG: Final = "\n".join(
         "| **Directory** | `06_file_upload_pipeline/` |",
         "| **Dependencies** | Project 03 |",
         "",
+        "### 07. REST API Auth Middleware",
+        "",
+        "| Field | Value |",
+        "|-------|-------|",
+        "| **Slug** | `07_rest_api_auth` |",
+        "| **Status** | scaffolded |",
+        "| **Concepts** | Middleware layers + JWT verification |",
+        "| **Key question** | How do layered middleware gates decide who reaches the handler? |",
+        "| **Learning goal** | Reason about ordered middleware (logging, auth, rate limiting). |",
+        "| **Directory** | `07_rest_api_auth/` |",
+        "| **Dependencies** | Project 03 |",
+        "",
     )
 )

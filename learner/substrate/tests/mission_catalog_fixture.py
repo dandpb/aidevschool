@@ -215,6 +215,14 @@ class MissionCatalogFixture:
                     ["game-05-relay-station"],
                     5206,
                 ),
+                _dev_binding(
+                    "game-07-checkpoint-city",
+                    "07_rest_api_auth",
+                    "U7-rest-api-auth",
+                    8,
+                    ["game-06-pipeline-plant"],
+                    5207,
+                ),
             ],
         }
         (root / "curriculum" / "ai-literacy" / "modules" / "mod-01").mkdir(parents=True)
@@ -245,6 +253,11 @@ class MissionCatalogFixture:
                         "id": "game-06-pipeline-plant",
                         "name": "PIPELINE PLANT",
                         "developmentPort": 5206,
+                    },
+                    {
+                        "id": "game-07-checkpoint-city",
+                        "name": "CHECKPOINT CITY",
+                        "developmentPort": 5207,
                     },
                 ]
             ),

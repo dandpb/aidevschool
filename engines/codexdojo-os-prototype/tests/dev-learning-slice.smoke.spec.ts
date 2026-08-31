@@ -33,7 +33,16 @@ type PipelineHook = {
   }
 }
 
-test('independently verifies all three Dev games through the shared mission contract', async ({
+type CheckpointHook = {
+  readonly game: {
+    snapshot: { phase: string }
+    start(): void
+    pendingAnswer(): string | null
+    predict(target: string): void
+  }
+}
+
+test('independently verifies all five Dev games through the shared mission contract', async ({
   page,
 }) => {
   test.setTimeout(60_000)
@@ -180,6 +189,37 @@ test('independently verifies all three Dev games through the shared mission cont
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
+  await expect(
+    page.getByRole('heading', { name: 'CHECKPOINT CITY: REST API with Auth' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const checkpoint = page.frameLocator(
+    'iframe[title="Missão CHECKPOINT CITY: REST API with Auth"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5207/')),
+  ).toBe(true)
+  const checkpointFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5207/'),
+  )
+  if (checkpointFrame === undefined) throw new Error('Checkpoint City mission frame was not loaded')
+  await expect.poll(() => checkpointFrame.evaluate(
+    () => (window as Window & { __checkpointCity?: CheckpointHook }).__checkpointCity !== undefined,
+  )).toBe(true)
+  await checkpointFrame.evaluate(() => {
+    const hook = (window as Window & { __checkpointCity?: CheckpointHook }).__checkpointCity
+    if (hook === undefined) throw new Error('Checkpoint City test hook is unavailable')
+    hook.game.start()
+    while (hook.game.snapshot.phase === 'predicting') {
+      const answer = hook.game.pendingAnswer()
+      if (answer === null) break
+      hook.game.predict(answer)
+    }
+  })
+  await expect(checkpoint.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
     const open = indexedDB.open('codexdojo-os-verification', 2)
     open.onerror = () => reject(open.error)
@@ -193,7 +233,7 @@ test('independently verifies all three Dev games through the shared mission cont
       }
     }
   }))
-  expect(stored).toHaveLength(4)
+  expect(stored).toHaveLength(5)
   expect(stored).toEqual(expect.arrayContaining([
     expect.objectContaining({
       schemaId: 'teaching-game-evidence',
@@ -225,6 +265,14 @@ test('independently verifies all three Dev games through the shared mission cont
       subject: {
         missionId: 'game-06-pipeline-plant',
         unitId: 'U6-file-upload',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-07-checkpoint-city',
+        unitId: 'U7-rest-api-auth',
       },
     }),
   ]))

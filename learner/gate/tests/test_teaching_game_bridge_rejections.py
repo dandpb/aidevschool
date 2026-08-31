@@ -10,7 +10,7 @@ from learner.gate.tests.teaching_game_bridge_records import (
 
 
 @pytest.mark.parametrize(
-    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]
+    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY"]
 )
 def test_rejects_favorable_aggregate_without_observations(game):
     record = make_teaching_game_record(game)
@@ -23,7 +23,7 @@ def test_rejects_favorable_aggregate_without_observations(game):
 
 
 @pytest.mark.parametrize(
-    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT"]
+    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY"]
 )
 def test_rejects_forged_metrics_and_pass_claims(game):
     metrics = make_teaching_game_record(game)
@@ -90,6 +90,7 @@ def test_direct_call_rejects_malformed_or_timezone_naive_timestamp(timestamp):
         ("WORMHOLE", "U5-websocket-chat", "05_websocket_chat", "relay-station-L1"),
         ("RELAY STATION", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
         ("PIPELINE PLANT", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
+        ("CHECKPOINT CITY", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
     ],
 )
 def test_rejects_cross_game_identity(game, unit_id, project, scenario_id):

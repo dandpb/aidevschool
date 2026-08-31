@@ -263,5 +263,96 @@
         "time_ms": 1000
       }
     }
+  },
+  "CHECKPOINT CITY": {
+    "L1": {
+      "observations": {
+        "kind": "checkpoint-city-L1",
+        "predictions": [
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "reaches-handler"
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "checkpoint-city-L2",
+        "predictions": [
+          "auth",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "auth",
+          "auth",
+          "auth",
+          "auth"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "auth"
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "checkpoint-city-L3",
+        "predictions": [
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "rate-limit",
+          "rate-limit",
+          "rate-limit"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "rate-limit"
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "checkpoint-city-L4",
+        "order": [
+          "logging",
+          "auth",
+          "rate-limit"
+        ],
+        "probePrediction": "auth"
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "reorder_correct": true,
+        "given_order": "rate-limit,logging,auth",
+        "player_order": "logging,auth,rate-limit",
+        "target_order": "logging,auth,rate-limit",
+        "probe_prediction_ok": true,
+        "probe_answer": "auth"
+      }
+    }
   }
 }

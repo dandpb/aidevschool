@@ -159,6 +159,33 @@ export const pipelinePlantRecord = {
   },
 }
 
+export const checkpointCityRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U7-rest-api-auth',
+  project: '07_rest_api_auth',
+  scenario_id: 'checkpoint-city-L4',
+  game: 'CHECKPOINT CITY',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-checkpoint-city',
+    reorder_correct: true,
+    given_order: 'rate-limit,logging,auth',
+    player_order: 'logging,auth,rate-limit',
+    target_order: 'logging,auth,rate-limit',
+    probe_prediction_ok: true,
+    probe_answer: 'auth',
+  },
+  observations: {
+    kind: 'checkpoint-city-L4',
+    order: ['logging', 'auth', 'rate-limit'],
+    probePrediction: 'auth',
+  },
+  curriculum_context: {
+    concept: 'middleware layers + JWT verification',
+    mechanic: 'concentric city walls, badge gates',
+  },
+}
+
 export function teachingGameReceipt(overrides: Readonly<Record<string, unknown>> = {}) {
   return {
     schema_version: 1,

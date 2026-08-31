@@ -157,6 +157,32 @@ async function completePipeline(frame: Frame) {
   })
 }
 
+async function completeCheckpointCity(frame: Frame) {
+  await expect.poll(() => frame.evaluate(() => {
+    type Hook = { game: { snapshot: { phase: string } } }
+    const phase = (window as Window & { __checkpointCity?: Hook }).__checkpointCity?.game.snapshot.phase
+    return phase === 'briefing' || phase === 'predicting'
+  })).toBe(true)
+  await frame.evaluate(() => {
+    type Hook = {
+      game: {
+        snapshot: { phase: string }
+        start(): void
+        pendingAnswer(): string | null
+        predict(target: string): void
+      }
+    }
+    const hook = (window as Window & { __checkpointCity?: Hook }).__checkpointCity
+    if (hook === undefined) throw new Error('Checkpoint City hook unavailable')
+    if (hook.game.snapshot.phase === 'briefing') hook.game.start()
+    while (hook.game.snapshot.phase === 'predicting') {
+      const answer = hook.game.pendingAnswer()
+      if (answer === null) break
+      hook.game.predict(answer)
+    }
+  })
+}
+
 async function returnFromGame(page: Page) {
   await expect(page.getByRole('button', { name: 'Voltar ao hub', exact: true })).toBeEnabled({ timeout: 15_000 })
   await page.getByRole('button', { name: 'Voltar ao hub', exact: true }).click()
@@ -259,6 +285,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await completePipeline(await gameFrame(page, 5206))
   await returnFromGame(page)
 
+  // Wave OP-A (AID-462): game-07 CHECKPOINT CITY is published as the 8th dev
+  // mission (chapterOrder 8, prereq game-06-pipeline-plant). The hosted mission
+  // must complete end-to-end through the deterministic public API truth.
+  await page.goto('/mission/dev/game-07-checkpoint-city')
+  await expect(page.getByRole('heading', { name: 'CHECKPOINT CITY: REST API with Auth' })).toBeVisible()
+  await completeCheckpointCity(await gameFrame(page, 5207))
+  await returnFromGame(page)
+
   await page.reload()
   const progress = await readOsProgress(page)
   for (const key of [
@@ -272,6 +306,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
     'dev:game-06-pipeline-plant',
+    'dev:game-07-checkpoint-city',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }
