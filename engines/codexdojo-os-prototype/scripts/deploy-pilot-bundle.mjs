@@ -8,6 +8,7 @@ import { verifyPilotBundle } from './pilot-bundle-lib.mjs'
 const osRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = resolve(osRoot, 'dist')
 const verifierFunction = 'dojo-verification-bridge.mjs'
+const collectorFunction = 'dojo-analytics-collector.mjs'
 const literacyCorpusModule = '_shared/literacy-corpus.mjs'
 const canonicalFunctions = resolve(osRoot, '..', '..', 'learner', 'gate', 'netlify-functions')
 const stagedFunctions = resolve(osRoot, 'netlify', 'functions')
@@ -16,15 +17,15 @@ async function sha256(path) {
   return createHash('sha256').update(await readFile(path)).digest('hex')
 }
 
-/** The deployed verifier and its literacy corpus must be byte-identical to
+/** The deployed functions and the literacy corpus must be byte-identical to
  * the canonical learner/gate sources (the corpus is regenerated from
- * curriculum/ai-literacy/ by its canonical tools; AID-449). */
+ * curriculum/ai-literacy/ by its canonical tools; AID-449; collector AID-470). */
 export async function verifyStagedVerifier(
   canonical = canonicalFunctions,
   staged = stagedFunctions,
 ) {
   const hashes = {}
-  for (const module of [verifierFunction, literacyCorpusModule]) {
+  for (const module of [verifierFunction, collectorFunction, literacyCorpusModule]) {
     const [canonicalHash, stagedHash] = await Promise.all([
       sha256(join(canonical, module)),
       sha256(join(staged, module)),
