@@ -12,13 +12,15 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
-from learner.gate import (
+from learner.gate.canonical_gate import (
     GateDecision,
     _check_evidence_semantics,
+    verify_and_gate,
+)
+from learner.gate.evidence_io import (
     load_evidence,
     load_evidence_ndjson,
     select_evidence,
-    verify_and_gate,
 )
 from learner.gate.literacy_verifier import (
     load_literacy_evidence,

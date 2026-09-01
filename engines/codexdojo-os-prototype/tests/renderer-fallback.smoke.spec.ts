@@ -81,7 +81,8 @@ test('reduced motion selects the keyboard-operable semantic projection', async (
   await expect(mission.getByTestId('accessible-projection')).toBeVisible()
   await expect(page.getByText('Acessível', { exact: true })).toBeVisible()
   await completeWithAccessibleKeyboard(page)
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect.poll(() => evidenceIdentity(page)).toEqual({
     source: 'voxeldojo',
     unit_id: 'U2-key-value-store',
@@ -105,7 +106,11 @@ test('context loss degrades and retries without resetting simulation or evidence
     const surface = stage as HTMLCanvasElement
     return surface.width > 0 && surface.height > 0 && surface.getContext('webgl2') !== null
   })).toBe(true)
-  expect((await canvas.screenshot()).byteLength).toBeGreaterThan(2_000)
+  // Playwright's locator.screenshot() hangs on WebGL at 375px; prove paint in-page.
+  await expect.poll(() => canvas.evaluate((stage) => {
+    const surface = stage as HTMLCanvasElement
+    return surface.toDataURL('image/png').length
+  })).toBeGreaterThan(2_000)
 
   for (let index = 0; index < 2; index += 1) {
     const shelf = await correctShelf(page)
@@ -134,7 +139,8 @@ test('context loss degrades and retries without resetting simulation or evidence
   await expect(mission.getByTestId('accessible-projection')).toBeVisible()
 
   await completeWithAccessibleKeyboard(page)
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect.poll(() => evidenceIdentity(page)).toEqual({
     source: 'voxeldojo',
     unit_id: 'U2-key-value-store',

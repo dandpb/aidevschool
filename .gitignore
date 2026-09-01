@@ -38,6 +38,7 @@ _probe_commit_test.txt
 .env
 .env.*
 !.env.example
+!.env.pilot
 kimi-debug-session_*.zip
 **/test-results-pilot/
 **/test-results-remote/

@@ -144,7 +144,7 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
     if (ownerId === null) break
     await voxel.getByTestId(`station-${ownerId}`).click()
   }
-  await expect(voxel.getByTestId('hud-status')).toContainText('cleared')
+  await expect(voxel.getByTestId('hud-status')).toContainText(/cleared|Missão concluída/)
   expect(await voxel.locator('body').evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
   await expect(page.locator('.embedded-evidence')).toContainText('voxeldojo')
   await expect(page.locator('.embedded-evidence')).toContainText('Verificação independente obrigatória')

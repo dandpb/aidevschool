@@ -77,7 +77,8 @@ test('records the IA Pratica activation funnel without learner content', async (
   await mission.getByTestId('criterion-c-limites').check()
   await mission.getByTestId('submit-attempt').click()
   await mission.getByTestId('finish-lesson').click()
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
 
   await expectActivationOrder(page, 'ai-pratica')
 })
@@ -85,7 +86,7 @@ test('records the IA Pratica activation funnel without learner content', async (
 test('records the Dev activation funnel through the same content-free schema', async ({ page }) => {
   test.setTimeout(60_000)
   await page.goto('/')
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
+  await page.getByTestId('track-option-dev').click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await page.locator('.next-mission-card .journey-primary').click()
 
@@ -111,7 +112,8 @@ test('records the Dev activation funnel through the same content-free schema', a
     if (shelf === null) break
     await mission.getByTestId(`shelf-${shelf}`).click()
   }
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
 
   await expectActivationOrder(page, 'dev')
 })

@@ -82,7 +82,15 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByRole("heading", { name: "Chegue à Vila Lume" })).toBeInTheDocument();
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
-    expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
+    const devCta = screen.getByTestId("dev-track-teaser");
+    expect(devCta).toHaveAttribute(
+      "href",
+      "https://aidevschool-codexdojo-os.netlify.app/?track=dev",
+    );
+    expect(devCta).toHaveTextContent("Trilha Dev");
+    expect(devCta).toHaveTextContent("Abrir no OS");
+    expect(devCta).toHaveTextContent("Para programadores");
+    expect(devCta).not.toHaveTextContent("Em breve");
     expect(screen.getByText(/Piloto gratuito para maiores de 18 anos/)).toBeInTheDocument();
     expect(screen.getByRole("contentinfo", { name: "Informações do piloto" })).toHaveTextContent(
       "Piloto público gratuito · para maiores de 18 anos",
