@@ -114,7 +114,8 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           <p className="eyebrow">{track.title}</p>
           <h1 id="onboarding-title">{currentStep.question}</h1>
         </div>
-        <div className="onboarding-progress" aria-label={`Etapa ${step + 1} de ${STEPS.length}`}>
+        <div className="onboarding-progress">
+          <span className="sr-only">{`Etapa ${step + 1} de ${STEPS.length}`}</span>
           {STEPS.map((item, index) => (
             <span key={item.key} className={index <= step ? "is-active" : ""} aria-hidden="true" />
           ))}

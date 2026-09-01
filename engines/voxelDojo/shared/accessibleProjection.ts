@@ -85,7 +85,7 @@ export class AccessibleProjection<TSnapshot> implements MissionProjection<TSnaps
     eyebrow.className = "accessible-projection__eyebrow"
     eyebrow.textContent = "Visualização sem WebGL"
     const heading = document.createElement("h2")
-    heading.textContent = summary.title
+    heading.textContent = `Projeção acessível — ${summary.title}`
     const status = document.createElement("p")
     status.dataset.testid = "accessible-status"
     status.setAttribute("role", "status")
