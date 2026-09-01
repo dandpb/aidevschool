@@ -1,6 +1,6 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
 # Fonte de verdade do índice: 17 lições públicas de IA na Prática
-# (l01–l14 + onda de continuação l18–l20) e 3 lições da trilha Dev,
+# (l01–l14 + onda de continuação l18–l20) e 6 lições da trilha Dev,
 # separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
@@ -246,3 +246,28 @@ lessons:
     prerequisites: [l10]
     skillIds: [avaliar]
     status: ready
+  # Módulo 5 — Dev: testes e revisão de código com IA (onda l21–l23, spec AID-528 rev 2)
+  - id: l21
+    moduleId: mod-05
+    title: "Peça testes que valem a pena"
+    objective: "Diante de uma função pronta, montar o pedido de testes com framework, comportamento-alvo e caso de borda explícitos — e esperar que a primeira resposta do assistente deixe bordas de fora."
+    estimatedMinutes: 4
+    prerequisites: [l16]
+    skillIds: [codificar]
+    status: planned
+  - id: l22
+    moduleId: mod-05
+    title: "Revise o código sugerido como engenheiro"
+    objective: "Diante de código sugerido por assistente, aplicar critérios objetivos de engenharia, separar o que aceita do que recusa com motivo e revisar comportamento antes de estilo."
+    estimatedMinutes: 5
+    prerequisites: [l16]
+    skillIds: [codificar, avaliar]
+    status: planned
+  - id: l23
+    moduleId: mod-05
+    title: "O que aceitar: limites do assistente"
+    objective: "Diante de sugestões em categorias de risco diferente, decidir o que aceitar, o que revisar a fundo e o que exige caminho convencional — sem terceirizar o próprio julgamento."
+    estimatedMinutes: 3
+    prerequisites: [l15]
+    skillIds: [decidir, codificar]
+    status: planned
