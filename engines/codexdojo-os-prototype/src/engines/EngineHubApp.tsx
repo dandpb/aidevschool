@@ -15,7 +15,7 @@ import { createEngineActionClient } from './client'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import { StaticEngineEvaluation } from './StaticEngineEvaluation'
-import type { EngineAction, EngineId } from './protocol'
+import type { EngineAction, EngineDefinition, EngineId } from './protocol'
 import { isOperatorSurface } from '../surface/operatorSurface'
 import { visibleEngineRegistry } from '../apps/studentCatalog'
 import { VoxelEngine } from './VoxelEngine'
@@ -60,6 +60,12 @@ const defaultUrls: Readonly<Partial<Record<EngineId, string>>> = {
   dojoToday: import.meta.env.VITE_DOJOTODAY_URL,
   voxelDojo: import.meta.env.VITE_VOXELDOJO_URL,
   zaiDuolingoLike: import.meta.env.VITE_ZAI_DUOLINGO_URL,
+}
+
+function publicEngineAccessLabel(engine: EngineDefinition): string {
+  if (engine.id === 'dojoToday') return 'Sugestão neste dispositivo · somente leitura'
+  if (engine.learnerAccess === 'read-only') return 'Estado canônico · somente leitura'
+  return 'Evidência bruta · não verificada'
 }
 
 const defaultActionRunner = createEngineActionClient()
@@ -128,7 +134,7 @@ export function EngineHubApp({
                 <div><span>{selected.role}</span><h2>{selected.name}</h2><p>{selected.capability}</p></div>
               </header>
               <div className="engine-policy-strip">
-                <span>{selected.id === 'dojoToday' ? 'Sugestão neste dispositivo · somente leitura' : selected.learnerAccess === 'read-only' ? 'Estado canônico · somente leitura' : 'Evidência bruta · não verificada'}</span>
+                <span>{publicEngineAccessLabel(selected)}</span>
                 <strong>Domínio: nunca decidido pelo OS</strong>
               </div>
               <div className="engine-policy-strip" data-testid="engine-evaluation-boundary">

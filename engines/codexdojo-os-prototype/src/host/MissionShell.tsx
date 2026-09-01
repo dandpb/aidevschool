@@ -198,15 +198,17 @@ export function MissionShell({
         </div>
       </header>
 
-      <MissionStatusControls
-        mission={mission}
-        session={session}
-        verification={verification}
-        completionStatus={completionStatus}
-        onRetryRenderer={retryRenderer}
-        onRetryVerification={retryVerification}
-        onRetrySave={saveCompletion}
-      />
+      {session.phase === 'completed' ? null : (
+        <MissionStatusControls
+          mission={mission}
+          session={session}
+          verification={verification}
+          completionStatus={completionStatus}
+          onRetryRenderer={retryRenderer}
+          onRetryVerification={retryVerification}
+          onRetrySave={saveCompletion}
+        />
+      )}
       <section className="mission-learning-layout" hidden={session.phase === 'completed'}>
         <section className="mission-runtime" aria-label="Atividade da missão">
           <iframe

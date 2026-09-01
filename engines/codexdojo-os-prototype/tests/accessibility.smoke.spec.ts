@@ -20,8 +20,9 @@ test('keeps the compact reduced-motion journey keyboard-operable with semantic f
   await page.keyboard.press('Enter')
 
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  const review = page.getByRole('button', { name: 'Revisar agora' })
-  await review.focus()
+  const launch = page.getByRole('button', { name: 'Começar missão' })
+  await expect(launch).toBeVisible()
+  await launch.focus()
   await page.keyboard.press('Enter')
 
   const status = page.locator('.mission-status[aria-live="polite"]')

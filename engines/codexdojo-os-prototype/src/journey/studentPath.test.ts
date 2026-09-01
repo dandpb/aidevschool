@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
 import { recommendMission } from '../missions/recommendation'
-import { completeOnboarding, createInitialOsProgress, missionKey } from '../progress/domain'
+import { completeOnboarding, createInitialOsProgress, missionKey, type OsProgress } from '../progress/domain'
 import { migrateOsProgress } from '../progress/migration'
 import {
   AI_PRATICA_GUIDED_RAIL_MISSION_IDS,
@@ -27,10 +27,9 @@ describe('student path remapping', () => {
     expect(isAiPraticaChapterComplete(progress, missionCatalog)).toBe(false)
   })
 
-
   it('marks IA Prática complete after only the l01-l03 rail', () => {
     const raw = createInitialOsProgress(missionCatalog)
-    const progress = {
+    const progress: OsProgress = {
       ...completeOnboarding(raw, {
         goal: 'work-better',
         context: 'work',
@@ -39,9 +38,9 @@ describe('student path remapping', () => {
       }),
       missionStatusByKey: {
         ...raw.missionStatusByKey,
-        [missionKey('ai-pratica', 'l01')]: 'completed' as const,
-        [missionKey('ai-pratica', 'l02')]: 'completed' as const,
-        [missionKey('ai-pratica', 'l03')]: 'completed' as const,
+        [missionKey('ai-pratica', 'l01')]: 'completed',
+        [missionKey('ai-pratica', 'l02')]: 'completed',
+        [missionKey('ai-pratica', 'l03')]: 'completed',
       },
     }
 
