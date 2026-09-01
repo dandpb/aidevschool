@@ -44,7 +44,7 @@ describe('honest progress screen', () => {
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
     expect(screen.getByText('Fonte: learner/substrate')).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'Evidência preservada' })).not.toBeNull()
-    await waitFor(() => expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(27))
+    await waitFor(() => expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(30))
     expect(screen.getAllByText('Realizada').length).toBeGreaterThan(0)
   })
 
@@ -67,7 +67,7 @@ describe('honest progress screen', () => {
     )
 
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Verificação indisponível no momento'))
-    expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(27)
+    expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(30)
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
   })
 })
