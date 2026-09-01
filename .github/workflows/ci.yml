@@ -14,6 +14,44 @@ on:
   pull_request:
 
 jobs:
+  # AID-537 (audit AID-400 Registro #4): the SDLC guardrail hooks
+  # (.claude/hooks/protect-paths|protect-tests|guard-commands) only execute in
+  # Claude Code sessions, while every agent in this company runs on other
+  # runtimes — so the guardrails were inert for the runtimes actually in use.
+  # This job replays the canonical hook scripts against the committed diff,
+  # which enforces the policy no matter which runtime (or human) produced the
+  # change. The self-test step fails the job if synthetic violations ever stop
+  # being detected. Overrides: owner-approved commit trailers
+  # SDLC-ALLOW-TEST-EDIT / SDLC-ALLOW-DERIVED-EDIT (see docs/sdlc/README.md
+  # §Guardrails); the credential rule has no override.
+  sdlc-guards:
+    name: SDLC guardrails (diff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: resolve comparison base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          if git rev-parse --verify -q "${BASE}^{commit}" >/dev/null 2>&1; then
+            echo "SDLC_BASE=$BASE" >> "$GITHUB_ENV"
+          else
+            echo "SDLC_BASE=" >> "$GITHUB_ENV"
+            echo "::warning::comparison base '$BASE' not fetchable (initial push?) — running self-test only"
+          fi
+      - name: guardrail self-test (synthetic violations must fail)
+        run: scripts/sdlc_guard_check.sh --self-test
+      - name: guardrail check (changed files vs base)
+        run: |
+          if [ -n "$SDLC_BASE" ]; then
+            scripts/sdlc_guard_check.sh --base "$SDLC_BASE"
+          fi
+
   codexdojo:
     name: codexDojo (TS)
     runs-on: ubuntu-latest

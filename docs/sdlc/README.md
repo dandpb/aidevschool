@@ -61,9 +61,10 @@ issue, use `AID-<n>-<slug>`. Templates: `docs/sdlc/templates/`.
 
 | Control | Type | Enforcement |
 | --- | --- | --- |
-| No edits to generated/derived paths (`.mavis/`, `dist/`, `node_modules/`, `.codegraph/`, …) | hook | `.claude/hooks/protect-paths.sh` (PreToolUse) |
-| Tests can't be weakened mid-fix (new test files OK; editing existing ones needs owner override) | hook | `.claude/hooks/protect-tests.sh` (PreToolUse) |
-| No force-push / history rewrite; no staging credentials | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) |
+| No edits to generated/derived paths (`.mavis/`, `.loops/`, `dist/`, `node_modules/`, `.codegraph/`, …) | hook + CI | `.claude/hooks/protect-paths.sh` (PreToolUse, Claude Code) · `scripts/sdlc_guard_check.sh` on the diff in CI job `sdlc-guards` (any runtime) |
+| Tests can't be weakened mid-fix (new test files OK; editing existing ones needs owner override) | hook + CI | `.claude/hooks/protect-tests.sh` (PreToolUse, Claude Code) · same CI check |
+| No committed credentials (`.env`, keys, tokens in paths or added lines) | hook + CI | `.claude/hooks/guard-commands.sh` (PreToolUse, Claude Code) · same CI check, **no override** |
+| No force-push / history rewrite | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) — guards a live git operation; cannot be re-checked post-hoc from a diff, so it stays a runtime + repo-owner concern |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
 | SDLC loop itself | advisory (skill) | `.claude/skills/ai-native-sdlc/SKILL.md` |
@@ -73,6 +74,36 @@ that must hold without exception get a hook behind the skill. Hook overrides
 (`SDLC_ALLOW_TEST_EDIT=1`, `SDLC_ALLOW_DERIVED_EDIT=1`) exist for
 owner-approved exceptions and are expected to be rare and justified in the
 task record.
+
+### Runtime-agnostic enforcement in CI (AID-537)
+
+PreToolUse/PostToolUse hooks only execute in Claude Code sessions, but agents
+in this company run on other runtimes — so from AID-394 until AID-537 the
+guardrails above were inert for every runtime actually in use (audit AID-400,
+Registro #4). Since AID-537, CI job `sdlc-guards`
+(`scripts/sdlc_guard_check.sh`, wired in `.github/workflows/ci.yml`) replays
+the **same canonical hook scripts** against the committed diff (vs the PR
+base), so a violation fails the PR regardless of which runtime produced it:
+
+- every added/modified path goes through `protect-paths.sh` and
+  `protect-tests.sh` (an "existence mirror" reproduces the hooks'
+  new-test-allowed / existing-test-blocked semantics; deletions count as test
+  edits but as derived-path cleanup);
+- every changed path and every added diff line goes through the credential
+  rules of `guard-commands.sh`;
+- a `--self-test` step runs synthetic violations through the real hooks on
+  every CI execution, so the enforcement path itself is continuously proven.
+
+The declarative override remains owner-gated, now with an auditable trailer:
+a commit in the PR range carrying `SDLC-ALLOW-TEST-EDIT: AID-<n>` or
+`SDLC-ALLOW-DERIVED-EDIT: AID-<n>` suppresses the corresponding CI check for
+that range. The trailer is only the audit hook — the cited AID issue must
+record the actual owner acceptance, and the reviewer/QA verifies that before
+merging. This is the same trust model as the live env-var overrides (an
+undisciplined session could export those too); the trailer just makes the
+exception visible in git history. Credential findings have no override, and
+the force-push rule remains runtime-intercepted because a diff cannot prove
+how it was pushed.
 
 ## Governance / audit
 
