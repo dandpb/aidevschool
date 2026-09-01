@@ -32,8 +32,8 @@ class TestFacade(TrackFixtureMixin):
             self.assertEqual(0, result.returncode)
             self.assertEqual("", result.stderr)
             self.assertEqual(
-                "OK: 20 lição(ões) ready validadas: 17 IA na Prática, 3 Dev; "
-                "3 planned (sem arquivo exigido).\n"
+                "OK: 23 lição(ões) ready validadas: 17 IA na Prática, 6 Dev; "
+                "0 planned (sem arquivo exigido).\n"
                 f"Read model gerado: {tmp}/lessons.ts\n",
                 result.stdout,
             )
@@ -73,4 +73,4 @@ class TestFacade(TrackFixtureMixin):
             with contextlib.redirect_stdout(stdout), self.assertRaises(SystemExit) as raised:
                 runpy.run_path(str(validate.__file__), run_name="__main__")
         self.assertEqual(0, raised.exception.code)
-        self.assertTrue(stdout.getvalue().startswith("OK: 20 lição(ões) ready validadas"))
+        self.assertTrue(stdout.getvalue().startswith("OK: 23 lição(ões) ready validadas"))
