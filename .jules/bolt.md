@@ -16,3 +16,6 @@
 ## 2026-08-16 - escapeHtml RegExp.test Fast Path
 **Learning:** In a template-string-based rendering engine, calling `String.replace()` on a high volume of safe strings causes unnecessary garbage collection and regex allocation. `RegExp.test()` is significantly faster (~2x) when avoiding the replace step for strings that don't need escaping.
 **Action:** Use `RegExp.test()` to early-return safe strings before applying heavy `.replace()` operations in hot paths.
+## 2026-08-30 - Optimize O(N) scans in miniTown state
+**Learning:** Simulation target lookups (like `pickRandomShopId`) and rendering sync loops can degrade significantly if inner helper functions like `findZoneById` use `Array.prototype.find()`. V8's array iteration is fast, but repeated O(N) scans on growing entity lists still cause unnecessary CPU overhead during ticks.
+**Action:** Populate O(1) Maps during entity creation (`addZone`, `addBuilding`) to maintain synchronized quick lookups and eliminate array scans on hot paths.

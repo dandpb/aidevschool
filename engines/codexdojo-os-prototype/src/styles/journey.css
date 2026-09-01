@@ -194,6 +194,7 @@
 .track-option strong { font-size: 1.35rem; }
 .track-option small { color: var(--journey-muted); font-size: 0.86rem; line-height: 1.45; }
 .track-option.selected { border-color: var(--journey-primary); background: var(--journey-primary-soft); }
+.track-option.selected small { color: var(--journey-primary-dark); }
 
 .recommendation-note,
 .local-note {

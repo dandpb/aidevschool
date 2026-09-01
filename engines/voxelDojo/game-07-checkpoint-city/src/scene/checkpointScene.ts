@@ -1,4 +1,9 @@
 import * as THREE from "three"
+import {
+  disposeObject3D,
+  type MissionProjection,
+  type ProjectionContextHooks,
+} from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { PredictionTarget } from "../sim/levels"
@@ -43,8 +48,10 @@ function spokePoint(radius: number, lift = 0): THREE.Vector3 {
  * each prediction it walks inward along the spoke, flashing green if it passed every wall and
  * red if a wall rejected it (then thrown back outward).
  */
-export class CheckpointScene {
+export class CheckpointScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
+  private readonly pointerDown: (e: PointerEvent) => void
   private cityGroup = new THREE.Group()
   private wallMeshes = new Map<string, THREE.Mesh>()
   private gateMeshes = new Map<string, THREE.Mesh>()
@@ -52,6 +59,7 @@ export class CheckpointScene {
   private avatar: THREE.Mesh
   private avatarLight: THREE.PointLight
   private clock = new THREE.Clock()
+  private disposed = false
   /** animation state for the walking/recoiling avatar */
   private anim: {
     from: number
@@ -65,7 +73,8 @@ export class CheckpointScene {
   private flashes = new Map<string, number>()
   onGateClick: ((target: PredictionTarget) => void) | null = null
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 24,
@@ -79,6 +88,7 @@ export class CheckpointScene {
       onFrame: () => {
         this.animate(this.clock.getDelta())
       },
+      ...hooks,
     })
 
     this.cityGroup.rotation.y = 0
@@ -120,7 +130,22 @@ export class CheckpointScene {
     this.avatarLight = new THREE.PointLight(PALETTE.avatar, 0.6, 4)
     this.cityGroup.add(this.avatarLight)
 
-    canvas.addEventListener("pointerdown", (e) => this.pick(e))
+    this.pointerDown = (e) => this.pick(e)
+    canvas.addEventListener("pointerdown", this.pointerDown)
+  }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.canvas.removeEventListener("pointerdown", this.pointerDown)
+    disposeObject3D(this.cityGroup)
+    this.viewport.dispose()
   }
 
   private pick(e: PointerEvent): void {

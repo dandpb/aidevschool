@@ -77,11 +77,11 @@ async function seedRejectedVerification(page: Page, mission: {
 
 test('prioritizes a due canonical review without copying mastery into local progress', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /Trilha técnica.*Dev/ }).click()
+  await page.getByTestId('track-option-dev').click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  await expect(page.getByText(/Revisão do dia/)).toBeVisible()
+  await expect(page.getByText(/Revisão (do dia|atrasada)/)).toBeVisible()
   await expect(page.getByRole('button', { name: 'Revisar agora' })).toBeVisible()
   await expect(page.getByText('XP local').locator('..')).toContainText('0')
 })
@@ -98,7 +98,7 @@ test('recovers from failed verification and preserves rewards across reloads wit
   })
   progress = recordMissionCompletion(progress, warehouse, missionCatalog, undefined, {
     now: new Date('2026-07-20T10:00:00-03:00'),
-    canonicalReviewKey: `${warehouse.unitId}:due:today`,
+    canonicalReviewKey: `${warehouse.unitId}:overdue:overdue 4d`,
   })
   progress = recordMissionCompletion(progress, wormhole, missionCatalog, undefined, {
     now: new Date('2026-07-20T11:00:00-03:00'),

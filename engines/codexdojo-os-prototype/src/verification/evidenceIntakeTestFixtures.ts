@@ -62,6 +62,7 @@ export function submission(
   overrides: Partial<EvidenceSubmission['record']> = {},
 ): EvidenceSubmission {
   return {
+    evidenceId: 'evidence-1',
     schemaId: 'literacy-evidence',
     schemaVersion: 1,
     engineId: 'literacyDojo',
@@ -123,6 +124,7 @@ export function voxelReceipt(
     project: '02_key_value_store',
     scenario_id: 'kv-warehouse-L1',
     game: 'KV WAREHOUSE',
+    attempt_id: 'kv-warehouse-L1-attempt-1',
     producer_pass_claim: true,
     independent_pass: true,
     errors: [],
@@ -138,6 +140,7 @@ export function voxelSubmission(
   overrides: Partial<EvidenceSubmission['record']> = {},
 ): EvidenceSubmission {
   return {
+    evidenceId: 'voxel-evidence-1',
     schemaId: 'teaching-game-evidence',
     schemaVersion: 1,
     engineId: 'voxelDojo',
@@ -151,13 +154,62 @@ export function voxelSubmission(
       unit_id: 'U2-key-value-store',
       project: '02_key_value_store',
       scenario_id: 'kv-warehouse-L1',
-      game: 'KV WAREHOUSE',
+    game: 'KV WAREHOUSE',
+    attempt_id: 'kv-warehouse-L1-attempt-1',
       ts: '2026-07-25T12:00:00.000Z',
       pass: true,
       metrics: { correct: 5 },
       review_context: {
         verifier_required: true,
       },
+      ...overrides,
+    },
+  }
+}
+
+export const wormholeMission: MissionDefinition = {
+  ...voxelMission,
+  id: 'game-03-wormhole',
+  unitId: 'U3-url-shortener',
+  projectId: '03_url_shortener',
+  title: 'Wormhole',
+  runtime: {
+    ...voxelMission.runtime,
+    entrypoint: 'http://127.0.0.1:5203',
+    environmentKey: 'VITE_WORMHOLE_URL',
+    contentVersion: 'game-03-wormhole@0.1.0',
+  },
+}
+
+export function wormholeReceipt(
+  overrides: Partial<TeachingGameVerificationReceipt> = {},
+): TeachingGameVerificationReceipt {
+  const { attempt_id: _echoed, ...rest } = voxelReceipt()
+  return {
+    ...rest,
+    unit_id: 'U3-url-shortener',
+    project: '03_url_shortener',
+    scenario_id: 'wormhole-L1',
+    game: 'WORMHOLE',
+    ...overrides,
+  }
+}
+
+/** Matches the hosted game-03 record: teaching games except KV WAREHOUSE emit no attempt_id. */
+export function wormholeSubmission(
+  overrides: Partial<EvidenceSubmission['record']> = {},
+): EvidenceSubmission {
+  const voxel = voxelSubmission()
+  const { attempt_id: _attemptId, ...warehouseRest } = voxel.record
+  return {
+    ...voxel,
+    subject: { missionId: 'game-03-wormhole', unitId: 'U3-url-shortener' },
+    record: {
+      ...warehouseRest,
+      unit_id: 'U3-url-shortener',
+      project: '03_url_shortener',
+      scenario_id: 'wormhole-L1',
+      game: 'WORMHOLE',
       ...overrides,
     },
   }
@@ -175,10 +227,10 @@ class MemoryVerificationStore implements VerificationStore {
   async latestForMission(missionId: string) {
     return [...this.raw.values()]
       .filter((entry) => entry.subject.missionId === missionId)
-      .sort((left, right) => (
+      .sort((left, right) =>
         right.acceptedAt.localeCompare(left.acceptedAt)
         || right.storageId.localeCompare(left.storageId)
-      ))[0]
+      )[0]
   }
 
   async getReceipt(evidenceDigest: string) {

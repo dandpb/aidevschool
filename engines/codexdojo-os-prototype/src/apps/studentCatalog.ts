@@ -4,16 +4,11 @@ import type { EngineDefinition } from '../engines/protocol'
 import { engineRegistry } from '../engines/registry'
 import { isOperatorSurface } from '../surface/operatorSurface'
 
-const OPERATOR_ONLY_APP_IDS = new Set<CoreAppId>(['software', 'engines'])
-const OPERATOR_ENGINE_IDS = new Set<EngineDefinition['id']>([
-  'codexDojo',
-  'minimaxDojo',
-  'miniMaxEvolutionEngine',
-  'openclaw',
-])
+const OPERATOR_ONLY_APP_IDS = new Set<CoreAppId>(['software'])
+export const PUBLIC_ENGINE_IDS = ['voxelDojo', 'pixelDojo', 'dojoToday', 'literacyDojo'] as const
 
-const STUDENT_DOCK_APP_IDS: readonly CoreAppId[] = ['dojo', 'files', 'terminal', 'architecture']
-const STUDENT_SHORTCUT_APP_IDS: readonly CoreAppId[] = ['dojo', 'terminal', 'files']
+const STUDENT_DOCK_APP_IDS: readonly CoreAppId[] = ['dojo', 'files', 'terminal', 'architecture', 'engines']
+const STUDENT_SHORTCUT_APP_IDS: readonly CoreAppId[] = ['dojo', 'terminal', 'files', 'engines']
 const OPERATOR_DOCK_APP_IDS: readonly CoreAppId[] = [
   'dojo',
   'files',
@@ -33,7 +28,8 @@ export function visibleAppCatalog(operatorSurface = isOperatorSurface()): readon
 
 export function visibleEngineRegistry(operatorSurface = isOperatorSurface()): readonly EngineDefinition[] {
   if (operatorSurface) return engineRegistry
-  return engineRegistry.filter((engine) => !OPERATOR_ENGINE_IDS.has(engine.id))
+  const allow = new Set<string>(PUBLIC_ENGINE_IDS)
+  return engineRegistry.filter((engine) => allow.has(engine.id))
 }
 
 export function visibleDockAppIds(operatorSurface = isOperatorSurface()): readonly CoreAppId[] {

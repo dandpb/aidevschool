@@ -57,7 +57,8 @@ test('proves the nontechnical release journey through recovery, verification, an
   await mission.getByTestId('output-out-a').check()
   await mission.getByTestId('criterion-c-fontes').check()
   await mission.getByTestId('submit-attempt').click()
-  await expect(page.getByText('Verificação pede nova tentativa', { exact: true })).toBeVisible()
+  await expect(page.getByText('O verificador indicou critérios a melhorar. A conclusão local e o XP foram preservados; o gate canônico continua separado.', { exact: true })).toBeVisible()
+  await expect(page.getByText('Veredito independente: FAIL', { exact: true })).toBeVisible()
 
   await page.reload()
   await mission.getByTestId('start-lesson').click()
@@ -67,18 +68,22 @@ test('proves the nontechnical release journey through recovery, verification, an
   await mission.getByTestId('submit-attempt').click()
   await mission.getByTestId('finish-lesson').click()
 
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible({
-    timeout: 15_000,
-  })
-  await expect(page.getByText(/gate canônico continua separado/i)).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(page.getByText(`${canonicalCount} verificadas · sem alteração local`)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await page.reload()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
 
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
-  await expect(page.getByRole('heading', { name: 'Seis missões, uma sequência' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: /WAREHOUSE/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '6 missões, uma sequência' })).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: 'Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION' }),
+  ).toBeVisible()
+  await expect(
+    page.getByRole('heading', { level: 3, name: 'WAREHOUSE: Key-Value Store (in-memory)' }),
+  ).toBeVisible()
   await page.getByRole('button', { name: '← Hub' }).click()
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
 })
@@ -90,11 +95,14 @@ test('proves the hosted simulation entry through accessible evidence and hub ret
   await page.goto('/mission/dev/game-02-warehouse')
 
   await completeWarehouse(await gameFrame(page, 5202))
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible({
-    timeout: 15_000,
-  })
-  await expect(page.getByText(/gate canônico continua separado/i)).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await expect(page).toHaveURL(/\/hub$/)
-  await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
+  await page.getByRole('button', { name: 'Abrir mapa' }).click()
+  await expect(
+    page.getByRole('heading', { level: 3, name: 'WORMHOLE: URL Shortener' }),
+  ).toBeVisible()
 })
