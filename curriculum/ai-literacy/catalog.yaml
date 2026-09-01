@@ -6,7 +6,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-08-31.1"
+contentVersion: "2026-09-01.1"
 
 track:
   id: ai-literacy
@@ -254,7 +254,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l16]
     skillIds: [codificar]
-    status: planned
+    status: ready
   - id: l22
     moduleId: mod-05
     title: "Revise o código sugerido como engenheiro"
@@ -262,7 +262,7 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l16]
     skillIds: [codificar, avaliar]
-    status: planned
+    status: ready
   - id: l23
     moduleId: mod-05
     title: "O que aceitar: limites do assistente"
@@ -270,4 +270,4 @@ lessons:
     estimatedMinutes: 3
     prerequisites: [l15]
     skillIds: [decidir, codificar]
-    status: planned
+    status: ready

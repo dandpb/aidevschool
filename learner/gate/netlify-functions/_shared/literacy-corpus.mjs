@@ -1511,7 +1511,426 @@ export const literacyCorpus = {
       "avaliar"
     ],
     "version": 1
+  },
+  "l21": {
+    "activities": [
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "Ex: TypeScript com Vitest, Node com o test runner nativo",
+              "id": "framework",
+              "label": "Linguagem e framework de teste"
+            },
+            {
+              "hint": "Ex: valida o payload contra o schema, rejeita campo ausente, lança erro de validação",
+              "id": "comportamento-alvo",
+              "label": "Comportamento-alvo"
+            },
+            {
+              "hint": "Ex: campo obrigatório ausente, array acima do limite, payload gigante",
+              "id": "caso-de-borda",
+              "label": "Caso de borda a cobrir"
+            },
+            {
+              "hint": "Ex: cada caso nomeado, com entrada e resultado esperado",
+              "id": "formato",
+              "label": "Formato dos casos"
+            }
+          ],
+          "genericPrompt": "escreve testes pra essa função",
+          "scenario": "A função validateWebhook da lição anterior está pronta: valida o payload contra um schema e rejeita entrada inválida. Agora você quer testes que valem a pena — não a lista de casos felizes que o assistente já gera sozinho."
+        },
+        "evaluation": {
+          "fields": {
+            "caso-de-borda": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "inválido",
+                "ausente",
+                "vazio",
+                "limite",
+                "máx",
+                "mín",
+                "token",
+                "grande",
+                "nulo"
+              ]
+            },
+            "comportamento-alvo": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "valida",
+                "retorna",
+                "lança",
+                "erro",
+                "parse",
+                "rejeita",
+                "aceita"
+              ]
+            },
+            "formato": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "nomeado",
+                "entrada",
+                "esperado",
+                "saída",
+                "dado",
+                "resultado",
+                "caso"
+              ]
+            },
+            "framework": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "Vitest",
+                "Jest",
+                "Node",
+                "TypeScript",
+                "pytest",
+                "Go",
+                "Rust",
+                "test"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l21-a1",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "ctx-framework-de-teste",
+              "text": "O framework de teste do projeto — em quê os testes serão escritos e executados"
+            },
+            {
+              "id": "ctx-entrada-de-exemplo",
+              "text": "Um exemplo de entrada válida e um de inválida, para o teste usar de referência"
+            },
+            {
+              "id": "ctx-comportamento-esperado",
+              "text": "O comportamento esperado da função: o que retorna, o que lança, em quais casos"
+            },
+            {
+              "id": "ctx-como-rodar-os-testes",
+              "text": "Como rodar os testes no projeto (comando ou script) — ajuda a conferir, mas não define os casos"
+            },
+            {
+              "id": "ctx-nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA usado na conversa"
+            },
+            {
+              "id": "ctx-ia-mais-recente",
+              "text": "Trocar por um modelo de IA mais recente"
+            }
+          ],
+          "prompt": "Colega: 'escreve testes pro webhook' · Assistente: entregou 12 testes com imports de um framework que o projeto não usa e mocks de um schema que não existe — nada roda."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "ctx-como-rodar-os-testes"
+          ],
+          "requiredContextIds": [
+            "ctx-framework-de-teste",
+            "ctx-entrada-de-exemplo",
+            "ctx-comportamento-esperado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l21-a2",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Um payload com campo obrigatório ausente"
+            },
+            {
+              "id": "opt-b",
+              "text": "Um array no tamanho limite máximo aceito"
+            },
+            {
+              "id": "opt-c",
+              "text": "Dois webhooks chegando juntos (concorrência)"
+            },
+            {
+              "id": "opt-d",
+              "text": "O caso feliz com uma entrada válida comum"
+            },
+            {
+              "id": "opt-e",
+              "text": "Nomes mais descritivos nos testes"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a",
+            "opt-b",
+            "opt-c"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l21-a3",
+        "type": "choice"
+      }
+    ],
+    "skillIds": [
+      "codificar"
+    ],
+    "version": 1
+  },
+  "l22": {
+    "activities": [
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-trata-erros",
+              "text": "Falhas são tratadas de forma previsível — log ou retorno, nunca engolidas"
+            },
+            {
+              "id": "c-limita-tentativas",
+              "text": "Tem teto de tentativas e backoff"
+            },
+            {
+              "id": "c-nomes-claros",
+              "text": "Nomes e estrutura legíveis"
+            },
+            {
+              "id": "c-escopo-minimo",
+              "text": "Faz só o que foi pedido, sem comportamento invisível extra"
+            },
+            {
+              "id": "c-dependencias",
+              "text": "Dependências declaradas"
+            }
+          ],
+          "responseText": "// Reenvia o webhook do pagamento até dar certo\nexport async function reenviarWebhook(url, payload) {\n  let tentativa = 0;\n  while (true) {\n    try {\n      const resposta = await fetch(url, {\n        method: \"POST\",\n        headers: { \"content-type\": \"application/json\" },\n        body: JSON.stringify(payload),\n      });\n      console.log(\"status do webhook:\", resposta.status);\n      if (resposta.ok) {\n        return resposta.status;\n      }\n    } catch (erro) {\n      // segue para a próxima tentativa\n    }\n    tentativa += 1;\n    await dormir(500);\n  }\n}\n\nfunction dormir(ms) {\n  return new Promise((resolver) => setTimeout(resolver, ms));\n}\n"
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-dependencias": "met",
+            "c-escopo-minimo": "partial",
+            "c-limita-tentativas": "not_met",
+            "c-nomes-claros": "met",
+            "c-trata-erros": "not_met"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l22-a1",
+        "type": "rubric_review"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-verifica-contra-criterios",
+              "text": "Verifica o código contra critérios explícitos de comportamento"
+            },
+            {
+              "id": "c-aponta-defeito-real",
+              "text": "Aponta defeitos concretos com consequência nomeada"
+            },
+            {
+              "id": "c-justifica-a-decisao",
+              "text": "Justifica aceitar ou recusar com motivo verificável"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Conferi contra nossos critérios: o catch vazio engole erros (a falha fica invisível) e o while(true) não tem teto de tentativas nem backoff (endpoint caído vira loop infinito). Recuso enquanto esses dois não forem corrigidos — com erro logado, teto e backoff, aprovo."
+            },
+            {
+              "id": "out-b",
+              "text": "Aprovo: passou no lint, o código está limpo e os nomes estão claros. Pode dar merge."
+            }
+          ],
+          "scenario": "A mesma função de reenvio de webhook com catch vazio e retry sem teto passou por duas revisões. Qual revisão protege o time?"
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-verifica-contra-criterios",
+            "c-aponta-defeito-real"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l22-a2",
+        "type": "output_comparison"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "step-reler",
+              "text": "Reler o pedido original para saber a intenção do código"
+            },
+            {
+              "id": "step-inspecionar",
+              "text": "Inspecionar o comportamento nas bordas e no erro"
+            },
+            {
+              "id": "step-conferir",
+              "text": "Conferir dependências e escopo invisível (o que o código faz além do pedido)"
+            },
+            {
+              "id": "step-estilo",
+              "text": "Só então opinar sobre estilo e nomes"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "step-reler",
+            "step-inspecionar",
+            "step-conferir",
+            "step-estilo"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l22-a3",
+        "type": "sort"
+      }
+    ],
+    "skillIds": [
+      "codificar",
+      "avaliar"
+    ],
+    "version": 1
+  },
+  "l23": {
+    "activities": [
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Usar como rascunho e validar contra a documentação oficial com testes próprios antes de subir."
+            },
+            {
+              "id": "opt-b",
+              "text": "Aceitar direto — o assistente acerta na maioria das vezes."
+            },
+            {
+              "id": "opt-c",
+              "text": "Proibir IA em qualquer código crítico, sempre."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l23-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "formatar-data-string",
+              "text": "Função que formata uma data para exibição em string"
+            },
+            {
+              "id": "parse-json-com-try",
+              "text": "Parser de JSON de configuração com try/catch e mensagem de erro"
+            },
+            {
+              "id": "subtotal-do-carrinho",
+              "text": "Cálculo do subtotal do carrinho exibido no resumo da tela"
+            },
+            {
+              "id": "hash-de-senha",
+              "text": "Função de hash de senha para o login"
+            },
+            {
+              "id": "sql-por-concatenacao",
+              "text": "Montagem de SQL por concatenação de strings no filtro de busca"
+            },
+            {
+              "id": "token-de-sessao",
+              "text": "Geração e validação do token de sessão"
+            },
+            {
+              "id": "assinatura-de-webhook",
+              "text": "Verificação da assinatura do webhook de pagamento"
+            }
+          ],
+          "labels": {
+            "safe": "Cópia com revisão leve",
+            "sensitive": "Revisão profunda obrigatória"
+          }
+        },
+        "evaluation": {
+          "classification": {
+            "assinatura-de-webhook": "sensitive",
+            "formatar-data-string": "safe",
+            "hash-de-senha": "sensitive",
+            "parse-json-com-try": "safe",
+            "sql-por-concatenacao": "sensitive",
+            "subtotal-do-carrinho": "safe",
+            "token-de-sessao": "sensitive"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l23-a2",
+        "type": "safety_classification"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Nenhum teste para a borda que importa"
+            },
+            {
+              "id": "opt-b",
+              "text": "Mexe em código que ninguém do time domina"
+            },
+            {
+              "id": "opt-c",
+              "text": "Cita uma API sem fonte verificável"
+            },
+            {
+              "id": "opt-d",
+              "text": "A resposta veio rápida"
+            },
+            {
+              "id": "opt-e",
+              "text": "O código está organizado"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a",
+            "opt-b",
+            "opt-c"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l23-a3",
+        "type": "choice"
+      }
+    ],
+    "skillIds": [
+      "decidir",
+      "codificar"
+    ],
+    "version": 1
   }
 }
 
-export const literacyCorpusVersion = "2026-08-31.1"
+export const literacyCorpusVersion = "2026-09-01.1"
