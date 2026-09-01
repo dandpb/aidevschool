@@ -14,6 +14,29 @@ on:
   pull_request:
 
 jobs:
+  # SDLC guardrails in CI (AID-537, audit AID-400 Reg#4): the AID-394 hooks
+  # are Claude Code PreToolUse events and no active runtime executes them,
+  # so this job replays the PR diff through the real hook scripts
+  # (protect-paths / protect-tests / guard-commands). Runs first: cheap,
+  # fast, and fails the PR before the suites burn minutes on a diff that
+  # would be rejected at review anyway. Override semantics: commit trailers
+  # SDLC-Allow-Test-Edit / SDLC-Allow-Derived-Edit downgrade to visible
+  # warnings; the owner acceptance happens at the merge gate (main requires
+  # an approval from someone other than the last pusher).
+  sdlc-guardrails:
+    name: SDLC guardrails (diff check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: the check diffs the PR against the merge base with
+          # origin/<base ref>, so a shallow checkout cannot resolve it.
+          fetch-depth: 0
+      - name: Replay PR diff through .claude/hooks guardrails
+        run: bash scripts/ci/sdlc_guard_check.sh
+        env:
+          SDLC_GUARD_BASE_REF: ${{ github.event.pull_request.base.ref || 'main' }}
+
   codexdojo:
     name: codexDojo (TS)
     runs-on: ubuntu-latest

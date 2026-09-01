@@ -65,6 +65,7 @@ issue, use `AID-<n>-<slug>`. Templates: `docs/sdlc/templates/`.
 | Tests can't be weakened mid-fix (new test files OK; editing existing ones needs owner override) | hook | `.claude/hooks/protect-tests.sh` (PreToolUse) |
 | No force-push / history rewrite; no staging credentials | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
+| Same three guardrails enforced over every PR diff, runtime-agnostic | CI | `scripts/ci/sdlc_guard_check.sh` in the `sdlc-guardrails` job (`.github/workflows/ci.yml`, AID-537) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
 | SDLC loop itself | advisory (skill) | `.claude/skills/ai-native-sdlc/SKILL.md` |
 
@@ -73,6 +74,29 @@ that must hold without exception get a hook behind the skill. Hook overrides
 (`SDLC_ALLOW_TEST_EDIT=1`, `SDLC_ALLOW_DERIVED_EDIT=1`) exist for
 owner-approved exceptions and are expected to be rare and justified in the
 task record.
+
+### CI enforcement (runtime-agnostic wire, AID-537)
+
+The hooks are Claude Code PreToolUse events; audit AID-400 (Reg #4) confirmed
+no active runtime executes them, so CI is where they hold for everyone. The
+`sdlc-guardrails` job replays every changed path of the PR diff (vs the merge
+base) through the real hook scripts: derived paths and existing-test
+edits/deletions block, credential-shaped paths and credential tokens in added
+content block (deleting an existing test also counts — runtime deletions go
+through Bash and bypass the hook's Edit matcher, so the diff check closes that
+gap; new test files stay allowed, keeping failing-test-first the norm).
+
+Overrides in CI are **declarative and still require owner acceptance**: a
+commit trailer `SDLC-Allow-Test-Edit: <task-record reference>` (or
+`SDLC-Allow-Derived-Edit:`) in the PR range downgrades the corresponding
+violation to a visible warning annotation — it never silences the check.
+The declaration only becomes acceptance at the merge gate, where main
+requires an approval from someone other than the last pusher; the reference
+in the trailer must point at the disclosure in the task record (precedent:
+AID-531/PR #221, comment `244c2f4c`). Credential violations have no override,
+matching the hook ("secrets never enter the diff"). Force-push/history-rewrite
+protection stays runtime-side (the diff cannot express it); branch protection
+on `main` is the CI-side control.
 
 ## Governance / audit
 
@@ -100,6 +124,7 @@ task record.
 2. ✅ Hooks: `.claude/hooks/*.sh` + `.claude/settings.json`
 3. ✅ Processes: this doc, `docs/sdlc/templates/`, `REVIEW.md`, `intent/`
 4. ✅ Wiring: root `CLAUDE.md` + `AGENTS.md` reference the loop
+5. ✅ CI enforcement of the three deterministic guardrails over PR diffs (AID-537)
 
 Future stages (optional, when this repo grows CI/monitoring): continuous
 evals on agent-config changes (eval suite gating `CLAUDE.md`/skills/hook
