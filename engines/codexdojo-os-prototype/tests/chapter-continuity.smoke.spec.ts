@@ -2,10 +2,10 @@ import { expect, test, type Frame, type Page } from '@playwright/test'
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l18', 'l19', 'l20'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l18' | 'l19' | 'l20'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23'
 
 async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   const lesson = chapterLessons.get(lessonId)
@@ -46,8 +46,20 @@ async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
         order.splice(order.indexOf(expectedId), 1)
         order.splice(target, 0, expectedId)
       }
+    } else if (activity.type === 'rubric_review') {
+      for (const criterion of activity.data.criteria) {
+        const verdict = activity.evaluation.expectedVerdicts[criterion.id]
+        if (verdict === undefined) throw new Error(`Missing expected verdict for criterion ${criterion.id}`)
+        await mission.getByTestId(`rubric-${criterion.id}-${verdict}`).check()
+      }
+    } else if (activity.type === 'safety_classification') {
+      for (const item of activity.data.items) {
+        const label = activity.evaluation.classification[item.id]
+        if (label === undefined) throw new Error(`Missing classification for item ${item.id}`)
+        await mission.getByTestId(`item-${item.id}-${label}`).check()
+      }
     } else {
-      throw new Error(`Unexpected first-chapter activity ${activity.type}`)
+      throw new Error(`Unexpected chapter-continuity activity ${activity.type}`)
     }
     await mission.getByTestId('submit-attempt').click()
     if (index === lesson.activities.length - 1) {
@@ -259,7 +271,7 @@ async function readOsProgress(page: Page): Promise<{ missionStatusByKey: Record<
 }
 
 test('preserves completed first-release missions across switches and reloads', async ({ page }) => {
-  test.setTimeout(120_000)
+  test.setTimeout(180_000)
   await page.goto('/')
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
@@ -319,16 +331,42 @@ test('preserves completed first-release missions across switches and reloads', a
   await completeRelay(await gameFrame(page, 5205))
   await returnFromGame(page)
 
-  // The dev track also publishes the Dev-journey literacy lessons (l15-l17,
-  // module 05). Prove the batch hosts on the dev track: the l15 motor
-  // handshake must reach the literacy start screen; l16/l17 stay locked
-  // behind the canonical prerequisite chain (l16: l15, l17: l16).
+  // The dev track also publishes the Dev-journey literacy lessons (l15-l17
+  // + l21-l23, module 05). Wave l21-l23 (spec AID-528 rev 2) anchors on the
+  // canonical prerequisites l16/l15, so complete the anchor chain first
+  // (l15 -> l16) to unlock the wave missions, then host and complete each
+  // new lesson end-to-end through its three activities.
   await page.goto('/mission/dev/l15')
   await expect(page.getByRole('heading', { name: 'Quando usar IA e quando não usar' })).toBeVisible()
-  await expect(page.locator('.mission-runtime iframe')).toBeVisible()
-  await expect(
-    page.frameLocator('.mission-runtime iframe').getByTestId('start-lesson'),
-  ).toBeVisible({ timeout: 20000 })
+  await completeLiteracyMission(page, 'l15')
+
+  await page.goto('/mission/dev/l16')
+  await expect(page.getByRole('heading', { name: 'Seu primeiro código com um assistente de IA' })).toBeVisible()
+  await completeLiteracyMission(page, 'l16')
+
+  // Wave dev l21 (spec AID-528 rev 2): l21 "Peça testes que valem a pena" is
+  // published as the 11th dev mission (chapterOrder 11, canonical prereq l16).
+  // Completes end-to-end through prompt_builder, missing_context, and
+  // multiSelect choice.
+  await page.goto('/mission/dev/l21')
+  await expect(page.getByRole('heading', { name: 'Peça testes que valem a pena' })).toBeVisible()
+  await completeLiteracyMission(page, 'l21')
+
+  // Wave dev l22 (spec AID-528 rev 2): l22 "Revise o código sugerido como
+  // engenheiro" is the 12th dev mission (chapterOrder 12, canonical prereq
+  // l16). Completes end-to-end through rubric_review, output_comparison,
+  // and sort.
+  await page.goto('/mission/dev/l22')
+  await expect(page.getByRole('heading', { name: 'Revise o código sugerido como engenheiro' })).toBeVisible()
+  await completeLiteracyMission(page, 'l22')
+
+  // Wave dev l23 (spec AID-528 rev 2): l23 "O que aceitar: limites do
+  // assistente" closes the wave as the 13th dev mission (chapterOrder 13,
+  // canonical prereq l15). Completes end-to-end through choice,
+  // safety_classification, and multiSelect choice.
+  await page.goto('/mission/dev/l23')
+  await expect(page.getByRole('heading', { name: 'O que aceitar: limites do assistente' })).toBeVisible()
+  await completeLiteracyMission(page, 'l23')
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
@@ -376,6 +414,11 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:game-07-checkpoint-city',
     'dev:game-08-timeline-tower',
     'dev:game-09-docking-bay',
+    'dev:l15',
+    'dev:l16',
+    'dev:l21',
+    'dev:l22',
+    'dev:l23',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }
