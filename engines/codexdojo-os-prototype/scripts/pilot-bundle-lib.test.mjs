@@ -36,6 +36,8 @@ test('stages the canonical learner/gate verifier into the site root (AID-305)', 
   assert.match(script, /'netlify', 'functions'/)
   assert.match(script, /verifierFunction = 'dojo-verification-bridge\.mjs'/)
   assert.match(script, /cp\(join\(canonicalFunctions, verifierFunction\), join\(stagedFunctions, verifierFunction\)\)/)
+  assert.match(script, /literacyCorpusModule = '_shared\/literacy-corpus\.mjs'/)
+  assert.match(script, /cp\(join\(canonicalFunctions, literacyCorpusModule\), join\(stagedFunctions, literacyCorpusModule\)\)/)
 })
 
 test('deploys the staged functions directory and rejects verifier drift (AID-305)', async (t) => {
@@ -46,13 +48,20 @@ test('deploys the staged functions directory and rejects verifier drift (AID-305
 
   const dir = await mkdtemp(join(tmpdir(), 'pilot-verifier-drift-'))
   t.after(() => rm(dir, { recursive: true, force: true }))
-  const canonical = join(dir, 'canonical.mjs')
-  const staged = join(dir, 'staged.mjs')
-  await writeFile(canonical, 'export default () => {}\n')
-  await writeFile(staged, 'export default () => {}\n')
+  const canonical = join(dir, 'canonical')
+  const staged = join(dir, 'staged')
+  await mkdir(join(canonical, '_shared'), { recursive: true })
+  await mkdir(join(staged, '_shared'), { recursive: true })
+  for (const module of ['dojo-verification-bridge.mjs', '_shared/literacy-corpus.mjs']) {
+    await writeFile(join(canonical, module), 'export default () => {}\n')
+    await writeFile(join(staged, module), 'export default () => {}\n')
+  }
   assert.equal(await verifyStagedVerifier(canonical, staged), await verifyStagedVerifier(canonical, canonical))
-  await writeFile(staged, 'export default () => 1\n')
-  await assert.rejects(verifyStagedVerifier(canonical, staged), /drifted/)
+  await writeFile(join(staged, 'dojo-verification-bridge.mjs'), 'export default () => 1\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /dojo-verification-bridge\.mjs.*drifted/)
+  await writeFile(join(staged, 'dojo-verification-bridge.mjs'), 'export default () => {}\n')
+  await writeFile(join(staged, '_shared', 'literacy-corpus.mjs'), 'export const literacyCorpus = {}\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /literacy-corpus\.mjs.*drifted/)
 })
 
 test('allows same-origin pilot apps to be framed without allowing external ancestors', async () => {
@@ -87,6 +96,7 @@ test('keeps launchable Dev missions inside the immutable OS bundle', async () =>
   assert.match(script, /VITE_WAREHOUSE_URL: '\/apps\/warehouse\/'/)
   assert.match(script, /VITE_WORMHOLE_URL: '\/apps\/wormhole\/'/)
   assert.match(script, /VITE_RELAY_STATION_URL: '\/apps\/relay-station\/'/)
+  assert.match(script, /VITE_PIPELINE_PLANT_URL: '\/apps\/pipeline-plant\/'/)
 })
 
 test('builds bundled Dev missions with their deployed subpath as the Vite base', async () => {
@@ -95,6 +105,7 @@ test('builds bundled Dev missions with their deployed subpath as the Vite base',
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/warehouse\/'\]/)
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/wormhole\/'\]/)
   assert.match(script, /args: \['run', 'build', '--base=\/apps\/relay-station\/'\]/)
+  assert.match(script, /args: \['run', 'build', '--base=\/apps\/pipeline-plant\/'\]/)
 })
 
 test('the public LiteracyDojo build cannot omit its independent verifier endpoint', async () => {

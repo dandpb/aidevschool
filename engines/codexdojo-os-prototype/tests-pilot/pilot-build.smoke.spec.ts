@@ -89,6 +89,58 @@ test('readiness os-voxel-hosted-missions and os-verification-recovery: hosted si
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
 })
 
+test('os-voxel-hosted-missions: the published PIPELINE PLANT mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-06-pipeline-plant')
+  await expectMissionMounted(
+    page,
+    'Missão PIPELINE PLANT: File Upload/Processing Pipeline',
+    /L1|tank|PIPELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published CHECKPOINT CITY mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-07-checkpoint-city')
+  await expectMissionMounted(
+    page,
+    'Missão CHECKPOINT CITY: REST API with Auth',
+    /L1|city|CHECKPOINT/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-08-timeline-tower')
+  await expectMissionMounted(
+    page,
+    'Missão TIMELINE TOWER: Event-Driven Order System',
+    /L1|tower|TIMELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published DOCKING BAY mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-09-docking-bay')
+  await expectMissionMounted(
+    page,
+    'Missão DOCKING BAY: Plugin System',
+    /L1|dock|DOCKING/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')

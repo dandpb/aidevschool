@@ -62,7 +62,7 @@ export function MapScreen({
         <div>
           <p className="journey-eyebrow">Mapa de missões</p>
           <h1>{publishedMissionCount} missões, uma sequência</h1>
-          <p>IA Prática e as três simulações hospedadas no OS, sem menu de motores.</p>
+          <p>IA Prática e a trilha dev no OS, sem menu de motores.</p>
         </div>
       </header>
       {verificationAvailability === 'unavailable' ? (
