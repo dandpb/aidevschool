@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from 'react'
+import { useCallback, useEffect, useMemo, useReducer } from 'react'
 import { emitAnalyticsSafely } from '../analytics/events'
 import { encodeRoute, parseRoute } from '../app/routes'
 import type { MissionDefinition } from '../domain'
@@ -14,9 +14,11 @@ import {
 } from '../progress/domain'
 import { useServices } from '../app/ServicesProvider'
 import { journeyReducer } from './journeyReducer'
+import { requestedTrackIdFromSearch } from './studentPath'
 
 export function useJourneyController() {
   const services = useServices()
+  const requestedTrackId = useMemo(() => requestedTrackIdFromSearch(), [])
   const [state, dispatch] = useReducer(journeyReducer, {
     kind: 'booting',
     route: parseRoute(services.navigation.currentPath()),
@@ -46,10 +48,24 @@ export function useJourneyController() {
           route = migration.progress.onboarding.completed
             ? { kind: 'hub' }
             : { kind: 'onboarding', step: 'profile' }
-          services.navigation.replace(encodeRoute(route))
+          const trackQuery = requestedTrackId === 'dev'
+            ? '?track=dev'
+            : requestedTrackId === 'ai-pratica'
+              ? '?track=ai-pratica'
+              : ''
+          services.navigation.replace(
+            `${encodeRoute(route)}${route.kind === 'onboarding' ? trackQuery : ''}` as Parameters<typeof services.navigation.replace>[0],
+          )
         } else if (!migration.progress.onboarding.completed && route.kind !== 'onboarding') {
           route = { kind: 'onboarding', step: 'profile' }
-          services.navigation.replace('/onboarding')
+          const trackQuery = requestedTrackId === 'dev'
+            ? '?track=dev'
+            : requestedTrackId === 'ai-pratica'
+              ? '?track=ai-pratica'
+              : ''
+          services.navigation.replace(
+            `/onboarding${trackQuery}` as Parameters<typeof services.navigation.replace>[0],
+          )
         }
         dispatch({
           type: 'LOADED',
@@ -157,5 +173,5 @@ export function useJourneyController() {
     [saveProgress, services, state],
   )
 
-  return { state, finishOnboarding, launchMission, completeMission, selectTrack }
+  return { state, finishOnboarding, launchMission, completeMission, selectTrack, requestedTrackId }
 }

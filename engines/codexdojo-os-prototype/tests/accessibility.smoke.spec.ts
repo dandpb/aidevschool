@@ -5,7 +5,9 @@ test('keeps the compact reduced-motion journey keyboard-operable with semantic f
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
 
-  const devTrack = page.getByRole('button', { name: /Trilha técnica.*Dev/ })
+  const devTrack = page.getByTestId('track-option-dev')
+  await expect(devTrack).toContainText('Dev')
+  await expect(page.getByTestId('track-option-ai-pratica')).toContainText('IA Prática')
   await devTrack.focus()
   await expect(devTrack).toBeFocused()
   expect(await devTrack.evaluate((element) => ({

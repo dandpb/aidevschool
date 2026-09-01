@@ -32,12 +32,9 @@ test('completes l02 through the mission-first host without changing canonical ma
   await mission.getByTestId('finish-lesson').click()
 
   await expect(mission.getByTestId('result-screen')).toBeVisible()
-  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
-  await expect(
-    page.getByText(
-      /O verificador independente aprovou esta evidência\. O gate canônico continua separado\./,
-    ),
-  ).toBeVisible()
+  await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
+  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(
     page.getByText(`${canonicalMastery} verificadas · sem alteração local`),
   ).toBeVisible()
@@ -69,11 +66,13 @@ test('shows independent FAIL separately from local and canonical progress', asyn
     mission.getByRole('heading', { name: 'IA não é uma fonte de verdade' }),
   ).toBeVisible()
   await mission.getByRole('button', { name: 'Começar missão', exact: true }).click()
-  await mission.getByTestId('output-out-a').check()
-  await mission.getByTestId('criterion-c-fontes').check()
+  const wrongOutput = mission.getByTestId('output-out-a')
+  await wrongOutput.scrollIntoViewIfNeeded()
+  await wrongOutput.check({ force: true })
+  await mission.getByTestId('criterion-c-fontes').check({ force: true })
   await mission.getByTestId('submit-attempt').click()
 
-  await expect(page.getByText('Verificação pede nova tentativa', { exact: true })).toBeVisible()
+  await expect(page.getByText('O verificador indicou critérios a melhorar. A conclusão local e o XP foram preservados; o gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(page.getByText('Veredito independente: FAIL', { exact: true })).toBeVisible()
   await expect(page.getByText('Gate canônico não executado', { exact: false })).toBeVisible()
   await expect(

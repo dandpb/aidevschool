@@ -46,7 +46,7 @@ function verificationService(): VerificationService {
 }
 
 describe('chapter map', () => {
-  it('shows the student mission sequence without Trilha Dev or track switching', async () => {
+  it('shows IA Prática and the 3-mission Dev rail without extra voxel or l15-l17', async () => {
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     if (l02 === undefined) throw new Error('Expected l02')
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
@@ -73,10 +73,11 @@ describe('chapter map', () => {
       </ServicesProvider>,
     )
 
-    expect(screen.getByRole('heading', { name: '27 missões, uma sequência' })).not.toBeNull()
+    expect(screen.getByRole('heading', { name: '20 missões, uma sequência' })).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)', level: 3 })).not.toBeNull()
-    expect(screen.queryByText(/Trilha Dev/)).toBeNull()
-    expect(screen.queryByRole('button', { name: /Trilha Dev/ })).toBeNull()
+    expect(screen.queryByText(/PIPELINE PLANT/)).toBeNull()
+    expect(screen.queryByText(/CHECKPOINT CITY/)).toBeNull()
+    expect(screen.queryByRole('heading', { name: /l15/i })).toBeNull()
     expect(screen.getAllByText('Bloqueada por pré-requisito').length).toBeGreaterThan(0)
     await waitFor(() => expect(screen.getByText('Verificação independente concluída')).not.toBeNull())
     expect(screen.getByText('Competência canônica verificada')).not.toBeNull()

@@ -32,7 +32,8 @@ export const wrongOutput = incorrect;
 export async function completeOnboarding(page: Page) {
   await page.goto("/");
   await expect(page.getByTestId("assistant-welcome")).toBeVisible();
-  await expect(page.getByTestId("dev-track-teaser")).toContainText("Em breve");
+  await expect(page.getByTestId("dev-track-teaser")).toContainText("Abrir no OS");
+  await expect(page.getByTestId("dev-track-teaser")).toHaveAttribute("href", "https://aidevschool-codexdojo-os.netlify.app/?track=dev");
   await page.getByTestId("onboarding-next").click();
   await page.getByTestId("onboarding-option-save_time").check();
   await page.getByTestId("onboarding-next").click();

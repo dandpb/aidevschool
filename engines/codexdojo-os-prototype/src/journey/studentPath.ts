@@ -1,9 +1,15 @@
-import type { MissionCatalogSnapshot, TrackId } from '../domain'
+import type { MissionCatalogSnapshot, MissionDefinition, TrackId } from '../domain'
 import type { OsProgress } from '../progress/domain'
 import { missionKey } from '../progress/domain'
 
 export const STUDENT_TRACK_ID: TrackId = 'ai-pratica'
 export const HOSTED_SIMULATIONS_TRACK_ID: TrackId = 'dev'
+
+export const DEV_GUIDED_RAIL_MISSION_IDS = [
+  'game-02-warehouse',
+  'game-03-wormhole',
+  'game-05-relay-station',
+] as const
 
 export const STUDENT_MISSION_CHAPTERS = [
   {
@@ -15,10 +21,19 @@ export const STUDENT_MISSION_CHAPTERS = [
   {
     id: 'hosted-simulations' as const,
     label: 'Dev',
-    detail: 'Missões dev e simulações hospedadas no OS',
+    detail: 'Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION',
     trackId: HOSTED_SIMULATIONS_TRACK_ID,
   },
 ] as const
+
+export function requestedTrackIdFromSearch(
+  search = typeof window === 'undefined' ? '' : window.location.search,
+): TrackId | undefined {
+  const track = new URLSearchParams(search).get('track')
+  if (track === 'dev') return HOSTED_SIMULATIONS_TRACK_ID
+  if (track === 'ai-pratica') return STUDENT_TRACK_ID
+  return undefined
+}
 
 export function isAiPraticaChapterComplete(
   progress: OsProgress,
@@ -29,39 +44,26 @@ export function isAiPraticaChapterComplete(
     .every((mission) => progress.missionStatusByKey[missionKey(mission.trackId, mission.id)] === 'completed')
 }
 
+export function isStudentRailMission(mission: Pick<MissionDefinition, 'trackId' | 'id'>): boolean {
+  if (mission.trackId === STUDENT_TRACK_ID) return true
+  if (mission.trackId !== HOSTED_SIMULATIONS_TRACK_ID) return false
+  return (DEV_GUIDED_RAIL_MISSION_IDS as readonly string[]).includes(mission.id)
+}
+
+export function listStudentRailMissions(
+  catalog: { readonly listLaunchable: (trackId?: TrackId) => readonly MissionDefinition[] },
+  trackId?: TrackId,
+): readonly MissionDefinition[] {
+  return catalog.listLaunchable(trackId).filter(isStudentRailMission)
+}
+
 export function remapLegacyDevTrackProgress(
   progress: OsProgress,
-  catalog: MissionCatalogSnapshot,
+  _catalog: MissionCatalogSnapshot,
 ): { readonly progress: OsProgress; readonly changed: boolean } {
-  const literacyIncomplete = !isAiPraticaChapterComplete(progress, catalog)
-  let changed = false
-  let next = progress
-
-  if (next.onboarding.selectedTrackId === HOSTED_SIMULATIONS_TRACK_ID) {
-    next = {
-      ...next,
-      onboarding: { ...next.onboarding, selectedTrackId: STUDENT_TRACK_ID },
-    }
-    changed = true
-  }
-
-  if (literacyIncomplete) {
-    if (next.onboarding.recommendedTrackId === HOSTED_SIMULATIONS_TRACK_ID) {
-      next = {
-        ...next,
-        onboarding: { ...next.onboarding, recommendedTrackId: STUDENT_TRACK_ID },
-      }
-      changed = true
-    }
-    if (next.activeTrackId === HOSTED_SIMULATIONS_TRACK_ID) {
-      next = {
-        ...next,
-        activeTrackId: STUDENT_TRACK_ID,
-        activeMissionId: null,
-      }
-      changed = true
-    }
-  }
-
-  return { progress: next, changed }
+  // Public offer: Dev is a first-class track. Do not rewrite selectedTrackId
+  // back to IA Prática, and do not wipe completed literacy missions when the
+  // learner chooses Dev again.
+  void _catalog
+  return { progress, changed: false }
 }

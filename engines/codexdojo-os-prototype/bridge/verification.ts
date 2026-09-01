@@ -39,7 +39,7 @@ export async function executeFixedVerification(input: {
   try {
     receipt = JSON.parse(processReceipt.stdout)
   } catch {
-    return { ok: false, code: 'invalid-verifier-response' }
+    return { ok: false, code: 'verifier-failed' }
   }
   if (!receiptMatchesRecordIdentity(receipt, input.record)) {
     return { ok: false, code: 'invalid-verifier-response' }

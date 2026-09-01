@@ -16,8 +16,8 @@ import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
 import { StaticEngineEvaluation } from './StaticEngineEvaluation'
 import type { EngineAction, EngineId } from './protocol'
-import { engineRegistry } from './registry'
 import { isOperatorSurface } from '../surface/operatorSurface'
+import { visibleEngineRegistry } from '../apps/studentCatalog'
 import { VoxelEngine } from './VoxelEngine'
 import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
 
@@ -73,7 +73,7 @@ export function EngineHubApp({
   configuredVoxelUrls = defaultVoxelUrls,
   operatorSurface = isOperatorSurface(),
 }: EngineHubAppProps) {
-  const engines = engineRegistry
+  const engines = visibleEngineRegistry(operatorSurface)
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
   const selected = engines.find((engine) => engine.id === selectedId)
@@ -168,7 +168,9 @@ export function EngineHubApp({
                 <EmbeddedEngine
                   key={selected.id}
                   engineName={selected.name}
-                  configuredUrl={configuredUrls[selected.id]}
+                  configuredUrl={selected.id === 'dojoToday'
+                    ? withHostLocalQuery(configuredUrls[selected.id])
+                    : configuredUrls[selected.id]}
                   developmentUrl={selected.runtime.developmentUrl}
                   development={development}
                   focused={focusedEngine}
@@ -198,4 +200,16 @@ export function EngineHubApp({
       </div>
     </div>
   )
+}
+
+function withHostLocalQuery(url: string | undefined): string | undefined {
+  if (url === undefined || url.trim() === '') return url
+  try {
+    const parsed = new URL(url, 'https://os.invalid')
+    parsed.searchParams.set('host', 'os')
+    if (url.startsWith('/')) return `${parsed.pathname}${parsed.search}${parsed.hash}`
+    return parsed.toString()
+  } catch {
+    return url
+  }
 }

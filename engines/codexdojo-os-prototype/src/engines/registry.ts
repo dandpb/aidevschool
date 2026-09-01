@@ -215,6 +215,10 @@ export const engineRegistry = [
   },
 ] as const satisfies readonly EngineDefinition[]
 
+function isStagedAppsPath(pathname: string): boolean {
+  return pathname === '/apps' || pathname.startsWith('/apps/')
+}
+
 export function resolveEngineUrl(
   configuredUrl: string | undefined,
   developmentUrl: string,
@@ -227,13 +231,23 @@ export function resolveEngineUrl(
   }
 
   try {
-    const url = new URL(candidate)
+    const url = candidate.startsWith('/')
+      ? new URL(candidate, hostOrigin ?? 'https://os.invalid')
+      : new URL(candidate)
     if (url.protocol === 'http:' || url.protocol === 'https:') {
+      const stagedApps = isStagedAppsPath(url.pathname)
+      if (candidate.startsWith('/apps/') && stagedApps) {
+        return { kind: 'ready', url: candidate }
+      }
       if (hostOrigin !== undefined && url.origin === hostOrigin) {
+        if (stagedApps) return { kind: 'ready', url: candidate }
         return {
           kind: 'unavailable',
           reason: 'Engine runtime must use a separate origin from the OS.',
         }
+      }
+      if (candidate.startsWith('/')) {
+        return { kind: 'unavailable', reason: 'Engine runtime URL is unsafe or malformed.' }
       }
       return { kind: 'ready', url: candidate }
     }

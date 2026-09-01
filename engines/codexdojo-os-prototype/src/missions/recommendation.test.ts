@@ -70,7 +70,7 @@ describe('initial mission recommendation', () => {
     })
   })
 
-  it('prioritizes IA Prática before hosted simulations for legacy Dev track selection', () => {
+  it('honors Dev track selection without requiring IA Prática first', () => {
     const progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
       goal: 'build-systems',
       context: 'personal-project',
@@ -82,13 +82,12 @@ describe('initial mission recommendation', () => {
 
     expect(recommendMission(progress, catalog)).toEqual({
       kind: 'start',
-      trackId: 'ai-pratica',
-      missionId: 'l02',
+      trackId: 'dev',
+      missionId: 'game-02-warehouse',
     })
-    expect(recommendMission(progress, catalog)).not.toMatchObject({ missionId: warehouse.id })
   })
 
-  it('unlocks hosted simulations only after IA Prática is complete', () => {
+  it('advances the Dev guided rail independently of IA Prática', () => {
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
       goal: 'build-systems',
       context: 'personal-project',
@@ -97,23 +96,16 @@ describe('initial mission recommendation', () => {
     })
     const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
     const wormhole = missionCatalog.missions.find((mission) => mission.id === 'game-03-wormhole')
-    const literacyMissions = catalog.listLaunchable('ai-pratica')
-    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
-    if (
-      warehouse === undefined ||
-      wormhole === undefined ||
-      literacyMissions.length === 0 ||
-      l02 === undefined
-    ) throw new Error('Expected hosted simulation and IA Prática missions')
-
-    progress = recordMissionCompletion(progress, l02, missionCatalog, 'l03')
-    for (const mission of literacyMissions) {
-      if (mission.id === 'l02') continue
-      progress = recordMissionCompletion(progress, mission, missionCatalog)
+    const relay = missionCatalog.missions.find((mission) => mission.id === 'game-05-relay-station')
+    if (warehouse === undefined || wormhole === undefined || relay === undefined) {
+      throw new Error('Expected Dev guided rail missions')
     }
+
     expect(recommendMission(progress, catalog)).toMatchObject({ missionId: warehouse.id })
     progress = recordMissionCompletion(progress, warehouse, missionCatalog)
     expect(recommendMission(progress, catalog)).toMatchObject({ missionId: wormhole.id })
+    progress = recordMissionCompletion(progress, wormhole, missionCatalog)
+    expect(recommendMission(progress, catalog)).toMatchObject({ missionId: relay.id })
   })
 
   it('prioritizes only actionable canonical review reasons', () => {

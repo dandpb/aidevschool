@@ -101,7 +101,9 @@ test('builds the pilot OS with the same-origin literacydojo app pinned by revisi
 test('builds the Dev journey against an immutable PixelDojo origin', async () => {
   const script = await readFile(new URL('./build-pilot-bundle.mjs', import.meta.url), 'utf8')
 
-  assert.match(script, /https:\/\/[a-f0-9]+--[a-z0-9-]+\.netlify\.app\//)
+  // Product+SM+Daniel accepted the same-origin /apps/pixelquest/ matrix on 2026-09-01.
+  assert.match(script, /const publicPixelDojoUrl = '\/apps\/pixelquest\/'/)
+  assert.doesNotMatch(script, /https:\/\/[a-f0-9]+--[a-z0-9-]+\.netlify\.app\//)
   assert.match(script, /VITE_PIXELDOJO_URL: publicPixelDojoUrl/)
 })
 

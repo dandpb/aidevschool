@@ -34,7 +34,7 @@ const literacyCorpusModule = '_shared/literacy-corpus.mjs'
 const publicLiteracyDojoUrl = '/apps/literacydojo/'
 // A Dev-cohort candidate must not resolve PixelDojo through a mutable alias or
 // a development fallback. This deploy is raw-evidence only; QA still owns GO.
-const publicPixelDojoUrl = 'https://6a920159a8d5e2dfdd7fbeca--singular-crostata-273e7e.netlify.app/'
+const publicPixelDojoUrl = '/apps/pixelquest/'
 
 const builds = [
   { name: 'OS', cwd: osRoot, command: 'npx', args: ['tsc', '-b'], source: null, target: '.' },
@@ -42,10 +42,11 @@ const builds = [
     name: 'OS',
     cwd: osRoot,
     command: 'npx',
-    args: ['vite', 'build', '--outDir', stage, '--emptyOutDir'],
+    args: ['vite', 'build', '--mode', 'pilot', '--outDir', stage, '--emptyOutDir'],
     env: {
       VITE_LITERACYDOJO_URL: publicLiteracyDojoUrl,
       VITE_PIXELDOJO_URL: publicPixelDojoUrl,
+      VITE_DOJOTODAY_URL: '/apps/dojotoday/',
       // These same-origin paths are part of the hashed OS artifact, so an
       // immutable OS permalink also freezes every launchable Dev mission.
       VITE_WAREHOUSE_URL: '/apps/warehouse/',
@@ -67,6 +68,17 @@ const builds = [
   { name: 'CHECKPOINT CITY', cwd: join(enginesRoot, 'voxelDojo', 'game-07-checkpoint-city'), command: 'pnpm', args: ['run', 'build', '--base=/apps/checkpoint-city/'], source: 'dist', target: 'apps/checkpoint-city' },
   { name: 'TIMELINE TOWER', cwd: join(enginesRoot, 'voxelDojo', 'game-08-timeline-tower'), command: 'pnpm', args: ['run', 'build', '--base=/apps/timeline-tower/'], source: 'dist', target: 'apps/timeline-tower' },
   { name: 'DOCKING BAY', cwd: join(enginesRoot, 'voxelDojo', 'game-09-docking-bay'), command: 'pnpm', args: ['run', 'build', '--base=/apps/docking-bay/'], source: 'dist', target: 'apps/docking-bay' },
+  { name: 'PixelQuest', cwd: join(enginesRoot, 'pixelDojo', 'pixel-quest'), command: 'pnpm', args: ['run', 'build', '--base=/apps/pixelquest/'], source: 'dist', target: 'apps/pixelquest' },
+  { name: 'dojoToday', cwd: join(enginesRoot, 'dojoToday'), command: 'npm', args: ['run', 'build', '--', '--base=/apps/dojotoday/'], source: 'dist', target: 'apps/dojotoday' },
+  { name: 'HASH RING', cwd: join(enginesRoot, 'voxelDojo', 'game-10-hash-ring'), command: 'pnpm', args: ['run', 'build', '--base=/apps/hash-ring/'], source: 'dist', target: 'apps/hash-ring' },
+  { name: 'AIR TRAFFIC', cwd: join(enginesRoot, 'voxelDojo', 'game-11-air-traffic'), command: 'pnpm', args: ['run', 'build', '--base=/apps/air-traffic/'], source: 'dist', target: 'apps/air-traffic' },
+  { name: 'MISSION CONTROL', cwd: join(enginesRoot, 'voxelDojo', 'game-12-mission-control'), command: 'pnpm', args: ['run', 'build', '--base=/apps/mission-control/'], source: 'dist', target: 'apps/mission-control' },
+  { name: 'BREAKER GRID', cwd: join(enginesRoot, 'voxelDojo', 'game-13-breaker-grid'), command: 'pnpm', args: ['run', 'build', '--base=/apps/breaker-grid/'], source: 'dist', target: 'apps/breaker-grid' },
+  { name: 'RIVER DELTA', cwd: join(enginesRoot, 'voxelDojo', 'game-14-river-delta'), command: 'pnpm', args: ['run', 'build', '--base=/apps/river-delta/'], source: 'dist', target: 'apps/river-delta' },
+  { name: 'OBSERVATORY', cwd: join(enginesRoot, 'voxelDojo', 'game-15-observatory'), command: 'pnpm', args: ['run', 'build', '--base=/apps/observatory/'], source: 'dist', target: 'apps/observatory' },
+  { name: 'FREIGHT YARD', cwd: join(enginesRoot, 'voxelDojo', 'game-16-freight-yard'), command: 'pnpm', args: ['run', 'build', '--base=/apps/freight-yard/'], source: 'dist', target: 'apps/freight-yard' },
+  { name: 'LIGHTHOUSE NETWORK', cwd: join(enginesRoot, 'voxelDojo', 'game-17-lighthouse-network'), command: 'pnpm', args: ['run', 'build', '--base=/apps/lighthouse-network/'], source: 'dist', target: 'apps/lighthouse-network' },
+  { name: 'STACKS', cwd: join(enginesRoot, 'voxelDojo', 'game-18-stacks'), command: 'pnpm', args: ['run', 'build', '--base=/apps/stacks/'], source: 'dist', target: 'apps/stacks' },
 ]
 
 function run(build) {

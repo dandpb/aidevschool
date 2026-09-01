@@ -160,6 +160,25 @@ describe('embedded engine URL boundary', () => {
     })
   })
 
+  it('accepts staged /apps/* paths on the OS origin', () => {
+    expect(resolveEngineUrl('/apps/pixelquest/', 'http://127.0.0.1:9999/', false, 'http://127.0.0.1:4174')).toEqual({
+      kind: 'ready',
+      url: '/apps/pixelquest/',
+    })
+    expect(resolveEngineUrl(
+      'http://127.0.0.1:4174/apps/dojotoday/',
+      'http://127.0.0.1:9999/',
+      false,
+      'http://127.0.0.1:4174',
+    )).toEqual({
+      kind: 'ready',
+      url: 'http://127.0.0.1:4174/apps/dojotoday/',
+    })
+    expect(resolveEngineUrl('/apps/../secret/', 'http://127.0.0.1:9999/', false, 'http://127.0.0.1:4174').kind).toBe(
+      'unavailable',
+    )
+  })
+
   it('uses a localhost fallback only in development', () => {
     // Given
     const fallback = 'http://127.0.0.1:5173/'

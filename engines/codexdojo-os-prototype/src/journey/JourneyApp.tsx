@@ -22,7 +22,7 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
 
   const { route, progress } = state
   if (route.kind === 'onboarding' || route.kind === 'boot') {
-    return <Onboarding onComplete={(input) => void controller.finishOnboarding(input)} />
+    return <Onboarding initialTrackId={controller.requestedTrackId} onComplete={(input) => void controller.finishOnboarding(input)} />
   }
   if (route.kind === 'hub') {
     return (
