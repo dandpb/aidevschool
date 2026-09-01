@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AppContent } from '../apps/AppContent'
 import { appTitles } from '../apps/appCatalog'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import { learnerSnapshot } from '../data/learner'
 import {
   DesktopShortcuts,
@@ -24,8 +25,9 @@ type AppProps = {
   readonly learner?: LearnerSnapshot
 }
 
-export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
+export function DesktopApp({ learner }: AppProps) {
   const operatorSurface = isOperatorSurface()
+  const resolvedLearner = learner ?? (operatorSurface ? learnerSnapshot : anonymousPublicLearner)
   const [windows, setWindows] = useState<WindowState[]>([
     {
       id: 'dojo',
@@ -130,7 +132,7 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
   return (
     <main className="desktop-shell">
       <TopBar
-        learner={learner}
+        learner={resolvedLearner}
         learnMode={learnMode}
         onToggleLearn={() => setLearnMode((value) => !value)}
         onOpenLauncher={() => setLauncherOpen(true)}
@@ -162,7 +164,7 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
             >
               <AppContent
                 appId={window.id}
-                learner={learner}
+                learner={resolvedLearner}
                 onTeach={teach}
                 onOpenApp={openApp}
               />

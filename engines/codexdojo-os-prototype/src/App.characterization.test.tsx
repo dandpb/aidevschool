@@ -135,4 +135,22 @@ describe('codexDojo OS release behavior', () => {
     expect(launcher.textContent).not.toContain('Central de Apps')
     expect(launcher.textContent).not.toContain('Fundamentos')
   })
+
+  it("does not project the author yaml as this visitor's mastery on public /desktop", () => {
+    renderDesktopRoute('?operator=0')
+
+    const desktop = screen.getByRole('main')
+    expect(desktop.textContent).toContain('0 dominadas')
+    expect(desktop.textContent).not.toContain('2 dominadas')
+    expect(desktop.textContent).not.toContain('U2-key-value-store')
+    expect(desktop.textContent).not.toContain('KV WAREHOUSE')
+  })
+
+  it('may still use the author yaml on operator /desktop', () => {
+    renderDesktopRoute('?operator=1')
+
+    const desktop = screen.getByRole('main')
+    expect(desktop.textContent).toContain('2 dominadas')
+    expect(desktop.textContent).toContain('KV WAREHOUSE')
+  })
 })
