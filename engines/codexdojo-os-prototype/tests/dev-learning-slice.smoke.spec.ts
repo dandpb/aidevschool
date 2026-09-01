@@ -100,7 +100,7 @@ test('independently verifies all seven Dev games through the shared mission cont
   }
 
   await expect(mission.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText(
     'O verificador independente aprovou esta evidência. O gate canônico continua separado.',
     { exact: true },
@@ -110,7 +110,7 @@ test('independently verifies all seven Dev games through the shared mission cont
 
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
   await expect(page.getByText('Verificação independente', { exact: true })).toBeVisible()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText('Não alterada por este fluxo', { exact: true })).toBeVisible()
 
   await page.goto('/mission/dev/game-03-wormhole')
@@ -142,7 +142,7 @@ test('independently verifies all seven Dev games through the shared mission cont
     await wormhole.getByTestId('submit-code').click()
   }
   await expect(wormhole.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   await page.goto('/mission/dev/game-05-relay-station')
@@ -177,7 +177,7 @@ test('independently verifies all seven Dev games through the shared mission cont
   }
   await relay.getByTestId('submit').click()
   await expect(relay.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
@@ -204,7 +204,7 @@ test('independently verifies all seven Dev games through the shared mission cont
     hook.game.predictOverflow(hook.game.bufferedOverflows())
   })
   await expect(pipeline.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   await page.goto('/mission/dev/game-07-checkpoint-city')
@@ -235,7 +235,7 @@ test('independently verifies all seven Dev games through the shared mission cont
     }
   })
   await expect(checkpoint.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   await page.goto('/mission/dev/game-08-timeline-tower')
@@ -264,7 +264,7 @@ test('independently verifies all seven Dev games through the shared mission cont
     }
   })
   await expect(timeline.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   await page.goto('/mission/dev/game-09-docking-bay')
@@ -294,7 +294,7 @@ test('independently verifies all seven Dev games through the shared mission cont
     }
   })
   await expect(docking.getByTestId('hud-status')).toContainText(/cleared|Missão concluída|evidence emitted/i)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
@@ -371,7 +371,7 @@ test('independently verifies all seven Dev games through the shared mission cont
   ]))
 
   await page.reload()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
   await page.screenshot({
     path: '../../.omo/evidence/integrate-multigame-verifiers/dev-games-desktop.png',

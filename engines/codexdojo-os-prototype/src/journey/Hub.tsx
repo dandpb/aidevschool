@@ -120,7 +120,7 @@ export function Hub({
         <section className="honest-progress" aria-label="Estado da missão concluída">
           <div><span>1</span><strong>Atividade concluída</strong><small>Salva neste dispositivo</small></div>
           <div className={verification.kind === 'not-submitted' ? '' : 'current'}><span>2</span><strong>Evidência preservada</strong><small>{verification.kind === 'not-submitted' ? 'Ainda não enviada' : 'Separada do progresso local'}</small></div>
-          <div className={independentlyVerified ? 'current' : ''}><span>3</span><strong>Verificação independente</strong><small>{independentlyVerified ? `Veredito ${verification.receipt.verdict}` : verification.kind === 'gateway-unavailable' ? 'Temporariamente indisponível' : 'Aguardando verificador'}</small></div>
+          <div className={independentlyVerified ? 'current' : ''}><span>3</span><strong>Verificação independente</strong><small data-testid={independentlyVerified ? 'independent-verdict' : undefined}>{independentlyVerified ? `Veredito ${verification.receipt.verdict}` : verification.kind === 'gateway-unavailable' ? 'Temporariamente indisponível' : 'Aguardando verificador'}</small></div>
           <div><span>4</span><strong>Competência canônica</strong><small>Não alterada por este fluxo</small></div>
           {verification.kind === 'gateway-unavailable' ? (
             <button

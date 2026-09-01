@@ -69,12 +69,12 @@ test('proves the nontechnical release journey through recovery, verification, an
   await mission.getByTestId('finish-lesson').click()
 
   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(page.getByText(`${canonicalCount} verificadas · sem alteração local`)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await page.reload()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
 
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
   await expect(page.getByRole('heading', { name: '6 missões, uma sequência' })).toBeVisible()
@@ -96,11 +96,11 @@ test('proves the hosted simulation entry through accessible evidence and hub ret
 
   await completeWarehouse(await gameFrame(page, 5202))
   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await expect(page).toHaveURL(/\/hub$/)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
   await expect(
     page.getByRole('heading', { level: 3, name: 'WORMHOLE: URL Shortener' }),

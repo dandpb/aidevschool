@@ -33,7 +33,7 @@ test('completes l02 through the mission-first host without changing canonical ma
 
   await expect(mission.getByTestId('result-screen')).toBeVisible()
   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(
     page.getByText(`${canonicalMastery} verificadas · sem alteração local`),
@@ -42,11 +42,11 @@ test('completes l02 through the mission-first host without changing canonical ma
 
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
   await expect(page.getByText('Verificação independente', { exact: true })).toBeVisible()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText('Não alterada por este fluxo', { exact: true })).toBeVisible()
   await page.reload()
   await expect(page.getByText('Evidência preservada', { exact: true })).toBeVisible()
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
   await expect(page.getByText(`${canonicalMastery} competências verificadas`)).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true,

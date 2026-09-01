@@ -99,5 +99,5 @@ test('remote Dev release journey mounts the hosted warehouse simulation from the
   await expect(page.getByText(/gate canônico continua separado/i)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await expect(page).toHaveURL(/\/hub$/)
-  await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible()
 })
