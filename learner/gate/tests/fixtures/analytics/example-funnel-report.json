@@ -1,0 +1,337 @@
+{
+  "reportVersion": 1,
+  "generatedAt": "2026-09-18T00:00:00.000Z",
+  "parameters": {
+    "windowsDays": [
+      1,
+      7,
+      21
+    ],
+    "graceDays": 2,
+    "kMinimum": 5,
+    "returnWindowAccumulated": "any event at day offset 1..N+graceDays",
+    "returnWindowStrict": "at least one event at day offset N..N+graceDays",
+    "reviewReturn": "returning event's session contains mission.started{mode:review} or review.started{reason:due|overdue}"
+  },
+  "anonymity": {
+    "identifiersPublished": false,
+    "suppressionRule": "buckets with n<k are suppressed",
+    "suppressedBuckets": 3
+  },
+  "source": {
+    "files": [
+      {
+        "name": "events-2026-07-13.ndjson",
+        "lines": 9
+      },
+      {
+        "name": "events-2026-07-14.ndjson",
+        "lines": 5
+      },
+      {
+        "name": "events-2026-07-15.ndjson",
+        "lines": 6
+      },
+      {
+        "name": "events-2026-07-16.ndjson",
+        "lines": 7
+      },
+      {
+        "name": "events-2026-07-17.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-07-18.ndjson",
+        "lines": 2
+      },
+      {
+        "name": "events-2026-07-21.ndjson",
+        "lines": 7
+      },
+      {
+        "name": "events-2026-07-25.ndjson",
+        "lines": 1
+      },
+      {
+        "name": "events-2026-08-04.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-08-08.ndjson",
+        "lines": 1
+      },
+      {
+        "name": "events-2026-08-10.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-08-11.ndjson",
+        "lines": 5
+      },
+      {
+        "name": "events-2026-08-12.ndjson",
+        "lines": 5
+      },
+      {
+        "name": "events-2026-08-20.ndjson",
+        "lines": 1
+      },
+      {
+        "name": "events-2026-08-24.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-08-25.ndjson",
+        "lines": 8
+      },
+      {
+        "name": "events-2026-08-26.ndjson",
+        "lines": 8
+      },
+      {
+        "name": "events-2026-08-27.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-08-28.ndjson",
+        "lines": 4
+      },
+      {
+        "name": "events-2026-08-31.ndjson",
+        "lines": 3
+      },
+      {
+        "name": "events-2026-09-02.ndjson",
+        "lines": 1
+      },
+      {
+        "name": "events-2026-09-17.ndjson",
+        "lines": 1
+      }
+    ],
+    "totalEvents": 94,
+    "rejectedEvents": 0,
+    "parseErrors": 0
+  },
+  "activationFunnel": {
+    "stages": [
+      "onboarding.started",
+      "onboarding.completed",
+      "mission.started",
+      "mission.completed"
+    ],
+    "cohorts": {
+      "2026-W29": {
+        "n": 6,
+        "counts": [
+          6,
+          6,
+          5,
+          5
+        ]
+      },
+      "2026-W33": {
+        "suppressed": true,
+        "n": 3
+      },
+      "2026-W35": {
+        "n": 6,
+        "counts": [
+          6,
+          6,
+          5,
+          5
+        ]
+      }
+    },
+    "overall": {
+      "n": 15,
+      "counts": [
+        15,
+        15,
+        13,
+        13
+      ]
+    }
+  },
+  "retention": {
+    "cohortDefinition": "first mission.completed{result:completed} on UTC day D0",
+    "cohorts": {
+      "2026-W29": {
+        "n": 5,
+        "D+1": {
+          "returned": 2,
+          "returnedRate": 0.4,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.4,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+7": {
+          "returned": 4,
+          "returnedRate": 0.8,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.4,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.2
+        },
+        "D+21": {
+          "returned": 4,
+          "returnedRate": 0.8,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.4,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.2
+        }
+      },
+      "2026-W33": {
+        "suppressed": true,
+        "n": 3
+      },
+      "2026-W35": {
+        "n": 5,
+        "D+1": {
+          "returned": 2,
+          "returnedRate": 0.4,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.4,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.2
+        },
+        "D+7": {
+          "returned": 3,
+          "returnedRate": 0.6,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.2,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.2
+        },
+        "D+21": {
+          "returned": 4,
+          "returnedRate": 0.8,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.2,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.2
+        }
+      }
+    },
+    "overall": {
+      "n": 13,
+      "D+1": {
+        "returned": 5,
+        "returnedRate": 0.3846,
+        "returnedStrict": 5,
+        "returnedStrictRate": 0.3846,
+        "reviewReturn": 1,
+        "reviewReturnRate": 0.0769
+      },
+      "D+7": {
+        "returned": 9,
+        "returnedRate": 0.6923,
+        "returnedStrict": 4,
+        "returnedStrictRate": 0.3077,
+        "reviewReturn": 2,
+        "reviewReturnRate": 0.1538
+      },
+      "D+21": {
+        "returned": 10,
+        "returnedRate": 0.7692,
+        "returnedStrict": 3,
+        "returnedStrictRate": 0.2308,
+        "reviewReturn": 2,
+        "reviewReturnRate": 0.1538
+      }
+    }
+  },
+  "wideCohortRetention": {
+    "cohortDefinition": "first onboarding.completed on UTC day D0",
+    "cohorts": {
+      "2026-W29": {
+        "n": 6,
+        "D+1": {
+          "returned": 2,
+          "returnedRate": 0.3333,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.3333,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+7": {
+          "returned": 4,
+          "returnedRate": 0.6667,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.3333,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.1667
+        },
+        "D+21": {
+          "returned": 4,
+          "returnedRate": 0.6667,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.3333,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.1667
+        }
+      },
+      "2026-W33": {
+        "suppressed": true,
+        "n": 3
+      },
+      "2026-W35": {
+        "n": 6,
+        "D+1": {
+          "returned": 2,
+          "returnedRate": 0.3333,
+          "returnedStrict": 2,
+          "returnedStrictRate": 0.3333,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.1667
+        },
+        "D+7": {
+          "returned": 3,
+          "returnedRate": 0.5,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.1667,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.1667
+        },
+        "D+21": {
+          "returned": 4,
+          "returnedRate": 0.6667,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.1667,
+          "reviewReturn": 1,
+          "reviewReturnRate": 0.1667
+        }
+      }
+    },
+    "overall": {
+      "n": 15,
+      "D+1": {
+        "returned": 5,
+        "returnedRate": 0.3333,
+        "returnedStrict": 5,
+        "returnedStrictRate": 0.3333,
+        "reviewReturn": 1,
+        "reviewReturnRate": 0.0667
+      },
+      "D+7": {
+        "returned": 9,
+        "returnedRate": 0.6,
+        "returnedStrict": 4,
+        "returnedStrictRate": 0.2667,
+        "reviewReturn": 2,
+        "reviewReturnRate": 0.1333
+      },
+      "D+21": {
+        "returned": 10,
+        "returnedRate": 0.6667,
+        "returnedStrict": 3,
+        "returnedStrictRate": 0.2,
+        "reviewReturn": 2,
+        "reviewReturnRate": 0.1333
+      }
+    }
+  }
+}

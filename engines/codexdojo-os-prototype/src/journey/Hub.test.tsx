@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
-import { learnerSnapshot } from '../data/learner'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
 import { completeOnboarding, createInitialOsProgress, recordMissionCompletion } from '../progress/domain'
@@ -39,7 +39,7 @@ describe('mission-first hub progression', () => {
       <ServicesProvider services={services}>
         <Hub
           progress={progress}
-          learner={{ ...learnerSnapshot, nextReviews: [], topPitfalls: [] }}
+          learner={anonymousPublicLearner}
           catalog={new GeneratedMissionCatalogRepository()}
           onLaunch={vi.fn()}
           onOpenMap={vi.fn()}
@@ -52,6 +52,9 @@ describe('mission-first hub progression', () => {
       expect(screen.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).not.toBeNull()
     })
     expect(screen.getByText('25', { selector: '.hub-chips strong' })).not.toBeNull()
+    expect(screen.getByTestId('canonical-mastery-count').textContent).toBe(
+      '0 competências verificadas',
+    )
     expect(screen.getByText(/Uma pausa não remove XP/)).not.toBeNull()
     expect(screen.queryByText(/\bvidas?\b|\benergia\b/i)).toBeNull()
     expect(screen.queryByText(/Trilha Dev/)).toBeNull()
@@ -59,5 +62,34 @@ describe('mission-first hub progression', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Entender meu progresso' }))
     expect(onOpenProgress).toHaveBeenCalledOnce()
+  })
+
+  it('shows masteredCount 0 for an anonymous public learner', async () => {
+    const progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'work-better',
+      context: 'work',
+      confidence: 'low',
+      selectedTrackId: 'ai-pratica',
+    })
+    const services = createServices({ verification })
+
+    render(
+      <ServicesProvider services={services}>
+        <Hub
+          progress={progress}
+          learner={anonymousPublicLearner}
+          catalog={new GeneratedMissionCatalogRepository()}
+          onLaunch={vi.fn()}
+          onOpenMap={vi.fn()}
+          onOpenProgress={vi.fn()}
+        />
+      </ServicesProvider>,
+    )
+
+    await waitFor(() => {
+      expect(screen.getByTestId('canonical-mastery-count').textContent).toBe(
+        '0 competências verificadas',
+      )
+    })
   })
 })

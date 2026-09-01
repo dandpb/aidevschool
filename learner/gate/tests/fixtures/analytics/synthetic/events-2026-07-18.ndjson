@@ -1,0 +1,2 @@
+{"schemaVersion":1,"eventId":"evt-0032","name":"onboarding.started","occurredAt":"2026-07-18T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-i6","sessionId":"s-i6-1"}}
+{"schemaVersion":1,"eventId":"evt-0033","name":"onboarding.completed","occurredAt":"2026-07-18T10:05:00Z","sequence":2,"dimensions":{"installationId":"install-i6","sessionId":"s-i6-1","recommendationChanged":true}}

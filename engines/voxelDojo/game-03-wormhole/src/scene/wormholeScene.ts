@@ -1,5 +1,6 @@
 import * as THREE from "three"
 import type { MissionProjection, ProjectionContextHooks } from "../../../shared/projection"
+import { prefersReducedMotion } from "../../../shared/reducedMotion"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { hashTruncCode } from "../sim/shortener"
@@ -39,6 +40,13 @@ export class WormholeScene implements MissionProjection<GameState> {
       ambientIntensity: 0.6,
       keyIntensity: 1.1,
       onFrame: () => {
+        // Rastros de viajantes e flash são decorativos: com reduced motion congelam
+        // e o feedback assenta no estado persistente (colisão continua vermelha).
+        if (prefersReducedMotion()) {
+          this.flashTimer = 0
+          this.portalVisual.animateFeedback(this.colliding, this.flashTimer)
+          return
+        }
         this.animateTravellers()
         this.animateFlash()
       },

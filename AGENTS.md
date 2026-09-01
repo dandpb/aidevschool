@@ -67,6 +67,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Work on Project 02's verified implementation | `curriculum/02_key_value_store/node-impl/` | Current verified track is Node-only; start with `README.md`, then use `docs/benchmark_results.md` and `docs/evolution_report.md` for the measured benchmark/optimize workflow. |
 | Update idea/prompt source | `docs/PROMPTS/-01_GOAL.md`, `docs/PROMPTS/00_IDEIAS.md` | Goal and seed ideas. |
 | Read the polyglot-arena design | `docs/design/polyglot-arena/` | Demoted from `engines/polyglotEvolutionArena/`; proposal-stage. |
+| Run the AI-native SDLC loop for any change | `.claude/skills/ai-native-sdlc/SKILL.md` | Every engineering task follows intent → spec → plan → build → verify → review → ship, committing artifacts to `intent/<change-id>/` (templates in `docs/sdlc/templates/`, process in `docs/sdlc/README.md`). Diffs are reviewed per root `REVIEW.md`; root `.claude/settings.json` hooks enforce protected paths, test integrity, and git safety. |
 
 ## CODE MAP
 
@@ -84,6 +85,11 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 
 - **One learner, one curriculum, many engines.** Do not duplicate `curriculum/` or `learner/`
   inside an engine; engines use symlinks or root-relative paths to the shared substrate.
+- Engineering changes run the AI-native SDLC loop (skill `ai-native-sdlc`): nothing is
+  implemented without an accepted plan; the session verifies its own work before reporting
+  done; every diff gets the `REVIEW.md` passes; monitoring/incident findings re-enter as new
+  `intent.md`. Hook overrides (`SDLC_ALLOW_TEST_EDIT`, `SDLC_ALLOW_DERIVED_EDIT`) require
+  explicit owner approval recorded in the task.
 - Learning progress is file-based and auditable: Markdown, YAML, and NDJSON.
 - A learner attempt plus independently verified evidence appropriate to the declared gate must exist
   before AI work is marked `mastered`. Programming units require executable evidence; Level 0

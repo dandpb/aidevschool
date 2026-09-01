@@ -1,0 +1,160 @@
+# Lição l21 — Onda dev l21–l23 (spec AID-528 rev 2 §2.1): pedir testes que valem a pena.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l21
+version: 1
+moduleId: mod-05
+title: "Peça testes que valem a pena"
+objective: "Diante de uma função pronta, montar o pedido de testes com framework, comportamento-alvo e caso de borda explícitos — e esperar que a primeira resposta do assistente deixe bordas de fora."
+estimatedMinutes: 4
+skillIds: [codificar]
+prerequisites: [l16]
+
+activities:
+  - id: l21-a1
+    type: prompt_builder
+    skillId: codificar
+    instruction: "MONTE O PEDIDO DE TESTES PARA A FUNÇÃO DA LIÇÃO ANTERIOR. PREENCHA OS CAMPOS COM O QUE O PEDIDO PRECISA NOMEAR."
+    data:
+      scenario: "A função validateWebhook da lição anterior está pronta: valida o payload contra um schema e rejeita entrada inválida. Agora você quer testes que valem a pena — não a lista de casos felizes que o assistente já gera sozinho."
+      genericPrompt: "escreve testes pra essa função"
+      fields:
+        - id: framework
+          label: "Linguagem e framework de teste"
+          hint: "Ex: TypeScript com Vitest, Node com o test runner nativo"
+        - id: comportamento-alvo
+          label: "Comportamento-alvo"
+          hint: "Ex: valida o payload contra o schema, rejeita campo ausente, lança erro de validação"
+        - id: caso-de-borda
+          label: "Caso de borda a cobrir"
+          hint: "Ex: campo obrigatório ausente, array acima do limite, payload gigante"
+        - id: formato
+          label: "Formato dos casos"
+          hint: "Ex: cada caso nomeado, com entrada e resultado esperado"
+    evaluation:
+      strategy: deterministic
+      fields:
+        framework:
+          minLength: 5
+          mustIncludeAny: ["Vitest", "Jest", "Node", "TypeScript", "pytest", "Go", "Rust", "test"]
+        comportamento-alvo:
+          minLength: 5
+          mustIncludeAny: ["valida", "retorna", "lança", "erro", "parse", "rejeita", "aceita"]
+        caso-de-borda:
+          minLength: 5
+          mustIncludeAny: ["inválido", "ausente", "vazio", "limite", "máx", "mín", "token", "grande", "nulo"]
+        formato:
+          minLength: 5
+          mustIncludeAny: ["nomeado", "entrada", "esperado", "saída", "dado", "resultado", "caso"]
+    feedback:
+      onFailure: "Teste que vale a pena tem framework, comportamento esperado e a borda que você quer cobrir — o caso feliz o assistente já gera sozinho."
+      perCheck:
+        framework: "Diga em quê os testes serão escritos e rodados. Ex: 'TypeScript com Vitest'."
+        comportamento-alvo: "Nomeie o que a função deve fazer: validar, retornar, lançar erro — o teste precisa de um alvo."
+        caso-de-borda: "Aponte a borda: campo ausente, valor no limite, entrada grande. Sem borda, o pedido só devolve o caminho feliz."
+        formato: "Diga a forma dos casos: nomeados, com entrada e resultado esperado."
+      onSuccess: "Pedido completo: framework, comportamento e borda nomeados. É assim que se pede teste que segura regressão — não a primeira leva de casos felizes."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que é longo ou visual demais para o assistente adivinhar? Pense no caso que quebra a função, não no que funciona."
+      - "Cada campo é uma restrição: linguagem, comportamento esperado, borda e forma do caso."
+      - "Para 'caso de borda': ausência, limite e tamanho são as bordas clássicas de um validador."
+
+  - id: l21-a2
+    type: missing_context
+    skillId: codificar
+    instruction: "COLEGA PEDIU TESTES E RECEBEU CASOS QUE NÃO RODAM NO PROJETO. O QUE FALTOU NO PEDIDO DELE?"
+    data:
+      prompt: "Colega: 'escreve testes pro webhook' · Assistente: entregou 12 testes com imports de um framework que o projeto não usa e mocks de um schema que não existe — nada roda."
+      contextOptions:
+        - id: ctx-framework-de-teste
+          text: "O framework de teste do projeto — em quê os testes serão escritos e executados"
+        - id: ctx-entrada-de-exemplo
+          text: "Um exemplo de entrada válida e um de inválida, para o teste usar de referência"
+        - id: ctx-comportamento-esperado
+          text: "O comportamento esperado da função: o que retorna, o que lança, em quais casos"
+        - id: ctx-como-rodar-os-testes
+          text: "Como rodar os testes no projeto (comando ou script) — ajuda a conferir, mas não define os casos"
+        - id: ctx-nome-do-modelo-de-ia
+          text: "O nome do modelo de IA usado na conversa"
+        - id: ctx-ia-mais-recente
+          text: "Trocar por um modelo de IA mais recente"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [ctx-framework-de-teste, ctx-entrada-de-exemplo, ctx-comportamento-esperado]
+      optionalContextIds: [ctx-como-rodar-os-testes]
+    feedback:
+      onFailure: "Os testes não rodam porque o pedido não disse em quê eles vivem nem o que devem provocar: sem framework, entrada de exemplo e comportamento esperado, o assistente inventa o resto — inclusive imports que não existem no projeto."
+      perCheck:
+        ctx-framework-de-teste: "Faltou isto: o framework do projeto. Sem ele, o assistente chuta o runner e os imports."
+        ctx-entrada-de-exemplo: "Faltou isto: um par válido/inválido de referência. Sem exemplo, o mock é inventado."
+        ctx-comportamento-esperado: "Faltou isto: o que a função deve fazer. Teste sem alvo testa nada."
+        ctx-como-rodar-os-testes: "Isto é opcional: o comando de execução ajuda a conferir o resultado, mas não é o que faz os testes existirem."
+        ctx-nome-do-modelo-de-ia: "Isto é mito: o nome do modelo não diz em quê o projeto testa."
+        ctx-ia-mais-recente: "Isto é mito: modelo mais recente também precisa do contexto — trocar de modelo não cria os imports certos."
+      onSuccess: "Exato! O pedido de testes precisa do mesmo contexto de qualquer pedido de código: framework, exemplo e comportamento esperado. Sem isso, os casos vêm de outro projeto."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare o que o assistente inventou (imports, mocks) com a informação que faltava no pedido."
+      - "Perguntas de modelo de IA desviam do ponto: o problema é o contexto que faltou no pedido."
+
+  - id: l21-a3
+    type: choice
+    skillId: codificar
+    instruction: "O ASSISTENTE ENTREGOU A PRIMEIRA LEVA DE TESTES. QUAIS CASOS PROVAVELMENTE FALTAM?"
+    data:
+      multiSelect: true
+      options:
+        - id: opt-a
+          text: "Um payload com campo obrigatório ausente"
+        - id: opt-b
+          text: "Um array no tamanho limite máximo aceito"
+        - id: opt-c
+          text: "Dois webhooks chegando juntos (concorrência)"
+        - id: opt-d
+          text: "O caso feliz com uma entrada válida comum"
+        - id: opt-e
+          text: "Nomes mais descritivos nos testes"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a, opt-b, opt-c]
+    feedback:
+      onFailure: "A primeira resposta cobre o caminho feliz; bordas — ausência, limite, concorrência — são exatamente o que o pedido precisa nomear. Caso feliz e nomes bonitos o assistente já entrega sozinho."
+      perCheck:
+        opt-a: "Falta isto: campo obrigatório ausente é a borda clássica de um validador — a primeira leva raramente a inclui."
+        opt-b: "Falta isto: valor no limite máximo é borda de tamanho — ninguém gera isso sem pedido."
+        opt-c: "Falta isto: concorrência (dois webhooks juntos) é a borda que expõe condição de corrida."
+        opt-d: "Isto o assistente sempre gera: entrada válida comum é o caso feliz, a primeira linha de qualquer resposta."
+        opt-e: "Isto é estilo, não cobertura: nomes descritivos não adicionam caso testado."
+      onSuccess: "Isso! Ausência, limite e concorrência: as bordas que o pedido precisa nomear. Esperar lacuna na primeira resposta é o hábito — e pedir o que falta é o método."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: quais casos o assistente gera sem ninguém pedir — e quais só aparecem se forem nomeados?"
+      - "Bordas clássicas de um validador: campo ausente, valor no limite, chegada simultânea."
+
+rubric:
+  id: l21-rubric
+  criteria:
+    - id: r-da-contexto-de-teste
+      text: "Monta pedido de testes com framework, comportamento-alvo e caso de borda explícitos."
+      weight: 1
+    - id: r-mira-a-borda
+      text: "Diferencia caso feliz de caso-limite e aponta qual borda cobrir."
+      weight: 1
+    - id: r-desconfia-do-facil
+      text: "Espera lacuna na primeira resposta do assistente e pede o que falta."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l21-a1, l21-a2, l21-a3]
