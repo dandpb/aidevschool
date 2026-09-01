@@ -25,7 +25,13 @@ import {
   EVENT_VOCABULARIES,
   validateAnalyticsEvent,
 } from "../netlify-functions/dojo-analytics-collector.mjs";
-import { collectInputFiles, readNdjsonEntries, resolveOutput } from "./ndjson_input.mjs";
+import {
+  collectInputFiles,
+  optionValue,
+  parseIntegerOption,
+  readNdjsonEntries,
+  resolveOutput,
+} from "./ndjson_input.mjs";
 
 export const MONITOR_VERSION = 1;
 export const DEFAULT_MAX_SAMPLES = 50;
@@ -131,6 +137,11 @@ export function classifyEvent(value) {
  *   (including monitor self-check disagreements), 2 = usage/IO error.
  */
 export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAULT_MAX_SAMPLES }) {
+  // Fail-closed maxSamples (AID-492, D1 class): a NaN silently records zero
+  // drift samples — losing the file:line evidence — so it is a usage error.
+  if (!Number.isInteger(maxSamples) || maxSamples < 0) {
+    return { summary: { error: `maxSamples must be an integer ≥ 0, got: ${maxSamples}` }, exitCode: 2 };
+  }
   let entries;
   let perFile;
   try {
@@ -196,15 +207,25 @@ export function monitorCli(argv, { now = new Date() } = {}) {
   const inputs = [];
   let output = null;
   let maxSamples = DEFAULT_MAX_SAMPLES;
+  const usageError = (message) => {
+    process.stderr.write(`${message}\n${usage()}`);
+    return Promise.resolve(2);
+  };
   for (let i = 0; i < args.length; i += 1) {
+    const option = optionValue(args, i);
     if (args[i] === "--input") {
-      inputs.push(...args[i + 1].split(","));
+      if (option.error !== undefined) return usageError(option.error);
+      inputs.push(...option.value.split(","));
       i += 1;
     } else if (args[i] === "--output") {
-      output = resolveOutput(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      output = resolveOutput(option.value);
       i += 1;
     } else if (args[i] === "--max-samples") {
-      maxSamples = Number(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      const parsed = parseIntegerOption(option.value, 0);
+      if (parsed.error !== undefined) return usageError(`invalid --max-samples: ${parsed.error}`);
+      maxSamples = parsed.value;
       i += 1;
     } else if (args[i] === "--help") {
       process.stdout.write(usage());
@@ -236,6 +257,7 @@ function usage() {
   return [
     "usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]",
     "  [--output summary.json] [--max-samples N]",
+    "fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2",
     "exit codes: 0 clean · 1 drift detected · 2 usage/IO error",
     "",
   ].join("\n");

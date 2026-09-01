@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -136,4 +136,71 @@ test("cli reports usage errors without throwing", async () => {
   const badPath = join(tmpdir(), "aid-473-f2-does-not-exist");
   assert.equal(await aggregateCli(["node", "aggregate_funnel.mjs", "--input", badPath]), 2);
   assert.equal(await aggregateCli(["node", "aggregate_funnel.mjs", "--bogus"]), 2);
+});
+
+// AID-492 (QA AID-489 D1): `--k abc` used to become k=NaN, `n < NaN` is always
+// false, and k-anonymous suppression was silently OFF — the n=3 W33 cohort got
+// published with rates and `parameters.kMinimum` serialized as null. Numeric
+// options must now fail closed: usage error + exit 2, and no bucket (not even
+// a suppressed one) is published anywhere.
+test("cli fails closed on invalid numeric options: exit 2 and nothing published (QA AID-489 D1)", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "aid-492-d1-"));
+  const output = join(dir, "report.json");
+  const markdown = join(dir, "report.md");
+  const base = [
+    "node", "aggregate_funnel.mjs",
+    "--input", SYNTHETIC,
+    "--now", GENERATED_AT.toISOString(),
+    "--output", output, "--markdown", markdown,
+  ];
+  const invalid = [
+    ["--k", "abc"], ["--k", ""], ["--k", "0"], ["--k", "-3"], ["--k", "1.5"], ["--k", "0x5"],
+    ["--k", "4"], // below the AID-463 §3.0 day-1 floor: k≥5, even when well-formed
+    ["--grace-days", "abc"], ["--grace-days", "0"], ["--grace-days", "2.5"],
+    ["--windows", "abc"], ["--windows", "1,x,7"], ["--windows", "0,7"], ["--windows", "1,,7"],
+    ["--now", "not-a-date"], ["--now", ""],
+  ];
+  for (const [flag, value] of invalid) {
+    assert.equal(await aggregateCli([...base, flag, value]), 2, `expected exit 2 for ${flag} ${value}`);
+  }
+  // Nothing was aggregated or written: a fail-open run would have created both
+  // artifacts (and published the n=3 W33 cohort when --k was the bad flag).
+  assert.equal(await access(output).then(() => true, () => false), false, "report.json must not exist");
+  assert.equal(await access(markdown).then(() => true, () => false), false, "report.md must not exist");
+});
+
+// AID-492 (QA AID-489 D2): a trailing option without a value used to crash the
+// CLI with `TypeError: Cannot read properties of undefined` (exit 1) instead
+// of the documented usage error + exit 2.
+test("cli fails closed on missing option values: exit 2, no crash (QA AID-489 D2)", async () => {
+  for (const flag of ["--input", "--output", "--markdown", "--k", "--grace-days", "--windows", "--now"]) {
+    assert.equal(await aggregateCli(["node", "aggregate_funnel.mjs", flag]), 2, flag);
+  }
+});
+
+test("library boundary is fail-closed too: aggregateFunnel throws, runAggregation refuses k<5 (QA AID-489 D1)", async () => {
+  assert.throws(() => aggregateFunnel([], { k: Number("abc") }), TypeError);
+  assert.throws(() => aggregateFunnel([], { k: 0 }), TypeError);
+  assert.throws(() => aggregateFunnel([], { graceDays: Number("abc") }), TypeError);
+  assert.throws(() => aggregateFunnel([], { windows: [1, Number("abc")] }), TypeError);
+  assert.throws(() => aggregateFunnel([], { windows: [] }), TypeError);
+  // The report-producing boundary enforces the §3.0 floor (k≥5), so even a
+  // programmatic caller cannot generate a below-policy report.
+  const refused = await runAggregation({ inputs: [SYNTHETIC], k: 4, now: GENERATED_AT });
+  assert.equal(refused.exitCode, 2);
+  assert.match(refused.report.error, /k must be an integer ≥ 5/);
+  // Well-formed values keep working through the full CLI path.
+  const dir = await mkdtemp(join(tmpdir(), "aid-492-ok-"));
+  const output = join(dir, "report.json");
+  assert.equal(
+    await aggregateCli([
+      "node", "aggregate_funnel.mjs", "--input", SYNTHETIC, "--k", "5",
+      "--windows", "1,7,21", "--grace-days", "2", "--now", GENERATED_AT.toISOString(),
+      "--output", output,
+    ]),
+    0,
+  );
+  const report = JSON.parse(await readFile(output, "utf8"));
+  assert.equal(report.parameters.kMinimum, 5);
+  assert.deepEqual(report.retention.cohorts["2026-W33"], { suppressed: true, n: 3 });
 });

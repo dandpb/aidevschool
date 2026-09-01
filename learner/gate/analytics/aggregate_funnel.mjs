@@ -26,7 +26,13 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { validateAnalyticsEvent } from "../netlify-functions/dojo-analytics-collector.mjs";
-import { collectInputFiles, readNdjsonEntries, resolveOutput } from "./ndjson_input.mjs";
+import {
+  collectInputFiles,
+  optionValue,
+  parseIntegerOption,
+  readNdjsonEntries,
+  resolveOutput,
+} from "./ndjson_input.mjs";
 
 export const REPORT_VERSION = 1;
 export const DEFAULT_WINDOWS = [1, 7, 21];
@@ -77,8 +83,20 @@ function eventTime(event) {
  */
 export function aggregateFunnel(entries, options = {}) {
   const k = options.k ?? DEFAULT_K_MINIMUM;
-  const windows = [...(options.windows ?? DEFAULT_WINDOWS)].sort((a, b) => a - b);
   const graceDays = options.graceDays ?? DEFAULT_GRACE_DAYS;
+  const windows = [...new Set(options.windows ?? DEFAULT_WINDOWS)].sort((a, b) => a - b);
+  // Fail-closed numeric parameters (AID-492 D1): a NaN k makes `n < k` always
+  // false, i.e. k-anonymous suppression silently OFF. Invalid values throw
+  // instead of aggregating — programmatic callers can't fail open either.
+  if (!Number.isInteger(k) || k < 1) {
+    throw new TypeError(`k must be an integer ≥ 1, got: ${k}`);
+  }
+  if (!Number.isInteger(graceDays) || graceDays < 1) {
+    throw new TypeError(`graceDays must be an integer ≥ 1, got: ${graceDays}`);
+  }
+  if (windows.length === 0 || windows.some((nDays) => !Number.isInteger(nDays) || nDays < 1)) {
+    throw new TypeError(`windows must be a non-empty list of integers ≥ 1, got: ${JSON.stringify(options.windows)}`);
+  }
 
   const accepted = [];
   let rejectedEvents = 0;
@@ -326,6 +344,22 @@ export function renderMarkdownReport(report) {
  *   2 on usage/IO error.
  */
 export async function runAggregation({ inputs, k, windows, graceDays, now = new Date() }) {
+  // Policy floor at the report-producing boundary (AID-492 D1): AID-463 §3.0
+  // mandates k≥5 from day 1, so this tool refuses to produce a report below
+  // it (a lower k would publish cohorts of 1-4 installations with rates).
+  if (k !== undefined && (!Number.isInteger(k) || k < DEFAULT_K_MINIMUM)) {
+    const detail = `k must be an integer ≥ ${DEFAULT_K_MINIMUM} (AID-463 §3.0 k-anonymity floor), got: ${k}`;
+    return { report: { error: detail }, markdown: "", exitCode: 2 };
+  }
+  if (graceDays !== undefined && (!Number.isInteger(graceDays) || graceDays < 1)) {
+    return { report: { error: `graceDays must be an integer ≥ 1, got: ${graceDays}` }, markdown: "", exitCode: 2 };
+  }
+  if (
+    windows !== undefined &&
+    (!Array.isArray(windows) || windows.length === 0 || windows.some((nDays) => !Number.isInteger(nDays) || nDays < 1))
+  ) {
+    return { report: { error: `windows must be a non-empty list of integers ≥ 1, got: ${JSON.stringify(windows)}` }, markdown: "", exitCode: 2 };
+  }
   let read;
   try {
     const inputFiles = await collectInputFiles(inputs);
@@ -345,27 +379,56 @@ export function aggregateCli(argv, { now = new Date() } = {}) {
   let k = DEFAULT_K_MINIMUM;
   let graceDays = DEFAULT_GRACE_DAYS;
   let windows = DEFAULT_WINDOWS;
+  const usageError = (message) => {
+    process.stderr.write(`${message}\n${usage()}`);
+    return Promise.resolve(2);
+  };
   for (let i = 0; i < args.length; i += 1) {
+    const option = optionValue(args, i);
     if (args[i] === "--input") {
-      inputs.push(...args[i + 1].split(","));
+      if (option.error !== undefined) return usageError(option.error);
+      inputs.push(...option.value.split(","));
       i += 1;
     } else if (args[i] === "--output") {
-      output = resolveOutput(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      output = resolveOutput(option.value);
       i += 1;
     } else if (args[i] === "--markdown") {
-      markdown = resolveOutput(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      markdown = resolveOutput(option.value);
       i += 1;
     } else if (args[i] === "--k") {
-      k = Number(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      const parsed = parseIntegerOption(option.value, 1);
+      if (parsed.error !== undefined) return usageError(`invalid --k: ${parsed.error}`);
+      if (parsed.value < DEFAULT_K_MINIMUM) {
+        return usageError(`invalid --k: ${parsed.value} (AID-463 §3.0 requires k ≥ ${DEFAULT_K_MINIMUM} from day 1)`);
+      }
+      k = parsed.value;
       i += 1;
     } else if (args[i] === "--grace-days") {
-      graceDays = Number(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      const parsed = parseIntegerOption(option.value, 1);
+      if (parsed.error !== undefined) return usageError(`invalid --grace-days: ${parsed.error}`);
+      graceDays = parsed.value;
       i += 1;
     } else if (args[i] === "--windows") {
-      windows = args[i + 1].split(",").map((value) => Number(value));
+      if (option.error !== undefined) return usageError(option.error);
+      const parsedWindows = [];
+      for (const raw of option.value.split(",")) {
+        const parsed = parseIntegerOption(raw, 1);
+        if (parsed.error !== undefined) return usageError(`invalid --windows entry: ${parsed.error}`);
+        parsedWindows.push(parsed.value);
+      }
+      windows = parsedWindows;
       i += 1;
     } else if (args[i] === "--now") {
-      now = new Date(args[i + 1]);
+      if (option.error !== undefined) return usageError(option.error);
+      const parsed = new Date(option.value);
+      if (Number.isNaN(parsed.getTime())) {
+        return usageError(`invalid --now: expected a valid ISO-8601 datetime, got: ${option.value}`);
+      }
+      now = parsed;
       i += 1;
     } else if (args[i] === "--help") {
       process.stdout.write(usage());
@@ -399,6 +462,8 @@ function usage() {
     "  [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]",
     "  [--grace-days 2] [--now ISO8601]",
     "emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published",
+    "fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);",
+    "  a missing option value or invalid number exits 2 without aggregating",
     "exit codes: 0 ok · 2 usage/IO error",
     "",
   ].join("\n");

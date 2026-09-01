@@ -88,3 +88,34 @@ export async function readNdjsonEntries(files) {
 export function resolveOutput(path) {
   return typeof path === "string" && path.length > 0 ? (isAbsolute(path) ? path : resolve(path)) : null;
 }
+
+/**
+ * Fail-closed value token for an option at args[index] (AID-492 D2).
+ * A missing or empty value is an error, never `undefined` reaching `.split`
+ * or `Number` — the CLI exits 2 with the usage message instead.
+ * @returns {{value: string} | {error: string}}
+ */
+export function optionValue(args, index) {
+  const raw = index + 1 < args.length ? args[index + 1] : null;
+  if (raw === null || raw === "") {
+    return { error: `option ${args[index]} requires a non-empty value` };
+  }
+  return { value: raw };
+}
+
+/**
+ * Strict integer option parse (AID-492 D1): no `Number()` coercion tricks —
+ * "abc", "", "1.5", "0x1", "1e2", "Infinity" are all errors, so a NaN can
+ * never silently disable k-anonymous suppression or sample collection.
+ * @param {string} raw value token from the command line
+ * @param {number} minimum inclusive lower bound (≥ 0 allowed)
+ * @returns {{value: number} | {error: string}}
+ */
+export function parseIntegerOption(raw, minimum = 1) {
+  const text = typeof raw === "string" ? raw.trim() : "";
+  if (/^[+-]?\d+$/.test(text)) {
+    const value = Number(text);
+    if (value >= minimum) return { value };
+  }
+  return { error: `expected an integer ≥ ${minimum}, got: ${text === "" ? '""' : text}` };
+}

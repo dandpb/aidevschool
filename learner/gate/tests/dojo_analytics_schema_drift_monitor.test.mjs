@@ -100,6 +100,41 @@ test("usage and IO errors exit 2 without throwing", async () => {
   assert.equal(await monitorCli(["node", "schema_drift_monitor.mjs", "--bogus"]), 2);
 });
 
+// AID-492 (QA AID-489 D2 + the D1 fail-open class in this CLI): a trailing
+// option used to crash with `TypeError: Cannot read properties of undefined`
+// (exit 1), and `--max-samples abc` became NaN, silently recording zero drift
+// samples. Both are usage errors now: message + exit 2, no crash, no run.
+test("cli fails closed on missing values and invalid --max-samples: exit 2 (QA AID-489 D2 + D1 class)", async () => {
+  for (const flag of ["--input", "--output", "--max-samples"]) {
+    assert.equal(await monitorCli(["node", "schema_drift_monitor.mjs", flag]), 2, flag);
+  }
+  const invalid = await monitorCli(
+    ["node", "schema_drift_monitor.mjs", "--input", join(FIXTURES, "synthetic"), "--max-samples", "abc"],
+    { now: NOW },
+  );
+  assert.equal(invalid, 2);
+  assert.equal(
+    await monitorCli(
+      ["node", "schema_drift_monitor.mjs", "--input", join(FIXTURES, "synthetic"), "--max-samples", "-1"],
+      { now: NOW },
+    ),
+    2,
+  );
+  // The library boundary rejects a NaN maxSamples instead of losing samples.
+  const refused = await runMonitor({ inputs: [join(FIXTURES, "synthetic")], now: NOW, maxSamples: Number("abc") });
+  assert.equal(refused.exitCode, 2);
+  assert.match(refused.summary.error, /maxSamples must be an integer ≥ 0/);
+  // Well-formed edge: zero samples is a legitimate request and still runs clean.
+  const dir = await mkdtemp(join(tmpdir(), "aid-492-monitor-"));
+  assert.equal(
+    await monitorCli(
+      ["node", "schema_drift_monitor.mjs", "--input", join(FIXTURES, "synthetic"), "--max-samples", "0", "--output", join(dir, "s.json")],
+      { now: NOW },
+    ),
+    0,
+  );
+});
+
 test("cli writes the summary to --output and bounds samples", async () => {
   const dir = await mkdtemp(join(tmpdir(), "aid-473-f2-monitor-"));
   const output = join(dir, "summary.json");
