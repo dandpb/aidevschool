@@ -333,10 +333,9 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   });
 }
 
-const root = document.getElementById("root");
-if (!root) throw new Error("Elemento #root não encontrado");
-
 async function boot(): Promise<void> {
+  const root = document.getElementById("root");
+  if (!root) throw new Error("Elemento #root não encontrado");
   const hosted = new URLSearchParams(window.location.search).get("host") === "os";
   if (hosted) {
     root.innerHTML = renderLocalSuggestion(await loadHostLocalToday());
