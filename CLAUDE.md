@@ -31,6 +31,13 @@ mantêm plataformas legadas funcionando.
 
 ## Como trabalhar
 
+- **SDLC loop (toda tarefa de engenharia):** rode a skill `ai-native-sdlc`
+  (`.claude/skills/ai-native-sdlc/SKILL.md`) — intent → spec → plan → build →
+  verify → review → ship, cada estágio termina com um artefato versionado em
+  `intent/<change-id>/`. Diffs seguem os passes do [REVIEW.md](REVIEW.md);
+  hooks em `.claude/settings.json` bloqueiam caminhos gerados, enfraquecimento
+  de testes e force-push. Processo completo: [docs/sdlc/README.md](docs/sdlc/README.md).
+
 - **Para o motor Claude Code** (agentes/comandos de 5 fases): abra o Claude Code com raiz em
   **`engines/miniMaxEvolutionEngine/`**. Lá estão `.claude/` (subagents, comandos `/devschool-*`,
   skill `agora-continuum`, hook de briefing) e o `CLAUDE.md` detalhado do orquestrador. O motor

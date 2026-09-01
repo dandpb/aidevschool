@@ -85,6 +85,7 @@ export const wormholeRecord = {
   project: '03_url_shortener',
   scenario_id: 'wormhole-L4',
   game: 'WORMHOLE',
+  attempt_id: undefined,
   metrics: {
     resolution_chosen: 'salted',
     resolved_code: '1drY',
@@ -108,6 +109,7 @@ export const relayRecord = {
   project: '05_websocket_chat',
   scenario_id: 'relay-station-L4',
   game: 'RELAY STATION',
+  attempt_id: undefined,
   metrics: {
     kind: 'voxeldoj-relay-station',
     target_correct: true,
@@ -131,6 +133,7 @@ export const pipelinePlantRecord = {
   project: '06_file_upload_pipeline',
   scenario_id: 'pipeline-plant-L4',
   game: 'PIPELINE PLANT',
+  attempt_id: undefined,
   metrics: {
     kind: 'voxeldoj-pipeline-plant',
     size: 1308,
@@ -153,6 +156,88 @@ export const pipelinePlantRecord = {
   curriculum_context: {
     concept: 'streaming vs buffering + bounded memory',
     mechanic: 'fluid tank + pipe + chunked slugs',
+  },
+}
+
+export const checkpointCityRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U7-rest-api-auth',
+  project: '07_rest_api_auth',
+  scenario_id: 'checkpoint-city-L4',
+  game: 'CHECKPOINT CITY',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-checkpoint-city',
+    reorder_correct: true,
+    given_order: 'rate-limit,logging,auth',
+    player_order: 'logging,auth,rate-limit',
+    target_order: 'logging,auth,rate-limit',
+    probe_prediction_ok: true,
+    probe_answer: 'auth',
+  },
+  observations: {
+    kind: 'checkpoint-city-L4',
+    order: ['logging', 'auth', 'rate-limit'],
+    probePrediction: 'auth',
+  },
+  curriculum_context: {
+    concept: 'middleware layers + JWT verification',
+    mechanic: 'concentric city walls, badge gates',
+  },
+}
+
+export const timelineTowerRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U8-event-driven',
+  project: '08_event_driven_order_system',
+  scenario_id: 'timeline-tower-L4',
+  game: 'TIMELINE TOWER',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-timeline-tower',
+    order_status_view_ok: true,
+    shipment_list_view_ok: true,
+    same_log_two_views: true,
+    views_correct: 2,
+  },
+  observations: {
+    kind: 'timeline-tower-L4',
+    predictedOrderStatus: 'cancelled',
+    predictedShipped: false,
+  },
+  curriculum_context: {
+    concept: 'append-only log + projection replay',
+    mechanic: 'tower of stacked event floors',
+  },
+}
+
+export const dockingBayRecord = {
+  ...teachingGameRecord,
+  unit_id: 'U9-plugin-system',
+  project: '09_plugin_system',
+  scenario_id: 'docking-bay-L1',
+  game: 'DOCKING BAY',
+  attempt_id: undefined,
+  metrics: {
+    kind: 'voxeldoj-docking-bay',
+    dock_predictions: 6,
+    dock_prediction_accuracy: 1,
+    contracts_checked: 6,
+  },
+  observations: {
+    kind: 'docking-bay-L1',
+    dockPredictions: [
+      { podId: 'pod-0', predictedDock: true },
+      { podId: 'pod-1', predictedDock: false },
+      { podId: 'pod-2', predictedDock: false },
+      { podId: 'pod-3', predictedDock: true },
+      { podId: 'pod-4', predictedDock: false },
+      { podId: 'pod-5', predictedDock: false },
+    ],
+  },
+  curriculum_context: {
+    concept: 'sandboxing + interface contracts',
+    mechanic: 'docking pods, force-field sandbox',
   },
 }
 

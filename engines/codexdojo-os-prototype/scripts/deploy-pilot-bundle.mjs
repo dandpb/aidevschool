@@ -8,25 +8,36 @@ import { verifyPilotBundle } from './pilot-bundle-lib.mjs'
 const osRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const dist = resolve(osRoot, 'dist')
 const verifierFunction = 'dojo-verification-bridge.mjs'
-const canonicalFunction = resolve(osRoot, '..', '..', 'learner', 'gate', 'netlify-functions', verifierFunction)
-const stagedFunction = resolve(osRoot, 'netlify', 'functions', verifierFunction)
+const collectorFunction = 'dojo-analytics-collector.mjs'
+const literacyCorpusModule = '_shared/literacy-corpus.mjs'
+const canonicalFunctions = resolve(osRoot, '..', '..', 'learner', 'gate', 'netlify-functions')
+const stagedFunctions = resolve(osRoot, 'netlify', 'functions')
 
 async function sha256(path) {
   return createHash('sha256').update(await readFile(path)).digest('hex')
 }
 
-/** The deployed verifier must be byte-identical to the canonical learner/gate source. */
+/** The deployed functions and the literacy corpus must be byte-identical to
+ * the canonical learner/gate sources (the corpus is regenerated from
+ * curriculum/ai-literacy/ by its canonical tools; AID-449; collector AID-470). */
 export async function verifyStagedVerifier(
-  canonical = canonicalFunction,
-  staged = stagedFunction,
+  canonical = canonicalFunctions,
+  staged = stagedFunctions,
 ) {
-  const [canonicalHash, stagedHash] = await Promise.all([sha256(canonical), sha256(staged)])
-  if (canonicalHash !== stagedHash) {
-    throw new Error(
-      `deploy aborted: staged ${verifierFunction} drifted from learner/gate/netlify-functions — rerun npm run build:pilot`,
-    )
+  const hashes = {}
+  for (const module of [verifierFunction, collectorFunction, literacyCorpusModule]) {
+    const [canonicalHash, stagedHash] = await Promise.all([
+      sha256(join(canonical, module)),
+      sha256(join(staged, module)),
+    ])
+    if (canonicalHash !== stagedHash) {
+      throw new Error(
+        `deploy aborted: staged ${module} drifted from learner/gate/netlify-functions — rerun npm run build:pilot`,
+      )
+    }
+    hashes[module] = stagedHash
   }
-  return stagedHash
+  return hashes[verifierFunction]
 }
 
 export async function deployPilotBundle(root, options = [], spawn = spawnSync) {

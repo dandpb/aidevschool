@@ -29,6 +29,16 @@ test('routes the same-origin Dev verification bridge ahead of the SPA fallback (
   assert.ok(verifier >= 0 && verifier < spaFallback, 'bridge routes must target the verifier function')
 })
 
+test('routes the same-origin analytics collector ahead of the SPA fallback (AID-470)', async () => {
+  const config = await readFile(new URL('../netlify.toml', import.meta.url), 'utf8')
+  const spaFallback = config.indexOf('from = "/*"')
+  const collectorRoute = config.indexOf('from = "/__dojo/bridge/v1/analytics"')
+
+  assert.ok(collectorRoute >= 0 && collectorRoute < spaFallback, 'collector route must precede the SPA fallback')
+  const collectorTarget = config.indexOf('to = "/.netlify/functions/dojo-analytics-collector"', collectorRoute)
+  assert.ok(collectorTarget > collectorRoute && collectorTarget < spaFallback, 'collector route must target the collector function')
+})
+
 test('stages the canonical learner/gate verifier into the site root (AID-305)', async () => {
   const script = await readFile(new URL('./build-pilot-bundle.mjs', import.meta.url), 'utf8')
 
@@ -36,6 +46,10 @@ test('stages the canonical learner/gate verifier into the site root (AID-305)', 
   assert.match(script, /'netlify', 'functions'/)
   assert.match(script, /verifierFunction = 'dojo-verification-bridge\.mjs'/)
   assert.match(script, /cp\(join\(canonicalFunctions, verifierFunction\), join\(stagedFunctions, verifierFunction\)\)/)
+  assert.match(script, /collectorFunction = 'dojo-analytics-collector\.mjs'/)
+  assert.match(script, /cp\(join\(canonicalFunctions, collectorFunction\), join\(stagedFunctions, collectorFunction\)\)/)
+  assert.match(script, /literacyCorpusModule = '_shared\/literacy-corpus\.mjs'/)
+  assert.match(script, /cp\(join\(canonicalFunctions, literacyCorpusModule\), join\(stagedFunctions, literacyCorpusModule\)\)/)
 })
 
 test('deploys the staged functions directory and rejects verifier drift (AID-305)', async (t) => {
@@ -46,13 +60,23 @@ test('deploys the staged functions directory and rejects verifier drift (AID-305
 
   const dir = await mkdtemp(join(tmpdir(), 'pilot-verifier-drift-'))
   t.after(() => rm(dir, { recursive: true, force: true }))
-  const canonical = join(dir, 'canonical.mjs')
-  const staged = join(dir, 'staged.mjs')
-  await writeFile(canonical, 'export default () => {}\n')
-  await writeFile(staged, 'export default () => {}\n')
+  const canonical = join(dir, 'canonical')
+  const staged = join(dir, 'staged')
+  await mkdir(join(canonical, '_shared'), { recursive: true })
+  await mkdir(join(staged, '_shared'), { recursive: true })
+  for (const module of ['dojo-verification-bridge.mjs', 'dojo-analytics-collector.mjs', '_shared/literacy-corpus.mjs']) {
+    await writeFile(join(canonical, module), 'export default () => {}\n')
+    await writeFile(join(staged, module), 'export default () => {}\n')
+  }
   assert.equal(await verifyStagedVerifier(canonical, staged), await verifyStagedVerifier(canonical, canonical))
-  await writeFile(staged, 'export default () => 1\n')
-  await assert.rejects(verifyStagedVerifier(canonical, staged), /drifted/)
+  await writeFile(join(staged, 'dojo-verification-bridge.mjs'), 'export default () => 1\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /dojo-verification-bridge\.mjs.*drifted/)
+  await writeFile(join(staged, 'dojo-verification-bridge.mjs'), 'export default () => {}\n')
+  await writeFile(join(staged, 'dojo-analytics-collector.mjs'), 'export default () => 1\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /dojo-analytics-collector\.mjs.*drifted/)
+  await writeFile(join(staged, 'dojo-analytics-collector.mjs'), 'export default () => {}\n')
+  await writeFile(join(staged, '_shared', 'literacy-corpus.mjs'), 'export const literacyCorpus = {}\n')
+  await assert.rejects(verifyStagedVerifier(canonical, staged), /literacy-corpus\.mjs.*drifted/)
 })
 
 test('allows same-origin pilot apps to be framed without allowing external ancestors', async () => {
