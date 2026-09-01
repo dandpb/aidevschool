@@ -116,8 +116,11 @@ while IFS= read -r -d '' status && IFS= read -r -d '' path; do
     *) fail "unhandled diff status '${status}' for '${path}'" ;;
   esac
 
-  # 1. protect-paths.sh — derived/generated path check, every status.
-  payload="$(jq -nc --arg p "$path" '{tool_name:"Edit", tool_input:{file_path:$p}}')"
+  # 1. protect-paths.sh — derived/generated path check, every status. The
+  #    hook pattern-matches the path string (no filesystem access), and its
+  #    leading-slash forms ('/.mavis/', '/dist/', ...) assume an absolute
+  #    path like the runtime would pass — so feed the absolute path.
+  payload="$(jq -nc --arg p "$REPO_ROOT/$path" '{tool_name:"Edit", tool_input:{file_path:$p}}')"
   rc=0; run_hook protect-paths.sh "$REPO_ROOT" "$payload" || rc=$?
   check_hook_rc "$rc" protect-paths.sh "$path"
   [ "$rc" = "2" ] && record_violation "derived-path" "$ALLOW_DERIVED_EDIT" "$path"
