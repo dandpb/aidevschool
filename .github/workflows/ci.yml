@@ -142,6 +142,12 @@ jobs:
       # accept and reject exactly the OS analytics vocabulary; TS-side parity
       # runs in the vitest suite above (collectorParity.test.ts).
       - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
+      # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
+      # contract tests run here, and the monitor itself fails high over the
+      # synthetic fixtures (real pilot NDJSON never lands in the repo; the
+      # fixtures are also checked against events.ts by fixtureSchemaDrift.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs ../../learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs
+      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
