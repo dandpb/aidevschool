@@ -1,0 +1,4 @@
+{"schemaVersion":1,"eventId":"evt-0047","name":"onboarding.started","occurredAt":"2026-08-10T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-j1","sessionId":"s-j1-1"}}
+{"schemaVersion":1,"eventId":"evt-0048","name":"onboarding.completed","occurredAt":"2026-08-10T10:05:00Z","sequence":2,"dimensions":{"installationId":"install-j1","sessionId":"s-j1-1"}}
+{"schemaVersion":1,"eventId":"evt-0049","name":"mission.started","occurredAt":"2026-08-10T10:10:00Z","sequence":3,"dimensions":{"installationId":"install-j1","sessionId":"s-j1-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0050","name":"mission.completed","occurredAt":"2026-08-10T10:30:00Z","sequence":4,"dimensions":{"installationId":"install-j1","sessionId":"s-j1-1","result":"completed"}}

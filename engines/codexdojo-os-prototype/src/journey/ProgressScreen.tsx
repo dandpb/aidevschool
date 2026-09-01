@@ -5,6 +5,7 @@ import { missionHasCanonicalMastery } from '../missions/reviewMapping'
 import { dailyXp, missionKey, type OsProgress } from '../progress/domain'
 import type { EvidenceVerificationState } from '../verification/ports'
 import { useVerificationByMission } from './useVerificationByMission'
+import { listStudentRailMissions } from './studentPath'
 
 function evidenceLabel(state: EvidenceVerificationState | undefined): string {
   if (state === undefined || state.kind === 'not-submitted') return 'Sem evidência recebida'
@@ -59,8 +60,8 @@ export function ProgressScreen({
       </section>
 
       <section className="progress-missions" aria-label="Estado por missão">
-        <h2>Missões do primeiro capítulo</h2>
-        {catalog.listLaunchable().map((mission) => {
+        <h2>Missões publicadas</h2>
+        {listStudentRailMissions(catalog).map((mission) => {
           const key = missionKey(mission.trackId, mission.id)
           const localStatus = progress.missionStatusByKey[key]
           const engagement = progress.missionEngagementByKey[key]

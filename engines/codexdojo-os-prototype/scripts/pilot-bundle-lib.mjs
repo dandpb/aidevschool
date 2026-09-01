@@ -36,6 +36,21 @@ export const PILOT_SURFACES = [
   { name: 'warehouse', entry: 'apps/warehouse/index.html' },
   { name: 'wormhole', entry: 'apps/wormhole/index.html' },
   { name: 'relay-station', entry: 'apps/relay-station/index.html' },
+  { name: 'pipeline-plant', entry: 'apps/pipeline-plant/index.html' },
+  { name: 'checkpoint-city', entry: 'apps/checkpoint-city/index.html' },
+  { name: 'timeline-tower', entry: 'apps/timeline-tower/index.html' },
+  { name: 'docking-bay', entry: 'apps/docking-bay/index.html' },
+  { name: 'pixelquest', entry: 'apps/pixelquest/index.html' },
+  { name: 'dojotoday', entry: 'apps/dojotoday/index.html' },
+  { name: 'hash-ring', entry: 'apps/hash-ring/index.html' },
+  { name: 'air-traffic', entry: 'apps/air-traffic/index.html' },
+  { name: 'mission-control', entry: 'apps/mission-control/index.html' },
+  { name: 'breaker-grid', entry: 'apps/breaker-grid/index.html' },
+  { name: 'river-delta', entry: 'apps/river-delta/index.html' },
+  { name: 'observatory', entry: 'apps/observatory/index.html' },
+  { name: 'freight-yard', entry: 'apps/freight-yard/index.html' },
+  { name: 'lighthouse-network', entry: 'apps/lighthouse-network/index.html' },
+  { name: 'stacks', entry: 'apps/stacks/index.html' },
 ]
 
 async function filesBelow(root, current = root) {

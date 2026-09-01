@@ -97,7 +97,7 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
       context,
       confidence,
       taskCategory,
-      // ponytail: MVP só tem a trilha IA na Prática; Trilha Dev é teaser "em breve".
+      // Standalone app stays IA na Prática. Trilha Dev is a CTA to the public OS.
       audience: "ia_pratica",
     });
     onDone(updated);
@@ -148,16 +148,20 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
                 </div>
                 <span className="route-badge">Disponível</span>
               </div>
-              <div className="audience-route audience-route-coming" data-testid="dev-track-teaser">
+              <a
+                className="audience-route audience-route-dev"
+                data-testid="dev-track-teaser"
+                href="https://aidevschool-codexdojo-os.netlify.app/?track=dev"
+              >
                 <span className="route-icon" aria-hidden="true">
                   ⌁
                 </span>
                 <div>
                   <strong>Trilha Dev</strong>
-                  <small>Agentes, APIs e apps com IA.</small>
+                  <small>Para programadores. Sem conta; o progresso fica no outro site.</small>
                 </div>
-                <span className="route-badge">Em breve</span>
-              </div>
+                <span className="route-badge">Abrir no OS</span>
+              </a>
             </div>
 
             <div className="privacy-note">

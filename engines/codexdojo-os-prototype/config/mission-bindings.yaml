@@ -1,10 +1,10 @@
 schemaVersion: 1
 tracks:
   - trackId: ai-pratica
-    contentVersion: "2026-08-21.1"
+    contentVersion: "2026-09-01.1"
     recommendedEntryMissionId: l02
   - trackId: dev
-    contentVersion: "2026-07-25.1"
+    contentVersion: "2026-09-01.1"
     recommendedEntryMissionId: game-02-warehouse
 bindings:
   - missionId: l01
@@ -21,7 +21,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-08-21.1"
+      contentVersion: "2026-09-01.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -43,7 +43,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-08-21.1"
+      contentVersion: "2026-09-01.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -65,7 +65,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-08-21.1"
+      contentVersion: "2026-09-01.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -73,6 +73,314 @@ bindings:
     fallback:
       kind: dom
       summary: "Classifique tarefas adequadas e arriscadas sem depender de cor, movimento ou ponteiro preciso."
+  - missionId: l04
+    chapterOrder: 4
+    prerequisites: [l03]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l04
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l04
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Compare quatro pedidos e escolha o que tem o objetivo mais claro e verificavel."
+  - missionId: l05
+    chapterOrder: 5
+    prerequisites: [l04]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l05
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l05
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Melhore um pedido generico preenchendo objetivo, contexto, publico e formato por campos rotulados."
+  - missionId: l06
+    chapterOrder: 6
+    prerequisites: [l05]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l06
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l06
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Aponte o contexto que falta e ajuste publico, tom e formato por controles rotulados."
+  - missionId: l07
+    chapterOrder: 7
+    prerequisites: [l06]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l07
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l07
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Ordene etapas de ajuste especifico em vez de recomecar o pedido do zero."
+  - missionId: l08
+    chapterOrder: 8
+    prerequisites: [l07]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l08
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l08
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Compare as duas respostas e escolha a mais util com criterio explicito."
+  - missionId: l09
+    chapterOrder: 9
+    prerequisites: [l08]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l09
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l09
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Avalie cada criterio e marque sinais de resposta inventada por controles rotulados."
+  - missionId: l10
+    chapterOrder: 10
+    prerequisites: [l09]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l10
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l10
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Marque as afirmacoes que exigem conferencia em fonte externa antes do uso."
+  - missionId: l11
+    chapterOrder: 11
+    prerequisites: [l10]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l11
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l11
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Ordene o processo de decisao e explicite os criterios antes de escolher."
+  - missionId: l12
+    chapterOrder: 12
+    prerequisites: [l11]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l12
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l12
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Classifique cada informacao como segura ou sensivel antes de cola-la na IA."
+  - missionId: l13
+    chapterOrder: 13
+    prerequisites: [l12]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l13
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l13
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Monte o pedido de uma tarefa real por campos rotulados mantendo o julgamento final."
+  - missionId: l14
+    chapterOrder: 14
+    prerequisites: [l13]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l14
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l14
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Execute pedir, proteger e aplicar em um cenario integrado por etapas rotuladas."
+  - missionId: l18
+    chapterOrder: 15
+    prerequisites: [l14]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l18
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l18
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Salve um pedido que funcionou como modelo e adapte-o a um novo cenario por controles rotulados."
+  - missionId: l19
+    chapterOrder: 16
+    prerequisites: [l07]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l19
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l19
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Leia uma conversa longa degradada e restaure o contexto perdido por controles rotulados."
+  - missionId: l20
+    chapterOrder: 17
+    prerequisites: [l10]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l20
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l20
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Marque afirmacoes que exigem verificacao e escolha a fonte certa por controles rotulados."
   - missionId: game-02-warehouse
     version: 1
     chapterOrder: 1
@@ -145,3 +453,232 @@ bindings:
     fallback:
       kind: dom
       summary: "Inspecione conexoes, fan-out e heartbeat por uma lista semantica com controles equivalentes."
+  - missionId: l15
+    chapterOrder: 4
+    prerequisites: []
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l15
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l15
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Classifique cada situacao de desenvolvimento e decida com criterio quando a IA generativa ajuda."
+  - missionId: l16
+    chapterOrder: 5
+    prerequisites: [l15]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l16
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l16
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Escreva um pedido de codigo com contexto tecnico e avalie a resposta com criterios de engenharia."
+  - missionId: l17
+    chapterOrder: 6
+    prerequisites: [l16]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l17
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l17
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Classifique o que vai para o cliente ou para o servidor e trate erros da API por controles rotulados."
+
+  - missionId: game-06-pipeline-plant
+    version: 1
+    chapterOrder: 7
+    prerequisites: [game-05-relay-station]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 06_file_upload_pipeline
+      unitId: U6-file-upload
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-06-pipeline-plant
+      entrypoint: http://127.0.0.1:5206/?hosted=1
+      environmentKey: VITE_PIPELINE_PLANT_URL
+      protocolVersion: "1.0"
+      contentVersion: game-06-pipeline-plant@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Preveja transbordo do tanque, ajuste o chunk e acompanhe a mesma simulacao deterministica por controles rotulados."
+  - missionId: game-07-checkpoint-city
+    version: 1
+    chapterOrder: 8
+    prerequisites: [game-06-pipeline-plant]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 07_rest_api_auth
+      unitId: U7-rest-api-auth
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-07-checkpoint-city
+      entrypoint: http://127.0.0.1:5207/?hosted=1
+      environmentKey: VITE_CHECKPOINT_CITY_URL
+      protocolVersion: "1.0"
+      contentVersion: game-07-checkpoint-city@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Preveja em qual porta cada pedido e rejeitado (logging, auth HMAC ou rate-limit) e reordene as muralhas por controles rotulados."
+  - missionId: game-08-timeline-tower
+    version: 1
+    chapterOrder: 9
+    prerequisites: [game-07-checkpoint-city]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 08_event_driven_order_system
+      unitId: U8-event-driven
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-08-timeline-tower
+      entrypoint: http://127.0.0.1:5208/?hosted=1
+      environmentKey: VITE_TIMELINE_TOWER_URL
+      protocolVersion: "1.0"
+      contentVersion: game-08-timeline-tower@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Dobre o log de eventos em projeções (status, checkpoint, replay e duas visões) por controles rotulados."
+  - missionId: game-09-docking-bay
+    version: 1
+    chapterOrder: 10
+    prerequisites: [game-08-timeline-tower]
+    trackId: dev
+    curriculum:
+      kind: project-voxel-game
+      projectId: 09_plugin_system
+      unitId: U9-plugin-system
+    estimatedMinutes: 12
+    runtime:
+      engineId: voxelDojo
+      gameId: game-09-docking-bay
+      entrypoint: http://127.0.0.1:5209/?hosted=1
+      environmentKey: VITE_DOCKING_BAY_URL
+      protocolVersion: "1.0"
+      contentVersion: game-09-docking-bay@0.1.0
+    evidence:
+      schema: teaching-game-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Preveja quais pods acoplam no clampe de contrato, nomeie métodos faltantes, classifique invocações na sandbox e conceda o conjunto mínimo de capacidades."
+  - missionId: l21
+    chapterOrder: 11
+    prerequisites: [l16]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l21
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l21
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Peca testes que valham a pena: monte o pedido com framework, comportamento alvo e caso de borda por controles rotulados."
+  - missionId: l22
+    chapterOrder: 12
+    prerequisites: [l16]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l22
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l22
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Revise o codigo sugerido pelo assistente aplicando criterios objetivos de engenharia por controles rotulados."
+  - missionId: l23
+    chapterOrder: 13
+    prerequisites: [l15]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l23
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l23
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-01.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Decida o que aceitar do assistente: classifique o risco do trecho e reconheca quando o humano decide por controles rotulados."
