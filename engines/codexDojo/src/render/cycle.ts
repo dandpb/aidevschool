@@ -80,7 +80,7 @@ export function renderCycle(state: AppState): string {
               <dd>${escapeHtml(model.selectedStage.output)}</dd>
             </div>
           </dl>
-          <button class="action-button" type="button" data-action="advance-stage">Concluir etapa</button>
+          <button class="action-button" type="button" data-action="advance-stage" aria-label="Concluir etapa: ${escapeHtml(model.selectedStage.label)}" title="Concluir etapa"><span aria-hidden="true">Concluir etapa</span></button>
         </article>
       </div>
     </section>
