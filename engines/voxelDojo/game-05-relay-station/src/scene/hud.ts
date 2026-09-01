@@ -1,13 +1,16 @@
 import { PALETTE } from "../../../shared/palette"
 import type { GameController, GameState } from "../game/controller"
 
-/** DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands. */
+/**
+ * DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands.
+ * Copy é PT-BR, alinhada ao vocabulário da projeção acessível (src/scene/accessible.ts).
+ */
 export function mountHud(root: HTMLElement, game: GameController): void {
   root.innerHTML = `
     <h1 data-testid="hud-title"></h1>
     <p class="lesson" data-testid="hud-lesson"></p>
     <p class="rule" data-testid="hud-rule"></p>
-    <div class="status" data-testid="hud-status"></div>
+    <div class="status" data-testid="hud-status" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="controls" data-testid="hud-controls"></div>
     <div class="legend" data-testid="hud-legend"></div>
     <pre class="metrics" data-testid="hud-metrics"></pre>
@@ -40,33 +43,36 @@ function q(root: HTMLElement, id: string): HTMLElement {
 }
 
 function renderStatus(node: HTMLElement, state: GameState): void {
-  if (state.phase === "briefing") node.textContent = "Press start."
-  else if (state.phase === "cleared") node.textContent = "Wave cleared — evidence emitted."
-  else if (state.phase === "failed") node.textContent = "Wave failed — evidence emitted. Retry?"
+  // Bloqueios urgentes usam role="alert"; demais mudanças são anunciadas educadamente.
+  node.setAttribute("role", state.phase === "failed" ? "alert" : "status")
+  if (state.phase === "briefing") node.textContent = "Pronto para iniciar."
+  else if (state.phase === "cleared") node.textContent = "Missão concluída; evidência emitida."
+  else if (state.phase === "failed")
+    node.textContent = "Critério ainda não atendido; tente novamente."
   else if (state.level.id === "L1")
-    node.textContent = `Click every station you predict is CONNECTED (${state.predicted.size} selected), then submit.`
+    node.textContent = `Clique em toda estação que você prevê estar CONECTADA (${state.predicted.size} selecionadas), depois envie.`
   else if (state.level.id === "L2")
-    node.textContent = `A broadcast fires on "${state.broadcastChannel}". Click the stations that will RECEIVE it (${state.predicted.size} selected), then submit.`
+    node.textContent = `Um broadcast dispara em "${state.broadcastChannel}". Clique nas estações que vão RECEBÊ-LO (${state.predicted.size} selecionadas), depois envie.`
   else if (state.level.id === "L3")
-    node.textContent = `Heartbeat timeout ${state.level.timeoutMs}ms. Click the stations whose links SURVIVE the sweep (${state.predicted.size} selected), then submit.`
-  else node.textContent = "A station was dropped. Click it to RECONNECT and rejoin the fan-out."
+    node.textContent = `Timeout de heartbeat de ${state.level.timeoutMs}ms. Clique nas estações cujos elos SOBREVIVEM à varredura (${state.predicted.size} selecionadas), depois envie.`
+  else node.textContent = "Uma estação caiu. Clique nela para RECONECTAR e voltar à difusão."
 }
 
 function renderControls(node: HTMLElement, state: GameState, game: GameController): void {
   node.innerHTML = ""
   if (state.phase === "briefing") {
-    button(node, "start", "Start wave", () => game.start())
+    button(node, "start", "Iniciar onda", () => game.start())
     return
   }
   if (state.phase === "cleared" || state.phase === "failed") {
-    if (state.phase === "failed") button(node, "retry", "Retry level", () => game.retry())
+    if (state.phase === "failed") button(node, "retry", "Tentar novamente", () => game.retry())
     if (state.phase === "cleared" && state.level.id !== "L4")
-      button(node, "next", "Next level", () => game.nextLevel())
+      button(node, "next", "Próximo nível", () => game.nextLevel())
     return
   }
   if (state.level.id !== "L4") {
-    button(node, "submit", "Submit prediction", () => game.submit())
-    button(node, "clear", "Clear selection", () => {
+    button(node, "submit", "Enviar previsão", () => game.submit())
+    button(node, "clear", "Limpar seleção", () => {
       for (const id of [...state.predicted]) game.togglePredict(id)
     })
   }
@@ -93,7 +99,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   })
   const hint = document.createElement("p")
   hint.className = "incoming"
-  hint.textContent = `broadcast channel: ${state.broadcastChannel} · now=${state.level.now}`
+  hint.textContent = `canal de broadcast: ${state.broadcastChannel} · agora=${state.level.now}`
   node.append(hint)
 }
 

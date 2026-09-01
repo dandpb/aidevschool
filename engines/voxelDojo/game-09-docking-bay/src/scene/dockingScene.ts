@@ -1,7 +1,9 @@
 import * as THREE from "three"
+import { disposeObject3D, type ProjectionContextHooks } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { HOST_CONTRACT } from "../sim/levels"
+import { checkContract } from "../sim/plugin"
 
 const RING_RADIUS = 6
 export const PALETTE = [
@@ -48,11 +50,14 @@ interface PodView {
  */
 export class DockingScene {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private stage = new THREE.Group()
   private podMeshes = new Map<string, PodView>()
+  private disposed = false
   onPodClick: ((podId: string) => void) | null = null
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 18,
@@ -67,6 +72,7 @@ export class DockingScene {
       onFrame: () => {
         this.animatePods()
       },
+      ...hooks,
     })
 
     this.viewport.scene.add(this.stage)
@@ -121,6 +127,19 @@ export class DockingScene {
     }
   }
 
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    disposeObject3D(this.stage)
+    this.viewport.dispose()
+  }
+
   private syncPods(state: GameState): void {
     const wanted = new Set(state.pods.map((p) => p.id))
     for (const [id, view] of this.podMeshes) {
@@ -137,7 +156,9 @@ export class DockingScene {
         this.stage.add(view.group)
       }
       const truth = state.pods.find((p) => p.id === pod.id)
-      const docked = truth ? truth.claimsContract.every((c) => HOST_CONTRACT.includes(c)) : false
+      // Same dock truth as the clamp itself (host ⊆ claims) — the scene must
+      // never seat a pod the clamp would reject.
+      const docked = truth ? checkContract(truth, HOST_CONTRACT) : false
       const predicted = state.dockPredictions.get(pod.id)
       // Approach eases toward the port as the wave progresses / resolves.
       const seated = state.phase === "cleared" || state.phase === "failed"

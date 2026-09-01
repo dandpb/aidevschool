@@ -24,7 +24,7 @@
     "id": {
       "type": "string",
       "pattern": "^l[0-9]{2}$",
-      "description": "ID estável da lição (l01..l14 na trilha inicial). Nunca deriva do título."
+      "description": "ID estável da lição (l01..l23 vigentes; novos ids só mediante emenda de contrato aprovada). Nunca deriva do título."
     },
     "version": {
       "type": "integer",

@@ -44,6 +44,22 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
+      name: 'miniTown',
+      command: 'pnpm exec vite --host 127.0.0.1 --port 5179 --strictPort',
+      cwd: '../miniTown',
+      url: 'http://127.0.0.1:5179',
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
+      name: 'dojoToday',
+      command: 'npm run dev -- --host 127.0.0.1 --port 5180 --strictPort',
+      cwd: '../dojoToday',
+      url: 'http://127.0.0.1:5180',
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
       name: 'voxelDojo catalog',
       command: 'pnpm run dev:catalog',
       cwd: '../voxelDojo',

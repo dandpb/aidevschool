@@ -29,6 +29,50 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     spy.mockRestore()
   })
 
+  it("L1 REJECTION CASE (AID-467): a pod with a dropped contract method is blocked, and the former all-dock oracle fails", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L1")
+    game.start()
+
+    // Ground truth: at least one pod docks and at least one is rejected.
+    const truth = game.snapshot.pods.map((pod) => game.podWouldDock(pod))
+    expect(truth.some(Boolean)).toBe(true)
+    expect(truth.every(Boolean)).toBe(false)
+
+    // A pod missing a host method must never dock.
+    const rejected = game.snapshot.pods.filter((pod) => !game.podWouldDock(pod))
+    expect(rejected.length).toBeGreaterThan(0)
+    for (const pod of rejected) {
+      const missing = HOST_CONTRACT.filter((c) => !pod.claimsContract.includes(c))
+      expect(missing.length).toBeGreaterThan(0)
+    }
+
+    // Predicting "every pod docks" (the pre-fix constant-true oracle) fails the wave.
+    for (const pod of game.snapshot.pods) {
+      game.predictDock(pod.id, true)
+    }
+    expect(game.snapshot.phase).toBe("failed")
+    const failed = evidenceLines(spy).map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
+    expect(failed[0]).toMatchObject({ scenario_id: "docking-bay-L1", pass: false })
+    spy.mockRestore()
+  })
+
+  it("L1 resolution docks only the truthful dockers on the host (rejected pods never dock)", () => {
+    const game = new GameController("L1")
+    game.start()
+    for (const pod of game.snapshot.pods) {
+      game.predictDock(pod.id, game.podWouldDock(pod))
+    }
+    expect(game.snapshot.phase).toBe("cleared")
+    for (const pod of game.snapshot.pods) {
+      if (game.podWouldDock(pod)) {
+        expect(game.snapshot.host.docked.has(pod.id)).toBe(true)
+      } else {
+        expect(game.snapshot.host.docked.has(pod.id)).toBe(false)
+      }
+    }
+  })
+
   it("L2: naming the exact missing method on each pod clears the wave", () => {
     const spy = vi.spyOn(console, "log").mockImplementation(() => {})
     const game = new GameController("L2")

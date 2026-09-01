@@ -13,7 +13,7 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 
 | Parte | Estado |
 | --- | --- |
-| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. As 3 lições Dev continuam válidas no catálogo, mas não entram no app enquanto a Trilha Dev estiver “Em breve”. |
+| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. A Trilha Dev no onboarding é um CTA para o OS público (`?track=dev`); as 3 lições Dev do catálogo não entram neste app. |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |

@@ -3,6 +3,7 @@ import { LocalBridgeGateway } from './localBridgeGateway'
 import type { EvidenceSubmission } from './ports'
 
 const evidence: EvidenceSubmission = {
+  evidenceId: 'evidence-1',
   schemaId: 'literacy-evidence',
   schemaVersion: 1,
   engineId: 'literacyDojo',

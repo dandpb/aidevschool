@@ -9,7 +9,9 @@ from learner.gate.tests.teaching_game_bridge_records import (
 )
 
 
-@pytest.mark.parametrize("game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION"])
+@pytest.mark.parametrize(
+    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY", "TIMELINE TOWER", "DOCKING BAY"]
+)
 def test_rejects_favorable_aggregate_without_observations(game):
     record = make_teaching_game_record(game)
     record.pop("observations")
@@ -20,7 +22,9 @@ def test_rejects_favorable_aggregate_without_observations(game):
     assert any("observations" in error for error in receipt["errors"])
 
 
-@pytest.mark.parametrize("game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION"])
+@pytest.mark.parametrize(
+    "game", ["KV WAREHOUSE", "WORMHOLE", "RELAY STATION", "PIPELINE PLANT", "CHECKPOINT CITY", "TIMELINE TOWER", "DOCKING BAY"]
+)
 def test_rejects_forged_metrics_and_pass_claims(game):
     metrics = make_teaching_game_record(game)
     metrics["metrics"] = {"kind": "forged"}
@@ -85,6 +89,10 @@ def test_direct_call_rejects_malformed_or_timezone_naive_timestamp(timestamp):
         ("KV WAREHOUSE", "U3-url-shortener", "03_url_shortener", "wormhole-L1"),
         ("WORMHOLE", "U5-websocket-chat", "05_websocket_chat", "relay-station-L1"),
         ("RELAY STATION", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
+        ("PIPELINE PLANT", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
+        ("CHECKPOINT CITY", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
+        ("TIMELINE TOWER", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
+        ("DOCKING BAY", "U2-key-value-store", "02_key_value_store", "kv-warehouse-L1"),
     ],
 )
 def test_rejects_cross_game_identity(game, unit_id, project, scenario_id):
