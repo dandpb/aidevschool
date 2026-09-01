@@ -85,6 +85,15 @@ describe('codexDojo OS engine registry', () => {
     }
   })
 
+  it('describes public dojoToday as a local suggestion, not canonical FSRS', () => {
+    const dojoToday = engineRegistry.find((engine) => engine.id === 'dojoToday')
+    expect(dojoToday?.role).toBe('Sugestão neste dispositivo')
+    expect(dojoToday?.capability).toMatch(/progresso local/)
+    expect(dojoToday?.capability).not.toMatch(/substrato/)
+    expect(dojoToday?.objective).toMatch(/sugestão neste dispositivo/)
+    expect(dojoToday?.objective).not.toMatch(/derivada do estado canônico/)
+  })
+
   it('never grants an OS adapter mastery authority', () => {
     // Given
     const registry = engineRegistry
@@ -158,6 +167,25 @@ describe('embedded engine URL boundary', () => {
       kind: 'unavailable',
       reason: 'Engine runtime must use a separate origin from the OS.',
     })
+  })
+
+  it('accepts staged /apps/* paths on the OS origin', () => {
+    expect(resolveEngineUrl('/apps/pixelquest/', 'http://127.0.0.1:9999/', false, 'http://127.0.0.1:4174')).toEqual({
+      kind: 'ready',
+      url: '/apps/pixelquest/',
+    })
+    expect(resolveEngineUrl(
+      'http://127.0.0.1:4174/apps/dojotoday/',
+      'http://127.0.0.1:9999/',
+      false,
+      'http://127.0.0.1:4174',
+    )).toEqual({
+      kind: 'ready',
+      url: 'http://127.0.0.1:4174/apps/dojotoday/',
+    })
+    expect(resolveEngineUrl('/apps/../secret/', 'http://127.0.0.1:9999/', false, 'http://127.0.0.1:4174').kind).toBe(
+      'unavailable',
+    )
   })
 
   it('uses a localhost fallback only in development', () => {

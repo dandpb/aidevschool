@@ -189,10 +189,10 @@ export function ResultScreen({
         </>
       )}
 
-      <div className="dev-teaser">
+      <a className="dev-teaser" href="https://aidevschool-codexdojo-os.netlify.app/?track=dev">
         <strong>Trilha Dev</strong>
-        <span>Em breve: desafios para quem programa com IA.</span>
-      </div>
+        <span>Para programadores no OS público. Sem conta; o progresso fica no outro site.</span>
+      </a>
 
       <div className="actions">
         {hosted ? (

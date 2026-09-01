@@ -123,16 +123,15 @@ describe('codexDojo OS release behavior', () => {
     expect(screen.queryByLabelText('Buscar aplicativos ou fundamentos')).toBeNull()
   })
 
-  it('hides Engine Hub and Central de Apps from the student desktop surface', async () => {
+  it('shows Engine Hub on the student desktop and keeps Central de Apps operator-only', async () => {
     const user = userEvent.setup()
     renderDesktopRoute('?operator=0')
 
-    expect(screen.queryByRole('button', { name: 'Engine Hub' })).toBeNull()
     expect(screen.queryByRole('button', { name: /Apps/ })).toBeNull()
 
     await user.click(screen.getByRole('button', { name: 'Atividades' }))
     const launcher = screen.getByRole('dialog', { name: 'Lançador de aplicativos' })
-    expect(launcher.textContent).not.toContain('Engine Hub')
+    expect(launcher.textContent).toContain('Engine Hub')
     expect(launcher.textContent).not.toContain('Central de Apps')
     expect(launcher.textContent).not.toContain('Fundamentos')
   })

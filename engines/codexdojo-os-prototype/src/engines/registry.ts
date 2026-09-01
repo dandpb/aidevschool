@@ -138,11 +138,11 @@ export const engineRegistry = [
   {
     id: 'dojoToday',
     name: 'dojoToday',
-    role: 'Projeção diária do programador',
-    capability: 'Inspecione a lição diária derivada do substrato sem permitir escrita canônica.',
-    objective: 'Apresentar ao programador a próxima prática diária derivada do estado canônico.',
+    role: 'Sugestão neste dispositivo',
+    capability: 'Mostre a próxima prática a partir do progresso local do OS, sem FSRS canônico nem escrita em learner/.',
+    objective: 'Apresentar uma sugestão neste dispositivo a partir do progresso local, nunca do estado canônico.',
     startCommand: 'cd engines/dojoToday && npm run dev -- --port 5180',
-    evaluationFocus: 'Utilidade da recomendação, fidelidade ao substrate e clareza de estado read-only.',
+    evaluationFocus: 'Utilidade da recomendação local, clareza de que não é FSRS canônico e estado read-only.',
     journeyClass: 'operations',
     portfolioStatus: 'internal',
     learnerAccess: 'read-only',
@@ -215,6 +215,10 @@ export const engineRegistry = [
   },
 ] as const satisfies readonly EngineDefinition[]
 
+function isStagedAppsPath(pathname: string): boolean {
+  return pathname === '/apps' || pathname.startsWith('/apps/')
+}
+
 export function resolveEngineUrl(
   configuredUrl: string | undefined,
   developmentUrl: string,
@@ -227,13 +231,23 @@ export function resolveEngineUrl(
   }
 
   try {
-    const url = new URL(candidate)
+    const url = candidate.startsWith('/')
+      ? new URL(candidate, hostOrigin ?? 'https://os.invalid')
+      : new URL(candidate)
     if (url.protocol === 'http:' || url.protocol === 'https:') {
+      const stagedApps = isStagedAppsPath(url.pathname)
+      if (candidate.startsWith('/apps/') && stagedApps) {
+        return { kind: 'ready', url: candidate }
+      }
       if (hostOrigin !== undefined && url.origin === hostOrigin) {
+        if (stagedApps) return { kind: 'ready', url: candidate }
         return {
           kind: 'unavailable',
           reason: 'Engine runtime must use a separate origin from the OS.',
         }
+      }
+      if (candidate.startsWith('/')) {
+        return { kind: 'unavailable', reason: 'Engine runtime URL is unsafe or malformed.' }
       }
       return { kind: 'ready', url: candidate }
     }
