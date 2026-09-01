@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
-import { learnerSnapshot } from '../data/learner'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
 import { createInitialOsProgress, recordMissionCompletion } from '../progress/domain'
@@ -33,7 +33,7 @@ describe('honest progress screen', () => {
       <ServicesProvider services={services}>
         <ProgressScreen
           progress={progress}
-          learner={learnerSnapshot}
+          learner={anonymousPublicLearner}
           catalog={new GeneratedMissionCatalogRepository()}
           onBack={vi.fn()}
         />
@@ -43,8 +43,10 @@ describe('honest progress screen', () => {
     expect(screen.getByRole('heading', { name: 'Esforço local não substitui competência verificada.' })).not.toBeNull()
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
     expect(screen.getByText('Fonte: learner/substrate')).not.toBeNull()
+    expect(screen.getByText('Competências').closest('div')?.querySelector('strong')?.textContent).toBe('0')
+    expect(screen.getAllByText('Não verificada')).toHaveLength(6)
     expect(screen.getByRole('heading', { name: 'Evidência preservada' })).not.toBeNull()
-    await waitFor(() => expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(30))
+    await waitFor(() => expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(6))
     expect(screen.getAllByText('Realizada').length).toBeGreaterThan(0)
   })
 
@@ -59,7 +61,7 @@ describe('honest progress screen', () => {
       <ServicesProvider services={services}>
         <ProgressScreen
           progress={createInitialOsProgress(missionCatalog)}
-          learner={learnerSnapshot}
+          learner={anonymousPublicLearner}
           catalog={new GeneratedMissionCatalogRepository()}
           onBack={vi.fn()}
         />
@@ -67,7 +69,7 @@ describe('honest progress screen', () => {
     )
 
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain('Verificação indisponível no momento'))
-    expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(30)
+    expect(screen.getAllByText('Sem evidência recebida')).toHaveLength(6)
     expect(screen.getByText('Fonte: OS / IndexedDB')).not.toBeNull()
   })
 })

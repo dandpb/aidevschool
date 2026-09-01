@@ -4,7 +4,7 @@ import type { MissionCatalogRepository } from '../missions/catalog'
 import { missionHasCanonicalMastery } from '../missions/reviewMapping'
 import { missionKey, type OsProgress } from '../progress/domain'
 import type { EvidenceVerificationState } from '../verification/ports'
-import { STUDENT_MISSION_CHAPTERS } from './studentPath'
+import { STUDENT_MISSION_CHAPTERS, listStudentRailMissions } from './studentPath'
 import { useVerificationByMission } from './useVerificationByMission'
 
 type MapOverlay = 'available' | 'in-progress' | 'completed' | 'evidence-pending' | 'verified' | 'canonical-mastery' | 'locked'
@@ -53,7 +53,7 @@ export function MapScreen({
 }) {
   const services = useServices()
   const { availability: verificationAvailability, verificationByKey } = useVerificationByMission(catalog, services.verification)
-  const publishedMissionCount = catalog.listLaunchable().length
+  const publishedMissionCount = listStudentRailMissions(catalog).length
 
   return (
     <main className="journey-page chapter-map-page" data-testid="chapter-map">
@@ -62,7 +62,7 @@ export function MapScreen({
         <div>
           <p className="journey-eyebrow">Mapa de missões</p>
           <h1>{publishedMissionCount} missões, uma sequência</h1>
-          <p>IA Prática e a trilha dev no OS, sem menu de motores.</p>
+          <p>Escolha IA Prática (l01–l03) ou Dev (WAREHOUSE, WORMHOLE e RELAY STATION). O restante fica no Hub, não neste trilho.</p>
         </div>
       </header>
       {verificationAvailability === 'unavailable' ? (
@@ -74,7 +74,7 @@ export function MapScreen({
             <p className="journey-eyebrow">{chapter.label}</p>
             <h2>{chapter.detail}</h2>
             <ol>
-              {catalog.listLaunchable(chapter.trackId).map((mission) => {
+              {listStudentRailMissions(catalog, chapter.trackId).map((mission) => {
                 const key = missionKey(chapter.trackId, mission.id)
                 const overlay = overlayFor(mission, progress, learner, verificationByKey[key])
                 const launchable = overlay !== 'locked'
@@ -82,7 +82,7 @@ export function MapScreen({
                   <li key={mission.id} className={`mission-map-node ${overlay}`}>
                     <span className="mission-map-order">{mission.chapterOrder}</span>
                     <div>
-                      <small>{OVERLAY_LABEL[overlay]}</small>
+                      <small data-testid={`map-overlay-${mission.id}`}>{OVERLAY_LABEL[overlay]}</small>
                       <h3>{mission.title}</h3>
                       <p>{mission.estimatedMinutes} min · {mission.objective}</p>
                       {mission.prerequisites.length > 0 ? (

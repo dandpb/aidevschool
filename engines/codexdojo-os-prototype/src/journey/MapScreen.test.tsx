@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { ServicesProvider } from '../app/ServicesProvider'
 import { createServices } from '../app/createServices'
-import { learnerSnapshot } from '../data/learner'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import { missionCatalog } from '../data/missions'
 import { GeneratedMissionCatalogRepository } from '../missions/catalog'
 import {
@@ -46,7 +46,7 @@ function verificationService(): VerificationService {
 }
 
 describe('chapter map', () => {
-  it('shows the student mission sequence without Trilha Dev or track switching', async () => {
+  it('shows IA Prática and the 3-mission Dev rail without extra voxel or l15-l17', async () => {
     const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
     if (l02 === undefined) throw new Error('Expected l02')
     let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
@@ -62,10 +62,7 @@ describe('chapter map', () => {
       <ServicesProvider services={services}>
         <MapScreen
           progress={progress}
-          learner={{
-            ...learnerSnapshot,
-            activeUnit: { ...learnerSnapshot.activeUnit, id: 'ai-literacy:l03', state: 'mastered' },
-          }}
+          learner={anonymousPublicLearner}
           catalog={new GeneratedMissionCatalogRepository()}
           onLaunch={vi.fn()}
           onBack={vi.fn()}
@@ -73,12 +70,41 @@ describe('chapter map', () => {
       </ServicesProvider>,
     )
 
-    expect(screen.getByRole('heading', { name: '30 missões, uma sequência' })).not.toBeNull()
+    expect(screen.getByRole('heading', { name: '6 missões, uma sequência' })).not.toBeNull()
     expect(screen.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)', level: 3 })).not.toBeNull()
-    expect(screen.queryByText(/Trilha Dev/)).toBeNull()
-    expect(screen.queryByRole('button', { name: /Trilha Dev/ })).toBeNull()
+    expect(screen.queryByText(/PIPELINE PLANT/)).toBeNull()
+    expect(screen.queryByText(/CHECKPOINT CITY/)).toBeNull()
+    expect(screen.queryByRole('heading', { name: /l15/i })).toBeNull()
     expect(screen.getAllByText('Bloqueada por pré-requisito').length).toBeGreaterThan(0)
     await waitFor(() => expect(screen.getByText('Verificação independente concluída')).not.toBeNull())
-    expect(screen.getByText('Competência canônica verificada')).not.toBeNull()
+    expect(screen.queryByText('Competência canônica verificada')).toBeNull()
+  })
+
+  it('does not claim canonical mastery on WAREHOUSE for an anonymous learner', async () => {
+    const progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
+      goal: 'build-systems',
+      context: 'personal-project',
+      confidence: 'high',
+      selectedTrackId: 'dev',
+    })
+    const services = createServices({ verification: verificationService() })
+
+    render(
+      <ServicesProvider services={services}>
+        <MapScreen
+          progress={progress}
+          learner={anonymousPublicLearner}
+          catalog={new GeneratedMissionCatalogRepository()}
+          onLaunch={vi.fn()}
+          onBack={vi.fn()}
+        />
+      </ServicesProvider>,
+    )
+
+    expect(anonymousPublicLearner.masteredCount).toBe(0)
+    expect(screen.getByTestId('map-overlay-game-02-warehouse').textContent).not.toBe(
+      'Competência canônica verificada',
+    )
+    expect(screen.queryByText('Competência canônica verificada')).toBeNull()
   })
 })

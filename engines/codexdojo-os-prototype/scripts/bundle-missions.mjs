@@ -27,13 +27,26 @@ const MISSIONS = [
   { name: 'checkpoint-city', cwd: 'voxelDojo/game-07-checkpoint-city' },
   { name: 'timeline-tower', cwd: 'voxelDojo/game-08-timeline-tower' },
   { name: 'docking-bay', cwd: 'voxelDojo/game-09-docking-bay' },
+  { name: 'pixelquest', cwd: 'pixelDojo/pixel-quest' },
+  { name: 'dojotoday', cwd: 'dojoToday' },
+  { name: 'hash-ring', cwd: 'voxelDojo/game-10-hash-ring' },
+  { name: 'air-traffic', cwd: 'voxelDojo/game-11-air-traffic' },
+  { name: 'mission-control', cwd: 'voxelDojo/game-12-mission-control' },
+  { name: 'breaker-grid', cwd: 'voxelDojo/game-13-breaker-grid' },
+  { name: 'river-delta', cwd: 'voxelDojo/game-14-river-delta' },
+  { name: 'observatory', cwd: 'voxelDojo/game-15-observatory' },
+  { name: 'freight-yard', cwd: 'voxelDojo/game-16-freight-yard' },
+  { name: 'lighthouse-network', cwd: 'voxelDojo/game-17-lighthouse-network' },
+  { name: 'stacks', cwd: 'voxelDojo/game-18-stacks' },
 ]
 
 const run = (cmd, args, cwd) =>
   execFileSync(cmd, args, { cwd, stdio: 'inherit', env: process.env })
 
 run('npm', ['ci', '--no-audit', '--no-fund'], resolve(enginesRoot, 'literacyDojo'))
+run('npm', ['ci', '--no-audit', '--no-fund'], resolve(enginesRoot, 'dojoToday'))
 run('corepack', ['pnpm', 'install', '--frozen-lockfile'], resolve(enginesRoot, 'voxelDojo'))
+run('corepack', ['pnpm', 'install', '--frozen-lockfile'], resolve(enginesRoot, 'pixelDojo'))
 
 for (const { name, cwd, prebuild } of MISSIONS) {
   const source = resolve(enginesRoot, cwd)

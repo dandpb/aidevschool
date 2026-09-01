@@ -281,18 +281,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'O que a IA faz bem e onde costuma falhar' })).toBeVisible()
   await page.getByRole('button', { name: 'Começar missão' }).click()
   await completeLiteracyMission(page, 'l03')
-  // The hub now recommends the next published lesson (l04+) once l03 is done.
-  // Prove the newly published batch actually hosts: the motor handshake must
-  // reach the literacy start screen instead of failing or being refused.
+  // Public IA Prática rail is l01-l03. After l02 and l03, the remaining rail
+  // mission is l01, not l04+ from the full catalog.
   await page.getByRole('button', { name: 'Começar missão' }).click()
-  await expect(page.getByRole('heading', { name: 'Dê um objetivo claro' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Sua primeira conversa com uma IA' })).toBeVisible()
   await expect(page.locator('.mission-runtime iframe')).toBeVisible()
   await expect(
     page.frameLocator('.mission-runtime iframe').getByTestId('start-lesson'),
   ).toBeVisible({ timeout: 20000 })
-  // Complete the remaining first-release lesson l01 through its direct mission
-  // URL, exactly like the hosted simulations below.
-  await page.goto('/mission/ai-pratica/l01')
   await completeLiteracyMission(page, 'l01')
 
   // Wave C1 (spec AID-414): l18 "Biblioteca de pedidos" is published as the

@@ -6,9 +6,55 @@ import { EngineHubApp } from './EngineHubApp'
 afterEach(cleanup)
 
 describe('Engine Hub', () => {
+  it('lists only the public allowlist when operatorSurface is false', () => {
+    render(<EngineHubApp development={false} operatorSurface={false} />)
+
+    const engineActions = screen.getAllByRole('button', { name: /^Usar / })
+    expect(engineActions.map((button) => button.getAttribute('aria-label'))).toEqual([
+      'Usar PixelDojo Quest',
+      'Usar LiteracyDojo',
+      'Usar dojoToday',
+      'Usar voxelDojo',
+    ])
+    expect(screen.queryByRole('button', { name: 'Usar miniTown' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Usar OpenClaw' })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Usar codexDojo Dashboard' })).toBeNull()
+  })
+
+  it('labels public dojoToday as a local suggestion instead of canonical substrate', async () => {
+    const user = userEvent.setup()
+    render(<EngineHubApp development={false} operatorSurface={false} />)
+    await user.click(screen.getByRole('button', { name: 'Usar dojoToday' }))
+    expect(screen.getByText('Sugestão neste dispositivo · somente leitura')).toBeTruthy()
+    expect(screen.getByRole('region', { name: 'Guia de avaliação · dojoToday' }).textContent).toMatch(
+      /sugestão neste dispositivo/i,
+    )
+    expect(screen.queryByText(/derivada do substrato/)).toBeNull()
+    expect(screen.queryByText('Estado canônico · somente leitura')).toBeNull()
+  })
+
+  it('shows labs and miniTown when operatorSurface is true', () => {
+    render(<EngineHubApp development={false} operatorSurface />)
+
+    const engineActions = screen.getAllByRole('button', { name: /^Usar / })
+    expect(engineActions.map((button) => button.getAttribute('aria-label'))).toEqual([
+      'Usar codexDojo Dashboard',
+      'Usar minimaxDojo Tutor Core',
+      'Usar MiniMax Evolution Engine',
+      'Usar OpenClaw',
+      'Usar PixelDojo Quest',
+      'Usar LiteracyDojo',
+      'Usar miniTown',
+      'Usar dojoToday',
+      'Usar voxelDojo',
+      'Usar AiDevSchool MVP',
+      'Usar Z.ai Duolingo-like',
+    ])
+  })
+
   it('presents the OS host and every external engine exactly once', () => {
     // Given
-    render(<EngineHubApp development={false} />)
+    render(<EngineHubApp development={false} operatorSurface />)
 
     // When
     const engineActions = screen.getAllByRole('button', { name: /^Usar / })
@@ -33,7 +79,7 @@ describe('Engine Hub', () => {
 
   it('registers Z.ai Duolingo-like honestly and requires its own hosted URL', async () => {
     const user = userEvent.setup()
-    const { rerender } = render(<EngineHubApp development={false} />)
+    const { rerender } = render(<EngineHubApp operatorSurface development={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Usar Z.ai Duolingo-like' }))
     expect(screen.getByRole('status').textContent).toContain('não está configurado')
@@ -41,6 +87,7 @@ describe('Engine Hub', () => {
 
     rerender(
       <EngineHubApp
+        operatorSurface
         development={false}
         configuredUrls={{ zaiDuolingoLike: 'https://runtime.example.test/zai-duolingo/' }}
       />,
@@ -55,6 +102,7 @@ describe('Engine Hub', () => {
     const user = userEvent.setup()
     render(
       <EngineHubApp
+        operatorSurface
         development={false}
         configuredUrls={{ codexDojo: 'https://dashboard.example.test/' }}
       />,
@@ -76,7 +124,7 @@ describe('Engine Hub', () => {
 
   it('teaches how to access and evaluate the selected engine', async () => {
     const user = userEvent.setup()
-    render(<EngineHubApp development={false} />)
+    render(<EngineHubApp operatorSurface development={false} />)
 
     await user.click(screen.getByRole('button', { name: 'Usar miniTown' }))
 
@@ -89,7 +137,7 @@ describe('Engine Hub', () => {
   it('shows an honest unavailable state when a production web URL is missing', async () => {
     // Given
     const user = userEvent.setup()
-    render(<EngineHubApp development={false} />)
+    render(<EngineHubApp operatorSurface development={false} />)
 
     // When
     await user.click(screen.getByRole('button', { name: 'Usar PixelDojo Quest' }))
@@ -103,6 +151,7 @@ describe('Engine Hub', () => {
     const user = userEvent.setup()
     render(
       <EngineHubApp
+        operatorSurface
         development={false}
         configuredVoxelUrls={{
           'game-02-warehouse': 'https://warehouse.voxel.example/',
@@ -133,7 +182,7 @@ describe('Engine Hub', () => {
       summary: 'Contrato determinístico executado',
       output: '1 passed in 0.08s',
     })
-    render(<EngineHubApp development={false} localBridgeAvailable runAction={runAction} />)
+    render(<EngineHubApp operatorSurface development={false} localBridgeAvailable runAction={runAction} />)
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
 
     // When
@@ -149,7 +198,7 @@ describe('Engine Hub', () => {
   it('shows one canonical YAML pipeline source for Evolution and OpenClaw', async () => {
     // Given
     const user = userEvent.setup()
-    render(<EngineHubApp development={false} />)
+    render(<EngineHubApp operatorSurface development={false} />)
 
     // When
     await user.click(screen.getByRole('button', { name: 'Usar OpenClaw' }))
@@ -173,7 +222,7 @@ describe('Engine Hub', () => {
     const runAction = vi.fn().mockImplementation(() => new Promise((resolve) => {
       resolveAction = resolve
     }))
-    render(<EngineHubApp development={false} localBridgeAvailable runAction={runAction} />)
+    render(<EngineHubApp operatorSurface development={false} localBridgeAvailable runAction={runAction} />)
     await user.click(screen.getByRole('button', { name: 'Usar minimaxDojo Tutor Core' }))
     await user.click(screen.getByRole('button', { name: 'Preparar sessão de tutoria' }))
 
@@ -196,7 +245,7 @@ describe('Engine Hub', () => {
   ) => {
     const user = userEvent.setup()
     const runAction = vi.fn()
-    render(<EngineHubApp development={false} runAction={runAction} />)
+    render(<EngineHubApp operatorSurface development={false} runAction={runAction} />)
 
     await user.click(screen.getByRole('button', { name: `Usar ${engineName}` }))
 
@@ -215,6 +264,7 @@ describe('Engine Hub', () => {
     const user = userEvent.setup()
     render(
       <EngineHubApp
+        operatorSurface
         development={false}
         configuredUrls={{ pixelDojo: 'https://pixel.example.test/' }}
       />,

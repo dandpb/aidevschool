@@ -1106,6 +1106,18 @@ h2 {
   box-shadow: none;
 }
 
+a.audience-route-dev {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-color: rgba(79, 70, 229, 0.45);
+}
+
+a.audience-route-dev .route-badge {
+  background: var(--primary-soft, #eef2ff);
+  color: var(--primary, #4338ca);
+}
+
 .audience-route strong,
 .audience-route small {
   display: block;
