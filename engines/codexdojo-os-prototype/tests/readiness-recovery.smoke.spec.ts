@@ -5,7 +5,6 @@ test('readiness os-returning-recovery: cleared local state returns to onboarding
   page,
 }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: /Recomendada.*IA Prática/ }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await expect(page.getByRole('heading', { name: 'Aprenda uma coisa útil agora.' })).toBeVisible()
   const clearedContext = await browser.newContext()

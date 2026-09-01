@@ -14,7 +14,7 @@ class TestCompiler(TrackFixtureMixin):
             self.assertIsNotNone(out_path)
             assert out_path is not None
             content = out_path.read_text(encoding="utf-8")
-            for n in range(1, 15):
+            for n in range(1, 18):
                 self.assertIn('"id": "l%02d"' % n, content)
             for act_type in (
                 "choice",
@@ -27,16 +27,21 @@ class TestCompiler(TrackFixtureMixin):
             ):
                 self.assertIn('"type": "%s"' % act_type, content)
 
-    def test_compile_real_track_excludes_dev_preview_from_public_read_model(self):
+    def test_compile_real_track_includes_dev_journey_with_module_metadata(self):
         with tempfile.TemporaryDirectory() as tmp:
             errors, out_path = self.compile_track(TRACK_DIR, tmp)
             self.assertEqual([], errors)
             self.assertIsNotNone(out_path)
             assert out_path is not None
             content = out_path.read_text(encoding="utf-8")
+            # As lições dev (mod-05) são missões hospedadas publicadas pelo OS
+            # (bindings da trilha dev) e por isso entram no read model, com a
+            # journey declarada por módulo para o app filtrar o percurso público.
             for lesson_id in ("l15", "l16", "l17"):
-                self.assertNotIn('"id": "%s"' % lesson_id, content)
-            self.assertNotIn('"id": "mod-05"', content)
+                self.assertIn('"id": "%s"' % lesson_id, content)
+            self.assertIn('"id": "mod-05"', content)
+            self.assertIn('"journey": "dev"', content)
+            self.assertIn('"journey": "ia_pratica"', content)
 
     def test_compile_refuses_invalid_content(self):
         with tempfile.TemporaryDirectory() as tmp:

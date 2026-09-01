@@ -1,0 +1,24 @@
+schemaVersion: 1
+assessmentId: 2026-08-22-2097723-os-voxel-returning-v11
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-22T16:24:00Z'
+revalidateBy: '2026-09-22'
+gitSha: 2097723cb62451c05ecafcd5bd6c474dc3b8a925
+decisions:
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-22T16:22:00Z-os-voxel-hosted-missions-mixed-2097723c
+  - 2026-08-22T16:22:00Z-os-renderer-accessibility-recovery-mixed-2097723c
+  - 2026-08-22T16:22:00Z-os-voxel-returning-device-mixed-2097723c
+- useCaseId: os-returning-learner
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-22T16:22:00Z-os-onboarding-track-choice-mixed-2097723c
+  - 2026-08-22T16:22:00Z-os-returning-device-mixed-2097723c
+  - 2026-08-22T16:22:00Z-os-returning-recovery-mixed-2097723c

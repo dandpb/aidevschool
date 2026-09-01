@@ -1,0 +1,147 @@
+# Lição l18 — Onda C1–C3 (spec AID-414 §2.1): biblioteca de pedidos reutilizáveis.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l18
+version: 1
+moduleId: mod-06
+title: "Biblioteca de pedidos: reutilize o que funciona"
+objective: "Transformar um pedido bem-sucedido em modelo reutilizável e adaptá-lo a um cenário novo sem recomeçar do zero — identificando o que trocar (contexto/público) e o que preservar (estrutura/formato)."
+estimatedMinutes: 4
+skillIds: [pedir, aplicar]
+prerequisites: [l14]
+
+activities:
+  - id: l18-a1
+    type: prompt_builder
+    skillId: pedir
+    instruction: "Você recebeu uma ótima resposta para o relatório semanal e quer salvar o pedido como modelo. Monte o modelo preenchendo os campos com o que fez o pedido funcionar."
+    data:
+      scenario: "Toda sexta-feira você pede à IA um relatório semanal da equipe para a diretoria. O pedido que funcionou dizia o que analisar, trazia os números da semana e pedia um resumo executivo curto. Agora você quer guardar esse pedido como modelo para não recomeçar do zero toda semana."
+      genericPrompt: "Faz um relatório."
+      fields:
+        - id: tarefa
+          label: "Tarefa"
+          hint: "O que o modelo de pedido pede à IA? Ex.: resumir o desempenho semanal da equipe."
+        - id: contexto
+          label: "Contexto"
+          hint: "Que dados da própria rotina o modelo deve trazer? Ex.: números de vendas, atendimento e prazos da semana."
+        - id: publico
+          label: "Público"
+          hint: "Para quem é a saída? Ex.: diretoria, em linguagem executiva."
+        - id: formato
+          label: "Formato"
+          hint: "Que forma a saída deve ter? Ex.: resumo executivo de uma página com destaques em tópicos."
+    evaluation:
+      strategy: deterministic
+      fields:
+        tarefa:
+          minLength: 8
+          mustIncludeAny: ["resumir", "sumari", "relat"]
+        contexto:
+          minLength: 12
+          mustIncludeAny: ["semana", "números", "numeros", "dados", "resultado"]
+        publico:
+          minLength: 6
+          mustIncludeAny: ["diretoria", "diretor", "gestor", "equipe"]
+        formato:
+          minLength: 6
+          mustIncludeAny: ["resumo executivo", "resumo de", "uma página", "uma pagina", "tópicos", "topicos", "curto"]
+    feedback:
+      onFailure: "O modelo ainda está genérico. Um modelo reutilizável guarda a ESTRUTURA que funcionou: tarefa clara, dados que você toda semana tem em mãos, público e formato — só o conteúdo específico muda a cada uso."
+      perCheck:
+        tarefa: "Diga a ação que a IA deve executar: resumir, relatar ou sumarizar o desempenho."
+        contexto: "Cite os dados da rotina que alimentam o pedido: números, resultados ou dados da semana."
+        publico: "Nomeie quem recebe a saída: diretoria, gestores ou a equipe."
+        formato: "Defina a forma da saída: resumo executivo, uma página, tópicos curtos."
+      onSuccess: "Modelo salvo! Você guardou a estrutura que funcionou — nas próximas semanas basta trocar os dados da semana."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que a resposta boa tinha que o pedido vago não tinha? Pense nos quatro campos do pedido original."
+      - "Campos do pedido original: tarefa (resumir o desempenho), contexto (dados da semana), público (diretoria) e formato (resumo curto)."
+      - "Palavras que precisam aparecer: resumir/relatar na Tarefa, números ou semana no Contexto, diretoria no Público e resumo/uma página no Formato."
+
+  - id: l18-a2
+    type: output_comparison
+    skillId: aplicar
+    instruction: "NOVO CENÁRIO: um e-mail para cliente sobre atraso de entrega. VOCÊ TEM O MODELO SALVO. COMPARE AS DUAS FORMAS DE FAZER O NOVO PEDIDO E ESCOLHA A MELHOR."
+    data:
+      scenario: "Usando a IA, você precisa escrever um e-mail para um cliente avisando que a entrega vai atrasar dois dias. Você tem o modelo do relatório semanal salvo (tarefa + contexto + público + formato)."
+      outputs:
+        - id: out-a
+          text: "Pego meu modelo e troco só o que muda: tarefa — escrever um e-mail sobre atraso de entrega; contexto — pedido 1042, atraso de 2 dias por falta de estoque, cliente é recorrente; público — o cliente, em tom cordial e direto; formato — e-mail curto com pedido de desculpas, motivo e nova data. Mantenho a estrutura de quatro campos que já funcionava."
+        - id: out-b
+          text: "Escrevo um pedido novo do zero, do meu jeito: 'IA, me ajuda com uma coisa pro cliente, preciso de um texto bonito sobre uma entrega, qualquer coisa serve, você sabe, algo profissional'."
+      criteria:
+        - id: c-adaptou-contexto
+          text: "Troca o contexto e o público do modelo pelos do novo cenário"
+        - id: c-preservou-estrutura
+          text: "Preserva a estrutura de campos que funcionou (tarefa, contexto, público, formato)"
+        - id: c-sem-sobra
+          text: "Não deixa resto do cenário antigo (relatório, diretoria, sexta-feira)"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-adaptou-contexto, c-sem-sobra]
+    feedback:
+      onFailure: "A saída A é melhor: ela adapta o modelo — troca público e contexto, preserva a estrutura de quatro campos e não carrega nada do cenário do relatório. A saída B joga fora tudo que já funcionava e volta ao pedido vago."
+      perCheck:
+        betterOutputId: "A saída A parte do que funcionou e troca só o necessário; a B recomeça do zero com um pedido genérico."
+        c-adaptou-contexto: "Faltou este critério: o novo pedido precisa trazer os dados do NOVO cenário (pedido 1042, atraso de 2 dias, cliente)."
+        c-sem-sobra: "Faltou este critério: nada do cenário antigo (relatório, diretoria, sexta-feira) pode sobrar no pedido adaptado."
+      onSuccess: "Exato! Reuso inteligente: preserva a estrutura, troca o conteúdo. O modelo vira uma ferramenta permanente."
+    storage:
+      policy: structured_only
+    hints:
+      - "Qual pedido você mandaria para a IA agora, sem explicar mais nada?"
+      - "No reuso certo, o que muda é o conteúdo (cenário, público); o que fica é a forma (campos, clareza)."
+      - "A saída A troca contexto e público e preserva os quatro campos; a saída B é um pedido vago sem estrutura."
+
+  - id: l18-a3
+    type: choice
+    skillId: aplicar
+    instruction: "EM QUAL SITUAÇÃO NÃO VALE REUTILIZAR O MODELO SALVO?"
+    data:
+      options:
+        - id: opt-a
+          text: "Uma nova tarefa de resumo para um público parecido com o de sempre — a estrutura de campos serve de novo."
+        - id: opt-b
+          text: "O pedido antigo continha dados sensíveis de um cliente (valores, nomes) e o novo cenário é um projeto de outro cliente."
+        - id: opt-c
+          text: "O formato de saída pedido agora é igual ao do modelo — resumo curto em tópicos."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-b]
+    feedback:
+      onFailure: "Reuso de estrutura é ótimo quando muda o conteúdo… mas dados sensíveis não podem viajar de cenário em cenário: reaproveitar aquele pedido carrega informação de um cliente para o projeto de outro. Nesse caso, comece um pedido novo — e sem os dados sensíveis."
+      onSuccess: "Correto! Reuso tem limite: estrutura se preserva, dado sensível nunca viaja. Nesse caso, o certo é um pedido novo e limpo."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: o que está sendo reaproveitado — a estrutura do pedido ou informações de um caso anterior?"
+      - "Estrutura e formato se reutilizam de bom grado; conteúdo sensível de outro cenário, não."
+      - "Um pedido antigo com dados sensíveis de um cliente não pode virar modelo para outro projeto."
+
+rubric:
+  id: l18-rubric
+  criteria:
+    - id: r-estrutura-campos
+      text: "Estrutura o pedido por campos (tarefa, contexto, público, formato) ao salvar o modelo."
+      weight: 1
+    - id: r-adapta-sem-recomecar
+      text: "Adapta o modelo a um cenário novo preservando o que funciona, sem recomeçar do zero."
+      weight: 1
+    - id: r-limite-do-reuso
+      text: "Reconhece quando o reuso é inadequado, inclusive quando carrega dado sensível."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l18-a1, l18-a2, l18-a3]

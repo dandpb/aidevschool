@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { AppContent } from '../apps/AppContent'
 import { appTitles } from '../apps/appCatalog'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import { learnerSnapshot } from '../data/learner'
 import {
   DesktopShortcuts,
@@ -18,12 +19,15 @@ import type {
 import { Launcher } from '../launcher/Launcher'
 import { coreContexts } from '../learning/learningContexts'
 import { LearningRail } from '../learning/LearningRail'
+import { isOperatorSurface } from '../surface/operatorSurface'
 
 type AppProps = {
   readonly learner?: LearnerSnapshot
 }
 
-export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
+export function DesktopApp({ learner }: AppProps) {
+  const operatorSurface = isOperatorSurface()
+  const resolvedLearner = learner ?? (operatorSurface ? learnerSnapshot : anonymousPublicLearner)
   const [windows, setWindows] = useState<WindowState[]>([
     {
       id: 'dojo',
@@ -128,17 +132,18 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
   return (
     <main className="desktop-shell">
       <TopBar
-        learner={learner}
+        learner={resolvedLearner}
         learnMode={learnMode}
         onToggleLearn={() => setLearnMode((value) => !value)}
         onOpenLauncher={() => setLauncherOpen(true)}
       />
 
-      <DesktopShortcuts onOpen={openApp} />
+      <DesktopShortcuts onOpen={openApp} operatorSurface={operatorSurface} />
       <Dock
         windows={windows}
         onOpen={openApp}
         onLauncher={() => setLauncherOpen((value) => !value)}
+        operatorSurface={operatorSurface}
       />
 
       <section
@@ -159,7 +164,7 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
             >
               <AppContent
                 appId={window.id}
-                learner={learner}
+                learner={resolvedLearner}
                 onTeach={teach}
                 onOpenApp={openApp}
               />
@@ -173,6 +178,7 @@ export function DesktopApp({ learner = learnerSnapshot }: AppProps) {
           onQuery={setLauncherQuery}
           onClose={() => setLauncherOpen(false)}
           onLaunch={launchDefinition}
+          operatorSurface={operatorSurface}
         />
       ) : null}
       {learnMode ? <LearningRail context={learningContext} onClose={() => setLearnMode(false)} /> : null}

@@ -4,6 +4,10 @@ import { routeBridgeRequest } from './router'
 import {
   literacyReceipt,
   literacyRecord,
+  checkpointCityRecord,
+  dockingBayRecord,
+  pipelinePlantRecord,
+  timelineTowerRecord,
   relayRecord,
   teachingGameRecord,
   wormholeRecord,
@@ -74,6 +78,7 @@ describe('verification bridge dispatch', () => {
       verdict: 'PASS',
       unit_id: 'U2-key-value-store',
       scenario_id: 'kv-warehouse-L1',
+      attempt_id: 'kv-warehouse-L1-attempt-1',
       producer_pass_claim: true,
       canonical_gate_status: 'not-submitted',
     })
@@ -82,6 +87,10 @@ describe('verification bridge dispatch', () => {
   it.each([
     ['WORMHOLE', wormholeRecord],
     ['RELAY STATION', relayRecord],
+    ['PIPELINE PLANT', pipelinePlantRecord],
+    ['CHECKPOINT CITY', checkpointCityRecord],
+    ['TIMELINE TOWER', timelineTowerRecord],
+    ['DOCKING BAY', dockingBayRecord],
   ])('dispatches %s evidence through the same fixed teaching-game process', async (_, record) => {
     const response = await routeBridgeRequest({
       method: 'POST',
@@ -102,6 +111,8 @@ describe('verification bridge dispatch', () => {
       scenario_id: record.scenario_id,
       game: record.game,
       producer_pass_claim: true,
+      canonical_gate_status: 'not-submitted',
     })
+    expect(response.body.receipt.attempt_id).toBeUndefined()
   })
 })

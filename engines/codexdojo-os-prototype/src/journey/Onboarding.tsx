@@ -5,27 +5,48 @@ import type {
   OnboardingGoal,
   OnboardingInput,
 } from '../progress/domain'
-import { recommendTrack } from '../progress/domain'
 import type { TrackId } from '../domain'
+import {
+  HOSTED_SIMULATIONS_TRACK_ID,
+  STUDENT_TRACK_ID,
+  requestedTrackIdFromSearch,
+} from './studentPath'
 
-export function Onboarding({ onComplete }: { readonly onComplete: (input: OnboardingInput) => void }) {
+export function Onboarding({
+  onComplete,
+  initialTrackId,
+}: {
+  readonly onComplete: (input: OnboardingInput) => void
+  readonly initialTrackId?: TrackId
+}) {
   const [goal, setGoal] = useState<OnboardingGoal>('work-better')
   const [context, setContext] = useState<OnboardingContext>('work')
   const [confidence, setConfidence] = useState<OnboardingConfidence>('low')
-  const recommendation = useMemo(() => recommendTrack({ goal, confidence }), [goal, confidence])
-  const [selection, setSelection] = useState<TrackId | null>(null)
-  const selectedTrackId = selection ?? recommendation
+  const [selectedTrackId, setSelectedTrackId] = useState<TrackId>(
+    () => initialTrackId ?? requestedTrackIdFromSearch() ?? STUDENT_TRACK_ID,
+  )
+  const recommendationCopy = useMemo(() => {
+    if (selectedTrackId === HOSTED_SIMULATIONS_TRACK_ID) {
+      return confidence === 'low'
+        ? 'Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION. IA Prática continua a um clique se você quiser um começo mais guiado.'
+        : 'Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION. Outras simulações ficam no Engine Hub.'
+    }
+    if (goal === 'build-systems' && confidence !== 'low') {
+      return 'Sugerimos a trilha Dev. IA Prática permanece disponível se você quiser começar pelo no-code.'
+    }
+    return 'Sugerimos IA Prática. A trilha Dev permanece clicável.'
+  }, [confidence, goal, selectedTrackId])
 
   return (
     <main className="journey-page onboarding-page">
       <header className="journey-brand">
         <span className="journey-cubes" aria-hidden="true"><i /><i /><i /><i /></span>
-        <span><strong>AI DevSchool</strong><small>uma escola, duas trilhas</small></span>
+        <span><strong>AI DevSchool</strong><small>escolha sua trilha</small></span>
       </header>
       <section className="onboarding-card" aria-labelledby="onboarding-title">
         <p className="journey-eyebrow">Seu primeiro passo</p>
         <h1 id="onboarding-title">O que você quer conseguir fazer com IA?</h1>
-        <p className="journey-lead">Leva menos de um minuto. Você pode ajustar a recomendação e trocar de trilha depois.</p>
+        <p className="journey-lead">Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.</p>
 
         <div className="onboarding-fields">
           <label>
@@ -54,32 +75,31 @@ export function Onboarding({ onComplete }: { readonly onComplete: (input: Onboar
           </label>
         </div>
 
-        <fieldset className="track-choice">
-          <legend className="journey-sr-only">Escolha de trilha</legend>
+        <div className="track-choice" role="radiogroup" aria-label="Trilha">
           <button
             type="button"
-            className={selectedTrackId === 'ai-pratica' ? 'track-option selected' : 'track-option'}
-            aria-pressed={selectedTrackId === 'ai-pratica'}
-            onClick={() => setSelection('ai-pratica')}
+            className={selectedTrackId === STUDENT_TRACK_ID ? 'track-option selected' : 'track-option'}
+            aria-pressed={selectedTrackId === STUDENT_TRACK_ID}
+            data-testid="track-option-ai-pratica"
+            onClick={() => setSelectedTrackId(STUDENT_TRACK_ID)}
           >
             <span>Recomendada para começar</span>
             <strong>IA Prática</strong>
-            <small>Aprenda a pedir, avaliar e aplicar sem precisar programar.</small>
+            <small>Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.</small>
           </button>
           <button
             type="button"
-            className={selectedTrackId === 'dev' ? 'track-option selected' : 'track-option'}
-            aria-pressed={selectedTrackId === 'dev'}
-            onClick={() => setSelection('dev')}
+            className={selectedTrackId === HOSTED_SIMULATIONS_TRACK_ID ? 'track-option selected' : 'track-option'}
+            aria-pressed={selectedTrackId === HOSTED_SIMULATIONS_TRACK_ID}
+            data-testid="track-option-dev"
+            onClick={() => setSelectedTrackId(HOSTED_SIMULATIONS_TRACK_ID)}
           >
-            <span>Trilha técnica</span>
+            <span>Para programadores</span>
             <strong>Dev</strong>
-            <small>Pratique fundamentos e sistemas com desafios executáveis.</small>
+            <small>Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.</small>
           </button>
-        </fieldset>
-        <p className="recommendation-note" role="status">
-          Recomendação: <strong>{recommendation === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>. Você escolheu <strong>{selectedTrackId === 'ai-pratica' ? 'IA Prática' : 'Trilha Dev'}</strong>.
-        </p>
+        </div>
+        <p className="recommendation-note" role="status">{recommendationCopy}</p>
         <button
           type="button"
           className="journey-primary"

@@ -271,6 +271,10 @@ class TestVoxelPerGameStubDetection(unittest.TestCase):
         (``test_full_sync_round_trip_keeps_per_game_files_in_sync``) verifies
         the round-trip works.
 
+        Scheduling strings such as ``dueIn`` are relative to the pinned
+        projection clock in ``learner/substrate/projection_clock.yaml``, not
+        the wall clock, so this check stays stable across calendar days.
+
         This test is the load-bearing stub detector. The marker check below
         is defense-in-depth for the case where the file exists but the
         substrate's renderer signature has drifted.

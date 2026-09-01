@@ -170,6 +170,24 @@ export class GameController {
     return this.state.level.reorder
   }
 
+  /** Closed observation trace for the independent verifier: the player's bounded
+   * inputs only (their gate predictions, and for L4 the wall order + probe
+   * prediction). The verifier recomputes every wave answer from the fixed
+   * seeded scenario; producer metrics are never trusted. */
+  private observations(): Record<string, unknown> {
+    if (this.state.level.id === "L4") {
+      return {
+        kind: "checkpoint-city-L4",
+        order: [...this.state.order],
+        probePrediction: this.state.predictions[0] ?? "auth",
+      }
+    }
+    return {
+      kind: `checkpoint-city-${this.state.level.id}`,
+      predictions: [...this.state.predictions],
+    }
+  }
+
   private finishWave(): void {
     const cfg = this.state.level
     let pass: boolean
@@ -187,9 +205,10 @@ export class GameController {
       pass = out.pass
       metrics = out.metrics
     }
-    this.state.lastMetrics = metrics
+    const record = { kind: "voxeldoj-checkpoint-city", ...metrics }
+    this.state.lastMetrics = record
     this.state.phase = pass ? "cleared" : "failed"
-    emitEvidence(cfg.id, pass, metrics)
+    emitEvidence(cfg.id, pass, record, this.observations())
     this.commit()
   }
 }

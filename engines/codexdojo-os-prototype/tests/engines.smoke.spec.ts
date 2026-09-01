@@ -17,7 +17,7 @@ declare global {
 }
 
 async function openEngineHub(page: Page): Promise<void> {
-  await page.goto('/desktop')
+  await page.goto('/desktop?operator=1')
   await page.getByRole('button', { name: 'Atividades' }).click()
   const launcher = page.getByRole('dialog', { name: 'Lançador de aplicativos' })
   await launcher.getByRole('textbox', { name: 'Buscar aplicativos ou fundamentos' }).fill('Engine Hub')
@@ -79,6 +79,23 @@ test('opens every voxelDojo catalog experience inside the OS', async ({ page }, 
   }
 })
 
+test('opens the no-code, explore-only, and daily projection surfaces with explicit boundaries', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-1280')
+  await openEngineHub(page)
+
+  for (const engine of [
+    { name: 'LiteracyDojo', frame: 'LiteracyDojo integrado', boundary: 'micro-lesson' },
+    { name: 'miniTown', frame: 'miniTown integrado', boundary: 'explore-only' },
+    { name: 'dojoToday', frame: 'dojoToday integrado', boundary: 'operations' },
+  ]) {
+    await page.getByRole('button', { name: `Usar ${engine.name}` }).click()
+    await expect(page.getByTestId('engine-evaluation-boundary')).toContainText(engine.boundary)
+    await expect(page.getByTitle(engine.frame)).toBeVisible()
+    await expect(page.frameLocator(`iframe[title="${engine.frame}"]`).locator('body')).toBeVisible()
+
+  }
+})
+
 test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub', async ({ page, context }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-1280')
   await context.grantPermissions(['clipboard-read', 'clipboard-write'])
@@ -127,7 +144,7 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
     if (ownerId === null) break
     await voxel.getByTestId(`station-${ownerId}`).click()
   }
-  await expect(voxel.getByTestId('hud-status')).toContainText('cleared')
+  await expect(voxel.getByTestId('hud-status')).toContainText(/cleared|Missão concluída/)
   expect(await voxel.locator('body').evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
   await expect(page.locator('.embedded-evidence')).toContainText('voxeldojo')
   await expect(page.locator('.embedded-evidence')).toContainText('Verificação independente obrigatória')

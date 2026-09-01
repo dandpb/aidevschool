@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "9a22041b485b25424b3ddcdd3d3a6eb1ec9d6a34",
+  "observedAt": "2026-08-31T11:45:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing the dev chain game-02 -> game-03 -> game-05 -> l15 -> l16 -> l17 -> game-06 hosted, the map row 8 flipped to 'Disponivel CHECKPOINT CITY ... Pre-requisito: game-06-pipeline-plant' while rows 9/10 stayed locked; after game-07 completed, row 9 unlocked; after game-08, row 10 unlocked. Chapter ordering and prereqs observed exactly as declared in the promoted missions catalog (chapterOrder 8/9/10, intra-track)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Result screens keep 'Estado canonico' / 'sem alteracao local' boundary language on every mission including the three new ones; final map rows show 'Verificacao independente concluida' rather than any mastery claim; receipts expose canonical_gate_status 'not-submitted' with reason 'learner-attempt-and-gate-eligibility-required'."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The UI displays honest verdicts for both directions: 'Verificacao independente aprovada' on genuine journeys and rejection language for unjudgeable free-text (l16-a1/l14-a1 prompt_builder FAIL with 'cannot be independently re-evaluated without free text') while the lesson still completes locally; retry and 'Voltar ao hub' remain available."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Renderer failure degrades to the labeled DOM projection with the fallback summary text declared in the promoted missions catalog; the learner keeps navigation ('Voltar ao hub') and can retry without repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Result screens show 'Verificacao independente aprovada' plus the canonical boundary language; free-text prompt_builder activities keep the documented honest-FAIL limit (no false approval), matching the gate verdict precedent."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Mission screens consistently separate local progress from 'Estado canonico ... sem alteracao local'; no screen claims canonical mastery for local completion."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Canonical-state projection ('Estado canonico', '2 verificadas') is displayed read-only on mission screens; evidence panels show 'Ainda nao enviada' until the learner actually plays, preserving the local/canonical boundary on the promoted pin."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Local state loss means re-onboarding only; no undocumented repository intervention was needed at any point during the wave verification."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Across the full hosted dev chain (game-02 through game-09 in one browser profile), returning to the hub and the map after each voxel mission preserved local completion state; after game-09 the map showed all three OP-A rows 'Verificacao independente concluida'. Every voxel result screen separates the local reward from 'Estado canonico ... sem alteracao local' and the bridge receipts repeat producer_writes_mastered false with canonical_gate_status 'not-submitted' — local voxel progress never reads as canonical mastery."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

@@ -6,12 +6,11 @@ import { expect, test } from '@playwright/test'
 import type { FrameLocator } from '@playwright/test'
 import { bucketOf } from '../../voxelDojo/game-02-warehouse/src/sim/hash'
 
-async function enterSchool(page: import('@playwright/test').Page, track?: RegExp) {
+async function enterSchool(page: import('@playwright/test').Page) {
   await page.goto('/')
   await expect(
     page.getByRole('heading', { name: 'O que você quer conseguir fazer com IA?' }),
   ).toBeVisible()
-  if (track) await page.getByRole('button', { name: track }).click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await expect(page.getByRole('heading', { name: 'Aprenda uma coisa útil agora.' })).toBeVisible()
 }
@@ -26,32 +25,32 @@ async function expectMissionMounted(
   innerContent: RegExp,
 ) {
   const frameElement = page.locator(`iframe[title="${iframeTitle}"]`)
-  await expect(frameElement).toBeVisible()
+  const frame = page.frameLocator(`iframe[title="${iframeTitle}"]`)
 
+  await expect(frameElement).toBeVisible({ timeout: 30_000 })
+  // Wait for runtime content before reading iframe attributes. On slower CI
+  // hosts the iframe element can appear while launchMission is still saving
+  // local state and swapping the mission shell.
+  await expect(frame.locator('body')).toContainText(innerContent, { timeout: 30_000 })
+
+  await expect(frameElement).toHaveAttribute('src', /.+/)
   const src = await frameElement.getAttribute('src')
   expect(src, 'mission iframe has a src').toBeTruthy()
   const origin = new URL(src as string, page.url()).origin
   expect(origin, 'mission must be served from the OS origin, not a dev server').toBe(
     new URL(page.url()).origin,
   )
-
-  // Assert on text rather than visibility: a failed load renders Chrome's error
-  // page (no match), while a mounted runtime may keep some nodes visually
-  // hidden or fall back to the non-WebGL projection in headless.
-  await expect(
-    page.frameLocator(`iframe[title="${iframeTitle}"]`).locator('body'),
-  ).toContainText(innerContent)
 }
 
 async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<void> {
   const status = frame.getByTestId('hud-status')
   const first = await status.textContent()
-  const count = first?.match(/\/(\d+):/)?.[1]
+  const count = first?.match(/de (\d+):/)?.[1]
   if (count === undefined) throw new Error('Warehouse crate count was not visible')
   const shelfCount = await frame.locator('[data-testid^="shelf-"]').count()
   for (let index = 0; index < Number(count); index += 1) {
     const current = await status.textContent()
-    const key = current?.match(/: (.+) — click/)?.[1]
+    const key = current?.match(/: (.+) — clique/)?.[1]
     if (key === undefined) throw new Error('Warehouse key was not visible')
     const expected = bucketOf(key, shelfCount)
     await frame
@@ -62,7 +61,11 @@ async function answerWarehouse(frame: FrameLocator, correct: boolean): Promise<v
 
 test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build', async ({ page }) => {
   await enterSchool(page)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  const startMission = page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ })
+  await startMission.scrollIntoViewIfNeeded()
+  await expect(startMission).toBeVisible()
+  await startMission.click()
+  await expect(page).toHaveURL(/\/mission\//)
   await expectMissionMounted(
     page,
     'Missão IA não é uma fonte de verdade',
@@ -70,11 +73,11 @@ test('readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Pr
   )
 })
 
-test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev mission mounts from the bundled build and reports the verifier honestly', async ({
+test('readiness os-voxel-hosted-missions and os-verification-recovery: hosted simulation mounts from the bundled build and reports the verifier honestly', async ({
   page,
 }) => {
-  await enterSchool(page, /Trilha técnica.*Dev/)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-02-warehouse')
   await expectMissionMounted(
     page,
     'Missão WAREHOUSE: Key-Value Store (in-memory)',
@@ -86,14 +89,66 @@ test('readiness os-voxel-hosted-missions and os-verification-recovery: Dev missi
   await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
 })
 
+test('os-voxel-hosted-missions: the published PIPELINE PLANT mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-06-pipeline-plant')
+  await expectMissionMounted(
+    page,
+    'Missão PIPELINE PLANT: File Upload/Processing Pipeline',
+    /L1|tank|PIPELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published CHECKPOINT CITY mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-07-checkpoint-city')
+  await expectMissionMounted(
+    page,
+    'Missão CHECKPOINT CITY: REST API with Auth',
+    /L1|city|CHECKPOINT/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-08-timeline-tower')
+  await expectMissionMounted(
+    page,
+    'Missão TIMELINE TOWER: Event-Driven Order System',
+    /L1|tower|TIMELINE/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
+test('os-voxel-hosted-missions: the published DOCKING BAY mission mounts from the bundled build', async ({
+  page,
+}) => {
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-09-docking-bay')
+  await expectMissionMounted(
+    page,
+    'Missão DOCKING BAY: Plugin System',
+    /L1|dock|DOCKING/i,
+  )
+  await expect(page.getByText('Ainda não enviada', { exact: true })).toBeVisible()
+})
+
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
-  await enterSchool(page, /Trilha técnica.*Dev/)
-  await page.getByRole('button', { name: /Começar missão|Revisar agora|Continuar missão/ }).click()
+  await enterSchool(page)
+  await page.goto('/mission/dev/game-02-warehouse')
   const frame = page.frameLocator('iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]')
   await frame.getByTestId('start').dispatchEvent('click')
 
   await answerWarehouse(frame, false)
-  await expect(frame.getByTestId('hud-status')).toContainText('failed')
+  await expect(frame.getByTestId('hud-status')).toContainText('ainda não atendido')
   await frame.getByTestId('retry').dispatchEvent('click')
   await answerWarehouse(frame, true)
 

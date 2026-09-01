@@ -1,6 +1,7 @@
 import type { MissionDefinition } from '../domain'
 import { SupportCta } from '../journey/SupportCta'
 import type { RendererFailureReason, RendererPreference } from '../rendering/domain'
+import { verificationCopy } from '../journey/ResultScreen'
 import type { EvidenceVerificationState } from '../verification/ports'
 import type { MissionSessionSnapshot } from './MissionSessionController'
 
@@ -28,8 +29,8 @@ function verificationLabel(state: EvidenceVerificationState): string {
       return 'Evidência rejeitada'
     case 'verified':
       return state.receipt.verdict === 'PASS'
-        ? 'Verificação independente aprovada'
-        : 'Verificação pede nova tentativa'
+        ? 'Veredito PASS'
+        : 'Veredito FAIL'
   }
 }
 
@@ -113,6 +114,7 @@ export function MissionStatusControls({
       {session.phase !== 'completed' && verification.kind === 'verified' ? (
         <section className="verification-note" aria-live="polite">
           <strong>Veredito independente: {verification.receipt.verdict}</strong>
+          <p>{verificationCopy(verification)}</p>
           <p>
             Gate canônico não executado: a tentativa e os requisitos do gate continuam separados
             deste veredito.

@@ -1,0 +1,32 @@
+schemaVersion: 1
+assessmentId: 2026-08-30-0f75daf-os-phase-race-v15
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-30T22:25:00Z'
+revalidateBy: '2026-09-29'
+gitSha: 0f75dafaa4764df45a53a0892c702badae58a718
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-30T22:20:52Z-os-literacy-hosted-mission-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-verification-recovery-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-literacy-returning-device-mixed-0f75dafa
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-30T22:20:52Z-os-voxel-hosted-missions-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-renderer-accessibility-recovery-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-voxel-returning-device-mixed-0f75dafa
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-30T22:20:52Z-os-onboarding-track-choice-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-returning-device-mixed-0f75dafa
+  - 2026-08-30T22:20:52Z-os-returning-recovery-mixed-0f75dafa

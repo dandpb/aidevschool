@@ -1,0 +1,5 @@
+{"schemaVersion":1,"eventId":"evt-0010","name":"journey.returned","occurredAt":"2026-07-14T00:15:00Z","sequence":10,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-2"}}
+{"schemaVersion":1,"eventId":"evt-0011","name":"onboarding.started","occurredAt":"2026-07-14T12:00:00Z","sequence":1,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-1"}}
+{"schemaVersion":1,"eventId":"evt-0012","name":"onboarding.completed","occurredAt":"2026-07-14T12:05:00Z","sequence":2,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-1","recommendationChanged":false}}
+{"schemaVersion":1,"eventId":"evt-0013","name":"mission.started","occurredAt":"2026-07-14T12:10:00Z","sequence":3,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0014","name":"mission.completed","occurredAt":"2026-07-14T12:30:00Z","sequence":4,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-1","result":"completed"}}

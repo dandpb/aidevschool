@@ -1,18 +1,23 @@
 import {
   BrainCircuit,
+  BookOpenCheck,
   Boxes,
+  CalendarDays,
   Gamepad2,
   Gauge,
   LayoutDashboard,
   ListChecks,
+  Map as MapIcon,
   ServerCog,
 } from 'lucide-react'
 import { type ReactNode, useState } from 'react'
 import { createEngineActionClient } from './client'
 import { EmbeddedEngine } from './EmbeddedEngine'
 import { type EngineActionRunner, LocalEngineAction } from './LocalEngineAction'
-import type { EngineAction, EngineId } from './protocol'
-import { engineRegistry } from './registry'
+import { StaticEngineEvaluation } from './StaticEngineEvaluation'
+import type { EngineAction, EngineDefinition, EngineId } from './protocol'
+import { isOperatorSurface } from '../surface/operatorSurface'
+import { visibleEngineRegistry } from '../apps/studentCatalog'
 import { VoxelEngine } from './VoxelEngine'
 import { parseVoxelUrlMap, type VoxelUrlMap } from './voxelCatalog'
 
@@ -24,6 +29,7 @@ export type EngineHubAppProps = {
   readonly localBridgeAvailable?: boolean
   readonly runAction?: EngineActionRunner
   readonly configuredVoxelUrls?: VoxelUrlMap
+  readonly operatorSurface?: boolean
 }
 
 const engineIcons: Readonly<Record<EngineId, ReactNode>> = {
@@ -32,7 +38,12 @@ const engineIcons: Readonly<Record<EngineId, ReactNode>> = {
   miniMaxEvolutionEngine: <Gauge />,
   openclaw: <ListChecks />,
   pixelDojo: <Gamepad2 />,
+  literacyDojo: <BookOpenCheck />,
+  miniTown: <MapIcon />,
+  dojoToday: <CalendarDays />,
   voxelDojo: <Boxes />,
+  aiDevschoolMvp: <BookOpenCheck />,
+  zaiDuolingoLike: <BookOpenCheck />,
 }
 
 const actionLabels: Readonly<Record<EngineAction, string>> = {
@@ -44,7 +55,17 @@ const actionLabels: Readonly<Record<EngineAction, string>> = {
 const defaultUrls: Readonly<Partial<Record<EngineId, string>>> = {
   codexDojo: import.meta.env.VITE_CODEXDOJO_URL,
   pixelDojo: import.meta.env.VITE_PIXELDOJO_URL,
+  literacyDojo: import.meta.env.VITE_LITERACYDOJO_URL,
+  miniTown: import.meta.env.VITE_MINITOWN_URL,
+  dojoToday: import.meta.env.VITE_DOJOTODAY_URL,
   voxelDojo: import.meta.env.VITE_VOXELDOJO_URL,
+  zaiDuolingoLike: import.meta.env.VITE_ZAI_DUOLINGO_URL,
+}
+
+function publicEngineAccessLabel(engine: EngineDefinition): string {
+  if (engine.id === 'dojoToday') return 'Sugestão neste dispositivo · somente leitura'
+  if (engine.learnerAccess === 'read-only') return 'Estado canônico · somente leitura'
+  return 'Evidência bruta · não verificada'
 }
 
 const defaultActionRunner = createEngineActionClient()
@@ -56,10 +77,12 @@ export function EngineHubApp({
   localBridgeAvailable = development || import.meta.env.VITE_LOCAL_ENGINE_BRIDGE === 'true',
   runAction = defaultActionRunner,
   configuredVoxelUrls = defaultVoxelUrls,
+  operatorSurface = isOperatorSurface(),
 }: EngineHubAppProps) {
+  const engines = visibleEngineRegistry(operatorSurface)
   const [selectedId, setSelectedId] = useState<EngineId | null>(null)
   const [focusedEngine, setFocusedEngine] = useState(false)
-  const selected = engineRegistry.find((engine) => engine.id === selectedId)
+  const selected = engines.find((engine) => engine.id === selectedId)
 
   const selectEngine = (engineId: EngineId) => {
     setSelectedId(engineId)
@@ -80,7 +103,7 @@ export function EngineHubApp({
 
       <div className="engine-hub-layout">
         <nav className="engine-selector" aria-label="Motores do ecossistema">
-          {engineRegistry.map((engine) => (
+          {engines.map((engine) => (
             <button
               type="button"
               key={engine.id}
@@ -100,9 +123,9 @@ export function EngineHubApp({
           {selected === undefined ? (
             <div className="engine-overview">
               <Boxes />
-              <span className="section-label">SEIS MOTORES INTEGRADOS</span>
+              <span className="section-label">LABORATÓRIO DE ENGINES</span>
               <h2>Escolha um motor para começar.</h2>
-              <p>Apps web abrem dentro desta janela. Motores locais usam apenas ações fixas e auditáveis.</p>
+              <p>Compare cada motor dentro do seu papel declarado. Saúde técnica não decide relevância pedagógica.</p>
             </div>
           ) : (
             <>
@@ -111,9 +134,27 @@ export function EngineHubApp({
                 <div><span>{selected.role}</span><h2>{selected.name}</h2><p>{selected.capability}</p></div>
               </header>
               <div className="engine-policy-strip">
-                <span>{selected.learnerAccess === 'read-only' ? 'Estado canônico · somente leitura' : 'Evidência bruta · não verificada'}</span>
+                <span>{publicEngineAccessLabel(selected)}</span>
                 <strong>Domínio: nunca decidido pelo OS</strong>
               </div>
+              <div className="engine-policy-strip" data-testid="engine-evaluation-boundary">
+                <span>Classe: {selected.journeyClass}</span>
+                <strong>Portfólio: {selected.portfolioStatus}</strong>
+              </div>
+              <section className="engine-guide" aria-label={`Guia de avaliação · ${selected.name}`}>
+                <div>
+                  <strong>Objetivo</strong>
+                  <p>{selected.objective}</p>
+                </div>
+                <div>
+                  <strong>Como acessar separadamente</strong>
+                  <code>{selected.startCommand}</code>
+                </div>
+                <div>
+                  <strong>O que avaliar</strong>
+                  <p>{selected.evaluationFocus}</p>
+                </div>
+              </section>
               {selected.id === 'miniMaxEvolutionEngine' || selected.id === 'openclaw' ? (
                 <div className="pipeline-integrity-warning" role="note">
                   <strong>Fonte única de pipeline</strong>
@@ -133,14 +174,16 @@ export function EngineHubApp({
                 <EmbeddedEngine
                   key={selected.id}
                   engineName={selected.name}
-                  configuredUrl={configuredUrls[selected.id]}
+                  configuredUrl={selected.id === 'dojoToday'
+                    ? withHostLocalQuery(configuredUrls[selected.id])
+                    : configuredUrls[selected.id]}
                   developmentUrl={selected.runtime.developmentUrl}
                   development={development}
                   focused={focusedEngine}
                   onToggleFocus={() => setFocusedEngine((current) => !current)}
                   evidenceSource={selected.runtime.evidenceSource}
                 />
-              ) : localBridgeAvailable ? (
+              ) : selected.runtime.kind === 'static-evaluation' && localBridgeAvailable && selected.runtime.action !== null ? (
                 <LocalEngineAction
                   key={selected.id}
                   engineId={selected.id}
@@ -148,11 +191,13 @@ export function EngineHubApp({
                   label={actionLabels[selected.runtime.action]}
                   runAction={runAction}
                 />
+              ) : selected.runtime.kind === 'static-evaluation' ? (
+                <StaticEngineEvaluation key={selected.id} engineId={selected.id} />
               ) : (
                 <div className="engine-unavailable" role="status">
                   <ServerCog />
                   <strong>A ponte local não está disponível</strong>
-                  <p>Use o servidor local de desenvolvimento ou o preview integrado para executar esta ação fixa.</p>
+                  <p>Use o servidor local de desenvolvimento para executar esta ação fixa.</p>
                 </div>
               )}
             </>
@@ -161,4 +206,16 @@ export function EngineHubApp({
       </div>
     </div>
   )
+}
+
+function withHostLocalQuery(url: string | undefined): string | undefined {
+  if (url === undefined || url.trim() === '') return url
+  try {
+    const parsed = new URL(url, 'https://os.invalid')
+    parsed.searchParams.set('host', 'os')
+    if (url.startsWith('/')) return `${parsed.pathname}${parsed.search}${parsed.hash}`
+    return parsed.toString()
+  } catch {
+    return url
+  }
 }

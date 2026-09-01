@@ -1,4 +1,5 @@
 import * as THREE from "three"
+import { disposeObject3D, type ProjectionContextHooks } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import type { OrderEvent } from "../sim/sourcing"
@@ -41,6 +42,7 @@ export const PALETTE = [
  */
 export class TowerScene {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private towerGroup = new THREE.Group()
   private floorMeshes: THREE.Mesh[] = []
   private elevator: THREE.Mesh
@@ -49,8 +51,10 @@ export class TowerScene {
   private readoutCanvas: HTMLCanvasElement
   private readoutCtx: CanvasRenderingContext2D
   private readoutTexture: THREE.CanvasTexture
+  private disposed = false
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 22,
@@ -66,6 +70,7 @@ export class TowerScene {
         this.elevator.position.y += (this.elevatorTargetY - this.elevator.position.y) * 0.12
         this.elevator.rotation.z += 0.01
       },
+      ...hooks,
     })
 
     this.viewport.scene.add(this.towerGroup)
@@ -154,6 +159,20 @@ export class TowerScene {
     })
     // keep the elevator above the base when the tower is empty
     if (log.length === 0) this.elevatorTargetY = 0
+  }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    this.readoutTexture.dispose()
+    disposeObject3D(this.towerGroup)
+    this.viewport.dispose()
   }
 
   private drawReadout(statusLabel: string, shippedLabel: string): void {

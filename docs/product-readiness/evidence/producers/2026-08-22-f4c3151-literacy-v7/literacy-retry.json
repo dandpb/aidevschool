@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+      "sha256": "d162ce8a64c698bd85141e03d93ada0967f6cb76f689816d2ee26481e61ed0cc"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/lessonSession.ts",
+      "sha256": "51276032a7547d9da2fc4c83e25e8f46968e50a95f87dfdb3afdca56fb0a59c3"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "incorrect-attempt-offers-safe-recovery",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-08-22T13:46:21Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "f4c31513b3bb4e78a087006f3757a602a19bea5b",
+  "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
+  "outcome": "pass",
+  "runId": "2026-08-22T13:46:21Z-literacy-retry-f4c31513",
+  "scenarioId": "literacy-retry",
+  "schemaVersion": 1,
+  "sourceFingerprint": "35a7c8a2c7693f13b9cf0fecd4bc618bb64814071905230ebe99d0a0ee7e9644"
+}
