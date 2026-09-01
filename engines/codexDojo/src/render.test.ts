@@ -128,7 +128,7 @@ describe("renderShell — targeted assertions", () => {
     for (const project of concurrencyProjects) {
       expect(html).toContain(project.title)
       expect(html).toContain(`data-project="${project.id}"`)
-      expect(html).toContain(`aria-label="Abrir briefing: ${project.title}"`)
+      expect(html).toContain(`aria-label="Abrir briefing de projeto: ${project.title}"`)
     }
   })
 

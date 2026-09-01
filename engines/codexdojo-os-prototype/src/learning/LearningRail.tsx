@@ -16,7 +16,7 @@ export function LearningRail({ context, onClose }: { readonly context: LearningC
   }
   return (
     <aside className="learning-rail">
-      <header><span><BrainCircuit /> Modo Aprender</span><button type="button" onClick={onClose} aria-label="Fechar Modo Aprender"><X /></button></header>
+      <header><span><BrainCircuit /> Modo Aprender</span><button type="button" onClick={onClose} aria-label="Fechar Modo Aprender" title="Fechar"><span aria-hidden="true"><X /></span></button></header>
       <div className="learning-scroll">
         <span className="context-eyebrow">{context.eyebrow}</span>
         <h2>{context.title}</h2>
@@ -36,7 +36,7 @@ export function LearningRail({ context, onClose }: { readonly context: LearningC
           </div>
           <form onSubmit={(event) => { event.preventDefault(); ask() }}>
             <input aria-label="Pergunta para o mentor local" value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="Pergunte sobre esta tela…" />
-            <button type="submit" aria-label="Enviar"><Send /></button>
+            <button type="submit" aria-label="Enviar" title="Enviar"><span aria-hidden="true"><Send /></span></button>
           </form>
         </section>
       </div>
