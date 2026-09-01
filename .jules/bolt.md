@@ -19,3 +19,7 @@
 ## 2026-08-30 - Optimize O(N) scans in miniTown state
 **Learning:** Simulation target lookups (like `pickRandomShopId`) and rendering sync loops can degrade significantly if inner helper functions like `findZoneById` use `Array.prototype.find()`. V8's array iteration is fast, but repeated O(N) scans on growing entity lists still cause unnecessary CPU overhead during ticks.
 **Action:** Populate O(1) Maps during entity creation (`addZone`, `addBuilding`) to maintain synchronized quick lookups and eliminate array scans on hot paths.
+
+## 2024-09-01 - Replace O(N log N) sorting with O(N) linear scan for closest target lookups
+**Learning:** In hot loops within simulation loops (like traffic target lookups called frequently), chaining `.filter().slice().sort()` on arrays is surprisingly expensive due to array allocations and the O(N log N) sorting overhead.
+**Action:** When only the single min/max element is needed from an array based on a distance metric, replace the filter+sort chain with a single O(N) linear scan. Use `<` or `<=` carefully to preserve the tie-breaking behavior of stable sorts.

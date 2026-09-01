@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-01-aa4d6c5b-os-wave-l21l23-v18
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-01T21:20:00Z'
+revalidateBy: '2026-10-01'
+gitSha: aa4d6c5b1552877000a06b2e27b0122ffdc500f3
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-01T21:10:00Z-os-verification-recovery-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-literacy-hosted-mission-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-literacy-returning-device-mixed-aa4d6c5b
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-01T21:10:00Z-os-voxel-hosted-missions-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-renderer-accessibility-recovery-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-voxel-returning-device-mixed-aa4d6c5b
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-01T21:10:00Z-os-onboarding-track-choice-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-returning-device-mixed-aa4d6c5b
+  - 2026-09-01T21:10:00Z-os-returning-recovery-mixed-aa4d6c5b

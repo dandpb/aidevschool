@@ -26,6 +26,63 @@ Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.
 
 O [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) no Netlify continua sendo uma rota separada, fora do OS.
 
+## Como fazer a primeira lição no LiteracyDojo avulso
+
+Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há conta. O progresso fica neste navegador. Concluída neste aparelho não é domínio verificado. Este caminho não leva ao OS — o avulso e o OS são superfícies separadas.
+
+1. Abra [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) em um navegador atual com armazenamento local habilitado.
+2. Na boas-vindas, leia que **Trilha Dev** está **Em breve**. Não entre nesse caminho.
+3. Responda às cinco perguntas curtas e continue.
+4. Você chega ao mapa da **Vila Lume**.
+5. Abra a primeira lição desta oferta: **Mapa Inicial** (l02 — **IA não é uma fonte de verdade**).
+6. Compare as duas respostas, escolha a mais confiável e marque os motivos.
+7. Se a resposta é **correta**: a lição fica **concluída neste aparelho** (não é domínio). A próxima lição no mapa é **O que a IA faz bem e onde costuma falhar**.
+8. Se a resposta é **errada**: leia o feedback, use a dica se quiser e escolha **Tentar novamente**. Depois disso, a próxima lição é **Sua primeira conversa com uma IA**.
+9. Para guardar o progresso local, use **Ver seu progresso → Baixar backup JSON** antes de limpar dados ou trocar de aparelho.
+10. Se recarrega o **mesmo navegador**: o onboarding já feito e l02 concluída voltam na introdução da próxima lição. Outro aparelho, outro navegador ou dados do site apagados começam do zero. Não há sincronização.
+
+## Como fazer IA Prática no OS
+
+Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
+
+1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
+2. No onboarding, responda objetivo, contexto e confiança. Você pode **ver** menções a **Trilha Dev** nesta tela — essa trilha **não** faz parte da oferta pronta neste piloto. Use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
+4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
+5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
+6. No mapa, o texto é **Seis missões, uma sequência**. O botão voltar mostra **← Hub** (hub de aprendizado). **WAREHOUSE** pode aparecer como **Disponível** antes de terminar IA Prática — a interface pode liberar cedo. No piloto, siga a missão destacada como próximo passo; não pule para o 3D só porque **WAREHOUSE** parece aberto.
+7. Leia o resultado de cada missão antes de continuar. Se aparece um aviso de verificador indisponível, isso é honesto — não é certificação. **Concluída** neste aparelho não é domínio verificado.
+
+## Como fazer as três missões 3D
+
+Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho.
+
+1. Volte ao hub de aprendizado (`/hub`) depois das três lições de IA Prática.
+2. Abra a missão 3D destacada como próximo passo — normalmente **WAREHOUSE** primeiro.
+3. Complete a interação na simulação e volte ao resultado do host. Leia o status antes de seguir.
+4. Repita para **WORMHOLE** e depois **RELAY STATION**, sempre pela missão destacada no hub.
+5. No mapa (**Seis missões, uma sequência**), o voltar é **← Hub**. Se **WAREHOUSE** já parecia aberto antes de terminar IA Prática, no piloto a sequência recomendada ainda é literacy primeiro; siga o destaque do hub.
+6. Se o 3D não carrega ou você prefere menos movimento, use a projeção acessível e os controles por teclado quando o host oferece essa opção.
+7. O status no host é progresso local — não é domínio verificado. Um aviso de verificador indisponível não é certificação.
+
+## Como voltar no mesmo aparelho
+
+No OS e no LiteracyDojo avulso, o retorno funciona só no **mesmo navegador e aparelho** onde você começou.
+
+**No OS**
+
+1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding. **Trilha Dev** pode ainda aparecer na interface; siga a missão destacada, não essa trilha.
+2. A missão destacada mostra onde continuar — literacy ou 3D, conforme o que já concluiu neste aparelho.
+3. Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding. Não há conta nem sincronização entre dispositivos.
+4. Concluída neste aparelho não é domínio verificado.
+
+**No LiteracyDojo avulso**
+
+1. Recarregue ou abra de novo [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) no **mesmo navegador**.
+2. Com onboarding feito e l02 concluída, você volta na introdução da próxima lição no mapa da Vila Lume.
+3. Outro aparelho, outro navegador ou dados apagados apagam o progresso. Use **Ver seu progresso → Baixar backup JSON** se já tinha backup documentado; **Restaurar backup** só no mesmo perfil do navegador.
+4. O avulso não transfere progresso ao OS. Concluída neste navegador não é domínio verificado.
+
 ## Standalone LiteracyDojo
 
 ### Choose this journey
