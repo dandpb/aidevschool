@@ -1,0 +1,145 @@
+# Lição l23 — Onda dev l21–l23 (spec AID-528 rev 2 §2.3): limites do assistente no aceite de código.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l23
+version: 1
+moduleId: mod-05
+title: "O que aceitar: limites do assistente"
+objective: "Diante de sugestões em categorias de risco diferente, decidir o que aceitar, o que revisar a fundo e o que exige caminho convencional — sem terceirizar o próprio julgamento."
+estimatedMinutes: 3
+skillIds: [decidir, codificar]
+prerequisites: [l15]
+
+activities:
+  - id: l23-a1
+    type: choice
+    skillId: decidir
+    instruction: "CÓDIGO CRÍTICO DE VERIFICAÇÃO DE PAGAMENTO. O ASSISTENTE SUGERIU UMA IMPLEMENTAÇÃO ELEGANTE. O QUE FAZER?"
+    data:
+      options:
+        - id: opt-a
+          text: "Usar como rascunho e validar contra a documentação oficial com testes próprios antes de subir."
+        - id: opt-b
+          text: "Aceitar direto — o assistente acerta na maioria das vezes."
+        - id: opt-c
+          text: "Proibir IA em qualquer código crítico, sempre."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a]
+    feedback:
+      onFailure: "Em código crítico a decisão não é confiança, é verificação — rascunho sim, cega não; e proibir sempre joga fora o ganho real do assistente."
+      onSuccess: "Isso! Rascunho com verificação: você mantém o ganho de velocidade e mantém a responsabilidade da decisão. Nem cegueira, nem proibição."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: o que acontece se essa implementação estiver errada — quem descobre, quando e a que custo?"
+      - "Os extremos (aceitar sempre, proibir sempre) terceirizam ou descartam o julgamento. O meio é verificação."
+
+  - id: l23-a2
+    type: safety_classification
+    skillId: codificar
+    instruction: "O ASSISTENTE SUGERIU UM TRECHO PARA CADA TAREFA ABAIXO. CLASSIFIQUE: CÓPIA COM REVISÃO LEVE OU REVISÃO PROFUNDA OBRIGATÓRIA?"
+    data:
+      labels:
+        safe: "Cópia com revisão leve"
+        sensitive: "Revisão profunda obrigatória"
+      items:
+        - id: formatar-data-string
+          text: "Função que formata uma data para exibição em string"
+        - id: parse-json-com-try
+          text: "Parser de JSON de configuração com try/catch e mensagem de erro"
+        - id: subtotal-do-carrinho
+          text: "Cálculo do subtotal do carrinho exibido no resumo da tela"
+        - id: hash-de-senha
+          text: "Função de hash de senha para o login"
+        - id: sql-por-concatenacao
+          text: "Montagem de SQL por concatenação de strings no filtro de busca"
+        - id: token-de-sessao
+          text: "Geração e validação do token de sessão"
+        - id: assinatura-de-webhook
+          text: "Verificação da assinatura do webhook de pagamento"
+    evaluation:
+      strategy: deterministic
+      classification:
+        formatar-data-string: safe
+        parse-json-com-try: safe
+        subtotal-do-carrinho: safe
+        hash-de-senha: sensitive
+        sql-por-concatenacao: sensitive
+        token-de-sessao: sensitive
+        assinatura-de-webhook: sensitive
+    feedback:
+      onFailure: "Auth, crypto, SQL e verificação de integridade são as categorias em que sugestão errada custa caro — revisão profunda ou caminho convencional; nunca copiar cego."
+      perCheck:
+        formatar-data-string: "Revisão leve: exibição de data não abre porta nem move dinheiro — erro aqui é visível e barato."
+        parse-json-com-try: "Revisão leve: parser com try/catch tem superfície pequena e falha de forma previsível."
+        subtotal-do-carrinho: "Revisão leve no código em si — mas confira o valor exibido: é o hábito da lição de números."
+        hash-de-senha: "Revisão profunda: crypto errada vaza credenciais — algoritmo correto, salt, custo. Aqui sugestão errada custa caro."
+        sql-por-concatenacao: "Revisão profunda: concatenação de SQL abre injeção — categoria em que o erro é explorável por terceiros."
+        token-de-sessao: "Revisão profunda: sessão quebrada é invasão de conta — auth é categoria de risco máximo."
+        assinatura-de-webhook: "Revisão profunda: verificação de integridade aceitando payload falso é perda direta de dinheiro."
+      onSuccess: "Perfeito: exibição e parse simples toleram cópia com revisão leve; auth, crypto, SQL e integridade exigem revisão profunda ou caminho convencional."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte por categoria, não por confiança: o que esse código protege — tela, dado ou acesso?"
+      - "Auth, criptografia, SQL e verificação de integridade: quatro categorias onde erro custa caro."
+
+  - id: l23-a3
+    type: choice
+    skillId: decidir
+    instruction: "QUAIS SINAIS DIZEM QUE A SUGESTÃO PRECISA DE HUMANO ANTES DE USAR?"
+    data:
+      multiSelect: true
+      options:
+        - id: opt-a
+          text: "Nenhum teste para a borda que importa"
+        - id: opt-b
+          text: "Mexe em código que ninguém do time domina"
+        - id: opt-c
+          text: "Cita uma API sem fonte verificável"
+        - id: opt-d
+          text: "A resposta veio rápida"
+        - id: opt-e
+          text: "O código está organizado"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a, opt-b, opt-c]
+    feedback:
+      onFailure: "Velocidade e aparência não são evidência — teste, domínio e fonte são. Os três sinais da esquerda nomeiam risco real; os dois da direita são impressão."
+      perCheck:
+        opt-a: "Sinal real: borda sem teste é exatamente onde o código quebra — e ninguém vai saber."
+        opt-b: "Sinal real: código que ninguém domina não tem quem avalie a sugestão — o humano precisa entrar."
+        opt-c: "Sinal real: API sem fonte verificável é resposta potencialmente inventada — conferir na documentação oficial."
+        opt-d: "Isto não é sinal: rapidez diz o tempo da resposta, não a qualidade."
+        opt-e: "Isto não é sinal: código organizado é estilo — lint limpo não prova comportamento."
+      onSuccess: "Exato! Teste, domínio e fonte — os três sinais que chamam o humano. Velocidade e aparência não decidem aceite."
+    storage:
+      policy: structured_only
+    hints:
+      - "Separe evidência de impressão: qual sinal você poderia mostrar a outra pessoa?"
+      - "Os três sinais reais ecoam a lição de decisão: risco, verificação e fonte."
+
+rubric:
+  id: l23-rubric
+  criteria:
+    - id: r-decide-por-criticidade
+      text: "Aceita ou recusa pela categoria de risco do trecho, não por confiança no assistente."
+      weight: 1
+    - id: r-classifica-o-risco
+      text: "Reconhece as categorias que exigem revisão profunda ou caminho convencional."
+      weight: 1
+    - id: r-reconhece-o-limite
+      text: "Sabe nomear quando a decisão é do humano — sem terceirizar o julgamento."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l23-a1, l23-a2, l23-a3]
