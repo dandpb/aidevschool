@@ -1,0 +1,4 @@
+{"schemaVersion":1,"eventId":"evt-0042","name":"journey.returned","occurredAt":"2026-08-04T11:00:00Z","sequence":17,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-4"}}
+{"schemaVersion":1,"eventId":"evt-0043","name":"review.started","occurredAt":"2026-08-04T11:01:00Z","sequence":18,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-4","reason":"overdue"}}
+{"schemaVersion":1,"eventId":"evt-0044","name":"mission.started","occurredAt":"2026-08-04T11:02:00Z","sequence":19,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-4","mode":"review"}}
+{"schemaVersion":1,"eventId":"evt-0045","name":"mission.completed","occurredAt":"2026-08-04T11:05:00Z","sequence":20,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-4","result":"completed"}}
