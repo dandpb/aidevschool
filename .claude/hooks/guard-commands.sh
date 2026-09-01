@@ -2,7 +2,10 @@
 # AI-native SDLC hook (PreToolUse: Bash)
 # Deterministic guardrails for git/secret safety:
 #  - no force-push / history rewrite on shared branches
+#    (incl. +refspec, --force=<value>, and remote branch deletion :refspec/--delete)
 #  - no staging or committing of credential files
+# Defense-in-depth: regex-level, deliberately conservative — a compound command
+# that pushes and then deletes a branch elsewhere is blocked; split the command.
 set -euo pipefail
 
 INPUT="$(cat)"
@@ -10,16 +13,22 @@ CMD="$(printf '%s' "$INPUT" | jq -r '.tool_input.command // ""')"
 
 [ -z "$CMD" ] && exit 0
 
-# 1. Force-push / remote history rewrite
-if printf '%s' "$CMD" | grep -qE 'git[[:space:]].*push.*(--force(-with-lease)?|-f)([[:space:]]|$)|git[[:space:]].*push[[:space:]]+.*:-'; then
-  >&2 echo "BLOCKED: force-push / remote history rewrite detected."
+# 1. Force-push / remote history rewrite / remote branch deletion
+#    --force=<v> via ([[:space:]=]|$); +refspec needs a non-digit ref start
+#    (avoids false-blocks like `git commit -m "push +1 fix"`); :refspec
+#    deletion requires whitespace immediately before ':'; --delete is the
+#    long form. `--force-if-includes` (safety option) stays allowed.
+if printf '%s' "$CMD" | grep -qE 'git[[:space:]].*push.*(--force(-with-lease)?([[:space:]=]|$)|-f([[:space:]]|$)|[[:space:]]\+[A-Za-z_*][^[:space:]]*|[[:space:]]:[A-Za-z0-9_*][^[:space:]]*|--delete([[:space:]]|$))'; then
+  >&2 echo "BLOCKED: force-push / remote rewrite / remote branch deletion detected."
   >&2 echo "The commit chain is the audit trail of the AI-native SDLC — it must not be rewritten."
   >&2 echo "If this is genuinely required, the owner must run it personally."
   exit 2
 fi
 
 # 2. Staging/committing credential-shaped files
-if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+(add|commit)[^;|&]*(\./)?\.?env[^/[:space:]]*|[[:space:]]id_rsa[^[:space:]]*|[[:space:]][^[:space:]]*\.pem([[:space:]]|$)|gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]+'; then
+#    id_rsa as a path component (start, after space, or after slash: ./id_rsa,
+#    secrets/id_rsa) — not just as a bare leading token.
+if printf '%s' "$CMD" | grep -qE 'git[[:space:]]+(add|commit)[^;|&]*(\./)?\.?env[^/[:space:]]*|(^|[[:space:]/])id_rsa|[[:space:]][^[:space:]]*\.pem([[:space:]]|$)|gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]+'; then
   >&2 echo "BLOCKED: command appears to stage, commit, or inline a credential (.env, key, or token)."
   >&2 echo "Secrets never enter the diff. Use environment injection outside the repo."
   exit 2
