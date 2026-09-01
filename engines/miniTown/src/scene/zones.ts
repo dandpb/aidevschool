@@ -60,7 +60,7 @@ export class ZonesRenderer {
         this.#slabs.set(zone.id, entry)
       }
       // Once construction is past `plot` the building renderer takes over.
-      const building = this.#town.buildings.find((b) => b.zoneId === zone.id)
+      const building = this.#town.findBuildingByZoneId(zone.id)
       const stage = building?.stage ?? "plot"
       const shouldShow = stage === "plot"
       if (entry.visible !== shouldShow) {
