@@ -14,8 +14,12 @@ import json
 import sys
 from typing import Any
 
+from learner.gate.checkpoint_evaluator import evaluate_checkpoint
+from learner.gate.docking_evaluator import evaluate_docking
+from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
+from learner.gate.pipeline_evaluator import evaluate_pipeline
 from learner.gate.relay_evaluator import evaluate_relay
 from learner.gate.warehouse_evaluator import evaluate_warehouse
 from learner.gate.wormhole_evaluator import evaluate_wormhole
@@ -41,6 +45,30 @@ GAME_SPECS = {
         "relay-station-",
         evaluate_relay,
     ),
+    "PIPELINE PLANT": (
+        "U6-file-upload",
+        "06_file_upload_pipeline",
+        "pipeline-plant-",
+        evaluate_pipeline,
+    ),
+    "CHECKPOINT CITY": (
+        "U7-rest-api-auth",
+        "07_rest_api_auth",
+        "checkpoint-city-",
+        evaluate_checkpoint,
+    ),
+    "TIMELINE TOWER": (
+        "U8-event-driven",
+        "08_event_driven_order_system",
+        "timeline-tower-",
+        evaluate_timeline,
+    ),
+    "DOCKING BAY": (
+        "U9-plugin-system",
+        "09_plugin_system",
+        "docking-bay-",
+        evaluate_docking,
+    ),
 }
 ALLOWED_KEYS = frozenset(
     {
@@ -57,16 +85,24 @@ ALLOWED_KEYS = frozenset(
         "curriculum_context",
     }
 )
+REQUIRED_KEYS = ALLOWED_KEYS
+# Optional identity metadata (teaching-game-contract.md): receipts bind their
+# attempt_id to the record's attempt_id for identity matching. The gate never
+# evaluates it; it only accepts and echoes a non-empty string when present.
+OPTIONAL_KEYS = frozenset({"attempt_id"})
 
 
 def _validate_identity(record: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    unknown = sorted(set(record) - ALLOWED_KEYS)
-    missing = sorted(ALLOWED_KEYS - set(record))
+    unknown = sorted(set(record) - ALLOWED_KEYS - OPTIONAL_KEYS)
+    missing = sorted(REQUIRED_KEYS - set(record))
     if unknown:
         errors.append(f"unknown fields: {', '.join(unknown)}")
     if missing:
         errors.append(f"missing fields: {', '.join(missing)}")
+    attempt_id = record.get("attempt_id")
+    if attempt_id is not None and (not isinstance(attempt_id, str) or not attempt_id):
+        errors.append("attempt_id must be a non-empty string when present")
     game = record.get("game")
     spec = GAME_SPECS.get(game) if isinstance(game, str) else None
     if spec is None:
@@ -114,7 +150,7 @@ def verify_teaching_game_evidence(record: dict[str, Any]) -> dict[str, Any]:
     if producer_claim is not None and producer_claim != independently_passed:
         errors.append("producer pass claim disagrees with the fixed independent evaluator")
     verdict = "PASS" if independently_passed and not errors else "FAIL"
-    return {
+    receipt: dict[str, Any] = {
         "schema_version": 1,
         "verdict": verdict,
         "context_isolated": True,
@@ -132,6 +168,10 @@ def verify_teaching_game_evidence(record: dict[str, Any]) -> dict[str, Any]:
         "canonical_gate_status": "not-submitted",
         "canonical_gate_reason": "learner-attempt-and-gate-eligibility-required",
     }
+    attempt_id = record.get("attempt_id")
+    if isinstance(attempt_id, str) and attempt_id:
+        receipt["attempt_id"] = attempt_id
+    return receipt
 
 
 def main() -> int:

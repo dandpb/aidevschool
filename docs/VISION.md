@@ -22,9 +22,11 @@ Dois públicos, uma mecânica:
 | Programadores | Engenharia robusta com IA: testes, review, benchmark e arquitetura | **Trilha Dev**: primeiro capítulo mission-first no codexdojo OS e continuidade nos 18 projetos de código (01–18) em [`curriculum/catalog.md`](../curriculum/catalog.md) |
 
 Esta tabela descreve o destino do produto, não o escopo do release candidate.
-O primeiro lançamento público entrega somente **IA na Prática** no
-LiteracyDojo: 14 missões em quatro módulos. A Trilha Dev permanece “Em breve”;
-seu conteúdo e o CodexDojo OS continuam como superfícies separadas.
+O lançamento público entrega **IA na Prática** no LiteracyDojo (14 missões)
+e a **Trilha Dev** no CodexDojo OS público (`https://aidevschool-codexdojo-os.netlify.app/?track=dev`):
+escolha de trilha, trilho guiado WAREHOUSE → WORMHOLE → RELAY STATION, e Engine Hub
+allowlist (voxel 16, PixelQuest, dojoToday local, literacy). Os 18 projetos de
+código continuam fora desta oferta.
 
 O que não muda entre públicos está no
 [`contrato de microlição`](design/micro-lesson-contract.md): objetivo curto,
@@ -54,12 +56,14 @@ isso que separa esta escola de um app de trivia.
 5. **Convergência.** A rota guiada segue Mapa Inicial → primeira conversa →
    limites da IA; a intermediária segue Mapa Inicial → limites da IA. Ambas
    convergem em como formular pedidos melhores.
-6. **Trilha Dev.** Aparece como “Em breve” no primeiro lançamento. O capítulo
-   WAREHOUSE → WORMHOLE → RELAY STATION continua no piloto separado do
-   CodexDojo OS, sem integrar a promessa pública do LiteracyDojo.
-7. **Lançamento.** O LiteracyDojo abre a jornada pública de IA na Prática. O
-   CodexDojo OS, seu desktop e o Engine Hub permanecem superfícies separadas,
-   verificáveis localmente e sem lançamento público compartilhado comprovado.
+6. **Trilha Dev.** O LiteracyDojo avulso aponta para o OS público com
+   `?track=dev`. No OS, o trilho guiado é WAREHOUSE → WORMHOLE → RELAY STATION;
+   as outras simulações voxel ficam no Engine Hub, não no trilho. Conclusão
+   local não é `mastered`.
+7. **Lançamento.** LiteracyDojo (IA na Prática) e CodexDojo OS (escolha de
+   trilha + Hub allowlist) são as URLs públicas. Use cases Dev em
+   product-readiness permanecem `stale` até assessment fresco — não são
+   customer-ready só porque a URL existe.
 8. **Progresso.** Sem conta, onboarding, conclusão, XP, meta diária, sequência e
    conquistas ficam neste navegador. Esses dados locais não sincronizam entre
    dispositivos e não podem representar `mastered`.

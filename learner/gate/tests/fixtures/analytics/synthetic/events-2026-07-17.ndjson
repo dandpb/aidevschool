@@ -1,0 +1,4 @@
+{"schemaVersion":1,"eventId":"evt-0028","name":"onboarding.started","occurredAt":"2026-07-17T11:00:00Z","sequence":1,"dimensions":{"installationId":"install-i5","sessionId":"s-i5-1"}}
+{"schemaVersion":1,"eventId":"evt-0029","name":"onboarding.completed","occurredAt":"2026-07-17T11:05:00Z","sequence":2,"dimensions":{"installationId":"install-i5","sessionId":"s-i5-1"}}
+{"schemaVersion":1,"eventId":"evt-0030","name":"mission.started","occurredAt":"2026-07-17T11:10:00Z","sequence":3,"dimensions":{"installationId":"install-i5","sessionId":"s-i5-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0031","name":"mission.completed","occurredAt":"2026-07-17T11:30:00Z","sequence":4,"dimensions":{"installationId":"install-i5","sessionId":"s-i5-1","result":"completed"}}

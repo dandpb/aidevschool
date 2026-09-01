@@ -2,6 +2,7 @@ import type { LearnerSnapshot, MissionKey, TrackId } from '../domain'
 import {
   HOSTED_SIMULATIONS_TRACK_ID,
   STUDENT_TRACK_ID,
+  isStudentRailMission,
 } from '../journey/studentPath'
 import type { EvidenceVerificationState } from '../verification/ports'
 import type { MissionCatalogRepository } from './catalog'
@@ -65,7 +66,7 @@ function resumeInProgress(
   catalog: MissionCatalogRepository,
   trackId: TrackId,
 ): MissionRecommendation | null {
-  const inProgress = catalog.listLaunchable(trackId).find(
+  const inProgress = catalog.listLaunchable(trackId).filter(isStudentRailMission).find(
     (mission) => progress.missionStatusByKey[missionKey(trackId, mission.id)] === 'in_progress',
   )
   if (inProgress === undefined) return null
@@ -78,7 +79,7 @@ function recommendMissionForTrack(
   context: RecommendationContext,
   trackId: TrackId,
 ): MissionRecommendation {
-  const trackMissions = catalog.listLaunchable(trackId)
+  const trackMissions = catalog.listLaunchable(trackId).filter(isStudentRailMission)
 
   if (context.learner !== undefined) {
     const review = mapCanonicalReviews(context.learner, catalog, trackId).find((mapped) => {
@@ -164,14 +165,24 @@ export function recommendMission(
 ): MissionRecommendation {
   if (!progress.onboarding.completed) return { kind: 'onboarding' }
 
-  const literacyResume = resumeInProgress(progress, catalog, STUDENT_TRACK_ID)
-  if (literacyResume !== null) return literacyResume
+  const selected = progress.onboarding.selectedTrackId
+    ?? progress.activeTrackId
+    ?? STUDENT_TRACK_ID
+  const primary = selected === HOSTED_SIMULATIONS_TRACK_ID
+    ? HOSTED_SIMULATIONS_TRACK_ID
+    : STUDENT_TRACK_ID
+  const secondary = primary === HOSTED_SIMULATIONS_TRACK_ID
+    ? STUDENT_TRACK_ID
+    : HOSTED_SIMULATIONS_TRACK_ID
 
-  const literacyRecommendation = recommendMissionForTrack(progress, catalog, context, STUDENT_TRACK_ID)
-  if (literacyRecommendation.kind !== 'none') return literacyRecommendation
+  const primaryResume = resumeInProgress(progress, catalog, primary)
+  if (primaryResume !== null) return primaryResume
 
-  const hostedResume = resumeInProgress(progress, catalog, HOSTED_SIMULATIONS_TRACK_ID)
-  if (hostedResume !== null) return hostedResume
+  const primaryRecommendation = recommendMissionForTrack(progress, catalog, context, primary)
+  if (primaryRecommendation.kind !== 'none') return primaryRecommendation
 
-  return recommendMissionForTrack(progress, catalog, context, HOSTED_SIMULATIONS_TRACK_ID)
+  const secondaryResume = resumeInProgress(progress, catalog, secondary)
+  if (secondaryResume !== null) return secondaryResume
+
+  return recommendMissionForTrack(progress, catalog, context, secondary)
 }

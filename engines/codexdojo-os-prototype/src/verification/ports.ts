@@ -7,6 +7,8 @@ export type EvidenceSubject = {
 }
 
 export type EvidenceSubmission = {
+  /** Stable id for this evidence delivery; retries in one mission run use distinct ids. */
+  readonly evidenceId: string
   readonly schemaId: string
   readonly schemaVersion: number
   readonly engineId: MissionEngineId
@@ -22,7 +24,7 @@ export type LiteracyVerificationReceipt = {
   readonly evidence_digest: string
   readonly lesson_id: string
   readonly activity_id: string
-  readonly attempt_id: string
+  readonly attempt_id?: string
   readonly activity_type: string
   readonly score: number | null
   readonly producer_pass_claim: boolean | null
@@ -43,6 +45,8 @@ export type TeachingGameVerificationReceipt = {
   readonly project: string
   readonly scenario_id: string
   readonly game: string
+  /** Present only when the verified record carried one; verifiers never mint ids. */
+  readonly attempt_id?: string
   readonly producer_pass_claim: boolean | null
   readonly independent_pass: boolean
   readonly errors: readonly string[]

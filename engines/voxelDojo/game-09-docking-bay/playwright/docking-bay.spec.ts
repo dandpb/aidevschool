@@ -37,6 +37,17 @@ test("boots the bay, plays L1 by predicting dock/reject, emits a passing record"
   expect(first.project).toBe("09_plugin_system")
   expect(first.scenario_id).toBe("docking-bay-L1")
   expect(first.pass).toBe(true)
+  expect(first.metrics.kind).toBe("voxeldoj-docking-bay")
+  // Closed observation trace for the independent verifier: the player's bounded
+  // inputs only; dock truth is recomputed verifier-side from the fixed wave.
+  expect(first.observations?.kind).toBe("docking-bay-L1")
+  const trace = first.observations?.dockPredictions as {
+    podId: string
+    predictedDock: boolean
+  }[]
+  // AID-467 corrected predicate: pod-0/pod-3 cover the host contract and dock;
+  // the rest are rejected — pinned so the constant-true defect cannot return.
+  expect(trace.map((p) => p.predictedDock)).toEqual([true, false, false, true, false, false])
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
   await page.screenshot({ path: ".logs/smoke-L1-cleared.png" })

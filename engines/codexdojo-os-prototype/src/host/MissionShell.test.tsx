@@ -47,6 +47,7 @@ class CompletingEvidenceSession extends MissionSessionController {
       renderer: createInitialRendererState(),
     })
     void this.testInput.onEvidence({
+      evidenceId: 'test-evidence',
       schemaId: this.testInput.mission.evidence.schema,
       schemaVersion: this.testInput.mission.evidence.version,
       engineId: this.testInput.mission.runtime.engineId,

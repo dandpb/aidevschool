@@ -17,6 +17,7 @@ import {
 } from "./assistant";
 import { today } from "./data/today";
 import { escapeHtml } from "./escape";
+import { loadHostLocalToday, renderLocalSuggestion } from "./localProjection";
 import type { DueReview, TodaySnapshot, TrackNode } from "./types";
 
 const REASON_LABEL: Record<DueReview["reason"], string> = {
@@ -332,7 +333,16 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   });
 }
 
-const root = document.getElementById("root");
-if (!root) throw new Error("Elemento #root não encontrado");
-root.innerHTML = render(today);
-wireInteractions(today.activeUnit);
+async function boot(): Promise<void> {
+  const root = document.getElementById("root");
+  if (!root) throw new Error("Elemento #root não encontrado");
+  const hosted = new URLSearchParams(window.location.search).get("host") === "os";
+  if (hosted) {
+    root.innerHTML = renderLocalSuggestion(await loadHostLocalToday());
+    return;
+  }
+  root.innerHTML = render(today);
+  wireInteractions(today.activeUnit);
+}
+
+void boot();

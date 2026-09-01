@@ -27,15 +27,17 @@ describe('OS progress migration', () => {
     expect(migrated.progress.missionStatusByKey[key]).toBe('completed')
   })
 
-  it('remaps legacy Dev track selection onto IA Prática without dropping completed voxel missions', () => {
+  it('preserves Dev track selection and completed literacy missions', () => {
     const raw = createInitialOsProgress(missionCatalog)
     const warehouseKey = missionKey('dev', 'game-02-warehouse')
+    const l01Key = missionKey('ai-pratica', 'l01')
     const legacy = completeOnboarding(
       {
         ...raw,
         missionStatusByKey: {
           ...raw.missionStatusByKey,
           [warehouseKey]: 'completed',
+          [l01Key]: 'completed',
         },
       },
       {
@@ -58,17 +60,20 @@ describe('OS progress migration', () => {
       missionCatalog,
     )
 
-    expect(migrated.kind).toBe('migrated')
-    expect(migrated.progress.onboarding.selectedTrackId).toBe('ai-pratica')
-    expect(migrated.progress.onboarding.recommendedTrackId).toBe('ai-pratica')
-    expect(migrated.progress.activeTrackId).toBe('ai-pratica')
-    expect(migrated.progress.activeMissionId).toBeNull()
+    expect(migrated.kind).toBe('loaded')
+    expect(migrated.progress.onboarding.selectedTrackId).toBe('dev')
+    expect(migrated.progress.onboarding.recommendedTrackId).toBe('dev')
+    expect(migrated.progress.activeTrackId).toBe('dev')
+    expect(migrated.progress.activeMissionId).toBe('game-02-warehouse')
     expect(migrated.progress.missionStatusByKey[warehouseKey]).toBe('completed')
+    expect(migrated.progress.missionStatusByKey[l01Key]).toBe('completed')
   })
 
   it('keeps hosted simulation pointers when IA Prática is already complete', () => {
     const raw = createInitialOsProgress(missionCatalog)
-    const literacyKeys = (['l01', 'l02', 'l03'] as const).map((id) => missionKey('ai-pratica', id))
+    const literacyKeys = missionCatalog.missions
+      .filter((mission) => mission.trackId === 'ai-pratica')
+      .map((mission) => missionKey('ai-pratica', mission.id))
     const legacy = {
       ...completeOnboarding(raw, {
         goal: 'build-systems',
@@ -87,8 +92,8 @@ describe('OS progress migration', () => {
     }
     const migrated = migrateOsProgress(legacy, missionCatalog)
 
-    expect(migrated.kind).toBe('migrated')
-    expect(migrated.progress.onboarding.selectedTrackId).toBe('ai-pratica')
+    expect(migrated.kind).toBe('loaded')
+    expect(migrated.progress.onboarding.selectedTrackId).toBe('dev')
     expect(migrated.progress.activeTrackId).toBe('dev')
     expect(migrated.progress.activeMissionId).toBe('game-03-wormhole')
   })
@@ -115,7 +120,7 @@ describe('OS progress migration', () => {
       longest: 0,
       lastActiveLocalDate: null,
     })
-    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(6)
+    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(30)
   })
 
   it('adds new IDs, drops removed IDs, and resets incompatible in-progress versions', () => {

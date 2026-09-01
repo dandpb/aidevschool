@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "06081f312e23b4e947abaf7a58f81b6f75d61244",
+  "observedAt": "2026-08-28T23:47:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Onboarding asked 'O que você quer conseguir fazer com IA?' and published the pilot sequence before entry: 'IA Prática — LiteracyDojo hospedado no OS, depois WAREHOUSE, WORMHOLE e RELAY STATION', with 'Comece por IA Prática e siga a sequência publicada pelo OS.' and 'Sem conta: o progresso fica neste dispositivo.' Entering the school landed on the IA Prática hub with the next mission queued. Observer response: I am in the IA Prática track first; my next supported simulations on this device are WAREHOUSE, WORMHOLE, and RELAY STATION, and my progress stays on this device without an account."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The hub shows 'XP local', chapter state, and the standing label 'Conclusão não é domínio'; a same-profile reload restored the IA Prática chapter and mentor panel exactly as left, and the paired chapter-continuity run restored IA Prática and Dev mission states across reloads and chapter switches. Observer response: the OS restores my unfinished missions only in this browser profile; this is local completion and is not synchronization across devices and is not mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A brand-new browser profile (no storage) returned to the onboarding screen with no reconstructed completion, XP, or mastery language; the surface restates 'Sem conta: o progresso fica neste dispositivo.' and the paired readiness-recovery run confirmed missing local state does not create completion. Observer response: cleared or missing browser storage means onboarding again from zero; I must not claim the prior session was mastered, verified, or synced elsewhere."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-returning-recovery-cause-not-explained-in-product",
+          "severity": "low",
+          "summary": "The reset is safe, but onboarding does not explain that cleared browser storage caused it.",
+          "owner": "codexDojo OS",
+          "disposition": "Consider a non-authoritative recovery notice without reconstructing progress."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The bundled mission runtimes are served from the OS origin under /apps/ and the hub frames progress as 'uma missão em destaque, com prática observável e progresso que não confunde conclusão com competência' plus 'Conclusão não é domínio'; the paired pilot-build run verified the hosted WAREHOUSE mount reports the verifier honestly and a corrected retry supersedes the failed attempt verification state, and the contextual mentor panel states 'Nao cria evidencia nem avalia dominio.' Observer response: local completion at 100% is not canonical mastery; on this static deploy verification stays unavailable and the hub does not claim or falsely reject evidence."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "With reduced motion forced and WebGL unavailable, the pilot build still presented the full semantic hub and mission projection operable by keyboard, matching the paired renderer-fallback runs (reduced-motion projection, context-loss retry preserving simulation/evidence identity, forced WebGL unavailability failing over without blocking mission controls). Observer response: I stop and escalate when neither the 3D renderer nor the accessible projection lets the learner complete the core WAREHOUSE interaction."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-profile reload restored the chapter and XP state after navigation, and the paired chapter-continuity run restored completed WAREHOUSE, WORMHOLE, and RELAY STATION mission states after chapter switches on the same profile. Observer response: hosted voxel mission continuity is limited to this browser profile; it does not follow me to another device or browser and does not claim mastery."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
