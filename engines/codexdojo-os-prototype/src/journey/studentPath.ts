@@ -5,6 +5,8 @@ import { missionKey } from '../progress/domain'
 export const STUDENT_TRACK_ID: TrackId = 'ai-pratica'
 export const HOSTED_SIMULATIONS_TRACK_ID: TrackId = 'dev'
 
+export const AI_PRATICA_GUIDED_RAIL_MISSION_IDS = ['l01', 'l02', 'l03'] as const
+
 export const DEV_GUIDED_RAIL_MISSION_IDS = [
   'game-02-warehouse',
   'game-03-wormhole',
@@ -15,7 +17,7 @@ export const STUDENT_MISSION_CHAPTERS = [
   {
     id: 'literacy' as const,
     label: 'IA Prática',
-    detail: 'Uso consciente sem exigir código',
+    detail: 'Trilho guiado: l01 → l02 → l03',
     trackId: STUDENT_TRACK_ID,
   },
   {
@@ -35,17 +37,26 @@ export function requestedTrackIdFromSearch(
   return undefined
 }
 
+export function trackSearchQuery(trackId: TrackId | undefined): string {
+  if (trackId === HOSTED_SIMULATIONS_TRACK_ID) return '?track=dev'
+  if (trackId === STUDENT_TRACK_ID) return '?track=ai-pratica'
+  return ''
+}
+
 export function isAiPraticaChapterComplete(
   progress: OsProgress,
-  catalog: MissionCatalogSnapshot,
+  _catalog?: MissionCatalogSnapshot,
 ): boolean {
-  return catalog.missions
-    .filter((mission) => mission.trackId === STUDENT_TRACK_ID)
-    .every((mission) => progress.missionStatusByKey[missionKey(mission.trackId, mission.id)] === 'completed')
+  void _catalog
+  return AI_PRATICA_GUIDED_RAIL_MISSION_IDS.every(
+    (id) => progress.missionStatusByKey[missionKey(STUDENT_TRACK_ID, id)] === 'completed',
+  )
 }
 
 export function isStudentRailMission(mission: Pick<MissionDefinition, 'trackId' | 'id'>): boolean {
-  if (mission.trackId === STUDENT_TRACK_ID) return true
+  if (mission.trackId === STUDENT_TRACK_ID) {
+    return (AI_PRATICA_GUIDED_RAIL_MISSION_IDS as readonly string[]).includes(mission.id)
+  }
   if (mission.trackId !== HOSTED_SIMULATIONS_TRACK_ID) return false
   return (DEV_GUIDED_RAIL_MISSION_IDS as readonly string[]).includes(mission.id)
 }

@@ -123,9 +123,18 @@ Não tocar no contrato de evidência. Deploy público continua na bridge Netlify
 8. Product-readiness dos use cases Dev revalidado ou explicitamente ainda `stale` no student-guide (nunca silencioso).
 9. Testes unitários: `studentPath.test.ts` cobre “não remapear `dev`”; `EngineHubApp.test.tsx` cobre allowlist pública vs operator; novo `Onboarding.test.tsx` cobre picker + `?track=dev`; `appFlow.test.tsx` cobre CTA (não teaser); `studentCatalog.test.ts` mostra Hub+4 engines ao aprendiz Dev.
 
+## learner.gate (feito neste PR, fora do wiring original)
+
+O plan original deixou `learner.gate` fora de escopo. O diff já precisava de um import barato para as bridges isoladas: stdout ilegível / fsrs ausente não pode parecer rejeição do aprendiz.
+
+- `learner/gate/__init__.py` passou a ser lazy (`__getattr__`) e reexporta `canonical_gate` só quando alguém pede `verify_and_gate` / `GateDecision`.
+- Bridges stdin/stdout (`learner.gate.literacy_bridge`, `learner.gate.teaching_game_bridge`) carregam sem fsrs / substrate scheduling.
+- A bridge do OS mapeia falha de processo / stdout não-JSON para `502 verifier-failed`. Recusa de contrato de evidência continua `422`. Os dois não são a mesma coisa: 502 é infra do verificador; 422 é o aprendiz/evidência.
+- Risco aberto: `python3 -m learner.gate` ainda importa `learner.gate.verifier`, que importa `canonical_gate` e `learner.substrate` (fsrs). O CLI canônico continua exigindo essa stack.
+
 ## Out of scope neste plan
 
-Código de curriculum 01–18, contas, sync, miniTown como aula, labs de operador no CTA, mentor LLM obrigatório, mudar `learner.gate`.
+Código de curriculum 01–18, contas, sync, miniTown como aula, labs de operador no CTA, mentor LLM obrigatório.
 
 ## Gate
 

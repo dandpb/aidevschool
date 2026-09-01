@@ -184,7 +184,7 @@ export function Hub({
             <p className="journey-eyebrow">Progresso honesto</p>
             <h2>Conclusão não é domínio</h2>
             <p>O jogo e o mentor ajudam a produzir uma tentativa. A verificação independente é um requisito; este fluxo não altera o estado canônico.</p>
-            <strong>{learner.masteredCount} competências verificadas</strong>
+            <strong data-testid="canonical-mastery-count">{learner.masteredCount} competências verificadas</strong>
             <button type="button" className="hub-map-link" onClick={onOpenProgress}>Entender meu progresso</button>
           </article>
           <article>

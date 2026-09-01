@@ -128,7 +128,7 @@ export function EngineHubApp({
                 <div><span>{selected.role}</span><h2>{selected.name}</h2><p>{selected.capability}</p></div>
               </header>
               <div className="engine-policy-strip">
-                <span>{selected.learnerAccess === 'read-only' ? 'Estado canônico · somente leitura' : 'Evidência bruta · não verificada'}</span>
+                <span>{selected.id === 'dojoToday' ? 'Sugestão neste dispositivo · somente leitura' : selected.learnerAccess === 'read-only' ? 'Estado canônico · somente leitura' : 'Evidência bruta · não verificada'}</span>
                 <strong>Domínio: nunca decidido pelo OS</strong>
               </div>
               <div className="engine-policy-strip" data-testid="engine-evaluation-boundary">

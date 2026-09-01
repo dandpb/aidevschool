@@ -77,7 +77,7 @@ test('proves the nontechnical release journey through recovery, verification, an
   await expect(page.getByText('Veredito PASS', { exact: true })).toBeVisible()
 
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
-  await expect(page.getByRole('heading', { name: '20 missões, uma sequência' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '6 missões, uma sequência' })).toBeVisible()
   await expect(
     page.getByRole('heading', { name: 'Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION' }),
   ).toBeVisible()

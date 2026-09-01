@@ -82,7 +82,7 @@ export function ResultScreen({
         </div>
         <div>
           <span>Competências canônicas</span>
-          <strong>{canonicalMasteryCount}</strong>
+          <strong data-testid="canonical-mastery-count">{canonicalMasteryCount}</strong>
         </div>
       </section>
 

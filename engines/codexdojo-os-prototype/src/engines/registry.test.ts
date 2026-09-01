@@ -85,6 +85,15 @@ describe('codexDojo OS engine registry', () => {
     }
   })
 
+  it('describes public dojoToday as a local suggestion, not canonical FSRS', () => {
+    const dojoToday = engineRegistry.find((engine) => engine.id === 'dojoToday')
+    expect(dojoToday?.role).toBe('Sugestão neste dispositivo')
+    expect(dojoToday?.capability).toMatch(/progresso local/)
+    expect(dojoToday?.capability).not.toMatch(/substrato/)
+    expect(dojoToday?.objective).toMatch(/sugestão neste dispositivo/)
+    expect(dojoToday?.objective).not.toMatch(/derivada do estado canônico/)
+  })
+
   it('never grants an OS adapter mastery authority', () => {
     // Given
     const registry = engineRegistry

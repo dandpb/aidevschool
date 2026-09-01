@@ -14,7 +14,7 @@ import {
 } from '../progress/domain'
 import { useServices } from '../app/ServicesProvider'
 import { journeyReducer } from './journeyReducer'
-import { requestedTrackIdFromSearch } from './studentPath'
+import { requestedTrackIdFromSearch, trackSearchQuery } from './studentPath'
 
 export function useJourneyController() {
   const services = useServices()
@@ -43,26 +43,23 @@ export function useJourneyController() {
           await services.progress.save(migration.progress)
         }
         if (ignore) return
+        let progress = migration.progress
+        if (requestedTrackId !== undefined && progress.onboarding.completed) {
+          progress = switchTrack(progress, requestedTrackId, services.missions.snapshot())
+          await services.progress.save(progress)
+        }
+        if (ignore) return
         let route = parseRoute(services.navigation.currentPath())
+        const trackQuery = trackSearchQuery(requestedTrackId)
         if (route.kind === 'boot') {
-          route = migration.progress.onboarding.completed
+          route = progress.onboarding.completed
             ? { kind: 'hub' }
             : { kind: 'onboarding', step: 'profile' }
-          const trackQuery = requestedTrackId === 'dev'
-            ? '?track=dev'
-            : requestedTrackId === 'ai-pratica'
-              ? '?track=ai-pratica'
-              : ''
           services.navigation.replace(
             `${encodeRoute(route)}${route.kind === 'onboarding' ? trackQuery : ''}` as Parameters<typeof services.navigation.replace>[0],
           )
-        } else if (!migration.progress.onboarding.completed && route.kind !== 'onboarding') {
+        } else if (!progress.onboarding.completed && route.kind !== 'onboarding') {
           route = { kind: 'onboarding', step: 'profile' }
-          const trackQuery = requestedTrackId === 'dev'
-            ? '?track=dev'
-            : requestedTrackId === 'ai-pratica'
-              ? '?track=ai-pratica'
-              : ''
           services.navigation.replace(
             `/onboarding${trackQuery}` as Parameters<typeof services.navigation.replace>[0],
           )
@@ -70,7 +67,7 @@ export function useJourneyController() {
         dispatch({
           type: 'LOADED',
           route,
-          progress: migration.progress,
+          progress,
           ...(migration.kind === 'reset' && migration.reason !== 'first-run'
             ? { resetReason: migration.reason }
             : {}),
@@ -92,7 +89,7 @@ export function useJourneyController() {
     return () => {
       ignore = true
     }
-  }, [services])
+  }, [requestedTrackId, services])
 
   const saveProgress = useCallback(
     async (progress: Parameters<typeof services.progress.save>[0]) => {

@@ -21,6 +21,18 @@ describe('Engine Hub', () => {
     expect(screen.queryByRole('button', { name: 'Usar codexDojo Dashboard' })).toBeNull()
   })
 
+  it('labels public dojoToday as a local suggestion instead of canonical substrate', async () => {
+    const user = userEvent.setup()
+    render(<EngineHubApp development={false} operatorSurface={false} />)
+    await user.click(screen.getByRole('button', { name: 'Usar dojoToday' }))
+    expect(screen.getByText('Sugestão neste dispositivo · somente leitura')).toBeTruthy()
+    expect(screen.getByRole('region', { name: 'Guia de avaliação · dojoToday' }).textContent).toMatch(
+      /sugestão neste dispositivo/i,
+    )
+    expect(screen.queryByText(/derivada do substrato/)).toBeNull()
+    expect(screen.queryByText('Estado canônico · somente leitura')).toBeNull()
+  })
+
   it('shows labs and miniTown when operatorSurface is true', () => {
     render(<EngineHubApp development={false} operatorSurface />)
 

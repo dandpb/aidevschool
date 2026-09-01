@@ -5,6 +5,7 @@ import { recommendMission } from '../missions/recommendation'
 import { completeOnboarding, createInitialOsProgress, missionKey } from '../progress/domain'
 import { migrateOsProgress } from '../progress/migration'
 import {
+  AI_PRATICA_GUIDED_RAIL_MISSION_IDS,
   DEV_GUIDED_RAIL_MISSION_IDS,
   isAiPraticaChapterComplete,
   listStudentRailMissions,
@@ -24,6 +25,28 @@ describe('student path remapping', () => {
     })
 
     expect(isAiPraticaChapterComplete(progress, missionCatalog)).toBe(false)
+  })
+
+
+  it('marks IA Prática complete after only the l01-l03 rail', () => {
+    const raw = createInitialOsProgress(missionCatalog)
+    const progress = {
+      ...completeOnboarding(raw, {
+        goal: 'work-better',
+        context: 'work',
+        confidence: 'low',
+        selectedTrackId: 'ai-pratica',
+      }),
+      missionStatusByKey: {
+        ...raw.missionStatusByKey,
+        [missionKey('ai-pratica', 'l01')]: 'completed' as const,
+        [missionKey('ai-pratica', 'l02')]: 'completed' as const,
+        [missionKey('ai-pratica', 'l03')]: 'completed' as const,
+      },
+    }
+
+    expect(isAiPraticaChapterComplete(progress, missionCatalog)).toBe(true)
+    expect(progress.missionStatusByKey[missionKey('ai-pratica', 'l04')]).not.toBe('completed')
   })
 
   it('does not remap Dev selection and keeps completed literacy and voxel status', () => {
@@ -94,6 +117,13 @@ describe('student path remapping', () => {
     expect(rail.map((mission) => mission.id)).toEqual([...DEV_GUIDED_RAIL_MISSION_IDS])
     expect(rail.some((mission) => mission.id.startsWith('l1'))).toBe(false)
     expect(rail.some((mission) => mission.id === 'game-06-pipeline-plant')).toBe(false)
+  })
+
+  it('limits the public IA Prática rail to l01-l03, not the full catalog', () => {
+    const rail = listStudentRailMissions(catalog, 'ai-pratica')
+    expect(rail.map((mission) => mission.id)).toEqual([...AI_PRATICA_GUIDED_RAIL_MISSION_IDS])
+    expect(rail.some((mission) => mission.id === 'l04')).toBe(false)
+    expect(listStudentRailMissions(catalog)).toHaveLength(6)
   })
 
   it('reads ?track=dev from the search string', () => {

@@ -62,7 +62,7 @@ export function MapScreen({
         <div>
           <p className="journey-eyebrow">Mapa de missões</p>
           <h1>{publishedMissionCount} missões, uma sequência</h1>
-          <p>Escolha IA Prática ou Dev. O trilho Dev publica só WAREHOUSE, WORMHOLE e RELAY STATION.</p>
+          <p>Escolha IA Prática (l01–l03) ou Dev (WAREHOUSE, WORMHOLE e RELAY STATION). O restante fica no Hub, não neste trilho.</p>
         </div>
       </header>
       {verificationAvailability === 'unavailable' ? (
@@ -82,7 +82,7 @@ export function MapScreen({
                   <li key={mission.id} className={`mission-map-node ${overlay}`}>
                     <span className="mission-map-order">{mission.chapterOrder}</span>
                     <div>
-                      <small>{OVERLAY_LABEL[overlay]}</small>
+                      <small data-testid={`map-overlay-${mission.id}`}>{OVERLAY_LABEL[overlay]}</small>
                       <h3>{mission.title}</h3>
                       <p>{mission.estimatedMinutes} min · {mission.objective}</p>
                       {mission.prerequisites.length > 0 ? (

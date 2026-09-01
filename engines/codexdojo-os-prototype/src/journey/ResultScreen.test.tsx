@@ -103,7 +103,7 @@ describe('mission result', () => {
             max_producer_claim: 'completed',
           },
         }}
-        canonicalMasteryCount={2}
+        canonicalMasteryCount={0}
         onRetryVerification={vi.fn()}
         onRetrySave={vi.fn()}
         onReturn={vi.fn()}
@@ -112,6 +112,7 @@ describe('mission result', () => {
 
     expect(screen.getByTestId('independent-verdict').textContent).toBe('Veredito PASS')
     expect(screen.getByTestId('completion-is-not-mastery').textContent).toMatch(/não é/)
+    expect(screen.getByTestId('canonical-mastery-count').textContent).toBe('0')
     expect(screen.getByText(/verificador independente aprovou/i)).not.toBeNull()
     expect(screen.queryByText(/domínio canônico/i)).toBeNull()
   })

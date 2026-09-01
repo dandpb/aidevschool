@@ -83,7 +83,10 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
     const devCta = screen.getByTestId("dev-track-teaser");
-    expect(devCta).toHaveAttribute("href", "https://aidevschool-codexdojo-os.netlify.app/?track=dev");
+    expect(devCta).toHaveAttribute(
+      "href",
+      "https://aidevschool-codexdojo-os.netlify.app/?track=dev",
+    );
     expect(devCta).toHaveTextContent("Trilha Dev");
     expect(devCta).toHaveTextContent("Abrir no OS");
     expect(devCta).toHaveTextContent("Para programadores");
