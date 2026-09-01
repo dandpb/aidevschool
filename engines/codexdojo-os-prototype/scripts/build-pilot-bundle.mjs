@@ -17,6 +17,10 @@ const backup = `${output}.previous-${process.pid}`
 const canonicalFunctions = join(repoRoot, 'learner', 'gate', 'netlify-functions')
 const stagedFunctions = join(osRoot, 'netlify', 'functions')
 const verifierFunction = 'dojo-verification-bridge.mjs'
+// Same-origin analytics collector (AID-470 F1): built, staged, and tested —
+// but the browser transport stays off until VITE_ANALYTICS_ENDPOINT is
+// explicitly configured at build time (board decision, ADR-0010).
+const collectorFunction = 'dojo-analytics-collector.mjs'
 // Generated verifier corpus for the hosted literacy bridge (AID-449); a
 // projection of curriculum/ai-literacy/ that must ship with the function.
 // The underscore directory is the Netlify shared-code convention: bundled
@@ -84,6 +88,7 @@ try {
   await rm(stagedFunctions, { recursive: true, force: true })
   await mkdir(stagedFunctions, { recursive: true })
   await cp(join(canonicalFunctions, verifierFunction), join(stagedFunctions, verifierFunction))
+  await cp(join(canonicalFunctions, collectorFunction), join(stagedFunctions, collectorFunction))
   await mkdir(join(stagedFunctions, '_shared'), { recursive: true })
   await cp(join(canonicalFunctions, literacyCorpusModule), join(stagedFunctions, literacyCorpusModule))
   const revision = process.env.COMMIT_REF || process.env.HEAD || 'local-uncommitted'

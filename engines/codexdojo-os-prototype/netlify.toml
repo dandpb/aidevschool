@@ -26,6 +26,15 @@
   status = 200
 
 [[redirects]]
+  # Same-origin analytics collector (AID-470 F1 / ADR-0010): receives the OS
+  # analytics batches. Passive endpoint — the browser transport only emits
+  # when VITE_ANALYTICS_ENDPOINT is set at build time, which no build surface
+  # in this repo does (activation is a board decision with the ADR in hand).
+  from = "/__dojo/bridge/v1/analytics"
+  to = "/.netlify/functions/dojo-analytics-collector"
+  status = 200
+
+[[redirects]]
   # The OS does not own a root service worker. Keep stale probes out of the SPA
   # fallback; LiteracyDojo's worker is scoped to /apps/literacydojo/sw.js.
   from = "/sw.js"

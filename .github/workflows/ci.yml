@@ -138,6 +138,10 @@ jobs:
       # The staged verification bridge is a projection of learner/gate; run its
       # contract test here so verifier drift fails CI instead of production (AID-415).
       - run: node --test ../../learner/gate/tests/dojo_verification_bridge_netlify.test.mjs
+      # Same for the analytics collector (AID-470 F1): the staged function must
+      # accept and reject exactly the OS analytics vocabulary; TS-side parity
+      # runs in the vitest suite above (collectorParity.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
