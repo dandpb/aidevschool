@@ -130,9 +130,24 @@ jobs:
       - run: pnpm --dir ../codexDojo install --frozen-lockfile
       - run: pnpm --dir ../pixelDojo install --frozen-lockfile
       - run: pnpm --dir ../voxelDojo install --frozen-lockfile
+      - run: pnpm --dir ../miniTown install --frozen-lockfile
+      - run: npm ci --prefix ../dojoToday
       - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
+      # The staged verification bridge is a projection of learner/gate; run its
+      # contract test here so verifier drift fails CI instead of production (AID-415).
+      - run: node --test ../../learner/gate/tests/dojo_verification_bridge_netlify.test.mjs
+      # Same for the analytics collector (AID-470 F1): the staged function must
+      # accept and reject exactly the OS analytics vocabulary; TS-side parity
+      # runs in the vitest suite above (collectorParity.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
+      # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
+      # contract tests run here, and the monitor itself fails high over the
+      # synthetic fixtures (real pilot NDJSON never lands in the repo; the
+      # fixtures are also checked against events.ts by fixtureSchemaDrift.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs ../../learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs
+      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
@@ -141,6 +156,10 @@ jobs:
           VITE_WAREHOUSE_URL: /apps/warehouse/
           VITE_WORMHOLE_URL: /apps/wormhole/
           VITE_RELAY_STATION_URL: /apps/relay-station/
+          VITE_PIPELINE_PLANT_URL: /apps/pipeline-plant/
+          VITE_CHECKPOINT_CITY_URL: /apps/checkpoint-city/
+          VITE_TIMELINE_TOWER_URL: /apps/timeline-tower/
+          VITE_DOCKING_BAY_URL: /apps/docking-bay/
       # P5: prove the static pilot build mounts missions from its own origin.
       # The build above already produced dist/ (and gates typecheck), so we
       # bundle the mission runtimes and run Playwright directly instead of

@@ -59,7 +59,7 @@ export function ProgressScreen({
       </section>
 
       <section className="progress-missions" aria-label="Estado por missão">
-        <h2>Missões do primeiro capítulo</h2>
+        <h2>Missões publicadas</h2>
         {catalog.listLaunchable().map((mission) => {
           const key = missionKey(mission.trackId, mission.id)
           const localStatus = progress.missionStatusByKey[key]

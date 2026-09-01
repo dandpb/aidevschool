@@ -25,7 +25,42 @@ type RelayHook = {
   }
 }
 
-test('independently verifies all three Dev games through the shared mission contract', async ({
+type PipelineHook = {
+  readonly game: {
+    start(): void
+    bufferedOverflows(): boolean
+    predictOverflow(willOverflow: boolean): void
+  }
+}
+
+type CheckpointHook = {
+  readonly game: {
+    snapshot: { phase: string }
+    start(): void
+    pendingAnswer(): string | null
+    predict(target: string): void
+  }
+}
+
+type TimelineHook = {
+  readonly game: {
+    snapshot: { phase: string; level: { id: string } }
+    start(): void
+    nextCorrectEventType(): string
+    appendNext(type: string): void
+  }
+}
+
+type DockingHook = {
+  readonly game: {
+    snapshot: { phase: string; pods: readonly { id: string }[] }
+    start(): void
+    podWouldDock(pod: { id: string }): boolean
+    predictDock(podId: string, willDock: boolean): void
+  }
+}
+
+test('independently verifies all seven Dev games through the shared mission contract', async ({
   page,
 }) => {
   test.setTimeout(60_000)
@@ -64,7 +99,7 @@ test('independently verifies all three Dev games through the shared mission cont
     await mission.getByTestId(`shelf-${shelf}`).click()
   }
 
-  await expect(mission.getByTestId('hud-status')).toContainText('Wave cleared')
+  await expect(mission.getByTestId('hud-status')).toContainText('Missão concluída; evidência emitida.')
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await expect(page.getByText(
     'O verificador independente aprovou esta evidência. O gate canônico continua separado.',
@@ -145,6 +180,123 @@ test('independently verifies all three Dev games through the shared mission cont
   await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
 
+  await expect(
+    page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const pipeline = page.frameLocator(
+    'iframe[title="Missão PIPELINE PLANT: File Upload/Processing Pipeline"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5206/')),
+  ).toBe(true)
+  const pipelineFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5206/'),
+  )
+  if (pipelineFrame === undefined) throw new Error('Pipeline mission frame was not loaded')
+  await expect.poll(() => pipelineFrame.evaluate(
+    () => (window as Window & { __pipelinePlant?: PipelineHook }).__pipelinePlant !== undefined,
+  )).toBe(true)
+  await pipelineFrame.evaluate(() => {
+    const hook = (window as Window & { __pipelinePlant?: PipelineHook }).__pipelinePlant
+    if (hook === undefined) throw new Error('Pipeline Plant test hook is unavailable')
+    hook.game.start()
+    hook.game.predictOverflow(hook.game.bufferedOverflows())
+  })
+  await expect(pipeline.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  await expect(
+    page.getByRole('heading', { name: 'CHECKPOINT CITY: REST API with Auth' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const checkpoint = page.frameLocator(
+    'iframe[title="Missão CHECKPOINT CITY: REST API with Auth"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5207/')),
+  ).toBe(true)
+  const checkpointFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5207/'),
+  )
+  if (checkpointFrame === undefined) throw new Error('Checkpoint City mission frame was not loaded')
+  await expect.poll(() => checkpointFrame.evaluate(
+    () => (window as Window & { __checkpointCity?: CheckpointHook }).__checkpointCity !== undefined,
+  )).toBe(true)
+  await checkpointFrame.evaluate(() => {
+    const hook = (window as Window & { __checkpointCity?: CheckpointHook }).__checkpointCity
+    if (hook === undefined) throw new Error('Checkpoint City test hook is unavailable')
+    hook.game.start()
+    while (hook.game.snapshot.phase === 'predicting') {
+      const answer = hook.game.pendingAnswer()
+      if (answer === null) break
+      hook.game.predict(answer)
+    }
+  })
+  await expect(checkpoint.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  await expect(
+    page.getByRole('heading', { name: 'TIMELINE TOWER: Event-Driven Order System' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const timeline = page.frameLocator(
+    'iframe[title="Missão TIMELINE TOWER: Event-Driven Order System"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5208/')),
+  ).toBe(true)
+  const timelineFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5208/'),
+  )
+  if (timelineFrame === undefined) throw new Error('Timeline Tower mission frame was not loaded')
+  await expect.poll(() => timelineFrame.evaluate(
+    () => (window as Window & { __timelineTower?: TimelineHook }).__timelineTower !== undefined,
+  )).toBe(true)
+  await timelineFrame.evaluate(() => {
+    const hook = (window as Window & { __timelineTower?: TimelineHook }).__timelineTower
+    if (hook === undefined) throw new Error('Timeline Tower test hook is unavailable')
+    hook.game.start()
+    while (hook.game.snapshot.phase === 'playing' && hook.game.snapshot.level.id === 'L1') {
+      hook.game.appendNext(hook.game.nextCorrectEventType())
+    }
+  })
+  await expect(timeline.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
+  await expect(
+    page.getByRole('heading', { name: 'DOCKING BAY: Plugin System' }),
+  ).toBeVisible()
+  await page.locator('.next-mission-card .journey-primary').click()
+  const docking = page.frameLocator(
+    'iframe[title="Missão DOCKING BAY: Plugin System"]',
+  )
+  await expect.poll(
+    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5209/')),
+  ).toBe(true)
+  const dockingFrame = page.frames().find(
+    (candidate) => candidate.url().startsWith('http://127.0.0.1:5209/'),
+  )
+  if (dockingFrame === undefined) throw new Error('Docking Bay mission frame was not loaded')
+  await expect.poll(() => dockingFrame.evaluate(
+    () => (window as Window & { __dockingBay?: DockingHook }).__dockingBay !== undefined,
+  )).toBe(true)
+  await dockingFrame.evaluate(() => {
+    const hook = (window as Window & { __dockingBay?: DockingHook }).__dockingBay
+    if (hook === undefined) throw new Error('Docking Bay test hook is unavailable')
+    hook.game.start()
+    for (const pod of hook.game.snapshot.pods) {
+      if (hook.game.snapshot.phase !== 'predicting') break
+      hook.game.predictDock(pod.id, hook.game.podWouldDock(pod))
+    }
+  })
+  await expect(docking.getByTestId('hud-status')).toContainText('cleared')
+  await expect(page.getByText('Verificação independente aprovada', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Voltar ao hub' }).click()
+
   const stored = await page.evaluate(async () => new Promise<unknown[]>((resolve, reject) => {
     const open = indexedDB.open('codexdojo-os-verification', 2)
     open.onerror = () => reject(open.error)
@@ -158,7 +310,7 @@ test('independently verifies all three Dev games through the shared mission cont
       }
     }
   }))
-  expect(stored).toHaveLength(3)
+  expect(stored).toHaveLength(7)
   expect(stored).toEqual(expect.arrayContaining([
     expect.objectContaining({
       schemaId: 'teaching-game-evidence',
@@ -182,6 +334,38 @@ test('independently verifies all three Dev games through the shared mission cont
       subject: {
         missionId: 'game-05-relay-station',
         unitId: 'U5-websocket-chat',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-06-pipeline-plant',
+        unitId: 'U6-file-upload',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-07-checkpoint-city',
+        unitId: 'U7-rest-api-auth',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-08-timeline-tower',
+        unitId: 'U8-event-driven',
+      },
+    }),
+    expect.objectContaining({
+      schemaId: 'teaching-game-evidence',
+      status: 'verified',
+      subject: {
+        missionId: 'game-09-docking-bay',
+        unitId: 'U9-plugin-system',
       },
     }),
   ]))

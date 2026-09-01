@@ -1,4 +1,5 @@
 import type { Capability, Contract, PluginManifest } from "./plugin"
+import { checkContract } from "./plugin"
 import { mulberry32 } from "./rng"
 
 export type LevelId = "L1" | "L2" | "L3" | "L4"
@@ -160,13 +161,15 @@ export interface LevelOutcome {
 /** Alias kept for symmetry with the result of every evaluate* function. */
 export type WaveOutcome = LevelOutcome
 
-/** L1: ≥80% dock predictions correct. */
+/** L1: ≥80% dock predictions correct. Dock truth is the clamp's own contract
+ * check (host ⊆ claims), delegated to `checkContract` so the wave and the
+ * docking clamp can never disagree. */
 export function evaluateDockWave(
   predictions: ReadonlyArray<{ pod: WavePod; predictedDock: boolean }>,
 ): WaveOutcome {
   let correct = 0
   for (const p of predictions) {
-    const truth = p.pod.claimsContract.every((c) => HOST_CONTRACT.includes(c))
+    const truth = checkContract(p.pod, HOST_CONTRACT)
     if (truth === p.predictedDock) correct++
   }
   const total = predictions.length

@@ -1,0 +1,132 @@
+# Lição l20 — Onda C3 (spec AID-414 §2.3): verificação operacional de números e fatos.
+# Aprofundamento de l09/l10: l10 decide SE verifica; l20 treina O QUÊ marcar e ONDE confirmar.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l20
+version: 1
+moduleId: mod-06
+title: "Números e fatos: verifique antes de usar"
+objective: "Diante de uma resposta com números e fatos específicos, marcar quais afirmações exigem verificação externa e escolher a fonte certa — aprofundamento operacional de l09/l10."
+estimatedMinutes: 3
+skillIds: [avaliar]
+prerequisites: [l10]
+
+activities:
+  - id: l20-a1
+    type: choice
+    skillId: avaliar
+    instruction: "A IA DEVOLVEU UM RESUMO SOBRE O DESEMPENHO DE VENDAS DO TRIMESTRE. MARQUE TODAS AS AFIRMAÇÕES QUE EXIGEM VERIFICAÇÃO EM FONTE EXTERNA ANTES DE VOCÊ USAR."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-crescimento
+          text: "As vendas cresceram 23% no último trimestre."
+        - id: opt-emails
+          text: "E-mails claros ajudam a manter clientes."
+        - id: opt-pesquisa
+          text: "Segundo uma pesquisa de 2024 da consultoria X, 61% dos clientes valorizam atendimento rápido."
+        - id: opt-equipes
+          text: "Equipes de vendas variam de empresa para empresa."
+        - id: opt-ticket
+          text: "O ticket médio ficou em R$ 412."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-crescimento, opt-pesquisa, opt-ticket]
+    feedback:
+      onFailure: "O sinal é a especificidade: número preciso (23%, R$ 412), fato datado e citação nominal (pesquisa de 2024 da consultoria X) são afirmações que a IA pode ter inventado — exigem conferência externa. Afirmações gerais ('e-mails claros ajudam', 'equipes variam') são conhecimento comum: verificá-las não muda sua decisão."
+      onSuccess: "Exato! Número preciso, fato datado e citação nominal pedem fonte externa; generalidades não valem o custo da conferência."
+    storage:
+      policy: structured_only
+    hints:
+      - "Quais afirmações, se estiverem erradas, mudam a sua decisão?"
+      - "Número exato, data e nome de consultoria são o tipo de detalhe que a IA mais confabula."
+      - "Generalidades não precisam de fonte — o problema é o dado específico sem origem."
+
+  - id: l20-a2
+    type: sort
+    skillId: avaliar
+    instruction: "HIERARQUIA DE FONTES. VOCÊ VAI CONFIRMAR O 'CRESCIMENTO DE 23% NO TRIMESTRE'. ORDENE AS FONTES DA MAIS CONFIÁVEL PARA A MENOS CONFIÁVEL PARA ESTE NÚMERO."
+    data:
+      items:
+        - id: src-imprensa
+          text: "Matéria da imprensa especializada citando o relatório de vendas"
+        - id: src-relatorio
+          text: "Relatório oficial de vendas da própria empresa"
+        - id: src-social
+          text: "Post em rede social comentando o assunto"
+        - id: src-planilha
+          text: "Planilha primária do setor de vendas"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [src-relatorio, src-planilha, src-imprensa, src-social]
+    feedback:
+      onFailure: "A ordem é: relatório oficial, planilha primária, imprensa citando o relatório, rede social. Quanto mais perto do dado bruto — e mais responsável por ele —, mais confiável a fonte; cada camada de commentary afasta do número original."
+      perCheck:
+        src-relatorio: "O relatório oficial é a fonte do número: quem produziu o dado responde por ele."
+        src-planilha: "A planilha primária é o dado bruto: um passo abaixo do relatório porque exige sua própria conferência de contexto."
+        src-imprensa: "A imprensa especializada é derivação: útil como atalho, mas já interpretou o relatório."
+        src-social: "Rede social é a ponta da cadeia: sem autoria verificável pelo número, serve no máximo como pista."
+      onSuccess: "Isso! Confie primeiro em quem produz o dado, depois no dado bruto, e só então nas derivações — naquela ordem."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte para cada fonte: quem produziu esse número e quem responde por ele?"
+      - "Derivações (matéria, post) repetem o número — não o originam."
+      - "Rede social não assina o dado; relatório oficial sim."
+
+  - id: l20-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "A IA AFIRMOU: 'AS VENDAS CRESCERAM 23% NO ÚLTIMO TRIMESTRE.' VOCÊ QUER USAR ESSA FRASE NUMA REUNIÃO. O QUE FALTA PARA USÁ-LA COM SEGURANÇA?"
+    data:
+      prompt: "As vendas cresceram 23% no último trimestre."
+      contextOptions:
+        - id: ctx-fonte-oficial
+          text: "A fonte oficial do número (qual relatório ou sistema gerou os 23%)"
+        - id: ctx-periodo-exato
+          text: "O período exato medido (datas de início e fim do 'último trimestre')"
+        - id: ctx-modelo-ia
+          text: "O nome do modelo de IA que gerou a resposta"
+        - id: ctx-opiniao-time
+          text: "A opinião do time de vendas sobre o crescimento"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [ctx-fonte-oficial, ctx-periodo-exato]
+    feedback:
+      onFailure: "Para usar o número com segurança faltam duas coisas: a fonte oficial (onde os 23% foram medidos) e o período exato (quais datas o 'último trimestre' cobre — trimestres fiscais e de calendário diferem). O modelo que gerou a frase não confere o dado; e a opinião do time não substitui a medição."
+      perCheck:
+        ctx-fonte-oficial: "Faltou isto: sem fonte oficial, o 23% é um número sem dono — ninguém responde por ele."
+        ctx-periodo-exato: "Faltou isto: 'último trimestre' é ambíguo; sem datas, você pode estar comparando períodos diferentes."
+        ctx-modelo-ia: "Isso não verifica nada: saber o modelo não confere o número — verificação é externa à IA."
+        ctx-opiniao-time: "Isso é impressão, não medição: opinião não substitui a fonte do dado."
+      onSuccess: "Exato! Número com fonte e período explícitos é número utilizável — o resto é nota de rodapé."
+    storage:
+      policy: structured_only
+    hints:
+      - "Se alguém na reunião perguntar 'de onde vem esse 23%?', o que você precisa saber responder?"
+      - "'Último trimestre' de quem? Datas fecham essa pergunta."
+      - "Nome do modelo e opinião do time não aparecem em nenhuma planilha — por um motivo."
+
+rubric:
+  id: l20-rubric
+  criteria:
+    - id: r-marca-o-que-verifica
+      text: "Marca as afirmações que exigem verificação pelo sinal: número preciso, fato datado, citação nominal."
+      weight: 1
+    - id: r-hierarquia-de-fontes
+      text: "Ordena fontes primárias antes de derivadas (relatório/planilha antes de imprensa/rede social)."
+      weight: 1
+    - id: r-nomeia-o-que-falta
+      text: "Nomeia o contexto faltante para usar uma afirmação: fonte oficial do número e período exato medido."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l20-a1, l20-a2, l20-a3]

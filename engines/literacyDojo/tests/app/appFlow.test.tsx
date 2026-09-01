@@ -10,7 +10,10 @@ import { readyLessonEntries } from "../../src/domain/track";
 import { InMemoryProgressRepository, createTestServices } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
-const ready = readyLessonEntries(modules);
+// O percurso público do app standalone é só ia_pratica; as lições dev
+// (mod-05) existem no read model para missões hospedadas do OS.
+const publicModules = modules.filter((module) => module.journey === "ia_pratica");
+const ready = readyLessonEntries(publicModules);
 const firstLesson = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
 if (!firstLesson) throw new Error("Mapa Inicial ausente do read model");
 const firstSkillId = firstLesson.skillIds[0];
@@ -80,6 +83,26 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
     expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
+    expect(screen.getByText(/Piloto gratuito para maiores de 18 anos/)).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo", { name: "Informações do piloto" })).toHaveTextContent(
+      "Piloto público gratuito · para maiores de 18 anos",
+    );
+    for (const linkName of [/Termos do piloto/, /termos do piloto/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./termos.html",
+      );
+    }
+    for (const linkName of [/^Privacidade$/, /aviso de privacidade/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./privacidade.html",
+      );
+    }
+    expect(screen.getByRole("link", { name: /Pedir suporte/ })).toHaveAttribute(
+      "href",
+      "https://github.com/dandpb/aidevschool/issues/new",
+    );
     await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-save_time"));
     await user.click(screen.getByTestId("onboarding-next"));
@@ -128,17 +151,20 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("confidence-support")).toHaveTextContent("Dica de partida");
   });
 
-  it("mapa público limita IA na Prática a 14 missões e mantém Dev fora do percurso", async () => {
+  it("mapa público limita IA na Prática ao catálogo ia_pratica (17 com l20) e mantém Dev fora do percurso", async () => {
     const user = userEvent.setup();
     const { services } = makeServices({ progress: seededProgress() });
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
-    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 14 lições concluídas");
+    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 17 lições concluídas");
     await user.click(screen.getByTestId("open-map"));
 
-    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/14 missões");
+    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/17 missões");
     expect(screen.queryByTestId("map-lesson-l15")).not.toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l18")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l19")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l20")).toBeInTheDocument();
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {

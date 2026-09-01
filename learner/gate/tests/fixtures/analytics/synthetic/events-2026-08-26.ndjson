@@ -1,0 +1,8 @@
+{"schemaVersion":1,"eventId":"evt-0074","name":"onboarding.started","occurredAt":"2026-08-26T09:00:00Z","sequence":1,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1"}}
+{"schemaVersion":1,"eventId":"evt-0075","name":"onboarding.completed","occurredAt":"2026-08-26T09:05:00Z","sequence":2,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1"}}
+{"schemaVersion":1,"eventId":"evt-0076","name":"mission.started","occurredAt":"2026-08-26T09:10:00Z","sequence":3,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0077","name":"structured_attempt.submitted","occurredAt":"2026-08-26T09:15:00Z","sequence":4,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1","activityType":"safety_classification"}}
+{"schemaVersion":1,"eventId":"evt-0078","name":"structured_attempt.passed","occurredAt":"2026-08-26T09:17:00Z","sequence":5,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1","activityType":"safety_classification"}}
+{"schemaVersion":1,"eventId":"evt-0079","name":"mission.completed","occurredAt":"2026-08-26T09:20:00Z","sequence":6,"dimensions":{"installationId":"install-k3","sessionId":"s-k3-1","result":"completed"}}
+{"schemaVersion":1,"eventId":"evt-0080","name":"onboarding.started","occurredAt":"2026-08-26T14:00:00Z","sequence":1,"dimensions":{"installationId":"install-m1","sessionId":"s-m1-1"}}
+{"schemaVersion":1,"eventId":"evt-0081","name":"onboarding.completed","occurredAt":"2026-08-26T14:05:00Z","sequence":2,"dimensions":{"installationId":"install-m1","sessionId":"s-m1-1","recommendationChanged":false}}

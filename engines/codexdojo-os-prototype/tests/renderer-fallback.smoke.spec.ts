@@ -49,7 +49,7 @@ async function completeWithAccessibleKeyboard(page: Page): Promise<void> {
     await action.focus()
     await action.press('Enter')
   }
-  await expect(mission.getByTestId('hud-status')).toContainText('Wave cleared')
+  await expect(mission.getByTestId('hud-status')).toContainText('Missão concluída; evidência emitida.')
 }
 
 async function evidenceIdentity(page: Page): Promise<Readonly<Record<string, unknown>>> {

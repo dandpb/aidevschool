@@ -1,11 +1,12 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
-# Fonte de verdade do índice: 14 lições públicas de IA na Prática e
-# 3 lições preservadas da prévia Dev, separadas pelo campo `journey`.
+# Fonte de verdade do índice: 17 lições públicas de IA na Prática
+# (l01–l14 + onda de continuação l18–l20) e 3 lições da trilha Dev,
+# separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-08-21.1"
+contentVersion: "2026-08-31.1"
 
 track:
   id: ai-literacy
@@ -71,6 +72,12 @@ modules:
     order: 5
     journey: dev
     skillIds: [decidir, integrar, codificar]
+  - id: mod-06
+    slug: 06-rotina-com-ia
+    title: "Rotina com IA"
+    order: 6
+    journey: ia_pratica
+    skillIds: [pedir, avaliar, aplicar]
 
 lessons:
   # Módulo 1 — IA sem mistério
@@ -213,4 +220,29 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l16]
     skillIds: [integrar]
+    status: ready
+  # Módulo 6 — Rotina com IA (onda de continuação C1–C3, spec AID-414)
+  - id: l18
+    moduleId: mod-06
+    title: "Biblioteca de pedidos: reutilize o que funciona"
+    objective: "Transformar um pedido bem-sucedido em modelo reutilizável e adaptá-lo a um cenário novo sem recomeçar do zero — identificando o que trocar (contexto/público) e o que preservar (estrutura/formato)."
+    estimatedMinutes: 4
+    prerequisites: [l14]
+    skillIds: [pedir, aplicar]
+    status: ready
+  - id: l19
+    moduleId: mod-06
+    title: "Conversas longas: gerencie o contexto"
+    objective: "Em uma conversa multi-turno degradada, identificar qual contexto a IA perdeu, executar a correção mínima que restaura a resposta útil e decidir entre continuar e recomeçar."
+    estimatedMinutes: 5
+    prerequisites: [l07]
+    skillIds: [pedir, avaliar]
+    status: ready
+  - id: l20
+    moduleId: mod-06
+    title: "Números e fatos: verifique antes de usar"
+    objective: "Diante de uma resposta com números e fatos específicos, marcar quais afirmações exigem verificação externa e escolher a fonte certa — aprofundamento operacional de l09/l10."
+    estimatedMinutes: 3
+    prerequisites: [l10]
+    skillIds: [avaliar]
     status: ready

@@ -23,6 +23,10 @@ const MISSIONS = [
   { name: 'warehouse', cwd: 'voxelDojo/game-02-warehouse' },
   { name: 'wormhole', cwd: 'voxelDojo/game-03-wormhole' },
   { name: 'relay-station', cwd: 'voxelDojo/game-05-relay-station' },
+  { name: 'pipeline-plant', cwd: 'voxelDojo/game-06-pipeline-plant' },
+  { name: 'checkpoint-city', cwd: 'voxelDojo/game-07-checkpoint-city' },
+  { name: 'timeline-tower', cwd: 'voxelDojo/game-08-timeline-tower' },
+  { name: 'docking-bay', cwd: 'voxelDojo/game-09-docking-bay' },
 ]
 
 const run = (cmd, args, cwd) =>

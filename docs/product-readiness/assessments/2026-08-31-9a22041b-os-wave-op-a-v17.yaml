@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-08-31-9a22041b-os-wave-op-a-v17
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-31T11:50:00Z'
+revalidateBy: '2026-09-30'
+gitSha: 9a22041b485b25424b3ddcdd3d3a6eb1ec9d6a34
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-31T11:45:00Z-os-verification-recovery-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-literacy-hosted-mission-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-literacy-returning-device-mixed-9a22041b
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-31T11:45:00Z-os-voxel-hosted-missions-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-renderer-accessibility-recovery-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-voxel-returning-device-mixed-9a22041b
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-31T11:45:00Z-os-onboarding-track-choice-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-returning-device-mixed-9a22041b
+  - 2026-08-31T11:45:00Z-os-returning-recovery-mixed-9a22041b
