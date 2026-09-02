@@ -6,7 +6,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-02.2"
+contentVersion: "2026-09-02.3"
 
 track:
   id: ai-literacy
@@ -91,7 +91,7 @@ lessons:
     moduleId: mod-01
     title: "Sua primeira conversa com uma IA"
     objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como um rascunho, não como uma ordem."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: []
     skillIds: [entender]
     status: ready
@@ -116,7 +116,7 @@ lessons:
     moduleId: mod-02
     title: "Dê um objetivo claro"
     objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: [l03]
     skillIds: [pedir]
     status: ready
