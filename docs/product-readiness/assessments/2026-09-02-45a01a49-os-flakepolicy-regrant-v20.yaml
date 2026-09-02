@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-02-45a01a49-os-flakepolicy-regrant-v20
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-02T03:50:00Z'
+revalidateBy: '2026-10-02'
+gitSha: 45a01a49574dfdf38e5193f69e6101f76cd93be2
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T03:47:00Z-os-verification-recovery-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-literacy-hosted-mission-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-literacy-returning-device-mixed-45a01a49
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T03:47:00Z-os-voxel-hosted-missions-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-voxel-returning-device-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-renderer-accessibility-recovery-mixed-45a01a49
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T03:47:00Z-os-onboarding-track-choice-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-returning-device-mixed-45a01a49
+  - 2026-09-02T03:47:00Z-os-returning-recovery-mixed-45a01a49
