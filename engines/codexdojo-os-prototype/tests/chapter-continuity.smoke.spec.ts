@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26', 'l27'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26' | 'l27'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -409,6 +409,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await page.goto('/mission/dev/l23')
   await expect(page.getByRole('heading', { name: 'O que aceitar: limites do assistente' })).toBeVisible()
   await completeLiteracyMission(page, 'l23')
+
+  // Wave O1 dev (AID-620, spec AID-610 rev 2): l27 "Debug com assistente:
+  // reproduza antes de perguntar" opens the assistente-evolution cycle as the
+  // 14th dev mission (chapterOrder 14, canonical prereq l21). Completes
+  // end-to-end through sort, prompt_builder, and missing_context.
+  await page.goto('/mission/dev/l27')
+  await expect(page.getByRole('heading', { name: 'Debug com assistente: reproduza antes de perguntar' })).toBeVisible()
+  await completeLiteracyMission(page, 'l27')
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
