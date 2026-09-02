@@ -33,12 +33,82 @@ export const literacyCorpus = {
         },
         "id": "l01-a1",
         "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "passo-tarefa",
+              "text": "Escolher uma tarefa simples e concreta para começar — algo pequeno, que você mesmo sabe avaliar."
+            },
+            {
+              "id": "passo-pergunta",
+              "text": "Escrever a pergunta dizendo o que quer e o mínimo de contexto sobre a sua situação."
+            },
+            {
+              "id": "passo-leitura",
+              "text": "Ler a resposta como rascunho: separar o que serve do que não serve."
+            },
+            {
+              "id": "passo-uso",
+              "text": "Ajustar o que não serviu e usar o que passou pela sua revisão."
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "passo-tarefa",
+            "passo-pergunta",
+            "passo-leitura",
+            "passo-uso"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l01-a2",
+        "type": "sort"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "tarefa-definida",
+              "text": "Uma tarefa definida — dizer o que ele quer que a IA faça"
+            },
+            {
+              "id": "contexto-minimo",
+              "text": "O contexto mínimo — a situação em que ele precisa de ajuda"
+            },
+            {
+              "id": "formato-esperado",
+              "text": "O formato esperado — que tipo de resposta ele quer receber (lista, texto, e-mail)"
+            },
+            {
+              "id": "nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA que ele vai usar"
+            },
+            {
+              "id": "temperatura",
+              "text": "A temperatura do modelo — uma configuração técnica de criatividade"
+            }
+          ],
+          "prompt": "Me ajuda aí"
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "tarefa-definida",
+            "contexto-minimo",
+            "formato-esperado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l01-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "entender"
     ],
-    "version": 1
+    "version": 2
   },
   "l02": {
     "activities": [
@@ -80,13 +150,77 @@ export const literacyCorpus = {
         },
         "id": "l02-a1",
         "type": "output_comparison"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-verifica-na-fonte",
+              "text": "Confirmo o número em uma fonte de confiança — relatório do setor ou site oficial — e só uso depois de confirmar."
+            },
+            {
+              "id": "opt-confia-no-especifico",
+              "text": "Uso direto: um número tão específico assim dificilmente está errado."
+            },
+            {
+              "id": "opt-descarta-tudo",
+              "text": "Descarto a resposta inteira — se a IA inventa um número, não dá para aproveitar nada dela."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-verifica-na-fonte"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l02-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "fluxo-resposta",
+              "text": "Receber a resposta da IA e ler até o fim."
+            },
+            {
+              "id": "fluxo-afirmacoes",
+              "text": "Marcar as afirmações que vão virar decisão — números, datas, nomes."
+            },
+            {
+              "id": "fluxo-fonte",
+              "text": "Localizar a fonte original de cada afirmação marcada."
+            },
+            {
+              "id": "fluxo-conferencia",
+              "text": "Conferir se o que a fonte diz bate com o que a resposta disse."
+            },
+            {
+              "id": "fluxo-uso",
+              "text": "Usar a informação com a anotação de onde ela veio."
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "fluxo-resposta",
+            "fluxo-afirmacoes",
+            "fluxo-fonte",
+            "fluxo-conferencia",
+            "fluxo-uso"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l02-a3",
+        "type": "sort"
       }
     ],
     "skillIds": [
       "entender",
       "avaliar"
     ],
-    "version": 3
+    "version": 4
   },
   "l03": {
     "activities": [
@@ -159,12 +293,51 @@ export const literacyCorpus = {
         },
         "id": "l03-a2",
         "type": "choice"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-fiel-ao-material",
+              "text": "Usa apenas informações que estão no relatório fornecido"
+            },
+            {
+              "id": "c-sem-dado-inventado",
+              "text": "Não apresenta como fato número ou citação que não está no material"
+            },
+            {
+              "id": "c-mais-completa",
+              "text": "Traz mais números e citações do que o próprio relatório"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) O relatório não traz projeção para o próximo trimestre. 5) Recomendação do relatório: revisar as metas por região."
+            },
+            {
+              "id": "out-b",
+              "text": "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) A projeção é de crescimento de 12% no próximo trimestre, segundo a Pesquisa Nacional de Vendas (2025), p. 34. 5) O setor deve bater recorde histórico."
+            }
+          ],
+          "scenario": "O relatório anexado (documento interno da empresa) mostra: vendas cresceram 6% no trimestre, o produto A puxou o crescimento e a região Sul teve queda leve. O documento não traz projeção para o próximo trimestre nem cita estudo externo nenhum."
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-fiel-ao-material",
+            "c-sem-dado-inventado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l03-a3",
+        "type": "output_comparison"
       }
     ],
     "skillIds": [
       "entender"
     ],
-    "version": 1
+    "version": 2
   },
   "l04": {
     "activities": [
@@ -197,12 +370,120 @@ export const literacyCorpus = {
         },
         "id": "l04-a1",
         "type": "choice"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "O que a IA deve fazer. Ex.: reescrever o e-mail deixando o tom mais cordial.",
+              "id": "tarefa",
+              "label": "Tarefa"
+            },
+            {
+              "hint": "Com o que a IA vai trabalhar. Ex.: o e-mail de cobrança que você já escreveu.",
+              "id": "material",
+              "label": "Material"
+            },
+            {
+              "hint": "Como conferir se a resposta cumpriu. Ex.: um e-mail cordial que mantém o valor e a data de vencimento.",
+              "id": "resultado",
+              "label": "Resultado esperado"
+            }
+          ],
+          "genericPrompt": "Melhora esse e-mail.",
+          "scenario": "Você trabalha no atendimento e um cliente ainda não pagou a fatura de junho. Você já escreveu o rascunho do e-mail de cobrança e quer a ajuda da IA para melhorá-lo antes de enviar. O pedido \"Melhora esse e-mail.\" deixa a IA adivinhando: qualquer resposta serve, e nenhuma resolve de verdade."
+        },
+        "evaluation": {
+          "fields": {
+            "material": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "e-mail",
+                "email",
+                "rascunho",
+                "cobrança",
+                "cobranca"
+              ]
+            },
+            "resultado": {
+              "minLength": 10,
+              "mustIncludeAny": [
+                "cordial",
+                "tom",
+                "mantendo",
+                "mantém",
+                "mantem",
+                "vencimento",
+                "verificar",
+                "conferir"
+              ]
+            },
+            "tarefa": {
+              "minLength": 10,
+              "mustIncludeAny": [
+                "reescrever",
+                "reescreva",
+                "revisar",
+                "melhorar",
+                "tom",
+                "cordial"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l04-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "tarefa-definida",
+              "text": "A tarefa: que melhoria ele quer (reescrever o tom? resumir? revisar?) — \"melhora\" não diz o que mudar"
+            },
+            {
+              "id": "material-do-pedido",
+              "text": "O material: o próprio e-mail, colado ou anexado ao pedido — a IA não tem como adivinhá-lo"
+            },
+            {
+              "id": "resultado-esperado",
+              "text": "O resultado esperado: como conferir se a resposta serve (por exemplo, cordial e mantendo o valor e a data de vencimento)"
+            },
+            {
+              "id": "quem-recebe",
+              "text": "Para quem é o e-mail (um cliente, um fornecedor): ajuda a escolher o tom, mas não completa o pedido"
+            },
+            {
+              "id": "nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA que ele pretende usar"
+            },
+            {
+              "id": "melhor-horario-para-enviar",
+              "text": "O melhor horário do dia para enviar e-mails de cobrança"
+            }
+          ],
+          "prompt": "COLEGA (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "quem-recebe"
+          ],
+          "requiredContextIds": [
+            "tarefa-definida",
+            "material-do-pedido",
+            "resultado-esperado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l04-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "pedir"
     ],
-    "version": 1
+    "version": 2
   },
   "l05": {
     "activities": [
@@ -269,12 +550,83 @@ export const literacyCorpus = {
         },
         "id": "l05-a1",
         "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-novo-horario",
+              "text": "O novo horário de funcionamento: dias e horas de atendimento a partir do próximo mês."
+            },
+            {
+              "id": "opt-quem-recebe",
+              "text": "Quem vai receber o aviso: os clientes da clínica, que podem precisar remarcar consultas."
+            },
+            {
+              "id": "opt-numero-de-cadeiras",
+              "text": "O número de cadeiras e consultórios da clínica."
+            },
+            {
+              "id": "opt-nome-do-fundador",
+              "text": "O nome do dentista que fundou a clínica."
+            },
+            {
+              "id": "opt-software-interno",
+              "text": "O software interno que a recepção usa para agendar consultas."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-novo-horario",
+            "opt-quem-recebe"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l05-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-responde-a-situacao-real",
+              "text": "Responde à situação real: a clínica, a mudança de horário e o próximo mês"
+            },
+            {
+              "id": "c-pronta-para-usar",
+              "text": "Está pronta para usar: pode ser enviada aos clientes sem edições nem explicações adicionais"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Assunto: Novo horário de atendimento da clínica\n\nOlá! A partir do próximo mês, nossa clínica vai atender de segunda a sábado, das 8h às 18h. Enviamos este aviso com antecedência para você organizar suas consultas. Se quiser remarcar o seu horário, é só responder este e-mail ou ligar para a recepção.\n\nUm abraço,\nEquipe da clínica"
+            },
+            {
+              "id": "out-b",
+              "text": "Prezado(a) cliente,\n\nEsperamos que esta mensagem o(a) encontre bem. Informamos que houve uma atualização em nossos serviços e que novas informações estão disponíveis. Permanecemos à disposição para quaisquer esclarecimentos.\n\nAtenciosamente,\nA gerência"
+            }
+          ],
+          "scenario": "O aviso da mudança de horário da clínica odontológica foi pedido à IA de dois jeitos. A resposta A veio de um pedido com os quatro campos preenchidos (objetivo, contexto, público e formato, como no primeiro exercício desta lição). A resposta B veio do pedido \"Escreve um e-mail pra mim.\""
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-responde-a-situacao-real",
+            "c-pronta-para-usar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l05-a3",
+        "type": "output_comparison"
       }
     ],
     "skillIds": [
       "pedir"
     ],
-    "version": 2
+    "version": 3
   },
   "l06": {
     "activities": [
@@ -314,12 +666,109 @@ export const literacyCorpus = {
         },
         "id": "l06-a1",
         "type": "missing_context"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "Quem recebe a mensagem. Ex.: a equipe no chat interno do time.",
+              "id": "publico",
+              "label": "Público"
+            },
+            {
+              "hint": "Como a mensagem deve soar. Ex.: direto e descontraído, como conversa de time.",
+              "id": "tom",
+              "label": "Tom"
+            },
+            {
+              "hint": "Que forma a resposta deve ter. Ex.: mensagem curta de chat, de 2 a 3 linhas, sem saudação formal.",
+              "id": "formato",
+              "label": "Formato"
+            }
+          ],
+          "genericPrompt": "Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h.",
+          "scenario": "A reunião de planejamento de sexta mudou para as 14h. O pedido \"Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h.\" já traz o objetivo e o contexto — mas a resposta veio formal demais para o grupo de chat da equipe, porque o pedido não dizia para quem, com qual tom e em que formato."
+        },
+        "evaluation": {
+          "fields": {
+            "formato": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "curta",
+                "curto",
+                "chat",
+                "mensagem",
+                "linhas"
+              ]
+            },
+            "publico": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "equipe",
+                "time",
+                "colegas",
+                "grupo",
+                "chat"
+              ]
+            },
+            "tom": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "direto",
+                "descontraído",
+                "descontraido",
+                "informal",
+                "leve",
+                "simples"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l06-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-linguagem",
+              "text": "A linguagem: fica direta e descontraída, como o chat do time pede."
+            },
+            {
+              "id": "opt-forma",
+              "text": "A forma: uma mensagem curta de chat, sem saudação e despedida de e-mail formal."
+            },
+            {
+              "id": "opt-cor-da-fonte",
+              "text": "A cor da fonte que a mensagem vai ter no chat."
+            },
+            {
+              "id": "opt-fatos-do-aviso",
+              "text": "Os fatos do aviso: a reunião continua sendo sexta às 14h — isso o pedido já trazia."
+            },
+            {
+              "id": "opt-tamanho-da-equipe",
+              "text": "O número de pessoas da equipe que vão receber a mensagem."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-linguagem",
+            "opt-forma"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l06-a3",
+        "type": "choice"
       }
     ],
     "skillIds": [
       "pedir"
     ],
-    "version": 1
+    "version": 2
   },
   "l07": {
     "activities": [
@@ -355,13 +804,113 @@ export const literacyCorpus = {
         },
         "id": "l07-a1",
         "type": "sort"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-ajuste",
+              "text": "Pedir o ajuste específico: \"Reescreva em tom mais leve e direto, mantendo o dia e a hora da troca de água.\""
+            },
+            {
+              "id": "opt-refaz",
+              "text": "Apagar tudo e fazer um pedido completamente novo, do zero, torcendo para a resposta virar diferente."
+            },
+            {
+              "id": "opt-aceita",
+              "text": "Usar como está: formal demais, mas ainda é um aviso válido para o grupo."
+            },
+            {
+              "id": "opt-generico",
+              "text": "Responder só \"melhore\" e deixar a IA adivinhar o que incomoda no texto."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-ajuste"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l07-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "A mudança que você quer ver. Ex.: o tom, mais leve e direto, linguagem de vizinho.",
+              "id": "o-que-mudar",
+              "label": "O que mudar"
+            },
+            {
+              "hint": "Em que parte da resposta aplicar. Ex.: no texto todo, começando pela abertura \"Comunicamos que...\".",
+              "id": "onde",
+              "label": "Onde"
+            },
+            {
+              "hint": "O que não pode mudar. Ex.: sábado, das 8h às 12h — a informação da troca de água.",
+              "id": "o-que-manter",
+              "label": "O que manter"
+            }
+          ],
+          "genericPrompt": "Melhore essa mensagem.",
+          "scenario": "A resposta da IA para o grupo do condomínio veio assim: \"Comunicamos que os serviços de troca da água serão realizados no sábado, das 8h às 12h. Colocamo-nos à disposição para esclarecimentos.\" O grupo é informal — o tom precisa ficar mais leve, sem perder a informação."
+        },
+        "evaluation": {
+          "fields": {
+            "o-que-manter": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "sábado",
+                "sabado",
+                "8h",
+                "12h",
+                "hora",
+                "horário",
+                "horario",
+                "manter",
+                "informação",
+                "informacao"
+              ]
+            },
+            "o-que-mudar": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "tom",
+                "leve",
+                "direto",
+                "formal",
+                "linguagem",
+                "informal"
+              ]
+            },
+            "onde": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "texto",
+                "abertura",
+                "comunicamos",
+                "todo",
+                "frase",
+                "início",
+                "inicio",
+                "título",
+                "titulo"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l07-a3",
+        "type": "prompt_builder"
       }
     ],
     "skillIds": [
       "pedir",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l08": {
     "activities": [
@@ -2716,4 +3265,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-09-02.2"
+export const literacyCorpusVersion = "2026-09-02.3"
