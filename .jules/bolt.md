@@ -23,3 +23,6 @@
 ## 2024-09-01 - Replace O(N log N) sorting with O(N) linear scan for closest target lookups
 **Learning:** In hot loops within simulation loops (like traffic target lookups called frequently), chaining `.filter().slice().sort()` on arrays is surprisingly expensive due to array allocations and the O(N log N) sorting overhead.
 **Action:** When only the single min/max element is needed from an array based on a distance metric, replace the filter+sort chain with a single O(N) linear scan. Use `<` or `<=` carefully to preserve the tie-breaking behavior of stable sorts.
+## 2025-02-18 - Preserve deterministic random selection without array allocation
+**Learning:** When optimizing random selection logic (e.g., removing `.filter()` for GC performance) in deterministic simulations like `miniTown`, preserve the exact number and sequence of PRNG calls (e.g., `this.rng()`) to avoid breaking test suites that rely on reproducible random states. Use multi-pass O(N) loops rather than algorithms like reservoir sampling if they alter RNG consumption.
+**Action:** When converting array manipulations to loops for random selection, always count the valid elements in a first pass, roll the RNG exactly once as before, and use a second pass to find the selected element. Never change the conditions under which the RNG is called.
