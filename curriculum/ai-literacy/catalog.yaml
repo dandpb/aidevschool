@@ -6,7 +6,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-01.1"
+contentVersion: "2026-09-02.1"
 
 track:
   id: ai-literacy
@@ -285,7 +285,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l18]
     skillIds: [pedir, avaliar]
-    status: planned
+    status: ready
   - id: l25
     moduleId: mod-07
     title: "Anexos seguros: proteja antes de enviar"

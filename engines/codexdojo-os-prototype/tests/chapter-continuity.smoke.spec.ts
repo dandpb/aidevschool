@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -333,6 +333,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Números e fatos: verifique antes de usar' })).toBeVisible()
   await completeLiteracyMission(page, 'l20')
 
+  // Wave O2 T1 (spec AID-528 rev 3): l24 "Anexe, cole ou descreva" opens
+  // mod-07 as the 18th ai-pratica mission (chapterOrder 18, canonical prereq
+  // l18 — completed above). Completes end-to-end through multiSelect choice,
+  // prompt_builder, and missing_context.
+  await page.goto('/mission/ai-pratica/l24')
+  await expect(page.getByRole('heading', { name: 'Anexe, cole ou descreva' })).toBeVisible()
+  await completeLiteracyMission(page, 'l24')
+
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -425,6 +433,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l18',
     'ai-pratica:l19',
     'ai-pratica:l20',
+    'ai-pratica:l24',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',

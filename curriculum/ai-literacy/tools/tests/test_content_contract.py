@@ -28,22 +28,21 @@ class TestValidContent(TrackFixtureMixin):
     def test_real_track_passes(self):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
-        # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
-        # Emenda T0 (AID-581, spec AID-528 rev 3 `dce5594f`, decisão CEO
-        # AID-579/A; card `d0ec8c57` superseded) + flip T1–T3 (AID-580):
-        # onda O2 l24–l26 entra `planned` em mod-07 (nenhum arquivo ainda;
-        # próximo id livre: l27, regra 7 do contrato).
-        entries = json_objects(array_field(required_object(catalog), "lessons"))
-        self.assertEqual(
-            [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
-            [string_field(lesson, "id") for lesson in ready],
-        )
-        for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23"):
-            self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
-        self.assertEqual(
-            ["l24", "l25", "l26"],
-            [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
-        )
+            # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
+            # Emenda T0 (AID-581, spec AID-528 rev 3 `dce5594f`, decisão CEO
+            # AID-579/A) + onda O2 (AID-580): l24 pousou `ready` em T1
+            # (AID-593); l25/l26 seguem `planned` até os landings T2/T3.
+            entries = json_objects(array_field(required_object(catalog), "lessons"))
+            self.assertEqual(
+                [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
+                [string_field(lesson, "id") for lesson in ready],
+            )
+            for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23", "l24"):
+                self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
+            self.assertEqual(
+                ["l25", "l26"],
+                [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
+            )
 
     def test_real_track_covers_all_seven_activity_types(self):
         errors, ready, _catalog = self.validate_track(TRACK_DIR)
