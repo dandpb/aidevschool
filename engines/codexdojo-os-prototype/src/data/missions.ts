@@ -1203,5 +1203,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Reproduza o erro antes de pedir correcao: caso minimo, mensagem, passo e esperado-vs-observado por controles rotulados.",
       },
     },
+    {
+      id: "l28",
+      version: 1,
+      trackId: "dev",
+      unitId: "ai-literacy:l28",
+      projectId: "00_ai_in_practice",
+      title: "Refatore com assistente sem quebrar comportamento",
+      objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez.",
+      estimatedMinutes: 5,
+      chapterOrder: 15,
+      prerequisites: [
+        "l21",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-02.2",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Exija testes verdes e refatore em passos pequenos com verificacao entre eles por controles rotulados.",
+      },
+    },
   ],
 }

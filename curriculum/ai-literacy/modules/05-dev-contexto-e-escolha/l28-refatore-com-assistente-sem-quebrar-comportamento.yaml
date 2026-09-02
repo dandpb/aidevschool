@@ -1,0 +1,137 @@
+# Lição l28 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.2): refatorar com assistente sem quebrar comportamento.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l28
+version: 1
+moduleId: mod-05
+title: "Refatore com assistente sem quebrar comportamento"
+objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."
+estimatedMinutes: 5
+skillIds: [codificar]
+prerequisites: [l21]
+
+activities:
+  - id: l28-a1
+    type: choice
+    skillId: codificar
+    instruction: "O CÓDIGO ESTÁ FEIO MAS FUNCIONA. QUAL É A PRÉ-CONDIÇÃO PARA REFACTORAR COM ASSISTENTE?"
+    data:
+      options:
+        - id: opt-a
+          text: "Testes verdes cobrindo o comportamento atual — e refatoração em passos pequenos, com testes após cada passo"
+        - id: opt-b
+          text: "Pedir ao assistente um rewrite completo de uma vez — ele vê o quadro inteiro"
+        - id: opt-c
+          text: "Refatorar só quando há bug — código que funciona não se toca"
+        - id: opt-d
+          text: "Ligar o linter no modo mais agressivo e aplicar tudo"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a]
+    feedback:
+      onFailure: "Sem rede de testes, 'melhorar' é sinônimo de 'quebrar sem perceber'; rewrite de uma vez troca comportamento invisível junto. A pré-condição da refatoração assistida é testes verdes cobrindo o comportamento — e passos pequenos com verificação no meio."
+      perCheck:
+        opt-a: "Correta: testes verdes são a rede que acusa a quebra, e passos pequenos com teste após cada passo localizam o problema quando ele nasce."
+        opt-b: "Rewrite de uma vez troca comportamento invisível junto: o assistente 'vê o quadro inteiro' — inclusive a parte que ninguém pediu para mudar."
+        opt-c: "Código que funciona se melhora SIM — com rede de segurança. Esperar o bug é jogar fora a vantagem de refatorar com o comportamento ainda são."
+        opt-d: "Linter arruma estilo, não comportamento — e 'aplicar tudo' de uma vez é a mesma reescrita sem rede, agora automática."
+      onSuccess: "Exato: a pré-condição é a rede de segurança. Testes verdes antes, passos pequenos durante — comportamento intacto é o que a refatoração promete e os testes provam."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que avisa você se a 'melhora' trocar o comportamento sem ninguém perceber?"
+      - "A resposta certa tem duas partes: uma rede de segurança antes de começar e verificação no meio dos passos."
+
+  - id: l28-a2
+    type: rubric_review
+    skillId: codificar
+    instruction: "O ASSISTENTE PROPOS ESTE PLANO DE REFACTORAÇÃO PARA UM MÓDULO DE 300 LINHAS. AVALIE CADA CRITÉRIO: ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO?"
+    data:
+      responseText: "vou reescrever o módulo inteiro com a arquitetura nova, mais limpa; no final você roda a suíte de testes uma vez para conferir"
+      criteria:
+        - id: c-preserva-comportamento
+          text: "Mantém o comportamento observável intacto — refatoração não muda o que o código faz"
+        - id: c-passos-pequenos
+          text: "Divide em passos pequenos e independentes"
+        - id: c-testes-apos-cada-passo
+          text: "Roda os testes após cada passo, não só no fim"
+        - id: c-escopo-minimo
+          text: "Não reescreve além do que foi pedido"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-preserva-comportamento: partial
+        c-passos-pequenos: not_met
+        c-testes-apos-cada-passo: not_met
+        c-escopo-minimo: not_met
+    feedback:
+      onFailure: "O plano tem a palavra 'limpa' e nenhuma rede de segurança: refatoração sem passo verificável é reescrita. Avalie critério por critério — comportamento, passos, testes no meio, escopo — antes de aprovar qualquer plano."
+      perCheck:
+        c-preserva-comportamento: "Parcial: a intenção existe — 'conferir no final' mostra que o autor lembra do comportamento — mas sem passos nem testes intermediários, o risco de trocar comportamento invisível em 300 linhas reescritas de uma vez é real. Intenção não é garantia."
+        c-passos-pequenos: "Não atendido: 'reescrever o módulo inteiro' é um passo único do tamanho do problema — não há divisão em passos pequenos e independentes."
+        c-testes-apos-cada-passo: "Não atendido: os testes aparecem uma vez, no final — exatamente quando já não dá para localizar o que quebrou no meio das 300 linhas."
+        c-escopo-minimo: "Não atendido: 'arquitetura nova' no 'módulo inteiro' reescreve além do que foi pedido — refatoração muda a forma, não reinventa o fundo."
+      onSuccess: "Vereditos certos: a intenção de preservar comportamento vale um 'parcial' — e nada mais. Sem passos, sem teste no meio e com escopo estourado, o plano é reescrita travestida de refatoração."
+    storage:
+      policy: structured_only
+    hints:
+      - "Conte quantas vezes os testes rodam no plano — e em que ponto."
+      - "O que acontece com o comportamento invisível quando 300 linhas mudam de uma vez?"
+      - "Compare 'arquitetura nova no módulo inteiro' com o que foi pedido: quem definiu o escopo?"
+
+  - id: l28-a3
+    type: output_comparison
+    skillId: codificar
+    instruction: "DUAS REFACTORAÇÕES ASSISTIDAS DO MESMO MÓDULO. COMPARE AS SAÍDAS E ESCOLHA A QUE VALE O MERGE."
+    data:
+      scenario: "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
+      outputs:
+        - id: out-a
+          text: "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: pronto para o merge."
+        - id: out-b
+          text: "Pronto! Reescrevi tudo em uma mensagem — o comportamento é o mesmo, confie."
+      criteria:
+        - id: c-preserva-comportamento
+          text: "Mantém o comportamento observável intacto durante a refatoração"
+        - id: c-verificavel-por-etapas
+          text: "Cada etapa é verificável por conta própria, com teste entre as etapas — não só no fim"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-preserva-comportamento, c-verificavel-por-etapas]
+    feedback:
+      onFailure: "'Confie' não é verificação: cada passo precisa de teste no meio, não só no fim. A saída A nomeia três passos e roda a suíte entre eles; a B entrega 300 linhas novas e uma promessa."
+      perCheck:
+        betterOutputId: "A saída A é a que acorda bem de manhã: três passos nomeados, teste entre cada um — qualquer regressão nasce localizada. A B troca evidência por 'confie'."
+        c-preserva-comportamento: "Faltou este critério na saída B: 'o comportamento é o mesmo' é afirmação sem prova — quem confere é a suíte, não a promessa."
+        c-verificavel-por-etapas: "Faltou este critério na saída B: uma mensagem única não tem etapas — e sem etapa, não há onde parar e conferir."
+      onSuccess: "Exato! Passos nomeados com teste entre eles: a refatoração vira uma escada em que cada degrau se verifica — em vez de um salto que se reza."
+    storage:
+      policy: structured_only
+    hints:
+      - "Em qual das duas você conseguiria apontar a etapa exata em que algo quebrou?"
+      - "Compare quantas vezes os testes rodam em cada saída — e quando."
+
+rubric:
+  id: l28-rubric
+  criteria:
+    - id: r-exige-testes-verdes
+      text: "Exige testes verdes cobrindo o comportamento como pré-condição antes de mexer."
+      weight: 1
+    - id: r-refatora-em-passos
+      text: "Refatora em passos pequenos e independentes, com verificação entre eles."
+      weight: 1
+    - id: r-verifica-comportamento
+      text: "Confere comportamento, não estilo — recusa reescrita que troca o que o código faz."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l28-a1, l28-a2, l28-a3]

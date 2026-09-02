@@ -2472,6 +2472,113 @@ export const literacyCorpus = {
       "avaliar"
     ],
     "version": 1
+  },
+  "l28": {
+    "activities": [
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Testes verdes cobrindo o comportamento atual — e refatoração em passos pequenos, com testes após cada passo"
+            },
+            {
+              "id": "opt-b",
+              "text": "Pedir ao assistente um rewrite completo de uma vez — ele vê o quadro inteiro"
+            },
+            {
+              "id": "opt-c",
+              "text": "Refatorar só quando há bug — código que funciona não se toca"
+            },
+            {
+              "id": "opt-d",
+              "text": "Ligar o linter no modo mais agressivo e aplicar tudo"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l28-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-preserva-comportamento",
+              "text": "Mantém o comportamento observável intacto — refatoração não muda o que o código faz"
+            },
+            {
+              "id": "c-passos-pequenos",
+              "text": "Divide em passos pequenos e independentes"
+            },
+            {
+              "id": "c-testes-apos-cada-passo",
+              "text": "Roda os testes após cada passo, não só no fim"
+            },
+            {
+              "id": "c-escopo-minimo",
+              "text": "Não reescreve além do que foi pedido"
+            }
+          ],
+          "responseText": "vou reescrever o módulo inteiro com a arquitetura nova, mais limpa; no final você roda a suíte de testes uma vez para conferir"
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-escopo-minimo": "not_met",
+            "c-passos-pequenos": "not_met",
+            "c-preserva-comportamento": "partial",
+            "c-testes-apos-cada-passo": "not_met"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l28-a2",
+        "type": "rubric_review"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-preserva-comportamento",
+              "text": "Mantém o comportamento observável intacto durante a refatoração"
+            },
+            {
+              "id": "c-verificavel-por-etapas",
+              "text": "Cada etapa é verificável por conta própria, com teste entre as etapas — não só no fim"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Passo 1: extrair a função de cálculo — rodar os testes. Passo 2: renomear as variáveis do domínio — rodar os testes. Passo 3: mover a validação para o início — rodar os testes. Suíte verde nos três passos: pronto para o merge."
+            },
+            {
+              "id": "out-b",
+              "text": "Pronto! Reescrevi tudo em uma mensagem — o comportamento é o mesmo, confie."
+            }
+          ],
+          "scenario": "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-preserva-comportamento",
+            "c-verificavel-por-etapas"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l28-a3",
+        "type": "output_comparison"
+      }
+    ],
+    "skillIds": [
+      "codificar"
+    ],
+    "version": 1
   }
 }
 

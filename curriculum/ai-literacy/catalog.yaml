@@ -318,7 +318,7 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l21]
     skillIds: [codificar]
-    status: planned
+    status: ready
   - id: l29
     moduleId: mod-05
     title: "Avalie as dependências sugeridas"
