@@ -2587,37 +2587,37 @@ export const literacyCorpus = {
           "multiSelect": true,
           "options": [
             {
-              "id": "opt-a",
-              "text": "Se o projeto ainda é mantido: versão recente, issues respondidas"
+              "id": "opt-manutencao",
+              "text": "Se o projeto ainda é mantido: versão recente e issues respondidas"
             },
             {
-              "id": "opt-b",
+              "id": "opt-licenca",
               "text": "Se a licença permite usar no seu projeto"
             },
             {
-              "id": "opt-c",
+              "id": "opt-seguranca",
               "text": "Se há avisos de segurança publicados contra ela"
             },
             {
-              "id": "opt-d",
-              "text": "Se a sua linguagem já resolve sem biblioteca nova"
+              "id": "opt-alternativa-nativa",
+              "text": "Se a sua linguagem já resolve o problema sem biblioteca nova"
             },
             {
-              "id": "opt-e",
+              "id": "opt-nome-facil",
               "text": "Se o nome do pacote é fácil de digitar"
             },
             {
-              "id": "opt-f",
+              "id": "opt-badges",
               "text": "Se o README tem badges bonitos"
             }
           ]
         },
         "evaluation": {
           "correctOptionIds": [
-            "opt-a",
-            "opt-b",
-            "opt-c",
-            "opt-d"
+            "opt-manutencao",
+            "opt-licenca",
+            "opt-seguranca",
+            "opt-alternativa-nativa"
           ],
           "strategy": "deterministic"
         },
@@ -2668,19 +2668,19 @@ export const literacyCorpus = {
           "contextOptions": [
             {
               "id": "manutencao-atual",
-              "text": "Se o projeto ainda é mantido hoje: versão recente, issues respondidas"
+              "text": "A manutenção atual: se há versão recente e issues respondidas"
             },
             {
               "id": "licenca-do-pacote",
-              "text": "A licença do pacote — se ela permite usar no projeto"
+              "text": "A licença do pacote: se ela permite usar no projeto"
             },
             {
               "id": "avisos-de-seguranca",
-              "text": "Avisos de segurança publicados contra o pacote"
+              "text": "Avisos de segurança publicados contra a biblioteca"
             },
             {
               "id": "tamanho-do-pacote",
-              "text": "O tamanho e as dependências que o pacote própria instala"
+              "text": "O tamanho do pacote e as dependências que ele próprio instala"
             },
             {
               "id": "quantidade-de-estrelas",
@@ -2691,7 +2691,7 @@ export const literacyCorpus = {
               "text": "O ano de criação do repositório"
             }
           ],
-          "prompt": "COLEGA (plano): 'O assistente recomendou a fmt-cpf e é a mais popular, então acabou a discussão: adiciono o pacote, chamo validar(campo) e commito.' · O plano tem três verbos e nenhum cheque."
+          "prompt": "COLEGA (plano): 'Adiciono fmt-cpf, chamo validar(campo), commito.' · VOCÊ: 'Por que essa?' · COLEGA: 'É a mais popular.' — nada mais foi verificado antes do commit."
         },
         "evaluation": {
           "optionalContextIds": [
