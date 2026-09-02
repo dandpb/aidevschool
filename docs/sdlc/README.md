@@ -105,6 +105,36 @@ exception visible in git history. Credential findings have no override, and
 the force-push rule remains runtime-intercepted because a diff cannot prove
 how it was pushed.
 
+### Content-wave fixture edits: per-wave trailer, no standing allowlist (AID-554)
+
+Content waves legitimately edit existing test files — contract fixtures kept
+in sync with the catalog (`curriculum/ai-literacy/tools/tests/test_content_contract.py`,
+`test_facade_contract.py`), migration counts, and the chapter-continuity
+smoke. The AID-554 policy for that class is the **per-wave owner-approved
+trailer**, not a path allowlist in the guard:
+
+- each authorized wave carries `SDLC-ALLOW-TEST-EDIT: AID-<n>` on the
+  fixture-editing commit; the cited AID records the owner acceptance (wave
+  plan / relay / triage), and the PR/receipt discloses which fixtures changed
+  and why assertions were not weakened; independent QA verifies pre-merge.
+  Proven in CI by PRs #235/#236/#237 (trailers AID-581/593/592) and the
+  later O1/O3-C1 waves — all green on the `sdlc-guards` job.
+- an **allowlist was considered and rejected**: a standing exception on
+  exactly the contract tests that guard learning-gate integrity silences the
+  tripwire for the highest-value paths; the coupling condition ("only when
+  the same diff flips catalog/content") is decidable only per-diff in the CI
+  wrapper, which would fork its semantics away from the canonical PreToolUse
+  hooks; and the per-exception AID trail — the "no claims without evidence"
+  audit hook — would be lost. The trailer's cost is one chore commit per
+  wave, which doubles as the disclosure.
+- the guard must still catch the unapproved case, and does: PR #250 head
+  `75294395` failed (edited `tests/fakes.ts` without acceptance) and was
+  restructured to comply in `e43e5232` (AID-685/AID-676).
+- the pre-policy red on main — PR #222 head `4d02ed36` / merge `aa4d6c5b`
+  (l21–l23, QA-audited legitimate in the AID-553 GO verdict, obs. 1) —
+  predates the trailer practice and is an immutable historical check run,
+  not open debt; every main push since is green.
+
 ## Governance / audit
 
 - The chain of commits is the audit trail: who asked (intent), what was
