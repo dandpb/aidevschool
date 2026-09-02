@@ -1,14 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createServices } from "../../src/app/services";
+import type { AnalyticsSink } from "../../src/application/ports";
 import { lessons } from "../../src/data/generated/lessons";
-import { buildLessonCompletedEvent, isValidAnalyticsEvent } from "../../src/domain/analytics";
-import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
 import {
-  InMemoryAnalyticsSink,
-  InMemoryEvidenceSink,
-  InMemoryProgressRepository,
-  fixedClock,
-} from "../fakes";
+  type ProductAnalyticsEvent,
+  buildLessonCompletedEvent,
+  isValidAnalyticsEvent,
+} from "../../src/domain/analytics";
+import { MAP_INITIAL_LESSON_ID, createInitialProgress } from "../../src/domain/progress";
+import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
+
+/** Coleta os eventos de analytics em memória — canal de teste (ADR-0009). */
+class InMemoryAnalyticsSink implements AnalyticsSink {
+  readonly events: ProductAnalyticsEvent[] = [];
+
+  track(event: ProductAnalyticsEvent): void {
+    this.events.push(event);
+  }
+}
 
 // AID-676 (spec AID-673 §3, espelho do createServices.analytics.test.ts do
 // OS): a fronteira de emissão do literacyDojo — nada sai do navegador a menos

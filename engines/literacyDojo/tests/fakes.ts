@@ -1,12 +1,6 @@
-import { noopAnalyticsSink } from "../src/adapters/analyticsSinks";
 import { createServices } from "../src/app/services";
-import type {
-  AnalyticsSink,
-  ProgressRepository,
-  VerificationClient,
-} from "../src/application/ports";
+import type { ProgressRepository, VerificationClient } from "../src/application/ports";
 import type { EvidenceSink } from "../src/application/ports";
-import type { ProductAnalyticsEvent } from "../src/domain/analytics";
 import type { LiteracyEvidenceRecord } from "../src/domain/evidence";
 import type { LearnerProgress } from "../src/domain/progress";
 
@@ -45,21 +39,11 @@ export class InMemoryEvidenceSink implements EvidenceSink {
   }
 }
 
-/** Coleta os eventos de analytics em memória — canal de teste (ADR-0009). */
-export class InMemoryAnalyticsSink implements AnalyticsSink {
-  readonly events: ProductAnalyticsEvent[] = [];
-
-  track(event: ProductAnalyticsEvent): void {
-    this.events.push(event);
-  }
-}
-
-/** Cria serviços 100% em memória para testes (analytics default: noop). */
+/** Cria serviços 100% em memória para testes. */
 export function createTestServices(overrides?: {
   progressRepo?: ProgressRepository;
   clock?: () => Date;
   verification?: VerificationClient;
-  analytics?: AnalyticsSink;
 }) {
   const evidence = new InMemoryEvidenceSink();
   const base = createServices({
@@ -67,7 +51,6 @@ export function createTestServices(overrides?: {
     evidence,
     clock: overrides?.clock,
     verification: overrides?.verification,
-    analytics: overrides?.analytics ?? noopAnalyticsSink,
   });
   return { ...base, evidence };
 }
