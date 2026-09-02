@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "b0c676486f78ea792581fd99062bd65aabac3e64",
+  "observedAt": "2026-09-02T00:26:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Observed first-hand on the pilot production artifact built from main b0c6764 (npm run build:pilot + bundled missions, served same-origin with the staged verification bridge; production alias still serves the v18 pin aa4d6c5b per its pilot-bundle-manifest checked 2026-09-02T00:06Z — promotion pending, disclosed in AID-566): a fresh browser profile lands on the track question ('O que você quer conseguir fazer com IA?') offering 'IA Prática' (recommended: 'Microlições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.') and 'Dev' ('Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION'); after 'Entrar na escola' the hub states the active chapter ('Capítulo IA Prática'), local 'XP local 0 / Meta 0/25', an explicit next action ('SEU PRÓXIMO PASSO ESTÁ PRONTO' with the featured mission and a 'Começar missão' CTA), and the map keeps 'Missões bloqueadas, em andamento e concluídas permanecem visíveis no mapa' with locked rows present. a11y diff #228 verified on this surface: the LearningRail close button exposes aria-label 'Fechar Modo Aprender' plus title 'Fechar' with its icon wrapped aria-hidden. Observer response: I choose the IA Prática route, the hub tells me my chapter, my local XP, and exactly which mission starts next."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Hosted voxel mission screens observed first-hand on the b0c6764 pilot artifact: game-02-warehouse and game-07-checkpoint-city mount from the OS host origin (iframe src /apps/warehouse/?hosted=1&hostOrigin=… same-origin) and keep the canonical boundary panel ('Estado canônico … 0 verificadas · sem alteração local'); the EVIDÊNCIA panel reads 'Ainda não enviada' until the learner actually plays; completing the warehouse mission through the keyboard-operable accessible projection yielded 'Veredito PASS' under completion-is-not-mastery copy, and the hub separates the four concerns by name ('Atividade concluída / Salva neste dispositivo', 'Evidência preservada / Separada do progresso local', 'Verificação independente / Veredito PASS', 'Competência canônica / Não alterada por este fluxo'), so no screen or receipt claims canonical mastery for local completion. a11y diff #184 verified here: the WebGL canvas carries role='img' with the pt-BR label 'Palco WebGL do jogo 02 do voxelDojo: armazém de chaves em 3D'."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Both directions plus the degradation path observed first-hand against the same-origin staged bridge on the b0c6764 pilot artifact: a wrong literacy attempt returned 'Veredito independente: FAIL' with 'O verificador indicou critérios a melhorar. A conclusão local e o XP foram preservados; o gate canônico continua separado.' and in-frame retry affordances ('Verificar de novo', 'Tentar novamente', 'Pedir dica', 'Sair da lição'); a correct retry recovered to the approved copy. With the bridge unreachable (routes aborted), completing the warehouse mission showed 'Verificador indisponível' — not a rejection ('Evidência rejeitida' absent) and not completion — and the host exposed 'Tentar verificação novamente'; clicking it after connectivity returned recovered the panel to 'O verificador independente aprovou esta evidência. O gate canônico continua separado.' 'Voltar ao hub' remained available throughout; no repository intervention was needed at any point."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "The hosted LiteracyDojo mission (l02 'IA não é uma fonte de verdade') completed end-to-end first-hand on the b0c6764 pilot artifact: the mission mounted from the OS host origin (/apps/literacydojo/?hosted=1…), the result screen stated 'Veredito PASS' under completion-is-not-mastery, the canonical line read '0 verificadas · sem alteração local', and the supported next action was present ('Voltar ao hub'), which returned to a hub that names the result and the next mission. a11y diff #184 verified on the bundled literacy surface: the onboarding step counter is now an .sr-only span ('Etapa 1 de 5') with aria-hidden dots instead of an aria-label on a non-semantic container."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "On the same browser profile against the b0c6764 pilot artifact, the hub after completing the hosted literacy mission separates local continuity from the canonical projection by name ('Evidência preservada / Separada do progresso local', 'Verificação independente / Veredito PASS', 'Competência canônica / Não alterada por este fluxo'); after a full reload the canonical verified count is unchanged (0 verificadas) and the completed activity remains recorded on the device, so local completion resumes while receipts keep the producer claim capped at completed — never mastered."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "After completing the warehouse mission on the b0c6764 pilot artifact and reloading on the same profile, the OS progress store still records dev:game-02-warehouse as 'completed' (read first-hand from the codexdojo-os IndexedDB 'os-progress' record), the hub shows 'XP local 25 / Meta 25/25' with the four-step evidence/canonical separation, and the canonical projection remains read-only ('0 verificadas · sem alteração local'); revisiting the mission screen restarts the deterministic simulation as a labeled replay ('Ainda não enviada' for the new run) while the hub keeps the completed state. The in-product loss boundary is stated in the mission footer copy: 'Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.'"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand on the b0c6764 pilot artifact: after completing the warehouse mission, clearing local state (localStorage, sessionStorage and every IndexedDB database for the origin) and reopening the school returns the learner to the onboarding question ('O que você quer conseguir fazer com IA?') with zero residual 'missão concluída' or 'mastered' claims on the fresh screen; the product itself explains the mechanism via the footer boundary copy ('Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.'), so the facilitator can name the cause and the fix (redo on the same device) without repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Same-browser-profile continuity for hosted voxel missions observed first-hand on the b0c6764 pilot artifact: after completion and reload the OS progress store keeps dev:game-02-warehouse 'completed', the hub retains the separation panels ('Evidência preservada', 'Verificação independente / Veredito PASS', 'Competência canônica / Não alterada por este fluxo') and XP local 25/25, while the mission screen offers the deterministic replay with the canonical projection read-only; the chapter-continuity suite that passed at this pin (5/5 desktop-1280 tests in test:readiness) asserts the same store-level persistence across reloads for the full dev chain."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Renderer degradation paths exercised first-hand on the b0c6764 pilot artifact: with WebGL forced unavailable the mission screen states 'WebGL não está disponível neste dispositivo.' and mounts the keyboard-operable semantic projection (accessible shelf controls focusable and operable by Enter); under reduced motion the projection is selected automatically (VISUALIZAÇÃO 'Acessível') and the mission completes end-to-end by keyboard alone; the recovery affordances are labeled buttons ('Usar visualização acessível', 'Tentar 3D novamente') and the canvas exposes role='img' with a pt-BR label. a11y diff #184 verified on the host chrome: keyboard focus entering the mission iframe toggles the mission-frame-focus class and the computed outline renders 'solid 2px rgb(77, 216, 208)' (the cyan focus ring Chromium's CSS-only :focus cannot apply to iframes), and the mission-context text now computes to rgb(79, 90, 117) (#4f5a75, 6.77:1 on the panel background — up from 4.88:1). Escalation threshold is nameable from the product: a journey must stop when the verifier (not the renderer) is unavailable — 'Verificador indisponível' is shown without implying completion — or when the accessible projection itself cannot render."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
