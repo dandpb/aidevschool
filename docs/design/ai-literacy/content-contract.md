@@ -12,9 +12,9 @@ no read model):
 
 ```ts
 type LessonDefinition = {
-  id: string                    // estável: lNN — vigentes l01..l23; nunca deriva do título
+  id: string                    // estável: lNN — vigentes l01..l26; nunca deriva do título
   version: number               // inteiro >= 1; toda alteração de conteúdo incrementa
-  moduleId: string              // mod-01..mod-06
+  moduleId: string              // mod-01..mod-07
   title: string
   objective: string             // objetivo observável
   estimatedMinutes: 3 | 4 | 5
@@ -77,14 +77,15 @@ feedback "ainda falta X" e, no futuro, da verificação independente.
 
 ## Catálogo
 
-`catalog.yaml` é o índice canônico das lições válidas (23 após a onda
-l21–l23). Cada módulo declara uma `journey`: `mod-01`…`mod-04` e `mod-06`
-pertencem a `ia_pratica` (14 lições dos módulos iniciais + 3 de continuação
-em `mod-06`: reutilização de pedidos, verificação de números e fatos,
-conversas longas) e `mod-05` pertence a `dev` (6 lições publicadas como
-missões hospedadas da trilha dev do OS — decisão de uso, pedido de código
-com contexto, integração de API, testes que valem a pena, revisão como
-engenheiro e limites do assistente — ver
+`catalog.yaml` é o índice canônico das lições válidas (26 após a onda
+l24–l26). Cada módulo declara uma `journey`: `mod-01`…`mod-04`, `mod-06` e
+`mod-07` pertencem a `ia_pratica` (14 lições dos módulos iniciais + 3 de
+continuação em `mod-06`: reutilização de pedidos, verificação de números e
+fatos, conversas longas; + 3 em `mod-07`: documentos e imagens no pedido —
+quando anexar, anexos seguros, conferir extração) e `mod-05` pertence a
+`dev` (6 lições publicadas como missões hospedadas da trilha dev do OS —
+decisão de uso, pedido de código com contexto, integração de API, testes
+que valem a pena, revisão como engenheiro e limites do assistente — ver
 `engines/codexdojo-os-prototype/config/mission-bindings.yaml`). O read model
 compila as duas jornadas; o percurso público do app standalone continua só
 `ia_pratica` (filtro por `journey` no adapter). As lições usam `status`:
@@ -109,7 +110,7 @@ curriculum/ai-literacy/*
 Exports do read model gerado (`lessons.ts`):
 
 - `lessons: LessonDefinition[]` — todas as lições `ready` validadas
-  (23 após a onda l21–l23) (`ia_pratica` + `dev`); missões hospedadas do OS
+  (26 após a onda l24–l26) (`ia_pratica` + `dev`); missões hospedadas do OS
   servem as duas jornadas;
 - `contentVersion: string` — versão do catálogo;
 - `track: Track` — metadados da trilha (título, público, promessa, idioma);
@@ -149,4 +150,4 @@ python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>  # valida + 
    read model.
  7. Extensão ou aposentação de ids de lição/módulo exige emenda deste contrato
     via issue aprovada pelo board; ids alocados sequencialmente (próximo livre
-    após `l23`: `l24`); ids nunca são reutilizados.
+    após `l26`: `l27`); ids nunca são reutilizados.

@@ -29,9 +29,10 @@ class TestValidContent(TrackFixtureMixin):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
         # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
-        # Emenda T0 (AID-531, spec AID-528 rev 2 `787cebef`, aceite board
-        # `1a4f9c5b`) + flip T1–T3 (AID-532): onda dev l21–l23 `ready` em
-        # mod-05 (nenhuma `planned` resta; próximo id livre: l24, regra 7).
+        # Emenda T0 (AID-581, spec AID-528 rev 3 `dce5594f`, decisão CEO
+        # AID-579/A; card `d0ec8c57` superseded) + flip T1–T3 (AID-580):
+        # onda O2 l24–l26 entra `planned` em mod-07 (nenhum arquivo ainda;
+        # próximo id livre: l27, regra 7 do contrato).
         entries = json_objects(array_field(required_object(catalog), "lessons"))
         self.assertEqual(
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
@@ -40,7 +41,7 @@ class TestValidContent(TrackFixtureMixin):
         for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23"):
             self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
         self.assertEqual(
-            [],
+            ["l24", "l25", "l26"],
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
         )
 
@@ -77,6 +78,7 @@ class TestValidContent(TrackFixtureMixin):
                 "mod-04": "ia_pratica",
                 "mod-05": "dev",
                 "mod-06": "ia_pratica",
+                "mod-07": "ia_pratica",
             },
             journeys,
         )

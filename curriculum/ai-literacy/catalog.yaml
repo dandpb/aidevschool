@@ -1,6 +1,6 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
-# Fonte de verdade do índice: 17 lições públicas de IA na Prática
-# (l01–l14 + onda de continuação l18–l20) e 6 lições da trilha Dev,
+# Fonte de verdade do índice: 20 lições públicas de IA na Prática
+# (l01–l14 + ondas de continuação l18–l20 e l24–l26) e 6 lições da trilha Dev,
 # separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
@@ -78,6 +78,12 @@ modules:
     order: 6
     journey: ia_pratica
     skillIds: [pedir, avaliar, aplicar]
+  - id: mod-07
+    slug: 07-ia-alem-do-texto
+    title: "IA além do texto"
+    order: 7
+    journey: ia_pratica
+    skillIds: [pedir, avaliar, proteger, aplicar]
 
 lessons:
   # Módulo 1 — IA sem mistério
@@ -271,3 +277,28 @@ lessons:
     prerequisites: [l15]
     skillIds: [decidir, codificar]
     status: ready
+  # Módulo 7 — IA além do texto (onda l24–l26, spec AID-528 rev 3)
+  - id: l24
+    moduleId: mod-07
+    title: "Anexe, cole ou descreva"
+    objective: "Diante de uma tarefa que depende de um documento ou imagem, escolher entre anexar o arquivo, colar um trecho, descrever de memória ou não enviar — e escrever o pedido referenciando o que o anexo contém."
+    estimatedMinutes: 4
+    prerequisites: [l18]
+    skillIds: [pedir, avaliar]
+    status: planned
+  - id: l25
+    moduleId: mod-07
+    title: "Anexos seguros: proteja antes de enviar"
+    objective: "Antes de anexar fotos, scans ou PDFs a um pedido, classificar o conteúdo como seguro ou sensível e remover ou tampar o que expõe pessoas."
+    estimatedMinutes: 4
+    prerequisites: [l12]
+    skillIds: [proteger]
+    status: planned
+  - id: l26
+    moduleId: mod-07
+    title: "Confira o que a IA extraiu"
+    objective: "Diante de uma extração feita de um documento anexado, conferir os campos críticos contra o trecho original e corrigir divergências antes de usar a saída."
+    estimatedMinutes: 4
+    prerequisites: [l20]
+    skillIds: [avaliar, aplicar]
+    status: planned
