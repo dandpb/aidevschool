@@ -34,15 +34,15 @@ mesmo quando o runbook já estiver em um commit documental posterior. Mudança d
 código ou configuração exige novo `RELEASE_SHA` e novas revisões; uma mudança
 somente documental não altera os bytes do candidato.
 
-Para AIDE-13, o pin aprovado no regime de promoção vigente (AID-532; registro
-`_work-products/AID-532/WAVE-PROMOTION-aa4d6c5.md`, onda via PR #222, registro
-via PR #229) é exatamente
-`aa4d6c5b1552877000a06b2e27b0122ffdc500f3`, ramo `release/aa4d6c5`. Ele
+Para AIDE-13, o pin aprovado no regime de promoção vigente (AID-601; registro
+`_work-products/AID-601/WAVE-PROMOTION-c3310cb8.md`, onda via PR #236/#237/#238,
+registro via PR docs) é exatamente
+`c3310cb8bb20cda236e84e823dfd25c0d7981979`, ramo `release/c3310cb8`. Ele
 substitui o candidato anterior
-`f4c31513b3bb4e78a087006f3757a602a19bea5b`, que ficou 178 commits atrás do
-main vigente. Outro SHA é outro candidato e exige nova avaliação. O
-`PROCEDURE_SHA` é calculado do checkout que contém este
-runbook, portanto não é um placeholder autorreferente.
+`aa4d6c5b1552877000a06b2e27b0122ffdc500f3` (AID-532, onda dev l21–l23), que
+ficou atrás do main vigente após a onda O2 de mod-07. Outro SHA é outro
+candidato e exige nova avaliação. O `PROCEDURE_SHA` é calculado do checkout que
+contém este runbook, portanto não é um placeholder autorreferente.
 
 ## 1. Pré-checks
 
@@ -52,12 +52,12 @@ outro limpo no SHA exato do release. Substitua somente os dois caminhos:
 ```bash
 set -euo pipefail
 export PROCEDURE_CHECKOUT="/caminho/para/checkout-limpo-do-runbook"
-export RELEASE_CHECKOUT="/caminho/para/checkout-limpo-de-aa4d6c5"
+export RELEASE_CHECKOUT="/caminho/para/checkout-limpo-de-c3310cb8"
 export EXPECTED_PROCEDURE_SHA="<sha-completo-aprovado-na-issue-ou-pr>"
 [[ "$EXPECTED_PROCEDURE_SHA" =~ ^[0-9a-f]{40}$ ]]
 PROCEDURE_SHA="$(git -C "$PROCEDURE_CHECKOUT" rev-parse HEAD)"
 readonly PROCEDURE_SHA
-readonly RELEASE_SHA=aa4d6c5b1552877000a06b2e27b0122ffdc500f3
+readonly RELEASE_SHA=c3310cb8bb20cda236e84e823dfd25c0d7981979
 
 test "$PROCEDURE_SHA" = "$EXPECTED_PROCEDURE_SHA"
 procedure_status="$(git -C "$PROCEDURE_CHECKOUT" status \
