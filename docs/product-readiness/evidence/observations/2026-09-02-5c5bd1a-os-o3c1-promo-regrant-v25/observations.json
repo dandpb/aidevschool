@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "5c5bd1a9b7e5994cddb071b06a2020de4833f084",
+  "observedAt": "2026-09-02T18:40:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-667 / gate AID-657 O3-C1 post-promotion), 2026-09-02 17:4x-18:1xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (promoted deploy 6a9859d1b3f3fda747dbe1ff at pin 4c2aeb7; alias verified serving OS assets/index--fAFjahX.js sha256 2575af3c... and hosted MOTOR index-46hhLbdu.js beb89235...; at the registration commit the OS bundle rebuilds byte-identical (2575af3c...) while the MOTOR bundle differs only by the AID-676 analytics-sink composition gated behind VITE_ANALYTICS_ENDPOINT, which no build surface sets (netlify.toml; passive transport) — the observed leg below ran against the promoted production MOTOR. Automated leg re-run by QA at the registration commit against the staged build: pilot specs 7/7 + chapter-continuity/renderer-fallback/readiness-recovery 5/5; promoted-pin CI rollup 36 check-runs = 35 success + 1 skip, 0 fail (GitHub API). Fresh browser profile on the alias: 'Entrar na escola' opened the hub, 'Começar missão' launched the hosted l02 mission in a same-origin iframe; the MOTOR played the retrofitted 3-activity lesson ('atividade 1 de 3' inside the iframe); finishing all three activities took the host mission status to 'Veredito PASS' via the independent bridge while the hub kept 'Competência canônica Não alterada por este fluxo' distinct from local completion. Observer response: I can state the visible result (independent PASS verdict, local XP awarded) and the supported next action (next mission offered with title and minutes)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-667 / gate AID-657 O3-C1 post-promotion), 2026-09-02 17:4x-18:1xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (promoted deploy 6a9859d1b3f3fda747dbe1ff at pin 4c2aeb7; alias verified serving OS assets/index--fAFjahX.js sha256 2575af3c... and hosted MOTOR index-46hhLbdu.js beb89235...; at the registration commit the OS bundle rebuilds byte-identical (2575af3c...) while the MOTOR bundle differs only by the AID-676 analytics-sink composition gated behind VITE_ANALYTICS_ENDPOINT, which no build surface sets (netlify.toml; passive transport) — the observed leg below ran against the promoted production MOTOR. With /__dojo/bridge/v1/* aborted at the network layer, a completed hosted mission showed the explicit degraded status 'Verificador indisponível' with no false 'Veredito PASS' and no fabricated completion; after releasing the routes the visible retry affordance returned the mission to a verdict state without resetting session or evidence identity. Degradation is visible, honest, and recoverable using only the visible state — no repository or developer intervention."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-667 / gate AID-657 O3-C1 post-promotion), 2026-09-02 17:4x-18:1xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (promoted deploy 6a9859d1b3f3fda747dbe1ff at pin 4c2aeb7; alias verified serving OS assets/index--fAFjahX.js sha256 2575af3c... and hosted MOTOR index-46hhLbdu.js beb89235...; at the registration commit the OS bundle rebuilds byte-identical (2575af3c...) while the MOTOR bundle differs only by the AID-676 analytics-sink composition gated behind VITE_ANALYTICS_ENDPOINT, which no build surface sets (netlify.toml; passive transport) — the observed leg below ran against the promoted production MOTOR. After completing the hosted l02 mission, reload resumed directly at /mission/ai-pratica/l02 with mission shell and MOTOR running (no onboarding repeat); the hub retained 'XP local 25 / Meta 25/25' and the completed-mission card ('Salva neste dispositivo', 'Evidência preservada', 'Verificação independente Veredito PASS'). Additionally, a seeded same-profile returning learner whose persisted progress was written under contentVersion 2026-09-02.2 (l01 completed, XP 25) hydrated on the production MOTOR with progress intact, retrofit notice S1 rendered on the pending-review card, S2 rendered exactly once on the review intro and stayed suppressed after reload (structured ack), and the review session opened on the full 3-activity lesson — continuity is demonstrably same-browser-profile only, with no cross-device sync claim anywhere on the surface (footer keeps 'Seu progresso fica somente neste navegador')."
+        }
+      ]
+    }
+  ]
+}
