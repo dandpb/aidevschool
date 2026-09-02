@@ -406,6 +406,30 @@ bindings:
     fallback:
       kind: dom
       summary: "Decida entre anexar, colar ou descrever um documento e escreva o pedido por controles rotulados."
+  # Onda O2 (spec AID-528 rev 3 §2.2): l25 é a 19ª missão ai-pratica.
+  # Sem bump de contentVersion — o bump único da onda viajou com o T1/l24.
+  - missionId: l25
+    chapterOrder: 19
+    prerequisites: [l12]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l25
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l25
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-02.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Classifique anexos como seguro ou sensivel e proteja os dados antes de enviar por controles rotulados."
   - missionId: game-02-warehouse
     version: 1
     chapterOrder: 1

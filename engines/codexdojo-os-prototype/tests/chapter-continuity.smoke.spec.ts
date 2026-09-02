@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -341,6 +341,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Anexe, cole ou descreva' })).toBeVisible()
   await completeLiteracyMission(page, 'l24')
 
+  // Wave O2 T2 (spec AID-528 rev 3 §2.2): l25 "Anexos seguros" is the 19th
+  // ai-pratica mission (chapterOrder 19, canonical prereq l12 — completed
+  // above). Completes end-to-end through safety_classification, choice, and
+  // missing_context.
+  await page.goto('/mission/ai-pratica/l25')
+  await expect(page.getByRole('heading', { name: 'Anexos seguros: proteja antes de enviar' })).toBeVisible()
+  await completeLiteracyMission(page, 'l25')
+
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -434,6 +442,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l19',
     'ai-pratica:l20',
     'ai-pratica:l24',
+    'ai-pratica:l25',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',

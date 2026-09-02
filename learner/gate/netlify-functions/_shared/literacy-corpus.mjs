@@ -2079,6 +2079,131 @@ export const literacyCorpus = {
       "avaliar"
     ],
     "version": 1
+  },
+  "l25": {
+    "activities": [
+      {
+        "data": {
+          "items": [
+            {
+              "id": "i-foto-produto",
+              "text": "Foto do novo produto no balcão da loja, sem ninguém aparecendo"
+            },
+            {
+              "id": "i-quadro-clientes",
+              "text": "Foto do quadro branco da reunião, com nomes de clientes e valores de contrato"
+            },
+            {
+              "id": "i-cracha",
+              "text": "Foto do crachá de um colega, com foto, nome completo e matrícula"
+            },
+            {
+              "id": "i-ata-publica",
+              "text": "PDF da ata da reunião que a empresa já publicou no site, na área aberta a visitantes"
+            },
+            {
+              "id": "i-scan-cpf",
+              "text": "Scan do contrato assinado, com nome e CPF do cliente visíveis"
+            },
+            {
+              "id": "i-print-vagas",
+              "text": "Print da página pública de vagas abertas no site da empresa"
+            },
+            {
+              "id": "i-foto-equipamento",
+              "text": "Foto do equipamento quebrado no balcão, sem pessoas e sem telas ligadas"
+            }
+          ],
+          "labels": {
+            "safe": "Seguro para anexar",
+            "sensitive": "Sensível — não anexar"
+          }
+        },
+        "evaluation": {
+          "classification": {
+            "i-ata-publica": "safe",
+            "i-cracha": "sensitive",
+            "i-foto-equipamento": "safe",
+            "i-foto-produto": "safe",
+            "i-print-vagas": "safe",
+            "i-quadro-clientes": "sensitive",
+            "i-scan-cpf": "sensitive"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l25-a1",
+        "type": "safety_classification"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Cobrir nomes e valores na imagem e anexar a foto tratada"
+            },
+            {
+              "id": "opt-b",
+              "text": "Anexar como está — a IA 'precisa do contexto completo' para ajudar"
+            },
+            {
+              "id": "opt-c",
+              "text": "Digitar nomes e valores no corpo do pedido, em vez de mostrá-los na imagem"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l25-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "checar-dados-pessoais-visiveis",
+              "text": "Checar o que o print mostra de cada pessoa antes de qualquer coisa (nomes, e-mails, telefones)"
+            },
+            {
+              "id": "tampar-antes-de-anexar",
+              "text": "Tampar os dados das pessoas na imagem antes de anexar o print"
+            },
+            {
+              "id": "fonte-publica-alternativa",
+              "text": "Verificar se a mesma informação já existe em uma fonte pública (relatório divulgado) que poderia ser usada no lugar"
+            },
+            {
+              "id": "reduzir-a-resolucao-da-foto",
+              "text": "Reduzir a resolução da imagem para os dados ficarem ilegíveis"
+            },
+            {
+              "id": "renomear-o-arquivo",
+              "text": "Renomear o arquivo para um nome que não mencione clientes"
+            }
+          ],
+          "prompt": "COLEGA: 'Vou anexar o print da tela do sistema — a lista de clientes aparece completa, com nome, e-mail e telefone de cada um — e pedir: resuma o que esses clientes têm em comum.'"
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "fonte-publica-alternativa"
+          ],
+          "requiredContextIds": [
+            "checar-dados-pessoais-visiveis",
+            "tampar-antes-de-anexar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l25-a3",
+        "type": "missing_context"
+      }
+    ],
+    "skillIds": [
+      "proteger"
+    ],
+    "version": 1
   }
 }
 
