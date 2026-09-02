@@ -1,5 +1,6 @@
 import type { Clock } from "../adapters/clock";
 import type { ActivityDefinition, LessonDefinition } from "../data/generated/lessons";
+import { buildLessonCompletedEvent } from "../domain/analytics";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -23,6 +24,7 @@ import {
 } from "../domain/progress";
 import { parseImportedProgress, serializeProgressForExport } from "../domain/progressBackup";
 import type {
+  AnalyticsSink,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
@@ -41,6 +43,8 @@ export type UseCaseDeps = {
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
+  /** Analytics de produto (ADR-0009) — piloto `lesson_completed`. */
+  analytics: AnalyticsSink;
 };
 
 export type SubmitAttemptResult = {
@@ -261,6 +265,19 @@ export class LiteracyUseCases {
       return result;
     }
     await this.deps.progress.save(result.progress);
+    // ADR-0009 piloto: exatamente 1× `lesson_completed` por conclusão, após o
+    // progresso persistir. Fire-and-forget — o contrato dos sinks é nunca
+    // lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+    this.deps.analytics.track(
+      buildLessonCompletedEvent({
+        lessonId: lesson.id,
+        lessonVersion: lesson.version,
+        score: result.outcome.lessonScore,
+        durationSeconds: input.durationSeconds,
+        occurredAt: this.deps.clock().toISOString(),
+        contentVersion: this.deps.content.getContentVersion(),
+      }),
+    );
     return result;
   }
 
