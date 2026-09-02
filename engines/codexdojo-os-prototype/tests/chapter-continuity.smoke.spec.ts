@@ -1,4 +1,4 @@
-import { expect, test, type Frame, type Page } from '@playwright/test'
+import { expect, test, type FrameLocator, type Frame, type Page } from '@playwright/test'
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
@@ -6,6 +6,24 @@ const chapterLessons = new Map(
 )
 
 type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23'
+
+// AID-571 (#227): the literacy option cards render
+// `<label class="option-card"><input/><span>…</span></label>` with a hover
+// transform transition, so `check()` on the 20px input under the text span can
+// have its click swallowed by a re-render ("Clicking the checkbox did not
+// change its state"). A learner clicks the card, so we click the label and
+// assert the end state retryably; the isChecked() guard keeps re-clicks
+// idempotent for checkboxes (radios cannot toggle off via their label).
+async function checkControl(mission: FrameLocator, testId: string) {
+  const input = mission.getByTestId(testId)
+  const card = input.locator('xpath=ancestor::label[1]')
+  await expect(async () => {
+    if (!(await input.isChecked())) {
+      await card.click()
+    }
+    await expect(input).toBeChecked({ timeout: 2_000 })
+  }).toPass({ timeout: 15_000 })
+}
 
 async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   const lesson = chapterLessons.get(lessonId)
@@ -15,12 +33,12 @@ async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
   for (const [index, activity] of lesson.activities.entries()) {
     if (activity.type === 'choice') {
       for (const optionId of activity.evaluation.correctOptionIds) {
-        await mission.getByTestId(`option-${optionId}`).check()
+        await checkControl(mission, `option-${optionId}`)
       }
     } else if (activity.type === 'output_comparison') {
-      await mission.getByTestId(`output-${activity.evaluation.betterOutputId}`).check()
+      await checkControl(mission, `output-${activity.evaluation.betterOutputId}`)
       for (const criterionId of activity.evaluation.requiredCriterionIds) {
-        await mission.getByTestId(`criterion-${criterionId}`).check()
+        await checkControl(mission, `criterion-${criterionId}`)
       }
     } else if (activity.type === 'prompt_builder') {
       for (const field of activity.data.fields) {
@@ -33,7 +51,7 @@ async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
       }
     } else if (activity.type === 'missing_context') {
       for (const contextId of activity.evaluation.requiredContextIds) {
-        await mission.getByTestId(`context-${contextId}`).check()
+        await checkControl(mission, `context-${contextId}`)
       }
     } else if (activity.type === 'sort') {
       const order = activity.data.items.map((item) => item.id)
@@ -50,13 +68,13 @@ async function completeLiteracyMission(page: Page, lessonId: ChapterLessonId) {
       for (const criterion of activity.data.criteria) {
         const verdict = activity.evaluation.expectedVerdicts[criterion.id]
         if (verdict === undefined) throw new Error(`Missing expected verdict for criterion ${criterion.id}`)
-        await mission.getByTestId(`rubric-${criterion.id}-${verdict}`).check()
+        await checkControl(mission, `rubric-${criterion.id}-${verdict}`)
       }
     } else if (activity.type === 'safety_classification') {
       for (const item of activity.data.items) {
         const label = activity.evaluation.classification[item.id]
         if (label === undefined) throw new Error(`Missing classification for item ${item.id}`)
-        await mission.getByTestId(`item-${item.id}-${label}`).check()
+        await checkControl(mission, `item-${item.id}-${label}`)
       }
     } else {
       throw new Error(`Unexpected chapter-continuity activity ${activity.type}`)

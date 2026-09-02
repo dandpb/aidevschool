@@ -142,10 +142,27 @@ test('os-voxel-hosted-missions: the published DOCKING BAY mission mounts from th
 })
 
 test('a corrected WAREHOUSE retry supersedes the failed attempt verification state', async ({ page }) => {
+  // AID-571 (#154): align with the other six mission tests (explicit mount
+  // wait) and budget the two full warehouse playthroughs explicitly instead
+  // of the default 30s test timeout the incident job died on.
+  test.setTimeout(120_000)
   await enterSchool(page)
   await page.goto('/mission/dev/game-02-warehouse')
+  await expectMissionMounted(
+    page,
+    'Missão WAREHOUSE: Key-Value Store (in-memory)',
+    /Hash|shelf|WAREHOUSE/i,
+  )
   const frame = page.frameLocator('iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]')
-  await frame.getByTestId('start').dispatchEvent('click')
+  // AID-571 (#154 root cause): a hosted mission auto-starts on launch
+  // (voxelDojo sceneHarness `hostedMission.launch` calls `game.start()`),
+  // so the briefing `start` control is transitional — it can disappear
+  // before this click lands (job 100028707657 timed out exactly there, and
+  // the rerun won the race). Waiting for the predicting phase covers both
+  // orders and both renderers (WebGL and the accessible fallback).
+  await expect(frame.getByTestId('hud-status')).toContainText('— clique na prateleira', {
+    timeout: 60_000,
+  })
 
   await answerWarehouse(frame, false)
   await expect(frame.getByTestId('hud-status')).toContainText('ainda não atendido')
