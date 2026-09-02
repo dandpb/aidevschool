@@ -1,7 +1,7 @@
 schemaVersion: 1
 tracks:
   - trackId: ai-pratica
-    contentVersion: "2026-09-01.1"
+    contentVersion: "2026-09-02.1"
     recommendedEntryMissionId: l02
   - trackId: dev
     contentVersion: "2026-09-01.1"
@@ -21,7 +21,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -43,7 +43,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -65,7 +65,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -87,7 +87,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -109,7 +109,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -131,7 +131,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -153,7 +153,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -175,7 +175,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -197,7 +197,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -219,7 +219,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -241,7 +241,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -263,7 +263,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -285,7 +285,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -307,7 +307,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -329,7 +329,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -351,7 +351,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -373,7 +373,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -381,6 +381,31 @@ bindings:
     fallback:
       kind: dom
       summary: "Marque afirmacoes que exigem verificacao e escolha a fonte certa por controles rotulados."
+  # Onda O2 (spec AID-528 rev 3 §2.1): l24 abre o mod-07 como 18ª missão
+  # ai-pratica. Primeiro binding da onda: carrega o bump único de
+  # contentVersion (desvio aceito por decisão CEO AID-585).
+  - missionId: l24
+    chapterOrder: 18
+    prerequisites: [l18]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l24
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l24
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-02.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Decida entre anexar, colar ou descrever um documento e escreva o pedido por controles rotulados."
   - missionId: game-02-warehouse
     version: 1
     chapterOrder: 1
@@ -467,7 +492,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -489,7 +514,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -511,7 +536,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -630,7 +655,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -652,7 +677,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1
@@ -674,7 +699,7 @@ bindings:
       entrypoint: http://127.0.0.1:5178/?hosted=1
       environmentKey: VITE_LITERACYDOJO_URL
       protocolVersion: "1.0"
-      contentVersion: "2026-09-01.1"
+      contentVersion: "2026-09-02.1"
     evidence:
       schema: literacy-evidence
       version: 1

@@ -1,0 +1,154 @@
+# Lição l24 — Onda O2 l24–l26 (spec AID-528 rev 3 `dce5594f` §2.1): anexar, colar ou descrever.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l24
+version: 1
+moduleId: mod-07
+title: "Anexe, cole ou descreva"
+objective: "Diante de uma tarefa que depende de um documento ou imagem, escolher entre anexar o arquivo, colar um trecho, descrever de memória ou não enviar — e escrever o pedido referenciando o que o anexo contém."
+estimatedMinutes: 4
+skillIds: [pedir, avaliar]
+prerequisites: [l18]
+
+activities:
+  - id: l24-a1
+    type: choice
+    skillId: avaliar
+    instruction: "EM QUAIS SITUAÇÕES ANEXAR O ARQUIVO ORIGINAL FUNCIONA MELHOR QUE DESCREVER OU COLAR? MARQUE TODAS."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-a
+          text: "A foto do quadro branco com o plano do trimestre — tem setas, cores e desenhos que você não conseguiria digitar."
+        - id: opt-b
+          text: "O PDF do contrato de 30 páginas onde você precisa localizar a cláusula de multa."
+        - id: opt-c
+          text: "A ideia de e-mail que está na sua cabeça — você ainda não a escreveu em lugar nenhum."
+        - id: opt-d
+          text: "A frase de abertura de um site público — duas linhas que você pode copiar e colar."
+        - id: opt-e
+          text: "A planilha com CPF e salário dos funcionários da equipe."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a, opt-b]
+    feedback:
+      onFailure: "ANEXAR ganha quando o conteúdo é longo ou visual demais para digitar E não é sensível. Sem arquivo não há o que anexar: descreva. Trecho curto: cole. Dado sensível (CPF, salário): não envie — a regra da lição 12 vale também para arquivos."
+      perCheck:
+        opt-a: "Correto anexar: conteúdo visual (quadro com setas e cores) não sobrevive a ser digitado — a foto é a fonte fiel."
+        opt-b: "Correto anexar: conteúdo longo (30 páginas) — colar ou resumir à mão perde informação e tempo; a IA localiza a cláusula no arquivo."
+        opt-c: "Aqui não há arquivo: a ideia só existe na sua cabeça — o caminho é descrever, não anexar."
+        opt-d: "Trecho curto e público: colar é mais direto que anexar — a frase cabe inteira no pedido."
+        opt-e: "Dado sensível (CPF, salário de pessoas): não se envia — anexo nenhum justifica expor pessoas (regra da l12)."
+      onSuccess: "Exato! A modalidade segue o conteúdo: longo ou visual → anexar; trecho curto → colar; só na cabeça → descrever; sensível → não enviar."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que é longo ou visual demais para digitar?"
+      - "Uma opção nem precisa de arquivo."
+      - "Uma delas expõe pessoas — não deveria ser enviada de forma alguma."
+
+  - id: l24-a2
+    type: prompt_builder
+    skillId: pedir
+    instruction: "A FOTO DO QUADRO JÁ ESTÁ ANEXADA. ESCREVA O PEDIDO QUE VAI JUNTO DO ANEXO PREENCHENDO OS CAMPOS."
+    data:
+      scenario: "Na sua ferramenta de IA você anexou a foto do quadro branco da reunião de planejamento: nela estão rabiscadas as decisões do trimestre e o cronograma. Neste exercício você não envia a foto — você monta o pedido por campos rotulados, como faria na ferramenta real depois de anexar. O pedido 'resuma isto', sozinho, devolveu um texto genérico que não citou nada do quadro."
+      genericPrompt: "resuma isto"
+      fields:
+        - id: tarefa
+          label: "Tarefa"
+          hint: "O que a IA deve fazer com o anexo? Ex.: resumir as decisões da reunião."
+        - id: referencia
+          label: "Referência ao anexo"
+          hint: "O que observar ou citar da foto? Ex.: as decisões e o cronograma escritos no quadro."
+        - id: formato
+          label: "Formato"
+          hint: "Que forma a saída deve ter? Ex.: lista de decisões em tópicos."
+    evaluation:
+      strategy: deterministic
+      fields:
+        tarefa:
+          minLength: 8
+          mustIncludeAny: ["resumo", "resumir", "lista", "decisões", "decisoes"]
+        referencia:
+          minLength: 8
+          mustIncludeAny: ["quadro", "imagem", "foto", "anexo", "arquivo"]
+        formato:
+          minLength: 4
+          mustIncludeAny: ["lista", "tópicos", "topicos", "tabela", "texto"]
+    feedback:
+      onFailure: "O pedido ainda trata o anexo como invisível. A IA só trabalha com o que você nomeia: diga O QUE fazer (resumir as decisões), ONDE olhar (o quadro da foto) e EM QUE FORMA responder (lista, tópicos, tabela)."
+      perCheck:
+        tarefa: "Diga a ação sobre o anexo: resumir ou listar as decisões da reunião."
+        referencia: "Aponte o que observar na foto: o quadro, a imagem, o anexo — e o que está escrito nele."
+        formato: "Defina a forma da saída: lista, tópicos, tabela ou texto corrido."
+      onSuccess: "Pedido completo! Anexo + pedido que referencia o conteúdo do anexo é a dupla que funciona: a IA sabe onde olhar e o que entregar."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que o pedido 'resuma isto' não disse sobre a foto anexada?"
+      - "Faltaram três coisas: a tarefa (resumir o quê), a referência ao quadro da imagem e a forma da saída."
+      - "Palavras que precisam aparecer: resumo/decisões na Tarefa, quadro/foto/anexo na Referência, lista/tópicos/tabela no Formato."
+
+  - id: l24-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "UM COLEGA ANEXOU A FOTO DO QUADRO E ESCREVEU SÓ 'O QUE ACHA DISTO?'. A RESPOSTA VEIO GENÉRICA. O QUE FALTOU NO PEDIDO DELE?"
+    data:
+      prompt: "COLEGA (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
+      contextOptions:
+        - id: tarefa-definida
+          text: "Uma tarefa definida: o que a IA deve fazer com a foto (por exemplo, resumir as decisões) — 'o que acha disto?' não pede nada"
+        - id: area-do-quadro
+          text: "A área do quadro que importa: as decisões? o cronograma? a foto inteira ou só um canto?"
+        - id: formato-de-saida
+          text: "O formato da saída: lista, tópicos, tabela — sem isso, a IA escolhe a forma sozinha"
+        - id: periodo-da-reuniao
+          text: "O período da reunião que o quadro registra (trimestre, mês), para dar contexto temporal ao resumo"
+        - id: nome-do-modelo-de-ia
+          text: "O nome do modelo de IA usado no pedido"
+        - id: uma-ia-mais-recente
+          text: "Usar uma IA mais recente, que entende fotos sem precisar de instrução"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [tarefa-definida, area-do-quadro, formato-de-saida]
+      optionalContextIds: [periodo-da-reuniao]
+    feedback:
+      onFailure: "A resposta veio genérica porque o pedido não pediu nada: sem tarefa, sem apontar a área do quadro e sem formato, a IA improvisa. Nome de modelo e 'IA mais recente' são desvio — qualquer IA precisa de instrução para trabalhar uma foto."
+      perCheck:
+        tarefa-definida: "Faltou isto: dizer o que fazer com a foto. 'O que acha disto?' é convite a palpite, não pedido de resumo."
+        area-do-quadro: "Faltou isto: apontar a área que importa (decisões, cronograma) — a foto inteira deixa a IA escolher sozinha."
+        formato-de-saida: "Faltou isto: o formato da saída (lista, tópicos, tabela); sem ele, a resposta vem na forma que a IA quiser."
+        periodo-da-reuniao: "Isto é opcional: datar o resumo (trimestre, mês) ajuda, mas o pedido não degrada sem isso."
+        nome-do-modelo-de-ia: "Isto é mito: o nome do modelo não aparece no pedido — e não substitui instrução."
+        uma-ia-mais-recente: "Isto é mito: IA mais recente também precisa de tarefa e formato; trocar de IA não corrige pedido vazio."
+      onSuccess: "Exato! Anexo não substitui pedido: tarefa, área do quadro e formato transformam um 'o que acha disto?' em pedido que produz resumo útil."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare o que a resposta entregou com o que o colega queria de verdade: o que ele não pediu?"
+      - "Faltaram três instruções: a tarefa (resumir o quê), a área do quadro e o formato da saída."
+
+rubric:
+  id: l24-rubric
+  criteria:
+    - id: r-escolhe-a-modalidade
+      text: "Decide entre anexar, colar, descrever ou não enviar de acordo com o cenário (conteúdo longo ou visual, trecho curto, sem arquivo, dado sensível)."
+      weight: 1
+    - id: r-referencia-o-anexo
+      text: "Escreve o pedido citando o anexo e dizendo o que observar nele."
+      weight: 1
+    - id: r-nomea-o-que-falta
+      text: "Aponta tarefa, área e formato quando um pedido com anexo vem sem instrução."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l24-a1, l24-a2, l24-a3]

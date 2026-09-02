@@ -1930,7 +1930,156 @@ export const literacyCorpus = {
       "codificar"
     ],
     "version": 1
+  },
+  "l24": {
+    "activities": [
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "A foto do quadro branco com o plano do trimestre — tem setas, cores e desenhos que você não conseguiria digitar."
+            },
+            {
+              "id": "opt-b",
+              "text": "O PDF do contrato de 30 páginas onde você precisa localizar a cláusula de multa."
+            },
+            {
+              "id": "opt-c",
+              "text": "A ideia de e-mail que está na sua cabeça — você ainda não a escreveu em lugar nenhum."
+            },
+            {
+              "id": "opt-d",
+              "text": "A frase de abertura de um site público — duas linhas que você pode copiar e colar."
+            },
+            {
+              "id": "opt-e",
+              "text": "A planilha com CPF e salário dos funcionários da equipe."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a",
+            "opt-b"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l24-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "O que a IA deve fazer com o anexo? Ex.: resumir as decisões da reunião.",
+              "id": "tarefa",
+              "label": "Tarefa"
+            },
+            {
+              "hint": "O que observar ou citar da foto? Ex.: as decisões e o cronograma escritos no quadro.",
+              "id": "referencia",
+              "label": "Referência ao anexo"
+            },
+            {
+              "hint": "Que forma a saída deve ter? Ex.: lista de decisões em tópicos.",
+              "id": "formato",
+              "label": "Formato"
+            }
+          ],
+          "genericPrompt": "resuma isto",
+          "scenario": "Na sua ferramenta de IA você anexou a foto do quadro branco da reunião de planejamento: nela estão rabiscadas as decisões do trimestre e o cronograma. Neste exercício você não envia a foto — você monta o pedido por campos rotulados, como faria na ferramenta real depois de anexar. O pedido 'resuma isto', sozinho, devolveu um texto genérico que não citou nada do quadro."
+        },
+        "evaluation": {
+          "fields": {
+            "formato": {
+              "minLength": 4,
+              "mustIncludeAny": [
+                "lista",
+                "tópicos",
+                "topicos",
+                "tabela",
+                "texto"
+              ]
+            },
+            "referencia": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "quadro",
+                "imagem",
+                "foto",
+                "anexo",
+                "arquivo"
+              ]
+            },
+            "tarefa": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "resumo",
+                "resumir",
+                "lista",
+                "decisões",
+                "decisoes"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l24-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "tarefa-definida",
+              "text": "Uma tarefa definida: o que a IA deve fazer com a foto (por exemplo, resumir as decisões) — 'o que acha disto?' não pede nada"
+            },
+            {
+              "id": "area-do-quadro",
+              "text": "A área do quadro que importa: as decisões? o cronograma? a foto inteira ou só um canto?"
+            },
+            {
+              "id": "formato-de-saida",
+              "text": "O formato da saída: lista, tópicos, tabela — sem isso, a IA escolhe a forma sozinha"
+            },
+            {
+              "id": "periodo-da-reuniao",
+              "text": "O período da reunião que o quadro registra (trimestre, mês), para dar contexto temporal ao resumo"
+            },
+            {
+              "id": "nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA usado no pedido"
+            },
+            {
+              "id": "uma-ia-mais-recente",
+              "text": "Usar uma IA mais recente, que entende fotos sem precisar de instrução"
+            }
+          ],
+          "prompt": "COLEGA (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "periodo-da-reuniao"
+          ],
+          "requiredContextIds": [
+            "tarefa-definida",
+            "area-do-quadro",
+            "formato-de-saida"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l24-a3",
+        "type": "missing_context"
+      }
+    ],
+    "skillIds": [
+      "pedir",
+      "avaliar"
+    ],
+    "version": 1
   }
 }
 
-export const literacyCorpusVersion = "2026-09-01.1"
+export const literacyCorpusVersion = "2026-09-02.1"
