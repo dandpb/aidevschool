@@ -1,5 +1,6 @@
 // Offline NDJSON → retention-funnel aggregation for the OS analytics collector
-// (AID-473 F2, spec: AID-463 draft §2 rev 40b963bf).
+// (AID-473 F2, spec: AID-463 draft §2 rev 40b963bf; F2b extension: AID-675,
+// spec AID-673 §2 — D1/D2 cuts + eventId dedup, reportVersion 2).
 //
 // Reads the collector's day-rotated NDJSON (append-only, accepted events only)
 // and emits an AGGREGATED, k-anonymized report. Non-negotiable boundaries:
@@ -9,6 +10,10 @@
 //   - dimensions are closed-vocabulary enums by construction; no free text,
 //     no IP, no user-agent, and no mastery state ever enter the report.
 //   - analytics is not evidence; this tool never writes learner state.
+//   - accepted events are deduplicated by eventId before any cut (ADR-0010
+//     Consequências: the beacon+fetch race can append the same event twice);
+//     the first occurrence in the standing sort order (occurredAt, sequence)
+//     wins and source.duplicateEvents reports how many lines were dropped.
 //
 // Funnel definitions (draft §2.1):
 //   - narrow cohort: first `mission.completed {result:"completed"}` on UTC day D0.
@@ -23,8 +28,10 @@
 //     "due"|"overdue"} — distinguishes "returned to review" from new content.
 // The first cycle establishes the baseline; no external numeric target.
 
+import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { validateAnalyticsEvent } from "../netlify-functions/dojo-analytics-collector.mjs";
 import {
   collectInputFiles,
@@ -34,7 +41,15 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
-export const REPORT_VERSION = 1;
+export const REPORT_VERSION = 2;
+/**
+ * Canonical mission→module mapping for the D2 cut (spec AID-673 §2.2): read
+ * from the shared curriculum catalog at execution time — no copied mapping.
+ * Unreadable/absent catalog ⇒ the section is `unavailable` with a reason
+ * (fail-closed, never fabricated).
+ */
+export const DEFAULT_CATALOG_LABEL = "curriculum/ai-literacy/catalog.yaml";
+const DEFAULT_CATALOG_PATH = fileURLToPath(new URL("../../../curriculum/ai-literacy/catalog.yaml", import.meta.url));
 export const DEFAULT_WINDOWS = [1, 7, 21];
 export const DEFAULT_GRACE_DAYS = 2;
 export const DEFAULT_K_MINIMUM = 5;
@@ -76,6 +91,57 @@ function eventTime(event) {
 }
 
 /**
+ * Minimal focused reader for the shared curriculum catalog (D2 cut, spec
+ * AID-673 §2.2): extracts modules (id → journey) and lessons (id → moduleId)
+ * from the top-level `modules:`/`lessons:` blocks. The tool stays
+ * dependency-free (repo root is not a Node project), so this parses exactly
+ * the catalog's stable `key: value` shape and nothing else.
+ * @returns {{missionToModule: Map<string, string>, moduleJourney: Map<string, string>} | null}
+ *   null when the catalog is absent/unreadable or carries no mapping — the
+ *   caller must then mark the section `unavailable` (fail-closed, never
+ *   fabricate a module attribution).
+ */
+export function loadMissionModuleIndex(catalogPath = DEFAULT_CATALOG_PATH) {
+  let raw;
+  try {
+    raw = readFileSync(catalogPath, "utf8");
+  } catch {
+    return null;
+  }
+  const moduleJourney = new Map();
+  const missionToModule = new Map();
+  let section = null;
+  let currentModule = null;
+  let currentLesson = null;
+  for (const line of raw.split("\n")) {
+    if (/^[A-Za-z][A-Za-z0-9_-]*:/.test(line)) {
+      section = line.slice(0, line.indexOf(":"));
+      currentModule = null;
+      currentLesson = null;
+      continue;
+    }
+    if (section === "modules") {
+      const match = /^  - id: (\S+)/.exec(line);
+      if (match !== null) {
+        currentModule = match[1];
+        continue;
+      }
+      const journey = /^    journey: (\S+)/.exec(line);
+      if (journey !== null && currentModule !== null) moduleJourney.set(currentModule, journey[1]);
+    } else if (section === "lessons") {
+      const match = /^  - id: (\S+)/.exec(line);
+      if (match !== null) {
+        currentLesson = match[1];
+        continue;
+      }
+      const module = /^    moduleId: (\S+)/.exec(line);
+      if (module !== null && currentLesson !== null) missionToModule.set(currentLesson, module[1]);
+    }
+  }
+  return missionToModule.size === 0 ? null : { missionToModule, moduleJourney };
+}
+
+/**
  * Aggregate validated events into the k-anonymized funnel report.
  * @param {Array<{value: object}>} entries parsed NDJSON entries (only lines the
  *   collector vocabulary accepts are aggregated; the rest are counted, never
@@ -112,10 +178,25 @@ export function aggregateFunnel(entries, options = {}) {
   }
   accepted.sort((a, b) => eventTime(a) - eventTime(b) || a.sequence - b.sequence);
 
+  // F2b dedup (spec AID-673 §2.1): the beacon+fetch race can append the same
+  // eventId twice; every cut below must see each event exactly once. First
+  // occurrence in the standing sort order (occurredAt, sequence) wins.
+  const seenEventIds = new Set();
+  const events = [];
+  let duplicateEvents = 0;
+  for (const event of accepted) {
+    if (seenEventIds.has(event.eventId)) {
+      duplicateEvents += 1;
+      continue;
+    }
+    seenEventIds.add(event.eventId);
+    events.push(event);
+  }
+
   // Group per installation, tag review sessions, remember first occurrence of
   // every stage, and record each event's day offset from its cohort D0.
   const installations = new Map();
-  for (const event of accepted) {
+  for (const event of events) {
     const id = event.dimensions.installationId;
     if (!installations.has(id)) {
       installations.set(id, { events: [], firstEventTime: eventTime(event), stageTimes: new Map() });
@@ -129,7 +210,7 @@ export function aggregateFunnel(entries, options = {}) {
     }
   }
   const reviewSessions = new Set();
-  for (const event of accepted) {
+  for (const event of events) {
     const dimensions = event.dimensions;
     if (
       (event.name === "mission.started" && dimensions.mode === "review") ||
@@ -225,6 +306,273 @@ export function aggregateFunnel(entries, options = {}) {
   if (overallWide.suppressed === true) suppressedBuckets += 1;
   if (overallActivation.suppressed === true) suppressedBuckets += 1;
 
+  // --- F2b sections (spec AID-673 §2.2) — D1 cuts, D2 cut, all k≥5/cell ---
+
+  // A count cell that must not be published below k: zero cells are omitted,
+  // 1..k-1 keeps only the convention already used by suppressed buckets (n),
+  // ≥k publishes the count. Identifiers never enter these structures.
+  function gatedCount(count) {
+    if (count === 0) return undefined;
+    return count < k ? { suppressed: true, n: count } : count;
+  }
+
+  function trackEntrySplitFor() {
+    const firstInitialStart = new Map();
+    for (const event of events) {
+      if (event.name !== "mission.started" || event.dimensions.mode !== "initial") continue;
+      const id = event.dimensions.installationId;
+      if (!firstInitialStart.has(id)) firstInitialStart.set(id, event);
+    }
+    const cohorts = new Map();
+    for (const event of firstInitialStart.values()) {
+      const week = isoWeekKey(eventTime(event));
+      const track = event.dimensions.trackId ?? "unknown";
+      if (!cohorts.has(week)) cohorts.set(week, new Map());
+      const tracks = cohorts.get(week);
+      tracks.set(track, (tracks.get(track) ?? 0) + 1);
+    }
+    const section = {
+      definition: "installations with ≥1 mission.started{mode:initial}, by ISO week of the first one; split by its trackId",
+      cohorts: {},
+    };
+    for (const week of [...cohorts.keys()].sort()) {
+      const tracks = cohorts.get(week);
+      const n = [...tracks.values()].reduce((sum, count) => sum + count, 0);
+      if (n < k) {
+        section.cohorts[week] = { suppressed: true, n };
+        continue;
+      }
+      const byTrack = {};
+      for (const track of [...tracks.keys()].sort()) {
+        const count = tracks.get(track);
+        byTrack[track] = { installations: count, rate: rate(count, n) };
+      }
+      section.cohorts[week] = { n, byTrack };
+    }
+    return section;
+  }
+
+  function missionSets() {
+    const started = new Map(); // missionId|unattributed -> Set(installationId)
+    const completed = new Map();
+    const add = (map, key, id) => {
+      if (!map.has(key)) map.set(key, new Set());
+      map.get(key).add(id);
+    };
+    for (const event of events) {
+      const dimensions = event.dimensions;
+      const key = dimensions.missionId ?? "unattributed";
+      if (event.name === "mission.started") add(started, key, dimensions.installationId);
+      if (event.name === "mission.completed" && dimensions.result === "completed") {
+        add(completed, key, dimensions.installationId);
+      }
+    }
+    return { started, completed };
+  }
+
+  function missionCompletionFor({ started, completed }) {
+    const section = {
+      definition: "installations with ≥1 mission.started (n) vs ≥1 mission.completed{result:completed}, per missionId context; missing missionId ⇒ unattributed",
+      missions: {},
+    };
+    for (const key of [...new Set([...started.keys(), ...completed.keys()])].sort()) {
+      const n = started.get(key)?.size ?? 0;
+      if (n < k) {
+        section.missions[key] = { suppressed: true, n };
+        continue;
+      }
+      const completedCount = completed.get(key)?.size ?? 0;
+      section.missions[key] = { started: n, completed: completedCount, completionRate: rate(completedCount, n) };
+    }
+    return section;
+  }
+
+  function activityFrictionFor() {
+    const attempts = new Map(); // `${activityType}|${missionKey}` -> {submitted, passed}
+    const missionFriction = new Map(); // missionKey -> {hint, retry}
+    for (const event of events) {
+      const dimensions = event.dimensions;
+      const missionKey = dimensions.missionId ?? "unattributed";
+      if (event.name === "structured_attempt.submitted" || event.name === "structured_attempt.passed") {
+        const activityKey = `${dimensions.activityType ?? "unknown"}|${missionKey}`;
+        if (!attempts.has(activityKey)) attempts.set(activityKey, { submitted: 0, passed: 0 });
+        const cell = attempts.get(activityKey);
+        if (event.name === "structured_attempt.submitted") cell.submitted += 1;
+        else cell.passed += 1;
+      }
+      if (event.name === "hint.requested" || event.name === "retry.requested") {
+        if (!missionFriction.has(missionKey)) missionFriction.set(missionKey, { hint: 0, retry: 0 });
+        const cell = missionFriction.get(missionKey);
+        if (event.name === "hint.requested") cell.hint += 1;
+        else cell.retry += 1;
+      }
+    }
+    const section = {
+      definition: "structured_attempt.passed/submitted per activityType × missionId; hint.requested/retry.requested counted per missionId (those events carry no activityType)",
+      attempts: {},
+      missionFriction: {},
+    };
+    for (const key of [...attempts.keys()].sort()) {
+      const cell = attempts.get(key);
+      if (cell.submitted < k) {
+        section.attempts[key] = { suppressed: true, n: cell.submitted };
+        continue;
+      }
+      section.attempts[key] = { submitted: cell.submitted, passed: cell.passed, passRate: rate(cell.passed, cell.submitted) };
+    }
+    for (const key of [...missionFriction.keys()].sort()) {
+      const cell = missionFriction.get(key);
+      const hint = gatedCount(cell.hint);
+      const retry = gatedCount(cell.retry);
+      if (hint !== undefined || retry !== undefined) section.missionFriction[key] = { hintRequested: hint, retryRequested: retry };
+    }
+    return section;
+  }
+
+  function verificationHealthFor() {
+    const states = new Map(); // state -> {events, installations: Set}
+    let totalEvents = 0;
+    for (const event of events) {
+      if (event.name !== "verification.state_changed") continue;
+      totalEvents += 1;
+      const state = event.dimensions.state ?? "unknown";
+      if (!states.has(state)) states.set(state, { events: 0, installations: new Set() });
+      const cell = states.get(state);
+      cell.events += 1;
+      cell.installations.add(event.dimensions.installationId);
+    }
+    const section = {
+      definition: "verification.state_changed events by state (bridge-level state; no missionId in the cut)",
+      totalEvents,
+      states: {},
+    };
+    for (const state of [...states.keys()].sort()) {
+      const cell = states.get(state);
+      if (cell.events < k || cell.installations.size < k) {
+        section.states[state] = { suppressed: true, n: cell.events };
+        continue;
+      }
+      section.states[state] = { events: cell.events, installations: cell.installations.size, share: rate(cell.events, totalEvents) };
+    }
+    return section;
+  }
+
+  function rendererDegradedFor() {
+    const fallbacks = new Map(); // fallback -> {events, reasons: Map, engineIds: Map}
+    for (const event of events) {
+      if (event.name !== "renderer.degraded") continue;
+      const dimensions = event.dimensions;
+      const fallback = dimensions.fallback ?? "unknown";
+      if (!fallbacks.has(fallback)) fallbacks.set(fallback, { events: 0, reasons: new Map(), engineIds: new Map() });
+      const cell = fallbacks.get(fallback);
+      cell.events += 1;
+      const reason = dimensions.reason ?? "unknown";
+      cell.reasons.set(reason, (cell.reasons.get(reason) ?? 0) + 1);
+      if (dimensions.engineId !== undefined) {
+        cell.engineIds.set(dimensions.engineId, (cell.engineIds.get(dimensions.engineId) ?? 0) + 1);
+      }
+    }
+    const section = {
+      definition: "renderer.degraded events by fallback, with aggregated reasons and engineId context when present",
+      fallbacks: {},
+    };
+    for (const fallback of [...fallbacks.keys()].sort()) {
+      const cell = fallbacks.get(fallback);
+      if (cell.events < k) {
+        section.fallbacks[fallback] = { suppressed: true, n: cell.events };
+        continue;
+      }
+      const reasons = {};
+      for (const reason of [...cell.reasons.keys()].sort()) {
+        const gated = gatedCount(cell.reasons.get(reason));
+        if (gated !== undefined) reasons[reason] = gated;
+      }
+      const engineIds = {};
+      for (const engineId of [...cell.engineIds.keys()].sort()) {
+        const gated = gatedCount(cell.engineIds.get(engineId));
+        if (gated !== undefined) engineIds[engineId] = gated;
+      }
+      section.fallbacks[fallback] = { events: cell.events, reasons, engineIds };
+    }
+    return section;
+  }
+
+  function moduleCompletionMedianFor({ started, completed }) {
+    const catalogPath = options.catalogPath ?? DEFAULT_CATALOG_PATH;
+    const catalogLabel = options.catalogPath ?? DEFAULT_CATALOG_LABEL;
+    const section = {
+      definition: "per-module completion (same definition as missionCompletion, unioned over the module's missions) for ia_pratica modules mapped in the catalog; median across published modules",
+      catalog: catalogLabel,
+    };
+    const catalog = loadMissionModuleIndex(catalogPath);
+    if (catalog === null) {
+      return { ...section, unavailable: true, reason: `catalog unavailable: ${catalogLabel}` };
+    }
+    const moduleStarted = new Map();
+    const moduleCompleted = new Map();
+    let unmappedMissions = 0;
+    for (const [missionId, installationIds] of started) {
+      if (missionId === "unattributed") continue;
+      const moduleId = catalog.missionToModule.get(missionId);
+      if (moduleId === undefined) {
+        unmappedMissions += 1;
+        continue;
+      }
+      if (!moduleStarted.has(moduleId)) moduleStarted.set(moduleId, new Set());
+      for (const id of installationIds) moduleStarted.get(moduleId).add(id);
+    }
+    for (const [missionId, installationIds] of completed) {
+      if (missionId === "unattributed") continue;
+      const moduleId = catalog.missionToModule.get(missionId);
+      if (moduleId === undefined) continue;
+      if (!moduleCompleted.has(moduleId)) moduleCompleted.set(moduleId, new Set());
+      for (const id of installationIds) moduleCompleted.get(moduleId).add(id);
+    }
+    const modules = {};
+    const publishedRates = [];
+    let modulesSuppressed = 0;
+    const journeyModuleIds = [...moduleStarted.keys()]
+      .filter((moduleId) => catalog.moduleJourney.get(moduleId) === "ia_pratica")
+      .sort();
+    for (const moduleId of journeyModuleIds) {
+      const n = moduleStarted.get(moduleId).size;
+      if (n < k) {
+        modules[moduleId] = { suppressed: true, n };
+        modulesSuppressed += 1;
+        continue;
+      }
+      const completedCount = moduleCompleted.get(moduleId)?.size ?? 0;
+      const completionRate = rate(completedCount, n);
+      modules[moduleId] = { n, completed: completedCount, completionRate };
+      publishedRates.push(completionRate);
+    }
+    publishedRates.sort((a, b) => a - b);
+    const mid = Math.floor(publishedRates.length / 2);
+    const medianCompletionRate =
+      publishedRates.length === 0
+        ? null
+        : publishedRates.length % 2 === 1
+          ? publishedRates[mid]
+          : rate(publishedRates[mid - 1] + publishedRates[mid], 2);
+    return {
+      ...section,
+      journey: "ia_pratica",
+      modules,
+      medianCompletionRate,
+      modulesPublished: publishedRates.length,
+      modulesSuppressed,
+      missionsWithoutModuleMapping: unmappedMissions,
+    };
+  }
+
+  const missionSetsResult = missionSets();
+  const trackEntrySplit = trackEntrySplitFor();
+  const missionCompletion = missionCompletionFor(missionSetsResult);
+  const activityFriction = activityFrictionFor();
+  const verificationHealth = verificationHealthFor();
+  const rendererDegraded = rendererDegradedFor();
+  const moduleCompletionMedian = moduleCompletionMedianFor(missionSetsResult);
+
   return {
     reportVersion: REPORT_VERSION,
     generatedAt: (options.now ?? new Date()).toISOString(),
@@ -237,10 +585,16 @@ export function aggregateFunnel(entries, options = {}) {
       reviewReturn: "returning event's session contains mission.started{mode:review} or review.started{reason:due|overdue}",
     },
     anonymity: { identifiersPublished: false, suppressionRule: "buckets with n<k are suppressed", suppressedBuckets },
-    source: { files: [], totalEvents: accepted.length, rejectedEvents, parseErrors },
+    source: { files: [], totalEvents: events.length, duplicateEvents, rejectedEvents, parseErrors },
     activationFunnel: { ...activationFunnel, overall: overallActivation },
     retention: { ...retention, overall: overallNarrow },
     wideCohortRetention: { ...wideRetention, overall: overallWide },
+    trackEntrySplit,
+    missionCompletion,
+    activityFriction,
+    verificationHealth,
+    rendererDegraded,
+    moduleCompletionMedian,
   };
 }
 
@@ -283,6 +637,22 @@ function percent(value) {
   return `${(value * 100).toFixed(1)}%`;
 }
 
+function trackSplitCell(bucket) {
+  return Object.entries(bucket.byTrack)
+    .map(([track, cell]) => `${track} ${cell.installations} (${percent(cell.rate)})`)
+    .join(" · ");
+}
+
+function suppressedCell(bucket) {
+  return `suppressed (n=${bucket.n} < k)`;
+}
+
+function countCell(value) {
+  if (value === undefined) return "0";
+  if (typeof value === "number") return String(value);
+  return suppressedCell(value);
+}
+
 function retentionRow(bucket, windows) {
   if (bucket.suppressed === true) return `suppressed (n=${bucket.n} < k)`;
   return windows
@@ -299,7 +669,7 @@ export function renderMarkdownReport(report) {
   const lines = [
     "# OS analytics — retention funnel (aggregated, k-anonymized)",
     "",
-    `Generated ${report.generatedAt} · ${source.totalEvents} accepted events · ${source.files.length} file(s) · ${source.rejectedEvents} rejected, ${source.parseErrors} unparsable line(s) excluded`,
+    `Generated ${report.generatedAt} · ${source.totalEvents} accepted events (${source.duplicateEvents} duplicate eventId line(s) removed) · ${source.files.length} file(s) · ${source.rejectedEvents} rejected, ${source.parseErrors} unparsable line(s) excluded`,
     "",
     `Windows: D+${parameters.windowsDays.join("/D+")} · grace ${parameters.graceDays}d · k≥${parameters.kMinimum} · identifiers never published · analytics ≠ evidence`,
     "",
@@ -333,6 +703,120 @@ export function renderMarkdownReport(report) {
       ? `suppressed (n=${activationFunnel.overall.n} < k)`
       : activationFunnel.overall.counts.join(" → ");
   lines.push(`| overall | ${activationFunnel.overall.suppressed === true ? "—" : activationFunnel.overall.n} | ${overallCells} |`);
+
+  lines.push(
+    "",
+    "## Track entry split (first mission.started{mode:initial} per installation)",
+    "",
+    "| cohort week | n | track split |",
+    "| --- | --- | --- |",
+  );
+  for (const [week, bucket] of Object.entries(report.trackEntrySplit.cohorts)) {
+    const split = bucket.suppressed === true ? suppressedCell(bucket) : trackSplitCell(bucket);
+    lines.push(`| ${week} | ${bucket.suppressed === true ? "—" : bucket.n} | ${split} |`);
+  }
+
+  lines.push(
+    "",
+    "## Mission completion (per missionId context)",
+    "",
+    "| mission | started (n) | completed | completion rate |",
+    "| --- | --- | --- | --- |",
+  );
+  for (const [mission, row] of Object.entries(report.missionCompletion.missions)) {
+    if (row.suppressed === true) {
+      lines.push(`| ${mission} | ${row.n} | — | ${suppressedCell(row)} |`);
+    } else {
+      lines.push(`| ${mission} | ${row.started} | ${row.completed} | ${percent(row.completionRate)} |`);
+    }
+  }
+
+  lines.push(
+    "",
+    "## Activity friction (structured attempts per activityType × missionId)",
+    "",
+    "| activityType | mission | submitted | passed | pass rate |",
+    "| --- | --- | --- | --- | --- |",
+  );
+  for (const [key, row] of Object.entries(report.activityFriction.attempts)) {
+    const [activityType, mission] = key.split("|");
+    if (row.suppressed === true) {
+      lines.push(`| ${activityType} | ${mission} | ${row.n} | — | ${suppressedCell(row)} |`);
+    } else {
+      lines.push(`| ${activityType} | ${mission} | ${row.submitted} | ${row.passed} | ${percent(row.passRate)} |`);
+    }
+  }
+  lines.push(
+    "",
+    "| mission | hint.requested | retry.requested |",
+    "| --- | --- | --- |",
+  );
+  for (const [mission, row] of Object.entries(report.activityFriction.missionFriction)) {
+    lines.push(`| ${mission} | ${countCell(row.hintRequested)} | ${countCell(row.retryRequested)} |`);
+  }
+
+  lines.push(
+    "",
+    "## Verification health (state_changed by state)",
+    "",
+    "| state | events | installations | share |",
+    "| --- | --- | --- | --- |",
+  );
+  for (const [state, row] of Object.entries(report.verificationHealth.states)) {
+    if (row.suppressed === true) {
+      lines.push(`| ${state} | ${row.n} | — | ${suppressedCell(row)} |`);
+    } else {
+      lines.push(`| ${state} | ${row.events} | ${row.installations} | ${percent(row.share)} |`);
+    }
+  }
+
+  lines.push(
+    "",
+    "## Renderer degradation (by fallback)",
+    "",
+    "| fallback | events | reasons | engines |",
+    "| --- | --- | --- | --- |",
+  );
+  for (const [fallback, row] of Object.entries(report.rendererDegraded.fallbacks)) {
+    if (row.suppressed === true) {
+      lines.push(`| ${fallback} | ${row.n} | — | — |`);
+    } else {
+      const reasons = Object.entries(row.reasons)
+        .map(([reason, count]) => `${reason} ${countCell(count)}`)
+        .join(" · ");
+      const engines = Object.entries(row.engineIds)
+        .map(([engineId, count]) => `${engineId} ${countCell(count)}`)
+        .join(" · ");
+      lines.push(`| ${fallback} | ${row.events} | ${reasons} | ${engines} |`);
+    }
+  }
+
+  lines.push(
+    "",
+    `## Module completion median — D2 (catalog: ${report.moduleCompletionMedian.catalog})`,
+    "",
+  );
+  if (report.moduleCompletionMedian.unavailable === true) {
+    lines.push(`unavailable: ${report.moduleCompletionMedian.reason}`, "");
+  } else {
+    lines.push(
+      "| module | started (n) | completed | completion rate |",
+      "| --- | --- | --- | --- |",
+    );
+    for (const [moduleId, row] of Object.entries(report.moduleCompletionMedian.modules)) {
+      if (row.suppressed === true) {
+        lines.push(`| ${moduleId} | ${row.n} | — | ${suppressedCell(row)} |`);
+      } else {
+        lines.push(`| ${moduleId} | ${row.n} | ${row.completed} | ${percent(row.completionRate)} |`);
+      }
+    }
+    const median = report.moduleCompletionMedian.medianCompletionRate;
+    lines.push(
+      "",
+      `Median completion rate across published modules: ${median === null ? "— (none published)" : percent(median)} (${report.moduleCompletionMedian.modulesPublished} published, ${report.moduleCompletionMedian.modulesSuppressed} suppressed, ${report.moduleCompletionMedian.missionsWithoutModuleMapping} mission id(s) without catalog mapping)`,
+    );
+  }
+
   lines.push("", "Baseline cycle: the first report establishes the baseline; no external numeric target is claimed.", "");
   return lines.join("\n");
 }
@@ -343,7 +827,7 @@ export function renderMarkdownReport(report) {
  *   success (drift is reported, not fatal here — the monitor fails high),
  *   2 on usage/IO error.
  */
-export async function runAggregation({ inputs, k, windows, graceDays, now = new Date() }) {
+export async function runAggregation({ inputs, k, windows, graceDays, catalogPath, now = new Date() }) {
   // Policy floor at the report-producing boundary (AID-492 D1): AID-463 §3.0
   // mandates k≥5 from day 1, so this tool refuses to produce a report below
   // it (a lower k would publish cohorts of 1-4 installations with rates).
@@ -367,7 +851,7 @@ export async function runAggregation({ inputs, k, windows, graceDays, now = new 
   } catch (error) {
     return { report: { error: error instanceof Error ? error.message : String(error) }, markdown: "", exitCode: 2 };
   }
-  const report = withSourceFiles(aggregateFunnel(read.entries, { k, windows, graceDays, now }), read.files);
+  const report = withSourceFiles(aggregateFunnel(read.entries, { k, windows, graceDays, catalogPath, now }), read.files);
   return { report, markdown: renderMarkdownReport(report), exitCode: 0 };
 }
 

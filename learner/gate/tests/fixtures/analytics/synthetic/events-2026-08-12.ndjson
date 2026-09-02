@@ -1,5 +1,5 @@
 {"schemaVersion":1,"eventId":"evt-0056","name":"onboarding.started","occurredAt":"2026-08-12T08:30:00Z","sequence":1,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1"}}
 {"schemaVersion":1,"eventId":"evt-0057","name":"onboarding.completed","occurredAt":"2026-08-12T08:35:00Z","sequence":2,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1"}}
-{"schemaVersion":1,"eventId":"evt-0058","name":"mission.started","occurredAt":"2026-08-12T08:40:00Z","sequence":3,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0058","name":"mission.started","occurredAt":"2026-08-12T08:40:00Z","sequence":3,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1","trackId":"ai-pratica","mode":"initial"}}
 {"schemaVersion":1,"eventId":"evt-0059","name":"mission.completed","occurredAt":"2026-08-12T09:00:00Z","sequence":4,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1","result":"completed"}}
 {"schemaVersion":1,"eventId":"evt-0060","name":"renderer.degraded","occurredAt":"2026-08-12T09:00:00Z","sequence":5,"dimensions":{"installationId":"install-j3","sessionId":"s-j3-1","reason":"context-lost","fallback":"canvas2d","rendererMode":"webgl"}}

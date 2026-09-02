@@ -33,8 +33,11 @@ const VALID_EVENT = {
 test("clean synthetic fixture passes with zero drift (exit 0)", async () => {
   const { summary, exitCode } = await runMonitor({ inputs: [join(FIXTURES, "synthetic")], now: NOW });
   assert.equal(exitCode, 0);
-  assert.equal(summary.totalLines, 94);
-  assert.equal(summary.validEvents, 94);
+  // AID-675 F2b: 120 lines added (W37 group incl. 2 exact eventId duplicates —
+  // duplicates are valid envelopes; dedup is the aggregator's job, not the
+  // monitor's).
+  assert.equal(summary.totalLines, 214);
+  assert.equal(summary.validEvents, 214);
   assert.equal(summary.driftCount, 0);
   assert.deepEqual(summary.driftByKind, {});
 });
