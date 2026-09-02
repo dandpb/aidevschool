@@ -204,8 +204,17 @@ jobs:
       # test:smoke:pilot, which would rebuild the OS a second time.
       - run: npx playwright install --with-deps chromium
       - run: node scripts/bundle-missions.mjs
-      - run: npx playwright test --config=playwright.pilot.config.ts
-      - run: npx playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
+      # AID-571 (Auditoria #5 A5-F4): deterministic retry policy for the
+      # codexdojo-os Playwright smokes. Both known flakes (#154 job 100028707657,
+      # #227 job 100052442436) were root-caused to test-side timing fragility
+      # and fixed in the specs; --retries=1 covers the residual transient class
+      # WITHOUT ad-hoc manual rerun-failed-jobs: a retried test surfaces as a
+      # named "flaky" entry in this log (plus its trace) — that listing is the
+      # durable trace the audit required — while a real regression fails twice
+      # and still fails the job. Recurrence of the flaky listing on the same
+      # test escalates to quarantine + automatic issue (do not raise retries).
+      - run: npx playwright test --retries=1 --config=playwright.pilot.config.ts
+      - run: npx playwright test --retries=1 --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
       - run: node scripts/readiness-report.mjs
         env:
           READINESS_TEST_RUN: passed
