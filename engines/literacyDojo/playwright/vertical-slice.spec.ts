@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { isValidEvidenceRecord } from "../src/domain/evidence";
 import {
   activity,
+  answerRemainingRight,
   answerRight,
   completeOnboarding,
   mapInitial,
@@ -55,7 +56,7 @@ test("readiness literacy-happy-path and literacy-resume: acerto de primeira enca
   expect(progress?.currentLessonId).toBe("l03");
 
   const records = await readEvidence(page);
-  expect(records).toHaveLength(1);
+  expect(records).toHaveLength(3);
   expect(records.every(isValidEvidenceRecord)).toBe(true);
 });
 
@@ -117,6 +118,8 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
     await page.getByTestId(`criterion-${criterionId}`).check();
   }
   await page.getByTestId("submit-attempt").click();
+  // Atividades novas do retrofit (O3-C1) — teclado segue válido nas demais.
+  await answerRemainingRight(page, mapInitial.activities, 1);
   await page.getByTestId("finish-lesson").click();
   await expect(page.getByTestId("result-screen")).toBeVisible();
 

@@ -35,6 +35,7 @@ import {
   MAP_INITIAL_LESSON_ID,
   type OnboardingState,
 } from "../domain/progress";
+import { RETROFIT_NOTICE_S2 } from "../domain/retrofitNotice";
 import { findModule } from "../domain/track";
 import { ErrorRecoveryScreen } from "./ErrorRecoveryScreen";
 
@@ -55,6 +56,7 @@ export function LessonScreen({
   lessonId,
   mode = "initial",
   onboarding,
+  retrofitNotice = false,
   onProgressChange,
   onCompleted,
   onExit,
@@ -62,6 +64,8 @@ export function LessonScreen({
   lessonId: string;
   mode?: LessonMode;
   onboarding: OnboardingState;
+  /** Aviso S2 (retrofit O3-C1): exibido 1× por learner/lição/bump na intro. */
+  retrofitNotice?: boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -221,7 +225,7 @@ export function LessonScreen({
           <h2>{mode === "review" ? "Hora de revisar" : "Pedido da Vila Lume"}</h2>
           <p>
             {mode === "review"
-              ? "Repetir é o que fixa: refaça a atividade desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
+              ? "Repetir é o que fixa: refaça as atividades desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
               : lesson.objective}
           </p>
           <VoxelSkillArt skillId={lesson.skillIds[0]} />
@@ -253,6 +257,11 @@ export function LessonScreen({
               : "Tente com o que você já sabe. Se travar, peça uma dica — ela ajuda sem entregar a resposta."}
           </p>
         </MentorGuide>
+        {retrofitNotice && (
+          <p className="muted" data-testid="retrofit-notice-s2">
+            {RETROFIT_NOTICE_S2}
+          </p>
+        )}
         <button
           type="button"
           className="btn btn-primary"

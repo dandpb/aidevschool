@@ -1,5 +1,5 @@
 import { type Frame, type Page, expect, test } from "@playwright/test";
-import { activity, answerRight, mapInitial } from "./support";
+import { activity, answerRemainingRight, answerRight, mapInitial } from "./support";
 
 /**
  * Reflow (WCAG 1.4.10) — AID-271: a 320 CSS px (viewport ou zoom 400%) o app não
@@ -166,6 +166,8 @@ test("Missão hospedada em iframe de 298px (paridade host @320): sem scroll hori
   await expect(frame.getByTestId("feedback-panel")).toBeVisible();
   await expectNoHorizontalScroll(frame, "missão hospedada (atividade)");
 
+  // Atividades novas do retrofit (O3-C1) também precisam caber sem scroll.
+  await answerRemainingRight(frame, mapInitial.activities, 1);
   await frame.getByTestId("finish-lesson").click();
   await expect(frame.getByTestId("result-screen")).toBeVisible();
   await expectNoHorizontalScroll(frame, "missão hospedada (resultado)");
