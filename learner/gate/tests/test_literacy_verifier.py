@@ -137,7 +137,7 @@ def test_canonical_identity_mismatch_fails_closed(field, value, message):
 def test_prompt_builder_fails_closed_without_persisting_free_text():
     record = make_literacy_record(
         lessonId="l05",
-        lessonVersion=2,
+        lessonVersion=3,
         activityId="l05-a1",
         activityType="prompt_builder",
         skillIds=["pedir"],

@@ -1,11 +1,11 @@
-import { type Page, expect } from "@playwright/test";
+import { type Frame, type Locator, type Page, expect } from "@playwright/test";
 import {
   DB_NAME,
   EVIDENCE_SESSION_KEY,
   PROGRESS_KEY,
   STORE_NAME,
 } from "../src/adapters/storageKeys";
-import { lessons } from "../src/data/generated/lessons";
+import { type ActivityDefinition, lessons } from "../src/data/generated/lessons";
 import type { LiteracyEvidenceRecord } from "../src/domain/evidence";
 import { MAP_INITIAL_LESSON_ID } from "../src/domain/progress";
 
@@ -53,14 +53,67 @@ export async function completeOnboarding(page: Page) {
   await page.getByTestId("start-lesson").click();
 }
 
-/** Responde corretamente a atividade do Mapa Inicial e conclui a lição. */
-export async function answerRight(page: Page) {
-  await page.getByTestId(`output-${activity.evaluation.betterOutputId}`).check();
-  for (const criterionId of activity.evaluation.requiredCriterionIds) {
-    await page.getByTestId(`criterion-${criterionId}`).check();
+/** Alvo com testids: página standalone ou iframe de missão hospedada. */
+type TestTarget = { getByTestId(id: string): Locator };
+
+/**
+ * Responde corretamente uma atividade qualquer do Mapa Inicial pelo DOM,
+ * dirigido pelo conteúdo gerado (pós-retrofit O3-C1: 3 atividades).
+ */
+async function answerRightOn(target: TestTarget, act: ActivityDefinition) {
+  if (act.type === "output_comparison") {
+    await target.getByTestId(`output-${act.evaluation.betterOutputId}`).check();
+    for (const criterionId of act.evaluation.requiredCriterionIds) {
+      await target.getByTestId(`criterion-${criterionId}`).check();
+    }
+    return;
   }
-  await page.getByTestId("submit-attempt").click();
-  await expect(page.getByTestId("feedback-panel")).toContainText(activity.feedback.onSuccess ?? "");
+  if (act.type === "choice") {
+    const correct = new Set(act.evaluation.correctOptionIds);
+    for (const option of act.data.options) {
+      if (!correct.has(option.id)) continue;
+      await target.getByTestId(`option-${option.id}`).check();
+      if (!act.data.multiSelect) return;
+    }
+    return;
+  }
+  if (act.type === "sort") {
+    const order = act.data.items.map((item) => item.id);
+    for (const [index, target2] of act.evaluation.expectedOrder.entries()) {
+      let position = order.indexOf(target2);
+      while (position > index) {
+        await target.getByTestId(`sort-up-${target2}`).click();
+        order.splice(position - 1, 0, order.splice(position, 1)[0]);
+        position -= 1;
+      }
+    }
+    return;
+  }
+  throw new Error(`tipo sem helper e2e: ${act.type}`);
+}
+
+/**
+ * Percorre as atividades de `from` em diante acertando cada uma (com
+ * next-activity entre elas) — a lição só conclui com o conjunto completo.
+ */
+export async function answerRemainingRight(
+  target: TestTarget,
+  activities: ActivityDefinition[],
+  from = 0,
+) {
+  for (const [index, act] of activities.entries()) {
+    if (index < from) continue;
+    // Avança da atividade anterior (sempre, exceto quando `from` já é a primeira).
+    if (index > 0) await target.getByTestId("next-activity").click();
+    await answerRightOn(target, act);
+    await target.getByTestId("submit-attempt").click();
+    await expect(target.getByTestId("feedback-panel")).toContainText(act.feedback.onSuccess ?? "");
+  }
+}
+
+/** Responde corretamente TODAS as atividades do Mapa Inicial e conclui a lição. */
+export async function answerRight(page: Page) {
+  await answerRemainingRight(page, mapInitial.activities);
   await page.getByTestId("finish-lesson").click();
 }
 

@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
+import { loadRetrofitAcks, resetRetrofitAcks, saveRetrofitAck } from "../adapters/retrofitAcks";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
+import { isRetrofitNoticeDue } from "../domain/retrofitNotice";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
 import { ErrorRecoveryScreen } from "../screens/ErrorRecoveryScreen";
 import { HomeScreen } from "../screens/HomeScreen";
@@ -35,7 +37,7 @@ export type Route =
   | { name: "home" }
   | { name: "map" }
   | { name: "progress" }
-  | { name: "lesson"; lessonId: string; mode?: LessonMode }
+  | { name: "lesson"; lessonId: string; mode?: LessonMode; retrofitNotice?: boolean }
   | { name: "result"; summary: LessonSummary };
 
 function AppShell({
@@ -49,8 +51,34 @@ function AppShell({
   const [route, setRoute] = useState<Route | null>(null);
   const [bootError, setBootError] = useState<string | null>(null);
   const [lessonOpenError, setLessonOpenError] = useState<string | null>(null);
+  const [retrofitAcks, setRetrofitAcks] = useState(() => loadRetrofitAcks());
   const hostReady = progress !== null;
 
+  /**
+   * Abertura de lição (initial/review/resume/hosted): se o aviso de retrofit
+   * (O3-C1 §3) está devido para este learner/lição/bump, marca o ack ANTES do
+   * primeiro render da intro — S2 é exibido 1× por bump de contentVersion.
+   */
+  const openLessonRoute = useCallback(
+    (lessonId: string, mode?: LessonMode, current?: LearnerProgress | null) => {
+      const learner = current ?? progress;
+      const due =
+        learner !== null &&
+        isRetrofitNoticeDue({
+          lessonId,
+          contentVersion: services.content.getContentVersion(),
+          lessonStatus: learner.lessonStatus,
+          acks: retrofitAcks,
+        });
+      if (due) {
+        setRetrofitAcks(saveRetrofitAck(lessonId, services.content.getContentVersion()));
+      }
+      setRoute({ name: "lesson", lessonId, mode, retrofitNotice: due });
+    },
+    [progress, retrofitAcks, services],
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: boot único por sessão de host/serviços; o destino usa `seeded` explícito e openLessonRoute não deve re-disparar o boot.
   useEffect(() => {
     let cancelled = false;
     void (async () => {
@@ -77,7 +105,7 @@ function AppShell({
       if (destination.kind === "onboarding") {
         setRoute({ name: "onboarding" });
       } else if (destination.kind === "lesson") {
-        setRoute({ name: "lesson", lessonId: destination.lessonId });
+        openLessonRoute(destination.lessonId, undefined, seeded);
       } else {
         setRoute({ name: "home" });
       }
@@ -87,6 +115,7 @@ function AppShell({
     };
   }, [hostAdapter, services]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: ciclo de vida do adaptador hospedado; openLessonRoute recebe o progresso atualizado explicitamente.
   useEffect(() => {
     if (hostAdapter === null || !hostReady) return;
     return hostAdapter.start(async (launch) => {
@@ -96,7 +125,7 @@ function AppShell({
       }
       const updated = await services.useCases.prepareHostedMission(launch.missionId);
       setProgress(updated);
-      setRoute({ name: "lesson", lessonId: launch.missionId });
+      openLessonRoute(launch.missionId, undefined, updated);
     }, services.content.getContentVersion());
   }, [hostAdapter, hostReady, services]);
 
@@ -113,6 +142,8 @@ function AppShell({
 
   const handleReset = useCallback(async () => {
     await services.progressRepo.reset();
+    resetRetrofitAcks();
+    setRetrofitAcks({});
     const fresh = await loadOrSeedProgress(services);
     setProgress(fresh);
     setRoute({ name: "onboarding" });
@@ -124,14 +155,14 @@ function AppShell({
       try {
         const updated = await services.useCases.startLesson(lessonId);
         setProgress(updated);
-        setRoute({ name: "lesson", lessonId });
+        openLessonRoute(lessonId, undefined, updated);
       } catch {
         setLessonOpenError(
           "Não foi possível salvar seu progresso. Tente abrir a missão novamente.",
         );
       }
     },
-    [services],
+    [openLessonRoute, services],
   );
 
   const handleOpenReview = useCallback(
@@ -140,12 +171,12 @@ function AppShell({
       try {
         const { progress: updated } = await services.useCases.startReview(lessonId);
         setProgress(updated);
-        setRoute({ name: "lesson", lessonId, mode: "review" });
+        openLessonRoute(lessonId, "review", updated);
       } catch {
         setLessonOpenError("Não foi possível iniciar esta revisão. Tente novamente.");
       }
     },
-    [services],
+    [openLessonRoute, services],
   );
 
   if (bootError) {
@@ -234,6 +265,7 @@ function AppShell({
               lessonId={route.lessonId}
               mode={route.mode ?? "initial"}
               onboarding={progress.onboarding}
+              retrofitNotice={route.retrofitNotice ?? false}
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);

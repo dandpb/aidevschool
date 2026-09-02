@@ -1,7 +1,7 @@
-# Lição l03 — Fase 2.
+# Lição l03 — Fase 2; retrofit O3-C1 (spec AID-644 rev 2 §2.3): +l03-a3 (apenas), v1→v2, 4 min.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l03
-version: 1
+version: 2
 moduleId: mod-01
 title: "O que a IA faz bem e onde costuma falhar"
 objective: "Distinguir tarefas em que a IA costuma ajudar (rascunhos, resumos, ideias) de tarefas em que ela costuma falhar (dados recentes, cálculos exatos, fatos específicos)."
@@ -76,6 +76,42 @@ activities:
       - "Procure os itens que exigem precisão absoluta: número exato, texto de lei, fato de hoje."
       - "São três as situações de falha; a que sobra é trabalho de texto, ponto forte da IA."
 
+  - id: l03-a3
+    type: output_comparison
+    skillId: entender
+    instruction: "Você anexou o mesmo relatório em duas conversas e fez o mesmo pedido: 'Resuma o relatório de vendas do trimestre em 5 tópicos para a reunião de segunda.' Escolha a resposta que você usaria e marque os motivos."
+    data:
+      scenario: "O relatório anexado (documento interno da empresa) mostra: vendas cresceram 6% no trimestre, o produto A puxou o crescimento e a região Sul teve queda leve. O documento não traz projeção para o próximo trimestre nem cita estudo externo nenhum."
+      outputs:
+        - id: out-a
+          text: "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) O relatório não traz projeção para o próximo trimestre. 5) Recomendação do relatório: revisar as metas por região."
+        - id: out-b
+          text: "1) Vendas cresceram 6% no trimestre. 2) O produto A puxou o crescimento. 3) A região Sul teve queda leve. 4) A projeção é de crescimento de 12% no próximo trimestre, segundo a Pesquisa Nacional de Vendas (2025), p. 34. 5) O setor deve bater recorde histórico."
+      criteria:
+        - id: c-fiel-ao-material
+          text: "Usa apenas informações que estão no relatório fornecido"
+        - id: c-sem-dado-inventado
+          text: "Não apresenta como fato número ou citação que não está no material"
+        - id: c-mais-completa
+          text: "Traz mais números e citações do que o próprio relatório"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-fiel-ao-material, c-sem-dado-inventado]
+    feedback:
+      onFailure: "Resumir um material que você forneceu é ponto forte da IA — quando a saída fica fiel ao material. A resposta B parece mais completa, mas a projeção de 12% e a citação com página não estão no relatório: são invenção."
+      perCheck:
+        betterOutputId: "A resposta B acrescenta um dado e uma citação que o relatório não tem — completude aparente é invenção. A resposta A usa só o que o documento traz e diz o que ele não traz."
+        c-fiel-ao-material: "Faltou este motivo: a resposta a usar é a que se limita ao que está no relatório."
+        c-sem-dado-inventado: "Faltou este motivo: número e citação que não estão no material são o sinal clássico de dado inventado."
+      onSuccess: "Isso! A evidência está na saída: fiel ao material = ponto forte confirmado; dado inventado = o ponto fraco clássico, agora visto na prática."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada tópico, pergunte: essa informação está no relatório anexado?"
+      - "Uma das respostas cita fonte e página para um dado que o relatório não menciona."
+      - "Escolha a resposta que só usa o que está no documento e marque os dois critérios de fidelidade."
+
 rubric:
   id: l03-rubric
   criteria:
@@ -84,6 +120,9 @@ rubric:
       weight: 1
     - id: r-pontos-fracos
       text: "Identifica dados recentes, cálculos exatos e citações precisas como pontos fracos."
+      weight: 1
+    - id: r-evidencia-na-saida
+      text: "Prefere a saída fiel ao material fornecido e justifica pela evidência da saída, não só pela categoria da tarefa."
       weight: 1
 
 evidence:
@@ -96,4 +135,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l03-a1, l03-a2]
+  requiredActivityIds: [l03-a1, l03-a2, l03-a3]

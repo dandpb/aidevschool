@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { modules } from "../../src/data/generated/lessons";
 import { lessons } from "../../src/data/generated/lessons";
 import {
+  MAP_INITIAL_LESSON_ID,
   XP_PER_LESSON_COMPLETE,
   applyAttemptToSkills,
   applyStreak,
@@ -116,13 +117,61 @@ describe("skills e revisão espaçada", () => {
 describe("conclusão de lição", () => {
   const lesson = lessons.find((item) => item.id === firstReady.id);
   if (!lesson) throw new Error("lição ausente");
-  const [requiredActivity] = lesson.completion.requiredActivityIds;
+  const required = lesson.completion.requiredActivityIds;
+  const allPassed = Object.fromEntries(required.map((id) => [id, 1]));
 
   it("exige todas as atividades obrigatórias e a média mínima do conteúdo", () => {
     expect(evaluateLessonCompletion(lesson, {}).completed).toBe(false);
-    expect(evaluateLessonCompletion(lesson, { [requiredActivity]: 0.5 }).completed).toBe(false);
-    expect(evaluateLessonCompletion(lesson, { [requiredActivity]: 1 }).completed).toBe(true);
-    expect(evaluateLessonCompletion(lesson, { [requiredActivity]: 1 }).lessonScore).toBe(1);
+    expect(evaluateLessonCompletion(lesson, { [required[0]]: 0.5 }).completed).toBe(false);
+    expect(evaluateLessonCompletion(lesson, allPassed).completed).toBe(true);
+    expect(evaluateLessonCompletion(lesson, allPassed).lessonScore).toBe(1);
+  });
+});
+
+describe("conclusão de lição — retrofit O3-C1 (spec AID-644 rev 2 §4.3/A3)", () => {
+  const retrofitted = ["l01", "l02", "l03", "l04", "l05", "l06", "l07"]
+    .map((id) => lessons.find((lesson) => lesson.id === id))
+    .filter((lesson): lesson is NonNullable<typeof lesson> => lesson !== undefined);
+
+  it("A4: as 7 lições retrofitadas têm 3 atividades e requiredActivityIds = conjunto completo", () => {
+    expect(retrofitted).toHaveLength(7);
+    for (const lesson of retrofitted) {
+      expect(lesson.activities, `${lesson.id} atividades`).toHaveLength(3);
+      expect(
+        [...lesson.completion.requiredActivityIds].sort(),
+        `${lesson.id} requiredActivityIds`,
+      ).toEqual(lesson.activities.map((activity) => activity.id).sort());
+      expect(lesson.completion.minimumScore).toBe(0.75);
+    }
+  });
+
+  it("A3: predicado version-blind — só a1 concluída NÃO completa (faltam as novas)", () => {
+    const l01 = lessons.find((lesson) => lesson.id === "l01");
+    if (!l01) throw new Error("l01 ausente do read model");
+    const outcome = evaluateLessonCompletion(l01, { "l01-a1": 1 });
+    expect(outcome.completed).toBe(false);
+    expect(outcome.missingActivityIds).toEqual(["l01-a2", "l01-a3"]);
+    expect(evaluateLessonCompletion(l01, { "l01-a1": 1, "l01-a2": 1, "l01-a3": 1 }).completed).toBe(
+      true,
+    );
+  });
+
+  it("A3: 3× média >= 0.75 completa; abaixo disso não completa", () => {
+    const l04 = lessons.find((lesson) => lesson.id === "l04");
+    if (!l04) throw new Error("l04 ausente do read model");
+    const required = l04.completion.requiredActivityIds;
+    const atCutoff = Object.fromEntries(required.map((id) => [id, 0.75]));
+    expect(evaluateLessonCompletion(l04, atCutoff).completed).toBe(true);
+    expect(evaluateLessonCompletion(l04, atCutoff).lessonScore).toBe(0.75);
+    const below = Object.fromEntries(required.map((id) => [id, 0.7]));
+    expect(evaluateLessonCompletion(l04, below).completed).toBe(false);
+  });
+
+  it("A6: o Mapa Inicial continua em l02 (pinagem explícita da lição de entrada)", () => {
+    expect(MAP_INITIAL_LESSON_ID).toBe("l02");
+    const l02 = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
+    if (!l02) throw new Error("l02 ausente do read model");
+    expect(l02.skillIds.length).toBeGreaterThan(0);
   });
 });
 

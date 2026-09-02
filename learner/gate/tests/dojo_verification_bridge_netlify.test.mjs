@@ -327,7 +327,7 @@ const LITERACY_EDGE_CASES = [
       source: "literacydojo",
       attemptId: "att-l05-pb",
       lessonId: "l05",
-      lessonVersion: 2,
+      lessonVersion: 3,
       activityId: "l05-a1",
       activityType: "prompt_builder",
       skillIds: ["pedir"],

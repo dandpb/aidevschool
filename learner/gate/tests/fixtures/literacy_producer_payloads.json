@@ -19,7 +19,7 @@
             "opt-rascunho": false
           },
           "lessonId": "l01",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -46,7 +46,7 @@
             "opt-rascunho": true
           },
           "lessonId": "l01",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -80,7 +80,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l02",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.6,
@@ -111,7 +111,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l02",
-          "lessonVersion": 3,
+          "lessonVersion": 4,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -146,7 +146,7 @@
             "t-resumo": false
           },
           "lessonId": "l03",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -177,7 +177,7 @@
             "t-resumo": true
           },
           "lessonId": "l03",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -207,7 +207,7 @@
             "f-planilha": false
           },
           "lessonId": "l03",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -237,7 +237,7 @@
             "f-planilha": true
           },
           "lessonId": "l03",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -271,7 +271,7 @@
             "opt-negocio": false
           },
           "lessonId": "l04",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -299,7 +299,7 @@
             "opt-negocio": true
           },
           "lessonId": "l04",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -333,7 +333,7 @@
             "noExtraContext": 1
           },
           "lessonId": "l06",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.5,
@@ -363,7 +363,7 @@
             "noExtraContext": 0
           },
           "lessonId": "l06",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -398,7 +398,7 @@
             "step-repita": false
           },
           "lessonId": "l07",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -430,7 +430,7 @@
             "step-repita": true
           },
           "lessonId": "l07",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,

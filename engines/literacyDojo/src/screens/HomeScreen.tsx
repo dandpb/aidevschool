@@ -2,6 +2,7 @@ import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelWorld } from "../components/VoxelWorld";
 import type { LearnerProgress } from "../domain/progress";
+import { RETROFIT_NOTICE_S1, isRetrofittedLesson } from "../domain/retrofitNotice";
 import { buildTrackQueries } from "../domain/trackQueries";
 
 /**
@@ -142,6 +143,12 @@ export function HomeScreen({
             Hora de revisar:{" "}
             {dueReviews.map((skill) => services.content.getSkillTitle(skill.skillId)).join(", ")}.
           </p>
+          {isRetrofittedLesson(reviewLesson.id, services.content.getContentVersion()) &&
+            progress.lessonStatus[reviewLesson.id] === "completed" && (
+              <p className="muted" data-testid="retrofit-notice-s1">
+                {RETROFIT_NOTICE_S1}
+              </p>
+            )}
           <button
             type="button"
             className="btn btn-secondary"

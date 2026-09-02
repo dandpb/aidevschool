@@ -39,6 +39,33 @@ async function answerActivity(
     }
     return;
   }
+  if (activity.type === "choice") {
+    const options = activity.data.options;
+    const correct = new Set(activity.evaluation.correctOptionIds);
+    for (const option of options) {
+      const shouldPick = mode === "right" ? correct.has(option.id) : !correct.has(option.id);
+      if (!shouldPick) continue;
+      if (activity.data.multiSelect || correct.size === 1) {
+        await user.click(screen.getByTestId(`option-${option.id}`));
+        if (!activity.data.multiSelect) return;
+      }
+    }
+    return;
+  }
+  if (activity.type === "sort") {
+    // Ordena por trocas adjacentes usando as setas do DOM até expectedOrder.
+    const order = activity.data.items.map((item) => item.id);
+    const expected = activity.evaluation.expectedOrder;
+    for (const [index, target] of expected.entries()) {
+      let position = order.indexOf(target);
+      while (position > index) {
+        await user.click(screen.getByTestId(`sort-up-${target}`));
+        order.splice(position - 1, 0, order.splice(position, 1)[0]);
+        position -= 1;
+      }
+    }
+    return;
+  }
   if (activity.type === "prompt_builder") {
     for (const field of activity.data.fields) {
       const rules = activity.evaluation.fields[field.id] ?? {};
@@ -205,6 +232,15 @@ describe("fluxo do app (integração)", () => {
     await answerActivity(user, activity, "right");
     await user.click(screen.getByTestId("submit-attempt"));
     await screen.findByText(activity.feedback.onSuccess ?? "Muito bem!");
+
+    // 4b) Atividades novas do retrofit (O3-C1): a lição só conclui com o
+    // conjunto completo de obrigatórias — percorre as restantes acertando.
+    for (const remaining of firstLesson.activities.slice(1)) {
+      await user.click(screen.getByTestId("next-activity"));
+      await answerActivity(user, remaining, "right");
+      await user.click(screen.getByTestId("submit-attempt"));
+      await screen.findByText(remaining.feedback.onSuccess ?? "Muito bem!");
+    }
     await user.click(screen.getByTestId("finish-lesson"));
 
     // 5) Resultado com a distinção lição concluída ≠ competência verificada.
@@ -221,10 +257,11 @@ describe("fluxo do app (integração)", () => {
     );
 
     // 6) Evidência: uma por tentativa avaliada, envelope válido.
-    expect(services.evidence.records).toHaveLength(2);
+    // (errada + acerto na a1) + 1 acerto por atividade nova = 4 no total.
+    expect(services.evidence.records).toHaveLength(2 + (firstLesson.activities.length - 1));
     expect(services.evidence.records.every(isValidEvidenceRecord)).toBe(true);
     expect(services.evidence.records[0].pass).toBe(false);
-    expect(services.evidence.records[1].pass).toBe(true);
+    expect(services.evidence.records.at(-1)?.pass).toBe(true);
   });
 
   it("resposta parcial mostra o check que faltou e não libera a conclusão", async () => {
@@ -260,6 +297,11 @@ describe("fluxo do app (integração)", () => {
     await user.click(screen.getByTestId("hint-button"));
     await answerActivity(user, firstLesson.activities[0], "right");
     await user.click(screen.getByTestId("submit-attempt"));
+    for (const remaining of firstLesson.activities.slice(1)) {
+      await user.click(screen.getByTestId("next-activity"));
+      await answerActivity(user, remaining, "right");
+      await user.click(screen.getByTestId("submit-attempt"));
+    }
     await user.click(screen.getByTestId("finish-lesson"));
 
     expect(await screen.findByTestId("route-explanation")).toHaveTextContent(

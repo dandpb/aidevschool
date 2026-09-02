@@ -34,6 +34,11 @@ const WRONG_ANSWER = {
   criterionIds: [],
 };
 
+/** Padrão pós-retrofit O3-C1: o Mapa Inicial (l02) tem 3 atividades obrigatórias. */
+const ALL_BEST_SCORES = Object.fromEntries(
+  lesson.completion.requiredActivityIds.map((id) => [id, 1]),
+);
+
 async function completeMvpOnboarding(services: ReturnType<typeof makeServices>["services"]) {
   await services.useCases.completeOnboarding({
     goal: "save_time",
@@ -254,7 +259,7 @@ describe("completeLesson", () => {
     });
     const result = await services.useCases.completeLesson({
       lessonId: lesson.id,
-      bestScores: { [activityId]: 1 },
+      bestScores: ALL_BEST_SCORES,
       durationSeconds: 180,
     });
     expect(result.outcome.completed).toBe(true);
@@ -280,7 +285,7 @@ describe("completeLesson", () => {
     await services.useCases.retryActivity({ lessonId: lesson.id, activityId });
     const result = await services.useCases.completeLesson({
       lessonId: lesson.id,
-      bestScores: { [activityId]: 1 },
+      bestScores: ALL_BEST_SCORES,
     });
     expect(result.outcome.completed).toBe(true);
     expect(result.nextLessonId).toBe(guidedLesson.id);
@@ -304,7 +309,7 @@ describe("completeLesson", () => {
     });
     const result = await services.useCases.completeLesson({
       lessonId: lesson.id,
-      bestScores: { [activityId]: 1 },
+      bestScores: ALL_BEST_SCORES,
     });
     expect(result.progress.onboarding.route).toBe("guided");
     expect(result.nextLessonId).toBe(guidedLesson.id);
