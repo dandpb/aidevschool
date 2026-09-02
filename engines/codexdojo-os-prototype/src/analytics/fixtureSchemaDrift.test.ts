@@ -22,7 +22,7 @@ import { analyticsEventIsValid } from './events'
 describe('analytics fixture schema drift (events.ts is canonical)', () => {
   it('accepts every synthetic-fixture envelope', async () => {
     const lines = await syntheticFixtureLines()
-    expect(lines.length).toBe(94)
+    expect(lines.length).toBe(214)
     for (const entry of lines) {
       const event = JSON.parse(entry.line) as unknown
       expect(analyticsEventIsValid(event), `${entry.file}:${entry.number}`).toBe(true)
@@ -48,12 +48,14 @@ describe('analytics fixture schema drift (events.ts is canonical)', () => {
     const report = JSON.parse(raw) as {
       reportVersion: number
       anonymity: { identifiersPublished: boolean; suppressedBuckets: number }
-      source: { totalEvents: number }
+      source: { totalEvents: number; duplicateEvents: number }
     }
-    expect(report.reportVersion).toBe(1)
+    // AID-675 F2b: reportVersion 2 (D1/D2 sections + eventId dedup).
+    expect(report.reportVersion).toBe(2)
     expect(report.anonymity.identifiersPublished).toBe(false)
     expect(report.anonymity.suppressedBuckets).toBeGreaterThan(0)
-    expect(report.source.totalEvents).toBe(94)
+    expect(report.source.totalEvents).toBe(212)
+    expect(report.source.duplicateEvents).toBe(2)
     expect(raw.includes('install-')).toBe(false)
     expect(raw.includes('session-')).toBe(false)
   })

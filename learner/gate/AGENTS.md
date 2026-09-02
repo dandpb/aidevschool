@@ -21,7 +21,7 @@ and may commit a gate outcome to canonical learner state. It never produces evid
 | Teaching-game contract | `../../docs/design/teaching-game-contract.md` | Producer/verifier split and cross-engine handoff rules. |
 | Pixel evidence details | `../../engines/pixelDojo/EVIDENCE_CONTRACT.md` | Pixel-specific NDJSON selection and metric rules. |
 | Contract tests | `tests/test_gate.py` | Preconditions, anti-replay, receipts, CLI, and nothing-to-grade cases. |
-| OS analytics (offline) | `analytics/`, `netlify-functions/dojo-analytics-collector.mjs` | NDJSON→funnel aggregation and schema-drift monitor for the OS collector (AID-470 F1 / AID-473 F2). Analytics is never evidence and never gates; reports are aggregated, k≥5-suppressed, identifier-free; fixtures under `tests/fixtures/analytics/` are synthetic only. |
+| OS analytics (offline) | `analytics/`, `netlify-functions/dojo-analytics-collector.mjs` | NDJSON→funnel aggregation and schema-drift monitor for the OS collector (AID-470 F1 / AID-473 F2; F2b reportVersion 2 per AID-675: eventId dedup + D1/D2 sections, module mapping read live from `curriculum/ai-literacy/catalog.yaml` with a fail-closed `unavailable` section). Analytics is never evidence and never gates; reports are aggregated, k≥5-suppressed, identifier-free; fixtures under `tests/fixtures/analytics/` are synthetic only. |
 
 ## CONVENTIONS
 

@@ -1,5 +1,5 @@
 {
-  "reportVersion": 1,
+  "reportVersion": 2,
   "generatedAt": "2026-09-18T00:00:00.000Z",
   "parameters": {
     "windowsDays": [
@@ -105,11 +105,24 @@
         "lines": 1
       },
       {
+        "name": "events-2026-09-08.ndjson",
+        "lines": 85
+      },
+      {
+        "name": "events-2026-09-09.ndjson",
+        "lines": 34
+      },
+      {
+        "name": "events-2026-09-11.ndjson",
+        "lines": 1
+      },
+      {
         "name": "events-2026-09-17.ndjson",
         "lines": 1
       }
     ],
-    "totalEvents": 94,
+    "totalEvents": 212,
+    "duplicateEvents": 2,
     "rejectedEvents": 0,
     "parseErrors": 0
   },
@@ -142,15 +155,24 @@
           5,
           5
         ]
+      },
+      "2026-W37": {
+        "n": 17,
+        "counts": [
+          17,
+          17,
+          17,
+          17
+        ]
       }
     },
     "overall": {
-      "n": 15,
+      "n": 32,
       "counts": [
-        15,
-        15,
-        13,
-        13
+        32,
+        32,
+        30,
+        30
       ]
     }
   },
@@ -214,33 +236,60 @@
           "reviewReturn": 1,
           "reviewReturnRate": 0.2
         }
+      },
+      "2026-W37": {
+        "n": 17,
+        "D+1": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.0588,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+7": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 0,
+          "returnedStrictRate": 0,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+21": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 0,
+          "returnedStrictRate": 0,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        }
       }
     },
     "overall": {
-      "n": 13,
+      "n": 30,
       "D+1": {
-        "returned": 5,
-        "returnedRate": 0.3846,
-        "returnedStrict": 5,
-        "returnedStrictRate": 0.3846,
+        "returned": 6,
+        "returnedRate": 0.2,
+        "returnedStrict": 6,
+        "returnedStrictRate": 0.2,
         "reviewReturn": 1,
-        "reviewReturnRate": 0.0769
+        "reviewReturnRate": 0.0333
       },
       "D+7": {
-        "returned": 9,
-        "returnedRate": 0.6923,
+        "returned": 10,
+        "returnedRate": 0.3333,
         "returnedStrict": 4,
-        "returnedStrictRate": 0.3077,
+        "returnedStrictRate": 0.1333,
         "reviewReturn": 2,
-        "reviewReturnRate": 0.1538
+        "reviewReturnRate": 0.0667
       },
       "D+21": {
-        "returned": 10,
-        "returnedRate": 0.7692,
+        "returned": 11,
+        "returnedRate": 0.3667,
         "returnedStrict": 3,
-        "returnedStrictRate": 0.2308,
+        "returnedStrictRate": 0.1,
         "reviewReturn": 2,
-        "reviewReturnRate": 0.1538
+        "reviewReturnRate": 0.0667
       }
     }
   },
@@ -304,34 +353,255 @@
           "reviewReturn": 1,
           "reviewReturnRate": 0.1667
         }
+      },
+      "2026-W37": {
+        "n": 17,
+        "D+1": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 1,
+          "returnedStrictRate": 0.0588,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+7": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 0,
+          "returnedStrictRate": 0,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        },
+        "D+21": {
+          "returned": 1,
+          "returnedRate": 0.0588,
+          "returnedStrict": 0,
+          "returnedStrictRate": 0,
+          "reviewReturn": 0,
+          "reviewReturnRate": 0
+        }
       }
     },
     "overall": {
-      "n": 15,
+      "n": 32,
       "D+1": {
-        "returned": 5,
-        "returnedRate": 0.3333,
-        "returnedStrict": 5,
-        "returnedStrictRate": 0.3333,
+        "returned": 6,
+        "returnedRate": 0.1875,
+        "returnedStrict": 6,
+        "returnedStrictRate": 0.1875,
         "reviewReturn": 1,
-        "reviewReturnRate": 0.0667
+        "reviewReturnRate": 0.0313
       },
       "D+7": {
-        "returned": 9,
-        "returnedRate": 0.6,
+        "returned": 10,
+        "returnedRate": 0.3125,
         "returnedStrict": 4,
-        "returnedStrictRate": 0.2667,
+        "returnedStrictRate": 0.125,
         "reviewReturn": 2,
-        "reviewReturnRate": 0.1333
+        "reviewReturnRate": 0.0625
       },
       "D+21": {
-        "returned": 10,
-        "returnedRate": 0.6667,
+        "returned": 11,
+        "returnedRate": 0.3438,
         "returnedStrict": 3,
-        "returnedStrictRate": 0.2,
+        "returnedStrictRate": 0.0938,
         "reviewReturn": 2,
-        "reviewReturnRate": 0.1333
+        "reviewReturnRate": 0.0625
       }
     }
+  },
+  "trackEntrySplit": {
+    "definition": "installations with ≥1 mission.started{mode:initial}, by ISO week of the first one; split by its trackId",
+    "cohorts": {
+      "2026-W29": {
+        "n": 5,
+        "byTrack": {
+          "ai-pratica": {
+            "installations": 3,
+            "rate": 0.6
+          },
+          "dev": {
+            "installations": 2,
+            "rate": 0.4
+          }
+        }
+      },
+      "2026-W33": {
+        "suppressed": true,
+        "n": 3
+      },
+      "2026-W35": {
+        "n": 5,
+        "byTrack": {
+          "ai-pratica": {
+            "installations": 3,
+            "rate": 0.6
+          },
+          "dev": {
+            "installations": 2,
+            "rate": 0.4
+          }
+        }
+      },
+      "2026-W37": {
+        "n": 17,
+        "byTrack": {
+          "ai-pratica": {
+            "installations": 11,
+            "rate": 0.6471
+          },
+          "dev": {
+            "installations": 6,
+            "rate": 0.3529
+          }
+        }
+      }
+    }
+  },
+  "missionCompletion": {
+    "definition": "installations with ≥1 mission.started (n) vs ≥1 mission.completed{result:completed}, per missionId context; missing missionId ⇒ unattributed",
+    "missions": {
+      "game-02-warehouse": {
+        "started": 6,
+        "completed": 6,
+        "completionRate": 1
+      },
+      "l01": {
+        "started": 6,
+        "completed": 6,
+        "completionRate": 1
+      },
+      "l04": {
+        "started": 8,
+        "completed": 5,
+        "completionRate": 0.625
+      },
+      "os-l04-1": {
+        "suppressed": true,
+        "n": 1
+      },
+      "unattributed": {
+        "started": 13,
+        "completed": 13,
+        "completionRate": 1
+      }
+    }
+  },
+  "activityFriction": {
+    "definition": "structured_attempt.passed/submitted per activityType × missionId; hint.requested/retry.requested counted per missionId (those events carry no activityType)",
+    "attempts": {
+      "choice|unattributed": {
+        "suppressed": true,
+        "n": 1
+      },
+      "prompt_builder|l01": {
+        "submitted": 6,
+        "passed": 4,
+        "passRate": 0.6667
+      },
+      "prompt_builder|unattributed": {
+        "suppressed": true,
+        "n": 1
+      },
+      "rubric_review|l04": {
+        "suppressed": true,
+        "n": 2
+      },
+      "safety_classification|unattributed": {
+        "suppressed": true,
+        "n": 1
+      },
+      "sort|unattributed": {
+        "suppressed": true,
+        "n": 1
+      }
+    },
+    "missionFriction": {
+      "l01": {
+        "hintRequested": 5,
+        "retryRequested": {
+          "suppressed": true,
+          "n": 2
+        }
+      },
+      "unattributed": {
+        "hintRequested": {
+          "suppressed": true,
+          "n": 1
+        },
+        "retryRequested": {
+          "suppressed": true,
+          "n": 1
+        }
+      }
+    }
+  },
+  "verificationHealth": {
+    "definition": "verification.state_changed events by state (bridge-level state; no missionId in the cut)",
+    "totalEvents": 20,
+    "states": {
+      "gateway-unavailable": {
+        "events": 6,
+        "installations": 6,
+        "share": 0.3
+      },
+      "pending": {
+        "suppressed": true,
+        "n": 2
+      },
+      "rejected": {
+        "events": 6,
+        "installations": 6,
+        "share": 0.3
+      },
+      "verified": {
+        "events": 6,
+        "installations": 6,
+        "share": 0.3
+      }
+    }
+  },
+  "rendererDegraded": {
+    "definition": "renderer.degraded events by fallback, with aggregated reasons and engineId context when present",
+    "fallbacks": {
+      "canvas2d": {
+        "suppressed": true,
+        "n": 1
+      },
+      "dom": {
+        "events": 6,
+        "reasons": {
+          "creation-failed": 6
+        },
+        "engineIds": {
+          "literacyDojo": 6
+        }
+      },
+      "none": {
+        "suppressed": true,
+        "n": 2
+      }
+    }
+  },
+  "moduleCompletionMedian": {
+    "definition": "per-module completion (same definition as missionCompletion, unioned over the module's missions) for ia_pratica modules mapped in the catalog; median across published modules",
+    "catalog": "curriculum/ai-literacy/catalog.yaml",
+    "journey": "ia_pratica",
+    "modules": {
+      "mod-01": {
+        "n": 6,
+        "completed": 6,
+        "completionRate": 1
+      },
+      "mod-02": {
+        "n": 8,
+        "completed": 5,
+        "completionRate": 0.625
+      }
+    },
+    "medianCompletionRate": 0.8125,
+    "modulesPublished": 2,
+    "modulesSuppressed": 0,
+    "missionsWithoutModuleMapping": 2
   }
 }

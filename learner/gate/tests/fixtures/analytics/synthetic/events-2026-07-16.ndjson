@@ -1,6 +1,6 @@
 {"schemaVersion":1,"eventId":"evt-0021","name":"onboarding.started","occurredAt":"2026-07-16T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-i4","sessionId":"s-i4-1"}}
 {"schemaVersion":1,"eventId":"evt-0022","name":"onboarding.completed","occurredAt":"2026-07-16T10:05:00Z","sequence":2,"dimensions":{"installationId":"install-i4","sessionId":"s-i4-1"}}
-{"schemaVersion":1,"eventId":"evt-0023","name":"mission.started","occurredAt":"2026-07-16T10:10:00Z","sequence":3,"dimensions":{"installationId":"install-i4","sessionId":"s-i4-1","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0023","name":"mission.started","occurredAt":"2026-07-16T10:10:00Z","sequence":3,"dimensions":{"installationId":"install-i4","sessionId":"s-i4-1","trackId":"ai-pratica","mode":"initial"}}
 {"schemaVersion":1,"eventId":"evt-0024","name":"mission.completed","occurredAt":"2026-07-16T10:30:00Z","sequence":4,"dimensions":{"installationId":"install-i4","sessionId":"s-i4-1","result":"completed"}}
 {"schemaVersion":1,"eventId":"evt-0025","name":"journey.returned","occurredAt":"2026-07-16T15:00:00Z","sequence":5,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-2"}}
 {"schemaVersion":1,"eventId":"evt-0026","name":"mission.started","occurredAt":"2026-07-16T15:01:00Z","sequence":6,"dimensions":{"installationId":"install-i2","sessionId":"s-i2-2","mode":"initial"}}
