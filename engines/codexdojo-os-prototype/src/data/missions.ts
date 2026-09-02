@@ -683,6 +683,41 @@ export const missionCatalog: MissionCatalogSnapshot = {
       },
     },
     {
+      id: "l26",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l26",
+      projectId: "00_ai_in_practice",
+      title: "Confira o que a IA extraiu",
+      objective: "Diante de uma extração feita de um documento anexado, conferir os campos críticos contra o trecho original e corrigir divergências antes de usar a saída.",
+      estimatedMinutes: 4,
+      chapterOrder: 20,
+      prerequisites: [
+        "l20",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-02.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Compare a extracao da IA com o documento original e corrija antes de usar por controles rotulados.",
+      },
+    },
+    {
       id: "game-02-warehouse",
       version: 1,
       trackId: "dev",

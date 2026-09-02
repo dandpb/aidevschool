@@ -1,0 +1,139 @@
+# Lição l26 — Onda O2 (spec AID-528 rev 3 §2.3): conferência de extração de documento anexado.
+# Fecha o arco do mod-07 (anexar → pedir → conferir → usar) e estende os sinais da l20
+# (número preciso, data, citação nominal) para a extração de anexo.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l26
+version: 1
+moduleId: mod-07
+title: "Confira o que a IA extraiu"
+objective: "Diante de uma extração feita de um documento anexado, conferir os campos críticos contra o trecho original e corrigir divergências antes de usar a saída."
+estimatedMinutes: 4
+skillIds: [avaliar, aplicar]
+prerequisites: [l20]
+
+activities:
+  - id: l26-a1
+    type: output_comparison
+    skillId: avaliar
+    instruction: "VOCÊ ANEXOU A ATA DA REUNIÃO E PEDIU UM RESUMO PARA A DIRETORIA. COMPARE AS DUAS SAÍDAS E ESCOLHA A MELHOR PARA USAR."
+    data:
+      scenario: "Você anexou a ata da reunião e pediu um resumo para a diretoria. Trecho visível da ata: 'orçamento aprovado: R$ 48.500 · prazo: 15 de março · responsável: equipe de suporte'. Na sua ferramenta real você anexaria o arquivo; aqui você decide por controles rotulados."
+      outputs:
+        - id: out-a
+          text: "Resumo para a diretoria: orçamento aprovado de R$ 48.500, prazo em 15 de março, responsável: equipe de suporte — valores conferidos na ata."
+        - id: out-b
+          text: "Resumo para a diretoria: orçamento na casa de cinquenta mil, prazo para meados de março, e a equipe cuida do resto."
+      criteria:
+        - id: c-preserva-valores-exatos
+          text: "Preserva os valores exatos do trecho original (R$ 48.500 · 15 de março · equipe de suporte)"
+        - id: c-cita-a-origem
+          text: "Marca de onde os valores vieram (a ata)"
+        - id: c-sem-invencao
+          text: "Não arredonda, não troca e não inventa valores"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-preserva-valores-exatos, c-sem-invencao]
+    feedback:
+      onFailure: "Extração que arredonda ou troca números sem marcar a origem não vai para a diretoria. A saída A mantém os três valores do trecho e avisa que foram conferidos na ata; a B troca R$ 48.500 por 'cinquenta mil', vaga o prazo para 'meados de março' e não cita origem nenhuma."
+      perCheck:
+        betterOutputId: "A saída A é a única que mantém valor, data e responsável exatamente como estão na ata — e marca a origem."
+        c-preserva-valores-exatos: "Faltou este critério: 'na casa de cinquenta mil' e 'meados de março' não são os valores da ata — extração se confere campo a campo."
+        c-sem-invencao: "Faltou este critério: arredondar e trocar números numa extração é o mesmo que inventar — o trecho diz R$ 48.500 e 15 de março."
+      onSuccess: "Exato! Extração pronta para usar: valores idênticos ao trecho original e origem marcada — a diretoria recebe o que a ata diz."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que acontece com a decisão da diretoria se o valor chegar trocado ou arredondado?"
+      - "Compare campo a campo com o trecho da ata: qual saída mantém R$ 48.500, 15 de março e equipe de suporte — e diz de onde vieram?"
+
+  - id: l26-a2
+    type: choice
+    skillId: avaliar
+    instruction: "A IA EXTRAIU ESTES CAMPOS DA ATA. QUAIS VOCÊ CONFERE NO DOCUMENTO ORIGINAL ANTES DE USAR?"
+    data:
+      multiSelect: true
+      options:
+        - id: opt-valor
+          text: "Valor aprovado: R$ 48.500"
+        - id: opt-data
+          text: "Data do prazo: 15 de março"
+        - id: opt-responsavel
+          text: "Responsável: equipe de suporte"
+        - id: opt-paginas
+          text: "A ata tem 3 páginas"
+        - id: opt-tom
+          text: "O texto da ata está formal"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-valor, opt-data, opt-responsavel]
+    feedback:
+      onFailure: "O sinal é o mesmo da verificação de números e fatos, agora no anexo: número preciso, data e citação nominal são campos que a IA pode trocar ao extrair — confira cada um contra o trecho original antes de usar. Quantidade de páginas e tom do texto não mudam a decisão."
+      perCheck:
+        opt-valor: "Confira: número exato é o campo que mais se troca na extração — R$ 48.500, não 'cinquenta mil'."
+        opt-data: "Confira: data vira 'meados de março' com facilidade — o prazo é 15 de março."
+        opt-responsavel: "Confira: citação nominal define quem responde pela entrega — equipe de suporte."
+        opt-paginas: "Não precisa conferir: o número de páginas não muda nenhuma decisão."
+        opt-tom: "Não precisa conferir: o tom do texto é descrição, não dado extraído."
+      onSuccess: "Isso! Número preciso, data e nome são os campos que exigem conferência — página e tom são detalhe do documento, não dado."
+    storage:
+      policy: structured_only
+    hints:
+      - "Quais campos, se chegarem trocados, mudam a decisão de quem lê o resumo?"
+      - "Número exato, data e nome próprio são os sinais de sempre — o resto é descrição do documento."
+
+  - id: l26-a3
+    type: sort
+    skillId: aplicar
+    instruction: "DO DOCUMENTO ANEXADO ATÉ O USO. ORDENE O FLUXO DE TRABALHO COMPLETO."
+    data:
+      items:
+        - id: passo-proteger-anexo
+          text: "Conferir se o anexo é seguro e remover o que a tarefa não usa"
+        - id: passo-anexar-e-pedir
+          text: "Anexar o documento e escrever o pedido com tarefa, referência e formato"
+        - id: passo-comparar-campos
+          text: "Comparar cada campo extraído com o trecho original"
+        - id: passo-corrigir-e-usar
+          text: "Corrigir a divergência no pedido e só então usar a saída"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [passo-proteger-anexo, passo-anexar-e-pedir, passo-comparar-campos, passo-corrigir-e-usar]
+    feedback:
+      onFailure: "A ordem é: conferir a segurança do anexo, anexar e pedir, comparar os campos extraídos com o trecho, corrigir e usar. A proteção vem antes de o arquivo sair; a comparação vem depois da resposta; a correção vem antes do uso."
+      perCheck:
+        passo-proteger-anexo: "Primeiro: remover o que expõe pessoas e o que a tarefa não usa — o arquivo não sai antes disso."
+        passo-anexar-e-pedir: "Segundo: anexo sem instrução gera resposta genérica — o pedido com tarefa, referência e formato vai junto."
+        passo-comparar-campos: "Terceiro: só existe o que comparar depois que a resposta chega — campo a campo contra o trecho."
+        passo-corrigir-e-usar: "Quarto: a divergência se corrige no pedido, e a saída só se usa depois de corrigida."
+      onSuccess: "Fechado: proteger → anexar e pedir → conferir → corrigir e usar. Esse é o mapa mental do módulo inteiro."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa estar resolvido antes de o arquivo sair do seu computador?"
+      - "Proteger vem antes de anexar; conferir vem depois da resposta; corrigir vem antes de usar."
+
+rubric:
+  id: l26-rubric
+  criteria:
+    - id: r-confere-campos-criticos
+      text: "Sabe quais campos exigem conferência pelo sinal: número preciso, data e citação nominal."
+      weight: 1
+    - id: r-verifica-contra-o-original
+      text: "Compara os campos extraídos contra o trecho original, não contra a memória."
+      weight: 1
+    - id: r-fecha-o-fluxo-com-correcao
+      text: "Corrige a divergência no pedido antes de usar a saída."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l26-a1, l26-a2, l26-a3]

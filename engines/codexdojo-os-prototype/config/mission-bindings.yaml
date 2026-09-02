@@ -430,6 +430,31 @@ bindings:
     fallback:
       kind: dom
       summary: "Classifique anexos como seguro ou sensivel e proteja os dados antes de enviar por controles rotulados."
+  # Onda O2 (spec AID-528 rev 3 §2.3): l26 fecha o mod-07 como 20ª missão
+  # ai-pratica. Mergeia por último na ordem da onda (chapterOrder 18→19→20);
+  # sem bump de contentVersion — o bump único viajou com o T1/l24.
+  - missionId: l26
+    chapterOrder: 20
+    prerequisites: [l20]
+    trackId: ai-pratica
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l26
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l26
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-02.1"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Compare a extracao da IA com o documento original e corrija antes de usar por controles rotulados."
   - missionId: game-02-warehouse
     version: 1
     chapterOrder: 1

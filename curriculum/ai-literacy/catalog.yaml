@@ -301,4 +301,4 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l20]
     skillIds: [avaliar, aplicar]
-    status: planned
+    status: ready
