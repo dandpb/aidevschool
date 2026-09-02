@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "7653822005549a690ce2604f64113b6e92b2782c",
+  "observedAt": "2026-09-02T14:05:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). Fresh browser profile on the production alias: the track question 'O que você quer conseguir fazer com IA?' renders with the recommended card and an explicit recommendation line while the Dev track card remains clickable (screenshot ev/obs-1-onboarding.png). After 'Entrar na escola' the hub names the active chapter ('Capítulo IA Prática'), local goal ('XP local 0 Meta 0/25') and an explicit next action ('SEU PRÓXIMO PASSO ESTÁ PRONTO' + 'Aprenda agora') (ev/obs-1-hub.png). Observer response: I know which track I am in and exactly which mission starts next."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). Real learner journey through the wave lesson l27 (Debug com assistente) completed in production: sort (canonical order, keyboard-operated move buttons), prompt_builder fields and missing_context checks submitted; the host mission status bar (aria-live=polite) transitioned to 'ETAPA Aplicar MOTOR completed EVIDÊNCIA Veredito PASS' — the independent verdict is visible to the learner (ev/obs-2-literacy-verdict.png, ev/l27-b3-host-verdict.png). The result screen keeps completion distinct from canonical competency ('A evidência seguirá para verificação independente, mas este fluxo não altera o estado canônico'). MOTOR hosted l27/l28/l29 all running from the same-origin /apps/literacydojo/ iframe. Observer response: I completed a hosted mission, saw the independent PASS verdict, and know completion did not touch canonical mastery."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). Degradation exercised for real in production by aborting /__dojo/bridge/v1/* from the browser context: the mission status visibly reported 'EVIDÊNCIA Verificador indisponível' with NO completion or verdict implied (ev/obs-3-verification-degraded.png); the visible 'Tentar verificação novamente' control recovered the journey after the abort was lifted — status returned to 'EVIDÊNCIA Veredito PASS' (ev/obs-3-verification-recovered.png). Bridge guards re-verified: session 200 same-origin / 403 cross-origin / 401 unauthenticated / 422 unknown schema; six QA-forged wrong-answer dispatches (wrong sort order, distractor, all-met rubric verdicts, wrong output, popularity-trap options) all FAIL-closed by the independent verifier. Facilitator path: visible state + retry control; no repository intervention needed."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). Same browser profile reloaded after completing l27: local XP retained across reload (XP local 25 before == 25 after), and revisiting /mission/dev/l27 restored the hosted mission state (MOTOR running, honest evidence status; ev/obs-4-literacy-returning.png, ev/obs-4-returning-map.png). Copy observed keeps continuity local ('Salva neste dispositivo' framing in the honest-progress rail) without any cross-device sync claim. Observer response: continuity worked on the same device and the UI never implied more than that."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). WAREHOUSE, WORMHOLE and RELAY STATION launched on their /mission/dev/* routes in production: each mounted from the host origin (iframe https://aidevschool-codexdojo-os.netlify.app) with status 'MOTOR running / VISUALIZAÇÃO 3D WebGL / EVIDÊNCIA Ainda não enviada' (ev/obs-5-*.png). Evidence is framed separately from mastery across the shell ('Competência canônica' rail; no mastery wording). Observer response: a mission result is a local step with raw evidence — nothing suggests canonical mastery."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). Same profile reloaded while inside /mission/dev/game-02-warehouse: the mission restored identically after reload ('ETAPA Responder MOTOR running VISUALIZAÇÃO 3D WebGL EVIDÊNCIA Ainda não enviada' before == after; ev/obs-6-voxel-returning.png). Continuity copy stays device-local; no cross-device claim observed anywhere in the shell."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). On the warehouse mission the 'Usar visualização acessível' control was present and switching produced a semantic DOM projection with 6 keyboard-focusable controls retained (ev/obs-7-renderer-accessible.png); reduced-motion/reflow verified at 320px without horizontal overflow on mission surfaces (l27/l28/l29: scrollWidth <= innerWidth). Renderer status is explicit in the mission status bar ('VISUALIZAÇÃO 3D WebGL' or the accessible label), so a failed renderer is nameable from the visible state; the automated renderer-fallback spec is green in the pin CI rollup. Escalation threshold visible: renderer recovery exhausted => the journey stops at the visible error with support CTA, never a silent pass."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). OS state resumed on the same profile after full reload: XP local identical (25 == 25), chapter retained, map reflecting completed state; the honest-progress rail marks steps 'Salva neste dispositivo' and 'Competência canônica — Não alterada por este fluxo' (ev/obs-4-returning-map.png). No cross-device sync wording exists in the shell. Observer response: continuity is visibly a same-device property."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-631 Gate B), 2026-09-02 13:0x-14:0xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9816a506dee943d5e6ec25; pilot-bundle-manifest sha256 9f2a44fb... identical on draft==alias==permalink==register AID-630; sourceRevision == pin 7653822) plus my own pilot-spec run (7/7, 17.5s) against the promoted static artifact and the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail; codexdojo-os (TS) success). With local state cleared from the browser (indexedDB os-progress deletion requested + localStorage cleared) the OS returned to a fresh, zero-state hub ('XP local 0', no verdict, no completion invented — verified: no 'Veredito PASS' and no non-zero XP after loss; ev/obs-8-fresh-onboarding.png). The deterministic onboarding-return path is covered by the automated readiness-recovery spec (green in the pin CI rollup, my first-hand check-run verification); from outside the page, IndexedDB deletion can be blocked by open connections, which itself demonstrates the state is local to the browser profile. Facilitator story: state loss is a local-browser event; nothing canonical is lost or fabricated."
+        }
+      ]
+    }
+  ]
+}
