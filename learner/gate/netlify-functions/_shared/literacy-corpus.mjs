@@ -2322,7 +2322,157 @@ export const literacyCorpus = {
       "aplicar"
     ],
     "version": 1
+  },
+  "l27": {
+    "activities": [
+      {
+        "data": {
+          "items": [
+            {
+              "id": "passo-reproduzir",
+              "text": "Reproduzir o erro deterministicamente: mesmo input, mesmo resultado, toda vez"
+            },
+            {
+              "id": "passo-isolar",
+              "text": "Isolar o caso mínimo que ainda reproduz o erro"
+            },
+            {
+              "id": "passo-pedir",
+              "text": "Montar o pedido com a mensagem exata, o passo que reproduz e o esperado-vs-observado"
+            },
+            {
+              "id": "passo-corrigir",
+              "text": "Aplicar a correção sugerida pelo assistente"
+            },
+            {
+              "id": "passo-testar",
+              "text": "Rodar os testes, incluindo o caso mínimo como teste novo"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "passo-reproduzir",
+            "passo-isolar",
+            "passo-pedir",
+            "passo-corrigir",
+            "passo-testar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l27-a1",
+        "type": "sort"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "A mensagem exata que aparece — cole como veio, com TypeError, stack ou trace se houver",
+              "id": "erro",
+              "label": "Erro"
+            },
+            {
+              "hint": "O passo a passo que dispara o erro toda vez — ex.: abro o formulário noturno, deixo o anexo vazio, clico aprovar",
+              "id": "reproduz",
+              "label": "Passo que reproduz"
+            },
+            {
+              "hint": "O que deveria acontecer vs. o que acontece — ex.: deveria aprovar o reembolso; retorna TypeError",
+              "id": "esperado-vs-observado",
+              "label": "Esperado vs. observado"
+            }
+          ],
+          "genericPrompt": "corrige isso",
+          "scenario": "No painel interno, aprovar um reembolso no formulário noturno lança 'TypeError: Cannot read properties of undefined (reading valor)' sempre que o campo de anexo fica vazio; no formulário diurno, o mesmo fluxo funciona. Você vai pedir a correção ao assistente — o pedido 'corrige isso', sozinho, já devolveu três palpites errados."
+        },
+        "evaluation": {
+          "fields": {
+            "erro": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "erro",
+                "exception",
+                "stack",
+                "falha",
+                "trace"
+              ]
+            },
+            "esperado-vs-observado": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "esperado",
+                "retorna",
+                "ocorre",
+                "recebe"
+              ]
+            },
+            "reproduz": {
+              "minLength": 5,
+              "mustIncludeAny": [
+                "reproduz",
+                "passo",
+                "sempre",
+                "executo",
+                "rodo"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l27-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "mensagem-de-erro",
+              "text": "A mensagem de erro exata: o texto completo que a tela ou o log mostra"
+            },
+            {
+              "id": "passo-que-reproduz",
+              "text": "O passo que reproduz: o que ele faz para o erro acontecer de novo, toda vez"
+            },
+            {
+              "id": "comportamento-esperado",
+              "text": "O comportamento esperado: o que deveria acontecer se tudo funcionasse"
+            },
+            {
+              "id": "versao-ambiente",
+              "text": "A versão da linguagem/runtime em que o projeto roda — estreita a causa quando o erro depende de ambiente"
+            },
+            {
+              "id": "modelo-de-ia",
+              "text": "O nome do modelo de IA usado na conversa"
+            },
+            {
+              "id": "print-da-tela-inteira",
+              "text": "Um print da tela inteira, em vez da mensagem de erro"
+            }
+          ],
+          "prompt": "COLEGA (mensagem ao assistente): 'não funciona, corrige' · ASSISTENTE (resposta): 'Claro! Sobre o que exatamente? Pode dar mais detalhes?' — três idas e vindas depois, o assistente já chutou três causas diferentes e nenhuma era a do formulário noturno."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "versao-ambiente"
+          ],
+          "requiredContextIds": [
+            "mensagem-de-erro",
+            "passo-que-reproduz",
+            "comportamento-esperado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l27-a3",
+        "type": "missing_context"
+      }
+    ],
+    "skillIds": [
+      "codificar",
+      "avaliar"
+    ],
+    "version": 1
   }
 }
 
-export const literacyCorpusVersion = "2026-09-02.1"
+export const literacyCorpusVersion = "2026-09-02.2"

@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26', 'l27'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26' | 'l27'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -374,7 +374,7 @@ test('preserves completed first-release missions across switches and reloads', a
   await returnFromGame(page)
 
   // The dev track also publishes the Dev-journey literacy lessons (l15-l17
-  // + l21-l23, module 05). Wave l21-l23 (spec AID-528 rev 2) anchors on the
+  // + l21-l23 + l27, module 05). Wave l21-l23 (spec AID-528 rev 2) anchors on the
   // canonical prerequisites l16/l15, so complete the anchor chain first
   // (l15 -> l16) to unlock the wave missions, then host and complete each
   // new lesson end-to-end through its three activities.
@@ -409,6 +409,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await page.goto('/mission/dev/l23')
   await expect(page.getByRole('heading', { name: 'O que aceitar: limites do assistente' })).toBeVisible()
   await completeLiteracyMission(page, 'l23')
+
+  // Wave O1 T1 (spec AID-610 rev 2 §2.1): l27 "Debug com assistente:
+  // reproduza antes de perguntar" opens the O1 dev wave as the 14th dev
+  // mission (chapterOrder 14, canonical prereq l21 — completed above).
+  // Completes end-to-end through sort, prompt_builder, and missing_context.
+  await page.goto('/mission/dev/l27')
+  await expect(page.getByRole('heading', { name: 'Debug com assistente: reproduza antes de perguntar' })).toBeVisible()
+  await completeLiteracyMission(page, 'l27')
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
@@ -464,6 +472,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:l21',
     'dev:l22',
     'dev:l23',
+    'dev:l27',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }
