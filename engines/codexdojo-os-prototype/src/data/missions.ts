@@ -1238,5 +1238,40 @@ export const missionCatalog: MissionCatalogSnapshot = {
         summary: "Exija testes verdes e refatore em passos pequenos com verificacao entre eles por controles rotulados.",
       },
     },
+    {
+      id: "l29",
+      version: 1,
+      trackId: "dev",
+      unitId: "ai-literacy:l29",
+      projectId: "00_ai_in_practice",
+      title: "Avalie as dependências sugeridas",
+      objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manutenção, licença, segurança e alternativa nativa antes de adicionar — e decidir com critério, não por popularidade.",
+      estimatedMinutes: 4,
+      chapterOrder: 16,
+      prerequisites: [
+        "l22",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-02.2",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Verifique manutencao, licenca, seguranca e alternativa nativa antes de adicionar a dependencia sugerida, por controles rotulados.",
+      },
+    },
   ],
 }
