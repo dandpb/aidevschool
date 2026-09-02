@@ -6,7 +6,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-02.1"
+contentVersion: "2026-09-02.2"
 
 track:
   id: ai-literacy
@@ -310,7 +310,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l21]
     skillIds: [codificar, avaliar]
-    status: planned
+    status: ready
   - id: l28
     moduleId: mod-05
     title: "Refatore com assistente sem quebrar comportamento"

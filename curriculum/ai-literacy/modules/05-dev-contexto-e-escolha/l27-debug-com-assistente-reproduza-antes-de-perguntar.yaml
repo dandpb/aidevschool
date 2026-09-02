@@ -1,0 +1,153 @@
+# Lição l27 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.1): debug com assistente — reproduzir antes de perguntar.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l27
+version: 1
+moduleId: mod-05
+title: "Debug com assistente: reproduza antes de perguntar"
+objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reproduzido deterministicamente, o caso mínimo isolado e o esperado-vs-observado — e só então aplicar a correção e rodar os testes, incluindo o caso mínimo."
+estimatedMinutes: 4
+skillIds: [codificar, avaliar]
+prerequisites: [l21]
+
+activities:
+  - id: l27-a1
+    type: sort
+    skillId: codificar
+    instruction: "VOCÊ ACABOU DE VER O ERRO. Ordene o diagnóstico assistido: o que vem antes do quê?"
+    data:
+      items:
+        - id: passo-reproduzir
+          text: "Reproduzir o erro deterministicamente: mesmo input, mesmo resultado, toda vez"
+        - id: passo-isolar
+          text: "Isolar o caso mínimo que ainda reproduz o erro"
+        - id: passo-pedir
+          text: "Montar o pedido com a mensagem exata, o passo que reproduz e o esperado-vs-observado"
+        - id: passo-corrigir
+          text: "Aplicar a correção sugerida pelo assistente"
+        - id: passo-testar
+          text: "Rodar os testes, incluindo o caso mínimo como teste novo"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [passo-reproduzir, passo-isolar, passo-pedir, passo-corrigir, passo-testar]
+    feedback:
+      onFailure: "Pedir correção antes de reproduzir é chute com custo de round-trip: o assistente resolve o bug que imagina, não o seu. E fechar sem teste novo no caso mínimo é bug reincidente. A ordem é: reproduzir, isolar, pedir, corrigir, testar."
+      perCheck:
+        passo-reproduzir: "Primeiro a reprodução: mesmo input, mesmo resultado. Sem ela, ninguém pode culpar coisa alguma — nem você, nem o assistente."
+        passo-isolar: "Depois o caso mínimo: o menor pedaço que ainda quebra é o que torna o erro explicável no pedido."
+        passo-pedir: "Só então o pedido completo: mensagem exata, passo que reproduz e esperado-vs-observado."
+        passo-corrigir: "A correção vem depois do pedido completo — aplicá-la antes é chutar com sotaque de IA."
+        passo-testar: "Por fim os testes, com o caso mínimo virando teste novo: sem ele, o mesmo bug volta sem avisar."
+      onSuccess: "Isso! Reproduzir, isolar, pedir, corrigir, testar — o caso mínimo isolado vira teste novo, e o bug de hoje não é o bug de amanhã."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que você precisa saber ANTES de poder culpar alguma coisa?"
+      - "O pedido completo vem antes de qualquer correção."
+      - "O caso mínimo que isolou vira teste — onde ele entra?"
+
+  - id: l27-a2
+    type: prompt_builder
+    skillId: codificar
+    instruction: "A FUNÇÃO DE REEMBOLSO LANÇA TypeError SÓ NO FORMULÁRIO NOTURNO. MONTE O PEDIDO DE CORREÇÃO PREENCHENDO OS CAMPOS."
+    data:
+      scenario: "No painel interno, aprovar um reembolso no formulário noturno lança 'TypeError: Cannot read properties of undefined (reading valor)' sempre que o campo de anexo fica vazio; no formulário diurno, o mesmo fluxo funciona. Você vai pedir a correção ao assistente — o pedido 'corrige isso', sozinho, já devolveu três palpites errados."
+      genericPrompt: "corrige isso"
+      fields:
+        - id: erro
+          label: "Erro"
+          hint: "A mensagem exata que aparece — cole como veio, com TypeError, stack ou trace se houver"
+        - id: reproduz
+          label: "Passo que reproduz"
+          hint: "O passo a passo que dispara o erro toda vez — ex.: abro o formulário noturno, deixo o anexo vazio, clico aprovar"
+        - id: esperado-vs-observado
+          label: "Esperado vs. observado"
+          hint: "O que deveria acontecer vs. o que acontece — ex.: deveria aprovar o reembolso; retorna TypeError"
+    evaluation:
+      strategy: deterministic
+      fields:
+        erro:
+          minLength: 5
+          mustIncludeAny: ["erro", "exception", "stack", "falha", "trace"]
+        reproduz:
+          minLength: 5
+          mustIncludeAny: ["reproduz", "passo", "sempre", "executo", "rodo"]
+        esperado-vs-observado:
+          minLength: 5
+          mustIncludeAny: ["esperado", "retorna", "ocorre", "recebe"]
+    feedback:
+      onFailure: "'Corrige isso' sem erro, passo e esperado devolve palpite — você já viu três. O pedido de debug que funciona carrega a mensagem exata, o passo que reproduz toda vez e o esperado-vs-observado."
+      perCheck:
+        erro: "Cole a mensagem exata do erro: TypeError, stack, trace — 'quebra' não é mensagem, é resumo."
+        reproduz: "Descreva o passo que dispara o erro toda vez: sem reprodução, o assistente corrige o bug que imaginou."
+        esperado-vs-observado: "Diga o que deveria acontecer e o que acontece: esperado-vs-observado é o contraste que orienta a correção."
+      onSuccess: "Pedido completo: erro exato, passo que reproduz e esperado-vs-observado. É esse pedido que o assistente transforma em correção certa na primeira resposta."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que o pedido 'corrige isso' não disse sobre o que acontece na tela?"
+      - "Três coisas fazem o pedido de debug: a mensagem exata, o passo que reproduz e o contraste esperado-vs-observado."
+      - "No campo Erro: cole o texto como aparece (TypeError, stack, trace); em Reproduz: o passo a passo; em Esperado: o contraste."
+
+  - id: l27-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "UM COLEGA COLAR SÓ 'NÃO FUNCIONA, CORRIGE' NO ASSISTENTE. O QUE FALTA NO PEDIDO DELE?"
+    data:
+      prompt: "COLEGA (mensagem ao assistente): 'não funciona, corrige' · ASSISTENTE (resposta): 'Claro! Sobre o que exatamente? Pode dar mais detalhes?' — três idas e vindas depois, o assistente já chutou três causas diferentes e nenhuma era a do formulário noturno."
+      contextOptions:
+        - id: mensagem-de-erro
+          text: "A mensagem de erro exata: o texto completo que a tela ou o log mostra"
+        - id: passo-que-reproduz
+          text: "O passo que reproduz: o que ele faz para o erro acontecer de novo, toda vez"
+        - id: comportamento-esperado
+          text: "O comportamento esperado: o que deveria acontecer se tudo funcionasse"
+        - id: versao-ambiente
+          text: "A versão da linguagem/runtime em que o projeto roda — estreita a causa quando o erro depende de ambiente"
+        - id: modelo-de-ia
+          text: "O nome do modelo de IA usado na conversa"
+        - id: print-da-tela-inteira
+          text: "Um print da tela inteira, em vez da mensagem de erro"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [mensagem-de-erro, passo-que-reproduz, comportamento-esperado]
+      optionalContextIds: [versao-ambiente]
+    feedback:
+      onFailure: "'Não funciona' sem mensagem, passo e esperado transforma o assistente em adivinho — daí os três palpites. O pedido de debug que corta idas e vindas carrega as três; o resto é desvio."
+      perCheck:
+        mensagem-de-erro: "Faltou isto: a mensagem exata. Sem ela, cada resposta é um palpite novo."
+        passo-que-reproduz: "Faltou isto: o passo que reproduz. O que não se reproduz não se corrige."
+        comportamento-esperado: "Faltou isto: o esperado. Sem saber o alvo, ninguém diz o que quebrou."
+        versao-ambiente: "Isto é opcional: versão da linguagem/runtime ajuda a estreitar a causa, mas o pedido não nasce morto sem ela."
+        modelo-de-ia: "Isto é mito: o nome do modelo não aparece no pedido — e nenhum modelo adivinha contexto que não recebeu."
+        print-da-tela-inteira: "Isto é ruído: o print da tela inteira esconde a mensagem de erro na paisagem — o assistente precisa do texto exato, não da moldura."
+      onSuccess: "Exato! Mensagem exata, passo que reproduz e comportamento esperado: as três coisas que transformam 'não funciona' em pedido de debug."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare o que o assistente chutou com a informação que ele nunca recebeu."
+      - "Três coisas fazem um pedido de debug: a mensagem exata, o passo que reproduz e o esperado."
+
+rubric:
+  id: l27-rubric
+  criteria:
+    - id: r-reproduz-antes-de-perguntar
+      text: "Reproduz o erro deterministicamente antes de pedir correção ao assistente."
+      weight: 1
+    - id: r-isola-o-caso
+      text: "Reduz ao caso mínimo que ainda reproduz e o leva ao pedido."
+      weight: 1
+    - id: r-fecha-com-teste
+      text: "Aplica a correção e roda os testes, incluindo o caso mínimo como teste novo."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l27-a1, l27-a2, l27-a3]
