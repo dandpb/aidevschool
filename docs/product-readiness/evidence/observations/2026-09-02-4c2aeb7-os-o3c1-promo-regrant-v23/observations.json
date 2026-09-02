@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "4c2aeb7a38bdea1bf25394cc88d44ea767b55466",
+  "observedAt": "2026-09-02T17:35:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-657 post-promotion gate), 2026-09-02 ~17:1x-17:4xZ, against the PRODUCTION alias aidevschool-codexdojo-os.netlify.app (deploy 6a9859d1b3f3fda747dbe1ff published 17:16:03Z; pilot-bundle-manifest sha256 c4a1e9b4a223a3bb85d8ab8f2a630e5f7ed72ba4eda0d6406a4f8dc7d4c772ac verified byte-identical alias==permalink 6a9859d1b3f3fda747dbe1ff--…; sourceRevision == pin 4c2aeb7a38bdea1bf25394cc88d44ea767b55466 == main; os surface sha256 9ed2fb4223f8… matches my own fetch of /index.html) plus the pin CI rollup verified first-hand via GitHub API (36 check-runs = 35 success + 1 platform-skip, 0 fail). Independent QA suite 132/132 PASS (script qa-aid657-postpromo.mjs, Playwright chromium + fetch, evidence log aid657_qa_pospromo.log). O3-C1 wave surface: ALL SEVEN retrofitted hosted missions /mission/ai-pratica/l01..l07 run MOTOR from the same-origin /apps/literacydojo/ iframe (plus /mission/dev/l27 regression outside the wave); every one offers the 3-activity standard (counter 'ATIVIDADE 1 DE 3' observed inside the hosted iframe for l01-l07); the published motor embeds the 13 new activity ids, the single contentVersion bump 2026-09-02.3 (uniform across catalog header + both track headers + 29 runtime bindings = 32 embedded strings, old versions absent), and the map stays 36 missions (29 literacy = 20 ia-pratica + 9 dev; 7 games) with verifierRequired and dom fallback on all 36; public anonymous rail stays honest at 6 (#225 preserved). Ten independently re-evaluable wave activities dispatch PASS through the production bridge with source 'independent-literacy-verifier' and producer_writes_mastered:false; the three prompt_builder additions fail closed ('cannot be independently re-evaluated', mastery_eligible:false). Observer response: a learner on production gets the full 3-activity hosted journey with an independent verdict and a true next action, and completion still never claims canonical mastery."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-657 post-promotion gate), 2026-09-02 ~17:1x-17:4xZ, against the PRODUCTION alias (identity chain as in os-literacy-hosted-mission above). Bridge guards re-verified on production: session 200 same-origin / 403 cross-origin (origin-forbidden) / 401 unauthenticated POST / 422 unknown schema. Fail-closed honesty: a QA-forged PASS on l01-a1 (wrong deterministicChecks with pass:true, score 1.0) is rejected with verdict FAIL by the independent verifier; the three new prompt_builder wave activities (l04-a2, l06-a2, l07-a3) return FAIL 'prompt_builder cannot be independently re-evaluated without free text' with mastery_eligible:false — no fabricated PASS. Regression: teaching-game dispatch (WORMHOLE L1) still PASSes with attempt_id echoed (AID-448). Rollback path verified without intervention: the pre-wave deploy 6a9816a506dee943d5e6ec25--… still serves sourceRevision 7653822005549a690ce2604f64113b6e92b2782c with pre-wave content (no l01-a2, contentVersion 2026-09-02.2), so the documented rollback (re-pin release/7653822) remains viable. Facilitator path: visible mission status + retry, no repository intervention needed."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation (AID-657 post-promotion gate), 2026-09-02 ~17:1x-17:4xZ, against the PRODUCTION alias (identity chain as in os-literacy-hosted-mission above). Returning-learner retrofit journey exercised for real on production: a learner seeded with l01-l07 completed under the PREVIOUS contentVersion 2026-09-02.2 (same browser profile, IndexedDB 'literacydojo' store) keeps local completion (grandfathering A1) and is force-offered review (A2): S1 renders on the Home 'Revisão pendente' card ('Esta lição ganhou atividades novas — sua conclusão continua valendo.'), S2 renders exactly once per lesson/bump in the lesson intro inside the hosted iframe for ALL SEVEN wave lessons, the structured ack literacydojo:retrofit-acks records {l01..l07: '2026-09-02.3'}, re-entry shows S2 zero times (idempotent 1x/bump), and the review copy is honest about scope (item D plural: 'refaça as atividades desta lição'; review runs 'ATIVIDADE 1 DE 3'). The copy never asks the learner to redo anything ('sua conclusão continua valendo') and the boundary stays local-device (no cross-device claim observed). Observer response: continuity worked on the same device across the content bump, the retrofit was explained to me once per lesson, and the UI never implied more than local progress."
+        }
+      ]
+    }
+  ]
+}
