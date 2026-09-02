@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-09-02-5c5bd1a-os-o3c1-promo-regrant-v25
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-02T18:41:00Z'
+revalidateBy: '2026-10-02'
+gitSha: 5c5bd1a9b7e5994cddb071b06a2020de4833f084
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T18:40:00Z-os-literacy-hosted-mission-mixed-5c5bd1a9
+  - 2026-09-02T18:40:00Z-os-verification-recovery-mixed-5c5bd1a9
+  - 2026-09-02T18:40:00Z-os-literacy-returning-device-mixed-5c5bd1a9
