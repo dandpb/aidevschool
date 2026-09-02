@@ -2204,6 +2204,124 @@ export const literacyCorpus = {
       "proteger"
     ],
     "version": 1
+  },
+  "l26": {
+    "activities": [
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-preserva-valores-exatos",
+              "text": "Preserva os valores exatos do trecho original (R$ 48.500 · 15 de março · equipe de suporte)"
+            },
+            {
+              "id": "c-cita-a-origem",
+              "text": "Marca de onde os valores vieram (a ata)"
+            },
+            {
+              "id": "c-sem-invencao",
+              "text": "Não arredonda, não troca e não inventa valores"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Resumo para a diretoria: orçamento aprovado de R$ 48.500, prazo em 15 de março, responsável: equipe de suporte — valores conferidos na ata."
+            },
+            {
+              "id": "out-b",
+              "text": "Resumo para a diretoria: orçamento na casa de cinquenta mil, prazo para meados de março, e a equipe cuida do resto."
+            }
+          ],
+          "scenario": "Você anexou a ata da reunião e pediu um resumo para a diretoria. Trecho visível da ata: 'orçamento aprovado: R$ 48.500 · prazo: 15 de março · responsável: equipe de suporte'. Na sua ferramenta real você anexaria o arquivo; aqui você decide por controles rotulados."
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-preserva-valores-exatos",
+            "c-sem-invencao"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l26-a1",
+        "type": "output_comparison"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-valor",
+              "text": "Valor aprovado: R$ 48.500"
+            },
+            {
+              "id": "opt-data",
+              "text": "Data do prazo: 15 de março"
+            },
+            {
+              "id": "opt-responsavel",
+              "text": "Responsável: equipe de suporte"
+            },
+            {
+              "id": "opt-paginas",
+              "text": "A ata tem 3 páginas"
+            },
+            {
+              "id": "opt-tom",
+              "text": "O texto da ata está formal"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-valor",
+            "opt-data",
+            "opt-responsavel"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l26-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "passo-proteger-anexo",
+              "text": "Conferir se o anexo é seguro e remover o que a tarefa não usa"
+            },
+            {
+              "id": "passo-anexar-e-pedir",
+              "text": "Anexar o documento e escrever o pedido com tarefa, referência e formato"
+            },
+            {
+              "id": "passo-comparar-campos",
+              "text": "Comparar cada campo extraído com o trecho original"
+            },
+            {
+              "id": "passo-corrigir-e-usar",
+              "text": "Corrigir a divergência no pedido e só então usar a saída"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "passo-proteger-anexo",
+            "passo-anexar-e-pedir",
+            "passo-comparar-campos",
+            "passo-corrigir-e-usar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l26-a3",
+        "type": "sort"
+      }
+    ],
+    "skillIds": [
+      "avaliar",
+      "aplicar"
+    ],
+    "version": 1
   }
 }
 

@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -349,6 +349,14 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Anexos seguros: proteja antes de enviar' })).toBeVisible()
   await completeLiteracyMission(page, 'l25')
 
+  // Wave O2 T3 (spec AID-528 rev 3 §2.3): l26 "Confira o que a IA extraiu"
+  // closes mod-07 as the 20th ai-pratica mission (chapterOrder 20, canonical
+  // prereq l20 — completed above). Completes end-to-end through
+  // output_comparison, choice, and sort.
+  await page.goto('/mission/ai-pratica/l26')
+  await expect(page.getByRole('heading', { name: 'Confira o que a IA extraiu' })).toBeVisible()
+  await completeLiteracyMission(page, 'l26')
+
   await page.goto('/mission/dev/game-02-warehouse')
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
   await completeWarehouse(await gameFrame(page, 5202))
@@ -443,6 +451,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l20',
     'ai-pratica:l24',
     'ai-pratica:l25',
+    'ai-pratica:l26',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',

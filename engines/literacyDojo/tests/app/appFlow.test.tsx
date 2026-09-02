@@ -159,22 +159,23 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("confidence-support")).toHaveTextContent("Dica de partida");
   });
 
-  it("mapa público limita IA na Prática ao catálogo ia_pratica (19 com l25) e mantém Dev fora do percurso", async () => {
+  it("mapa público limita IA na Prática ao catálogo ia_pratica (20 com l26) e mantém Dev fora do percurso", async () => {
     const user = userEvent.setup();
     const { services } = makeServices({ progress: seededProgress() });
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
-    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 19 lições concluídas");
+    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 20 lições concluídas");
     await user.click(screen.getByTestId("open-map"));
 
-    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/19 missões");
+    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/20 missões");
     expect(screen.queryByTestId("map-lesson-l15")).not.toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l18")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l19")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l20")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l24")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l25")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l26")).toBeInTheDocument();
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {
