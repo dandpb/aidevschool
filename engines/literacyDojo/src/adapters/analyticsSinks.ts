@@ -48,10 +48,36 @@ export function httpNdjsonAnalyticsSink(endpoint: string): AnalyticsSink {
   };
 }
 
-/** Seleciona o sink pelo endpoint configurado (import.meta.env). */
+/**
+ * Seleciona o sink pelo endpoint configurado (import.meta.env).
+ *
+ * Fronteira de recepção (AID-673 §1.5): o endpoint de literacy NÃO é a rota
+ * do coletor do OS (`/__dojo/bridge/v1/analytics`) — aquele coletor aceita
+ * somente batches do vocabulário do OS e rejeitaria o envelope
+ * `source:"literacydojo"` com 422 (`unsupported-schema`). A superfície
+ * receptora de literacy é decisão de ativação do board (ADR-0010 §4);
+ * nenhuma superfície de build deste repo define o env.
+ */
 export function analyticsSinkFromEnv(endpoint: string | undefined, isDev: boolean): AnalyticsSink {
   if (endpoint && endpoint.trim().length > 0) {
     return httpNdjsonAnalyticsSink(endpoint.trim());
   }
   return isDev ? consoleAnalyticsSink : noopAnalyticsSink;
+}
+
+// Augmentation ambient de ImportMetaEnv (consolidada aqui, arquivo de
+// fronteira que lê o env — AID-676; não criar arquivo `*env*.d.ts`, a regra
+// guard-commands do repo trata paths `.env*`/`*env*` como credential-shaped).
+// `tsconfig.app.json` já carrega `types: ["vite/client"]`.
+declare global {
+  interface ImportMetaEnv {
+    /**
+     * Endpoint NDJSON do sink de analytics do literacyDojo (ADR-0009). A
+     * declaração de tipo NÃO habilita nada: nenhuma superfície de build deste
+     * repo define este valor — ativar o transporte é decisão do board
+     * (ADR-0010 §4). Sem o env, o sink composto é noop em produção e console
+     * em dev.
+     */
+    readonly VITE_ANALYTICS_ENDPOINT?: string;
+  }
 }
