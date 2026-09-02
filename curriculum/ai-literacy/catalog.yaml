@@ -293,7 +293,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l12]
     skillIds: [proteger]
-    status: planned
+    status: ready
   - id: l26
     moduleId: mod-07
     title: "Confira o que a IA extraiu"

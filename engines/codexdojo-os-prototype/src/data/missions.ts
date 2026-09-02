@@ -648,6 +648,41 @@ export const missionCatalog: MissionCatalogSnapshot = {
       },
     },
     {
+      id: "l25",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l25",
+      projectId: "00_ai_in_practice",
+      title: "Anexos seguros: proteja antes de enviar",
+      objective: "Antes de anexar fotos, scans ou PDFs a um pedido, classificar o conteúdo como seguro ou sensível e remover ou tampar o que expõe pessoas.",
+      estimatedMinutes: 4,
+      chapterOrder: 19,
+      prerequisites: [
+        "l12",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-02.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Classifique anexos como seguro ou sensivel e proteja os dados antes de enviar por controles rotulados.",
+      },
+    },
+    {
       id: "game-02-warehouse",
       version: 1,
       trackId: "dev",

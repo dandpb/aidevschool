@@ -120,7 +120,7 @@ describe('OS progress migration', () => {
       longest: 0,
       lastActiveLocalDate: null,
     })
-    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(31)
+    expect(Object.keys(migrated.progress.missionEngagementByKey)).toHaveLength(32)
   })
 
   it('adds new IDs, drops removed IDs, and resets incompatible in-progress versions', () => {
