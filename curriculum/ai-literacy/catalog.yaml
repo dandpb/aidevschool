@@ -1,12 +1,12 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
 # Fonte de verdade do índice: 20 lições públicas de IA na Prática
-# (l01–l14 + ondas de continuação l18–l20 e l24–l26) e 6 lições da trilha Dev,
+# (l01–l14 + ondas de continuação l18–l20 e l24–l26) e 9 lições da trilha Dev,
 # separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-02.1"
+contentVersion: "2026-09-02.2"
 
 track:
   id: ai-literacy
@@ -302,3 +302,28 @@ lessons:
     prerequisites: [l20]
     skillIds: [avaliar, aplicar]
     status: ready
+  # Módulo 5 — Dev: onda l27–l29 (spec AID-610 rev 2)
+  - id: l27
+    moduleId: mod-05
+    title: "Debug com assistente: reproduza antes de perguntar"
+    objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reproduzido deterministicamente, o caso mínimo isolado e o esperado-vs-observado — e só então aplicar a correção e rodar os testes, incluindo o caso mínimo."
+    estimatedMinutes: 4
+    prerequisites: [l21]
+    skillIds: [codificar, avaliar]
+    status: planned
+  - id: l28
+    moduleId: mod-05
+    title: "Refatore com assistente sem quebrar comportamento"
+    objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."
+    estimatedMinutes: 5
+    prerequisites: [l21]
+    skillIds: [codificar]
+    status: planned
+  - id: l29
+    moduleId: mod-05
+    title: "Avalie as dependências sugeridas"
+    objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manutenção, licença, segurança e alternativa nativa antes de adicionar — e decidir com critério, não por popularidade."
+    estimatedMinutes: 4
+    prerequisites: [l22]
+    skillIds: [codificar, avaliar]
+    status: planned
