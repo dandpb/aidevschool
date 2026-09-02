@@ -2,10 +2,10 @@ import { expect, test, type FrameLocator, type Frame, type Page } from '@playwri
 import { lessons } from '../../literacyDojo/src/data/generated/lessons'
 
 const chapterLessons = new Map(
-  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26', 'l27', 'l28'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
+  lessons.filter((lesson) => ['l01', 'l02', 'l03', 'l15', 'l16', 'l18', 'l19', 'l20', 'l21', 'l22', 'l23', 'l24', 'l25', 'l26', 'l27', 'l28', 'l29'].includes(lesson.id)).map((lesson) => [lesson.id, lesson]),
 )
 
-type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26' | 'l27' | 'l28'
+type ChapterLessonId = 'l01' | 'l02' | 'l03' | 'l15' | 'l16' | 'l18' | 'l19' | 'l20' | 'l21' | 'l22' | 'l23' | 'l24' | 'l25' | 'l26' | 'l27' | 'l28' | 'l29'
 
 // AID-571 (#227): the literacy option cards render
 // `<label class="option-card"><input/><span>…</span></label>` with a hover
@@ -374,7 +374,7 @@ test('preserves completed first-release missions across switches and reloads', a
   await returnFromGame(page)
 
   // The dev track also publishes the Dev-journey literacy lessons (l15-l17
-  // + l21-l23 + l27 + l28, module 05). Wave l21-l23 (spec AID-528 rev 2) anchors on the
+  // + l21-l23 + l27-l29, module 05). Wave l21-l23 (spec AID-528 rev 2) anchors on the
   // canonical prerequisites l16/l15, so complete the anchor chain first
   // (l15 -> l16) to unlock the wave missions, then host and complete each
   // new lesson end-to-end through its three activities.
@@ -425,6 +425,15 @@ test('preserves completed first-release missions across switches and reloads', a
   await page.goto('/mission/dev/l28')
   await expect(page.getByRole('heading', { name: 'Refatore com assistente sem quebrar comportamento' })).toBeVisible()
   await completeLiteracyMission(page, 'l28')
+
+  // Wave O1 T3 (spec AID-610 rev 2 §2.3, variante α): l29 "Avalie as
+  // dependências sugeridas" closes the O1 dev wave as the 16th dev mission
+  // (chapterOrder 16, canonical prereq l22 — completed above). Completes
+  // end-to-end through multiSelect choice, rubric_review, and
+  // missing_context.
+  await page.goto('/mission/dev/l29')
+  await expect(page.getByRole('heading', { name: 'Avalie as dependências sugeridas' })).toBeVisible()
+  await completeLiteracyMission(page, 'l29')
 
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
@@ -482,6 +491,7 @@ test('preserves completed first-release missions across switches and reloads', a
     'dev:l23',
     'dev:l27',
     'dev:l28',
+    'dev:l29',
   ]) {
     expect(progress.missionStatusByKey[key]).toBe('completed')
   }

@@ -1,0 +1,156 @@
+# Lição l29 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.3 = variante α, advisory CD AID-611 `d683f18a`):
+# avaliar dependências sugeridas antes de adicionar. Fecha o arco do ciclo de evolução com assistente.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l29
+version: 1
+moduleId: mod-05
+title: "Avalie as dependências sugeridas"
+objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manutenção, licença, segurança e alternativa nativa antes de adicionar — e decidir com critério, não por popularidade."
+estimatedMinutes: 4
+skillIds: [codificar, avaliar]
+prerequisites: [l22]
+
+activities:
+  - id: l29-a1
+    type: choice
+    skillId: avaliar
+    instruction: "O ASSISTENTE SUGERIU ADICIONAR A BIBLIOTECA fmt-cpf PARA VALIDAR CPF NO FORMULÁRIO. O QUE VOCÊ CONFERE ANTES DE ACEITAR? MARQUE TODAS."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-a
+          text: "Se o projeto ainda é mantido: versão recente, issues respondidas"
+        - id: opt-b
+          text: "Se a licença permite usar no seu projeto"
+        - id: opt-c
+          text: "Se há avisos de segurança publicados contra ela"
+        - id: opt-d
+          text: "Se a sua linguagem já resolve sem biblioteca nova"
+        - id: opt-e
+          text: "Se o nome do pacote é fácil de digitar"
+        - id: opt-f
+          text: "Se o README tem badges bonitos"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a, opt-b, opt-c, opt-d]
+    feedback:
+      onFailure: "Os cheques são manutenção, licença, segurança e alternativa nativa — popularidade e aparência não mantêm código. O que o assistente recomenda é candidato, não decisão: conferir antes de adicionar é a parte sua do trabalho."
+      perCheck:
+        opt-a: "Confira: manutenção — versão recente e issues respondidas dizem se alguém corrige o amanhã dessa biblioteca."
+        opt-b: "Confira: licença — o que a biblioteca permite define o que o seu projeto pode fazer com ela."
+        opt-c: "Confira: avisos de segurança publicados contra o pacote — a falha conhecida que ninguém leu vira brecha no seu formulário."
+        opt-d: "Confira: alternativa nativa — se a sua linguagem já valida o dado, a dependência nova é peso morto."
+        opt-e: "Isto não é cheque: facilidade de digitar o nome diz nada sobre manutenção, licença ou segurança."
+        opt-f: "Isto não é cheque: badges bonitos no README são aparência — aparência não recebe correções."
+      onSuccess: "Isso! Manutenção, licença, segurança e alternativa nativa: os quatro cheques antes de qualquer 'instala'. O resto é estética de repositório."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que acontece com o seu projeto se essa biblioteca parar de receber correções?"
+      - "Uma das opções olha para dentro da própria linguagem."
+      - "Duas opções são sobre aparência."
+
+  - id: l29-a2
+    type: rubric_review
+    skillId: avaliar
+    instruction: "O ASSISTENTE RECOMENDOU ESTA DEPENDÊNCIA. AVALIE A RECOMENDAÇÃO EM CADA CRITÉRIO: ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO?"
+    data:
+      responseText: "Use fmt-cpf — é a mais popular, não tem dependências e a licença é permissiva. Adicione com o gerenciador de pacotes e chame validar(campo)."
+      criteria:
+        - id: c-compara-com-alternativa-nativa
+          text: "Compara com o que a linguagem já oferece antes de adicionar"
+        - id: c-verifica-manutencao
+          text: "Informa manutenção: versão recente, atividade, resposta a issues"
+        - id: c-verifica-licenca
+          text: "Informa a licença"
+        - id: c-verifica-seguranca
+          text: "Menciona avisos de segurança conhecidos"
+        - id: c-escopo-da-dependencia
+          text: "Declara tamanho/dependências que ela própria instala"
+    evaluation:
+      strategy: deterministic
+      expectedVerdicts:
+        c-compara-com-alternativa-nativa: not_met
+        c-verifica-manutencao: not_met
+        c-verifica-licenca: met
+        c-verifica-seguranca: not_met
+        c-escopo-da-dependencia: met
+    feedback:
+      onFailure: "Popularidade não é manutenção: a resposta cita licença e tamanho, mas não compara com a alternativa nativa nem olha manutenção e segurança — a decisão de adicionar dependência é sua."
+      perCheck:
+        c-compara-com-alternativa-nativa: "Não atendido: em nenhum momento a recomendação pergunta se a sua linguagem já valida CPF — a primeira pergunta antes de instalar qualquer coisa."
+        c-verifica-manutencao: "Não atendido: 'a mais popular' é fama, não manutenção — nada sobre versão recente, atividade ou issues respondidas."
+        c-verifica-licenca: "Atendido: a licença é informada — 'a licença é permissiva' é o cheque completo deste critério."
+        c-verifica-seguranca: "Não atendido: nenhum aviso de segurança é mencionado — o cheque que falta é justamente o que vira brecha."
+        c-escopo-da-dependencia: "Atendido: 'não tem dependências' declara o que ela própria instala — o escopo da dependência está informado."
+      onSuccess: "Vereditos certos: licença e escopo informados valem 'atendido' — e o resto é o que falta. A recomendação acerta 2 de 5 cheques: aceitá-la sem os outros 3 é decidir por popularidade."
+    storage:
+      policy: structured_only
+    hints:
+      - "Popularidade aparece duas vezes na resposta — o que ela prova sobre correções futuras?"
+      - "A resposta fala do pacote, mas fala da sua linguagem em algum momento?"
+      - "Licença e tamanho estão informados; some o que falta: comparação nativa, manutenção, segurança."
+
+  - id: l29-a3
+    type: missing_context
+    skillId: codificar
+    instruction: "UM COLEGA VAI ADICIONAR A BIBLIOTECA SUGERIDA 'PORQUE É A MAIS POPULAR'. O PLANO DELE É: 'ADICIONO, CHAMO, COMMITO'. O QUE FALTA NO PLANO?"
+    data:
+      prompt: "COLEGA (plano): 'O assistente recomendou a fmt-cpf e é a mais popular, então acabou a discussão: adiciono o pacote, chamo validar(campo) e commito.' · O plano tem três verbos e nenhum cheque."
+      contextOptions:
+        - id: manutencao-atual
+          text: "Se o projeto ainda é mantido hoje: versão recente, issues respondidas"
+        - id: licenca-do-pacote
+          text: "A licença do pacote — se ela permite usar no projeto"
+        - id: avisos-de-seguranca
+          text: "Avisos de segurança publicados contra o pacote"
+        - id: tamanho-do-pacote
+          text: "O tamanho e as dependências que o pacote própria instala"
+        - id: quantidade-de-estrelas
+          text: "A quantidade de estrelas do repositório"
+        - id: ano-de-criacao-do-repositorio
+          text: "O ano de criação do repositório"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [manutencao-atual, licenca-do-pacote, avisos-de-seguranca]
+      optionalContextIds: [tamanho-do-pacote]
+    feedback:
+      onFailure: "O plano do colega pula do 'popular' direto para o commit: os cheques de manutenção, licença e segurança ficaram de fora. Estrelas e ano de criação não são cheque — popularidade não é critério de engenharia e projeto antigo pode estar abandonado."
+      perCheck:
+        manutencao-atual: "Faltou isto: manutenção — versão recente e issues respondidas dizem se alguém cuida do pacote hoje."
+        licenca-do-pacote: "Faltou isto: a licença — sem ela, ninguém sabe se o projeto pode usar a biblioteca."
+        avisos-de-seguranca: "Faltou isto: avisos de segurança publicados — o commit não pode vir antes de ler se há falha conhecida."
+        tamanho-do-pacote: "Isto é opcional: tamanho e dependências transitivas completam o quadro, mas os três cheques principais não dependem dele."
+        quantidade-de-estrelas: "Isto não é cheque: estrelas medem popularidade — e popularidade não mantém código (o mesmo eco da primeira atividade)."
+        ano-de-criacao-do-repositorio: "Isto não é cheque: idade não é manutenção ativa — projeto de 2016 pode estar abandonado desde 2019."
+      onSuccess: "Exato! Manutenção, licença e segurança antes do commit: os mesmos cheques da recomendação, agora aplicados ao plano de quem executa."
+    storage:
+      policy: structured_only
+    hints:
+      - "O plano tem três verbos — adicionar, chamar, commitar — e nenhum momento de conferir. Onde os cheques entrariam?"
+      - "Estrelas e ano de criação dizem alguma coisa sobre quem corrige o pacote hoje?"
+
+rubric:
+  id: l29-rubric
+  criteria:
+    - id: r-verifica-antes-de-adicionar
+      text: "Verifica manutenção, licença e segurança antes de aceitar a dependência."
+      weight: 1
+    - id: r-compara-com-alternativa-nativa
+      text: "Pergunta se a linguagem já resolve antes de adicionar biblioteca nova."
+      weight: 1
+    - id: r-decide-com-criterio
+      text: "Aceita, recusa ou substitui com motivo — não por popularidade."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l29-a1, l29-a2, l29-a3]

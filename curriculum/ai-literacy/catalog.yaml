@@ -326,4 +326,4 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l22]
     skillIds: [codificar, avaliar]
-    status: planned
+    status: ready

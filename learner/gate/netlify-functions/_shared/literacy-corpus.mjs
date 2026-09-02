@@ -2579,6 +2579,140 @@ export const literacyCorpus = {
       "codificar"
     ],
     "version": 1
+  },
+  "l29": {
+    "activities": [
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "Se o projeto ainda é mantido: versão recente, issues respondidas"
+            },
+            {
+              "id": "opt-b",
+              "text": "Se a licença permite usar no seu projeto"
+            },
+            {
+              "id": "opt-c",
+              "text": "Se há avisos de segurança publicados contra ela"
+            },
+            {
+              "id": "opt-d",
+              "text": "Se a sua linguagem já resolve sem biblioteca nova"
+            },
+            {
+              "id": "opt-e",
+              "text": "Se o nome do pacote é fácil de digitar"
+            },
+            {
+              "id": "opt-f",
+              "text": "Se o README tem badges bonitos"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a",
+            "opt-b",
+            "opt-c",
+            "opt-d"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l29-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-compara-com-alternativa-nativa",
+              "text": "Compara com o que a linguagem já oferece antes de adicionar"
+            },
+            {
+              "id": "c-verifica-manutencao",
+              "text": "Informa manutenção: versão recente, atividade, resposta a issues"
+            },
+            {
+              "id": "c-verifica-licenca",
+              "text": "Informa a licença"
+            },
+            {
+              "id": "c-verifica-seguranca",
+              "text": "Menciona avisos de segurança conhecidos"
+            },
+            {
+              "id": "c-escopo-da-dependencia",
+              "text": "Declara tamanho/dependências que ela própria instala"
+            }
+          ],
+          "responseText": "Use fmt-cpf — é a mais popular, não tem dependências e a licença é permissiva. Adicione com o gerenciador de pacotes e chame validar(campo)."
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-compara-com-alternativa-nativa": "not_met",
+            "c-escopo-da-dependencia": "met",
+            "c-verifica-licenca": "met",
+            "c-verifica-manutencao": "not_met",
+            "c-verifica-seguranca": "not_met"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l29-a2",
+        "type": "rubric_review"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "manutencao-atual",
+              "text": "Se o projeto ainda é mantido hoje: versão recente, issues respondidas"
+            },
+            {
+              "id": "licenca-do-pacote",
+              "text": "A licença do pacote — se ela permite usar no projeto"
+            },
+            {
+              "id": "avisos-de-seguranca",
+              "text": "Avisos de segurança publicados contra o pacote"
+            },
+            {
+              "id": "tamanho-do-pacote",
+              "text": "O tamanho e as dependências que o pacote própria instala"
+            },
+            {
+              "id": "quantidade-de-estrelas",
+              "text": "A quantidade de estrelas do repositório"
+            },
+            {
+              "id": "ano-de-criacao-do-repositorio",
+              "text": "O ano de criação do repositório"
+            }
+          ],
+          "prompt": "COLEGA (plano): 'O assistente recomendou a fmt-cpf e é a mais popular, então acabou a discussão: adiciono o pacote, chamo validar(campo) e commito.' · O plano tem três verbos e nenhum cheque."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "tamanho-do-pacote"
+          ],
+          "requiredContextIds": [
+            "manutencao-atual",
+            "licenca-do-pacote",
+            "avisos-de-seguranca"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l29-a3",
+        "type": "missing_context"
+      }
+    ],
+    "skillIds": [
+      "codificar",
+      "avaliar"
+    ],
+    "version": 1
   }
 }
 

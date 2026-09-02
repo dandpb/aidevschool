@@ -807,3 +807,29 @@ bindings:
     fallback:
       kind: dom
       summary: "Exija testes verdes e refatore em passos pequenos com verificacao entre eles por controles rotulados."
+  # Onda O1 (spec AID-610 rev 2 §2.3, variante α via advisory CD AID-611):
+  # l29 fecha a onda dev como 16ª missão dev (prereq canônico [l22]).
+  # SEM bump de contentVersion — o bump único da onda viajou com T1/l27
+  # (padrão O2, precedentes PR #238/#222).
+  - missionId: l29
+    chapterOrder: 16
+    prerequisites: [l22]
+    trackId: dev
+    curriculum:
+      kind: ai-literacy-lesson
+      lessonId: l29
+      projectId: 00_ai_in_practice
+      unitId: ai-literacy:l29
+    runtime:
+      engineId: literacyDojo
+      entrypoint: http://127.0.0.1:5178/?hosted=1
+      environmentKey: VITE_LITERACYDOJO_URL
+      protocolVersion: "1.0"
+      contentVersion: "2026-09-02.2"
+    evidence:
+      schema: literacy-evidence
+      version: 1
+      verifierRequired: true
+    fallback:
+      kind: dom
+      summary: "Verifique manutencao, licenca, seguranca e alternativa nativa antes de adicionar a dependencia sugerida, por controles rotulados."
