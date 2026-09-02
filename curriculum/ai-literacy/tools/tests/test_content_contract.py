@@ -29,9 +29,10 @@ class TestValidContent(TrackFixtureMixin):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
         # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
-        # Emenda T0 (AID-581, spec AID-528 rev 3 `dce5594f`, decisão CEO
-        # AID-579/A) + onda O2 (AID-580) completa: l24 (T1), l25 (T2) e
-        # l26 (T3) pousaram `ready` — nenhuma lição `planned` resta.
+        # Emenda T0 (AID-615, spec AID-610 rev 2 `51166a32`, decisão CEO
+        # AID-609/A; swap α l29 via advisory CD AID-611): onda O1 dev
+        # l27–l29 entra `planned` em mod-05 (nenhum arquivo ainda;
+        # próximo id livre: l30, regra 7 do contrato).
         entries = json_objects(array_field(required_object(catalog), "lessons"))
         self.assertEqual(
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
@@ -40,7 +41,7 @@ class TestValidContent(TrackFixtureMixin):
         for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23", "l24", "l25", "l26"):
             self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
         self.assertEqual(
-            [],
+            ["l27", "l28", "l29"],
             [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
         )
 
