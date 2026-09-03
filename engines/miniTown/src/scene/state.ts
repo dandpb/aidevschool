@@ -220,12 +220,33 @@ export class Town {
 
   /** Pick a random inhabited shop building. Drives resident shopping trips. */
   pickRandomShopId(): string | null {
-    const shops = this.buildings.filter(
-      (b) => b.stage === "inhabited" && this.findZoneById(b.zoneId)?.type === "shop",
-    )
-    if (shops.length === 0) return null
-    const idx = Math.floor(this.rng() * shops.length)
-    return shops[idx]?.id ?? null
+    // Optimization: Avoid intermediate array allocation from .filter()
+    // First pass to count valid shops to reduce GC pressure
+    let count = 0
+    for (let i = 0; i < this.buildings.length; i++) {
+      const b = this.buildings[i]
+      if (b && b.stage === "inhabited" && this.findZoneById(b.zoneId)?.type === "shop") {
+        count++
+      }
+    }
+
+    if (count === 0) return null
+
+    // Roll RNG exactly once to preserve deterministic sequence
+    const idx = Math.floor(this.rng() * count)
+
+    // Second pass to find the selected shop
+    let currentIdx = 0
+    for (let i = 0; i < this.buildings.length; i++) {
+      const b = this.buildings[i]
+      if (b && b.stage === "inhabited" && this.findZoneById(b.zoneId)?.type === "shop") {
+        if (currentIdx === idx) {
+          return b.id
+        }
+        currentIdx++
+      }
+    }
+    return null
   }
 
   /**
