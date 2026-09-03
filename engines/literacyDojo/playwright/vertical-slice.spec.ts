@@ -11,6 +11,11 @@ import {
   wrongOutput,
 } from "./support";
 
+// Mesma convenção de porta do playwright.config.ts: a spec não pode assumir
+// a porta default, senão rodar em outra porta (contorno de colisão) quebra
+// o filtro de "requests externos" com falsas falhas (AID-742).
+const appOrigin = `http://localhost:${process.env.LITERACY_E2E_APP_PORT ?? "4173"}`;
+
 test("readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada", async ({
   page,
 }) => {
@@ -64,8 +69,7 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   await page.setViewportSize({ width: 320, height: 640 });
   const externalRequests: string[] = [];
   page.on("request", (request) => {
-    if (new URL(request.url()).origin !== "http://localhost:4173")
-      externalRequests.push(request.url());
+    if (new URL(request.url()).origin !== appOrigin) externalRequests.push(request.url());
   });
   await page.goto("/");
 

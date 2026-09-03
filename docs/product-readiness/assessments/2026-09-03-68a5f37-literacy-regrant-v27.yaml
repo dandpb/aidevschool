@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-09-03-68a5f37-literacy-regrant-v27
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-03T19:31:00Z'
+revalidateBy: '2026-10-03'
+gitSha: 68a5f37cd9f426d322ca8c6aa3512ea0f0504366
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T19:26:00Z-literacy-happy-path-mixed-68a5f37c
+  - 2026-09-03T19:26:00Z-literacy-retry-mixed-68a5f37c
+  - 2026-09-03T19:26:00Z-literacy-resume-mixed-68a5f37c
