@@ -358,6 +358,8 @@ jobs:
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
+      - name: run readiness cli guard tests
+        run: python3 -m pytest docs/product-readiness/tests -q
       - name: upload product-readiness-report.json
         if: always()
         uses: actions/upload-artifact@v4

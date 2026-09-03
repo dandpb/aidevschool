@@ -2,6 +2,7 @@ import hashlib
 import json
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 from readiness_test_support import register_tools_package
@@ -9,6 +10,7 @@ from readiness_test_support import register_tools_package
 
 register_tools_package()
 
+from product_readiness_tools.evaluate import current_decision
 from product_readiness_tools.fingerprint import manual_fingerprint, source_fingerprint
 from product_readiness_tools.load import load_domain
 
@@ -83,6 +85,23 @@ def test_enforce_rejects_report_narrower_than_published_grants(tmp_path: Path) -
     )
 
     # Then enforcement fails closed rather than silently dropping those grants
+    domain = load_domain(READINESS_ROOT)
+    report_scenarios = {
+        entry["scenarioId"] for entry in json.loads(candidate.read_text(encoding="utf-8"))["results"]
+    }
+    covered_use_cases = {
+        use_case.id
+        for use_case in domain.use_cases
+        if set(use_case.scenario_ids) & report_scenarios
+    }
+    now = datetime.now(UTC)
+    granted_but_omitted = {
+        decision.use_case_id
+        for use_case in domain.use_cases
+        if (decision := current_decision(domain, use_case, REPO_ROOT, now)).granted_tier is not None
+    } - covered_use_cases
+    assert granted_but_omitted, "published baseline must still grant a journey the candidate omits"
     assert result.returncode == 1
-    assert "BLOCKED: os-voxel-guided-missions" in result.stderr
-    assert "BLOCKED: os-returning-learner" in result.stderr
+    for use_case_id in sorted(granted_but_omitted):
+        assert f"BLOCKED: {use_case_id}" in result.stderr
+    assert "BLOCKED: literacy-standalone-first-lesson" not in result.stderr
