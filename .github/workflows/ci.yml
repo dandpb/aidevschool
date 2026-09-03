@@ -329,6 +329,16 @@ jobs:
       - run: npm run selfcheck
       - run: npm run lint
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:readiness
+      # This report contains automated facts only; observation assertions stay
+      # with the independent assessor and cannot grant readiness in CI.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: dojotoday-readiness-${{ github.sha }}
+          path: engines/dojoToday/test-results
+          if-no-files-found: warn
 
   product-readiness:
     name: product readiness (claims)
