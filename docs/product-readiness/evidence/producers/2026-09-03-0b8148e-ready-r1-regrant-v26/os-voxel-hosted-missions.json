@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+      "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+    },
+    {
+      "path": "engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts",
+      "sha256": "88bc1ff50166f3e4474a2b75f3170ec482aacc54e025b8d754ef5aa3006595d0"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "all-supported-voxel-missions-mount",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-03T08:36:21Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "0b8148e586575361d721d6d1a5a4bebe49285d0e",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-09-03T08:36:21Z-os-voxel-hosted-missions-0b8148e5",
+  "scenarioId": "os-voxel-hosted-missions",
+  "schemaVersion": 1,
+  "sourceFingerprint": "0b3cc7baf133abc458438bd0a0baa8df52f9c21608a4f021bc4687f6359fd40f"
+}

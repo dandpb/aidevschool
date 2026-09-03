@@ -1,0 +1,58 @@
+schemaVersion: 1
+assessmentId: 2026-09-03-0b8148e-ready-r1-regrant-v26
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-03T08:46:00Z'
+revalidateBy: '2026-10-03'
+gitSha: 0b8148e586575361d721d6d1a5a4bebe49285d0e
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-literacy-happy-path-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-literacy-retry-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-literacy-resume-mixed-0b8148e5
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-os-voxel-hosted-missions-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-os-voxel-returning-device-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-os-renderer-accessibility-recovery-mixed-0b8148e5
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-os-onboarding-track-choice-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-os-returning-device-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-os-returning-recovery-mixed-0b8148e5
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-dojotoday-active-unit-guidance-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-dojotoday-read-only-boundary-observed-0b8148e5
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-pixelquest-encounter-evidence-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-pixelquest-evidence-recovery-observed-0b8148e5
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-voxel-standalone-loop-mixed-0b8148e5
+  - 2026-09-03T08:45:00Z-voxel-accessible-renderer-observed-0b8148e5
+- useCaseId: minitown-explore-only
+  outcome: pass
+  grantedTier: experimental
+  reasons: []
+  resultRunIds:
+  - 2026-09-03T08:45:00Z-minitown-explore-only-mixed-0b8148e5
