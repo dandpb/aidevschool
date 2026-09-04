@@ -1435,12 +1435,56 @@ export const literacyCorpus = {
         },
         "id": "l15-a2",
         "type": "output_comparison"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "exigencia-de-exatidao",
+              "text": "A exigência de exatidão: folha fecha no centavo ou admite aproximação"
+            },
+            {
+              "id": "sensibilidade-dos-dados",
+              "text": "A sensibilidade dos dados: nomes, salários e cargos de pessoas reais saem da empresa"
+            },
+            {
+              "id": "necessidade-de-auditabilidade",
+              "text": "A necessidade de auditoria: o cálculo tem de dar para reconstituir e conferir depois"
+            },
+            {
+              "id": "volume-da-planilha",
+              "text": "O volume da planilha: quantas linhas e colunas cabem no pedido"
+            },
+            {
+              "id": "fama-do-modelo",
+              "text": "Se o modelo de IA é o mais famoso do momento"
+            },
+            {
+              "id": "rapidez-da-resposta",
+              "text": "Se a resposta vem rápida ou demora para sair"
+            }
+          ],
+          "prompt": "COLEGA (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "volume-da-planilha"
+          ],
+          "requiredContextIds": [
+            "exigencia-de-exatidao",
+            "sensibilidade-dos-dados",
+            "necessidade-de-auditabilidade"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l15-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "decidir"
     ],
-    "version": 1
+    "version": 2
   },
   "l16": {
     "activities": [
@@ -1589,12 +1633,52 @@ export const literacyCorpus = {
         },
         "id": "l16-a2",
         "type": "rubric_review"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-contexto-do-projeto",
+              "text": "Usa o contexto do projeto (runtime, contrato anexado, onde roda)"
+            },
+            {
+              "id": "c-restrição-declarada",
+              "text": "Respeita as restrições declaradas (dependência única, o que não logar)"
+            },
+            {
+              "id": "c-verificavel",
+              "text": "Deixa o comportamento verificável (hipótese declarada, teste sugerido)"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Seguindo o contrato que você anexou: input unknown validado com zod contra o schema; retorno tipado ou lança ValidationError para o handler tratar; antes de logar, removo as chaves com token/secret no nome (lista de exclusão em um só lugar); sem dependência além de zod. Assumi que payload inválido lança — se preferir Result, é um ajuste de uma linha. Um teste com payload válido e outro inválido fecham o comportamento."
+            },
+            {
+              "id": "out-b",
+              "text": "Aqui está uma função robusta e pronta para produção, que valida qualquer payload com segurança total. Ela usa um validador interno avançado, cobre todos os casos de webhook de qualquer serviço e é otimizada para alta performance. Pode confiar no código: segue as melhores práticas do mercado. Qualquer coisa, é só pedir."
+            }
+          ],
+          "scenario": "Mesma tarefa, dois momentos. No rush: 'escreve uma função que valida payload de webhook'. Depois, com calma: 'TypeScript 5 / Node 20. Anexei o contrato do payload (schema do webhook). A função recebe unknown, valida com zod (única dependência permitida), NÃO loga campo com token/secret no nome e roda no handler Express em produção.'"
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-contexto-do-projeto",
+            "c-restrição-declarada",
+            "c-verificavel"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l16-a3",
+        "type": "output_comparison"
       }
     ],
     "skillIds": [
       "codificar"
     ],
-    "version": 1
+    "version": 2
   },
   "l17": {
     "activities": [
@@ -1684,12 +1768,50 @@ export const literacyCorpus = {
         },
         "id": "l17-a2",
         "type": "output_comparison"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "passo-ler-contrato",
+              "text": "Ler o contrato da API: autenticação, limites de taxa, erros retornados, formatos"
+            },
+            {
+              "id": "passo-guardar-chave",
+              "text": "Guardar a chave fora do código: variável de ambiente ou gerenciador de segredos, nunca no commit"
+            },
+            {
+              "id": "passo-chamada-minima",
+              "text": "Implementar a chamada mínima: um endpoint, um caso de uso, resposta logada"
+            },
+            {
+              "id": "passo-tratar-erro",
+              "text": "Tratar erro e limite da chamada: timeout, 429, falha inesperada — cada um com destino definido"
+            },
+            {
+              "id": "passo-testar-real",
+              "text": "Testar com caso real: payload de verdade, chave de verdade, ponta a ponta"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "passo-ler-contrato",
+            "passo-guardar-chave",
+            "passo-chamada-minima",
+            "passo-tratar-erro",
+            "passo-testar-real"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l17-a3",
+        "type": "sort"
       }
     ],
     "skillIds": [
       "integrar"
     ],
-    "version": 1
+    "version": 2
   },
   "l18": {
     "activities": [
@@ -3265,4 +3387,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-09-02.3"
+export const literacyCorpusVersion = "2026-09-04.1"

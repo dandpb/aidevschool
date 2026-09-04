@@ -1,7 +1,7 @@
-# Lição l15 — Trilha Dev piloto: decisão técnica sobre o uso de IA generativa.
+# Lição l15 — Trilha Dev piloto: decisão técnica sobre o uso de IA generativa. — v2 ONDA C1 (spec AID-807 §1): +a3 missing_context.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l15
-version: 1
+version: 2
 moduleId: mod-05
 title: "Quando usar IA e quando não usar"
 objective: "Diante de três situações de desenvolvimento, decidir com critério técnico quando uma IA generativa ajuda e quando a solução certa é outra."
@@ -71,6 +71,45 @@ activities:
       - "Procure menção a pacotes, configuração e o cenário específico (Redis, três instâncias)."
       - "A resposta A cita 'express-rate-limit' e o Redis do cenário; a resposta B é genérica."
 
+  - id: l15-a3
+    type: missing_context
+    skillId: decidir
+    instruction: "UM COLEGA VAI USAR UMA IA GENERATIVA PARA FECHAR OS TOTAIS DA FOLHA DE PAGAMENTO. O que falta checar no plano dele?"
+    data:
+      prompt: "COLEGA (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
+      contextOptions:
+        - id: exigencia-de-exatidao
+          text: "A exigência de exatidão: folha fecha no centavo ou admite aproximação"
+        - id: sensibilidade-dos-dados
+          text: "A sensibilidade dos dados: nomes, salários e cargos de pessoas reais saem da empresa"
+        - id: necessidade-de-auditabilidade
+          text: "A necessidade de auditoria: o cálculo tem de dar para reconstituir e conferir depois"
+        - id: volume-da-planilha
+          text: "O volume da planilha: quantas linhas e colunas cabem no pedido"
+        - id: fama-do-modelo
+          text: "Se o modelo de IA é o mais famoso do momento"
+        - id: rapidez-da-resposta
+          text: "Se a resposta vem rápida ou demora para sair"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [exigencia-de-exatidao, sensibilidade-dos-dados, necessidade-de-auditabilidade]
+      optionalContextIds: [volume-da-planilha]
+    feedback:
+      onFailure: "'IA boa não erra conta' não é controle: folha é cálculo exato, com dado pessoal, que auditoria pode pedir um dia. Exatidão, sensibilidade e auditoria são os cheques que faltam; fama e rapidez do modelo não checam nada — são critério de marketing, não de engenharia."
+      perCheck:
+        exigencia-de-exatidao: "Faltou isto: exatidão — totais de folha têm que fechar no centavo, e geração probabilística não garante casa decimal."
+        sensibilidade-dos-dados: "Faltou isto: sensibilidade — a planilha leva nome, salário e cargo de pessoa real para fora da empresa antes de qualquer avaliação."
+        necessidade-de-auditabilidade: "Faltou isto: auditoria — 'a IA somou' não é rastro; folha tem de dar para reconstituir linha por linha."
+        volume-da-planilha: "Isto é opcional: volume muda como a planilha cabe no pedido, mas o plano não nasce errado por causa dele."
+        fama-do-modelo: "Isto não é cheque: fama é marketing — não mede precisão de cálculo nem proteção de dado."
+        rapidez-da-resposta: "Isto não é cheque: rapidez fala da latência do modelo, não da correção do total."
+      onSuccess: "Exato: exatidão exigida, dado sensível e auditoria futura — os três cheques antes de colar a folha em qualquer IA. Volume completa o juízo; fama e rapidez continuam fora da lista."
+    storage:
+      policy: structured_only
+    hints:
+      - "Folha de pagamento é cálculo exato com dado de pessoa real — quais riscos o plano do colega não considerou?"
+      - "Se a auditoria pedir o cálculo amanhã, o rastro 'a IA somou' basta?"
+      - "Fama e rapidez falam do modelo, não da tarefa — o cheque tem de falar da tarefa."
 rubric:
   id: l15-rubric
   criteria:
@@ -94,4 +133,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l15-a1, l15-a2]
+  requiredActivityIds: [l15-a1, l15-a2, l15-a3]
