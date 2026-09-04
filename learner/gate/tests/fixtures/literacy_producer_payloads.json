@@ -942,7 +942,7 @@
             "opt-c": false
           },
           "lessonId": "l15",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -969,7 +969,7 @@
             "opt-c": true
           },
           "lessonId": "l15",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -1001,7 +1001,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l15",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.6,
@@ -1031,10 +1031,71 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l15",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
+          "skillIds": [
+            "decidir"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l15-a3": {
+        "pass": {
+          "activityId": "l15-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "exigencia-de-exatidao",
+              "sensibilidade-dos-dados",
+              "necessidade-de-auditabilidade"
+            ]
+          },
+          "attemptId": "att-l15-l15-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "exigencia-de-exatidao": true,
+            "sensibilidade-dos-dados": true,
+            "necessidade-de-auditabilidade": true,
+            "noExtraContext": 0
+          },
+          "lessonId": "l15",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "decidir"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l15-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "exigencia-de-exatidao",
+              "fama-do-modelo"
+            ]
+          },
+          "attemptId": "att-l15-l15-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "exigencia-de-exatidao": true,
+            "sensibilidade-dos-dados": false,
+            "necessidade-de-auditabilidade": false,
+            "noExtraContext": 1
+          },
+          "lessonId": "l15",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.25,
           "skillIds": [
             "decidir"
           ],
@@ -1068,7 +1129,7 @@
             "c-types": false
           },
           "lessonId": "l16",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -1101,10 +1162,74 @@
             "c-types": true
           },
           "lessonId": "l16",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
+          "skillIds": [
+            "codificar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l16-a3": {
+        "pass": {
+          "activityId": "l16-a3",
+          "activityType": "output_comparison",
+          "answer": {
+            "criterionIds": [
+              "c-contexto-do-projeto",
+              "c-restrição-declarada",
+              "c-verificavel"
+            ],
+            "outputId": "out-a"
+          },
+          "attemptId": "att-l16-l16-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "betterOutputId": true,
+            "c-contexto-do-projeto": true,
+            "c-restrição-declarada": true,
+            "c-verificavel": true,
+            "noExtraCriteria": 0
+          },
+          "lessonId": "l16",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "codificar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l16-a3",
+          "activityType": "output_comparison",
+          "answer": {
+            "criterionIds": [
+              "c-contexto-do-projeto"
+            ],
+            "outputId": "out-b"
+          },
+          "attemptId": "att-l16-l16-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "betterOutputId": false,
+            "c-contexto-do-projeto": true,
+            "c-restrição-declarada": false,
+            "c-verificavel": false,
+            "noExtraCriteria": 0
+          },
+          "lessonId": "l16",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
           "skillIds": [
             "codificar"
           ],
@@ -1140,7 +1265,7 @@
             "user-text": false
           },
           "lessonId": "l17",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -1175,7 +1300,7 @@
             "user-text": true
           },
           "lessonId": "l17",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -1209,7 +1334,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l17",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.67,
@@ -1241,10 +1366,78 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l17",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
+          "skillIds": [
+            "integrar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l17-a3": {
+        "pass": {
+          "activityId": "l17-a3",
+          "activityType": "sort",
+          "answer": {
+            "orderedIds": [
+              "passo-ler-contrato",
+              "passo-guardar-chave",
+              "passo-chamada-minima",
+              "passo-tratar-erro",
+              "passo-testar-real"
+            ]
+          },
+          "attemptId": "att-l17-l17-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "passo-ler-contrato": true,
+            "passo-guardar-chave": true,
+            "passo-chamada-minima": true,
+            "passo-tratar-erro": true,
+            "passo-testar-real": true
+          },
+          "lessonId": "l17",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "integrar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l17-a3",
+          "activityType": "sort",
+          "answer": {
+            "orderedIds": [
+              "passo-guardar-chave",
+              "passo-ler-contrato",
+              "passo-chamada-minima",
+              "passo-tratar-erro",
+              "passo-testar-real"
+            ]
+          },
+          "attemptId": "att-l17-l17-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "passo-chamada-minima": true,
+            "passo-guardar-chave": false,
+            "passo-ler-contrato": false,
+            "passo-testar-real": true,
+            "passo-tratar-erro": true
+          },
+          "lessonId": "l17",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.6,
           "skillIds": [
             "integrar"
           ],
