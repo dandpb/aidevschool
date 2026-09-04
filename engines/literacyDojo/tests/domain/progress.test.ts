@@ -175,6 +175,47 @@ describe("conclusão de lição — retrofit O3-C1 (spec AID-644 rev 2 §4.3/A3)
   });
 });
 
+describe("conclusão de lição — retrofit C1 (spec AID-807 §1.4.3/A1–A4, ordem AID-806/B)", () => {
+  const retrofitted = ["l15", "l16", "l17"]
+    .map((id) => lessons.find((lesson) => lesson.id === id))
+    .filter((lesson): lesson is NonNullable<typeof lesson> => lesson !== undefined);
+
+  it("A4: as 3 lições retrofitadas têm 3 atividades e requiredActivityIds = conjunto completo", () => {
+    expect(retrofitted).toHaveLength(3);
+    for (const lesson of retrofitted) {
+      expect(lesson.version, `${lesson.id} version`).toBe(2);
+      expect(lesson.activities, `${lesson.id} atividades`).toHaveLength(3);
+      expect(
+        [...lesson.completion.requiredActivityIds].sort(),
+        `${lesson.id} requiredActivityIds`,
+      ).toEqual(lesson.activities.map((activity) => activity.id).sort());
+      expect(lesson.completion.minimumScore).toBe(0.75);
+    }
+  });
+
+  it("A3: predicado version-blind — só a1+a2 concluídas NÃO completa (falta a nova)", () => {
+    const l15 = lessons.find((lesson) => lesson.id === "l15");
+    if (!l15) throw new Error("l15 ausente do read model");
+    const outcome = evaluateLessonCompletion(l15, { "l15-a1": 1, "l15-a2": 1 });
+    expect(outcome.completed).toBe(false);
+    expect(outcome.missingActivityIds).toEqual(["l15-a3"]);
+    expect(evaluateLessonCompletion(l15, { "l15-a1": 1, "l15-a2": 1, "l15-a3": 1 }).completed).toBe(
+      true,
+    );
+  });
+
+  it("A3: 3× média >= 0.75 completa; abaixo disso não completa", () => {
+    const l17 = lessons.find((lesson) => lesson.id === "l17");
+    if (!l17) throw new Error("l17 ausente do read model");
+    const required = l17.completion.requiredActivityIds;
+    const atCutoff = Object.fromEntries(required.map((id) => [id, 0.75]));
+    expect(evaluateLessonCompletion(l17, atCutoff).completed).toBe(true);
+    expect(evaluateLessonCompletion(l17, atCutoff).lessonScore).toBe(0.75);
+    const below = Object.fromEntries(required.map((id) => [id, 0.7]));
+    expect(evaluateLessonCompletion(l17, below).completed).toBe(false);
+  });
+});
+
 describe("xp", () => {
   it("awardXp acumula e registra o XP do dia (meta diária)", () => {
     const progress = awardXp(createInitialProgress(modules, "v1"), XP_PER_LESSON_COMPLETE, NOW);

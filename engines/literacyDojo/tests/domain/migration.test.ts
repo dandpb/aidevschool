@@ -47,6 +47,35 @@ describe("migrateProgress (forward-only)", () => {
     expect(migrated.skills.entender?.nextReviewAt).toBe(now.toISOString());
   });
 
+  it("retrofit C1 (A1): l15 concluída só com a1+a2 permanece completed após o bump de contentVersion", () => {
+    // Learner que concluiu l15 na versão de 2 atividades (2026-09-02.3):
+    // o bump para o catálogo de 3 atividades NÃO rebaixa o status persistido
+    // (grandfathering, ruling AID-640 E2 / spec AID-807 §1.1.3).
+    const progress = createInitialProgress(modules, "2026-09-02.3");
+    progress.lessonStatus.l15 = "completed";
+    progress.currentLessonId = "l16";
+    const migrated = migrateProgress(progress, contentVersion);
+    expect(migrated.contentVersion).toBe(contentVersion);
+    expect(migrated.lessonStatus.l15).toBe("completed");
+    expect(migrated.currentLessonId).toBe("l16");
+  });
+
+  it("retrofit C1 (A2): skill praticada (decidir) fica com revisão devida imediatamente no bump", () => {
+    const progress = createInitialProgress(modules, "2026-09-02.3");
+    progress.lessonStatus.l15 = "completed";
+    progress.skills.decidir = {
+      skillId: "decidir",
+      attempts: 2,
+      passes: 2,
+      lastScore: 1,
+      lastPracticedAt: "2026-09-03T10:00:00.000Z",
+      nextReviewAt: "2026-10-03T10:00:00.000Z",
+    };
+    const now = new Date("2026-09-04T15:00:00.000Z");
+    const migrated = migrateProgress(progress, contentVersion, now);
+    expect(migrated.skills.decidir?.nextReviewAt).toBe(now.toISOString());
+  });
+
   it("progresso da versão 2 recebe os campos do Mapa Inicial sem perder histórico", () => {
     const progress = createInitialProgress(modules, contentVersion);
     const legacy = { ...progress, schemaVersion: 2 };
