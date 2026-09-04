@@ -1,0 +1,67 @@
+[
+ {
+  "welcome": "MENTORA DE APRENDIZAGEMLumi, sua guiaEu sou a Lumi. Os moradores trazem pedidos curtos e você aprende a usar IA ajudando a vila, uma escolha de cada vez.Aqui não existe pressa nem punição: tente, confira, peça uma dica e ajuste quando precisar."
+ },
+ {
+  "mapScreen": "VILA LUMEMapa da Vila LumeCada pedido leva de 3 a 5 minutos. Tente primeiro, receba feedback e ilumine o próximo caminho.0/20 missões0 XP0 dias de sequênciaVILA LUMEMENTORA DE APRENDIZAGEMLumi, sua guiaComece pelo pedido marcado como Disponível. Os bairros seguintes aparecem conforme você pratica.1BAIRRO 1Praça do EncontroIA sem mistério. Descubra o que a IA faz — e o que continua sendo decisão humana.0/3◆MISSÃO 1Sua primeira conversa com uma IA4 min · BloqueadaBloqueada▶MISSÃO 2IA não é uma fonte de verdade4 min · DisponívelComeçar◆MISSÃO 3O que a IA faz bem e onde costuma falhar4 min · BloqueadaBloqueada2BAIRRO 2Oficina de ContextoAprender a pedir. Aprenda a pedir melhor, comparar alternativas e ajustar o resultado.0/4◆MISSÃO 1Dê um objetivo claro4 min · BloqueadaBloqueada◆MISSÃO 2Dê contexto para obter uma resposta útil5 min · BloqueadaBloqueada◆MISSÃO 3Defina público, tom e formato4 min · BloqueadaBloqueada◆MISSÃO 4Melhore a resposta em etapas4 min · BloqueadaBloqueada3BAIRRO 3Biblioteca da DúvidaAvaliar e verificar. Reconheça sinais de erro e verifique antes de confiar.0/4◆MISSÃO 1A primeira resposta não é necessariamente a melhor3 min · BloqueadaBloqueada◆MISSÃO 2Como reconhecer uma resposta inventada4 min · BloqueadaBloqueada◆MISSÃO 3Quando procurar fontes externas3 min · BloqueadaBloqueada◆MISSÃO 4Como comparar alternativas e explicitar critérios4 min · BloqueadaBloqueada4BAIRRO 4Correio SeguroSegurança e aplicação. Use IA com segurança em situações reais do cotidiano.0/3◆MISSÃO 1Proteja suas informações4 min · BloqueadaBloqueada◆MISSÃO 2Use IA para uma tarefa real de trabalho5 min · BloqueadaBloqueada◆MISSÃO 3Desafio final: pedir, avaliar, melhorar e aplicar5 min · BloqueadaBloqueada6BAIRRO 6Rotina com IARotina com IA. Pratique uma nova habilidade com IA.0/3◆MISSÃO 1Biblioteca de pedidos: reutilize o que funciona4 min · BloqueadaBloqueada◆MISSÃO 2Conversas longas: gerencie o contexto5 min · BloqueadaBloqueada◆MISSÃO 3Números e fatos: verifique antes de usar3 min · BloqueadaBloqueada7BAIRRO 7IA além do textoIA além do texto. Pratique uma nova habilidade com IA.0/3◆MISSÃO 1Anexe, cole ou descreva4 min · BloqueadaBloqueada◆MISSÃO 2Anexos seguros: proteja antes de enviar4 min · BloqueadaBloqueada◆MISSÃO 3Confira o que a IA extraiu4 min · BloqueadaBloqueadaVoltar ao início"
+ },
+ {
+  "wrongFeedback": "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?Pontuação desta tentativa: 20%A resposta A parece ótima, mas nenhum número tem fonte — a IA pode ter inventado valores que só parecem precisos. A resposta B diz o que não sabe e indica onde confirmar.Faltou este motivo: uma resposta confiável indica a origem dos dados ou onde verificá-los.Faltou este motivo: uma resposta confiável deixa claro o que é estimativa ou desconhecido."
+ },
+ {
+  "hints": "Dicas:Compare as duas respostas procurando uma coisa só: de onde saíram os números?"
+ },
+ {
+  "result": "VILA LUME · MISSÃO CONCLUÍDAA vila ganhou uma nova luz: IA não é uma fonte de verdadeXP conquistado · 100% de pontuaçãoVILA LUMEHabilidade praticadaEntender, AvaliarEntender: A IA entrega blocos prontos. Quem decide onde cada um encaixa é você.Conquista desbloqueada🏆 Primeira liçãoConquistas marcam constância, não competência verificada.O que foi bemIsso! Resposta útil é a que diz de onde vem a informação e o que precisa ser verificado — não a que soa mais confiante.Certo! Verificar antes de usar: o número fica confirmado e a apresentação fica segura.Esse é o fluxo verificar-antes-de-usar: ler, marcar, localizar, conferir e usar com anotação.Para fixarReconhece que uma resposta convincente sem fonte pode estar inventada.Prefere a resposta que declara limites e indica como verificar.Justifica a escolha com critérios de verificação, não com a aparência da resposta.Vamos lembrar você de revisar esta lição nos próximos dias.O que isto significaLição concluída registra o seu progresso neste aparelho. Isso é diferente de competência verificada. Ela depende de uma verificação independente, que ainda não faz parte deste aplicativo.Verificação da tentativaVerificação independente ainda não está configurada neste ambiente.Tentar verificação novamenteSua próxima aplicação: organizar um agendamentoTransforme compromissos e prioridades em um rascunho de agenda.Seu próximo passoComo você fez uma checagem extra ou pediu apoio no Mapa Inicial, vamos começar com uma conversa simples com IA antes de avançar.Trilha DevPara programadores no OS público. Sem conta; o progresso fica no outro site.Próximo pedidoVer mapa da Vila Lume",
+  "routeExplanation": "Seu próximo passoComo você fez uma checagem extra ou pediu apoio no Mapa Inicial, vamos começar com uma conversa simples com IA antes de avançar."
+ },
+ {
+  "nextLessonHeading": "Sua primeira conversa com uma IA"
+ },
+ {
+  "resumedHeading": "Sua primeira conversa com uma IA"
+ },
+ {
+  "boundaryCopy": "Piloto público gratuito · para maiores de 18 anos. Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.Termos do pilotoPrivacidadePedir suporte (abre em nova aba)"
+ },
+ {
+  "progressLessonL02": {
+   "l01": "in_progress",
+   "l02": "completed",
+   "l03": "locked",
+   "l04": "locked",
+   "l05": "locked",
+   "l06": "locked",
+   "l07": "locked",
+   "l08": "locked",
+   "l09": "locked",
+   "l10": "locked",
+   "l11": "locked",
+   "l12": "locked",
+   "l13": "locked",
+   "l14": "locked",
+   "l18": "locked",
+   "l19": "locked",
+   "l20": "locked",
+   "l24": "locked",
+   "l25": "locked",
+   "l26": "locked"
+  },
+  "currentLessonId": "l01"
+ },
+ {
+  "evidenceCount": 4,
+  "allValid": true,
+  "verifierRequired": true,
+  "activityIds": [
+   "l02-a1",
+   "l02-a1",
+   "l02-a2",
+   "l02-a3"
+  ]
+ },
+ {
+  "walkActivityCount": 3,
+  "firstActivityType": "output_comparison"
+ }
+]

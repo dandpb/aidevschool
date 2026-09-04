@@ -9,95 +9,112 @@ import {
   isRetrofittedLesson,
 } from "../../src/domain/retrofitNotice";
 
-const WAVE_VERSIONS = Object.keys(RETROFITTED_LESSONS_BY_CONTENT_VERSION);
+/**
+ * Ondas de retrofit lançadas (contentVersion → lições retrofitadas):
+ * - O3-C1 (spec AID-644 rev 2 §3): l01–l07 sob 2026-09-02.3.
+ * - C1 (spec AID-807 §1 / ordem AID-806/B): l15–l17 sob 2026-09-04.1.
+ */
+const LAUNCHED_WAVES: Record<string, readonly string[]> = {
+  "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
+  "2026-09-04.1": ["l15", "l16", "l17"],
+};
 
 function statuses(completed: string[]): Record<string, LessonStatus> {
   return Object.fromEntries(completed.map((lessonId) => [lessonId, "completed" as const]));
 }
 
-describe("retrofitNotice (onda O3-C1, spec AID-644 rev 2 §3)", () => {
-  it("mapa da onda cobre exatamente l01–l07 no contentVersion vigente do catálogo", () => {
+describe("retrofitNotice (ondas O3-C1 + C1, specs AID-644 rev 2 §3 / AID-807 §1)", () => {
+  it("mapa de ondas é exatamente o lançado e cobre o contentVersion vigente do catálogo", () => {
     // Garante que o mapa cobre o contentVersion gerado atual (barreira para ondas futuras).
-    expect(WAVE_VERSIONS).toContain(contentVersion);
-    for (const version of WAVE_VERSIONS) {
-      const lessons = RETROFITTED_LESSONS_BY_CONTENT_VERSION[version];
-      expect([...lessons].sort()).toEqual(["l01", "l02", "l03", "l04", "l05", "l06", "l07"]);
-    }
+    expect(RETROFITTED_LESSONS_BY_CONTENT_VERSION).toEqual(LAUNCHED_WAVES);
+    expect(Object.keys(LAUNCHED_WAVES)).toContain(contentVersion);
   });
 
-  it("isRetrofittedLesson: lições da onda no version do bump; fora da onda ou de outra versão, não", () => {
-    for (const version of WAVE_VERSIONS) {
-      expect(isRetrofittedLesson("l01", version)).toBe(true);
-      expect(isRetrofittedLesson("l07", version)).toBe(true);
+  it("isRetrofittedLesson: lição da onda no version do bump; onda vizinha ou versão outra, não", () => {
+    for (const [version, waveLessons] of Object.entries(LAUNCHED_WAVES)) {
+      const otherWave = Object.entries(LAUNCHED_WAVES)
+        .filter(([v]) => v !== version)
+        .flatMap(([, lessons]) => lessons);
+      for (const lessonId of waveLessons) {
+        expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(true);
+      }
+      for (const lessonId of otherWave) {
+        expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(false);
+      }
       expect(isRetrofittedLesson("l08", version)).toBe(false);
       expect(isRetrofittedLesson("l27", version)).toBe(false);
     }
     expect(isRetrofittedLesson("l01", "2026-09-02.2")).toBe(false);
+    expect(isRetrofittedLesson("l15", "2026-09-02.3")).toBe(false);
     expect(isRetrofittedLesson("l01", "versao-desconhecida")).toBe(false);
   });
 
   it("aviso devido: lição da onda + status persistido completed + sem ack nesta versão", () => {
-    const [version] = WAVE_VERSIONS;
     expect(
       isRetrofitNoticeDue({
         lessonId: "l01",
-        contentVersion: version,
+        contentVersion: "2026-09-02.3",
         lessonStatus: statuses(["l01"]),
+        acks: {},
+      }),
+    ).toBe(true);
+    expect(
+      isRetrofitNoticeDue({
+        lessonId: "l15",
+        contentVersion: "2026-09-04.1",
+        lessonStatus: statuses(["l15"]),
         acks: {},
       }),
     ).toBe(true);
   });
 
   it("não devido para lição não concluída (novo learner nunca vê o aviso de conclusão mantida)", () => {
-    const [version] = WAVE_VERSIONS;
     expect(
       isRetrofitNoticeDue({
-        lessonId: "l01",
-        contentVersion: version,
-        lessonStatus: { l01: "in_progress" },
+        lessonId: "l15",
+        contentVersion: "2026-09-04.1",
+        lessonStatus: { l15: "in_progress" },
         acks: {},
       }),
     ).toBe(false);
   });
 
   it("idempotência: ack na MESMA versão suprime o aviso; bump futuro o rearma (A5)", () => {
-    const [version] = WAVE_VERSIONS;
-    const lessonStatus = statuses(["l01"]);
+    const lessonStatus = statuses(["l15"]);
     expect(
       isRetrofitNoticeDue({
-        lessonId: "l01",
-        contentVersion: version,
+        lessonId: "l15",
+        contentVersion: "2026-09-04.1",
         lessonStatus,
-        acks: { l01: version },
+        acks: { l15: "2026-09-04.1" },
       }),
     ).toBe(false);
     expect(
       isRetrofitNoticeDue({
-        lessonId: "l01",
-        contentVersion: version,
+        lessonId: "l15",
+        contentVersion: "2026-09-04.1",
         lessonStatus,
-        acks: { l01: "2026-09-02.2" },
+        acks: { l15: "2026-09-02.3" },
       }),
     ).toBe(true);
     expect(
       isRetrofitNoticeDue({
-        lessonId: "l01",
+        lessonId: "l15",
         contentVersion: "2099-01-01.1",
         lessonStatus,
-        acks: { l01: version },
+        acks: { l15: "2026-09-04.1" },
       }),
     ).toBe(false);
   });
 
   it("ack de outra lição não interfere (1× por learner/lição/bump)", () => {
-    const [version] = WAVE_VERSIONS;
-    const lessonStatus = statuses(["l01", "l02"]);
+    const lessonStatus = statuses(["l15", "l16"]);
     expect(
       isRetrofitNoticeDue({
-        lessonId: "l02",
-        contentVersion: version,
+        lessonId: "l16",
+        contentVersion: "2026-09-04.1",
         lessonStatus,
-        acks: { l01: version },
+        acks: { l15: "2026-09-04.1" },
       }),
     ).toBe(true);
   });

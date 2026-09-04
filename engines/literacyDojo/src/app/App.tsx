@@ -40,7 +40,7 @@ export type Route =
   | { name: "lesson"; lessonId: string; mode?: LessonMode; retrofitNotice?: boolean }
   | { name: "result"; summary: LessonSummary };
 
-function AppShell({
+export function AppShell({
   services,
   hostAdapter,
 }: {

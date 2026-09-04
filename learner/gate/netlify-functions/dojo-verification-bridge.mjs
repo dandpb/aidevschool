@@ -20,13 +20,24 @@ function json(body, status = 200, extra = {}) {
   });
 }
 
+// Python json.dumps(ensure_ascii=True) escapes every char above 0x7F as
+// \uXXXX (lowercase hex, surrogate halves escaped individually). JSON.stringify
+// emits raw UTF-8 for those, so digests diverge on non-ASCII ids — e.g. the
+// criterion `c-restrição-declarada` (ONDA C1, AID-808). Escaping non-ASCII
+// here keeps stable() byte-identical to Python for ASCII-only payloads.
+function pyAsciiEscaped(jsonString) {
+  return jsonString.replace(/[\u0080-\uffff]/g, (ch) => {
+    return `\\u${ch.charCodeAt(0).toString(16).padStart(4, "0")}`;
+  });
+}
+
 function stable(value) {
   if (Array.isArray(value)) return `[${value.map(stable).join(",")}]`;
   if (value !== null && typeof value === "object") {
     return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b))
-      .map(([key, item]) => `${JSON.stringify(key)}:${stable(item)}`).join(",")}}`;
+      .map(([key, item]) => `${pyAsciiEscaped(JSON.stringify(key))}:${stable(item)}`).join(",")}}`;
   }
-  return JSON.stringify(value);
+  return pyAsciiEscaped(JSON.stringify(value));
 }
 
 function digest(record) {

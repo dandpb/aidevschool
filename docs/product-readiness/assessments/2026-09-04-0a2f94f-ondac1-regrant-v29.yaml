@@ -1,0 +1,23 @@
+schemaVersion: 1
+assessmentId: 2026-09-04-0a2f94f-ondac1-regrant-v29
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-04T19:35:00Z'
+revalidateBy: '2026-10-04'
+gitSha: 0a2f94f8fd1a74de3a642eeff989ac7e0ad8757b
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-04T19:31:30Z-literacy-happy-path-mixed-0a2f94f8
+  - 2026-09-04T19:31:30Z-literacy-retry-mixed-0a2f94f8
+  - 2026-09-04T19:31:30Z-literacy-resume-mixed-0a2f94f8
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-04T19:31:30Z-os-literacy-hosted-mission-mixed-0a2f94f8
+  - 2026-09-04T19:31:30Z-os-verification-recovery-mixed-0a2f94f8
+  - 2026-09-04T19:31:30Z-os-literacy-returning-device-mixed-0a2f94f8
