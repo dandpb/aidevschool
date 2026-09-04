@@ -1,0 +1,14 @@
+schemaVersion: 1
+assessmentId: 2026-09-04-289cdbd-dojotoday-xsschain-regrant-v28
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-04T03:00:00Z'
+revalidateBy: '2026-10-04'
+gitSha: 289cdbd87b45ecf0a1f2d63514ebb9a4897fa174
+decisions:
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-04T02:55:00Z-dojotoday-active-unit-guidance-mixed-289cdbd8
+  - 2026-09-04T02:55:00Z-dojotoday-read-only-boundary-observed-289cdbd8
