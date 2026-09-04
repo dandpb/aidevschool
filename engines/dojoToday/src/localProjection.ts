@@ -94,6 +94,8 @@ export async function loadHostLocalToday(): Promise<LocalSuggestion> {
   }
 }
 
+import { escapeHtml } from "./escape";
+
 export function renderLocalSuggestion(suggestion: LocalSuggestion): string {
   return `
     <header class="hero">
@@ -102,8 +104,8 @@ export function renderLocalSuggestion(suggestion: LocalSuggestion): string {
     </header>
     <section class="card mission-card" data-testid="dojo-today-local-suggestion" aria-label="Sugestão neste dispositivo">
       <p class="eyebrow">Não é FSRS canônico</p>
-      <h2>${suggestion.title}</h2>
-      <p>${suggestion.detail}</p>
+      <h2>${escapeHtml(suggestion.title)}</h2>
+      <p>${escapeHtml(suggestion.detail)}</p>
       <p class="muted">Esta vista lê o progresso local do OS. Não escreve learner/learning_state.yaml e não marca mastered.</p>
     </section>
     <footer class="note">
