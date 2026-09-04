@@ -27,7 +27,7 @@ limiares abaixo são **contagens com denominador** (`2/3`), coerentes com o
 | # | Item | Por que não bloqueia |
 | --- | --- | --- |
 | I1 | Retry/recuperação | Só avaliável com erro natural; ausência de erro = `não observado` (kit §7), não falha. Se houve erro e ninguém recuperou com H0, o CEO decide com o registro explícito |
-| I2 | Retorno/ritmo diário | A obrigatoriedade do retorno é decisão pendente do founder (PRD + AID-718). Registrar direto/relatado/não por participante; 0/3 retornos precisa constar em destaque |
+| I2 | Retorno/ritmo diário | Retorno diário **opcional, com registro completo** — decidido pelo founder (card `3c0474e9` Q2 = `optional`, 2026-09-03; resolve a pendência PRD + AID-718). Registrar direto/relatado/não por participante; 0/3 retornos precisa constar em destaque |
 | I3 | Funil OP-B | Na escala do P6 (n<5) todas as células são suprimidas (k≥5). A evidência OP-B aplicável é o **dry-run do pipeline** (coleta sem drift + agregação executa + zero identificadores publicados — ver [LEITURA_FUNIL_OPB](LEITURA_FUNIL_OPB.md)); células publicáveis viram evidência adicional quando houver ≥5 instalações |
 
 ## Resultados possíveis

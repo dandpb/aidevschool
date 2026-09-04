@@ -6,6 +6,12 @@ Kit operacional que destrava a execução humana do
 que gateia a onda O3-C2 (AID-644 §RESERVADO). Despacho: ORDEM CEO AID-718/B. Nada aqui ativa transporte,
 produz conteúdo ou altera produto.
 
+**Status (2026-09-03, card founder `3c0474e9` — AID-751 → ORDEM CEO AID-751/A / AID-757):**
+piloto **GO `run-now`** (Q1) — founder recruta ≥ 3 participantes e executa com
+este kit; retorno diário **opcional com registro completo** (Q2, refletido no
+[I2](CRITERIO_O3C2.md)). O3-C2 segue RESERVADA até o gate de
+[CRITERIO_O3C2.md](CRITERIO_O3C2.md) ser aplicado (QA valida, CEO despacha).
+
 | Artefato | Papel | Quem usa |
 | --- | --- | --- |
 | [Runbook do facilitador](RUNBOOK_FACILITADOR.md) | 1 página: conduzir entrada → primeira lição → retry → retorno | Facilitadora (founder) |
