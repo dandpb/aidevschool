@@ -57,6 +57,28 @@ issue, use `AID-<n>-<slug>`. Templates: `docs/sdlc/templates/`.
   into a single short plan block in the task record, but self-verification
   and review are never skipped.
 
+### External-origin PRs (bots: Sentinel, Jules)
+
+Fixes sometimes arrive as PRs from external bots (Sentinel security scans,
+Jules). A bot has no Paperclip presence and owns no accountability trail
+here, so it cannot register its own intent — but merged bot PRs become
+precedent, so the written producer link is still required (audit
+AID-767/B finding F1, retrofitted by AID-771 in
+`intent/2026-09-03-xss-dojotoday-sentinel/`):
+
+- **Who registers:** the CEO, or an agent dispatched by the CEO, creates
+  the fast-path record — a short plan block in the task record, or
+  `intent/<change-id>/` with `intent.md` + `plan.md` — **before merge**,
+  linking the PR, the independent QA-verdict issue, and any follow-up
+  guard or re-grant.
+- **What never changes:** the independent verdict (producer ≠ verifier)
+  remains mandatory before merge; the record documents the chain, it
+  never substitutes for verification.
+- **If the record slips** (as with PR #262): retrofit it promptly as a
+  **retrospective record** marked as such at the top of each file, citing
+  the verdicts and merge SHAs that already happened, and let the miss feed
+  the audit.
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
