@@ -251,7 +251,8 @@ export function findAdjacentWalkable(
   // preserving deterministic selection by using < operator for tie-breaking.
   let bestCandidate = candidates[0]
   if (!bestCandidate) return null // Handled by length check above, but satisfies TS
-  let bestIndex = prefer.findIndex((p) => p.x === bestCandidate.x && p.y === bestCandidate.y)
+  const initialCandidate = bestCandidate
+  let bestIndex = prefer.findIndex((p) => p.x === initialCandidate.x && p.y === initialCandidate.y)
 
   for (let i = 1; i < candidates.length; i++) {
     const currentCandidate = candidates[i]
