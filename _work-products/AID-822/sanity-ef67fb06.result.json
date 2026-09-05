@@ -1,0 +1,202 @@
+{
+  "base": "https://aidevschool-codexdojo-os.netlify.app",
+  "expectPin": "ef67fb06be7d8eb6ff3fe8d16e9c65024d4ac118",
+  "checks": [
+    {
+      "name": "manifest-sha256==receipt-1f79089d",
+      "ok": true,
+      "detail": "1f79089d3b368372"
+    },
+    {
+      "name": "manifest-sourceRevision==ef67fb06",
+      "ok": true,
+      "detail": "ef67fb06be7d8eb6ff3fe8d16e9c65024d4ac118"
+    },
+    {
+      "name": "manifest-os-sha256==receipt-f605b3c6",
+      "ok": true,
+      "detail": "f605b3c611c65424"
+    },
+    {
+      "name": "contentVersion-uniform-2026-09-04.1",
+      "ok": true,
+      "detail": "32 strings, distinct: 2026-09-04.1"
+    },
+    {
+      "name": "warmup-/hub-rendered",
+      "ok": true,
+      "detail": "1318 chars"
+    },
+    {
+      "name": "warmup-/hub-no-l15-l17-text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "warmup-/hub-no-dev-l15-l17-refs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "warmup-/map-rendered",
+      "ok": true,
+      "detail": "1301 chars"
+    },
+    {
+      "name": "warmup-/map-no-l15-l17-text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "warmup-/map-no-dev-l15-l17-refs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "warmup-/progress-rendered",
+      "ok": true,
+      "detail": "1760 chars"
+    },
+    {
+      "name": "warmup-/progress-no-l15-l17-text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "warmup-/progress-no-dev-l15-l17-refs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "l27-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydo"
+    },
+    {
+      "name": "l27-host-independent-verdict-PASS",
+      "ok": true,
+      "detail": "Veredito PASS"
+    },
+    {
+      "name": "l28-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydo"
+    },
+    {
+      "name": "l28-host-independent-verdict-PASS",
+      "ok": true,
+      "detail": "Veredito PASS"
+    },
+    {
+      "name": "l29-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydo"
+    },
+    {
+      "name": "l29-host-independent-verdict-PASS",
+      "ok": true,
+      "detail": "Veredito PASS"
+    },
+    {
+      "name": "hub-rendered-after-l29",
+      "ok": true,
+      "detail": "1307 chars"
+    },
+    {
+      "name": "zero-console-errors",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "missions": [
+    {
+      "missionId": "l27",
+      "ms": 32228,
+      "iframeSrc": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/?hosted=1&hostOrigin=https%3A%2F%2Faidevschool-codexdojo-os.netlify.app",
+      "ariaLiveAtCompletion": "",
+      "hostVerdict": "Veredito PASS",
+      "perActivity": [
+        {
+          "attempt": "a1_sort",
+          "ms": 417
+        },
+        {
+          "attempt": "a2_prompt_builder",
+          "ms": 121
+        },
+        {
+          "attempt": "a3_missing_context",
+          "ms": 310
+        }
+      ]
+    },
+    {
+      "missionId": "l28",
+      "ms": 32446,
+      "iframeSrc": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/?hosted=1&hostOrigin=https%3A%2F%2Faidevschool-codexdojo-os.netlify.app",
+      "ariaLiveAtCompletion": "",
+      "hostVerdict": "Veredito PASS",
+      "perActivity": [
+        {
+          "attempt": "a1_choice",
+          "ms": 443
+        },
+        {
+          "attempt": "a2_rubric",
+          "ms": 597
+        },
+        {
+          "attempt": "a3_output_comparison",
+          "ms": 265
+        }
+      ]
+    },
+    {
+      "missionId": "l29",
+      "ms": 32540,
+      "iframeSrc": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/?hosted=1&hostOrigin=https%3A%2F%2Faidevschool-codexdojo-os.netlify.app",
+      "ariaLiveAtCompletion": "",
+      "hostVerdict": "Veredito PASS",
+      "perActivity": [
+        {
+          "attempt": "a1_choice_multi",
+          "ms": 606
+        },
+        {
+          "attempt": "a2_rubric",
+          "ms": 650
+        },
+        {
+          "attempt": "a3_missing_context",
+          "ms": 264
+        }
+      ]
+    }
+  ],
+  "startedAt": "2026-09-04T20:22:59.329Z",
+  "onboarding": {
+    "ms": 1531,
+    "landedOn": "https://aidevschool-codexdojo-os.netlify.app/hub"
+  },
+  "warmup": {
+    "/hub": {
+      "chars": 1318,
+      "textHits": [],
+      "domHits": []
+    },
+    "/map": {
+      "chars": 1301,
+      "textHits": [],
+      "domHits": []
+    },
+    "/progress": {
+      "chars": 1760,
+      "textHits": [],
+      "domHits": []
+    }
+  },
+  "consoleErrors": [],
+  "completedAt": "2026-09-04T20:24:40.122Z",
+  "happyPathMs": 98745,
+  "verdict": "PASS"
+}
