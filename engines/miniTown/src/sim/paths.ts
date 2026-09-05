@@ -245,18 +245,31 @@ export function findAdjacentWalkable(
     candidates.push({ x: nx, y: ny })
   }
   if (candidates.length === 0) return null
-  // Sort by prefer-list membership, then by Manhattan distance to the
-  // first preferred cell (so the result is deterministic but prefers
-  // cells closer to existing roads).
-  candidates.sort((a, b) => {
-    const ai = prefer.findIndex((p) => p.x === a.x && p.y === a.y)
-    const bi = prefer.findIndex((p) => p.x === b.x && p.y === b.y)
-    if (ai === -1 && bi === -1) return 0
-    if (ai === -1) return 1
-    if (bi === -1) return -1
-    return ai - bi
-  })
-  return candidates[0] ?? null
+
+  // Optimization: Replaced O(N log N) sorting with O(N) linear scan for the single closest target.
+  // This prevents array allocations and avoids unnecessary O(N) inner loops per comparison,
+  // preserving deterministic selection by using < operator for tie-breaking.
+  let bestCandidate = candidates[0]
+  if (!bestCandidate) return null // Handled by length check above, but satisfies TS
+  const initialCandidate = bestCandidate
+  let bestIndex = prefer.findIndex((p) => p.x === initialCandidate.x && p.y === initialCandidate.y)
+
+  for (let i = 1; i < candidates.length; i++) {
+    const currentCandidate = candidates[i]
+    if (!currentCandidate) continue
+    const currentIndex = prefer.findIndex(
+      (p) => p.x === currentCandidate.x && p.y === currentCandidate.y,
+    )
+
+    if (currentIndex !== -1) {
+      // We use `<` to preserve stable-sort-like "first closest match" tie-breaking behavior
+      if (bestIndex === -1 || currentIndex < bestIndex) {
+        bestCandidate = currentCandidate
+        bestIndex = currentIndex
+      }
+    }
+  }
+  return bestCandidate
 }
 
 /** Manhattan distance between two cells. Used by spawners for proximity checks. */
