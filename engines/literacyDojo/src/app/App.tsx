@@ -298,7 +298,7 @@ export function AppShell({
             <a
               href="https://github.com/dandpb/aidevschool/issues/new"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
             >
               Pedir suporte <span className="sr-only">(abre em nova aba)</span>
             </a>
