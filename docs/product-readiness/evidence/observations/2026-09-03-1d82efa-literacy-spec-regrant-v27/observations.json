@@ -1,0 +1,47 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "1d82efa236b3b44d4267d8c3f0437f062c6a6946",
+ "observedAt": "2026-09-03T19:20:00Z",
+ "scenarios": [
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Re-grant v27 (CEO order AID-745, remediation of PR #261/AID-742). Producer legs re-run first-hand at pin 1d82efa2: full E2E 9/9 on default port 4173 (19:1xZ) AND 9/9 on LITERACY_E2E_APP_PORT=4300, both traversing onboarding -> Mapa da Vila Lume -> Mapa Inicial completion -> result screen ('VILA LUME · MISSÃO CONCLUÍDA ... XP conquistado · 100% de pontuação') -> explicit next-lesson control landing on 'O que a IA faz bem e onde costuma falhar'. Understanding claim re-checked against the unchanged surface: engines/literacyDojo/src/ is byte-identical to the v26 pin 0b8148e5 (progress.ts f3353c90..., lessonSession.ts 51276032..., indexedDbProgressRepository.ts 44fd0ee8... — same digests recorded in results.ndjson v26 rows), so the QA AID-719 first-hand observation of 2026-09-03 (screenshots ev/lit-2-map.png, ev/lit-5-result.png, ev/lit-7-next-lesson.png) still describes these exact UI bytes; the only delta in scope is inside the spec file itself (origin filter now derives from LITERACY_E2E_APP_PORT ?? 4173), which touches no learner-visible copy or control. Independent re-verification: QA AID-744 re-executes the E2E suite in a clean worktree and its GO requires green CI on the final head."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Re-grant v27 (CEO order AID-745). Producer legs at pin 1d82efa2: E2E 9/9 default port + 9/9 alt port, both exercising the guided retry route ('readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada'): wrong output yields specific plain-language feedback, a visible hint control and another attempt, then completion — no facilitator or repository knowledge involved. Understanding claim re-checked against the unchanged surface: lessonSession.ts and all of engines/literacyDojo/src/ are byte-identical to the v26 pin 0b8148e5 (digests match the v26 rows in results.ndjson), so the QA AID-719 first-hand walk of 2026-09-03 (screenshots ev/lit-3-wrong.png, ev/lit-4-hint.png; welcome norm 'não existe pressa nem punição: tente, confira, peça uma dica e ajuste') still describes these exact UI bytes. Spec-only delta (origin filter parameterization, AID-742) changes no feedback copy or retry control. Independent re-verification: QA AID-744 clean-worktree E2E re-run; GO requires green CI."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Re-grant v27 (CEO order AID-745). Producer legs at pin 1d82efa2: E2E 9/9 default port + 9/9 alt port, both covering same-device resume (reload preserves IndexedDB progress and opens the next available lesson). Boundary claim re-checked against the unchanged surface: indexedDbProgressRepository.ts and all of engines/literacyDojo/src/ are byte-identical to the v26 pin 0b8148e5 (digests match the v26 rows in results.ndjson), so the persistent footer copy observed first-hand by QA AID-719 on 2026-09-03 ('Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.'; screenshot ev/lit-6-resume.png) still describes these exact UI bytes. Spec-only delta (origin filter parameterization, AID-742) touches no persistence or boundary copy. Independent re-verification: QA AID-744 clean-worktree E2E re-run; GO requires green CI."
+    }
+   ]
+  }
+ ]
+}

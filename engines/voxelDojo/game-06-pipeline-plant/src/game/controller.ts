@@ -152,10 +152,33 @@ export class GameController {
     return bufferedJobOverflows(this.state.job, this.state.level.backpressure)
   }
 
+  /** Closed observation trace for the independent verifier: the player's bounded
+   * inputs only. The verifier recomputes every outcome number from these; the
+   * producer's metrics are never trusted (teaching-game contract item 2/3). */
+  private observations(): Record<string, unknown> {
+    switch (this.state.level.id) {
+      case "L1":
+      case "L4":
+        return {
+          kind: `pipeline-plant-${this.state.level.id}`,
+          predictedOverflow: this.state.predictedOverflow === true,
+        }
+      case "L2":
+        return { kind: "pipeline-plant-L2", predictedBounded: this.state.predictedBounded === true }
+      case "L3":
+        return {
+          kind: "pipeline-plant-L3",
+          chunkSize: this.state.tunedChunkSize,
+          predictedPeak: this.state.predictedPeak ?? 0,
+        }
+    }
+  }
+
   private finish(out: WaveOutcome): void {
-    this.state.lastMetrics = out.metrics
+    const metrics = { kind: "voxeldoj-pipeline-plant", ...out.metrics }
+    this.state.lastMetrics = metrics
     this.state.phase = out.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, out.pass, out.metrics)
+    emitEvidence(this.state.level.id, out.pass, metrics, this.observations())
     this.commit()
   }
 }

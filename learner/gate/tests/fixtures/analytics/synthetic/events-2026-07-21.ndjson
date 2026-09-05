@@ -1,0 +1,7 @@
+{"schemaVersion":1,"eventId":"evt-0034","name":"journey.returned","occurredAt":"2026-07-21T09:00:00Z","sequence":11,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3"}}
+{"schemaVersion":1,"eventId":"evt-0035","name":"review.started","occurredAt":"2026-07-21T09:01:00Z","sequence":12,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3","reason":"due"}}
+{"schemaVersion":1,"eventId":"evt-0036","name":"mission.started","occurredAt":"2026-07-21T09:02:00Z","sequence":13,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3","mode":"review","missionId":"os-l04-1"}}
+{"schemaVersion":1,"eventId":"evt-0037","name":"structured_attempt.submitted","occurredAt":"2026-07-21T09:05:00Z","sequence":14,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3","activityType":"sort"}}
+{"schemaVersion":1,"eventId":"evt-0038","name":"structured_attempt.passed","occurredAt":"2026-07-21T09:06:00Z","sequence":15,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3","activityType":"sort"}}
+{"schemaVersion":1,"eventId":"evt-0039","name":"mission.completed","occurredAt":"2026-07-21T09:07:00Z","sequence":16,"dimensions":{"installationId":"install-i1","sessionId":"s-i1-3","result":"completed"}}
+{"schemaVersion":1,"eventId":"evt-0040","name":"journey.returned","occurredAt":"2026-07-21T09:30:00Z","sequence":5,"dimensions":{"installationId":"install-i5","sessionId":"s-i5-2"}}

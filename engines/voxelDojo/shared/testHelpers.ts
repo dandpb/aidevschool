@@ -14,6 +14,7 @@ export interface EvidenceRecord {
     probes?: ReadonlyArray<{ key: string; predictedAlive: boolean }>
     predictedSwept?: number
     hashStrength?: number | "full"
+    [key: string]: unknown
   }
 }
 

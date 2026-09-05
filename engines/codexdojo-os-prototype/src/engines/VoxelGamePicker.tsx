@@ -7,20 +7,25 @@ export type VoxelGamePickerProps = {
 
 export function VoxelGamePicker({ selectedId, onSelect }: VoxelGamePickerProps) {
   return (
-    <label className="voxel-game-picker">
-      <span>Experiência voxelDojo</span>
-      <select
-        aria-label="Experiência voxelDojo"
-        value={selectedId}
-        onChange={(event) => {
-          const selected = voxelCatalog.find((game) => game.id === event.target.value)
-          if (selected !== undefined) onSelect(selected.id)
-        }}
-      >
-        {voxelCatalog.map((game) => (
-          <option key={game.id} value={game.id}>{game.name}</option>
-        ))}
-      </select>
-    </label>
+    <div className="voxel-game-picker">
+      <label>
+        <span>Simulação voxelDojo</span>
+        <select
+          aria-label="Experiência voxelDojo"
+          value={selectedId}
+          onChange={(event) => {
+            const selected = voxelCatalog.find((game) => game.id === event.target.value)
+            if (selected !== undefined) onSelect(selected.id)
+          }}
+        >
+          {voxelCatalog.map((game) => (
+            <option key={game.id} value={game.id}>{game.name}</option>
+          ))}
+        </select>
+      </label>
+      <p className="voxel-game-picker-note">
+        Simulação · evidência bruta, não verificada. Não é um projeto do catálogo 01–18 nem domínio.
+      </p>
+    </div>
   )
 }

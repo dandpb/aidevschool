@@ -11,7 +11,7 @@ import {
   type OsProgress,
 } from '../progress/domain'
 import { MentorPanel } from '../mentor/MentorPanel'
-import { STUDENT_MISSION_CHAPTERS } from './studentPath'
+import { STUDENT_MISSION_CHAPTERS, listStudentRailMissions } from './studentPath'
 import { useVerificationByMission } from './useVerificationByMission'
 
 export function Hub({
@@ -41,7 +41,7 @@ export function Hub({
       : undefined
   const status = mission === undefined ? undefined : progress.missionStatusByKey[missionKey(mission.trackId, mission.id)]
   const activeTrackId = mission?.trackId ?? progress.onboarding.selectedTrackId ?? progress.activeTrackId ?? 'ai-pratica'
-  const studentMissions = STUDENT_MISSION_CHAPTERS.flatMap((chapter) => catalog.listLaunchable(chapter.trackId))
+  const studentMissions = STUDENT_MISSION_CHAPTERS.flatMap((chapter) => listStudentRailMissions(catalog, chapter.trackId))
   const completedMission = [...studentMissions]
     .reverse()
     .find((item) => progress.missionStatusByKey[missionKey(item.trackId, item.id)] === 'completed')
@@ -52,7 +52,8 @@ export function Hub({
   const independentlyVerified = verification.kind === 'verified'
   const now = services.clock()
   const todayXp = dailyXp(progress, now)
-  const completedInTrack = catalog.listLaunchable(activeTrackId).filter(
+  const trackRail = listStudentRailMissions(catalog, activeTrackId)
+  const completedInTrack = trackRail.filter(
     (item) => progress.missionStatusByKey[missionKey(item.trackId, item.id)] === 'completed',
   ).length
   const lastActiveDate = progress.localEngagementStreak.lastActiveLocalDate
@@ -99,7 +100,7 @@ export function Hub({
           <span><strong>AI DevSchool</strong><small>hub de aprendizagem</small></span>
         </div>
         <div className="hub-chips">
-          <span>Capítulo <strong>{activeTrackId === 'dev' ? 'Simulações' : 'IA Prática'}</strong></span>
+          <span>Capítulo <strong>{activeTrackId === 'dev' ? 'Dev' : 'IA Prática'}</strong></span>
           <span>XP local <strong>{progress.xp}</strong></span>
           <span>Meta <strong>{todayXp}/{progress.dailyGoalXp}</strong></span>
         </div>
@@ -119,7 +120,7 @@ export function Hub({
         <section className="honest-progress" aria-label="Estado da missão concluída">
           <div><span>1</span><strong>Atividade concluída</strong><small>Salva neste dispositivo</small></div>
           <div className={verification.kind === 'not-submitted' ? '' : 'current'}><span>2</span><strong>Evidência preservada</strong><small>{verification.kind === 'not-submitted' ? 'Ainda não enviada' : 'Separada do progresso local'}</small></div>
-          <div className={independentlyVerified ? 'current' : ''}><span>3</span><strong>Verificação independente</strong><small>{independentlyVerified ? `Veredito ${verification.receipt.verdict}` : verification.kind === 'gateway-unavailable' ? 'Temporariamente indisponível' : 'Aguardando verificador'}</small></div>
+          <div className={independentlyVerified ? 'current' : ''}><span>3</span><strong>Verificação independente</strong><small data-testid={independentlyVerified ? 'independent-verdict' : undefined}>{independentlyVerified ? `Veredito ${verification.receipt.verdict}` : verification.kind === 'gateway-unavailable' ? 'Temporariamente indisponível' : 'Aguardando verificador'}</small></div>
           <div><span>4</span><strong>Competência canônica</strong><small>Não alterada por este fluxo</small></div>
           {verification.kind === 'gateway-unavailable' ? (
             <button
@@ -152,10 +153,10 @@ export function Hub({
                 role="progressbar"
                 aria-label="Missões concluídas nesta trilha"
                 aria-valuemin={0}
-                aria-valuemax={3}
+                aria-valuemax={Math.max(trackRail.length, 1)}
                 aria-valuenow={completedInTrack}
               >
-                <span style={{ width: `${Math.round((completedInTrack / 3) * 100)}%` }} />
+                <span style={{ width: `${Math.round((completedInTrack / Math.max(trackRail.length, 1)) * 100)}%` }} />
               </div>
               <p className="mission-expected"><strong>Resultado esperado:</strong> {mission.fallback.summary}</p>
               <ol className="mission-stages">
@@ -183,7 +184,7 @@ export function Hub({
             <p className="journey-eyebrow">Progresso honesto</p>
             <h2>Conclusão não é domínio</h2>
             <p>O jogo e o mentor ajudam a produzir uma tentativa. A verificação independente é um requisito; este fluxo não altera o estado canônico.</p>
-            <strong>{learner.masteredCount} competências verificadas</strong>
+            <strong data-testid="canonical-mastery-count">{learner.masteredCount} competências verificadas</strong>
             <button type="button" className="hub-map-link" onClick={onOpenProgress}>Entender meu progresso</button>
           </article>
           <article>

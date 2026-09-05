@@ -143,6 +143,7 @@ export type ModuleDefinition = {
   slug: string
   title: string
   order: number
+  journey: "ia_pratica" | "dev"
   skillIds: SkillId[]
   lessons: CatalogLessonEntry[]
 }
@@ -189,6 +190,7 @@ def _modules_payload(modules, entries):
                 "slug": module["slug"],
                 "title": module["title"],
                 "order": module["order"],
+                "journey": module["journey"],
                 "skillIds": module.get("skillIds") or [],
                 "lessons": [entry for entry in entries if entry["moduleId"] == module["id"]],
             }
@@ -201,17 +203,14 @@ def _as_ts(payload):
 
 
 def _render_content(catalog, ready_lessons):
-    public_modules = [
-        module
-        for module in catalog.get("modules") or []
-        if module["journey"] == PUBLIC_JOURNEY
+    journey_module_ids = {
+        module["id"] for module in catalog.get("modules") or []
+    }
+    ready_lessons_all = [
+        lesson for lesson in ready_lessons if lesson["moduleId"] in journey_module_ids
     ]
-    public_module_ids = {module["id"] for module in public_modules}
-    public_ready_lessons = [
-        lesson for lesson in ready_lessons if lesson["moduleId"] in public_module_ids
-    ]
-    entries = _catalog_entries(catalog, public_ready_lessons, public_module_ids)
-    modules_payload = _modules_payload(public_modules, entries)
+    entries = _catalog_entries(catalog, ready_lessons_all, journey_module_ids)
+    modules_payload = _modules_payload(catalog.get("modules") or [], entries)
     track_payload = {key: catalog["track"][key] for key in ("id", "title", "audience", "promise", "language")}
     skills_payload = [
         {"id": skill["id"], "title": skill["title"], "description": skill["description"]}
@@ -221,10 +220,13 @@ def _render_content(catalog, ready_lessons):
 
     content = (
         GENERATED_HEADER
-        + "\n// Read model público de IA na Prática. Fonte canônica: curriculum/ai-literacy/.\n"
+        + "\n// Read model de lições validadas das duas jornadas (ia_pratica e dev).\n"
+        + "// O percurso público do app standalone filtra por journey no adapter;\n"
+        + "// missões hospedadas do OS podem servir lições dev (ver content-contract.md).\n"
+        + "// Fonte canônica: curriculum/ai-literacy/.\n"
         + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile <outdir>\n\n"
         + ts_types
-        + "\nexport const contentVersion: string = " 
+        + "\nexport const contentVersion: string = "
         + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
         + "\n\nexport const track: Track = "
         + _as_ts(track_payload)
@@ -233,10 +235,70 @@ def _render_content(catalog, ready_lessons):
         + "\n\nexport const skills: SkillDefinition[] = "
         + _as_ts(skills_payload)
         + "\n\nexport const lessons: LessonDefinition[] = "
-        + _as_ts(public_ready_lessons)
+        + _as_ts(ready_lessons_all)
         + "\n"
     )
     return content
+
+
+VERIFIER_CORPUS_FILENAME = "literacy-corpus.mjs"
+
+
+def _verifier_corpus_payload(ready_lessons):
+    """Projeção mínima por lição: exatamente os campos que o verificador
+    independente lê (learner/gate/literacy_evaluator.py). Nada de texto de
+    instrução/feedback/hints entra no trust boundary hospedado."""
+
+    def activity_payload(activity):
+        return {
+            "id": activity["id"],
+            "type": activity["type"],
+            "data": activity["data"],
+            "evaluation": activity["evaluation"],
+        }
+
+    corpus = {}
+    for lesson in sorted(ready_lessons, key=lambda item: item["id"]):
+        corpus[lesson["id"]] = {
+            "version": lesson["version"],
+            "skillIds": lesson["skillIds"],
+            "activities": [activity_payload(a) for a in lesson["activities"]],
+        }
+    return corpus
+
+
+def _render_verifier_corpus(catalog, ready_lessons):
+    payload = _verifier_corpus_payload(ready_lessons)
+    return (
+        GENERATED_HEADER
+        + "\n// Verifier corpus for the staged literacy bridge (AID-449): the exact\n"
+        + "// lesson/activity facts the canonical Python verifier reads from\n"
+        + "// curriculum/ai-literacy/. Do not add producer-facing fields here.\n"
+        + "// Canonical evaluator: learner/gate/literacy_evaluator.py.\n"
+        + "// Regenere com: python3 curriculum/ai-literacy/tools/validate.py --compile-verifier <outdir>\n\n"
+        + "export const literacyCorpus = "
+        + json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)
+        + "\n\nexport const literacyCorpusVersion = "
+        + json.dumps(str(catalog.get("contentVersion")), ensure_ascii=False)
+        + "\n"
+    )
+
+
+def compile_verifier_corpus(track_dir, outdir, validated=None):
+    """Compila o corpus do verificador hospedado. Retorna (errors, output_path).
+
+    validated: tupla já computada de validate_track(track_dir), para não revalidar.
+    """
+    errors, ready_lessons, catalog = (
+        validated if validated is not None else validate_track(track_dir)
+    )
+    if errors:
+        return errors, None
+    outdir = Path(outdir)
+    outdir.mkdir(parents=True, exist_ok=True)
+    out_path = outdir / VERIFIER_CORPUS_FILENAME
+    out_path.write_text(_render_verifier_corpus(catalog, ready_lessons), encoding="utf-8")
+    return [], out_path
 
 
 def compile_track(track_dir, outdir, validated=None):

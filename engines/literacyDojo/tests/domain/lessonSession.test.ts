@@ -3,7 +3,6 @@ import { lessons } from "../../src/data/generated/lessons";
 import {
   canFinish,
   createLessonSession,
-  currentActivity,
   finishLesson,
   hintsFor,
   isLastActivity,
@@ -20,20 +19,48 @@ import {
 const lesson = lessons.find((item) => item.id === "l03");
 if (!lesson) throw new Error("lição l03 ausente do read model");
 
-const [activityA, activityB] = lesson.activities;
-if (!activityA || !activityB) throw new Error("lição l03 precisa de pelo menos 2 atividades");
+const [activityA, activityB, activityC] = lesson.activities;
+if (!activityA || !activityB || !activityC) {
+  throw new Error("lição l03 precisa de 3 atividades (padrão pós-retrofit O3-C1)");
+}
 
 const NOW = new Date("2026-07-19T12:00:00.000Z");
 
-function makeEvaluation(score: number, pass: boolean) {
+function makeEvaluation(score: number, pass: boolean, activityId = activityA.id) {
   return {
-    activityId: activityA.id,
+    activityId,
     activityType: activityA.type,
     checks: [],
     deterministicChecks: {},
     score,
     pass,
   };
+}
+
+/** Percorre TODAS as atividades da lição aprovando cada uma (padrão 3 atividades). */
+function passAllActivities(
+  targetLesson: (typeof lessons)[number],
+  mode: "initial" | "review" = "initial",
+) {
+  let session = createLessonSession(targetLesson.id, mode);
+  session = startSession(session, NOW);
+  for (const activity of targetLesson.activities) {
+    session = submitAttempt(
+      session,
+      targetLesson,
+      {
+        activityId: activity.id,
+        activityType: activity.type,
+        checks: [],
+        deterministicChecks: {},
+        score: 1,
+        pass: true,
+      },
+      makeFeedback(),
+    );
+    session = nextActivity(session, targetLesson);
+  }
+  return session;
 }
 
 import type { AttemptFeedback } from "../../src/domain/feedback";
@@ -149,7 +176,7 @@ describe("finish gating", () => {
     expect(canFinish(session, lesson)).toBe(false);
 
     session = submitAttempt(session, lesson, makeEvaluation(1, true), makeFeedback());
-    // Ainda não é a última atividade.
+    // Ainda não é a última atividade (l03 tem 3 atividades pós-retrofit O3-C1).
     expect(isLastActivity(session, lesson)).toBe(false);
     const beforeFinish = finishLesson(session, lesson, NOW);
     expect(beforeFinish.session.phase).not.toBe("completed");
@@ -161,6 +188,14 @@ describe("finish gating", () => {
       activityId: activityB.id,
     };
     session = submitAttempt(session, lesson, activityBEvaluation, makeFeedback());
+    expect(isLastActivity(session, lesson)).toBe(false);
+
+    session = nextActivity(session, lesson);
+    const activityCEvaluation = {
+      ...makeEvaluation(1, true),
+      activityId: activityC.id,
+    };
+    session = submitAttempt(session, lesson, activityCEvaluation, makeFeedback());
     expect(isLastActivity(session, lesson)).toBe(true);
     expect(canFinish(session, lesson)).toBe(true);
 
@@ -170,6 +205,7 @@ describe("finish gating", () => {
     expect(finished.finishPayload?.bestScores).toEqual({
       [activityA.id]: 1,
       [activityB.id]: 1,
+      [activityC.id]: 1,
     });
   });
 
@@ -188,63 +224,23 @@ describe("finish gating", () => {
   });
 
   it("clampa duração negativa ou zero para 0", () => {
-    const singleActivityLesson = lessons.find((item) => item.activities.length > 0);
-    if (!singleActivityLesson) throw new Error("lição ausente");
-    const activity = currentActivity(
-      createLessonSession(singleActivityLesson.id, "initial"),
-      singleActivityLesson,
-    );
-    if (!activity) throw new Error("atividade ausente");
+    const anyLesson = lessons.find((item) => item.activities.length > 0);
+    if (!anyLesson) throw new Error("lição ausente");
+    const session = passAllActivities(anyLesson);
 
-    let session = createLessonSession(singleActivityLesson.id, "initial");
-    session = startSession(session, NOW);
-    session = submitAttempt(
-      session,
-      singleActivityLesson,
-      {
-        activityId: activity.id,
-        activityType: activity.type,
-        checks: [],
-        deterministicChecks: {},
-        score: 1,
-        pass: true,
-      },
-      makeFeedback(),
-    );
-
-    const beforeStart = finishLesson(session, singleActivityLesson, new Date(NOW.getTime() - 1000));
+    const beforeStart = finishLesson(session, anyLesson, new Date(NOW.getTime() - 1000));
     expect(beforeStart.finishPayload?.durationSeconds).toBe(0);
 
-    const sameTime = finishLesson(session, singleActivityLesson, NOW);
+    const sameTime = finishLesson(session, anyLesson, NOW);
     expect(sameTime.finishPayload?.durationSeconds).toBe(0);
   });
 
   it("preserva o modo (initial/review) no payload de finish", () => {
-    const singleActivityLesson = lessons.find((item) => item.activities.length > 0);
-    if (!singleActivityLesson) throw new Error("lição ausente");
-    const activity = currentActivity(
-      createLessonSession(singleActivityLesson.id, "review"),
-      singleActivityLesson,
-    );
-    if (!activity) throw new Error("atividade ausente");
+    const anyLesson = lessons.find((item) => item.activities.length > 0);
+    if (!anyLesson) throw new Error("lição ausente");
+    const session = passAllActivities(anyLesson, "review");
 
-    let session = createLessonSession(singleActivityLesson.id, "review");
-    session = startSession(session, NOW);
-    session = submitAttempt(
-      session,
-      singleActivityLesson,
-      {
-        activityId: activity.id,
-        activityType: activity.type,
-        checks: [],
-        deterministicChecks: {},
-        score: 1,
-        pass: true,
-      },
-      makeFeedback(),
-    );
-
-    const finished = finishLesson(session, singleActivityLesson, new Date(NOW.getTime() + 5000));
+    const finished = finishLesson(session, anyLesson, new Date(NOW.getTime() + 5000));
     expect(finished.session.mode).toBe("review");
     expect(finished.finishPayload?.durationSeconds).toBe(5);
   });

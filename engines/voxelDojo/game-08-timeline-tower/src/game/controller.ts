@@ -29,14 +29,19 @@ export interface GameState {
   /** L1: which append step the player is on. */
   appendStep: number
   correctAppends: number
+  /** L1: the event types the player picked, in order (bounded inputs for the verifier). */
+  appendPicks: OrderEvent["type"][]
+  /** L2: the final status the player predicted. */
+  statusPick: OrderStatus | null
   /** L3: the checkpoint index the player must rewind to. */
   checkpointIndex: number
   /** L3: two-phase guess (checkpoint, then replay). */
   replayAtCheckpoint: OrderStatus | null
+  replayAfterReplay: OrderStatus | null
   /** L4: two-view guess accumulator. */
   twoViewOrderStatus: OrderStatus | null
   twoViewShipped: boolean | null
-  lastMetrics: Record<string, number | boolean> | null
+  lastMetrics: Record<string, number | boolean | string> | null
 }
 
 export type Listener = (state: GameState) => void
@@ -101,8 +106,11 @@ export class GameController {
       log,
       appendStep: 0,
       correctAppends: 0,
+      appendPicks: [],
+      statusPick: null,
       checkpointIndex,
       replayAtCheckpoint: null,
+      replayAfterReplay: null,
       twoViewOrderStatus: null,
       twoViewShipped: null,
       lastMetrics: null,
@@ -180,6 +188,7 @@ export class GameController {
   appendNext(type: OrderEvent["type"]): void {
     if (this.state.level.id !== "L1" || this.state.phase !== "playing") return
     const correct = this.nextCorrectEventType()
+    this.state.appendPicks.push(type)
     if (type === correct) this.state.correctAppends++
     this.state.appendStep++
     if (this.state.appendStep >= LIFECYCLE_ORDER.length) {
@@ -191,6 +200,7 @@ export class GameController {
   /** L2: player predicts the final order status after folding every event. */
   predictStatus(status: OrderStatus): void {
     if (this.state.level.id !== "L2" || this.state.phase !== "playing") return
+    this.state.statusPick = status
     this.finishWave(evaluateProjection(this.state.log, { predictedStatus: status }))
     this.commit()
   }
@@ -206,6 +216,7 @@ export class GameController {
   predictAfterReplay(status: OrderStatus): void {
     if (this.state.level.id !== "L3" || this.state.phase !== "playing") return
     if (this.state.replayAtCheckpoint === null) return
+    this.state.replayAfterReplay = status
     this.finishWave(
       evaluateReplay(this.state.log, this.state.checkpointIndex, {
         predictedAtCheckpoint: this.state.replayAtCheckpoint,
@@ -246,10 +257,44 @@ export class GameController {
     return STATUS_CHOICES
   }
 
+  /** Closed observation trace for the independent verifier: the player's bounded
+   * inputs only. The verifier refolds the fixed scenario log from these picks
+   * and recomputes every outcome; producer metrics are never trusted. */
+  private observations(): Record<string, unknown> {
+    switch (this.state.level.id) {
+      case "L1":
+        return {
+          kind: "timeline-tower-L1",
+          appends: [...this.state.appendPicks],
+        }
+      case "L2":
+        return {
+          kind: "timeline-tower-L2",
+          predictedStatus: this.state.statusPick ?? "pending",
+        }
+      case "L3":
+        return {
+          kind: "timeline-tower-L3",
+          predictedAtCheckpoint: this.state.replayAtCheckpoint ?? "pending",
+          predictedAfterReplay: this.state.replayAfterReplay ?? "pending",
+        }
+      case "L4":
+        return {
+          kind: "timeline-tower-L4",
+          predictedOrderStatus: this.state.twoViewOrderStatus ?? "pending",
+          predictedShipped: this.state.twoViewShipped === true,
+        }
+    }
+  }
+
   private finishWave(outcome: { pass: boolean; metrics: Record<string, number | boolean> }): void {
-    this.state.lastMetrics = outcome.metrics
+    const metrics: Record<string, number | boolean | string> = {
+      kind: "voxeldoj-timeline-tower",
+      ...outcome.metrics,
+    }
+    this.state.lastMetrics = metrics
     this.state.phase = outcome.pass ? "cleared" : "failed"
-    emitEvidence(this.state.level.id, outcome.pass, outcome.metrics)
+    emitEvidence(this.state.level.id, outcome.pass, metrics, this.observations())
   }
 }
 

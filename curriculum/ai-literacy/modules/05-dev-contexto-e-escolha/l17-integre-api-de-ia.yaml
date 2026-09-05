@@ -1,7 +1,7 @@
-# Lição l17 — Trilha Dev piloto: integrar API de IA com decisões de arquitetura.
+# Lição l17 — Trilha Dev piloto: integrar API de IA com decisões de arquitetura. — v2 ONDA C1 (spec AID-807 §1): +a3 sort.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l17
-version: 1
+version: 2
 moduleId: mod-05
 title: "Integre uma API de IA em um projeto real"
 objective: "Conectar um endpoint de API de IA, tratar erros e decidir o que vai para o cliente e o que vai para o servidor."
@@ -87,6 +87,40 @@ activities:
       - "Olhe para os logs: qual arquitetura protege os dados do usuário?"
       - "A arquitetura A menciona timeout, retry e logs sem texto do usuário; a B não menciona nenhum desses."
 
+  - id: l17-a3
+    type: sort
+    skillId: integrar
+    instruction: "A PROVA DE CONCEITO VIROU PROJETO: VOCÊ VAI INTEGRAR A API DE IA NO APP. Ordene a integração: o que vem antes do quê?"
+    data:
+      items:
+        - id: passo-ler-contrato
+          text: "Ler o contrato da API: autenticação, limites de taxa, erros retornados, formatos"
+        - id: passo-guardar-chave
+          text: "Guardar a chave fora do código: variável de ambiente ou gerenciador de segredos, nunca no commit"
+        - id: passo-chamada-minima
+          text: "Implementar a chamada mínima: um endpoint, um caso de uso, resposta logada"
+        - id: passo-tratar-erro
+          text: "Tratar erro e limite da chamada: timeout, 429, falha inesperada — cada um com destino definido"
+        - id: passo-testar-real
+          text: "Testar com caso real: payload de verdade, chave de verdade, ponta a ponta"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [passo-ler-contrato, passo-guardar-chave, passo-chamada-minima, passo-tratar-erro, passo-testar-real]
+    feedback:
+      onFailure: "A ordem é: contrato → chave → chamada mínima → tratar erro → testar. Cada par vizinho tem um porque: o contrato informa os erros e limites que o tratamento vai cobrir; a chave precisa estar guardada fora do código ANTES da primeira chamada que a usa — senão vaza no commit ou a chamada nasce quebrada; o tratamento cobre a chamada mínima que existe, não a que você imagina; e o teste com caso real só fecha o ciclo depois que chamada e tratamento existem."
+      perCheck:
+        passo-ler-contrato: "Primeiro o contrato: é ele que diz quais erros e limites existem — sem isso, tratamento é chute."
+        passo-guardar-chave: "Depois a chave fora do código: a primeira chamada já usa o segredo — ele precisa estar guardado antes dela."
+        passo-chamada-minima: "A chamada mínima vem na sequência: um endpoint, um caso — o menor pedaço que já exige contrato e chave."
+        passo-tratar-erro: "O tratamento cobre a chamada que você tem: timeout, 429 e falha inesperada ganham destino definido um a um."
+        passo-testar-real: "Por fim o caso real: valida chamada e tratamento ponta a ponta — antes disso, tudo é especulação."
+      onSuccess: "Isso: contrato → chave → chamada mínima → tratamento → teste real. Cada passo cria a condição do seguinte — é isso que integra sem surpresa."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que você precisa saber sobre erros e limites antes de poder tratá-los?"
+      - "A primeira chamada já usa a chave: onde ela precisa estar quando a chamada nasce?"
+      - "Testar ponta a ponta é o último passo — o que precisa existir antes dele?"
 rubric:
   id: l17-rubric
   criteria:
@@ -110,4 +144,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l17-a1, l17-a2]
+  requiredActivityIds: [l17-a1, l17-a2, l17-a3]

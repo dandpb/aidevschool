@@ -33,6 +33,7 @@ export type ValidatedEvidenceEnvelope<
   ts: string
   pass: boolean
   metrics: TMetrics
+  attempt_id?: string
   review_context?: EvidenceReviewContext<TReason>
   curriculum_context?: CurriculumContext
 } & Record<TIdentityKey, string>
@@ -116,6 +117,7 @@ export function validateEvidenceEnvelope(
     ts: timestamp,
     pass: raw["pass"],
     metrics: options.decodeMetrics(metrics),
+    ...readAttemptId(raw),
   }
   const reviewContext = readReviewContext(raw["review_context"], options)
   const curriculumContext = readCurriculumContext(raw["curriculum_context"], options)
@@ -127,6 +129,17 @@ export function validateEvidenceEnvelope(
     return { ...shared, encounter_id: identity, ...contexts }
   }
   return { ...shared, scenario_id: identity, ...contexts }
+}
+
+function readAttemptId(
+  source: Record<string, unknown>,
+): { attempt_id?: string } {
+  const value = source["attempt_id"]
+  if (value === undefined) return {}
+  if (typeof value !== "string" || value.trim() === "") {
+    throw new EvidenceValidationError("evidence.attempt_id must be a non-empty string")
+  }
+  return { attempt_id: value }
 }
 
 function readReviewContext(

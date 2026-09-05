@@ -13,7 +13,7 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 
 | Parte | Estado |
 | --- | --- |
-| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. As 3 lições Dev continuam válidas no catálogo, mas não entram no app enquanto a Trilha Dev estiver “Em breve”. |
+| Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. A Trilha Dev no onboarding é um CTA para o OS público (`?track=dev`); as 3 lições Dev do catálogo não entram neste app. |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
@@ -134,6 +134,17 @@ UI (src/screens, src/components)
   `ConsoleEvidenceSink` fica ativo. Os dados nunca saem do navegador.
 - **`attemptId`** é sequencial por perfil (`att-000001`, …) via contador no
   progresso — determinístico e único por tentativa.
+- **Analytics de produto (ADR-0009, piloto `lesson_completed`):** `Services`
+  compõe `AnalyticsSink` atrás de `VITE_ANALYTICS_ENDPOINT` — sem o env o
+  sink é noop em produção e console em dev; nenhuma superfície de build
+  define o env (transporte OFF; ativação é gate do board, ADR-0010 §4). Em
+  missão hospedada (`?hosted=1`) o sink é sempre noop — o host OS já mede as
+  missões com o vocabulário dele, evitando dupla contagem. A emissão (1×
+  `lesson_completed` por conclusão, após `progress.save`, fire-and-forget)
+  vive em `completeLesson`. O endpoint de literacy não é a rota do coletor
+  do OS (`/__dojo/bridge/v1/analytics` rejeitaria o envelope
+  `source:"literacydojo"` com 422); a recepção de literacy é decisão de
+  ativação.
 - **Biome 1.9 + overrides por `include`:** `src/data/generated/` fora do
   lint/format (arquivo gerado).
 
@@ -155,4 +166,6 @@ Antes de anunciar uma alteração local, execute `npm run gen:content`,
 `npm run lint`, `npm run test` e `npm run build` no mesmo checkout. Para uma
 alteração de fluxo, inclua `npm run test:e2e`. Uma publicação pública exige
 verificação separada da rota publicada; ela não muda a fronteira de
-`completed` e `mastered`.
+`completed` e `mastered`. O procedimento operacional de preview imutável,
+promoção humana, saúde pós-deploy e rollback está no
+[`RELEASE_RUNBOOK.md`](RELEASE_RUNBOOK.md).

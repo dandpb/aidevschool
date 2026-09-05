@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createEngineActionClient } from './client'
+import { resolveEngineUrl } from './registry'
 
 describe('Engine Hub bridge client', () => {
   it('returns a parsed action receipt from the same-origin bridge', async () => {
@@ -101,5 +102,12 @@ describe('Engine Hub bridge client', () => {
     const retry = await runAction('openclaw', 'preview-checklist')
     expect(retry.ok).toBe(true)
     expect(fetcher).toHaveBeenCalledTimes(3)
+  })
+})
+
+describe('staged /apps engine URLs', () => {
+  it('relaxes same-origin only for bundled /apps paths', () => {
+    expect(resolveEngineUrl('/apps/warehouse/', '', false, 'https://os.example').kind).toBe('ready')
+    expect(resolveEngineUrl('/engines/pixel-quest/', '', false, 'https://os.example').kind).toBe('unavailable')
   })
 })

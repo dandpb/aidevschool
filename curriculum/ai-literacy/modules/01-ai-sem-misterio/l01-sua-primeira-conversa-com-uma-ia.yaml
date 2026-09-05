@@ -1,11 +1,11 @@
-# Lição l01 — primeira lição da trilha (Fase 2).
+# Lição l01 — primeira lição da trilha (Fase 2); retrofit O3-C1 (spec AID-644 rev 2 §2.1): +l01-a2/+l01-a3, v1→v2, 3→4 min.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l01
-version: 1
+version: 2
 moduleId: mod-01
 title: "Sua primeira conversa com uma IA"
 objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como um rascunho, não como uma ordem."
-estimatedMinutes: 3
+estimatedMinutes: 4
 skillIds: [entender]
 prerequisites: []
 
@@ -38,6 +38,72 @@ activities:
       - "Pense na IA como um estagiário esforçado: ele entrega um rascunho rápido, mas quem assina embaixo é você."
       - "A melhor opção equilibra aproveitar o trabalho da IA e revisar com o seu conhecimento da equipe."
 
+  - id: l01-a2
+    type: sort
+    skillId: entender
+    instruction: "Um colega quer ter a primeira conversa com uma IA e quer começar bem. Ordene o ciclo da primeira conversa, do começo ao fim."
+    data:
+      items:
+        - id: passo-tarefa
+          text: "Escolher uma tarefa simples e concreta para começar — algo pequeno, que você mesmo sabe avaliar."
+        - id: passo-pergunta
+          text: "Escrever a pergunta dizendo o que quer e o mínimo de contexto sobre a sua situação."
+        - id: passo-leitura
+          text: "Ler a resposta como rascunho: separar o que serve do que não serve."
+        - id: passo-uso
+          text: "Ajustar o que não serviu e usar o que passou pela sua revisão."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [passo-tarefa, passo-pergunta, passo-leitura, passo-uso]
+    feedback:
+      onFailure: "A primeira conversa funciona em quatro passos: começar com uma tarefa simples e concreta, escrever a pergunta com o mínimo de contexto, ler a resposta como rascunho e ajustar antes de usar. Fora dessa ordem, o pedido vira palpite e o uso vira risco."
+      perCheck:
+        passo-tarefa: "O começo é antes da pergunta: uma tarefa simples e concreta é o que permite conferir o resultado depois."
+        passo-pergunta: "Com a tarefa escolhida, a pergunta sai melhor: o que você quer mais o mínimo de contexto."
+        passo-leitura: "A resposta chega como rascunho: separar o que serve do que não serve vem antes de qualquer uso."
+        passo-uso: "O uso é o ponto final do ciclo — e só entra o que passou pela sua revisão."
+      onSuccess: "Esse é o ciclo da primeira conversa: tarefa simples → pergunta com contexto mínimo → leitura como rascunho → ajuste e uso."
+    storage:
+      policy: structured_only
+    hints:
+      - "O ciclo começa antes de escrever qualquer pergunta: com o que é preciso decidir primeiro?"
+      - "Do meio para o fim: a resposta é um rascunho — e o que você faz com um rascunho?"
+
+  - id: l01-a3
+    type: missing_context
+    skillId: entender
+    instruction: "Outro colega vai fazer a primeira pergunta dele e mostra a mensagem que pretende enviar: só 'me ajuda aí'. A IA respondeu pedindo esclarecimento — e ele travou. O que estava faltando na mensagem dele?"
+    data:
+      prompt: "Me ajuda aí"
+      contextOptions:
+        - id: tarefa-definida
+          text: "Uma tarefa definida — dizer o que ele quer que a IA faça"
+        - id: contexto-minimo
+          text: "O contexto mínimo — a situação em que ele precisa de ajuda"
+        - id: formato-esperado
+          text: "O formato esperado — que tipo de resposta ele quer receber (lista, texto, e-mail)"
+        - id: nome-do-modelo-de-ia
+          text: "O nome do modelo de IA que ele vai usar"
+        - id: temperatura
+          text: "A temperatura do modelo — uma configuração técnica de criatividade"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [tarefa-definida, contexto-minimo, formato-esperado]
+    feedback:
+      onFailure: "'Me ajuda aí' não diz o que fazer, em que situação, nem que resposta esperar. Nome de modelo e temperatura são configuração da ferramenta — nenhum dos dois substitui uma pergunta com tarefa, contexto e formato."
+      perCheck:
+        tarefa-definida: "Faltou isto: a tarefa — 'me ajuda aí' não pede nada; a IA não tem como adivinhar o que ele quer."
+        contexto-minimo: "Faltou isto: o contexto mínimo — a situação dele é o que separa uma resposta útil de uma genérica."
+        formato-esperado: "Faltou isto: o formato esperado — sem dizer que tipo de resposta quer, ele recebe o formato que a IA escolher."
+        nome-do-modelo-de-ia: "Isto é mito de setup: o nome do modelo não vai no pedido — qualquer IA precisa saber o que você quer."
+        temperatura: "Isto é mito de setup: temperatura é configuração interna da ferramenta — não conserta pergunta vazia."
+      onSuccess: "Exato! Primeira pergunta que funciona traz as três: tarefa definida, contexto mínimo e formato esperado."
+    storage:
+      policy: structured_only
+    hints:
+      - "Leia a mensagem como se você fosse a IA: o que dá para fazer com 'me ajuda aí'?"
+      - "Três coisas faltam: o que fazer (tarefa), a situação (contexto) e o tipo de resposta (formato)."
+
 rubric:
   id: l01-rubric
   criteria:
@@ -46,6 +112,9 @@ rubric:
       weight: 1
     - id: r-julgamento
       text: "Reconhece que o julgamento final sobre o conteúdo permanece com a pessoa."
+      weight: 1
+    - id: r-monta-a-primeira-pergunta
+      text: "Monta a primeira pergunta com tarefa definida, contexto mínimo e formato esperado."
       weight: 1
 
 evidence:
@@ -58,4 +127,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l01-a1]
+  requiredActivityIds: [l01-a1, l01-a2, l01-a3]

@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App";
+import { serviceWorkerUrl } from "./pwa";
 import "./styles.css";
 
 const container = document.getElementById("root");
@@ -14,5 +15,5 @@ createRoot(container).render(
 
 // Offline só no build: em dev/testes o service worker atrapalharia o HMR.
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  void navigator.serviceWorker.register("/sw.js");
+  void navigator.serviceWorker.register(serviceWorkerUrl(import.meta.env.BASE_URL));
 }

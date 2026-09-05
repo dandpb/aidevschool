@@ -1,5 +1,5 @@
 import { useServices } from '../app/ServicesProvider'
-import { learnerSnapshot } from '../data/learner'
+import { anonymousPublicLearner } from '../data/anonymousLearner'
 import type { LearnerSnapshot } from '../domain'
 import { MissionShell } from '../host/MissionShell'
 import { Hub } from './Hub'
@@ -8,7 +8,7 @@ import { Onboarding } from './Onboarding'
 import { ProgressScreen } from './ProgressScreen'
 import { useJourneyController } from './useJourneyController'
 
-export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: LearnerSnapshot }) {
+export function JourneyApp({ learner = anonymousPublicLearner }: { readonly learner?: LearnerSnapshot }) {
   const services = useServices()
   const controller = useJourneyController()
   const { state } = controller
@@ -22,7 +22,7 @@ export function JourneyApp({ learner = learnerSnapshot }: { readonly learner?: L
 
   const { route, progress } = state
   if (route.kind === 'onboarding' || route.kind === 'boot') {
-    return <Onboarding onComplete={(input) => void controller.finishOnboarding(input)} />
+    return <Onboarding initialTrackId={controller.requestedTrackId} onComplete={(input) => void controller.finishOnboarding(input)} />
   }
   if (route.kind === 'hub') {
     return (

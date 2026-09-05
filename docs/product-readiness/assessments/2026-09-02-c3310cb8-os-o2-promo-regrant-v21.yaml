@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-02-c3310cb8-os-o2-promo-regrant-v21
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-02T09:55:00Z'
+revalidateBy: '2026-10-02'
+gitSha: c3310cb8bb20cda236e84e823dfd25c0d7981979
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T09:47:30Z-os-verification-recovery-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-literacy-hosted-mission-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-literacy-returning-device-mixed-c3310cb8
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T09:47:30Z-os-voxel-hosted-missions-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-voxel-returning-device-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-renderer-accessibility-recovery-mixed-c3310cb8
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-02T09:47:30Z-os-onboarding-track-choice-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-returning-device-mixed-c3310cb8
+  - 2026-09-02T09:47:30Z-os-returning-recovery-mixed-c3310cb8

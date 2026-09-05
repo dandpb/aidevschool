@@ -1,7 +1,9 @@
+import { TeachingGameHostAdapter } from "@aidevschool/evidence/host-protocol"
+import type { MissionProjection } from "../../shared/projection"
 import { createSceneHarness } from "../../shared/sceneHarness"
 import { GameController, type GameState } from "./game/controller"
+import { createPipelineAccessibleProjection } from "./scene/accessible"
 import { mountHud } from "./scene/hud"
-import { PipelineScene } from "./scene/pipelineScene"
 
 declare global {
   interface Window {
@@ -10,17 +12,41 @@ declare global {
   }
 }
 
-createSceneHarness<GameState, GameController, PipelineScene>({
+createSceneHarness<GameState, GameController, MissionProjection<GameState>>({
   createGame: () => new GameController("L1"),
-  createScene: (canvas) => new PipelineScene(canvas),
   windowKey: "__pipelinePlant",
   mountHud,
-  wireInteraction: (game, scene) => {
-    scene.onTankClick = () => {
-      const level = game.snapshot.level.id
-      // clicking the tank toggles the current overflow/bounded prediction preview (L1/L2/L4 buffered)
-      if (level === "L1" || level === "L4") game.predictOverflow(!game.bufferedOverflows())
-    }
+  renderer: {
+    loadWebgl: async (canvas, game, hooks) => {
+      const { PipelineScene } = await import("./scene/pipelineScene")
+      const scene = new PipelineScene(canvas, hooks)
+      scene.onTankClick = () => {
+        const level = game.snapshot.level.id
+        // clicking the tank toggles the current overflow/bounded prediction preview (L1/L4 buffered)
+        if (level === "L1" || level === "L4") game.predictOverflow(!game.bufferedOverflows())
+      }
+      return scene
+    },
+    createAccessible: (_target, game, controlsRoot) =>
+      createPipelineAccessibleProjection(game, controlsRoot),
   },
-  onState: (state, _game, scene) => scene.sync(state),
+  hostedMission: {
+    adapter: new TeachingGameHostAdapter({
+      engineId: "voxelDojo",
+      missionId: "game-06-pipeline-plant",
+      missionVersion: 1,
+      unitId: "U6-file-upload",
+      engineVersion: "0.1.0",
+      contentVersion: "game-06-pipeline-plant@0.1.0",
+    }),
+    launch: (game) => {
+      if (game.snapshot.phase === "briefing") game.start()
+    },
+    projectState: (state) => {
+      if (state.phase === "cleared") return { status: "completed", stage: "apply", progress: 1 }
+      if (state.phase === "failed") return { status: "failed", stage: "apply", progress: 1 }
+      if (state.phase === "briefing") return { status: "running", stage: "understand", progress: 0 }
+      return { status: "running", stage: "respond", progress: 0.5 }
+    },
+  },
 })

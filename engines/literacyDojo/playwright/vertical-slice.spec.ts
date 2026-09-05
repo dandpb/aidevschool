@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { isValidEvidenceRecord } from "../src/domain/evidence";
 import {
   activity,
+  answerRemainingRight,
   answerRight,
   completeOnboarding,
   mapInitial,
@@ -9,6 +10,11 @@ import {
   readProgress,
   wrongOutput,
 } from "./support";
+
+// Mesma convenção de porta do playwright.config.ts: a spec não pode assumir
+// a porta default, senão rodar em outra porta (contorno de colisão) quebra
+// o filtro de "requests externos" com falsas falhas (AID-742).
+const appOrigin = `http://localhost:${process.env.LITERACY_E2E_APP_PORT ?? "4173"}`;
 
 test("readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada", async ({
   page,
@@ -55,7 +61,7 @@ test("readiness literacy-happy-path and literacy-resume: acerto de primeira enca
   expect(progress?.currentLessonId).toBe("l03");
 
   const records = await readEvidence(page);
-  expect(records).toHaveLength(1);
+  expect(records).toHaveLength(3);
   expect(records.every(isValidEvidenceRecord)).toBe(true);
 });
 
@@ -63,8 +69,7 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
   await page.setViewportSize({ width: 320, height: 640 });
   const externalRequests: string[] = [];
   page.on("request", (request) => {
-    if (new URL(request.url()).origin !== "http://localhost:4173")
-      externalRequests.push(request.url());
+    if (new URL(request.url()).origin !== appOrigin) externalRequests.push(request.url());
   });
   await page.goto("/");
 
@@ -117,6 +122,8 @@ test("Mapa Inicial continua utilizável em viewport compacto", async ({ page }) 
     await page.getByTestId(`criterion-${criterionId}`).check();
   }
   await page.getByTestId("submit-attempt").click();
+  // Atividades novas do retrofit (O3-C1) — teclado segue válido nas demais.
+  await answerRemainingRight(page, mapInitial.activities, 1);
   await page.getByTestId("finish-lesson").click();
   await expect(page.getByTestId("result-screen")).toBeVisible();
 

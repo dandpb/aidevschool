@@ -8,6 +8,7 @@ import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
 import type { ActivityAnswer } from "../domain/evaluation";
+import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import {
   type AttemptState,
   type FinishPayload,
@@ -34,6 +35,7 @@ import {
   MAP_INITIAL_LESSON_ID,
   type OnboardingState,
 } from "../domain/progress";
+import { RETROFIT_NOTICE_S2 } from "../domain/retrofitNotice";
 import { findModule } from "../domain/track";
 import { ErrorRecoveryScreen } from "./ErrorRecoveryScreen";
 
@@ -54,6 +56,7 @@ export function LessonScreen({
   lessonId,
   mode = "initial",
   onboarding,
+  retrofitNotice = false,
   onProgressChange,
   onCompleted,
   onExit,
@@ -61,6 +64,8 @@ export function LessonScreen({
   lessonId: string;
   mode?: LessonMode;
   onboarding: OnboardingState;
+  /** Aviso S2 (retrofit O3-C1): exibido 1× por learner/lição/bump na intro. */
+  retrofitNotice?: boolean;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -74,6 +79,7 @@ export function LessonScreen({
     onboarding,
   }));
   const [submitting, setSubmitting] = useState(false);
+  const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   // Gerenciamento de foco: o título recebe foco a cada nova tela do player
   // (introdução e cada atividade), orientando teclado e leitor de tela.
@@ -132,6 +138,7 @@ export function LessonScreen({
       applyTransition({
         session: submitAttempt(session, lesson, result.evaluation, result.feedback),
       });
+      if (result.evaluation.pass) latestPassingEvidence.current = result.record;
       onProgressChange(result.progress);
     } finally {
       setSubmitting(false);
@@ -168,7 +175,10 @@ export function LessonScreen({
           bestScores: payload.bestScores,
         });
         if (!result.outcome.completed) return;
-        const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, { mode });
+        const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {
+          mode,
+          evidenceRecord: latestPassingEvidence.current,
+        });
         onCompleted(result.progress, summary);
         return;
       }
@@ -182,6 +192,7 @@ export function LessonScreen({
         mode,
         nextLessonId: result.nextLessonId,
         newlyUnlocked: result.newlyUnlocked,
+        evidenceRecord: latestPassingEvidence.current,
       });
       onCompleted(result.progress, summary);
     } finally {
@@ -214,7 +225,7 @@ export function LessonScreen({
           <h2>{mode === "review" ? "Hora de revisar" : "Pedido da Vila Lume"}</h2>
           <p>
             {mode === "review"
-              ? "Repetir é o que fixa: refaça a atividade desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
+              ? "Repetir é o que fixa: refaça as atividades desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha."
               : lesson.objective}
           </p>
           <VoxelSkillArt skillId={lesson.skillIds[0]} />
@@ -246,6 +257,11 @@ export function LessonScreen({
               : "Tente com o que você já sabe. Se travar, peça uma dica — ela ajuda sem entregar a resposta."}
           </p>
         </MentorGuide>
+        {retrofitNotice && (
+          <p className="muted" data-testid="retrofit-notice-s2">
+            {RETROFIT_NOTICE_S2}
+          </p>
+        )}
         <button
           type="button"
           className="btn btn-primary"
@@ -370,6 +386,7 @@ function buildSummary(
     mode: LessonMode;
     nextLessonId?: string;
     newlyUnlocked?: Achievement[];
+    evidenceRecord?: LiteracyEvidenceRecord;
   },
 ): LessonSummary {
   const activityResults: ActivityResultSummary[] = lesson.completion.requiredActivityIds
@@ -388,5 +405,6 @@ function buildSummary(
     mode: options.mode,
     nextLessonId: options.nextLessonId,
     newlyUnlocked: options.newlyUnlocked,
+    evidenceRecord: options.evidenceRecord,
   };
 }

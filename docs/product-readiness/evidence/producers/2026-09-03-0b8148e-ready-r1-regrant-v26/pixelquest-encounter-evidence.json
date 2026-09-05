@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/pixel-quest.spec.ts",
+      "sha256": "5805741b95071dc72b75a9b2857e060d647e797ed3e41f460dc8d62977318705"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "encounter-emits-valid-raw-evidence",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-03T08:37:10Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "0b8148e586575361d721d6d1a5a4bebe49285d0e",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-03T08:37:10Z-pixelquest-encounter-evidence-0b8148e5",
+  "scenarioId": "pixelquest-encounter-evidence",
+  "schemaVersion": 1,
+  "sourceFingerprint": "41c587ff1a44b762ad7bfb8d252c7b5cb50c85fc3c2579a895dfcedfb3481c74"
+}

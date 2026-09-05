@@ -1,0 +1,134 @@
+# Lição l19 — Onda C2 (spec AID-414 §2.2): conversas longas e gerenciamento de contexto.
+# Única lição da trilha que treina multi-turno. Validada por
+# curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l19
+version: 1
+moduleId: mod-06
+title: "Conversas longas: gerencie o contexto"
+objective: "Em uma conversa multi-turno degradada, identificar qual contexto a IA perdeu, executar a correção mínima que restaura a resposta útil e decidir entre continuar e recomeçar."
+estimatedMinutes: 5
+skillIds: [pedir, avaliar]
+prerequisites: [l07]
+
+activities:
+  - id: l19-a1
+    type: missing_context
+    skillId: avaliar
+    instruction: "CONVERSA LONGA, RESPOSTA DEGRADADA. Leia os turnos: no turno 1, você definiu o combinado do resumo; no turno 3, pediu uma adaptação; no turno 4, a IA entregou 3 páginas informais para o time técnico. O que faltou no turno degradado (o turno 3)?"
+    data:
+      prompt: "TURNO 1 (você): 'Resuma o relatório do trimestre. Público: diretoria. Tom: formal. No máximo 1 página.' · TURNO 2 (IA): entrega resumo formal de 1 página, com destaques. · TURNO 3 (você): 'Agora adapte esse resumo para o time técnico.' · TURNO 4 (IA): entrega 3 páginas informais, com jargão e sem destaques."
+      contextOptions:
+        - id: ctx-publico-original
+          text: "O público da nova versão: para quem é e o que esse público espera (o turno só disse 'time técnico', sem dizer o que mudava em relação à diretoria)"
+        - id: ctx-tom-original
+          text: "O tom: manter o registro formal do início — ou mudá-lo de forma explícita, não por omissão"
+        - id: ctx-limite-tamanho
+          text: "O limite de tamanho: o máximo de 1 página definido no turno 1 seguia valendo"
+        - id: ctx-formato-anterior
+          text: "O formato da versão anterior (tópicos com destaques), caso devesse ser preservado na adaptação"
+        - id: ctx-ia-lenta
+          text: "A IA ficou lenta porque a conversa ficou longa demais"
+        - id: ctx-ia-nova
+          text: "Seria necessário usar um modelo de IA mais novo"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [ctx-publico-original, ctx-tom-original, ctx-limite-tamanho]
+      optionalContextIds: [ctx-formato-anterior]
+    feedback:
+      onFailure: "A IA não 'esqueceu por malvadez': o turno 3 mudou o destinatário sem reafirmar o combinado. Sem público, tom e limite reestabelecidos, ela improvisa — e o improvisado saiu informal e com 3 páginas. Lentidão e versão do modelo não explicam uma resposta que ignora restrições."
+      perCheck:
+        ctx-publico-original: "Faltou isto: dizer o que o novo público precisa. 'Time técnico' sozinho não diz se ele quer profundidade, prazo ou decisão."
+        ctx-tom-original: "Faltou isto: o tom formal era um combinado do turno 1 — quem não reafirma, abre espaço para a IA escolher por conta própria."
+        ctx-limite-tamanho: "Faltou isto: o limite de 1 página continuava valendo; sem ele, a resposta cresceu para 3 páginas."
+        ctx-formato-anterior: "Isto é opcional: preservar o formato anterior (tópicos com destaques) ajuda, mas a resposta não degrada sem isso."
+        ctx-ia-lenta: "Isto é mito: lentidão muda o tempo, não o conteúdo — restrições ignoradas são problema de contexto, não de velocidade."
+        ctx-ia-nova: "Isto é mito: modelo mais novo também precisa do contexto; trocar de modelo não restaura o combinado perdido."
+      onSuccess: "Exato! Em conversas longas, o combinado antigo não se transfere sozinho: público, tom e limite precisam ser reafirmados quando o pedido muda."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare o turno 1 com o turno 4: quais combinados foram violados na entrega?"
+      - "O turno 3 nomeou o novo destinatário, mas não disse o que ele precisa, nem o tom, nem o tamanho."
+      - "Perguntas de velocidade ou de modelo desviam do ponto: o problema é o contexto que faltou no pedido."
+
+  - id: l19-a2
+    type: sort
+    skillId: pedir
+    instruction: "PLANO DE RECUPERAÇÃO MÍNIMA. A resposta saiu degradada e a conversa ainda vale. Ordene a menor sequência de passos que restaura a resposta útil — sem recomeçar do zero e sem aceitar a versão errada."
+    data:
+      items:
+        - id: step-pedir
+          text: "Pedir a nova versão ('refaça o resumo seguindo o que combinamos acima')"
+        - id: step-citar
+          text: "Citar a restrição perdida ('volte ao público diretoria, tom formal, no máximo 1 página')"
+        - id: step-conferir
+          text: "Conferir a versão entregue contra as restrições antes de usar"
+        - id: step-confirmar
+          text: "Confirmar o entendimento ('resuma em 3 linhas o que você vai entregar')"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [step-citar, step-confirmar, step-pedir, step-conferir]
+    feedback:
+      onFailure: "A ordem certa é: citar a restrição perdida, confirmar o entendimento, pedir a nova versão e conferir antes de usar. Pedir antes de citar faz a IA adivinhar; usar sem conferir fecha a conversa no erro."
+      perCheck:
+        step-citar: "Primeiro o contexto: sem reafirmar público, tom e tamanho, o novo pedido nasce cego igual ao anterior."
+        step-confirmar: "Depois a conferência de entendimento: o resumo de 3 linhas barato evita a refação cara."
+        step-pedir: "Só então a nova versão — agora com destino conhecido."
+        step-conferir: "Por fim a checagem contra as restrições: recuperação termina quando a entrega passa no combinado, não quando ela chega."
+      onSuccess: "Isso! Correção mínima em 4 passos: restrição, entendimento, versão, conferência — a conversa se recupera sem recomeçar."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que precisa estar restabelecido ANTES de pedir a nova versão?"
+      - "Confirmar o entendimento custa 3 linhas; pular essa etapa custa refazer tudo."
+      - "A último passo protege você: conferir a entrega contra o combinado."
+
+  - id: l19-a3
+    type: choice
+    skillId: avaliar
+    instruction: "CONTINUAR OU RECOMEÇAR? EM QUAL DAS CONVERSAS VALE A PENAS RECOMEÇAR DO ZERO?"
+    data:
+      options:
+        - id: opt-a
+          text: "Seis turnos úteis e a IA esqueceu uma restrição no meio do caminho."
+        - id: opt-b
+          text: "A conversa acumulou três correções conflitantes e a IA agora mistura versões diferentes dos requisitos."
+        - id: opt-c
+          text: "A resposta está boa, mas você quer o resultado em outro formato."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-b]
+    feedback:
+      onFailure: "Olhe o custo de recuperar: (a) esquecimento pontual se corrige com um turno — cite a restrição perdida; (c) formato se ajusta com um pedido específico (o que você viu em 'Melhore a resposta em etapas'). Já (b) é corrupção de contexto: com três correções conflitantes, cada nova resposta herda requisitos misturados — recomeçar limpo é mais barato do que dessoldar."
+      onSuccess: "Exato! Recomeçar vale quando o contexto está corrompido (requisitos misturados), não quando falta um detalhe (restaure) nem quando sobra um ajuste (itere)."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: o problema está em UM turno ou na CONVERSA inteira?"
+      - "Esquecimento pontual tem correção mínima; mistura de versões contamina cada resposta nova."
+      - "Ajuste de formato é iteração — você já treinou isso na lição de melhorar em etapas."
+
+rubric:
+  id: l19-rubric
+  criteria:
+    - id: r-diagnostica-contexto
+      text: "Identifica o contexto perdido em um turno degradado (público, tom, limite) e descarta mitos de velocidade/modelo."
+      weight: 1
+    - id: r-correcao-minima
+      text: "Restaura a resposta útil com a menor intervenção que resolve (restrição, entendimento, versão, conferência)."
+      weight: 1
+    - id: r-criterio-continuar-recomecar
+      text: "Decide entre continuar e recomeçar com critério explícito (corrupção de contexto vs. falha pontual)."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l19-a1, l19-a2, l19-a3]

@@ -1,9 +1,10 @@
 """Adapter that derives the minimaxDojo whiteboard views."""
 
-import datetime
 from typing import Any
 
 import yaml
+
+from learner.substrate.projection_clock import projection_today
 
 STATE_MAP_PT = {
     "presenting": "APRESENTANDO",
@@ -29,7 +30,7 @@ def derive_whiteboard_profile(state: dict[str, Any]) -> dict[str, Any]:
         "id": "aluno-001",
         "learner_id": learner.get("id", ""),
         "derived_from": "../../learner/learning_state.yaml",
-        "updated": datetime.date.today().isoformat(),
+        "updated": projection_today().isoformat(),
         "agente_owner": "mnemosyne",
         "core": {
             "aluno": {
@@ -101,7 +102,7 @@ def derive_whiteboard_trail(state: dict[str, Any]) -> dict[str, Any]:
     return {
         "aluno_id": "aluno-001",
         "derived_from": "../../learner/learning_state.yaml",
-        "atualizado": datetime.date.today().isoformat(),
+        "atualizado": projection_today().isoformat(),
         "agente_owner": "cartografo",
         "focus": learner.get("focus", "robustness"),
         "active_unit": active.get("id", ""),

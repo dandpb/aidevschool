@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aidevschool.dev/schemas/engine-lab-run-v1.json",
+  "title": "AiDevSchool Engine Lab run",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runId", "startedAt", "gitSha", "engines", "canonicalState"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "runId": { "type": "string", "minLength": 1 },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "gitSha": { "type": "string", "minLength": 7 },
+    "engines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["engineId", "journeyClass", "checks", "evidence"],
+        "properties": {
+          "engineId": { "type": "string", "minLength": 1 },
+          "experienceId": { "type": "string" },
+          "journeyClass": { "enum": ["micro-lesson", "teaching-game", "explore-only", "operations"] },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "status", "durationMs"],
+              "properties": {
+                "id": { "type": "string" },
+                "status": { "enum": ["pass", "fail", "blocked", "not-applicable"] },
+                "durationMs": { "type": "integer", "minimum": 0 }
+              }
+            }
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["emitted", "verifierRequired", "receiptStatus"],
+            "properties": {
+              "emitted": { "type": "boolean" },
+              "verifierRequired": { "type": "boolean" },
+              "receiptStatus": { "enum": ["pass", "fail", "unavailable", "not-applicable"] }
+            }
+          }
+        }
+      }
+    },
+    "canonicalState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["beforeSha256", "afterSha256", "unchanged"],
+      "properties": {
+        "beforeSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "afterSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "unchanged": { "const": true }
+      }
+    }
+  }
+}

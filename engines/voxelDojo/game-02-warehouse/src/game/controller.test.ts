@@ -32,6 +32,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       project: "02_key_value_store",
       scenario_id: "kv-warehouse-L1",
       game: "KV WAREHOUSE",
+      attempt_id: "kv-warehouse-L1-attempt-1",
       pass: true,
       observations: {
         kind: "warehouse-L1",
@@ -59,6 +60,33 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
       .find((r) => r.scenario_id === "kv-warehouse-L1")
     expect(rec?.pass).toBe(false)
     spy.mockRestore()
+  })
+
+  it("binds retry evidence to a new attempt id", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L1")
+    const play = (correct: boolean) => {
+      game.start()
+      while (game.snapshot.phase === "predicting") {
+        const key = game.snapshot.keys[game.snapshot.pendingIndex]
+        if (key === undefined) break
+        const truth = game.shelfOfKey(key)
+        game.predictShelf(correct ? truth : (truth + 1) % game.snapshot.store.shelfCount)
+      }
+    }
+
+    play(false)
+    game.retry()
+    while (game.snapshot.phase === "predicting") {
+      const key = game.snapshot.keys[game.snapshot.pendingIndex]
+      if (key === undefined) break
+      game.predictShelf(game.shelfOfKey(key))
+    }
+
+    const attempts = evidenceLines(spy).map(
+      (line) => JSON.parse(line.slice("EVIDENCE ".length)).attempt_id,
+    )
+    expect(attempts).toEqual(["kv-warehouse-L1-attempt-1", "kv-warehouse-L1-attempt-2"])
   })
 
   it("emits the same canonical inner record once in standalone and hosted modes", () => {

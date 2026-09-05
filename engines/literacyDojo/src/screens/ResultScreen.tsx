@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { LessonSummary } from "../app/App";
 import { useServices } from "../app/services";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
@@ -9,6 +9,7 @@ import {
   MAP_INITIAL_LESSON_ID,
   type OnboardingTaskCategory,
 } from "../domain/progress";
+import type { LiteracyVerificationReceipt } from "../domain/verification";
 
 /**
  * Resultado (plano seção 9): habilidade praticada, o que foi bem, o que
@@ -31,6 +32,9 @@ export function ResultScreen({
 }) {
   const services = useServices();
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory>();
+  const [receipt, setReceipt] = useState<LiteracyVerificationReceipt>();
+  const [verificationError, setVerificationError] = useState<string>();
+  const [verifying, setVerifying] = useState(false);
   const { lesson } = summary;
   const successMessages = summary.activityResults
     .filter((result) => result.pass && result.feedback.summary)
@@ -41,6 +45,26 @@ export function ResultScreen({
       setTaskCategory(savedProgress?.onboarding.taskCategory);
     });
   }, [services]);
+
+  const verifyAttempt = useCallback(async () => {
+    if (!summary.evidenceRecord) return;
+    setVerifying(true);
+    setVerificationError(undefined);
+    try {
+      setReceipt(await services.verification.verify(summary.evidenceRecord));
+    } catch (error) {
+      setReceipt(undefined);
+      setVerificationError(
+        error instanceof Error ? error.message : "Não foi possível verificar esta tentativa.",
+      );
+    } finally {
+      setVerifying(false);
+    }
+  }, [services.verification, summary.evidenceRecord]);
+
+  useEffect(() => {
+    void verifyAttempt();
+  }, [verifyAttempt]);
 
   return (
     <section
@@ -117,6 +141,32 @@ export function ResultScreen({
         </p>
       </div>
 
+      <div className="card" data-testid="verification-status" aria-live="polite">
+        <h2>Verificação da tentativa</h2>
+        {verifying && <p>Enviando evidência estruturada para verificação independente…</p>}
+        {receipt && (
+          <p>
+            <strong>Recibo independente: {receipt.verdict}</strong>. Ele corresponde à tentativa{" "}
+            {receipt.attempt_id}. A lição continua concluída somente neste aparelho; este recibo não
+            altera domínio canônico.
+          </p>
+        )}
+        {verificationError && (
+          <>
+            <p role="alert">{verificationError}</p>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              data-testid="retry-verification"
+              onClick={() => void verifyAttempt()}
+            >
+              Tentar verificação novamente
+            </button>
+          </>
+        )}
+        {!summary.evidenceRecord && <p>Nenhuma tentativa aprovada disponível para verificação.</p>}
+      </div>
+
       {lesson.id === MAP_INITIAL_LESSON_ID && summary.nextLessonId && (
         <>
           {taskCategory && (
@@ -139,10 +189,10 @@ export function ResultScreen({
         </>
       )}
 
-      <div className="dev-teaser">
+      <a className="dev-teaser" href="https://aidevschool-codexdojo-os.netlify.app/?track=dev">
         <strong>Trilha Dev</strong>
-        <span>Em breve: desafios para quem programa com IA.</span>
-      </div>
+        <span>Para programadores no OS público. Sem conta; o progresso fica no outro site.</span>
+      </a>
 
       <div className="actions">
         {hosted ? (

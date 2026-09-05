@@ -1,5 +1,6 @@
 import type { Clock } from "../adapters/clock";
 import type { ActivityDefinition, LessonDefinition } from "../data/generated/lessons";
+import { buildLessonCompletedEvent } from "../domain/analytics";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -23,6 +24,7 @@ import {
 } from "../domain/progress";
 import { parseImportedProgress, serializeProgressForExport } from "../domain/progressBackup";
 import type {
+  AnalyticsSink,
   ContentRepository,
   EvidenceSink,
   FeedbackProvider,
@@ -41,6 +43,8 @@ export type UseCaseDeps = {
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
+  /** Analytics de produto (ADR-0009) — piloto `lesson_completed`. */
+  analytics: AnalyticsSink;
 };
 
 export type SubmitAttemptResult = {
@@ -55,7 +59,45 @@ export type ResumeDestination =
   | { kind: "home" }
   | { kind: "lesson"; lessonId: string };
 
-const HOSTED_FIRST_CHAPTER = new Set(["l01", "l02", "l03"]);
+/**
+ * Lições autorizadas pelo contrato hospedado (missões publicadas pelo OS).
+ * Espelha as bindings publicadas em engines/codexdojo-os-prototype/config/
+ * mission-bindings.yaml: l01–l14 + l18–l20 (mod-06) e l24–l26 (mod-07,
+ * onda O2 completa) na trilha ai-pratica e l15–l17 + l21–l23 + l27–l29
+ * (mod-05, journey dev; onda O1 completa) na trilha dev. Lições do
+ * catálogo fora desse conjunto continuam não hospedadas.
+ */
+const HOSTED_OS_MISSION_LESSONS = new Set([
+  "l01",
+  "l02",
+  "l03",
+  "l04",
+  "l05",
+  "l06",
+  "l07",
+  "l08",
+  "l09",
+  "l10",
+  "l11",
+  "l12",
+  "l13",
+  "l14",
+  "l15",
+  "l16",
+  "l17",
+  "l18",
+  "l19",
+  "l20",
+  "l21",
+  "l22",
+  "l23",
+  "l24",
+  "l25",
+  "l26",
+  "l27",
+  "l28",
+  "l29",
+]);
 
 export class LiteracyUseCases {
   constructor(private readonly deps: UseCaseDeps) {}
@@ -103,18 +145,22 @@ export class LiteracyUseCases {
   }
 
   async prepareHostedMission(lessonId: string): Promise<LearnerProgress> {
-    this.requireLesson(lessonId);
-    if (!HOSTED_FIRST_CHAPTER.has(lessonId)) {
+    const lesson = this.requireLesson(lessonId);
+    if (!HOSTED_OS_MISSION_LESSONS.has(lessonId)) {
       throw new Error(`Lição não autorizada pelo contrato hospedado: ${lessonId}`);
     }
     let progress = await this.requireProgress();
     if (!progress.onboarding.completed) {
+      // Lições fora dos módulos do percurso público pertencem à journey dev:
+      // o onboarding hospedado registra a audiência correspondente.
+      const publicModuleIds = new Set(this.deps.content.listModules().map((module) => module.id));
+      const audience = publicModuleIds.has(lesson.moduleId) ? "ia_pratica" : "trilha_dev";
       progress = completeOnboarding(progress, {
         goal: "verify_answers",
         context: "work",
         confidence: "medium",
         taskCategory: "news_research",
-        audience: "ia_pratica",
+        audience,
       });
     }
     if (!isLessonUnlocked(progress, lessonId)) {
@@ -219,6 +265,19 @@ export class LiteracyUseCases {
       return result;
     }
     await this.deps.progress.save(result.progress);
+    // ADR-0009 piloto: exatamente 1× `lesson_completed` por conclusão, após o
+    // progresso persistir. Fire-and-forget — o contrato dos sinks é nunca
+    // lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+    this.deps.analytics.track(
+      buildLessonCompletedEvent({
+        lessonId: lesson.id,
+        lessonVersion: lesson.version,
+        score: result.outcome.lessonScore,
+        durationSeconds: input.durationSeconds,
+        occurredAt: this.deps.clock().toISOString(),
+        contentVersion: this.deps.content.getContentVersion(),
+      }),
+    );
     return result;
   }
 

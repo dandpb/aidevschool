@@ -28,7 +28,7 @@ test("boots the relay, plays L1 by predicting the connected set, emits a passing
   }
   await page.getByTestId("submit").click()
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("concluída")
   const records = collectEvidence(consoleLines)
   expect(records.length).toBe(1)
   const first = records[0] as EvidenceRecord
@@ -61,7 +61,7 @@ test("L2 fan-out: predicting the delivery set resolves the wave and emits bounde
   }
   await page.getByTestId("submit").click()
 
-  await expect(page.getByTestId("hud-status")).toContainText("cleared")
+  await expect(page.getByTestId("hud-status")).toContainText("concluída")
   const record = collectEvidence(consoleLines).find((r) => r.scenario_id === "relay-station-L2")
   expect(record).toBeDefined()
   expect(record?.pass).toBe(true)

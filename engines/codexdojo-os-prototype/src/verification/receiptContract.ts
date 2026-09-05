@@ -33,7 +33,7 @@ function literacyReceiptShapeIsValid(value: Record<string, unknown>): value is L
     && SHA256_HEX.test(value.evidence_digest)
     && typeof value.lesson_id === 'string'
     && typeof value.activity_id === 'string'
-    && typeof value.attempt_id === 'string'
+    && (value.game !== 'KV WAREHOUSE' || typeof value.attempt_id === 'string')
     && typeof value.activity_type === 'string'
     && (value.score === null || (typeof value.score === 'number' && Number.isFinite(value.score)))
     && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
@@ -59,6 +59,7 @@ function teachingGameReceiptShapeIsValid(
     && typeof value.project === 'string'
     && typeof value.scenario_id === 'string'
     && typeof value.game === 'string'
+    && (value.attempt_id === undefined || typeof value.attempt_id === 'string')
     && (value.producer_pass_claim === null || typeof value.producer_pass_claim === 'boolean')
     && typeof value.independent_pass === 'boolean'
     && isStringArray(value.errors)
@@ -77,7 +78,12 @@ export function receiptShapeIsValid(value: unknown): value is VerificationReceip
   )
 }
 
-/** Identity binding: the receipt describes exactly the record that was submitted. */
+/**
+ * Identity binding: the receipt describes exactly the record that was submitted.
+ * `attempt_id` is optional producer metadata: canonical verifiers echo it only
+ * when the record carried one, so absence binds to absence and any present
+ * value must match exactly.
+ */
 export function receiptMatchesRecordIdentity(
   receipt: unknown,
   record: Readonly<Record<string, unknown>>,
@@ -98,6 +104,7 @@ export function receiptMatchesRecordIdentity(
     && receipt.project === record.project
     && receipt.scenario_id === record.scenario_id
     && receipt.game === record.game
+    && receipt.attempt_id === record.attempt_id
     && receipt.producer_pass_claim === record.pass
   )
 }

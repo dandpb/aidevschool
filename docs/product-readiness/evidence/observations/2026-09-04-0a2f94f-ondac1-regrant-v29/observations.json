@@ -1,0 +1,86 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "0a2f94f8fd1a74de3a642eeff989ac7e0ad8757b",
+ "observedAt": "2026-09-04T19:31:30Z",
+ "scenarios": [
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk 2026-09-04 19:29-19:31Z (chromium over the engine's vite dev surface at PR #267 head 0a2f94f8, fresh browser profile, viewport 360x740; walk scripted and executed by the independent assessor, distinct from the producer's CI runs). Five-step onboarding ends on 'Mapa da Vila Lume' with 'Comece pelo pedido marcado como Disponível' and 'Cada pedido leva de 3 a 5 minutos' — no repository knowledge needed (ev/lit-2-map.png). Completing Mapa Inicial renders 'VILA LUME · MISSÃO CONCLUÍDA ... XP conquistado · 100% de pontuação' (ev/lit-5-result.png) and the result screen names the next step explicitly ('Seu próximo passo ... vamos começar com uma conversa simples com IA antes de avançar.'); following 'next-lesson' lands on the heading 'Sua primeira conversa com uma IA' (ev/lit-6-next-lesson.png) and a reload restores the same in-progress lesson intro (ev/lit-7-resume.png). Progress read from the app's own IndexedDB in the same walk: lessonStatus.l02=completed with the routed next lesson l01 set as currentLessonId; 4 valid LiteracyEvidenceRecords emitted (wrong + 3 correct attempts across the 3 activities), all with verifierRequired=true. The surface itself names the continuation at every step."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand on the same walk: submitting the wrong output on the first Mapa Inicial activity produced specific plain-language feedback — 'Quase lá. Uma resposta confiável não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?' plus 'Pontuação desta tentativa: 20%' (ev/lit-3-wrong.png). The hint control rendered 'Dicas: Compare as duas respostas procurando uma coisa só: de onde saíram os números?' (ev/lit-4-hint.png); 'Tentar novamente' returned the activity for a new attempt, and completing all three activities finished the lesson at 100%. The result screen explained the route in learner language ('Como você fez uma checagem extra ou pediu apoio no Mapa Inicial, vamos começar com uma conversa simples com IA antes de avançar.'). The welcome screen pre-frames the norm ('Aqui não existe pressa nem punição: tente, confira, peça uma dica e ajuste quando precisar.'). No facilitator or product-internal language is required at any point."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: after completing Mapa Inicial and advancing, a reload restored the in-progress lesson intro with the same heading 'Sua primeira conversa com uma IA' (persisted intro state; ev/lit-7-resume.png) and the app's persistent footer states the boundary explicitly: 'Piloto público gratuito · para maiores de 18 anos. Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.' Same-device continuity works (IndexedDB progress read in-walk: lessonStatus.l02=completed) and the app itself tells the learner its limits. Post-C1 content shape confirmed on the walk: Mapa Inicial runs 3 activities and the C1-bumped lessons (l15-l17, version 2) are served by the same generated read model without touching this standalone journey's flow."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-literacy-hosted-mission",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-can-state-result-and-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk 2026-09-04 19:30-19:31Z (chromium, fresh profile, OS dev surface with local engine bridge at PR #267 head 0a2f94f8; hosted MOTOR served same-origin from the engine dev server). 'Entrar na escola' opened the hub showing '0 competências verificadas' — canonical competence stays separate (ev/os-2-hub.png). The C1 dev mission /mission/dev/l15 ('Quando usar IA e quando não usar', 'Simulação hospedada · 4 min') mounted the hosted LiteracyDojo mission in the mission iframe and played the version-2 3-activity lesson through understand/respond/apply (ev/os-3-l15-intro.png, ev/os-4-l15-act1.png); the host kept 'Estado canônico ... 0 verificadas · sem alteração local' distinct from local completion during the run. Finishing all three activities took the host mission status to 'Evidência: Veredito PASS' via the independent bridge (ev/os-5-l15-verdict.png); returning to the hub retained 'XP local 25 / Meta 25/25' and offered the next step ('Próxima missão · 4 min — IA não é uma fonte de verdade') (ev/os-6-hub-after.png). Observer response: I can state the visible result (independent PASS verdict, local XP awarded, canonical competence unchanged) and the supported next action (named next mission with title and minutes)."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-verification-recovery",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "facilitator-can-recover-without-repository-intervention",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation on the same walk: with the local bridge routes (/__dojo/bridge/v1/*) aborted at the network layer, a completed hosted l16 mission ('Seu primeiro código com um assistente de IA', 3 activities) showed the explicit degraded status 'Verificador indisponível' with the visible retry affordance 'Tentar verificação novamente' and no false 'Veredito PASS' and no fabricated completion (ev/os-7-degraded.png). After releasing the routes, clicking the visible retry affordance moved the mission back into verification ('Aguardando verificador independente') without resetting the session or evidence identity; the completed state then saved and 'Voltar ao hub' returned normally (ev/os-8-recovered.png). Degradation is visible, honest, and recoverable using only the visible state — no repository or developer intervention."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-literacy-returning-device",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-literacy-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: after completing the hosted l15 and l16 missions, a reload kept the hub session and the app's own IndexedDB retained both completions (missionStatusByKey dev:l15=completed, dev:l16=completed, read after the reload) with 'XP local 25 / Meta 25/25' intact (ev/os-9-returning.png). Re-entering /mission/dev/l15 on the same profile opened the mission shell directly with no onboarding repeat (ev/os-10-l15-returning-reentry.png). The boundary stays visible on the surface itself: the mission page keeps 'Estado canônico ... 0 verificadas · sem alteração local' and the hub counter 'competências verificadas' separate from local progress — continuity is demonstrably same-browser-profile only, with no cross-device sync claim anywhere on the observed surfaces."
+    }
+   ]
+  }
+ ]
+}

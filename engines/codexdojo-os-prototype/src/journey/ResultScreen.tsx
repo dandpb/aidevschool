@@ -18,7 +18,7 @@ const ACHIEVEMENT_LABELS: Readonly<Record<AchievementId, string>> = {
   'streak-7': 'Sequência de 7 dias',
 }
 
-function verificationCopy(verification: EvidenceVerificationState): string {
+export function verificationCopy(verification: EvidenceVerificationState): string {
   switch (verification.kind) {
     case 'not-submitted':
       return 'A prática terminou, mas nenhuma evidência foi recebida.'
@@ -67,6 +67,9 @@ export function ResultScreen({
         A recompensa local celebra a prática. Evidência, veredito independente e competência
         canônica continuam registros diferentes.
       </p>
+      <p data-testid="completion-is-not-mastery">
+        Concluída neste dispositivo não é <code>mastered</code>. O host não fabrica veredito PASS.
+      </p>
 
       <section className="result-rewards" aria-label="Recompensas locais">
         <div>
@@ -79,7 +82,7 @@ export function ResultScreen({
         </div>
         <div>
           <span>Competências canônicas</span>
-          <strong>{canonicalMasteryCount}</strong>
+          <strong data-testid="canonical-mastery-count">{canonicalMasteryCount}</strong>
         </div>
       </section>
 
@@ -92,6 +95,9 @@ export function ResultScreen({
 
       <div className="result-verification" aria-live="polite">
         <strong>Resultado da verificação</strong>
+        {verification.kind === 'verified' ? (
+          <p data-testid="independent-verdict">Veredito {verification.receipt.verdict}</p>
+        ) : null}
         <p>{verificationCopy(verification)}</p>
         {verification.kind === 'gateway-unavailable' ? (
           <button type="button" onClick={onRetryVerification}>

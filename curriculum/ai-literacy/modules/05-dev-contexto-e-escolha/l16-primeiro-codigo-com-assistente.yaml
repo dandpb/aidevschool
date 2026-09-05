@@ -1,7 +1,7 @@
-# Lição l16 — Trilha Dev piloto: formular pedido de código com contexto técnico.
+# Lição l16 — Trilha Dev piloto: formular pedido de código com contexto técnico. — v2 ONDA C1 (spec AID-807 §1): +a3 output_comparison.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l16
-version: 1
+version: 2
 moduleId: mod-05
 title: "Seu primeiro código com um assistente de IA"
 objective: "Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia."
@@ -118,6 +118,42 @@ activities:
       - "TypeScript remove tipos em runtime; o que parece redact no tipo pode não acontecer de fato."
       - "O código usa zod.parse() — o que acontece se o payload for inválido?"
 
+  - id: l16-a3
+    type: output_comparison
+    skillId: codificar
+    instruction: "VOCÊ PEDIU A MESMA FUNÇÃO DE DUAS FORMAS — UMA VEZ NO RUSH, UMA VEZ COM CONTEXTO. CHEGARAM DUAS RESPOSTAS DO ASSISTENTE. COMPARE E ESCOLHA A MELHOR BASE PARA SEGUIR."
+    data:
+      scenario: "Mesma tarefa, dois momentos. No rush: 'escreve uma função que valida payload de webhook'. Depois, com calma: 'TypeScript 5 / Node 20. Anexei o contrato do payload (schema do webhook). A função recebe unknown, valida com zod (única dependência permitida), NÃO loga campo com token/secret no nome e roda no handler Express em produção.'"
+      outputs:
+        - id: out-a
+          text: "Seguindo o contrato que você anexou: input unknown validado com zod contra o schema; retorno tipado ou lança ValidationError para o handler tratar; antes de logar, removo as chaves com token/secret no nome (lista de exclusão em um só lugar); sem dependência além de zod. Assumi que payload inválido lança — se preferir Result, é um ajuste de uma linha. Um teste com payload válido e outro inválido fecham o comportamento."
+        - id: out-b
+          text: "Aqui está uma função robusta e pronta para produção, que valida qualquer payload com segurança total. Ela usa um validador interno avançado, cobre todos os casos de webhook de qualquer serviço e é otimizada para alta performance. Pode confiar no código: segue as melhores práticas do mercado. Qualquer coisa, é só pedir."
+      criteria:
+        - id: c-contexto-do-projeto
+          text: "Usa o contexto do projeto (runtime, contrato anexado, onde roda)"
+        - id: c-restrição-declarada
+          text: "Respeita as restrições declaradas (dependência única, o que não logar)"
+        - id: c-verificavel
+          text: "Deixa o comportamento verificável (hipótese declarada, teste sugerido)"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-contexto-do-projeto, c-restrição-declarada, c-verificavel]
+    feedback:
+      onFailure: "A resposta A anda sobre o seu chão: cita o contrato anexado, respeita zod como única dependência, protege o log e declara o que assumiu — dá para verificar. A B é confiança solta: 'robusta', 'qualquer payload', 'segurança total', sem uma linha que se apoie no seu contexto. Pedido com contexto não compra resposta boa sozinho — a resposta é conferida contra o pedido."
+      perCheck:
+        betterOutputId: "A resposta A é aterrada: cada frase volta ao seu pedido (schema, zod, log, handler). A B serviria para qualquer projeto — e por isso não serve para o seu."
+        c-contexto-do-projeto: "Faltou este critério: a resposta A cita TypeScript, o contrato anexado e o handler; a B não toca no seu projeto nenhuma vez."
+        c-restrição-declarada: "Faltou este critério: a A usa só zod e exclui token/secret do log; a B promete 'qualquer payload' e ignora as restrições."
+        c-verificavel: "Faltou este critério: a A declara a suposição (lança vs Result) e sugere dois testes; na B não há o que verificar — só adjetivos."
+      onSuccess: "Isso: resposta aterrada em arquivo, restrição e teste vence confiança solta. Pedido com contexto é metade do caminho; avaliar a resposta contra o pedido é a outra metade."
+    storage:
+      policy: structured_only
+    hints:
+      - "Cada frase da resposta A volta a algo que você declarou; na B, troque 'robusta' por um fato do SEU projeto — existe?"
+      - "Onde a resposta fala de verificação? Hipótese declarada e teste sugerido são rastro; adjetivo não é."
+      - "A A cita o schema anexado, zod como única dependência e a exclusão de token/secret no log; a B ignora os três."
 rubric:
   id: l16-rubric
   criteria:
@@ -141,4 +177,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l16-a1, l16-a2]
+  requiredActivityIds: [l16-a1, l16-a2, l16-a3]

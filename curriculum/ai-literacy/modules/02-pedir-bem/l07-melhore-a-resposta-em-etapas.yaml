@@ -1,7 +1,7 @@
-# Lição l07 — Fase 2.
+# Lição l07 — Fase 2; retrofit Onda O3-C1 (spec AID-644 rev 2 §2.7; advisory AID-645 `2ed06cf2`): +l07-a2/a3, v2.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l07
-version: 1
+version: 2
 moduleId: mod-02
 title: "Melhore a resposta em etapas"
 objective: "Iterar sobre uma resposta da IA com pedidos de ajuste específicos em vez de recomeçar do zero."
@@ -41,6 +41,81 @@ activities:
       - "O ciclo começa pelo pedido e termina na repetição — o que vem entre um e outro?"
       - "Antes de pedir o ajuste, você precisa saber o que ajustar: leitura crítica vem antes do ajuste."
 
+  - id: l07-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Você pediu à IA um aviso para o grupo do condomínio sobre a troca da água do sábado e a resposta veio com tom formal demais — parece comunicado oficial da administração. Qual é o próximo pedido certo?"
+    data:
+      options:
+        - id: opt-ajuste
+          text: "Pedir o ajuste específico: \"Reescreva em tom mais leve e direto, mantendo o dia e a hora da troca de água.\""
+        - id: opt-refaz
+          text: "Apagar tudo e fazer um pedido completamente novo, do zero, torcendo para a resposta virar diferente."
+        - id: opt-aceita
+          text: "Usar como está: formal demais, mas ainda é um aviso válido para o grupo."
+        - id: opt-generico
+          text: "Responder só \"melhore\" e deixar a IA adivinhar o que incomoda no texto."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-ajuste]
+    feedback:
+      onFailure: "O diagnóstico já existe: o problema é o tom, não o conteúdo. O próximo passo do ciclo é um ajuste específico — dizer o que mudar (o tom) e o que manter (dia e hora). Recomeçar do zero joga fora o que estava bom; aceitar ignora o problema; \"melhore\" é ajuste genérico, e ajuste genérico gera resposta genérica."
+      perCheck:
+        opt-ajuste: "Isso: o pedido nomeia o que muda (tom mais leve e direto) e o que fica (dia e hora) — a IA sabe exatamente o que fazer."
+        opt-refaz: "Recomeçar do zero desperdiça o que já estava bom — o aviso tinha a informação certa, só no tom errado."
+        opt-aceita: "Aceitar ignora o feedback: você já identificou o problema, o ciclo manda ajustá-lo, não conviver com ele."
+        opt-generico: "\"Melhore\" não diz o quê: sem nomear o tom como alvo, a IA pode mudar qualquer coisa — ou quase nada."
+      onSuccess: "Isso! Ajuste específico: o que muda (o tom), o que fica (dia e hora). A resposta melhora na próxima etapa, sem recomeçar."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que exatamente incomodou na resposta: o conteúdo ou a forma como soou?"
+      - "Um bom pedido de ajuste diz o que mudar — e também o que não deve mudar."
+      - "\"Melhore\" sem detalhe devolve o mesmo problema: a IA não sabe o que incomoda."
+
+  - id: l07-a3
+    type: prompt_builder
+    skillId: pedir
+    instruction: "Agora monte você o pedido de ajuste completo, preenchendo os três campos para transformar o feedback \"tom formal demais\" em um pedido que a IA consegue executar."
+    data:
+      scenario: "A resposta da IA para o grupo do condomínio veio assim: \"Comunicamos que os serviços de troca da água serão realizados no sábado, das 8h às 12h. Colocamo-nos à disposição para esclarecimentos.\" O grupo é informal — o tom precisa ficar mais leve, sem perder a informação."
+      genericPrompt: "Melhore essa mensagem."
+      fields:
+        - id: o-que-mudar
+          label: "O que mudar"
+          hint: "A mudança que você quer ver. Ex.: o tom, mais leve e direto, linguagem de vizinho."
+        - id: onde
+          label: "Onde"
+          hint: "Em que parte da resposta aplicar. Ex.: no texto todo, começando pela abertura \"Comunicamos que...\"."
+        - id: o-que-manter
+          label: "O que manter"
+          hint: "O que não pode mudar. Ex.: sábado, das 8h às 12h — a informação da troca de água."
+    evaluation:
+      strategy: deterministic
+      fields:
+        o-que-mudar:
+          minLength: 5
+          mustIncludeAny: ["tom", "leve", "direto", "formal", "linguagem", "informal"]
+        onde:
+          minLength: 5
+          mustIncludeAny: ["texto", "abertura", "comunicamos", "todo", "frase", "início", "inicio", "título", "titulo"]
+        o-que-manter:
+          minLength: 5
+          mustIncludeAny: ["sábado", "sabado", "8h", "12h", "hora", "horário", "horario", "manter", "informação", "informacao"]
+    feedback:
+      onFailure: "Um pedido de ajuste que funciona diz as três coisas: o que mudar (o tom), onde (a abertura, o texto todo) e o que manter (sábado, 8h às 12h). Sem isso, a IA escolhe sozinha — e pode mudar o que estava certo."
+      perCheck:
+        o-que-mudar: "Nomeie a mudança: o tom — mais leve e direto, de conversa de grupo de vizinhos."
+        onde: "Aponte o lugar: o texto todo, ou pelo menos a abertura \"Comunicamos que...\", que é o que mais soa a oficial."
+        o-que-manter: "Proteja a informação: sábado, das 8h às 12h — o aviso precisa continuar dizendo isso."
+      onSuccess: "Pedido de ajuste completo: muda o que precisa, onde precisa, e preserva o que estava certo. É assim que a conversa avança em etapas — e o próximo ajuste parte de uma base melhor."
+    storage:
+      policy: structured_only
+    hints:
+      - "O feedback era um só: o tom. Comece por ele no campo \"o que mudar\"."
+      - "No campo \"o que manter\", pense na informação que os vizinhos precisam continuar vendo."
+      - "Palavras que ajudam: tom ou leve em O que mudar; texto ou abertura em Onde; sábado ou 8h em O que manter."
+
 rubric:
   id: l07-rubric
   criteria:
@@ -49,6 +124,9 @@ rubric:
       weight: 1
     - id: r-ajuste-especifico
       text: "Entende que ajustes devem ser específicos, não um recomeço do zero."
+      weight: 1
+    - id: r-pedido-de-ajuste
+      text: "Formula o pedido de ajuste dizendo o que mudar, onde e o que manter."
       weight: 1
 
 evidence:
@@ -61,4 +139,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l07-a1]
+  requiredActivityIds: [l07-a1, l07-a2, l07-a3]

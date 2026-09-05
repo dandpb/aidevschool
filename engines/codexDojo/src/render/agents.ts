@@ -7,6 +7,12 @@ import { escapeHtml } from "./escape"
 export function renderAgents(state: AppState): string {
   const selectedAgent = getSelectedAgent(state)
 
+  const isCopied = state.copiedAgentId === selectedAgent.id
+  const copyText = isCopied ? "Copiado" : "Copiar prompt"
+  const copyAriaLabel = isCopied
+    ? `Prompt de ${selectedAgent.name} copiado`
+    : `Copiar prompt de ${selectedAgent.name}`
+
   return `
     <section class="workbench agents-view" aria-label="Agentes do codexDojo">
       <div class="section-heading">
@@ -60,8 +66,8 @@ export function renderAgents(state: AppState): string {
       <article class="agent-detail">
         <div class="detail-topline">
           <span>${escapeHtml(selectedAgent.group)}</span>
-          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-live="polite">
-            ${state.copiedAgentId === selectedAgent.id ? "Copiado" : "Copiar prompt"}
+          <button class="icon-button" type="button" data-copy-agent="${escapeHtml(selectedAgent.id)}" aria-live="polite" aria-label="${escapeHtml(copyAriaLabel)}" title="${escapeHtml(copyText)}">
+            <span aria-hidden="true">${escapeHtml(copyText)}</span>
           </button>
         </div>
         <h3>${escapeHtml(selectedAgent.name)}</h3>

@@ -14,6 +14,44 @@ on:
   pull_request:
 
 jobs:
+  # AID-537 (audit AID-400 Registro #4): the SDLC guardrail hooks
+  # (.claude/hooks/protect-paths|protect-tests|guard-commands) only execute in
+  # Claude Code sessions, while every agent in this company runs on other
+  # runtimes — so the guardrails were inert for the runtimes actually in use.
+  # This job replays the canonical hook scripts against the committed diff,
+  # which enforces the policy no matter which runtime (or human) produced the
+  # change. The self-test step fails the job if synthetic violations ever stop
+  # being detected. Overrides: owner-approved commit trailers
+  # SDLC-ALLOW-TEST-EDIT / SDLC-ALLOW-DERIVED-EDIT (see docs/sdlc/README.md
+  # §Guardrails); the credential rule has no override.
+  sdlc-guards:
+    name: SDLC guardrails (diff)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: resolve comparison base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+          fi
+          if git rev-parse --verify -q "${BASE}^{commit}" >/dev/null 2>&1; then
+            echo "SDLC_BASE=$BASE" >> "$GITHUB_ENV"
+          else
+            echo "SDLC_BASE=" >> "$GITHUB_ENV"
+            echo "::warning::comparison base '$BASE' not fetchable (initial push?) — running self-test only"
+          fi
+      - name: guardrail self-test (synthetic violations must fail)
+        run: scripts/sdlc_guard_check.sh --self-test
+      - name: guardrail check (changed files vs base)
+        run: |
+          if [ -n "$SDLC_BASE" ]; then
+            scripts/sdlc_guard_check.sh --base "$SDLC_BASE"
+          fi
+
   codexdojo:
     name: codexDojo (TS)
     runs-on: ubuntu-latest
@@ -130,9 +168,24 @@ jobs:
       - run: pnpm --dir ../codexDojo install --frozen-lockfile
       - run: pnpm --dir ../pixelDojo install --frozen-lockfile
       - run: pnpm --dir ../voxelDojo install --frozen-lockfile
+      - run: pnpm --dir ../miniTown install --frozen-lockfile
+      - run: npm ci --prefix ../dojoToday
       - run: python -m pip install -e ../..
       - run: npm run lint
       - run: npm run test
+      # The staged verification bridge is a projection of learner/gate; run its
+      # contract test here so verifier drift fails CI instead of production (AID-415).
+      - run: node --test ../../learner/gate/tests/dojo_verification_bridge_netlify.test.mjs
+      # Same for the analytics collector (AID-470 F1): the staged function must
+      # accept and reject exactly the OS analytics vocabulary; TS-side parity
+      # runs in the vitest suite above (collectorParity.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
+      # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
+      # contract tests run here, and the monitor itself fails high over the
+      # synthetic fixtures (real pilot NDJSON never lands in the repo; the
+      # fixtures are also checked against events.ts by fixtureSchemaDrift.test.ts).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs ../../learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs
+      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build
@@ -141,14 +194,27 @@ jobs:
           VITE_WAREHOUSE_URL: /apps/warehouse/
           VITE_WORMHOLE_URL: /apps/wormhole/
           VITE_RELAY_STATION_URL: /apps/relay-station/
+          VITE_PIPELINE_PLANT_URL: /apps/pipeline-plant/
+          VITE_CHECKPOINT_CITY_URL: /apps/checkpoint-city/
+          VITE_TIMELINE_TOWER_URL: /apps/timeline-tower/
+          VITE_DOCKING_BAY_URL: /apps/docking-bay/
       # P5: prove the static pilot build mounts missions from its own origin.
       # The build above already produced dist/ (and gates typecheck), so we
       # bundle the mission runtimes and run Playwright directly instead of
       # test:smoke:pilot, which would rebuild the OS a second time.
       - run: npx playwright install --with-deps chromium
       - run: node scripts/bundle-missions.mjs
-      - run: npx playwright test --config=playwright.pilot.config.ts
-      - run: npx playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
+      # AID-571 (Auditoria #5 A5-F4): deterministic retry policy for the
+      # codexdojo-os Playwright smokes. Both known flakes (#154 job 100028707657,
+      # #227 job 100052442436) were root-caused to test-side timing fragility
+      # and fixed in the specs; --retries=1 covers the residual transient class
+      # WITHOUT ad-hoc manual rerun-failed-jobs: a retried test surfaces as a
+      # named "flaky" entry in this log (plus its trace) — that listing is the
+      # durable trace the audit required — while a real regression fails twice
+      # and still fails the job. Recurrence of the flaky listing on the same
+      # test escalates to quarantine + automatic issue (do not raise retries).
+      - run: npx playwright test --retries=1 --config=playwright.pilot.config.ts
+      - run: npx playwright test --retries=1 --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
       - run: node scripts/readiness-report.mjs
         env:
           READINESS_TEST_RUN: passed
@@ -263,6 +329,16 @@ jobs:
       - run: npm run selfcheck
       - run: npm run lint
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:readiness
+      # This report contains automated facts only; observation assertions stay
+      # with the independent assessor and cannot grant readiness in CI.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: dojotoday-readiness-${{ github.sha }}
+          path: engines/dojoToday/test-results
+          if-no-files-found: warn
 
   product-readiness:
     name: product readiness (claims)
@@ -292,6 +368,8 @@ jobs:
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
+      - name: run readiness cli guard tests
+        run: python3 -m pytest docs/product-readiness/tests -q
       - name: upload product-readiness-report.json
         if: always()
         uses: actions/upload-artifact@v4
@@ -496,10 +574,8 @@ jobs:
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — openclaw was not CI-enforced. Runs
   # the pytest island (file-based checklist runner, simulate-grade per
-  # ADR-0002) and the simulate CLI to verify the spec artifact exists with
-  # the minimum size floor. The CLI mutates learner/pipeline_status.yaml on
-  # the runner; that's intentional evidence of "checklist ran" but harmless
-  # because each CI run is on a fresh checkout.
+  # ADR-0002) and the read-only preview CLI. The cleanliness assertion guards
+  # the canonical learner source against accidental writes during smoke runs.
   openclaw:
     name: openclaw (checklist runner)
     runs-on: ubuntu-latest
@@ -511,8 +587,10 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - name: openclaw unit tests
         run: python -m pytest engines/openclaw/tests -q
-      - name: openclaw simulate (spec phase, rate-limiter pilot)
-        run: python -m engines.openclaw --phase spec --project curriculum/01_rate_limiter --mode simulate
+      - name: openclaw read-only smoke
+        run: |
+          python -m engines.openclaw --preview
+          test -z "$(git status --porcelain -- learner/)"
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — aiDevschoolMvp installer + acceptance
   # tests were in pyproject.toml testpaths but only ran as part of the

@@ -44,8 +44,8 @@ export function renderOverview(state: AppState): string {
           projetos incrementais, revisão, testes, métricas e memória de aprendizado.
         </p>
         <div class="primary-actions">
-          <button class="action-button" type="button" data-view="cycle">Avançar ciclo</button>
-          <button class="action-button secondary" type="button" data-view="agents">Ver agentes</button>
+          <button class="action-button" type="button" data-view="cycle" aria-label="Avançar para o próximo ciclo" title="Avançar ciclo"><span aria-hidden="true">Avançar ciclo</span></button>
+          <button class="action-button secondary" type="button" data-view="agents" aria-label="Ver todos os agentes" title="Ver agentes"><span aria-hidden="true">Ver agentes</span></button>
         </div>
       </article>
 
@@ -84,7 +84,7 @@ export function renderOverview(state: AppState): string {
           ${model.currentProject.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ul>
         <div class="primary-actions">
-          <button class="action-button" type="button" data-project="${escapeHtml(model.currentProject.id)}">Ver projeto</button>
+          <button class="action-button" type="button" data-project="${escapeHtml(model.currentProject.id)}" aria-label="Ver projeto: ${escapeHtml(model.currentProject.title)}" title="Ver projeto"><span aria-hidden="true">Ver projeto</span></button>
         </div>
       </article>
 

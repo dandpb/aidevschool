@@ -28,10 +28,20 @@ class TestValidContent(TrackFixtureMixin):
     def test_real_track_passes(self):
         errors, ready, catalog = self.validate_track(TRACK_DIR)
         self.assertEqual([], errors)
-        # Toda lição do catálogo está validada e pronta, na ordem do catálogo.
+        # Toda lição `ready` do catálogo está validada, na ordem do catálogo.
+        # Emenda T0 (AID-615) + onda O1 dev completa: l27 (T1), l28 (T2) e
+        # l29 (T3) pousaram `ready` em mod-05 — próximo id livre após a
+        # onda: l30, regra 7 do contrato.
+        entries = json_objects(array_field(required_object(catalog), "lessons"))
         self.assertEqual(
-            [string_field(lesson, "id") for lesson in json_objects(array_field(required_object(catalog), "lessons"))],
+            [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "ready"],
             [string_field(lesson, "id") for lesson in ready],
+        )
+        for lesson_id in ("l18", "l19", "l20", "l21", "l22", "l23", "l24", "l25", "l26", "l27", "l28", "l29"):
+            self.assertIn(lesson_id, [string_field(lesson, "id") for lesson in ready])
+        self.assertEqual(
+            [],
+            [string_field(lesson, "id") for lesson in entries if string_field(lesson, "status") == "planned"],
         )
 
     def test_real_track_covers_all_seven_activity_types(self):
@@ -66,6 +76,8 @@ class TestValidContent(TrackFixtureMixin):
                 "mod-03": "ia_pratica",
                 "mod-04": "ia_pratica",
                 "mod-05": "dev",
+                "mod-06": "ia_pratica",
+                "mod-07": "ia_pratica",
             },
             journeys,
         )
@@ -83,7 +95,14 @@ class TestValidContent(TrackFixtureMixin):
         self.assertEqual(array_field(entries["l01"], "prerequisites"), [])
         self.assertEqual(array_field(entries["l02"], "prerequisites"), [])
         self.assertEqual(array_field(entries["l03"], "prerequisites"), ["l02"])
-        self.assertEqual(set(ready_by_id), {string_field(lesson, "id") for lesson in json_objects(array_field(required_object(catalog), "lessons"))})
+        self.assertEqual(
+            set(ready_by_id),
+            {
+                string_field(lesson, "id")
+                for lesson in json_objects(array_field(required_object(catalog), "lessons"))
+                if string_field(lesson, "status") == "ready"
+            },
+        )
         for lesson_id in ("l01", "l02", "l03"):
             self.assertGreaterEqual(int_field(ready_by_id[lesson_id], "version"), 1)
 

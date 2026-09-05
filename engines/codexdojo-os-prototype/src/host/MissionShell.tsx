@@ -115,6 +115,26 @@ export function MissionShell({
     )
   }, [mission])
 
+  // A11y (AID-272): Chromium does not match :focus/:focus-visible on an iframe element when
+  // keyboard focus enters its content, so a CSS-only focus indicator never applies. Toggle a
+  // class via window blur/focus + activeElement so the mission container shows a visible
+  // outline while the learner is inside the engine frame.
+  useEffect(() => {
+    const frame = frameRef.current
+    if (frame === null) return
+    const syncFrameFocus = () => {
+      frame.classList.toggle('mission-frame-focus', document.activeElement === frame)
+    }
+    window.addEventListener('blur', syncFrameFocus)
+    window.addEventListener('focus', syncFrameFocus)
+    syncFrameFocus()
+    return () => {
+      window.removeEventListener('blur', syncFrameFocus)
+      window.removeEventListener('focus', syncFrameFocus)
+      frame.classList.remove('mission-frame-focus')
+    }
+  }, [])
+
   useEffect(() => {
     const frame = frameRef.current
     if (loadedFrameUrl !== frameUrl || frame === null) return

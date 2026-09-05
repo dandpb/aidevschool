@@ -19,6 +19,10 @@ certificação, domínio verificado, retenção de longo prazo ou resultado de m
 Uma amostra de 1–3 pessoas serve para descobrir problemas e produzir exemplos observáveis. Ela
 não sustenta percentuais, comparação de segmentos ou conclusão sobre demanda de mercado.
 
+> O [kit P6](piloto/README.md) (AID-720) reusa este protocolo para o piloto com
+> alunos reais que gateia O3-C2: runbook de 1 página, ficha objetiva, leitura do
+> funil OP-B pós-ativação e critério de decisão.
+
 ## Como usar o kit
 
 1. A pessoa responsável preenche o [handoff humano](#handoff-humano) sem registrar nomes dos

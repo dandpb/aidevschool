@@ -60,7 +60,7 @@ describe('EvidenceIntake literacy verification', () => {
     const restored = await intake.latest(mission)
     const retried = await intake.retry(mission)
 
-    expect(store.raw.get('run-1')).toMatchObject({
+    expect(store.raw.get('evidence-1')).toMatchObject({
       status: 'rejected',
       rejectionCode: 'receipt-mismatch',
     })
@@ -78,7 +78,7 @@ describe('EvidenceIntake literacy verification', () => {
     const state = await intake.accept(mission, submission())
 
     expect(state).toEqual({ kind: 'rejected', code: 'invalid-verifier-response' })
-    expect(store.raw.get('run-1')).toMatchObject({
+    expect(store.raw.get('evidence-1')).toMatchObject({
       status: 'rejected',
       rejectionCode: 'invalid-verifier-response',
     })

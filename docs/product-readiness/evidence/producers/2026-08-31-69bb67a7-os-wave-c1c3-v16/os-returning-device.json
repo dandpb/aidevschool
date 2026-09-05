@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+      "sha256": "efa2b9aa3e15e792dc2cc4724f41b6e3b0bf473d40979bc4076715293b74e180"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "same-device-state-resumes",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-08-31T04:09:11Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "69bb67a7800242495bf62542537b2ce0c14dd573",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-08-31T04:09:11Z-os-returning-device-69bb67a7",
+  "scenarioId": "os-returning-device",
+  "schemaVersion": 1,
+  "sourceFingerprint": "076c079c5e555a7abd8768a9dd397677eb0d75cc2b50ac5d62a73db9461728d1"
+}

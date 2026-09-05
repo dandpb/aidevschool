@@ -1,11 +1,12 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
-# Fonte de verdade do índice: 14 lições públicas de IA na Prática e
-# 3 lições preservadas da prévia Dev, separadas pelo campo `journey`.
+# Fonte de verdade do índice: 20 lições públicas de IA na Prática
+# (l01–l14 + ondas de continuação l18–l20 e l24–l26) e 9 lições da trilha Dev,
+# separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-08-21.1"
+contentVersion: "2026-09-04.1"
 
 track:
   id: ai-literacy
@@ -71,6 +72,18 @@ modules:
     order: 5
     journey: dev
     skillIds: [decidir, integrar, codificar]
+  - id: mod-06
+    slug: 06-rotina-com-ia
+    title: "Rotina com IA"
+    order: 6
+    journey: ia_pratica
+    skillIds: [pedir, avaliar, aplicar]
+  - id: mod-07
+    slug: 07-ia-alem-do-texto
+    title: "IA além do texto"
+    order: 7
+    journey: ia_pratica
+    skillIds: [pedir, avaliar, proteger, aplicar]
 
 lessons:
   # Módulo 1 — IA sem mistério
@@ -78,7 +91,7 @@ lessons:
     moduleId: mod-01
     title: "Sua primeira conversa com uma IA"
     objective: "Fazer uma primeira pergunta a uma IA e interpretar a resposta como um rascunho, não como uma ordem."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: []
     skillIds: [entender]
     status: ready
@@ -103,7 +116,7 @@ lessons:
     moduleId: mod-02
     title: "Dê um objetivo claro"
     objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: [l03]
     skillIds: [pedir]
     status: ready
@@ -213,4 +226,104 @@ lessons:
     estimatedMinutes: 5
     prerequisites: [l16]
     skillIds: [integrar]
+    status: ready
+  # Módulo 6 — Rotina com IA (onda de continuação C1–C3, spec AID-414)
+  - id: l18
+    moduleId: mod-06
+    title: "Biblioteca de pedidos: reutilize o que funciona"
+    objective: "Transformar um pedido bem-sucedido em modelo reutilizável e adaptá-lo a um cenário novo sem recomeçar do zero — identificando o que trocar (contexto/público) e o que preservar (estrutura/formato)."
+    estimatedMinutes: 4
+    prerequisites: [l14]
+    skillIds: [pedir, aplicar]
+    status: ready
+  - id: l19
+    moduleId: mod-06
+    title: "Conversas longas: gerencie o contexto"
+    objective: "Em uma conversa multi-turno degradada, identificar qual contexto a IA perdeu, executar a correção mínima que restaura a resposta útil e decidir entre continuar e recomeçar."
+    estimatedMinutes: 5
+    prerequisites: [l07]
+    skillIds: [pedir, avaliar]
+    status: ready
+  - id: l20
+    moduleId: mod-06
+    title: "Números e fatos: verifique antes de usar"
+    objective: "Diante de uma resposta com números e fatos específicos, marcar quais afirmações exigem verificação externa e escolher a fonte certa — aprofundamento operacional de l09/l10."
+    estimatedMinutes: 3
+    prerequisites: [l10]
+    skillIds: [avaliar]
+    status: ready
+  # Módulo 5 — Dev: testes e revisão de código com IA (onda l21–l23, spec AID-528 rev 2)
+  - id: l21
+    moduleId: mod-05
+    title: "Peça testes que valem a pena"
+    objective: "Diante de uma função pronta, montar o pedido de testes com framework, comportamento-alvo e caso de borda explícitos — e esperar que a primeira resposta do assistente deixe bordas de fora."
+    estimatedMinutes: 4
+    prerequisites: [l16]
+    skillIds: [codificar]
+    status: ready
+  - id: l22
+    moduleId: mod-05
+    title: "Revise o código sugerido como engenheiro"
+    objective: "Diante de código sugerido por assistente, aplicar critérios objetivos de engenharia, separar o que aceita do que recusa com motivo e revisar comportamento antes de estilo."
+    estimatedMinutes: 5
+    prerequisites: [l16]
+    skillIds: [codificar, avaliar]
+    status: ready
+  - id: l23
+    moduleId: mod-05
+    title: "O que aceitar: limites do assistente"
+    objective: "Diante de sugestões em categorias de risco diferente, decidir o que aceitar, o que revisar a fundo e o que exige caminho convencional — sem terceirizar o próprio julgamento."
+    estimatedMinutes: 3
+    prerequisites: [l15]
+    skillIds: [decidir, codificar]
+    status: ready
+  # Módulo 7 — IA além do texto (onda l24–l26, spec AID-528 rev 3)
+  - id: l24
+    moduleId: mod-07
+    title: "Anexe, cole ou descreva"
+    objective: "Diante de uma tarefa que depende de um documento ou imagem, escolher entre anexar o arquivo, colar um trecho, descrever de memória ou não enviar — e escrever o pedido referenciando o que o anexo contém."
+    estimatedMinutes: 4
+    prerequisites: [l18]
+    skillIds: [pedir, avaliar]
+    status: ready
+  - id: l25
+    moduleId: mod-07
+    title: "Anexos seguros: proteja antes de enviar"
+    objective: "Antes de anexar fotos, scans ou PDFs a um pedido, classificar o conteúdo como seguro ou sensível e remover ou tampar o que expõe pessoas."
+    estimatedMinutes: 4
+    prerequisites: [l12]
+    skillIds: [proteger]
+    status: ready
+  - id: l26
+    moduleId: mod-07
+    title: "Confira o que a IA extraiu"
+    objective: "Diante de uma extração feita de um documento anexado, conferir os campos críticos contra o trecho original e corrigir divergências antes de usar a saída."
+    estimatedMinutes: 4
+    prerequisites: [l20]
+    skillIds: [avaliar, aplicar]
+    status: ready
+  # Módulo 5 — Dev: onda l27–l29 (spec AID-610 rev 2)
+  - id: l27
+    moduleId: mod-05
+    title: "Debug com assistente: reproduza antes de perguntar"
+    objective: "Diante de um bug, montar o pedido de diagnóstico com o erro reproduzido deterministicamente, o caso mínimo isolado e o esperado-vs-observado — e só então aplicar a correção e rodar os testes, incluindo o caso mínimo."
+    estimatedMinutes: 4
+    prerequisites: [l21]
+    skillIds: [codificar, avaliar]
+    status: ready
+  - id: l28
+    moduleId: mod-05
+    title: "Refatore com assistente sem quebrar comportamento"
+    objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."
+    estimatedMinutes: 5
+    prerequisites: [l21]
+    skillIds: [codificar]
+    status: ready
+  - id: l29
+    moduleId: mod-05
+    title: "Avalie as dependências sugeridas"
+    objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manutenção, licença, segurança e alternativa nativa antes de adicionar — e decidir com critério, não por popularidade."
+    estimatedMinutes: 4
+    prerequisites: [l22]
+    skillIds: [codificar, avaliar]
     status: ready

@@ -1,4 +1,6 @@
 import * as THREE from "three"
+import type { MissionProjection, ProjectionContextHooks } from "../../../shared/projection"
+import { disposeObject3D } from "../../../shared/projection"
 import { createViewport, type Viewport } from "../../../shared/viewport"
 import type { GameState } from "../game/controller"
 import { bufferedTruth, streamingTruth } from "../sim/levels"
@@ -47,9 +49,11 @@ function bytesToLevel(bytes: number, capacity: number): number {
  * one at a time (level stair-steps, settles at chunkSize). Overflow spills past the rim as a
  * Points cloud when size > capacity.
  */
-export class PipelineScene {
+export class PipelineScene implements MissionProjection<GameState> {
   private readonly viewport: Viewport
+  private readonly canvas: HTMLCanvasElement
   private clock = new THREE.Clock()
+  private disposed = false
 
   // tank parts
   private fluidMesh: THREE.Mesh
@@ -76,7 +80,8 @@ export class PipelineScene {
 
   onTankClick: (() => void) | null = null
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvas: HTMLCanvasElement, hooks: ProjectionContextHooks = {}) {
+    this.canvas = canvas
     this.viewport = createViewport(canvas, {
       background: "#0b0e14",
       fogNear: 22,
@@ -91,6 +96,7 @@ export class PipelineScene {
         const dt = this.clock.getDelta()
         this.animate(dt, this.clock.getElapsedTime())
       },
+      ...hooks,
     })
 
     // tank shell — transparent box (just edges + faint walls)
@@ -205,6 +211,19 @@ export class PipelineScene {
     const targets = [this.fluidMesh]
     const hits = this.viewport.raycaster.intersectObjects(targets)
     if (hits.length > 0 && this.onTankClick) this.onTankClick()
+  }
+
+  mount(): void {}
+
+  focus(): void {
+    this.canvas.focus()
+  }
+
+  dispose(): void {
+    if (this.disposed) return
+    this.disposed = true
+    disposeObject3D(this.viewport.scene)
+    this.viewport.dispose()
   }
 
   /** Rebuild the projection from a sim snapshot. */

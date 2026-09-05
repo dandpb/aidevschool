@@ -9,7 +9,7 @@ def make_literacy_record(**overrides: Any) -> dict[str, Any]:
         "source": "literacydojo",
         "attemptId": "att-000001",
         "lessonId": "l02",
-        "lessonVersion": 3,
+        "lessonVersion": 4,
         "activityId": "l02-a1",
         "activityType": "output_comparison",
         "skillIds": ["entender", "avaliar"],

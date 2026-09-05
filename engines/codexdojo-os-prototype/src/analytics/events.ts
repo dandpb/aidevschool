@@ -50,7 +50,10 @@ const ACTIVITY_TYPES: readonly AnalyticsScalar[] = [
 ]
 
 // As dimensões permitidas de cada evento são exatamente as chaves do seu vocabulário.
-const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabularies>> = {
+// Exported for the collector parity test: the staged same-origin collector
+// (learner/gate/netlify-functions/dojo-analytics-collector.mjs) must keep an
+// identical closed vocabulary on the receiving side (AID-470 F1).
+export const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabularies>> = {
   'onboarding.started': {},
   'onboarding.completed': { recommendationChanged: [true, false] },
   'journey.returned': {},
@@ -89,7 +92,7 @@ const EVENT_POLICIES: Readonly<Record<AnalyticsEventName, EventPolicy>> = (() =>
   return policies
 })()
 
-const CONTEXT_KEYS: readonly string[] = [
+export const CONTEXT_KEYS: readonly string[] = [
   'trackId',
   'missionId',
   'missionRunId',
@@ -98,7 +101,7 @@ const CONTEXT_KEYS: readonly string[] = [
   'contentVersion',
   'rendererMode',
 ]
-const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly string[] | undefined>> = {
+export const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly string[] | undefined>> = {
   trackId: ['ai-pratica', 'dev'],
   engineId: ['literacyDojo', 'voxelDojo'],
   rendererMode: ['webgl', 'canvas2d', 'dom', 'none'],

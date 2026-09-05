@@ -10,7 +10,10 @@ import { readyLessonEntries } from "../../src/domain/track";
 import { InMemoryProgressRepository, createTestServices } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
 
-const ready = readyLessonEntries(modules);
+// O percurso público do app standalone é só ia_pratica; as lições dev
+// (mod-05) existem no read model para missões hospedadas do OS.
+const publicModules = modules.filter((module) => module.journey === "ia_pratica");
+const ready = readyLessonEntries(publicModules);
 const firstLesson = lessons.find((lesson) => lesson.id === MAP_INITIAL_LESSON_ID);
 if (!firstLesson) throw new Error("Mapa Inicial ausente do read model");
 const firstSkillId = firstLesson.skillIds[0];
@@ -33,6 +36,33 @@ async function answerActivity(
     const picked = mode === "right" ? required : mode === "partial" ? required.slice(0, 1) : [];
     for (const id of picked) {
       await user.click(screen.getByTestId(`criterion-${id}`));
+    }
+    return;
+  }
+  if (activity.type === "choice") {
+    const options = activity.data.options;
+    const correct = new Set(activity.evaluation.correctOptionIds);
+    for (const option of options) {
+      const shouldPick = mode === "right" ? correct.has(option.id) : !correct.has(option.id);
+      if (!shouldPick) continue;
+      if (activity.data.multiSelect || correct.size === 1) {
+        await user.click(screen.getByTestId(`option-${option.id}`));
+        if (!activity.data.multiSelect) return;
+      }
+    }
+    return;
+  }
+  if (activity.type === "sort") {
+    // Ordena por trocas adjacentes usando as setas do DOM até expectedOrder.
+    const order = activity.data.items.map((item) => item.id);
+    const expected = activity.evaluation.expectedOrder;
+    for (const [index, target] of expected.entries()) {
+      let position = order.indexOf(target);
+      while (position > index) {
+        await user.click(screen.getByTestId(`sort-up-${target}`));
+        order.splice(position - 1, 0, order.splice(position, 1)[0]);
+        position -= 1;
+      }
     }
     return;
   }
@@ -79,7 +109,35 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByRole("heading", { name: "Chegue à Vila Lume" })).toBeInTheDocument();
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
-    expect(screen.getByTestId("dev-track-teaser")).toHaveTextContent("Em breve");
+    const devCta = screen.getByTestId("dev-track-teaser");
+    expect(devCta).toHaveAttribute(
+      "href",
+      "https://aidevschool-codexdojo-os.netlify.app/?track=dev",
+    );
+    expect(devCta).toHaveTextContent("Trilha Dev");
+    expect(devCta).toHaveTextContent("Abrir no OS");
+    expect(devCta).toHaveTextContent("Para programadores");
+    expect(devCta).not.toHaveTextContent("Em breve");
+    expect(screen.getByText(/Piloto gratuito para maiores de 18 anos/)).toBeInTheDocument();
+    expect(screen.getByRole("contentinfo", { name: "Informações do piloto" })).toHaveTextContent(
+      "Piloto público gratuito · para maiores de 18 anos",
+    );
+    for (const linkName of [/Termos do piloto/, /termos do piloto/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./termos.html",
+      );
+    }
+    for (const linkName of [/^Privacidade$/, /aviso de privacidade/]) {
+      expect(screen.getAllByRole("link", { name: linkName })[0]).toHaveAttribute(
+        "href",
+        "./privacidade.html",
+      );
+    }
+    expect(screen.getByRole("link", { name: /Pedir suporte/ })).toHaveAttribute(
+      "href",
+      "https://github.com/dandpb/aidevschool/issues/new",
+    );
     await user.click(screen.getByTestId("onboarding-next"));
     await user.click(screen.getByTestId("onboarding-option-save_time"));
     await user.click(screen.getByTestId("onboarding-next"));
@@ -128,17 +186,23 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("confidence-support")).toHaveTextContent("Dica de partida");
   });
 
-  it("mapa público limita IA na Prática a 14 missões e mantém Dev fora do percurso", async () => {
+  it("mapa público limita IA na Prática ao catálogo ia_pratica (20 com l26) e mantém Dev fora do percurso", async () => {
     const user = userEvent.setup();
     const { services } = makeServices({ progress: seededProgress() });
     render(<App services={services} />);
 
     await screen.findByTestId("home-screen");
-    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 14 lições concluídas");
+    expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 20 lições concluídas");
     await user.click(screen.getByTestId("open-map"));
 
-    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/14 missões");
+    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/20 missões");
     expect(screen.queryByTestId("map-lesson-l15")).not.toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l18")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l19")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l20")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l24")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l25")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l26")).toBeInTheDocument();
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {
@@ -168,6 +232,15 @@ describe("fluxo do app (integração)", () => {
     await answerActivity(user, activity, "right");
     await user.click(screen.getByTestId("submit-attempt"));
     await screen.findByText(activity.feedback.onSuccess ?? "Muito bem!");
+
+    // 4b) Atividades novas do retrofit (O3-C1): a lição só conclui com o
+    // conjunto completo de obrigatórias — percorre as restantes acertando.
+    for (const remaining of firstLesson.activities.slice(1)) {
+      await user.click(screen.getByTestId("next-activity"));
+      await answerActivity(user, remaining, "right");
+      await user.click(screen.getByTestId("submit-attempt"));
+      await screen.findByText(remaining.feedback.onSuccess ?? "Muito bem!");
+    }
     await user.click(screen.getByTestId("finish-lesson"));
 
     // 5) Resultado com a distinção lição concluída ≠ competência verificada.
@@ -184,10 +257,11 @@ describe("fluxo do app (integração)", () => {
     );
 
     // 6) Evidência: uma por tentativa avaliada, envelope válido.
-    expect(services.evidence.records).toHaveLength(2);
+    // (errada + acerto na a1) + 1 acerto por atividade nova = 4 no total.
+    expect(services.evidence.records).toHaveLength(2 + (firstLesson.activities.length - 1));
     expect(services.evidence.records.every(isValidEvidenceRecord)).toBe(true);
     expect(services.evidence.records[0].pass).toBe(false);
-    expect(services.evidence.records[1].pass).toBe(true);
+    expect(services.evidence.records.at(-1)?.pass).toBe(true);
   });
 
   it("resposta parcial mostra o check que faltou e não libera a conclusão", async () => {
@@ -223,6 +297,11 @@ describe("fluxo do app (integração)", () => {
     await user.click(screen.getByTestId("hint-button"));
     await answerActivity(user, firstLesson.activities[0], "right");
     await user.click(screen.getByTestId("submit-attempt"));
+    for (const remaining of firstLesson.activities.slice(1)) {
+      await user.click(screen.getByTestId("next-activity"));
+      await answerActivity(user, remaining, "right");
+      await user.click(screen.getByTestId("submit-attempt"));
+    }
     await user.click(screen.getByTestId("finish-lesson"));
 
     expect(await screen.findByTestId("route-explanation")).toHaveTextContent(

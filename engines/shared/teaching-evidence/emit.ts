@@ -49,6 +49,7 @@ export interface EvidenceRecord {
   unit_id: string
   project: string
   scenario_id: string
+  attempt_id?: string
   game: string
   ts: string
   pass: boolean
@@ -69,6 +70,7 @@ export interface EmitOptions {
   pass: boolean
   metrics: Record<string, number | boolean | string>
   observations?: Readonly<Record<string, unknown>>
+  attemptId?: string
   reviewSlice?: ReviewSliceLike
   now?: () => Date
 }
@@ -84,6 +86,7 @@ export function emitEvidence(opts: EmitOptions): EvidenceRecord {
     unit_id: meta.unitId,
     project: meta.project,
     scenario_id: meta.scenarioId,
+    ...(opts.attemptId === undefined ? {} : { attempt_id: opts.attemptId }),
     game: meta.game,
     ts: now().toISOString(),
     pass,

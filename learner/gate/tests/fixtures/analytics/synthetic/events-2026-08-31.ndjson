@@ -1,0 +1,3 @@
+{"schemaVersion":1,"eventId":"evt-0090","name":"journey.returned","occurredAt":"2026-08-31T11:00:00Z","sequence":5,"dimensions":{"installationId":"install-k5","sessionId":"s-k5-2"}}
+{"schemaVersion":1,"eventId":"evt-0091","name":"mission.started","occurredAt":"2026-08-31T11:01:00Z","sequence":6,"dimensions":{"installationId":"install-k5","sessionId":"s-k5-2","mode":"initial"}}
+{"schemaVersion":1,"eventId":"evt-0092","name":"mission.completed","occurredAt":"2026-08-31T11:05:00Z","sequence":7,"dimensions":{"installationId":"install-k5","sessionId":"s-k5-2","result":"completed"}}

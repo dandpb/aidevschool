@@ -4,12 +4,30 @@
       "observations": {
         "kind": "wormhole-L1",
         "predictions": [
-          {"url": "https://delta.app/8ril9k-0", "predictedCode": "35y4"},
-          {"url": "https://delta.app/9rd4jn-1", "predictedCode": "REDI"},
-          {"url": "https://flux.sys/8wbont-2", "predictedCode": "3qEK"},
-          {"url": "https://ada.io/8ruko7-3", "predictedCode": "1buv"},
-          {"url": "https://delta.app/7g40wq-4", "predictedCode": "442O"},
-          {"url": "https://cache.net/dy7kps-5", "predictedCode": "1Nfi"}
+          {
+            "url": "https://delta.app/8ril9k-0",
+            "predictedCode": "35y4"
+          },
+          {
+            "url": "https://delta.app/9rd4jn-1",
+            "predictedCode": "REDI"
+          },
+          {
+            "url": "https://flux.sys/8wbont-2",
+            "predictedCode": "3qEK"
+          },
+          {
+            "url": "https://ada.io/8ruko7-3",
+            "predictedCode": "1buv"
+          },
+          {
+            "url": "https://delta.app/7g40wq-4",
+            "predictedCode": "442O"
+          },
+          {
+            "url": "https://cache.net/dy7kps-5",
+            "predictedCode": "1Nfi"
+          }
         ]
       },
       "metrics": {
@@ -22,12 +40,30 @@
       "observations": {
         "kind": "wormhole-L2",
         "predictions": [
-          {"code": "3B8b", "predictedUrl": "https://delta.app/3wxzra-0"},
-          {"code": "4DF2", "predictedUrl": "https://bytes.dev/3e8o2g-1"},
-          {"code": "1f4R", "predictedUrl": "https://cache.net/eu4mct-2"},
-          {"code": "2vGN", "predictedUrl": "https://cache.net/b4u2g8-3"},
-          {"code": "2PJA", "predictedUrl": "https://edge.run/9u4i7-4"},
-          {"code": "2xqJ", "predictedUrl": "https://ada.io/280dma-5"}
+          {
+            "code": "3B8b",
+            "predictedUrl": "https://delta.app/3wxzra-0"
+          },
+          {
+            "code": "4DF2",
+            "predictedUrl": "https://bytes.dev/3e8o2g-1"
+          },
+          {
+            "code": "1f4R",
+            "predictedUrl": "https://cache.net/eu4mct-2"
+          },
+          {
+            "code": "2vGN",
+            "predictedUrl": "https://cache.net/b4u2g8-3"
+          },
+          {
+            "code": "2PJA",
+            "predictedUrl": "https://edge.run/9u4i7-4"
+          },
+          {
+            "code": "2xqJ",
+            "predictedUrl": "https://ada.io/280dma-5"
+          }
         ]
       },
       "metrics": {
@@ -39,12 +75,30 @@
       "observations": {
         "kind": "wormhole-L3",
         "predictions": [
-          {"url": "https://delta.app/c89yjl-0", "predictedCollision": false},
-          {"url": "https://delta.app/9rgfr-1", "predictedCollision": false},
-          {"url": "https://wormhole.collide/133", "predictedCollision": false},
-          {"url": "https://wormhole.collide/163", "predictedCollision": true},
-          {"url": "https://edge.run/fx6tp8-4", "predictedCollision": false},
-          {"url": "https://bytes.dev/ddbqp2-5", "predictedCollision": false}
+          {
+            "url": "https://delta.app/c89yjl-0",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://delta.app/9rgfr-1",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://wormhole.collide/133",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://wormhole.collide/163",
+            "predictedCollision": true
+          },
+          {
+            "url": "https://edge.run/fx6tp8-4",
+            "predictedCollision": false
+          },
+          {
+            "url": "https://bytes.dev/ddbqp2-5",
+            "predictedCollision": false
+          }
         ]
       },
       "metrics": {
@@ -71,7 +125,11 @@
     "L1": {
       "observations": {
         "kind": "relay-L1",
-        "predictions": ["st-0", "st-2", "st-4"]
+        "predictions": [
+          "st-0",
+          "st-2",
+          "st-4"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -84,7 +142,10 @@
     "L2": {
       "observations": {
         "kind": "relay-L2",
-        "predictions": ["st-0", "st-3"]
+        "predictions": [
+          "st-0",
+          "st-3"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -97,7 +158,11 @@
     "L3": {
       "observations": {
         "kind": "relay-L3",
-        "predictions": ["st-0", "st-2", "st-4"]
+        "predictions": [
+          "st-0",
+          "st-2",
+          "st-4"
+        ]
       },
       "metrics": {
         "kind": "voxeldoj-relay-station",
@@ -119,6 +184,352 @@
         "rejoined_fanout": true,
         "delivered_after": 4,
         "was_dropped": true
+      }
+    }
+  },
+  "PIPELINE PLANT": {
+    "L1": {
+      "observations": {
+        "kind": "pipeline-plant-L1",
+        "predictedOverflow": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 115,
+        "capacity": 100,
+        "mode": "buffered",
+        "overflow_predicted": true,
+        "overflow_actual": true,
+        "peak_mem": 115,
+        "delivered": 100,
+        "overflowed": 15
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "pipeline-plant-L2",
+        "predictedBounded": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 1023,
+        "capacity": 100,
+        "chunk_size": 40,
+        "mode": "streaming",
+        "bounded_predicted": true,
+        "bounded_actual": true,
+        "peak_mem": 40,
+        "delivered": 1023,
+        "overflowed": 0
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "pipeline-plant-L3",
+        "chunkSize": 40,
+        "predictedPeak": 40
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 496,
+        "capacity": 100,
+        "chunk_size": 40,
+        "mode": "streaming",
+        "peak_predicted": 40,
+        "peak_actual": 40,
+        "delivered": 496,
+        "overflowed": 0,
+        "chunk_fits": true
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "pipeline-plant-L4",
+        "predictedOverflow": true
+      },
+      "metrics": {
+        "kind": "voxeldoj-pipeline-plant",
+        "size": 1308,
+        "capacity": 100,
+        "mode": "buffered",
+        "overflow_predicted": true,
+        "overflow_actual": true,
+        "peak_mem": 1308,
+        "delivered": 200,
+        "overflowed": 1108,
+        "stalled": false,
+        "drained": 100,
+        "drain_rate": 0.1,
+        "time_ms": 1000
+      }
+    }
+  },
+  "CHECKPOINT CITY": {
+    "L1": {
+      "observations": {
+        "kind": "checkpoint-city-L1",
+        "predictions": [
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "reaches-handler"
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "checkpoint-city-L2",
+        "predictions": [
+          "auth",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "auth",
+          "auth",
+          "auth",
+          "auth"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "auth"
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "checkpoint-city-L3",
+        "predictions": [
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "reaches-handler",
+          "rate-limit",
+          "rate-limit",
+          "rate-limit"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "predictions": 8,
+        "prediction_accuracy": 1.0,
+        "correct_predictions": 8,
+        "reached_handler": true,
+        "rejected_at": "rate-limit"
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "checkpoint-city-L4",
+        "order": [
+          "logging",
+          "auth",
+          "rate-limit"
+        ],
+        "probePrediction": "auth"
+      },
+      "metrics": {
+        "kind": "voxeldoj-checkpoint-city",
+        "reorder_correct": true,
+        "given_order": "rate-limit,logging,auth",
+        "player_order": "logging,auth,rate-limit",
+        "target_order": "logging,auth,rate-limit",
+        "probe_prediction_ok": true,
+        "probe_answer": "auth"
+      }
+    }
+  },
+  "TIMELINE TOWER": {
+    "L1": {
+      "observations": {
+        "kind": "timeline-tower-L1",
+        "appends": [
+          "OrderCreated",
+          "PaymentAuthorized",
+          "InventoryReserved",
+          "OrderConfirmed",
+          "OrderShipped",
+          "OrderDelivered"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-timeline-tower",
+        "append_predictions": 6,
+        "append_order_accuracy": 1.0
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "timeline-tower-L2",
+        "predictedStatus": "delivered"
+      },
+      "metrics": {
+        "kind": "voxeldoj-timeline-tower",
+        "events_folded": 6,
+        "predicted_status_ok": true,
+        "final_status_correct": 1
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "timeline-tower-L3",
+        "predictedAtCheckpoint": "inventory_reserved",
+        "predictedAfterReplay": "delivered"
+      },
+      "metrics": {
+        "kind": "voxeldoj-timeline-tower",
+        "checkpoint_index": 3,
+        "status_at_checkpoint_ok": true,
+        "status_after_replay_ok": true,
+        "replay_deterministic": true
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "timeline-tower-L4",
+        "predictedOrderStatus": "cancelled",
+        "predictedShipped": false
+      },
+      "metrics": {
+        "kind": "voxeldoj-timeline-tower",
+        "order_status_view_ok": true,
+        "shipment_list_view_ok": true,
+        "same_log_two_views": true,
+        "views_correct": 2
+      }
+    }
+  },
+  "DOCKING BAY": {
+    "L1": {
+      "observations": {
+        "kind": "docking-bay-L1",
+        "dockPredictions": [
+          {
+            "podId": "pod-0",
+            "predictedDock": true
+          },
+          {
+            "podId": "pod-1",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-2",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-3",
+            "predictedDock": true
+          },
+          {
+            "podId": "pod-4",
+            "predictedDock": false
+          },
+          {
+            "podId": "pod-5",
+            "predictedDock": false
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "dock_predictions": 6,
+        "dock_prediction_accuracy": 1.0,
+        "contracts_checked": 6
+      }
+    },
+    "L2": {
+      "observations": {
+        "kind": "docking-bay-L2",
+        "missingPredictions": [
+          {
+            "podId": "pod-0",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-1",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-2",
+            "predictedMissing": "none"
+          },
+          {
+            "podId": "pod-3",
+            "predictedMissing": "readState"
+          },
+          {
+            "podId": "pod-4",
+            "predictedMissing": "readState"
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "mismatch_predictions": 5,
+        "mismatch_prediction_accuracy": 1.0,
+        "missing_methods_named": 5
+      }
+    },
+    "L3": {
+      "observations": {
+        "kind": "docking-bay-L3",
+        "classifications": [
+          {
+            "method": "connect",
+            "predictedAllow": true
+          },
+          {
+            "method": "readState",
+            "predictedAllow": true
+          },
+          {
+            "method": "writeState",
+            "predictedAllow": true
+          },
+          {
+            "method": "log",
+            "predictedAllow": false
+          }
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "sandbox_probes": 4,
+        "sandbox_accuracy": 1.0,
+        "capabilities_granted": 3
+      }
+    },
+    "L4": {
+      "observations": {
+        "kind": "docking-bay-L4",
+        "chosenCapabilities": [
+          "connect",
+          "writeState"
+        ]
+      },
+      "metrics": {
+        "kind": "voxeldoj-docking-bay",
+        "required_calls_covered": true,
+        "no_overgrant": true,
+        "least_privilege": true,
+        "granted_count": 2,
+        "required_count": 2
       }
     }
   }

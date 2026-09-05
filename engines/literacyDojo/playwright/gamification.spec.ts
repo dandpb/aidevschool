@@ -22,7 +22,7 @@ test("engajamento após a primeira lição: XP, meta diária, sequência e conqu
   await page.getByTestId("go-map").click();
   await page.getByTestId("map-back").click();
 
-  await expect(page.getByTestId("xp-value")).toContainText("35 XP");
+  await expect(page.getByTestId("xp-value")).toContainText("55 XP");
   await expect(page.getByTestId("streak-value")).toContainText("1 dia");
   await expect(page.getByTestId("daily-goal")).toContainText(`/${DAILY_GOAL_XP} XP ✅`);
   await expect(page.getByTestId("track-progress")).toContainText("1 de");
@@ -61,12 +61,20 @@ test("revisão espaçada vencida: refaz a lição, emite evidência de revisão 
 
   const records = await readEvidence(page);
   expect(records.every(isValidEvidenceRecord)).toBe(true);
-  expect(records.map((record) => record.context)).toEqual(["initial", "review"]);
+  // Pós-retrofit O3-C1: 3 atividades por execução (initial e review).
+  expect(records.map((record) => record.context)).toEqual([
+    "initial",
+    "initial",
+    "initial",
+    "review",
+    "review",
+    "review",
+  ]);
 
   const progress = await readProgress(page);
   expect(progress).toMatchObject({
     lessonStatus: { [MAP_INITIAL_LESSON_ID]: "completed" },
   });
-  // A revisão concede XP de atividade, mas não XP de conclusão de lição (25).
-  expect(progress?.xp).toBe(45);
+  // A revisão concede XP de atividade (3 passes), mas não XP de conclusão de lição (25).
+  expect(progress?.xp).toBe(85);
 });

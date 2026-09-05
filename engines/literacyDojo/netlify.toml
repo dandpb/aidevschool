@@ -1,6 +1,10 @@
 [build]
   command = "npm run build"
   publish = "dist"
+  functions = "../../learner/gate/netlify-functions"
+
+[build.environment]
+  VITE_LITERACY_VERIFIER_URL = "/.netlify/functions/literacy-verify"
 
 [[redirects]]
   from = "/*"

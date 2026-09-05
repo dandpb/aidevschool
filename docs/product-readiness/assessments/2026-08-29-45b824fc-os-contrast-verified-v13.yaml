@@ -1,0 +1,32 @@
+schemaVersion: 1
+assessmentId: 2026-08-29-45b824fc-os-contrast-verified-v13
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-29T02:40:00Z'
+revalidateBy: '2026-09-28'
+gitSha: 45b824fce8151d827979d67b6e97417a64f27c5e
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-29T02:30:00Z-os-literacy-hosted-mission-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-literacy-returning-device-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-verification-recovery-mixed-45b824fc
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-29T02:30:00Z-os-voxel-hosted-missions-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-renderer-accessibility-recovery-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-voxel-returning-device-mixed-45b824fc
+- useCaseId: os-returning-learner
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-29T02:30:00Z-os-onboarding-track-choice-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-returning-device-mixed-45b824fc
+  - 2026-08-29T02:30:00Z-os-returning-recovery-mixed-45b824fc

@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Turma paga, duas superfícies: LiteracyDojo avulso e OS (link estático). Pode vender como customer-ready a primeira lição avulsa (Mapa Inicial — l02; condicional), as missões de IA Prática no OS (l01–l03; pass), as três missões voxel (WAREHOUSE, WORMHOLE, RELAY STATION; pass) e retorno no mesmo aparelho (condicional). Caminho no OS: Entrar na escola → IA Prática (l01–l03) → as 3 missões 3D; sem Hub, sem escolher Trilha Dev. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio). #143 não está no produto; sem checkout neste guia.
+Duas superfícies públicas: LiteracyDojo avulso e OS (`https://aidevschool-codexdojo-os.netlify.app/`). O OS oferece escolha **IA Prática | Dev**, trilho Dev de 3 missões, e Engine Hub allowlist. O avulso tem CTA para o OS `?track=dev`. **Não** venda use cases Dev como customer-ready: eles estão `stale`. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), nem labs de operador no CTA.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -20,7 +20,7 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 | Etapa | O que fazer |
 | --- | --- |
 | Antes | Escolha a superfície (LiteracyDojo avulso **ou** OS). Teste o link no navegador da turma. Combine: mesmo aparelho, sem prometer sincronização nem domínio pela UI. |
-| Abertura (2 min) | Diga que não há conta; progresso fica no navegador; **concluída ≠ competência verificada**; Trilha Dev no LiteracyDojo avulso está “em breve”. |
+| Abertura (2 min) | Diga que não há conta; progresso fica no navegador; **concluída ≠ competência verificada**; Trilha Dev no avulso abre o OS público. |
 | Durante | Observe sem conduzir cada clique. No LiteracyDojo, mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. |
 | Verificador (OS) | No deploy estático, “Verificador indisponível” é honesto — não venda como certificação. |
 | Suporte | WhatsApp [+55 11 98436-3878](https://wa.me/5511984363878) (principal) e [daniel@heropa.com](mailto:daniel@heropa.com) — SLA informal: 1 dia útil. |
@@ -32,12 +32,11 @@ não cobre.
 
 ## Percurso atual no codexDojo OS
 
-No main atual, o OS não tem Hub nem escolha entre **IA Prática** e **Trilha Dev**.
-O caminho customer-ready é **Entrar na escola** → **IA Prática** (catálogo l01–l03)
-→ as três missões 3D (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); não venda
-as outras 14 lições avulsas como se existirem no OS. **IA Prática**, as três missões
-3D e retorno no mesmo aparelho estão prontas para cliente. Não prometa sincronização
-avulso→OS — o aluno recomeça ao mudar de superfície. Oriente a turma assim:
+O OS público tem escolha entre **IA Prática** e **Dev** e um Engine Hub allowlist
+(voxel, PixelQuest, dojoToday local, literacy). Labs e miniTown só com `?operator=1`.
+O trilho Dev é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
+lições avulsas como se existirem no OS. A prontidão Dev permanece `stale`. Não
+prometa sincronização avulso→OS. Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.
 2. Missões de **IA Prática** hospedadas (l01–l03), na ordem do trilho.
@@ -46,9 +45,101 @@ avulso→OS — o aluno recomeça ao mudar de superfície. Oriente a turma assim
 4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos nem
    entre avulso e OS.
 
-Se o aprendiz retomar num perfil que tinha parado na trilha antiga **Dev**, o host
-volta para **IA Prática** até esse capítulo terminar. Não peça para escolher trilha
-— essa UI não existe mais no piloto.
+Se o aprendiz retomar num perfil antigo, ele pode escolher **Dev** de novo no
+onboarding/mapa sem apagar `completed` de l01–l03. `?track=dev` pré-seleciona Dev.
+
+## Como fazer a primeira lição no LiteracyDojo avulso
+
+**Grant:** `literacy-standalone-first-lesson` — customer-ready com **conditional-follow-up** (gaps médios/baixos dispositionados). Pode orientar a primeira lição avulsa; não prometa domínio, sync nem transferência ao OS.
+
+**O que observar**
+
+1. O aprendiz abre [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) sem conta.
+2. Na boas-vindas, **Trilha Dev** aparece **Em breve** e não entra no caminho.
+3. Cinco perguntas curtas, depois o mapa da **Vila Lume**.
+4. Primeira lição desta oferta: **Mapa Inicial** l02 (**IA não é uma fonte de verdade**).
+5. Compara duas respostas, escolhe a mais confiável e marca motivos.
+6. **Correta:** lição concluída neste aparelho (não domínio); próxima no mapa: **O que a IA faz bem e onde costuma falhar**.
+7. **Errada:** feedback, dica, **Tentar novamente**; depois a próxima é **Sua primeira conversa com uma IA**.
+8. Mesmo navegador: onboarding feito, l02 concluída, retorno na intro da próxima lição. Outro aparelho ou dados apagados = recomeço. Sem sync.
+
+**O que não prometer**
+
+- Domínio ou certificação por UI concluída.
+- Sincronização entre aparelhos ou entre avulso e OS.
+- **Trilha Dev** no avulso (em breve).
+- As outras 14 lições avulsas como parte desta oferta no OS.
+- Handoff “agora vá ao OS” após a primeira lição.
+
+Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Suporte: WhatsApp e e-mail já na seção **Oferta paga**. #143 não está no produto — sem checkout neste guia.
+
+## Como fazer IA Prática no OS
+
+**Grant:** `os-literacy-guided-mission` — customer-ready **pass**. Pode orientar IA Prática l01–l03 no OS.
+
+**O que observar**
+
+1. Entrada em `/` (não `/desktop`), onboarding (objetivo, contexto, confiança). O deploy público ainda **mostra** **Trilha Dev** no onboarding; o aprendiz deve usar o cartão **IA Prática** e **Entrar na escola**, com a mensagem de progresso neste dispositivo — **não** escolher **Trilha Dev** como trilha pronta.
+2. Chegada ao **hub de aprendizado** (`/hub`) — missão em destaque; **Trilha Dev** também pode aparecer na interface. **Não** é o Engine Hub do operador. Caminho do piloto: missão recomendada (l02 primeiro).
+3. Primeira recomendação l02; l01 no mapa sem pré-requisito; l03 após l02.
+4. Três missões literacy completas seguindo a missão destacada.
+5. Mapa **Seis missões, uma sequência**; voltar **← Hub**.
+6. **WAREHOUSE** pode mostrar **Disponível** antes de terminar IA Prática — UI sem pré-requisito. No piloto, `recommendMission` prioriza literacy; o aprendiz deve seguir o destaque, não pular ao 3D só porque **WAREHOUSE** parece aberto.
+7. Banner de verificador indisponível no deploy estático — honesto, não certificação. Concluída ≠ domínio.
+
+**O que não prometer**
+
+- **Trilha Dev** como trilha selecionável pronta para cliente (pode aparecer na UI do OS, mas não é o caminho desta oferta).
+- Engine Hub, Central de Apps ou laboratório no caminho do estudante (`?operator=1` é só operador — ver abaixo).
+- Domínio, sync entre dispositivos ou avulso→OS.
+- As 14 lições extras do avulso no OS.
+
+**Facilitador/operador:** `?operator=1` abre Engine Hub, Central de Apps e laboratório. **Não** mostre isso ao estudante como caminho de aprendizado.
+
+## Como fazer as três missões 3D
+
+**Grant:** `os-voxel-guided-missions` — customer-ready **pass**. Pode orientar WAREHOUSE → WORMHOLE → RELAY STATION no OS.
+
+**O que observar**
+
+1. Após l01–l03, o hub aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**.
+2. O aprendiz abre cada missão pelo destaque do hub e lê o status do host antes de seguir.
+3. Mapa com **Seis missões, uma sequência**; voltar **← Hub**.
+4. Se **WAREHOUSE** já parecia aberto antes de literacy, no piloto a sequência recomendada ainda é literacy primeiro.
+5. Projeção acessível e teclado quando 3D falha ou movimento reduzido.
+6. Status do host = progresso local; verificador indisponível = honesto, não mastery.
+
+**O que não prometer**
+
+- Domínio ou certificação pelo status do host.
+- Que missões 3D substituem ou dispensam IA Prática no piloto.
+- Sync, conta ou continuidade em outro aparelho.
+- Catálogo voxel fora do OS ou missões além das três hospedadas.
+
+## Como voltar no mesmo aparelho
+
+**Grant:** `os-returning-learner` — customer-ready com **conditional-follow-up**. Pode orientar retorno no mesmo aparelho; não prometa sync.
+
+**O que observar (OS)**
+
+1. Mesmo navegador/aparelho: `/` redireciona a `/hub` se `onboarding.completed`. **Trilha Dev** pode ainda aparecer no hub; o retorno segue a missão destacada (literacy ou 3D).
+2. Hub mostra a missão destacada conforme progresso local (literacy ou 3D).
+3. Outro navegador, outro aparelho ou dados apagados = onboarding de novo. Sem sync.
+4. Concluída neste aparelho ≠ domínio verificado.
+
+**O que observar (LiteracyDojo avulso)**
+
+1. Mesmo navegador: onboarding feito, l02 concluída, retorno na intro da próxima lição.
+2. Backup JSON se já documentado; restauração só no mesmo perfil do navegador.
+3. Avulso não transfere ao OS.
+
+**O que não prometer**
+
+- Sincronização entre dispositivos, navegadores ou superfícies (avulso ↔ OS).
+- Que “concluída” ou “retomou” significa domínio verificado.
+- Conta, login ou checkout (#143 fora do produto).
+
+Suporte: WhatsApp e e-mail na seção **Oferta paga** — não invente novos canais.
 
 ## Standalone LiteracyDojo
 

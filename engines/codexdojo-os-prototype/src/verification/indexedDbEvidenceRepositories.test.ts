@@ -3,6 +3,7 @@ import { IndexedDbVerificationStore } from './indexedDbEvidenceRepositories'
 import type { RawEvidenceEntry, StoredVerificationReceipt } from './ports'
 
 const raw: RawEvidenceEntry = {
+  evidenceId: 'evidence-1',
   schemaId: 'literacy-evidence',
   schemaVersion: 1,
   engineId: 'literacyDojo',

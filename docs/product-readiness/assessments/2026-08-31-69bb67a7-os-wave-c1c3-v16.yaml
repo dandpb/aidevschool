@@ -1,0 +1,32 @@
+schemaVersion: 1
+assessmentId: 2026-08-31-69bb67a7-os-wave-c1c3-v16
+assessorContext: independent-readiness-review
+verifiedAt: '2026-08-31T05:10:00Z'
+revalidateBy: '2026-09-30'
+gitSha: 69bb67a7800242495bf62542537b2ce0c14dd573
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-08-31T04:55:00Z-os-literacy-hosted-mission-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-verification-recovery-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-literacy-returning-device-mixed-69bb67a7
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-31T04:55:00Z-os-voxel-hosted-missions-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-renderer-accessibility-recovery-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-voxel-returning-device-mixed-69bb67a7
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-08-31T04:55:00Z-os-onboarding-track-choice-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-returning-device-mixed-69bb67a7
+  - 2026-08-31T04:55:00Z-os-returning-recovery-mixed-69bb67a7

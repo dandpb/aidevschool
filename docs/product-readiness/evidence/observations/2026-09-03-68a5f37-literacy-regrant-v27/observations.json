@@ -1,0 +1,47 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "68a5f37cd9f426d322ca8c6aa3512ea0f0504366",
+ "observedAt": "2026-09-03T19:26:00Z",
+ "scenarios": [
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk 2026-09-03 19:2xZ (chromium over the engine's vite dev surface at head 68a5f37c, fresh browser profile; walk scripted and executed by the assessor, distinct from the producer's runs). Onboarding ends on 'Mapa da Vila Lume' with the entry node stating availability ('Disponível') — no repository knowledge needed (ev/lit-2-map.png). Completing Mapa Inicial renders 'VILA LUME · MISSÃO CONCLUÍDA ... XP conquistada · 100% de pontuação' with an explicit next-lesson control (ev/lit-5-result.png); following it lands on the next lesson heading, and a reload restores the in-progress lesson intro (ev/lit-6-next-lesson.png, ev/lit-7-resume.png). Progress read from the app's own IndexedDB in the same walk: lessonStatus.l02=completed with the routed next lesson set as currentLessonId. The surface itself names the continuation at every step."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand on the same walk: submitting the wrong output ('out-a', confident numbers) produced specific plain-language feedback — 'Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?' — plus per-check guidance ('Faltou este motivo: ...') and a visible hint control (ev/lit-3-wrong.png). Clicking it rendered 'Dicas: Compare as duas respostas procurando uma coisa só: de onde saíram os números?' (ev/lit-4-hint.png; exact copy re-verified in a follow-up probe of the same session); 'Tentar novamente' returned the activity for a new attempt, which completed the lesson. The result screen explained the route in learner language ('Como você fez uma checagem extra ou pediu apoio no Mapa Inicial, vamos começar com uma conversa simples com IA antes de avançar.'). The welcome screen pre-frames the norm ('não existe pressa nem punição'). No facilitator or product-internal language is required at any point."
+    }
+   ]
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: after completing Mapa Inicial and advancing, a reload restored the in-progress lesson intro (same heading, persisted intro state; ev/lit-7-resume.png) and the app's persistent footer states the boundary explicitly: 'Piloto público gratuito · para maiores de 18 anos. Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.' Same-device continuity works (IndexedDB progress read in-walk: lessonStatus.l02=completed) and the app itself tells the learner its limits."
+    }
+   ]
+  }
+ ]
+}

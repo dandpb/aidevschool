@@ -235,3 +235,14 @@ button:disabled {
     bottom: 88px;
   }
 }
+
+/* DESIGN.md §Motion: respect prefers-reduced-motion for non-essential effects. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

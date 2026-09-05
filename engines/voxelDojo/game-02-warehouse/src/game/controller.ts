@@ -55,6 +55,7 @@ export type Listener = (state: GameState) => void
 export class GameController {
   private state: GameState
   private listeners: Listener[] = []
+  private attemptSequence = 1
 
   constructor(level: LevelId = "L1") {
     this.state = this.freshState(levelConfig(level))
@@ -127,6 +128,7 @@ export class GameController {
   }
 
   loadLevel(level: LevelId): void {
+    this.attemptSequence = 1
     this.state = this.freshState(levelConfig(level))
     this.commit()
   }
@@ -207,7 +209,9 @@ export class GameController {
   }
 
   retry(): void {
-    this.loadLevel(this.state.level.id)
+    this.attemptSequence++
+    this.state = this.freshState(levelConfig(this.state.level.id))
+    this.commit()
     this.start()
   }
 
@@ -274,6 +278,12 @@ export class GameController {
                 predictedSwept: this.state.predictedSwept,
               }
             : { kind: "warehouse-L4", hashStrength: this.state.store.hashStrength }
-    emitEvidence(this.state.level.id, outcome.pass, metrics, observations)
+    emitEvidence(
+      this.state.level.id,
+      outcome.pass,
+      metrics,
+      observations,
+      `kv-warehouse-${this.state.level.id}-attempt-${this.attemptSequence}`,
+    )
   }
 }

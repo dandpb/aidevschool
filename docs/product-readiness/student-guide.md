@@ -9,22 +9,79 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-Este guia ensina o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador). No OS o caminho é Entrar na escola → IA Prática (l01–l03) e depois as três missões 3D (WAREHOUSE, WORMHOLE, RELAY STATION). A oferta pronta para cliente é a primeira lição avulsa, as missões de IA Prática no OS, as três missões 3D e voltar no mesmo aparelho. As outras lições do avulso não estão no OS — quem muda de superfície recomeça. Isso não é certificado: concluída não é domínio. Sem conta nem cópia entre aparelhos. A Trilha Dev no LiteracyDojo avulso continua em breve.
+Este guia ensina o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador). No OS o caminho é Entrar na escola → IA Prática (l01–l03) e depois as três missões 3D (WAREHOUSE, WORMHOLE, RELAY STATION). A oferta pública agora inclui escolha de trilha no OS (IA Prática | Dev), o trilho Dev de 3 missões, o Engine Hub allowlist (voxel 16, PixelQuest, dojoToday local, literacy) e o CTA do LiteracyDojo avulso para `https://aidevschool-codexdojo-os.netlify.app/?track=dev`. As outras lições do avulso não estão no OS — quem muda de superfície recomeça. Isso não é certificado: concluída não é domínio. Sem conta nem cópia entre aparelhos. Use cases Dev em product-readiness (`os-voxel-guided-missions`, `os-returning-learner`, `pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, `dojotoday-daily-guidance`) continuam `stale` até assessment fresco — não chame de customer-ready.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS. Não há Hub nem escolha entre **IA Prática** e **Trilha Dev**. O caminho concedido nesta oferta é **Entrar na escola** → **IA Prática** (catálogo l01–l03) → as três missões 3D (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); as outras lições do LiteracyDojo avulso não estão no OS. **IA Prática**, as três missões 3D e retomar no mesmo aparelho estão prontas para cliente.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). O onboarding oferece **IA Prática** ou **Dev** (`?track=dev` pré-seleciona Dev). Quem escolhe Dev não é forçado a refazer l01–l03. O trilho Dev publicado é **WAREHOUSE → WORMHOLE → RELAY STATION**. O Engine Hub lista voxelDojo, PixelQuest, dojoToday (sugestão neste dispositivo) e LiteracyDojo; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. A prontidão Dev permanece `stale`.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
-2. Responda ao onboarding curto (objetivo, contexto, confiança). A sequência publicada começa em **IA Prática**.
+2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
 3. Selecione **Entrar na escola**.
-4. Complete as missões de **IA Prática** hospedadas no OS (l01–l03), na ordem mostrada pelo trilho de aprendizado.
-5. Complete as três simulações 3D hospedadas no OS (**WAREHOUSE**, **WORMHOLE** e **RELAY STATION**), na ordem mostrada pelo trilho.
+4. Se escolheu **IA Prática**, complete as missões hospedadas no OS na ordem do trilho.
+5. Se escolheu **Dev**, complete as três simulações 3D (**WAREHOUSE**, **WORMHOLE** e **RELAY STATION**) na ordem do trilho. Outras simulações voxel estão no Engine Hub, não no trilho.
 6. Leia o resultado de cada missão antes de continuar. `completed` significa progresso local no host; não significa `mastered`.
 
-**Retomar:** recarregar o mesmo aparelho pode restaurar progresso no produto. Outro navegador, outro aparelho ou dados apagados começam do zero; não há conta nem sincronização entre dispositivos nem entre o avulso e o OS. Se você tinha parado na trilha antiga **Dev**, o OS volta para **IA Prática** até esse capítulo terminar.
+**Retomar:** recarregar o mesmo aparelho pode restaurar progresso no produto. Outro navegador, outro aparelho ou dados apagados começam do zero; não há conta nem sincronização entre dispositivos nem entre o avulso e o OS. Quem já esteve em **Dev** pode escolhê-la de novo sem apagar `completed` de l01–l03.
 
 O [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) no Netlify continua sendo uma rota separada, fora do OS.
+
+## Como fazer a primeira lição no LiteracyDojo avulso
+
+Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há conta. O progresso fica neste navegador. Concluída neste aparelho não é domínio verificado. Este caminho não leva ao OS — o avulso e o OS são superfícies separadas.
+
+1. Abra [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) em um navegador atual com armazenamento local habilitado.
+2. Na boas-vindas, leia que **Trilha Dev** está **Em breve**. Não entre nesse caminho.
+3. Responda às cinco perguntas curtas e continue.
+4. Você chega ao mapa da **Vila Lume**.
+5. Abra a primeira lição desta oferta: **Mapa Inicial** (l02 — **IA não é uma fonte de verdade**).
+6. Compare as duas respostas, escolha a mais confiável e marque os motivos.
+7. Se a resposta é **correta**: a lição fica **concluída neste aparelho** (não é domínio). A próxima lição no mapa é **O que a IA faz bem e onde costuma falhar**.
+8. Se a resposta é **errada**: leia o feedback, use a dica se quiser e escolha **Tentar novamente**. Depois disso, a próxima lição é **Sua primeira conversa com uma IA**.
+9. Para guardar o progresso local, use **Ver seu progresso → Baixar backup JSON** antes de limpar dados ou trocar de aparelho.
+10. Se recarrega o **mesmo navegador**: o onboarding já feito e l02 concluída voltam na introdução da próxima lição. Outro aparelho, outro navegador ou dados do site apagados começam do zero. Não há sincronização.
+
+## Como fazer IA Prática no OS
+
+Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
+
+1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
+2. No onboarding, responda objetivo, contexto e confiança. Você pode **ver** menções a **Trilha Dev** nesta tela — essa trilha **não** faz parte da oferta pronta neste piloto. Use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
+4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
+5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
+6. No mapa, o texto é **Seis missões, uma sequência**. O botão voltar mostra **← Hub** (hub de aprendizado). **WAREHOUSE** pode aparecer como **Disponível** antes de terminar IA Prática — a interface pode liberar cedo. No piloto, siga a missão destacada como próximo passo; não pule para o 3D só porque **WAREHOUSE** parece aberto.
+7. Leia o resultado de cada missão antes de continuar. Se aparece um aviso de verificador indisponível, isso é honesto — não é certificação. **Concluída** neste aparelho não é domínio verificado.
+
+## Como fazer as três missões 3D
+
+Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho.
+
+1. Volte ao hub de aprendizado (`/hub`) depois das três lições de IA Prática.
+2. Abra a missão 3D destacada como próximo passo — normalmente **WAREHOUSE** primeiro.
+3. Complete a interação na simulação e volte ao resultado do host. Leia o status antes de seguir.
+4. Repita para **WORMHOLE** e depois **RELAY STATION**, sempre pela missão destacada no hub.
+5. No mapa (**Seis missões, uma sequência**), o voltar é **← Hub**. Se **WAREHOUSE** já parecia aberto antes de terminar IA Prática, no piloto a sequência recomendada ainda é literacy primeiro; siga o destaque do hub.
+6. Se o 3D não carrega ou você prefere menos movimento, use a projeção acessível e os controles por teclado quando o host oferece essa opção.
+7. O status no host é progresso local — não é domínio verificado. Um aviso de verificador indisponível não é certificação.
+
+## Como voltar no mesmo aparelho
+
+No OS e no LiteracyDojo avulso, o retorno funciona só no **mesmo navegador e aparelho** onde você começou.
+
+**No OS**
+
+1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding. **Trilha Dev** pode ainda aparecer na interface; siga a missão destacada, não essa trilha.
+2. A missão destacada mostra onde continuar — literacy ou 3D, conforme o que já concluiu neste aparelho.
+3. Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding. Não há conta nem sincronização entre dispositivos.
+4. Concluída neste aparelho não é domínio verificado.
+
+**No LiteracyDojo avulso**
+
+1. Recarregue ou abra de novo [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) no **mesmo navegador**.
+2. Com onboarding feito e l02 concluída, você volta na introdução da próxima lição no mapa da Vila Lume.
+3. Outro aparelho, outro navegador ou dados apagados apagam o progresso. Use **Ver seu progresso → Baixar backup JSON** se já tinha backup documentado; **Restaurar backup** só no mesmo perfil do navegador.
+4. O avulso não transfere progresso ao OS. Concluída neste navegador não é domínio verificado.
 
 ## Standalone LiteracyDojo
 
@@ -143,9 +200,10 @@ unassessed until that proof is recorded.
 
 ### Read today's guidance in dojoToday
 
-Open the generated dojoToday view to see due reviews, your active unit, and the
-documented next action. The view reads the canonical learner projection. It
-does not schedule, evaluate, or write learner state.
+When embedded in the public OS, dojoToday shows a **sugestão neste dispositivo**
+from local OS progress (active / next guided Dev mission). It is not canonical
+FSRS and does not write `learner/learning_state.yaml`. The standalone generated
+view still reads the canonical projection in lab/operator setups.
 
 If the view is stale or missing, ask a facilitator to regenerate the shared
 projection. Stop if the canonical state is unavailable; don't use an old view

@@ -1,7 +1,7 @@
-# Lição l02 — piloto da vertical slice (seção 17 do plano).
+# Lição l02 — piloto da vertical slice (seção 17 do plano); retrofit O3-C1 (spec AID-644 rev 2 §2.2): +l02-a2/+l02-a3, v3→v4, 4 min. ATENÇÃO: lição de entrada (Mapa Inicial) — simplicidade máxima de copy.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l02
-version: 3
+version: 4
 moduleId: mod-01
 title: "IA não é uma fonte de verdade"
 objective: "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho."
@@ -46,6 +46,68 @@ activities:
       - "Uma resposta que admite o que não sabe costuma ser mais confiável do que uma cheia de números exatos."
       - "A resposta B diz o que não sabe e indica onde confirmar; marque os motivos ligados a fonte e a limites."
 
+  - id: l02-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Para abrir a apresentação de amanhã, você pediu a uma IA um dado sobre o mercado em que a empresa atua. Ela respondeu: 'O mercado brasileiro de cursos online cresceu 34% no último ano.' O número é específico, mas a resposta não traz nenhuma fonte. O que você faz antes de usar esse número?"
+    data:
+      options:
+        - id: opt-verifica-na-fonte
+          text: "Confirmo o número em uma fonte de confiança — relatório do setor ou site oficial — e só uso depois de confirmar."
+        - id: opt-confia-no-especifico
+          text: "Uso direto: um número tão específico assim dificilmente está errado."
+        - id: opt-descarta-tudo
+          text: "Descarto a resposta inteira — se a IA inventa um número, não dá para aproveitar nada dela."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-verifica-na-fonte]
+    feedback:
+      onFailure: "Antes de usar: verificar. Específico não é o mesmo que verdadeiro — e um número sem fonte não condena a resposta inteira, só pede confirmação."
+      perCheck:
+        opt-verifica-na-fonte: "Isso: o número só entra na apresentação depois de confirmado em uma fonte de confiança."
+        opt-confia-no-especifico: "Cuidado: especificidade não é evidência — a IA pode inventar números que só parecem precisos."
+        opt-descarta-tudo: "Exagero: o problema é um número sem fonte — verificar resolve, sem jogar a resposta inteira fora."
+      onSuccess: "Certo! Verificar antes de usar: o número fica confirmado e a apresentação fica segura."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que a resposta não diz sobre o número 34%?"
+      - "Entre confiar sem prova e jogar tudo fora existe um caminho do meio."
+
+  - id: l02-a3
+    type: sort
+    skillId: avaliar
+    instruction: "Agora o passo a passo completo: ordene o fluxo de verificar uma resposta da IA antes de usar no trabalho."
+    data:
+      items:
+        - id: fluxo-resposta
+          text: "Receber a resposta da IA e ler até o fim."
+        - id: fluxo-afirmacoes
+          text: "Marcar as afirmações que vão virar decisão — números, datas, nomes."
+        - id: fluxo-fonte
+          text: "Localizar a fonte original de cada afirmação marcada."
+        - id: fluxo-conferencia
+          text: "Conferir se o que a fonte diz bate com o que a resposta disse."
+        - id: fluxo-uso
+          text: "Usar a informação com a anotação de onde ela veio."
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [fluxo-resposta, fluxo-afirmacoes, fluxo-fonte, fluxo-conferencia, fluxo-uso]
+    feedback:
+      onFailure: "O fluxo é: ler a resposta → marcar o que vira decisão → localizar a fonte → conferir se bate → usar com anotação. Sem a marcação o esforço se espalha; sem a anotação a informação perde a origem."
+      perCheck:
+        fluxo-resposta: "Tudo começa com a leitura completa — sem ela, você não sabe o que precisa ser verificado."
+        fluxo-afirmacoes: "Marcar o que vai virar decisão (números, datas, nomes) foca a verificação no que importa."
+        fluxo-fonte: "Com as afirmações marcadas, vem a busca: localizar a fonte original de cada uma."
+        fluxo-conferencia: "A fonte aberta, a conferência: o que ela diz bate com o que a resposta afirmou?"
+        fluxo-uso: "O uso é o fim da fila — e a anotação de origem viaja junto com a informação."
+      onSuccess: "Esse é o fluxo verificar-antes-de-usar: ler, marcar, localizar, conferir e usar com anotação."
+    storage:
+      policy: structured_only
+    hints:
+      - "Primeiro você precisa saber o que a resposta disse — e o que dela vira decisão."
+      - "A conferência vem entre localizar a fonte e usar: comparar os dois lados."
+
 rubric:
   id: l02-rubric
   criteria:
@@ -69,4 +131,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l02-a1]
+  requiredActivityIds: [l02-a1, l02-a2, l02-a3]

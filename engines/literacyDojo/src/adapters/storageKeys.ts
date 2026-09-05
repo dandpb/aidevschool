@@ -8,3 +8,6 @@ export const PROGRESS_KEY = "learner-progress";
 
 /** Espelho de evidência em sessionStorage — canal de teste do DevtoolsBridgeEvidenceSink. */
 export const EVIDENCE_SESSION_KEY = "literacydojo:evidence";
+
+/** Acks do aviso de retrofit (O3-C1): JSON estruturado lessonId → contentVersion. */
+export const RETROFIT_ACKS_KEY = "literacydojo:retrofit-acks";

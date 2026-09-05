@@ -1,7 +1,7 @@
-# Lição l05 — piloto da vertical slice (seção 17 do plano).
+# Lição l05 — piloto da vertical slice (seção 17 do plano); retrofit Onda O3-C1 (spec AID-644 rev 2 §2.5; advisory AID-645 `2ed06cf2`): +l05-a2/a3, v3.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l05
-version: 2
+version: 3
 moduleId: mod-02
 title: "Dê contexto para obter uma resposta útil"
 objective: "Melhorar um pedido genérico preenchendo campos estruturados de objetivo, contexto, público e formato."
@@ -60,6 +60,76 @@ activities:
       - "No campo Objetivo, use um verbo de comunicação; no campo Contexto, conte o que vai mudar na clínica."
       - "Palavras que precisam aparecer: horário no Contexto, clientes ou pacientes no Público e e-mail no Formato."
 
+  - id: l05-a2
+    type: choice
+    skillId: pedir
+    instruction: "A clínica odontológica vai mudar o horário de funcionamento no próximo mês e você vai pedir à IA o e-mail de aviso. Quais informações mudam a resposta da IA? Marque todas."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-novo-horario
+          text: "O novo horário de funcionamento: dias e horas de atendimento a partir do próximo mês."
+        - id: opt-quem-recebe
+          text: "Quem vai receber o aviso: os clientes da clínica, que podem precisar remarcar consultas."
+        - id: opt-numero-de-cadeiras
+          text: "O número de cadeiras e consultórios da clínica."
+        - id: opt-nome-do-fundador
+          text: "O nome do dentista que fundou a clínica."
+        - id: opt-software-interno
+          text: "O software interno que a recepção usa para agendar consultas."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-novo-horario, opt-quem-recebe]
+    feedback:
+      onFailure: "Contexto é a informação que muda o conteúdo do aviso: o fato novo (o horário) muda o que o e-mail diz; quem recebe muda o jeito de falar. Número de cadeiras, nome do fundador e software interno são verdadeiros — mas não mudam uma linha da resposta. Contexto suficiente não é tudo sobre a clínica."
+      perCheck:
+        opt-novo-horario: "Muda a resposta: o novo horário é o fato central do aviso — sem ele, o e-mail não diz nada."
+        opt-quem-recebe: "Muda a resposta: escrever para clientes que podem remarcar define o tom e o que o e-mail precisa oferecer."
+        opt-numero-de-cadeiras: "Não muda a resposta: o tamanho da clínica não entra no aviso sobre horário."
+        opt-nome-do-fundador: "Não muda a resposta: a história da clínica é detalhe verdadeiro, mas irrelevante para este e-mail."
+        opt-software-interno: "Não muda a resposta: a ferramenta da recepção é assunto interno — o cliente não precisa saber."
+      onSuccess: "Isso! Contexto suficiente = o que muda a resposta: o fato novo (horário) e para quem se escreve (clientes). Não tudo sobre a clínica."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada informação, pergunte: se ela mudasse, o e-mail mudaria?"
+      - "Duas informações fazem o conteúdo do aviso mudar; três são detalhes verdadeiros, mas irrelevantes aqui."
+      - "O fato novo da situação é uma; quem precisa remarcar consultas é outra."
+
+  - id: l05-a3
+    type: output_comparison
+    skillId: pedir
+    instruction: "O mesmo aviso foi pedido à IA duas vezes — uma com o pedido genérico, outra com os campos preenchidos. Compare as duas respostas e escolha a que está pronta para usar."
+    data:
+      scenario: "O aviso da mudança de horário da clínica odontológica foi pedido à IA de dois jeitos. A resposta A veio de um pedido com os quatro campos preenchidos (objetivo, contexto, público e formato, como no primeiro exercício desta lição). A resposta B veio do pedido \"Escreve um e-mail pra mim.\""
+      outputs:
+        - id: out-a
+          text: "Assunto: Novo horário de atendimento da clínica\n\nOlá! A partir do próximo mês, nossa clínica vai atender de segunda a sábado, das 8h às 18h. Enviamos este aviso com antecedência para você organizar suas consultas. Se quiser remarcar o seu horário, é só responder este e-mail ou ligar para a recepção.\n\nUm abraço,\nEquipe da clínica"
+        - id: out-b
+          text: "Prezado(a) cliente,\n\nEsperamos que esta mensagem o(a) encontre bem. Informamos que houve uma atualização em nossos serviços e que novas informações estão disponíveis. Permanecemos à disposição para quaisquer esclarecimentos.\n\nAtenciosamente,\nA gerência"
+      criteria:
+        - id: c-responde-a-situacao-real
+          text: "Responde à situação real: a clínica, a mudança de horário e o próximo mês"
+        - id: c-pronta-para-usar
+          text: "Está pronta para usar: pode ser enviada aos clientes sem edições nem explicações adicionais"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-responde-a-situacao-real, c-pronta-para-usar]
+    feedback:
+      onFailure: "A resposta A está pronta para usar porque o pedido que a gerou trouxe os campos: objetivo (avisar da mudança), contexto (clínica, novo horário, próximo mês), público (clientes, tom cordial) e formato (e-mail curto com assunto). A B é educada, mas não diz nada — quem lê não fica sabendo nem o que mudou."
+      perCheck:
+        betterOutputId: "A resposta A sai de um pedido com os campos preenchidos; a B sai de \"Escreve um e-mail pra mim.\" — e genérico no pedido, genérico na resposta."
+        c-responde-a-situacao-real: "Faltou este critério: a resposta precisa falar da clínica, da mudança de horário e do próximo mês — os fatos que o pedido preenchido carregava."
+        c-pronta-para-usar: "Faltou este critério: a resposta certa pode ser enviada sem editar nada — a B precisaria ser reescrita antes de ir aos clientes."
+      onSuccess: "Exato! Campos preenchidos no pedido = resposta que resolve a situação real sem retrabalho. É o efeito do contexto em ação."
+    storage:
+      policy: structured_only
+    hints:
+      - "Qual das duas você poderia encaminhar aos clientes agora, sem editar nada?"
+      - "Procure os fatos da situação na resposta: clínica, mudança de horário, próximo mês."
+      - "A resposta A traz os fatos que vieram do pedido preenchido; a B usa só cortesia genérica."
+
 rubric:
   id: l05-rubric
   criteria:
@@ -83,4 +153,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l05-a1]
+  requiredActivityIds: [l05-a1, l05-a2, l05-a3]

@@ -6,7 +6,7 @@ from learner.substrate.mission_catalog_voxel import MissionCatalogError
 
 
 TRACK_ORDER = ("ai-pratica", "dev")
-FIRST_RELEASE_MISSIONS_PER_TRACK = 3
+MIN_MISSIONS_PER_TRACK = 1
 
 
 def _validate_prerequisite_graph(missions: list[dict[str, Any]]) -> None:
@@ -72,16 +72,17 @@ def finalize_missions(
     )
     for track_id in TRACK_ORDER:
         track_missions = [mission for mission in missions if mission["trackId"] == track_id]
-        if len(track_missions) != FIRST_RELEASE_MISSIONS_PER_TRACK:
+        mission_count = len(track_missions)
+        if mission_count < MIN_MISSIONS_PER_TRACK:
             raise MissionCatalogError(
-                f"track {track_id!r} must declare exactly "
-                f"{FIRST_RELEASE_MISSIONS_PER_TRACK} launchable missions"
+                f"track {track_id!r} must declare at least "
+                f"{MIN_MISSIONS_PER_TRACK} launchable mission(s)"
             )
         orders = [mission["chapterOrder"] for mission in track_missions]
-        if orders != list(range(1, FIRST_RELEASE_MISSIONS_PER_TRACK + 1)):
+        if orders != list(range(1, mission_count + 1)):
             raise MissionCatalogError(
-                f"track {track_id!r} chapterOrder values must be "
-                f"1..{FIRST_RELEASE_MISSIONS_PER_TRACK}"
+                f"track {track_id!r} chapterOrder values must be a contiguous "
+                f"run 1..{mission_count} with no gaps or duplicates"
             )
         recommended = tracks[track_id]["recommendedEntryMissionId"]
         recommended_mission = next(

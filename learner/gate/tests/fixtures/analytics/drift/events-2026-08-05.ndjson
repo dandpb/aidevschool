@@ -1,0 +1,12 @@
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"mission.abandoned","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"mission.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1","mode":"initial","difficulty":"hard"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"mission.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1","mode":"hardcore"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"journey.returned","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"yesterday-ish","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"2026-08-05T10:00:00Z","sequence":0,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"}}
+this line is not json
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"},"source":"literacydojo"}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"mission.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1","mode":"initial","trackId":"third-track"}}
+{"schemaVersion":2,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install-drift","sessionId":"s-drift-1"}}
+{"schemaVersion":1,"eventId":"evt-drift-0001","name":"onboarding.started","occurredAt":"2026-08-05T10:00:00Z","sequence":1,"dimensions":{"installationId":"install drift","sessionId":"s-drift-1"}}

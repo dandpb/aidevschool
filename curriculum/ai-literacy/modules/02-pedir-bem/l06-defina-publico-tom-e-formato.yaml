@@ -1,7 +1,7 @@
-# Lição l06 — Fase 2.
+# Lição l06 — Fase 2; retrofit Onda O3-C1 (spec AID-644 rev 2 §2.6; advisory AID-645 `2ed06cf2`): +l06-a2/a3, v2.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l06
-version: 1
+version: 2
 moduleId: mod-02
 title: "Defina público, tom e formato"
 objective: "Ajustar público, tom e formato de um pedido para obter uma resposta pronta para usar."
@@ -45,6 +45,85 @@ activities:
       - "Compare o pedido com a queixa: a resposta veio formal demais. Que três informações teriam evitado isso?"
       - "Pense em: quem recebe, como deve soar e onde a mensagem vai ser publicada."
 
+  - id: l06-a2
+    type: prompt_builder
+    skillId: pedir
+    instruction: "A mensagem formal demais da atividade anterior mostra o que faltou no pedido. Agora conserte: acrescente público, tom e formato preenchendo os três campos."
+    data:
+      scenario: "A reunião de planejamento de sexta mudou para as 14h. O pedido \"Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h.\" já traz o objetivo e o contexto — mas a resposta veio formal demais para o grupo de chat da equipe, porque o pedido não dizia para quem, com qual tom e em que formato."
+      genericPrompt: "Escreva uma mensagem avisando que a reunião de sexta mudou para as 14h."
+      fields:
+        - id: publico
+          label: "Público"
+          hint: "Quem recebe a mensagem. Ex.: a equipe no chat interno do time."
+        - id: tom
+          label: "Tom"
+          hint: "Como a mensagem deve soar. Ex.: direto e descontraído, como conversa de time."
+        - id: formato
+          label: "Formato"
+          hint: "Que forma a resposta deve ter. Ex.: mensagem curta de chat, de 2 a 3 linhas, sem saudação formal."
+    evaluation:
+      strategy: deterministic
+      fields:
+        publico:
+          minLength: 5
+          mustIncludeAny: ["equipe", "time", "colegas", "grupo", "chat"]
+        tom:
+          minLength: 5
+          mustIncludeAny: ["direto", "descontraído", "descontraido", "informal", "leve", "simples"]
+        formato:
+          minLength: 5
+          mustIncludeAny: ["curta", "curto", "chat", "mensagem", "linhas"]
+    feedback:
+      onFailure: "O pedido já dizia o quê (avisar da mudança) e o contexto (sexta, 14h). Faltava o ajuste fino: para quem (a equipe do chat), como soa (direto e descontraído) e em que forma (mensagem curta de chat)."
+      perCheck:
+        publico: "Diga quem recebe: a equipe no chat interno — não 'alguém' e não a diretoria."
+        tom: "Defina como a mensagem deve soar: direto e descontraído, como o chat do time."
+        formato: "Defina a forma: mensagem curta de chat, poucas linhas, sem saudação e despedida de e-mail."
+      onSuccess: "Agora sim: objetivo + contexto + público + tom + formato — a resposta sai pronta para colar no chat da equipe."
+    storage:
+      policy: structured_only
+    hints:
+      - "Por que a resposta anterior veio formal demais? Que três informações faltaram no pedido?"
+      - "Pense no chat da equipe: como as mensagens do time costumam soar e qual tamanho têm?"
+      - "Palavras que ajudam: equipe ou time no Público; direto ou descontraído no Tom; curta, chat ou linhas no Formato."
+
+  - id: l06-a3
+    type: choice
+    skillId: pedir
+    instruction: "Com público, tom e formato definidos no pedido, a resposta muda. O que exatamente muda — e o que não muda? Marque todas."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-linguagem
+          text: "A linguagem: fica direta e descontraída, como o chat do time pede."
+        - id: opt-forma
+          text: "A forma: uma mensagem curta de chat, sem saudação e despedida de e-mail formal."
+        - id: opt-cor-da-fonte
+          text: "A cor da fonte que a mensagem vai ter no chat."
+        - id: opt-fatos-do-aviso
+          text: "Os fatos do aviso: a reunião continua sendo sexta às 14h — isso o pedido já trazia."
+        - id: opt-tamanho-da-equipe
+          text: "O número de pessoas da equipe que vão receber a mensagem."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-linguagem, opt-forma]
+    feedback:
+      onFailure: "Público, tom e formato mudam a apresentação da mensagem — como ela soa e em que forma chega. Não mudam os fatos (sexta, 14h), que vinham do objetivo e do contexto; e não dependem de cor de fonte nem de quantas pessoas vão ler."
+      perCheck:
+        opt-linguagem: "Muda: com o tom definido, a linguagem da resposta muda — direta e descontraída em vez de formal."
+        opt-forma: "Muda: com o formato definido, a resposta vem como mensagem curta de chat, não como e-mail."
+        opt-cor-da-fonte: "Não muda: a IA não escolhe cor de fonte — isso não altera uma linha do texto."
+        opt-fatos-do-aviso: "Não muda: os fatos (sexta, 14h) vêm do objetivo e do contexto, que o pedido já trazia."
+        opt-tamanho-da-equipe: "Não muda: o número de leitores não altera o texto da mensagem."
+      onSuccess: "Exato: público, tom e formato mudam linguagem e forma da resposta. O conteúdo factual vem do objetivo e do contexto, que o pedido já tinha."
+    storage:
+      policy: structured_only
+    hints:
+      - "Separe o que é da mensagem (como soa, que forma tem) do que não depende dela."
+      - "Duas opções descrevem como a resposta muda; as outras três, não."
+      - "Cor de fonte e tamanho da equipe não mudam nenhuma linha do texto."
+
 rubric:
   id: l06-rubric
   criteria:
@@ -53,6 +132,9 @@ rubric:
       weight: 1
     - id: r-descarta-irrelevante
       text: "Descarta informações que não mudam a resposta (cor de fonte, histórico irrelevante)."
+      weight: 1
+    - id: r-adiciona-apresentacao
+      text: "Acrescenta público, tom e formato a um pedido que já tem objetivo e contexto."
       weight: 1
 
 evidence:
@@ -65,4 +147,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l06-a1]
+  requiredActivityIds: [l06-a1, l06-a2, l06-a3]

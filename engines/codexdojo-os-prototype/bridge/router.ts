@@ -120,7 +120,13 @@ async function routeVerification(request: BridgeRequest, executor: ActionExecuto
     record: parsed.record,
   }, executor)
   if (!result.ok) {
-    return { status: result.code === 'unsupported-schema' ? 404 : 422, body: { error: result.code } }
+    if (result.code === 'unsupported-schema') {
+      return { status: 404, body: { error: result.code } }
+    }
+    if (result.code === 'verifier-failed') {
+      return { status: 502, body: { error: result.code } }
+    }
+    return { status: 422, body: { error: result.code } }
   }
   return { status: 200, body: { receipt: result.receipt } }
 }
