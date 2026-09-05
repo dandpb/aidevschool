@@ -26,3 +26,6 @@
 ## 2025-02-18 - Preserve deterministic random selection without array allocation
 **Learning:** When optimizing random selection logic (e.g., removing `.filter()` for GC performance) in deterministic simulations like `miniTown`, preserve the exact number and sequence of PRNG calls (e.g., `this.rng()`) to avoid breaking test suites that rely on reproducible random states. Use multi-pass O(N) loops rather than algorithms like reservoir sampling if they alter RNG consumption.
 **Action:** When converting array manipulations to loops for random selection, always count the valid elements in a first pass, roll the RNG exactly once as before, and use a second pass to find the selected element. Never change the conditions under which the RNG is called.
+## 2025-02-17 - Avoid O(N log N) sorting for finding a single element
+**Learning:** In hot loops, chaining `.sort()` just to find a single min/max element introduces unnecessary array allocations and O(N log N) overhead, especially if the comparator itself has an inner O(N) loop (like `.findIndex()`).
+**Action:** Replace sorting for single targets with an O(N) linear scan using a simple loop. When tie-breaking matters (e.g., maintaining deterministic simulation results), use strict inequality (`<`) to mimic the "first closest match" behavior of stable sorting.
