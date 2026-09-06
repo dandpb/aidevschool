@@ -1,0 +1,35 @@
+{
+  "base": "http://127.0.0.1:5174",
+  "startedAt": "2026-09-06T22:28:43.038Z",
+  "steps": {
+    "w1Map": {
+      "questVisible": true,
+      "labsVisible": true,
+      "noEarlyCompletionClaim": true
+    },
+    "w2BeforeEvidence": {
+      "noPassClaimYet": true,
+      "promptChipsShown": true
+    },
+    "w3EncounterEvidence": {
+      "evidenceEmittedClaim": true,
+      "evidenceRecord": {
+        "unit_id": "U0-sonda-rate-limiter-robustness",
+        "project": "01_rate_limiter",
+        "encounter_id": "encounter-agent-quest-01",
+        "pass": true,
+        "verifier_required": true
+      },
+      "consoleEvidenceLines": 1,
+      "verifierDecidesMastery": true,
+      "noMasteryByGame": true
+    },
+    "w4MapStatus": {
+      "statusStripShowsEvidence": true,
+      "statusIsEvidenceNotCompletion": true,
+      "evidenceIsTheArtifact": true
+    }
+  },
+  "ok": true,
+  "finishedAt": "2026-09-06T22:28:43.894Z"
+}
