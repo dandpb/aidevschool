@@ -111,7 +111,7 @@ describe("migrateProgress (forward-only)", () => {
   it("corredor (spec AID-915 §6.3): schema 3 → 4 acrescenta moduleCheckpoints vazio", () => {
     const progress = createInitialProgress(modules, contentVersion);
     const preBump = { ...progress, schemaVersion: 3 } as Record<string, unknown>;
-    delete (preBump as { moduleCheckpoints?: unknown }).moduleCheckpoints;
+    (preBump as { moduleCheckpoints?: unknown }).moduleCheckpoints = undefined;
     preBump.lessonStatus = { ...progress.lessonStatus, l01: "completed", l03: "completed" };
     const migrated = migrateProgress(preBump, contentVersion);
     expect(migrated.schemaVersion).toBe(PROGRESS_SCHEMA_VERSION);
