@@ -1,7 +1,9 @@
 # ADR-0010: Coletor same-origin de analytics do OS — fronteira pseudônima, NDJSON append-only e retenção
 
-**Status:** Accepted (construção e teste) · ativação pendente de decisão do board · **Data:**
-2026-08-31 · **Decisor:** fatia OP-B do draft AID-463 aprovada pelo board em 2026-08-31
+**Status:** Accepted · **Ativação aprovada 2026-09-06** (ordem CEO AID-910/D / AID-913: env
+`VITE_ANALYTICS_ENDPOINT` same-origin nos 2 netlify.toml + Netlify Blobs como backing +
+copy publicada; o literacy v2 também é recebido neste coletor — emenda no ADR-0009) ·
+**Data:** 2026-08-31 · **Decisor:** fatia OP-B do draft AID-463 aprovada pelo board em 2026-08-31
 (interação `92af26d6`, opção `opb-foundation`; ordem AID-470)
 **Contexto:** o ADR-0009 fixou a fronteira de analytics do bounded context `literacyDojo`
 (envelope `source:"literacydojo"`) e escolheu NDJSON local sem backend para aquela fase. O OS

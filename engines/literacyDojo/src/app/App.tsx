@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { loadRetrofitAcks, resetRetrofitAcks, saveRetrofitAck } from "../adapters/retrofitAcks";
 import type { LessonDefinition } from "../data/generated/lessons";
+import { buildEntryViewedEvent } from "../domain/analytics";
 import type { ModuleCheckpointId } from "../domain/checkpoints";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -153,6 +154,28 @@ export function AppShell({
       heading.focus({ preventScroll: true });
     }
   }, [route]);
+
+  // Funil AID-913 (emenda ADR-0009): `entry_viewed` exatamente 1× por page
+  // load, quando a home é exibida. Missão hospedada não passa pela home — o
+  // host OS mede a entrada da journey dele (onboarding/mission.started).
+  const entryViewedEmittedRef = useRef(false);
+  // biome-ignore lint/correctness/useExhaustiveDependencies: hostAdapter é estático por mount; a emissão é única por page load guiada por `route`.
+  useEffect(() => {
+    if (route?.name !== "home" || hostAdapter !== null || entryViewedEmittedRef.current) return;
+    entryViewedEmittedRef.current = true;
+    services.analytics.track(
+      buildEntryViewedEvent(
+        {
+          sessionId: services.analyticsIdentity.sessionId,
+          eventId: services.analyticsIdentity.nextEventId(),
+        },
+        {
+          occurredAt: services.clock().toISOString(),
+          contentVersion: services.content.getContentVersion(),
+        },
+      ),
+    );
+  }, [route, services]);
 
   const handleReset = useCallback(async () => {
     await services.progressRepo.reset();

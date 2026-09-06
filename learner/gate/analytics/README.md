@@ -82,3 +82,10 @@ committed artifact fails CI instead of misleading a reader. The example embeds
 the current catalog mapping — a curriculum module restructure changes the D2
 section and requires regenerating the examples. Real monthly reports are dated
 work products (`_work-products/` pattern) and never commit raw NDJSON.
+
+**Ativação AID-913 (2026-09-06):** o pipeline lê os dois envelopes (OS v1 e
+literacy v2). `schema_drift_monitor.mjs` (monitorVersion 2) classifica e
+conta por envelope; `aggregate_funnel.mjs` (reportVersion 3) adiciona a
+seção `literacyFunnel` (funil por `sessionId` anônimo efêmero, k≥5
+imutável). Probe executável de ponta a ponta:
+`node learner/gate/analytics/probe_collector_export.mjs`.

@@ -32,7 +32,7 @@ import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateAnalyticsEvent } from "../netlify-functions/dojo-analytics-collector.mjs";
+import { validateAnalyticsEvent, validateLiteracyEvent } from "../netlify-functions/dojo-analytics-collector.mjs";
 import {
   collectInputFiles,
   optionValue,
@@ -41,7 +41,7 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
-export const REPORT_VERSION = 2;
+export const REPORT_VERSION = 3;
 /**
  * Canonical mission→module mapping for the D2 cut (spec AID-673 §2.2): read
  * from the shared curriculum catalog at execution time — no copied mapping.
@@ -165,6 +165,7 @@ export function aggregateFunnel(entries, options = {}) {
   }
 
   const accepted = [];
+  const literacyAccepted = [];
   let rejectedEvents = 0;
   let parseErrors = 0;
   for (const entry of entries) {
@@ -172,11 +173,14 @@ export function aggregateFunnel(entries, options = {}) {
       parseErrors += 1;
     } else if (validateAnalyticsEvent(entry.value)) {
       accepted.push(entry.value);
+    } else if (validateLiteracyEvent(entry.value)) {
+      literacyAccepted.push(entry.value);
     } else {
       rejectedEvents += 1;
     }
   }
   accepted.sort((a, b) => eventTime(a) - eventTime(b) || a.sequence - b.sequence);
+  literacyAccepted.sort((a, b) => Date.parse(a.occurredAt) - Date.parse(b.occurredAt));
 
   // F2b dedup (spec AID-673 §2.1): the beacon+fetch race can append the same
   // eventId twice; every cut below must see each event exactly once. First
@@ -572,6 +576,7 @@ export function aggregateFunnel(entries, options = {}) {
   const verificationHealth = verificationHealthFor();
   const rendererDegraded = rendererDegradedFor();
   const moduleCompletionMedian = moduleCompletionMedianFor(missionSetsResult);
+  const literacyFunnel = literacyFunnelFor({ events: literacyAccepted, k });
 
   return {
     reportVersion: REPORT_VERSION,
@@ -595,6 +600,142 @@ export function aggregateFunnel(entries, options = {}) {
     verificationHealth,
     rendererDegraded,
     moduleCompletionMedian,
+    literacyFunnel,
+  };
+}
+
+// --- literacy funnel (AID-913 activation; envelope source:"literacydojo") ---
+
+const LITERACY_STAGES = [
+  { key: "entry_viewed", event: "entry_viewed" },
+  { key: "lesson_started", event: "lesson_started" },
+  { key: "activity_attempted", event: "activity_attempted" },
+  { key: "lesson_completed", event: "lesson_completed" },
+];
+
+/**
+ * Session-level funnel for the literacy v2 envelope. Sessions are anonymous
+ * and ephemeral (`sessionId`, in memory per page load — AID-913); every
+ * published cell is k-suppressed and no identifier is ever emitted. Attempts
+ * per session+lesson beyond the first are the retry marker.
+ */
+function literacyFunnelFor({ events: literacyAccepted, k }) {
+  // Dedup by eventId (same beacon+fetch race as the OS envelope).
+  const seenLiteracyEventIds = new Set();
+  let literacyDuplicates = 0;
+  const literacyEvents = [];
+  for (const event of literacyAccepted) {
+    if (seenLiteracyEventIds.has(event.eventId)) {
+      literacyDuplicates += 1;
+      continue;
+    }
+    seenLiteracyEventIds.add(event.eventId);
+    literacyEvents.push(event);
+  }
+
+  const sessions = new Map();
+  for (const event of literacyEvents) {
+    const id = event.sessionId;
+    if (!sessions.has(id)) {
+      sessions.set(id, { firstTime: Date.parse(event.occurredAt), stageTimes: new Map(), lessons: new Map() });
+    }
+    const session = sessions.get(id);
+    if (!session.stageTimes.has(event.event)) {
+      session.stageTimes.set(event.event, Date.parse(event.occurredAt));
+    }
+    const lessonId = typeof event.props?.lessonId === "string" ? event.props.lessonId : null;
+    if (lessonId !== null && (event.event === "lesson_started" || event.event === "activity_attempted" || event.event === "lesson_completed")) {
+      if (!session.lessons.has(lessonId)) session.lessons.set(lessonId, { attempts: 0, started: false, completed: false });
+      const lesson = session.lessons.get(lessonId);
+      if (event.event === "lesson_started") lesson.started = true;
+      if (event.event === "activity_attempted") lesson.attempts += 1;
+      if (event.event === "lesson_completed") lesson.completed = true;
+    }
+  }
+
+  const reachedStages = (session) => {
+    const counts = [];
+    let previousTime = Number.NEGATIVE_INFINITY;
+    for (const stage of LITERACY_STAGES) {
+      const stageTime = session.stageTimes.get(stage.event);
+      if (stageTime === undefined || stageTime < previousTime) return counts;
+      previousTime = stageTime;
+      counts.push(stage.event);
+    }
+    return counts;
+  };
+
+  const stageBucket = (cohort) => {
+    const n = cohort.length;
+    if (n < k) return { suppressed: true, n };
+    const counts = LITERACY_STAGES.map(() => 0);
+    for (const session of cohort) {
+      for (const stage of reachedStages(session)) {
+        counts[LITERACY_STAGES.findIndex((item) => item.event === stage)] += 1;
+      }
+    }
+    return { n, counts };
+  };
+
+  const byWeek = {};
+  for (const session of sessions.values()) {
+    const week = isoWeekKey(session.firstTime);
+    (byWeek[week] ??= []).push(session);
+  }
+  const funnelByWeek = {};
+  for (const week of [...Object.keys(byWeek)].sort()) {
+    funnelByWeek[week] = stageBucket(byWeek[week]);
+  }
+
+  const lessonStarts = new Map();
+  for (const session of sessions.values()) {
+    for (const [lessonId, lesson] of session.lessons) {
+      if (!lesson.started && !lesson.completed) continue;
+      if (!lessonStarts.has(lessonId)) lessonStarts.set(lessonId, { started: new Set(), completed: new Set() });
+      if (lesson.started) lessonStarts.get(lessonId).started.add(session);
+      if (lesson.completed) lessonStarts.get(lessonId).completed.add(session);
+    }
+  }
+  const lessonCompletion = {};
+  for (const lessonId of [...lessonStarts.keys()].sort()) {
+    const n = lessonStarts.get(lessonId).started.size;
+    if (n < k) {
+      lessonCompletion[lessonId] = { suppressed: true, n };
+      continue;
+    }
+    const completed = lessonStarts.get(lessonId).completed.size;
+    lessonCompletion[lessonId] = { n, completed, completionRate: rate(completed, n) };
+  }
+
+  let attemptEvents = 0;
+  let attemptPassed = 0;
+  const attemptSessions = new Set();
+  const retrySessions = new Set();
+  for (const event of literacyEvents) {
+    if (event.event !== "activity_attempted") continue;
+    attemptEvents += 1;
+    if (event.props?.passed === true) attemptPassed += 1;
+    attemptSessions.add(event.sessionId);
+    const lessonId = typeof event.props?.lessonId === "string" ? event.props.lessonId : "?";
+    const session = sessions.get(event.sessionId);
+    if (session !== undefined && (session.lessons.get(lessonId)?.attempts ?? 0) > 1) {
+      retrySessions.add(event.sessionId);
+    }
+  }
+  const attempts = attemptSessions.size < k
+    ? { suppressed: true, n: attemptSessions.size }
+    : { n: attemptSessions.size, submitted: attemptEvents, passed: attemptPassed, retrySessions: retrySessions.size };
+
+  return {
+    envelope: "literacydojo v2",
+    totalEvents: literacyEvents.length,
+    duplicateEvents: literacyDuplicates,
+    totalSessions: sessions.size,
+    stages: LITERACY_STAGES.map((stage) => stage.key),
+    overall: stageBucket([...sessions.values()]),
+    byWeek: funnelByWeek,
+    lessonCompletion,
+    attempts,
   };
 }
 
@@ -814,6 +955,46 @@ export function renderMarkdownReport(report) {
     lines.push(
       "",
       `Median completion rate across published modules: ${median === null ? "— (none published)" : percent(median)} (${report.moduleCompletionMedian.modulesPublished} published, ${report.moduleCompletionMedian.modulesSuppressed} suppressed, ${report.moduleCompletionMedian.missionsWithoutModuleMapping} mission id(s) without catalog mapping)`,
+    );
+  }
+
+  lines.push(
+    "",
+    "## Literacy funnel (envelope literacydojo v2, sessions anônimas efêmeras)",
+    "",
+  );
+  const literacy = report.literacyFunnel;
+  if (literacy.overall.suppressed === true) {
+    lines.push(`Overall: ${suppressedCell(literacy.overall)} — sessões insuficientes para publicar o funil.`, "");
+  } else {
+    lines.push(
+      `Overall (${literacy.stages.join(" → ")}): ${literacy.overall.counts.join(" → ")} de ${literacy.overall.n} sessão(ões).`,
+      "",
+    );
+  }
+  lines.push("| semana ISO | n | sessões por estágio |", "| --- | --- | --- |");
+  for (const [week, bucket] of Object.entries(literacy.byWeek)) {
+    if (bucket.suppressed === true) {
+      lines.push(`| ${week} | ${bucket.n} | ${suppressedCell(bucket)} |`);
+    } else {
+      lines.push(`| ${week} | ${bucket.n} | ${bucket.counts.join(" → ")} |`);
+    }
+  }
+  lines.push("", "| lesson | started (n) | completed | completion rate |", "| --- | --- | --- | --- |");
+  for (const [lessonId, row] of Object.entries(literacy.lessonCompletion)) {
+    if (row.suppressed === true) {
+      lines.push(`| ${lessonId} | ${row.n} | — | ${suppressedCell(row)} |`);
+    } else {
+      lines.push(`| ${lessonId} | ${row.n} | ${row.completed} | ${percent(row.completionRate)} |`);
+    }
+  }
+  if (literacy.attempts.suppressed === true) {
+    lines.push("", `Attempts: ${suppressedCell(literacy.attempts)} (sessões com tentativa).`, "");
+  } else {
+    lines.push(
+      "",
+      `Attempts: ${literacy.attempts.submitted} tentativa(s), ${literacy.attempts.passed} passada(s), ${literacy.attempts.retrySessions} sessão(ões) com retry, em ${literacy.attempts.n} sessão(ões).`,
+      "",
     );
   }
 

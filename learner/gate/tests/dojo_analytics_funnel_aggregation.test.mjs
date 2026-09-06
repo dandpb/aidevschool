@@ -38,7 +38,8 @@ async function aggregateFixture(options = {}) {
 
 test("aggregates the synthetic fixture into the hand-computed funnel", async () => {
   const report = await aggregateFixture();
-  assert.equal(report.reportVersion, 2);
+  // v3 (AID-913): report ganha a seção literacyFunnel (funil literacy v2).
+  assert.equal(report.reportVersion, 3);
   assert.equal(report.source.totalEvents, 212);
   assert.equal(report.source.duplicateEvents, 2);
   assert.equal(report.source.rejectedEvents, 0);
@@ -277,7 +278,7 @@ test("moduleCompletionMedian is fail-closed when the catalog is unavailable", as
   assert.equal(missing.moduleCompletionMedian.unavailable, true);
   assert.match(missing.moduleCompletionMedian.reason, /catalog unavailable/);
   assert.equal(missing.moduleCompletionMedian.modules, undefined);
-  assert.equal(missing.reportVersion, 2);
+  assert.equal(missing.reportVersion, 3);
   // A present-but-empty catalog is also unavailable: never fabricate mappings.
   const dir = await mkdtemp(join(tmpdir(), "aid-675-catalog-"));
   const emptyCatalog = join(dir, "catalog.yaml");

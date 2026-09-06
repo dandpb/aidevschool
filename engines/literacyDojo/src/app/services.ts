@@ -1,4 +1,6 @@
 import { createContext, useContext } from "react";
+import { createAnalyticsIdentity } from "../adapters/analyticsIdentity";
+import type { AnalyticsIdentity } from "../adapters/analyticsIdentity";
 import { analyticsSinkFromEnv, noopAnalyticsSink } from "../adapters/analyticsSinks";
 import type { Clock } from "../adapters/clock";
 import { systemClock } from "../adapters/clock";
@@ -35,6 +37,8 @@ export type Services = {
   useCases: LiteracyUseCases;
   verification: VerificationClient;
   analytics: AnalyticsSink;
+  /** Identidade anônima efêmera de analytics (emenda AID-913). */
+  analyticsIdentity: AnalyticsIdentity;
 };
 
 export function createServices(overrides?: {
@@ -68,17 +72,19 @@ export function createServices(overrides?: {
     (verifierEndpoint
       ? new HttpVerificationClient(verifierEndpoint)
       : new UnavailableVerificationClient());
-  // Analytics (ADR-0009, AID-676): transporte OFF por padrão — sem env o sink
-  // é noop (produção) ou console (dev); nenhuma superfície de build define
-  // VITE_ANALYTICS_ENDPOINT (ativação é gate do board, ADR-0010 §4). Em
-  // missão hospedada o sink literacy é sempre noop: o host OS já mede as
-  // missões com os 12 eventos do vocabulário dele (contexto engineId:
-  // literacyDojo) — emitir aqui duplicaria a contagem numa futura ativação.
+  // Analytics (ADR-0009, emenda AID-913): transporte ON nas superfícies
+  // autorizadas — VITE_ANALYTICS_ENDPOINT é definido somente nos
+  // [build.environment] dos dois netlify.toml, sempre same-origin; sem o env
+  // o sink é noop (produção) ou console (dev). Em missão hospedada o sink
+  // literacy continua sempre noop: o host OS já mede as missões com os 12
+  // eventos do vocabulário dele (contexto engineId: literacyDojo) — emitir
+  // aqui duplicaria a contagem.
   const analytics =
     overrides?.analytics ??
     (overrides?.hostAdapter
       ? noopAnalyticsSink
       : analyticsSinkFromEnv(import.meta.env.VITE_ANALYTICS_ENDPOINT, import.meta.env.DEV));
+  const analyticsIdentity = createAnalyticsIdentity();
   const useCases = new LiteracyUseCases({
     content,
     progress: progressRepo,
@@ -86,8 +92,19 @@ export function createServices(overrides?: {
     feedback,
     clock,
     analytics,
+    analyticsIdentity,
   });
-  return { content, progressRepo, evidence, feedback, clock, useCases, verification, analytics };
+  return {
+    content,
+    progressRepo,
+    evidence,
+    feedback,
+    clock,
+    useCases,
+    verification,
+    analytics,
+    analyticsIdentity,
+  };
 }
 
 /**

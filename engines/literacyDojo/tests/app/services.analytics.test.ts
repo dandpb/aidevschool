@@ -4,6 +4,7 @@ import type { AnalyticsSink } from "../../src/application/ports";
 import { lessons } from "../../src/data/generated/lessons";
 import {
   type ProductAnalyticsEvent,
+  buildAnalyticsBatch,
   buildLessonCompletedEvent,
   isValidAnalyticsEvent,
 } from "../../src/domain/analytics";
@@ -22,19 +23,32 @@ class InMemoryAnalyticsSink implements AnalyticsSink {
 // AID-676 (spec AID-673 §3, espelho do createServices.analytics.test.ts do
 // OS): a fronteira de emissão do literacyDojo — nada sai do navegador a menos
 // que VITE_ANALYTICS_ENDPOINT seja explicitamente configurado em build, o que
-// nenhuma superfície deste repo faz (ativação é gate do board, ADR-0010 §4).
+// por ativação O1 (AID-913, emenda ADR-0009/ADR-0010 §4) acontece SOMENTE nos
+// [build.environment] dos 2 netlify.toml (same-origin; travado por teste).
 // Missão hospedada nunca emite pelo sink literacy (o host OS já mede as
 // missões) e o piloto lesson_completed sai exatamente 1× por conclusão.
 
 const FIXED_NOW = new Date("2026-07-19T12:00:00.000Z");
 
-const PILOT_EVENT = buildLessonCompletedEvent({
-  lessonId: "l02",
-  lessonVersion: 1,
-  score: 1,
-  occurredAt: FIXED_NOW.toISOString(),
-  contentVersion: "test",
-});
+// Identidade anônima efêmera v2 (emenda AID-913): eventId por evento,
+// sessionId por page load — nunca persistida, nunca PII.
+const PILOT_IDENTITY = {
+  eventId: "01234567-89ab-4cde-8f01-23456789abcd",
+  sessionId: "fedcba98-7654-4321-8fed-cba987654321",
+};
+
+const PILOT_EVENT = buildLessonCompletedEvent(
+  PILOT_IDENTITY,
+  {
+    lessonId: "l02",
+    lessonVersion: 1,
+    score: 1,
+  },
+  {
+    occurredAt: FIXED_NOW.toISOString(),
+    contentVersion: "test",
+  },
+);
 
 function makeCompletableServices(analytics: InMemoryAnalyticsSink) {
   const progressRepo = new InMemoryProgressRepository();
@@ -84,7 +98,9 @@ describe("createServices analytics transport selection", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("(c) env definido ⇒ httpNdjson selecionado (POST NDJSON no endpoint)", () => {
+  it("(c) env definido ⇒ batch sink same-origin selecionado (1 POST JSON por lote no flush)", () => {
+    // Ativação O1 (AID-913): o transporte é o batch sink NDJSON→JSON
+    // (buffer 20 eventos/15s/pagehide) — substitui o POST-por-evento v1.
     vi.stubEnv("VITE_ANALYTICS_ENDPOINT", "/literacy-analytics");
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
@@ -92,14 +108,18 @@ describe("createServices analytics transport selection", () => {
     const { analytics } = createServices();
 
     analytics.track(PILOT_EVENT);
+    // Bufferizado: analytics nunca bloqueia nem atrasa a lição.
+    expect(fetchMock).not.toHaveBeenCalled();
 
+    const flushable = analytics as unknown as { flush(reason?: string): void };
+    flushable.flush("dispose");
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const call = fetchMock.mock.calls[0];
     expect(call?.[0]).toBe("/literacy-analytics");
     const init = call?.[1] as RequestInit | undefined;
     expect(init?.method).toBe("POST");
-    expect((init?.headers as Record<string, string>)["Content-Type"]).toBe("application/x-ndjson");
-    expect(init?.body).toBe(`${JSON.stringify(PILOT_EVENT)}\n`);
+    expect((init?.headers as Record<string, string>)["Content-Type"]).toBe("application/json");
+    expect(init?.body).toBe(JSON.stringify(buildAnalyticsBatch([PILOT_EVENT])));
   });
 
   it("(d) missão hospedada ⇒ noop mesmo com env definido", () => {
@@ -146,7 +166,7 @@ describe("createServices analytics transport selection", () => {
     expect(isValidAnalyticsEvent(event)).toBe(true);
     expect(event.event).toBe("lesson_completed");
     expect(event.source).toBe("literacydojo");
-    expect(event.schemaVersion).toBe(1);
+    expect(event.schemaVersion).toBe(2);
     expect(event.occurredAt).toBe(FIXED_NOW.toISOString());
     expect(event.contentVersion).toBe(services.content.getContentVersion());
     expect(event.props).toEqual({
@@ -155,6 +175,10 @@ describe("createServices analytics transport selection", () => {
       score: result.outcome.lessonScore,
       durationSeconds: 42,
     });
+    // Identidade anônima v2: eventId novo por evento; sessionId estável por
+    // page load (serviços = 1 sessão em memória).
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    expect(event.eventId).toMatch(uuid);
 
     // Revisão espaçada não é conclusão: emite os eventos de MEDIÇÃO do
     // corredor (spec AID-915 §4.3) — review_started + review_completed — e
@@ -177,5 +201,9 @@ describe("createServices analytics transport selection", () => {
     expect(analytics.events).toHaveLength(4);
     expect(JSON.stringify(analytics.events)).not.toContain("mastered");
     expect(analytics.events.filter((item) => item.event === "lesson_completed")).toHaveLength(2);
+    // Identidade anônima v2: mesma sessão ⇒ mesmo sessionId em TODOS os
+    // eventos (conclusão + revisão); eventId distinto por evento.
+    expect(new Set(analytics.events.map((item) => item.sessionId)).size).toBe(1);
+    expect(new Set(analytics.events.map((item) => item.eventId)).size).toBe(4);
   });
 });
