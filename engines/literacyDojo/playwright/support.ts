@@ -337,7 +337,7 @@ export async function seedCorridorProgress(
     (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints = checkpoints;
   }
   if (options.preBump) {
-    delete (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints;
+    (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints = undefined;
     progress.schemaVersion = 3;
     progress.contentVersion = "2026-09-04.1";
   }
