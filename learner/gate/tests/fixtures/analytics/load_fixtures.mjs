@@ -1,10 +1,12 @@
 // Fixture loader for the vitest-side schema-drift check (AID-473 F2). The OS
 // engine's typecheck has no node builtin types, so — following the F1 pattern
-// of dojo-analytics-collector.d.mts — this loader runs on the node side and
-// exports plain strings the vitest suite (fixtureSchemaDrift.test.ts) asserts
-// against the canonical vocabulary in src/analytics/events.ts. Node builtins
-// load lazily inside each function so importing this module from the jsdom
-// test runner stays side-effect-free (same reason the F1 collector defers fs).
+// of dojo-analytics-collector.d.mts (now at learner/gate/analytics/, outside
+// the deployable functions dir per AID-961) — this loader runs on the node
+// side and exports plain strings the vitest suite (fixtureSchemaDrift.test.ts)
+// asserts against the canonical vocabulary in src/analytics/events.ts. Node
+// builtins load lazily inside each function so importing this module from the
+// jsdom test runner stays side-effect-free (same reason the F1 collector
+// defers fs).
 
 async function fsExtras() {
   const [fs, path] = await Promise.all([import("node:fs/promises"), import("node:path")]);

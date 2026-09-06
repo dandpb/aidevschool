@@ -185,6 +185,81 @@ test("BlobsEventStore é idempotente por dia/eventId e serve o export", async (t
   assert.deepEqual(JSON.parse(lines[0]), event);
 });
 
+// AID-961: a semântica do Blobs EDGE API de produção é o INVERSO do servidor
+// local @netlify/blobs/server usado na prova do PR #280 — no edge,
+// `directories:true` é listing DELIMITADO (0 blobs aninhados) e o flat COM
+// prefixo é recursivo; no servidor local, `directories:true` é recursivo e o
+// flat COM prefixo devolve VAZIO. O defeito live (export com 0 linhas nas 2
+// superfícies, pin c2937e55) veio do readRange acreditar na semântica local.
+// A única forma portável (recursiva e idêntica nas duas implementações) é o
+// scan flat SEM prefixo + filtro de dia no cliente. Este fake EMULA o edge e
+// falha fechado se qualquer caminho de leitura reintroduzir `directories` ou
+// `prefix` na listagem.
+function edgeSemanticsFakeStore(blobs, violations) {
+  const keysMatching = (prefix) => [...blobs.keys()].filter((key) => !prefix || key.startsWith(prefix));
+  return {
+    async setJSON(key, value) {
+      blobs.set(key, JSON.stringify(value));
+    },
+    async get(key) {
+      return blobs.get(key) ?? null;
+    },
+    async list(options = {}) {
+      const prefix = options.prefix ?? "";
+      if (options.directories) {
+        violations.push(`list({prefix:${JSON.stringify(prefix)}, directories:true}) — SEMÂNTICA EDGE: delimitado, devolve 0 blobs aninhados`);
+        // Edge real (probe AID-961, drafts 6a9dbcbd…/6a9dbd4bd…): só entradas
+        // de diretório do nível imediato, nenhum blob recursivo.
+        const suffixes = new Set();
+        for (const key of keysMatching(prefix)) {
+          const rest = key.slice(prefix.length).replace(/^\//, "");
+          const slash = rest.indexOf("/");
+          suffixes.add(slash === -1 ? rest : `${rest.slice(0, slash)}/`);
+        }
+        return { blobs: [], directories: [...suffixes] };
+      }
+      if (prefix !== "") {
+        // Servidor local real (probe first-hand AID-961): flat com prefixo
+        // devolve VAZIO — depender disso aqui esconderia o defeito do CI.
+        return { blobs: [] };
+      }
+      // Flat SEM prefixo = recursivo nas duas implementações (paginável por
+      // cursor na API real) — a única forma portável.
+      return { blobs: keysMatching("").map((key) => ({ key })) };
+    },
+    async delete(key) {
+      blobs.delete(key);
+    },
+  };
+}
+
+test("AID-961: readRange usa scan flat SEM prefixo — nunca directories/prefix (semântica edge)", async () => {
+  const blobs = new Map();
+  const violations = [];
+  const store = new BlobsEventStore({ store: edgeSemanticsFakeStore(blobs, violations) });
+  await store.append([literacyEvent()], FIXED_NOW);
+  await store.append([osEvent()], FIXED_NOW);
+  const lines = await store.readRange("2026-09-07", "2026-09-07");
+  assert.deepEqual(violations, [], "readRange não pode usar directories/prefix na listagem — semântica divergente entre edge e servidor local");
+  assert.equal(lines.length, 2, "export deve servir os 2 envelopes (os + literacy) pelo scan flat com filtro de dia no cliente");
+});
+
+test("AID-961: prune também lista FLAT — sem directories:true — e deleta só fora da janela", async () => {
+  const blobs = new Map();
+  const violations = [];
+  const store = new BlobsEventStore({
+    store: edgeSemanticsFakeStore(blobs, violations),
+    retentionDays: 90,
+  });
+  const oldDay = "2026-06-01";
+  await store.append([literacyEvent()], new Date(`${oldDay}T12:00:00.000Z`));
+  await store.append([literacyEvent({ eventId: "0f0a6b1e-2c3d-4e5f-8a9b-0c1d2e3f4a5c" })], FIXED_NOW);
+  await store.prune(FIXED_NOW);
+  assert.deepEqual(violations, [], "prune não pode passar directories:true — varredura do store é a listagem flat");
+  assert.deepEqual([...blobs.keys()].filter((key) => key.startsWith(oldDay)), [], "blob fora da janela de retenção deve ser deletado");
+  assert.equal(blobs.size, 1, "blob dentro da janela permanece");
+});
+
 test("paridade: validateLiteracyEvent rejeita o que o emissor considera inválido", () => {
   assert.equal(validateLiteracyEvent(literacyEvent()), true);
   assert.equal(validateLiteracyEvent(literacyEvent({ source: "os" })), false);

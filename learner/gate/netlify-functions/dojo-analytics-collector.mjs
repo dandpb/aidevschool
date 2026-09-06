@@ -21,6 +21,14 @@
 // wrapper netlify-blobs-runtime.mjs declared in this directory's package.json
 // (a bare dynamic specifier is opaque to the functions bundler and never
 // shipped — the live backing was ephemeral /tmp on both surfaces).
+//
+// AID-961 export fix: `directories:true` on the Blobs EDGE API is a
+// DELIMITED one-level listing (0 nested blobs) and a flat list WITH a day
+// prefix returns [] on the local @netlify/blobs/server — so the live export
+// shipped 0 rows on both surfaces. The read paths use the one listing form
+// with IDENTICAL recursive semantics on both implementations — a flat,
+// no-prefix, cursor-paginated scan with client-side day filtering (same as
+// prune) — and CI locks that with an emulated-edge probe.
 
 // Node builtins load lazily so importing this module for vocabulary parity
 // checks stays side-effect-free and browser-test-runner friendly.
@@ -417,26 +425,41 @@ export class BlobsEventStore {
   async readRange(from, to) {
     if (!UTC_DAY.test(from) || !UTC_DAY.test(to)) return [];
     const lines = [];
+    // AID-961 (defect do redeploy AID-960): o export live devolvia 0 linhas
+    // porque `directories:true` no Blobs EDGE API é listing DELIMITADO (um
+    // nível por chamada — 0 blobs aninhados), o INVERSO do servidor local
+    // @netlify/blobs/server usado na prova do PR #280 (recursivo com a flag;
+    // e, pior, com prefixo de dia o listing FLAT local devolve vazio). A
+    // ÚNICA forma de `list` com semântica IDÊNTICA nas duas implementações —
+    // e recursiva nas duas — é o scan FLAT SEM prefixo, paginado por cursor,
+    // com o filtro de dia aplicado no cliente (mesma estratégia do prune).
+    // Trade-off aceito no volume de pilot/90 dias de retenção: export varre
+    // o store em vez de endereçar o dia no servidor. Nunca reintroduzir
+    // `directories` ou `prefix` neste caminho — CI trava a semântica com
+    // probe do edge emulado (verify-deployed-blobs) + teste unitário.
+    const days = new Set();
     for (let day = new Date(`${from}T00:00:00Z`); day <= new Date(`${to}T23:59:59Z`); day.setUTCDate(day.getUTCDate() + 1)) {
-      // AID-947: `directories: true` é recursão — sem ele o protocolo Blobs
-      // lista só o nível raso do prefixo e as chaves `<dia>/<source>/<eventId>`
-      // ficam invisíveis (export vazio). Paginado via cursor; comprovado
-      // contra o servidor local @netlify/blobs/server (verify-deployed-blobs).
-      let cursor;
-      do {
-        const listed = await this.store.list({ prefix: dayKey(day), directories: true, ...(cursor === undefined ? {} : { cursor }) });
-        for (const blob of listed.blobs) {
-          const value = await this.store.get(blob.key);
-          if (typeof value === "string" && value.length > 0) lines.push(value);
-        }
-        cursor = listed.nextCursor;
-      } while (cursor !== undefined && cursor !== null);
+      days.add(dayKey(day));
     }
+    let cursor;
+    do {
+      const listed = await this.store.list({ ...(cursor === undefined ? {} : { cursor }) });
+      for (const blob of listed.blobs) {
+        if (!days.has(blob.key.slice(0, 10))) continue;
+        const value = await this.store.get(blob.key);
+        if (typeof value === "string" && value.length > 0) lines.push(value);
+      }
+      cursor = listed.nextCursor;
+    } while (cursor !== undefined && cursor !== null);
     return lines;
   }
 
   /** Retention prune: delete blobs whose UTC day prefix is older than the window. */
   async prune(now = new Date()) {
+    // AID-961: listing FLAT sem `directories` — no edge API ela é recursiva
+    // (varre o store inteiro, paginada por cursor), que é exatamente o que o
+    // prune precisa. `directories: true` aqui seria delimitado (1 nível) e
+    // esconderia as chaves `<dia>/<source>/<eventId>`.
     const cutoff = now.getTime() - this.retentionDays * 24 * 60 * 60 * 1000;
     let cursor;
     do {

@@ -82,11 +82,43 @@ test("a projeção OS netlify/functions, quando presente, é cópia fiel do can�
   }
 });
 
-test("o staging do OS embarca wrapper e manifest (build-pilot-bundle.mjs)", async () => {
+test("o staging do OS embarca wrapper, manifest E lockfile, e instala as deps (build-pilot-bundle.mjs)", async () => {
   const staging = await readText(join(ROOT, "engines", "codexdojo-os-prototype", "scripts", "build-pilot-bundle.mjs"));
-  for (const file of ["netlify-blobs-runtime.mjs", "package.json"]) {
+  for (const file of ["netlify-blobs-runtime.mjs", "package.json", "package-lock.json"]) {
     assert.ok(staging.includes(`'${file}'`), `staging deve copiar ${file} para netlify/functions`);
   }
+  // AID-961 deploy gap (a): `netlify deploy` resolve @netlify/blobs no bundle
+  // time e falhou com "Could not resolve" sem install prévio — o staging é
+  // quem instala as deps das funções (npm ci pinado pelo lockfile).
+  assert.match(
+    staging,
+    /spawnSync\('npm', \['ci', '--ignore-scripts', '--no-audit', '--no-fund'\]/,
+    "staging deve rodar npm ci dentro de netlify/functions (AID-961)",
+  );
+});
+
+test("AID-961: o diretório canônico de funções é DEPLOYÁVEL — sem declarações .d.* (422 do deploy CLI)", async () => {
+  const fs = await import("node:fs/promises");
+  const entries = await fs.readdir(CANONICAL_FUNCTIONS, { withFileTypes: true });
+  const declarations = entries
+    .filter((entry) => entry.isFile() && /\.d\.(m|c)?(ts|js)$/.test(entry.name))
+    .map((entry) => entry.name);
+  assert.deepEqual(
+    declarations,
+    [],
+    "declarações de tipo no dir de funções fazem o deploy CLI do literacy rejeitar TODO o diretório com 422 Incorrect function names — mova para learner/gate/analytics/ (padrão AID-961)",
+  );
+  // A semântica de listagem do fix AID-961 (scan flat sem prefixo) não pode
+  // regredir para `directories` em nenhuma chamada store.list do coletor —
+  // o comportamento é travado ponta-a-ponta em verify_deployed_blobs.mjs
+  // (probe edge) e no teste v2 (fake edge-semântico); este scan é a barreira
+  // estática de cheap-fail no review.
+  const collector = await readText(join(CANONICAL_FUNCTIONS, "dojo-analytics-collector.mjs"));
+  assert.doesNotMatch(
+    collector,
+    /\.list\(\{[^}]*directories/,
+    "store.list com directories tem semântica divergente edge vs servidor local (defect AID-961) — use o scan flat sem prefixo",
+  );
 });
 
 test("cada superfície aponta o diretório de funções correto no netlify.toml", async () => {
