@@ -1,0 +1,153 @@
+{
+  "base": "http://127.0.0.1:4193",
+  "startedAt": "2026-09-06T22:33:20.097Z",
+  "steps": {
+    "w1Onboarding": {
+      "heading": true,
+      "boundaryShown": true,
+      "practicalCard": true,
+      "devCard": true,
+      "oneMinuteClaim": true
+    },
+    "w1HubAfterEnter": {
+      "hubHeading": true,
+      "devChapter": true,
+      "featuredMission": true
+    },
+    "w2Warehouse": {
+      "iframeSameOrigin": true,
+      "hudFinal": "Missão concluída; evidência emitida.",
+      "evidenceIdentity": {
+        "source": "voxeldojo",
+        "unit_id": "U2-key-value-store",
+        "project": "02_key_value_store",
+        "game": "KV WAREHOUSE",
+        "pass": true
+      }
+    },
+    "w2HostAfterMission": {
+      "verifierUnavailable": true,
+      "notSent": false,
+      "completionNotMastery": true,
+      "masteredWordLines": [
+        "Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS."
+      ],
+      "panelExcerpt": [
+        "0 verificadas · sem alteração local",
+        "EVIDÊNCIA",
+        "Verificador indisponível",
+        "A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.",
+        "COMPETÊNCIAS CANÔNICAS",
+        "Resultado da verificação",
+        "A evidência está segura. O verificador pode ser tentado novamente.",
+        "Tentar verificação novamente"
+      ]
+    },
+    "w4VerificationRecovery": {
+      "hubHonestStatus": true,
+      "activityCompletedPanel": true,
+      "evidencePreservedPanel": true,
+      "canonicalPanel": true,
+      "exitedViaSurfaceButton": true
+    },
+    "w3ReturningDevice": {
+      "hubRestored": true,
+      "hubHeadingSeen": true,
+      "sameDeviceLanguage": true,
+      "idbHasProgress": true,
+      "idbStatusSample": [
+        [
+          "ai-pratica:l01",
+          "available"
+        ],
+        [
+          "ai-pratica:l02",
+          "available"
+        ],
+        [
+          "ai-pratica:l03",
+          "locked"
+        ],
+        [
+          "ai-pratica:l04",
+          "locked"
+        ],
+        [
+          "ai-pratica:l05",
+          "locked"
+        ],
+        [
+          "ai-pratica:l06",
+          "locked"
+        ]
+      ],
+      "honestPanelAfterReload": true,
+      "masteredWordLines": [
+        "Uma missão em destaque, com prática observável e progresso que não confunde conclusão com competência.",
+        "Competência canônica",
+        "0 competências verificadas"
+      ],
+      "bodyExcerpt": "AI DevSchool\nhub de aprendizagem\nCapítulo IA Prática\nXP local 25\nMeta 25/25\nSEU PRÓXIMO PASSO ESTÁ PRONTO\nAprenda uma coisa útil agora.\nUma missão em destaque, com prática observável e progresso que não confunde conclusão com competência.\n1\nAtividade concluída\nSalva neste dispositivo\n2\nEvidência preservada\nSeparada do progresso local\n3\nVerificação independente\nTemporariamente indisponível\n4\nCompetência canônica\nNão alterada por este fluxo\nTentar verificação novamente\nPRÓXIMA MISSÃO · 4 MIN\nIA não é uma fonte de verdade\nDiante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho.\nResultado esperado: Compare as duas respostas, escolha a mais confiavel e marque os criterios de verificacao.\n1\nEntender\n2\nResponder\n3\nAplicar\nComeçar missão\nIA\nMentor contextual\nCoach contextual · sem ferramentas\n×\nIA não é uma fonte de verdade\nEtapa"
+    },
+    "w3VoxelReentry": {
+      "resumes": false,
+      "stateHonest": false,
+      "noSetupReplay": true,
+      "bodyExcerpt": " Sem WebGL, use a projeção acessível abaixo. L1 — Hash → prateleira Uma caixa sempre cai na prateleira para a qual sua chave faz hash. Mesma chave ⇒ mesma prateleira. Acerte a prateleira de ≥80% das caixas que chegam. Caixa 1 de 12: key:8gl33c:0 — clique na prateleira para a qual a chave faz hash. prateleira 0prateleira 1prateleira 2prateleira 3prateleira 4prateleira 5 prateleira 0 · 0 caixas prat"
+    },
+    "w5ClearedStorage": {
+      "backToOnboarding": true,
+      "boundaryRepeated": true,
+      "noCompletionClaim": true,
+      "noMasteryClaim": true
+    },
+    "w6LiteracyMount": {
+      "sameOrigin": true,
+      "lessonL02": true
+    },
+    "w6LiteracyComplete": {
+      "backAtHubEnabled": true,
+      "resultVisible": true,
+      "nextActionVisible": true,
+      "honestVerification": false,
+      "masteredWordLines": [
+        "Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS."
+      ],
+      "panelExcerpt": [
+        "Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho.",
+        "0 verificadas · sem alteração local",
+        "EVIDÊNCIA",
+        "Verificador indisponível",
+        "A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.",
+        "COMPETÊNCIAS CANÔNICAS",
+        "Primeira missão · Primeira prática · IA Prática iniciada",
+        "Resultado da verificação",
+        "A evidência está segura. O verificador pode ser tentado novamente.",
+        "Tentar verificação novamente"
+      ]
+    },
+    "w7LiteracyReturning": {
+      "reloadLandsOnMission": true,
+      "missionStateHonest": true,
+      "mentorBoundaryShown": true,
+      "noCrossDeviceClaim": true,
+      "bodyExcerpt": "← Hub\nIA PRÁTICA · 4 MIN\nIA não é uma fonte de verdade\nDiante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho.\nEstado canônico\npresenting\n0 verificadas · sem alteração local\nETAPA\nEntender\nMOTOR\nrunning\nEVIDÊNCIA\nAinda não enviada\nIA\nMentor contextual\nCoach contextual · sem ferramentas\n×\nIA não é uma fonte de verdade\nEtapa atual: understand\nTipo de ajuda\nPergunta\nExplicar\nPista\nSua pergunta\nPedir ajuda\nEu ajudo com perguntas e p"
+    },
+    "w7LiteracyHubContinuity": {
+      "hubShowsCompleted": true,
+      "nextMissionOffered": true,
+      "sameDeviceBoundary": true,
+      "honestVerificationPanel": true
+    },
+    "w8AccessibleRenderer": {
+      "accessibleProjection": true,
+      "acessivelChip": true
+    },
+    "w8AccessibleComplete": {
+      "hudFinal": "Missão concluída; evidência emitida.",
+      "completionNotMasteryVisible": true
+    }
+  },
+  "finishedAt": "2026-09-06T22:34:25.487Z",
+  "ok": true
+}

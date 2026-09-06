@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/voxelDojo/catalog.json",
+      "sha256": "99b01cc0f4c787b95f1f8d958cefba6a5954f394351fbdf5c07e41a84f8c9256"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "each-declared-game-runs-its-browser-smoke",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-06T22:12:14Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "e41b9b93d74af3e2b54e05a4f49275800b43bbe1",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-06T22:12:14Z-voxel-standalone-loop-e41b9b93",
+  "scenarioId": "voxel-standalone-loop",
+  "schemaVersion": 1,
+  "sourceFingerprint": "78ddc95d1179bb5c555525dbee6b70c001d76f32bc86d5ecec1ae29ac8a40e5d"
+}

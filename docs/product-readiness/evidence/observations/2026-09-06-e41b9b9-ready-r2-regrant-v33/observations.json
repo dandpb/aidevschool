@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "e41b9b93d74af3e2b54e05a4f49275800b43bbe1",
+  "observedAt": "2026-09-06T22:55:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Fresh context lands on 'O que você quer conseguir fazer com IA?' with the boundary stated up front ('Leva menos de um minuto. ... Sem conta; o progresso fica neste dispositivo.'), both tracks explicit and selectable (IA Prática/Dev cards); 'Entrar na escola' lands on the hub ('Aprenda uma coisa útil agora.') with featured next mission and steps — chosen track and next action are nameable from the surface alone (ev/qaos-01-onboarding.png, ev/qaos-02-hub-fresh.png; walk-log-os w1Onboarding/w1HubAfterEnter)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. After completing the hosted WAREHOUSE mission, reload restores the hub (heading + 'Capítulo IA Prática', XP local intact) with the four-step honest-progress panel ('1 Atividade concluída · Salva neste dispositivo / 2 Evidência preservada / 3 Verificação independente · Temporariamente indisponível / 4 Competência canônica · Não alterada por este fluxo'); app IndexedDB codexdojo-os/progress/os-progress retains missionStatusByKey (walk-log w3ReturningDevice.idbStatusSample); same-device language present and no cross-device claim (ev/qaos-06-hub-after-reload.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. A brand-new browser context (no shared storage) opening the pilot root lands back on onboarding with the boundary repeated; the page shows no 'concluída' completion text and no 'mastered' word (walk-log w5ClearedStorage noCompletionClaim/noMasteryClaim; ev/qaos-08-cleared-storage-onboarding.png) — cleared or unavailable local state returns safely to onboarding without inventing prior completion, explainable from shipped surfaces without repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Hosted LiteracyDojo mission 'IA não é uma fonte de verdade' (l02) mounts from the OS host origin (iframe src same-origin, ev/qaos-09-literacy-mission-mounted.png); after completing its three activities and finishing the lesson, the host shows the result honestly — 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.', 'Verificador indisponível', 'Resultado da verificação · A evidência está segura. O verificador pode ser tentado novamente.' — and the hub names the next action ('PRÓXIMA MISSÃO ... Começar missão') (ev/qaos-10-literacy-complete-host.png; walk-log w6LiteracyMount/w6LiteracyComplete panelExcerpt)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. With the static-deploy verifier unavailable, the surface keeps honest states and its own recovery paths: 'Verificador indisponível' + 'Tentar verificação novamente' on the mission, and back at the hub 'Verificação independente · Temporariamente indisponível' with 'Atividade concluída', 'Evidência preservada', 'Competência canônica · Não alterada por este fluxo' — exit via the surface's own 'Voltar ao hub' button, no repository intervention (ev/qaos-05-hub-honest-progress.png; walk-log w4VerificationRecovery); matches the facilitator guide's verification-unavailable row (preserve evidence, retry, escalate on implied acceptance)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Reloading while on the completed literacy mission returns the learner to the same mission page with honest local state ('Estado canônico presenting · 0 verificadas · sem alteração local', 'EVIDÊNCIA · Ainda não enviada', mentor boundary 'Nao cria evidencia nem avalia dominio'); '← Hub' then shows 'Atividade concluída', the next mission offered, 'Temporariamente indisponível' verification panel, and 'Salva neste dispositivo' — literacy continuity stays same-device with no sync claim (ev/qaos-11-literacy-returning-hub.png; walk-log w7LiteracyReturning/w7LiteracyHubContinuity)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Completing hosted WAREHOUSE emits the raw record pass=true (source voxeldojo, unit U2-key-value-store, project 02_key_value_store, walk-log w2Warehouse.evidenceIdentity) and the host panels keep the registers separate: 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.', '0 verificadas · sem alteração local', 'Verificador indisponível', 'COMPETÊNCIAS CANÔNICAS' — evidence preserved for a future verifier, no mastery claim on any observed surface (ev/qaos-03-warehouse-complete.png, ev/qaos-04-host-evidence-panel.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. With reduced motion emulated, the hosted WAREHOUSE mission selects the semantic projection ('accessible-projection' visible, host chip 'Acessível') and the core interaction completes by keyboard ('accessible-shelf-*' + Enter → 'Missão concluída; evidência emitida.', completion-is-not-mastery visible) (ev/qaos-12-accessible-projection.png, ev/qaos-13-accessible-complete.png; walk-log w8AccessibleRenderer/w8AccessibleComplete) — the facilitator guide names the exact threshold ('WebGL initialization fails → select the accessible renderer and retry with keyboard; escalate when both projections fail or the accessible projection loses the promised interaction'), and this walk confirms the first rung works as shipped."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. After the hosted WAREHOUSE mission and a reload, the hub restores with local progress intact (IndexedDB os-progress missionStatusByKey, walk-log w3ReturningDevice) and re-entering the mission shows honest state rather than a false resumption — on this pass the iframe fell back to the accessible projection banner ('Sem WebGL, use a projeção acessível abaixo') and restarted L1 for a fresh evidence record, with no cross-device or completion claim (ev/qaos-07-warehouse-reentry.png; walk-log w3VoxelReentry.bodyExcerpt); continuity boundary language stays 'neste dispositivo' at the hub."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. The daily view shows 'Sua lição de hoje' + 'Retome por aqui' with the active unit named ('KV WAREHOUSE: hash-map-backed CRUD with TTL expiration') and states its own boundary in place: 'Agendado por FSRS a partir dos seus gates executáveis. Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.' (the only 'dominadas' text is the canonical FSRS counter '2/2 dominadas', a read-only projection of verifier-owned gates, not a dojoToday claim) (ev/qadt-01-daily-view.png; walk-log-dojotoday w1DailyView)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Document/code review at e41b9b93: src/data/today.ts is generated ('AUTO-GERADO por learner/substrate/adapters/dojotoday.py — NÃO EDITAR À MÃO', source learner/learning_state.yaml + scheduler), regeneration happens only via prebuild 'cd ../.. && python3 -m learner.substrate', and the local projection UI itself states 'Não escreve learner/learning_state.yaml e não marca mastered' (src/localProjection.ts:109); no dojoToday code path writes learner state or mastery."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. The page presents the projection as scheduler output ('apenas mostra o scheduler'), offers no scheduling/marking action, and routes verification to the independent verifier ('O verificador independente decide') — a facilitator seeing stale guidance can stop at that boundary instead of presenting it as current (ev/qadt-02-boundary.png; walk-log-dojotoday w2BoundedExit)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-encounter-evidence",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Playing the documented token-bucket encounter emits 'Evidencia PASS emitida' plus the durable record (window.__pixelQuestEvidence + 'EVIDENCE <json>' console line; record unit U0-sonda-rate-limiter-robustness, project 01_rate_limiter, encounter-agent-quest-01, pass=true, verifier_required=true) and the surface states 'O verificador decide mastery' before any claim; the map status strip shows 'Evidencia PASS' — evidence is the artifact, completion/mastery never claimed by the game (ev/qapx-01-encounter-evidence.png, ev/qapx-02-map-status.png; walk-log-pixel w3EncounterEvidence/w4MapStatus)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-evidence-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "replay-recovers-evidence-without-state-promotion",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Document/code review at e41b9b93: evidence flows only through src/game/evidence/emitter.ts (validated, appended to window.__pixelQuestEvidence, echoed to console 'EVIDENCE <json>'); replaying an encounter appends a new raw record to the same channel — .logs/evidence.ndjson is persisted by the Playwright smoke harness, not by game code, and no pixel-quest source writes learner/learning_state.yaml, units_log or .mavis (EVIDENCE_CONTRACT.md; pixel-quest/AGENTS.md anti-patterns; grep of src shows no learner-state writes)."
+        },
+        {
+          "id": "missing-evidence-does-not-count-as-completion",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Before the encounter is answered there is no 'Evidencia PASS' claim anywhere (walk-log-pixel w2BeforeEvidence.noPassClaimYet), the status strip only lights up as 'Evidencia PASS' after the record is emitted, and the on-screen contract keeps 'O verificador decide mastery' — a screenshot or game status without the record is never presented as the deliverable (ev/qapx-02-map-status.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Standalone game-02-warehouse runs its deterministic L1 loop (hud 'L1 — Hash → prateleira', rule 'mesma chave ⇒ mesma prateleira', ≥80% target) and on completion emits exactly one raw record with game-scoped identity (source voxeldojo, unit U2-key-value-store, project 02_key_value_store, scenario kv-warehouse-L1, game KV WAREHOUSE, pass=true) locatable via window.__voxelDojoEvidence — scope is this game and this unit, no cross-game or mastery claim (ev/qavx-01-standalone-loop.png; walk-log-voxel w1StandaloneLoop/w1Evidence)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Document/code review at e41b9b93: game-02-warehouse provides createWarehouseAccessibleProjection via the shared sceneHarness; when WebGL is unsupported/times out the harness activates the accessible projection with an explicit reason ('unsupported'/'context-lost'/'load-timeout', engines/voxelDojo/shared/sceneHarness.ts:203-245) and publishes renderer state honestly ('none'/'failed' when no projection can be created); games that do not provide createAccessible get no fallback claim — the harness reports failure instead of inventing one."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. With WebGL disabled (--disable-webgl/--disable-webgl2), the standalone game mounts the accessible projection ('accessible-projection' visible, banner 'Sem WebGL, use a projeção acessível abaixo') and after start exposes 6 keyboard-operable shelf controls ('accessible-shelf-0..5', follow-up probe 23:0xZ) — the learner can continue the supported interaction or stop with no false completion or readiness claim (ev/qavx-02-accessible.png; walk-log-voxel w2AccessibleRenderer + probe shelvesAfterStart=6)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "minitown-explore-only",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "experimental-boundary-is-understood",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation sweep R2 2026-09-06 22:40-23:00Z (AID-930, ORDEM AID-972), chromium headless, walk scripts written and executed by the independent assessor (logs/walk-log-*.json + ev/*.png in this bundle), distinct from the producer CI runs (engines/*/test-results/readiness at e41b9b93, all pass); checkout e41b9b93 on branch qa/aid930-sweep-v33, git status clean of tracked changes before the walks; pilot bundle served by vite preview 127.0.0.1:4193 (npm run test:smoke:pilot dist contract); dojoToday dev 5181, pixel-quest dev 5174, voxelDojo game-02 dev localhost:5292. Document review at e41b9b93: student-guide 'Experimental: miniTown' states it is explore-only and 'makes no promise of completion, persistence, progression, evidence, or mastery', 'Nothing you see in miniTown means completed, verified, or mastered', and the runtime inspection hook is not learner evidence; the facilitator guide mirrors it (label experimental/explore-only, no saved progress/evidence/mastery, route guided outcomes to standalone LiteracyDojo); engine AGENTS.md: miniTown never writes canonical learner state. Producer playwright smoke (town-renders-and-advances) passed at e41b9b93 22:12:18Z."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

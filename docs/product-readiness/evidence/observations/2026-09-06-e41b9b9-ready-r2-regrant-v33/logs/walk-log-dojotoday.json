@@ -1,0 +1,24 @@
+{
+  "base": "http://127.0.0.1:5181",
+  "startedAt": "2026-09-06T22:27:16.476Z",
+  "steps": {
+    "w1DailyView": {
+      "headingToday": true,
+      "resumeHere": true,
+      "activeUnitNamed": true,
+      "guidanceOnlyBoundary": true,
+      "verifierBoundary": true,
+      "noMasteryClaim": false,
+      "dueReviewsShown": true,
+      "nextActionDocumented": true
+    },
+    "w2BoundedExit": {
+      "projectionStated": true,
+      "readOnlyNoScheduling": true,
+      "facilitatorStopPath": true,
+      "noFalseCurrency": true
+    }
+  },
+  "ok": true,
+  "finishedAt": "2026-09-06T22:27:17.475Z"
+}
