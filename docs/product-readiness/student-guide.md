@@ -9,11 +9,24 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-Este guia ensina o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador). No OS o caminho é Entrar na escola → IA Prática (l01–l03) e depois as três missões 3D (WAREHOUSE, WORMHOLE, RELAY STATION). A oferta pública agora inclui escolha de trilha no OS (IA Prática | Dev), o trilho Dev de 3 missões, o Engine Hub allowlist (voxel 16, PixelQuest, dojoToday local, literacy) e o CTA do LiteracyDojo avulso para `https://aidevschool-codexdojo-os.netlify.app/?track=dev`. As outras lições do avulso não estão no OS — quem muda de superfície recomeça. Isso não é certificado: concluída não é domínio. Sem conta nem cópia entre aparelhos. Em product-readiness, `os-voxel-guided-missions` e `os-returning-learner` estão `customer-ready` (assessment v30 @ `505e7a6`, 2026-09-06); `pixelquest-evidence-encounter`, `voxel-standalone-learning-loop` e `dojotoday-daily-guidance` permanecem no tier `validated-journey` — não chame estes últimos de customer-ready.
+A oferta **pronta para cliente** hoje tem duas superfícies públicas:
+
+**LiteracyDojo avulso** ([https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/)):
+- **Primeira lição**: **Mapa Inicial — l02**
+- **Corredor módulos 01–03**: 11 lições, desafios de módulo e revisões espaçadas no mesmo aparelho — detalhes na seção [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
+
+**codexDojo OS** ([https://aidevschool-codexdojo-os.netlify.app/](https://aidevschool-codexdojo-os.netlify.app/)):
+- **IA Prática** hospedada (l01–l03)
+- Três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
+- Retomar no mesmo aparelho
+
+Estes cinco caminhos estão `customer-ready` na matriz (assessment v33 @ `e41b9b9`, 2026-09-06). O OS pode mostrar escolha **IA Prática | Dev** e um Engine Hub no produto — a oferta paga CR são as missões hospedadas acima, **não** o catálogo voxel avulso, PixelQuest, dojoToday nem o CTA `?track=dev` como oferta de literacy no avulso. PixelQuest, voxelDojo avulso e dojoToday têm grant `validated-journey`; miniTown é `experimental` — **não** chame estes de customer-ready.
+
+Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). O onboarding oferece **IA Prática** ou **Dev** (`?track=dev` pré-seleciona Dev). Quem escolhe Dev não é forçado a refazer l01–l03. O trilho Dev publicado é **WAREHOUSE → WORMHOLE → RELAY STATION**. O Engine Hub lista voxelDojo, PixelQuest, dojoToday (sugestão neste dispositivo) e LiteracyDojo; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. A prontidão do trilho Dev (OS) está `customer-ready` (v30 @ `505e7a6`); o status do host continua progresso local, nunca domínio.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), as três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding pode oferecer **IA Prática** ou **Dev**; quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub lista voxelDojo, PixelQuest, dojoToday e literacy — **fora** da oferta paga CR; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
@@ -28,7 +41,7 @@ O [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) no Netlif
 
 ## Como fazer a primeira lição no LiteracyDojo avulso
 
-Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há conta. O progresso fica neste navegador. Concluída neste aparelho não é domínio verificado. Este caminho não leva ao OS — o avulso e o OS são superfícies separadas.
+Esta seção cobre a **primeira lição** (**Mapa Inicial — l02**), uma das ofertas CR do avulso. O **corredor (módulos 01–03)** é a outra — veja [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor). Não há conta. O progresso fica neste navegador. Concluída neste aparelho não é domínio verificado. Este caminho não leva ao OS — o avulso e o OS são superfícies separadas.
 
 1. Abra [https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/) em um navegador atual com armazenamento local habilitado.
 2. Na boas-vindas, leia que **Trilha Dev** está **Em breve**. Não entre nesse caminho.
@@ -43,11 +56,11 @@ Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há co
 
 ## Como fazer IA Prática no OS
 
-Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
+Oferta **pronta para cliente** (`os-literacy-guided-mission`, customer-ready). Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
 
 1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
-2. No onboarding, responda objetivo, contexto e confiança. A **Trilha Dev** nesta tela é a oferta para programadores (WAREHOUSE → WORMHOLE → RELAY STATION; o progresso é evidência bruta para verificador independente, não domínio). Para o começo guiado no-code, use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
-3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui para quem a escolheu; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
+2. No onboarding, responda objetivo, contexto e confiança. O produto pode mostrar **Trilha Dev** na mesma tela — é outro caminho CR para as três missões 3D (veja a seção abaixo), não o Engine Hub. Para **IA Prática**, use o cartão correspondente e **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. Siga a missão em destaque como próximo passo de **IA Prática**.
 4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
 5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
 6. No mapa, o texto é **Seis missões, uma sequência**. O botão voltar mostra **← Hub** (hub de aprendizado). **WAREHOUSE** pode aparecer como **Disponível** antes de terminar IA Prática — a interface pode liberar cedo. No piloto, siga a missão destacada como próximo passo; não pule para o 3D só porque **WAREHOUSE** parece aberto.
@@ -55,7 +68,7 @@ Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`).
 
 ## Como fazer as três missões 3D
 
-Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho.
+Oferta **pronta para cliente** (`os-voxel-guided-missions`, customer-ready). Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho. Quem escolheu **Dev** no onboarding segue o mesmo trilho de três missões hospedadas — não confunda com o catálogo voxel do Engine Hub.
 
 1. Volte ao hub de aprendizado (`/hub`) depois das três lições de IA Prática.
 2. Abra a missão 3D destacada como próximo passo — normalmente **WAREHOUSE** primeiro.
@@ -67,7 +80,7 @@ Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE*
 
 ## Como voltar no mesmo aparelho
 
-No OS e no LiteracyDojo avulso, o retorno funciona só no **mesmo navegador e aparelho** onde você começou.
+Oferta **pronta para cliente** no OS (`os-returning-learner`, customer-ready) e no LiteracyDojo avulso. O retorno funciona só no **mesmo navegador e aparelho** onde você começou.
 
 **No OS**
 
