@@ -1,0 +1,150 @@
+[
+ {
+  "onboardingLead": "Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo."
+ },
+ {
+  "onboardingLocalNote": "Sem conta: o progresso fica neste dispositivo."
+ },
+ {
+  "trackOptions": [
+   "RECOMENDADA PARA COMEÇAR\nIA Prática\nMicrolições no-code hospedadas. Conclusão local neste dispositivo, nunca domínio.",
+   "PARA PROGRAMADORES\nDev\nTrilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações."
+  ]
+ },
+ {
+  "recommendationNote": "Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION. IA Prática continua a um clique se você quiser um começo mais guiado."
+ },
+ {
+  "hubChapterChip": "Capítulo Dev"
+ },
+ {
+  "hubNextMission": "WAREHOUSE: Key-Value Store (in-memory)"
+ },
+ {
+  "hubHonestProgress": "Progresso honestoConclusão não é domínioO jogo e o mentor ajudam a produzir uma tentativa. A verificação independente é um requisito; este fluxo não altera o estado canônico.0 competências verificadasEntender meu progresso"
+ },
+ {
+  "progressScreen": "← HubProgresso com fonte visívelEsforço local não substitui competência verificada.Cada coluna mostra quem produz o estado. XP, prática e sequência ficam neste dispositivo; domínio vem apenas da projeção canônica.XP local0Fonte: OS / IndexedDBMeta de hoje0/25Fonte: OS / data localSequência local0 diasFonte: práticas locaisCompetências0Fonte: learner/substrate1Atividade concluídaEstado local salvo no dispositivo. Pode liberar a próxima missão, mas não certifica domínio.2Prática realizadaMarca que uma tentativa aplicou o conceito. Continua sendo um registro de engajamento local.3Evidência preservadaRegistro bruto do produtor, guardado fora do XP e sem poder de aprovar a si mesmo.4Veredito independenteRecibo separado e ligado ao digest da evidência. PASS ainda respeita a elegibilidade do gate.5Competência canônicaSomente a projeção de `learner/learning_state.yaml` pode apresentar este estado.Missões publicadasIA PráticaSua primeira conversa com uma IAConclusão localavailablePráticaPendenteVerificaçãoSem evidência recebidaCanônicoNão verificadaIA PráticaIA não é uma fonte de verdadeConclusão localavailablePráticaPendenteVerificaçãoSem evidência recebidaCanônicoNão verificadaIA PráticaO"
+ },
+ {
+  "warehouseFrameUrl": "http://127.0.0.1:4176/apps/warehouse/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4176"
+ },
+ {
+  "warehouseHostStatusArea": "EtapaResponderMotorrunningVisualização3D WebGLEvidênciaAinda não enviada"
+ },
+ {
+  "wormholeFrameUrl": "http://127.0.0.1:4176/apps/wormhole/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4176"
+ },
+ {
+  "wormholeHostStatusArea": "EtapaEntenderMotorlaunchingVisualização3D WebGLEvidênciaAinda não enviada"
+ },
+ {
+  "relayFrameUrl": "http://127.0.0.1:4176/apps/relay-station/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4176"
+ },
+ {
+  "relayHostStatusArea": "EtapaResponderMotorrunningVisualização3D WebGLEvidênciaAinda não enviada"
+ },
+ {
+  "rendererModeChip": "EtapaResponderMotorrunningVisualizaçãoAcessívelEvidênciaAinda não enviada"
+ },
+ {
+  "warehouseCompletionArea": "← HubSimulação hospedada · 12 minWAREHOUSE: Key-Value Store (in-memory)Comparar mapas e dicionários sob carga concorrente e persistência simples.Estado canônicopresenting0 verificadas · sem alteração localEtapaAplicarMotorcompletedVisualizaçãoAcessívelEvidênciaVerificador indisponívelIAMentor contextualCoach contextual · sem ferramentas×WAREHOUSE: Key-Value Store (in-memory)Etapa atual: applyTipo de ajudaPerguntaExplicarPistaSua perguntaQue pergunta pode me ajudar a pensar no proximo passo?Pedir ajudaEu ajudo com perguntas e pistas graduais, sem selecionar a resposta.Pistas do provedor: 0/5Nao cria evidencia nem avalia dominio.Prática concluída neste dispositivoSeu esforço virou um próximo passo claro.A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.XP nesta prática+25 XPXP total local25 XPCompetências canônicas0Nova conquistaPrimeira missão · Primeira prática · Trilha Dev iniciadaResultado da verificaçãoA evidência está segura. O verificador pode ser tentado novamente.Tentar verificação novamentePrecisa de ajuda? O facilitador responde em até 1 dia útil.WhatsApp · daniel@heropa.comVoltar ao hubPreveja a prateleira de cada chave e acompanhe a mesma simulacao deterministica por controles rotulados."
+ },
+ {
+  "hubChapterChipAfterCompletion": "Capítulo Dev"
+ },
+ {
+  "hubNextMissionAfterWarehouse": "WORMHOLE: URL Shortener"
+ },
+ {
+  "honestProgressSection": "1Atividade concluídaSalva neste dispositivo2Evidência preservadaSeparada do progresso local3Verificação independenteTemporariamente indisponível4Competência canônicaNão alterada por este fluxoTentar verificação novamente"
+ },
+ {
+  "missionStatusByKeyAfterWalk": {
+   "ai-pratica:l01": "available",
+   "ai-pratica:l02": "available",
+   "ai-pratica:l03": "locked",
+   "ai-pratica:l04": "locked",
+   "ai-pratica:l05": "locked",
+   "ai-pratica:l06": "locked",
+   "ai-pratica:l07": "locked",
+   "ai-pratica:l08": "locked",
+   "ai-pratica:l09": "locked",
+   "ai-pratica:l10": "locked",
+   "ai-pratica:l11": "locked",
+   "ai-pratica:l12": "locked",
+   "ai-pratica:l13": "locked",
+   "ai-pratica:l14": "locked",
+   "ai-pratica:l18": "locked",
+   "ai-pratica:l19": "locked",
+   "ai-pratica:l20": "locked",
+   "ai-pratica:l24": "locked",
+   "ai-pratica:l25": "locked",
+   "ai-pratica:l26": "locked",
+   "dev:game-02-warehouse": "completed",
+   "dev:game-03-wormhole": "available",
+   "dev:game-05-relay-station": "locked",
+   "dev:l15": "available",
+   "dev:l16": "locked",
+   "dev:l17": "locked",
+   "dev:game-06-pipeline-plant": "locked",
+   "dev:game-07-checkpoint-city": "locked",
+   "dev:game-08-timeline-tower": "locked",
+   "dev:game-09-docking-bay": "locked",
+   "dev:l21": "locked",
+   "dev:l22": "locked",
+   "dev:l23": "locked",
+   "dev:l27": "locked",
+   "dev:l28": "locked",
+   "dev:l29": "locked"
+  }
+ },
+ {
+  "missionStatusByKeyAfterReload": {
+   "ai-pratica:l01": "available",
+   "ai-pratica:l02": "available",
+   "ai-pratica:l03": "locked",
+   "ai-pratica:l04": "locked",
+   "ai-pratica:l05": "locked",
+   "ai-pratica:l06": "locked",
+   "ai-pratica:l07": "locked",
+   "ai-pratica:l08": "locked",
+   "ai-pratica:l09": "locked",
+   "ai-pratica:l10": "locked",
+   "ai-pratica:l11": "locked",
+   "ai-pratica:l12": "locked",
+   "ai-pratica:l13": "locked",
+   "ai-pratica:l14": "locked",
+   "ai-pratica:l18": "locked",
+   "ai-pratica:l19": "locked",
+   "ai-pratica:l20": "locked",
+   "ai-pratica:l24": "locked",
+   "ai-pratica:l25": "locked",
+   "ai-pratica:l26": "locked",
+   "dev:game-02-warehouse": "completed",
+   "dev:game-03-wormhole": "available",
+   "dev:game-05-relay-station": "locked",
+   "dev:l15": "available",
+   "dev:l16": "locked",
+   "dev:l17": "locked",
+   "dev:game-06-pipeline-plant": "locked",
+   "dev:game-07-checkpoint-city": "locked",
+   "dev:game-08-timeline-tower": "locked",
+   "dev:game-09-docking-bay": "locked",
+   "dev:l21": "locked",
+   "dev:l22": "locked",
+   "dev:l23": "locked",
+   "dev:l27": "locked",
+   "dev:l28": "locked",
+   "dev:l29": "locked"
+  }
+ },
+ {
+  "warehouseReentry": "← HubSimulação hospedada · 12 minWAREHOUSE: Key-Value Store (in-memory)Comparar mapas e dicionários sob carga concorrente e persistência simples.Estado canônicopresenting0 verificadas · sem alteração localEtapaResponderMotorrunningVisualizaçãoAcessívelEvidênciaAinda não enviadaIAMentor contextualCoach contextual · sem ferramentas×WAREHOUSE: Key-Value Store (in-memory)Etapa atual: respondTipo de ajudaPerguntaExplicarPistaSua perguntaQue pergunta pode me ajudar a pensar no proximo passo?Pedir ajudaEu ajudo com perguntas e pistas graduais, sem selecionar a resposta.Pistas do provedor: 0/5Nao cria evidencia nem avalia dominio.Preveja a prateleira de cada chave e acompanhe a mesma simulacao deterministica por controles rotulados."
+ },
+ {
+  "clearedStorageShowsCompletion": false,
+  "clearedStorageShowsMastery": false,
+  "clearedStorageOnboardingNote": "Sem conta: o progresso fica neste dispositivo."
+ }
+]

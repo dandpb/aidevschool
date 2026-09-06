@@ -1,0 +1,86 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "505e7a6cea00dfb0cb693c8bc6e81463a547a104",
+ "observedAt": "2026-09-06T13:24:00Z",
+ "scenarios": [
+  {
+   "scenarioId": "os-onboarding-track-choice",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-can-explain-track-choice",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk 2026-09-06 13:21-13:24Z (chromium over the static pilot build at main head 505e7a6 served by vite preview on 127.0.0.1:4176 — the same bundled dist/ contract as the published pilot route — fresh browser profile, viewport 1280x800; walk scripted and executed by the independent assessor, distinct from the producer's CI runs; log in walk-log-os.json). Onboarding asks 'O que você quer conseguir fazer com IA?' and states the boundary up front: 'Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.' plus 'Sem conta: o progresso fica neste dispositivo.' (ev/qav-01-onboarding-dev.png). The two track cards are explicit and selectable: IA Prática ('Recomendada para começar ... Conclusão local neste dispositivo, nunca domínio.') and Dev ('Para programadores ... Trilho guiado: WAREHOUSE → WORMHOLE → RELAY STATION. O Engine Hub abre as outras simulações.'). Selecting Dev updates the status line to 'Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION. IA Prática continua a um clique...' — the learner can state which track was chosen and why. After 'Entrar na escola' the hub confirms the choice in the chapter chip 'Capítulo Dev' and names the next action in the featured card: 'WAREHOUSE: Key-Value Store (in-memory)' with a 'Começar missão' launch control and a trilha progress bar (ev/qav-02-hub-dev.png). 'Entender meu progresso' opens a screen whose H1 states the reading rule in learner language — 'Esforço local não substitui competência verificada.' with 'XP, prática e sequência ficam neste dispositivo; domínio vem apenas da projeção canônica.' and per-column sources (ev/qav-03-progress.png). No repository knowledge was needed at any step."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-returning-recovery",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "facilitator-explains-local-state-loss",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand on the same walk: a brand-new browser context (no shared storage with the walked profile) opening the pilot root lands back on onboarding ('O que você quer conseguir fazer com IA?') with the device boundary repeated ('Sem conta: o progresso fica neste dispositivo.'), and the page contains no 'missão concluída' and no 'mastered' text (ev/qav-12-cleared-storage-onboarding.png; walk-log-os.json clearedStorageShowsCompletion=false, clearedStorageShowsMastery=false) — cleared or unavailable local state returns safely to onboarding without inventing prior completion. The facilitator can explain this loss boundary entirely from shipped surfaces, with no undocumented repository intervention: the onboarding local note states where progress lives, the hub honest-progress panel separates 'Atividade concluída — Salva neste dispositivo' from 'Competência canônica — Não alterada por este fluxo', the progress screen says 'Estado local salvo no dispositivo ... não certifica domínio', and the facilitator guide's recovery table directs 'Progress does not resume → Confirm the same browser profile and enabled storage; restart onboarding if local data was cleared' with escalation only when 'Same-profile supported state repeatedly disappears'. Support contacts shown on recovery states are the shipped WhatsApp/e-mail pair with a 1-business-day SLA."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-returning-device",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-local-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: after completing WAREHOUSE in the Dev track, reloading the same browser profile restores the supported local OS state without redoing setup — the hub still shows 'Capítulo Dev', the featured card advances to the next mission 'WORMHOLE: URL Shortener', and the four-step honest-progress panel reads '1 Atividade concluída · Salva neste dispositivo / 2 Evidência preservada · Separada do progresso local / 3 Verificação independente · Temporariamente indisponível / 4 Competência canônica · Não alterada por este fluxo' (ev/qav-09-returning-hub.png). The app's own IndexedDB (record codexdojo-os/os-progress) retains dev:game-02-warehouse = completed across a full reload (ev/qav-10-returning-reload.png; walk-log-os.json missionStatusByKeyAfterReload), and re-entering the mission resumes it mid-journey ('Etapa atual: respond', motor running) rather than replaying completed setup (ev/qav-11-warehouse-reentry.png). The same-device boundary is stated in learner language on every surface of the journey — 'Sem conta: o progresso fica neste dispositivo.' (onboarding), 'Salva neste dispositivo' (hub), 'Estado local salvo no dispositivo ... não certifica domínio' (progress screen) — and nothing in the UI promises cross-device sync, accounts, or transfer between the standalone app and the OS."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-voxel-hosted-missions",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-distinguishes-evidence-from-mastery",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: each supported hosted voxelDojo mission — WAREHOUSE, WORMHOLE, RELAY STATION — was launched from the Dev track and mounted from the OS's own origin in the static pilot build (iframe srcs http://127.0.0.1:4176/apps/warehouse/?hosted=1..., /apps/wormhole/..., /apps/relay-station/...; ev/qav-04-warehouse-mounted.png, qav-05-wormhole-mounted.png, qav-06-relay-mounted.png). The host status strip reports per-mission state honestly ('Etapa ... Motor running/launching · Visualização 3D WebGL · Evidência: Ainda não enviada') — a mission result is never presented as canonical mastery. Completing WAREHOUSE via the keyboard-operable accessible projection renders the explicit anti-conflation copy: 'Prática concluída neste dispositivo', 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' (data-testid completion-is-not-mastery), 'A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.' (ev/qav-08-warehouse-accessible-complete.png). In the static deploy no local verifier bridge exists and the host says so instead of implying a verdict — 'Evidência: Verificador indisponível' with 'A evidência está segura. O verificador pode ser tentado novamente.' — and the mission header keeps 'Estado canônico ... 0 verificadas · sem alteração local'. The learner-facing distinction (local completion vs raw evidence vs verified evidence vs mastery) is exactly the one the facilitator guide asks the learner to articulate."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-renderer-accessibility-recovery",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "facilitator-can-name-escalation-threshold",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: with prefers-reduced-motion enabled before launch, WAREHOUSE opened directly on the semantic projection — the host chip reads 'Visualização: Acessível' (not '3D WebGL') and the mission stays fully keyboard-operable via labeled controls (ev/qav-07-warehouse-accessible.png); the core journey completed end-to-end by keyboard alone (Enter on the labeled shelf controls) and still emitted the honest result state (ev/qav-08-warehouse-accessible-complete.png). The facilitator can name the escalation threshold from shipped surfaces without repository knowledge: the recovery table in the facilitator guide states for 'WebGL initialization fails' the safe recovery is 'Select the accessible renderer and retry the core interaction with keyboard controls' and escalation happens when 'Both projections fail or the accessible projection loses the promised interaction'; for blocked reduced-motion/keyboard flow, escalation when 'A claimed accessibility path cannot complete the core journey'. On-screen failure labels are specific and non-blaming ('WebGL não está disponível neste dispositivo.', 'A conexão com a GPU foi interrompida.', 'A visualização 3D não pôde ser restaurada.'), and support escalation contacts (WhatsApp primary, e-mail backup, 1 business day) are printed on the recovery states — the boundary of when the journey must stop is nameable before it is hit."
+    }
+   ]
+  },
+  {
+   "scenarioId": "os-voxel-returning-device",
+   "outcome": "pass",
+   "gaps": [],
+   "assertions": [
+    {
+     "id": "learner-understands-voxel-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Observed first-hand: after the hosted WAREHOUSE mission was completed on the profile, a reload of the OS restored the Dev track with the mission state intact — the hub chapter chip stays 'Capítulo Dev', the trilha progress advances (featured next mission becomes 'WORMHOLE: URL Shortener'), and the local progress record read from the app's own IndexedDB shows dev:game-02-warehouse = completed after the reload (ev/qav-09-returning-hub.png, ev/qav-10-returning-reload.png). Re-entering WAREHOUSE on the same profile resumes the mission ('Etapa atual: respond') instead of restarting it (ev/qav-11-warehouse-reentry.png). The continuity boundary is stated in the surface's own language: 'Atividade concluída · Salva neste dispositivo', 'Sem conta: o progresso fica neste dispositivo', and the progress screen's 'Estado local salvo no dispositivo. Pode liberar a próxima missão, mas não certifica domínio.' — nothing promises cross-device or cross-browser sync for hosted voxel missions, and the student guide's returning section matches what the surface shows (same browser/aparelho resumes; another browser, device, or cleared data starts over)."
+    }
+   ]
+  }
+ ]
+}
