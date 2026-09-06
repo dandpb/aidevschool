@@ -6,7 +6,7 @@ import { aggregateFunnel, renderMarkdownReport } from "../analytics/aggregate_fu
 // Seção literacyFunnel do relatório (ativação AID-913): funil por sessão
 // anônima efêmera, k-suppressão imutável, dedup por eventId do envelope v2.
 
-const FIXTURE = new URL("./fixtures/analytics/synthetic/events-2026-09-14.ndjson", import.meta.url);
+const FIXTURE = new URL("./fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson", import.meta.url);
 
 async function literacyEntries() {
   const raw = await readFile(FIXTURE, "utf8");

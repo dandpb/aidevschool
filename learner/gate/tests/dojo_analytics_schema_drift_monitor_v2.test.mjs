@@ -9,7 +9,7 @@ const FIXTURES = new URL("./fixtures/analytics/", import.meta.url);
 
 test("aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope", async () => {
   const { summary, exitCode } = await runMonitor({
-    inputs: [new URL("synthetic/events-2026-09-14.ndjson", FIXTURES).pathname],
+    inputs: [new URL("synthetic-v2/events-2026-09-14.ndjson", FIXTURES).pathname],
   });
   assert.equal(exitCode, 0, JSON.stringify(summary.samples, null, 2));
   assert.equal(summary.validOsEvents, 0);
@@ -21,7 +21,7 @@ test("aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope",
 
 test("drift literacy falha alto (exit 1) com motivo classificado", async () => {
   const { summary, exitCode } = await runMonitor({
-    inputs: [new URL("drift/events-2026-09-14.ndjson", FIXTURES).pathname],
+    inputs: [new URL("drift-v2/events-2026-09-14.ndjson", FIXTURES).pathname],
   });
   assert.equal(exitCode, 1);
   assert.equal(summary.driftCount, 2);
