@@ -26,3 +26,7 @@
 ## 2025-02-18 - Preserve deterministic random selection without array allocation
 **Learning:** When optimizing random selection logic (e.g., removing `.filter()` for GC performance) in deterministic simulations like `miniTown`, preserve the exact number and sequence of PRNG calls (e.g., `this.rng()`) to avoid breaking test suites that rely on reproducible random states. Use multi-pass O(N) loops rather than algorithms like reservoir sampling if they alter RNG consumption.
 **Action:** When converting array manipulations to loops for random selection, always count the valid elements in a first pass, roll the RNG exactly once as before, and use a second pass to find the selected element. Never change the conditions under which the RNG is called.
+
+## 2026-09-05 - Avoid submitting performance fixes without executable benchmark scripts and SDLC procedures
+**Learning:** PRs will be closed if performance optimizations are submitted without providing an executable benchmark artifact or skipping the mandatory SDLC sequence (intent -> spec -> countersign -> merge). CI aggregated `product readiness (claims)` can fail if a sub-project doesn't upload required readiness artifacts.
+**Action:** When implementing optimizations, always include the test/benchmark script inside the repository as concrete evidence (not just in memory/comments), and never bypass the repository's SDLC processes unless explicitly permitted. Wait for issue demands before optimizing experimental surfaces.
