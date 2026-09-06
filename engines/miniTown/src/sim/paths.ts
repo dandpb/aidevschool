@@ -235,28 +235,48 @@ export function findAdjacentWalkable(
   target: Cell,
   prefer: ReadonlyArray<Cell> = [],
 ): Cell | null {
-  const candidates: Cell[] = []
+  let bestCandidate: Cell | null = null
+  let bestScore = Infinity
+
+  // Optimization: Replaced O(N log N) filter+sort chain with an O(N) linear scan.
+  // This avoids intermediate array allocations and reduces GC pressure in hot loops
+  // like pathfinding and spawning, finding the best preferred candidate efficiently.
   for (const [dx, dy] of ROAD_NEIGHBOR_OFFSETS) {
     const nx = target.x + dx
     const ny = target.y + dy
     if (!grid.inBounds(nx, ny)) continue
     const cell = grid.cellAt(nx, ny)
     if (!cell) continue
-    candidates.push({ x: nx, y: ny })
+
+    // Find the score based on prefer-list membership
+    // Using a simple loop is faster than findIndex for small arrays
+    let score = Infinity
+    for (let i = 0; i < prefer.length; i++) {
+      if (prefer[i].x === nx && prefer[i].y === ny) {
+        score = i
+        break
+      }
+    }
+    // If not in prefer list, give a worse score than any index
+    if (score === Infinity) {
+      // We still consider this candidate, but want to prefer earlier candidates
+      // to maintain determinism as if it was returning 0 when both are not in prefer list.
+      // By assigning Infinity + dx + dy (or something stable), we can ensure stable fallback.
+      // Actually the old code did: if (ai === -1 && bi === -1) return 0;
+      // This means it kept original insertion order (which is ROAD_NEIGHBOR_OFFSETS order).
+      // Since we iterate in ROAD_NEIGHBOR_OFFSETS order, using a stable fallback score
+      // will pick the first one that is found. We'll use Infinity since < will be false for next Infinity.
+      score = Infinity
+    }
+
+    // Using < preserves the deterministic "first closest match" behavior
+    // of the previous stable sort implementation
+    if (bestCandidate === null || score < bestScore) {
+      bestScore = score
+      bestCandidate = { x: nx, y: ny }
+    }
   }
-  if (candidates.length === 0) return null
-  // Sort by prefer-list membership, then by Manhattan distance to the
-  // first preferred cell (so the result is deterministic but prefers
-  // cells closer to existing roads).
-  candidates.sort((a, b) => {
-    const ai = prefer.findIndex((p) => p.x === a.x && p.y === a.y)
-    const bi = prefer.findIndex((p) => p.x === b.x && p.y === b.y)
-    if (ai === -1 && bi === -1) return 0
-    if (ai === -1) return 1
-    if (bi === -1) return -1
-    return ai - bi
-  })
-  return candidates[0] ?? null
+  return bestCandidate
 }
 
 /** Manhattan distance between two cells. Used by spawners for proximity checks. */
