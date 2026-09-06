@@ -23,6 +23,11 @@ export declare const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly stri
 
 export declare function validateAnalyticsEvent(value: unknown): boolean
 export declare function isAnalyticsBatch(value: unknown): boolean
-export declare function createCollectorHandler(options?: { sink?: { append(events: unknown[]): Promise<void> } }): (request: Request) => Promise<Response>
+export declare function createCollectorHandler(options?: {
+  backing?: { append(events: unknown[], now?: Date): Promise<void>; readRange?(from: string, to: string): Promise<string[]>; prune?(now?: Date): Promise<void> }
+  sink?: { append(events: unknown[]): Promise<void> }
+  exportToken?: string
+  now?: Date | (() => Date)
+}): (request: Request) => Promise<Response>
 declare const handler: (request: Request) => Promise<Response>
 export default handler

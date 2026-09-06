@@ -184,6 +184,19 @@ jobs:
       # fixed l02-v3 contract test keeps the tracked function in lockstep with
       # the live literacy-verify deployment (fails closed on any drift).
       - run: node --test ../../learner/gate/tests/literacy_verify_netlify.test.mjs
+      # AID-913 second envelope + activation invariants (spec §3/§7): the v2
+      # collector contract and the executable activation-surface invariant.
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v2.test.mjs ../../learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs
+      # AID-947 durable-backing packaging invariant: the deployed functions
+      # must declare @netlify/blobs and load it through the static-import
+      # wrapper — the live backing was ephemeral /tmp NDJSON on both surfaces
+      # when this regressed (countersign AID-940 finding).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_packaging.test.mjs
+      # AID-947 end-to-end durable proof in CI: real local Blobs server
+      # (@netlify/blobs/server) + the collector's DEFAULT export — duplicate
+      # identical POSTs must collapse to one export line.
+      - run: npm ci --prefix ../../learner/gate/netlify-functions --ignore-scripts --no-audit --no-fund
+      - run: node ../../learner/gate/analytics/verify_deployed_blobs.mjs
       # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
       # contract tests run here, and the monitor itself fails high over the
       # synthetic fixtures (real pilot NDJSON never lands in the repo; the

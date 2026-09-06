@@ -1,0 +1,4 @@
+deployed-default POST #1: 202 | POST #2: 202
+/tmp NDJSON lines after POST #1: 1 | after identical POST #2: 2
+no runtime Blobs context -> NDJSON fallback (append-only, duplicates BY DESIGN locally).
+durable+idempotent path (1 line after duplicate POSTs): verify_deployed_blobs.mjs / CI step AID-947.

@@ -1,0 +1,23 @@
+AID-947 pre-fix root-cause repro — captured 2026-09-06 ~16:50Z against the
+65d64bca tree (post-AID-913 activation, pre-fix), node v24.18.0.
+
+$ node repro-rootcause.mjs   (pre-fix variant, same probes)
+A1 blobs-import: REJECTED code=ERR_MODULE_NOT_FOUND
+B1 deployed-default POST #1: 202
+B2 /tmp NDJSON lines after POST #1: 1
+B3 /tmp NDJSON lines after identical POST #2: 2 (idempotent store would keep 1)
+
+Reading:
+- A1: the bare specifier "@netlify/blobs" is unresolvable from the deployed
+  functions directory (declared nowhere; opaque to the functions bundler),
+  so BlobsEventStore.create() always returned null in production.
+- B1–B3: the module's DEFAULT export built its handler WITHOUT backing, so
+  the live collector always used NdjsonFileSink (/tmp, ephemeral per lambda
+  instance) — reproducing locally the exact black-box finding of the QA
+  countersign AID-940 (duplicate lines per eventId in the live export on
+  both surfaces).
+- Third latent defect (found while proving the fix): BlobsEventStore.readRange
+  listed with a trailing-slash prefix; the Blobs list protocol is
+  non-recursive without `directories: true`, so the export would have
+  returned ZERO lines even with the dependency and wiring fixed. Proven
+  against the real local Blobs server (@netlify/blobs/server).

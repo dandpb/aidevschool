@@ -14,6 +14,13 @@
 // runtime provides it; otherwise (local/test) the append-only NDJSON file
 // sink keeps behavior inspectable. A token-guarded GET exports the raw NDJSON
 // for the F2b funnel aggregation (k≥5 immutable, ADR-463 §3.0).
+//
+// AID-947 durability fix: the deployed default export now actually selects
+// that durable backing (it previously always built the /tmp NDJSON sink),
+// and the Blobs client reaches the deployed bundle through the static-import
+// wrapper netlify-blobs-runtime.mjs declared in this directory's package.json
+// (a bare dynamic specifier is opaque to the functions bundler and never
+// shipped — the live backing was ephemeral /tmp on both surfaces).
 
 // Node builtins load lazily so importing this module for vocabulary parity
 // checks stays side-effect-free and browser-test-runner friendly.
@@ -375,12 +382,15 @@ export class BlobsEventStore {
   static async create({ retentionDays } = {}) {
     let blobs;
     try {
-      // Especificador opaco ao bundler (variável + @vite-ignore): a
-      // dependência existe só no runtime Netlify — em vite/vitest o import
-      // rejeita em runtime e o fallback (NDJSON) assume; nunca quebra a
-      // suíte de paridade do OS.
-      const moduleId = "@netlify/blobs";
-      blobs = await import(/* @vite-ignore */ moduleId);
+      // AID-947: o cliente Blobs entra por um wrapper com import ESTÁTICO
+      // (netlify-blobs-runtime.mjs) — o bundler do Netlify (esbuild) consegue
+      // traçar e embutir a dependência no bundle deployado, coisa que um
+      // dynamic import de bare specifier (opaco ao bundler) nunca permitiu;
+      // a dependência ficava fora do pacote e a produção caía silenciosamente
+      // no NDJSON /tmp efêmero (achado do countersign AID-940). Em
+      // vite/vitest o import do wrapper ainda rejeita em runtime e o fallback
+      // (NDJSON) assume — nunca quebra a suíte de paridade do OS.
+      blobs = await import(/* @vite-ignore */ "./netlify-blobs-runtime.mjs");
     } catch {
       return null;
     }
@@ -408,12 +418,19 @@ export class BlobsEventStore {
     if (!UTC_DAY.test(from) || !UTC_DAY.test(to)) return [];
     const lines = [];
     for (let day = new Date(`${from}T00:00:00Z`); day <= new Date(`${to}T23:59:59Z`); day.setUTCDate(day.getUTCDate() + 1)) {
-      const prefix = `${dayKey(day)}/`;
-      const listed = await this.store.list({ prefix });
-      for (const blob of listed.blobs) {
-        const value = await this.store.get(blob.key);
-        if (typeof value === "string" && value.length > 0) lines.push(value);
-      }
+      // AID-947: `directories: true` é recursão — sem ele o protocolo Blobs
+      // lista só o nível raso do prefixo e as chaves `<dia>/<source>/<eventId>`
+      // ficam invisíveis (export vazio). Paginado via cursor; comprovado
+      // contra o servidor local @netlify/blobs/server (verify-deployed-blobs).
+      let cursor;
+      do {
+        const listed = await this.store.list({ prefix: dayKey(day), directories: true, ...(cursor === undefined ? {} : { cursor }) });
+        for (const blob of listed.blobs) {
+          const value = await this.store.get(blob.key);
+          if (typeof value === "string" && value.length > 0) lines.push(value);
+        }
+        cursor = listed.nextCursor;
+      } while (cursor !== undefined && cursor !== null);
     }
     return lines;
   }
@@ -421,15 +438,19 @@ export class BlobsEventStore {
   /** Retention prune: delete blobs whose UTC day prefix is older than the window. */
   async prune(now = new Date()) {
     const cutoff = now.getTime() - this.retentionDays * 24 * 60 * 60 * 1000;
-    const listed = await this.store.list();
-    for (const blob of listed.blobs) {
-      const day = blob.key.split("/")[0];
-      if (!UTC_DAY.test(day)) continue;
-      const fileDay = Date.parse(`${day}T00:00:00Z`);
-      if (!Number.isNaN(fileDay) && fileDay < cutoff) {
-        await this.store.delete(blob.key).catch(() => undefined);
+    let cursor;
+    do {
+      const listed = await this.store.list({ ...(cursor === undefined ? {} : { cursor }) });
+      for (const blob of listed.blobs) {
+        const day = blob.key.split("/")[0];
+        if (!UTC_DAY.test(day)) continue;
+        const fileDay = Date.parse(`${day}T00:00:00Z`);
+        if (!Number.isNaN(fileDay) && fileDay < cutoff) {
+          await this.store.delete(blob.key).catch(() => undefined);
+        }
       }
-    }
+      cursor = listed.nextCursor;
+    } while (cursor !== undefined && cursor !== null);
   }
 }
 
@@ -463,9 +484,14 @@ export function createCollectorHandler({
   backing,
   sink,
   exportToken = process.env.ANALYTICS_EXPORT_TOKEN,
-  now = new Date(),
+  now = () => new Date(),
 } = {}) {
   const store = backing ?? sink ?? new NdjsonFileSink();
+  // AID-947: `now` pode ser um Date fixo (testes determinísticos) ou uma
+  // função de relógio (default). O default por função evita congelar o dia
+  // UTC em instâncias de função de longa vida: eventos pós-virada de dia
+  // continuam indo para o bucket do dia certo.
+  const currentTime = typeof now === "function" ? now : () => now;
   return async (request) => {
     const originalPath = request.headers.get("x-nf-original-path");
     const pathname = originalPath || new URL(request.url).pathname;
@@ -482,7 +508,7 @@ export function createCollectorHandler({
         return json({ error: "unauthorized" }, 401);
       }
       const url = new URL(request.url);
-      const today = dayKey(now instanceof Date ? now : new Date());
+      const today = dayKey(currentTime());
       const from = url.searchParams.get("from") ?? today;
       const to = url.searchParams.get("to") ?? today;
       const lines = await store.readRange(from, to);
@@ -513,9 +539,30 @@ export function createCollectorHandler({
     } else {
       return json({ error: "unsupported-schema" }, 422);
     }
-    await store.append(accepted, now);
+    await store.append(accepted, currentTime());
     return json({ acceptedEventIds: accepted.map((event) => event.eventId) }, 202);
   };
 }
 
-export default createCollectorHandler();
+// AID-947: o handler deployado (default export) agora seleciona o backing
+// durável — Netlify Blobs quando o runtime o prove, NDJSON apenas como
+// fallback local/test. Antes o default export construía o handler SEM
+// backing, então o live escrevia sempre no /tmp efêmero mesmo com Blobs
+// disponível (defeito AID-947; reproduzido localmente antes deste fix).
+// Seleção preguiçosa no 1º request: mantém o módulo livre de top-level
+// await; falha de inicialização é reintegrada no request seguinte.
+let deployedHandlerPromise;
+export default async function deployedHandler(request) {
+  if (deployedHandlerPromise === undefined) {
+    deployedHandlerPromise = createAnalyticsBacking().then(({ store }) =>
+      createCollectorHandler({ backing: store }));
+  }
+  let handlerImpl;
+  try {
+    handlerImpl = await deployedHandlerPromise;
+  } catch (error) {
+    deployedHandlerPromise = undefined; // init retried on the next request
+    throw error;
+  }
+  return handlerImpl(request);
+}
