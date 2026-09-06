@@ -9,24 +9,21 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-A oferta **pronta para cliente** hoje tem duas superfícies públicas:
+A oferta **pronta para cliente** hoje inclui **cinco caminhos customer-ready** (assessment v33 @ `e41b9b9`, 2026-09-06):
 
-**LiteracyDojo avulso** ([https://aidevschool-literacydojo.netlify.app/](https://aidevschool-literacydojo.netlify.app/)):
-- **Primeira lição**: **Mapa Inicial — l02**
-- **Corredor módulos 01–03**: 11 lições, desafios de módulo e revisões espaçadas no mesmo aparelho — detalhes na seção [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
+1. **Primeira lição avulsa** — **Mapa Inicial — l02** ([LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/))
+2. **Corredor avulso mod 01–03** — 11 lições, desafios de módulo e revisões espaçadas no mesmo aparelho — detalhes na seção [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
+3. **OS — IA Prática** (l01–l03) — escolha **IA Prática** no onboarding ([codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/))
+4. **OS — trilho Dev** — três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); escolha **Dev** no onboarding ou siga depois de IA Prática
+5. **OS — retomar no mesmo aparelho** — literacy ou 3D, conforme progresso local
 
-**codexDojo OS** ([https://aidevschool-codexdojo-os.netlify.app/](https://aidevschool-codexdojo-os.netlify.app/)):
-- **IA Prática** hospedada (l01–l03)
-- Três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
-- Retomar no mesmo aparelho
-
-Estes cinco caminhos estão `customer-ready` na matriz (assessment v33 @ `e41b9b9`, 2026-09-06). O OS pode mostrar escolha **IA Prática | Dev** e um Engine Hub no produto — a oferta paga CR são as missões hospedadas acima, **não** o catálogo voxel avulso, PixelQuest, dojoToday nem o CTA `?track=dev` como oferta de literacy no avulso. PixelQuest, voxelDojo avulso e dojoToday têm grant `validated-journey`; miniTown é `experimental` — **não** chame estes de customer-ready.
+O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. A oferta paga **não** inclui Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday nem miniTown. PixelQuest, voxelDojo avulso e dojoToday têm grant `validated-journey`; miniTown é `experimental`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), as três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding pode oferecer **IA Prática** ou **Dev**; quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub lista voxelDojo, PixelQuest, dojoToday e literacy — **fora** da oferta paga CR; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), o trilho **Dev** de três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding **oferece escolha de trilha**: **IA Prática** ou **Dev**. Quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub lista voxelDojo, PixelQuest, dojoToday e literacy — **fora** da oferta paga CR; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
@@ -59,7 +56,7 @@ Esta seção cobre a **primeira lição** (**Mapa Inicial — l02**), uma das of
 Oferta **pronta para cliente** (`os-literacy-guided-mission`, customer-ready). Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
 
 1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
-2. No onboarding, responda objetivo, contexto e confiança. O produto pode mostrar **Trilha Dev** na mesma tela — é outro caminho CR para as três missões 3D (veja a seção abaixo), não o Engine Hub. Para **IA Prática**, use o cartão correspondente e **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+2. No onboarding, responda objetivo, contexto e confiança. O produto **oferece escolha IA Prática | Dev** — escolha **IA Prática** para este caminho CR (l01–l03). **Dev** é o caminho CR alternativo para as três missões 3D (veja a seção abaixo). Depois selecione **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
 3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. Siga a missão em destaque como próximo passo de **IA Prática**.
 4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
 5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
@@ -68,9 +65,9 @@ Oferta **pronta para cliente** (`os-literacy-guided-mission`, customer-ready). U
 
 ## Como fazer as três missões 3D
 
-Oferta **pronta para cliente** (`os-voxel-guided-missions`, customer-ready). Depois de l01–l03 em **IA Prática**, o hub de aprendizado aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho. Quem escolheu **Dev** no onboarding segue o mesmo trilho de três missões hospedadas — não confunda com o catálogo voxel do Engine Hub.
+Oferta **pronta para cliente** (`os-voxel-guided-missions`, customer-ready). Entrada pelo trilho **Dev** no onboarding **ou** depois de l01–l03 em **IA Prática** — em ambos os casos o hub aponta **WAREHOUSE**, depois **WORMHOLE**, depois **RELAY STATION**, na ordem do trilho. Não confunda com o catálogo voxel do Engine Hub.
 
-1. Volte ao hub de aprendizado (`/hub`) depois das três lições de IA Prática.
+1. Se escolheu **Dev** no onboarding, siga as três missões destacadas no hub. Se veio de **IA Prática**, volte ao hub de aprendizado (`/hub`) depois de l01–l03.
 2. Abra a missão 3D destacada como próximo passo — normalmente **WAREHOUSE** primeiro.
 3. Complete a interação na simulação e volte ao resultado do host. Leia o status antes de seguir.
 4. Repita para **WORMHOLE** e depois **RELAY STATION**, sempre pela missão destacada no hub.
@@ -80,11 +77,11 @@ Oferta **pronta para cliente** (`os-voxel-guided-missions`, customer-ready). Dep
 
 ## Como voltar no mesmo aparelho
 
-Oferta **pronta para cliente** no OS (`os-returning-learner`, customer-ready) e no LiteracyDojo avulso. O retorno funciona só no **mesmo navegador e aparelho** onde você começou.
+Oferta **pronta para cliente** no OS (`os-returning-learner`, customer-ready **pass**) e no LiteracyDojo avulso. O retorno funciona só no **mesmo navegador e aparelho** onde você começou.
 
 **No OS**
 
-1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding. **Trilha Dev** pode ainda aparecer na interface; siga a missão destacada, não essa trilha.
+1. Abra de novo o mesmo endereço na raiz (`/`). Se o onboarding já foi concluído, você volta ao hub de aprendizado (`/hub`), não ao onboarding. A escolha **IA Prática | Dev** pode ainda aparecer — siga a missão destacada da trilha que você escolheu (literacy ou 3D).
 2. A missão destacada mostra onde continuar — literacy ou 3D, conforme o que já concluiu neste aparelho.
 3. Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding. Não há conta nem sincronização entre dispositivos.
 4. Concluída neste aparelho não é domínio verificado.

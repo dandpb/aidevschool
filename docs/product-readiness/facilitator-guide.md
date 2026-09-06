@@ -10,12 +10,15 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-**Pronta para cliente no main** (assessment v33 @ `e41b9b9`, 2026-09-06):
+**Pronta para cliente no main** (assessment v33 @ `e41b9b9`, 2026-09-06) — **cinco caminhos customer-ready**:
 
-- **LiteracyDojo avulso** — **primeira lição** (**Mapa Inicial — l02**) e **corredor módulos 01–03** (11 lições, desafios de módulo, revisões espaçadas no mesmo aparelho). Detalhes operacionais do corredor em [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor).
-- **codexDojo OS** (`https://aidevschool-codexdojo-os.netlify.app/`) — **IA Prática** l01–l03, três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**), retorno no mesmo aparelho.
+1. **`literacy-standalone-first-lesson`** — primeira lição avulsa (**Mapa Inicial — l02**)
+2. **`literacy-standalone-corridor-mod01-03`** — corredor avulso mod 01–03 (11 lições, desafios de módulo, revisões espaçadas no mesmo aparelho) — detalhes em [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
+3. **`os-literacy-guided-mission`** — OS **IA Prática** l01–l03 (escolha **IA Prática** no onboarding)
+4. **`os-voxel-guided-missions`** — OS trilho **Dev**: três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
+5. **`os-returning-learner`** — retorno no mesmo aparelho (literacy ou 3D)
 
-O OS pode mostrar escolha **IA Prática | Dev** e Engine Hub no produto — a oferta paga CR são as missões hospedadas acima, **não** o catálogo voxel avulso, PixelQuest, dojoToday, `?track=dev` como CTA de literacy no avulso, nem labs de operador. PixelQuest, voxelDojo avulso e dojoToday têm grant `validated-journey`; miniTown é `experimental` — **não** os venda como customer-ready.
+Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2) e [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. **Não** venda Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday ou miniTown como oferta paga CR (grants `validated-journey` ou `experimental`). No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
 
@@ -37,16 +40,16 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 
 ## Percurso atual no codexDojo OS
 
-A oferta CR no OS inclui **IA Prática** (l01–l03), três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O OS público pode ter escolha entre **IA Prática** e **Dev** e um Engine Hub allowlist
+A oferta CR no OS inclui **IA Prática** (l01–l03), trilho **Dev** de três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O OS público **oferece escolha de trilha** entre **IA Prática** e **Dev** e um Engine Hub allowlist
 (voxel, PixelQuest, dojoToday local, literacy) — **fora** da oferta paga CR. Labs e miniTown só com `?operator=1`.
 O trilho Dev hospedado é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
 lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso e dojoToday têm grant
 `validated-journey` — não prometa customer-ready. Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
-1. Onboarding curto → **Entrar na escola**.
-2. Missões de **IA Prática** hospedadas (l01–l03), na ordem do trilho.
-3. As três simulações 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY
+1. Onboarding curto → escolha **IA Prática** ou **Dev** → **Entrar na escola**.
+2. Se **IA Prática**: missões hospedadas (l01–l03), na ordem do trilho.
+3. Se **Dev** (ou após IA Prática): três simulações 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY
    STATION**), na ordem do trilho.
 4. Mesmo aparelho, sem conta, sem prometer sincronização entre dispositivos nem
    entre avulso e OS.
@@ -85,8 +88,8 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 **O que observar**
 
-1. Entrada em `/` (não `/desktop`), onboarding (objetivo, contexto, confiança). O deploy público **mostra** **Trilha Dev** no onboarding — caminho CR alternativo para as três missões 3D; para **IA Prática**, o aprendiz usa o cartão correspondente e **Entrar na escola**, com a mensagem de progresso neste dispositivo.
-2. Chegada ao **hub de aprendizado** (`/hub`) — missão em destaque; **Trilha Dev** também pode aparecer na interface. **Não** é o Engine Hub do operador. Caminho recomendado: missão em destaque (l02 primeiro).
+1. Entrada em `/` (não `/desktop`), onboarding (objetivo, contexto, confiança). O deploy público **oferece escolha IA Prática | Dev** — para **IA Prática**, o aprendiz escolhe esse cartão e **Entrar na escola**, com a mensagem de progresso neste dispositivo. **Dev** é caminho CR alternativo para as três missões 3D.
+2. Chegada ao **hub de aprendizado** (`/hub`) — missão em destaque; a escolha de trilha pode ainda aparecer. **Não** é o Engine Hub do operador. Caminho **IA Prática**: missão em destaque (l02 primeiro).
 3. Primeira recomendação l02; l01 no mapa sem pré-requisito; l03 após l02.
 4. Três missões literacy completas seguindo a missão destacada.
 5. Mapa **Seis missões, uma sequência**; voltar **← Hub**.
@@ -129,7 +132,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 **O que observar (OS)**
 
-1. Mesmo navegador/aparelho: `/` redireciona a `/hub` se `onboarding.completed`. **Trilha Dev** pode ainda aparecer no hub; o retorno segue a missão destacada (literacy ou 3D).
+1. Mesmo navegador/aparelho: `/` redireciona a `/hub` se `onboarding.completed`. A escolha **IA Prática | Dev** pode ainda aparecer; o retorno segue a missão destacada da trilha escolhida (literacy ou 3D).
 2. Hub mostra a missão destacada conforme progresso local (literacy ou 3D).
 3. Outro navegador, outro aparelho ou dados apagados = onboarding de novo. Sem sync.
 4. Concluída neste aparelho ≠ domínio verificado.
