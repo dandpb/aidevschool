@@ -21,15 +21,21 @@ export default defineConfig({
   ],
   webServer: [
     {
-      command: `VITE_LITERACY_E2E=1 npm run dev -- --port ${appPort} --strictPort`,
+      // AID-867: o guard falha rápido com erro explícito se a porta já tiver um
+      // servidor vivo (de outro app ou de rodada anterior); o `--strictPort`
+      // cobre a corrida entre o probe e o bind do vite.
+      command: `node scripts/e2e-port-guard.mjs --port ${appPort} --role app && VITE_LITERACY_E2E=1 npm run dev -- --port ${appPort} --strictPort`,
       url: `http://localhost:${appPort}`,
-      reuseExistingServer: !process.env.CI,
+      // Nunca reusar um servidor vivo: o health-check `url` aceita QUALQUER app
+      // respondendo na porta e o Playwright rodaria a suíte contra o app errado
+      // sem aviso (AID-867: 8 falsas falhas na baseline l08–l13).
+      reuseExistingServer: false,
       timeout: 60_000,
     },
     {
       // `vite build` direto: o conteúdo já foi gerado por pretest:e2e e regenerá-lo
       // aqui invalidaria o dev server que já está servindo a outra suíte.
-      command: `npx vite build && npm run preview -- --port ${pwaPort} --strictPort`,
+      command: `node scripts/e2e-port-guard.mjs --port ${pwaPort} --role pwa && npx vite build && npm run preview -- --port ${pwaPort} --strictPort`,
       url: `http://localhost:${pwaPort}`,
       // Sempre sobe um preview novo: reusar um servidor "vivo" de outra rodada
       // deixava o build velho (ou já encerrado) atender o teste de offline.
