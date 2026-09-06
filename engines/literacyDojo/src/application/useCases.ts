@@ -1,6 +1,22 @@
+import type { AnalyticsIdentity } from "../adapters/analyticsIdentity";
 import type { Clock } from "../adapters/clock";
 import type { ActivityDefinition, LessonDefinition } from "../data/generated/lessons";
-import { buildLessonCompletedEvent } from "../domain/analytics";
+import {
+  buildActivityAttemptedEvent,
+  buildLessonCompletedEvent,
+  buildLessonStartedEvent,
+  buildReviewCompletedEvent,
+  buildReviewStartedEvent,
+} from "../domain/analytics";
+import {
+  type CompleteCheckpointResult,
+  type ModuleCheckpointId,
+  checkpointById,
+  completeCheckpointSession,
+  isCheckpointAvailable,
+  isCheckpointCompleted,
+  startCheckpointSession,
+} from "../domain/checkpoints";
 import { type ActivityAnswer, type EvaluationResult, evaluateActivity } from "../domain/evaluation";
 import { type LiteracyEvidenceRecord, buildEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
@@ -20,6 +36,7 @@ import {
   recordActivityAttempt,
   recordMapInitialHintRequest,
   recordMapInitialRetry,
+  scheduleReviewForLesson,
   startLesson as startLessonInDomain,
 } from "../domain/progress";
 import { parseImportedProgress, serializeProgressForExport } from "../domain/progressBackup";
@@ -43,8 +60,10 @@ export type UseCaseDeps = {
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
-  /** Analytics de produto (ADR-0009) — piloto `lesson_completed`. */
+  /** Analytics de produto (ADR-0009, emenda AID-913): funil entry→start→attempt→complete. */
   analytics: AnalyticsSink;
+  /** Identidade anônima efêmera (sessionId por page load + eventId por evento). */
+  analyticsIdentity: AnalyticsIdentity;
 };
 
 export type SubmitAttemptResult = {
@@ -135,12 +154,27 @@ export class LiteracyUseCases {
   }
 
   async startLesson(lessonId: string): Promise<LearnerProgress> {
-    this.requireLesson(lessonId);
+    const lesson = this.requireLesson(lessonId);
     const progress = await this.requireProgress();
     if (!isLessonUnlocked(progress, lessonId))
       throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
     const next = startLessonInDomain(progress, lessonId);
     await this.deps.progress.save(next);
+    // Funil AID-913: estágio "início de lição". Fire-and-forget após o
+    // progresso persistir — o sink nunca lança nem bloqueia a lição.
+    this.deps.analytics.track(
+      buildLessonStartedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        { lessonId: lesson.id, lessonVersion: lesson.version },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
     return next;
   }
 
@@ -208,6 +242,27 @@ export class LiteracyUseCases {
     });
     this.deps.evidence.emit(record);
 
+    // Funil AID-913: estágio "tentativa" — passa ou não; tentativas repetidas
+    // na mesma lição/sessão são o marcador de retry. A avaliação detalhada
+    // fica na evidência (canal próprio); analytics carrega só o resultado.
+    this.deps.analytics.track(
+      buildActivityAttemptedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        {
+          lessonId: lesson.id,
+          activityType: activity.type,
+          passed: evaluation.pass,
+        },
+        {
+          occurredAt: now.toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
+
     return {
       progress: next,
       evaluation,
@@ -265,55 +320,162 @@ export class LiteracyUseCases {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    // ADR-0009 piloto: exatamente 1× `lesson_completed` por conclusão, após o
-    // progresso persistir. Fire-and-forget — o contrato dos sinks é nunca
-    // lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+    // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
+    // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
+    // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
+    // lição.
     this.deps.analytics.track(
-      buildLessonCompletedEvent({
-        lessonId: lesson.id,
-        lessonVersion: lesson.version,
-        score: result.outcome.lessonScore,
-        durationSeconds: input.durationSeconds,
-        occurredAt: this.deps.clock().toISOString(),
-        contentVersion: this.deps.content.getContentVersion(),
-      }),
+      buildLessonCompletedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        {
+          lessonId: lesson.id,
+          lessonVersion: lesson.version,
+          score: result.outcome.lessonScore,
+          durationSeconds: input.durationSeconds,
+        },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
     );
     return result;
   }
 
   /**
    * Início de uma revisão espaçada: a lição precisa estar concluída. Não muda
-   * status nem concede XP — apenas registra o evento e devolve o contexto.
+   * status nem concede XP — registra o evento de medição (spec AID-915 §4.3)
+   * e devolve o contexto. Fire-and-forget: analytics nunca bloqueia a lição.
    */
   async startReview(
     lessonId: string,
-  ): Promise<{ progress: LearnerProgress; intervalDays: number }> {
+  ): Promise<{ progress: LearnerProgress; intervalDays: number; stage: number }> {
     const lesson = this.requireLesson(lessonId);
     const progress = await this.requireProgress();
     if (progress.lessonStatus[lessonId] !== "completed") {
       throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
     }
-    const bestPasses = Math.max(
+    const bestStage = Math.max(
       0,
-      ...lesson.skillIds.map((skillId) => (progress.skills[skillId]?.passes ?? 1) - 1),
+      ...lesson.skillIds.map((skillId) => {
+        const practice = progress.skills[skillId];
+        // Estágio persistido (§4.4) manda; legado sem estágio deriva de passes.
+        return practice?.reviewStage ?? (practice?.passes ?? 1) - 1;
+      }),
     );
-    const stage = Math.min(lesson.review.intervalsDays.length - 1, bestPasses);
+    const stage = Math.min(lesson.review.intervalsDays.length - 1, bestStage);
     const intervalDays = lesson.review.intervalsDays[stage] ?? 1;
-    return { progress, intervalDays };
+    this.deps.analytics.track(
+      buildReviewStartedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        { lessonId, intervalDays, stage },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
+    return { progress, intervalDays, stage };
   }
 
   /**
-   * Conclusão de uma revisão espaçada: sem XP de lição e sem desbloqueio; a
-   * agenda seguinte já foi avançada pelas próprias tentativas (passes → estágio).
+   * Conclusão de uma revisão espaçada: sem XP de lição e sem desbloqueio. Com
+   * `intervalIndex` (estágio na abertura + 1), REAGENDA a lição em exatamente
+   * um hop da janela [1,7,21] com clamp no último estágio (spec AID-915 §4.4
+   * — uma sessão de revisão = um avanço de estágio; sem isso, lições de N
+   * atividades saltariam N estágios por sessão). Emite `review_completed`
+   * quando aprovada (spec AID-915 §4.3).
    */
   async completeReview(input: {
     lessonId: string;
     bestScores: Record<string, number>;
+    intervalIndex?: number;
   }): Promise<CompleteLessonResult> {
     const lesson = this.requireLesson(input.lessonId);
     const outcome = evaluateLessonCompletion(lesson, input.bestScores);
-    const progress = await this.requireProgress();
+    let progress = await this.requireProgress();
+    if (outcome.completed) {
+      if (input.intervalIndex !== undefined) {
+        progress = scheduleReviewForLesson(
+          progress,
+          lesson,
+          this.deps.clock(),
+          input.intervalIndex,
+        );
+        await this.deps.progress.save(progress);
+      }
+      this.deps.analytics.track(
+        buildReviewCompletedEvent(
+          {
+            sessionId: this.deps.analyticsIdentity.sessionId,
+            eventId: this.deps.analyticsIdentity.nextEventId(),
+          },
+          { lessonId: input.lessonId, score: outcome.lessonScore },
+          {
+            occurredAt: this.deps.clock().toISOString(),
+            contentVersion: this.deps.content.getContentVersion(),
+          },
+        ),
+      );
+    }
     return { progress, outcome };
+  }
+
+  /**
+   * Corredor literacy (spec AID-915 §3): início de uma sessão de Desafio de
+   * Módulo. Exige disponibilidade (última lição do módulo concluída) e conta
+   * a tentativa. As atividades são submetidas pelo fluxo comum
+   * (`submitActivityAttempt`) com o lessonId ORIGINAL e `context:"review"` —
+   * schema de evidência intacto, skills avançam pelo caminho já existente.
+   */
+  async startCheckpoint(checkpointId: ModuleCheckpointId): Promise<{ progress: LearnerProgress }> {
+    const progress = await this.requireProgress();
+    const next = startCheckpointSession(progress, this.deps.content.listModules(), checkpointId);
+    await this.deps.progress.save(next);
+    return { progress: next };
+  }
+
+  /** Disponibilidade/completação do desafio para a UI (mapa, home). */
+  async checkpointState(checkpointId: ModuleCheckpointId): Promise<{
+    available: boolean;
+    completed: boolean;
+  }> {
+    const progress = await this.requireProgress();
+    return {
+      available: isCheckpointAvailable(progress, this.deps.content.listModules(), checkpointId),
+      completed: isCheckpointCompleted(progress, checkpointId),
+    };
+  }
+
+  /**
+   * Fim de uma sessão de Desafio: média das melhores notas ≥ 0.75 →
+   * `completed` + desbloqueio da primeira lição do módulo seguinte (gate
+   * locked-only). Falha não muda status (retry ilimitado, §3.4).
+   */
+  async completeCheckpoint(input: {
+    checkpointId: ModuleCheckpointId;
+    bestScores: Record<string, number>;
+  }): Promise<CompleteCheckpointResult> {
+    const checkpoint = checkpointById(input.checkpointId);
+    const progress = await this.requireProgress();
+    const scores = checkpoint.activityRefs.map(
+      (ref) => input.bestScores[`${ref.lessonId}:${ref.activityId}`] ?? 0,
+    );
+    const result = completeCheckpointSession(
+      progress,
+      this.deps.content.listModules(),
+      input.checkpointId,
+      scores,
+      this.deps.clock(),
+    );
+    await this.deps.progress.save(result.progress);
+    return result;
   }
 
   /** Ponto de retomada após reload: onboarding pendente → onboarding; lição em andamento → player; senão → home. */

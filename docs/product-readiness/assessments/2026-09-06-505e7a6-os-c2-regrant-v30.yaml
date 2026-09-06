@@ -1,0 +1,23 @@
+schemaVersion: 1
+assessmentId: 2026-09-06-505e7a6-os-c2-regrant-v30
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-06T13:40:00Z'
+revalidateBy: '2026-10-06'
+gitSha: 505e7a6cea00dfb0cb693c8bc6e81463a547a104
+decisions:
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T13:24:00Z-os-voxel-hosted-missions-mixed-505e7a6c
+  - 2026-09-06T13:24:00Z-os-renderer-accessibility-recovery-mixed-505e7a6c
+  - 2026-09-06T13:24:00Z-os-voxel-returning-device-mixed-505e7a6c
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T13:24:00Z-os-onboarding-track-choice-mixed-505e7a6c
+  - 2026-09-06T13:24:00Z-os-returning-recovery-mixed-505e7a6c
+  - 2026-09-06T13:24:00Z-os-returning-device-mixed-505e7a6c

@@ -9,11 +9,11 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-Este guia ensina o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador). No OS o caminho é Entrar na escola → IA Prática (l01–l03) e depois as três missões 3D (WAREHOUSE, WORMHOLE, RELAY STATION). A oferta pública agora inclui escolha de trilha no OS (IA Prática | Dev), o trilho Dev de 3 missões, o Engine Hub allowlist (voxel 16, PixelQuest, dojoToday local, literacy) e o CTA do LiteracyDojo avulso para `https://aidevschool-codexdojo-os.netlify.app/?track=dev`. As outras lições do avulso não estão no OS — quem muda de superfície recomeça. Isso não é certificado: concluída não é domínio. Sem conta nem cópia entre aparelhos. Use cases Dev em product-readiness (`os-voxel-guided-missions`, `os-returning-learner`, `pixelquest-evidence-encounter`, `voxel-standalone-learning-loop`, `dojotoday-daily-guidance`) continuam `stale` até assessment fresco — não chame de customer-ready.
+Este guia ensina o LiteracyDojo avulso (primeira lição, Mapa Inicial — l02; só essa lição nesta oferta) e o site do OS (endereço fixo, no navegador). No OS o caminho é Entrar na escola → IA Prática (l01–l03) e depois as três missões 3D (WAREHOUSE, WORMHOLE, RELAY STATION). A oferta pública agora inclui escolha de trilha no OS (IA Prática | Dev), o trilho Dev de 3 missões, o Engine Hub allowlist (voxel 16, PixelQuest, dojoToday local, literacy) e o CTA do LiteracyDojo avulso para `https://aidevschool-codexdojo-os.netlify.app/?track=dev`. As outras lições do avulso não estão no OS — quem muda de superfície recomeça. Isso não é certificado: concluída não é domínio. Sem conta nem cópia entre aparelhos. Em product-readiness, `os-voxel-guided-missions` e `os-returning-learner` estão `customer-ready` (assessment v30 @ `505e7a6`, 2026-09-06); `pixelquest-evidence-encounter`, `voxel-standalone-learning-loop` e `dojotoday-daily-guidance` permanecem no tier `validated-journey` — não chame estes últimos de customer-ready.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). O onboarding oferece **IA Prática** ou **Dev** (`?track=dev` pré-seleciona Dev). Quem escolhe Dev não é forçado a refazer l01–l03. O trilho Dev publicado é **WAREHOUSE → WORMHOLE → RELAY STATION**. O Engine Hub lista voxelDojo, PixelQuest, dojoToday (sugestão neste dispositivo) e LiteracyDojo; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. A prontidão Dev permanece `stale`.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). O onboarding oferece **IA Prática** ou **Dev** (`?track=dev` pré-seleciona Dev). Quem escolhe Dev não é forçado a refazer l01–l03. O trilho Dev publicado é **WAREHOUSE → WORMHOLE → RELAY STATION**. O Engine Hub lista voxelDojo, PixelQuest, dojoToday (sugestão neste dispositivo) e LiteracyDojo; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. A prontidão do trilho Dev (OS) está `customer-ready` (v30 @ `505e7a6`); o status do host continua progresso local, nunca domínio.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
@@ -46,8 +46,8 @@ Esta oferta cobre só a primeira lição (**Mapa Inicial — l02**). Não há co
 Use o endereço fixo que o facilitador passou. Abra em `/` (não em `/desktop`). Não há conta; o progresso fica neste aparelho. Concluída no host não é domínio verificado.
 
 1. Abra o site do OS na raiz (`/`) em um navegador atual com armazenamento local habilitado.
-2. No onboarding, responda objetivo, contexto e confiança. Você pode **ver** menções a **Trilha Dev** nesta tela — essa trilha **não** faz parte da oferta pronta neste piloto. Use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
-3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
+2. No onboarding, responda objetivo, contexto e confiança. A **Trilha Dev** nesta tela é a oferta para programadores (WAREHOUSE → WORMHOLE → RELAY STATION; o progresso é evidência bruta para verificador independente, não domínio). Para o começo guiado no-code, use o cartão de **IA Prática** e o botão **Entrar na escola**. A mensagem diz que, sem conta, o progresso fica neste dispositivo.
+3. Você entra no **hub de aprendizado** (`/hub`). É o ponto de missões — não é o Engine Hub do operador. **Trilha Dev** também pode aparecer aqui para quem a escolheu; não é o caminho desta oferta. Siga a missão em destaque como próximo passo de **IA Prática**.
 4. A primeira recomendação é l02 (**IA não é uma fonte de verdade**). No mapa, l01 também está disponível sem pré-requisito. l03 só abre depois de l02.
 5. Complete as três missões de **IA Prática** hospedadas (l01, l02 e l03), seguindo a missão destacada como próximo passo.
 6. No mapa, o texto é **Seis missões, uma sequência**. O botão voltar mostra **← Hub** (hub de aprendizado). **WAREHOUSE** pode aparecer como **Disponível** antes de terminar IA Prática — a interface pode liberar cedo. No piloto, siga a missão destacada como próximo passo; não pule para o 3D só porque **WAREHOUSE** parece aberto.
@@ -113,6 +113,24 @@ If a page reload interrupts an activity, return to the map and restart that less
 ### Supported next action
 
 Continue to the next available LiteracyDojo lesson on the same device. The standalone route does not automatically transfer progress to another engine or grant canonical mastery.
+
+## Standalone LiteracyDojo corridor
+
+### O que é o Desafio de Módulo
+
+Depois de concluir todas as lições de um bairro (módulo), o mapa abre o **Desafio do Módulo**: 3–4 atividades rápidas, uma de cada lição que você já fez, em menos de 3 minutos. É revisão, não conteúdo novo. Você precisa passar no desafio (média das notas ≥ 75%) para entrar no próximo bairro. Se falhar, nada é perdido — leia o feedback, peça uma dica e tente de novo quantas vezes quiser. O que você já concluiu continua valendo.
+
+### Por que as revisões voltam
+
+Concluir uma lição agenda uma revisão para o dia seguinte, depois em 7 dias e depois em 21 dias — é o jeito de fixar o conteúdo, não uma punição. Quando a revisão está no dia, a Home mostra o cartão **Revisão pendente**. Fazer a revisão não muda sua posição na trilha.
+
+### Limites do dispositivo
+
+O corredor inteiro (3 bairros, 11 lições, 3 desafios e as revisões) fica salvo **somente neste navegador**, como o resto da trilha. Não há conta nem sincronização entre aparelhos; limpar os dados do site apaga o progresso local. Faça o backup JSON em **Ver seu progresso** antes de limpar dados ou trocar de navegador.
+
+### Próxima ação
+
+Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir, ou complete a revisão do dia mostrada na Home — sempre no mesmo aparelho. Se algo não carregar ou o progresso desaparecer, pare de tentar e peça ajuda a um facilitador.
 
 ## Experimental: miniTown
 

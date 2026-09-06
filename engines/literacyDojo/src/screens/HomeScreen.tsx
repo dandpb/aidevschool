@@ -13,6 +13,7 @@ export function HomeScreen({
   progress,
   onContinue,
   onReview,
+  onOpenCheckpoint,
   onOpenMap,
   onOpenProgress,
   onReset,
@@ -20,6 +21,7 @@ export function HomeScreen({
   progress: LearnerProgress;
   onContinue: (lessonId: string) => void;
   onReview: (lessonId: string) => void;
+  onOpenCheckpoint: (checkpointId: "cp-01" | "cp-02" | "cp-03") => void;
   onOpenMap: () => void;
   onOpenProgress: () => void;
   onReset: () => void;
@@ -28,6 +30,7 @@ export function HomeScreen({
   const track = services.content.getTrack();
   const queries = buildTrackQueries(progress, services.content, services.clock);
   const { mission, reviewLesson, dailyGoal: goal, trackSummary: summary, dueReviews } = queries;
+  const pendingCheckpoint = queries.pendingCheckpoint;
 
   const handleReset = () => {
     if (window.confirm("Apagar todo o progresso deste aparelho e recomeçar do zero?")) {
@@ -68,9 +71,28 @@ export function HomeScreen({
 
       <div className="card mission-card">
         <p className="card-kicker">PEDIDO DA VILA</p>
-        <h2>Um morador precisa da sua ajuda</h2>
-        {mission ? (
+        {pendingCheckpoint ? (
           <>
+            <h2 data-testid="checkpoint-mission">
+              Continuar: Desafio do Módulo {pendingCheckpoint.module.order}
+            </h2>
+            <p className="muted">
+              {pendingCheckpoint.checkpoint.activityRefs.length} atividades rápidas de{" "}
+              {pendingCheckpoint.module.title} — menos de 3 minutos. Complete para entrar no próximo
+              bairro.
+            </p>
+            <button
+              type="button"
+              className="btn btn-primary"
+              data-testid="continue-button"
+              onClick={() => onOpenCheckpoint(pendingCheckpoint.checkpoint.id)}
+            >
+              Continuar: Desafio do Módulo {pendingCheckpoint.module.order}
+            </button>
+          </>
+        ) : mission ? (
+          <>
+            <h2>Um morador precisa da sua ajuda</h2>
             <p className="card-title" data-testid="mission-title">
               {mission.title}
             </p>

@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Duas superfícies públicas: LiteracyDojo avulso e OS (`https://aidevschool-codexdojo-os.netlify.app/`). O OS oferece escolha **IA Prática | Dev**, trilho Dev de 3 missões, e Engine Hub allowlist. O avulso tem CTA para o OS `?track=dev`. **Não** venda use cases Dev como customer-ready: eles estão `stale`. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), nem labs de operador no CTA.
+Duas superfícies públicas: LiteracyDojo avulso e OS (`https://aidevschool-codexdojo-os.netlify.app/`). O OS oferece escolha **IA Prática | Dev**, trilho Dev de 3 missões, e Engine Hub allowlist. O avulso tem CTA para o OS `?track=dev`. Os use cases Dev do OS (`os-voxel-guided-missions`, `os-returning-learner`) estão `customer-ready` (v30 @ `505e7a6`); os demais use cases Dev (PixelQuest, voxelDojo avulso, dojoToday) seguem `validated-journey` — não os venda como customer-ready. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), nem labs de operador no CTA.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -35,7 +35,9 @@ não cobre.
 O OS público tem escolha entre **IA Prática** e **Dev** e um Engine Hub allowlist
 (voxel, PixelQuest, dojoToday local, literacy). Labs e miniTown só com `?operator=1`.
 O trilho Dev é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
-lições avulsas como se existirem no OS. A prontidão Dev permanece `stale`. Não
+lições avulsas como se existirem no OS. O trilho Dev do OS está `customer-ready`
+(v30 @ `505e7a6`); PixelQuest, voxelDojo avulso e dojoToday seguem
+`validated-journey`. Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.
@@ -98,7 +100,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 ## Como fazer as três missões 3D
 
-**Grant:** `os-voxel-guided-missions` — customer-ready **pass**. Pode orientar WAREHOUSE → WORMHOLE → RELAY STATION no OS.
+**Grant:** `os-voxel-guided-missions` — customer-ready **pass** (v30 @ `505e7a6`, 2026-09-06). Pode orientar WAREHOUSE → WORMHOLE → RELAY STATION no OS.
 
 **O que observar**
 
@@ -118,7 +120,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 
 ## Como voltar no mesmo aparelho
 
-**Grant:** `os-returning-learner` — customer-ready com **conditional-follow-up**. Pode orientar retorno no mesmo aparelho; não prometa sync.
+**Grant:** `os-returning-learner` — customer-ready **pass** (v30 @ `505e7a6`, 2026-09-06). Pode orientar retorno no mesmo aparelho; não prometa sync.
 
 **O que observar (OS)**
 
@@ -175,6 +177,30 @@ Record the scenario outcome, visible failures, browser/device context, and any i
 ### Evaluate
 
 The journey passes observation only when the learner can start without repository knowledge, use feedback and retry, reach a local completed result, explain that it is not mastery, and name the next supported action. Record any critical or high gap as blocking; documentation is not a workaround for a broken core or recovery journey.
+
+## Standalone LiteracyDojo corridor
+
+### Preparar
+
+- Mesma preparação do LiteracyDojo avulso (navegador compatível, armazenamento habilitado, perfil separado para observação limpa).
+- Para o corredor, um perfil que já concluiu o módulo 1 (ou um backup JSON de retorno) é mais útil que um perfil novo: o momento observável é o Desafio de Módulo e a revisão espaçada.
+
+### Observar (gate, retry, revisão)
+
+- **Gate entre bairros:** ao concluir as lições de um bairro, o Desafio do Módulo abre no mapa e na Home ("Continuar: Desafio do Módulo N"). Observe se o aprendiz entende que precisa passar no desafio para entrar no próximo bairro — e que falhar não perde nada.
+- **Retry no desafio:** se uma atividade do desafio falhar, observe se a pessoa lê o feedback, pede dica e tenta de novo sem pedir ajuda. O módulo seguinte deve continuar bloqueado até passar.
+- **Revisão espaçada:** com uma revisão vencida (D+1), a Home mostra "Revisão pendente". Observe se a pessoa distingue revisão de conteúdo novo e se entende que revisar não muda a posição na trilha.
+- Perguntas de fechamento: "O que aconteceu quando você errou no desafio?" e "O que você faria amanhã?"
+
+### Recuperação segura
+
+- Retry e reabertura são sempre seguros: nenhuma conclusão é perdida e lições antigas nunca são re-bloqueadas (grandfathering).
+- **Nunca** reverta ou reescreva o progresso do aprendiz para "destravar" algo; se o gate parecer travado, verifique se o Desafio do Módulo anterior aparece concluído no mapa.
+- Ajustes de relógio do aparelho não são suporte: revisões vencem por data local; mexer no relógio é manipulação de teste, não procedimento de facilitador.
+
+### Escalonamento
+
+Os mesmos canais do LiteracyDojo avulso: WhatsApp (primário) e daniel@heropa.com (backup), resposta em 1 dia útil. Escale se o Desafio de Módulo não abrir com o bairro concluído, se o módulo seguinte não destravar após aprovação, ou se a revisão vencida não aparecer na Home no dia seguinte.
 
 ## Experimental: miniTown
 

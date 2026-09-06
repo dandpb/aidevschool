@@ -1,7 +1,8 @@
 import type { LessonDefinition, ModuleDefinition } from "../data/generated/lessons";
+import { isLessonGateLocked } from "./checkpoints";
 import { nextReadyLessonId, readyLessonEntries } from "./track";
 
-export const PROGRESS_SCHEMA_VERSION = 3;
+export const PROGRESS_SCHEMA_VERSION = 4;
 export const MAP_INITIAL_LESSON_ID = "l02";
 
 /**
@@ -19,6 +20,14 @@ export type SkillPractice = {
   lastScore: number;
   lastPracticedAt: string;
   nextReviewAt?: string;
+  /**
+   * Estágio de revisão persistido (corredor, spec AID-915 §4.4): quantos hops
+   * da janela [1,7,21] a skill já completou. Uma SESSÃO de revisão aprovada
+   * avança exatamente 1 estágio (com clamp) — sem isso, lições de N atividades
+   * saltariam N estágios por sessão. Ausente = legado pré-corredor: o estágio
+   * deriva de `passes` (comportamento anterior preservado).
+   */
+  reviewStage?: number;
 };
 
 export type OnboardingGoal = "write_better" | "save_time" | "verify_answers" | "protect_data";
@@ -108,11 +117,25 @@ export type ApplicationReport = {
   reportedAt: string;
 };
 
+/**
+ * Estado dos Desafios de Módulo do corredor (spec AID-915 §3.3), keyed by
+ * moduleId. `status` fica em "available" até a aprovação; `completed` nunca é
+ * derivado sem tentativa avaliada. Disponibilidade é predicado (última lição
+ * do módulo concluída), não estado armazenado.
+ */
+export type ModuleCheckpoint = {
+  status: "available" | "completed";
+  bestScore: number;
+  attempts: number;
+  completedAt?: string;
+};
+
 export type LearnerProgress = {
   schemaVersion: number;
   contentVersion: string;
   currentLessonId: string;
   lessonStatus: Record<string, LessonStatus>;
+  moduleCheckpoints: Record<string, ModuleCheckpoint>;
   skills: Record<string, SkillPractice>;
   xp: number;
   streak: { current: number; longest: number; lastActivityDate?: string };
@@ -158,6 +181,7 @@ export function createInitialProgress(
     contentVersion,
     currentLessonId: ready[0]?.id ?? "",
     lessonStatus,
+    moduleCheckpoints: {},
     skills: {},
     xp: 0,
     streak: { current: 0, longest: 0 },
@@ -215,6 +239,14 @@ export function completeOnboarding(
   };
 }
 
+/**
+ * Desbloqueio linear por ordem das `ready`, com o gate do corredor (spec
+ * AID-915 §3.4): uma lição `locked` que é a primeira de um módulo ativado
+ * (CHECKPOINT_ACTIVATION) só desbloqueia com o Desafio do módulo anterior
+ * concluído. O gate age SOMENTE sobre status `locked` — nada que já está
+ * `available`/`in_progress`/`completed` é re-bloqueado (grandfathering,
+ * padrão retrofit O3-C1). Módulos fora do mapa seguem linear como hoje.
+ */
 export function unlockNextReadyLesson(
   progress: LearnerProgress,
   modules: ModuleDefinition[],
@@ -223,6 +255,7 @@ export function unlockNextReadyLesson(
   const nextId = nextLessonIdFor(progress, modules, completedLessonId);
   if (!nextId) return { progress };
   if (progress.lessonStatus[nextId] !== "locked") return { progress, unlockedLessonId: nextId };
+  if (isLessonGateLocked(progress, modules, nextId)) return { progress };
   return {
     progress: {
       ...progress,
@@ -322,9 +355,16 @@ export function applyAttemptToSkills(
       lastScore: score,
       lastPracticedAt: iso,
       nextReviewAt: previous?.nextReviewAt,
+      reviewStage: previous?.reviewStage,
     };
     if (passed && intervalsDays.length > 0) {
-      const stage = clampStage(passes - 1, intervalsDays.length - 1);
+      // Com estágio persistido (corredor §4.4), cada aprovação avança 1 hop a
+      // partir dele; legado sem estágio deriva de passes (semântica anterior).
+      const stage =
+        previous?.reviewStage !== undefined
+          ? clampStage(previous.reviewStage + 1, intervalsDays.length - 1)
+          : clampStage(passes - 1, intervalsDays.length - 1);
+      next.reviewStage = stage;
       next.nextReviewAt = new Date(now.getTime() + intervalsDays[stage] * DAY_MS).toISOString();
     }
     skills[skillId] = next;
@@ -539,7 +579,7 @@ export function scheduleReviewForLesson(
       lastScore: 0,
       lastPracticedAt: now.toISOString(),
     };
-    skills[skillId] = { ...previous, nextReviewAt };
+    skills[skillId] = { ...previous, nextReviewAt, reviewStage: stage };
   }
   return { ...progress, skills };
 }

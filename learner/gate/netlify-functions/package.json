@@ -1,0 +1,8 @@
+{
+  "name": "learner-gate-netlify-functions",
+  "private": true,
+  "description": "Deployable Netlify Functions for the learner trust boundary. The analytics collector resolves @netlify/blobs from here at runtime (AID-947); Netlify installs these dependencies when bundling the functions directory.",
+  "dependencies": {
+    "@netlify/blobs": "10.7.13"
+  }
+}

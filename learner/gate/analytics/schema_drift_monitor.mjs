@@ -1,18 +1,19 @@
-// Schema-drift monitor for the OS analytics collector (AID-473 F2).
+// Schema-drift monitor for the analytics collectors (AID-473 F2; literacy v2
+// support added by the AID-913 activation).
 //
 // The closed vocabularies are canonical in
-// engines/codexdojo-os-prototype/src/analytics/events.ts (emission side) and
-// projected into the staged collector (receiving side); the vitest parity test
-// src/analytics/collectorParity.test.ts fails CI when those two diverge. This
-// monitor imports the parity-locked projection from the collector module, so
-// "received envelope vs closed vocabulary" here is transitively locked to
-// events.ts, and additionally validates the fixtures directly against the TS
-// side via src/analytics/fixtureSchemaDrift.test.ts.
+// engines/codexdojo-os-prototype/src/analytics/events.ts (OS emission side) and
+// engines/literacyDojo/src/domain/analytics.ts (literacy emission side),
+// projected into the staged collector (receiving side); the parity tests
+// (src/analytics/collectorParity.test.ts and the literacy counterpart) fail CI
+// when those diverge. This monitor imports the parity-locked projections from
+// the collector module, so "received envelope vs closed vocabulary" here is
+// transitively locked to the emitters.
 //
 // It classifies every drifted line with a reason (kind + offending key/value
 // preview), exits 1 on any drift so CI fails high, and cross-checks its own
-// verdict against the collector's validateAnalyticsEvent on every single line:
-// a disagreement is itself reported as drift (kind "monitor-bug") and never
+// verdict against the collector's validators on every single line: a
+// disagreement is itself reported as drift (kind "monitor-bug") and never
 // silently accepted.
 //
 // Boundary: analytics is not evidence; this tool never writes learner state.
@@ -23,7 +24,11 @@ import {
   CONTEXT_KEYS,
   CONTEXT_VOCABULARIES,
   EVENT_VOCABULARIES,
+  LITERACY_BATCH_SCHEMA_VERSION,
+  LITERACY_SOURCE,
+  OS_BATCH_SCHEMA_VERSION,
   validateAnalyticsEvent,
+  validateLiteracyEvent,
 } from "../netlify-functions/dojo-analytics-collector.mjs";
 import {
   collectInputFiles,
@@ -33,12 +38,37 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
-export const MONITOR_VERSION = 1;
+export const MONITOR_VERSION = 2;
 export const DEFAULT_MAX_SAMPLES = 50;
 const PREVIEW_LIMIT = 64;
 const ENVELOPE_KEYS = ["schemaVersion", "eventId", "name", "occurredAt", "sequence", "dimensions"];
+const LITERACY_ENVELOPE_KEYS = [
+  "schemaVersion", "source", "event", "eventId", "sessionId",
+  "occurredAt", "contentVersion", "props",
+];
 const ENRICHED_KEYS = ["installationId", "sessionId", ...CONTEXT_KEYS];
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$/;
+const LITERACY_UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const LITERACY_ACTIVITY_TYPES = [
+  "choice", "sort", "missing_context", "safety_classification", "prompt_builder",
+  "output_comparison", "rubric_review",
+];
+const LITERACY_EVENT_PROPS = {
+  entry_viewed: [],
+  mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
+  route_chosen: ["route"],
+  lesson_started: ["lessonId", "lessonVersion"],
+  activity_attempted: ["lessonId", "activityType", "passed"],
+  lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
+};
+const LITERACY_OPTIONAL_PROPS = {
+  entry_viewed: [],
+  mapa_inicial_done: ["durationSeconds"],
+  route_chosen: [],
+  lesson_started: [],
+  activity_attempted: [],
+  lesson_completed: ["durationSeconds"],
+};
 
 function isRecord(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -132,6 +162,81 @@ export function classifyEvent(value) {
 }
 
 /**
+ * Classify one received literacy v2 envelope against its closed vocabulary,
+ * mirroring the collector's validateLiteracyEvent decision tree.
+ */
+export function classifyLiteracyEvent(value) {
+  if (!isRecord(value)) return { kind: "not-an-object" };
+  const envelopeKeys = Object.keys(value);
+  if (envelopeKeys.some((key) => !LITERACY_ENVELOPE_KEYS.includes(key)) || envelopeKeys.length !== LITERACY_ENVELOPE_KEYS.length) {
+    const diff = firstDifference(value, LITERACY_ENVELOPE_KEYS);
+    return { kind: "envelope-keys", message: diff.message, key: diff.key };
+  }
+  if (value.schemaVersion !== LITERACY_BATCH_SCHEMA_VERSION) return { kind: "schema-version", valuePreview: preview(value.schemaVersion) };
+  if (value.source !== LITERACY_SOURCE) return { kind: "source", valuePreview: preview(value.source) };
+  if (typeof value.eventId !== "string" || !LITERACY_UUID_PATTERN.test(value.eventId)) {
+    return { kind: "event-id", valuePreview: preview(value.eventId) };
+  }
+  if (typeof value.sessionId !== "string" || !LITERACY_UUID_PATTERN.test(value.sessionId)) {
+    return { kind: "identity-format", key: "sessionId", valuePreview: preview(value.sessionId) };
+  }
+  if (typeof value.occurredAt !== "string" || Number.isNaN(Date.parse(value.occurredAt))) {
+    return { kind: "occurred-at", valuePreview: preview(value.occurredAt) };
+  }
+  if (typeof value.contentVersion !== "string" || value.contentVersion.length === 0) {
+    return { kind: "content-version", valuePreview: preview(value.contentVersion) };
+  }
+  const props = value.props;
+  if (!isRecord(props)) return { kind: "props", message: "props is not an object" };
+  const allowedProps = LITERACY_EVENT_PROPS[value.event] ?? [];
+  const optionalProps = LITERACY_OPTIONAL_PROPS[value.event] ?? [];
+  for (const key of allowedProps) {
+    if (!optionalProps.includes(key) && !(key in props)) {
+      return { kind: "props-keys", key, message: `missing prop "${key}"` };
+    }
+  }
+  for (const [key, entryValue] of Object.entries(props)) {
+    if (!allowedProps.includes(key)) {
+      return { kind: "props-keys", key, message: `unexpected prop key "${key}"` };
+    }
+    if (key.length > 40 || !/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) {
+      return { kind: "props-keys", key, message: `unexpected prop key "${key}"` };
+    }
+    const scalarOk =
+      typeof entryValue === "boolean" ||
+      (typeof entryValue === "number" && Number.isFinite(entryValue)) ||
+      (typeof entryValue === "string" && entryValue.length > 0 && entryValue.length <= 120);
+    if (!scalarOk) return { kind: "props-scalar", key, valuePreview: preview(entryValue) };
+  }
+  if (value.event === "activity_attempted") {
+    if (typeof props.lessonId !== "string" || props.lessonId.length === 0) {
+      return { kind: "props-value", key: "lessonId", valuePreview: preview(props.lessonId) };
+    }
+    if (!LITERACY_ACTIVITY_TYPES.includes(props.activityType)) {
+      return { kind: "event-vocabulary", key: "activityType", valuePreview: preview(props.activityType) };
+    }
+    if (typeof props.passed !== "boolean") {
+      return { kind: "props-value", key: "passed", valuePreview: preview(props.passed) };
+    }
+  }
+  if (value.event === "lesson_started" || value.event === "lesson_completed" || value.event === "mapa_inicial_done") {
+    if (typeof props.lessonId !== "string" || props.lessonId.length === 0) {
+      return { kind: "props-value", key: "lessonId", valuePreview: preview(props.lessonId) };
+    }
+    if (typeof props.lessonVersion !== "number" || !Number.isInteger(props.lessonVersion)) {
+      return { kind: "props-value", key: "lessonVersion", valuePreview: preview(props.lessonVersion) };
+    }
+    if (value.event !== "lesson_started" && (typeof props.score !== "number" || !Number.isFinite(props.score))) {
+      return { kind: "props-value", key: "score", valuePreview: preview(props.score) };
+    }
+  }
+  if (value.event === "route_chosen" && props.route !== "guided" && props.route !== "intermediate") {
+    return { kind: "event-vocabulary", key: "route", valuePreview: preview(props.route) };
+  }
+  return null;
+}
+
+/**
  * Run the monitor over NDJSON inputs.
  * @returns {{summary: object, exitCode: number}} exit 0 = no drift, 1 = drift
  *   (including monitor self-check disagreements), 2 = usage/IO error.
@@ -157,7 +262,14 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
   const samples = [];
   let totalLines = 0;
   let validEvents = 0;
+  let validOsEvents = 0;
+  let validLiteracyEvents = 0;
   let driftCount = 0;
+
+  const isLiteracyEnvelope = (value) =>
+    isRecord(value) &&
+    value.schemaVersion === LITERACY_BATCH_SCHEMA_VERSION &&
+    value.source === LITERACY_SOURCE;
 
   for (const entry of entries) {
     totalLines += 1;
@@ -166,14 +278,20 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
     if (entry.parseError !== undefined) {
       drift = { kind: entry.parseError === "blank-line" ? "blank-line" : "invalid-json", message: entry.parseError };
     } else {
-      drift = classifyEvent(entry.value);
+      const literacy = isLiteracyEnvelope(entry.value);
+      drift = literacy ? classifyLiteracyEvent(entry.value) : classifyEvent(entry.value);
       // Self-check: the classifier must agree with the collector on every line.
-      if ((drift === null) !== validateAnalyticsEvent(entry.value)) {
-        drift = { kind: "monitor-bug", message: "classifier disagrees with validateAnalyticsEvent" };
+      const validatorVerdict = literacy
+        ? validateLiteracyEvent(entry.value)
+        : validateAnalyticsEvent(entry.value);
+      if ((drift === null) !== validatorVerdict) {
+        drift = { kind: "monitor-bug", message: "classifier disagrees with collector validator" };
       }
     }
     if (drift === null) {
       validEvents += 1;
+      if (isLiteracyEnvelope(entry.value)) validLiteracyEvents += 1;
+      else validOsEvents += 1;
       file.validEvents += 1;
       continue;
     }
@@ -195,6 +313,8 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
     files: perFile,
     totalLines,
     validEvents,
+    validOsEvents,
+    validLiteracyEvents,
     driftCount,
     driftByKind,
     samples,

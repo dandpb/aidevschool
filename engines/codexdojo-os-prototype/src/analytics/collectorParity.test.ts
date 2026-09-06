@@ -5,14 +5,22 @@ import {
   EVENT_VOCABULARIES,
   analyticsEventIsValid,
 } from './events'
-import {
-  ANALYTICS_EVENT_NAMES as COLLECTOR_EVENT_NAMES,
-  CONTEXT_KEYS as COLLECTOR_CONTEXT_KEYS,
-  CONTEXT_VOCABULARIES as COLLECTOR_CONTEXT_VOCABULARIES,
-  EVENT_VOCABULARIES as COLLECTOR_EVENT_VOCABULARIES,
-  validateAnalyticsEvent,
-} from '../../../../learner/gate/netlify-functions/dojo-analytics-collector.mjs'
+// AID-961: the collector's type declarations left the deployable functions
+// directory (a colocated .d.mts makes the Netlify deploy CLI reject the
+// literacy functions dir with 422 "Incorrect function names"). This import
+// is intentionally untyped at the TS boundary; parity itself is enforced at
+// RUNTIME by the assertions below — the .mjs is the real deployed module.
+// @ts-expect-error TS7016: declarations intentionally not colocated (AID-961)
+import * as collectorModule from '../../../../learner/gate/netlify-functions/dojo-analytics-collector.mjs'
 import { CONTEXT_KEYS, CONTEXT_VOCABULARIES } from './events'
+
+const {
+  ANALYTICS_EVENT_NAMES: COLLECTOR_EVENT_NAMES,
+  CONTEXT_KEYS: COLLECTOR_CONTEXT_KEYS,
+  CONTEXT_VOCABULARIES: COLLECTOR_CONTEXT_VOCABULARIES,
+  EVENT_VOCABULARIES: COLLECTOR_EVENT_VOCABULARIES,
+  validateAnalyticsEvent,
+} = collectorModule
 
 // AID-470 F1 parity: the staged same-origin collector must accept and reject
 // exactly the events this engine emits. The canonical vocabulary lives here

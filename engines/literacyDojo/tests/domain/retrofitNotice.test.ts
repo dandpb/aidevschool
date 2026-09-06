@@ -24,10 +24,11 @@ function statuses(completed: string[]): Record<string, LessonStatus> {
 }
 
 describe("retrofitNotice (ondas O3-C1 + C1, specs AID-644 rev 2 §3 / AID-807 §1)", () => {
-  it("mapa de ondas é exatamente o lançado e cobre o contentVersion vigente do catálogo", () => {
-    // Garante que o mapa cobre o contentVersion gerado atual (barreira para ondas futuras).
+  it("mapa de ondas é exatamente o lançado; o bump do corredor NÃO é onda de retrofit", () => {
+    // Corredor literacy (spec AID-915 §6.2): o bump 2026-09-06.1 não
+    // retrofitou lição nenhuma — nenhuma chave nova no mapa de ondas.
     expect(RETROFITTED_LESSONS_BY_CONTENT_VERSION).toEqual(LAUNCHED_WAVES);
-    expect(Object.keys(LAUNCHED_WAVES)).toContain(contentVersion);
+    expect(Object.keys(LAUNCHED_WAVES)).not.toContain(contentVersion);
   });
 
   it("isRetrofittedLesson: lição da onda no version do bump; onda vizinha ou versão outra, não", () => {

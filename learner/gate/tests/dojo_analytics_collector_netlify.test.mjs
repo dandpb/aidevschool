@@ -145,8 +145,29 @@ test("handler gates: cross-origin, path, method, size, JSON, schema", async () =
     method: "GET",
     headers: { "sec-fetch-site": "same-origin" },
   }));
-  assert.equal(get.status, 405);
-  assert.equal(get.headers.get("allow"), "POST");
+  // v2 (AID-913): GET é o export do operador (F2b). Sem token de deploy
+  // configurado não existe export — fail-closed, não 405.
+  assert.equal(get.status, 404);
+  assert.equal((await get.json()).error, "export-unavailable");
+  const guarded = createCollectorHandler({ sink: new MemorySink(), exportToken: "deploy-secret" });
+  const noAuth = await guarded(new Request(`https://os.example${ANALYTICS_COLLECTOR_PATH}`, {
+    method: "GET",
+    headers: { "sec-fetch-site": "same-origin" },
+  }));
+  assert.equal(noAuth.status, 401);
+  assert.equal((await noAuth.json()).error, "unauthorized");
+  const wrongAuth = await guarded(new Request(`https://os.example${ANALYTICS_COLLECTOR_PATH}`, {
+    method: "GET",
+    headers: { authorization: "Bearer errado", "sec-fetch-site": "same-origin" },
+  }));
+  assert.equal(wrongAuth.status, 401);
+
+  const method = await handler(new Request(`https://os.example${ANALYTICS_COLLECTOR_PATH}`, {
+    method: "DELETE",
+    headers: { "sec-fetch-site": "same-origin" },
+  }));
+  assert.equal(method.status, 405);
+  assert.equal(method.headers.get("allow"), "GET, POST");
 
   const tooLarge = await handler(post(`${"x".repeat(65_537)}`));
   assert.equal(tooLarge.status, 413);

@@ -1,0 +1,37 @@
+schemaVersion: 1
+id: literacy-corridor-happy-path
+useCaseId: literacy-standalone-corridor-mod01-03
+kind: happy-path
+execution: mixed
+startState: seeded-mod01-complete
+steps:
+  - complete-lessons-l01-l03
+  - home-shows-module-challenge-mission
+  - pass-cp-01-challenge
+  - gate-unlocks-l04
+  - complete-l04-l07-pass-cp-02
+  - complete-l08-l11-pass-cp-03
+  - corridor-celebration-and-next-action
+assertions:
+  - id: corridor-completes-without-stalling
+    severity: high
+    evidence: playwright
+    claim: The learner progresses continuously through modules 1-3 and passes each module challenge without getting stuck.
+  - id: gate-opens-only-after-challenge
+    severity: high
+    evidence: playwright
+    claim: The first lesson of the next module unlocks only after the previous module challenge is completed.
+  - id: learner-names-next-action-after-cp-03
+    severity: high
+    evidence: observation
+    claim: After completing cp-03 the learner can name the next action (continue to module 4 or return tomorrow for review) without repository knowledge.
+  - id: result-is-local-completion
+    severity: high
+    evidence: playwright
+    claim: Corridor results are saved as local completion and never presented as canonical mastery.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/corridor.spec.ts
+  - engines/literacyDojo/src/domain/checkpoints.ts

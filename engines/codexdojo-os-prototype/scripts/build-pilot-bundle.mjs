@@ -17,10 +17,21 @@ const backup = `${output}.previous-${process.pid}`
 const canonicalFunctions = join(repoRoot, 'learner', 'gate', 'netlify-functions')
 const stagedFunctions = join(osRoot, 'netlify', 'functions')
 const verifierFunction = 'dojo-verification-bridge.mjs'
-// Same-origin analytics collector (AID-470 F1): built, staged, and tested —
-// but the browser transport stays off until VITE_ANALYTICS_ENDPOINT is
-// explicitly configured at build time (board decision, ADR-0010).
-const collectorFunction = 'dojo-analytics-collector.mjs'
+  // Same-origin analytics collector (AID-470 F1): built, staged, and tested —
+  // but the browser transport stays off until VITE_ANALYTICS_ENDPOINT is
+  // explicitly configured at build time (board decision, ADR-0010).
+  const collectorFunction = 'dojo-analytics-collector.mjs'
+  // Static-import seam so the functions bundler can trace and inline the
+  // Netlify Blobs client — the durable collector backing (defect AID-947:
+  // a bare dynamic specifier never shipped and the live backing was the
+  // ephemeral /tmp NDJSON sink on both surfaces).
+  const collectorBlobsRuntime = 'netlify-blobs-runtime.mjs'
+  // Deployable functions manifest: declares @netlify/blobs so the functions
+  // build resolves the dependency at bundle time (AID-947).
+  const functionsManifest = 'package.json'
+  // AID-961 deploy gap (a): the lockfile ships with the manifest so the
+  // staged install below is reproducible (`npm ci`, never `npm install`).
+  const functionsLockfile = 'package-lock.json'
 // Generated verifier corpus for the hosted literacy bridge (AID-449); a
 // projection of curriculum/ai-literacy/ that must ship with the function.
 // The underscore directory is the Netlify shared-code convention: bundled
@@ -101,6 +112,23 @@ try {
   await mkdir(stagedFunctions, { recursive: true })
   await cp(join(canonicalFunctions, verifierFunction), join(stagedFunctions, verifierFunction))
   await cp(join(canonicalFunctions, collectorFunction), join(stagedFunctions, collectorFunction))
+  await cp(join(canonicalFunctions, collectorBlobsRuntime), join(stagedFunctions, collectorBlobsRuntime))
+  await cp(join(canonicalFunctions, functionsManifest), join(stagedFunctions, functionsManifest))
+  await cp(join(canonicalFunctions, functionsLockfile), join(stagedFunctions, functionsLockfile))
+  // AID-961 deploy gap (a): `netlify deploy --functions netlify/functions`
+  // resolves @netlify/blobs at bundle time and failed with "Could not
+  // resolve" on a clean checkout — the staged manifest alone is not enough.
+  // Install the deployed dependency set (pinned by the lockfile) inside the
+  // staging dir so the deploy works without a manual `npm ci` in
+  // learner/gate/netlify-functions (the staging dir is gitignored).
+  const functionsInstall = spawnSync('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund'], {
+    cwd: stagedFunctions,
+    stdio: 'inherit',
+    env: process.env,
+  })
+  if (functionsInstall.status !== 0) {
+    throw new Error(`functions dependencies install failed with exit ${functionsInstall.status ?? 'unknown'}`)
+  }
   await mkdir(join(stagedFunctions, '_shared'), { recursive: true })
   await cp(join(canonicalFunctions, literacyCorpusModule), join(stagedFunctions, literacyCorpusModule))
   const revision = process.env.COMMIT_REF || process.env.HEAD || 'local-uncommitted'

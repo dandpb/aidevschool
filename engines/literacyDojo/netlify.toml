@@ -5,6 +5,21 @@
 
 [build.environment]
   VITE_LITERACY_VERIFIER_URL = "/.netlify/functions/literacy-verify"
+  # Ativação O1 (ordem AID-910/D / AID-913): batch analytics same-origin para
+  # o coletor em learner/gate/netlify-functions/dojo-analytics-collector.mjs.
+  # Valor autorizado é exatamente este caminho — drift é travado por teste
+  # (services.analytics.test.ts). O secret de EXPORT (ANALYTICS_EXPORT_TOKEN)
+  # é configurado só no provedor, nunca no repo.
+  VITE_ANALYTICS_ENDPOINT = "/__dojo/bridge/v1/analytics"
+
+[[redirects]]
+  # Same-origin analytics collector (ativação AID-913 / ADR-0009+0010): recebe
+  # os batches do envelope literacy v2. A função já é deployada via
+  # `functions = ../../learner/gate/netlify-functions`; a rota segue o padrão
+  # da ponte de verificação (same-origin imposto no coletor).
+  from = "/__dojo/bridge/v1/analytics"
+  to = "/.netlify/functions/dojo-analytics-collector"
+  status = 200
 
 [[redirects]]
   from = "/*"

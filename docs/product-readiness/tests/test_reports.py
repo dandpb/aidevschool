@@ -162,7 +162,9 @@ def test_build_candidate_report_merges_independent_observations() -> None:
                 {
                     "scenarioId": scenario_id,
                     "outcome": "pass",
-                    "assertions": [
+                    "assertions": []
+                    if assertion_id is None
+                    else [
                         {
                             "id": assertion_id,
                             "evidence": "observation",
@@ -176,6 +178,20 @@ def test_build_candidate_report_merges_independent_observations() -> None:
                     ("literacy-happy-path", "learner-can-name-next-action"),
                     ("literacy-retry", "learner-understands-retry"),
                     ("literacy-resume", "learner-understands-device-boundary"),
+                    # Corredor (AID-916): cenários com asserção de observação
+                    # carregam o id; cenários playwright-only (grandfathered,
+                    # resume) entram com conjunto vazio — a fusão segue mixed.
+                    ("literacy-corridor-happy-path", "learner-names-next-action-after-cp-03"),
+                    (
+                        "literacy-corridor-gate-retry",
+                        "learner-understands-retry-without-internal-language",
+                    ),
+                    (
+                        "literacy-corridor-review-window",
+                        "learner-distinguishes-review-from-new-content",
+                    ),
+                    ("literacy-corridor-grandfathered-return", None),
+                    ("literacy-corridor-resume-mid-module", None),
                 )
             ],
         }

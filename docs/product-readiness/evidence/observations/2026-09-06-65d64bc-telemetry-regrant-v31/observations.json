@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "65d64bca51e2e5814268f3ffa8c564a109fb5ecd",
+  "observedAt": "2026-09-06T16:40:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:33-16:36Z (chromium over the engine's vite surface at the telemetry merge commit 65d64bca, fresh browser profile, viewport 360x740; walk scripted and executed by the independent assessor — QA AID-940 — distinct from the producer's CI runs; five-step onboarding ends on the Mapa Inicial lesson start, guided route taken after one recovered wrong attempt). Completing Mapa Inicial renders 'VILA LUME · MISSÃO CONCLUÍDA … XP conquistado · 100% de pontuação' and the result screen names the practiced skill and the boundary in learner language; the guided-route explanation follows and 'next-lesson' lands on the named continuation 'Sua primeira conversa com IA' restored from IndexedDB after reload (ev/w1-4-result.png, ev/w1-5-next-lesson.png, ev/w1-6-resume.png). Progress read from the app's own IndexedDB in the same walk: lessonStatus.l02=completed, currentLessonId=l01 (guided route), 4 valid LiteracyEvidenceRecords emitted (1 wrong + 3 correct attempts), all verifierRequired=true, and the serialized state contains no 'mastered' anywhere. The result screen keeps local-vs-verified explicit ('Lição concluída registra o seu seu progresso neste aparelho' boundary family; trophy copy: 'Conquistas marcam constância, não competência verificada')."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Observed first-hand on the same walk: submitting the wrong output on the first Mapa Inicial activity produced specific plain-language feedback — 'Quase lá. Uma resposta confiável não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?' plus 'Pontuação desta tentativa: 20%' (ev/w1-2-wrong.png). The hint control rendered 'Dicas: Compare as duas respostas procurando uma coisa só: de onde saíram os números?' (ev/w1-3-hint.png); 'Tentar novamente' returned the activity for a new attempt, and completing the three activities finished the lesson at 100% (MISSÃO CONCLUÍDA). No facilitator or product-internal language is required at any point."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Observed first-hand: after completing Mapa Inicial and advancing, a reload restored the in-progress next lesson intro with heading 'Sua primeira conversa com IA' (persisted intro state; ev/w1-6-resume.png). Same-device continuity works (IndexedDB progress read in-walk: lessonStatus.l02=completed) and the app tells the learner its limits in learner language — achievements copy on the result screen: 'Conquistas marcam constância, não competência verificada.' No 'mastered' appears in the serialized progress read in-walk."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:36Z (same surface and profile discipline at 65d64bca; corridor start states seeded directly into the test profile's IndexedDB via the §4.4 test harness — seeding only shortcuts lesson completion, the challenge session itself was driven through the UI). With modules 1-3 lessons complete and cp-01/cp-02 recorded, Home names the pending mission 'Continuar: Desafio do Módulo 3' (ev/w2-1-home-mission.png); after passing cp-03 the celebration states the two supported next actions in learner language with zero repository knowledge: 'Você completou os três primeiros bairros da Vila Lume! Continue para Segurança e aplicação — ou volte amanhã para sua revisão.' (ev/w2-5-cp03-celebration.png). Progress read in-walk: moduleCheckpoints.mod-03=completed; 4 evidence records emitted in the session, all with context 'review' and all structurally valid; the serialized state contains no 'mastered' anywhere."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Observed first-hand on the corridor walk at 65d64bca: with l01-l03 completed, Home shows the mission 'Continuar: Desafio do Módulo 1' (ev/w2-1-gr-home.png); the challenge intro sets expectations in learner language ('Desafio do Módulo 1: revise o que você aprendeu em IA sem mistério. É rápido — menos de 3 minutos.', ev/w2-2-gr-intro.png). Submitting a wrong sort on the first activity produced formative feedback with a failing panel class (ev/w2-3-gr-wrong.png), the hint list rendered concrete guidance, and 'Tentar novamente' returned the activity; completing the challenge finished with 'Desafio concluído' (ev/w2-4-gr-result.png) while prior completions stayed intact (l01-l03 completed throughout, read in-walk). No checkpoint/module identifiers or repository vocabulary leak to the learner at any point."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Observed first-hand 2026-09-06 16:33Z at 65d64bca: completing Mapa Inicial scheduled the first spaced review at +1d (skills.entender.nextReviewAt read from IndexedDB ≈ now+1.00d). After a disclosed test-profile harness adjustment (§4.4: nextReviewAt set to now, the only way to exercise the schedule without time travel), reload shows a distinct pending-review card on Home with a 'Revisar agora' action (ev/w3-1-review-card.png) — visually and textually distinct from new-content missions; the review intro names the session as a review ('Revisão: IA não é uma fonte de verdade' / 'Hora de revisar. Repetir é o que fixa…', ev/w3-2-review-intro.png). Completing the review advanced the window measured live: nextReviewAt ≈ now+7.00d (2026-09-13T16:33Z), matching the [1,7,21] schedule."
+        }
+      ]
+    }
+  ]
+}

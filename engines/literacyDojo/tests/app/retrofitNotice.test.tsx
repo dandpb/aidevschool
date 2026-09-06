@@ -3,10 +3,27 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { RETROFIT_ACKS_KEY } from "../../src/adapters/storageKeys";
 import { App, AppShell } from "../../src/app/App";
+import { createServices } from "../../src/app/services";
+import type { ContentRepository } from "../../src/application/ports";
 import { createInitialProgress } from "../../src/domain/progress";
+import type { LearnerProgress } from "../../src/domain/progress";
 import { RETROFIT_NOTICE_S1, RETROFIT_NOTICE_S2 } from "../../src/domain/retrofitNotice";
 import { LiteracyMissionAdapter } from "../../src/host/LiteracyMissionAdapter";
+import { InMemoryEvidenceSink, InMemoryProgressRepository, fixedClock } from "../fakes";
 import { FIXED_NOW, makeServices } from "../helpers";
+
+/** Serviços em memória com repositório de conteúdo pinado (janela da onda C1). */
+function makeServicesWithContent(progress: LearnerProgress, content: ContentRepository) {
+  const progressRepo = new InMemoryProgressRepository();
+  progressRepo.seed(progress);
+  const services = createServices({
+    progressRepo,
+    evidence: new InMemoryEvidenceSink(),
+    clock: fixedClock(FIXED_NOW),
+    content,
+  });
+  return { services, progressRepo };
+}
 
 /**
  * Aviso de retrofit (O3-C1 spec AID-644 rev 2 §3 + A5; onda C1 spec AID-807
@@ -37,7 +54,15 @@ function retrofittedLearnerServices() {
     lastPracticedAt: new Date(FIXED_NOW.getTime() - 86_400_000).toISOString(),
     nextReviewAt: new Date(FIXED_NOW.getTime() - 1_000).toISOString(),
   };
-  return makeServices({ progress }).services;
+  // A onda C1 do retrofit é "2026-09-04.1"; o contentVersion vigente do
+  // catálogo seguiu em frente (corredor AID-916, bump sem retrofit). O aviso
+  // é devido na VERSÃO DA ONDA: pinamos o repositório para reproduzir o
+  // learner que retorna durante a janela da onda (comportamento lançado).
+  const waveContent = {
+    ...scaffold.services.content,
+    getContentVersion: () => "2026-09-04.1",
+  };
+  return makeServicesWithContent(progress, waveContent).services;
 }
 
 afterEach(() => {

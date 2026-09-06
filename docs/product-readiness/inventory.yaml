@@ -25,6 +25,36 @@ useCases:
       - engines/literacyDojo/playwright/vertical-slice.spec.ts
       - curriculum/ai-literacy/modules/01-ai-sem-misterio/l02-ia-nao-e-fonte-de-verdade.yaml
     owner: literacyDojo
+  - id: literacy-standalone-corridor-mod01-03
+    surface: literacyDojo
+    audience: nontechnical-learner
+    intendedTier: customer-ready
+    promise: Progress continuously through modules 1-3 (11 lessons), pass each module challenge,
+      return for spaced reviews on the [1,7,21] schedule, and understand the local result and next action.
+    entry:
+      route: https://aidevschool-literacydojo.netlify.app/
+      prerequisites: [supported-modern-browser, browser-storage-enabled]
+    progressSemantics: local-completion
+    recovery: Use corrective feedback, hints, and unlimited retries on lessons and module challenges
+      without losing prior completion; grandfathered lessons are never re-locked.
+    nextAction: Continue the next module lesson or challenge, or complete the due review shown on Home,
+      on the same device; ask a facilitator for help otherwise.
+    scenarioIds:
+      - literacy-corridor-happy-path
+      - literacy-corridor-gate-retry
+      - literacy-corridor-review-window
+      - literacy-corridor-grandfathered-return
+      - literacy-corridor-resume-mid-module
+    manualRefs:
+      student: student-guide.md#standalone-literacydojo-corridor
+      facilitator: facilitator-guide.md#standalone-literacydojo-corridor
+    sourcePaths:
+      - engines/literacyDojo/src/
+      - engines/literacyDojo/playwright/corridor.spec.ts
+      - curriculum/ai-literacy/modules/01-ai-sem-misterio/
+      - curriculum/ai-literacy/modules/02-pedir-bem/
+      - curriculum/ai-literacy/modules/03-avaliar-e-verificar/
+    owner: literacyDojo
   - id: os-literacy-guided-mission
     surface: codexDojo OS
     audience: nontechnical-learner

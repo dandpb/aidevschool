@@ -13,6 +13,9 @@ const IDB = { name: DB_NAME, store: STORE_NAME, key: PROGRESS_KEY };
 
 type ProgressDoc = Record<string, unknown> & {
   skills: Record<string, { nextReviewAt?: string }>;
+  lessonStatus?: Record<string, unknown>;
+  moduleCheckpoints?: Record<string, { status?: string }>;
+  schemaVersion?: number;
 };
 
 /** Fixtures compartilhadas entre os specs: o Mapa Inicial é a porta de entrada de todos os fluxos. */
@@ -142,6 +145,15 @@ export function readProgress(page: Page): Promise<ProgressDoc | undefined> {
   return idbProgress(page, "get");
 }
 
+/**
+ * Escreve o LearnerProgress no IndexedDB (harness de teste do corredor,
+ * spec AID-915 §5.2): seeding de estados de retorno sem dirigir a UI toda.
+ * Manipulação de storage SOMENTE aqui — nunca em código de produção.
+ */
+export function writeProgressDoc(page: Page, progress: ProgressDoc): Promise<void> {
+  return idbProgress(page, "put", progress);
+}
+
 function writeProgress(page: Page, progress: ProgressDoc): Promise<void> {
   return idbProgress(page, "put", progress);
 }
@@ -166,4 +178,168 @@ export function readEvidence(page: Page): Promise<LiteracyEvidenceRecord[]> {
     (key) => JSON.parse(window.sessionStorage.getItem(key) ?? "[]"),
     EVIDENCE_SESSION_KEY,
   );
+}
+
+// ---------------------------------------------------------------------------
+// Corredor literacy mod-01→03 (spec AID-915): helpers de desafio e seeding.
+// ---------------------------------------------------------------------------
+
+/** Responde CORRETAMENTE qualquer atividade dos Desafios de Módulo. */
+export async function answerCheckpointActivityRight(target: TestTarget, act: ActivityDefinition) {
+  if (act.type === "prompt_builder") {
+    for (const field of act.data.fields) {
+      const rules = act.evaluation.fields[field.id] ?? {};
+      const seed = rules.mustIncludeAny?.[0] ?? field.hint;
+      let value = `${seed} com contexto do público e do formato desejado para o trabalho`;
+      const minLength = rules.minLength ?? 0;
+      while (value.length < minLength) value = `${value} detalhado`;
+      await target.getByTestId(`field-${field.id}`).fill(value.slice(0, rules.maxLength));
+    }
+    return;
+  }
+  if (act.type === "rubric_review") {
+    for (const criterion of act.data.criteria) {
+      const verdict = act.evaluation.expectedVerdicts[criterion.id];
+      await target.getByTestId(`rubric-${criterion.id}-${verdict}`).check();
+    }
+    return;
+  }
+  if (act.type === "sort" || act.type === "choice" || act.type === "output_comparison") {
+    await answerRightOn(target, act);
+    return;
+  }
+  throw new Error(`tipo sem helper e2e de acerto: ${act.type}`);
+}
+
+/** Responde ERRADAMENTE qualquer atividade dos Desafios (feedback + retry, §3.4). */
+export async function answerCheckpointActivityWrong(target: TestTarget, act: ActivityDefinition) {
+  if (act.type === "output_comparison") {
+    const incorrect = act.data.outputs.find(
+      (output) => output.id !== act.evaluation.betterOutputId,
+    );
+    if (!incorrect) throw new Error("atividade sem alternativa incorreta");
+    await target.getByTestId(`output-${incorrect.id}`).check();
+    return;
+  }
+  if (act.type === "choice") {
+    const wrongOption = act.data.options.find(
+      (option) => !act.evaluation.correctOptionIds.includes(option.id),
+    );
+    if (!wrongOption) throw new Error("choice sem alternativa incorreta");
+    await target.getByTestId(`option-${wrongOption.id}`).check();
+    return;
+  }
+  if (act.type === "sort") {
+    // Submete a ordem exibida sem mexer (a ordem inicial só é correta se
+    // coincidir com a esperada — nesse caso move o último item para cima).
+    const initial = act.data.items.map((item) => item.id);
+    const matches = act.evaluation.expectedOrder.every((id, index) => id === initial[index]);
+    if (matches) await target.getByTestId(`sort-up-${initial[initial.length - 1]}`).click();
+    return;
+  }
+  if (act.type === "prompt_builder") {
+    for (const field of act.data.fields) {
+      await target.getByTestId(`field-${field.id}`).fill("x");
+    }
+    return;
+  }
+  if (act.type === "rubric_review") {
+    for (const criterion of act.data.criteria) {
+      const expected = act.evaluation.expectedVerdicts[criterion.id];
+      const wrong = expected === "met" ? "not_met" : "met";
+      await target.getByTestId(`rubric-${criterion.id}-${wrong}`).check();
+    }
+    return;
+  }
+  throw new Error(`tipo sem helper e2e de erro: ${act.type}`);
+}
+
+/**
+ * Percorre uma sessão inteira de Desafio de Módulo acertando todas as
+ * atividades (com next-activity entre elas) e conclui o desafio.
+ */
+export async function solveCheckpointRight(
+  page: Page,
+  activities: ActivityDefinition[],
+): Promise<void> {
+  for (const [index, act] of activities.entries()) {
+    if (index > 0) await page.getByTestId("next-activity").click();
+    await answerCheckpointActivityRight(page, act);
+    await page.getByTestId("submit-attempt").click();
+    await expect(page.getByTestId("feedback-panel")).toHaveClass(/feedback-pass/);
+  }
+  await page.getByTestId("finish-checkpoint").click();
+}
+
+/** Estado do corredor para seeding: progresso inicial + lições concluídas. */
+export async function seedCorridorProgress(
+  page: Page,
+  options: {
+    completedLessonIds: string[];
+    currentLessonId?: string;
+    inProgressLessonId?: string;
+    route?: "guided" | "intermediate";
+    completedCheckpointModuleIds?: string[];
+    /** Coloca o doc como pré-bump (schema 3, contentVersion antiga). */
+    preBump?: boolean;
+    skillsPracticed?: boolean;
+  },
+): Promise<void> {
+  const modules = (await import("../src/data/generated/lessons")).modules.filter(
+    (module) => module.journey === "ia_pratica",
+  );
+  const { createInitialProgress } = await import("../src/domain/progress");
+  const { contentVersion } = await import("../src/data/generated/lessons");
+  const progress = createInitialProgress(modules, contentVersion) as unknown as ProgressDoc;
+  progress.onboarding = {
+    ...(progress.onboarding as object),
+    completed: true,
+    route: options.route ?? "guided",
+  };
+  const lessonStatus = progress.lessonStatus as Record<string, unknown>;
+  for (const id of options.completedLessonIds) {
+    lessonStatus[id] = "completed";
+  }
+  if (options.inProgressLessonId) {
+    lessonStatus[options.inProgressLessonId] = "in_progress";
+  }
+  if ((options.route ?? "guided") === "intermediate") {
+    lessonStatus.l01 = "locked"; // a rota intermediária pula l01 para sempre
+  }
+  progress.currentLessonId =
+    options.currentLessonId ??
+    options.inProgressLessonId ??
+    options.completedLessonIds[options.completedLessonIds.length - 1] ??
+    "l01";
+  if (options.skillsPracticed) {
+    (progress as { skills?: Record<string, unknown> }).skills = {
+      entender: {
+        skillId: "entender",
+        attempts: 1,
+        passes: 1,
+        lastScore: 1,
+        lastPracticedAt: new Date().toISOString(),
+        nextReviewAt: new Date(Date.now() + 86_400_000).toISOString(),
+      },
+    } as unknown as ProgressDoc["skills"];
+  }
+  if (options.completedCheckpointModuleIds?.length) {
+    const checkpoints =
+      (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints ?? {};
+    for (const moduleId of options.completedCheckpointModuleIds) {
+      checkpoints[moduleId] = {
+        status: "completed",
+        bestScore: 1,
+        attempts: 1,
+        completedAt: new Date().toISOString(),
+      };
+    }
+    (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints = checkpoints;
+  }
+  if (options.preBump) {
+    (progress as { moduleCheckpoints?: Record<string, unknown> }).moduleCheckpoints = undefined;
+    progress.schemaVersion = 3;
+    progress.contentVersion = "2026-09-04.1";
+  }
+  await writeProgressDoc(page, progress);
 }

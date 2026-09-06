@@ -12,6 +12,10 @@
 [build.environment]
   NODE_VERSION = "22"
   NPM_FLAGS = "--include=dev"
+  # Ativação O1 (ordem AID-910/D / AID-913, decisão §4 do ADR-0010): liga o
+  # transporte same-origin do OS para o coletor staged nesta mesma rota. O
+  # secret de EXPORT (ANALYTICS_EXPORT_TOKEN) é configurado só no provedor.
+  VITE_ANALYTICS_ENDPOINT = "/__dojo/bridge/v1/analytics"
 
 [[redirects]]
   # Same-origin verification bridge (AID-305): route the Dev-journey verifier
@@ -26,10 +30,10 @@
   status = 200
 
 [[redirects]]
-  # Same-origin analytics collector (AID-470 F1 / ADR-0010): receives the OS
-  # analytics batches. Passive endpoint — the browser transport only emits
-  # when VITE_ANALYTICS_ENDPOINT is set at build time, which no build surface
-  # in this repo does (activation is a board decision with the ADR in hand).
+  # Same-origin analytics collector (AID-470 F1 / ADR-0010; ativação AID-913):
+  # receives the OS v1 batches. The browser transport emits to this exact
+  # same-origin path (VITE_ANALYTICS_ENDPOINT above); cross-origin POSTs are
+  # rejected by the collector (sec-fetch-site gate).
   from = "/__dojo/bridge/v1/analytics"
   to = "/.netlify/functions/dojo-analytics-collector"
   status = 200

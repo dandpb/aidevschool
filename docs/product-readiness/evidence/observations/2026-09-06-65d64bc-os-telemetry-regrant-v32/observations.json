@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "65d64bca51e2e5814268f3ffa8c564a109fb5ecd",
+  "observedAt": "2026-09-06T16:50:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. Onboarding asks 'O que você quer conseguir fazer com IA?' and states the boundary up front ('Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.'); the two track cards are explicit and selectable (IA Prática 'ReCOMENDADA PARA COMEÇAR ... Conclusão local neste dispositivo, nunca domínio.'; Dev 'PARA PROGRAMADORES ... Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION.'), selecting Dev and entering the school lands on the hub headed 'Capítulo Dev' with the featured next mission and steps — the chosen track and next action are nameable from the surface alone (ev/qaos-01-onboarding.png, ev/qaos-02-hub-practical.png, ev/qaos-11-dev-returning-hub.png; walk-log-os w1OnboardingTexts/w2HubDev)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. After completing the hosted WAREHOUSE mission on the Dev track, a reload restores the hub with 'Capítulo Dev', XP local intact and the four-step honest-progress panel ('1 Atividade concluída · Salva neste dispositivo / 2 Evidência preservada ... / 3 Verificação independente · Temporariamente indisponível / 4 Competência canônica · Não alterada por este fluxo'); the app's own IndexedDB (codexdojo-os/progress/os-progress) retains the mission state across the reload (walk-log w2IdbAfterReload), and re-entering WAREHOUSE resumes mid-journey ('ETAPA Responder · MOTOR running') instead of replaying setup (ev/qaos-12-warehouse-reentry.png). Continuity language stays same-device everywhere ('Sem conta: o progresso fica neste dispositivo.') — no cross-device claim on any observed surface."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. A brand-new browser context (no shared storage) opening the pilot root lands back on onboarding ('O que você quer conseguir fazer com IA?') with the boundary repeated, and the page contains no 'missão concluída' and no 'mastered' text (walk-log w3ClearedShowsCompletion=false, w3ClearedShowsMastery=false; ev/qaos-13-cleared-storage-onboarding.png) — cleared or unavailable local state returns safely to onboarding without inventing prior completion, explainable from shipped surfaces without undocumented repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. From the IA Prática hub the featured mission 'IA não é uma fonte de verdade' (4 min) mounts the hosted LiteracyDojo motor same-origin from the OS build (iframe src http://127.0.0.1:4176/apps/literacydojo/?hosted=1&hostOrigin=...; ev/qaos-03-literacy-mission-mounted.png). Playing the 3-activity lesson through understand/respond/apply ends with the host status honest about every layer: 'ETAPA Aplicar · MOTOR completed · EVIDÊNCIA Verificador indisponível' while 'Estado canônico presenting · 0 verificadas · sem alteração local' stays on screen (ev/qaos-04-literacy-mission-complete.png); returning to the hub shows 'XP local 25 / Meta 25/25', the four-step honest-progress panel and the named next mission 'PRÓXIMA MISSÃO · 4 MIN — O que a IA faz bem e onde costuma falhar' (ev/qaos-05-hub-after-mission.png). I can state the visible result (local completion + XP, canonical competence unchanged, evidence not submitted) and the supported next action (named next mission)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. After completing the hosted l02 mission, a reload keeps the hub session and the app's own IndexedDB retains ai-pratica:l02 = completed after the reload (walk-log w1IdbAfterReload), with 'XP local 25 / Meta 25/25' intact (ev/qaos-06-returning-reload.png). Re-entering /mission/ai-pratica/l02 on the same profile opens the mission shell directly into lesson content with no onboarding repeat (walk-log w1ReentryDirectToLesson=true; ev/qaos-07-literacy-reentry.png). The boundary is stated on the surface itself ('Sem conta: o progresso fica neste dispositivo.', 'Salva neste dispositivo', 'Competência canônica · Não alterada') — same-browser-profile continuity only, no cross-device sync claim anywhere."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. In the static deploy no local verifier bridge exists and the host says so instead of implying a verdict: after completing WAREHOUSE the mission page shows 'Verificador indisponível' with the explicit safe-retry copy 'A evidência está segura. O verificador pode ser tentado novamente.' and the visible affordance 'Tentar verificação novamente'; the hub keeps 'Verificação independente · Temporariamente indisponível' plus 'Tentar verificação novamente' (walk-log w2MissionPageComplete/w1HubAfter; ev/qaos-09-warehouse-complete.png). Degradation is visible, honest and recoverable using only the visible state and the facilitator manual — no false PASS, no fabricated completion, no repository intervention."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. Each supported hosted voxelDojo mission — WAREHOUSE, WORMHOLE, RELAY STATION — mounted from the OS's own origin in the static pilot build (iframe srcs http://127.0.0.1:4176/apps/warehouse/?hosted=1..., /apps/wormhole/..., /apps/relay-station/...; ev/qaos-08-warehouse-accessible.png, qaos-10-game-03-wormhole-mounted.png, qaos-10-game-05-relay-station-mounted.png). Completing WAREHOUSE renders the explicit anti-conflation copy: 'PRÁTICA CONCLUÍDA NESTE DISPOSITIVO ... A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.' and 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' with 'COMPETÊNCIAS CANÔNICAS 0' and the evidence kept separate ('A evidência está segura.') (ev/qaos-09-warehouse-complete.png; walk-log w2MissionPageComplete) — a mission result is never presented as canonical mastery."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. After the hosted WAREHOUSE mission completed on the profile, a reload restored the Dev track with mission state intact — hub chip 'Capítulo Dev', XP local 25/25 preserved, and the local progress record read from the app's own IndexedDB after the reload keeps the mission status persisted (walk-log w2IdbAfterReload); re-entering WAREHOUSE on the same profile resumes the mission ('ETAPA Responder · MOTOR running') instead of restarting setup (ev/qaos-12-warehouse-reentry.png). The continuity boundary is stated in the surface's own language ('Atividade concluída · Salva neste dispositivo', 'Sem conta: o progresso fica neste dispositivo.') — nothing promises cross-device or cross-browser sync."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk 2026-09-06 16:47-16:50Z (chromium, scripts written and executed by the independent assessor, distinct from the producer's CI runs; logs walk-log-literacy.json / walk-log-os.json and screenshots ev/ in this bundle; checkout 65d64bca, git status clean before the walk; landed after the fact as v32 OS-only because the parallel QA run AID-940 had already re-granted the literacy use cases as v31); codexdojo-os static pilot build (npm run test:smoke:pilot dist) served by vite preview on 127.0.0.1:4176 — the same bundled-dist contract as the published pilot route. With prefers-reduced-motion enabled before launch, WAREHOUSE opened directly on the semantic projection — the host chip reads 'VISUALIZAÇÃO Acessível' (not '3D WebGL') and the mission stayed fully keyboard-operable; the core journey completed end-to-end by keyboard alone (Enter on the labeled accessible-shelf controls) and still emitted the honest result state ('Missão concluída; evidência emitida.' in the mission HUD; MOTOR completed; ev/qaos-08-warehouse-accessible.png, qaos-09-warehouse-complete.png). The facilitator can name the escalation threshold from shipped surfaces without repository knowledge: the recovery table in the facilitator guide states for 'WebGL initialization fails' the safe recovery is 'Select the accessible renderer and retry the core interaction with keyboard controls' with escalation when 'Both projections fail or the accessible projection loses the promised interaction'."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

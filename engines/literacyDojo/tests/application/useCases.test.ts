@@ -3,8 +3,10 @@ import * as generatedContentAdapter from "../../src/adapters/generatedContentRep
 import { createServices } from "../../src/app/services";
 import type { OutputComparisonActivity } from "../../src/data/generated/lessons";
 import { lessons, modules } from "../../src/data/generated/lessons";
+import type { ProductAnalyticsEvent } from "../../src/domain/analytics";
 import { isValidEvidenceRecord } from "../../src/domain/evidence";
 import {
+  type LearnerProgress,
   MAP_INITIAL_LESSON_ID,
   XP_PER_ACTIVITY_PASS,
   XP_PER_LESSON_COMPLETE,
@@ -380,5 +382,223 @@ describe("export/import progress", () => {
       /não migrável|JSON inválido/,
     );
     expect(await progressRepo.load()).toEqual(before);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Corredor literacy mod-01→03 (spec AID-915, ordem AID-910/E = AID-916)
+// ---------------------------------------------------------------------------
+
+class InMemoryAnalyticsSink {
+  readonly events: ProductAnalyticsEvent[] = [];
+
+  track(event: ProductAnalyticsEvent): void {
+    this.events.push(event);
+  }
+}
+
+function makeAnalyticsServices(progress?: LearnerProgress) {
+  const progressRepo = new InMemoryProgressRepository();
+  const analytics = new InMemoryAnalyticsSink();
+  const services = createServices({
+    progressRepo,
+    evidence: new InMemoryEvidenceSink(),
+    clock: fixedClock(FIXED_NOW),
+    analytics,
+  });
+  const initial =
+    progress ??
+    createInitialProgress(services.content.listModules(), services.content.getContentVersion());
+  progressRepo.seed(initial);
+  return { services, progressRepo, analytics };
+}
+
+function corridorProgressWith(completedIds: string[]) {
+  const { services } = makeAnalyticsServices();
+  const progress = createInitialProgress(
+    services.content.listModules(),
+    services.content.getContentVersion(),
+  );
+  for (const id of completedIds) progress.lessonStatus[id] = "completed";
+  progress.onboarding.completed = true;
+  progress.currentLessonId = completedIds[completedIds.length - 1] ?? "l01";
+  return progress;
+}
+
+describe("corredor: revisão espaçada medida (spec AID-915 §4.3)", () => {
+  it("startReview emite review_started com intervalDays e stage do vocabulário fechado", async () => {
+    const progress = corridorProgressWith(["l02"]);
+    progress.skills.entender = {
+      skillId: "entender",
+      attempts: 1,
+      passes: 1,
+      lastScore: 1,
+      lastPracticedAt: FIXED_NOW.toISOString(),
+      nextReviewAt: FIXED_NOW.toISOString(),
+    };
+    const { services, analytics } = makeAnalyticsServices(progress);
+    const lessonReview = lessons.find((item) => item.id === "l02");
+    if (!lessonReview) throw new Error("l02 ausente");
+
+    const result = await services.useCases.startReview("l02");
+    expect(result.intervalDays).toBe(lessonReview.review.intervalsDays[0]);
+    expect(result.stage).toBe(0);
+    expect(analytics.events).toHaveLength(1);
+    const [event] = analytics.events;
+    expect(event.event).toBe("review_started");
+    expect(event.props.lessonId).toBe("l02");
+    expect(event.props.intervalDays).toBe(lessonReview.review.intervalsDays[0]);
+    expect(event.props.stage).toBe(0);
+  });
+
+  it("completeReview emite review_completed somente quando aprovada; sem texto livre", async () => {
+    const progress = corridorProgressWith(["l02"]);
+    const { services, analytics } = makeAnalyticsServices(progress);
+    const lessonReview = lessons.find((item) => item.id === "l02");
+    if (!lessonReview) throw new Error("l02 ausente");
+
+    const failed = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: Object.fromEntries(
+        lessonReview.completion.requiredActivityIds.map((id) => [id, 0]),
+      ),
+    });
+    expect(failed.outcome.completed).toBe(false);
+    expect(analytics.events).toHaveLength(0);
+
+    const passed = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: Object.fromEntries(
+        lessonReview.completion.requiredActivityIds.map((id) => [id, 1]),
+      ),
+    });
+    expect(passed.outcome.completed).toBe(true);
+    expect(analytics.events).toHaveLength(1);
+    const [event] = analytics.events;
+    expect(event.event).toBe("review_completed");
+    expect(event.props.lessonId).toBe("l02");
+    expect(event.props.score).toBe(1);
+    expect(JSON.stringify(event)).not.toContain("mastered");
+  });
+});
+
+describe("corredor: casos de uso do Desafio de Módulo (spec AID-915 §3)", () => {
+  it("startCheckpoint exige disponibilidade e persiste a tentativa", async () => {
+    const locked = makeAnalyticsServices(corridorProgressWith(["l01", "l02"]));
+    await expect(locked.services.useCases.startCheckpoint("cp-01")).rejects.toThrow(/indisponível/);
+
+    const progress = corridorProgressWith(["l01", "l02", "l03"]);
+    const { services, progressRepo } = makeAnalyticsServices(progress);
+    const started = await services.useCases.startCheckpoint("cp-01");
+    expect(started.progress.moduleCheckpoints["mod-01"]?.attempts).toBe(1);
+    expect((await progressRepo.load())?.moduleCheckpoints["mod-01"]?.attempts).toBe(1);
+  });
+
+  it("checkpointState reflete disponibilidade e completação para a UI", async () => {
+    const progress = corridorProgressWith(["l01", "l02", "l03"]);
+    const { services } = makeAnalyticsServices(progress);
+    expect(await services.useCases.checkpointState("cp-01")).toEqual({
+      available: true,
+      completed: false,
+    });
+    expect(await services.useCases.checkpointState("cp-02")).toEqual({
+      available: false,
+      completed: false,
+    });
+  });
+
+  it("completeCheckpoint aprovado marca completed e desbloqueia l04 (gate locked-only)", async () => {
+    const progress = corridorProgressWith(["l01", "l02", "l03"]);
+    const { services } = makeAnalyticsServices(progress);
+    await services.useCases.startCheckpoint("cp-01");
+    const bestScores = {
+      "l01:l01-a2": 1,
+      "l02:l02-a1": 1,
+      "l03:l03-a2": 1,
+    };
+    const result = await services.useCases.completeCheckpoint({
+      checkpointId: "cp-01",
+      bestScores,
+    });
+    expect(result.outcome.passed).toBe(true);
+    expect(result.progress.moduleCheckpoints["mod-01"]?.status).toBe("completed");
+    expect(result.progress.lessonStatus.l04).toBe("available");
+    expect(result.unlockedLessonId).toBe("l04");
+  });
+
+  it("completeCheckpoint reprovado mantém módulo seguinte locked e status available", async () => {
+    const progress = corridorProgressWith(["l01", "l02", "l03"]);
+    const { services } = makeAnalyticsServices(progress);
+    await services.useCases.startCheckpoint("cp-01");
+    const result = await services.useCases.completeCheckpoint({
+      checkpointId: "cp-01",
+      bestScores: { "l01:l01-a2": 0, "l02:l02-a1": 0, "l03:l03-a2": 0 },
+    });
+    expect(result.outcome.passed).toBe(false);
+    expect(result.progress.lessonStatus.l04).toBe("locked");
+    expect(result.progress.moduleCheckpoints["mod-01"]?.status).toBe("available");
+  });
+});
+
+describe("corredor: uma sessão de revisão = um hop de janela (spec AID-915 §4.4)", () => {
+  it("completeReview com intervalIndex reagenda exatamente o próximo estágio com clamp", async () => {
+    const progress = corridorProgressWith(["l02"]);
+    const { services } = makeAnalyticsServices(progress);
+    const lessonReview = lessons.find((item) => item.id === "l02");
+    if (!lessonReview) throw new Error("l02 ausente");
+    const all = Object.fromEntries(
+      lessonReview.completion.requiredActivityIds.map((id) => [id, 1]),
+    );
+
+    const hop1 = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: all,
+      intervalIndex: 1,
+    });
+    const dayMs = 86_400_000;
+    const next1 = Date.parse(hop1.progress.skills.entender?.nextReviewAt ?? "");
+    expect(next1 - FIXED_NOW.getTime()).toBeGreaterThan(6.5 * dayMs);
+    expect(next1 - FIXED_NOW.getTime()).toBeLessThan(7.5 * dayMs);
+
+    const hop2 = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: all,
+      intervalIndex: 2,
+    });
+    const next2 = Date.parse(hop2.progress.skills.entender?.nextReviewAt ?? "");
+    expect(next2 - FIXED_NOW.getTime()).toBeGreaterThan(20.5 * dayMs);
+    expect(next2 - FIXED_NOW.getTime()).toBeLessThan(21.5 * dayMs);
+
+    // Clamp no último estágio: índice além do vetor fica no 21d.
+    const clamp = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: all,
+      intervalIndex: 99,
+    });
+    const next3 = Date.parse(clamp.progress.skills.entender?.nextReviewAt ?? "");
+    expect(next3 - FIXED_NOW.getTime()).toBeGreaterThan(20.5 * dayMs);
+  });
+
+  it("sem intervalIndex o comportamento anterior é preservado (sem reagendamento)", async () => {
+    const progress = corridorProgressWith(["l02"]);
+    progress.skills.entender = {
+      skillId: "entender",
+      attempts: 1,
+      passes: 1,
+      lastScore: 1,
+      lastPracticedAt: FIXED_NOW.toISOString(),
+      nextReviewAt: FIXED_NOW.toISOString(),
+    };
+    const { services, progressRepo } = makeAnalyticsServices(progress);
+    const lessonReview = lessons.find((item) => item.id === "l02");
+    if (!lessonReview) throw new Error("l02 ausente");
+    const result = await services.useCases.completeReview({
+      lessonId: "l02",
+      bestScores: Object.fromEntries(
+        lessonReview.completion.requiredActivityIds.map((id) => [id, 1]),
+      ),
+    });
+    expect(result.outcome.completed).toBe(true);
+    expect(await progressRepo.load()).toEqual(progress);
   });
 });

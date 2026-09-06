@@ -1,0 +1,32 @@
+schemaVersion: 1
+id: literacy-corridor-review-window
+useCaseId: literacy-standalone-corridor-mod01-03
+kind: continuity
+execution: mixed
+startState: fresh-browser-profile
+steps:
+  - complete-map-initial-lesson
+  - assert-due-plus-1d-in-storage
+  - controlled-storage-tamper-to-past
+  - reload-home-shows-pending-review
+  - complete-review-assert-plus-7d
+  - tamper-and-review-again-assert-plus-21d-and-clamp
+assertions:
+  - id: windows-1-7-21-observable-in-storage
+    severity: high
+    evidence: playwright
+    claim: Spaced review windows [1,7,21] and stage progression are observable in browser storage via the controlled test-channel tamper harness.
+  - id: review-evidence-emitted-and-valid
+    severity: high
+    evidence: playwright
+    claim: Review attempts emit LiteracyEvidenceRecord with context review against the current schema.
+  - id: learner-distinguishes-review-from-new-content
+    severity: high
+    evidence: observation
+    claim: The learner distinguishes the review session from new lesson content.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/corridor.spec.ts
+  - engines/literacyDojo/src/domain/progress.ts
