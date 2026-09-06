@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: literacy-corridor-gate-retry
+useCaseId: literacy-standalone-corridor-mod01-03
+kind: recovery
+execution: mixed
+startState: seeded-mod01-complete
+steps:
+  - open-cp-01
+  - fail-first-challenge-activity
+  - read-formative-feedback
+  - request-hint
+  - retry-and-recover
+  - complete-challenge
+  - next-module-unlocks
+assertions:
+  - id: failure-offers-feedback-hint-retry
+    severity: high
+    evidence: playwright
+    claim: Failing a challenge activity offers corrective feedback, a hint, and unlimited retry without losing any prior completion.
+  - id: next-module-stays-locked-until-pass
+    severity: high
+    evidence: playwright
+    claim: The next module first lesson remains locked until the module challenge is passed.
+  - id: learner-understands-retry-without-internal-language
+    severity: high
+    evidence: observation
+    claim: The learner understands the retry is free of punishment and uses no internal product vocabulary.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/corridor.spec.ts
+  - engines/literacyDojo/src/screens/CheckpointScreen.tsx

@@ -156,14 +156,26 @@ describe("createServices analytics transport selection", () => {
       durationSeconds: 42,
     });
 
-    // Revisão espaçada não é conclusão: não emite.
+    // Revisão espaçada não é conclusão: emite os eventos de MEDIÇÃO do
+    // corredor (spec AID-915 §4.3) — review_started + review_completed — e
+    // nunca `lesson_completed`.
     await services.useCases.startReview(lesson.id);
     await services.useCases.completeReview({ lessonId: lesson.id, bestScores: allBestScores });
-    expect(analytics.events).toHaveLength(1);
+    expect(analytics.events).toHaveLength(3);
+    expect(analytics.events[1]).toMatchObject({
+      event: "review_started",
+      props: { lessonId: lesson.id },
+    });
+    expect(analytics.events[2]).toMatchObject({
+      event: "review_completed",
+      props: { lessonId: lesson.id, score: 1 },
+    });
+    expect(analytics.events.every(isValidAnalyticsEvent)).toBe(true);
 
     // Nova conclusão (replay): 1 novo evento — sempre 1× por conclusão.
     await services.useCases.completeLesson({ lessonId: lesson.id, bestScores: allBestScores });
-    expect(analytics.events).toHaveLength(2);
-    expect(analytics.events.every((item) => item.event === "lesson_completed")).toBe(true);
+    expect(analytics.events).toHaveLength(4);
+    expect(JSON.stringify(analytics.events)).not.toContain("mastered");
+    expect(analytics.events.filter((item) => item.event === "lesson_completed")).toHaveLength(2);
   });
 });

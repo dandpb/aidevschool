@@ -1,6 +1,13 @@
 import type { Clock } from "../adapters/clock";
 import type { ContentRepository } from "../application/ports";
 import type { CatalogLessonEntry, ModuleDefinition, SkillId } from "../data/generated/lessons";
+import {
+  CHECKPOINT_SELECTION,
+  type CheckpointDefinition,
+  isCheckpointAvailable,
+  isCheckpointCompleted,
+  isLessonGateLocked,
+} from "./checkpoints";
 import type { DailyGoalStatus, LearnerProgress, LessonStatus, SkillPractice } from "./progress";
 import { dailyGoalStatus, reviewsDue, upcomingReviews } from "./progress";
 import { readyLessonEntries, trackSummary } from "./track";
@@ -18,8 +25,20 @@ export type ModuleSummary = {
   totalCount: number;
 };
 
+export type CheckpointSummary = {
+  checkpoint: CheckpointDefinition;
+  module: ModuleDefinition;
+  available: boolean;
+  completed: boolean;
+  /** Módulo seguinte travado aguardando este desafio (mensagem do gate no mapa). */
+  gatesModuleTitle?: string;
+};
+
 export type TrackQueries = {
   mission: CatalogLessonEntry | undefined;
+  /** Desafio pendente (available e não concluído) — vira a missão do Home. */
+  pendingCheckpoint: CheckpointSummary | undefined;
+  checkpointSummaries: CheckpointSummary[];
   reviewLesson: CatalogLessonEntry | undefined;
   dailyGoal: DailyGoalStatus;
   trackSummary: { completed: number; total: number };
@@ -70,8 +89,37 @@ export function buildTrackQueries(
     totalCount: module.lessons.length,
   }));
 
+  const checkpointSummaries: CheckpointSummary[] = CHECKPOINT_SELECTION.flatMap((checkpoint) => {
+    const module = modules.find((entry) => entry.id === checkpoint.moduleId);
+    if (!module) return [];
+    return [
+      {
+        checkpoint,
+        module,
+        available: isCheckpointAvailable(progress, modules, checkpoint.id),
+        completed: isCheckpointCompleted(progress, checkpoint.id),
+      },
+    ];
+  });
+
+  // Mensagem do gate no mapa: primeira lição locked do módulo ativado.
+  for (const summary of checkpointSummaries) {
+    for (const other of moduleSummaries) {
+      const first = other.module.lessons.find((lesson) => lesson.hasContent);
+      if (first && isLessonGateLocked(progress, modules, first.id)) {
+        summary.gatesModuleTitle = other.module.title;
+      }
+    }
+  }
+
+  const pendingCheckpoint = checkpointSummaries.find(
+    (summary) => summary.available && !summary.completed,
+  );
+
   return {
     mission,
+    pendingCheckpoint,
+    checkpointSummaries,
     reviewLesson,
     dailyGoal: dailyGoalStatus(progress, now),
     trackSummary: trackSummary(modules, progress),

@@ -3387,4 +3387,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-09-04.1"
+export const literacyCorpusVersion = "2026-09-06.1"

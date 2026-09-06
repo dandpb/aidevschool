@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { loadRetrofitAcks, resetRetrofitAcks, saveRetrofitAck } from "../adapters/retrofitAcks";
 import type { LessonDefinition } from "../data/generated/lessons";
+import type { ModuleCheckpointId } from "../domain/checkpoints";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import type { AttemptFeedback } from "../domain/feedback";
 import type { Achievement, LearnerProgress } from "../domain/progress";
 import { isRetrofitNoticeDue } from "../domain/retrofitNotice";
 import { LiteracyMissionAdapter, isHostedMission } from "../host/LiteracyMissionAdapter";
+import { CheckpointScreen } from "../screens/CheckpointScreen";
 import { ErrorRecoveryScreen } from "../screens/ErrorRecoveryScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { type LessonMode, LessonScreen } from "../screens/LessonScreen";
@@ -37,7 +39,14 @@ export type Route =
   | { name: "home" }
   | { name: "map" }
   | { name: "progress" }
-  | { name: "lesson"; lessonId: string; mode?: LessonMode; retrofitNotice?: boolean }
+  | {
+      name: "lesson";
+      lessonId: string;
+      mode?: LessonMode;
+      retrofitNotice?: boolean;
+      reviewStage?: number;
+    }
+  | { name: "checkpoint"; checkpointId: ModuleCheckpointId }
   | { name: "result"; summary: LessonSummary };
 
 export function AppShell({
@@ -60,7 +69,12 @@ export function AppShell({
    * primeiro render da intro — S2 é exibido 1× por bump de contentVersion.
    */
   const openLessonRoute = useCallback(
-    (lessonId: string, mode?: LessonMode, current?: LearnerProgress | null) => {
+    (
+      lessonId: string,
+      mode?: LessonMode,
+      current?: LearnerProgress | null,
+      reviewStage?: number,
+    ) => {
       const learner = current ?? progress;
       const due =
         learner !== null &&
@@ -73,7 +87,7 @@ export function AppShell({
       if (due) {
         setRetrofitAcks(saveRetrofitAck(lessonId, services.content.getContentVersion()));
       }
-      setRoute({ name: "lesson", lessonId, mode, retrofitNotice: due });
+      setRoute({ name: "lesson", lessonId, mode, retrofitNotice: due, reviewStage });
     },
     [progress, retrofitAcks, services],
   );
@@ -169,9 +183,9 @@ export function AppShell({
     async (lessonId: string) => {
       setLessonOpenError(null);
       try {
-        const { progress: updated } = await services.useCases.startReview(lessonId);
+        const { progress: updated, stage } = await services.useCases.startReview(lessonId);
         setProgress(updated);
-        openLessonRoute(lessonId, "review", updated);
+        openLessonRoute(lessonId, "review", updated, stage);
       } catch {
         setLessonOpenError("Não foi possível iniciar esta revisão. Tente novamente.");
       }
@@ -238,6 +252,7 @@ export function AppShell({
               progress={progress}
               onContinue={(lessonId) => void handleOpenLesson(lessonId)}
               onReview={(lessonId) => void handleOpenReview(lessonId)}
+              onOpenCheckpoint={(checkpointId) => setRoute({ name: "checkpoint", checkpointId })}
               onOpenMap={() => setRoute({ name: "map" })}
               onOpenProgress={() => setRoute({ name: "progress" })}
               onReset={handleReset}
@@ -248,6 +263,7 @@ export function AppShell({
               progress={progress}
               onBack={() => setRoute({ name: "home" })}
               onStartLesson={(lessonId) => void handleOpenLesson(lessonId)}
+              onOpenCheckpoint={(checkpointId) => setRoute({ name: "checkpoint", checkpointId })}
             />
           )}
           {route.name === "progress" && (
@@ -266,6 +282,7 @@ export function AppShell({
               mode={route.mode ?? "initial"}
               onboarding={progress.onboarding}
               retrofitNotice={route.retrofitNotice ?? false}
+              reviewStage={route.reviewStage}
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);
@@ -275,6 +292,16 @@ export function AppShell({
               onExit={() => {
                 if (hostAdapter === null) setRoute({ name: "map" });
               }}
+            />
+          )}
+          {route.name === "checkpoint" && (
+            <CheckpointScreen
+              key={route.checkpointId}
+              checkpointId={route.checkpointId}
+              onProgressChange={setProgress}
+              onFinished={() => setRoute({ name: "home" })}
+              onExit={() => setRoute({ name: "map" })}
+              onStartNextLesson={(lessonId) => void handleOpenLesson(lessonId)}
             />
           )}
           {route.name === "result" && (

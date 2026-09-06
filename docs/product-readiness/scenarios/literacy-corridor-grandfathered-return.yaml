@@ -1,0 +1,29 @@
+schemaVersion: 1
+id: literacy-corridor-grandfathered-return
+useCaseId: literacy-standalone-corridor-mod01-03
+kind: continuity
+execution: mixed
+startState: seeded-pre-bump-progress
+steps:
+  - seed-pre-bump-state-schema3-with-l01-l05-completed
+  - reload-after-content-version-bump
+  - inspect-statuses-and-map
+assertions:
+  - id: no-status-re-locked-or-reset
+    severity: high
+    evidence: playwright
+    claim: No lesson status is re-locked or reset after the corridor content version bump; grandfathered lessons keep their completion.
+  - id: past-module-challenges-appear-optional
+    severity: high
+    evidence: playwright
+    claim: Module challenges for modules the learner already passed appear as optional review challenges, never as barriers.
+  - id: reviews-due-on-first-return-without-recompletion
+    severity: high
+    evidence: playwright
+    claim: Practiced skills have a review due on the first return after the bump without requiring lesson recompletion.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/corridor.spec.ts
+  - engines/literacyDojo/src/domain/migration.ts

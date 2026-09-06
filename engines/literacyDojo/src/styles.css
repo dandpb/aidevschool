@@ -2374,3 +2374,24 @@ a.audience-route-dev .route-badge {
   justify-self: end;
   width: auto;
 }
+
+/* Corredor literacy mod-01→03: Desafios de Módulo (spec AID-915 §3) */
+.checkpoint-card {
+  margin-top: 0.75rem;
+}
+
+.checkpoint-card h3 {
+  margin: 0.25rem 0;
+}
+
+.checkpoint-card-done {
+  border-style: dashed;
+}
+
+.checkpoint-gate-hint {
+  margin: 0.5rem 0 0;
+}
+
+.checkpoint-screen .card {
+  text-align: left;
+}
