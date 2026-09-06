@@ -20,6 +20,12 @@ const result = spawnSync(
     "literacy-happy-path",
     "literacy-retry",
     "literacy-resume",
+    // Corredor literacy mod-01→03 (spec AID-915 §5.2, ordem AID-916).
+    "literacy-corridor-happy-path",
+    "literacy-corridor-gate-retry",
+    "literacy-corridor-review-window",
+    "literacy-corridor-grandfathered-return",
+    "literacy-corridor-resume-mid-module",
   ],
   { cwd: repoRoot, encoding: "utf8", stdio: "inherit" },
 );

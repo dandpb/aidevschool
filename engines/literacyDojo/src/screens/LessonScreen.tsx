@@ -57,6 +57,7 @@ export function LessonScreen({
   mode = "initial",
   onboarding,
   retrofitNotice = false,
+  reviewStage,
   onProgressChange,
   onCompleted,
   onExit,
@@ -66,6 +67,8 @@ export function LessonScreen({
   onboarding: OnboardingState;
   /** Aviso S2 (retrofit O3-C1): exibido 1× por learner/lição/bump na intro. */
   retrofitNotice?: boolean;
+  /** Estágio da revisão na abertura — 1 hop por sessão ao concluir (§4.4). */
+  reviewStage?: number;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -173,6 +176,7 @@ export function LessonScreen({
         const result = await services.useCases.completeReview({
           lessonId: lesson.id,
           bestScores: payload.bestScores,
+          intervalIndex: reviewStage === undefined ? undefined : reviewStage + 1,
         });
         if (!result.outcome.completed) return;
         const summary = buildSummary(lesson, session.best, result.outcome.lessonScore, {

@@ -125,6 +125,17 @@ Seguindo o padrão do engine (portas em `src/application/ports.ts`, adapters em
 
 - Este ADR autoriza **um evento piloto** (`lesson_completed`) instrumentado no
   engine. Os demais três eventos do conjunto mínimo entram por fatias próprias.
+- **Emenda (2026-09-06, corredor AID-916 / spec AID-915 §4.3):** o vocabulário
+  ganha exatamente dois eventos de medição da revisão espaçada, um a um como
+  manda este ADR: `review_started` (props: `lessonId`, `intervalDays`,
+  `stage`) no início de uma revisão devida e `review_completed` (props:
+  `lessonId`, `score`) na conclusão aprovada. Mesma fronteira de privacidade
+  (sem texto livre, sem identificadores persistentes, nunca `mastered`);
+  engajamento de retorno, nunca competência. Os demais eventos propostos
+  (`lesson_started`, `activity_attempted`, `hint_requested`,
+  `real_world_application_reported`, …) continuam não instrumentados por este
+  ADR — a ativação O1 (AID-913) corre por emenda própria e não renomeia os
+  eventos daqui.
 - Nenhum backend é implantado por este ADR; o adapter HTTP só existe para
   provar a porta e degradar silenciosamente.
 - Analytics não muda a fronteira `completed`/`mastered` e não carrega

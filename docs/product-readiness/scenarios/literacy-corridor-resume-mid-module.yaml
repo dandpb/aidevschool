@@ -1,0 +1,30 @@
+schemaVersion: 1
+id: literacy-corridor-resume-mid-module
+useCaseId: literacy-standalone-corridor-mod01-03
+kind: continuity
+execution: mixed
+startState: seeded-mid-l06-in-progress
+steps:
+  - seed-mid-module-state
+  - reload
+  - resume-in-progress-lesson
+  - inspect-module-summary-and-map
+assertions:
+  - id: resumes-in-progress-lesson
+    severity: high
+    evidence: playwright
+    claim: A returning learner resumes the in-progress lesson directly.
+  - id: module-summary-preserved
+    severity: high
+    evidence: playwright
+    claim: Module completion summary and past challenge completion are preserved across reloads.
+  - id: pending-challenge-becomes-home-mission
+    severity: high
+    evidence: playwright
+    claim: When a module challenge is pending, the Home mission card becomes the module challenge.
+automation:
+  workingDirectory: engines/literacyDojo
+  argv: [npm, run, test:e2e]
+sourcePaths:
+  - engines/literacyDojo/playwright/corridor.spec.ts
+  - engines/literacyDojo/src/domain/trackQueries.ts

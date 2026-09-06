@@ -95,8 +95,8 @@ O domínio não conhece ferramentas de analytics (adapter inicial:
 | `hint_requested` | pedido de dica | `activityId`, `hintIndex` |
 | `activity_passed` | atividade aprovada | `activityId`, tentativas até passar |
 | `lesson_completed` | lição concluída | `lessonId`, `score`, duração real |
-| `review_started` | início de revisão espaçada | `lessonId`, `intervalDays` |
-| `review_completed` | fim de revisão | `lessonId`, `score` |
+| `review_started` | início de revisão espaçada | `lessonId`, `intervalDays`, `stage` (instrumentado — emenda ADR-0009, corredor AID-916) |
+| `review_completed` | fim de revisão | `lessonId`, `score` (instrumentado — emenda ADR-0009, corredor AID-916) |
 | `real_world_application_reported` | usuário relata aplicação real | `lessonId`, categoria da tarefa |
 
 Esses eventos alimentam as métricas do plano (funil, aprendizagem, qualidade) —
