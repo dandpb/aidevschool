@@ -252,7 +252,8 @@ export function findAdjacentWalkable(
     // Using a simple loop is faster than findIndex for small arrays
     let score = Infinity
     for (let i = 0; i < prefer.length; i++) {
-      if (prefer[i].x === nx && prefer[i].y === ny) {
+      const p = prefer[i]
+      if (p && p.x === nx && p.y === ny) {
         score = i
         break
       }
