@@ -180,6 +180,10 @@ jobs:
       # accept and reject exactly the OS analytics vocabulary; TS-side parity
       # runs in the vitest suite above (collectorParity.test.ts).
       - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
+      # Independent literacy verifier for the standalone site (AID-941): the
+      # fixed l02-v3 contract test keeps the tracked function in lockstep with
+      # the live literacy-verify deployment (fails closed on any drift).
+      - run: node --test ../../learner/gate/tests/literacy_verify_netlify.test.mjs
       # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
       # contract tests run here, and the monitor itself fails high over the
       # synthetic fixtures (real pilot NDJSON never lands in the repo; the
