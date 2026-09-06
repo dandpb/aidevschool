@@ -1,0 +1,27 @@
+PASS manifest-sha256==receipt-1f79089d — 1f79089d3b368372
+PASS manifest-sourceRevision==ef67fb06 — ef67fb06be7d8eb6ff3fe8d16e9c65024d4ac118
+PASS manifest-os-sha256==receipt-f605b3c6 — f605b3c611c65424
+PASS contentVersion-uniform-2026-09-04.1 — 32 strings, distinct: 2026-09-04.1
+ONBOARDING(dev): 1531ms -> https://aidevschool-codexdojo-os.netlify.app/hub
+PASS warmup-/hub-rendered — 1318 chars
+PASS warmup-/hub-no-l15-l17-text
+PASS warmup-/hub-no-dev-l15-l17-refs
+PASS warmup-/map-rendered — 1301 chars
+PASS warmup-/map-no-l15-l17-text
+PASS warmup-/map-no-dev-l15-l17-refs
+PASS warmup-/progress-rendered — 1760 chars
+PASS warmup-/progress-no-l15-l17-text
+PASS warmup-/progress-no-dev-l15-l17-refs
+PASS l27-iframe-same-origin — https://aidevschool-codexdojo-os.netlify.app/apps/literacydo
+PASS l27-host-independent-verdict-PASS — Veredito PASS
+MISSION l27: 32.2s | host verdict: Veredito PASS
+PASS l28-iframe-same-origin — https://aidevschool-codexdojo-os.netlify.app/apps/literacydo
+PASS l28-host-independent-verdict-PASS — Veredito PASS
+MISSION l28: 32.4s | host verdict: Veredito PASS
+PASS l29-iframe-same-origin — https://aidevschool-codexdojo-os.netlify.app/apps/literacydo
+PASS l29-host-independent-verdict-PASS — Veredito PASS
+MISSION l29: 32.5s | host verdict: Veredito PASS
+PASS hub-rendered-after-l29 — 1307 chars
+PASS zero-console-errors
+
+SUMMARY: missions=3/3 checks=21 failed=0 verdict=PASS happyPath=98.7s

@@ -32,6 +32,9 @@ _probe_commit_test.txt
 
 # Logs
 *.log
+# Exception: SDLC evidence run-logs land in git (audit rule F1 — nothing
+# evidence-critical outside git; SDLC Audit #7 / retrofit AID-848).
+!_work-products/AID-822/sanity-ef67fb06.run.log
 
 # Local environment, debug sessions, and pilot output
 # (patterns without a slash already match at any depth — no **/ variants needed)
