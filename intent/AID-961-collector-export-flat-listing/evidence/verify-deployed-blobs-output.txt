@@ -1,0 +1,11 @@
+PASS  identical POST #1 -> 202 — status=202
+PASS  identical POST #2 -> 202 — status=202
+PASS  export -> 200 ndjson — status=200
+PASS  exactly 1 line per eventId after duplicate POSTs — lines=1
+PASS  line carries the posted eventId
+PASS  edge-semantics POST -> 202 — status=202
+PASS  edge-semantics export -> 200 ndjson with the edge line — status=200 edgeHits=1
+PASS  read paths only use the portable no-prefix flat scan (edge semantics)
+PASS  no-context POST still 202 via NDJSON fallback — status=202
+
+all checks passed

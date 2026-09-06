@@ -29,6 +29,9 @@ const verifierFunction = 'dojo-verification-bridge.mjs'
   // Deployable functions manifest: declares @netlify/blobs so the functions
   // build resolves the dependency at bundle time (AID-947).
   const functionsManifest = 'package.json'
+  // AID-961 deploy gap (a): the lockfile ships with the manifest so the
+  // staged install below is reproducible (`npm ci`, never `npm install`).
+  const functionsLockfile = 'package-lock.json'
 // Generated verifier corpus for the hosted literacy bridge (AID-449); a
 // projection of curriculum/ai-literacy/ that must ship with the function.
 // The underscore directory is the Netlify shared-code convention: bundled
@@ -111,6 +114,21 @@ try {
   await cp(join(canonicalFunctions, collectorFunction), join(stagedFunctions, collectorFunction))
   await cp(join(canonicalFunctions, collectorBlobsRuntime), join(stagedFunctions, collectorBlobsRuntime))
   await cp(join(canonicalFunctions, functionsManifest), join(stagedFunctions, functionsManifest))
+  await cp(join(canonicalFunctions, functionsLockfile), join(stagedFunctions, functionsLockfile))
+  // AID-961 deploy gap (a): `netlify deploy --functions netlify/functions`
+  // resolves @netlify/blobs at bundle time and failed with "Could not
+  // resolve" on a clean checkout — the staged manifest alone is not enough.
+  // Install the deployed dependency set (pinned by the lockfile) inside the
+  // staging dir so the deploy works without a manual `npm ci` in
+  // learner/gate/netlify-functions (the staging dir is gitignored).
+  const functionsInstall = spawnSync('npm', ['ci', '--ignore-scripts', '--no-audit', '--no-fund'], {
+    cwd: stagedFunctions,
+    stdio: 'inherit',
+    env: process.env,
+  })
+  if (functionsInstall.status !== 0) {
+    throw new Error(`functions dependencies install failed with exit ${functionsInstall.status ?? 'unknown'}`)
+  }
   await mkdir(join(stagedFunctions, '_shared'), { recursive: true })
   await cp(join(canonicalFunctions, literacyCorpusModule), join(stagedFunctions, literacyCorpusModule))
   const revision = process.env.COMMIT_REF || process.env.HEAD || 'local-uncommitted'

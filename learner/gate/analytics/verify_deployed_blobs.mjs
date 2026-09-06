@@ -10,7 +10,16 @@
 //      export (what Netlify actually deploys) -> both 202;
 //   4. GET export with Bearer token -> exactly ONE line per eventId
 //      (the QA AID-940 countersign reproduced TWO lines pre-fix);
-//   5. control: without a runtime context, the default export falls back to
+//   5. AID-961 edge-semantics probe: the local server devolves RECURSIVE
+//      results for `directories:true` (and [] for a flat list WITH a day
+//      prefix), but the PRODUCTION edge API is the INVERSE — flat no-prefix
+//      listing is the recursive one, `directories:true` is a DELIMITED
+//      one-level listing (0 nested blobs) — which made the live export
+//      return 0 rows on both surfaces (pin c2937e55). This probe wraps the
+//      REAL server store so BOTH divergent forms behave exactly like the
+//      edge and re-runs POST+GET end-to-end: the export must still return
+//      every line, failing closed if any read path reintroduces them;
+//   6. control: without a runtime context, the default export falls back to
 //      the NDJSON file sink (local/test behavior preserved).
 //
 // Requires `npm install` in ../netlify-functions/ (the deployed dependency
@@ -82,7 +91,74 @@ check("exactly 1 line per eventId after duplicate POSTs", lines.length === 1,
   `lines=${lines.length}${lines.length > 1 ? " (DUPLICATED — pre-fix behavior)" : ""}`);
 check("line carries the posted eventId", lines[0]?.includes(eventId) === true);
 
-// 5) control: no runtime context -> NDJSON fallback (local/test semantics)
+// 5) AID-961 edge-semantics probe. The real store stays underneath; the two
+// forms whose semantics DIVERGE between the local server and the production
+// edge are rewritten to the observed edge behavior (live probes on both
+// surfaces, drafts 6a9dbcbd…/6a9dbd4bd…): `directories:true` → delimited
+// listing with ZERO nested blobs; flat list with a `prefix` → also empty.
+// The portable no-prefix flat scan passes through untouched.
+const runtime = await import("../netlify-functions/netlify-blobs-runtime.mjs");
+const realStore = runtime.getStore("dojo-analytics");
+const edgeViolations = [];
+const edgeStore = Object.create(realStore);
+edgeStore.list = async (options = {}) => {
+  if (options.directories) {
+    edgeViolations.push(`list({prefix:${JSON.stringify(options.prefix ?? "")}, directories:true}) — edge semantics: delimited, 0 nested blobs`);
+    const flat = await realStore.list({});
+    const directories = new Set();
+    for (const { key } of flat.blobs) {
+      const rest = key.slice((options.prefix ?? "").length);
+      const slash = rest.indexOf("/");
+      if (slash !== -1) directories.add(rest.slice(0, slash + 1));
+    }
+    return { blobs: [], directories: [...directories] };
+  }
+  if (options.prefix !== undefined && options.prefix !== "") {
+    edgeViolations.push(`list({prefix:${JSON.stringify(options.prefix)}}) — edge/local semantics diverge on prefixed flat lists`);
+    return { blobs: [] };
+  }
+  return realStore.list(options);
+};
+const edgeEventId = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+const edgeDay = new Date().toISOString().slice(0, 10);
+const edgeBatch = () => JSON.stringify({
+  schemaVersion: 2,
+  source: "literacydojo",
+  events: [{
+    schemaVersion: 2,
+    source: "literacydojo", event: "entry_viewed",
+    eventId: edgeEventId,
+    sessionId: "99999999-9999-9999-9999-999999999999",
+    occurredAt: new Date().toISOString(),
+    contentVersion: "verify-a961-edge",
+    props: {},
+  }],
+});
+const edgeHandler = collector.createCollectorHandler({
+  backing: new collector.BlobsEventStore({ store: edgeStore }),
+  exportToken: "edge-token",
+  now: () => new Date(),
+});
+const edgePost = new Request("https://live.example/__dojo/bridge/v1/analytics", {
+  method: "POST",
+  headers: { "content-type": "application/json", "sec-fetch-site": "same-origin" },
+  body: edgeBatch(),
+});
+const edgeAccepted = await edgeHandler(edgePost);
+check("edge-semantics POST -> 202", edgeAccepted.status === 202, `status=${edgeAccepted.status}`);
+const edgeExport = await edgeHandler(new Request(
+  `https://live.example/__dojo/bridge/v1/analytics?from=${edgeDay}&to=${edgeDay}`,
+  { headers: { authorization: "Bearer edge-token" } },
+));
+const edgeBody = edgeExport.status === 200 ? await edgeExport.text() : "";
+const edgeLines = edgeBody.split("\n").filter((line) => line.length > 0);
+const edgeHits = edgeLines.filter((line) => line.includes(edgeEventId)).length;
+check("edge-semantics export -> 200 ndjson with the edge line", edgeExport.status === 200 && edgeHits === 1,
+  `status=${edgeExport.status} edgeHits=${edgeHits}${edgeHits === 0 ? " (0 ROWS — live defect AID-961)" : ""}`);
+check("read paths only use the portable no-prefix flat scan (edge semantics)", edgeViolations.length === 0,
+  edgeViolations[0] ?? "");
+
+// 6) control: no runtime context -> NDJSON fallback (local/test semantics)
 delete globalThis.netlifyBlobsContext;
 process.env.ANALYTICS_EXPORT_TOKEN = "";
 const noContext = await collector.default(post());

@@ -1,8 +1,14 @@
 /**
- * Type surface of the canonical same-origin analytics collector for consumers
- * inside the OS engine's typecheck (collectorParity.test.ts). The function
- * itself is plain ESM staged into the Netlify bundle; only the parity-test
- * imports need these types.
+ * Type surface of the canonical same-origin analytics collector
+ * (../netlify-functions/dojo-analytics-collector.mjs). AID-961 deploy gap
+ * (b): this declaration moved OUT of the functions directory — the Netlify
+ * deploy CLI treats `dojo-analytics-collector.d.mts` as a function file with
+ * an invalid name and rejects the whole literacy deploy with 422 "Incorrect
+ * function names" when `functions = ../../learner/gate/netlify-functions`.
+ * It now lives with the offline analytics tooling; consumers importing the
+ * runtime .mjs from a TS typecheck (collectorParity.test.ts) carry an
+ * explicit @ts-expect-error and rely on the runtime parity assertions
+ * instead of colocated declarations.
  */
 
 export declare const ANALYTICS_COLLECTOR_PATH: string

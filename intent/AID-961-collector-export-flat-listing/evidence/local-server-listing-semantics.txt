@@ -1,0 +1,5 @@
+flat no prefix      : {"blobs":["2026-09-06/literacydojo/event-3","2026-09-06/os/event-1","2026-09-06/os/event-2","2026-09-07/os/event-4"],"directories":[],"nextCursor":null}
+flat prefix day     : {"blobs":[],"directories":[],"nextCursor":null}
+flat prefix day+/   : {"blobs":[],"directories":[],"nextCursor":null}
+directories no prefix: {"blobs":["2026-09-06/literacydojo/event-3","2026-09-06/os/event-1","2026-09-06/os/event-2","2026-09-07/os/event-4"],"directories":[],"nextCursor":null}
+directories prefix day: {"blobs":["2026-09-06/literacydojo/event-3","2026-09-06/os/event-1","2026-09-06/os/event-2"],"directories":[],"nextCursor":null}
