@@ -1,7 +1,10 @@
+import type { AnalyticsIdentity } from "../adapters/analyticsIdentity";
 import type { Clock } from "../adapters/clock";
 import type { ActivityDefinition, LessonDefinition } from "../data/generated/lessons";
 import {
+  buildActivityAttemptedEvent,
   buildLessonCompletedEvent,
+  buildLessonStartedEvent,
   buildReviewCompletedEvent,
   buildReviewStartedEvent,
 } from "../domain/analytics";
@@ -57,8 +60,10 @@ export type UseCaseDeps = {
   evidence: EvidenceSink;
   feedback: FeedbackProvider;
   clock: Clock;
-  /** Analytics de produto (ADR-0009) — piloto `lesson_completed`. */
+  /** Analytics de produto (ADR-0009, emenda AID-913): funil entry→start→attempt→complete. */
   analytics: AnalyticsSink;
+  /** Identidade anônima efêmera (sessionId por page load + eventId por evento). */
+  analyticsIdentity: AnalyticsIdentity;
 };
 
 export type SubmitAttemptResult = {
@@ -149,12 +154,27 @@ export class LiteracyUseCases {
   }
 
   async startLesson(lessonId: string): Promise<LearnerProgress> {
-    this.requireLesson(lessonId);
+    const lesson = this.requireLesson(lessonId);
     const progress = await this.requireProgress();
     if (!isLessonUnlocked(progress, lessonId))
       throw new Error(`Lição bloqueada ou sem conteúdo: ${lessonId}`);
     const next = startLessonInDomain(progress, lessonId);
     await this.deps.progress.save(next);
+    // Funil AID-913: estágio "início de lição". Fire-and-forget após o
+    // progresso persistir — o sink nunca lança nem bloqueia a lição.
+    this.deps.analytics.track(
+      buildLessonStartedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        { lessonId: lesson.id, lessonVersion: lesson.version },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
     return next;
   }
 
@@ -222,6 +242,27 @@ export class LiteracyUseCases {
     });
     this.deps.evidence.emit(record);
 
+    // Funil AID-913: estágio "tentativa" — passa ou não; tentativas repetidas
+    // na mesma lição/sessão são o marcador de retry. A avaliação detalhada
+    // fica na evidência (canal próprio); analytics carrega só o resultado.
+    this.deps.analytics.track(
+      buildActivityAttemptedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        {
+          lessonId: lesson.id,
+          activityType: activity.type,
+          passed: evaluation.pass,
+        },
+        {
+          occurredAt: now.toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
+    );
+
     return {
       progress: next,
       evaluation,
@@ -279,18 +320,27 @@ export class LiteracyUseCases {
       return result;
     }
     await this.deps.progress.save(result.progress);
-    // ADR-0009 piloto: exatamente 1× `lesson_completed` por conclusão, após o
-    // progresso persistir. Fire-and-forget — o contrato dos sinks é nunca
-    // lançar nem adiar a resposta; analytics nunca bloqueia a lição.
+    // ADR-0009 (emenda AID-913): exatamente 1× `lesson_completed` por
+    // conclusão, após o progresso persistir. Fire-and-forget — o contrato dos
+    // sinks é nunca lançar nem adiar a resposta; analytics nunca bloqueia a
+    // lição.
     this.deps.analytics.track(
-      buildLessonCompletedEvent({
-        lessonId: lesson.id,
-        lessonVersion: lesson.version,
-        score: result.outcome.lessonScore,
-        durationSeconds: input.durationSeconds,
-        occurredAt: this.deps.clock().toISOString(),
-        contentVersion: this.deps.content.getContentVersion(),
-      }),
+      buildLessonCompletedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        {
+          lessonId: lesson.id,
+          lessonVersion: lesson.version,
+          score: result.outcome.lessonScore,
+          durationSeconds: input.durationSeconds,
+        },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
     );
     return result;
   }
@@ -319,13 +369,17 @@ export class LiteracyUseCases {
     const stage = Math.min(lesson.review.intervalsDays.length - 1, bestStage);
     const intervalDays = lesson.review.intervalsDays[stage] ?? 1;
     this.deps.analytics.track(
-      buildReviewStartedEvent({
-        lessonId,
-        intervalDays,
-        stage,
-        occurredAt: this.deps.clock().toISOString(),
-        contentVersion: this.deps.content.getContentVersion(),
-      }),
+      buildReviewStartedEvent(
+        {
+          sessionId: this.deps.analyticsIdentity.sessionId,
+          eventId: this.deps.analyticsIdentity.nextEventId(),
+        },
+        { lessonId, intervalDays, stage },
+        {
+          occurredAt: this.deps.clock().toISOString(),
+          contentVersion: this.deps.content.getContentVersion(),
+        },
+      ),
     );
     return { progress, intervalDays, stage };
   }
@@ -357,12 +411,17 @@ export class LiteracyUseCases {
         await this.deps.progress.save(progress);
       }
       this.deps.analytics.track(
-        buildReviewCompletedEvent({
-          lessonId: input.lessonId,
-          score: outcome.lessonScore,
-          occurredAt: this.deps.clock().toISOString(),
-          contentVersion: this.deps.content.getContentVersion(),
-        }),
+        buildReviewCompletedEvent(
+          {
+            sessionId: this.deps.analyticsIdentity.sessionId,
+            eventId: this.deps.analyticsIdentity.nextEventId(),
+          },
+          { lessonId: input.lessonId, score: outcome.lessonScore },
+          {
+            occurredAt: this.deps.clock().toISOString(),
+            contentVersion: this.deps.content.getContentVersion(),
+          },
+        ),
       );
     }
     return { progress, outcome };

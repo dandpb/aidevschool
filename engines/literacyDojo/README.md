@@ -143,17 +143,26 @@ UI (src/screens, src/components)
   `ConsoleEvidenceSink` fica ativo. Os dados nunca saem do navegador.
 - **`attemptId`** é sequencial por perfil (`att-000001`, …) via contador no
   progresso — determinístico e único por tentativa.
-- **Analytics de produto (ADR-0009, piloto `lesson_completed`):** `Services`
-  compõe `AnalyticsSink` atrás de `VITE_ANALYTICS_ENDPOINT` — sem o env o
-  sink é noop em produção e console em dev; nenhuma superfície de build
-  define o env (transporte OFF; ativação é gate do board, ADR-0010 §4). Em
-  missão hospedada (`?hosted=1`) o sink é sempre noop — o host OS já mede as
-  missões com o vocabulário dele, evitando dupla contagem. A emissão (1×
-  `lesson_completed` por conclusão, após `progress.save`, fire-and-forget)
-  vive em `completeLesson`. O endpoint de literacy não é a rota do coletor
-  do OS (`/__dojo/bridge/v1/analytics` rejeitaria o envelope
-  `source:"literacydojo"` com 422); a recepção de literacy é decisão de
-  ativação.
+- **Analytics de produto (ADR-0009 §Emenda AID-913 — ATIVADO):** envelope
+  `schemaVersion: 2` (`source:"literacydojo"`) com identidade anônima efêmera
+  (`sessionId` por page load, só em memória; `eventId` por evento) e funil
+  fechado: `entry_viewed` (1× por load, na home) → `lesson_started`
+  (`startLesson`) → `activity_attempted` (`submitActivityAttempt`; retry =
+  tentativas repetidas) → `lesson_completed` (1× por conclusão, após
+  `progress.save`, fire-and-forget). `Services` compõe um **batch sink**
+  (`analyticsBatchSink.ts`: buffer 20 eventos / 15s / pagehide com beacon)
+  quando `VITE_ANALYTICS_ENDPOINT` está definido — e o env é definido SOMENTE
+  nos `[build.environment]` dos netlify.toml do literacy e do OS, sempre
+  `/__dojo/bridge/v1/analytics` (invariante fail-closed por teste). Sem o env:
+  noop em produção, console em dev. Em missão hospedada (`?hosted=1`) o sink é
+  sempre noop — o host OS já mede as missões com o vocabulário dele, evitando
+  dupla contagem. O coletor same-origin
+  (`learner/gate/netlify-functions/dojo-analytics-collector.mjs`, estendido
+  pela ativação) aceita os envelopes OS v1 e literacy v2 com paridade travada
+  por teste, persiste idempotentemente (Netlify Blobs quando disponível) e
+  exporta NDJSON bruto via GET autenticado por `ANALYTICS_EXPORT_TOKEN`
+  (segredo de deploy, nunca no repo). Leitura: `literacyFunnel` no
+  `aggregate_funnel.mjs` (reportVersion 3), k-anonimato n≥5 imutável.
 - **Biome 1.9 + overrides por `include`:** `src/data/generated/` fora do
   lint/format (arquivo gerado).
 

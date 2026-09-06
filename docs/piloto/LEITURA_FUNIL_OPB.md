@@ -1,4 +1,4 @@
-# Leitura do funil OP-B — procedimento (executar somente após ativação pelo board)
+# Leitura do funil OP-B — procedimento (ativação aprovada 2026-09-06, ordem AID-910/D; reportVersion 3)
 
 Dono da execução: founder/operador humano. Este procedimento **não** ativa
 nada; ele lê o NDJSON depois que o board ligar o transporte. Fronteiras
@@ -34,12 +34,23 @@ evidência; vocabulário fechado) e [ADR-0010](../design/adr/0010-os-analytics-c
 - O funil mede **retorno à experiência**, nunca aprendizagem ou competência
   (`mastered` é proibido em analytics).
 
-## 1. Exportar o NDJSON coletado
+## 1. Exportar o NDJSON coletado (ativação AID-913)
 
-Copie do backing definido na ativação os arquivos diários
-`events-<AAAA-MM-DD>.ndjson` (dia UTC) para um diretório **fora do repo**
-(ex.: `/tmp/p6-funil/`). NDJSON real nunca é commitado; relatórios finais são
-work products datados (`_work-products/`).
+Com a ativação (ordem AID-910/D), o export é via endpoint same-origin do
+próprio site, autenticado por Bearer token (`ANALYTICS_EXPORT_TOKEN`, segredo
+de deploy — nunca no repo):
+
+```bash
+curl -H "Authorization: Bearer $ANALYTICS_EXPORT_TOKEN" \
+  "https://<site>/__dojo/bridge/v1/analytics?from=AAAA-MM-DD&to=AAAA-MM-DD" \
+  -o /tmp/p6-funil/events-export.ndjson
+```
+
+Exporte para um diretório **fora do repo** (ex.: `/tmp/p6-funil/`). NDJSON
+real nunca é commitado; relatórios finais são work products datados
+(`_work-products/`). O NDJSON contém os dois envelopes (OS v1 **e** literacy
+v2 — ativação AID-913); o agregador discrimina por `source` e o funil literacy
+aparece na seção `literacyFunnel` (reportVersion 3).
 
 ## 2. Checar drift do vocabulário (obrigatório antes de agregar)
 

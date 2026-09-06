@@ -1,6 +1,9 @@
 # ADR-0009: Analytics de produto do literacyDojo — eventos mínimos, fronteira de privacidade e backend
 
-**Status:** Accepted · **Data:** 2026-08-13 · **Decisor:** Daniel (Fase 4.3 do
+**Status:** Accepted · **Emendado 2026-09-06 (AID-913, ordem AID-910/D):** envelope v2
+(`eventId` + `sessionId` efêmero), eventos `lesson_started`/`activity_attempted`,
+instrumentação de `entry_viewed`, batch sink same-origin e ativação do transporte
+(roteada para o coletor do ADR-0010; ver §Emenda no fim). · **Data:** 2026-08-13 · **Decisor:** Daniel (Fase 4.3 do
 acompanhamento do plano LiteracyDojo)
 **Contexto:** O vertical slice do `literacyDojo` está funcional (onboarding,
 Mapa Inicial, lições, revisão espaçada, evidência por tentativa), mas **não
@@ -153,3 +156,31 @@ Seguindo o padrão do engine (portas em `src/application/ports.ts`, adapters em
   autocapture); a visão multiusuário agregada fica adiada até o backend.
 - Revisitar quando: hipótese de backend validada (ver gatilho acima) ou quando
   o funil exigir correlação por sessão — ambos pedem emenda deste ADR.
+
+## Emenda 2026-09-06 (AID-913 — ativação O1, ordem AID-910/D)
+
+A ordem CEO AID-910/D ativou a telemetria nas 2 journeys live antes da janela O1
+(~09-23), exatamente pela via que este ADR reservava: identificador **efêmero em
+memória** + eventos fatia a fatia + sink existente. Em vigor:
+
+- **Envelope v2** (`schemaVersion: 2`): todo evento carrega `eventId` (UUID por
+  evento; dedup na recepção) e `sessionId` (UUID por page load, **só em
+  memória**, nunca persistido — o §2 pré-autorizava esta forma via emenda).
+  Sem `installationId` no literacy: a sessão anônima basta para o funil.
+- **Eventos novos**: `lesson_started` (`lessonId`, `lessonVersion`) e
+  `activity_attempted` (`lessonId`, `activityType`, `passed`); `entry_viewed`
+  passa a ser instrumentado (1× por page load na home). Funil:
+  entry_viewed → lesson_started → activity_attempted → lesson_completed.
+  Retry = tentativas repetidas na mesma lição/sessão (sem evento novo);
+  hint continua fora do vocabulário literacy.
+- **Props fechadas por evento** com conjunto exato de chaves e vocabulários de
+  valor (activityType: os 7 tipos do contrato; route: guided|intermediate) —
+  paridade 1:1 com o coletor, travada por teste.
+- **Batch sink**: lotes `{schemaVersion:2, source:"literacydojo", events:[…]}`
+  via POST same-origin (buffer 20 eventos / 15s / pagehide com beacon; teto do
+  coletor respeitado). Missão hospedada permanece **noop** no literacy (o host
+  OS mede a missão; sem dupla contagem).
+- **Ativação**: `VITE_ANALYTICS_ENDPOINT=/__dojo/bridge/v1/analytics` definido
+  SOMENTE nos `[build.environment]` dos dois netlify.toml (invariante fail-closed
+  por teste). Recepção pelo coletor do ADR-0010 estendido a este envelope.
+  Retenção e k-anonimato (n≥5) conforme ADR-0010 e AID-463 §3.0.

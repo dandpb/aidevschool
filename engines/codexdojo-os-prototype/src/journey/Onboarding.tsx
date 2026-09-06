@@ -107,7 +107,10 @@ export function Onboarding({
         >
           Entrar na escola
         </button>
-        <p className="local-note">Sem conta: o progresso fica neste dispositivo.</p>
+        <p className="local-note">
+          Sem conta: o progresso fica neste dispositivo.{' '}
+          <a href="/privacidade.html">Como usamos dados anônimos de uso.</a>
+        </p>
       </section>
     </main>
   )

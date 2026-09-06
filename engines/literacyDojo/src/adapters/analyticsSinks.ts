@@ -1,5 +1,6 @@
 import type { AnalyticsSink } from "../application/ports";
 import { isValidAnalyticsEvent } from "../domain/analytics";
+import { createBatchAnalyticsSink } from "./analyticsBatchSink";
 
 /**
  * Analytics sinks (ADR-0009). A fronteira de privacidade é inviolável: todo
@@ -25,42 +26,19 @@ export const consoleAnalyticsSink: AnalyticsSink = {
 };
 
 /**
- * NDJSON-over-HTTP: uma linha JSON por evento via fetch keepalive,
- * fire-and-forget. Erros de rede são engolidos (analytics nunca afeta a
- * experiência de aprendizagem). Só é ativado quando um endpoint é
- * explicitamente configurado.
- */
-export function httpNdjsonAnalyticsSink(endpoint: string): AnalyticsSink {
-  return {
-    track(event): void {
-      if (!isValidAnalyticsEvent(event)) return;
-      try {
-        void fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-ndjson" },
-          body: `${JSON.stringify(event)}\n`,
-          keepalive: true,
-        }).catch(() => undefined);
-      } catch {
-        // fire-and-forget: nunca propagar
-      }
-    },
-  };
-}
-
-/**
  * Seleciona o sink pelo endpoint configurado (import.meta.env).
  *
- * Fronteira de recepção (AID-673 §1.5): o endpoint de literacy NÃO é a rota
- * do coletor do OS (`/__dojo/bridge/v1/analytics`) — aquele coletor aceita
- * somente batches do vocabulário do OS e rejeitaria o envelope
- * `source:"literacydojo"` com 422 (`unsupported-schema`). A superfície
- * receptora de literacy é decisão de ativação do board (ADR-0010 §4);
- * nenhuma superfície de build deste repo define o env.
+ * Ativação O1 (AID-913, emenda ADR-0009/ADR-0010 §4): o endpoint definido em
+ * build (`VITE_ANALYTICS_ENDPOINT`) ativa o batch sink same-origin — lotes
+ * NDJSON/JSON para o coletor do próprio site. A única superfície autorizada
+ * a definir o env são os `[build.environment]` dos netlify.toml do literacy
+ * e do OS, sempre com o caminho same-origin `/__dojo/bridge/v1/analytics`
+ * (invariantes travadas por teste). Sem o env, o sink é noop em produção e
+ * console em dev; o sink nunca lança exceção.
  */
 export function analyticsSinkFromEnv(endpoint: string | undefined, isDev: boolean): AnalyticsSink {
   if (endpoint && endpoint.trim().length > 0) {
-    return httpNdjsonAnalyticsSink(endpoint.trim());
+    return createBatchAnalyticsSink({ endpoint: endpoint.trim() });
   }
   return isDev ? consoleAnalyticsSink : noopAnalyticsSink;
 }
@@ -72,11 +50,12 @@ export function analyticsSinkFromEnv(endpoint: string | undefined, isDev: boolea
 declare global {
   interface ImportMetaEnv {
     /**
-     * Endpoint NDJSON do sink de analytics do literacyDojo (ADR-0009). A
-     * declaração de tipo NÃO habilita nada: nenhuma superfície de build deste
-     * repo define este valor — ativar o transporte é decisão do board
-     * (ADR-0010 §4). Sem o env, o sink composto é noop em produção e console
-     * em dev.
+     * Rota same-origin do coletor de analytics (batch NDJSON) definida
+     * APENAS nos `[build.environment]` de `engines/literacyDojo/netlify.toml`
+     * e `engines/codexdojo-os-prototype/netlify.toml` (ativação O1 — ordem
+     * AID-910/D / AID-913). O valor autorizado é exatamente
+     * `/__dojo/bridge/v1/analytics`; qualquer outro valor em qualquer
+     * superfície é drift travado por teste.
      */
     readonly VITE_ANALYTICS_ENDPOINT?: string;
   }
