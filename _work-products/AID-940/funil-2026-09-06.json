@@ -1,0 +1,149 @@
+{
+  "reportVersion": 3,
+  "generatedAt": "2026-09-06T23:59:00.000Z",
+  "parameters": {
+    "windowsDays": [
+      1,
+      7,
+      21
+    ],
+    "graceDays": 2,
+    "kMinimum": 5,
+    "returnWindowAccumulated": "any event at day offset 1..N+graceDays",
+    "returnWindowStrict": "at least one event at day offset N..N+graceDays",
+    "reviewReturn": "returning event's session contains mission.started{mode:review} or review.started{reason:due|overdue}"
+  },
+  "anonymity": {
+    "identifiersPublished": false,
+    "suppressionRule": "buckets with n<k are suppressed",
+    "suppressedBuckets": 6
+  },
+  "source": {
+    "files": [
+      {
+        "name": "events-2026-09-06.ndjson",
+        "lines": 9
+      }
+    ],
+    "totalEvents": 3,
+    "duplicateEvents": 1,
+    "rejectedEvents": 0,
+    "parseErrors": 0
+  },
+  "activationFunnel": {
+    "stages": [
+      "onboarding.started",
+      "onboarding.completed",
+      "mission.started",
+      "mission.completed"
+    ],
+    "cohorts": {
+      "2026-W36": {
+        "suppressed": true,
+        "n": 3
+      }
+    },
+    "overall": {
+      "suppressed": true,
+      "n": 3
+    }
+  },
+  "retention": {
+    "cohortDefinition": "first mission.completed{result:completed} on UTC day D0",
+    "cohorts": {
+      "2026-W36": {
+        "suppressed": true,
+        "n": 0
+      }
+    },
+    "overall": {
+      "suppressed": true,
+      "n": 0
+    }
+  },
+  "wideCohortRetention": {
+    "cohortDefinition": "first onboarding.completed on UTC day D0",
+    "cohorts": {
+      "2026-W36": {
+        "suppressed": true,
+        "n": 0
+      }
+    },
+    "overall": {
+      "suppressed": true,
+      "n": 0
+    }
+  },
+  "trackEntrySplit": {
+    "definition": "installations with ≥1 mission.started{mode:initial}, by ISO week of the first one; split by its trackId",
+    "cohorts": {}
+  },
+  "missionCompletion": {
+    "definition": "installations with ≥1 mission.started (n) vs ≥1 mission.completed{result:completed}, per missionId context; missing missionId ⇒ unattributed",
+    "missions": {}
+  },
+  "activityFriction": {
+    "definition": "structured_attempt.passed/submitted per activityType × missionId; hint.requested/retry.requested counted per missionId (those events carry no activityType)",
+    "attempts": {},
+    "missionFriction": {}
+  },
+  "verificationHealth": {
+    "definition": "verification.state_changed events by state (bridge-level state; no missionId in the cut)",
+    "totalEvents": 0,
+    "states": {}
+  },
+  "rendererDegraded": {
+    "definition": "renderer.degraded events by fallback, with aggregated reasons and engineId context when present",
+    "fallbacks": {}
+  },
+  "moduleCompletionMedian": {
+    "definition": "per-module completion (same definition as missionCompletion, unioned over the module's missions) for ia_pratica modules mapped in the catalog; median across published modules",
+    "catalog": "curriculum/ai-literacy/catalog.yaml",
+    "journey": "ia_pratica",
+    "modules": {},
+    "medianCompletionRate": null,
+    "modulesPublished": 0,
+    "modulesSuppressed": 0,
+    "missionsWithoutModuleMapping": 0
+  },
+  "literacyFunnel": {
+    "envelope": "literacydojo v2",
+    "totalEvents": 4,
+    "duplicateEvents": 1,
+    "totalSessions": 4,
+    "stages": [
+      "entry_viewed",
+      "lesson_started",
+      "activity_attempted",
+      "lesson_completed"
+    ],
+    "overall": {
+      "suppressed": true,
+      "n": 4
+    },
+    "byWeek": {
+      "2026-W36": {
+        "suppressed": true,
+        "n": 4
+      }
+    },
+    "lessonCompletion": {
+      "deploy-probe": {
+        "suppressed": true,
+        "n": 1
+      },
+      "l01": {
+        "suppressed": true,
+        "n": 1
+      },
+      "qa-smoke-a940": {
+        "suppressed": true,
+        "n": 1
+      }
+    },
+    "attempts": {
+      "suppressed": true,
+      "n": 0
+    }
+  }
+}
