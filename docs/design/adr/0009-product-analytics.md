@@ -171,6 +171,11 @@ memória** + eventos fatia a fatia + sink existente. Em vigor:
   `activity_attempted` (`lessonId`, `activityType`, `passed`); `entry_viewed`
   passa a ser instrumentado (1× por page load na home). Funil:
   entry_viewed → lesson_started → activity_attempted → lesson_completed.
+  **Esta emenda supersede o limite "um a um, nunca em lote" do §1 (linha
+  "eventos futuros entram um a um") para esta fatia exata** — 2 eventos novos +
+  instrumentação de `entry_viewed`, cada um ainda individualmente validado na
+  fronteira; a próxima fatia volta a exigir emenda própria. `hint_requested`
+  permanece FORA do vocabulário literacy.
   Retry = tentativas repetidas na mesma lição/sessão (sem evento novo);
   hint continua fora do vocabulário literacy.
 - **Props fechadas por evento** com conjunto exato de chaves e vocabulários de

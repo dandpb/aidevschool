@@ -375,7 +375,12 @@ export class BlobsEventStore {
   static async create({ retentionDays } = {}) {
     let blobs;
     try {
-      blobs = await import("@netlify/blobs");
+      // Especificador opaco ao bundler (variável + @vite-ignore): a
+      // dependência existe só no runtime Netlify — em vite/vitest o import
+      // rejeita em runtime e o fallback (NDJSON) assume; nunca quebra a
+      // suíte de paridade do OS.
+      const moduleId = "@netlify/blobs";
+      blobs = await import(/* @vite-ignore */ moduleId);
     } catch {
       return null;
     }

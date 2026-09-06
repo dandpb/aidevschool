@@ -19,12 +19,17 @@ evidência; vocabulário fechado) e [ADR-0010](../design/adr/0010-os-analytics-c
 
 ## Escopo honesto — o que este funil mede e o que não mede
 
-- O relatório F2b lê o NDJSON do **coletor do OS** (vocabulário de 12 eventos
-  do `codexdojo-os-prototype`). A entrada do piloto P6 é o **LiteracyDojo
-  avulso**, cujo sink (`VITE_ANALYTICS_ENDPOINT`, ADR-0009) emite
-  `source:"literacydojo"` — envelope que o coletor do OS **rejeita com 422**
-  (`unsupported-schema`). Recepção literacy é decisão futura de ativação; até
-  lá, o funil abaixo só produz números para a superfície **OS**.
+- O relatório F2b (reportVersion 3) lê o NDJSON do coletor com os **dois
+  envelopes**: OS v1 (12 eventos do `codexdojo-os-prototype`) e literacy v2
+  (`source:"literacydojo"` — eventos `entry_viewed`/`lesson_started`/
+  `activity_attempted`/`lesson_completed`, seção `literacyFunnel`). Desde a
+  ativação (AID-913, 2026-09-06), o coletor aceita os dois envelopes na mesma
+  rota same-origin e o agregador discrimina por `source`.
+- **Sessão do literacy = page load** (sessionId efêmero em memória, sem
+  identificador persistente). Um reload durante a sessão aparece como **duas
+  sessões** — o facilitador não deve ler isso como drop-off; com 5–8 sessões
+  moderadas, cruze `entry_viewed` por dia com as notas da moderação antes de
+  qualquer conclusão.
 - **k-anonimato n≥5 é imutável.** Com 1–3 instalações do piloto, **toda célula
   agregada fica suprimida** (só o `n` aparece). Nessa escala o valor desta
   leitura é o **dry-run do pipeline** (coleta → sem drift → agregação roda →
