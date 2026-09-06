@@ -1,5 +1,5 @@
 {
-  "reportVersion": 2,
+  "reportVersion": 3,
   "generatedAt": "2026-09-18T00:00:00.000Z",
   "parameters": {
     "windowsDays": [
@@ -603,5 +603,27 @@
     "modulesPublished": 2,
     "modulesSuppressed": 0,
     "missionsWithoutModuleMapping": 2
+  },
+  "literacyFunnel": {
+    "envelope": "literacydojo v2",
+    "totalEvents": 0,
+    "duplicateEvents": 0,
+    "totalSessions": 0,
+    "stages": [
+      "entry_viewed",
+      "lesson_started",
+      "activity_attempted",
+      "lesson_completed"
+    ],
+    "overall": {
+      "suppressed": true,
+      "n": 0
+    },
+    "byWeek": {},
+    "lessonCompletion": {},
+    "attempts": {
+      "suppressed": true,
+      "n": 0
+    }
   }
 }

@@ -50,13 +50,20 @@ describe('analytics fixture schema drift (events.ts is canonical)', () => {
       anonymity: { identifiersPublished: boolean; suppressedBuckets: number }
       source: { totalEvents: number; duplicateEvents: number }
     }
-    // AID-675 F2b: reportVersion 2 (D1/D2 sections + eventId dedup).
-    expect(report.reportVersion).toBe(2)
+    // AID-675 F2b: reportVersion 2 added D1/D2 sections + eventId dedup;
+    // AID-913 activation: reportVersion 3 adds the literacyFunnel section
+    // (literacy v2 envelope). Same synthetic fixture (212 OS v1 events).
+    expect(report.reportVersion).toBe(3)
     expect(report.anonymity.identifiersPublished).toBe(false)
     expect(report.anonymity.suppressedBuckets).toBeGreaterThan(0)
     expect(report.source.totalEvents).toBe(212)
     expect(report.source.duplicateEvents).toBe(2)
+    // The literacy funnel section is present, suppressed at n=0 (fail-closed
+    // k≥5) and carries no session/event identifiers.
+    const literacyFunnel = (report as { literacyFunnel?: { envelope?: string } }).literacyFunnel
+    expect(literacyFunnel?.envelope).toBe('literacydojo v2')
     expect(raw.includes('install-')).toBe(false)
     expect(raw.includes('session-')).toBe(false)
+    expect(raw.includes('s-lit-')).toBe(false)
   })
 })

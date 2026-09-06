@@ -6,23 +6,35 @@ import {
   isValidAnalyticsEvent,
 } from "../../src/domain/analytics";
 
+// v2 (emenda ADR-0009 via AID-913): todo evento carrega identidade anônima
+// efêmera — eventId por evento, sessionId por page load (nunca persistido).
+const IDENTITY = {
+  eventId: "01234567-89ab-4cde-8f01-23456789abcd",
+  sessionId: "fedcba98-7654-4321-8fed-cba987654321",
+};
+
 const BASE = {
   occurredAt: "2026-08-13T12:00:00.000Z",
   contentVersion: "2026-07-25.1",
 };
 
-describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
+const INPUT = {
+  lessonId: "l02",
+  lessonVersion: 3,
+  score: 0.75,
+  durationSeconds: 210,
+};
+
+describe("buildLessonCompletedEvent (evento piloto ADR-0009, envelope v2 AID-913)", () => {
   it("emite o envelope versionado com somente metadados estruturados", () => {
-    const event = buildLessonCompletedEvent({
-      lessonId: "l02",
-      lessonVersion: 3,
-      score: 0.75,
-      durationSeconds: 210,
-      ...BASE,
-    });
+    const event = buildLessonCompletedEvent(IDENTITY, INPUT, BASE);
     expect(event.schemaVersion).toBe(ANALYTICS_SCHEMA_VERSION);
     expect(event.source).toBe(ANALYTICS_SOURCE);
     expect(event.event).toBe("lesson_completed");
+    expect(event.eventId).toBe(IDENTITY.eventId);
+    expect(event.sessionId).toBe(IDENTITY.sessionId);
+    expect(event.occurredAt).toBe(BASE.occurredAt);
+    expect(event.contentVersion).toBe(BASE.contentVersion);
     expect(event.props).toEqual({
       lessonId: "l02",
       lessonVersion: 3,
@@ -33,12 +45,11 @@ describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
   });
 
   it("durationSeconds opcional é omitido quando ausente", () => {
-    const event = buildLessonCompletedEvent({
-      lessonId: "l02",
-      lessonVersion: 3,
-      score: 1,
-      ...BASE,
-    });
+    const event = buildLessonCompletedEvent(
+      IDENTITY,
+      { lessonId: INPUT.lessonId, lessonVersion: INPUT.lessonVersion, score: 1 },
+      BASE,
+    );
     expect(event.props).not.toHaveProperty("durationSeconds");
     expect(isValidAnalyticsEvent(event)).toBe(true);
   });
@@ -47,12 +58,11 @@ describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
     // Uma resposta de texto livre jamais entra em analytics: o construtor
     // falha fechado se a prop ultrapassar o limite de string curta.
     expect(() =>
-      buildLessonCompletedEvent({
-        lessonId: "a".repeat(200), // simula texto livre vazando por prop
-        lessonVersion: 1,
-        score: 1,
-        ...BASE,
-      }),
+      buildLessonCompletedEvent(
+        IDENTITY,
+        { lessonId: "a".repeat(200), lessonVersion: 1, score: 1 }, // simula texto livre vazando por prop
+        BASE,
+      ),
     ).toThrow();
   });
 
@@ -62,12 +72,11 @@ describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
     // durationSeconds — não existe parâmetro por onde texto livre ou dado
     // pessoal possa entrar no envelope. Auditamos o envelope resultante: só
     // metadados estruturados da lição e do resultado.
-    const event = buildLessonCompletedEvent({
-      lessonId: "l02",
-      lessonVersion: 3,
-      score: 1,
-      ...BASE,
-    });
+    const event = buildLessonCompletedEvent(
+      IDENTITY,
+      { lessonId: INPUT.lessonId, lessonVersion: INPUT.lessonVersion, score: 1 },
+      BASE,
+    );
     expect(Object.keys(event.props).sort()).toEqual(["lessonId", "lessonVersion", "score"].sort());
     // Nenhum valor carrega texto livre: lessonId é id curto, version/score numéricos.
     for (const value of Object.values(event.props)) {
@@ -79,13 +88,30 @@ describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
     }
   });
 
-  it("validação estrutural rejeita envelope malformado (schema, props não primitivas)", () => {
-    const event = buildLessonCompletedEvent({
-      lessonId: "l02",
-      lessonVersion: 3,
-      score: 1,
-      ...BASE,
-    });
+  it("identidade anônima v2: eventId e sessionId são UUIDs por evento/sessão (nunca PII)", () => {
+    const event = buildLessonCompletedEvent(IDENTITY, INPUT, BASE);
+    // sessionId efêmero por page load + eventId por evento: dedup na recepção
+    // sem identificador persistente (forma pré-autorizada pelo ADR-0009 §2).
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+    expect(event.eventId).toMatch(uuid);
+    expect(event.sessionId).toMatch(uuid);
+    // Nada além dos campos do envelope: sem identificador de instalação.
+    expect(Object.keys(event).sort()).toEqual(
+      [
+        "contentVersion",
+        "event",
+        "eventId",
+        "occurredAt",
+        "props",
+        "schemaVersion",
+        "sessionId",
+        "source",
+      ].sort(),
+    );
+  });
+
+  it("validação estrutural rejeita envelope malformado (schema, props não primitivas, identidade ausente)", () => {
+    const event = buildLessonCompletedEvent(IDENTITY, INPUT, BASE);
     expect(isValidAnalyticsEvent({ ...event, schemaVersion: 99 })).toBe(false);
     expect(isValidAnalyticsEvent({ ...event, source: "outro" })).toBe(false);
     expect(isValidAnalyticsEvent({ ...event, event: "invented" })).toBe(false);
@@ -93,5 +119,13 @@ describe("buildLessonCompletedEvent (evento piloto ADR-0009)", () => {
     expect(isValidAnalyticsEvent({ ...event, props: { list: [1, 2] } })).toBe(false);
     expect(isValidAnalyticsEvent({ ...event, props: { nan: Number.NaN } })).toBe(false);
     expect(isValidAnalyticsEvent({ ...event, occurredAt: "nao-e-data" })).toBe(false);
+    // v2: identidade anônima é obrigatória e com formato UUID — sem ela o
+    // envelope é inválido (não pode deduplicar nem agregar por sessão).
+    expect(isValidAnalyticsEvent({ ...event, eventId: "sem-uuid" })).toBe(false);
+    expect(isValidAnalyticsEvent({ ...event, sessionId: "" })).toBe(false);
+    const { eventId: _eventId, ...semEventId } = event;
+    expect(isValidAnalyticsEvent(semEventId)).toBe(false);
+    const { sessionId: _sessionId, ...semSessionId } = event;
+    expect(isValidAnalyticsEvent(semSessionId)).toBe(false);
   });
 });
