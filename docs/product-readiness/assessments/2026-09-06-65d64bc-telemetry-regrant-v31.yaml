@@ -1,0 +1,25 @@
+schemaVersion: 1
+assessmentId: 2026-09-06-65d64bc-telemetry-regrant-v31
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-06T16:45:00Z'
+revalidateBy: '2026-10-06'
+gitSha: 65d64bca51e2e5814268f3ffa8c564a109fb5ecd
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T16:40:00Z-literacy-happy-path-mixed-65d64bca
+  - 2026-09-06T16:40:00Z-literacy-retry-mixed-65d64bca
+  - 2026-09-06T16:40:00Z-literacy-resume-mixed-65d64bca
+- useCaseId: literacy-standalone-corridor-mod01-03
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T16:34:30Z-literacy-corridor-grandfathered-return-65d64bca
+  - 2026-09-06T16:34:30Z-literacy-corridor-resume-mid-module-65d64bca
+  - 2026-09-06T16:40:00Z-literacy-corridor-happy-path-mixed-65d64bca
+  - 2026-09-06T16:40:00Z-literacy-corridor-gate-retry-mixed-65d64bca
+  - 2026-09-06T16:40:00Z-literacy-corridor-review-window-mixed-65d64bca
