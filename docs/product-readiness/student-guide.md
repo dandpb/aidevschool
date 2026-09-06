@@ -114,6 +114,24 @@ If a page reload interrupts an activity, return to the map and restart that less
 
 Continue to the next available LiteracyDojo lesson on the same device. The standalone route does not automatically transfer progress to another engine or grant canonical mastery.
 
+## Standalone LiteracyDojo corridor
+
+### O que é o Desafio de Módulo
+
+Depois de concluir todas as lições de um bairro (módulo), o mapa abre o **Desafio do Módulo**: 3–4 atividades rápidas, uma de cada lição que você já fez, em menos de 3 minutos. É revisão, não conteúdo novo. Você precisa passar no desafio (média das notas ≥ 75%) para entrar no próximo bairro. Se falhar, nada é perdido — leia o feedback, peça uma dica e tente de novo quantas vezes quiser. O que você já concluiu continua valendo.
+
+### Por que as revisões voltam
+
+Concluir uma lição agenda uma revisão para o dia seguinte, depois em 7 dias e depois em 21 dias — é o jeito de fixar o conteúdo, não uma punição. Quando a revisão está no dia, a Home mostra o cartão **Revisão pendente**. Fazer a revisão não muda sua posição na trilha.
+
+### Limites do dispositivo
+
+O corredor inteiro (3 bairros, 11 lições, 3 desafios e as revisões) fica salvo **somente neste navegador**, como o resto da trilha. Não há conta nem sincronização entre aparelhos; limpar os dados do site apaga o progresso local. Faça o backup JSON em **Ver seu progresso** antes de limpar dados ou trocar de navegador.
+
+### Próxima ação
+
+Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir, ou complete a revisão do dia mostrada na Home — sempre no mesmo aparelho. Se algo não carregar ou o progresso desaparecer, pare de tentar e peça ajuda a um facilitador.
+
 ## Experimental: miniTown
 
 ### Choose this journey

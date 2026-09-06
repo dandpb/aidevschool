@@ -14,6 +14,7 @@ e o ADR [`docs/design/adr/0005-ai-literacy-bounded-context.md`](../../docs/desig
 | Parte | Estado |
 | --- | --- |
 | Conteúdo | O percurso público projeta 14 missões de `ia_pratica` em 4 módulos. A Trilha Dev no onboarding é um CTA para o OS público (`?track=dev`); as 3 lições Dev do catálogo não entram neste app. |
+| Corredor mod-01→03 | Arco contínuo com Desafios de Módulo (cp-01..cp-03) nas fronteiras, gate locked-only entre bairros e revisão espaçada [1,7,21] medida (spec AID-915; E2E `playwright/corridor.spec.ts`). |
 | Aplicação | React/Vite local-first, com conteúdo gerado, progresso em IndexedDB e feedback determinístico. |
 | Progresso | A UI registra no máximo `completed`; `mastered` requer verificação independente. |
 | Verificação | Rode os comandos desta página no checkout atual; contagens e deploys históricos não são status de release. |
@@ -100,6 +101,14 @@ UI (src/screens, src/components)
    só no IndexedDB do navegador.
 6. **Feedback sem chamada externa** — `DeterministicFeedbackProvider` usa
    `feedback.*` e `hints` do conteúdo.
+7. **O Desafio de Módulo não é lição** — é composição runtime de atividades
+   existentes (`CHECKPOINT_SELECTION` em `src/domain/checkpoints.ts`,
+   content-owned). Tentativas de desafio passam pelo fluxo comum com o
+   `lessonId` original e `context:"review"`; nenhum id novo de lição/módulo.
+   O gate entre bairros age **somente sobre lições `locked`** (grandfathering:
+   nada já desbloqueado é re-bloqueado). Bump de `contentVersion` põe revisão
+   devida no 1º retorno para skills praticadas (regra da migração: versão nova
+   pede revisão, não reconclusão).
 
 ## Decisões de implementação
 

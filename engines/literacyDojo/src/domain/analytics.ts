@@ -21,7 +21,9 @@ export type ProductAnalyticsEventName =
   | "entry_viewed"
   | "mapa_inicial_done"
   | "route_chosen"
-  | "lesson_completed";
+  | "lesson_completed"
+  | "review_started"
+  | "review_completed";
 
 export type AnalyticsPropValue = string | number | boolean;
 
@@ -39,6 +41,8 @@ const EVENT_NAMES: readonly ProductAnalyticsEventName[] = [
   "mapa_inicial_done",
   "route_chosen",
   "lesson_completed",
+  "review_started",
+  "review_completed",
 ];
 
 /**
@@ -116,6 +120,49 @@ export function buildLessonCompletedEvent(input: {
       lessonVersion: input.lessonVersion,
       score: input.score,
       durationSeconds: input.durationSeconds,
+    },
+    occurredAt: input.occurredAt,
+    contentVersion: input.contentVersion,
+  });
+}
+
+/**
+ * Medição da revisão espaçada no corredor (spec AID-915 §4.3, emenda
+ * ADR-0009): início de uma revisão devida. Props travadas: `lessonId`,
+ * `intervalDays` (janela declarada) e `stage` (índice do estágio [1,7,21]).
+ * Engajamento, nunca competência.
+ */
+export function buildReviewStartedEvent(input: {
+  lessonId: string;
+  intervalDays: number;
+  stage: number;
+  occurredAt: string;
+  contentVersion: string;
+}): ProductAnalyticsEvent {
+  return buildEvent({
+    event: "review_started",
+    props: {
+      lessonId: input.lessonId,
+      intervalDays: input.intervalDays,
+      stage: input.stage,
+    },
+    occurredAt: input.occurredAt,
+    contentVersion: input.contentVersion,
+  });
+}
+
+/** Conclusão de uma revisão espaçada (spec AID-915 §4.3): `lessonId` + `score`. */
+export function buildReviewCompletedEvent(input: {
+  lessonId: string;
+  score: number;
+  occurredAt: string;
+  contentVersion: string;
+}): ProductAnalyticsEvent {
+  return buildEvent({
+    event: "review_completed",
+    props: {
+      lessonId: input.lessonId,
+      score: input.score,
     },
     occurredAt: input.occurredAt,
     contentVersion: input.contentVersion,
