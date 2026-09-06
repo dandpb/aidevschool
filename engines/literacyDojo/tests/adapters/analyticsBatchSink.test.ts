@@ -90,7 +90,7 @@ describe("batch analytics sink (AID-913)", () => {
 
     tasks[0]?.handler();
     expect(fetcher).toHaveBeenCalledTimes(1);
-    const batch = JSON.parse((fetcher.mock.calls[0]?.[1] as RequestInit).body as string);
+    const batch = JSON.parse((fetcher.mock.calls[0] as unknown as [string, RequestInit])?.[1].body as string);
     expect(batch.events).toHaveLength(2);
   });
 
@@ -107,7 +107,7 @@ describe("batch analytics sink (AID-913)", () => {
     sink.flush("pagehide");
     expect(beacon).toHaveBeenCalledTimes(1);
     expect(fetcher).not.toHaveBeenCalled();
-    const blob = beacon.mock.calls[0]?.[1] as Blob;
+    const blob = (beacon.mock.calls[0] as unknown as [string, Blob])?.[1] as Blob;
     expect(blob.type).toBe("application/json");
   });
 
@@ -127,7 +127,7 @@ describe("batch analytics sink (AID-913)", () => {
     expect(fetcher).not.toHaveBeenCalled();
     sink.track(makeEvent(100));
     expect(fetcher).toHaveBeenCalledTimes(1);
-    const batch = JSON.parse((fetcher.mock.calls[0]?.[1] as RequestInit).body as string);
+    const batch = JSON.parse((fetcher.mock.calls[0] as unknown as [string, RequestInit])?.[1].body as string);
     expect(batch.events).toHaveLength(100);
   });
 

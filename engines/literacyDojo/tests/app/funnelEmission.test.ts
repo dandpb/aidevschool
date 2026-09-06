@@ -81,7 +81,7 @@ describe("funil anônimo (emenda AID-913)", () => {
     await services.useCases.submitActivityAttempt({
       lessonId: lesson.id,
       activityId: activity.id,
-      answer: { kind: "output_comparison", outputId: "__none__", criterionIds: [] },
+      answer: { outputId: "__none__", criterionIds: [] },
     });
     expect(analytics.events).toHaveLength(1);
     const attempt = analytics.events[0];
