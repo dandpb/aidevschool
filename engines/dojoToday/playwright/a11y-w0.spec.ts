@@ -100,6 +100,7 @@ test("w0-2: --muted atinge contraste AA (>=4.5:1) nos textos auditados (AID-914 
       // Escopo W0 = regras auditadas com --muted (AID-914 §1.4). Overrides de estado
       // (ex.: .is-mastered .track-glyph em --success sobre --success-soft) são
       // achados vizinhos, reportados no receipt — não parte desta ordem.
+      // W1 (AID-1027) cobre esse par em a11y-w1.spec.ts a partir de 2026-09-07.
       const parseColor = (value: string): [number, number, number] | null => {
         const v = value.trim();
         if (v.startsWith("#")) {
