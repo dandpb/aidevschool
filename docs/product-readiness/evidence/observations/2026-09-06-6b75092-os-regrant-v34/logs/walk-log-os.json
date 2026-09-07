@@ -1,0 +1,38 @@
+[
+  {
+    "trackOptionsVisible": 5
+  },
+  {
+    "onboardingLead": "AI DevSchool\nescolha sua trilha\n\nSEU PRIMEIRO PASSO\n\nO que você quer conseguir fazer com IA?\n\nLeva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\n\nObjeti"
+  },
+  {
+    "hubHeading": true
+  },
+  {
+    "literacyMissionUrl": "http://127.0.0.1:4176/mission/ai-pratica/l02"
+  },
+  {
+    "honestProgressVisible": true
+  },
+  {
+    "accessibleProjectionVisible": false
+  },
+  {
+    "completionNotMastery": false
+  },
+  {
+    "indexedDbNames": [
+      "codexdojo-os",
+      "codexdojo-os-verification"
+    ]
+  },
+  {
+    "clearedStorageShowsCompletion": false
+  },
+  {
+    "clearedStorageShowsMastery": false
+  },
+  {
+    "clearedStorageOnboarding": true
+  }
+]
