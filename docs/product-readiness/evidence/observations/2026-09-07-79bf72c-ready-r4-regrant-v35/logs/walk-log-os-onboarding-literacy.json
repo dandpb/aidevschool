@@ -1,0 +1,27 @@
+{
+  "surface": "codexdojo-os/renderer+onboarding",
+  "startedAt": "2026-09-07T08:37:05.003Z",
+  "steps": [
+    {
+      "step": "onboarding",
+      "headingVisible": true,
+      "trackChoiceCopy": true
+    },
+    {
+      "step": "literacy-hosted-mount",
+      "honestVerifierStatus": true
+    },
+    {
+      "step": "hub-returning-reload",
+      "localBoundaryCopy": true,
+      "note": "cleared-storage recovery asserted by readiness-recovery spec green this head (merged main fix); renderer degradation by renderer-fallback specs 5/5"
+    }
+  ],
+  "finishedAt": "2026-09-07T08:37:07.922Z",
+  "verdict": {
+    "heading": true,
+    "hasTrackChoice": true,
+    "honestStatus": true,
+    "localBoundary": true
+  }
+}

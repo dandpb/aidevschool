@@ -1,0 +1,32 @@
+{
+  "surface": "dojoToday",
+  "startedAt": "2026-09-07T08:35:54.902Z",
+  "steps": [
+    {
+      "step": "daily-view",
+      "hasSchedule": true,
+      "hasActiveUnit": true
+    },
+    {
+      "step": "boundary",
+      "guidanceOnlyCopy": true,
+      "noMasteryClaim": true,
+      "writeAffordancesFound": 1,
+      "note": "Salvar/Limpar belong to the optional assistant config panel (local UI preference); no canonical learner-state writes. Inline play button opens the game; view itself never evaluates."
+    },
+    {
+      "step": "returning-reload",
+      "stableBoundary": true
+    }
+  ],
+  "build": "ok (tsc --noEmit && vite build; prebuild learner.substrate derived-only)",
+  "finishedAt": "2026-09-07T08:35:58.158Z",
+  "verdict": {
+    "guidanceOnly": true,
+    "noMastery": true,
+    "writeAffordances": 1,
+    "hasSchedule": true,
+    "hasActiveUnit": true,
+    "stableBoundary": true
+  }
+}

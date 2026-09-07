@@ -1,0 +1,17 @@
+{
+  "surface": "miniTown",
+  "startedAt": "2026-09-07T08:37:43.951Z",
+  "steps": [
+    {
+      "step": "explore",
+      "simVisible": true,
+      "noLessonOrPersistenceClaims": true,
+      "exploreCopy": true
+    }
+  ],
+  "verdict": {
+    "simAdvances": true,
+    "noLessonPersistence": true,
+    "exploreOnly": true
+  }
+}
