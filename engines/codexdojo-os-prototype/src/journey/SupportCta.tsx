@@ -17,8 +17,14 @@ export function SupportCta({ compact = false }: { compact?: boolean }) {
       <p>
         {whatsappHref ? (
           <>
-            <a href={whatsappHref} data-testid="support-whatsapp" target="_blank" rel="noreferrer">
-              WhatsApp
+            <a
+              href={whatsappHref}
+              data-testid="support-whatsapp"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp (abre em nova aba)"
+            >
+              <span aria-hidden="true">WhatsApp</span>
             </a>
             {' · '}
           </>

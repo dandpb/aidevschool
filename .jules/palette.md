@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2024-07-24 - Warning screen readers about external links
+**Learning:** External links (`target="_blank"`) open in a new tab, causing an unexpected context switch that can disorient screen reader users if not explicitly announced. The visible text alone does not provide this context.
+**Action:** When creating `target="_blank"` links, explicitly add a descriptive `aria-label` (e.g., `aria-label="Link (abre em nova aba)"`) to warn screen readers about the context switch, and wrap the generic inner visible text in a `<span aria-hidden="true">` to prevent redundant reading. Always include `rel="noopener noreferrer"` for defense in depth against tabnabbing.

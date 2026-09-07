@@ -58,9 +58,10 @@ describe("renderShell — targeted assertions", () => {
     expect(html).not.toContain("linux-app-tile")
     expect(html).not.toContain("run-linux-lab")
     expect(html).toContain('data-codexdojo-os-launch="true"')
-    expect(html).toContain("Abrir codexDojo OS")
+    expect(html).toContain('<span aria-hidden="true">Abrir codexDojo OS</span>')
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noopener noreferrer"')
+    expect(html).toContain('aria-label="Abrir codexDojo OS (abre em nova aba)"')
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {
