@@ -18,10 +18,10 @@ commands and diagnostics remain in the linked engine READMEs.
 4. **`os-voxel-guided-missions`** — OS trilho **Dev**: três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
 5. **`os-returning-learner`** — retorno no mesmo aparelho (literacy ou 3D)
 6. **`pixelquest-evidence-encounter`** — PixelQuest: encontro documentado + handoff de evidência (app local)
-7. **`voxel-standalone-learning-loop`** — voxelDojo avulso: WAREHOUSE de referência com rota estática
-8. **`dojotoday-daily-guidance`** — dojoToday: vista diária somente leitura com rota estática
+7. **`voxel-standalone-learning-loop`** — voxelDojo avulso: WAREHOUSE de referência com rota estática declarada pelo facilitador
+8. **`dojotoday-daily-guidance`** — dojoToday: vista diária somente leitura com rota estática declarada pelo facilitador
 
-Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2), [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5) e **rotas locais declaradas / app local** (itens 6–8: PixelQuest, voxel WAREHOUSE de referência, dojoToday — sem URL Netlify pública para PixelQuest). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–8 **fazem parte da oferta paga** como CR **local** (matriz v35); **miniTown** segue `experimental` e fora da oferta. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
+Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2), [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5) e **rotas locais declaradas / app local** (itens 6–8: PixelQuest, voxel WAREHOUSE de referência, dojoToday — **sem URL Netlify pública**; entrada só por rota local/static que o facilitador declarar). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–8 **fazem parte da oferta paga** como CR **local** (matriz v35); **miniTown** segue `experimental` e fora da oferta. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
 
 Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
 

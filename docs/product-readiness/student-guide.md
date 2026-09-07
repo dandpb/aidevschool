@@ -18,10 +18,10 @@ A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (a
 4. **OS — trilho Dev** — três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); escolha **Dev** no onboarding ou siga depois de IA Prática
 5. **OS — retomar no mesmo aparelho** — literacy ou 3D, conforme progresso local
 6. **PixelQuest — encontro com evidência** — app local (encounters + handoff de evidência para o verificador independente)
-7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico com rota estática declarada
-8. **dojoToday — lição de hoje** — vista diária somente leitura com rota estática declarada
+7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico com rota estática declarada pelo facilitador
+8. **dojoToday — lição de hoje** — vista diária somente leitura com rota estática declarada pelo facilitador
 
-O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. Os itens 6–8 **fazem parte da oferta paga** como CR **local** (app local ou rota estática declarada pelo facilitador): **não** têm URL pública Netlify (PixelQuest é app local), **não** são o trilho guiado Literacy/OS e **não** entram pelo Engine Hub do OS. A oferta paga **não** inclui Engine Hub como entrada para esses percursos, o catálogo voxel completo além do WAREHOUSE de referência, labs/operador (`?operator=1`) nem **miniTown** (`experimental`). A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
+O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. Os itens 6–8 **fazem parte da oferta paga** como CR **local** (app local ou rota estática declarada pelo facilitador): **não** há URL Netlify pública para PixelQuest, voxel avulso ou dojoToday; **não** são o trilho guiado Literacy/OS e **não** entram pelo Engine Hub do OS. A oferta paga **não** inclui Engine Hub como entrada para esses percursos, o catálogo voxel completo além do WAREHOUSE de referência, labs/operador (`?operator=1`) nem **miniTown** (`experimental`). A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 
