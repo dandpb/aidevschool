@@ -348,7 +348,10 @@ jobs:
           node-version: 20
           cache: npm
           cache-dependency-path: engines/dojoToday/package-lock.json
-      - run: python -m pip install -e ../..
+      # Match the other Python jobs (learner/minimax/openclaw): install from the
+      # repo root with [dev] so selfcheck/prebuild always have fsrs + pyyaml.
+      - run: python -m pip install -e ".[dev]"
+        working-directory: .
       - run: npm ci
       - run: npm run selfcheck
       - run: npm run lint
