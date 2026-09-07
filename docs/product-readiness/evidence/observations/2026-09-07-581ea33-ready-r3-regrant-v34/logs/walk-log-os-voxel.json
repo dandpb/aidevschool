@@ -1,0 +1,24 @@
+{
+  "surface": "codexdojo-os/voxel-hosted",
+  "startedAt": "2026-09-07T08:05:58.623Z",
+  "steps": [
+    {
+      "step": "mission-mounted",
+      "verifierStatus": "Ainda não enviada (honest: producer != verifier)"
+    },
+    {
+      "step": "hosted-L1-complete",
+      "hostNoFalseMasteryCopy": true,
+      "note": "host reports local mission result; canonical mastery stays with the independent verifier"
+    },
+    {
+      "step": "returning-device-reload",
+      "perDeviceBoundaryCopy": true
+    }
+  ],
+  "finishedAt": "2026-09-07T08:06:03.475Z",
+  "verdict": {
+    "noFalseMastery": true,
+    "perDeviceBoundary": true
+  }
+}

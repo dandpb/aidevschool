@@ -10,7 +10,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-Duas superfícies públicas: LiteracyDojo avulso e OS (`https://aidevschool-codexdojo-os.netlify.app/`). O OS oferece escolha **IA Prática | Dev**, trilho Dev de 3 missões, e Engine Hub allowlist. O avulso tem CTA para o OS `?track=dev`. Os use cases Dev do OS (`os-voxel-guided-missions`, `os-returning-learner`) estão `customer-ready` (v30 @ `505e7a6`); os demais use cases Dev (PixelQuest, voxelDojo avulso, dojoToday) seguem `validated-journey` — não os venda como customer-ready. Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), nem labs de operador no CTA.
+Duas superfícies públicas: LiteracyDojo avulso e OS (`https://aidevschool-codexdojo-os.netlify.app/`). O OS oferece escolha **IA Prática | Dev**, trilho Dev de 3 missões, e Engine Hub allowlist. O avulso tem CTA para o OS `?track=dev`. Os use cases Dev do OS (`os-voxel-guided-missions`, `os-returning-learner`) estão `customer-ready` (v34 @ `581ea330`, 2026-09-07), assim como PixelQuest, voxelDojo avulso (WAREHOUSE de referência) e dojoToday, elevados pela AID-987/T1 com cenários continuity e rotas estáticas — venda-os como customer-ready conforme a matriz vigente, sem prometer certificado ou domínio (concluída ≠ domínio). Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), nem labs de operador no CTA.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -36,8 +36,8 @@ O OS público tem escolha entre **IA Prática** e **Dev** e um Engine Hub allowl
 (voxel, PixelQuest, dojoToday local, literacy). Labs e miniTown só com `?operator=1`.
 O trilho Dev é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
 lições avulsas como se existirem no OS. O trilho Dev do OS está `customer-ready`
-(v30 @ `505e7a6`); PixelQuest, voxelDojo avulso e dojoToday seguem
-`validated-journey`. Não
+(v34 @ `581ea330`, 2026-09-07); PixelQuest, voxelDojo avulso (WAREHOUSE de
+referência) e dojoToday também estão `customer-ready` (AID-987/T1). Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
 1. Onboarding curto → **Entrar na escola**.

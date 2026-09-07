@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "581ea3305c023ab52b98ba66884833916f872963",
+  "observedAt": "2026-09-07T08:05:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Daily view (vite preview prod build) shows schedule, streak, active unit and next action with the copy 'Agendado por FSRS... Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.' — guidance-only boundary observed first-hand (qadt-01, walk-log-dojotoday)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Prebuild regenerated the derived projection (python3 -m learner.substrate, canonical YAML untouched); the view renders read-only with no learner-state writes — only the optional assistant panel saves a local UI preference (noted in walk log; qadt-02)."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Reload keeps the scheduler-authority copy and the demo-projection notice is deploy-gated (VITE_DOJOTODAY_DEMO_NOTICE, off locally); the documented exit is regenerate-or-stop, and the page never presents stale guidance as current mastery (qadt-03, walk-log-dojotoday)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-no-eval-carryover",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Two-build fixture day-n/day-n+1 passed green in the suite; on the walked view the returning learner sees the regenerated projection only — returning does not evaluate work nor mark anything mastered (same scheduler-authority copy)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-encounter-evidence",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. After completing the documented rate-limiter encounter the UI shows 'Evidencia PASS emitida' together with 'O verificador decide mastery' — evidence and mastery are visibly separated (qapx-01, walk-log-pixelquest)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-evidence-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "replay-recovers-evidence-without-state-promotion",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Replaying the encounter re-emits a fresh EVIDENCE console record (raw NDJSON channel); no canonical learner state is written by the game (qapx-02/03, walk-log-pixelquest)."
+        },
+        {
+          "id": "missing-evidence-does-not-count-as-completion",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Completion copy is tied to the emitted record; without a record the UI offers replay, not a completion claim — the game status never substitutes for evidence (walk-log-pixelquest)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-returning-evidence-handoff",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. On return + deterministic replay the anti-mastery copy is shown again and the saved artifact remains the raw handoff channel — the independent verifier still decides (qapx-02/03)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. L1 completion in WAREHOUSE emits one raw record scoped to kv-warehouse-L1/U2-key-value-store; no sibling-game or mastery claim appears — catalog-wide scope covered by the 16/16 catalog smoke run this head (qavx-01, walk-log-warehouse)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Under reduced motion the game still mounts with honest status copy; the keyboard-operable semantic projection logic is asserted by shared/accessibleProjection.test.ts (9/9 this head) and renderer-fallback specs (qavx-04, walk-log-warehouse-accessible)."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. No false completion appears when the WebGL path is not used; renderer degradation/retry and fail-over behaviour is asserted by renderer-fallback specs (5/5 this head) — the learner can stop without a readiness claim (walk-log-warehouse-accessible)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-return-reentry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Re-entry restarts the deterministic briefing (hud L1, no 'concluída' carryover), the in-memory evidence channel is session-bound (0 after reload) and the replay emits a fresh pass record — raw evidence only, mastery stays with the verifier (qavx-02/03, walk-log-warehouse)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Hosted WAREHOUSE mission mounted from the OS origin, completed L1 in-frame; host verification status stays honest ('Ainda não enviada' / 'Verificador indisponível' semantics per pilot suite) — the host never fabricates PASS (qaos-01/02, walk-log-os-voxel)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Under reduced motion the mission still mounts with honest status; renderer recovery failure paths (context loss retry, forced unavailability fail-over without resetting evidence identity) are asserted by renderer-fallback specs (5/5 this head) — the stop/escalate boundary is nameable from the UI (qaos-04, walk-log-os-renderer)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992, chromium headless, QA-authored walk specs executed in each engine harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle), distinct from producer CI runs. Reload on the same browser profile keeps the per-device mission continuity language ('neste dispositivo') and the honest verification status — continuity is same-profile only and the learner can see it (qaos-03, walk-log-os-voxel)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Onboarding heading 'O que você quer conseguir fazer com IA?' with explicit track options (IA Prática | Dev) and a single 'Entrar na escola' entry — the learner can state their choice (qaos-05, walk-log-os-onboarding-literacy)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Hub return + reload on the same profile keeps per-device/local continuity language ('neste dispositivo', no account) — the boundary is visible to the learner (qaos-07, walk-log-os-onboarding-literacy)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Cleared local state returns to onboarding without completion claims (readiness-recovery spec green this head); the walked onboarding shows no resurrected progress — the facilitator can explain the loss honestly (qaos-05/07)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Hosted IA Prática mission mounts from the OS origin with the honest host status ('Ainda não enviada') — the learner reads the local result and next action without a fabricated verdict (qaos-06, walk-log-os-onboarding-literacy)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. The pilot corrected-retry suite (green this head) shows a failed attempt being superseded by a corrected one with 'Verificador indisponível'/'Temporariamente indisponível' honest states and no repository intervention; my walk confirms the honest pending status on the mounted mission (qaos-06)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Returning to the hub on the same profile shows continuation state with per-device language; no cross-device or account promise appears (qaos-07, walk-log-os-onboarding-literacy)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "minitown-explore-only",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "experimental-boundary-is-understood",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/*.png + logs/walk-log-*.json in this bundle), distinct from producer CI runs. Walked the town surface: exploration/simulation only, with no lesson, persistence, progression, evidence or mastery affordances present (qamt-01, walk-log-minitown) — the experimental boundary in the guides matches the walked behaviour."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Lesson flow observed live: onboarding delivers the trail map; result/next-action copy is plain and actionable — the suite asserts the result-screen 'Lição concluída' + route explanation; the walked map/start screens show the next step without jargon."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Wrong submission produced specific plain-language feedback (plainFeedback=true) with zero internal jargon (noJargon=true) — hint + retry affordances visible (qali-02)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Reload keeps local progress visible (localProgress=true) with no account/cross-device promise (noAccount=true) — progress is this browser profile's IndexedDB only (qali-03)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Corridor cp-03 completion and next-action routing asserted by corridor.spec.ts (green this head); the walked lesson-level next-action copy is the same honest engine copy."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Gate retries in the corridor use the same plain-language feedback observed first-hand (qali-02); corridor.spec.ts asserts the gate-retry flow green at this head."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 @ 581ea330 (AID-988/AID-992; screenshots ev/qali-*.png + logs/walk-log-literacy.json), distinct from producer runs (vertical-slice.spec.ts + corridor.spec.ts green at this head). Review windows ([1,7,21] schedule) and the review-vs-new distinction are asserted by corridor.spec.ts hops (+7d/+21d clamp, review context records) green this head; the walked home/map shows review affordances separately from new lessons."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

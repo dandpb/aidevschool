@@ -1,0 +1,28 @@
+{
+  "surface": "codexdojo-os/onboarding-literacy-returning",
+  "startedAt": "2026-09-07T08:08:59.700Z",
+  "steps": [
+    {
+      "step": "onboarding",
+      "headingVisible": true,
+      "trackChoiceCopy": true
+    },
+    {
+      "step": "literacy-hosted-mount",
+      "honestVerifierStatus": true,
+      "note": "result and next action come from the host honestly; verification remains external"
+    },
+    {
+      "step": "hub-returning-reload",
+      "localBoundaryCopy": true,
+      "note": "same-browser-profile continuity; cleared storage returns to onboarding without completion claims (recovery asserted by readiness-recovery spec this head)"
+    }
+  ],
+  "finishedAt": "2026-09-07T08:09:05.170Z",
+  "verdict": {
+    "heading": true,
+    "hasTrackChoice": true,
+    "honestStatus": true,
+    "localBoundary": true
+  }
+}

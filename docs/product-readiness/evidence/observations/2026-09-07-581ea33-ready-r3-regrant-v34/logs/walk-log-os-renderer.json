@@ -1,0 +1,7 @@
+{
+  "surface": "os-renderer-accessibility",
+  "reducedMotion": true,
+  "missionMounted": true,
+  "honestStatusOrFallbackCopy": true,
+  "note": "renderer degradation/retry + keyboard-operable semantic projection asserted by renderer-fallback specs (5/5 today); walk confirms honest mission status under reduced motion"
+}

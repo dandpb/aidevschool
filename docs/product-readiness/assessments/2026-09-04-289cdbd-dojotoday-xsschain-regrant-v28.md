@@ -9,4 +9,4 @@
 
 | Use case | Outcome | Granted tier | Result runs | Reasons |
 | --- | --- | --- | --- | --- |
-| `dojotoday-daily-guidance` | `pass` | `validated-journey` | `2026-09-04T02:55:00Z-dojotoday-active-unit-guidance-mixed-289cdbd8`, `2026-09-04T02:55:00Z-dojotoday-read-only-boundary-observed-289cdbd8` | - |
+| `dojotoday-daily-guidance` | `stale` | `-` | `2026-09-04T02:55:00Z-dojotoday-active-unit-guidance-mixed-289cdbd8`, `2026-09-04T02:55:00Z-dojotoday-read-only-boundary-observed-289cdbd8` | tier elevated to customer-ready by AID-987/T1 (PR #290); superseded by re-grant v34 @ 581ea330 (QA AID-988/AID-992) |

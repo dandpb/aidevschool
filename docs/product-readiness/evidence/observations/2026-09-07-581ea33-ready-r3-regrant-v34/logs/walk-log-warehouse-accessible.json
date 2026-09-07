@@ -1,0 +1,6 @@
+{
+  "surface": "warehouse-accessible",
+  "semanticProjectionElement": false,
+  "honestCopy": true,
+  "note": "shared accessibleProjection unit suite (9/9) + renderer-fallback specs cover degradation/retry; walk verifies the projection surfaces honestly in-game"
+}
