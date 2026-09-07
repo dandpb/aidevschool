@@ -6,7 +6,10 @@
   --bg-grad-b: #f3e9ff;
   --ink: #1f1b2e;
   --ink-soft: #5b5570;
-  --muted: #8a83a0;
+  /* AID-1023/W0 (auditoria AID-914 §1.4): AA — #8a83a0 = 3.35:1 sobre --bg.
+     #686378 mantém matiz/saturação e dá ≥4.5:1 em todos os pares texto/fundo
+     (pior caso .track-glyph sobre --line #ece6f5 = 4.72:1). */
+  --muted: #686378;
   --card: #ffffff;
   --line: #ece6f5;
   --primary: #4f46e5;
@@ -545,6 +548,18 @@ body {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* Foco visível para navegação por teclado (AID-1023/W0, auditoria AID-914 §1.2 —
+   padrão literacyDojo styles.css:196-202: outline 3px + offset 2px). */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
 .socrates {
   margin-top: 12px;
   border-top: 1px dashed var(--line);
@@ -567,9 +582,9 @@ body {
   color: var(--ink);
   min-height: 44px;
 }
-.socrates-input:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 1px;
+.socrates-input:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
   border-color: var(--primary);
 }
 .socrates-config {
