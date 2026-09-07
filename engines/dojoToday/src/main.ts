@@ -204,9 +204,11 @@ function demoNoticeEnabled(): boolean {
   // it statically in production builds (bare import.meta.env objects are not
   // replaced); the try/catch keeps runtime contexts without Vite env inert.
   try {
-    const value: unknown = (import.meta as unknown as {
-      env: { VITE_DOJOTODAY_DEMO_NOTICE?: string };
-    }).env.VITE_DOJOTODAY_DEMO_NOTICE;
+    const value: unknown = (
+      import.meta as unknown as {
+        env: { VITE_DOJOTODAY_DEMO_NOTICE?: string };
+      }
+    ).env.VITE_DOJOTODAY_DEMO_NOTICE;
     return value === "1";
   } catch {
     return false;
