@@ -112,7 +112,7 @@ useCases:
     intendedTier: customer-ready
     promise: Read the current schedule, understand due reviews and the active unit, and follow the documented next action.
     entry:
-      route: https://aidevschool-dojotoday.netlify.app/
+      route: dojoToday local route (facilitator-declared static projection)
       prerequisites: [supported-modern-browser, declared-demo-projection]
     progressSemantics: read-only
     recovery: Regenerate the learner projection when the view is stale; stop if the canonical learner state cannot be read.
@@ -146,7 +146,7 @@ useCases:
     intendedTier: customer-ready
     promise: Complete the deterministic loop in each declared standalone game and locate raw evidence for independent verification.
     entry:
-      route: https://aidevschool-voxel-warehouse.netlify.app/
+      route: voxelDojo WAREHOUSE local route (facilitator-declared static)
       prerequisites: [supported-desktop-browser, keyboard-input, webgl-or-accessible-renderer]
     progressSemantics: raw-evidence
     recovery: Use the accessible renderer when supported or stop when the declared core interaction cannot run.
