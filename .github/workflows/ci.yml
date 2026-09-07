@@ -187,6 +187,13 @@ jobs:
       # AID-913 second envelope + activation invariants (spec §3/§7): the v2
       # collector contract and the executable activation-surface invariant.
       - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v2.test.mjs ../../learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs
+      # AID-987/T1b surfaces envelope v3: the same collector also receives the
+      # anonymous dojoToday/voxelDojo/PixelQuest funnel events; the contract
+      # test fails closed on vocabulary drift against the canonical emitter.
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v3.test.mjs
+      # ...and the schema-drift monitor learns the v3 envelope too (exports
+      # containing surface events must classify, not drift).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs
       # AID-947 durable-backing packaging invariant: the deployed functions
       # must declare @netlify/blobs and load it through the static-import
       # wrapper — the live backing was ephemeral /tmp NDJSON on both surfaces

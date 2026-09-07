@@ -672,3 +672,11 @@ body {
     transition: none !important;
   }
 }
+
+/* AID-987/T1 (D2-A, R2 da spec AID-981): banner honesto do build público de
+   demonstração — só existe quando o deploy define VITE_DOJOTODAY_DEMO_NOTICE. */
+.demo-note {
+  border: 1px dashed var(--muted);
+  font-size: 0.8rem;
+  text-align: left;
+}

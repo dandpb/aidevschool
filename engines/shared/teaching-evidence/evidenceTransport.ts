@@ -1,3 +1,4 @@
+import { emitFunnelEvent } from "./funnelTelemetry"
 import { forwardMissionEvidence } from "./hostProtocol"
 import { isRecord } from "./hostMessageDecoder"
 
@@ -21,14 +22,52 @@ export function configureEvidenceParentOrigin(candidate: string | undefined): vo
 
 export function dualEmit<T extends object>(record: T, channel: EvidenceChannel = "game"): T {
   const forwarded = isRecord(record) && forwardMissionEvidence(record)
+  let postedToHost = false
   if (typeof window !== "undefined") {
     writeWindowChannel(window, record, channel)
     if (!forwarded) {
-      forwardToEmbeddingHost(record)
+      postedToHost = forwardToEmbeddingHost(record)
     }
   }
+  emitChannelFunnel(record, channel, forwarded || postedToHost)
   console.log(`EVIDENCE ${JSON.stringify(record)}`)
   return record
+}
+
+/**
+ * AID-987/T1b anonymous funnel telemetry (AID-913 pattern): when a teaching
+ * game emits evidence through the pixelquest/voxeldojo channels, the funnel
+ * counts the completed loop — and an evidence-handoff only when the record
+ * actually left the game toward an embedding host. No-op unless the deploy
+ * activated the same-origin endpoint; the "game" channel stays unmeasured by
+ * design (no surfaces declared for it in this wave).
+ */
+function emitChannelFunnel(record: object, channel: EvidenceChannel, handedOff: boolean): void {
+  const unitId =
+    isRecord(record) && typeof record["unit_id"] === "string" ? record["unit_id"] : null
+  if (channel === "voxeldojo") {
+    if (unitId === null) return
+    const pass = isRecord(record) && record["pass"] === true
+    emitFunnelEvent("voxeldojo", "voxel-loop-complete", {
+      unitId,
+      result: pass ? "completed" : "failed",
+    })
+    if (handedOff) {
+      emitFunnelEvent("voxeldojo", "evidence-handoff", { unitId })
+    }
+    return
+  }
+  if (channel === "pixelquest") {
+    if (unitId === null) return
+    const pass = isRecord(record) && record["pass"] === true
+    emitFunnelEvent("pixelquest", "pixelquest-encounter-complete", {
+      unitId,
+      result: pass ? "completed" : "failed",
+    })
+    if (handedOff) {
+      emitFunnelEvent("pixelquest", "evidence-handoff", { unitId })
+    }
+  }
 }
 
 function writeWindowChannel(
@@ -53,22 +92,22 @@ function writeWindowChannel(
   }
 }
 
-function forwardToEmbeddingHost<T extends object>(record: T): void {
+function forwardToEmbeddingHost<T extends object>(record: T): boolean {
   if (
     typeof window === "undefined" ||
     window.parent === window ||
     typeof document === "undefined"
   ) {
-    return
+    return false
   }
-  if (evidenceParentOrigin === null || document.referrer === "") return
+  if (evidenceParentOrigin === null || document.referrer === "") return false
   let referrerOrigin: string
   try {
     referrerOrigin = new URL(document.referrer).origin
   } catch {
-    return
+    return false
   }
-  if (referrerOrigin !== evidenceParentOrigin) return
+  if (referrerOrigin !== evidenceParentOrigin) return false
   window.parent.postMessage(
     {
       type: TEACHING_EVIDENCE_MESSAGE,
@@ -77,4 +116,5 @@ function forwardToEmbeddingHost<T extends object>(record: T): void {
     },
     evidenceParentOrigin,
   )
+  return true
 }

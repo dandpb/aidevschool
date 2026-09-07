@@ -16,7 +16,7 @@ test("aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope",
   assert.equal(summary.validLiteracyEvents, 8);
   assert.equal(summary.validEvents, 8);
   assert.equal(summary.driftCount, 0);
-  assert.equal(summary.monitorVersion, 2);
+  assert.equal(summary.monitorVersion >= 2, true);
 });
 
 test("drift literacy falha alto (exit 1) com motivo classificado", async () => {

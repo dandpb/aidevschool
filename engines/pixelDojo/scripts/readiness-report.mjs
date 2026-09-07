@@ -18,6 +18,7 @@ const result = spawnSync(
     "engines/pixelDojo/test-results/readiness",
     "--scenarios",
     "pixelquest-encounter-evidence",
+    "pixelquest-returning-evidence-handoff",
   ],
   { cwd: repoRoot, encoding: "utf8", stdio: "inherit" },
 );

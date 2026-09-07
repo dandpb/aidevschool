@@ -7,6 +7,7 @@
  * Regra de ouro: produtor ≠ verificador.
  */
 import "./styles.css";
+import { emitFunnelEvent } from "@aidevschool/evidence/funnel-telemetry";
 import {
   askSocrates,
   clearConfig,
@@ -198,6 +199,31 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
     </section>`;
 }
 
+function demoNoticeEnabled(): boolean {
+  // Literal member chain on import.meta.env so the bundler's define replaces
+  // it statically in production builds (bare import.meta.env objects are not
+  // replaced); the try/catch keeps runtime contexts without Vite env inert.
+  try {
+    const value: unknown = (import.meta as unknown as {
+      env: { VITE_DOJOTODAY_DEMO_NOTICE?: string };
+    }).env.VITE_DOJOTODAY_DEMO_NOTICE;
+    return value === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** R2 da spec AID-981: copy honesta no build público de demonstração (D2-A). */
+function demoNotice(): string {
+  if (!demoNoticeEnabled()) return "";
+  return `
+    <aside class="card demo-note" aria-label="Projeção de demonstração">
+      <p><strong>Projeção de demonstração.</strong> Esta rota pública mostra o
+      read model de demonstração do projeto; a sua jornada real vive no seu
+      dispositivo e no seu repositório, agendada pelo seu próprio substrato.</p>
+    </aside>`;
+}
+
 function render(s: TodaySnapshot): string {
   const overdue = [...s.reviews].sort((a, b) =>
     a.reason === "overdue" ? -1 : b.reason === "overdue" ? 1 : 0,
@@ -214,6 +240,8 @@ function render(s: TodaySnapshot): string {
       <h1>Sua lição de hoje</h1>
       <p class="hero-date">${dateLabel}</p>
     </header>
+
+    ${demoNotice()}
 
     ${streakCard(s.streak)}
 
@@ -341,6 +369,11 @@ async function boot(): Promise<void> {
     root.innerHTML = renderLocalSuggestion(await loadHostLocalToday());
     return;
   }
+  // AID-987/T1b (padrão AID-913): evento anônimo de funil da abertura da view
+  // diária — conta aberturas, não identifica ninguém e não persiste nada; é
+  // no-op sem o endpoint same-origin ativado no deploy. O modo hospedado do OS
+  // fica de fora para não duplo-contar o funil do host.
+  emitFunnelEvent("dojotoday", "daily-view-open");
   root.innerHTML = render(today);
   wireInteractions(today.activeUnit);
 }

@@ -15,9 +15,14 @@ import {
 } from "../netlify-functions/dojo-analytics-collector.mjs";
 
 const ROOT = join(import.meta.dirname, "..", "..", "..");
+// AID-987/T1 (D2-A + T1b): o dojoToday estático e o jogo voxel de referência
+// entram na lista de superfícies autorizadas — mesmas regras (valor
+// same-origin idêntico à rota do redirect, no [build.environment]).
 const AUTHORIZED = new Set([
   join("engines", "literacyDojo", "netlify.toml"),
   join("engines", "codexdojo-os-prototype", "netlify.toml"),
+  join("engines", "dojoToday", "netlify.toml"),
+  join("engines", "voxelDojo", "game-02-warehouse", "netlify.toml"),
 ]);
 
 async function* findNetlifyTomls(dir) {
@@ -31,7 +36,7 @@ async function* findNetlifyTomls(dir) {
   }
 }
 
-test("VITE_ANALYTICS_ENDPOINT é definido somente nos 2 netlify.toml autorizados", async () => {
+test("VITE_ANALYTICS_ENDPOINT é definido somente nos netlify.toml autorizados", async () => {
   const found = [];
   for await (const file of findNetlifyTomls(ROOT)) {
     const config = await readFile(file, "utf8");

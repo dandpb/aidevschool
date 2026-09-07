@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: pixelquest-returning-evidence-handoff
+useCaseId: pixelquest-evidence-encounter
+kind: continuity
+execution: mixed
+startState: saved-evidence-artifact-then-closed-app
+steps: [reopen-pixelquest, replay-encounter, verify-reemitted-evidence-matches-saved-artifact-core, verify-saved-artifact-remains-valid, identify-verifier-handoff]
+assertions:
+  - id: return-replay-is-deterministic-and-artifact-uncorrupted
+    severity: high
+    evidence: playwright
+    claim: Returning to the app and replaying the documented encounter re-emits raw evidence with the same deterministic core while the learner's saved artifact from the earlier session remains valid and uncorrupted.
+  - id: no-false-mastery-on-return
+    severity: high
+    evidence: observation
+    claim: The learner understands that neither the replay nor the saved artifact means mastery; the raw evidence still requires the independent verifier.
+automation:
+  workingDirectory: engines/pixelDojo
+  argv: [pnpm, run, smoke]
+sourcePaths: [engines/pixelDojo/pixel-quest/playwright/returning.spec.ts, engines/pixelDojo/pixel-quest/src/game/evidence/]
