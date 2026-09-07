@@ -17,17 +17,17 @@ A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (a
 3. **OS — IA Prática** (l01–l03) — escolha **IA Prática** no onboarding ([codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/))
 4. **OS — trilho Dev** — três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); escolha **Dev** no onboarding ou siga depois de IA Prática
 5. **OS — retomar no mesmo aparelho** — literacy ou 3D, conforme progresso local
-6. **PixelQuest — encontro com evidência** — app local ( encounters + handoff de evidência para o verificador independente)
+6. **PixelQuest — encontro com evidência** — app local (encounters + handoff de evidência para o verificador independente)
 7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico com rota estática declarada
 8. **dojoToday — lição de hoje** — vista diária somente leitura com rota estática declarada
 
-O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. A oferta paga **não** inclui Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday nem miniTown. miniTown é `experimental`. A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
+O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. Os itens 6–8 fazem parte da oferta paga como **CR local** (app local ou rota estática declarada). A oferta paga **não** inclui o Engine Hub como entrada, o catálogo voxel avulso além do WAREHOUSE de referência, labs de operador (`?operator=1`) nem miniTown (`experimental`). A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 
 ## Percurso atual no codexDojo OS
 
-Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), o trilho **Dev** de três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding **oferece escolha de trilha**: **IA Prática** ou **Dev**. Quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub lista voxelDojo, PixelQuest, dojoToday e literacy — **fora** da oferta paga CR; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
+Use esta seção para o piloto no site do OS (`https://aidevschool-codexdojo-os.netlify.app/`). A oferta CR inclui **IA Prática** (l01–l03), o trilho **Dev** de três missões 3D hospedadas e retomar no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O onboarding **oferece escolha de trilha**: **IA Prática** ou **Dev**. Quem escolhe **Dev** completa **WAREHOUSE → WORMHOLE → RELAY STATION** sem refazer l01–l03. O Engine Hub do OS lista voxelDojo, PixelQuest, dojoToday e literacy, mas **não** é a entrada da oferta paga — os itens 6–8 entram por app local ou rota estática declarada, não pelo Hub nem por este trilho; labs e miniTown só com `?operator=1`. As outras lições do LiteracyDojo avulso não estão no OS. O status do host é progresso local — nunca domínio.
 
 1. Abra o endereço do OS que o facilitador passou, em um navegador atual com armazenamento local habilitado.
 2. Responda ao onboarding curto (objetivo, contexto, confiança) e escolha **IA Prática** ou **Dev**.
