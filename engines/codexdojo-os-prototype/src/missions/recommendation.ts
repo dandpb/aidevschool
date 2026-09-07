@@ -45,6 +45,26 @@ function isLocallyLaunchable(progress: OsProgress, trackId: TrackId, missionId: 
   return progress.missionStatusByKey[missionKey(trackId, missionId)] !== 'locked'
 }
 
+function hasForwardAvailableMission(
+  progress: OsProgress,
+  catalog: MissionCatalogRepository,
+  trackId: TrackId,
+): boolean {
+  return catalog.listLaunchable(trackId).some(
+    (mission) => progress.missionStatusByKey[missionKey(trackId, mission.id)] === 'available',
+  )
+}
+
+function shouldDeferRecoveryRetry(
+  progress: OsProgress,
+  catalog: MissionCatalogRepository,
+  trackId: TrackId,
+  missionId: string,
+): boolean {
+  const status = progress.missionStatusByKey[missionKey(trackId, missionId)]
+  return status === 'completed' && hasForwardAvailableMission(progress, catalog, trackId)
+}
+
 function resumeInProgress(
   progress: OsProgress,
   catalog: MissionCatalogRepository,
@@ -86,6 +106,7 @@ function recommendMissionForTrack(
   }
 
   const verificationRetry = trackMissions.find((mission) => {
+    if (shouldDeferRecoveryRetry(progress, catalog, trackId, mission.id)) return false
     const verification = context.verificationByKey?.[missionKey(trackId, mission.id)]
     return (
       isLocallyLaunchable(progress, trackId, mission.id) &&
@@ -104,6 +125,7 @@ function recommendMissionForTrack(
   }
 
   const localRetry = trackMissions.find((mission) => {
+    if (shouldDeferRecoveryRetry(progress, catalog, trackId, mission.id)) return false
     const engagement = progress.missionEngagementByKey[missionKey(trackId, mission.id)]
     return isLocallyLaunchable(progress, trackId, mission.id) && engagement?.retryRecommended === true
   })

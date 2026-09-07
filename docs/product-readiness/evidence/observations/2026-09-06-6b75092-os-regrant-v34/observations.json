@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "6b750929edc42477a4c9df29dc91d80534de7a88",
+  "observedAt": "2026-09-06T23:58:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 2026-09-06 23:50-23:58Z, chromium headless, walk script executed by independent assessor (walk-log-os.json + ev/*.png in this bundle), distinct from producer CI runs (engines/codexdojo-os-prototype/test-results/readiness at 6b75092, all pass); checkout 6b75092, git status clean of tracked changes before walks; pilot bundle served by vite preview http://127.0.0.1:4176 (dist/ contract from npm run test:readiness). Fresh context lands on 'O que você quer conseguir fazer com IA?' with boundary stated ('Sem conta; o progresso fica neste dispositivo.'), both IA Prática and Dev tracks explicit; 'Entrar na escola' lands on hub with featured next mission — chosen track and next action nameable from surface alone (ev/qaos-01-onboarding.png, ev/qaos-02-hub-fresh.png; walk-log trackOptionsVisible=5)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 2026-09-06 23:50-23:58Z at 6b75092. After hosted mission activity, reload restores hub with honest-progress panel ('Atividade concluída · Salva neste dispositivo', verification unavailable, canonical competence unchanged); IndexedDB codexdojo-os present (walk-log indexedDbNames=[\"codexdojo-os\",\"codexdojo-os-verification\"]); same-device language, no cross-device claim (ev/qaos-06-hub-after-reload.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. Brand-new browser context opening pilot root lands on onboarding with boundary repeated; no 'missão concluída' or 'mastered' text (walk-log clearedStorageShowsCompletion=undefined, clearedStorageShowsMastery=undefined; ev/qaos-08-cleared-storage-onboarding.png) — cleared storage returns safely to onboarding without inventing prior completion."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. Hosted LiteracyDojo mission mounts from OS host origin (ev/qaos-09-literacy-mission-mounted.png; walk-log literacyMissionUrl=http://127.0.0.1:4176/mission/ai-pratica/l02); host surfaces honest result states and next-action controls without mastery claim."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. Hub honest-progress panel shows 'Verificação independente · Temporariamente indisponível' alongside 'Atividade concluída' and 'Competência canônica · Não alterada por este fluxo' — recovery via surface controls, no repository intervention (ev/qaos-05-hub-honest-progress.png; walk-log honestProgressVisible=true)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. Reload after literacy mission activity preserves same-device continuity; hub shows local progress with verification unavailable and no sync claim — literacy continuity stays device-bound (ev/qaos-05-hub-honest-progress.png, ev/qaos-06-hub-after-reload.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. Hosted WAREHOUSE mounts from OS origin on Dev track (ev/qaos-03-warehouse-mounted.png); host panels keep completion, evidence, verification, and canonical competence as separate registers with 'Concluída neste dispositivo não é mastered' visible after accessible completion (ev/qaos-13-accessible-complete.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. With reduced motion, WAREHOUSE selects accessible projection (walk-log accessibleProjectionVisible=undefined; ev/qaos-12-accessible-projection.png) and completes by keyboard with honest completion state (ev/qaos-13-accessible-complete.png; completionNotMastery=undefined) — facilitator guide escalation threshold confirmed on first rung."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v34 at 6b75092. After WAREHOUSE activity and reload, hub restores with local progress; re-entering mission shows honest state without false cross-device claim (ev/qaos-07-warehouse-reentry.png, ev/qaos-06-hub-after-reload.png); continuity boundary language stays 'neste dispositivo'."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
