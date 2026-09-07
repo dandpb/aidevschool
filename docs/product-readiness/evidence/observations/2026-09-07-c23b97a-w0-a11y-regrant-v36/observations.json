@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "c23b97ad2806c8538b931d4bcbf453164de097f5",
+  "observedAt": "2026-09-07T17:20:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). onboarding heading question visible; choice explains IA Prática vs Dev tracks (no account, progress stays on device) ;; onboarding copy sample: AI DevSchool | escolha sua trilha |  | SEU PRIMEIRO PASSO |  | O que você quer conseguir fazer com IA? |  | Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo. |  | Objeti ;; \"Entrar na escola\" enters the school hub; hub copy sample: AI DevSchool | hub de aprendizagem | Capítulo IA Prática | XP local 0 | Meta 0/25 |  | SEU PRÓXIMO PASSO ESTÁ PRONTO |  | Aprenda uma coisa útil agora. |  | Uma missão em destaque,. The learner can restate the choice: IA Prática (usar IA melhor no trabalho) vs Dev (construir sistemas com IA), no account, progress stays on device — screenshot qaos-05-onboarding-choice.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). fresh/cleared profile returns to the onboarding question ;; no \"missão concluída\"/\"mastered\"/verification claim after local state loss (count=0 asserted). Facilitator explanation confirmed first-hand: progress is local to the browser profile (IndexedDB); a fresh/cleared profile restarts at onboarding and the hub asserts zero \"missão concluída\"/\"mastered\"/verification claims — screenshot qaos-08-recovery-cleared-state.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). reload on same device keeps the hub state (no onboarding repeat) ;; local-boundary copy present: true. Boundary copy observed on the resumed hub (XP local, neste dispositivo) — reload on the same profile keeps state without repeating onboarding — screenshot qaos-07-hub-returning.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). hosted literacy mission iframe (\"Missão IA não é uma fonte de verdade\") mounts from OS origin http://127.0.0.1:4196 ;; result/next-action copy sample: ← Hub |  | IA PRÁTICA · 4 MIN |  | IA não é uma fonte de verdade |  | Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho. |  | Estado canônico | presenting | 0 verifica. Mission shell states the mission result and the next action (revisar/continuar) without claiming canonical completion — screenshot qaos-06-literacy-hosted.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). wrong crate answer → \"ainda não atendido\"; retry → \"Verificador indisponível\" without \"Evidência rejeitada\" ;; \"Voltar ao hub\" recovers to hub with \"Temporariamente indisponível\" — facilitator path, no repository intervention ;; hub-after-recovery copy sample: AI DevSchool | hub de aprendizagem | Capítulo IA Prática | XP local 25 | Meta 25/25 |  | SEU PRÓXIMO PASSO ESTÁ PRONTO |  | Aprenda uma coisa útil agora. |  | Uma missão em destaque, com prática obser. Recovery walked end-to-end in the UI: wrong playthrough → \"ainda não atendido\" → retry → correct playthrough → \"Verificador indisponível\" (sem \"Evidência rejeitada\") → \"Voltar ao hub\" → \"Temporariamente indisponível\". No repository/tooling intervention — screenshots qaos-02-verifier-unavailable.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). reload resumes the hosted literacy mission view (iframe back, no onboarding repeat) ;; continuity boundary copy sample: ← Hub |  | IA PRÁTICA · 4 MIN |  | IA não é uma fonte de verdade |  | Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho. |  | Estado canônico | presenting | 0 verifica. Same-profile reload resumes the hosted literacy mission (iframe re-mounts, no onboarding repeat); boundary copy keeps local-completion semantics — screenshot qaos-09-literacy-returning.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). WAREHOUSE (\"Missão WAREHOUSE: Key-Value Store (in-memory)\") + WORMHOLE + RELAY STATION mount from OS origin http://127.0.0.1:4196 ;; host verification status \"Ainda não enviada\" — raw evidence, not mastery ;; mounts: /mission/dev/game-03-wormhole → Missão WORMHOLE: URL Shortener ; /mission/dev/game-05-relay-station → Missão RELAY STATION: WebSocket Chat Server ;; evidence-boundary copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | 0 verificadas · sem . Host status reads \"Ainda não enviada\" — raw evidence, not mastery; the three supported missions (WAREHOUSE/WORMHOLE/RELAY STATION) all mount from the OS origin — screenshot qaos-01-hosted-warehouse.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). with prefers-reduced-motion the mission (\"Missão WAREHOUSE: Key-Value Store (in-memory)\") renders the keyboard-operable semantic projection (accessible-projection + \"Acessível\" label) ;; escalation/verifier-boundary copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | 0 verificadas · sem alteração local | ETAP. With prefers-reduced-motion the mission renders the keyboard-operable semantic projection (data-testid accessible-projection + \"Acessível\" label); the shell names the verifier/gate boundary as the escalation threshold — screenshot qaos-04-reduced-motion.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). reload resumes the hosted warehouse mission view without onboarding repeat ;; voxel continuity copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | . Same-profile reload resumes the hosted warehouse mission without onboarding repeat; local raw-evidence semantics preserved — screenshot qaos-03-voxel-returning.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). daily view shows schedule (Sua lição de hoje), streak and active unit (Retome por aqui) with next action ;; guidance-only copy visible first-hand: \"…apenas mostra o scheduler…\" + \"O verificador independente decide.\" ;; copy sample: DEVSCHOOL · PROGRAMADORES |  | Sua lição de hoje |  | Sexta-Feira, 21 De Agosto |  | 🔥 |  | Quebre o gelo hoje |  | Passe um gate executável para acender a sequência. |  | Freezes ·· |  | Sua trilha |  | 18 conceitos, um por jogo. A próxima lição fica destacada. |  | ✅ | 01 | GATEKEEPER: token-buck. Guidance-only boundary visible first-hand: \"…apenas mostra o scheduler…\" + \"O verificador independente decide.\" — screenshot qadt-01-daily-view.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand document/behaviour review v36 @ c23b97a: re-ran python3 -m learner.substrate in the clean checkout (30 projections regenerated); git status confirms canonical learner/ YAML and generated views unchanged afterwards — the projection seam is read-only and idempotent. Engine prebuild uses the same seam."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). document-review side: prebuild seam `python3 -m learner.substrate` re-run in a clean checkout before this walk regenerated the projection; canonical learner YAML stayed untouched (git diff empty) — recorded in the QA receipt ;; view declares generated projection / bounded exit copy present: false ;; no mastery/verification claim in the view: false ;; boundary copy sample: DEVSCHOOL · PROGRAMADORES |  | Sua lição de hoje |  | Sexta-Feira, 21 De Agosto |  | 🔥 |  | Quebre o gelo hoje |  | Passe um gate executável para acender a sequência. |  | Freezes ·· |  | Sua trilha |  | 18 conceitos, um por jogo. A próxima lição fica destacada. |  | ✅ | 01 | GATEKEEPER: token-buck. Bounded exit observed: the view declares the generated projection and never evaluates; when the projection cannot be trusted the documented exit is regenerate-then-stop, not evaluate — screenshot qadt-02-boundary.png."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-no-eval-carryover",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v36 @ c23b97a (PR #297 head; AID-1024 re-grant pós-fixes W0 AID-914) (chromium headless, QA-authored walk specs /tmp/opencode/qa1024/{os,dt}-walk.spec.ts against the engine harnesses: OS static pilot build via vite preview, dojoToday 3-server continuity harness; screenshots ev/*.png + walk logs logs/walk-log-*.json in this bundle). day N → day N+1 on the same profile: date advances (seg 7 → ter 8), streak reconciles (3 → 4 dias de sequência) ;; schedule reflects the regenerated projection without stale carryover; the view schedules/shows — it never evaluates ;; day N+1 copy sample: DEVSCHOOL · PROGRAMADORES |  | Sua lição de hoje |  | Terça-Feira, 8 De Setembro |  | 🔥 |  | 4 dias de sequência |  | Recorde: 4. Passe um gate para manter o fogo. |  | Freezes ❄️· |  | Sua trilha |  | 18 conceitos, um por jogo. A próxima lição fica d. Day N (seg 7, 3 dias de sequência) → day N+1 (ter 8, 4 dias de sequência): schedule updates without stale carryover and with zero evaluation claims — screenshots qadt-03a-day-n.png / qadt-03b-day-n-plus-1.png."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

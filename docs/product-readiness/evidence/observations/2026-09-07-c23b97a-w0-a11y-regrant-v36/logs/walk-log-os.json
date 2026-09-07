@@ -1,0 +1,71 @@
+{
+  "walk": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "observed": [
+        "onboarding heading question visible; choice explains IA Prática vs Dev tracks (no account, progress stays on device)",
+        "onboarding copy sample: AI DevSchool | escolha sua trilha |  | SEU PRIMEIRO PASSO |  | O que você quer conseguir fazer com IA? |  | Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo. |  | Objeti",
+        "\"Entrar na escola\" enters the school hub; hub copy sample: AI DevSchool | hub de aprendizagem | Capítulo IA Prática | XP local 0 | Meta 0/25 |  | SEU PRÓXIMO PASSO ESTÁ PRONTO |  | Aprenda uma coisa útil agora. |  | Uma missão em destaque,"
+      ]
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "observed": [
+        "reload on same device keeps the hub state (no onboarding repeat)",
+        "local-boundary copy present: true"
+      ]
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "observed": [
+        "fresh/cleared profile returns to the onboarding question",
+        "no \"missão concluída\"/\"mastered\"/verification claim after local state loss (count=0 asserted)"
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "observed": [
+        "hosted literacy mission iframe (\"Missão IA não é uma fonte de verdade\") mounts from OS origin http://127.0.0.1:4196",
+        "result/next-action copy sample: ← Hub |  | IA PRÁTICA · 4 MIN |  | IA não é uma fonte de verdade |  | Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho. |  | Estado canônico | presenting | 0 verifica"
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "observed": [
+        "reload resumes the hosted literacy mission view (iframe back, no onboarding repeat)",
+        "continuity boundary copy sample: ← Hub |  | IA PRÁTICA · 4 MIN |  | IA não é uma fonte de verdade |  | Diante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho. |  | Estado canônico | presenting | 0 verifica"
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "observed": [
+        "WAREHOUSE (\"Missão WAREHOUSE: Key-Value Store (in-memory)\") + WORMHOLE + RELAY STATION mount from OS origin http://127.0.0.1:4196",
+        "host verification status \"Ainda não enviada\" — raw evidence, not mastery",
+        "mounts: /mission/dev/game-03-wormhole → Missão WORMHOLE: URL Shortener ; /mission/dev/game-05-relay-station → Missão RELAY STATION: WebSocket Chat Server",
+        "evidence-boundary copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | 0 verificadas · sem "
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "observed": [
+        "wrong crate answer → \"ainda não atendido\"; retry → \"Verificador indisponível\" without \"Evidência rejeitada\"",
+        "\"Voltar ao hub\" recovers to hub with \"Temporariamente indisponível\" — facilitator path, no repository intervention",
+        "hub-after-recovery copy sample: AI DevSchool | hub de aprendizagem | Capítulo IA Prática | XP local 25 | Meta 25/25 |  | SEU PRÓXIMO PASSO ESTÁ PRONTO |  | Aprenda uma coisa útil agora. |  | Uma missão em destaque, com prática obser"
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "observed": [
+        "reload resumes the hosted warehouse mission view without onboarding repeat",
+        "voxel continuity copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | "
+      ]
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "observed": [
+        "with prefers-reduced-motion the mission (\"Missão WAREHOUSE: Key-Value Store (in-memory)\") renders the keyboard-operable semantic projection (accessible-projection + \"Acessível\" label)",
+        "escalation/verifier-boundary copy sample: ← Hub |  | SIMULAÇÃO HOSPEDADA · 12 MIN |  | WAREHOUSE: Key-Value Store (in-memory) |  | Comparar mapas e dicionários sob carga concorrente e persistência simples. |  | Estado canônico | presenting | 0 verificadas · sem alteração local | ETAP"
+      ]
+    }
+  ]
+}
