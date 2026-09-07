@@ -44,3 +44,11 @@ tests), then applied the validate.py change (4 passed).
   governed solely by the latest decision + `enforce` freshness/fingerprint gates
   (inventory.yaml is inside every `source_fingerprint`, so a bump still auto-stales the
   current claim until re-granted). Accepted trade-off; recorded in intent.md.
+
+## Addendum (AID-1001 acceptance, 2026-09-07)
+
+AID-1001 requires the elevation convention documented in `docs/product-readiness/README.md`.
+That README is a generated projection (`render.py` → `cli.py render`), so the canonical
+path is a static section in `tools/render.py` (`## Tier elevation and supersession`)
+followed by regeneration; `cli.py check` confirms sources and matrix in sync. Full suite
+re-run after the change: 36 passed.

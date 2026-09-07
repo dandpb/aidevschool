@@ -31,3 +31,13 @@ A runnable engine or passing producer test does not grant a readiness tier.
 - `evidence/results.ndjson` owns append-only promoted scenario facts.
 - `assessments/*.yaml` own immutable independent decisions.
 - `student-guide.md` and `facilitator-guide.md` own audience guidance.
+
+## Tier elevation and supersession
+
+The current-tier gate in `tools/validate.py` binds only the latest decision per use case (newest `verifiedAt`).
+After an intended-tier elevation, strictly older decisions are superseded history: they still obey every
+integrity rule (outcome/tier coherence, known runs, duplicate protection) and are exempt only from equality
+with the current `intendedTier`, so the gate closes with the new assessment alone — no manual rewrite of past
+assessments. Decisions sharing the newest `verifiedAt` all face the gate (fail-closed). A bump without a newer
+re-grant stays red with exactly one wrong-tier error on the latest decision, and the claim stales until
+re-granted via `enforce`.
