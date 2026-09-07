@@ -30,29 +30,23 @@ decisions:
   - 2026-09-06T22:55:00Z-os-returning-device-mixed-e41b9b93
   - 2026-09-06T22:55:00Z-os-returning-recovery-mixed-e41b9b93
 - useCaseId: dojotoday-daily-guidance
-  outcome: stale
-  grantedTier: null
-  reasons:
-  - 'tier elevated to customer-ready by AID-987/T1 (PR #290); superseded by re-grant
-    v34 @ 581ea330 (QA AID-988/AID-992)'
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
   resultRunIds:
   - 2026-09-06T22:55:00Z-dojotoday-active-unit-guidance-mixed-e41b9b93
   - 2026-09-06T22:55:00Z-dojotoday-read-only-boundary-observed-e41b9b93
 - useCaseId: pixelquest-evidence-encounter
-  outcome: stale
-  grantedTier: null
-  reasons:
-  - 'tier elevated to customer-ready by AID-987/T1 (PR #290); superseded by re-grant
-    v34 @ 581ea330 (QA AID-988/AID-992)'
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
   resultRunIds:
   - 2026-09-06T22:55:00Z-pixelquest-encounter-evidence-mixed-e41b9b93
   - 2026-09-06T22:55:00Z-pixelquest-evidence-recovery-observed-e41b9b93
 - useCaseId: voxel-standalone-learning-loop
-  outcome: stale
-  grantedTier: null
-  reasons:
-  - 'tier elevated to customer-ready by AID-987/T1 (PR #290); superseded by re-grant
-    v34 @ 581ea330 (QA AID-988/AID-992)'
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
   resultRunIds:
   - 2026-09-06T22:55:00Z-voxel-standalone-loop-mixed-e41b9b93
   - 2026-09-06T22:55:00Z-voxel-accessible-renderer-observed-e41b9b93
