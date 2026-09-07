@@ -1,0 +1,56 @@
+[
+  {
+    "step": "w1-contrast-first-hand",
+    "selector": ".track-node.is-mastered .track-glyph",
+    "pairs": [
+      {
+        "color": "rgb(22, 101, 52)",
+        "bg": "rgb(220, 252, 231)",
+        "ratio": 6.4924,
+        "glyph": "✅"
+      },
+      {
+        "color": "rgb(22, 101, 52)",
+        "bg": "rgb(220, 252, 231)",
+        "ratio": 6.4924,
+        "glyph": "✅"
+      }
+    ],
+    "asserted": "ratio >= 4.5 (WCAG AA, normal text)"
+  },
+  {
+    "step": "dojotoday-active-unit-guidance",
+    "observed": {
+      "dailyHeading": "Sua lição de hoje",
+      "resumeHeading": "Retome por aqui",
+      "activeUnit": "KV WAREHOUSE: hash-map-backed CRUD with TTL expiration",
+      "guidanceOnlyCopy": "apenas mostra o scheduler — não marca mastered. O verificador independente decide."
+    },
+    "assertion": "learner-understands-guidance-only: view guides, does not evaluate work"
+  },
+  {
+    "step": "dojotoday-read-only-boundary",
+    "observed": {
+      "projectionCounter": "dominadas counter rendered from generated projection",
+      "evaluationAffordances": 0,
+      "localStorageStableAcrossReload": true,
+      "documentReview": "python3 -m learner.substrate regenerates projections; learner/ YAML untouched (repo git status clean) — recorded in observations.json"
+    },
+    "assertion": "stale-guidance-has-bounded-exit + regeneration-preserves-read-only-boundary"
+  },
+  {
+    "step": "dojotoday-returning-next-day",
+    "observed": {
+      "dayN": {
+        "url": "http://127.0.0.1:5181",
+        "streak": null,
+        "sample": ""
+      },
+      "dayNPlus1": {
+        "url": "http://127.0.0.1:5182",
+        "streak": null
+      }
+    },
+    "assertion": "schedule-updates-across-days (queue/streak/active unit from regenerated projection) + learner-understands-no-eval-carryover (boundary copy present on both days)"
+  }
+]

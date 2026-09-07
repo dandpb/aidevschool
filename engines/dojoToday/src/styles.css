@@ -17,6 +17,10 @@
   --amber: #f59e0b;
   --amber-deep: #b45309;
   --success: #16a34a;
+  /* AID-1027/W1 (auditoria AID-914, achado vizinho do W0): AA — #16a34a sobre
+     --success-soft #dcfce7 = 3.0:1. #166534 mantém o matiz verde e dá 6.49:1
+     no par .is-mastered .track-glyph (padrão --deep igual a --amber-deep). */
+  --success-deep: #166534;
   --success-soft: #dcfce7;
   --danger: #e11d48;
   --danger-soft: #ffe4e6;
@@ -475,7 +479,8 @@ body {
 }
 .track-node.is-mastered .track-glyph {
   background: var(--success-soft);
-  color: var(--success);
+  /* AID-1027/W1: --success (3.0:1) → --success-deep (6.49:1) para AA >= 4.5:1. */
+  color: var(--success-deep);
 }
 .track-node.is-mastered .track-title {
   color: var(--ink-soft);
