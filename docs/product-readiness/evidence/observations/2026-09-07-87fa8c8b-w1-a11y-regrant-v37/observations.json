@@ -1,0 +1,53 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "87fa8c8b6d892bbae40c675795222198984dad72",
+ "observedAt": "2026-09-07T17:56:00Z",
+ "scenarios": [
+  {
+   "scenarioId": "dojotoday-active-unit-guidance",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-guidance-only",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk v37 @ 87fa8c8b (PR #298 head; AID-1033 re-grant pós-fix W1 AID-914/AID-1027) (chromium headless, QA-authored walk spec /tmp/opencode/qa1033/dt-walk.spec.ts contra o harness de 3 servidores do engine; screenshots ev/*.png + walk log logs/walk-log-dojotoday.json neste bundle). 'Sua lição de hoje' e 'Retome por aqui' visíveis; unidade ativa KV WAREHOUSE renderizada a partir da projeção gerada; copy de fronteira 'apenas mostra o scheduler — não marca mastered. O verificador independente decide.' visível — a vista orienta e não avalia trabalho. W1 re-validado no mesmo render: glifos ✅ de .track-node.is-mastered .track-glyph computados rgb(22,101,52) sobre rgb(220,252,231) = 6.4924:1 (>= 4.5 AA texto normal; 0.85rem/900) — screenshot qadt-00-w1-contrast.png + qadt-01-daily-view.png."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "dojotoday-read-only-boundary",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "regeneration-preserves-read-only-boundary",
+     "evidence": "document-review",
+     "outcome": "pass",
+     "notes": "Document-review QA v37 @ 87fa8c8b: python3 -m learner.substrate re-executado na worktree — 30 projeções regeneradas; git diff de arquivos rastreados = 0 (learner/ YAML intocado; .mavis/ é derivado). O PR #298 toca apenas engines/dojoToday/src/styles.css + playwright/ (verificado via gh pr diff --name-only: 3 arquivos, +96/−1) — nenhum caminho de escrita de estado do learner. Recuperação por regeneração preserva a fronteira read-only."
+    },
+    {
+     "id": "stale-guidance-has-bounded-exit",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA v37 @ 87fa8c8b: vista read-only sem afordância de avaliação (count=0 para controles concluir/mastered/avaliar); localStorage estável entre reloads (vista não escreve estado); contador 'dominadas' vem da projeção canônica, não de decisão do dojoToday; facilitador pode parar/recarregar em vez de apresentar orientação stale — screenshot qadt-02-boundary.png."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "dojotoday-returning-next-day",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-no-eval-carryover",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA v37 @ 87fa8c8b: day-N (fixture 5181) e day-N+1 (fixture 5182) renderizam 'Sua lição de hoje' com a fila/streak/unidade ativa da projeção regenerada de cada dia; copy de fronteira 'O verificador independente decide' presente em ambos os dias — retornar não avalia nem marca mastered, apenas reexibe a projeção do scheduler — screenshots qadt-03a-day-n.png + qadt-03b-day-n-plus-1.png."
+    }
+   ],
+   "gaps": []
+  }
+ ]
+}
