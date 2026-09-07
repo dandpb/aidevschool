@@ -1,0 +1,98 @@
+=== literacyDojo ===
+Mon Sep  7 11:47:11 AM UTC 2026
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+
+added 200 packages, and audited 201 packages in 7s
+
+35 packages are looking for funding
+  run `npm fund` for details
+
+1 high severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.9.7 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+Downloading Chrome for Testing 151.0.7922.34 (playwright chromium v1234) from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-linux64.zip
+|                                                                                |   0% of 184.3 MiB
+|■■■■■■■■                                                                        |  10% of 184.3 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 184.3 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 184.3 MiB
+Chrome for Testing 151.0.7922.34 (playwright chromium v1234) downloaded to /home/ubuntu/.cache/ms-playwright/chromium-1234
+Downloading Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234) from https://cdn.playwright.dev/builds/cft/151.0.7922.34/linux64/chrome-headless-shell-linux64.zip
+|                                                                                |   0% of 114.7 MiB
+|■■■■■■■■                                                                        |  10% of 114.7 MiB
+|■■■■■■■■■■■■■■■■                                                                |  20% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■                                                        |  30% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                                |  40% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                        |  50% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                                |  60% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                        |  70% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■                |  80% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■        |  90% of 114.7 MiB
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 114.7 MiB
+Chrome Headless Shell 151.0.7922.34 (playwright chromium-headless-shell v1234) downloaded to /home/ubuntu/.cache/ms-playwright/chromium_headless_shell-1234
+
+> literacydojo@0.1.0 pretest:e2e
+> npm run gen:content
+
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated
+
+OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+
+> literacydojo@0.1.0 test:e2e
+> playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+
+Running 15 tests using 1 worker
+
+(node:8636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:8636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [app] › playwright/corridor.spec.ts:56:1 › literacy-corridor-happy-path: corredor completo l01→l11 com os 3 desafios, gate e próxima ação (9.2s)
+  ✓   2 [app] › playwright/corridor.spec.ts:134:1 › literacy-corridor-gate-retry: falha no desafio oferece feedback, dica e retry sem perder conclusões (3.0s)
+  ✓   3 [app] › playwright/corridor.spec.ts:172:1 › literacy-corridor-review-window: janelas [1,7,21] observáveis no storage com tamper controlado (§4.4) (6.0s)
+  ✓   4 [app] › playwright/corridor.spec.ts:241:1 › literacy-corridor-grandfathered-return: progresso pré-bump preservado, desafios opcionais, revisões devidas (1.7s)
+  ✓   5 [app] › playwright/corridor.spec.ts:270:1 › literacy-corridor-resume-mid-module: retoma lição em andamento e preserva o resumo do módulo (1.5s)
+  ✓   6 [app] › playwright/corridor.spec.ts:293:1 › literacy-corridor rota intermediate: cp-01 abre sem l01 (risco R1 §8) e libera l04 (2.9s)
+  ✓   7 [app] › playwright/gamification.spec.ts:12:1 › engajamento após a primeira lição: XP, meta diária, sequência e conquista (3.6s)
+  ✓   8 [app] › playwright/gamification.spec.ts:44:1 › revisão espaçada vencida: refaz a lição, emite evidência de revisão e não muda a trilha (5.4s)
+  ✓   9 [app] › playwright/reflow-320.spec.ts:106:1 › Standalone a 320px: sem scroll horizontal essencial do onboarding ao resultado (3.7s)
+  ✓  10 [app] › playwright/reflow-320.spec.ts:134:1 › Missão hospedada em iframe de 298px (paridade host @320): sem scroll horizontal essencial (4.0s)
+  ✓  11 [app] › playwright/reflow-320.spec.ts:176:1 › Controle de regressão: piso de largura não pode voltar a travar reflow (839ms)
+  ✓  12 [app] › playwright/vertical-slice.spec.ts:19:1 › readiness literacy-retry: Mapa Inicial encaminha erro, dica e nova tentativa para a rota guiada (3.9s)
+  ✓  13 [app] › playwright/vertical-slice.spec.ts:42:1 › readiness literacy-happy-path and literacy-resume: acerto de primeira encaminha para a rota intermediária (2.9s)
+  ✓  14 [app] › playwright/vertical-slice.spec.ts:68:1 › Mapa Inicial continua utilizável em viewport compacto (1.7s)
+(node:11399) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11399) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [pwa] › playwright/pwa.spec.ts:7:1 › instalável e utilizável offline depois da primeira visita (400ms)
+
+  15 passed (1.0m)
+Reported engines/literacyDojo/test-results/readiness/literacy-corridor-gate-retry.json
+Reported engines/literacyDojo/test-results/readiness/literacy-corridor-grandfathered-return.json
+Reported engines/literacyDojo/test-results/readiness/literacy-corridor-happy-path.json
+Reported engines/literacyDojo/test-results/readiness/literacy-corridor-resume-mid-module.json
+Reported engines/literacyDojo/test-results/readiness/literacy-corridor-review-window.json
+Reported engines/literacyDojo/test-results/readiness/literacy-happy-path.json
+Reported engines/literacyDojo/test-results/readiness/literacy-resume.json
+Reported engines/literacyDojo/test-results/readiness/literacy-retry.json
+EXIT=0
+Mon Sep  7 11:48:50 AM UTC 2026

@@ -1,0 +1,408 @@
+=== codexdojo-os ===
+Mon Sep  7 11:47:11 AM UTC 2026
+
+added 367 packages, and audited 368 packages in 12s
+
+91 packages are looking for funding
+  run `npm fund` for details
+
+2 high severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.9.7 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+> codexdojo-os-prototype@0.1.0 test:readiness
+> npm run test:smoke:pilot && playwright test --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+
+> codexdojo-os-prototype@0.1.0 test:smoke:pilot
+> npm run build:pilot && playwright test --config=playwright.pilot.config.ts
+
+
+> codexdojo-os-prototype@0.1.0 build:pilot
+> tsc -b && vite build --mode pilot && node scripts/bundle-missions.mjs
+
+vite v8.1.4 building client environment for pilot...
+[2Ktransforming...✓ 1870 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                        0.60 kB │ gzip:   0.38 kB
+dist/assets/index-BfHDYrYk.css                                        56.54 kB │ gzip:  11.51 kB
+dist/assets/create-pointer-move-prompt-handoff-C_G_UhQ--D2vs1SMh.js   50.95 kB │ gzip:  17.76 kB
+dist/assets/copy-content-BuqfLMsd-D0Y8tH8k.js                         53.55 kB │ gzip:  19.42 kB
+dist/assets/renderer-OgmF5gNo-Bc7UFJ5H.js                            120.10 kB │ gzip:  36.09 kB
+dist/assets/dist-DVjHAVAm.js                                         120.85 kB │ gzip:  36.43 kB
+dist/assets/dist-CSugcPru.js                                         354.94 kB │ gzip:  93.58 kB
+dist/assets/index-DmLuoYRf.js                                        390.19 kB │ gzip: 116.52 kB
+
+✓ built in 913ms
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+
+added 200 packages in 6s
+
+added 22 packages in 2s
+Scope: all 18 workspace projects
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+Done in 1.9s using pnpm v9.15.9
+Scope: all 3 workspace projects
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+Done in 1s using pnpm v9.15.9
+
+▸ bundling literacydojo from literacyDojo
+
+> literacydojo@0.1.0 gen:content
+> cd ../.. && python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/src/data/generated
+
+OK: 29 lição(ões) ready validadas: 20 IA na Prática, 9 Dev; 0 planned (sem arquivo exigido).
+Read model gerado: engines/literacyDojo/src/data/generated/lessons.ts
+vite v6.4.3 building for production...
+transforming...
+✓ 83 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                   0.83 kB │ gzip:   0.44 kB
+dist-hosted/assets/index-CgKJSllh.css   32.53 kB │ gzip:   8.05 kB
+dist-hosted/assets/index-BrHkIjok.js   444.66 kB │ gzip: 131.98 kB
+✓ built in 2.14s
+  → dist/apps/literacydojo
+
+▸ bundling warehouse from voxelDojo/game-02-warehouse
+vite v6.4.3 building for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                           4.19 kB │ gzip:   1.63 kB
+dist-hosted/assets/index-DbexD0ep.js            37.27 kB │ gzip:  12.86 kB
+dist-hosted/assets/warehouseScene-b6rRg0By.js  495.54 kB │ gzip: 124.75 kB
+✓ built in 2.30s
+  → dist/apps/warehouse
+
+▸ bundling wormhole from voxelDojo/game-03-wormhole
+vite v6.4.3 building for production...
+transforming...
+✓ 34 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                          4.46 kB │ gzip:   1.66 kB
+dist-hosted/assets/index-GOcXPDIj.js           37.45 kB │ gzip:  13.01 kB
+dist-hosted/assets/wormholeScene-DGbTGiQf.js  527.45 kB │ gzip: 133.04 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.48s
+  → dist/apps/wormhole
+
+▸ bundling relay-station from voxelDojo/game-05-relay-station
+vite v6.4.3 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                       4.22 kB │ gzip:   1.63 kB
+dist-hosted/assets/index-DxHsPA5I.js        35.11 kB │ gzip:  12.06 kB
+dist-hosted/assets/relayScene-YgLXJx8E.js  505.39 kB │ gzip: 127.90 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.08s
+  → dist/apps/relay-station
+
+▸ bundling pipeline-plant from voxelDojo/game-06-pipeline-plant
+vite v6.4.3 building for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                          1.69 kB │ gzip:   0.82 kB
+dist-hosted/assets/index-rDaOFk6O.js           34.81 kB │ gzip:  11.95 kB
+dist-hosted/assets/pipelineScene-B782j2y7.js  507.75 kB │ gzip: 128.59 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.20s
+  → dist/apps/pipeline-plant
+
+▸ bundling checkpoint-city from voxelDojo/game-07-checkpoint-city
+vite v6.4.3 building for production...
+transforming...
+✓ 31 modules transformed.
+[plugin vite:reporter] 
+(!) /workspace/engines/voxelDojo/game-07-checkpoint-city/src/scene/checkpointScene.ts is dynamically imported by /workspace/engines/voxelDojo/game-07-checkpoint-city/src/main.ts but also statically imported by /workspace/engines/voxelDojo/game-07-checkpoint-city/src/scene/hud.ts, dynamic import will not move module into another chunk.
+
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.69 kB │ gzip:   0.83 kB
+dist-hosted/assets/index-XsSzPgtL.js  545.91 kB │ gzip: 142.73 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.46s
+  → dist/apps/checkpoint-city
+
+▸ bundling timeline-tower from voxelDojo/game-08-timeline-tower
+vite v6.4.3 building for production...
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.71 kB │ gzip:   0.82 kB
+dist-hosted/assets/index-CR8mjUHB.js  538.38 kB │ gzip: 138.43 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.03s
+  → dist/apps/timeline-tower
+
+▸ bundling docking-bay from voxelDojo/game-09-docking-bay
+vite v6.4.3 building for production...
+transforming...
+✓ 30 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.66 kB │ gzip:   0.81 kB
+dist-hosted/assets/index-erwVsc3q.js  537.20 kB │ gzip: 139.25 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.38s
+  → dist/apps/docking-bay
+
+▸ bundling pixelquest from pixelDojo/pixel-quest
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 47 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                   0.56 kB │ gzip:   0.34 kB
+dist-hosted/assets/index-DkneHjAH.css    3.26 kB │ gzip:   1.21 kB
+dist-hosted/assets/index-QdBcyEKd.js   572.70 kB │ gzip: 146.96 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.64s
+  → dist/apps/pixelquest
+
+▸ bundling dojotoday from dojoToday
+vite v6.4.3 building for production...
+transforming...
+✓ 9 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  0.68 kB │ gzip: 0.41 kB
+dist-hosted/assets/index-DkQKlcrt.css   9.77 kB │ gzip: 2.90 kB
+dist-hosted/assets/index-DRt-keXP.js   21.10 kB │ gzip: 7.99 kB
+✓ built in 345ms
+  → dist/apps/dojotoday
+
+▸ bundling hash-ring from voxelDojo/game-10-hash-ring
+vite v6.4.3 building for production...
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.64 kB │ gzip:   0.81 kB
+dist-hosted/assets/index-BD5A4t3F.js  523.39 kB │ gzip: 135.12 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.64s
+  → dist/apps/hash-ring
+
+▸ bundling air-traffic from voxelDojo/game-11-air-traffic
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.56 kB │ gzip:   0.78 kB
+dist-hosted/assets/index-zyuJlkSH.js  523.51 kB │ gzip: 134.88 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.47s
+  → dist/apps/air-traffic
+
+▸ bundling mission-control from voxelDojo/game-12-mission-control
+vite v6.4.3 building for production...
+transforming...
+✓ 28 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.64 kB │ gzip:   0.80 kB
+dist-hosted/assets/index-CJP97OGa.js  531.23 kB │ gzip: 137.37 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.63s
+  → dist/apps/mission-control
+
+▸ bundling breaker-grid from voxelDojo/game-13-breaker-grid
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.74 kB │ gzip:   0.83 kB
+dist-hosted/assets/index-BK-mStD8.js  543.85 kB │ gzip: 140.10 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.63s
+  → dist/apps/breaker-grid
+
+▸ bundling river-delta from voxelDojo/game-14-river-delta
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.69 kB │ gzip:   0.82 kB
+dist-hosted/assets/index-BiFq0T_X.js  532.23 kB │ gzip: 137.35 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.69s
+  → dist/apps/river-delta
+
+▸ bundling observatory from voxelDojo/game-15-observatory
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.77 kB │ gzip:   0.83 kB
+dist-hosted/assets/index-kRNmqIUX.js  522.83 kB │ gzip: 134.47 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.52s
+  → dist/apps/observatory
+
+▸ bundling freight-yard from voxelDojo/game-16-freight-yard
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.65 kB │ gzip:   0.81 kB
+dist-hosted/assets/index-Mz0HiKbx.js  528.86 kB │ gzip: 136.81 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.85s
+  → dist/apps/freight-yard
+
+▸ bundling lighthouse-network from voxelDojo/game-17-lighthouse-network
+vite v6.4.3 building for production...
+transforming...
+✓ 27 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.69 kB │ gzip:   0.83 kB
+dist-hosted/assets/index-pSTNXVBr.js  527.33 kB │ gzip: 136.15 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.44s
+  → dist/apps/lighthouse-network
+
+▸ bundling stacks from voxelDojo/game-18-stacks
+vite v6.4.3 building for production...
+transforming...
+✓ 25 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-hosted/index.html                  1.58 kB │ gzip:   0.77 kB
+dist-hosted/assets/index-SH8qgIo-.js  533.79 kB │ gzip: 137.70 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.13s
+  → dist/apps/stacks
+
+19 mission runtimes bundled into dist/apps/.
+
+Running 7 tests using 1 worker
+
+(node:11214) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11214) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:62:1 › readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build (2.9s)
+  ✓  2 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:76:1 › readiness os-voxel-hosted-missions and os-verification-recovery: hosted simulation mounts from the bundled build and reports the verifier honestly (1.6s)
+  ✓  3 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:92:1 › os-voxel-hosted-missions: the published PIPELINE PLANT mission mounts from the bundled build (1.7s)
+  ✓  4 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:105:1 › os-voxel-hosted-missions: the published CHECKPOINT CITY mission mounts from the bundled build (1.6s)
+  ✓  5 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:118:1 › os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from the bundled build (1.6s)
+  ✓  6 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:131:1 › os-voxel-hosted-missions: the published DOCKING BAY mission mounts from the bundled build (1.7s)
+  ✓  7 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:144:1 › a corrected WAREHOUSE retry supersedes the failed attempt verification state (2.2s)
+
+  7 passed (15.4s)
+
+Running 5 tests using 1 worker
+
+(node:11822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11822) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [desktop-1280] › tests/chapter-continuity.smoke.spec.ts:291:1 › preserves completed first-release missions across switches and reloads (59.9s)
+  ✓  2 [desktop-1280] › tests/readiness-recovery.smoke.spec.ts:3:1 › readiness os-returning-recovery: cleared local state returns to onboarding without completion (2.3s)
+  ✓  3 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:73:1 › reduced motion selects the keyboard-operable semantic projection (1.6s)
+  ✓  4 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:96:1 › context loss degrades and retries without resetting simulation or evidence identity (2.3s)
+  ✓  5 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:154:1 › forced WebGL unavailability fails over without blocking mission controls (2.1s)
+
+  5 passed (1.2m)
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-literacy-hosted-mission.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-literacy-returning-device.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-onboarding-track-choice.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-renderer-accessibility-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-returning-device.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-returning-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-verification-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-voxel-hosted-missions.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-voxel-returning-device.json
+EXIT=0
+Mon Sep  7 11:50:13 AM UTC 2026

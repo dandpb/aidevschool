@@ -1,0 +1,50 @@
+=== pixelDojo ===
+Mon Sep  7 11:47:11 AM UTC 2026
+Scope: all 3 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +60
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 60, reused 3, downloaded 8, added 4
+Progress: resolved 60, reused 3, downloaded 27, added 17
+Progress: resolved 60, reused 3, downloaded 55, added 58
+Progress: resolved 60, reused 3, downloaded 57, added 60, done
+.../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+
+dependencies:
++ @aidevschool/evidence 0.1.0 <- ../shared/teaching-evidence
+
+devDependencies:
++ @biomejs/biome 2.5.3
++ @playwright/test 1.61.1
++ @types/node 22.20.1
++ @types/three 0.182.0
++ typescript 5.9.3
++ vite 7.3.6
++ vitest 4.1.10
+
+Done in 4.1s using pnpm v9.15.9
+
+> pixel-dojo@ smoke /workspace/engines/pixelDojo
+> pnpm -r --if-present smoke && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+Scope: 2 of 3 workspace projects
+pixel-quest smoke$ playwright test
+pixel-quest smoke: Running 2 tests using 2 workers
+pixel-quest smoke: (node:6970) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+pixel-quest smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+pixel-quest smoke: (node:6970) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+pixel-quest smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+pixel-quest smoke: (node:6972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+pixel-quest smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+pixel-quest smoke: (node:6972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+pixel-quest smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+pixel-quest smoke:   ✓  2 playwright/returning.spec.ts:49:1 › returning learner: deterministic replay keeps the saved evidence artifact handoff honest (6.4s)
+pixel-quest smoke:   ✓  1 playwright/pixel-quest.spec.ts:18:1 › plays the PixelDojo curriculum quest slice and advances labs (9.6s)
+pixel-quest smoke:   2 passed (13.3s)
+pixel-quest smoke: Done
+Reported engines/pixelDojo/test-results/readiness/pixelquest-encounter-evidence.json
+Reported engines/pixelDojo/test-results/readiness/pixelquest-returning-evidence-handoff.json
+EXIT=0
+Mon Sep  7 11:47:43 AM UTC 2026

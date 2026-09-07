@@ -1,0 +1,31 @@
+=== dojoToday ===
+Mon Sep  7 11:47:11 AM UTC 2026
+
+added 22 packages, and audited 24 packages in 3s
+
+6 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm notice
+npm notice New major version of npm available! 10.9.7 -> 12.0.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+npm notice To update run: npm install -g npm@12.0.2
+npm notice
+
+> dojotoday@0.1.0 selfcheck
+> python3 tools/selfcheck.py
+
+Traceback (most recent call last):
+  File "/workspace/engines/dojoToday/tools/selfcheck.py", line 15, in <module>
+    from learner.substrate.adapters.dojotoday import _self_check  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/learner/substrate/adapters/dojotoday.py", line 15, in <module>
+    from learner.substrate.dashboard_snapshot import build_snapshot
+  File "/workspace/learner/substrate/dashboard_snapshot.py", line 32, in <module>
+    from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
+  File "/workspace/learner/substrate/scheduling.py", line 26, in <module>
+    from fsrs import Card, Rating, Scheduler
+ModuleNotFoundError: No module named 'fsrs'
+EXIT=1
+Mon Sep  7 11:47:14 AM UTC 2026

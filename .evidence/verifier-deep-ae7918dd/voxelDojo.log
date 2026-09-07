@@ -1,0 +1,220 @@
+=== voxelDojo ===
+Mon Sep  7 11:47:11 AM UTC 2026
+Scope: all 18 workspace projects
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +65
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 65, reused 0, downloaded 12, added 5
+Progress: resolved 65, reused 0, downloaded 36, added 24
+Progress: resolved 65, reused 0, downloaded 64, added 64
+Progress: resolved 65, reused 0, downloaded 65, added 65, done
+.../esbuild@0.25.12/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.21.5/node_modules/esbuild postinstall$ node install.js
+.../esbuild@0.25.12/node_modules/esbuild postinstall: Done
+.../esbuild@0.21.5/node_modules/esbuild postinstall: Done
+
+dependencies:
++ @aidevschool/evidence 0.1.0 <- ../shared/teaching-evidence
+
+devDependencies:
++ @biomejs/biome 2.5.3
++ @playwright/test 1.61.1
++ @types/three 0.170.0
++ three 0.170.0
++ typescript 5.9.3
++ vite 6.4.3
++ vitest 2.1.9
+
+Done in 4.2s using pnpm v9.15.9
+
+> voxel-dojo@ smoke /workspace/engines/voxelDojo
+> pnpm -r --if-present smoke && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+Scope: 17 of 18 workspace projects
+game-02-warehouse smoke$ playwright test
+game-03-wormhole smoke$ playwright test
+game-05-relay-station smoke$ playwright test
+game-06-pipeline-plant smoke$ playwright test
+game-02-warehouse smoke: Running 4 tests using 1 worker
+game-06-pipeline-plant smoke: Running 3 tests using 1 worker
+game-03-wormhole smoke: Running 3 tests using 1 worker
+game-02-warehouse smoke: (node:6988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-02-warehouse smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-05-relay-station smoke: Running 3 tests using 1 worker
+game-02-warehouse smoke: (node:6988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-02-warehouse smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-06-pipeline-plant smoke: (node:7049) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-06-pipeline-plant smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-06-pipeline-plant smoke: (node:7049) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-06-pipeline-plant smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-03-wormhole smoke: (node:7096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-03-wormhole smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-03-wormhole smoke: (node:7096) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-03-wormhole smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-05-relay-station smoke: (node:7109) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-05-relay-station smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-05-relay-station smoke: (node:7109) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-05-relay-station smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-06-pipeline-plant smoke:   ✓  1 playwright/pipeline-plant.spec.ts:10:1 › boots the tank, plays L1 by predicting overflow from the public API truth, emits a passing record (3.6s)
+game-05-relay-station smoke:   ✓  1 playwright/relay-station.spec.ts:10:1 › boots the relay, plays L1 by predicting the connected set, emits a passing record (5.5s)
+game-06-pipeline-plant smoke:   ✓  2 playwright/pipeline-plant.spec.ts:54:1 › L2 stream: predicting bounded stays flat and clears with no overflow (3.3s)
+game-06-pipeline-plant smoke:   ✓  3 playwright/pipeline-plant.spec.ts:82:1 › renders an actual WebGL canvas (not a blank shell) (426ms)
+game-06-pipeline-plant smoke:   3 passed (11.7s)
+game-06-pipeline-plant smoke: Done
+game-07-checkpoint-city smoke$ playwright test
+game-02-warehouse smoke:   ✓  1 playwright/warehouse.spec.ts:35:1 › boots the warehouse, plays L1 by clicking predicted shelves, emits a passing record (8.3s)
+game-03-wormhole smoke:   ✓  1 playwright/wormhole.spec.ts:10:1 › boots the wormhole, plays L1 by typing predicted codes, emits a passing record (9.1s)
+game-05-relay-station smoke:   ✓  2 playwright/relay-station.spec.ts:45:1 › L2 fan-out: predicting the delivery set resolves the wave and emits bounded metrics (3.1s)
+game-05-relay-station smoke:   ✓  3 playwright/relay-station.spec.ts:72:1 › renders an actual WebGL canvas (not a blank shell) (386ms)
+game-05-relay-station smoke:   3 passed (14.0s)
+game-07-checkpoint-city smoke: Running 5 tests using 1 worker
+game-05-relay-station smoke: Done
+game-08-timeline-tower smoke$ playwright test
+game-07-checkpoint-city smoke: (node:7842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-07-checkpoint-city smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-07-checkpoint-city smoke: (node:7842) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-07-checkpoint-city smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-03-wormhole smoke:   ✓  2 playwright/wormhole.spec.ts:46:1 › L4 resolve: picking salted resolves the forced collision and emits a passing record (2.7s)
+game-07-checkpoint-city smoke:   ✓  1 playwright/checkpoint-city.spec.ts:12:1 › renders an actual WebGL canvas (not a blank shell) (1.3s)
+game-02-warehouse smoke:   ✓  2 playwright/warehouse.spec.ts:86:1 › L3 TTL: correct decay-probes + swept prediction clear the wave and emit bounded metrics (5.1s)
+game-03-wormhole smoke:   ✓  3 playwright/wormhole.spec.ts:73:1 › renders an actual WebGL canvas (not a blank shell) (769ms)
+game-03-wormhole smoke:   3 passed (17.1s)
+game-02-warehouse smoke:   ✓  3 playwright/warehouse.spec.ts:128:1 › renders an actual WebGL canvas (not a blank shell) (313ms)
+game-03-wormhole smoke: Done
+game-09-docking-bay smoke$ playwright test
+game-08-timeline-tower smoke: Running 5 tests using 1 worker
+game-08-timeline-tower smoke: (node:8145) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-08-timeline-tower smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-08-timeline-tower smoke: (node:8145) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-08-timeline-tower smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-09-docking-bay smoke: Running 3 tests using 1 worker
+game-09-docking-bay smoke: (node:8344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-09-docking-bay smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-09-docking-bay smoke: (node:8344) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-09-docking-bay smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-08-timeline-tower smoke:   ✓  1 playwright/timeline-tower.spec.ts:10:1 › boots the tower, plays L1 by appending the correct event order, emits a passing record (3.5s)
+game-08-timeline-tower smoke:   ✓  2 playwright/timeline-tower.spec.ts:59:1 › L2 build-the-projection: predicting the true final status clears and emits evidence (1.9s)
+game-07-checkpoint-city smoke:   ✓  2 playwright/checkpoint-city.spec.ts:22:1 › boots the city, plays L1 by predicting each gate, emits a passing record (9.5s)
+game-08-timeline-tower smoke:   ✓  3 playwright/timeline-tower.spec.ts:85:1 › L3 replay: predicting the checkpoint and the full replay clears (2.1s)
+game-02-warehouse smoke:   ✓  4 playwright/warehouse.spec.ts:138:1 › continuity re-entry: deterministic restart without corrupted evidence (AID-987/T1) (10.3s)
+game-02-warehouse smoke:   4 passed (28.2s)
+game-02-warehouse smoke: Done
+game-10-hash-ring smoke$ playwright test
+game-08-timeline-tower smoke:   ✓  4 playwright/timeline-tower.spec.ts:108:1 › L4 two views: cancelled + not shipped clears both projections (2.3s)
+game-08-timeline-tower smoke:   ✓  5 playwright/timeline-tower.spec.ts:132:1 › renders an actual WebGL canvas (not a blank shell) (1.2s)
+game-10-hash-ring smoke: Running 3 tests using 1 worker
+game-08-timeline-tower smoke:   5 passed (15.0s)
+game-08-timeline-tower smoke: Done
+game-11-air-traffic smoke$ playwright test
+game-10-hash-ring smoke: (node:8826) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-10-hash-ring smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-10-hash-ring smoke: (node:8826) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-10-hash-ring smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-09-docking-bay smoke:   ✓  1 playwright/docking-bay.spec.ts:10:1 › boots the bay, plays L1 by predicting dock/reject, emits a passing record (9.7s)
+game-11-air-traffic smoke: Running 3 tests using 1 worker
+game-11-air-traffic smoke: (node:9011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-11-air-traffic smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-09-docking-bay smoke:   ✓  2 playwright/docking-bay.spec.ts:56:1 › L3 sandbox: classifying every invoked method correctly emits a passing record (2.5s)
+game-11-air-traffic smoke: (node:9011) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-11-air-traffic smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-09-docking-bay smoke:   ✓  3 playwright/docking-bay.spec.ts:86:1 › renders an actual WebGL canvas (not a blank shell) (1.4s)
+game-09-docking-bay smoke:   3 passed (17.7s)
+game-09-docking-bay smoke: Done
+game-12-mission-control smoke$ playwright test
+game-07-checkpoint-city smoke:   ✓  3 playwright/checkpoint-city.spec.ts:61:1 › L2 forged badge: predicting the ground-truth gate (auth vs handler) clears the wave (10.7s)
+game-10-hash-ring smoke:   ✓  1 playwright/hash-ring.spec.ts:10:1 › boots the ring, plays L1 by clicking predicted owners, emits a passing record (5.8s)
+game-12-mission-control smoke: Running 3 tests using 1 worker
+game-12-mission-control smoke: (node:9276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-12-mission-control smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-12-mission-control smoke: (node:9276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-12-mission-control smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-12-mission-control smoke:   ✓  1 playwright/mission-control.spec.ts:11:1 › renders an actual WebGL canvas (not a blank shell) (983ms)
+game-11-air-traffic smoke:   ✓  1 playwright/air-traffic.spec.ts:10:1 › boots the airport, plays L1 round-robin by clicking predicted pads, emits a passing record (7.3s)
+game-12-mission-control smoke:   ✓  2 playwright/mission-control.spec.ts:21:1 › boots the constellation, plays L1 by predicting the leader, emits a passing record (2.0s)
+game-10-hash-ring smoke:   ✓  2 playwright/hash-ring.spec.ts:48:1 › L2 join: clicking the predicted loser resolves the wave and emits bounded metrics (5.6s)
+game-10-hash-ring smoke:   ✓  3 playwright/hash-ring.spec.ts:72:1 › renders an actual WebGL canvas (not a blank shell) (756ms)
+game-10-hash-ring smoke:   3 passed (15.1s)
+game-10-hash-ring smoke: Done
+game-13-breaker-grid smoke$ playwright test
+game-12-mission-control smoke:   ✓  3 playwright/mission-control.spec.ts:54:1 › L2 kill: predicting leader → killing it → predicting successor clears with a greater term (2.2s)
+game-12-mission-control smoke:   3 passed (8.0s)
+game-12-mission-control smoke: Done
+game-14-river-delta smoke$ playwright test
+game-07-checkpoint-city smoke:   ✓  4 playwright/checkpoint-city.spec.ts:92:1 › L3 rate limit: predicting the boundary (cap+1 rejects at rate-limit) clears (8.8s)
+game-13-breaker-grid smoke: Running 3 tests using 1 worker
+game-13-breaker-grid smoke: (node:9629) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-13-breaker-grid smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-14-river-delta smoke: Running 3 tests using 1 worker
+game-13-breaker-grid smoke: (node:9629) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-13-breaker-grid smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-14-river-delta smoke: (node:9693) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-14-river-delta smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-14-river-delta smoke: (node:9693) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-14-river-delta smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-14-river-delta smoke:   ✓  1 playwright/river-delta.spec.ts:11:1 › renders an actual WebGL canvas (not a blank shell) (973ms)
+game-07-checkpoint-city smoke:   ✓  5 playwright/checkpoint-city.spec.ts:119:1 › L4 order matters: restoring the wall order and predicting auth clears (5.2s)
+game-11-air-traffic smoke:   ✓  2 playwright/air-traffic.spec.ts:48:1 › L2 health check: probe reveals the dead pad, avoiding it clears with zero errors (9.1s)
+game-07-checkpoint-city smoke:   5 passed (38.9s)
+game-07-checkpoint-city smoke: Done
+game-15-observatory smoke$ playwright test
+game-11-air-traffic smoke:   ✓  3 playwright/air-traffic.spec.ts:78:1 › renders an actual WebGL canvas (not a blank shell) (738ms)
+game-11-air-traffic smoke:   3 passed (20.3s)
+game-11-air-traffic smoke: Done
+game-16-freight-yard smoke$ playwright test
+game-15-observatory smoke: Running 4 tests using 1 worker
+game-13-breaker-grid smoke:   ✓  1 playwright/breaker-grid.spec.ts:11:1 › boots the grid, plays L1 by injecting failures + predicting the trip, emits a passing record (6.1s)
+game-15-observatory smoke: (node:10193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-15-observatory smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-15-observatory smoke: (node:10193) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-15-observatory smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-14-river-delta smoke:   ✓  2 playwright/river-delta.spec.ts:21:1 › boots the delta, plays L1 by predicting the source of each log, emits a passing record (5.5s)
+game-16-freight-yard smoke: Running 3 tests using 1 worker
+game-15-observatory smoke:   ✓  1 playwright/observatory.spec.ts:11:1 › renders an actual WebGL canvas (not a blank shell) (1.1s)
+game-16-freight-yard smoke: (node:10513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-16-freight-yard smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-16-freight-yard smoke: (node:10513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-16-freight-yard smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-13-breaker-grid smoke:   ✓  2 playwright/breaker-grid.spec.ts:63:1 › L2 cooldown + probe: predicting the half-open probe outcome clears the wave (7.2s)
+game-13-breaker-grid smoke:   ✓  3 playwright/breaker-grid.spec.ts:104:1 › renders an actual WebGL canvas (not a blank shell) (1.2s)
+game-13-breaker-grid smoke:   3 passed (17.9s)
+game-13-breaker-grid smoke: Done
+game-17-lighthouse-network smoke$ playwright test
+game-14-river-delta smoke:   ✓  3 playwright/river-delta.spec.ts:64:1 › L2 filter: predicting pass/drop for each log clears the wave and emits bounded metrics (8.8s)
+game-15-observatory smoke:   ✓  2 playwright/observatory.spec.ts:21:1 › boots the observatory, plays L1 by clicking predicted buckets, emits a passing record (8.2s)
+game-14-river-delta smoke:   3 passed (18.3s)
+game-14-river-delta smoke: Done
+game-18-stacks smoke$ playwright test
+game-15-observatory smoke:   ✓  3 playwright/observatory.spec.ts:60:1 › L2: predicting the bucket the p95 contour sits in clears and emits the percentile value (2.1s)
+game-17-lighthouse-network smoke: Running 3 tests using 1 worker
+game-17-lighthouse-network smoke: (node:10909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-17-lighthouse-network smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-17-lighthouse-network smoke: (node:10909) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-17-lighthouse-network smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-18-stacks smoke: Running 3 tests using 1 worker
+game-16-freight-yard smoke:   ✓  1 playwright/freight-yard.spec.ts:10:1 › boots the yard, plays L1 by clicking predicted lanes, emits a passing record (12.1s)
+game-18-stacks smoke: (node:10967) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-18-stacks smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-18-stacks smoke: (node:10967) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+game-18-stacks smoke: (Use `node --trace-warnings ...` to show where the warning was created)
+game-15-observatory smoke:   ✓  4 playwright/observatory.spec.ts:98:1 › L4: the fat-tail distribution alerts under the SLO while the tight one stays silent (2.6s)
+game-15-observatory smoke:   4 passed (17.1s)
+game-15-observatory smoke: Done
+game-18-stacks smoke:   ✓  1 playwright/stacks.spec.ts:10:1 › renders an actual WebGL canvas (not a blank shell) (1.3s)
+game-16-freight-yard smoke:   ✓  2 playwright/freight-yard.spec.ts:48:1 › L2 crews: auto-assigning lanes then locking in clears and emits a complete-assignment record (4.6s)
+game-17-lighthouse-network smoke:   ✓  1 playwright/lighthouse-network.spec.ts:10:1 › boots the network, plays L1 by acking to quorum, emits a passing record (5.4s)
+game-16-freight-yard smoke:   ✓  3 playwright/freight-yard.spec.ts:72:1 › renders an actual WebGL canvas (not a blank shell) (1.4s)
+game-16-freight-yard smoke:   3 passed (21.8s)
+game-16-freight-yard smoke: Done
+game-18-stacks smoke:   ✓  2 playwright/stacks.spec.ts:20:1 › boots the library, plays L1 by filing word-cards onto the right shelves, emits a passing record (4.4s)
+game-17-lighthouse-network smoke:   ✓  2 playwright/lighthouse-network.spec.ts:49:1 › L3 partition: predicting the majority side resolves the wave and emits a record (2.7s)
+game-17-lighthouse-network smoke:   ✓  3 playwright/lighthouse-network.spec.ts:74:1 › renders an actual WebGL canvas (not a blank shell) (861ms)
+game-18-stacks smoke:   ✓  3 playwright/stacks.spec.ts:58:1 › L2 one-term query: predicting the top doc clears and emits a passing record (2.1s)
+game-17-lighthouse-network smoke:   3 passed (12.7s)
+game-17-lighthouse-network smoke: Done
+game-18-stacks smoke:   3 passed (11.6s)
+game-18-stacks smoke: Done
+Reported engines/voxelDojo/test-results/readiness/voxel-standalone-loop.json
+Reported engines/voxelDojo/test-results/readiness/voxel-standalone-return-reentry.json
+EXIT=0
+Mon Sep  7 11:48:47 AM UTC 2026
