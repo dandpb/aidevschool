@@ -6,9 +6,11 @@ revalidateBy: '2026-10-04'
 gitSha: 289cdbd87b45ecf0a1f2d63514ebb9a4897fa174
 decisions:
 - useCaseId: dojotoday-daily-guidance
-  outcome: pass
-  grantedTier: validated-journey
-  reasons: []
+  outcome: stale
+  grantedTier: null
+  reasons:
+  - 'tier elevated to customer-ready by AID-987/T1 (PR #290); superseded by re-grant
+    v34 @ 581ea330 (QA AID-988/AID-992)'
   resultRunIds:
   - 2026-09-04T02:55:00Z-dojotoday-active-unit-guidance-mixed-289cdbd8
   - 2026-09-04T02:55:00Z-dojotoday-read-only-boundary-observed-289cdbd8

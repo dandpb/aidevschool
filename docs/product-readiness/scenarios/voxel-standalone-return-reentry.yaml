@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: voxel-standalone-return-reentry
+useCaseId: voxel-standalone-learning-loop
+kind: continuity
+execution: mixed
+startState: completed-loop-then-closed-game
+steps: [reopen-declared-game, verify-deterministic-restart, locate-or-reexport-evidence-handoff, continue-next-declared-game, identify-verifier-handoff]
+assertions:
+  - id: reentry-is-deterministic-and-uncorrupted
+    severity: high
+    evidence: playwright
+    claim: Reopening the declared game after a completed loop restarts the deterministic loop from its briefing state without resurrecting or corrupting the in-memory evidence channel, and a replay emits a fresh record with the same deterministic core.
+  - id: no-false-mastery-on-return
+    severity: high
+    evidence: observation
+    claim: The learner understands that returning and replaying produces raw evidence only; mastery remains the independent verifier's decision.
+automation:
+  workingDirectory: engines/voxelDojo
+  argv: [pnpm, run, smoke]
+sourcePaths: [engines/voxelDojo/game-02-warehouse/playwright/warehouse.spec.ts, engines/voxelDojo/game-02-warehouse/src/, engines/voxelDojo/shared/]

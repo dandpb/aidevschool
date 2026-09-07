@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+      "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "learner-enters-chosen-track",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-07T08:37:52Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "79bf72c8be789438fb8b8077525bd464d35079bb",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-09-07T08:37:52Z-os-onboarding-track-choice-79bf72c8",
+  "scenarioId": "os-onboarding-track-choice",
+  "schemaVersion": 1,
+  "sourceFingerprint": "fd8307d798c820a812a3f056bc6204e8975f87db83d857b53aac1208d05fd105"
+}

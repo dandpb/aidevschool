@@ -9,15 +9,19 @@ organized by learner goal rather than repository component.
 
 ## Oferta paga
 
-A oferta **pronta para cliente** hoje inclui **cinco caminhos customer-ready** (assessment v33 @ `e41b9b9`, 2026-09-06):
+
+A oferta **pronta para cliente** hoje inclui **oito caminhos customer-ready** (assessment v35, 2026-09-07 — os três últimos elevados pela AID-987/T1 com cenários continuity e rotas estáticas):
 
 1. **Primeira lição avulsa** — **Mapa Inicial — l02** ([LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/))
 2. **Corredor avulso mod 01–03** — 11 lições, desafios de módulo e revisões espaçadas no mesmo aparelho — detalhes na seção [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
 3. **OS — IA Prática** (l01–l03) — escolha **IA Prática** no onboarding ([codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/))
 4. **OS — trilho Dev** — três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**); escolha **Dev** no onboarding ou siga depois de IA Prática
 5. **OS — retomar no mesmo aparelho** — literacy ou 3D, conforme progresso local
+6. **PixelQuest — encontro com evidência** — app local ( encounters + handoff de evidência para o verificador independente)
+7. **voxelDojo avulso — WAREHOUSE de referência** — loop determinístico com rota estática declarada
+8. **dojoToday — lição de hoje** — vista diária somente leitura com rota estática declarada
 
-O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. A oferta paga **não** inclui Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday nem miniTown. PixelQuest, voxelDojo avulso e dojoToday têm grant `validated-journey`; miniTown é `experimental`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
+O OS **oferece escolha de trilha** (**IA Prática | Dev**) no onboarding e no hub — os dois caminhos acima (itens 3 e 4) são CR. A oferta paga **não** inclui Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday nem miniTown. miniTown é `experimental`. A composição da oferta paga e dos CTAs (incl. Engine Hub e `?track=dev`) segue decisão do CEO; o CTA do avulso continua sem `?track=dev`. No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
 
 Não há conta nem cópia entre aparelhos. Quem muda de superfície recomeça. **Concluída não é domínio** — não é certificado.
 

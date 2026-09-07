@@ -1,0 +1,32 @@
+{
+  "surface": "pixel-quest",
+  "startedAt": "2026-09-07T07:59:11.002Z",
+  "steps": [
+    {
+      "step": "session1-encounter",
+      "evidencePass": true,
+      "antiMasteryCopy": true,
+      "evidenceConsoleLines": 1
+    },
+    {
+      "step": "returning-replay",
+      "evidencePass": true,
+      "antiMasteryCopy": true,
+      "newEvidenceLines": 1
+    },
+    {
+      "step": "evidence-cores",
+      "lastTwo": [
+        {
+          "unit": null,
+          "verdict": null
+        }
+      ],
+      "note": "replay determinism asserted by playwright returning.spec.ts; NDJSON handoff channel unchanged"
+    }
+  ],
+  "finishedAt": "2026-09-07T07:59:11.926Z",
+  "verdict": {
+    "evidenceLines": 2
+  }
+}

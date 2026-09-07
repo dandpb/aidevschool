@@ -10,17 +10,21 @@ commands and diagnostics remain in the linked engine READMEs.
 
 ## Oferta paga
 
-**Pronta para cliente no main** (assessment v33 @ `e41b9b9`, 2026-09-06) — **cinco caminhos customer-ready**:
+**Pronta para cliente** (assessment v35, 2026-09-07, inclui a elevação AID-987/T1) — **oito caminhos customer-ready**:
 
 1. **`literacy-standalone-first-lesson`** — primeira lição avulsa (**Mapa Inicial — l02**)
 2. **`literacy-standalone-corridor-mod01-03`** — corredor avulso mod 01–03 (11 lições, desafios de módulo, revisões espaçadas no mesmo aparelho) — detalhes em [Standalone LiteracyDojo corridor](#standalone-literacydojo-corridor)
 3. **`os-literacy-guided-mission`** — OS **IA Prática** l01–l03 (escolha **IA Prática** no onboarding)
 4. **`os-voxel-guided-missions`** — OS trilho **Dev**: três missões 3D hospedadas (**WAREHOUSE**, **WORMHOLE**, **RELAY STATION**)
 5. **`os-returning-learner`** — retorno no mesmo aparelho (literacy ou 3D)
+6. **`pixelquest-evidence-encounter`** — PixelQuest: encontro documentado + handoff de evidência (app local)
+7. **`voxel-standalone-learning-loop`** — voxelDojo avulso: WAREHOUSE de referência com rota estática
+8. **`dojotoday-daily-guidance`** — dojoToday: vista diária somente leitura com rota estática
 
-Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2) e [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. **Não** venda Engine Hub, catálogo voxel avulso, PixelQuest, dojoToday ou miniTown como oferta paga CR (grants `validated-journey` ou `experimental`). No avulso, **Trilha Dev** continua **Em breve** — não use `?track=dev` como CTA de literacy.
+Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2) e [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–8 foram elevados a `customer-ready` pela AID-987/T1 (cenários continuity + rotas estáticas); **miniTown** segue `experimental`. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
 
 Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
+>>>>>>> origin/main
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -40,11 +44,10 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 
 ## Percurso atual no codexDojo OS
 
-A oferta CR no OS inclui **IA Prática** (l01–l03), trilho **Dev** de três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v33 @ `e41b9b9`). O OS público **oferece escolha de trilha** entre **IA Prática** e **Dev** e um Engine Hub allowlist
-(voxel, PixelQuest, dojoToday local, literacy) — **fora** da oferta paga CR. Labs e miniTown só com `?operator=1`.
+A oferta CR no OS inclui **IA Prática** (l01–l03), trilho **Dev** de três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v35). O OS público **oferece escolha de trilha** entre **IA Prática** e **Dev** e um Engine Hub allowlist
+(voxel, PixelQuest, dojoToday local, literacy) — o Hub segue **fora** da oferta paga até decisão do CEO. Labs e miniTown só com `?operator=1`.
 O trilho Dev hospedado é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
-lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso e dojoToday têm grant
-`validated-journey` — não prometa customer-ready. Não
+lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso (WAREHOUSE de referência) e dojoToday estão `customer-ready` (AID-987/T1) — venda conforme a matriz v35, sem prometer certificado/domínio. Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
 1. Onboarding curto → escolha **IA Prática** ou **Dev** → **Entrar na escola**.
