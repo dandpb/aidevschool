@@ -1,0 +1,39 @@
+schemaVersion: 1
+assessmentId: 2026-09-07-c23b97a-w0-a11y-regrant-v36
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-07T17:25:00Z'
+revalidateBy: '2026-10-07'
+gitSha: c23b97ad2806c8538b931d4bcbf453164de097f5
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-07T17:20:00Z-os-literacy-hosted-mission-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-verification-recovery-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-literacy-returning-device-mixed-c23b97ad
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-07T17:20:00Z-os-voxel-hosted-missions-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-renderer-accessibility-recovery-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-voxel-returning-device-mixed-c23b97ad
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-07T17:20:00Z-os-onboarding-track-choice-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-returning-recovery-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-os-returning-device-mixed-c23b97ad
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-07T17:20:00Z-dojotoday-active-unit-guidance-mixed-c23b97ad
+  - 2026-09-07T17:20:00Z-dojotoday-read-only-boundary-observed-c23b97ad
+  - 2026-09-07T17:20:00Z-dojotoday-returning-next-day-mixed-c23b97ad
