@@ -26,3 +26,7 @@
 ## 2025-02-18 - Preserve deterministic random selection without array allocation
 **Learning:** When optimizing random selection logic (e.g., removing `.filter()` for GC performance) in deterministic simulations like `miniTown`, preserve the exact number and sequence of PRNG calls (e.g., `this.rng()`) to avoid breaking test suites that rely on reproducible random states. Use multi-pass O(N) loops rather than algorithms like reservoir sampling if they alter RNG consumption.
 **Action:** When converting array manipulations to loops for random selection, always count the valid elements in a first pass, roll the RNG exactly once as before, and use a second pass to find the selected element. Never change the conditions under which the RNG is called.
+
+## 2025-02-19 - Optimize adjacent walkable cell searches
+**Learning:** In simulation lookups, finding adjacent walkable cells with a preferred sorting (like `findAdjacentWalkable`) using `candidates.push()` followed by `candidates.sort()` with nested `findIndex()` calls creates unnecessary intermediate array allocations and O(N log N) sorting overhead.
+**Action:** Replace intermediate array allocations and chained `.sort()` methods with a single-pass O(N) linear scan. Track the best candidate manually and use strict inequalities to preserve deterministic tie-breaking behavior and reduce GC pressure. Explicitly check `bestCandidate === null` to ensure the first candidate is captured even if all share the worst-case score (e.g., `Infinity`).
