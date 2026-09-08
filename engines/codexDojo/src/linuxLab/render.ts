@@ -9,7 +9,7 @@ import type { AppState } from "../state"
 export function renderLinuxLab(_state: AppState): string {
   const osUrl = getCodexDojoOsUrl()
   const action = osUrl
-    ? `<a class="action-button" data-codexdojo-os-launch="true" href="${escapeHtml(osUrl)}" target="_blank" rel="noopener noreferrer">Abrir codexDojo OS</a>`
+    ? `<a class="action-button" data-codexdojo-os-launch="true" href="${escapeHtml(osUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir codexDojo OS (abre em nova aba)" title="Abrir codexDojo OS"><span aria-hidden="true">Abrir codexDojo OS</span></a>`
     : `<p role="status">Configure <code>VITE_CODEXDOJO_OS_URL</code> para habilitar o workspace completo.</p>`
 
   return `
