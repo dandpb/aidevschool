@@ -106,7 +106,8 @@ describe("fluxo do app (integração)", () => {
     const onboarding = await screen.findByTestId("onboarding-screen");
     expect(onboarding).toBeInTheDocument();
 
-    expect(screen.getByRole("heading", { name: "Chegue à Vila Lume" })).toBeInTheDocument();
+    // AID-1150: o contador de etapa entra no nome acessível do h1 (sr-only).
+    expect(screen.getByRole("heading", { name: /Chegue à Vila Lume/ })).toBeInTheDocument();
     expect(screen.getByTestId("vila-lume-scene")).toBeInTheDocument();
     expect(screen.getByTestId("assistant-welcome")).toBeInTheDocument();
     const devCta = screen.getByTestId("dev-track-teaser");

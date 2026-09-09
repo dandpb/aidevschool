@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
@@ -58,6 +58,17 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // AID-1150/AID-1134 T1: a mudança de etapa precisa ser anunciada — foco no h1
+  // da nova etapa (padrão do LessonScreen/CheckpointScreen) com o contador
+  // "Etapa N de 5" no nome acessível, para o leitor de tela ler a nova
+  // pergunta e sair da referência da etapa anterior.
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de etapa (padrão do LessonScreen), embora não leia os valores.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [step]);
+
   const currentStep = STEPS[step];
   const currentValue =
     currentStep.key === "goal"
@@ -112,7 +123,10 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
       <div className="onboarding-heading">
         <div>
           <p className="eyebrow">{track.title}</p>
-          <h1 id="onboarding-title">{currentStep.question}</h1>
+          <h1 id="onboarding-title" ref={headingRef} tabIndex={-1}>
+            <span className="sr-only">{`Etapa ${step + 1} de ${STEPS.length} — `}</span>
+            {currentStep.question}
+          </h1>
         </div>
         <div className="onboarding-progress">
           <span className="sr-only">{`Etapa ${step + 1} de ${STEPS.length}`}</span>
