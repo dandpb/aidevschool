@@ -81,4 +81,9 @@ Passos (fundador):
 
 | Data | Ferramenta | Monitors (6) | Verificado por | Notas |
 | --- | --- | --- | --- | --- |
-| — | — | — | — | signup pendente (founder) |
+| 2026-09-09 | Better Stack Free — conta founder | 6 checks conforme §2, criação **atestada pelo founder** (aceitação da confirmação AID-989 `2e9f8dd6`, 22:28Z; credenciais/IDs fora do canal por design) | FPE: estados esperados re-verificados live **6/6 @ 22:29:30Z** (2× `/` 200; 2× export 401; 2× cross-site 403); runbook merged no `main` via PR #289 (CI 36/36, 2026-09-07) | Status page público é opcional (§3.4) — registrar o link aqui quando o founder compartilhar; e-mail de alerta testado no signup (passo §3.3) |
+
+Divisão honesta de evidência: **FPE-verificável first-hand** = estados esperados das 6 rotas ao
+vivo + config/runbook merged; **founder-atestado** = existência/configuração da conta e dos
+monitors no provedor (sem credenciais no canal, o founder é a única parte que pode atestar). Um
+incidente real futuro (e-mail de alerta chegando) é a confirmação operacional final.
