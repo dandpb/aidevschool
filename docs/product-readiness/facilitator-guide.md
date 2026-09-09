@@ -23,7 +23,7 @@ commands and diagnostics remain in the linked engine READMEs.
 
 Superfícies: [LiteracyDojo avulso](https://aidevschool-literacydojo.netlify.app/) (itens 1–2), [codexDojo OS](https://aidevschool-codexdojo-os.netlify.app/) (itens 3–5) e **rotas locais declaradas** (itens 6–8: app local do PixelQuest, rota estática do WAREHOUSE de referência, rota estática do dojoToday). O OS **oferece escolha de trilha IA Prática | Dev** — os dois caminhos CR (itens 3 e 4) são válidos. Os itens 6–8 foram elevados a `customer-ready` pela AID-987/T1 (cenários continuity + rotas estáticas); **miniTown** segue `experimental`. A composição da oferta paga e dos CTAs (Engine Hub, catálogo voxel completo, `?track=dev`) segue decisão do CEO — enquanto isso, no avulso **Trilha Dev** continua **Em breve** e o CTA do literacy não usa `?track=dev`. Sem prometer certificado ou domínio (concluída ≠ domínio).
 
-Não venda as outras 14 lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
+Não venda as demais lições avulsas no OS, sync avulso→OS, certificação/domínio (concluída ≠ domínio), checkout (#143) nem conta entre aparelhos.
 
 Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 [kit operacional](../PILOTO_PERCURSO_CLIENTE.md).
@@ -79,7 +79,7 @@ onboarding/mapa sem apagar `completed` de l01–l03. O produto pode aceitar `?tr
 - Domínio ou certificação por UI concluída.
 - Sincronização entre aparelhos ou entre avulso e OS.
 - **Trilha Dev** no avulso (em breve).
-- As outras 14 lições avulsas como parte desta oferta no OS.
+- As demais lições avulsas como parte desta oferta no OS.
 - Handoff “agora vá ao OS” após a primeira lição.
 
 Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Suporte: WhatsApp e e-mail já na seção **Oferta paga**. #143 não está no produto — sem checkout neste guia.
@@ -103,7 +103,7 @@ Mostre **Ver seu progresso → Baixar backup JSON** antes de sessão longa. Supo
 - Engine Hub, Central de Apps ou laboratório no caminho do estudante (`?operator=1` é só operador — ver abaixo).
 - Catálogo voxel avulso além do WAREHOUSE de referência, ou o Engine Hub como entrada para PixelQuest/dojoToday (itens 6–8 são CR por app local ou rota estática declarada, não por este caminho).
 - Domínio, sync entre dispositivos ou avulso→OS.
-- As 14 lições extras do avulso no OS.
+- As demais lições do avulso no OS.
 - CTA `?track=dev` no avulso como oferta de literacy (Trilha Dev no avulso continua **Em breve**).
 
 **Facilitador/operador:** `?operator=1` abre Engine Hub, Central de Apps e laboratório. **Não** mostre isso ao estudante como caminho de aprendizado.
