@@ -12,13 +12,13 @@
       "outcome": "pass"
     }
   ],
-  "executedAt": "2026-09-09T04:23:39Z",
+  "executedAt": "2026-09-09T05:24:12Z",
   "executor": "automated",
   "gaps": [],
-  "gitSha": "27dc2f14dcc6c5186b5e7cd008e9469a678b75d3",
+  "gitSha": "f72913fcda09f8c469aa2812c4c132f32918e389",
   "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
   "outcome": "pass",
-  "runId": "2026-09-09T04:23:39Z-dojotoday-returning-next-day-27dc2f14",
+  "runId": "2026-09-09T05:24:12Z-dojotoday-returning-next-day-f72913fc",
   "scenarioId": "dojotoday-returning-next-day",
   "schemaVersion": 1,
   "sourceFingerprint": "a9a92a08792a99e7137bac61a002ab1630733d15e28162e87b54a93083548507"

@@ -16,13 +16,13 @@
       "outcome": "pass"
     }
   ],
-  "executedAt": "2026-09-09T05:04:49Z",
+  "executedAt": "2026-09-09T05:24:13Z",
   "executor": "automated",
   "gaps": [],
-  "gitSha": "27dc2f14dcc6c5186b5e7cd008e9469a678b75d3",
+  "gitSha": "f72913fcda09f8c469aa2812c4c132f32918e389",
   "manualFingerprint": "63d81c0960c54ed315306959bf663a689c1713854d95f9dcbeec5c5297c831ad",
   "outcome": "pass",
-  "runId": "2026-09-09T05:04:49Z-literacy-retry-27dc2f14",
+  "runId": "2026-09-09T05:24:13Z-literacy-retry-f72913fc",
   "scenarioId": "literacy-retry",
   "schemaVersion": 1,
   "sourceFingerprint": "e514cfe8a59f7c4faebaef048d45efcc03ad696cc251c7354388bf4c1adc3ce6"
