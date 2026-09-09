@@ -1,0 +1,59 @@
+{
+  "walk": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "observed": [
+        "lição do Mapa Inicial inicia com instruction h1 tabIndex=-1 (fplit-02-lesson-start.png)",
+        "resultado local da lição com completed ≠ mastered e próxima ação clara (fplit-05-result.png)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "observed": [
+        "tentativa errada → feedback-panel fail com CheckList específico + score: \"Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar,\" (fplit-03-wrong-feedback.png)",
+        "W3: opções do check falho marcadas com aria-invalid=true no ActivityInput (count=0)",
+        "dica progressiva anexada numerada na região do painel (fplit-04-hint.png)",
+        "retry limpa a tentativa e preserva dicas; foco programático retorna ao heading (focusOnHeading=true)",
+        "W3/B7 sob emulação forced-colors: feedback de falha distinguível sem cor — border 3px dashed (texto do sumário é o affordance primário) (fplit-06-wrong-feedback-forced-colors.png)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "observed": [
+        "reload retorna ao home com progresso local preservado (l02=completed); progresso é device-bound (IndexedDB), sem mastered"
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "observed": [
+        "home do corredor mostra a missão do desafio pendente do módulo (checkpoint-mission) (fplit-07-corridor-mission.png)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "observed": [
+        "falha no Desafio oferece feedback formativo, dica e retry sem perder conclusões anteriores; módulo seguinte permanece locked até concluir (fplit-08-cp-fail-hint.png)",
+        "desafio concluído libera o módulo seguinte; conclusões anteriores preservadas (fplit-09-cp-result.png)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "observed": [
+        "card de revisão devida visível no home (D+1); revisão distingue de conteúdo novo pelo rótulo 'Revisão' no intro (fplit-10-review-card.png)",
+        "revisão concluída avança a janela [1,7,21]: próxima revisão ≈ +7d (delta=7d)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "observed": [
+        "retorno pré-bump preservado: l01-l05=completed; desafio cp-01 opcional (não bloqueia) e revisão devida oferecida no 1º retorno (fplit-11-grandfathered-map.png)"
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "observed": [
+        "retorno retoma a lição em andamento (l06) direto no intro, com o resumo do módulo e o desafio anterior concluído preservados (fplit-12-resume-mid.png)"
+      ]
+    }
+  ]
+}

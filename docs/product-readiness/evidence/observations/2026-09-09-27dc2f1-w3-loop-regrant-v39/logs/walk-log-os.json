@@ -1,0 +1,61 @@
+{
+  "walk": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "observed": [
+        "onboarding do OS: heading 'O que você quer conseguir fazer com IA?' + entrada 'Entrar na escola' → hub 'Aprenda uma coisa útil agora.' (fpos-01-onboarding.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "observed": [
+        "hub renderiza as trilhas hospedadas a partir do estado local (fpos-02-hub.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "observed": [
+        "missão hospedada da literacy (IA Prática) monta do bundle na origem do OS com conteúdo renderizado no iframe (fpos-03-literacy-mission.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "observed": [
+        "retorno ao hub preserva o estado local da trilha sem repetir setup"
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "observed": [
+        "WAREHOUSE monta do bundle na origem do OS (iframe /apps/warehouse) com hud de prateleiras (fpos-04-warehouse-mounted.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "observed": [
+        "tentativa errada reportada no hud da missão ('ainda não atendido') antes do retry (fpos-05-wrong-attempt.png)",
+        "resultado honesto: 'Verificador indisponível' sem fabricar veredito; W3: região com data-testid=feedback-panel (aria-live polite/atomic) e botão retry-activity 'Tentar verificação novamente' (fpos-06-verifier-unavailable.png)",
+        "W3: completion-is-not-mastery visível — concluída ≠ mastered; host não fabrica PASS",
+        "W3/B7 sob emulação forced-colors: região de verificação mantém borda distinguível (border 2px solid; system colors) — o fundo suave sozinho não sobrevive (fpos-07-w3-result-forced-colors.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "observed": [
+        "retorno ao hub após missão preserva estado local sem repetir setup (Voltar ao hub)"
+      ]
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "observed": [
+        "WAREHOUSE com WebGL indisponível: aviso 'WebGL não está disponível neste dispositivo.' + projeção acessível (accessible-projection) sem bloquear controles (fpos-08-accessible-projection.png)"
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "observed": [
+        "missão voxel publica status do host preciso sem falsa alegação de mastery"
+      ]
+    }
+  ]
+}

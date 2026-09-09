@@ -42,6 +42,9 @@ export function ChoiceView({
               data-testid={`option-${option.id}`}
               checked={selected.has(option.id)}
               disabled={disabled}
+              /* W3 §4.1 (AID-1096): checks falhando marcados com aria-invalid,
+                 não só com a affordance visual .is-invalid. */
+              aria-invalid={invalidIds.includes(option.id) || undefined}
               onChange={() => handleChange(option.id)}
             />
             <span>{option.text}</span>

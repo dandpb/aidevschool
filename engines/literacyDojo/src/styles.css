@@ -2438,3 +2438,30 @@ a.audience-route-dev .route-badge {
 .checkpoint-screen .card {
   text-align: left;
 }
+
+/* W3 forced-colors wave 1 (AID-1096 / AID-914 §3-B7, docs/design/design-foundations.md §4):
+   bordas e outline dos controles/containers do loop sobrevivem a system colors, e a
+   distinção pass/fail/inválido exista sem cor (largura/estilo de borda). Geometria +
+   system colors — sem forced-color-adjust: none (não quebramos temas de alto contraste). */
+@media (forced-colors: active) {
+  .feedback-pass {
+    border-width: 3px;
+    border-style: solid;
+  }
+  .feedback-fail {
+    border-width: 3px;
+    border-style: dashed;
+  }
+  .option-card.is-invalid {
+    border-width: 3px;
+    border-style: dashed;
+  }
+  .option-card.is-selected {
+    border-width: 3px;
+  }
+  .btn {
+    /* transparent no esquema normal; sob forced-colors a borda precisa existir
+       com system color para o controle não perder contorno. */
+    border: 2px solid ButtonText;
+  }
+}

@@ -657,3 +657,20 @@
   color: var(--journey-primary-dark);
   font-weight: 850;
 }
+
+/* W3 forced-colors wave 1 (AID-1096 / AID-914 §3-B7, docs/design/design-foundations.md §4):
+   bordas e outline dos controles/containers do loop de missão sobrevivem a system
+   colors; distinção sem cor por largura/estilo de borda (geometria + system colors,
+   sem forced-color-adjust: none). */
+@media (forced-colors: active) {
+  .result-verification {
+    /* sem borda no esquema normal (fundo suave) — sob system colors ganha contorno */
+    border: 2px solid CanvasText;
+  }
+  .journey-primary,
+  .result-verification button,
+  .mentor-submit,
+  .journey-back {
+    border: 2px solid ButtonText;
+  }
+}

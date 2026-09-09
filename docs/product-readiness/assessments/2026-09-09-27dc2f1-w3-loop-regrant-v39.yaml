@@ -1,0 +1,57 @@
+schemaVersion: 1
+assessmentId: 2026-09-09-27dc2f1-w3-loop-regrant-v39
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-09T05:26:00Z'
+revalidateBy: '2026-10-08'
+gitSha: f72913fcda09f8c469aa2812c4c132f32918e389
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:25:00Z-literacy-happy-path-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-literacy-resume-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-literacy-retry-mixed-f72913fc
+- useCaseId: literacy-standalone-corridor-mod01-03
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:24:13Z-literacy-corridor-grandfathered-return-f72913fc
+  - 2026-09-09T05:24:13Z-literacy-corridor-resume-mid-module-f72913fc
+  - 2026-09-09T05:25:00Z-literacy-corridor-gate-retry-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-literacy-corridor-happy-path-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-literacy-corridor-review-window-mixed-f72913fc
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:25:00Z-os-literacy-hosted-mission-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-literacy-returning-device-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-verification-recovery-mixed-f72913fc
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:25:00Z-os-renderer-accessibility-recovery-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-voxel-hosted-missions-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-voxel-returning-device-mixed-f72913fc
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:25:00Z-os-onboarding-track-choice-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-returning-device-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-os-returning-recovery-mixed-f72913fc
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-09T05:25:00Z-dojotoday-active-unit-guidance-mixed-f72913fc
+  - 2026-09-09T05:25:00Z-dojotoday-read-only-boundary-observed-f72913fc
+  - 2026-09-09T05:25:00Z-dojotoday-returning-next-day-mixed-f72913fc

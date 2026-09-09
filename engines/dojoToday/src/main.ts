@@ -129,7 +129,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               placeholder="Pergunte ao Sócrates sobre esta missão…"
               aria-label="Pergunta para o Sócrates"
             />
-            <button id="soc-send" type="button" class="btn btn-primary socrates-send">Perguntar</button>
+            <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
           </div>
           <button id="soc-config-btn" type="button" class="link-btn">⚙️ Configurar assistente (opcional)</button>
           <div id="soc-config" class="socrates-config" hidden>
@@ -151,12 +151,15 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               <button id="soc-clear" type="button" class="link-btn">Limpar</button>
             </div>
           </div>
+          <!-- W3 §4.3-4 (AID-1096): testid canônico do papel feedback-panel do loop
+               (docs/design/design-foundations.md §3.4 — mapeamento dojoToday). -->
           <div
             id="soc-reply"
             class="socrates-reply"
             role="status"
             aria-live="polite"
             aria-atomic="true"
+            data-testid="feedback-panel"
           ></div>
         </div>
       </div>
