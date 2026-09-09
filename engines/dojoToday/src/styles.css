@@ -749,3 +749,21 @@ summary:focus-visible {
   font-size: 0.8rem;
   text-align: left;
 }
+
+/* W3 forced-colors wave 1 (AID-1096 / AID-914 §3-B7, docs/design/design-foundations.md §4):
+   bordas e outline dos controles/containers do loop sobrevivem a system colors;
+   distinção sem cor por largura/estilo de borda (geometria + system colors, sem
+   forced-color-adjust: none). */
+@media (forced-colors: active) {
+  .socrates-reply.is-error {
+    /* cor+borda+texto no esquema normal; sob system colors: dashed reforçada */
+    border: 2px dashed CanvasText;
+  }
+  .btn-primary,
+  .socrates-send {
+    border: 2px solid ButtonText;
+  }
+  .socrates-input {
+    border: 2px solid CanvasText;
+  }
+}

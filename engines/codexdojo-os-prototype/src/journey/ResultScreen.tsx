@@ -106,7 +106,16 @@ export function ResultScreen({
         </section>
       ) : null}
 
-      <div ref={verificationRef} tabIndex={-1} className="result-verification" aria-live="polite" aria-atomic="true">
+      {/* W3 §4.3-4 (AID-1096): testid canônico do papel feedback-panel do loop —
+          docs/design/design-foundations.md §3.4 (mapeamento de papéis por engine). */}
+      <div
+        ref={verificationRef}
+        tabIndex={-1}
+        className="result-verification"
+        aria-live="polite"
+        aria-atomic="true"
+        data-testid="feedback-panel"
+      >
         <strong>Resultado da verificação</strong>
         {verification.kind === 'verified' ? (
           <p data-testid="independent-verdict">Veredito {verification.receipt.verdict}</p>
@@ -115,6 +124,8 @@ export function ResultScreen({
         {verification.kind === 'gateway-unavailable' ? (
           <button
             type="button"
+            className="result-retry"
+            data-testid="retry-activity"
             disabled={retryVerificationBusy}
             aria-busy={retryVerificationBusy}
             onClick={retryVerification}
@@ -125,10 +136,17 @@ export function ResultScreen({
       </div>
 
       {completionStatus === 'failed' ? (
-        <div className="result-verification" role="alert" aria-atomic="true">
+        <div
+          className="result-verification"
+          role="alert"
+          aria-atomic="true"
+          data-testid="system-error-panel"
+        >
           <strong>A conclusão local não foi salva.</strong>
           <button
             type="button"
+            className="result-retry"
+            data-testid="retry-activity"
             onClick={() => {
               verificationRef.current?.focus()
               onRetrySave()
