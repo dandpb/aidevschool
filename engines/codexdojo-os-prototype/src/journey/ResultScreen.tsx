@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import type { AchievementId } from '../progress/domain'
 import type { EvidenceVerificationState } from '../verification/ports'
 import { SupportCta } from './SupportCta'
@@ -50,7 +51,7 @@ export function ResultScreen({
   readonly summary?: MissionCompletionSummary
   readonly verification: EvidenceVerificationState
   readonly canonicalMasteryCount: number
-  readonly onRetryVerification: () => void
+  readonly onRetryVerification: () => Promise<unknown> | undefined
   readonly onRetrySave: () => void
   readonly onReturn: () => void
 }) {
@@ -59,6 +60,18 @@ export function ResultScreen({
     verification.kind === 'rejected' ||
     verification.kind === 'gateway-unavailable'
   const canReturn = completionStatus === 'saved' && verificationFinished
+  const verifying = verification.kind === 'validating'
+  // AID-1089/W2 (state contract §2.3, preservação de foco no retry): os botões
+  // de retry desmontam na mudança de estado; a região de verificação persiste
+  // e recebe foco programático (tabIndex -1).
+  const verificationRef = useRef<HTMLDivElement | null>(null)
+  const [verificationInFlight, setVerificationInFlight] = useState(false)
+  const retryVerification = () => {
+    setVerificationInFlight(true)
+    verificationRef.current?.focus()
+    void Promise.resolve(onRetryVerification()).finally(() => setVerificationInFlight(false))
+  }
+  const retryVerificationBusy = verifying || verificationInFlight
   return (
     <section className="mission-result" aria-labelledby="mission-result-title">
       <p className="journey-eyebrow">Prática concluída neste dispositivo</p>
@@ -93,23 +106,34 @@ export function ResultScreen({
         </section>
       ) : null}
 
-      <div className="result-verification" aria-live="polite">
+      <div ref={verificationRef} tabIndex={-1} className="result-verification" aria-live="polite" aria-atomic="true">
         <strong>Resultado da verificação</strong>
         {verification.kind === 'verified' ? (
           <p data-testid="independent-verdict">Veredito {verification.receipt.verdict}</p>
         ) : null}
         <p>{verificationCopy(verification)}</p>
         {verification.kind === 'gateway-unavailable' ? (
-          <button type="button" onClick={onRetryVerification}>
+          <button
+            type="button"
+            disabled={retryVerificationBusy}
+            aria-busy={retryVerificationBusy}
+            onClick={retryVerification}
+          >
             Tentar verificação novamente
           </button>
         ) : null}
       </div>
 
       {completionStatus === 'failed' ? (
-        <div className="result-verification" role="alert">
+        <div className="result-verification" role="alert" aria-atomic="true">
           <strong>A conclusão local não foi salva.</strong>
-          <button type="button" onClick={onRetrySave}>
+          <button
+            type="button"
+            onClick={() => {
+              verificationRef.current?.focus()
+              onRetrySave()
+            }}
+          >
             Tentar salvar novamente
           </button>
         </div>

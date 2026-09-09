@@ -151,7 +151,13 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               <button id="soc-clear" type="button" class="link-btn">Limpar</button>
             </div>
           </div>
-          <div id="soc-reply" class="socrates-reply" aria-live="polite"></div>
+          <div
+            id="soc-reply"
+            class="socrates-reply"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
         </div>
       </div>
     </section>`;
@@ -290,8 +296,10 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     if (modelInput) modelInput.value = cfg.model;
   };
   fill();
-  const setReply = (text: string) => {
+  const setReply = (text: string, isError = false) => {
+    // W2 §2.3 (AID-1089): feedback por cor + borda + texto — nunca só cor.
     reply.textContent = text;
+    reply.classList.toggle("is-error", isError && text.length > 0);
   };
 
   configBtn.addEventListener("click", () => {
@@ -342,17 +350,26 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     if (!question) return;
     const cfg = loadConfig();
     send.disabled = true;
-    if (!isConfigured(cfg)) {
-      configPanel.hidden = false;
-      fill();
-      setReply(deterministicNudge(mission));
+    // W2 §2.3-6 (AID-1089): ação assíncrona — controle desabilita + aria-busy;
+    // a região role=status (#soc-reply, aria-live polite) anuncia o andamento.
+    send.setAttribute("aria-busy", "true");
+    try {
+      if (!isConfigured(cfg)) {
+        configPanel.hidden = false;
+        fill();
+        setReply(deterministicNudge(mission));
+        return;
+      }
+      setReply("Sócrates está pensando…");
+      const result = await askSocrates(cfg, mission, question);
+      setReply(
+        result.ok ? result.text : `${result.error}\n\n${deterministicNudge(mission)}`,
+        !result.ok,
+      );
+    } finally {
       send.disabled = false;
-      return;
+      send.removeAttribute("aria-busy");
     }
-    setReply("Sócrates está pensando…");
-    const result = await askSocrates(cfg, mission, question);
-    setReply(result.ok ? result.text : `${result.error}\n\n${deterministicNudge(mission)}`);
-    send.disabled = false;
   };
   send.addEventListener("click", () => void ask());
   q.addEventListener("keydown", (event) => {

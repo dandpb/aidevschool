@@ -31,6 +31,11 @@
   --school-sun: #ffbf47;
   --school-coral: #ff7d66;
   --school-focus: #d56800;
+  /* AID-1089/W2 (state contract, proposta AID-914 §2.2/§2.3 doc proposal rev 1):
+     alias semântica mínima exigida pelo state contract — mapeia o valor local,
+     zero mudança visual. A alias completa de 18 tokens permanece deferral (W1
+     da proposta §2.5 nunca pousou; ver receipt AID-1089). */
+  --ads-focus: var(--school-focus);
 }
 
 * { box-sizing: border-box; }
@@ -53,7 +58,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 
 .journey-page :focus-visible,
 .journey-loading :focus-visible {
-  outline: 3px solid var(--school-focus);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 3px;
 }
 

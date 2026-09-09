@@ -160,11 +160,17 @@ export function MentorPanel({
         </div>
       ) : null}
 
-      <button type="button" className="mentor-submit" disabled={busy || question.trim() === ''} onClick={() => void submit()}>
+      <button
+        type="button"
+        className="mentor-submit"
+        disabled={busy || question.trim() === ''}
+        aria-busy={busy}
+        onClick={() => void submit()}
+      >
         {busy ? 'Pensando…' : 'Pedir ajuda'}
       </button>
 
-      <div className="mentor-response" aria-live="polite" aria-busy={busy}>
+      <div className="mentor-response" role="status" aria-live="polite" aria-atomic="true" aria-busy={busy}>
         {busy ? <p>O mentor esta preparando uma pergunta curta.</p> : null}
         {response === undefined && !busy ? <p>Eu ajudo com perguntas e pistas graduais, sem selecionar a resposta.</p> : null}
         {response !== undefined && !busy ? (
