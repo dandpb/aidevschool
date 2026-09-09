@@ -162,6 +162,10 @@ export function LessonScreen({
     if (!activity) return;
     await services.useCases.retryActivity({ lessonId: lesson.id, activityId: activity.id });
     applyTransition({ session: retryCurrentActivity(session, lesson) });
+    // AID-1089/W2 (state contract §2.3, preservação de foco no retry): o botão
+    // "Tentar novamente" desmonta quando a tentativa é limpa; o efeito de fase
+    // (feedback→attempting) já refoca o heading tabIndex=-1 — o comportamento
+    // é travado por tests/app/lessonStateContract.test.tsx como contrato.
   };
 
   const handleNextActivity = () => {
@@ -317,6 +321,15 @@ export function LessonScreen({
 
       {attempt && <FeedbackPanel feedback={attempt.feedback} hintsShown={hints.shown} />}
 
+      {/* AID-1089/W2 (state contract §2.3-6): região role=status do loading —
+          a ação assíncrona desabilita o controle e anuncia o andamento.
+          <output> carrega role=status implícito (biome useSemanticElements). */}
+      {submitting && (
+        <output className="sr-only" data-testid="lesson-busy">
+          Verificando sua resposta…
+        </output>
+      )}
+
       <div className="actions">
         {!attempt?.evaluation.pass && (
           <button
@@ -324,6 +337,7 @@ export function LessonScreen({
             className="btn btn-primary"
             data-testid="submit-attempt"
             disabled={!isAnswerComplete(activity, answer) || submitting}
+            aria-busy={submitting}
             onClick={() => void handleSubmit()}
           >
             {attempt ? "Verificar de novo" : "Verificar resposta"}
@@ -365,6 +379,7 @@ export function LessonScreen({
             className="btn btn-primary"
             data-testid="finish-lesson"
             disabled={!requiredPassed || submitting}
+            aria-busy={submitting}
             onClick={() => void applyTransition(finishLesson(session, lesson, services.clock()))}
           >
             {mode === "review" ? "Concluir revisão" : "Concluir lição"}

@@ -1,0 +1,248 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "4234cebccc08d14b6419ee29c6fa31303618195a",
+ "observedAt": "2026-09-09T02:40:00Z",
+ "scenarios": [
+  {
+   "scenarioId": "dojotoday-active-unit-guidance",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-guidance-only",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). 'Sua lição de hoje' e 'Retome por aqui' visíveis com a unidade ativa KV WAREHOUSE renderizada da projeção gerada (fpdt-01-daily-view.png); copy de fronteira presente: 'apenas mostra o scheduler — não marca mastered. O verificador independente decide.' W2 re-validado no mesmo render: #soc-reply role=status aria-live=polite aria-atomic=true e #soc-send disabled+aria-busy=true durante o voo assíncrono, reabilitado ao fim (fpdt-02-w2-socrates-busy.png) — a vista orienta e não avalia trabalho."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "dojotoday-read-only-boundary",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "regeneration-preserves-read-only-boundary",
+     "evidence": "document-review",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). Document-review v38 @ 4234cebc: python3 -m learner.substrate re-executado nesta sessão — 'Generated projections regenerated: 30'; git diff de arquivos rastreados = 0 (learner/ YAML intocado; .mavis/ é derivado). PR #303 (gh pr diff --name-only, 14 arquivos) toca apenas engines/{dojoToday,literacyDojo,codexdojo-os-prototype}/src|playwright|tests — nenhum caminho de escrita de estado do learner. Recuperação por regeneração preserva a fronteira read-only."
+    },
+    {
+     "id": "stale-guidance-has-bounded-exit",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). vista read-only sem afordância de avaliação (count=0 para controles concluir/mastered/avaliar); localStorage estável entre reloads (a vista não escreve estado); contador 'dominadas' vem da projeção canônica — facilitador pode recarregar em vez de apresentar orientação stale (fpdt-03-boundary.png)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "dojotoday-returning-next-day",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-no-eval-carryover",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). day-N (fixture 5181) e day-N+1 (fixture 5182) renderizam 'Sua lição de hoje' com fila/streak/unidade ativa da projeção de cada dia ('🔥 3 dias de sequência' no day-N); copy 'O verificador independente decide' presente em ambos — retornar não avalia nem carrega veredito do dia anterior, apenas reexibe a projeção do scheduler (fpdt-04-day-n.png, fpdt-05-day-n-plus-1.png)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). onboarding 5 passos sem conhecimento de repositório entrega o mapa e a lição Mapa Inicial (fplit-02-lesson-start.png); ao concluir, o resultado local nomeia a próxima ação em linguagem do aprendiz — 'VILA LUME · MISSÃO CONCLUÍDA … XP conquistado · 100% de pontuação' com controle de próxima lição (fplit-05-result.png); toda tentativa avaliada emite evidência com verifierRequired (resultado é local-completion, nunca mastery; 4 registros schema-válidos no walk)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). tentativa incorreta renderiza feedback formativo (feedback-fail) sem linguagem interna (fplit-03-wrong-feedback.png); dica abre hints-list na mesma tela (fplit-04-hint.png) e retry reabre a atividade, que passa com feedback-pass — concluir exige acerto, sem perder o que já estava concluído."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). reload no mesmo dispositivo retoma a lição em andamento (lesson-intro) sem repetir onboarding (fplit-06-resume.png); progresso é local do app (IndexedDB lido no walk: l02=completed, current=l01 in_progress); não há conta nem sincronização — a fronteira do dispositivo é o próprio comportamento observado."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-names-next-action-after-cp-03",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). corredor contínuo observado: Home nomeia o desafio pendente ('Continuar: Desafio do Módulo 1', fplit-07-corridor-mission.png); cp-01 concluído abre o módulo seguinte ('Bairro 1 completo!', l04=available, fplit-09-cp-result.png); cp-03 concluído → celebração 'três primeiros bairros da Vila Lume' e próxima lição nomeada na sequência (fplit-10-cp03-celebration.png) — após o cp-03 o aprendiz consegue nomear o próximo passo sem ajuda."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-gate-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry-without-internal-language",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). falha no desafio mantém feedback + dica + retry na mesma tela sem jargão interno (fplit-08-cp-fail-hint.png); módulo seguinte permanece locked durante o desafio (l04=locked, l03=completed lidos do storage no walk) — retry ilimitado sem perder conclusões, gate explicado em linguagem de bairro/vila."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-review-window",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-distinguishes-review-from-new-content",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). com a janela [1,7,21] vencida, o Home exibe card/botão de revisão distinto do conteúdo novo (fplit-11-review-card.png); a revisão abre com rótulo 'Revisão' na intro da lição (fplit-12-review-intro.png) — o aprendiz diferencia revisitar de começar lição inédita."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-onboarding-track-choice",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-explain-track-choice",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). onboarding pergunta 'O que você quer conseguir fazer com IA?' com escolha IA Prática/Dev explicada e sem conta — 'progresso fica neste dispositivo' (fpos-01-onboarding.png); 'Entrar na escola' entrega o hub 'Aprenda uma coisa útil agora.' com a próxima missão em destaque (fpos-02-hub.png) — o aprendiz consegue dizer o que escolheu e o que vem a seguir."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-verification-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "facilitator-can-recover-without-repository-intervention",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). resposta errada → 'ainda não atendido' com retry (fpos-08-wrong-attempt.png); corrigida → 'Verificador indisponível' SEM 'Evidência rejeitada' (fpos-09-verifier-unavailable.png); 'Voltar ao hub' recupera com 'Temporariamente indisponível' — caminho do facilitador inteiro na UI, sem intervenção de repositório."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-returning-device",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-literacy-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). reload retoma a missão de literacy hospedada (iframe 'IA não é uma fonte de verdade' remonta, onboarding não repete — fpos-05-literacy-returning.png); continuidade é local ao dispositivo/hospedeiro, com estado canônico reportado pelo shell — sem promessa de sincronização."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-voxel-hosted-missions",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-distinguishes-evidence-from-mastery",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). WAREHOUSE e WORMHOLE montam do próprio host (origem 127.0.0.1:4176 do preview, fpos-06-warehouse.png/fpos-07-wormhole.png); status de verificação honesto 'Ainda não enviada' — o produto é evidência bruta para verificador independente, não mastery."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-renderer-accessibility-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "facilitator-can-name-escalation-threshold",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). reduced motion seleciona a projeção semântica operável por teclado com selo 'Acessível' preservando o journey (fpos-11-accessible-projection.png); limiar nomeável: WebGL indisponível/evitado → renderer acessível mantém a missão utilizável — escalonamento é trocar de renderer, não bloquear o aprendiz."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-voxel-returning-device",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-voxel-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). reload retoma a missão voxel hospedada no mesmo dispositivo (iframe WAREHOUSE remonta, hub não repete onboarding — fpos-10-voxel-returning.png); estado hospedado é local ao dispositivo, sem carry de veredito."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-returning-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "facilitator-explains-local-state-loss",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). perfil limpo volta à pergunta de onboarding SEM fabricar conclusão (count=0 para 'missão concluída'/'mastered' — fpos-12-cleared-storage.png); a explicação é própria da UI: estado é local; ao limpar/perder, recomeça o onboarding sem reconstruir conclusão anterior."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-returning-device",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-local-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). reload no mesmo dispositivo mantém o hub 'Aprenda uma coisa útil agora.' sem repetir onboarding (fpos-03-returning-reload.png); fronteira local explícita no copy do hub — progresso é deste dispositivo/navegador."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-hosted-mission",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-state-result-and-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v38 @ 4234cebc (PR #303 head; AID-1093 re-grant pós-W2 AID-1089, desbloqueio delegado pelo QA em AID-1091/AID-1093; countersign QA de encerramento pendente no PR) (chromium headless, walk specs FPE contra os harnesses dos engines: dojoToday 3-servidores 5180/5181/5182, literacyDojo vite dev 360x740, OS static pilot build via vite preview 4176; screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle). missão hospedada 'IA não é uma fonte de verdade' monta do próprio host (origem do preview 4176, fpos-04-literacy-mission.png); shell reporta resultado/next-action: '← Hub · IA Prática · 4 min · IA não é uma fonte de verdade … Estado canônico · presenting · 0 verificadas' — aprendiz consegue dizer o que fez e o que fazer a seguir."
+    }
+   ],
+   "gaps": []
+  }
+ ]
+}

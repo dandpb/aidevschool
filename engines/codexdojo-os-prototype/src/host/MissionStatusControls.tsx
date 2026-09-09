@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import type { MissionDefinition } from '../domain'
 import { SupportCta } from '../journey/SupportCta'
 import type { RendererFailureReason, RendererPreference } from '../rendering/domain'
@@ -40,7 +41,7 @@ type MissionStatusControlsProps = {
   readonly verification: EvidenceVerificationState
   readonly completionStatus: 'idle' | 'saving' | 'saved' | 'failed'
   readonly onRetryRenderer: (preference: RendererPreference) => void
-  readonly onRetryVerification: () => void
+  readonly onRetryVerification: () => Promise<unknown> | undefined
   readonly onRetrySave: () => void
 }
 
@@ -53,11 +54,32 @@ export function MissionStatusControls({
   onRetryVerification,
   onRetrySave,
 }: MissionStatusControlsProps) {
+  // AID-1089/W2 (state contract §2.3, preservação de foco no retry): os botões
+  // de retry vivem em seções que desmontam quando o estado muda; o painel de
+  // status persiste e recebe foco programático (tabIndex -1).
+  const statusRef = useRef<HTMLElement | null>(null)
+  const retryThenFocusStatus = (retry: () => void) => {
+    retry()
+    statusRef.current?.focus()
+  }
+  // AID-1089/W2 (§2.3-6): busy local durante o voo do retry de verificação
+  // (a promise retorna antes do estado terminal chegar via updateVerification).
+  const [verificationInFlight, setVerificationInFlight] = useState(false)
+  const handleRetryVerification = () => {
+    setVerificationInFlight(true)
+    statusRef.current?.focus()
+    void Promise.resolve(onRetryVerification()).finally(() => setVerificationInFlight(false))
+  }
+  const verifying = verification.kind === 'validating' || verificationInFlight
   return (
     <>
       <section
+        ref={statusRef}
+        tabIndex={-1}
         className={`mission-status${mission.runtime.engineId === 'voxelDojo' ? ' with-renderer' : ''}`}
+        role="status"
         aria-live="polite"
+        aria-atomic="true"
       >
         <div>
           <span>Etapa</span>
@@ -97,7 +119,7 @@ export function MissionStatusControls({
               As decisões, os critérios e a evidência não mudam.
             </p>
           </div>
-          <button type="button" onClick={() => onRetryRenderer('webgl')}>
+          <button type="button" onClick={() => retryThenFocusStatus(() => onRetryRenderer('webgl'))}>
             Tentar 3D novamente
           </button>
         </section>
@@ -112,7 +134,7 @@ export function MissionStatusControls({
       ) : null}
 
       {session.phase !== 'completed' && verification.kind === 'verified' ? (
-        <section className="verification-note" aria-live="polite">
+        <section className="verification-note" aria-live="polite" aria-atomic="true">
           <strong>Veredito independente: {verification.receipt.verdict}</strong>
           <p>{verificationCopy(verification)}</p>
           <p>
@@ -122,9 +144,14 @@ export function MissionStatusControls({
         </section>
       ) : null}
       {session.phase !== 'completed' && verification.kind === 'gateway-unavailable' ? (
-        <section className="verification-note" role="status">
+        <section className="verification-note" role="status" aria-atomic="true">
           <p>A evidência foi preservada. O verificador local está indisponível.</p>
-          <button type="button" onClick={onRetryVerification}>
+          <button
+            type="button"
+            disabled={verifying}
+            aria-busy={verifying}
+            onClick={handleRetryVerification}
+          >
             Tentar verificação novamente
           </button>
         </section>
@@ -135,9 +162,9 @@ export function MissionStatusControls({
         </p>
       ) : null}
       {session.phase !== 'completed' && completionStatus === 'failed' ? (
-        <section className="verification-note" role="alert">
+        <section className="verification-note" role="alert" aria-atomic="true">
           <p>Não foi possível salvar a conclusão local.</p>
-          <button type="button" onClick={onRetrySave}>
+          <button type="button" onClick={() => retryThenFocusStatus(onRetrySave)}>
             Tentar salvar novamente
           </button>
         </section>

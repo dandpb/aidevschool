@@ -29,6 +29,16 @@
   --radius: 22px;
   --shadow: 0 18px 40px -22px rgba(49, 46, 129, 0.45);
   --shadow-sm: 0 6px 16px -10px rgba(49, 46, 129, 0.4);
+
+  /* AID-1089/W2 (state contract, proposta AID-914 §2.2/§2.3 doc proposal rev 1):
+     alias semântica mínima exigida pelo state contract — mapeia valores locais,
+     zero mudança visual. A alias completa de 18 tokens permanece deferral (W1
+     da proposta §2.5 nunca pousou; ver receipt AID-1089). */
+  --ads-focus: var(--primary);
+  --ads-success-text: var(--success-deep);
+  --ads-success-bg: var(--success-soft);
+  --ads-error-text: var(--danger);
+  --ads-error-bg: var(--danger-soft);
 }
 
 * {
@@ -518,7 +528,10 @@ body {
   }
 }
 
-/* Sócrates (assistente opcional) + botões base */
+/* Sócrates (assistente opcional) + botões base — state contract AID-1089/W2
+   (proposta AID-914 §2.3): todo controle interativo define rest, :hover,
+   :active (ou equiv. teclado), :focus-visible via --ads-focus, :disabled com
+   aparência própria + cursor:not-allowed, e loading quando assíncrono. */
 .btn {
   border: none;
   cursor: pointer;
@@ -534,12 +547,22 @@ body {
   color: #fff;
   box-shadow: 0 4px 0 var(--primary-deep);
 }
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled) {
   filter: brightness(1.05);
 }
+.btn-primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--primary-deep);
+}
 .btn-primary:disabled {
-  opacity: 0.5;
-  cursor: default;
+  /* W2 §2.3-5: aparência própria, não apenas opacity. */
+  background: #a5a1b8;
+  color: #fff;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn[aria-busy="true"] {
+  cursor: progress;
 }
 .link-btn {
   background: none;
@@ -553,16 +576,28 @@ body {
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.link-btn:hover:not(:disabled) {
+  color: var(--primary-deep);
+}
+.link-btn:active:not(:disabled) {
+  text-decoration-thickness: 2px;
+}
+.link-btn:disabled {
+  color: var(--muted);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
 
 /* Foco visível para navegação por teclado (AID-1023/W0, auditoria AID-914 §1.2 —
-   padrão literacyDojo styles.css:196-202: outline 3px + offset 2px). */
+   padrão literacyDojo styles.css:196-202: outline 3px + offset 2px). W2/AID-1089:
+   cor migra para a alias --ads-focus do state contract (§2.3-4). */
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 a:focus-visible,
 summary:focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 2px;
 }
 .socrates {
@@ -588,9 +623,17 @@ summary:focus-visible {
   min-height: 44px;
 }
 .socrates-input:focus-visible {
-  outline: 3px solid var(--primary);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 2px;
   border-color: var(--primary);
+}
+/* W2 §2.3-5: input também é controle interativo — :disabled próprio. */
+.socrates-input:disabled,
+.socrates-config input:disabled {
+  background: #f1eef7;
+  border-color: var(--line);
+  color: var(--muted);
+  cursor: not-allowed;
 }
 .socrates-config {
   margin-top: 10px;
@@ -638,6 +681,12 @@ summary:focus-visible {
   line-height: 1.45;
   white-space: pre-wrap;
   color: var(--ink);
+}
+.socrates-reply.is-error {
+  /* W2 §2.3 (containers de feedback): estado por cor + borda + texto, nunca só cor. */
+  background: var(--ads-error-bg);
+  border-color: var(--ads-error-text);
+  color: var(--ads-error-text);
 }
 .socrates-reply:empty {
   display: none;

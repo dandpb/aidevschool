@@ -1,0 +1,29 @@
+{
+ "walk": [
+  {
+   "scenarioId": "dojotoday-active-unit-guidance",
+   "observed": [
+    "'Sua lição de hoje' + 'Retome por aqui' headings visíveis; unidade ativa KV WAREHOUSE renderizada da projeção gerada (5180 canônica)",
+    "copy de fronteira presente: \"Agendado por FSRS a partir dos seus gates executáveis. Esta página\\n      apenas mostra o scheduler — não marca mastered. O verificador independente decide.\"",
+    "copy de autoridade presente: \"Agendado por FSRS a partir dos seus gates executáveis. Esta página\\n      apenas mostra o scheduler — não marca mastered. O verificador independente decide.\"",
+    "W2 re-validado no render: #soc-reply role=status aria-live=polite aria-atomic=true; durante o voo #soc-send disabled+aria-busy=true e de volta habilitado ao fim (fpdt-02-w2-socrates-busy.png)",
+    "resposta do assistente anunciada na região de status (endpoint fake do walk, voo observável): \"Resposta socrática de teste.\""
+   ]
+  },
+  {
+   "scenarioId": "dojotoday-read-only-boundary",
+   "observed": [
+    "vista sem afordância de avaliação (controles concluir/mastered/avaliar: count=0)",
+    "localStorage estável entre reloads (vista não escreve estado): true",
+    "regeneração do substrato re-executada nesta sessão: 30 projeções regeneradas, git diff de arquivos rastreados = 0 (learner/ YAML intocado)"
+   ]
+  },
+  {
+   "scenarioId": "dojotoday-returning-next-day",
+   "observed": [
+    "day-N (fixture 5181) renderiza 'Sua lição de hoje' com a fila/streak da projeção: \"DevSchool · programadores Sua lição de hoje segunda-feira, 7 de setembro 🔥 3 dias de sequência Recorde: 4. Passe um gate para manter o fogo. Freezes ❄️· Sua trilha 18 conceitos, um por jogo. A próxim\"",
+    "day-N+1 (fixture 5182) renderiza a view do dia seguinte com copy de fronteira 'O verificador independente decide' — retornar não avalia nem carrega veredito do dia anterior"
+   ]
+  }
+ ]
+}

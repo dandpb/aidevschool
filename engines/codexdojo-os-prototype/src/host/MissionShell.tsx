@@ -88,7 +88,9 @@ export function MissionShell({
       dimensions: { reason: 'verification-unavailable' },
       context: analyticsContext,
     })
-    void services.verification.retry(mission, updateVerification)
+    // AID-1089/W2 (§2.3-6): retorna a promise para o controle de retry poder
+    // manter aria-busy/disabled durante o voo assíncrono.
+    return services.verification.retry(mission, updateVerification)
   }, [analyticsContext, mission, services, updateVerification])
 
   const retryRenderer = useCallback((preference: RendererPreference) => {

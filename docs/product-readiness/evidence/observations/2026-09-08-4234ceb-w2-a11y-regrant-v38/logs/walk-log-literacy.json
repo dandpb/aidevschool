@@ -1,0 +1,45 @@
+{
+ "walk": [
+  {
+   "scenarioId": "literacy-happy-path",
+   "observed": [
+    "onboarding 5 passos sem conhecimento de repositório entrega o mapa e a lição inicial Mapa Inicial",
+    "resultado local nomeia a próxima ação em linguagem do aprendiz: \"VILA LUME · MISSÃO CONCLUÍDAA vila ganhou uma nova luz: IA não é uma fonte de verdadeXP conquistado · 100% de pontuaçãoVILA LUMEHabilidade praticadaEntender, AvaliarEntender: A IA entrega blocos prontos. Quem decide onde cada um encaixa é você.Conquista desbloqueada🏆 Primeira liçãoConquistas marcam\"",
+    "toda tentativa avaliada emite evidência com verifierRequired (resultado = local-completion, nunca mastery): registros=4, schema-válidos=true"
+   ]
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "observed": [
+    "tentativa incorreta renderiza feedback formativo (feedback-fail) sem linguagem interna; dica e nova tentativa ficam na mesma tela"
+   ]
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "observed": [
+    "reload no mesmo dispositivo retoma a lição em andamento (lesson-intro) sem repetir onboarding; progresso é local do app (IndexedDB): l02=completed, current=l01, em-andamento=l01"
+   ]
+  },
+  {
+   "scenarioId": "literacy-corridor-happy-path",
+   "observed": [
+    "missão do Home vira o desafio pendente do módulo ('Continuar: Desafio do Módulo 1') — próxima ação nomeada no corredor",
+    "desafio do módulo 1 concluído ('Bairro 1 completo!') libera o módulo seguinte (l04=available, mod-01=completed)",
+    "cp-03 concluído → celebração 'três primeiros bairros da Vila Lume' e próxima lição nomeada na sequência (learner-names-next-action): \"MISSÃO DA VILA · Segurança e aplicaçãoProteja suas informações4 min · ProtegerPedido da Vila LumeClassificar informações do dia a dia de tra\""
+   ]
+  },
+  {
+   "scenarioId": "literacy-corridor-gate-retry",
+   "observed": [
+    "falha no desafio mantém feedback + dica + retry sem perder conclusões; módulo seguinte permanece locked durante o desafio (l04=locked, l03=completed)"
+   ]
+  },
+  {
+   "scenarioId": "literacy-corridor-review-window",
+   "observed": [
+    "Home passa a exibir card/botão de revisão distinto do conteúdo novo quando a janela [1,7,21] vence",
+    "a revisão abre com rótulo 'Revisão' na intro da lição — conteúdo reapresentado como revisão, não como lição inédita"
+   ]
+  }
+ ]
+}
