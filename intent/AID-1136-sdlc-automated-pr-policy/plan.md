@@ -47,3 +47,26 @@ Status: approved (owner gate: issue AID-1136 traz as decisões como critérios d
 - Verificador: QA Lead (ca6a3f95), fresh-context, child issue dedicada com
   o diff do PR contra este plan; verdict antecede o merge.
 - Merge: CEO single-writer com countersign registrado OU founder no GitHub.
+
+## r2 (2026-09-09, pós-countersign AID-1137 r1 REQUEST_CHANGES)
+
+QA (AID-1137, veredito r1 22:59Z): política correta e necessária, critérios
+formais todos PASS, mas 3 defeitos de acuracidade no registro histórico.
+Correções aplicadas pelo produtor (CEO) neste mesmo PR:
+
+- **F1 (Major):** retro-lista completada de 5 para 9 linhas — adicionados
+  #216/#227/#228 (merged 09-01, sem trilha na época) e #254 (trilha parcial
+  AID-695 + PR #257; retrofit adicional não exigido). Retrofits criados:
+  `intent/2026-09-01-https-byok-sentinel/`,
+  `intent/2026-09-01-traffic-target-bolt/`,
+  `intent/2026-09-01-aria-labels-palette/` (RETROSPECTIVE RECORDS, claims do
+  produtor-bot marcados como tais, sem re-verificação alegada).
+- **F2 (Medium):** caracterização "closures mudos" corrigida com fatos
+  verificados first-hand (timestamps comments+closed_at): nenhum close foi
+  mudo; gap real = ausência de triagem PR-específica **pré-close** em
+  #282–#294; #299/#300 tinham triagem registrada (AID-1042/AID-1045).
+- **F3 (Low):** `<change-id>` harmonizado com a regra global (§Artifacts):
+  `AID-<n>-<slug>` para origem Paperclip, `YYYY-MM-DD-<slug>` caso contrário.
+
+Condições r2 (QA): F1 tabela+retrofits ✓ · F2 reescrito ✓ · F3 harmonizado ✓ ·
+CI verde no novo head (docs-only). r2 solicitada à QA via AID-1137.

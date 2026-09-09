@@ -75,7 +75,10 @@ Registro #7):
    fast-path record **antes do merge**: `intent/<change-id>/` com `intent.md`
    + `plan.md` mínimos (ou, para bounded fixes, um short plan block no task
    record), linkando o PR, o veredito independente e follow-ups (guards,
-   re-grants). `<change-id>` = `YYYY-MM-DD-<slug>`.
+   re-grants). `<change-id>` segue a regra global (§Artifacts):
+   `AID-<n>-<slug>` quando o despacho origina de issue Paperclip (a norma —
+   toda aceitação registrada flui por aqui), `YYYY-MM-DD-<slug>` caso
+   contrário (ex.: retrofits de PRs de bot sem issue de origem).
 2. **CI verde no head** — incluindo o job `sdlc-guards`; PR vermelho não entra,
    sem exceção.
 3. **Aceitação registrada** — merge somente com uma das duas formas:
@@ -92,17 +95,29 @@ Registro #7):
 
 PR fechado sem merge leva **comentário de fechamento obrigatório** antes do
 close: motivo (veredito, duplicidade, obsolescência, risco), link para a
-issue/verdict de origem e, quando aplicável, o destino do trabalho. Os
-closures mudos pré-política (#282, #283, #293, #294, #299, #300) são
-histórico imutável — não reabrir — mas todo close novo registra motivo. Se o
-registro escorregar (como no PR #262): retrofit prontamente como
-**retrospective record**, marcado como tal no topo de cada arquivo, citando
-vereditos e merge SHAs, e deixe a falha alimentar a auditoria.
+issue/verdict de origem e, quando aplicável, o destino do trabalho. Fatos
+pré-política verificados first-hand (AID-1137 r1/F2): **nenhum dos closes
+citados foi mudo.** #282/#283 receberam motivo do founder no instante do
+close ("unauthorized bot PR", precedente #268/AID-837 — 22:06:15Z/22:06:16Z
+vs close 22:06:15Z/22:06:17Z); #293/#294 receberam motivo ~46s **após** o
+close (12:07:07Z/12:07:08Z vs 12:06:20Z/12:06:22Z); #299/#300 foram fechados
+**com triagem PR-específica registrada** (AID-1042; AID-1045 veredito CLOSE,
+close single-writer CEO). O gap real pré-política em #282–#294: ausência de
+**triagem PR-específica pré-close** — o motivo existiu, mas a cadeia
+pedido → veredito → close não estava registrada antes do close. Esses closes
+são histórico imutável — não reabrir — mas todo close novo registra motivo
+**antes** do close. Se o registro escorregar (como no PR #262): retrofit
+prontamente como **retrospective record**, marcado como tal no topo de cada
+arquivo, citando vereditos e merge SHAs, e deixe a falha alimentar a auditoria.
 
-### Retro-lista dos merged sob esta política (AID-1136, 2026-09-09)
+### Retro-lista canônica dos bot PRs merged (AID-1136, 2026-09-09; completada r2/AID-1137-F1)
 
 | PR | Conta/tema | Merge (SHA, data) | Aceitação registrada |
 | --- | --- | --- | --- |
+| #216 | Sentinel — enforce HTTPS para BYOK endpoints (`askSocrates`) | `5de4e147` 2026-09-01 | founder merge GitHub; **sem trilha na época** — retrofit `intent/2026-09-01-https-byok-sentinel/` (r2) |
+| #227 | Bolt — `pickRandomTrafficTarget` O(N) linear scan | `128b21f4` 2026-09-01 | founder merge GitHub; **sem trilha na época** — retrofit `intent/2026-09-01-traffic-target-bolt/` (r2) |
+| #228 | Palette — ARIA labels contextuais (codexDojo render + OS rail) | `f1ec086a` 2026-09-01 | founder merge GitHub; **sem trilha na época** — retrofit `intent/2026-09-01-aria-labels-palette/` (r2) |
+| #254 | Bolt — `pickRandomShopId` array allocation | `22c5fdd1` 2026-09-03 | founder merge GitHub; trilha parcial: `intent/AID-695-pickrandomshopid-regression-test/` (teste de regressão) + PR #257 — retrofit adicional não exigido (decisão r2) |
 | #262 | Sentinel — XSS dojoToday `renderLocalSuggestion` | `fd7c52aa` 2026-09-04 | founder merge GitHub; retrofit AID-771 em `intent/2026-09-03-xss-dojotoday-sentinel/` + QA AID-766/764 |
 | #301 | Bolt — perf pathfinding miniTown | `b8f9d5d4` 2026-09-09 | countersign AID-1087 r2 CONFORME; merge CEO single-writer |
 | #302 | Palette — a11y link OS linuxLab (nova aba) | `2f66572c` 2026-09-08 | QA countersign AID-1081 CONFORME @ `763dbbed`; desfecho CEO |
