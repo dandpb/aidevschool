@@ -1,0 +1,34 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+      "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+    },
+    {
+      "path": "engines/literacyDojo/src/screens/CheckpointScreen.tsx",
+      "sha256": "237a7c551af2112447d83bab68151d75f70d8c66d221e6cec864f9d824d9c2d8"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "failure-offers-feedback-hint-retry",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "next-module-stays-locked-until-pass",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-09T05:04:49Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "27dc2f14dcc6c5186b5e7cd008e9469a678b75d3",
+  "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+  "outcome": "pass",
+  "runId": "2026-09-09T05:04:49Z-literacy-corridor-gate-retry-27dc2f14",
+  "scenarioId": "literacy-corridor-gate-retry",
+  "schemaVersion": 1,
+  "sourceFingerprint": "8b6f1ebd271fb412f969764634f19bc4436916ea1c733ac582e6dffde8d76031"
+}

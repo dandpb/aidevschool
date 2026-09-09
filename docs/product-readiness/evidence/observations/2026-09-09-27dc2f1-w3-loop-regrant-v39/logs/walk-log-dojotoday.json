@@ -1,0 +1,29 @@
+{
+  "walk": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "observed": [
+        "'Sua lição de hoje' + 'Retome por aqui' headings visíveis; unidade ativa renderizada da projeção gerada (5180 canônica) (fpdt-01-daily-view.png)",
+        "W3 re-validado no render: #soc-reply data-testid=feedback-panel com role=status aria-live=polite aria-atomic=true; #soc-send data-testid=submit-attempt",
+        "W3 forced-colors wave 1 declarada no stylesheet: @media (forced-colors: active) com .socrates-reply.is-error dashed 2px, .btn-primary/.socrates-send 2px ButtonText, .socrates-input 2px CanvasText",
+        "resposta do assistente anunciada na região de status (endpoint fake do walk): 'Resposta socrática de teste.' (fpdt-02-w3-socrates-reply.png)",
+        "W3/B7 sob emulação forced-colors: feedback de erro distinguível sem cor — .is-error borderTopStyle=dashed, width=2px (texto do erro é o affordance primário) (fpdt-06-w3-socrates-error-forced-colors.png)"
+      ]
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "observed": [
+        "vista sem afordância de avaliação (controles concluir/mastered/avaliar: presentes)",
+        "localStorage estável entre reloads (vista não escreve estado): true",
+        "fronteira de autoridade presente na view (fpdt-03-boundary.png): 'O verificador independente decide'"
+      ]
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "observed": [
+        "day-N (fixture 5181) renderiza 'Sua lição de hoje' com fila/streak da projeção (fpdt-04-day-n.png)",
+        "day-N+1 (fixture 5182) renderiza a view do dia seguinte com copy de fronteira — retornar não avalia nem carrega veredito do dia anterior (fpdt-05-day-n-plus-1.png)"
+      ]
+    }
+  ]
+}
