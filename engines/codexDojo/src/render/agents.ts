@@ -51,12 +51,15 @@ export function renderAgents(state: AppState): string {
 
       <div class="agent-list">
         ${agents
-          .map((agent) => {
-            const { className, aria } = pressedAttrs(agent.id === selectedAgent.id)
+          .map((agent, index) => {
+            const isSelected = agent.id === selectedAgent.id
+            const { className, aria } = pressedAttrs(isSelected)
+            const selectionText = isSelected ? ", atual" : ""
+            const ariaLabel = `Agente ${index + 1}: ${agent.name} (${agent.role})${selectionText}`
             return `
-              <button class="agent-row ${className}" type="button" data-agent="${escapeHtml(agent.id)}"${aria}>
-                <span>${escapeHtml(agent.name)}</span>
-                <small>${escapeHtml(agent.role)}</small>
+              <button class="agent-row ${className}" type="button" data-agent="${escapeHtml(agent.id)}"${aria} aria-label="${escapeHtml(ariaLabel)}">
+                <span aria-hidden="true">${escapeHtml(agent.name)}</span>
+                <small aria-hidden="true">${escapeHtml(agent.role)}</small>
               </button>
             `
           })
