@@ -57,27 +57,57 @@ issue, use `AID-<n>-<slug>`. Templates: `docs/sdlc/templates/`.
   into a single short plan block in the task record, but self-verification
   and review are never skipped.
 
-### External-origin PRs (bots: Sentinel, Jules)
+## PRs automatizados (Bolt/Palette/Sentinel) — fast path documentado + aceitação registrada
 
-Fixes sometimes arrive as PRs from external bots (Sentinel security scans,
-Jules). A bot has no Paperclip presence and owns no accountability trail
-here, so it cannot register its own intent — but merged bot PRs become
-precedent, so the written producer link is still required (audit
-AID-767/B finding F1, retrofitted by AID-771 in
-`intent/2026-09-03-xss-dojotoday-sentinel/`):
+Fixes and improvements arrive as PRs from automated accounts — Bolt
+(performance), Palette (a11y/visual), Sentinel (security), all via
+`google-labs-jules[bot]` on the founder's GitHub login. These accounts have
+no Paperclip presence and own no accountability trail here, so they cannot
+register their own intent: **an open PR is not a delivery.** But merged bot
+PRs become precedent, so the written producer link is still required (audit
+AID-767/B finding F1; good precedent `intent/2026-09-03-xss-dojotoday-sentinel/`,
+retrofitted by AID-771). Policy ratified by AID-1136 (despacho do board,
+Registro #7):
 
-- **Who registers:** the CEO, or an agent dispatched by the CEO, creates
-  the fast-path record — a short plan block in the task record, or
-  `intent/<change-id>/` with `intent.md` + `plan.md` — **before merge**,
-  linking the PR, the independent QA-verdict issue, and any follow-up
-  guard or re-grant.
-- **What never changes:** the independent verdict (producer ≠ verifier)
-  remains mandatory before merge; the record documents the chain, it
-  never substitutes for verification.
-- **If the record slips** (as with PR #262): retrofit it promptly as a
-  **retrospective record** marked as such at the top of each file, citing
-  the verdicts and merge SHAs that already happened, and let the miss feed
-  the audit.
+### Fast path canônico (antes do merge)
+
+1. **Registro do produtor** — o CEO, ou agente despachado pelo CEO, cria o
+   fast-path record **antes do merge**: `intent/<change-id>/` com `intent.md`
+   + `plan.md` mínimos (ou, para bounded fixes, um short plan block no task
+   record), linkando o PR, o veredito independente e follow-ups (guards,
+   re-grants). `<change-id>` = `YYYY-MM-DD-<slug>`.
+2. **CI verde no head** — incluindo o job `sdlc-guards`; PR vermelho não entra,
+   sem exceção.
+3. **Aceitação registrada** — merge somente com uma das duas formas:
+   - founder merge no GitHub (aceite do dono humano no próprio PR), **ou**
+   - veredito/countersign Paperclip independente (QA Lead ou fresh-context
+     verifier contra o `plan.md`) + merge single-writer CEO citando o
+     countersign na mensagem de merge (precedentes #301/#302/#306).
+
+   **Producer ≠ verifier nunca é dispensado:** o registro documenta a cadeia,
+   nunca substitui a verificação. Um bot (nem o CEO como produtor) nunca
+   verifica o próprio diff.
+
+### Recusa também é registrada (close mudo é proibido)
+
+PR fechado sem merge leva **comentário de fechamento obrigatório** antes do
+close: motivo (veredito, duplicidade, obsolescência, risco), link para a
+issue/verdict de origem e, quando aplicável, o destino do trabalho. Os
+closures mudos pré-política (#282, #283, #293, #294, #299, #300) são
+histórico imutável — não reabrir — mas todo close novo registra motivo. Se o
+registro escorregar (como no PR #262): retrofit prontamente como
+**retrospective record**, marcado como tal no topo de cada arquivo, citando
+vereditos e merge SHAs, e deixe a falha alimentar a auditoria.
+
+### Retro-lista dos merged sob esta política (AID-1136, 2026-09-09)
+
+| PR | Conta/tema | Merge (SHA, data) | Aceitação registrada |
+| --- | --- | --- | --- |
+| #262 | Sentinel — XSS dojoToday `renderLocalSuggestion` | `fd7c52aa` 2026-09-04 | founder merge GitHub; retrofit AID-771 em `intent/2026-09-03-xss-dojotoday-sentinel/` + QA AID-766/764 |
+| #301 | Bolt — perf pathfinding miniTown | `b8f9d5d4` 2026-09-09 | countersign AID-1087 r2 CONFORME; merge CEO single-writer |
+| #302 | Palette — a11y link OS linuxLab (nova aba) | `2f66572c` 2026-09-08 | QA countersign AID-1081 CONFORME @ `763dbbed`; desfecho CEO |
+| #305 | Palette — aria-labels agent list | `401c4d5d` 2026-09-09 | founder merge GitHub |
+| #306 | Bolt — micro-opt `isCellOccupiedByVehicle` | `aa084ab9` 2026-09-09 | CI 36/36; merge CEO single-writer, precedente #301 |
 
 ## Guardrails (what is enforced, and how)
 
