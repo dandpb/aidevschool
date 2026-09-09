@@ -657,3 +657,27 @@
   color: var(--journey-primary-dark);
   font-weight: 850;
 }
+
+/* AID-1096/W3 (forced-colors wave 1, baseline B7 da proposta AID-914 §3.1):
+   em forced-colors o UA substitui a paleta e suprime box-shadow — o
+   .journey-primary perde a sombra 3D e a aresta (border: 0), então ganha
+   borda explícita >=2px; :disabled mapeia para GrayText. Containers de
+   status/resultado preservam estrutura + texto (B3). Sem
+   forced-color-adjust: none nesta wave. Padrão:
+   docs/design/design-foundations.md §4. */
+@media (forced-colors: active) {
+  .journey-primary,
+  .mentor-submit,
+  .mentor-reopen,
+  .result-verification button {
+    border: 2px solid ButtonText;
+  }
+  .journey-primary:disabled,
+  .mentor-submit:disabled,
+  .journey-back:disabled,
+  .mission-map-node button:disabled,
+  .result-verification button:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+}

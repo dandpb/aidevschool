@@ -2438,3 +2438,30 @@ a.audience-route-dev .route-badge {
 .checkpoint-screen .card {
   text-align: left;
 }
+
+/* AID-1096/W3 (forced-colors wave 1, baseline B7 da proposta AID-914 §3.1):
+   em forced-colors o UA substitui a paleta e suprime box-shadow — bordas
+   explícitas >=2px mantêm as arestas dos botões do loop, :disabled mapeia
+   para GrayText e os containers de feedback preservam a distinção por
+   estrutura + texto (B3: nunca só cor; fail ganha borda Mark). Sem
+   forced-color-adjust: none nesta wave. Padrão:
+   docs/design/design-foundations.md §4. */
+@media (forced-colors: active) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-small {
+    border: 2px solid ButtonText;
+  }
+  .btn-primary:disabled,
+  .btn-secondary:disabled,
+  .btn-small:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+  .btn-link:disabled {
+    color: GrayText;
+  }
+  .feedback-fail {
+    border-color: Mark;
+  }
+}

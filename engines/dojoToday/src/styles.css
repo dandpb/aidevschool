@@ -692,6 +692,33 @@ summary:focus-visible {
   display: none;
 }
 
+/* AID-1096/W3 (forced-colors wave 1, baseline B7 da proposta AID-914 §3.1):
+   em forced-colors o UA substitui a paleta e suprime box-shadow/filter —
+   bordas explícitas >=2px mantêm as arestas dos controles do loop (a sombra
+   3D do .btn-primary some) e :disabled mapeia para GrayText. Containers de
+   feedback preservam borda + texto (nunca só cor). Sem forced-color-adjust:
+   none nesta wave. Padrão: docs/design/design-foundations.md §4. */
+@media (forced-colors: active) {
+  .btn {
+    border: 2px solid ButtonText;
+  }
+  .btn:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+  .link-btn:disabled {
+    color: GrayText;
+  }
+  .socrates-input:disabled,
+  .socrates-config input:disabled {
+    border-color: GrayText;
+    color: GrayText;
+  }
+  .socrates-reply.is-error {
+    border: 2px solid Mark;
+  }
+}
+
 /* Jogar inline (iframe do jogo voxel/pixel) */
 .play-inline-row {
   margin-top: 8px;
