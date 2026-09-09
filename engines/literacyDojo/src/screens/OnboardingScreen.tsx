@@ -131,10 +131,10 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
           </h1>
         </div>
         <div className="onboarding-progress">
-          {/* role="status" (aria-live polite): anuncia "Etapa N de 5" na
-              transição; conteúdo inicial não é falado (live regions só falam
-              em mudança pós-carga). */}
-          <span className="sr-only" role="status">{`Etapa ${step + 1} de ${STEPS.length}`}</span>
+          {/* <output> carrega role="status" implícito (aria-live polite):
+              anuncia "Etapa N de 5" na transição; conteúdo inicial não é
+              falado (live regions só falam em mudança pós-carga). */}
+          <output className="sr-only">{`Etapa ${step + 1} de ${STEPS.length}`}</output>
           {STEPS.map((item, index) => (
             <span key={item.key} className={index <= step ? "is-active" : ""} aria-hidden="true" />
           ))}
