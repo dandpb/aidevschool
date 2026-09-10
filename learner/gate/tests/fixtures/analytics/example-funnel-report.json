@@ -1,5 +1,5 @@
 {
-  "reportVersion": 3,
+  "reportVersion": 4,
   "generatedAt": "2026-09-18T00:00:00.000Z",
   "parameters": {
     "windowsDays": [
@@ -625,5 +625,171 @@
       "suppressed": true,
       "n": 0
     }
+  },
+  "glossary": {
+    "entry.lesson-resume": "retomada pós-reload de lição em andamento (chamado de 'deep-link' no relatório da janela 2026-09-06→10; o termo 'deep-link' está aposentado no vocabulário novo)",
+    "entry.absent-pre-v4": "não instrumentado (pré-v4) — nunca 'unknown'",
+    "briefExposure.exitedBrief": "viu o brief e não chegou à 1ª atividade — comportamento observado (exposição), nunca leitura ou compreensão",
+    "briefExposure.exitedFirstActivity": "viu a 1ª atividade e não submeteu — não glosado como 'não entendeu o que fazer' (essa é a hipótese F1, testada com as sessões O1)",
+    "briefExposure.residualNoBrief": "started sem brief_viewed — canário de qualidade de dados (defeito de emissão se crescer), não segmento de aprendiz",
+    "briefExposure.startedToBrief": "~100% <15s por construção (a intro renderiza junto com o started) — nota de uso",
+    "o1.artifactMapping": "artefatos de pesquisa O1 referem a tela pelo nome visível ao aprendiz ('Pedido da Vila Lume'); mapeamento analítico: brief/lesson_brief_viewed ↔ intro/'Pedido da Vila Lume' ('brief' é vocabulário de analista — o aprendiz nunca vê essa palavra)"
+  },
+  "activationDetail": {
+    "definition": "OS: sessões por tipo de entrada (primeiro marcador da sessão: onboarding.started=first-visit · journey.returned=returning · nenhum=unclassified canário) com alcance in-sessão; literacy: split pela prop `entry` (R1). k≥5/célula",
+    "osSessions": {
+      "overall": {
+        "n": 46,
+        "firstVisit": {
+          "sessions": 32,
+          "onboardingCompleted": 32,
+          "missionStarted": 30,
+          "missionCompleted": 30
+        },
+        "returning": {
+          "sessions": 14,
+          "missionStarted": 5,
+          "missionCompleted": 5
+        }
+      },
+      "byWeek": {
+        "2026-W29": {
+          "n": 8,
+          "firstVisit": {
+            "sessions": 6,
+            "onboardingCompleted": 6,
+            "missionStarted": 5,
+            "missionCompleted": 5
+          },
+          "returning": {
+            "sessions": 2,
+            "missionStarted": 1,
+            "missionCompleted": 1
+          }
+        },
+        "2026-W30": {
+          "suppressed": true,
+          "n": 3
+        },
+        "2026-W32": {
+          "suppressed": true,
+          "n": 2
+        },
+        "2026-W33": {
+          "suppressed": true,
+          "n": 4
+        },
+        "2026-W34": {
+          "suppressed": true,
+          "n": 1
+        },
+        "2026-W35": {
+          "n": 7,
+          "firstVisit": {
+            "sessions": 6,
+            "onboardingCompleted": 6,
+            "missionStarted": 5,
+            "missionCompleted": 5
+          },
+          "returning": {
+            "sessions": 1,
+            "missionStarted": 1,
+            "missionCompleted": 1
+          }
+        },
+        "2026-W36": {
+          "suppressed": true,
+          "n": 2
+        },
+        "2026-W37": {
+          "n": 18,
+          "firstVisit": {
+            "sessions": 17,
+            "onboardingCompleted": 17,
+            "missionStarted": 17,
+            "missionCompleted": 17
+          },
+          "returning": {
+            "sessions": 1,
+            "missionStarted": 0,
+            "missionCompleted": 0
+          }
+        },
+        "2026-W38": {
+          "suppressed": true,
+          "n": 1
+        }
+      }
+    },
+    "literacyEntrySplit": {
+      "definition": "sessões literacy por prop opcional `entry` do entry_viewed (home|lesson-resume|onboarding); sem a prop = 'not-instrumented-pre-v4' (envelope pré-v4, nunca rejeitado); sem entry_viewed = 'no-entry-event' (canário do gap pré-F2)",
+      "byWeek": {},
+      "overall": {
+        "suppressed": true,
+        "n": 0
+      }
+    }
+  },
+  "briefExposure": {
+    "definition": "dwell/exposição por sessão entre started, brief, 1ª apresentação e 1ª submissão (bins R3); rótulos de comportamento observado, nunca leitura — ver glossário",
+    "literacySessions": {
+      "definition": "envelope literacy v2 — sessões anônimas efêmeras (page load); segmentos: exitedBrief = started∧brief∧¬presented(índice 0) · exitedFirstActivity = presented(0)∧¬submissão · submittedFirst = presented(0)∧submissão; resíduo = started∧¬brief (canário)",
+      "segments": {},
+      "dwellBins": {
+        "startedToBrief": {
+          "bins": {}
+        },
+        "briefToFirstPresentation": {
+          "bins": {}
+        },
+        "presentationToFirstSubmission": {
+          "bins": {}
+        }
+      },
+      "mediansSeconds": {
+        "briefToFirstPresentation": null,
+        "presentationToFirstSubmission": null
+      }
+    },
+    "hostedMissions": {
+      "definition": "envelope OS v1 — missões hospedadas (mission-events reemitidos pelo MissionShell); segmentos análogos ao literacy (started=mission.started)",
+      "nSessionsWithStarted": 12,
+      "segments": {
+        "residualNoBrief": 12
+      },
+      "dwellBins": {
+        "startedToBrief": {
+          "bins": {}
+        },
+        "briefToFirstPresentation": {
+          "bins": {}
+        },
+        "presentationToFirstSubmission": {
+          "bins": {}
+        }
+      },
+      "mediansSeconds": {
+        "briefToFirstPresentation": null,
+        "presentationToFirstSubmission": null
+      },
+      "coverage": "engineId=literacyDojo somente — voxelDojo não emite os eventos de exposição nesta onda (adoção voxel = follow-up data-gated)"
+    }
+  },
+  "probeClassification": {
+    "definition": "tráfego sintético classificado deterministicamente por marcador de identificador (prefixo probe. novo + lista legada aid###-/qa-/sequential-uuid); elimina inferência por timing ONDE há marcador — sem marcador a sessão permanece não classificada por esta seção",
+    "markerRules": [
+      "probe.",
+      "aid###-",
+      "qa-",
+      "sequential-uuid"
+    ],
+    "counts": {
+      "osEvents": 0,
+      "literacyEvents": 0,
+      "osInstallations": 0,
+      "literacySessions": 0,
+      "byMarker": {}
+    },
+    "policy": "as seções v3/v4 de aprendiz continuam computadas sobre TODOS os eventos aceitos (semântica inalterada); excluir sondas da leitura é decisão do operador com esta seção em mãos"
   }
 }

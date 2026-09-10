@@ -41,7 +41,7 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
-export const REPORT_VERSION = 3;
+export const REPORT_VERSION = 4;
 /**
  * Canonical mission→module mapping for the D2 cut (spec AID-673 §2.2): read
  * from the shared curriculum catalog at execution time — no copied mapping.
@@ -60,6 +60,72 @@ const ACTIVATION_STAGES = [
   { name: "mission.completed", dimensions: { result: "completed" } },
 ];
 const DAY_MS = 24 * 60 * 60 * 1000;
+
+// --- F2 v4 (spec AID-1218 R3–R5): exposição, detalhe de entrada, sondas ---
+
+/** Bins de dwell do R3 {`<15s`,`15-60s`,`1-5min`,`>5min`} — o compromisso. */
+export const DWELL_BINS = ["<15s", "15-60s", "1-5min", ">5min"];
+
+export function dwellBinLabel(milliseconds) {
+  if (milliseconds < 0) return null;
+  const seconds = milliseconds / 1000;
+  if (seconds < 15) return "<15s";
+  if (seconds < 60) return "15-60s";
+  if (seconds < 300) return "1-5min";
+  return ">5min";
+}
+
+/**
+ * Marcadores determinísticos de tráfego sintético (R5, emenda ADR-0010): o
+ * prefixo `probe.` é a convenção nova; os demais são a lista legada de
+ * marcadores conhecidos do 1º relatório (§8.5) — classificação por marcador
+ * elimina a inferência por timing ONDE há marcador. As seções v3 continuam
+ * computadas sobre TODOS os eventos aceitos (semântica inalterada, R7d);
+ * excluir sonda da leitura é decisão do operador, nunca automática.
+ */
+export const PROBE_MARKER_RULES = [
+  { marker: "probe.", matches: (id) => id.startsWith("probe.") },
+  { marker: "aid###-", matches: (id) => /^aid\d{3}-/.test(id) },
+  { marker: "qa-", matches: (id) => id.startsWith("qa-") },
+  {
+    marker: "sequential-uuid",
+    matches: (id) => /-0000-4000-8000-/.test(id),
+  },
+];
+
+export function probeMarkerFor(...identifiers) {
+  for (const rule of PROBE_MARKER_RULES) {
+    for (const id of identifiers) {
+      if (typeof id === "string" && id.length > 0 && rule.matches(id)) return rule.marker;
+    }
+  }
+  return null;
+}
+
+/** Glossário binding do report v4 (spec R1/R3/R4). */
+export const REPORT_GLOSSARY = {
+  "entry.lesson-resume":
+    "retomada pós-reload de lição em andamento (chamado de 'deep-link' no relatório da janela 2026-09-06→10; o termo 'deep-link' está aposentado no vocabulário novo)",
+  "entry.absent-pre-v4": "não instrumentado (pré-v4) — nunca 'unknown'",
+  "briefExposure.exitedBrief":
+    "viu o brief e não chegou à 1ª atividade — comportamento observado (exposição), nunca leitura ou compreensão",
+  "briefExposure.exitedFirstActivity":
+    "viu a 1ª atividade e não submeteu — não glosado como 'não entendeu o que fazer' (essa é a hipótese F1, testada com as sessões O1)",
+  "briefExposure.residualNoBrief":
+    "started sem brief_viewed — canário de qualidade de dados (defeito de emissão se crescer), não segmento de aprendiz",
+  "briefExposure.startedToBrief":
+    "~100% <15s por construção (a intro renderiza junto com o started) — nota de uso",
+  "o1.artifactMapping":
+    "artefatos de pesquisa O1 referem a tela pelo nome visível ao aprendiz ('Pedido da Vila Lume'); mapeamento analítico: brief/lesson_brief_viewed ↔ intro/'Pedido da Vila Lume' ('brief' é vocabulário de analista — o aprendiz nunca vê essa palavra)",
+};
+
+function medianOf(sortedValues) {
+  if (sortedValues.length === 0) return null;
+  const mid = Math.floor(sortedValues.length / 2);
+  return sortedValues.length % 2 === 1
+    ? sortedValues[mid]
+    : Math.round(((sortedValues[mid - 1] + sortedValues[mid]) / 2) * 1000) / 1000;
+}
 
 function utcDayStart(isoMs) {
   const date = new Date(isoMs);
@@ -576,7 +642,17 @@ export function aggregateFunnel(entries, options = {}) {
   const verificationHealth = verificationHealthFor();
   const rendererDegraded = rendererDegradedFor();
   const moduleCompletionMedian = moduleCompletionMedianFor(missionSetsResult);
-  const literacyFunnel = literacyFunnelFor({ events: literacyAccepted, k });
+  // F2 v4: dedup do envelope literacy compartilhado entre literacyFunnel e
+  // as seções novas (activationDetail/briefExposure/probeClassification).
+  const literacyDedup = dedupeLiteracyEvents(literacyAccepted);
+  const literacyFunnel = literacyFunnelFor({
+    events: literacyDedup.events,
+    duplicateEvents: literacyDedup.duplicates,
+    k,
+  });
+  const activationDetail = activationDetailFor({ events, literacyEvents: literacyDedup.events, k });
+  const briefExposure = briefExposureFor({ osEvents: events, literacyEvents: literacyDedup.events, k });
+  const probeClassification = probeClassificationFor({ events, literacyEvents: literacyDedup.events });
 
   return {
     reportVersion: REPORT_VERSION,
@@ -601,7 +677,29 @@ export function aggregateFunnel(entries, options = {}) {
     rendererDegraded,
     moduleCompletionMedian,
     literacyFunnel,
+    // F2 v4 (spec AID-1218 R3–R5) — seções NOVAS apenas; as seções v3 acima
+    // permanecem com definição e números idênticos para o mesmo input (R7d).
+    glossary: REPORT_GLOSSARY,
+    activationDetail,
+    briefExposure,
+    probeClassification,
   };
+}
+
+/** Dedup por eventId do envelope literacy (corrida beacon+fetch, ADR-0010). */
+function dedupeLiteracyEvents(accepted) {
+  const seen = new Set();
+  const events = [];
+  let duplicates = 0;
+  for (const event of accepted) {
+    if (seen.has(event.eventId)) {
+      duplicates += 1;
+      continue;
+    }
+    seen.add(event.eventId);
+    events.push(event);
+  }
+  return { events, duplicates };
 }
 
 // --- literacy funnel (AID-913 activation; envelope source:"literacydojo") ---
@@ -619,19 +717,7 @@ const LITERACY_STAGES = [
  * published cell is k-suppressed and no identifier is ever emitted. Attempts
  * per session+lesson beyond the first are the retry marker.
  */
-function literacyFunnelFor({ events: literacyAccepted, k }) {
-  // Dedup by eventId (same beacon+fetch race as the OS envelope).
-  const seenLiteracyEventIds = new Set();
-  let literacyDuplicates = 0;
-  const literacyEvents = [];
-  for (const event of literacyAccepted) {
-    if (seenLiteracyEventIds.has(event.eventId)) {
-      literacyDuplicates += 1;
-      continue;
-    }
-    seenLiteracyEventIds.add(event.eventId);
-    literacyEvents.push(event);
-  }
+function literacyFunnelFor({ events: literacyEvents, duplicateEvents: literacyDuplicates, k }) {
 
   const sessions = new Map();
   for (const event of literacyEvents) {
@@ -741,6 +827,320 @@ function literacyFunnelFor({ events: literacyAccepted, k }) {
 
 function firstTimeOf(installation, stageName) {
   return installation.stageTimes.get(stageName);
+}
+
+// --- F2 v4 sections (spec AID-1218 R3–R5) — aditivas; seções v3 intactas ---
+
+/** Mediana contínua (segundos) k-gated — bins são o compromisso, esta é a
+ *  comparabilidade direcional com o tempo contínuo do scorecard O1. */
+function gatedMedian(secondsValues, k) {
+  if (secondsValues.length === 0) return null;
+  if (secondsValues.length < k) return { suppressed: true, n: secondsValues.length };
+  return medianOf([...secondsValues].sort((a, b) => a - b));
+}
+
+function gatedCountCell(count, k) {
+  if (count === 0) return undefined;
+  return count < k ? { suppressed: true, n: count } : count;
+}
+
+/**
+ * activationDetail (R4): sessões OS classificadas por tipo de entrada —
+ * `onboarding.started` (first-visit) × `journey.returned` (returning) ×
+ * `unclassified` (canário, esperado ~0) — com alcance IN-SESSÃO dos estágios
+ * de ativação; e o split de entrada literacy pela prop `entry` (R1), incluindo
+ * o bucket pré-v4 ("não instrumentado") e o canário de sessão sem evento de
+ * entrada. Tudo k≥5/célula; identificadores nunca publicados.
+ */
+function activationDetailFor({ events, literacyEvents, k }) {
+  const sessions = new Map();
+  for (const event of events) {
+    const key = `${event.dimensions.installationId}:${event.dimensions.sessionId}`;
+    if (!sessions.has(key)) {
+      sessions.set(key, { firstTime: eventTime(event), entry: null, reached: new Set() });
+    }
+    const session = sessions.get(key);
+    if (session.entry === null) {
+      if (event.name === "onboarding.started") session.entry = "first-visit";
+      else if (event.name === "journey.returned") session.entry = "returning";
+    }
+    if (event.name === "onboarding.completed") session.reached.add("onboarding.completed");
+    if (event.name === "mission.started") session.reached.add("mission.started");
+    if (event.name === "mission.completed" && event.dimensions.result === "completed") {
+      session.reached.add("mission.completed");
+    }
+  }
+
+  const bucketFor = (cohort) => {
+    const n = cohort.length;
+    if (n < k) return { suppressed: true, n };
+    const firstVisit = cohort.filter((session) => session.entry === "first-visit");
+    const returning = cohort.filter((session) => session.entry === "returning");
+    const unclassified = cohort.filter((session) => session.entry === null);
+    const bucket = { n };
+    if (firstVisit.length > 0) {
+      bucket.firstVisit = {
+        sessions: firstVisit.length,
+        onboardingCompleted: firstVisit.filter((s) => s.reached.has("onboarding.completed")).length,
+        missionStarted: firstVisit.filter((s) => s.reached.has("mission.started")).length,
+        missionCompleted: firstVisit.filter((s) => s.reached.has("mission.completed")).length,
+      };
+    }
+    if (returning.length > 0) {
+      bucket.returning = {
+        sessions: returning.length,
+        missionStarted: returning.filter((s) => s.reached.has("mission.started")).length,
+        missionCompleted: returning.filter((s) => s.reached.has("mission.completed")).length,
+      };
+    }
+    if (unclassified.length > 0) {
+      // Canário (esperado ~0): sessão sem onboarding.started nem journey.returned.
+      bucket.unclassified = { sessions: unclassified.length };
+    }
+    return bucket;
+  };
+
+  const byWeek = {};
+  const weekCohorts = new Map();
+  for (const session of sessions.values()) {
+    const week = isoWeekKey(session.firstTime);
+    if (!weekCohorts.has(week)) weekCohorts.set(week, []);
+    weekCohorts.get(week).push(session);
+  }
+  for (const week of [...weekCohorts.keys()].sort()) {
+    byWeek[week] = bucketFor(weekCohorts.get(week));
+  }
+
+  // Split de entrada literacy (R1): prop `entry` opcional; ausência em
+  // envelope pré-v4 = "não instrumentado (pré-v4)"; sessão sem entry_viewed
+  // = canário do gap de instrumentação do 1º relatório (nunca 'unknown').
+  const literacyByEntry = new Map();
+  const literacyWeeks = new Map();
+  const literacySessions = new Map();
+  for (const event of literacyEvents) {
+    if (!literacySessions.has(event.sessionId)) {
+      literacySessions.set(event.sessionId, { firstTime: Date.parse(event.occurredAt), entry: null });
+    }
+    const session = literacySessions.get(event.sessionId);
+    if (event.event === "entry_viewed" && session.entry === null) {
+      session.entry = typeof event.props?.entry === "string" ? event.props.entry : "not-instrumented-pre-v4";
+    }
+  }
+  for (const session of literacySessions.values()) {
+    const entry = session.entry ?? "no-entry-event";
+    literacyByEntry.set(entry, (literacyByEntry.get(entry) ?? 0) + 1);
+    const week = isoWeekKey(session.firstTime);
+    if (!literacyWeeks.has(week)) literacyWeeks.set(week, new Map());
+    const entries = literacyWeeks.get(week);
+    entries.set(entry, (entries.get(entry) ?? 0) + 1);
+  }
+  const literacyEntrySplit = {
+    definition:
+      "sessões literacy por prop opcional `entry` do entry_viewed (home|lesson-resume|onboarding); sem a prop = 'not-instrumented-pre-v4' (envelope pré-v4, nunca rejeitado); sem entry_viewed = 'no-entry-event' (canário do gap pré-F2)",
+    byWeek: {},
+  };
+  const entryBucket = (entries) => {
+    const n = [...entries.values()].reduce((sum, count) => sum + count, 0);
+    if (n < k) return { suppressed: true, n };
+    const bucket = { n };
+    for (const entry of [...entries.keys()].sort()) {
+      bucket.byEntry = bucket.byEntry ?? {};
+      bucket.byEntry[entry] = { sessions: entries.get(entry) };
+    }
+    return bucket;
+  };
+  literacyEntrySplit.overall = entryBucket(literacyByEntry);
+  for (const week of [...literacyWeeks.keys()].sort()) {
+    literacyEntrySplit.byWeek[week] = entryBucket(literacyWeeks.get(week));
+  }
+
+  return {
+    definition:
+      "OS: sessões por tipo de entrada (primeiro marcador da sessão: onboarding.started=first-visit · journey.returned=returning · nenhum=unclassified canário) com alcance in-sessão; literacy: split pela prop `entry` (R1). k≥5/célula",
+    osSessions: { overall: bucketFor([...sessions.values()]), byWeek },
+    literacyEntrySplit,
+  };
+}
+
+/**
+ * briefExposure (R3): segmentação por sessão do dwell entre started, brief,
+ * 1ª apresentação e 1ª submissão. Rótulos medem COMPORTAMENTO OBSERVADO
+ * (exposição) — nunca leitura nem compreensão (glossário binding do report).
+ * Resíduo declarado: `started ∧ ¬brief_viewed` é canário de qualidade de
+ * dados, não segmento de aprendiz. Medianas contínuas (b)/(c) k-gated;
+ * (a) started→brief é ~100% <15s por construção (nota de uso).
+ */
+function briefExposureFor({ osEvents, literacyEvents, k }) {
+  const BIN_KEYS = DWELL_BINS;
+
+  const exposureBlock = (definition, sessions, extra = {}) => {
+    const anchor = (session) => {
+      const started = session.started ?? null;
+      const brief = session.brief ?? null;
+      const presented = session.presented ?? null;
+      const submitted = session.submitted ?? null;
+      const exitedBrief = started !== null && brief !== null && presented === null;
+      const exitedFirstActivity = presented !== null && submitted === null;
+      const submittedSegment = presented !== null && submitted !== null;
+      const residualNoBrief = started !== null && brief === null;
+      return { started, brief, presented, submitted, exitedBrief, exitedFirstActivity, submittedSegment, residualNoBrief };
+    };
+    const anchored = sessions.map(anchor);
+    const n = anchored.filter((s) => s.started !== null).length;
+    const segments = {
+      exitedBrief: gatedCountCell(anchored.filter((s) => s.exitedBrief).length, k),
+      exitedFirstActivity: gatedCountCell(anchored.filter((s) => s.exitedFirstActivity).length, k),
+      submittedFirst: gatedCountCell(anchored.filter((s) => s.submittedSegment).length, k),
+      residualNoBrief: gatedCountCell(anchored.filter((s) => s.residualNoBrief).length, k),
+    };
+    const intervalBins = (fromKey, toKey) => {
+      const observed = anchored.filter((s) => s[fromKey] !== null && s[toKey] !== null && s[toKey] >= s[fromKey]);
+      const counts = Object.fromEntries(BIN_KEYS.map((key) => [key, 0]));
+      for (const session of observed) {
+        const label = dwellBinLabel(session[toKey] - session[fromKey]);
+        if (label !== null) counts[label] += 1;
+      }
+      const bins = {};
+      for (const key of BIN_KEYS) {
+        const cell = gatedCountCell(counts[key], k);
+        if (cell !== undefined) bins[key] = cell;
+      }
+      return { observed: gatedCountCell(observed.length, k), bins };
+    };
+    const medianSeconds = (fromKey, toKey) => {
+      const values = anchored
+        .filter((s) => s[fromKey] !== null && s[toKey] !== null && s[toKey] >= s[fromKey])
+        .map((s) => (s[toKey] - s[fromKey]) / 1000);
+      return gatedMedian(values, k);
+    };
+    return {
+      definition,
+      nSessionsWithStarted: gatedCountCell(n, k),
+      segments,
+      dwellBins: {
+        startedToBrief: intervalBins("started", "brief"),
+        briefToFirstPresentation: intervalBins("brief", "presented"),
+        presentationToFirstSubmission: intervalBins("presented", "submitted"),
+      },
+      mediansSeconds: {
+        briefToFirstPresentation: medianSeconds("brief", "presented"),
+        presentationToFirstSubmission: medianSeconds("presented", "submitted"),
+      },
+      ...extra,
+    };
+  };
+
+  // Literacy v2 envelope: âncoras por SESSÃO (primeiras ocorrências; sessão =
+  // page load — múltiplas lições numa sessão usam a 1ª de cada estágio).
+  const literacySessions = new Map();
+  for (const event of literacyEvents) {
+    if (!literacySessions.has(event.sessionId)) {
+      literacySessions.set(event.sessionId, {});
+    }
+    const session = literacySessions.get(event.sessionId);
+    const time = Date.parse(event.occurredAt);
+    if (event.event === "lesson_started" && session.started === undefined) session.started = time;
+    if (event.event === "lesson_brief_viewed" && session.brief === undefined) session.brief = time;
+    if (
+      event.event === "activity_presented" &&
+      event.props?.activityIndex === 0 &&
+      session.presented === undefined
+    ) {
+      session.presented = time;
+    }
+    if (event.event === "activity_attempted" && session.submitted === undefined) session.submitted = time;
+  }
+  const literacyBlock = exposureBlock(
+    "envelope literacy v2 — sessões anônimas efêmeras (page load); segmentos: exitedBrief = started∧brief∧¬presented(índice 0) · exitedFirstActivity = presented(0)∧¬submissão · submittedFirst = presented(0)∧submissão; resíduo = started∧¬brief (canário)",
+    [...literacySessions.values()],
+  );
+
+  // OS hosted missions (reemissão do MissionShell): a segmentação vale para
+  // engineId=literacyDojo — voxelDojo não emite mission.brief_viewed /
+  // activity.presented nesta onda (cobertura declarada; adoção = follow-up
+  // data-gated). activity.presented não carrega índice no envelope OS: a 1ª
+  // apresentação da sessão é o âncor (emissão é 1×/índice por construção).
+  const hostedSessions = new Map();
+  for (const event of osEvents) {
+    if (event.dimensions.engineId !== "literacyDojo") continue;
+    if (
+      event.name !== "mission.started" &&
+      event.name !== "mission.brief_viewed" &&
+      event.name !== "activity.presented" &&
+      event.name !== "structured_attempt.submitted"
+    ) {
+      continue;
+    }
+    const key = `${event.dimensions.installationId}:${event.dimensions.sessionId}`;
+    if (!hostedSessions.has(key)) hostedSessions.set(key, {});
+    const session = hostedSessions.get(key);
+    const time = eventTime(event);
+    if (event.name === "mission.started" && session.started === undefined) session.started = time;
+    if (event.name === "mission.brief_viewed" && session.brief === undefined) session.brief = time;
+    if (event.name === "activity.presented" && session.presented === undefined) session.presented = time;
+    if (event.name === "structured_attempt.submitted" && session.submitted === undefined) {
+      session.submitted = time;
+    }
+  }
+  const hostedBlock = exposureBlock(
+    "envelope OS v1 — missões hospedadas (mission-events reemitidos pelo MissionShell); segmentos análogos ao literacy (started=mission.started)",
+    [...hostedSessions.values()],
+    {
+      coverage:
+        "engineId=literacyDojo somente — voxelDojo não emite os eventos de exposição nesta onda (adoção voxel = follow-up data-gated)",
+    },
+  );
+
+  return {
+    definition:
+      "dwell/exposição por sessão entre started, brief, 1ª apresentação e 1ª submissão (bins R3); rótulos de comportamento observado, nunca leitura — ver glossário",
+    literacySessions: literacyBlock,
+    hostedMissions: hostedBlock,
+  };
+}
+
+/**
+ * probeClassification (R5): classificação determinística de tráfego
+ * sintético por marcador (prefixo `probe.` + lista legada). DIAGNÓSTICO
+ * apenas — as seções v3 continuam computadas sobre todos os eventos aceitos
+ * (R7d: mesmo input ⇒ mesmos valores v3); exclusão de sondas é decisão de
+ * leitura do operador, nunca aplicada silenciosamente aqui.
+ */
+function probeClassificationFor({ events, literacyEvents }) {
+  const byMarker = {};
+  let probeEvents = 0;
+  const osInstallations = new Set();
+  const literacySessions = new Set();
+  const classify = (identifiers) => probeMarkerFor(...identifiers);
+  for (const event of events) {
+    const marker = classify([event.eventId, event.dimensions.installationId, event.dimensions.sessionId]);
+    if (marker === null) continue;
+    probeEvents += 1;
+    byMarker[marker] = (byMarker[marker] ?? 0) + 1;
+    osInstallations.add(event.dimensions.installationId);
+  }
+  let literacyProbeEvents = 0;
+  for (const event of literacyEvents) {
+    const marker = classify([event.eventId, event.sessionId]);
+    if (marker === null) continue;
+    literacyProbeEvents += 1;
+    byMarker[marker] = (byMarker[marker] ?? 0) + 1;
+    literacySessions.add(event.sessionId);
+  }
+  return {
+    definition:
+      "tráfego sintético classificado deterministicamente por marcador de identificador (prefixo probe. novo + lista legada aid###-/qa-/sequential-uuid); elimina inferência por timing ONDE há marcador — sem marcador a sessão permanece não classificada por esta seção",
+    markerRules: PROBE_MARKER_RULES.map((rule) => rule.marker),
+    counts: {
+      osEvents: probeEvents,
+      literacyEvents: literacyProbeEvents,
+      osInstallations: osInstallations.size,
+      literacySessions: literacySessions.size,
+      byMarker,
+    },
+    policy:
+      "as seções v3/v4 de aprendiz continuam computadas sobre TODOS os eventos aceitos (semântica inalterada); excluir sondas da leitura é decisão do operador com esta seção em mãos",
+  };
 }
 
 function firstMissionCompleted(installation) {
@@ -997,6 +1397,95 @@ export function renderMarkdownReport(report) {
       "",
     );
   }
+
+  // --- F2 v4 sections (additive; glossário binding primeiro) ---
+  lines.push("", "## Glossário v4 (binding — spec AID-1218 R1/R3/R4)", "");
+  for (const [key, text] of Object.entries(report.glossary ?? {})) {
+    lines.push(`- **${key}**: ${text}`);
+  }
+
+  const detail = report.activationDetail;
+  lines.push(
+    "",
+    "## Activation detail v4 (entrada first-visit × returning; OS por sessão)",
+    "",
+    "| corte | n | first-visit (onb.compl→mission.started→completed) | returning (started→completed) | unclassified |",
+    "| --- | --- | --- | --- | --- |",
+  );
+  const detailRow = (label, bucket) => {
+    if (bucket.suppressed === true) {
+      return `| ${label} | ${bucket.n} | ${suppressedCell(bucket)} | — | — |`;
+    }
+    const first = bucket.firstVisit
+      ? `${bucket.firstVisit.sessions} (${bucket.firstVisit.onboardingCompleted}→${bucket.firstVisit.missionStarted}→${bucket.firstVisit.missionCompleted})`
+      : "0";
+    const returning = bucket.returning
+      ? `${bucket.returning.sessions} (${bucket.returning.missionStarted}→${bucket.returning.missionCompleted})`
+      : "0";
+    const unclassified = bucket.unclassified ? String(bucket.unclassified.sessions) : "0";
+    return `| ${label} | ${bucket.n} | ${first} | ${returning} | ${unclassified} |`;
+  };
+  lines.push(detailRow("overall", detail.osSessions.overall));
+  for (const [week, bucket] of Object.entries(detail.osSessions.byWeek)) {
+    lines.push(detailRow(week, bucket));
+  }
+  const entrySplit = detail.literacyEntrySplit;
+  lines.push(
+    "",
+    "### Literacy — split da prop `entry` (R1)",
+    "",
+    "| corte | n | por entrada |",
+    "| --- | --- | --- |",
+  );
+  const entryRow = (label, bucket) => {
+    if (bucket.suppressed === true) return `| ${label} | ${bucket.n} | ${suppressedCell(bucket)} |`;
+    const cells = Object.entries(bucket.byEntry ?? {})
+      .map(([entry, cell]) => `${entry} ${cell.sessions}`)
+      .join(" · ");
+    return `| ${label} | ${bucket.n} | ${cells} |`;
+  };
+  lines.push(entryRow("overall", entrySplit.overall));
+  for (const [week, bucket] of Object.entries(entrySplit.byWeek)) {
+    lines.push(entryRow(week, bucket));
+  }
+
+  const exposure = report.briefExposure;
+  lines.push("", "## Brief exposure v4 (segmentos R3 — exposição observada, nunca leitura)", "");
+  const exposureBlocks = [
+    ["literacySessions", exposure.literacySessions],
+    ["hostedMissions", exposure.hostedMissions],
+  ];
+  for (const [blockKey, block] of exposureBlocks) {
+    lines.push(`### ${blockKey}`, "");
+    if (block.coverage !== undefined) lines.push(`Cobertura: ${block.coverage}`, "");
+    const segmentCell = (value) =>
+      value === undefined ? "0" : typeof value === "number" ? String(value) : suppressedCell(value);
+    lines.push(
+      `Segmentos (sessões com started: ${segmentCell(block.nSessionsWithStarted)}): ` +
+        `saiu no brief ${segmentCell(block.segments.exitedBrief)} · saiu na 1ª atividade ${segmentCell(block.segments.exitedFirstActivity)} · submeteu ${segmentCell(block.segments.submittedFirst)} · resíduo sem brief ${segmentCell(block.segments.residualNoBrief)} (canário).`,
+    );
+    for (const [intervalKey, interval] of Object.entries(block.dwellBins)) {
+      const bins = Object.entries(interval.bins)
+        .map(([bin, cell]) => `${bin} ${countCell(cell)}`)
+        .join(" · ");
+      lines.push(`- dwell ${intervalKey} (observados ${countCell(interval.observed)}): ${bins || "—"}`);
+    }
+    const medians = block.mediansSeconds;
+    lines.push(
+      `- medianas contínuas (s): brief→1ª apresentação ${medians.briefToFirstPresentation === null ? "—" : typeof medians.briefToFirstPresentation === "number" ? medians.briefToFirstPresentation : suppressedCell(medians.briefToFirstPresentation)} · apresentação→1ª submissão ${medians.presentationToFirstSubmission === null ? "—" : typeof medians.presentationToFirstSubmission === "number" ? medians.presentationToFirstSubmission : suppressedCell(medians.presentationToFirstSubmission)}`,
+    );
+    lines.push("");
+  }
+
+  const probes = report.probeClassification;
+  lines.push(
+    "## Probe classification v4 (diagnóstico determinístico — não altera as seções acima)",
+    "",
+    `Marcadores: ${probes.markerRules.join(" · ")} — eventos OS ${probes.counts.osEvents}, literacy ${probes.counts.literacyEvents}, instalações OS ${probes.counts.osInstallations}, sessões literacy ${probes.counts.literacySessions}.`,
+    "",
+    probes.policy,
+    "",
+  );
 
   lines.push("", "Baseline cycle: the first report establishes the baseline; no external numeric target is claimed.", "");
   return lines.join("\n");

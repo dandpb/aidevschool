@@ -20,7 +20,7 @@ test("literacyFunnel agrega por sessão com dedup e alcance ordenado", async () 
   const entries = await literacyEntries();
   const report = aggregateFunnel(entries, { k: 1 });
   const literacy = report.literacyFunnel;
-  assert.equal(report.reportVersion, 3);
+  assert.equal(report.reportVersion, 4); // F2 v4 (spec AID-1218 R4): seções v3 intactas, seções novas aditivas
   assert.equal(literacy.envelope, "literacydojo v2");
   assert.equal(literacy.totalEvents, 8);
   assert.equal(literacy.totalSessions, 3);

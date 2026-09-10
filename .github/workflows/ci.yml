@@ -191,9 +191,15 @@ jobs:
       # anonymous dojoToday/voxelDojo/PixelQuest funnel events; the contract
       # test fails closed on vocabulary drift against the canonical emitter.
       - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v3.test.mjs
+      # F2 2026-09-10-entry-brief-instrumentation: exposure vocabulary (+2 OS
+      # names, +2 literacy names, optional entry prop) mirrored in the collector.
+      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v4.test.mjs
       # ...and the schema-drift monitor learns the v3 envelope too (exports
       # containing surface events must classify, not drift).
       - run: node --test ../../learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs
+      # F2: the monitor accepts the extended vocabulary (exposure events +
+      # entry prop) and reports the non-UUID eventId diagnostic without failing.
+      - run: node --test ../../learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs
       # AID-947 durable-backing packaging invariant: the deployed functions
       # must declare @netlify/blobs and load it through the static-import
       # wrapper — the live backing was ephemeral /tmp NDJSON on both surfaces
@@ -209,7 +215,11 @@ jobs:
       # synthetic fixtures (real pilot NDJSON never lands in the repo; the
       # fixtures are also checked against events.ts by fixtureSchemaDrift.test.ts).
       - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs ../../learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs
-      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic
+      # F2 v4: activationDetail/briefExposure/probeClassification — additive
+      # sections; v3 sections stay value-identical (R7d locked by the
+      # byte-identical example report in the main aggregation test above).
+      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs
+      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic,../../learner/gate/tests/fixtures/analytics/synthetic-v4
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
       - run: npm run build

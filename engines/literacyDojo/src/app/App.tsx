@@ -155,13 +155,25 @@ export function AppShell({
     }
   }, [route]);
 
-  // Funil AID-913 (emenda ADR-0009): `entry_viewed` exatamente 1× por page
-  // load, quando a home é exibida. Missão hospedada não passa pela home — o
-  // host OS mede a entrada da journey dele (onboarding/mission.started).
+  // Funil AID-913 (emenda ADR-0009) + F2 R1 (`2026-09-10-entry-brief-instrumentation`):
+  // `entry_viewed` exatamente 1× por page load, na PRIMEIRA rota renderizada —
+  // qualquer destino de `resumeSession` (home, retomada de lição pós-reload,
+  // onboarding) — com a prop opcional `entry` discriminando a rota. Missão
+  // hospedada não passa por aqui: o host OS mede a entrada da journey dele
+  // (onboarding.started/journey.returned) e o sink literacy é noop.
   const entryViewedEmittedRef = useRef(false);
   // biome-ignore lint/correctness/useExhaustiveDependencies: hostAdapter é estático por mount; a emissão é única por page load guiada por `route`.
   useEffect(() => {
-    if (route?.name !== "home" || hostAdapter !== null || entryViewedEmittedRef.current) return;
+    if (hostAdapter !== null || entryViewedEmittedRef.current) return;
+    const entry =
+      route?.name === "home"
+        ? "home"
+        : route?.name === "lesson"
+          ? "lesson-resume"
+          : route?.name === "onboarding"
+            ? "onboarding"
+            : undefined;
+    if (entry === undefined) return;
     entryViewedEmittedRef.current = true;
     services.analytics.track(
       buildEntryViewedEvent(
@@ -173,6 +185,7 @@ export function AppShell({
           occurredAt: services.clock().toISOString(),
           contentVersion: services.content.getContentVersion(),
         },
+        { entry },
       ),
     );
   }, [route, services]);
@@ -306,6 +319,18 @@ export function AppShell({
               onboarding={progress.onboarding}
               retrofitNotice={route.retrofitNotice ?? false}
               reviewStage={route.reviewStage}
+              missionEvents={
+                hostAdapter === null
+                  ? undefined
+                  : {
+                      // F2 R2: encaminhamento ao host em missão hospedada —
+                      // o sink v2 é noop aqui, o funil OS recebe somente via
+                      // protocolo host-engine (MissionShell reemite).
+                      onBriefViewed: () => hostAdapter.publishBriefViewed(),
+                      onActivityPresented: (activityType) =>
+                        hostAdapter.publishActivityPresented(activityType),
+                    }
+              }
               onProgressChange={setProgress}
               onCompleted={(updated, summary) => {
                 setProgress(updated);

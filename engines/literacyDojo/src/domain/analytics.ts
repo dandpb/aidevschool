@@ -34,7 +34,18 @@ export type ProductAnalyticsEventName =
   | "activity_attempted"
   | "lesson_completed"
   | "review_started"
-  | "review_completed";
+  | "review_completed"
+  | "lesson_brief_viewed"
+  | "activity_presented";
+
+/**
+ * Rota de entrada da 1ª tela renderizada (F2 R1): retomada pós-reload de
+ * lição em andamento ("lesson-resume" — chamado de "deep-link" no relatório
+ * da janela 09-06→09-10), home ou onboarding. Prop OPCIONAL de
+ * `entry_viewed`: envelopes pré-v4 sem a prop continuam válidos.
+ */
+export const ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"] as const;
+export type EntryRoute = (typeof ENTRY_ROUTES)[number];
 
 export type AnalyticsPropValue = string | number | boolean;
 
@@ -71,6 +82,8 @@ const EVENT_NAMES: readonly ProductAnalyticsEventName[] = [
   "lesson_completed",
   "review_started",
   "review_completed",
+  "lesson_brief_viewed",
+  "activity_presented",
 ];
 
 /**
@@ -79,7 +92,7 @@ const EVENT_NAMES: readonly ProductAnalyticsEventName[] = [
  * teste (coletor rejeita exatamente o que este validador rejeita).
  */
 const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   route_chosen: ["route"],
   lesson_started: ["lessonId", "lessonVersion"],
@@ -87,11 +100,13 @@ const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>
   lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   review_started: ["lessonId", "intervalDays", "stage"],
   review_completed: ["lessonId", "score"],
+  lesson_brief_viewed: ["lessonId", "lessonVersion"],
+  activity_presented: ["lessonId", "activityType", "activityIndex"],
 };
 
 /** Props opcionais (presentes ou ausentes; nunca com outro nome). */
 const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["durationSeconds"],
   route_chosen: [],
   lesson_started: [],
@@ -99,6 +114,8 @@ const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string
   lesson_completed: ["durationSeconds"],
   review_started: [],
   review_completed: [],
+  lesson_brief_viewed: [],
+  activity_presented: [],
 };
 
 const UUID_KEYS: readonly (keyof ProductAnalyticsEvent)[] = ["eventId", "sessionId"];
@@ -160,6 +177,28 @@ export function isValidAnalyticsEvent(value: unknown): value is ProductAnalytics
     const { route } = props as Record<string, unknown>;
     if (route !== "guided" && route !== "intermediate") return false;
   }
+  // entry_viewed: prop OPCIONAL `entry` com vocabulário fechado (F2 R1) —
+  // ausência continua válida (envelopes pré-v4 nunca rejeitados).
+  if (eventName === "entry_viewed" && "entry" in props) {
+    if (!ENTRY_ROUTES.includes(props.entry as EntryRoute)) return false;
+  }
+  if (eventName === "lesson_brief_viewed") {
+    const { lessonId, lessonVersion } = props as Record<string, unknown>;
+    if (typeof lessonId !== "string" || lessonId.length === 0) return false;
+    if (typeof lessonVersion !== "number" || !Number.isInteger(lessonVersion)) return false;
+  }
+  if (eventName === "activity_presented") {
+    const { lessonId, activityType, activityIndex } = props as Record<string, unknown>;
+    if (typeof lessonId !== "string" || lessonId.length === 0) return false;
+    if (!ANALYTICS_ACTIVITY_TYPES.includes(activityType as AnalyticsActivityType)) return false;
+    if (
+      typeof activityIndex !== "number" ||
+      !Number.isInteger(activityIndex) ||
+      activityIndex < 0
+    ) {
+      return false;
+    }
+  }
   return true;
 }
 
@@ -198,11 +237,57 @@ type TimingInput = { occurredAt: string; contentVersion: string };
 export function buildEntryViewedEvent(
   identity: IdentityInput,
   timing: TimingInput,
+  input: { entry?: EntryRoute } = {},
 ): ProductAnalyticsEvent {
   return buildEvent({
     event: "entry_viewed",
     ...identity,
-    props: {},
+    props: { entry: input.entry },
+    ...timing,
+  });
+}
+
+/**
+ * Brief da lição visível ao aprendiz (F2 R2, emenda ADR-0009): a intro da
+ * lição — o card "Pedido da Vila Lume" — foi renderizada. Exposição
+ * observada, nunca leitura; mesma fronteira de privacidade (só metadados
+ * estruturados da lição).
+ */
+export function buildLessonBriefViewedEvent(
+  identity: IdentityInput,
+  input: { lessonId: string; lessonVersion: number },
+  timing: TimingInput,
+): ProductAnalyticsEvent {
+  return buildEvent({
+    event: "lesson_brief_viewed",
+    ...identity,
+    props: {
+      lessonId: input.lessonId,
+      lessonVersion: input.lessonVersion,
+    },
+    ...timing,
+  });
+}
+
+/**
+ * Atividade do índice `activityIndex` tornada visível pela 1ª vez na sessão
+ * (F2 R2, emenda ADR-0009). Emissão por (sessão, índice) — re-render/retry/
+ * retomada não reemitem índices já apresentados (guarda no player).
+ * Exposição, nunca engajamento comprovado.
+ */
+export function buildActivityPresentedEvent(
+  identity: IdentityInput,
+  input: { lessonId: string; activityType: AnalyticsActivityType; activityIndex: number },
+  timing: TimingInput,
+): ProductAnalyticsEvent {
+  return buildEvent({
+    event: "activity_presented",
+    ...identity,
+    props: {
+      lessonId: input.lessonId,
+      activityType: input.activityType,
+      activityIndex: input.activityIndex,
+    },
     ...timing,
   });
 }

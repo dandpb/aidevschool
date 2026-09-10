@@ -7,6 +7,11 @@ import { MentorGuide } from "../components/MentorGuide";
 import { VoxelSkillArt } from "../components/VoxelSkillArt";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
 import type { LessonDefinition } from "../data/generated/lessons";
+import {
+  type AnalyticsActivityType,
+  buildActivityPresentedEvent,
+  buildLessonBriefViewedEvent,
+} from "../domain/analytics";
 import type { ActivityAnswer } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import {
@@ -42,6 +47,17 @@ import { ErrorRecoveryScreen } from "./ErrorRecoveryScreen";
 export type { LessonMode };
 
 /**
+ * Eventos de exposição encaminhados ao host em missão hospedada (F2 R2): o
+ * sink literacy v2 permanece noop hospedado — `mission.brief_viewed` /
+ * `activity.presented` chegam ao funil OS somente pelo protocolo
+ * host-engine (sem segunda via; duplicação impossível por construção).
+ */
+export type MissionExposureEvents = {
+  onBriefViewed: () => void;
+  onActivityPresented: (activityType: AnalyticsActivityType, activityIndex: number) => void;
+};
+
+/**
  * Player de lição (plano seção 9): uma ideia por tela — introdução curta com a
  * situação, tentativa antes da explicação completa, feedback acionável
  * ("ainda falta X") e tentar novamente. Modo "review" (Fase 2): re-executa as
@@ -58,6 +74,7 @@ export function LessonScreen({
   onboarding,
   retrofitNotice = false,
   reviewStage,
+  missionEvents,
   onProgressChange,
   onCompleted,
   onExit,
@@ -69,6 +86,8 @@ export function LessonScreen({
   retrofitNotice?: boolean;
   /** Estágio da revisão na abertura — 1 hop por sessão ao concluir (§4.4). */
   reviewStage?: number;
+  /** Presente somente em missão hospedada (forwarding mission-event ao host). */
+  missionEvents?: MissionExposureEvents;
   onProgressChange: (progress: LearnerProgress) => void;
   onCompleted: (progress: LearnerProgress, summary: LessonSummary) => void;
   onExit: () => void;
@@ -84,12 +103,56 @@ export function LessonScreen({
   const [submitting, setSubmitting] = useState(false);
   const latestPassingEvidence = useRef<LiteracyEvidenceRecord>();
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-  // Gerenciamento de foco: o título recebe foco a cada nova tela do player
-  // (introdução e cada atividade), orientando teclado e leitor de tela.
+  // Exposição (F2 R2, emenda ADR-0009): brief 1× por mount (a intro não
+  // retorna depois de "Começar missão") e `activity_presented` 1× por
+  // (sessão, índice absoluto) — re-render/retry/navegação de volta não
+  // reemitem índices já apresentados (guarda por Set).
+  const briefViewedRef = useRef(false);
+  const presentedActivityKeysRef = useRef<Set<string>>(new Set());
   // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de fase/atividade (phase/currentActivityIndex), embora não leia o valor.
   useEffect(() => {
     headingRef.current?.focus();
   }, [session.phase, session.currentActivityIndex]);
+  useEffect(() => {
+    if (!lesson) return;
+    const identity = {
+      sessionId: services.analyticsIdentity.sessionId,
+      eventId: services.analyticsIdentity.nextEventId(),
+    };
+    const timing = {
+      occurredAt: services.clock().toISOString(),
+      contentVersion: services.content.getContentVersion(),
+    };
+    if (session.phase === "intro") {
+      if (!briefViewedRef.current) {
+        briefViewedRef.current = true;
+        services.analytics.track(
+          buildLessonBriefViewedEvent(
+            identity,
+            { lessonId: lesson.id, lessonVersion: lesson.version },
+            timing,
+          ),
+        );
+        missionEvents?.onBriefViewed();
+      }
+      return;
+    }
+    if (session.phase === "completed") return;
+    const index = session.currentActivityIndex;
+    const activity = lesson.activities[index];
+    if (activity === undefined) return;
+    const key = `${lesson.id}:${index}`;
+    if (presentedActivityKeysRef.current.has(key)) return;
+    presentedActivityKeysRef.current.add(key);
+    services.analytics.track(
+      buildActivityPresentedEvent(
+        identity,
+        { lessonId: lesson.id, activityType: activity.type, activityIndex: index },
+        timing,
+      ),
+    );
+    missionEvents?.onActivityPresented(activity.type, index);
+  }, [session.phase, session.currentActivityIndex, lesson, services, missionEvents]);
 
   if (!lesson) {
     return <ErrorRecoveryScreen message="Lição não encontrada." onBack={onExit} />;

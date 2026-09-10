@@ -6,6 +6,7 @@ import {
   driftFixtureLines,
   exampleReportRaw,
   syntheticFixtureLines,
+  syntheticV4FixtureLines,
 } from '../../../../learner/gate/tests/fixtures/analytics/load_fixtures.mjs'
 import { analyticsEventIsValid } from './events'
 
@@ -24,6 +25,19 @@ describe('analytics fixture schema drift (events.ts is canonical)', () => {
     const lines = await syntheticFixtureLines()
     expect(lines.length).toBe(214)
     for (const entry of lines) {
+      const event = JSON.parse(entry.line) as unknown
+      expect(analyticsEventIsValid(event), `${entry.file}:${entry.number}`).toBe(true)
+    }
+  })
+
+  it('accepts every synthetic-v4 OS envelope (F2 exposure events)', async () => {
+    const entries = await syntheticV4FixtureLines()
+    const osLines = entries.filter((entry) => {
+      const parsed = JSON.parse(entry.line) as { schemaVersion?: number }
+      return parsed.schemaVersion === 1
+    })
+    expect(osLines.length).toBeGreaterThan(0)
+    for (const entry of osLines) {
       const event = JSON.parse(entry.line) as unknown
       expect(analyticsEventIsValid(event), `${entry.file}:${entry.number}`).toBe(true)
     }
@@ -51,9 +65,11 @@ describe('analytics fixture schema drift (events.ts is canonical)', () => {
       source: { totalEvents: number; duplicateEvents: number }
     }
     // AID-675 F2b: reportVersion 2 added D1/D2 sections + eventId dedup;
-    // AID-913 activation: reportVersion 3 adds the literacyFunnel section
-    // (literacy v2 envelope). Same synthetic fixture (212 OS v1 events).
-    expect(report.reportVersion).toBe(3)
+    // AID-913 activation: reportVersion 3 added the literacyFunnel section
+    // (literacy v2 envelope). F2 2026-09-10: reportVersion 4 adds
+    // activationDetail/briefExposure/probeClassification/glossary — additive;
+    // same synthetic fixture (212 OS v1 events).
+    expect(report.reportVersion).toBe(4)
     expect(report.anonymity.identifiersPublished).toBe(false)
     expect(report.anonymity.suppressedBuckets).toBeGreaterThan(0)
     expect(report.source.totalEvents).toBe(212)

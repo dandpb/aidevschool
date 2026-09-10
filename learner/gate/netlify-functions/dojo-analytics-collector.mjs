@@ -61,6 +61,9 @@ export const ANALYTICS_EVENT_NAMES = [
   "mission.started", "mission.completed", "structured_attempt.submitted",
   "structured_attempt.passed", "hint.requested", "retry.requested",
   "review.started", "verification.state_changed", "renderer.degraded",
+  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
+  // de exposição de missões hospedadas (vocabulário aditivo retro-compat).
+  "mission.brief_viewed", "activity.presented",
 ];
 
 const ACTIVITY_TYPES = [
@@ -97,6 +100,8 @@ export const EVENT_VOCABULARIES = {
     ],
     fallback: ["canvas2d", "dom", "none"],
   },
+  "mission.brief_viewed": {},
+  "activity.presented": { activityType: ACTIVITY_TYPES },
 };
 
 export const CONTEXT_KEYS = [
@@ -219,7 +224,13 @@ export const LITERACY_EVENT_NAMES = [
   // Corredor literacy (spec AID-915 §4.3, emenda ADR-0009): revisão espaçada.
   "review_started",
   "review_completed",
+  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
+  // de exposição (brief renderizado; atividade visível pela 1ª vez).
+  "lesson_brief_viewed",
+  "activity_presented",
 ];
+
+export const LITERACY_ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"];
 
 export const LITERACY_ACTIVITY_TYPES = ACTIVITY_TYPES;
 
@@ -232,7 +243,7 @@ const LITERACY_PROP_KEY_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 // Props permitidas por evento — conjunto EXATO; paridade 1:1 com
 // EVENT_PROPS/OPTIONAL_PROPS de engines/literacyDojo/src/domain/analytics.ts.
 const LITERACY_EVENT_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   route_chosen: ["route"],
   lesson_started: ["lessonId", "lessonVersion"],
@@ -240,9 +251,11 @@ const LITERACY_EVENT_PROPS = {
   lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   review_started: ["lessonId", "intervalDays", "stage"],
   review_completed: ["lessonId", "score"],
+  lesson_brief_viewed: ["lessonId", "lessonVersion"],
+  activity_presented: ["lessonId", "activityType", "activityIndex"],
 };
 const LITERACY_OPTIONAL_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["durationSeconds"],
   route_chosen: [],
   lesson_started: [],
@@ -250,6 +263,8 @@ const LITERACY_OPTIONAL_PROPS = {
   lesson_completed: ["durationSeconds"],
   review_started: [],
   review_completed: [],
+  lesson_brief_viewed: [],
+  activity_presented: [],
 };
 
 function literacyPropsAreValid(eventName, props) {
@@ -293,6 +308,22 @@ function literacyEventPropsAreValid(event) {
       );
     case "route_chosen":
       return props.route === "guided" || props.route === "intermediate";
+    // F2 R1: prop opcional `entry` com vocabulário fechado; ausência
+    // (envelopes pré-v4) continua válida — aditivo retro-compat.
+    case "entry_viewed":
+      return !("entry" in props) || LITERACY_ENTRY_ROUTES.includes(props.entry);
+    case "lesson_brief_viewed":
+      return (
+        typeof props.lessonId === "string" && props.lessonId.length > 0 &&
+        typeof props.lessonVersion === "number" && Number.isInteger(props.lessonVersion)
+      );
+    case "activity_presented":
+      return (
+        typeof props.lessonId === "string" && props.lessonId.length > 0 &&
+        LITERACY_ACTIVITY_TYPES.includes(props.activityType) &&
+        typeof props.activityIndex === "number" && Number.isInteger(props.activityIndex) &&
+        props.activityIndex >= 0
+      );
     default:
       return true;
   }

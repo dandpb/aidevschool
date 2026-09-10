@@ -37,7 +37,7 @@ function envelope(name: AnalyticsEventName, dimensions: Record<string, Analytics
 }
 
 describe('OS analytics event contract', () => {
-  it('accepts exactly the 12 public event names with minimal input and envelope data', () => {
+  it('accepts exactly the 14 public event names with minimal input and envelope data', () => {
     expect(ANALYTICS_EVENT_NAMES).toEqual([
       'onboarding.started',
       'onboarding.completed',
@@ -51,8 +51,11 @@ describe('OS analytics event contract', () => {
       'review.started',
       'verification.state_changed',
       'renderer.degraded',
+      // F2 2026-09-10-entry-brief-instrumentation: exposure events (+2).
+      'mission.brief_viewed',
+      'activity.presented',
     ])
-    expect(ANALYTICS_EVENT_NAMES).toHaveLength(12)
+    expect(ANALYTICS_EVENT_NAMES).toHaveLength(14)
     expect(ANALYTICS_EVENT_NAMES.every((name) => analyticsEventInputIsValid({ name }))).toBe(true)
     expect(ANALYTICS_EVENT_NAMES.every((name) => analyticsEventIsValid(envelope(name)))).toBe(true)
   })
