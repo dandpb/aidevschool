@@ -1,0 +1,29 @@
+{
+  "env": {
+    "base": "http://127.0.0.1:4176",
+    "head": "7a790f48",
+    "walk": "QA ca6a3f95 first-hand walk v2"
+  },
+  "missionUrl": "http://127.0.0.1:4176/mission/ai-pratica/l02",
+  "wrongAttempt": {
+    "feedback": "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?Pontuação desta tentativa: 20%A resposta A parece ótima, mas nenhum número tem fonte — a IA pode ",
+    "hints": "Dicas:Compare as duas respostas procurando uma coisa só: de onde saíram os números?"
+  },
+  "activity3Pass": true,
+  "resultNextAction": {
+    "lessonCompleted": true,
+    "nextActionNamed": true,
+    "localCompletionDisclaimer": true,
+    "verificationHonest": true,
+    "verificationRetryOffered": true,
+    "noFabricatedMastery": true
+  },
+  "returningDevice": {
+    "noOnboardingRepeat": true,
+    "missionContinues": true
+  },
+  "missionHud": {
+    "honestNotSent": true,
+    "noFabricatedVerdict": true
+  }
+}
