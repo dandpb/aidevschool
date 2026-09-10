@@ -7,5 +7,9 @@
 export declare function syntheticFixtureLines(): Promise<
   ReadonlyArray<{ readonly file: string; readonly number: number; readonly line: string }>
 >
+/** F2 `2026-09-10-entry-brief-instrumentation`: mixed-envelope v4 fixture. */
+export declare function syntheticV4FixtureLines(): Promise<
+  ReadonlyArray<{ readonly file: string; readonly number: number; readonly line: string }>
+>
 export declare function driftFixtureLines(): Promise<ReadonlyArray<string>>
 export declare function exampleReportRaw(): Promise<string>
