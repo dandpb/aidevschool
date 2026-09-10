@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+      "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/migration.ts",
+      "sha256": "70ef0724782f9dad7340311c5f9d16eda6e70c74a6d480e0592d2b2510aa5c63"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "no-status-re-locked-or-reset",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "past-module-challenges-appear-optional",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "reviews-due-on-first-return-without-recompletion",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-10T01:47:24Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "3326ace517a37172e3de8dd221fd5699acfcd002",
+  "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+  "outcome": "pass",
+  "runId": "2026-09-10T01:47:24Z-literacy-corridor-grandfathered-return-3326ace5",
+  "scenarioId": "literacy-corridor-grandfathered-return",
+  "schemaVersion": 1,
+  "sourceFingerprint": "8740f61659bae5ff8db45e029d95100751f43aeb3615c4900a8cd95b2b427491"
+}

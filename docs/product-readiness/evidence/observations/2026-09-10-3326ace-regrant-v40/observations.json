@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "3326ace517a37172e3de8dd221fd5699acfcd002",
+  "observedAt": "2026-09-10T01:06:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "resultado local da lição diz 'Lição concluída' (completed ≠ mastered) e a próxima ação é nomeável sem conhecimento de repositório: heading da próxima lição 'O que a IA faz bem e onde costuma falhar' visível após concluir o Mapa Inicial (fplit40-02-lesson-result.png, fplit40-03-next-action-named.png) | v40/PR #311 (AID-1150): onboarding anuncia cada mudança de etapa — foco no h1 #onboarding-title + role=status 'Etapa N de 5' nas Etapas 2–5, verificado por walk QA em perfil novo (fplit40-01-onboarding-step5.png; walk-log-literacy.json onboarding-step-announcement)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "reload no mesmo perfil retorna à lição em andamento (lesson-intro 'O que a IA faz bem e onde costuma falhar') sem repetir onboarding; progresso l02=completed persistido em IndexedDB do próprio navegador — device-bound, currentLessonId=l03, sem 'mastered' no estado (fplit40-04-resume-after-reload.png; walk-log-literacy.json literacy-resume)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "tentativa errada → feedback formativo no painel ('Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais…') + dica progressiva; retry recupera e conclui a lição ('Lição concluída'); sem linguagem interna (ids/testids) no texto visível ao aprendiz (fplit40-05-wrong-feedback.png, fplit40-06-hint.png; walk-log-literacy.json literacy-retry noInternalLanguage=true)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "home do corredor mostra a missão pendente 'Continuar: Desafio do Módulo 3' (fplit40-07-corridor-mission-home.png); cp-03 concluído → celebração 'três primeiros bairros da Vila Lume' + próxima ação nomeável: botão 'Ir para' a lição seguinte 'Proteja suas informações' (mod-04) visível e clicável (fplit40-08-cp03-celebration.png, fplit40-09-cp03-next-action.png); mod-03=completed e sem 'mastered' no estado persistido"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "falha no Desafio cp-01 → feedback formativo + dica oferecida; retry sem punição: conclusões anteriores preservadas (l01=completed), módulo seguinte locked (l04) durante o desafio e available após 'Desafio concluído'/'Bairro 1 completo!'; sem linguagem interna no texto visível (fplit40-10-cp-fail-feedback.png, fplit40-11-cp-hint.png, fplit40-12-cp-result.png; walk-log-literacy.json literacy-corridor-gate-retry)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "card de revisão devida visível no home (D+1); intro da sessão rotulado 'Revisão' — distingue de conteúdo novo; revisão concluída avança a janela [1,7,21]: próxima revisão ≈ +7d (nextReviewDeltaDays=7) (fplit40-13-review-card-home.png, fplit40-14-review-intro.png; walk-log-literacy.json literacy-corridor-review-window)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "missão literacy hospedada monta do bundle pilot na origem do OS (iframe src=/apps/literacydojo/?hosted=1&hostOrigin=… na mesma origem) com conteúdo renderizado ('IA não é uma fonte de verdade'); status de verificação do host é honesto ('Ainda não enviada' — não fabrica veredito/mastery) e a saída/continuação é affordance visível '← Hub'/'Voltar ao hub' (fpos40-03-literacy-mission.png, fpos40-03b-literacy-frame.png; walk-log-os.json os-literacy-hosted-mission frameSrc)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "retorno '← Hub' + reload no mesmo perfil do navegador: hub preserva a trilha com affordance 'Retomar/Continuar missão' sem repetir o setup de onboarding; estado é local ao perfil (localStorage codexdojo-os.analytics.*) — continuidade limitada ao mesmo navegador, sem alegação de sync entre dispositivos (fpos40-04-returning-hub.png; walk-log-os.json os-literacy-returning-device)"
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "tentativa errada reportada no hud da missão ('ainda não atendido') com retry visível; após acerto o host reporta 'Verificador indisponível' sem fabricar conclusão ('Evidência rejeitada' ausente); 'Voltar ao hub' leva ao estado 'Temporariamente indisponível' — recuperação inteiramente pelo estado visível (sem intervenção de repositório) (fpos40-05-wrong-attempt-visible-state.png, fpos40-06-verifier-unavailable-honest.png, fpos40-07-hub-recovery-state.png; walk-log-os.json os-verification-recovery)"
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

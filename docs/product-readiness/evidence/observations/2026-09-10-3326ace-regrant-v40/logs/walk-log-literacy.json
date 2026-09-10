@@ -1,0 +1,72 @@
+{
+  "surface": "literacyDojo standalone (dev :4183)",
+  "startedAt": "2026-09-10T01:01:19.126Z",
+  "onboarding-step-announcement": {
+    "v40A11y": true,
+    "announcements": [
+      {
+        "heading": "O que você quer melhorar com IA?",
+        "focused": true,
+        "status": "Etapa 2 de 5"
+      },
+      {
+        "heading": "Onde você mais pretende usar IA?",
+        "focused": true,
+        "status": "Etapa 3 de 5"
+      },
+      {
+        "heading": "Como você avalia sua confiança hoje?",
+        "focused": true,
+        "status": "Etapa 4 de 5"
+      },
+      {
+        "heading": "Qual situação você quer explorar primeiro?",
+        "focused": true,
+        "status": "Etapa 5 de 5"
+      }
+    ]
+  },
+  "literacy-happy-path": {
+    "resultSaysCompleted": true,
+    "noMasteryLanguage": true,
+    "nextActionNamed": true,
+    "noInternalLanguageInResult": true
+  },
+  "literacy-resume": {
+    "resumeAfterReload": true,
+    "l02Completed": true,
+    "currentLessonId": "l03",
+    "storageIsDeviceBoundIndexedDB": true,
+    "noMasteredInState": true
+  },
+  "literacy-retry": {
+    "feedbackFormative": true,
+    "hintsProgressive": true,
+    "retryRecovers": true,
+    "noInternalLanguage": true,
+    "failTextSample": "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de"
+  },
+  "literacy-corridor-happy-path": {
+    "missionSaysModule3": true,
+    "celebrationNamesCorridor": false,
+    "nextActionAfterCp03": true,
+    "mod03Completed": true,
+    "noMastered": true
+  },
+  "literacy-corridor-gate-retry": {
+    "feedbackFormative": true,
+    "hintOffered": true,
+    "retryWithoutPunishment": true,
+    "module2UnlockedAfterFinish": true,
+    "lockedDuringAttempt": true,
+    "noInternalLanguage": true,
+    "resultSample": "Desafio concluído!\nBairro 1 completo!\n\nBairro 1 completo! Sua próxima revisão já está agendada.\n\nIr para Aprender a pedi"
+  },
+  "literacy-corridor-review-window": {
+    "reviewCardVisible": true,
+    "introLabeledReview": true,
+    "reviewAdvancesWindow": true,
+    "nextReviewDeltaDays": 7
+  },
+  "finishedAt": "2026-09-10T01:01:28.768Z"
+}

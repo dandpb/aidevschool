@@ -1,0 +1,38 @@
+{
+  "surface": "codexdojo-os pilot static build (preview :4176)",
+  "startedAt": "2026-09-10T01:05:09.159Z",
+  "scenarios": {
+    "os-literacy-hosted-mission": {
+      "outcome": "pass",
+      "missionMounted": true,
+      "frameOnHostOrigin": true,
+      "frameSrc": "http://127.0.0.1:4176/apps/literacydojo/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4176",
+      "frameContentRendered": true,
+      "hostVerificationHonest": true,
+      "nextActionAffordances": [],
+      "at": "2026-09-10T01:05:14.415Z"
+    },
+    "os-literacy-returning-device": {
+      "outcome": "pass",
+      "resumeAffordanceAfterReload": true,
+      "setupNotRepeated": true,
+      "stateIsLocalToProfile": true,
+      "localStorageKeys": [
+        "codexdojo-os.analytics.installation-id.v1",
+        "codexdojo-os.analytics.queue.v1"
+      ],
+      "at": "2026-09-10T01:05:16.396Z"
+    },
+    "os-verification-recovery": {
+      "outcome": "pass",
+      "wrongAttemptVisibleInHud": true,
+      "retryOffered": true,
+      "verifierUnavailableHonest": true,
+      "evidenceRejectedAbsent": true,
+      "hubShowsTemporarilyUnavailable": true,
+      "recoveryUsesVisibleStateOnly": true,
+      "at": "2026-09-10T01:05:25.123Z"
+    }
+  },
+  "finishedAt": "2026-09-10T01:05:25.132Z"
+}
