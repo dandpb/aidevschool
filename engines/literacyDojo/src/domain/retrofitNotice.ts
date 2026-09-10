@@ -16,6 +16,7 @@ import type { LessonStatus } from "./progress";
 export const RETROFITTED_LESSONS_BY_CONTENT_VERSION: Record<string, readonly string[]> = {
   "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
   "2026-09-04.1": ["l15", "l16", "l17"],
+  "2026-09-10.2": ["l08", "l09", "l10", "l11", "l12", "l13"],
 };
 
 /** S1 — linha adicional do card "Revisão pendente" do Home (spec §3, verbatim). */
