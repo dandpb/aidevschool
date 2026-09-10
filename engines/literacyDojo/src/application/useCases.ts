@@ -81,8 +81,9 @@ export type ResumeDestination =
 /**
  * Lições autorizadas pelo contrato hospedado (missões publicadas pelo OS).
  * Espelha as bindings publicadas em engines/codexdojo-os-prototype/config/
- * mission-bindings.yaml: l01–l14 + l18–l20 (mod-06) e l24–l26 (mod-07,
- * onda O2 completa) na trilha ai-pratica e l15–l17 + l21–l23 + l27–l29
+ * mission-bindings.yaml: l01–l14 + l18–l20 (mod-06), l24–l26 (mod-07,
+ * onda O2 completa) e l30–l32 (mod-08, onda W1 completa) na trilha
+ * ai-pratica e l15–l17 + l21–l23 + l27–l29
  * (mod-05, journey dev; onda O1 completa) na trilha dev. Lições do
  * catálogo fora desse conjunto continuam não hospedadas.
  */
@@ -116,6 +117,9 @@ const HOSTED_OS_MISSION_LESSONS = new Set([
   "l27",
   "l28",
   "l29",
+  "l30",
+  "l31",
+  "l32",
 ]);
 
 export class LiteracyUseCases {

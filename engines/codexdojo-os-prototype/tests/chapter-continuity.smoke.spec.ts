@@ -346,6 +346,30 @@ test('preserves completed first-release missions across switches and reloads', a
   await expect(page.getByRole('heading', { name: 'Avalie as dependências sugeridas' })).toBeVisible()
   await completeLiteracyMission(page, 'l29')
 
+  // Wave W1 T1 (spec AID-1219 §3): l30 "Rotinas repetitivas" opens mod-08
+  // as the 21st ai-pratica mission (chapterOrder 21, canonical prereq
+  // l18 — completed above). Completes end-to-end through multiSelect
+  // choice, prompt_builder, and output_comparison.
+  await page.goto('/mission/ai-pratica/l30')
+  await expect(page.getByRole('heading', { name: 'Rotinas repetitivas: o que automatizar' })).toBeVisible()
+  await completeLiteracyMission(page, 'l30')
+
+  // Wave W1 T2 (spec AID-1219 §3): l31 "Pequenas automações" is the 22nd
+  // ai-pratica mission (chapterOrder 22, canonical prereq l12 — completed
+  // above). Completes end-to-end through safety_classification,
+  // missing_context, and sort.
+  await page.goto('/mission/ai-pratica/l31')
+  await expect(page.getByRole('heading', { name: 'Pequenas automações: onde o humano valida' })).toBeVisible()
+  await completeLiteracyMission(page, 'l31')
+
+  // Wave W1 T3 (spec AID-1219 §3): l32 "Quando a automação erra" closes
+  // mod-08 as the 23rd ai-pratica mission (chapterOrder 23, canonical
+  // prereq l19 — completed above). Completes end-to-end through choice,
+  // output_comparison, and missing_context.
+  await page.goto('/mission/ai-pratica/l32')
+  await expect(page.getByRole('heading', { name: 'Quando a automação erra' })).toBeVisible()
+  await completeLiteracyMission(page, 'l32')
+
   await page.goto('/mission/dev/game-06-pipeline-plant')
   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
   await completePipeline(await gameFrame(page, 5206))
@@ -388,6 +412,9 @@ test('preserves completed first-release missions across switches and reloads', a
     'ai-pratica:l24',
     'ai-pratica:l25',
     'ai-pratica:l26',
+    'ai-pratica:l30',
+    'ai-pratica:l31',
+    'ai-pratica:l32',
     'dev:game-02-warehouse',
     'dev:game-03-wormhole',
     'dev:game-05-relay-station',
