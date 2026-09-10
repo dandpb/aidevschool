@@ -12,7 +12,7 @@ contrato). Piloto pago segue o modelo facilitado P6/O1 (cobrança out-of-band).
 | Superfície | URL | Papel | Build/deploy |
 | --- | --- | --- | --- |
 | codexDojo OS | `https://aidevschool-codexdojo-os.netlify.app/` | Host mission-first do piloto (superfície contribuidor) | `npm run build:pilot` + `scripts/build-pilot-bundle.mjs`; functions staged do canônico `learner/gate/netlify-functions` |
-| LiteracyDojo avulso | `https://aidevschool-literacydojo.netlify.app/` | Entrada pública de aprendiz (20 missões IA Prática, pt-BR) | `npm run build`; functions do dir canônico `learner/gate/netlify-functions` |
+| LiteracyDojo avulso | `https://aidevschool-literacydojo.netlify.app/` | Entrada pública de aprendiz (23 missões IA Prática, pt-BR) | `npm run build`; functions do dir canônico `learner/gate/netlify-functions` |
 
 Coletor de telemetria same-origin: `POST /__dojo/bridge/v1/analytics` (envelopes OS v1 + literacy v2;
 backing durável Netlify Blobs, chave idempotente `dia/eventId`, retenção 90d, zero PII —

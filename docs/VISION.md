@@ -22,7 +22,7 @@ Dois públicos, uma mecânica:
 | Programadores | Engenharia robusta com IA: testes, review, benchmark e arquitetura | **Trilha Dev**: primeiro capítulo mission-first no codexdojo OS e continuidade nos 18 projetos de código (01–18) em [`curriculum/catalog.md`](../curriculum/catalog.md) |
 
 Esta tabela descreve o destino do produto, não o escopo do release candidate.
-O lançamento público entrega **IA na Prática** no LiteracyDojo (20 missões)
+O lançamento público entrega **IA na Prática** no LiteracyDojo (23 missões)
 e a **Trilha Dev** no CodexDojo OS público (`https://aidevschool-codexdojo-os.netlify.app/?track=dev`):
 escolha de trilha, trilho guiado WAREHOUSE → WORMHOLE → RELAY STATION, e Engine Hub
 allowlist (voxel 16, PixelQuest, dojoToday local, literacy). Os 18 projetos de
