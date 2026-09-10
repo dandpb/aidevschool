@@ -195,7 +195,7 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("track-progress")).toHaveTextContent("0 de 23 lições concluídas");
     await user.click(screen.getByTestId("open-map"));
 
-    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/20 missões");
+    expect(await screen.findByTestId("map-screen")).toHaveTextContent("0/23 missões");
     expect(screen.queryByTestId("map-lesson-l15")).not.toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l18")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l19")).toBeInTheDocument();
@@ -203,6 +203,9 @@ describe("fluxo do app (integração)", () => {
     expect(screen.getByTestId("map-lesson-l24")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l25")).toBeInTheDocument();
     expect(screen.getByTestId("map-lesson-l26")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l30")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l31")).toBeInTheDocument();
+    expect(screen.getByTestId("map-lesson-l32")).toBeInTheDocument();
   });
 
   it("lição completa: erro → dica → tentar novamente → acerto → resultado, com evidência por tentativa", async () => {
