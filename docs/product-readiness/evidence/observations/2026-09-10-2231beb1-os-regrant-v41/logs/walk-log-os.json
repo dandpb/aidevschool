@@ -1,0 +1,78 @@
+[
+  {
+    "trackOptionsVisible": 2
+  },
+  {
+    "onboardingLead": "AI DevSchool\nescolha sua trilha\n\nSEU PRIMEIRO PASSO\n\nO que você quer conseguir fazer com IA?\n\nLeva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\n\nObjetivo\nUsar IA melhor no trabalho\nEntender respostas e riscos\nConstruir sistemas com IA\nContexto\nTrabalh"
+  },
+  {
+    "hubHeading": true
+  },
+  {
+    "literacyMissionUrl": "http://127.0.0.1:4180/apps/literacydojo/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4180"
+  },
+  {
+    "wrongAttemptFeedbackVisible": true,
+    "wrongAttemptFeedbackSample": "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?\n\nPontuação desta tentativa: 60%\n\nA respos",
+    "submitDisabledWithoutSelection": true
+  },
+  {
+    "resultNamesNextAction": false,
+    "resultLocalDisclaimer": true,
+    "resultAvoidsMastery": false
+  },
+  {
+    "verificationHonest": true,
+    "retryVerificationControl": 1,
+    "missionHudNotSent": false,
+    "noFabricatedVerdict": true
+  },
+  {
+    "hubNoResutp": true,
+    "continueMissionVisible": false
+  },
+  {
+    "hubAfterReload": true,
+    "honestProgressVisible": true,
+    "verificationUnavailableShown": true,
+    "canonicalUnchanged": true,
+    "sameDeviceLanguageOnly": true,
+    "indexedDbNames": [
+      "codexdojo-os",
+      "codexdojo-os-verification",
+      "literacydojo"
+    ]
+  },
+  {
+    "warehouseMountedFromOsOrigin": true,
+    "warehouseUrl": "http://127.0.0.1:4180/mission/dev/game-02-warehouse"
+  },
+  {
+    "warehouseWrongHonest": false,
+    "warehouseWrongNoMastery": true
+  },
+  {
+    "warehouseCompletionHonest": true,
+    "warehouseNoMasteryClaim": false
+  },
+  {
+    "voxelHubAfterReload": true
+  },
+  {
+    "warehouseReentryHonest": true,
+    "reentryContinuesDeviceLocal": false
+  },
+  {
+    "accessibleProjectionVisible": true,
+    "accessibleLabel": true
+  },
+  {
+    "accessibleKeyboardCompletion": true,
+    "hudStatusText": "Missão concluída; evidência emitida."
+  },
+  {
+    "clearedStorageOnboarding": true,
+    "clearedStorageShowsCompletion": false,
+    "clearedStorageShowsMastery": false
+  }
+]
