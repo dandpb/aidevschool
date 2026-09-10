@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { metrics } from "./data/cycle"
@@ -10,6 +10,10 @@ import { type AppState, buildInitialState } from "./state"
 const stateWith = (overrides: Partial<AppState>): AppState => ({
   ...buildInitialState("maestro", "diagnosticar"),
   ...overrides,
+})
+
+afterEach(() => {
+  vi.unstubAllEnvs()
 })
 
 describe("renderShell — targeted assertions", () => {
@@ -52,15 +56,26 @@ describe("renderShell — targeted assertions", () => {
   })
 
   it("linuxLab: is bridge-only (no fake desktop tiles)", () => {
+    vi.stubEnv("VITE_CODEXDOJO_OS_URL", "http://127.0.0.1:5174")
     const html = renderShell(stateWith({ view: "linuxLab" }))
 
     expect(html).toContain("Linux Lab")
     expect(html).not.toContain("linux-app-tile")
     expect(html).not.toContain("run-linux-lab")
     expect(html).toContain('data-codexdojo-os-launch="true"')
+    expect(html).toContain('href="http://127.0.0.1:5174"')
     expect(html).toContain('<span aria-hidden="true">Abrir codexDojo OS</span>')
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noopener noreferrer"')
+  })
+
+  it("linuxLab: renders the configure hint and no launch anchor when the OS URL is unresolved", () => {
+    vi.stubEnv("VITE_CODEXDOJO_OS_URL", "")
+    const html = renderShell(stateWith({ view: "linuxLab" }))
+
+    expect(html).toContain("Linux Lab")
+    expect(html).not.toContain("data-codexdojo-os-launch")
+    expect(html).toContain("Configure <code>VITE_CODEXDOJO_OS_URL</code>")
   })
 
   it("agents (selected=critico): critico row is active, others are not", () => {
