@@ -21,6 +21,10 @@ contract for OpenClaw and Codex use.
 ## CONVENTIONS
 
 - Use `pnpm`, not `npm`, for this app.
+- `pnpm run test` must pass with no ambient `VITE_CODEXDOJO_OS_URL` (and even with
+  `NODE_ENV=production`): specs that assert the OS launch anchor stub the env with
+  `vi.stubEnv("VITE_CODEXDOJO_OS_URL", ...)`, and the unresolved branch is pinned by its
+  own spec. Do not make suite success depend on machine/CI env injection.
 - TypeScript is strict; preserve the `tsconfig.json` settings.
 - Biome is the formatter/linter. Current local rules reject explicit `any`, non-null assertions,
   unused imports/vars, and missing type-only imports.

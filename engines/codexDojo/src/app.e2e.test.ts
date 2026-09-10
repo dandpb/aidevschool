@@ -8,6 +8,7 @@ describe("codexDojo core dashboard E2E", () => {
   afterEach(() => {
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
   })
 
   it("covers overview, agents, copy prompt, cycle, roadmap, and project briefing surfaces", async () => {
@@ -77,6 +78,7 @@ describe("codexDojo core dashboard E2E", () => {
   })
 
   it("linuxLab view exposes only the OS launch bridge", () => {
+    vi.stubEnv("VITE_CODEXDOJO_OS_URL", "http://127.0.0.1:5174")
     const root = document.createElement("div")
 
     mountCodexDojo(root)
