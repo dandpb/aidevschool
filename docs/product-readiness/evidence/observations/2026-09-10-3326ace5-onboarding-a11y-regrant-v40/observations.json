@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "3326ace517a37172e3de8dd221fd5699acfcd002",
+  "observedAt": "2026-09-10T01:15:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk first-hand no build da árvore do PR #311 (OnboardingScreen idêntico ao merged head 3326ace5; vite preview 360x740): resultado da lição nomeia a próxima ação sem conhecimento de repositório — 'Sua próxima aplicação: organizar um agendamento' + botão 'Próximo pedido' + 'Seu próximo passo' explícito (qa40-happy-result.png); disclaimer de conclusão local ('neste aparelho… diferente de competência verificada') presente."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reload no mesmo navegador preserva o progresso (l02=completed, l03=available/current; home volta sem repetir onboarding) (qa40-resume-home.png); persistência exclusivamente no IndexedDB 'literacydojo' local — sem conta/servidor — logo limpar dados do navegador ou trocar de dispositivo remove o progresso (fronteira visível na própria UI: 'registra o seu progresso neste aparelho')."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Tentativa errada → feedback formativo específico ('Quase lá. Uma resposta confiante não é necessariamente confiável… Pontuação: 20%') (qa40-retry-feedback.png) + dica progressiva ('Dicas: Compare as duas respostas…') (qa40-retry-hint.png) + retry que recupera e conclui (qa40-retry-result.png); linguagem 100% do domínio do aprendiz, sem vocabulário interno (ids/gates/schema) — retry autoexplicativo."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Celebrção pós-cp-03 nomeia a próxima ação em linguagem do usuário: 'Você completou os três primeiros bairros da Vila Lume! Continue para Segurança e aplicação — ou volte amanhã para sua revisão.' (qa40-corridor-cp03-celebration.png) e a entrada do Módulo 4 abre como próxima lição (heading 'Proteja suas informações') (qa40-corridor-next-action.png)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Falha no Desafio 1 → feedback formativo ('A primeira conversa funciona em quatro passos…' + pontuação 50%) sem punição (qa40-gate-fail.png); retry recupera e conclusões l01–l03 permanecem completed (qa40-gate-recovered.png); zero vocabulário interno no texto apresentado (regex l0\\d|mod-0\\d|schema|gate|cp-0\\d sem match no feedback)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Com revisão devida (D+1 antecipada via harness de teste), o home apresenta o card de revisão rotulado 'Revisão' — distinguível de conteúdo novo pela rotulação e contexto (qa40-review-card.png); janela avança [1,7,21] conforme spec (assert automático do produtor 20/20)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Missão IA Prática monta do bundle na origem do OS (iframe src=/apps/literacydojo/?hosted=1 na porta do próprio OS — sem dev server) com conteúdo renderizado; lição hospedada concluída first-hand: resultado nomeia próxima ação ('Próximo pedido'/'Seu próximo passo') com disclaimer de conclusão local (qa40-os-result-next-action.png)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Retorno ao hub após missão: sem repetição de setup ('Entrar na escola' não reaparece), estado local da trilha preservado e missão segue como 'Continuar missão' (qa40-os-returning-hub.png); continuidade restrita ao mesmo perfil do navegador (armazenamento local) — troca de dispositivo/limpeza recomeça, coerente com o texto exibido na lição hospedada."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Tentativa errada na missão hospedada reportada com feedback formativo + dica + retry (qa40-os-wrong-attempt.png); verificação honesta: 'Verificação independente ainda não está configurada neste ambiente' com botão 'Tentar verificação novamente' — sem veredito fabricado — e hud da missão reporta 'Ainda não enviada' (qa40-os-mission-hud.png); recuperação inteira pelo estado visível, sem intervenção de repositório."
+        }
+      ]
+    }
+  ]
+}
