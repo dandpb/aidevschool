@@ -7,16 +7,16 @@ import type { MissionCatalogSnapshot } from "../domain"
 
 export const missionCatalog: MissionCatalogSnapshot = {
   schemaVersion: 1,
-  contentVersion: "2026-09-06.1",
+  contentVersion: "2026-09-10.1",
   tracks: [
     {
       id: "ai-pratica",
-      contentVersion: "2026-09-06.1",
+      contentVersion: "2026-09-10.1",
       recommendedEntryMissionId: "l02",
     },
     {
       id: "dev",
-      contentVersion: "2026-09-06.1",
+      contentVersion: "2026-09-10.1",
       recommendedEntryMissionId: "game-02-warehouse",
     },
   ],
@@ -42,7 +42,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -75,7 +75,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -110,7 +110,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -145,7 +145,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -180,7 +180,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -215,7 +215,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -250,7 +250,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -285,7 +285,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -320,7 +320,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -355,7 +355,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -390,7 +390,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -425,7 +425,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -460,7 +460,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -495,7 +495,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -530,7 +530,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -565,7 +565,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -600,7 +600,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -635,7 +635,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -670,7 +670,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -705,7 +705,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -715,6 +715,111 @@ export const missionCatalog: MissionCatalogSnapshot = {
       fallback: {
         kind: "dom",
         summary: "Compare a extracao da IA com o documento original e corrija antes de usar por controles rotulados.",
+      },
+    },
+    {
+      id: "l30",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l30",
+      projectId: "00_ai_in_practice",
+      title: "Rotinas repetitivas: o que automatizar",
+      objective: "Distinguir tarefas do próprio trabalho que valem virar rotina assistida (repetitiva + estruturada + baixo risco) das que exigem julgamento humano a cada vez, e parametrizar o pedido-padrão da tarefa escolhida.",
+      estimatedMinutes: 4,
+      chapterOrder: 21,
+      prerequisites: [
+        "l18",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-10.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Decida quais tarefas repetitivas viram rotina assistida e monte o pedido-padrao com o dado que muda por controles rotulados.",
+      },
+    },
+    {
+      id: "l31",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l31",
+      projectId: "00_ai_in_practice",
+      title: "Pequenas automações: onde o humano valida",
+      objective: "Classificar saídas de automação entre uso direto e checagem obrigatória, nomear o que falta em um pedido de automação (gatilho, limite de escala) e sequenciar a adoção segura.",
+      estimatedMinutes: 4,
+      chapterOrder: 22,
+      prerequisites: [
+        "l12",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-10.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Classifique saidas de automacao entre uso direto e checagem obrigatoria e ordene a adocao segura por controles rotulados.",
+      },
+    },
+    {
+      id: "l32",
+      version: 1,
+      trackId: "ai-pratica",
+      unitId: "ai-literacy:l32",
+      projectId: "00_ai_in_practice",
+      title: "Quando a automação erra",
+      objective: "Detectar que uma rotina automatizada degradou (saída coerente com a semana anterior mas errada para esta), aplicar a correção mínima no pedido (só o dado que mudou) e repor o contexto perdido.",
+      estimatedMinutes: 3,
+      chapterOrder: 23,
+      prerequisites: [
+        "l19",
+      ],
+      stages: [
+        "understand",
+        "respond",
+        "apply",
+      ],
+      runtime: {
+        engineId: "literacyDojo",
+        entrypoint: "http://127.0.0.1:5178/?hosted=1",
+        environmentKey: "VITE_LITERACYDOJO_URL",
+        protocolVersion: "1.0",
+        contentVersion: "2026-09-10.1",
+      },
+      evidence: {
+        schema: "literacy-evidence",
+        version: 1,
+        verifierRequired: true,
+      },
+      fallback: {
+        kind: "dom",
+        summary: "Detecte a rotina automatizada degradada e monte a correcao minima que repoe o contexto por controles rotulados.",
       },
     },
     {
@@ -841,7 +946,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -876,7 +981,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -911,7 +1016,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1086,7 +1191,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1121,7 +1226,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1156,7 +1261,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1191,7 +1296,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1226,7 +1331,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
@@ -1261,7 +1366,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
         entrypoint: "http://127.0.0.1:5178/?hosted=1",
         environmentKey: "VITE_LITERACYDOJO_URL",
         protocolVersion: "1.0",
-        contentVersion: "2026-09-06.1",
+        contentVersion: "2026-09-10.1",
       },
       evidence: {
         schema: "literacy-evidence",
