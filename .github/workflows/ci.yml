@@ -34,7 +34,13 @@ jobs:
       - name: resolve comparison base
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE="${{ github.event.pull_request.base.sha }}"
+            # AID-1272: pull_request.base.sha is frozen at PR creation. Once
+            # main advances and the PR merges it, that stale base turned the
+            # diff range cumulative and a MODIFIED test showed as ADDED
+            # (new-test-allowed) at head, only going red on the main push
+            # after merge. Compare against the CURRENT base branch tip
+            # (fetch-depth: 0 fetched all refs, so origin/<base.ref> resolves).
+            BASE="origin/${{ github.event.pull_request.base.ref }}"
           else
             BASE="${{ github.event.before }}"
           fi
