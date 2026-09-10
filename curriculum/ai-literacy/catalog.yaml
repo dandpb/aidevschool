@@ -1,6 +1,7 @@
 # Catálogo canônico da trilha ai-literacy (bounded context AI Literacy).
-# Fonte de verdade do índice: 20 lições públicas de IA na Prática
-# (l01–l14 + ondas de continuação l18–l20 e l24–l26) e 9 lições da trilha Dev,
+# Fonte de verdade do índice: 23 lições públicas de IA na Prática
+# (l01–l14 + ondas de continuação l18–l20, l24–l26 e l30–l32) e 9 lições
+# da trilha Dev,
 # separadas pelo campo `journey`.
 # Lições com status "ready" têm arquivo próprio em modules/ e são validadas
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
@@ -84,6 +85,12 @@ modules:
     order: 7
     journey: ia_pratica
     skillIds: [pedir, avaliar, proteger, aplicar]
+  - id: mod-08
+    slug: 08-rotina-com-ia-ii
+    title: "Rotina com IA II"
+    order: 8
+    journey: ia_pratica
+    skillIds: [pedir, avaliar, aplicar]
 
 lessons:
   # Módulo 1 — IA sem mistério
@@ -327,3 +334,30 @@ lessons:
     prerequisites: [l22]
     skillIds: [codificar, avaliar]
     status: ready
+
+  # Módulo 8 — Rotina com IA II (onda l30–l32, spec AID-1219 doc t0-emenda;
+  # briefs AID-528 rev 1 §5 ressuscitados com re-id, AID-1214 §3.1)
+  - id: l30
+    moduleId: mod-08
+    title: "Rotinas repetitivas: o que automatizar"
+    objective: "Distinguir tarefas do próprio trabalho que valem virar rotina assistida (repetitiva + estruturada + baixo risco) das que exigem julgamento humano a cada vez, e parametrizar o pedido-padrão da tarefa escolhida."
+    estimatedMinutes: 4
+    prerequisites: [l18]
+    skillIds: [pedir, aplicar]
+    status: planned
+  - id: l31
+    moduleId: mod-08
+    title: "Pequenas automações: onde o humano valida"
+    objective: "Classificar saídas de automação entre uso direto e checagem obrigatória, nomear o que falta em um pedido de automação (gatilho, limite de escala) e sequenciar a adoção segura."
+    estimatedMinutes: 4
+    prerequisites: [l12]
+    skillIds: [avaliar, proteger]
+    status: planned
+  - id: l32
+    moduleId: mod-08
+    title: "Quando a automação erra"
+    objective: "Detectar que uma rotina automatizada degradou (saída coerente com a semana anterior mas errada para esta), aplicar a correção mínima no pedido (só o dado que mudou) e repor o contexto perdido."
+    estimatedMinutes: 3
+    prerequisites: [l19]
+    skillIds: [avaliar]
+    status: planned
