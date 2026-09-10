@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "9d5af73e8499e64a66489e18505727f7e65fc12b",
+  "observedAt": "2026-09-10T14:35:24Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "QA observation walk v42 @ 9d5af73e (AID-1265; chromium headless sobre a superfície vite do literacyDojo no head merged da main, perfil novo; spec scripts/literacy/obs-lit.spec.ts; screenshots ev/qa1265-litobs-03-result-next.png). Após concluir a lição de entrada, o ResultScreen nomeia a próxima ação na linguagem do aprendiz e o mapa público destaca a próxima lição disponível sem conhecimento de repositório. Corroboração LIVE: walk idêntico executado contra a produção promovida e91272b2 (deploy 6aa293e4) na sessão AID-1265 com contentVersion 2026-09-10.1 observado no storage (recibo na AID-1254)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: rodapé visível em toda tela declara a fronteira em linguagem do aprendiz — 'Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.' (ev/qa1265-litobs-01-welcome-footer.png; spec assertion footerText). Recarregamentos no walk preservaram o estado sem promessa de sincronização entre dispositivos. Igual copy observada na produção e91272b2."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: tentativa errada (output_comparison) mostra feedback formativo + dica (ev/qa1265-litobs-02-wrong-hint.png) e controle de retry na própria UI sem vocabulário interno (spec captura retryLabel de retry-activity). O ciclo erro→dica→acerto termina em conclusão local honesta; na produção e91272b2 o ciclo completo foi exercido nas 3 lições W1 (l30–l32)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e com corredor mod-01–03 semeado concluído (checkpoints incluídos): a Home pós-cp-03 apresenta a próxima ação suportada e o mapa mostra o módulo seguinte com entrada disponível, sem beco sem saída (ev/qa1265-litobs-04-postcp03-home.png, ev/qa1265-litobs-05-postcp03-map.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: a tela de Desafio do Módulo apresenta a missão em linguagem do aprendiz e o retry é sempre oferecido na UI sem linguagem de punição nem vocabulário interno (ev/qa1265-litobs-07-checkpoint.png). Recuperação documentada no facilitator-guide.md §'Recuperação segura' (retry/reabertura sempre seguros; nunca reverter progresso)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: revisão vencida (nextReviewAt antecipado) faz a Home oferecer entrada de revisão distinta (review-button) e a intro da lição rotulada 'Revisão', separando sessão de revisão de conteúdo novo (spec assertion lesson-intro contains 'Revisão'; ev/qa1265-litobs-06-review-distinct.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "QA observation walk v42 @ 9d5af73e (AID-1265; chromium headless sobre o preview do bundle piloto do OS (build:pilot, vite preview 127.0.0.1:4180), perfil novo; spec scripts/os/obs-os.spec.ts; ev/qa1265-osobs-01-onboarding-choice.png). Onboarding sem conhecimento de repositório apresenta a escolha em linguagem do aprendiz: 'O que você quer conseguir fazer com IA? … Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.', com objetivo/contexto/confiança e recomendação de trilha visível; ao entrar, o hub 'Aprenda uma coisa útil agora.' reflete a escolha sem repetir setup. Corroboração LIVE: mesma jornada executada na produção e91272b2 (deploy 6aa293d0)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: missão l30 'Rotinas repetitivas: o que automatizar' monta same-origin no bundle piloto (iframe 'Missão …' da própria origem — spec assertion origin == page origin; ev/qa1265-osobs-02-l30-mounted.png). Resultado nomeia o próximo passo: 'Prática concluída neste dispositivo — Seu esforço virou um próximo passo claro.' com status de etapas e saída visível ('← Hub'). Loop completo de 3 atividades (erro→dica→retry→acerto×3) exercido first-hand na produção e91272b2 na mesma sessão (recibo AID-1254)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: tentativa errada na missão hospedada reporta feedback formativo nomeando critérios faltantes com retry na própria UI (retry-activity) — sem intervenção de repositório. Estado de verificação sempre visível no painel de status da missão (Etapa/Motor/Evidência); na produção e91272b2 o canal de evidência exibiu 'Veredito PASS' com o quadro canônico intacto ('0 verificadas · sem alteração local') e a copy explícita 'O host não fabrica veredito PASS'. Recuperação documentada em facilitator-guide.md §'Recover and escalate' (retry/reabertura seguros; escalonamento nomeado)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: reload na missão l30 preserva a página de missão sem re-onboarding; navegar à raiz mostra o hub ('Aprenda uma coisa útil agora.') refletindo a trilha, sem repetir setup (ev/qa1265-osobs-03-returning-hub.png). Linguagem só de mesmo-dispositivo: '0 verificadas · sem alteração local' no painel canônico e 'Sem conta; o progresso fica neste dispositivo.' no onboarding — sem promessa de sincronização. Igual comportamento na produção e91272b2."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: mesmo contexto recarregado mantém hub e missão com estado honesto ('Evidência: Aguardando verificador independente' na missão WAREHOUSE reaberta; '0 verificadas · sem alteração local' no painel canônico) sem afirmar conclusão canônica (ev/qa1265-osobs-05-warehouse-mounted.png, ev/qa1265-osobs-06-warehouse-result.png). Persistência exclusivamente local do próprio navegador."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e com storage limpo (localStorage + IndexedDB): o OS volta ao onboarding ('O que você quer conseguir fazer com IA?') SEM exibir conclusão herdada nem claims de competência (spec captura clearedShowsOnboarding=true / clearedShowsCompletion=false; ev/qa1265-osobs-04-cleared-onboarding.png). Ausência de estado local é o comportamento documentado: facilitator-guide.md §'Learner changes browser/device or clears data' — explicar que o novo contexto começa separado; restaurar só pelo export do aprendiz, nunca reconstruindo conclusão."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: WAREHOUSE monta same-origin no bundle piloto (iframe da própria origem; ev/qa1265-osobs-05-warehouse-mounted.png). Ao concluir a simulação (prateleiras corretas first-hand), o painel separa explicitamente os registros: MOTOR 'completed', EVIDÊNCIA 'Aguardando verificador independente', quadro canônico 'presenting · 0 verificadas · sem alteração local' — evidência/resultado local não é interpretado como competência canônica (ev/qa1265-osobs-06-warehouse-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e: reabertura da missão WAREHOUSE no mesmo contexto remonta a simulação determinística com fronteira honesta — 'EVIDÊNCIA Aguardando verificador independente' e quadro canônico '0 verificadas · sem alteração local', sem linguagem de mastery ou veredito fabricado (ev/qa1265-osobs-06-warehouse-result.png). Continuidade é do dispositivo, não canônica."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v42 @ 9d5af73e em contexto reduced-motion: a página da missão WAREHOUSE expõe a projeção acessível como affordance visível — 'Usar visualização acessível' (ev/qa1265-osobs-07-accessible-affordance.png; spec assertion accessibleAffordance) e o painel reporta o modo de visualização ativo. O limiar de escalada é nomeável sem repositório: facilitator-guide.md §'WebGL initialization fails' — selecionar o renderer acessível e repetir a interação central por teclado; escalar quando ambas as projeções falham ou a acessível perde a interação prometida."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
