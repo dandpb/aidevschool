@@ -8,6 +8,7 @@ describe("codexDojo core dashboard E2E", () => {
   afterEach(() => {
     vi.restoreAllMocks()
     vi.unstubAllGlobals()
+    vi.unstubAllEnvs()
   })
 
   it("covers overview, agents, copy prompt, cycle, roadmap, and project briefing surfaces", async () => {
@@ -77,6 +78,10 @@ describe("codexDojo core dashboard E2E", () => {
   })
 
   it("linuxLab view exposes only the OS launch bridge", () => {
+    // AID-1154: the bridge only renders when VITE_CODEXDOJO_OS_URL resolves;
+    // vitest runs with import.meta.env.DEV=false, so stub it deterministically
+    // instead of depending on the runner's environment.
+    vi.stubEnv("VITE_CODEXDOJO_OS_URL", "http://127.0.0.1:5174/")
     const root = document.createElement("div")
 
     mountCodexDojo(root)

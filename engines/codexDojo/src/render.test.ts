@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { getCycleCompletionPercent } from "./cycle"
 import { agents } from "./data/agents"
 import { metrics } from "./data/cycle"
@@ -13,6 +13,10 @@ const stateWith = (overrides: Partial<AppState>): AppState => ({
 })
 
 describe("renderShell — targeted assertions", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
   it("overview: contains brand, completion percent, 14 agent nodes, 6 stage chips", () => {
     const html = renderShell(stateWith({ view: "overview" }))
 
@@ -52,6 +56,10 @@ describe("renderShell — targeted assertions", () => {
   })
 
   it("linuxLab: is bridge-only (no fake desktop tiles)", () => {
+    // AID-1154: stub the OS URL so the launch anchor renders regardless of
+    // the runner's environment (vitest has import.meta.env.DEV=false, so the
+    // dev fallback in getCodexDojoOsUrl does not apply).
+    vi.stubEnv("VITE_CODEXDOJO_OS_URL", "http://127.0.0.1:5174/")
     const html = renderShell(stateWith({ view: "linuxLab" }))
 
     expect(html).toContain("Linux Lab")
