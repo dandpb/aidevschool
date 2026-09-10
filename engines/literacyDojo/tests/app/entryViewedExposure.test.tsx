@@ -41,7 +41,8 @@ async function entryEvents(analytics: InMemoryAnalyticsSink) {
   // DEPOIS do commit do h1 — sob carga, o findByRole resolvia antes do evento
   // chegar ao sink (flake AID-1255). Pronto-sinal é o próprio evento: poll do
   // sink até `entry_viewed` estar presente; a unicidade segue assertada por
-  // cada teste.
+  // cada teste. Edição de teste existente aprovada pelo owner: QA AID-1250
+  // comentário 428cf15a (F2 LOW) — trailer SDLC-ALLOW-TEST-EDIT no commit.
   await waitFor(() => {
     expect(analytics.events.some((event) => event.event === "entry_viewed")).toBe(true);
   });
