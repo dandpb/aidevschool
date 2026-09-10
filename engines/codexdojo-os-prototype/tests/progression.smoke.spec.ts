@@ -1,8 +1,10 @@
 import { expect, test, type Page } from '@playwright/test'
 import { missionCatalog } from '../src/data/missions'
+import { GeneratedMissionCatalogRepository } from '../src/missions/catalog'
 import {
   completeOnboarding,
   createInitialOsProgress,
+  missionKey,
   recordMissionCompletion,
 } from '../src/progress/domain'
 
@@ -75,34 +77,42 @@ async function seedRejectedVerification(page: Page, mission: {
   }), mission)
 }
 
-test('prioritizes a due canonical review without copying mastery into local progress', async ({ page }) => {
+test('keeps the public dev hub anonymous: next mission, no canonical review or mastery projection', async ({ page }) => {
+  // ec534f7: the public journey resolves anonymousPublicLearner, so due
+  // canonical reviews and the author's mastery count must never surface here.
+  // The review-priority surface itself stays covered deterministically by
+  // src/missions/recommendation.test.ts (synthetic learner fixtures).
   await page.goto('/')
   await page.getByTestId('track-option-dev').click()
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
 
   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
-  await expect(page.getByText(/Revisão (do dia|atrasada)/)).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Revisar agora' })).toBeVisible()
+  await expect(page.getByText(/Revisão (do dia|atrasada)/)).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Revisar agora' })).toHaveCount(0)
+  await expect(page.getByTestId('canonical-mastery-count')).toHaveText('0 competências verificadas')
   await expect(page.getByText('XP local').locator('..')).toContainText('0')
 })
 
 test('recovers from failed verification and preserves rewards across reloads without punishment', async ({ page }) => {
-  const warehouse = missionCatalog.missions.find((mission) => mission.id === 'game-02-warehouse')
   const wormhole = missionCatalog.missions.find((mission) => mission.id === 'game-03-wormhole')
-  if (warehouse === undefined || wormhole === undefined) throw new Error('Expected Dev missions')
+  if (wormhole === undefined) throw new Error('Expected Dev missions')
   let progress = completeOnboarding(createInitialOsProgress(missionCatalog), {
     goal: 'build-systems',
     context: 'personal-project',
     confidence: 'high',
     selectedTrackId: 'dev',
   })
-  progress = recordMissionCompletion(progress, warehouse, missionCatalog, undefined, {
-    now: new Date('2026-07-20T10:00:00-03:00'),
-    canonicalReviewKey: `${warehouse.unitId}:overdue:overdue 4d`,
-  })
-  progress = recordMissionCompletion(progress, wormhole, missionCatalog, undefined, {
-    now: new Date('2026-07-20T11:00:00-03:00'),
-  })
+  // Forward-over-recovery (recommendation.forward-over-recovery.test.ts): a
+  // rejected verdict only becomes 'Recuperação guiada' when no forward dev
+  // mission remains, so complete the whole launchable dev rail through the
+  // domain functions — deterministic, no dependence on the generated snapshot.
+  // Fixed past dates keep the "Uma pausa não remove XP" return copy visible.
+  for (const mission of new GeneratedMissionCatalogRepository().listLaunchable('dev')) {
+    if (progress.missionStatusByKey[missionKey('dev', mission.id)] === 'completed') continue
+    progress = recordMissionCompletion(progress, mission, missionCatalog, undefined, {
+      now: new Date('2026-07-20T10:00:00-03:00'),
+    })
+  }
 
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'O que você quer conseguir fazer com IA?' })).toBeVisible()
@@ -117,11 +127,11 @@ test('recovers from failed verification and preserves rewards across reloads wit
   await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible()
   await expect(page.getByText(/Uma pausa não remove XP/)).toBeVisible()
-  await expect(page.getByText('XP local').locator('..')).toContainText('50')
+  await expect(page.getByText('XP local').locator('..')).toContainText(`${progress.xp}`)
   await expect(page.getByText(/\bvidas?\b|\benergia\b/i)).toHaveCount(0)
 
   await page.reload()
   await expect(page.getByRole('button', { name: 'Tentar novamente' })).toBeVisible()
-  await expect(page.getByText('XP local').locator('..')).toContainText('50')
+  await expect(page.getByText('XP local').locator('..')).toContainText(`${progress.xp}`)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
 })

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { completeLiteracyMission } from './support/literacyMission'
 
 test('preserves local learning when network-backed services are unavailable', async ({ context, page }) => {
   await page.goto('/')
@@ -19,12 +20,9 @@ test('preserves local learning when network-backed services are unavailable', as
   })
   expect(queuedEvents.length).toBeGreaterThan(0)
 
-  await mission.getByTestId('start-lesson').click()
-  await mission.getByTestId('output-out-b').check()
-  await mission.getByTestId('criterion-c-fontes').check()
-  await mission.getByTestId('criterion-c-limites').check()
-  await mission.getByTestId('submit-attempt').click()
-  await mission.getByTestId('finish-lesson').click()
+  // AID-1153 (retrofit f70205de): loop all three l02 activities offline; the
+  // verifier stays unavailable and the evidence is preserved, not lost.
+  await completeLiteracyMission(page, 'l02', { returnToHub: false })
 
   await expect(page.getByText('Verificador indisponível', { exact: true })).toBeVisible()
   await expect(page.getByText(/A evidência está segura/)).toBeVisible()
