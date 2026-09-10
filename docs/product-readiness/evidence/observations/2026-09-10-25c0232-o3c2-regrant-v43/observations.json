@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "25c0232f8c41098950623c1a862d6df289609451",
+  "observedAt": "2026-09-10T15:48:41Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8b8 @ cb128865): erro→retry dentro da lição retrofitted l09–l11 usa vocabulário do aprendiz (feedback onFailure/dicas do conteúdo canônico), sem termos internos; conclusão exige minimumScore 0.75 com as 3 atividades (contrato conferido no YAML @ pin)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8b8 @ cb128865): mapa público com 23 missões IA Prática, 0 'Em breve', retrofit l08–l13 navegável nos módulos mod-03/mod-04 com botão iniciar visível (ev/qa1293-02-map-mod03-04.png); ao concluir cp-03 o aprendiz nomeia a próxima ação (próxima lição/mod-04) sem conhecimento de repositório."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8b8 @ cb128865): janela de revisão espaçada distinta de conteúdo novo — intervalsDays [1,7,21] preservados nos 6 YAMLs retrofitted; o ResultScreen apresenta revisão e próxima lição como ações distintas. Producer test:e2e 20/20 no head cobre o fluxo de revisão (corridor suite)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "QA observation walk v43 O3-C2 (AID-1293; chromium headless contra a PRODUÇÃO promovida https://aidevschool-literacydojo.netlify.app, deploy 6aa2c8b8 @ pin cb128865; spec scripts/literacy/live-o3c2.spec.ts 'entrada l02 intacta'). Perfil novo → onboarding → lição de entrada l02 rodando com contentVersion 2026-09-10.2 no storage; o ResultScreen após concluir nomeia a próxima ação na linguagem do aprendiz e o mapa público destaca a próxima lição sem conhecimento de repositório (ev/qa1293-01-entry-l02.png). Producer gate no head 25c0232: literacy test:e2e 20/20."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8b8 @ cb128865): o rodapé declara a fronteira de dispositivo em toda tela e recarregamentos no corredor semeado preservaram o estado sem promessa de sincronização; contentVersion 2026-09-10.2 persistida no storage local. Espec scripts/literacy/live-o3c2.spec.ts (seedCorridorProgress + reload)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8b8 @ cb128865): resposta errada na l08 → feedback corretivo onFailure + dica revelada 1-a-1 + retry leva ao acerto sem linguagem interna de repositório (spec 'erro→dica→acerto×3', ev/qa1293-1x-l08-result.png mostra conclusão honesta sem mastered)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "QA observation walk v43 O3-C2 (AID-1293; produção OS https://aidevschool-codexdojo-os.netlify.app deploy 6aa2c8a5 @ cb128865; spec scripts/os/live-os-o3c2.spec.ts). Deep links /mission/ai-pratica/l08…l13 montam iframe same-origin com conteúdo O3-C2 (6/6); missão hospedada l08 jogável end-to-end: 'Veredito PASS' no canal de evidência + quadro canônico '0 verificadas' + copy explícita de que conclusão local não é mastery nem veredito do host (ev/qa1293-os-03-mission-l08-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8a5 @ cb128865): retorno ao host após concluir missão hospedada mantém a fronteira de continuidade — progresso local do iframe literacy persiste no dispositivo, quadro canônico do OS segue '0 verificadas · sem alteração local' (fronteira declarada na copy do host)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8a5 @ cb128865): entrada 'Entrar na escola' → onboarding com escolha de trilha explicável na linguagem do aprendiz ('O que você quer conseguir fazer com IA?'); mapa guiado l01–l03 IA Prática + WAREHOUSE→WORMHOLE→RELAY intacto (ev/qa1293-os-01-map-guiado.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Producer gate no head 25c0232: renderer-fallback.smoke.spec.ts 5/5 (desktop-1280) — reduced motion seleciona projeção semântica operável por teclado, perda de contexto WebGL degrada sem resetar evidência. LIVE cb128865: mapa e missões hospedadas responderam a navegação por teclado nos walks (ev/qa1293-os-02-mission-l08-intro.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8a5 @ cb128865): sessões repetidas no mesmo dispositivo preservam estado local das missões hospedadas (walks l08 e l12) sem tocar o estado canônico — fronteira '0 verificadas' visível em todas as superfícies de resultado."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8a5 @ cb128865): estado local limpo retorna ao onboarding honesto (fluxo 'Entrar na escola' reproduzido em cada teste da spec live) sem promessa de recuperação entre dispositivos; cópia de fronteira visível. Producer trio desktop-1280 5/5 no head 25c0232 (readiness-recovery spec)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v43 O3-C2 (AID-1293, produção 6aa2c8a5 @ cb128865): a ponte de verificação responde fail-closed (403 sem sessão válida; sonda direta no precheck independente desta onda) — facilitador recupera estado sem intervenção de repositório; canal de evidência 'Veredito PASS' aparece somente após conclusão legítima da missão."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Producer gate no head 25c0232: pilot-build smoke 8/8 inclui missões voxel hospedadas (WAREHOUSE retry corrige estado de verificação); LIVE cb128865: /apps/warehouse/ … /apps/stacks/ 20×2 superfícies 200 no precheck independente desta onda; walks no host confirmam iframe same-origin e distinção evidência×mastery ('0 verificadas' + copy da recompensa local)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Producer gate no head 25c0232 (pilot smoke 8/8, chapter-continuity preserva missões concluídas entre recargas); LIVE cb128865: fronteira de continuidade voxel declarada no host (mesmo padrão literacy: progresso local no dispositivo, quadro canônico intocado)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
