@@ -1,0 +1,29 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/dojoToday/playwright/readiness.spec.ts",
+      "sha256": "290f8a375e47eaee54240dfe343552b81be0b4f14ed3dfeeceb257b85127bb7b"
+    },
+    {
+      "path": "engines/dojoToday/tools/selfcheck.py",
+      "sha256": "5bd135cb3042ac8e3837d3e8e7bebac30a3351a3bb478cfb8be5df69d8a94b32"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "schedule-and-active-unit-are-readable",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-10T21:37:48Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "80c3105f847bf09f6c98823b5316bddcb23dba0b",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-10T21:37:48Z-dojotoday-active-unit-guidance-80c3105f",
+  "scenarioId": "dojotoday-active-unit-guidance",
+  "schemaVersion": 1,
+  "sourceFingerprint": "10fb4ddb7856f0335943e0b2eca95d14a36e0b11594bf10f18176092353c5c70"
+}
