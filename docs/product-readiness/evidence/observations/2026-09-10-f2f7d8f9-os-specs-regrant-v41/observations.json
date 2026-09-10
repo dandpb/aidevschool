@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "f2f7d8f906c55643e3930e4cc5d530c66fd8628d",
+  "observedAt": "2026-09-10T04:15:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk observado first-hand v41 2026-09-10 ~04:05Z, chromium headless 1280x800, bundle piloto (dist/ de npm run test:readiness) servido por vite preview 127.0.0.1:4180; checkout f2f7d8f9, árvore sem mudanças tracked antes do walk; distinto das runs de CI. Contexto novo cai no onboarding: radiogroup 'Trilha' com 2 opções (IA Prática / Dev), lead 'O que você quer conseguir fazer com IA?' e fronteira 'Sem conta; o progresso fica neste dispositivo' (logs/walk-log-os.json trackOptionsVisible=2 + onboardingLead; ev/qa41-01-onboarding.png). 'Entrar na escola' leva ao hub 'Aprenda uma coisa útil agora.' (ev/qa41-02-hub-fresh.png). A escolha é explicável em linguagem do aprendiz, sem vocabulário interno."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Missão IA Prática (l02) monta do bundle na origem do próprio OS: iframe /apps/literacydojo/?hosted=1&hostOrigin=<origem OS>, sem dev server (logs/walk-log-os.json literacyMissionUrl; ev/qa41-03-literacy-mission-mounted.png). Lição hospedada concluída first-hand pelo loop de 3 atividades (output_comparison → choice → sort) com tentativa errada intermediária: 'Quase lá. Uma resposta confiável não é necessariamente confiável… Pontuação desta tentativa: 60%' + 'Tentar novamente' (ev/qa41-04-literacy-wrong-attempt.png). Resultado celebra 'PRÁTICA CONCLUÍDA NESTE DISPOSITIVO' e nomeia o próximo passo — hub mostra 'SEU PRÓXIMO PASSO ESTÁ PRONTO' + 'PRÓXIMA MISSÃO' (ev/qa41-05-literacy-result.png, ev/qa41-07-hub-returning.png) com 'Estado canônico 0 verificadas · sem alteração local'."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Verificação honesta na superfície: resultado da missão exibe 'EVIDÊNCIA Verificador indisponível' e o hub mantém 'Verificação independente · Temporariamente indisponível' com botão 'Tentar verificação novamente' — sem veredito fabricado (logs/walk-log-os.json verificationHonest=true, retryVerificationControl=1; ev/qa41-06-verification-honest.png, ev/qa41-08-hub-honest-progress.png 'Competência canônica · Não alterada por este fluxo'). Recuperação da tentativa errada inteira pelos controles visíveis ('Tentar novamente' reinicia a atividade e o retry correto conclui); nenhuma intervenção de repositório foi necessária."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Retorno ao hub pós-missão de alfabetização: sem repetição de setup ('Entrar na escola' ausente — logs/walk-log-os.json hubNoResetup=true), trilha preservada ('XP local 25', missões Concluídas; ev/qa41-07-hub-returning.png) e reload preserva o mesmo estado (ev/qa41-08-hub-honest-progress.png). Continuidade restrita ao mesmo dispositivo: IndexedDB 'literacydojo' + 'codexdojo-os' (logs/walk-log-os.json indexedDbNames), linguagem 'Salva neste dispositivo' sem promessa de sincronização/cross-device (sameDeviceLanguageOnly=true)."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reload pós-atividades restaura o hub com o painel honesto de 4 registros separados: 'Atividade concluída · Salva neste dispositivo', 'Evidência preservada · Separada do progresso local', 'Verificação independente · Temporariamente indisponível', 'Competência canônica · Não alterada por este fluxo' (ev/qa41-08-hub-honest-progress.png; logs/walk-log-os.json honestProgressVisible=true, canonicalUnchanged=true, indexedDbNames=['codexdojo-os','codexdojo-os-verification','literacydojo']). Fronteira de mesmo-dispositivo explícita na UI, sem claim de nuvem/sincronização."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Contexto novíssimo de navegador (storage limpo) cai em /onboarding com 'Entrar na escola' e a fronteira repetida 'Sem conta; o progresso fica neste dispositivo'; nenhum texto de 'missão concluída', 'Atividade concluída', 'mastered' ou 'competências verificadas' (logs/cleared-storage-reprobe.json showsCompletion=false, showsMastery=false, boundaryRepeated=true; ev/qa41-14-cleared-storage-onboarding.png). Perda de estado local recomeça com segurança, sem inventar conclusão prévia — explicável pelo texto da própria superfície."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE hospedada monta da origem do OS: iframe /apps/warehouse/?hosted=1&hostOrigin=<origem OS> (logs/walk-log-os.json warehouseUrl; ev/qa41-09-warehouse-mounted.png). Conclusão honesta com registros separados: 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' e 'A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.' (ev/qa41-10-warehouse-complete.png) — evidência distinta de mastery."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Com prefers-reduced-motion, WAREHOUSE seleciona a projeção semântica operável por teclado (testid accessible-projection + rótulo 'Acessível'; ev/qa41-12-accessible-projection.png); conclusão 100% por teclado (focus + Enter em accessible-shelf-N) com HUD 'Missão concluída; evidência emitida.' e bloco completion-is-not-mastery visível (ev/qa41-13-accessible-complete.png; logs/walk-log-os.json accessibleProjectionVisible=true, accessibleKeyboardCompletion=true, hudStatusText). O primeiro degrau de escalonamento da guia (visualização acessível preserva a jornada) confirma-se na própria superfície."
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Pós-WAREHOUSE + reload o hub restaura o progresso local (logs/walk-log-os.json voxelHubAfterReload=true, 'Atividade concluída'); re-entrada em /mission/dev/game-02-warehouse mostra estado honesto 'Estado canônico presenting · 0 verificadas · sem alteração local' e 'EVIDÊNCIA Ainda não enviada', sem veredito fabricado nem claim cross-device (ev/qa41-11-warehouse-reentry.png; logs/walk-log-os.json warehouseReentryHonest=true). Continuidade voxel permanece restrita ao dispositivo."
+        }
+      ]
+    }
+  ]
+}

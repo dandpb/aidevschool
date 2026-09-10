@@ -1,0 +1,77 @@
+[
+  {
+    "trackOptionsVisible": 2
+  },
+  {
+    "onboardingLead": "AI DevSchool\nescolha sua trilha\n\nSEU PRIMEIRO PASSO\n\nO que você quer conseguir fazer com IA?\n\nLeva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.\n\nObjetivo\nUsar IA melhor no trabalho\nEntender respostas e riscos\nConstruir sistemas com IA\nContexto\nTrabalh"
+  },
+  {
+    "hubHeading": true
+  },
+  {
+    "literacyMissionUrl": "http://127.0.0.1:4180/apps/literacydojo/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4180"
+  },
+  {
+    "wrongAttemptFeedbackVisible": true,
+    "wrongAttemptFeedbackSample": "Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?\n\nPontuação desta tentativa: 60%\n\nA respos",
+    "submitDisabledWithoutSelection": true
+  },
+  {
+    "resultTextSample": "← Hub\n\nIA PRÁTICA · 4 MIN\n\nIA não é uma fonte de verdade\n\nDiante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho.\n\nEstado canônico\npresenting\n0 verificadas · sem alteração local\nETAPA\nAplicar\nMOTOR\ncompleted\nEVIDÊNCIA\nVerificador indisponível\nIA\nMentor contextual\nCoach contextual · sem ferramentas\n×\n\nIA não é uma fonte de verdade\nEtapa atual: apply\n\nTipo de ajuda\nPergunta\nExplicar\nPista\nSua pergunta\nPedir ajuda\n\nEu ajudo com perguntas e pistas graduais, sem selecionar a resposta.\n\nPistas do provedor: 0/5\nNao cria evidencia nem avalia dominio.\n\nPRÁTICA CONCLUÍDA NESTE DISPOSITIVO\n\nSeu esforço virou um próximo passo claro.\n\nA ",
+    "resultNamesNextAction": true,
+    "resultLocalDisclaimer": true,
+    "resultAvoidsMastery": false
+  },
+  {
+    "verificationHonest": true,
+    "retryVerificationControl": 1,
+    "missionHudNotSent": false,
+    "noFabricatedVerdict": true
+  },
+  {
+    "hubNoResetup": true,
+    "hubReturnTextSample": "AI DevSchool\nhub de aprendizagem\nCapítulo IA Prática\nXP local 25\nMeta 25/25\n\nSEU PRÓXIMO PASSO ESTÁ PRONTO\n\nAprenda uma coisa útil agora.\n\nUma missão em destaque, com prática observável e progresso que não confunde conclusão com competência.\n\n1\nAtividade concluída\nSalva neste dispositivo\n2\nEvidência preservada\nSeparada do progresso local\n3\nVerificação independente\nTemporariamente indisponível\n4\nCompetência canônica\nNão alterada por este fluxo\nTentar verificação novamente\n\nPRÓXIMA MISSÃO · 4 MIN\n",
+    "continueOrNextMission": true,
+    "railShowsCompleted": true
+  },
+  {
+    "hubAfterReload": true,
+    "honestProgressVisible": true,
+    "verificationUnavailableShown": true,
+    "canonicalUnchanged": true,
+    "sameDeviceLanguageOnly": true,
+    "indexedDbNames": [
+      "codexdojo-os",
+      "codexdojo-os-verification",
+      "literacydojo"
+    ]
+  },
+  {
+    "warehouseMountedFromOsOrigin": true,
+    "warehouseUrl": "http://127.0.0.1:4180/apps/warehouse/?hosted=1&hostOrigin=http%3A%2F%2F127.0.0.1%3A4180"
+  },
+  {
+    "warehouseCompletionHonest": true,
+    "warehouseNoMasteryClaim": false
+  },
+  {
+    "voxelHubAfterReload": true
+  },
+  {
+    "warehouseReentryHonest": true,
+    "reentryContinuesDeviceLocal": false
+  },
+  {
+    "accessibleProjectionVisible": true,
+    "accessibleLabel": true
+  },
+  {
+    "accessibleKeyboardCompletion": true,
+    "hudStatusText": "Missão concluída; evidência emitida."
+  },
+  {
+    "clearedStorageOnboarding": false,
+    "clearedStorageShowsCompletion": false,
+    "clearedStorageShowsMastery": false
+  }
+]
