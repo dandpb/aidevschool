@@ -1,0 +1,9 @@
+{
+  "clearedStorageReprobe": {
+    "onboardingUrl": "http://127.0.0.1:4180/onboarding",
+    "enterSchoolButton": true,
+    "showsCompletion": false,
+    "showsMastery": false,
+    "boundaryRepeated": true
+  }
+}
