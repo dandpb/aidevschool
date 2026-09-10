@@ -131,7 +131,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
             />
             <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
           </div>
-          <button id="soc-config-btn" type="button" class="link-btn">⚙️ Configurar assistente (opcional)</button>
+          <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config">⚙️ Configurar assistente (opcional)</button>
           <div id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
@@ -307,6 +307,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
 
   configBtn.addEventListener("click", () => {
     configPanel.hidden = !configPanel.hidden;
+    configBtn.setAttribute("aria-expanded", String(!configPanel.hidden));
     fill();
   });
   saveBtn?.addEventListener("click", () => {
@@ -316,6 +317,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
       model: modelInput?.value.trim() || "gpt-4o-mini",
     });
     configPanel.hidden = true;
+    configBtn.setAttribute("aria-expanded", "false");
     setReply(
       isConfigured(loadConfig())
         ? "Assistente configurado. Pergunte acima."
@@ -359,6 +361,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     try {
       if (!isConfigured(cfg)) {
         configPanel.hidden = false;
+        configBtn.setAttribute("aria-expanded", "true");
         fill();
         setReply(deterministicNudge(mission));
         return;
