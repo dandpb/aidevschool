@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { App } from "../../src/app/App";
 import { createServices } from "../../src/app/services";
@@ -37,7 +37,14 @@ function bootServices() {
 }
 
 async function entryEvents(analytics: InMemoryAnalyticsSink) {
-  await screen.findByRole("heading", { level: 1 });
+  // A emissão vive num efeito passivo (App.tsx useEffect) que pode dar flush
+  // DEPOIS do commit do h1 — sob carga, o findByRole resolvia antes do evento
+  // chegar ao sink (flake AID-1255). Pronto-sinal é o próprio evento: poll do
+  // sink até `entry_viewed` estar presente; a unicidade segue assertada por
+  // cada teste.
+  await waitFor(() => {
+    expect(analytics.events.some((event) => event.event === "entry_viewed")).toBe(true);
+  });
   return analytics.events.filter((event) => event.event === "entry_viewed");
 }
 
