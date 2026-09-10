@@ -1,0 +1,49 @@
+schemaVersion: 1
+assessmentId: 2026-09-10-9d5af73e-w1-regrant-v42
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-10T14:35:24Z'
+revalidateBy: '2026-10-08'
+gitSha: 9d5af73e8499e64a66489e18505727f7e65fc12b
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T14:35:24Z-literacy-happy-path-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-resume-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-retry-mixed-9d5af73e
+- useCaseId: literacy-standalone-corridor-mod01-03
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T14:35:24Z-literacy-corridor-happy-path-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-corridor-gate-retry-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-corridor-review-window-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-corridor-grandfathered-return-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-literacy-corridor-resume-mid-module-mixed-9d5af73e
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T14:35:24Z-os-literacy-hosted-mission-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-verification-recovery-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-literacy-returning-device-mixed-9d5af73e
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T14:35:24Z-os-voxel-hosted-missions-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-voxel-returning-device-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-renderer-accessibility-recovery-mixed-9d5af73e
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T14:35:24Z-os-onboarding-track-choice-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-returning-device-mixed-9d5af73e
+  - 2026-09-10T14:35:24Z-os-returning-recovery-mixed-9d5af73e
