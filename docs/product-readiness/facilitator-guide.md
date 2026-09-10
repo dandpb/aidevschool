@@ -45,7 +45,7 @@ Para piloto humano de 1–3 pessoas só no LiteracyDojo, use também o
 
 A oferta CR no OS inclui **IA Prática** (l01–l03), trilho **Dev** de três missões 3D hospedadas e retorno no mesmo aparelho — `customer-ready` (v35). O OS público **oferece escolha de trilha** entre **IA Prática** e **Dev** e um Engine Hub allowlist
 (voxel, PixelQuest, dojoToday local, literacy) — o Hub **não** é entrada da oferta paga até decisão do CEO; os itens 6–8 (PixelQuest, WAREHOUSE de referência, dojoToday) entram por app local ou rota estática declarada. Labs e miniTown só com `?operator=1`.
-O trilho Dev hospedado é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as outras 14
+O trilho Dev hospedado é **WAREHOUSE → WORMHOLE → RELAY STATION**. Não venda as demais
 lições avulsas como se existirem no OS. PixelQuest, voxelDojo avulso (WAREHOUSE de referência) e dojoToday estão `customer-ready` (AID-987/T1) — venda conforme a matriz v35, sem prometer certificado/domínio. Não
 prometa sincronização avulso→OS. Oriente a turma assim:
 
