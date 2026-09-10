@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "80c3105f847bf09f6c98823b5316bddcb23dba0b",
+  "observedAt": "2026-09-10T21:37:34Z",
+  "scenarios": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "'Sua lição de hoje' + 'Retome por aqui' headings visíveis; unidade ativa renderizada da projeção gerada (5180 canônica) com copy 'apenas mostra o scheduler' (dtv44-01-daily-view.png) | PR #335 re-validado first-hand no walk: #soc-config-btn parte com aria-expanded=false + aria-controls=soc-config e o painel #soc-config parte OCULTO — a guarda CSS .socrates-config[hidden]{display:none} deste re-anchor v44 corrige o display:flex que mantinha o painel sempre visível (achado: sem a guarda, aria-expanded=false era falso para AT); abrir/salvar alternam aria-expanded=true/false (dtv44-02-config-expanded.png, dtv44-03-config-saved-collapsed.png) | pergunta sem config abre o painel expandido e anuncia o nudge determinístico 'tente primeiro… quem avalia é o verificador independente' na região role=status (dtv44-04-nudge-fallback-expanded.png)"
+        }
+      ]
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "vista sem afordância de avaliação (não há controle concluir/mastered/avaliar; só '▶ Jogar aqui' e 'Perguntar') | localStorage estável e vazio entre toggles+reload (vista não escreve estado): true (dtv44-05-boundary.png) | document-review: re-execução do substrato nesta sessão (python3 -m learner.substrate) — 30 projeções regeneradas, git diff de arquivos rastreados = 0 (learner/ YAML intocado; src/data/today.ts segue projeção gerada)"
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "fronteira de autoridade presente na vista (dtv44-05-boundary.png): 'O verificador independente decide' + 'apenas mostra o scheduler' — a vista orienta a regenerar/parar em vez de apresentar orientação stale como atual (recovery documentado: 'Regenerate the learner projection when the view is stale; stop if the canonical learner state cannot be read')"
+        }
+      ]
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "outcome": "pass",
+      "gaps": [],
+      "assertions": [
+        {
+          "id": "learner-understands-no-eval-carryover",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "day-N (fixture 5181) renderiza 'Sua lição de hoje' com fila/streak da projeção (dtv44-06-day-n.png) | day-N+1 (fixture 5182) renderiza a view do dia seguinte com copy de fronteira 'O verificador independente decide' + 'apenas mostra o scheduler' — retornar não avalia nem carrega veredito do dia anterior (dtv44-07-day-n-plus-1.png)"
+        }
+      ]
+    }
+  ]
+}
