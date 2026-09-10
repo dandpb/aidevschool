@@ -189,3 +189,29 @@ memória** + eventos fatia a fatia + sink existente. Em vigor:
   SOMENTE nos `[build.environment]` dos dois netlify.toml (invariante fail-closed
   por teste). Recepção pelo coletor do ADR-0010 estendido a este envelope.
   Retenção e k-anonimato (n≥5) conforme ADR-0010 e AID-463 §3.0.
+
+## Emenda 2026-09-10 (F2 `2026-09-10-entry-brief-instrumentation` — spec AID-1218, ORDEM AID-1245)
+
+Instrumenta entrada, brief e exposição à 1ª atividade. Em vigor:
+
+- **Eventos de exposição (2, espelhados nos 2 envelopes):** literacy v2 ganha
+  `lesson_brief_viewed` {`lessonId`, `lessonVersion`} (intro da lição
+  renderizada — o brief É a intro na visão do aprendiz: card "Pedido da Vila
+  Lume") e `activity_presented` {`lessonId`, `activityType`, `activityIndex`≥0}
+  (atividade do índice i visível pela 1ª vez na sessão; 1 emissão por (sessão,
+  índice absoluto) — re-render/retry/retomada não reemitem). No lado OS os
+  mesmos momentos chegam via protocolo host-engine (+`mission.brief_viewed`,
+  `activity.presented` ao `EngineMissionEventName` e ao vocabulário OS v1) —
+  o sink literacy permanece **noop em missão hospedada**: os novos eventos
+  chegam ao funil OS somente pela via única host-engine → `MissionShell`
+  (duplicação impossível por construção). Nada além disso: sem evento de
+  saída/scroll/focus — abandono é inferido por ausência de submissão + dwell.
+- **Prop opcional `entry` em `entry_viewed`:** ∈ {`home`, `lesson-resume`,
+  `onboarding`}, emitida na **primeira rota renderizada** (qualquer destino de
+  `resumeSession`) — 1× por page load. Ausência da prop continua válida
+  (vocabulário aditivo retro-compat: envelopes pré-v4 são lidos como "não
+  instrumentado (pré-v4)", nunca rejeitados; "deep-link" fica aposentado).
+- **Fronteira preservada:** só enums/inteiros/booleans/UUIDs pseudônimos;
+  exposição observada, nunca leitura/competência (`mastered` segue proibido);
+  analytics ≠ evidência (regra AID-909); paridade emissor↔receptor travada por
+  teste nos 2 envelopes (`collectorParity` + teste do coletor).

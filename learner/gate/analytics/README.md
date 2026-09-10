@@ -40,7 +40,18 @@ node learner/gate/analytics/aggregate_funnel.mjs --input <collector-dir|file.ndj
   [--grace-days 2] [--now ISO8601]
 ```
 
-## Report contract (reportVersion 2, F2b)
+## Report contract (reportVersion 2 F2b → v4 additive; F2 `2026-09-10-entry-brief-instrumentation`)
+
+v4 is **additive**: every v3 section keeps its definition and numbers for the
+same input (locked by the byte-identical example-report test and the R7d
+replay of the 2026-09-06→10 export); new information lives in new sections
+only — `glossary` (binding reading rules R1/R3/R4), `activationDetail` (OS
+sessions first-visit × returning by entry marker + literacy `entry` prop
+split), `briefExposure` (R3 segments, dwell bins, continuous medians (b)/(c),
+residual canary; `hostedMissions` block scoped to `engineId=literacyDojo`
+with declared voxelDojo coverage), and `probeClassification` (deterministic
+synthetic-traffic markers `probe.` + legacy list — diagnostic; learner
+sections keep counting every accepted event).
 
 - **Dedup (ADR-0010 beacon+fetch race):** accepted events are deduplicated by
   `eventId` (first occurrence in the `occurredAt`,`sequence` sort) before any

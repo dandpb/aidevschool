@@ -95,4 +95,75 @@ Windows: D+1/D+7/D+21 · grace 2d · k≥5 · identifiers never published · ana
 
 Median completion rate across published modules: 81.3% (2 published, 0 suppressed, 2 mission id(s) without catalog mapping)
 
+## Literacy funnel (envelope literacydojo v2, sessions anônimas efêmeras)
+
+Overall: suppressed (n=0 < k) — sessões insuficientes para publicar o funil.
+
+| semana ISO | n | sessões por estágio |
+| --- | --- | --- |
+
+| lesson | started (n) | completed | completion rate |
+| --- | --- | --- | --- |
+
+Attempts: suppressed (n=0 < k) (sessões com tentativa).
+
+
+## Glossário v4 (binding — spec AID-1218 R1/R3/R4)
+
+- **entry.lesson-resume**: retomada pós-reload de lição em andamento (chamado de 'deep-link' no relatório da janela 2026-09-06→10; o termo 'deep-link' está aposentado no vocabulário novo)
+- **entry.absent-pre-v4**: não instrumentado (pré-v4) — nunca 'unknown'
+- **briefExposure.exitedBrief**: viu o brief e não chegou à 1ª atividade — comportamento observado (exposição), nunca leitura ou compreensão
+- **briefExposure.exitedFirstActivity**: viu a 1ª atividade e não submeteu — não glosado como 'não entendeu o que fazer' (essa é a hipótese F1, testada com as sessões O1)
+- **briefExposure.residualNoBrief**: started sem brief_viewed — canário de qualidade de dados (defeito de emissão se crescer), não segmento de aprendiz
+- **briefExposure.startedToBrief**: ~100% <15s por construção (a intro renderiza junto com o started) — nota de uso
+- **o1.artifactMapping**: artefatos de pesquisa O1 referem a tela pelo nome visível ao aprendiz ('Pedido da Vila Lume'); mapeamento analítico: brief/lesson_brief_viewed ↔ intro/'Pedido da Vila Lume' ('brief' é vocabulário de analista — o aprendiz nunca vê essa palavra)
+
+## Activation detail v4 (entrada first-visit × returning; OS por sessão)
+
+| corte | n | first-visit (onb.compl→mission.started→completed) | returning (started→completed) | unclassified |
+| --- | --- | --- | --- | --- |
+| overall | 46 | 32 (32→30→30) | 14 (5→5) | 0 |
+| 2026-W29 | 8 | 6 (6→5→5) | 2 (1→1) | 0 |
+| 2026-W30 | 3 | suppressed (n=3 < k) | — | — |
+| 2026-W32 | 2 | suppressed (n=2 < k) | — | — |
+| 2026-W33 | 4 | suppressed (n=4 < k) | — | — |
+| 2026-W34 | 1 | suppressed (n=1 < k) | — | — |
+| 2026-W35 | 7 | 6 (6→5→5) | 1 (1→1) | 0 |
+| 2026-W36 | 2 | suppressed (n=2 < k) | — | — |
+| 2026-W37 | 18 | 17 (17→17→17) | 1 (0→0) | 0 |
+| 2026-W38 | 1 | suppressed (n=1 < k) | — | — |
+
+### Literacy — split da prop `entry` (R1)
+
+| corte | n | por entrada |
+| --- | --- | --- |
+| overall | 0 | suppressed (n=0 < k) |
+
+## Brief exposure v4 (segmentos R3 — exposição observada, nunca leitura)
+
+### literacySessions
+
+Segmentos (sessões com started: 0): saiu no brief 0 · saiu na 1ª atividade 0 · submeteu 0 · resíduo sem brief 0 (canário).
+- dwell startedToBrief (observados 0): —
+- dwell briefToFirstPresentation (observados 0): —
+- dwell presentationToFirstSubmission (observados 0): —
+- medianas contínuas (s): brief→1ª apresentação — · apresentação→1ª submissão —
+
+### hostedMissions
+
+Cobertura: engineId=literacyDojo somente — voxelDojo não emite os eventos de exposição nesta onda (adoção voxel = follow-up data-gated)
+
+Segmentos (sessões com started: 12): saiu no brief 0 · saiu na 1ª atividade 0 · submeteu 0 · resíduo sem brief 12 (canário).
+- dwell startedToBrief (observados 0): —
+- dwell briefToFirstPresentation (observados 0): —
+- dwell presentationToFirstSubmission (observados 0): —
+- medianas contínuas (s): brief→1ª apresentação — · apresentação→1ª submissão —
+
+## Probe classification v4 (diagnóstico determinístico — não altera as seções acima)
+
+Marcadores: probe. · aid###- · qa- · sequential-uuid — eventos OS 0, literacy 0, instalações OS 0, sessões literacy 0.
+
+as seções v3/v4 de aprendiz continuam computadas sobre TODOS os eventos aceitos (semântica inalterada); excluir sondas da leitura é decisão do operador com esta seção em mãos
+
+
 Baseline cycle: the first report establishes the baseline; no external numeric target is claimed.

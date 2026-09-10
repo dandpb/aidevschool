@@ -1,6 +1,25 @@
 export const HOST_ENGINE_PROTOCOL = "aidevschool.host-engine" as const;
 export const HOST_ENGINE_PROTOCOL_VERSION = "1.0" as const;
 
+/**
+ * Nomes fechados de `mission-event` que a engine pode publicar ao host
+ * (F2 `2026-09-10-entry-brief-instrumentation`, emenda ADR-0009). Espelham
+ * 1:1 o `EngineMissionEventName` do receptor
+ * (engines/codexdojo-os-prototype/src/host/protocol.ts) — a paridade
+ * emissor↔receptor é travada por teste em ambos os engines.
+ */
+export const ENGINE_MISSION_EVENT_NAMES = [
+  "mission.started",
+  "mission.completed",
+  "structured_attempt.submitted",
+  "structured_attempt.passed",
+  "retry.requested",
+  "review.started",
+  "mission.brief_viewed",
+  "activity.presented",
+] as const;
+export type EngineMissionEventName = (typeof ENGINE_MISSION_EVENT_NAMES)[number];
+
 export type ProtocolEnvelope<TType extends string, TPayload> = {
   protocol: typeof HOST_ENGINE_PROTOCOL;
   version: typeof HOST_ENGINE_PROTOCOL_VERSION;

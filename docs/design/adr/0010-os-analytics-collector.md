@@ -102,3 +102,24 @@ Aplicar **somente quando o board ativar o coletor**. Texto no tom das páginas a
 
 > Podemos coletar estatísticas anônimas de uso para melhorar a experiência, conforme o aviso
 > de privacidade. Essas estatísticas não avaliam seu aprendizado e não identificam você.
+
+## Emenda 2026-09-10 (F2 — convenção de prefixo de sonda `probe.`, spec AID-1218 R5 / ORDEM AID-1245)
+
+Formaliza o identificador de tráfego sintético/verificação (resolve o §8.5 do
+1º relatório AID-1212, onde prefixos `aid###` eram convenção informal):
+
+- **Convenção nova:** sondas e verificações usam identificadores com prefixo
+  `probe.` (ex.: `probe.qa.a958-watchdog`) nos campos string do envelope OS v1
+  (`eventId`/`installationId`/`sessionId`). Produção mantém
+  `installation-`/`session-`/`event-` + UUID. O envelope literacy v2 exige
+  `eventId`/`sessionId` UUID — sondas literacy usam a forma sequencial legada
+  (UUIDs sintéticos reconhecíveis), declarada na lista legada.
+- **Classificação determinística, não validação:** o coletor NÃO passa a
+  rejeitar eventIds não-UUID não-prefixados (retro-compat); a agregação v4
+  (`probeClassification`) classifica o tier sintético por prefixo `probe.` +
+  lista legada de marcadores conhecidos (`aid###-`, `qa-`, UUID sequencial
+  `-0000-4000-8000-`) — elimina inferência por timing ONDE há marcador. As
+  seções de aprendiz continuam computadas sobre todos os eventos aceitos;
+  excluir sondas é decisão de leitura do operador.
+- **Drift monitor:** reporta contagem de eventId non-UUID do envelope OS como
+  diagnóstico de adoção, sem falhar.
