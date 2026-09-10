@@ -1,0 +1,153 @@
+# Lição l30 — Onda W1 l30–l32 (spec AID-1219; briefs AID-528 rev 1 §5 ressuscitados
+# via AID-1214 §3.1): rotinas repetitivas — o que automatizar.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l30
+version: 1
+moduleId: mod-08
+title: "Rotinas repetitivas: o que automatizar"
+objective: "Distinguir tarefas do próprio trabalho que valem virar rotina assistida (repetitiva + estruturada + baixo risco) das que exigem julgamento humano a cada vez, e parametrizar o pedido-padrão da tarefa escolhida."
+estimatedMinutes: 4
+skillIds: [pedir, aplicar]
+prerequisites: [l18]
+
+activities:
+  - id: l30-a1
+    type: choice
+    skillId: aplicar
+    instruction: "NA SUA SEMANA DE TRABALHO, QUAIS TAREFAS VALEM VIRAR ROTINA ASSISTIDA COM A IA? MARQUE TODAS AS CANDIDATAS."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-a
+          text: "O relatório semanal para a diretoria: toda sexta, os mesmos campos e o mesmo formato — só os números da semana mudam."
+        - id: opt-b
+          text: "A resposta-padrão para agendar reuniões: o texto-base é sempre o mesmo; muda só o nome, a data e o horário."
+        - id: opt-c
+          text: "O resumo das atas do time: a ata é nova toda semana, mas a estrutura do resumo pedida à IA é sempre a mesma."
+        - id: opt-d
+          text: "O feedback delicado sobre o erro de um colega: acontece toda semana com alguém, mas cada conversa depende da pessoa, do momento e do histórico."
+        - id: opt-e
+          text: "A escolha do próximo contratado da equipe: repete a cada vaga aberta, mas cada decisão muda a vida de alguém."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a, opt-b, opt-c]
+    feedback:
+      onFailure: "Vira rotina assistida o que junta três coisas: REPETITIVA (mesmo ritmo, toda semana), ESTRUTURADA (mesma forma, mesmos campos) e BAIXO RISCO (um erro não custa caro nem expõe ninguém). Tarefa que repete no ritmo mas depende de julgamento humano — pessoa certa, momento certo, consequência para outros — continua humana a cada vez: a IA pode rascunhar, você decide."
+      perCheck:
+        opt-a: "Candidata: repetitiva (sexta a sexta), estruturada (mesmos campos e formato) e de baixo risco — você revisa antes de enviar e o erro não é irreversível."
+        opt-b: "Candidata: o texto-base é fixo e só os dados pequenos mudam — é quase um modelo com campos, exatamente o que uma rotina assistida faz bem."
+        opt-c: "Candidata: o material muda (ata nova), mas a estrutura do resumo é sempre a mesma — repetição de forma, conteúdo novo."
+        opt-d: "Não é candidata: o ritmo repete, mas o conteúdo exige julgamento a cada vez — pessoa, momento e histórico mudam a conversa. Automatizar aqui é terceirizar o próprio julgamento (o que a l13 pede para você manter)."
+        opt-e: "Não é candidata: decisão sobre pessoas tem consequência real e irreversível — a IA pode ajudar a organizar critérios, mas a decisão é humana a cada vez."
+      onSuccess: "Exato! O teste dos três ingredientes: repetitiva + estruturada + baixo risco. O que depende de julgamento humano a cada vez não vira rotina — vira IA como assistente, com você decidindo."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada tarefa, pergunte: o ritmo repete, mas a FORMA também repete? E o que acontece se sair errado?"
+      - "Duas dessas tarefas tratam de pessoas e consequências — julgamento humano a cada vez."
+      - "As candidatas têm a mesma cara do pedido-padrão que você salvou na lição da biblioteca de pedidos."
+
+  - id: l30-a2
+    type: prompt_builder
+    skillId: pedir
+    instruction: "VOCÊ ESCOLHEU AUTOMATIZAR O RELATÓRIO SEMANAL. MONTE O PEDIDO-PADRÃO DA ROTINA PREENCHENDO OS CAMPOS — O QUE FICA SALVO E O QUE MUDA A CADA SEMANA."
+    data:
+      scenario: "Na sua ferramenta de IA você salvou um pedido-padrão para não recomeçar do zero toda semana (como na lição da biblioteca de pedidos). Neste exercício você não roda automação nenhuma — você monta o pedido-padrão por campos rotulados, como faria na ferramenta real ao criar a rotina. O pedido 'relatório', sozinho, devolve toda semana um texto de forma diferente."
+      genericPrompt: "relatório"
+      fields:
+        - id: tarefa
+          label: "Tarefa"
+          hint: "O que a rotina pede à IA, sempre igual? Ex.: resumir o desempenho semanal da equipe."
+        - id: dado-que-muda
+          label: "Dado que muda a cada semana"
+          hint: "O que você troca no pedido toda semana? Ex.: os números de vendas, atendimento e prazos da semana."
+        - id: formato
+          label: "Formato"
+          hint: "Que forma fixa a saída deve ter? Ex.: resumo executivo curto em tópicos."
+    evaluation:
+      strategy: deterministic
+      fields:
+        tarefa:
+          minLength: 8
+          mustIncludeAny: ["resumir", "resumo", "relatar", "relatório", "relatorio"]
+        dado-que-muda:
+          minLength: 8
+          mustIncludeAny: ["números", "numeros", "dados", "semana", "vendas", "resultados", "indicadores"]
+        formato:
+          minLength: 4
+          mustIncludeAny: ["resumo", "tópicos", "topicos", "lista", "tabela", "uma página", "uma pagina"]
+    feedback:
+      onFailure: "Um pedido-padrão de rotina separa o FIXO do VARIÁVEL: a tarefa e o formato ficam salvos (é o que dá regularidade); o dado da semana é o único campo que você troca a cada uso. Se tudo mudar junto, não é rotina — é recomeçar do zero."
+      perCheck:
+        tarefa: "Diga a ação fixa da rotina: resumir, relatar ou montar o resumo do desempenho."
+        dado-que-muda: "Nomeie o que é trocado a cada semana: os números, dados ou resultados da semana."
+        formato: "Trave a forma da saída: resumo, tópicos, lista, tabela — sempre igual."
+      onSuccess: "Pedido-padrão pronto! Tarefa e formato salvos, dado da semana como único campo variável — na próxima sexta você troca uma coisa só."
+    storage:
+      policy: structured_only
+    hints:
+      - "No pedido-padrão, o que você nunca mais quer digitar? E o que muda toda semana?"
+      - "A tarefa e o formato ficam fixos; os números da semana são o campo variável."
+      - "Palavras que precisam aparecer: resumir/relatar na Tarefa, números ou semana no Dado, resumo/tópicos no Formato."
+
+  - id: l30-a3
+    type: output_comparison
+    skillId: aplicar
+    instruction: "DUAS PESSOAS TRANSFORMARAM O MESMO PEDIDO-PADRÃO EM ROTINA. COMPARE E ESCOLHA A FORMA SEGURA."
+    data:
+      scenario: "Você e uma colega criaram o mesmo pedido-padrão do relatório semanal. Cada uma transformou o pedido em rotina de um jeito — na vida real isso vira uma regra de uso; aqui você decide por controles rotulados."
+      outputs:
+        - id: out-a
+          text: "Toda sexta eu cole os números da semana no pedido-padrão, a IA monta o resumo no formato combinado — e eu LEIO antes de mandar para a diretoria. Se algo mudou demais (meta nova, resultado estranho), eu ajusto o pedido na hora e depois sigo."
+        - id: out-b
+          text: "Liguei o envio automático: toda sexta o resumo sai direto para a diretoria sem passar por mim. Ganhei minha sexta de volta."
+      criteria:
+        - id: c-revisao-humana
+          text: "A saída passa por leitura humana antes de chegar a quem usa"
+        - id: c-sem-envio-cego
+          text: "Nada é enviado automaticamente sem alguém conferir antes"
+        - id: c-ajusta-quando-muda
+          text: "Quando o dado ou a regra muda, o pedido é ajustado antes do próximo uso"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-revisao-humana, c-sem-envio-cego]
+    feedback:
+      onFailure: "A rotina A mantém o humano no ponto que importa: a IA produz sempre igual, mas quem valida o resultado antes de chegar à diretoria é você — e o pedido se ajusta quando o dado muda. A rotina B terceiriza o julgamento junto com o trabalho: envio cego é exatamente o risco que a lição 13 pede para você não correr."
+      perCheck:
+        betterOutputId: "A rotina A automatiza o trabalho e mantém o julgamento; a B automatiza os dois — e o erro viaja sozinho até a diretoria."
+        c-revisao-humana: "Faltou este critério: alguém lê o resultado antes de ele chegar a quem usa — a revisão é o cinto de segurança da rotina."
+        c-sem-envio-cego: "Faltou este critério: envio automático sem conferência nenhuma é o ponto onde um erro vira erro público."
+        c-ajusta-quando-muda: "Critério bônus da rotina A: ela também prevê ajustar o pedido quando o dado muda — o que a lição 'quando a automação erra' treina em detalhe."
+      onSuccess: "Exato! Automatizar o trabalho não é automatizar o julgamento: produção automática, validação humana — e ajuste fino quando o dado muda."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: quando o resultado chega à diretoria, quem já leu aquele texto?"
+      - "O que acontece na rotina B se o dado desta semana estiver errado ou diferente do usual?"
+      - "A rotina segura mantém a leitura humana antes do envio — e sabe ajustar o pedido quando algo muda."
+
+rubric:
+  id: l30-rubric
+  criteria:
+    - id: r-identifica-candidata
+      text: "Aplica o teste repetitiva + estruturada + baixo risco para separar o que vira rotina assistida do que exige julgamento humano a cada vez."
+      weight: 1
+    - id: r-parametriza-o-pedido
+      text: "Monta o pedido-padrão com tarefa e formato fixos e um único campo variável (o dado que muda a cada semana)."
+      weight: 1
+    - id: r-mantem-controle-humano
+      text: "Escolhe a rotina com revisão humana antes do uso e sem envio cego, mantendo o próprio julgamento."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l30-a1, l30-a2, l30-a3]

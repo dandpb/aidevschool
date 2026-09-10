@@ -344,7 +344,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l18]
     skillIds: [pedir, aplicar]
-    status: planned
+    status: ready
   - id: l31
     moduleId: mod-08
     title: "Pequenas automações: onde o humano valida"
@@ -352,7 +352,7 @@ lessons:
     estimatedMinutes: 4
     prerequisites: [l12]
     skillIds: [avaliar, proteger]
-    status: planned
+    status: ready
   - id: l32
     moduleId: mod-08
     title: "Quando a automação erra"
@@ -360,4 +360,4 @@ lessons:
     estimatedMinutes: 3
     prerequisites: [l19]
     skillIds: [avaliar]
-    status: planned
+    status: ready
