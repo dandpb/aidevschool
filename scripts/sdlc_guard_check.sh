@@ -281,6 +281,49 @@ SDLC-ALLOW-TEST-EDIT: AID-9001" -- \
 SDLC-ALLOW-DERIVED-EDIT: AID-9002" -- \
     "printf 'regenerated\n' > .loops/memory.md"
 
+  # AID-1272 regression: PR head has MERGED an advanced base, then edits a
+  # test the base added after the branch point. With the CURRENT base tip the
+  # diff must classify the test as modified (blocked, rc=1). With the stale
+  # PR-creation sha the same diff read the file as ADDED (rc=0) — the exact
+  # downgrade that let a trailer-less edit pass at head and only fail on the
+  # main push. The wrapper cannot detect a stale base by itself (the caller
+  # knows the real branch tip), so ci.yml resolves origin/<base.ref>; the
+  # second assertion below pins the hazard semantics for the record.
+  local stale_sha advanced_sha
+  stale_sha="$base_sha"
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  mkdir -p "$R/tests/unit"
+  printf 'def test_x():\n    assert True\n' > "$R/tests/unit/test_x.py"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "main adds test_x after the PR opened"
+  advanced_sha="$($GITC rev-parse HEAD)"
+  $GITC checkout -q -b st-stale-base "$stale_sha"
+  $GITC merge -q --no-edit "$advanced_sha" >/dev/null 2>&1
+  printf 'def test_x():\n    assert False\n' > "$R/tests/unit/test_x.py"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "edit main-added test without trailer"
+  local out_rc
+  out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$advanced_sha" --head st-stale-base 2>&1)"; out_rc=$?
+  if [ "$out_rc" -eq 1 ]; then
+    echo "PASS [merged-advance: current base blocks edit of main-added test] rc=$out_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [merged-advance: current base blocks edit of main-added test] rc=$out_rc expected 1"
+    printf '%s\n' "$out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$stale_sha" --head st-stale-base 2>&1)"; out_rc=$?
+  if [ "$out_rc" -eq 0 ]; then
+    echo "PASS [stale PR-creation base downgrades M->A (documented hazard; caller must pass the current tip)] rc=$out_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [stale PR-creation base downgrades M->A] rc=$out_rc expected 0"
+    printf '%s\n' "$out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD st-stale-base >/dev/null
+
   rm -rf "$T"
   echo "self-test: $pass passed, $fail failed"
   [ "$fail" -eq 0 ] || return 1

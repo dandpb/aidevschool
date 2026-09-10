@@ -156,6 +156,12 @@ base), so a violation fails the PR regardless of which runtime produced it:
   `protect-tests.sh` (an "existence mirror" reproduces the hooks'
   new-test-allowed / existing-test-blocked semantics; deletions count as test
   edits but as derived-path cleanup);
+- the PR comparison base is the **current base branch tip**
+  (`origin/<base.ref>`), not `pull_request.base.sha`: that payload field is
+  frozen at PR creation, and once main advances a stale base turns the diff
+  range cumulative — a test main added after the branch point then shows as
+  ADDED (new-test-allowed) at head and only fails the main push after merge
+  (AID-1272; the `--self-test` pins both classifications);
 - every changed path and every added diff line goes through the credential
   rules of `guard-commands.sh`;
 - a `--self-test` step runs synthetic violations through the real hooks on
