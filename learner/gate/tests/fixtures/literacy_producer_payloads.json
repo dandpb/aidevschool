@@ -465,7 +465,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l08",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.6,
@@ -495,7 +495,7 @@
             "noExtraCriteria": 0
           },
           "lessonId": "l08",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -504,6 +504,126 @@
           ],
           "source": "literacydojo",
           "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l08-a2": {
+        "pass": {
+          "activityId": "l08-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-criterios-da-tarefa"
+            ]
+          },
+          "attemptId": "att-l08-l08-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-criterios-da-tarefa": true,
+            "opt-mais-longa": true,
+            "opt-mais-confiante": true,
+            "opt-primeira-mesmo": true
+          },
+          "lessonId": "l08",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l08-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-mais-longa"
+            ]
+          },
+          "attemptId": "att-l08-l08-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-criterios-da-tarefa": false,
+            "opt-mais-longa": false,
+            "opt-mais-confiante": true,
+            "opt-primeira-mesmo": true
+          },
+          "lessonId": "l08",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.5,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l08-a3": {
+        "pass": {
+          "activityId": "l08-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "o-que-nao-serviu",
+              "direcao-diferente",
+              "o-que-manter"
+            ]
+          },
+          "attemptId": "att-l08-l08-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "o-que-nao-serviu": true,
+            "direcao-diferente": true,
+            "o-que-manter": true,
+            "noExtraContext": 0
+          },
+          "lessonId": "l08",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l08-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "o-que-nao-serviu",
+              "direcao-diferente",
+              "tom-educado"
+            ]
+          },
+          "attemptId": "att-l08-l08-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "o-que-nao-serviu": true,
+            "direcao-diferente": true,
+            "o-que-manter": false,
+            "noExtraContext": 1
+          },
+          "lessonId": "l08",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.5,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
           "verifierRequired": true
         }
       }
@@ -528,7 +648,7 @@
             "c-numeros": false
           },
           "lessonId": "l09",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -557,7 +677,7 @@
             "c-numeros": true
           },
           "lessonId": "l09",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -566,6 +686,126 @@
           ],
           "source": "literacydojo",
           "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l09-a2": {
+        "pass": {
+          "activityId": "l09-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-prova-fora-da-resposta"
+            ]
+          },
+          "attemptId": "att-l09-l09-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-prova-fora-da-resposta": true,
+            "opt-ia-sempre-avisa": true,
+            "opt-so-temas-tecnicos": true
+          },
+          "lessonId": "l09",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l09-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-ia-sempre-avisa"
+            ]
+          },
+          "attemptId": "att-l09-l09-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-prova-fora-da-resposta": false,
+            "opt-ia-sempre-avisa": false,
+            "opt-so-temas-tecnicos": true
+          },
+          "lessonId": "l09",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l09-a3": {
+        "pass": {
+          "activityId": "l09-a3",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-especialistas-sem-nome",
+              "opt-fonte-so-nome",
+              "opt-numero-sem-origem"
+            ]
+          },
+          "attemptId": "att-l09-l09-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-numero-sem-origem": true,
+            "opt-fonte-so-nome": true,
+            "opt-especialistas-sem-nome": true,
+            "opt-explica-o-setor": true,
+            "opt-oferece-ajuda": true
+          },
+          "lessonId": "l09",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l09-a3",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-especialistas-sem-nome",
+              "opt-explica-o-setor",
+              "opt-numero-sem-origem"
+            ]
+          },
+          "attemptId": "att-l09-l09-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-numero-sem-origem": true,
+            "opt-fonte-so-nome": false,
+            "opt-especialistas-sem-nome": true,
+            "opt-explica-o-setor": false,
+            "opt-oferece-ajuda": true
+          },
+          "lessonId": "l09",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.6,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
           "verifierRequired": true
         }
       }
@@ -591,7 +831,7 @@
             "s-paragrafo": false
           },
           "lessonId": "l10",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -622,7 +862,7 @@
             "s-paragrafo": true
           },
           "lessonId": "l10",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -631,6 +871,120 @@
           ],
           "source": "literacydojo",
           "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l10-a2": {
+        "pass": {
+          "activityId": "l10-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-fato-com-consequencia"
+            ]
+          },
+          "attemptId": "att-l10-l10-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-fato-com-consequencia": true,
+            "opt-conferir-tudo": true,
+            "opt-nao-conferir": true
+          },
+          "lessonId": "l10",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l10-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-conferir-tudo"
+            ]
+          },
+          "attemptId": "att-l10-l10-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-fato-com-consequencia": false,
+            "opt-conferir-tudo": false,
+            "opt-nao-conferir": true
+          },
+          "lessonId": "l10",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l10-a3": {
+        "pass": {
+          "activityId": "l10-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "destino-do-texto",
+              "consequencia-do-erro"
+            ]
+          },
+          "attemptId": "att-l10-l10-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "destino-do-texto": true,
+            "consequencia-do-erro": true,
+            "noExtraContext": 0
+          },
+          "lessonId": "l10",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l10-a3",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "destino-do-texto",
+              "tom-do-paragrafo"
+            ]
+          },
+          "attemptId": "att-l10-l10-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "destino-do-texto": true,
+            "consequencia-do-erro": false,
+            "noExtraContext": 1
+          },
+          "lessonId": "l10",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
           "verifierRequired": true
         }
       }
@@ -657,7 +1011,7 @@
             "step-pede": false
           },
           "lessonId": "l11",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -688,7 +1042,7 @@
             "step-pede": true
           },
           "lessonId": "l11",
-          "lessonVersion": 1,
+          "lessonVersion": 2,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -697,6 +1051,124 @@
           ],
           "source": "literacydojo",
           "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l11-a2": {
+        "pass": {
+          "activityId": "l11-a2",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "criterios-que-importam",
+              "restricoes-da-situacao"
+            ]
+          },
+          "attemptId": "att-l11-l11-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "criterios-que-importam": true,
+            "restricoes-da-situacao": true,
+            "noExtraContext": 0
+          },
+          "lessonId": "l11",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l11-a2",
+          "activityType": "missing_context",
+          "answer": {
+            "contextIds": [
+              "criterios-que-importam",
+              "todas-as-ferramentas-do-mercado"
+            ]
+          },
+          "attemptId": "att-l11-l11-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "criterios-que-importam": true,
+            "restricoes-da-situacao": false,
+            "noExtraContext": 1
+          },
+          "lessonId": "l11",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l11-a3": {
+        "pass": {
+          "activityId": "l11-a3",
+          "activityType": "rubric_review",
+          "answer": {
+            "verdicts": {
+              "c-criterios-do-contexto": "not_met",
+              "c-lado-a-lado": "not_met",
+              "c-motivo-registrado": "partial"
+            }
+          },
+          "attemptId": "att-l11-l11-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "c-criterios-do-contexto": true,
+            "c-lado-a-lado": true,
+            "c-motivo-registrado": true
+          },
+          "lessonId": "l11",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l11-a3",
+          "activityType": "rubric_review",
+          "answer": {
+            "verdicts": {
+              "c-criterios-do-contexto": "met",
+              "c-lado-a-lado": "not_met",
+              "c-motivo-registrado": "partial"
+            }
+          },
+          "attemptId": "att-l11-l11-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "c-criterios-do-contexto": false,
+            "c-lado-a-lado": true,
+            "c-motivo-registrado": true
+          },
+          "lessonId": "l11",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.67,
+          "skillIds": [
+            "avaliar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
           "verifierRequired": true
         }
       }
@@ -729,7 +1201,7 @@
             "i-vaga": false
           },
           "lessonId": "l12",
-          "lessonVersion": 2,
+          "lessonVersion": 3,
           "pass": false,
           "schemaVersion": 1,
           "score": 0.0,
@@ -766,7 +1238,7 @@
             "i-vaga": true
           },
           "lessonId": "l12",
-          "lessonVersion": 2,
+          "lessonVersion": 3,
           "pass": true,
           "schemaVersion": 1,
           "score": 1.0,
@@ -775,6 +1247,258 @@
           ],
           "source": "literacydojo",
           "timestamp": "2026-08-31T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l12-a2": {
+        "pass": {
+          "activityId": "l12-a2",
+          "activityType": "safety_classification",
+          "answer": {
+            "labels": {
+              "i-relato": "safe",
+              "i-pergunta": "safe",
+              "i-print": "sensitive",
+              "i-protocolo": "sensitive",
+              "i-assinatura": "sensitive"
+            }
+          },
+          "attemptId": "att-l12-l12-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "i-relato": true,
+            "i-pergunta": true,
+            "i-print": true,
+            "i-protocolo": true,
+            "i-assinatura": true
+          },
+          "lessonId": "l12",
+          "lessonVersion": 3,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "proteger"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l12-a2",
+          "activityType": "safety_classification",
+          "answer": {
+            "labels": {
+              "i-relato": "sensitive",
+              "i-pergunta": "sensitive",
+              "i-print": "sensitive",
+              "i-protocolo": "sensitive",
+              "i-assinatura": "sensitive"
+            }
+          },
+          "attemptId": "att-l12-l12-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "i-relato": false,
+            "i-pergunta": false,
+            "i-print": true,
+            "i-protocolo": true,
+            "i-assinatura": true
+          },
+          "lessonId": "l12",
+          "lessonVersion": 3,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.6,
+          "skillIds": [
+            "proteger"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l12-a3": {
+        "pass": {
+          "activityId": "l12-a3",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-reduz-e-anonimiza"
+            ]
+          },
+          "attemptId": "att-l12-l12-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-reduz-e-anonimiza": true,
+            "opt-cola-tudo": true,
+            "opt-desiste": true,
+            "opt-ignorar-depois": true
+          },
+          "lessonId": "l12",
+          "lessonVersion": 3,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "proteger"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l12-a3",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-cola-tudo"
+            ]
+          },
+          "attemptId": "att-l12-l12-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-reduz-e-anonimiza": false,
+            "opt-cola-tudo": false,
+            "opt-desiste": true,
+            "opt-ignorar-depois": true
+          },
+          "lessonId": "l12",
+          "lessonVersion": 3,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.5,
+          "skillIds": [
+            "proteger"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      }
+    },
+    "l13": {
+      "l13-a2": {
+        "pass": {
+          "activityId": "l13-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-ciclo-completo"
+            ]
+          },
+          "attemptId": "att-l13-l13-a2-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-ciclo-completo": true,
+            "opt-enviar-direto": true,
+            "opt-cinco-versoes": true
+          },
+          "lessonId": "l13",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "aplicar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l13-a2",
+          "activityType": "choice",
+          "answer": {
+            "optionIds": [
+              "opt-enviar-direto"
+            ]
+          },
+          "attemptId": "att-l13-l13-a2-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "opt-ciclo-completo": false,
+            "opt-enviar-direto": false,
+            "opt-cinco-versoes": true
+          },
+          "lessonId": "l13",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.33,
+          "skillIds": [
+            "aplicar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        }
+      },
+      "l13-a3": {
+        "pass": {
+          "activityId": "l13-a3",
+          "activityType": "sort",
+          "answer": {
+            "orderedIds": [
+              "etapa-tarefa",
+              "etapa-rascunho",
+              "etapa-fatos",
+              "etapa-ajustes",
+              "etapa-uso"
+            ]
+          },
+          "attemptId": "att-l13-l13-a3-pass",
+          "context": "initial",
+          "deterministicChecks": {
+            "etapa-tarefa": true,
+            "etapa-rascunho": true,
+            "etapa-fatos": true,
+            "etapa-ajustes": true,
+            "etapa-uso": true
+          },
+          "lessonId": "l13",
+          "lessonVersion": 2,
+          "pass": true,
+          "schemaVersion": 1,
+          "score": 1.0,
+          "skillIds": [
+            "aplicar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
+          "verifierRequired": true
+        },
+        "fail": {
+          "activityId": "l13-a3",
+          "activityType": "sort",
+          "answer": {
+            "orderedIds": [
+              "etapa-tarefa",
+              "etapa-fatos",
+              "etapa-rascunho",
+              "etapa-ajustes",
+              "etapa-uso"
+            ]
+          },
+          "attemptId": "att-l13-l13-a3-fail",
+          "context": "initial",
+          "deterministicChecks": {
+            "etapa-tarefa": true,
+            "etapa-rascunho": false,
+            "etapa-fatos": false,
+            "etapa-ajustes": true,
+            "etapa-uso": true
+          },
+          "lessonId": "l13",
+          "lessonVersion": 2,
+          "pass": false,
+          "schemaVersion": 1,
+          "score": 0.6,
+          "skillIds": [
+            "aplicar"
+          ],
+          "source": "literacydojo",
+          "timestamp": "2026-09-10T00:00:00.000Z",
           "verifierRequired": true
         }
       }

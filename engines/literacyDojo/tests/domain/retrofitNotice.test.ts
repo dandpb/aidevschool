@@ -13,22 +13,24 @@ import {
  * Ondas de retrofit lançadas (contentVersion → lições retrofitadas):
  * - O3-C1 (spec AID-644 rev 2 §3): l01–l07 sob 2026-09-02.3.
  * - C1 (spec AID-807 §1 / ordem AID-806/B): l15–l17 sob 2026-09-04.1.
+ * - O3-C2 (spec AID-1220/B3, ruling AID-640): l08–l13 sob 2026-09-10.2.
  */
 const LAUNCHED_WAVES: Record<string, readonly string[]> = {
   "2026-09-02.3": ["l01", "l02", "l03", "l04", "l05", "l06", "l07"],
   "2026-09-04.1": ["l15", "l16", "l17"],
+  "2026-09-10.2": ["l08", "l09", "l10", "l11", "l12", "l13"],
 };
 
 function statuses(completed: string[]): Record<string, LessonStatus> {
   return Object.fromEntries(completed.map((lessonId) => [lessonId, "completed" as const]));
 }
 
-describe("retrofitNotice (ondas O3-C1 + C1, specs AID-644 rev 2 §3 / AID-807 §1)", () => {
-  it("mapa de ondas é exatamente o lançado; o bump do corredor NÃO é onda de retrofit", () => {
-    // Corredor literacy (spec AID-915 §6.2): o bump 2026-09-06.1 não
-    // retrofitou lição nenhuma — nenhuma chave nova no mapa de ondas.
+describe("retrofitNotice (ondas O3-C1 + C1 + O3-C2, specs AID-644 rev 2 §3 / AID-807 §1 / AID-1220)", () => {
+  it("mapa de ondas é exatamente o lançado e cobre o contentVersion vigente do catálogo", () => {
+    // Garante que o mapa cobre o contentVersion gerado atual (barreira para ondas futuras);
+    // bumps de corredor sem retrofit (2026-09-06.1, 2026-09-10.1) não entram no mapa.
     expect(RETROFITTED_LESSONS_BY_CONTENT_VERSION).toEqual(LAUNCHED_WAVES);
-    expect(Object.keys(LAUNCHED_WAVES)).not.toContain(contentVersion);
+    expect(Object.keys(LAUNCHED_WAVES)).toContain(contentVersion);
   });
 
   it("isRetrofittedLesson: lição da onda no version do bump; onda vizinha ou versão outra, não", () => {
@@ -42,11 +44,12 @@ describe("retrofitNotice (ondas O3-C1 + C1, specs AID-644 rev 2 §3 / AID-807 §
       for (const lessonId of otherWave) {
         expect(isRetrofittedLesson(lessonId, version), `${lessonId}@${version}`).toBe(false);
       }
-      expect(isRetrofittedLesson("l08", version)).toBe(false);
+      expect(isRetrofittedLesson("l14", version)).toBe(false);
       expect(isRetrofittedLesson("l27", version)).toBe(false);
     }
     expect(isRetrofittedLesson("l01", "2026-09-02.2")).toBe(false);
     expect(isRetrofittedLesson("l15", "2026-09-02.3")).toBe(false);
+    expect(isRetrofittedLesson("l08", "2026-09-10.1")).toBe(false);
     expect(isRetrofittedLesson("l01", "versao-desconhecida")).toBe(false);
   });
 

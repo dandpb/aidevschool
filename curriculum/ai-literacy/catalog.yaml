@@ -7,7 +7,7 @@
 # contra schemas/lesson.schema.json. Lições "planned" ainda não exigem arquivo.
 # Regras: docs/design/ai-literacy/content-contract.md.
 schemaVersion: 1
-contentVersion: "2026-09-10.1"
+contentVersion: "2026-09-10.2"
 
 track:
   id: ai-literacy
@@ -156,7 +156,7 @@ lessons:
     moduleId: mod-03
     title: "A primeira resposta não é necessariamente a melhor"
     objective: "Comparar a primeira resposta da IA com uma alternativa e escolher com critério explícito."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: [l07]
     skillIds: [avaliar]
     status: ready
@@ -172,7 +172,7 @@ lessons:
     moduleId: mod-03
     title: "Quando procurar fontes externas"
     objective: "Decidir quando uma afirmação da IA exige verificação em fonte externa antes do uso."
-    estimatedMinutes: 3
+    estimatedMinutes: 4
     prerequisites: [l09]
     skillIds: [avaliar]
     status: ready

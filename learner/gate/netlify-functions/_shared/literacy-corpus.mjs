@@ -952,12 +952,79 @@ export const literacyCorpus = {
         },
         "id": "l08-a1",
         "type": "output_comparison"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-criterios-da-tarefa",
+              "text": "Defino dois ou três critérios da tarefa — resolve o problema, dá para agir nesta semana, serve para o prazo — e comparo as duas respostas neles."
+            },
+            {
+              "id": "opt-mais-longa",
+              "text": "Escolho a mais longa: texto maior é sinal de trabalho mais completo."
+            },
+            {
+              "id": "opt-mais-confiante",
+              "text": "Escolho a que soa mais confiante: quem tem certeza escreve assim."
+            },
+            {
+              "id": "opt-primeira-mesmo",
+              "text": "Fico com a primeira: comparar as duas é perder tempo."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-criterios-da-tarefa"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l08-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "o-que-nao-serviu",
+              "text": "O que não serviu na primeira resposta — para a nova versão não repetir"
+            },
+            {
+              "id": "direcao-diferente",
+              "text": "A direção diferente que a nova versão deve tentar (outra abordagem, outro formato)"
+            },
+            {
+              "id": "o-que-manter",
+              "text": "O que deve continuar igual na nova versão"
+            },
+            {
+              "id": "tom-educado",
+              "text": "Pedir com mais educação — um 'por favor' bem colocado"
+            },
+            {
+              "id": "numero-da-versao",
+              "text": "O número da versão anterior, para a IA não se repetir"
+            }
+          ],
+          "prompt": "Pode fazer outra versão dessa resposta?"
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "o-que-nao-serviu",
+            "direcao-diferente",
+            "o-que-manter"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l08-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l09": {
     "activities": [
@@ -989,12 +1056,75 @@ export const literacyCorpus = {
         },
         "id": "l09-a1",
         "type": "rubric_review"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-prova-fora-da-resposta",
+              "text": "A segurança do texto não prova nada: a invenção sai com o mesmo tom do acerto. A prova está fora da resposta — na fonte e na origem dos números."
+            },
+            {
+              "id": "opt-ia-sempre-avisa",
+              "text": "Verdade: quando não tem certeza, a IA avisa claramente na própria resposta."
+            },
+            {
+              "id": "opt-so-temas-tecnicos",
+              "text": "Invenção só acontece em temas técnicos; assuntos do dia a dia estão seguros."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-prova-fora-da-resposta"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l09-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-numero-sem-origem",
+              "text": "Número preciso (41,3%) sem nenhuma origem indicada"
+            },
+            {
+              "id": "opt-fonte-so-nome",
+              "text": "Levantamento citado apenas pelo nome, sem autor, instituição ou link"
+            },
+            {
+              "id": "opt-especialistas-sem-nome",
+              "text": "'Especialistas afirmam' sem nomear nenhum especialista"
+            },
+            {
+              "id": "opt-explica-o-setor",
+              "text": "A resposta explica o que é o setor antes de citar os números"
+            },
+            {
+              "id": "opt-oferece-ajuda",
+              "text": "A resposta se oferece para ajudar com outras perguntas"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-numero-sem-origem",
+            "opt-fonte-so-nome",
+            "opt-especialistas-sem-nome"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l09-a3",
+        "type": "choice"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l10": {
     "activities": [
@@ -1034,12 +1164,70 @@ export const literacyCorpus = {
         },
         "id": "l10-a1",
         "type": "choice"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-fato-com-consequencia",
+              "text": "Conferir em fonte externa o fato checável com consequência — número, lei, prazo, afirmação sobre empresa — e seguir adiante com conselho geral de escrita."
+            },
+            {
+              "id": "opt-conferir-tudo",
+              "text": "Conferir tudo, sempre: segurança total vale o atraso."
+            },
+            {
+              "id": "opt-nao-conferir",
+              "text": "Não conferir nada: a IA acerta na maioria das vezes."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-fato-com-consequencia"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l10-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "destino-do-texto",
+              "text": "Para onde vai o texto — relatório interno, cliente, site público"
+            },
+            {
+              "id": "consequencia-do-erro",
+              "text": "O que acontece se a informação estiver errada"
+            },
+            {
+              "id": "tom-do-paragrafo",
+              "text": "O tom do parágrafo — se está formal ou informal"
+            },
+            {
+              "id": "imagens-do-relatorio",
+              "text": "Se o relatório vai ter imagens ou só texto"
+            }
+          ],
+          "prompt": "A IA escreveu este parágrafo para o meu relatório. Preciso conferir?"
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "destino-do-texto",
+            "consequencia-do-erro"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l10-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l11": {
     "activities": [
@@ -1075,12 +1263,73 @@ export const literacyCorpus = {
         },
         "id": "l11-a1",
         "type": "sort"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "criterios-que-importam",
+              "text": "Os critérios que importam para a equipe — preço, facilidade, suporte em português"
+            },
+            {
+              "id": "restricoes-da-situacao",
+              "text": "As restrições reais — orçamento máximo, prazo de decisão, quem vai usar"
+            },
+            {
+              "id": "todas-as-ferramentas-do-mercado",
+              "text": "A lista completa de todas as ferramentas do mercado, para a comparação ser exaustiva"
+            },
+            {
+              "id": "paginas-dos-sites",
+              "text": "O número de páginas do site de cada ferramenta"
+            }
+          ],
+          "prompt": "Compare as três opções de ferramenta e me diga qual é a melhor."
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "criterios-que-importam",
+            "restricoes-da-situacao"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l11-a2",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-criterios-do-contexto",
+              "text": "A escolha usou critérios explícitos do próprio contexto (custo, agenda da equipe, necessidade de tirar dúvidas ao vivo)"
+            },
+            {
+              "id": "c-lado-a-lado",
+              "text": "As duas opções foram comparadas nas mesmas dimensões, lado a lado"
+            },
+            {
+              "id": "c-motivo-registrado",
+              "text": "O motivo final da escolha é dele e ficou registrado de forma verificável"
+            }
+          ],
+          "responseText": "\"Pedi para a IA comparar treinamento ao vivo online com treinamento gravado. Ela recomendou o gravado, que é mais moderno e está na moda. Vou de gravado.\""
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-criterios-do-contexto": "not_met",
+            "c-lado-a-lado": "not_met",
+            "c-motivo-registrado": "partial"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l11-a3",
+        "type": "rubric_review"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l12": {
     "activities": [
@@ -1135,12 +1384,84 @@ export const literacyCorpus = {
         },
         "id": "l12-a1",
         "type": "safety_classification"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "i-relato",
+              "text": "O relato 'um cliente espera há 12 dias um reembolso' — sem nome, sem valor, sem protocolo"
+            },
+            {
+              "id": "i-pergunta",
+              "text": "A pergunta 'como escrever um pedido de desculpas por um atraso?'"
+            },
+            {
+              "id": "i-print",
+              "text": "Um print da conversa mostrando foto, nome e @ do cliente"
+            },
+            {
+              "id": "i-protocolo",
+              "text": "O número de protocolo do atendimento junto com o nome do cliente"
+            },
+            {
+              "id": "i-assinatura",
+              "text": "O trecho do e-mail do cliente com a assinatura dele — nome e cargo"
+            }
+          ],
+          "labels": {
+            "safe": "Seguro para compartilhar",
+            "sensitive": "Sensível — não compartilhar"
+          }
+        },
+        "evaluation": {
+          "classification": {
+            "i-assinatura": "sensitive",
+            "i-pergunta": "safe",
+            "i-print": "sensitive",
+            "i-protocolo": "sensitive",
+            "i-relato": "safe"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l12-a2",
+        "type": "safety_classification"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-reduz-e-anonimiza",
+              "text": "Reduzir e anonimizar antes de colar: trocar o nome por 'o cliente', cortar o que identifica e enviar só o trecho necessário para a dúvida"
+            },
+            {
+              "id": "opt-cola-tudo",
+              "text": "Colar o e-mail inteiro: sem o caso completo, a IA não ajuda direito"
+            },
+            {
+              "id": "opt-desiste",
+              "text": "Desistir da IA: assunto que envolve cliente não pode passar por IA nunca"
+            },
+            {
+              "id": "opt-ignorar-depois",
+              "text": "Colar tudo e pedir para a IA 'ignorar' os dados pessoais depois"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-reduz-e-anonimiza"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l12-a3",
+        "type": "choice"
       }
     ],
     "skillIds": [
       "proteger"
     ],
-    "version": 2
+    "version": 3
   },
   "l13": {
     "activities": [
@@ -1207,12 +1528,76 @@ export const literacyCorpus = {
         },
         "id": "l13-a1",
         "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-ciclo-completo",
+              "text": "Aplicar o ciclo: avaliar com os critérios da tarefa, conferir os fatos que viram decisão, pedir ajustes específicos — e usar com o julgamento final meu"
+            },
+            {
+              "id": "opt-enviar-direto",
+              "text": "Encaminhar direto para o destinatário: pedido bem-feito, resposta pronta"
+            },
+            {
+              "id": "opt-cinco-versoes",
+              "text": "Pedir outras cinco versões e escolher a mais bonita, sem critérios"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-ciclo-completo"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l13-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "etapa-tarefa",
+              "text": "Escolher a tarefa real e montar o pedido completo — objetivo, contexto e formato, sem dados sensíveis"
+            },
+            {
+              "id": "etapa-rascunho",
+              "text": "Ler a resposta como rascunho e avaliar com os critérios da tarefa"
+            },
+            {
+              "id": "etapa-fatos",
+              "text": "Conferir em fonte externa os fatos que viram decisão"
+            },
+            {
+              "id": "etapa-ajustes",
+              "text": "Pedir ajustes específicos — um por vez, dizendo o que mudar e o que manter"
+            },
+            {
+              "id": "etapa-uso",
+              "text": "Usar o resultado com o julgamento final próprio"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "etapa-tarefa",
+            "etapa-rascunho",
+            "etapa-fatos",
+            "etapa-ajustes",
+            "etapa-uso"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l13-a3",
+        "type": "sort"
       }
     ],
     "skillIds": [
       "aplicar"
     ],
-    "version": 1
+    "version": 2
   },
   "l14": {
     "activities": [
@@ -3780,4 +4165,4 @@ export const literacyCorpus = {
   }
 }
 
-export const literacyCorpusVersion = "2026-09-10.1"
+export const literacyCorpusVersion = "2026-09-10.2"
