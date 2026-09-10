@@ -105,7 +105,9 @@ test('operates the real dashboard, PixelQuest, and HASH RING inside Engine Hub',
   const dashboard = page.frameLocator('iframe[title="codexDojo Dashboard integrado"]')
   await expect(dashboard.getByRole('heading', { name: 'codexDojo' })).toBeVisible()
   await page.evaluate(() => navigator.clipboard.writeText(''))
-  await dashboard.getByRole('button', { name: 'Ver agentes' }).click()
+  // eb4850d8 renamed the accessible name; the visible span stays "Ver agentes"
+  // but aria-label now reads "Ver todos os agentes".
+  await dashboard.getByRole('button', { name: 'Ver todos os agentes' }).click()
   const copyPrompt = dashboard.locator('[data-copy-agent]')
   await copyPrompt.click()
   await expect(copyPrompt).toHaveText('Copiado')
