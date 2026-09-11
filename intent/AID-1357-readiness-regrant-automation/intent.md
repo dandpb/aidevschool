@@ -26,7 +26,9 @@ O desperdício específico: o CI **já produz as evidências de producer no SHA 
 todo push** (artefatos `*-readiness-$SHA` por engine + passo `aggregate`,
 `ci.yml:400-409`). A onda manual re-faz, via agentes, o que a máquina já rodou. O único
 passo que precisa de parte independente é a observação + countersign (por desenho:
-24 dos 27 cenários declaram evidência de observação; `evaluate.py:29-45` bloqueia
+25 dos 27 cenários declaram evidência não-playwright (veredito AID-1359/F2; os
+2 playwright-only pertencem a um use case que bloqueia pelos demais);
+`evaluate.py:29-45` bloqueia
 executor só-automático; `evidence.py:93-94` exige `assessorContext:
 independent-readiness-review`).
 
