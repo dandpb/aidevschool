@@ -1,0 +1,18 @@
+{
+  "walk": [
+    {
+      "scenarioId": "dojotoday-daily-guidance",
+      "observed": [
+        "'Sua lição de hoje' + 'Retome por aqui' visíveis; unidade ativa renderizada da projeção gerada (5180 canônica) (dtv44-01-daily-view.png)",
+        "PR #335 re-validado no toggle: #soc-config-btn parte com aria-expanded=false + aria-controls=soc-config; painel parte OCULTO (guarda CSS [hidden] do re-anchor v44 corrige display:flex que mantinha o painel sempre visível — aria-expanded agora é verdadeiro para AT); abrir alterna aria-expanded=true (dtv44-02-config-expanded.png)",
+        "salvar config recolhe o painel e sincroniza aria-expanded=false; resposta na região role=status (dtv44-03-config-saved-collapsed.png)",
+        "pós-reload com config salva: painel recolhido e aria-expanded=false (estado do painel não persiste)",
+        "perguntar sem config força o painel aberto com aria-expanded=true e nudge determinístico anunciado em role=status (dtv44-04-nudge-fallback-expanded.png)",
+        "vista sem afordância de avaliação (não há controle concluir/mastered/avaliar; só '▶ Jogar aqui' e 'Perguntar') | localStorage estável e vazio entre toggles+reload (vista não escreve estado): true (dtv44-05-boundary.png)",
+        "day-N (fixture 5181) renderiza 'Sua lição de hoje' com fila/streak da projeção (dtv44-06-day-n.png)",
+        "day-N+1 (fixture 5182) renderiza a view do dia seguinte com copy de fronteira — retornar não avalia nem carrega veredito do dia anterior (dtv44-07-day-n-plus-1.png)"
+      ]
+    }
+  ],
+  "dayNPlus1StreakSample": "4 dias de sequência"
+}
