@@ -1,0 +1,100 @@
+PASS os-manifest-sha256 a3ac015c5df24fa0 (local-identical: true)
+PASS os-manifest-sourceRevision 5bf86b97dbb4456d90557eb823b84f9e21162438
+PASS os-manifest-os-bytes a4ed3138020817b8
+PASS os-manifest-literacy-bytes c10f63c02f1e0759
+PASS os-surface-200 / 200
+PASS os-surface-200 /apps/literacydojo/ 200
+PASS os-surface-200 /apps/warehouse/ 200
+PASS os-surface-200 /apps/wormhole/ 200
+PASS os-surface-200 /apps/relay-station/ 200
+PASS os-surface-200 /apps/pipeline-plant/ 200
+PASS os-surface-200 /apps/checkpoint-city/ 200
+PASS os-surface-200 /apps/timeline-tower/ 200
+PASS os-surface-200 /apps/docking-bay/ 200
+PASS os-surface-200 /apps/pixelquest/ 200
+PASS os-surface-200 /apps/dojotoday/ 200
+PASS os-surface-200 /apps/hash-ring/ 200
+PASS os-surface-200 /apps/air-traffic/ 200
+PASS os-surface-200 /apps/mission-control/ 200
+PASS os-surface-200 /apps/breaker-grid/ 200
+PASS os-surface-200 /apps/river-delta/ 200
+PASS os-surface-200 /apps/observatory/ 200
+PASS os-surface-200 /apps/freight-yard/ 200
+PASS os-surface-200 /apps/lighthouse-network/ 200
+PASS os-surface-200 /apps/stacks/ 200
+PASS os-env-pin-VITE_LITERACYDOJO_URL VITE_LITERACYDOJO_URL -> /apps/literacydojo/
+PASS os-env-pin-VITE_WAREHOUSE_URL VITE_WAREHOUSE_URL -> /apps/warehouse/
+PASS os-env-pin-VITE_WORMHOLE_URL VITE_WORMHOLE_URL -> /apps/wormhole/
+PASS os-env-pin-VITE_RELAY_STATION_URL VITE_RELAY_STATION_URL -> /apps/relay-station/
+PASS os-env-pin-VITE_PIPELINE_PLANT_URL VITE_PIPELINE_PLANT_URL -> /apps/pipeline-plant/
+PASS os-env-pin-VITE_CHECKPOINT_CITY_URL VITE_CHECKPOINT_CITY_URL -> /apps/checkpoint-city/
+PASS os-env-pin-VITE_TIMELINE_TOWER_URL VITE_TIMELINE_TOWER_URL -> /apps/timeline-tower/
+PASS os-env-pin-VITE_DOCKING_BAY_URL VITE_DOCKING_BAY_URL -> /apps/docking-bay/
+PASS os-env-pin-VITE_PIXELDOJO_URL VITE_PIXELDOJO_URL -> /apps/pixelquest/
+PASS os-env-pin-VITE_DOJOTODAY_URL VITE_DOJOTODAY_URL -> /apps/dojotoday/
+PASS os-analytics-endpoint-baked VITE_ANALYTICS_ENDPOINT activation baked into OS bundle
+PASS os-privacidade-static-200 200
+PASS os-privacidade-telemetry-copy h2 Telemetria do produto present
+PASS os-privacidade-not-spa-shell static file, no SPA bootstrap
+PASS os-collector-cross-origin-403 403 origin-forbidden
+PASS os-export-fail-closed 404 export-unavailable
+PASS os-ingestion-smoke-202 202 {"acceptedEventIds":["a1452001-0000-4000-8000-000000001452"]}
+PASS os-invalid-envelope-rejected 422 unsupported-schema
+PASS os-bridge-session-responds 403
+PASS os-bridge-corpus-l01-session l01 on regenerated corpus: 403
+PASS os-bridge-corpus-l02-session l02 on regenerated corpus: 403
+PASS os-bridge-corpus-l15-session l15 on regenerated corpus: 403
+PASS os-bridge-corpus-l30-session l30 on regenerated corpus: 403
+PASS os-bridge-verification-fail-closed 403
+PASS os-catalog-literacy remote=32 local=32 canon=32
+PASS os-catalog-games remote=7 local=7 canon=7
+PASS os-catalog-verifierRequired remote=39 local=39 canon=39
+PASS os-catalog-dom remote=39 local=39 canon=39
+PASS os-catalog-aiPratica remote=24 local=24 canon=24
+PASS os-catalog-dev remote=17 local=17 canon=17
+PASS os-catalog-total-39 32+7
+PASS os-catalog-l01-present l01 in mission catalog (remote+local)
+PASS os-catalog-l02-present l02 in mission catalog (remote+local)
+PASS os-catalog-l15-present l15 in mission catalog (remote+local)
+PASS os-catalog-l30-present l30 in mission catalog (remote+local)
+PASS os-catalog-contentVersion-uniform 35 embedded: contentVersion:`2026-09-10.2`
+PASS os-catalog-no-stale-version previous contentVersion fully rotated
+PASS os-f1-start-here-badge badge textual "Comece aqui" (map-start-here-) baked
+PASS os-f1-active-chapter trilha ativa no header do mapa baked
+PASS os-f1-local-parity F1 OS anchors present in the local pin build
+PASS dt-a11y-css-hidden-guard .socrates-config[hidden]{display:none} baked
+PASS dt-a11y-aria-expanded toggle aria-expanded wiring baked
+PASS lit-dist-byte-equivalence 9 files, 0 bad 
+PASS lit-200 / 200
+PASS lit-200 /manifest.webmanifest 200
+PASS lit-200 /sw.js 200
+PASS lit-200 /privacidade.html 200
+PASS lit-200 /termos.html 200
+PASS lit-spa-fallback 200 shell
+PASS lit-privacidade-telemetry-section h2 Telemetria do produto + k>=5/90d
+PASS lit-termos-telemetry-section sentença de estatísticas anônimas
+PASS lit-collector-route-json-fail-closed 404 export-unavailable ct=application/json
+PASS lit-collector-not-spa-html não cai no fallback
+PASS lit-collector-cross-origin-403 403 origin-forbidden
+PASS lit-ingestion-smoke-202 202 {"acceptedEventIds":["b1452002-0000-4000-8000-000000001452"]}
+PASS lit-analytics-endpoint-baked VITE_ANALYTICS_ENDPOINT baked
+PASS lit-verifier-endpoint-baked VITE_LITERACY_VERIFIER_URL baked
+PASS lit-envelope-v2-baked emitter v2
+PASS lit-content-version-2026-09-10.2 contentVersion baked, previous rotated
+PASS lit-f1-lead-in "Primeiro passo:" baked
+PASS lit-f1-phrase-1 Você vai escolher as suas respostas entre opções p
+PASS lit-f1-phrase-2 Você vai colocar as partes na ordem certa com as s
+PASS lit-f1-phrase-3 Você vai ler um pedido que saiu torto e marcar o q
+PASS lit-f1-phrase-4 Você vai classificar cada item em duas categorias 
+PASS lit-f1-phrase-5 Você vai montar um pedido preenchendo campos curto
+PASS lit-f1-phrase-6 Você vai comparar duas respostas da IA e marcar os
+PASS lit-f1-phrase-7 Você vai avaliar uma resposta critério por critéri
+PASS lit-f1-index0-framing framing índice 0 + testid baked
+PASS lit-aid1150-onboarding-title h1 id=onboarding-title com tabIndex -1
+PASS lit-aid1150-sr-only-step-counter contador de etapa sr-only baked
+PASS lit-aid1150-document-title <title> do onboarding carregado
+PASS lit-verify-draft-pass 200 PASS 1-netlify-l02-v3
+PASS lit-verify-draft-fail-closed 200 FAIL
+PASS lit-verify-parity-with-live live=PASS/1-netlify-l02-v3 draft=PASS/1-netlify-l02-v3
+
+98/98 checks passed
