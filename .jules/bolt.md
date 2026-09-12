@@ -30,3 +30,7 @@
 ## 2024-05-30 - O(N) array scans to Map lookup tradeoffs in miniTown
 **Learning:** Optimizing O(N) array scans like `isCellOccupiedByVehicle` to O(1) Map lookups in deterministic simulation loops like `miniTown`'s `tick()` might not always yield significant performance improvements and can increase GC pressure if maps are re-created/cleared on every frame. When there are relatively few entities (e.g. 50 vehicles), the overhead of Map lookups, hash calculations, and clearing/rebuilding the Map each frame can outweigh the benefits of avoiding an O(N) linear array scan. V8 is extremely fast at linear scans over small, contiguous arrays. Traditional indexed `for` loops can be a better micro-optimization than `for...of` when maps are too costly.
 **Action:** When replacing array scans with Map lookups in tight loops, ensure the entity count is large enough to justify the hashing overhead, and avoid rebuilding the maps per-frame. For small array linear scans, use standard indexed `for` loops instead of `for...of` to avoid iterator overhead.
+
+## 2025-02-18 - Optimize findIndex in deterministic pathfinding hot loops
+**Learning:** In simulation engine hot loops (like pathfinding adjacency queries), using `Array.prototype.findIndex` allocates a closure on every iteration. This adds function invocation overhead and increases GC pressure, leading to degraded performance when called thousands of times per tick.
+**Action:** Replace `Array.prototype.findIndex` with a traditional indexed `for` loop in frequently called functions.
