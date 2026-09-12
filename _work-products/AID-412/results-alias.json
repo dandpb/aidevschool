@@ -1,0 +1,271 @@
+{
+  "base": "https://aidevschool-codexdojo-os.netlify.app",
+  "tag": "alias",
+  "at": "2026-08-30T18:10:43.896Z",
+  "results": [
+    {
+      "id": "A1 manifest-sha256",
+      "ok": true,
+      "detail": "f81bfd077214d1ec903a376850c486d2490fa0e65289149df7a1e79d3d798d04"
+    },
+    {
+      "id": "A2 manifest-sourceRevision",
+      "ok": true,
+      "detail": "72130c6d7002fc03d2fccb6a1131d05f7bbab467"
+    },
+    {
+      "id": "A3 entry-sha os",
+      "ok": true,
+      "detail": "b319126dd082 vs b319126dd082"
+    },
+    {
+      "id": "A3 entry-sha literacydojo",
+      "ok": true,
+      "detail": "0a633c55b9d2 vs 0a633c55b9d2"
+    },
+    {
+      "id": "A4 requiredFile apps/literacydojo/sw.js",
+      "ok": true,
+      "detail": "7f9ac49c7cd9"
+    },
+    {
+      "id": "A4 requiredFile apps/literacydojo/termos.html",
+      "ok": true,
+      "detail": "385d87d6c123"
+    },
+    {
+      "id": "A4 requiredFile apps/literacydojo/privacidade.html",
+      "ok": true,
+      "detail": "27fe5a37e1af"
+    },
+    {
+      "id": "A3 entry-sha warehouse",
+      "ok": true,
+      "detail": "d348c274f57d vs d348c274f57d"
+    },
+    {
+      "id": "A3 entry-sha wormhole",
+      "ok": true,
+      "detail": "eef9a3b10c3b vs eef9a3b10c3b"
+    },
+    {
+      "id": "A3 entry-sha relay-station",
+      "ok": true,
+      "detail": "535ee05728c0 vs 535ee05728c0"
+    },
+    {
+      "id": "A3 entry-sha pipeline-plant",
+      "ok": true,
+      "detail": "91f5755fdb9d vs 91f5755fdb9d"
+    },
+    {
+      "id": "A5 files-inventory-200",
+      "ok": true,
+      "detail": "30/30"
+    },
+    {
+      "id": "A6 os-embeds-same-origin-literacy",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "A7 os-embeds-same-origin-pipeline-plant",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "A8 os-no-stale-external-pin",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "A9 os-pins-pixelDojo-immutable",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "A10 catalog-21-chapterOrders",
+      "ok": true,
+      "detail": "21"
+    },
+    {
+      "id": "A11 catalog-embeds-new-missions",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "id": "A12 literacy-contentVersion",
+      "ok": true,
+      "detail": "2026-08-21.1"
+    },
+    {
+      "id": "A13 surface-200 /apps/literacydojo/",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "A13 surface-200 /apps/warehouse/",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "A13 surface-200 /apps/wormhole/",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "A13 surface-200 /apps/relay-station/",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "A13 surface-200 /apps/pipeline-plant/",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "id": "B1 bridge-session-200",
+      "ok": true,
+      "detail": "200 token=43ch"
+    },
+    {
+      "id": "B2 bridge-403-cross-origin",
+      "ok": true,
+      "detail": "403 {\"error\":\"origin-forbidden\"}"
+    },
+    {
+      "id": "B3 bridge-401-no-token",
+      "ok": true,
+      "detail": "401"
+    },
+    {
+      "id": "B4 bridge-warehouse-PASS",
+      "ok": true,
+      "detail": "200 PASS errors=[]"
+    },
+    {
+      "id": "B5 bridge-pipeline-verdict-captured",
+      "ok": true,
+      "detail": "verdict=FAIL (escopo da ponte: warehouse-only=true)"
+    },
+    {
+      "id": "C1 map-count-21",
+      "ok": true,
+      "detail": "21 missões, uma sequência"
+    },
+    {
+      "id": "C2 MOTOR-control-l01",
+      "ok": true,
+      "detail": "MOTOR running iframe=https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C2b l01-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C2 MOTOR-control-l14",
+      "ok": true,
+      "detail": "MOTOR running iframe=https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C2b l14-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C3 MOTOR-l15",
+      "ok": true,
+      "detail": "MOTOR running iframe=https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C3b l15-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/"
+    },
+    {
+      "id": "C4 map-l16-locked-needs-l15",
+      "ok": true,
+      "detail": "{\"locked\":true,\"label\":\"Bloqueada por pré-requisito\",\"prereq\":\"Pré-requisito: l15\"}"
+    },
+    {
+      "id": "C4b map-l17-locked-needs-l16",
+      "ok": true,
+      "detail": "{\"locked\":true,\"label\":\"Bloqueada por pré-requisito\",\"prereq\":\"Pré-requisito: l16\"}"
+    },
+    {
+      "id": "C4c map-game-06-locked-needs-game-05",
+      "ok": true,
+      "detail": "{\"locked\":true,\"label\":\"Bloqueada por pré-requisito\",\"prereq\":\"Pré-requisito: game-05-relay-station\"}"
+    },
+    {
+      "id": "C5 l15-completed-local",
+      "ok": true,
+      "detail": "completed"
+    },
+    {
+      "id": "C5b map-l16-unlocked-after-l15",
+      "ok": true,
+      "detail": "{\"locked\":false,\"label\":\"Disponível\",\"prereq\":\"Pré-requisito: l15\"}"
+    },
+    {
+      "id": "C5c map-l17-still-locked",
+      "ok": true,
+      "detail": "{\"locked\":true,\"label\":\"Bloqueada por pré-requisito\",\"prereq\":\"Pré-requisito: l16\"}"
+    },
+    {
+      "id": "C5d l16-runs-after-l15",
+      "ok": true,
+      "detail": "MOTOR running"
+    },
+    {
+      "id": "C6 MOTOR-game-06",
+      "ok": true,
+      "detail": "MOTOR running iframe=https://aidevschool-codexdojo-os.netlify.app/apps/pipeline-plant/"
+    },
+    {
+      "id": "C6b game-06-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/pipeline-plant/"
+    },
+    {
+      "id": "C6c game-06-hook-present",
+      "ok": true,
+      "detail": "phase=predicting"
+    },
+    {
+      "id": "C6e game-06-completed-local",
+      "ok": true,
+      "detail": "completed"
+    },
+    {
+      "id": "C6d game-06-verdict-reported-honestly",
+      "ok": true,
+      "detail": "FAIL reportado honestamente (ver nota bridge-pipeline-response)"
+    },
+    {
+      "id": "C7 game-06-dom-fallback",
+      "ok": true,
+      "detail": "← Hub SIMULAÇÃO HOSPEDADA · 12 MIN PIPELINE PLANT: File Upload/Processing Pipeline Processar uploads grandes sem estourar memória. Estado canônico mastered 2 ve"
+    },
+    {
+      "id": "C8 MOTOR-warehouse-control",
+      "ok": true,
+      "detail": "MOTOR running iframe=https://aidevschool-codexdojo-os.netlify.app/apps/warehouse/"
+    },
+    {
+      "id": "C8b warehouse-iframe-same-origin",
+      "ok": true,
+      "detail": "https://aidevschool-codexdojo-os.netlify.app/apps/warehouse/"
+    }
+  ],
+  "notes": {
+    "os-asset": "assets/index-ChOeLNhb.js",
+    "os-asset-has-pin": true,
+    "l16-bundle-excerpt": "l16`,version:1,trackId:`dev`,unitId:`ai-literacy:l16`,projectId:`00_ai_in_practice`,title:`Seu primeiro código com um assistente de IA`,objective:`Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia.`,estimatedMinutes:5,chapterOrder:5,p",
+    "bridge-pipeline-response": "{\"status\":200,\"body\":{\"receipt\":{\"schema_version\":1,\"verdict\":\"FAIL\",\"context_isolated\":true,\"source\":\"independent-teaching-game-verifier\",\"evidence_digest\":\"82f8610072eae39c53a52c17d7847fc300909427b033ff9200649febedc6a8c2\",\"unit_id\":\"U6-file-upload\",\"project\":\"06_file_upload_pipeline\",\"scenario_id\":\"pipeline-plant-L4\",\"game\":\"PIPELINE PLANT\",\"attempt_id\":\"qa-aid412-pipeline\",\"producer_pass_claim\":true,\"independent_pass\":false,\"errors\":[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario trace\",\"producer metrics disagree with in",
+    "l16-deeplink": "← Hub SIMULAÇÃO HOSPEDADA · 5 MIN Seu primeiro código com um assistente de IA Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia. Estado canônico mastered 2 verificadas · sem alteração local ETAPA Entender MOTOR running EVIDÊNCIA Ainda",
+    "game-06-post-completion": "← Hub SIMULAÇÃO HOSPEDADA · 12 MIN PIPELINE PLANT: File Upload/Processing Pipeline Processar uploads grandes sem estourar memória. Estado canônico mastered 2 verificadas · sem alteração local ETAPA Aplicar MOTOR completed VISUALIZAÇÃO 3D WebGL EVIDÊNCIA Evidência rejeitada Preveja transbordo do tanque, ajuste o chunk e acompanhe a mesma simulacao deterministica por controles rotulados. Usar visualização acessível IA Mentor contextual Coach contextual · sem ferramentas × PIPELINE PLANT: File Upload/Processing Pipeline Etapa atual: apply Tipo de ajuda Pergunta Explicar Pista Sua pergunta Pedir ajuda Eu ajudo com perguntas e pistas graduais, sem selecionar a resposta. Pistas do provedor: 0/5 Nao cria evidencia nem avalia dominio. PRÁTICA CONCLUÍDA NESTE DISPOSITIVO Seu esforço virou um próximo passo claro. A recompensa local celebra a prática. Evidência, veredito independente e competência ",
+    "game-06-fallback-text": "← Hub SIMULAÇÃO HOSPEDADA · 12 MIN PIPELINE PLANT: File Upload/Processing Pipeline Processar uploads grandes sem estourar memória. Estado canônico mastered 2 verificadas · sem alteração local ETAPA Entender MOTOR Conectando VISUALIZAÇÃO probing EVIDÊNCIA Ainda não enviada IA Mentor contextual Coach contextual · sem ferramentas × PIPELINE PLANT: File Upload/Processing Pipeline Etapa atual: understand Tipo de ajuda Pergunta Explicar Pista Sua pergunta Pedir ajuda Eu ajudo com perguntas e pistas graduais, sem selecionar a resposta. Pistas do provedor: 0/5 Nao cria evidencia nem avalia dominio. Pr"
+  }
+}

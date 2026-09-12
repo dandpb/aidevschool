@@ -1,0 +1,6 @@
+surfaces: {"os": {"entry": "index.html", "sha256": "4658412b9d3c8a3a4f5623178b7be03dbd43eaf10c85da062d9b1febcc966541"}, "literacydojo": {"entry": "apps/literacydojo/index.html", "sha256": "878b051fb0f25ca82f56d8a2671822668b0b3e55c5f0c675d45495255a7abae5", "requiredFiles": {"apps/literacydojo/sw.js": {"sha256": "520c1205d666a51b2120dc3f07ce3b774510242dd03e547122ed4313e1ec06e4"}, "apps/literacydojo/termos.htm
+sample file entries:
+"apps/literacydojo/assets/index-BKwMz48c.css"
+"apps/literacydojo/assets/index-C9_PUc3M.js"
+"apps/literacydojo/icon-192.png"
+"apps/literacydojo/icon-512.png"

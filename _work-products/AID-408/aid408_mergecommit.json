@@ -1,0 +1,166 @@
+{
+  "sha": "9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "node_id": "C_kwDOTFPFxtoAKDlkMzZlMzY5NjI0MThjYjJkNWM1ZjVhMWQ3MmI3YWU0MGIxYmI3ZTc",
+  "commit": {
+    "author": {
+      "name": "Daniel Pinheiro Barreto",
+      "email": "daniel@heropa.com",
+      "date": "2026-08-30T17:07:44Z"
+    },
+    "committer": {
+      "name": "GitHub",
+      "email": "noreply@github.com",
+      "date": "2026-08-30T17:07:44Z"
+    },
+    "message": "Merge pull request #190 from dandpb/aid-396/substrate-projection-resync\n\nfix(substrate): re-sync drifted projections; pin whiteboard stamps to projection clock (AID-396)",
+    "tree": {
+      "sha": "564037c5b96cfe7c4c4b0d1c5ea412de631293f3",
+      "url": "https://api.github.com/repos/dandpb/aidevschool/git/trees/564037c5b96cfe7c4c4b0d1c5ea412de631293f3"
+    },
+    "url": "https://api.github.com/repos/dandpb/aidevschool/git/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+    "comment_count": 0,
+    "verification": {
+      "verified": true,
+      "reason": "valid",
+      "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqlGNgCRC1aQ7uu5UhlAAAWcAQAHvmFfP3kiAqjctAh6tgUYqG\nj41SeAmtDo9mj2364p3X27jusJVWgXIFfHBQaLyZs+RAi9vNhXb+8PLR7HX7XKPB\nyw8AgaCb4UKnjjI+F3iYpmWInatbAIL24+wvk6g1O99UjyNkFLpFc/6Ca4tHum/4\nb6yIixTjaR751XtxtLVqAQZcDGbXoaStkD4Qww9YcLRuHtB7D3Ma6vIvgoBTSJLd\n8hhoePUIVH7jd7hHBDfXnW6H62ilER2BWeZvks3f+0PtzOKaLX/dcG+dR2YegglV\nbVdzMbSfG2PWMqFnmWpTFrjmGZgkrpjLE815zKe89qjdQacvclSouDnBKp3W7jzZ\nPbqSgSOnMh0uXfimGoxkk6ULmTK1a/20gwLqHh3LD9jIdktgu1fY0VH4dUNX/3u1\nJ5FFhVr4TR9st6usPjC/FYnBVb0rpTTwgsAlTUSUABe1VAwH2xv9BqtNqMfvTcst\nx5RHvuZXdo6R3FSWmsfdYs4w8XkaymtKRk/m2Uzga1ftEzTBBZOx4lDA4fK6xyku\nDwLksw+V7s5JRj19wz1brjha4uch9HD52d98EcifkOC1jNHZhnPt9WtgNL0Co5wF\n+q9pFlxAAaKmDES9Pd9zPnwAzHtXMXZzo0qHKDDPMdq0udS9tuED4s8S5euC7mi4\nqM02oK+lrmFtYNkqpm3R\n=r7H8\n-----END PGP SIGNATURE-----\n",
+      "payload": "tree 564037c5b96cfe7c4c4b0d1c5ea412de631293f3\nparent 6d72735ba2113cb6198c4d7be26c2f01e5f5d694\nparent 940ca29410455cf08a4304d5b839ac8b2ac66093\nauthor Daniel Pinheiro Barreto <daniel@heropa.com> 1788109664 -0300\ncommitter GitHub <noreply@github.com> 1788109664 -0300\n\nMerge pull request #190 from dandpb/aid-396/substrate-projection-resync\n\nfix(substrate): re-sync drifted projections; pin whiteboard stamps to projection clock (AID-396)",
+      "verified_at": "2026-08-30T17:07:44Z"
+    }
+  },
+  "url": "https://api.github.com/repos/dandpb/aidevschool/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "html_url": "https://github.com/dandpb/aidevschool/commit/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "comments_url": "https://api.github.com/repos/dandpb/aidevschool/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/comments",
+  "author": {
+    "login": "dandpb",
+    "id": 2193703,
+    "node_id": "MDQ6VXNlcjIxOTM3MDM=",
+    "avatar_url": "https://avatars.githubusercontent.com/u/2193703?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/dandpb",
+    "html_url": "https://github.com/dandpb",
+    "followers_url": "https://api.github.com/users/dandpb/followers",
+    "following_url": "https://api.github.com/users/dandpb/following{/other_user}",
+    "gists_url": "https://api.github.com/users/dandpb/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/dandpb/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/dandpb/subscriptions",
+    "organizations_url": "https://api.github.com/users/dandpb/orgs",
+    "repos_url": "https://api.github.com/users/dandpb/repos",
+    "events_url": "https://api.github.com/users/dandpb/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/dandpb/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "committer": {
+    "login": "web-flow",
+    "id": 19864447,
+    "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+    "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/web-flow",
+    "html_url": "https://github.com/web-flow",
+    "followers_url": "https://api.github.com/users/web-flow/followers",
+    "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+    "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+    "organizations_url": "https://api.github.com/users/web-flow/orgs",
+    "repos_url": "https://api.github.com/users/web-flow/repos",
+    "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/web-flow/received_events",
+    "type": "User",
+    "user_view_type": "public",
+    "site_admin": false
+  },
+  "parents": [
+    {
+      "sha": "6d72735ba2113cb6198c4d7be26c2f01e5f5d694",
+      "url": "https://api.github.com/repos/dandpb/aidevschool/commits/6d72735ba2113cb6198c4d7be26c2f01e5f5d694",
+      "html_url": "https://github.com/dandpb/aidevschool/commit/6d72735ba2113cb6198c4d7be26c2f01e5f5d694"
+    },
+    {
+      "sha": "940ca29410455cf08a4304d5b839ac8b2ac66093",
+      "url": "https://api.github.com/repos/dandpb/aidevschool/commits/940ca29410455cf08a4304d5b839ac8b2ac66093",
+      "html_url": "https://github.com/dandpb/aidevschool/commit/940ca29410455cf08a4304d5b839ac8b2ac66093"
+    }
+  ],
+  "stats": {
+    "total": 42,
+    "additions": 31,
+    "deletions": 11
+  },
+  "files": [
+    {
+      "sha": "07881e691bbf01e72bf44ba76edbb3ca82f11f08",
+      "filename": "engines/minimaxDojo/whiteboard/learner_profile.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Flearner_profile.md",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Flearner_profile.md",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/engines%2FminimaxDojo%2Fwhiteboard%2Flearner_profile.md?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -2,7 +2,7 @@\n id: aluno-001\n learner_id: daniel-barreto\n derived_from: ../../learner/learning_state.yaml\n-updated: '2026-08-22'\n+updated: '2026-08-21'\n agente_owner: mnemosyne\n ---\n "
+    },
+    {
+      "sha": "eb0bb76611e8d9d2f9d36a2955d6e314ee3d69f1",
+      "filename": "engines/minimaxDojo/whiteboard/profile.yaml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Fprofile.yaml",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Fprofile.yaml",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/engines%2FminimaxDojo%2Fwhiteboard%2Fprofile.yaml?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -3,7 +3,7 @@\n id: aluno-001\n learner_id: daniel-barreto\n derived_from: ../../learner/learning_state.yaml\n-updated: '2026-08-22'\n+updated: '2026-08-21'\n agente_owner: mnemosyne\n core:\n   aluno:"
+    },
+    {
+      "sha": "eed850fe9ebf43c8379ab03a673eaac996d57b76",
+      "filename": "engines/minimaxDojo/whiteboard/trail.md",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Ftrail.md",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FminimaxDojo%2Fwhiteboard%2Ftrail.md",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/engines%2FminimaxDojo%2Fwhiteboard%2Ftrail.md?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -1,7 +1,7 @@\n ---\n aluno_id: aluno-001\n derived_from: ../../learner/learning_state.yaml\n-atualizado: '2026-08-22'\n+atualizado: '2026-08-21'\n agente_owner: cartografo\n ---\n "
+    },
+    {
+      "sha": "dd18faccde8da830eb1f288d580c0ebf4a6026ff",
+      "filename": "engines/voxelDojo/shared/content.ts",
+      "status": "modified",
+      "additions": 5,
+      "deletions": 5,
+      "changes": 10,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FvoxelDojo%2Fshared%2Fcontent.ts",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/engines%2FvoxelDojo%2Fshared%2Fcontent.ts",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/engines%2FvoxelDojo%2Fshared%2Fcontent.ts?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -34,14 +34,14 @@ export const reviewSlice: ReviewSlice = {\n     {\n       unitId: \"U0-sonda-rate-limiter-robustness\",\n       title: \"GATEKEEPER: token-bucket rate limiter robustness\",\n-      dueIn: \"overdue 27d\",\n+      dueIn: \"overdue 43d\",\n       reason: \"overdue\",\n     },\n     {\n       unitId: \"U2-key-value-store\",\n       title: \"KV WAREHOUSE: hash-map-backed CRUD with TTL expiration\",\n-      dueIn: \"today\",\n-      reason: \"due\",\n+      dueIn: \"overdue 4d\",\n+      reason: \"overdue\",\n     },\n     {\n       unitId: \"P-001\",\n@@ -52,8 +52,8 @@ export const reviewSlice: ReviewSlice = {\n   ],\n   streak: {\n     current: 0,\n-    longest: 1,\n-    lastGateDate: \"2026-07-05\",\n+    longest: 2,\n+    lastGateDate: \"2026-08-13\",\n     freezesEquipped: 0,\n     freezesMax: 2,\n   },"
+    },
+    {
+      "sha": "1cfebcbcd830ebb5d65d731e43a3c9434e66ac4a",
+      "filename": "learner/substrate/adapters/whiteboard.py",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 3,
+      "changes": 7,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/learner%2Fsubstrate%2Fadapters%2Fwhiteboard.py",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/learner%2Fsubstrate%2Fadapters%2Fwhiteboard.py",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/learner%2Fsubstrate%2Fadapters%2Fwhiteboard.py?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -1,10 +1,11 @@\n \"\"\"Adapter that derives the minimaxDojo whiteboard views.\"\"\"\n \n-import datetime\n from typing import Any\n \n import yaml\n \n+from learner.substrate.projection_clock import projection_today\n+\n STATE_MAP_PT = {\n     \"presenting\": \"APRESENTANDO\",\n     \"practicing\": \"PRATICANDO\",\n@@ -29,7 +30,7 @@ def derive_whiteboard_profile(state: dict[str, Any]) -> dict[str, Any]:\n         \"id\": \"aluno-001\",\n         \"learner_id\": learner.get(\"id\", \"\"),\n         \"derived_from\": \"../../learner/learning_state.yaml\",\n-        \"updated\": datetime.date.today().isoformat(),\n+        \"updated\": projection_today().isoformat(),\n         \"agente_owner\": \"mnemosyne\",\n         \"core\": {\n             \"aluno\": {\n@@ -101,7 +102,7 @@ def derive_whiteboard_trail(state: dict[str, Any]) -> dict[str, Any]:\n     return {\n         \"aluno_id\": \"aluno-001\",\n         \"derived_from\": \"../../learner/learning_state.yaml\",\n-        \"atualizado\": datetime.date.today().isoformat(),\n+        \"atualizado\": projection_today().isoformat(),\n         \"agente_owner\": \"cartografo\",\n         \"focus\": learner.get(\"focus\", \"robustness\"),\n         \"active_unit\": active.get(\"id\", \"\"),"
+    },
+    {
+      "sha": "c3b06aebe5254b65f8d33e59f4d6d121e881cc97",
+      "filename": "learner/substrate/tests/test_projection_clock.py",
+      "status": "modified",
+      "additions": 19,
+      "deletions": 0,
+      "changes": 19,
+      "blob_url": "https://github.com/dandpb/aidevschool/blob/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/learner%2Fsubstrate%2Ftests%2Ftest_projection_clock.py",
+      "raw_url": "https://github.com/dandpb/aidevschool/raw/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/learner%2Fsubstrate%2Ftests%2Ftest_projection_clock.py",
+      "contents_url": "https://api.github.com/repos/dandpb/aidevschool/contents/learner%2Fsubstrate%2Ftests%2Ftest_projection_clock.py?ref=9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+      "patch": "@@ -16,6 +16,25 @@ def test_projection_today_is_iso_date(self):\n     def test_projection_today_matches_committed_clock(self):\n         self.assertEqual(projection_today(), date(2026, 8, 21))\n \n+    def test_whiteboard_stamps_use_pinned_clock(self):\n+        \"\"\"Whiteboard updated/atualizado must not read the wall clock.\n+\n+        Otherwise ``python3 -m learner.substrate --check`` drifts on every\n+        calendar day after the last sync (AID-396).\n+        \"\"\"\n+        from learner.substrate import load_canonical\n+        from learner.substrate.adapters.whiteboard import (\n+            derive_whiteboard_profile,\n+            derive_whiteboard_trail,\n+        )\n+\n+        state = load_canonical()\n+        pinned = projection_today().isoformat()\n+        profile = derive_whiteboard_profile(state)\n+        trail = derive_whiteboard_trail(state)\n+        self.assertEqual(profile[\"updated\"], pinned)\n+        self.assertEqual(trail[\"atualizado\"], pinned)\n+\n \n if __name__ == \"__main__\":\n     unittest.main()"
+    }
+  ]
+}

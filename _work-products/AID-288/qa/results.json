@@ -1,0 +1,113 @@
+[
+  {
+    "game": "game-02-warehouse",
+    "lang": "pt-BR",
+    "status": {
+      "role": "status",
+      "live": "polite"
+    },
+    "noOldEnglishCopy": true,
+    "buttonTargets": [],
+    "desktop": {
+      "768": {
+        "hudW": 340,
+        "scrollW": 768,
+        "innerW": 768
+      },
+      "854": {
+        "hudW": 340,
+        "scrollW": 854,
+        "innerW": 854
+      },
+      "1280": {
+        "hudW": 340,
+        "scrollW": 1280,
+        "innerW": 1280
+      }
+    },
+    "reflow320": {
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "stacked": true
+    },
+    "reducedMotion": {
+      "animation": "none",
+      "transition": "0s",
+      "matches": true
+    }
+  },
+  {
+    "game": "game-03-wormhole",
+    "lang": "pt-BR",
+    "status": {
+      "role": "status",
+      "live": "polite"
+    },
+    "noOldEnglishCopy": true,
+    "buttonTargets": [],
+    "desktop": {
+      "768": {
+        "hudW": 360,
+        "scrollW": 768,
+        "innerW": 768
+      },
+      "854": {
+        "hudW": 360,
+        "scrollW": 854,
+        "innerW": 854
+      },
+      "1280": {
+        "hudW": 360,
+        "scrollW": 1280,
+        "innerW": 1280
+      }
+    },
+    "reflow320": {
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "stacked": true
+    },
+    "reducedMotion": {
+      "animation": "none",
+      "transition": "0s",
+      "matches": true
+    }
+  },
+  {
+    "game": "game-05-relay-station",
+    "lang": "pt-BR",
+    "status": {
+      "role": "status",
+      "live": "polite"
+    },
+    "noOldEnglishCopy": true,
+    "buttonTargets": [],
+    "desktop": {
+      "768": {
+        "hudW": 340,
+        "scrollW": 768,
+        "innerW": 768
+      },
+      "854": {
+        "hudW": 340,
+        "scrollW": 854,
+        "innerW": 854
+      },
+      "1280": {
+        "hudW": 340,
+        "scrollW": 1280,
+        "innerW": 1280
+      }
+    },
+    "reflow320": {
+      "scrollWidth": 320,
+      "innerWidth": 320,
+      "stacked": true
+    },
+    "reducedMotion": {
+      "animation": "none",
+      "transition": "0s",
+      "matches": true
+    }
+  }
+]

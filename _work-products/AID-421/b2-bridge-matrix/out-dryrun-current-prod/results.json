@@ -1,0 +1,173 @@
+{
+ "base": "https://aidevschool-codexdojo-os.netlify.app",
+ "pin": "72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+ "manifestSha": "f81bfd077214d1ec903a376850c486d2490fa0e65289149df7a1e79d3d798d04",
+ "results": [
+  {
+   "id": "I1 manifest-200",
+   "ok": true,
+   "detail": "200"
+  },
+  {
+   "id": "I2 manifest-sha256-declared",
+   "ok": true,
+   "detail": "want=f81bfd077214 got=f81bfd077214"
+  },
+  {
+   "id": "I3 manifest-sourceRevision==pin",
+   "ok": true,
+   "detail": "want=72130c6d7002 got=72130c6d7002"
+  },
+  {
+   "id": "B1 bridge-session-200-token",
+   "ok": true,
+   "detail": "200 token=43ch"
+  },
+  {
+   "id": "B2 bridge-403-cross-origin",
+   "ok": true,
+   "detail": "403 {\"error\":\"origin-forbidden\"}"
+  },
+  {
+   "id": "B3 bridge-401-no-token",
+   "ok": true,
+   "detail": "401"
+  },
+  {
+   "id": "M KV WAREHOUSE L1 PASS",
+   "ok": true,
+   "detail": "verdict=PASS errors=[]"
+  },
+  {
+   "id": "M KV WAREHOUSE L2 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M KV WAREHOUSE L3 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M KV WAREHOUSE L4 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M WORMHOLE L1 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M WORMHOLE L2 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M WORMHOLE L3 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M WORMHOLE L4 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M RELAY STATION L1 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M RELAY STATION L2 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M RELAY STATION L3 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M RELAY STATION L4 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M PIPELINE PLANT L1 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M PIPELINE PLANT L2 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M PIPELINE PLANT L3 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "M PIPELINE PLANT L4 PASS",
+   "ok": false,
+   "detail": "verdict=FAIL errors=[\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the closed L1 scenario t"
+  },
+  {
+   "id": "R-forged KV WAREHOUSE FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  },
+  {
+   "id": "R-forged WORMHOLE FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  },
+  {
+   "id": "R-forged RELAY STATION FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  },
+  {
+   "id": "R-forged PIPELINE PLANT FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  },
+  {
+   "id": "R-noobs KV WAREHOUSE FAIL",
+   "ok": true,
+   "detail": "FAIL [\"observations do not match the closed L1 scenario trace\",\"producer metrics disagree with independen"
+  },
+  {
+   "id": "R-noobs WORMHOLE FAIL",
+   "ok": true,
+   "detail": "FAIL [\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the "
+  },
+  {
+   "id": "R-noobs RELAY STATION FAIL",
+   "ok": true,
+   "detail": "FAIL [\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the "
+  },
+  {
+   "id": "R-noobs PIPELINE PLANT FAIL",
+   "ok": true,
+   "detail": "FAIL [\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\",\"observations do not match the "
+  },
+  {
+   "id": "R-unknown-game FAIL",
+   "ok": false,
+   "detail": "FAIL [\"evidence identity is not the fixed WAREHOUSE L1 verifier contract\"]"
+  },
+  {
+   "id": "R-mutated-trace FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  },
+  {
+   "id": "R-pass-claim FAIL",
+   "ok": true,
+   "detail": "FAIL"
+  }
+ ],
+ "notes": {}
+}

@@ -1,0 +1,107 @@
+{
+  "executedAt": "2026-08-24T21:06:41.542Z",
+  "environment": {
+    "node": "v24.18.0",
+    "browser": "Chromium headless",
+    "viewport": "1280x800"
+  },
+  "canonicalProbes": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "93e9209df712bf9cede769e37a3a9bbfa6b93b336aa9075c2c1eb6375b2a53df",
+      "bytes": 608
+    },
+    {
+      "path": "/apps/literacydojo/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e7d434bac95646bb4efe23cd0d31457d67d28b12fc8e79f117a1a2d23ce87625",
+      "bytes": 834
+    },
+    {
+      "path": "/apps/warehouse/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e84d9ada359fdca4b1ac18a11918027719564a8fa6de7e760b61c056027be96f",
+      "bytes": 2904
+    },
+    {
+      "path": "/apps/wormhole/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "3c62187b8b9132f9f3f938cc4c09e1b864481afe33524b0017d272485dc75f68",
+      "bytes": 3102
+    },
+    {
+      "path": "/apps/relay-station/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "afe5ee990f18bc65b4ffa85fb3457153b3ce8f490cbf1e9f33b8908c70c93371",
+      "bytes": 2930
+    }
+  ],
+  "immutableProbes": [
+    {
+      "path": "/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "93e9209df712bf9cede769e37a3a9bbfa6b93b336aa9075c2c1eb6375b2a53df",
+      "bytes": 608
+    },
+    {
+      "path": "/apps/literacydojo/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e7d434bac95646bb4efe23cd0d31457d67d28b12fc8e79f117a1a2d23ce87625",
+      "bytes": 834
+    },
+    {
+      "path": "/apps/warehouse/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "e84d9ada359fdca4b1ac18a11918027719564a8fa6de7e760b61c056027be96f",
+      "bytes": 2904
+    },
+    {
+      "path": "/apps/wormhole/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "3c62187b8b9132f9f3f938cc4c09e1b864481afe33524b0017d272485dc75f68",
+      "bytes": 3102
+    },
+    {
+      "path": "/apps/relay-station/",
+      "status": 200,
+      "contentType": "text/html; charset=UTF-8",
+      "sha256": "afe5ee990f18bc65b4ffa85fb3457153b3ce8f490cbf1e9f33b8908c70c93371",
+      "bytes": 2930
+    }
+  ],
+  "hashesMatch": true,
+  "journeys": [
+    {
+      "base": "https://aidevschool-codexdojo-os.netlify.app",
+      "landingHeading": "O que você quer conseguir fazer com IA?",
+      "boundary": "A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.",
+      "verification": "Verificador indisponível",
+      "hubUrl": "https://aidevschool-codexdojo-os.netlify.app/hub",
+      "consoleErrors": [
+        "The script has an unsupported MIME type ('text/html')."
+      ],
+      "failedRequests": []
+    },
+    {
+      "base": "https://6a8c366553da9a55fed22b04--aidevschool-codexdojo-os.netlify.app",
+      "landingHeading": "O que você quer conseguir fazer com IA?",
+      "boundary": "A recompensa local celebra a prática. Evidência, veredito independente e competência canônica continuam registros diferentes.",
+      "verification": "Verificador indisponível",
+      "hubUrl": "https://6a8c366553da9a55fed22b04--aidevschool-codexdojo-os.netlify.app/hub",
+      "consoleErrors": [
+        "The script has an unsupported MIME type ('text/html')."
+      ],
+      "failedRequests": []
+    }
+  ]
+}

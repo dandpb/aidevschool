@@ -1,0 +1,126 @@
+{
+  "name": "main",
+  "commit": {
+    "sha": "72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+    "node_id": "C_kwDOTFPFxtoAKDcyMTMwYzZkNzAwMmZjMDNkMmZjY2I2YTExMzFkMDVmN2JiYWI0Njc",
+    "commit": {
+      "author": {
+        "name": "Daniel Pinheiro Barreto",
+        "email": "daniel@heropa.com",
+        "date": "2026-08-30T17:40:21Z"
+      },
+      "committer": {
+        "name": "GitHub",
+        "email": "noreply@github.com",
+        "date": "2026-08-30T17:40:21Z"
+      },
+      "message": "Merge pull request #192 from dandpb/aid-359/dev-mission-game-06\n\nfeat(os,voxelDojo,learner): publish game-06-pipeline-plant as the fourth Dev mission (AID-359)",
+      "tree": {
+        "sha": "567e4c794348e5776474dcff60e079197d833e24",
+        "url": "https://api.github.com/repos/dandpb/aidevschool/git/trees/567e4c794348e5776474dcff60e079197d833e24"
+      },
+      "url": "https://api.github.com/repos/dandpb/aidevschool/git/commits/72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+      "comment_count": 0,
+      "verification": {
+        "verified": true,
+        "reason": "valid",
+        "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqlGsFCRC1aQ7uu5UhlAAAKA8QAHA4ujAF96wVJr9qbiUWr1BT\n9yheqRtVjeGmWEhrbJpvLfRCR4Vgn2xKhF37P9Z6QSKgvk9j2jbPbhkppb3MEI77\nqpbM4MGTp28OtAIPjxcUDQPgwJ1ko1y8sjRqt6ZIYQw5H439zVLFGdRUZeDRdA7T\nIT4CaIdAlzwK+tbxDe9jnRZfl7AUWGSqCkqjjVK0xEtTwZNvtQrkCq48BNhAZOn7\n2VeN03HzDphImcAXu5+WXSOsGnnC8Xsg/ZOk3Vb7oLceRf1Y8TogbOCAyprsdNTg\nG0z9pTMud83+OotxyRqAMiK+iydAeLCkpUmDcFL/It2h3lx7noTZXVjyYoWTj487\nMvYqw5p1nkA1i/QI6dZPv8BZSkaDNQxWpKVTDJHY5uCDcHfO+hJy9lBUEipkds4A\n45jVrNfI2H2SoTT5bFa56LLroVTjRZzCwDkdfNWWFm8pK8o5g3JKTX5fop2cSyi6\nJ+JX3SYNSRti4iIS33NtPBIoGvQWSSpu/VPa/FvkVmQxjGEwbMe1m4Fmw70BlBS0\nT0O/uh2mHLzvdW1g6iSILH/qhuEblxEIvXzWw8m8qN2QADDw69NY4L1CZaz+op+c\nbu9PUf3KicGR6BUxVmuXAmeBQdvUfbwx5aljklUrRbrEfOECmuXQKrjfkNng4KxM\n90a0Vie8FMmBczs8533F\n=bn1J\n-----END PGP SIGNATURE-----\n",
+        "payload": "tree 567e4c794348e5776474dcff60e079197d833e24\nparent 0a2e2042220aea457fbf9018f7fe7fc28fca78f9\nparent f6875cb85007e88de7e74d8affb8e3cd95428645\nauthor Daniel Pinheiro Barreto <daniel@heropa.com> 1788111621 -0300\ncommitter GitHub <noreply@github.com> 1788111621 -0300\n\nMerge pull request #192 from dandpb/aid-359/dev-mission-game-06\n\nfeat(os,voxelDojo,learner): publish game-06-pipeline-plant as the fourth Dev mission (AID-359)",
+        "verified_at": "2026-08-30T17:40:22Z"
+      }
+    },
+    "url": "https://api.github.com/repos/dandpb/aidevschool/commits/72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+    "html_url": "https://github.com/dandpb/aidevschool/commit/72130c6d7002fc03d2fccb6a1131d05f7bbab467",
+    "comments_url": "https://api.github.com/repos/dandpb/aidevschool/commits/72130c6d7002fc03d2fccb6a1131d05f7bbab467/comments",
+    "author": {
+      "login": "dandpb",
+      "id": 2193703,
+      "node_id": "MDQ6VXNlcjIxOTM3MDM=",
+      "avatar_url": "https://avatars.githubusercontent.com/u/2193703?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dandpb",
+      "html_url": "https://github.com/dandpb",
+      "followers_url": "https://api.github.com/users/dandpb/followers",
+      "following_url": "https://api.github.com/users/dandpb/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dandpb/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dandpb/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dandpb/subscriptions",
+      "organizations_url": "https://api.github.com/users/dandpb/orgs",
+      "repos_url": "https://api.github.com/users/dandpb/repos",
+      "events_url": "https://api.github.com/users/dandpb/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dandpb/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "committer": {
+      "login": "web-flow",
+      "id": 19864447,
+      "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/web-flow",
+      "html_url": "https://github.com/web-flow",
+      "followers_url": "https://api.github.com/users/web-flow/followers",
+      "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+      "organizations_url": "https://api.github.com/users/web-flow/orgs",
+      "repos_url": "https://api.github.com/users/web-flow/repos",
+      "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/web-flow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "parents": [
+      {
+        "sha": "0a2e2042220aea457fbf9018f7fe7fc28fca78f9",
+        "url": "https://api.github.com/repos/dandpb/aidevschool/commits/0a2e2042220aea457fbf9018f7fe7fc28fca78f9",
+        "html_url": "https://github.com/dandpb/aidevschool/commit/0a2e2042220aea457fbf9018f7fe7fc28fca78f9"
+      },
+      {
+        "sha": "f6875cb85007e88de7e74d8affb8e3cd95428645",
+        "url": "https://api.github.com/repos/dandpb/aidevschool/commits/f6875cb85007e88de7e74d8affb8e3cd95428645",
+        "html_url": "https://github.com/dandpb/aidevschool/commit/f6875cb85007e88de7e74d8affb8e3cd95428645"
+      }
+    ]
+  },
+  "_links": {
+    "self": "https://api.github.com/repos/dandpb/aidevschool/branches/main",
+    "html": "https://github.com/dandpb/aidevschool/tree/main"
+  },
+  "protected": true,
+  "protection": {
+    "enabled": true,
+    "required_status_checks": {
+      "enforcement_level": "everyone",
+      "contexts": [
+        "literacyDojo (TS + content)",
+        "codexdojo-os (TS)",
+        "Python (learner + curriculum shared)",
+        "product readiness (claims)"
+      ],
+      "checks": [
+        {
+          "context": "literacyDojo (TS + content)",
+          "app_id": 15368
+        },
+        {
+          "context": "codexdojo-os (TS)",
+          "app_id": 15368
+        },
+        {
+          "context": "Python (learner + curriculum shared)",
+          "app_id": 15368
+        },
+        {
+          "context": "product readiness (claims)",
+          "app_id": 15368
+        }
+      ]
+    }
+  },
+  "protection_url": "https://api.github.com/repos/dandpb/aidevschool/branches/main/protection"
+}
