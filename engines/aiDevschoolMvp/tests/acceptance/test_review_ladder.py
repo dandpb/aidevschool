@@ -43,6 +43,14 @@ from _state_transitions import (  # noqa: E402
 CID = "C05"
 T0 = next(r["target_retention_days"] for r in CURRICULUM if r["id"] == CID)
 PASS_TS = "2026-09-01T12:00:00Z"
+EXPECTED_NEXT_REVIEW_TS = [
+    "2026-09-10T12:00:00Z",
+    "2026-09-28T12:00:00Z",
+    "2026-11-03T12:00:00Z",
+    "2026-12-28T12:00:00Z",
+    "2027-02-21T12:00:00Z",
+    "2027-04-17T12:00:00Z",
+]
 
 
 def _ladder(passes: int) -> list[dict]:
@@ -78,21 +86,21 @@ def test_review_pass_ladder_doubles_target_with_cap_and_pure_gaps():
     assert all(g <= _core.gap_days(365) for g in gaps), "no gap may exceed gap_days(365)"
 
     last_pass = _core.parse_iso(PASS_TS)
-    for r in rows:
+    for r, pinned in zip(rows, EXPECTED_NEXT_REVIEW_TS):
         expected = (
             (last_pass + timedelta(days=r["gap_days"]))
             .replace(microsecond=0)
             .isoformat()
             .replace("+00:00", "Z")
         )
+        assert r["next_review_ts"] == pinned
         assert r["next_review_ts"] == expected
+        # INV-2 purity: the replay-recorded timestamp must be reproducible from
+        # (target_days_effective, last_pass_ts) alone — not merely self-equal.
         assert schedule_next_review(
             {"target_days_effective": r["target"]},
-            _core.parse_iso(expected).isoformat().replace("+00:00", "Z"),
-        ) == schedule_next_review(
-            {"target_days_effective": r["target"]},
-            _core.parse_iso(expected).isoformat().replace("+00:00", "Z"),
-        )
+            last_pass.isoformat().replace("+00:00", "Z"),
+        ) == r["next_review_ts"]
         last_pass = _core.parse_iso(r["next_review_ts"])
 
 
