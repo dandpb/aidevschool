@@ -1,0 +1,349 @@
+{
+  "startedAt": "2026-08-28T21:35:06.343Z",
+  "apps": {
+    "warehouse": {
+      "lang": "pt-BR",
+      "statusCount": 1,
+      "statusRole": "status",
+      "statusAriaLive": "polite",
+      "liveRegionCount": 1,
+      "buttons": [
+        {
+          "text": "Iniciar onda",
+          "w": 89,
+          "h": 56
+        },
+        {
+          "text": "prateleira 0 · 0 caixas",
+          "w": 118,
+          "h": 94
+        },
+        {
+          "text": "prateleira 1 · 0 caixas",
+          "w": 118,
+          "h": 94
+        },
+        {
+          "text": "prateleira 2 · 0 caixas",
+          "w": 118,
+          "h": 94
+        },
+        {
+          "text": "prateleira 3 · 0 caixas",
+          "w": 118,
+          "h": 94
+        },
+        {
+          "text": "prateleira 4 · 0 caixas",
+          "w": 118,
+          "h": 94
+        },
+        {
+          "text": "prateleira 5 · 0 caixas",
+          "w": 118,
+          "h": 94
+        }
+      ],
+      "buttonsMin": 56,
+      "buttonsBelow44": [],
+      "hudText": "L1 — Hash → prateleira Uma caixa sempre pousa na prateleira para onde sua chave faz hash. Mesma chave ⇒ mesma prateleira. Preveja a prateleira de ≥80% das caixas que chegam. Pressione iniciar. Iniciar onda prateleira 0 · 0 caixas prateleira 1 · 0 caixas prateleira 2 · 0 caixas prateleira 3 · 0 caixas prateleira 4 · 0 caixas prateleira 5 · 0 caixas",
+      "englishHints": [],
+      "focusStableAcrossStatusChange": true,
+      "statusTextAfterStart": "Caixa 1/12: key:8gl33c:0 — clique na prateleira para onde a chave faz hash.",
+      "reducedMotionComputed": {
+        "nonZero": [],
+        "checked": 22
+      },
+      "cssHasReducedMotionQuery": true,
+      "viewports": {
+        "320": {
+          "scrollW": 320,
+          "clientW": 320,
+          "bodyScrollW": 320,
+          "bodyClientW": 320,
+          "hudVisible": true,
+          "hudTop": 233,
+          "hudWidth": 320,
+          "viewport": 320,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "375": {
+          "scrollW": 375,
+          "clientW": 375,
+          "bodyScrollW": 375,
+          "bodyClientW": 375,
+          "hudVisible": true,
+          "hudTop": 273,
+          "hudWidth": 375,
+          "viewport": 375,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "768": {
+          "scrollW": 801,
+          "clientW": 768,
+          "bodyScrollW": 801,
+          "bodyClientW": 768,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 33,
+          "viewport": 768,
+          "hOverflow": 33,
+          "pass": false
+        },
+        "1280": {
+          "scrollW": 1313,
+          "clientW": 1280,
+          "bodyScrollW": 1313,
+          "bodyClientW": 1280,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 33,
+          "viewport": 1280,
+          "hOverflow": 33,
+          "pass": false
+        }
+      },
+      "tokens": {
+        "--vx-bg": "#0b0e14",
+        "--vx-surface": "#101827",
+        "--vx-surface-raised": "#1a2030",
+        "--vx-text": "#e6e9f2",
+        "--vx-text-muted": "#aab3cc",
+        "--vx-text-dim": "#7f8ab0",
+        "--vx-action": "#4fc3f7",
+        "--vx-focus": "#ffd54f",
+        "--vx-status": "#ffd54f",
+        "--vx-success": "#80cbc4",
+        "--vx-error": "#f06292"
+      }
+    },
+    "wormhole": {
+      "lang": "pt-BR",
+      "statusCount": 1,
+      "statusRole": "status",
+      "statusAriaLive": "polite",
+      "liveRegionCount": 1,
+      "buttons": [
+        {
+          "text": "Iniciar onda",
+          "w": 89,
+          "h": 56
+        }
+      ],
+      "buttonsMin": 56,
+      "buttonsBelow44": [],
+      "hudText": "L1 — Portal de carimbo A URL é encurtada para um código base62. Preveja o código do portal. Preveja o código base62 de ≥80% das URLs que chegam. Pressione iniciar. Iniciar onda delta.app/8ril9k-0 delta.app/9rd4jn-1 flux.sys/8wbont-2 ada.io/8ruko7-3 delta.app/7g40wq-4 cache.net/dy7kps-5",
+      "englishHints": [],
+      "focusStableAcrossStatusChange": true,
+      "statusTextAfterStart": "URL 1/6: https://delta.app/8ril9k-0 — digite o código base62 de 4 caracteres e envie.",
+      "reducedMotionComputed": {
+        "nonZero": [],
+        "checked": 22
+      },
+      "cssHasReducedMotionQuery": true,
+      "viewports": {
+        "320": {
+          "scrollW": 320,
+          "clientW": 320,
+          "bodyScrollW": 320,
+          "bodyClientW": 320,
+          "hudVisible": true,
+          "hudTop": 233,
+          "hudWidth": 320,
+          "viewport": 320,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "375": {
+          "scrollW": 375,
+          "clientW": 375,
+          "bodyScrollW": 375,
+          "bodyClientW": 375,
+          "hudVisible": true,
+          "hudTop": 273,
+          "hudWidth": 375,
+          "viewport": 375,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "768": {
+          "scrollW": 801,
+          "clientW": 768,
+          "bodyScrollW": 801,
+          "bodyClientW": 768,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 33,
+          "viewport": 768,
+          "hOverflow": 33,
+          "pass": false
+        },
+        "1280": {
+          "scrollW": 1313,
+          "clientW": 1280,
+          "bodyScrollW": 1313,
+          "bodyClientW": 1280,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 33,
+          "viewport": 1280,
+          "hOverflow": 33,
+          "pass": false
+        }
+      },
+      "tokens": {
+        "--vx-bg": "#06080f",
+        "--vx-surface": "#101827",
+        "--vx-surface-raised": "#1a2030",
+        "--vx-text": "#e6e9f2",
+        "--vx-text-muted": "#aab3cc",
+        "--vx-text-dim": "#7f8ab0",
+        "--vx-action": "#4fc3f7",
+        "--vx-focus": "#ffd54f",
+        "--vx-status": "#ffd54f",
+        "--vx-success": "#80cbc4",
+        "--vx-error": "#f06292"
+      }
+    },
+    "relay-station": {
+      "lang": "pt-BR",
+      "statusCount": 1,
+      "statusRole": "status",
+      "statusAriaLive": "polite",
+      "liveRegionCount": 1,
+      "buttons": [
+        {
+          "text": "Iniciar onda",
+          "w": 138,
+          "h": 44
+        },
+        {
+          "text": "st-0 ○ —",
+          "w": 125,
+          "h": 44
+        },
+        {
+          "text": "st-1 ✕ —",
+          "w": 125,
+          "h": 44
+        },
+        {
+          "text": "st-2 ○ —",
+          "w": 125,
+          "h": 44
+        },
+        {
+          "text": "st-3 ✕ —",
+          "w": 125,
+          "h": 44
+        },
+        {
+          "text": "st-4 ○ —",
+          "w": 125,
+          "h": 44
+        }
+      ],
+      "buttonsMin": 44,
+      "buttonsBelow44": [],
+      "hudText": "L1 — Elo persistente Um cliente mantém uma conexão persistente ou não mantém. Preveja o conjunto vivo. Preveja todas as estações conectadas (o conjunto vivo) com ≥80% de acerto. Pressione iniciar. Iniciar onda st-0 ○ — st-1 ✕ — st-2 ○ — st-3 ✕ — st-4 ○ — canal de broadcast: alerts · agora=100",
+      "englishHints": [],
+      "focusStableAcrossStatusChange": true,
+      "statusTextAfterStart": "Clique em todas as estações que você prevê CONECTADAS (0 selecionadas), depois envie.",
+      "reducedMotionComputed": {
+        "nonZero": [],
+        "checked": 20
+      },
+      "cssHasReducedMotionQuery": true,
+      "viewports": {
+        "320": {
+          "scrollW": 320,
+          "clientW": 320,
+          "bodyScrollW": 320,
+          "bodyClientW": 320,
+          "hudVisible": true,
+          "hudTop": 233,
+          "hudWidth": 320,
+          "viewport": 320,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "375": {
+          "scrollW": 375,
+          "clientW": 375,
+          "bodyScrollW": 375,
+          "bodyClientW": 375,
+          "hudVisible": true,
+          "hudTop": 273,
+          "hudWidth": 375,
+          "viewport": 375,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "768": {
+          "scrollW": 768,
+          "clientW": 768,
+          "bodyScrollW": 768,
+          "bodyClientW": 768,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 340,
+          "viewport": 768,
+          "hOverflow": 0,
+          "pass": true
+        },
+        "1280": {
+          "scrollW": 1280,
+          "clientW": 1280,
+          "bodyScrollW": 1280,
+          "bodyClientW": 1280,
+          "hudVisible": true,
+          "hudTop": 0,
+          "hudWidth": 340,
+          "viewport": 1280,
+          "hOverflow": 0,
+          "pass": true
+        }
+      },
+      "tokens": {
+        "--vx-bg": "#0b0e14",
+        "--vx-surface": "#101827",
+        "--vx-surface-raised": "#1a2030",
+        "--vx-text": "#e6e9f2",
+        "--vx-text-muted": "#aab3cc",
+        "--vx-text-dim": "#7f8ab0",
+        "--vx-action": "#4fc3f7",
+        "--vx-focus": "#ffd54f",
+        "--vx-status": "#ffd54f",
+        "--vx-success": "#80cbc4",
+        "--vx-error": "#f06292"
+      }
+    }
+  },
+  "pixelquest": {
+    "lang": "pt-BR",
+    "cssLinks": [
+      "https://6a91fafbab0b3c4e0ee36c61--singular-crostata-273e7e.netlify.app/assets/index-DKv6CY17.css"
+    ],
+    "cssHasReducedMotion": true,
+    "reducedMotionComputed": {
+      "badAnimated": 0,
+      "checked": 15
+    }
+  },
+  "host": {
+    "lang": "pt-BR",
+    "iframes": [],
+    "warehouse": {
+      "found": false
+    },
+    "wormhole": {
+      "found": false
+    },
+    "relay-station": {
+      "found": false
+    }
+  },
+  "notes": []
+}

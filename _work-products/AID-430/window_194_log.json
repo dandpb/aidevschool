@@ -1,0 +1,15 @@
+{
+ "window": "merge_194_bridge_parity",
+ "toggle_off": "2026-08-30T22:41:44Z",
+ "toggle_off_status": 200,
+ "merge_194": "2026-08-30T22:41:47Z",
+ "merge_194_status": 200,
+ "merge_194_resp": {
+  "sha": "f3762e2428ebfd8d8607683f7f44af4f516ac7f7",
+  "merged": true,
+  "message": "Pull Request successfully merged"
+ },
+ "toggle_on": "2026-08-30T22:41:47Z",
+ "toggle_on_status": 200,
+ "protection_restored_identical": true
+}
