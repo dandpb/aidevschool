@@ -1,0 +1,15 @@
+{
+ "window": "merge_200_v15",
+ "toggle_off": "2026-08-30T22:34:39Z",
+ "toggle_off_status": 200,
+ "merge_200": "2026-08-30T22:34:42Z",
+ "merge_200_status": 200,
+ "merge_200_resp": {
+  "sha": "3a167f0ad773e784a3d8f110eab83d87f4271adf",
+  "merged": true,
+  "message": "Pull Request successfully merged"
+ },
+ "toggle_on": "2026-08-30T22:34:42Z",
+ "toggle_on_status": 200,
+ "protection_restored_identical": true
+}

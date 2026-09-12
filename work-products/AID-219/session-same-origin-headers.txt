@@ -1,0 +1,16 @@
+HTTP/2 200 
+age: 0
+cache-control: no-store
+cache-status: "Netlify Durable"; fwd=bypass
+cache-status: "Netlify Edge"; fwd=miss; fwd-status=200
+content-type: application/json
+cross-origin-resource-policy: same-origin
+date: Wed, 26 Aug 2026 22:18:30 GMT
+netlify-vary: query
+server: Netlify
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Accept-Encoding
+x-content-type-options: nosniff
+x-nf-request-id: 01M102EH4AV1BKDT9MMZ19G3GJ
+x-robots-tag: noindex
+

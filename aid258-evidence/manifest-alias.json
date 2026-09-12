@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "3f6419063e1dad923317c911227a8b21fcf50ad7",
+  "surfaces": {
+    "os": {
+      "entry": "index.html",
+      "sha256": "4658412b9d3c8a3a4f5623178b7be03dbd43eaf10c85da062d9b1febcc966541"
+    },
+    "literacydojo": {
+      "entry": "apps/literacydojo/index.html",
+      "sha256": "878b051fb0f25ca82f56d8a2671822668b0b3e55c5f0c675d45495255a7abae5",
+      "requiredFiles": {
+        "apps/literacydojo/sw.js": {
+          "sha256": "520c1205d666a51b2120dc3f07ce3b774510242dd03e547122ed4313e1ec06e4"
+        },
+        "apps/literacydojo/termos.html": {
+          "sha256": "385d87d6c123385137dee041abe6f9904b193ad19811cc71e45c7399a6763b12"
+        },
+        "apps/literacydojo/privacidade.html": {
+          "sha256": "27fe5a37e1aff970029adcd348cb32c0597b1fb3bee5ba4c5eada235b42cd487"
+        }
+      }
+    },
+    "warehouse": {
+      "entry": "apps/warehouse/index.html",
+      "sha256": "d348c274f57d1be30e27ac7c313faf176bc9c7202f03ffc28ce2c5db56d83616"
+    },
+    "wormhole": {
+      "entry": "apps/wormhole/index.html",
+      "sha256": "eef9a3b10c3b676adb10a051f7bad22b283b80446dfbf16322a0570acff5ab09"
+    },
+    "relay-station": {
+      "entry": "apps/relay-station/index.html",
+      "sha256": "535ee05728c0c724e4e6ca87748628d76fa12b99cf53437cea42222529fea4ae"
+    }
+  },
+  "files": [
+    "apps/literacydojo/assets/index-BKwMz48c.css",
+    "apps/literacydojo/assets/index-C9_PUc3M.js",
+    "apps/literacydojo/icon-192.png",
+    "apps/literacydojo/icon-512.png",
+    "apps/literacydojo/index.html",
+    "apps/literacydojo/manifest.webmanifest",
+    "apps/literacydojo/privacidade.html",
+    "apps/literacydojo/sw.js",
+    "apps/literacydojo/termos.html",
+    "apps/relay-station/assets/index-C-tRQD57.js",
+    "apps/relay-station/assets/relayScene-ClItgmF3.js",
+    "apps/relay-station/index.html",
+    "apps/warehouse/assets/index-9pb-sRjd.js",
+    "apps/warehouse/assets/warehouseScene-Da4zdjpP.js",
+    "apps/warehouse/index.html",
+    "apps/wormhole/assets/index-8T4qUWcl.js",
+    "apps/wormhole/assets/wormholeScene-CIDxsI77.js",
+    "apps/wormhole/index.html",
+    "assets/copy-content-BuqfLMsd-D0Y8tH8k.js",
+    "assets/create-pointer-move-prompt-handoff-C_G_UhQ--D2vs1SMh.js",
+    "assets/dist-CSugcPru.js",
+    "assets/dist-v33NAnr7.js",
+    "assets/index-Bc81vrSn.js",
+    "assets/index-DRZSEgHv.css",
+    "assets/renderer-OgmF5gNo-Bc7UFJ5H.js",
+    "dojo-wallpaper.png",
+    "index.html"
+  ]
+}

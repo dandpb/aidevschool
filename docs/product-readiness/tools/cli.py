@@ -28,6 +28,13 @@ from tools.evidence import (  # noqa: E402
 )
 from tools.enforcement import blocked_claims, candidate_path  # noqa: E402
 from tools.models import ReadinessDomain  # noqa: E402
+from tools.regrant import (  # noqa: E402
+    Defect,
+    PendingObservation,
+    RegrantBranchError,
+    classify_proposal,
+    require_regrant_branch,
+)
 from tools.render import drift, expected_views, write_views  # noqa: E402
 from tools.reports import (  # noqa: E402
     CandidateRequest,
@@ -58,6 +65,22 @@ def _print_candidate(proposal: AssessmentProposal) -> None:
         print(f"- {decision.use_case_id}: {decision.outcome}; reasons={reasons}")
 
 
+def _print_usage() -> None:
+    print(
+        "usage: python3 docs/product-readiness/tools/cli.py "
+        "{check [--reports DIR...]|enforce --reports DIR...|render|"
+        "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
+        "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
+        "[--scenarios ID...]|"
+        "assess --input REPORT [--dry-run]|regrant --propose --input REPORT}\n"
+        "  regrant exits: 0 written (assessment + rendered views), "
+        "1 invalid report or blocked-for-non-producer reasons, "
+        "2 bad usage or write-branch guard (main/detached HEAD), "
+        "3 pending independent observation (no writes)",
+        file=sys.stderr,
+    )
+
+
 def main(args: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if args is None else args)
     try:
@@ -67,6 +90,39 @@ def main(args: list[str] | None = None) -> int:
         return 1
     if domain is None:
         return 1
+    if arguments[:1] == ["regrant"]:
+        if len(arguments) != 4 or arguments[1] != "--propose" or arguments[2] != "--input":
+            _print_usage()
+            return 2
+        try:
+            require_regrant_branch(REPO_ROOT)
+        except RegrantBranchError as error:
+            print(error.message, file=sys.stderr)
+            return 2
+        try:
+            request = load_assessment_request(Path(arguments[3]))
+            proposal = propose_assessment(domain, request, REPO_ROOT)
+        except EvidenceError as error:
+            print(f"INVALID: {error}", file=sys.stderr)
+            return 1
+        outcome = classify_proposal(domain, proposal)
+        if isinstance(outcome, Defect):
+            for reason in outcome.reasons:
+                print(f"INVALID: {reason}", file=sys.stderr)
+            return 1
+        if isinstance(outcome, PendingObservation):
+            print("REGRANT PENDING: awaiting independent observation")
+            for use_case_id, pending in outcome.checklist:
+                print(f"- {use_case_id}:")
+                for reason in pending:
+                    print(f"  - [ ] {reason}")
+            return 3
+        results_path, assessment_path = write_assessment(proposal, READINESS_ROOT)
+        print(f"Wrote {results_path.relative_to(REPO_ROOT)}")
+        print(f"Wrote {assessment_path.relative_to(REPO_ROOT)}")
+        for path in write_views(load_domain(READINESS_ROOT)):
+            print(f"Rendered {path.relative_to(REPO_ROOT)}")
+        return 0
     aggregate = aggregate_arguments(arguments, REPO_ROOT)
     if aggregate is not None:
         directories, observation_directories, output, assessment_id, verified_at, revalidate_by = aggregate
@@ -211,15 +267,7 @@ def main(args: list[str] | None = None) -> int:
         write_assessment(proposal, READINESS_ROOT)
         write_views(load_domain(READINESS_ROOT))
         return 0
-    print(
-        "usage: python3 docs/product-readiness/tools/cli.py "
-        "{check [--reports DIR...]|enforce --reports DIR...|render|"
-        "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
-        "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
-        "[--scenarios ID...]|"
-        "assess --input REPORT [--dry-run]}",
-        file=sys.stderr,
-    )
+    _print_usage()
     return 2
 
 

@@ -1862,6 +1862,24 @@ a.audience-route-dev .route-badge {
   color: var(--primary);
 }
 
+/* F1 2026-09-10-activation-first-activity (R1): bloco first-touch da intro —
+   lead-in fixo + frase do tipo da 1ª atividade (domínio firstTouch.ts).
+   Apresentação apenas; texto comunica, nunca só cor. */
+.first-touch {
+  margin: 0;
+  border: 1px solid rgba(73, 201, 143, 0.32);
+  border-radius: 14px;
+  background: rgba(242, 255, 248, 0.86);
+  padding: 12px 14px;
+  color: #176846;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.first-touch strong {
+  letter-spacing: 0.02em;
+}
+
 .result-score {
   display: inline-block;
   border-radius: 999px;

@@ -1,0 +1,29 @@
+{
+ "steps": [
+  "chose Dev track",
+  "entered school",
+  "opened featured mission"
+ ],
+ "iframes": [
+  {
+   "src": "https://6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app/apps/warehouse/?hosted=1&hostOrigin=https%3A%2F%2F6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app",
+   "title": "Missão WAREHOUSE: Key-Value Store (in-memory)",
+   "w": 854,
+   "h": 549
+  }
+ ],
+ "framesFound": [
+  "https://6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app/apps/warehouse/?hosted=1&hostOrigin=https%3A%2F%2F6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app"
+ ],
+ "warehouse": {
+  "url": "https://6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app/apps/warehouse/?hosted=1&hostOrigin=https%3A%2F%2F6a91fb4dc2e2cd5f4dc00b6c--aidevschool-codexdojo-os.netlify.app",
+  "lang": "pt-BR",
+  "statusRole": "status",
+  "statusAriaLive": "polite",
+  "hudButtons": 12,
+  "nonZeroDurations": 0,
+  "hudW": 33,
+  "scrollW": 972,
+  "clientW": 854
+ }
+}

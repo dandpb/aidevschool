@@ -14,6 +14,7 @@ import {
 } from "../domain/analytics";
 import type { ActivityAnswer } from "../domain/evaluation";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
+import { FIRST_TOUCH_LEAD_IN, firstTouchPhrase } from "../domain/firstTouch";
 import {
   type AttemptState,
   type FinishPayload,
@@ -278,6 +279,11 @@ export function LessonScreen({
       showMapContext && onboarding?.confidence === "low"
         ? lesson.activities[0]?.hints?.[0]
         : undefined;
+    // F1 R1 (first-touch): frase derivada do activities[0].type canônico via
+    // mapa fechado — sem hardcode por lição; modo revisão herda a mesma frase
+    // (mesma tela, sem bifurcação de copy); missão hospedada herda pelo adapter.
+    const firstTouch =
+      lesson.activities[0] !== undefined ? firstTouchPhrase(lesson.activities[0].type) : undefined;
     return (
       <section
         className="screen lesson-intro-screen"
@@ -333,6 +339,11 @@ export function LessonScreen({
             {RETROFIT_NOTICE_S2}
           </p>
         )}
+        {firstTouch !== undefined && (
+          <p className="first-touch" data-testid="first-touch">
+            <strong>{FIRST_TOUCH_LEAD_IN}</strong> {firstTouch}
+          </p>
+        )}
         <button
           type="button"
           className="btn btn-primary"
@@ -367,6 +378,14 @@ export function LessonScreen({
       <p className="eyebrow">
         VILA LUME · {mode === "review" ? "Revisão · " : ""}
         {lesson.title} · atividade {currentIndex + 1} de {activities.length}
+        {currentIndex === 0 && (
+          <>
+            {" · "}
+            <span data-testid="first-activity-framing">
+              Primeira atividade — tente com o que você sabe; se travar, peça uma dica
+            </span>
+          </>
+        )}
       </p>
       <h1 id="activity-heading" className="activity-instruction" ref={headingRef} tabIndex={-1}>
         {activity.instruction}

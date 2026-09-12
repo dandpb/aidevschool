@@ -1,0 +1,219 @@
+name: Readiness re-grant factory
+
+# AID-1357 (Opção A of the AID-1308 assessment): when a main push run of CI
+# fails the readiness gate, rebuild the re-grant PR against the merged SHA.
+# The factory only PROPOSES — it never verifies itself (assessorContext stays
+# `independent-readiness-review`), never merges (single-writer CEO), and a
+# candidate with producer-only defects is reported, not granted (exit 3).
+# B1 (AID-1359): a PR opened with GITHUB_TOKEN emits no pull_request/push
+# events (GitHub recursion guard), so it is born without CI. The Paperclip
+# watchdog (AID-1357 carrier) closes+reopens it with the agent credential to
+# trigger pull_request[reopened]; a PR with no checks after 45 min is closed
+# with a §recusa reason so the dedupe label is freed again.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+concurrency:
+  group: readiness-regrant-factory
+  cancel-in-progress: false
+
+jobs:
+  propose-regrant:
+    name: propose readiness re-grant PR
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    env:
+      SHA: ${{ github.event.workflow_run.head_sha }}
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - name: compute run ids
+        run: |
+          echo "SHA8=${SHA::8}" >> "$GITHUB_ENV"
+          echo "TODAY=$(date -u +%Y%m%d)" >> "$GITHUB_ENV"
+          echo "ASSESSMENT_ID=$(date -u +%Y-%m-%d)-${SHA::8}-auto-regrant" >> "$GITHUB_ENV"
+      # R3 (AID-1359): artifacts belong to the CI run that failed, not to this
+      # workflow run — download-artifact needs run-id + an explicit
+      # github-token to read across runs. Two attempts for flake (AID-571).
+      - name: download readiness artifacts (attempt 1)
+        id: artifacts1
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-readiness-${{ env.SHA }}"
+          path: artifacts/product-readiness
+          merge-multiple: true
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: download readiness artifacts (attempt 2)
+        id: artifacts2
+        if: steps.artifacts1.outcome == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-readiness-${{ env.SHA }}"
+          path: artifacts/product-readiness
+          merge-multiple: true
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: aggregate producer facts (attempt 1)
+        id: aggregate1
+        continue-on-error: true
+        run: >-
+          python3 docs/product-readiness/tools/cli.py aggregate
+          --reports artifacts/product-readiness
+          --output artifacts/product-readiness/product-readiness-report.json
+          --assessment-id "$ASSESSMENT_ID"
+      - name: aggregate producer facts (attempt 2)
+        id: aggregate2
+        if: steps.aggregate1.outcome == 'failure'
+        run: >-
+          python3 docs/product-readiness/tools/cli.py aggregate
+          --reports artifacts/product-readiness
+          --output artifacts/product-readiness/product-readiness-report.json
+          --assessment-id "$ASSESSMENT_ID"
+      # If aggregation itself fails (missing artifacts → validate errors) this
+      # is a product defect, not staleness: abort without a PR.
+      - name: re-run readiness gate on the merged SHA (check)
+        id: gatecheck
+        continue-on-error: true
+        run: >-
+          python3 docs/product-readiness/tools/cli.py check
+          --reports artifacts/product-readiness 2>&1 | tee gate-output.txt;
+          test ${PIPESTATUS[0]} -eq 0
+      - name: re-run readiness gate on the merged SHA (enforce)
+        id: gateenforce
+        if: steps.gatecheck.outcome == 'success'
+        continue-on-error: true
+        run: >-
+          python3 docs/product-readiness/tools/cli.py enforce
+          --reports artifacts/product-readiness 2>&1 | tee -a gate-output.txt;
+          test ${PIPESTATUS[0]} -eq 0
+      - name: decide whether a re-grant is needed
+        id: gate
+        if: always()
+        run: |
+          if [ "${{ steps.gatecheck.outcome }}" = "success" ] && [ "${{ steps.gateenforce.outcome }}" = "success" ]; then
+            echo "needed=false" >> "$GITHUB_OUTPUT"
+            echo "readiness gate is green on the merged SHA; nothing to re-grant"
+          else
+            echo "needed=true" >> "$GITHUB_OUTPUT"
+            echo "readiness gate failed on the merged SHA; a re-grant proposal is needed"
+          fi
+      - name: dedupe open re-grant PRs
+        id: dedupe
+        if: steps.gate.outputs.needed == 'true'
+        run: |
+          open=$(gh pr list --label readiness-regrant --state open --json number --jq 'length')
+          if [ "$open" -gt 0 ]; then
+            echo "an open readiness-regrant PR already exists ($open); skipping (dedupe)"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: ensure factory labels exist
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          gh label create readiness-regrant --color 0e8a16 --description "automated readiness re-grant proposal" || true
+          gh label create bot --color b60205 --description "opened by automation; never merged by automation" || true
+      - name: create the re-grant branch
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          git config user.name "aidevschool-readiness-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "regrant/auto-$TODAY-$SHA8"
+      # Exit 3 (pending independent observation) is the expected outcome for a
+      # CI-only candidate: the bot never writes. Exit 0 means an independent
+      # report was already in the tree (full write). Anything else aborts
+      # without a PR (§recusa: wrong PRs are not opened).
+      - name: propose the re-grant
+        id: propose
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          set +e
+          python3 docs/product-readiness/tools/cli.py regrant \
+            --propose --input artifacts/product-readiness/product-readiness-report.json \
+            > propose-output.txt 2>&1
+          code=$?
+          set -e
+          cat propose-output.txt
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -ne 0 ] && [ "$code" -ne 3 ]; then
+            echo "regrant --propose exited $code (defect); aborting without PR" >&2
+            exit 1
+          fi
+      - name: build the PR body
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          {
+            echo "## Auto re-grant proposal (readiness re-grant factory, AID-1357)"
+            echo
+            echo "The CI run for main push \`${SHA}\` failed the readiness gate."
+            echo "This PR carries the producer snapshot so the re-grant can be"
+            echo "completed with independent observation."
+            echo
+            echo "### Gate output (red)"
+            echo '```'
+            cat gate-output.txt 2>/dev/null || echo "(gate output unavailable)"
+            echo '```'
+            echo
+            echo "### Pending observation checklist (\`regrant --propose\` exit 3 — the bot never writes)"
+            echo '```'
+            cat propose-output.txt 2>/dev/null || echo "(proposal wrote files: exit 0 path)"
+            echo '```'
+            echo
+            echo "### Countersign path (docs/sdlc/README.md §PRs automatizados)"
+            echo
+            echo "1. QA observes on this branch, archives bundles in \`docs/product-readiness/evidence/observations/<id>/\`,"
+            echo "   then re-runs \`aggregate --observations\` + \`regrant --propose\` (exit 0 = write)."
+            echo "2. Countersign QA against \`intent/AID-1357-readiness-regrant-automation/plan.md\`."
+            echo "3. Merge single-writer CEO citing the countersign in the merge message."
+            echo
+            echo "**The bot does NOT merge** (branch protection + single-writer CEO)."
+            echo
+            echo "**B1:** this PR was opened with GITHUB_TOKEN, so it triggers no CI events"
+            echo "(GitHub recursion guard). The Paperclip watchdog closes+reopens it with the"
+            echo "agent credential to fire \`pull_request[reopened]\` and let required checks"
+            echo "report. If no checks report after 45 minutes, the watchdog closes it with a"
+            echo "§recusa reason to free the dedupe label."
+          } > pr-body.md
+      - name: commit the producer snapshot
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          git add docs/product-readiness/evidence/producers
+          if [ "${{ steps.propose.outputs.code }}" = "0" ]; then
+            git add docs/product-readiness/assessments docs/product-readiness/evidence/results.ndjson docs/product-readiness/README.md
+          fi
+          git diff --staged --quiet && { echo "nothing to commit; aborting without PR"; exit 1; }
+          git commit -m "docs(readiness): auto re-grant producer snapshot @ $SHA8 (AID-1357)"
+      - name: push the re-grant branch
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: git push origin "HEAD:regrant/auto-$TODAY-$SHA8"
+      - name: open the re-grant PR
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          version=$(( $(ls docs/product-readiness/assessments | grep -c regrant) + 1 ))
+          gh pr create \
+            --base main \
+            --head "regrant/auto-$TODAY-$SHA8" \
+            --title "docs(readiness): auto re-grant v${version} @ ${SHA8}" \
+            --body-file pr-body.md \
+            --label readiness-regrant \
+            --label bot

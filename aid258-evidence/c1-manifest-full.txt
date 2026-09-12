@@ -1,0 +1,37 @@
+schemaVersion: 1
+os: sha256=4658412b9d3c8a3a…
+literacydojo: sha256=878b051fb0f25ca8…
+  apps/literacydojo/sw.js: sha256=520c1205d666a51b…
+  apps/literacydojo/termos.html: sha256=385d87d6c1233851…
+  apps/literacydojo/privacidade.html: sha256=27fe5a37e1aff970…
+warehouse: sha256=d348c274f57d1be3…
+wormhole: sha256=eef9a3b10c3b676a…
+relay-station: sha256=535ee05728c0c724…
+--- files (27):
+  apps/literacydojo/assets/index-BKwMz48c.css
+  apps/literacydojo/assets/index-C9_PUc3M.js
+  apps/literacydojo/icon-192.png
+  apps/literacydojo/icon-512.png
+  apps/literacydojo/index.html
+  apps/literacydojo/manifest.webmanifest
+  apps/literacydojo/privacidade.html
+  apps/literacydojo/sw.js
+  apps/literacydojo/termos.html
+  apps/relay-station/assets/index-C-tRQD57.js
+  apps/relay-station/assets/relayScene-ClItgmF3.js
+  apps/relay-station/index.html
+  apps/warehouse/assets/index-9pb-sRjd.js
+  apps/warehouse/assets/warehouseScene-Da4zdjpP.js
+  apps/warehouse/index.html
+  apps/wormhole/assets/index-8T4qUWcl.js
+  apps/wormhole/assets/wormholeScene-CIDxsI77.js
+  apps/wormhole/index.html
+  assets/copy-content-BuqfLMsd-D0Y8tH8k.js
+  assets/create-pointer-move-prompt-handoff-C_G_UhQ--D2vs1SMh.js
+  assets/dist-CSugcPru.js
+  assets/dist-v33NAnr7.js
+  assets/index-Bc81vrSn.js
+  assets/index-DRZSEgHv.css
+  assets/renderer-OgmF5gNo-Bc7UFJ5H.js
+  dojo-wallpaper.png
+  index.html

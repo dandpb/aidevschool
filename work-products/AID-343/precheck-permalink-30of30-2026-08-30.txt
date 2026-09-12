@@ -1,0 +1,32 @@
+PASS manifest-sha256 7d0e16d9902e6a1f4b667db8bc8c8525f5cbdd33e3fd5d55e85a38c5fae836fe
+PASS manifest-sourceRevision 6d72735ba2113cb6198c4d7be26c2f01e5f5d694
+PASS manifest-os-bytes 49d7cc8a3fba4b3e
+PASS surface-200 / 200
+PASS surface-200 /apps/literacydojo/ 200
+PASS surface-200 /apps/warehouse/ 200
+PASS surface-200 /apps/wormhole/ 200
+PASS surface-200 /apps/relay-station/ 200
+PASS os-embeds-same-origin-literacy 
+PASS os-no-stale-external-pin 
+PASS os-copy-template-missions 
+PASS os-pins-pixelpixelDojo-immutable VITE_PIXELDOJO_URL must be the immutable deploy, not a dev fallback
+PASS literacy-contentVersion-2026-08-21.1 
+PASS literacy-not-2026-07-25.1 
+PASS reflow-no-body-min-width-320 
+PASS reflow-voxel-world-min-width-0 
+PASS MOTOR l01 MOTOR running iframe=https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l01 iframe same-origin https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR l02 MOTOR running iframe=https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l02 iframe same-origin https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR l04 MOTOR running iframe=https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l04 iframe same-origin https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR l14 MOTOR running iframe=https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l14 iframe same-origin https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR warehouse MOTOR running iframe=https://6a944cf24d75848dee3a5505--aidevschool-codexdojo-os.netlify.app/apps/warehouse/
+PASS reflow-iframe@320 docScrollW=298 innerW=298
+PASS reflow-iframe@298 docScrollW=298 innerW=298
+PASS bridge-session-200-same-origin 200 token=43ch
+PASS bridge-session-403-cross-origin 403 {"error":"origin-forbidden"}
+PASS os-runtime-copy-17-missions "17 missões, uma sequência"
+
+30/30 PASS

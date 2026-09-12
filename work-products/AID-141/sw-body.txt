@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <meta name="theme-color" content="#080d1b" />
+    <meta name="description" content="Protótipo do codexDojo OS — aprenda computação dentro de um desktop Linux." />
+    <title>codexDojo OS</title>
+    <script type="module" crossorigin src="/assets/index-BftoyJQ1.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BHKblCkm.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
