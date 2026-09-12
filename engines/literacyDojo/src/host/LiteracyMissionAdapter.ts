@@ -1,12 +1,15 @@
 import type { EvidenceSink } from "../application/ports";
+import type { AnalyticsActivityType } from "../domain/analytics";
 import type { LiteracyEvidenceRecord } from "../domain/evidence";
 import {
+  type EngineMissionEventName,
   type HostHelloMessage,
   type MissionLaunchMessage,
   createEngineEnvelope,
   decodeHostMessage,
   expectedHostOrigin,
 } from "./protocol";
+import { missionEventPayloadIsValid } from "./validation";
 
 type Correlation = {
   hostSessionId: string;
@@ -81,14 +84,26 @@ export class LiteracyMissionAdapter implements EvidenceSink {
     });
   }
 
+  /**
+   * F2 R2 (`2026-09-10-entry-brief-instrumentation`): o brief da missão
+   * (intro da lição) ficou visível ao aprendiz. O sink literacy v2 segue
+   * noop em missão hospedada — o evento chega ao funil OS somente por aqui
+   * (protocolo host-engine → MissionShell), sem segunda via de emissão.
+   */
+  publishBriefViewed(): void {
+    this.publishEvent("mission.brief_viewed", {});
+  }
+
+  /** F2 R2: atividade do índice atual tornada visível pela 1ª vez na sessão. */
+  publishActivityPresented(activityType: AnalyticsActivityType): void {
+    this.publishEvent("activity.presented", { activityType });
+  }
+
   private publishEvent(
-    name:
-      | "mission.started"
-      | "mission.completed"
-      | "structured_attempt.submitted"
-      | "structured_attempt.passed",
+    name: EngineMissionEventName,
     dimensions: Readonly<Record<string, string | number | boolean>> = {},
   ): void {
+    if (!missionEventPayloadIsValid({ name, dimensions })) return;
     this.eventSequence += 1;
     this.post("mission.event", { sequence: this.eventSequence, name, dimensions });
   }

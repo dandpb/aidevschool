@@ -27,8 +27,13 @@ import {
   LITERACY_BATCH_SCHEMA_VERSION,
   LITERACY_SOURCE,
   OS_BATCH_SCHEMA_VERSION,
+  SURFACE_BATCH_SCHEMA_VERSION,
+  SURFACE_EVENT_PROPS,
+  SURFACE_RESULT_VALUES,
+  SURFACE_SOURCES,
   validateAnalyticsEvent,
   validateLiteracyEvent,
+  validateSurfaceEvent,
 } from "../netlify-functions/dojo-analytics-collector.mjs";
 import {
   collectInputFiles,
@@ -38,7 +43,7 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
-export const MONITOR_VERSION = 2;
+export const MONITOR_VERSION = 4;
 export const DEFAULT_MAX_SAMPLES = 50;
 const PREVIEW_LIMIT = 64;
 const ENVELOPE_KEYS = ["schemaVersion", "eventId", "name", "occurredAt", "sequence", "dimensions"];
@@ -53,21 +58,34 @@ const LITERACY_ACTIVITY_TYPES = [
   "choice", "sort", "missing_context", "safety_classification", "prompt_builder",
   "output_comparison", "rubric_review",
 ];
+const LITERACY_ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"];
+// Espelho 1:1 de EVENT_PROPS/OPTIONAL_PROPS de
+// engines/literacyDojo/src/domain/analytics.ts (inclui o corredor de revisão
+// AID-915 e os eventos de exposição F2 — o self-check contra o validador do
+// coletor falha alto se este espelho atrasar em relação ao coletor).
 const LITERACY_EVENT_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   route_chosen: ["route"],
   lesson_started: ["lessonId", "lessonVersion"],
   activity_attempted: ["lessonId", "activityType", "passed"],
   lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
+  review_started: ["lessonId", "intervalDays", "stage"],
+  review_completed: ["lessonId", "score"],
+  lesson_brief_viewed: ["lessonId", "lessonVersion"],
+  activity_presented: ["lessonId", "activityType", "activityIndex"],
 };
 const LITERACY_OPTIONAL_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["durationSeconds"],
   route_chosen: [],
   lesson_started: [],
   activity_attempted: [],
   lesson_completed: ["durationSeconds"],
+  review_started: [],
+  review_completed: [],
+  lesson_brief_viewed: [],
+  activity_presented: [],
 };
 
 function isRecord(value) {
@@ -233,6 +251,87 @@ export function classifyLiteracyEvent(value) {
   if (value.event === "route_chosen" && props.route !== "guided" && props.route !== "intermediate") {
     return { kind: "event-vocabulary", key: "route", valuePreview: preview(props.route) };
   }
+  // F2 R1/R2: prop opcional `entry` com vocabulário fechado (ausência continua
+  // válida — envelopes pré-v4 nunca rejeitados) e eventos de exposição.
+  if (value.event === "entry_viewed" && "entry" in props && !LITERACY_ENTRY_ROUTES.includes(props.entry)) {
+    return { kind: "event-vocabulary", key: "entry", valuePreview: preview(props.entry) };
+  }
+  if (value.event === "lesson_brief_viewed") {
+    if (typeof props.lessonId !== "string" || props.lessonId.length === 0) {
+      return { kind: "props-value", key: "lessonId", valuePreview: preview(props.lessonId) };
+    }
+    if (typeof props.lessonVersion !== "number" || !Number.isInteger(props.lessonVersion)) {
+      return { kind: "props-value", key: "lessonVersion", valuePreview: preview(props.lessonVersion) };
+    }
+  }
+  if (value.event === "activity_presented") {
+    if (typeof props.lessonId !== "string" || props.lessonId.length === 0) {
+      return { kind: "props-value", key: "lessonId", valuePreview: preview(props.lessonId) };
+    }
+    if (!LITERACY_ACTIVITY_TYPES.includes(props.activityType)) {
+      return { kind: "event-vocabulary", key: "activityType", valuePreview: preview(props.activityType) };
+    }
+    if (typeof props.activityIndex !== "number" || !Number.isInteger(props.activityIndex) || props.activityIndex < 0) {
+      return { kind: "props-value", key: "activityIndex", valuePreview: preview(props.activityIndex) };
+    }
+  }
+  return null;
+}
+
+/**
+ * Classify one received surfaces v3 envelope (AID-987/T1b) against its closed
+ * vocabulary, mirroring the collector's validateSurfaceEvent decision tree.
+ */
+export function classifySurfaceEvent(value) {
+  if (!isRecord(value)) return { kind: "not-an-object" };
+  const envelopeKeys = Object.keys(value);
+  const surfaceEnvelopeKeys = [
+    "schemaVersion", "source", "event", "eventId", "sessionId",
+    "occurredAt", "props",
+  ];
+  if (envelopeKeys.some((key) => !surfaceEnvelopeKeys.includes(key)) || envelopeKeys.length !== surfaceEnvelopeKeys.length) {
+    const diff = firstDifference(value, surfaceEnvelopeKeys);
+    return { kind: "envelope-keys", message: diff.message, key: diff.key };
+  }
+  if (value.schemaVersion !== SURFACE_BATCH_SCHEMA_VERSION) return { kind: "schema-version", valuePreview: preview(value.schemaVersion) };
+  if (typeof value.source !== "string" || !SURFACE_SOURCES.includes(value.source)) {
+    return { kind: "source", valuePreview: preview(value.source) };
+  }
+  const allowedProps = SURFACE_EVENT_PROPS[value.event] ?? null;
+  if (allowedProps === null) return { kind: "event-name", valuePreview: preview(value.event) };
+  if (typeof value.eventId !== "string" || !LITERACY_UUID_PATTERN.test(value.eventId)) {
+    return { kind: "event-id", valuePreview: preview(value.eventId) };
+  }
+  if (typeof value.sessionId !== "string" || !LITERACY_UUID_PATTERN.test(value.sessionId)) {
+    return { kind: "identity-format", key: "sessionId", valuePreview: preview(value.sessionId) };
+  }
+  if (typeof value.occurredAt !== "string" || Number.isNaN(Date.parse(value.occurredAt))) {
+    return { kind: "occurred-at", valuePreview: preview(value.occurredAt) };
+  }
+  const props = value.props;
+  if (!isRecord(props)) return { kind: "props", message: "props is not an object" };
+  for (const key of Object.keys(props)) {
+    if (!allowedProps.includes(key)) {
+      return { kind: "props-keys", key, message: `unexpected prop key "${key}"` };
+    }
+  }
+  for (const [key, entryValue] of Object.entries(props)) {
+    const scalarOk =
+      typeof entryValue === "boolean" ||
+      (typeof entryValue === "number" && Number.isFinite(entryValue)) ||
+      (typeof entryValue === "string" && entryValue.length > 0 && entryValue.length <= 128);
+    if (!scalarOk) return { kind: "props-scalar", key, valuePreview: preview(entryValue) };
+  }
+  if (allowedProps.includes("unitId")) {
+    if (typeof props.unitId !== "string" || !SAFE_IDENTIFIER.test(props.unitId)) {
+      return { kind: "props-value", key: "unitId", valuePreview: preview(props.unitId) };
+    }
+  }
+  if (allowedProps.includes("result")) {
+    if (typeof props.result !== "string" || !SURFACE_RESULT_VALUES.includes(props.result)) {
+      return { kind: "event-vocabulary", key: "result", valuePreview: preview(props.result) };
+    }
+  }
   return null;
 }
 
@@ -264,12 +363,23 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
   let validEvents = 0;
   let validOsEvents = 0;
   let validLiteracyEvents = 0;
+  let validSurfaceEvents = 0;
   let driftCount = 0;
+  // R5 (emenda ADR-0010, diagnóstico sem falha): o eventId do envelope OS é
+  // string 1..128, não necessariamente UUID — sondas legadas usam marcadores
+  // não-UUID (prefixos aid### informais). A convenção nova é o prefixo
+  // `probe.`; a contagem aqui é diagnóstico de adoção, nunca rejeição.
+  let nonUuidOsEventIds = 0;
+  let probePrefixedOsEventIds = 0;
 
   const isLiteracyEnvelope = (value) =>
     isRecord(value) &&
     value.schemaVersion === LITERACY_BATCH_SCHEMA_VERSION &&
     value.source === LITERACY_SOURCE;
+
+  const isSurfaceEnvelope = (value) =>
+    isRecord(value) &&
+    value.schemaVersion === SURFACE_BATCH_SCHEMA_VERSION;
 
   for (const entry of entries) {
     totalLines += 1;
@@ -279,11 +389,18 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
       drift = { kind: entry.parseError === "blank-line" ? "blank-line" : "invalid-json", message: entry.parseError };
     } else {
       const literacy = isLiteracyEnvelope(entry.value);
-      drift = literacy ? classifyLiteracyEvent(entry.value) : classifyEvent(entry.value);
+      const surface = !literacy && isSurfaceEnvelope(entry.value);
+      drift = literacy
+        ? classifyLiteracyEvent(entry.value)
+        : surface
+          ? classifySurfaceEvent(entry.value)
+          : classifyEvent(entry.value);
       // Self-check: the classifier must agree with the collector on every line.
       const validatorVerdict = literacy
         ? validateLiteracyEvent(entry.value)
-        : validateAnalyticsEvent(entry.value);
+        : surface
+          ? validateSurfaceEvent(entry.value)
+          : validateAnalyticsEvent(entry.value);
       if ((drift === null) !== validatorVerdict) {
         drift = { kind: "monitor-bug", message: "classifier disagrees with collector validator" };
       }
@@ -291,7 +408,14 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
     if (drift === null) {
       validEvents += 1;
       if (isLiteracyEnvelope(entry.value)) validLiteracyEvents += 1;
-      else validOsEvents += 1;
+      else if (isSurfaceEnvelope(entry.value)) validSurfaceEvents += 1;
+      else {
+        validOsEvents += 1;
+        if (typeof entry.value.eventId === "string" && !LITERACY_UUID_PATTERN.test(entry.value.eventId)) {
+          nonUuidOsEventIds += 1;
+          if (entry.value.eventId.startsWith("probe.")) probePrefixedOsEventIds += 1;
+        }
+      }
       file.validEvents += 1;
       continue;
     }
@@ -315,9 +439,17 @@ export async function runMonitor({ inputs, now = new Date(), maxSamples = DEFAUL
     validEvents,
     validOsEvents,
     validLiteracyEvents,
+    validSurfaceEvents,
     driftCount,
     driftByKind,
     samples,
+    // Diagnóstico R5 (não afeta exit code): eventId não-UUID do envelope OS e
+    // quantos já adotam o prefixo `probe.` da convenção nova.
+    osEventIdDiagnostics: {
+      nonUuidEventIds: nonUuidOsEventIds,
+      probePrefixedEventIds: probePrefixedOsEventIds,
+      note: "diagnóstico de adoção da convenção probe. (ADR-0010, emenda F2) — nunca rejeição",
+    },
   };
   return { summary, exitCode: driftCount > 0 ? 1 : 0 };
 }

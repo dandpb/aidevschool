@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 
-from .models import DecisionOutcome, ReadinessDomain, ReadinessTier, TierPolicy, UseCase
+from .models import (
+    DecisionOutcome,
+    ReadinessDomain,
+    ReadinessTier,
+    TierPolicy,
+    UseCase,
+    UseCaseId,
+)
 from .paths import markdown_anchor_exists, validate_repo_path
 
 
@@ -65,6 +73,22 @@ def _validate_use_case(domain: ReadinessDomain, use_case: UseCase, repo_root: Pa
     return tuple(errors)
 
 
+def _latest_decision_time(domain: ReadinessDomain) -> dict[UseCaseId, datetime]:
+    """Map each use case to the newest assessment time that decides it.
+
+    A decision recorded strictly before that time is superseded history: the
+    current-claim tier gate only binds the latest decision, so an intended-tier
+    elevation does not invalidate the audit trail that led to it.
+    """
+    latest: dict[UseCaseId, datetime] = {}
+    for assessment in domain.assessments:
+        for decision in assessment.decisions:
+            current = latest.get(decision.use_case_id)
+            if current is None or assessment.verified_at > current:
+                latest[decision.use_case_id] = assessment.verified_at
+    return latest
+
+
 def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]:
     errors: list[str] = []
     use_case_ids = [use_case.id for use_case in domain.use_cases]
@@ -104,6 +128,7 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
             if error is not None:
                 errors.append(error)
     known_run_ids = set(run_ids)
+    latest_decision_time = _latest_decision_time(domain)
     for result in domain.results:
         if result.scenario_id not in scenario_ids:
             errors.append(f"result {result.run_id} references unknown scenario {result.scenario_id}")
@@ -126,10 +151,11 @@ def validate_domain(domain: ReadinessDomain, repo_root: Path) -> tuple[str, ...]
             intended_tier = next(
                 use_case.intended_tier for use_case in domain.use_cases if use_case.id == decision.use_case_id
             )
+            superseded = assessment.verified_at < latest_decision_time[decision.use_case_id]
             if decision.outcome in {DecisionOutcome.PASS, DecisionOutcome.CONDITIONAL_FOLLOW_UP}:
                 if decision.granted_tier is None:
                     errors.append(f"assessment {assessment.assessment_id} grants no tier for {decision.use_case_id}")
-                elif decision.granted_tier is not intended_tier:
+                elif decision.granted_tier is not intended_tier and not superseded:
                     errors.append(f"assessment {assessment.assessment_id} grants the wrong tier for {decision.use_case_id}")
             elif decision.granted_tier is not None:
                 errors.append(f"assessment {assessment.assessment_id} grants a tier for {decision.use_case_id} despite {decision.outcome}")

@@ -1,0 +1,61 @@
+{
+ "walk": [
+  {
+   "scenarioId": "os-onboarding-track-choice",
+   "observed": [
+    "onboarding pergunta 'O que você quer conseguir fazer com IA?' com escolha de trilha explicada e sem conta (progresso no dispositivo): \"AI DevSchoolescolha sua trilhaSeu primeiro passoO que você quer conseguir fazer com IA?Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste disposi\"",
+    "'Entrar na escola' entrega o hub 'Aprenda uma coisa útil agora.' com próxima missão em destaque — o aprendiz consegue explicar o que escolheu e o que vem a seguir"
+   ]
+  },
+  {
+   "scenarioId": "os-returning-device",
+   "observed": [
+    "reload no mesmo dispositivo mantém o hub (sem repetir onboarding) — estado local retomado com fronteira local explícita"
+   ]
+  },
+  {
+   "scenarioId": "os-literacy-hosted-mission",
+   "observed": [
+    "missão hospedada 'IA não é uma fonte de verdade' monta do próprio host (origem http://127.0.0.1:4176); shell reporta estado e next-action: \"← HubIA Prática · 4 minIA não é uma fonte de verdadeDiante de uma resposta convincente sem evidência, reconhecer que ela precisa ser verificada antes de ser usada no trabalho.Estado canônicopresenting0 verificadas · sem \""
+   ]
+  },
+  {
+   "scenarioId": "os-literacy-returning-device",
+   "observed": [
+    "reload retoma a missão de literacy hospedada (iframe de volta, sem repetir onboarding) — continuidade local com fronteira do host explícita"
+   ]
+  },
+  {
+   "scenarioId": "os-voxel-hosted-missions",
+   "observed": [
+    "WAREHOUSE monta do host (origem http://127.0.0.1:4176); status de verificação honesto 'Ainda não enviada' — evidência bruta, não mastery",
+    "WORMHOLE (URL Shortener) também monta do host (origem http://127.0.0.1:4176) — as missões voxels suportadas montam sob o mesmo contrato"
+   ]
+  },
+  {
+   "scenarioId": "os-verification-recovery",
+   "observed": [
+    "resposta errada → 'ainda não atendido' com retry; corrigida → 'Verificador indisponível' SEM 'Evidência rejeitada' (ausência de verificador não vira rejeição); recuperação por 'Voltar ao hub' — facilitador recupera sem intervenção de repositório",
+    "hub pós-recuperação marca verificação 'Temporariamente indisponível' — estado honesto e recuperável"
+   ]
+  },
+  {
+   "scenarioId": "os-voxel-returning-device",
+   "observed": [
+    "reload retoma a missão voxel hospedada no mesmo dispositivo (iframe remonta, hub não repete onboarding)"
+   ]
+  },
+  {
+   "scenarioId": "os-renderer-accessibility-recovery",
+   "observed": [
+    "reduced motion seleciona a projeção semântica operável por teclado ('Acessível') preservando o journey da missão — limiar de escalonamento nomeável pelo facilitador (WebGL indisponível → renderer acessível, não bloqueio)"
+   ]
+  },
+  {
+   "scenarioId": "os-returning-recovery",
+   "observed": [
+    "perfil limpo volta à pergunta de onboarding SEM fabricar conclusão (count=0 para 'missão concluída'/'mastered') — perda de estado local é explicável pelo facilitador sem intervenção"
+   ]
+  }
+ ]
+}

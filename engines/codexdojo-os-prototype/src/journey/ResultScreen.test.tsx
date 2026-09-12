@@ -116,4 +116,51 @@ describe('mission result', () => {
     expect(screen.getByText(/verificador independente aprovou/i)).not.toBeNull()
     expect(screen.queryByText(/domínio canônico/i)).toBeNull()
   })
+
+  // AID-1096/W3 — contrato do loop (docs/design/design-foundations.md §3.4):
+  // papéis canônicos do ResultScreen = feedback-panel (região de verificação,
+  // live region) + retry-activity (recuperação); erro de sistema = role=alert.
+  it('exposes canonical loop role testids: feedback-panel and retry-activity', async () => {
+    render(
+      <ResultScreen
+        completionStatus="saved"
+        verification={{ kind: 'gateway-unavailable', storageId: 'run-1', retryable: true }}
+        canonicalMasteryCount={0}
+        onRetryVerification={vi.fn()}
+        onRetrySave={vi.fn()}
+        onReturn={vi.fn()}
+      />,
+    )
+
+    const panel = screen.getByTestId('feedback-panel')
+    expect(panel.getAttribute('aria-live')).toBe('polite')
+    expect(panel.getAttribute('aria-atomic')).toBe('true')
+    expect(panel.textContent).toMatch(/Resultado da verificação/)
+    const retry = screen.getByTestId('retry-activity')
+    expect(retry.textContent).toBe('Tentar verificação novamente')
+    await userEvent.click(retry)
+    expect(screen.getByTestId('feedback-panel')).not.toBeNull()
+  })
+
+  it('marks the save-failure recovery as a system-error alert with a retry-activity control', async () => {
+    const onRetrySave = vi.fn()
+    render(
+      <ResultScreen
+        completionStatus="failed"
+        verification={{ kind: 'gateway-unavailable', storageId: 'run-1', retryable: true }}
+        canonicalMasteryCount={0}
+        onRetryVerification={vi.fn()}
+        onRetrySave={onRetrySave}
+        onReturn={vi.fn()}
+      />,
+    )
+
+    // erro de sistema nunca é silencioso: role=alert + ação de recuperação (§3.2)
+    const alert = screen.getByTestId('system-error-panel')
+    expect(alert.getAttribute('role')).toBe('alert')
+    const retry = screen.getAllByTestId('retry-activity').map((n) => n.textContent)
+    expect(retry).toContain('Tentar salvar novamente')
+    await userEvent.click(screen.getByRole('button', { name: 'Tentar salvar novamente' }))
+    expect(onRetrySave).toHaveBeenCalledOnce()
+  })
 })

@@ -27,6 +27,23 @@ export async function syntheticFixtureLines() {
   return lines;
 }
 
+/**
+ * F2 `2026-09-10-entry-brief-instrumentation` fixture (synthetic-v4): mixed
+ * envelopes — OS v1 exposure events AND literacy v2 lines. The OS-side
+ * fixture test validates only the schemaVersion 1 lines against events.ts.
+ */
+export async function syntheticV4FixtureLines() {
+  const { fs, path } = await fsExtras();
+  const dir = path.join(import.meta.dirname, "synthetic-v4");
+  const files = (await fs.readdir(dir)).sort();
+  const lines = [];
+  for (const file of files) {
+    const raw = await fs.readFile(path.join(dir, file), "utf8");
+    linesOf(raw).forEach((line, index) => lines.push({ file: path.basename(file), number: index + 1, line }));
+  }
+  return lines;
+}
+
 /** The committed drift-fixture lines (1 valid baseline + 11 drifted). */
 export async function driftFixtureLines() {
   const { fs, path } = await fsExtras();

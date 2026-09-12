@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useServices } from "../app/services";
 import { MentorGuide } from "../components/MentorGuide";
 import { VoxelTaskArt, taskDetails } from "../components/VoxelTaskArt";
@@ -58,6 +58,20 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
   const [taskCategory, setTaskCategory] = useState<OnboardingTaskCategory | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // AID-1150/AID-1134 T1: a mudança de etapa precisa ser anunciada — foco no h1
+  // da nova etapa (padrão do LessonScreen/CheckpointScreen) reposiciona a
+  // referência de leitura no novo conteúdo, e o contador "Etapa N de 5" (span
+  // sr-only do progresso, agora role="status") é anunciado na transição.
+  // Semânticas separadas e sem sobreposição de fala: o foco anuncia a pergunta,
+  // o status anuncia o passo; se o leitor engolir o live region no evento de
+  // foco, degrada para o anúncio da pergunta (nunca fala duas vezes).
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: o efeito deve re-executar a cada mudança de etapa (padrão do LessonScreen), embora não leia os valores.
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, [step]);
+
   const currentStep = STEPS[step];
   const currentValue =
     currentStep.key === "goal"
@@ -112,10 +126,15 @@ export function OnboardingScreen({ onDone }: { onDone: (progress: LearnerProgres
       <div className="onboarding-heading">
         <div>
           <p className="eyebrow">{track.title}</p>
-          <h1 id="onboarding-title">{currentStep.question}</h1>
+          <h1 id="onboarding-title" ref={headingRef} tabIndex={-1}>
+            {currentStep.question}
+          </h1>
         </div>
         <div className="onboarding-progress">
-          <span className="sr-only">{`Etapa ${step + 1} de ${STEPS.length}`}</span>
+          {/* <output> carrega role="status" implícito (aria-live polite):
+              anuncia "Etapa N de 5" na transição; conteúdo inicial não é
+              falado (live regions só falam em mudança pós-carga). */}
+          <output className="sr-only">{`Etapa ${step + 1} de ${STEPS.length}`}</output>
           {STEPS.map((item, index) => (
             <span key={item.key} className={index <= step ? "is-active" : ""} aria-hidden="true" />
           ))}

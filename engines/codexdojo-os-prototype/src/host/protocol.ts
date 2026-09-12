@@ -23,6 +23,8 @@ export type EngineMissionEventName =
   | 'structured_attempt.passed'
   | 'retry.requested'
   | 'review.started'
+  | 'mission.brief_viewed'
+  | 'activity.presented'
 
 export type ProtocolEnvelope<TType extends string, TPayload> = {
   readonly protocol: typeof HOST_ENGINE_PROTOCOL

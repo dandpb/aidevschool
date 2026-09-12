@@ -1,0 +1,15 @@
+ docs/product-readiness/README.md                   |   6 +-
+ .../2026-08-30-72130c6d-os-catalog-v14.md          |  14 +++
+ .../2026-08-30-72130c6d-os-catalog-v14.yaml        |  32 +++++
+ .../2026-08-30-os-catalog-live/observations.json   | 133 +++++++++++++++++++++
+ .../os-literacy-hosted-mission.json                |  25 ++++
+ .../os-literacy-returning-device.json              |  25 ++++
+ .../os-onboarding-track-choice.json                |  25 ++++
+ .../os-renderer-accessibility-recovery.json        |  29 +++++
+ .../os-returning-device.json                       |  25 ++++
+ .../os-returning-recovery.json                     |  25 ++++
+ .../os-verification-recovery.json                  |  25 ++++
+ .../os-voxel-hosted-missions.json                  |  29 +++++
+ .../os-voxel-returning-device.json                 |  25 ++++
+ docs/product-readiness/evidence/results.ndjson     |   9 ++
+ 14 files changed, 424 insertions(+), 3 deletions(-)

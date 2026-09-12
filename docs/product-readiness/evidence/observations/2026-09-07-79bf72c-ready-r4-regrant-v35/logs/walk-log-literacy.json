@@ -1,0 +1,24 @@
+{
+  "surface": "literacyDojo",
+  "startedAt": "2026-09-07T08:37:37.089Z",
+  "steps": [
+    {
+      "step": "retry-feedback",
+      "plainLanguage": true,
+      "noInternalJargon": true
+    },
+    {
+      "step": "resume-reload",
+      "localProgressVisible": true,
+      "noAccountPromise": true,
+      "note": "progress local to this browser profile; corridor flows (cp-03 next action, review-window hops, grandfathered return, mid-module resume) asserted by corridor.spec.ts + vertical-slice.spec.ts green at this head"
+    }
+  ],
+  "finishedAt": "2026-09-07T08:37:41.497Z",
+  "verdict": {
+    "plainFeedback": true,
+    "noJargon": true,
+    "localProgress": true,
+    "noAccount": true
+  }
+}

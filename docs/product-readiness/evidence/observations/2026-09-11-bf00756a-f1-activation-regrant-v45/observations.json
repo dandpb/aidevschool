@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "bf00756aef8f9e3afb003a0880a4d1407a199077",
+  "observedAt": "2026-09-11T22:40:24Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a (AID-1428, QA ca6a3f95; chromium headless sobre vite dev localhost:4190 na branch aid-1425/f1-activation-build; scripts/literacy/obs-lit.spec.ts; logs/walk-log-lit.json). Conclusão da lição l02 exibe resultado que nomeia o próximo passo na linguagem do aprendiz — 'MISSÃO CONCLUÍDA … A vila ganhou uma nova luz', XP e habilidade praticada, e a Home/Mapa seguintes oferecem a próxima missão sem jargão de repositório (ev/qa1428-litobs-05-result-next.png). Bônus F1 (AID-1425 §3.1): intro exibiu 'Primeiro passo: Você vai comparar duas respostas da IA e marcar os motivos — nada de digitar.' (ev/qa1428-litobs-02-intro-first-touch.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: tentativa errada (output_comparison sem critérios) mostra feedback formativo 'Quase lá… Pontuação desta tentativa: 20%' com dica (ev/qa1428-litobs-04-wrong-hint.png) e retry na própria UI com rótulo 'Tentar novamente' — sem vocabulário interno nem punição (logs/walk-log-lit.json retryLabel). O ciclo erro→dica→acerto termina em conclusão local honesta."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: rodapé visível desde o welcome declara a fronteira em linguagem do aprendiz — 'Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.' (ev/qa1428-litobs-01-welcome-footer.png; logs/walk-log-lit.json footerDeviceBoundary). Recarregamentos no walk preservaram o estado sem promessa de sincronização entre dispositivos."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: pós-cp-03 (corredor mod-01..03 completo), a Home mostra progresso honesto e o Mapa nomeia o próximo passo — '11/23 missões' e entrada do módulo seguinte visível ao aprendiz sem conhecimento de repositório (ev/qa1428-litobs-06-postcp03-home.png, ev/qa1428-litobs-07-postcp03-map.png; logs/walk-log-lit2.json postCp03Home/postCp03MapNextModule)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: Home com cp-01 pendente oferece 'Continuar: Desafio do Módulo 1' e a tela de desafio apresenta a missão em linguagem do aprendiz — 'Desafio do Módulo 1: revise o que você aprendeu em IA sem mistério. É rápido — menos de 3 minutos.' + 'Tente com o que você já sabe — se travar, peça uma dica.' — retry sempre na UI, sem linguagem de punição nem vocabulário interno (ev/qa1428-litobs-09-checkpoint.png; logs/walk-log-lit2.json checkpointMissionHeading/checkpointIntro)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: revisão vencida (nextReviewAt antecipado) faz a Home oferecer entrada distinta ('Revisar agora') e a intro da lição rotulada 'Revisão: IA não é uma fonte de verdade … Hora de revisar — Repetir é o que fixa: refaça as atividades desta lição para manter o conteúdo vivo. A revisão não muda seu progresso na trilha' — separando sessão de revisão de conteúdo novo (ev/qa1428-litobs-08-review-distinct.png; logs/walk-log-lit2.json reviewEntryLabel/reviewIntroHeading)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a (AID-1428; chromium headless sobre vite preview 127.0.0.1:4180 do bundle piloto build:pilot na branch do PR #342; scripts/os/obs-os.spec.ts; logs/walk-log-os.json). Onboarding sem conhecimento de repositório apresenta a escolha de trilha em linguagem do aprendiz — 'O que você quer conseguir fazer com IA?' com 'Entrar na escola' (ev/qa1428-osobs-01-onboarding-choice.png); ao entrar, o hub 'Aprenda uma coisa útil agora.' reflete a trilha escolhida sem repetir setup. Bônus F1 (§3.4/§3.5): o mapa exibe exatamente 1 badge textual 'Comece aqui' (strong, DOM 'Comece aqui') e o header destaca 'Trilha ativa: IA Prática — trilho guiado: L01 → L02 → L03' (ev/qa1428-osobs-02-map-start-here.png; logs/walk-log-os.json f1BadgeCount=1/f1BadgeText/f1ActiveChapter)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: missão l30 'Rotinas repetitivas: o que automatizar' monta same-origin no bundle piloto (iframe da própria origem 4180; ev/qa1428-osobs-03-l30-mounted.png). Bônus F1 (§3.1 hospedada): a intro hospedada herda pela mesma tela o bloco first-touch — 'Primeiro passo: Você vai escolher as suas respostas entre opções prontas — só clicar, nada de digitar.' (frase do tipo choice do Anexo A; logs/walk-log-os.json f1HostedFirstTouchText). O hub de retorno nomeia o próximo passo na linguagem do aprendiz — 'SEU PRÓXIMO PASSO ESTÁ PRONTO … PRÓXIMA MISSÃO · 4 MIN — IA não é uma fonte de verdade' (ev/qa1428-osobs-05-returning-hub.png; logs/walk-log-os.json returningHub), com progresso honesto '0 verificadas · sem alteração local'."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: o painel de status da missão hospedada mantém o estado de verificação sempre visível (Etapa/Motor/Evidência) e o resultado WAREHOUSE reporta honestamente a indisponibilidade — 'Verificador indisponível' com fronteira canônica '0 verificadas · sem alteração local' e 'Prática concluída neste dispositivo', sem veredito fabricado (ev/qa1428-osobs-08-warehouse-result.png; logs/walk-log-os.json warehouseVerifierBoundary); recuperação acontece na própria UI (retry-activity na missão hospedada; 'Tentar verificação novamente' no ResultScreen), sem intervenção de repositório."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: reload na missão l30 preserva a página de missão sem re-onboarding (logs/walk-log-os.json returningMissionPreserved=true); navegar à raiz mostra o hub refletindo a trilha sem repetir setup (returningNoOnboarding=true) com linguagem só de mesmo-dispositivo — '0 verificadas · sem alteração local' no painel canônico (ev/qa1428-osobs-05-returning-hub.png), sem promessa de sincronização."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: mesmo contexto recarregado mantém o hub com progresso honesto e a missão WAREHOUSE remonta com estado honesto de evidência — motor 'completed', evidência 'Verificador indisponível', quadro canônico '0 verificadas · sem alteração local' — sem afirmar conclusão canônica nem mastery (ev/qa1428-osobs-07-warehouse-mounted.png, ev/qa1428-osobs-08-warehouse-result.png; logs/walk-log-os.json warehouseRemountedAfterReload=true)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a com storage limpo (localStorage + IndexedDB): o OS volta ao onboarding ('O que você quer conseguir fazer com IA?') SEM exibir conclusão herdada nem claims de competência (logs/walk-log-os.json clearedShowsOnboarding=true / clearedShowsCompletion=false; ev/qa1428-osobs-06-cleared-onboarding.png). Ausência de estado local é o comportamento documentado: recuperação = refazer o onboarding, sem estado fabricado."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: WAREHOUSE monta same-origin no bundle piloto (ev/qa1428-osobs-07-warehouse-mounted.png). Ao concluir a simulação first-hand (prateleiras corretas), o painel separa explicitamente os registros: MOTOR 'completed', EVIDÊNCIA 'Verificador indisponível' (indisponibilidade honesta nesta rede), quadro canônico '0 verificadas · sem alteração local' e 'Prática concluída neste dispositivo' — evidência nunca apresentada como competência canônica (ev/qa1428-osobs-08-warehouse-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a: reabertura da missão WAREHOUSE no mesmo contexto (reload) remonta a simulação com fronteira honesta — evidência e verificação reportadas sem linguagem de mastery ou veredito fabricado, quadro canônico '0 verificadas · sem alteração local' preservado (ev/qa1428-osobs-08-warehouse-result.png; logs/walk-log-os.json warehouseRemountedAfterReload). Continuidade exclusivamente local (indexedDB do próprio dispositivo)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v45 @ bf00756a em contexto reduced-motion: a página da missão WAREHOUSE reporta o modo de visualização ativo com a projeção acessível nomeável — sem WebGL neste ambiente o painel exibe badge 'Acessível' e a projeção acessível do armazém de chaves fica ativa ('Projeção acessível — L1 — Hash → prateleira' no iframe; ev/qa1428-osobs-09-accessible-affordance.png; logs/walk-log-os.json accessibleAffordance). O limiar de escalada é nomeável sem repositório: facilitator-guide.md §'WebGL initialization fails' — selecionar o renderer acessível e repetir a interação central por teclado; escalar quando ambas as projeções falham ou a acessível perde a interação prometida."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+ "name": "main",
+ "commit": {
+  "sha": "9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "node_id": "C_kwDOTFPFxtoAKDlkMzZlMzY5NjI0MThjYjJkNWM1ZjVhMWQ3MmI3YWU0MGIxYmI3ZTc",
+  "commit": {
+   "author": {
+    "name": "Daniel Pinheiro Barreto",
+    "email": "daniel@heropa.com",
+    "date": "2026-08-30T17:07:44Z"
+   },
+   "committer": {
+    "name": "GitHub",
+    "email": "noreply@github.com",
+    "date": "2026-08-30T17:07:44Z"
+   },
+   "message": "Merge pull request #190 from dandpb/aid-396/substrate-projection-resync\n\nfix(substrate): re-sync drifted projections; pin whiteboard stamps to projection clock (AID-396)",
+   "tree": {
+    "sha": "564037c5b96cfe7c4c4b0d1c5ea412de631293f3",
+    "url": "https://api.github.com/repos/dandpb/aidevschool/git/trees/564037c5b96cfe7c4c4b0d1c5ea412de631293f3"
+   },
+   "url": "https://api.github.com/repos/dandpb/aidevschool/git/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+   "comment_count": 0,
+   "verification": {
+    "verified": true,
+    "reason": "valid",
+    "signature": "-----BEGIN PGP SIGNATURE-----\n\nwsFcBAABCAAQBQJqlGNgCRC1aQ7uu5UhlAAAWcAQAHvmFfP3kiAqjctAh6tgUYqG\nj41SeAmtDo9mj2364p3X27jusJVWgXIFfHBQaLyZs+RAi9vNhXb+8PLR7HX7XKPB\nyw8AgaCb4UKnjjI+F3iYpmWInatbAIL24+wvk6g1O99UjyNkFLpFc/6Ca4tHum/4\nb6yIixTjaR751XtxtLVqAQZcDGbXoaStkD4Qww9YcLRuHtB7D3Ma6vIvgoBTSJLd\n8hhoePUIVH7jd7hHBDfXnW6H62ilER2BWeZvks3f+0PtzOKaLX/dcG+dR2YegglV\nbVdzMbSfG2PWMqFnmWpTFrjmGZgkrpjLE815zKe89qjdQacvclSouDnBKp3W7jzZ\nPbqSgSOnMh0uXfimGoxkk6ULmTK1a/20gwLqHh3LD9jIdktgu1fY0VH4dUNX/3u1\nJ5FFhVr4TR9st6usPjC/FYnBVb0rpTTwgsAlTUSUABe1VAwH2xv9BqtNqMfvTcst\nx5RHvuZXdo6R3FSWmsfdYs4w8XkaymtKRk/m2Uzga1ftEzTBBZOx4lDA4fK6xyku\nDwLksw+V7s5JRj19wz1brjha4uch9HD52d98EcifkOC1jNHZhnPt9WtgNL0Co5wF\n+q9pFlxAAaKmDES9Pd9zPnwAzHtXMXZzo0qHKDDPMdq0udS9tuED4s8S5euC7mi4\nqM02oK+lrmFtYNkqpm3R\n=r7H8\n-----END PGP SIGNATURE-----\n",
+    "payload": "tree 564037c5b96cfe7c4c4b0d1c5ea412de631293f3\nparent 6d72735ba2113cb6198c4d7be26c2f01e5f5d694\nparent 940ca29410455cf08a4304d5b839ac8b2ac66093\nauthor Daniel Pinheiro Barreto <daniel@heropa.com> 1788109664 -0300\ncommitter GitHub <noreply@github.com> 1788109664 -0300\n\nMerge pull request #190 from dandpb/aid-396/substrate-projection-resync\n\nfix(substrate): re-sync drifted projections; pin whiteboard stamps to projection clock (AID-396)",
+    "verified_at": "2026-08-30T17:07:44Z"
+   }
+  },
+  "url": "https://api.github.com/repos/dandpb/aidevschool/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "html_url": "https://github.com/dandpb/aidevschool/commit/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7",
+  "comments_url": "https://api.github.com/repos/dandpb/aidevschool/commits/9d36e36962418cb2d5c5f5a1d72b7ae40b1bb7e7/comments",
+  "author": {
+   "login": "dandpb",
+   "id": 2193703,
+   "node_id": "MDQ6VXNlcjIxOTM3MDM=",
+   "avatar_url": "https://avatars.githubusercontent.com/u/2193703?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/dandpb",
+   "html_url": "https://github.com/dandpb",
+   "followers_url": "https://api.github.com/users/dandpb/followers",
+   "following_url": "https://api.github.com/users/dandpb/following{/other_user}",
+   "gists_url": "https://api.github.com/users/dandpb/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/dandpb/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/dandpb/subscriptions",
+   "organizations_url": "https://api.github.com/users/dandpb/orgs",
+   "repos_url": "https://api.github.com/users/dandpb/repos",
+   "events_url": "https://api.github.com/users/dandpb/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/dandpb/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "committer": {
+   "login": "web-flow",
+   "id": 19864447,
+   "node_id": "MDQ6VXNlcjE5ODY0NDQ3",
+   "avatar_url": "https://avatars.githubusercontent.com/u/19864447?v=4",
+   "gravatar_id": "",
+   "url": "https://api.github.com/users/web-flow",
+   "html_url": "https://github.com/web-flow",
+   "followers_url": "https://api.github.com/users/web-flow/followers",
+   "following_url": "https://api.github.com/users/web-flow/following{/other_user}",
+   "gists_url": "https://api.github.com/users/web-flow/gists{/gist_id}",
+   "starred_url": "https://api.github.com/users/web-flow/starred{/owner}{/repo}",
+   "subscriptions_url": "https://api.github.com/users/web-flow/subscriptions",
+   "organizations_url": "https://api.github.com/users/web-flow/orgs",
+   "repos_url": "https://api.github.com/users/web-flow/repos",
+   "events_url": "https://api.github.com/users/web-flow/events{/privacy}",
+   "received_events_url": "https://api.github.com/users/web-flow/received_events",
+   "type": "User",
+   "user_view_type": "public",
+   "site_admin": false
+  },
+  "parents": [
+   {
+    "sha": "6d72735ba2113cb6198c4d7be26c2f01e5f5d694",
+    "url": "https://api.github.com/repos/dandpb/aidevschool/commits/6d72735ba2113cb6198c4d7be26c2f01e5f5d694",
+    "html_url": "https://github.com/dandpb/aidevschool/commit/6d72735ba2113cb6198c4d7be26c2f01e5f5d694"
+   },
+   {
+    "sha": "940ca29410455cf08a4304d5b839ac8b2ac66093",
+    "url": "https://api.github.com/repos/dandpb/aidevschool/commits/940ca29410455cf08a4304d5b839ac8b2ac66093",
+    "html_url": "https://github.com/dandpb/aidevschool/commit/940ca29410455cf08a4304d5b839ac8b2ac66093"
+   }
+  ]
+ },
+ "_links": {
+  "self": "https://api.github.com/repos/dandpb/aidevschool/branches/main",
+  "html": "https://github.com/dandpb/aidevschool/tree/main"
+ },
+ "protected": true,
+ "protection": {
+  "enabled": true,
+  "required_status_checks": {
+   "enforcement_level": "everyone",
+   "contexts": [
+    "literacyDojo (TS + content)",
+    "codexdojo-os (TS)",
+    "Python (learner + curriculum shared)",
+    "product readiness (claims)"
+   ],
+   "checks": [
+    {
+     "context": "literacyDojo (TS + content)",
+     "app_id": 15368
+    },
+    {
+     "context": "codexdojo-os (TS)",
+     "app_id": 15368
+    },
+    {
+     "context": "Python (learner + curriculum shared)",
+     "app_id": 15368
+    },
+    {
+     "context": "product readiness (claims)",
+     "app_id": 15368
+    }
+   ]
+  }
+ },
+ "protection_url": "https://api.github.com/repos/dandpb/aidevschool/branches/main/protection"
+}

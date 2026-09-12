@@ -2,10 +2,39 @@
 # Uso: conecte este diretório (engines/dojoToday) como base do site no Netlify,
 # ou rode `netlify deploy --prod` a partir daqui com o CLI autenticado.
 # O build regenera o read model a partir do substrato (FSRS/streak/gate).
+#
+# AID-987/T1 — D2-A (deploy estático mínimo) + T1b (telemetria anônima):
+# o coletor canônico (learner/gate/netlify-functions) é deployado same-origin
+# (precedente literacyDojo), a rota redireciona ANTES de qualquer fallback, e a
+# ativação do funil é exclusivamente o [build.environment] abaixo. O secret de
+# EXPORT (ANALYTICS_EXPORT_TOKEN) é configurado só no provedor, nunca no repo.
+# VITE_DOJOTODAY_DEMO_NOTICE acende o banner honesto de projeção de demonstração.
 
 [build]
   command = "python3 -m pip install pyyaml fsrs && npm run build"
   publish = "dist"
+  functions = "../../learner/gate/netlify-functions"
 
 [build.environment]
   NODE_VERSION = "22"
+  VITE_ANALYTICS_ENDPOINT = "/__dojo/bridge/v1/analytics"
+  VITE_DOJOTODAY_DEMO_NOTICE = "1"
+
+[[redirects]]
+  # Same-origin analytics collector (ativação AID-913 / envelope surfaces v3
+  # AID-987/T1b): recebe os batches anônimos do dojoToday.
+  from = "/__dojo/bridge/v1/analytics"
+  to = "/.netlify/functions/dojo-analytics-collector"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin"
+    X-Content-Type-Options = "nosniff"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

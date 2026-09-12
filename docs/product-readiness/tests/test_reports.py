@@ -82,8 +82,8 @@ def test_emit_engine_reports_covers_programmer_browser_producers(tmp_path: Path)
     # Then each producer reports only scenarios with an exercised browser assertion
     pixel_ids = {json.loads(path.read_text())["scenarioId"] for path in pixel_output.glob("*.json")}
     voxel_ids = {json.loads(path.read_text())["scenarioId"] for path in voxel_output.glob("*.json")}
-    assert pixel_ids == {"pixelquest-encounter-evidence"}
-    assert voxel_ids == {"voxel-standalone-loop"}
+    assert pixel_ids == {"pixelquest-encounter-evidence", "pixelquest-returning-evidence-handoff"}
+    assert voxel_ids == {"voxel-standalone-loop", "voxel-standalone-return-reentry"}
     assert not (pixel_output / "stale.json").exists()
 
 

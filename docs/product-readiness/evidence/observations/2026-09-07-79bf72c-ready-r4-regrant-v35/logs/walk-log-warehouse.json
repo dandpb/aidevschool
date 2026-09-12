@@ -1,0 +1,31 @@
+{
+  "surface": "voxelDojo/game-02-warehouse",
+  "startedAt": "2026-09-07T08:36:27.940Z",
+  "steps": [
+    {
+      "step": "session1-L1",
+      "records": 1,
+      "pass": true,
+      "unit": "U2-key-value-store",
+      "evidenceCopyPresent": true,
+      "note": "one passing game does not validate sibling games or grant mastery — raw record only; catalog-wide scope covered by catalog smoke (16/16 this head)"
+    },
+    {
+      "step": "reentry",
+      "briefingRestarted": true,
+      "evidenceChannelAfterReload": 0
+    },
+    {
+      "step": "replay",
+      "freshRecords": 1,
+      "pass": true,
+      "attempt": "kv-warehouse-L1-attempt-1"
+    }
+  ],
+  "finishedAt": "2026-09-07T08:36:31.183Z",
+  "verdict": {
+    "session1Records": 1,
+    "replayRecords": 1,
+    "channelEmptyAfterReload": true
+  }
+}

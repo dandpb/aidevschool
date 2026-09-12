@@ -10,6 +10,11 @@
   --panel-soft: #121d31;
   --line: rgba(255, 255, 255, 0.1);
   --muted: #8f9bb0;
+  /* AID-1023/W0 (auditoria AID-914 §1.1-4): --text era fantasma em engine-hub.css:60.
+     Declarado no namespace escuro do OS com a cor base de texto do app (:root color),
+     preservando a cor efetiva herdada. O par claro é --school-ink (usar este valor em
+     superfície escura criaria defeito AA novo). */
+  --text: #eef3ff;
   --coral: #ff755d;
   --violet: #9b82ff;
   --blue: #4d8fff;
@@ -26,6 +31,11 @@
   --school-sun: #ffbf47;
   --school-coral: #ff7d66;
   --school-focus: #d56800;
+  /* AID-1089/W2 (state contract, proposta AID-914 §2.2/§2.3 doc proposal rev 1):
+     alias semântica mínima exigida pelo state contract — mapeia o valor local,
+     zero mudança visual. A alias completa de 18 tokens permanece deferral (W1
+     da proposta §2.5 nunca pousou; ver receipt AID-1089). */
+  --ads-focus: var(--school-focus);
 }
 
 * { box-sizing: border-box; }
@@ -48,7 +58,7 @@ button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-
 
 .journey-page :focus-visible,
 .journey-loading :focus-visible {
-  outline: 3px solid var(--school-focus);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 3px;
 }
 

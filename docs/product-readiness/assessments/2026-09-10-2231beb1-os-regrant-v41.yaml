@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-10-2231beb1-os-regrant-v41
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-10T04:30:00Z'
+revalidateBy: '2026-10-08'
+gitSha: 2231beb14dcd1298bb55b948a788bfbabc8ef9b5
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T04:21:21Z-os-literacy-hosted-mission-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-verification-recovery-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-literacy-returning-device-mixed-2231beb1
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T04:21:21Z-os-voxel-hosted-missions-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-voxel-returning-device-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-renderer-accessibility-recovery-mixed-2231beb1
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-10T04:21:21Z-os-onboarding-track-choice-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-returning-device-mixed-2231beb1
+  - 2026-09-10T04:21:21Z-os-returning-recovery-mixed-2231beb1

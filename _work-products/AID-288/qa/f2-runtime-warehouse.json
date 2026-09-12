@@ -1,0 +1,11 @@
+{
+  "hudStatus": "Missão concluída; evidência emitida.",
+  "windowEvidenceCount": 1,
+  "attemptIds": [
+    {
+      "scenario_id": "kv-warehouse-L1",
+      "attempt_id": "kv-warehouse-L1-attempt-1",
+      "pass": true
+    }
+  ]
+}

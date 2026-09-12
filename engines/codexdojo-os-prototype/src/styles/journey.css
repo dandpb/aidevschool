@@ -476,7 +476,8 @@
 .mentor-field textarea { min-height: 72px; }
 .mentor-attempt-fields { display: grid; gap: 2px; }
 .mentor-submit { width: 100%; margin-top: 12px; border: 0; background: var(--journey-primary); color: #fff; }
-.mentor-submit:disabled { opacity: 0.65; cursor: wait; }
+/* AID-1089/W2 §2.3-5: aparência própria no :disabled (antes era só opacity). */
+.mentor-submit:disabled { background: var(--journey-line); color: var(--journey-muted); cursor: not-allowed; }
 .mentor-response {
   min-height: 96px;
   margin-top: 12px;
@@ -537,8 +538,58 @@
 
 .journey-page :focus-visible,
 .journey-loading :focus-visible {
-  outline: 3px solid var(--school-focus);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 3px;
+}
+
+/* AID-1089/W2 — state contract (proposta AID-914 §2.3, doc proposal rev 1) nos
+   controles do loop de lição/missão: rest, :hover:not(:disabled),
+   :active:not(:disabled), :focus-visible via --ads-focus (acima), :disabled com
+   aparência própria + cursor:not-allowed, e loading (disable + aria-busy). */
+.journey-page .journey-back:hover:not(:disabled),
+.mission-map-node button:hover:not(:disabled),
+.verification-note button:hover:not(:disabled),
+.renderer-recovery button:hover:not(:disabled),
+.renderer-choice button:hover:not(:disabled),
+.result-verification button:hover:not(:disabled),
+.mentor-mode button:hover:not(:disabled),
+.mentor-reopen:hover:not(:disabled) {
+  background: var(--journey-primary-soft);
+  border-color: var(--journey-primary);
+}
+
+.journey-page .journey-back:active:not(:disabled),
+.mission-map-node button:active:not(:disabled),
+.verification-note button:active:not(:disabled),
+.renderer-recovery button:active:not(:disabled),
+.renderer-choice button:active:not(:disabled),
+.result-verification button:active:not(:disabled),
+.mentor-mode button:active:not(:disabled),
+.mentor-reopen:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.journey-primary:hover:not(:disabled) {
+  filter: brightness(1.04);
+}
+
+.journey-primary:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 3px 0 var(--journey-primary-dark);
+}
+
+/* §2.3-5: :disabled com aparência própria (não apenas opacity) + cursor. */
+.journey-page .journey-back:disabled,
+.journey-primary:disabled {
+  background: var(--journey-line);
+  color: var(--journey-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* §2.3-6: controle em loading assíncrono (disable + aria-busy). */
+.journey-page [aria-busy="true"] {
+  cursor: progress;
 }
 
 @media (max-width: 820px) {
@@ -605,4 +656,21 @@
 .support-cta a {
   color: var(--journey-primary-dark);
   font-weight: 850;
+}
+
+/* W3 forced-colors wave 1 (AID-1096 / AID-914 §3-B7, docs/design/design-foundations.md §4):
+   bordas e outline dos controles/containers do loop de missão sobrevivem a system
+   colors; distinção sem cor por largura/estilo de borda (geometria + system colors,
+   sem forced-color-adjust: none). */
+@media (forced-colors: active) {
+  .result-verification {
+    /* sem borda no esquema normal (fundo suave) — sob system colors ganha contorno */
+    border: 2px solid CanvasText;
+  }
+  .journey-primary,
+  .result-verification button,
+  .mentor-submit,
+  .journey-back {
+    border: 2px solid ButtonText;
+  }
 }

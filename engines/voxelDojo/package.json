@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run shared/accessibleProjection.test.ts && pnpm -r --if-present test",
+    "test": "vitest run shared/accessibleProjection.test.ts shared/funnelTelemetry.test.ts && pnpm -r --if-present test",
     "typecheck": "pnpm -r --if-present typecheck",
     "lint": "biome check .",
     "dev:catalog": "node scripts/serve-catalog.mjs",

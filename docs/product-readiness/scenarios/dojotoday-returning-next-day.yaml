@@ -1,0 +1,20 @@
+schemaVersion: 1
+id: dojotoday-returning-next-day
+useCaseId: dojotoday-daily-guidance
+kind: continuity
+execution: mixed
+startState: returning-device-next-day
+steps: [reopen-daily-view, verify-updated-due-review-queue, verify-streak-reconciled, verify-active-unit-consistent, follow-next-action]
+assertions:
+  - id: schedule-updates-across-days
+    severity: high
+    evidence: playwright
+    claim: Reopening the view on the next generated projection day reflects the new due-review queue, reconciled streak, and consistent active unit without carrying stale day-N state.
+  - id: learner-understands-no-eval-carryover
+    severity: high
+    evidence: observation
+    claim: The learner understands that returning does not evaluate work or mark anything mastered; the view only shows the regenerated scheduler projection.
+automation:
+  workingDirectory: engines/dojoToday
+  argv: [npm, run, test:readiness]
+sourcePaths: [engines/dojoToday/playwright/continuity.spec.ts, engines/dojoToday/playwright/fixtures/, engines/dojoToday/src/]

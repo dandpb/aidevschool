@@ -15,6 +15,12 @@
 // sink keeps behavior inspectable. A token-guarded GET exports the raw NDJSON
 // for the F2b funnel aggregation (k≥5 immutable, ADR-463 §3.0).
 //
+// AID-987/T1b: also accepts the anonymous "surfaces" envelope v3
+// {schemaVersion:3, source:"dojotoday"|"voxeldojo"|"pixelquest", events:[…]}
+// (dojoToday / voxelDojo / PixelQuest funnel events; canonical emission in
+// engines/shared/teaching-evidence/funnelTelemetry.ts) through this same
+// route, guards, durability, and export.
+//
 // AID-947 durability fix: the deployed default export now actually selects
 // that durable backing (it previously always built the /tmp NDJSON sink),
 // and the Blobs client reaches the deployed bundle through the static-import
@@ -55,6 +61,9 @@ export const ANALYTICS_EVENT_NAMES = [
   "mission.started", "mission.completed", "structured_attempt.submitted",
   "structured_attempt.passed", "hint.requested", "retry.requested",
   "review.started", "verification.state_changed", "renderer.degraded",
+  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
+  // de exposição de missões hospedadas (vocabulário aditivo retro-compat).
+  "mission.brief_viewed", "activity.presented",
 ];
 
 const ACTIVITY_TYPES = [
@@ -91,6 +100,8 @@ export const EVENT_VOCABULARIES = {
     ],
     fallback: ["canvas2d", "dom", "none"],
   },
+  "mission.brief_viewed": {},
+  "activity.presented": { activityType: ACTIVITY_TYPES },
 };
 
 export const CONTEXT_KEYS = [
@@ -213,7 +224,13 @@ export const LITERACY_EVENT_NAMES = [
   // Corredor literacy (spec AID-915 §4.3, emenda ADR-0009): revisão espaçada.
   "review_started",
   "review_completed",
+  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
+  // de exposição (brief renderizado; atividade visível pela 1ª vez).
+  "lesson_brief_viewed",
+  "activity_presented",
 ];
+
+export const LITERACY_ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"];
 
 export const LITERACY_ACTIVITY_TYPES = ACTIVITY_TYPES;
 
@@ -226,7 +243,7 @@ const LITERACY_PROP_KEY_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 // Props permitidas por evento — conjunto EXATO; paridade 1:1 com
 // EVENT_PROPS/OPTIONAL_PROPS de engines/literacyDojo/src/domain/analytics.ts.
 const LITERACY_EVENT_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   route_chosen: ["route"],
   lesson_started: ["lessonId", "lessonVersion"],
@@ -234,9 +251,11 @@ const LITERACY_EVENT_PROPS = {
   lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
   review_started: ["lessonId", "intervalDays", "stage"],
   review_completed: ["lessonId", "score"],
+  lesson_brief_viewed: ["lessonId", "lessonVersion"],
+  activity_presented: ["lessonId", "activityType", "activityIndex"],
 };
 const LITERACY_OPTIONAL_PROPS = {
-  entry_viewed: [],
+  entry_viewed: ["entry"],
   mapa_inicial_done: ["durationSeconds"],
   route_chosen: [],
   lesson_started: [],
@@ -244,6 +263,8 @@ const LITERACY_OPTIONAL_PROPS = {
   lesson_completed: ["durationSeconds"],
   review_started: [],
   review_completed: [],
+  lesson_brief_viewed: [],
+  activity_presented: [],
 };
 
 function literacyPropsAreValid(eventName, props) {
@@ -287,6 +308,22 @@ function literacyEventPropsAreValid(event) {
       );
     case "route_chosen":
       return props.route === "guided" || props.route === "intermediate";
+    // F2 R1: prop opcional `entry` com vocabulário fechado; ausência
+    // (envelopes pré-v4) continua válida — aditivo retro-compat.
+    case "entry_viewed":
+      return !("entry" in props) || LITERACY_ENTRY_ROUTES.includes(props.entry);
+    case "lesson_brief_viewed":
+      return (
+        typeof props.lessonId === "string" && props.lessonId.length > 0 &&
+        typeof props.lessonVersion === "number" && Number.isInteger(props.lessonVersion)
+      );
+    case "activity_presented":
+      return (
+        typeof props.lessonId === "string" && props.lessonId.length > 0 &&
+        LITERACY_ACTIVITY_TYPES.includes(props.activityType) &&
+        typeof props.activityIndex === "number" && Number.isInteger(props.activityIndex) &&
+        props.activityIndex >= 0
+      );
     default:
       return true;
   }
@@ -315,6 +352,87 @@ export function isLiteracyBatch(value) {
   if (!hasOnlyKeys(value, ["schemaVersion", "source", "events"])) return false;
   if (value.schemaVersion !== LITERACY_BATCH_SCHEMA_VERSION) return false;
   if (value.source !== LITERACY_SOURCE) return false;
+  if (!Array.isArray(value.events)) return false;
+  if (value.events.length === 0 || value.events.length > ANALYTICS_BATCH_MAX_EVENTS) return false;
+  return true;
+}
+
+// --- surfaces envelope validation (AID-987/T1b: dojoToday, voxelDojo, PixelQuest) ---
+//
+// Canonical emission vocabularies live in
+// engines/shared/teaching-evidence/funnelTelemetry.ts; this function is the
+// receiving trust boundary and CI locks parity
+// (learner/gate/tests/dojo_analytics_collector_v3.test.mjs). Same privacy
+// contract as the other envelopes: closed vocabularies, bounded scalars, no
+// free text, no learner identity — sessionId is a per-page-load random UUID.
+
+export const SURFACE_BATCH_SCHEMA_VERSION = 3;
+export const SURFACE_SOURCES = ["dojotoday", "voxeldojo", "pixelquest"];
+
+export const SURFACE_EVENT_NAMES = [
+  "daily-view-open",
+  "voxel-loop-complete",
+  "pixelquest-encounter-complete",
+  "evidence-handoff",
+];
+
+export const SURFACE_EVENT_PROPS = {
+  "daily-view-open": [],
+  "voxel-loop-complete": ["unitId", "result"],
+  "pixelquest-encounter-complete": ["unitId", "result"],
+  "evidence-handoff": ["unitId"],
+};
+
+export const SURFACE_RESULT_VALUES = ["completed", "failed"];
+
+const SURFACE_EVENT_NAMES_SET = new Set(SURFACE_EVENT_NAMES);
+const SURFACE_SOURCES_SET = new Set(SURFACE_SOURCES);
+const SURFACE_UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SURFACE_MAX_PROP_STRING = 128;
+const SURFACE_UNIT_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$/;
+
+function surfaceEventIsValidSource(value) {
+  return typeof value === "string" && SURFACE_SOURCES_SET.has(value);
+}
+
+export function validateSurfaceEvent(value) {
+  if (!isRecord(value)) return false;
+  if (!hasOnlyKeys(value, [
+    "schemaVersion", "source", "event", "eventId", "sessionId",
+    "occurredAt", "props",
+  ])) return false;
+  if (value.schemaVersion !== SURFACE_BATCH_SCHEMA_VERSION) return false;
+  if (!surfaceEventIsValidSource(value.source)) return false;
+  if (typeof value.event !== "string" || !SURFACE_EVENT_NAMES_SET.has(value.event)) return false;
+  if (typeof value.eventId !== "string" || !SURFACE_UUID_PATTERN.test(value.eventId)) return false;
+  if (typeof value.sessionId !== "string" || !SURFACE_UUID_PATTERN.test(value.sessionId)) return false;
+  if (typeof value.occurredAt !== "string" || Number.isNaN(Date.parse(value.occurredAt))) return false;
+  const props = value.props;
+  if (!isRecord(props)) return false;
+  const allowed = SURFACE_EVENT_PROPS[value.event];
+  if (!Object.keys(props).every((key) => allowed.includes(key))) return false;
+  for (const entryValue of Object.values(props)) {
+    if (typeof entryValue === "boolean") continue;
+    if (typeof entryValue === "number" && Number.isFinite(entryValue)) continue;
+    if (typeof entryValue === "string" && entryValue.length > 0 && entryValue.length <= SURFACE_MAX_PROP_STRING) {
+      continue;
+    }
+    return false;
+  }
+  if (allowed.includes("unitId")) {
+    if (typeof props.unitId !== "string" || !SURFACE_UNIT_ID_PATTERN.test(props.unitId)) return false;
+  }
+  if (allowed.includes("result")) {
+    if (typeof props.result !== "string" || !SURFACE_RESULT_VALUES.includes(props.result)) return false;
+  }
+  return true;
+}
+
+export function isSurfaceBatch(value) {
+  if (!isRecord(value)) return false;
+  if (!hasOnlyKeys(value, ["schemaVersion", "source", "events"])) return false;
+  if (value.schemaVersion !== SURFACE_BATCH_SCHEMA_VERSION) return false;
+  if (!surfaceEventIsValidSource(value.source)) return false;
   if (!Array.isArray(value.events)) return false;
   if (value.events.length === 0 || value.events.length > ANALYTICS_BATCH_MAX_EVENTS) return false;
   return true;
@@ -414,10 +532,12 @@ export class BlobsEventStore {
     if (events.length === 0) return;
     const day = dayKey(now);
     for (const event of events) {
-      const source = event.name !== undefined ? "os" : LITERACY_SOURCE;
+      // AID-987/T1b: surfaces v3 events carry their own source; OS v1 has
+      // `name`, literacy v2 is the remaining fallback.
+      const source = event.source ?? (event.name !== undefined ? "os" : LITERACY_SOURCE);
       const eventId = typeof event.eventId === "string" ? event.eventId : null;
       if (eventId === null) continue;
-      // Day-first key so a single prefix lists both envelopes per day.
+      // Day-first key so a single prefix lists all envelopes per day.
       await this.store.setJSON(`${day}/${source}/${eventId}`, event);
     }
   }
@@ -559,6 +679,8 @@ export function createCollectorHandler({
       accepted = input.events.filter(validateAnalyticsEvent);
     } else if (isLiteracyBatch(input)) {
       accepted = input.events.filter(validateLiteracyEvent);
+    } else if (isSurfaceBatch(input)) {
+      accepted = input.events.filter(validateSurfaceEvent);
     } else {
       return json({ error: "unsupported-schema" }, 422);
     }

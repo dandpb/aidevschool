@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { completeLiteracyMission } from './support/literacyMission'
 
 type WarehouseHook = {
   readonly game: {
@@ -70,13 +71,9 @@ test('records the IA Pratica activation funnel without learner content', async (
   await page.getByRole('button', { name: 'Entrar na escola' }).click()
   await page.getByRole('button', { name: 'Começar missão' }).click()
 
-  const mission = page.frameLocator('iframe[title="Missão IA não é uma fonte de verdade"]')
-  await mission.getByRole('button', { name: 'Começar missão', exact: true }).click()
-  await mission.getByTestId('output-out-b').check()
-  await mission.getByTestId('criterion-c-fontes').check()
-  await mission.getByTestId('criterion-c-limites').check()
-  await mission.getByTestId('submit-attempt').click()
-  await mission.getByTestId('finish-lesson').click()
+  // AID-1153 (retrofit f70205de): the funnel needs mission.completed, which
+  // only fires after the full three-activity l02 walkthrough.
+  await completeLiteracyMission(page, 'l02', { returnToHub: false })
   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible()
   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
 

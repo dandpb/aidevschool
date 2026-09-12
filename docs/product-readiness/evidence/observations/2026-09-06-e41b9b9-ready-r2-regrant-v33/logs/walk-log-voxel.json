@@ -1,0 +1,33 @@
+{
+  "base": "http://localhost:5292",
+  "startedAt": "2026-09-06T22:30:02.937Z",
+  "steps": {
+    "w1StandaloneLoop": {
+      "gameNamed": false,
+      "conceptNamed": true,
+      "deterministicLoop": true,
+      "noMasteryClaim": true,
+      "evidenceMentioned": false
+    },
+    "w1Evidence": {
+      "record": {
+        "source": "voxeldojo",
+        "unit_id": "U2-key-value-store",
+        "project": "02_key_value_store",
+        "scenario_id": "kv-warehouse-L1",
+        "game": "KV WAREHOUSE",
+        "pass": true
+      },
+      "evidenceIsRawOutput": true,
+      "rawEvidenceLocatable": true
+    },
+    "w2AccessibleRenderer": {
+      "accessibleProjectionShown": true,
+      "projectionIsKeyboardOperable": false,
+      "honestExitAvailable": true,
+      "noFalseCompletion": true
+    }
+  },
+  "ok": true,
+  "finishedAt": "2026-09-06T22:30:04.139Z"
+}

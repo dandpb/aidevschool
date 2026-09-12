@@ -1,7 +1,7 @@
-# Lição l12 — piloto da vertical slice (seção 17 do plano).
+# Lição l12 — piloto da vertical slice (seção 17 do plano); retrofit O3-C2 (AID-1220, padrão AID-644/648): +l12-a2/+l12-a3, v2→v3.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l12
-version: 2
+version: 3
 moduleId: mod-04
 title: "Proteja suas informações"
 objective: "Classificar informações do dia a dia de trabalho como seguras ou sensíveis antes de colá-las em uma IA."
@@ -61,6 +61,79 @@ activities:
       - "Conteúdo que já é público (site, vaga anunciada) não precisa de proteção; o que é interno ou pessoal, precisa."
       - "Senha, cartão, planilha com CPF e ata com valores de contrato são sensíveis; os demais itens são seguros."
 
+  - id: l12-a2
+    type: safety_classification
+    skillId: proteger
+    instruction: "Agora casos menos óbvios do dia a dia: para cada informação, decida se pode ir para a IA ou se fica de fora."
+    data:
+      labels:
+        safe: "Seguro para compartilhar"
+        sensitive: "Sensível — não compartilhar"
+      items:
+        - id: i-relato
+          text: "O relato 'um cliente espera há 12 dias um reembolso' — sem nome, sem valor, sem protocolo"
+        - id: i-pergunta
+          text: "A pergunta 'como escrever um pedido de desculpas por um atraso?'"
+        - id: i-print
+          text: "Um print da conversa mostrando foto, nome e @ do cliente"
+        - id: i-protocolo
+          text: "O número de protocolo do atendimento junto com o nome do cliente"
+        - id: i-assinatura
+          text: "O trecho do e-mail do cliente com a assinatura dele — nome e cargo"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-relato: safe
+        i-pergunta: safe
+        i-print: sensitive
+        i-protocolo: sensitive
+        i-assinatura: sensitive
+    feedback:
+      onFailure: "A regra continua a mesma, agora em casos-limite: se o trecho identifica uma pessoa (print com foto e @, protocolo com nome, assinatura), fica de fora. Se o problema está descrito sem identificá-lo, pode ir — é isso que torna a ajuda da IA possível sem expor ninguém."
+      perCheck:
+        i-relato: "Seguro: o problema chega sem identificadores — nenhum nome, valor ou protocolo. A IA ajuda no caso sem saber de quem ele é."
+        i-pergunta: "Seguro: é uma dúvida de escrita, sem qualquer dado do cliente ou da empresa."
+        i-print: "Sensível: foto, nome e @ identificam a pessoa — a imagem precisa ser tratada antes de qualquer envio."
+        i-protocolo: "Sensível: protocolo mais nome localiza a pessoa no sistema da empresa — junto, identificam."
+        i-assinatura: "Sensível: nome e cargo na assinatura identificam o cliente — corte a assinatura antes de usar o e-mail."
+      onSuccess: "Muito bem: descrever o problema sem identificar a pessoa abre caminho para usar a IA — e é exatamente essa a prática recomendada."
+    storage:
+      policy: structured_only
+    hints:
+      - "A pergunta de sempre: este trecho permite identificar alguém? Se sim, fica de fora."
+      - "Dois itens descrevem situações sem identificá-las — esses podem ir."
+
+  - id: l12-a3
+    type: choice
+    skillId: proteger
+    instruction: "O colega precisa da IA para responder um cliente, mas o material que ele tem — o e-mail completo do cliente, com dados pessoais — é o único disponível. O que você aconselha?"
+    data:
+      options:
+        - id: opt-reduz-e-anonimiza
+          text: "Reduzir e anonimizar antes de colar: trocar o nome por 'o cliente', cortar o que identifica e enviar só o trecho necessário para a dúvida"
+        - id: opt-cola-tudo
+          text: "Colar o e-mail inteiro: sem o caso completo, a IA não ajuda direito"
+        - id: opt-desiste
+          text: "Desistir da IA: assunto que envolve cliente não pode passar por IA nunca"
+        - id: opt-ignorar-depois
+          text: "Colar tudo e pedir para a IA 'ignorar' os dados pessoais depois"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-reduz-e-anonimiza]
+    feedback:
+      onFailure: "Entre colar tudo e desistir da IA existe o caminho do meio: reduzir e anonimizar. O que identifica sai antes de colar — não depois, com um pedido de 'ignore'. E a maioria das dúvidas não precisa do e-mail inteiro."
+      perCheck:
+        opt-reduz-e-anonimiza: "Isso: menos dados, nenhum identificador, só o trecho da dúvida — a IA ajuda e ninguém é exposto."
+        opt-cola-tudo: "O caso completo quase nunca é necessário: a dúvida cabe no trecho — e o resto é exposição sem ganho."
+        opt-desiste: "Não é proibição: com redução e anonimização, assunto de cliente pode passar pela IA com segurança."
+        opt-ignorar-depois: "Instrução não desfaz exposição: uma vez colado, o dado saiu — 'ignorar depois' não protege ninguém."
+      onSuccess: "Exato: reduzir, anonimizar, colar o essencial. Proteção e ajuda da IA caminham juntas."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que a IA realmente precisa para ajudar na dúvida — o e-mail todo ou o parágrafo do problema?"
+      - "Uma das opções assume que dá para 'desfazer' o envio depois. Dá?"
+
 rubric:
   id: l12-rubric
   criteria:
@@ -84,4 +157,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l12-a1]
+  requiredActivityIds: [l12-a1, l12-a2, l12-a3]

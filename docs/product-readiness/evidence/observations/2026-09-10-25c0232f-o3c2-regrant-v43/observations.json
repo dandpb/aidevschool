@@ -1,0 +1,125 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "25c0232f8c41098950623c1a862d6df289609451",
+ "observedAt": "2026-09-10T15:42:03Z",
+ "scenarios": [
+  {
+   "scenarioId": "literacy-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-name-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "FPE observation walk v43 @ 25c0232f (AID-1295; chromium headless sobre a superficie vite do literacyDojo na main 25c0232f pos-O3-C2, perfil novo; spec scripts/literacy/obs-lit.spec.ts; screenshot ev/qa1295-litobs-03-result-next.png). Apos concluir a licao de entrada, o ResultScreen nomeia a proxima acao na linguagem do aprendiz: 'Sua proxima aplicacao: organizar um agendamento' + 'Seu proximo passo' com a rota guiada explicita e o CTA 'Ver mapa da Vila Lume'. Corroboracao LIVE na producao promovida ainda pendente para a onda O3-C2 (pin cb128865): nao reivindicada neste re-grant."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-resume",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-device-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: rodape visivel em toda tela declara a fronteira em linguagem do aprendiz — 'Seu progresso fica somente neste navegador e pode ser perdido ao limpar os dados do site.' (ev/qa1295-litobs-01-welcome-footer.png; spec assertion footerText). Recarregamentos no walk preservaram o estado sem promessa de sincronizacao entre dispositivos."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: tentativa errada (output_comparison) mostra feedback formativo nomeando os criterios faltantes ('Faltou este motivo: ...') + dica (ev/qa1295-litobs-02-wrong-hint.png) e controle de retry na propria UI com rotulo 'Tentar novamente', sem vocabulario interno (spec captura retryLabel)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-happy-path",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-names-next-action-after-cp-03",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: pos-cp-03 (11/23 licoes, conteudo 2026-09-10.2 pos-O3-C2), a home nomeia o proximo passo honesto — 'Voce concluiu todas as licoes deste piloto. Novas licoes estao a caminho — enquanto isso, revise o que ja praticou no mapa da trilha.' com CTAs 'Explorar Vila Lume'/'Ver seu progresso' (ev/qa1295-litobs-04-postcp03-home.png); o mapa mostra bairros 1-3 completos com 'Refazer' e o proximo bairro disponivel (ev/qa1295-litobs-05-postcp03-map.png)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-gate-retry",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-retry-without-internal-language",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: home com desafio pendente exibe CTA sem linguagem punitiva — 'Continuar: Desafio do Modulo 1 · 3 atividades rapidas ... Complete para entrar no proximo bairro.' (LOG checkpointCta; spec assertion checkpointCta). Estacao de retry do desafio exercida na walk automatizada corridor.spec.ts (gate-retry) neste mesmo head."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "literacy-corridor-review-window",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-distinguishes-review-from-new-content",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: entrada distinta 'Revisar agora' na home; intro da revisao rotulada 'Revisao: IA nao e uma fonte de verdade' com copia propria — 'Hora de revisar ... A revisao nao muda seu progresso na trilha.' + 'Comecar revisao'/'Sair da revisao' (ev/qa1295-litobs-06-review-distinct.png; spec assertions reviewEntryLabel/reviewIntroHeading)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-hosted-mission",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-can-state-result-and-next-action",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: missao l30 'Rotinas repetitivas: o que automatizar' monta same-origin no bundle piloto local (iframe 'Missao ...' da propria origem; ev/qa1295-osobs-01-l30-mounted.png). Loop completo de 3 atividades exercido first-hand no preview local (erro opt-d → feedback formativo → dica → retry → acertos a1/a2/a3): resultado nomeia o que foi bem e o que fixa, com 'Vamos lembrar voce de revisar esta licao nos proximos dias' e saida ao hub visivel (ev/qa1295-osobs-03-hosted-result.png). LIVE na producao promovida ainda pendente para a onda O3-C2 (pin cb128865): nao reivindicado neste re-grant."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-verification-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "facilitator-can-recover-without-repository-intervention",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: tentativa errada na missao hospedada reporta feedback formativo nomeando os criterios ('Vira rotina assistida o que junta tres coisas: REPETITIVA, ESTRUTURADA e BAIXO RISCO ...') com retry na propria UI (retry-activity) — sem intervencao de repositorio (ev/qa1295-osobs-02-wrong-hint.png). Estado de verificacao visivel no painel da missao apos conclusao (ev/qa1295-osobs-04-returning-mission.png) sem fabricar conclusao; recuperacao documentada em facilitator-guide.md secao 'Recover and escalate' (retry/reabertura seguros; escalonamento nomeado)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "os-literacy-returning-device",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-understands-literacy-continuity-boundary",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "Walk v43 @ 25c0232f: reload na missao l30 preserva a pagina de missao sem re-onboarding (ev/qa1295-osobs-04-returning-mission.png); navegar a raiz mostra o hub refletindo a trilha ('Capitulo IA Pratica · XP local 25 · Proxima missao') sem repetir setup (ev/qa1295-osobs-05-returning-hub.png). Linguagem somente de mesmo-dispositivo: hub exibe '0 competencias verificadas' + 'Conclusao nao e dominio' — sem promessa de sincronizacao (spec assertions canonicalBoundary)."
+    }
+   ],
+   "gaps": []
+  }
+ ]
+}

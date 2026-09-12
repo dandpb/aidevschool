@@ -235,28 +235,36 @@ export function findAdjacentWalkable(
   target: Cell,
   prefer: ReadonlyArray<Cell> = [],
 ): Cell | null {
-  const candidates: Cell[] = []
+  let bestCell: Cell | null = null
+  let bestScore = Infinity
+
   for (const [dx, dy] of ROAD_NEIGHBOR_OFFSETS) {
     const nx = target.x + dx
     const ny = target.y + dy
     if (!grid.inBounds(nx, ny)) continue
     const cell = grid.cellAt(nx, ny)
     if (!cell) continue
-    candidates.push({ x: nx, y: ny })
+
+    // Optimization: Avoid intermediate array allocation and sort() for best candidate
+    // Reduces GC pressure in simulation hot loops.
+    let score = -1
+    for (let i = 0; i < prefer.length; i++) {
+      const p = prefer[i]
+      if (p && p.x === nx && p.y === ny) {
+        score = i
+        break
+      }
+    }
+    const finalScore = score === -1 ? Infinity : score
+
+    // Strict inequality ensures deterministic tie-breaking (first valid candidate wins)
+    if (bestCell === null || finalScore < bestScore) {
+      bestScore = finalScore
+      bestCell = { x: nx, y: ny }
+    }
   }
-  if (candidates.length === 0) return null
-  // Sort by prefer-list membership, then by Manhattan distance to the
-  // first preferred cell (so the result is deterministic but prefers
-  // cells closer to existing roads).
-  candidates.sort((a, b) => {
-    const ai = prefer.findIndex((p) => p.x === a.x && p.y === a.y)
-    const bi = prefer.findIndex((p) => p.x === b.x && p.y === b.y)
-    if (ai === -1 && bi === -1) return 0
-    if (ai === -1) return 1
-    if (bi === -1) return -1
-    return ai - bi
-  })
-  return candidates[0] ?? null
+
+  return bestCell
 }
 
 /** Manhattan distance between two cells. Used by spawners for proximity checks. */

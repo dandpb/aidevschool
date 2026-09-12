@@ -96,7 +96,9 @@ function payloadIsValid(type: unknown, payload: unknown): boolean {
           payload.name === 'structured_attempt.submitted' ||
           payload.name === 'structured_attempt.passed' ||
           payload.name === 'retry.requested' ||
-          payload.name === 'review.started') &&
+          payload.name === 'review.started' ||
+          payload.name === 'mission.brief_viewed' ||
+          payload.name === 'activity.presented') &&
         (payload.dimensions === undefined ||
           (isRecord(payload.dimensions) &&
             Object.keys(payload.dimensions).length <= 8 &&

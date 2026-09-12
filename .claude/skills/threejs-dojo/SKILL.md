@@ -90,10 +90,10 @@ flakes, evidence-schema misses, retried steps).
    - Input: PLAN slice + chosen shape
    - **Shape A** — write, in this order:
      1. `engines/pixelDojo/pixel-quest/src/game/encounters/<concept>.ts` (typed encounter module)
-     2. factory registration in `src/game/encounters/registry.ts`
-     3. `EncounterType` variant in `src/content/types.ts` if the schema changes
-     4. validator update in `src/content/packValidator.ts` if a new field type is introduced
-     5. pack entry in `src/content/curriculumPack.ts`
+     2. factory registration in `engines/pixelDojo/pixel-quest/src/game/encounters/registry.ts`
+     3. `EncounterType` variant in `engines/pixelDojo/pixel-quest/src/content/types.ts` if the schema changes
+     4. validator update in `engines/pixelDojo/pixel-quest/src/content/packValidator.ts` if a new field type is introduced
+     5. pack entry in `engines/pixelDojo/pixel-quest/src/content/curriculumPack.ts`
    - **Shape B** — create `engines/pixelDojo/games/<NN>_<slug>/` mirroring pixel-quest: `package.json`
      (pnpm scripts: `dev`, `lint`, `test`, `build`, `smoke`), `tsconfig.json` (strict), `biome.jsonc`,
      `vitest.config.ts`, `playwright.config.ts`, `index.html`, `src/main.ts`, `src/render/`,

@@ -1,0 +1,153 @@
+# Lição l31 — Onda W1 l30–l32 (spec AID-1219; briefs AID-528 rev 1 §5 ressuscitados
+# via AID-1214 §3.1): pequenas automações — onde o humano valida.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l31
+version: 1
+moduleId: mod-08
+title: "Pequenas automações: onde o humano valida"
+objective: "Classificar saídas de automação entre uso direto e checagem obrigatória, nomear o que falta em um pedido de automação (gatilho, limite de escala) e sequenciar a adoção segura."
+estimatedMinutes: 4
+skillIds: [avaliar, proteger]
+prerequisites: [l12]
+
+activities:
+  - id: l31-a1
+    type: safety_classification
+    skillId: proteger
+    instruction: "SUA ROTINA ASSISTIDA JÁ ESTÁ RODANDO. PARA CADA SAÍDA ABAIXO, DECIDA: PODE SER USADA DIRETO OU EXIGE CHECAGEM OBRIGATÓRIA ANTES DE USAR?"
+    data:
+      labels:
+        safe: "Uso direto — pode ir sem conferir"
+        sensitive: "Checagem obrigatória antes de usar"
+      items:
+        - id: i-rascunho-divulgacao
+          text: "O rascunho do post de divulgação do evento aberto do mês, montado pela rotina a partir da agenda já pública"
+        - id: i-lembrete-semanal
+          text: "O lembrete interno de segunda-feira com a lista de compromissos públicos da equipe, sem dados de clientes"
+        - id: i-numero-diretoria
+          text: "O número consolidado do mês que a rotina monta para a apresentação da diretoria"
+        - id: i-nome-cliente
+          text: "O nome do cliente citado no e-mail de acompanhamento que a rotina prepara"
+        - id: i-valor-contrato
+          text: "O valor do contrato citado no resumo que a rotina gera para a reunião comercial"
+        - id: i-historico-gasto
+          text: "O quanto aquele cliente gastou este ano, citado no e-mail de aniversário que a rotina envia"
+    evaluation:
+      strategy: deterministic
+      classification:
+        i-rascunho-divulgacao: safe
+        i-lembrete-semanal: safe
+        i-numero-diretoria: sensitive
+        i-nome-cliente: sensitive
+        i-valor-contrato: sensitive
+        i-historico-gasto: sensitive
+    feedback:
+      onFailure: "A regra da lição 12 continua valendo dentro da rotina: número que sustenta decisão, nome de cliente em comunicação, valor de contrato e histórico de gasto são checagem obrigatória — não porque a IA erra sempre, mas porque o erro desses viaja sozinho. Rascunho de divulgação pública e lembrete sem dados sensíveis podem ir direto: o pior caso é um ajuste rápido."
+      perCheck:
+        i-rascunho-divulgacao: "Uso direto: nasce de fonte pública e é um rascunho seu — se sair estranho, você ajusta antes de publicar, sem dano."
+        i-lembrete-semanal: "Uso direto: informação interna sem dado pessoal nem de cliente; o pior caso é um compromisso fora de ordem."
+        i-numero-diretoria: "Checagem obrigatória: número que sustenta decisão da diretoria — número errado automático vira decisão errada (a lição de números e fatos vale em dobro na rotina)."
+        i-nome-cliente: "Checagem obrigatória: nome de cliente em comunicação que sai automaticamente — um nome trocado é um relacionamento exposto."
+        i-valor-contrato: "Checagem obrigatória: valor de contrato em material de reunião — erro de valor em contexto comercial custa caro."
+        i-historico-gasto: "Checagem obrigatória: quanto o cliente gastou é dado sensível dele, citado automaticamente em um e-mail — exposição sem revisão."
+      onSuccess: "Exato! A classificação de sensibilidade da l12 não desaparece quando a tarefa vira rotina — ela é exatamente o mapa do onde o humano valida."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada saída, pergunte: se isso sair errado e ninguém conferir, quem percebe — e a que custo?"
+      - "O que sustenta decisão, cita cliente, ou mostra valor e histórico de gasto não viaja sem checagem."
+      - "Rascunho de fonte pública e lembrete interno sem dados são uso direto; número para diretoria, nome, valor e histórico são checagem."
+
+  - id: l31-a2
+    type: missing_context
+    skillId: avaliar
+    instruction: "UM COLEGA PEDIU À IA: 'TODA SEMANA, MONTE O RESUMO DE VENDAS E ME MANDE'. O QUE FALTA NO PEDIDO DELE PARA A ROTINA SER CONTROLÁVEL?"
+    data:
+      prompt: "COLEGA (pedido): 'toda semana, monte o resumo de vendas e me mande' · O QUE ACONTECEU: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
+      contextOptions:
+        - id: gatilho-definido
+          text: "O gatilho: o que dispara a rotina e quando (sexta ao completar a planilha? segunda cedo?) — 'toda semana' não diz qual sexta, nem com qual dado"
+        - id: limite-de-escala
+          text: "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que SEMPRE volta para um humano decidir"
+        - id: formato-do-resumo
+          text: "O formato do resumo (tópicos, tamanho, indicadores), para a saída vir sempre igual e o estranho saltar aos olhos"
+        - id: nome-do-modelo-de-ia
+          text: "O nome do modelo de IA que vai executar a rotina"
+        - id: uma-ia-mais-recente
+          text: "Usar uma IA mais recente, que sabe sozinha quando a planilha está incompleta"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [gatilho-definido, limite-de-escala]
+      optionalContextIds: [formato-do-resumo]
+    feedback:
+      onFailure: "Um pedido de automação tem duas âncoras que um pedido comum não tem: o GATILHO (quando roda e com qual dado — por isso ele pegou a planilha parcial) e o LIMITE (até onde vai sozinha e o que sempre volta para você). Nome de modelo e 'IA mais recente' são desvio: nenhum modelo adivinha sexta atrasada."
+      perCheck:
+        gatilho-definido: "Faltou isto: o gatilho — 'toda semana' não diz qual dia, nem espera a planilha estar completa. Foi assim que o resumo saiu com dado parcial."
+        limite-de-escala: "Faltou isto: o limite — 'me mande' não diz se a rotina rascunha ou envia, nem para quem. Sem limite, a rotina decide sozinha o que é decisão sua."
+        formato-do-resumo: "Isto é opcional: fixar o formato ajuda o erro a saltar aos olhos — mas a rotina não fica incontrolável sem isso."
+        nome-do-modelo-de-ia: "Isto é mito: o nome do modelo não define quando a rotina dispara nem até onde vai — gatilho e limite são combinado seu, não do modelo."
+        uma-ia-mais-recente: "Isto é mito: IA mais recente não adivinha planilha incompleta — quem precisa saber da sexta atrasada é o gatilho, não o modelo."
+      onSuccess: "Exato! Gatilho (quando e com qual dado) e limite (até onde sozinha, o que volta para você) — os dois combinados que fazem uma automação pequena ser controlável."
+    storage:
+      policy: structured_only
+    hints:
+      - "Por que o resumo saiu com a planilha parcial? O que o pedido nunca especificou?"
+      - "Um pedido de automação precisa dizer quando roda e até onde vai sozinho."
+      - "Procure as duas âncoras: gatilho (dia e dado) e limite (o que sempre volta para um humano)."
+
+  - id: l31-a3
+    type: sort
+    skillId: avaliar
+    instruction: "ORDENE A ADOÇÃO SEGURA DA SUA PRIMEIRA AUTOMAÇÃO — DO PRIMEIRO PASSO À AMPLIAÇÃO."
+    data:
+      items:
+        - id: s1-piloto
+          text: "Escolher UMA tarefa pequena e de baixo risco para o piloto — por exemplo, o rascunho do relatório semanal"
+        - id: s2-revisao-total
+          text: "Rodar o piloto com revisão manual de TUDO o que sai, por algumas semanas, conferindo as saídas críticas"
+        - id: s3-ajustar
+          text: "Ajustar gatilho, limite e pedido com o que o piloto ensinou (inclusive os erros)"
+        - id: s4-ampliar
+          text: "Ampliar gradualmente para outras tarefas — mantendo checagem obrigatória onde o erro custa caro"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [s1-piloto, s2-revisao-total, s3-ajustar, s4-ampliar]
+    feedback:
+      onFailure: "A adoção segura cresce em círculos: piloto pequeno de baixo risco, revisão manual de tudo enquanto você ainda não conhece os erros, ajuste do combinado (gatilho, limite, pedido) — e só então ampliar, levando as checagens para onde o erro custa caro. Ampliar antes de revisar é apostar; ajustar antes do piloto é ajustar no escuro."
+      perCheck:
+        s1-piloto: "O piloto vem primeiro: tarefa pequena e de baixo risco — erro barato enquanto você aprende o comportamento da rotina."
+        s2-revisao-total: "A revisão total vem junto do piloto: com poucas saídas, dá para conferir tudo e conhecer os pontos fracos."
+        s3-ajustar: "O ajuste vem depois de conhecer os erros do piloto: gatilho, limite e pedido ganham o que a prática ensinou."
+        s4-ampliar: "A ampliação vem por último: mais tarefas, com a checagem concentrada onde o erro custa caro — não revisão total para sempre."
+      onSuccess: "Exato! Círculos concêntricos: piloto pequeno → revisão de tudo → ajuste do combinado → ampliação com checagem nos pontos críticos."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte: o que você precisa conhecer ANTES de deixar a rotina crescer?"
+      - "Revisar tudo só é viável quando a rotina é pequena — por isso o piloto vem antes da ampliação."
+      - "A ordem é: piloto de baixo risco, revisão total, ajuste do combinado, ampliação gradual."
+
+rubric:
+  id: l31-rubric
+  criteria:
+    - id: r-classifica-a-saida
+      text: "Classifica cada saída de automação entre uso direto e checagem obrigatória, estendendo a regra de sensibilidade para dentro da rotina."
+      weight: 1
+    - id: r-nomea-o-que-falta
+      text: "Nomeia o que falta em um pedido de automação: gatilho (quando e com qual dado) e limite de escala (o que sempre volta ao humano)."
+      weight: 1
+    - id: r-sequencia-a-adocao
+      text: "Ordena a adoção segura: piloto pequeno, revisão manual de tudo, ajuste e ampliação gradual com checagem nos pontos críticos."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l31-a1, l31-a2, l31-a3]

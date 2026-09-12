@@ -1,0 +1,143 @@
+# Lição l32 — Onda W1 l30–l32 (spec AID-1219; briefs AID-528 rev 1 §5 ressuscitados
+# via AID-1214 §3.1): quando a automação erra.
+# Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
+id: l32
+version: 1
+moduleId: mod-08
+title: "Quando a automação erra"
+objective: "Detectar que uma rotina automatizada degradou (saída coerente com a semana anterior mas errada para esta), aplicar a correção mínima no pedido (só o dado que mudou) e repor o contexto perdido."
+estimatedMinutes: 3
+skillIds: [avaliar]
+prerequisites: [l19]
+
+activities:
+  - id: l32-a1
+    type: choice
+    skillId: avaliar
+    instruction: "TODA SEGUNDA, A ROTINA ENTREGA O RESUMO SEMANAL DE VENDAS PARA A REUNIÃO. NESTA SEMANA A PLANILHA MUDOU: A COLUNA 'VENDAS DO PERÍODO' VIROU 'VENDAS LÍQUIDAS' E ENTROU UMA LINHA DE ESTORNO. O RESUMO CHEGOU COM O MESMO FORMATO DE SEMPRE E NÚMEROS 'NA MÉDIA' DAS OUTRAS SEMANAS. QUAL É O SINAL DE QUE A ROTINA DEGRADOU?"
+    data:
+      options:
+        - id: opt-a
+          text: "A saída veio impecável no formato e 'na média' das semanas — mas o dado desta semana mudou (coluna nova, estorno); o resumo respondeu ao que a rotina esperava, não ao que chegou."
+        - id: opt-b
+          text: "A rotina demorou alguns minutos a mais para rodar na segunda de manhã."
+        - id: opt-c
+          text: "O formato do resumo mudou um pouco em relação às outras semanas."
+        - id: opt-d
+          text: "A rotina avisou, em vermelho, que não encontrou o arquivo da planilha."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-a]
+    feedback:
+      onFailure: "Degradação de rotina é o erro SILENCIOSO: a saída continua bonita, no formato de sempre, e por isso mesmo ninguém desconfia — mas ela foi montada com o dado velho ou incompleto. Lentidão (b) não muda conteúdo; mudança de formato (c) é sinal de outra coisa (o pedido foi editado); aviso de erro (d) é falha barulhenta, que se anuncia sozinha: o perigoso é o erro que não avisa."
+      perCheck:
+        opt-a: "Este é o sinal: coerência com a semana ANTERIOR + desconexão com o dado DESTA semana. A coluna mudou, o estorno entrou — e o resumo saiu como se nada tivesse acontecido."
+        opt-b: "Lentidão muda o tempo, não o conteúdo — o resumo lento ainda estaria errado pela mesma razão."
+        opt-c: "Mudança de formato seria estranho em outra direção (alguém mexeu no pedido); aqui o formato veio EXATAMENTE igual — o problema estava no dado."
+        opt-d: "Erro anunciado é o caso fácil: a rotina para e avisa. A degradação é o caso difícil: ela NÃO avisa — entrega bonito e errado."
+      onSuccess: "Exato! O sinal é a combinação: saída coerente com as semanas anteriores + dado desta semana que mudou. Rotina degradada erra em silêncio — quem conhece o dado é você."
+    storage:
+      policy: structured_only
+    hints:
+      - "Compare a saída com duas coisas: com as semanas anteriores e com o dado desta semana. Com qual delas ela combina?"
+      - "O aviso vermelho seria um erro óbvio — o que torna ESTE erro perigoso é justamente o que ele não faz."
+      - "A saída parece certa porque repete o padrão antigo — mas a planilha desta semana não é mais a antiga."
+
+  - id: l32-a2
+    type: output_comparison
+    skillId: avaliar
+    instruction: "VOCÊ DETECTOU A DEGRADAÇÃO. COMPARE AS DUAS CORREÇÕES E ESCOLHA A MELHOR."
+    data:
+      scenario: "A rotina do resumo semanal de vendas degradou depois que a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas', entrou linha de estorno). Você vai corrigir o pedido da rotina."
+      outputs:
+        - id: out-a
+          text: "Correção no ponto: 'A planilha mudou: a coluna de vendas do período agora se chama vendas líquidas, e entrou uma linha de estorno que precisa ser descontada. Use a coluna nova e considere o estorno. O resto segue como combinado: resumo para a reunião, em tópicos, com os três indicadores de sempre.'"
+        - id: out-b
+          text: "Recomeço total: apagar a rotina e o pedido-padrão, escrever um pedido inteiro do zero e montar um modelo novo de resumo — só depois de algumas semanas testar de novo."
+      criteria:
+        - id: c-so-o-que-mudou
+          text: "A correção aponta exatamente o que mudou no dado desta semana (coluna nova, estorno)"
+        - id: c-mantem-o-combinado
+          text: "Preserva a regra que continuava valendo (formato, indicadores, público da reunião)"
+        - id: c-sem-retrabalho-cego
+          text: "Não joga fora o que funcionava sem saber o que exatamente deu errado"
+    evaluation:
+      strategy: deterministic
+      betterOutputId: out-a
+      requiredCriterionIds: [c-so-o-que-mudou, c-mantem-o-combinado]
+    feedback:
+      onFailure: "A correção A é mínima como na lição de conversas longas: nomeia SÓ o que mudou (coluna, estorno) e reafirma o combinado que segue valendo (tópicos, três indicadores, reunião). A B é retrabalho no escuro: apagar tudo sem diagnosticar joga fora o aprendizado de semanas e ainda esconde a causa real — o próximo pedido novo nasce com o mesmo buraco."
+      perCheck:
+        betterOutputId: "A correção A conserta a causa com o menor gesto possível; a B troca a casa porque uma porta emperrou."
+        c-so-o-que-mudou: "Faltou este critério: a correção precisa dizer o que exatamente mudou no dado — coluna nova e estorno — senão a IA corrige no escuro."
+        c-mantem-o-combinado: "Faltou este critério: reafirmar a regra que continua valendo (formato, indicadores, público) — senão a correção desmonta o que funcionava."
+        c-sem-retrabalho-cego: "Critério bônus da correção A: recomeço total sem diagnóstico joga fora o que funcionava e não garante que o erro não volte."
+      onSuccess: "Exato! Correção mínima: o que mudou + a regra que segue valendo. É o mesmo gesto da conversa longa degradada — agora aplicado à rotina."
+    storage:
+      policy: structured_only
+    hints:
+      - "O que exatamente quebrou: o pedido inteiro, ou a parte que lê o dado?"
+      - "Uma correção boa diz o que mudou E o que continua valendo — só uma das duas não basta."
+      - "A correção mínima nomeia a coluna nova e o estorno, e mantém tópicos, indicadores e público como estavam."
+
+  - id: l32-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "O PEDIDO DE CORREÇÃO FOI SÓ 'ATUALIZA O RESUMO, POR FAVOR'. O QUE FALTA NESSA CORREÇÃO?"
+    data:
+      prompt: "ROTINA (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O QUE ACONTECEU: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · SEU PEDIDO DE CORREÇÃO: 'atualiza o resumo, por favor'."
+      contextOptions:
+        - id: o-que-mudou
+          text: "O que mudou no dado: a coluna nova e a linha de estorno — sem isso, 'atualizar' não diz o que a IA precisa ler de diferente"
+        - id: regra-que-continua-valendo
+          text: "A regra que continua valendo: tópicos, os três indicadores, 1 página, público da reunião — para a correção não desmontar o combinado"
+        - id: onde-a-mudanca-aparece
+          text: "Onde a mudança está na planilha (aba, linha da coluna), para a IA localizar sozinha o ponto novo"
+        - id: nome-do-modelo-de-ia
+          text: "O nome do modelo de IA que executa a rotina"
+        - id: recomecar-tudo
+          text: "Apagar a rotina inteira e recomeçar do zero, já que ela falhou uma vez"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [o-que-mudou, regra-que-continua-valendo]
+      optionalContextIds: [onde-a-mudanca-aparece]
+    feedback:
+      onFailure: "'Atualiza' não corrige rotina degradada: a IA não sabe o que mudou no seu dado — quem viu a planilha nova foi você. A correção que repõe o contexto diz O QUE MUDOU (coluna, estorno) e A REGRA QUE SEGUE VALENDO (tópicos, indicadores, 1 página). Nome de modelo é desvio; apagar tudo é pânico — uma falha não aposenta um combinado que funcionou por semanas."
+      perCheck:
+        o-que-mudou: "Faltou isto: dizer o que mudou no dado (coluna nova, estorno). Sem isso, a 'atualização' continua lendo a planilha velha que existe só na memória da rotina."
+        regra-que-continua-valendo: "Faltou isto: reafirmar o que segue valendo (tópicos, três indicadores, 1 página) — correção sem regra vira licença para a IA improvisar a forma."
+        onde-a-mudanca-aparece: "Isto é opcional: apontar aba e linha ajuda a IA a localizar a mudança, mas o pedido já corrige sem isso."
+        nome-do-modelo-de-ia: "Isto é mito: o nome do modelo não informa a mudança da planilha — o contexto perdido é seu, não do modelo."
+        recomecar-tudo: "Isto é pânico, não correção: apagar a rotina joga fora o combinado que funcionava e não conserta a causa (o dado que mudou)."
+      onSuccess: "Exato! Correção de rotina repõe o contexto em duas partes: o que mudou + a regra que continua valendo. A rotina volta a ler o presente, sem perder o combinado."
+    storage:
+      policy: structured_only
+    hints:
+      - "A IA não viu a planilha nova. O que só você sabe sobre esta semana?"
+      - "Uma correção completa diz o que mudou e o que segue valendo."
+      - "Procure: a mudança (coluna, estorno) e o combinado antigo que não pode se perder (formato, indicadores, tamanho)."
+
+rubric:
+  id: l32-rubric
+  criteria:
+    - id: r-detecta-o-desvio
+      text: "Reconhece o sinal de degradação: saída coerente com semanas anteriores mas desconectada do dado atual."
+      weight: 1
+    - id: r-aplica-correcao-minima
+      text: "Corrige só o que quebrou (o dado que mudou), sem descartar o pedido-padrão que funcionava."
+      weight: 1
+    - id: r-repoem-o-contexto
+      text: "Repõe o contexto perdido: nomeia o que mudou e reafirma a regra que continua valendo."
+      weight: 1
+
+evidence:
+  verifierRequired: true
+  completionClaim: lesson_completed
+  includesFreeText: false
+
+review:
+  intervalsDays: [1, 7, 21]
+
+completion:
+  minimumScore: 0.75
+  requiredActivityIds: [l32-a1, l32-a2, l32-a3]

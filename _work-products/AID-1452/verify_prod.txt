@@ -1,0 +1,15 @@
+PASS os-dup-post-202-202 202/202 accepted=["c1452003-0000-4000-8000-000000001452"]
+PASS os-dup-post-identical-accept same acceptedEventIds both times
+PASS os-export-bearer-200-ndjson 200 256 lines (attempts: 1)
+PASS os-export-dedup-single-line 1 line(s) for marker c1452003-0000-4000-8000-000000001452
+PASS os-export-401-no-token 401 unauthorized
+PASS os-cross-origin-403 403 origin-forbidden
+PASS lit-dup-post-202-202 202/202 accepted=["d1452004-0000-4000-8000-000000001452"]
+PASS lit-dup-post-identical-accept same acceptedEventIds both times
+PASS lit-export-bearer-200-ndjson 200 34 lines (attempts: 1)
+PASS lit-export-dedup-single-line 1 line(s) for marker d1452004-0000-4000-8000-000000001452
+PASS lit-export-401-no-token 401 unauthorized
+PASS lit-cross-origin-403 403 origin-forbidden
+PASS os-manifest-pin 5bf86b97dbb4456d90557eb823b84f9e21162438
+
+13/13 checks passed

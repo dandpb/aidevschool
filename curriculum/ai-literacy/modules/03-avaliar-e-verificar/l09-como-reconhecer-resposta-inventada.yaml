@@ -1,7 +1,7 @@
-# Lição l09 — Fase 2.
+# Lição l09 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l09-a2/+l09-a3, v1→v2.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l09
-version: 1
+version: 2
 moduleId: mod-03
 title: "Como reconhecer uma resposta inventada"
 objective: "Identificar sinais de alucinação: fontes que não existem, números precisos sem origem, detalhes confiantes demais."
@@ -42,6 +42,69 @@ activities:
       - "Tente checar mentalmente cada fonte: você conseguiria encontrar esse 'estudo' ou esse 'relatório' com as informações dadas?"
       - "Um critério aqui não é totalmente falho: a resposta admite alguma variação, mas se contradiz na conclusão."
 
+  - id: l09-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Você mostrou ao colega uma resposta com sinais de invenção. Ele disse: 'Se algo fosse invenção, a IA teria avisado — repare na segurança com que ela escreveu.' Qual é a melhor resposta para ele?"
+    data:
+      options:
+        - id: opt-prova-fora-da-resposta
+          text: "A segurança do texto não prova nada: a invenção sai com o mesmo tom do acerto. A prova está fora da resposta — na fonte e na origem dos números."
+        - id: opt-ia-sempre-avisa
+          text: "Verdade: quando não tem certeza, a IA avisa claramente na própria resposta."
+        - id: opt-so-temas-tecnicos
+          text: "Invenção só acontece em temas técnicos; assuntos do dia a dia estão seguros."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-prova-fora-da-resposta]
+    feedback:
+      onFailure: "O colega está confiando no lugar errado: a IA não sabe quando está inventando — às vezes hesita, às vezes não. O tom não é sinal de nada; a verificação é externa ao texto."
+      perCheck:
+        opt-prova-fora-da-resposta: "Isso: confiança é estilo de escrita, não evidência. Invenção e acerto saem com a mesma segurança — só a fonte resolve."
+        opt-ia-sempre-avisa: "A IA não tem como saber o que inventou: pode avisar às vezes, mas não dá para depender disso."
+        opt-so-temas-tecnicos: "Invenção aparece em qualquer tema: fonte vaga e número sem origem são sinais em assunto técnico ou do dia a dia."
+      onSuccess: "Exato: o sinal de invenção nunca está no tom — está na falta de fonte verificável e na origem dos números."
+    storage:
+      policy: structured_only
+    hints:
+      - "Pergunte ao colega: como a IA saberia que inventou? Ela não tem como checar a si mesma."
+      - "Onde fica a prova de uma informação: no texto que a afirma ou na fonte de onde ela deveria vir?"
+
+  - id: l09-a3
+    type: choice
+    skillId: avaliar
+    instruction: "Você pediu à IA: 'quais empresas do nosso setor mais cresceram no último ano?'. Ela respondeu: 'A Acme lidera com crescimento de 41,3%, segundo o levantamento Setor em Foco. Especialistas afirmam que a tendência deve se manter. Fica tranquilo: os dados são confiáveis.' Marque os sinais de possível invenção."
+    data:
+      multiSelect: true
+      options:
+        - id: opt-numero-sem-origem
+          text: "Número preciso (41,3%) sem nenhuma origem indicada"
+        - id: opt-fonte-so-nome
+          text: "Levantamento citado apenas pelo nome, sem autor, instituição ou link"
+        - id: opt-especialistas-sem-nome
+          text: "'Especialistas afirmam' sem nomear nenhum especialista"
+        - id: opt-explica-o-setor
+          text: "A resposta explica o que é o setor antes de citar os números"
+        - id: opt-oferece-ajuda
+          text: "A resposta se oferece para ajudar com outras perguntas"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-numero-sem-origem, opt-fonte-so-nome, opt-especialistas-sem-nome]
+    feedback:
+      onFailure: "Três sinais clássicos: número preciso sem origem, fonte citada só pelo nome (sem autor nem link) e 'especialistas' que ninguém nomeia. Explicar o assunto e oferecer ajuda são cortesia, não sinal de invenção."
+      perCheck:
+        opt-numero-sem-origem: "Sinal: 41,3% é preciso demais para viajar sem origem — número sem fonte é o primeiro alerta."
+        opt-fonte-so-nome: "Sinal: 'levantamento Setor em Foco' sem autor, instituição ou link não dá para encontrar — provável invenção."
+        opt-especialistas-sem-nome: "Sinal: 'especialistas afirmam' sem nome é autoridade fantasma."
+        opt-explica-o-setor: "Não é sinal: dar contexto sobre o assunto é comum e não afirma nada checável."
+        opt-oferece-ajuda: "Não é sinal: oferecer ajuda é cortesia do formato, não diz nada sobre a confiabilidade dos dados."
+      onSuccess: "Isso! Número sem origem, fonte só pelo nome e especialista sem nome: três sinais, uma conclusão — verificar antes de usar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Para cada trecho da resposta: você conseguiria encontrá-lo em algum lugar de verdade?"
+      - "Dois itens são apenas boas maneiras da IA — não dizem nada sobre os dados."
+
 rubric:
   id: l09-rubric
   criteria:
@@ -65,4 +128,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l09-a1]
+  requiredActivityIds: [l09-a1, l09-a2, l09-a3]

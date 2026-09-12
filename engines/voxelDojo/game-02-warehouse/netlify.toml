@@ -1,0 +1,37 @@
+# Deploy estático mínimo do jogo de referência voxelDojo (AID-987/T1, D2-A):
+# rota de entrada declarada do use case `voxel-standalone-learning-loop`.
+# Uso: conecte engines/voxelDojo/game-02-warehouse como base do site no
+# Netlify (repo raiz), ou `netlify deploy --prod` a partir daqui com o CLI
+# autenticado. O build é o próprio build do pacote (tsc + vite).
+#
+# T1b: coletor canônico same-origin (precedente literacyDojo) recebe os
+# eventos anônimos de funil do jogo (envelope surfaces v3). O secret de EXPORT
+# (ANALYTICS_EXPORT_TOKEN) é configurado só no provedor, nunca no repo.
+
+[build]
+  command = "npx pnpm@9 install --no-frozen-lockfile && npx pnpm@9 run build"
+  publish = "dist"
+  functions = "../../../learner/gate/netlify-functions"
+
+[build.environment]
+  NODE_VERSION = "22"
+  VITE_ANALYTICS_ENDPOINT = "/__dojo/bridge/v1/analytics"
+
+[[redirects]]
+  # Same-origin analytics collector (AID-987/T1b): recebe os batches anônimos
+  # do jogo (voxel-loop-complete / evidence-handoff).
+  from = "/__dojo/bridge/v1/analytics"
+  to = "/.netlify/functions/dojo-analytics-collector"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin"
+    X-Content-Type-Options = "nosniff"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

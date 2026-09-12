@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "2231beb14dcd1298bb55b948a788bfbabc8ef9b5",
+  "observedAt": "2026-09-10T04:21:21Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "QA observation walk v41 @ 2231beb1 (AID-1200; bundle piloto build:pilot 19 missões, vite preview 127.0.0.1:4180, chromium headless 1280x800; screenshots ev/qa41-*.png + logs/walk-log-os.json neste bundle). Onboarding sem conhecimento de repositório apresenta a escolha de trilha em linguagem do aprendiz: 'O que você quer fazer com IA? … Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.' com 2 opções de trilha visíveis (ev/qa41-01-onboarding.png); ao entrar, o hub 'Aprenda uma coisa útil agora.' reflete a trilha escolhida sem repetir setup (ev/qa41-02-hub-fresh.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: missão IA Prática monta do bundle na origem do OS (iframe /apps/literacydojo/?hosted=1 na porta 4180 do próprio OS, sem dev server — logs/walk-log-os.json literacyMissionUrl; ev/qa41-03-literacy-mission-mounted.png). Loop completo de 3 atividades executado first-hand (tentativa errada → feedback formativo 'Quase lá… Pontuação desta tentativa: 60%' com dica, ev/qa41-04; retry-activity → resposta correta → a2 choice → a3 sort → finish-lesson). Resultado nomeia o próximo passo na linguagem do aprendiz: 'PRÁTICA CONCLUÍDA NESTE DISPOSITIVO — Seu esforço virou um próximo passo claro.' + 'Resultado da verificação: A evidência está segura. O verificador pode ser tentado novamente.' (logs/probe-text.json LITERACY-RESULT; ev/qa41-05-literacy-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: tentativa errada na missão hospedada reportada com feedback formativo + critérios faltantes nomeados + retry na própria UI (retry-activity), sem intervenção de repositório (ev/qa41-04-literacy-wrong-attempt.png). Verificação honesta no resultado: 'EVIDÊNCIA Verificador indisponível' + controle 'Tentar verificação novamente' presente; sem veredito fabricado — 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' (logs/probe-text.json LITERACY-RESULT; ev/qa41-06-verification-honest.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: retorno ao hub após a missão sem repetir onboarding ('Entrar na escola' não reaparece; hub mostra progresso da trilha — ev/qa41-07-hub-returning.png); reload no mesmo dispositivo preserva o estado com fronteira explícita: '1 Atividade concluída — Salva neste dispositivo', '3 Verificação independente — Temporariamente indisponível', '4 Competência canônica — Não alterada por este fluxo'; linguagem só de mesmo-dispositivo, sem promessa de sincronização (ev/qa41-08-hub-honest-progress.png; logs/walk-log-os.json hubAfterReload/honestProgressVisible/canonicalUnchanged/sameDeviceLanguageOnly, indexedDB local: codexdojo-os, codexdojo-os-verification, literacydojo)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: mesmo contexto recarregado mantém o hub com 'Atividade concluída / Salva neste dispositivo' e a missão WAREHOUSE remonta com estado honesto de evidência ('EVIDÊNCIA Ainda não enviada'; ETAPA Responder / MOTOR running) sem afirmar conclusão ou mastery (logs/probe-text.json WAREHOUSE-REENTRY-PAGE; ev/qa41-08-hub-honest-progress.png, ev/qa41-11-warehouse-reentry.png). Persistência exclusivamente local (indexedDB do próprio dispositivo; '0 verificadas · sem alteração local' no painel canônico)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41 contexto com storage limpo: o OS volta ao onboarding ('Entrar na escola' presente) SEM exibir conclusão herdada nem claims de competência — logs/walk-log-os.json clearedStorageOnboarding=true, clearedStorageShowsCompletion=false, clearedStorageShowsMastery=false (ev/qa41-14-cleared-storage-onboarding.png). A ausência de estado local é o comportamento documentado: perda de dados do navegador remove o progresso local e o caminho de recuperação é refazer o onboarding — sem estado fabricado."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: WAREHOUSE monta da origem do OS (iframe /apps/warehouse/?hosted=1 em 4180; ev/qa41-09-warehouse-mounted.png). Passagem errada first-hand mostra estado de falha honesto no HUD ('Critério ainda não atendido; tente novamente.' + 'Tentar novamente', precisão 0 no painel de evidência — logs/probe-text.json WAREHOUSE-WRONG-FRAME; ev/qa41-09b-warehouse-wrong.png); retry recupera para conclusão. O resultado separa explicitamente conclusão local de competência: 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' + 'EVIDÊNCIA Verificador indisponível' + 'COMPETÊNCIAS CANÔNICAS 0' (logs/probe-text.json WAREHOUSE-COMPLETE-PAGE; ev/qa41-10-warehouse-complete.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41: após concluir WAREHOUSE e voltar ao hub, reload preserva o progresso local ('Atividade concluída'; logs/walk-log-os.json voxelHubAfterReload) e a reentrada na missão remonta a simulação determinística com fronteira honesta — 'EVIDÊNCIA Ainda não enviada' e nenhuma linguagem de mastery/veredito (logs/probe-text.json WAREHOUSE-REENTRY-PAGE; ev/qa41-11-warehouse-reentry.png). Continuidade é do dispositivo, não canônica: '0 verificadas · sem alteração local'."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk v41 contexto reduced-motion: a projeção acessível é a escalada visível na própria UI — rótulo 'Acessível' + affordance 'Usar visualização acessível' na página da missão (ev/qa41-12-accessible-projection.png); jornada completa por teclado funciona na projeção (controles accessible-shelf-* focáveis + Enter) e o HUD reporta 'Missão concluída; evidência emitida.' ao fim (logs/walk-log-os.json accessibleProjectionVisible/accessibleLabel/accessibleKeyboardCompletion/hudStatusText; ev/qa41-13-accessible-complete.png). O limiar de escalada é nomeável sem repositório: se a WebGL/narrativa visual não serve o aprendiz, a projeção acessível preserva a mesma jornada determinística rotulada."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

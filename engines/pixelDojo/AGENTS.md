@@ -24,6 +24,7 @@ Install once: `cd engines/pixelDojo && pnpm install`.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Run or change the game | `pixel-quest/` | App-local guide lives in `pixel-quest/AGENTS.md`. |
+| Visual identity and tokens | `pixel-quest/DESIGN.md` | Read before any UI work; update when tokens change. |
 | Game architecture | `pixel-quest/README.md`, `pixel-quest/DESIGN.md` | Current Three.js app, not the older Phaser plan. |
 | Content-pack rules | `pixel-quest/docs/content-packs.md` | Declarative curriculum pack contract. |
 | Browser smoke contract | `pixel-quest/playwright/pixel-quest.spec.ts` | Plays the game and checks evidence/console behavior. |

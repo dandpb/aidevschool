@@ -1,7 +1,7 @@
-# Lição l13 — Fase 2.
+# Lição l13 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l13-a2/+l13-a3, v1→v2.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l13
-version: 1
+version: 2
 moduleId: mod-04
 title: "Use IA para uma tarefa real de trabalho"
 objective: "Aplicar o ciclo pedir-avaliar-melhorar em uma tarefa real da própria rotina, mantendo o julgamento final."
@@ -51,6 +51,68 @@ activities:
       - "Comece pelo objetivo: complete a frase 'Preciso que a IA ___' com um verbo de ação."
       - "No formato, escreva o nome da entrega: e-mail, lista, tópicos, tabela ou mensagem."
 
+  - id: l13-a2
+    type: choice
+    skillId: aplicar
+    instruction: "Você montou o pedido completo para a sua tarefa real e a IA devolveu um rascunho bom. Qual é o próximo passo?"
+    data:
+      options:
+        - id: opt-ciclo-completo
+          text: "Aplicar o ciclo: avaliar com os critérios da tarefa, conferir os fatos que viram decisão, pedir ajustes específicos — e usar com o julgamento final meu"
+        - id: opt-enviar-direto
+          text: "Encaminhar direto para o destinatário: pedido bem-feito, resposta pronta"
+        - id: opt-cinco-versoes
+          text: "Pedir outras cinco versões e escolher a mais bonita, sem critérios"
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-ciclo-completo]
+    feedback:
+      onFailure: "Um bom pedido aumenta a chance de boa resposta — mas não acaba com o seu trabalho: sem avaliação com critérios, conferência dos fatos e ajustes, o rascunho vira aposta. E quantidade de versões não substitui critério."
+      perCheck:
+        opt-ciclo-completo: "Isso: pedir bem é a primeira etapa — avaliar, conferir e ajustar é o que transforma rascunho em entrega sua."
+        opt-enviar-direto: "Pedido completo não verifica resposta: erro de fato e ajuste pendente passam direto para o destinatário."
+        opt-cinco-versoes: "Versões a mais sem critérios são escolha por aparência — a balança certa continua sendo a da tarefa."
+      onSuccess: "Isso! O pedido de qualidade encurta o caminho — e o ciclo avaliar-conferir-ajustar fecha com o julgamento final seu."
+    storage:
+      policy: structured_only
+    hints:
+      - "Lembre do início da trilha: resposta de IA é rascunho. O que falta entre um rascunho bom e uma entrega?"
+      - "Se a resposta tem um número que alguém vai usar para decidir, o que fazer com ele antes do envio?"
+
+  - id: l13-a3
+    type: sort
+    skillId: aplicar
+    instruction: "Para fechar: ordene o ciclo completo de uma tarefa real com IA, do começo até o uso."
+    data:
+      items:
+        - id: etapa-tarefa
+          text: "Escolher a tarefa real e montar o pedido completo — objetivo, contexto e formato, sem dados sensíveis"
+        - id: etapa-rascunho
+          text: "Ler a resposta como rascunho e avaliar com os critérios da tarefa"
+        - id: etapa-fatos
+          text: "Conferir em fonte externa os fatos que viram decisão"
+        - id: etapa-ajustes
+          text: "Pedir ajustes específicos — um por vez, dizendo o que mudar e o que manter"
+        - id: etapa-uso
+          text: "Usar o resultado com o julgamento final próprio"
+    evaluation:
+      strategy: deterministic
+      expectedOrder: [etapa-tarefa, etapa-rascunho, etapa-fatos, etapa-ajustes, etapa-uso]
+    feedback:
+      onFailure: "A ordem do ciclo: pedido completo (sem dados sensíveis) → leitura como rascunho com critérios → conferência dos fatos que viram decisão → ajustes específicos → uso com julgamento final. Fatos antes dos ajustes: não vale polir texto com número errado."
+      perCheck:
+        etapa-tarefa: "O começo é antes da IA: tarefa real escolhida e pedido completo — já protegendo os dados."
+        etapa-rascunho: "A resposta chega como rascunho: a avaliação com critérios da tarefa vem antes de qualquer ajuste."
+        etapa-fatos: "Entre avaliar e ajustar, a conferência: fato que vira decisão se confirma em fonte externa."
+        etapa-ajustes: "Com o conteúdo seguro, os ajustes específicos — um por vez, com o que mudar e o que manter."
+        etapa-uso: "O uso é o fim: o resultado passa pelo seu julgamento final antes de virar entrega."
+      onSuccess: "Esse é o ciclo da tarefa real: pedir protegido, avaliar com critérios, conferir o que decide, ajustar em etapas e usar com julgamento próprio."
+    storage:
+      policy: structured_only
+    hints:
+      - "Duas etapas envolvem conferir coisas diferentes: o conteúdo (critérios) e os fatos (fonte externa). Qual vem primeiro?"
+      - "O ajuste específico vem depois de saber que os fatos estão certos — e antes do uso."
+
 rubric:
   id: l13-rubric
   criteria:
@@ -74,4 +136,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l13-a1]
+  requiredActivityIds: [l13-a1, l13-a2, l13-a3]

@@ -1,11 +1,11 @@
-# Lição l08 — Fase 2.
+# Lição l08 — Fase 2; retrofit O3-C2 (AID-1220, padrão AID-644/648): +l08-a2/+l08-a3, v1→v2, 3→4 min.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l08
-version: 1
+version: 2
 moduleId: mod-03
 title: "A primeira resposta não é necessariamente a melhor"
 objective: "Comparar a primeira resposta da IA com uma alternativa e escolher com critério explícito."
-estimatedMinutes: 3
+estimatedMinutes: 4
 skillIds: [avaliar]
 prerequisites: [l07]
 
@@ -46,6 +46,72 @@ activities:
       - "Releia o cenário: você precisa agir esta semana, sem contratar nada. Qual resposta vira tarefa na segunda-feira?"
       - "Marque os motivos ligados a ação concreta e ponto de partida — não à aparência da resposta."
 
+  - id: l08-a2
+    type: choice
+    skillId: avaliar
+    instruction: "Você pediu outra versão e agora tem duas respostas para o mesmo pedido: a primeira e a alternativa. Como decide qual usar?"
+    data:
+      options:
+        - id: opt-criterios-da-tarefa
+          text: "Defino dois ou três critérios da tarefa — resolve o problema, dá para agir nesta semana, serve para o prazo — e comparo as duas respostas neles."
+        - id: opt-mais-longa
+          text: "Escolho a mais longa: texto maior é sinal de trabalho mais completo."
+        - id: opt-mais-confiante
+          text: "Escolho a que soa mais confiante: quem tem certeza escreve assim."
+        - id: opt-primeira-mesmo
+          text: "Fico com a primeira: comparar as duas é perder tempo."
+    evaluation:
+      strategy: deterministic
+      correctOptionIds: [opt-criterios-da-tarefa]
+    feedback:
+      onFailure: "Quase lá. Tamanho e tom de voz não medem qualidade: o que decide é o critério da tarefa — a resposta resolve o problema e dá para agir? Compare as duas neles."
+      perCheck:
+        opt-criterios-da-tarefa: "Isso: critérios explícitos da tarefa são a única balança comum entre duas respostas — o resto é aparência."
+        opt-mais-longa: "Comprimento não é qualidade: a resposta longa pode ser a que menos vira ação (lembre da primeira atividade)."
+        opt-mais-confiante: "Tom confiante não prova nada: a IA escreve com a mesma segurança o que acerta e o que inventa."
+        opt-primeira-mesmo: "Ficar com a primeira sem comparar joga fora a vantagem de ter uma alternativa: a comparação leva minutos e muda a decisão."
+      onSuccess: "Exato: duas respostas, os mesmos critérios — a escolha vira decisão com motivo, não impressão."
+    storage:
+      policy: structured_only
+    hints:
+      - "Se você tivesse que explicar a escolha em uma frase para o seu gestor, o que diria? Isso é o seu critério."
+      - "Desconfie de sinais de aparência: tamanho e confiança no texto."
+
+  - id: l08-a3
+    type: missing_context
+    skillId: avaliar
+    instruction: "Um colega quer uma alternativa e mostra o pedido que vai mandar: só 'Pode fazer outra versão dessa resposta?'. O que está faltando no pedido dele?"
+    data:
+      prompt: "Pode fazer outra versão dessa resposta?"
+      contextOptions:
+        - id: o-que-nao-serviu
+          text: "O que não serviu na primeira resposta — para a nova versão não repetir"
+        - id: direcao-diferente
+          text: "A direção diferente que a nova versão deve tentar (outra abordagem, outro formato)"
+        - id: o-que-manter
+          text: "O que deve continuar igual na nova versão"
+        - id: tom-educado
+          text: "Pedir com mais educação — um 'por favor' bem colocado"
+        - id: numero-da-versao
+          text: "O número da versão anterior, para a IA não se repetir"
+    evaluation:
+      strategy: deterministic
+      requiredContextIds: [o-que-nao-serviu, direcao-diferente, o-que-manter]
+    feedback:
+      onFailure: "'Outra versão' sem direção vem parecida ou pior: a alternativa útil nasce de um pedido que diz o que não serviu, que direção nova tentar e o que deve continuar igual. Educação e numeração de versão não mudam o conteúdo."
+      perCheck:
+        o-que-nao-serviu: "Faltou isto: dizer o que não funcionou — sem isso, a IA não sabe o que evitar na nova versão."
+        direcao-diferente: "Faltou isto: a direção nova (outra abordagem, outro formato) é o que transforma 'de novo' em 'diferente'."
+        o-que-manter: "Faltou isto: dizer o que deve continuar igual evita que a nova versão perca o que já estava bom."
+        tom-educado: "Educação não muda o resultado: 'por favor' não diz à IA o que fazer de diferente."
+        numero-da-versao: "A IA não numera versões: o que evita repetição é o pedido com direção, não um número."
+      onSuccess: "Exato! Alternativa de verdade nasce de pedido completo: o que evitar, a direção nova e o que preservar."
+    storage:
+      policy: structured_only
+    hints:
+      - "Leia o pedido como se você fosse a IA: com 'pode fazer outra versão', o que dá para fazer de diferente?"
+      - "Três coisas faltam: o que evitar, para onde ir e o que não pode se perder."
+
 rubric:
   id: l08-rubric
   criteria:
@@ -54,6 +120,9 @@ rubric:
       weight: 1
     - id: r-primeira-nao-melhor
       text: "Reconhece que a primeira resposta mais confiante pode ser a menos útil."
+      weight: 1
+    - id: r-segunda-opcao
+      text: "Escolhe entre duas respostas com critérios explícitos da tarefa e pede a alternativa dizendo o que mudar e o que manter."
       weight: 1
 
 evidence:
@@ -66,4 +135,4 @@ review:
 
 completion:
   minimumScore: 0.75
-  requiredActivityIds: [l08-a1]
+  requiredActivityIds: [l08-a1, l08-a2, l08-a3]

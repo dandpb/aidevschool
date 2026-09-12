@@ -25,6 +25,10 @@ pnpm run test
 pnpm run build
 ```
 
+`pnpm run test` is env-independent: it must pass with `VITE_CODEXDOJO_OS_URL` unset (and
+under `NODE_ENV=production`). Specs that assert the OS launch bridge stub that env via
+`vi.stubEnv`; no env injection is required to run the suite.
+
 ## Ecosystem Entry Points
 
 | Need | File |

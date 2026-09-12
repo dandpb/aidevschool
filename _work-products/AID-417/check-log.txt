@@ -1,0 +1,1 @@
+cli.py check: PASS (exit 0) @ 9a717b8, worktree /paperclip/tmp/aid417/wt

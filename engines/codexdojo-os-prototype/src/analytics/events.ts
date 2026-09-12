@@ -3,6 +3,10 @@ export const ANALYTICS_EVENT_NAMES = [
   'mission.started', 'mission.completed', 'structured_attempt.submitted',
   'structured_attempt.passed', 'hint.requested', 'retry.requested',
   'review.started', 'verification.state_changed', 'renderer.degraded',
+  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
+  // de exposição de missões hospedadas, reemitidos pelo MissionShell a
+  // partir dos mission-events da engine.
+  'mission.brief_viewed', 'activity.presented',
 ] as const
 export type AnalyticsEventName = (typeof ANALYTICS_EVENT_NAMES)[number]
 export type AnalyticsScalar = string | number | boolean
@@ -81,6 +85,8 @@ export const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabu
     ],
     fallback: ['canvas2d', 'dom', 'none'],
   },
+  'mission.brief_viewed': {},
+  'activity.presented': { activityType: ACTIVITY_TYPES },
 }
 
 const EVENT_POLICIES: Readonly<Record<AnalyticsEventName, EventPolicy>> = (() => {

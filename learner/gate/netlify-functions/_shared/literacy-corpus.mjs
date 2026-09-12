@@ -952,12 +952,79 @@ export const literacyCorpus = {
         },
         "id": "l08-a1",
         "type": "output_comparison"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-criterios-da-tarefa",
+              "text": "Defino dois ou três critérios da tarefa — resolve o problema, dá para agir nesta semana, serve para o prazo — e comparo as duas respostas neles."
+            },
+            {
+              "id": "opt-mais-longa",
+              "text": "Escolho a mais longa: texto maior é sinal de trabalho mais completo."
+            },
+            {
+              "id": "opt-mais-confiante",
+              "text": "Escolho a que soa mais confiante: quem tem certeza escreve assim."
+            },
+            {
+              "id": "opt-primeira-mesmo",
+              "text": "Fico com a primeira: comparar as duas é perder tempo."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-criterios-da-tarefa"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l08-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "o-que-nao-serviu",
+              "text": "O que não serviu na primeira resposta — para a nova versão não repetir"
+            },
+            {
+              "id": "direcao-diferente",
+              "text": "A direção diferente que a nova versão deve tentar (outra abordagem, outro formato)"
+            },
+            {
+              "id": "o-que-manter",
+              "text": "O que deve continuar igual na nova versão"
+            },
+            {
+              "id": "tom-educado",
+              "text": "Pedir com mais educação — um 'por favor' bem colocado"
+            },
+            {
+              "id": "numero-da-versao",
+              "text": "O número da versão anterior, para a IA não se repetir"
+            }
+          ],
+          "prompt": "Pode fazer outra versão dessa resposta?"
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "o-que-nao-serviu",
+            "direcao-diferente",
+            "o-que-manter"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l08-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l09": {
     "activities": [
@@ -989,12 +1056,75 @@ export const literacyCorpus = {
         },
         "id": "l09-a1",
         "type": "rubric_review"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-prova-fora-da-resposta",
+              "text": "A segurança do texto não prova nada: a invenção sai com o mesmo tom do acerto. A prova está fora da resposta — na fonte e na origem dos números."
+            },
+            {
+              "id": "opt-ia-sempre-avisa",
+              "text": "Verdade: quando não tem certeza, a IA avisa claramente na própria resposta."
+            },
+            {
+              "id": "opt-so-temas-tecnicos",
+              "text": "Invenção só acontece em temas técnicos; assuntos do dia a dia estão seguros."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-prova-fora-da-resposta"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l09-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-numero-sem-origem",
+              "text": "Número preciso (41,3%) sem nenhuma origem indicada"
+            },
+            {
+              "id": "opt-fonte-so-nome",
+              "text": "Levantamento citado apenas pelo nome, sem autor, instituição ou link"
+            },
+            {
+              "id": "opt-especialistas-sem-nome",
+              "text": "'Especialistas afirmam' sem nomear nenhum especialista"
+            },
+            {
+              "id": "opt-explica-o-setor",
+              "text": "A resposta explica o que é o setor antes de citar os números"
+            },
+            {
+              "id": "opt-oferece-ajuda",
+              "text": "A resposta se oferece para ajudar com outras perguntas"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-numero-sem-origem",
+            "opt-fonte-so-nome",
+            "opt-especialistas-sem-nome"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l09-a3",
+        "type": "choice"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l10": {
     "activities": [
@@ -1034,12 +1164,70 @@ export const literacyCorpus = {
         },
         "id": "l10-a1",
         "type": "choice"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-fato-com-consequencia",
+              "text": "Conferir em fonte externa o fato checável com consequência — número, lei, prazo, afirmação sobre empresa — e seguir adiante com conselho geral de escrita."
+            },
+            {
+              "id": "opt-conferir-tudo",
+              "text": "Conferir tudo, sempre: segurança total vale o atraso."
+            },
+            {
+              "id": "opt-nao-conferir",
+              "text": "Não conferir nada: a IA acerta na maioria das vezes."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-fato-com-consequencia"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l10-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "destino-do-texto",
+              "text": "Para onde vai o texto — relatório interno, cliente, site público"
+            },
+            {
+              "id": "consequencia-do-erro",
+              "text": "O que acontece se a informação estiver errada"
+            },
+            {
+              "id": "tom-do-paragrafo",
+              "text": "O tom do parágrafo — se está formal ou informal"
+            },
+            {
+              "id": "imagens-do-relatorio",
+              "text": "Se o relatório vai ter imagens ou só texto"
+            }
+          ],
+          "prompt": "A IA escreveu este parágrafo para o meu relatório. Preciso conferir?"
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "destino-do-texto",
+            "consequencia-do-erro"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l10-a3",
+        "type": "missing_context"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l11": {
     "activities": [
@@ -1075,12 +1263,73 @@ export const literacyCorpus = {
         },
         "id": "l11-a1",
         "type": "sort"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "criterios-que-importam",
+              "text": "Os critérios que importam para a equipe — preço, facilidade, suporte em português"
+            },
+            {
+              "id": "restricoes-da-situacao",
+              "text": "As restrições reais — orçamento máximo, prazo de decisão, quem vai usar"
+            },
+            {
+              "id": "todas-as-ferramentas-do-mercado",
+              "text": "A lista completa de todas as ferramentas do mercado, para a comparação ser exaustiva"
+            },
+            {
+              "id": "paginas-dos-sites",
+              "text": "O número de páginas do site de cada ferramenta"
+            }
+          ],
+          "prompt": "Compare as três opções de ferramenta e me diga qual é a melhor."
+        },
+        "evaluation": {
+          "requiredContextIds": [
+            "criterios-que-importam",
+            "restricoes-da-situacao"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l11-a2",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-criterios-do-contexto",
+              "text": "A escolha usou critérios explícitos do próprio contexto (custo, agenda da equipe, necessidade de tirar dúvidas ao vivo)"
+            },
+            {
+              "id": "c-lado-a-lado",
+              "text": "As duas opções foram comparadas nas mesmas dimensões, lado a lado"
+            },
+            {
+              "id": "c-motivo-registrado",
+              "text": "O motivo final da escolha é dele e ficou registrado de forma verificável"
+            }
+          ],
+          "responseText": "\"Pedi para a IA comparar treinamento ao vivo online com treinamento gravado. Ela recomendou o gravado, que é mais moderno e está na moda. Vou de gravado.\""
+        },
+        "evaluation": {
+          "expectedVerdicts": {
+            "c-criterios-do-contexto": "not_met",
+            "c-lado-a-lado": "not_met",
+            "c-motivo-registrado": "partial"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l11-a3",
+        "type": "rubric_review"
       }
     ],
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l12": {
     "activities": [
@@ -1135,12 +1384,84 @@ export const literacyCorpus = {
         },
         "id": "l12-a1",
         "type": "safety_classification"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "i-relato",
+              "text": "O relato 'um cliente espera há 12 dias um reembolso' — sem nome, sem valor, sem protocolo"
+            },
+            {
+              "id": "i-pergunta",
+              "text": "A pergunta 'como escrever um pedido de desculpas por um atraso?'"
+            },
+            {
+              "id": "i-print",
+              "text": "Um print da conversa mostrando foto, nome e @ do cliente"
+            },
+            {
+              "id": "i-protocolo",
+              "text": "O número de protocolo do atendimento junto com o nome do cliente"
+            },
+            {
+              "id": "i-assinatura",
+              "text": "O trecho do e-mail do cliente com a assinatura dele — nome e cargo"
+            }
+          ],
+          "labels": {
+            "safe": "Seguro para compartilhar",
+            "sensitive": "Sensível — não compartilhar"
+          }
+        },
+        "evaluation": {
+          "classification": {
+            "i-assinatura": "sensitive",
+            "i-pergunta": "safe",
+            "i-print": "sensitive",
+            "i-protocolo": "sensitive",
+            "i-relato": "safe"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l12-a2",
+        "type": "safety_classification"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-reduz-e-anonimiza",
+              "text": "Reduzir e anonimizar antes de colar: trocar o nome por 'o cliente', cortar o que identifica e enviar só o trecho necessário para a dúvida"
+            },
+            {
+              "id": "opt-cola-tudo",
+              "text": "Colar o e-mail inteiro: sem o caso completo, a IA não ajuda direito"
+            },
+            {
+              "id": "opt-desiste",
+              "text": "Desistir da IA: assunto que envolve cliente não pode passar por IA nunca"
+            },
+            {
+              "id": "opt-ignorar-depois",
+              "text": "Colar tudo e pedir para a IA 'ignorar' os dados pessoais depois"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-reduz-e-anonimiza"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l12-a3",
+        "type": "choice"
       }
     ],
     "skillIds": [
       "proteger"
     ],
-    "version": 2
+    "version": 3
   },
   "l13": {
     "activities": [
@@ -1207,12 +1528,76 @@ export const literacyCorpus = {
         },
         "id": "l13-a1",
         "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-ciclo-completo",
+              "text": "Aplicar o ciclo: avaliar com os critérios da tarefa, conferir os fatos que viram decisão, pedir ajustes específicos — e usar com o julgamento final meu"
+            },
+            {
+              "id": "opt-enviar-direto",
+              "text": "Encaminhar direto para o destinatário: pedido bem-feito, resposta pronta"
+            },
+            {
+              "id": "opt-cinco-versoes",
+              "text": "Pedir outras cinco versões e escolher a mais bonita, sem critérios"
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-ciclo-completo"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l13-a2",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "etapa-tarefa",
+              "text": "Escolher a tarefa real e montar o pedido completo — objetivo, contexto e formato, sem dados sensíveis"
+            },
+            {
+              "id": "etapa-rascunho",
+              "text": "Ler a resposta como rascunho e avaliar com os critérios da tarefa"
+            },
+            {
+              "id": "etapa-fatos",
+              "text": "Conferir em fonte externa os fatos que viram decisão"
+            },
+            {
+              "id": "etapa-ajustes",
+              "text": "Pedir ajustes específicos — um por vez, dizendo o que mudar e o que manter"
+            },
+            {
+              "id": "etapa-uso",
+              "text": "Usar o resultado com o julgamento final próprio"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "etapa-tarefa",
+            "etapa-rascunho",
+            "etapa-fatos",
+            "etapa-ajustes",
+            "etapa-uso"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l13-a3",
+        "type": "sort"
       }
     ],
     "skillIds": [
       "aplicar"
     ],
-    "version": 1
+    "version": 2
   },
   "l14": {
     "activities": [
@@ -3384,7 +3769,400 @@ export const literacyCorpus = {
       "avaliar"
     ],
     "version": 1
+  },
+  "l30": {
+    "activities": [
+      {
+        "data": {
+          "multiSelect": true,
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "O relatório semanal para a diretoria: toda sexta, os mesmos campos e o mesmo formato — só os números da semana mudam."
+            },
+            {
+              "id": "opt-b",
+              "text": "A resposta-padrão para agendar reuniões: o texto-base é sempre o mesmo; muda só o nome, a data e o horário."
+            },
+            {
+              "id": "opt-c",
+              "text": "O resumo das atas do time: a ata é nova toda semana, mas a estrutura do resumo pedida à IA é sempre a mesma."
+            },
+            {
+              "id": "opt-d",
+              "text": "O feedback delicado sobre o erro de um colega: acontece toda semana com alguém, mas cada conversa depende da pessoa, do momento e do histórico."
+            },
+            {
+              "id": "opt-e",
+              "text": "A escolha do próximo contratado da equipe: repete a cada vaga aberta, mas cada decisão muda a vida de alguém."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a",
+            "opt-b",
+            "opt-c"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l30-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "fields": [
+            {
+              "hint": "O que a rotina pede à IA, sempre igual? Ex.: resumir o desempenho semanal da equipe.",
+              "id": "tarefa",
+              "label": "Tarefa"
+            },
+            {
+              "hint": "O que você troca no pedido toda semana? Ex.: os números de vendas, atendimento e prazos da semana.",
+              "id": "dado-que-muda",
+              "label": "Dado que muda a cada semana"
+            },
+            {
+              "hint": "Que forma fixa a saída deve ter? Ex.: resumo executivo curto em tópicos.",
+              "id": "formato",
+              "label": "Formato"
+            }
+          ],
+          "genericPrompt": "relatório",
+          "scenario": "Na sua ferramenta de IA você salvou um pedido-padrão para não recomeçar do zero toda semana (como na lição da biblioteca de pedidos). Neste exercício você não roda automação nenhuma — você monta o pedido-padrão por campos rotulados, como faria na ferramenta real ao criar a rotina. O pedido 'relatório', sozinho, devolve toda semana um texto de forma diferente."
+        },
+        "evaluation": {
+          "fields": {
+            "dado-que-muda": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "números",
+                "numeros",
+                "dados",
+                "semana",
+                "vendas",
+                "resultados",
+                "indicadores"
+              ]
+            },
+            "formato": {
+              "minLength": 4,
+              "mustIncludeAny": [
+                "resumo",
+                "tópicos",
+                "topicos",
+                "lista",
+                "tabela",
+                "uma página",
+                "uma pagina"
+              ]
+            },
+            "tarefa": {
+              "minLength": 8,
+              "mustIncludeAny": [
+                "resumir",
+                "resumo",
+                "relatar",
+                "relatório",
+                "relatorio"
+              ]
+            }
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l30-a2",
+        "type": "prompt_builder"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-revisao-humana",
+              "text": "A saída passa por leitura humana antes de chegar a quem usa"
+            },
+            {
+              "id": "c-sem-envio-cego",
+              "text": "Nada é enviado automaticamente sem alguém conferir antes"
+            },
+            {
+              "id": "c-ajusta-quando-muda",
+              "text": "Quando o dado ou a regra muda, o pedido é ajustado antes do próximo uso"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Toda sexta eu cole os números da semana no pedido-padrão, a IA monta o resumo no formato combinado — e eu LEIO antes de mandar para a diretoria. Se algo mudou demais (meta nova, resultado estranho), eu ajusto o pedido na hora e depois sigo."
+            },
+            {
+              "id": "out-b",
+              "text": "Liguei o envio automático: toda sexta o resumo sai direto para a diretoria sem passar por mim. Ganhei minha sexta de volta."
+            }
+          ],
+          "scenario": "Você e uma colega criaram o mesmo pedido-padrão do relatório semanal. Cada uma transformou o pedido em rotina de um jeito — na vida real isso vira uma regra de uso; aqui você decide por controles rotulados."
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-revisao-humana",
+            "c-sem-envio-cego"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l30-a3",
+        "type": "output_comparison"
+      }
+    ],
+    "skillIds": [
+      "pedir",
+      "aplicar"
+    ],
+    "version": 1
+  },
+  "l31": {
+    "activities": [
+      {
+        "data": {
+          "items": [
+            {
+              "id": "i-rascunho-divulgacao",
+              "text": "O rascunho do post de divulgação do evento aberto do mês, montado pela rotina a partir da agenda já pública"
+            },
+            {
+              "id": "i-lembrete-semanal",
+              "text": "O lembrete interno de segunda-feira com a lista de compromissos públicos da equipe, sem dados de clientes"
+            },
+            {
+              "id": "i-numero-diretoria",
+              "text": "O número consolidado do mês que a rotina monta para a apresentação da diretoria"
+            },
+            {
+              "id": "i-nome-cliente",
+              "text": "O nome do cliente citado no e-mail de acompanhamento que a rotina prepara"
+            },
+            {
+              "id": "i-valor-contrato",
+              "text": "O valor do contrato citado no resumo que a rotina gera para a reunião comercial"
+            },
+            {
+              "id": "i-historico-gasto",
+              "text": "O quanto aquele cliente gastou este ano, citado no e-mail de aniversário que a rotina envia"
+            }
+          ],
+          "labels": {
+            "safe": "Uso direto — pode ir sem conferir",
+            "sensitive": "Checagem obrigatória antes de usar"
+          }
+        },
+        "evaluation": {
+          "classification": {
+            "i-historico-gasto": "sensitive",
+            "i-lembrete-semanal": "safe",
+            "i-nome-cliente": "sensitive",
+            "i-numero-diretoria": "sensitive",
+            "i-rascunho-divulgacao": "safe",
+            "i-valor-contrato": "sensitive"
+          },
+          "strategy": "deterministic"
+        },
+        "id": "l31-a1",
+        "type": "safety_classification"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "gatilho-definido",
+              "text": "O gatilho: o que dispara a rotina e quando (sexta ao completar a planilha? segunda cedo?) — 'toda semana' não diz qual sexta, nem com qual dado"
+            },
+            {
+              "id": "limite-de-escala",
+              "text": "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que SEMPRE volta para um humano decidir"
+            },
+            {
+              "id": "formato-do-resumo",
+              "text": "O formato do resumo (tópicos, tamanho, indicadores), para a saída vir sempre igual e o estranho saltar aos olhos"
+            },
+            {
+              "id": "nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA que vai executar a rotina"
+            },
+            {
+              "id": "uma-ia-mais-recente",
+              "text": "Usar uma IA mais recente, que sabe sozinha quando a planilha está incompleta"
+            }
+          ],
+          "prompt": "COLEGA (pedido): 'toda semana, monte o resumo de vendas e me mande' · O QUE ACONTECEU: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "formato-do-resumo"
+          ],
+          "requiredContextIds": [
+            "gatilho-definido",
+            "limite-de-escala"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l31-a2",
+        "type": "missing_context"
+      },
+      {
+        "data": {
+          "items": [
+            {
+              "id": "s1-piloto",
+              "text": "Escolher UMA tarefa pequena e de baixo risco para o piloto — por exemplo, o rascunho do relatório semanal"
+            },
+            {
+              "id": "s2-revisao-total",
+              "text": "Rodar o piloto com revisão manual de TUDO o que sai, por algumas semanas, conferindo as saídas críticas"
+            },
+            {
+              "id": "s3-ajustar",
+              "text": "Ajustar gatilho, limite e pedido com o que o piloto ensinou (inclusive os erros)"
+            },
+            {
+              "id": "s4-ampliar",
+              "text": "Ampliar gradualmente para outras tarefas — mantendo checagem obrigatória onde o erro custa caro"
+            }
+          ]
+        },
+        "evaluation": {
+          "expectedOrder": [
+            "s1-piloto",
+            "s2-revisao-total",
+            "s3-ajustar",
+            "s4-ampliar"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l31-a3",
+        "type": "sort"
+      }
+    ],
+    "skillIds": [
+      "avaliar",
+      "proteger"
+    ],
+    "version": 1
+  },
+  "l32": {
+    "activities": [
+      {
+        "data": {
+          "options": [
+            {
+              "id": "opt-a",
+              "text": "A saída veio impecável no formato e 'na média' das semanas — mas o dado desta semana mudou (coluna nova, estorno); o resumo respondeu ao que a rotina esperava, não ao que chegou."
+            },
+            {
+              "id": "opt-b",
+              "text": "A rotina demorou alguns minutos a mais para rodar na segunda de manhã."
+            },
+            {
+              "id": "opt-c",
+              "text": "O formato do resumo mudou um pouco em relação às outras semanas."
+            },
+            {
+              "id": "opt-d",
+              "text": "A rotina avisou, em vermelho, que não encontrou o arquivo da planilha."
+            }
+          ]
+        },
+        "evaluation": {
+          "correctOptionIds": [
+            "opt-a"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l32-a1",
+        "type": "choice"
+      },
+      {
+        "data": {
+          "criteria": [
+            {
+              "id": "c-so-o-que-mudou",
+              "text": "A correção aponta exatamente o que mudou no dado desta semana (coluna nova, estorno)"
+            },
+            {
+              "id": "c-mantem-o-combinado",
+              "text": "Preserva a regra que continuava valendo (formato, indicadores, público da reunião)"
+            },
+            {
+              "id": "c-sem-retrabalho-cego",
+              "text": "Não joga fora o que funcionava sem saber o que exatamente deu errado"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out-a",
+              "text": "Correção no ponto: 'A planilha mudou: a coluna de vendas do período agora se chama vendas líquidas, e entrou uma linha de estorno que precisa ser descontada. Use a coluna nova e considere o estorno. O resto segue como combinado: resumo para a reunião, em tópicos, com os três indicadores de sempre.'"
+            },
+            {
+              "id": "out-b",
+              "text": "Recomeço total: apagar a rotina e o pedido-padrão, escrever um pedido inteiro do zero e montar um modelo novo de resumo — só depois de algumas semanas testar de novo."
+            }
+          ],
+          "scenario": "A rotina do resumo semanal de vendas degradou depois que a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas', entrou linha de estorno). Você vai corrigir o pedido da rotina."
+        },
+        "evaluation": {
+          "betterOutputId": "out-a",
+          "requiredCriterionIds": [
+            "c-so-o-que-mudou",
+            "c-mantem-o-combinado"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l32-a2",
+        "type": "output_comparison"
+      },
+      {
+        "data": {
+          "contextOptions": [
+            {
+              "id": "o-que-mudou",
+              "text": "O que mudou no dado: a coluna nova e a linha de estorno — sem isso, 'atualizar' não diz o que a IA precisa ler de diferente"
+            },
+            {
+              "id": "regra-que-continua-valendo",
+              "text": "A regra que continua valendo: tópicos, os três indicadores, 1 página, público da reunião — para a correção não desmontar o combinado"
+            },
+            {
+              "id": "onde-a-mudanca-aparece",
+              "text": "Onde a mudança está na planilha (aba, linha da coluna), para a IA localizar sozinha o ponto novo"
+            },
+            {
+              "id": "nome-do-modelo-de-ia",
+              "text": "O nome do modelo de IA que executa a rotina"
+            },
+            {
+              "id": "recomecar-tudo",
+              "text": "Apagar a rotina inteira e recomeçar do zero, já que ela falhou uma vez"
+            }
+          ],
+          "prompt": "ROTINA (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O QUE ACONTECEU: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · SEU PEDIDO DE CORREÇÃO: 'atualiza o resumo, por favor'."
+        },
+        "evaluation": {
+          "optionalContextIds": [
+            "onde-a-mudanca-aparece"
+          ],
+          "requiredContextIds": [
+            "o-que-mudou",
+            "regra-que-continua-valendo"
+          ],
+          "strategy": "deterministic"
+        },
+        "id": "l32-a3",
+        "type": "missing_context"
+      }
+    ],
+    "skillIds": [
+      "avaliar"
+    ],
+    "version": 1
   }
 }
 
-export const literacyCorpusVersion = "2026-09-06.1"
+export const literacyCorpusVersion = "2026-09-10.2"

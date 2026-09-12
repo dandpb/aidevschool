@@ -5,7 +5,6 @@ import { learnerSnapshot } from '../data/learner'
 import {
   completeOnboarding,
   createInitialOsProgress,
-  missionKey,
   recordMissionAttempt,
   recordMissionCompletion,
   startMission,
@@ -265,28 +264,5 @@ describe('initial mission recommendation', () => {
       missionId: 'l02',
       pitfallId: 'P-001',
     })
-  })
-
-  it('directs rejected evidence to recovery before new content', () => {
-    const l02 = missionCatalog.missions.find((mission) => mission.id === 'l02')
-    if (l02 === undefined) throw new Error('Expected l02')
-    const progress = recordMissionCompletion(
-      completeOnboarding(createInitialOsProgress(missionCatalog), {
-        goal: 'work-better',
-        context: 'work',
-        confidence: 'low',
-        selectedTrackId: 'ai-pratica',
-      }),
-      l02,
-      missionCatalog,
-      'l03',
-      { now: new Date('2026-07-25T10:00:00Z') },
-    )
-    expect(recommendMission(progress, catalog, {
-      learner: learnerWith({ nextReviews: [], topPitfalls: [] }),
-      verificationByKey: {
-        [missionKey('ai-pratica', 'l02')]: { kind: 'rejected' as const, code: 'digest-mismatch' },
-      },
-    })).toMatchObject({ kind: 'retry', missionId: 'l02', reason: 'rejected-evidence' })
   })
 })

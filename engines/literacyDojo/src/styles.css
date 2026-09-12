@@ -169,6 +169,35 @@ ol {
   transform: translateY(1px);
 }
 
+/* AID-1089/W2 (state contract §2.3-5): :disabled com aparência própria +
+   cursor:not-allowed — vale para toda variante .btn do loop de lição. */
+.btn-secondary:disabled,
+.btn-small:disabled {
+  background: #ece9f7;
+  border-color: var(--border);
+  border-bottom-color: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-link:hover:not(:disabled),
+.btn-link:active:not(:disabled) {
+  color: var(--muted-strong);
+}
+
+.btn-link:disabled {
+  color: var(--muted);
+  opacity: 0.6;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* AID-1089/W2 (§2.3-6): controle em loading assíncrono (disable + aria-busy). */
+.btn[aria-busy="true"] {
+  cursor: progress;
+}
+
 .btn-small {
   width: auto;
   min-height: 40px;
@@ -192,12 +221,13 @@ ol {
   gap: 10px;
 }
 
-/* Foco visível para navegação por teclado */
+/* Foco visível para navegação por teclado — AID-1089/W2: cor migra para a
+   alias --ads-focus do state contract (§2.3-4). */
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 a:focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--ads-focus);
   outline-offset: 2px;
 }
 
@@ -810,6 +840,16 @@ textarea.is-invalid {
   --shadow-small: 0 4px 0 rgba(49, 39, 104, 0.12);
   --shadow-soft: 0 2px 6px rgba(26, 35, 50, 0.08);
   --shadow-press: 0 3px 0 var(--primary-dark);
+
+  /* AID-1089/W2 (state contract, proposta AID-914 §2.2/§2.3 doc proposal rev 1):
+     alias semântica mínima exigida pelo state contract — mapeia valores locais,
+     zero mudança visual. A alias completa de 18 tokens permanece deferral (W1
+     da proposta §2.5 nunca pousou; ver receipt AID-1089). */
+  --ads-focus: var(--focus);
+  --ads-success-text: var(--success-text);
+  --ads-success-bg: var(--success-bg);
+  --ads-error-text: var(--error-text);
+  --ads-error-bg: var(--error-bg);
 }
 
 body {
@@ -1202,7 +1242,10 @@ a.audience-route-dev .route-badge {
 }
 
 .option-card:focus-within {
-  outline: 3px solid var(--focus);
+  /* AID-1089/W2 §2.3-4: equivalente de :focus-visible para o padrão
+     label+rádio do choice (o rádio visualmente escondido mantém o teclado;
+     o outline do label é o substituto visível — nunca outline:none seco). */
+  outline: 3px solid var(--ads-focus);
   outline-offset: 3px;
 }
 
@@ -1819,6 +1862,24 @@ a.audience-route-dev .route-badge {
   color: var(--primary);
 }
 
+/* F1 2026-09-10-activation-first-activity (R1): bloco first-touch da intro —
+   lead-in fixo + frase do tipo da 1ª atividade (domínio firstTouch.ts).
+   Apresentação apenas; texto comunica, nunca só cor. */
+.first-touch {
+  margin: 0;
+  border: 1px solid rgba(73, 201, 143, 0.32);
+  border-radius: 14px;
+  background: rgba(242, 255, 248, 0.86);
+  padding: 12px 14px;
+  color: #176846;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.first-touch strong {
+  letter-spacing: 0.02em;
+}
+
 .result-score {
   display: inline-block;
   border-radius: 999px;
@@ -2394,4 +2455,31 @@ a.audience-route-dev .route-badge {
 
 .checkpoint-screen .card {
   text-align: left;
+}
+
+/* W3 forced-colors wave 1 (AID-1096 / AID-914 §3-B7, docs/design/design-foundations.md §4):
+   bordas e outline dos controles/containers do loop sobrevivem a system colors, e a
+   distinção pass/fail/inválido exista sem cor (largura/estilo de borda). Geometria +
+   system colors — sem forced-color-adjust: none (não quebramos temas de alto contraste). */
+@media (forced-colors: active) {
+  .feedback-pass {
+    border-width: 3px;
+    border-style: solid;
+  }
+  .feedback-fail {
+    border-width: 3px;
+    border-style: dashed;
+  }
+  .option-card.is-invalid {
+    border-width: 3px;
+    border-style: dashed;
+  }
+  .option-card.is-selected {
+    border-width: 3px;
+  }
+  .btn {
+    /* transparent no esquema normal; sob forced-colors a borda precisa existir
+       com system color para o controle não perder contorno. */
+    border: 2px solid ButtonText;
+  }
 }

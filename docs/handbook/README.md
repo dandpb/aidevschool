@@ -29,10 +29,12 @@ do not run `npm install` / `pnpm install` at the root.
 
 ## The canonical learner entry
 
-The first public learner entry is `engines/literacyDojo/`: 14 **IA Prática**
+The first public learner entry is `engines/literacyDojo/`: 23 **IA Prática**
 missions for nontechnical learners, in pt-BR, with no account and progress kept
-in this browser. **Trilha Dev** remains a coming-soon teaser and is not part of
-this release.
+in this browser. The canonical mission count is the `ia_pratica` total in
+`curriculum/ai-literacy/catalog.yaml` (validator:
+`python3 curriculum/ai-literacy/tools/validate.py`). **Trilha Dev** remains a
+coming-soon teaser and is not part of this release.
 
 LiteracyDojo keeps onboarding, mission completion, XP, daily goals, engagement
 streaks, achievements, and opaque checkpoints locally in this browser. That

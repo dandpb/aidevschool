@@ -1,0 +1,143 @@
+{
+ "base": "http://localhost:4173",
+ "startedAt": "2026-08-28T21:57:25.115Z",
+ "apps": {
+  "warehouse": {
+   "320": {
+    "scrollW": 320,
+    "clientW": 320,
+    "hudWidth": 320,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "375": {
+    "scrollW": 375,
+    "clientW": 375,
+    "hudWidth": 375,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "768": {
+    "scrollW": 768,
+    "clientW": 768,
+    "hudWidth": 340,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "1280": {
+    "scrollW": 1280,
+    "clientW": 1280,
+    "hudWidth": 340,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "lang": "pt-BR"
+  },
+  "wormhole": {
+   "320": {
+    "scrollW": 320,
+    "clientW": 320,
+    "hudWidth": 320,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "375": {
+    "scrollW": 375,
+    "clientW": 375,
+    "hudWidth": 375,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "768": {
+    "scrollW": 768,
+    "clientW": 768,
+    "hudWidth": 360,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "1280": {
+    "scrollW": 1280,
+    "clientW": 1280,
+    "hudWidth": 360,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "lang": "pt-BR"
+  },
+  "relay-station": {
+   "320": {
+    "scrollW": 320,
+    "clientW": 320,
+    "hudWidth": 320,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "375": {
+    "scrollW": 375,
+    "clientW": 375,
+    "hudWidth": 375,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "768": {
+    "scrollW": 768,
+    "clientW": 768,
+    "hudWidth": 340,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "1280": {
+    "scrollW": 1280,
+    "clientW": 1280,
+    "hudWidth": 340,
+    "hudVisible": true,
+    "hudButtonsVisible": true,
+    "hOverflow": 0,
+    "pass": true
+   },
+   "lang": "pt-BR"
+  }
+ },
+ "host": {
+  "steps": [
+   "chose Dev track",
+   "entered school",
+   "opened featured mission"
+  ],
+  "iframes": [
+   {
+    "src": "http://localhost:4173/apps/warehouse/?hosted=1&hostOrigin=http%3A%2F%2Flocalhost%3A4173",
+    "w": 854
+   }
+  ],
+  "warehouse": {
+   "hudW": 340,
+   "scrollW": 854,
+   "clientW": 854,
+   "overflow": 0,
+   "lastHudButtonInsideViewport": true
+  }
+ }
+}

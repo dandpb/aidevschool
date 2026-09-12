@@ -34,6 +34,11 @@ export default defineConfig({
       url: 'http://127.0.0.1:5176',
       reuseExistingServer: true,
       timeout: 120_000,
+      // AID-1153: `pnpm exec` runs the dev server with NODE_ENV=production, so
+      // import.meta.env.DEV is false and PixelQuest's evidence emitter would
+      // skip host forwarding. Pin the OS origin explicitly — the same defense
+      // voxelDojo's serve-catalog.mjs already applies.
+      env: { VITE_CODEXDOJO_OS_ORIGIN: 'http://127.0.0.1:4174' },
     },
     {
       name: 'LiteracyDojo',

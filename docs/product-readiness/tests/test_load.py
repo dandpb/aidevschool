@@ -26,6 +26,7 @@ def test_load_domain_parses_closed_typed_records() -> None:
     assert tuple(scenario.id for scenario in domain.scenarios) == (
         "dojotoday-active-unit-guidance",
         "dojotoday-read-only-boundary",
+        "dojotoday-returning-next-day",
         "literacy-corridor-gate-retry",
         "literacy-corridor-grandfathered-return",
         "literacy-corridor-happy-path",
@@ -46,8 +47,10 @@ def test_load_domain_parses_closed_typed_records() -> None:
         "os-voxel-returning-device",
         "pixelquest-encounter-evidence",
         "pixelquest-evidence-recovery",
+        "pixelquest-returning-evidence-handoff",
         "voxel-accessible-renderer",
         "voxel-standalone-loop",
+        "voxel-standalone-return-reentry",
     )
 
 

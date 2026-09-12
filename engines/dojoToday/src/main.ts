@@ -7,6 +7,7 @@
  * Regra de ouro: produtor ≠ verificador.
  */
 import "./styles.css";
+import { emitFunnelEvent } from "@aidevschool/evidence/funnel-telemetry";
 import {
   askSocrates,
   clearConfig,
@@ -128,9 +129,9 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               placeholder="Pergunte ao Sócrates sobre esta missão…"
               aria-label="Pergunta para o Sócrates"
             />
-            <button id="soc-send" type="button" class="btn btn-primary socrates-send">Perguntar</button>
+            <button id="soc-send" type="button" class="btn btn-primary socrates-send" data-testid="submit-attempt">Perguntar</button>
           </div>
-          <button id="soc-config-btn" type="button" class="link-btn">⚙️ Configurar assistente (opcional)</button>
+          <button id="soc-config-btn" type="button" class="link-btn" aria-expanded="false" aria-controls="soc-config">⚙️ Configurar assistente (opcional)</button>
           <div id="soc-config" class="socrates-config" hidden>
             <p class="muted socrates-privacy">
               Experimental. Sua chave fica só neste navegador e vai apenas para o endpoint
@@ -150,7 +151,16 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
               <button id="soc-clear" type="button" class="link-btn">Limpar</button>
             </div>
           </div>
-          <div id="soc-reply" class="socrates-reply" aria-live="polite"></div>
+          <!-- W3 §4.3-4 (AID-1096): testid canônico do papel feedback-panel do loop
+               (docs/design/design-foundations.md §3.4 — mapeamento dojoToday). -->
+          <div
+            id="soc-reply"
+            class="socrates-reply"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+            data-testid="feedback-panel"
+          ></div>
         </div>
       </div>
     </section>`;
@@ -198,6 +208,33 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
     </section>`;
 }
 
+function demoNoticeEnabled(): boolean {
+  // Literal member chain on import.meta.env so the bundler's define replaces
+  // it statically in production builds (bare import.meta.env objects are not
+  // replaced); the try/catch keeps runtime contexts without Vite env inert.
+  try {
+    const value: unknown = (
+      import.meta as unknown as {
+        env: { VITE_DOJOTODAY_DEMO_NOTICE?: string };
+      }
+    ).env.VITE_DOJOTODAY_DEMO_NOTICE;
+    return value === "1";
+  } catch {
+    return false;
+  }
+}
+
+/** R2 da spec AID-981: copy honesta no build público de demonstração (D2-A). */
+function demoNotice(): string {
+  if (!demoNoticeEnabled()) return "";
+  return `
+    <aside class="card demo-note" aria-label="Projeção de demonstração">
+      <p><strong>Projeção de demonstração.</strong> Esta rota pública mostra o
+      read model de demonstração do projeto; a sua jornada real vive no seu
+      dispositivo e no seu repositório, agendada pelo seu próprio substrato.</p>
+    </aside>`;
+}
+
 function render(s: TodaySnapshot): string {
   const overdue = [...s.reviews].sort((a, b) =>
     a.reason === "overdue" ? -1 : b.reason === "overdue" ? 1 : 0,
@@ -214,6 +251,8 @@ function render(s: TodaySnapshot): string {
       <h1>Sua lição de hoje</h1>
       <p class="hero-date">${dateLabel}</p>
     </header>
+
+    ${demoNotice()}
 
     ${streakCard(s.streak)}
 
@@ -260,12 +299,15 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     if (modelInput) modelInput.value = cfg.model;
   };
   fill();
-  const setReply = (text: string) => {
+  const setReply = (text: string, isError = false) => {
+    // W2 §2.3 (AID-1089): feedback por cor + borda + texto — nunca só cor.
     reply.textContent = text;
+    reply.classList.toggle("is-error", isError && text.length > 0);
   };
 
   configBtn.addEventListener("click", () => {
     configPanel.hidden = !configPanel.hidden;
+    configBtn.setAttribute("aria-expanded", String(!configPanel.hidden));
     fill();
   });
   saveBtn?.addEventListener("click", () => {
@@ -275,6 +317,7 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
       model: modelInput?.value.trim() || "gpt-4o-mini",
     });
     configPanel.hidden = true;
+    configBtn.setAttribute("aria-expanded", "false");
     setReply(
       isConfigured(loadConfig())
         ? "Assistente configurado. Pergunte acima."
@@ -312,17 +355,27 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
     if (!question) return;
     const cfg = loadConfig();
     send.disabled = true;
-    if (!isConfigured(cfg)) {
-      configPanel.hidden = false;
-      fill();
-      setReply(deterministicNudge(mission));
+    // W2 §2.3-6 (AID-1089): ação assíncrona — controle desabilita + aria-busy;
+    // a região role=status (#soc-reply, aria-live polite) anuncia o andamento.
+    send.setAttribute("aria-busy", "true");
+    try {
+      if (!isConfigured(cfg)) {
+        configPanel.hidden = false;
+        configBtn.setAttribute("aria-expanded", "true");
+        fill();
+        setReply(deterministicNudge(mission));
+        return;
+      }
+      setReply("Sócrates está pensando…");
+      const result = await askSocrates(cfg, mission, question);
+      setReply(
+        result.ok ? result.text : `${result.error}\n\n${deterministicNudge(mission)}`,
+        !result.ok,
+      );
+    } finally {
       send.disabled = false;
-      return;
+      send.removeAttribute("aria-busy");
     }
-    setReply("Sócrates está pensando…");
-    const result = await askSocrates(cfg, mission, question);
-    setReply(result.ok ? result.text : `${result.error}\n\n${deterministicNudge(mission)}`);
-    send.disabled = false;
   };
   send.addEventListener("click", () => void ask());
   q.addEventListener("keydown", (event) => {
@@ -341,6 +394,11 @@ async function boot(): Promise<void> {
     root.innerHTML = renderLocalSuggestion(await loadHostLocalToday());
     return;
   }
+  // AID-987/T1b (padrão AID-913): evento anônimo de funil da abertura da view
+  // diária — conta aberturas, não identifica ninguém e não persiste nada; é
+  // no-op sem o endpoint same-origin ativado no deploy. O modo hospedado do OS
+  // fica de fora para não duplo-contar o funil do host.
+  emitFunnelEvent("dojotoday", "daily-view-open");
   root.innerHTML = render(today);
   wireInteractions(today.activeUnit);
 }

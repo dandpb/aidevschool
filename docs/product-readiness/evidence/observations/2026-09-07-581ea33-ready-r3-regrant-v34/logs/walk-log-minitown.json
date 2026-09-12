@@ -1,0 +1,18 @@
+{
+  "surface": "miniTown",
+  "startedAt": "2026-09-07T08:09:15.324Z",
+  "steps": [
+    {
+      "step": "explore",
+      "simVisible": true,
+      "noLessonOrPersistenceClaims": true,
+      "exploreCopy": true,
+      "note": "experimental surface: exploration only — no lesson, persistence, progression, evidence or mastery promise (document-review of the boundary against the walked surface)"
+    }
+  ],
+  "verdict": {
+    "simAdvances": true,
+    "noLessonPersistence": true,
+    "exploreOnly": true
+  }
+}

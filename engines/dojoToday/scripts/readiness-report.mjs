@@ -19,6 +19,7 @@ const result = spawnSync(
     'engines/dojoToday/test-results/readiness',
     '--scenarios',
     'dojotoday-active-unit-guidance',
+    'dojotoday-returning-next-day',
   ],
   { cwd: repoRoot, encoding: 'utf8', stdio: 'inherit' },
 )

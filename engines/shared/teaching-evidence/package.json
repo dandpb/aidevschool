@@ -12,6 +12,10 @@
     "./host-protocol": {
       "types": "./hostProtocol.ts",
       "import": "./hostProtocol.ts"
+    },
+    "./funnel-telemetry": {
+      "types": "./funnelTelemetry.ts",
+      "import": "./funnelTelemetry.ts"
     }
   }
 }

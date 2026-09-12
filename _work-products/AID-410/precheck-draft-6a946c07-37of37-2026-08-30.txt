@@ -1,0 +1,39 @@
+PASS manifest-sha256 f81bfd077214d1ec903a376850c486d2490fa0e65289149df7a1e79d3d798d04
+PASS manifest-sourceRevision 72130c6d7002fc03d2fccb6a1131d05f7bbab467
+PASS manifest-os-bytes b319126dd082e054
+PASS surface-200 / 200
+PASS surface-200 /apps/literacydojo/ 200
+PASS surface-200 /apps/warehouse/ 200
+PASS surface-200 /apps/wormhole/ 200
+PASS surface-200 /apps/relay-station/ 200
+PASS surface-200 /apps/pipeline-plant/ 200
+PASS os-embeds-same-origin-literacy 
+PASS os-embeds-same-origin-pipeline-plant 
+PASS os-no-stale-external-pin 
+PASS os-copy-template-missions 
+PASS os-pins-pixelDojo-immutable VITE_PIXELDOJO_URL must be the immutable deploy, not a dev fallback
+PASS literacy-contentVersion-2026-08-21.1 
+PASS literacy-not-2026-07-25.1 
+PASS reflow-no-body-min-width-320 
+PASS reflow-voxel-world-min-width-0 
+PASS MOTOR l01 MOTOR running iframe=https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l01 iframe same-origin https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR l14 MOTOR running iframe=https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l14 iframe same-origin https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR l15 MOTOR running iframe=https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS l15 iframe same-origin https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/literacydojo/
+PASS MOTOR game-06 MOTOR running iframe=https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/pipeline-plant/
+PASS game-06 iframe same-origin https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/pipeline-plant/
+PASS MOTOR warehouse MOTOR running iframe=https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/warehouse/
+PASS warehouse iframe same-origin https://6a946c076fded0979e88bf80--aidevschool-codexdojo-os.netlify.app/apps/warehouse/
+PASS reflow-iframe@320 docScrollW=298 innerW=298
+PASS reflow-iframe@298 docScrollW=298 innerW=298
+PASS bridge-session-200-same-origin 200 token=43ch
+PASS bridge-session-403-cross-origin 403 {"error":"origin-forbidden"}
+PASS bridge-verification-401-no-token 401
+PASS map-count-21-missions 21 missões, uma sequência
+PASS catalog-embeds-game-06 
+PASS catalog-embeds-l15-l17 
+PASS catalog-21-chapterOrders 21
+
+=== 37/37 PASS ===

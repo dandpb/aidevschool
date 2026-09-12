@@ -16,7 +16,8 @@ test("aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope",
   assert.equal(summary.validLiteracyEvents, 8);
   assert.equal(summary.validEvents, 8);
   assert.equal(summary.driftCount, 0);
-  assert.equal(summary.monitorVersion, 2);
+  // AID-987/T1b: o monitor aprendeu o envelope surfaces v3 (monitorVersion 3).
+  assert.equal(summary.monitorVersion, 4); // F2 v4: vocabulário estendido, diagnóstico non-UUID
 });
 
 test("drift literacy falha alto (exit 1) com motivo classificado", async () => {

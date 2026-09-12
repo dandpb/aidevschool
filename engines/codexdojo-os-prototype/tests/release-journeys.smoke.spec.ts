@@ -1,4 +1,5 @@
 import { expect, test, type Frame, type Page } from '@playwright/test'
+import { completeLiteracyMission } from './support/literacyMission'
 
 async function openSchool(page: Page) {
   await page.goto('/')
@@ -61,20 +62,20 @@ test('proves the nontechnical release journey through recovery, verification, an
   await expect(page.getByText('Veredito independente: FAIL', { exact: true })).toBeVisible()
 
   await page.reload()
-  await mission.getByTestId('start-lesson').click()
-  await mission.getByTestId('output-out-b').check()
-  await mission.getByTestId('criterion-c-fontes').check()
-  await mission.getByTestId('criterion-c-limites').check()
-  await mission.getByTestId('submit-attempt').click()
-  await mission.getByTestId('finish-lesson').click()
+  // AID-1153 (retrofit f70205de): the passing retry must walk all three l02
+  // activities (next-activity → finish-lesson) like chapter-continuity.
+  await completeLiteracyMission(page, 'l02', { returnToHub: false })
 
   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
-  await expect(page.getByTestId('independent-verdict')).toBeVisible()
+  await expect(page.getByTestId('independent-verdict')).toBeVisible({ timeout: 15_000 })
   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
   await expect(page.getByText(`${canonicalCount} verificadas · sem alteração local`)).toBeVisible()
   await page.getByRole('button', { name: 'Voltar ao hub' }).click()
   await page.reload()
-  await expect(page.getByTestId('independent-verdict')).toBeVisible()
+  // After a failed attempt precedes the passing run, the mission-completion
+  // evidence settles through the bridge verifier slowly (tens of seconds);
+  // the PASS verdict is durable across the reload, so wait it out.
+  await expect(page.getByTestId('independent-verdict')).toBeVisible({ timeout: 60_000 })
 
   await page.getByRole('button', { name: 'Abrir mapa' }).click()
   await expect(page.getByRole('heading', { name: '6 missões, uma sequência' })).toBeVisible()

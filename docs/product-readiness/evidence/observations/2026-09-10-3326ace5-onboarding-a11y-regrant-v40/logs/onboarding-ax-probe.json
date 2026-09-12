@@ -1,0 +1,191 @@
+{
+  "env": {
+    "base": "http://localhost:4199",
+    "viewport": "360x740",
+    "browser": "chromium CDP Accessibility.getFullAXTree",
+    "head": "7a790f48"
+  },
+  "steps": [
+    {
+      "step": 2,
+      "expectedHeading": "O que você quer melhorar com IA?",
+      "expectedCounter": "Etapa 2 de 5",
+      "dom": {
+        "activeId": "onboarding-title",
+        "activeTag": "H1",
+        "h1Text": "O que você quer melhorar com IA?",
+        "tabIndex": "-1"
+      },
+      "axHeadingFocused": {
+        "name": "O que você quer melhorar com IA?",
+        "childText": "O que você quer melhorar com IA?",
+        "focused": true,
+        "level": 1
+      },
+      "axStatusRegions": [
+        {
+          "name": "",
+          "childText": "Etapa 2 de 5",
+          "live": "polite",
+          "atomic": true
+        }
+      ],
+      "firstTabStopAfterHeading": {
+        "id": "",
+        "testid": "onboarding-option-write_better"
+      },
+      "noCounterInHeadingName": true,
+      "pass": true
+    },
+    {
+      "step": 3,
+      "expectedHeading": "Onde você mais pretende usar IA?",
+      "expectedCounter": "Etapa 3 de 5",
+      "dom": {
+        "activeId": "onboarding-title",
+        "activeTag": "H1",
+        "h1Text": "Onde você mais pretende usar IA?",
+        "tabIndex": "-1"
+      },
+      "axHeadingFocused": {
+        "name": "Onde você mais pretende usar IA?",
+        "childText": "Onde você mais pretende usar IA?",
+        "focused": true,
+        "level": 1
+      },
+      "axStatusRegions": [
+        {
+          "name": "",
+          "childText": "Etapa 3 de 5",
+          "live": "polite",
+          "atomic": true
+        }
+      ],
+      "firstTabStopAfterHeading": {
+        "id": "",
+        "testid": "onboarding-option-work"
+      },
+      "noCounterInHeadingName": true,
+      "pass": true
+    },
+    {
+      "step": 4,
+      "expectedHeading": "Como você avalia sua confiança hoje?",
+      "expectedCounter": "Etapa 4 de 5",
+      "dom": {
+        "activeId": "onboarding-title",
+        "activeTag": "H1",
+        "h1Text": "Como você avalia sua confiança hoje?",
+        "tabIndex": "-1"
+      },
+      "axHeadingFocused": {
+        "name": "Como você avalia sua confiança hoje?",
+        "childText": "Como você avalia sua confiança hoje?",
+        "focused": true,
+        "level": 1
+      },
+      "axStatusRegions": [
+        {
+          "name": "",
+          "childText": "Etapa 4 de 5",
+          "live": "polite",
+          "atomic": true
+        }
+      ],
+      "firstTabStopAfterHeading": {
+        "id": "",
+        "testid": "onboarding-option-low"
+      },
+      "noCounterInHeadingName": true,
+      "pass": true
+    },
+    {
+      "step": 5,
+      "expectedHeading": "Qual situação você quer explorar primeiro?",
+      "expectedCounter": "Etapa 5 de 5",
+      "dom": {
+        "activeId": "onboarding-title",
+        "activeTag": "H1",
+        "h1Text": "Qual situação você quer explorar primeiro?",
+        "tabIndex": "-1"
+      },
+      "axHeadingFocused": {
+        "name": "Qual situação você quer explorar primeiro?",
+        "childText": "Qual situação você quer explorar primeiro?",
+        "focused": true,
+        "level": 1
+      },
+      "axStatusRegions": [
+        {
+          "name": "",
+          "childText": "Etapa 5 de 5",
+          "live": "polite",
+          "atomic": true
+        }
+      ],
+      "firstTabStopAfterHeading": {
+        "id": "",
+        "testid": "onboarding-option-scheduling"
+      },
+      "noCounterInHeadingName": true,
+      "pass": true
+    }
+  ],
+  "liveRegionsOnOnboarding": [
+    {
+      "tag": "output",
+      "attr": "(implicit)",
+      "text": "Etapa 1 de 5",
+      "class": "sr-only"
+    }
+  ],
+  "initial": {
+    "domActiveElement": {
+      "id": "onboarding-title",
+      "tag": "H1"
+    },
+    "axHeading": [
+      {
+        "name": "Chegue à Vila Lume",
+        "childText": "Chegue à Vila Lume",
+        "focused": true,
+        "level": 1
+      },
+      {
+        "name": "Lumi, sua guia",
+        "childText": "Lumi, sua guia",
+        "level": 2
+      }
+    ],
+    "axStatus": [
+      {
+        "name": "",
+        "childText": "Etapa 1 de 5",
+        "live": "polite",
+        "atomic": true
+      }
+    ]
+  },
+  "back": {
+    "expectedHeading": "Como você avalia sua confiança hoje?",
+    "expectedCounter": "Etapa 4 de 5",
+    "domActiveElement": {
+      "activeId": "onboarding-title"
+    },
+    "axHeadingFocused": {
+      "name": "Como você avalia sua confiança hoje?",
+      "childText": "Como você avalia sua confiança hoje?",
+      "focused": true,
+      "level": 1
+    },
+    "axStatusRegions": [
+      {
+        "name": "",
+        "childText": "Etapa 4 de 5",
+        "live": "polite",
+        "atomic": true
+      }
+    ],
+    "pass": true
+  }
+}

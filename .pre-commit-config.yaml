@@ -1,0 +1,58 @@
+# Pre-commit checks for the shared Python surfaces.
+# The Node engines keep their own tooling (biome/vitest/playwright) wired into
+# each engine's package.json; this config covers the repo-root Python suites
+# (minimaxDojo, openclaw, learner/substrate, learner/gate, aiDevschoolMvp).
+#
+# Deliberately check-only (no auto-fix hooks): this repo treats committed
+# evidence, curriculum docs, and learner records as auditable history — a
+# hook that rewrites files on commit would falsify that record. Checks fail
+# loudly; fixing is a human/agent decision, never automatic.
+# Install once with: uv pip install pre-commit && pre-commit install
+exclude: |
+  (?x)^(
+    _?work-products/.*|
+    aid[0-9]+-evidence/.*|
+    \.loops/.*|
+    \.playwright-mcp/.*|
+    \.omo/.*|
+    \.mavis/.*|
+    \.scratch/.*|
+    \.specs/.*|
+    \.harness-eval/.*|
+    \.Codex/.*|
+    \.jules/.*|
+    \.agora/.*|
+    \.logs/.*|
+    docs/.*|
+    APRENDIZADOS\.md
+  )
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+        exclude: |
+          (?x)^(
+            docs/curso/workflow_lab/fixtures/.*|
+            learner/substrate/fixtures/.*|
+            learner/substrate/schema\.yaml|
+            engines/minimaxDojo/whiteboard/cron_registry\.yaml|
+            engines/minimaxDojo/config/learner\.yaml|
+            engines/aiDevschoolMvp/aidevschool/prompts/.*|
+            curriculum/ai-literacy/.*|
+            learner/.*|
+            intent/.*
+          )
+      - id: check-merge-conflict
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+
+  - repo: local
+    hooks:
+      # Fast byte-compile of the shared Python surfaces (read-only check).
+      - id: python-import-smoke
+        name: python import smoke (shared substrate)
+        entry: .venv/bin/python -m compileall -q engines/minimaxDojo engines/openclaw learner
+        language: system
+        pass_filenames: false
+        files: \.py$

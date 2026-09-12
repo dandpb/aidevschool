@@ -1,0 +1,58 @@
+schemaVersion: 1
+assessmentId: 2026-09-06-e41b9b9-ready-r2-regrant-v33
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-06T23:10:00Z'
+revalidateBy: '2026-10-06'
+gitSha: e41b9b93d74af3e2b54e05a4f49275800b43bbe1
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-os-literacy-hosted-mission-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-verification-recovery-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-literacy-returning-device-mixed-e41b9b93
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-os-voxel-hosted-missions-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-renderer-accessibility-recovery-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-voxel-returning-device-mixed-e41b9b93
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-os-onboarding-track-choice-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-returning-device-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-os-returning-recovery-mixed-e41b9b93
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-dojotoday-active-unit-guidance-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-dojotoday-read-only-boundary-observed-e41b9b93
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-pixelquest-encounter-evidence-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-pixelquest-evidence-recovery-observed-e41b9b93
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: validated-journey
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-voxel-standalone-loop-mixed-e41b9b93
+  - 2026-09-06T22:55:00Z-voxel-accessible-renderer-observed-e41b9b93
+- useCaseId: minitown-explore-only
+  outcome: pass
+  grantedTier: experimental
+  reasons: []
+  resultRunIds:
+  - 2026-09-06T22:55:00Z-minitown-explore-only-mixed-e41b9b93
