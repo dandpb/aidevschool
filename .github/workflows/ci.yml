@@ -225,6 +225,10 @@ jobs:
       # sections; v3 sections stay value-identical (R7d locked by the
       # byte-identical example report in the main aggregation test above).
       - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs
+      # AID-1525 (CI wiring AID-1547): the conditional surfacesFunnel section
+      # of the v4 contract — surfaces v3 lines aggregate per source instead of
+      # landing in rejectedEvents; inputs without v3 stay byte-identical.
+      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs
       - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic,../../learner/gate/tests/fixtures/analytics/synthetic-v4
       # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
       # at build time), so the smoke below can reuse this dist/ without a rebuild.
