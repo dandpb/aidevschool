@@ -247,7 +247,14 @@ export function findAdjacentWalkable(
 
     // Optimization: Avoid intermediate array allocation and sort() for best candidate
     // Reduces GC pressure in simulation hot loops.
-    const score = prefer.findIndex((p) => p.x === nx && p.y === ny)
+    let score = -1
+    for (let i = 0; i < prefer.length; i++) {
+      const p = prefer[i]
+      if (p && p.x === nx && p.y === ny) {
+        score = i
+        break
+      }
+    }
     const finalScore = score === -1 ? Infinity : score
 
     // Strict inequality ensures deterministic tie-breaking (first valid candidate wins)
