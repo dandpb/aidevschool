@@ -59,7 +59,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Run the AI-literacy chat-tutor MVP | `engines/aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring; tests via repo-root `make test`. |
 | Review the Vertical Protocol prototype | `engines/zai-duolingo-like/` | Non-integrated Next.js prototype; future engine; outside `make test`; do not delete. |
 | Validate the 2D game workspace | `engines/pixelDojo/` | Install once, then use the root `lint`, `test`, `typecheck`, `build`, and `smoke` scripts; use `pnpm --filter pixel-quest dev` for the app. |
-| Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `.loops/threejs-dojo-coverage/` | Read the loop memory first; canonical batch artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/`. |
+| Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `docs/loops/threejs-dojo-coverage/` | Read the loop memory first (tracked at `docs/loops/threejs-dojo-coverage/memory.md`); run artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/` (untracked). |
 | Validate the 3D game workspace | `engines/voxelDojo/` | Run catalog-wide scripts across `game-*`; use `game-10-hash-ring` as the reference package. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/` | Keep `MANIFEST.md` mapped to concrete files. |
 | Work on the tutor core | `engines/minimaxDojo/` | Start with `INDEX.md`, `README.md`, `docs/`, `prompts/`, then `core/` and `tests/` for the Python reference implementation and contract tests. |
@@ -178,7 +178,7 @@ python3 -m unittest discover -s learner/substrate/tests
 ## Tooling root convention
 
 - `.mavis/` is the canonical derived runtime view; `learner/substrate/` regenerates it.
-- `.loops/` stores append-only loop memory; read a loop's `memory.md` before rerunning it.
+- `.loops/` is untracked runtime state for loop runs (output artifacts under `.loops/<loop>/output/`); the append-only loop memory itself is tracked at `docs/loops/<loop>/memory.md` — read it before rerunning a loop and append to it after the run (policy: `docs/loops/README.md`, decision AID-1528/achado A AID-1522).
 - `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.serena/`, `.commandcode/`, and `.compozy/` are
   platform/session state unless a tracked file says otherwise.
 - Durable shared state belongs in `.mavis/`, `learner/`, or `curriculum/`. Codex-specific runbooks

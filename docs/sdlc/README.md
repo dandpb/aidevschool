@@ -163,6 +163,7 @@ na issue AID-1515 (QA countersign fresh-context, #346 prioritário).
 | --- | --- | --- | --- |
 | #345 | harness L4 108/108 — uv.lock + pre-commit check-only + fix cites threejs-dojo | `82e8ef8c` 2026-09-12 | founder merge GitHub; CI 36/36 verde pré-merge incl. `SDLC guardrails (diff)`; retrofit `intent/2026-09-12-harness-l4/`; veredito QA pós-fato AID-1515 |
 | #346 | DESIGN.md per-engine (spec Stitch) + CI job `design-md-lint` | `0a85deff` 2026-09-12 | founder merge GitHub; CI 37/37 verde pré-merge incl. guardrails + DESIGN.md lint; trilha parcial in-repo (`.tasks/design-md-frontend.md`); retrofit `intent/2026-09-12-design-md-ci-lint/`; veredito QA pós-fato AID-1515 |
+| #349 | `Fix/win path` — docs-reconciliation (DOCUMENTATION/VISION/AGENTS) + wave de conteúdo (miro-tour, wiki, curso-simples, legal/piloto, evidence) + restore digest miniTown + untrack `.loops/` | `d92f2f90` 2026-09-12 | founder merge GitHub; CI zero-falhas no head `845922cc` incl. `SDLC guardrails (diff)` + `product readiness (claims)`; retrofit `intent/2026-09-12-win-path-docs-reconciliation/`; veredito QA pós-fato AID-1522 (conteúdo APROVADO COM RESSALVA — achado A remediado em AID-1528) |
 
 ## Guardrails (what is enforced, and how)
 

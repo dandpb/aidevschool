@@ -32,7 +32,7 @@ per-slug failure: every slug gets attempted; the final verdict reports
 - Concurrency cap: 18                  <!-- hard cap on simultaneously-running worker sessions -->
 - Engine: **voxelDojo**                <!-- one isolated Three.js app per slug for parallelism isolation -->
 - Output dir: `.loops/threejs-dojo-coverage/output/<run-id>/`
-- Memory file: `.loops/threejs-dojo-coverage/memory.md`
+- Memory file: `docs/loops/threejs-dojo-coverage/memory.md`
 - Per-slug output (delegated): `.loops/threejs-dojo/output/<slug>/`          <!-- produced by each worker; orchestrator copies a manifest pointer, not the artifacts -->
 
 **Training Mode ON:** pause before each major step (preflight, dispatch,
@@ -62,8 +62,8 @@ The loop may read:
 - `engines/voxelDojo/game-<NN>-<slug>/` — per-slug app destination (each worker writes its OWN directory)
 - `learner/learning_state.yaml` — gate contract (read-only; verifier-owned `mastered`)
 - `.claude/skills/threejs-dojo/SKILL.md` — the per-slug loop this loop wraps (workers load this skill)
-- `.loops/threejs-dojo/memory.md` — per-slug memory (read by orchestrator to detect already-closed slugs)
-- `.loops/threejs-dojo-coverage/memory.md` — read FIRST; learn from past coverage runs
+- `docs/loops/threejs-dojo/memory.md` — per-slug memory (read by orchestrator to detect already-closed slugs)
+- `docs/loops/threejs-dojo-coverage/memory.md` — read FIRST; learn from past coverage runs
 
 Read the coverage memory file first — it records what the last batch learned
 (per-slug failures, parallelism pain, engine decisions that worked).
@@ -97,7 +97,7 @@ Read the coverage memory file first — it records what the last batch learned
    load the `.claude/skills/threejs-dojo/SKILL.md` skill and run it
    end-to-end (steps 1–6 of that skill), then write their verdict to
    `.loops/threejs-dojo/output/<slug>/verifier-report.json` and update
-   `.loops/threejs-dojo/memory.md`. All fresh slugs are isolated voxelDojo apps
+   `docs/loops/threejs-dojo/memory.md`. All fresh slugs are isolated voxelDojo apps
    and may run in parallel up to the concurrency cap.
    - Input: per-slug row from the manifest, plus the worker brief template:
      ```text
@@ -105,7 +105,7 @@ Read the coverage memory file first — it records what the last batch learned
      Load skill: .claude/skills/threejs-dojo/SKILL.md
      Slug: <slug> — Engine: <voxelDojo|accept>
      Catalog line: <catalog concept + done-rule>
-     Memory to read first: .loops/threejs-dojo/memory.md
+     Memory to read first: docs/loops/threejs-dojo/memory.md
      Per-slug output dir: .loops/threejs-dojo/output/<slug>/
      Plan path: engines/voxelDojo/docs/plans/<NN>_<slug>.md
      Concurrency note: voxelDojo workers run in parallel in isolated app
@@ -156,7 +156,7 @@ Read the coverage memory file first — it records what the last batch learned
      FAIL, batch is reported as best-effort with the gap list)
 
 5. **Append coverage memory** — write one batch entry to
-   `.loops/threejs-dojo-coverage/memory.md` with the per-slug score table,
+   `docs/loops/threejs-dojo-coverage/memory.md` with the per-slug score table,
    the batch verifier's verdict, parallelism observations (any working-tree
    collisions, port collisions, biome/tsc interference between voxelDojo apps,
    and whether the voxelDojo isolation held), and one lessons line per
@@ -231,7 +231,7 @@ At the end of **every** batch run, write both:
      parallelism notes, retry_target per open slug, lessons cross-link
      to memory)
 2. **Memory** → append one entry to
-   `.loops/threejs-dojo-coverage/memory.md`:
+   `docs/loops/threejs-dojo-coverage/memory.md`:
 
    ```markdown
    ## Batch <ISO-8601 timestamp> — run-id <run-id>
@@ -285,4 +285,4 @@ Three.js app sandbox:
 - Each app has its own `package.json`, `node_modules`, lockfile,
   Vite dev server (auto-assigned port), Playwright smoke, Biome config, tsconfig.
 - Two workers never read or write the same file.
-- Port assignments come from `.loops/threejs-dojo/ROUTING_MANIFEST.md`.
+- Port assignments come from `docs/loops/threejs-dojo/ROUTING_MANIFEST.md`.
