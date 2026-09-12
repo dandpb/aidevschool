@@ -1,0 +1,88 @@
+{
+  "assessmentId": "2026-08-21-c256a96-wayfinder",
+  "assessorContext": "independent-readiness-review",
+  "gitSha": "c256a9643b72ccde93345eebcb3c29f0cacd2949",
+  "results": [
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "f3353c90a9658aa0606f0dd96bf3e66fd2ae0e5543c244c5bb35c049213f3999"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-21-c256a96-wayfinder/literacy-happy-path.json",
+          "sha256": "ecde3b03b7ad94f109f4210175bb1b50a997e6f0278fa99aa65cdaf181ebd3f8"
+        }
+      ],
+      "executedAt": "2026-08-21T05:42:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "c256a9643b72ccde93345eebcb3c29f0cacd2949",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-21T05:42:15Z-literacy-happy-path-c256a964",
+      "scenarioId": "literacy-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts",
+          "sha256": "6aeb5dac580377f8f737a25b86d8318005f5e8e75da5c3cb72c0ebe7008e63d9"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-21-c256a96-wayfinder/literacy-resume.json",
+          "sha256": "bdd922efdab2629df7fc9412e8bd9cfad13f294762ec9ddd385a0d6b224ae13e"
+        }
+      ],
+      "executedAt": "2026-08-21T05:42:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "c256a9643b72ccde93345eebcb3c29f0cacd2949",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-21T05:42:15Z-literacy-resume-c256a964",
+      "scenarioId": "literacy-resume",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/lessonSession.ts",
+          "sha256": "51276032a7547d9da2fc4c83e25e8f46968e50a95f87dfdb3afdca56fb0a59c3"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-21-c256a96-wayfinder/literacy-retry.json",
+          "sha256": "16bf66958c1375c36622258364e4c9a0040790f3d08b2c2e81dd42b7ff797dd9"
+        }
+      ],
+      "executedAt": "2026-08-21T05:42:15Z",
+      "executor": "automated",
+      "gaps": [],
+      "gitSha": "c256a9643b72ccde93345eebcb3c29f0cacd2949",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-21T05:42:15Z-literacy-retry-c256a964",
+      "scenarioId": "literacy-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    }
+  ],
+  "revalidateBy": "2026-09-21",
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-21T05:45:00Z"
+}

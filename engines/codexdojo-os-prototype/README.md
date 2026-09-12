@@ -133,7 +133,7 @@ unverified, and never grants mastery.
 ## Implemented surfaces
 
 - Desktop shell, top bar, dock, searchable launcher, and movable windows.
-- Catalog with 11 apps and explicit maturity states.
+- Catalog with the IA Prática / Dev tracks and the missions bundled in the pilot; secondary apps accessible via `/desktop`.
 - Contextual Learn Mode and a deterministic local mentor prototype.
 - Tracks, local Terminal commands, Files, and an architecture map.
 - Engine Lab/Hub with nine bounded engine adapters and raw-evidence receipts.

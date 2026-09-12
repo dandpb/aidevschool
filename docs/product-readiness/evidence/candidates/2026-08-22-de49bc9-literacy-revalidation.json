@@ -1,0 +1,124 @@
+{
+  "assessmentId": "2026-08-22-de49bc9-literacy-revalidation",
+  "assessorContext": "independent-readiness-review",
+  "gitSha": "de49bc9e8518a78a80460fac893606fce00a7b78",
+  "results": [
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/progress.ts",
+          "sha256": "f3353c90a9658aa0606f0dd96bf3e66fd2ae0e5543c244c5bb35c049213f3999"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-de49bc9-literacy-revalidation/literacy-happy-path.json",
+          "sha256": "fffab083f772033b60ccc5a2d522f25d9972199df8bcba30bd332a1d0c20a0c5"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-literacy-revalidation/2026-08-22-literacy-live.json",
+          "sha256": "7e7a2bf93bd11a3865f2547c31b65b2797b37084646bff22253ca305c750c9e0"
+        }
+      ],
+      "executedAt": "2026-08-22T16:12:15Z",
+      "executor": "mixed",
+      "gaps": [
+        {
+          "disposition": "Avaliar se o mapa deve explicar em uma frase por que a primeira miss\u00e3o dispon\u00edvel n\u00e3o \u00e9 a de n\u00famero 1 (ex.: 'come\u00e7amos por aqui porque...'), ou renomear a numera\u00e7\u00e3o de entrada; n\u00e3o bloqueia a jornada \u2014 o CTA \u00fanico permaneceu inequ\u00edvoco.",
+          "id": "literacy-happy-path-mission-numbering-vs-entry",
+          "owner": "LiteracyDojo",
+          "severity": "low",
+          "summary": "No mapa fresco, a 'MISS\u00c3O 1 \u2014 Sua primeira conversa com uma IA' aparece como 'Bloqueada' logo acima da 'MISS\u00c3O 2 \u2014 IA n\u00e3o \u00e9 uma fonte de verdade' com 'Dispon\u00edvel/Come\u00e7ar'. A numera\u00e7\u00e3o sugere ordem sequencial, ent\u00e3o um aprendiz pode estranhar come\u00e7ar pela miss\u00e3o 2 com a 1 trancada; a orienta\u00e7\u00e3o da Lumi ('Comece pelo pedido marcado como Dispon\u00edvel') e o CTA \u00fanico resolvem a a\u00e7\u00e3o, mas a l\u00f3gica de entrada (Mapa Inicial) n\u00e3o \u00e9 explicada em linguagem de aprendiz."
+        }
+      ],
+      "gitSha": "de49bc9e8518a78a80460fac893606fce00a7b78",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-22T16:12:15Z-literacy-happy-path-mixed-de49bc9e",
+      "scenarioId": "literacy-happy-path",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/domain/lessonSession.ts",
+          "sha256": "51276032a7547d9da2fc4c83e25e8f46968e50a95f87dfdb3afdca56fb0a59c3"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-de49bc9-literacy-revalidation/literacy-retry.json",
+          "sha256": "04f773dba47da420221d373f42d0dbc2559183b26a5c024104c4e418c026209b"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-literacy-revalidation/2026-08-22-literacy-live.json",
+          "sha256": "7e7a2bf93bd11a3865f2547c31b65b2797b37084646bff22253ca305c750c9e0"
+        }
+      ],
+      "executedAt": "2026-08-22T16:12:15Z",
+      "executor": "mixed",
+      "gaps": [
+        {
+          "disposition": "Considerar um primeiro passo de feedback que aponte apenas os sinais a procurar (fonte e limites) sem nomear a resposta B, reservando a nomea\u00e7\u00e3o para uma segunda falha ou para a dica; n\u00e3o bloqueia a jornada e o tom permanece acolhedor.",
+          "id": "literacy-retry-feedback-reveals-solution",
+          "owner": "LiteracyDojo",
+          "severity": "low",
+          "summary": "O primeiro feedback de erro j\u00e1 nomeia a resposta correta ('A resposta B diz o que n\u00e3o sabe e indica onde confirmar'), ent\u00e3o o retry vira aplica\u00e7\u00e3o guiada em vez de descoberta independente: na segunda tentativa o aprendiz j\u00e1 sabe qual resposta marcar."
+        }
+      ],
+      "gitSha": "de49bc9e8518a78a80460fac893606fce00a7b78",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-22T16:12:15Z-literacy-retry-mixed-de49bc9e",
+      "scenarioId": "literacy-retry",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    },
+    {
+      "artifacts": [
+        {
+          "path": "engines/literacyDojo/playwright/vertical-slice.spec.ts",
+          "sha256": "bf626950c102c887d30391018c1a906ab7ba9671d9645c1b0add968853b22e48"
+        },
+        {
+          "path": "engines/literacyDojo/src/adapters/indexedDbProgressRepository.ts",
+          "sha256": "6aeb5dac580377f8f737a25b86d8318005f5e8e75da5c3cb72c0ebe7008e63d9"
+        },
+        {
+          "path": "docs/product-readiness/evidence/producers/2026-08-22-de49bc9-literacy-revalidation/literacy-resume.json",
+          "sha256": "1d89518955ea4ec9e6c3aa6d517f8710406f89abf69c0ac8420f88944c302738"
+        },
+        {
+          "path": "docs/product-readiness/evidence/observations/2026-08-22-literacy-revalidation/2026-08-22-literacy-live.json",
+          "sha256": "7e7a2bf93bd11a3865f2547c31b65b2797b37084646bff22253ca305c750c9e0"
+        }
+      ],
+      "executedAt": "2026-08-22T16:12:15Z",
+      "executor": "mixed",
+      "gaps": [
+        {
+          "disposition": "Adicionar uma frase de consequ\u00eancia \u00e0 nota existente (ex.: 'Se voc\u00ea limpar os dados deste navegador ou usar outro aparelho, o progresso recome\u00e7a.') e/ou repeti-la na \u00e1rea de progresso; n\u00e3o bloqueia a jornada \u2014 a continuidade no mesmo navegador funcionou e a localidade \u00e9 comunicada.",
+          "id": "literacy-resume-no-explicit-data-loss-warning",
+          "owner": "LiteracyDojo",
+          "severity": "low",
+          "summary": "O app comunica a localidade do progresso ('neste navegador', 'sem conta', 'neste aparelho') mas nunca diz explicitamente que limpar os dados do navegador ou trocar de dispositivo/remove o progresso; a nota aparece uma \u00fanica vez no onboarding (enquadrada como privacidade) e na tela de conclus\u00e3o, e n\u00e3o h\u00e1 lembrete persistente em home/mapa/progresso."
+        }
+      ],
+      "gitSha": "de49bc9e8518a78a80460fac893606fce00a7b78",
+      "manualFingerprint": "ef0ba147c97647aeca28689c25fe45f42955ead33d75cfc87d9e958992729c4f",
+      "outcome": "pass",
+      "runId": "2026-08-22T16:12:15Z-literacy-resume-mixed-de49bc9e",
+      "scenarioId": "literacy-resume",
+      "schemaVersion": 1,
+      "sourceFingerprint": "0f59504cf494bd4375cfb62399cfe42dd8c78fa3b694d8864fd2fc84b369d989"
+    }
+  ],
+  "revalidateBy": "2026-09-21",
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-22T16:16:38Z"
+}

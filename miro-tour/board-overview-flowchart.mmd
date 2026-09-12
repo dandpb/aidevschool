@@ -1,0 +1,43 @@
+%% Diagram: Spatial overview of the Miro board ROADMAP Guia do Arquiteto | Author: auto | Date: 2026-08-21
+%%{init: {'theme': 'base', 'themeVariables': {'primaryColor': '#4f46e5', 'primaryTextColor': '#ffffff', 'primaryBorderColor': '#3730a3', 'lineColor': '#94a3b8', 'secondaryColor': '#10b981', 'tertiaryColor': '#f59e0b', 'background': '#ffffff', 'mainBkg': '#f8fafc', 'nodeBorder': '#cbd5e1', 'clusterBkg': '#f1f5f9', 'clusterBorder': '#e2e8f0', 'titleColor': '#1e293b', 'edgeLabelBackground': '#ffffff', 'textColor': '#334155'}}}%%
+flowchart LR
+    subgraph leftCol ["Coluna esquerda"]
+        direction TB
+        treinamentos["Treinamentos<br/>CS50 · SQLBolt · Linux"]
+        banco["Banco de imagens"]
+        artigos["Artigos"]
+        videos["Catálogo de vídeos"]
+        treinamentos --> banco --> artigos --> videos
+    end
+
+    subgraph spine ["Trilha central — 47 estágios"]
+        direction TB
+        largada(["Largada"])
+        f1["Fase 1<br/>Fundamentos"]
+        f2["Fase 2<br/>Web, APIs e DevOps"]
+        f3["Fase 3<br/>Qualidade"]
+        f4["Fase 4<br/>Arquitetura"]
+        f5["Fase 5<br/>NFRs"]
+        largada --> f1 --> f2 --> f3 --> f4 --> f5
+    end
+
+    subgraph rightCol ["Chegada"]
+        direction TB
+        padroes["Microsserviços<br/>EDA · Serverless"]
+        certs["AWS Certified<br/>System Design"]
+        parabens(["Parabéns"])
+        padroes --> certs --> parabens
+    end
+
+    videos --> largada
+    f5 --> padroes
+
+    classDef resource fill:#10b981,stroke:#059669,color:#ffffff
+    classDef phase fill:#4f46e5,stroke:#3730a3,color:#ffffff
+    classDef startEnd fill:#f8fafc,stroke:#4f46e5,color:#1e293b
+    classDef highlight fill:#f59e0b,stroke:#d97706,color:#1e293b
+
+    class treinamentos,banco,artigos,videos resource
+    class f1,f2,f3,f4,f5 phase
+    class largada,parabens startEnd
+    class padroes,certs highlight
