@@ -14,7 +14,8 @@ registro: SM (AID-1331 ask `2aebe4d8`) · Change-id:
 `2026-09-10-aria-expanded-socrates-palette` · Status: registered-pre-merge,
 **INELEGÍVEL para merge** — head vermelho em `product readiness (claims)`
 (correção de evidência na auditoria AID-1333, 2026-09-10 ~21:4xZ; ver
-"CI / elegibilidade" abaixo)
+"CI / elegibilidade" abaixo) — **superseded pela Emenda 2026-09-11: head
+atual `d1f5b2a0` verde 36/36, substância já no main; ver emenda no rodapé**
 
 ## Problem (claim do produtor)
 
@@ -57,3 +58,29 @@ PR #335 aberto 2026-09-10T19:55:16Z (task Jules `14525935469184098205`).
 Founder merge no GitHub (opção (b), CEO via ask `2aebe4d8`, 20:58Z). Sem
 countersign QA — o dono humano assume a verificação no gate, na forma da
 política; achados pós-merge re-entram como novo `intent.md` (Maintain).
+
+## Emenda 2026-09-11 (staleness) — SM, auditoria AID-1363
+
+O bloco "INELEGÍVEL para merge" acima está **stale**: referia-se ao head
+`c3723e7f` e foi verificado first-hand novamente nesta data. Estado atual:
+
+- **Head atual do PR #335: `d1f5b2a0`** — **36/36 checks verdes**
+  (incl. `product readiness (claims)` e `SDLC guardrails (diff)`; GitHub
+  API check-runs, verificado 2026-09-11T02:4xZ). O unblock descrito acima
+  (re-ancoragem readiness) **aconteceu**: PR #337 (v44 re-anchor dojoToday
+  @ `80c3105f`, AID-1334, QA GO AID-1339).
+- **A substância já landed nativamente no main**: `aria-expanded` +
+  `aria-controls` presentes em `engines/dojoToday/src/main.ts`
+  (`main.ts:134,310,320,364`); `styles.css:640` documenta inclusive um
+  ajuste além do PR original (estado do painel visível vs. colapsado).
+- **Diff residual do PR vs main: apenas `.jules/palette.md`** (arquivo de
+  trabalho do bot; sem substância de produto).
+
+**Decisão pendente (dono: founder/CEO)** — merge do residual OU close com
+comentário pré-close por obsolescência/duplicidade (§Recusa também é
+registrada, `docs/sdlc/README.md`). A substância já entregue torna o close
+o desfecho provável; qualquer das duas formas registra a cadeia. O head
+verde mantém o PR elegível caso o founder prefira o merge.
+
+Referência: decisão 3 da auditoria AID-1360 (01:35Z), que despachou esta
+emenda ao SM; emenda executada na auditoria AID-1363.
