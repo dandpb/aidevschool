@@ -25,7 +25,7 @@
 - **Slug:** `08_event_driven_order_system`
 - **Region id / dir:** `engines/voxelDojo/game-08-timeline-tower/`
 - **Unit id (evidence field):** `U8-event-driven` (from
-  `.loops/threejs-dojo/ROUTING_MANIFEST.md`; the verifier keys on this exact string, not the
+  `docs/loops/threejs-dojo/ROUTING_MANIFEST.md`; the verifier keys on this exact string, not the
   project slug).
 - **Project (evidence field):** `08_event_driven_order_system`
 - **Scenario id pattern:** `timeline-tower-L<n>` (n = 1..4)
