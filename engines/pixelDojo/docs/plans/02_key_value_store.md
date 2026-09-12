@@ -28,7 +28,7 @@
   removes, and EXPIRE/PERSIST manage the TTL clock — all routed through `hash(key) % N` with
   deterministic, concurrency-safe behavior.
 - **Unit id (evidence target):** `U2-key-value-store` (per
-  `.loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
+  `docs/loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
   so the run emits `scheduled_review: false`, `review_reason: "deepening"` until it is added).
 - **Encounter / scene id:** `kv-warehouse-01`
 

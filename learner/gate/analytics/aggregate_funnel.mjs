@@ -32,7 +32,11 @@ import { readFileSync } from "node:fs";
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { validateAnalyticsEvent, validateLiteracyEvent } from "../netlify-functions/dojo-analytics-collector.mjs";
+import {
+  validateAnalyticsEvent,
+  validateLiteracyEvent,
+  validateSurfaceEvent,
+} from "../netlify-functions/dojo-analytics-collector.mjs";
 import {
   collectInputFiles,
   optionValue,
@@ -41,6 +45,9 @@ import {
   resolveOutput,
 } from "./ndjson_input.mjs";
 
+// Nota AID-1525: a seção `surfacesFunnel` é aditiva ao contrato v4 e só
+// materializa quando o input contém eventos surfaces v3 — inputs sem v3
+// produzem exatamente o mesmo relatório v4 de antes (chave omitida).
 export const REPORT_VERSION = 4;
 /**
  * Canonical mission→module mapping for the D2 cut (spec AID-673 §2.2): read
@@ -232,6 +239,7 @@ export function aggregateFunnel(entries, options = {}) {
 
   const accepted = [];
   const literacyAccepted = [];
+  const surfaceAccepted = [];
   let rejectedEvents = 0;
   let parseErrors = 0;
   for (const entry of entries) {
@@ -241,12 +249,17 @@ export function aggregateFunnel(entries, options = {}) {
       accepted.push(entry.value);
     } else if (validateLiteracyEvent(entry.value)) {
       literacyAccepted.push(entry.value);
+    } else if (validateSurfaceEvent(entry.value)) {
+      // AID-1525: envelope surfaces v3 deixava de ser agregado e era
+      // contado como rejeitado embora o coletor live o aceite (AID-987/T1b).
+      surfaceAccepted.push(entry.value);
     } else {
       rejectedEvents += 1;
     }
   }
   accepted.sort((a, b) => eventTime(a) - eventTime(b) || a.sequence - b.sequence);
   literacyAccepted.sort((a, b) => Date.parse(a.occurredAt) - Date.parse(b.occurredAt));
+  surfaceAccepted.sort((a, b) => Date.parse(a.occurredAt) - Date.parse(b.occurredAt));
 
   // F2b dedup (spec AID-673 §2.1): the beacon+fetch race can append the same
   // eventId twice; every cut below must see each event exactly once. First
@@ -653,6 +666,14 @@ export function aggregateFunnel(entries, options = {}) {
   const activationDetail = activationDetailFor({ events, literacyEvents: literacyDedup.events, k });
   const briefExposure = briefExposureFor({ osEvents: events, literacyEvents: literacyDedup.events, k });
   const probeClassification = probeClassificationFor({ events, literacyEvents: literacyDedup.events });
+  // AID-1525: dedup do envelope surfaces v3 espelha a chave durável do
+  // coletor (`dia/source/eventId`) — mesmo eventId em fontes distintas são
+  // eventos distintos; mesma fonte+eventId é a corrida beacon+fetch.
+  const surfaceDedup = dedupeSurfaceEvents(surfaceAccepted);
+  const surfacesFunnel = surfacesFunnelFor({
+    events: surfaceDedup.events,
+    duplicateEvents: surfaceDedup.duplicates,
+  });
 
   return {
     reportVersion: REPORT_VERSION,
@@ -683,6 +704,55 @@ export function aggregateFunnel(entries, options = {}) {
     activationDetail,
     briefExposure,
     probeClassification,
+    // AID-1525: seção condicional — presente apenas quando o input tem
+    // eventos surfaces v3 (convenção de célula zero omitida); inputs sem v3
+    // geram relatório idêntico ao v4 de antes, byte a byte.
+    ...(surfaceDedup.events.length > 0 ? { surfacesFunnel } : {}),
+  };
+}
+
+/** Dedup por `source/eventId` do envelope surfaces v3 (espelha a chave durável
+ *  do coletor — AID-987/T1b; corrida beacon+fetch, ADR-0010). */
+function dedupeSurfaceEvents(accepted) {
+  const seen = new Set();
+  const events = [];
+  let duplicates = 0;
+  for (const event of accepted) {
+    const key = `${event.source}/${event.eventId}`;
+    if (seen.has(key)) {
+      duplicates += 1;
+      continue;
+    }
+    seen.add(key);
+    events.push(event);
+  }
+  return { events, duplicates };
+}
+
+// --- surfaces funnel (AID-987/T1b; envelope v3: dojoToday · voxelDojo · PixelQuest) ---
+
+/**
+ * Per-source counts for the surfaces v3 envelope. Counts only — no rates, no
+ * buckets, no identifiers: `sessionId` is an in-memory per-page-load UUID
+ * (funnelTelemetry.ts) and is never published, only counted. Zero-count
+ * sources are omitted, matching the standing zero-count-cell convention.
+ */
+function surfacesFunnelFor({ events: surfaceEvents, duplicateEvents: surfaceDuplicates }) {
+  const sources = {};
+  for (const source of [...new Set(surfaceEvents.map((event) => event.source))].sort()) {
+    const sourceEvents = surfaceEvents.filter((event) => event.source === source);
+    const sessions = new Set(sourceEvents.map((event) => event.sessionId));
+    const events = {};
+    for (const name of [...new Set(sourceEvents.map((event) => event.event))].sort()) {
+      events[name] = sourceEvents.filter((event) => event.event === name).length;
+    }
+    sources[source] = { totalEvents: sourceEvents.length, sessions: sessions.size, events };
+  }
+  return {
+    envelope: "surfaces v3 (AID-987/T1b)",
+    totalEvents: surfaceEvents.length,
+    duplicateEvents: surfaceDuplicates,
+    sources,
   };
 }
 
@@ -1486,6 +1556,26 @@ export function renderMarkdownReport(report) {
     probes.policy,
     "",
   );
+
+  // --- AID-1525 section (condicional: só quando há eventos surfaces v3) ---
+  const surfaces = report.surfacesFunnel;
+  if (surfaces !== undefined) {
+    lines.push(
+      "",
+      "## Surfaces funnel (envelope surfaces v3 — dojoToday · voxelDojo · PixelQuest, AID-987/T1b)",
+      "",
+      `Eventos aceitos ${surfaces.totalEvents}, duplicados removidos ${surfaces.duplicateEvents}; contagens por fonte (sessões anônimas efêmeras contadas, nunca publicadas).`,
+      "",
+      "| fonte | eventos | sessões | por evento |",
+      "| --- | --- | --- | --- |",
+    );
+    for (const source of Object.keys(surfaces.sources)) {
+      const row = surfaces.sources[source];
+      const perEvent = Object.entries(row.events).map(([name, count]) => `${name}×${count}`).join(" · ");
+      lines.push(`| ${source} | ${row.totalEvents} | ${row.sessions} | ${perEvent} |`);
+    }
+    lines.push("");
+  }
 
   lines.push("", "Baseline cycle: the first report establishes the baseline; no external numeric target is claimed.", "");
   return lines.join("\n");

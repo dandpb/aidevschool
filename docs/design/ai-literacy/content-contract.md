@@ -103,6 +103,13 @@ compila as duas jornadas; o percurso público do app standalone continua só
 Catálogo e arquivo devem concordar em `moduleId`, `title`, `estimatedMinutes`,
 `prerequisites` e `skillIds`; divergência falha o build.
 
+Lição de jornada `ia_pratica` não pode ter pré-requisito de jornada `dev`:
+o percurso público do app standalone não projeta lições dev, então a lição
+ficaria permanentemente bloqueada — o validador semântico falha o build com
+mensagem explícita (regra `_check_prereq_journeys` em `tools/catalog_rules.py`,
+AID-1523/PR #354). O caminho inverso — lição `dev` com pré-requisito
+`ia_pratica` — é permitido: missões hospedadas constroem sobre lições públicas.
+
 ## Pipeline de compilação
 
 ```text
