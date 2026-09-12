@@ -33,7 +33,7 @@ itself.
 | Plan | `intent.md` | `intent/<change-id>/intent.md` |
 | Design | `spec.md` | `intent/<change-id>/spec.md` |
 | Build | `plan.md` + diff + tests | `intent/<change-id>/plan.md` + normal source tree |
-| Test | command outputs / evidence | task record (Paperclip issue comment or PR) |
+| Test | command outputs / evidence | task record (Paperclip issue comment or PR) — use `docs/sdlc/templates/receipt.md` (AID-1516) |
 | Ship | review verdict + commit | git history (audit trail) |
 | Maintain | new `intent.md` / regression test | back to `intent/` + test suites |
 
@@ -56,6 +56,14 @@ issue, use `AID-<n>-<slug>`. Templates: `docs/sdlc/templates/`.
 - **Small-fix fast path:** for bounded fixes the three artifacts collapse
   into a single short plan block in the task record, but self-verification
   and review are never skipped.
+- **Receipt com prova de árvore limpa (mandatory, AID-1516):** every
+  build/completion receipt cites first-hand that `git status --porcelain`
+  is empty in the shared checkout `_default` **before the issue is flipped
+  `done`**; anything that appears is committed (receipt/work-product) or
+  deleted with justification cited in the receipt. Template:
+  `docs/sdlc/templates/receipt.md`. Prevention of the recurrence class
+  "recibos/work-products untracked no `_default`" (AID-1353-F1 →
+  AID-1354/PR #338 → AID-1442/PR #343 → AID-1514/F2).
 
 ## PRs automatizados (Bolt/Palette/Sentinel) — fast path documentado + aceitação registrada
 
