@@ -124,6 +124,46 @@ arquivo, citando vereditos e merge SHAs, e deixe a falha alimentar a auditoria.
 | #305 | Palette — aria-labels agent list | `401c4d5d` 2026-09-09 | founder merge GitHub |
 | #306 | Bolt — micro-opt `isCellOccupiedByVehicle` | `aa084ab9` 2026-09-09 | CI 36/36; merge CEO single-writer, precedente #301 |
 
+## Founder-direct engineering PRs (política explícita — decisão CEO AID-1515, 2026-09-12)
+
+**Escopo:** PRs de engenharia onde o produtor é o próprio founder humano
+(conta `dandpb`) — classe distinta dos bot PRs (Bolt/Palette/Sentinel via
+`google-labs-jules[bot]`) e dos diffs produzidos por agentes Paperclip.
+Origem: auditoria SM AID-1514 achado **F1** — PRs #345/#346 merged sem
+registro do produtor nem veredito independente.
+
+**Decisão (gate):** o fast path canônico (§PRs automatizados) aplica-se a
+essa classe com duas adaptações:
+
+1. **Aceitação** — o founder merge no GitHub é aceite do dono humano e
+   permanece forma válida de aceitação (prerrogativa do owner; não há
+   countersign hierarquicamente "acima" do dono).
+2. **Registro do produtor antes do self-merge** — exigido como em qualquer
+   engineering diff: short plan block no task record (ex. `.tasks/<slug>.md`
+   tlc-plan, como #346 fez) ou `intent/<change-id>/`. O registro pode viver
+   no próprio branch do PR, desde que commitado **antes** do merge. O corpo
+   do PR, sozinho, não é registro (não é rastreável como artifact chain).
+3. **Producer ≠ verifier nunca dispensado** — o founder que merga o próprio
+   diff é produtor verificando o próprio trabalho. Veredito independente:
+   - diff que toca **autoridade de processo** (CI/gates/guardrails, política,
+     paths protegidos, credenciais): countersign QA fresh-context
+     **pré-merge**;
+   - engineering bounded comum: countersign no ciclo de auditoria
+     (pós-merge OK; o sweep SM/QA cata — foi o que aconteceu aqui).
+4. **CI verde no head antes do merge** — incluindo `sdlc-guards`, sem
+   exceção (vale para founder-direct como para todos).
+
+A falha de #345/#346 foi o item 2 (e o 3 na forma pré-merge para #346, que
+toca CI). O retrofit abaixo supre o registro; os vereditos pós-fato correm
+na issue AID-1515 (QA countersign fresh-context, #346 prioritário).
+
+### Retro-lista founder-direct engineering PRs merged sem registro (AID-1515)
+
+| PR | Tema | Merge (SHA, data) | Aceitação registrada |
+| --- | --- | --- | --- |
+| #345 | harness L4 108/108 — uv.lock + pre-commit check-only + fix cites threejs-dojo | `82e8ef8c` 2026-09-12 | founder merge GitHub; CI 36/36 verde pré-merge incl. `SDLC guardrails (diff)`; retrofit `intent/2026-09-12-harness-l4/`; veredito QA pós-fato AID-1515 |
+| #346 | DESIGN.md per-engine (spec Stitch) + CI job `design-md-lint` | `0a85deff` 2026-09-12 | founder merge GitHub; CI 37/37 verde pré-merge incl. guardrails + DESIGN.md lint; trilha parcial in-repo (`.tasks/design-md-frontend.md`); retrofit `intent/2026-09-12-design-md-ci-lint/`; veredito QA pós-fato AID-1515 |
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
