@@ -2,9 +2,10 @@ import { useServices } from '../app/ServicesProvider'
 import type { LearnerSnapshot, MissionDefinition } from '../domain'
 import type { MissionCatalogRepository } from '../missions/catalog'
 import { missionHasCanonicalMastery } from '../missions/reviewMapping'
+import { recommendMission } from '../missions/recommendation'
 import { missionKey, type OsProgress } from '../progress/domain'
 import type { EvidenceVerificationState } from '../verification/ports'
-import { STUDENT_MISSION_CHAPTERS, listStudentRailMissions } from './studentPath'
+import { STUDENT_MISSION_CHAPTERS, STUDENT_TRACK_ID, listStudentRailMissions } from './studentPath'
 import { useVerificationByMission } from './useVerificationByMission'
 
 type MapOverlay = 'available' | 'in-progress' | 'completed' | 'evidence-pending' | 'verified' | 'canonical-mastery' | 'locked'
@@ -55,6 +56,24 @@ export function MapScreen({
   const { availability: verificationAvailability, verificationByKey } = useVerificationByMission(catalog, services.verification)
   const publishedMissionCount = listStudentRailMissions(catalog).length
 
+  // F1 2026-09-10-activation-first-activity (R3): o mapa espelha a recomendação
+  // do Hub — mesma fonte única `recommendMission`. Badge "Comece aqui" SOMENTE
+  // para kinds start/resume; review/prática/recuperação mantêm labels próprios.
+  // Apresentação aditiva: overlays, travas e studentPath inalterados.
+  const recommendation = recommendMission(progress, catalog, { learner, verificationByKey })
+  const startHereMission =
+    recommendation.kind === 'start' || recommendation.kind === 'resume'
+      ? { trackId: recommendation.trackId, missionId: recommendation.missionId }
+      : null
+  // Trilha ativa espelha o Hub: trackId da recomendação quando existe (mesma
+  // fonte), senão a seleção do onboarding/estado local.
+  const activeTrackId =
+    ('trackId' in recommendation ? recommendation.trackId : null)
+    ?? progress.onboarding.selectedTrackId
+    ?? progress.activeTrackId
+    ?? STUDENT_TRACK_ID
+  const activeChapter = STUDENT_MISSION_CHAPTERS.find((chapter) => chapter.trackId === activeTrackId)
+
   return (
     <main className="journey-page chapter-map-page" data-testid="chapter-map">
       <header className="chapter-map-header">
@@ -63,6 +82,11 @@ export function MapScreen({
           <p className="journey-eyebrow">Mapa de missões</p>
           <h1>{publishedMissionCount} missões, uma sequência</h1>
           <p>Escolha IA Prática (l01–l03) ou Dev (WAREHOUSE, WORMHOLE e RELAY STATION). O restante fica no Hub, não neste trilho.</p>
+          {activeChapter !== undefined ? (
+            <p className="journey-eyebrow" data-testid="map-active-chapter">
+              Trilha ativa: {activeChapter.label} — {activeChapter.detail}
+            </p>
+          ) : null}
         </div>
       </header>
       {verificationAvailability === 'unavailable' ? (
@@ -78,11 +102,20 @@ export function MapScreen({
                 const key = missionKey(chapter.trackId, mission.id)
                 const overlay = overlayFor(mission, progress, learner, verificationByKey[key])
                 const launchable = overlay !== 'locked'
+                const showStartHere =
+                  startHereMission !== null &&
+                  chapter.trackId === startHereMission.trackId &&
+                  mission.id === startHereMission.missionId
                 return (
                   <li key={mission.id} className={`mission-map-node ${overlay}`}>
                     <span className="mission-map-order">{mission.chapterOrder}</span>
                     <div>
                       <small data-testid={`map-overlay-${mission.id}`}>{OVERLAY_LABEL[overlay]}</small>
+                      {showStartHere ? (
+                        <strong className="journey-eyebrow" data-testid={`map-start-here-${mission.id}`}>
+                          Comece aqui
+                        </strong>
+                      ) : null}
                       <h3>{mission.title}</h3>
                       <p>{mission.estimatedMinutes} min · {mission.objective}</p>
                       {mission.prerequisites.length > 0 ? (
