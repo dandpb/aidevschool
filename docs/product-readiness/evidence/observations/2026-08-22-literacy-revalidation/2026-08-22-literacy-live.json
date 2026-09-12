@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "de49bc9e8518a78a80460fac893606fce00a7b78",
+  "observedAt": "2026-08-22T16:12:15Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Perfil fresco em navegador efêmero (build de produção servido por vite preview). Completei o onboarding em 5 passos ('Chegue à Vila Lume', 'O que você quer melhorar com IA?', 'Onde você mais pretende usar IA?', 'Como você avalia sua confiança hoje?', 'Qual situação você quer explorar primeiro?') e cheguei ao mapa: exatamente uma missão com chip 'Disponível' e botão 'Começar', todas as demais 'Bloqueada'; a home mostrava o card 'PEDIDO DA VILA' com o mesmo título e um único botão 'Atender pedido', além de '0 de 17 lições concluídas'. Concluí a lição (escolhi a resposta que declara fontes e limites, marquei os dois motivos correspondentes, 'Concluir lição') e cheguei à tela pós-lição ('A vila ganhou uma nova luz', 35 XP, conquista 'Primeira lição', card 'Seu próximo passo' e botão 'Próximo pedido'). Sem nenhum conhecimento do repositório, a próxima ação era inequívoca em todos os pontos da jornada. Resposta do observador: eu abriria agora 'IA não é uma fonte de verdade'."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-happy-path-mission-numbering-vs-entry",
+          "severity": "low",
+          "summary": "No mapa fresco, a 'MISSÃO 1 — Sua primeira conversa com uma IA' aparece como 'Bloqueada' logo acima da 'MISSÃO 2 — IA não é uma fonte de verdade' com 'Disponível/Começar'. A numeração sugere ordem sequencial, então um aprendiz pode estranhar começar pela missão 2 com a 1 trancada; a orientação da Lumi ('Comece pelo pedido marcado como Disponível') e o CTA único resolvem a ação, mas a lógica de entrada (Mapa Inicial) não é explicada em linguagem de aprendiz.",
+          "owner": "LiteracyDojo",
+          "disposition": "Avaliar se o mapa deve explicar em uma frase por que a primeira missão disponível não é a de número 1 (ex.: 'começamos por aqui porque...'), ou renomear a numeração de entrada; não bloqueia a jornada — o CTA único permaneceu inequívoco."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Perfil fresco; na primeira lição escolhi de propósito a Resposta A (números confiantes sem fonte) com o motivo-armadilha 'Apresenta números bem detalhados com total confiança'. O feedback veio em linguagem de pessoa comum, sem jargão interno: 'Quase lá. Uma resposta confiante não é necessariamente confiável: antes de usar, procure dois sinais — a resposta diz de onde vêm os dados e admite o que não sabe?', com 'Pontuação desta tentativa: 0%' e três bullets dizendo exatamente o que faltou ('nenhum número tem fonte — a IA pode ter inventado valores que só parecem precisos', 'faltou indicar a origem dos dados', 'faltou deixar claro o que é estimativa'). As ações após o erro eram autoexplicativas: 'Verificar de novo', 'Tentar novamente' e 'Pedir dica' (a dica também é concreta: 'Compare as duas respostas procurando uma coisa só: de onde saíram os números?'). 'Tentar novamente' limpou o feedback e zerou a atividade; refiz com a resposta que declara limites e fontes e passei, chegando a 'Concluir lição' sem nenhuma ajuda externa. Resposta do observador: depois de errar, eu entenderia que devo procurar os dois sinais (de onde vêm os dados e o que a IA admite não saber) e responder de novo; o erro não encerra a missão."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-retry-feedback-reveals-solution",
+          "severity": "low",
+          "summary": "O primeiro feedback de erro já nomeia a resposta correta ('A resposta B diz o que não sabe e indica onde confirmar'), então o retry vira aplicação guiada em vez de descoberta independente: na segunda tentativa o aprendiz já sabe qual resposta marcar.",
+          "owner": "LiteracyDojo",
+          "disposition": "Considerar um primeiro passo de feedback que aponte apenas os sinais a procurar (fonte e limites) sem nomear a resposta B, reservando a nomeação para uma segunda falha ou para a dica; não bloqueia a jornada e o tom permanece acolhedor."
+        }
+      ]
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reutilizei o perfil da jornada 1 (lição concluída) e recarreguei a página duas vezes: a home manteve 35 XP, 'Sequência: 1 dia', 'Meta de hoje: 35/10 XP ✅', '1 de 17 lições concluídas' e a próxima missão 'O que a IA faz bem e onde costuma falhar' com 'Atender pedido' — a continuidade funcionou. Ao iniciar essa missão e recarregar no meio da atividade, o app me devolveu à lição em andamento (tela de introdução da mesma lição), sem perder o progresso da trilha. Comunicação do limite local, em linguagem acessível: no onboarding, 'Privado por padrão. Seu progresso fica neste navegador, sem conta e sem registrar detalhes das suas tarefas.'; na tela pós-lição, 'Lição concluída registra o seu progresso neste aparelho.'; no reset, 'Apagar todo o progresso deste aparelho e recomeçar do zero?'. Resposta do observador: eu entenderia que o progresso mora neste navegador/aparelho e que, sem conta, ele não me acompanha em outro dispositivo; porém nunca li, em lugar nenhum, o aviso explícito de que limpar os dados do navegador apaga o progresso — essa consequência fica por minha inferência."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "literacy-resume-no-explicit-data-loss-warning",
+          "severity": "low",
+          "summary": "O app comunica a localidade do progresso ('neste navegador', 'sem conta', 'neste aparelho') mas nunca diz explicitamente que limpar os dados do navegador ou trocar de dispositivo/remove o progresso; a nota aparece uma única vez no onboarding (enquadrada como privacidade) e na tela de conclusão, e não há lembrete persistente em home/mapa/progresso.",
+          "owner": "LiteracyDojo",
+          "disposition": "Adicionar uma frase de consequência à nota existente (ex.: 'Se você limpar os dados deste navegador ou usar outro aparelho, o progresso recomeça.') e/ou repeti-la na área de progresso; não bloqueia a jornada — a continuidade no mesmo navegador funcionou e a localidade é comunicada."
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # Estado real — verificado por execução
 
+> ⚠️ **Snapshot datado (2026-08-17).** Para status atual, use as fontes vivas:
+> `docs/product-readiness/` (matriz gerada), `curriculum/catalog.md` e
+> `learner/learning_state.yaml`.
+
 **Data:** 2026-08-17 · **Método:** tudo abaixo foi **executado** nesta sessão (suítes, CLIs, builds, apps no
 browser). Nada foi copiado de doc. Onde um doc do repo contradiz o que rodou, o doc está marcado como errado.
 **Ambiente:** node 22.23.2 · pnpm 9.15.9 · Python 3.11.11 (.venv) · go 1.26.4 · cargo 1.85.0 — toolchain completo.
