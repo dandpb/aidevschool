@@ -58,6 +58,26 @@ jobs:
             scripts/sdlc_guard_check.sh --base "$SDLC_BASE"
           fi
 
+  # AID-1556 (audit AID-1526 §3.1, P1): the promotion precheck lives in
+  # scripts/precheck/ as a versioned baseline with per-wave anchor configs,
+  # replacing the copy-per-wave scripts that drifted between waves. This job
+  # runs the offline self-test (synthetic violations must fail, same contract
+  # as the sdlc-guard self-test above) and a dry-run of the anchor wave
+  # config, so registry/config drift breaks CI before it can reach a
+  # promotion wave. No network, no dependencies.
+  precheck-baseline:
+    name: Promotion precheck baseline (self-test + dry-run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: precheck self-test (synthetic violations must fail)
+        run: node scripts/precheck/precheck.mjs --self-test
+      - name: anchor wave dry-run (offline plan + registry validation)
+        run: node scripts/precheck/precheck.mjs --wave scripts/precheck/waves/AID-935-65d64bca.json --dry-run
+
   codexdojo:
     name: codexDojo (TS)
     runs-on: ubuntu-latest
