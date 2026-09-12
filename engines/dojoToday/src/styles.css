@@ -635,12 +635,6 @@ summary:focus-visible {
   color: var(--muted);
   cursor: not-allowed;
 }
-.socrates-config[hidden] {
-  /* AID-1334: display:flex abaixo derrotava o atributo hidden (painel sempre
-     visível), tornando o aria-expanded do PR #335 falso para leitores de tela.
-     A guarda restaura a semântica do hidden. */
-  display: none;
-}
 .socrates-config {
   margin-top: 10px;
   display: flex;
