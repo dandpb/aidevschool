@@ -41,7 +41,7 @@
   after the configured number of successful probes (and `half_open → open` on any probe failure),
   AND routes every `open`-state request to fail-fast fallback without ever contacting the upstream.
 - **Unit id (evidence target):** `U13-circuit-breaker` (per
-  `.loops/threejs-dojo/ROUTING_MANIFEST.md` line 34; encounter id `game-13-breaker-grid`,
+  `docs/loops/threejs-dojo/ROUTING_MANIFEST.md` line 47; encounter id `game-13-breaker-grid`,
   dev port `5213`). The substrate does not yet have this unit registered, so the run emits
   `scheduled_review: false`, `review_reason: "deepening"` until it is added. (The task prompt
   referenced the project slug `13_api_gateway_circuit_breaker` as the unit; the canonical
