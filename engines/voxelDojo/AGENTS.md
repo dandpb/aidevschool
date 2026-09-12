@@ -11,6 +11,7 @@ reference package, not the only implementation.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Define a new game | `PLAN.md` | Fill the template before scaffolding. One game = one concept. |
+| Visual identity and HUD tokens | `DESIGN.md` | Read before any UI/HUD work; update when `shared/palette.ts` or `docs/3d-style.md` changes. |
 | Workspace/tooling | `package.json`, `pnpm-workspace.yaml`, `biome.jsonc`, `tsconfig.base.json` | Install once here; root scripts recurse across `game-*`. |
 | Game catalog (all 16 `game-*` packages) | `catalog.json` | One entry per implemented game with id, name, and dev port. `game-10-hash-ring/` is the reference, not the only implementation. |
 | Reference package | `game-10-hash-ring/` | Representative Vite + strict TypeScript + Three.js + Vitest + Playwright package. |

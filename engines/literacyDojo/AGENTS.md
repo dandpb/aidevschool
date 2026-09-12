@@ -53,4 +53,5 @@ npm run test:e2e      # playwright (webServer vite automático, porta 4173)
 | Casos de uso | `src/application/useCases.ts` |
 | Novas portas/adapters | `src/application/ports.ts`, `src/adapters/` |
 | Telas/fluxos | `src/screens/`, `src/components/`, `src/app/App.tsx` |
+| Identidade visual e tokens | `DESIGN.md` | Ler antes de qualquer trabalho de UI; atualizar quando os tokens do `:root` mudarem. |
 | Conteúdo de lição | `curriculum/ai-literacy/` (nunca aqui) |
