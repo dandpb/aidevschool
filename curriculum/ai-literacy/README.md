@@ -75,6 +75,10 @@ python3 -m unittest discover -s curriculum/ai-literacy/tools/tests -t .
 - Toda alteração de conteúdo incrementa `version` da lição.
 - `catalog.yaml` e o arquivo da lição devem concordar em módulo, título,
   duração, pré-requisitos e skills — o validador acusa divergência.
+- Lição de jornada `ia_pratica` não pode ter pré-requisito de jornada `dev`:
+  o percurso público do app standalone não projeta lições dev, então a lição
+  ficaria permanentemente bloqueada (o validador falha o build). O caminho
+  inverso — lição `dev` com pré-requisito público — é permitido.
 - Lição `ready` exige arquivo válido; lição com arquivo exige `status: ready`.
 - Nenhum conteúdo pode declarar `mastered`: o termo é reservado a um futuro
   verificador independente (ver `docs/design/ai-literacy/evidence-contract.md`).
