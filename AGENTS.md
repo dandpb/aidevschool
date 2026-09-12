@@ -44,6 +44,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Task | Location | Notes |
 | --- | --- | --- |
 | Get repo-wide orientation | `docs/handbook/README.md` | Read this first for architecture, onboarding, per-engine refs, substrate, and glossary. |
+| Find an engine's visual identity | `DESIGN.md` (root map) | Per-engine design tokens and rules; each frontend engine owns its DESIGN.md — read it before any UI work in that engine. |
 | Share a mixed-audience overview | `docs/AI_DevSchool_Overview.docx` | Standalone ecosystem overview for handoffs or non-implementers. |
 | Review current repo hygiene debt | `docs/TECH_DEBT_AUDIT_2026-07-08.md` | Current full-ecosystem debt inventory plus phased remediation notes; use it before broad cleanup. |
 | Run shared Python verification | `Makefile`, `pyproject.toml` | Use repo-root `make install`, `make test`, `make test-core`, and `make test-substrate`. |

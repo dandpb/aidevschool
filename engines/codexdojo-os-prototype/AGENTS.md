@@ -10,6 +10,7 @@ React/Vite app with a desktop shell, learning rail, and local lab interactions.
 | Task | Location | Notes |
 | --- | --- | --- |
 | Composition and window state | `src/App.tsx` | Keep this as the shallow composition root. |
+| Visual identity and tokens | `DESIGN.md` | Read before any UI work; update when tokens change. |
 | App catalog and content | `src/apps/` | App manifests and app-specific views. |
 | Desktop chrome | `src/desktop/` | Top bar, dock, window shell. |
 | Launcher | `src/launcher/` | Search and app launch behavior. |
