@@ -40,8 +40,11 @@
   2026-09-12T17:16:18Z): **37/37 jobs verdes**, incluindo
   `SDLC guardrails (diff) → success` **e** `DESIGN.md lint → success`.
   Merge às 17:24:50Z — **depois** do verde.
-- Run de push pós-merge no `0a85deff`: 38 checks verdes/skipped, incl.
-  `SDLC guardrails (diff) → success`.
+- Run de push pós-merge no `0a85deff`: **zero falhas** — todos os
+  check-runs verdes/skipped, incl. `SDLC guardrails (diff) → success`
+  (ressalva trivial QA AID-1517: a contagem de check-runs acumula com
+  re-runs — 38 no levantamento CEO, 39 na verificação QA 18:52Z — o fato
+  estável é zero falhas).
 - Zero reviews no PR; author = merger = `dandpb`.
 
 ## Verificação alegada pelo produtor (não re-executada neste retrofit)
