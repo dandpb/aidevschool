@@ -33,7 +33,7 @@ backed by a recorded decision, with a verifier, in a known place, against a know
 - Retry cap: 3
 - Verification threshold: 8/10
 - Output dir: `.loops/architecture-weed/output/<adr-slug>/`
-- Memory file: `.loops/architecture-weed/memory.md`
+- Memory file: `docs/loops/architecture-weed/memory.md`
 - ADR location: `docs/design/adr/NNNN-<slug>.md`
 - Cadence: on-demand (no schedule yet — wrap with `/loop` or `/schedule` if/when cadence emerges)
 
@@ -62,7 +62,7 @@ The loop may read:
 - `docs/ARCHITECTURE_EVALUATION_*.md` — prior gap analyses (date-stamped).
 - `engines/*/`, `learner/`, `curriculum/`, `.mavis/` — implementation surfaces.
 - `docs/design/adr/` — prior ADRs (read all; do not edit past the new one).
-- `.loops/architecture-weed/memory.md` — read first; what the last run learned.
+- `docs/loops/architecture-weed/memory.md` — read first; what the last run learned.
 
 The loop may invoke:
 
@@ -74,7 +74,7 @@ The loop may write:
 
 - One new file at `docs/design/adr/NNNN-<slug>.md`.
 - One run-output file at `.loops/architecture-weed/output/<adr-slug>/run-<timestamp>.md`.
-- Append one entry to `.loops/architecture-weed/memory.md`.
+- Append one entry to `docs/loops/architecture-weed/memory.md`.
 
 ## Steps
 
@@ -149,7 +149,7 @@ The loop is done when **all** of these hold:
 - If the decision touched canonical state, derived views were regenerated this run.
 - The fresh-context verifier returns `score ≥ 8/10` AND `result: PASS`.
 - One run-output file exists at `.loops/architecture-weed/output/<adr-slug>/run-<timestamp>.md`.
-- One entry was appended to `.loops/architecture-weed/memory.md`.
+- One entry was appended to `docs/loops/architecture-weed/memory.md`.
 
 ## Verification
 
@@ -183,7 +183,7 @@ At the end of **every** run, write both:
    - the chosen divergence and classification,
    - the verifier verdict (score, result, failed_criteria if any),
    - the next-run hint (what to look at next, or "no consequential divergence found").
-3. **Memory** → append one entry to `.loops/architecture-weed/memory.md`:
+3. **Memory** → append one entry to `docs/loops/architecture-weed/memory.md`:
 
    ```markdown
    ## Run <ISO-8601 timestamp>
