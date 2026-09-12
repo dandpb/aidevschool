@@ -37,7 +37,7 @@
   order — read straight off the inverted index and the corpus statistics (FR-002, FR-004, FR-005,
   FR-006, FR-008, FR-009).
 - **Unit id (evidence target):** `U18-search-engine` (per
-  `.loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
+  `docs/loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
   so the run emits `scheduled_review: false`, `review_reason: "deepening"` until it is added).
 - **Encounter / scene id:** `search-stacks-01`
 - **Engine / dir / port:** `voxelDojo` · `game-18-stacks` · `5218`

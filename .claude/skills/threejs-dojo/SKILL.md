@@ -26,7 +26,7 @@ context, score ≥ 8/10). Training Mode is ON by default.
 - Retry cap: 3
 - Verification threshold: 8/10
 - Output dir: `.loops/threejs-dojo/output/<concept-slug>/`
-- Memory file: `.loops/threejs-dojo/memory.md`
+- Memory file: `docs/loops/threejs-dojo/memory.md`
 
 **Training Mode ON:** pause before each step and wait for approval; skip any step already passing its
 done-rule; re-run only failing steps; keep the retry cap.
@@ -55,7 +55,7 @@ The loop may read:
 - `engines/pixelDojo/pixel-quest/playwright/` — smoke spec pattern (Shape A & Shape B)
 - `engines/pixelDojo/pixel-quest/` — full engine shell for Shape A reuse; reference for Shape B
 - `learner/learning_state.yaml` — active units + gate contract (read-only; the verifier owns `mastered`)
-- `.loops/threejs-dojo/memory.md` — read FIRST; learn from past runs
+- `docs/loops/threejs-dojo/memory.md` — read FIRST; learn from past runs
 
 Read the memory file first — it records what the last run learned (shape decisions, smoke
 flakes, evidence-schema misses, retried steps).
@@ -190,7 +190,7 @@ At the end of **every** run, write both:
    - `screenshot.png` — copied screenshot
    - `verifier-report.json` — verifier's structured verdict (`score`, `result`, `failed_criteria`,
      `retry_target`, `confidence`)
-2. **Memory** → append one entry to `.loops/threejs-dojo/memory.md`:
+2. **Memory** → append one entry to `docs/loops/threejs-dojo/memory.md`:
 
    ```markdown
    ## Run <ISO-8601 timestamp>

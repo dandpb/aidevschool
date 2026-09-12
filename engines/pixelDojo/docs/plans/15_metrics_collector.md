@@ -35,7 +35,7 @@
   `pending → firing → resolved` as the aggregated percentile breaches and clears the threshold —
   all driven through deterministic invariants (RF-003, RF-008, RF-009, RF-014, RF-015).
 - **Unit id (evidence target):** `U15-metrics-collector` (per
-  `.loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
+  `docs/loops/threejs-dojo/ROUTING_MANIFEST.md`; the substrate does not yet have this unit registered,
   so the run emits `scheduled_review: false`, `review_reason: "deepening"` until it is added).
 - **Encounter / scene id:** `metrics-observatory-01`
 - **Engine / dir / port:** `voxelDojo` · `game-15-observatory` · `5215`
