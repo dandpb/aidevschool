@@ -53,6 +53,15 @@ with declared voxelDojo coverage), and `probeClassification` (deterministic
 synthetic-traffic markers `probe.` + legacy list — diagnostic; learner
 sections keep counting every accepted event).
 
+AID-1525 (ainda no contrato v4): a seção **condicional** `surfacesFunnel`
+agrega o envelope surfaces v3 (dojoToday/voxelDojo/PixelQuest, AID-987/T1b)
+que o coletor live já aceita — essas linhas válidas eram contadas como
+`rejectedEvents` sem agregação. A seção só materializa quando o input contém
+eventos v3 (convenção de célula zero omitida): per-source event and session
+counts only (dedup key `source/eventId`, mirroring the collector's durable
+key); identifiers are never published, only counted. Inputs sem v3 produzem
+o mesmo relatório v4 de antes, byte a byte.
+
 - **Dedup (ADR-0010 beacon+fetch race):** accepted events are deduplicated by
   `eventId` (first occurrence in the `occurredAt`,`sequence` sort) before any
   cut; `source.duplicateEvents` counts removed lines and `source.totalEvents`
