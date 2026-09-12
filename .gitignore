@@ -165,3 +165,6 @@ engines/codexdojo-os-prototype/netlify/functions/
 # .scratch/ holds dated drafts and exports; .lavish/ holds generated HTML reports.
 .scratch/
 .lavish/
+
+
+.loops/
