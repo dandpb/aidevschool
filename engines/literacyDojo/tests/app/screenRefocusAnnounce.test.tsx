@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { App } from "../../src/app/App";
 import type { ProgressRepository } from "../../src/application/ports";
 import { type ActivityDefinition, lessons, modules } from "../../src/data/generated/lessons";
@@ -17,13 +17,19 @@ import { makeServices } from "../helpers";
  *   instrução, o status anuncia o passo (semânticas separadas).
  * - ProgressScreen: o h1 é focável e recebe foco na montagem da tela (troca
  *   de rota SPA reposiciona a leitura em "Seu progresso"); status de backup
- *   segue em role=status/alert.
+ *   segue em role=status/alert. AID-1766: o efeito genérico de rota do App
+ *   (App.tsx — `.app-stage h1` → tabIndex=-1 + focus a cada troca de rota)
+ *   torna esse contrato redundante-defensivo no caminho composto; por isso o
+ *   teste do Progress neutraliza esse efeito (spy seletivo de querySelector)
+ *   para exercitar SOMENTE o contrato da própria tela.
  * - ErrorRecoveryScreen: o h1 recebe foco na montagem (a tela de recuperação
  *   renderiza fora do .app-stage do efeito genérico de rota — sem refocus
  *   próprio, o foco caía no body) e a mensagem segue em role="alert".
  *
  * Mutations que quebram isso (sem refocus, sem tabIndex=-1, sem role="status"
- * do contador, sem role="alert") falham aqui.
+ * do contador, sem role="alert") falham aqui — incluindo, desde a AID-1766, a
+ * remoção do diff inteiro do ProgressScreen (provada por mutação: sem a
+ * neutralização, o efeito do App mantinha o teste verde).
  */
 
 type User = ReturnType<typeof userEvent.setup>;
@@ -95,19 +101,38 @@ function corridorProgress() {
 }
 
 describe("AID-1755/T3: refocus/anúncio em Progress/Checkpoint/ErrorRecovery", () => {
-  it("Progress: h1 focável (tabIndex=-1) e focado ao entrar na tela", async () => {
-    const user = userEvent.setup();
-    const { services } = makeServices({ progress: corridorProgress() });
-    render(<App services={services} />);
+  it("Progress: h1 focável (tabIndex=-1) e focado ao entrar na tela — com o efeito genérico de rota do App desligado", async () => {
+    // AID-1766 (countersign AID-1764): o efeito genérico de rota do App
+    // (App.tsx, `document.querySelector(".app-stage h1")` → tabIndex=-1 +
+    // focus) mascara o contrato do ProgressScreen — remover TODO o diff da
+    // tela mantinha este teste verde (prova por mutação do QA). O spy abaixo
+    // devolve null apenas para `.app-stage h1`, desligando esse efeito: o
+    // único provedor de foco/tabIndex no teste passa a ser o efeito de
+    // montagem da própria tela. Em produção o efeito do App permanece como
+    // defesa em profundidade (redundância intencional).
+    const passthrough = document.querySelector.bind(document);
+    const appStageQuerySelector = vi
+      .spyOn(document, "querySelector")
+      .mockImplementation((selectors: string) =>
+        selectors === ".app-stage h1" ? null : passthrough(selectors),
+      );
 
-    await screen.findByTestId("home-screen");
-    await user.click(screen.getByTestId("open-progress"));
-    await screen.findByTestId("progress-screen");
+    try {
+      const user = userEvent.setup();
+      const { services } = makeServices({ progress: corridorProgress() });
+      render(<App services={services} />);
 
-    const h1 = screen.getByRole("heading", { name: "Seu progresso" });
-    expect(h1).toHaveAttribute("id", "progress-title");
-    expect(h1).toHaveAttribute("tabindex", "-1");
-    expect(h1).toHaveFocus();
+      await screen.findByTestId("home-screen");
+      await user.click(screen.getByTestId("open-progress"));
+      await screen.findByTestId("progress-screen");
+
+      const h1 = screen.getByRole("heading", { name: "Seu progresso" });
+      expect(h1).toHaveAttribute("id", "progress-title");
+      expect(h1).toHaveAttribute("tabindex", "-1");
+      expect(h1).toHaveFocus();
+    } finally {
+      appStageQuerySelector.mockRestore();
+    }
   });
 
   it("Checkpoint: transição de atividade foca o h1 e atualiza o status 'Atividade N de M'", async () => {

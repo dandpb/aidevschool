@@ -18,9 +18,14 @@ import { answerCheckpointActivityRight, seedCorridorProgress } from "./support";
  * screenRefocusAnnounce.test.tsx): o caminho de boot quebrado não é
  * reproduzível no browser de teste sem corromper o storage do harness.
  *
- * Mutation-guard: remover o refocus (efeito [phase, current] do
- * CheckpointScreen, refocus de montagem do ProgressScreen) ou o
+ * Mutation-guard: remover o refocus do Checkpoint (efeito [phase, current],
+ * transição intra-rota não coberta pelo efeito de rota do App) ou o
  * role="status" do contador quebra os asserts de activeElement/status abaixo.
+ * O caso Progress é deliberadamente só evidência do caminho composto: no
+ * browser real o efeito genérico de rota do App também foca `.app-stage h1`
+ * (defesa em profundidade), então este spec não distingue o contrato da tela —
+ * o mutation-guard efetivo do ProgressScreen vive no teste unitário com esse
+ * efeito neutralizado (AID-1766, spy seletivo de querySelector).
  */
 
 function checkpointActivities(checkpointId: string): ActivityDefinition[] {
