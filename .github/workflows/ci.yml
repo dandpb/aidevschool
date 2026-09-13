@@ -470,10 +470,17 @@ jobs:
           set -e
           for dir in curriculum/[0-9][0-9]_*/node-impl; do
             test -f "$dir/package.json" || continue
+            # AID-1670 (hardening-top10 R10): install from the committed
+            # lockfile so dependency resolution is reproducible; a missing or
+            # out-of-sync lockfile fails here instead of flaking upstream.
+            test -f "$dir/package-lock.json" || {
+              echo "::error::$dir/package.json has no committed package-lock.json (AID-1670)"
+              exit 1
+            }
             echo "::group::$dir"
             (
               cd "$dir"
-              npm install --no-package-lock --no-audit --no-fund
+              npm ci --no-audit --no-fund
               npm run lint
               npm run test
               npm run build
