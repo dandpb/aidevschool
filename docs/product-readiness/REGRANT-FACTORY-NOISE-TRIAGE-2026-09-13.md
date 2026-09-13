@@ -118,6 +118,15 @@ R1 como primeira leva do ratchet; (ii) voxeldojo ganha meta-check agregado
 (barato, estilo `product-readiness`) antes de qualquer required; (iii) nada é
 executado agora — decisão e sequência pertencem ao PRE/founder pelo kit.
 
+> **Atualização (2026-09-13, AID-1757/r7-C):** a análise completa com dados
+> quantitativos (82 runs, custo/benefício por contexto, falso-verde do agregador)
+> está em
+> [`REQUIRED-GATES-ELEVATION-ANALYSIS-2026-09-13.md`](REQUIRED-GATES-ELEVATION-ANALYSIS-2026-09-13.md).
+> Recomendação refinada: onda 1 = os 4 contexts raiz (`pixelDojo (TS)`,
+> `miniTown (TS)`, `dojoToday (TS + substrate)`, `voxelDojo (TS)` — nome estável);
+> matriz `games/<id>` nunca required crua; meta-check agregado só como onda 2
+> opcional.
+
 ## 6. Fontes
 
 - API GitHub (read-only, 2026-09-13, sessão ESE/AID-1738): endpoints listados no §2.
