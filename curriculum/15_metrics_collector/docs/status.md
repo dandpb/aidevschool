@@ -58,3 +58,8 @@ Review artifacts are complete for this cycle:
 - `docs/evolution_report.md` — completed in this cycle.
 
 Project readiness remains **partial** because the implementations establish a common baseline but not the full observability-system contract.
+
+## Addendum — node-first recalibration (AID-1671, 2026-09-13)
+
+- The `go-impl/` and `rust-impl/` directories listed in the inventory above were removed by the curriculum-wide node-first policy (commit `1b0a3090`; Project 01 kept as the only polyglot pilot), so the Go/Rust inventory rows describe the tree as it was at review time, not the current tree. `docs/spec.md` was recalibrated in the same direction: Node/TypeScript is the maintained implementation track and Go/Rust guidance became optional porting notes.
+- In the same change, the hardcoded stubs flagged by hardening R8 were replaced with store-backed behavior in `node-impl/`: `GET /alerts/rules` lists created rules, `GET /alerts/events` lists recorded evaluation events, `GET /dashboard` builds panels from recorded series and returns alert states, `GET /metrics?query=` resolves the metric type instead of assuming `gauge` (counter and histogram/timer percentiles are queryable), `GET /health` reports the real active-series count, and `POST /metrics/:type` rejects unknown types with `invalid_metric_type`.

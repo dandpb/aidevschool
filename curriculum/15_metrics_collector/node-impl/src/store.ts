@@ -44,6 +44,27 @@ export interface AlertEvent {
   severity: string;
 }
 
+export interface AlertState {
+  ruleId: string;
+  name: string;
+  status: 'ok' | 'firing';
+  currentValue: number | null;
+  threshold: number;
+  lastEvaluatedAt: Date;
+}
+
+export interface SeriesRef {
+  name: string;
+  type: MetricType;
+  labels: Record<string, string>;
+}
+
+export interface QueryResult {
+  matched: boolean;
+  type: MetricType | null;
+  value: number | null;
+}
+
 function seriesKey(name: string, type: MetricType, labels: Record<string, string>): string {
   const labelParts = Object.entries(labels)
     .sort(([a], [b]) => a.localeCompare(b))
@@ -78,16 +99,46 @@ function aggregate(values: number[], aggregation: string): number {
   }
 }
 
+function histogramAggregate(h: HistogramData, aggregation: string): number | null {
+  switch (aggregation) {
+    case 'count':
+      return h.count;
+    case 'sum':
+      return h.sum;
+    case 'avg':
+      return h.count === 0 ? null : h.sum / h.count;
+    case 'p50':
+    case 'p95':
+    case 'p99': {
+      if (h.count === 0) return null;
+      const pct = aggregation === 'p50' ? 0.5 : aggregation === 'p95' ? 0.95 : 0.99;
+      const target = Math.ceil(h.count * pct);
+      for (const bucket of h.buckets) {
+        if (bucket.upperBound === Number.MAX_VALUE) break;
+        if (bucket.cumulativeCount >= target) return bucket.upperBound;
+      }
+      return null;
+    }
+    default:
+      return null;
+  }
+}
+
 export class MetricStore {
   private samples: Map<string, TimeSeriesPoint[]> = new Map();
   private histograms: Map<string, HistogramData> = new Map();
   private alerts: Map<string, AlertRule> = new Map();
+  private alertStates: Map<string, AlertState> = new Map();
+  private seriesRegistry: Map<string, SeriesRef> = new Map();
   public events: AlertEvent[] = [];
 
   constructor(private maxSize: number) {}
 
   record(sample: MetricSample): void {
     const key = seriesKey(sample.name, sample.type, sample.labels);
+    if (!this.seriesRegistry.has(key)) {
+      this.seriesRegistry.set(key, { name: sample.name, type: sample.type, labels: sample.labels });
+    }
 
     switch (sample.type) {
       case 'counter':
@@ -143,6 +194,58 @@ export class MetricStore {
     return aggregate(values, aggregation);
   }
 
+  queryByName(
+    name: string,
+    labels: Record<string, string>,
+    start: Date | undefined,
+    end: Date | undefined,
+    aggregation: string,
+  ): QueryResult {
+    for (const metricType of ['counter', 'gauge'] as const) {
+      const key = seriesKey(name, metricType, labels);
+      const points = this.samples.get(key);
+      if (points && points.length > 0) {
+        return {
+          matched: true,
+          type: metricType,
+          value: this.query(name, metricType, labels, start, end, aggregation),
+        };
+      }
+    }
+    for (const metricType of ['histogram', 'timer'] as const) {
+      const key = seriesKey(name, metricType, labels);
+      const h = this.histograms.get(key);
+      if (h && h.count > 0) {
+        return { matched: true, type: metricType, value: histogramAggregate(h, aggregation) };
+      }
+    }
+    return { matched: false, type: null, value: null };
+  }
+
+  listSeries(): SeriesRef[] {
+    return [...this.seriesRegistry.values()];
+  }
+
+  seriesPoints(
+    name: string,
+    metricType: MetricType,
+    labels: Record<string, string>,
+    start: Date | undefined,
+    end: Date | undefined,
+  ): TimeSeriesPoint[] {
+    const key = seriesKey(name, metricType, labels);
+    const points = this.samples.get(key) ?? [];
+    return points.filter((p) => (!start || p.timestamp >= start) && (!end || p.timestamp <= end));
+  }
+
+  histogramFor(name: string, metricType: MetricType, labels: Record<string, string>): HistogramData | undefined {
+    return this.histograms.get(seriesKey(name, metricType, labels));
+  }
+
+  activeSeriesCount(): number {
+    return this.seriesRegistry.size;
+  }
+
   histogramPercentile(name: string, labels: Record<string, string>, percentile: number): number {
     const key = seriesKey(name, 'histogram', labels);
     let h = this.histograms.get(key);
@@ -163,6 +266,19 @@ export class MetricStore {
 
   createAlert(rule: AlertRule): void {
     this.alerts.set(rule.ruleId, rule);
+  }
+
+  listAlerts(): AlertRule[] {
+    return [...this.alerts.values()];
+  }
+
+  listAlertStates(): AlertState[] {
+    return [...this.alertStates.values()];
+  }
+
+  listAlertEvents(ruleId?: string, limit = 100): AlertEvent[] {
+    const filtered = ruleId ? this.events.filter((e) => e.ruleId === ruleId) : this.events;
+    return filtered.slice(-limit);
   }
 
   evaluateAlerts(): void {
@@ -193,9 +309,18 @@ export class MetricStore {
           break;
       }
 
+      this.alertStates.set(rule.ruleId, {
+        ruleId: rule.ruleId,
+        name: rule.name,
+        status: triggered ? 'firing' : 'ok',
+        currentValue: value,
+        threshold: rule.threshold,
+        lastEvaluatedAt: now,
+      });
+
       if (triggered) {
         this.events.push({
-          alertEventId: `evt_${Date.now()}`,
+          alertEventId: `evt_${Date.now()}_${this.events.length}`,
           ruleId: rule.ruleId,
           triggeredAt: new Date(),
           observedValue: value,
