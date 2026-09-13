@@ -1,0 +1,7 @@
+# AiDevSchool — codexDojo OS (QW1 AID-1593 / web-audit §2, §7)
+# Antes: o SPA fallback (netlify.toml /* -> /index.html) servia HTML como
+# robots.txt. Arquivos reais em public/ têm precedência sobre o redirect.
+User-agent: *
+Disallow: /__dojo/
+
+Sitemap: https://aidevschool-codexdojo-os.netlify.app/sitemap.xml
