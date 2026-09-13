@@ -173,6 +173,41 @@ na issue AID-1515 (QA countersign fresh-context, #346 prioritário).
 | #346 | DESIGN.md per-engine (spec Stitch) + CI job `design-md-lint` | `0a85deff` 2026-09-12 | founder merge GitHub; CI 37/37 verde pré-merge incl. guardrails + DESIGN.md lint; trilha parcial in-repo (`.tasks/design-md-frontend.md`); retrofit `intent/2026-09-12-design-md-ci-lint/`; veredito QA pós-fato AID-1515 |
 | #349 | `Fix/win path` — docs-reconciliation (DOCUMENTATION/VISION/AGENTS) + wave de conteúdo (miro-tour, wiki, curso-simples, legal/piloto, evidence) + restore digest miniTown + untrack `.loops/` | `d92f2f90` 2026-09-12 | founder merge GitHub; CI zero-falhas no head `845922cc` incl. `SDLC guardrails (diff)` + `product readiness (claims)`; retrofit `intent/2026-09-12-win-path-docs-reconciliation/`; veredito QA pós-fato AID-1522 (conteúdo APROVADO COM RESSALVA — achado A remediado em AID-1528) |
 
+## Merge protocol — hygiene de runs (anti-run-duplicado, AID-1618)
+
+Incidente AID-1612 (2026-09-13): um run duplicado do mesmo agente retomou o
+relay com contexto em memória antigo ("falta #364"), sem reler o thread, e
+mergeou o PR #364 às 03:50:57Z — 32s após o recibo de hold no thread e contra
+o ruling single-writer FPE vigente (postmortem AID-1608; registro
+`intent/AID-1618-anti-duplicate-run-protocol/`). Três regras binding para todo
+writer (hoje o single-writer FPE; sob R1, quem mergar):
+
+1. **Re-read obrigatório pré-write (continuations incluídas).** Toda
+   continuation/restart de sessão DEVE reler o thread-alvo do board antes de
+   qualquer write/merge — `GET /api/issues/{id}` + `GET /api/issues/{id}/comments`
+   cobrindo no mínimo do último recibo de hold/despacho em diante. Contexto em
+   memória não é evidência: a sessão recém-retomada pode estar ultrapassada
+   por despachos, rulings e holds postados após a sua captura. Merge sem
+   re-read é violação de protocolo mesmo com CI verde.
+2. **Gate de guardrails no head.** Pre-merge exige o check `SDLC guardrails
+   (diff)` presente **e** success no head do PR — "0 failures" na lista de
+   checks não basta: a ausência do check também é estado de falha, e lista
+   truncada/paginação incompleta não conta como verificação
+   (`gh api repos/dandpb/aidevschool/commits/<head-sha>/check-runs --paginate`).
+   Ausência ou conclusão != success = não merge. (Correção de registro
+   AID-1618: a alegação mid-incidente de guard ausente no head `4e408399` do
+   #364 não reproduziu na re-verificação first-hand — os 3 commits do PR
+   tinham o check presente+success; o gate permanece como verificação
+   explícita por nome.)
+3. **Kill de cadeia (runs duplicados).** Ao detectar run duplicado do mesmo
+   agente na mesma issue-alvo: (i) identificar as runs —
+   `GET /api/issues/{issueId}/live-runs` (+ `GET /api/issues/{id}/active-run`);
+   (ii) matar a run obsoleta — `POST /api/heartbeat-runs/{runId}/cancel`
+   (hoje board-only para agentes: escalar ao CEO imediatamente se 403);
+   (iii) **confirmar a morte re-listando as runs** antes de encerrar a própria
+   run ou postar recibo; (iv) se a run respawner, second-kill + escalação CEO
+   (precedente AID-1612). Morte sem confirmação não é morte.
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
