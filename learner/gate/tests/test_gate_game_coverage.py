@@ -30,8 +30,6 @@ CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
         "game-10-hash-ring",  # evaluator blocked on unitId fix (catalog.json:48)
-        "game-11-air-traffic",  # evaluator planned (AID-1594 PR2)
-        "game-12-mission-control",  # evaluator planned (AID-1594 PR2)
         "game-13-breaker-grid",
         "game-14-river-delta",
         "game-15-observatory",
