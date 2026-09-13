@@ -116,13 +116,16 @@ recibo do drill** (duráveis).
 Quem fecha um PR de drill/proposta (executor do drill PRE/QA, ou o watchdog
 no caso zumbi/§recusa) passa a seguir, **nesta ordem estrita**:
 
-1. **Capturar os jobs da run de CI do head do PR antes de qualquer write de
+1. **Capturar os jobs das runs de CI do head do PR antes de qualquer write de
    cleanup**:
-   `docs/product-readiness/tools/capture_drill_jobs.sh <PR>` — resolve a run
-   `pull_request` da branch do PR (`actions/workflows/ci.yml/runs`, head_sha
-   casado), lê `actions/runs/{id}/jobs` e comenta no PR **nome+conclusão de
-   cada job não-verde** (+ run id/URL/SHA/branch/timestamp; idempotente por
-   marcador `drill-jobs-receipt`). Sem run de CI na branch (B1a), o próprio
+   `docs/product-readiness/tools/capture_drill_jobs.sh <PR>` — resolve as
+   runs `pull_request` da branch do PR (`actions/workflows/ci.yml/runs`,
+   head_sha casado), lê `actions/runs/{id}/jobs` de cada uma e comenta no PR
+   **nome+conclusão de cada job não-verde** (+ índice de runs com
+   id/URL/SHA/branch/timestamp; marcador idempotente `drill-jobs-receipt`).
+   Runs não-verdes **sem jobs** (vermelho phantom de run-level — ex. run
+   34764665344) são registradas como tal: esse vermelho não é reconstruível
+   nem com a branch viva. Sem run de CI na branch (B1a), o próprio
    comentário registra o fato — evidência durável em vez de silêncio.
 2. Só então **fechar o PR com motivo** (§recusa: drill não recebe
    countersign; zumbi: checks não reportaram) — close mudo continua
