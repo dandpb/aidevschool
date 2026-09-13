@@ -187,6 +187,27 @@ describe("validateEvidenceEnvelope — rejects invalid envelopes (BUG_AUDIT #34 
     )
   })
 
+  it("rejects locale/slash dates that Date.parse would accept (AID-1678: strict ISO 8601 shape)", () => {
+    expectRejected(envelope({ ts: "July 10, 2026" }), OPTIONS, "evidence.ts must be an ISO timestamp")
+    expectRejected(envelope({ ts: "2026/07/10" }), OPTIONS, "evidence.ts must be an ISO timestamp")
+    expectRejected(envelope({ ts: "Jul 10 2026, 10:30:00" }), OPTIONS, "evidence.ts must be an ISO timestamp")
+    expectRejected(
+      envelope({ ts: "Sat Sep 13 2026 00:00:00 GMT+0000" }),
+      OPTIONS,
+      "evidence.ts must be an ISO timestamp",
+    )
+  })
+
+  it("accepts the ISO 8601 shapes the strict gate must keep valid", () => {
+    expect(validateEvidenceEnvelope(envelope({ ts: "2026-09-13" }), OPTIONS).ts).toBe("2026-09-13")
+    expect(validateEvidenceEnvelope(envelope({ ts: "2026-09-13T04:45Z" }), OPTIONS).ts).toBe(
+      "2026-09-13T04:45Z",
+    )
+    expect(
+      validateEvidenceEnvelope(envelope({ ts: "2026-09-13T04:45:38.123+03:00" }), OPTIONS).ts,
+    ).toBe("2026-09-13T04:45:38.123+03:00")
+  })
+
   it("rejects non-boolean pass", () => {
     expectRejected(envelope({ pass: "true" }), OPTIONS, "evidence.pass must be boolean")
     expectRejected(envelope({ pass: 1 }), OPTIONS, "evidence.pass must be boolean")
