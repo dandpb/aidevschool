@@ -1,7 +1,7 @@
-# AID-1755 — Método do passe real de leitor de tela (NVDA+Firefox / VoiceOver) no main atual `a518d867`
+# AID-1755 — Método do passe real de leitor de tela (NVDA+Firefox / VoiceOver) no main atual `f22bb323`
 
-Data: 2026-09-13 UTC (método preparado por LAAE; **passe físico é founder-side**)
-Pin verificado: `main` = `a518d867688540bd04eb82c6aa0c4d0affda2a61` (merge PR #392, onda r3 — baseline axe congelada).
+Data: 2026-09-13 UTC (método preparado por LAAE; **passe físico é founder-side**). Re-pin f22bb323 em 2026-09-13 (P&RE, AID-1769/AID-1772) após o merge do PR #399 — nota no fim do doc.
+Pin verificado: `main` = `f22bb323` (merge PR #399, single-writer AID-1772/r12 — inclui `playwright/refocus-a11y.spec.ts` e `tests/app/screenRefocusAnnounce.test.tsx`). Pin original do método: `a518d867` (merge PR #392, baseline axe congelada — mantido abaixo por rastreio).
 Escopo: app standalone `engines/literacyDojo/` (Vila Lume), 5 telas core do funnel — onboarding, mapa, lição+feedback, resultado, progresso.
 
 Este documento segue o método da re-execução AID-264 (`docs/qa/AID-264_QA_ACESSIBILIDADE_PILOTO_REEXEC_61b85535_2026-08-28.md`): pin declarado e verificável, ambiente declarado, veredito por superfície com critério explícito, evidência registrada, limitações declaradas. A diferença: AID-264 mediu com proxy automatizado (árvore computada + live regions + MutationObserver) e **recomendou explicitamente 1 passe NVDA+Firefox antes do GO final** — este documento é o kit executável desse passe. O card de agendamento do founder só existe se o carrier decidir (não criar por padrão).
@@ -24,7 +24,7 @@ O proxy automatizado existente prova, no DOM computado: semântica (axe WCAG A/A
 
 ```bash
 git clone https://github.com/dandpb/aidevschool && cd aidevschool
-git checkout a518d867   # pin deste método
+git checkout f22bb323   # pin deste método (re-pin AID-1769; original a518d867 não contém refocus-a11y.spec.ts)
 cd engines/literacyDojo
 npm ci && npm run gen:content
 npm run dev -- --port 4173
@@ -72,7 +72,7 @@ Veredito de tela = GO só se todos os itens [obrigatórios] passarem. Registrar 
 
 ## 5. Proxy automatizado do que é mecanizável (roda antes do passe)
 
-Rodar no mesmo pin — se qualquer item falhar, registrar como defeito e tratar antes do passe físico (não é supressão):
+Rodar no mesmo pin — se qualquer item falhar, registrar como defeito e tratar antes do passe físico (não é supressão). Neste pin (pós-merge do PR #399) o comando executa as 5 specs incl. `refocus-a11y.spec.ts`; no pin original `a518d867` esse filtro não tinha match e o refocus ficava silenciosamente descoberto (ressalva MÉDIA do countersign QA AID-1764 — PR #401 comment 5654746099):
 
 ```bash
 cd engines/literacyDojo && npm ci && npm run gen:content
@@ -98,6 +98,10 @@ Reproduzir a tabela por tela com veredito por item + observação; declarar vers
 2. VO testado em Safari (padrão); Firefox-mac é extra opcional.
 3. Zoom 400% aproximado por viewport 320px no proxy; o passe físico pode complementar com zoom real do navegador.
 4. O checklist cobre o funnel feliz + caminhos de erro listados; não cobre missão hospedada no OS (superfície do host, fora do escopo AID-1755).
+
+## Re-pin (AID-1769 — rastreio)
+
+- 2026-09-13 · P&RE · re-pin do método do pin `a518d867` para o main pós-merge do PR #399, dissolvendo a ressalva MÉDIA do countersign QA AID-1764 (PR #401 comment 5654746099): o comando proxy §5 agora roda `refocus-a11y.spec.ts` de verdade (spec + teste unitário citados na tabela existem neste pin). Ordem: AID-1772 (carrier AID-1714/r12). O nome do arquivo preserva o pin original para manter estáveis as referências (PR #401/issues).
 
 ## Disposição
 
