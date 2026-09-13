@@ -60,8 +60,8 @@ export const learnerSnapshot: LearnerSnapshot = {
       reason: "recurring-trap",
     },
   ],
-  masteredCount: 2,
-  scaffoldedCount: 17,
+  masteredCount: 5,
+  scaffoldedCount: 14,
   streak: {
     current: 0,
     longest: 2,

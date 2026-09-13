@@ -16,11 +16,11 @@ describe('DesktopApp public learner default', () => {
 
     const desktop = screen.getByRole('main')
     expect(desktop.textContent).toContain('0 dominadas')
-    expect(desktop.textContent).not.toContain('2 dominadas')
+    expect(desktop.textContent).not.toContain('5 dominadas')
     expect(desktop.textContent).not.toContain('U2-key-value-store')
     expect(desktop.textContent).not.toContain('KV WAREHOUSE')
     expect(anonymousPublicLearner.masteredCount).toBe(0)
-    expect(learnerSnapshot.masteredCount).toBe(2)
+    expect(learnerSnapshot.masteredCount).toBe(5)
     expect(learnerSnapshot.activeUnit.id).toBe('U2-key-value-store')
   })
 
@@ -29,7 +29,7 @@ describe('DesktopApp public learner default', () => {
     render(<DesktopApp />)
 
     const desktop = screen.getByRole('main')
-    expect(desktop.textContent).toContain('2 dominadas')
+    expect(desktop.textContent).toContain('5 dominadas')
     expect(desktop.textContent).toContain('KV WAREHOUSE')
     expect(desktop.textContent).toContain('DOMINADA')
   })

@@ -613,9 +613,10 @@ class TestDashboardSnapshot(unittest.TestCase):
 
     def test_build_snapshot_picks_up_backlog_counts(self):
         snapshot = build_snapshot()
-        # BACKLOG_STATUS.md: 01 + 02 implemented; 00 + 03-18 scaffolded (17).
-        self.assertEqual(snapshot["masteredCount"], 2)
-        self.assertEqual(snapshot["scaffoldedCount"], 17)
+        # BACKLOG_STATUS.md: 01 + 02 implemented, plus 05 + 12 + 18 Node.js-only
+        # partial implementations (5 total); 00 + 03-04 + 06-11 + 13-17 scaffolded (14).
+        self.assertEqual(snapshot["masteredCount"], 5)
+        self.assertEqual(snapshot["scaffoldedCount"], 14)
 
     def test_build_snapshot_includes_typed_challenge_statuses(self):
         snapshot = build_snapshot()

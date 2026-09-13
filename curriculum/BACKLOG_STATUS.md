@@ -11,20 +11,20 @@ Canonical source: [catalog.md](./catalog.md). This operational view preserves th
 | `02_key_value_store` | `implemented` | Node.js has executable spec, tests, review, benchmark, evolution, and verifier evidence. Certification caveat: this is Node.js-only; the earlier ungated Go/Rust backfill directories were removed in commit `1b0a309` and no longer exist on disk. |
 | `03_url_shortener` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `04_concurrent_task_queue` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `05_websocket_chat` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
+| `05_websocket_chat` | `implemented` | The Node.js implementation under `05_websocket_chat/node-impl/` passes 10 of 10 tests across 2 files (`chatHub`, `config`) via `vitest run`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check). |
 | `06_file_upload_pipeline` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `07_rest_api_auth` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `08_event_driven_order_system` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `09_plugin_system` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `10_distributed_cache` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `11_load_balancer` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `12_distributed_job_scheduler` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
+| `12_distributed_job_scheduler` | `implemented` | The Node.js implementation under `12_distributed_job_scheduler/node-impl/` passes 8 of 8 tests (`scheduler`) via `vitest run --coverage`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check). |
 | `13_api_gateway_circuit_breaker` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `14_log_aggregator` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `15_metrics_collector` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `16_mini_message_queue` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
 | `17_distributed_config_service` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
-| `18_search_engine` | `scaffolded` | Project artifacts exist; catalog verification is pending. |
+| `18_search_engine` | `implemented` | The Node.js implementation under `18_search_engine/node-impl/` passes 10 of 10 tests (`search`) via `vitest run`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check). |
 
 ## Update rule
 

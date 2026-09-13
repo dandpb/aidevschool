@@ -94,8 +94,8 @@ export const projects: readonly DojoProject[] = [
       "WebSocket protocol, connection management, fan-out broadcasting, rooms, presence, heartbeats",
     learningGoal: "Gerir conexões persistentes e broadcast em escala.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "The Node.js implementation under `05_websocket_chat/node-impl/` passes 10 of 10 tests across 2 files (`chatHub`, `config`) via `vitest run`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check).",
+      "implemented (Node.js only)",
       "05_websocket_chat/",
       "Projects 01-03",
     ],
@@ -206,8 +206,8 @@ export const projects: readonly DojoProject[] = [
       "Leader election (Raft simplified), distributed locks, cron-like scheduling, fault tolerance, DAG dependencies, exponential backoff retry",
     learningGoal: "Coordenar jobs distribuídos sem split-brain.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "The Node.js implementation under `12_distributed_job_scheduler/node-impl/` passes 8 of 8 tests (`scheduler`) via `vitest run --coverage`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check).",
+      "implemented (Node.js only)",
       "12_distributed_job_scheduler/",
       "Projects 07-09",
     ],
@@ -302,8 +302,8 @@ export const projects: readonly DojoProject[] = [
       "Inverted indexes, tokenization, TF-IDF/BM25 ranking, query parsing, fuzzy search, autocomplete, incremental indexing, index persistence",
     learningGoal: "Construir busca com tokenização, ranking e autocomplete.",
     evidence: [
-      "Project artifacts exist; catalog verification is pending.",
-      "scaffolded",
+      "The Node.js implementation under `18_search_engine/node-impl/` passes 10 of 10 tests (`search`) via `vitest run`. The `docs/` set holds spec, code review, benchmark results, evolution report, and status. Go and Rust do not exist on disk — no `go-impl/` or `rust-impl/` directory. This is Node.js only, not a three-language comparison. The project is not yet gate-certified. Re-verified 2026-09-13 (Wave 1 readiness check).",
+      "implemented (Node.js only)",
       "18_search_engine/",
       "Projects 13-15",
     ],

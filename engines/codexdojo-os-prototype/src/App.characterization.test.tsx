@@ -141,7 +141,7 @@ describe('codexDojo OS release behavior', () => {
 
     const desktop = screen.getByRole('main')
     expect(desktop.textContent).toContain('0 dominadas')
-    expect(desktop.textContent).not.toContain('2 dominadas')
+    expect(desktop.textContent).not.toContain('5 dominadas')
     expect(desktop.textContent).not.toContain('U2-key-value-store')
     expect(desktop.textContent).not.toContain('KV WAREHOUSE')
   })
@@ -150,7 +150,7 @@ describe('codexDojo OS release behavior', () => {
     renderDesktopRoute('?operator=1')
 
     const desktop = screen.getByRole('main')
-    expect(desktop.textContent).toContain('2 dominadas')
+    expect(desktop.textContent).toContain('5 dominadas')
     expect(desktop.textContent).toContain('KV WAREHOUSE')
   })
 })
