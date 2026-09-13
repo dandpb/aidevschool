@@ -303,9 +303,22 @@ jobs:
           fi
           git diff --staged --quiet && { echo "nothing to commit; aborting without PR"; exit 1; }
           git commit -m "docs(readiness): auto re-grant producer snapshot @ $SHA8 (AID-1357)"
+      # AID-1669: git push can be rejected by transient GitHub storage errors
+      # (drill 4: "remote: fatal error in commit_refs"). Retry before giving
+      # up so a blip never leaves the snapshot unpushed mid-window.
       - name: push the re-grant branch
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
-        run: git push origin "HEAD:regrant/auto-$TODAY-$SHA8"
+        run: |
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:regrant/auto-$TODAY-$SHA8"; then
+              echo "re-grant branch pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "git push attempt $attempt failed; retrying in 20s" >&2
+            sleep 20
+          done
+          echo "git push failed after 3 attempts" >&2
+          exit 1
       # AID-1669: gh pr create can fail on transient GitHub 5xx (drill 3 hit
       # HTTP 502 on GraphQL with the branch already pushed). Retry with
       # already-created detection so a lost response never orphans the branch.
