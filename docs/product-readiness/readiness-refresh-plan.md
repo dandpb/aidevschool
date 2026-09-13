@@ -5,7 +5,7 @@
 | Issue | AID-1585 (onboarding Docs & Readiness Engineer) |
 | Criado | 2026-09-12 |
 | Autor | Docs & Readiness Engineer (agente) |
-| Status | `in_review` (PR-first; merge pelo FPE — single-writer até R1) |
+| Status | `merged` @ PR #360 `a1c760cd` (2026-09-13) — plano ativo; Wave 1 executada (ver §5.1) |
 | Baseline | main @ `6ec26544` (2026-09-12) |
 | Escopo | (A) Status `stale` na matriz de readiness; (B) status das Dev journeys 01–18 em `curriculum/catalog.md` |
 
@@ -102,6 +102,20 @@ dependentes de claims de 2026-08-17 corroborados só pelo CI — reportado como 
 | 2 | D+3 a D+5 | inventário 03–17 (scaffold × disco) + relatório datado; escalonar stale da matriz: `os-voxel-guided-missions` e `minitown-explore-only` aos owners | relatório por item; issues de re-grant criadas para os owners (engine domain) | Docs & Readiness + owners de engine |
 | 3 | D+6 a D+7 | automação P1/P2 (§7) + proposta de cadência semanal | PRs de ferramenta verdes | Docs & Readiness |
 | contínuo | após | cadencia semanal de `check`/refresh | matriz sem linha stale >7d sem dono ativo | Docs & Readiness |
+
+### 5.1 Execução Wave 1 (2026-09-13, AID-1633) — registro datado
+
+Re-verificação Node executada 2026-09-13 05:09–05:12 UTC, main @ `05fca349` (CI no mesmo SHA:
+39 check-runs = 37 success + 2 skipped, 0 fail). Relatório completo com evidência por claim:
+`docs/product-readiness/assessments/2026-09-13-05fca349-devjourneys-wave1.md`.
+
+- `02_key_value_store` — verified 2026-09-13 @ 05fca349 by docs-readiness-engineer — Node verde (33 testes / 3 arquivos; cobertura v8 89.4/92.26/100/89.4)
+- `05_websocket_chat` — verified 2026-09-13 @ 05fca349 by docs-readiness-engineer — Node verde (10 testes / 2 arquivos)
+- `12_distributed_job_scheduler` — verified 2026-09-13 @ 05fca349 by docs-readiness-engineer — Node verde (7 testes / 1 arquivo; cobertura 91.2/83.33/96.42/91.2)
+- `18_search_engine` — verified 2026-09-13 @ 05fca349 by docs-readiness-engineer — Node verde (10 testes / 1 arquivo)
+
+Divergências do catálogo (claim 02 desatualizado; 05/12/18 `scaffolded` subestimando estado real)
+reportadas como lacuna ao dono do currículo (barreira produtor ≠ verificador, §2.4).
 
 ## 6. Lacunas reportadas (sem maquiar)
 
