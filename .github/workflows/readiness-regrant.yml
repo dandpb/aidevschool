@@ -306,14 +306,30 @@ jobs:
       - name: push the re-grant branch
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: git push origin "HEAD:regrant/auto-$TODAY-$SHA8"
+      # AID-1669: gh pr create can fail on transient GitHub 5xx (drill 3 hit
+      # HTTP 502 on GraphQL with the branch already pushed). Retry with
+      # already-created detection so a lost response never orphans the branch.
       - name: open the re-grant PR
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: |
-          version=$(( $(ls docs/product-readiness/assessments | grep -c regrant) + 1 ))
-          gh pr create \
-            --base main \
-            --head "regrant/auto-$TODAY-$SHA8" \
-            --title "docs(readiness): auto re-grant v${version} @ ${SHA8}" \
-            --body-file pr-body.md \
-            --label readiness-regrant \
-            --label bot
+          for attempt in 1 2 3; do
+            version=$(( $(ls docs/product-readiness/assessments | grep -c regrant) + 1 ))
+            if gh pr create \
+              --base main \
+              --head "regrant/auto-$TODAY-$SHA8" \
+              --title "docs(readiness): auto re-grant v${version} @ ${SHA8}" \
+              --body-file pr-body.md \
+              --label readiness-regrant \
+              --label bot; then
+              echo "re-grant PR opened on attempt $attempt"
+              exit 0
+            fi
+            if [ "$(gh pr list --head "regrant/auto-$TODAY-$SHA8" --state open --json number --jq 'length')" -gt 0 ]; then
+              echo "re-grant PR already exists (created before a failed response); continuing"
+              exit 0
+            fi
+            echo "gh pr create attempt $attempt failed; retrying in 30s" >&2
+            sleep 30
+          done
+          echo "gh pr create failed after 3 attempts" >&2
+          exit 1
