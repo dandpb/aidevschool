@@ -14,11 +14,28 @@
  * emissão continua atrás da porta `AnalyticsSink`, agora em batches NDJSON
  * same-origin quando um endpoint é configurado (ativação AID-913).
  */
+import { recordHasOnlyKeys } from "../../../shared/teaching-evidence/funnelCore";
+import literacyVocabulary from "../../../shared/teaching-evidence/vocabularies/literacy.json" with { type: "json" };
 
 export const ANALYTICS_SCHEMA_VERSION = 2;
 export const ANALYTICS_SOURCE = "literacydojo";
 
-/** Guarda-chuva contra vazamento de texto livre: strings de props são curtas. */
+/**
+ * Vocabulário de fonte única (consolidação 2026-09-13): as tabelas abaixo
+ * derivam de engines/shared/teaching-evidence/vocabularies/literacy.json —
+ * o mesmo JSON que alimenta as tabelas GENERATED do coletor e o monitor de
+ * drift (igualdade total travada por
+ * learner/gate/tests/dojo_analytics_vocabularies.test.mjs). Os tipos-literal
+ * abaixo são a projeção em compile-time desse JSON.
+ */
+const vocabulary = literacyVocabulary as unknown as {
+  readonly eventNames: readonly ProductAnalyticsEventName[];
+  readonly eventProps: Readonly<Record<ProductAnalyticsEventName, readonly string[]>>;
+  readonly optionalProps: Readonly<Record<ProductAnalyticsEventName, readonly string[]>>;
+  readonly entryRoutes: readonly EntryRoute[];
+  readonly activityTypes: readonly AnalyticsActivityType[];
+};
+
 const MAX_PROP_STRING_LENGTH = 120;
 const MAX_PROP_KEY_LENGTH = 40;
 const PROP_KEY_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
@@ -44,22 +61,22 @@ export type ProductAnalyticsEventName =
  * da janela 09-06→09-10), home ou onboarding. Prop OPCIONAL de
  * `entry_viewed`: envelopes pré-v4 sem a prop continuam válidos.
  */
-export const ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"] as const;
-export type EntryRoute = (typeof ENTRY_ROUTES)[number];
+export type EntryRoute = "home" | "lesson-resume" | "onboarding";
+export const ENTRY_ROUTES: readonly EntryRoute[] = vocabulary.entryRoutes;
 
 export type AnalyticsPropValue = string | number | boolean;
 
-/** Mesmos 7 tipos de atividade do contrato de conteúdo (espelho do coletor). */
-export const ANALYTICS_ACTIVITY_TYPES = [
-  "choice",
-  "sort",
-  "missing_context",
-  "safety_classification",
-  "prompt_builder",
-  "output_comparison",
-  "rubric_review",
-] as const;
-export type AnalyticsActivityType = (typeof ANALYTICS_ACTIVITY_TYPES)[number];
+export type AnalyticsActivityType =
+  | "choice"
+  | "sort"
+  | "missing_context"
+  | "safety_classification"
+  | "prompt_builder"
+  | "output_comparison"
+  | "rubric_review";
+
+/** Mesmos 7 tipos de atividade do contrato de conteúdo (fonte: literacy.json). */
+export const ANALYTICS_ACTIVITY_TYPES: readonly AnalyticsActivityType[] = vocabulary.activityTypes;
 
 export type ProductAnalyticsEvent = {
   schemaVersion: typeof ANALYTICS_SCHEMA_VERSION;
@@ -73,50 +90,17 @@ export type ProductAnalyticsEvent = {
   props: Record<string, AnalyticsPropValue>;
 };
 
-const EVENT_NAMES: readonly ProductAnalyticsEventName[] = [
-  "entry_viewed",
-  "mapa_inicial_done",
-  "route_chosen",
-  "lesson_started",
-  "activity_attempted",
-  "lesson_completed",
-  "review_started",
-  "review_completed",
-  "lesson_brief_viewed",
-  "activity_presented",
-];
+const EVENT_NAMES: readonly ProductAnalyticsEventName[] = vocabulary.eventNames;
 
 /**
- * Props permitidas por evento — o conjunto EXATO (fechado). Espelhado 1:1 no
- * coletor same-origin (`dojo-analytics-collector.mjs`); paridade travada por
- * teste (coletor rejeita exatamente o que este validador rejeita).
+ * Props permitidas por evento — o conjunto EXATO (fechado), derivado de
+ * literacy.json; o coletor deriva as mesmas tabelas do mesmo JSON (paridade
+ * estrutural, não copiada à mão).
  */
-const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  route_chosen: ["route"],
-  lesson_started: ["lessonId", "lessonVersion"],
-  activity_attempted: ["lessonId", "activityType", "passed"],
-  lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  review_started: ["lessonId", "intervalDays", "stage"],
-  review_completed: ["lessonId", "score"],
-  lesson_brief_viewed: ["lessonId", "lessonVersion"],
-  activity_presented: ["lessonId", "activityType", "activityIndex"],
-};
+const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = vocabulary.eventProps;
 
 /** Props opcionais (presentes ou ausentes; nunca com outro nome). */
-const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["durationSeconds"],
-  route_chosen: [],
-  lesson_started: [],
-  activity_attempted: [],
-  lesson_completed: ["durationSeconds"],
-  review_started: [],
-  review_completed: [],
-  lesson_brief_viewed: [],
-  activity_presented: [],
-};
+const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = vocabulary.optionalProps;
 
 const UUID_KEYS: readonly (keyof ProductAnalyticsEvent)[] = ["eventId", "sessionId"];
 
@@ -146,8 +130,9 @@ export function isValidAnalyticsEvent(value: unknown): value is ProductAnalytics
   for (const key of required) {
     if (!(key in props)) return false;
   }
+  // Closed-record check compartilhado com os demais produtores (funnelCore).
+  if (!recordHasOnlyKeys(props as Record<string, unknown>, EVENT_PROPS[eventName])) return false;
   for (const [key, item] of Object.entries(props)) {
-    if (!EVENT_PROPS[eventName].includes(key)) return false;
     if (key.length > MAX_PROP_KEY_LENGTH || !PROP_KEY_PATTERN.test(key)) return false;
     if (typeof item === "string") {
       if (item.length > MAX_PROP_STRING_LENGTH) return false;
