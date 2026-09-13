@@ -435,7 +435,7 @@ def _validate_attempt_files(state: dict[str, Any], root: Path = ROOT) -> list[st
 def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     """Assert that units with a gate review have evidence that passes the gate.
 
-    Delegates to ``curriculum._shared.evidence.check_evidence``, which is
+    Delegates to ``learner.gate.standards.check_evidence``, which is
     shape-detecting: game evidence requires a recognized empirical rubric or a
     gate review bound to a separate verifier receipt. Bound reviews recheck the
     canonical producer-evidence digest and reject embedded verifier blocks.
@@ -450,7 +450,7 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
     same vocabulary used by ``_validate_units_log`` via
     ``RATING_FROM_GATE``) — pure ``presented`` events don't need evidence.
     """
-    from curriculum._shared.evidence import check_evidence
+    from learner.gate.standards import check_evidence
     from learner.gate.evidence_io import bound_evidence_violations
     from learner.substrate.scheduling import RATING_FROM_GATE
 

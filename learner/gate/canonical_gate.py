@@ -11,7 +11,10 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from curriculum._shared.evidence import game_metric_violations
+from learner.gate.standards import (
+    effective_thresholds,
+    game_metric_violations,
+)
 from learner.gate.evidence_io import (
     load_evidence,
     load_evidence_ndjson,
@@ -166,7 +169,13 @@ def _check_evidence_semantics(
     }
     rubric_pass, rubric_errors = independently_verified_pass(producer_evidence)
     if verifier_receipt is not None:
-        errors.extend(receipt_violations(verifier_receipt, producer_evidence))
+        errors.extend(
+            receipt_violations(
+                verifier_receipt,
+                producer_evidence,
+                effective_thresholds(active_unit.get("empirical_gate")),
+            )
+        )
     elif evidence.get("pass") is True:
         if rubric_pass is not True:
             errors.extend(rubric_errors)
