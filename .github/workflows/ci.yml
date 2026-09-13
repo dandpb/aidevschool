@@ -217,14 +217,15 @@ jobs:
           cache: npm
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
-      - run: npm run lint
-      - run: npm run test
       # §5.2 (AID-1738, ORDEM AID-1714/r3-B): the cross-engine integration
       # steps that used to live inline below moved to the named harness
       # scripts/integration/cross-engine.sh (contract: scripts/integration/
       # README.md). The harness owns the integration contract with CI-identical
-      # argv and is first-class locally; this job keeps id/name so the required
-      # check `codexdojo-os (TS)` is unchanged, and only orchestrates.
+      # argv and phase ORDER (deps → unit lint/test → contracts → blobs →
+      # drift → build → smoke → report; the OS unit tests spawn the Python
+      # bridge verifiers, so the substrate install must precede them) and is
+      # first-class locally; this job keeps id/name so the required check
+      # `codexdojo-os (TS)` is unchanged, and only orchestrates.
       # INTEGRATION_PLAYWRIGHT_RETRIES=1 is the deterministic retry policy
       # (AID-571/AID-1658): local runs default to 0.
       - name: cross-engine integration harness (scripts/integration)

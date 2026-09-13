@@ -26,6 +26,7 @@ reais e o substrato compartilhado:
 | Fase | O que prova | Fonte/commando canônico |
 | --- | --- | --- |
 | `deps` | todos os workspaces TS irmãos instalam de forma reprodutível (lockfiles congelados) + `pip install -e` da raiz (bridge despacha verificadores Python) | `npm ci`/`pnpm install --frozen-lockfile` |
+| `unit` | lint (biome) + unit tests (vitest) do OS — **depois** de `deps`: os testes de dispatch do bridge spawnam os verificadores Python (ordem do job original; reorder falha com 502, PR #394 tentativa 1) | `npm run lint` + `npm run test` |
 | `contracts` | contratos do gate de ouro via **glob** — enumeração manual já orfanou 3 contratos (AID-1601 R1) | `node --test learner/gate/tests/*.test.mjs` |
 | `blobs-proof` | export deduplicado contra um servidor real de Blobs (AID-947) | `verify_deployed_blobs.mjs` |
 | `schema-drift` | monitor falha alto nos fixtures sintéticos (AID-473 F2) | `schema_drift_monitor.mjs` |

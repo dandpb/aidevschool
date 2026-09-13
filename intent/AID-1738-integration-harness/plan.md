@@ -5,6 +5,9 @@ Arquivos (ordem):
 1. `scripts/integration/cross-engine.sh` — runner nomeado. Fases:
    `deps` (self `npm ci` a menos que `--skip-self-install` + 4 installs pnpm
    `--frozen-lockfile` + dojoToday npm + `pip install -e` raiz),
+   `unit` (lint+test do OS, **após** deps — os testes de dispatch do bridge
+   spawnam verificadores Python; reorder quebrou com 502 na tentativa 1 do
+   PR #394 e foi corrigido voltando à ordem do job original),
    `contracts` (`node --test learner/gate/tests/*.test.mjs`, glob AID-1601),
    `blobs-proof` (npm ci netlify-functions + `verify_deployed_blobs.mjs`,
    AID-947), `schema-drift` (fixtures synthetic+synthetic-v4, AID-473 F2),
@@ -26,9 +29,10 @@ Arquivos (ordem):
 Invariantes de behavior (verificados):
 
 - Required check `codexdojo-os (TS)` inalterado (id+nome do job).
-- Ordem lógica preservada: lint/test do OS dependem só do self `npm ci`
-  (deps do OS não incluem workspaces irmãos — package.json conferido);
-  integração roda depois, como antes.
+- Ordem lógica preservada (lição da tentativa 1 do PR #394): lint/test do
+  OS rodam DEPOIS de `pip install -e` da raiz — `routerVerificationDispatch.
+  test.ts` despacha para verificadores Python (502 sem o substrato). A fase
+  `unit` do harness fixa essa ordem.
 - `--skip-self-install` só omite o `npm ci` que o job já executou.
 
 ## Verificação (self-verify, primeira mão)

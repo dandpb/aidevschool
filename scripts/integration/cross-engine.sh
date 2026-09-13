@@ -20,7 +20,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 OS_DIR="$REPO_ROOT/engines/codexdojo-os-prototype"
 
-PHASES_ALL=(deps contracts blobs-proof schema-drift build smoke report)
+PHASES_ALL=(deps unit contracts blobs-proof schema-drift build smoke report)
 
 usage() {
   sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//' >&2
@@ -33,6 +33,10 @@ Phases (default: all, in this order):
   deps          npm ci (self, unless --skip-self-install) + the 5 sibling TS
                 workspaces (codexDojo/pixelDojo/voxelDojo via pnpm, miniTown
                 via pnpm, dojoToday via npm) + `pip install -e` repo root
+  unit          OS lint (biome) + unit tests (vitest) — MUST run after deps:
+                bridge dispatch tests spawn the Python verifiers, so the
+                shared substrate has to be installed first (the original CI
+                job order; verified the hard way on PR #394 attempt 1)
   contracts     learner/gate contract tests via glob (AID-1601)
   blobs-proof   AID-947 end-to-end Blobs proof (local @netlify/blobs server)
   schema-drift  AID-473 F2 schema-drift monitor over synthetic fixtures
@@ -43,7 +47,8 @@ Phases (default: all, in this order):
 
 Flags:
   --skip-self-install   skip the OS `npm ci` in deps (caller already installed,
-                        e.g. the CI job which runs lint/test first)
+                        e.g. the CI job, which keeps a bare `npm ci` step for
+                        cache warm-up before delegating everything here)
   -h, --help            this help
 
 Environment:
@@ -98,6 +103,17 @@ phase_deps() {
   (cd "$OS_DIR" && pnpm --dir ../miniTown install --frozen-lockfile)
   (cd "$OS_DIR" && npm ci --prefix ../dojoToday)
   "$PY" -m pip install -e "$REPO_ROOT"
+}
+
+phase_unit() {
+  banner "unit: OS lint (biome) + unit tests (vitest)"
+  # Order matters (original CI job sequence): the vitest suite includes the
+  # bridge dispatch tests, which spawn the shared Python verifiers — deps
+  # (pip install -e of the repo root) must precede this phase. Reordering it
+  # earlier fails routerVerificationDispatch.test.ts with 502 (PR #394
+  # attempt 1).
+  (cd "$OS_DIR" && npm run lint)
+  (cd "$OS_DIR" && npm run test)
 }
 
 phase_contracts() {
