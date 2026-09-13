@@ -139,8 +139,9 @@ curriculum/09_plugin_system/go-impl/plugin-system-go
 engines/phantasy-codex-adventure/
 engines/phantasyCodexAdventure/
 games/
-# Curriculum lockfiles & raw bench dumps (regenerate when needed)
-curriculum/**/node-impl/package-lock.json
+# Curriculum raw bench dumps (regenerate when needed). node-impl lockfiles
+# are tracked since AID-1670 (hardening-top10 R10): CI installs with `npm ci`,
+# so the lockfile is the reproducible source of truth — commit it.
 curriculum/**/benchmarks/results/
 curriculum/**/benchmarks/results-*/
 # miniTown concept art (not runtime)
