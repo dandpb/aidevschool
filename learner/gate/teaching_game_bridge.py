@@ -14,11 +14,13 @@ import json
 import sys
 from typing import Any
 
+from learner.gate.air_traffic_evaluator import evaluate_air_traffic
 from learner.gate.checkpoint_evaluator import evaluate_checkpoint
 from learner.gate.docking_evaluator import evaluate_docking
 from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
+from learner.gate.mission_control_evaluator import evaluate_mission_control
 from learner.gate.pipeline_evaluator import evaluate_pipeline
 from learner.gate.relay_evaluator import evaluate_relay
 from learner.gate.warehouse_evaluator import evaluate_warehouse
@@ -68,6 +70,18 @@ GAME_SPECS = {
         "09_plugin_system",
         "docking-bay-",
         evaluate_docking,
+    ),
+    "AIR TRAFFIC": (
+        "U11-load-balancer",
+        "11_load_balancer",
+        "air-traffic-",
+        evaluate_air_traffic,
+    ),
+    "MISSION CONTROL": (
+        "U12-job-scheduler",
+        "12_distributed_job_scheduler",
+        "mission-control-",
+        evaluate_mission_control,
     ),
 }
 ALLOWED_KEYS = frozenset(
