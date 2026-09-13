@@ -17,6 +17,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 
+from learner.analytics import capture_event
 from learner.substrate import load_canonical, validate
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -53,6 +54,15 @@ def get_learner_state(learner_id: str) -> dict:
         raise HTTPException(status_code=404, detail="learner not found")
     state = load_canonical(state_path)
     errors = validate(state, state_path.parent.parent)
+    capture_event(
+        learner_id,
+        "learner_state_requested",
+        {
+            "state_valid": not errors,
+            "validation_error_count": len(errors),
+            "instance_source": "shard" if "instances" in state_path.parts else "pilot",
+        },
+    )
     return {
         "learner_id": learner_id,
         "canonical_path": str(state_path.relative_to(REPO_ROOT)),

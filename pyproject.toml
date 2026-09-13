@@ -14,6 +14,8 @@ dependencies = [
   # FSRS spaced-repetition scheduler imported by learner/substrate/scheduling.py.
   # Also previously undeclared — surfaced by the D5 test-runnability pass.
   "fsrs>=6,<7",
+  "posthog>=7,<8",
+  "python-dotenv>=1,<2",
 ]
 
 [project.optional-dependencies]

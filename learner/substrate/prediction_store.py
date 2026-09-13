@@ -6,6 +6,7 @@ from typing import Final, TypeAlias, TypeGuard
 
 import yaml
 
+from learner.analytics import capture_event
 from shared.fsio import atomic_write_text
 
 
@@ -105,7 +106,8 @@ def record_prediction(
 ) -> Path:
     target = path or PREDICTIONS_PATH
     predictions = _load_existing_predictions(target)
-    predictions.append(_normalized_record(record))
+    normalized = _normalized_record(record)
+    predictions.append(normalized)
     content = yaml.safe_dump(
         {"predictions": predictions},
         sort_keys=False,
@@ -113,4 +115,16 @@ def record_prediction(
         width=100,
     )
     atomic_write_text(target, content)
+    capture_event(
+        "prediction_store",
+        "prediction_recorded",
+        {
+            "project": normalized["project"],
+            "metric": normalized["metric"],
+            "predicted_winner": normalized["predicted"],
+            "actual_winner": normalized["actual"],
+            "prediction_correct": normalized["correct"],
+            "prediction_count": len(predictions),
+        },
+    )
     return target

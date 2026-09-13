@@ -21,6 +21,7 @@ import argparse
 import sys
 from pathlib import Path
 
+from learner.analytics import capture_event, capture_exception
 from learner.gate.verifier import (
     DEFAULT_EVIDENCE_CANDIDATES,
     GameVerifier,
@@ -69,10 +70,12 @@ def main(argv: list[str] | None = None) -> int:
     try:
         state = load_state(root)
     except (OSError, ValueError) as exc:
+        capture_exception(exc, "learner_gate")
         print(f"CANNOT GATE — learner state unreadable/invalid: {exc}")
         return 1
 
     unit = state.get("active_unit", {})
+    learner_id = str(state.get("learner", {}).get("id") or "learner_gate")
     evidence_path = resolve_evidence(root, args.evidence, unit)
     if evidence_path is None or not evidence_path.exists():
         looked = args.evidence or ", ".join(DEFAULT_EVIDENCE_CANDIDATES)
@@ -107,6 +110,16 @@ def main(argv: list[str] | None = None) -> int:
         print(
             f"LITERACY VERDICT PASS — mastery_eligible={decision.mastery_eligible} "
             f"(producer max claim remains completed; UI cannot write mastered)"
+        )
+        capture_event(
+            learner_id,
+            "learner_gate_evaluated",
+            {
+                "evidence_type": "literacy",
+                "gate_outcome": "pass",
+                "mastery_eligible": bool(decision.mastery_eligible),
+                "dry_run": args.dry_run,
+            },
         )
         return 0
 
@@ -160,6 +173,16 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     _print_game_outcome(decision, evidence_path, args.dry_run)
+    capture_event(
+        learner_id,
+        "learner_gate_evaluated",
+        {
+            "evidence_type": "game",
+            "gate_outcome": decision.gate_outcome,
+            "rating": decision.rating,
+            "dry_run": args.dry_run,
+        },
+    )
     return 0
 
 
