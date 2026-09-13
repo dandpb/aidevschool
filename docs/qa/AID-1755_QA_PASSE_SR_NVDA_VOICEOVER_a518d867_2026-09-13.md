@@ -72,7 +72,7 @@ Veredito de tela = GO só se todos os itens [obrigatórios] passarem. Registrar 
 
 ## 5. Proxy automatizado do que é mecanizável (roda antes do passe)
 
-Rodar no mesmo pin — se qualquer item falhar, registrar como defeito e tratar antes do passe físico (não é supressão):
+Rodar no pin pós-merge do PR #399 — `main` = `f22bb323` (merge #399, 2026-09-13 18:29Z): o `refocus-a11y.spec.ts` entra com o #399 e não existe no pin original `a518d867` deste método — nele o filtro roda sem match (comando cai para 4 arquivos) e a cobertura refocus ficaria silenciosamente de fora (ressalva MÉDIA da QA, PR #401 comment 5654746099). Os demais 4 specs existem em ambos os pins. Se qualquer item falhar, registrar como defeito e tratar antes do passe físico (não é supressão):
 
 ```bash
 cd engines/literacyDojo && npm ci && npm run gen:content
