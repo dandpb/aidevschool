@@ -2,10 +2,9 @@
 // append-only window publication + embedding-host postMessage transport.
 // The append-only tests are the BUG_AUDIT_2026-07-19 #33 mutation guard:
 // reverting writeWindowChannel to an overwrite must fail this file.
-// NOTE (revalidated on main 75cbafbc): only the pixelquest/voxeldojo
-// channels honor append-only today; the dormant `game` channel keeps the
-// historical single-record slot — tracked in the AID-1673 follow-up issue,
-// so this file pins reachability (not shape) for that channel.
+// AID-1678: the dormant `game` channel is append-only too (legacy single
+// record wrapped), closing the #33 residual this suite had pinned as
+// reachability-only while the follow-up issue was open.
 import { afterEach, describe, expect, it, vi } from "vitest"
 import {
   TEACHING_EVIDENCE_MESSAGE,
@@ -79,12 +78,24 @@ describe("dualEmit — window channels are append-only (BUG_AUDIT #33 guard)", (
     expect(channelValues(window, "__voxelDojoEvidence")).toEqual([fresh])
   })
 
-  it("game channel keeps the record reachable on __gameEvidence", () => {
+  it("game channel appends every record in order (AID-1678: BUG_AUDIT #33 residual closed)", () => {
     vi.spyOn(console, "log").mockImplementation(() => undefined)
     const { window } = stubBrowserWindow()
+    const first = record()
+    const second = record("U3-other")
+    dualEmit(first, "game")
+    dualEmit(second, "game")
+    expect(channelValues(window, "__gameEvidence")).toEqual([first, second])
+  })
+
+  it("a legacy single-record game channel value is wrapped, not dropped", () => {
+    vi.spyOn(console, "log").mockImplementation(() => undefined)
+    const { window } = stubBrowserWindow()
+    const legacy = record("U1-legacy")
+    window.__gameEvidence = legacy
     const fresh = record()
     dualEmit(fresh, "game")
-    expect((window.__gameEvidence as { unit_id: string }).unit_id).toBe(fresh.unit_id)
+    expect(channelValues(window, "__gameEvidence")).toEqual([legacy, fresh])
   })
 
   it("returns the record unchanged (identity) and works without a window", () => {
@@ -110,7 +121,7 @@ describe("dualEmit — embedding-host postMessage gate", () => {
       evidence: fresh,
     })
     expect(targetOrigin).toBe(HOST_ORIGIN)
-    expect((window.__gameEvidence as { unit_id: string }).unit_id).toBe(fresh.unit_id)
+    expect((window.__gameEvidence as { unit_id: string }[])[0]?.unit_id).toBe(fresh.unit_id)
   })
 
   it("stays silent on mismatching referrer, empty referrer, and bad referrer URLs", () => {

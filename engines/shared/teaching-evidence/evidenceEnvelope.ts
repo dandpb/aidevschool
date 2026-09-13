@@ -61,6 +61,15 @@ export class EvidenceValidationError extends Error {
   }
 }
 
+/**
+ * BUG_AUDIT_2026-07-19 #34 residual (AID-1678): `Date.parse` alone accepts
+ * locale formats like "July 10, 2026"; the envelope demands ISO 8601 shape.
+ * `Date.parse` stays as the second conjunct to reject impossible calendars
+ * (e.g. "2026-13-45T99:99:99Z") that the shape regex alone would pass.
+ */
+const ISO_8601_TIMESTAMP =
+  /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?)?$/
+
 type IdentityKey = "encounter_id" | "scenario_id"
 type AnyValidationOptions = EvidenceEnvelopeValidationOptions<
   EvidenceSource,
@@ -98,7 +107,11 @@ export function validateEvidenceEnvelope(
     throw new EvidenceValidationError(`evidence.game must be ${options.game}`)
   }
   const timestamp = raw["ts"]
-  if (typeof timestamp !== "string" || Number.isNaN(Date.parse(timestamp))) {
+  if (
+    typeof timestamp !== "string" ||
+    !ISO_8601_TIMESTAMP.test(timestamp) ||
+    Number.isNaN(Date.parse(timestamp))
+  ) {
     throw new EvidenceValidationError("evidence.ts must be an ISO timestamp")
   }
   if (typeof raw["pass"] !== "boolean") {

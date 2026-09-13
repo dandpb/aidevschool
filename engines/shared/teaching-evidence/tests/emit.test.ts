@@ -133,7 +133,7 @@ describe("emitEvidence — channel routing", () => {
     expect(channel[0]).toBe(record)
   })
 
-  it("explicit __gameEvidence windowKey routes to the game channel", () => {
+  it("explicit __gameEvidence windowKey routes to the game channel (append-only, AID-1678)", () => {
     silenceEvidenceConsole()
     const { window } = stubBrowserWindow()
     const record = emitEvidence({
@@ -142,8 +142,8 @@ describe("emitEvidence — channel routing", () => {
       metrics: METRICS,
       now: FIXED_CLOCK,
     })
-    const published = window.__gameEvidence as { unit_id?: string }
-    expect(published).toBeTruthy()
-    expect(published.unit_id).toBe(record.unit_id)
+    const channel = window.__gameEvidence as unknown[]
+    expect(Array.isArray(channel)).toBe(true)
+    expect(channel[0]).toBe(record)
   })
 })
