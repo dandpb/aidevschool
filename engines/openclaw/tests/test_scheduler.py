@@ -12,6 +12,8 @@ from engines.openclaw.runner.pipeline_status import Phase, PipelineStatus
 from engines.openclaw.runner.pipeline_status import load_status as _parse_status, save_status as _write_status
 from engines.openclaw.runner.scheduler import Scheduler
 
+_SEED_STATUS_PATH = Path(__file__).parent / "fixtures" / "pipeline_status.seed.md"
+
 
 class InjectedWriteError(RuntimeError):
     pass
@@ -42,9 +44,7 @@ def test_scheduler_reaches_cycle_complete(tmp_path: Path) -> None:
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
 
-    status = _parse_status(status_path) if status_path.exists() else _parse_status(
-        Path("learner/pipeline_status.md")
-    )
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
@@ -67,9 +67,7 @@ def test_scheduler_writes_curriculum_evidence_status_yaml(tmp_path: Path) -> Non
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
 
-    status = _parse_status(status_path) if status_path.exists() else _parse_status(
-        Path("learner/pipeline_status.md")
-    )
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
@@ -98,7 +96,7 @@ def test_scheduler_surfaces_curriculum_mirror_failure(
     status_path = tmp_path / "pipeline_status.md"
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
-    status = _parse_status(Path("learner/pipeline_status.md"))
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
@@ -125,7 +123,7 @@ def test_scheduler_rolls_back_curriculum_mirror_when_pipeline_write_fails(
     status_path = tmp_path / "pipeline_status.md"
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
-    status = _parse_status(Path("learner/pipeline_status.md"))
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
@@ -156,7 +154,7 @@ def test_scheduler_rejects_project_path_traversal(tmp_path: Path, project: str) 
     status_path = tmp_path / "pipeline_status.md"
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
-    status = _parse_status(Path("learner/pipeline_status.md"))
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = project
     _write_status(status, status_path)
@@ -173,7 +171,7 @@ def test_scheduler_respects_learning_gate(tmp_path: Path) -> None:
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: true\n", encoding="utf-8")
 
-    status = _parse_status(Path("learner/pipeline_status.md"))
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
@@ -193,7 +191,7 @@ def test_missing_spec_halts(tmp_path: Path) -> None:
     state_path = tmp_path / "learning_state.yaml"
     state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
 
-    status = _parse_status(Path("learner/pipeline_status.md"))
+    status = _parse_status(_SEED_STATUS_PATH)
     status.phase = Phase.SPEC
     status.current_project = "curriculum/01_rate_limiter"
     status.blockers = []
