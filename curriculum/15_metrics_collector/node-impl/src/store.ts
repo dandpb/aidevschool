@@ -44,11 +44,55 @@ export interface AlertEvent {
   severity: string;
 }
 
+export interface SeriesSnapshot {
+  name: string;
+  type: MetricType;
+  labels: Record<string, string>;
+  points: TimeSeriesPoint[];
+  summary: { last: number; avg: number; min: number; max: number; count: number };
+}
+
+export interface AlertRuleState {
+  ruleId: string;
+  name: string;
+  enabled: boolean;
+  status: 'ok' | 'firing';
+  currentValue: number | null;
+  threshold: number;
+  operator: string;
+  lastEvaluatedAt: Date;
+}
+
 function seriesKey(name: string, type: MetricType, labels: Record<string, string>): string {
   const labelParts = Object.entries(labels)
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([k, v]) => `${k}=${v}`);
   return [type, name, ...labelParts].join(',');
+}
+
+function parseSeriesKey(key: string): { type: MetricType; name: string; labels: Record<string, string> } {
+  const parts = key.split(',');
+  const labels: Record<string, string> = {};
+  for (const part of parts.slice(2)) {
+    const eq = part.indexOf('=');
+    if (eq > 0) labels[part.slice(0, eq)] = part.slice(eq + 1);
+  }
+  return { type: parts[0] as MetricType, name: parts[1], labels };
+}
+
+function compareThreshold(operator: string, value: number, threshold: number): boolean {
+  switch (operator) {
+    case 'gt':
+      return value > threshold;
+    case 'gte':
+      return value >= threshold;
+    case 'lt':
+      return value < threshold;
+    case 'lte':
+      return value <= threshold;
+    default:
+      return false;
+  }
 }
 
 function aggregate(values: number[], aggregation: string): number {
@@ -127,20 +171,66 @@ export class MetricStore {
 
   query(
     name: string,
-    metricType: MetricType,
+    metricType: MetricType | undefined,
     labels: Record<string, string>,
     start: Date | undefined,
     end: Date | undefined,
     aggregation: string,
   ): number {
+    if (!metricType) return 0;
     const key = seriesKey(name, metricType, labels);
-    const points = this.samples.get(key) ?? [];
 
-    const values = points
-      .filter((p) => (!start || p.timestamp >= start) && (!end || p.timestamp <= end))
-      .map((p) => p.value);
+    const points = this.samples.get(key);
+    if (points) {
+      const values = points
+        .filter((p) => (!start || p.timestamp >= start) && (!end || p.timestamp <= end))
+        .map((p) => p.value);
+      return aggregate(values, aggregation);
+    }
 
-    return aggregate(values, aggregation);
+    return this.aggregateHistogramData(this.histograms.get(key), aggregation);
+  }
+
+  resolveMetricType(name: string): MetricType | undefined {
+    for (const key of this.samples.keys()) {
+      const parsed = parseSeriesKey(key);
+      if (parsed.name === name) return parsed.type;
+    }
+    for (const key of this.histograms.keys()) {
+      const parsed = parseSeriesKey(key);
+      if (parsed.name === name) return parsed.type;
+    }
+    return undefined;
+  }
+
+  private percentileFromHistogram(h: HistogramData, percentile: number): number {
+    const target = Math.ceil(h.count * percentile);
+    for (const bucket of h.buckets) {
+      if (bucket.cumulativeCount >= target) {
+        return bucket.upperBound;
+      }
+    }
+    return 0;
+  }
+
+  private aggregateHistogramData(h: HistogramData | undefined, aggregation: string): number {
+    if (!h || h.count === 0) return 0;
+    switch (aggregation) {
+      case 'count':
+        return h.count;
+      case 'sum':
+        return h.sum;
+      case 'avg':
+        return h.sum / h.count;
+      case 'p50':
+        return this.percentileFromHistogram(h, 0.5);
+      case 'p95':
+        return this.percentileFromHistogram(h, 0.95);
+      case 'p99':
+        return this.percentileFromHistogram(h, 0.99);
+      default:
+        return 0;
+    }
   }
 
   histogramPercentile(name: string, labels: Record<string, string>, percentile: number): number {
@@ -152,17 +242,64 @@ export class MetricStore {
     }
     if (!h || h.count === 0) return 0;
 
-    const target = Math.ceil(h.count * percentile);
-    for (const bucket of h.buckets) {
-      if (bucket.cumulativeCount >= target) {
-        return bucket.upperBound;
-      }
-    }
-    return 0;
+    return this.percentileFromHistogram(h, percentile);
   }
 
   createAlert(rule: AlertRule): void {
     this.alerts.set(rule.ruleId, rule);
+  }
+
+  listAlerts(): AlertRule[] {
+    return [...this.alerts.values()];
+  }
+
+  listSeries(): SeriesSnapshot[] {
+    const snapshots: SeriesSnapshot[] = [];
+    for (const [key, points] of this.samples) {
+      const { type, name, labels } = parseSeriesKey(key);
+      const values = points.map((p) => p.value);
+      snapshots.push({
+        name,
+        type,
+        labels,
+        points: [...points],
+        summary: {
+          last: values.length > 0 ? values[values.length - 1] : 0,
+          avg: aggregate(values, 'avg'),
+          min: aggregate(values, 'min'),
+          max: aggregate(values, 'max'),
+          count: values.length,
+        },
+      });
+    }
+    return snapshots;
+  }
+
+  alertStates(): AlertRuleState[] {
+    const now = new Date();
+    return this.listAlerts().map((rule) => {
+      const match = rule.query.match(/^(\w+)\((\w+)\)$/);
+      let currentValue: number | null = null;
+      if (match) {
+        const [, aggregation, name] = match;
+        const metricType = this.resolveMetricType(name);
+        if (metricType) {
+          const start = new Date(now.getTime() - rule.windowSeconds * 1000);
+          currentValue = this.query(name, metricType, {}, start, now, aggregation);
+        }
+      }
+      const triggered = currentValue !== null && compareThreshold(rule.operator, currentValue, rule.threshold);
+      return {
+        ruleId: rule.ruleId,
+        name: rule.name,
+        enabled: rule.enabled,
+        status: rule.enabled && triggered ? 'firing' : 'ok',
+        currentValue,
+        threshold: rule.threshold,
+        operator: rule.operator,
+        lastEvaluatedAt: now,
+      };
+    });
   }
 
   evaluateAlerts(): void {
@@ -177,21 +314,7 @@ export class MetricStore {
       const start = new Date(now.getTime() - rule.windowSeconds * 1000);
       const value = this.aggregateQuery(name, agg, start, now);
 
-      let triggered = false;
-      switch (rule.operator) {
-        case 'gt':
-          triggered = value > rule.threshold;
-          break;
-        case 'gte':
-          triggered = value >= rule.threshold;
-          break;
-        case 'lt':
-          triggered = value < rule.threshold;
-          break;
-        case 'lte':
-          triggered = value <= rule.threshold;
-          break;
-      }
+      const triggered = compareThreshold(rule.operator, value, rule.threshold);
 
       if (triggered) {
         this.events.push({

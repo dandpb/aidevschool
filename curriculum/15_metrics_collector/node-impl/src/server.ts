@@ -39,7 +39,8 @@ export function createServer(): express.Express {
       const name = match ? match[2] : query;
       const start = req.query.start ? new Date(req.query.start as string) : undefined;
       const end = req.query.end ? new Date(req.query.end as string) : undefined;
-      const value = store.query(name, 'gauge', {}, start, end, agg);
+      const metricType = store.resolveMetricType(name);
+      const value = store.query(name, metricType, {}, start, end, agg);
       jsonResponse(res, 200, { query, value });
     } else {
       res.setHeader('Content-Type', 'text/plain; version=0.0.4');
@@ -48,7 +49,14 @@ export function createServer(): express.Express {
   });
 
   app.get('/dashboard', (_req: Request, res: Response) => {
-    jsonResponse(res, 200, { dashboardId: 'default', panels: [], alerts: [] });
+    const panels = store.listSeries().map((series) => ({
+      panelId: `${series.type}_${series.name}`,
+      title: series.name,
+      query: series.name,
+      series: [series],
+      summary: series.summary,
+    }));
+    jsonResponse(res, 200, { dashboardId: 'default', panels, alerts: store.alertStates() });
   });
 
   app.post('/alerts/rules', (req: Request, res: Response) => {
@@ -58,7 +66,7 @@ export function createServer(): express.Express {
   });
 
   app.get('/alerts/rules', (_req: Request, res: Response) => {
-    jsonResponse(res, 200, { items: [] });
+    jsonResponse(res, 200, { items: store.listAlerts() });
   });
 
   app.get('/health', (_req: Request, res: Response) => {

@@ -54,6 +54,27 @@ describe('GET /metrics?query=', () => {
     expect(res.body.ok).toBe(true);
     expect(res.body.data.value).toBe(3);
   });
+
+  it('queries an ingested counter via sum (metric type resolved from the series, not hardcoded gauge)', async () => {
+    const server = app();
+    for (let i = 0; i < 3; i++) {
+      await request(server).post('/metrics/counter').send({ name: 'http_requests_total', value: 1 });
+    }
+    const res = await request(server).get('/metrics?query=sum(http_requests_total)');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.data.value).toBe(3);
+  });
+
+  it('queries timer observations from histogram data via sum', async () => {
+    const server = app();
+    await request(server).post('/metrics/timer').send({ name: 'dur', value: 0.05 });
+    await request(server).post('/metrics/timer').send({ name: 'dur', value: 0.2 });
+    const res = await request(server).get('/metrics?query=sum(dur)');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.data.value).toBeCloseTo(0.25, 5);
+  });
 });
 
 describe('GET /metrics', () => {
@@ -84,18 +105,80 @@ describe('POST /alerts/rules', () => {
 });
 
 describe('GET /alerts/rules', () => {
-  it('lists alert rules', async () => {
+  it('returns empty items only on a fresh store', async () => {
     const res = await request(app()).get('/alerts/rules');
     expect(res.status).toBe(200);
     expect(res.body.ok).toBe(true);
+    expect(res.body.data.items).toEqual([]);
+  });
+
+  it('roundtrips a rule created via POST (FR-014 read-your-writes)', async () => {
+    const server = app();
+    await request(server).post('/alerts/rules').send({
+      ruleId: 'rule1',
+      name: 'high-cpu',
+      enabled: true,
+      query: 'avg(cpu)',
+      operator: 'gt',
+      threshold: 5,
+      windowSeconds: 300,
+      severity: 'warning',
+    });
+    const res = await request(server).get('/alerts/rules');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    const items = res.body.data.items;
+    expect(items).toHaveLength(1);
+    expect(items[0].ruleId).toBe('rule1');
+    expect(items[0].name).toBe('high-cpu');
+    expect(items[0].enabled).toBe(true);
   });
 });
 
 describe('GET /dashboard', () => {
-  it('returns dashboard', async () => {
+  it('returns empty panels and alerts only on a fresh store', async () => {
     const res = await request(app()).get('/dashboard');
     expect(res.status).toBe(200);
     expect(res.body.ok).toBe(true);
+    expect(res.body.data.panels).toEqual([]);
+    expect(res.body.data.alerts).toEqual([]);
+  });
+
+  it('derives panels with series data, summary, and alert state from the store (FR-010)', async () => {
+    const server = app();
+    for (let i = 0; i < 5; i++) {
+      await request(server).post('/metrics/gauge').send({ name: 'cpu', value: i + 1 });
+    }
+    await request(server).post('/alerts/rules').send({
+      ruleId: 'rule1',
+      name: 'high-cpu',
+      enabled: true,
+      query: 'avg(cpu)',
+      operator: 'gt',
+      threshold: 2,
+      windowSeconds: 300,
+      severity: 'warning',
+    });
+    const res = await request(server).get('/dashboard');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+
+    const panels = res.body.data.panels;
+    expect(panels.length).toBeGreaterThanOrEqual(1);
+    const cpuPanel = panels.find((p: { title: string }) => p.title === 'cpu');
+    expect(cpuPanel).toBeDefined();
+    expect(cpuPanel.series).toHaveLength(1);
+    expect(cpuPanel.series[0].points).toHaveLength(5);
+    expect(cpuPanel.summary.last).toBe(5);
+    expect(cpuPanel.summary.avg).toBe(3);
+    expect(cpuPanel.summary.max).toBe(5);
+
+    const alerts = res.body.data.alerts;
+    expect(alerts).toHaveLength(1);
+    expect(alerts[0].ruleId).toBe('rule1');
+    expect(alerts[0].status).toBe('firing');
+    expect(alerts[0].currentValue).toBe(3);
+    expect(alerts[0].threshold).toBe(2);
   });
 });
 
