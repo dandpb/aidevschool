@@ -19,7 +19,7 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
 | --- | --- | --- | --- | --- | --- |
 | QW1 | robots.txt + sitemap.xml reais nas 2 superfícies (4 arquivos novos: `public/robots.txt` + `public/sitemap.xml` por engine, `lastmod` do git log) | [#362](https://github.com/dandpb/aidevschool/pull/362) `aid-1593/qw1-robots-sitemap` | `fd981924` 03:12:27Z | `fd981924` | **`35a757f2` 03:27:25Z (merged)** |
 | QW2 | Headers de segurança no literacyDojo (`netlify.toml` +15 linhas: Referrer-Policy, X-Content-Type-Options, Permissions-Policy, CSP; delta `worker-src 'self'` vs OS p/ service worker) | [#363](https://github.com/dandpb/aidevschool/pull/363) `aid-1593/qw2-security-headers` | `fc066fd0` 03:13:25Z | `69fa010e` (merge de main 03:27:32Z, 7s após merge #362 — renovação de base stale, classe `intent/AID-1272-sdlc-guard-stale-base/`) | **`c1b7b5b8` 03:41:58Z (merged)** |
-| QW3 | `rel=canonical` + favicon nos `index.html` das 2 superfícies; OS ganha `public/icon-64.png` (8,1 KB, derivado deterministicamente do asset existente: crop central + box-average) | [#364](https://github.com/dandpb/aidevschool/pull/364) `aid-1593/qw3-canonical-icon` | `9955d10c` 03:14:14Z | `4e408399` (2× merge de main) | **`2c5f77dd` 03:50:57Z (merged pelo CEO `dandpb` enquanto este registro estava aberto como PR #371, antes de alcançar `main` — retrofit também; AID-1604 itens 2-3 overtaken, F4)** |
+| QW3 | `rel=canonical` + favicon nos `index.html` das 2 superfícies; OS ganha `public/icon-64.png` (8,1 KB, derivado deterministicamente do asset existente: crop central + box-average) | [#364](https://github.com/dandpb/aidevschool/pull/364) `aid-1593/qw3-canonical-icon` | `9955d10c` 03:14:14Z | `4e408399` (2× merge de main) | **`2c5f77dd` 03:50:57Z (merged por run duplicado da PRE — identidade GitHub compartilhada `dandpb` — enquanto este registro estava aberto como PR #371, antes de alcançar `main`; retrofit também; AID-1604 itens 2-3 overtaken; incidente AID-1612 + ruling CEO `3c28583a` MANTER)** |
 
 ### Vereditos e evidência
 
@@ -42,8 +42,12 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
   guardrails SUCCESS); **#362** coberto pelo espelho `428d89f1` no mesmo
   thread (03:50:25Z; registro canônico AID-1604/F3 segue com o CEO).
   **Quem executou cada merge
-  (verificado FPE via GitHub API, AID-1614): CEO `dandpb`** — #362 03:27:25Z
-  (`35a757f2`), #363 03:41:59Z (`c1b7b5b8`), #364 03:50:57Z (`2c5f77dd`); o
+  (atribuição canônica: disposição CEO `756777fd` "onda 100% escrita pela
+  PRE" + incidente AID-1612 "executor: run duplicado do PRE"; recibos da PRE
+  `7c092b70`/`ddaa7132`): runs da PRE**, sob a identidade GitHub compartilhada
+  `dandpb` (conta do CEO; a API do GitHub não distingue o operador) — #362
+  03:27:25Z (`35a757f2`), #363 03:41:59Z (`c1b7b5b8`), #364 03:50:57Z
+  (`2c5f77dd`, run duplicado); o
   FPE não executou nenhum dos três merges (writer-identity → F4). CI verde em
   cada merge SHA (37 SUCCESS incl. SDLC guardrails nos 3) — verificação
   a posteriori pelo FPE (AID-1604 item 2 na forma overtaken).
@@ -69,8 +73,9 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
    (ElementTree); árvore limpa (`git status --porcelain`) — done.
 3. CI verde nas 3 PRs + recibo AID-1593/AID-1584 — done (03:22–03:23Z).
 4. Merge single-writer FPE: **overtaken** — #362 (03:27:25Z), #363 (03:41:58Z)
-   e #364 (03:50:57Z) merged, todos executados pelo CEO `dandpb`, não pelo
-   FPE (AID-1604/F3-F4); #364 antes deste registro alcançar `main`.
+   e #364 (03:50:57Z) merged, todos executados por runs da PRE (identidade
+   GitHub compartilhada `dandpb`), não pelo FPE (AID-1604/F3-F4; incidente
+   AID-1612); #364 antes deste registro alcançar `main`.
 5. Retrofit deste registro (AID-1602) — este PR.
 
 ## Risks
@@ -103,7 +108,8 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
   mergeia single-writer; SM audita a cadeia (AID-1597 → anchor AID-400).
 - QW3 #364: revalidação de CI pelo FPE feita **a posteriori** no merge SHA
   `2c5f77dd` (verde: 37 SUCCESS + 7 SKIPPED incl. SDLC guardrails) — o merge
-  por conta do CEO (03:50:57Z) antecedeu a revalidação pré-merge planejada
+  pela PRE duplicada (03:50:57Z, incidente AID-1612) antecedeu a revalidação
+  pré-merge planejada
   (AID-1604 item 2, overtaken) — producer não verifica o próprio diff.
 
 ## Follow-ups (com dono, não-bloqueantes)

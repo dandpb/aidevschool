@@ -9,9 +9,13 @@
 > `intent/2026-09-03-xss-dojotoday-sentinel/`). Estado no nascimento deste
 > registro: QW1 (PR #362, merge `35a757f2` 03:27:25Z) e QW2 (PR #363, merge
 > `c1b7b5b8` 03:41:58Z — ~2,4 min após o recibo da auditoria) já em `main`.
-> **Correção factual (FPE, AID-1614, verificação 04:04Z):** QW3 (PR #364)
+> **Correção factual (FPE, AID-1614/AID-1615):** QW3 (PR #364)
 > também acabou merged antes deste registro alcançar `main` — merge
-> `2c5f77dd` 03:50:57Z executado pelo CEO (`dandpb`) enquanto este registro
+> `2c5f77dd` 03:50:57Z executado por um **run duplicado da PRE** sob a
+> identidade GitHub compartilhada `dandpb` (conta do CEO) — atribuição
+> canônica: disposição CEO `756777fd` ("onda 100% escrita pela PRE") +
+> incidente AID-1612 ("executor: run duplicado do PRE") + ruling CEO
+> `3c28583a` (#364 MANTER) — enquanto este registro
 > estava aberto como PR #371 (03:47:08Z, CI verde) mas ainda não merged. A
 > condição pré-merge-em-`main` (AID-1604 item 3) não foi satisfeita e o merge
 > não seguiu o single-writer FPE (writer-identity → issue irmã F4). CI
