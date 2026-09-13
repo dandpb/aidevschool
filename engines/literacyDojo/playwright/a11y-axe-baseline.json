@@ -1,0 +1,27 @@
+{
+  "_comment": "AID-1739 (LAAE T1): baseline congelada do scanner axe-core (WCAG 2.0/2.1 A+AA) nas telas core do literacyDojo. Chave = '<tela>::<rule>'. Nova violação fora desta lista falha o CI (defeito a tratar, nunca suprimir); entrada que sumiu fica stale e também falha — encolha a baseline ao corrigir (mesmo ratchet do scripts/python_complexity_baseline.txt, AID-1636). O array `examples` é registro informativo do run que congelou a baseline (seletores podem variar com conteúdo gerado); o gate compara apenas a chave tela::rule.",
+  "frozenAt": "2026-09-13",
+  "entries": {
+    "onboarding::color-contrast": {
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "wcag": ["wcag2aa", "wcag143"],
+      "nodes": 1,
+      "examples": [".audience-route-dev > .route-badge"]
+    },
+    "result::aria-prohibited-attr": {
+      "impact": "serious",
+      "help": "Elements must only use permitted ARIA attributes",
+      "wcag": ["wcag2a", "wcag412"],
+      "nodes": 1,
+      "examples": [".voxel-task"]
+    },
+    "progress::color-contrast": {
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "wcag": ["wcag2aa", "wcag143"],
+      "nodes": 21,
+      "examples": [".lesson-row > .chip-locked.chip"]
+    }
+  }
+}
