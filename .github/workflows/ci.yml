@@ -217,64 +217,21 @@ jobs:
           cache: npm
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
-      - run: pnpm --dir ../codexDojo install --frozen-lockfile
-      - run: pnpm --dir ../pixelDojo install --frozen-lockfile
-      - run: pnpm --dir ../voxelDojo install --frozen-lockfile
-      - run: pnpm --dir ../miniTown install --frozen-lockfile
-      - run: npm ci --prefix ../dojoToday
-      - run: python -m pip install -e ../..
-      - run: npm run lint
-      - run: npm run test
-      # All learner/gate contract tests run via glob (AID-1601, hardening-top10
-      # R1): manual enumeration had silently orphaned 3 collector contracts
-      # (edge_semantics, funnel_aggregation_v2, schema_drift_monitor_v2), so a
-      # golden-rule contract regression could pass CI unnoticed. The glob wires
-      # every *.test.mjs in learner/gate/tests (17 today) and auto-wires future
-      # ones (precedent: AID-415, AID-470, AID-913, AID-941, AID-947, AID-987,
-      # AID-1525 — per-test rationale lives in each file's header).
-      - run: node --test ../../learner/gate/tests/*.test.mjs
-      # AID-947 end-to-end durable proof in CI: real local Blobs server
-      # (@netlify/blobs/server) + the collector's DEFAULT export — duplicate
-      # identical POSTs must collapse to one export line.
-      - run: npm ci --prefix ../../learner/gate/netlify-functions --ignore-scripts --no-audit --no-fund
-      - run: node ../../learner/gate/analytics/verify_deployed_blobs.mjs
-      # Schema-drift monitor over the synthetic fixtures (AID-473 F2): the
-      # contract tests above cover classification; this CLI run also fails
-      # high on the fixture inputs (real pilot NDJSON never lands in the repo;
-      # the fixtures are checked against events.ts by fixtureSchemaDrift.test.ts).
-      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic,../../learner/gate/tests/fixtures/analytics/synthetic-v4
-      # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
-      # at build time), so the smoke below can reuse this dist/ without a rebuild.
-      - run: npm run build
+      # §5.2 (AID-1738, ORDEM AID-1714/r3-B): the cross-engine integration
+      # steps that used to live inline below moved to the named harness
+      # scripts/integration/cross-engine.sh (contract: scripts/integration/
+      # README.md). The harness owns the integration contract with CI-identical
+      # argv and phase ORDER (deps → unit lint/test → contracts → blobs →
+      # drift → build → smoke → report; the OS unit tests spawn the Python
+      # bridge verifiers, so the substrate install must precede them) and is
+      # first-class locally; this job keeps id/name so the required check
+      # `codexdojo-os (TS)` is unchanged, and only orchestrates.
+      # INTEGRATION_PLAYWRIGHT_RETRIES=1 is the deterministic retry policy
+      # (AID-571/AID-1658): local runs default to 0.
+      - name: cross-engine integration harness (scripts/integration)
+        run: bash ../../scripts/integration/cross-engine.sh --skip-self-install
         env:
-          VITE_LITERACYDOJO_URL: /apps/literacydojo/
-          VITE_WAREHOUSE_URL: /apps/warehouse/
-          VITE_WORMHOLE_URL: /apps/wormhole/
-          VITE_RELAY_STATION_URL: /apps/relay-station/
-          VITE_PIPELINE_PLANT_URL: /apps/pipeline-plant/
-          VITE_CHECKPOINT_CITY_URL: /apps/checkpoint-city/
-          VITE_TIMELINE_TOWER_URL: /apps/timeline-tower/
-          VITE_DOCKING_BAY_URL: /apps/docking-bay/
-      # P5: prove the static pilot build mounts missions from its own origin.
-      # The build above already produced dist/ (and gates typecheck), so we
-      # bundle the mission runtimes and run Playwright directly instead of
-      # test:smoke:pilot, which would rebuild the OS a second time.
-      - run: npx playwright install --with-deps chromium
-      - run: node scripts/bundle-missions.mjs
-      # AID-571 (Auditoria #5 A5-F4): deterministic retry policy for the
-      # codexdojo-os Playwright smokes. Both known flakes (#154 job 100028707657,
-      # #227 job 100052442436) were root-caused to test-side timing fragility
-      # and fixed in the specs; --retries=1 covers the residual transient class
-      # WITHOUT ad-hoc manual rerun-failed-jobs: a retried test surfaces as a
-      # named "flaky" entry in this log (plus its trace) — that listing is the
-      # durable trace the audit required — while a real regression fails twice
-      # and still fails the job. Recurrence of the flaky listing on the same
-      # test escalates to quarantine + automatic issue (do not raise retries).
-      - run: npx playwright test --retries=1 --config=playwright.pilot.config.ts
-      - run: npx playwright test --retries=1 --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
-      - run: node scripts/readiness-report.mjs
-        env:
-          READINESS_TEST_RUN: passed
+          INTEGRATION_PLAYWRIGHT_RETRIES: "1"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
