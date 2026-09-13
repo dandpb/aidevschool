@@ -15,7 +15,7 @@ from learner.substrate.adapters.whiteboard import (
     render_profile_yaml,
     render_trail_md,
 )
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 from learner.substrate.generated_views import check_views, write_views
 
 ROOT = Path(__file__).resolve().parent.parent.parent

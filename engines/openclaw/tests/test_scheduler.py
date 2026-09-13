@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from curriculum._shared.evidence import ChallengeEvidence
-from engines.openclaw.errors import StateCorruptionError
+from shared.errors import StateCorruptionError
 from engines.openclaw.runner.pipeline_status import Phase, PipelineStatus
 from engines.openclaw.runner.pipeline_status import load_status as _parse_status, save_status as _write_status
 from engines.openclaw.runner.scheduler import Scheduler

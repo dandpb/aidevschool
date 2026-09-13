@@ -29,7 +29,7 @@ from typing import Any, TypeGuard
 
 import yaml
 
-from curriculum._shared.time import utc_now_iso
+from shared.time import utc_now_iso
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
@@ -210,7 +210,7 @@ def _is_finite_number(value: Any) -> TypeGuard[float]:
 
 
 def _resolve_contained(path: Path, base: Path) -> Path:
-    from engines.openclaw.errors import StateCorruptionError
+    from shared.errors import StateCorruptionError
 
     resolved_base = base.resolve()
     resolved = path.resolve() if path.is_absolute() else (resolved_base / path).resolve()
@@ -220,7 +220,7 @@ def _resolve_contained(path: Path, base: Path) -> Path:
 
 
 def _project_dir(base: Path, project_id: str) -> Path:
-    from engines.openclaw.errors import StateCorruptionError
+    from shared.errors import StateCorruptionError
 
     project_path = Path(project_id)
     if project_path.is_absolute() or len(project_path.parts) != 1 or project_id in {"", ".", ".."}:
@@ -251,7 +251,7 @@ def _evidence_ndjson_path(project_id: str, root: Path) -> Path:
 
 def _detect_phase(project_id: str, root: Path) -> Phase:
     """YAML first; Markdown fallback. Mirrors pipeline_status.load_status."""
-    from engines.openclaw.errors import StateCorruptionError
+    from shared.errors import StateCorruptionError
 
     yaml_path = _status_yaml_path(project_id, root)
     if yaml_path.exists():
@@ -394,8 +394,8 @@ def commit(report: ChallengeEvidence, *, root: Path | str | None = None) -> Path
     Does not touch ``docs/status.md`` (human narrative) or ``evidence.ndjson``
     (append-only audit — use :func:`record_verdict` for that).
     """
-    from engines.openclaw.errors import StateCorruptionError
-    from learner.substrate.fsio import atomic_write_text
+    from shared.errors import StateCorruptionError
+    from shared.fsio import atomic_write_text
 
     root = _resolve_root(root)
     if report.phase not in Phase:
@@ -471,7 +471,7 @@ def check_evidence(
     """
     root = _resolve_root(root)
     prefix = f"{label}.evidence_file" if label else "evidence_file"
-    from engines.openclaw.errors import StateCorruptionError
+    from shared.errors import StateCorruptionError
 
     try:
         resolved = _resolve_contained(Path(evidence_path), root)

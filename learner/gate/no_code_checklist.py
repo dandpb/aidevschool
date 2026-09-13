@@ -240,7 +240,7 @@ def verify_no_code_checklist(
 
 def write_no_code_receipt(verdict: NoCodeChecklistVerdict, path: str | Path) -> Path:
     """Write the independent receipt JSON (never touches learning_state)."""
-    from learner.substrate.fsio import atomic_write_text
+    from shared.fsio import atomic_write_text
 
     out = Path(path)
     out.parent.mkdir(parents=True, exist_ok=True)

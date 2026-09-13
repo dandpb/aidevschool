@@ -69,7 +69,7 @@ def create_instance(name: str, learner_id: str, language: str = "TypeScript",
     backup = state_path.parent / f"learning_state.{_utc_stamp()}.yaml.bak"
     if state_path.is_file():
         shutil.copy2(state_path, backup)
-    from learner.substrate.fsio import atomic_write_text
+    from shared.fsio import atomic_write_text
 
     # This file is the ecosystem's source of truth: a crash mid-write must leave
     # the previous state intact. Not save_canonical() — validate() requires an

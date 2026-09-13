@@ -43,6 +43,7 @@ testpaths = [
   "engines/test_engine_contracts.py",
   "learner/tests",
   "curriculum/_shared/tests",
+  "shared/tests",
   # AI Literacy content-contract suite (unittest-style, also runs standalone).
   "curriculum/ai-literacy/tools/tests",
   # Product-readiness canonical-source, validation, and generated-view checks.

@@ -4,7 +4,7 @@ import subprocess
 from tempfile import TemporaryDirectory
 import unittest
 
-from engines.openclaw.errors import StateCorruptionError
+from shared.errors import StateCorruptionError
 from engines.miniMaxEvolutionEngine.os_adapter import REPO_ROOT, prepare_workflow
 
 

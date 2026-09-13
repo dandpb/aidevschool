@@ -6,7 +6,7 @@ from typing import Final, TypeAlias, TypeGuard
 
 import yaml
 
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 
 
 ROOT: Final = Path(__file__).resolve().parent.parent.parent

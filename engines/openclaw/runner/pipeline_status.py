@@ -9,7 +9,7 @@ from typing import Any
 import yaml
 
 from enum import StrEnum
-from engines.openclaw.errors import StateCorruptionError
+from shared.errors import StateCorruptionError
 from engines.openclaw.fsio import atomic_write_text
 
 

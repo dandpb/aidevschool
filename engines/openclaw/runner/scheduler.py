@@ -12,7 +12,7 @@ from curriculum._shared.evidence import Phase as EvidencePhase
 from curriculum._shared.evidence import commit as commit_evidence
 from curriculum._shared.evidence import inspect as inspect_challenge
 from engines.openclaw import config as cfg
-from engines.openclaw.errors import StateCorruptionError
+from shared.errors import StateCorruptionError
 from engines.openclaw.fsio import atomic_write_text, read_yaml_mapping
 from engines.openclaw.runner.checklist import evaluate
 from engines.openclaw.runner.pipeline_status import (

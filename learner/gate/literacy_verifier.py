@@ -20,7 +20,7 @@ from typing import Any
 
 from learner.gate.evidence_io import EvidenceParseError, MAX_EVIDENCE_BYTES
 from learner.gate.evidence_validator import validate_literacy_evidence_structure
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 from .literacy_evaluator import recompute_literacy_evidence
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

@@ -23,7 +23,7 @@ from curriculum._shared.evidence import (
     record_verdict,
     statuses,
 )
-from engines.openclaw.errors import StateCorruptionError
+from shared.errors import StateCorruptionError
 
 
 def _make_challenge(

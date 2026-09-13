@@ -10,6 +10,7 @@ from typing import assert_never
 
 from engines.openclaw import config as cfg
 from engines.openclaw.errors import OpenclawError
+from shared.errors import StateCorruptionError
 from engines.openclaw.runner.checklist import evaluate
 from engines.openclaw.runner.pipeline_status import Phase, yaml_path_for
 from engines.openclaw.runner.scheduler import Scheduler
@@ -134,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
         print()
 
         results = scheduler.run(max_events=args.max_events)
-    except OpenclawError as exc:
+    except (OpenclawError, StateCorruptionError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
