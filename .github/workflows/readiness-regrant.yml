@@ -10,11 +10,37 @@ name: Readiness re-grant factory
 # watchdog (AID-1357 carrier) closes+reopens it with the agent credential to
 # trigger pull_request[reopened]; a PR with no checks after 45 min is closed
 # with a §recusa reason so the dedupe label is freed again.
+#
+# AID-1669 (hardening R6): `workflow_dispatch` drills the exact production
+# path so the factory's maiden effective run is never the first real stale
+# window. No gates are relaxed in either drill mode:
+# - replay (`run_id`): re-run against a historical FAILED push run of CI on
+#   main (the real trigger payload, replayed);
+# - fixture drill (`fixture_drill: true`): run against a green main CI run
+#   and append a synthetic drift marker to the readiness README in the
+#   working tree only (never committed) to reproduce the stale-window gate
+#   failure (DRIFT) with current tooling — all historical main failures
+#   predate regrant.py.
+# The target run must be a push run of CI on main (failed for replay,
+# successful for fixture) and its SHA must carry the re-grant tooling.
 
 on:
   workflow_run:
     workflows: [CI]
     types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: >-
+          CI run id to drill — failed push run on main (replay), or successful
+          push run on main (fixture; default: latest green main run).
+        required: false
+        type: string
+      fixture_drill:
+        description: Append a worktree-only drift marker to the readiness README to force the stale-window gate failure.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -29,18 +55,72 @@ jobs:
   propose-regrant:
     name: propose readiness re-grant PR
     if: >-
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.head_branch == 'main' &&
-      github.event.workflow_run.conclusion == 'failure'
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == 'main' &&
+       github.event.workflow_run.conclusion == 'failure')
     runs-on: ubuntu-latest
     env:
-      SHA: ${{ github.event.workflow_run.head_sha }}
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+      # AID-1669: resolve the target CI run (event payload in workflow_run
+      # mode; validated API lookup in dispatch drill mode), then pin the
+      # worktree to the target SHA so aggregation fingerprints match the
+      # producer reports of that exact run. Drills against targets that are
+      # not push runs of CI on main (or that predate the re-grant tooling)
+      # are refused here — §recusa: wrong inputs never produce PRs.
+      - name: resolve target run
+        run: |
+          set -eu
+          fixture=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.fixture_drill }}" = "true" ]; then
+            fixture=true
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            rid='${{ inputs.run_id }}'
+            if [ "$fixture" = "true" ]; then
+              want_cc=success
+              if [ -z "$rid" ]; then
+                rid=$(gh api "repos/${GH_REPO}/actions/workflows/ci.yml/runs?branch=main&event=push&status=success&per_page=1" --jq '.workflow_runs[0].id')
+              fi
+            else
+              want_cc=failure
+            fi
+            if [ -z "$rid" ]; then
+              echo "refusing drill: inputs.run_id is required for replay drills (failed main CI run)" >&2
+              exit 1
+            fi
+            meta=$(gh api "repos/${GH_REPO}/actions/runs/${rid}" --jq '[.head_sha, .name, .event, .head_branch, .conclusion] | @tsv')
+            sha=$(printf '%s' "$meta" | cut -f1); wf=$(printf '%s' "$meta" | cut -f2)
+            ev=$(printf '%s' "$meta" | cut -f3); br=$(printf '%s' "$meta" | cut -f4); cc=$(printf '%s' "$meta" | cut -f5)
+            if [ "$wf" != "CI" ] || [ "$ev" != "push" ] || [ "$br" != "main" ] || [ "$cc" != "$want_cc" ]; then
+              echo "refusing drill of run ${rid}: workflow=${wf} event=${ev} branch=${br} conclusion=${cc} — replay needs a FAILED push run of CI on main; fixture needs a SUCCESSFUL one" >&2
+              exit 1
+            fi
+            echo "REPLAY_MODE=true" >> "$GITHUB_ENV"
+            if [ "$fixture" = "true" ]; then
+              echo "FIXTURE_DRILL=true" >> "$GITHUB_ENV"
+            fi
+          else
+            rid='${{ github.event.workflow_run.id }}'
+            sha='${{ github.event.workflow_run.head_sha }}'
+          fi
+          if [ "$(git rev-parse HEAD)" != "$sha" ]; then
+            git fetch --depth=1 origin "$sha"
+            git checkout --detach "$sha"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if ! git cat-file -e "${sha}:docs/product-readiness/tools/regrant.py" 2>/dev/null; then
+              echo "refusing drill of run ${rid}: target SHA ${sha} predates the re-grant tooling (tools/regrant.py absent); propose would exit 2 (usage)" >&2
+              exit 1
+            fi
+          fi
+          echo "RUN_ID=${rid}" >> "$GITHUB_ENV"
+          echo "SHA=${sha}" >> "$GITHUB_ENV"
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -61,7 +141,7 @@ jobs:
           pattern: "*-readiness-${{ env.SHA }}"
           path: artifacts/product-readiness
           merge-multiple: true
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ env.RUN_ID }}
           github-token: ${{ github.token }}
       - name: download readiness artifacts (attempt 2)
         id: artifacts2
@@ -71,7 +151,7 @@ jobs:
           pattern: "*-readiness-${{ env.SHA }}"
           path: artifacts/product-readiness
           merge-multiple: true
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ env.RUN_ID }}
           github-token: ${{ github.token }}
       - name: aggregate producer facts (attempt 1)
         id: aggregate1
@@ -91,6 +171,19 @@ jobs:
           --assessment-id "$ASSESSMENT_ID"
       # If aggregation itself fails (missing artifacts → validate errors) this
       # is a product defect, not staleness: abort without a PR.
+      # AID-1669 fixture drill: append a marker line to the committed
+      # readiness README — WORKING TREE ONLY, never committed — so `check`
+      # reports the same DRIFT that fails a real stale window (run 905's first
+      # error line). The candidate stays healthy (producer reports match the
+      # checkout), so `regrant --propose` takes the real exit-3 path and the
+      # drill PR carries only the producer snapshot: nothing synthetic lands
+      # anywhere. Verified locally: marker -> drift=(README.md,), restore -> ().
+      - name: apply fixture drill drift (synthetic stale window, worktree only)
+        if: github.event_name == 'workflow_dispatch' && env.FIXTURE_DRILL == 'true'
+        run: |
+          set -eu
+          printf '%s\n' "<!-- AID-1669 fixture drill: synthetic drift (worktree only, never committed) -->" >> docs/product-readiness/README.md
+          git --no-pager diff --stat
       - name: re-run readiness gate on the merged SHA (check)
         id: gatecheck
         continue-on-error: true
@@ -163,6 +256,13 @@ jobs:
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: |
           {
+            if [ "${FIXTURE_DRILL:-false}" = "true" ]; then
+              echo "**FIXTURE DRILL (workflow_dispatch run ${{ github.run_id }}) against green CI run ${RUN_ID} @ \`${SHA}\` — synthetic stale window via a worktree-only drift marker on the readiness README (never committed). Same production path, no relaxed gates; close without merge.**"
+              echo
+            elif [ "${REPLAY_MODE:-false}" = "true" ]; then
+              echo "**REPLAY (workflow_dispatch run ${{ github.run_id }}) of CI run ${RUN_ID} @ \`${SHA}\` — drill, same production path, no relaxed gates. The claims of this historical SHA may already be re-granted on current main; verify before countersigning.**"
+              echo
+            fi
             echo "## Auto re-grant proposal (readiness re-grant factory, AID-1357)"
             echo
             echo "The CI run for main push \`${SHA}\` failed the readiness gate."
@@ -203,17 +303,46 @@ jobs:
           fi
           git diff --staged --quiet && { echo "nothing to commit; aborting without PR"; exit 1; }
           git commit -m "docs(readiness): auto re-grant producer snapshot @ $SHA8 (AID-1357)"
+      # AID-1669: git push can be rejected by transient GitHub storage errors
+      # (drill 4: "remote: fatal error in commit_refs"). Retry before giving
+      # up so a blip never leaves the snapshot unpushed mid-window.
       - name: push the re-grant branch
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
-        run: git push origin "HEAD:regrant/auto-$TODAY-$SHA8"
+        run: |
+          for attempt in 1 2 3; do
+            if git push origin "HEAD:regrant/auto-$TODAY-$SHA8"; then
+              echo "re-grant branch pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "git push attempt $attempt failed; retrying in 20s" >&2
+            sleep 20
+          done
+          echo "git push failed after 3 attempts" >&2
+          exit 1
+      # AID-1669: gh pr create can fail on transient GitHub 5xx (drill 3 hit
+      # HTTP 502 on GraphQL with the branch already pushed). Retry with
+      # already-created detection so a lost response never orphans the branch.
       - name: open the re-grant PR
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: |
-          version=$(( $(ls docs/product-readiness/assessments | grep -c regrant) + 1 ))
-          gh pr create \
-            --base main \
-            --head "regrant/auto-$TODAY-$SHA8" \
-            --title "docs(readiness): auto re-grant v${version} @ ${SHA8}" \
-            --body-file pr-body.md \
-            --label readiness-regrant \
-            --label bot
+          for attempt in 1 2 3; do
+            version=$(( $(ls docs/product-readiness/assessments | grep -c regrant) + 1 ))
+            if gh pr create \
+              --base main \
+              --head "regrant/auto-$TODAY-$SHA8" \
+              --title "docs(readiness): auto re-grant v${version} @ ${SHA8}" \
+              --body-file pr-body.md \
+              --label readiness-regrant \
+              --label bot; then
+              echo "re-grant PR opened on attempt $attempt"
+              exit 0
+            fi
+            if [ "$(gh pr list --head "regrant/auto-$TODAY-$SHA8" --state open --json number --jq 'length')" -gt 0 ]; then
+              echo "re-grant PR already exists (created before a failed response); continuing"
+              exit 0
+            fi
+            echo "gh pr create attempt $attempt failed; retrying in 30s" >&2
+            sleep 30
+          done
+          echo "gh pr create failed after 3 attempts" >&2
+          exit 1
