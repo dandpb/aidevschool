@@ -59,6 +59,12 @@ fail-closed.
 
 ## Fluxo automatizado (Opção A — AID-1357)
 
+> Ruído de CI das branches `regrant/auto-*` (vermelho esperado de proposta +
+> jobs inacessíveis pós-delete): triagem, root-cause e política de diagnóstico
+> durável em [`REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md`](REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md)
+> (AID-1738 §5.1). O cleanup de drill/proposta captura o resumo de jobs da run
+> num comentário do PR **antes** de fechar/deletar a branch (decisão C+E).
+
 Workflow `readiness-regrant.yml` (`workflow_run`: CI `completed`, `push@main`,
 `failure`) propõe o PR de re-grant contra o SHA mesclado. Ele **nunca** concede:
 o candidate de CI é `executor: automated`, e o teste de contrato
