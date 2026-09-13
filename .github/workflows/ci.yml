@@ -271,6 +271,17 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -e ".[dev]"
+      # AID-1636 (hardening-top10 R4, fila QA-approved rev2 AID-1586):
+      # scripts/check_python_complexity.py (radon >=6,<7 from [dev]) was the
+      # charter's complexity ruler but ran nowhere — debt grew invisible.
+      # Self-test first (synthetic over-complex function must fail the gate),
+      # then the real check: new violations fail CI; the frozen baseline at
+      # scripts/python_complexity_baseline.txt waives the 107 pre-existing
+      # entries and must shrink when complexity drops (stale entries fail).
+      - name: python complexity gate self-test (synthetic violations must fail)
+        run: python3 scripts/check_python_complexity.py --self-test
+      - name: python complexity gate (max 8, ratchet vs frozen baseline)
+        run: python3 scripts/check_python_complexity.py --max 8 --baseline scripts/python_complexity_baseline.txt learner engines/minimaxDojo engines/openclaw engines/miniMaxEvolutionEngine engines/aiDevschoolMvp
       - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
 
   literacydojo:
