@@ -8,14 +8,18 @@
 # carregar o diagnóstico.
 #
 # Uso:   capture_drill_jobs.sh <PR-number>
-# Saída: comentário no PR com nome+conclusão de cada job não-verde
-#        (+ run id/URL/SHA/branch/timestamp da captura) e a URL do
-#        comentário no stdout (para o recibo do drill).
+# Saída: comentário no PR com nome+conclusão de cada job não-verde de CADA
+#        run do head do PR (+ run id/URL/conclusão/SHA/branch/timestamp) e
+#        a URL do comentário no stdout (para o recibo do drill). Runs
+#        não-verdes SEM jobs (vermelho phantom de run-level, ex. run
+#        34764665344) são registradas como tal — esse vermelho não é
+#        reconstruível nem com a branch viva.
 #
 # O protocolo (REGRANT-RUNBOOK.md § "Protocolo de cleanup de drill/proposta")
 # exige a ordem estrita: capturar (este script) → fechar o PR com motivo →
-# deletar a branch. Rodar este script DEPOIS do delete é inútil: a resposta
-# volta vazia — ele se recusa e sai não-zero nesse caso.
+# deletar a branch. Rodar este script DEPOIS do delete perde o diagnóstico
+# (jobs voltam vazios pós-delete) — ele detecta o caso (branch sumida + run
+# concluída não-verde sem jobs) e sai não-zero.
 set -euo pipefail
 
 if [ "$#" -ne 1 ]; then
@@ -34,81 +38,85 @@ SHA="$(printf '%s' "$meta" | jq -r '.headRefOid')"
 SHA8="${SHA:0:8}"
 CAPTURED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
-# 1. Resolver a run de CI do head do PR (event pull_request na branch da
-#    proposta; head_sha casado). Sem sha casado, usa a mais recente da branch
-#    e sinaliza no comentário.
+# 1. Resolver as runs de CI do head do PR (event pull_request na branch da
+#    proposta; head_sha casado). Sem sha casado, usa as runs mais recentes
+#    da branch e sinaliza no comentário.
 run_json="$(gh api "repos/${REPO}/actions/workflows/ci.yml/runs?branch=${BRANCH}&event=pull_request&per_page=20")"
-RID="$(printf '%s' "$run_json" | jq -r "[.workflow_runs[] | select(.head_sha == \"${SHA}\")] | if length > 0 then (max_by(.run_number) | .id | tostring) else empty end")"
+runs_matched="$(printf '%s' "$run_json" | jq -r "[.workflow_runs[] | select(.head_sha == \"${SHA}\")] | sort_by(.run_number) | reverse | .[0:5]")"
 SHA_MATCHED="yes"
-if [ -z "$RID" ]; then
-  RID="$(printf '%s' "$run_json" | jq -r 'if (.workflow_runs | length) > 0 then (.workflow_runs | max_by(.run_number) | .id | tostring) else empty end')"
+if [ "$(printf '%s' "$runs_matched" | jq 'length')" -eq 0 ]; then
+  runs_matched="$(printf '%s' "$run_json" | jq -r 'sort_by(.run_number) | reverse | .[0:5]')"
   SHA_MATCHED="no"
 fi
 
 body_file="$(mktemp)"
 trap 'rm -f "$body_file"' EXIT
 
-if [ -z "$RID" ]; then
+branch_exists="yes"
+gh api "repos/${REPO}/git/ref/heads/${BRANCH}" >/dev/null 2>&1 || branch_exists="no"
+
+if [ "$(printf '%s' "$runs_matched" | jq 'length')" -eq 0 ]; then
   # B1a (runbook): PR nascido de GITHUB_TOKEN pode não ter run de CI na
   # branch (ninguém fez close+reopen). O próprio comentário registra o fato —
   # evidência durável do vácuo em vez de silêncio.
   {
-    echo "${MARKER_PREFIX} none run=${BRANCH} -->"
+    echo "${MARKER_PREFIX} none branch=${BRANCH} -->"
     echo "## Drill jobs receipt (AID-1741 C+E)"
     echo
-    echo "- branch: \`${BRANCH}\` · head: \`${SHA8}\` · capturado: ${CAPTURED_AT}"
+    echo "- branch: \`${BRANCH}\` (existe: ${branch_exists}) · head: \`${SHA8}\` · capturado: ${CAPTURED_AT}"
     echo "- **nenhuma run de CI \`pull_request\` encontrada na branch no momento do cleanup**"
     echo "  (B1a — PR de GITHUB_TOKEN não emite eventos; close+reopen dispara CI)."
     echo "- Convenção E: vermelho em \`head_branch ~ ^regrant/auto-\` = proposal-red, não regressão."
   } > "$body_file"
 else
-  run_meta="$(gh api "repos/${REPO}/actions/runs/${RID}")"
-  RUN_URL="$(printf '%s' "$run_meta" | jq -r '.html_url')"
-  RUN_STATUS="$(printf '%s' "$run_meta" | jq -r '.status')"
-  RUN_CONCLUSION="$(printf '%s' "$run_meta" | jq -r '.conclusion // "—"')"
+  RID="$(printf '%s' "$runs_matched" | jq -r '.[0].id')"
   MARKER="${MARKER_PREFIX} run=${RID} sha=${SHA8} -->"
 
   # Idempotência: comentário com o mesmo marcador já existe → não duplica.
   existing="$(gh api "repos/${REPO}/issues/${PR}/comments?per_page=100" \
-    --jq ".[] | select(.body | startswith(\"${MARKER_PREFIX} run=${RID} \")) | .html_url" || true)"
+    --jq ".[] | select(.body | startswith(\"${MARKER_PREFIX} run=${RID} \")) | .html_url" 2>/dev/null | grep -m1 '^https://' || true)"
   if [ -n "$existing" ]; then
     echo "receipt already posted for run ${RID}: ${existing}"
     exit 0
-  fi
-
-  # Nota: sem --paginate (gh concatena arrays de páginas e quebra o jq);
-  # per_page=100 cobre o deck atual de checks do repo.
-  jobs_json="$(gh api "repos/${REPO}/actions/runs/${RID}/jobs?per_page=100")"
-  total="$(printf '%s' "$jobs_json" | jq '[.jobs[]] | length')"
-  nongreen="$(printf '%s' "$jobs_json" | jq -r '[.jobs[] | select((.conclusion // "") != "success" and (.conclusion // "") != "skipped")] | length')"
-
-  lost_jobs="no"
-  if [ "$total" -eq 0 ] && [ "$RUN_STATUS" = "completed" ] && [ "$RUN_CONCLUSION" != "success" ] && [ "$RUN_CONCLUSION" != "skipped" ]; then
-    # Run concluída não-verde sem jobs = captura pós-delete da branch (a API
-    # devolve [] depois que a ref some) — a ordem do protocolo foi violada.
-    lost_jobs="yes"
   fi
 
   {
     echo "${MARKER}"
     echo "## Drill jobs receipt (AID-1741 C+E)"
     echo
-    echo "- run CI: [#${RID}](${RUN_URL}) (status: \`${RUN_STATUS}\`, conclusão: \`${RUN_CONCLUSION}\`)"
-    echo "- branch: \`${BRANCH}\` · head: \`${SHA8}\` (sha casado: ${SHA_MATCHED}) · capturado: ${CAPTURED_AT}"
-    echo "- jobs: ${total} total, ${nongreen} não-verde(s)"
+    echo "- branch: \`${BRANCH}\` (existe: ${branch_exists}) · head: \`${SHA8}\` (sha casado: ${SHA_MATCHED}) · capturado: ${CAPTURED_AT}"
+    echo "- runs do head (mais recente primeiro):"
     echo
-    if [ "$lost_jobs" = "yes" ]; then
-      echo "**⚠ jobs vazios para run concluída não-verde — captura após o delete da branch (ordem do protocolo violada) ou nunca reportados.**"
-    elif [ "$RUN_STATUS" != "completed" ]; then
-      echo "Run ainda não concluída no momento da captura — conclusões parciais acima."
-    elif [ "$nongreen" -gt 0 ]; then
-      echo "| job | status | conclusão |"
-      echo "|---|---|---|"
-      printf '%s' "$jobs_json" | jq -r '.jobs[] | select((.conclusion // "") != "success" and (.conclusion // "") != "skipped") | "| \(.name) | \(.status) | \(.conclusion // "—") |"'
-    else
-      echo "**Nenhum job não-verde** (todos success/skipped)."
-    fi
+    echo "| run | status | conclusão | jobs | não-verdes |"
+    echo "|---|---|---|---|---|"
+    printf '%s' "$runs_matched" | while IFS=$'\t' read -r id status conclusion url; do
+      # Nota: sem --paginate no fetch de jobs (gh concatena arrays de páginas
+      # e quebra o jq); per_page=100 cobre o deck atual de checks do repo.
+      jobs_json="$(gh api "repos/${REPO}/actions/runs/${id}/jobs?per_page=100")"
+      total="$(printf '%s' "$jobs_json" | jq '[.jobs[]] | length')"
+      nongreen="$(printf '%s' "$jobs_json" | jq -r '[.jobs[] | select((.conclusion // "") != "success" and (.conclusion // "") != "skipped")] | length')"
+      echo "| [#${id}](${url}) | ${status} | ${conclusion} | ${total} | ${nongreen} |"
+    done <<<"$(printf '%s' "$runs_matched" | jq -r '.[] | [.id, .status, (.conclusion // "—"), .html_url] | @tsv')"
     echo
+    # Detalhe: nome+conclusão de cada job não-verde de cada run não-verde.
+    printf '%s' "$runs_matched" | while IFS=$'\t' read -r id status conclusion url; do
+      if [ "$conclusion" != "success" ] && [ "$conclusion" != "skipped" ]; then
+        jobs_json="$(gh api "repos/${REPO}/actions/runs/${id}/jobs?per_page=100")"
+        nongreen="$(printf '%s' "$jobs_json" | jq -r '[.jobs[] | select((.conclusion // "") != "success" and (.conclusion // "") != "skipped")] | length')"
+        echo "### Run [#${id}](${url}) — \`${conclusion}\`"
+        echo
+        if [ "$nongreen" -gt 0 ]; then
+          echo "| job | status | conclusão |"
+          echo "|---|---|---|"
+          printf '%s' "$jobs_json" | jq -r '.jobs[] | select((.conclusion // "") != "success" and (.conclusion // "") != "skipped") | "| \(.name) | \(.status) | \(.conclusion // "—") |"'
+        elif [ "$status" != "completed" ]; then
+          echo "Run ainda não concluída no momento da captura — sem conclusões de job."
+        else
+          echo "**⚠ run concluída não-verde com jobs vazios** — vermelho de run-level sem causa registrada (phantom); não é reconstruível nem com a branch viva. Se a branch já não existe, é captura pós-delete (ordem do protocolo violada)."
+        fi
+        echo
+      fi
+    done <<<"$(printf '%s' "$runs_matched" | jq -r '.[] | [.id, .status, (.conclusion // "—"), .html_url] | @tsv')"
     echo "Capturado **antes** do close/delete da branch (protocolo AID-1741; pós-delete a API devolve \`jobs: []\`)."
     echo "Convenção E: vermelho em \`head_branch ~ ^regrant/auto-\` = proposal-red (producer snapshot sem countersign), não regressão — verificador é a lane \`main\`."
   } > "$body_file"
@@ -116,8 +124,13 @@ fi
 
 url="$(gh pr comment "$PR" --repo "$REPO" --body-file "$body_file")"
 echo "drill jobs receipt posted on PR #${PR}: ${url}"
-if [ "${lost_jobs:-no}" = "yes" ]; then
-  echo "ERROR: run ${RID} completed non-green with zero jobs — captured after branch delete (protocol order violated)" >&2
-  exit 1
-fi
 
+# Ordem do protocolo violada: branch já deletada com run concluída não-verde
+# sem jobs — o micro-diagnóstico foi perdido.
+if [ "$branch_exists" = "no" ]; then
+  bad="$(printf '%s' "$runs_matched" | jq -r '[.[] | select(.status == "completed" and (.conclusion // "") != "success" and (.conclusion // "") != "skipped")] | length')"
+  if [ "${bad:-0}" -gt 0 ]; then
+    echo "ERROR: branch já deletada com run concluída não-verde — capturada após o delete (ordem do protocolo violada)" >&2
+    exit 1
+  fi
+fi
