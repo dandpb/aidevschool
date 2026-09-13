@@ -1,6 +1,6 @@
 # Intent — AID-1593 QW1-QW3: quick wins SEO/segurança das 2 superfícies públicas O1
 
-> **RETROSPECTIVE RECORD (retrofit) para QW1/QW2; pré-merge para QW3.** Criado
+> **RETROSPECTIVE RECORD (retrofit) para QW1-QW3.** Criado
 > em 2026-09-13 sob **AID-1602** (achado **F1** da auditoria SDLC AID-1597,
 > recibo `5f5e93cd` 03:39:33Z): a onda foi executada e merged **sem o registro
 > do produtor em `intent/`**, exigido pela política (`docs/sdlc/README.md`
@@ -8,9 +8,15 @@
 > registro escorrega, precedente PR #262 →
 > `intent/2026-09-03-xss-dojotoday-sentinel/`). Estado no nascimento deste
 > registro: QW1 (PR #362, merge `35a757f2` 03:27:25Z) e QW2 (PR #363, merge
-> `c1b7b5b8` 03:41:58Z — ~2,4 min após o recibo da auditoria) já em `main`;
-> QW3 (PR #364) **aberto**, merge segurado pelo FPE (AID-1604 item 3) até
-> este registro existir. A falha alimenta a auditoria AID-1597. A lacuna de
+> `c1b7b5b8` 03:41:58Z — ~2,4 min após o recibo da auditoria) já em `main`.
+> **Correção factual (FPE, AID-1614, verificação 04:04Z):** QW3 (PR #364)
+> também acabou merged antes deste registro alcançar `main` — merge
+> `2c5f77dd` 03:50:57Z executado pelo CEO (`dandpb`) enquanto este registro
+> estava aberto como PR #371 (03:47:08Z, CI verde) mas ainda não merged. A
+> condição pré-merge-em-`main` (AID-1604 item 3) não foi satisfeita e o merge
+> não seguiu o single-writer FPE (writer-identity → issue irmã F4). CI
+> pós-merge verde no head de `main` `2c5f77dd` (37 SUCCESS + 7 SKIPPED, incl.
+> SDLC guardrails). A falha alimenta a auditoria AID-1597. A lacuna de
 > evidência do veredito citado nas mensagens de merge ("FPE review GO
 > AID-1595" com relay sem comentários) é o achado irmão **F3 → AID-1604**
 > (owner FPE), deliberadamente fora do escopo deste registro.
