@@ -11,11 +11,17 @@ name: Readiness re-grant factory
 # trigger pull_request[reopened]; a PR with no checks after 45 min is closed
 # with a §recusa reason so the dedupe label is freed again.
 #
-# AID-1669 (hardening R6): `workflow_dispatch` replay drills the exact
-# production path against a historical failed main CI run (inputs.run_id),
-# so the factory's maiden effective run is never the first real stale
-# window. No gates are relaxed in replay mode: the target run must be a
-# failed push run of CI on main, and every step is identical.
+# AID-1669 (hardening R6): `workflow_dispatch` drills the exact production
+# path so the factory's maiden effective run is never the first real stale
+# window. No gates are relaxed in either drill mode:
+# - replay (`run_id`): re-run against a historical FAILED push run of CI on
+#   main (the real trigger payload, replayed);
+# - fixture drill (`fixture_drill: true`): run against a green main CI run
+#   and flip ONE promoted-result fingerprint in the working tree only
+#   (never committed) to reproduce the stale-claims gate failure with
+#   current tooling — all historical main failures predate regrant.py.
+# The target run must be a push run of CI on main (failed for replay,
+# successful for fixture) and its SHA must carry the re-grant tooling.
 
 on:
   workflow_run:
@@ -24,9 +30,16 @@ on:
   workflow_dispatch:
     inputs:
       run_id:
-        description: CI run id to replay (failed push run of CI on main)
-        required: true
+        description: >-
+          CI run id to drill — failed push run on main (replay), or successful
+          push run on main (fixture; default: latest green main run).
+        required: false
         type: string
+      fixture_drill:
+        description: Flip one promoted-result fingerprint (worktree only) to force the stale gate failure.
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -54,22 +67,43 @@ jobs:
         with:
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}
       # AID-1669: resolve the target CI run (event payload in workflow_run
-      # mode; validated API lookup in dispatch replay mode), then pin the
+      # mode; validated API lookup in dispatch drill mode), then pin the
       # worktree to the target SHA so aggregation fingerprints match the
-      # producer reports of that exact run.
+      # producer reports of that exact run. Drills against targets that are
+      # not push runs of CI on main (or that predate the re-grant tooling)
+      # are refused here — §recusa: wrong inputs never produce PRs.
       - name: resolve target run
         run: |
           set -eu
+          fixture=false
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.fixture_drill }}" = "true" ]; then
+            fixture=true
+          fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             rid='${{ inputs.run_id }}'
+            if [ "$fixture" = "true" ]; then
+              want_cc=success
+              if [ -z "$rid" ]; then
+                rid=$(gh api "repos/${GH_REPO}/actions/workflows/ci.yml/runs?branch=main&event=push&status=success&per_page=1" --jq '.workflow_runs[0].id')
+              fi
+            else
+              want_cc=failure
+            fi
+            if [ -z "$rid" ]; then
+              echo "refusing drill: inputs.run_id is required for replay drills (failed main CI run)" >&2
+              exit 1
+            fi
             meta=$(gh api "repos/${GH_REPO}/actions/runs/${rid}" --jq '[.head_sha, .name, .event, .head_branch, .conclusion] | @tsv')
             sha=$(printf '%s' "$meta" | cut -f1); wf=$(printf '%s' "$meta" | cut -f2)
             ev=$(printf '%s' "$meta" | cut -f3); br=$(printf '%s' "$meta" | cut -f4); cc=$(printf '%s' "$meta" | cut -f5)
-            if [ "$wf" != "CI" ] || [ "$ev" != "push" ] || [ "$br" != "main" ] || [ "$cc" != "failure" ]; then
-              echo "refusing replay of run ${rid}: workflow=${wf} event=${ev} branch=${br} conclusion=${cc} — must be a failed push run of CI on main" >&2
+            if [ "$wf" != "CI" ] || [ "$ev" != "push" ] || [ "$br" != "main" ] || [ "$cc" != "$want_cc" ]; then
+              echo "refusing drill of run ${rid}: workflow=${wf} event=${ev} branch=${br} conclusion=${cc} — replay needs a FAILED push run of CI on main; fixture needs a SUCCESSFUL one" >&2
               exit 1
             fi
             echo "REPLAY_MODE=true" >> "$GITHUB_ENV"
+            if [ "$fixture" = "true" ]; then
+              echo "FIXTURE_DRILL=true" >> "$GITHUB_ENV"
+            fi
           else
             rid='${{ github.event.workflow_run.id }}'
             sha='${{ github.event.workflow_run.head_sha }}'
@@ -77,6 +111,12 @@ jobs:
           if [ "$(git rev-parse HEAD)" != "$sha" ]; then
             git fetch --depth=1 origin "$sha"
             git checkout --detach "$sha"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if ! git cat-file -e "${sha}:docs/product-readiness/tools/regrant.py" 2>/dev/null; then
+              echo "refusing drill of run ${rid}: target SHA ${sha} predates the re-grant tooling (tools/regrant.py absent); propose would exit 2 (usage)" >&2
+              exit 1
+            fi
           fi
           echo "RUN_ID=${rid}" >> "$GITHUB_ENV"
           echo "SHA=${sha}" >> "$GITHUB_ENV"
@@ -130,6 +170,32 @@ jobs:
           --assessment-id "$ASSESSMENT_ID"
       # If aggregation itself fails (missing artifacts → validate errors) this
       # is a product defect, not staleness: abort without a PR.
+      # AID-1669 fixture drill: flip one promoted result's recorded source
+      # fingerprint — WORKING TREE ONLY, never committed — so the independent
+      # evidence looks recorded before a source change. Producer reports stay
+      # valid (results.ndjson is outside the fingerprint scope), the gate
+      # fails as a genuine stale-claims window, and the drill PR contains
+      # nothing synthetic (the exit-3 path commits the producer snapshot only).
+      - name: apply fixture drill drift (synthetic staleness, worktree only)
+        if: github.event_name == 'workflow_dispatch' && env.FIXTURE_DRILL == 'true'
+        run: |
+          set -eu
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("docs/product-readiness/evidence/results.ndjson")
+          lines = path.read_text(encoding="utf-8").splitlines()
+          if not lines:
+              raise SystemExit("refusing fixture drill: results.ndjson is empty")
+          entry = json.loads(lines[-1])
+          fp = entry["sourceFingerprint"]
+          entry["sourceFingerprint"] = fp[:-1] + ("1" if fp[-1] != "1" else "0")
+          lines[-1] = json.dumps(entry, ensure_ascii=False)
+          path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+          print(f"fixture drift applied: scenario {entry['scenarioId']} sourceFingerprint "
+                f"{fp[:12]}… -> {entry['sourceFingerprint'][:12]}… (worktree only)")
+          PY
+          git --no-pager diff --stat
       - name: re-run readiness gate on the merged SHA (check)
         id: gatecheck
         continue-on-error: true
@@ -202,7 +268,10 @@ jobs:
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: |
           {
-            if [ "${REPLAY_MODE:-false}" = "true" ]; then
+            if [ "${FIXTURE_DRILL:-false}" = "true" ]; then
+              echo "**FIXTURE DRILL (workflow_dispatch run ${{ github.run_id }}) against green CI run ${RUN_ID} @ \`${SHA}\` — synthetic staleness via one flipped promoted-result fingerprint (worktree only, never committed). Same production path, no relaxed gates; close without merge.**"
+              echo
+            elif [ "${REPLAY_MODE:-false}" = "true" ]; then
               echo "**REPLAY (workflow_dispatch run ${{ github.run_id }}) of CI run ${RUN_ID} @ \`${SHA}\` — drill, same production path, no relaxed gates. The claims of this historical SHA may already be re-granted on current main; verify before countersigning.**"
               echo
             fi
