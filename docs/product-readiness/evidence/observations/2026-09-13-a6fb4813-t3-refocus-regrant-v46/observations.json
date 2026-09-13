@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "a6fb481381b53a4f39e6bd6e9a443c00846c4339",
+  "observedAt": "2026-09-13T17:37:14Z",
+  "scenarios": [
+    {
+      "scenarioId": "literacy-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-name-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk QA @ a6fb4813 (vite :4190): após concluir l01, a tela de resultado mostra 'MISSÃO CONCLUÍDA', XP conquistado, habilidade praticada e o CTA de próxima lição em linguagem da vila — a próxima ação é nomeável sem conhecimento de repositório (screenshot qa1763-litobs-03-result-next.png, walk-log-lit.json resultNextAction)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Erro na 1ª atividade de l01 (output errada, sem critérios): feedback 'Quase lá...' formativo, sem jargão técnico (regex stack trace/exception/localStorage/schemaVersion negativo), botão 'Tentar novamente' visível e funcional no próprio card (walk-log-lit.json wrongAttemptFeedback/retryLabel; screenshot qa1763-litobs-02-wrong-hint-retry.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-resume",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-device-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Rodapé do welcome: 'Seu progresso fica somente neste navegador e pode ser perdido...' — a fronteira de dispositivo é declarada ao aprendiz em superfície real (walk-log-lit.json footerDeviceBoundary; screenshot qa1763-litobs-01-welcome-footer.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-happy-path",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-names-next-action-after-cp-03",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Seed com corredor mod-01..03 fechado (checkpoints completos): home mostra 'Você concluiu...' e o mapa orienta 'Comece pelo pedido marcado como Disponível' com o próximo bairro visível — próxima ação nomeável pós-cp-03 (walk-log-lit2.json postCp03Home/postCp03MapNextModule; screenshots qa1763-litobs-08/09)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-gate-retry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-retry-without-internal-language",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "No Desafio do Módulo 1 (cp-01, atividade sort), resposta errada → feedback formativo ('A primeira conversa funciona em quatro passos...'), sem linguagem interna (regex negativo), 'Tentar novamente' disponível no próprio player (walk-log-lit2.json gateRetryFeedback/gateRetryLabel; screenshot qa1763-litobs-06-gate-retry.png). Bônus T3: transição de atividade foca o h1 e o status 'Atividade 1 de 3' → 'Atividade 2 de 3' no role=status (logs t3Checkpoint*)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-review-window",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-review-from-new-content",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Com revisão vencida (seed l02 + backdate): home exibe entrada própria 'Revisar agora' distinta do CTA de missão nova; a intro traz selo 'Revisão: IA não é uma fonte de verdade' (walk-log-lit2.json reviewEntryLabel/reviewIntroHeading; screenshot qa1763-litobs-10-review-distinct.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-grandfathered-return",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "literacy-corridor-resume-mid-module",
+      "outcome": "pass",
+      "assertions": [],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk QA @ a6fb4813 (preview piloto :4180, bundle desta branch): missão hospedada l30 montada na origem do OS, completada com respostas corretas (a1 choice opt-a/b/c, a2 prompt_builder, a3 output_comparison out-a+critérios); resultado 'MISSÃO CONCLUÍDA · XP conquistado · 100%' visível no iframe e o hub nomeia 'PRÓXIMA MISSÃO · 4 MIN' — resultado e próxima ação explicáveis pelo estado visível (walk-log-os.json l30Result/returningHub; screenshots qa1763-osobs-01/02)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Resposta errada na l30 hospedada (opt-d/opt-e): feedback formativo 'Vira rotina assistida o que junta três coisas...' sem jargão interno, dica disponível e 'Tentar novamente' funcional no próprio iframe — recuperação guiável pelo estado visível, sem intervenção de repositório; fronteira honesta '0 verificadas' preservada no host (walk-log-os.json recoveryFeedback/recoveryRetryLabel/hostBoundary; screenshots qa1763-osobs-03/04)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reload no mesmo perfil: missão l30 remonta sem re-onboarding e o hub declara 'XP local 0' com 'SEU PRÓXIMO PASSO ESTÁ PRONTO' — continuidade visível restrita ao mesmo perfil de navegador, sem promessa de sync (walk-log-os.json returningMissionPreserved/returningNoOnboarding/returningHub; screenshot qa1763-osobs-05)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
