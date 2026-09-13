@@ -87,6 +87,17 @@ describe('GET /metrics?query=', () => {
     expect(res.body.data.value).toBeGreaterThan(0);
   });
 
+  it('queries timer observations from histogram data via sum', async () => {
+    const server = app();
+    await request(server).post('/metrics/timer').send({ name: 'dur', value: 0.05 });
+    await request(server).post('/metrics/timer').send({ name: 'dur', value: 0.2 });
+    const res = await request(server).get('/metrics?query=sum(dur)');
+    expect(res.status).toBe(200);
+    expect(res.body.data.matched).toBe(true);
+    expect(res.body.data.type).toBe('timer');
+    expect(res.body.data.value).toBeCloseTo(0.25, 5);
+  });
+
   it('reports unmatched for an unknown metric', async () => {
     const res = await request(app()).get('/metrics?query=sum(nope)');
     expect(res.status).toBe(200);
@@ -124,6 +135,13 @@ describe('POST /alerts/rules', () => {
 });
 
 describe('GET /alerts/rules', () => {
+  it('returns empty items only on a fresh store', async () => {
+    const res = await request(app()).get('/alerts/rules');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.data.items).toHaveLength(0);
+  });
+
   it('lists the rules that were created', async () => {
     const server = app();
     await request(server).post('/alerts/rules').send({
@@ -205,6 +223,15 @@ describe('GET /alerts/events', () => {
 });
 
 describe('GET /dashboard', () => {
+  it('returns empty panels and alerts only on a fresh store', async () => {
+    const res = await request(app()).get('/dashboard');
+    expect(res.status).toBe(200);
+    expect(res.body.ok).toBe(true);
+    expect(res.body.data.dashboardId).toBe('default');
+    expect(res.body.data.panels).toHaveLength(0);
+    expect(res.body.data.alerts).toHaveLength(0);
+  });
+
   it('returns panels built from recorded series and alert state', async () => {
     const server = app();
     await request(server).post('/metrics/gauge').send({ name: 'cpu', value: 10 });
