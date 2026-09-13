@@ -1,0 +1,16 @@
+{
+  "sources": ["dojotoday", "voxeldojo", "pixelquest"],
+  "eventNames": [
+    "daily-view-open",
+    "voxel-loop-complete",
+    "pixelquest-encounter-complete",
+    "evidence-handoff"
+  ],
+  "eventProps": {
+    "daily-view-open": [],
+    "voxel-loop-complete": ["unitId", "result"],
+    "pixelquest-encounter-complete": ["unitId", "result"],
+    "evidence-handoff": ["unitId"]
+  },
+  "resultValues": ["completed", "failed"]
+}

@@ -2,13 +2,12 @@
 // support added by the AID-913 activation).
 //
 // The closed vocabularies are canonical in
-// engines/codexdojo-os-prototype/src/analytics/events.ts (OS emission side) and
-// engines/literacyDojo/src/domain/analytics.ts (literacy emission side),
-// projected into the staged collector (receiving side); the parity tests
-// (src/analytics/collectorParity.test.ts and the literacy counterpart) fail CI
-// when those diverge. This monitor imports the parity-locked projections from
-// the collector module, so "received envelope vs closed vocabulary" here is
-// transitively locked to the emitters.
+// engines/shared/teaching-evidence/vocabularies/{os,literacy,surfaces}.json
+// (the single authority since the 2026-09-13 emitter consolidation),
+// projected into the emitters (events.ts / analytics.ts / funnelTelemetry.ts)
+// and into the staged collector's GENERATED tables (receiving side). This
+// monitor imports those projections from the collector module, so "received
+// envelope vs closed vocabulary" here is transitively locked to the JSON.
 //
 // It classifies every drifted line with a reason (kind + offending key/value
 // preview), exits 1 on any drift so CI fails high, and cross-checks its own
@@ -24,9 +23,12 @@ import {
   CONTEXT_KEYS,
   CONTEXT_VOCABULARIES,
   EVENT_VOCABULARIES,
+  LITERACY_ACTIVITY_TYPES,
+  LITERACY_ENTRY_ROUTES,
+  LITERACY_EVENT_PROPS,
+  LITERACY_OPTIONAL_PROPS,
   LITERACY_BATCH_SCHEMA_VERSION,
   LITERACY_SOURCE,
-  OS_BATCH_SCHEMA_VERSION,
   SURFACE_BATCH_SCHEMA_VERSION,
   SURFACE_EVENT_PROPS,
   SURFACE_RESULT_VALUES,
@@ -54,39 +56,6 @@ const LITERACY_ENVELOPE_KEYS = [
 const ENRICHED_KEYS = ["installationId", "sessionId", ...CONTEXT_KEYS];
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$/;
 const LITERACY_UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const LITERACY_ACTIVITY_TYPES = [
-  "choice", "sort", "missing_context", "safety_classification", "prompt_builder",
-  "output_comparison", "rubric_review",
-];
-const LITERACY_ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"];
-// Espelho 1:1 de EVENT_PROPS/OPTIONAL_PROPS de
-// engines/literacyDojo/src/domain/analytics.ts (inclui o corredor de revisão
-// AID-915 e os eventos de exposição F2 — o self-check contra o validador do
-// coletor falha alto se este espelho atrasar em relação ao coletor).
-const LITERACY_EVENT_PROPS = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  route_chosen: ["route"],
-  lesson_started: ["lessonId", "lessonVersion"],
-  activity_attempted: ["lessonId", "activityType", "passed"],
-  lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  review_started: ["lessonId", "intervalDays", "stage"],
-  review_completed: ["lessonId", "score"],
-  lesson_brief_viewed: ["lessonId", "lessonVersion"],
-  activity_presented: ["lessonId", "activityType", "activityIndex"],
-};
-const LITERACY_OPTIONAL_PROPS = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["durationSeconds"],
-  route_chosen: [],
-  lesson_started: [],
-  activity_attempted: [],
-  lesson_completed: ["durationSeconds"],
-  review_started: [],
-  review_completed: [],
-  lesson_brief_viewed: [],
-  activity_presented: [],
-};
 
 function isRecord(value) {
   return typeof value === "object" && value !== null && !Array.isArray(value);

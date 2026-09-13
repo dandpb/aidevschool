@@ -1,0 +1,48 @@
+{
+  "eventNames": [
+    "entry_viewed",
+    "mapa_inicial_done",
+    "route_chosen",
+    "lesson_started",
+    "activity_attempted",
+    "lesson_completed",
+    "review_started",
+    "review_completed",
+    "lesson_brief_viewed",
+    "activity_presented"
+  ],
+  "eventProps": {
+    "entry_viewed": ["entry"],
+    "mapa_inicial_done": ["lessonId", "lessonVersion", "score", "durationSeconds"],
+    "route_chosen": ["route"],
+    "lesson_started": ["lessonId", "lessonVersion"],
+    "activity_attempted": ["lessonId", "activityType", "passed"],
+    "lesson_completed": ["lessonId", "lessonVersion", "score", "durationSeconds"],
+    "review_started": ["lessonId", "intervalDays", "stage"],
+    "review_completed": ["lessonId", "score"],
+    "lesson_brief_viewed": ["lessonId", "lessonVersion"],
+    "activity_presented": ["lessonId", "activityType", "activityIndex"]
+  },
+  "optionalProps": {
+    "entry_viewed": ["entry"],
+    "mapa_inicial_done": ["durationSeconds"],
+    "route_chosen": [],
+    "lesson_started": [],
+    "activity_attempted": [],
+    "lesson_completed": ["durationSeconds"],
+    "review_started": [],
+    "review_completed": [],
+    "lesson_brief_viewed": [],
+    "activity_presented": []
+  },
+  "entryRoutes": ["home", "lesson-resume", "onboarding"],
+  "activityTypes": [
+    "choice",
+    "sort",
+    "missing_context",
+    "safety_classification",
+    "prompt_builder",
+    "output_comparison",
+    "rubric_review"
+  ]
+}

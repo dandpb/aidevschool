@@ -10,6 +10,8 @@ Filesystem topology (symlinks, engines not copying curriculum/learner) lives in
 ``learner/substrate/tests/test_engine_topology.py``; the OS engine registry and
 bridge are covered by the TypeScript suites in ``engines/codexdojo-os-prototype``.
 """
+import os
+import re
 import unittest
 from pathlib import Path
 
@@ -153,6 +155,58 @@ class TestVoxelDojoContract(unittest.TestCase):
         self.assertTrue((self.engine / "README.md").is_file())
         self.assertTrue((self.engine / "PLAN.md").is_file())
         self.assertTrue((self.engine / "docs").is_dir())
+class TestAnalyticsVocabularyContracts(unittest.TestCase):
+    """Analytics vocabularies are single-sourced as JSON (2026-09-13
+    emitter consolidation): the only hand-written definition of each producer
+    vocabulary is ``engines/shared/teaching-evidence/vocabularies/<producer>.json``.
+    A declaration of any vocabulary table literal outside the JSON-derived
+    loader/generator modules is hand-copied drift and fails here."""
+
+    TABLE_DECLARATION = re.compile(
+        r"(?:const|let|var)\s+"
+        r"(?:LITERACY_EVENT_PROPS|LITERACY_OPTIONAL_PROPS|SURFACE_EVENT_PROPS"
+        r"|FUNNEL_EVENT_PROPS|EVENT_VOCABULARIES)\b"
+    )
+    # JSON loader / derived modules — each derives its tables mechanically
+    # from vocabularies/*.json (equality locked by
+    # learner/gate/tests/dojo_analytics_vocabularies.test.mjs; the .d.mts is
+    # the type projection of the collector's generated exports).
+    DERIVED_MODULES = {
+        "engines/shared/teaching-evidence/vocabularies.ts",
+        "engines/shared/teaching-evidence/funnelTelemetry.ts",
+        "engines/literacyDojo/src/domain/analytics.ts",
+        "engines/codexdojo-os-prototype/src/analytics/events.ts",
+        "learner/gate/netlify-functions/dojo-analytics-collector.mjs",
+        "learner/gate/analytics/dojo-analytics-collector.d.mts",
+        "learner/gate/analytics/refresh_vocabularies.mjs",
+    }
+    PRUNED_DIRS = {
+        ".git", "node_modules", "__pycache__", "dist", "test-results",
+        ".netlify", ".venv", "coverage",
+    }
+    SCANNED_SUFFIXES = {".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".md"}
+
+    def test_analytics_vocabularies_single_sourced(self):
+        offenders = []
+        for dirpath, dirnames, filenames in os.walk(ROOT):
+            dirnames[:] = [name for name in dirnames if name not in self.PRUNED_DIRS]
+            for filename in filenames:
+                path = Path(dirpath) / filename
+                if path.suffix not in self.SCANNED_SUFFIXES or path.stat().st_size > 1_000_000:
+                    continue
+                relative = path.relative_to(ROOT)
+                try:
+                    body = path.read_text(encoding="utf-8")
+                except (UnicodeDecodeError, OSError):
+                    continue
+                if self.TABLE_DECLARATION.search(body) and relative.as_posix() not in self.DERIVED_MODULES:
+                    offenders.append(relative.as_posix())
+        self.assertEqual(
+            offenders,
+            [],
+            "hand-written analytics vocabulary tables outside vocabularies/*.json "
+            f"(allowed only in the JSON-derived loader modules): {offenders}",
+        )
 
 
 if __name__ == "__main__":

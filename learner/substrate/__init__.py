@@ -440,8 +440,9 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
     gate review bound to a separate verifier receipt. Bound reviews recheck the
     canonical producer-evidence digest and reject embedded verifier blocks.
     Curriculum evidence (a verifier-owned ``verifier`` block) must satisfy
-    ``verdict == "PASS"``, ``mutation_score >= 0.65``, ``coverage_core >= 0.80``,
-    and ``context_isolated is True``. Missing/unparseable files yield a labelled
+    ``verdict == "PASS"`` with both scores at or above the seam thresholds
+    (``learner.gate.standards.load_thresholds``) and
+    ``context_isolated is True``. Missing/unparseable files yield a labelled
     error. The same call replaces the former bare ``json.loads`` parseability
     check and adds the semantic gate that was previously missing (audit gap:
     the validator proved the path was readable but never checked the verdict).

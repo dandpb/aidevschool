@@ -86,11 +86,14 @@ def _threshold_literal_violations(root: Path) -> list[str]:
     """Scan production .py files for hardcoded mutation/coverage thresholds.
 
     Excludes ``tests`` directories (fixtures legitimately carry scores) and
-    ``__pycache__``. The live bar is read from the seam at judgment time by
-    ``learner/gate/standards.load_thresholds``; any literal here is drift.
+    vendored/generated trees (``node_modules``, ``__pycache__``, ``dist``,
+    ``target``, virtualenvs). The live bar is read from the seam at judgment
+    time by ``learner/gate/standards.load_thresholds``; any literal here is drift.
     """
+    import os
     import re
 
+    skip_dirs = {"tests", "__pycache__", "node_modules", "dist", "target", ".venv", ".venv-linux", "venv"}
     pattern = re.compile(
         r"(mutation(?:_score)?(?:_min)?|cobertura|coverage(?:_core)?(?:_min)?)"
         r"[^\n]{0,40}(?:=|:|<|>|≥)\s*0\.[6-9][0-9]",
@@ -98,16 +101,19 @@ def _threshold_literal_violations(root: Path) -> list[str]:
     )
     findings: list[str] = []
     for area in ("learner", "curriculum"):
-        for path in (root / area).rglob("*.py"):
-            if "tests" in path.parts or "__pycache__" in path.parts:
-                continue
-            try:
-                text = path.read_text(encoding="utf-8")
-            except OSError:
-                continue
-            for lineno, line in enumerate(text.splitlines(), start=1):
-                if pattern.search(line):
-                    findings.append(f"{path.relative_to(root)}:{lineno}: {line.strip()}")
+        for dirpath, dirnames, filenames in os.walk(root / area):
+            dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+            for filename in filenames:
+                if not filename.endswith(".py"):
+                    continue
+                path = Path(dirpath) / filename
+                try:
+                    text = path.read_text(encoding="utf-8")
+                except OSError:
+                    continue
+                for lineno, line in enumerate(text.splitlines(), start=1):
+                    if pattern.search(line):
+                        findings.append(f"{path.relative_to(root)}:{lineno}: {line.strip()}")
     return findings
 
 
