@@ -165,6 +165,14 @@ jobs:
       # Root scripts include shared accessibility/evidence checks that a raw
       # recursive invocation would skip.
       - run: pnpm test
+      # AID-1673 (hardening-top10 R3): direct suite for @aidevschool/evidence,
+      # the golden-rule primitive shared by pixelDojo, voxelDojo and dojoToday.
+      # The package declares no dependencies, so this step only needs this
+      # workspace's vitest install plus the package's own config. Pins the
+      # BUG_AUDIT_2026-07-19 #33/#34 regression classes (append-only channels,
+      # invalid-envelope / non-ISO-ts rejection); mutation proof documented in
+      # engines/shared/teaching-evidence/README.md.
+      - run: pnpm exec vitest run -c ../shared/teaching-evidence/vitest.config.ts --reporter=verbose
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
