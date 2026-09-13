@@ -257,7 +257,12 @@ export class GameController {
   predictionAccuracy(): number {
     const n = this.state.predictions.length
     if (n === 0) return 0
-    return this.state.predictions.filter((p) => p.correct).length / n
+    // Optimization: avoid array allocation from .filter().length
+    let correct = 0
+    for (let i = 0; i < n; i++) {
+      if (this.state.predictions[i]?.correct) correct++
+    }
+    return correct / n
   }
 
   /** Is a pad's health visible to the player (revealed by probe, or all-healthy level)? */
@@ -267,8 +272,12 @@ export class GameController {
 
   private resolveWave(): void {
     const cfg = this.state.level
-    const correct = this.state.predictions.filter((p) => p.correct).length
     const total = this.state.predictions.length
+    // Optimization: avoid array allocation from .filter().length
+    let correct = 0
+    for (let i = 0; i < total; i++) {
+      if (this.state.predictions[i]?.correct) correct++
+    }
     const errors = this.errors()
     let outcome: { pass: boolean; metrics: Record<string, number | boolean | string> }
     if (cfg.id === "L1") {
