@@ -438,13 +438,44 @@ jobs:
           pattern: "*-readiness-${{ github.sha }}"
           path: artifacts/product-readiness
           merge-multiple: true
+      # AID-1669 (hardening R6): fail fast and unambiguously when no producer
+      # report was downloaded, instead of letting an empty aggregation surface
+      # later at `check` with stale-looking "lacks independent evidence"
+      # errors. Genuine staleness only ever fails `check`/`enforce` below with
+      # producer reports in hand — that is the re-grant-factory signal.
+      - name: assert producer reports present
+        run: |
+          count=$(find artifacts/product-readiness -type f -name '*.json' ! -name 'product-readiness-report.json' | wc -l)
+          if [ "$count" -eq 0 ]; then
+            failed=""
+            for pair in "literacydojo=${{ needs.literacydojo.result }}" \
+                        "codexdojo-os=${{ needs.codexdojo-os.result }}" \
+                        "dojotoday=${{ needs.dojotoday.result }}" \
+                        "pixeldojo=${{ needs.pixeldojo.result }}" \
+                        "voxeldojo=${{ needs.voxeldojo.result }}" \
+                        "minitown=${{ needs.minitown.result }}"; do
+              job="${pair%%=*}"; result="${pair##*=}"
+              if [ "$result" != "success" ]; then failed="$failed $job=$result"; fi
+            done
+            echo "::error title=PRODUCER-REPORTS-MISSING::zero producer readiness reports downloaded; non-success producer jobs:${failed:- none}. NOT a stale-claims window: the readiness re-grant factory must not propose for this run."
+            exit 1
+          fi
+          echo "producer readiness report files present: $count"
       - name: aggregate tested-SHA producer facts
         run: >-
           python3 docs/product-readiness/tools/cli.py aggregate
           --reports artifacts/product-readiness
           --output artifacts/product-readiness/product-readiness-report.json
       - name: validate readiness sources and candidate report
+        id: readiness_check
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+      # AID-1669: this annotation can only be reached with producer reports
+      # present (assert above passed), so the failure above is the
+      # stale-claims/invalid-candidate signal the factory exists for — clearly
+      # distinct from PRODUCER-REPORTS-MISSING above.
+      - name: annotate stale or invalid readiness failure
+        if: failure() && steps.readiness_check.outcome == 'failure'
+        run: echo "::error title=READINESS-STALE-OR-INVALID::producer reports were present, so the check failure above means claims are stale (or the candidate report is invalid). This IS the re-grant-factory signal."
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
       - name: run readiness cli guard tests
