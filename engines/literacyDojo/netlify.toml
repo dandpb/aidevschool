@@ -25,3 +25,18 @@
   from = "/*"
   to = "/index.html"
   status = 200
+
+[[headers]]
+  # Paridade de headers de segurança com o codexdojo-os (QW2 AID-1593,
+  # doc web-audit AID-1584 §6/§7): a superfície literacyDojo não tinha
+  # nenhum deles. Política idêntica à de engines/codexdojo-os-prototype/
+  # netlify.toml, com um delta justificado: worker-src 'self', porque o
+  # literacyDojo registra um service worker em produção
+  # (src/main.tsx -> navigator.serviceWorker.register, sw.js em public/);
+  # o OS não tem worker próprio, por isso o dele não precisa.
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "strict-origin"
+    X-Content-Type-Options = "nosniff"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https:; frame-src https:; object-src 'none'; base-uri 'self'; frame-ancestors 'self'; worker-src 'self'"
