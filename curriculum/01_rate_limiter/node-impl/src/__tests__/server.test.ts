@@ -240,11 +240,23 @@ describe('HTTP server', () => {
   });
 
   describe('centralized error handler', () => {
-    // The 4-arg error handler in `buildServer` is hard to exercise
-    // directly through `buildServer` because the 404 catch-all is
-    // registered before any caller-added routes can be. Its contract
-    // is a small adapter that returns 500 JSON, so we don't bother
-    // with a hand-rolled mirror here.
-    it.todo('returns 500 JSON for unhandled errors');
+    // The 4-arg error handler is reached through the public `deps.clock`
+    // seam: a throwing clock makes `tryConsume` throw synchronously inside
+    // the rate-limit middleware, and Express forwards that error to the
+    // centralized handler — no hand-rolled mirror of the app required.
+    it('returns 500 JSON for unhandled errors', async () => {
+      const explodingClock = (): number => {
+        throw new Error('clock exploded');
+      };
+      const failing = buildServer(config, logger, { clock: explodingClock });
+      try {
+        const res = await request(failing.app).get('/');
+        expect(res.status).toBe(500);
+        expect(res.headers['content-type']).toMatch(/application\/json/);
+        expect(res.body).toEqual({ error: 'Internal Server Error' });
+      } finally {
+        await failing.close();
+      }
+    });
   });
 });
