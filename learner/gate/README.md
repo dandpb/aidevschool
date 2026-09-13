@@ -24,6 +24,27 @@ python3 -m learner.gate.literacy_verifier \
 Implementation and CLI: `learner/gate/literacy_verifier.py`.
 Contract: `docs/design/ai-literacy/evidence-contract.md`.
 
+## No-code checklist path (ADR-0004, track 00)
+
+The ADR-0004 checklist artifact gets a deterministic structural verifier —
+the human Prometor review stays the final countersign and is never replaced:
+
+```bash
+python3 -m learner.gate.no_code_checklist \
+  --evidence path/to/checklist.json \
+  --write-receipt learner/verifier_receipts/no-code-last.json
+```
+
+- Exit `0` only when the artifact is structurally valid (closed schema,
+  >= 3 distinct falsifiable-shape items, `confirmado`/`refutado` results).
+- **`mastery_eligible` is always `false` here**: the receipt carries
+  `promoter_countersign_required: true`; promotion happens only through the
+  Prometor review defined by ADR-0004, never from this verdict alone.
+- Invalid, missing, or oversized artifacts **fail closed** (exit `1`).
+
+Implementation and CLI: `learner/gate/no_code_checklist.py`.
+Decision record: `docs/design/adr/0004-no-code-empirical-gate.md`.
+
 ## Run the gate
 
 Use a separate verifier receipt for evidence that doesn't have a built-in empirical
