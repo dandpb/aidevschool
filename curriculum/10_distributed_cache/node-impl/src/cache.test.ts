@@ -90,6 +90,24 @@ describe('distributed cache node implementation', () => {
     await cache.shutdown();
     assert.equal(cache.isShutdown(), true);
   });
+
+  it('reports real cache state (entries/evictions) on /health', async () => {
+    const cache = new Cache(new Config('node-a').withCapacityEntries(2));
+    const app = new HttpApp(cache);
+    const empty = JSON.parse((await app.handle('GET', '/health')).body);
+    assert.equal(empty.status, 'ok');
+    assert.equal(empty.entries, 0);
+    assert.equal(empty.evictions, 0);
+    await app.handle('PUT', '/cache/k1', JSON.stringify({ value: 'v1' }));
+    await app.handle('PUT', '/cache/k2', JSON.stringify({ value: 'v2' }));
+    const full = JSON.parse((await app.handle('GET', '/health')).body);
+    assert.equal(full.entries, 2);
+    assert.equal(full.evictions, 0);
+    await app.handle('PUT', '/cache/k3', JSON.stringify({ value: 'v3' }));
+    const afterEviction = JSON.parse((await app.handle('GET', '/health')).body);
+    assert.equal(afterEviction.entries, 2);
+    assert.equal(afterEviction.evictions, 1);
+  });
 });
 
 after(() => undefined);
