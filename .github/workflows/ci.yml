@@ -124,7 +124,17 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): extends the AID-571 deterministic
+      # Playwright retry policy to pixelDojo. The smoke script is expanded
+      # here (recursive per-package run + readiness report) so the flags land
+      # on `playwright test` itself — appending them to `pnpm smoke` would
+      # hand them to readiness-report.mjs instead. A retried test surfaces as
+      # a named "flaky" entry in this log plus its on-first-retry trace
+      # (durable via the artifact upload below); a real regression fails
+      # twice and still fails the job. Recurrence on the same test escalates
+      # to quarantine + issue (do not raise retries). Local stays retries: 0.
+      - run: pnpm -r --if-present run smoke --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -158,7 +168,15 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the workspace-wide smoke sweep (script expanded here so the flags land
+      # on each game's `playwright test`, not on readiness-report.mjs). A
+      # retried test surfaces as a named "flaky" entry in this log plus its
+      # on-first-retry trace (durable via the artifact upload below); a real
+      # regression fails twice and still fails the job. Recurrence on the same
+      # test escalates to quarantine + issue (do not raise retries).
+      - run: pnpm -r --if-present run smoke --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -306,7 +324,15 @@ jobs:
       - run: npm run test
       - run: npm run build
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the literacyDojo e2e suite (test:e2e expanded here so the flags land
+      # on `playwright test` itself). A retried test surfaces as a named
+      # "flaky" entry in this log plus its on-first-retry trace (durable via
+      # the artifact upload below); a real regression fails twice and still
+      # fails the job. Recurrence on the same test escalates to quarantine +
+      # issue (do not raise retries). Local stays retries: 0.
+      - run: npx playwright test --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       # This report contains automated facts only; observation assertions stay
       # with the independent assessor and cannot grant readiness in CI.
       - uses: actions/upload-artifact@v4
@@ -342,7 +368,15 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the miniTown smoke (script expanded here so the flags land on
+      # `playwright test` itself). A retried test surfaces as a named "flaky"
+      # entry in this log plus its on-first-retry trace (durable via the
+      # artifact upload below); a real regression fails twice and still fails
+      # the job. Recurrence on the same test escalates to quarantine + issue
+      # (do not raise retries). Local stays retries: 0.
+      - run: MINITOWN_PORT=5189 pnpm exec playwright test --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -531,8 +565,24 @@ jobs:
       - name: build
         run: pnpm --filter ${{ matrix.game }} build
       - run: pnpm exec playwright install --with-deps chromium
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # each game's smoke (every game-* smoke script is a plain
+      # `playwright test`, so the flags pass straight through pnpm). A retried
+      # test surfaces as a named "flaky" entry in this log plus its
+      # on-first-retry trace; recurrence on the same test escalates to
+      # quarantine + issue (do not raise retries).
       - name: smoke
-        run: pnpm --filter ${{ matrix.game }} smoke
+        run: pnpm --filter ${{ matrix.game }} run smoke --retries=1 --trace on-first-retry
+      # Durable half of the AID-571 contract for this matrix: keep the
+      # on-first-retry traces (flaky evidence) as an artifact. Named
+      # deliberately OUTSIDE the `*-readiness-${{ github.sha }}` pattern so
+      # the product-readiness aggregation never ingests game test-results.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: voxeldojo-games-flaky-traces-${{ matrix.game }}-${{ github.sha }}
+          path: engines/voxelDojo/${{ matrix.game }}/test-results
+          if-no-files-found: warn
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — pixelDojo `games/*` siblings. The
   # canonical `pixel-quest/` is already covered by the root `pixeldojo` job
