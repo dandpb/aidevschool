@@ -32,16 +32,38 @@ describe('distributed job scheduler core', () => {
     expect(election.isLeader('pid-9')).toBe(false);
   });
 
-  it('dispatches by priority, due time, and creation order', () => {
-    const scheduler = new Scheduler('node-a', () => 0);
+  it('holds future-due jobs until dueAtMs on both dispatch paths', () => {
+    let now = 0;
+    const scheduler = new Scheduler('node-a', () => now);
     scheduler.becomeLeader(['node-a'], 60_000);
-    const low = scheduler.submit({ name: 'low', priority: Priority.Low });
-    const highLate = scheduler.submit({ name: 'high-late', priority: Priority.High, runAfterMs: 2_000 });
-    const highEarly = scheduler.submit({ name: 'high-early', priority: Priority.High });
+    const normalDue = scheduler.submit({ name: 'normal-due', priority: Priority.Normal });
+    const highLater = scheduler.submit({ name: 'high-later', priority: Priority.High, runAfterMs: 2_000 });
 
-    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(highEarly.id);
-    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(highLate.id);
-    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(low.id);
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(normalDue.id);
+    expect(() => scheduler.dispatchNext('worker-1', 1_000)).toThrow(/no dispatchable job/i);
+    expect(() => scheduler.dispatchJob(highLater.id, 'worker-1', 1_000)).toThrow(/not due/i);
+
+    now += 2_000;
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(highLater.id);
+  });
+
+  it('dispatches due jobs by priority, then due time, then creation order', () => {
+    let now = 0;
+    const scheduler = new Scheduler('node-a', () => now);
+    scheduler.becomeLeader(['node-a'], 60_000);
+    const normalOlder = scheduler.submit({ name: 'normal-older', priority: Priority.Normal });
+    const lowDue = scheduler.submit({ name: 'low-due', priority: Priority.Low });
+    const highDue = scheduler.submit({ name: 'high-due', priority: Priority.High, runAfterMs: 1_000 });
+    const tieOlder = scheduler.submit({ name: 'tie-older', priority: Priority.Normal, runAfterMs: 3_000 });
+    now = 1_000;
+    const tieNewer = scheduler.submit({ name: 'tie-newer', priority: Priority.Normal, runAfterMs: 2_000 });
+
+    now = 3_000;
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(highDue.id);
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(normalOlder.id);
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(tieOlder.id);
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(tieNewer.id);
+    expect(scheduler.dispatchNext('worker-1', 1_000).job.id).toBe(lowDue.id);
   });
 
   it('rejects concurrent locks and stale fencing tokens', () => {
