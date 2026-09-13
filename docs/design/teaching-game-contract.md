@@ -74,6 +74,35 @@
    no databases, no netcode, no server unless a concept demonstrably requires shared state —
    and then only after the plan argues for it.
 
+## Frozen contract identifiers
+
+Some identifier strings are load-bearing across game emitter, verifier, bridge, and already
+recorded evidence. Those below are **frozen historical names**: they are not typos to fix
+one side at a time. Consistency on every side is what keeps historical evidence verifiable.
+
+### `metrics.kind = "voxeldoj-kv-warehouse"` — FROZEN (voxelDojo game-02 warehouse)
+
+The string is a historical artifact (engine is `voxelDojo`; the kind says `voxeldoj`), but
+production and verifiers are consistent and pin it (freeze registered 2026-09-13, board doc
+`hardening-top10` R9 / AID-1586; landed via AID-1663). Pinned at freeze time on `main`
+(`6fef278`) by:
+
+- Emitter: `engines/voxelDojo/game-02-warehouse/src/game/controller.ts` (1 occurrence)
+- Netlify verification bridge: `learner/gate/netlify-functions/dojo-verification-bridge.mjs` (4)
+- Deterministic evaluator: `learner/gate/warehouse_evaluator.py` (4)
+- codexdojo-os-prototype bridge record: `engines/codexdojo-os-prototype/bridge/routerVerificationRecords.ts` (1)
+- Contract suites that pin the string: `learner/gate/tests/dojo_verification_bridge_netlify.test.mjs`,
+  `learner/gate/tests/teaching_game_bridge_records.py`, `learner/gate/tests/test_relay_evaluator.py`
+- Historical evidence already recorded under this kind: `engines/voxelDojo/game-02-warehouse/.logs/evidence.ndjson`
+  and `work-products/AID-*/qa-result*.json`
+
+**Rename rule:** this kind must NOT be renamed as a one-sided "typo fix". Renaming only the
+game (or only the evaluator/bridge) makes the verifier reject previously recorded evidence and
+breaks the learning gate silently. Any rename is a coordinated migration with its own issue and
+plan, touching all of: (1) game emitters, (2) evaluator + Netlify bridge matchers,
+(3) the codexdojo-os-prototype bridge record, (4) the contract suites, and (5) migration or
+dual-acceptance of historical evidence records.
+
 ## Engine registry
 
 | Engine | Genre | Evidence `source` | Review slice destination |
