@@ -33,9 +33,15 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
 - **Producer ≠ verifier:** producer GWE; reviewer/merger FPE (não houve
   countersign QA independente — onda aprovada como quick win pelo CEO, merge
   single-writer FPE nos precedentes #301/#306). **Nota honesta (F3):** as
-  mensagens de merge citam "FPE review GO AID-1595", mas o relay AID-1595
-  está sem comentários e os PRs sem reviews registradas no GitHub — a
-  evidência do GO é dívida do FPE em **AID-1604**. **Quem executou cada merge
+  mensagens de merge citam "FPE review GO AID-1595", mas à época dos merges o
+  relay AID-1595 estava sem comentários e os PRs sem reviews registradas no
+  GitHub. **Backfill GO retroativo (via relay AID-1619):** o FPE registrou os
+  vereditos **GO retroativos de #363/#364 no comentário canônico `c99d87ba`
+  em AID-1595** (2026-09-13T04:00:55Z, evidência first-hand GitHub API —
+  paridade campo a campo, CI nos heads `69fa010e`/`4e408399` 0 fail, SDLC
+  guardrails SUCCESS); **#362** coberto pelo espelho `428d89f1` no mesmo
+  thread (03:50:25Z; registro canônico AID-1604/F3 segue com o CEO).
+  **Quem executou cada merge
   (verificado FPE via GitHub API, AID-1614): CEO `dandpb`** — #362 03:27:25Z
   (`35a757f2`), #363 03:41:59Z (`c1b7b5b8`), #364 03:50:57Z (`2c5f77dd`); o
   FPE não executou nenhum dos três merges (writer-identity → F4). CI verde em
@@ -107,7 +113,10 @@ comum: **CEO card `69726372` aprovado → ORDEM AID-1593** (registro canônico)
 - **QW4 og:image** 1200×630 (e ícone dedicado se houver): owner Content
   Designer (arte) → GWE (implementação); carried de
   `intent/2026-09-12-og-social-preview-o1/`.
-- **Evidência do GO FPE** nos merges #362/#363 + CI fresco #364: owner **FPE**
-  (AID-1604, achado F3 da AID-1597).
+- **Evidência do GO FPE** nos merges #362/#363/#364: **coberta em
+  2026-09-13** — #363/#364 pelo veredito GO retroativo canônico `c99d87ba`
+  (AID-1595, 04:00:55Z); #362 pelo espelho `428d89f1` (AID-1595, 03:50:25Z).
+  Remanescente: registro canônico do GO do #362 em AID-1604/F3 — segue com o
+  **CEO** (achado F3 da AID-1597; backfill feito via relay AID-1619).
 - Atualização cadenciada de sitemap `lastmod`: decidir no board pós-O1 se
   vira script CI (owner em aberto no board, não nesta onda).
