@@ -1,0 +1,21 @@
+{
+  "surface": "miniTown",
+  "gitPin": "650bcfdc",
+  "startedAt": "2026-09-14T18:38:03.104Z",
+  "steps": [
+    {
+      "step": "explore",
+      "hudText": "MiniTown — morning  simTime=8.01h",
+      "simAdvances": true,
+      "sceneChildren": 6,
+      "forbiddenAffordancesFound": [],
+      "buttonCount": 0
+    }
+  ],
+  "verdict": {
+    "simAdvances": true,
+    "noLessonPersistence": true,
+    "exploreOnly": true,
+    "runtimeErrors": []
+  }
+}

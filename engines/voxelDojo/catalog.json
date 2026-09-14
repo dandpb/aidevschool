@@ -5,18 +5,18 @@
     "developmentPort": 5202,
     "unitId": "U2-key-value-store"
   },
- {
-  "id": "game-03-wormhole",
-  "name": "WORMHOLE",
-  "developmentPort": 5203,
-  "unitId": "U3-url-shortener"
- },
- {
-  "id": "game-04-task-queue",
-  "name": "TASK FORGE",
-  "developmentPort": 5204,
-  "unitId": "U4-task-queue"
- },
+  {
+    "id": "game-03-wormhole",
+    "name": "WORMHOLE",
+    "developmentPort": 5203,
+    "unitId": "U3-url-shortener"
+  },
+  {
+    "id": "game-04-task-queue",
+    "name": "TASK FORGE",
+    "developmentPort": 5204,
+    "unitId": "U4-task-queue"
+  },
   {
     "id": "game-05-relay-station",
     "name": "RELAY STATION",
@@ -51,7 +51,7 @@
     "id": "game-10-hash-ring",
     "name": "HASH RING",
     "developmentPort": 5177,
-    "unitId": "U9-distributed-cache"
+    "unitId": "U10-distributed-cache"
   },
   {
     "id": "game-11-air-traffic",

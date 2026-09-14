@@ -1,0 +1,23 @@
+{
+  "base": ":5180 canônica (worktree 9aa3ec71) + fixtures :5181/:5182 (seam DOJOTODAY_TODAY_MODULE)",
+  "gitPin": "9aa3ec71",
+  "dailyHeading": "Sua lição de hoje",
+  "activeUnitVisible": true,
+  "nextActionNamed": true,
+  "guidanceOnlyDisclaimers": [
+    "apenas mostra o scheduler",
+    "O verificador independente decide"
+  ],
+  "masteryControlsPresent": false,
+  "masteryBoundaryDisclaimer": "Esta página apenas mostra o scheduler — não marca mastered.",
+  "localStorageKeys": [],
+  "learnerStateKeys": [],
+  "readOnlyCanonicalSource": false,
+  "readOnlyStorageKeys": [],
+  "readOnlyLearnerStateKeys": [],
+  "returningQueueUpdated": true,
+  "returningStreakReconciled": "3 → 4 dias de sequência",
+  "returningActiveUnitConsistent": true,
+  "returningLocalStorageWrites": 0,
+  "noEvalCarryoverDisclaimers": true
+}

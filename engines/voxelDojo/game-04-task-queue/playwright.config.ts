@@ -1,6 +1,6 @@
-import { defineConfig } from "@playwright/test";
+import { defineConfig } from "@playwright/test"
 
-const baseURL = "http://localhost:5204";
+const baseURL = "http://localhost:5204"
 
 export default defineConfig({
   testDir: "./playwright",
@@ -15,4 +15,4 @@ export default defineConfig({
     reuseExistingServer: false,
     timeout: 30_000,
   },
-});
+})

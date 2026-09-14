@@ -18,9 +18,7 @@
   existing encounter shell; add a typed encounter + pack entry.
 - The `01` rate-limiter is **done** (token-bucket + sequence-flow encounters exist; closed gate
   for U0). The `10` hash-ring pilot is **done** in voxelDojo. The `04` task-queue encounter is
-  **done** in pixel-quest (this buildout), and the 3D producer TASK FORGE (Shape B override,
-  decision AID-1859 Option A / AID-1877 PR-A1) is **done** in voxelDojo `game-04-task-queue`.
-  Do not rebuild any of these.
+  **done** in pixel-quest (this buildout). Do not rebuild any of these.
 
 ## All 18 modules (status as of 2026-07-05)
 
@@ -37,13 +35,13 @@
 > `scenarioSlug: "kv-warehouse"`, `metrics.kind: "voxeldoj-kv-warehouse"`. The greenfield rebuild
 > remains a future enhancement; the current game is the gate-eligible producer.
 | 03 | url_shortener | voxelDojo | game-03-wormhole | U3-url-shortener | 5203 | short-code collision; base62 | wormhole gates between planets | ✅ DONE |
-| 04 | concurrent_task_queue | voxelDojo (Shape B) | game-04-task-queue (AID-1877 PR-A1); pixel lab-04 remains as 2D warm-up | U4-task-queue | 5204 | bounded worker-pool dispatch | task forge: hopper + arms + annealing rack + scrap chute | ✅ DONE |
+| 04 | concurrent_task_queue | pixel-quest | encounters/taskQueue.ts (NEW) | U4-task-queue | — | retry/backpressure/DLQ ordering | (2D encounter) | ✅ DONE |
 | 05 | websocket_chat | voxelDojo | game-05-relay-station | U5-websocket-chat | 5205 | persistent conns; fan-out; heartbeat | orbiting relay stations, laser links | ✅ DONE |
 | 06 | file_upload_pipeline | voxelDojo | game-06-pipeline-plant | U6-file-upload | 5206 | streaming vs buffering; bounded memory | fluid pipeline + overflow tanks | ✅ DONE |
 | 07 | rest_api_auth | voxelDojo | game-07-checkpoint-city | U7-rest-api-auth | 5207 | middleware layers; JWT verify | concentric city walls, badge gates | ✅ DONE |
 | 08 | event_driven_order_system | voxelDojo | game-08-timeline-tower | U8-event-driven | 5208 | append-only log; projection; replay | tower of stacked event floors | ✅ DONE |
 | 09 | plugin_system | voxelDojo | game-09-docking-bay | U9-plugin-system | 5209 | sandboxing; interface contracts | docking pods, force-field sandbox | ✅ DONE |
-| 10 | distributed_cache | voxelDojo | game-10-hash-ring | U9-distributed-cache | 5210 | consistent hashing + rebalancing | orbital hash ring | ✅ DONE (pilot) |
+| 10 | distributed_cache | voxelDojo | game-10-hash-ring | U10-distributed-cache | 5210 | consistent hashing + rebalancing | orbital hash ring | ✅ DONE (pilot) |
 | 11 | load_balancer | voxelDojo | game-11-air-traffic | U11-load-balancer | 5211 | health checks; routing policy | air-traffic to landing pads | ✅ DONE |
 | 12 | distributed_job_scheduler | voxelDojo | game-12-mission-control | U12-job-scheduler | 5212 | leader election; DAG deps | stations vote; launch in DAG order | ✅ DONE |
 | 13 | api_gateway_circuit_breaker | voxelDojo | game-13-breaker-grid | U13-circuit-breaker | 5213 | circuit breaker open/closed/half-open | 3D power grid, tripping breakers | ✅ DONE |
@@ -53,9 +51,10 @@
 | 17 | distributed_config_service | voxelDojo | game-17-lighthouse-network | U17-config-service | 5217 | consensus; watch/notify | lighthouse quorum re-aiming beams | ✅ DONE |
 | 18 | search_engine | voxelDojo | game-18-stacks | U18-search-engine | 5218 | inverted index; ranking | 3D library, word-card catalog | ✅ DONE |
 
-**Note on unit_id collisions:** `09 plugin_system` and `10 distributed_cache` both stem from a
-project-9/10 area in the substrate. The ids are distinct (`U9-plugin-system` vs
-`U9-distributed-cache`); the verifier keys on `unit_id` + `project`.
+**Note on unit_id collisions:** `09 plugin_system` and `10 distributed_cache` historically both
+carried a `U9-*` prefix (pilot-era quirk, fixed in AID-1855). Since the fix the ids follow the
+game number (`U9-plugin-system` vs `U10-distributed-cache`); the verifier keys on
+`unit_id` + `project`.
 
 ## Per-game M1–M6 done-rule (voxelDojo) — met by all 15 voxelDojo games
 

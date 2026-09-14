@@ -29,6 +29,9 @@ CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
+        # game-04-task-queue removed in this PR (AID-1902 PR-A2): the TASK FORGE
+        # evaluator (learner/gate/task_queue_evaluator.py) registers it in GAME_SPECS,
+        # paying the debt AID-1901 PR-A1 left when it shipped the game.
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
@@ -39,24 +42,19 @@ ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
 # Known catalog unitId quirks: game number != unit number prefix. Pinned to
 # the exact (game id, unitId) pair so any change — the fix OR a new breakage —
 # fails until this allowlist is consciously updated.
-ALLOWED_UNITID_QUIRKS: dict[str, str] = {
-    # engines/voxelDojo/catalog.json:48 — U9 collides with game-09 (U9-plugin-system);
-    # owned by the Curriculum Platform Engineer (verifier-map L4). The HASH RING
-    # evaluator binds to this catalog identity until the quirk is fixed; the fix
-    # must update GAME_SPECS in the same PR.
-    "game-10-hash-ring": "U9-distributed-cache",
-}
+# Empty since AID-1855: the game-10 quirk (U9-distributed-cache colliding with
+# game-09's U9-plugin-system) was fixed to U10-distributed-cache in
+# engines/voxelDojo/catalog.json:48, restoring the game-NN == UNN invariant
+# for the whole catalog.
+ALLOWED_UNITID_QUIRKS: dict[str, str] = {}
 
 # Curriculum projects with no producing game (known gaps, verifier-map §4).
-# 04_concurrent_task_queue was unpinned in AID-1877 PR-A1 — the SAME PR that adds
-# game-04-task-queue to the catalog (the same-PR rule this tripwire enforces: a pin
-# whose debt no longer exists is stale and fails CI). The dispatch wording "só sai
-# no PR do avaliador" refers to the ALLOWED_UNVERIFIED entry above, which rides in
-# this PR and leaves in PR-A2 (task_queue_evaluator) — that is the evaluator debt.
 ALLOWED_PROJECTS_WITHOUT_GAME: frozenset[str] = frozenset(
     {
         "00_ai_in_practice",  # no-code track: literacy + ADR-0004 checklist, no voxelDojo game
         "01_rate_limiter",  # legacy GATEKEEPER rubric gate, closed 2026-07-05
+        # 04_concurrent_task_queue removed in the same PR that added game-04-task-queue
+        # to catalog.json (AID-1901 PR-A1, CEO decision AID-1859 Opção A).
     }
 )
 

@@ -1,103 +1,112 @@
-// TASK FORGE wave coordinator. Deterministic discrete-event pump: every player
-// decision advances the world to the next event instant (injectable logical clock,
-// seeded jitter) — same inputs => same progression, headless-testable in Vitest.
 import { emitEvidence } from "../evidence/emit"
 import {
-  evaluateQueueWave,
+  type Arrival,
+  DOCK_WINDOW,
+  emptyMetrics,
+  evaluateWave,
   LEVELS,
   type LevelConfig,
   type LevelId,
   levelConfig,
+  toTask,
+  type WaveMetrics,
+  WORK_BEATS,
 } from "../sim/levels"
 import {
-  type ArrivalSpec,
-  allTerminal,
   backpressure,
-  deadLetterTask,
-  dispatch,
-  dispatchOrder,
-  failTask,
-  hasActiveKey,
-  idleWorker,
-  makeTask,
-  makeWorkers,
+  dispatch as dispatchOntoPool,
+  fail,
+  isDuplicate,
+  makePool,
   pickNext,
-  promoteReady,
-  type QueueState,
-  queueDepth,
-  requiredRoute,
   runningCount,
-  type SimTask,
-  succeedTask,
+  type Task,
+  type WorkerPool,
 } from "../sim/queue"
 import { mulberry32 } from "../sim/rng"
 
-export type Phase = "briefing" | "running" | "cleared" | "failed"
+export type Phase = "briefing" | "playing" | "cleared" | "failed"
+export type Classification = "retry" | "dlq"
 
-export type Prompt =
-  | { readonly kind: "dispatch"; readonly candidates: readonly SimTask[] }
-  | { readonly kind: "classify"; readonly task: SimTask }
-  | { readonly kind: "gate"; readonly arrival: ArrivalSpec; readonly reason: "full" | "duplicate" }
+export interface RunningTask {
+  readonly task: Task
+  readonly completesAt: number
+}
+
+/** A finished ingot awaiting the player's retry/DLQ classification. */
+export interface FinishedTask {
+  readonly task: Task
+  /** the queue-contract truth (HUD hides it; tests/smoke read it via hooks) */
+  readonly correctRoute: Classification
+  readonly retryAt: number
+}
 
 export interface GameState {
   readonly level: LevelConfig
-  phase: Phase
-  queue: QueueState
-  arrivalIndex: number
-  /** the decision the world is waiting on (null while auto-advancing / paused) */
-  pending: Prompt | null
-  dispatchPredictions: number
-  dispatchCorrect: number
-  retryClassifications: number
-  retryCorrect: number
-  dlqClassifications: number
-  dlqCorrect: number
-  poisonRequeued: number
-  backpressureViolations: number
-  duplicatesEnqueued: number
-  /** diagnostics beyond the frozen metrics (HUD/tests; never emitted) */
-  gatesRejected: number
-  lastMetrics: Record<string, number | boolean | string> | null
+  readonly phase: Phase
+  /** sim clock — one beat per player action (+ auto-beats while nothing is actionable) */
+  readonly now: number
+  readonly paused: boolean
+  readonly scriptIndex: number
+  /** forklift currently docking; lands on its own when the dock window closes */
+  readonly inbound: Arrival | null
+  readonly dockDeadline: number
+  readonly queue: readonly Task[]
+  readonly running: readonly RunningTask[]
+  readonly finished: readonly FinishedTask[]
+  readonly succeededIds: readonly string[]
+  readonly dlqIds: readonly string[]
+  readonly metrics: WaveMetrics
+  readonly lastMetrics: WaveMetrics | null
+  readonly status: string
+  readonly wrongfulRejects: number
 }
 
 export type Listener = (state: GameState) => void
 
+const SETTLE_CAP = 10_000
+
+/**
+ * TASK FORGE controller — turn-based, deterministic (same action sequence ⇒
+ * same wave, same evidence). Each player action advances the clock one beat;
+ * auto-events (completions, inbound landings, countdowns) are processed
+ * between actions in `settle()`. The player's four actions mirror plan §5:
+ * click an ingot (dispatch prediction), click rack/chute (classify), R
+ * (reject inbound), P (pause workers).
+ */
 export class GameController {
   private state: GameState
   private listeners: Listener[] = []
   private rng: () => number
+  private pool: WorkerPool
+  private dispatchLog: Array<{ expected: string; picked: string }> = []
+  private classificationLog: Array<{ task: string; route: Classification; correct: boolean }> = []
 
   constructor(level: LevelId = "L1") {
-    this.rng = mulberry32(levelConfig(level).seed ^ 0x5eed04)
-    this.state = this.freshState(levelConfig(level))
+    const cfg = levelConfig(level)
+    this.state = this.freshState(cfg)
+    this.rng = mulberry32(cfg.seed)
+    this.pool = makePool(cfg.workerCount)
   }
 
   private freshState(cfg: LevelConfig): GameState {
     return {
       level: cfg,
       phase: "briefing",
-      queue: {
-        now: 0,
-        capacity: cfg.capacity,
-        workers: makeWorkers(cfg.workerCount),
-        paused: false,
-        tasks: [],
-        maxConcurrentRunning: 0,
-        queueOverflowed: false,
-      },
-      arrivalIndex: 0,
-      pending: null,
-      dispatchPredictions: 0,
-      dispatchCorrect: 0,
-      retryClassifications: 0,
-      retryCorrect: 0,
-      dlqClassifications: 0,
-      dlqCorrect: 0,
-      poisonRequeued: 0,
-      backpressureViolations: 0,
-      duplicatesEnqueued: 0,
-      gatesRejected: 0,
+      now: 0,
+      paused: false,
+      scriptIndex: 0,
+      inbound: null,
+      dockDeadline: 0,
+      queue: [],
+      running: [],
+      finished: [],
+      succeededIds: [],
+      dlqIds: [],
+      metrics: emptyMetrics(cfg.workerCount),
       lastMetrics: null,
+      status: "Pronto para iniciar.",
+      wrongfulRejects: 0,
     }
   }
 
@@ -110,21 +119,31 @@ export class GameController {
     fn(this.state)
   }
 
-  private commit(): void {
+  private commit(patch: Partial<GameState>): void {
+    this.state = { ...this.state, ...patch }
     for (const fn of this.listeners) fn(this.state)
   }
 
+  // ── lifecycle ──────────────────────────────────────────────────────────────
+
   start(): void {
-    if (this.state.phase !== "briefing") return
-    this.state.phase = "running"
-    this.pump()
-    this.commit()
+    const cfg = this.state.level
+    this.rng = mulberry32(cfg.seed)
+    this.pool = makePool(cfg.workerCount)
+    this.dispatchLog = []
+    this.classificationLog = []
+    this.commit({ phase: "playing", status: "A forja está ligada." })
+    this.settle()
   }
 
   loadLevel(level: LevelId): void {
-    this.rng = mulberry32(levelConfig(level).seed ^ 0x5eed04)
-    this.state = this.freshState(levelConfig(level))
-    this.commit()
+    const cfg = levelConfig(level)
+    this.state = this.freshState(cfg)
+    this.rng = mulberry32(cfg.seed)
+    this.pool = makePool(cfg.workerCount)
+    this.dispatchLog = []
+    this.classificationLog = []
+    this.commit({})
   }
 
   nextLevel(): void {
@@ -138,259 +157,326 @@ export class GameController {
     this.start()
   }
 
-  /** P — park/resume every arm. Paused arms hold their ingot; the hopper keeps accepting. */
-  togglePause(): void {
-    if (this.state.phase !== "running") return
-    this.state.queue.paused = !this.state.queue.paused
-    this.pump()
-    this.commit()
+  // ── truth hooks (HUD hints, scene, smoke) ──────────────────────────────────
+
+  /** The ingot the next idle arm WILL grab (queue-contract truth). */
+  expectedDispatchId(): string | null {
+    if (this.state.phase !== "playing" || this.state.paused) return null
+    if (runningCount(this.pool) >= this.pool.workerCount) return null
+    return pickNext(this.state.queue, this.state.now)?.id ?? null
   }
 
-  /** Player's prediction for the next grab; the arm then takes the TRUTH (pickNext). */
-  predictDispatch(taskId: string): void {
-    const pending = this.state.pending
-    if (this.state.phase !== "running" || pending?.kind !== "dispatch") return
-    const truth = pickNext(this.state.queue.tasks, this.state.queue.now)
-    if (!truth) return
-    this.state.dispatchPredictions++
-    if (taskId === truth.id) this.state.dispatchCorrect++
-    const worker = idleWorker(this.state.queue.workers)
-    if (!worker) throw new Error("dispatch prompt with no idle worker (invariant I1)")
-    dispatch(this.state.queue, truth.id, worker)
-    this.state.pending = null
-    this.pump()
-    this.commit()
+  /** Is a dispatch window open (idle arm + eligible ingot)? */
+  dispatchWindowOpen(): boolean {
+    return this.expectedDispatchId() !== null
   }
 
-  /** Route the held finished ingot to the annealing rack (retry). */
-  classifyRetry(taskId: string): void {
-    const pending = this.state.pending
-    if (this.state.phase !== "running" || pending?.kind !== "classify") return
-    if (pending.task.id !== taskId) return
-    const task = this.requireTask(taskId)
-    this.state.retryClassifications++
-    if (requiredRoute(task) === "retry") {
-      this.state.retryCorrect++
-      this.applyTransientFailure(task)
-    } else if (task.kind === "poison") {
-      // canonical pathology: poison parked on the rack will only fail again
-      this.state.poisonRequeued++
-      task.status = "retry_wait"
-      task.nextAttemptAt =
-        this.state.queue.now + this.state.level.backoffBase * 2 ** task.retries + this.jitter()
-    } else {
-      // exhausted crack: the forge refuses — retries over the limit go to scrap
-      deadLetterTask(this.state.queue, taskId)
-    }
-    this.state.pending = null
-    this.pump()
-    this.commit()
+  /** Oldest finished ingot awaiting classification. */
+  headFinished(): FinishedTask | null {
+    return this.state.finished[0] ?? null
   }
 
-  /** Route the held finished ingot to the scrap chute (DLQ). */
-  classifyDlq(taskId: string): void {
-    const pending = this.state.pending
-    if (this.state.phase !== "running" || pending?.kind !== "classify") return
-    if (pending.task.id !== taskId) return
-    const task = this.requireTask(taskId)
-    this.state.dlqClassifications++
-    if (requiredRoute(task) === "dlq") this.state.dlqCorrect++
-    deadLetterTask(this.state.queue, taskId)
-    this.state.pending = null
-    this.pump()
-    this.commit()
+  /** Must the docking forklift be rejected (dup sigil or full hopper)? */
+  inboundRequiresReject(): boolean {
+    const inbound = this.state.inbound
+    if (!inbound) return false
+    if (isDuplicate(this.activeKeys(), toTask(inbound, this.state.now))) return true
+    return backpressure(this.state.queue.length, this.state.level.capacity) === "full"
   }
 
-  /** R — send the gated forklift back (429 on full hopper / dedup on active sigil). */
-  rejectInbound(): void {
-    const pending = this.state.pending
-    if (this.state.phase !== "running" || pending?.kind !== "gate") return
-    this.state.gatesRejected++
-    this.state.arrivalIndex++
-    this.state.pending = null
-    this.pump()
-    this.commit()
+  /** Queue depth vs capacity for the HUD gauge (N/capacity). */
+  queueDepth(): { depth: number; capacity: number } {
+    return { depth: this.state.queue.length, capacity: this.state.level.capacity }
   }
 
-  /** Skipping R: an overfull hopper overflows / a duplicate sigil gets enqueued. */
-  admitInbound(): void {
-    const pending = this.state.pending
-    if (this.state.phase !== "running" || pending?.kind !== "gate") return
-    if (pending.reason === "full") {
-      this.state.backpressureViolations++
-      this.state.queue.queueOverflowed = true
-    } else {
-      this.state.duplicatesEnqueued++
-    }
-    this.enqueueArrival(pending.arrival)
-    this.state.arrivalIndex++
-    this.state.pending = null
-    this.pump()
-    this.commit()
+  private activeKeys(): Set<string> {
+    const keys = new Set<string>()
+    for (const t of this.state.queue) keys.add(t.idempotencyKey)
+    for (const r of this.state.running) keys.add(r.task.idempotencyKey)
+    for (const f of this.state.finished) keys.add(f.task.idempotencyKey)
+    return keys
   }
 
-  /** Ground truth for the next grab (HUD hint + Playwright smoke drive). */
-  truthPickId(): string | null {
-    const truth = pickNext(this.state.queue.tasks, this.state.queue.now)
-    return truth?.id ?? null
-  }
-
-  /** Ground truth for the held classify prompt. */
-  truthRoute(): "retry" | "dlq" | null {
-    const pending = this.state.pending
-    if (pending?.kind !== "classify") return null
-    return requiredRoute(pending.task)
-  }
-
-  queueDepthNow(): number {
-    return queueDepth(this.state.queue)
-  }
-
-  backpressureNow(): string {
-    return backpressure(queueDepth(this.state.queue), this.state.queue.capacity)
-  }
-
-  runningNow(): number {
-    return runningCount(this.state.queue.workers)
-  }
-
-  private requireTask(id: string): SimTask {
-    const task = this.state.queue.tasks.find((t) => t.id === id)
-    if (!task) throw new Error(`unknown task ${id}`)
-    return task
-  }
-
-  private jitter(): number {
-    return this.rng() * this.state.level.backoffBase
-  }
-
-  private applyTransientFailure(task: SimTask): void {
-    failTask(
-      task,
-      task.retries + 1,
-      this.state.level.backoffBase,
-      this.state.queue.now,
-      this.jitter(),
-    )
-    for (const w of this.state.queue.workers) {
-      if (w.busyWith === task.id) w.busyWith = null
-    }
-  }
-
-  private enqueueArrival(spec: ArrivalSpec): void {
-    const id = `t-${this.state.arrivalIndex}-${spec.label.replace(/\W+/g, "-")}`
-    const task = makeTask(spec, id, this.state.level.maxRetries)
-    this.state.queue.tasks.push(task)
-  }
+  // ── player actions ─────────────────────────────────────────────────────────
 
   /**
-   * Advance the world event-by-event until a player decision is required or the
-   * wave resolves. Pure with respect to (script, decisions, seed): no wall clock.
+   * Predict the ingot the next idle arm grabs (plan §4.2). The truth is
+   * `pickNext` at `now`; the arm then takes the TRUE ingot regardless, so a
+   * wrong prediction never corrupts the sim — it only misses the recall.
    */
-  private pump(): void {
-    const guard = 10_000
-    for (let i = 0; i < guard; i++) {
-      const q = this.state.queue
-      const arrivalsDone = this.state.arrivalIndex >= this.state.level.arrivals.length
-      if (arrivalsDone && (q.tasks.length === 0 || allTerminal(q))) {
+  predictDispatch(taskId: string): void {
+    if (this.state.phase !== "playing" || this.state.paused) return
+    const truth = pickNext(this.state.queue, this.state.now)
+    if (!truth) return
+    const res = dispatchOntoPool(this.pool, truth, this.state.now)
+    if (!res.ok) return
+    this.pool = res.pool
+    const correct = truth.id === taskId
+    const running = [
+      ...this.state.running,
+      { task: truth, completesAt: this.state.now + WORK_BEATS },
+    ]
+    const metrics: WaveMetrics = {
+      ...this.state.metrics,
+      dispatch_predictions: this.state.metrics.dispatch_predictions + 1,
+      dispatch_correct: this.state.metrics.dispatch_correct + (correct ? 1 : 0),
+      max_concurrent_running: Math.max(
+        this.state.metrics.max_concurrent_running,
+        runningCount(this.pool),
+      ),
+    }
+    this.dispatchLog.push({ expected: truth.id, picked: taskId })
+    this.commit({
+      queue: this.state.queue.filter((t) => t.id !== truth.id),
+      running,
+      metrics,
+      status: correct
+        ? `Previsão certa: ${truth.id} (prioridade ${truth.priority}) foi ao braço.`
+        : `Previsão errada: o braço pegou ${truth.id}, não ${taskId}.`,
+    })
+    this.tick()
+  }
+
+  /** Route the oldest finished ingot to the annealing rack (retry). */
+  classifyRetry(): void {
+    this.classify("retry")
+  }
+
+  /** Route the oldest finished ingot to the scrap chute (DLQ). */
+  classifyDlq(): void {
+    this.classify("dlq")
+  }
+
+  private classify(choice: Classification): void {
+    if (this.state.phase !== "playing") return
+    const head = this.state.finished[0]
+    if (!head) return
+    const { task, correctRoute, retryAt } = head
+    const finished = this.state.finished.slice(1)
+    const metrics = { ...this.state.metrics }
+    const queue = [...this.state.queue]
+    const dlqIds = [...this.state.dlqIds]
+    let status: string
+
+    if (choice === "retry") {
+      metrics.retry_classifications++
+      if (correctRoute === "retry") {
+        metrics.retry_correct++
+        // backoff already computed by fail() when the ingot came off the arm
+        queue.push({ ...task, retries: task.retries + 1, scheduledFor: retryAt })
+        status = `Certo: ${task.id} descansa no rack; volta a ser elegível no beat ${retryAt}.`
+      } else {
+        // requeueing a must-DLQ ingot is the canonical queue pathology; the
+        // budget is forced past max so the next completion presents DLQ again
+        // (wave terminates; the pass rule already records the violation)
+        metrics.poison_requeued++
+        queue.push({ ...task, retries: task.maxRetries + 1, scheduledFor: retryAt })
+        status = `Errado: ${task.id} não tem mais retry — poison/exausto voltou ao funil.`
+      }
+    } else {
+      metrics.dlq_classifications++
+      if (correctRoute === "dlq") {
+        metrics.dlq_correct++
+        status = `Certo: ${task.id} foi para a calha de sucata (DLQ).`
+      } else {
+        status = `Errado: ${task.id} ainda tinha retry — foi pro DLQ cedo demais.`
+      }
+      dlqIds.push(task.id)
+    }
+
+    this.classificationLog.push({ task: task.id, route: choice, correct: choice === correctRoute })
+    this.commit({ finished, queue, dlqIds, metrics, status })
+    this.tick()
+  }
+
+  /** R — reject the docking forklift (backpressure 429 / idempotency dup). */
+  rejectInbound(): void {
+    if (this.state.phase !== "playing") return
+    const inbound = this.state.inbound
+    if (!inbound) return
+    const required = this.inboundRequiresReject()
+    this.commit({
+      inbound: null,
+      scriptIndex: this.state.scriptIndex + 1,
+      wrongfulRejects: this.state.wrongfulRejects + (required ? 0 : 1),
+      status: required
+        ? `429 certo: a empilhadeira ${inbound.id} voltou de onde veio.`
+        : `429 indevido: ${inbound.id} tinha vaga (o funil aceitaria).`,
+    })
+    this.tick()
+  }
+
+  /** P — park/resume the arms (worker_count 0 ↔ N, RF-006). */
+  togglePause(): void {
+    if (this.state.phase !== "playing") return
+    const paused = !this.state.paused
+    this.commit({
+      paused,
+      status: paused
+        ? "Braços estacionados (worker_count = 0): a fila continua aceitando — 200, não erro."
+        : "Braços de volta ao trabalho.",
+    })
+    this.tick()
+  }
+
+  // ── sim engine (deterministic) ─────────────────────────────────────────────
+
+  /** One beat of auto time after a player action. */
+  private tick(): void {
+    this.commit({ now: this.state.now + 1 })
+    this.processAutoEvents()
+    this.settle()
+  }
+
+  /** Auto-advance beats while no player decision is available. */
+  private settle(): void {
+    for (let i = 0; i < SETTLE_CAP; i++) {
+      if (this.waveEnded()) {
         this.finishWave()
         return
       }
-      promoteReady(q)
-
-      // 1) arrivals due (script order; a gate interrupts the batch)
-      const next = this.state.level.arrivals[this.state.arrivalIndex]
-      if (next && next.at <= q.now) {
-        if (hasActiveKey(q, next.idempotencyKey)) {
-          this.state.pending = { kind: "gate", arrival: next, reason: "duplicate" }
-          return
-        }
-        if (backpressure(queueDepth(q), q.capacity) === "full") {
-          this.state.pending = { kind: "gate", arrival: next, reason: "full" }
-          return
-        }
-        this.enqueueArrival(next)
-        this.state.arrivalIndex++
-        continue
-      }
-
-      // 2) completions (oldest start first). Parked arms hold their ingot.
-      if (!q.paused) {
-        const done = q.tasks
-          .filter((t) => t.status === "running" && t.startedAt !== null)
-          .filter((t) => (t.startedAt ?? 0) + this.state.level.serviceTime <= q.now)
-          .sort((a, b) => (a.startedAt ?? 0) - (b.startedAt ?? 0) || a.id.localeCompare(b.id))
-        const first = done[0]
-        if (first) {
-          if (first.kind === "poison" || first.failuresLeft > 0) {
-            this.state.pending = { kind: "classify", task: first }
-            return
-          }
-          succeedTask(q, first.id)
-          continue
-        }
-      }
-
-      // 3) dispatch prompt (never while paused — parked arms grab nothing)
-      if (!q.paused) {
-        const worker = idleWorker(q.workers)
-        if (worker) {
-          const candidates = dispatchOrder(q.tasks, q.now)
-          if (candidates.length > 0) {
-            this.state.pending = { kind: "dispatch", candidates }
-            return
-          }
-        }
-      }
-
-      // 4) jump to the next event instant; parked => world waits for the player
-      const nextTime = this.nextEventTime()
-      if (nextTime === null) return
-      q.now = nextTime
+      // A parked forge (P) always leaves the player the unpause action —
+      // freeze auto-time instead of spinning (backlog grows on landing only).
+      if (this.state.paused) return
+      if (this.playerDecisionAvailable()) return
+      this.commit({ now: this.state.now + 1 })
+      this.processAutoEvents()
     }
-    throw new Error("pump guard tripped (script loop?)")
+    throw new Error("settle() exceeded cap — wave cannot progress (sim regression)")
   }
 
-  private nextEventTime(): number | null {
-    const q = this.state.queue
-    const times: number[] = []
-    const arrival = this.state.level.arrivals[this.state.arrivalIndex]
-    if (arrival && arrival.at > q.now) times.push(arrival.at)
-    for (const t of q.tasks) {
-      if (t.status === "running" && !q.paused && t.startedAt !== null) {
-        const finish = t.startedAt + this.state.level.serviceTime
-        if (finish > q.now) times.push(finish)
+  private playerDecisionAvailable(): boolean {
+    return (
+      this.state.finished.length > 0 ||
+      this.dispatchWindowOpen() ||
+      (this.state.inbound !== null && this.inboundRequiresReject())
+    )
+  }
+
+  private processAutoEvents(): void {
+    const s = this.state
+    let running = s.running
+    let finished = s.finished
+    let queue = s.queue
+    let inbound = s.inbound
+    let dockDeadline = s.dockDeadline
+    let scriptIndex = s.scriptIndex
+    let metrics = s.metrics
+    let succeededIds = s.succeededIds
+
+    // 1. completions (paused arms hold their ingots mid-flame)
+    if (!s.paused) {
+      const stillRunning: RunningTask[] = []
+      for (const slot of running) {
+        if (slot.completesAt > s.now) {
+          stillRunning.push(slot)
+          continue
+        }
+        this.pool = this.releaseSlot(this.pool, slot.task.id)
+        if (slot.task.kind === "clear") {
+          succeededIds = [...succeededIds, slot.task.id]
+        } else {
+          const plan = fail(slot.task, this.rng, s.now)
+          finished = [
+            ...finished,
+            { task: slot.task, correctRoute: plan.action, retryAt: plan.nextAttemptAt },
+          ]
+        }
       }
-      if (t.status === "retry_wait" && t.nextAttemptAt !== null && t.nextAttemptAt > q.now) {
-        times.push(t.nextAttemptAt)
-      }
-      if (t.status === "queued" && t.scheduledFor > q.now) times.push(t.scheduledFor)
+      running = stillRunning
     }
-    if (times.length === 0) return null
-    return Math.min(...times)
+
+    // 2. inbound lands when its dock window closes (skipping R has a cost)
+    if (inbound && s.now >= dockDeadline) {
+      const task = toTask(inbound, s.now)
+      if (isDuplicate(this.activeKeysWith(queue, running, finished), task)) {
+        metrics = {
+          ...metrics,
+          idempotency_duplicates_enqueued: metrics.idempotency_duplicates_enqueued + 1,
+        }
+      } else if (backpressure(queue.length, s.level.capacity) === "full") {
+        metrics = {
+          ...metrics,
+          queue_overflowed: true,
+          backpressure_violations: metrics.backpressure_violations + 1,
+        }
+      } else {
+        queue = [...queue, task]
+      }
+      inbound = null
+      scriptIndex += 1
+    }
+
+    // 3. present the next arrival
+    const script = s.level.arrivals
+    const next = script[scriptIndex]
+    if (!inbound && next && s.now >= next.arrivesAt) {
+      inbound = next
+      dockDeadline = s.now + DOCK_WINDOW
+    }
+
+    this.commit({
+      running,
+      finished,
+      queue,
+      inbound,
+      dockDeadline,
+      scriptIndex,
+      metrics,
+      succeededIds,
+    })
+  }
+
+  private activeKeysWith(
+    queue: readonly Task[],
+    running: readonly RunningTask[],
+    finished: readonly FinishedTask[],
+  ): Set<string> {
+    const keys = new Set<string>()
+    for (const t of queue) keys.add(t.idempotencyKey)
+    for (const r of running) keys.add(r.task.idempotencyKey)
+    for (const f of finished) keys.add(f.task.idempotencyKey)
+    return keys
+  }
+
+  private releaseSlot(pool: WorkerPool, taskId: string): WorkerPool {
+    return {
+      ...pool,
+      slots: pool.slots.map((slot) => (slot.taskId === taskId ? { taskId: null } : slot)),
+    }
+  }
+
+  private waveEnded(): boolean {
+    const s = this.state
+    return (
+      s.phase === "playing" &&
+      s.scriptIndex >= s.level.arrivals.length &&
+      s.inbound === null &&
+      s.queue.length === 0 &&
+      s.running.length === 0 &&
+      s.finished.length === 0
+    )
   }
 
   private finishWave(): void {
-    const q = this.state.queue
-    const s = this.state
-    const outcome = evaluateQueueWave({
-      kind: "voxeldojo-task-queue",
-      dispatch_predictions: s.dispatchPredictions,
-      dispatch_correct: s.dispatchCorrect,
-      retry_classifications: s.retryClassifications,
-      retry_correct: s.retryCorrect,
-      dlq_classifications: s.dlqClassifications,
-      dlq_correct: s.dlqCorrect,
-      poison_requeued: s.poisonRequeued,
-      backpressure_violations: s.backpressureViolations,
-      idempotency_duplicates_enqueued: s.duplicatesEnqueued,
-      queue_overflowed: q.queueOverflowed,
-      max_concurrent_running: q.maxConcurrentRunning,
-      worker_count: q.workers.length,
+    const metrics = this.state.metrics
+    const pass = evaluateWave(metrics)
+    this.commit({
+      phase: pass ? "cleared" : "failed",
+      lastMetrics: metrics,
+      status: pass
+        ? "Onda concluída; evidência emitida."
+        : "Critério do contrato não atendido; tente novamente.",
     })
-    s.lastMetrics = { ...outcome.metrics }
-    s.phase = outcome.pass ? "cleared" : "failed"
-    s.pending = null
-    emitEvidence(s.level.id, outcome.pass, outcome.metrics)
+    emitEvidence(
+      this.state.level.id,
+      pass,
+      { ...metrics },
+      {
+        kind: `task-forge-${this.state.level.id}`,
+        dispatch_log: this.dispatchLog.slice(),
+        classifications: this.classificationLog.slice(),
+      },
+    )
   }
 }
