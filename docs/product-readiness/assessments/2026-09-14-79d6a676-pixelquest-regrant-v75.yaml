@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-79d6a676-pixelquest-regrant-v75
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T20:50:00Z'
+revalidateBy: '2026-10-14'
+gitSha: 79d6a6765868d01634241bf06e692b5717882b5a
+decisions:
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T20:48:32Z-pixelquest-encounter-evidence-mixed-79d6a676
+  - 2026-09-14T20:48:32Z-pixelquest-evidence-recovery-observed-79d6a676
+  - 2026-09-14T20:48:32Z-pixelquest-returning-evidence-handoff-mixed-79d6a676
