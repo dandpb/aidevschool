@@ -1,0 +1,268 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "067a73e9a8a3fec57d94b7038ef756da45a016f2",
+  "observedAt": "2026-09-14T18:05:00Z",
+  "scenarios": [
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Superfície :5180 (vite dev, projeção canônica da árvore): view apresenta 'Sua lição de hoje' + fila de reviews ('Retome por aqui', GATEKEEPER overdue 43d) + unidade ativa 'KV WAREHOUSE: hash-map-backed CRUD with TTL expiration' + próxima ação nomeada; declara a fronteira orientação-não-avaliação na própria página ('Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.'). Nenhum controle de conclusão/domínio; nenhuma chave localStorage de estado de aprendiz (walk-log-dt learnerStateKeys=[]). FIRST-HAND do diff v53: o track lista o nó 04 como TASK FORGE e a projeção servida carrega gameDir engines/voxelDojo/game-04-task-queue (sem pixel-quest no nó 04 — as refs pixel-quest remanescentes são do nó 01 GATEKEEPER, legítimas; walk-log-dt projectionNode04Block/trackTitles; screenshots aid1900-dtobs-01-active-unit.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). today.ts é AUTO-GERADO por learner/substrate/adapters/dojotoday.py (header do arquivo da árvore) e a view declara a fonte canônica; nenhum write de estado sai da view (localStorage sem chaves de aprendiz, walk-log-dt readOnlyLearnerStateKeys=[]). A regeneração preserva a fronteira read-only: prebuild documentado roda python3 -m learner.substrate; o job dojoToday (TS + substrate) desta árvore passou selfcheck + playwright na run CI 34867848560 (verde). Recuperação de projeção stale permanece a saída bornada documentada (regenerar ou parar), sem avaliação fabricada."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Na superfície servida, a fronteira observável: a view nunca escreve estado (0 writes em localStorage), declara a fonte canônica e a própria página nomeia a saída — apenas mostra o scheduler; sem interação que prometa conclusão (walk-log-dt readOnly*; screenshot aid1900-dtobs-02-readonly-boundary.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-no-eval-carryover",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Fixtures :5181/:5182 (seam DOJOTODAY_TODAY_MODULE, harness do engine): day-N (seg 7 set, 3 dias de sequência, overdue 44d) → day-N+1 (ter 8 set, 4 dias de sequência, overdue 45d; 44d some; nenhum 'due hoje'): fila reconciliada, streak avança 3→4, unidade ativa KV WAREHOUSE consistente; 0 writes em localStorage entre dias; disclaimers de não-avaliação presentes nos dois dias (walk-log-dt returning*; screenshots aid1900-dtobs-03-day-n.png, aid1900-dtobs-04-day-n-plus-1.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Preview do piloto :4180: missão L30 (Rotinas repetitivas) hospedada jogada até o fim (3 atividades com feedback-pass); resultado nomeável no iframe (result-screen) e fronteira honesta no host ('0 verificadas', 'sem alteração local', 'Aguardando verificador independente/Verificador indisponível'); próxima ação nomeável no hub (walk-log-os l30*/hostBoundary; screenshots aid1900-osobs-04/05/06)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Tentativa errada na L30 → feedback corretivo visível (sem stack trace/detalhes internos), botão de dica + 'tentar de novo' na própria UI; retry funciona in-app; reload preserva a missão sem re-onboarding (walk-log-os recovery*; screenshot aid1900-osobs-07-l30-recovery.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Mesmo perfil: reload na missão L30 remonta o conteúdo hospedado; hub acessível sem re-onboarding; o host mantém a contagem canônica '0 verificadas · sem alteração local' — a continuidade observável é local ao dispositivo, sem promessa de sync cross-device (walk-log-os returningMissionPreserved/literacyContinuity*; screenshot aid1900-osobs-08-literacy-returning.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Boot do piloto: pergunta de intenção ('O que você quer conseguir fazer com IA?') + 'Entrar na escola' → hub 'Aprenda uma coisa útil agora.'; a escolha é explicável na própria superfície (pergunta → trilha nomeada no hub); sem estado fabricado de conclusão (walk-log-os onboardingCopy/hubHeading; screenshot aid1900-osobs-01-onboarding-choice.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). localStorage+indexedDB limpos → onboarding volta a aparecer (sem desktop preservado) e NENHUMA conclusão/verificação é fabricada no texto (clearedShowsCompletion=false); a perda de estado local é o comportamento explicável — retomar requer refazer o setup local, sem reconstruir conclusões (walk-log-os cleared*; screenshot aid1900-osobs-03-cleared-onboarding.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Mesmo dispositivo/perfil: /desktop preservado após reload (dock 'Aplicativos favoritos' visível), hub acessível sem re-onboarding; a fronteira local é a observável — estado hospedado no dispositivo, contagem canônica intacta (walk-log-os returningDesktopPreserved/returningNoOnboarding; screenshot aid1900-osobs-02-returning-hub.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). WAREHOUSE hospedada jogada até o fim (chaves clicadas via hash determinístico do próprio jogo); HUD 'PRÁTICA CONCLUÍDA NESTE DISPOSITIVO' no iframe, mas o host mantém '0 verificadas · sem alteração local' + 'Aguardando verificador independente' e declara 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' FIRST-HAND do diff v53 no picker do Engine Hub: 17 opções incluindo TASK FORGE (derivado de catalog.json); TASK FORGE sem URL hospedada no piloto → painel preciso 'Runtime não está configurado', sem falsa conclusão; HASH RING continua montando; fronteira do hub 'Domínio: nunca decidido pelo OS · Evidência bruta · não verificada' (walk-log-os warehouse*/engineHub*/taskForge*; screenshots aid1900-osobs-09/10/12/13)."
+        }
+      ],
+      "gaps": [
+        {
+          "id": "os-voxel-registry-copy-16-of-17",
+          "severity": "low",
+          "summary": "Capability do registry do Engine Hub (src/engines/registry.ts:162) diz '16 simulações' com o catálogo em 17 jogos após o PR-A1 (picker correto, derivado de catalog.json, oferece TASK FORGE). Drift cosmético de copy; não viola status preciso por missão.",
+          "owner": "lee",
+          "disposition": "follow-up-no-PR-A1 (correção de 1 linha sugerida ao owner; não bloqueia o re-grant)"
+        }
+      ]
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Com reduced-motion emulado, a superfície acessível é sempre nomeável: affordance 'Usar visualização acessível' (ou projeção degradada declarada) mantendo 'Estado canônico ... 0 verificadas'; o limite de escalação (renderer degradado ≠ jornada perdida; a jornada só para quando a projeção declarada também falha) é nomeável em superfície real (walk-log-os accessibleAffordance/accessibleProjectionActive; screenshot aid1900-osobs-11-accessible-affordance.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Reload na missão WAREHOUSE hospedada: iframe remonta com HUD visível, estado honesto preservado ('0 verificadas | sem alteração local | Estado canônico'), missão reiniciável; nenhuma promessa de sincronização cross-device no texto do host (walk-log-os warehouseRemountedAfterReload/warehouseHonestResult; screenshots aid1900-osobs-09/10)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-encounter-evidence",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). pixel-quest :5176 (vite dev): lab-04 Concurrent Task Queue jogado até o fim (admit legit / dead-letter poison, 13 jobs) → 'Evidencia PASS emitida' e registro crú no canal do jogo; FIRST-HAND do alinhamento de identidade do PR: o registro do lab-04 carrega unit_id U4-task-queue (antes U-04_concurrent_task_queue), project 04_concurrent_task_queue, encounter encounter-04_concurrent_task_queue, metrics kind pixelquest-task-queue (processed 10, poison_dead_lettered 3, poison_retried 0, overheated false), curriculum_context Worker Queue e review_context scheduler learner-substrate/verifier_required — evidência a entregar ao verificador, nunca apresentada como domínio (nenhuma linguagem mastered/dominad; walk-log-px lab04*; screenshots aid1900-pxobs-01/02)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-evidence-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "replay-recovers-evidence-without-state-promotion",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Replay do encounter reemite registro fresco no canal NDJSON crú (observado na estação abaixo); nenhum estado canônico de aprendiz é promovido: o canal é append-only em memória (EVIDENCE_CONTRACT.md do engine), a UI amarra a cópia de conclusão ao registro emitido e sem registro a oferta é replay — sem registro não há claim de conclusão. Job pixelDojo (TS) desta árvore verde na run CI 34867848560 (smoke completo do quest slice, incl. lab-04)."
+        },
+        {
+          "id": "missing-evidence-does-not-count-as-completion",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Replay observado: segunda passada do lab-04 emite registro NOVO (canal cresce, pass=true). Reload zera o canal em memória (0 registros) e nenhuma conclusão persiste na página (missingEvidenceCompletionClaim=false) — sem registro, a UI não conta o encounter como conclusão (walk-log-px recovery*/missingEvidence*; screenshot aid1900-pxobs-03-replay-recovery.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-returning-evidence-handoff",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Retorno (reload) + replay determinístico do lab-04: mesmo veredito (U4-task-queue, pass), artifact crú preservado como handoff no canal, anti-mastery copy reapresentada; nenhuma transformação do registro em veredito de domínio (walk-log-px handoff*; screenshot aid1900-pxobs-04-returning-handoff.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). TASK FORGE (jogo novo) :5204 (vite dev, porta do catálogo): L1 jogada até 'cleared' clicando os ingots reais do HUD; exatamente 1 registro EVIDENCE com source voxeldojo, unit_id U4-task-queue, project 04_concurrent_task_queue, game TASK FORGE, scenario task-forge-L1, metrics kind voxeldojo-task-queue (dispatch 12/12, worker_count 3, max_concurrent 3, queue_overflowed false, idempotency_duplicates 0) — contrato §11 do plano 04_concurrent_task_queue. Escopo por jogo: catálogo lido da árvore declara 17 jogos com unitIds distintos (TASK FORGE=U4-task-queue; HASH RING=U10-distributed-cache etc.); um jogo verde não valida irmãos nem concede mastery (nenhuma linguagem dominad/mastered/verificad; walk-log-voxel g04*/catalog*; screenshots aid1900-voxobs-01/02)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). game-02 DECLARA projeção acessível (src/scene/accessible.ts + renderer recoverable no main.ts via shared/sceneHarness.ts) e a preserva: sem WebGL a projeção acessível ativa e o loop continua operável, sem fabricar conclusão. game-04 NÃO declara renderer acessível (main.ts sem renderer:, caminho legacy) e não alega fallback (index.html/HUD sem promessa de projeção) — coerente com a regra 'jogos sem projeção declarada não alegam fallback'. Smokes de catálogo (17 jogos) verdes no CI desta árvore (run 34867848560, voxeldojo-readiness-067a73e9)."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Sem WebGL (chromium --disable-webgl/--disable-webgl2): game-02 mantém projeção acessível ativa sem conclusão fabricada; game-04 (sem projeção declarada) não emite NENHUM registro EVIDENCE (0) e não mostra cleared/conclusão/mastered — a saída é honesta: o aprendiz pode parar sem falsa conclusão (walk-log-voxel g02NoWebgl*/g04NoWebgl*; screenshots aid1900-voxobs-04/05)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-return-reentry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "2026-09-14T18:05:00ZWalk QA independente AID-1900 @ 067a73e9 (merge ref do PR #421: 7e03b60f em main a7939416; worktree próprio, chromium headless via playwright, specs/config arquivadas em scripts/, screenshots em ev/, walk-logs em logs/ deste bundle; distinto das runs de CI do producer). Reentry em TASK FORGE: após cleared, reload reinicia do briefing L1 com canal de evidência zerado (0 registros ressuscitados); replay emite registro NOVO determinístico (U4-task-queue, pass) sem corromper o canal; nenhuma linguagem de mastery no retorno (walk-log-voxel reentry*; screenshot aid1900-voxobs-03-g04-reentry-replay.png)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

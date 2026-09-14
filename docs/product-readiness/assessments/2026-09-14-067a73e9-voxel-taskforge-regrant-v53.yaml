@@ -1,0 +1,56 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-067a73e9-voxel-taskforge-regrant-v53
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T18:30:00Z'
+revalidateBy: '2026-10-14'
+gitSha: 067a73e9a8a3fec57d94b7038ef756da45a016f2
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-os-literacy-hosted-mission-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-verification-recovery-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-literacy-returning-device-mixed-067a73e9
+- useCaseId: os-voxel-guided-missions
+  outcome: conditional-follow-up
+  grantedTier: customer-ready
+  reasons:
+  - dispositioned medium/low gaps remain
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-os-voxel-hosted-missions-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-renderer-accessibility-recovery-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-voxel-returning-device-mixed-067a73e9
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-os-onboarding-track-choice-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-returning-recovery-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-os-returning-device-mixed-067a73e9
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-dojotoday-active-unit-guidance-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-dojotoday-read-only-boundary-observed-067a73e9
+  - 2026-09-14T18:05:00Z-dojotoday-returning-next-day-mixed-067a73e9
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-pixelquest-encounter-evidence-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-pixelquest-evidence-recovery-observed-067a73e9
+  - 2026-09-14T18:05:00Z-pixelquest-returning-evidence-handoff-mixed-067a73e9
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T18:05:00Z-voxel-standalone-loop-mixed-067a73e9
+  - 2026-09-14T18:05:00Z-voxel-accessible-renderer-observed-067a73e9
+  - 2026-09-14T18:05:00Z-voxel-standalone-return-reentry-mixed-067a73e9

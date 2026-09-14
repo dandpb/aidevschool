@@ -1,0 +1,144 @@
+{
+  "base": "game-04 :5204 + game-02 :5202 (vite dev, worktree 067a73e9)",
+  "gitPin": "067a73e9",
+  "g04BriefingTitle": "L1 — First dispatches",
+  "g04Lesson": "An idle arm always grabs the brightest eligible ingot; ties go to the oldest arrival. P parks every arm — the hopper keeps accepting (paused is not broken).",
+  "g04EvidenceRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U4-task-queue",
+      "project": "04_concurrent_task_queue",
+      "scenario_id": "task-forge-L1",
+      "game": "TASK FORGE",
+      "ts": "2026-09-14T16:52:25.751Z",
+      "pass": true,
+      "metrics": {
+        "kind": "voxeldojo-task-queue",
+        "dispatch_predictions": 12,
+        "dispatch_correct": 12,
+        "retry_classifications": 0,
+        "retry_correct": 0,
+        "dlq_classifications": 0,
+        "dlq_correct": 0,
+        "poison_requeued": 0,
+        "backpressure_violations": 0,
+        "idempotency_duplicates_enqueued": 0,
+        "queue_overflowed": false,
+        "max_concurrent_running": 3,
+        "worker_count": 3
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+        "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute",
+        "accepted_signal": "correct next-dispatch prediction AND correct retry/DLQ classification AND held backpressure + idempotency",
+        "rejected_trap": "requeuing poison / overflowing hopper / enqueuing a duplicate sigil"
+      }
+    }
+  ],
+  "g04UnitId": "U4-task-queue",
+  "g04Project": "04_concurrent_task_queue",
+  "g04Game": "TASK FORGE",
+  "g04Scenario": "task-forge-L1",
+  "g04Pass": true,
+  "g04MetricsKind": "voxeldojo-task-queue",
+  "g04Metrics": {
+    "kind": "voxeldojo-task-queue",
+    "dispatch_predictions": 12,
+    "dispatch_correct": 12,
+    "retry_classifications": 0,
+    "retry_correct": 0,
+    "dlq_classifications": 0,
+    "dlq_correct": 0,
+    "poison_requeued": 0,
+    "backpressure_violations": 0,
+    "idempotency_duplicates_enqueued": 0,
+    "queue_overflowed": false,
+    "max_concurrent_running": 3,
+    "worker_count": 3
+  },
+  "g04ChannelLength": 1,
+  "catalogUnitIds": {
+    "game-02-warehouse": "U2-key-value-store",
+    "game-03-wormhole": "U3-url-shortener",
+    "game-04-task-queue": "U4-task-queue",
+    "game-05-relay-station": "U5-websocket-chat",
+    "game-06-pipeline-plant": "U6-file-upload",
+    "game-07-checkpoint-city": "U7-rest-api-auth",
+    "game-08-timeline-tower": "U8-event-driven",
+    "game-09-docking-bay": "U9-plugin-system",
+    "game-10-hash-ring": "U10-distributed-cache",
+    "game-11-air-traffic": "U11-load-balancer",
+    "game-12-mission-control": "U12-job-scheduler",
+    "game-13-breaker-grid": "U13-circuit-breaker",
+    "game-14-river-delta": "U14-log-aggregator",
+    "game-15-observatory": "U15-metrics-collector",
+    "game-16-freight-yard": "U16-message-queue",
+    "game-17-lighthouse-network": "U17-config-service",
+    "game-18-stacks": "U18-search-engine"
+  },
+  "catalogGameCount": 17,
+  "catalogDeclaresTaskForge": "U4-task-queue",
+  "g04MasteryLanguage": false,
+  "reentryFirstChannelLength": 1,
+  "reentryRestartsFromBriefing": true,
+  "reentryChannelFreshAfterReload": 0,
+  "reentryReplayRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U4-task-queue",
+      "project": "04_concurrent_task_queue",
+      "scenario_id": "task-forge-L1",
+      "game": "TASK FORGE",
+      "ts": "2026-09-14T16:52:32.894Z",
+      "pass": true,
+      "metrics": {
+        "kind": "voxeldojo-task-queue",
+        "dispatch_predictions": 12,
+        "dispatch_correct": 12,
+        "retry_classifications": 0,
+        "retry_correct": 0,
+        "dlq_classifications": 0,
+        "dlq_correct": 0,
+        "poison_requeued": 0,
+        "backpressure_violations": 0,
+        "idempotency_duplicates_enqueued": 0,
+        "queue_overflowed": false,
+        "max_concurrent_running": 3,
+        "worker_count": 3
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+        "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute",
+        "accepted_signal": "correct next-dispatch prediction AND correct retry/DLQ classification AND held backpressure + idempotency",
+        "rejected_trap": "requeuing poison / overflowing hopper / enqueuing a duplicate sigil"
+      }
+    }
+  ],
+  "reentryMasteryLanguage": false,
+  "g04DeclaresRenderer": false,
+  "g04ClaimsAccessibleFallback": false,
+  "g02NoWebglProjectionCount": 2,
+  "g02NoWebglBody": "VISUALIZAÇÃO SEM WEBGL\n\nProjeção acessível — L1 — Hash → prateleira\n\nPronto para iniciar.\n\nUma caixa sempre cai na prateleira para a qual sua chave faz hash. Mesma chave ⇒ mesma prateleira.\n\nPrateleira 0: 0 caixas\nPrateleira 1: 0 caixas\nPrateleira 2: 0 caixas\nPrateleira 3: 0 caixas\nPrateleira 4: 0 caixas\nPrateleira 5: 0 caixas\nIniciar missão\nIr para os controles detalhados\nL1 — Hash → prateleira\n\n",
+  "g02NoWebglFalseCompletion": false,
+  "g04NoWebglProjectionCount": 0,
+  "g04NoWebglBody": "L1 — First dispatches\n\nAn idle arm always grabs the brightest eligible ingot; ties go to the oldest arrival. P parks every arm — the hopper keeps accepting (paused is not broken).\n\nPredict the grabbed ingot on >= 80% of dispatches.\n\nPress start.\nStart wave\n\nhopper: 0/8 (open) · arms busy: 0/3",
+  "g04NoWebglEvidenceEmitted": 0,
+  "g04NoWebglFalseCompletion": false,
+  "g04NoWebglPageErrors": [
+    "Error creating WebGL context."
+  ]
+}

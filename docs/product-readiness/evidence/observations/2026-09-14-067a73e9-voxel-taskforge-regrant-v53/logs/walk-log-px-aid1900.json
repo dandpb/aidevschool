@@ -1,0 +1,112 @@
+{
+  "base": ":5176 pixel-quest vite dev (worktree 067a73e9)",
+  "gitPin": "067a73e9",
+  "lab04EvidenceRecord": {
+    "source": "pixelquest",
+    "unit_id": "U4-task-queue",
+    "project": "04_concurrent_task_queue",
+    "game": "PixelDojo Quest",
+    "ts": "2026-09-14T17:07:51.486Z",
+    "pass": true,
+    "metrics": {
+      "kind": "pixelquest-task-queue",
+      "processed": 10,
+      "poison_dead_lettered": 3,
+      "poison_retried": 0,
+      "legit_retried": 0,
+      "backpressure_peak": 0,
+      "overheated": false
+    },
+    "encounter_id": "encounter-04_concurrent_task_queue",
+    "review_context": {
+      "unit_kind": "concept",
+      "scheduled_review": false,
+      "review_reason": "overdue",
+      "streak_candidate": true,
+      "scheduler_source": "learner-substrate",
+      "verifier_required": true
+    },
+    "curriculum_context": {
+      "concept": "Fila concorrente, backpressure e processamento justo",
+      "mechanic": "Worker Queue",
+      "accepted_signal": "tarefa pronta",
+      "rejected_trap": "job veneno sem lease"
+    }
+  },
+  "lab04UnitId": "U4-task-queue",
+  "lab04Metrics": {
+    "kind": "pixelquest-task-queue",
+    "processed": 10,
+    "poison_dead_lettered": 3,
+    "poison_retried": 0,
+    "legit_retried": 0,
+    "backpressure_peak": 0,
+    "overheated": false
+  },
+  "lab04CurriculumContext": {
+    "concept": "Fila concorrente, backpressure e processamento justo",
+    "mechanic": "Worker Queue",
+    "accepted_signal": "tarefa pronta",
+    "rejected_trap": "job veneno sem lease"
+  },
+  "lab04ReviewContext": {
+    "unit_kind": "concept",
+    "scheduled_review": false,
+    "review_reason": "overdue",
+    "streak_candidate": true,
+    "scheduler_source": "learner-substrate",
+    "verifier_required": true
+  },
+  "antiMasteryCopyVisible": true,
+  "masteryLanguage": false,
+  "evidenceChannelLength": 1,
+  "recoveryReplayRecord": {
+    "source": "pixelquest",
+    "unit_id": "U4-task-queue",
+    "project": "04_concurrent_task_queue",
+    "game": "PixelDojo Quest",
+    "ts": "2026-09-14T17:07:52.135Z",
+    "pass": true,
+    "metrics": {
+      "kind": "pixelquest-task-queue",
+      "processed": 10,
+      "poison_dead_lettered": 3,
+      "poison_retried": 0,
+      "legit_retried": 0,
+      "backpressure_peak": 0,
+      "overheated": false
+    },
+    "encounter_id": "encounter-04_concurrent_task_queue",
+    "review_context": {
+      "unit_kind": "concept",
+      "scheduled_review": false,
+      "review_reason": "overdue",
+      "streak_candidate": true,
+      "scheduler_source": "learner-substrate",
+      "verifier_required": true
+    },
+    "curriculum_context": {
+      "concept": "Fila concorrente, backpressure e processamento justo",
+      "mechanic": "Worker Queue",
+      "accepted_signal": "tarefa pronta",
+      "rejected_trap": "job veneno sem lease"
+    }
+  },
+  "recoveryFreshRecordEmitted": true,
+  "recoveryChannelGrew": true,
+  "recoveryDocumentReview": "replay reemite registro fresco (observado acima); cópia de conclusão condicionada ao registro; canal é append-only NDJSON (EVIDENCE_CONTRACT.md); sem registro a UI oferece replay, não conclusão",
+  "missingEvidenceAfterReloadChannel": 0,
+  "missingEvidenceCompletionClaim": false,
+  "handoffReplayDeterministic": true,
+  "handoffReplayMetrics": {
+    "kind": "pixelquest-task-queue",
+    "processed": 10,
+    "poison_dead_lettered": 3,
+    "poison_retried": 0,
+    "legit_retried": 0,
+    "backpressure_peak": 0,
+    "overheated": false
+  },
+  "handoffMasteryLanguage": false,
+  "handoffRawArtifactPreserved": true
+}
