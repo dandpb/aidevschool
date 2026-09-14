@@ -130,7 +130,7 @@ no physics engine — docking is parametric animation along the ring.
 
 **12. Learning-gate hooks**
 
-- Targets unit **`U9-distributed-cache`** (project `10_distributed_cache`) in
+- Targets unit **`U10-distributed-cache`** (project `10_distributed_cache`) in
   `../../learner/learning_state.yaml`. As of 2026-07-05 that unit is **not yet mastered** (the
   2026-07-01 seeded masteries were reverted; only U0 is honestly gated), so HASH RING evidence can
   serve the **real learning gate** for U9 when the scheduler makes it the active unit — and serves
@@ -138,7 +138,7 @@ no physics engine — docking is parametric animation along the ring.
   `review_reason` dynamically from the substrate-generated review slice, so both modes work
   without code changes.
 - On wave clear, emit:
-  `{"source":"voxeldojo","unit_id":"U9-distributed-cache","project":"10_distributed_cache","scenario_id":"hash-ring-L2","game":"HASH RING","ts":"<iso>","pass":true,"metrics":{"moved_ratio":0.24,"theoretical_kn":0.25,"load_skew":1.3,"arc_prediction_accuracy":0.9,"modulo_contrast_stated":false},"review_context":{"unit_kind":"concept","scheduled_review":true,"review_reason":"due","verifier_required":true}}`
+  `{"source":"voxeldojo","unit_id":"U10-distributed-cache","project":"10_distributed_cache","scenario_id":"hash-ring-L2","game":"HASH RING","ts":"<iso>","pass":true,"metrics":{"moved_ratio":0.24,"theoretical_kn":0.25,"load_skew":1.3,"arc_prediction_accuracy":0.9,"modulo_contrast_stated":false},"review_context":{"unit_kind":"concept","scheduled_review":true,"review_reason":"due","verifier_required":true}}`
   via `window.__voxelDojoEvidence` and an `EVIDENCE <json>` console record.
 - The verifier (Prometor context) validates metrics against the gate/review policy and appends any
   review event to `units_log`. **The game never writes learner state.**

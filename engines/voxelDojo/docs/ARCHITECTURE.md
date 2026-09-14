@@ -77,7 +77,7 @@ One JSON record per cleared scenario/wave, emitted twice (belt and suspenders):
 ```json
 {
   "source": "voxeldojo",
-  "unit_id": "U9-distributed-cache",
+  "unit_id": "U10-distributed-cache",
   "project": "10_distributed_cache",
   "scenario_id": "hash-ring-L2",
   "game": "HASH RING",
@@ -107,7 +107,7 @@ reads captured records (Playwright run output in `.logs/`, or the browser-global
 against `empirical_gate` / review-scheduling policy, and appends gate/review events to `units_log`.
 Whether a given attempt is a first-mastery gate or a scheduled review is decided by learner state,
 not by the game: as of 2026-07-05 only U0 is honestly mastered, so HASH RING can gate
-`U9-distributed-cache` for real when it becomes the active unit. Games read their review slice
+`U10-distributed-cache` for real when it becomes the active unit. Games read their review slice
 from the substrate projections and derive `review_context` from it rather than assuming either mode.
 
 ## Integration points
