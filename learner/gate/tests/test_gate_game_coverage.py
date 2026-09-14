@@ -25,13 +25,10 @@ VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
 # Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4: 10 of 19 projects lack a gate path). Each entry must be
+# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-10-hash-ring",  # evaluator blocked on unitId fix (catalog.json:48)
-        "game-13-breaker-grid",
-        "game-14-river-delta",
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
@@ -44,7 +41,9 @@ ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
 # fails until this allowlist is consciously updated.
 ALLOWED_UNITID_QUIRKS: dict[str, str] = {
     # engines/voxelDojo/catalog.json:48 — U9 collides with game-09 (U9-plugin-system);
-    # owned by the Curriculum Platform Engineer (verifier-map L4).
+    # owned by the Curriculum Platform Engineer (verifier-map L4). The HASH RING
+    # evaluator binds to this catalog identity until the quirk is fixed; the fix
+    # must update GAME_SPECS in the same PR.
     "game-10-hash-ring": "U9-distributed-cache",
 }
 
