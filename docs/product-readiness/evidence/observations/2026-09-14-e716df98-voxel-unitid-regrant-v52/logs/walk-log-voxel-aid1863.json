@@ -1,0 +1,91 @@
+{
+  "base": "game-10 :5177 + game-02 :5173 (vite dev, worktree e716df98)",
+  "gitPin": "e716df98",
+  "g10EvidenceRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U10-distributed-cache",
+      "project": "10_distributed_cache",
+      "scenario_id": "hash-ring-L1",
+      "game": "HASH RING",
+      "ts": "2026-09-14T14:59:22.479Z",
+      "pass": true,
+      "metrics": {
+        "owner_predictions": 12,
+        "owner_prediction_accuracy": 1
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "consistent hashing",
+        "mechanic": "orbital hash ring"
+      }
+    }
+  ],
+  "g10UnitId": "U10-distributed-cache",
+  "g10Project": "10_distributed_cache",
+  "g10Scenario": "hash-ring-L1",
+  "g10Pass": true,
+  "catalogUnitIds": {
+    "game-02-warehouse": "U2-key-value-store",
+    "game-03-wormhole": "U3-url-shortener",
+    "game-05-relay-station": "U5-websocket-chat",
+    "game-06-pipeline-plant": "U6-file-upload",
+    "game-07-checkpoint-city": "U7-rest-api-auth",
+    "game-08-timeline-tower": "U8-event-driven",
+    "game-09-docking-bay": "U9-plugin-system",
+    "game-10-hash-ring": "U10-distributed-cache",
+    "game-11-air-traffic": "U11-load-balancer",
+    "game-12-mission-control": "U12-job-scheduler",
+    "game-13-breaker-grid": "U13-circuit-breaker",
+    "game-14-river-delta": "U14-log-aggregator",
+    "game-15-observatory": "U15-metrics-collector",
+    "game-16-freight-yard": "U16-message-queue",
+    "game-17-lighthouse-network": "U17-config-service",
+    "game-18-stacks": "U18-search-engine"
+  },
+  "catalogDeclaresPerGameUnits": true,
+  "g10MasteryLanguage": false,
+  "reentryFirstChannelLength": 1,
+  "reentryRestartsFromBriefing": true,
+  "reentryChannelFreshAfterReload": 0,
+  "reentryReplayRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U10-distributed-cache",
+      "project": "10_distributed_cache",
+      "scenario_id": "hash-ring-L1",
+      "game": "HASH RING",
+      "ts": "2026-09-14T14:59:24.940Z",
+      "pass": true,
+      "metrics": {
+        "owner_predictions": 12,
+        "owner_prediction_accuracy": 1
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "consistent hashing",
+        "mechanic": "orbital hash ring"
+      }
+    }
+  ],
+  "reentryMasteryLanguage": false,
+  "g02NoWebglProjectionActive": true,
+  "g02NoWebglBody": "VISUALIZAÇÃO SEM WEBGL\n\nProjeção acessível — L1 — Hash → prateleira\n\nPronto para iniciar.\n\nUma caixa sempre cai na prateleira para a qual sua chave faz hash. Mesma chave ⇒ mesma prateleira.\n\nPrateleira 0: 0 caixas\nPrateleira 1: 0 caixas\nPrateleira 2: 0 caixas\nPrateleira 3: 0 caixas\nPrateleira 4: 0 caixas\nPrateleira 5: 0 caixas\nIniciar missão\nIr para os controles detalhados\nL1 — Hash → prateleira\n\n",
+  "g02NoWebglFalseCompletion": false,
+  "g10NoWebglProjectionCount": 0,
+  "g10NoWebglBody": "L1 — First ring\n\nA key belongs to the next station clockwise from its hash.\n\nPredict the owner of ≥80% of incoming keys.\n\nPress start.\nStart wave\n st-0 · 0 keys st-1 · 0 keys st-2 · 0 keys",
+  "g10NoWebglEvidenceEmitted": 0,
+  "g10NoWebglFalseCompletion": false
+}
