@@ -29,7 +29,7 @@ CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-10-hash-ring",  # evaluator blocked on unitId fix (catalog.json:48)
+        "game-10-hash-ring",  # no evaluator yet; unitId fixed in AID-1855, HASH RING evaluator unblocked
         "game-13-breaker-grid",
         "game-14-river-delta",
         "game-15-observatory",
@@ -42,11 +42,11 @@ ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
 # Known catalog unitId quirks: game number != unit number prefix. Pinned to
 # the exact (game id, unitId) pair so any change — the fix OR a new breakage —
 # fails until this allowlist is consciously updated.
-ALLOWED_UNITID_QUIRKS: dict[str, str] = {
-    # engines/voxelDojo/catalog.json:48 — U9 collides with game-09 (U9-plugin-system);
-    # owned by the Curriculum Platform Engineer (verifier-map L4).
-    "game-10-hash-ring": "U9-distributed-cache",
-}
+# Empty since AID-1855: the game-10 quirk (U9-distributed-cache colliding with
+# game-09's U9-plugin-system) was fixed to U10-distributed-cache in
+# engines/voxelDojo/catalog.json:48, restoring the game-NN == UNN invariant
+# for the whole catalog.
+ALLOWED_UNITID_QUIRKS: dict[str, str] = {}
 
 # Curriculum projects with no producing game (known gaps, verifier-map §4).
 ALLOWED_PROJECTS_WITHOUT_GAME: frozenset[str] = frozenset(
