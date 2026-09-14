@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts",
+      "sha256": "a0495300b8afee5829d05d6bafc7065a83f03ca5c2a1de8a016e40d2684b146c"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "hosted-voxel-state-resumes",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-14T14:26:39Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "e716df98ce2f03c429cde94102a6e40ba16d4c96",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-09-14T14:26:39Z-os-voxel-returning-device-e716df98",
+  "scenarioId": "os-voxel-returning-device",
+  "schemaVersion": 1,
+  "sourceFingerprint": "3703457fbbddae47c17fded27d280296d7a5b053329cca87386c4bff2a1d807a"
+}
