@@ -111,6 +111,167 @@ def _reject(errors: list[str], level: str) -> bool:
     return False
 
 
+def _accuracy_outcome(
+    correct: int, total: int, count_key: str, accuracy_key: str
+) -> tuple[bool, dict[str, Any]]:
+    accuracy = correct / total if total else 0.0
+    metrics = {
+        "kind": METRIC_KIND,
+        count_key: total,
+        accuracy_key: round2(accuracy),
+    }
+    return accuracy >= 0.8, metrics
+
+
+def _river_l1(
+    cfg: dict[str, Any], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "predictions"}):
+        _reject(errors, "L1")
+        return None
+    predictions = observations["predictions"]
+    logs = _logs_for(cfg, "L1")
+    sources = frozenset(cfg["sources"])
+    if observations["kind"] != "river-delta-L1" or not _source_predictions(
+        predictions, sources, len(logs)
+    ):
+        _reject(errors, "L1")
+        return None
+    correct = sum(
+        1 for log, predicted in zip(logs, predictions) if predicted == log["source"]
+    )
+    return _accuracy_outcome(
+        correct, len(logs), "source_predictions", "source_prediction_accuracy"
+    )
+
+
+def _source_predictions(predictions: Any, sources: frozenset[str], count: int) -> bool:
+    return (
+        isinstance(predictions, list)
+        and len(predictions) == count
+        and all(isinstance(item, str) and item in sources for item in predictions)
+    )
+
+
+def _river_l2(
+    cfg: dict[str, Any], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "predictions"}):
+        _reject(errors, "L2")
+        return None
+    predictions = observations["predictions"]
+    logs = _logs_for(cfg, "L2")
+    if observations["kind"] != "river-delta-L2" or not _bool_predictions(
+        predictions, len(logs)
+    ):
+        _reject(errors, "L2")
+        return None
+    correct = sum(
+        1
+        for log, predicted in zip(logs, predictions)
+        if predicted == _reached_sink(log, cfg["pipeline"])
+    )
+    return _accuracy_outcome(
+        correct, len(logs), "filter_predictions", "filter_prediction_accuracy"
+    )
+
+
+def _bool_predictions(predictions: Any, count: int) -> bool:
+    return (
+        isinstance(predictions, list)
+        and len(predictions) == count
+        and all(isinstance(item, bool) for item in predictions)
+    )
+
+
+def _river_l3(
+    cfg: dict[str, Any], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "injectSource", "predictedSources"}):
+        _reject(errors, "L3")
+        return None
+    inject_source = observations["injectSource"]
+    predicted = observations["predictedSources"]
+    sources = frozenset(cfg["sources"])
+    if observations["kind"] != "river-delta-L3" or not _valid_dye_fields(
+        inject_source, predicted, sources
+    ):
+        _reject(errors, "L3")
+        return None
+    trace_ids, trace_events = _trace_for(cfg, "L3")
+    trace_source_set = {log_id.rsplit("-", 1)[0] for log_id in trace_ids}
+    predicted_set = set(predicted)
+    sets_equal = predicted_set == trace_source_set
+    inject_valid = inject_source in trace_source_set
+    metrics = {
+        "kind": METRIC_KIND,
+        "dyed_sources_predicted": len(predicted_set),
+        "dyed_sources_actual": len(trace_source_set),
+        "source_set_correct": sets_equal,
+        "inject_source_valid": inject_valid,
+        "trace_events": trace_events,
+    }
+    return sets_equal and inject_valid and bool(trace_ids), metrics
+
+
+def _valid_dye_fields(
+    inject_source: Any, predicted: Any, sources: frozenset[str]
+) -> bool:
+    return (
+        inject_source in sources
+        and isinstance(predicted, list)
+        and bool(predicted)
+        and all(item in sources for item in predicted)
+    )
+
+
+def _river_l4(
+    cfg: dict[str, Any], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "collectedLogIds"}):
+        _reject(errors, "L4")
+        return None
+    collected = observations["collectedLogIds"]
+    logs = _logs_for(cfg, "L4")
+    valid_log_ids = frozenset(log["logId"] for log in logs)
+    if observations["kind"] != "river-delta-L4" or not _valid_collection(
+        collected, valid_log_ids
+    ):
+        _reject(errors, "L4")
+        return None
+    trace_ids, _ = _trace_for(cfg, "L4")
+    collected_set = set(collected)
+    truth_set = set(trace_ids)
+    missing = len(truth_set - collected_set)
+    extra = len(collected_set - truth_set)
+    exact = truth_set == collected_set
+    metrics = {
+        "kind": METRIC_KIND,
+        "trace_log_ids_actual": len(truth_set),
+        "trace_log_ids_collected": len(collected_set),
+        "missing_log_ids": missing,
+        "extra_log_ids": extra,
+        "trace_exact": exact,
+    }
+    return exact, metrics
+
+
+def _valid_collection(collected: Any, valid_log_ids: frozenset[str]) -> bool:
+    return (
+        isinstance(collected, list)
+        and bool(collected)
+        and all(item in valid_log_ids for item in collected)
+    )
+
+
+_LEVEL_HANDLERS = {
+    "L1": _river_l1,
+    "L2": _river_l2,
+    "L3": _river_l3,
+    "L4": _river_l4,
+}
+
+
 def evaluate_river_delta(
     level: str, observations: Any, producer_metrics: Any, errors: list[str]
 ) -> bool:
@@ -121,103 +282,10 @@ def evaluate_river_delta(
         errors.append("observations must be a bounded object")
         return False
 
-    cfg = LEVELS[level]
-    sources: frozenset[str] = frozenset(cfg["sources"])
-    logs = _logs_for(cfg, level)
-
-    if level in {"L1", "L2"}:
-        if not closed_dict(observations, {"kind", "predictions"}):
-            return _reject(errors, level)
-        predictions = observations["predictions"]
-        prompt_count = len(logs)
-        if not isinstance(predictions, list) or len(predictions) != prompt_count:
-            return _reject(errors, level)
-        if level == "L1":
-            if observations["kind"] != "river-delta-L1" or not all(
-                isinstance(item, str) and item in sources for item in predictions
-            ):
-                return _reject(errors, level)
-            correct = sum(
-                1
-                for log, predicted in zip(logs, predictions)
-                if predicted == log["source"]
-            )
-            expected: dict[str, Any] = {
-                "kind": METRIC_KIND,
-                "source_predictions": prompt_count,
-                "source_prediction_accuracy": round2(correct / prompt_count),
-            }
-        else:
-            if observations["kind"] != "river-delta-L2" or not all(
-                isinstance(item, bool) for item in predictions
-            ):
-                return _reject(errors, level)
-            correct = sum(
-                1
-                for log, predicted in zip(logs, predictions)
-                if predicted == _reached_sink(log, cfg["pipeline"])
-            )
-            expected = {
-                "kind": METRIC_KIND,
-                "filter_predictions": prompt_count,
-                "filter_prediction_accuracy": round2(correct / prompt_count),
-            }
-        passed = (correct / prompt_count) >= 0.8
-    else:
-        trace_ids, trace_events = _trace_for(cfg, level)
-        trace_source_set = {log_id.rsplit("-", 1)[0] for log_id in trace_ids}
-        valid_log_ids = frozenset(log["logId"] for log in logs)
-        if level == "L3":
-            if not closed_dict(observations, {"kind", "injectSource", "predictedSources"}):
-                return _reject(errors, level)
-            inject_source = observations["injectSource"]
-            predicted = observations["predictedSources"]
-            if (
-                observations["kind"] != "river-delta-L3"
-                or inject_source not in sources
-                or not isinstance(predicted, list)
-                or not predicted
-                or not all(item in sources for item in predicted)
-            ):
-                return _reject(errors, level)
-            predicted_set = set(predicted)
-            sets_equal = predicted_set == trace_source_set
-            inject_valid = inject_source in trace_source_set
-            expected = {
-                "kind": METRIC_KIND,
-                "dyed_sources_predicted": len(predicted_set),
-                "dyed_sources_actual": len(trace_source_set),
-                "source_set_correct": sets_equal,
-                "inject_source_valid": inject_valid,
-                "trace_events": trace_events,
-            }
-            passed = sets_equal and inject_valid and bool(trace_ids)
-        else:
-            if not closed_dict(observations, {"kind", "collectedLogIds"}):
-                return _reject(errors, level)
-            collected = observations["collectedLogIds"]
-            if (
-                observations["kind"] != "river-delta-L4"
-                or not isinstance(collected, list)
-                or not collected
-                or not all(item in valid_log_ids for item in collected)
-            ):
-                return _reject(errors, level)
-            collected_set = set(collected)
-            truth_set = set(trace_ids)
-            missing = len(truth_set - collected_set)
-            extra = len(collected_set - truth_set)
-            exact = truth_set == collected_set
-            expected = {
-                "kind": METRIC_KIND,
-                "trace_log_ids_actual": len(truth_set),
-                "trace_log_ids_collected": len(collected_set),
-                "missing_log_ids": missing,
-                "extra_log_ids": extra,
-                "trace_exact": exact,
-            }
-            passed = exact
-
+    outcome = _LEVEL_HANDLERS[level](LEVELS[level], observations, errors)
+    if outcome is None:
+        return False
+    passed, expected = outcome
     if not metrics_match(producer_metrics, expected):
         errors.append("producer metrics disagree with independently recomputed observations")
         return False

@@ -166,9 +166,8 @@ def _evaluate_topology_change(
     return prediction_ok and within_bound and survived, metrics
 
 
-def _reject(errors: list[str], level: str) -> bool:
+def _reject(errors: list[str], level: str) -> None:
     errors.append(f"observations do not match the closed {level} scenario trace")
-    return False
 
 
 def _station_list(value: Any, stations: tuple[str, ...], count: int) -> bool:
@@ -177,6 +176,121 @@ def _station_list(value: Any, stations: tuple[str, ...], count: int) -> bool:
         and len(value) == count
         and all(isinstance(item, str) and item in stations for item in value)
     )
+
+
+def _hash_l1(
+    cfg: dict[str, Any], keys: list[str], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "predictions"}):
+        return _reject(errors, "L1")
+    predictions = observations["predictions"]
+    if observations["kind"] != "hash-ring-L1" or not _station_list(
+        predictions, STATIONS_L1, cfg["keys"]
+    ):
+        return _reject(errors, "L1")
+    anchors = _anchors(tuple(f"st-{i}" for i in range(cfg["stations"])), cfg["vnodes"])
+    hashes = [hash_value for hash_value, _ in anchors]
+    correct = sum(
+        1
+        for key, predicted in zip(keys, predictions)
+        if predicted == _owner_of(_ring_hash(key), hashes, anchors)
+    )
+    raw_accuracy = correct / cfg["keys"]
+    metrics = {
+        "kind": METRIC_KIND,
+        "owner_predictions": cfg["keys"],
+        "owner_prediction_accuracy": round2(raw_accuracy),
+    }
+    return raw_accuracy >= 0.8, metrics
+
+
+def _hash_l2(
+    cfg: dict[str, Any], keys: list[str], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "predictedLoser"}):
+        return _reject(errors, "L2")
+    predicted_loser = observations["predictedLoser"]
+    if (
+        observations["kind"] != "hash-ring-L2"
+        or not isinstance(predicted_loser, str)
+        or predicted_loser not in STATIONS_L2
+    ):
+        return _reject(errors, "L2")
+    base_ids = tuple(f"st-{i}" for i in range(cfg["stations"]))
+    before = _assign(keys, base_ids, cfg["vnodes"])
+    after = _assign(keys, base_ids + ("st-new",), cfg["vnodes"])
+    actual_loser = _biggest_loser(keys, before, after)
+    return _evaluate_topology_change(
+        keys, before, after, False, predicted_loser, actual_loser, False, cfg["stations"]
+    )
+
+
+def _valid_vnodes(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and 1 <= value <= 64
+
+
+def _hash_l3(
+    cfg: dict[str, Any], keys: list[str], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "vnodes"}):
+        return _reject(errors, "L3")
+    vnodes = observations["vnodes"]
+    if observations["kind"] != "hash-ring-L3" or not _valid_vnodes(vnodes):
+        return _reject(errors, "L3")
+    assignment = _assign(keys, tuple(f"st-{i}" for i in range(cfg["stations"])), vnodes)
+    counts = [0] * cfg["stations"]
+    for owner in assignment.values():
+        counts[int(owner.split("-")[1])] += 1
+    mean = sum(counts) / len(counts)
+    skew = 1.0 if mean == 0 else max(counts) / mean
+    metrics = {
+        "kind": METRIC_KIND,
+        "load_skew": round2(skew),
+        "vnodes_used": vnodes,
+    }
+    return skew <= 1.6 and vnodes > 1, metrics
+
+
+def _contrast_answer(value: Any) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and value in CONTRAST_OPTIONS
+    )
+
+
+def _hash_l4(
+    cfg: dict[str, Any], keys: list[str], observations: dict[str, Any], errors: list[str]
+) -> tuple[bool, dict[str, Any]] | None:
+    if not closed_dict(observations, {"kind", "consistent", "modulo"}):
+        return _reject(errors, "L4")
+    consistent = observations["consistent"]
+    modulo = observations["modulo"]
+    if (
+        observations["kind"] != "hash-ring-L4"
+        or not _contrast_answer(consistent)
+        or not _contrast_answer(modulo)
+    ):
+        return _reject(errors, "L4")
+    base_ids = tuple(f"st-{i}" for i in range(cfg["stations"]))
+    before = _modulo_assign(keys, base_ids)
+    after = _modulo_assign(keys, base_ids + ("st-new",))
+    contrast_stated = (
+        consistent == CONTRAST_CORRECT["consistent"]
+        and modulo == CONTRAST_CORRECT["modulo"]
+    )
+    # The controller short-circuits the loser prediction to "n/a" on L4.
+    return _evaluate_topology_change(
+        keys, before, after, True, "n/a", "n/a", contrast_stated, cfg["stations"]
+    )
+
+
+_LEVEL_HANDLERS = {
+    "L1": _hash_l1,
+    "L2": _hash_l2,
+    "L3": _hash_l3,
+    "L4": _hash_l4,
+}
 
 
 def evaluate_hash_ring(
@@ -191,93 +305,10 @@ def evaluate_hash_ring(
 
     cfg = LEVELS[level]
     keys = _keys_for(cfg)
-    base_ids = tuple(f"st-{index}" for index in range(cfg["stations"]))
-
-    if level == "L1":
-        if not closed_dict(observations, {"kind", "predictions"}):
-            return _reject(errors, level)
-        predictions = observations["predictions"]
-        if (
-            observations["kind"] != "hash-ring-L1"
-            or not _station_list(predictions, STATIONS_L1, cfg["keys"])
-        ):
-            return _reject(errors, level)
-        anchors = _anchors(base_ids, cfg["vnodes"])
-        hashes = [hash_value for hash_value, _ in anchors]
-        correct = sum(
-            1
-            for key, predicted in zip(keys, predictions)
-            if predicted == _owner_of(_ring_hash(key), hashes, anchors)
-        )
-        raw_accuracy = correct / cfg["keys"]
-        expected: dict[str, Any] = {
-            "kind": METRIC_KIND,
-            "owner_predictions": cfg["keys"],
-            "owner_prediction_accuracy": round2(raw_accuracy),
-        }
-        passed = raw_accuracy >= 0.8
-    elif level == "L2":
-        if not closed_dict(observations, {"kind", "predictedLoser"}):
-            return _reject(errors, level)
-        predicted_loser = observations["predictedLoser"]
-        if (
-            observations["kind"] != "hash-ring-L2"
-            or not isinstance(predicted_loser, str)
-            or predicted_loser not in STATIONS_L2
-        ):
-            return _reject(errors, level)
-        before = _assign(keys, base_ids, cfg["vnodes"])
-        after = _assign(keys, base_ids + ("st-new",), cfg["vnodes"])
-        actual_loser = _biggest_loser(keys, before, after)
-        passed, expected = _evaluate_topology_change(
-            keys, before, after, False, predicted_loser, actual_loser, False, cfg["stations"]
-        )
-    elif level == "L3":
-        if not closed_dict(observations, {"kind", "vnodes"}):
-            return _reject(errors, level)
-        vnodes = observations["vnodes"]
-        if (
-            observations["kind"] != "hash-ring-L3"
-            or not isinstance(vnodes, int)
-            or isinstance(vnodes, bool)
-            or not 1 <= vnodes <= 64
-        ):
-            return _reject(errors, level)
-        assignment = _assign(keys, base_ids, vnodes)
-        counts = [0] * cfg["stations"]
-        for owner in assignment.values():
-            counts[int(owner.split("-")[1])] += 1
-        mean = sum(counts) / len(counts)
-        skew = 1.0 if mean == 0 else max(counts) / mean
-        expected = {
-            "kind": METRIC_KIND,
-            "load_skew": round2(skew),
-            "vnodes_used": vnodes,
-        }
-        passed = skew <= 1.6 and vnodes > 1
-    else:
-        if not closed_dict(observations, {"kind", "consistent", "modulo"}):
-            return _reject(errors, level)
-        consistent = observations["consistent"]
-        modulo = observations["modulo"]
-        for answer in (consistent, modulo):
-            if not isinstance(answer, (int, float)) or isinstance(answer, bool):
-                return _reject(errors, level)
-            if answer not in CONTRAST_OPTIONS:
-                return _reject(errors, level)
-        if observations["kind"] != "hash-ring-L4":
-            return _reject(errors, level)
-        before = _modulo_assign(keys, base_ids)
-        after = _modulo_assign(keys, base_ids + ("st-new",))
-        contrast_stated = (
-            consistent == CONTRAST_CORRECT["consistent"]
-            and modulo == CONTRAST_CORRECT["modulo"]
-        )
-        # The controller short-circuits the loser prediction to "n/a" on L4.
-        passed, expected = _evaluate_topology_change(
-            keys, before, after, True, "n/a", "n/a", contrast_stated, cfg["stations"]
-        )
-
+    outcome = _LEVEL_HANDLERS[level](cfg, keys, observations, errors)
+    if outcome is None:
+        return False
+    passed, expected = outcome
     if not metrics_match(producer_metrics, expected):
         errors.append("producer metrics disagree with independently recomputed observations")
         return False
