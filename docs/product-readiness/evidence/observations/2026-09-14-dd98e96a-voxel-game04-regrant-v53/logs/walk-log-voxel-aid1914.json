@@ -1,0 +1,386 @@
+{
+  "base": "game-04 :5204 + game-02 :5173 (vite dev, worktree 9aa3ec71)",
+  "gitPin": "9aa3ec71",
+  "g04L1EvidenceRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U4-task-queue",
+      "project": "04_concurrent_task_queue",
+      "scenario_id": "task-forge-L1",
+      "game": "TASK FORGE",
+      "ts": "2026-09-14T17:31:41.226Z",
+      "pass": true,
+      "metrics": {
+        "kind": "voxeldojo-task-queue",
+        "dispatch_predictions": 10,
+        "dispatch_correct": 10,
+        "retry_classifications": 0,
+        "retry_correct": 0,
+        "dlq_classifications": 0,
+        "dlq_correct": 0,
+        "poison_requeued": 0,
+        "backpressure_violations": 0,
+        "idempotency_duplicates_enqueued": 0,
+        "queue_overflowed": false,
+        "max_concurrent_running": 2,
+        "worker_count": 2
+      },
+      "observations": {
+        "kind": "task-forge-L1",
+        "dispatch_log": [
+          {
+            "expected": "t1",
+            "picked": "t1"
+          },
+          {
+            "expected": "t2",
+            "picked": "t2"
+          },
+          {
+            "expected": "t3",
+            "picked": "t3"
+          },
+          {
+            "expected": "t4",
+            "picked": "t4"
+          },
+          {
+            "expected": "t5",
+            "picked": "t5"
+          },
+          {
+            "expected": "t7",
+            "picked": "t7"
+          },
+          {
+            "expected": "t6",
+            "picked": "t6"
+          },
+          {
+            "expected": "t8",
+            "picked": "t8"
+          },
+          {
+            "expected": "t9",
+            "picked": "t9"
+          },
+          {
+            "expected": "t10",
+            "picked": "t10"
+          }
+        ],
+        "classifications": []
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+        "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute"
+      }
+    }
+  ],
+  "g04L1": {
+    "unit_id": "U4-task-queue",
+    "project": "04_concurrent_task_queue",
+    "scenario_id": "task-forge-L1",
+    "game": "TASK FORGE",
+    "pass": true,
+    "metrics": {
+      "kind": "voxeldojo-task-queue",
+      "dispatch_predictions": 10,
+      "dispatch_correct": 10,
+      "retry_classifications": 0,
+      "retry_correct": 0,
+      "dlq_classifications": 0,
+      "dlq_correct": 0,
+      "poison_requeued": 0,
+      "backpressure_violations": 0,
+      "idempotency_duplicates_enqueued": 0,
+      "queue_overflowed": false,
+      "max_concurrent_running": 2,
+      "worker_count": 2
+    }
+  },
+  "catalogUnitIds": {
+    "game-02-warehouse": "U2-key-value-store",
+    "game-03-wormhole": "U3-url-shortener",
+    "game-04-task-queue": "U4-task-queue",
+    "game-05-relay-station": "U5-websocket-chat",
+    "game-06-pipeline-plant": "U6-file-upload",
+    "game-07-checkpoint-city": "U7-rest-api-auth",
+    "game-08-timeline-tower": "U8-event-driven",
+    "game-09-docking-bay": "U9-plugin-system",
+    "game-10-hash-ring": "U10-distributed-cache",
+    "game-11-air-traffic": "U11-load-balancer",
+    "game-12-mission-control": "U12-job-scheduler",
+    "game-13-breaker-grid": "U13-circuit-breaker",
+    "game-14-river-delta": "U14-log-aggregator",
+    "game-15-observatory": "U15-metrics-collector",
+    "game-16-freight-yard": "U16-message-queue",
+    "game-17-lighthouse-network": "U17-config-service",
+    "game-18-stacks": "U18-search-engine"
+  },
+  "catalogGameCount": 17,
+  "catalogDeclaresPerGameUnits": true,
+  "g04MasteryLanguage": false,
+  "g04L4EvidenceRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U4-task-queue",
+      "project": "04_concurrent_task_queue",
+      "scenario_id": "task-forge-L4",
+      "game": "TASK FORGE",
+      "ts": "2026-09-14T17:31:42.923Z",
+      "pass": true,
+      "metrics": {
+        "kind": "voxeldojo-task-queue",
+        "dispatch_predictions": 14,
+        "dispatch_correct": 14,
+        "retry_classifications": 3,
+        "retry_correct": 3,
+        "dlq_classifications": 5,
+        "dlq_correct": 5,
+        "poison_requeued": 0,
+        "backpressure_violations": 0,
+        "idempotency_duplicates_enqueued": 0,
+        "queue_overflowed": false,
+        "max_concurrent_running": 3,
+        "worker_count": 3
+      },
+      "observations": {
+        "kind": "task-forge-L4",
+        "dispatch_log": [
+          {
+            "expected": "w1",
+            "picked": "w1"
+          },
+          {
+            "expected": "w2",
+            "picked": "w2"
+          },
+          {
+            "expected": "w3",
+            "picked": "w3"
+          },
+          {
+            "expected": "w4",
+            "picked": "w4"
+          },
+          {
+            "expected": "w5",
+            "picked": "w5"
+          },
+          {
+            "expected": "w6",
+            "picked": "w6"
+          },
+          {
+            "expected": "w7",
+            "picked": "w7"
+          },
+          {
+            "expected": "w8",
+            "picked": "w8"
+          },
+          {
+            "expected": "w9",
+            "picked": "w9"
+          },
+          {
+            "expected": "w11",
+            "picked": "w11"
+          },
+          {
+            "expected": "w12",
+            "picked": "w12"
+          },
+          {
+            "expected": "w9",
+            "picked": "w9"
+          },
+          {
+            "expected": "w12",
+            "picked": "w12"
+          },
+          {
+            "expected": "w9",
+            "picked": "w9"
+          }
+        ],
+        "classifications": [
+          {
+            "task": "w2",
+            "route": "dlq",
+            "correct": true
+          },
+          {
+            "task": "w4",
+            "route": "dlq",
+            "correct": true
+          },
+          {
+            "task": "w7",
+            "route": "dlq",
+            "correct": true
+          },
+          {
+            "task": "w9",
+            "route": "retry",
+            "correct": true
+          },
+          {
+            "task": "w12",
+            "route": "retry",
+            "correct": true
+          },
+          {
+            "task": "w9",
+            "route": "retry",
+            "correct": true
+          },
+          {
+            "task": "w12",
+            "route": "dlq",
+            "correct": true
+          },
+          {
+            "task": "w9",
+            "route": "dlq",
+            "correct": true
+          }
+        ]
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+        "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute"
+      }
+    }
+  ],
+  "g04L4": {
+    "unit_id": "U4-task-queue",
+    "project": "04_concurrent_task_queue",
+    "scenario_id": "task-forge-L4",
+    "pass": true,
+    "metrics": {
+      "kind": "voxeldojo-task-queue",
+      "dispatch_predictions": 14,
+      "dispatch_correct": 14,
+      "retry_classifications": 3,
+      "retry_correct": 3,
+      "dlq_classifications": 5,
+      "dlq_correct": 5,
+      "poison_requeued": 0,
+      "backpressure_violations": 0,
+      "idempotency_duplicates_enqueued": 0,
+      "queue_overflowed": false,
+      "max_concurrent_running": 3,
+      "worker_count": 3
+    }
+  },
+  "reentryFirstChannelLength": 1,
+  "reentryRestartsFromBriefing": true,
+  "reentryChannelFreshAfterReload": 0,
+  "reentryReplayRecords": [
+    {
+      "source": "voxeldojo",
+      "unit_id": "U4-task-queue",
+      "project": "04_concurrent_task_queue",
+      "scenario_id": "task-forge-L1",
+      "game": "TASK FORGE",
+      "ts": "2026-09-14T17:31:45.010Z",
+      "pass": true,
+      "metrics": {
+        "kind": "voxeldojo-task-queue",
+        "dispatch_predictions": 10,
+        "dispatch_correct": 10,
+        "retry_classifications": 0,
+        "retry_correct": 0,
+        "dlq_classifications": 0,
+        "dlq_correct": 0,
+        "poison_requeued": 0,
+        "backpressure_violations": 0,
+        "idempotency_duplicates_enqueued": 0,
+        "queue_overflowed": false,
+        "max_concurrent_running": 2,
+        "worker_count": 2
+      },
+      "observations": {
+        "kind": "task-forge-L1",
+        "dispatch_log": [
+          {
+            "expected": "t1",
+            "picked": "t1"
+          },
+          {
+            "expected": "t2",
+            "picked": "t2"
+          },
+          {
+            "expected": "t3",
+            "picked": "t3"
+          },
+          {
+            "expected": "t4",
+            "picked": "t4"
+          },
+          {
+            "expected": "t5",
+            "picked": "t5"
+          },
+          {
+            "expected": "t7",
+            "picked": "t7"
+          },
+          {
+            "expected": "t6",
+            "picked": "t6"
+          },
+          {
+            "expected": "t8",
+            "picked": "t8"
+          },
+          {
+            "expected": "t9",
+            "picked": "t9"
+          },
+          {
+            "expected": "t10",
+            "picked": "t10"
+          }
+        ],
+        "classifications": []
+      },
+      "review_context": {
+        "unit_kind": "concept",
+        "scheduled_review": false,
+        "review_reason": "deepening",
+        "scheduler_source": "learner-substrate",
+        "verifier_required": true
+      },
+      "curriculum_context": {
+        "concept": "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+        "mechanic": "task forge: hopper + N arms + annealing rack + scrap chute"
+      }
+    }
+  ],
+  "reentryMasteryLanguage": false,
+  "g02NoWebglProjectionActive": true,
+  "g02NoWebglBody": "VISUALIZAÇÃO SEM WEBGL\n\nProjeção acessível — L1 — Hash → prateleira\n\nPronto para iniciar.\n\nUma caixa sempre cai na prateleira para a qual sua chave faz hash. Mesma chave ⇒ mesma prateleira.\n\nPrateleira 0: 0 caixas\nPrateleira 1: 0 caixas\nPrateleira 2: 0 caixas\nPrateleira 3: 0 caixas\nPrateleira 4: 0 caixas\nPrateleira 5: 0 caixas\nIniciar missão\nIr para os controles detalhados\nL1 — Hash → prateleira\n\n",
+  "g02NoWebglFalseCompletion": false,
+  "g04NoWebglProjectionActive": true,
+  "g04NoWebglProjectionText": "VISUALIZAÇÃO SEM WEBGL\n\nProjeção acessível — L1 — TASK FORGE: Prioridade e FIFO\n\nPronto para iniciar.\n\nO braço livre pega sempre o lingote mais brilhante (prioridade); empate vai ao mais antigo. P pausa os braços — a fila aceita mesmo assim (200, não erro).\n\nFunil: 0/6 · braços: 0/2\nSucesso: 0 · DLQ: 0 · rack: 0\nDoca livre.\nAcender a forja\nIr para os controles detalhados\nL1 — TASK FORGE: Prioridade e FIFO\n\nO braço livre pega sempre o lingote mais brilhante (prioridade); empate vai ao mais antigo",
+  "g04NoWebglEvidenceEmitted": 0,
+  "g04NoWebglFalseCompletion": false
+}
