@@ -187,9 +187,16 @@ jobs:
       - name: re-run readiness gate on the merged SHA (check)
         id: gatecheck
         continue-on-error: true
+        # AID-1890: the factory's stale-window detector must use
+        # --require-current — plain `check` became deterministic (views vs
+        # recorded promoted decisions) and stays green through a stale window,
+        # which would leave needed=false and blind the factory. The flag keeps
+        # the exact production semantics: DRIFT (view desync, incl. the
+        # AID-1669 fixture drill marker) and STALE-WINDOW (live staleness vs
+        # promoted state) both redden here, green main stays green.
         run: >-
           python3 docs/product-readiness/tools/cli.py check
-          --reports artifacts/product-readiness 2>&1 | tee gate-output.txt;
+          --require-current --reports artifacts/product-readiness 2>&1 | tee gate-output.txt;
           test ${PIPESTATUS[0]} -eq 0
       - name: re-run readiness gate on the merged SHA (enforce)
         id: gateenforce

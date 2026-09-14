@@ -64,8 +64,8 @@ export const today: TodaySnapshot = {
     },
     {
       "num": "04",
-      "title": "TASK QUEUE",
-      "gameDir": "engines/pixelDojo/pixel-quest",
+      "title": "TASK FORGE",
+      "gameDir": "engines/voxelDojo/game-04-task-queue",
       "status": "available"
     },
     {

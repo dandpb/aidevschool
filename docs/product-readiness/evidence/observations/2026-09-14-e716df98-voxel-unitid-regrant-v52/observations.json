@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "e716df98ce2f03c429cde94102a6e40ba16d4c96",
+  "observedAt": "2026-09-14T15:00:20Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk FPE @ e716df98 (árvore do PR #412 = merge ref 21dde164→00789fe6; preview piloto :4180 do worktree): WAREHOUSE hospedada jogada até o fim (12 chaves clicadas via hash determinístico do próprio jogo); HUD 'PRÁTICA CONCLUÍDA NESTE DISPOSITIVO' no iframe, mas o host mantém a fronteira honesta '0 verificadas · sem alteração local' + 'Aguardando verificador independente'/'Verificador indisponível' e declara explicitamente 'Concluída neste dispositivo não é mastered. O host não fabrica veredito PASS.' — evidência de jogo nunca é apresentada como verificação/mastery (walk-log-os-aid1863.json warehouseVerifierBoundary/warehouseHonestResult/hostMasteryDisclaimer; screenshots aid1863-osobs-01-warehouse-mounted.png, aid1863-osobs-02-warehouse-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Com reduced-motion emulado, a superfície de renderer acessível é sempre nomeável: projeção acessível ATIVA com badge 'Acessível' (sem WebGL) mantendo 'Estado canônico ... 0 verificadas · sem alteração local' — o limite de escalação (renderer degradado ≠ jornada perdida; a jornada só para quando a projeção declarada também falha) é nomeável em superfície real na árvore do PR (walk-log-os-aid1863.json accessibleAffordance='Projeção acessível ativa (badge Acessível)'/accessibleProjectionActive; screenshot aid1863-osobs-03-accessible-affordance.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Reload no mesmo dispositivo/perfil: WAREHOUSE remonta no host com HUD visível e estado honesto preservado ('0 verificadas | sem alteração local | Estado canônico' presentes no texto pós-reload), missão reiniciável; nenhuma promessa de sincronização cross-device no texto do host — a fronteira de continuidade (mesmo perfil de navegador) é a observável (walk-log-os-aid1863.json warehouseRemountedAfterReload=true/returningBoundaryVisible=true/crossDeviceSyncClaimed=false; screenshots aid1863-osobs-04-returning-mounted.png, aid1863-osobs-05-returning-honest.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-active-unit-guidance",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-guidance-only",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk FPE @ e716df98 contra a projeção canônica gerada (:5180, worktree): view apresenta 'Sua lição de hoje' + fila de reviews ('Retome por aqui', GATEKEEPER overdue) + unidade ativa 'KV WAREHOUSE: hash-map-backed CRUD with TTL expiration' + próxima ação nomeada; e declara a fronteira de orientação-não-avaliação na própria página: 'Esta página apenas mostra o scheduler — não marca mastered. O verificador independente decide.' Nenhum controle de conclusão/domínio; nenhuma chave localStorage de estado de aprendiz (walk-log-dt-aid1863.json dailyHeading/activeUnitVisible/nextActionNamed/masteryBoundaryDisclaimer/learnerStateKeys=[]; screenshot aid1863-dtobs-01-active-unit.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-read-only-boundary",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "regeneration-preserves-read-only-boundary",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Revisão de código/doc na árvore e716df98: a recuperação por regeneração é toda do lado do substrate e nunca escreve estado do aprendiz a partir do dojoToday — (1) engines/dojoToday/package.json 'prebuild' = 'cd ../.. && python3 -m learner.substrate' (a view só re-gera projeções derivadas; o YAML canônico em learner/ não é tocado pelo engine); (2) engines/dojoToday/src/main.ts+localProjection.ts apenas LÊEM a projeção gerada (nenhum caminho de escrita em learner/); (3) engines/dojoToday/tools/selfcheck.py delega a learner/substrate/adapters/dojotoday._self_check — verificado executável na árvore: selfcheck rc=0 'OK: dojotoday self-check passed (track + game_dir)' (logs/selfcheck-dojotoday.log); (4) o checklist do cenário muda o filtro de fixture em learner/substrate/tests/test_voxel_slice.py (teste, não estado). A fronteira read-only preserva: dojoToday nunca avalia e nunca marca mastery."
+        },
+        {
+          "id": "stale-guidance-has-bounded-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "A saída bornada é observável na superfície e executável: selfcheck executado first-hand na árvore retorna rc=0 com mensagem única 'OK: ...' (falhaceria seria rc≠0 com instrução de regenerar — código inspecionado em _self_check, retorna 1 com diagnóstico); a view canonica carrega a projeção gerada sem writes locais (readOnlyStorageKeys=[]/readOnlyLearnerStateKeys=[]) e o texto da página aponta para a fonte canônica sem apresentar orientação stale como atual (walk-log-dt-aid1863.json readOnlyStorageKeys; screenshot aid1863-dtobs-02-readonly-boundary.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "dojotoday-returning-next-day",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-no-eval-carryover",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Retorno day N → day N+1 no mesmo perfil (:5181→:5182, seam DOJOTODAY_TODAY_MODULE do próprio engine): data muda 'segunda-feira, 7'→'terça-feira, 8 de setembro', streak reconciliado 3→4 dias, review overdue envelhece 44d→45d, 'overdue 44d' e 'due hoje' zerados (fila nova sem estado stale), unidade ativa consistente (KV WAREHOUSE), localStorage vazio (nenhum write de retorno) e o disclaimer de não-avaliação permanece ('apenas mostra o scheduler', 'O verificador independente decide') — retornar não avalia nem marca nada (walk-log-dt-aid1863.json returningQueueUpdated/returningStreakReconciled/returningActiveUnitConsistent/returningLocalStorageWrites=0/noEvalCarryoverDisclaimers; screenshots aid1863-dtobs-03-day-n.png, aid1863-dtobs-04-day-n-plus-1.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk FPE @ e716df98 (game-10 :5177, vite dev do worktree): loop L1 jogado até 'cleared' com 12 predições de dono pelo HUD real; registro EVIDENCE capturado no console do browser carrega source=voxeldojo, unit_id=U10-distributed-cache (o fix do PR #412 verificado first-hand: antes U9), project=10_distributed_cache, scenario_id=hash-ring-L1, pass=true, review_context.verifier_required=true, scheduler_source=learner-substrate — evidência crua para verificador independente, sem linguagem de mastery na página. O escopo é por jogo: engines/voxelDojo/catalog.json declara 16 unidades distintas (game-09=U9-plugin-system, game-10=U10-distributed-cache — exatamente a colisão que o PR corrige), então um jogo verde não valida irmãos nem concede mastery (walk-log-voxel-aid1863.json g10EvidenceRecords/g10UnitId/catalogUnitIds/g10MasteryLanguage=false; screenshots aid1863-voxobs-01-g10-briefing.png, aid1863-voxobs-02-g10-cleared.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Revisão de código na árvore e716df98: engines/voxelDojo/shared/accessibleProjection.ts define a projeção semântica como MissionProjection completa (section role=region + aria-label + tabIndex; summarize() carrega título/status/description/details do snapshot; actions() expõe ações rotuladas que chamam a MESMA API do jogo — interação suportada preservada, fronteira de evidência intacta). games que declaram: game-02-warehouse/src/scene/accessible.ts (createWarehouseAccessibleProjection: 'Iniciar missão'/'Tentar novamente'/controles de prateleira com status por caixa). game-10 NÃO declara createAccessible (ringScene.ts) e o harness (shared/sceneHarness.ts activateAccessible→catch→publishRenderer 'none'/'failed') não anuncia fallback para quem não declara; catalog.json não contém nenhuma claim de fallback. Verificado ao vivo: game-02 sem WebGL monta .accessible-projection ativa; game-10 sem WebGL não monta projeção nenhuma (0 elementos)."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Browser real com --disable-webgl/--disable-webgl2: game-10 (sem projeção declarada) para com honestidade — página mostra apenas o briefing 'L1 — First ring ... Press start.', NENHUM registro EVIDENCE emitido (0), nenhuma conclusão fabricada ('cleared|missão concluída|dominad|mastered' ausentes); o aprendiz pode parar sem falsa conclusão/readiness. Contraste first-hand: game-02 (projeção declarada) na mesma condição monta a projeção acessível ativa preservando a interação — também sem conclusão fabricada (walk-log-voxel-aid1863.json g10NoWebglProjectionCount=0/g10NoWebglEvidenceEmitted=0/g10NoWebglFalseCompletion=false/g02NoWebglProjectionActive=true/g02NoWebglFalseCompletion=false; screenshots aid1863-voxobs-04-g02-nowebgl-projection.png, aid1863-voxobs-05-g10-nowebgl-honest.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-return-reentry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Pós-loop completo: reload (fechar/reabrir) reinicia do briefing (hud-title 'L1' visível de novo), o canal de evidência em memória NÃO ressuscita (length 0 pós-reload vs 1 antes — sem corrupção/estado fantasma) e o replay emite registro NOVO com ts distinto, mesmo núcleo determinístico (unit_id=U10-distributed-cache, pass=true); nenhuma linguagem de mastery na página — retorno/replay produz apenas evidência crua, mastery segue decisão do verificador independente (walk-log-voxel-aid1863.json reentryRestartsFromBriefing=true/reentryChannelFreshAfterReload=0/reentryReplayRecords/reentryMasteryLanguage=false; screenshot aid1863-voxobs-03-g10-reentry-replay.png)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

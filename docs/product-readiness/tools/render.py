@@ -4,16 +4,53 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Final
 
-from .evaluate import current_decision
-from .models import Assessment, ReadinessDomain
+from .evaluate import current_decision, latest_assessment
+from .models import Assessment, DecisionOutcome, ReadinessDomain, ReadinessDecision, UseCase
 
 
 GENERATED_MARKER: Final = "<!-- DO NOT EDIT BY HAND: generated from canonical product-readiness sources -->"
 
 
-def render_matrix(domain: ReadinessDomain, repo_root: Path | None = None, now: datetime | None = None) -> str:
-    repository = Path(domain.root).parents[1] if repo_root is None else repo_root
+def recorded_decision(domain: ReadinessDomain, use_case: UseCase) -> ReadinessDecision:
+    """Return the decision exactly as promoted by the latest assessment.
+
+    Pure function of the tracked readiness sources: no wall clock and no
+    working-tree fingerprints participate, so generated views derived from it
+    are deterministic on any checkout (AID-1890).
+    """
+    assessment = latest_assessment(domain, use_case)
+    if assessment is None:
+        return ReadinessDecision(
+            use_case.id, DecisionOutcome.UNASSESSED, None, ("no promoted assessment",), ()
+        )
+    return next(
+        decision for decision in assessment.decisions if decision.use_case_id == use_case.id
+    )
+
+
+def live_deviations(
+    domain: ReadinessDomain,
+    repo_root: Path,
+    now: datetime | None = None,
+) -> tuple[tuple[UseCase, ReadinessDecision, ReadinessDecision], ...]:
+    """Compare promoted decisions against a live re-evaluation.
+
+    A deviation means the claims are in a stale window for this tree/clock:
+    sources under a use case's fingerprints drifted from the promoted state,
+    or an assessment crossed its revalidateBy date. This is the re-grant
+    factory's signal; it is deliberately NOT part of view drift (AID-1890).
+    """
     current_time = datetime.now(timezone.utc) if now is None else now
+    deviations = []
+    for use_case in sorted(domain.use_cases, key=lambda item: item.id):
+        recorded = recorded_decision(domain, use_case)
+        current = current_decision(domain, use_case, repo_root, current_time)
+        if (recorded.outcome, recorded.granted_tier) != (current.outcome, current.granted_tier):
+            deviations.append((use_case, recorded, current))
+    return tuple(deviations)
+
+
+def render_matrix(domain: ReadinessDomain) -> str:
     lines = [
         GENERATED_MARKER,
         "",
@@ -26,7 +63,7 @@ def render_matrix(domain: ReadinessDomain, repo_root: Path | None = None, now: d
         "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for use_case in sorted(domain.use_cases, key=lambda item: item.id):
-        decision = current_decision(domain, use_case, repository, current_time)
+        decision = recorded_decision(domain, use_case)
         assessments = tuple(
             assessment
             for assessment in domain.assessments
