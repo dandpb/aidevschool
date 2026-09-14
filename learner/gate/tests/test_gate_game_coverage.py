@@ -25,13 +25,10 @@ VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
 # Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4: 10 of 19 projects lack a gate path). Each entry must be
+# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-10-hash-ring",  # no evaluator yet; unitId fixed in AID-1855, HASH RING evaluator unblocked
-        "game-13-breaker-grid",
-        "game-14-river-delta",
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
