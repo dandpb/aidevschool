@@ -153,6 +153,9 @@ def main(argv: list[str] | None = None, *, root: Path | None = None) -> int:
     final_status = scheduler.read_status()
     print()
     print(f"Final phase: {final_status.phase.value}")
+    print(
+        f"Provenance: grade={final_status.grade.value} advanced_by={final_status.advanced_by or '-'}"
+    )
     if final_status.phase.value == "cycle-complete":
         print("Checklist completed successfully.")
         return 0
