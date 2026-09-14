@@ -4,25 +4,34 @@ The verifier replays the player's bounded decision trace against the
 deterministic worker-pool wave seeded by the level config — it never trusts
 the producer's metrics or ``pass`` claim.
 
-Sim model (mirror of ``engines/voxelDojo/game-04-task-queue/src/sim``): the
-hop per level is the data-only arrival script plus capacity/workers/
-serviceTime/backoffBase/maxRetries (``levels.ts``). ``queue.ts`` enforces the
-invariants the replay must reproduce: priority-desc/FIFO/id tie-break with a
+Sim model (mirror of the canonical ``engines/voxelDojo/game-04-task-queue``
+merged via PR #424/AID-1901): the wave is the data-only arrival script of
+``src/sim/levels.ts`` (ids ``t1..tN``/``u..``/``v..``/``w..``, clock in beats,
+``WORK_BEATS 3``/``DOCK_WINDOW 2`` cadence, per-level seeds 4104/4204/4304/
+4404, worker counts 2/2/2/3, capacities 6/4/6/5). ``src/sim/queue.ts`` pins
+the invariants the replay reproduces: priority-desc/FIFO/id tie-break with a
 ``scheduled_for`` eligibility gate (I2), transient backoff
-``base * 2^retries + jitter`` with jitter drawn from mulberry32 seeded
-``seed ^ 0x5eed04`` in failure order (I3), poison/exhausted cracks go to the
-DLQ (I4), active duplicate idempotency keys gate the forklift (I5), and
-depth >= capacity is the "full" backpressure gate (I6). The discrete-event
-pump mirrors ``controller.ts``: arrivals (gate interrupt) -> oldest-start
-completion (classify prompt for poison/cracked, else succeed) -> dispatch
-prompt -> jump to the next event instant. Arrival ids are
-``t-<script index>-<slug>``; a requeued poison keeps its arm busy (the
-canonical pathology), which is why complete waves never requeue poison.
+``base * 2^retries + floor(rng()*2)`` with ``rng = mulberry32(seed)`` drawn in
+completion order (I3), poison/exhausted cracks go to the DLQ (I4), duplicate
+active idempotency keys and a full hopper are rejected inbound (I5/I6). The
+pump mirrors the turn-based ``src/game/controller.ts``: every answered prompt
+advances the clock one beat; auto-beats run only while no prompt is open.
+Inbound forklifts hold the dock for ``DOCK_WINDOW`` beats and land on their
+own (duplicate enqueued / overflow counted) unless the player rejects them —
+this producer has no admit action, so a trace ``gate`` entry can only be a
+``reject`` (the closed ``admit`` arm of the decision shape serves producers
+with an explicit admit action and is rejected fail-closed here).
 
-Ground truth (pinned by ``test_task_queue_evaluator.py`` and cross-checked
-against the TS controller): a perfect L1 play answers 12 dispatch prompts
-(12/12, max_concurrent_running 3); perfect L3 classifies 5 retry + 3 DLQ;
-perfect L4 rejects both gate flavors (no overflow, no duplicate enqueued).
+Ground truth re-pinned to the canonical sim (AID-1939, QA order AID-1937/F1):
+a perfect L1 play answers 10 dispatch prompts (10/10, ``t1..t10`` in canonical
+order, ``max_concurrent_running 2``); a perfect L2 rejects both duplicate
+forklifts (u10/u11) and dispatches 12; a perfect L3 classifies 7 retry + 4
+DLQ; a perfect L4 routes both poisons and the exhausted crack to the DLQ,
+rejects the duplicate w10, and classifies 3 retry + 5 DLQ. The perfect-play
+traces are pinned bit-for-bit in ``test_task_queue_evaluator.py`` and were
+cross-checked first-hand against real controller+emitter dumps (QA AID-1937
+evidence: perfect waves played on the canonical controller @341154c6 and
+replayed here — 4/4 PASS).
 
 Observation contract (closed per level):
 
@@ -32,141 +41,132 @@ where each decision is one of (closed key sets):
 
 - ``{"type": "dispatch", "taskId": <task id the player predicted>}``
 - ``{"type": "classify", "taskId": <held task id>, "route": "retry"|"dlq"}``
-- ``{"type": "gate", "action": "reject"|"admit"}``
+- ``{"type": "gate", "action": "reject"}`` (admit is not producible here)
 
-``decisions`` must cover the whole wave exactly (no missing prompt, no extra
-decision): the replay consumes them in order as the pump emits prompts. The
-recomputed metrics must match the producer metrics exactly, and the frozen
-pass rule (plan §11, ``levels.ts`` evaluateQueueWave) decides the verdict.
+``decisions`` must cover the whole wave exactly in prompt-answer order (no
+missing prompt, no extra decision): the replay consumes them against the
+no-pause canonical wave; a match played with pauses can diverge and is then
+rejected fail-closed. The recomputed metrics must match the producer metrics
+exactly, and the frozen pass rule (plan §11, ``levels.ts`` ``evaluateWave``)
+decides the verdict.
 """
 
 from __future__ import annotations
 
+import math
 from typing import Any
 
 from .evaluator_primitives import closed_dict, metrics_match, mulberry32
 
 METRIC_KIND = "voxeldojo-task-queue"
 
-# Mirrors game-04-task-queue/src/sim/levels.ts (LEVELS table). serviceTime is
-# the logical hold per ingot; backoffBase feeds base * 2^retries + jitter.
+# Cadence constants mirrored from game-04-task-queue/src/sim/levels.ts and
+# src/sim/queue.ts (canonical contract, PR #424).
+WORK_BEATS = 3
+DOCK_WINDOW = 2
+BACKOFF_BASE = 2
+SETTLE_CAP = 10_000
 
 
-def _arr(
-    at: float,
-    label: str,
+def _a(
+    task_id: str,
     priority: int,
+    arrives_at: int,
+    delay_beats: int,
     kind: str,
-    key: str,
-    scheduled_for: float | None = None,
-    failures_left: int | None = None,
+    idempotency_key: str | None = None,
+    retries: int = 0,
+    max_retries: int = 2,
 ) -> dict[str, Any]:
+    """Mirror of the levels.ts ``a()`` arrival constructor."""
     arrival: dict[str, Any] = {
-        "at": at,
-        "label": label,
+        "id": task_id,
+        "idempotencyKey": idempotency_key or f"sigil-{task_id}",
         "priority": priority,
+        "arrivesAt": arrives_at,
+        "delayBeats": delay_beats,
         "kind": kind,
-        "idempotencyKey": key,
+        "retries": retries,
+        "maxRetries": max_retries,
     }
-    if scheduled_for is not None:
-        arrival["scheduledFor"] = scheduled_for
-    if failures_left is not None:
-        arrival["failuresLeft"] = failures_left
     return arrival
 
 
+# Mirrors game-04-task-queue/src/sim/levels.ts (LEVELS table @main): ids,
+# beats clock, seeds, worker counts, and capacities are data-only — the wave
+# is the script, not RNG (the only stochastic element is backoff jitter).
 LEVELS: dict[str, dict[str, Any]] = {
     "L1": {
-        "seed": 11,
-        "capacity": 8,
-        "worker_count": 3,
-        "service_time": 2,
-        "backoff_base": 1,
-        "max_retries": 2,
+        "seed": 4104,
+        "worker_count": 2,
+        "capacity": 6,
         "arrivals": [
-            _arr(0, "order #101", 1, "clear", "ik-101"),
-            _arr(0.4, "order #102", 2, "clear", "ik-102"),
-            _arr(0.8, "email #5", 2, "clear", "ik-105"),
-            _arr(1.2, "render #42", 3, "clear", "ik-142"),
-            _arr(1.6, "webhook #7", 1, "clear", "ik-107"),
-            _arr(3, "digest", 2, "clear", "ik-201"),
-            _arr(3.4, "thumb #200", 2, "clear", "ik-200"),
-            _arr(3.8, "audit", 3, "clear", "ik-301"),
-            _arr(4.2, "order #103", 1, "clear", "ik-103"),
-            _arr(4.6, "fanout #9", 1, "clear", "ik-109"),
-            _arr(6.5, "report", 3, "clear", "ik-302"),
-            _arr(6.9, "order #104", 2, "clear", "ik-104"),
+            _a("t1", 1, 0, 0, "clear"),
+            _a("t2", 3, 1, 0, "clear"),
+            _a("t3", 2, 2, 0, "clear"),
+            _a("t4", 3, 4, 0, "clear"),
+            _a("t5", 1, 5, 0, "clear"),
+            _a("t6", 4, 6, 3, "clear"),  # scheduled: countdown ring must drain
+            _a("t7", 2, 8, 0, "clear"),
+            _a("t8", 3, 9, 0, "clear"),
+            _a("t9", 5, 11, 2, "clear"),  # high priority, scheduled
+            _a("t10", 1, 13, 0, "clear"),
         ],
     },
     "L2": {
-        "seed": 22,
-        "capacity": 6,
+        "seed": 4204,
         "worker_count": 2,
-        "service_time": 2,
-        "backoff_base": 1,
-        "max_retries": 2,
+        "capacity": 4,
         "arrivals": [
-            _arr(0, "warmup", 1, "clear", "ik-401"),
-            _arr(1.5, "hold #1", 3, "clear", "ik-402", scheduled_for=6),
-            _arr(3, "quick #1", 1, "clear", "ik-403"),
-            _arr(4.5, "hold #2", 3, "clear", "ik-404", scheduled_for=9),
-            _arr(6, "quick #2", 2, "clear", "ik-405"),
-            _arr(7.5, "hold #3", 2, "clear", "ik-406", scheduled_for=11),
-            _arr(9, "quick #3", 1, "clear", "ik-407"),
-            _arr(10.5, "bright", 3, "clear", "ik-408"),
-            _arr(12, "quick #4", 2, "clear", "ik-409"),
-            _arr(13.5, "closer", 1, "clear", "ik-410"),
+            _a("u1", 2, 0, 0, "clear"),
+            _a("u2", 2, 1, 0, "clear"),
+            _a("u3", 1, 2, 0, "clear"),
+            _a("u4", 3, 3, 0, "clear"),
+            _a("u5", 2, 4, 0, "clear"),
+            _a("u6", 1, 5, 6, "clear"),  # scheduled: parked in the hopper
+            _a("u7", 2, 6, 0, "clear"),
+            _a("u8", 3, 7, 6, "clear"),  # scheduled: parked in the hopper
+            _a("u9", 1, 8, 0, "clear"),
+            _a("u10", 2, 10, 0, "clear", "sigil-u6"),  # duplicate of parked u6
+            _a("u11", 3, 12, 0, "clear", "sigil-u8"),  # duplicate of parked u8
+            _a("u12", 1, 14, 0, "clear"),
+            _a("u13", 2, 15, 0, "clear"),
+            _a("u14", 1, 16, 0, "clear"),
         ],
     },
     "L3": {
-        "seed": 33,
-        "capacity": 8,
-        "worker_count": 3,
-        "service_time": 2,
-        "backoff_base": 1,
-        "max_retries": 2,
+        "seed": 4304,
+        "worker_count": 2,
+        "capacity": 6,
         "arrivals": [
-            _arr(0, "order #201", 2, "clear", "ik-501"),
-            _arr(1.5, "flake #1", 2, "cracked", "ik-502"),
-            _arr(3, "webhook #8", 1, "clear", "ik-503"),
-            _arr(4.5, "poison ocr", 3, "poison", "ik-504"),
-            _arr(6, "digest", 2, "clear", "ik-505"),
-            _arr(7.5, "brittle csv", 1, "cracked", "ik-506", failures_left=3),
-            _arr(9, "flake #2", 3, "cracked", "ik-507"),
-            _arr(10.5, "poison json", 2, "poison", "ik-508"),
-            _arr(12, "render #43", 1, "clear", "ik-509"),
-            _arr(13.5, "flake #3", 2, "cracked", "ik-510"),
-            _arr(15, "audit", 3, "clear", "ik-511"),
-            _arr(16.5, "order #202", 1, "clear", "ik-512"),
+            _a("v1", 2, 0, 0, "clear"),
+            _a("v2", 1, 1, 0, "transient"),
+            _a("v3", 3, 3, 0, "clear"),
+            _a("v4", 2, 4, 0, "transient"),
+            _a("v5", 1, 6, 0, "clear"),
+            _a("v6", 3, 8, 0, "transient", retries=1),  # at the budget edge
+            _a("v7", 2, 10, 0, "clear"),
+            _a("v8", 1, 12, 0, "transient"),
+            _a("v9", 3, 14, 0, "clear"),
         ],
     },
     "L4": {
-        "seed": 44,
-        "capacity": 5,
+        "seed": 4404,
         "worker_count": 3,
-        "service_time": 2,
-        "backoff_base": 1,
-        "max_retries": 2,
+        "capacity": 5,
         "arrivals": [
-            _arr(0, "order #301", 2, "clear", "ik-601"),
-            _arr(0.5, "order #302", 2, "clear", "ik-602"),
-            _arr(1, "render #50", 3, "clear", "ik-603"),
-            _arr(1.5, "hold #1", 1, "clear", "ik-604", scheduled_for=5.5),
-            _arr(2, "hold #2", 1, "clear", "ik-605", scheduled_for=6),
-            _arr(2.5, "digest", 1, "clear", "ik-606"),
-            _arr(3.2, "webhook #10", 2, "clear", "ik-607"),
-            _arr(3.4, "fanout #11", 1, "clear", "ik-608"),
-            _arr(3.6, "flake #9", 1, "cracked", "ik-609"),
-            _arr(3.7, "spike #1", 1, "clear", "ik-616"),
-            _arr(3.8, "audit", 1, "clear", "ik-610"),
-            _arr(3.9, "spike #2", 1, "clear", "ik-617"),
-            _arr(3.95, "storm", 1, "clear", "ik-618"),
-            _arr(4, "digest AGAIN", 2, "clear", "ik-606"),
-            _arr(5, "poison csv", 2, "poison", "ik-611"),
-            _arr(6.5, "flake #10", 3, "cracked", "ik-612"),
-            _arr(8, "report #9", 2, "clear", "ik-613"),
-            _arr(9.5, "brittle xml", 1, "cracked", "ik-614", failures_left=3),
-            _arr(11, "closer", 2, "clear", "ik-615"),
+            _a("w1", 2, 0, 0, "clear"),
+            _a("w2", 3, 1, 0, "poison"),
+            _a("w3", 1, 2, 0, "clear"),
+            _a("w4", 2, 3, 0, "transient", retries=2),  # exhausted -> DLQ
+            _a("w5", 3, 4, 0, "clear"),
+            _a("w6", 1, 5, 0, "clear"),
+            _a("w7", 2, 6, 0, "poison"),
+            _a("w8", 3, 8, 2, "clear"),  # scheduled high priority
+            _a("w9", 1, 9, 0, "transient"),
+            _a("w10", 2, 10, 0, "clear", "sigil-w9"),  # duplicate of in-flight w9
+            _a("w11", 3, 12, 0, "clear"),
+            _a("w12", 2, 14, 0, "transient", retries=1),
         ],
     },
 }
@@ -176,97 +176,65 @@ _CLASSIFY_KEYS = {"type", "taskId", "route"}
 _GATE_KEYS = {"type", "action"}
 
 
-def _slug(label: str) -> str:
-    """Mirror of the TS id slug: ``label.replace(/\\W+/g, "-")`` (\\w = [A-Za-z0-9_])."""
-    out: list[str] = []
-    prev_dash = False
-    for character in label:
-        if character.isalnum() or character == "_":
-            out.append(character)
-            prev_dash = False
-        elif not prev_dash:
-            out.append("-")
-            prev_dash = True
-    return "".join(out)
-
-
-def _make_task(arrival: dict[str, Any], task_id: str, max_retries: int) -> dict[str, Any]:
-    kind = arrival["kind"]
+def _to_task(arrival: dict[str, Any], now: int) -> dict[str, Any]:
+    """Mirror of levels.ts ``toTask``: the hopper task a landing becomes."""
     return {
-        "id": task_id,
+        "id": arrival["id"],
         "idempotencyKey": arrival["idempotencyKey"],
         "priority": arrival["priority"],
-        "enqueuedAt": arrival["at"],
-        "scheduledFor": arrival.get("scheduledFor", arrival["at"]),
-        "kind": kind,
-        "maxRetries": max_retries,
-        "failuresLeft": arrival.get("failuresLeft", 1 if kind == "cracked" else 0),
-        "status": "queued",
-        "workerId": None,
-        "startedAt": None,
-        "retries": 0,
-        "nextAttemptAt": None,
+        "enqueuedAt": now,
+        "scheduledFor": now + arrival["delayBeats"],
+        "kind": arrival["kind"],
+        "retries": arrival["retries"],
+        "maxRetries": arrival["maxRetries"],
     }
 
 
-def _queue_depth(tasks: list[dict[str, Any]]) -> int:
-    return sum(1 for t in tasks if t["status"] in ("queued", "retry_wait"))
+def _is_eligible(task: dict[str, Any], now: int) -> bool:
+    """queue.ts ``isEligible``: scheduled_for gates grabbing (RF-008)."""
+    return now >= task["scheduledFor"]
 
 
-def _has_active_key(tasks: list[dict[str, Any]], key: str) -> bool:
-    return any(
-        t["idempotencyKey"] == key and t["status"] in ("queued", "running", "retry_wait")
-        for t in tasks
-    )
-
-
-def _is_eligible(task: dict[str, Any], now: float) -> bool:
-    if task["status"] == "queued":
-        return task["scheduledFor"] <= now
-    if task["status"] == "retry_wait":
-        return task["nextAttemptAt"] is not None and task["nextAttemptAt"] <= now
-    return False
-
-
-def _beats(task: dict[str, Any], best: dict[str, Any]) -> bool:
-    """I2 tie-break: priority desc, then oldest arrival, then lowest id."""
-    if task["priority"] != best["priority"]:
-        return task["priority"] > best["priority"]
-    if task["enqueuedAt"] != best["enqueuedAt"]:
-        return task["enqueuedAt"] < best["enqueuedAt"]
-    return task["id"] < best["id"]
-
-
-def _pick_next(tasks: list[dict[str, Any]], now: float) -> dict[str, Any] | None:
+def _pick_next(queue: list[dict[str, Any]], now: int) -> dict[str, Any] | None:
+    """queue.ts ``pickNext``: priority desc, FIFO, id — a total order."""
     best: dict[str, Any] | None = None
-    for task in tasks:
+    for task in queue:
         if not _is_eligible(task, now):
             continue
-        if best is None or _beats(task, best):
+        if best is None:
+            best = task
+            continue
+        if task["priority"] > best["priority"]:
+            best = task
+            continue
+        if task["priority"] == best["priority"] and task["enqueuedAt"] < best["enqueuedAt"]:
+            best = task
+            continue
+        if (
+            task["priority"] == best["priority"]
+            and task["enqueuedAt"] == best["enqueuedAt"]
+            and task["id"] < best["id"]
+        ):
             best = task
     return best
 
 
-def _required_route(task: dict[str, Any]) -> str:
-    if task["kind"] == "poison" or task["retries"] >= task["maxRetries"]:
-        return "dlq"
-    return "retry"
-
-
 class _Replay:
-    """Mirrors GameController: pump + decision application + metric counters."""
+    """Mirrors GameController: turn-based pump, auto-beats, metric counters."""
 
     def __init__(self, cfg: dict[str, Any]) -> None:
         self.cfg = cfg
-        self.rng = mulberry32(cfg["seed"] ^ 0x5EED04)
-        self.now = 0.0
+        self.rng = mulberry32(cfg["seed"])
+        self.now = 0
+        self.arrivals = cfg["arrivals"]
         self.capacity = cfg["capacity"]
-        self.workers = [f"arm-{i}" for i in range(cfg["worker_count"])]
-        self.busy_with: dict[str, str | None] = {worker: None for worker in self.workers}
-        self.tasks: list[dict[str, Any]] = []
-        self.max_concurrent_running = 0
-        self.queue_overflowed = False
-        self.arrival_index = 0
+        self.slots: list[str | None] = [None] * cfg["worker_count"]
+        self.queue: list[dict[str, Any]] = []
+        self.running: list[dict[str, Any]] = []  # {task, completesAt}
+        self.finished: list[dict[str, Any]] = []  # {task, correctRoute, retryAt}
+        self.inbound: dict[str, Any] | None = None
+        self.dock_deadline = 0
+        self.script_index = 0
         self.dispatch_predictions = 0
         self.dispatch_correct = 0
         self.retry_classifications = 0
@@ -276,261 +244,199 @@ class _Replay:
         self.poison_requeued = 0
         self.backpressure_violations = 0
         self.duplicates_enqueued = 0
-        self.pending: dict[str, Any] | None = None
+        self.queue_overflowed = False
+        self.max_concurrent_running = 0
 
-    # ── queue helpers (mirror queue.ts) ────────────────────────────────────
-
-    def _jitter(self) -> float:
-        return self.rng() * self.cfg["backoff_base"]
+    # ── truth hooks (mirror controller.ts) ─────────────────────────────────
 
     def _running_count(self) -> int:
-        return sum(1 for held in self.busy_with.values() if held is not None)
+        return sum(1 for slot in self.slots if slot is not None)
 
-    def _idle_worker(self) -> str | None:
-        for worker, held in self.busy_with.items():
-            if held is None:
-                return worker
+    def _idle_slot(self) -> int | None:
+        for index, slot in enumerate(self.slots):
+            if slot is None:
+                return index
         return None
 
-    def _free_worker(self, task_id: str) -> None:
-        for worker, held in self.busy_with.items():
-            if held == task_id:
-                self.busy_with[worker] = None
+    def _active_keys(self) -> set[str]:
+        keys = {task["idempotencyKey"] for task in self.queue}
+        keys.update(entry["task"]["idempotencyKey"] for entry in self.running)
+        keys.update(entry["task"]["idempotencyKey"] for entry in self.finished)
+        return keys
 
-    def _all_terminal(self) -> bool:
-        seen = 0
-        for task in self.tasks:
-            if task["status"] not in ("succeeded", "dead"):
-                return False
-            seen += 1
-        return seen > 0
+    def _hopper_full(self) -> bool:
+        # queue.ts backpressure(): only "full" is behaviorally load-bearing
+        # (reject/landing); "limited" is HUD gauge only.
+        return len(self.queue) >= self.capacity
 
-    def _enqueue(self, arrival: dict[str, Any]) -> None:
-        task_id = f"t-{self.arrival_index}-{_slug(arrival['label'])}"
-        self.tasks.append(_make_task(arrival, task_id, self.cfg["max_retries"]))
-
-    # ── event-time collectors (mirror controller.ts nextEventTime) ─────────
-
-    def _finish_time(self, task: dict[str, Any]) -> float | None:
-        if task["status"] != "running" or task["startedAt"] is None:
-            return None
-        finish = task["startedAt"] + self.cfg["service_time"]
-        return finish if finish > self.now else None
-
-    def _retry_time(self, task: dict[str, Any]) -> float | None:
-        if task["status"] != "retry_wait" or task["nextAttemptAt"] is None:
-            return None
-        return task["nextAttemptAt"] if task["nextAttemptAt"] > self.now else None
-
-    def _scheduled_time(self, task: dict[str, Any]) -> float | None:
-        if task["status"] != "queued":
-            return None
-        return task["scheduledFor"] if task["scheduledFor"] > self.now else None
-
-    def _task_times(self, task: dict[str, Any]) -> list[float]:
-        times = []
-        for collector in (self._finish_time, self._retry_time, self._scheduled_time):
-            time = collector(task)
-            if time is not None:
-                times.append(time)
-        return times
-
-    def _next_event_time(self) -> float | None:
-        times: list[float] = []
-        arrivals = self.cfg["arrivals"]
-        if self.arrival_index < len(arrivals) and arrivals[self.arrival_index]["at"] > self.now:
-            times.append(arrivals[self.arrival_index]["at"])
-        for task in self.tasks:
-            times.extend(self._task_times(task))
-        return min(times) if times else None
-
-    # ── pump steps (mirror controller.ts pump) ────────────────────────────
-
-    def _wave_resolved(self) -> bool:
-        arrivals = self.cfg["arrivals"]
-        if self.arrival_index >= len(arrivals):
-            return not self.tasks or self._all_terminal()
-        return False
-
-    def _promote_ready(self) -> None:
-        for task in self.tasks:
-            if (
-                task["status"] == "retry_wait"
-                and task["nextAttemptAt"] is not None
-                and task["nextAttemptAt"] <= self.now
-            ):
-                task["status"] = "queued"
-
-    def _admit_due_arrival(self) -> bool:
-        """Arrivals step: enqueue, gate, or nothing due. True = re-loop."""
-        arrivals = self.cfg["arrivals"]
-        nxt = arrivals[self.arrival_index] if self.arrival_index < len(arrivals) else None
-        if nxt is None or nxt["at"] > self.now:
+    def _requires_reject(self) -> bool:
+        if self.inbound is None:
             return False
-        if _has_active_key(self.tasks, nxt["idempotencyKey"]):
-            self.pending = {"kind": "gate", "reason": "duplicate", "arrival": nxt}
-        elif _queue_depth(self.tasks) >= self.capacity:
-            self.pending = {"kind": "gate", "reason": "full", "arrival": nxt}
-        else:
-            self._enqueue(nxt)
-            self.arrival_index += 1
+        landing = _to_task(self.inbound, self.now)
+        if landing["idempotencyKey"] in self._active_keys():
             return True
-        return False
+        return self._hopper_full()
 
-    def _first_completion(self) -> dict[str, Any] | None:
-        done = sorted(
-            (
-                task
-                for task in self.tasks
-                if task["status"] == "running"
-                and task["startedAt"] is not None
-                and task["startedAt"] + self.cfg["service_time"] <= self.now
-            ),
-            key=lambda task: (task["startedAt"], task["id"]),
+    def _dispatch_window_open(self) -> bool:
+        return self._idle_slot() is not None and _pick_next(self.queue, self.now) is not None
+
+    def _decision_available(self) -> bool:
+        return (
+            bool(self.finished)
+            or self._dispatch_window_open()
+            or (self.inbound is not None and self._requires_reject())
         )
-        return done[0] if done else None
 
-    def _completion_step(self) -> bool:
-        """Completions step. True = re-loop (auto-succeeded one task)."""
-        first = self._first_completion()
-        if first is None:
-            return False
-        if first["kind"] == "poison" or first["failuresLeft"] > 0:
-            self.pending = {"kind": "classify", "task": first}
-            return False
-        first["status"] = "succeeded"
-        self._free_worker(first["id"])
-        return True
+    def _wave_ended(self) -> bool:
+        return (
+            self.script_index >= len(self.arrivals)
+            and self.inbound is None
+            and not self.queue
+            and not self.running
+            and not self.finished
+        )
 
-    def _prompt_or_jump(self) -> bool:
-        """Dispatch prompt when an arm is free, else jump. True = re-loop."""
-        if self._idle_worker() is not None and _pick_next(self.tasks, self.now):
-            self.pending = {"kind": "dispatch"}
-            return False
-        jump = self._next_event_time()
-        if jump is None:
-            return False  # no prompt and nowhere to jump (stalled wave)
-        self.now = jump
-        return True
+    # ── sim engine (mirror controller.ts tick/settle/processAutoEvents) ────
 
-    def _advance(self) -> bool:
-        """One decision-free pump step. True = re-loop; False = waiting/stalled."""
-        self._promote_ready()
-        if self._admit_due_arrival():
-            return True
-        if self.pending is None and self._completion_step():
-            return True
-        if self.pending is None and self._prompt_or_jump():
-            return True
-        return False
+    def _fail(self, task: dict[str, Any]) -> tuple[str, int]:
+        """queue.ts ``fail``: route + backoff beat for a finished crack."""
+        if task["kind"] == "poison":
+            return "dlq", self.now
+        retries = task["retries"] + 1
+        if retries > task["maxRetries"]:
+            return "dlq", self.now
+        jitter = math.floor(self.rng() * 2)  # 0|1 beat, drawn in completion order
+        return "retry", self.now + BACKOFF_BASE * 2 ** task["retries"] + jitter
 
-    def _consume(self, decisions: list[dict[str, Any]], index: int) -> int | None:
-        """Apply decisions[index]; returns the next index, or None on mismatch."""
-        if index >= len(decisions) or not self._apply(decisions[index]):
-            return None
-        return index + 1
+    def _process_auto_events(self) -> None:
+        # 1. completions (arms release in running order; clear tasks succeed
+        #    silently, cracks queue a classify prompt with the fail plan).
+        survivors: list[dict[str, Any]] = []
+        for entry in self.running:
+            if entry["completesAt"] > self.now:
+                survivors.append(entry)
+                continue
+            task = entry["task"]
+            self.slots = [None if slot == task["id"] else slot for slot in self.slots]
+            if task["kind"] == "clear":
+                continue  # succeeded — no prompt, no metric
+            route, retry_at = self._fail(task)
+            self.finished.append(
+                {"task": task, "correctRoute": route, "retryAt": retry_at}
+            )
+        self.running = survivors
+
+        # 2. inbound lands when its dock window closes (skipping R has a cost).
+        if self.inbound is not None and self.now >= self.dock_deadline:
+            landing = _to_task(self.inbound, self.now)
+            if landing["idempotencyKey"] in self._active_keys():
+                self.duplicates_enqueued += 1
+            elif self._hopper_full():
+                self.queue_overflowed = True
+                self.backpressure_violations += 1
+            else:
+                self.queue.append(landing)
+            self.inbound = None
+            self.script_index += 1
+
+        # 3. present the next arrival.
+        if self.inbound is None and self.script_index < len(self.arrivals):
+            nxt = self.arrivals[self.script_index]
+            if self.now >= nxt["arrivesAt"]:
+                self.inbound = nxt
+                self.dock_deadline = self.now + DOCK_WINDOW
+
+    def _tick(self) -> None:
+        self.now += 1
+        self._process_auto_events()
 
     def run(self, decisions: list[dict[str, Any]]) -> bool:
         """Replay the wave; True iff the trace covers it exactly."""
         next_decision = 0
-        for _ in range(10_000):
-            if self._wave_resolved():
+        for _ in range(SETTLE_CAP):
+            if self._wave_ended():
                 return next_decision == len(decisions)
-            if not self._advance() and self.pending is None:
-                return False  # stalled wave (e.g. requeued poison jam)
-            if self.pending is None:
-                continue
-            consumed = self._consume(decisions, next_decision)
-            if consumed is None:
-                return False  # trace does not cover the wave (or breaks it)
-            next_decision = consumed
-        return False  # pump guard (mirrors the TS guard)
+            if self._decision_available():
+                if next_decision >= len(decisions) or not self._apply(
+                    decisions[next_decision]
+                ):
+                    return False  # truncated / off-script decision
+                next_decision += 1
+            else:
+                self.now += 1
+                self._process_auto_events()
+        return False  # settle cap (mirrors the TS SETTLE_CAP guard)
 
-    # ── decision application (mirror predictDispatch/classify*/gate) ───────
+    # ── decision application (mirror predictDispatch/classify/rejectInbound) ──
 
     def _apply(self, decision: dict[str, Any]) -> bool:
-        pending = self.pending
         if decision["type"] == "dispatch":
-            return self._apply_dispatch(decision, pending)
+            return self._apply_dispatch(decision)
         if decision["type"] == "classify":
-            return self._apply_classify(decision, pending)
-        return self._apply_gate(decision, pending)
+            return self._apply_classify(decision)
+        return self._apply_gate(decision)
 
-    def _apply_dispatch(self, decision: dict[str, Any], pending: dict[str, Any] | None) -> bool:
-        if pending is None or pending["kind"] != "dispatch":
-            return False
-        truth = _pick_next(self.tasks, self.now)
-        worker = self._idle_worker()
-        if truth is None or worker is None:
+    def _apply_dispatch(self, decision: dict[str, Any]) -> bool:
+        truth = _pick_next(self.queue, self.now)
+        slot = self._idle_slot()
+        if truth is None or slot is None:
             return False
         self.dispatch_predictions += 1
         if decision["taskId"] == truth["id"]:
             self.dispatch_correct += 1
-        truth["status"] = "running"
-        truth["workerId"] = worker
-        truth["startedAt"] = self.now
-        self.busy_with[worker] = truth["id"]
+        self.slots[slot] = truth["id"]
+        self.queue.remove(truth)
+        self.running.append({"task": truth, "completesAt": self.now + WORK_BEATS})
         running = self._running_count()
         if running > self.max_concurrent_running:
             self.max_concurrent_running = running
-        self.pending = None
+        self._tick()
         return True
 
-    def _cool_task(self, task: dict[str, Any]) -> None:
-        """I3: rack the ingot for base * 2^retries + jitter (draw order pinned)."""
-        task["status"] = "retry_wait"
-        task["nextAttemptAt"] = (
-            self.now + self.cfg["backoff_base"] * 2 ** task["retries"] + self._jitter()
-        )
-
-    def _apply_retry_route(self, task: dict[str, Any]) -> None:
-        self.retry_classifications += 1
-        if _required_route(task) == "retry":
-            self.retry_correct += 1
-            task["retries"] += 1
-            task["failuresLeft"] -= 1
-            self._cool_task(task)
-            self._free_worker(task["id"])
-        elif task["kind"] == "poison":
-            # canonical pathology: poison parked on the rack keeps its arm
-            self.poison_requeued += 1
-            self._cool_task(task)
-        else:
-            # exhausted crack: over the limit goes to scrap
-            task["status"] = "dead"
-            task["nextAttemptAt"] = None
-            self._free_worker(task["id"])
-
-    def _apply_classify(self, decision: dict[str, Any], pending: dict[str, Any] | None) -> bool:
-        if pending is None or pending["kind"] != "classify":
+    def _apply_classify(self, decision: dict[str, Any]) -> bool:
+        if not self.finished:
             return False
-        task = pending["task"]
+        head = self.finished[0]
+        task = head["task"]
         if decision["taskId"] != task["id"]:
             return False
         if decision["route"] == "retry":
-            self._apply_retry_route(task)
+            self.retry_classifications += 1
+            if head["correctRoute"] == "retry":
+                self.retry_correct += 1
+                self.queue.append(
+                    {
+                        **task,
+                        "retries": task["retries"] + 1,
+                        "scheduledFor": head["retryAt"],
+                    }
+                )
+            else:
+                # canonical pathology: poison/exhausted requeued past budget
+                self.poison_requeued += 1
+                self.queue.append(
+                    {
+                        **task,
+                        "retries": task["maxRetries"] + 1,
+                        "scheduledFor": head["retryAt"],
+                    }
+                )
         else:
             self.dlq_classifications += 1
-            if _required_route(task) == "dlq":
+            if head["correctRoute"] == "dlq":
                 self.dlq_correct += 1
-            task["status"] = "dead"
-            task["nextAttemptAt"] = None
-            self._free_worker(task["id"])
-        self.pending = None
+        self.finished.pop(0)
+        self._tick()
         return True
 
-    def _apply_gate(self, decision: dict[str, Any], pending: dict[str, Any] | None) -> bool:
-        if pending is None or pending["kind"] != "gate":
+    def _apply_gate(self, decision: dict[str, Any]) -> bool:
+        if self.inbound is None:
             return False
-        if decision["action"] == "admit":
-            if pending["reason"] == "full":
-                self.backpressure_violations += 1
-                self.queue_overflowed = True
-            else:
-                self.duplicates_enqueued += 1
-            self._enqueue(pending["arrival"])
-        self.arrival_index += 1
-        self.pending = None
+        if decision["action"] != "reject":
+            return False  # this producer has no admit action (fail-closed)
+        self.inbound = None
+        self.script_index += 1
+        self._tick()
         return True
 
     def metrics(self) -> dict[str, Any]:
@@ -547,7 +453,7 @@ class _Replay:
             "idempotency_duplicates_enqueued": self.duplicates_enqueued,
             "queue_overflowed": self.queue_overflowed,
             "max_concurrent_running": self.max_concurrent_running,
-            "worker_count": len(self.workers),
+            "worker_count": len(self.slots),
         }
 
 
@@ -611,7 +517,7 @@ def _intake_ok(m: dict[str, Any]) -> bool:
 
 
 def _pass_rule(m: dict[str, Any]) -> bool:
-    """Frozen pass rule (plan §11 / levels.ts evaluateQueueWave)."""
+    """Frozen pass rule (plan §11 / levels.ts evaluateWave)."""
     return _accuracy_ok(m) and _classifications_ok(m) and _intake_ok(m)
 
 

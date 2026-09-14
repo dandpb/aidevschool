@@ -60,3 +60,38 @@ reais de TASK FORGE são rejeitados por "missing fields: observations" — nunca
 aceitos por métrica auto-declarada. Follow-up: emissor passar a emitir o
 traço `task-forge-L<n>` (owner LENG, jogo é escrita dela; deadline suave =
 jornada atingir U4, ~fim nov/2026). Prazo e owner registrados no board.
+
+## Re-pin do ground truth ao sim canônico (AID-1939, 2026-09-14)
+
+ORDEM QA AID-1937/F1 (countersign ORDEM AID-1935/AID-1922 §3): o `LEVELS`
+original espelhava o sim órfão do #421 (ids `t-0-order-101`, L1=12 despachos,
+worker_count 3, service_time 2, relógio contínuo) e rejeitava fail-closed
+traços perfeitos REAIS do jogo canônico mergeado pelo #424 (ids `t1..tN`,
+beats, WORK_BEATS 3, DOCK_WINDOW 2, seeds 4104..4404, L1=10 despachos) —
+provado first-hand pela QA (waves perfeitas no controller canônico + emissor
+#425 @341154c6, replayadas no avaliador @285cb84e: L1–L4 todos rejeitados).
+
+Re-pin executado no mesmo PR (branch `vee/aid-1902-task-forge-evaluator`):
+
+1. `task_queue_evaluator.py`: `LEVELS` re-escrito do `src/sim/levels.ts`
+   canônico; `_Replay` re-escrito como espelho do `controller.ts`
+   turn-based (cada decisão respondida avança 1 beat; auto-beats só sem
+   prompt; completions em `WORK_BEATS`; inbound doca por `DOCK_WINDOW` e
+   aterrissa sozinho — duplicata estourada/estouro contados só no pouso;
+   jitter `floor(rng()*2)` com `rng = mulberry32(seed)` puro, sorteado na
+   ordem de completion; gate `admit` não é produzível neste produtor →
+   fail-closed como mismatch de traço). Produtor ≠ verificador preservado:
+   o espelho continua Python independente, só re-ancorado no contrato
+   canônico.
+2. `test_task_queue_evaluator.py`: traços perfeitos pinados bit-a-bit iguais
+   aos dumps first-hand da QA (`qa1937_L1..L4.json` — decisões E métricas);
+   4 traços falhos derivados deterministicamente no mesmo espelho
+   (3 predições erradas 7/10; misroute transient→DLQ 3/4; poison reenfileirado;
+   duplicata não rejeitada que aterrissa) + guardas novos: `admit` rejeitado,
+   ids do sim órfão rejeitados, pin dos números canônicos (L1 10/10,
+   L3 16 despachos/7 retry/4 DLQ, L4 14/3/5 + reject).
+3. Evidência executável do cross-check (reprática): replay dos 4 dumps QA
+   contra o avaliador re-pinado → **4/4 PASS, métricas conferem**;
+   `pytest learner/gate/tests learner/tests curriculum/_shared/tests
+   engines/test_engine_contracts.py -q` → **522 passed** (era 520; +2 guardas).
+
