@@ -52,9 +52,15 @@ Worktree dedicado (ex.: `/tmp/opencode/promo<wave>/wt`), detached no pin, `git s
 
 1. `deploy-pilot-bundle.mjs --site aidevschool-codexdojo-os` (sem `--prod`) para o OS; para a
    literacy, deploy CLI `--no-build` do staging próprio.
-2. **Precheck completo contra draft E alias de produção** — adaptar o script da onda anterior
-   (`_work-products/AID-935/precheck-65d64bca.mjs` é o ancestral; a onda corrente copia e ajusta
-   âncoras de conteúdo). Cobertura obrigatória (72 checks na onda AID-935): identidade de
+2. **Precheck completo contra draft E alias de produção** — via o baseline canônico versionado
+   `scripts/precheck/` (AID-1556; audit AID-1526 §3.1): criar a âncora da onda copiando o
+   **config** de onda mais próximo para `scripts/precheck/waves/<AID>-<pin7>.json` e ajustar
+   apenas âncoras (pin, hashes, catálogo, `contentVersion`, markers de copy, alias live) —
+   receita completa em `scripts/precheck/README.md` §"Adding a wave". **Cópia de script por onda
+   está aposentada** (era `_work-products/<onda>/precheck-<sha>.mjs`): o guard
+   `scripts/precheck/guard-no-stray-copies.sh` falha a CI se um novo `precheck-*.mjs` aparecer
+   fora de `scripts/precheck/` (AID-1831). Cobertura obrigatória (72 checks na âncora AID-935):
+   identidade de
    manifesto/sourceRevision/sha de superfície; páginas 200; env pins + endpoint de telemetria
    baked; `/privacidade.html` 200 com copy de telemetria; **coletor cross-origin 403**; **export
    fail-closed (401 sem token com `ANALYTICS_EXPORT_TOKEN` armado)**; **smoke de ingestão
@@ -84,7 +90,8 @@ que o rollback.
    `release/<sha-anterior>` intacta é o caminho preferencial).
 2. Rebuild no pin anterior (worktree limpo, §3) + redeploy com alias `--prod`.
 3. Re-rodar o precheck **contra o alias re-pinado** (mínimo: manifesto/sourceRevision, 401/403,
-   smoke de ingestão, export >0).
+   smoke de ingestão, export >0) — via `scripts/precheck/precheck.mjs --wave
+   waves/<onda>.json --against alias` com a âncora da onda revertida (§4.2).
 4. Registrar o rollback como receipt (motivo, janela de indisponibilidade, sha de volta) e abrir
    child issue do defeito com blocker nomeado.
 5. Nunca reverter unilateralmente conteúdo QA-GO sem registro: o rollback é decisão operacional e

@@ -65,18 +65,24 @@ jobs:
   # as the sdlc-guard self-test above) and a dry-run of the anchor wave
   # config, so registry/config drift breaks CI before it can reach a
   # promotion wave. No network, no dependencies.
+  # AID-1831 (same P1, closing acts): the stray-copy guard keeps the retired
+  # copy-per-wave pattern from returning — any precheck-*.mjs outside
+  # scripts/precheck/ beyond the frozen receipt baseline fails here.
   precheck-baseline:
     name: Promotion precheck baseline (self-test + dry-run)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+        node-version: 20
       - name: precheck self-test (synthetic violations must fail)
         run: node scripts/precheck/precheck.mjs --self-test
       - name: anchor wave dry-run (offline plan + registry validation)
         run: node scripts/precheck/precheck.mjs --wave scripts/precheck/waves/AID-935-65d64bca.json --dry-run
+      - name: precheck stray-copy guard self-test (new copies must fail)
+        run: bash scripts/precheck/guard-no-stray-copies.sh --self-test
+      - name: precheck stray-copy guard (no gate scripts outside scripts/precheck/)
+        run: bash scripts/precheck/guard-no-stray-copies.sh
 
   codexdojo:
     name: codexDojo (TS)
