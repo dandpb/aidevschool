@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest"
+import { setMissionEvidenceForwarder } from "@aidevschool/evidence/host-protocol"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { LEVELS, type LevelId } from "../sim/levels"
-import { GameController } from "./controller"
+import { GameController, type TraceDecision } from "./controller"
 
 /**
  * A perfect player: uses the public truth APIs (pickNext truth via truthPickId,
@@ -272,5 +273,153 @@ describe("GameController — pause (RF-006) and determinism", () => {
       }
     }
     expect(rackSeenAt).not.toBeNull()
+  })
+})
+
+/** Standalone EVIDENCE console records emitted by the headless controller. */
+function evidenceRecords(spy: ReturnType<typeof vi.spyOn>): Record<string, unknown>[] {
+  return spy.mock.calls
+    .map((c: unknown[]) => String(c[0]))
+    .filter((l: string) => l.startsWith("EVIDENCE "))
+    .map((l) => JSON.parse(l.slice("EVIDENCE ".length)))
+}
+
+function lastRecord(spy: ReturnType<typeof vi.spyOn>, level: LevelId) {
+  return evidenceRecords(spy).find((r) => r.scenario_id === `task-forge-${level}`)
+}
+
+/** Emitted decision trace for a level; fails loudly if the record is missing. */
+function tracedDecisions(spy: ReturnType<typeof vi.spyOn>, level: LevelId): TraceDecision[] {
+  const observations = lastRecord(spy, level)?.observations as
+    | { kind: string; decisions: TraceDecision[] }
+    | undefined
+  if (!observations) throw new Error(`no emitted observations for ${level}`)
+  return observations.decisions
+}
+
+/** The verifier (learner/gate/task_queue_evaluator.py) only accepts closed key sets. */
+function hasClosedShape(d: TraceDecision): boolean {
+  const keys = Object.keys(d).sort().join(",")
+  if (d.type === "dispatch") return keys === "taskId,type"
+  if (d.type === "classify") return keys === "route,taskId,type"
+  return keys === "action,type"
+}
+
+afterEach(() => {
+  setMissionEvidenceForwarder(null)
+  vi.restoreAllMocks()
+})
+
+describe("GameController — evidence observations (AID-1906, contract pinned in PR-A2)", () => {
+  it("emits the pinned L1-perfect decision trace as record observations", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L1")
+    playPerfect(game)
+    const records = evidenceRecords(spy)
+    expect(records).toHaveLength(1)
+    const [first] = records
+    if (!first) throw new Error("expected one EVIDENCE record")
+    expect(first).toMatchObject({
+      source: "voxeldojo",
+      unit_id: "U4-task-queue",
+      project: "04_concurrent_task_queue",
+      game: "TASK FORGE",
+      scenario_id: "task-forge-L1",
+      pass: true,
+    })
+    // exact ground truth of test_task_queue_evaluator.py TRACES["L1-perfect"]:
+    // 12 dispatches in prompt order (audit outranks thumb-200 at the same instant)
+    expect(first.observations).toEqual({
+      kind: "task-forge-L1",
+      decisions: [
+        "t-0-order-101",
+        "t-1-order-102",
+        "t-2-email-5",
+        "t-3-render-42",
+        "t-4-webhook-7",
+        "t-5-digest",
+        "t-7-audit",
+        "t-6-thumb-200",
+        "t-8-order-103",
+        "t-9-fanout-9",
+        "t-10-report",
+        "t-11-order-104",
+      ].map((taskId) => ({ type: "dispatch", taskId })),
+    })
+  })
+
+  it("perfect plays cover each wave exactly, decision-for-decision (closed shapes)", () => {
+    // totals pinned by the verifier ground truth: L1 12, L2 10, L3 25 (17+5+3), L4 29 (20+6+3)
+    const totals: Record<LevelId, number> = { L1: 12, L2: 10, L3: 25, L4: 29 }
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    for (const level of LEVELS) {
+      const game = new GameController(level.id)
+      playPerfect(game)
+      const record = lastRecord(spy, level.id)
+      expect(record, level.id).toBeDefined()
+      const observations = record?.observations as { kind: string; decisions: TraceDecision[] }
+      expect(observations.kind, level.id).toBe(`task-forge-${level.id}`)
+      expect(observations.decisions, level.id).toHaveLength(totals[level.id])
+      for (const d of observations.decisions) {
+        expect(hasClosedShape(d), `${level.id}: ${JSON.stringify(d)}`).toBe(true)
+      }
+      // JSON round trip: the emitted trace is bounded, plain, key-stable
+      expect(JSON.parse(JSON.stringify(observations))).toEqual(observations)
+    }
+  })
+
+  it("L3 observations record the 5 retry + 3 dlq classifications at their pinned prompts", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L3")
+    playPerfect(game)
+    const decisions = tracedDecisions(spy, "L3")
+    const routes = (d: TraceDecision): string | null => (d.type === "classify" ? d.route : null)
+    expect(decisions.filter((d) => routes(d) === "retry")).toHaveLength(5)
+    expect(decisions.filter((d) => routes(d) === "dlq")).toHaveLength(3)
+    expect(decisions.filter((d) => d.type === "dispatch")).toHaveLength(17)
+    // first classify prompt of the wave is flake #1 going to the annealing rack
+    expect(decisions[3]).toEqual({ type: "classify", taskId: "t-1-flake-1", route: "retry" })
+  })
+
+  it("L4 observations pin the three gate rejects after the opening dispatches", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L4")
+    playPerfect(game)
+    const decisions = tracedDecisions(spy, "L4")
+    expect(decisions.slice(0, 6).every((d) => d.type === "dispatch")).toBe(true)
+    expect(decisions.slice(6, 9)).toEqual([
+      { type: "gate", action: "reject" },
+      { type: "gate", action: "reject" },
+      { type: "gate", action: "reject" },
+    ])
+    expect(decisions.filter((d) => d.type === "gate")).toHaveLength(3)
+  })
+
+  it("traces wrong dispatch predictions as predicted — never corrected to the truth", () => {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {})
+    const game = new GameController("L1")
+    game.start()
+    const misses: string[] = []
+    let guard = 5000
+    while (game.snapshot.phase === "running" && guard-- > 0) {
+      const pending = game.snapshot.pending
+      if (pending?.kind !== "dispatch") throw new Error("L1 should only prompt dispatches")
+      const truth = game.truthPickId() ?? ""
+      const missable = pending.candidates.find((c) => c.id !== truth)
+      if (misses.length < 4 && missable) {
+        misses.push(missable.id)
+        game.predictDispatch(missable.id)
+      } else {
+        game.predictDispatch(truth)
+      }
+    }
+    expect(game.snapshot.phase).toBe("failed")
+    const record = lastRecord(spy, "L1")
+    expect(record?.pass).toBe(false)
+    const decisions = tracedDecisions(spy, "L1")
+    expect(decisions).toHaveLength(12)
+    const traced = decisions.map((d) => (d.type === "dispatch" ? d.taskId : null))
+    for (const miss of misses) expect(traced).toContain(miss)
+    expect(record?.metrics).toMatchObject({ dispatch_predictions: 12, dispatch_correct: 8 })
   })
 })

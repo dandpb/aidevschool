@@ -40,6 +40,11 @@ test("boots the forge, plays L1 by predicting dispatches, emits a passing record
   expect(first.metrics.dispatch_correct).toBe(12)
   expect(first.metrics.worker_count).toBe(3)
   expect(first.metrics.max_concurrent_running).toBeLessThanOrEqual(3)
+  // AID-1906: the record carries the observations trace the verifier replays
+  const observations = first.observations as { kind: string; decisions: unknown[] }
+  expect(observations.kind).toBe("task-forge-L1")
+  expect(observations.decisions).toHaveLength(12)
+  expect(observations.decisions[0]).toEqual({ type: "dispatch", taskId: "t-0-order-101" })
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
   await page.screenshot({ path: ".logs/smoke-L1-cleared.png" })

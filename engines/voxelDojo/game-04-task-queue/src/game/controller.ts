@@ -34,6 +34,20 @@ import { mulberry32 } from "../sim/rng"
 
 export type Phase = "briefing" | "running" | "cleared" | "failed"
 
+/**
+ * Closed decision trace consumed by the independent TASK FORGE verifier
+ * (learner/gate/task_queue_evaluator.py, pinned in PR-A2): one entry per
+ * answered prompt, in prompt order, with exactly the keys the replay accepts.
+ * The trace records what the player actually did (wrong predictions included)
+ * and is never reordered — a match played with pauses may answer prompts in an
+ * order that diverges from the verifier's no-pause replay and is then rejected
+ * fail-closed, never accepted by self-declared metrics.
+ */
+export type TraceDecision =
+  | { readonly type: "dispatch"; readonly taskId: string }
+  | { readonly type: "classify"; readonly taskId: string; readonly route: "retry" | "dlq" }
+  | { readonly type: "gate"; readonly action: "reject" | "admit" }
+
 export type Prompt =
   | { readonly kind: "dispatch"; readonly candidates: readonly SimTask[] }
   | { readonly kind: "classify"; readonly task: SimTask }
@@ -55,6 +69,8 @@ export interface GameState {
   poisonRequeued: number
   backpressureViolations: number
   duplicatesEnqueued: number
+  /** decisions answered this wave, emitted as observations (verifier contract) */
+  decisions: TraceDecision[]
   /** diagnostics beyond the frozen metrics (HUD/tests; never emitted) */
   gatesRejected: number
   lastMetrics: Record<string, number | boolean | string> | null
@@ -96,6 +112,7 @@ export class GameController {
       poisonRequeued: 0,
       backpressureViolations: 0,
       duplicatesEnqueued: 0,
+      decisions: [],
       gatesRejected: 0,
       lastMetrics: null,
     }
@@ -153,6 +170,8 @@ export class GameController {
     const truth = pickNext(this.state.queue.tasks, this.state.queue.now)
     if (!truth) return
     this.state.dispatchPredictions++
+    // trace the player's prediction (wrong ids included), not the truth
+    this.state.decisions = [...this.state.decisions, { type: "dispatch", taskId }]
     if (taskId === truth.id) this.state.dispatchCorrect++
     const worker = idleWorker(this.state.queue.workers)
     if (!worker) throw new Error("dispatch prompt with no idle worker (invariant I1)")
@@ -169,6 +188,7 @@ export class GameController {
     if (pending.task.id !== taskId) return
     const task = this.requireTask(taskId)
     this.state.retryClassifications++
+    this.state.decisions = [...this.state.decisions, { type: "classify", taskId, route: "retry" }]
     if (requiredRoute(task) === "retry") {
       this.state.retryCorrect++
       this.applyTransientFailure(task)
@@ -194,6 +214,7 @@ export class GameController {
     if (pending.task.id !== taskId) return
     const task = this.requireTask(taskId)
     this.state.dlqClassifications++
+    this.state.decisions = [...this.state.decisions, { type: "classify", taskId, route: "dlq" }]
     if (requiredRoute(task) === "dlq") this.state.dlqCorrect++
     deadLetterTask(this.state.queue, taskId)
     this.state.pending = null
@@ -206,6 +227,7 @@ export class GameController {
     const pending = this.state.pending
     if (this.state.phase !== "running" || pending?.kind !== "gate") return
     this.state.gatesRejected++
+    this.state.decisions = [...this.state.decisions, { type: "gate", action: "reject" }]
     this.state.arrivalIndex++
     this.state.pending = null
     this.pump()
@@ -216,6 +238,7 @@ export class GameController {
   admitInbound(): void {
     const pending = this.state.pending
     if (this.state.phase !== "running" || pending?.kind !== "gate") return
+    this.state.decisions = [...this.state.decisions, { type: "gate", action: "admit" }]
     if (pending.reason === "full") {
       this.state.backpressureViolations++
       this.state.queue.queueOverflowed = true
@@ -391,6 +414,9 @@ export class GameController {
     s.lastMetrics = { ...outcome.metrics }
     s.phase = outcome.pass ? "cleared" : "failed"
     s.pending = null
-    emitEvidence(s.level.id, outcome.pass, outcome.metrics)
+    emitEvidence(s.level.id, outcome.pass, outcome.metrics, {
+      kind: `task-forge-${s.level.id}`,
+      decisions: [...s.decisions],
+    })
   }
 }
