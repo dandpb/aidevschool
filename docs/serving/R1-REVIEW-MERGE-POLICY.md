@@ -1,8 +1,9 @@
-# Política R1 de review/merge multi-dev (DRAFT v0 — aguarda aprovação FPE + CEO)
+# Política R1 de review/merge multi-dev (ATIVA — R1.0 desde 2026-09-14)
 
-**Status:** DRAFT para aprovação (AID-1526). **Proprietário operacional:** Platform & Release
-Engineer; **aprovação:** FPE + CEO (fund ratificado no plano AID-1521). **Vigência:** substitui o
-regime single-writer ("apenas o FPE merga") na data de ativação registrada abaixo.
+**Status:** ATIVA (R1.0). **Proprietário operacional:** Platform & Release
+Engineer; **aprovação:** FPE + CEO (fund ratificado no plano AID-1521; quorum no thread AID-1526;
+ordem de execução AID-1816 sob delegação founder AID-1814). **Vigência:** 2026-09-14 — substitui o
+regime single-writer ("apenas o FPE merga"); registro completo na §7.
 **Objetivo:** escalar o time dev com segurança, mantendo intocáveis os gates existentes
 (QA countersign, autorização founder para deploy, producer ≠ verifier).
 
@@ -81,13 +82,27 @@ Postmortem curto (≤10 linhas) na issue da mudança quando: merge causar regres
 vermelho pós-merge, ou reversão de promoção. Dono: Platform & Release Engineer; escalada
 FPE → CEO → founder; produção paralela ao `PROMOTION-RUNBOOK.md` §7.
 
-## 7. Ativação (checklist)
+## 7. Ativação (registro — concluída em 2026-09-14)
 
-- [ ] Aprovação FPE + CEO neste doc (thread AID-1526).
-- [ ] Branch protection + required checks configurados em `main` (owner: Platform Engineer).
-- [ ] CODEOWNERS criado no mesmo PR de ativação.
-- [ ] Anúncio no board com a data de vigência e a lista inicial de Reviewers por área.
-- [ ] Registro da ativação nesta seção (data, commit, revisores).
+- [x] Aprovação FPE + CEO neste doc (thread AID-1526: FPE APPROVE @ `2b248684`, review 5648707074;
+      CEO APPROVE relay AID-1551, verbatim no comentário `21b51476`; PDE cross-domain GO @
+      `ea9da44f`, despacho AID-1735; card board-only `cd35f433` stale-superseded pela diretiva
+      founder AID-1814).
+- [x] Branch protection + required checks configurados em `main` (owner: Platform Engineer): PUT +
+      GET verificados 2026-09-14 — 9 contexts (§3.1), `strict`, `enforce_admins`, force-push e
+      delete proibidos, conversation resolution obrigatória, contador mecânico de approvals 0
+      (limite R1.0).
+- [x] CODEOWNERS criado no mesmo PR de ativação (`.github/CODEOWNERS`, PR #408).
+- [x] Anúncio no board com a data de vigência e a lista inicial de Reviewers por área (payload F do
+      kit rev 2 — comentário `894e7963` na AID-1816, 2026-09-14T06:54:30Z).
+- [x] Registro da ativação nesta seção: **data** 2026-09-14 · **policy** mergeada via PR #351
+      (`9ec63fcb`, merger FPE single-writer — AID-1817) · **ativação** via PR #408 (`828e0594`,
+      reviewer FPE por substituição §2/B3 — AID-1821) · **quorum/revisores**: FPE, CEO, PDE
+      cross-domain, founder (AID-1814) · **payload D rev 2 aplicado** (9 contexts). Governança: o
+      kit `activation-kit` rev 3 (10º context `Promotion precheck baseline (self-test + dry-run)`,
+      AID-1556/PR #359) é artefato de run stale (incidente AID-1818, correção AID-1820) —
+      não-canônico sem linha CEO explícita; se aceito, o delta é aplicável por PUT idempotente
+      (hardening puro).
 
 ## 8. Fora de escopo (R2+, exige decisão founder)
 
