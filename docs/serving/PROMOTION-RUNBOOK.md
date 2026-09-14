@@ -2,7 +2,9 @@
 
 **Status:** processo canônico (promovido do work-product AID-956 por AID-989/Opção A, 2026-09-07).
 Fluxo provado 3× ponta-a-ponta nas ondas AID-935 (`65d64bca`), AID-960 (`c2937e55`) e AID-964
-(`e41b9b93`). **Owner operacional:** FPE. **Merge single-writer:** CEO. **Countersign de conteúdo:**
+(`e41b9b93`). **Owner operacional:** FPE. **Merge:** R1 (docs/serving/R1-REVIEW-MERGE-POLICY.md)
+— merger FPE ou CEO conforme §2; single-writer encerrado na ativação R1 (2026-09-14).
+**Countersign de conteúdo:**
 QA. Substitui o runbook efêmero `_work-products/AID-956/REDEPLOY-RUNBOOK.md` (não mais
 reproduzido; os registros de onda permanecem a evidência histórica).
 
@@ -19,7 +21,8 @@ rotina seguem este runbook ponta-a-ponta; não existe promoção "rápida" fora 
 ## 1. Gates de entrada (todos obrigatórios, verificados first-hand)
 
 1. **Countersign QA GO** sobre o head a promover (issue da QA citando o sha).
-2. **Merge single-writer do CEO** no GitHub (PR com revisão; o merge commit é o pin candidato).
+2. **Merge via PR em `main`** no GitHub (merger FPE ou CEO conforme R1 §2, com review registrada;
+   o merge commit é o pin candidato).
 3. **CI verde no pin:** check-runs do merge commit aguardados até conclusão (0 fail; platform-skip
    aceitável).
 4. **Autorização founder** para deploy público (padrão single-writer vigente;

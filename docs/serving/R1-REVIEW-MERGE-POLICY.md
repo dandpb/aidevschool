@@ -33,13 +33,32 @@ PRs continuam pequenos e autocontidos (regra vigente do plano AID-1521). Finding
 advisory e severity-rankados como em `REVIEW.md` — a decisão de gate é do merger, exceto onde há
 countersign QA obrigatório.
 
+Quando o autor da PR detém o papel de reviewer obrigatório da linha aplicável, a revisão passa ao
+substituto na cadeia **Platform → FPE → CEO** (producer ≠ verificador preservado; evita deadlock de
+reviewer único).
+
 ## 3. Gates de merge (enforcement mecânico, na ativação)
 
-1. **Branch protection em `main`:** PR obrigatório; ≥N approvals conforme tabela acima (mínimo
-   1); CI verde obrigatório (jobs `CI` e `SDLC guardrails` como required checks); proibir force
-   push e delete de `main`.
-2. **CODEOWNERS** por área mapeando a tabela §2 (ex.: `/engines/literacyDojo/ @reviewer-literacy`,
-   `/.github/ @platform-eng`, `/docs/serving/ @platform-eng @fpe`).
+1. **Branch protection em `main`:** PR obrigatório; CI verde com required checks por
+   **nome exato do check-run** (9 — onda 1 do ratchet B1, decisão CEO AID-1714/r10, análise §5.3 @
+   `d434ba26`): `literacyDojo (TS + content)`, `codexdojo-os (TS)`, `Python (learner + curriculum
+   shared)`, `product readiness (claims)`, `SDLC guardrails (diff)`, `pixelDojo (TS)`,
+   `miniTown (TS)`, `dojoToday (TS + substrate)`, `voxelDojo (TS)` (nome do workflow `CI` não gera
+   check-run; jobs skipped/literais da matrix ficam fora). **Ratchet B1:** contexts da matriz
+   `voxelDojo games/<id> (TS)` **nunca** são required crus (dinâmicos por `catalog.json` —
+   required-por-jogo quebraria a protection a cada jogo novo/rename); bloqueio por jogo, se um dia
+   desejado, é via **meta-check agregado de contexto único estável (onda 2, opcional — critérios de
+   disparo §8 da análise; revisitar pós-R1)**; force push e delete de `main` proibidos;
+   `enforce_admins` mantido. **Limite R1.0 (identidade GitHub única):** contador mecânico de
+   approvals permanece 0 (self-approval não conta); o ≥N da §2 é verificado proceduralmente pelo
+   merger com a review registrada no PR. Contador ≥1 requer identidades GitHub por agente (decisão
+   founder).
+2. **CODEOWNERS** (`.github/CODEOWNERS`) mapeando a tabela §2 e o plano AID-1521, declarativo na
+   R1.0 (identidade única `@dandpb`): `/curriculum/`→Curriculum Platform Engineer;
+   `/engines/`→Learning Engine Engineer; `/learner/`→Learner App Engineer;
+   `/.github/`+`/scripts/`+`/docs/serving/`→Platform & Release Engineer (fallback FPE);
+   cross-domain→Full-Stack Feature Engineer como 2º revisor. `require_code_owner_reviews` só liga
+   com identidades por agente.
 3. **Sem bypass:** nunca merge com checks vermelhos; calibração de checks só com QA Lead e por PR.
 
 ## 4. Graduação para Merger (R1.1, após ≥2 semanas de R1.0 estável)
