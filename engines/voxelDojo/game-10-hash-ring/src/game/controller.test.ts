@@ -24,7 +24,7 @@ describe("full headless playthrough (input → sim → evidence wiring)", () => 
     expect(records).toHaveLength(1)
     expect(records[0]).toMatchObject({
       source: "voxeldojo",
-      unit_id: "U9-distributed-cache",
+      unit_id: "U10-distributed-cache",
       project: "10_distributed_cache",
       scenario_id: "hash-ring-L1",
       pass: true,

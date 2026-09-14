@@ -36,7 +36,7 @@ test("boots the ring, plays L1 by clicking predicted owners, emits a passing rec
   expect(records.length).toBe(1)
   const first = records[0] as EvidenceRecord
   expect(first.source).toBe("voxeldojo")
-  expect(first.unit_id).toBe("U9-distributed-cache")
+  expect(first.unit_id).toBe("U10-distributed-cache")
   expect(first.project).toBe("10_distributed_cache")
   expect(first.scenario_id).toBe("hash-ring-L1")
   expect(first.pass).toBe(true)
