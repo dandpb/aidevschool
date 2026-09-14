@@ -707,3 +707,42 @@ def test_redaction_handles_assignment_and_bearer_tokens() -> None:
     assert "abc123" not in text
     assert "xyz" not in text
     assert text.count("[REDACTED]") >= 3
+
+
+def test_compare_and_advance_stamps_verified(
+    workspace: SupervisorPaths,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The supervisor advance (post verifier PASS) stamps verified provenance."""
+    executable = _fake_cli(workspace.repo_root)
+    config = _config(workspace.repo_root, executable)
+    request = _publish(workspace)
+    monkeypatch.setenv("PATH", os.environ.get("PATH", "/usr/bin:/bin"))
+
+    execute_request(workspace, request["request_id"], config_path=config, now=lambda: NOW)
+
+    pipeline = yaml.safe_load(workspace.pipeline.read_text(encoding="utf-8"))
+    assert pipeline["phase"] == "spec-done"
+    assert pipeline["grade"] == "verified"
+    assert pipeline["advanced_by"] == "mme-supervisor"
+
+
+def test_planned_digest_matches_saved_bytes(
+    workspace: SupervisorPaths,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Ledger's resulting_pipeline_digest == sha256 of the saved file: the
+    planned prediction and save_status output share one serialization."""
+    import hashlib
+
+    executable = _fake_cli(workspace.repo_root)
+    config = _config(workspace.repo_root, executable)
+    request = _publish(workspace)
+    monkeypatch.setenv("PATH", os.environ.get("PATH", "/usr/bin:/bin"))
+
+    execute_request(workspace, request["request_id"], config_path=config, now=lambda: NOW)
+
+    events = read_ledger(workspace.ledger)
+    authorized = [e for e in events if e["event"] == "advancement_authorized"][0]
+    saved_sha = hashlib.sha256(workspace.pipeline.read_bytes()).hexdigest()
+    assert authorized["resulting_pipeline_digest"] == saved_sha

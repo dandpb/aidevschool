@@ -16,15 +16,28 @@ from shared.errors import StateCorruptionError
 from engines.openclaw.fsio import atomic_write_text, read_yaml_mapping
 from engines.openclaw.runner.checklist import evaluate
 from engines.openclaw.runner.pipeline_status import (
+    Grade,
     Phase,
     PipelineStatus,
     load_status,
     save_status,
     yaml_path_for,
 )
-
 ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PIPELINE_STATUS = ROOT / "learner" / "pipeline_status.md"
+
+# Fine-grained scheduler phase -> coarse curriculum evidence phase. Pinned by
+# engines/openclaw/tests/test_phase_map_pinned.py; the two vocabularies are
+# intentionally distinct (M8 dedup is out of scope).
+_PHASE_MAP = {
+    Phase.SPEC: EvidencePhase.SPEC,
+    Phase.SPEC_DONE: EvidencePhase.IMPL,
+    Phase.IMPL_DONE: EvidencePhase.REVIEW,
+    Phase.REVIEW_DONE: EvidencePhase.BENCHMARK,
+    Phase.BENCHMARK_DONE: EvidencePhase.OPTIMIZE,
+    Phase.CYCLE_COMPLETE: EvidencePhase.CYCLE_COMPLETE,
+}
+
 LEARNING_STATE = ROOT / "learner" / "learning_state.yaml"
 
 
@@ -47,10 +60,9 @@ class Scheduler:
         config: cfg.OpenclawConfig | None = None,
     ) -> None:
         self.root = root or ROOT
-        self.status_path = status_path or PIPELINE_STATUS
-        self.state_path = state_path or LEARNING_STATE
+        self.status_path = status_path or (self.root / "learner" / "pipeline_status.md")
+        self.state_path = state_path or (self.root / "learner" / "learning_state.yaml")
         self.config = config or cfg.DEFAULT_CONFIG
-
     def read_status(self) -> PipelineStatus:
         return load_status(self.status_path)
 
@@ -122,20 +134,16 @@ class Scheduler:
 
         # Mirror the phase advance into the curriculum evidence contract so the
         # evidence module's reads stay in sync with the scheduler's writes.
-        # Maps the scheduler's fine-grained phase vocabulary to the evidence
-        # module's coarse phase vocabulary.
-        _PHASE_MAP = {
-            Phase.SPEC: EvidencePhase.SPEC,
-            Phase.SPEC_DONE: EvidencePhase.IMPL,
-            Phase.IMPL_DONE: EvidencePhase.REVIEW,
-            Phase.REVIEW_DONE: EvidencePhase.BENCHMARK,
-            Phase.BENCHMARK_DONE: EvidencePhase.OPTIMIZE,
-            Phase.CYCLE_COMPLETE: EvidencePhase.CYCLE_COMPLETE,
-        }
         bare_project = Path(project).name
         ev = inspect_challenge(bare_project, root=self.root)
         next_evidence = replace(ev, phase=_PHASE_MAP[next_phase])
-        next_status = replace(status, phase=next_phase, awaiting="")
+        next_status = replace(
+            status,
+            phase=next_phase,
+            awaiting="",
+            grade=Grade.SIMULATE,
+            advanced_by="openclaw-checklist",
+        )
         mirror_path = self.root / "curriculum" / bare_project / "status.yaml"
         pipeline_path = yaml_path_for(self.status_path)
         mirror_before = mirror_path.read_bytes() if mirror_path.exists() else None
