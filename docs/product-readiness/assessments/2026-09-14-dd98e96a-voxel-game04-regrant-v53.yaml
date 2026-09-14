@@ -1,0 +1,47 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-dd98e96a-voxel-game04-regrant-v53
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T17:42:36Z'
+revalidateBy: '2026-10-14'
+gitSha: dd98e96ab593bb45fc6aaf0a02e1dc5f0187ed3d
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T13:40:30Z-os-literacy-hosted-mission-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-verification-recovery-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-literacy-returning-device-mixed-dd98e96a
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T13:40:30Z-os-voxel-hosted-missions-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-renderer-accessibility-recovery-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-voxel-returning-device-mixed-dd98e96a
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T13:40:30Z-os-onboarding-track-choice-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-returning-device-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-os-returning-recovery-mixed-dd98e96a
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T13:40:30Z-dojotoday-active-unit-guidance-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-dojotoday-read-only-boundary-observed-dd98e96a
+  - 2026-09-14T13:40:30Z-dojotoday-returning-next-day-mixed-dd98e96a
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T13:40:30Z-voxel-standalone-loop-mixed-dd98e96a
+  - 2026-09-14T13:40:30Z-voxel-accessible-renderer-observed-dd98e96a
+  - 2026-09-14T13:40:30Z-voxel-standalone-return-reentry-mixed-dd98e96a

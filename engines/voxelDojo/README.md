@@ -5,13 +5,15 @@
 an 8-bit *arcade encounter*, voxelDojo turns one concept into an explorable *3D system simulation* —
 the learner walks (or flies) inside the architecture and operates it.
 
-> Status: **16 voxelDojo games implemented** in `engines/voxelDojo/game-*/` (15 added in the
-> 2026-07-05 all-18 buildout; project 10 HASH RING is the original pilot). The full catalog is
+> Status: **17 voxelDojo games implemented** in `engines/voxelDojo/game-*/` (15 added in the
+> 2026-07-05 all-18 buildout; project 10 HASH RING is the original pilot; `game-04-task-queue`
+> TASK FORGE added by AID-1901 PR-A1 — CEO decision AID-1859 Opção A moved the 04 seed back
+> from pixel-quest Shape A to this Shape-B 3D forge). The full catalog is
 > `engines/voxelDojo/catalog.json`; the per-game PLAN slice lives in `engines/voxelDojo/docs/plans/`.
 > Each game ships a deterministic headless sim core with Vitest concept proofs, a Three.js scene,
 > levels L1–L4, voxeldojo evidence emission, and a Playwright browser smoke. Project 01
-> (rate limiter) and Project 04 (task queue) are rules-shaped and live in the sister pixel-quest
-> engine as Shape A encounters (`tokenBucket`, `sequenceFlow`, `taskQueue`). [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md)
+> (rate limiter) remains rules-shaped and lives in the sister pixel-quest
+> engine as Shape A encounters (`tokenBucket`, `sequenceFlow`). [`docs/GAP_ANALYSIS.md`](docs/GAP_ANALYSIS.md)
 > is the status ledger; see the **Subjects → games** table below for the full map.
 
 ## The big idea
@@ -55,7 +57,7 @@ concept. Only Game 10 is specified in `PLAN.md` so far; the rest are seeds.
 | 01 | Rate limiter | Bucket capacity vs refill rate | **FLOODGATES** — operate dam sluices; the reservoir is the bucket, inflow bursts must be smoothed |
 | 02 | Key-value store | Hashing to shelves, TTL expiry | **WAREHOUSE** — pilot a picker-bot storing crates on hash-addressed shelves; TTL crates visibly decay |
 | 03 | URL shortener | Short-code generation, collisions | **WORMHOLE** — stamp wormhole gates between planets; a code collision routes travellers to the wrong world |
-| 04 | Task queue | Retry, backpressure, DLQ | **FACTORY FLOOR** — 3D conveyor plant; jam = backpressure; poison crates ride the retry loop then drop to the DLQ chute |
+| 04 | Task queue | Bounded worker-pool dispatch: priority + FIFO, retry/backoff, DLQ, backpressure, idempotency | **TASK FORGE** — run the forge: hopper of glowing ingots, N forge arms, annealing rack (backoff), scrap chute (DLQ); full hopper = 429, duplicate sigil = reject |
 | 05 | WebSocket chat | Persistent conns, fan-out, heartbeats | **RELAY STATION** — keep laser links alive between orbiting stations; heartbeat pulses; broadcast = beam split |
 | 06 | File upload pipeline | Streaming vs buffering, bounded memory | **PIPELINE PLANT** — route fluid through pipes; buffer tanks overflow if you don't stream in chunks |
 | 07 | REST API + auth | Middleware layers, JWT verification | **CHECKPOINT CITY** — escort requests through concentric city walls; each gate is one middleware; forged badges fail signature check |
