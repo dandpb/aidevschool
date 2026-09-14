@@ -84,3 +84,22 @@ readiness (aggregate/check/enforce), DESIGN.md lint.
 Tudo observado roda em free tier (GitHub Actions + Netlify free). Nenhuma recomendação acima
 adiciona custo; #6 usa apenas minutosActions já inclusos. Novo serviço pago segue exigindo ordem
 explícita do founder.
+
+## 6. Registro de fechamento dos gaps P1 (AID-1831, 2026-09-14)
+
+Estado dos achados P1 do §3 / recomendações do §4, verificado first-hand na onda pós-R1
+(ORDEM AID-1830/A). As seções §1–§5 acima permanecem como o snapshot histórico observado em
+2026-09-12; este registro é aditivo.
+
+| Achado/Rec (#) | Estado | Evidência de fechamento |
+| --- | --- | --- |
+| Precheck fora do repo canônico (1/2) | **Fechado em 2 atos** | Ato 1 — AID-1556/PR #359 (2026-09-12): baseline versionado `scripts/precheck/` (72 checks da âncora AID-935, ids verbatim) + self-test offline (27 cenários sintéticos: violações DEVEM falhar) + dry-run + job CI `Promotion precheck baseline (self-test + dry-run)` — verdes no head de `main` (re-verificado 2026-09-14: self-test 27/27, dry-run válido, check-run success). Ato 2 — AID-1831 (esta PR): runbook §4.2/§6.3 apontam para o fluxo canônico; relíquia `precheck-ce3b4f5c.mjs` (cópia AID-462 commitada na raiz via PR #295) removida; guard `scripts/precheck/guard-no-stray-copies.sh` (+ baseline congelado de receipts históricos, self-test no CI) impede o retorno do padrão cópia-por-onda. |
+| `literacy-verify` untracked (2/3) | **Fechado** | Rastreada in-repo desde AID-941/PR #295 (2026-09-07): `learner/gate/netlify-functions/literacy-verify.mjs` (o achado estava stale quando da redação da auditoria). Padrão dos demais gates atingido: (i) **versionada** — função + contrato fixo l02-v3 documentados em `learner/gate/netlify-functions/README.md` e `learner/gate/AGENTS.md`; (ii) **CI** — contract test `learner/gate/tests/literacy_verify_netlify.test.mjs` roda na fase unit do harness cross-engine dentro do required check `codexdojo-os (TS)` (3/3 pass local 2026-09-14); (iii) **evidência live** — probes 2026-09-14 contra `aidevschool-literacydojo.netlify.app/.netlify/functions/literacy-verify`: fail-closed fora do contrato (`verifier_version 1-netlify-l02-v3`, `producer_writes_mastered:false`), paridade comportamental com o fonte rastreado; deploy do dir canônico inclui a função (`functions = ../../learner/gate/netlify-functions` no `netlify.toml`) e o precheck da promoção traz `lit-verify-parity-with-live` entre os 72 checks. |
+| Merge single-writer (3/1) | **Fechado** | Política R1 aprovada e **ativa** desde 2026-09-14 07:15Z (AID-1555 done; PRs #351/#408/#409; branch protection 9 required checks verificada E3 `9e8a98f0`). |
+| Branch protection + CODEOWNERS (4/4) | **Fechado** | Idem R1 ativação (E2/E3, ORDEM AID-1816). |
+
+**Pendente com gate explícito (não-bloqueante):** elevar o job `Promotion precheck baseline
+(self-test + dry-run)` a 10º required context. O kit `activation-kit` rev 3 (AID-1556/PR #359)
+já carrega esse delta, mas é artefato de run stale (incidente AID-1818, correção AID-1820) —
+aplicável por PUT idempotente **somente com linha CEO explícita** aceitando o delta (hardening
+puro). Registrado como ponto de decisão no thread AID-1831.
