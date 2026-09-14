@@ -29,7 +29,9 @@ CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-04-task-queue",  # AID-1901 PR-A1 shipped the game; evaluator lands in PR-A2 (VEE, AID-1901 sibling)
+        # game-04-task-queue removed in this PR (AID-1902 PR-A2): the TASK FORGE
+        # evaluator (learner/gate/task_queue_evaluator.py) registers it in GAME_SPECS,
+        # paying the debt AID-1901 PR-A1 left when it shipped the game.
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",

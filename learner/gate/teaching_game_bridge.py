@@ -26,6 +26,7 @@ from learner.gate.mission_control_evaluator import evaluate_mission_control
 from learner.gate.pipeline_evaluator import evaluate_pipeline
 from learner.gate.relay_evaluator import evaluate_relay
 from learner.gate.river_delta_evaluator import evaluate_river_delta
+from learner.gate.task_queue_evaluator import evaluate_task_queue
 from learner.gate.warehouse_evaluator import evaluate_warehouse
 from learner.gate.wormhole_evaluator import evaluate_wormhole
 
@@ -43,6 +44,12 @@ GAME_SPECS = {
         "03_url_shortener",
         "wormhole-",
         evaluate_wormhole,
+    ),
+    "TASK FORGE": (
+        "U4-task-queue",
+        "04_concurrent_task_queue",
+        "task-forge-",
+        evaluate_task_queue,
     ),
     "RELAY STATION": (
         "U5-websocket-chat",
