@@ -41,10 +41,13 @@ reviewer único).
 ## 3. Gates de merge (enforcement mecânico, na ativação)
 
 1. **Branch protection em `main`:** PR obrigatório; CI verde com required checks por
-   **nome exato do check-run** (9 — onda 1 do ratchet B1, decisão CEO AID-1714/r10, análise §5.3 @
-   `d434ba26`): `literacyDojo (TS + content)`, `codexdojo-os (TS)`, `Python (learner + curriculum
-   shared)`, `product readiness (claims)`, `SDLC guardrails (diff)`, `pixelDojo (TS)`,
-   `miniTown (TS)`, `dojoToday (TS + substrate)`, `voxelDojo (TS)` (nome do workflow `CI` não gera
+   **nome exato do check-run** (10 — onda 1 do ratchet B1, decisão CEO AID-1714/r10, análise §5.3 @
+   `d434ba26`; 10º acrescido por emenda formal CEO via relay AID-1837, 2026-09-14, aplicado por
+   PUT idempotente — change-id `AID-1831-required-context-10-amendment`): `literacyDojo (TS +
+   content)`, `codexdojo-os (TS)`, `Python (learner + curriculum shared)`,
+   `product readiness (claims)`, `SDLC guardrails (diff)`, `pixelDojo (TS)`,
+   `miniTown (TS)`, `dojoToday (TS + substrate)`, `voxelDojo (TS)`,
+   `Promotion precheck baseline (self-test + dry-run)` (nome do workflow `CI` não gera
    check-run; jobs skipped/literais da matrix ficam fora). **Ratchet B1:** contexts da matriz
    `voxelDojo games/<id> (TS)` **nunca** são required crus (dinâmicos por `catalog.json` —
    required-por-jogo quebraria a protection a cada jogo novo/rename); bloqueio por jogo, se um dia
@@ -100,9 +103,11 @@ FPE → CEO → founder; produção paralela ao `PROMOTION-RUNBOOK.md` §7.
       reviewer FPE por substituição §2/B3 — AID-1821) · **quorum/revisores**: FPE, CEO, PDE
       cross-domain, founder (AID-1814) · **payload D rev 2 aplicado** (9 contexts). Governança: o
       kit `activation-kit` rev 3 (10º context `Promotion precheck baseline (self-test + dry-run)`,
-      AID-1556/PR #359) é artefato de run stale (incidente AID-1818, correção AID-1820) —
-      não-canônico sem linha CEO explícita; se aceito, o delta é aplicável por PUT idempotente
-      (hardening puro).
+      AID-1556/PR #359), artefato de run stale (incidente AID-1818, correção AID-1820), foi
+      **canonizado e aplicado em 2026-09-14** por linha CEO explícita (relay AID-1837, decisão
+      sobre o pedido `7caa207d` da AID-1831): PUT idempotente verificado por GET (10 contexts;
+      diff pré→pós = somente o append; demais campos inalterados). Hardening puro: nenhum merge
+      futuro entra em `main` com a baseline de precheck vermelha.
 
 ## 8. Fora de escopo (R2+, exige decisão founder)
 
