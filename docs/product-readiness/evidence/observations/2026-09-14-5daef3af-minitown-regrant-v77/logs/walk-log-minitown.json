@@ -1,0 +1,37 @@
+{
+  "surface": "miniTown",
+  "gitPin": "5daef3af",
+  "startedAt": "2026-09-14T22:18:48.800Z",
+  "steps": [
+    {
+      "step": "launch-local-route",
+      "titleOk": true,
+      "canvasVisible": true,
+      "hudMounted": true
+    },
+    {
+      "step": "observe-town-simulation",
+      "simAdvances": true,
+      "sceneChildren": 6,
+      "hudSimTimeAdvances": true,
+      "runtimeErrors": []
+    },
+    {
+      "step": "confirm-explore-only-boundary",
+      "localStorageEntries": 0,
+      "sessionStorageEntries": 0,
+      "storageWritesByApp": false,
+      "masteryOrCompletionCopy": false
+    },
+    {
+      "step": "exit-without-learner-write",
+      "simTimeResetAfterReload": true,
+      "storageStillEmpty": true
+    }
+  ],
+  "verdict": {
+    "townRendersAndAdvances": true,
+    "exploreOnlyBoundaryHeld": true,
+    "noLearnerWrite": true
+  }
+}
