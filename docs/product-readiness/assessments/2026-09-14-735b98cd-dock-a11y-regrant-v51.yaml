@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-735b98cd-dock-a11y-regrant-v51
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T03:17:00Z'
+revalidateBy: '2026-10-14'
+gitSha: 735b98cd082a7f41748ff7c06740d504d0058ea0
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T03:16:00Z-os-literacy-hosted-mission-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-verification-recovery-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-literacy-returning-device-mixed-735b98cd
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T03:16:00Z-os-voxel-hosted-missions-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-renderer-accessibility-recovery-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-voxel-returning-device-mixed-735b98cd
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T03:16:00Z-os-onboarding-track-choice-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-returning-device-mixed-735b98cd
+  - 2026-09-14T03:16:00Z-os-returning-recovery-mixed-735b98cd
