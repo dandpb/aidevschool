@@ -25,12 +25,10 @@ VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
 # Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4, L1' lote 2+: games 15-18; AID-1877 PR-A1: game-04).
-# Each entry must be removed in the same PR that ships the game's evaluator
-# (PR-A2 task_queue_evaluator, per decision AID-1859 Option A).
+# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
+# removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-04-task-queue",
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
