@@ -47,8 +47,12 @@ const SUMMARY_PATH = join(LEDGER_DIR, "README.md")
 // Playwright browser surfaces of the CI matrix (AID-1658 policy jobs). The
 // voxelDojo per-game matrix legs are matched by prefix so new games are
 // covered without edits.
+// codexDojo (TS) joined at AID-1889: its minimal e2e (AID-1857/t1, PR #417)
+// adopted the retry policy post-merge, so its flakes must land in the ledger
+// too (finding AID-1884).
 const PLAYWRIGHT_JOB_PATTERNS = [
   /^literacyDojo \(TS \+ content\)$/,
+  /^codexDojo \(TS\)$/,
   /^codexdojo-os \(TS\)$/,
   /^miniTown \(TS\)$/,
   /^dojoToday \(TS \+ substrate\)$/,

@@ -1,0 +1,34 @@
+
+Deploying to Netlify
+────────────────────────────────────────────────────────────────
+
+Deploy path:        /tmp/opencode/promo1854/lit_stage/dist
+Functions path:     /tmp/opencode/promo1854/lit_stage/functions
+Configuration path: /tmp/opencode/promo1854/lit_stage/netlify.toml
+
+⠋ Uploading blobs to deploy store...
+
+✔ Finished uploading blobs to deploy store
+⠋ Hashing files...
+⠋ Looking for a functions cache...
+✔ No cached functions were found
+✔ Finished hashing 12 files and 4 functions
+⠋ CDN diffing files...
+✔ CDN requesting 5 files and 0 functions and 0 edge functions
+⠋ Uploading 5 files
+✔ Finished uploading 5 assets
+⠋ Waiting for deploy to go live...
+✔ Deploy is live!
+
+🚀 Deploy complete
+────────────────────────────────────────────────────────────────
+
+Draft URL: <https://6aa802b8703403ba985921db--aidevschool-literacydojo.netlify.app>
+
+Build logs: <https://app.netlify.com/projects/aidevschool-literacydojo/deploys/6aa802b8703403ba985921db>
+Function logs: <https://app.netlify.com/projects/aidevschool-literacydojo/logs/functions?scope=deploy:6aa802b8703403ba985921db>
+Edge function logs: <https://app.netlify.com/projects/aidevschool-literacydojo/logs/edge-functions?scope=deployid:6aa802b8703403ba985921db>
+
+If everything looks good on your draft URL, deploy it to your main project URL with the --prod flag:
+netlify deploy --no-build --prod
+

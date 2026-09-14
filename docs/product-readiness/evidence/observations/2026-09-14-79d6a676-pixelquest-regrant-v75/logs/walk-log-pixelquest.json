@@ -1,0 +1,26 @@
+{
+  "surface": "pixel-quest",
+  "gitPin": "79d6a676",
+  "startedAt": "2026-09-14T20:48:32.408Z",
+  "steps": [
+    {
+      "step": "session1-encounter",
+      "evidencePass": true,
+      "unit": "U0-sonda-rate-limiter-robustness",
+      "antiMasteryCopy": true
+    },
+    {
+      "step": "returning-replay",
+      "inMemoryChannelAfterReload": 0,
+      "freshEvidenceLines": 1,
+      "sameDeterministicCore": true,
+      "antiMasteryCopy": true
+    }
+  ],
+  "verdict": {
+    "evidencePass": true,
+    "replayRecoversEvidence": true,
+    "sessionBoundChannel": true,
+    "noFalseMastery": true
+  }
+}
