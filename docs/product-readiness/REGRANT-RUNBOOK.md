@@ -59,6 +59,12 @@ fail-closed.
 
 ## Fluxo automatizado (Opção A — AID-1357)
 
+> Ruído de CI das branches `regrant/auto-*` (vermelho esperado de proposta +
+> jobs inacessíveis pós-delete): triagem, root-cause e política de diagnóstico
+> durável em [`REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md`](REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md)
+> (AID-1738 §5.1). O cleanup de drill/proposta captura o resumo de jobs da run
+> num comentário do PR **antes** de fechar/deletar a branch (decisão C+E).
+
 Workflow `readiness-regrant.yml` (`workflow_run`: CI `completed`, `push@main`,
 `failure`) propõe o PR de re-grant contra o SHA mesclado. Ele **nunca** concede:
 o candidate de CI é `executor: automated`, e o teste de contrato
@@ -103,6 +109,46 @@ garante que todo use case tem ≥1 cenário com assertion não-playwright — lo
 - **Retry**: download de artefatos e aggregate com 2 tentativas (flake,
   precedente AID-571). Run do CI re-executado dispara `workflow_run` de novo
   naturalmente.
+
+### Protocolo de cleanup de drill/proposta — captura durável de jobs (C+E, AID-1741)
+
+Decisão C+E da triagem do ruído da fábrica
+([`REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md`](REGRANT-FACTORY-NOISE-TRIAGE-2026-09-13.md)
+§4, PR #391 / AID-1738 §5.1; IMPL AID-1741): o **auto-delete permanece** — a
+durabilidade do diagnóstico muda de lugar, da branch (efêmera: pós-delete
+`actions/runs/{id}/jobs` devolve `[]` e check-runs evapora) para o **PR +
+recibo do drill** (duráveis).
+
+Quem fecha um PR de drill/proposta (executor do drill PRE/QA, ou o watchdog
+no caso zumbi/§recusa) passa a seguir, **nesta ordem estrita**:
+
+1. **Capturar os jobs das runs de CI do head do PR antes de qualquer write de
+   cleanup**:
+   `docs/product-readiness/tools/capture_drill_jobs.sh <PR>` — resolve as
+   runs `pull_request` da branch do PR (`actions/workflows/ci.yml/runs`,
+   head_sha casado), lê `actions/runs/{id}/jobs` de cada uma e comenta no PR
+   **nome+conclusão de cada job não-verde** (+ índice de runs com
+   id/URL/SHA/branch/timestamp; marcador idempotente `drill-jobs-receipt`).
+   Runs não-verdes **sem jobs** (vermelho phantom de run-level — ex. run
+   34764665344) são registradas como tal: esse vermelho não é reconstruível
+   nem com a branch viva. Sem run de CI na branch (B1a), o próprio
+   comentário registra o fato — evidência durável em vez de silêncio.
+2. Só então **fechar o PR com motivo** (§recusa: drill não recebe
+   countersign; zumbi: checks não reportaram) — close mudo continua
+   proibido.
+3. Por fim **deletar a branch** (`git push origin --delete regrant/auto-*`
+   ou equivalente pela API).
+
+A ordem 1→2→3 produz timeline ordenável no PR: comentário-jobs **antes** de
+`closed` **antes** de `head_ref_deleted` (critério de aceite AID-1741).
+Fechar/deletar antes de capturar perde o diagnóstico para sempre — a run
+continua no lista como vermelho, mas com `jobs: []`.
+
+**Convenção de consumo (E):** vermelho em `head_branch ~ ^regrant/auto-` =
+**proposal-red** — o PR de proposta carrega só o producer snapshot
+(`regrant --propose` exit 3; o bot nunca escreve) e `product readiness
+(claims)` falha na branch por design até countersign. Não é regressão; o
+verificador é a lane `main` (push-run fail-closed).
 
 ### Fallback manual (primeiro run)
 

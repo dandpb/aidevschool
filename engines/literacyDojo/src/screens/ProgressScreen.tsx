@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { downloadTextFile } from "../adapters/downloadText";
 import { useServices } from "../app/services";
 import type { LearnerProgress } from "../domain/progress";
@@ -34,9 +34,20 @@ export function ProgressScreen({
 }) {
   const services = useServices();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  // AID-1755/T3 (padrão AID-1150): a tela possui o contrato de foco do seu
+  // próprio h1 (tabIndex=-1 + refocus na montagem, padrão do
+  // LessonScreen/CheckpointScreen) — a troca de rota SPA reposiciona a
+  // referência de leitura no título "Seu progresso" sem depender do efeito
+  // genérico de rota do App; mudanças assíncronas (backup) seguem nos live
+  // regions role=status/alert do backupStatus.
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
   const [backupStatus, setBackupStatus] = useState<{ kind: "ok" | "error"; text: string } | null>(
     null,
   );
+
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
   const queries = buildTrackQueries(progress, services.content, services.clock);
   const { dailyGoal: goal, dueReviews: due, upcomingReviews: upcoming } = queries;
   const unlockedIds = new Set(progress.achievements.map((achievement) => achievement.id));
@@ -90,7 +101,9 @@ export function ProgressScreen({
 
   return (
     <section className="screen" data-testid="progress-screen" aria-labelledby="progress-title">
-      <h1 id="progress-title">Seu progresso</h1>
+      <h1 id="progress-title" ref={headingRef} tabIndex={-1}>
+        Seu progresso
+      </h1>
 
       <div className="card">
         <h2>Engajamento</h2>

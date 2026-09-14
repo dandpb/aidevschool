@@ -76,9 +76,18 @@ function writeWindowChannel(
   channel: EvidenceChannel,
 ): void {
   switch (channel) {
-    case "game":
-      Reflect.set(target, "__gameEvidence", record)
+    case "game": {
+      // BUG_AUDIT_2026-07-19 #33 residual (AID-1678): append-only like the
+      // pixelquest/voxeldojo channels; a legacy single record is wrapped, the
+      // historical fix shape of 52aaf72ee.
+      const previous = Reflect.get(target, "__gameEvidence")
+      Reflect.set(
+        target,
+        "__gameEvidence",
+        [...(Array.isArray(previous) ? previous : previous ? [previous] : []), record],
+      )
       return
+    }
     case "pixelquest": {
       const previous = Reflect.get(target, "__pixelQuestEvidence")
       Reflect.set(target, "__pixelQuestEvidence", [...(Array.isArray(previous) ? previous : []), record])

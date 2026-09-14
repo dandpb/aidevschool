@@ -196,7 +196,12 @@ export class Scheduler {
 
   dispatchNext(workerId: string, leaseMs: number): { job: Job; lock: Lock } {
     const candidates = [...this.jobs.values()]
-      .filter((job) => job.status === JobStatus.Pending && this.dependenciesCompleted(job))
+      .filter(
+        (job) =>
+          job.status === JobStatus.Pending &&
+          job.dueAtMs <= this.now() &&
+          this.dependenciesCompleted(job),
+      )
       .sort(compareJobs);
 
     for (const candidate of candidates) {
@@ -221,6 +226,9 @@ export class Scheduler {
     }
     if (!this.dependenciesCompleted(job)) {
       throw new Error('dependencies not completed');
+    }
+    if (job.dueAtMs > this.now()) {
+      throw new Error('job is not due yet');
     }
 
     const lock = this.locks.acquire(job.id, this.nodeId, workerId, leaseMs);

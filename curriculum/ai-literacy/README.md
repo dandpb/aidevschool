@@ -7,15 +7,16 @@ cópia de currículo: os projetos numerados (`01_`…`18_`) e a trilha Nível 0
 (`00_ai_in_practice/`, gate no-code do aprendiz único) continuam intocados.
 
 - **Público:** profissionais não técnicos que querem usar IA no trabalho.
-- **Escopo público:** 14 microlições de 3–5 minutos em 4 módulos da jornada
+- **Escopo público:** 23 microlições de 3–5 minutos em 7 módulos da jornada
   `ia_pratica`; conteúdo em pt-BR.
-- **Prévia Dev:** 3 lições válidas no módulo `mod-05`, classificadas como
-  jornada `dev`; ficam preservadas no catálogo, mas não entram no read model
-  público enquanto a Trilha Dev estiver “Em breve”.
+- **Prévia Dev:** 9 lições válidas no módulo `mod-05` (`l15`–`l17`, `l21`–`l23`,
+  `l27`–`l29`), classificadas como jornada `dev`; ficam preservadas no
+  catálogo, mas não entram no read model público enquanto a Trilha Dev estiver
+  “Em breve”.
 - **Consumidora:** `engines/literacyDojo/`, que
   consome **somente o read model tipado gerado** — nunca estes YAMLs direto.
-- **Estado do conteúdo:** 17/17 lições estão `ready` no catálogo: 14 públicas e
-  3 da prévia Dev. Esse status prova validade de conteúdo, não release do app
+- **Estado do conteúdo:** 32/32 lições estão `ready` no catálogo: 23 públicas e
+  9 da prévia Dev. Esse status prova validade de conteúdo, não release do app
   nem domínio do aprendiz.
 
 ## Estrutura
@@ -23,16 +24,19 @@ cópia de currículo: os projetos numerados (`01_`…`18_`) e a trilha Nível 0
 ```text
 curriculum/ai-literacy/
 ├── README.md              # este arquivo
-├── catalog.yaml           # índice canônico: jornadas, skills, módulos, 17 lições
+├── catalog.yaml           # índice canônico: jornadas, skills, módulos, 32 lições
 ├── schemas/
 │   ├── lesson.schema.json # contrato LessonDefinition
 │   └── rubric.schema.json # contrato de rubrica verificável
 ├── modules/
-│   ├── 01-ai-sem-misterio/       # lições l01–l03
-│   ├── 02-pedir-bem/             # lições l04–l07
-│   ├── 03-avaliar-e-verificar/   # lições l08–l11
-│   ├── 04-seguranca-e-aplicacao/ # lições l12–l14
-│   └── 05-dev-contexto-e-escolha/ # prévia Dev l15–l17, fora do app público
+│   ├── 01-ai-sem-misterio/        # lições l01–l03
+│   ├── 02-pedir-bem/              # lições l04–l07
+│   ├── 03-avaliar-e-verificar/    # lições l08–l11
+│   ├── 04-seguranca-e-aplicacao/  # lições l12–l14
+│   ├── 05-dev-contexto-e-escolha/ # prévia Dev l15–l17, l21–l23, l27–l29, fora do app público
+│   ├── 06-rotina-com-ia/          # lições l18–l20
+│   ├── 07-ia-alem-do-texto/       # lições l24–l26
+│   └── 08-rotina-com-ia-ii/       # lições l30–l32
 └── tools/
     ├── validate.py      # validador + compilador do read model
     └── tests/           # testes de contrato (unittest; descobertos pelo pytest)
@@ -54,7 +58,7 @@ python3 curriculum/ai-literacy/tools/validate.py --compile engines/literacyDojo/
 ```
 
 Gera `<outdir>/lessons.ts` com cabeçalho `DO NOT EDIT BY HAND`, os tipos
-`LessonDefinition` + union de atividades e somente os 4 módulos/14 lições
+`LessonDefinition` + union de atividades e somente os 7 módulos/23 lições
 `ready` da jornada `ia_pratica`. A jornada `dev` continua canônica, mas não é
 projetada no LiteracyDojo público. Lições `planned` não entram em `lessons`,
 mas podem permanecer no índice do módulo com `hasContent: false`; elas não
@@ -68,7 +72,7 @@ python3 -m unittest discover -s curriculum/ai-literacy/tools/tests -t .
 
 ## Regras de edição (resumo; contrato completo em `docs/design/ai-literacy/content-contract.md`)
 
-- IDs são estáveis (`l01`…`l17`, `mod-01`…`mod-05`, skills em kebab-case) e
+- IDs são estáveis (`l01`…`l32`, `mod-01`…`mod-08`, skills em kebab-case) e
   nunca dependem do título exibido.
 - Todo módulo declara `journey: ia_pratica | dev`; somente `ia_pratica` compõe
   o percurso público deste release.

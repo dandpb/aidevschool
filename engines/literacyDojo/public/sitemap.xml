@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AiDevSchool — LiteracyDojo (QW1 AID-1593 / web-audit §2, §7).
+     lastmod = data do último commit que alterou cada arquivo (git log). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://aidevschool-literacydojo.netlify.app/</loc>
+    <lastmod>2026-09-12</lastmod>
+  </url>
+  <url>
+    <loc>https://aidevschool-literacydojo.netlify.app/privacidade.html</loc>
+    <lastmod>2026-09-06</lastmod>
+  </url>
+  <url>
+    <loc>https://aidevschool-literacydojo.netlify.app/termos.html</loc>
+    <lastmod>2026-09-06</lastmod>
+  </url>
+</urlset>

@@ -172,6 +172,10 @@ export class Cache {
     return { ...this.counters };
   }
 
+  health(): { status: string; entries: number; evictions: number } {
+    return { status: 'ok', entries: this.entries.size, evictions: this.counters.evictions };
+  }
+
   async shutdown(): Promise<void> {
     this.shutdownFlag = true;
     console.log(JSON.stringify({ level: 'info', event: 'shutdown' }));
@@ -334,7 +338,7 @@ export class HttpApp {
   constructor(private readonly cache: Cache) {}
 
   async handle(method: string, path: string, body = ''): Promise<HttpResponse> {
-    if (path === '/health') return json(200, { status: 'ok' });
+    if (path === '/health') return json(200, this.cache.health());
     if (path === '/metrics') return json(200, this.cache.metrics());
     if (path === '/cluster/ring') return json(200, this.cache.ringInfo());
     if (path === '/cache/invalidate' && method === 'POST') {

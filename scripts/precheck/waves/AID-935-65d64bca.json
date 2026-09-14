@@ -1,0 +1,224 @@
+{
+  "wave": "AID-935",
+  "title": "Telemetry activation wave (PR #277 merge 65d64bca; spec AID-913 GO AID-918 / QA GO AID-928; order AID-935)",
+  "anchorScript": "_work-products/AID-935/precheck-65d64bca.mjs",
+  "os": {
+    "pin": "65d64bca51e2e5814268f3ffa8c564a109fb5ecd",
+    "manifestSha256": "a3b46052654b3c5cf95f91bc9b5427b5500e270e7cbe58cea8c0873bcb3b82b9",
+    "osBundleSha256": "83084624aff7bf8c2a0979b7b05d5e6754d8d0e37bccd37ca7a69651993bbd53",
+    "apps": [
+      "literacydojo",
+      "warehouse",
+      "wormhole",
+      "relay-station",
+      "pipeline-plant",
+      "checkpoint-city",
+      "timeline-tower",
+      "docking-bay",
+      "pixelquest",
+      "dojotoday",
+      "hash-ring",
+      "air-traffic",
+      "mission-control",
+      "breaker-grid",
+      "river-delta",
+      "observatory",
+      "freight-yard",
+      "lighthouse-network",
+      "stacks"
+    ],
+    "envPins": {
+      "VITE_LITERACYDOJO_URL": "literacydojo",
+      "VITE_WAREHOUSE_URL": "warehouse",
+      "VITE_WORMHOLE_URL": "wormhole",
+      "VITE_RELAY_STATION_URL": "relay-station",
+      "VITE_PIPELINE_PLANT_URL": "pipeline-plant",
+      "VITE_CHECKPOINT_CITY_URL": "checkpoint-city",
+      "VITE_TIMELINE_TOWER_URL": "timeline-tower",
+      "VITE_DOCKING_BAY_URL": "docking-bay",
+      "VITE_PIXELDOJO_URL": "pixelquest",
+      "VITE_DOJOTODAY_URL": "dojotoday"
+    },
+    "analyticsEndpoint": "/__dojo/bridge/v1/analytics",
+    "privacidade": {
+      "staticRoute": "/privacidade.html",
+      "telemetryCopyMarker": "Telemetria do produto"
+    },
+    "bridge": {
+      "sessionMissionId": "ai-literacy:l15",
+      "sessionActivityId": "l15-a1"
+    },
+    "catalog": {
+      "literacyMissions": 29,
+      "literacyEvidence": 29,
+      "verifierRequired": 36,
+      "domFallbacks": 36,
+      "gamesEvidence": 7,
+      "totalMissions": 36,
+      "aiPraticaTracks": 21,
+      "devTracks": 17,
+      "contentVersion": "2026-09-06.1",
+      "contentVersionEmbeds": 32
+    },
+    "ingestion": {
+      "eventId": "0a5d35e1-0000-4000-8000-smoke00000001",
+      "installationId": "aid935-os-smoke",
+      "sessionId": "aid935-os-smoke-s1"
+    }
+  },
+  "literacy": {
+    "distListFile": "/tmp/opencode/promo935/lit_dist_files.txt",
+    "localDistDir": "/tmp/opencode/promo935/wt/engines/literacyDojo/dist",
+    "coreAssets": [
+      "/",
+      "/manifest.webmanifest",
+      "/sw.js",
+      "/privacidade.html",
+      "/termos.html"
+    ],
+    "spaFallback": {
+      "probePath": "/rota-inexistente-aid935",
+      "shellMarker": "<div id=\"root\"></div>"
+    },
+    "privacidade": {
+      "telemetryHeading": "<h2>Telemetria do produto</h2>",
+      "kAnonymityCopy": "pelo menos 5 pessoas",
+      "retentionCopy": "90 dias",
+      "lastUpdated": "Última atualização: 6 de setembro de 2026",
+      "staleDate": "Última atualização: 22 de agosto"
+    },
+    "termos": {
+      "anonymousStatsCopy": "estatísticas anônimas de uso"
+    },
+    "collector": {
+      "route": "/__dojo/bridge/v1/analytics",
+      "exportFrom": "2026-09-06",
+      "exportTo": "2026-09-06"
+    },
+    "ingestion": {
+      "eventId": "3a5d35e2-0000-4000-8000-000000000002",
+      "sessionId": "3a5d35e2-0000-4000-8000-000000000003",
+      "contentVersion": "2026-09-06.1",
+      "lessonId": "l01",
+      "lessonVersion": 2
+    },
+    "baked": {
+      "analyticsEndpoint": "/__dojo/bridge/v1/analytics",
+      "verifierEndpoint": "/.netlify/functions/literacy-verify",
+      "envelopeV2": "schemaVersion:2"
+    },
+    "verify": {
+      "route": "/.netlify/functions/literacy-verify",
+      "liveAliasUrl": "https://aidevschool-literacydojo.netlify.app/.netlify/functions/literacy-verify",
+      "passProbe": {
+        "schemaVersion": 1,
+        "source": "literacydojo",
+        "verifierRequired": true,
+        "lessonId": "l02",
+        "lessonVersion": 3,
+        "activityId": "l02-a1",
+        "activityType": "output_comparison",
+        "skillIds": [
+          "entender",
+          "avaliar"
+        ],
+        "answer": {
+          "outputId": "out-b",
+          "criterionIds": [
+            "c-fontes",
+            "c-limites"
+          ]
+        },
+        "deterministicChecks": {
+          "betterOutputId": true,
+          "c-fontes": true,
+          "c-limites": true,
+          "noExtraCriteria": 0
+        },
+        "score": 1,
+        "pass": true
+      },
+      "failProbe": {
+        "schemaVersion": 1,
+        "source": "other"
+      },
+      "expected": {
+        "verifier_version": "1-netlify-l02-v3"
+      }
+    }
+  },
+  "anchorCheckIds": [
+    "os-manifest-sha256",
+    "os-manifest-sourceRevision",
+    "os-manifest-os-bytes",
+    "os-surface-200 /",
+    "os-surface-200 /apps/literacydojo/",
+    "os-surface-200 /apps/warehouse/",
+    "os-surface-200 /apps/wormhole/",
+    "os-surface-200 /apps/relay-station/",
+    "os-surface-200 /apps/pipeline-plant/",
+    "os-surface-200 /apps/checkpoint-city/",
+    "os-surface-200 /apps/timeline-tower/",
+    "os-surface-200 /apps/docking-bay/",
+    "os-surface-200 /apps/pixelquest/",
+    "os-surface-200 /apps/dojotoday/",
+    "os-surface-200 /apps/hash-ring/",
+    "os-surface-200 /apps/air-traffic/",
+    "os-surface-200 /apps/mission-control/",
+    "os-surface-200 /apps/breaker-grid/",
+    "os-surface-200 /apps/river-delta/",
+    "os-surface-200 /apps/observatory/",
+    "os-surface-200 /apps/freight-yard/",
+    "os-surface-200 /apps/lighthouse-network/",
+    "os-surface-200 /apps/stacks/",
+    "os-env-pin-VITE_LITERACYDOJO_URL",
+    "os-env-pin-VITE_WAREHOUSE_URL",
+    "os-env-pin-VITE_WORMHOLE_URL",
+    "os-env-pin-VITE_RELAY_STATION_URL",
+    "os-env-pin-VITE_PIPELINE_PLANT_URL",
+    "os-env-pin-VITE_CHECKPOINT_CITY_URL",
+    "os-env-pin-VITE_TIMELINE_TOWER_URL",
+    "os-env-pin-VITE_DOCKING_BAY_URL",
+    "os-env-pin-VITE_PIXELDOJO_URL",
+    "os-env-pin-VITE_DOJOTODAY_URL",
+    "os-analytics-endpoint-baked",
+    "os-privacidade-static-200",
+    "os-privacidade-telemetry-copy",
+    "os-privacidade-not-spa-shell",
+    "os-collector-cross-origin-403",
+    "os-export-fail-closed",
+    "os-ingestion-smoke-202",
+    "os-invalid-envelope-rejected",
+    "os-bridge-session-responds",
+    "os-bridge-verification-fail-closed",
+    "os-catalog-29-literacy-missions",
+    "os-catalog-29-literacy-evidence",
+    "os-catalog-verifierRequired-36",
+    "os-catalog-36-dom-fallback",
+    "os-catalog-7-games",
+    "os-catalog-36-total",
+    "os-catalog-ia-pratica-20",
+    "os-catalog-dev-9",
+    "os-catalog-contentVersion-uniform",
+    "lit-dist-byte-equivalence",
+    "lit-200 /",
+    "lit-200 /manifest.webmanifest",
+    "lit-200 /sw.js",
+    "lit-200 /privacidade.html",
+    "lit-200 /termos.html",
+    "lit-spa-fallback",
+    "lit-privacidade-telemetry-section",
+    "lit-termos-telemetry-section",
+    "lit-privacidade-not-stale",
+    "lit-collector-route-json-fail-closed",
+    "lit-collector-not-spa-html",
+    "lit-collector-cross-origin-403",
+    "lit-ingestion-smoke-202",
+    "lit-analytics-endpoint-baked",
+    "lit-verifier-endpoint-baked",
+    "lit-envelope-v2-baked",
+    "lit-verify-draft-pass",
+    "lit-verify-draft-fail-closed",
+    "lit-verify-parity-with-live"
+  ]
+}

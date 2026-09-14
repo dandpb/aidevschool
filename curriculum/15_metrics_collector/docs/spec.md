@@ -6,9 +6,9 @@
 
 ## Overview
 
-Build a language-neutral metrics collection service in Go, Rust, and Node.js/TypeScript that records application metrics, stores them as time-series data, aggregates them for dashboard queries, exposes a Prometheus-compatible scrape endpoint, and evaluates threshold-based alerts. The project is an educational observability system: learners must understand metric types, timestamped samples, histogram buckets, query windows, percentile accuracy, downsampling, retention, and the latency trade-offs between hot-path recording and read-time aggregation.
+Build a metrics collection service in Node.js/TypeScript that records application metrics, stores them as time-series data, aggregates them for dashboard queries, exposes a Prometheus-compatible scrape endpoint, and evaluates threshold-based alerts. The project is an educational observability system: learners must understand metric types, timestamped samples, histogram buckets, query windows, percentile accuracy, downsampling, retention, and the latency trade-offs between hot-path recording and read-time aggregation.
 
-This project teaches the core primitives behind production monitoring systems. Counters, gauges, histograms, and timers behave differently, so the API and storage model must preserve those semantics instead of treating every metric as a generic number. Each implementation must expose the same public behavior so reviews and benchmarks can compare runtime choices, data layout, aggregation strategy, and percentile accuracy rather than feature drift.
+This project teaches the core primitives behind production monitoring systems. Counters, gauges, histograms, and timers behave differently, so the API and storage model must preserve those semantics instead of treating every metric as a generic number. The public contract below is language-neutral so a learner can port it to another runtime and compare choices, but the maintained implementation track is Node.js/TypeScript (`node-impl/`); see **Implementation Tracks** at the end of this spec (recalibrated in AID-1671 — earlier revisions promised Go and Rust implementations that the node-first curriculum policy removed; Project 01 is the polyglot pilot).
 
 The central comparison question is: **How do histogram bucket strategies affect p99 accuracy across runtimes?** Implementations MUST support explicit histogram bucket configuration and MUST report enough data for benchmark reviews to compare approximate percentiles with known input distributions.
 
@@ -53,7 +53,7 @@ The central comparison question is: **How do histogram bucket strategies affect 
 - **NFR-009: Restart recovery.** Implementations MUST document whether accepted samples are durable before acknowledgement, buffered until flush, or volatile in memory; restart behavior MUST be visible in health output.
 - **NFR-010: Query safety.** Query APIs MUST reject or cap queries that would scan unbounded ranges, return unbounded series, or exceed configured cardinality limits.
 - **NFR-011: Alert isolation.** A slow or failing alert rule MUST NOT stop ingestion, dashboard queries, or other alert rules from evaluating.
-- **NFR-012: Language neutrality.** Go, Rust, and Node/TypeScript implementations MUST follow this public contract even if their storage engines, concurrency primitives, histogram algorithms, and HTTP frameworks differ.
+- **NFR-012: Language neutrality.** The public contract is language-neutral so any runtime can implement it, but the maintained implementation track is Node/TypeScript (`node-impl/`). Ports to other runtimes are optional learner extensions, not deliverables of this project.
 
 ## API / Interface Contract
 
@@ -523,25 +523,22 @@ flowchart LR
 - **NFR-001:** Benchmark evidence shows record latency below **0.1 ms p95** under the defined profile.
 - **NFR-002:** Benchmark evidence shows 1-hour dashboard/query requests below **50 ms p99** under the defined profile.
 
-## Language-Specific Notes
+## Implementation Tracks
 
-### Go
+> Recalibrated in AID-1671. Earlier revisions of this spec promised Go, Rust, and Node.js/TypeScript implementations. The curriculum-wide node-first policy (commit `1b0a3090`) keeps Project 01 as the only polyglot pilot and removed the `go-impl/` and `rust-impl/` directories from this project; the spec no longer promises them.
 
-- Prefer explicit goroutine ownership for ingestion, flushing, downsampling, retention, and alert evaluation workers.
-- Use bounded channels or queues for backpressure and document batch sizes, flush intervals, and lock granularity around per-series updates.
-- Compare histogram bucket update strategies with benchmarks because lock contention can dominate the `<0.1 ms` record-latency target.
-
-### Rust
-
-- Model metric types with enums and typed validation errors so invalid counter/gauge/histogram/timer semantics are rejected at boundaries.
-- Use bounded async channels or lock-free/low-contention structures for the hot record path, and make ownership between raw store, rollups, and query snapshots explicit.
-- Benchmark percentile calculation and bucket merge strategies independently from HTTP parsing to isolate runtime and data-layout effects.
-
-### Node/TS
+### Node/TS (maintained)
 
 - Use runtime validation for metric write schemas and avoid parsing unbounded request bodies into memory.
 - Keep ingestion hot paths non-blocking; push downsampling, retention, and alert evaluation into batched async loops or workers so the HTTP event loop remains responsive.
 - JSON-native ergonomics are a strength, but benchmarks must separate parse/validation time from series update, storage flush, aggregation, and dashboard rendering time.
+
+### Porting to Go or Rust (optional learner extension)
+
+- The contract above is runtime-agnostic: any port MUST expose the same endpoints, envelopes, and error codes.
+- In Go, prefer explicit goroutine ownership for ingestion, flushing, downsampling, retention, and alert evaluation workers, with bounded channels for backpressure.
+- In Rust, model metric types as enums with typed validation errors and use bounded async channels on the hot record path, making ownership between raw store, rollups, and query snapshots explicit.
+- Compare histogram bucket update strategies with benchmarks, because lock contention can dominate the `<0.1 ms` record-latency target in either runtime.
 
 ## Dependencies
 

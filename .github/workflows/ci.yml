@@ -58,6 +58,26 @@ jobs:
             scripts/sdlc_guard_check.sh --base "$SDLC_BASE"
           fi
 
+  # AID-1556 (audit AID-1526 §3.1, P1): the promotion precheck lives in
+  # scripts/precheck/ as a versioned baseline with per-wave anchor configs,
+  # replacing the copy-per-wave scripts that drifted between waves. This job
+  # runs the offline self-test (synthetic violations must fail, same contract
+  # as the sdlc-guard self-test above) and a dry-run of the anchor wave
+  # config, so registry/config drift breaks CI before it can reach a
+  # promotion wave. No network, no dependencies.
+  precheck-baseline:
+    name: Promotion precheck baseline (self-test + dry-run)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: precheck self-test (synthetic violations must fail)
+        run: node scripts/precheck/precheck.mjs --self-test
+      - name: anchor wave dry-run (offline plan + registry validation)
+        run: node scripts/precheck/precheck.mjs --wave scripts/precheck/waves/AID-935-65d64bca.json --dry-run
+
   codexdojo:
     name: codexDojo (TS)
     runs-on: ubuntu-latest
@@ -104,7 +124,17 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): extends the AID-571 deterministic
+      # Playwright retry policy to pixelDojo. The smoke script is expanded
+      # here (recursive per-package run + readiness report) so the flags land
+      # on `playwright test` itself — appending them to `pnpm smoke` would
+      # hand them to readiness-report.mjs instead. A retried test surfaces as
+      # a named "flaky" entry in this log plus its on-first-retry trace
+      # (durable via the artifact upload below); a real regression fails
+      # twice and still fails the job. Recurrence on the same test escalates
+      # to quarantine + issue (do not raise retries). Local stays retries: 0.
+      - run: pnpm -r --if-present run smoke --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -135,10 +165,26 @@ jobs:
       # Root scripts include shared accessibility/evidence checks that a raw
       # recursive invocation would skip.
       - run: pnpm test
+      # AID-1673 (hardening-top10 R3): direct suite for @aidevschool/evidence,
+      # the golden-rule primitive shared by pixelDojo, voxelDojo and dojoToday.
+      # The package declares no dependencies, so this step only needs this
+      # workspace's vitest install plus the package's own config. Pins the
+      # BUG_AUDIT_2026-07-19 #33/#34 regression classes (append-only channels,
+      # invalid-envelope / non-ISO-ts rejection); mutation proof documented in
+      # engines/shared/teaching-evidence/README.md.
+      - run: pnpm exec vitest run -c ../shared/teaching-evidence/vitest.config.ts --reporter=verbose
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the workspace-wide smoke sweep (script expanded here so the flags land
+      # on each game's `playwright test`, not on readiness-report.mjs). A
+      # retried test surfaces as a named "flaky" entry in this log plus its
+      # on-first-retry trace (durable via the artifact upload below); a real
+      # regression fails twice and still fails the job. Recurrence on the same
+      # test escalates to quarantine + issue (do not raise retries).
+      - run: pnpm -r --if-present run smoke --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -171,97 +217,21 @@ jobs:
           cache: npm
           cache-dependency-path: engines/codexdojo-os-prototype/package-lock.json
       - run: npm ci
-      - run: pnpm --dir ../codexDojo install --frozen-lockfile
-      - run: pnpm --dir ../pixelDojo install --frozen-lockfile
-      - run: pnpm --dir ../voxelDojo install --frozen-lockfile
-      - run: pnpm --dir ../miniTown install --frozen-lockfile
-      - run: npm ci --prefix ../dojoToday
-      - run: python -m pip install -e ../..
-      - run: npm run lint
-      - run: npm run test
-      # The staged verification bridge is a projection of learner/gate; run its
-      # contract test here so verifier drift fails CI instead of production (AID-415).
-      - run: node --test ../../learner/gate/tests/dojo_verification_bridge_netlify.test.mjs
-      # Same for the analytics collector (AID-470 F1): the staged function must
-      # accept and reject exactly the OS analytics vocabulary; TS-side parity
-      # runs in the vitest suite above (collectorParity.test.ts).
-      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_netlify.test.mjs
-      # Independent literacy verifier for the standalone site (AID-941): the
-      # fixed l02-v3 contract test keeps the tracked function in lockstep with
-      # the live literacy-verify deployment (fails closed on any drift).
-      - run: node --test ../../learner/gate/tests/literacy_verify_netlify.test.mjs
-      # AID-913 second envelope + activation invariants (spec §3/§7): the v2
-      # collector contract and the executable activation-surface invariant.
-      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v2.test.mjs ../../learner/gate/tests/dojo_analytics_activation_surfaces.test.mjs
-      # AID-987/T1b surfaces envelope v3: the same collector also receives the
-      # anonymous dojoToday/voxelDojo/PixelQuest funnel events; the contract
-      # test fails closed on vocabulary drift against the canonical emitter.
-      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v3.test.mjs
-      # F2 2026-09-10-entry-brief-instrumentation: exposure vocabulary (+2 OS
-      # names, +2 literacy names, optional entry prop) mirrored in the collector.
-      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_v4.test.mjs
-      # ...and the schema-drift monitor learns the v3 envelope too (exports
-      # containing surface events must classify, not drift).
-      - run: node --test ../../learner/gate/tests/dojo_analytics_schema_drift_monitor_v3.test.mjs
-      # F2: the monitor accepts the extended vocabulary (exposure events +
-      # entry prop) and reports the non-UUID eventId diagnostic without failing.
-      - run: node --test ../../learner/gate/tests/dojo_analytics_schema_drift_monitor_v4.test.mjs
-      # AID-947 durable-backing packaging invariant: the deployed functions
-      # must declare @netlify/blobs and load it through the static-import
-      # wrapper — the live backing was ephemeral /tmp NDJSON on both surfaces
-      # when this regressed (countersign AID-940 finding).
-      - run: node --test ../../learner/gate/tests/dojo_analytics_collector_packaging.test.mjs
-      # AID-947 end-to-end durable proof in CI: real local Blobs server
-      # (@netlify/blobs/server) + the collector's DEFAULT export — duplicate
-      # identical POSTs must collapse to one export line.
-      - run: npm ci --prefix ../../learner/gate/netlify-functions --ignore-scripts --no-audit --no-fund
-      - run: node ../../learner/gate/analytics/verify_deployed_blobs.mjs
-      # Offline aggregation + schema-drift monitor (AID-473 F2): the funnel
-      # contract tests run here, and the monitor itself fails high over the
-      # synthetic fixtures (real pilot NDJSON never lands in the repo; the
-      # fixtures are also checked against events.ts by fixtureSchemaDrift.test.ts).
-      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation.test.mjs ../../learner/gate/tests/dojo_analytics_schema_drift_monitor.test.mjs
-      # F2 v4: activationDetail/briefExposure/probeClassification — additive
-      # sections; v3 sections stay value-identical (R7d locked by the
-      # byte-identical example report in the main aggregation test above).
-      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_aggregation_v4.test.mjs
-      # AID-1525 (CI wiring AID-1547): the conditional surfacesFunnel section
-      # of the v4 contract — surfaces v3 lines aggregate per source instead of
-      # landing in rejectedEvents; inputs without v3 stay byte-identical.
-      - run: node --test ../../learner/gate/tests/dojo_analytics_funnel_surfaces_v3.test.mjs
-      - run: node ../../learner/gate/analytics/schema_drift_monitor.mjs --input ../../learner/gate/tests/fixtures/analytics/synthetic,../../learner/gate/tests/fixtures/analytics/synthetic-v4
-      # Build with the same-origin pilot URLs baked in (Vite reads import.meta.env
-      # at build time), so the smoke below can reuse this dist/ without a rebuild.
-      - run: npm run build
+      # §5.2 (AID-1738, ORDEM AID-1714/r3-B): the cross-engine integration
+      # steps that used to live inline below moved to the named harness
+      # scripts/integration/cross-engine.sh (contract: scripts/integration/
+      # README.md). The harness owns the integration contract with CI-identical
+      # argv and phase ORDER (deps → unit lint/test → contracts → blobs →
+      # drift → build → smoke → report; the OS unit tests spawn the Python
+      # bridge verifiers, so the substrate install must precede them) and is
+      # first-class locally; this job keeps id/name so the required check
+      # `codexdojo-os (TS)` is unchanged, and only orchestrates.
+      # INTEGRATION_PLAYWRIGHT_RETRIES=1 is the deterministic retry policy
+      # (AID-571/AID-1658): local runs default to 0.
+      - name: cross-engine integration harness (scripts/integration)
+        run: bash ../../scripts/integration/cross-engine.sh --skip-self-install
         env:
-          VITE_LITERACYDOJO_URL: /apps/literacydojo/
-          VITE_WAREHOUSE_URL: /apps/warehouse/
-          VITE_WORMHOLE_URL: /apps/wormhole/
-          VITE_RELAY_STATION_URL: /apps/relay-station/
-          VITE_PIPELINE_PLANT_URL: /apps/pipeline-plant/
-          VITE_CHECKPOINT_CITY_URL: /apps/checkpoint-city/
-          VITE_TIMELINE_TOWER_URL: /apps/timeline-tower/
-          VITE_DOCKING_BAY_URL: /apps/docking-bay/
-      # P5: prove the static pilot build mounts missions from its own origin.
-      # The build above already produced dist/ (and gates typecheck), so we
-      # bundle the mission runtimes and run Playwright directly instead of
-      # test:smoke:pilot, which would rebuild the OS a second time.
-      - run: npx playwright install --with-deps chromium
-      - run: node scripts/bundle-missions.mjs
-      # AID-571 (Auditoria #5 A5-F4): deterministic retry policy for the
-      # codexdojo-os Playwright smokes. Both known flakes (#154 job 100028707657,
-      # #227 job 100052442436) were root-caused to test-side timing fragility
-      # and fixed in the specs; --retries=1 covers the residual transient class
-      # WITHOUT ad-hoc manual rerun-failed-jobs: a retried test surfaces as a
-      # named "flaky" entry in this log (plus its trace) — that listing is the
-      # durable trace the audit required — while a real regression fails twice
-      # and still fails the job. Recurrence of the flaky listing on the same
-      # test escalates to quarantine + automatic issue (do not raise retries).
-      - run: npx playwright test --retries=1 --config=playwright.pilot.config.ts
-      - run: npx playwright test --retries=1 --project=desktop-1280 tests/chapter-continuity.smoke.spec.ts tests/renderer-fallback.smoke.spec.ts tests/readiness-recovery.smoke.spec.ts
-      - run: node scripts/readiness-report.mjs
-        env:
-          READINESS_TEST_RUN: passed
+          INTEGRATION_PLAYWRIGHT_RETRIES: "1"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -284,6 +254,17 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -e ".[dev]"
+      # AID-1636 (hardening-top10 R4, fila QA-approved rev2 AID-1586):
+      # scripts/check_python_complexity.py (radon >=6,<7 from [dev]) was the
+      # charter's complexity ruler but ran nowhere — debt grew invisible.
+      # Self-test first (synthetic over-complex function must fail the gate),
+      # then the real check: new violations fail CI; the frozen baseline at
+      # scripts/python_complexity_baseline.txt waives the 107 pre-existing
+      # entries and must shrink when complexity drops (stale entries fail).
+      - name: python complexity gate self-test (synthetic violations must fail)
+        run: python3 scripts/check_python_complexity.py --self-test
+      - name: python complexity gate (max 8, ratchet vs frozen baseline)
+        run: python3 scripts/check_python_complexity.py --max 8 --baseline scripts/python_complexity_baseline.txt learner engines/minimaxDojo engines/openclaw engines/miniMaxEvolutionEngine engines/aiDevschoolMvp
       - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
 
   literacydojo:
@@ -308,7 +289,15 @@ jobs:
       - run: npm run test
       - run: npm run build
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the literacyDojo e2e suite (test:e2e expanded here so the flags land
+      # on `playwright test` itself). A retried test surfaces as a named
+      # "flaky" entry in this log plus its on-first-retry trace (durable via
+      # the artifact upload below); a real regression fails twice and still
+      # fails the job. Recurrence on the same test escalates to quarantine +
+      # issue (do not raise retries). Local stays retries: 0.
+      - run: npx playwright test --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       # This report contains automated facts only; observation assertions stay
       # with the independent assessor and cannot grant readiness in CI.
       - uses: actions/upload-artifact@v4
@@ -344,7 +333,15 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm smoke
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # the miniTown smoke (script expanded here so the flags land on
+      # `playwright test` itself). A retried test surfaces as a named "flaky"
+      # entry in this log plus its on-first-retry trace (durable via the
+      # artifact upload below); a real regression fails twice and still fails
+      # the job. Recurrence on the same test escalates to quarantine + issue
+      # (do not raise retries). Local stays retries: 0.
+      - run: MINITOWN_PORT=5189 pnpm exec playwright test --retries=1 --trace on-first-retry
+      - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -406,13 +403,44 @@ jobs:
           pattern: "*-readiness-${{ github.sha }}"
           path: artifacts/product-readiness
           merge-multiple: true
+      # AID-1669 (hardening R6): fail fast and unambiguously when no producer
+      # report was downloaded, instead of letting an empty aggregation surface
+      # later at `check` with stale-looking "lacks independent evidence"
+      # errors. Genuine staleness only ever fails `check`/`enforce` below with
+      # producer reports in hand — that is the re-grant-factory signal.
+      - name: assert producer reports present
+        run: |
+          count=$(find artifacts/product-readiness -type f -name '*.json' ! -name 'product-readiness-report.json' | wc -l)
+          if [ "$count" -eq 0 ]; then
+            failed=""
+            for pair in "literacydojo=${{ needs.literacydojo.result }}" \
+                        "codexdojo-os=${{ needs.codexdojo-os.result }}" \
+                        "dojotoday=${{ needs.dojotoday.result }}" \
+                        "pixeldojo=${{ needs.pixeldojo.result }}" \
+                        "voxeldojo=${{ needs.voxeldojo.result }}" \
+                        "minitown=${{ needs.minitown.result }}"; do
+              job="${pair%%=*}"; result="${pair##*=}"
+              if [ "$result" != "success" ]; then failed="$failed $job=$result"; fi
+            done
+            echo "::error title=PRODUCER-REPORTS-MISSING::zero producer readiness reports downloaded; non-success producer jobs:${failed:- none}. NOT a stale-claims window: the readiness re-grant factory must not propose for this run."
+            exit 1
+          fi
+          echo "producer readiness report files present: $count"
       - name: aggregate tested-SHA producer facts
         run: >-
           python3 docs/product-readiness/tools/cli.py aggregate
           --reports artifacts/product-readiness
           --output artifacts/product-readiness/product-readiness-report.json
       - name: validate readiness sources and candidate report
+        id: readiness_check
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+      # AID-1669: this annotation can only be reached with producer reports
+      # present (assert above passed), so the failure above is the
+      # stale-claims/invalid-candidate signal the factory exists for — clearly
+      # distinct from PRODUCER-REPORTS-MISSING above.
+      - name: annotate stale or invalid readiness failure
+        if: failure() && steps.readiness_check.outcome == 'failure'
+        run: echo "::error title=READINESS-STALE-OR-INVALID::producer reports were present, so the check failure above means claims are stale (or the candidate report is invalid). This IS the re-grant-factory signal."
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
       - name: run readiness cli guard tests
@@ -438,10 +466,17 @@ jobs:
           set -e
           for dir in curriculum/[0-9][0-9]_*/node-impl; do
             test -f "$dir/package.json" || continue
+            # AID-1670 (hardening-top10 R10): install from the committed
+            # lockfile so dependency resolution is reproducible; a missing or
+            # out-of-sync lockfile fails here instead of flaking upstream.
+            test -f "$dir/package-lock.json" || {
+              echo "::error::$dir/package.json has no committed package-lock.json (AID-1670)"
+              exit 1
+            }
             echo "::group::$dir"
             (
               cd "$dir"
-              npm install --no-package-lock --no-audit --no-fund
+              npm ci --no-audit --no-fund
               npm run lint
               npm run test
               npm run build
@@ -533,8 +568,24 @@ jobs:
       - name: build
         run: pnpm --filter ${{ matrix.game }} build
       - run: pnpm exec playwright install --with-deps chromium
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy for
+      # each game's smoke (every game-* smoke script is a plain
+      # `playwright test`, so the flags pass straight through pnpm). A retried
+      # test surfaces as a named "flaky" entry in this log plus its
+      # on-first-retry trace; recurrence on the same test escalates to
+      # quarantine + issue (do not raise retries).
       - name: smoke
-        run: pnpm --filter ${{ matrix.game }} smoke
+        run: pnpm --filter ${{ matrix.game }} run smoke --retries=1 --trace on-first-retry
+      # Durable half of the AID-571 contract for this matrix: keep the
+      # on-first-retry traces (flaky evidence) as an artifact. Named
+      # deliberately OUTSIDE the `*-readiness-${{ github.sha }}` pattern so
+      # the product-readiness aggregation never ingests game test-results.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: voxeldojo-games-flaky-traces-${{ matrix.game }}-${{ github.sha }}
+          path: engines/voxelDojo/${{ matrix.game }}/test-results
+          if-no-files-found: warn
 
   # TECH_DEBT_AUDIT_2026-07-08 item 8 — pixelDojo `games/*` siblings. The
   # canonical `pixel-quest/` is already covered by the root `pixeldojo` job
