@@ -162,7 +162,7 @@ describe('Engine Hub', () => {
     await user.click(screen.getByRole('button', { name: 'Usar voxelDojo' }))
     const picker = screen.getByRole('combobox', { name: 'Experiência voxelDojo' })
 
-    expect(picker.querySelectorAll('option')).toHaveLength(16)
+    expect(picker.querySelectorAll('option')).toHaveLength(17)
     expect(screen.getByTitle('voxelDojo · HASH RING integrado').getAttribute('src')).toBe(
       'https://hash-ring.voxel.example/',
     )

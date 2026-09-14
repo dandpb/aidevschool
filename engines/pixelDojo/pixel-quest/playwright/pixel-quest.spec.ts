@@ -316,9 +316,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     metrics: { kind: "pixelquest-token-bucket" },
     review_context: { verifier_required: true, scheduler_source: "learner-substrate" },
   })
-  const taskQueueConsoleRecord = parsedEvidence.find(
-    (record) => record.unit_id === "U4-task-queue",
-  )
+  const taskQueueConsoleRecord = parsedEvidence.find((record) => record.unit_id === "U4-task-queue")
   expect(taskQueueConsoleRecord).toBeDefined()
   expect(taskQueueConsoleRecord).toMatchObject({
     metrics: { kind: "pixelquest-task-queue" },
