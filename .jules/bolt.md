@@ -34,3 +34,7 @@
 ## 2025-02-18 - Optimize findIndex in deterministic pathfinding hot loops
 **Learning:** In simulation engine hot loops (like pathfinding adjacency queries), using `Array.prototype.findIndex` allocates a closure on every iteration. This adds function invocation overhead and increases GC pressure, leading to degraded performance when called thousands of times per tick.
 **Action:** Replace `Array.prototype.findIndex` with a traditional indexed `for` loop in frequently called functions.
+
+## 2025-02-18 - Avoid array allocations for counting in hot paths
+**Learning:** In simulation hot paths like state evaluation loops, using `.filter(...).length` to count elements based on a condition creates unnecessary intermediate array allocations, increasing garbage collection (GC) pressure. This pattern is particularly harmful when called frequently during simulation ticks.
+**Action:** Replace `.filter(...).length` with standard `for` loops and a counter variable to avoid array allocations and reduce GC pressure.
