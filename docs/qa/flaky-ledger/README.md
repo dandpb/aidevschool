@@ -20,12 +20,12 @@ GITHUB_TOKEN=… node scripts/flaky-ledger/flaky-ledger.mjs --runs 60
 
 ## Estado atual (regenerado na última varredura)
 
-- Última varredura: 60 run(s) do workflow CI (59 com jobs Playwright examinados).
-- Entradas novas na última varredura: 0; total acumulado no ledger: 0.
+- Última varredura: 44 run(s) do workflow CI (42 com jobs Playwright examinados; 28 log(s) indisponível(is) no momento e ignorado(s) — re-rodar a varredura cobre o que faltou).
+- Entradas novas na última varredura: 1; total acumulado no ledger: 1.
 
 | Superfície | Teste | Ocorrências | Última |
 | --- | --- | --- | --- |
-| — | — | 0 | — |
+| codexdojo-os | `[desktop-1280] › tests/chapter-continuity.smoke.spec.ts:202:1 › preserves completed first-release missions across switches and reloads ` | 1 | 2026-09-14T16:17:17Z |
 
 (Zero linhas = zero entradas flaky registradas nas varreduras — estado
 legítimo, não falha da ferramenta.)
