@@ -174,7 +174,7 @@ def main(args: list[str] | None = None) -> int:
         for value in operands:
             if value == "--require-current":
                 require_current = True
-            else:
+            elif value != "--reports":
                 report_values.append(value)
         report_directories = tuple(Path(value) for value in report_values)
         report_errors = validate_report_directories(domain, REPO_ROOT, report_directories)

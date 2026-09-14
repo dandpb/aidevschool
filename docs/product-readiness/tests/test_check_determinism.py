@@ -8,6 +8,7 @@ The stale-claims window keeps a single blocking consumer: `check
 trigger.
 """
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -83,6 +84,11 @@ def _build_fixture(tmp_path: Path, revalidate_by: date) -> Path:
     source_dir.mkdir(parents=True)
     source_file = source_dir / "app.ts"
     source_file.write_text("export const version = 1;\n", encoding="utf-8")
+    artifact_dir = tmp_path / "engines" / "fixtureEngine" / "artifacts"
+    artifact_dir.mkdir(parents=True)
+    artifact_file = artifact_dir / "happy-path.ndjson"
+    artifact_file.write_text('{"scenario":"fixture-happy-path"}\n', encoding="utf-8")
+    artifact_sha = hashlib.sha256(artifact_file.read_bytes()).hexdigest()
 
     inventory = """
 schemaVersion: 1
@@ -143,7 +149,12 @@ sourcePaths: [engines/fixtureEngine/src/]
         "outcome": "pass",
         "sourceFingerprint": source_digest,
         "manualFingerprint": manual_digest,
-        "artifacts": [],
+        "artifacts": [
+            {
+                "path": "engines/fixtureEngine/artifacts/happy-path.ndjson",
+                "sha256": artifact_sha,
+            }
+        ],
         "gaps": [],
     }
     (readiness_root / "evidence" / "results.ndjson").write_text(
@@ -206,6 +217,19 @@ def test_check_ignores_revalidate_by_boundary(tmp_path: Path, capsys) -> None:
     # ...and the expiry is reported only under --require-current
     assert cli.main(["check", "--require-current"]) == 1
     assert "assessment has expired" in capsys.readouterr().err
+
+
+def test_check_accepts_reports_flag_with_empty_directory(tmp_path: Path) -> None:
+    # Given the CI invocation shape `check --reports DIR` (regression: the
+    # flag itself must never be parsed as a report directory)
+    _build_fixture(tmp_path, date(2026, 10, 14))
+    cli = _load_cli(tmp_path / "docs" / "product-readiness", tmp_path)
+    empty_reports = tmp_path / "artifacts" / "product-readiness"
+    empty_reports.mkdir(parents=True)
+
+    # Then the flag is consumed and the empty directory validates cleanly
+    assert cli.main(["check", "--reports", str(empty_reports)]) == 0
+    assert cli.main(["check", "--reports", str(empty_reports), "--require-current"]) == 0
 
 
 def test_check_still_blocks_view_desync(tmp_path: Path, capsys) -> None:
