@@ -1,0 +1,480 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.7, pytest-8.4.2, pluggy-1.6.0 -- /mnt/mac/aidevschool/.venv-linux/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp/aidevschool-context-authority
+configfile: pyproject.toml
+collecting ... collected 22 items
+
+engines/openclaw/tests/test_provenance.py::test_legacy_provenance_is_read_only FAILED [  4%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-spec-done-impl] FAILED [  9%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-done-impl-done-review] FAILED [ 13%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[impl-done-review-done-benchmark] FAILED [ 18%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[review-done-benchmark-done-optimize] FAILED [ 22%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete] FAILED [ 27%]
+engines/openclaw/tests/test_provenance.py::test_cli_override_reports_simulated_provenance FAILED [ 31%]
+engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance FAILED [ 36%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent] FAILED [ 40%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent] FAILED [ 45%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent] FAILED [ 50%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-] FAILED [ 54%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ] FAILED [ 59%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None] FAILED [ 63%]
+engines/openclaw/tests/test_provenance.py::test_cli_preview_preserves_provenance PASSED [ 68%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_pass_stamps_authorized_bytes FAILED [ 72%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_fail_keeps_provenance PASSED [ 77%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] FAILED [ 81%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-devschool-spec] FAILED [ 86%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-] FAILED [ 90%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract FAILED [ 95%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented FAILED [100%]
+
+=================================== FAILURES ===================================
+_____________________ test_legacy_provenance_is_read_only ______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_legacy_provenance_is_read0')
+
+    def test_legacy_provenance_is_read_only(tmp_path: Path) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text("phase: spec-done\ncurrent_project: curriculum/01_rate_limiter\n")
+        before = path.read_bytes()
+        status = load_status(path)
+>       assert status.grade == "unspecified"
+               ^^^^^^^^^^^^
+E       AttributeError: 'PipelineStatus' object has no attribute 'grade'
+
+engines/openclaw/tests/test_provenance.py:27: AttributeError
+_________ test_checklist_advances_with_provenance[spec-spec-done-impl] _________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_checklist_advances_with_p0')
+phase = <Phase.SPEC: 'spec'>, next_phase = 'spec-done', mirror = 'impl'
+
+    @pytest.mark.parametrize("phase,next_phase,mirror", [
+        (Phase.SPEC, "spec-done", "impl"),
+        (Phase.SPEC_DONE, "impl-done", "review"),
+        (Phase.IMPL_DONE, "review-done", "benchmark"),
+        (Phase.REVIEW_DONE, "benchmark-done", "optimize"),
+        (Phase.BENCHMARK_DONE, "cycle-complete", "cycle-complete"),
+    ])
+    def test_checklist_advances_with_provenance(tmp_path: Path, phase, next_phase, mirror) -> None:
+        scheduler = _scheduler(tmp_path, phase)
+        result = scheduler.step()
+        assert not result.halted
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == next_phase
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:49: KeyError
+_____ test_checklist_advances_with_provenance[spec-done-impl-done-review] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_checklist_advances_with_p1')
+phase = <Phase.SPEC_DONE: 'spec-done'>, next_phase = 'impl-done'
+mirror = 'review'
+
+    @pytest.mark.parametrize("phase,next_phase,mirror", [
+        (Phase.SPEC, "spec-done", "impl"),
+        (Phase.SPEC_DONE, "impl-done", "review"),
+        (Phase.IMPL_DONE, "review-done", "benchmark"),
+        (Phase.REVIEW_DONE, "benchmark-done", "optimize"),
+        (Phase.BENCHMARK_DONE, "cycle-complete", "cycle-complete"),
+    ])
+    def test_checklist_advances_with_provenance(tmp_path: Path, phase, next_phase, mirror) -> None:
+        scheduler = _scheduler(tmp_path, phase)
+        result = scheduler.step()
+        assert not result.halted
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == next_phase
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:49: KeyError
+___ test_checklist_advances_with_provenance[impl-done-review-done-benchmark] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_checklist_advances_with_p2')
+phase = <Phase.IMPL_DONE: 'impl-done'>, next_phase = 'review-done'
+mirror = 'benchmark'
+
+    @pytest.mark.parametrize("phase,next_phase,mirror", [
+        (Phase.SPEC, "spec-done", "impl"),
+        (Phase.SPEC_DONE, "impl-done", "review"),
+        (Phase.IMPL_DONE, "review-done", "benchmark"),
+        (Phase.REVIEW_DONE, "benchmark-done", "optimize"),
+        (Phase.BENCHMARK_DONE, "cycle-complete", "cycle-complete"),
+    ])
+    def test_checklist_advances_with_provenance(tmp_path: Path, phase, next_phase, mirror) -> None:
+        scheduler = _scheduler(tmp_path, phase)
+        result = scheduler.step()
+        assert not result.halted
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == next_phase
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:49: KeyError
+_ test_checklist_advances_with_provenance[review-done-benchmark-done-optimize] _
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_checklist_advances_with_p3')
+phase = <Phase.REVIEW_DONE: 'review-done'>, next_phase = 'benchmark-done'
+mirror = 'optimize'
+
+    @pytest.mark.parametrize("phase,next_phase,mirror", [
+        (Phase.SPEC, "spec-done", "impl"),
+        (Phase.SPEC_DONE, "impl-done", "review"),
+        (Phase.IMPL_DONE, "review-done", "benchmark"),
+        (Phase.REVIEW_DONE, "benchmark-done", "optimize"),
+        (Phase.BENCHMARK_DONE, "cycle-complete", "cycle-complete"),
+    ])
+    def test_checklist_advances_with_provenance(tmp_path: Path, phase, next_phase, mirror) -> None:
+        scheduler = _scheduler(tmp_path, phase)
+        result = scheduler.step()
+        assert not result.halted
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == next_phase
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:49: KeyError
+_ test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete] _
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_checklist_advances_with_p4')
+phase = <Phase.BENCHMARK_DONE: 'benchmark-done'>, next_phase = 'cycle-complete'
+mirror = 'cycle-complete'
+
+    @pytest.mark.parametrize("phase,next_phase,mirror", [
+        (Phase.SPEC, "spec-done", "impl"),
+        (Phase.SPEC_DONE, "impl-done", "review"),
+        (Phase.IMPL_DONE, "review-done", "benchmark"),
+        (Phase.REVIEW_DONE, "benchmark-done", "optimize"),
+        (Phase.BENCHMARK_DONE, "cycle-complete", "cycle-complete"),
+    ])
+    def test_checklist_advances_with_provenance(tmp_path: Path, phase, next_phase, mirror) -> None:
+        scheduler = _scheduler(tmp_path, phase)
+        result = scheduler.step()
+        assert not result.halted
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == next_phase
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:49: KeyError
+________________ test_cli_override_reports_simulated_provenance ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_cli_override_reports_simu0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0xffffb888e8b0>
+capsys = <_pytest.capture.CaptureFixture object at 0xffffb88901a0>
+
+    def test_cli_override_reports_simulated_provenance(tmp_path: Path, monkeypatch, capsys) -> None:
+        scheduler = _scheduler(tmp_path)
+        monkeypatch.setattr(cli, "Scheduler", lambda **kwargs: scheduler)
+        code = cli.main(["--phase", "spec-done", "--project", "curriculum/01_rate_limiter", "--max-events", "0"])
+        assert code == 1
+        status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
+        assert status["phase"] == "spec-done"
+>       assert status["grade"] == "simulate"
+               ^^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/openclaw/tests/test_provenance.py:62: KeyError
+----------------------------- Captured stdout call -----------------------------
+OpenClaw checklist: project=curriculum/01_rate_limiter mode=simulate
+  current phase: spec-done
+  current project: curriculum/01_rate_limiter
+
+
+Final phase: spec-done
+Runner halted before cycle-complete.
+______________ test_sequential_writers_preserve_latest_provenance ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_sequential_writers_preser0')
+
+    def test_sequential_writers_preserve_latest_provenance(tmp_path: Path) -> None:
+        scheduler = _scheduler(tmp_path)
+        scheduler.step()
+        status = scheduler.read_status()
+>       assert status.grade == "simulate"
+               ^^^^^^^^^^^^
+E       AttributeError: 'PipelineStatus' object has no attribute 'grade'
+
+engines/openclaw/tests/test_provenance.py:73: AttributeError
+______________ test_invalid_provenance_is_rejected[trusted-agent] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej0')
+grade = 'trusted', writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_______________ test_invalid_provenance_is_rejected[None-agent] ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej1')
+grade = None, writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_________________ test_invalid_provenance_is_rejected[7-agent] _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej2')
+grade = 7, writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+________________ test_invalid_provenance_is_rejected[simulate-] ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej3')
+grade = 'simulate', writer = ''
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_______________ test_invalid_provenance_is_rejected[verified-  ] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej4')
+grade = 'verified', writer = '  '
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+______________ test_invalid_provenance_is_rejected[verified-None] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_invalid_provenance_is_rej5')
+grade = 'verified', writer = None
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_________________ test_supervisor_pass_stamps_authorized_bytes _________________
+
+workspace = SupervisorPaths(repo_root=PosixPath('/tmp/pytest-of-dani/pytest-6/test_supervisor_pass_stamps_au0'), pipeline=PosixPat...pass_stamps_au0/curriculum'), operations=PosixPath('/tmp/pytest-of-dani/pytest-6/test_supervisor_pass_stamps_au0/ops'))
+
+    def test_supervisor_pass_stamps_authorized_bytes(workspace) -> None:
+        executable = _fake_cli(workspace.repo_root)
+        config = _config(workspace.repo_root, executable)
+        request = _publish(workspace)
+        before = workspace.learner.read_bytes()
+        result = execute_request(
+            workspace, request["request_id"], config_path=config, now=lambda: NOW,
+            role_runner=lambda config, request, paths, role: _producer() if role == "producer" else _verifier(),
+        )
+        assert result["status"] == "completed"
+        state = yaml.safe_load(workspace.pipeline.read_text())
+        assert state["phase"] == "spec-done"
+>       assert state["grade"] == "verified"
+               ^^^^^^^^^^^^^^
+E       KeyError: 'grade'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:35: KeyError
+___ test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan0')
+grade = 'simulate', writer = 'openclaw-checklist'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "devschool-spec"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+>       assert f"grade: {grade}" in output
+E       AssertionError: assert 'grade: simulate' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan0/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan0/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan0/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting: \nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:86: AssertionError
+_____ test_briefing_exposes_provenance_read_only[verified-devschool-spec] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan1')
+grade = 'verified', writer = 'devschool-spec'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "devschool-spec"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+>       assert f"grade: {grade}" in output
+E       AssertionError: assert 'grade: verified' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan1/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan1/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan1/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting: \nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:86: AssertionError
+___________ test_briefing_exposes_provenance_read_only[unspecified-] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan2')
+grade = 'unspecified', writer = ''
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "devschool-spec"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+>       assert f"grade: {grade}" in output
+E       AssertionError: assert 'grade: unspecified' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan2/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan2/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-6/test_briefing_exposes_provenan2/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting: \nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:86: AssertionError
+____________________ test_phase_runner_provenance_contract _____________________
+
+    def test_phase_runner_provenance_contract() -> None:
+        base = ROOT / "engines/miniMaxEvolutionEngine/.claude"
+        runner = (base / "commands/devschool/phaserunner.md").read_text()
+>       assert "grade" in runner and "advanced_by" in runner
+E       assert ('grade' in '---\ndescription: PhaseRunner protocol — reusable orchestration seam for every AI DevSchool slash command. Commands invoke run_phase(spec); this file defines the interface.\nargument-hint: "(internal protocol — not invoked directly by users)"\n---\n\n# PhaseRunner\n\nThe **PhaseRunner** is the single seam that collapses the repeated\nread-state → check-gate → dispatch producer → dispatch verifier → update status → retry\npattern shared by every AI DevSchool phase command.\n\nIt is a protocol, not a subagent. The Orquestrador executes `run_phase(spec)` by reading\nthis interface and applying it to the phase-specific `spec` provided by each slash command.\n\n## Interface: `run_phase(spec)`\n\n### Inputs\n\n`spec` is a plain map with the following fields:\n\n| Field | Required | Description |\n| --- | --- | --- |\n| `phase` | yes | Canonical phase name: `spec`, `impl`, `review`, `benchmark`, `optimize`. |\n| `producer` | yes | Subagent(s) to dispatch. String for one agent; list for multiple. |\n| `verifier_phase` | yes | Phase argument passed to the `verifier` subagent. |\n| `next_status` | yes | Value to write through the YAML-first status helper on verifier PASS. |\n| `pre_condit...cked` is true, stop and tell the user to run `/devschool-diagnose`.\n4. **Check pre-condition.** If `pre_condition` is set and the current phase does not match, stop and report the blocker.\n5. **Dispatch producers.**\n   - If `parallel: true`, send all producer Tasks in the same assistant message.\n   - If `parallel: false`, send one producer Task and wait for it.\n6. **Dispatch verifier.** After all producers finish, run the `verifier` subagent with phase `verifier_phase`.\n7. **Apply verdict.**\n   - **PASS**: update the status object, then call `save_status(status, Path("learner/pipeline_status.yaml"))` → `next_status`; never overwrite Markdown narrative.\n   - **FAIL**: send the feedback to the producer(s) and retry from step 5, counting failures. Halt after `retry_limit` consecutive failures and record a blocker.\n8. **Report.** Present the verdict, the updated status, and the next recommended command.\n\n## Why this seam?\n\nBefore PhaseRunner, every phase command reimplemented the same six-step dance.\nAfter PhaseRunner, each command is a thin `spec` declaration; the orchestration logic\nlives in one place, gains locality, and can be tested through its interface fields.\n')
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:95: AssertionError
+________________________ test_mvp_authority_documented _________________________
+
+    def test_mvp_authority_documented() -> None:
+        context = (ROOT / "CONTEXT-MAP.md").read_text()
+        for term in ("MVP Mastery", "MVP Gate", "MVP Review", "G1–G4", "gap-ladder", "FSRS"):
+>           assert term in context
+E           AssertionError: assert 'MVP Mastery' in '# Context Map\n\nAI DevSchool is one ecosystem with **one learner and one curriculum**, realized through several\nbounded contexts. Each context owns its language. When a word appears in two contexts, the\nmeanings are different — do not collapse them.\n\nCanonical language references live next to the context they describe. Some\ngeneric surfaces use their local README instead of a dedicated glossary. This\nmap is the index and relationship contract only.\n\n## Contexts\n\n| Context | Entry | Kind | Owns |\n| --- | --- | --- | --- |\n| [Learner Journey](./learner/CONTEXT.md) | `learner/CONTEXT.md` | Core | Mastery proof, learning-state machine, reviews, streak, profile |\n| [Curriculum Catalog](./curriculum/CONTEXT.md) | `curriculum/CONTEXT.md` | Supporting | Challenge catalog, project identities, backlog truth |\n| [AI Literacy](./docs/design/ai-literacy/README.md) | `docs/design/ai-literacy/` | Core | Nontechnical lesson content, deterministic activities, local progress and raw evidence |\n| [LiteracyDojo](./engines/literacyDojo/README.md) | `engines/literacyDojo/README.md` | Generic | Guided AI microlearning UI; consumes generated content and records at most `completed` |\n| ... Language collisions (do not merge)\n\n| Word | In Learner Journey | Elsewhere |\n| --- | --- | --- |\n| **Gate** | **Learning Gate** (blocks AI until attempt evaluated) or **Empirical Gate** (numeric mastery bar) | Project-cycle transition checks; not the same object |\n| **Phase / state** | **Learning State**: presenting → practicing → evaluating → mastered | **Project Phase**: spec → impl → review → benchmark → cycle-complete |\n| **Unit** | **Active Unit** / logged unit of learning under the gate | Curriculum **Project** slice or game level — clarify before using |\n| **Completed** | Not a canonical Learner Journey mastery state | Local experience progress in LiteracyDojo; never promote it implicitly |\n| **Verifier / Prometor** | Role that alone may pass the empirical bar and record mastery | Same role name in the project cycle, different artifact under test |\n| **Evidence** | **Executable Evidence** justifying mastery | Game **Evidence Record** is raw input; verifier re-judges it |\n\n## Out of glossary scope\n\nImplementation seams (file paths, generators, config markers, adapter names) belong in\n`docs/handbook/`, `AGENTS.md`, and engine docs — not in any `CONTEXT.md`.\n'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:112: AssertionError
+=========================== short test summary info ============================
+FAILED engines/openclaw/tests/test_provenance.py::test_legacy_provenance_is_read_only
+FAILED engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-spec-done-impl]
+FAILED engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-done-impl-done-review]
+FAILED engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[impl-done-review-done-benchmark]
+FAILED engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[review-done-benchmark-done-optimize]
+FAILED engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete]
+FAILED engines/openclaw/tests/test_provenance.py::test_cli_override_reports_simulated_provenance
+FAILED engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_pass_stamps_authorized_bytes
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-devschool-spec]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented
+========================= 20 failed, 2 passed in 5.50s =========================
