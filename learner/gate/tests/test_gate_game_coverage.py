@@ -25,13 +25,11 @@ VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
 # Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4: 10 of 19 projects lack a gate path). Each entry must be
+# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-10-hash-ring",  # evaluator blocked on unitId fix (catalog.json:48)
-        "game-13-breaker-grid",
-        "game-14-river-delta",
+        "game-04-task-queue",  # AID-1901 PR-A1 shipped the game; evaluator lands in PR-A2 (VEE, AID-1901 sibling)
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
@@ -42,18 +40,19 @@ ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
 # Known catalog unitId quirks: game number != unit number prefix. Pinned to
 # the exact (game id, unitId) pair so any change — the fix OR a new breakage —
 # fails until this allowlist is consciously updated.
-ALLOWED_UNITID_QUIRKS: dict[str, str] = {
-    # engines/voxelDojo/catalog.json:48 — U9 collides with game-09 (U9-plugin-system);
-    # owned by the Curriculum Platform Engineer (verifier-map L4).
-    "game-10-hash-ring": "U9-distributed-cache",
-}
+# Empty since AID-1855: the game-10 quirk (U9-distributed-cache colliding with
+# game-09's U9-plugin-system) was fixed to U10-distributed-cache in
+# engines/voxelDojo/catalog.json:48, restoring the game-NN == UNN invariant
+# for the whole catalog.
+ALLOWED_UNITID_QUIRKS: dict[str, str] = {}
 
 # Curriculum projects with no producing game (known gaps, verifier-map §4).
 ALLOWED_PROJECTS_WITHOUT_GAME: frozenset[str] = frozenset(
     {
         "00_ai_in_practice",  # no-code track: literacy + ADR-0004 checklist, no voxelDojo game
         "01_rate_limiter",  # legacy GATEKEEPER rubric gate, closed 2026-07-05
-        "04_concurrent_task_queue",  # no producer planned yet (verifier-map L2)
+        # 04_concurrent_task_queue removed in the same PR that added game-04-task-queue
+        # to catalog.json (AID-1901 PR-A1, CEO decision AID-1859 Opção A).
     }
 )
 

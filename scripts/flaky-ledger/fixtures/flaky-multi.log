@@ -1,0 +1,9 @@
+2026-09-13T08:15:22.1000000Z
+2026-09-13T08:15:22.1000001Z Running 20 tests using 2 workers
+2026-09-13T08:16:01.4210000Z   ✓  7 playwright/onboarding-a11y.spec.ts:10:5 › onboarding is keyboard reachable (2.1s)
+2026-09-13T08:16:04.0020000Z
+2026-09-13T08:16:04.3100001Z   2 flaky
+2026-09-13T08:16:04.3100002Z     [chromium] › e2e/reflow-320.spec.ts:14:3 › reflow › vertical slice holds at 320px
+2026-09-13T08:16:04.3100003Z     [chromium] › e2e/pwa.spec.ts:52:5 › offline: service worker serves the shell
+2026-09-13T08:16:04.3100004Z
+2026-09-13T08:16:04.3200000Z   18 passed (41.9s)

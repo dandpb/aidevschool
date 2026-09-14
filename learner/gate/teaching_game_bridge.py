@@ -15,14 +15,17 @@ import sys
 from typing import Any
 
 from learner.gate.air_traffic_evaluator import evaluate_air_traffic
+from learner.gate.breaker_grid_evaluator import evaluate_breaker_grid
 from learner.gate.checkpoint_evaluator import evaluate_checkpoint
 from learner.gate.docking_evaluator import evaluate_docking
+from learner.gate.hash_ring_evaluator import evaluate_hash_ring
 from learner.gate.timeline_evaluator import evaluate_timeline
 from learner.gate.evidence_validator import validate_teaching_evidence_structure
 from learner.gate.evidence_io import canonical_evidence_digest, read_bounded_evidence
 from learner.gate.mission_control_evaluator import evaluate_mission_control
 from learner.gate.pipeline_evaluator import evaluate_pipeline
 from learner.gate.relay_evaluator import evaluate_relay
+from learner.gate.river_delta_evaluator import evaluate_river_delta
 from learner.gate.warehouse_evaluator import evaluate_warehouse
 from learner.gate.wormhole_evaluator import evaluate_wormhole
 
@@ -71,6 +74,16 @@ GAME_SPECS = {
         "docking-bay-",
         evaluate_docking,
     ),
+    "HASH RING": (
+        # game-10 unitId quirk fixed to U10-distributed-cache in AID-1855
+        # (catalog.json:48); ALLOWED_UNITID_QUIRKS is empty since then, so this
+        # entry binds to the catalog identity under the restored game-NN == UNN
+        # invariant.
+        "U10-distributed-cache",
+        "10_distributed_cache",
+        "hash-ring-",
+        evaluate_hash_ring,
+    ),
     "AIR TRAFFIC": (
         "U11-load-balancer",
         "11_load_balancer",
@@ -82,6 +95,18 @@ GAME_SPECS = {
         "12_distributed_job_scheduler",
         "mission-control-",
         evaluate_mission_control,
+    ),
+    "BREAKER GRID": (
+        "U13-circuit-breaker",
+        "13_api_gateway_circuit_breaker",
+        "breaker-grid-",
+        evaluate_breaker_grid,
+    ),
+    "RIVER DELTA": (
+        "U14-log-aggregator",
+        "14_log_aggregator",
+        "river-delta-",
+        evaluate_river_delta,
     ),
 }
 ALLOWED_KEYS = frozenset(
