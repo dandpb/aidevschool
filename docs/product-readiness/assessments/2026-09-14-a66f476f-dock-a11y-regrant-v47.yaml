@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-a66f476f-dock-a11y-regrant-v47
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T01:15:00Z'
+revalidateBy: '2026-10-14'
+gitSha: a66f476f80bb8cc3e246efe02f14baa9a3968131
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T01:09:38Z-os-literacy-hosted-mission-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-verification-recovery-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-literacy-returning-device-mixed-a66f476f
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T01:09:38Z-os-voxel-hosted-missions-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-renderer-accessibility-recovery-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-voxel-returning-device-mixed-a66f476f
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T01:09:38Z-os-onboarding-track-choice-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-returning-device-mixed-a66f476f
+  - 2026-09-14T01:09:38Z-os-returning-recovery-mixed-a66f476f
