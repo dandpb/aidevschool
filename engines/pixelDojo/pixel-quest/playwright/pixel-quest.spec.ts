@@ -236,7 +236,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   // Lab 04 — Concurrent Task Queue (task_queue): the playable mechanic teaches
   // retry / backpressure / dead-letter-queue ordering. Process every legit job
   // (admit) and dead-letter every poison job (reject) to emit a passing
-  // pixelquest-task-queue evidence record for U-04_concurrent_task_queue.
+  // pixelquest-task-queue evidence record for U4-task-queue (lab 04).
   await page.evaluate(() => window.__pixelQuestDebug?.enterRegion("lab-04_concurrent_task_queue"))
   await expect(page.locator(".objective-chip")).toContainText("Concurrent Task Queue")
   await page.keyboard.press("e")
@@ -258,7 +258,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
   const taskQueueEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(taskQueueEvidence?.project).toBe("04_concurrent_task_queue")
-  expect(taskQueueEvidence?.unit_id).toBe("U-04_concurrent_task_queue")
+  expect(taskQueueEvidence?.unit_id).toBe("U4-task-queue")
   expect(taskQueueEvidence?.encounter_id).toBe("encounter-04_concurrent_task_queue")
   expect(taskQueueEvidence?.pass).toBe(true)
   const taskQueueMetrics = taskQueueEvidence?.metrics
@@ -300,7 +300,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
 
   // The smoke must emit >=1 valid `EVIDENCE ` console line per completed
   // encounter, including the token-bucket record for 01_rate_limiter and the
-  // task-queue record for U-04_concurrent_task_queue. Each line is
+  // task-queue record for U4-task-queue. Each line is
   // `EVIDENCE <json>`; parse the payload and assert each record carries the
   // right metrics.kind and verifier_required=true.
   expect(evidenceConsoleLines.length).toBeGreaterThanOrEqual(1)
@@ -316,9 +316,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     metrics: { kind: "pixelquest-token-bucket" },
     review_context: { verifier_required: true, scheduler_source: "learner-substrate" },
   })
-  const taskQueueConsoleRecord = parsedEvidence.find(
-    (record) => record.unit_id === "U-04_concurrent_task_queue",
-  )
+  const taskQueueConsoleRecord = parsedEvidence.find((record) => record.unit_id === "U4-task-queue")
   expect(taskQueueConsoleRecord).toBeDefined()
   expect(taskQueueConsoleRecord).toMatchObject({
     metrics: { kind: "pixelquest-task-queue" },
