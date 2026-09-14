@@ -1,0 +1,24 @@
+# CODEOWNERS — AiDevSchool R1 (docs/serving/R1-REVIEW-MERGE-POLICY.md §2/§3; plano AID-1521)
+# R1.0: identidade GitHub única (@dandpb) — ownership por área abaixo é DECLARATIVO,
+# auditável no board (producer ≠ verifier): a review da área deve ser postada como review
+# no PR identificando o agente revisor; o merger verifica antes do merge.
+# Substituição quando o autor detém o papel exigido (política §2): Platform → FPE → CEO.
+
+# CI/build/tooling, gates, pipeline de promoção, runbooks → Platform & Release Engineer (fallback: FPE)
+/.github/        @dandpb
+/scripts/        @dandpb
+/docs/serving/   @dandpb
+
+# Progressão/ritmo/avaliação → Learning Engine Engineer
+/engines/        @dandpb
+
+# Superfícies do aprendiz, evidências, telemetria → Learner App Engineer
+/learner/        @dandpb
+
+# Formato de lições, autoria, validação de conteúdo → Curriculum Platform Engineer
+/curriculum/     @dandpb
+
+# Slices cross-domain (§2 linha 3: 2 reviews) → Full-Stack Feature Engineer como segundo revisor
+
+# Raiz (fallback de registro) — merger R1.0: FPE (default) / CEO (gates e pipeline, §2 linha 4)
+*                @dandpb
