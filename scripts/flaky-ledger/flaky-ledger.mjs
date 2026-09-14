@@ -138,14 +138,26 @@ function parseArgs(argv) {
   return args
 }
 
-async function githubFetchJson(path, token) {
+// Secondary rate limits (bursty abuse detection) answer 403/429 with a
+// Retry-After hint even when the primary quota is untouched — retry the
+// listing calls the same way the log downloads are retried.
+async function githubFetchJson(path, token, attempts = 4) {
   const headers = { Accept: "application/vnd.github+json" }
   if (token) headers.Authorization = `Bearer ${token}`
-  const response = await fetch(`https://api.github.com${path}`, { headers })
-  if (!response.ok) {
-    throw new Error(`GET ${path} -> ${response.status} ${response.statusText}`)
+  let lastError = new Error(`GET ${path} -> unknown`)
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const response = await fetch(`https://api.github.com${path}`, { headers })
+    if (response.ok) {
+      return response.json()
+    }
+    lastError = new Error(`GET ${path} -> ${response.status} ${response.statusText}`)
+    if (response.status !== 403 && response.status !== 429) {
+      throw lastError
+    }
+    const retryAfter = Number(response.headers.get("retry-after"))
+    await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? Math.min(retryAfter, 30) * 1000 : 5000)
   }
-  return response.json()
+  throw lastError
 }
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
