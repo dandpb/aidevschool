@@ -18,7 +18,9 @@
   existing encounter shell; add a typed encounter + pack entry.
 - The `01` rate-limiter is **done** (token-bucket + sequence-flow encounters exist; closed gate
   for U0). The `10` hash-ring pilot is **done** in voxelDojo. The `04` task-queue encounter is
-  **done** in pixel-quest (this buildout). Do not rebuild any of these.
+  **done** in pixel-quest (this buildout), and the 3D producer TASK FORGE (Shape B override,
+  decision AID-1859 Option A / AID-1877 PR-A1) is **done** in voxelDojo `game-04-task-queue`.
+  Do not rebuild any of these.
 
 ## All 18 modules (status as of 2026-07-05)
 
@@ -35,7 +37,7 @@
 > `scenarioSlug: "kv-warehouse"`, `metrics.kind: "voxeldoj-kv-warehouse"`. The greenfield rebuild
 > remains a future enhancement; the current game is the gate-eligible producer.
 | 03 | url_shortener | voxelDojo | game-03-wormhole | U3-url-shortener | 5203 | short-code collision; base62 | wormhole gates between planets | ✅ DONE |
-| 04 | concurrent_task_queue | pixel-quest | encounters/taskQueue.ts (NEW) | U4-task-queue | — | retry/backpressure/DLQ ordering | (2D encounter) | ✅ DONE |
+| 04 | concurrent_task_queue | voxelDojo (Shape B) | game-04-task-queue (AID-1877 PR-A1); pixel lab-04 remains as 2D warm-up | U4-task-queue | 5204 | bounded worker-pool dispatch | task forge: hopper + arms + annealing rack + scrap chute | ✅ DONE |
 | 05 | websocket_chat | voxelDojo | game-05-relay-station | U5-websocket-chat | 5205 | persistent conns; fan-out; heartbeat | orbiting relay stations, laser links | ✅ DONE |
 | 06 | file_upload_pipeline | voxelDojo | game-06-pipeline-plant | U6-file-upload | 5206 | streaming vs buffering; bounded memory | fluid pipeline + overflow tanks | ✅ DONE |
 | 07 | rest_api_auth | voxelDojo | game-07-checkpoint-city | U7-rest-api-auth | 5207 | middleware layers; JWT verify | concentric city walls, badge gates | ✅ DONE |

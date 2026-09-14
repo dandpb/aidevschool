@@ -12,6 +12,17 @@ export const GAME_EVIDENCE_META = {
     scenarioSlug: "wormhole",
     curriculum: { concept: "short-code generation + collision handling", mechanic: "wormhole code-gates between planets" },
   },
+  "game-04-task-queue": {
+    project: "04_concurrent_task_queue",
+    game: "TASK FORGE",
+    scenarioSlug: "task-forge",
+    curriculum: {
+      concept: "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
+      mechanic: "task forge: hopper + N arms + annealing rack + scrap chute",
+      accepted_signal: "correct next-dispatch prediction AND correct retry/DLQ classification AND held backpressure + idempotency",
+      rejected_trap: "requeuing poison / overflowing hopper / enqueuing a duplicate sigil",
+    },
+  },
   "game-05-relay-station": {
     project: "05_websocket_chat",
     game: "RELAY STATION",

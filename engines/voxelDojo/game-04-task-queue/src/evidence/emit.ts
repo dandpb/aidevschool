@@ -1,0 +1,7 @@
+import { createEmitForGame, type EvidenceRecord } from "../../../shared/createEmitForGame"
+import { reviewSlice } from "../reviewSlice"
+import type { LevelId } from "../sim/levels"
+
+export type { EvidenceRecord }
+
+export const emitEvidence = createEmitForGame<LevelId>("game-04-task-queue", reviewSlice)
