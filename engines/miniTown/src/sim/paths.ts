@@ -167,8 +167,14 @@ function bfs(grid: GridLike, from: Cell, to: Cell, rng: () => number): Cell[] | 
     // Tie-break with the caller's RNG so two runs of the same path don't
     // always pick the same neighbour; the per-call Town RNG keeps the
     // session deterministic.
-    const cell = bucket.splice(Math.floor(rng() * bucket.length), 1)[0]
+    const idx = Math.floor(rng() * bucket.length)
+    const cell = bucket[idx]
     if (!cell) continue
+    // Optimization: O(1) swap-and-pop instead of O(N) splice to avoid array allocations and shifting in hot path
+    const last = bucket.pop()
+    if (idx < bucket.length && last !== undefined) {
+      bucket[idx] = last
+    }
     if (bucket.length === 0) frontiers.delete(lowest)
     const cellK = cellKey(cell.x, cell.y)
     if (cellK === goalKey) {
