@@ -14,3 +14,7 @@
 **Vulnerability:** A learner configuring a custom "Bring Your Own Key" (BYOK) AI endpoint in `dojoToday` could unknowingly input an HTTP (unencrypted) base URL, causing their API key to be transmitted over plaintext on the local network.
 **Learning:** Even though the AI feature runs entirely locally and the keys are stored in `localStorage`, network requests using `fetch` must still be secured to prevent interception, as user-configured endpoints may not enforce HTTPS on their own.
 **Prevention:** In Bring-Your-Own-Key (BYOK) configurations, strictly validate the user-provided base URL to enforce the `https:` protocol (exempting `localhost` and `127.0.0.1` for local development endpoints) before making any outbound API requests.
+## 2026-09-13 - Prevent Reverse Tabnabbing
+**Vulnerability:** External links opening in new tabs (`target="_blank"`) without the `noopener` attribute can expose the application to reverse tabnabbing attacks in older browsers, where the malicious site can change the `window.opener.location` to a phishing page.
+**Learning:** While `rel="noreferrer"` implicitly provides `noopener` behavior in modern browsers (Chrome >= 88), explicitly stating `noopener noreferrer` ensures broader protection across all environments and satisfies strict security linters.
+**Prevention:** Always add `rel="noopener noreferrer"` to all `target="_blank"` external links in React applications (like `literacyDojo` and `codexdojo-os-prototype`) to enforce defense in depth.
