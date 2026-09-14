@@ -195,26 +195,22 @@ def _is_eligible(task: dict[str, Any], now: int) -> bool:
     return now >= task["scheduledFor"]
 
 
+def _beats(task: dict[str, Any], best: dict[str, Any]) -> bool:
+    """queue.ts tie-breaks: priority desc, then FIFO arrival, then id."""
+    if task["priority"] != best["priority"]:
+        return task["priority"] > best["priority"]
+    if task["enqueuedAt"] != best["enqueuedAt"]:
+        return task["enqueuedAt"] < best["enqueuedAt"]
+    return task["id"] < best["id"]
+
+
 def _pick_next(queue: list[dict[str, Any]], now: int) -> dict[str, Any] | None:
     """queue.ts ``pickNext``: priority desc, FIFO, id — a total order."""
     best: dict[str, Any] | None = None
     for task in queue:
         if not _is_eligible(task, now):
             continue
-        if best is None:
-            best = task
-            continue
-        if task["priority"] > best["priority"]:
-            best = task
-            continue
-        if task["priority"] == best["priority"] and task["enqueuedAt"] < best["enqueuedAt"]:
-            best = task
-            continue
-        if (
-            task["priority"] == best["priority"]
-            and task["enqueuedAt"] == best["enqueuedAt"]
-            and task["id"] < best["id"]
-        ):
+        if best is None or _beats(task, best):
             best = task
     return best
 
@@ -308,9 +304,9 @@ class _Replay:
         jitter = math.floor(self.rng() * 2)  # 0|1 beat, drawn in completion order
         return "retry", self.now + BACKOFF_BASE * 2 ** task["retries"] + jitter
 
-    def _process_auto_events(self) -> None:
-        # 1. completions (arms release in running order; clear tasks succeed
-        #    silently, cracks queue a classify prompt with the fail plan).
+    def _process_completions(self) -> None:
+        """Arms release in running order; clear tasks succeed silently, cracks
+        queue a classify prompt with the fail plan."""
         survivors: list[dict[str, Any]] = []
         for entry in self.running:
             if entry["completesAt"] > self.now:
@@ -326,25 +322,33 @@ class _Replay:
             )
         self.running = survivors
 
-        # 2. inbound lands when its dock window closes (skipping R has a cost).
-        if self.inbound is not None and self.now >= self.dock_deadline:
-            landing = _to_task(self.inbound, self.now)
-            if landing["idempotencyKey"] in self._active_keys():
-                self.duplicates_enqueued += 1
-            elif self._hopper_full():
-                self.queue_overflowed = True
-                self.backpressure_violations += 1
-            else:
-                self.queue.append(landing)
-            self.inbound = None
-            self.script_index += 1
+    def _land_inbound(self) -> None:
+        """The inbound lands when its dock window closes (skipping R costs)."""
+        if self.inbound is None or self.now < self.dock_deadline:
+            return
+        landing = _to_task(self.inbound, self.now)
+        if landing["idempotencyKey"] in self._active_keys():
+            self.duplicates_enqueued += 1
+        elif self._hopper_full():
+            self.queue_overflowed = True
+            self.backpressure_violations += 1
+        else:
+            self.queue.append(landing)
+        self.inbound = None
+        self.script_index += 1
 
-        # 3. present the next arrival.
-        if self.inbound is None and self.script_index < len(self.arrivals):
-            nxt = self.arrivals[self.script_index]
-            if self.now >= nxt["arrivesAt"]:
-                self.inbound = nxt
-                self.dock_deadline = self.now + DOCK_WINDOW
+    def _present_next_arrival(self) -> None:
+        if self.inbound is not None or self.script_index >= len(self.arrivals):
+            return
+        nxt = self.arrivals[self.script_index]
+        if self.now >= nxt["arrivesAt"]:
+            self.inbound = nxt
+            self.dock_deadline = self.now + DOCK_WINDOW
+
+    def _process_auto_events(self) -> None:
+        self._process_completions()
+        self._land_inbound()
+        self._present_next_arrival()
 
     def _tick(self) -> None:
         self.now += 1
