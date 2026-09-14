@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "a66f476f80bb8cc3e246efe02f14baa9a3968131",
+  "observedAt": "2026-09-14T01:09:38Z",
+  "scenarios": [
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Walk FPE @ a66f476f (preview piloto :4180, PR #406): boot pede 'O que você quer conseguir fazer com IA?' com 'Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.' — a escolha de trilha é explicável em linguagem do aprendiz, sem conta e com fronteira de dispositivo declarada (walk-log-os406.json onboardingCopy; screenshot qa1797-osobs-01-onboarding-choice.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Missão hospedada l30 concluída 100% no host do OS: resultado 'VILA LUME · MISSÃO CONCLUÍDA', XP conquistado, habilidade praticada nomeada ('Pedir, Aplicar') — resultado e próxima ação nomeáveis sem conhecimento de repositório; fronteira honesta do host: '0 verificadas' (walk-log-os406.json l30Result/hostBoundary; screenshots qa1797-osobs-06-l30-result.png, qa1797-osobs-07-host-boundary.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE hospedada jogada até o fim: HUD 'Missão concluída' no iframe, mas o host mantém '0 verificadas · sem alteração local' + 'Verificador indisponível' — evidência de jogo nunca é apresentada como verificação/mastery (walk-log-os406.json warehouseVerifierBoundary/warehouseHonestResult; screenshot qa1797-osobs-11-warehouse-result.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Erro na a1 do l30 (candidatas erradas opt-d/opt-e): feedback formativo de conteúdo ('Vira rotina assistida o que junta três coisas: REPETITIVA, ESTRUTURADA e BAIXO RISCO...'), sem jargão interno (regex stack trace/exception/localStorage/schemaVersion/undefined negativo), dica via hint-button e 'Tentar novamente' funcional na própria UI — recuperação sem intervenção de repositório (walk-log-os406.json recoveryFeedback/recoveryRetryLabel; screenshot qa1797-osobs-08-l30-recovery.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Pós-erro na missão l30: reload remonta 'Rotinas repetitivas: o que automatizar' sem re-onboarding e o hub volta direto sem repetir setup — continuidade no mesmo dispositivo é observável (walk-log-os406.json returningMissionPreserved/literacyContinuityNoReOnboarding/literacyContinuityHub; screenshot qa1797-osobs-09-literacy-returning.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Superfície de renderer acessível sempre nomeável no ambiente headless: projeção acessível ATIVA com badge 'Acessível' (sem WebGL) mantendo 'Estado canônico ... 0 verificadas' — o limite de escalada (renderer degradado ≠ jornada perdida) é nomeável em superfície real (walk-log-os406.json accessibleAffordance/accessibleProjectionActive; screenshot qa1797-osobs-12-accessible-affordance.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Desktop + hub preservados após reload no mesmo dispositivo (dock 'Trilhas Dojo (aberto)' persiste; hub sem re-onboarding) e a fronteira local continua declarada no boot ('o progresso fica neste dispositivo') — a boundary local é visível ao retornar (walk-log-os406.json returningDesktopPreserved/returningNoReOnboarding/returningHub; screenshots qa1797-osobs-02-dock-a11y-running.png, qa1797-osobs-03-returning-hub.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "localStorage+indexedDB limpos → o boot volta a pedir a escolha de trilha (onboarding íntegro) e NÃO mostra nenhuma conclusão fabricada ('concluída|verificada' ausente) — a perda de estado local é explicável pelo comportamento observado, sem estado fantasma (walk-log-os406.json clearedShowsOnboarding=true/clearedShowsCompletion=false; screenshot qa1797-osobs-04-cleared-onboarding.png)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "WAREHOUSE remonta após reload no mesmo dispositivo com HUD 'Estado canônico' preservado e a missão reiniciável do estado honesto — continuidade voxel observável com fronteira canônica '0 verificadas · sem alteração local' (walk-log-os406.json warehouseRemountedAfterReload/warehouseHonestResult; screenshots qa1797-osobs-10-warehouse-mounted.png, qa1797-osobs-11-warehouse-result.png)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
