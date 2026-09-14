@@ -74,7 +74,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        node-version: 20
+        with:
+          node-version: 20
       - name: precheck self-test (synthetic violations must fail)
         run: node scripts/precheck/precheck.mjs --self-test
       - name: anchor wave dry-run (offline plan + registry validation)
