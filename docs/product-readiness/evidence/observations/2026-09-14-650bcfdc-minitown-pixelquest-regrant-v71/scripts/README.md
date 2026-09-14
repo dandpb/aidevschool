@@ -1,7 +1,7 @@
 # QA observation bundle — re-grant v71 (AID-1924, PR #427)
 
 Independent observation phase (runbook `docs/product-readiness/REGRANT-RUNBOOK.md`
-§Fluxo automatizado passo 4). Tree: PR #427 head `d8643dee` (branch
+§Fluxo automatizado passo 4). Tree: PR #427 head `650bcfdc` (branch
 `regrant/auto-20260914-7dfc665f`); base main `c552a1e9` (pós-#424).
 
 Use cases in scope (exactly the STALE-WINDOW set flagged by the factory @7dfc665f):
