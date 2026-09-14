@@ -75,10 +75,11 @@ GAME_SPECS = {
         evaluate_docking,
     ),
     "HASH RING": (
-        # catalog.json still carries the U9 quirk for game-10 (pinned in
-        # test_gate_game_coverage.py::ALLOWED_UNITID_QUIRKS); this entry binds
-        # to the catalog identity until the Curriculum Platform Engineer fixes it.
-        "U9-distributed-cache",
+        # game-10 unitId quirk fixed to U10-distributed-cache in AID-1855
+        # (catalog.json:48); ALLOWED_UNITID_QUIRKS is empty since then, so this
+        # entry binds to the catalog identity under the restored game-NN == UNN
+        # invariant.
+        "U10-distributed-cache",
         "10_distributed_cache",
         "hash-ring-",
         evaluate_hash_ring,

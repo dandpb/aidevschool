@@ -209,8 +209,8 @@ def _bridge_record(level: str, passed: bool = True) -> dict[str, Any]:
     observations, metrics = PASSING[level]
     record: dict[str, Any] = {
         "source": "voxeldojo",
-        # catalog.json:48 still pins game-10 to the U9 quirk unitId.
-        "unit_id": "U9-distributed-cache",
+        # catalog.json:48 carries game-10 as U10-distributed-cache (AID-1855).
+        "unit_id": "U10-distributed-cache",
         "project": "10_distributed_cache",
         "scenario_id": f"hash-ring-{level}",
         "game": "HASH RING",
@@ -235,7 +235,7 @@ def test_bridge_verifies_each_passing_hash_ring_level(level: str) -> None:
 
     assert receipt["verdict"] == "PASS"
     assert receipt["producer_writes_mastered"] is False
-    assert receipt["unit_id"] == "U9-distributed-cache"
+    assert receipt["unit_id"] == "U10-distributed-cache"
 
 
 def test_bridge_rejects_a_false_pass_claim() -> None:

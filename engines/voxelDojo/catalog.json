@@ -45,7 +45,7 @@
     "id": "game-10-hash-ring",
     "name": "HASH RING",
     "developmentPort": 5177,
-    "unitId": "U9-distributed-cache"
+    "unitId": "U10-distributed-cache"
   },
   {
     "id": "game-11-air-traffic",
