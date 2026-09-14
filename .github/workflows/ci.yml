@@ -108,6 +108,25 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      # AID-1857/t1: browser e2e mínimo contra `vite preview` (build real, sem
+      # deploy externo) — mount + ciclo de eventos + catálogo não-vazio + zero
+      # pageerror. AID-1658 (hardening-top10 R7): AID-571 deterministic retry
+      # policy — a retried test surfaces as a named "flaky" entry in this log
+      # plus its on-first-retry trace (durable via the artifact upload below);
+      # a real regression fails twice and still fails the job. Recurrence on
+      # the same test escalates to quarantine + issue (do not raise retries).
+      # Local stays retries: 0.
+      - run: pnpm run test:e2e --retries=1 --trace on-first-retry
+      # Named `codexdojo-e2e-<sha>` (NOT `-readiness-<sha>`): codexDojo is
+      # outside the 6 product-readiness claim surfaces; this artifact must not
+      # be picked up by the claims aggregator's `*-readiness-<sha>` download.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: codexdojo-e2e-${{ github.sha }}
+          path: engines/codexDojo/test-results
+          if-no-files-found: warn
 
   pixeldojo:
     name: pixelDojo (TS)
