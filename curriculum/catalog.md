@@ -43,7 +43,7 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 | **Learning goal** | Aplicar IA em tarefas reais com checklist de verificação falsificável (gate no-code). |
 | **Directory** | `00_ai_in_practice/` |
 | **Dependencies** | None (entry point da trilha não-técnica; paralelo ao 01) |
-| **Evidence** | Catalogue artifacts exist: `curriculum/00_ai_in_practice/docs/spec.md` (spec do no-code gate, AD-004/005/006), `curriculum/ai-literacy/catalog.yaml` (5 módulos · 14 lições · 8 skills · contentVersion 2026-07-25.1), `engines/literacyDojo/` (MVP com voxel world, world map, fluxo de lição guiado, gamificação local-first, PWA — 57 testes + Playwright 5/5 + PWA 1/1, PR-47 mergeado), `engines/miniTown/` (superfície cozy Nível 0, 5-task plan). Verificação executável do no-code gate (Prometor) pendente — mais fraco que evidências de código e nunca promove unidades 1–6. |
+| **Evidence** | Catalogue artifacts exist: `curriculum/00_ai_in_practice/docs/spec.md` (spec do no-code gate, AD-004/005/006), `curriculum/ai-literacy/catalog.yaml` (8 módulos · 32 lições · 8 skills · contentVersion 2026-09-10.2), `engines/literacyDojo/` (MVP com voxel world, world map, fluxo de lição guiado, gamificação local-first, PWA — 57 testes + Playwright 5/5 + PWA 1/1, PR-47 mergeado), `engines/miniTown/` (superfície cozy Nível 0, 5-task plan). Verificação executável do no-code gate (Prometor) pendente — mais fraco que evidências de código e nunca promove unidades 1–6. |
 
 ---
 

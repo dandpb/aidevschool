@@ -26,6 +26,8 @@ ADR-0009/0010). Export operacional: `GET` da mesma rota com Bearer `ANALYTICS_EX
 | --- | --- |
 | [`PROMOTION-RUNBOOK.md`](PROMOTION-RUNBOOK.md) | **Gate canônico staging→prod** (promovido do work-product AID-956; fluxo provado nas ondas AID-935/AID-960/AID-964) + rollback + incidente |
 | [`UPTIME-MONITOR-SETUP.md`](UPTIME-MONITOR-SETUP.md) | Config exata do monitor externo uptime (free tier) + runbook de signup founder (único passo externo) + verificação pós-signup FPE |
+| [`PIPELINE-AUDIT_AID-1526_2026-09-12.md`](PIPELINE-AUDIT_AID-1526_2026-09-12.md) | Auditoria do pipeline draft→precheck→alias (72 checks) + CI (tempos reais, gaps P1–P3) — baseline do Platform & Release Engineer |
+| [`R1-REVIEW-MERGE-POLICY.md`](R1-REVIEW-MERGE-POLICY.md) | **DRAFT** — política R1 de review/merge multi-dev (aprovação FPE+CEO; ativação via checklist §7) |
 
 ## Postura de cotas free tier (Netlify) — resumo
 

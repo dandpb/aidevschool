@@ -48,11 +48,11 @@ Audit findings: the gate verifier (`python3 -m learner.gate`) validates
 records are ingestible unchanged. Scheduling truth flows substrate → game via a generated review
 slice; `render_voxel_review_ts` renders the shared `content.ts` module, so
 `python3 -m learner.substrate` regenerates `shared/content.ts` alongside the pixel slice. The game derives
-`review_context.scheduled_review` from that slice (`"due"` if `U9-distributed-cache` is in
+`review_context.scheduled_review` from that slice (`"due"` if `U10-distributed-cache` is in
 `nextReviews`, else `"deepening"`). Framing correction (2026-07-05, later the same day): the 18
 masteries dated 2026-07-01 turned out to be seeded without evidence and were reverted — only U0
 is honestly gated. So HASH RING is not review-only: it can serve the **real first-mastery gate**
-for `U9-distributed-cache` when the scheduler activates that unit. The emitter already derives
+for `U10-distributed-cache` when the scheduler activates that unit. The emitter already derives
 `review_context` dynamically from the slice, so no code change was needed — the load-bearing
 lesson is in [[aidevschool-status-2026-06]]: never trust `learning_state.yaml` claims without
 checking `learner/attempts/` and evidence files.
