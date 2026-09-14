@@ -1,14 +1,19 @@
 import type { GameController, GameState } from "../game/controller"
 
-/** DOM HUD — briefing, per-prompt controls, queue readouts. Reads sim state; dispatches controller commands. */
+/**
+ * DOM HUD — briefing, controls, gauges, metrics. Reads sim state; dispatches
+ * controller commands. Buttons mirror the scene interactions so the wave is
+ * fully playable without WebGL (accessibility + smoke). Copy é PT-BR,
+ * alinhada à projeção acessível (src/scene/accessible.ts).
+ */
 export function mountHud(root: HTMLElement, game: GameController): void {
   root.innerHTML = `
     <h1 data-testid="hud-title"></h1>
     <p class="lesson" data-testid="hud-lesson"></p>
     <p class="rule" data-testid="hud-rule"></p>
-    <div class="status" data-testid="hud-status"></div>
+    <div class="status" data-testid="hud-status" role="status" aria-live="polite" aria-atomic="true"></div>
     <div class="controls" data-testid="hud-controls"></div>
-    <div class="legend" data-testid="hud-legend"></div>
+    <div class="gauges" data-testid="hud-gauges"></div>
     <pre class="metrics" data-testid="hud-metrics"></pre>
   `
   const el = {
@@ -17,17 +22,17 @@ export function mountHud(root: HTMLElement, game: GameController): void {
     rule: q(root, "hud-rule"),
     status: q(root, "hud-status"),
     controls: q(root, "hud-controls"),
-    legend: q(root, "hud-legend"),
+    gauges: q(root, "hud-gauges"),
     metrics: q(root, "hud-metrics"),
   }
 
   game.subscribe((state) => {
-    el.title.textContent = `${state.level.id} — ${state.level.title}`
+    el.title.textContent = `${state.level.id} — TASK FORGE: ${state.level.title}`
     el.lesson.textContent = state.level.lesson
     el.rule.textContent = state.level.passRule
     renderStatus(el.status, state)
     renderControls(el.controls, state, game)
-    renderLegend(el.legend, state, game)
+    renderGauges(el.gauges, state)
     el.metrics.textContent = state.lastMetrics ? JSON.stringify(state.lastMetrics, null, 2) : ""
   })
 }
@@ -39,87 +44,77 @@ function q(root: HTMLElement, id: string): HTMLElement {
 }
 
 function renderStatus(node: HTMLElement, state: GameState): void {
+  node.setAttribute("role", state.phase === "failed" ? "alert" : "status")
   if (state.phase === "briefing") {
-    node.textContent = "Press start."
+    node.textContent = "Pronto para iniciar."
     return
   }
   if (state.phase === "cleared") {
-    node.textContent = "Wave cleared — evidence emitted."
+    node.textContent = "Onda concluída; evidência emitida."
     return
   }
   if (state.phase === "failed") {
-    node.textContent = "Wave failed — evidence emitted. Retry?"
+    node.textContent = "Critério do contrato não atendido; tente novamente."
     return
   }
-  const pending = state.pending
-  if (state.queue.paused) {
-    node.textContent = "Arms parked (P). The hopper keeps accepting — paused is not broken."
+  if (state.inbound) {
+    const dup = state.inbound.idempotencyKey.startsWith("sigil-") === false
+    node.innerHTML = `Empilhadeira <span class="code">${state.inbound.id}</span> (prio ${state.inbound.priority}${dup ? ", SIGILO DUPLICADO" : ""}) está ancorando — R rejeita (429).`
     return
   }
-  if (pending?.kind === "dispatch") {
-    node.textContent = "An arm is idle: click the ingot it will grab next."
-    return
-  }
-  if (pending?.kind === "classify") {
-    node.textContent = `Arm opened ${pending.task.id} (${pending.task.kind}): retry rack or scrap chute?`
-    return
-  }
-  if (pending?.kind === "gate") {
-    node.textContent =
-      pending.reason === "full"
-        ? "Hopper FULL — reject the forklift (R, 429) or it overflows."
-        : "Duplicate sigil — reject the forklift (R) or the duplicate is enqueued."
-    return
-  }
-  node.textContent = "Forge running…"
+  node.textContent = state.status
 }
 
 function renderControls(node: HTMLElement, state: GameState, game: GameController): void {
   node.innerHTML = ""
   if (state.phase === "briefing") {
-    button(node, "start", "Start wave", () => game.start())
+    button(node, "start", "Acender a forja", () => game.start())
     return
   }
   if (state.phase === "cleared" || state.phase === "failed") {
-    if (state.phase === "failed") button(node, "retry", "Retry level", () => game.retry())
-    if (state.phase === "cleared" && state.level.id !== "L4") {
-      button(node, "next", "Next level", () => game.nextLevel())
-    }
+    if (state.phase === "failed") button(node, "retry", "Tentar novamente", () => game.retry())
+    if (state.phase === "cleared" && state.level.id !== "L4")
+      button(node, "next", "Próximo nível", () => game.nextLevel())
     return
   }
-  button(node, "pause", state.queue.paused ? "Resume arms (P)" : "Park arms (P)", () =>
+
+  // R — reject the docking forklift
+  if (state.inbound)
+    button(node, "reject-inbound", "R — rejeitar empilhadeira (429)", () => game.rejectInbound())
+
+  // classification of the oldest finished ingot
+  const head = state.finished[0]
+  if (head) {
+    button(node, "classify-retry", "Rack de têmpera (retry)", () => game.classifyRetry())
+    button(node, "classify-dlq", "Calha de sucata (DLQ)", () => game.classifyDlq())
+  }
+
+  // dispatch prediction: one button per eligible hopper ingot
+  for (const task of state.queue) {
+    if (task.scheduledFor > state.now) continue
+    button(node, `pick-${task.id}`, `${task.id} (prio ${task.priority})`, () =>
+      game.predictDispatch(task.id),
+    )
+  }
+
+  // P — pause/resume workers
+  button(node, "toggle-pause", state.paused ? "P — religar braços" : "P — estacionar braços", () =>
     game.togglePause(),
   )
-  const pending = state.pending
-  if (pending?.kind === "gate") {
-    button(node, "reject", "Reject (R)", () => game.rejectInbound())
-    button(node, "admit", "Let it in", () => game.admitInbound())
-  }
-  if (pending?.kind === "classify") {
-    button(node, "classify-retry", "Annealing rack (retry)", () =>
-      game.classifyRetry(pending.task.id),
-    )
-    button(node, "classify-dlq", "Scrap chute (DLQ)", () => game.classifyDlq(pending.task.id))
-  }
 }
 
-function renderLegend(node: HTMLElement, state: GameState, game: GameController): void {
-  node.innerHTML = ""
-  const depth = document.createElement("p")
-  depth.dataset.testid = "queue-depth"
-  depth.textContent = `hopper: ${game.queueDepthNow()}/${state.queue.capacity} (${game.backpressureNow()}) · arms busy: ${game.runningNow()}/${state.queue.workers.length}`
-  node.append(depth)
-
-  const pending = state.pending
-  if (pending?.kind === "dispatch") {
-    for (const t of pending.candidates) {
-      const row = document.createElement("button")
-      row.dataset.testid = `ingot-${t.id}`
-      row.textContent = `${t.id} · p${t.priority} · ${t.kind}${t.scheduledFor > state.queue.now ? " · ring" : ""}`
-      row.addEventListener("click", () => game.predictDispatch(t.id))
-      node.append(row)
-    }
+function renderGauges(node: HTMLElement, state: GameState): void {
+  if (state.phase === "briefing") {
+    node.innerHTML = ""
+    return
   }
+  const waiting = state.queue.filter((t) => t.scheduledFor > state.now).length
+  node.innerHTML = `
+    <p data-testid="gauge-queue">funil: ${state.queue.length}/${state.level.capacity}${state.queue.length >= state.level.capacity ? " (CHEIO — 429 na próxima)" : ""}</p>
+    <p data-testid="gauge-busy">braços: ${state.running.length}/${state.level.workerCount}${state.paused ? " (estacionados)" : ""}</p>
+    <p data-testid="gauge-rack">rack: ${waiting} aguardando backoff</p>
+    <p data-testid="gauge-out">sucesso: ${state.succeededIds.length} · DLQ: ${state.dlqIds.length}</p>
+  `
 }
 
 function button(parent: HTMLElement, testId: string, label: string, onClick: () => void): void {

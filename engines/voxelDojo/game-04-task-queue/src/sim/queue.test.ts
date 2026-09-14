@@ -2,214 +2,167 @@ import { describe, expect, it } from "vitest"
 import {
   backpressure,
   dispatch,
-  dispatchOrder,
-  failTask,
-  hasActiveKey,
+  fail,
+  isDuplicate,
   isEligible,
-  makeTask,
-  makeWorkers,
+  makePool,
   pickNext,
-  promoteReady,
-  type QueueState,
-  queueDepth,
-  requiredRoute,
-  retryDelay,
   runningCount,
-  succeedTask,
+  type Task,
 } from "./queue"
 import { mulberry32 } from "./rng"
 
-function spec(over: Partial<Parameters<typeof makeTask>[0]> = {}) {
+function task(partial: Partial<Task> & { id: string }): Task {
   return {
-    at: 0,
-    label: "job",
+    idempotencyKey: partial.id,
     priority: 1,
-    kind: "clear" as const,
-    idempotencyKey: `ik-${Math.random()}`,
-    ...over,
+    enqueuedAt: 0,
+    scheduledFor: 0,
+    kind: "clear",
+    retries: 0,
+    maxRetries: 2,
+    ...partial,
   }
 }
 
-function stateWith(capacity = 8, workers = 3): QueueState {
-  return {
-    now: 0,
-    capacity,
-    workers: makeWorkers(workers),
-    paused: false,
-    tasks: [],
-    maxConcurrentRunning: 0,
-    queueOverflowed: false,
-  }
-}
+describe("pickNext — bounded priority queue (RF-007)", () => {
+  it("picks the highest priority; FIFO breaks ties; id breaks final ties", () => {
+    const low = task({ id: "a", priority: 1, enqueuedAt: 0 })
+    const high = task({ id: "b", priority: 5, enqueuedAt: 40 })
+    const sameHighOlder = task({ id: "c", priority: 5, enqueuedAt: 10 })
+    const sameHighSameAge = task({ id: "d", priority: 5, enqueuedAt: 10 })
+    expect(pickNext([low, high, sameHighOlder, sameHighSameAge], 100)?.id).toBe("c")
+    // tie between c and d resolved deterministically by id
+    expect(pickNext([sameHighSameAge, sameHighOlder], 100)?.id).toBe("c")
+    expect(pickNext([low], 100)?.id).toBe("a")
+    expect(pickNext([], 100)).toBeNull()
+  })
 
-describe("pickNext — I2 priority desc + FIFO tie-break + scheduled_for gate", () => {
-  it("picks the brightest eligible ingot", () => {
-    const tasks = [
-      makeTask(spec({ priority: 1, idempotencyKey: "a" }), "t-a", 2),
-      makeTask(spec({ priority: 3, idempotencyKey: "b" }), "t-b", 2),
-      makeTask(spec({ priority: 2, idempotencyKey: "c" }), "t-c", 2),
+  it("gates on scheduled_for (RF-008): not grabbable until the countdown drains", () => {
+    const scheduled = task({ id: "s", priority: 9, scheduledFor: 5 })
+    const humble = task({ id: "h", priority: 1, scheduledFor: 0 })
+    expect(pickNext([scheduled, humble], 4)?.id).toBe("h")
+    expect(pickNext([scheduled, humble], 5)?.id).toBe("s")
+    expect(isEligible(scheduled, 4)).toBe(false)
+    expect(isEligible(scheduled, 5)).toBe(true)
+  })
+
+  it("is a total order: same queue + same clock ⇒ same pick (determinism invariant)", () => {
+    const queue = [
+      task({ id: "x1", priority: 2, enqueuedAt: 3 }),
+      task({ id: "x2", priority: 2, enqueuedAt: 1 }),
+      task({ id: "x3", priority: 3, enqueuedAt: 9, scheduledFor: 4 }),
     ]
-    expect(pickNext(tasks, 10)?.id).toBe("t-b")
-  })
-
-  it("breaks priority ties by oldest arrival (FIFO), then by id", () => {
-    const tasks = [
-      makeTask(spec({ priority: 2, at: 3, idempotencyKey: "a" }), "t-a", 2),
-      makeTask(spec({ priority: 2, at: 1, idempotencyKey: "b" }), "t-b", 2),
-      makeTask(spec({ priority: 2, at: 1, idempotencyKey: "c" }), "t-c", 2),
-    ]
-    expect(pickNext(tasks, 10)?.id).toBe("t-b")
-    expect(dispatchOrder(tasks, 10).map((t) => t.id)).toEqual(["t-b", "t-c", "t-a"])
-  })
-
-  it("gates grabbing on scheduled_for (RF-008): a dim now beats a bright later", () => {
-    const tasks = [
-      makeTask(spec({ priority: 3, idempotencyKey: "hot", scheduledFor: 6 }), "t-hot", 2),
-      makeTask(spec({ priority: 1, idempotencyKey: "dim" }), "t-dim", 2),
-    ]
-    expect(pickNext(tasks, 5)?.id).toBe("t-dim")
-    expect(pickNext(tasks, 6)?.id).toBe("t-hot")
-  })
-
-  it("returns null when nothing is eligible", () => {
-    const tasks = [makeTask(spec({ scheduledFor: 9 }), "t-x", 2)]
-    expect(pickNext(tasks, 1)).toBeNull()
-  })
-})
-
-describe("dispatch — I1 running <= worker_count on every step", () => {
-  it("fills every arm and refuses the impossible dispatch", () => {
-    const state = stateWith(8, 2)
-    const tasks = [
-      makeTask(spec({ idempotencyKey: "a" }), "t-a", 2),
-      makeTask(spec({ idempotencyKey: "b" }), "t-b", 2),
-      makeTask(spec({ idempotencyKey: "c" }), "t-c", 2),
-    ]
-    state.tasks = tasks
-    const w0 = state.workers[0]
-    const w1 = state.workers[1]
-    if (!w0 || !w1) throw new Error("fixture needs 2 workers")
-    dispatch(state, "t-a", w0)
-    dispatch(state, "t-b", w1)
-    expect(runningCount(state.workers)).toBe(2)
-    expect(state.maxConcurrentRunning).toBe(2)
-    expect(() => dispatch(state, "t-c", w1)).toThrow()
-    expect(runningCount(state.workers)).toBe(2)
-  })
-
-  it("tracks the high-water mark after arms free up", () => {
-    const state = stateWith(8, 3)
-    state.tasks = [makeTask(spec({ idempotencyKey: "a" }), "t-a", 2)]
-    const w0 = state.workers[0]
-    if (!w0) throw new Error("fixture needs a worker")
-    dispatch(state, "t-a", w0)
-    succeedTask(state, "t-a")
-    expect(runningCount(state.workers)).toBe(0)
-    expect(state.maxConcurrentRunning).toBe(1)
-  })
-})
-
-describe("failTask — I3 backoff monotonic + I4 poison/exhaustion to DLQ", () => {
-  it("cools a transient on the rack with base * 2^retries + jitter", () => {
-    const task = makeTask(spec({ kind: "cracked" }), "t-cr", 2)
-    const result = failTask(task, 1, 1, 10, 0.5)
-    expect(result.status).toBe("retry_wait")
-    expect(task.nextAttemptAt).toBe(10 + retryDelay(1, 1, 0.5))
-    expect(task.status).toBe("retry_wait")
-  })
-
-  it("backoff grows exponentially and stays monotonic per task", () => {
-    const task = makeTask(spec({ kind: "cracked" }), "t-cr", 5)
-    let now = 0
-    let previous = -Number.POSITIVE_INFINITY
-    for (let retries = 1; retries <= 4; retries++) {
-      const r = failTask(task, retries, 1, now, 0.1)
-      expect(r.nextAttemptAt).not.toBeNull()
-      const at = r.nextAttemptAt ?? 0
-      expect(at).toBeGreaterThan(previous)
-      previous = at
-      now = at
-      task.status = "queued"
+    for (let now = 0; now < 12; now++) {
+      const a = pickNext(queue, now)
+      const b = pickNext([...queue].reverse(), now)
+      expect(a?.id).toBe(b?.id)
     }
   })
+})
 
-  it("poison bypasses the rack and goes straight to the scrap chute", () => {
-    const task = makeTask(spec({ kind: "poison" }), "t-pz", 2)
-    expect(failTask(task, 1, 1, 5, 0).status).toBe("dead")
-    expect(task.status).toBe("dead")
-    expect(requiredRoute(task)).toBe("dlq")
+describe("dispatch — worker pool (RF-005)", () => {
+  it("never exceeds worker_count on any tick sequence", () => {
+    let pool = makePool(3)
+    const tasks = Array.from({ length: 10 }, (_, i) => task({ id: `t${i}` }))
+    for (const t of tasks) {
+      const next = pickNext([t], 0)
+      if (!next) continue
+      const res = dispatch(pool, next, 0)
+      pool = res.pool
+      expect(runningCount(pool)).toBeLessThanOrEqual(pool.workerCount)
+    }
+    expect(runningCount(pool)).toBe(3)
   })
 
-  it("a transient at max_retries is scrapped, not re-annealed", () => {
-    const task = makeTask(spec({ kind: "cracked" }), "t-ex", 2)
-    task.retries = 2
-    expect(failTask(task, 3, 1, 9, 0).status).toBe("dead")
-    expect(requiredRoute(task)).toBe("dlq")
+  it("refuses the (worker_count + 1)-th dispatch", () => {
+    let pool = makePool(2)
+    for (const id of ["a", "b"]) {
+      const res = dispatch(pool, task({ id }), 0)
+      expect(res.ok).toBe(true)
+      pool = res.pool
+    }
+    const refused = dispatch(pool, task({ id: "c" }), 0)
+    expect(refused.ok).toBe(false)
+    expect(runningCount(refused.pool)).toBe(2)
   })
 
-  it("requiredRoute: crack under the limit retries, poison always DLQs", () => {
-    const crack = makeTask(spec({ kind: "cracked" }), "t-c1", 2)
-    crack.retries = 0
-    expect(requiredRoute(crack)).toBe("retry")
-    crack.retries = 1
-    expect(requiredRoute(crack)).toBe("retry")
-    crack.retries = 2
-    expect(requiredRoute(crack)).toBe("dlq")
+  it("refuses dispatch of a task whose scheduled_for has not drained", () => {
+    const res = dispatch(makePool(4), task({ id: "late", scheduledFor: 9 }), 1)
+    expect(res.ok).toBe(false)
   })
 })
 
-describe("idempotency + backpressure — I5 / I6", () => {
-  it("rejects an active duplicate idempotency key, forgets terminal ones", () => {
-    const state = stateWith()
-    const first = makeTask(spec({ idempotencyKey: "sigil-1" }), "t-1", 2)
-    state.tasks.push(first)
-    expect(hasActiveKey(state, "sigil-1")).toBe(true)
-    first.status = "succeeded"
-    expect(hasActiveKey(state, "sigil-1")).toBe(false)
+describe("fail — retry/backoff, poison, exhaustion (RF-009 / RF-010)", () => {
+  it("transient cracks retry with base * 2^retries + jitter and monotonic next_attempt_at", () => {
+    const rng = mulberry32(7)
+    const t0 = task({ id: "r", kind: "transient", retries: 0, maxRetries: 3 })
+    const p1 = fail(t0, rng, 10)
+    expect(p1.action).toBe("retry")
+    expect(p1.retries).toBe(1)
+    expect(p1.nextAttemptAt).toBeGreaterThanOrEqual(12) // 10 + 2*2^0 + 0..1
+
+    const t1 = { ...t0, retries: p1.retries }
+    const p2 = fail(t1, rng, 20)
+    expect(p2.action).toBe("retry")
+    expect(p2.nextAttemptAt).toBeGreaterThanOrEqual(24) // 20 + 2*2^1 + 0..1
+    expect(p2.nextAttemptAt).toBeGreaterThan(p1.nextAttemptAt)
+
+    const t2 = { ...t0, retries: p2.retries }
+    const p3 = fail(t2, rng, 100)
+    expect(p3.action).toBe("retry")
+    expect(p3.nextAttemptAt).toBeGreaterThanOrEqual(108) // 100 + 2*2^2 + 0..1
   })
 
-  it("backpressure reads full exactly at capacity", () => {
-    expect(backpressure(3, 5)).toBe("open")
-    expect(backpressure(4, 5)).toBe("limited")
-    expect(backpressure(5, 5)).toBe("full")
-    expect(backpressure(6, 5)).toBe("full")
-    expect(backpressure(0, 1)).toBe("open")
+  it("same seed ⇒ same backoff schedule (determinism)", () => {
+    const t = task({ id: "r", kind: "transient", retries: 1, maxRetries: 3 })
+    const a = fail(t, mulberry32(42), 50)
+    const b = fail(t, mulberry32(42), 50)
+    expect(a).toEqual(b)
   })
 
-  it("queueDepth counts queued + retry_wait only", () => {
-    const state = stateWith()
-    const a = makeTask(spec({ idempotencyKey: "a" }), "t-a", 2)
-    const b = makeTask(spec({ idempotencyKey: "b" }), "t-b", 2)
-    const c = makeTask(spec({ idempotencyKey: "c" }), "t-c", 2)
-    b.status = "retry_wait"
-    c.status = "dead"
-    state.tasks = [a, b, c]
-    expect(queueDepth(state)).toBe(2)
+  it("poison bypasses the annealing rack (straight DLQ, no retry)", () => {
+    const plan = fail(
+      task({ id: "p", kind: "poison", retries: 0, maxRetries: 5 }),
+      mulberry32(1),
+      10,
+    )
+    expect(plan.action).toBe("dlq")
+  })
+
+  it("exhausted retries (retries + 1 > max_retries) hit the DLQ", () => {
+    const plan = fail(
+      task({ id: "e", kind: "transient", retries: 2, maxRetries: 2 }),
+      mulberry32(1),
+      10,
+    )
+    expect(plan.action).toBe("dlq")
+  })
+
+  it("clear tasks never reach fail() routing in the controller sense — retry budget only applies to cracks", () => {
+    // guard the contract: a fresh transient under budget always retries
+    const plan = fail(
+      task({ id: "fresh", kind: "transient", retries: 0, maxRetries: 2 }),
+      mulberry32(3),
+      0,
+    )
+    expect(plan.action).toBe("retry")
   })
 })
 
-describe("promoteReady — rack re-enters the hopper", () => {
-  it("a cooled retry becomes grabbable again", () => {
-    const state = stateWith()
-    const task = makeTask(spec({ kind: "cracked" }), "t-r", 2)
-    task.status = "retry_wait"
-    task.nextAttemptAt = 12
-    state.tasks = [task]
-    state.now = 11
-    promoteReady(state)
-    expect(task.status).toBe("retry_wait")
-    expect(isEligible(task, state.now)).toBe(false)
-    state.now = 12
-    promoteReady(state)
-    expect(task.status).toBe("queued")
-    expect(isEligible(task, state.now)).toBe(true)
+describe("dedup — idempotency keys (RF-003)", () => {
+  it("rejects an active duplicate key and admits a fresh one", () => {
+    const active = new Set(["sigil-1"])
+    expect(isDuplicate(active, task({ id: "d", idempotencyKey: "sigil-1" }))).toBe(true)
+    expect(isDuplicate(active, task({ id: "n", idempotencyKey: "sigil-2" }))).toBe(false)
   })
 })
 
-describe("determinism — same seed, same numbers", () => {
-  it("mulberry32 replays identical jitter streams", () => {
-    const a = mulberry32(44)
-    const b = mulberry32(44)
-    for (let i = 0; i < 8; i++) expect(a()).toBe(b())
+describe("backpressure — bounded hopper (RNF-003 / RF-013)", () => {
+  it("reports full at capacity: the next forklift must be rejected (429)", () => {
+    expect(backpressure(0, 4)).toBe("open")
+    expect(backpressure(3, 4)).toBe("limited")
+    expect(backpressure(4, 4)).toBe("full")
+    expect(backpressure(5, 4)).toBe("full")
   })
 })

@@ -25,12 +25,11 @@ VOXEL_CATALOG = REPO_ROOT / "engines" / "voxelDojo" / "catalog.json"
 CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 
 # Games known to have NO independent evaluator in GAME_SPECS yet
-# (verifier-map §4, L1' lote 2+: games 15-18; AID-1877 PR-A1: game-04).
-# Each entry must be removed in the same PR that ships the game's evaluator
-# (PR-A2 task_queue_evaluator, per decision AID-1859 Option A).
+# (verifier-map §4, L1' lote 2+: games 15-18). Each entry must be
+# removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
-        "game-04-task-queue",
+        "game-04-task-queue",  # AID-1901 PR-A1 shipped the game; evaluator lands in PR-A2 (VEE, AID-1901 sibling)
         "game-15-observatory",
         "game-16-freight-yard",
         "game-17-lighthouse-network",
@@ -48,15 +47,12 @@ ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
 ALLOWED_UNITID_QUIRKS: dict[str, str] = {}
 
 # Curriculum projects with no producing game (known gaps, verifier-map §4).
-# 04_concurrent_task_queue was unpinned in AID-1877 PR-A1 — the SAME PR that adds
-# game-04-task-queue to the catalog (the same-PR rule this tripwire enforces: a pin
-# whose debt no longer exists is stale and fails CI). The dispatch wording "só sai
-# no PR do avaliador" refers to the ALLOWED_UNVERIFIED entry above, which rides in
-# this PR and leaves in PR-A2 (task_queue_evaluator) — that is the evaluator debt.
 ALLOWED_PROJECTS_WITHOUT_GAME: frozenset[str] = frozenset(
     {
         "00_ai_in_practice",  # no-code track: literacy + ADR-0004 checklist, no voxelDojo game
         "01_rate_limiter",  # legacy GATEKEEPER rubric gate, closed 2026-07-05
+        # 04_concurrent_task_queue removed in the same PR that added game-04-task-queue
+        # to catalog.json (AID-1901 PR-A1, CEO decision AID-1859 Opção A).
     }
 )
 

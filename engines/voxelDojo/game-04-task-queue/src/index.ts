@@ -1,36 +1,38 @@
 export type { EvidenceRecord } from "./evidence/emit"
-export type { GameState, Listener, Phase, Prompt } from "./game/controller"
-export { GameController } from "./game/controller"
-export type { LevelConfig, LevelId, WaveMetrics, WaveOutcome } from "./sim/levels"
-export { evaluateQueueWave, LEVELS, levelConfig } from "./sim/levels"
 export type {
-  ArrivalSpec,
-  BackpressureState,
-  FinishOutcome,
-  ForgeWorker,
-  IngotKind,
-  QueueState,
-  SimTask,
-  TaskStatus,
+  Classification,
+  FinishedTask,
+  GameState,
+  Listener,
+  Phase,
+  RunningTask,
+} from "./game/controller"
+export { GameController } from "./game/controller"
+export type { Arrival, LevelConfig, LevelId, WaveMetrics } from "./sim/levels"
+export {
+  DOCK_WINDOW,
+  emptyMetrics,
+  evaluateWave,
+  hopperLevel,
+  LEVELS,
+  levelConfig,
+  WORK_BEATS,
+} from "./sim/levels"
+export type {
+  BackpressureLevel,
+  FailPlan,
+  FailureKind,
+  Task,
+  WorkerPool,
+  WorkerSlot,
 } from "./sim/queue"
 export {
-  allTerminal,
   backpressure,
-  deadLetterTask,
   dispatch,
-  dispatchOrder,
-  failTask,
-  finishOutcome,
-  hasActiveKey,
-  idleWorker,
+  fail,
+  isDuplicate,
   isEligible,
-  makeTask,
-  makeWorkers,
+  makePool,
   pickNext,
-  promoteReady,
-  queueDepth,
-  requiredRoute,
-  retryDelay,
   runningCount,
-  succeedTask,
 } from "./sim/queue"

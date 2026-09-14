@@ -73,19 +73,20 @@ class TestVoxelReviewSlice(unittest.TestCase):
 class TestVoxelPerGameFanOut(unittest.TestCase):
     """Closes the 15/16 hand-copied stub gap (TECH_DEBT_AUDIT_2026-07-08 #4).
 
-    The substrate's voxel sync MUST fan out to all game packages via the
+    The substrate's voxel sync MUST fan out to all 16 game packages via the
     canonical ``VOXEL_GAME_UNIT_IDS`` mapping. Each per-game file is
     rendered from the snapshot filtered to that game's unit; the file's
     ``reason`` field is therefore FSRS-computed, never a static literal.
     """
 
-    def test_all_game_ids_known_to_substrate(self):
+    def test_all_16_game_ids_known_to_substrate(self):
         from learner.substrate.dashboard_snapshot import (
             VOXEL_GAME_IDS,
             VOXEL_GAME_UNIT_IDS,
         )
 
-        # 17 since AID-1877 PR-A1 added game-04-task-queue (catalog contiguous 02-18)
+        # 17 since AID-1901 PR-A1 (game-04-task-queue landed; the 04 seed
+        # moved back from pixel-quest per CEO decision AID-1859 Opção A).
         self.assertEqual(len(VOXEL_GAME_IDS), 17)
         # Every game-* directory under engines/voxelDojo/ is in the substrate map.
         on_disk = sorted(p.name for p in VOXEL_DOJO.glob("game-*") if p.is_dir())

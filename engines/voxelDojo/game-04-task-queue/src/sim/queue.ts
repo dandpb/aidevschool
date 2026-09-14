@@ -1,268 +1,148 @@
-// Bounded worker-pool dispatch core — TASK FORGE (plan: engines/pixelDojo/docs/plans/04_concurrent_task_queue.md §10).
-// Pure, headless, deterministic: injected RNG (mulberry32) + logical clock. NO three import.
-//
-// Invariants (Vitest-enforced):
-//   I1 running_count <= worker_count on every step (RF-005)
-//   I2 pickNext = priority desc, FIFO tie-break, scheduled_for gate (RF-007/RF-008)
-//   I3 transient retry: next_attempt_at = base * 2^retries + jitter(rng), monotonic (RF-009)
-//   I4 poison bypasses retry -> DLQ; retries >= max_retries -> DLQ (RF-010)
-//   I5 duplicate active idempotency_key rejected (RF-003)
-//   I6 backpressure "full" rejects at capacity (RNF-003, RF-013)
+/**
+ * TASK FORGE sim core — bounded worker-pool dispatch (project 04_concurrent_task_queue).
+ *
+ * Pure headless rules with injected RNG + injected clock: NO `three` import, NO DOM.
+ * Everything here is unit-tested in Vitest without a GPU (voxelDojo PLAN §10).
+ *
+ * One concept: N workers pull the next eligible task from a bounded priority queue
+ * (priority desc, FIFO tie-break); transient failures retry with exponential backoff;
+ * poison / exhausted tasks go to the dead-letter queue; the queue rejects new tasks
+ * when full (backpressure); duplicate `idempotency_key` submissions are deduped.
+ */
 
-export type IngotKind = "clear" | "cracked" | "poison"
-export type TaskStatus = "queued" | "running" | "retry_wait" | "succeeded" | "dead"
-export type BackpressureState = "open" | "limited" | "full"
+export type FailureKind = "clear" | "transient" | "poison"
 
-export interface SimTask {
+export type BackpressureLevel = "open" | "limited" | "full"
+
+/** A task = an ingot. `kind` is the hidden outcome the player must route correctly. */
+export interface Task {
   readonly id: string
   readonly idempotencyKey: string
-  /** higher = brighter = dispatched first */
+  /** higher = brighter glow = dispatched first (RF-007) */
   readonly priority: number
-  /** arrival time; FIFO tie-break inside a priority band (older first) */
+  /** sim-time beat of arrival; FIFO tie-break within a priority band (RF-007) */
   readonly enqueuedAt: number
-  /** countdown ring: not grabbable before this logical instant (RF-008) */
+  /** sim-time beat before which the task is NOT grabbable; 0 = immediately (RF-008) */
   readonly scheduledFor: number
-  readonly kind: IngotKind
+  /** outcome once a forge arm finishes it */
+  readonly kind: FailureKind
+  readonly retries: number
   readonly maxRetries: number
-  /** remaining guaranteed transient failures (0 = next completion succeeds) */
-  failuresLeft: number
-  status: TaskStatus
-  workerId: string | null
-  startedAt: number | null
-  retries: number
-  nextAttemptAt: number | null
 }
 
-export interface ForgeWorker {
-  readonly id: string
-  busyWith: string | null
+export interface WorkerSlot {
+  readonly taskId: string | null
 }
 
-export interface QueueState {
-  now: number
-  capacity: number
-  workers: ForgeWorker[]
-  paused: boolean
-  tasks: SimTask[]
-  /** RF-005 acceptance: highest running_count ever observed (must stay <= worker_count) */
-  maxConcurrentRunning: number
-  queueOverflowed: boolean
+export interface WorkerPool {
+  readonly workerCount: number
+  readonly slots: readonly WorkerSlot[]
 }
 
-export interface ArrivalSpec {
-  readonly at: number
-  readonly label: string
-  readonly priority: number
-  readonly kind: IngotKind
-  readonly idempotencyKey: string
-  /** absolute logical instant the ingot becomes grabbable (default: at) */
-  readonly scheduledFor?: number
-  /** remaining transient failures before this cracked ingot cools (default: 1) */
-  readonly failuresLeft?: number
-}
-
-export function makeWorkers(count: number): ForgeWorker[] {
-  return Array.from({ length: count }, (_, i) => ({ id: `arm-${i}`, busyWith: null }))
-}
-
-export function makeTask(spec: ArrivalSpec, id: string, maxRetries: number): SimTask {
+export function makePool(workerCount: number): WorkerPool {
   return {
-    id,
-    idempotencyKey: spec.idempotencyKey,
-    priority: spec.priority,
-    enqueuedAt: spec.at,
-    scheduledFor: spec.scheduledFor ?? spec.at,
-    kind: spec.kind,
-    maxRetries,
-    failuresLeft: spec.failuresLeft ?? (spec.kind === "cracked" ? 1 : 0),
-    status: "queued",
-    workerId: null,
-    startedAt: null,
-    retries: 0,
-    nextAttemptAt: null,
+    workerCount,
+    slots: Array.from({ length: workerCount }, () => ({ taskId: null })),
   }
 }
 
-export function queueDepth(state: QueueState): number {
-  let depth = 0
-  for (const t of state.tasks) {
-    if (t.status === "queued" || t.status === "retry_wait") depth++
-  }
-  return depth
+export function runningCount(pool: WorkerPool): number {
+  return pool.slots.filter((s) => s.taskId !== null).length
 }
 
-export function runningCount(workers: readonly ForgeWorker[]): number {
-  let n = 0
-  for (const w of workers) {
-    if (w.busyWith !== null) n++
-  }
-  return n
+/** Is the task grabbable right now? scheduled_for gates eligibility (RF-008). */
+export function isEligible(task: Task, now: number): boolean {
+  return now >= task.scheduledFor
 }
 
-export function idleWorker(workers: readonly ForgeWorker[]): ForgeWorker | null {
-  for (const w of workers) {
-    if (w.busyWith === null) return w
-  }
-  return null
-}
-
-/** I5: is this idempotency key held by an ACTIVE task (queued/running/retry_wait)? */
-export function hasActiveKey(state: QueueState, idempotencyKey: string): boolean {
-  for (const t of state.tasks) {
-    if (
-      t.idempotencyKey === idempotencyKey &&
-      (t.status === "queued" || t.status === "running" || t.status === "retry_wait")
-    ) {
-      return true
+/**
+ * The next task an idle arm grabs: highest priority, ties broken by earliest
+ * arrival (FIFO), final tie by id so the pick is a total order (determinism:
+ * same queue + same clock ⇒ same pick). Tasks whose scheduled_for countdown
+ * ring has not drained are skipped.
+ */
+export function pickNext(queue: readonly Task[], now: number): Task | null {
+  let best: Task | null = null
+  for (const task of queue) {
+    if (!isEligible(task, now)) continue
+    if (best === null) {
+      best = task
+      continue
     }
-  }
-  return false
-}
-
-/** I6: depth >= capacity -> "full" (429); >= 80% -> "limited"; else "open". */
-export function backpressure(depth: number, capacity: number): BackpressureState {
-  if (depth >= capacity) return "full"
-  if (depth >= capacity * 0.8) return "limited"
-  return "open"
-}
-
-export function isEligible(task: SimTask, now: number): boolean {
-  if (task.status === "queued") return task.scheduledFor <= now
-  if (task.status === "retry_wait") return task.nextAttemptAt !== null && task.nextAttemptAt <= now
-  return false
-}
-
-/** I2: the next task an idle arm grabs — brightest (priority desc), oldest wins ties. */
-export function pickNext(tasks: readonly SimTask[], now: number): SimTask | null {
-  let best: SimTask | null = null
-  for (const t of tasks) {
-    if (!isEligible(t, now)) continue
+    if (task.priority > best.priority) {
+      best = task
+      continue
+    }
+    if (task.priority === best.priority && task.enqueuedAt < best.enqueuedAt) {
+      best = task
+      continue
+    }
     if (
-      best === null ||
-      t.priority > best.priority ||
-      (t.priority === best.priority && t.enqueuedAt < best.enqueuedAt) ||
-      (t.priority === best.priority && t.enqueuedAt === best.enqueuedAt && t.id < best.id)
+      task.priority === best.priority &&
+      task.enqueuedAt === best.enqueuedAt &&
+      task.id < best.id
     ) {
-      best = t
+      best = task
     }
   }
   return best
 }
 
-/** Candidate list for the dispatch prediction prompt, in grab order. */
-export function dispatchOrder(tasks: readonly SimTask[], now: number): SimTask[] {
-  return tasks
-    .filter((t) => isEligible(t, now))
-    .sort(
-      (a, b) => b.priority - a.priority || a.enqueuedAt - b.enqueuedAt || a.id.localeCompare(b.id),
-    )
-}
-
 /**
- * I3: exponential backoff with deterministic jitter — `base * 2^retries + jitter`.
- * The RNG is injected, so the same seed replays the same wave bit-for-bit.
+ * Dispatch a task onto the pool. Enforces the RF-005 invariant: `running ≤
+ * worker_count` — dispatch is refused (ok: false) when every arm is busy or
+ * the task is not yet eligible. The caller (controller) only ever dispatches
+ * the `pickNext` truth, so a refusal is a sim regression, not player error.
  */
-export function retryDelay(base: number, retries: number, jitter: number): number {
-  return base * 2 ** retries + jitter
-}
-
-/** I1: an idle arm takes `task`; running_count can never exceed worker_count. */
-export function dispatch(state: QueueState, taskId: string, worker: ForgeWorker): void {
-  const task = state.tasks.find((t) => t.id === taskId)
-  if (!task) throw new Error(`dispatch: unknown task ${taskId}`)
-  if (worker.busyWith !== null) throw new Error(`dispatch: worker ${worker.id} is busy`)
-  if (!isEligible(task, state.now)) throw new Error(`dispatch: task ${taskId} is not eligible`)
-  task.status = "running"
-  task.workerId = worker.id
-  task.startedAt = state.now
-  worker.busyWith = task.id
-  const running = runningCount(state.workers)
-  if (running > state.maxConcurrentRunning) state.maxConcurrentRunning = running
-}
-
-export type FinishOutcome = "succeeded" | "transient_failure" | "poison_failure"
-
-/** What actually happens when an arm opens on this ingot. Pure read of scripted truth. */
-export function finishOutcome(task: SimTask): FinishOutcome {
-  if (task.kind === "poison") return "poison_failure"
-  if (task.failuresLeft > 0) return "transient_failure"
-  return "succeeded"
-}
-
-/** Ground truth for the classify prompt: only poison or exhausted cracks may be scrapped... and only they MUST be. */
-export function requiredRoute(task: SimTask): "retry" | "dlq" {
-  if (task.kind === "poison") return "dlq"
-  if (task.retries >= task.maxRetries) return "dlq"
-  return "retry"
-}
-
-export interface FailResult {
-  status: "retry_wait" | "dead"
-  nextAttemptAt: number | null
-}
-
-/**
- * I3 + I4: apply a failure. `poison` and exhausted transients go straight to the
- * scrap chute (DLQ); a transient under the limit cools on the annealing rack for
- * `base * 2^retries + jitter(rng)`.
- */
-export function failTask(
-  task: SimTask,
-  retriesAfterFailure: number,
-  backoffBase: number,
+export function dispatch(
+  pool: WorkerPool,
+  task: Task,
   now: number,
-  jitter: number,
-): FailResult {
-  task.retries = retriesAfterFailure
-  if (task.kind === "poison" || retriesAfterFailure > task.maxRetries) {
-    task.status = "dead"
-    task.nextAttemptAt = null
-    return { status: "dead", nextAttemptAt: null }
+): { ok: boolean; pool: WorkerPool } {
+  if (!isEligible(task, now) || runningCount(pool) >= pool.workerCount) {
+    return { ok: false, pool }
   }
-  task.failuresLeft -= 1
-  task.status = "retry_wait"
-  task.nextAttemptAt = now + retryDelay(backoffBase, retriesAfterFailure, jitter)
-  return { status: "retry_wait", nextAttemptAt: task.nextAttemptAt }
+  const index = pool.slots.findIndex((slot) => slot.taskId === null)
+  if (index === -1) return { ok: false, pool }
+  const slots = pool.slots.map((slot, i) => (i === index ? { taskId: task.id } : { ...slot }))
+  return { ok: true, pool: { ...pool, slots } }
 }
 
-export function succeedTask(state: QueueState, taskId: string): void {
-  const task = state.tasks.find((t) => t.id === taskId)
-  if (!task) throw new Error(`succeed: unknown task ${taskId}`)
-  task.status = "succeeded"
-  freeWorker(state, taskId)
+/** Default exponential-backoff base (in beats) shared by every level. */
+export const BACKOFF_BASE = 2
+
+export interface FailPlan {
+  action: "retry" | "dlq"
+  /** retry: sim-time beat at which the task re-enters the hopper as eligible */
+  nextAttemptAt: number
+  retries: number
 }
 
-export function deadLetterTask(state: QueueState, taskId: string): void {
-  const task = state.tasks.find((t) => t.id === taskId)
-  if (!task) throw new Error(`dlq: unknown task ${taskId}`)
-  task.status = "dead"
-  freeWorker(state, taskId)
+/**
+ * Outcome routing for a finished task (RF-009 / RF-010):
+ * - `poison` MUST bypass retries (straight to the DLQ — the canonical queue pathology);
+ * - a transient crack under `maxRetries` retries with `backoff = base * 2^retries + jitter(rng)`;
+ * - an exhausted transient (retries + 1 > maxRetries) goes to the DLQ too.
+ */
+export function fail(task: Task, rng: () => number, now: number, base = BACKOFF_BASE): FailPlan {
+  if (task.kind === "poison") return { action: "dlq", nextAttemptAt: now, retries: task.retries }
+  const retries = task.retries + 1
+  if (retries > task.maxRetries) return { action: "dlq", nextAttemptAt: now, retries }
+  const jitter = Math.floor(rng() * 2) // 0|1 beat, deterministic per seed
+  return { action: "retry", nextAttemptAt: now + base * 2 ** (retries - 1) + jitter, retries }
 }
 
-export function freeWorker(state: QueueState, taskId: string): void {
-  for (const w of state.workers) {
-    if (w.busyWith === taskId) w.busyWith = null
-  }
+/** A task with an active idempotency_key still in flight is a duplicate (RF-003). */
+export function isDuplicate(activeKeys: ReadonlySet<string>, task: Task): boolean {
+  return activeKeys.has(task.idempotencyKey)
 }
 
-/** Rack -> hopper: a cooled retry becomes grabbable again (original FIFO slot kept). */
-export function promoteReady(state: QueueState): void {
-  for (const t of state.tasks) {
-    if (t.status === "retry_wait" && t.nextAttemptAt !== null && t.nextAttemptAt <= state.now) {
-      t.status = "queued"
-    }
-  }
-}
-
-export function enqueueTask(state: QueueState, task: SimTask): void {
-  state.tasks.push(task)
-}
-
-export function allTerminal(state: QueueState): boolean {
-  let seen = 0
-  for (const t of state.tasks) {
-    if (t.status !== "succeeded" && t.status !== "dead") return false
-    seen++
-  }
-  return seen > 0
+/**
+ * Hopper admission level (RNF-003 / RF-013). `full` means the NEXT forklift
+ * must be rejected (429) or the hopper overflows.
+ */
+export function backpressure(queueLength: number, capacity: number): BackpressureLevel {
+  if (queueLength >= capacity) return "full"
+  if (queueLength >= Math.ceil(capacity * 0.75)) return "limited"
+  return "open"
 }

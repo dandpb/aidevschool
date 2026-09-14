@@ -1,0 +1,7 @@
+2026-09-14T09:25:07.1000000Z
+2026-09-14T09:25:07.1000001Z Running 20 tests using 2 workers
+2026-09-14T09:25:41.2200000Z   ✓  1 playwright/corridor.spec.ts:10:5 › learner advances the corridor (1.2s)
+2026-09-14T09:25:42.1230000Z   ✓  2 playwright/gamification.spec.ts:8:5 › streak increments once per unit (0.8s)
+2026-09-14T09:25:49.5120000Z
+2026-09-14T09:25:49.5120001Z   20 passed (42.3s)
+2026-09-14T09:25:49.6000000Z ##[group]Run npm run readiness

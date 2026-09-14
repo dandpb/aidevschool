@@ -16,12 +16,7 @@ export const GAME_EVIDENCE_META = {
     project: "04_concurrent_task_queue",
     game: "TASK FORGE",
     scenarioSlug: "task-forge",
-    curriculum: {
-      concept: "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency",
-      mechanic: "task forge: hopper + N arms + annealing rack + scrap chute",
-      accepted_signal: "correct next-dispatch prediction AND correct retry/DLQ classification AND held backpressure + idempotency",
-      rejected_trap: "requeuing poison / overflowing hopper / enqueuing a duplicate sigil",
-    },
+    curriculum: { concept: "bounded worker-pool dispatch with priority, retry/backoff, DLQ, backpressure, idempotency", mechanic: "task forge: hopper + N arms + annealing rack + scrap chute" },
   },
   "game-05-relay-station": {
     project: "05_websocket_chat",
