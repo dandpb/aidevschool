@@ -127,12 +127,47 @@ class TestEffectiveThresholds(_SeamFixture):
             verdict, effective_thresholds({"mutation_min": 0.50})
         )
         self.assertEqual(blockers, ())
+    def test_gate_receipt_path_uses_unit_overlay_end_to_end(self) -> None:
+        """Verify gap 3: canonical_gate wires effective_thresholds into the
+        receipt check — a unit bar below the seam must accept evidence the seam
+        alone would reject (and the seam alone must still reject it)."""
+        from learner.gate.canonical_gate import _check_evidence_semantics
+
+        producer = {
+            "unit_id": "U2",
+            "project": "02_key_value_store",
+            "game": "KV WAREHOUSE",
+            "ts": "2026-09-13T00:00:00Z",
+            "pass": True,
+        }
+        receipt = VerifierReceipt(
+            verdict="PASS", context_isolated=True,
+            mutation_score=0.58, coverage_core=0.92, source="test",
+            evidence_digest=canonical_evidence_digest(
+                {k: v for k, v in producer.items() if k != "verifier"}
+            ),
+        )
+        unit_seam_bar = {
+            "id": "U2",
+            "project": "02_key_value_store",
+            "empirical_gate": {"mutation_min": 0.50},
+        }
+        seam_only_unit = {"id": "U2", "project": "02_key_value_store"}
+
+        # Seam alone (0.65): the receipt's 0.58 is rejected.
+        errors_seam = _check_evidence_semantics(producer, seam_only_unit, receipt)
+        self.assertTrue(any("mutation_score" in e for e in errors_seam), errors_seam)
+
+        # With the unit's own bar (0.50): the same receipt passes.
+        errors_unit = _check_evidence_semantics(producer, unit_seam_bar, receipt)
+        self.assertEqual(errors_unit, [])
 
 
 class TestSeamFailure(_SeamFixture):
     """C3 — a missing/malformed seam fails loudly, naming the path, no fallback."""
 
     def test_missing_seam_raises_naming_path(self) -> None:
+
         missing = Path(self._tmp.name) / "nope.yaml"
         standards.DEFAULT_SEAM_PATH = missing
         try:
