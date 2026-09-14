@@ -85,7 +85,9 @@ class TestVoxelPerGameFanOut(unittest.TestCase):
             VOXEL_GAME_UNIT_IDS,
         )
 
-        self.assertEqual(len(VOXEL_GAME_IDS), 16)
+        # 17 since AID-1901 PR-A1 (game-04-task-queue landed; the 04 seed
+        # moved back from pixel-quest per CEO decision AID-1859 Opção A).
+        self.assertEqual(len(VOXEL_GAME_IDS), 17)
         # Every game-* directory under engines/voxelDojo/ is in the substrate map.
         on_disk = sorted(p.name for p in VOXEL_DOJO.glob("game-*") if p.is_dir())
         self.assertEqual(sorted(VOXEL_GAME_UNIT_IDS.keys()), on_disk)

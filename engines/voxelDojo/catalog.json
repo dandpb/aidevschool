@@ -12,6 +12,12 @@
     "unitId": "U3-url-shortener"
   },
   {
+    "id": "game-04-task-queue",
+    "name": "TASK FORGE",
+    "developmentPort": 5204,
+    "unitId": "U4-task-queue"
+  },
+  {
     "id": "game-05-relay-station",
     "name": "RELAY STATION",
     "developmentPort": 5205,

@@ -29,6 +29,7 @@ CURRICULUM_CATALOG = REPO_ROOT / "curriculum" / "catalog.md"
 # removed in the same PR that ships the game's evaluator.
 ALLOWED_UNVERIFIED: frozenset[str] = frozenset(
     {
+        "game-04-task-queue",  # AID-1901 PR-A1 shipped the game; evaluator lands in PR-A2 (VEE, AID-1901 sibling)
         "game-10-hash-ring",  # evaluator blocked on unitId fix (catalog.json:48)
         "game-13-breaker-grid",
         "game-14-river-delta",
@@ -53,7 +54,8 @@ ALLOWED_PROJECTS_WITHOUT_GAME: frozenset[str] = frozenset(
     {
         "00_ai_in_practice",  # no-code track: literacy + ADR-0004 checklist, no voxelDojo game
         "01_rate_limiter",  # legacy GATEKEEPER rubric gate, closed 2026-07-05
-        "04_concurrent_task_queue",  # no producer planned yet (verifier-map L2)
+        # 04_concurrent_task_queue removed in the same PR that added game-04-task-queue
+        # to catalog.json (AID-1901 PR-A1, CEO decision AID-1859 Opção A).
     }
 )
 
