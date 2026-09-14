@@ -460,13 +460,36 @@ jobs:
       - name: validate readiness sources and candidate report
         id: readiness_check
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+      # AID-1890: `check` above is deterministic — it compares the generated
+      # views against the RECORDED promoted decisions, so PR lanes cannot flap
+      # with the re-grant factory cycle (wall-clock revalidateBy boundaries or
+      # diffs under a use case's sourcePaths no longer redden unrelated PRs).
+      # The stale-claims window keeps exactly one blocking consumer: the main
+      # push lane, whose red run is the readiness-regrant factory trigger
+      # (workflow_run on failed push CI runs). On PR lanes the same signal is
+      # surfaced as a non-blocking warning for triage visibility.
+      - name: check claims staleness window (main push lane only, factory trigger)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: python3 docs/product-readiness/tools/cli.py check --require-current
+      - name: surface claims staleness window (PR lanes, non-blocking)
+        if: github.event_name != 'push'
+        run: |
+          set +e
+          python3 docs/product-readiness/tools/cli.py check --require-current
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=READINESS-STALE-WINDOW::promoted readiness claims are in a stale window for this tree (expected mid re-grant cycle; non-blocking on PR lanes). The re-grant factory heals it from the next main push run."
+          fi
+          exit 0
       # AID-1669: this annotation can only be reached with producer reports
-      # present (assert above passed), so the failure above is the
-      # stale-claims/invalid-candidate signal the factory exists for — clearly
-      # distinct from PRODUCER-REPORTS-MISSING above.
+      # present (assert above passed). AID-1890 narrowed `check` to view
+      # desync + candidate validation, so the failure above means the tracked
+      # generated views no longer match the canonical sources (or the
+      # candidate report is invalid) — heal with `cli.py render`; on the main
+      # push lane this red is also the re-grant-factory signal.
       - name: annotate stale or invalid readiness failure
         if: failure() && steps.readiness_check.outcome == 'failure'
-        run: echo "::error title=READINESS-STALE-OR-INVALID::producer reports were present, so the check failure above means claims are stale (or the candidate report is invalid). This IS the re-grant-factory signal."
+        run: echo "::error title=READINESS-VIEW-DESYNC-OR-INVALID::producer reports were present, so the check failure above means the generated readiness views are out of sync with the canonical sources (or the candidate report is invalid). Re-render with python3 docs/product-readiness/tools/cli.py render; on main pushes this is also the re-grant-factory signal."
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
       - name: run readiness cli guard tests

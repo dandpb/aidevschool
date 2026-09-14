@@ -35,7 +35,7 @@ from tools.regrant import (  # noqa: E402
     classify_proposal,
     require_regrant_branch,
 )
-from tools.render import drift, expected_views, write_views  # noqa: E402
+from tools.render import drift, expected_views, live_deviations, write_views  # noqa: E402
 from tools.reports import (  # noqa: E402
     CandidateRequest,
     ReportSnapshot,
@@ -68,7 +68,7 @@ def _print_candidate(proposal: AssessmentProposal) -> None:
 def _print_usage() -> None:
     print(
         "usage: python3 docs/product-readiness/tools/cli.py "
-        "{check [--reports DIR...]|enforce --reports DIR...|render|"
+        "{check [--reports DIR...] [--require-current]|enforce --reports DIR...|render|"
         "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
         "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
         "[--scenarios ID...]|"
@@ -159,8 +159,24 @@ def main(args: list[str] | None = None) -> int:
         print(f"Aggregated {len(report['results'])} producer result(s) into {output}.")
         print("The aggregate contains facts only; an independent assessor must evaluate it.")
         return 0
-    if arguments and arguments[0] == "check" and (len(arguments) == 1 or arguments[1] == "--reports"):
-        report_directories = tuple(Path(value) for value in arguments[2:]) if len(arguments) > 1 else ()
+    if arguments and arguments[0] == "check" and (
+        len(arguments) == 1 or arguments[1] in {"--reports", "--require-current"}
+    ):
+        # AID-1890: default `check` validates the generated views against the
+        # RECORDED promoted decisions (pure function of the tracked sources, no
+        # wall clock, no working-tree fingerprints), so PR lanes cannot flap
+        # with the re-grant factory cycle. `--require-current` additionally
+        # fails on a live stale window — the factory's signal, consumed by the
+        # main push lane (readiness-regrant.yml fires on failed main CI runs).
+        operands = arguments[1:] if len(arguments) > 1 else ()
+        require_current = False
+        report_values: list[str] = []
+        for value in operands:
+            if value == "--require-current":
+                require_current = True
+            elif value != "--reports":
+                report_values.append(value)
+        report_directories = tuple(Path(value) for value in report_values)
         report_errors = validate_report_directories(domain, REPO_ROOT, report_directories)
         if report_errors:
             for error in report_errors:
@@ -180,6 +196,18 @@ def main(args: list[str] | None = None) -> int:
             for path in changed:
                 print(f"DRIFT: {path.relative_to(REPO_ROOT)}", file=sys.stderr)
             return 1
+        if require_current:
+            deviations = live_deviations(domain, REPO_ROOT)
+            if deviations:
+                for use_case, recorded, current in deviations:
+                    print(
+                        f"STALE-WINDOW: {use_case.id}: recorded {recorded.outcome}/"
+                        f"{recorded.granted_tier} vs current {current.outcome}/"
+                        f"{current.granted_tier}; reasons={'; '.join(current.reasons)}",
+                        file=sys.stderr,
+                    )
+                return 1
+            print("Promoted readiness claims are current for this tree and clock.")
         print("Product-readiness sources and generated matrix are valid and in sync.")
         return 0
     if arguments and arguments[0] == "enforce" and len(arguments) > 2 and arguments[1] == "--reports":

@@ -45,7 +45,7 @@ def _proof_errors(scenario: Scenario, result: ScenarioResult) -> tuple[str, ...]
     return ()
 
 
-def _latest_assessment(domain: ReadinessDomain, use_case: UseCase) -> Assessment | None:
+def latest_assessment(domain: ReadinessDomain, use_case: UseCase) -> Assessment | None:
     candidates = [
         assessment
         for assessment in domain.assessments
@@ -129,7 +129,7 @@ def current_decision(
     repo_root: Path,
     now: datetime,
 ) -> ReadinessDecision:
-    assessment = _latest_assessment(domain, use_case)
+    assessment = latest_assessment(domain, use_case)
     if assessment is None:
         return ReadinessDecision(use_case.id, DecisionOutcome.UNASSESSED, None, ("no promoted assessment",), ())
     stored = next(decision for decision in assessment.decisions if decision.use_case_id == use_case.id)
