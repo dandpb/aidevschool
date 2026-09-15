@@ -62,6 +62,17 @@ test("boots the forge, plays L1 via HUD buttons + truth API, emits a passing rec
   expect(first.pass).toBe(true)
   expect(first.metrics.kind).toBe("voxeldojo-task-queue")
   expect(first.metrics.dispatch_correct).toBe(first.metrics.dispatch_predictions)
+  // AID-1906: the record carries the closed observations trace the verifier replays
+  const observations = first.observations as { kind: string; decisions: unknown[] }
+  expect(observations.kind).toBe("task-forge-L1")
+  const decisions = observations.decisions as Array<Record<string, unknown>>
+  const dispatches = decisions.filter((d) => d.type === "dispatch")
+  const classifies = decisions.filter((d) => d.type === "classify")
+  expect(dispatches).toHaveLength(first.metrics.dispatch_predictions)
+  expect(classifies).toHaveLength(
+    first.metrics.retry_classifications + first.metrics.dlq_classifications,
+  )
+  expect(decisions[0]).toEqual({ type: "dispatch", taskId: expect.any(String) })
   expect(await page.evaluate(() => window.__voxelDojoEvidence?.length ?? 0)).toBe(1)
 
   await page.screenshot({ path: ".logs/smoke-L1-cleared.png" })

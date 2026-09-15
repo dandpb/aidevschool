@@ -28,6 +28,24 @@ import { mulberry32 } from "../sim/rng"
 export type Phase = "briefing" | "playing" | "cleared" | "failed"
 export type Classification = "retry" | "dlq"
 
+/**
+ * Closed decision trace consumed by the independent TASK FORGE verifier
+ * (learner/gate/task_queue_evaluator.py, contract pinned in PR-A2 #423):
+ * one entry per answered prompt, in prompt order, with exactly the keys the
+ * replay accepts. The trace records what the player actually did (wrong
+ * predictions included) and is never reordered — a match played with pauses
+ * may answer prompts in an order that diverges from the verifier's no-pause
+ * replay and is then rejected fail-closed, never accepted by self-declared
+ * metrics. In this controller a gate prompt is answered explicitly only on
+ * R (reject); admitting happens by letting the dock window close, so gate
+ * entries carry "reject" (the "admit" arm of the contract exists for
+ * producers with an explicit admit action).
+ */
+export type TraceDecision =
+  | { readonly type: "dispatch"; readonly taskId: string }
+  | { readonly type: "classify"; readonly taskId: string; readonly route: "retry" | "dlq" }
+  | { readonly type: "gate"; readonly action: "reject" | "admit" }
+
 export interface RunningTask {
   readonly task: Task
   readonly completesAt: number
@@ -81,6 +99,8 @@ export class GameController {
   private pool: WorkerPool
   private dispatchLog: Array<{ expected: string; picked: string }> = []
   private classificationLog: Array<{ task: string; route: Classification; correct: boolean }> = []
+  /** decisions answered this wave, emitted as observations (verifier contract, AID-1906) */
+  private decisions: TraceDecision[] = []
 
   constructor(level: LevelId = "L1") {
     const cfg = levelConfig(level)
@@ -132,6 +152,7 @@ export class GameController {
     this.pool = makePool(cfg.workerCount)
     this.dispatchLog = []
     this.classificationLog = []
+    this.decisions = []
     this.commit({ phase: "playing", status: "A forja está ligada." })
     this.settle()
   }
@@ -143,6 +164,7 @@ export class GameController {
     this.pool = makePool(cfg.workerCount)
     this.dispatchLog = []
     this.classificationLog = []
+    this.decisions = []
     this.commit({})
   }
 
@@ -226,6 +248,8 @@ export class GameController {
       ),
     }
     this.dispatchLog.push({ expected: truth.id, picked: taskId })
+    // trace the player's prediction (wrong ids included), not the truth
+    this.decisions = [...this.decisions, { type: "dispatch", taskId }]
     this.commit({
       queue: this.state.queue.filter((t) => t.id !== truth.id),
       running,
@@ -285,6 +309,7 @@ export class GameController {
     }
 
     this.classificationLog.push({ task: task.id, route: choice, correct: choice === correctRoute })
+    this.decisions = [...this.decisions, { type: "classify", taskId: task.id, route: choice }]
     this.commit({ finished, queue, dlqIds, metrics, status })
     this.tick()
   }
@@ -295,6 +320,7 @@ export class GameController {
     const inbound = this.state.inbound
     if (!inbound) return
     const required = this.inboundRequiresReject()
+    this.decisions = [...this.decisions, { type: "gate", action: "reject" }]
     this.commit({
       inbound: null,
       scriptIndex: this.state.scriptIndex + 1,
@@ -474,8 +500,7 @@ export class GameController {
       { ...metrics },
       {
         kind: `task-forge-${this.state.level.id}`,
-        dispatch_log: this.dispatchLog.slice(),
-        classifications: this.classificationLog.slice(),
+        decisions: this.decisions.slice(),
       },
     )
   }

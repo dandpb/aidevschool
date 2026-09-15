@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { LEVELS, type LevelId } from "../sim/levels"
-import { GameController } from "./controller"
+import { GameController, type TraceDecision } from "./controller"
 
 /**
  * Determinism + contract tests for the TASK FORGE controller. The autopilot
@@ -258,5 +258,134 @@ describe("determinism — same actions ⇒ same wave", () => {
     expect(s1.running.length).toBe(0)
     game.togglePause()
     expect(game.snapshot.paused).toBe(false)
+  })
+})
+
+/**
+ * AID-1906 — evidence observations trace (verifier contract pinned in PR-A2
+ * #423: learner/gate/task_queue_evaluator.py accepts only the closed
+ * {kind, decisions} observations with per-decision closed key sets). The
+ * trace below is derived from the canonical sim itself (this controller's
+ * truth APIs), not from literals: the #421-sim ground-truth numbers pinned
+ * in the original stack (L1=12 dispatches of t-0-order-101, L4=29) belong to
+ * the orphaned #421 wave data and are void post-re-anchor; re-pinning the
+ * evaluator TRACES against this canonical sim is tracked for the PR-A2
+ * owner (QA countersign input).
+ */
+
+/** The verifier only accepts closed key sets per decision. */
+function hasClosedShape(d: TraceDecision): boolean {
+  const keys = Object.keys(d).sort().join(",")
+  if (d.type === "dispatch") return keys === "taskId,type"
+  if (d.type === "classify") return keys === "route,taskId,type"
+  return keys === "action,type"
+}
+
+/** Autopilot that records the exact prompt answers as it plays. */
+function tracedAutopilot(game: GameController, maxSteps = 500): TraceDecision[] {
+  const trace: TraceDecision[] = []
+  for (let i = 0; i < maxSteps; i++) {
+    const s = game.snapshot
+    if (s.phase !== "playing") return trace
+    if (s.inbound && game.inboundRequiresReject()) {
+      trace.push({ type: "gate", action: "reject" })
+      game.rejectInbound()
+      continue
+    }
+    const head = game.headFinished()
+    if (head) {
+      trace.push({ type: "classify", taskId: head.task.id, route: head.correctRoute })
+      if (head.correctRoute === "retry") game.classifyRetry()
+      else game.classifyDlq()
+      continue
+    }
+    const expected = game.expectedDispatchId()
+    if (expected) {
+      trace.push({ type: "dispatch", taskId: expected })
+      game.predictDispatch(expected)
+      continue
+    }
+    // nothing actionable: the dock window closes on its own — nudge the clock
+    game.togglePause()
+    game.togglePause()
+  }
+  throw new Error("tracedAutopilot exceeded maxSteps")
+}
+
+function emittedObservations(): { kind: string; decisions: TraceDecision[] }[] {
+  return vi
+    .mocked(emitEvidence)
+    .mock.calls.map((c) => c[3] as { kind: string; decisions: TraceDecision[] })
+}
+
+function soleEmittedObservations(): { kind: string; decisions: TraceDecision[] } {
+  const [observations] = emittedObservations()
+  if (!observations) throw new Error("expected exactly one emitted observations record")
+  return observations
+}
+
+describe("evidence observations — AID-1906 decision trace (canonical sim)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  for (const cfg of LEVELS) {
+    it(`${cfg.id}: emits exactly the played decision trace as record observations`, () => {
+      const game = new GameController(cfg.id)
+      game.start()
+      const trace = tracedAutopilot(game)
+      expect(game.snapshot.phase).toBe("cleared")
+      const emitted = emittedObservations()
+      expect(emitted).toEqual([{ kind: `task-forge-${cfg.id}`, decisions: trace }])
+      for (const d of trace) expect(hasClosedShape(d)).toBe(true)
+    })
+  }
+
+  it("trace counts reconcile with the independently recomputed metrics", () => {
+    for (const cfg of LEVELS) {
+      vi.clearAllMocks()
+      const game = new GameController(cfg.id)
+      game.start()
+      tracedAutopilot(game)
+      const m = game.snapshot.metrics
+      const observations = soleEmittedObservations()
+      const dispatches = observations.decisions.filter((d) => d.type === "dispatch")
+      const classifies = observations.decisions.filter((d) => d.type === "classify")
+      const gates = observations.decisions.filter((d) => d.type === "gate")
+      expect(dispatches).toHaveLength(m.dispatch_predictions)
+      expect(classifies).toHaveLength(m.retry_classifications + m.dlq_classifications)
+      // this controller has no explicit admit action: every gate answer is a reject
+      for (const g of gates) expect(g).toEqual({ type: "gate", action: "reject" })
+    }
+  })
+
+  it("wrong predictions stay in the trace — the player's answer, never the truth", () => {
+    const game = new GameController("L1")
+    game.start()
+    const truth = game.expectedDispatchId()
+    expect(truth).not.toBeNull()
+    game.predictDispatch("t-not-the-truth")
+    // keep playing optimally so the wave ends and the record is emitted
+    tracedAutopilot(game)
+    const observations = soleEmittedObservations()
+    expect(observations.decisions[0]).toEqual({ type: "dispatch", taskId: "t-not-the-truth" })
+    expect(game.snapshot.metrics.dispatch_correct).toBeLessThan(
+      game.snapshot.metrics.dispatch_predictions,
+    )
+  })
+
+  it("same play ⇒ same trace (byte-for-byte, determinism invariant)", () => {
+    for (const cfg of LEVELS) {
+      vi.clearAllMocks()
+      const a = new GameController(cfg.id)
+      a.start()
+      tracedAutopilot(a)
+      const first = emittedObservations()
+      vi.clearAllMocks()
+      const b = new GameController(cfg.id)
+      b.start()
+      tracedAutopilot(b)
+      expect(emittedObservations()).toEqual(first)
+    }
   })
 })
