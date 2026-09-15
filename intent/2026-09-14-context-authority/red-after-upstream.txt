@@ -1,0 +1,408 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.7, pytest-8.4.2, pluggy-1.6.0 -- /mnt/mac/aidevschool/.venv-linux/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/mac/aidevschool/.scratch/worktrees/context-authority
+configfile: pyproject.toml
+collecting ... collected 22 items
+
+engines/openclaw/tests/test_provenance.py::test_legacy_provenance_is_read_only PASSED [  4%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-spec-done-impl] PASSED [  9%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-done-impl-done-review] PASSED [ 13%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[impl-done-review-done-benchmark] PASSED [ 18%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[review-done-benchmark-done-optimize] PASSED [ 22%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete] PASSED [ 27%]
+engines/openclaw/tests/test_provenance.py::test_cli_override_reports_simulated_provenance PASSED [ 31%]
+engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance FAILED [ 36%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent] FAILED [ 40%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent] FAILED [ 45%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent] FAILED [ 50%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-] FAILED [ 54%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ] FAILED [ 59%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None] FAILED [ 63%]
+engines/openclaw/tests/test_provenance.py::test_cli_preview_preserves_provenance PASSED [ 68%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_pass_stamps_authorized_bytes PASSED [ 72%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_fail_keeps_provenance PASSED [ 77%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] FAILED [ 81%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-mme-supervisor] FAILED [ 86%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-] FAILED [ 90%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract FAILED [ 95%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented FAILED [100%]
+
+=================================== FAILURES ===================================
+______________ test_sequential_writers_preserve_latest_provenance ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_sequential_writers_preser0')
+
+    def test_sequential_writers_preserve_latest_provenance(tmp_path: Path) -> None:
+        scheduler = _scheduler(tmp_path)
+        scheduler.step()
+        status = scheduler.read_status()
+        assert status.grade == "simulate"
+        assert status.advanced_by == "openclaw-checklist"
+        status.grade = "verified"
+        status.advanced_by = "mme-supervisor"
+>       save_status(status, scheduler.status_path)
+
+engines/openclaw/tests/test_provenance.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/runner/pipeline_status.py:121: in save_status
+    dump_status(status),
+    ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = PipelineStatus(cycle_id='', current_project='curriculum/01_rate_limiter', complexity_level=1, phase=<Phase.SPEC_DONE: 'spec-done'>, awaiting='', blockers=[], grade='verified', advanced_by='mme-supervisor')
+
+    def dump_status(status: PipelineStatus) -> str:
+        """Serialize machine status — the ONE serialization (write and digest share it).
+    
+        The MME supervisor digests a *planned* status with this same function to
+        predict, byte-exactly, what :func:`save_status` will write; changing the
+        field set here changes both sides of that contract together.
+        """
+        return yaml.safe_dump(
+            {
+                "cycle_id": status.cycle_id,
+                "current_project": status.current_project,
+                "complexity_level": status.complexity_level,
+                "phase": status.phase.value,
+                "awaiting": status.awaiting,
+                "blockers": list(status.blockers),
+>               "grade": status.grade.value,
+                         ^^^^^^^^^^^^^^^^^^
+                "advanced_by": status.advanced_by,
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        )
+E       AttributeError: 'str' object has no attribute 'value'
+
+engines/openclaw/runner/pipeline_status.py:109: AttributeError
+______________ test_invalid_provenance_is_rejected[trusted-agent] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej0')
+grade = 'trusted', writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+        with pytest.raises(StateCorruptionError):
+            load_status(path)
+        path.write_text("phase: spec\n")
+        before = path.read_bytes()
+        status = PipelineStatus(grade=grade, advanced_by=writer)
+        with pytest.raises(StateCorruptionError):
+>           save_status(status, path)
+
+engines/openclaw/tests/test_provenance.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/runner/pipeline_status.py:121: in save_status
+    dump_status(status),
+    ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = PipelineStatus(cycle_id='', current_project='', complexity_level=1, phase=<Phase.SPEC: 'spec'>, awaiting='', blockers=[], grade='trusted', advanced_by='agent')
+
+    def dump_status(status: PipelineStatus) -> str:
+        """Serialize machine status — the ONE serialization (write and digest share it).
+    
+        The MME supervisor digests a *planned* status with this same function to
+        predict, byte-exactly, what :func:`save_status` will write; changing the
+        field set here changes both sides of that contract together.
+        """
+        return yaml.safe_dump(
+            {
+                "cycle_id": status.cycle_id,
+                "current_project": status.current_project,
+                "complexity_level": status.complexity_level,
+                "phase": status.phase.value,
+                "awaiting": status.awaiting,
+                "blockers": list(status.blockers),
+>               "grade": status.grade.value,
+                         ^^^^^^^^^^^^^^^^^^
+                "advanced_by": status.advanced_by,
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        )
+E       AttributeError: 'str' object has no attribute 'value'
+
+engines/openclaw/runner/pipeline_status.py:109: AttributeError
+_______________ test_invalid_provenance_is_rejected[None-agent] ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej1')
+grade = None, writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_________________ test_invalid_provenance_is_rejected[7-agent] _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej2')
+grade = 7, writer = 'agent'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+        with pytest.raises(StateCorruptionError):
+            load_status(path)
+        path.write_text("phase: spec\n")
+        before = path.read_bytes()
+        status = PipelineStatus(grade=grade, advanced_by=writer)
+        with pytest.raises(StateCorruptionError):
+>           save_status(status, path)
+
+engines/openclaw/tests/test_provenance.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/runner/pipeline_status.py:121: in save_status
+    dump_status(status),
+    ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+status = PipelineStatus(cycle_id='', current_project='', complexity_level=1, phase=<Phase.SPEC: 'spec'>, awaiting='', blockers=[], grade=7, advanced_by='agent')
+
+    def dump_status(status: PipelineStatus) -> str:
+        """Serialize machine status — the ONE serialization (write and digest share it).
+    
+        The MME supervisor digests a *planned* status with this same function to
+        predict, byte-exactly, what :func:`save_status` will write; changing the
+        field set here changes both sides of that contract together.
+        """
+        return yaml.safe_dump(
+            {
+                "cycle_id": status.cycle_id,
+                "current_project": status.current_project,
+                "complexity_level": status.complexity_level,
+                "phase": status.phase.value,
+                "awaiting": status.awaiting,
+                "blockers": list(status.blockers),
+>               "grade": status.grade.value,
+                         ^^^^^^^^^^^^^^^^^^
+                "advanced_by": status.advanced_by,
+            },
+            sort_keys=False,
+            allow_unicode=True,
+        )
+E       AttributeError: 'int' object has no attribute 'value'
+
+engines/openclaw/runner/pipeline_status.py:109: AttributeError
+________________ test_invalid_provenance_is_rejected[simulate-] ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej3')
+grade = 'simulate', writer = ''
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+_______________ test_invalid_provenance_is_rejected[verified-  ] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej4')
+grade = 'verified', writer = '  '
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+______________ test_invalid_provenance_is_rejected[verified-None] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_invalid_provenance_is_rej5')
+grade = 'verified', writer = None
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("trusted", "agent"), (None, "agent"), (7, "agent"),
+        ("simulate", ""), ("verified", "  "), ("verified", None),
+    ])
+    def test_invalid_provenance_is_rejected(tmp_path: Path, grade, writer) -> None:
+        path = tmp_path / "pipeline_status.yaml"
+        path.write_text(yaml.safe_dump({"phase": "spec", "grade": grade, "advanced_by": writer}))
+>       with pytest.raises(StateCorruptionError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'shared.errors.StateCorruptionError'>
+
+engines/openclaw/tests/test_provenance.py:91: Failed
+___ test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan0')
+grade = 'simulate', writer = 'openclaw-checklist'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "mme-supervisor"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+        assert f"grade: {grade}" in output
+        assert f"advanced_by: {writer or '-'}" in output
+>       assert "simulate e unspecified não substituem verified" in output
+E       AssertionError: assert 'simulate e unspecified não substituem verified' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan0/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan0/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan0/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting:  · grade: simulate · advanced_by: openclaw-checklist\nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:88: AssertionError
+_____ test_briefing_exposes_provenance_read_only[verified-mme-supervisor] ______
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan1')
+grade = 'verified', writer = 'mme-supervisor'
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "mme-supervisor"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+        assert f"grade: {grade}" in output
+        assert f"advanced_by: {writer or '-'}" in output
+>       assert "simulate e unspecified não substituem verified" in output
+E       AssertionError: assert 'simulate e unspecified não substituem verified' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan1/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan1/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan1/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting:  · grade: verified · advanced_by: mme-supervisor\nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:88: AssertionError
+___________ test_briefing_exposes_provenance_read_only[unspecified-] ___________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan2')
+grade = 'unspecified', writer = ''
+
+    @pytest.mark.parametrize("grade,writer", [
+        ("simulate", "openclaw-checklist"), ("verified", "mme-supervisor"), ("unspecified", ""),
+    ])
+    def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
+        engines = tmp_path / "engines"
+        engines.mkdir()
+        (engines / "__init__.py").write_text("")
+        shutil.copytree(ROOT / "engines/openclaw", engines / "openclaw", ignore=shutil.ignore_patterns("__pycache__", "tests"))
+        mme = engines / "miniMaxEvolutionEngine"
+        mme.mkdir()
+        (mme / "__init__.py").write_text("")
+        shutil.copy2(ROOT / "engines/miniMaxEvolutionEngine/os_adapter.py", mme / "os_adapter.py")
+        commands = mme / ".claude/commands/devschool"
+        commands.mkdir(parents=True)
+        (commands / "implement.md").write_text("existing command")
+        learner = tmp_path / "learner"
+        learner.mkdir()
+        pipeline = learner / "pipeline_status.yaml"
+        pipeline.write_text(yaml.safe_dump({"phase": "spec-done", "grade": grade, "advanced_by": writer}))
+        state = learner / "learning_state.yaml"
+        state.write_text("gate:\n  implementation_blocked: false\n")
+        before = (pipeline.read_bytes(), state.read_bytes())
+        hook = ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        result = subprocess.run(["bash", str(hook)], cwd=tmp_path, capture_output=True, text=True,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(tmp_path), "PYTHONPATH": f"{tmp_path}:{ROOT}"})
+        assert result.returncode == 0, result.stderr
+        output = result.stdout
+        if output.lstrip().startswith("{"):
+            output = json.loads(output)["hookSpecificOutput"]["additionalContext"]
+        assert f"grade: {grade}" in output
+        assert f"advanced_by: {writer or '-'}" in output
+>       assert "simulate e unspecified não substituem verified" in output
+E       AssertionError: assert 'simulate e unspecified não substituem verified' in '🥋 AI DevSchool — Ágora Continuum (Claude Code)\n\nVocê é o ORQUESTRADOR (Maestro/Mavis). Delegue aos subagents e rode o portão do verificador entre\nas fases. RESPEITE o learning gate: o aprendiz tenta e é avaliado antes de a IA implementar.\n\n=== Pipeline (YAML-first machine state; Markdown only cold-start narrative) ===\nMiniMax Evolution workflow briefing (read-only)\nPipeline source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan2/learner/pipeline_status.yaml\nLearning gate source: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan2/learner/learning_state.yaml\nCommand contract: /tmp/pytest-of-dani/pytest-0/test_briefing_exposes_provenan2/engines/miniMaxEvolutionEngine/.claude/commands/devschool/implement.md\nProject: \nPhase: spec-done · awaiting:  · grade: unspecified · advanced_by: -\nLearning gate blocked: false\nNext Claude Code command: /devschool-implement\nAuthority: this briefing prepares the workflow; it does not execute a phase or advance state.\n\n=== Learning gate (learner/learning_state.yaml) ===\ngate:\n  implementation_blocked: false\n\n=== Supervisor status/recovery (read-only first) ===\nRode rtk python3 -m engines.miniMaxEvolutionEngine.supervisor status para ver action, reason, pending\nrequest, lease, retries e blocker. Use reconcile/fail/block/resume somente como recuperação explícita.\nSessionStart nunca inicia tick, poll, execute ou processo de modelo autônomo.\n\nPróximo passo? Rode /devschool-status para o workflow recomendado e supervisor status para o estado\noperacional, sem escrever nos arquivos canônicos.'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:88: AssertionError
+____________________ test_phase_runner_provenance_contract _____________________
+
+    def test_phase_runner_provenance_contract() -> None:
+        base = ROOT / "engines/miniMaxEvolutionEngine/.claude"
+        runner = (base / "commands/devschool/phaserunner.md").read_text()
+        assert "grade" in runner and "advanced_by" in runner
+>       assert "simulate e unspecified não substituem verified" in runner
+E       assert 'simulate e unspecified não substituem verified' in '---\ndescription: PhaseRunner protocol — reusable orchestration seam for every AI DevSchool slash command. Commands invoke run_phase(spec); this file defines the interface.\nargument-hint: "(internal protocol — not invoked directly by users)"\n---\n\n# PhaseRunner\n\nThe **PhaseRunner** is the single seam that collapses the repeated\nread-state → check-gate → dispatch producer → dispatch verifier → update status → retry\npattern shared by every AI DevSchool phase command.\n\nIt is a protocol, not a subagent. The Orquestrador executes `run_phase(spec)` by reading\nthis interface and applying it to the phase-specific `spec` provided by each slash command.\n\n## Interface: `run_phase(spec)`\n\n### Inputs\n\n`spec` is a plain map with the following fields:\n\n| Field | Required | Description |\n| --- | --- | --- |\n| `phase` | yes | Canonical phase name: `spec`, `impl`, `review`, `benchmark`, `optimize`. |\n| `producer` | yes | Subagent(s) to dispatch. String for one agent; list for multiple. |\n| `verifier_phase` | yes | Phase argument passed to the `verifier` subagent. |\n| `next_status` | yes | Value to write through the YAML-first status helper on verifier PASS. |\n| `pre_condit...k pre-condition.** If `pre_condition` is set and the current phase does not match, stop and report the blocker.\n5. **Dispatch producers.**\n   - If `parallel: true`, send all producer Tasks in the same assistant message.\n   - If `parallel: false`, send one producer Task and wait for it.\n6. **Dispatch verifier.** After all producers finish, run the `verifier` subagent with phase `verifier_phase`.\n7. **Apply verdict.**\n   - **PASS**: update the status object with the next phase, `grade="verified"`, `advanced_by="/devschool-<command>"`, then call `save_status(status, Path("learner/pipeline_status.yaml"))` → `next_status`; never overwrite Markdown narrative.\n   - **FAIL**: send the feedback to the producer(s) and retry from step 5, counting failures. Halt after `retry_limit` consecutive failures and record a blocker.\n8. **Report.** Present the verdict, the updated status, and the next recommended command.\n\n## Why this seam?\n\nBefore PhaseRunner, every phase command reimplemented the same six-step dance.\nAfter PhaseRunner, each command is a thin `spec` declaration; the orchestration logic\nlives in one place, gains locality, and can be tested through its interface fields.\n'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:96: AssertionError
+________________________ test_mvp_authority_documented _________________________
+
+    def test_mvp_authority_documented() -> None:
+        context = (ROOT / "CONTEXT-MAP.md").read_text()
+        for term in ("MVP Mastery", "MVP Gate", "MVP Review", "G1–G4", "gap-ladder", "FSRS"):
+>           assert term in context
+E           AssertionError: assert 'MVP Mastery' in '# Context Map\n\nAI DevSchool is one ecosystem with **one learner and one curriculum**, realized through several\nbounded contexts. Each context owns its language. When a word appears in two contexts, the\nmeanings are different — do not collapse them.\n\nCanonical language references live next to the context they describe. Some\ngeneric surfaces use their local README instead of a dedicated glossary. This\nmap is the index and relationship contract only.\n\n## Contexts\n\n| Context | Entry | Kind | Owns |\n| --- | --- | --- | --- |\n| [Learner Journey](./learner/CONTEXT.md) | `learner/CONTEXT.md` | Core | Mastery proof, learning-state machine, reviews, streak, profile |\n| [Curriculum Catalog](./curriculum/CONTEXT.md) | `curriculum/CONTEXT.md` | Supporting | Challenge catalog, project identities, backlog truth |\n| [AI Literacy](./docs/design/ai-literacy/README.md) | `docs/design/ai-literacy/` | Core | Nontechnical lesson content, deterministic activities, local progress and raw evidence |\n| [LiteracyDojo](./engines/literacyDojo/README.md) | `engines/literacyDojo/README.md` | Generic | Guided AI microlearning UI; consumes generated content and records at most `completed` |\n| ... Language collisions (do not merge)\n\n| Word | In Learner Journey | Elsewhere |\n| --- | --- | --- |\n| **Gate** | **Learning Gate** (blocks AI until attempt evaluated) or **Empirical Gate** (numeric mastery bar) | Project-cycle transition checks; not the same object |\n| **Phase / state** | **Learning State**: presenting → practicing → evaluating → mastered | **Project Phase**: spec → impl → review → benchmark → cycle-complete |\n| **Unit** | **Active Unit** / logged unit of learning under the gate | Curriculum **Project** slice or game level — clarify before using |\n| **Completed** | Not a canonical Learner Journey mastery state | Local experience progress in LiteracyDojo; never promote it implicitly |\n| **Verifier / Prometor** | Role that alone may pass the empirical bar and record mastery | Same role name in the project cycle, different artifact under test |\n| **Evidence** | **Executable Evidence** justifying mastery | Game **Evidence Record** is raw input; verifier re-judges it |\n\n## Out of glossary scope\n\nImplementation seams (file paths, generators, config markers, adapter names) belong in\n`docs/handbook/`, `AGENTS.md`, and engine docs — not in any `CONTEXT.md`.\n'
+
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py:112: AssertionError
+=========================== short test summary info ============================
+FAILED engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ]
+FAILED engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-mme-supervisor]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-]
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract
+FAILED engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented
+======================== 12 failed, 10 passed in 7.20s =========================

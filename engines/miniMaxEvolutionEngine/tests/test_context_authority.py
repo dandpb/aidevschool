@@ -33,7 +33,7 @@ def test_supervisor_pass_stamps_authorized_bytes(workspace) -> None:
     state = yaml.safe_load(workspace.pipeline.read_text())
     assert state["phase"] == "spec-done"
     assert state["grade"] == "verified"
-    assert state["advanced_by"] == "devschool-spec"
+    assert state["advanced_by"] == "mme-supervisor"
     auth = [event for event in read_ledger(workspace.ledger) if event["event"] == "advancement_authorized"]
     assert len(auth) == 1
     assert auth[0]["resulting_pipeline_digest"] == hashlib.sha256(workspace.pipeline.read_bytes()).hexdigest()
@@ -41,7 +41,7 @@ def test_supervisor_pass_stamps_authorized_bytes(workspace) -> None:
 
 
 def test_supervisor_fail_keeps_provenance(workspace) -> None:
-    _set_pipeline(workspace, grade="simulate", advanced_by="openclaw-cli")
+    _set_pipeline(workspace, grade="simulate", advanced_by="openclaw-cli-override")
     config = _config(workspace.repo_root, _fake_cli(workspace.repo_root))
     request = _publish(workspace)
     before = workspace.pipeline.read_bytes()
@@ -55,7 +55,7 @@ def test_supervisor_fail_keeps_provenance(workspace) -> None:
 
 
 @pytest.mark.parametrize("grade,writer", [
-    ("simulate", "openclaw-checklist"), ("verified", "devschool-spec"), ("unspecified", ""),
+    ("simulate", "openclaw-checklist"), ("verified", "mme-supervisor"), ("unspecified", ""),
 ])
 def test_briefing_exposes_provenance_read_only(tmp_path: Path, grade: str, writer: str) -> None:
     engines = tmp_path / "engines"

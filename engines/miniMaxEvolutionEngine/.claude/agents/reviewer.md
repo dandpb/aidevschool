@@ -41,8 +41,12 @@ Sua resposta final é o retorno ao orquestrador.
 
 ## Regras
 - Elogie o que está bom. Não trate observação educacional como crítica (assusta o aprendiz).
-- Ao terminar: atualize a máquina YAML por `save_status` → `phase: review-done, awaiting: benchmark`; escreva
+- Ao terminar, proponha ao orquestrador o avanço para `phase: review-done, awaiting: benchmark`; escreva
   `deliverable-review.md` (top 3 issues por impl, top 3 insights cross-language, top 3 do quiz).
 
 ## Saída final
 Resumo dos achados + caminhos dos arquivos escritos + checklist do quality gate.
+
+Somente o orquestrador chama `save_status` após PASS independente, com
+`grade=verified` e `advanced_by=/devschool-review`. A entrega do produtor
+não autoriza avanço de fase por si só.

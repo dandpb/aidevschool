@@ -51,3 +51,8 @@ re-roda 1 run e compara com a mediana reportada (tolerância ±20%), tabela comp
 seção de limitações. Só em **PASS** atualize o YAML por `save_status`: `phase: benchmark-done`,
 `awaiting: optimizer`, `agents.benchmarker: done`. Em FAIL, devolva ao `benchmarker` (respeite
 `retry_limit`). Próximo comando: `/devschool-optimize`.
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.

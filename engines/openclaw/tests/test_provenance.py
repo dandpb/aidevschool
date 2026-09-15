@@ -60,10 +60,10 @@ def test_cli_override_reports_simulated_provenance(tmp_path: Path, monkeypatch, 
     status = yaml.safe_load(scheduler.status_path.with_suffix(".yaml").read_text())
     assert status["phase"] == "spec-done"
     assert status["grade"] == "simulate"
-    assert status["advanced_by"] == "openclaw-cli"
+    assert status["advanced_by"] == "openclaw-cli-override"
     output = capsys.readouterr().out
-    assert "grade: simulate" in output
-    assert "advanced_by: openclaw-cli" in output
+    assert "grade=simulate" in output
+    assert "advanced_by=openclaw-cli-override" in output
 
 
 def test_sequential_writers_preserve_latest_provenance(tmp_path: Path) -> None:
@@ -73,11 +73,11 @@ def test_sequential_writers_preserve_latest_provenance(tmp_path: Path) -> None:
     assert status.grade == "simulate"
     assert status.advanced_by == "openclaw-checklist"
     status.grade = "verified"
-    status.advanced_by = "devschool-spec"
+    status.advanced_by = "mme-supervisor"
     save_status(status, scheduler.status_path)
     result = scheduler.read_status()
     assert result.grade == "verified"
-    assert result.advanced_by == "devschool-spec"
+    assert result.advanced_by == "mme-supervisor"
     assert result.phase == Phase.SPEC_DONE
 
 

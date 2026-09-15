@@ -50,3 +50,8 @@ artefact: curriculum/{project}/{language}-impl/
 Verifier uma vez **por linguagem**. `impl-done` só quando todas as linguagens pedidas derem PASS.
 
 Não re-seed go/rust vazios em 02–18 sem pedido explícito de polyglot.
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.

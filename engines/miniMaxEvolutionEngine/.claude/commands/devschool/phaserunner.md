@@ -39,6 +39,12 @@ this interface and applying it to the phase-specific `spec` provided by each sla
 4. **Gate is respected.** When `learning_gate_check: true`, a blocked gate halts the phase and suggests `/devschool-diagnose`.
 5. **Failures are concrete.** Every FAIL includes file:line evidence and actionable feedback to the producer.
 
+Regra de consumo: simulate e unspecified não substituem verified quando uma
+fase exige comprovação independente. O orquestrador confirma o PASS antes de
+registrar a procedência; a produção do artefato sozinha não autoriza o avanço.
+`advanced_by` identifica o último executor, não autentica um verificador.
+Ao registrar apenas blockers, preserve grade/advanced_by da fase atual.
+
 ### Steps
 
 1. **Resolve project.** Read YAML-first pipeline state with `load_status(Path("learner/pipeline_status.yaml"))`; Markdown is only a cold-start/narrative fallback. Use `$ARGUMENTS` if provided; otherwise use `current_project`.

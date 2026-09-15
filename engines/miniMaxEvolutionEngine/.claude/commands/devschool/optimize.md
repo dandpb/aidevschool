@@ -47,3 +47,8 @@ JSONs, e ≥1 rejeitada presente. Só em **PASS** atualize o YAML por `save_stat
 `phase: cycle-complete`, `awaiting: next-curator`, `agents.optimizer: done`; acrescente
 padrões/anti-padrões ao `learner/journal.md` e sugira `/devschool-next`. Em FAIL, devolva ao
 `optimizer` (respeite `retry_limit`).
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.

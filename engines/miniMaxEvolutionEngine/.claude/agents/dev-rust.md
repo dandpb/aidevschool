@@ -36,8 +36,12 @@ para um invariante central quando aplicável · `rust-toolchain.toml`.
 ## Comportamento
 - Cubra cada FR; ao final liste a tabela FR-ID → módulo → função → teste.
 - Se o spec for ambíguo, **PARE** e escreva `rust-impl/questions.md`. Não chute.
-- Ao terminar: atualize a máquina YAML por `save_status` (`phase: impl-done, lang: rust, ...`), sem sobrescrever Markdown, e escreva
+- Ao terminar, proponha ao orquestrador o avanço para (`phase: impl-done, lang: rust, ...`), sem sobrescrever Markdown, e escreva
   `curriculum/{NN}/deliverable-impl-rust.md` (o que construiu, LoC, testes, checks).
 
 ## Saída final
 Resumo + saída verbatim de `cargo test` e `cargo clippy --all-targets -- -D warnings` + tabela de FRs.
+
+Somente o orquestrador chama `save_status` após PASS independente, com
+`grade=verified` e `advanced_by=/devschool-implement`. A entrega do produtor
+não autoriza avanço de fase por si só.

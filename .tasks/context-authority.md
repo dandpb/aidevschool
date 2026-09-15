@@ -28,9 +28,9 @@ não uma inferência sobre tamanho de PRs no histórico.
 2. Cada avanço de checklist persiste `grade: simulate` e
    `advanced_by: openclaw-checklist`, mantendo as fases e espelhamento atuais.
 3. O override CLI `--phase` persiste `grade: simulate` e
-   `advanced_by: openclaw-cli`, mesmo quando não há steps posteriores.
+   `advanced_by: openclaw-cli-override`, mesmo quando não há steps posteriores.
 4. O supervisor, após PASS independente e autorização durável, persiste
-   `grade: verified` e `advanced_by: devschool-spec` no tracer autônomo existente;
+   `grade: verified` e `advanced_by: mme-supervisor` no tracer autônomo existente;
    o digest autorizado corresponde exatamente aos bytes persistidos.
 5. Ao gravar sequencialmente simulate e verified, a leitura retorna a procedência
    da última gravação. Valores de grade fora de `simulate|verified|unspecified`

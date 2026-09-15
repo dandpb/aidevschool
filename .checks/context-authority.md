@@ -17,7 +17,7 @@ as autoridades em mapas/glossários existentes, sem alterar o runtime MVP.
 
 | One-way door | Literal shape | Alternative rejected |
 | --- | --- | --- |
-| Procedência persistida | grade: simulate/verified/unspecified; advanced_by string; legado unspecified/empty; nomes openclaw-checklist, openclaw-cli, devschool-spec | Proibir simulate: contrário à decisão aceita |
+| Procedência persistida | grade: simulate/verified/unspecified; advanced_by string; legado unspecified/empty; nomes openclaw-checklist, openclaw-cli-override, mme-supervisor | Proibir simulate: contrário à decisão aceita |
 
 ## Checks
 
@@ -34,10 +34,10 @@ Proof: O::test_legacy_provenance_is_read_only
 preservam os espelhos impl/review/benchmark/optimize/cycle-complete (critério 2).
 Proof: O::test_checklist_advances_with_provenance
 
-**C3** — Override CLI sem steps grava simulate/openclaw-cli (critério 3).
+**C3** — Override CLI sem steps grava simulate/openclaw-cli-override (critério 3).
 Proof: O::test_cli_override_reports_simulated_provenance
 
-**C4** — PASS autônomo grava verified/devschool-spec e o digest autorizado é
+**C4** — PASS autônomo grava verified/mme-supervisor e o digest autorizado é
 o dos bytes gravados (critério 4).
 Proof: M::test_supervisor_pass_stamps_authorized_bytes
 
