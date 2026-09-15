@@ -152,9 +152,12 @@ implementation; it does **not** satisfy the later executable mastery gate. After
 implementation, an independent verifier evaluates the programming evidence.
 Level 0 has no software-implementation phase and follows the separate no-code
 checklist contract from
-[ADR-0004](../design/adr/0004-no-code-empirical-gate.md). That branch is a
-product requirement, not a current substrate capability: version 2 does not
-persist a no-code evidence type yet.
+[ADR-0004](../design/adr/0004-no-code-empirical-gate.md). The substrate implements
+a separate `gate_kind: no_code` path through
+`learner.gate.no_code.verify_and_gate_no_code`: literacy evidence plus an
+independent receipt, an eligible active unit and a recorded attempt can produce
+a canonical transition. Browser verification returns a receipt; it does not
+perform that canonical write.
 
 ```mermaid
 stateDiagram-v2
@@ -172,10 +175,10 @@ For programming projects, the two loops meet at the **diagnostic**:
 attempt under `learner/attempts/`, the `sonda` agent grades it, and only then
 does `implementation_blocked` flip to `false`. A programming unit never becomes
 `mastered` from that diagnostic alone; it later requires verifier-backed
-executable evidence. Level 0 is specified to reach evaluation through its
-no-code activity and the ADR-0004 checklist, but it cannot transition to
-`mastered` through the current substrate until that evidence branch is
-implemented.
+executable evidence. The implemented no-code gate consumes literacy evidence
+and an independent receipt with `mastery_eligible: true` before mastery can be
+recorded. This capability does not make local Level 0 completion canonical or
+establish end-to-end browser promotion for every lesson.
 
 ## 5. The programming empirical gate (thresholds)
 

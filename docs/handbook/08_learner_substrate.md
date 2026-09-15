@@ -67,8 +67,10 @@ Top: `version: 2`, `system: agora-continuum`. The key blocks:
   `⟨config: galileu.cv_max_pct⟩`) and `learning` (`requires_attempt_before_solution: true`,
   `hint_budget_per_day: ⟨config: socrates.quota_dia⟩`,
   `mastery_source: executable_evidence`). This is the currently implemented executable branch.
-  [ADR-0004](../design/adr/0004-no-code-empirical-gate.md) specifies the future no-code checklist
-  branch, but the substrate cannot persist or validate that evidence type yet.
+  The separate [ADR-0004](../design/adr/0004-no-code-empirical-gate.md) no-code path
+  is implemented in `learner/gate/no_code.py`. Its unit and gate review carry
+  `gate_kind: no_code`; evidence validation uses the literacy digest. The legacy
+  global `mastery_source` value does not describe this evidence class.
 - **`units_log`** — the FSRS input (spaced-repetition review history). Each unit: `unit_id`, `concept`,
   `kind`, `project`, `mastered`, and a `reviews` list. Header comment: "ratings come ONLY from gate
   outcomes, never self-report."
@@ -193,13 +195,18 @@ Other scheduling logic:
   `⟨config: gates.cobertura_nucleo_min⟩`, `⟨config: gates.mutation_score_min⟩`,
   `⟨config: galileu.samples_min⟩`, `⟨config: galileu.warmup_min⟩`, and
   `⟨config: galileu.cv_max_pct⟩`. The verifier runs in an isolated context.
-- **Level 0 no-code gate (planned substrate branch):** ADR-0004 requires an independently verified,
-  falsifiable checklist to replace executable code evidence. The current schema and validator do
-  not encode that evidence class, so local Level 0 completion cannot be promoted to `mastered`
-  through the substrate today.
+- **No-code gate (implemented Python path):** an evaluating `gate_kind: no_code`
+  unit, a learner attempt, raw literacy evidence and a matching independent
+  receipt enter `verify_and_gate_no_code`. A passing, mastery-eligible receipt
+  can support canonical promotion. The empirical-gate metadata records
+  `require_executable_evidence: false` and omits coverage/mutation thresholds;
+  receipt binding and replay protection remain required. Browser verification
+  and local completion do not themselves perform this canonical transition.
 - **Current mastery invariant (enforced in `validate`):** `mastered: true` is invalid without at
-  least one gate review. The validator checks the recognized outcome/rating relationship; it does
-  not currently validate an evidence class.
+  least one gate review. The validator checks the recognized outcome/rating relationship and
+  dispatches digest-bound validation for no-code reviews to the literacy evidence
+  validator. See the [write interface](../../learner/substrate/interface.md) for
+  publication failure/recovery and verified versus local engagement streaks.
 
 ## Commands & dependencies
 

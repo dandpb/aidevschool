@@ -92,23 +92,24 @@ def transition_gate(
 
     if passed:
         unit["state"] = "mastered"
-        # Audit #9: a mastered unit must declare an empirical_gate. The
-        # no_code path never reads min_coverage/mutation_min, but the block
-        # itself is the canonical marker that the promotion was evidence-
-        # bound. Copy any pre-existing values; fall back to a no-code-shaped
-        # default that the validator accepts (the boolean still has to be
-        # set explicitly so the validator can read it).
         existing_gate = unit.get("empirical_gate")
-        if not isinstance(existing_gate, dict):
+        if gate_kind == "no_code":
+            unit["empirical_gate"] = {"require_executable_evidence": False}
+        elif not isinstance(existing_gate, dict):
             unit["empirical_gate"] = {
                 "require_executable_evidence": True,
                 "min_coverage": 0.0,
                 "mutation_min": 0.0,
             }
+        evidence_label = (
+            "independently verified no-code evidence"
+            if gate_kind == "no_code"
+            else "executable evidence"
+        )
         new_state["next_action"] = {
             "owner": "leader",
             "action": (
-                f"{unit['id']} mastered with executable evidence. Pick the next "
+                f"{unit['id']} mastered with {evidence_label}. Pick the next "
                 "unit (Cartografo) and present it before any implementation."
             ),
         }

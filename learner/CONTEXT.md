@@ -1,6 +1,6 @@
 # Learner Journey
 
-Proves — with executable evidence, not model opinion — that a learner mastered a concept, while
+Proves — with independently verified evidence appropriate to the declared gate — that a learner mastered a concept, while
 preserving productive struggle. Certainty of completion never lives in the LLM.
 
 ## People and identity
@@ -33,7 +33,7 @@ Does **not** include Failure Block; that is a separate escalation outcome (see b
 _Avoid_: phase (reserved for the project cycle), status (too vague)
 
 **Mastered**:
-A unit that received a passing Gate Outcome from the Verifier, with Executable Evidence and at
+A unit that received a passing Gate Outcome from the Verifier, with Gate Evidence and at
 least one gate Review. Never means "the game showed PASS," "code exists," or "the AI said so."
 Portuguese: **DOMINADO**.
 _Avoid_: complete, done, finished, shipped, green, cleared (cleared is a play surface word)
@@ -74,10 +74,20 @@ and project, non-empty Attempt, Active Unit in evaluating, fresh unconsumed evid
 consistent record. Failing Eligibility is **not** a Gate Outcome and must not append a fail Review.
 _Avoid_: validation error as mastery fail, reject as Retry
 
+**Gate Evidence**:
+Evidence appropriate to the unit's declared gate: Executable Evidence for code/game
+units or independently verified No-code Evidence for eligible no-code units.
+The producer's own judgment never substitutes for the Verifier's Gate Outcome.
+
 **Executable Evidence**:
 Real execution output the Verifier consumes — test/coverage/mutation/benchmark artifacts, or a
 teaching-game Evidence Record — that alone can justify a passing Gate Outcome.
 _Avoid_: screenshot-only proof, chat transcript, self-report, localStorage "save", Run Judgment alone
+
+**No-code Evidence**:
+Structured evidence of a no-code activity, bound to a separate independent
+verification receipt. It supports the declared no-code gate without claiming
+code coverage or mutation strength; local completion alone is insufficient.
 
 **Attempt**:
 A learner try at a unit, recorded before solutions are unlocked. Required for Eligibility and
@@ -111,8 +121,9 @@ Mastered.
 _Avoid_: transcript, chat log, evidence file alone
 
 **Streak**:
-Consecutive days with a **passing** Gate Outcome. A failed Gate Outcome does not break the
+The **verified learning streak**: consecutive days with a **passing** Gate Outcome. A failed Gate Outcome does not break the
 streak by itself; missed days consume Freezes.
+Local engagement streaks belong to practice surfaces and do not count as passing Gate Outcomes.
 _Avoid_: combo, daily goal, attempt streak (attempts without a pass do not count)
 
 **Freeze**:

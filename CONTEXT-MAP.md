@@ -38,9 +38,12 @@ decision lands; do not delete it.
   generated, typed read model. LiteracyDojo never edits the source YAML.
 - **LiteracyDojo → AI Literacy**: emits `LiteracyEvidenceRecord` attempts and
   keeps experience progress local. `completed` is not `mastered`.
-- **LiteracyDojo ↛ Learner Journey**: there is no accepted write adapter into
-  `learner/learning_state.yaml`; an independent no-code verifier is still
-  required before shared mastery can exist.
+- **LiteracyDojo → independent verification → Learner Journey**: the producer
+  emits raw attempts; browser verification can return a receipt but does not
+  write canonical state. The implemented Python no-code gate separately consumes
+  evidence and an independent receipt for an eligible active unit, then persists
+  through the Journey's canonical transition. Local `completed` alone cannot
+  take this path; browser receipt delivery is not canonical promotion.
 - **miniTown ↛ Learner Journey**: miniTown is exploration only. Runtime state
   is inspectable, but it is neither lesson evidence nor a mastery write.
 - **Micro-lesson contract → learner surfaces**: defines the shared pedagogical
@@ -77,8 +80,9 @@ decision lands; do not delete it.
 | **Phase / state** | **Learning State**: presenting → practicing → evaluating → mastered | **Project Phase**: spec → impl → review → benchmark → cycle-complete |
 | **Unit** | **Active Unit** / logged unit of learning under the gate | Curriculum **Project** slice or game level — clarify before using |
 | **Completed** | Not a canonical Learner Journey mastery state | Local experience progress in LiteracyDojo; never promote it implicitly |
+| **Streak** | Verified learning streak: days with passing Gate Outcomes, with limited Freezes | Local engagement streak in LiteracyDojo: consecutive local dates of activity attempts, including unsuccessful attempts, without canonical Freezes or mastery authority |
 | **Verifier / Prometor** | Role that alone may pass the empirical bar and record mastery | Same role name in the project cycle, different artifact under test |
-| **Evidence** | **Executable Evidence** justifying mastery | Game **Evidence Record** is raw input; verifier re-judges it |
+| **Evidence** | **Gate Evidence** appropriate to the declared code/game or no-code gate | Game or literacy **Evidence Record** is raw input; verifier re-judges it |
 
 ## Out of glossary scope
 
