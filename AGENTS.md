@@ -40,7 +40,7 @@ aidevschool/
 
 Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 `project_proposal.md -> curriculum/catalog.md`, and `learning_journal.md -> learner/journal.md`.
-`.codegraph` points at OMO's generated codegraph cache; `graphify-out/` is derived output.
+`.codegraph` points at OMO's generated codegraph cache.
 
 ## WHERE TO LOOK
 
@@ -163,11 +163,11 @@ python3 -m unittest discover -s learner/substrate/tests
 ## NOTES
 
 - Broad scans should exclude `node_modules/`, `.opencode/node_modules`, `dist/`, `target/`,
-  coverage output, `.codegraph/`, and `graphify-out/`.
+  coverage output, and `.codegraph/`.
 - Smoke screenshots and `**/test-results/` are generated outputs; keep them out of source control,
   but keep tracked evidence files (`evidence.json`, `evidence.ndjson`, `live-evidence*`) because
   they are the learning-gate audit trail.
-- Use LSP/codegraph when exposed; `.codegraph` and `graphify-out/` are generated references, not source.
+- Use LSP/codegraph when exposed; `.codegraph` is a generated reference, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
 - Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
   runs under `docs/product-readiness/evidence/` (wayfinder rejected 2026-08-22; the
