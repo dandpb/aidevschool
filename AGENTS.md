@@ -118,8 +118,11 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   non-authoritative and never mark mastery.
 - Numeric tutor thresholds live in `engines/minimaxDojo/config/learner.yaml`; prompts/docs use the
   `⟨config: path⟩` marker instead of hardcoding values.
-- In Codex shell sessions, prefix commands with `rtk`; for library/framework/SDK docs lookup, use
-  the `ctx7` CLI before answering.
+- All agent shell sessions (Codex, Claude Code, omp, OpenCode, Gemini, Copilot) prefix
+  commands with `rtk` for token-compact output; integrations are user-global per agent
+  (`rtk init -g`, `--codex -g`, `--agent omp -g`, `--opencode -g`, `--gemini -g`,
+  `--copilot -g`). For library/framework/SDK docs lookup, use the `ctx7` CLI before
+  answering.
 
 ## ANTI-PATTERNS
 
