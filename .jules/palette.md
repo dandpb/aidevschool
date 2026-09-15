@@ -15,3 +15,7 @@
 ## 2024-07-23 - Announcing Visual State in codexDojo
 **Learning:** In codexDojo's custom interactive UI elements, purely visual states like `.is-complete` classes or spatial node positions (e.g. `.agent-node` map locations) are not announced by default, leading to accessibility gaps.
 **Action:** Explicitly pair these visual states with semantic announcements by computing a dynamic string containing the index, name, and current status, applying it via `aria-label`, and hiding the redundant inner textual labels with `aria-hidden="true"`.
+
+## 2026-09-15 - Explicit ARIA Context for Navigation and Filters
+**Learning:** In codexDojo, main navigation sections and filter buttons use generic text like 'Painel' or 'Todos'. These terms lack semantic context when announced by screen readers out of the visual flow, leading to confusion.
+**Action:** When creating navigation links or filtering buttons with generic names, compute a fully contextual `aria-label` (e.g., 'Ir para Painel' or 'Filtrar por Todos'), provide a matching `title` tooltip, and wrap the visible inner text in `<span aria-hidden="true">`. Update corresponding test assertions that strictly assert the old string format.
