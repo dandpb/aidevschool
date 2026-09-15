@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-09-15-71fcb392-os-voxel-regrant-v79
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-15T01:20:00Z'
+revalidateBy: '2026-10-15'
+gitSha: 71fcb3926a1549314b675b88ac7c741406173623
+decisions:
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-15T01:17:00Z-os-voxel-hosted-missions-mixed-71fcb392
+  - 2026-09-15T01:17:00Z-os-renderer-accessibility-recovery-mixed-71fcb392
+  - 2026-09-15T01:17:00Z-os-voxel-returning-device-mixed-71fcb392
