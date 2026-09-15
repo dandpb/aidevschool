@@ -1,0 +1,23 @@
+{
+  "base": "ff2a4046 (main)",
+  "env": "node v20.19.5 (sha256 verificado nodejs.org; CI pins node 20), pnpm 9.15.9/12.4.1 via corepack, chromium playwright 1.61.1, python 3.13",
+  "envNotes": [
+    "NODE_ENV=production do sandbox removido p/ harness (pnpm pulava devDeps)",
+    "npm omit=dev do ~/.npmrc neutralizado via HOME limpo + npm_config_include=dev",
+    "portas strict 5204/5173/5191/4177 ocupadas por vites vazados de worktrees de sessões encerradas (aid1914/aid1924) foram liberadas"
+  ],
+  "generatedAt": "2026-09-15T01:18:00Z",
+  "harnessPhases": {
+    "blobs-proof": "pass (AID-947 blobs local)",
+    "build": "pass (vite build pilot, URLs same-origin)",
+    "contracts": "pass (learner/gate *.test.mjs)",
+    "deps": "pass (harness2.log: siblings pnpm/npm + pip install -e)",
+    "report": "pass (readiness-report.mjs READINESS_TEST_RUN=passed; 9 producer reports em engines/codexdojo-os-prototype/test-results/readiness/)",
+    "schema-drift": "pass (AID-473 F2)",
+    "smoke": "pass (harness6.log: bundle-missions 19/19 dist/apps; pilot smoke 8/8 em 24.5s; desktop-1280 5/5 em 1.8m — chapter-continuity 1.4m, readiness-recovery, renderer-fallback x3)",
+    "unit": "pass (harness2.log: biome lint 161 files clean + vitest verde — os 65 fails anteriores eram artefato node 24, não reproduzem no node 20 pinado do CI)"
+  },
+  "head": "71fcb3926a1549314b675b88ac7c741406173623",
+  "runId": "qa1972-os-voxel-regrant-v79",
+  "worktree": "/tmp/opencode/aid1972/branch (branch regrant/auto-20260915-ff2a4046 do PR #433)"
+}
