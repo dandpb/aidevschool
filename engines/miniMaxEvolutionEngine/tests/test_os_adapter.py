@@ -132,3 +132,32 @@ awaiting: yaml-implementer
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_workflow_output_includes_grade(tmp_path: Path) -> None:
+    """The briefing line names the provenance of the current phase."""
+    import yaml as _yaml
+    from engines.miniMaxEvolutionEngine.os_adapter import prepare_workflow
+
+    yml = tmp_path / "pipeline_status.yaml"
+    yml.write_text(
+        _yaml.safe_dump(
+            {
+                "cycle_id": "c1",
+                "current_project": "curriculum/02_key_value_store",
+                "phase": "impl-done",
+                "awaiting": "reviewer",
+                "blockers": [],
+                "grade": "verified",
+                "advanced_by": "mme-supervisor",
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+    gate = tmp_path / "learning_state.yaml"
+    gate.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
+
+    out = prepare_workflow(yml, gate)
+    assert "grade: verified" in out
+    assert "advanced_by: mme-supervisor" in out

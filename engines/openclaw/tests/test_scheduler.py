@@ -201,3 +201,24 @@ def test_missing_spec_halts(tmp_path: Path) -> None:
     results = scheduler.run(max_events=3)
     assert results[-1].halted
     assert "spec" in results[-1].reason.lower()
+
+
+def test_step_stamps_simulate_provenance(tmp_path: Path) -> None:
+    """Every checklist advance carries simulate provenance (ADR-0002 truth)."""
+    _project_tree(tmp_path)
+    status_path = tmp_path / "pipeline_status.md"
+    state_path = tmp_path / "learning_state.yaml"
+    state_path.write_text("gate:\n  implementation_blocked: false\n", encoding="utf-8")
+    status = _parse_status(_SEED_STATUS_PATH)
+    status.phase = Phase.SPEC
+    status.current_project = "curriculum/01_rate_limiter"
+    status.blockers = []
+    _write_status(status, status_path)
+
+    scheduler = Scheduler(root=tmp_path, status_path=status_path, state_path=state_path)
+    scheduler.run(max_events=30)
+
+    final = scheduler.read_status()
+    assert final.phase == Phase.CYCLE_COMPLETE
+    assert final.grade.value == "simulate", "checklist advances are simulate-grade"
+    assert final.advanced_by == "openclaw-checklist"
