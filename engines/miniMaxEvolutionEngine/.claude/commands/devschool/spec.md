@@ -23,3 +23,8 @@ benchmark plan numérico, Open Questions vazio).
 
 Quando o `curator` terminar, dispare o subagent **`verifier`** na fase `spec` para validar o gate.
 Só atualize o YAML por `save_status` → `spec-done` em **PASS**; nunca sobrescreva Markdown. Em FAIL, devolva ao curator com o feedback.
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.

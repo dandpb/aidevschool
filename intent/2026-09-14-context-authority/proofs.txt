@@ -1,0 +1,31 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.7, pytest-8.4.2, pluggy-1.6.0 -- /mnt/mac/aidevschool/.venv-linux/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/mac/aidevschool/.scratch/worktrees/context-authority
+configfile: pyproject.toml
+collecting ... collected 22 items
+
+engines/openclaw/tests/test_provenance.py::test_legacy_provenance_is_read_only PASSED [  4%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-spec-done-impl] PASSED [  9%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-done-impl-done-review] PASSED [ 13%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[impl-done-review-done-benchmark] PASSED [ 18%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[review-done-benchmark-done-optimize] PASSED [ 22%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete] PASSED [ 27%]
+engines/openclaw/tests/test_provenance.py::test_cli_override_reports_simulated_provenance PASSED [ 31%]
+engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance PASSED [ 36%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent] PASSED [ 40%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent] PASSED [ 45%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent] PASSED [ 50%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-] PASSED [ 54%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ] PASSED [ 59%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None] PASSED [ 63%]
+engines/openclaw/tests/test_provenance.py::test_cli_preview_preserves_provenance PASSED [ 68%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_pass_stamps_authorized_bytes PASSED [ 72%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_fail_keeps_provenance PASSED [ 77%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] PASSED [ 81%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-mme-supervisor] PASSED [ 86%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-] PASSED [ 90%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract PASSED [ 95%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented PASSED [100%]
+
+============================== 22 passed in 4.88s ==============================

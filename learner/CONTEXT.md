@@ -108,6 +108,18 @@ Spaced-repetition quality derived only from a Gate Outcome (again / hard / good 
 self-reported and never invented when Eligibility fails.
 _Avoid_: stars, thumbs, difficulty slider
 
+**MVP Mastery**:
+The chat tutor's `MASTERED` result in its own concept ledger. It does not mean
+Canonical Mastered and does not confer a passing canonical Gate Outcome.
+
+**MVP Gate**:
+The G1–G4 assessment rules of the chat tutor, distinct from the Learning Gate
+and Empirical Gate of this journey.
+
+**MVP Review**:
+The chat tutor's gap-ladder review. It is distinct from both canonical FSRS
+reviews and local skill practice reviews in LiteracyDojo.
+
 **Review**:
 A recorded gate or presentation event on a unit in the Units Log. A gate Review carries Gate
 Outcome and Rating; it is the only path that can support Mastered.

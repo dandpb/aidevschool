@@ -77,6 +77,9 @@ decision lands; do not delete it.
 | Word | In Learner Journey | Elsewhere |
 | --- | --- | --- |
 | **Gate** | **Learning Gate** (blocks AI until attempt evaluated) or **Empirical Gate** (numeric mastery bar) | Project-cycle transition checks; not the same object |
+| **MVP Mastery** | Canonical Mastered requires its own learner attempt and independently verified gate evidence | MVP `MASTERED` is a verdict in the tutor's own ledger; it is not canonical mastery and has no automatic promotion path |
+| **MVP Gate** | Learning Gate and Empirical Gate govern the canonical active unit | G1–G4 govern the MVP's 24-concept track; they are not aliases for the canonical gates |
+| **MVP Review** | FSRS reviews derive from canonical Gate Outcomes | MVP gap-ladder reviews and LiteracyDojo local skill reviews retain their own schedules; neither overwrites canonical FSRS |
 | **Phase / state** | **Learning State**: presenting → practicing → evaluating → mastered | **Project Phase**: spec → impl → review → benchmark → cycle-complete |
 | **Unit** | **Active Unit** / logged unit of learning under the gate | Curriculum **Project** slice or game level — clarify before using |
 | **Completed** | Not a canonical Learner Journey mastery state | Local experience progress in LiteracyDojo; never promote it implicitly |

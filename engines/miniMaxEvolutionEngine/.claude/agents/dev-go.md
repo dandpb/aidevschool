@@ -36,8 +36,12 @@ testes unitários (`*_test.go`, table-driven) + ≥1 teste de integração (sobe
 - Cubra cada FR; ao final liste a tabela FR-ID → arquivo → função → teste.
 - Se o spec for ambíguo, **PARE** e escreva `go-impl/questions.md` com as ambiguidades. Não chute.
 - Não espere os outros idiomas. Build, test, exit.
-- Ao terminar: atualize a máquina YAML por `save_status` (`phase: impl-done, lang: go, ...`), sem sobrescrever Markdown, e escreva
+- Ao terminar, proponha ao orquestrador o avanço para (`phase: impl-done, lang: go, ...`), sem sobrescrever Markdown, e escreva
   `curriculum/{NN}/deliverable-impl-go.md` (o que construiu, LoC via `wc -l`, cobertura, tamanho, checks).
 
 ## Saída final
 Resumo + saída verbatim de `go test -race ./...` e `golangci-lint run ./...` + tabela de cobertura de FRs.
+
+Somente o orquestrador chama `save_status` após PASS independente, com
+`grade=verified` e `advanced_by=/devschool-implement`. A entrega do produtor
+não autoriza avanço de fase por si só.

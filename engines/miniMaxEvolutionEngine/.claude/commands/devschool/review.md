@@ -40,3 +40,8 @@ nenhum contexto do produtor além dos artefatos no filesystem: ele confere 3 iss
 Só em **PASS** atualize o YAML por `save_status`: `phase: review-done`, `awaiting: benchmarker`,
 `agents.reviewer: done` + nota com os artefatos produzidos. Em FAIL, devolva o feedback concreto ao
 `reviewer` (respeite `retry_limit`). Próximo comando: `/devschool-benchmark`.
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.
