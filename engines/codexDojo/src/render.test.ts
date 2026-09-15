@@ -178,7 +178,7 @@ describe("renderShell — targeted assertions", () => {
     expect(html).toContain(project.title)
     expect(html).toContain(selectedProjectId.toUpperCase())
     expect(html).toContain('data-view="project"')
-    expect(html).toContain(">Projeto</button>")
+    expect(html).toContain('><span aria-hidden="true">Projeto</span></button>')
     expect(html).not.toContain(defaultSelected.title)
   })
 })

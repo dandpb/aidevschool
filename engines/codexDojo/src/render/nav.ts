@@ -7,7 +7,8 @@ export function renderNav(state: AppState): string {
   return viewRegistry
     .map(({ id, label }) => {
       const { className, aria } = currentAttrs(state.view === id, "page")
-      return `<button class="nav-button ${className}" type="button" data-view="${escapeHtml(id)}"${aria}>${escapeHtml(label)}</button>`
+      const ariaLabel = `Ir para ${label}`
+      return `<button class="nav-button ${className}" type="button" data-view="${escapeHtml(id)}"${aria} aria-label="${escapeHtml(ariaLabel)}" title="${escapeHtml(ariaLabel)}"><span aria-hidden="true">${escapeHtml(label)}</span></button>`
     })
     .join("")
 }
