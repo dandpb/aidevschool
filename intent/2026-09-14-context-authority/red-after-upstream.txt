@@ -43,18 +43,18 @@ tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-0/test_sequential_writers_prese
         status.advanced_by = "mme-supervisor"
 >       save_status(status, scheduler.status_path)
 
-engines/openclaw/tests/test_provenance.py:77: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/tests/test_provenance.py:77:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 engines/openclaw/runner/pipeline_status.py:121: in save_status
     dump_status(status),
     ^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 status = PipelineStatus(cycle_id='', current_project='curriculum/01_rate_limiter', complexity_level=1, phase=<Phase.SPEC_DONE: 'spec-done'>, awaiting='', blockers=[], grade='verified', advanced_by='mme-supervisor')
 
     def dump_status(status: PipelineStatus) -> str:
         """Serialize machine status — the ONE serialization (write and digest share it).
-    
+
         The MME supervisor digests a *planned* status with this same function to
         predict, byte-exactly, what :func:`save_status` will write; changing the
         field set here changes both sides of that contract together.
@@ -97,18 +97,18 @@ grade = 'trusted', writer = 'agent'
         with pytest.raises(StateCorruptionError):
 >           save_status(status, path)
 
-engines/openclaw/tests/test_provenance.py:97: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/tests/test_provenance.py:97:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 engines/openclaw/runner/pipeline_status.py:121: in save_status
     dump_status(status),
     ^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 status = PipelineStatus(cycle_id='', current_project='', complexity_level=1, phase=<Phase.SPEC: 'spec'>, awaiting='', blockers=[], grade='trusted', advanced_by='agent')
 
     def dump_status(status: PipelineStatus) -> str:
         """Serialize machine status — the ONE serialization (write and digest share it).
-    
+
         The MME supervisor digests a *planned* status with this same function to
         predict, byte-exactly, what :func:`save_status` will write; changing the
         field set here changes both sides of that contract together.
@@ -168,18 +168,18 @@ grade = 7, writer = 'agent'
         with pytest.raises(StateCorruptionError):
 >           save_status(status, path)
 
-engines/openclaw/tests/test_provenance.py:97: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+engines/openclaw/tests/test_provenance.py:97:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 engines/openclaw/runner/pipeline_status.py:121: in save_status
     dump_status(status),
     ^^^^^^^^^^^^^^^^^^^
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 status = PipelineStatus(cycle_id='', current_project='', complexity_level=1, phase=<Phase.SPEC: 'spec'>, awaiting='', blockers=[], grade=7, advanced_by='agent')
 
     def dump_status(status: PipelineStatus) -> str:
         """Serialize machine status — the ONE serialization (write and digest share it).
-    
+
         The MME supervisor digests a *planned* status with this same function to
         predict, byte-exactly, what :func:`save_status` will write; changing the
         field set here changes both sides of that contract together.

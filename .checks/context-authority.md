@@ -63,6 +63,9 @@ Proof: M::test_briefing_exposes_provenance_read_only
 **C10** — PhaseRunner e instruções de escrita condicionam verified ao PASS
 independente; producers não avançam sozinhos (critério 7).
 Proof: M::test_phase_runner_provenance_contract
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_phase_runner_requires_independent_verifier_before_stamping
 
 **C11** — Preview real permanece somente leitura (Observable/existing).
 Proof: O::test_cli_preview_preserves_provenance
@@ -72,6 +75,9 @@ Proof: O::test_cli_preview_preserves_provenance
 **C12** — Mapa possui colisões explícitas MASTERED, G1–G4 e gap-ladder/FSRS/
 revisão local, com README e glossários ligados ao MANIFEST (critérios 9, 10).
 Proof: M::test_mvp_authority_documented
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_mvp_result_does_not_confer_canonical_mastery
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_mvp_runtime_and_canonical_data_are_not_modified
+Proof: engines/miniMaxEvolutionEngine/tests/test_authority_manifest_coverage.py::test_authority_manifest_links_contracts_and_proofs
 
 ## Swept
 
