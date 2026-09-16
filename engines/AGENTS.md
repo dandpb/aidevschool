@@ -20,12 +20,15 @@ engines/
 ├── openclaw/               # file-based runner/scheduler tracer bullet
 ├── pixelDojo/              # 2D teaching-game engine; pixel-quest/ is the runnable app
 ├── shared/                 # cross-engine teaching-evidence primitives
-├── voxelDojo/              # catalog of 3D teaching-simulation packages
-└── zai-duolingo-like/      # non-integrated Next.js prototype "Vertical Protocol"; future engine
+└── voxelDojo/              # catalog of 3D teaching-simulation packages
 ```
 
 The polyglot evolution arena design material is archived at `docs/design/polyglot-arena/`
 (proposal-stage; was `engines/polyglotEvolutionArena/` until 2026-06-21).
+
+`zai-duolingo-like/` was a dangling submodule gitlink (no `.gitmodules` entry, no content),
+removed by c604d2ec on 2026-09-07; its stale references here were cleaned on 2026-09-16
+(AID-2117). Do not re-add the entry unless real engine content lands in the repo.
 
 ## WHERE TO LOOK
 
@@ -39,7 +42,6 @@ The polyglot evolution arena design material is archived at `docs/design/polyglo
 | Cozy town-sim (level-0 entry) | `miniTown/` | Observational Three.js city sim; start with `README.md`. Never writes canonical learner state. |
 | Programmer's daily lesson | `dojoToday/` | Read-only landing: FSRS due reviews, streak, active unit. Read model `src/data/today.ts` is generated (prebuild runs the substrate); never schedules, grades, or marks mastery. |
 | AI-literacy chat-tutor MVP | `aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring/scheduling; installer tests in `tests/installer` run via repo-root `make test`. |
-| Vertical Protocol prototype | `zai-duolingo-like/` | Non-integrated Next.js prototype (future engine); outside `make test`; do not delete. |
 | Shared teaching evidence | `shared/teaching-evidence/` | Dual-channel producer helpers; no mastery writes. |
 | Long-running tutor protocol | `minimaxDojo/` | Start with local `AGENTS.md`, then `INDEX.md`; verify from repo root with `make test-core`. |
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |

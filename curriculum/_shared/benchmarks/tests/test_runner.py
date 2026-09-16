@@ -178,7 +178,15 @@ class TestBridge(unittest.TestCase):
             self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
 
     def test_aggregate_builds_report_from_committed_files(self):
-        # End-to-end bridge over real committed project-01 result files (N=1).
+        # End-to-end bridge over real project-01 result files (N=1). The raw
+        # results/ tree is gitignored machine-local scratch output (see
+        # TestParserFaithfulness above), so a fresh checkout legitimately has
+        # none — skip instead of failing, per the substrate skipTest precedent.
+        if not R.result_path(PROJ01, "go", "baseline", 1).exists():
+            self.skipTest(
+                "project-01 benchmarks/results/ absent on this checkout "
+                "(gitignored local live-run artifacts)"
+            )
         cfg = R.load_benchmark_config(PROJ01 / "benchmark.yaml")
         report = R.aggregate(PROJ01, cfg, "01_rate_limiter", n=1)
         self.assertEqual(report.project_id, "01_rate_limiter")

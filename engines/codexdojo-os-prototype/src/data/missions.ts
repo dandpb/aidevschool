@@ -124,7 +124,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l04",
-      version: 2,
+      version: 3,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l04",
       projectId: "00_ai_in_practice",
@@ -509,7 +509,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l18",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l18",
       projectId: "00_ai_in_practice",
@@ -544,7 +544,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l19",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l19",
       projectId: "00_ai_in_practice",
@@ -579,7 +579,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l20",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l20",
       projectId: "00_ai_in_practice",
@@ -614,7 +614,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l24",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l24",
       projectId: "00_ai_in_practice",
@@ -649,7 +649,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l25",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l25",
       projectId: "00_ai_in_practice",
@@ -684,7 +684,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l26",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l26",
       projectId: "00_ai_in_practice",
@@ -719,7 +719,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l30",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l30",
       projectId: "00_ai_in_practice",
@@ -754,7 +754,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l31",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l31",
       projectId: "00_ai_in_practice",
@@ -789,7 +789,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l32",
-      version: 1,
+      version: 2,
       trackId: "ai-pratica",
       unitId: "ai-literacy:l32",
       projectId: "00_ai_in_practice",
@@ -927,7 +927,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l15",
-      version: 2,
+      version: 3,
       trackId: "dev",
       unitId: "ai-literacy:l15",
       projectId: "00_ai_in_practice",
@@ -960,7 +960,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l16",
-      version: 2,
+      version: 3,
       trackId: "dev",
       unitId: "ai-literacy:l16",
       projectId: "00_ai_in_practice",
@@ -995,7 +995,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l17",
-      version: 2,
+      version: 3,
       trackId: "dev",
       unitId: "ai-literacy:l17",
       projectId: "00_ai_in_practice",
@@ -1170,7 +1170,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l21",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l21",
       projectId: "00_ai_in_practice",
@@ -1205,7 +1205,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l22",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l22",
       projectId: "00_ai_in_practice",
@@ -1240,7 +1240,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l23",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l23",
       projectId: "00_ai_in_practice",
@@ -1275,7 +1275,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l27",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l27",
       projectId: "00_ai_in_practice",
@@ -1310,7 +1310,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l28",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l28",
       projectId: "00_ai_in_practice",
@@ -1345,7 +1345,7 @@ export const missionCatalog: MissionCatalogSnapshot = {
     },
     {
       id: "l29",
-      version: 1,
+      version: 2,
       trackId: "dev",
       unitId: "ai-literacy:l29",
       projectId: "00_ai_in_practice",

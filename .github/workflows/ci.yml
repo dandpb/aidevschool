@@ -160,6 +160,12 @@ jobs:
       # twice and still fails the job. Recurrence on the same test escalates
       # to quarantine + issue (do not raise retries). Local stays retries: 0.
       - run: pnpm -r --if-present run smoke --retries=1 --trace on-first-retry
+        env:
+          # AID-2148: dedicated CI runners finish this suite well inside the
+          # historical 30s ceiling, so they pin a tighter budget than the
+          # 300s shared-runner default (AID-2113 evidence) — a red run stays
+          # bounded (~20m worst case across 5 specs x 2 attempts).
+          PIXELQUEST_TIMEOUT_MS: "120000"
       - run: READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
       - uses: actions/upload-artifact@v4
         if: success()
