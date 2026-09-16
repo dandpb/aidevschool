@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/miniTown/README.md",
+      "sha256": "889415e108b28bd7160961387970e6f2535f3c88b54baf37ae2f53c30f612645"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "town-renders-and-advances",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-14T20:07:29Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "35dd41935d6fd8316b0563e18fbaa2981065f515",
+  "manualFingerprint": "3bcbd6c38ceea61bb999c9d395e381aca7d42446d216b36982bf056a7910d37b",
+  "outcome": "pass",
+  "runId": "2026-09-14T20:07:29Z-minitown-explore-only-35dd4193",
+  "scenarioId": "minitown-explore-only",
+  "schemaVersion": 1,
+  "sourceFingerprint": "84944eb60576d763c35c98f637c3d32064b31e91c26ecf8db04179b8fa363434"
+}

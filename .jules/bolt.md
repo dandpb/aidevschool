@@ -34,3 +34,13 @@
 ## 2025-02-18 - Optimize findIndex in deterministic pathfinding hot loops
 **Learning:** In simulation engine hot loops (like pathfinding adjacency queries), using `Array.prototype.findIndex` allocates a closure on every iteration. This adds function invocation overhead and increases GC pressure, leading to degraded performance when called thousands of times per tick.
 **Action:** Replace `Array.prototype.findIndex` with a traditional indexed `for` loop in frequently called functions.
+
+## 2025-02-18 - Avoid array allocations for counting in hot paths
+**Learning:** In simulation hot paths like state evaluation loops, using `.filter(...).length` to count elements based on a condition creates unnecessary intermediate array allocations, increasing garbage collection (GC) pressure. This pattern is particularly harmful when called frequently during simulation ticks.
+**Action:** Replace `.filter(...).length` with standard `for` loops and a counter variable to avoid array allocations and reduce GC pressure.
+## 2024-05-31 - [Iterators in hot loops vs V8]
+**Learning:** Modern V8 engine optimizes `for...of` loops over arrays effectively. Converting them to traditional indexed loops for "performance" is often a premature micro-optimization with no measurable impact, sacrificing readability.
+**Action:** Do not replace `for...of` loops with indexed `for` loops unless there is a proven, measured bottleneck in that specific loop.
+## 2025-02-18 - Optimize array shifts in simulation pathfinding
+**Learning:** In simulation hot loops like BFS pathfinding, using `Array.prototype.splice` to extract elements from a bucket modifies the array in-place, shifting all subsequent elements. This causes O(N) operations and heavy garbage collection overhead, particularly detrimental when running thousands of times per second.
+**Action:** Replace `splice` with a O(1) swap-and-pop technique (`const last = arr.pop(); if (idx < arr.length) arr[idx] = last;`) when removing elements from an unordered array or bucket where element order doesn't matter (e.g., identical cost tiers in pathfinding).

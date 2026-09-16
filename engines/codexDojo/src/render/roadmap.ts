@@ -62,5 +62,6 @@ function renderFilterButton(
   currentFilter: ProjectFilter,
 ): string {
   const { className, aria } = pressedAttrs(filter === currentFilter)
-  return `<button class="filter-button ${className}" type="button" data-filter="${escapeHtml(filter)}"${aria}>${escapeHtml(label)}</button>`
+  const ariaLabel = `Filtrar por ${label}`
+  return `<button class="filter-button ${className}" type="button" data-filter="${escapeHtml(filter)}"${aria} aria-label="${escapeHtml(ariaLabel)}" title="${escapeHtml(ariaLabel)}"><span aria-hidden="true">${escapeHtml(label)}</span></button>`
 }

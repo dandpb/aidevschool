@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "650bcfdc7d8170df7605af47d6f2971ba2876927",
+  "observedAt": "2026-09-14T18:43:12Z",
+  "scenarios": [
+    {
+      "scenarioId": "minitown-explore-only",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "experimental-boundary-is-understood",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v71 @ 650bcfdc (branch regrant/auto-20260914-7dfc665f do PR #427; AID-1924; chromium headless sobre vite dev :5191/:4177 no worktree; QA-authored walk specs em scripts/, screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle), distinto das runs de producer (pnpm run smoke: miniTown 1/1, pixelDojo 5/5 verdes nesta árvore). Revisão documental + walk: student-guide.md §'Experimental: miniTown' declara explore-only sem promessa de completion/persistence/progression/evidence/mastery; facilitator-guide.md mantém miniTown fora da oferta paga (experimental, só ?operator=1); README 'Limites' reafirma que o engine nunca escreve estado canônico do aprendiz. No walk first-hand a cidade renderizou (canvas+HUD), a simulação avançou (controller.step) sem erros de runtime e o DOM não apresenta affordance de lição/persistência/progressão/mastery (nenhum botão, nenhum copy de progresso) — o boundary documentado casa com o comportamento observado (qamt71-01, walk-log-minitown)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-encounter-evidence",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v71 @ 650bcfdc (branch regrant/auto-20260914-7dfc665f do PR #427; AID-1924; chromium headless sobre vite dev :5191/:4177 no worktree; QA-authored walk specs em scripts/, screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle), distinto das runs de producer (pnpm run smoke: miniTown 1/1, pixelDojo 5/5 verdes nesta árvore). Após completar o encontro documentado (Lab 01 Rate Limiter, timeline determinística de 12 ações) o UI mostra 'Evidencia PASS emitida' junto de 'O verificador decide mastery' — evidência e mastery visivelmente separados; o registro EVIDENCE no canal console carrega pass=true com unit U0-sonda-rate-limiter-robustness (qapx71-01, walk-log-pixelquest)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-evidence-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "replay-recovers-evidence-without-state-promotion",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v71 @ 650bcfdc (branch regrant/auto-20260914-7dfc665f do PR #427; AID-1924; chromium headless sobre vite dev :5191/:4177 no worktree; QA-authored walk specs em scripts/, screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle), distinto das runs de producer (pnpm run smoke: miniTown 1/1, pixelDojo 5/5 verdes nesta árvore). EVIDENCE_CONTRACT.md (engines/pixelDojo) declara: o jogo emite apenas evidência, nunca escreve learner state; 'pass' nunca é mastery por si; canal NDJSON append-only (window.__pixelQuestEvidence → .logs/evidence.ndjson), consumido pelo verificador que decide o gate. No walk, o replay pós-reload re-emitiu linha EVIDENCE fresca (sameDeterministicCore=true: mesma unit/scenario/veredito) sem qualquer promoção de estado (qapx71-02, walk-log-pixelquest)."
+        },
+        {
+          "id": "missing-evidence-does-not-count-as-completion",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v71 @ 650bcfdc (branch regrant/auto-20260914-7dfc665f do PR #427; AID-1924; chromium headless sobre vite dev :5191/:4177 no worktree; QA-authored walk specs em scripts/, screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle), distinto das runs de producer (pnpm run smoke: miniTown 1/1, pixelDojo 5/5 verdes nesta árvore). Após reload o canal em memória está zerado (session-bound, 0 registros acessíveis) e o UI não apresenta claim de conclusão até o novo registro ser emitido; o replay é a affordance oferecida e o status do jogo nunca substitui a evidência (walk-log-pixelquest, passo returning-replay)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "pixelquest-returning-evidence-handoff",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "First-hand QA observation walk v71 @ 650bcfdc (branch regrant/auto-20260914-7dfc665f do PR #427; AID-1924; chromium headless sobre vite dev :5191/:4177 no worktree; QA-authored walk specs em scripts/, screenshots ev/*.png + walk logs logs/walk-log-*.json neste bundle), distinto das runs de producer (pnpm run smoke: miniTown 1/1, pixelDojo 5/5 verdes nesta árvore). No retorno (reload no mesmo perfil) + replay determinístico a copy anti-mastery foi exibida de novo ('O verificador decide mastery') e o artefato persistido permanece o canal raw de handoff — o verificador independente continua decidindo; nenhuma claim de mastery apareceu em nenhuma das sessões (qapx71-02, walk-log-pixelquest)."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

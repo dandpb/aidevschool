@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-beb3250c-dock-a11y-regrant-v49
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T02:10:00Z'
+revalidateBy: '2026-10-14'
+gitSha: beb3250c42d7c1ab67f5a67b529bba63d26638d3
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T02:03:05Z-os-literacy-hosted-mission-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-verification-recovery-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-literacy-returning-device-mixed-beb3250c
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T02:03:05Z-os-voxel-hosted-missions-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-renderer-accessibility-recovery-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-voxel-returning-device-mixed-beb3250c
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T02:03:05Z-os-onboarding-track-choice-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-returning-device-mixed-beb3250c
+  - 2026-09-14T02:03:05Z-os-returning-recovery-mixed-beb3250c

@@ -659,9 +659,16 @@ function regionId(module: CurriculumModule): string {
 // encounter-agent-quest-01) as a FROZEN persistence contract: U0 is the substrate's
 // canonical rate-limiter unit (the only unit in learning_state.yaml). Do not rename
 // without migrating the substrate, the verifier done-rule, and the smoke assertions.
+// 04_concurrent_task_queue emits the canonical U4 unit id pinned by the CEO decision
+// AID-1859 Option A (dispatch AID-1877): `U4-task-queue`, same identity as the
+// voxelDojo catalog entry — NOT the `U-04_concurrent_task_queue` template default
+// (identity drift class L4: gate rejects unit mismatch on first U4 attempt).
 function unitId(module: CurriculumModule): string {
   if (module.project === "01_rate_limiter") {
     return "U0-sonda-rate-limiter-robustness"
+  }
+  if (module.project === "04_concurrent_task_queue") {
+    return "U4-task-queue"
   }
   return `U-${module.project}`
 }

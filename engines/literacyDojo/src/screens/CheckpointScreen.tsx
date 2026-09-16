@@ -277,6 +277,14 @@ export function CheckpointScreen({
         VILA LUME · Desafio do Módulo {module.order} · atividade {current + 1} de{" "}
         {activityRefs.length}
       </p>
+      {/* AID-1755/T3 (padrão AID-1150): o contador de atividade vive num live
+          region sr-only — o foco no h1 anuncia a nova instrução e o status
+          anuncia o passo ("Atividade N de M"); semânticas separadas, sem
+          sobreposição de fala. O eyebrow visível segue como referência
+          visual; o <output> carrega role="status" implícito. */}
+      <output className="sr-only" data-testid="checkpoint-activity-status">
+        {`Atividade ${current + 1} de ${activityRefs.length}`}
+      </output>
       <h1 id="activity-heading" className="activity-instruction" ref={headingRef} tabIndex={-1}>
         {activity.instruction}
       </h1>

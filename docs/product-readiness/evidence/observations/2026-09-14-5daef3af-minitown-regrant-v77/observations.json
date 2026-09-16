@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "observerContext": "independent-readiness-observer",
+  "gitSha": "5daef3afcf03bdb5946041b95db9a54d7adfac12",
+  "observedAt": "2026-09-14T22:18:50Z",
+  "scenarios": [
+    {
+      "scenarioId": "minitown-explore-only",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "experimental-boundary-is-understood",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand QA v77 @ 5daef3af (branch regrant/auto-20260914-974ef10d do PR #432, base main @ 974ef10d; AID-1954): student-guide.md §Experimental: miniTown e facilitator-guide.md §Experimental: miniTown (âncoras manualRefs do inventory.yaml) rotulam miniTown como experimental e explore-only, sem promessa de completion, persistence, progression, evidence ou mastery — 'Nothing you see in miniTown means completed, verified, or mastered'; guia do facilitador manda declarar explicitamente que nada é salvo e proíbe tratar HUD ou window.__miniTown como evidência. Corroboração de código no walk: grep em engines/miniTown/src/ não encontra localStorage/sessionStorage/indexedDB/fetch (zero superfícies de escrita ou rede), e o walk QA-authored confirmou 0 entradas de storage com o app aberto e pós-reload. Manual fingerprint da árvore (3bcbd6c3…) confere com o registrado no producer report e no snapshot do PR #432."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}

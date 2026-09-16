@@ -65,6 +65,9 @@ jobs:
   # as the sdlc-guard self-test above) and a dry-run of the anchor wave
   # config, so registry/config drift breaks CI before it can reach a
   # promotion wave. No network, no dependencies.
+  # AID-1831 (same P1, closing acts): the stray-copy guard keeps the retired
+  # copy-per-wave pattern from returning — any precheck-*.mjs outside
+  # scripts/precheck/ beyond the frozen receipt baseline fails here.
   precheck-baseline:
     name: Promotion precheck baseline (self-test + dry-run)
     runs-on: ubuntu-latest
@@ -77,6 +80,10 @@ jobs:
         run: node scripts/precheck/precheck.mjs --self-test
       - name: anchor wave dry-run (offline plan + registry validation)
         run: node scripts/precheck/precheck.mjs --wave scripts/precheck/waves/AID-935-65d64bca.json --dry-run
+      - name: precheck stray-copy guard self-test (new copies must fail)
+        run: bash scripts/precheck/guard-no-stray-copies.sh --self-test
+      - name: precheck stray-copy guard (no gate scripts outside scripts/precheck/)
+        run: bash scripts/precheck/guard-no-stray-copies.sh
 
   codexdojo:
     name: codexDojo (TS)
@@ -101,6 +108,25 @@ jobs:
       - run: pnpm lint
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium
+      # AID-1857/t1: browser e2e mínimo contra `vite preview` (build real, sem
+      # deploy externo) — mount + ciclo de eventos + catálogo não-vazio + zero
+      # pageerror. AID-1658 (hardening-top10 R7): AID-571 deterministic retry
+      # policy — a retried test surfaces as a named "flaky" entry in this log
+      # plus its on-first-retry trace (durable via the artifact upload below);
+      # a real regression fails twice and still fails the job. Recurrence on
+      # the same test escalates to quarantine + issue (do not raise retries).
+      # Local stays retries: 0.
+      - run: pnpm run test:e2e --retries=1 --trace on-first-retry
+      # Named `codexdojo-e2e-<sha>` (NOT `-readiness-<sha>`): codexDojo is
+      # outside the 6 product-readiness claim surfaces; this artifact must not
+      # be picked up by the claims aggregator's `*-readiness-<sha>` download.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: codexdojo-e2e-${{ github.sha }}
+          path: engines/codexDojo/test-results
+          if-no-files-found: warn
 
   pixeldojo:
     name: pixelDojo (TS)
@@ -434,13 +460,36 @@ jobs:
       - name: validate readiness sources and candidate report
         id: readiness_check
         run: python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+      # AID-1890: `check` above is deterministic — it compares the generated
+      # views against the RECORDED promoted decisions, so PR lanes cannot flap
+      # with the re-grant factory cycle (wall-clock revalidateBy boundaries or
+      # diffs under a use case's sourcePaths no longer redden unrelated PRs).
+      # The stale-claims window keeps exactly one blocking consumer: the main
+      # push lane, whose red run is the readiness-regrant factory trigger
+      # (workflow_run on failed push CI runs). On PR lanes the same signal is
+      # surfaced as a non-blocking warning for triage visibility.
+      - name: check claims staleness window (main push lane only, factory trigger)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: python3 docs/product-readiness/tools/cli.py check --require-current
+      - name: surface claims staleness window (PR lanes, non-blocking)
+        if: github.event_name != 'push'
+        run: |
+          set +e
+          python3 docs/product-readiness/tools/cli.py check --require-current
+          status=$?
+          if [ "$status" -ne 0 ]; then
+            echo "::warning title=READINESS-STALE-WINDOW::promoted readiness claims are in a stale window for this tree (expected mid re-grant cycle; non-blocking on PR lanes). The re-grant factory heals it from the next main push run."
+          fi
+          exit 0
       # AID-1669: this annotation can only be reached with producer reports
-      # present (assert above passed), so the failure above is the
-      # stale-claims/invalid-candidate signal the factory exists for — clearly
-      # distinct from PRODUCER-REPORTS-MISSING above.
+      # present (assert above passed). AID-1890 narrowed `check` to view
+      # desync + candidate validation, so the failure above means the tracked
+      # generated views no longer match the canonical sources (or the
+      # candidate report is invalid) — heal with `cli.py render`; on the main
+      # push lane this red is also the re-grant-factory signal.
       - name: annotate stale or invalid readiness failure
         if: failure() && steps.readiness_check.outcome == 'failure'
-        run: echo "::error title=READINESS-STALE-OR-INVALID::producer reports were present, so the check failure above means claims are stale (or the candidate report is invalid). This IS the re-grant-factory signal."
+        run: echo "::error title=READINESS-VIEW-DESYNC-OR-INVALID::producer reports were present, so the check failure above means the generated readiness views are out of sync with the canonical sources (or the candidate report is invalid). Re-render with python3 docs/product-readiness/tools/cli.py render; on main pushes this is also the re-grant-factory signal."
       - name: enforce readiness claims without writes
         run: python3 docs/product-readiness/tools/cli.py enforce --reports artifacts/product-readiness
       - name: run readiness cli guard tests

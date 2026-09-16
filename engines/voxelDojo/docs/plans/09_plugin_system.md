@@ -138,8 +138,9 @@ WebGL-free so the contract/sandbox math runs identically in Vitest and the brows
   recorded as **deepening play** (`scheduled_review:false`,
   `review_reason:"deepening"`) and can serve the real learning gate for U9-plugin-system the moment
   the scheduler makes it the active unit — the emitter derives `scheduled_review`/`review_reason`
-  from the slice, so both modes work without code changes. (Note: the hash-ring pilot uses a
-  distinct id `U9-distributed-cache`; the verifier keys on `unit_id` + `project`, so there is no
+  from the slice, so both modes work without code changes. (Note: the hash-ring pilot was
+  renumbered to its own unit `U10-distributed-cache` in AID-1855 — it briefly shared the `U9-`
+  prefix with this game; the verifier keys on `unit_id` + `project`, so there was no
   collision.)
 - On wave clear, emit:
   `{"source":"voxeldojo","unit_id":"U9-plugin-system","project":"09_plugin_system","scenario_id":"docking-bay-L1","game":"DOCKING BAY","ts":"<iso>","pass":true,"metrics":{"dock_predictions":6,"dock_prediction_accuracy":1,"contracts_checked":6},"review_context":{"unit_kind":"concept","scheduled_review":false,"review_reason":"deepening","scheduler_source":"learner-substrate","verifier_required":true},"curriculum_context":{"concept":"sandboxing + interface contracts","mechanic":"docking pods, force-field sandbox"}}`

@@ -1,0 +1,9 @@
+2026-09-14T10:02:03.1000000Z
+2026-09-14T10:02:03.1000001Z Running 2 tests using 2 workers
+2026-09-14T10:02:09.4210000Z   ✓  1 playwright/pixel-quest.spec.ts:18:5 › plays the PixelDojo curriculum quest slice and advances labs (3.1s)
+2026-09-14T10:02:10.0020000Z   ✓  2 playwright/returning.spec.ts:49:1 › returning learner: deterministic replay keeps the saved evidence artifact handoff honest (1.4s)
+2026-09-14T10:02:10.3100000Z
+2026-09-14T10:02:10.3100001Z   1 flaky
+2026-09-14T10:02:10.3100002Z     [chromium] › playwright/pixel-quest.spec.ts:18:5 › plays the PixelDojo curriculum quest slice and advances labs
+2026-09-14T10:02:10.3100003Z
+2026-09-14T10:02:10.3200000Z   1 skipped (6.4s)

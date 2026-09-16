@@ -1,0 +1,211 @@
+===== [cross-engine] deps: sibling TS workspaces + shared Python substrate =====
+Done in 743ms using pnpm v9.15.9
+Done in 712ms using pnpm v9.15.9
+===== [cross-engine] unit: OS lint (biome) + unit tests (vitest) =====
+Checked 161 files in 123ms. No fixes applied.
+Test Files  60 passed (60)
+Tests  358 passed (358)
+Duration  22.87s (transform 1.70s, setup 0ms, import 5.89s, tests 8.91s, environment 42.97s)
+===== [cross-engine] contracts: learner/gate contract tests (glob) =====
+ok 1 - VITE_ANALYTICS_ENDPOINT é definido somente nos netlify.toml autorizados
+ok 2 - o valor autorizado é exatamente a rota same-origin canônica do coletor, no [build.environment]
+ok 3 - cada site autorizado redireciona a rota do coletor ANTES do fallback /* (first-match-wins)
+ok 4 - o segredo de export nunca vive no repo: ANALYTICS_EXPORT_TOKEN ausente dos tomls
+ok 5 - AID-961: readRange usa scan flat SEM prefixo — nunca directories/prefix (semântica edge)
+ok 6 - AID-961: readRange filtra o intervalo de dias no cliente (scan do store inteiro)
+ok 7 - AID-961: prune também lista FLAT — sem directories/prefix — e deleta só fora da janela
+ok 8 - AID-961: o diretório canônico de funções é DEPLOYÁVEL — sem declarações .d.* (422 do deploy CLI)
+ok 9 - AID-961: o staging do OS embarca lockfile e instala as deps das funções (build-pilot-bundle.mjs)
+ok 10 - AID-961: nenhuma chamada store.list do coletor usa directories (barreira estática)
+ok 11 - accepts the canonical OS event shapes for every vocabulary dimension
+ok 12 - rejects every violation of the closed envelope, vocabulary, and identity boundary
+ok 13 - batch shape is closed: schemaVersion 1 and 1..100 events
+ok 14 - handler gates: cross-origin, path, method, size, JSON, schema
+ok 15 - handler accepts only valid events of a mixed batch and reports exactly their ids
+ok 16 - NdjsonFileSink appends one JSON line per event, rotating by UTC day, and prunes beyond retention
+ok 17 - o diretório canônico de funções declara @netlify/blobs com versão exata
+ok 18 - o wrapper netlify-blobs-runtime.mjs é o ÚNICO import estático de @netlify/blobs do repo
+ok 19 - o coletor carrega o cliente Blobs pelo wrapper (import dinâmico, nunca bare specifier)
+ok 20 - o default export deployado seleciona o backing durável (createAnalyticsBacking)
+ok 21 - a projeção OS netlify/functions, quando presente, é cópia fiel do canônico # SKIP projeção OS ausente (checkout limpo — staging garantido pelo teste do script)
+ok 22 - o staging do OS embarca wrapper e manifest (build-pilot-bundle.mjs)
+ok 23 - cada superfície aponta o diretório de funções correto no netlify.toml
+ok 24 - a raiz do repo NÃO é um projeto Node (package.json só no diretório de funções)
+ok 25 - aceita batch literacy v2 válido e responde 202 com acceptedEventIds
+ok 26 - aceitação parcial: evento literacy inválido não é anexado
+ok 27 - envelope desconhecido continua 422 unsupported-schema
+ok 28 - export GET exige Bearer token e devolve NDJSON do intervalo
+ok 29 - BlobsEventStore é idempotente por dia/eventId e serve o export
+ok 30 - paridade: validateLiteracyEvent rejeita o que o emissor considera inválido
+ok 31 - aceita batch surfaces v3 válido e responde 202 com acceptedEventIds
+ok 32 - validação fail-closed: PII/free-text, prop indevida, vocabulário e formato
+ok 33 - aceitação parcial e batch inválido
+ok 34 - cross-site continua proibido para o envelope v3
+ok 35 - paridade de vocabulário com o emissor canônico (funnelTelemetry.ts)
+ok 36 - OS v1: mission.brief_viewed e activity.presented são aceitos; vocabulário tem 14 nomes
+ok 37 - literacy v2: lesson_brief_viewed e activity_presented são aceitos com props fechadas
+ok 38 - entry_viewed: prop opcional `entry` com vocabulário fechado; ausência continua aceita (pré-v4)
+ok 39 - o handler aceita batches end-to-end com os novos eventos dos 2 envelopes
+ok 40 - aggregates the synthetic fixture into the hand-computed funnel
+ok 41 - wide cohort (first onboarding.completed) reports the wider denominator
+ok 42 - activation funnel counts ordered stage reachability per week
+ok 43 - the report never publishes installation, session, or event identifiers
+ok 44 - committed example report regenerates byte-identically (no stale artifacts)
+ok 45 - k override suppresses publishable cohorts; window override narrows buckets
+ok 46 - vocabulary-rejected and unparsable lines are counted, never aggregated
+ok 47 - isoWeekKey uses the ISO 8601 Thursday rule in UTC
+ok 48 - eventId duplicates are removed before any cut (ADR-0010 beacon+fetch race)
+ok 49 - trackEntrySplit reports the weekly first-initial-start split, k-suppressed
+ok 50 - missionCompletion attributes per missionId, unattributed bucket, and suppression
+ok 51 - activityFriction reports pass rate per activityType × missionId plus mission-level friction
+ok 52 - verificationHealth counts states without a missionId cut
+ok 53 - rendererDegraded counts per fallback with reasons and engineId context
+ok 54 - moduleCompletionMedian maps missions via the live catalog and takes the median (D2)
+ok 55 - moduleCompletionMedian is fail-closed when the catalog is unavailable
+ok 56 - markdown render includes the new F2b sections
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# Subtest: cli reports usage errors without throwing
+ok 57 - cli reports usage errors without throwing
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+# exit codes: 0 ok · 2 usage/IO error
+ok 58 - cli fails closed on invalid numeric options: exit 2 and nothing published (QA AID-489 D1)
+ok 59 - cli fails closed on missing option values: exit 2, no crash (QA AID-489 D2)
+#     "parseErrors": 0
+ok 60 - library boundary is fail-closed too: aggregateFunnel throws, runAggregation refuses k<5 (QA AID-489 D1)
+ok 61 - literacyFunnel agrega por sessão com dedup e alcance ordenado
+ok 62 - k-suppressão: células com n<k mostram só o n
+ok 63 - markdown renderiza a seção literacy sem identificadores
+ok 64 - activationDetail segmenta sessões OS first-visit × returning com alcance in-sessão
+ok 65 - activationDetail publica o split literacy da prop entry (R1), incluindo pré-v4 e canário
+ok 66 - briefExposure literacy: segmentos R3, bins e medianas contínuas (b)/(c)
+ok 67 - briefExposure hostedMissions: segmentos análogos no envelope OS (engineId=literacyDojo) com cobertura declarada
+ok 68 - k≥5 suprime as células novas mantendo o n (declaração, não falha)
+ok 69 - probeClassification: marcadores determinísticos probe. + legados (diagnóstico, não remove das seções)
+ok 70 - glossário binding R1/R3/R4 vem no report e no markdown
+ok 71 - o report v4 nunca publica identificadores da fixture
+ok 72 - dwellBinLabel cobre os 4 bins do R3 e rejeita intervalo negativo
+ok 73 - probeMarkerFor: prefixo probe. vence pela ordem determinística da lista
+ok 74 - surfacesFunnel agrega o envelope v3 por fonte com dedup source/eventId
+ok 75 - sessões surfaces são contadas, nunca publicadas — nem sessionId nem eventId
+ok 76 - input sem v3 mantém o relatório v4 idêntico: chave surfacesFunnel omitida
+ok 77 - seções v3/v4 permanecem idênticas com e sem linhas v3 no mesmo input (aditivo)
+ok 78 - markdown publica a seção surfaces quando há v3 no input
+ok 79 - linha v3 inválida continua rejeitada (fail-closed do vocabulário)
+ok 80 - clean synthetic fixture passes with zero drift (exit 0)
+ok 81 - drift fixture fails high with every divergence kind classified
+ok 82 - classifyEvent mirrors the collector verdict on the rejection tree
+#   "error": "no input paths given: pass one or more .ndjson files or directories"
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# Subtest: usage and IO errors exit 2 without throwing
+ok 83 - usage and IO errors exit 2 without throwing
+ok 84 - cli fails closed on missing values and invalid --max-samples: exit 2 (QA AID-489 D2 + D1 class)
+ok 85 - cli writes the summary to --output and bounds samples
+ok 86 - blank interior lines are drift, a trailing newline is not
+ok 87 - aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope
+ok 88 - drift literacy falha alto (exit 1) com motivo classificado
+ok 89 - aceita envelopes surfaces v3 e conta separadamente dos envelopes v1/v2
+ok 90 - drift surfaces v3 falha alto (exit 1) com motivo classificado
+ok 91 - mistura v1 + v2 + v3 no mesmo input soma os três contadores
+ok 92 - a fixture synthetic-v4 passa limpa (vocabulário estendido aceito nos 2 envelopes)
+ok 93 - self-check parity: o espelho literacy concorda com o coletor nos eventos de revisão (AID-915) e exposição (F2)
+ok 94 - drift literacy: entry fora do vocabulário e activityIndex negativo falham alto com motivo classificado
+ok 95 - eventId OS com prefixo probe. é aceito (convenção nova, R5) e não é drift
+ok 96 - staged bridge recomputes each official payload across the 7-game x L1-L4 matrix
+ok 97 - hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)
+ok 98 - WAREHOUSE retry changes FAIL to independently bound PASS
+# Subtest: each complete failing WAREHOUSE level stays an honest FAIL without errors
+ok 99 - each complete failing WAREHOUSE level stays an honest FAIL without errors
+ok 100 - rejects favorable aggregate without observations for every game
+ok 101 - rejects forged metrics and pass claims for every game
+ok 102 - rejects trace or producer disagreement mutations
+ok 103 - rejects other projects and embedded verifiers
+ok 104 - rejects unknown game and nonclosed record
+ok 105 - rejects malformed or timezone-naive timestamps
+ok 106 - publishes same-origin session JSON instead of SPA HTML
+ok 107 - verification endpoint returns a bound receipt for a wormhole payload
+ok 108 - verification endpoint omits attempt_id for a hosted wormhole record without one (AID-448)
+ok 109 - staged literacy verifier matches the canonical Python verifier receipt-for-receipt (AID-449)
+ok 110 - staged literacy verifier recomputes every canonical activity across the 20 hosted lessons
+ok 111 - staged literacy verifier fails closed on prompt_builder and drift without false approval
+ok 112 - verification endpoint returns a bound literacy receipt (AID-449)
+ok 113 - verification endpoint still rejects unknown schemas with 422
+ok 114 - accepts the independently recomputed l02 v3 attempt
+ok 115 - fails closed when producer claims drift from the structured answer
+ok 116 - fails closed outside the fixed canonical lesson contract
+# tests 116
+# suites 0
+# pass 115
+# fail 0
+===== [cross-engine] blobs-proof: AID-947 end-to-end durable proof =====
+===== [cross-engine] schema-drift: AID-473 F2 monitor over synthetic fixtures =====
+===== [cross-engine] build: OS dist with same-origin pilot URLs (Vite import.meta.env) =====
+transforming...✓ 1870 modules transformed.
+✓ built in 341ms
+===== [cross-engine] smoke: bundle-missions + Playwright pilot & desktop smokes =====
+cross-engine: Playwright --retries=0 (CI pins 1; local default 0 — AID-571/AID-1658)
+cross-engine: browser install skipped (INTEGRATION_SKIP_BROWSER_INSTALL=1)
+error during build:
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react' imported from /tmp/opencode/aid1972/branch/engines/literacyDojo/node_modules/.vite-temp/vite.config.ts.timestamp-1789433660755-
+node:internal/errors:984
+const err = new Error(message);
+Error: Command failed: npx vite build --base=/apps/literacydojo/ --outDir /tmp/opencode/aid1972/branch/engines/literacyDojo/dist-hosted --emptyOutDir
+at genericNodeError (node:internal/errors:984:15)
+at wrappedFn (node:internal/errors:538:14)
+at checkExecSyncError (node:child_process:891:11)
+HARNESS_EXIT=1

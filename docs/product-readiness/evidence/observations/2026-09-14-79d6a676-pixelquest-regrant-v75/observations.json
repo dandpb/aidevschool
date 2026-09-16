@@ -1,0 +1,53 @@
+{
+ "schemaVersion": 1,
+ "observerContext": "independent-readiness-observer",
+ "gitSha": "79d6a6765868d01634241bf06e692b5717882b5a",
+ "observedAt": "2026-09-14T20:48:32Z",
+ "scenarios": [
+  {
+   "scenarioId": "pixelquest-encounter-evidence",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "learner-distinguishes-evidence-from-mastery",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk v75 @ 79d6a676 (branch regrant/auto-20260914-35dd4193 do PR #430, base main @ 35dd4193; AID-1943; chromium headless sobre vite dev :4183 no worktree; QA-authored walk spec em scripts/, screenshots ev/qapx75-*.png + walk log logs/walk-log-pixelquest.json neste bundle), distinto das runs de producer (pnpm run smoke: pixelDojo 5/5 verdes nesta árvore; reports gitSha 79d6a676). Após completar o encontro documentado (Lab 01 Rate Limiter, timeline determinística de 12 ações) o UI mostra 'Evidencia PASS emitida' junto de 'O verificador decide mastery' — evidência e mastery visivelmente separados; o registro EVIDENCE no canal console carrega pass=true com unit U0-sonda-rate-limiter-robustness (qapx75-01, walk-log-pixelquest step session1-encounter)."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "pixelquest-evidence-recovery",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "replay-recovers-evidence-without-state-promotion",
+     "evidence": "document-review",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk v75 @ 79d6a676 (branch regrant/auto-20260914-35dd4193 do PR #430, base main @ 35dd4193; AID-1943; chromium headless sobre vite dev :4183 no worktree; QA-authored walk spec em scripts/, screenshots ev/qapx75-*.png + walk log logs/walk-log-pixelquest.json neste bundle), distinto das runs de producer (pnpm run smoke: pixelDojo 5/5 verdes nesta árvore). Revisão documental + walk: engines/pixelDojo/pixel-quest/AGENTS.md e src/game/evidence/emitter.ts mantêm o fluxo emitEvidence validado → window.__pixelQuestEvidence (append-only em memória, bound à sessão) → echo console 'EVIDENCE <json>'; nenhum caminho de escrita em learner/ ou estado canônico do aprendiz parte do replay. No walk first-hand, após reload o canal em memória reiniciou (0 registros), o replay determinístico re-emitiu evidência fresca (1 nova linha EVIDENCE, mesmo núcleo unit/scenario/pass) sem promoção de estado — recuperação por re-execução, não por ressurreição de canal (qapx75-02, walk-log-pixelquest step returning-replay)."
+    },
+    {
+     "id": "missing-evidence-does-not-count-as-completion",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk v75 @ 79d6a676 (branch regrant/auto-20260914-35dd4193 do PR #430, base main @ 35dd4193; AID-1943; chromium headless sobre vite dev :4183 no worktree; QA-authored walk spec em scripts/, screenshots ev/qapx75-*.png + walk log logs/walk-log-pixelquest.json neste bundle), distinto das runs de producer (pnpm run smoke: pixelDojo 5/5 verdes nesta árvore). No walk, a sessão returning pós-reload começa sem canal acessível (0 registros) e o HUD/UI não apresenta copy de conclusão/mastery — nenhuma tela substitui a evidência ausente por status do jogo; a copy apresentada é 'O verificador decide mastery' (anti-substituição). O app não emite claim de completion a partir do replay; a única via de evidência é o registro EVIDENCE reemitido."
+    }
+   ],
+   "gaps": []
+  },
+  {
+   "scenarioId": "pixelquest-returning-evidence-handoff",
+   "outcome": "pass",
+   "assertions": [
+    {
+     "id": "no-false-mastery-on-return",
+     "evidence": "observation",
+     "outcome": "pass",
+     "notes": "First-hand QA observation walk v75 @ 79d6a676 (branch regrant/auto-20260914-35dd4193 do PR #430, base main @ 35dd4193; AID-1943; chromium headless sobre vite dev :4183 no worktree; QA-authored walk spec em scripts/, screenshots ev/qapx75-*.png + walk log logs/walk-log-pixelquest.json neste bundle), distinto das runs de producer (pnpm run smoke: pixelDojo 5/5 verdes nesta árvore; returning.spec.ts verde = fato de producer). Na sessão returning (pós-reload), o replay determinístico re-emite evidência com o mesmo núcleo (unit U0-sonda-rate-limiter-robustness, scenario e pass=true idênticos à sessão 1) e o UI volta a exibir 'O verificador decide mastery' — nem o replay nem o artefato salvo são apresentados como mastery; o handoff para o verificador independente permanece explícito (qapx75-02, walk-log-pixelquest verdict noFalseMastery=true)."
+    }
+   ],
+   "gaps": []
+  }
+ ]
+}

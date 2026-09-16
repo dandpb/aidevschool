@@ -23,7 +23,7 @@ describe("task queue encounter", () => {
     expect(state.evidence?.pass).toBe(true)
     expect(validateEvidenceRecord(state.evidence)).toMatchObject({
       project: "04_concurrent_task_queue",
-      unit_id: "U-04_concurrent_task_queue",
+      unit_id: "U4-task-queue",
       pass: true,
       metrics: {
         kind: "pixelquest-task-queue",

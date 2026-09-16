@@ -1,0 +1,13 @@
+schemaVersion: 1
+assessmentId: 2026-09-14-5daef3af-minitown-regrant-v77
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-14T22:22:00Z'
+revalidateBy: '2026-10-14'
+gitSha: 5daef3afcf03bdb5946041b95db9a54d7adfac12
+decisions:
+- useCaseId: minitown-explore-only
+  outcome: pass
+  grantedTier: experimental
+  reasons: []
+  resultRunIds:
+  - 2026-09-14T22:18:50Z-minitown-explore-only-mixed-5daef3af

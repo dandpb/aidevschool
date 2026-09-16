@@ -6,6 +6,7 @@
 declare module "node:fs" {
   export function mkdirSync(path: string, options?: { readonly recursive?: boolean }): void
   export function writeFileSync(path: string, data: string, encoding?: "utf8"): void
+  export function readFileSync(path: string, encoding: "utf8"): string
 }
 
 declare module "node:path" {

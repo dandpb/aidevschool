@@ -6,6 +6,7 @@ describe('voxelDojo OS catalog', () => {
     expect(voxelCatalog.map((game) => game.id)).toEqual([
       'game-02-warehouse',
       'game-03-wormhole',
+      'game-04-task-queue',
       'game-05-relay-station',
       'game-06-pipeline-plant',
       'game-07-checkpoint-city',
@@ -21,7 +22,7 @@ describe('voxelDojo OS catalog', () => {
       'game-17-lighthouse-network',
       'game-18-stacks',
     ])
-    expect(new Set(voxelCatalog.map((game) => game.developmentUrl)).size).toBe(16)
+    expect(new Set(voxelCatalog.map((game) => game.developmentUrl)).size).toBe(17)
   })
 
   it('accepts only string URLs for known games', () => {
