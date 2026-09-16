@@ -41,7 +41,7 @@ async function playEncounter(
   for (const action of actions) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const evidence = await page.evaluate(
     () => window.__pixelQuestEvidence?.at(-1) as PixelQuestEvidenceRecord | undefined,
   )

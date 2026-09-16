@@ -71,9 +71,11 @@ coverage ≥ `min_coverage` (0.80), mutation ≥
 `learner/pitfalls.md`; wins → `learner/journal.md`; mastery updates append to `units_log` with
 `{id, mastered_at, evidence}`. This skill must not be skipped.
 
-## The 17 subagents (`.claude/agents/`)
+## The 25 subagents (`.claude/agents/`)
 
-Model tier in parentheses. The first 15 mirror the shared protocol; the last 2 are arena-only.
+Model tier in parentheses. The first 15 mirror the shared protocol; 2 are arena-only
+(ADR-005); and 8 are thin wrappers whose canonical bodies live in
+`engines/minimaxDojo/prompts/per_agent/` (Ágora personas, wired up in E10).
 
 `sonda` (sonnet), `socrates` (sonnet), `cronos` (haiku), `mneme` (haiku), `mnemosyne` (sonnet),
 `seneca` (opus), `curator` (opus — Phase 1), `dev-go` / `dev-rust` / `dev-node` (sonnet — Phase 2,
@@ -85,12 +87,19 @@ benchmark, whether the three implementations were at equal effort budget, so the
 languages and not unequal producer effort) and `arena-narrator` (opus — writes the pedagogical
 `arena_report.md` narrative).
 
+Ágora wrappers (thin; canonical persona in minimaxDojo): `maestro` (opus — orchestrates the 13
+other personas), `atena` (sonnet — metrics panel / Quality Gate), `galileu` (opus — statistical
+benchmark lab), `mestre-conteudo` (sonnet — exercise generator), `cartografo` (opus — robustness
+trail architect, dispatched by `/devschool-trail`), `critico` (opus — pedagogical code reviewer),
+`ouroboros` (opus — post-cycle self-improvement loop, dispatched by `/devschool-evolve`), and
+`prometor` (opus — ephemeral adversarial verifier of the Ágora continuum).
+
 **Model-routing rule:** deep reasoning (curator/reviewer/optimizer/verifier) → opus; high-volume
 generation (devs/benchmarker/sonda) → sonnet; the verifier runs a different tier from producers for
 cross-model diversity. Subagents never call other subagents — the orchestrator chains them, and the
 three `dev-*` are dispatched in one message to run in parallel.
 
-## The 18 slash commands (`.claude/commands/devschool/`)
+## The 20 slash commands (`.claude/commands/devschool/`)
 
 | Group | Commands |
 | --- | --- |
@@ -98,6 +107,7 @@ three `dev-*` are dispatched in one message to run in parallel.
 | Phases | `/devschool-spec`, `/devschool-implement`, `/devschool-review`, `/devschool-benchmark`, `/devschool-optimize`, `/devschool-verify` |
 | Loops | `/devschool-cycle` (full 5-phase loop), `/devschool-audit` (cross-model sampling), `/devschool-next` (close cycle → pick next catalog project) |
 | Arena | `/devschool-arena` (3 impls + fairness audit + benchmark + narrative + verifier → `arena_report.md`) |
+| Ágora | `/devschool-trail` (robustness trail via `cartografo`), `/devschool-evolve` (post-cycle self-improvement via `ouroboros`) |
 | Internal | `/devschool-phaserunner` (not user-invoked) |
 
 ### The PhaseRunner seam
@@ -115,8 +125,8 @@ single `run_phase(spec)` interface. `spec` fields: `phase`, `producer` (str|list
 | --- | --- |
 | `CLAUDE.md` | Authoritative orchestrator doc: phases, gate, subagents, commands, model routing, security. |
 | `AGENTS.md` | Terse "where to look" + conventions + anti-patterns. |
-| `.claude/agents/*.md` | 17 subagent definitions (YAML frontmatter: name/description/tools/model/color). |
-| `.claude/commands/devschool/*.md` | 18 slash commands + a `tests/` subdir. |
+| `.claude/agents/*.md` | 25 subagent definitions (YAML frontmatter: name/description/tools/model/color). |
+| `.claude/commands/devschool/*.md` | 20 slash commands + a `tests/` subdir. |
 | `.claude/skills/agora-continuum/SKILL.md` | The learning-gate protocol skill. |
 | `.claude/hooks/briefing.sh` | SessionStart hook — injects `pipeline_status.yaml` + `learning_state.yaml`. |
 | `curriculum → ../../curriculum` | Symlink to the shared curriculum. |

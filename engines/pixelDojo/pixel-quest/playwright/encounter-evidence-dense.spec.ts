@@ -49,7 +49,7 @@ const labPlans: readonly LabPlan[] = [
   {
     regionId: "lab-07_rest_api_auth",
     regionLabel: "REST API Auth",
-    trainingLabel: "Treino de autorizacao",
+    trainingLabel: "Treino de autorização",
     actions: ["z", "x", "z", "x", "x", "z"],
     project: "07_rest_api_auth",
     metricsKind: "pixelquest-policy-gate",
@@ -84,7 +84,7 @@ async function playLab(page: Page, plan: LabPlan): Promise<void> {
   for (const action of plan.actions) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
 }
 
 test("every encounter kind emits schema-valid evidence with dual console/page channels in sync", async ({

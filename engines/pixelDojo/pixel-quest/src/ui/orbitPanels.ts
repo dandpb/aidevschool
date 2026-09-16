@@ -27,12 +27,12 @@ export type SkillOrbitPanelParams = {
 }
 
 export function renderBriefingPanel(params: BriefingPanelParams): void {
-  params.objective.textContent = `PixelDojo Quest: ${params.totalUnits} labs do curriculum`
+  params.objective.textContent = `PixelDojo Quest: ${params.totalUnits} labs do currículo`
   params.status.textContent = `Review ${params.reviewTrack.active.dueIn} | ${streakText(
     params.reviewTrack,
   )}`
   params.phase.textContent = phaseText("briefing")
-  params.prompt.textContent = "Enter: comecar | O: orbita 3D | H: fases"
+  params.prompt.textContent = "Enter: começar | O: órbita 3D | H: fases"
   params.panel.className = "panel"
   params.panel.innerHTML = ""
 
@@ -40,27 +40,27 @@ export function renderBriefingPanel(params: BriefingPanelParams): void {
   title.textContent = "Briefing"
   const body = document.createElement("p")
   body.textContent =
-    "Complete cada lab do curriculum como pratica, duelo, evidencia e diario. A orbita 3D mostra a trilha de habilidades antes do gate de mastery."
+    "Complete cada lab do curriculum como prática, duelo, evidência e diário. A órbita 3D mostra a trilha de habilidades antes do gate de mastery."
   const actions = document.createElement("div")
   actions.className = "panel-actions"
   actions.append(
-    makeButton("Comecar", params.callbacks.onStartQuest),
-    makeButton("Orbita 3D", params.callbacks.onOpenSkillOrbit),
-    makeButton("Ver diario", params.callbacks.onOpenJournal),
+    makeButton("Começar", params.callbacks.onStartQuest),
+    makeButton("Órbita 3D", params.callbacks.onOpenSkillOrbit),
+    makeButton("Ver diário", params.callbacks.onOpenJournal),
   )
   params.panel.append(title, body, actions)
 }
 
 export function renderSkillOrbitPanel(params: SkillOrbitPanelParams): void {
   const stationNumber = params.station.index + 1
-  params.objective.textContent = `Orbita 3D: ${stationNumber}/${params.totalUnits} ${params.station.mechanicName}`
+  params.objective.textContent = `Órbita 3D: ${stationNumber}/${params.totalUnits} ${params.station.mechanicName}`
   params.status.textContent = params.station.completed
-    ? "Estacao concluida | evidencia emitida"
+    ? "Estação concluída | evidência emitida"
     : params.station.locked
-      ? "Gate bloqueado | complete o prerequisito"
+      ? "Gate bloqueado | complete o pré-requisito"
       : `Pronto para praticar | ${streakText(params.reviewTrack)}`
   params.phase.textContent = phaseText("orbit")
-  params.prompt.textContent = "Setas A/D: trocar estacao | Enter: abrir lab | O/Esc: fechar"
+  params.prompt.textContent = "Setas A/D: trocar estação | Enter: abrir lab | O/Esc: fechar"
   params.panel.className = "panel skill-orbit-panel"
   params.panel.innerHTML = ""
 
@@ -78,7 +78,7 @@ export function renderSkillOrbitPanel(params: SkillOrbitPanelParams): void {
   actions.append(
     makeButton("Anterior", params.callbacks.onOrbitPrevious),
     open,
-    makeButton("Proximo", params.callbacks.onOrbitNext),
+    makeButton("Próximo", params.callbacks.onOrbitNext),
     makeButton("Fechar", params.callbacks.onClosePanel),
   )
   params.panel.append(title, body, actions)
