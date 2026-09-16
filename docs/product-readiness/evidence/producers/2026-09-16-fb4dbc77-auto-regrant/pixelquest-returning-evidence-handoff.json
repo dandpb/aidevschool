@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/pixelDojo/pixel-quest/playwright/returning.spec.ts",
+      "sha256": "2caa9695d0d75958849fbe146512fdcb65ccf5e6067d2f03b38b5bdce31a153b"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "return-replay-is-deterministic-and-artifact-uncorrupted",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-16T20:13:29Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "fb4dbc77ed1c197b249bfeabd5af6b4d7e6e8092",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-16T20:13:29Z-pixelquest-returning-evidence-handoff-fb4dbc77",
+  "scenarioId": "pixelquest-returning-evidence-handoff",
+  "schemaVersion": 1,
+  "sourceFingerprint": "66d91165ff1f2112003b41b8034a4f73b6024259a2405d97bfe6972526913fa8"
+}
