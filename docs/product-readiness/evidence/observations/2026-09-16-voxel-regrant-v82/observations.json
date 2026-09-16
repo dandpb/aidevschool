@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "gitSha": "ef414d4a5d5881ebd27ff2c3f6a242df4f99518a",
+  "observedAt": "2026-09-16T14:25:00Z",
+  "observerContext": "independent-readiness-observer",
+  "scenarios": [
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental + walk de código first-hand Docs & Readiness (AID-2140) na árvore do anchor ef414d4a (base main 7b07b89c): student-guide.md:30 'O status do host é progresso local — nunca domínio'; §codexdojo-os-guided-journey passo 5 (linha 36) limita o trilho Dev às três missões hospedadas WAREHOUSE→WORMHOLE→RELAY STATION e linha 72 nomeia a oferta 'customer-ready' sem prometer domínio. facilitator-guide.md:49 'sem prometer certificado/domínio (concluída ≠ domínio)'. Corroboração de código: engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx:68 rotula engines de progresso 'Evidência bruta · não verificada'. Producer gates first-hand desta árvore (cópia byte-idêntica mod portas, logs/): os-readiness.log pilot smoke 8/8 + specs desktop-1280 pass, incluindo a montagem das 3 missões voxel do host; receipts os-readiness/os-voxel-hosted-missions.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2140): facilitator-guide.md:285-292 tabela 'Recover and escalate' do trilho guiado OS nomeia o limiar: 'WebGL initialization fails → Select the accessible renderer and retry the core interaction with keyboard controls → Escalate when: Both projections fail or the accessible projection loses the promised interaction'; linha 264 manda checar 'the reduced-motion accessible renderer'. student-guide.md:270-273 (§Complete a standalone voxelDojo loop): 'use the game's declared accessible projection when it preserves the core interaction. Stop when neither renderer supports the loop' — saída honesta nomeável. Corroboração executável first-hand: os-readiness.log renderer-fallback.smoke.spec.ts pass (reduced motion, context loss, forced WebGL unavailability) na mesma run desktop-1280."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2140): student-guide.md:199-202 §Resume or recover: 'The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization'. Corroboração de código: engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts:10 — persistência é indexedDB.open local por perfil, sem conta/sync. Producer gate first-hand: os-readiness.log chapter-continuity.smoke.spec.ts 'preserves completed first-release missions across switches and reloads' pass (desktop-1280), incluindo retomada das missões voxel dev após reload no mesmo perfil."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-loop",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-game-specific-scope",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2140): student-guide.md:263-269 §Complete a standalone voxelDojo loop: 'A passing game validates only that declared package; it says nothing about its siblings and does not grant mastery' + 'Locate the emitted raw evidence before you leave the game'. Verificação de consistência do drift que causou o stale window (herança PRs #435/#436): as contagens corrigidas conferem com a árvore — engines/voxelDojo/AGENTS.md:16 'all 17 game-* packages', engines/voxelDojo/shared/sceneHarness.ts:4 'byte-identical across all 17 games', catalog.json com exatamente 17 entradas game-* e DESIGN.md:7 hud-panel #0b0e14 — drift de fingerprint sobre docs, sem mudança de comportamento. Producer gate first-hand: logs/voxel-smoke.log — pnpm run smoke 17/17 games pass (75 testes playwright ✓, cada jogo roda seu próprio smoke e emite evidência), receipt voxel-readiness/voxel-standalone-loop.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-accessible-renderer",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "accessible-projection-preserves-supported-interaction",
+          "evidence": "document-review",
+          "outcome": "pass",
+          "notes": "Revisão de código first-hand na árvore do anchor (AID-2093]: engines/voxelDojo/shared/accessibleProjection.ts:39 'export class AccessibleProjection<TSnapshot> implements MissionProjection<TSnapshot>' — a projeção semântica é uma MissionProjection completa (section role=region + summarize/actions), preservando a interação suportada e o boundary de evidência; engines/voxelDojo/shared/accessibleProjection.test.ts trava o contrato (vitest verde como parte do smoke — voxel-smoke.log 'test' phase shared/*). Guias: student-guide.md:270-272 manda usar a projeção acessível declarada 'when it preserves the core interaction'."
+        },
+        {
+          "id": "unsupported-renderer-has-honest-exit",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental + walk first-hand (AID-2140): student-guide.md:272-273: 'Stop when neither renderer supports the loop… or exit at that unsupported boundary without claiming completion'; facilitator-guide.md:292 escalation 'when both projections fail'. Corroboração executável: renderer-fallback.smoke.spec.ts (forced WebGL unavailability) pass em os-readiness.log — a projeção acessível declarada ativa sem fabricar conclusão; no smoke voxel, jogos sem projeção declarada apenas rodam seus smokes sem claim de fallback (catalog.json não declara projeção para jogos sem suporte)."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "voxel-standalone-return-reentry",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "no-false-mastery-on-return",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2140): student-guide.md:129 'The standalone route does not automatically transfer progress to another engine or grant canonical mastery' e §Resume or recover (117) — retorno no mesmo device restaura o suportado, evidência bruta segue exigindo verificador independente (EngineHubApp.tsx:68 'Evidência bruta · não verificada'). Producer gate first-hand: voxel-smoke.log — reentry/replay dos jogos declarados exercitado pelo smoke do game-02-warehouse (playwright/warehouse.spec.ts: reinício determinístico do briefing + registro novo por replay, sem ressurreição do canal em memória), 3/3 pass."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
