@@ -2,7 +2,7 @@
 # via AID-1214 §3.1): rotinas repetitivas — o que automatizar.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l30
-version: 1
+version: 2
 moduleId: mod-08
 title: "Rotinas repetitivas: o que automatizar"
 objective: "Distinguir tarefas do próprio trabalho que valem virar rotina assistida (repetitiva + estruturada + baixo risco) das que exigem julgamento humano a cada vez, e parametrizar o pedido-padrão da tarefa escolhida."
@@ -14,7 +14,7 @@ activities:
   - id: l30-a1
     type: choice
     skillId: aplicar
-    instruction: "NA SUA SEMANA DE TRABALHO, QUAIS TAREFAS VALEM VIRAR ROTINA ASSISTIDA COM A IA? MARQUE TODAS AS CANDIDATAS."
+    instruction: "Na sua semana de trabalho, quais tarefas valem virar rotina assistida com a IA? Marque todas as candidatas."
     data:
       multiSelect: true
       options:
@@ -43,14 +43,14 @@ activities:
     storage:
       policy: structured_only
     hints:
-      - "Para cada tarefa, pergunte: o ritmo repete, mas a FORMA também repete? E o que acontece se sair errado?"
+      - "Para cada tarefa, pergunte: o ritmo repete, mas a forma também repete? E o que acontece se sair errado?"
       - "Duas dessas tarefas tratam de pessoas e consequências — julgamento humano a cada vez."
       - "As candidatas têm a mesma cara do pedido-padrão que você salvou na lição da biblioteca de pedidos."
 
   - id: l30-a2
     type: prompt_builder
     skillId: pedir
-    instruction: "VOCÊ ESCOLHEU AUTOMATIZAR O RELATÓRIO SEMANAL. MONTE O PEDIDO-PADRÃO DA ROTINA PREENCHENDO OS CAMPOS — O QUE FICA SALVO E O QUE MUDA A CADA SEMANA."
+    instruction: "Você escolheu automatizar o relatório semanal. Monte o pedido-padrão da rotina preenchendo os campos — o que fica salvo e o que muda a cada semana."
     data:
       scenario: "Na sua ferramenta de IA você salvou um pedido-padrão para não recomeçar do zero toda semana (como na lição da biblioteca de pedidos). Neste exercício você não roda automação nenhuma — você monta o pedido-padrão por campos rotulados, como faria na ferramenta real ao criar a rotina. O pedido 'relatório', sozinho, devolve toda semana um texto de forma diferente."
       genericPrompt: "relatório"
@@ -93,7 +93,7 @@ activities:
   - id: l30-a3
     type: output_comparison
     skillId: aplicar
-    instruction: "DUAS PESSOAS TRANSFORMARAM O MESMO PEDIDO-PADRÃO EM ROTINA. COMPARE E ESCOLHA A FORMA SEGURA."
+    instruction: "Duas pessoas transformaram o mesmo pedido-padrão em rotina. Compare e escolha a forma segura."
     data:
       scenario: "Você e uma colega criaram o mesmo pedido-padrão do relatório semanal. Cada uma transformou o pedido em rotina de um jeito — na vida real isso vira uma regra de uso; aqui você decide por controles rotulados."
       outputs:
@@ -118,7 +118,7 @@ activities:
         betterOutputId: "A rotina A automatiza o trabalho e mantém o julgamento; a B automatiza os dois — e o erro viaja sozinho até a diretoria."
         c-revisao-humana: "Faltou este critério: alguém lê o resultado antes de ele chegar a quem usa — a revisão é o cinto de segurança da rotina."
         c-sem-envio-cego: "Faltou este critério: envio automático sem conferência nenhuma é o ponto onde um erro vira erro público."
-        c-ajusta-quando-muda: "Critério bônus da rotina A: ela também prevê ajustar o pedido quando o dado muda — o que a lição 'quando a automação erra' treina em detalhe."
+        c-ajusta-quando-muda: "Critério bônus da rotina A: ela também prevê ajustar o pedido quando o dado muda — ponto que a lição 'Quando a automação erra' aprofunda mais adiante."
       onSuccess: "Exato! Automatizar o trabalho não é automatizar o julgamento: produção automática, validação humana — e ajuste fino quando o dado muda."
     storage:
       policy: structured_only

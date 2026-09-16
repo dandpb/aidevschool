@@ -2,7 +2,7 @@
 # via AID-1214 §3.1): pequenas automações — onde o humano valida.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l31
-version: 1
+version: 2
 moduleId: mod-08
 title: "Pequenas automações: onde o humano valida"
 objective: "Classificar saídas de automação entre uso direto e checagem obrigatória, nomear o que falta em um pedido de automação (gatilho, limite de escala) e sequenciar a adoção segura."
@@ -14,7 +14,7 @@ activities:
   - id: l31-a1
     type: safety_classification
     skillId: proteger
-    instruction: "SUA ROTINA ASSISTIDA JÁ ESTÁ RODANDO. PARA CADA SAÍDA ABAIXO, DECIDA: PODE SER USADA DIRETO OU EXIGE CHECAGEM OBRIGATÓRIA ANTES DE USAR?"
+    instruction: "Sua rotina assistida já está rodando. Para cada saída abaixo, decida: pode ser usada direto ou exige checagem obrigatória antes de usar?"
     data:
       labels:
         safe: "Uso direto — pode ir sem conferir"
@@ -42,15 +42,15 @@ activities:
         i-valor-contrato: sensitive
         i-historico-gasto: sensitive
     feedback:
-      onFailure: "A regra da lição 12 continua valendo dentro da rotina: número que sustenta decisão, nome de cliente em comunicação, valor de contrato e histórico de gasto são checagem obrigatória — não porque a IA erra sempre, mas porque o erro desses viaja sozinho. Rascunho de divulgação pública e lembrete sem dados sensíveis podem ir direto: o pior caso é um ajuste rápido."
+      onFailure: "A regra da lição 'Proteja suas informações' continua valendo dentro da rotina: número que sustenta decisão, nome de cliente em comunicação, valor de contrato e histórico de gasto são checagem obrigatória — não porque a IA erra sempre, mas porque o erro desses viaja sozinho. Rascunho de divulgação pública e lembrete sem dados sensíveis podem ir direto: o pior caso é um ajuste rápido."
       perCheck:
         i-rascunho-divulgacao: "Uso direto: nasce de fonte pública e é um rascunho seu — se sair estranho, você ajusta antes de publicar, sem dano."
         i-lembrete-semanal: "Uso direto: informação interna sem dado pessoal nem de cliente; o pior caso é um compromisso fora de ordem."
-        i-numero-diretoria: "Checagem obrigatória: número que sustenta decisão da diretoria — número errado automático vira decisão errada (a lição de números e fatos vale em dobro na rotina)."
+        i-numero-diretoria: "Checagem obrigatória: número que sustenta decisão da diretoria — número errado automático vira decisão errada (conferir na fonte vale em dobro na rotina)."
         i-nome-cliente: "Checagem obrigatória: nome de cliente em comunicação que sai automaticamente — um nome trocado é um relacionamento exposto."
         i-valor-contrato: "Checagem obrigatória: valor de contrato em material de reunião — erro de valor em contexto comercial custa caro."
         i-historico-gasto: "Checagem obrigatória: quanto o cliente gastou é dado sensível dele, citado automaticamente em um e-mail — exposição sem revisão."
-      onSuccess: "Exato! A classificação de sensibilidade da l12 não desaparece quando a tarefa vira rotina — ela é exatamente o mapa do onde o humano valida."
+      onSuccess: "Exato! A classificação de sensibilidade da lição 'Proteja suas informações' não desaparece quando a tarefa vira rotina — ela é exatamente o mapa do onde o humano valida."
     storage:
       policy: structured_only
     hints:
@@ -61,14 +61,14 @@ activities:
   - id: l31-a2
     type: missing_context
     skillId: avaliar
-    instruction: "UM COLEGA PEDIU À IA: 'TODA SEMANA, MONTE O RESUMO DE VENDAS E ME MANDE'. O QUE FALTA NO PEDIDO DELE PARA A ROTINA SER CONTROLÁVEL?"
+    instruction: "Um colega pediu à IA: 'toda semana, monte o resumo de vendas e me mande'. O que falta no pedido dele para a rotina ser controlável?"
     data:
-      prompt: "COLEGA (pedido): 'toda semana, monte o resumo de vendas e me mande' · O QUE ACONTECEU: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
+      prompt: "Colega (pedido): 'toda semana, monte o resumo de vendas e me mande' · O que aconteceu: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
       contextOptions:
         - id: gatilho-definido
           text: "O gatilho: o que dispara a rotina e quando (sexta ao completar a planilha? segunda cedo?) — 'toda semana' não diz qual sexta, nem com qual dado"
         - id: limite-de-escala
-          text: "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que SEMPRE volta para um humano decidir"
+          text: "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que sempre volta para um humano decidir"
         - id: formato-do-resumo
           text: "O formato do resumo (tópicos, tamanho, indicadores), para a saída vir sempre igual e o estranho saltar aos olhos"
         - id: nome-do-modelo-de-ia
@@ -98,7 +98,7 @@ activities:
   - id: l31-a3
     type: sort
     skillId: avaliar
-    instruction: "ORDENE A ADOÇÃO SEGURA DA SUA PRIMEIRA AUTOMAÇÃO — DO PRIMEIRO PASSO À AMPLIAÇÃO."
+    instruction: "Ordene a adoção segura da sua primeira automação — do primeiro passo à ampliação."
     data:
       items:
         - id: s1-piloto
@@ -123,7 +123,7 @@ activities:
     storage:
       policy: structured_only
     hints:
-      - "Pergunte: o que você precisa conhecer ANTES de deixar a rotina crescer?"
+      - "Pergunte: o que você precisa conhecer antes de deixar a rotina crescer?"
       - "Revisar tudo só é viável quando a rotina é pequena — por isso o piloto vem antes da ampliação."
       - "A ordem é: piloto de baixo risco, revisão total, ajuste do combinado, ampliação gradual."
 

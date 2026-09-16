@@ -1,6 +1,6 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-08-22
+**Updated:** 2026-09-16
 **Source baseline:** c256a96
 **Branch:** main
 
@@ -26,8 +26,7 @@ aidevschool/
 │   ├── openclaw/              # file-based checklist runner for the simulate-grade 5-phase cycle
 │   ├── pixelDojo/             # 8-bit teaching-game engine with Playwright evidence contract (arcadeAcademy merged here 2026-06-21)
 │   ├── shared/                # cross-engine teaching-evidence primitives
-│   ├── voxelDojo/             # pnpm catalog of Three.js teaching simulations
-│   └── zai-duolingo-like/     # non-integrated Next.js prototype "Vertical Protocol"; future engine, outside make test
+│   └── voxelDojo/             # pnpm catalog of Three.js teaching simulations
 ├── docs/design/polyglot-arena/ # demoted design archive (proposal-stage; was engines/polyglotEvolutionArena/)
 ├── curriculum/                # shared coding challenges and executable evidence
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
@@ -57,7 +56,6 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Validate the Level 0 exploration surface | `engines/miniTown/` | Run its lint, test, typecheck, build, and smoke commands. It never writes learner state. |
 | See the programmer's daily lesson | `engines/dojoToday/` | Read-only "lesson for today" (FSRS due reviews, streak, active unit); read model generated via `python3 -m learner.substrate` in prebuild. |
 | Run the AI-literacy chat-tutor MVP | `engines/aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring; tests via repo-root `make test`. |
-| Review the Vertical Protocol prototype | `engines/zai-duolingo-like/` | Non-integrated Next.js prototype; future engine; outside `make test`; do not delete. |
 | Validate the 2D game workspace | `engines/pixelDojo/` | Install once, then use the root `lint`, `test`, `typecheck`, `build`, and `smoke` scripts; use `pnpm --filter pixel-quest dev` for the app. |
 | Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `docs/loops/threejs-dojo-coverage/` | Read the loop memory first (tracked at `docs/loops/threejs-dojo-coverage/memory.md`); run artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/` (untracked). |
 | Validate the 3D game workspace | `engines/voxelDojo/` | Run catalog-wide scripts across `game-*`; use `game-10-hash-ring` as the reference package. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
@@ -68,7 +66,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Change learner state | `learner/` | Shared source of truth for gates, profile, pitfalls, journal, pipeline. |
 | Change learner-state adapters | `learner/substrate/` | Edit canonical YAML first, then run `python3 -m learner.substrate`. |
 | Change project evidence | `curriculum/` | Shared challenge specs, implementations, reviews, benchmarks. |
-| Work on Project 02's verified implementation | `curriculum/02_key_value_store/node-impl/` | Current verified track is Node-only; start with `README.md`, then use `docs/benchmark_results.md` and `docs/evolution_report.md` for the measured benchmark/optimize workflow. |
+| Work on Project 02's verified implementation | `curriculum/02_key_value_store/node-impl/` | Current verified track is Node-only; start with `README.md`, then use `curriculum/02_key_value_store/docs/benchmark_results.md` and `curriculum/02_key_value_store/docs/evolution_report.md` for the measured benchmark/optimize workflow. |
 | Update idea/prompt source | `docs/PROMPTS/-01_GOAL.md`, `docs/PROMPTS/00_IDEIAS.md` | Goal and seed ideas. |
 | Read the polyglot-arena design | `docs/design/polyglot-arena/` | Demoted from `engines/polyglotEvolutionArena/`; proposal-stage. |
 | Run the simple AI-workflow course | `docs/curso-simples/` | HTML course + completion ROADMAP with per-phase gates; teaching material for a real student, not learner state. |
@@ -169,6 +167,7 @@ python3 -m unittest discover -s learner/substrate/tests
   they are the learning-gate audit trail.
 - Use LSP/codegraph when exposed; `.codegraph` and `graphify-out/` are generated references, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
+- `engines/zai-duolingo-like/` was a dangling submodule gitlink (no `.gitmodules` entry, no content in this repo), removed by c604d2ec on 2026-09-07; its stale map references were cleaned on 2026-09-16 (AID-2117). Do not re-add the entry unless real engine content lands in the repo.
 - Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
   runs under `docs/product-readiness/evidence/` (wayfinder rejected 2026-08-22; the
   `2026-08-22-de49bc9-literacy-revalidation` run was superseded by upstream assessments

@@ -15,7 +15,7 @@ aidevschool/                 # ECOSSISTEMA
 │   ├── minimaxDojo/              # tutoring-core (14 agentes; spec layer + state machine Python testada)
 │   ├── codexDojo/                # app user-facing (pnpm; dashboard read-only do learner state)
 │   ├── pixelDojo/                # teaching-game engine (arcade 8-bit emite evidência compartilhada)
-│   ├── voxelDojo/                # simulações 3D didáticas (16 games implementados; piloto game-10-hash-ring)
+│   ├── voxelDojo/                # simulações 3D didáticas (17 games implementados; piloto game-10-hash-ring)
 │   └── openclaw/                 # checklist runner file-based (modo simulate; sem event bus)
 ├── docs/design/polyglot-arena/   # design archive (proposal-stage, demoted de engines/polyglotEvolutionArena/ em 2026-06-21)
 ├── curriculum/              # COMPARTILHADO: desafios + catalog.md

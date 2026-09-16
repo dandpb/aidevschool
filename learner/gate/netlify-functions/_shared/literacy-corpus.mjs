@@ -463,7 +463,7 @@ export const literacyCorpus = {
               "text": "O melhor horário do dia para enviar e-mails de cobrança"
             }
           ],
-          "prompt": "COLEGA (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
+          "prompt": "Colega (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -483,7 +483,7 @@ export const literacyCorpus = {
     "skillIds": [
       "pedir"
     ],
-    "version": 2
+    "version": 3
   },
   "l05": {
     "activities": [
@@ -1849,7 +1849,7 @@ export const literacyCorpus = {
               "text": "Se a resposta vem rápida ou demora para sair"
             }
           ],
-          "prompt": "COLEGA (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
+          "prompt": "Colega (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -1869,7 +1869,7 @@ export const literacyCorpus = {
     "skillIds": [
       "decidir"
     ],
-    "version": 2
+    "version": 3
   },
   "l16": {
     "activities": [
@@ -2063,7 +2063,7 @@ export const literacyCorpus = {
     "skillIds": [
       "codificar"
     ],
-    "version": 2
+    "version": 3
   },
   "l17": {
     "activities": [
@@ -2196,7 +2196,7 @@ export const literacyCorpus = {
     "skillIds": [
       "integrar"
     ],
-    "version": 2
+    "version": 3
   },
   "l18": {
     "activities": [
@@ -2344,7 +2344,7 @@ export const literacyCorpus = {
       "pedir",
       "aplicar"
     ],
-    "version": 1
+    "version": 2
   },
   "l19": {
     "activities": [
@@ -2376,7 +2376,7 @@ export const literacyCorpus = {
               "text": "Seria necessário usar um modelo de IA mais novo"
             }
           ],
-          "prompt": "TURNO 1 (você): 'Resuma o relatório do trimestre. Público: diretoria. Tom: formal. No máximo 1 página.' · TURNO 2 (IA): entrega resumo formal de 1 página, com destaques. · TURNO 3 (você): 'Agora adapte esse resumo para o time técnico.' · TURNO 4 (IA): entrega 3 páginas informais, com jargão e sem destaques."
+          "prompt": "Turno 1 (você): 'Resuma o relatório do trimestre. Público: diretoria. Tom: formal. No máximo 1 página.' · Turno 2 (IA): entrega resumo formal de 1 página, com destaques. · Turno 3 (você): 'Agora adapte esse resumo para o time técnico.' · Turno 4 (IA): entrega 3 páginas informais, com jargão e sem destaques."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -2456,7 +2456,7 @@ export const literacyCorpus = {
       "pedir",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l20": {
     "activities": [
@@ -2566,7 +2566,7 @@ export const literacyCorpus = {
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l21": {
     "activities": [
@@ -2741,7 +2741,7 @@ export const literacyCorpus = {
     "skillIds": [
       "codificar"
     ],
-    "version": 1
+    "version": 2
   },
   "l22": {
     "activities": [
@@ -2861,7 +2861,7 @@ export const literacyCorpus = {
       "codificar",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l23": {
     "activities": [
@@ -2985,7 +2985,7 @@ export const literacyCorpus = {
       "decidir",
       "codificar"
     ],
-    "version": 1
+    "version": 2
   },
   "l24": {
     "activities": [
@@ -3113,7 +3113,7 @@ export const literacyCorpus = {
               "text": "Usar uma IA mais recente, que entende fotos sem precisar de instrução"
             }
           ],
-          "prompt": "COLEGA (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
+          "prompt": "Colega (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -3134,7 +3134,7 @@ export const literacyCorpus = {
       "pedir",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l25": {
     "activities": [
@@ -3240,7 +3240,7 @@ export const literacyCorpus = {
               "text": "Renomear o arquivo para um nome que não mencione clientes"
             }
           ],
-          "prompt": "COLEGA: 'Vou anexar o print da tela do sistema — a lista de clientes aparece completa, com nome, e-mail e telefone de cada um — e pedir: resuma o que esses clientes têm em comum.'"
+          "prompt": "Colega: 'Vou anexar o print da tela do sistema — a lista de clientes aparece completa, com nome, e-mail e telefone de cada um — e pedir: resuma o que esses clientes têm em comum.'"
         },
         "evaluation": {
           "optionalContextIds": [
@@ -3259,7 +3259,7 @@ export const literacyCorpus = {
     "skillIds": [
       "proteger"
     ],
-    "version": 1
+    "version": 2
   },
   "l26": {
     "activities": [
@@ -3377,7 +3377,7 @@ export const literacyCorpus = {
       "avaliar",
       "aplicar"
     ],
-    "version": 1
+    "version": 2
   },
   "l27": {
     "activities": [
@@ -3506,7 +3506,7 @@ export const literacyCorpus = {
               "text": "Um print da tela inteira, em vez da mensagem de erro"
             }
           ],
-          "prompt": "COLEGA (mensagem ao assistente): 'não funciona, corrige' · ASSISTENTE (resposta): 'Claro! Sobre o que exatamente? Pode dar mais detalhes?' — três idas e vindas depois, o assistente já chutou três causas diferentes e nenhuma era a do formulário noturno."
+          "prompt": "Colega (mensagem ao assistente): 'não funciona, corrige' · Assistente (resposta): 'Claro! Sobre o que exatamente? Pode dar mais detalhes?' — três idas e vindas depois, o assistente já chutou três causas diferentes e nenhuma era a do formulário noturno."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -3527,7 +3527,7 @@ export const literacyCorpus = {
       "codificar",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l28": {
     "activities": [
@@ -3634,7 +3634,7 @@ export const literacyCorpus = {
     "skillIds": [
       "codificar"
     ],
-    "version": 1
+    "version": 2
   },
   "l29": {
     "activities": [
@@ -3747,7 +3747,7 @@ export const literacyCorpus = {
               "text": "O ano de criação do repositório"
             }
           ],
-          "prompt": "COLEGA (plano): 'Adiciono fmt-cpf, chamo validar(campo), commito.' · VOCÊ: 'Por que essa?' · COLEGA: 'É a mais popular.' — nada mais foi verificado antes do commit."
+          "prompt": "Colega (plano): 'Adiciono fmt-cpf, chamo validar(campo), commito.' · Você: 'Por que essa?' · Colega: 'É a mais popular.' — nada mais foi verificado antes do commit."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -3768,7 +3768,7 @@ export const literacyCorpus = {
       "codificar",
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   },
   "l30": {
     "activities": [
@@ -3917,7 +3917,7 @@ export const literacyCorpus = {
       "pedir",
       "aplicar"
     ],
-    "version": 1
+    "version": 2
   },
   "l31": {
     "activities": [
@@ -3977,7 +3977,7 @@ export const literacyCorpus = {
             },
             {
               "id": "limite-de-escala",
-              "text": "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que SEMPRE volta para um humano decidir"
+              "text": "O limite: até onde a rotina vai sozinha (só o rascunho? envia para quem?) e o que sempre volta para um humano decidir"
             },
             {
               "id": "formato-do-resumo",
@@ -3992,7 +3992,7 @@ export const literacyCorpus = {
               "text": "Usar uma IA mais recente, que sabe sozinha quando a planilha está incompleta"
             }
           ],
-          "prompt": "COLEGA (pedido): 'toda semana, monte o resumo de vendas e me mande' · O QUE ACONTECEU: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
+          "prompt": "Colega (pedido): 'toda semana, monte o resumo de vendas e me mande' · O que aconteceu: o resumo da primeira semana veio bom — mas ele nunca disse quando a rotina dispara, nem até onde ela pode ir sozinha, e já pegou um resumo montado com a planilha parcial de uma sexta atrasada."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -4045,7 +4045,7 @@ export const literacyCorpus = {
       "avaliar",
       "proteger"
     ],
-    "version": 1
+    "version": 2
   },
   "l32": {
     "activities": [
@@ -4142,7 +4142,7 @@ export const literacyCorpus = {
               "text": "Apagar a rotina inteira e recomeçar do zero, já que ela falhou uma vez"
             }
           ],
-          "prompt": "ROTINA (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O QUE ACONTECEU: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · SEU PEDIDO DE CORREÇÃO: 'atualiza o resumo, por favor'."
+          "prompt": "Rotina (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O que aconteceu: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · Seu pedido de correção: 'atualiza o resumo, por favor'."
         },
         "evaluation": {
           "optionalContextIds": [
@@ -4161,7 +4161,7 @@ export const literacyCorpus = {
     "skillIds": [
       "avaliar"
     ],
-    "version": 1
+    "version": 2
   }
 }
 
