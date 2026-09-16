@@ -33,7 +33,8 @@ function makeServicesWithContent(progress: LearnerProgress, content: ContentRepo
  * A onda C1 retrofitou apenas l15–l17 (journey dev), que o app avulso não
  * publica na trilha (mod-05 fora de listModules) — o caminho positivo do
  * aviso nesta onda é o lançamento HOSPEDADO da missão dev (contrato do OS),
- * que valida missionVersion = 2 (bump da onda) e exibe S2 na intro.
+ * que valida missionVersion = versão vigente da lição (3 pós-pass AID-2104;
+ * era 2 no bump da onda) e exibe S2 na intro.
  */
 
 /** Learner dev que concluiu l15 na onda anterior, com revisão de decidir vencida. */
@@ -108,7 +109,7 @@ describe("aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas
     await user.click(screen.getByRole("button", { name: "Sair da revisão" }));
   });
 
-  it("missão hospedada l15 (missionVersion 2): S2 na intro, ack estruturado, idempotente por bump", async () => {
+  it("missão hospedada l15 (missionVersion 3): S2 na intro, ack estruturado, idempotente por bump", async () => {
     window.history.replaceState(null, "", "/?hosted=1&hostOrigin=http%3A%2F%2Fhost.test");
     vi.spyOn(document, "referrer", "get").mockReturnValue("http://host.test/");
     const postMessage = vi.spyOn(window.parent, "postMessage").mockImplementation(() => undefined);
@@ -147,7 +148,7 @@ describe("aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas
           origin: "http://host.test",
           data: envelope("mission.launch", {
             missionId: "l15",
-            missionVersion: 2,
+            missionVersion: 3,
             mode: "initial",
             locale: "pt-BR",
           }),
@@ -156,7 +157,7 @@ describe("aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    // O contrato hospedado recusa versão de missão que não a da onda (2).
+    // O contrato hospedado recusa versão de missão que não a vigente da lição (3).
     // A intro exibe S2 1× e o ack viaja para o armazenamento estruturado.
     await screen.findByTestId("lesson-intro");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
@@ -190,7 +191,7 @@ describe("aviso de retrofit no app (S1/S2/item D; onda C1 = l15–l17 hospedadas
           origin: "http://host.test",
           data: envelope("mission.launch", {
             missionId: "l15",
-            missionVersion: 2,
+            missionVersion: 3,
             mode: "initial",
             locale: "pt-BR",
           }),

@@ -1,7 +1,7 @@
 # Lição l28 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.2): refatorar com assistente sem quebrar comportamento.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l28
-version: 1
+version: 2
 moduleId: mod-05
 title: "Refatore com assistente sem quebrar comportamento"
 objective: "Diante de código funcional a melhorar, exigir testes verdes cobrindo o comportamento como pré-condição e refatorar com o assistente em passos pequenos e verificáveis — nunca reescrita de uma vez."
@@ -13,7 +13,7 @@ activities:
   - id: l28-a1
     type: choice
     skillId: codificar
-    instruction: "O CÓDIGO ESTÁ FEIO MAS FUNCIONA. QUAL É A PRÉ-CONDIÇÃO PARA REFACTORAR COM ASSISTENTE?"
+    instruction: "O código está feio mas funciona. Qual é a pré-condição para refactorar com assistente?"
     data:
       options:
         - id: opt-a
@@ -44,7 +44,7 @@ activities:
   - id: l28-a2
     type: rubric_review
     skillId: codificar
-    instruction: "O ASSISTENTE PROPOS ESTE PLANO DE REFACTORAÇÃO PARA UM MÓDULO DE 300 LINHAS. AVALIE CADA CRITÉRIO: ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO?"
+    instruction: "O assistente propôs este plano de refactoração para um módulo de 300 linhas. Avalie cada critério: atendido, parcialmente atendido ou não atendido?"
     data:
       responseText: "vou reescrever o módulo inteiro com a arquitetura nova, mais limpa; no final você roda a suíte de testes uma vez para conferir"
       criteria:
@@ -81,7 +81,7 @@ activities:
   - id: l28-a3
     type: output_comparison
     skillId: codificar
-    instruction: "DUAS REFACTORAÇÕES ASSISTIDAS DO MESMO MÓDULO. COMPARE AS SAÍDAS E ESCOLHA A QUE VALE O MERGE."
+    instruction: "Duas refactorações assistidas do mesmo módulo. Compare as saídas e escolha a que vale o merge."
     data:
       scenario: "O mesmo módulo de 300 linhas passou por duas sessões de refatoração com assistente. Qual delas você colocaria no merge sem medo?"
       outputs:
