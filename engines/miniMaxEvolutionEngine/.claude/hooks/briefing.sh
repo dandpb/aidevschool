@@ -5,7 +5,16 @@ set -euo pipefail
 
 ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
 
-status="$(cd "$ROOT" && python3 -m engines.miniMaxEvolutionEngine.os_adapter)"
+# O módulo os_adapter só é importável a partir da raiz do repositório. Quando o Claude Code
+# é aberto na raiz do próprio engine (modo documentado no README "Run it"), CLAUDE_PROJECT_DIR
+# aponta para o engine dir; resolva o toplevel do git para manter o briefing funcional.
+if ! (cd "$ROOT" && python3 -c "import engines.miniMaxEvolutionEngine.os_adapter" >/dev/null 2>&1); then
+  TOP="$(git -C "$ROOT" rev-parse --show-toplevel 2>/dev/null || true)"
+  ROOT="${TOP:-$ROOT}"
+fi
+
+status="$(cd "$ROOT" && python3 -m engines.miniMaxEvolutionEngine.os_adapter 2>/dev/null \
+  || echo "(os_adapter indisponível: execute a partir da raiz do repositório)")"
 gate="$(cat "$ROOT/learner/learning_state.yaml" 2>/dev/null || echo '(learner/learning_state.yaml ausente)')"
 
 ctx="🥋 AI DevSchool — Ágora Continuum (Claude Code)

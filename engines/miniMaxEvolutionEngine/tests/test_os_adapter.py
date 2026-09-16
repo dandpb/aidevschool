@@ -34,6 +34,49 @@ class EvolutionOsAdapterTest(unittest.TestCase):
         self.assertIn("Rode /devschool-status", result.stdout)
         self.assertEqual(before, {path: path.read_bytes() for path in canonical})
 
+    def test_session_start_hook_also_works_rooted_at_engine_directory(self) -> None:
+        # README "Run it" opens Claude Code rooted at engines/miniMaxEvolutionEngine/;
+        # CLAUDE_PROJECT_DIR then points at the engine dir, where the os_adapter module
+        # is not importable. The hook must resolve the repo root (AID-2104/AID-2111).
+        hook = REPO_ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        engine_root = REPO_ROOT / "engines/miniMaxEvolutionEngine"
+        canonical = (
+            REPO_ROOT / "learner/pipeline_status.yaml",
+            REPO_ROOT / "learner/learning_state.yaml",
+        )
+        before = {path: path.read_bytes() for path in canonical}
+        result = subprocess.run(
+            ["bash", str(hook)],
+            cwd=engine_root,
+            env={**os.environ, "CLAUDE_PROJECT_DIR": str(engine_root)},
+            capture_output=True,
+            check=True,
+            text=True,
+        )
+
+        self.assertIn(
+            f"Pipeline source: {REPO_ROOT / 'learner/pipeline_status.yaml'}",
+            result.stdout,
+        )
+        self.assertIn("=== Learning gate", result.stdout)
+        self.assertIn("SessionStart nunca inicia tick, poll, execute", result.stdout)
+        self.assertEqual(before, {path: path.read_bytes() for path in canonical})
+
+    def test_session_start_hook_is_deterministic_across_runs(self) -> None:
+        hook = REPO_ROOT / "engines/miniMaxEvolutionEngine/.claude/hooks/briefing.sh"
+        outputs = []
+        for _ in range(2):
+            result = subprocess.run(
+                ["bash", str(hook)],
+                cwd=REPO_ROOT,
+                env={**os.environ, "CLAUDE_PROJECT_DIR": str(REPO_ROOT)},
+                capture_output=True,
+                check=True,
+            )
+            outputs.append(result.stdout)
+
+        self.assertEqual(outputs[0], outputs[1])
+
     def test_prefers_sibling_yaml_status_over_conflicting_markdown(self) -> None:
         with TemporaryDirectory() as directory:
             root = Path(directory)
