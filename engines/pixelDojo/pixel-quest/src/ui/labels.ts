@@ -13,7 +13,7 @@ export function phaseLabel(phase: GamePhase): string {
     return "Briefing"
   }
   if (phase === "orbit") {
-    return "Orbita 3D"
+    return "Órbita 3D"
   }
   if (phase === "map") {
     return "Mapa"
@@ -25,10 +25,10 @@ export function phaseLabel(phase: GamePhase): string {
     return "Duelo"
   }
   if (phase === "evidence") {
-    return "Evidencia"
+    return "Evidência"
   }
   if (phase === "review") {
-    return "Revisao"
+    return "Revisão"
   }
   return "Gate"
 }

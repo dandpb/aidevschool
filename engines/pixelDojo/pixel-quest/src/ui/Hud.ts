@@ -81,7 +81,7 @@ export class Hud {
       : `Objetivo: ${params.objective}`
     this.status.textContent =
       params.latestEvidence?.pass === true
-        ? `Evidencia PASS | ${streakText(params.reviewTrack)}`
+        ? `Evidência PASS | ${streakText(params.reviewTrack)}`
         : `Review ${reviewStatusLabel(params.reviewTrack.active.status)} | ${streakText(
             params.reviewTrack,
           )}`
@@ -178,8 +178,8 @@ export class Hud {
     request.className = "request-line"
     if (state.complete) {
       request.textContent = state.evidence?.pass
-        ? "Evidencia PASS emitida. O verificador decide mastery."
-        : "Evidencia FAIL emitida. Repita o duelo para praticar."
+        ? "Evidência PASS emitida. O verificador decide mastery."
+        : "Evidência FAIL emitida. Repita o duelo para praticar."
     } else {
       const requestType =
         state.prompt?.label ??
@@ -198,7 +198,7 @@ export class Hud {
       close.addEventListener("click", this.callbacks.onClosePanel)
       const journal = document.createElement("button")
       journal.type = "button"
-      journal.textContent = "Abrir diario"
+      journal.textContent = "Abrir diário"
       journal.addEventListener("click", this.callbacks.onOpenJournal)
       actions.append(close, journal)
     } else {
@@ -220,17 +220,17 @@ export class Hud {
     this.panel.className = "panel"
     this.panel.innerHTML = ""
     const title = document.createElement("h2")
-    title.textContent = "Diario"
+    title.textContent = "Diário"
     const body = document.createElement("p")
     const reviewLine = `${reviewTrack.active.title}: ${reviewTrack.active.dueIn}`
     const streakLine = `Streak ${reviewTrack.streak.current}${pendingDeltaText(reviewTrack)} | freeze ${
       reviewTrack.streak.freezesEquipped
     }/${reviewTrack.streak.freezesMax}`
     if (evidence === undefined) {
-      body.textContent = `${reviewLine}. ${streakLine}. Sem evidencia ainda.`
+      body.textContent = `${reviewLine}. ${streakLine}. Sem evidência ainda.`
     } else {
       const { accepted, leaked } = evidenceMetricsSummary(evidence.metrics)
-      body.textContent = `${reviewLine}. ${streakLine}. Ultima evidencia: ${
+      body.textContent = `${reviewLine}. ${streakLine}. Última evidência: ${
         evidence.pass ? "PASS" : "FAIL"
       }, accepts ${accepted}, leaks ${leaked}.`
     }

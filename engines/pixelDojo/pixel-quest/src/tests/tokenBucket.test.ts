@@ -22,10 +22,10 @@ describe("token bucket encounter", () => {
       unit_id: "U-03_url_shortener",
       pass: true,
       curriculum_context: {
-        concept: "Codigos curtos, colisao e redirecionamento confiavel",
+        concept: "Códigos curtos, colisão e redirecionamento confiável",
         mechanic: "Slug Router",
-        accepted_signal: "slug unico",
-        rejected_trap: "colisao de slug",
+        accepted_signal: "slug único",
+        rejected_trap: "colisão de slug",
       },
     })
   })
