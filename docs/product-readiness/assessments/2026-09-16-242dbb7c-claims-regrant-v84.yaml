@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-16-242dbb7c-claims-regrant-v84
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-16T18:30:00Z'
+revalidateBy: '2026-10-16'
+gitSha: 242dbb7c4a769737db13b962db33173fa0a64218
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:30:00Z-os-literacy-hosted-mission-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-literacy-returning-device-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-verification-recovery-mixed-242dbb7c
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:30:00Z-os-voxel-hosted-missions-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-renderer-accessibility-recovery-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-voxel-returning-device-mixed-242dbb7c
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:30:00Z-os-onboarding-track-choice-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-returning-recovery-mixed-242dbb7c
+  - 2026-09-16T18:30:00Z-os-returning-device-mixed-242dbb7c
