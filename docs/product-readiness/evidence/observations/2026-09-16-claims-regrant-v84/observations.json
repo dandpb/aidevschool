@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "gitSha": "242dbb7c4a769737db13b962db33173fa0a64218",
+  "observedAt": "2026-09-16T18:30:00Z",
+  "observerContext": "independent-readiness-observer",
+  "scenarios": [
+    {
+      "scenarioId": "os-literacy-hosted-mission",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-state-result-and-next-action",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental + walk de código first-hand Docs & Readiness (AID-2174) na árvore do kickoff 242dbb7c (base main 067f41e9, pós PR #447/AID-2131; linhas re-conferidas nesta árvore): student-guide.md:60 — oferta 'os-literacy-guided-mission, customer-ready' com o limite 'Concluída no host não é domínio verificado'; :63-64 item 3 — hub de aprendizado e 'Siga a missão em destaque como próximo passo de IA Prática'; :68 item 7 — 'Leia o resultado de cada missão antes de continuar. Se aparece um aviso de verificador indisponível, isso é honesto — não é certificação. Concluída neste aparelho não é domínio verificado'. facilitator-guide.md:268-269 — 'State that host completion is local, raw evidence requires a verifier, and canonical mastery remains outside the OS'; :275-277 — observar track choice, interpret-the-result e name the next action. Corroboração de código: engines/codexdojo-os-prototype/src/journey/Onboarding.tsx:49 ('Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo'), src/journey/Hub.tsx:137 next-mission-card (missão destacada). Producer gate first-hand: logs/os-readiness.log pilot smoke 8/8 (inclui montagem das missões literacy hospedadas), receipt logs/os-readiness/os-literacy-hosted-mission.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-literacy-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-literacy-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: student-guide.md:84 §Como voltar no mesmo aparelho — 'O retorno funciona só no mesmo navegador e aparelho onde você começou' (oferta os-returning-learner customer-ready pass + limite do LiteracyDojo avulso na mesma seção); :90 item 3 — 'Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding. Não há conta nem sincronização entre dispositivos'; :91 item 4 — 'Concluída neste aparelho não é domínio verificado'; :45 (§Standalone LiteracyDojo primeira lição) o mesmo limite para a superfície avulsa. Corroboração de código: engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts:10 — persistência é indexedDB.open local por perfil de navegador, sem conta/sync. Producer gate first-hand: logs/os-readiness.log chapter-continuity.smoke.spec.ts pass (preserva estado das missões literacy hospedadas entre reloads no mesmo perfil), receipt logs/os-readiness/os-literacy-returning-device.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-verification-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: facilitator-guide.md:290 §Recover and escalate — 'Verification is unavailable or rejected | Keep the visible state as not submitted or rejected; preserve raw evidence and point to the on-screen email (daniel@heroma.com, 1 business day)' — recuperação por UI/e-mail, sem intervenção de repositório; :269 registra o SLA de suporte; :295-298 §Evaluate — passa quando o aprendiz 'can choose a track, enter and leave the hosted mission boundary, explain the result and next action' (classificação de gap documental na mesma seção). student-guide.md:205-206 — 'If a hosted mission does not load, retry once. If verification is unavailable, leave the status as not submitted and continue only when the guide presents a safe next action'. Corroboração de código: engines/codexdojo-os-prototype/src/journey/Hub.tsx:116 — 'Verificação indisponível no momento. Seu progresso local continua salvo'; :122 — 'Evidência preservada / Separada do progresso local'. Producer gate first-hand: logs/os-readiness.log readiness-recovery.smoke.spec.ts pass (verificação indisponível não cria completion nem corrompe evidência), receipt logs/os-readiness/os-verification-recovery.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-onboarding-track-choice",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-can-explain-track-choice",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental + walk de código first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: student-guide.md:184 — 'The OS can recommend a track, but you can change the track before you enter the school'; :63 item 2/3 — 'O produto oferece escolha IA Prática | Dev... Depois selecione Entrar na escola. A mensagem diz que, sem conta, o progresso fica neste dispositivo'. facilitator-guide.md:275-277 — 'Ask a fresh learner to review the track recommendation, choose a track, open a hosted mission...'; :296-298 §Evaluate — passa quando o aprendiz 'can choose a track'. Corroboração de código: engines/codexdojo-os-prototype/src/journey/Onboarding.tsx:37 — 'Sugerimos IA Prática. A trilha Dev permanece clicável.'; :78 track-choice role=radiogroup; :81-87 opções IA Prática/Dev (aria-pressed, data-testid track-option-ai-pratica). Producer gate first-hand: logs/os-readiness.log pilot smoke 8/8 (inclui onboarding track choice), receipt logs/os-readiness/os-onboarding-track-choice.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-explains-local-state-loss",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: facilitator-guide.md:291 §Recover and escalate — 'Progress does not resume | Confirm the same browser profile and enabled storage; restart onboarding if local data was cleared' (explicação nomeável: perda de estado local = perfil/dados do site, recomeço honesto pelo onboarding, sem intervenção de repositório). student-guide.md:90 item 3 — 'Outro navegador, outro aparelho ou dados do site apagados começam do zero no onboarding'; :91 item 4 — 'Concluída neste aparelho não é domínio verificado'. Corroboração de código: engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts:10 (estado só no indexedDB local do perfil). Producer gate first-hand: logs/os-readiness.log readiness-recovery.smoke.spec.ts pass (missing-local-state não cria completion), receipt logs/os-readiness/os-returning-recovery.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-local-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: student-guide.md:84 — oferta 'os-returning-learner, customer-ready pass... O retorno funciona só no mesmo navegador e aparelho onde você começou'; :90 — sem conta/sincronização; :91 — concluída não é domínio; :199-203 (§Resume or recover) — 'The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization'; :117 (§English summary) o mesmo contrato de persistência local. Corroboração de código: engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts:10 — persistência local por perfil. Producer gate first-hand: logs/os-readiness.log chapter-continuity.smoke.spec.ts pass (retomada no mesmo dispositivo), receipt logs/os-readiness/os-returning-device.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-hosted-missions",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental + walk de código first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: student-guide.md:71 §Como fazer as três missões 3D — oferta 'os-voxel-guided-missions, customer-ready'; :30 — 'O status do host é progresso local — nunca domínio'; :196-197 — 'completed means local host progress. Produced evidence still requires an independent verifier, and neither state means mastered'. facilitator-guide.md:278-279 — 'ask the learner to distinguish local completion, raw evidence, verified evidence, rejection, and mastery'; :290 — estado not-submitted preservado quando verificação indisponível. Corroboração de código: engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx:68 rotula engines de progresso 'Evidência bruta · não verificada'; src/journey/Hub.tsx:185 — 'Conclusão não é domínio'. Producer gate first-hand: logs/os-readiness.log pilot smoke 8/8 inclui a montagem das 3 missões voxel (WAREHOUSE/WORMHOLE/RELAY STATION) do host (19 runtimes bundled), receipt logs/os-readiness/os-voxel-hosted-missions.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-renderer-accessibility-recovery",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "facilitator-can-name-escalation-threshold",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: facilitator-guide.md:292 §Recover and escalate — 'WebGL initialization fails | Select the accessible renderer and retry the core interaction with keyboard controls | Escalate when: Both projections fail or the accessible projection loses the promised interaction' (limiar nomeável); :293 — reduced-motion bloqueado escala quando a accessibility path não completa o core journey; :264 — prepare inclui 'Check desktop keyboard operation and the reduced-motion accessible renderer'. student-guide.md:211-213 — 'use the accessible projection and keyboard controls. Stop and ask a facilitator when neither the 3D nor accessible projection supports the core interaction'. Producer gate first-hand: logs/os-readiness.log renderer-fallback.smoke.spec.ts pass (reduced motion, context loss, WebGL forçado indisponível) desktop-1280, receipt logs/os-readiness/os-renderer-accessibility-recovery.json."
+        }
+      ],
+      "gaps": []
+    },
+    {
+      "scenarioId": "os-voxel-returning-device",
+      "outcome": "pass",
+      "assertions": [
+        {
+          "id": "learner-understands-voxel-continuity-boundary",
+          "evidence": "observation",
+          "outcome": "pass",
+          "notes": "Revisão documental first-hand (AID-2174), linhas re-conferidas na árvore 242dbb7c: student-guide.md:199-203 §Resume or recover — 'The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization'; aplicado às missões voxel por :70-77 (§Como fazer as três missões 3D: mesma superfície OS, mesmo perfil, missões destacadas WAREHOUSE/WORMHOLE/RELAY STATION). Corroboração de código: engines/codexdojo-os-prototype/src/progress/indexedDbProgressRepository.ts:10 — persistência indexedDB local por perfil, sem conta/sync. Producer gate first-hand: logs/os-readiness.log chapter-continuity.smoke.spec.ts pass (preserva missões concluídas entre switches e reloads, inclui retomada das missões voxel no mesmo perfil), receipt logs/os-readiness/os-voxel-returning-device.json."
+        }
+      ],
+      "gaps": []
+    }
+  ]
+}
