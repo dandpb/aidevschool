@@ -1,7 +1,7 @@
 # Lição l17 — Trilha Dev piloto: integrar API de IA com decisões de arquitetura. — v2 ONDA C1 (spec AID-807 §1): +a3 sort.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l17
-version: 2
+version: 3
 moduleId: mod-05
 title: "Integre uma API de IA em um projeto real"
 objective: "Conectar um endpoint de API de IA, tratar erros e decidir o que vai para o cliente e o que vai para o servidor."
@@ -13,7 +13,7 @@ activities:
   - id: l17-a1
     type: safety_classification
     skillId: integrar
-    instruction: "VOCÊ VAI INTEGRAR UMA API DE IA (OPENAI) EM UM APP WEB. CLASSIFIQUE CADA INFORMAÇÃO COMO SEGURA PARA IR AO CLIENTE OU SENSÍVEL (DEVE FICAR SÓ NO BACKEND)."
+    instruction: "Você vai integrar uma API de IA (OpenAI) em um app web. Classifique cada informação como segura para ir ao cliente ou sensível (deve ficar só no backend)."
     data:
       labels:
         safe: "Seguro (pode ir ao cliente)"
@@ -53,7 +53,7 @@ activities:
   - id: l17-a2
     type: output_comparison
     skillId: integrar
-    instruction: "DOIS DEVS PROPUSERAM ARQUITETURAS DIFERENTES PARA INTEGRAR A API DE IA. COMPARE E ESCOLHA A MAIS ROBUSTA PARA PRODUÇÃO."
+    instruction: "Dois devs propuseram arquiteturas diferentes para integrar a API de IA. Compare e escolha a mais robusta para produção."
     data:
       scenario: "App React + Node/Express. O usuário digita um texto e clica em 'Resumir'. O backend chama a API da OpenAI e devolve o resumo. O app tem 2k usuários ativos."
       outputs:
@@ -90,7 +90,7 @@ activities:
   - id: l17-a3
     type: sort
     skillId: integrar
-    instruction: "A PROVA DE CONCEITO VIROU PROJETO: VOCÊ VAI INTEGRAR A API DE IA NO APP. Ordene a integração: o que vem antes do quê?"
+    instruction: "A prova de conceito virou projeto: você vai integrar a API de IA no app. Ordene a integração: o que vem antes do quê?"
     data:
       items:
         - id: passo-ler-contrato
