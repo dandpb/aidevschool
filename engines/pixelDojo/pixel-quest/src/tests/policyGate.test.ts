@@ -22,7 +22,7 @@ describe("policy gate encounters", () => {
     expect(state.evidence?.curriculum_context).toMatchObject({
       mechanic: "Auth Gate",
       accepted_signal: "token autorizado",
-      rejected_trap: "escopo invalido",
+      rejected_trap: "escopo inválido",
     })
   })
 
