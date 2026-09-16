@@ -1,7 +1,7 @@
 /**
  * Scene harness for voxelDojo games.
  *
- * The `main.ts` bootstrap was byte-identical across all 16 games except for
+ * The `main.ts` bootstrap was byte-identical across all 17 games except for
  * five variable slots: the Scene constructor, the `__<slug>` window hook name,
  * a click-wiring callback, a state-subscribe callback, and `scene.sync` arity
  * (warehouse passes the controller; air-traffic has an edge-triggered side
