@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import importlib.util
 import json
 import sys
 from dataclasses import replace
@@ -12,13 +13,22 @@ import yaml
 
 READINESS_ROOT: Final = Path(__file__).resolve().parent.parent
 REPO_ROOT: Final = READINESS_ROOT.parents[1]
-if str(READINESS_ROOT) not in sys.path:
-    sys.path.insert(0, str(READINESS_ROOT))
+_TOOLS_PACKAGE: Final = "product_readiness_tools"
+if _TOOLS_PACKAGE not in sys.modules:
+    _spec = importlib.util.spec_from_file_location(
+        _TOOLS_PACKAGE,
+        Path(__file__).resolve().parent / "__init__.py",
+        submodule_search_locations=[str(Path(__file__).resolve().parent)],
+    )
+    assert _spec is not None and _spec.loader is not None
+    _module = importlib.util.module_from_spec(_spec)
+    sys.modules[_TOOLS_PACKAGE] = _module
+    _spec.loader.exec_module(_module)
 
-from tools.load import DomainParseError, load_domain  # noqa: E402
-from tools.history import HistoryParseError  # noqa: E402
-from tools.arguments import aggregate_arguments  # noqa: E402
-from tools.evidence import (  # noqa: E402
+from product_readiness_tools.load import DomainParseError, load_domain  # noqa: E402
+from product_readiness_tools.history import HistoryParseError  # noqa: E402
+from product_readiness_tools.arguments import aggregate_arguments  # noqa: E402
+from product_readiness_tools.evidence import (  # noqa: E402
     AssessmentProposal,
     EvidenceError,
     assessment_mapping,
@@ -26,17 +36,17 @@ from tools.evidence import (  # noqa: E402
     propose_assessment,
     write_assessment,
 )
-from tools.enforcement import blocked_claims, candidate_path  # noqa: E402
-from tools.models import ReadinessDomain  # noqa: E402
-from tools.regrant import (  # noqa: E402
+from product_readiness_tools.enforcement import blocked_claims, candidate_path  # noqa: E402
+from product_readiness_tools.models import ReadinessDomain  # noqa: E402
+from product_readiness_tools.regrant import (  # noqa: E402
     Defect,
     PendingObservation,
     RegrantBranchError,
     classify_proposal,
     require_regrant_branch,
 )
-from tools.render import drift, expected_views, live_deviations, write_views  # noqa: E402
-from tools.reports import (  # noqa: E402
+from product_readiness_tools.render import drift, expected_views, live_deviations, write_views  # noqa: E402
+from product_readiness_tools.reports import (  # noqa: E402
     CandidateRequest,
     ReportSnapshot,
     build_candidate_report,
@@ -44,7 +54,7 @@ from tools.reports import (  # noqa: E402
     snapshot_report_directories,
     validate_report_directories,
 )
-from tools.validate import validate_domain  # noqa: E402
+from product_readiness_tools.validate import validate_domain  # noqa: E402
 
 
 def _load_valid_domain() -> ReadinessDomain | None:
