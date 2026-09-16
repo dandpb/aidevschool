@@ -1,0 +1,127 @@
+===== [cross-engine] smoke: bundle-missions + Playwright pilot & desktop smokes =====
+cross-engine: Playwright --retries=0 (CI pins 1; local default 0 — AID-571/AID-1658)
+cross-engine: browser install skipped (INTEGRATION_SKIP_BROWSER_INSTALL=1)
+Done in 848ms using pnpm v9.15.9
+Done in 679ms using pnpm v9.15.9
+▸ bundling literacydojo from literacyDojo
+vite v6.4.3 building for production...
+✓ 85 modules transformed.
+✓ built in 999ms
+  → dist/apps/literacydojo
+▸ bundling warehouse from voxelDojo/game-02-warehouse
+vite v6.4.3 building for production...
+✓ 35 modules transformed.
+✓ built in 1.18s
+  → dist/apps/warehouse
+▸ bundling wormhole from voxelDojo/game-03-wormhole
+vite v6.4.3 building for production...
+✓ 34 modules transformed.
+✓ built in 1.23s
+  → dist/apps/wormhole
+▸ bundling relay-station from voxelDojo/game-05-relay-station
+vite v6.4.3 building for production...
+✓ 31 modules transformed.
+✓ built in 1.47s
+  → dist/apps/relay-station
+▸ bundling pipeline-plant from voxelDojo/game-06-pipeline-plant
+vite v6.4.3 building for production...
+✓ 31 modules transformed.
+✓ built in 1.28s
+  → dist/apps/pipeline-plant
+▸ bundling checkpoint-city from voxelDojo/game-07-checkpoint-city
+vite v6.4.3 building for production...
+✓ 31 modules transformed.
+✓ built in 1.34s
+  → dist/apps/checkpoint-city
+▸ bundling timeline-tower from voxelDojo/game-08-timeline-tower
+vite v6.4.3 building for production...
+✓ 28 modules transformed.
+✓ built in 1.22s
+  → dist/apps/timeline-tower
+▸ bundling docking-bay from voxelDojo/game-09-docking-bay
+vite v6.4.3 building for production...
+✓ 30 modules transformed.
+✓ built in 1.19s
+  → dist/apps/docking-bay
+▸ bundling pixelquest from pixelDojo/pixel-quest
+vite v7.3.6 building client environment for production...
+✓ 47 modules transformed.
+✓ built in 1.26s
+  → dist/apps/pixelquest
+▸ bundling dojotoday from dojoToday
+vite v6.4.3 building for production...
+✓ 9 modules transformed.
+✓ built in 155ms
+  → dist/apps/dojotoday
+▸ bundling hash-ring from voxelDojo/game-10-hash-ring
+vite v6.4.3 building for production...
+✓ 28 modules transformed.
+✓ built in 1.18s
+  → dist/apps/hash-ring
+▸ bundling air-traffic from voxelDojo/game-11-air-traffic
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.27s
+  → dist/apps/air-traffic
+▸ bundling mission-control from voxelDojo/game-12-mission-control
+vite v6.4.3 building for production...
+✓ 28 modules transformed.
+✓ built in 1.16s
+  → dist/apps/mission-control
+▸ bundling breaker-grid from voxelDojo/game-13-breaker-grid
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.27s
+  → dist/apps/breaker-grid
+▸ bundling river-delta from voxelDojo/game-14-river-delta
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.22s
+  → dist/apps/river-delta
+▸ bundling observatory from voxelDojo/game-15-observatory
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.22s
+  → dist/apps/observatory
+▸ bundling freight-yard from voxelDojo/game-16-freight-yard
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.18s
+  → dist/apps/freight-yard
+▸ bundling lighthouse-network from voxelDojo/game-17-lighthouse-network
+vite v6.4.3 building for production...
+✓ 27 modules transformed.
+✓ built in 1.24s
+  → dist/apps/lighthouse-network
+▸ bundling stacks from voxelDojo/game-18-stacks
+vite v6.4.3 building for production...
+✓ 25 modules transformed.
+✓ built in 1.19s
+  → dist/apps/stacks
+19 mission runtimes bundled into dist/apps/.
+  ✓  1 [desktop-1280] › tests-pilot/a11y-w3-forced-colors.spec.ts:52:1 › AID-1096/W3: papéis canônicos do loop e borda sobrevivem a forced-colors no ResultScreen (2.8s)
+  ✓  2 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:62:1 › readiness os-onboarding-track-choice and os-literacy-hosted-mission: IA Prática mission mounts from the bundled build (3.3s)
+  ✓  3 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:76:1 › readiness os-voxel-hosted-missions and os-verification-recovery: hosted simulation mounts from the bundled build and reports the verifier honestly (1.7
+  ✓  4 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:92:1 › os-voxel-hosted-missions: the published PIPELINE PLANT mission mounts from the bundled build (2.0s)
+  ✓  5 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:105:1 › os-voxel-hosted-missions: the published CHECKPOINT CITY mission mounts from the bundled build (2.5s)
+  ✓  6 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:118:1 › os-voxel-hosted-missions: the published TIMELINE TOWER mission mounts from the bundled build (2.4s)
+  ✓  7 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:131:1 › os-voxel-hosted-missions: the published DOCKING BAY mission mounts from the bundled build (2.5s)
+  ✓  8 [desktop-1280] › tests-pilot/pilot-build.smoke.spec.ts:144:1 › a corrected WAREHOUSE retry supersedes the failed attempt verification state (5.6s)
+  8 passed (24.5s)
+  ✓  1 [desktop-1280] › tests/chapter-continuity.smoke.spec.ts:202:1 › preserves completed first-release missions across switches and reloads (1.4m)
+  ✓  2 [desktop-1280] › tests/readiness-recovery.smoke.spec.ts:3:1 › readiness os-returning-recovery: cleared local state returns to onboarding without completion (2.9s)
+  ✓  3 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:73:1 › reduced motion selects the keyboard-operable semantic projection (2.1s)
+  ✓  4 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:96:1 › context loss degrades and retries without resetting simulation or evidence identity (4.0s)
+  ✓  5 [desktop-1280] › tests/renderer-fallback.smoke.spec.ts:154:1 › forced WebGL unavailability fails over without blocking mission controls (2.5s)
+  5 passed (1.8m)
+===== [cross-engine] report: readiness-report.mjs (producer facts for the claims gate) =====
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-literacy-hosted-mission.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-literacy-returning-device.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-onboarding-track-choice.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-renderer-accessibility-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-returning-device.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-returning-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-verification-recovery.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-voxel-hosted-missions.json
+Reported engines/codexdojo-os-prototype/test-results/readiness/os-voxel-returning-device.json
+cross-engine: requested phases completed: smoke report

@@ -1,0 +1,47 @@
+{
+  "gitSha": "71fcb3926a1549314b675b88ac7c741406173623",
+  "observedAt": "2026-09-15T01:17:00Z",
+  "observerContext": "independent-readiness-observer",
+  "scenarios": [
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "notes": "Revisão documental + walk de código first-hand QA v79 @ 71fcb392 (AID-1972): o material de jornada nomeia explicitamente que resultado de missão hospedada e evidência bruta NÃO são mastery. student-guide.md §codexdojo-os-guided-journey (âncora manualRefs do inventory.yaml, confere com o manualFingerprint c44084c0…/manual do producer report) — 'Complete a hosted mission' passo 4: \"`completed` means local host progress. Produced evidence still requires an independent verifier, and neither state means `mastered`\"; 'Supported next action': \"The OS does not accept its own evidence or grant canonical mastery\". Facilitator-guide §Prepare: \"State that host completion is local, raw evidence requires a verifier, and canonical mastery remains outside the OS\". Corroboração de código first-hand na árvore 71fcb392 (branch regrant/auto-20260915-ff2a4046 do PR #433, base main @ ff2a4046; AID-1972): engines/codexdojo-os-prototype/src/engines/EngineHubApp.tsx:63-68 publicEngineAccessLabel rotula engines de progresso como 'Evidência bruta · não verificada'; inventory.yaml progressSemantics: raw-evidence. Testes que travam o boundary (suite unit 161 arquivos biome-clean + vitest verde node 20 nesta árvore, harness cross-engine fase unit): engines/registry.test.ts:97 'never grants an OS adapter mastery authority'; src/progress/domain.test.ts:37 e :91 assertam que o JSON persistido nunca contém 'mastered'; src/engines/EngineHubApp.test.tsx:263 'renders only source-bound raw evidence as requiring independent verification'; src/App.characterization.test.tsx:139 'does not project the author yaml as this visitor's mastery on public /desktop'. Producer gates desta árvore (harness cross-engine CI-idêntico, node 20): pilot smoke 8/8 pass incluindo tests-pilot/pilot-build.smoke.spec.ts (missões WAREHOUSE/WORMHOLE/RELAY STATION montando do host origin /apps/*); o resultado do host exibe status local sem claim canônico.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-voxel-hosted-missions"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "facilitator-can-name-escalation-threshold",
+          "notes": "Revisão documental first-hand QA v79 @ 71fcb392 (AID-1972): facilitator-guide.md §codexdojo-os-guided-journey → tabela 'Recover and escalate' nomeia o limiar de escalonamento com sintoma/recuperação/escalação: 'WebGL initialization fails → Select the accessible renderer and retry the core interaction with keyboard controls → Escalate when: Both projections fail or the accessible projection loses the promised interaction' e 'Reduced-motion or keyboard flow is blocked → … Escalate when: A claimed accessibility path cannot complete the core journey'. student-guide.md manda o learner 'Stop and ask a facilitator when neither the 3D nor accessible projection supports the core interaction'; telas de recovery nomeiam o e-mail de suporte (daniel@heropa.com, SLA 1 business day; WhatsApp primário pelo facilitator-guide). Corroboração executável nesta árvore (producer gates harness smoke, desktop-1280): tests/renderer-fallback.smoke.spec.ts 3/3 pass — 'reduced motion selects the keyboard-operable semantic projection', 'context loss degrades and retries without resetting simulation or evidence identity', 'forced WebGL unavailability fails over without blocking mission controls' — a projeção acessível preserva a jornada core e o fail-over existe exatamente como o guia descreve.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-renderer-accessibility-recovery"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-understands-voxel-continuity-boundary",
+          "notes": "Revisão documental + walk de código first-hand QA v79 @ 71fcb392 (AID-1972): student-guide.md §Resume or recover: \"The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization.\" facilitator-guide: perfis fresh/returning separados e 'Progress does not resume → Confirm the same browser profile and enabled storage'. Corroboração de código: persistência é IndexedDB local por perfil (src/progress/indexedDbProgressRepository.ts), sem conta nem sync; o claim automatizado do cenário é 'restores supported Dev mission state without claiming cross-device sync' (scenario yaml). Executável nesta árvore (producer gates harness smoke, desktop-1280): tests/chapter-continuity.smoke.spec.ts 'preserves completed first-release missions across switches and reloads' pass (1.4m) — resume same-profile exercitado first-hand.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-voxel-returning-device"
+    }
+  ],
+  "schemaVersion": 1
+}
