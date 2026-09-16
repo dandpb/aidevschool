@@ -1,7 +1,7 @@
 # Lição l16 — Trilha Dev piloto: formular pedido de código com contexto técnico. — v2 ONDA C1 (spec AID-807 §1): +a3 output_comparison.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l16
-version: 2
+version: 3
 moduleId: mod-05
 title: "Seu primeiro código com um assistente de IA"
 objective: "Escrever um pedido de código com contexto técnico suficiente e avaliar a resposta da IA com critérios de engenharia."
@@ -13,7 +13,7 @@ activities:
   - id: l16-a1
     type: prompt_builder
     skillId: codificar
-    instruction: "MONTE UM PEDIDO CLARO PARA A IA GERAR CÓDIGO. PREENCHA OS CAMPOS ABAIXO COM O CONTEXTO TÉCNICO NECESSÁRIO."
+    instruction: "Monte um pedido claro para a IA gerar código. Preencha os campos abaixo com o contexto técnico necessário."
     data:
       scenario: "Você precisa de uma função que valide e sanitize um payload JSON de webhook vindo de um serviço externo (Stripe). O payload precisa ser validado contra um schema e campos sensíveis (como tokens) precisam ser removidos antes de logar."
       genericPrompt: "Escreve uma função pra validar payload de webhook."
@@ -61,7 +61,7 @@ activities:
   - id: l16-a2
     type: rubric_review
     skillId: codificar
-    instruction: "AVALIE O CÓDIGO GERADO PELA IA USANDO OS CRITÉRIOS ABAIXO. PARA CADA CRITÉRIO, DECIDA SE FOI ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO."
+    instruction: "Avalie o código gerado pela IA usando os critérios abaixo. Para cada critério, decida se foi atendido, parcialmente atendido ou não atendido."
     data:
       responseText: |
         import { z } from 'zod';
@@ -121,7 +121,7 @@ activities:
   - id: l16-a3
     type: output_comparison
     skillId: codificar
-    instruction: "VOCÊ PEDIU A MESMA FUNÇÃO DE DUAS FORMAS — UMA VEZ NO RUSH, UMA VEZ COM CONTEXTO. CHEGARAM DUAS RESPOSTAS DO ASSISTENTE. COMPARE E ESCOLHA A MELHOR BASE PARA SEGUIR."
+    instruction: "Você pediu a mesma função de duas formas — uma vez no rush, uma vez com contexto. Chegaram duas respostas do assistente. Compare e escolha a melhor base para seguir."
     data:
       scenario: "Mesma tarefa, dois momentos. No rush: 'escreve uma função que valida payload de webhook'. Depois, com calma: 'TypeScript 5 / Node 20. Anexei o contrato do payload (schema do webhook). A função recebe unknown, valida com zod (única dependência permitida), NÃO loga campo com token/secret no nome e roda no handler Express em produção.'"
       outputs:

@@ -1,7 +1,7 @@
 # Lição l23 — Onda dev l21–l23 (spec AID-528 rev 2 §2.3): limites do assistente no aceite de código.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l23
-version: 1
+version: 2
 moduleId: mod-05
 title: "O que aceitar: limites do assistente"
 objective: "Diante de sugestões em categorias de risco diferente, decidir o que aceitar, o que revisar a fundo e o que exige caminho convencional — sem terceirizar o próprio julgamento."
@@ -13,7 +13,7 @@ activities:
   - id: l23-a1
     type: choice
     skillId: decidir
-    instruction: "CÓDIGO CRÍTICO DE VERIFICAÇÃO DE PAGAMENTO. O ASSISTENTE SUGERIU UMA IMPLEMENTAÇÃO ELEGANTE. O QUE FAZER?"
+    instruction: "Código crítico de verificação de pagamento. O assistente sugeriu uma implementação elegante. O que fazer?"
     data:
       options:
         - id: opt-a
@@ -37,7 +37,7 @@ activities:
   - id: l23-a2
     type: safety_classification
     skillId: codificar
-    instruction: "O ASSISTENTE SUGERIU UM TRECHO PARA CADA TAREFA ABAIXO. CLASSIFIQUE: CÓPIA COM REVISÃO LEVE OU REVISÃO PROFUNDA OBRIGATÓRIA?"
+    instruction: "O assistente sugeriu um trecho para cada tarefa abaixo. Classifique: cópia com revisão leve ou revisão profunda obrigatória?"
     data:
       labels:
         safe: "Cópia com revisão leve"
@@ -87,7 +87,7 @@ activities:
   - id: l23-a3
     type: choice
     skillId: decidir
-    instruction: "QUAIS SINAIS DIZEM QUE A SUGESTÃO PRECISA DE HUMANO ANTES DE USAR?"
+    instruction: "Quais sinais dizem que a sugestão precisa de humano antes de usar?"
     data:
       multiSelect: true
       options:

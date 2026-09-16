@@ -183,7 +183,7 @@ describe("conclusão de lição — retrofit C1 (spec AID-807 §1.4.3/A1–A4, o
   it("A4: as 3 lições retrofitadas têm 3 atividades e requiredActivityIds = conjunto completo", () => {
     expect(retrofitted).toHaveLength(3);
     for (const lesson of retrofitted) {
-      expect(lesson.version, `${lesson.id} version`).toBe(2);
+      expect(lesson.version, `${lesson.id} version`).toBe(3);
       expect(lesson.activities, `${lesson.id} atividades`).toHaveLength(3);
       expect(
         [...lesson.completion.requiredActivityIds].sort(),
