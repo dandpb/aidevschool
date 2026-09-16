@@ -1,7 +1,7 @@
 # Lição l25 — Onda O2 (spec AID-528 rev 3 §2.2): anexos seguros — a regra da l12 estendida a imagens.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l25
-version: 1
+version: 2
 moduleId: mod-07
 title: "Anexos seguros: proteja antes de enviar"
 objective: "Antes de anexar fotos, scans ou PDFs a um pedido, classificar o conteúdo como seguro ou sensível e remover ou tampar o que expõe pessoas."
@@ -63,7 +63,7 @@ activities:
   - id: l25-a2
     type: choice
     skillId: proteger
-    instruction: "A foto do quadro da reunião tem nomes de clientes e valores, mas sua tarefa é só organizar as etapas do projeto. O QUE FAZER ANTES DE ANEXAR?"
+    instruction: "A foto do quadro da reunião tem nomes de clientes e valores, mas sua tarefa é só organizar as etapas do projeto. O que fazer antes de anexar?"
     data:
       options:
         - id: opt-a
@@ -91,9 +91,9 @@ activities:
   - id: l25-a3
     type: missing_context
     skillId: proteger
-    instruction: "PLANO DO COLEGA. Um colega vai anexar um print da tela do sistema para pedir um resumo. O QUE FALTA NO PLANO DELE PARA PROTEGER AS PESSOAS?"
+    instruction: "Plano do colega. Um colega vai anexar um print da tela do sistema para pedir um resumo. O que falta no plano dele para proteger as pessoas?"
     data:
-      prompt: "COLEGA: 'Vou anexar o print da tela do sistema — a lista de clientes aparece completa, com nome, e-mail e telefone de cada um — e pedir: resuma o que esses clientes têm em comum.'"
+      prompt: "Colega: 'Vou anexar o print da tela do sistema — a lista de clientes aparece completa, com nome, e-mail e telefone de cada um — e pedir: resuma o que esses clientes têm em comum.'"
       contextOptions:
         - id: checar-dados-pessoais-visiveis
           text: "Checar o que o print mostra de cada pessoa antes de qualquer coisa (nomes, e-mails, telefones)"

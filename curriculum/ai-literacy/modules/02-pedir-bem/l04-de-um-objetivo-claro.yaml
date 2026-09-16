@@ -1,7 +1,7 @@
 # Lição l04 — Fase 2; retrofit Onda O3-C1 (spec AID-644 rev 2 §2.4; advisory AID-645 `2ed06cf2`): +l04-a2/a3, v2, 3→4 min.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l04
-version: 2
+version: 3
 moduleId: mod-02
 title: "Dê um objetivo claro"
 objective: "Reescrever um pedido vago como um objetivo concreto e verificável."
@@ -89,7 +89,7 @@ activities:
     skillId: pedir
     instruction: "Um colega que não sabe usar IA mandou a mensagem abaixo para você repassar. O que está faltando no pedido dele?"
     data:
-      prompt: "COLEGA (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
+      prompt: "Colega (mensagem): \"Melhora esse e-mail pra mim, por favor? Preciso enviar hoje.\" — e mais nada: o e-mail não veio junto e não há instruções do que melhorar."
       contextOptions:
         - id: tarefa-definida
           text: "A tarefa: que melhoria ele quer (reescrever o tom? resumir? revisar?) — \"melhora\" não diz o que mudar"

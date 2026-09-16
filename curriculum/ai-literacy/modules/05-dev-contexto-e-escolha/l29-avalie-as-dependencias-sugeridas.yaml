@@ -1,7 +1,7 @@
 # Lição l29 — Onda O1 dev l27–l29 (spec AID-610 rev 2 §2.3): avaliar as dependências sugeridas pelo assistente.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l29
-version: 1
+version: 2
 moduleId: mod-05
 title: "Avalie as dependências sugeridas"
 objective: "Diante de uma biblioteca recomendada pelo assistente, verificar manutenção, licença, segurança e alternativa nativa antes de adicionar — e decidir com critério, não por popularidade."
@@ -13,7 +13,7 @@ activities:
   - id: l29-a1
     type: choice
     skillId: avaliar
-    instruction: "O ASSISTENTE SUGERIU ADICIONAR A BIBLIOTECA fmt-cpf PARA VALIDAR CPF NO FORMULÁRIO. Marque tudo o que você confere ANTES de aceitar."
+    instruction: "O assistente sugeriu adicionar a biblioteca fmt-cpf para validar CPF no formulário. Marque tudo o que você confere antes de aceitar."
     data:
       multiSelect: true
       options:
@@ -52,7 +52,7 @@ activities:
   - id: l29-a2
     type: rubric_review
     skillId: codificar
-    instruction: "O ASSISTENTE RECOMENDOU A BIBLIOTECA fmt-cpf ASSIM. AVALIE CADA CRITÉRIO: ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO?"
+    instruction: "O assistente recomendou a biblioteca fmt-cpf assim. Avalie cada critério: atendido, parcialmente atendido ou não atendido?"
     data:
       responseText: "Use fmt-cpf — é a mais popular, não tem dependências e a licença é permissiva. Adicione com o gerenciador de pacotes e chame validar(campo)."
       criteria:
@@ -93,9 +93,9 @@ activities:
   - id: l29-a3
     type: missing_context
     skillId: avaliar
-    instruction: "UM COLEGA VAI ADICIONAR A BIBLIOTECA SUGERIDA 'PORQUE É A MAIS POPULAR'. O que falta no plano dele?"
+    instruction: "Um colega vai adicionar a biblioteca sugerida 'porque é a mais popular'. O que falta no plano dele?"
     data:
-      prompt: "COLEGA (plano): 'Adiciono fmt-cpf, chamo validar(campo), commito.' · VOCÊ: 'Por que essa?' · COLEGA: 'É a mais popular.' — nada mais foi verificado antes do commit."
+      prompt: "Colega (plano): 'Adiciono fmt-cpf, chamo validar(campo), commito.' · Você: 'Por que essa?' · Colega: 'É a mais popular.' — nada mais foi verificado antes do commit."
       contextOptions:
         - id: manutencao-atual
           text: "A manutenção atual: se há versão recente e issues respondidas"

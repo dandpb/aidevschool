@@ -1,7 +1,7 @@
 # Lição l24 — Onda O2 l24–l26 (spec AID-528 rev 3 `dce5594f` §2.1): anexar, colar ou descrever.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l24
-version: 1
+version: 2
 moduleId: mod-07
 title: "Anexe, cole ou descreva"
 objective: "Diante de uma tarefa que depende de um documento ou imagem, escolher entre anexar o arquivo, colar um trecho, descrever de memória ou não enviar — e escrever o pedido referenciando o que o anexo contém."
@@ -13,7 +13,7 @@ activities:
   - id: l24-a1
     type: choice
     skillId: avaliar
-    instruction: "EM QUAIS SITUAÇÕES ANEXAR O ARQUIVO ORIGINAL FUNCIONA MELHOR QUE DESCREVER OU COLAR? MARQUE TODAS."
+    instruction: "Em quais situações anexar o arquivo original funciona melhor que descrever ou colar? Marque todas."
     data:
       multiSelect: true
       options:
@@ -49,7 +49,7 @@ activities:
   - id: l24-a2
     type: prompt_builder
     skillId: pedir
-    instruction: "A FOTO DO QUADRO JÁ ESTÁ ANEXADA. ESCREVA O PEDIDO QUE VAI JUNTO DO ANEXO PREENCHENDO OS CAMPOS."
+    instruction: "A foto do quadro já está anexada. Escreva o pedido que vai junto do anexo preenchendo os campos."
     data:
       scenario: "Na sua ferramenta de IA você anexou a foto do quadro branco da reunião de planejamento: nela estão rabiscadas as decisões do trimestre e o cronograma. Neste exercício você não envia a foto — você monta o pedido por campos rotulados, como faria na ferramenta real depois de anexar. O pedido 'resuma isto', sozinho, devolveu um texto genérico que não citou nada do quadro."
       genericPrompt: "resuma isto"
@@ -92,9 +92,9 @@ activities:
   - id: l24-a3
     type: missing_context
     skillId: avaliar
-    instruction: "UM COLEGA ANEXOU A FOTO DO QUADRO E ESCREVEU SÓ 'O QUE ACHA DISTO?'. A RESPOSTA VEIO GENÉRICA. O QUE FALTOU NO PEDIDO DELE?"
+    instruction: "Um colega anexou a foto do quadro e escreveu só 'o que acha disto?'. A resposta veio genérica. O que faltou no pedido dele?"
     data:
-      prompt: "COLEGA (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
+      prompt: "Colega (mensagem): anexa a foto do quadro da reunião e escreve só 'o que acha disto?' · IA (resposta): 'Parece um quadro de planejamento interessante! Sugiro organizar as ideias por prioridade e revisar os prazos. Quer que eu detalhe algum ponto?' — nada das decisões, nada do cronograma."
       contextOptions:
         - id: tarefa-definida
           text: "Uma tarefa definida: o que a IA deve fazer com a foto (por exemplo, resumir as decisões) — 'o que acha disto?' não pede nada"

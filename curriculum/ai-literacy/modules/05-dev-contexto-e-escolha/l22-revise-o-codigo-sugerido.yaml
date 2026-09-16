@@ -1,7 +1,7 @@
 # Lição l22 — Onda dev l21–l23 (spec AID-528 rev 2 §2.2): revisar código sugerido como engenheiro.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l22
-version: 1
+version: 2
 moduleId: mod-05
 title: "Revise o código sugerido como engenheiro"
 objective: "Diante de código sugerido por assistente, aplicar critérios objetivos de engenharia, separar o que aceita do que recusa com motivo e revisar comportamento antes de estilo."
@@ -13,7 +13,7 @@ activities:
   - id: l22-a1
     type: rubric_review
     skillId: codificar
-    instruction: "O ASSISTENTE SUGERIU ESTA FUNÇÃO DE REENVIO DE WEBHOOK. AVALIE CADA CRITÉRIO: ATENDIDO, PARCIALMENTE ATENDIDO OU NÃO ATENDIDO?"
+    instruction: "O assistente sugeriu esta função de reenvio de webhook. Avalie cada critério: atendido, parcialmente atendido ou não atendido?"
     data:
       responseText: |
         // Reenvia o webhook do pagamento até dar certo
@@ -77,7 +77,7 @@ activities:
   - id: l22-a2
     type: output_comparison
     skillId: avaliar
-    instruction: "DOIS DEVS REVISARAM O MESMO CÓDIGO DE RETRY. COMPARE AS REVISÕES E ESCOLHA A MAIS ÚTIL ANTES DO MERGE."
+    instruction: "Dois devs revisaram o mesmo código de retry. Compare as revisões e escolha a mais útil antes do merge."
     data:
       scenario: "A mesma função de reenvio de webhook com catch vazio e retry sem teto passou por duas revisões. Qual revisão protege o time?"
       outputs:
@@ -112,7 +112,7 @@ activities:
   - id: l22-a3
     type: sort
     skillId: codificar
-    instruction: "ORDENE UMA REVISÃO ÚTIL: QUAL A SEQUÊNCIA DE PASSOS DE UM CÓDIGO SUGERIDO ATÉ O VEREDITO?"
+    instruction: "Ordene uma revisão útil: qual a sequência de passos de um código sugerido até o veredito?"
     data:
       items:
         - id: step-reler
@@ -137,7 +137,7 @@ activities:
     storage:
       policy: structured_only
     hints:
-      - "O que você precisa saber ANTES de julgar qualquer linha: o que o código deveria fazer?"
+      - "O que você precisa saber antes de julgar qualquer linha: o que o código deveria fazer?"
       - "Estilo é o único passo que pode esperar — qual é o primeiro que não pode?"
 
 rubric:

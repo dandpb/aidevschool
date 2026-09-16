@@ -1,7 +1,7 @@
 # Lição l15 — Trilha Dev piloto: decisão técnica sobre o uso de IA generativa. — v2 ONDA C1 (spec AID-807 §1): +a3 missing_context.
 # Validado por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l15
-version: 2
+version: 3
 moduleId: mod-05
 title: "Quando usar IA e quando não usar"
 objective: "Diante de três situações de desenvolvimento, decidir com critério técnico quando uma IA generativa ajuda e quando a solução certa é outra."
@@ -13,7 +13,7 @@ activities:
   - id: l15-a1
     type: choice
     skillId: decidir
-    instruction: "TRÊS SITUAÇÕES ABAIXO. MARQUE AQUELA EM QUE UMA IA GENERATIVA É A MELHOR ESCOLHA."
+    instruction: "Três situações abaixo. Marque aquela em que uma IA generativa é a melhor escolha."
     data:
       options:
         - id: opt-a
@@ -38,7 +38,7 @@ activities:
   - id: l15-a2
     type: output_comparison
     skillId: decidir
-    instruction: "VOCÊ PEDIU 'COMO IMPLEMENTAR RATE LIMITING EM UMA API NODE'. COMPARE AS DUAS RESPOSTAS E ESCOLHA A MAIS ÚTIL PARA UM DEV SENIOR."
+    instruction: "Você pediu 'como implementar rate limiting em uma API Node'. Compare as duas respostas e escolha a mais útil para um dev sênior."
     data:
       scenario: "Você está implementando rate limiting em uma API Express em produção com Redis compartilhado entre três instâncias."
       outputs:
@@ -67,16 +67,16 @@ activities:
     storage:
       policy: structured_only
     hints:
-      - "Qual resposta daria para você começar a codificar AGORA, sem pesquisar mais nada?"
+      - "Qual resposta daria para você começar a codificar agora, sem pesquisar mais nada?"
       - "Procure menção a pacotes, configuração e o cenário específico (Redis, três instâncias)."
       - "A resposta A cita 'express-rate-limit' e o Redis do cenário; a resposta B é genérica."
 
   - id: l15-a3
     type: missing_context
     skillId: decidir
-    instruction: "UM COLEGA VAI USAR UMA IA GENERATIVA PARA FECHAR OS TOTAIS DA FOLHA DE PAGAMENTO. O que falta checar no plano dele?"
+    instruction: "Um colega vai usar uma IA generativa para fechar os totais da folha de pagamento. O que falta checar no plano dele?"
     data:
-      prompt: "COLEGA (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
+      prompt: "Colega (plano): 'Colo a planilha da folha inteira na IA, peço os totais de salários, descontos e encargos, confiro se o número de funcionários bate e lanço no sistema. IA boa não erra conta.' — nada mais foi checado antes do lançamento."
       contextOptions:
         - id: exigencia-de-exatidao
           text: "A exigência de exatidão: folha fecha no centavo ou admite aproximação"
