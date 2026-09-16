@@ -38,6 +38,11 @@ npm run build
 npm run test:smoke
 ```
 
+`test:smoke` imports literacyDojo's generated read model
+(`../literacyDojo/src/data/generated/lessons.ts`, gitignored). From a fresh clone,
+run `npm run gen:content` in `../literacyDojo` before the smoke suite, or spec
+imports fail with `Cannot find module`.
+
 ## ANTI-PATTERNS
 
 - Do not import generated data from `../codexDojo/`; both engines receive their own projection from
