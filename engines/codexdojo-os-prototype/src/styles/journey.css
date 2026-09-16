@@ -14,7 +14,7 @@
   --journey-sky: #bfe8f8;
   min-height: 100dvh;
   color: var(--journey-ink);
-  font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
+  font-family: "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
   background:
     radial-gradient(circle at 8% 4%, rgba(255, 191, 71, 0.28), transparent 25rem),
     radial-gradient(circle at 94% 15%, rgba(73, 201, 143, 0.18), transparent 28rem),
