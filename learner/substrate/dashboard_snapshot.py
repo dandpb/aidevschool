@@ -187,7 +187,7 @@ VOXEL_GAME_UNIT_IDS: dict[str, str] = {
     )
 }
 
-#: All 16 voxelDojo game directories under ``engines/voxelDojo/``.
+#: All 17 voxelDojo game directories under ``engines/voxelDojo/``.
 VOXEL_GAME_IDS: tuple[str, ...] = tuple(VOXEL_GAME_UNIT_IDS.keys())
 
 
@@ -221,9 +221,10 @@ def build_voxel_per_game_review_slices(
     deepening).
 
     Returning a per-game map (not a single concatenated slice) is what makes the
-    15/16 "hand-copied stub" failure mode impossible: each game's file is
-    derived from the canonical state with that game's unit as the filter, not
-    copy-pasted from game-10.
+    historical 15-of-16 "hand-copied stub" failure mode (15 stubs when the
+    catalog had 16 games; the catalog now has 17) impossible: each game's file
+    is derived from the canonical state with that game's unit as the filter,
+    not copy-pasted from game-10.
 
     The streak is shared across all games (one learner, one streak) and is
     passed through unchanged.

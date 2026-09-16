@@ -20,7 +20,7 @@ npm run dev
 
 The OS dashboard starts on its normal Vite address. The Engine Hub uses fixed
 development fallbacks for the embedded dashboard (`5175`), PixelQuest (`5176`),
-and all 16 voxelDojo game packages (`5177`, `5202`, `5203`, `5205`–`5209`, and
+and all 17 voxelDojo game packages (`5177`, `5202`–`5209`, and
 `5211`–`5218`).
 Configure `VITE_CODEXDOJO_URL`, `VITE_PIXELDOJO_URL`, and the compatibility
 `VITE_VOXELDOJO_URL` for HASH RING. Use `VITE_VOXELDOJO_URLS` as a JSON map from
@@ -56,7 +56,7 @@ The current implementation includes:
 - six available app surfaces: Dojo Tracks, Terminal, Files, Architecture Map,
   App Center, and Engine Hub;
 - six external engine adapters: three embedded browser engines and three fixed,
-  read-only local actions; voxelDojo includes all 16 game packages;
+  read-only local actions; voxelDojo includes all 17 game packages;
 - a catalog of planned apps with explicit maturity states;
 - a contextual Learn Mode and a deterministic local mentor interaction;
 - responsive layouts for desktop and smaller screens.
