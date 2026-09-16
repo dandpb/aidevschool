@@ -99,6 +99,18 @@ Registro #7):
    nunca substitui a verificação. Um bot (nem o CEO como produtor) nunca
    verifica o próprio diff.
 
+**Ordenamento binding: veredito + registro ANTES do merge (AID-2219,
+2026-09-16).** O item 3 lista formas de *aceitação*, não substitutos do
+fast path: qualquer delas — **incluindo founder merge no GitHub** — exige,
+antes do merge ser executado, (i) **veredito first-hand FPE/QA postado no
+carrier** (triagem aberta não é veredito) e (ii) **registro do produtor
+commitado** (item 1). Recorrência da classe AID-767/F1 que motivou a emenda:
+PR #460 (Sentinel HIGH XSS dojoToday) merged pelo CEO 25s após a abertura da
+triagem AID-2201, com CI verde no head — CI verde prova o guardrail do diff,
+não a cadeia pedido → veredito → registro → merge. Mitigação seguiu §retrofit
+(veredito AID-2201, retrospective record #463, guard #465; sem rework). O
+check operacional dessa regra é o item 4 do §Merge protocol.
+
 ### Recusa também é registrada (close mudo é proibido)
 
 PR fechado sem merge leva **comentário de fechamento obrigatório** antes do
@@ -179,8 +191,8 @@ Incidente AID-1612 (2026-09-13): um run duplicado do mesmo agente retomou o
 relay com contexto em memória antigo ("falta #364"), sem reler o thread, e
 mergeou o PR #364 às 03:50:57Z — 32s após o recibo de hold no thread e contra
 o ruling single-writer FPE vigente (postmortem AID-1608; registro
-`intent/AID-1618-anti-duplicate-run-protocol/`). Três regras binding para todo
-writer (hoje o single-writer FPE; sob R1, quem mergar):
+`intent/AID-1618-anti-duplicate-run-protocol/`). Quatro regras binding para
+todo writer (hoje o single-writer FPE; sob R1, quem mergar):
 
 1. **Re-read obrigatório pré-write (continuations incluídas).** Toda
    continuation/restart de sessão DEVE reler o thread-alvo do board antes de
@@ -207,6 +219,19 @@ writer (hoje o single-writer FPE; sob R1, quem mergar):
    (iii) **confirmar a morte re-listando as runs** antes de encerrar a própria
    run ou postar recibo; (iv) se a run respawner, second-kill + escalação CEO
    (precedente AID-1612). Morte sem confirmação não é morte.
+4. **Checklist pré-merge para PR de bot (AID-2219).** Antes de executar o
+   merge de qualquer PR de bot (Sentinel/Bolt/Palette), responda em voz alta
+   os dois checks binários — **"veredito postado? registro commitado?"**:
+   - **veredito first-hand postado** no carrier (issue Paperclip do
+     despacho) pelo FPE/QA — triagem aberta ou CI verde no head **não**
+     contam (norma: §PRs automatizados, "Ordenamento binding"; caso âncora:
+     #460/AID-2201, classe AID-767/F1);
+   - **registro do produtor commitado** em `intent/<change-id>/` (ou short
+     plan block no task record), no branch do PR ou em main, com timestamp
+     anterior ao merge.
+   Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
+   verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
+   segue a adaptação da própria seção AID-1515).
 
 ## Guardrails (what is enforced, and how)
 
