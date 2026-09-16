@@ -1,10 +1,10 @@
 ---
 version: alpha
 name: voxelDojo — shared game HUD
-description: The catalog-wide 3D teaching-simulation workspace (18 game-* packages). One shared HUD language on a deep-space canvas with soft-blue text, cyan interaction, amber status, and an 8-color station palette (shared/palette.ts) that identifies entities across scene and HUD.
+description: The catalog-wide 3D teaching-simulation workspace (17 game-* packages). One shared HUD language on a deep-space canvas with soft-blue text, cyan interaction, amber status, and an 8-color station palette (shared/palette.ts) that identifies entities across scene and HUD.
 colors:
   canvas: "#0b0e14"
-  hud-panel: "#0d1119"
+  hud-panel: "#0b0e14"
   button-bg: "#1a2030"
   text-primary: "#e6e9f2"
   text-muted: "#aab3cc"
@@ -60,7 +60,7 @@ components:
 
 ## Overview
 
-The 3D teaching-simulation catalog: 18 uniform `game-*` packages sharing one
+The 3D teaching-simulation catalog: 17 uniform `game-*` packages sharing one
 HUD contract (inline styles in each `index.html`, palette from
 `shared/palette.ts`). Deep-space canvas, quiet slate HUD rail on the side,
 cyan for what you can act on, amber for what the simulation is telling you.
@@ -68,7 +68,7 @@ cyan for what you can act on, amber for what the simulation is telling you.
 ## Colors
 
 - **Canvas** (`#0b0e14`): the space every scene floats in.
-- **HUD neutrals** (`#0d1119` panel, `#1a2030` buttons, `#3d4663` borders, text `#e6e9f2`/`#aab3cc`/`#7f8ab0`): one quiet slate ladder — the HUD must never outshine the scene.
+- **HUD neutrals** (transparent rail over the `#0b0e14` canvas, `#1a2030` buttons, `#3d4663` borders, text `#e6e9f2`/`#aab3cc`/`#7f8ab0`): one quiet slate ladder — the HUD must never outshine the scene.
 - **Interactive cyan** (`#4fc3f7`): hover borders, incoming signals. The "you can act" color.
 - **Status amber** (`#ffd54f`): simulation status lines ("Pronto para iniciar").
 - **Station palette** (8 colors, `shared/palette.ts`): entity identity — same color in the 3D scene AND the HUD swatch (`colorFor(stationId)` is deterministic). Never reordered casually; the mapping is identity.
