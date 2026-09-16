@@ -9,7 +9,6 @@
 
 | Use case | Outcome | Granted tier | Result runs | Reasons |
 | --- | --- | --- | --- | --- |
-| `dojotoday-daily-guidance` | `pass` | `customer-ready` | `2026-09-16T22:55:00Z-dojotoday-active-unit-guidance-mixed-cabdc4a1`, `2026-09-16T22:55:00Z-dojotoday-read-only-boundary-observed-cabdc4a1`, `2026-09-16T22:55:00Z-dojotoday-returning-next-day-mixed-cabdc4a1` | - |
 | `literacy-standalone-corridor-mod01-03` | `pass` | `customer-ready` | `2026-09-16T20:43:52Z-literacy-corridor-grandfathered-return-cabdc4a1`, `2026-09-16T20:43:52Z-literacy-corridor-resume-mid-module-cabdc4a1`, `2026-09-16T22:55:00Z-literacy-corridor-gate-retry-mixed-cabdc4a1`, `2026-09-16T22:55:00Z-literacy-corridor-happy-path-mixed-cabdc4a1`, `2026-09-16T22:55:00Z-literacy-corridor-review-window-mixed-cabdc4a1` | - |
 | `literacy-standalone-first-lesson` | `pass` | `customer-ready` | `2026-09-16T22:55:00Z-literacy-happy-path-mixed-cabdc4a1`, `2026-09-16T22:55:00Z-literacy-resume-mixed-cabdc4a1`, `2026-09-16T22:55:00Z-literacy-retry-mixed-cabdc4a1` | - |
 | `minitown-explore-only` | `pass` | `experimental` | `2026-09-16T22:55:00Z-minitown-explore-only-mixed-cabdc4a1` | - |

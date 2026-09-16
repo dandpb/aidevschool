@@ -47,14 +47,6 @@ decisions:
   - 2026-09-16T22:55:00Z-os-onboarding-track-choice-mixed-cabdc4a1
   - 2026-09-16T22:55:00Z-os-returning-device-mixed-cabdc4a1
   - 2026-09-16T22:55:00Z-os-returning-recovery-mixed-cabdc4a1
-- useCaseId: dojotoday-daily-guidance
-  outcome: pass
-  grantedTier: customer-ready
-  reasons: []
-  resultRunIds:
-  - 2026-09-16T22:55:00Z-dojotoday-active-unit-guidance-mixed-cabdc4a1
-  - 2026-09-16T22:55:00Z-dojotoday-read-only-boundary-observed-cabdc4a1
-  - 2026-09-16T22:55:00Z-dojotoday-returning-next-day-mixed-cabdc4a1
 - useCaseId: pixelquest-evidence-encounter
   outcome: pass
   grantedTier: customer-ready
