@@ -2,7 +2,7 @@
 # Aprofundamento de l09/l10: l10 decide SE verifica; l20 treina O QUÊ marcar e ONDE confirmar.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l20
-version: 1
+version: 2
 moduleId: mod-06
 title: "Números e fatos: verifique antes de usar"
 objective: "Diante de uma resposta com números e fatos específicos, marcar quais afirmações exigem verificação externa e escolher a fonte certa — aprofundamento operacional de l09/l10."
@@ -14,7 +14,7 @@ activities:
   - id: l20-a1
     type: choice
     skillId: avaliar
-    instruction: "A IA DEVOLVEU UM RESUMO SOBRE O DESEMPENHO DE VENDAS DO TRIMESTRE. MARQUE TODAS AS AFIRMAÇÕES QUE EXIGEM VERIFICAÇÃO EM FONTE EXTERNA ANTES DE VOCÊ USAR."
+    instruction: "A IA devolveu um resumo sobre o desempenho de vendas do trimestre. Marque todas as afirmações que exigem verificação em fonte externa antes de você usar."
     data:
       multiSelect: true
       options:
@@ -44,7 +44,7 @@ activities:
   - id: l20-a2
     type: sort
     skillId: avaliar
-    instruction: "HIERARQUIA DE FONTES. VOCÊ VAI CONFIRMAR O 'CRESCIMENTO DE 23% NO TRIMESTRE'. ORDENE AS FONTES DA MAIS CONFIÁVEL PARA A MENOS CONFIÁVEL PARA ESTE NÚMERO."
+    instruction: "Hierarquia de fontes. Você vai confirmar o 'crescimento de 23% no trimestre'. Ordene as fontes da mais confiável para a menos confiável para este número."
     data:
       items:
         - id: src-imprensa
@@ -76,7 +76,7 @@ activities:
   - id: l20-a3
     type: missing_context
     skillId: avaliar
-    instruction: "A IA AFIRMOU: 'AS VENDAS CRESCERAM 23% NO ÚLTIMO TRIMESTRE.' VOCÊ QUER USAR ESSA FRASE NUMA REUNIÃO. O QUE FALTA PARA USÁ-LA COM SEGURANÇA?"
+    instruction: "A IA afirmou: 'As vendas cresceram 23% no último trimestre.' Você quer usar essa frase numa reunião. O que falta para usá-la com segurança?"
     data:
       prompt: "As vendas cresceram 23% no último trimestre."
       contextOptions:

@@ -1,7 +1,7 @@
 # Lição l18 — Onda C1–C3 (spec AID-414 §2.1): biblioteca de pedidos reutilizáveis.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l18
-version: 1
+version: 2
 moduleId: mod-06
 title: "Biblioteca de pedidos: reutilize o que funciona"
 objective: "Transformar um pedido bem-sucedido em modelo reutilizável e adaptá-lo a um cenário novo sem recomeçar do zero — identificando o que trocar (contexto/público) e o que preservar (estrutura/formato)."
@@ -63,7 +63,7 @@ activities:
   - id: l18-a2
     type: output_comparison
     skillId: aplicar
-    instruction: "NOVO CENÁRIO: um e-mail para cliente sobre atraso de entrega. VOCÊ TEM O MODELO SALVO. COMPARE AS DUAS FORMAS DE FAZER O NOVO PEDIDO E ESCOLHA A MELHOR."
+    instruction: "Novo cenário: um e-mail para cliente sobre atraso de entrega. Você tem o modelo salvo. Compare as duas formas de fazer o novo pedido e escolha a melhor."
     data:
       scenario: "Usando a IA, você precisa escrever um e-mail para um cliente avisando que a entrega vai atrasar dois dias. Você tem o modelo do relatório semanal salvo (tarefa + contexto + público + formato)."
       outputs:
@@ -99,7 +99,7 @@ activities:
   - id: l18-a3
     type: choice
     skillId: aplicar
-    instruction: "EM QUAL SITUAÇÃO NÃO VALE REUTILIZAR O MODELO SALVO?"
+    instruction: "Em qual situação não vale reutilizar o modelo salvo?"
     data:
       options:
         - id: opt-a
