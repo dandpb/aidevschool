@@ -26,6 +26,59 @@ Registro operacional da classe de falha AID-1295 / AID-1265 (1º attempt):
    Se a main andou depois dos checks, espere re-run e confira verde no merge ref.
 4. O **push-run da main pós-merge é o verificador final** fail-closed; se ficar
    vermelho, registre bug e re-ancore (não relaxe o gate).
+5. **Lote que edita specs cobertas por claims** (commit no range do PR com trailer
+   `SDLC-ALLOW-TEST-EDIT: AID-<n>` tocando specs/`sourcePaths` de cenários com
+   claims publicadas): o lote só é declarado fechado com o
+   **re-grant emparceirado completo** — §"Re-grant emparceirado no mesmo lote"
+   abaixo. Snapshot de fábrica sozinho não conta como re-grant.
+
+## Re-grant emparceirado no mesmo lote (AID-2202, 2026-09-16)
+
+**Classe de falha** (repeat-incident de 5 janelas, auditoria SDLC AID-2200
+instância #70): um merge aprovado com override de edição de specs deixa a lane
+main vermelha em `product readiness (claims)` até intervenção manual, porque:
+
+- o lane de PR trata claims stale como non-blocking **by design** (o verificador
+  é o push-run da main, fail-closed);
+- a fábrica AID-1357 propõe apenas o snapshot de producer (`regrant --propose`
+  exit 3 — pendente de observação independente; o bot nunca escreve).
+
+Evidência do incidente (verificada 1º-mão em 2026-09-16):
+
+- PR #446 (merge `cce67949af`, trailer `SDLC-ALLOW-TEST-EDIT: AID-2121`,
+  aceite owner CEO) editou 5 specs playwright de pixel-quest
+  (`encounter-evidence-dense`, `error-path`, `evidence-append-only`,
+  `pixel-quest`, `returning`) → push-run da main falha com `STALE-WINDOW:
+  pixelquest-evidence-encounter … artifact digest does not match` (run
+  35145136858).
+- Rounds da fábrica #458 (`50d31811ec`) e #459 (`fb4dbc77ed`) mesclaram
+  snapshots sem observação independente → 9 features seguem `blocked` com
+  `lacks independent evidence` / `missing promoted result` no mesmo run.
+- Pushes da main vermelhos consecutivos no job `product readiness (claims)`:
+  `4b87d5b29b`, `50d31811ec`, `fb4dbc77ed`.
+
+**Regra (gate AID-2202):** um lote de merge single-writer que contenha PR cujo
+diff toque specs/`sourcePaths` de cenários com claims publicadas **fecha apenas
+quando o re-grant das scenarios afetadas estiver completo no mesmo lote**:
+
+1. observação independente arquivada em
+   `evidence/observations/<id>/` (executor ≠ producer do diff de specs);
+2. `aggregate --observations` + `assess`/`regrant --propose` terminando
+   **exit 0** (assessment escrito no contexto `independent-readiness-review`,
+   com promoted results para os use cases re-ancorados);
+3. push-run da main **verde** em `product readiness (claims)` — o lote não está
+   "done" antes disso.
+
+Ordem operacional: produza o re-grant emparceirado (manual §"Fluxo local de
+re-anchor" ou fase QA na branch da fábrica) **antes** de declarar o lote
+fechado; se a observação independente não puder ser produzida a tempo, o merge
+do PR de specs **espera** — deixar a main vermelha até intervenção manual não é
+opção. Precedentes de re-grant manual com observação independente: #455 (v83,
+AID-2153), #457 (v84, AID-2174). Instância em curso na data: AID-2199 (v88).
+
+Evolução da fábrica para propor re-grant já com observação completa (fecha a
+limitação acima): follow-up delegado ao dono da fábrica (AID-1357) — até lá o
+emparceiramento é responsabilidade do lote de merge, não da fábrica.
 
 ## Fluxo local de re-anchor (producer ≠ verificador)
 
