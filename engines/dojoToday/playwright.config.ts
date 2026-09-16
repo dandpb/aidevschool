@@ -42,5 +42,29 @@ export default defineConfig({
         DOJOTODAY_TODAY_MODULE: "playwright/fixtures/today.day-n-plus-1.ts",
       },
     },
+    // AID-2205 numeric-fields escape guard (follow-up obrigatório do PR #460,
+    // cadeia #262/#264): duas projeções hostis com payloads HTML em campos
+    // numericamente tipados — 5183 = hoje hostil (current/freezesMax/
+    // masteredCount/totalUnits), 5184 = streak acesa com longest hostil. A
+    // spec numeric-fields-escape.spec.ts deve falhar se qualquer escapeHtml ou
+    // coerção Number(...)||0 do diff do #460 for removida.
+    {
+      command: "npm run dev -- --host 127.0.0.1 --port 5183 --strictPort",
+      url: "http://127.0.0.1:5183",
+      reuseExistingServer: false,
+      timeout: 30_000,
+      env: {
+        DOJOTODAY_TODAY_MODULE: "playwright/fixtures/today.numeric-hostile.ts",
+      },
+    },
+    {
+      command: "npm run dev -- --host 127.0.0.1 --port 5184 --strictPort",
+      url: "http://127.0.0.1:5184",
+      reuseExistingServer: false,
+      timeout: 30_000,
+      env: {
+        DOJOTODAY_TODAY_MODULE: "playwright/fixtures/today.numeric-hostile-record.ts",
+      },
+    },
   ],
 });
