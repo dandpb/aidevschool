@@ -1,0 +1,7 @@
+=== env ===
+v20.19.5
+9.15.9
+Python 3.13.5
+group1 rc=1
+group1b rc=0
+group2 rc=0

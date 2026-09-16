@@ -1,0 +1,125 @@
+{
+  "gitSha": "a34246d8c5e0513a3af29b1213e0b80101a0be37",
+  "observedAt": "2026-09-16T18:36:21Z",
+  "observerContext": "independent-readiness-observer",
+  "scenarios": [
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-can-state-result-and-next-action",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175; branch regrant/auto-20260916-067f41e9 do PR #456, base main @ 067f41e9). student-guide.md §codexdojo-os-guided-journey 'Complete a hosted mission' passo 4 (l.195): \"`completed` means local host progress. Produced evidence still requires an independent verifier, and neither state means `mastered`\"; 'Supported next action' (l.216-220): continuar para a próxima missão no mesmo dispositivo / submeter evidência ao verificador separado — \"The OS does not accept its own evidence or grant canonical mastery\" (manualFingerprint a064c2e4… confere com o producer report). Corroboração de código nesta árvore: src/journey/ResultScreen.tsx:77 eyebrow 'Prática concluída neste dispositivo' (semântica local), :29/:30/:36/:37 estados de verificação nomeados separadamente do progresso local ('aguarda o verificador independente', 'O gate canônico continua separado.'); src/journey/Hub.tsx:37 recommendMission exibe a próxima missão suportada; src/learning/LearningRail.tsx Modo Aprender nomeia conceito/desafio da atividade hospedada. Executável nesta árvore (harness cross-engine CI-idêntico node 20, fase smoke/report): pilot 8/8 pass incluindo montagem das missões hospedadas + relatório honesto do verificador ('Ainda não enviada', tests-pilot/pilot-build.smoke.spec.ts:76-88). Delta v85 observado first-hand: os novos bytes que invalidaram o fingerprint (PR #447/AID-2131: src/testEnvironment.canary.test.ts + normalização NODE_ENV=test em vite.config.ts:5-7) não alteram a UI de resultado/next-action; a lane unit desta árvore exercita o canário (React.act função) e passa 61 arquivos/359 testes + biome 162 arquivos limpos.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-literacy-hosted-mission"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "facilitator-can-recover-without-repository-intervention",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175). student-guide.md §Resume or recover (l.201-211): \"If verification is unavailable, leave the status as not submitted and continue only when the guide presents a safe next action… Do not treat a blank frame, unavailable verifier, or browser reload as completion\"; tela de recovery nomeia daniel@heropa.com (SLA 1 business day). facilitator-guide.md §codexDojo OS guided journey 'Recover and escalate' (l.287-296): 'Verification is unavailable or rejected → Keep the visible state as not submitted or rejected; preserve raw evidence and point to the on-screen email' — escalonamento é procedimento visível, sem intervenção de repositório (qualquer 'undocumented repository intervention' é gap bloqueante, l.301). Corroboração de código nesta árvore: src/verification/ports.ts:81 status union ('pending'|'gateway-unavailable'|'rejected'|'verified') não tem estado de conclusão por indisponibilidade; src/verification/evidenceIntake.ts:125-126 gateway-unavailable é retryable (:258 preserva o raw com status 'gateway-unavailable' em vez de descartar/inventar); src/journey/ResultScreen.tsx:30 'A evidência está segura. O verificador pode ser tentado novamente.'; tests-pilot/pilot-build.smoke.spec.ts:87-88 o host declara 'Ainda não enviada' no deploy estático sem verificador — 'producer != verifier survives the pilot build'. Executável nesta árvore (harness smoke): pilot 8/8 inclui 'a corrected WAREHOUSE retry supersedes the failed attempt verification state' (3.9s).",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-verification-recovery"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-understands-literacy-continuity-boundary",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175). student-guide.md §codexdojo-os-guided-journey 'Resume or recover' (l.199-203): \"The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization.\" facilitator-guide.md (l.291): 'Progress does not resume → Confirm the same browser profile and enabled storage; restart onboarding if local data was cleared.' Corroboração de código nesta árvore: persistência é IndexedDB local por perfil (src/progress/indexedDbProgressRepository.ts), sem conta nem sync; src/progress/domain.test.ts:37 e :91 o JSON persistido nunca contém 'mastered'. Executável nesta árvore (harness smoke, desktop-1280): tests/chapter-continuity.smoke.spec.ts:202 'preserves completed first-release missions across switches and reloads' pass (1.4m) — resume same-profile do estado suportado exercitado first-hand; producer report automated de os-literacy-returning-device ('hosted-literacy-state-resumes') pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-literacy-returning-device"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-can-explain-track-choice",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175). student-guide.md §codexdojo-os-guided-journey 'Choose this journey' (l.180-185): \"The OS can recommend a track, but you can change the track before you enter the school\"; oferta CR (l.30): onboarding oferece escolha de trilha IA Prática (l01–l03) ou Dev, 'Entrar na escola'. facilitator-guide.md 'Observe without leading' (l.276-279): pedir ao learner fresh que revise a recomendação, escolha trilha, abra missão hospedada e nomeie a próxima ação. Corroboração de código nesta árvore: src/journey/Onboarding.tsx:31-35 copy nomeia as trilhas e a recomendação ('Trilho Dev: WAREHOUSE → WORMHOLE → RELAY STATION…', 'Sugerimos a trilha Dev. IA Prática permanece disponível…'); src/journey/Onboarding.test.tsx:7 'offers IA Prática and Dev, and keeps Dev clickable when confidence is low' + preseleção ?track=dev; src/journey/Hub.tsx:37 recommendMission apresenta a próxima missão da trilha escolhida. Executável nesta árvore (harness smoke/report): producer report automated 'learner-enters-chosen-track' pass @ a34246d8; onboarding exercitado em todos os specs smoke via 'Entrar na escola'.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-onboarding-track-choice"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "facilitator-explains-local-state-loss",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175). student-guide.md §Resume or recover (l.201-205): storage local limpo/unavailable → recomeça separado, sem reconstruir conclusão anterior; 'Do not treat… browser reload as completion'. facilitator-guide.md (l.262-263): 'Never clear a learner's existing profile to manufacture a clean run'; (l.291) 'Progress does not resume → Confirm the same browser profile and enabled storage; restart onboarding if local data was cleared' — a explicação do boundary é procedimento de facilitador com estado visível, sem intervenção de repositório. Corroboração de código nesta árvore: sem estado remoto/fabricado — progresso vive só no perfil (src/progress/indexedDbProgressRepository.ts); src/verification/evidenceIntake.ts não reconstitui status a partir de ausência de storage. Executável nesta árvore (harness smoke, desktop-1280): tests/readiness-recovery.smoke.spec.ts:3 'readiness os-returning-recovery: cleared local state returns to onboarding without completion' pass (2.8s, contexto limpo criado no próprio teste) — producer report automated 'missing-local-state-does-not-create-completion' pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-returning-recovery"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-understands-local-boundary",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175). student-guide.md §Resume or recover (l.199-203) e §Como voltar no mesmo aparelho (l.82+): mesmo perfil = retomada suportada; outro navegador/dispositivo ou dados limpos = começa separado; 'there is no account or cross-device synchronization'. facilitator-guide.md (l.291) boundary de same-profile para o facilitador. Corroboração de código nesta árvore: persistência IndexedDB por perfil sem conta/sync (src/progress/indexedDbProgressRepository.ts); src/progress/domain.test.ts:19 'persists only local mission states and cannot represent mastery'; src/engines/registry.test.ts:97 'never grants an OS adapter mastery authority'. Executável nesta árvore (harness smoke, desktop-1280): tests/chapter-continuity.smoke.spec.ts:202 'preserves completed first-release missions across switches and reloads' pass (1.4m) — retomada same-profile sem claim cross-device exercitada first-hand; producer report automated 'same-device-state-resumes' pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-returning-device"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-distinguishes-evidence-from-mastery",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175; re-observação do cenário coberto no v79/AID-1972 nesta árvore pós-AID-2131). student-guide.md §Complete a hosted mission passo 4 (l.195-197) e §Supported next action (l.216-220): resultado de missão hospedada e evidência bruta NÃO são mastery; 'The OS does not accept its own evidence or grant canonical mastery'. facilitator-guide.md §Prepare (l.265-266): 'State that host completion is local, raw evidence requires a verifier, and canonical mastery remains outside the OS.' Corroboração de código nesta árvore: src/engines/EngineHubApp.tsx:63-68 publicEngineAccessLabel rotula engines de progresso como 'Evidência bruta · não verificada' (dojoToday 'Sugestão neste dispositivo · somente leitura'); inventory.yaml progressSemantics: raw-evidence; src/progress/domain.test.ts:37/:91 JSON persistido nunca contém 'mastered'; src/engines/registry.test.ts:97 'never grants an OS adapter mastery authority'; src/App.characterization.test.tsx / EngineHubApp.test.tsx travam o boundary de exibição. Executável nesta árvore (harness smoke/report): pilot smoke 8/8 pass — missões WAREHOUSE/WORMHOLE/RELAY STATION (+ PIPELINE PLANT, TIMELINE TOWER, DOCKING BAY) montando do host origin e reportando 'Ainda não enviada' (tests-pilot/pilot-build.smoke.spec.ts:76-88: 'producer != verifier survives the pilot build'); producer report automated 'all-supported-voxel-missions-mount' pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-voxel-hosted-missions"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "facilitator-can-name-escalation-threshold",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175; re-observação do cenário coberto no v79/AID-1972 nesta árvore pós-AID-2131). facilitator-guide.md §codexDojo OS guided journey 'Recover and escalate' (l.287-296) nomeia os limiares com sintoma/recuperação/escalonamento: 'WebGL initialization fails → Select the accessible renderer and retry the core interaction with keyboard controls → Escalate when: Both projections fail or the accessible projection loses the promised interaction' e 'Reduced-motion or keyboard flow is blocked → … Escalate when: A claimed accessibility path cannot complete the core journey'. student-guide.md (l.212-214): 'use the accessible projection and keyboard controls. Stop and ask a facilitator when neither the 3D nor accessible projection supports the core interaction'; telas de recovery nomeiam daniel@heropa.com (SLA 1 business day; WhatsApp primário pelo facilitator-guide l.267-268). Executável nesta árvore (harness smoke, desktop-1280): tests/renderer-fallback.smoke.spec.ts 3/3 pass — 'reduced motion selects the keyboard-operable semantic projection' (:73), 'context loss degrades and retries without resetting simulation or evidence identity' (:96), 'forced WebGL unavailability fails over without blocking mission controls' (:154) — a projeção acessível preserva a jornada core e o fail-over existe exatamente como o guia descreve; producer report automated 'accessible-renderer-preserves-core-journey' pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-renderer-accessibility-recovery"
+    },
+    {
+      "assertions": [
+        {
+          "evidence": "observation",
+          "id": "learner-understands-voxel-continuity-boundary",
+          "notes": "Revisão documental + walk de código first-hand QA v85 @ a34246d8 (AID-2175; re-observação do cenário coberto no v79/AID-1972 nesta árvore pós-AID-2131). student-guide.md §Resume or recover (l.199-203): \"The OS saves supported setup and mission state in this browser profile. Reload the same device to resume. Another browser, another device, or cleared site data starts separately; there is no account or cross-device synchronization.\" facilitator-guide.md (l.262-263 perfis fresh/returning separados; l.291 'Confirm the same browser profile and enabled storage'). Corroboração de código nesta árvore: persistência é IndexedDB local por perfil (src/progress/indexedDbProgressRepository.ts), sem conta nem sync; o claim automatizado do cenário é 'restores supported Dev mission state without claiming cross-device sync' (scenario yaml). Executável nesta árvore (harness smoke, desktop-1280): tests/chapter-continuity.smoke.spec.ts:202 'preserves completed first-release missions across switches and reloads' pass (1.4m) — resume same-profile do trilho Dev exercitado first-hand; producer report automated 'hosted-voxel-state-resumes' pass @ a34246d8.",
+          "outcome": "pass"
+        }
+      ],
+      "gaps": [],
+      "outcome": "pass",
+      "scenarioId": "os-voxel-returning-device"
+    }
+  ],
+  "schemaVersion": 1
+}

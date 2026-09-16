@@ -1,0 +1,31 @@
+schemaVersion: 1
+assessmentId: 2026-09-16-a34246d8-os-regrant-v85
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-16T18:36:21Z'
+revalidateBy: '2026-10-16'
+gitSha: a34246d8c5e0513a3af29b1213e0b80101a0be37
+decisions:
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:36:21Z-os-literacy-hosted-mission-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-verification-recovery-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-literacy-returning-device-mixed-a34246d8
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:36:21Z-os-voxel-hosted-missions-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-renderer-accessibility-recovery-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-voxel-returning-device-mixed-a34246d8
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T18:36:21Z-os-onboarding-track-choice-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-returning-recovery-mixed-a34246d8
+  - 2026-09-16T18:36:21Z-os-returning-device-mixed-a34246d8

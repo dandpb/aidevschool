@@ -1,0 +1,24 @@
+{
+  "base": "067f41e9 (main)",
+  "env": "node v20.19.5 (CI pins node 20; verificado nodejs.org tarball), pnpm 9.15.9, chromium playwright cache local, python 3.13",
+  "envNotes": [
+    "NODE_ENV=production do sandbox removido p/ harness (devDeps)",
+    "npm omit=dev do ~/.npmrc neutralizado via npm_config_include=dev",
+    "substrate pip install -e . --break-system-packages (PEP 668 do sandbox; equivalente ao passo deps do harness)",
+    "portas strict (4174/5175/5176/5178) livres no início da execução"
+  ],
+  "generatedAt": "2026-09-16T18:36:21Z",
+  "harnessPhases": {
+    "blobs-proof": "pass (AID-947 blobs local)",
+    "build": "pass (vite build pilot, URLs same-origin)",
+    "contracts": "pass (learner/gate *.test.mjs)",
+    "deps": "pass (npm ci OS + 5 siblings pnpm/npm; substrate pip editável manual por PEP 668)",
+    "report": "pass (readiness-report.mjs READINESS_TEST_RUN=passed; 9 producer reports em engines/codexdojo-os-prototype/test-results/readiness/ @ a34246d8)",
+    "schema-drift": "pass (AID-473 F2)",
+    "smoke": "pass (bundle-missions 19/19 dist/apps; pilot smoke 8/8 em 21.2s; desktop-1280 5/5 em 1.8m — chapter-continuity 1.4m, readiness-recovery 2.8s, renderer-fallback x3)",
+    "unit": "pass (biome lint 162 arquivos clean — inclui o canário novo do AID-2131 — + NODE_ENV=test vitest run: 61 arquivos/359 testes verdes, incl. src/testEnvironment.canary.test.ts React.act)"
+  },
+  "head": "a34246d8c5e0513a3af29b1213e0b80101a0be37",
+  "runId": "qa2175-os-regrant-v85",
+  "worktree": "/tmp/opencode/v85 (branch regrant/auto-20260916-067f41e9 do PR #456; clone limpo)"
+}

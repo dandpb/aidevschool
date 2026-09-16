@@ -1,0 +1,1849 @@
+
+===== [cross-engine] unit: OS lint (biome) + unit tests (vitest) =====
+
+> codexdojo-os-prototype@0.1.0 lint
+> biome lint src bridge tests tests-pilot tests-remote vite.config.ts playwright.config.ts playwright.pilot.config.ts playwright.remote.config.ts
+
+Checked 162 files in 169ms. No fixes applied.
+
+> codexdojo-os-prototype@0.1.0 test
+> NODE_ENV=test vitest run
+
+
+ RUN  v4.1.10 /tmp/opencode/v85/engines/codexdojo-os-prototype
+
+
+ Test Files  61 passed (61)
+      Tests  359 passed (359)
+   Start at  14:29:48
+   Duration  28.21s (transform 1.69s, setup 0ms, import 6.81s, tests 10.96s, environment 52.60s)
+
+
+===== [cross-engine] contracts: learner/gate contract tests (glob) =====
+TAP version 13
+# Subtest: VITE_ANALYTICS_ENDPOINT é definido somente nos netlify.toml autorizados
+ok 1 - VITE_ANALYTICS_ENDPOINT é definido somente nos netlify.toml autorizados
+  ---
+  duration_ms: 164.43333
+  ...
+# Subtest: o valor autorizado é exatamente a rota same-origin canônica do coletor, no [build.environment]
+ok 2 - o valor autorizado é exatamente a rota same-origin canônica do coletor, no [build.environment]
+  ---
+  duration_ms: 2.224471
+  ...
+# Subtest: cada site autorizado redireciona a rota do coletor ANTES do fallback /* (first-match-wins)
+ok 3 - cada site autorizado redireciona a rota do coletor ANTES do fallback /* (first-match-wins)
+  ---
+  duration_ms: 1.518031
+  ...
+# Subtest: o segredo de export nunca vive no repo: ANALYTICS_EXPORT_TOKEN ausente dos tomls
+ok 4 - o segredo de export nunca vive no repo: ANALYTICS_EXPORT_TOKEN ausente dos tomls
+  ---
+  duration_ms: 76.161079
+  ...
+# Subtest: AID-961: readRange usa scan flat SEM prefixo — nunca directories/prefix (semântica edge)
+ok 5 - AID-961: readRange usa scan flat SEM prefixo — nunca directories/prefix (semântica edge)
+  ---
+  duration_ms: 3.277611
+  ...
+# Subtest: AID-961: readRange filtra o intervalo de dias no cliente (scan do store inteiro)
+ok 6 - AID-961: readRange filtra o intervalo de dias no cliente (scan do store inteiro)
+  ---
+  duration_ms: 0.340159
+  ...
+# Subtest: AID-961: prune também lista FLAT — sem directories/prefix — e deleta só fora da janela
+ok 7 - AID-961: prune também lista FLAT — sem directories/prefix — e deleta só fora da janela
+  ---
+  duration_ms: 0.33852
+  ...
+# Subtest: AID-961: o diretório canônico de funções é DEPLOYÁVEL — sem declarações .d.* (422 do deploy CLI)
+ok 8 - AID-961: o diretório canônico de funções é DEPLOYÁVEL — sem declarações .d.* (422 do deploy CLI)
+  ---
+  duration_ms: 6.760183
+  ...
+# Subtest: AID-961: o staging do OS embarca lockfile e instala as deps das funções (build-pilot-bundle.mjs)
+ok 9 - AID-961: o staging do OS embarca lockfile e instala as deps das funções (build-pilot-bundle.mjs)
+  ---
+  duration_ms: 1.441491
+  ...
+# Subtest: AID-961: nenhuma chamada store.list do coletor usa directories (barreira estática)
+ok 10 - AID-961: nenhuma chamada store.list do coletor usa directories (barreira estática)
+  ---
+  duration_ms: 1.200061
+  ...
+# Subtest: accepts the canonical OS event shapes for every vocabulary dimension
+ok 11 - accepts the canonical OS event shapes for every vocabulary dimension
+  ---
+  duration_ms: 4.880621
+  ...
+# Subtest: rejects every violation of the closed envelope, vocabulary, and identity boundary
+ok 12 - rejects every violation of the closed envelope, vocabulary, and identity boundary
+  ---
+  duration_ms: 0.57899
+  ...
+# Subtest: batch shape is closed: schemaVersion 1 and 1..100 events
+ok 13 - batch shape is closed: schemaVersion 1 and 1..100 events
+  ---
+  duration_ms: 0.20112
+  ...
+# Subtest: handler gates: cross-origin, path, method, size, JSON, schema
+ok 14 - handler gates: cross-origin, path, method, size, JSON, schema
+  ---
+  duration_ms: 27.36288
+  ...
+# Subtest: handler accepts only valid events of a mixed batch and reports exactly their ids
+ok 15 - handler accepts only valid events of a mixed batch and reports exactly their ids
+  ---
+  duration_ms: 2.050421
+  ...
+# Subtest: NdjsonFileSink appends one JSON line per event, rotating by UTC day, and prunes beyond retention
+ok 16 - NdjsonFileSink appends one JSON line per event, rotating by UTC day, and prunes beyond retention
+  ---
+  duration_ms: 14.618035
+  ...
+# Subtest: o diretório canônico de funções declara @netlify/blobs com versão exata
+ok 17 - o diretório canônico de funções declara @netlify/blobs com versão exata
+  ---
+  duration_ms: 7.799102
+  ...
+# Subtest: o wrapper netlify-blobs-runtime.mjs é o ÚNICO import estático de @netlify/blobs do repo
+ok 18 - o wrapper netlify-blobs-runtime.mjs é o ÚNICO import estático de @netlify/blobs do repo
+  ---
+  duration_ms: 1.378951
+  ...
+# Subtest: o coletor carrega o cliente Blobs pelo wrapper (import dinâmico, nunca bare specifier)
+ok 19 - o coletor carrega o cliente Blobs pelo wrapper (import dinâmico, nunca bare specifier)
+  ---
+  duration_ms: 2.03043
+  ...
+# Subtest: o default export deployado seleciona o backing durável (createAnalyticsBacking)
+ok 20 - o default export deployado seleciona o backing durável (createAnalyticsBacking)
+  ---
+  duration_ms: 2.954661
+  ...
+# Subtest: a projeção OS netlify/functions, quando presente, é cópia fiel do canônico
+ok 21 - a projeção OS netlify/functions, quando presente, é cópia fiel do canônico # SKIP projeção OS ausente (checkout limpo — staging garantido pelo teste do script)
+  ---
+  duration_ms: 1.009809
+  ...
+# Subtest: o staging do OS embarca wrapper e manifest (build-pilot-bundle.mjs)
+ok 22 - o staging do OS embarca wrapper e manifest (build-pilot-bundle.mjs)
+  ---
+  duration_ms: 1.313881
+  ...
+# Subtest: cada superfície aponta o diretório de funções correto no netlify.toml
+ok 23 - cada superfície aponta o diretório de funções correto no netlify.toml
+  ---
+  duration_ms: 1.53769
+  ...
+# Subtest: a raiz do repo NÃO é um projeto Node (package.json só no diretório de funções)
+ok 24 - a raiz do repo NÃO é um projeto Node (package.json só no diretório de funções)
+  ---
+  duration_ms: 0.92551
+  ...
+# Subtest: aceita batch literacy v2 válido e responde 202 com acceptedEventIds
+ok 25 - aceita batch literacy v2 válido e responde 202 com acceptedEventIds
+  ---
+  duration_ms: 42.230734
+  ...
+# Subtest: aceitação parcial: evento literacy inválido não é anexado
+ok 26 - aceitação parcial: evento literacy inválido não é anexado
+  ---
+  duration_ms: 3.975791
+  ...
+# Subtest: envelope desconhecido continua 422 unsupported-schema
+ok 27 - envelope desconhecido continua 422 unsupported-schema
+  ---
+  duration_ms: 5.197242
+  ...
+# Subtest: export GET exige Bearer token e devolve NDJSON do intervalo
+ok 28 - export GET exige Bearer token e devolve NDJSON do intervalo
+  ---
+  duration_ms: 8.726693
+  ...
+# Subtest: BlobsEventStore é idempotente por dia/eventId e serve o export
+ok 29 - BlobsEventStore é idempotente por dia/eventId e serve o export
+  ---
+  duration_ms: 0.822261
+  ...
+# Subtest: paridade: validateLiteracyEvent rejeita o que o emissor considera inválido
+ok 30 - paridade: validateLiteracyEvent rejeita o que o emissor considera inválido
+  ---
+  duration_ms: 0.278849
+  ...
+# Subtest: aceita batch surfaces v3 válido e responde 202 com acceptedEventIds
+ok 31 - aceita batch surfaces v3 válido e responde 202 com acceptedEventIds
+  ---
+  duration_ms: 33.892881
+  ...
+# Subtest: validação fail-closed: PII/free-text, prop indevida, vocabulário e formato
+ok 32 - validação fail-closed: PII/free-text, prop indevida, vocabulário e formato
+  ---
+  duration_ms: 0.418081
+  ...
+# Subtest: aceitação parcial e batch inválido
+ok 33 - aceitação parcial e batch inválido
+  ---
+  duration_ms: 4.274882
+  ...
+# Subtest: cross-site continua proibido para o envelope v3
+ok 34 - cross-site continua proibido para o envelope v3
+  ---
+  duration_ms: 2.35583
+  ...
+# Subtest: paridade de vocabulário com o emissor canônico (funnelTelemetry.ts)
+ok 35 - paridade de vocabulário com o emissor canônico (funnelTelemetry.ts)
+  ---
+  duration_ms: 2.36617
+  ...
+# Subtest: OS v1: mission.brief_viewed e activity.presented são aceitos; vocabulário tem 14 nomes
+ok 36 - OS v1: mission.brief_viewed e activity.presented são aceitos; vocabulário tem 14 nomes
+  ---
+  duration_ms: 1.74001
+  ...
+# Subtest: literacy v2: lesson_brief_viewed e activity_presented são aceitos com props fechadas
+ok 37 - literacy v2: lesson_brief_viewed e activity_presented são aceitos com props fechadas
+  ---
+  duration_ms: 0.582739
+  ...
+# Subtest: entry_viewed: prop opcional `entry` com vocabulário fechado; ausência continua aceita (pré-v4)
+ok 38 - entry_viewed: prop opcional `entry` com vocabulário fechado; ausência continua aceita (pré-v4)
+  ---
+  duration_ms: 1.18651
+  ...
+# Subtest: o handler aceita batches end-to-end com os novos eventos dos 2 envelopes
+ok 39 - o handler aceita batches end-to-end com os novos eventos dos 2 envelopes
+  ---
+  duration_ms: 23.858618
+  ...
+# Subtest: aggregates the synthetic fixture into the hand-computed funnel
+ok 40 - aggregates the synthetic fixture into the hand-computed funnel
+  ---
+  duration_ms: 39.791565
+  ...
+# Subtest: wide cohort (first onboarding.completed) reports the wider denominator
+ok 41 - wide cohort (first onboarding.completed) reports the wider denominator
+  ---
+  duration_ms: 19.606977
+  ...
+# Subtest: activation funnel counts ordered stage reachability per week
+ok 42 - activation funnel counts ordered stage reachability per week
+  ---
+  duration_ms: 17.930536
+  ...
+# Subtest: the report never publishes installation, session, or event identifiers
+ok 43 - the report never publishes installation, session, or event identifiers
+  ---
+  duration_ms: 12.497585
+  ...
+# Subtest: committed example report regenerates byte-identically (no stale artifacts)
+ok 44 - committed example report regenerates byte-identically (no stale artifacts)
+  ---
+  duration_ms: 18.936947
+  ...
+# Subtest: k override suppresses publishable cohorts; window override narrows buckets
+ok 45 - k override suppresses publishable cohorts; window override narrows buckets
+  ---
+  duration_ms: 20.939287
+  ...
+# Subtest: vocabulary-rejected and unparsable lines are counted, never aggregated
+ok 46 - vocabulary-rejected and unparsable lines are counted, never aggregated
+  ---
+  duration_ms: 5.536453
+  ...
+# Subtest: isoWeekKey uses the ISO 8601 Thursday rule in UTC
+ok 47 - isoWeekKey uses the ISO 8601 Thursday rule in UTC
+  ---
+  duration_ms: 0.191821
+  ...
+# Subtest: eventId duplicates are removed before any cut (ADR-0010 beacon+fetch race)
+ok 48 - eventId duplicates are removed before any cut (ADR-0010 beacon+fetch race)
+  ---
+  duration_ms: 11.636674
+  ...
+# Subtest: trackEntrySplit reports the weekly first-initial-start split, k-suppressed
+ok 49 - trackEntrySplit reports the weekly first-initial-start split, k-suppressed
+  ---
+  duration_ms: 12.911186
+  ...
+# Subtest: missionCompletion attributes per missionId, unattributed bucket, and suppression
+ok 50 - missionCompletion attributes per missionId, unattributed bucket, and suppression
+  ---
+  duration_ms: 10.461225
+  ...
+# Subtest: activityFriction reports pass rate per activityType × missionId plus mission-level friction
+ok 51 - activityFriction reports pass rate per activityType × missionId plus mission-level friction
+  ---
+  duration_ms: 12.994585
+  ...
+# Subtest: verificationHealth counts states without a missionId cut
+ok 52 - verificationHealth counts states without a missionId cut
+  ---
+  duration_ms: 14.276626
+  ...
+# Subtest: rendererDegraded counts per fallback with reasons and engineId context
+ok 53 - rendererDegraded counts per fallback with reasons and engineId context
+  ---
+  duration_ms: 15.623896
+  ...
+# Subtest: moduleCompletionMedian maps missions via the live catalog and takes the median (D2)
+ok 54 - moduleCompletionMedian maps missions via the live catalog and takes the median (D2)
+  ---
+  duration_ms: 15.303085
+  ...
+# Subtest: moduleCompletionMedian is fail-closed when the catalog is unavailable
+ok 55 - moduleCompletionMedian is fail-closed when the catalog is unavailable
+  ---
+  duration_ms: 23.780219
+  ...
+# Subtest: markdown render includes the new F2b sections
+ok 56 - markdown render includes the new F2b sections
+  ---
+  duration_ms: 7.588922
+  ...
+# Subtest: cli reports usage errors without throwing
+ok 57 - cli reports usage errors without throwing
+  ---
+  duration_ms: 1.512471
+  ...
+# Subtest: cli fails closed on invalid numeric options: exit 2 and nothing published (QA AID-489 D1)
+ok 58 - cli fails closed on invalid numeric options: exit 2 and nothing published (QA AID-489 D1)
+  ---
+  duration_ms: 1.49729
+  ...
+# Subtest: cli fails closed on missing option values: exit 2, no crash (QA AID-489 D2)
+ok 59 - cli fails closed on missing option values: exit 2, no crash (QA AID-489 D2)
+  ---
+  duration_ms: 0.24502
+  ...
+# input path not found: /tmp/aid-473-f2-does-not-exist
+# unknown argument: --bogus
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: expected an integer ≥ 1, got: abc
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --k requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: expected an integer ≥ 1, got: 0
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: expected an integer ≥ 1, got: -3
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: expected an integer ≥ 1, got: 1.5
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: expected an integer ≥ 1, got: 0x5
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --k: 4 (AID-463 §3.0 requires k ≥ 5 from day 1)
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --grace-days: expected an integer ≥ 1, got: abc
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --grace-days: expected an integer ≥ 1, got: 0
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --grace-days: expected an integer ≥ 1, got: 2.5
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --windows entry: expected an integer ≥ 1, got: abc
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --windows entry: expected an integer ≥ 1, got: x
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --windows entry: expected an integer ≥ 1, got: 0
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --windows entry: expected an integer ≥ 1, got: ""
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# invalid --now: expected a valid ISO-8601 datetime, got: not-a-date
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --now requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --input requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --output requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --markdown requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --k requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --grace-days requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --windows requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# option --now requires a non-empty value
+# usage: node learner/gate/analytics/aggregate_funnel.mjs --input <dir|file.ndjson>[,...]
+#   [--output report.json] [--markdown report.md] [--k 5] [--windows 1,7,21]
+#   [--grace-days 2] [--now ISO8601]
+# emits the k-anonymized D+1/D+7/D+21 retention funnel; identifiers are never published
+# fail-closed: --k/grace-days/windows must be integers (--k ≥ 5 per AID-463 §3.0);
+#   a missing option value or invalid number exits 2 without aggregating
+# exit codes: 0 ok · 2 usage/IO error
+# {
+#   "reportVersion": 4,
+#   "generatedAt": "2026-09-18T00:00:00.000Z",
+#   "parameters": {
+#     "windowsDays": [
+#       1,
+#       7,
+#       21
+#     ],
+#     "graceDays": 2,
+#     "kMinimum": 5,
+#     "returnWindowAccumulated": "any event at day offset 1..N+graceDays",
+#     "returnWindowStrict": "at least one event at day offset N..N+graceDays",
+#     "reviewReturn": "returning event's session contains mission.started{mode:review} or review.started{reason:due|overdue}"
+#   },
+#   "anonymity": {
+#     "identifiersPublished": false,
+#     "suppressionRule": "buckets with n<k are suppressed",
+#     "suppressedBuckets": 3
+#   },
+#   "source": {
+#     "files": [
+#       {
+#         "name": "events-2026-07-13.ndjson",
+#         "lines": 9
+#       },
+#       {
+#         "name": "events-2026-07-14.ndjson",
+#         "lines": 5
+#       },
+#       {
+#         "name": "events-2026-07-15.ndjson",
+#         "lines": 6
+#       },
+#       {
+#         "name": "events-2026-07-16.ndjson",
+#         "lines": 7
+#       },
+#       {
+#         "name": "events-2026-07-17.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-07-18.ndjson",
+#         "lines": 2
+#       },
+#       {
+#         "name": "events-2026-07-21.ndjson",
+#         "lines": 7
+#       },
+#       {
+#         "name": "events-2026-07-25.ndjson",
+#         "lines": 1
+#       },
+#       {
+#         "name": "events-2026-08-04.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-08-08.ndjson",
+#         "lines": 1
+#       },
+#       {
+#         "name": "events-2026-08-10.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-08-11.ndjson",
+#         "lines": 5
+#       },
+#       {
+#         "name": "events-2026-08-12.ndjson",
+#         "lines": 5
+#       },
+#       {
+#         "name": "events-2026-08-20.ndjson",
+#         "lines": 1
+#       },
+#       {
+#         "name": "events-2026-08-24.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-08-25.ndjson",
+#         "lines": 8
+#       },
+#       {
+#         "name": "events-2026-08-26.ndjson",
+#         "lines": 8
+#       },
+#       {
+#         "name": "events-2026-08-27.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-08-28.ndjson",
+#         "lines": 4
+#       },
+#       {
+#         "name": "events-2026-08-31.ndjson",
+#         "lines": 3
+#       },
+#       {
+#         "name": "events-2026-09-02.ndjson",
+#         "lines": 1
+#       },
+#       {
+#         "name": "events-2026-09-08.ndjson",
+#         "lines": 85
+#       },
+#       {
+#         "name": "events-2026-09-09.ndjson",
+#         "lines": 34
+#       },
+#       {
+#         "name": "events-2026-09-11.ndjson",
+#         "lines": 1
+#       },
+#       {
+#         "name": "events-2026-09-17.ndjson",
+#         "lines": 1
+#       }
+#     ],
+#     "totalEvents": 212,
+#     "duplicateEvents": 2,
+#     "rejectedEvents": 0,
+#     "parseErrors": 0
+#   },
+#   "activationFunnel": {
+#     "stages": [
+#       "onboarding.started",
+#       "onboarding.completed",
+#       "mission.started",
+#       "mission.completed"
+#     ],
+#     "cohorts": {
+#       "2026-W29": {
+#         "n": 6,
+#         "counts": [
+#           6,
+#           6,
+#           5,
+#           5
+#         ]
+#       },
+#       "2026-W33": {
+#         "suppressed": true,
+#         "n": 3
+#       },
+#       "2026-W35": {
+#         "n": 6,
+#         "counts": [
+#           6,
+#           6,
+#           5,
+#           5
+#         ]
+#       },
+#       "2026-W37": {
+#         "n": 17,
+#         "counts": [
+#           17,
+#           17,
+#           17,
+#           17
+#         ]
+#       }
+#     },
+#     "overall": {
+#       "n": 32,
+#       "counts": [
+#         32,
+#         32,
+#         30,
+#         30
+#       ]
+#     }
+#   },
+#   "retention": {
+#     "cohortDefinition": "first mission.completed{result:completed} on UTC day D0",
+#     "cohorts": {
+#       "2026-W29": {
+#         "n": 5,
+#         "D+1": {
+#           "returned": 2,
+#           "returnedRate": 0.4,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.4,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+7": {
+#           "returned": 4,
+#           "returnedRate": 0.8,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.4,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.2
+#         },
+#         "D+21": {
+#           "returned": 4,
+#           "returnedRate": 0.8,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.4,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.2
+#         }
+#       },
+#       "2026-W33": {
+#         "suppressed": true,
+#         "n": 3
+#       },
+#       "2026-W35": {
+#         "n": 5,
+#         "D+1": {
+#           "returned": 2,
+#           "returnedRate": 0.4,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.4,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.2
+#         },
+#         "D+7": {
+#           "returned": 3,
+#           "returnedRate": 0.6,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.2,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.2
+#         },
+#         "D+21": {
+#           "returned": 4,
+#           "returnedRate": 0.8,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.2,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.2
+#         }
+#       },
+#       "2026-W37": {
+#         "n": 17,
+#         "D+1": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.0588,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+7": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 0,
+#           "returnedStrictRate": 0,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+21": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 0,
+#           "returnedStrictRate": 0,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         }
+#       }
+#     },
+#     "overall": {
+#       "n": 30,
+#       "D+1": {
+#         "returned": 6,
+#         "returnedRate": 0.2,
+#         "returnedStrict": 6,
+#         "returnedStrictRate": 0.2,
+#         "reviewReturn": 1,
+#         "reviewReturnRate": 0.0333
+#       },
+#       "D+7": {
+#         "returned": 10,
+#         "returnedRate": 0.3333,
+#         "returnedStrict": 4,
+#         "returnedStrictRate": 0.1333,
+#         "reviewReturn": 2,
+#         "reviewReturnRate": 0.0667
+#       },
+#       "D+21": {
+#         "returned": 11,
+#         "returnedRate": 0.3667,
+#         "returnedStrict": 3,
+#         "returnedStrictRate": 0.1,
+#         "reviewReturn": 2,
+#         "reviewReturnRate": 0.0667
+#       }
+#     }
+#   },
+#   "wideCohortRetention": {
+#     "cohortDefinition": "first onboarding.completed on UTC day D0",
+#     "cohorts": {
+#       "2026-W29": {
+#         "n": 6,
+#         "D+1": {
+#           "returned": 2,
+#           "returnedRate": 0.3333,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.3333,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+7": {
+#           "returned": 4,
+#           "returnedRate": 0.6667,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.3333,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.1667
+#         },
+#         "D+21": {
+#           "returned": 4,
+#           "returnedRate": 0.6667,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.3333,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.1667
+#         }
+#       },
+#       "2026-W33": {
+#         "suppressed": true,
+#         "n": 3
+#       },
+#       "2026-W35": {
+#         "n": 6,
+#         "D+1": {
+#           "returned": 2,
+#           "returnedRate": 0.3333,
+#           "returnedStrict": 2,
+#           "returnedStrictRate": 0.3333,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.1667
+#         },
+#         "D+7": {
+#           "returned": 3,
+#           "returnedRate": 0.5,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.1667,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.1667
+#         },
+#         "D+21": {
+#           "returned": 4,
+#           "returnedRate": 0.6667,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.1667,
+#           "reviewReturn": 1,
+#           "reviewReturnRate": 0.1667
+#         }
+#       },
+#       "2026-W37": {
+#         "n": 17,
+#         "D+1": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 1,
+#           "returnedStrictRate": 0.0588,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+7": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 0,
+#           "returnedStrictRate": 0,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         },
+#         "D+21": {
+#           "returned": 1,
+#           "returnedRate": 0.0588,
+#           "returnedStrict": 0,
+#           "returnedStrictRate": 0,
+#           "reviewReturn": 0,
+#           "reviewReturnRate": 0
+#         }
+#       }
+#     },
+#     "overall": {
+#       "n": 32,
+#       "D+1": {
+#         "returned": 6,
+#         "returnedRate": 0.1875,
+#         "returnedStrict": 6,
+#         "returnedStrictRate": 0.1875,
+#         "reviewReturn": 1,
+#         "reviewReturnRate": 0.0313
+#       },
+#       "D+7": {
+#         "returned": 10,
+#         "returnedRate": 0.3125,
+#         "returnedStrict": 4,
+#         "returnedStrictRate": 0.125,
+#         "reviewReturn": 2,
+#         "reviewReturnRate": 0.0625
+#       },
+#       "D+21": {
+#         "returned": 11,
+#         "returnedRate": 0.3438,
+#         "returnedStrict": 3,
+#         "returnedStrictRate": 0.0938,
+#         "reviewReturn": 2,
+#         "reviewReturnRate": 0.0625
+#       }
+#     }
+#   },
+#   "trackEntrySplit": {
+#     "definition": "installations with ≥1 mission.started{mode:initial}, by ISO week of the first one; split by its trackId",
+#     "cohorts": {
+#       "2026-W29": {
+#         "n": 5,
+#         "byTrack": {
+#           "ai-pratica": {
+#             "installations": 3,
+#             "rate": 0.6
+#           },
+#           "dev": {
+#             "installations": 2,
+#             "rate": 0.4
+#           }
+#         }
+#       },
+#       "2026-W33": {
+#         "suppressed": true,
+#         "n": 3
+#       },
+#       "2026-W35": {
+#         "n": 5,
+#         "byTrack": {
+#           "ai-pratica": {
+#             "installations": 3,
+#             "rate": 0.6
+#           },
+#           "dev": {
+#             "installations": 2,
+#             "rate": 0.4
+#           }
+#         }
+#       },
+#       "2026-W37": {
+#         "n": 17,
+#         "byTrack": {
+#           "ai-pratica": {
+#             "installations": 11,
+#             "rate": 0.6471
+#           },
+#           "dev": {
+#             "installations": 6,
+#             "rate": 0.3529
+#           }
+#         }
+#       }
+#     }
+#   },
+#   "missionCompletion": {
+#     "definition": "installations with ≥1 mission.started (n) vs ≥1 mission.completed{result:completed}, per missionId context; missing missionId ⇒ unattributed",
+#     "missions": {
+#       "game-02-warehouse": {
+#         "started": 6,
+#         "completed": 6,
+#         "completionRate": 1
+#       },
+#       "l01": {
+#         "started": 6,
+#         "completed": 6,
+#         "completionRate": 1
+#       },
+#       "l04": {
+#         "started": 8,
+#         "completed": 5,
+#         "completionRate": 0.625
+#       },
+#       "os-l04-1": {
+#         "suppressed": true,
+#         "n": 1
+#       },
+#       "unattributed": {
+#         "started": 13,
+#         "completed": 13,
+#         "completionRate": 1
+#       }
+#     }
+#   },
+#   "activityFriction": {
+#     "definition": "structured_attempt.passed/submitted per activityType × missionId; hint.requested/retry.requested counted per missionId (those events carry no activityType)",
+#     "attempts": {
+#       "choice|unattributed": {
+#         "suppressed": true,
+#         "n": 1
+#       },
+#       "prompt_builder|l01": {
+#         "submitted": 6,
+#         "passed": 4,
+#         "passRate": 0.6667
+#       },
+#       "prompt_builder|unattributed": {
+#         "suppressed": true,
+#         "n": 1
+#       },
+#       "rubric_review|l04": {
+#         "suppressed": true,
+#         "n": 2
+#       },
+#       "safety_classification|unattributed": {
+#         "suppressed": true,
+#         "n": 1
+#       },
+#       "sort|unattributed": {
+#         "suppressed": true,
+#         "n": 1
+#       }
+#     },
+#     "missionFriction": {
+#       "l01": {
+#         "hintRequested": 5,
+#         "retryRequested": {
+#           "suppressed": true,
+#           "n": 2
+#         }
+#       },
+#       "unattributed": {
+#         "hintRequested": {
+#           "suppressed": true,
+#           "n": 1
+#         },
+#         "retryRequested": {
+#           "suppressed": true,
+#           "n": 1
+#         }
+#       }
+#     }
+#   },
+#   "verificationHealth": {
+#     "definition": "verification.state_changed events by state (bridge-level state; no missionId in the cut)",
+#     "totalEvents": 20,
+#     "states": {
+#       "gateway-unavailable": {
+#         "events": 6,
+#         "installations": 6,
+#         "share": 0.3
+#       },
+#       "pending": {
+#         "suppressed": true,
+#         "n": 2
+#       },
+#       "rejected": {
+#         "events": 6,
+#         "installations": 6,
+#         "share": 0.3
+#       },
+#       "verified": {
+#         "events": 6,
+#         "installations": 6,
+#         "share": 0.3
+#       }
+#     }
+#   },
+#   "rendererDegraded": {
+#     "definition": "renderer.degraded events by fallback, with aggregated reasons and engineId context when present",
+#     "fallbacks": {
+#       "canvas2d": {
+#         "suppressed": true,
+#         "n": 1
+#       },
+#       "dom": {
+#         "events": 6,
+#         "reasons": {
+#           "creation-failed": 6
+#         },
+#         "engineIds": {
+#           "literacyDojo": 6
+#         }
+#       },
+#       "none": {
+#         "suppressed": true,
+#         "n": 2
+#       }
+#     }
+#   },
+#   "moduleCompletionMedian": {
+#     "definition": "per-module completion (same definition as missionCompletion, unioned over the module's missions) for ia_pratica modules mapped in the catalog; median across published modules",
+#     "catalog": "curriculum/ai-literacy/catalog.yaml",
+#     "journey": "ia_pratica",
+#     "modules": {
+#       "mod-01": {
+#         "n": 6,
+#         "completed": 6,
+#         "completionRate": 1
+#       },
+#       "mod-02": {
+#         "n": 8,
+#         "completed": 5,
+#         "completionRate": 0.625
+#       }
+#     },
+#     "medianCompletionRate": 0.8125,
+#     "modulesPublished": 2,
+#     "modulesSuppressed": 0,
+#     "missionsWithoutModuleMapping": 2
+#   },
+#   "literacyFunnel": {
+#     "envelope": "literacydojo v2",
+#     "totalEvents": 0,
+#     "duplicateEvents": 0,
+#     "totalSessions": 0,
+#     "stages": [
+#       "entry_viewed",
+#       "lesson_started",
+#       "activity_attempted",
+#       "lesson_completed"
+#     ],
+#     "overall": {
+#       "suppressed": true,
+#       "n": 0
+#     },
+#     "byWeek": {},
+#     "lessonCompletion": {},
+#     "attempts": {
+#       "suppressed": true,
+#       "n": 0
+#     }
+#   },
+#   "glossary": {
+#     "entry.lesson-resume": "retomada pós-reload de lição em andamento (chamado de 'deep-link' no relatório da janela 2026-09-06→10; o termo 'deep-link' está aposentado no vocabulário novo)",
+#     "entry.absent-pre-v4": "não instrumentado (pré-v4) — nunca 'unknown'",
+#     "briefExposure.exitedBrief": "viu o brief e não chegou à 1ª atividade — comportamento observado (exposição), nunca leitura ou compreensão",
+#     "briefExposure.exitedFirstActivity": "viu a 1ª atividade e não submeteu — não glosado como 'não entendeu o que fazer' (essa é a hipótese F1, testada com as sessões O1)",
+#     "briefExposure.residualNoBrief": "started sem brief_viewed — canário de qualidade de dados (defeito de emissão se crescer), não segmento de aprendiz",
+#     "briefExposure.startedToBrief": "~100% <15s por construção (a intro renderiza junto com o started) — nota de uso",
+#     "o1.artifactMapping": "artefatos de pesquisa O1 referem a tela pelo nome visível ao aprendiz ('Pedido da Vila Lume'); mapeamento analítico: brief/lesson_brief_viewed ↔ intro/'Pedido da Vila Lume' ('brief' é vocabulário de analista — o aprendiz nunca vê essa palavra)"
+#   },
+#   "activationDetail": {
+#     "definition": "OS: sessões por tipo de entrada (primeiro marcador da sessão: onboarding.started=first-visit · journey.returned=returning · nenhum=unclassified canário) com alcance in-sessão; literacy: split pela prop `entry` (R1). k≥5/célula",
+#     "osSessions": {
+#       "overall": {
+#         "n": 46,
+#         "firstVisit": {
+#           "sessions": 32,
+#           "onboardingCompleted": 32,
+#           "missionStarted": 30,
+#           "missionCompleted": 30
+#         },
+#         "returning": {
+#           "sessions": 14,
+#           "missionStarted": 5,
+#           "missionCompleted": 5
+#         }
+#       },
+#       "byWeek": {
+#         "2026-W29": {
+#           "n": 8,
+#           "firstVisit": {
+#             "sessions": 6,
+#             "onboardingCompleted": 6,
+#             "missionStarted": 5,
+#             "missionCompleted": 5
+#           },
+#           "returning": {
+#             "sessions": 2,
+#             "missionStarted": 1,
+#             "missionCompleted": 1
+#           }
+#         },
+#         "2026-W30": {
+#           "suppressed": true,
+#           "n": 3
+#         },
+#         "2026-W32": {
+#           "suppressed": true,
+#           "n": 2
+#         },
+#         "2026-W33": {
+#           "suppressed": true,
+#           "n": 4
+#         },
+#         "2026-W34": {
+#           "suppressed": true,
+#           "n": 1
+#         },
+#         "2026-W35": {
+#           "n": 7,
+#           "firstVisit": {
+#             "sessions": 6,
+#             "onboardingCompleted": 6,
+#             "missionStarted": 5,
+#             "missionCompleted": 5
+#           },
+#           "returning": {
+#             "sessions": 1,
+#             "missionStarted": 1,
+#             "missionCompleted": 1
+#           }
+#         },
+#         "2026-W36": {
+#           "suppressed": true,
+#           "n": 2
+#         },
+#         "2026-W37": {
+#           "n": 18,
+#           "firstVisit": {
+#             "sessions": 17,
+#             "onboardingCompleted": 17,
+#             "missionStarted": 17,
+#             "missionCompleted": 17
+#           },
+#           "returning": {
+#             "sessions": 1,
+#             "missionStarted": 0,
+#             "missionCompleted": 0
+#           }
+#         },
+#         "2026-W38": {
+#           "suppressed": true,
+#           "n": 1
+#         }
+#       }
+#     },
+#     "literacyEntrySplit": {
+#       "definition": "sessões literacy por prop opcional `entry` do entry_viewed (home|lesson-resume|onboarding); sem a prop = 'not-instrumented-pre-v4' (envelope pré-v4, nunca rejeitado); sem entry_viewed = 'no-entry-event' (canário do gap pré-F2)",
+#       "byWeek": {},
+#       "overall": {
+#         "suppressed": true,
+#         "n": 0
+#       }
+#     }
+#   },
+#   "briefExposure": {
+#     "definition": "dwell/exposição por sessão entre started, brief, 1ª apresentação e 1ª submissão (bins R3); rótulos de comportamento observado, nunca leitura — ver glossário",
+#     "literacySessions": {
+#       "definition": "envelope literacy v2 — sessões anônimas efêmeras (page load); segmentos: exitedBrief = started∧brief∧¬presented(índice 0) · exitedFirstActivity = presented(0)∧¬submissão · submittedFirst = presented(0)∧submissão; resíduo = started∧¬brief (canário)",
+#       "segments": {},
+#       "dwellBins": {
+#         "startedToBrief": {
+#           "bins": {}
+#         },
+#         "briefToFirstPresentation": {
+#           "bins": {}
+#         },
+#         "presentationToFirstSubmission": {
+#           "bins": {}
+#         }
+#       },
+#       "mediansSeconds": {
+#         "briefToFirstPresentation": null,
+#         "presentationToFirstSubmission": null
+#       }
+#     },
+#     "hostedMissions": {
+#       "definition": "envelope OS v1 — missões hospedadas (mission-events reemitidos pelo MissionShell); segmentos análogos ao literacy (started=mission.started)",
+#       "nSessionsWithStarted": 12,
+#       "segments": {
+#         "residualNoBrief": 12
+#       },
+#       "dwellBins": {
+#         "startedToBrief": {
+#           "bins": {}
+#         },
+#         "briefToFirstPresentation": {
+#           "bins": {}
+#         },
+#         "presentationToFirstSubmission": {
+#           "bins": {}
+#         }
+#       },
+#       "mediansSeconds": {
+#         "briefToFirstPresentation": null,
+#         "presentationToFirstSubmission": null
+#       },
+#       "coverage": "engineId=literacyDojo somente — voxelDojo não emite os eventos de exposição nesta onda (adoção voxel = follow-up data-gated)"
+#     }
+#   },
+#   "probeClassification": {
+#     "definition": "tráfego sintético classificado deterministicamente por marcador de identificador (prefixo probe. novo + lista legada aid\#\#\#-/qa-/sequential-uuid); elimina inferência por timing ONDE há marcador — sem marcador a sessão permanece não classificada por esta seção",
+#     "markerRules": [
+#       "probe.",
+#       "aid\#\#\#-",
+#       "qa-",
+#       "sequential-uuid"
+#     ],
+#     "counts": {
+#       "osEvents": 0,
+#       "literacyEvents": 0,
+#       "osInstallations": 0,
+#       "literacySessions": 0,
+#       "byMarker": {}
+#     },
+#     "policy": "as seções v3/v4 de aprendiz continuam computadas sobre TODOS os eventos aceitos (semântica inalterada); excluir sondas da leitura é decisão do operador com esta seção em mãos"
+#   }
+# }
+# Subtest: library boundary is fail-closed too: aggregateFunnel throws, runAggregation refuses k<5 (QA AID-489 D1)
+ok 60 - library boundary is fail-closed too: aggregateFunnel throws, runAggregation refuses k<5 (QA AID-489 D1)
+  ---
+  duration_ms: 32.287283
+  ...
+# Subtest: literacyFunnel agrega por sessão com dedup e alcance ordenado
+ok 61 - literacyFunnel agrega por sessão com dedup e alcance ordenado
+  ---
+  duration_ms: 10.288313
+  ...
+# Subtest: k-suppressão: células com n<k mostram só o n
+ok 62 - k-suppressão: células com n<k mostram só o n
+  ---
+  duration_ms: 2.046102
+  ...
+# Subtest: markdown renderiza a seção literacy sem identificadores
+ok 63 - markdown renderiza a seção literacy sem identificadores
+  ---
+  duration_ms: 3.070801
+  ...
+# Subtest: activationDetail segmenta sessões OS first-visit × returning com alcance in-sessão
+ok 64 - activationDetail segmenta sessões OS first-visit × returning com alcance in-sessão
+  ---
+  duration_ms: 15.792796
+  ...
+# Subtest: activationDetail publica o split literacy da prop entry (R1), incluindo pré-v4 e canário
+ok 65 - activationDetail publica o split literacy da prop entry (R1), incluindo pré-v4 e canário
+  ---
+  duration_ms: 3.882651
+  ...
+# Subtest: briefExposure literacy: segmentos R3, bins e medianas contínuas (b)/(c)
+ok 66 - briefExposure literacy: segmentos R3, bins e medianas contínuas (b)/(c)
+  ---
+  duration_ms: 2.741592
+  ...
+# Subtest: briefExposure hostedMissions: segmentos análogos no envelope OS (engineId=literacyDojo) com cobertura declarada
+ok 67 - briefExposure hostedMissions: segmentos análogos no envelope OS (engineId=literacyDojo) com cobertura declarada
+  ---
+  duration_ms: 2.293701
+  ...
+# Subtest: k≥5 suprime as células novas mantendo o n (declaração, não falha)
+ok 68 - k≥5 suprime as células novas mantendo o n (declaração, não falha)
+  ---
+  duration_ms: 2.855672
+  ...
+# Subtest: probeClassification: marcadores determinísticos probe. + legados (diagnóstico, não remove das seções)
+ok 69 - probeClassification: marcadores determinísticos probe. + legados (diagnóstico, não remove das seções)
+  ---
+  duration_ms: 3.210951
+  ...
+# Subtest: glossário binding R1/R3/R4 vem no report e no markdown
+ok 70 - glossário binding R1/R3/R4 vem no report e no markdown
+  ---
+  duration_ms: 8.129443
+  ...
+# Subtest: o report v4 nunca publica identificadores da fixture
+ok 71 - o report v4 nunca publica identificadores da fixture
+  ---
+  duration_ms: 3.071071
+  ...
+# Subtest: dwellBinLabel cobre os 4 bins do R3 e rejeita intervalo negativo
+ok 72 - dwellBinLabel cobre os 4 bins do R3 e rejeita intervalo negativo
+  ---
+  duration_ms: 0.26886
+  ...
+# Subtest: probeMarkerFor: prefixo probe. vence pela ordem determinística da lista
+ok 73 - probeMarkerFor: prefixo probe. vence pela ordem determinística da lista
+  ---
+  duration_ms: 0.182821
+  ...
+# Subtest: surfacesFunnel agrega o envelope v3 por fonte com dedup source/eventId
+ok 74 - surfacesFunnel agrega o envelope v3 por fonte com dedup source/eventId
+  ---
+  duration_ms: 6.821463
+  ...
+# Subtest: sessões surfaces são contadas, nunca publicadas — nem sessionId nem eventId
+ok 75 - sessões surfaces são contadas, nunca publicadas — nem sessionId nem eventId
+  ---
+  duration_ms: 2.37514
+  ...
+# Subtest: input sem v3 mantém o relatório v4 idêntico: chave surfacesFunnel omitida
+ok 76 - input sem v3 mantém o relatório v4 idêntico: chave surfacesFunnel omitida
+  ---
+  duration_ms: 29.38039
+  ...
+# Subtest: seções v3/v4 permanecem idênticas com e sem linhas v3 no mesmo input (aditivo)
+ok 77 - seções v3/v4 permanecem idênticas com e sem linhas v3 no mesmo input (aditivo)
+  ---
+  duration_ms: 2.312551
+  ...
+# Subtest: markdown publica a seção surfaces quando há v3 no input
+ok 78 - markdown publica a seção surfaces quando há v3 no input
+  ---
+  duration_ms: 0.66411
+  ...
+# Subtest: linha v3 inválida continua rejeitada (fail-closed do vocabulário)
+ok 79 - linha v3 inválida continua rejeitada (fail-closed do vocabulário)
+  ---
+  duration_ms: 0.349409
+  ...
+# Subtest: clean synthetic fixture passes with zero drift (exit 0)
+ok 80 - clean synthetic fixture passes with zero drift (exit 0)
+  ---
+  duration_ms: 30.430021
+  ...
+# Subtest: drift fixture fails high with every divergence kind classified
+ok 81 - drift fixture fails high with every divergence kind classified
+  ---
+  duration_ms: 4.261792
+  ...
+# Subtest: classifyEvent mirrors the collector verdict on the rejection tree
+ok 82 - classifyEvent mirrors the collector verdict on the rejection tree
+  ---
+  duration_ms: 0.51549
+  ...
+# {
+#   "error": "no input paths given: pass one or more .ndjson files or directories"
+# }
+# unknown argument: --bogus
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# option --input requires a non-empty value
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# option --output requires a non-empty value
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# option --max-samples requires a non-empty value
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# invalid --max-samples: expected an integer ≥ 0, got: abc
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# invalid --max-samples: expected an integer ≥ 0, got: -1
+# usage: node learner/gate/analytics/schema_drift_monitor.mjs --input <dir|file.ndjson>[,...]
+#   [--output summary.json] [--max-samples N]
+# fail-closed: --max-samples must be an integer ≥ 0; a missing option value exits 2
+# exit codes: 0 clean · 1 drift detected · 2 usage/IO error
+# Subtest: usage and IO errors exit 2 without throwing
+ok 83 - usage and IO errors exit 2 without throwing
+  ---
+  duration_ms: 4.378532
+  ...
+# schema drift monitor: 0 drift(s) across 214 line(s); summary written to /tmp/aid-492-monitor-TziqSs/s.json
+# Subtest: cli fails closed on missing values and invalid --max-samples: exit 2 (QA AID-489 D2 + D1 class)
+ok 84 - cli fails closed on missing values and invalid --max-samples: exit 2 (QA AID-489 D2 + D1 class)
+  ---
+  duration_ms: 21.296747
+  ...
+# schema drift monitor: 11 drift(s) across 12 line(s); summary written to /tmp/aid-473-f2-monitor-Sz2dzB/summary.json
+# schema drift detected: 11 line(s) diverge from the closed vocabulary
+# Subtest: cli writes the summary to --output and bounds samples
+ok 85 - cli writes the summary to --output and bounds samples
+  ---
+  duration_ms: 4.434411
+  ...
+# Subtest: blank interior lines are drift, a trailing newline is not
+ok 86 - blank interior lines are drift, a trailing newline is not
+  ---
+  duration_ms: 1.430591
+  ...
+# Subtest: aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope
+ok 87 - aceita envelopes OS v1 e literacy v2 no mesmo input e conta por envelope
+  ---
+  duration_ms: 6.778892
+  ...
+# Subtest: drift literacy falha alto (exit 1) com motivo classificado
+ok 88 - drift literacy falha alto (exit 1) com motivo classificado
+  ---
+  duration_ms: 3.218131
+  ...
+# Subtest: aceita envelopes surfaces v3 e conta separadamente dos envelopes v1/v2
+ok 89 - aceita envelopes surfaces v3 e conta separadamente dos envelopes v1/v2
+  ---
+  duration_ms: 4.964572
+  ...
+# Subtest: drift surfaces v3 falha alto (exit 1) com motivo classificado
+ok 90 - drift surfaces v3 falha alto (exit 1) com motivo classificado
+  ---
+  duration_ms: 1.895611
+  ...
+# Subtest: mistura v1 + v2 + v3 no mesmo input soma os três contadores
+ok 91 - mistura v1 + v2 + v3 no mesmo input soma os três contadores
+  ---
+  duration_ms: 3.154861
+  ...
+# Subtest: a fixture synthetic-v4 passa limpa (vocabulário estendido aceito nos 2 envelopes)
+ok 92 - a fixture synthetic-v4 passa limpa (vocabulário estendido aceito nos 2 envelopes)
+  ---
+  duration_ms: 13.244475
+  ...
+# Subtest: self-check parity: o espelho literacy concorda com o coletor nos eventos de revisão (AID-915) e exposição (F2)
+ok 93 - self-check parity: o espelho literacy concorda com o coletor nos eventos de revisão (AID-915) e exposição (F2)
+  ---
+  duration_ms: 0.364721
+  ...
+# Subtest: drift literacy: entry fora do vocabulário e activityIndex negativo falham alto com motivo classificado
+ok 94 - drift literacy: entry fora do vocabulário e activityIndex negativo falham alto com motivo classificado
+  ---
+  duration_ms: 5.752432
+  ...
+# Subtest: eventId OS com prefixo probe. é aceito (convenção nova, R5) e não é drift
+ok 95 - eventId OS com prefixo probe. é aceito (convenção nova, R5) e não é drift
+  ---
+  duration_ms: 2.375951
+  ...
+# Subtest: staged bridge recomputes each official payload across the 7-game x L1-L4 matrix
+ok 96 - staged bridge recomputes each official payload across the 7-game x L1-L4 matrix
+  ---
+  duration_ms: 19.026367
+  ...
+# Subtest: hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)
+ok 97 - hosted records without attempt_id verify PASS and the receipt omits attempt_id (AID-448)
+  ---
+  duration_ms: 1.424331
+  ...
+# Subtest: WAREHOUSE retry changes FAIL to independently bound PASS
+ok 98 - WAREHOUSE retry changes FAIL to independently bound PASS
+  ---
+  duration_ms: 0.61092
+  ...
+# Subtest: each complete failing WAREHOUSE level stays an honest FAIL without errors
+ok 99 - each complete failing WAREHOUSE level stays an honest FAIL without errors
+  ---
+  duration_ms: 1.52173
+  ...
+# Subtest: rejects favorable aggregate without observations for every game
+ok 100 - rejects favorable aggregate without observations for every game
+  ---
+  duration_ms: 0.80313
+  ...
+# Subtest: rejects forged metrics and pass claims for every game
+ok 101 - rejects forged metrics and pass claims for every game
+  ---
+  duration_ms: 1.49363
+  ...
+# Subtest: rejects trace or producer disagreement mutations
+ok 102 - rejects trace or producer disagreement mutations
+  ---
+  duration_ms: 1.07203
+  ...
+# Subtest: rejects other projects and embedded verifiers
+ok 103 - rejects other projects and embedded verifiers
+  ---
+  duration_ms: 0.397
+  ...
+# Subtest: rejects unknown game and nonclosed record
+ok 104 - rejects unknown game and nonclosed record
+  ---
+  duration_ms: 0.53206
+  ...
+# Subtest: rejects malformed or timezone-naive timestamps
+ok 105 - rejects malformed or timezone-naive timestamps
+  ---
+  duration_ms: 0.47737
+  ...
+# Subtest: publishes same-origin session JSON instead of SPA HTML
+ok 106 - publishes same-origin session JSON instead of SPA HTML
+  ---
+  duration_ms: 20.553117
+  ...
+# Subtest: verification endpoint returns a bound receipt for a wormhole payload
+ok 107 - verification endpoint returns a bound receipt for a wormhole payload
+  ---
+  duration_ms: 2.290481
+  ...
+# Subtest: verification endpoint omits attempt_id for a hosted wormhole record without one (AID-448)
+ok 108 - verification endpoint omits attempt_id for a hosted wormhole record without one (AID-448)
+  ---
+  duration_ms: 1.70045
+  ...
+# Subtest: staged literacy verifier matches the canonical Python verifier receipt-for-receipt (AID-449)
+ok 109 - staged literacy verifier matches the canonical Python verifier receipt-for-receipt (AID-449)
+  ---
+  duration_ms: 316.729395
+  ...
+# Subtest: staged literacy verifier recomputes every canonical activity across the 20 hosted lessons
+ok 110 - staged literacy verifier recomputes every canonical activity across the 20 hosted lessons
+  ---
+  duration_ms: 3.360291
+  ...
+# Subtest: staged literacy verifier fails closed on prompt_builder and drift without false approval
+ok 111 - staged literacy verifier fails closed on prompt_builder and drift without false approval
+  ---
+  duration_ms: 0.82975
+  ...
+# Subtest: verification endpoint returns a bound literacy receipt (AID-449)
+ok 112 - verification endpoint returns a bound literacy receipt (AID-449)
+  ---
+  duration_ms: 1.57437
+  ...
+# Subtest: verification endpoint still rejects unknown schemas with 422
+ok 113 - verification endpoint still rejects unknown schemas with 422
+  ---
+  duration_ms: 1.193652
+  ...
+# Subtest: accepts the independently recomputed l02 v3 attempt
+ok 114 - accepts the independently recomputed l02 v3 attempt
+  ---
+  duration_ms: 9.721343
+  ...
+# Subtest: fails closed when producer claims drift from the structured answer
+ok 115 - fails closed when producer claims drift from the structured answer
+  ---
+  duration_ms: 0.3354
+  ...
+# Subtest: fails closed outside the fixed canonical lesson contract
+ok 116 - fails closed outside the fixed canonical lesson contract
+  ---
+  duration_ms: 0.20351
+  ...
+1..116
+# tests 116
+# suites 0
+# pass 115
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 1080.017391
+
+===== [cross-engine] blobs-proof: AID-947 end-to-end durable proof =====
+
+added 50 packages in 844ms
+PASS  identical POST #1 -> 202 — status=202
+PASS  identical POST #2 -> 202 — status=202
+PASS  export -> 200 ndjson — status=200
+PASS  exactly 1 line per eventId after duplicate POSTs — lines=1
+PASS  line carries the posted eventId
+PASS  edge-semantics POST -> 202 — status=202
+PASS  edge-semantics export -> 200 ndjson with the edge line — status=200 edgeHits=1
+PASS  read paths only use the portable no-prefix flat scan (edge semantics)
+PASS  no-context POST still 202 via NDJSON fallback — status=202
+
+all checks passed
+
+===== [cross-engine] schema-drift: AID-473 F2 monitor over synthetic fixtures =====
+{
+  "monitorVersion": 4,
+  "generatedAt": "2026-09-16T18:30:18.890Z",
+  "files": [
+    {
+      "name": "events-2026-07-13.ndjson",
+      "lines": 9,
+      "validEvents": 9,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-14.ndjson",
+      "lines": 5,
+      "validEvents": 5,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-15.ndjson",
+      "lines": 6,
+      "validEvents": 6,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-16.ndjson",
+      "lines": 7,
+      "validEvents": 7,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-17.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-18.ndjson",
+      "lines": 2,
+      "validEvents": 2,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-21.ndjson",
+      "lines": 7,
+      "validEvents": 7,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-07-25.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-04.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-08.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-10.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-11.ndjson",
+      "lines": 5,
+      "validEvents": 5,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-12.ndjson",
+      "lines": 5,
+      "validEvents": 5,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-20.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-24.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-25.ndjson",
+      "lines": 8,
+      "validEvents": 8,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-26.ndjson",
+      "lines": 8,
+      "validEvents": 8,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-27.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-28.ndjson",
+      "lines": 4,
+      "validEvents": 4,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-08-31.ndjson",
+      "lines": 3,
+      "validEvents": 3,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-02.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-08.ndjson",
+      "lines": 85,
+      "validEvents": 85,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-09.ndjson",
+      "lines": 34,
+      "validEvents": 34,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-11.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-17.ndjson",
+      "lines": 1,
+      "validEvents": 1,
+      "driftCount": 0
+    },
+    {
+      "name": "events-2026-09-16.ndjson",
+      "lines": 48,
+      "validEvents": 48,
+      "driftCount": 0
+    }
+  ],
+  "totalLines": 262,
+  "validEvents": 262,
+  "validOsEvents": 240,
+  "validLiteracyEvents": 22,
+  "validSurfaceEvents": 0,
+  "driftCount": 0,
+  "driftByKind": {},
+  "samples": [],
+  "osEventIdDiagnostics": {
+    "nonUuidEventIds": 240,
+    "probePrefixedEventIds": 1,
+    "note": "diagnóstico de adoção da convenção probe. (ADR-0010, emenda F2) — nunca rejeição"
+  }
+}
+
+===== [cross-engine] build: OS dist with same-origin pilot URLs (Vite import.meta.env) =====
+
+> codexdojo-os-prototype@0.1.0 build
+> tsc -b && vite build
+
+vite v8.1.4 building client environment for production...
+[2Ktransforming...✓ 1870 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                                        1.56 kB │ gzip:   0.62 kB
+dist/assets/index-C0BWfuVd.css                                        58.07 kB │ gzip:  11.76 kB
+dist/assets/create-pointer-move-prompt-handoff-C_G_UhQ--D2vs1SMh.js   50.95 kB │ gzip:  17.76 kB
+dist/assets/copy-content-BuqfLMsd-D0Y8tH8k.js                         53.55 kB │ gzip:  19.42 kB
+dist/assets/renderer-OgmF5gNo-Bc7UFJ5H.js                            120.10 kB │ gzip:  36.09 kB
+dist/assets/dist-xNElWUyw.js                                         120.85 kB │ gzip:  36.43 kB
+dist/assets/dist-CSugcPru.js                                         354.94 kB │ gzip:  93.58 kB
+dist/assets/index-DLX4m5Pv.js                                        392.22 kB │ gzip: 116.78 kB
+
+✓ built in 352ms
+cross-engine: requested phases completed: unit contracts blobs-proof schema-drift build
