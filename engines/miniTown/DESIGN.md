@@ -28,6 +28,7 @@ colors:
   metal-sheet: "#b0b0b0"
   window-glass: "#1a1f2a"
   window-light: "#ffd089"
+  ambient-light: "#ffffff"
   wall-cream: "#f3ead0"
   wall-yellow: "#f7e5b0"
   wall-sand: "#d6c4a0"
@@ -75,7 +76,7 @@ Level 0 entry surface for nontechnical audiences: a cozy town at dusk you
 wander and observe. Nothing to fail, nothing to configure. The 3D scene is the
 entire experience; UI chrome is one translucent HUD panel. Colors live inline
 in the scene code (`src/scene/dayNight.ts`, `ground.ts`, `roads.ts`,
-`buildings.ts`, `zones.ts`, `main.ts`) and in the sim palettes
+`buildings.ts`, `zones.ts`, `sceneRoot.ts`, `main.ts`) and in the sim palettes
 (`src/sim/variation.ts`, `src/sim/residents.ts`) — this document is their
 registry so future overlays stay in palette.
 
@@ -84,6 +85,7 @@ registry so future overlays stay in palette.
 - **Night ladder** (`#0d1424` → `#1a2238` → `#3d4663` → `#5d6b88`): the dusk sky gradient; the deepest tone is up, the lightest at the horizon.
 - **Sky pastels** (`#a3d0e8`/`#c0d5e0`/`#cfe6f0`): horizon haze layers.
 - **Warm lights** (`#ffb074` windows, `#fff4d6` lit interiors, `#ffd089` window point lights): the emotional core — tiny warm glows against the cool night. Use warm-on-cool contrast, never large warm areas.
+- **Ambient light** (`#ffffff`, intensity 0.4 in `src/scene/sceneRoot.ts`): neutral scene fill; lighting infrastructure, not a material palette color.
 - **Greens** (`#6f9663` ground, `#7fa572` trees, `#88b27a`/`#82ad75` grass accents): muted, natural, never saturated.
 - **Roads** (`#3a3a3e` asphalt, `#e8e8e8` centre stripe, `#d0d0d0` edge lines): quiet greys, never pure black/white.
 - **Buildings** (`#c8b89a` sand, `#a04030` terracotta defaults; `#8a6a4a` wood beams, `#eae0c0` stakes, `#b0b0b0` metal sheets, `#1a1f2a` window glass): soft village palette.
