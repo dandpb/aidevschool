@@ -52,7 +52,7 @@ export function renderGatePanel(params: GatePanelParams): void {
   params.panel.className = "panel"
   params.panel.innerHTML = ""
   const title = document.createElement("h2")
-  title.textContent = "Gate de regiao"
+  title.textContent = "Gate de região"
   const body = document.createElement("p")
   body.textContent = params.label
   params.panel.append(title, body, makeButton("Fechar", params.callbacks.onClosePanel))

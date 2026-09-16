@@ -36,9 +36,9 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.locator(".objective-chip")).toContainText("PixelDojo Quest")
   await expect(page.locator(".phase-strip")).toContainText("Briefing")
   await expect(page.locator(".objective-chip")).toContainText("18 labs")
-  await page.getByRole("button", { name: "Orbita 3D" }).click()
-  await expect(page.locator(".objective-chip")).toContainText("Orbita 3D")
-  await expect(page.locator(".phase-strip")).toContainText("Orbita 3D")
+  await page.getByRole("button", { name: "Órbita 3D" }).click()
+  await expect(page.locator(".objective-chip")).toContainText("Órbita 3D")
+  await expect(page.locator(".phase-strip")).toContainText("Órbita 3D")
   await expect(page.getByText("Duelo 1: Rate Limiter")).toBeVisible()
   await page.keyboard.press("ArrowRight")
   await expect(page.getByText("Duelo 2: Key Value Store")).toBeVisible()
@@ -76,8 +76,8 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
     await page.keyboard.press(action)
   }
 
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
-  await expect(page.locator(".phase-strip")).toContainText("Evidencia")
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
+  await expect(page.locator(".phase-strip")).toContainText("Evidência")
   const evidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(evidence?.unit_id).toBe(firstUnitId)
   expect(evidence?.project).toBe("01_rate_limiter")
@@ -93,7 +93,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   }
   expect(evidence?.curriculum_context).toMatchObject({
     mechanic: "Token Bucket",
-    accepted_signal: "requisicao legitima",
+    accepted_signal: "requisição legítima",
     rejected_trap: "rajada abusiva",
   })
   expect(evidence?.review_context).toMatchObject({
@@ -106,18 +106,18 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await page.screenshot({ path: "shots/pixel-quest-token-bucket.png", fullPage: true })
 
   await page.getByRole("button", { name: "Voltar ao mapa" }).click()
-  await expect(page.locator(".status-strip")).toContainText("Evidencia PASS")
+  await expect(page.locator(".status-strip")).toContainText("Evidência PASS")
   if (firstUnitScheduledReview) {
     await expect(page.locator(".status-strip")).toContainText("+1 pending")
   } else {
     await expect(page.locator(".status-strip")).not.toContainText("+1 pending")
   }
   await page.keyboard.press("j")
-  await expect(page.getByText("Ultima evidencia: PASS")).toBeVisible()
+  await expect(page.getByText("Última evidência: PASS")).toBeVisible()
   if (firstUnitScheduledReview) {
     await expect(page.getByText("gate pending")).toBeVisible()
   }
-  await expect(page.locator(".phase-strip")).toContainText("Revisao")
+  await expect(page.locator(".phase-strip")).toContainText("Revisão")
 
   await page.getByRole("button", { name: "Fechar" }).click()
   for (let step = 0; step < 7; step += 1) {
@@ -139,13 +139,13 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   for (const action of ["z", "z", "x", "z", "x"]) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const sequenceEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(sequenceEvidence?.project).toBe("02_key_value_store")
   expect(sequenceEvidence?.pass).toBe(true)
   expect(sequenceEvidence?.curriculum_context).toMatchObject({
     mechanic: "TTL Cache",
-    accepted_signal: "chave quente valida",
+    accepted_signal: "chave quente válida",
     rejected_trap: "leitura expirada",
   })
 
@@ -153,7 +153,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.locator(".objective-chip")).toContainText("REST API Auth")
   await page.keyboard.press("e")
   await page.keyboard.press("Enter")
-  await expect(page.getByText("Treino de autorizacao")).toBeVisible()
+  await expect(page.getByText("Treino de autorização")).toBeVisible()
   await page.keyboard.press("Enter")
   const authMode = await page.evaluate(() => window.__pixelQuestDebug?.getMode())
   expect(authMode).toBe("auth-gate")
@@ -161,7 +161,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   for (const action of ["z", "x", "z", "x", "x", "z"]) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const policyEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(policyEvidence?.project).toBe("07_rest_api_auth")
   expect(policyEvidence?.pass).toBe(true)
@@ -174,7 +174,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   expect(policyEvidence?.curriculum_context).toMatchObject({
     mechanic: "Auth Gate",
     accepted_signal: "token autorizado",
-    rejected_trap: "escopo invalido",
+    rejected_trap: "escopo inválido",
   })
   await page.screenshot({ path: "shots/pixel-quest-auth-gate-3d.png", fullPage: true })
 
@@ -188,14 +188,14 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   for (const action of ["z", "x", "z", "x", "z"]) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const routeEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(routeEvidence?.project).toBe("11_load_balancer")
   expect(routeEvidence?.pass).toBe(true)
   expect(routeEvidence?.curriculum_context).toMatchObject({
     mechanic: "Health Router",
-    accepted_signal: "no saudavel",
-    rejected_trap: "no degradado",
+    accepted_signal: "nó saudável",
+    rejected_trap: "nó degradado",
   })
 
   // Lab 13 — Circuit Breaker (route_health) projects through the 3D
@@ -208,7 +208,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   await expect(page.locator(".objective-chip")).toContainText("Circuit Breaker")
   await page.keyboard.press("e")
   await page.keyboard.press("Enter")
-  await expect(page.getByText("Treino de resiliencia")).toBeVisible()
+  await expect(page.getByText("Treino de resiliência")).toBeVisible()
   await page.keyboard.press("Enter")
   const cbMode = await page.evaluate(() => window.__pixelQuestDebug?.getMode())
   expect(cbMode).toBe("circuit-breaker")
@@ -216,7 +216,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   for (const action of ["z", "x", "z", "x", "z"]) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const cbEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(cbEvidence?.project).toBe("13_api_gateway_circuit_breaker")
   expect(cbEvidence?.pass).toBe(true)
@@ -228,7 +228,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   }
   expect(cbEvidence?.curriculum_context).toMatchObject({
     mechanic: "Circuit Breaker",
-    accepted_signal: "upstream saudavel",
+    accepted_signal: "upstream saudável",
     rejected_trap: "falha em cascata",
   })
   await page.screenshot({ path: "shots/pixel-quest-circuit-breaker-3d.png", fullPage: true })
@@ -255,7 +255,7 @@ test("plays the PixelDojo curriculum quest slice and advances labs", async ({ pa
   for (const action of taskQueueActions) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const taskQueueEvidence = await page.evaluate(() => window.__pixelQuestEvidence?.at(-1))
   expect(taskQueueEvidence?.project).toBe("04_concurrent_task_queue")
   expect(taskQueueEvidence?.unit_id).toBe("U4-task-queue")

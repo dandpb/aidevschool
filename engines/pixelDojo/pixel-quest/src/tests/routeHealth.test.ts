@@ -27,8 +27,8 @@ describe("route health encounter", () => {
       },
       curriculum_context: {
         mechanic: "Health Router",
-        accepted_signal: "no saudavel",
-        rejected_trap: "no degradado",
+        accepted_signal: "nó saudável",
+        rejected_trap: "nó degradado",
       },
     })
   })

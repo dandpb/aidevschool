@@ -79,10 +79,10 @@ export function findEncounter(
 export function worldPrompt(world: WorldState): string {
   const interaction = getInteraction(world)
   if (interaction.kind === "npc") {
-    return "E: falar | O: orbita | J: diario | H: fases"
+    return "E: falar | O: órbita | J: diário | H: fases"
   }
   if (interaction.kind === "gate") {
-    return "E: inspecionar gate | O: orbita | J: diario | H: fases"
+    return "E: inspecionar gate | O: órbita | J: diário | H: fases"
   }
-  return "Setas/WASD: mover | O: orbita | J: diario | H: fases"
+  return "Setas/WASD: mover | O: órbita | J: diário | H: fases"
 }
