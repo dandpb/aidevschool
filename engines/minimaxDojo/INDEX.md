@@ -1,6 +1,6 @@
 # 📑 minimaxDojo — Índice
 
-> **Mapa completo de arquivos.** Para usar o dojo, comece pelo [`QUICK_START.md`](QUICK_START.md).
+> **Mapa completo de arquivos.** Para usar o dojo, comece pelo [`QUICK_START.md`](docs/QUICK_START.md).
 
 ## 🚀 Por onde começar
 
