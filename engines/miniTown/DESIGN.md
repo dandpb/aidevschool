@@ -14,11 +14,42 @@ colors:
   window-lit: "#fff4d6"
   ground-green: "#6f9663"
   tree-green: "#7fa572"
-  hud-bg: "#11110f"
+  grass-accent-a: "#88b27a"
+  grass-accent-b: "#82ad75"
+  asphalt: "#3a3a3e"
+  road-stripe: "#e8e8e8"
+  road-edge: "#d0d0d0"
   hud-overlay: "#0b0e14"
   hud-text: "#e6e9f2"
   building-sand: "#c8b89a"
   building-terracotta: "#a04030"
+  wood-beam: "#8a6a4a"
+  wood-stake: "#eae0c0"
+  metal-sheet: "#b0b0b0"
+  window-glass: "#1a1f2a"
+  window-light: "#ffd089"
+  wall-cream: "#f3ead0"
+  wall-yellow: "#f7e5b0"
+  wall-sand: "#d6c4a0"
+  wall-tan: "#bfa583"
+  wall-straw: "#e6d4b0"
+  roof-terracotta: "#c0524a"
+  roof-forest: "#5e7d5a"
+  roof-navy: "#3d6a8a"
+  roof-walnut: "#8a5a3b"
+  roof-bronze: "#a07b50"
+  roof-brick: "#7a3f3a"
+  shirt-terracotta: "#d96a4a"
+  shirt-forest: "#5a8a5a"
+  shirt-mustard: "#d6a64a"
+  shirt-plum: "#7a4a8a"
+  skin-peach: "#f1c3a2"
+  skin-tan: "#d8a684"
+  skin-brown: "#a87a5a"
+  skin-pale: "#efc89a"
+  zone-residential: "#9ec5e8"
+  zone-shop: "#aedca0"
+  zone-workspace: "#f0d97a"
 typography:
   hud-label:
     fontFamily: system-ui
@@ -43,17 +74,24 @@ components:
 Level 0 entry surface for nontechnical audiences: a cozy town at dusk you
 wander and observe. Nothing to fail, nothing to configure. The 3D scene is the
 entire experience; UI chrome is one translucent HUD panel. Colors live inline
-in the scene code (`src/scene/dayNight.ts`, `ground.ts`, `main.ts`) — this
-document is their registry so future overlays stay in palette.
+in the scene code (`src/scene/dayNight.ts`, `ground.ts`, `roads.ts`,
+`buildings.ts`, `zones.ts`, `main.ts`) and in the sim palettes
+(`src/sim/variation.ts`, `src/sim/residents.ts`) — this document is their
+registry so future overlays stay in palette.
 
 ## Colors
 
 - **Night ladder** (`#0d1424` → `#1a2238` → `#3d4663` → `#5d6b88`): the dusk sky gradient; the deepest tone is up, the lightest at the horizon.
 - **Sky pastels** (`#a3d0e8`/`#c0d5e0`/`#cfe6f0`): horizon haze layers.
-- **Warm lights** (`#ffb074` windows, `#fff4d6` lit interiors): the emotional core — tiny warm glows against the cool night. Use warm-on-cool contrast, never large warm areas.
-- **Greens** (`#6f9663` ground, `#7fa572` trees): muted, natural, never saturated.
-- **Buildings** (`#c8b89a` sand, `#a04030` terracotta): soft village palette.
-- **HUD** (`rgba(11,14,20,0.7)` bg, `#e6e9f2` text): the only DOM chrome.
+- **Warm lights** (`#ffb074` windows, `#fff4d6` lit interiors, `#ffd089` window point lights): the emotional core — tiny warm glows against the cool night. Use warm-on-cool contrast, never large warm areas.
+- **Greens** (`#6f9663` ground, `#7fa572` trees, `#88b27a`/`#82ad75` grass accents): muted, natural, never saturated.
+- **Roads** (`#3a3a3e` asphalt, `#e8e8e8` centre stripe, `#d0d0d0` edge lines): quiet greys, never pure black/white.
+- **Buildings** (`#c8b89a` sand, `#a04030` terracotta defaults; `#8a6a4a` wood beams, `#eae0c0` stakes, `#b0b0b0` metal sheets, `#1a1f2a` window glass): soft village palette.
+- **Wall palette** (`#f3ead0` cream, `#f7e5b0` soft yellow, `#d6c4a0` sand, `#bfa583` tan, `#e6d4b0` pale straw, plus sand default): pastel walls per `docs/concepts/CONCEPTS.md`.
+- **Roof palette** (`#c0524a` terracotta, `#5e7d5a` forest, `#3d6a8a` navy, `#8a5a3b` walnut, `#a07b50` bronze, `#7a3f3a` brick): saturated but small-area accents.
+- **Residents** — shirts (`#d96a4a` terracotta, `#5a8a5a` forest, `#3d6a8a` navy, `#d6a64a` mustard, `#7a4a8a` plum) and skin tones (`#f1c3a2` peach, `#d8a684` tan, `#a87a5a` brown, `#efc89a` pale): tiny varied dots of life.
+- **Zone slabs** (`#9ec5e8` residential, `#aedca0` shop, `#f0d97a` workspace): pale ground hints under plots.
+- **HUD** (`rgba(11,14,20,0.7)` bg, `#e6e9f2` text, `#3d4663` border): the only DOM chrome.
 
 ## Typography
 
