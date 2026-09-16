@@ -1,0 +1,39 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/literacyDojo/playwright/corridor.spec.ts",
+      "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
+    },
+    {
+      "path": "engines/literacyDojo/src/domain/trackQueries.ts",
+      "sha256": "141d1091c6af4a0c5e03ebc81acaa3e24598ffaaae78017f849e6773e941b67e"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "resumes-in-progress-lesson",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "module-summary-preserved",
+      "outcome": "pass"
+    },
+    {
+      "evidence": "playwright",
+      "id": "pending-challenge-becomes-home-mission",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-16T18:14:23Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "067f41e9f6b9731a84515bfc13b4cadb7b3a532a",
+  "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
+  "outcome": "pass",
+  "runId": "2026-09-16T18:14:23Z-literacy-corridor-resume-mid-module-067f41e9",
+  "scenarioId": "literacy-corridor-resume-mid-module",
+  "schemaVersion": 1,
+  "sourceFingerprint": "c34638cfde3eee72f96500d9e7492911e65999fb9866e7bf120e6207a3d80c3f"
+}
