@@ -1,0 +1,23 @@
+schemaVersion: 1
+assessmentId: 2026-09-16-ef414d4a-voxel-regrant-v82
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-16T14:26:00Z'
+revalidateBy: '2026-10-16'
+gitSha: ef414d4a5d5881ebd27ff2c3f6a242df4f99518a
+decisions:
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T14:25:00Z-os-voxel-hosted-missions-mixed-ef414d4a
+  - 2026-09-16T14:25:00Z-os-renderer-accessibility-recovery-mixed-ef414d4a
+  - 2026-09-16T14:25:00Z-os-voxel-returning-device-mixed-ef414d4a
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T14:25:00Z-voxel-standalone-loop-mixed-ef414d4a
+  - 2026-09-16T14:25:00Z-voxel-accessible-renderer-observed-ef414d4a
+  - 2026-09-16T14:25:00Z-voxel-standalone-return-reentry-mixed-ef414d4a

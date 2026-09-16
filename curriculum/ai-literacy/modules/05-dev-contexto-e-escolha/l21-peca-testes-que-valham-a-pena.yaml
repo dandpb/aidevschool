@@ -1,7 +1,7 @@
 # Lição l21 — Onda dev l21–l23 (spec AID-528 rev 2 §2.1): pedir testes que valem a pena.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l21
-version: 1
+version: 2
 moduleId: mod-05
 title: "Peça testes que valem a pena"
 objective: "Diante de uma função pronta, montar o pedido de testes com framework, comportamento-alvo e caso de borda explícitos — e esperar que a primeira resposta do assistente deixe bordas de fora."
@@ -13,7 +13,7 @@ activities:
   - id: l21-a1
     type: prompt_builder
     skillId: codificar
-    instruction: "MONTE O PEDIDO DE TESTES PARA A FUNÇÃO DA LIÇÃO ANTERIOR. PREENCHA OS CAMPOS COM O QUE O PEDIDO PRECISA NOMEAR."
+    instruction: "Monte o pedido de testes para a função da lição anterior. Preencha os campos com o que o pedido precisa nomear."
     data:
       scenario: "A função validateWebhook da lição anterior está pronta: valida o payload contra um schema e rejeita entrada inválida. Agora você quer testes que valem a pena — não a lista de casos felizes que o assistente já gera sozinho."
       genericPrompt: "escreve testes pra essa função"
@@ -63,7 +63,7 @@ activities:
   - id: l21-a2
     type: missing_context
     skillId: codificar
-    instruction: "COLEGA PEDIU TESTES E RECEBEU CASOS QUE NÃO RODAM NO PROJETO. O QUE FALTOU NO PEDIDO DELE?"
+    instruction: "Colega pediu testes e recebeu casos que não rodam no projeto. O que faltou no pedido dele?"
     data:
       prompt: "Colega: 'escreve testes pro webhook' · Assistente: entregou 12 testes com imports de um framework que o projeto não usa e mocks de um schema que não existe — nada roda."
       contextOptions:
@@ -102,7 +102,7 @@ activities:
   - id: l21-a3
     type: choice
     skillId: codificar
-    instruction: "O ASSISTENTE ENTREGOU A PRIMEIRA LEVA DE TESTES. QUAIS CASOS PROVAVELMENTE FALTAM?"
+    instruction: "O assistente entregou a primeira leva de testes. Quais casos provavelmente faltam?"
     data:
       multiSelect: true
       options:

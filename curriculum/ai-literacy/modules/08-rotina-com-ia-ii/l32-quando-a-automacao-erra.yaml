@@ -2,7 +2,7 @@
 # via AID-1214 §3.1): quando a automação erra.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l32
-version: 1
+version: 2
 moduleId: mod-08
 title: "Quando a automação erra"
 objective: "Detectar que uma rotina automatizada degradou (saída coerente com a semana anterior mas errada para esta), aplicar a correção mínima no pedido (só o dado que mudou) e repor o contexto perdido."
@@ -14,7 +14,7 @@ activities:
   - id: l32-a1
     type: choice
     skillId: avaliar
-    instruction: "TODA SEGUNDA, A ROTINA ENTREGA O RESUMO SEMANAL DE VENDAS PARA A REUNIÃO. NESTA SEMANA A PLANILHA MUDOU: A COLUNA 'VENDAS DO PERÍODO' VIROU 'VENDAS LÍQUIDAS' E ENTROU UMA LINHA DE ESTORNO. O RESUMO CHEGOU COM O MESMO FORMATO DE SEMPRE E NÚMEROS 'NA MÉDIA' DAS OUTRAS SEMANAS. QUAL É O SINAL DE QUE A ROTINA DEGRADOU?"
+    instruction: "Toda segunda, a rotina entrega o resumo semanal de vendas para a reunião. Nesta semana a planilha mudou: a coluna 'vendas do período' virou 'vendas líquidas' e entrou uma linha de estorno. O resumo chegou com o mesmo formato de sempre e números 'na média' das outras semanas. Qual é o sinal de que a rotina degradou?"
     data:
       options:
         - id: opt-a
@@ -31,9 +31,9 @@ activities:
     feedback:
       onFailure: "Degradação de rotina é o erro SILENCIOSO: a saída continua bonita, no formato de sempre, e por isso mesmo ninguém desconfia — mas ela foi montada com o dado velho ou incompleto. Lentidão (b) não muda conteúdo; mudança de formato (c) é sinal de outra coisa (o pedido foi editado); aviso de erro (d) é falha barulhenta, que se anuncia sozinha: o perigoso é o erro que não avisa."
       perCheck:
-        opt-a: "Este é o sinal: coerência com a semana ANTERIOR + desconexão com o dado DESTA semana. A coluna mudou, o estorno entrou — e o resumo saiu como se nada tivesse acontecido."
+        opt-a: "Este é o sinal: coerência com a semana anterior + desconexão com o dado desta semana. A coluna mudou, o estorno entrou — e o resumo saiu como se nada tivesse acontecido."
         opt-b: "Lentidão muda o tempo, não o conteúdo — o resumo lento ainda estaria errado pela mesma razão."
-        opt-c: "Mudança de formato seria estranho em outra direção (alguém mexeu no pedido); aqui o formato veio EXATAMENTE igual — o problema estava no dado."
+        opt-c: "Mudança de formato seria estranho em outra direção (alguém mexeu no pedido); aqui o formato veio exatamente igual — o problema estava no dado."
         opt-d: "Erro anunciado é o caso fácil: a rotina para e avisa. A degradação é o caso difícil: ela NÃO avisa — entrega bonito e errado."
       onSuccess: "Exato! O sinal é a combinação: saída coerente com as semanas anteriores + dado desta semana que mudou. Rotina degradada erra em silêncio — quem conhece o dado é você."
     storage:
@@ -46,7 +46,7 @@ activities:
   - id: l32-a2
     type: output_comparison
     skillId: avaliar
-    instruction: "VOCÊ DETECTOU A DEGRADAÇÃO. COMPARE AS DUAS CORREÇÕES E ESCOLHA A MELHOR."
+    instruction: "Você detectou a degradação. Compare as duas correções e escolha a melhor."
     data:
       scenario: "A rotina do resumo semanal de vendas degradou depois que a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas', entrou linha de estorno). Você vai corrigir o pedido da rotina."
       outputs:
@@ -83,9 +83,9 @@ activities:
   - id: l32-a3
     type: missing_context
     skillId: avaliar
-    instruction: "O PEDIDO DE CORREÇÃO FOI SÓ 'ATUALIZA O RESUMO, POR FAVOR'. O QUE FALTA NESSA CORREÇÃO?"
+    instruction: "O pedido de correção foi só 'atualiza o resumo, por favor'. O que falta nessa correção?"
     data:
-      prompt: "ROTINA (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O QUE ACONTECEU: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · SEU PEDIDO DE CORREÇÃO: 'atualiza o resumo, por favor'."
+      prompt: "Rotina (combinado da segunda 9h): resumo semanal de vendas para a reunião — tópicos, três indicadores, máximo de 1 página. · O que aconteceu: a planilha mudou (coluna 'vendas do período' virou 'vendas líquidas'; entrou uma linha de estorno) e o resumo saiu 'na média', ignorando a mudança. · Seu pedido de correção: 'atualiza o resumo, por favor'."
       contextOptions:
         - id: o-que-mudou
           text: "O que mudou no dado: a coluna nova e a linha de estorno — sem isso, 'atualizar' não diz o que a IA precisa ler de diferente"
