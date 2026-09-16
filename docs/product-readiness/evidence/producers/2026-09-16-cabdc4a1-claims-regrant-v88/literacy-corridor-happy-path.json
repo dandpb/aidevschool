@@ -26,13 +26,13 @@
       "outcome": "pass"
     }
   ],
-  "executedAt": "2026-09-16T20:14:22Z",
+  "executedAt": "2026-09-16T20:43:52Z",
   "executor": "automated",
   "gaps": [],
-  "gitSha": "fb4dbc77ed1c197b249bfeabd5af6b4d7e6e8092",
+  "gitSha": "cabdc4a113a3a28f994ae0a4e09c61c5e078a087",
   "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
   "outcome": "pass",
-  "runId": "2026-09-16T20:14:22Z-literacy-corridor-happy-path-fb4dbc77",
+  "runId": "2026-09-16T20:43:52Z-literacy-corridor-happy-path-cabdc4a1",
   "scenarioId": "literacy-corridor-happy-path",
   "schemaVersion": 1,
   "sourceFingerprint": "c34638cfde3eee72f96500d9e7492911e65999fb9866e7bf120e6207a3d80c3f"

@@ -5,30 +5,30 @@
       "sha256": "5c8e70a100cfbe76b15163d14643808c7870b61c5c062873d324f29a9e797439"
     },
     {
-      "path": "engines/literacyDojo/src/screens/CheckpointScreen.tsx",
-      "sha256": "7a810fd213d7cfef28a3e58eba5d5ebf01959cf3b7cb6ff9b57067159b0563f1"
+      "path": "engines/literacyDojo/src/domain/progress.ts",
+      "sha256": "9a745e0a94f5dd1bae11f2337eca143f0cc3f6fa57b83fe3e421c2a5b7087954"
     }
   ],
   "assertions": [
     {
       "evidence": "playwright",
-      "id": "failure-offers-feedback-hint-retry",
+      "id": "windows-1-7-21-observable-in-storage",
       "outcome": "pass"
     },
     {
       "evidence": "playwright",
-      "id": "next-module-stays-locked-until-pass",
+      "id": "review-evidence-emitted-and-valid",
       "outcome": "pass"
     }
   ],
-  "executedAt": "2026-09-16T20:14:22Z",
+  "executedAt": "2026-09-16T20:43:52Z",
   "executor": "automated",
   "gaps": [],
-  "gitSha": "fb4dbc77ed1c197b249bfeabd5af6b4d7e6e8092",
+  "gitSha": "cabdc4a113a3a28f994ae0a4e09c61c5e078a087",
   "manualFingerprint": "571bff9702625be2e9b4f03bd0b2cc9dde09f13819cde60272ac80ed8279274d",
   "outcome": "pass",
-  "runId": "2026-09-16T20:14:22Z-literacy-corridor-gate-retry-fb4dbc77",
-  "scenarioId": "literacy-corridor-gate-retry",
+  "runId": "2026-09-16T20:43:52Z-literacy-corridor-review-window-cabdc4a1",
+  "scenarioId": "literacy-corridor-review-window",
   "schemaVersion": 1,
   "sourceFingerprint": "c34638cfde3eee72f96500d9e7492911e65999fb9866e7bf120e6207a3d80c3f"
 }

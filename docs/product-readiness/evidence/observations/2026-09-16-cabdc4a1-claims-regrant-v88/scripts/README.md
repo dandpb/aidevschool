@@ -53,7 +53,7 @@ O snapshot de producer deste re-grant vem dos artefatos do push-run da main
 (literacyDojo, codexdojo-os, dojoToday, miniTown, pixelDojo, voxelDojo games,
 curriculum…) — único RED é o próprio `product readiness (claims` (job 104960941856),
 que é o defeito que este re-grant cura. A fábrica AID-1357 baixou esses artefatos
-(`*-readiness-fb4dbc77`) e os agregou em `evidence/producers/2026-09-16-fb4dbc77-auto-regrant/`
+(`*-readiness-fb4dbc77`) e os agregou em `evidence/producers/2026-09-16-cabdc4a1-claims-regrant-v88/`
 (24 reports `executor: automated`, gitSha `fb4dbc77`); esta fase QA re-agrega com
 `--observations` e promove via `regrant --propose` (exit 0 = escrita do assessment).
 
@@ -61,14 +61,24 @@ que é o defeito que este re-grant cura. A fábrica AID-1357 baixou esses artefa
 
 ```bash
 python3 docs/product-readiness/tools/cli.py aggregate \
-  --reports docs/product-readiness/evidence/producers/2026-09-16-fb4dbc77-auto-regrant \
-  --observations docs/product-readiness/evidence/observations/2026-09-16-fb4dbc77-claims-regrant-v88 \
+  --reports docs/product-readiness/evidence/producers/2026-09-16-cabdc4a1-claims-regrant-v88 \
+  --observations docs/product-readiness/evidence/observations/2026-09-16-cabdc4a1-claims-regrant-v88 \
   --output /tmp/candidate-v88.json \
-  --assessment-id 2026-09-16-fb4dbc77-auto-regrant \
+  --assessment-id 2026-09-16-cabdc4a1-claims-regrant-v88 \
   --verified-at 2026-09-16T21:10:00Z --revalidate-by 2026-10-16
 python3 docs/product-readiness/tools/cli.py regrant --propose --input /tmp/candidate-v88.json
 python3 docs/product-readiness/tools/cli.py check
 python3 docs/product-readiness/tools/cli.py check --require-current
-python3 docs/product-readiness/tools/cli.py enforce --reports docs/product-readiness/evidence/producers/2026-09-16-fb4dbc77-auto-regrant
+python3 docs/product-readiness/tools/cli.py enforce --reports docs/product-readiness/evidence/producers/2026-09-16-cabdc4a1-claims-regrant-v88
 python3 -m pytest docs/product-readiness/tests -q
 ```
+
+
+## Re-anchor (executado antes do countersign)
+
+Main moveu para `58098bb5` (PR #460 — XSS fix `engines/dojoToday/src/main.ts`, sourcePath de
+`dojotoday-daily-guidance`) durante o ciclo → branch re-anciada na árvore merge `cabdc4a1`
+(= `7f5d5cc4`; tree `5f9499131e` idêntica). Producer evidence re-fatorada dos artefatos do CI
+pull_request run 35147943861 (`*-readiness-cabdc4a1…`, 24 reports `executor: automated`,
+gitSha `cabdc4a1`, 38 jobs verdes + 1 skip). O diff `fb4dbc77→cabdc4a1` não toca nenhum arquivo
+citado nas notas de observação (apenas `engines/dojoToday/src/main.ts`).
