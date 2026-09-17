@@ -852,7 +852,25 @@ jobs:
       # and reseeds it), and the /api/chat mini-service is stubbed via
       # page.route in the specs — no external services required.
       - run: npx playwright install --with-deps chromium
-      - run: npm run test:e2e
+      # AID-1658 (hardening-top10 R7): AID-571 deterministic retry policy,
+      # same as every other Playwright job here — the engine config keeps
+      # retries: 0 for local; CI passes the flags straight to `playwright
+      # test` (script expanded like literacyDojo's e2e step). First live
+      # evidence: main push 04fc07d5 flaked once on playground.spec.ts:131
+      # (new-thread row count; 28/29 pass) after two green PR runs — a
+      # retried test surfaces as a named flaky entry with its on-first-retry
+      # trace (artifact below); a real regression fails twice and still
+      # fails the job. Recurrence escalates to quarantine + issue.
+      - run: npx playwright test --retries=1 --trace on-first-retry
+      # Durable half of the AID-571 contract: keep flaky traces as an
+      # artifact. Named `zai-e2e-<sha>` (NOT `-readiness-<sha>`) so the
+      # claims aggregator never ingests engine test-results.
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: zai-e2e-${{ github.sha }}
+          path: engines/zai-duolingo-like/test-results
+          if-no-files-found: warn
 
 
   # DESIGN.md contract (2026-09-12): every frontend engine owns a DESIGN.md
