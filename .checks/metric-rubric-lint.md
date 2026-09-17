@@ -60,7 +60,7 @@ Proof: `python3 -m pytest "learner/gate/tests/test_metric_lint.py::test_propose_
 
 ### S4 - Check + CI · 3 files · ~10 KB · ~3k
 
-**C9** - `--check` exits 1 naming game+metric for an enumerated-but-missing metric; exits 1 for `unknown` without provenance
+**C9** - `--check` exits 1 naming game+metric for an enumerated-but-missing metric; exits 1 for ANY `unknown` entry (precision note, verifier round 1: the task's 'without provenance' carve-out is vacuous — the loader requires provenance on every entry — so the implemented rule is the stricter 'unknown always fails check', which the design's Journey states)
 Proof: `python3 -m pytest "learner/gate/tests/test_metric_lint.py::test_check_fails_closed_on_gaps"`
 
 **C10** - Census lands: over the current repo (17 games ∪ rubrics ∪ on-disk evidence), `python3 -m learner.gate.metric_lint --check` exits 0
