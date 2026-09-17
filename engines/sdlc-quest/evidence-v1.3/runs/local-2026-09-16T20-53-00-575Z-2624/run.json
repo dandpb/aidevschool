@@ -1,0 +1,222 @@
+{
+  "schema": "quest-local-gate/v1",
+  "runId": "local-2026-09-16T20-53-00-575Z-2624",
+  "startedAt": "2026-09-16T20:53:00.578Z",
+  "origin": "SDLC Quest own runner",
+  "sourceRepository": {
+    "url": "https://github.com/dandpb/harness-toolkit",
+    "inspected": false,
+    "adapterExecuted": false
+  },
+  "trust": "local-unattested",
+  "steps": [
+    {
+      "id": "contract-shape",
+      "status": "passed",
+      "checks": 10,
+      "scope": "Presença, estrutura e referências dos critérios. Não autentica aprovação humana nem a qualidade semântica do contrato."
+    },
+    {
+      "id": "build",
+      "status": "passed",
+      "startedAt": "2026-09-16T20:53:00.608Z",
+      "command": [
+        "python3",
+        "tools/build.py"
+      ],
+      "endedAt": "2026-09-16T20:53:02.272Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "elapsedMs": 1661,
+      "log": "build.log",
+      "logSha256": "add24601917afb0fabcd77d25d7feab349bf016acd0cf1768e1e2efb064cda3f"
+    },
+    {
+      "id": "rules",
+      "status": "passed",
+      "startedAt": "2026-09-16T20:53:02.273Z",
+      "command": [
+        "/opt/nvm/versions/node/v22.16.0/bin/node",
+        "--test",
+        "tests/audit.test.cjs",
+        "tests/core.test.cjs",
+        "tests/golden.test.cjs",
+        "tests/harness.test.cjs",
+        "tests/quest-gate.test.cjs",
+        "tests/tlc.test.cjs"
+      ],
+      "endedAt": "2026-09-16T20:53:03.858Z",
+      "exitCode": 0,
+      "signal": null,
+      "error": null,
+      "elapsedMs": 1583,
+      "log": "rules.log",
+      "logSha256": "ed1981b818126a68c145b66549964461b6660b14f1f50d1a54cb62b39e267985"
+    },
+    {
+      "id": "campaign-desktop",
+      "status": "running",
+      "startedAt": "2026-09-16T20:53:03.863Z",
+      "command": [
+        "python3",
+        "tests/playtest.py",
+        "desktop"
+      ]
+    }
+  ],
+  "localChecksCompleted": false,
+  "independentReview": "not-executed",
+  "productionAuthorized": false,
+  "releaseGate": "not-configured",
+  "limitations": [
+    "O candidato e o runner estão no mesmo ambiente editável.",
+    "Hashes detectam divergências; não autenticam um executor confiável.",
+    "Jornadas usam set_content e localStorage em memória; não validam file:// nativo."
+  ],
+  "sourceBefore": {
+    "sha256": "3ee2c517b2ff88f7c926b6f6c1dd88590d319f4f7b8e73db6ce4e93891cf2615",
+    "files": [
+      {
+        "path": "docs/harness/contract.json",
+        "sha256": "c1ca3f3797efb8081b72b91ef5d1aeeef2ddbdd1e1e5325e93a2e71e240ef3b7"
+      },
+      {
+        "path": "docs/harness/integration-status.md",
+        "sha256": "d1fc1af128948e577e6f6aa6967b573bd5f6a9b8c6e86d25cb4f49660656b546"
+      },
+      {
+        "path": "index.html",
+        "sha256": "db4a2f21df15a3e4bfb343b78578e0bff9c348811c224c4e25c394467030113b"
+      },
+      {
+        "path": "package.json",
+        "sha256": "859dfa85bf7ce975e86b7ea2ab1481cb730c29b57e1a711832b804b0780a92c6"
+      },
+      {
+        "path": "requirements-dev.txt",
+        "sha256": "df7696acf1e200684a962c8b7cb25363273b8239093235e68bb3f60231a9799f"
+      },
+      {
+        "path": "src/app.js",
+        "sha256": "19b8c0a716b3a79ebfb19c16650d9012a01b6b1978e3bf78abc8e1f0a8e7a157"
+      },
+      {
+        "path": "src/core.js",
+        "sha256": "b446fa6afc8504a696c2a96e5a0519f28ff6936c9c7dab89b3f074e8f6dbc2d6"
+      },
+      {
+        "path": "src/data.js",
+        "sha256": "e95ea0b861cd6855fde8bb9b9c5f75f8eee783b11fb4f9b2309cd5bd5528da40"
+      },
+      {
+        "path": "src/harness-app.js",
+        "sha256": "bbc0d339bac98486b13216850ac587bfa78b6f9b78ea8518f6845c49b7231a68"
+      },
+      {
+        "path": "src/harness-core.js",
+        "sha256": "838b6cda12b561e4c6332db193430f4bb02233f5d968b994b69c2085231a5873"
+      },
+      {
+        "path": "src/harness-style.css",
+        "sha256": "806a59df595a2d4644af47fa2fea737160adaff1b122832514009cb6b6ea6340"
+      },
+      {
+        "path": "src/style.css",
+        "sha256": "eea488cb1ff79122f3229cf12217bd21c76ac97ac8023be741d8fba4d5d3b835"
+      },
+      {
+        "path": "src/tlc-app.js",
+        "sha256": "88870d02dfe1bb34c8a0f7bd8763dcc75d066960df05bbf76f3376c84307b268"
+      },
+      {
+        "path": "src/tlc-core.js",
+        "sha256": "559a9243e96579823936383d0fd8986e4c815a56407613038a55046fafbe6ee3"
+      },
+      {
+        "path": "src/tlc-data.js",
+        "sha256": "a5c4c8cc138cd1581d5dbaa11c4fdd1a548e363e56c0ae36a93fc9473995e9cc"
+      },
+      {
+        "path": "src/tlc-style.css",
+        "sha256": "ce8a7799917682554fd2ad923d99d9b94f64aea1c3c1a62f4d07584012c7094e"
+      },
+      {
+        "path": "src/world.js",
+        "sha256": "54fdfae7a1c635c48b4f4beac11f1583da07783b54d6940aa7a00ee7d91a774e"
+      },
+      {
+        "path": "tests/audit-browser.py",
+        "sha256": "e4821e5615a69ee9cdb8a2dffe7cbcec31037dcc0e3b12feeb8966ff68544503"
+      },
+      {
+        "path": "tests/audit.test.cjs",
+        "sha256": "c7d3a3eace8b9fea44882c71917983a4df9943cbc6c65660055810fdec2a1dc1"
+      },
+      {
+        "path": "tests/browser_support.py",
+        "sha256": "ced6331bf021653cb620f91ae80aae8982e070846253b18b8c41464d7eeca003"
+      },
+      {
+        "path": "tests/contrast-probe.js",
+        "sha256": "3c3798f09f06be2e2513f6ec0aff7c6623d9f6b3024bbb0abe37c53b2a0425c9"
+      },
+      {
+        "path": "tests/core.test.cjs",
+        "sha256": "686f456c4b5b3ab3e4f6511ec4e34f4f16ef7d087f38bbb8f73c9f2cf1793f3e"
+      },
+      {
+        "path": "tests/fixtures/accepted-decisions.json",
+        "sha256": "fa95a4c55c2c6e88121864af752f78fe04335242b2723f98a4506d3dab776791"
+      },
+      {
+        "path": "tests/fixtures/tlc-decisions.json",
+        "sha256": "965396d00299807927055b5b63a0de94b306a5f63a6714138923e18536df3f74"
+      },
+      {
+        "path": "tests/golden.test.cjs",
+        "sha256": "00319db000e04474707bc62fe6d498f1d8cc2e3066eebb932ccdd6317e7a1bc2"
+      },
+      {
+        "path": "tests/harness-browser.py",
+        "sha256": "ac75b8938c65f572606043a1870778fc05f46b65fcae64fb2dd1130d21f41668"
+      },
+      {
+        "path": "tests/harness.test.cjs",
+        "sha256": "dacffd97692cf34bd77d8fbb3c0dd82628adc0ce8c3f24856d6aec293b2e8e78"
+      },
+      {
+        "path": "tests/playtest.py",
+        "sha256": "53d5536ad3db82cab5047a2882391d157545f73defd17f149cb3bfe4a28f3190"
+      },
+      {
+        "path": "tests/quest-gate.test.cjs",
+        "sha256": "92914a16c984490dfc4f6b1edccf781cda6f77e24597204f90ec185b21064714"
+      },
+      {
+        "path": "tests/tlc-browser.py",
+        "sha256": "506fb1a8552a290a7335bc11a1c9f58b301506353d96ac73dc81504f067c51ce"
+      },
+      {
+        "path": "tests/tlc.test.cjs",
+        "sha256": "9cc03586847103eb0edc1bc53819211ae986596892e3675da41aaf1fb05fd48f"
+      },
+      {
+        "path": "tests/ui-matrix.py",
+        "sha256": "a1025a5dd1a92f481608d734820f90b9e2489f442509cfa7aea664179ccc0738"
+      },
+      {
+        "path": "tools/build.py",
+        "sha256": "6951f76152d0d972487fb1fb13d911a42457b9514f77c48f643d7ea7c13d427e"
+      },
+      {
+        "path": "tools/create_tlc_content.py",
+        "sha256": "fa44c9e1c687740832550b4d1b74ca94c368498f3e66ca9a8388f6b2fcdfe301"
+      },
+      {
+        "path": "tools/quest-gate.cjs",
+        "sha256": "286322c693a322b3d59c3253fe348083429e060d573f67dd40d2f1f882f6c0c7"
+      }
+    ]
+  }
+}

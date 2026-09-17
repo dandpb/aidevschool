@@ -1,0 +1,84 @@
+3.0s PASS 1 old campaign starts unchanged
+3.0s PASS 2 TLC expansion starts unchanged
+3.3s PASS 3 keyboard opens lab
+3.3s PASS 4 initial document fits width
+3.4s PASS 5 initial dialog content fits width
+3.4s PASS 6 initial dialog inside viewport
+3.4s PASS 7 initial sampled text contrast
+4.4s PASS 8 real integration pending disclosed
+4.4s PASS 9 provided repository reference exact
+4.4s PASS 10 repo source link safe new tab
+4.4s PASS 11 package download disabled before checks
+4.5s PASS 12 forged enabled button cannot export missing package
+5.2s PASS 13 skip package records block
+5.2s PASS 14 skip no receipts
+6.0s PASS 15 self declaration rejected
+6.0s PASS 16 claim no receipts
+7.1s PASS 17 incomplete intent fails
+7.2s PASS 18 input intent keeps focus
+8.3s PASS 19 complete intent executed
+8.3s PASS 20 discover document fits width
+8.3s PASS 21 discover dialog content fits width
+8.3s PASS 22 discover dialog inside viewport
+8.3s PASS 23 discover sampled text contrast
+9.8s PASS 24 incomplete plan fails
+9.8s PASS 25 input plan keeps focus
+10.9s PASS 26 complete plan executed
+12.1s PASS 27 original materialized without pretending verification
+12.8s PASS 28 input suite keeps focus
+13.4s PASS 29 buggy candidate rejected by tests
+13.4s PASS 30 all fifteen checks executed for buggy candidate
+13.4s PASS 31 failure is real cross tenant result
+13.4s PASS 32 failed-tests document fits width
+13.4s PASS 33 failed-tests dialog content fits width
+13.5s PASS 34 failed-tests dialog inside viewport
+13.5s PASS 35 failed-tests sampled text contrast
+14.5s PASS 36 input patch keeps focus
+14.5s PASS 37 code edit invalidates implementation
+16.3s PASS 38 correct candidate passes complete proof
+16.3s PASS 39 baseline and mutant fail as required
+16.3s PASS 40 verified-tests document fits width
+16.4s PASS 41 verified-tests dialog content fits width
+16.4s PASS 42 verified-tests dialog inside viewport
+16.4s PASS 43 verified-tests sampled text contrast
+17.3s PASS 44 input review keeps focus
+18.1s PASS 45 stale review rejected
+18.1s PASS 46 input review keeps focus
+19.2s PASS 47 current simulated review accepted locally
+19.2s PASS 48 review not presented as independent agent
+20.3s PASS 49 package requires and has six current receipts
+20.3s PASS 50 validated package button unlocked
+20.3s PASS 51 local-package document fits width
+20.3s PASS 52 local-package dialog content fits width
+20.3s PASS 53 local-package dialog inside viewport
+20.3s PASS 54 local-package sampled text contrast
+21.3s PASS 55 package.json has bytes
+21.3s PASS 56 export contains executed checks
+21.3s PASS 57 export never claims toolkit executed
+21.3s PASS 58 export never claims production authorization
+21.3s PASS 59 export never claims independent reviewer
+21.3s PASS 60 export marks own schema
+21.3s PASS 61 export marks source access missing
+21.7s PASS 62 production denied even after six gates
+21.7s PASS 63 Escape closes lab
+21.7s PASS 64 keyboard focus returns to launch
+22.4s PASS 65 reopening same page preserves current execution
+22.9s PASS 66 editing after green keeps only two earlier receipts
+22.9s PASS 67 editing disables previously valid package download
+22.9s PASS 68 verification explicitly stale
+22.9s PASS 69 invalidated document fits width
+22.9s PASS 70 invalidated dialog content fits width
+23.0s PASS 71 invalidated dialog inside viewport
+23.0s PASS 72 invalidated sampled text contrast
+24.0s PASS 73 cannot rerun package with stale evidence
+24.9s PASS 74 input patch keeps focus
+29.1s PASS 75 revalidation restores package
+29.2s PASS 76 six training goals actually earned
+30.1s PASS 77 guide.md has bytes
+30.1s PASS 78 guide contains real integration gap
+30.4s PASS 79 backup.json has bytes
+30.4s PASS 80 backup stores harness inputs only
+30.8s PASS 81 new run requires explicit confirmation
+31.1s PASS 82 cancel keeps receipts
+RESET2_START 31.092231888000015
+RESET2_OPEN 31.51265352500002

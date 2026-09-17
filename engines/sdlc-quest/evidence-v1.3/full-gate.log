@@ -1,0 +1,5 @@
+RUN build
+PASSED build 0
+RUN rules
+PASSED rules 0
+RUN campaign-desktop

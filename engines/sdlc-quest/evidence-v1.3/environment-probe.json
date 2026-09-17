@@ -1,0 +1,13 @@
+{
+  "browser": "144.0.7559.96",
+  "file_navigation": {
+    "ok": false,
+    "error": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at file:///mnt/data/quest-v1.3-work/sdlc-quest-v1.3/sdlc-quest.html\nCall log:\n  - navigating to \"file:///mnt/data/quest-v1.3-work/sdlc-quest-v1.3/sdlc-quest.html\", waiting until \"load\"\n"
+  },
+  "page_title": "SDLC Quest v1.3 \u2014 Laborat\u00f3rio de execu\u00e7\u00e3o",
+  "mobile_width": {
+    "width": 390,
+    "scroll": 390,
+    "dialog": 350
+  }
+}

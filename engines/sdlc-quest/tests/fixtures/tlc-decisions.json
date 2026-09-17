@@ -1,0 +1,18 @@
+{
+  "tlc-situation": "situation",
+  "tlc-verdict": {"open":"gate","committed":"record","unclear":"spike"},
+  "tlc-design": ["decision","boundary","unknown"],
+  "tlc-success": "outcome",
+  "tlc-slice": "vertical",
+  "tlc-sweep": {"validation":"criterion","failure":"criterion","idempotency":"existing","authorization":"criterion","concurrency":"unresolved","lifecycle":"unresolved","dependency":"existing","state":"criterion","observability":"existing"},
+  "tlc-criteria": {"http":"check","latency":"target","fast":"vague"},
+  "tlc-task-pr": "one",
+  "tlc-profile": {"base":"light","coverage":"standard","screens":"ui"},
+  "tlc-proof-lab": {"suite":"contract","patch":"scoped"},
+  "tlc-verifier": "orchestrator",
+  "tlc-handoff": ["checks","decisions","rejected"],
+  "tlc-review": {"findings":["F1"],"verdict":"REQUEST_CHANGES"},
+  "tlc-severity": {"blocker":"REQUEST_CHANGES","should":"COMMENT","nit":"APPROVE"},
+  "tlc-carryover": "carry",
+  "tlc-converge": "stop"
+}

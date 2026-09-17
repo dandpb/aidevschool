@@ -34,7 +34,7 @@ aidevschool/
 ├── dev-workflow-claude/       # tested AI dev workflow library + teaching page (course support)
 ├── wiki/                      # research wiki: dated syntheses and sources (readiness, drift, privacy)
 ├── miro-tour/                 # architect-career Miro board extraction + learning trails (reference)
-└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .serena/ .compozy/ # platform/tool state
+└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .compozy/ # platform/tool state
 ```
 
 Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
@@ -181,7 +181,7 @@ python3 -m unittest discover -s learner/substrate/tests
 
 - `.mavis/` is the canonical derived runtime view; `learner/substrate/` regenerates it.
 - `.loops/` is untracked runtime state for loop runs (output artifacts under `.loops/<loop>/output/`); the append-only loop memory itself is tracked at `docs/loops/<loop>/memory.md` — read it before rerunning a loop and append to it after the run (policy: `docs/loops/README.md`, decision AID-1528/achado A AID-1522).
-- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.serena/`, `.commandcode/`, and `.compozy/` are
+- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.commandcode/`, and `.compozy/` are
   platform/session state unless a tracked file says otherwise.
 - Durable shared state belongs in `.mavis/`, `learner/`, or `curriculum/`. Codex-specific runbooks
   belong in `.codex/napkin.md` or the global `napkin` skill. Document new `.X/` roots here first.

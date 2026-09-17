@@ -1,0 +1,573 @@
+{
+  "format": "quest-harness-demo",
+  "schemaVersion": 1,
+  "appVersion": "1.3.0",
+  "mode": "educational-local",
+  "exportedAt": "2026-09-16T20:56:47.225Z",
+  "runId": "quest-mu4kzpo1-xcnpkx1",
+  "policy": "quest-local-contract-v1",
+  "sourceRepository": {
+    "url": "https://github.com/dandpb/harness-toolkit",
+    "status": "not-inspected",
+    "integration": "pending-source-access"
+  },
+  "summary": {
+    "currentSteps": 6,
+    "totalSteps": 6,
+    "localPackageReady": true,
+    "productionAuthorized": false,
+    "toolkitExecuted": false,
+    "independentReviewerExecuted": false,
+    "halted": false
+  },
+  "inputs": {
+    "intent": "complete",
+    "plan": "traceable",
+    "patch": "scoped",
+    "suite": "contract",
+    "runner": "normal",
+    "review": "current"
+  },
+  "codeRevision": 2,
+  "receipts": {
+    "discover": {
+      "step": "discover",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2],\"inputs\":{\"intent\":\"complete\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 5,
+      "at": "2026-09-16T20:56:44.684Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "problem",
+          "label": "problem",
+          "pass": true
+        },
+        {
+          "id": "outcome",
+          "label": "outcome",
+          "pass": true
+        },
+        {
+          "id": "scope",
+          "label": "scope",
+          "pass": true
+        },
+        {
+          "id": "question",
+          "label": "question",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "artifact": {
+          "problem": "Suporte depende da engenharia para reenviar webhooks.",
+          "outcome": "Administrador solicita retry e acompanha o resultado.",
+          "scope": "Apenas entregas do próprio tenant; sem reenvio em massa.",
+          "question": "Como tratar resposta perdida e possível duplicação no destino?"
+        },
+        "scope": "Validação estrutural de uma fixture didática, não aprovação do produto."
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "plan": {
+      "step": "plan",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2,2],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 8,
+      "at": "2026-09-16T20:56:45.073Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "own-a",
+          "label": "Critério ligado ao check own-a",
+          "pass": true
+        },
+        {
+          "id": "own-b",
+          "label": "Critério ligado ao check own-b",
+          "pass": true
+        },
+        {
+          "id": "cross-a",
+          "label": "Critério ligado ao check cross-a",
+          "pass": true
+        },
+        {
+          "id": "cross-b",
+          "label": "Critério ligado ao check cross-b",
+          "pass": true
+        },
+        {
+          "id": "missing",
+          "label": "Critério ligado ao check missing",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "criteria": [
+          {
+            "id": "own-a",
+            "check": "own-a"
+          },
+          {
+            "id": "own-b",
+            "check": "own-b"
+          },
+          {
+            "id": "cross-a",
+            "check": "cross-a"
+          },
+          {
+            "id": "cross-b",
+            "check": "cross-b"
+          },
+          {
+            "id": "missing",
+            "check": "missing"
+          }
+        ]
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "implement": {
+      "step": "implement",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2,2,2],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 13,
+      "at": "2026-09-16T20:56:45.927Z",
+      "codeRevision": 2,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "materialized",
+          "label": "Candidata conhecida selecionada em memória",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "source": "(id, tenant) => rows.find(row => row.id === id && row.tenant === tenant) ?? null",
+        "patch": "scoped",
+        "scope": "Seleção de função predefinida; não é execução de uma skill ou edição de repositório."
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "verify": {
+      "step": "verify",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2,2,2,2],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\",\"suite\":\"contract\",\"runner\":\"normal\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 14,
+      "at": "2026-09-16T20:56:46.123Z",
+      "codeRevision": 2,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "before:own-a",
+          "label": "A encontra sua entrega",
+          "actual": "A",
+          "expected": "A",
+          "pass": true,
+          "version": "before"
+        },
+        {
+          "id": "before:own-b",
+          "label": "B encontra sua entrega",
+          "actual": "B",
+          "expected": "B",
+          "pass": true,
+          "version": "before"
+        },
+        {
+          "id": "before:cross-a",
+          "label": "A não encontra entrega B",
+          "actual": "B",
+          "expected": null,
+          "pass": false,
+          "version": "before"
+        },
+        {
+          "id": "before:cross-b",
+          "label": "B não encontra entrega A",
+          "actual": "A",
+          "expected": null,
+          "pass": false,
+          "version": "before"
+        },
+        {
+          "id": "before:missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "before"
+        },
+        {
+          "id": "candidate:own-a",
+          "label": "A encontra sua entrega",
+          "actual": "A",
+          "expected": "A",
+          "pass": true,
+          "version": "candidate"
+        },
+        {
+          "id": "candidate:own-b",
+          "label": "B encontra sua entrega",
+          "actual": "B",
+          "expected": "B",
+          "pass": true,
+          "version": "candidate"
+        },
+        {
+          "id": "candidate:cross-a",
+          "label": "A não encontra entrega B",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "candidate"
+        },
+        {
+          "id": "candidate:cross-b",
+          "label": "B não encontra entrega A",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "candidate"
+        },
+        {
+          "id": "candidate:missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "candidate"
+        },
+        {
+          "id": "mutant:own-a",
+          "label": "A encontra sua entrega",
+          "actual": null,
+          "expected": "A",
+          "pass": false,
+          "version": "mutant"
+        },
+        {
+          "id": "mutant:own-b",
+          "label": "B encontra sua entrega",
+          "actual": null,
+          "expected": "B",
+          "pass": false,
+          "version": "mutant"
+        },
+        {
+          "id": "mutant:cross-a",
+          "label": "A não encontra entrega B",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "mutant"
+        },
+        {
+          "id": "mutant:cross-b",
+          "label": "B não encontra entrega A",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "mutant"
+        },
+        {
+          "id": "mutant:missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true,
+          "version": "mutant"
+        }
+      ],
+      "evidence": {
+        "suite": "contract",
+        "verdicts": [
+          {
+            "version": "before",
+            "exitCode": 1
+          },
+          {
+            "version": "candidate",
+            "exitCode": 0
+          },
+          {
+            "version": "mutant",
+            "exitCode": 1
+          }
+        ],
+        "scope": "Consultas em memória. Não testa HTTP, autenticação, concorrência ou infra."
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "judge": {
+      "step": "judge",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2,2,2,2,3],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\",\"suite\":\"contract\",\"runner\":\"normal\",\"review\":\"current\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 18,
+      "at": "2026-09-16T20:56:46.732Z",
+      "codeRevision": 2,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "role",
+          "label": "Parecer não é autodeclaração do autor",
+          "pass": true
+        },
+        {
+          "id": "revision",
+          "label": "Parecer ligado à candidata e à verificação atuais",
+          "pass": true
+        },
+        {
+          "id": "blockers",
+          "label": "Sem bloqueador aberto na fixture de revisão",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "simulatedReviewer": true,
+        "verifierEvent": 14,
+        "reviewedRevision": 2,
+        "verdict": "APPROVE_SIMULATED"
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "package": {
+      "step": "package",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[2,2,2,2,3,1],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\",\"suite\":\"contract\",\"runner\":\"normal\",\"review\":\"current\"}}",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "event": 19,
+      "at": "2026-09-16T20:56:46.849Z",
+      "codeRevision": 2,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "discover",
+          "label": "Recibo atual de Descobrir",
+          "pass": true
+        },
+        {
+          "id": "plan",
+          "label": "Recibo atual de Planejar",
+          "pass": true
+        },
+        {
+          "id": "implement",
+          "label": "Recibo atual de Implementar",
+          "pass": true
+        },
+        {
+          "id": "verify",
+          "label": "Recibo atual de Verificar",
+          "pass": true
+        },
+        {
+          "id": "judge",
+          "label": "Recibo atual de Revisar",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "productionAuthorized": false,
+        "realToolkitExecuted": false,
+        "independentReview": false
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    }
+  },
+  "timeline": [
+    {
+      "seq": 1,
+      "at": "2026-09-16T20:56:44.340Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "package",
+      "outcome": "blocked",
+      "message": "Pré-condições não satisfeitas: Descobrir, Planejar, Implementar, Verificar, Revisar."
+    },
+    {
+      "seq": 2,
+      "at": "2026-09-16T20:56:44.432Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "declare",
+      "outcome": "rejected",
+      "message": "“Terminei” é uma declaração. Nenhum recibo de execução foi criado."
+    },
+    {
+      "seq": 3,
+      "at": "2026-09-16T20:56:44.566Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "discover",
+      "outcome": "failed",
+      "message": "Um campo done:true não substitui os quatro conteúdos exigidos."
+    },
+    {
+      "seq": 4,
+      "at": "2026-09-16T20:56:44.623Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:intent",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "complete",
+      "codeRevision": 1
+    },
+    {
+      "seq": 5,
+      "at": "2026-09-16T20:56:44.684Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "discover",
+      "outcome": "passed",
+      "message": "Intenção do exercício contém problema, resultado, escopo e pergunta aberta."
+    },
+    {
+      "seq": 6,
+      "at": "2026-09-16T20:56:44.903Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "plan",
+      "outcome": "failed",
+      "message": "A matriz omite casos negativos de tenant ou de ID ausente."
+    },
+    {
+      "seq": 7,
+      "at": "2026-09-16T20:56:44.966Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:plan",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "traceable",
+      "codeRevision": 1
+    },
+    {
+      "seq": 8,
+      "at": "2026-09-16T20:56:45.073Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "plan",
+      "outcome": "passed",
+      "message": "Os cinco comportamentos estão ligados a checks conhecidos."
+    },
+    {
+      "seq": 9,
+      "at": "2026-09-16T20:56:45.217Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "implement",
+      "outcome": "passed",
+      "message": "Candidata r1 materializada. Implementar não significa que os testes passaram."
+    },
+    {
+      "seq": 10,
+      "at": "2026-09-16T20:56:45.362Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:suite",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "contract",
+      "codeRevision": 1
+    },
+    {
+      "seq": 11,
+      "at": "2026-09-16T20:56:45.437Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "verify",
+      "outcome": "failed",
+      "message": "O verificador executou, mas a prova foi reprovada. Inspecione resultados, cobertura e mutante."
+    },
+    {
+      "seq": 12,
+      "at": "2026-09-16T20:56:45.808Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:patch",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "scoped",
+      "codeRevision": 2
+    },
+    {
+      "seq": 13,
+      "at": "2026-09-16T20:56:45.927Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "implement",
+      "outcome": "passed",
+      "message": "Candidata r2 materializada. Implementar não significa que os testes passaram."
+    },
+    {
+      "seq": 14,
+      "at": "2026-09-16T20:56:46.123Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "verify",
+      "outcome": "passed",
+      "message": "15 asserções executadas: baseline defeituosa reprovada, candidata aprovada e mutante “nega tudo” reprovado."
+    },
+    {
+      "seq": 15,
+      "at": "2026-09-16T20:56:46.464Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:review",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "stale",
+      "codeRevision": 2
+    },
+    {
+      "seq": 16,
+      "at": "2026-09-16T20:56:46.600Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "judge",
+      "outcome": "failed",
+      "message": "Parecer recusado: autodeclaração, revisão antiga ou bloqueador aberto."
+    },
+    {
+      "seq": 17,
+      "at": "2026-09-16T20:56:46.667Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "input:review",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "current",
+      "codeRevision": 2
+    },
+    {
+      "seq": 18,
+      "at": "2026-09-16T20:56:46.732Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "judge",
+      "outcome": "passed",
+      "message": "Parecer didático confere com esta revisão. Nenhum the-judge real ou revisor independente foi executado."
+    },
+    {
+      "seq": 19,
+      "at": "2026-09-16T20:56:46.849Z",
+      "runId": "quest-mu4kzpo1-xcnpkx1",
+      "action": "package",
+      "outcome": "passed",
+      "message": "Pacote local pronto. A autorização de produção permanece AUSENTE."
+    }
+  ],
+  "limits": [
+    "Não é saída do harness-toolkit nem de uma skill real.",
+    "Recibos locais não são assinados; podem ser alterados fora da UI.",
+    "Checks cobrem apenas funções reduzidas em memória.",
+    "Um backup restaura entradas, não comprova execuções."
+  ]
+}

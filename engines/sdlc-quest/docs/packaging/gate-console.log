@@ -1,0 +1,23 @@
+
+> sdlc-quest@1.3.0 gate
+> node tools/quest-gate.cjs
+
+RUN build
+PASSED build 0
+RUN rules
+PASSED rules 0
+RUN campaign-desktop
+PASSED campaign-desktop 0
+RUN campaign-mobile
+PASSED campaign-mobile 0
+RUN tlc-desktop
+PASSED tlc-desktop 0
+RUN tlc-mobile
+PASSED tlc-mobile 0
+RUN harness-desktop
+PASSED harness-desktop 0
+RUN harness-mobile
+PASSED harness-mobile 0
+Receipt: evidence-v1.3/runs/local-2026-09-17T11-42-22-974Z-1160/run.json
+Verificações locais concluídas.
+Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.

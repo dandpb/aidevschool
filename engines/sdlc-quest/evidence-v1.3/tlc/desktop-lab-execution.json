@@ -1,0 +1,141 @@
+{
+  "simulation": true,
+  "scope": "Funções de consulta em memória; não é CI, HTTP, autenticação ou um verificador independente.",
+  "appVersion": "1.2.0",
+  "exportedAt": "2026-09-16T20:56:11.673Z",
+  "ok": true,
+  "suite": "contract",
+  "patch": "scoped",
+  "versions": [
+    {
+      "id": "before",
+      "label": "Antes do patch",
+      "implementation": "original",
+      "checks": [
+        {
+          "id": "own-a",
+          "label": "A encontra sua entrega",
+          "actual": "A",
+          "expected": "A",
+          "pass": true
+        },
+        {
+          "id": "own-b",
+          "label": "B encontra sua entrega",
+          "actual": "B",
+          "expected": "B",
+          "pass": true
+        },
+        {
+          "id": "cross-a",
+          "label": "A não encontra entrega B",
+          "actual": "B",
+          "expected": null,
+          "pass": false
+        },
+        {
+          "id": "cross-b",
+          "label": "B não encontra entrega A",
+          "actual": "A",
+          "expected": null,
+          "pass": false
+        },
+        {
+          "id": "missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        }
+      ],
+      "exitCode": 1
+    },
+    {
+      "id": "candidate",
+      "label": "Sua candidata",
+      "implementation": "scoped",
+      "checks": [
+        {
+          "id": "own-a",
+          "label": "A encontra sua entrega",
+          "actual": "A",
+          "expected": "A",
+          "pass": true
+        },
+        {
+          "id": "own-b",
+          "label": "B encontra sua entrega",
+          "actual": "B",
+          "expected": "B",
+          "pass": true
+        },
+        {
+          "id": "cross-a",
+          "label": "A não encontra entrega B",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        },
+        {
+          "id": "cross-b",
+          "label": "B não encontra entrega A",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        },
+        {
+          "id": "missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        }
+      ],
+      "exitCode": 0
+    },
+    {
+      "id": "mutant",
+      "label": "Mutante: nega tudo",
+      "implementation": "denyAll",
+      "checks": [
+        {
+          "id": "own-a",
+          "label": "A encontra sua entrega",
+          "actual": null,
+          "expected": "A",
+          "pass": false
+        },
+        {
+          "id": "own-b",
+          "label": "B encontra sua entrega",
+          "actual": null,
+          "expected": "B",
+          "pass": false
+        },
+        {
+          "id": "cross-a",
+          "label": "A não encontra entrega B",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        },
+        {
+          "id": "cross-b",
+          "label": "B não encontra entrega A",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        },
+        {
+          "id": "missing",
+          "label": "ID ausente retorna null",
+          "actual": null,
+          "expected": null,
+          "pass": true
+        }
+      ],
+      "exitCode": 1
+    }
+  ],
+  "message": "Regressão detecta o bug anterior; candidata passa; mutante defeituoso é rejeitado."
+}

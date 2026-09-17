@@ -1,0 +1,221 @@
+{
+  "format": "sdlc-quest-backup",
+  "backupVersion": 1,
+  "appVersion": "1.3.0",
+  "createdAt": "2026-09-16T20:56:34.003Z",
+  "state": {
+    "version": 1,
+    "tlc": {
+      "version": 1,
+      "done": {
+        "tlc-situation": {
+          "score": 85,
+          "at": "2026-09-16T20:56:26.040Z"
+        },
+        "tlc-verdict": {
+          "score": 100,
+          "at": "2026-09-16T20:56:26.404Z"
+        },
+        "tlc-design": {
+          "score": 100,
+          "at": "2026-09-16T20:56:26.851Z"
+        },
+        "tlc-success": {
+          "score": 100,
+          "at": "2026-09-16T20:56:27.237Z"
+        },
+        "tlc-slice": {
+          "score": 100,
+          "at": "2026-09-16T20:56:27.704Z"
+        },
+        "tlc-sweep": {
+          "score": 100,
+          "at": "2026-09-16T20:56:28.037Z"
+        },
+        "tlc-criteria": {
+          "score": 100,
+          "at": "2026-09-16T20:56:28.357Z"
+        },
+        "tlc-task-pr": {
+          "score": 100,
+          "at": "2026-09-16T20:56:28.654Z"
+        },
+        "tlc-profile": {
+          "score": 100,
+          "at": "2026-09-16T20:56:29.090Z"
+        },
+        "tlc-proof-lab": {
+          "score": 85,
+          "at": "2026-09-16T20:56:30.862Z"
+        },
+        "tlc-verifier": {
+          "score": 100,
+          "at": "2026-09-16T20:56:31.409Z"
+        },
+        "tlc-handoff": {
+          "score": 100,
+          "at": "2026-09-16T20:56:31.857Z"
+        },
+        "tlc-review": {
+          "score": 85,
+          "at": "2026-09-16T20:56:32.404Z"
+        },
+        "tlc-severity": {
+          "score": 100,
+          "at": "2026-09-16T20:56:32.856Z"
+        },
+        "tlc-carryover": {
+          "score": 100,
+          "at": "2026-09-16T20:56:33.171Z"
+        },
+        "tlc-converge": {
+          "score": 100,
+          "at": "2026-09-16T20:56:33.471Z"
+        }
+      },
+      "attempts": {
+        "tlc-situation": 1,
+        "tlc-verdict": 0,
+        "tlc-design": 0,
+        "tlc-success": 0,
+        "tlc-slice": 0,
+        "tlc-sweep": 0,
+        "tlc-criteria": 0,
+        "tlc-task-pr": 0,
+        "tlc-profile": 0,
+        "tlc-proof-lab": 1,
+        "tlc-verifier": 0,
+        "tlc-handoff": 0,
+        "tlc-review": 1,
+        "tlc-severity": 0,
+        "tlc-carryover": 0,
+        "tlc-converge": 0
+      },
+      "drafts": {
+        "tlc-situation": "situation",
+        "tlc-verdict": {
+          "open": "gate",
+          "committed": "record",
+          "unclear": "spike"
+        },
+        "tlc-design": [
+          "decision",
+          "boundary",
+          "unknown"
+        ],
+        "tlc-success": "outcome",
+        "tlc-slice": "vertical",
+        "tlc-sweep": {
+          "validation": "criterion",
+          "failure": "criterion",
+          "idempotency": "existing",
+          "authorization": "criterion",
+          "concurrency": "unresolved",
+          "lifecycle": "unresolved",
+          "dependency": "existing",
+          "state": "criterion",
+          "observability": "existing"
+        },
+        "tlc-criteria": {
+          "http": "check",
+          "latency": "target",
+          "fast": "vague"
+        },
+        "tlc-task-pr": "one",
+        "tlc-profile": {
+          "base": "light",
+          "coverage": "standard",
+          "screens": "ui"
+        },
+        "tlc-proof-lab": {
+          "suite": "contract",
+          "patch": "scoped"
+        },
+        "tlc-verifier": "orchestrator",
+        "tlc-handoff": [
+          "checks",
+          "decisions",
+          "rejected"
+        ],
+        "tlc-review": {
+          "findings": [
+            "F1"
+          ],
+          "verdict": "REQUEST_CHANGES"
+        },
+        "tlc-severity": {
+          "blocker": "REQUEST_CHANGES",
+          "should": "COMMENT",
+          "nit": "APPROVE"
+        },
+        "tlc-carryover": "carry",
+        "tlc-converge": "stop"
+      },
+      "selected": 0
+    },
+    "harness": {
+      "version": 1,
+      "inputs": {
+        "intent": "incomplete",
+        "plan": "happy",
+        "patch": "original",
+        "suite": "happy",
+        "runner": "normal",
+        "review": "self"
+      },
+      "selected": 0
+    },
+    "done": {},
+    "attempts": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "hints": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "drafts": {},
+    "transfer": {
+      "intent": "",
+      "evidence": "",
+      "authority": "",
+      "stop": ""
+    },
+    "sound": false,
+    "motion": false,
+    "selected": 0,
+    "startedAt": "2026-09-16T20:56:24.578Z"
+  }
+}

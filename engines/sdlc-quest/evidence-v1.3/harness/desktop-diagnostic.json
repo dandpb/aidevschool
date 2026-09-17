@@ -1,0 +1,277 @@
+{
+  "format": "quest-harness-demo",
+  "schemaVersion": 1,
+  "appVersion": "1.3.0",
+  "mode": "educational-local",
+  "exportedAt": "2026-09-16T20:56:50.071Z",
+  "runId": "quest-mu4kztxn-oa6vdok",
+  "policy": "quest-local-contract-v1",
+  "sourceRepository": {
+    "url": "https://github.com/dandpb/harness-toolkit",
+    "status": "not-inspected",
+    "integration": "pending-source-access"
+  },
+  "summary": {
+    "currentSteps": 3,
+    "totalSteps": 6,
+    "localPackageReady": false,
+    "productionAuthorized": false,
+    "toolkitExecuted": false,
+    "independentReviewerExecuted": false,
+    "halted": true
+  },
+  "inputs": {
+    "intent": "complete",
+    "plan": "traceable",
+    "patch": "scoped",
+    "suite": "contract",
+    "runner": "normal",
+    "review": "current"
+  },
+  "codeRevision": 1,
+  "receipts": {
+    "discover": {
+      "step": "discover",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[1],\"inputs\":{\"intent\":\"complete\"}}",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "event": 1,
+      "at": "2026-09-16T20:56:49.081Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "problem",
+          "label": "problem",
+          "pass": true
+        },
+        {
+          "id": "outcome",
+          "label": "outcome",
+          "pass": true
+        },
+        {
+          "id": "scope",
+          "label": "scope",
+          "pass": true
+        },
+        {
+          "id": "question",
+          "label": "question",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "artifact": {
+          "problem": "Suporte depende da engenharia para reenviar webhooks.",
+          "outcome": "Administrador solicita retry e acompanha o resultado.",
+          "scope": "Apenas entregas do próprio tenant; sem reenvio em massa.",
+          "question": "Como tratar resposta perdida e possível duplicação no destino?"
+        },
+        "scope": "Validação estrutural de uma fixture didática, não aprovação do produto."
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "plan": {
+      "step": "plan",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[1,1],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\"}}",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "event": 2,
+      "at": "2026-09-16T20:56:49.201Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "own-a",
+          "label": "Critério ligado ao check own-a",
+          "pass": true
+        },
+        {
+          "id": "own-b",
+          "label": "Critério ligado ao check own-b",
+          "pass": true
+        },
+        {
+          "id": "cross-a",
+          "label": "Critério ligado ao check cross-a",
+          "pass": true
+        },
+        {
+          "id": "cross-b",
+          "label": "Critério ligado ao check cross-b",
+          "pass": true
+        },
+        {
+          "id": "missing",
+          "label": "Critério ligado ao check missing",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "criteria": [
+          {
+            "id": "own-a",
+            "check": "own-a"
+          },
+          {
+            "id": "own-b",
+            "check": "own-b"
+          },
+          {
+            "id": "cross-a",
+            "check": "cross-a"
+          },
+          {
+            "id": "cross-b",
+            "check": "cross-b"
+          },
+          {
+            "id": "missing",
+            "check": "missing"
+          }
+        ]
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "implement": {
+      "step": "implement",
+      "status": "passed",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[1,1,1],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\"}}",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "event": 3,
+      "at": "2026-09-16T20:56:49.314Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [
+        {
+          "id": "materialized",
+          "label": "Candidata conhecida selecionada em memória",
+          "pass": true
+        }
+      ],
+      "evidence": {
+        "source": "(id, tenant) => rows.find(row => row.id === id && row.tenant === tenant) ?? null",
+        "patch": "scoped",
+        "scope": "Seleção de função predefinida; não é execução de uma skill ou edição de repositório."
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    },
+    "verify": {
+      "step": "verify",
+      "status": "stale",
+      "binding": "{\"policy\":\"quest-local-contract-v1\",\"revisions\":[1,1,1,2],\"inputs\":{\"intent\":\"complete\",\"plan\":\"traceable\",\"patch\":\"scoped\",\"suite\":\"contract\",\"runner\":\"unavailable\"}}",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "event": 7,
+      "at": "2026-09-16T20:56:49.615Z",
+      "codeRevision": 1,
+      "policy": "quest-local-contract-v1",
+      "checks": [],
+      "evidence": {
+        "error": "unavailable",
+        "injected": true
+      },
+      "execution": "quest-local-teaching",
+      "toolkitExecuted": false,
+      "independentReview": false
+    }
+  },
+  "timeline": [
+    {
+      "seq": 1,
+      "at": "2026-09-16T20:56:49.081Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "discover",
+      "outcome": "passed",
+      "message": "Intenção do exercício contém problema, resultado, escopo e pergunta aberta."
+    },
+    {
+      "seq": 2,
+      "at": "2026-09-16T20:56:49.201Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "plan",
+      "outcome": "passed",
+      "message": "Os cinco comportamentos estão ligados a checks conhecidos."
+    },
+    {
+      "seq": 3,
+      "at": "2026-09-16T20:56:49.314Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "implement",
+      "outcome": "passed",
+      "message": "Candidata r1 materializada. Implementar não significa que os testes passaram."
+    },
+    {
+      "seq": 4,
+      "at": "2026-09-16T20:56:49.407Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "input:runner",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "unavailable",
+      "codeRevision": 1
+    },
+    {
+      "seq": 5,
+      "at": "2026-09-16T20:56:49.468Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "verify",
+      "outcome": "failed",
+      "message": "Verificador indisponível (falha injetada). Zero checks não equivale a sucesso."
+    },
+    {
+      "seq": 6,
+      "at": "2026-09-16T20:56:49.549Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "verify",
+      "outcome": "failed",
+      "message": "Verificador indisponível (falha injetada). Zero checks não equivale a sucesso."
+    },
+    {
+      "seq": 7,
+      "at": "2026-09-16T20:56:49.615Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "verify",
+      "outcome": "failed",
+      "message": "Verificador indisponível (falha injetada). Zero checks não equivale a sucesso."
+    },
+    {
+      "seq": 8,
+      "at": "2026-09-16T20:56:49.615Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "budget",
+      "outcome": "escalated",
+      "message": "Três falhas nesta etapa. Execução interrompida: revise o problema antes de iniciar outra execução."
+    },
+    {
+      "seq": 9,
+      "at": "2026-09-16T20:56:49.950Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "input:runner",
+      "outcome": "changed",
+      "message": "Entrada alterada. Recibos dependentes precisam de nova execução.",
+      "value": "normal",
+      "codeRevision": 1
+    },
+    {
+      "seq": 10,
+      "at": "2026-09-16T20:56:50.014Z",
+      "runId": "quest-mu4kztxn-oa6vdok",
+      "action": "verify",
+      "outcome": "blocked",
+      "message": "Orçamento esgotado. Esta execução está encerrada para novos passos."
+    }
+  ],
+  "limits": [
+    "Não é saída do harness-toolkit nem de uma skill real.",
+    "Recibos locais não são assinados; podem ser alterados fora da UI.",
+    "Checks cobrem apenas funções reduzidas em memória.",
+    "Um backup restaura entradas, não comprova execuções."
+  ]
+}

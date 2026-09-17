@@ -1,0 +1,209 @@
+{
+  "format": "sdlc-quest-backup",
+  "backupVersion": 1,
+  "appVersion": "1.2.0",
+  "createdAt": "2026-09-16T20:08:05.749Z",
+  "state": {
+    "version": 1,
+    "tlc": {
+      "version": 1,
+      "done": {
+        "tlc-situation": {
+          "score": 85,
+          "at": "2026-09-16T20:07:58.097Z"
+        },
+        "tlc-verdict": {
+          "score": 100,
+          "at": "2026-09-16T20:07:58.484Z"
+        },
+        "tlc-design": {
+          "score": 100,
+          "at": "2026-09-16T20:07:58.963Z"
+        },
+        "tlc-success": {
+          "score": 100,
+          "at": "2026-09-16T20:07:59.346Z"
+        },
+        "tlc-slice": {
+          "score": 100,
+          "at": "2026-09-16T20:07:59.902Z"
+        },
+        "tlc-sweep": {
+          "score": 100,
+          "at": "2026-09-16T20:08:00.264Z"
+        },
+        "tlc-criteria": {
+          "score": 100,
+          "at": "2026-09-16T20:08:00.612Z"
+        },
+        "tlc-task-pr": {
+          "score": 100,
+          "at": "2026-09-16T20:08:00.981Z"
+        },
+        "tlc-profile": {
+          "score": 100,
+          "at": "2026-09-16T20:08:01.412Z"
+        },
+        "tlc-proof-lab": {
+          "score": 85,
+          "at": "2026-09-16T20:08:02.265Z"
+        },
+        "tlc-verifier": {
+          "score": 100,
+          "at": "2026-09-16T20:08:02.863Z"
+        },
+        "tlc-handoff": {
+          "score": 100,
+          "at": "2026-09-16T20:08:03.346Z"
+        },
+        "tlc-review": {
+          "score": 85,
+          "at": "2026-09-16T20:08:04.001Z"
+        },
+        "tlc-severity": {
+          "score": 100,
+          "at": "2026-09-16T20:08:04.462Z"
+        },
+        "tlc-carryover": {
+          "score": 100,
+          "at": "2026-09-16T20:08:04.828Z"
+        },
+        "tlc-converge": {
+          "score": 100,
+          "at": "2026-09-16T20:08:05.183Z"
+        }
+      },
+      "attempts": {
+        "tlc-situation": 1,
+        "tlc-verdict": 0,
+        "tlc-design": 0,
+        "tlc-success": 0,
+        "tlc-slice": 0,
+        "tlc-sweep": 0,
+        "tlc-criteria": 0,
+        "tlc-task-pr": 0,
+        "tlc-profile": 0,
+        "tlc-proof-lab": 1,
+        "tlc-verifier": 0,
+        "tlc-handoff": 0,
+        "tlc-review": 1,
+        "tlc-severity": 0,
+        "tlc-carryover": 0,
+        "tlc-converge": 0
+      },
+      "drafts": {
+        "tlc-situation": "situation",
+        "tlc-verdict": {
+          "open": "gate",
+          "committed": "record",
+          "unclear": "spike"
+        },
+        "tlc-design": [
+          "decision",
+          "boundary",
+          "unknown"
+        ],
+        "tlc-success": "outcome",
+        "tlc-slice": "vertical",
+        "tlc-sweep": {
+          "validation": "criterion",
+          "failure": "criterion",
+          "idempotency": "existing",
+          "authorization": "criterion",
+          "concurrency": "unresolved",
+          "lifecycle": "unresolved",
+          "dependency": "existing",
+          "state": "criterion",
+          "observability": "existing"
+        },
+        "tlc-criteria": {
+          "http": "check",
+          "latency": "target",
+          "fast": "vague"
+        },
+        "tlc-task-pr": "one",
+        "tlc-profile": {
+          "base": "light",
+          "coverage": "standard",
+          "screens": "ui"
+        },
+        "tlc-proof-lab": {
+          "suite": "contract",
+          "patch": "scoped"
+        },
+        "tlc-verifier": "orchestrator",
+        "tlc-handoff": [
+          "checks",
+          "decisions",
+          "rejected"
+        ],
+        "tlc-review": {
+          "findings": [
+            "F1"
+          ],
+          "verdict": "REQUEST_CHANGES"
+        },
+        "tlc-severity": {
+          "blocker": "REQUEST_CHANGES",
+          "should": "COMMENT",
+          "nit": "APPROVE"
+        },
+        "tlc-carryover": "carry",
+        "tlc-converge": "stop"
+      },
+      "selected": 0
+    },
+    "done": {},
+    "attempts": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "hints": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "drafts": {},
+    "transfer": {
+      "intent": "",
+      "evidence": "",
+      "authority": "",
+      "stop": ""
+    },
+    "sound": false,
+    "motion": false,
+    "selected": 0,
+    "startedAt": "2026-09-16T20:07:57.039Z"
+  }
+}

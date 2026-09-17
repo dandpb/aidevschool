@@ -1,0 +1,15 @@
+SDLC QUEST v1.3 — PACOTE LOCAL
+
+1. Extraia a pasta sdlc-quest inteira.
+2. Para jogar sem instalar nada: abra sdlc-quest.html no navegador.
+3. Para usar um servidor local (Node.js 22+): abra o terminal nesta pasta e rode:
+
+   npm start
+
+4. Abra http://127.0.0.1:8080. Ctrl+C encerra.
+
+Nao precisa de npm install, banco de dados ou chave de API para jogar.
+Alternativas: INICIAR-Mac.command, INICIAR-Windows.cmd ou sh iniciar.sh.
+
+Salve um backup JSON nas Configuracoes da versao anterior para trazer seu progresso.
+O README.md explica desenvolvimento, testes opcionais e limites da integracao.

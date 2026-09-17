@@ -1,0 +1,431 @@
+{
+  "mode": "desktop",
+  "method": "Chromium / Playwright set_content / explicit in-memory localStorage double",
+  "checks": [
+    "new expansion empty",
+    "keyboard opens workshop",
+    "hub no document horizontal overflow",
+    "hub no dialog horizontal overflow",
+    "hub dialog inside viewport",
+    "Escape closes expansion",
+    "focus restored after close",
+    "campaign has contextual skill link",
+    "tlc-situation visible",
+    "tlc-situation before no document horizontal overflow",
+    "tlc-situation before no dialog horizontal overflow",
+    "tlc-situation before dialog inside viewport",
+    "tlc-situation empty does not consume attempt",
+    "tlc-situation free example visible",
+    "tlc-situation studying does not consume XP",
+    "choice retains keyboard focus",
+    "incorrect discovery blocked",
+    "tlc-situation completes with fixed answer",
+    "tlc-situation explanation visible",
+    "tlc-situation solved no document horizontal overflow",
+    "tlc-situation solved no dialog horizontal overflow",
+    "tlc-situation solved dialog inside viewport",
+    "tlc-verdict visible",
+    "tlc-verdict before no document horizontal overflow",
+    "tlc-verdict before no dialog horizontal overflow",
+    "tlc-verdict before dialog inside viewport",
+    "tlc-verdict empty does not consume attempt",
+    "tlc-verdict free example visible",
+    "tlc-verdict studying does not consume XP",
+    "tlc-verdict completes with fixed answer",
+    "tlc-verdict explanation visible",
+    "tlc-verdict solved no document horizontal overflow",
+    "tlc-verdict solved no dialog horizontal overflow",
+    "tlc-verdict solved dialog inside viewport",
+    "tlc-design visible",
+    "tlc-design before no document horizontal overflow",
+    "tlc-design before no dialog horizontal overflow",
+    "tlc-design before dialog inside viewport",
+    "tlc-design empty does not consume attempt",
+    "tlc-design free example visible",
+    "tlc-design studying does not consume XP",
+    "tlc-design completes with fixed answer",
+    "tlc-design explanation visible",
+    "tlc-design solved no document horizontal overflow",
+    "tlc-design solved no dialog horizontal overflow",
+    "tlc-design solved dialog inside viewport",
+    "tlc-success visible",
+    "tlc-success before no document horizontal overflow",
+    "tlc-success before no dialog horizontal overflow",
+    "tlc-success before dialog inside viewport",
+    "tlc-success empty does not consume attempt",
+    "tlc-success free example visible",
+    "tlc-success studying does not consume XP",
+    "tlc-success completes with fixed answer",
+    "tlc-success explanation visible",
+    "tlc-success solved no document horizontal overflow",
+    "tlc-success solved no dialog horizontal overflow",
+    "tlc-success solved dialog inside viewport",
+    "discover reward",
+    "discover-artifact.md nonempty download",
+    "artifact extension usable",
+    "artifact marks fictional example",
+    "tlc-slice visible",
+    "tlc-slice before no document horizontal overflow",
+    "tlc-slice before no dialog horizontal overflow",
+    "tlc-slice before dialog inside viewport",
+    "tlc-slice empty does not consume attempt",
+    "tlc-slice free example visible",
+    "tlc-slice studying does not consume XP",
+    "tlc-slice completes with fixed answer",
+    "tlc-slice explanation visible",
+    "tlc-slice solved no document horizontal overflow",
+    "tlc-slice solved no dialog horizontal overflow",
+    "tlc-slice solved dialog inside viewport",
+    "tlc-sweep visible",
+    "tlc-sweep before no document horizontal overflow",
+    "tlc-sweep before no dialog horizontal overflow",
+    "tlc-sweep before dialog inside viewport",
+    "tlc-sweep empty does not consume attempt",
+    "tlc-sweep free example visible",
+    "tlc-sweep studying does not consume XP",
+    "tlc-sweep completes with fixed answer",
+    "tlc-sweep explanation visible",
+    "tlc-sweep solved no document horizontal overflow",
+    "tlc-sweep solved no dialog horizontal overflow",
+    "tlc-sweep solved dialog inside viewport",
+    "tlc-criteria visible",
+    "tlc-criteria before no document horizontal overflow",
+    "tlc-criteria before no dialog horizontal overflow",
+    "tlc-criteria before dialog inside viewport",
+    "tlc-criteria empty does not consume attempt",
+    "tlc-criteria free example visible",
+    "tlc-criteria studying does not consume XP",
+    "tlc-criteria completes with fixed answer",
+    "tlc-criteria explanation visible",
+    "tlc-criteria solved no document horizontal overflow",
+    "tlc-criteria solved no dialog horizontal overflow",
+    "tlc-criteria solved dialog inside viewport",
+    "tlc-task-pr visible",
+    "tlc-task-pr before no document horizontal overflow",
+    "tlc-task-pr before no dialog horizontal overflow",
+    "tlc-task-pr before dialog inside viewport",
+    "tlc-task-pr empty does not consume attempt",
+    "tlc-task-pr free example visible",
+    "tlc-task-pr studying does not consume XP",
+    "tlc-task-pr completes with fixed answer",
+    "tlc-task-pr explanation visible",
+    "tlc-task-pr solved no document horizontal overflow",
+    "tlc-task-pr solved no dialog horizontal overflow",
+    "tlc-task-pr solved dialog inside viewport",
+    "plan reward",
+    "tlc-profile visible",
+    "tlc-profile before no document horizontal overflow",
+    "tlc-profile before no dialog horizontal overflow",
+    "tlc-profile before dialog inside viewport",
+    "tlc-profile empty does not consume attempt",
+    "tlc-profile free example visible",
+    "tlc-profile studying does not consume XP",
+    "tlc-profile completes with fixed answer",
+    "tlc-profile explanation visible",
+    "tlc-profile solved no document horizontal overflow",
+    "tlc-profile solved no dialog horizontal overflow",
+    "tlc-profile solved dialog inside viewport",
+    "tlc-proof-lab visible",
+    "tlc-proof-lab before no document horizontal overflow",
+    "tlc-proof-lab before no dialog horizontal overflow",
+    "tlc-proof-lab before dialog inside viewport",
+    "tlc-proof-lab empty does not consume attempt",
+    "tlc-proof-lab free example visible",
+    "tlc-proof-lab studying does not consume XP",
+    "weak regression rejected",
+    "baseline incorrectly green is visibly demonstrated",
+    "proof draft restored at current task",
+    "proof draft values restored",
+    "results not invented on reload",
+    "tlc-proof-lab completes with fixed answer",
+    "tlc-proof-lab explanation visible",
+    "tlc-proof-lab solved no document horizontal overflow",
+    "tlc-proof-lab solved no dialog horizontal overflow",
+    "tlc-proof-lab solved dialog inside viewport",
+    "three versions executed",
+    "red green red visible",
+    "fifteen local assertions displayed",
+    "lab-execution.json nonempty download",
+    "exported local proof has fifteen assertions",
+    "exported local proof is red green red",
+    "exported local proof disclaims CI",
+    "tlc-verifier visible",
+    "tlc-verifier before no document horizontal overflow",
+    "tlc-verifier before no dialog horizontal overflow",
+    "tlc-verifier before dialog inside viewport",
+    "tlc-verifier empty does not consume attempt",
+    "tlc-verifier free example visible",
+    "tlc-verifier studying does not consume XP",
+    "tlc-verifier completes with fixed answer",
+    "tlc-verifier explanation visible",
+    "tlc-verifier solved no document horizontal overflow",
+    "tlc-verifier solved no dialog horizontal overflow",
+    "tlc-verifier solved dialog inside viewport",
+    "tlc-handoff visible",
+    "tlc-handoff before no document horizontal overflow",
+    "tlc-handoff before no dialog horizontal overflow",
+    "tlc-handoff before dialog inside viewport",
+    "tlc-handoff empty does not consume attempt",
+    "tlc-handoff free example visible",
+    "tlc-handoff studying does not consume XP",
+    "tlc-handoff completes with fixed answer",
+    "tlc-handoff explanation visible",
+    "tlc-handoff solved no document horizontal overflow",
+    "tlc-handoff solved no dialog horizontal overflow",
+    "tlc-handoff solved dialog inside viewport",
+    "implement reward",
+    "tlc-review visible",
+    "tlc-review before no document horizontal overflow",
+    "tlc-review before no dialog horizontal overflow",
+    "tlc-review before dialog inside viewport",
+    "tlc-review empty does not consume attempt",
+    "tlc-review free example visible",
+    "tlc-review studying does not consume XP",
+    "wrong review verdict is blocked",
+    "tlc-review completes with fixed answer",
+    "tlc-review explanation visible",
+    "tlc-review solved no document horizontal overflow",
+    "tlc-review solved no dialog horizontal overflow",
+    "tlc-review solved dialog inside viewport",
+    "findings.json nonempty download",
+    "findings explicitly simulated",
+    "tlc-severity visible",
+    "tlc-severity before no document horizontal overflow",
+    "tlc-severity before no dialog horizontal overflow",
+    "tlc-severity before dialog inside viewport",
+    "tlc-severity empty does not consume attempt",
+    "tlc-severity free example visible",
+    "tlc-severity studying does not consume XP",
+    "tlc-severity completes with fixed answer",
+    "tlc-severity explanation visible",
+    "tlc-severity solved no document horizontal overflow",
+    "tlc-severity solved no dialog horizontal overflow",
+    "tlc-severity solved dialog inside viewport",
+    "tlc-carryover visible",
+    "tlc-carryover before no document horizontal overflow",
+    "tlc-carryover before no dialog horizontal overflow",
+    "tlc-carryover before dialog inside viewport",
+    "tlc-carryover empty does not consume attempt",
+    "tlc-carryover free example visible",
+    "tlc-carryover studying does not consume XP",
+    "tlc-carryover completes with fixed answer",
+    "tlc-carryover explanation visible",
+    "tlc-carryover solved no document horizontal overflow",
+    "tlc-carryover solved no dialog horizontal overflow",
+    "tlc-carryover solved dialog inside viewport",
+    "tlc-converge visible",
+    "tlc-converge before no document horizontal overflow",
+    "tlc-converge before no dialog horizontal overflow",
+    "tlc-converge before dialog inside viewport",
+    "tlc-converge empty does not consume attempt",
+    "tlc-converge free example visible",
+    "tlc-converge studying does not consume XP",
+    "tlc-converge completes with fixed answer",
+    "tlc-converge explanation visible",
+    "tlc-converge solved no document horizontal overflow",
+    "tlc-converge solved no dialog horizontal overflow",
+    "tlc-converge solved dialog inside viewport",
+    "judge reward",
+    "all sixteen completed",
+    "expected XP with three mistakes",
+    "original campaign score untouched",
+    "replay adds no XP",
+    "guide.md nonempty download",
+    "guide includes all skills",
+    "guide includes full official install command",
+    "backup.json nonempty download",
+    "backup contains expansion",
+    "kit no document horizontal overflow",
+    "kit no dialog horizontal overflow",
+    "kit dialog inside viewport",
+    "install command exact",
+    "all four safe source links",
+    "clipboard fallback retains command",
+    "prompt copy fallback exact",
+    "backup import restores all TLC achievements",
+    "backup import restores score",
+    "v1.1 import keeps eighteen achievements",
+    "v1.1 import keeps original 1800 XP",
+    "v1.1 notes preserved",
+    "v1.1 old-only backup starts expansion empty",
+    "skill in main manual",
+    "320-hub no document horizontal overflow",
+    "320-hub no dialog horizontal overflow",
+    "320-hub dialog inside viewport",
+    "320-profile no document horizontal overflow",
+    "320-profile no dialog horizontal overflow",
+    "320-profile dialog inside viewport",
+    "768-hub no document horizontal overflow",
+    "768-hub no dialog horizontal overflow",
+    "768-hub dialog inside viewport",
+    "768-profile no document horizontal overflow",
+    "768-profile no dialog horizontal overflow",
+    "768-profile dialog inside viewport",
+    "no page errors",
+    "no runtime HTTP requests"
+  ],
+  "errors": [],
+  "requests": [],
+  "visual": [
+    {
+      "name": "hub",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-situation before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-situation solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-verdict before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-verdict solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-design before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-design solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-success before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-success solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-slice before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-slice solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-sweep before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-sweep solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-criteria before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-criteria solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-task-pr before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-task-pr solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-profile before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-profile solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-proof-lab before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-proof-lab solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-verifier before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-verifier solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-handoff before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-handoff solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-review before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-review solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-severity before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-severity solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-carryover before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-carryover solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-converge before",
+      "contrast_candidates": []
+    },
+    {
+      "name": "tlc-converge solved",
+      "contrast_candidates": []
+    },
+    {
+      "name": "kit",
+      "contrast_candidates": []
+    },
+    {
+      "name": "320-hub",
+      "contrast_candidates": []
+    },
+    {
+      "name": "320-profile",
+      "contrast_candidates": []
+    },
+    {
+      "name": "768-hub",
+      "contrast_candidates": []
+    },
+    {
+      "name": "768-profile",
+      "contrast_candidates": []
+    }
+  ],
+  "limitations": [
+    "Native file:// navigation blocked by administrative policy.",
+    "No native persistent storage, Safari, Firefox or physical mobile test.",
+    "No independent subagent executed."
+  ],
+  "browser": "144.0.7559.96",
+  "passed": 261,
+  "contrast_failed_states": 0
+}

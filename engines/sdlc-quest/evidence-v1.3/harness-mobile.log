@@ -1,0 +1,164 @@
+2.9s PASS 1 old campaign starts unchanged
+2.9s PASS 2 TLC expansion starts unchanged
+3.1s PASS 3 keyboard opens lab
+3.1s PASS 4 initial document fits width
+3.2s PASS 5 initial dialog content fits width
+3.2s PASS 6 initial dialog inside viewport
+3.2s PASS 7 initial sampled text contrast
+3.3s PASS 8 real integration pending disclosed
+3.3s PASS 9 provided repository reference exact
+3.3s PASS 10 repo source link safe new tab
+3.3s PASS 11 package download disabled before checks
+3.4s PASS 12 forged enabled button cannot export missing package
+3.5s PASS 13 skip package records block
+3.5s PASS 14 skip no receipts
+3.6s PASS 15 self declaration rejected
+3.6s PASS 16 claim no receipts
+3.7s PASS 17 incomplete intent fails
+3.7s PASS 18 input intent keeps focus
+3.8s PASS 19 complete intent executed
+3.8s PASS 20 discover document fits width
+3.8s PASS 21 discover dialog content fits width
+3.8s PASS 22 discover dialog inside viewport
+3.9s PASS 23 discover sampled text contrast
+4.0s PASS 24 incomplete plan fails
+4.0s PASS 25 input plan keeps focus
+4.1s PASS 26 complete plan executed
+4.3s PASS 27 original materialized without pretending verification
+4.4s PASS 28 input suite keeps focus
+4.5s PASS 29 buggy candidate rejected by tests
+4.5s PASS 30 all fifteen checks executed for buggy candidate
+4.5s PASS 31 failure is real cross tenant result
+4.5s PASS 32 failed-tests document fits width
+4.5s PASS 33 failed-tests dialog content fits width
+4.5s PASS 34 failed-tests dialog inside viewport
+4.5s PASS 35 failed-tests sampled text contrast
+4.7s PASS 36 input patch keeps focus
+4.7s PASS 37 code edit invalidates implementation
+5.0s PASS 38 correct candidate passes complete proof
+5.0s PASS 39 baseline and mutant fail as required
+5.0s PASS 40 verified-tests document fits width
+5.0s PASS 41 verified-tests dialog content fits width
+5.0s PASS 42 verified-tests dialog inside viewport
+5.0s PASS 43 verified-tests sampled text contrast
+5.2s PASS 44 input review keeps focus
+5.4s PASS 45 stale review rejected
+5.4s PASS 46 input review keeps focus
+5.4s PASS 47 current simulated review accepted locally
+5.4s PASS 48 review not presented as independent agent
+5.6s PASS 49 package requires and has six current receipts
+5.6s PASS 50 validated package button unlocked
+5.6s PASS 51 local-package document fits width
+5.7s PASS 52 local-package dialog content fits width
+5.7s PASS 53 local-package dialog inside viewport
+5.7s PASS 54 local-package sampled text contrast
+5.8s PASS 55 package.json has bytes
+5.8s PASS 56 export contains executed checks
+5.8s PASS 57 export never claims toolkit executed
+5.8s PASS 58 export never claims production authorization
+5.8s PASS 59 export never claims independent reviewer
+5.8s PASS 60 export marks own schema
+5.8s PASS 61 export marks source access missing
+6.0s PASS 62 production denied even after six gates
+6.0s PASS 63 Escape closes lab
+6.0s PASS 64 keyboard focus returns to launch
+6.1s PASS 65 reopening same page preserves current execution
+6.1s PASS 66 editing after green keeps only two earlier receipts
+6.1s PASS 67 editing disables previously valid package download
+6.1s PASS 68 verification explicitly stale
+6.1s PASS 69 invalidated document fits width
+6.1s PASS 70 invalidated dialog content fits width
+6.1s PASS 71 invalidated dialog inside viewport
+6.2s PASS 72 invalidated sampled text contrast
+6.3s PASS 73 cannot rerun package with stale evidence
+6.4s PASS 74 input patch keeps focus
+6.9s PASS 75 revalidation restores package
+7.0s PASS 76 six training goals actually earned
+7.1s PASS 77 guide.md has bytes
+7.1s PASS 78 guide contains real integration gap
+7.2s PASS 79 backup.json has bytes
+7.2s PASS 80 backup stores harness inputs only
+7.2s PASS 81 new run requires explicit confirmation
+7.3s PASS 82 cancel keeps receipts
+7.4s PASS 83 new run clears receipts
+7.8s PASS 84 input runner keeps focus
+8.0s PASS 85 third verifier failure halts
+8.0s PASS 86 unavailable verifier produces no fabricated checks
+8.0s PASS 87 budget-exhausted document fits width
+8.1s PASS 88 budget-exhausted dialog content fits width
+8.1s PASS 89 budget-exhausted dialog inside viewport
+8.1s PASS 90 budget-exhausted sampled text contrast
+8.2s PASS 91 input runner keeps focus
+8.3s PASS 92 changing verifier cannot bypass exhausted budget
+8.3s PASS 93 diagnostic.json has bytes
+8.3s PASS 94 diagnostic distinguishes failure from ready
+8.3s PASS 95 main campaign XP unaffected by lab
+8.3s PASS 96 TLC XP unaffected by lab
+8.5s PASS 97 TLC has integrated entry point to harness
+8.5s PASS 98 only one modal stays open
+8.6s PASS 99 manual documents pending toolkit integration
+10.0s PASS 100 restored settings preserve candidate
+10.0s PASS 101 backup import never restores passed checks
+10.2s PASS 102 v1.2 TLC achievement preserved
+10.2s PASS 103 v1.2 note preserved
+10.3s PASS 104 v1.2 import creates fresh lab
+11.2s PASS 105 320-initial document fits width
+11.3s PASS 106 320-initial dialog content fits width
+11.3s PASS 107 320-initial dialog inside viewport
+11.3s PASS 108 320-initial sampled text contrast
+11.5s PASS 109 320-step-0 document fits width
+11.5s PASS 110 320-step-0 dialog content fits width
+11.5s PASS 111 320-step-0 dialog inside viewport
+11.5s PASS 112 320-step-0 sampled text contrast
+11.5s PASS 113 320-step-1 document fits width
+11.6s PASS 114 320-step-1 dialog content fits width
+11.6s PASS 115 320-step-1 dialog inside viewport
+11.6s PASS 116 320-step-1 sampled text contrast
+11.6s PASS 117 320-step-2 document fits width
+11.7s PASS 118 320-step-2 dialog content fits width
+11.7s PASS 119 320-step-2 dialog inside viewport
+11.7s PASS 120 320-step-2 sampled text contrast
+11.8s PASS 121 320-step-3 document fits width
+11.8s PASS 122 320-step-3 dialog content fits width
+11.8s PASS 123 320-step-3 dialog inside viewport
+11.8s PASS 124 320-step-3 sampled text contrast
+11.9s PASS 125 320-step-4 document fits width
+11.9s PASS 126 320-step-4 dialog content fits width
+11.9s PASS 127 320-step-4 dialog inside viewport
+11.9s PASS 128 320-step-4 sampled text contrast
+12.0s PASS 129 320-step-5 document fits width
+12.0s PASS 130 320-step-5 dialog content fits width
+12.1s PASS 131 320-step-5 dialog inside viewport
+12.1s PASS 132 320-step-5 sampled text contrast
+13.1s PASS 133 768-initial document fits width
+13.2s PASS 134 768-initial dialog content fits width
+13.2s PASS 135 768-initial dialog inside viewport
+13.2s PASS 136 768-initial sampled text contrast
+13.4s PASS 137 768-step-0 document fits width
+13.4s PASS 138 768-step-0 dialog content fits width
+13.4s PASS 139 768-step-0 dialog inside viewport
+13.5s PASS 140 768-step-0 sampled text contrast
+13.5s PASS 141 768-step-1 document fits width
+13.5s PASS 142 768-step-1 dialog content fits width
+13.5s PASS 143 768-step-1 dialog inside viewport
+13.6s PASS 144 768-step-1 sampled text contrast
+13.6s PASS 145 768-step-2 document fits width
+13.6s PASS 146 768-step-2 dialog content fits width
+13.7s PASS 147 768-step-2 dialog inside viewport
+13.7s PASS 148 768-step-2 sampled text contrast
+13.8s PASS 149 768-step-3 document fits width
+13.8s PASS 150 768-step-3 dialog content fits width
+13.8s PASS 151 768-step-3 dialog inside viewport
+13.8s PASS 152 768-step-3 sampled text contrast
+13.9s PASS 153 768-step-4 document fits width
+13.9s PASS 154 768-step-4 dialog content fits width
+13.9s PASS 155 768-step-4 dialog inside viewport
+14.0s PASS 156 768-step-4 sampled text contrast
+14.1s PASS 157 768-step-5 document fits width
+14.1s PASS 158 768-step-5 dialog content fits width
+14.1s PASS 159 768-step-5 dialog inside viewport
+14.1s PASS 160 768-step-5 sampled text contrast
+15.3s PASS 161 native storage unavailable path still operates
+15.3s PASS 162 no JavaScript errors
+15.3s PASS 163 no runtime HTTP requests
+{"mode": "mobile", "passed": 163, "fatal": null, "errors": [], "contrast_failed_states": 0}
