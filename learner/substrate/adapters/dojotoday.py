@@ -8,11 +8,13 @@ without deciding mastery or writing back to the canonical state.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from datetime import date
 from pathlib import Path
 from typing import Any
 
 from learner.substrate.dashboard_snapshot import build_snapshot
+from learner.substrate.snapshot_sources import count_mastered
 from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import derive_next_reviews
 
@@ -110,6 +112,8 @@ def derive_today_snapshot(
     source_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Return the dojoToday snapshot dict derived from the canonical state.
 
@@ -119,7 +123,13 @@ def derive_today_snapshot(
     """
     today = today or projection_today()
     canonical_path = source_root / "learner" / "learning_state.yaml"
-    snapshot = build_snapshot(canonical_path, state=state, source_root=source_root, today=today)
+    snapshot = build_snapshot(
+        canonical_path,
+        state=state,
+        source_root=source_root,
+        today=today,
+        judgment_client=judgment_client,
+    )
 
     units_log = state.get("units_log") or []
     by_id = {unit.get("unit_id"): unit for unit in units_log if unit.get("unit_id")}
@@ -160,7 +170,7 @@ def derive_today_snapshot(
         "curr": snapshot["curr"],
         "activeUnit": active_view,
         "reviews": reviews,
-        "masteredCount": sum(1 for unit in units_log if unit.get("mastered")),
+        "masteredCount": count_mastered(units_log),
         "totalUnits": len(units_log),
         "nextProjectNum": next_num,
         "track": track,

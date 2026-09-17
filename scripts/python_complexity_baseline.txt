@@ -97,7 +97,6 @@ learner/substrate/__init__.py:validate
 learner/substrate/__main__.py:main
 learner/substrate/adapters/dojotoday.py:_build_track
 learner/substrate/adapters/dojotoday.py:_self_check
-learner/substrate/adapters/dojotoday.py:derive_today_snapshot
 learner/substrate/catalog.py:parse_catalog
 learner/substrate/dashboard_data.py:render_ts_value
 learner/substrate/dashboard_snapshot.py:build_snapshot
