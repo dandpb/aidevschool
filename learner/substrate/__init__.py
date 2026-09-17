@@ -844,15 +844,21 @@ def sync() -> None:
     `projections.build_generated_views`.
     """
     from learner.substrate.projections import build_generated_views
+    from learner.substrate.judgments import default_client
 
     state = load_and_validate()
-    views = build_generated_views(SOURCE_ROOT, ROOT, state)
+    views = build_generated_views(
+        SOURCE_ROOT, ROOT, state, judgment_client=default_client()
+    )
     write_views(views)
     print(f"Generated projections regenerated: {len(views)}")
 
 
 def check(state: dict[str, Any] | None = None) -> list[Path]:
     from learner.substrate.projections import build_generated_views
+    from learner.substrate.judgments import default_client
 
     current = state if state is not None else load_and_validate()
-    return check_views(build_generated_views(SOURCE_ROOT, ROOT, current))
+    return check_views(
+        build_generated_views(SOURCE_ROOT, ROOT, current, judgment_client=default_client())
+    )
