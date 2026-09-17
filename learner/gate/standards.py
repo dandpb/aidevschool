@@ -249,25 +249,15 @@ def challenge_gate_blockers(
 # Game rubrics and metric violations
 # ---------------------------------------------------------------------------
 
-_NONZERO_FAILURE_METRICS = frozenset(
-    {
-        "abusive_admitted",
-        "guards_missed",
-        "misroutes",
-        "skipped_required",
-    }
-)
-_TRUE_FAILURE_METRICS = frozenset(
-    {
-        "corrupt_load",
-        "latency_over",
-        "overflow",
-        "overflowed",
-        "overheated",
-        "queue_overflowed",
-        "reactor_overloaded",
-    }
-)
+#: Failure-metric vocabularies derive from the committed snapshot
+#: (``learner/gate/metric_failure_snapshot.yaml``) at import — the declared
+#: seam discipline of ``load_thresholds``: nothing hardcodes failure metric
+#: names. A missing/malformed snapshot fails import loudly via
+#: :class:`MetricSnapshotError` rather than yielding an empty vocabulary.
+#: Seeded and maintained by ``python3 -m learner.gate.metric_lint``.
+from learner.gate.metric_snapshot import failure_vocabularies  # noqa: E402
+
+_NONZERO_FAILURE_METRICS, _TRUE_FAILURE_METRICS = failure_vocabularies()
 
 
 def _is_finite_number(value: Any) -> TypeGuard[float]:

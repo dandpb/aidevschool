@@ -322,6 +322,23 @@ def _journal_entries(journal_path: Path) -> dict[str, dict[str, str]]:
     return entries
 
 
+def record_judgment(
+    sweep: str,
+    state: dict[str, Any],
+    questions: dict[str, Any],
+    answers: dict[str, Any],
+    receipts_root: Path | None = None,
+) -> str:
+    """Write the ok-receipt for a successful sweep; returns the input digest16.
+
+    Public seam for judgment consumers outside this module (e.g.
+    ``learner.gate.metric_lint``) so they share the exact receipt contract.
+    """
+    root = receipts_root or DEFAULT_RECEIPTS_ROOT
+    _write_ok_receipt(sweep, state, questions, answers, root)
+    return _input_digest(state, questions)[:16]
+
+
 def _ask(
     sweep: str,
     primitive: str,
