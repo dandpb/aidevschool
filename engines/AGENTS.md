@@ -9,6 +9,7 @@ orchestration live here, while learner state and curriculum evidence stay at the
 
 ```text
 engines/
+├── school-entry/          # independent TypeSafe entry + operator release control
 ├── codexDojo/              # pnpm dashboard + product-facing ecosystem contract
 ├── codexdojo-os-prototype/ # React/Vite educational OS bounded context
 ├── literacyDojo/           # npm AI microlearning app; generated content, local progress only

@@ -1,0 +1,20 @@
+{
+  "name": "aidevschool-entry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server/main.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node --test tests/browser.spec.mjs",
+    "test:live": "node scripts/live-api.mjs",
+    "check": "node scripts/check.mjs",
+    "hash-password": "node scripts/hash-password.mjs"
+  },
+  "dependencies": {
+    "playwright": "1.61.1"
+  }
+}
