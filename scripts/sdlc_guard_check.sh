@@ -219,11 +219,16 @@ self_test() {
 
   local GITC="git -C $R -c user.name=selftest -c user.email=selftest@example.invalid"
 
-  mkdir -p "$R/tests/unit" "$R/dist" "$R/.loops" "$R/src"
+  mkdir -p "$R/tests/unit" "$R/dist" "$R/.loops" "$R/src" "$R/scripts" "$R/demo/test"
   printf 'def test_a():\n    assert True\n' > "$R/tests/unit/test_a.py"
   printf 'generated\n' > "$R/dist/generated.js"
   printf 'loop memory\n' > "$R/.loops/memory.md"
   printf 'app\n' > "$R/src/app.py"
+  # AID-2293 (harden F2): .test.mjs/.spec.mjs OUTSIDE */tests/* (and files in a
+  # singular */test/ dir) must classify as existing tests once edited/deleted.
+  printf 'import assert from "node:assert"\n' > "$R/scripts/complexity.test.mjs"
+  printf 'import assert from "node:assert"\n' > "$R/scripts/pilot.spec.mjs"
+  printf 'export function helper() { return 1 }\n' > "$R/demo/test/run.mjs"
   $GITC add -A >/dev/null
   $GITC commit -qm "base"
   local base_sha
@@ -262,6 +267,19 @@ self_test() {
     "printf 'def test_a():\n    assert False\n' > tests/unit/test_a.py"
   scenario "delete existing test"                     1 "drop test" -- \
     "rm tests/unit/test_a.py"
+  # AID-2293 (harden F2): .mjs classification. These four scenarios failed
+  # open before the pattern fix (the hook escaped them: neither the name
+  # patterns nor the dir rules matched .test.mjs/.spec.mjs outside */tests/*,
+  # and the singular */test/ dir was not classified either).
+  scenario "modify existing .test.mjs outside */tests/*"  1 "touch test.mjs" -- \
+    "printf 'import assert from \"node:assert\" // weakened\n' > scripts/complexity.test.mjs"
+  scenario "delete existing .spec.mjs outside */tests/*"  1 "drop spec.mjs" -- \
+    "rm scripts/pilot.spec.mjs"
+  scenario "new .test.mjs/.spec.mjs outside */tests/* allowed (failing-test-first)" 0 "add test.mjs" -- \
+    "printf 'import assert from \"node:assert\"\n' > scripts/newthing.test.mjs" \
+    "printf 'import assert from \"node:assert\"\n' > scripts/newthing.spec.mjs"
+  scenario "edit non-test file under singular */test/* dir" 1 "touch demo/test helper" -- \
+    "printf 'export function helper() { return 2 }\n' > demo/test/run.mjs"
   scenario "edit derived dist/ artifact"              1 "hand-edit dist" -- \
     "printf 'hand edited\n' >> dist/generated.js"
   scenario "edit derived .loops/ memory"              1 "hand-edit loops" -- \
