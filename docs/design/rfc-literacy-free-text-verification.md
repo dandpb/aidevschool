@@ -1,7 +1,11 @@
 # RFC: May a typed judgment model verify free-text learner answers?
 
-**Status**: OPEN — needs an owner decision. This document frames the question;
-it decides nothing.
+**Status**: ACCEPTED — the owner answered **YES** (Daniel, 2026-09-17): a
+typed judgment model may form part of "independently verified" for free-text
+literacy answers, under the conditions this RFC framed (thresholds owned by
+code, borderline escalated to the owner, digest-named committed receipts).
+Next step: tlc-discover on the resulting work, reusing the pilot's
+runner/receipt/replay infrastructure.
 
 **Context**: opened 2026-09-17 from the fragile-parsing exploration and the
 semantic-substrate-seam pilot (`.design/semantic-substrate-seam.md`, PR #486),
