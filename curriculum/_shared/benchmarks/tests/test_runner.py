@@ -7,6 +7,7 @@ extracted parsers reproduce project 01's committed ``aggregated.json``.
 """
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -178,22 +179,28 @@ class TestBridge(unittest.TestCase):
             self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
 
     def test_aggregate_builds_report_from_committed_files(self):
-        # End-to-end bridge over real project-01 result files (N=1). The raw
-        # results/ tree is gitignored machine-local scratch output (see
-        # TestParserFaithfulness above), so a fresh checkout legitimately has
-        # none — skip instead of failing, per the substrate skipTest precedent.
-        if not R.result_path(PROJ01, "go", "baseline", 1).exists():
-            self.skipTest(
-                "project-01 benchmarks/results/ absent on this checkout "
-                "(gitignored local live-run artifacts)"
-            )
-        cfg = R.load_benchmark_config(PROJ01 / "benchmark.yaml")
-        report = R.aggregate(PROJ01, cfg, "01_rate_limiter", n=1)
-        self.assertEqual(report.project_id, "01_rate_limiter")
-        self.assertEqual(set(report.scenarios), set(cfg.scenarios))
-        self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
-        # N=1 committed data cannot pass the N>=3 gate; the report still builds.
-        self.assertFalse(report.all_pass)
+        # Self-contained e2e of the aggregate() bridge (AID-2132): a temp
+        # project mirroring 01_rate_limiter's committed layout — the real
+        # committed benchmark.yaml plus fixture result files at N=1. The raw
+        # results/ tree is gitignored machine-local scratch output, so reading
+        # it made the test order/state-dependent: absent -> skip, leftover
+        # unparseable live-run file -> "p99" missing from an empty aggregation.
+        with tempfile.TemporaryDirectory() as d:
+            proj = Path(d)
+            shutil.copyfile(PROJ01 / "benchmark.yaml", proj / "benchmark.yaml")
+            cfg = R.load_benchmark_config(proj / "benchmark.yaml")
+            for lang in R.LANGS:
+                for sc in cfg.scenarios:
+                    p = R.result_path(proj, lang, sc, 1)
+                    p.parent.mkdir(parents=True, exist_ok=True)
+                    p.write_text(K6_FIXTURE)
+                    R.result_path(proj, lang, sc, 1, "_stats.json").write_text(STATS_FIXTURE)
+            report = R.aggregate(proj, cfg, "01_rate_limiter", n=1)
+            self.assertEqual(report.project_id, "01_rate_limiter")
+            self.assertEqual(set(report.scenarios), set(cfg.scenarios))
+            self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
+            # N=1 fixture data cannot pass the N>=3 gate; the report still builds.
+            self.assertFalse(report.all_pass)
 
 
 class TestRunBenchmarkMocked(unittest.TestCase):
