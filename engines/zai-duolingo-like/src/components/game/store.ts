@@ -80,6 +80,11 @@ interface GameStore {
   // playground
   playgroundThread: { id: string; messages: ChatMessage[] } | null;
   playgroundLoading: boolean;
+  // bumped every time the thread is cleared (Limpar/reset); in-flight sends
+  // capture the generation at send time and drop their late state writes when
+  // it changed, so a slow save response can never re-bind an old threadId
+  // onto the fresh thread
+  playgroundThreadGen: number;
 
   // transient UI
   bipMood: "idle" | "happy" | "sad" | "thinking" | "sleep";
@@ -159,6 +164,7 @@ export const useGame = create<GameStore>((set, get) => ({
 
   playgroundThread: null,
   playgroundLoading: false,
+  playgroundThreadGen: 0,
 
   bipMood: "idle",
   setBipMood: (m) => set({ bipMood: m }),
@@ -182,15 +188,30 @@ export const useGame = create<GameStore>((set, get) => ({
     set({ loading: true });
     try {
       await get().refreshState();
-      await get().refreshCurriculum();
-      await get().refreshDailyChallenge();
-      // returning learners (any XP or a custom name) skip the cinematic
+      // returning learners (any XP or a custom name) skip the cinematic.
+      // Routed as soon as the snapshot lands so a transient failure of the
+      // secondary fetches below can never strand the learner on the
+      // cinematic screen.
       const snap = get().snapshot;
       if (snap && (snap.learner.xp > 0 || snap.learner.name !== "Recruta")) {
         set({ view: "home" });
       }
+      // secondary reads: each may fail independently (transient 5xx) without
+      // breaking routing; SkillPath/other views re-fetch on demand when the
+      // slice is still missing.
+      try {
+        await get().refreshCurriculum();
+      } catch {
+        /* curriculum retries from the views that need it */
+      }
+      try {
+        await get().refreshDailyChallenge();
+      } catch {
+        /* daily challenge card re-fetches on next bootstrap/refresh */
+      }
     } catch {
-      /* noop */
+      /* noop: snapshot fetch failed; Page's effect re-runs bootstrap while
+         snapshot stays null */
     } finally {
       set({ loading: false });
     }
@@ -396,14 +417,16 @@ export const useGame = create<GameStore>((set, get) => ({
       await get().refreshState();
       await get().refreshCurriculum();
       await get().refreshAchievements();
-      set({
+      set((s) => ({
         view: "onboarding",
         activeLesson: null,
         lastResult: null,
         playgroundThread: null,
+        // invalidate any in-flight playground save from before the reset
+        playgroundThreadGen: s.playgroundThreadGen + 1,
         achievementToasts: [],
         leagueResetNotice: null,
-      });
+      }));
     } catch {
       /* noop */
     } finally {
@@ -424,10 +447,14 @@ export const useGame = create<GameStore>((set, get) => ({
   },
 
   newPlaygroundThread: () => {
-    set({ playgroundThread: { id: "", messages: [] } });
+    set((s) => ({
+      playgroundThread: { id: "", messages: [] },
+      playgroundThreadGen: s.playgroundThreadGen + 1,
+    }));
   },
 
   sendPlaygroundMessage: async (message) => {
+    const genAtSend = get().playgroundThreadGen;
     const thread = get().playgroundThread ?? { id: "", messages: [] };
     const userMsg = { role: "user" as const, content: message };
     // optimistic: append user message immediately
@@ -454,11 +481,16 @@ export const useGame = create<GameStore>((set, get) => ({
       }
       const reply = miniData.reply as string;
       const replyMsg = { role: "assistant" as const, content: reply };
-      set({
-        playgroundThread: {
-          id: thread.id,
-          messages: [...get().playgroundThread!.messages, replyMsg],
-        },
+      // thread may have been cleared (Limpar) while the reply was in flight —
+      // drop the write instead of resurrecting the old messages
+      set((s) => {
+        if (s.playgroundThreadGen !== genAtSend) return {};
+        return {
+          playgroundThread: {
+            id: thread.id,
+            messages: [...s.playgroundThread!.messages, replyMsg],
+          },
+        };
       });
 
       // 2) persist the exchange + sync achievements via the Next.js route
@@ -474,12 +506,16 @@ export const useGame = create<GameStore>((set, get) => ({
         });
         const saveData = await saveRes.json();
         if (saveData.ok) {
-          // update thread id (may be newly created)
-          set((s) => ({
-            playgroundThread: s.playgroundThread
-              ? { ...s.playgroundThread, id: saveData.threadId }
-              : s.playgroundThread,
-          }));
+          // update thread id (may be newly created) — only if the thread we
+          // sent into is still current; after a Limpar the save's threadId
+          // belongs to the OLD conversation and must not leak into the new one
+          set((s) => {
+            if (s.playgroundThreadGen !== genAtSend || !s.playgroundThread)
+              return {};
+            return {
+              playgroundThread: { ...s.playgroundThread, id: saveData.threadId },
+            };
+          });
           if (saveData.newAchievements && saveData.newAchievements.length > 0) {
             get().pushAchievementToasts(saveData.newAchievements);
           }
@@ -494,14 +530,17 @@ export const useGame = create<GameStore>((set, get) => ({
         content:
           "⚠️ Os servidores de Tóquio estão instáveis com a chuva. Tente novamente em instantes.",
       };
-      set((s) => ({
-        playgroundThread: s.playgroundThread
-          ? {
-              id: s.playgroundThread.id,
-              messages: [...s.playgroundThread.messages, errReply],
-            }
-          : { id: "", messages: [errReply] },
-      }));
+      set((s) => {
+        if (s.playgroundThreadGen !== genAtSend) return {};
+        return {
+          playgroundThread: s.playgroundThread
+            ? {
+                id: s.playgroundThread.id,
+                messages: [...s.playgroundThread.messages, errReply],
+              }
+            : { id: "", messages: [errReply] },
+        };
+      });
     } finally {
       set({ playgroundLoading: false });
     }

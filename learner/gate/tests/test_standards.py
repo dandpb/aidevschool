@@ -1,6 +1,7 @@
 """Standards tests: the numeric bar binds to the declared seam.
 
-Threshold binding (C1), per-unit overlay (C2), loud seam failure (C3), and the
+Threshold binding (C1), per-unit overlay (C2, with the AID-2287 R3 floor: the
+overlay may only raise the bar), loud seam failure (C3), and the
 shape-detecting evidence gate moved from ``curriculum/_shared/tests/test_evidence.py``
 with the judgment (2026-09-13).
 """
@@ -19,6 +20,7 @@ from learner.gate.evidence_io import canonical_evidence_digest
 from learner.gate.standards import (
     Thresholds,
     ThresholdSeamError,
+    ThresholdFloorError,
     VerifierVerdict,
     check_evidence,
     effective_thresholds,
@@ -99,38 +101,100 @@ class TestSeamBinding(_SeamFixture):
 
 
 class TestEffectiveThresholds(_SeamFixture):
-    """C2 — a unit's empirical_gate overlays the seam; absent keys fall back."""
+    """C2 — a unit's empirical_gate overlays the seam; absent keys fall back.
+
+    Since AID-2287 (R3): the overlay may only raise the bar — a value below
+    the seam baseline fails closed with ``ThresholdFloorError``.
+    """
 
     def test_effective_thresholds_overrides_and_falls_back(self) -> None:
         base = load_thresholds()
         self.assertEqual(base, Thresholds(mutation_min=0.65, coverage_min=0.80))
         self.assertEqual(effective_thresholds(None), base)
         self.assertEqual(effective_thresholds({}), base)
+        # Equal-to-seam values (the live canonical shape) resolve unchanged.
         self.assertEqual(
-            effective_thresholds({"mutation_min": 0.50}),
-            Thresholds(mutation_min=0.50, coverage_min=0.80),
+            effective_thresholds({"mutation_min": 0.65, "min_coverage": 0.80}),
+            base,
+        )
+        # Raising the bar above the seam is the overlay's job.
+        self.assertEqual(
+            effective_thresholds({"mutation_min": 0.72}),
+            Thresholds(mutation_min=0.72, coverage_min=0.80),
         )
         self.assertEqual(
-            effective_thresholds({"mutation_min": 0.50, "min_coverage": 0.70}),
-            Thresholds(mutation_min=0.50, coverage_min=0.70),
+            effective_thresholds({"mutation_min": 0.72, "min_coverage": 0.85}),
+            Thresholds(mutation_min=0.72, coverage_min=0.85),
         )
+
+    def test_overlay_below_seam_floor_fails_closed(self) -> None:
+        with self.assertRaises(ThresholdFloorError) as ctx:
+            effective_thresholds({"mutation_min": 0.50})
+        self.assertIn("mutation_min", str(ctx.exception))
+        self.assertIn("0.65", str(ctx.exception))
+        with self.assertRaises(ThresholdFloorError):
+            effective_thresholds({"min_coverage": 0.70})
+        # The floor is relative to the explicit base when one is given.
+        with self.assertRaises(ThresholdFloorError):
+            effective_thresholds({"mutation_min": 0.60}, Thresholds(0.65, 0.80))
+        self.assertEqual(
+            effective_thresholds({"mutation_min": 0.60}, Thresholds(0.55, 0.80)),
+            Thresholds(mutation_min=0.60, coverage_min=0.80),
+        )
+        # CLI boundaries catch ValueError; the floor error stays compatible.
+        self.assertIsInstance(ctx.exception, ValueError)
 
     def test_unit_overlay_binds_the_verdict(self) -> None:
         verdict = VerifierVerdict(
-            mutation_score=0.55, coverage_core=0.90,
+            mutation_score=0.66, coverage_core=0.90,
             context_isolated=True, verdict="PASS",
         )
-        # Against the seam (0.65) it fails…
-        self.assertFalse(verdict.verified_pass)
-        # …against the unit's own bar (0.50) the same verdict passes.
+        # Against the seam (0.65) it passes…
+        self.assertTrue(verdict.verified_pass)
+        # …against the unit's raised bar (0.72) the same verdict fails.
         blockers = standards.verdict_blockers(
-            verdict, effective_thresholds({"mutation_min": 0.50})
+            verdict, effective_thresholds({"mutation_min": 0.72})
         )
-        self.assertEqual(blockers, ())
+        self.assertTrue(any("mutation_score" in b for b in blockers), blockers)
+
     def test_gate_receipt_path_uses_unit_overlay_end_to_end(self) -> None:
         """Verify gap 3: canonical_gate wires effective_thresholds into the
-        receipt check — a unit bar below the seam must accept evidence the seam
-        alone would reject (and the seam alone must still reject it)."""
+        receipt check — a unit bar above the seam must reject evidence the
+        seam alone would accept (and the seam alone must still accept it)."""
+        from learner.gate.canonical_gate import _check_evidence_semantics
+
+        producer = {
+            "unit_id": "U2",
+            "project": "02_key_value_store",
+            "game": "KV WAREHOUSE",
+            "ts": "2026-09-13T00:00:00Z",
+            "pass": True,
+        }
+        receipt = VerifierReceipt(
+            verdict="PASS", context_isolated=True,
+            mutation_score=0.68, coverage_core=0.92, source="test",
+            evidence_digest=canonical_evidence_digest(
+                {k: v for k, v in producer.items() if k != "verifier"}
+            ),
+        )
+        raised_bar_unit = {
+            "id": "U2",
+            "project": "02_key_value_store",
+            "empirical_gate": {"mutation_min": 0.72},
+        }
+        seam_only_unit = {"id": "U2", "project": "02_key_value_store"}
+
+        # Seam alone (0.65): the receipt's 0.68 is accepted.
+        errors_seam = _check_evidence_semantics(producer, seam_only_unit, receipt)
+        self.assertEqual(errors_seam, [])
+
+        # With the unit's raised bar (0.72): the same receipt is rejected.
+        errors_unit = _check_evidence_semantics(producer, raised_bar_unit, receipt)
+        self.assertTrue(any("mutation_score" in e for e in errors_unit), errors_unit)
+
+    def test_lowered_overlay_bar_cannot_reach_judgment(self) -> None:
+        """R3 end to end: a below-seam overlay in canonical state fails
+        closed at the receipt check instead of judging against a lower bar."""
         from learner.gate.canonical_gate import _check_evidence_semantics
 
         producer = {
@@ -143,24 +207,15 @@ class TestEffectiveThresholds(_SeamFixture):
         receipt = VerifierReceipt(
             verdict="PASS", context_isolated=True,
             mutation_score=0.58, coverage_core=0.92, source="test",
-            evidence_digest=canonical_evidence_digest(
-                {k: v for k, v in producer.items() if k != "verifier"}
-            ),
+            evidence_digest=canonical_evidence_digest(producer),
         )
-        unit_seam_bar = {
+        lowered_unit = {
             "id": "U2",
             "project": "02_key_value_store",
             "empirical_gate": {"mutation_min": 0.50},
         }
-        seam_only_unit = {"id": "U2", "project": "02_key_value_store"}
-
-        # Seam alone (0.65): the receipt's 0.58 is rejected.
-        errors_seam = _check_evidence_semantics(producer, seam_only_unit, receipt)
-        self.assertTrue(any("mutation_score" in e for e in errors_seam), errors_seam)
-
-        # With the unit's own bar (0.50): the same receipt passes.
-        errors_unit = _check_evidence_semantics(producer, unit_seam_bar, receipt)
-        self.assertEqual(errors_unit, [])
+        with self.assertRaises(ThresholdFloorError):
+            _check_evidence_semantics(producer, lowered_unit, receipt)
 
 
 class TestSeamFailure(_SeamFixture):
