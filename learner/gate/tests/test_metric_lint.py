@@ -110,7 +110,7 @@ def test_enumeration_extracts_literal_keys(tmp_path: Path) -> None:
     game_src.mkdir(parents=True)
     (game_src / "levels.ts").write_text(FIXTURE_GAME, encoding="utf-8")
     census = metric_lint.enumerate_metrics(tmp_path)
-    assert {"outer_count", "nested", "inner_ok", "deeper", "deep_key"} <= census["game-99-fx"]
+    assert census["game-99-fx"] == {"outer_count", "nested", "inner_ok", "deeper", "deep_key"}
 
 
 def test_enumeration_game10_live() -> None:
@@ -181,6 +181,7 @@ def test_propose_writes_receipts_and_prints_yaml(tmp_path: Path) -> None:
     assert "classification: failure(nonzero)" in snippet
     assert "classification: not_failure" in snippet
     assert "provenance: receipt:" in snippet
+    assert "# p=0.97" in snippet
 
 
 def test_propose_without_key_exits_2(
