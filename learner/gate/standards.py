@@ -11,7 +11,8 @@ Two layers:
   (``engines/minimaxDojo/config/learner.yaml``, per root ``AGENTS.md``) on
   every call and fails loudly when it is missing or malformed — there is no
   fallback. :func:`effective_thresholds` overlays a unit's own
-  ``empirical_gate`` block when it declares one.
+  ``empirical_gate`` block when it declares one; the overlay may only raise
+  the bar (floor at the baseline, fail-closed per AID-2287 R3).
 - **The judgment.** :class:`VerifierVerdict`, the game rubric machinery
   (:func:`independently_verified_pass`), :func:`game_metric_violations`, and
   the shape-detecting :func:`check_evidence` / :func:`passes_gate` wrappers.
@@ -43,6 +44,19 @@ class ThresholdSeamError(ValueError):
 
     Subclasses :class:`ValueError` so existing CLI boundaries that catch
     ``ValueError`` surface it as a clean non-zero exit naming the path.
+    """
+
+
+class ThresholdFloorError(ThresholdSeamError):
+    """A unit overlay tried to lower the bar below the declared baseline.
+
+    Raised by :func:`effective_thresholds` (fail-closed) when
+    ``active_unit.empirical_gate`` declares a value below the baseline: the
+    per-unit overlay exists to raise the bar for harder units, and a lowered
+    threshold reaching judgment through a canonical-state edit is exactly the
+    regrade path the gate must not offer (AID-2287 R3). A legitimate
+    below-baseline acceptance is an owner decision recorded in an issue and
+    carried by a code change — never a state edit.
     """
 
 
@@ -117,6 +131,10 @@ def effective_thresholds(
     A unit declares per-unit values as ``mutation_min`` / ``min_coverage``
     (the ``active_unit.empirical_gate`` shape in ``learning_state.yaml``).
     Absent keys fall back to ``base`` (the seam when not given).
+
+    The overlay may raise the bar, never lower it (AID-2287 R3): any value
+    below ``base`` fails closed with :class:`ThresholdFloorError`, so a
+    lowered threshold cannot reach judgment via canonical-state edits.
     """
     th = base if base is not None else load_thresholds()
     if not unit_gate:
@@ -125,6 +143,7 @@ def effective_thresholds(
         "mutation_min": unit_gate.get("mutation_min", th.mutation_min),
         "coverage_min": unit_gate.get("min_coverage", th.coverage_min),
     }
+    floors = {"mutation_min": th.mutation_min, "coverage_min": th.coverage_min}
     for key, value in resolved.items():
         try:
             number = float(value)
@@ -135,6 +154,14 @@ def effective_thresholds(
         if not 0.0 <= number <= 1.0:
             raise ThresholdSeamError(
                 f"active_unit.empirical_gate.{key}={number} is outside [0, 1]"
+            )
+        if number < floors[key]:
+            raise ThresholdFloorError(
+                f"active_unit.empirical_gate.{key}={number} is below the "
+                f"baseline {floors[key]} — a unit overlay may raise the bar, "
+                "never lower it (fail-closed; a below-baseline acceptance "
+                "must be an owner decision recorded in an issue and carried "
+                "by a code change, not a state edit)"
             )
         resolved[key] = number
     return Thresholds(**resolved)
@@ -496,6 +523,7 @@ def passes_gate(
 __all__ = [
     "DEFAULT_SEAM_PATH",
     "ThresholdSeamError",
+    "ThresholdFloorError",
     "Thresholds",
     "VerifierVerdict",
     "load_thresholds",
