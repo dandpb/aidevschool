@@ -38,7 +38,10 @@ case "$id" in
       echo "resolve: PAPERCLIP_API_URL/PAPERCLIP_API_TOKEN not configured (set them to resolve ${id})" >&2
       exit 4
     }
-    code="$(curl -s -o /dev/null -w '%{http_code}' -m 20 \
+    # -L: the board URL may answer http->https with a 301 (same-host redirect
+    # keeps the Authorization header); without it every lookup is a "transport
+    # error". rc 6/7/28 (resolve/connect/timeout) land in the default case.
+    code="$(curl -sL -o /dev/null -w '%{http_code}' -m 20 \
       -H "Authorization: Bearer ${PAPERCLIP_API_TOKEN}" \
       "${PAPERCLIP_API_URL%/}/api/issues/${id}" 2>/dev/null)"
     case "$code" in
