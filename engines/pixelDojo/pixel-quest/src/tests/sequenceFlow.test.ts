@@ -27,7 +27,7 @@ describe("sequence flow encounter", () => {
       },
       curriculum_context: {
         mechanic: "TTL Cache",
-        accepted_signal: "chave quente valida",
+        accepted_signal: "chave quente válida",
         rejected_trap: "leitura expirada",
       },
     })

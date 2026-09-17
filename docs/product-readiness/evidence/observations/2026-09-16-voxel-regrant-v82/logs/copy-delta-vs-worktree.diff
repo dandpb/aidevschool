@@ -1,0 +1,1265 @@
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/catalog.json	2026-09-16 09:49:18.690596349 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/catalog.json	2026-09-16 10:08:54.005752572 -0400
+@@ -2,103 +2,103 @@
+   {
+     "id": "game-02-warehouse",
+     "name": "WAREHOUSE",
+-    "developmentPort": 5202,
++    "developmentPort": 5302,
+     "unitId": "U2-key-value-store"
+   },
+   {
+     "id": "game-03-wormhole",
+     "name": "WORMHOLE",
+-    "developmentPort": 5203,
++    "developmentPort": 5303,
+     "unitId": "U3-url-shortener"
+   },
+   {
+     "id": "game-04-task-queue",
+     "name": "TASK FORGE",
+-    "developmentPort": 5204,
++    "developmentPort": 5304,
+     "unitId": "U4-task-queue"
+   },
+   {
+     "id": "game-05-relay-station",
+     "name": "RELAY STATION",
+-    "developmentPort": 5205,
++    "developmentPort": 5305,
+     "unitId": "U5-websocket-chat"
+   },
+   {
+     "id": "game-06-pipeline-plant",
+     "name": "PIPELINE PLANT",
+-    "developmentPort": 5206,
++    "developmentPort": 5306,
+     "unitId": "U6-file-upload"
+   },
+   {
+     "id": "game-07-checkpoint-city",
+     "name": "CHECKPOINT CITY",
+-    "developmentPort": 5207,
++    "developmentPort": 5307,
+     "unitId": "U7-rest-api-auth"
+   },
+   {
+     "id": "game-08-timeline-tower",
+     "name": "TIMELINE TOWER",
+-    "developmentPort": 5208,
++    "developmentPort": 5308,
+     "unitId": "U8-event-driven"
+   },
+   {
+     "id": "game-09-docking-bay",
+     "name": "DOCKING BAY",
+-    "developmentPort": 5209,
++    "developmentPort": 5309,
+     "unitId": "U9-plugin-system"
+   },
+   {
+     "id": "game-10-hash-ring",
+     "name": "HASH RING",
+-    "developmentPort": 5177,
++    "developmentPort": 5377,
+     "unitId": "U10-distributed-cache"
+   },
+   {
+     "id": "game-11-air-traffic",
+     "name": "AIR TRAFFIC",
+-    "developmentPort": 5211,
++    "developmentPort": 5311,
+     "unitId": "U11-load-balancer"
+   },
+   {
+     "id": "game-12-mission-control",
+     "name": "MISSION CONTROL",
+-    "developmentPort": 5212,
++    "developmentPort": 5312,
+     "unitId": "U12-job-scheduler"
+   },
+   {
+     "id": "game-13-breaker-grid",
+     "name": "BREAKER GRID",
+-    "developmentPort": 5213,
++    "developmentPort": 5313,
+     "unitId": "U13-circuit-breaker"
+   },
+   {
+     "id": "game-14-river-delta",
+     "name": "RIVER DELTA",
+-    "developmentPort": 5214,
++    "developmentPort": 5314,
+     "unitId": "U14-log-aggregator"
+   },
+   {
+     "id": "game-15-observatory",
+     "name": "OBSERVATORY",
+-    "developmentPort": 5215,
++    "developmentPort": 5315,
+     "unitId": "U15-metrics-collector"
+   },
+   {
+     "id": "game-16-freight-yard",
+     "name": "FREIGHT YARD",
+-    "developmentPort": 5216,
++    "developmentPort": 5316,
+     "unitId": "U16-message-queue"
+   },
+   {
+     "id": "game-17-lighthouse-network",
+     "name": "LIGHTHOUSE NETWORK",
+-    "developmentPort": 5217,
++    "developmentPort": 5317,
+     "unitId": "U17-config-service"
+   },
+   {
+     "id": "game-18-stacks",
+     "name": "STACKS",
+-    "developmentPort": 5218,
++    "developmentPort": 5318,
+     "unitId": "U18-search-engine"
+   }
+ ]
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-02-warehouse/.logs: smoke-L1-cleared.png
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-02-warehouse/.logs: smoke-L3-cleared.png
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-02-warehouse/playwright.config.ts	2026-09-16 09:49:18.692596329 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-02-warehouse/playwright.config.ts	2026-09-16 10:08:26.329000987 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5202";
++const baseURL = "http://localhost:5302";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5202 --strictPort",
++    command: "npx vite --port 5302 --strictPort",
+     url: baseURL,
+     reuseExistingServer: true,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-03-wormhole: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-03-wormhole/playwright.config.ts	2026-09-16 09:49:18.694596310 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-03-wormhole/playwright.config.ts	2026-09-16 10:08:26.331000969 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5203";
++const baseURL = "http://localhost:5303";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5203 --strictPort",
++    command: "npx vite --port 5303 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-04-task-queue: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-04-task-queue/playwright.config.ts	2026-09-16 09:49:18.695596300 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-04-task-queue/playwright.config.ts	2026-09-16 10:08:26.332000960 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test"
+ 
+-const baseURL = "http://localhost:5204"
++const baseURL = "http://localhost:5304"
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5204 --strictPort",
++    command: "npx vite --port 5304 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-05-relay-station: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-05-relay-station/playwright.config.ts	2026-09-16 09:49:18.697596281 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-05-relay-station/playwright.config.ts	2026-09-16 10:08:26.334000942 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5205";
++const baseURL = "http://localhost:5305";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5205 --strictPort",
++    command: "npx vite --port 5305 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-06-pipeline-plant: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-06-pipeline-plant/playwright.config.ts	2026-09-16 09:49:18.698596271 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-06-pipeline-plant/playwright.config.ts	2026-09-16 10:08:26.335000933 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5206";
++const baseURL = "http://localhost:5306";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5206 --strictPort",
++    command: "npx vite --port 5306 --strictPort",
+     url: baseURL,
+     reuseExistingServer: true,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-07-checkpoint-city/.logs: smoke-L1-cleared.png
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-07-checkpoint-city/.logs: smoke-L2-forged-cleared.png
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-07-checkpoint-city/.logs: smoke-L3-rate-limit-cleared.png
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-07-checkpoint-city/.logs: smoke-L4-order-cleared.png
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-07-checkpoint-city/playwright.config.ts	2026-09-16 09:49:18.700596251 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-07-checkpoint-city/playwright.config.ts	2026-09-16 10:08:26.337000915 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5207";
++const baseURL = "http://localhost:5307";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5207 --strictPort",
++    command: "npx vite --port 5307 --strictPort",
+     url: baseURL,
+     reuseExistingServer: true,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-08-timeline-tower: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-08-timeline-tower/playwright.config.ts	2026-09-16 09:49:18.705596203 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-08-timeline-tower/playwright.config.ts	2026-09-16 10:08:26.338000906 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5208",
++    baseURL: "http://localhost:5308",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5208 --strictPort",
+-    url: "http://localhost:5208",
++    command: "npx vite --port 5308 --strictPort",
++    url: "http://localhost:5308",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-09-docking-bay: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-09-docking-bay/playwright.config.ts	2026-09-16 09:49:18.706596193 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-09-docking-bay/playwright.config.ts	2026-09-16 10:08:26.340000888 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5209";
++const baseURL = "http://localhost:5309";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5209 --strictPort",
++    command: "npx vite --port 5309 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-10-hash-ring: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-10-hash-ring/playwright.config.ts	2026-09-16 09:49:18.707596183 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-10-hash-ring/playwright.config.ts	2026-09-16 10:09:26.243463381 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5175";
++const baseURL = "http://localhost:5375";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5175 --strictPort",
++    command: "npx vite --port 5375 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-11-air-traffic: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-11-air-traffic/playwright.config.ts	2026-09-16 09:49:18.710596154 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-11-air-traffic/playwright.config.ts	2026-09-16 10:08:26.343000861 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5211",
++    baseURL: "http://localhost:5311",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5211 --strictPort",
+-    url: "http://localhost:5211",
++    command: "npx vite --port 5311 --strictPort",
++    url: "http://localhost:5311",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-12-mission-control: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-12-mission-control/playwright.config.ts	2026-09-16 09:49:18.711596144 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-12-mission-control/playwright.config.ts	2026-09-16 10:08:26.345000843 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5212",
++    baseURL: "http://localhost:5312",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5212 --strictPort",
+-    url: "http://localhost:5212",
++    command: "npx vite --port 5312 --strictPort",
++    url: "http://localhost:5312",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-13-breaker-grid: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-13-breaker-grid/playwright.config.ts	2026-09-16 09:49:18.712596134 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-13-breaker-grid/playwright.config.ts	2026-09-16 10:08:26.348000816 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5213",
++    baseURL: "http://localhost:5313",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5213 --strictPort",
+-    url: "http://localhost:5213",
++    command: "npx vite --port 5313 --strictPort",
++    url: "http://localhost:5313",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-14-river-delta: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-14-river-delta/playwright.config.ts	2026-09-16 09:49:18.714596115 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-14-river-delta/playwright.config.ts	2026-09-16 10:08:26.349000807 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5214";
++const baseURL = "http://localhost:5314";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5214 --strictPort",
++    command: "npx vite --port 5314 --strictPort",
+     url: baseURL,
+     reuseExistingServer: true,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-15-observatory: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-15-observatory/playwright.config.ts	2026-09-16 09:49:18.715596105 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-15-observatory/playwright.config.ts	2026-09-16 10:08:26.351000789 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5215";
++const baseURL = "http://localhost:5315";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5215 --strictPort",
++    command: "npx vite --port 5315 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-16-freight-yard: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-16-freight-yard/playwright.config.ts	2026-09-16 09:49:18.717596086 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-16-freight-yard/playwright.config.ts	2026-09-16 10:08:26.352000780 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5216",
++    baseURL: "http://localhost:5316",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5216 --strictPort",
+-    url: "http://localhost:5216",
++    command: "npx vite --port 5316 --strictPort",
++    url: "http://localhost:5316",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-17-lighthouse-network: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-17-lighthouse-network/playwright.config.ts	2026-09-16 09:49:18.718596076 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-17-lighthouse-network/playwright.config.ts	2026-09-16 10:08:26.354000762 -0400
+@@ -4,12 +4,12 @@
+   testDir: "./playwright",
+   timeout: 60_000,
+   use: {
+-    baseURL: "http://localhost:5217",
++    baseURL: "http://localhost:5317",
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5217 --strictPort",
+-    url: "http://localhost:5217",
++    command: "npx vite --port 5317 --strictPort",
++    url: "http://localhost:5317",
+     reuseExistingServer: true,
+     timeout: 30_000,
+   },
+Only in /paperclip/tmp/aid2140-run/engines/voxelDojo/game-18-stacks: .logs
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/game-18-stacks/playwright.config.ts	2026-09-16 09:49:18.719596066 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/game-18-stacks/playwright.config.ts	2026-09-16 10:08:26.355000753 -0400
+@@ -1,6 +1,6 @@
+ import { defineConfig } from "@playwright/test";
+ 
+-const baseURL = "http://localhost:5218";
++const baseURL = "http://localhost:5318";
+ 
+ export default defineConfig({
+   testDir: "./playwright",
+@@ -10,7 +10,7 @@
+     screenshot: "only-on-failure",
+   },
+   webServer: {
+-    command: "npx vite --port 5218 --strictPort",
++    command: "npx vite --port 5318 --strictPort",
+     url: baseURL,
+     reuseExistingServer: false,
+     timeout: 30_000,
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/scripts/serve-catalog.mjs	2026-09-16 09:49:18.725596008 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/scripts/serve-catalog.mjs	2026-09-16 10:09:36.440371943 -0400
+@@ -18,7 +18,7 @@
+   return game
+ })
+ 
+-process.env.VITE_CODEXDOJO_OS_ORIGIN ??= "http://127.0.0.1:4174"
++process.env.VITE_CODEXDOJO_OS_ORIGIN ??= "http://127.0.0.1:4374"
+ const servers = []
+ 
+ try {
+--- /paperclip/tmp/aid2140/wt/engines/voxelDojo/shared/evidence.ts	2026-09-16 09:49:18.725596008 -0400
++++ /paperclip/tmp/aid2140-run/engines/voxelDojo/shared/evidence.ts	2026-09-16 10:09:36.440371943 -0400
+@@ -2,7 +2,7 @@
+ 
+ configureEvidenceParentOrigin(
+   import.meta.env["VITE_CODEXDOJO_OS_ORIGIN"]
+-    || (import.meta.env.DEV ? "http://127.0.0.1:4174" : undefined),
++    || (import.meta.env.DEV ? "http://127.0.0.1:4374" : undefined),
+ )
+ 
+ export * from "@aidevschool/evidence"
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/playwright.config.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/playwright.config.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/playwright.config.ts	2026-09-16 09:49:18.612597110 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/playwright.config.ts	2026-09-16 10:08:40.321875378 -0400
+@@ -7,60 +7,60 @@
+   // ponytail: shared fixed-port engine servers require serial specs; use per-worker ports before raising this.
+   workers: 1,
+   use: {
+-    baseURL: 'http://127.0.0.1:4174',
++    baseURL: 'http://127.0.0.1:4374',
+     screenshot: 'only-on-failure',
+     trace: 'retain-on-failure',
+   },
+   webServer: [
+     {
+       name: 'codexDojo OS',
+-      command: 'VITE_LOCAL_ENGINE_BRIDGE=true npm run dev -- --host 127.0.0.1 --port 4174 --strictPort',
+-      url: 'http://127.0.0.1:4174',
++      command: 'VITE_LOCAL_ENGINE_BRIDGE=true npm run dev -- --host 127.0.0.1 --port 4374 --strictPort',
++      url: 'http://127.0.0.1:4374',
+       reuseExistingServer: false,
+       timeout: 120_000,
+     },
+     {
+       name: 'codexDojo dashboard',
+-      command: 'pnpm exec vite --host 127.0.0.1 --port 5175 --strictPort',
++      command: 'pnpm exec vite --host 127.0.0.1 --port 5375 --strictPort',
+       cwd: '../codexDojo',
+-      url: 'http://127.0.0.1:5175',
++      url: 'http://127.0.0.1:5375',
+       reuseExistingServer: true,
+       timeout: 120_000,
+     },
+     {
+       name: 'PixelDojo Quest',
+-      command: 'pnpm exec vite --host 127.0.0.1 --port 5176 --strictPort',
++      command: 'pnpm exec vite --host 127.0.0.1 --port 5376 --strictPort',
+       cwd: '../pixelDojo/pixel-quest',
+-      url: 'http://127.0.0.1:5176',
++      url: 'http://127.0.0.1:5376',
+       reuseExistingServer: true,
+       timeout: 120_000,
+       // AID-1153: `pnpm exec` runs the dev server with NODE_ENV=production, so
+       // import.meta.env.DEV is false and PixelQuest's evidence emitter would
+       // skip host forwarding. Pin the OS origin explicitly — the same defense
+       // voxelDojo's serve-catalog.mjs already applies.
+-      env: { VITE_CODEXDOJO_OS_ORIGIN: 'http://127.0.0.1:4174' },
++      env: { VITE_CODEXDOJO_OS_ORIGIN: 'http://127.0.0.1:4374' },
+     },
+     {
+       name: 'LiteracyDojo',
+-      command: 'npm run dev -- --host 127.0.0.1 --port 5178 --strictPort',
++      command: 'npm run dev -- --host 127.0.0.1 --port 5378 --strictPort',
+       cwd: '../literacyDojo',
+-      url: 'http://127.0.0.1:5178',
++      url: 'http://127.0.0.1:5378',
+       reuseExistingServer: true,
+       timeout: 120_000,
+     },
+     {
+       name: 'miniTown',
+-      command: 'pnpm exec vite --host 127.0.0.1 --port 5179 --strictPort',
++      command: 'pnpm exec vite --host 127.0.0.1 --port 5379 --strictPort',
+       cwd: '../miniTown',
+-      url: 'http://127.0.0.1:5179',
++      url: 'http://127.0.0.1:5379',
+       reuseExistingServer: true,
+       timeout: 120_000,
+     },
+     {
+       name: 'dojoToday',
+-      command: 'npm run dev -- --host 127.0.0.1 --port 5180 --strictPort',
++      command: 'npm run dev -- --host 127.0.0.1 --port 5380 --strictPort',
+       cwd: '../dojoToday',
+-      url: 'http://127.0.0.1:5180',
++      url: 'http://127.0.0.1:5380',
+       reuseExistingServer: true,
+       timeout: 120_000,
+     },
+@@ -68,7 +68,7 @@
+       name: 'voxelDojo catalog',
+       command: 'pnpm run dev:catalog',
+       cwd: '../voxelDojo',
+-      url: 'http://127.0.0.1:5177',
++      url: 'http://127.0.0.1:5377',
+       reuseExistingServer: true,
+       timeout: 120_000,
+     },
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/playwright.pilot.config.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/playwright.pilot.config.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/playwright.pilot.config.ts	2026-09-16 09:49:18.612597110 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/playwright.pilot.config.ts	2026-09-16 10:08:40.321875378 -0400
+@@ -9,15 +9,15 @@
+   retries: 0,
+   workers: 1,
+   use: {
+-    baseURL: 'http://127.0.0.1:4176',
++    baseURL: 'http://127.0.0.1:4376',
+     screenshot: 'only-on-failure',
+     trace: 'retain-on-failure',
+   },
+   webServer: {
+     // preview only — never `dev`, so a missing bundle fails instead of being
+     // silently served by a runtime's own dev server.
+-    command: 'npx vite preview --host 127.0.0.1 --port 4176 --strictPort',
+-    url: 'http://127.0.0.1:4176',
++    command: 'npx vite preview --host 127.0.0.1 --port 4376 --strictPort',
++    url: 'http://127.0.0.1:4376',
+     reuseExistingServer: false,
+     timeout: 120_000,
+   },
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/data/missions.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/data/missions.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/data/missions.ts	2026-09-16 09:49:18.629596944 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/data/missions.ts	2026-09-16 10:20:02.582823358 -0400
+@@ -39,7 +39,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -72,7 +72,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -107,7 +107,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -142,7 +142,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -177,7 +177,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -212,7 +212,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -247,7 +247,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -282,7 +282,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -317,7 +317,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -352,7 +352,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -387,7 +387,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -422,7 +422,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -457,7 +457,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -492,7 +492,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -527,7 +527,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -562,7 +562,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -597,7 +597,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -632,7 +632,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -667,7 +667,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -702,7 +702,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -737,7 +737,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -772,7 +772,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -807,7 +807,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -840,7 +840,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5202/?hosted=1",
++        entrypoint: "http://127.0.0.1:5302/?hosted=1",
+         environmentKey: "VITE_WAREHOUSE_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-02-warehouse@0.1.0",
+@@ -875,7 +875,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5203/?hosted=1",
++        entrypoint: "http://127.0.0.1:5303/?hosted=1",
+         environmentKey: "VITE_WORMHOLE_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-03-wormhole@0.1.0",
+@@ -910,7 +910,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5205/?hosted=1",
++        entrypoint: "http://127.0.0.1:5305/?hosted=1",
+         environmentKey: "VITE_RELAY_STATION_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-05-relay-station@0.1.0",
+@@ -943,7 +943,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -978,7 +978,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1013,7 +1013,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1048,7 +1048,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5206/?hosted=1",
++        entrypoint: "http://127.0.0.1:5306/?hosted=1",
+         environmentKey: "VITE_PIPELINE_PLANT_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-06-pipeline-plant@0.1.0",
+@@ -1083,7 +1083,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5207/?hosted=1",
++        entrypoint: "http://127.0.0.1:5307/?hosted=1",
+         environmentKey: "VITE_CHECKPOINT_CITY_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-07-checkpoint-city@0.1.0",
+@@ -1118,7 +1118,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5208/?hosted=1",
++        entrypoint: "http://127.0.0.1:5308/?hosted=1",
+         environmentKey: "VITE_TIMELINE_TOWER_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-08-timeline-tower@0.1.0",
+@@ -1153,7 +1153,7 @@
+       ],
+       runtime: {
+         engineId: "voxelDojo",
+-        entrypoint: "http://127.0.0.1:5209/?hosted=1",
++        entrypoint: "http://127.0.0.1:5309/?hosted=1",
+         environmentKey: "VITE_DOCKING_BAY_URL",
+         protocolVersion: "1.0",
+         contentVersion: "game-09-docking-bay@0.1.0",
+@@ -1188,7 +1188,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1223,7 +1223,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1258,7 +1258,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1293,7 +1293,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1328,7 +1328,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+@@ -1363,7 +1363,7 @@
+       ],
+       runtime: {
+         engineId: "literacyDojo",
+-        entrypoint: "http://127.0.0.1:5178/?hosted=1",
++        entrypoint: "http://127.0.0.1:5378/?hosted=1",
+         environmentKey: "VITE_LITERACYDOJO_URL",
+         protocolVersion: "1.0",
+         contentVersion: "2026-09-10.2",
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/engines/registry.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/engines/registry.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/engines/registry.ts	2026-09-16 09:49:18.635596886 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/engines/registry.ts	2026-09-16 10:08:40.322875369 -0400
+@@ -16,7 +16,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_CODEXDOJO_URL',
+-      developmentUrl: 'http://127.0.0.1:5175/',
++      developmentUrl: 'http://127.0.0.1:5375/',
+       evidenceSource: null,
+       missionProtocol: null,
+     },
+@@ -81,7 +81,7 @@
+     role: 'Jogo didático 2D',
+     capability: 'Jogue encontros reais e produza evidência bruta para um verificador separado.',
+     objective: 'Ensinar conceitos de programação como mecânicas 2D operáveis.',
+-    startCommand: 'cd engines/pixelDojo && pnpm --filter pixel-quest dev -- --port 5176',
++    startCommand: 'cd engines/pixelDojo && pnpm --filter pixel-quest dev -- --port 5376',
+     evaluationFocus: 'Compreensão e transferência do conceito, acessibilidade e qualidade da evidência bruta.',
+     journeyClass: 'teaching-game',
+     portfolioStatus: 'supporting',
+@@ -90,7 +90,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_PIXELDOJO_URL',
+-      developmentUrl: 'http://127.0.0.1:5176/',
++      developmentUrl: 'http://127.0.0.1:5376/',
+       evidenceSource: 'pixelquest',
+       missionProtocol: null,
+     },
+@@ -101,7 +101,7 @@
+     role: 'Microlições de IA para não programadores',
+     capability: 'Teste tentativa, feedback, dica, retry e evidência estruturada da trilha IA na Prática.',
+     objective: 'Ensinar pessoas não técnicas a usar e conferir IA por microlições práticas.',
+-    startCommand: 'cd engines/literacyDojo && npm run dev -- --port 5178',
++    startCommand: 'cd engines/literacyDojo && npm run dev -- --port 5378',
+     evaluationFocus: 'Ativação, retry, transferência no-code, privacidade e recibo independente.',
+     journeyClass: 'micro-lesson',
+     portfolioStatus: 'learner-facing',
+@@ -110,7 +110,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_LITERACYDOJO_URL',
+-      developmentUrl: 'http://127.0.0.1:5178/',
++      developmentUrl: 'http://127.0.0.1:5378/',
+       evidenceSource: null,
+       missionProtocol: '1.0',
+     },
+@@ -121,7 +121,7 @@
+     role: 'Exploração Level 0',
+     capability: 'Avalie a hipótese de orientação acolhedora sem confundir exploração com atividade avaliada.',
+     objective: 'Testar se uma vila explorável melhora orientação e confiança antes da primeira missão.',
+-    startCommand: 'cd engines/miniTown && pnpm exec vite --host 127.0.0.1 --port 5179 --strictPort',
++    startCommand: 'cd engines/miniTown && pnpm exec vite --host 127.0.0.1 --port 5379 --strictPort',
+     evaluationFocus: 'Compreensão da proposta, tempo até a missão e custo de exploração; aprendizagem avaliada é NA.',
+     journeyClass: 'explore-only',
+     portfolioStatus: 'incubating',
+@@ -130,7 +130,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_MINITOWN_URL',
+-      developmentUrl: 'http://127.0.0.1:5179/',
++      developmentUrl: 'http://127.0.0.1:5379/',
+       evidenceSource: null,
+       missionProtocol: null,
+     },
+@@ -141,7 +141,7 @@
+     role: 'Sugestão neste dispositivo',
+     capability: 'Mostre a próxima prática a partir do progresso local do OS, sem FSRS canônico nem escrita em learner/.',
+     objective: 'Apresentar uma sugestão neste dispositivo a partir do progresso local, nunca do estado canônico.',
+-    startCommand: 'cd engines/dojoToday && npm run dev -- --port 5180',
++    startCommand: 'cd engines/dojoToday && npm run dev -- --port 5380',
+     evaluationFocus: 'Utilidade da recomendação local, clareza de que não é FSRS canônico e estado read-only.',
+     journeyClass: 'operations',
+     portfolioStatus: 'internal',
+@@ -150,7 +150,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_DOJOTODAY_URL',
+-      developmentUrl: 'http://127.0.0.1:5180/',
++      developmentUrl: 'http://127.0.0.1:5380/',
+       evidenceSource: null,
+       missionProtocol: null,
+     },
+@@ -170,7 +170,7 @@
+     runtime: {
+       kind: 'embedded-web',
+       environmentKey: 'VITE_VOXELDOJO_URL',
+-      developmentUrl: 'http://127.0.0.1:5177/',
++      developmentUrl: 'http://127.0.0.1:5377/',
+       evidenceSource: null,
+       missionProtocol: '1.0',
+     },
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/host/missionSessionTestKit.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/host/missionSessionTestKit.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/host/missionSessionTestKit.ts	2026-09-16 09:49:18.636596876 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/host/missionSessionTestKit.ts	2026-09-16 10:20:02.582823358 -0400
+@@ -44,7 +44,7 @@
+   stages: ['understand', 'respond', 'apply'],
+   runtime: {
+     engineId: 'voxelDojo',
+-    entrypoint: 'http://127.0.0.1:5202',
++    entrypoint: 'http://127.0.0.1:5302',
+     environmentKey: 'VITE_WAREHOUSE_URL',
+     protocolVersion: '1.0',
+     contentVersion: 'game-02-warehouse@0.1.0',
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/verification/evidenceIntakeTestFixtures.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/verification/evidenceIntakeTestFixtures.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/src/verification/evidenceIntakeTestFixtures.ts	2026-09-16 09:49:18.641596827 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/src/verification/evidenceIntakeTestFixtures.ts	2026-09-16 10:20:02.582823358 -0400
+@@ -49,7 +49,7 @@
+   stages: ['understand', 'respond', 'apply'],
+   runtime: {
+     engineId: 'voxelDojo',
+-    entrypoint: 'http://127.0.0.1:5202',
++    entrypoint: 'http://127.0.0.1:5302',
+     environmentKey: 'VITE_WAREHOUSE_URL',
+     protocolVersion: '1.0',
+     contentVersion: 'game-02-warehouse@0.1.0',
+@@ -175,7 +175,7 @@
+   title: 'Wormhole',
+   runtime: {
+     ...voxelMission.runtime,
+-    entrypoint: 'http://127.0.0.1:5203',
++    entrypoint: 'http://127.0.0.1:5303',
+     environmentKey: 'VITE_WORMHOLE_URL',
+     contentVersion: 'game-03-wormhole@0.1.0',
+   },
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/activation-funnel.smoke.spec.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/activation-funnel.smoke.spec.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/activation-funnel.smoke.spec.ts	2026-09-16 09:49:18.642596817 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/activation-funnel.smoke.spec.ts	2026-09-16 10:19:45.339955408 -0400
+@@ -91,7 +91,7 @@
+     'iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]',
+   )
+   await expect(mission.getByTestId('shelf-0')).toBeVisible()
+-  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5202/'))
++  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5302/'))
+   if (frame === undefined) throw new Error('Warehouse mission frame was not loaded')
+   const keyCount = await frame.evaluate(() => {
+     const hook = (window as Window & { __warehouse?: WarehouseHook }).__warehouse
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts	2026-09-16 09:49:18.642596817 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/chapter-continuity.smoke.spec.ts	2026-09-16 10:19:45.339955408 -0400
+@@ -270,18 +270,18 @@
+ 
+   await page.goto('/mission/dev/game-02-warehouse')
+   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
+-  await completeWarehouse(await gameFrame(page, 5202))
++  await completeWarehouse(await gameFrame(page, 5302))
+   await returnFromGame(page)
+ 
+   await page.reload()
+   await page.goto('/mission/dev/game-03-wormhole')
+   await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
+-  await completeWormhole(await gameFrame(page, 5203))
++  await completeWormhole(await gameFrame(page, 5303))
+   await returnFromGame(page)
+ 
+   await page.goto('/mission/dev/game-05-relay-station')
+   await expect(page.getByRole('heading', { name: 'RELAY STATION: WebSocket Chat Server' })).toBeVisible()
+-  await completeRelay(await gameFrame(page, 5205))
++  await completeRelay(await gameFrame(page, 5305))
+   await returnFromGame(page)
+ 
+   // The dev track also publishes the Dev-journey literacy lessons (l15-l17
+@@ -372,7 +372,7 @@
+ 
+   await page.goto('/mission/dev/game-06-pipeline-plant')
+   await expect(page.getByRole('heading', { name: 'PIPELINE PLANT: File Upload/Processing Pipeline' })).toBeVisible()
+-  await completePipeline(await gameFrame(page, 5206))
++  await completePipeline(await gameFrame(page, 5306))
+   await returnFromGame(page)
+ 
+   // Wave OP-A (AID-462): game-07 CHECKPOINT CITY is published as the 8th dev
+@@ -380,7 +380,7 @@
+   // must complete end-to-end through the deterministic public API truth.
+   await page.goto('/mission/dev/game-07-checkpoint-city')
+   await expect(page.getByRole('heading', { name: 'CHECKPOINT CITY: REST API with Auth' })).toBeVisible()
+-  await completeCheckpointCity(await gameFrame(page, 5207))
++  await completeCheckpointCity(await gameFrame(page, 5307))
+   await returnFromGame(page)
+ 
+   // Wave OP-A (AID-462): game-08 TIMELINE TOWER is published as the 9th dev
+@@ -388,7 +388,7 @@
+   // must complete end-to-end through the deterministic public API truth.
+   await page.goto('/mission/dev/game-08-timeline-tower')
+   await expect(page.getByRole('heading', { name: 'TIMELINE TOWER: Event-Driven Order System' })).toBeVisible()
+-  await completeTimelineTower(await gameFrame(page, 5208))
++  await completeTimelineTower(await gameFrame(page, 5308))
+   await returnFromGame(page)
+ 
+   // Wave OP-A (AID-462): game-09 DOCKING BAY is published as the 10th dev
+@@ -397,7 +397,7 @@
+   // dock oracle uses the clamp's contract check (AID-467 fix-forward).
+   await page.goto('/mission/dev/game-09-docking-bay')
+   await expect(page.getByRole('heading', { name: 'DOCKING BAY: Plugin System' })).toBeVisible()
+-  await completeDockingBay(await gameFrame(page, 5209))
++  await completeDockingBay(await gameFrame(page, 5309))
+   await returnFromGame(page)
+ 
+   await page.reload()
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts	2026-09-16 09:49:18.642596817 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/dev-learning-slice.smoke.spec.ts	2026-09-16 10:19:45.339955408 -0400
+@@ -80,7 +80,7 @@
+     'iframe[title="Missão WAREHOUSE: Key-Value Store (in-memory)"]',
+   )
+   await expect(mission.getByTestId('shelf-0')).toBeVisible()
+-  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5202/'))
++  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5302/'))
+   if (frame === undefined) throw new Error('Warehouse mission frame was not loaded')
+   const keyCount = await frame.evaluate(() => {
+     const hook = (window as Window & { __warehouse?: WarehouseHook }).__warehouse
+@@ -117,10 +117,10 @@
+   await expect(page.getByRole('heading', { name: 'WORMHOLE: URL Shortener' })).toBeVisible()
+   const wormhole = page.frameLocator('iframe[title="Missão WORMHOLE: URL Shortener"]')
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5203/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5303/')),
+   ).toBe(true)
+   const wormholeFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5203/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5303/'),
+   )
+   if (wormholeFrame === undefined) throw new Error('Wormhole mission frame was not loaded')
+   await expect.poll(() => wormholeFrame.evaluate(
+@@ -153,10 +153,10 @@
+     'iframe[title="Missão RELAY STATION: WebSocket Chat Server"]',
+   )
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5205/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5305/')),
+   ).toBe(true)
+   const relayFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5205/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5305/'),
+   )
+   if (relayFrame === undefined) throw new Error('Relay mission frame was not loaded')
+   await expect.poll(() => relayFrame.evaluate(
+@@ -188,10 +188,10 @@
+     'iframe[title="Missão PIPELINE PLANT: File Upload/Processing Pipeline"]',
+   )
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5206/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5306/')),
+   ).toBe(true)
+   const pipelineFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5206/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5306/'),
+   )
+   if (pipelineFrame === undefined) throw new Error('Pipeline mission frame was not loaded')
+   await expect.poll(() => pipelineFrame.evaluate(
+@@ -215,10 +215,10 @@
+     'iframe[title="Missão CHECKPOINT CITY: REST API with Auth"]',
+   )
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5207/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5307/')),
+   ).toBe(true)
+   const checkpointFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5207/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5307/'),
+   )
+   if (checkpointFrame === undefined) throw new Error('Checkpoint City mission frame was not loaded')
+   await expect.poll(() => checkpointFrame.evaluate(
+@@ -246,10 +246,10 @@
+     'iframe[title="Missão TIMELINE TOWER: Event-Driven Order System"]',
+   )
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5208/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5308/')),
+   ).toBe(true)
+   const timelineFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5208/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5308/'),
+   )
+   if (timelineFrame === undefined) throw new Error('Timeline Tower mission frame was not loaded')
+   await expect.poll(() => timelineFrame.evaluate(
+@@ -275,10 +275,10 @@
+     'iframe[title="Missão DOCKING BAY: Plugin System"]',
+   )
+   await expect.poll(
+-    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5209/')),
++    () => page.frames().some((candidate) => candidate.url().startsWith('http://127.0.0.1:5309/')),
+   ).toBe(true)
+   const dockingFrame = page.frames().find(
+-    (candidate) => candidate.url().startsWith('http://127.0.0.1:5209/'),
++    (candidate) => candidate.url().startsWith('http://127.0.0.1:5309/'),
+   )
+   if (dockingFrame === undefined) throw new Error('Docking Bay mission frame was not loaded')
+   await expect.poll(() => dockingFrame.evaluate(
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts	2026-09-16 09:49:18.642596817 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/release-journeys.smoke.spec.ts	2026-09-16 10:19:45.339955408 -0400
+@@ -95,7 +95,7 @@
+   await openSchool(page)
+   await page.goto('/mission/dev/game-02-warehouse')
+ 
+-  await completeWarehouse(await gameFrame(page, 5202))
++  await completeWarehouse(await gameFrame(page, 5302))
+   await expect(page.getByTestId('completion-is-not-mastery')).toBeVisible({ timeout: 15_000 })
+   await expect(page.getByTestId('independent-verdict')).toBeVisible()
+   await expect(page.getByText('O verificador independente aprovou esta evidência. O gate canônico continua separado.', { exact: true })).toBeVisible()
+diff -ru '--exclude=node_modules' '--exclude=dist' '--exclude=test-results' '--exclude=test-results-pilot' '--exclude=.vite' '--exclude=.git' /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts
+--- /paperclip/tmp/aid2140/wt/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts	2026-09-16 09:49:18.642596817 -0400
++++ /paperclip/tmp/aid2140-run/engines/codexdojo-os-prototype/tests/renderer-fallback.smoke.spec.ts	2026-09-16 10:08:40.322875369 -0400
+@@ -18,12 +18,12 @@
+   await page.goto('/mission/dev/game-02-warehouse')
+   await expect(page.getByRole('heading', { name: 'WAREHOUSE: Key-Value Store (in-memory)' })).toBeVisible()
+   await expect.poll(
+-    () => page.frames().some((frame) => frame.url().startsWith('http://127.0.0.1:5202/')),
++    () => page.frames().some((frame) => frame.url().startsWith('http://127.0.0.1:5302/')),
+   ).toBe(true)
+ }
+ 
+ function warehouseFrame(page: Page) {
+-  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5202/'))
++  const frame = page.frames().find((candidate) => candidate.url().startsWith('http://127.0.0.1:5302/'))
+   if (frame === undefined) throw new Error('Warehouse mission frame was not loaded')
+   return frame
+ }

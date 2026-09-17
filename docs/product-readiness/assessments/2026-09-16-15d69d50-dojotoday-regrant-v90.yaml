@@ -1,0 +1,15 @@
+schemaVersion: 1
+assessmentId: 2026-09-16-15d69d50-dojotoday-regrant-v90
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-16T22:14:00Z'
+revalidateBy: '2026-10-16'
+gitSha: 15d69d5014e058e047095b8ad83ca0405d9c8842
+decisions:
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-16T22:14:00Z-dojotoday-active-unit-guidance-mixed-15d69d50
+  - 2026-09-16T22:14:00Z-dojotoday-read-only-boundary-observed-15d69d50
+  - 2026-09-16T22:14:00Z-dojotoday-returning-next-day-mixed-15d69d50

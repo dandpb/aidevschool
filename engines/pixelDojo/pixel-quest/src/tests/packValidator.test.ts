@@ -39,7 +39,7 @@ describe("content pack validation", () => {
       kind: "token_bucket",
       id: "encounter-agent-quest-01",
       mechanicName: "Token Bucket",
-      goodRequestLabel: "requisicao legitima",
+      goodRequestLabel: "requisição legítima",
       badRequestLabel: "rajada abusiva",
     })
     expect(
@@ -53,8 +53,8 @@ describe("content pack validation", () => {
     ).toMatchObject({
       kind: "route_health",
       mechanicName: "Health Router",
-      goodRequestLabel: "no saudavel",
-      badRequestLabel: "no degradado",
+      goodRequestLabel: "nó saudável",
+      badRequestLabel: "nó degradado",
     })
     expect(
       pack.encounters.find((encounter) => encounter.project === "07_rest_api_auth"),
@@ -62,7 +62,7 @@ describe("content pack validation", () => {
       kind: "policy_gate",
       mechanicName: "Auth Gate",
       goodRequestLabel: "token autorizado",
-      badRequestLabel: "escopo invalido",
+      badRequestLabel: "escopo inválido",
     })
     expect(
       pack.encounters.find((encounter) => encounter.project === "09_plugin_system"),

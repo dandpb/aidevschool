@@ -44,15 +44,17 @@ function voxelCore(): string {
 
 function streakCard(s: TodaySnapshot["streak"]): string {
   const flames = "🔥";
-  const freezes = "❄️".repeat(s.freezesEquipped);
-  const frozen = "·".repeat(Math.max(0, s.freezesMax - s.freezesEquipped));
+  const freezes = "❄️".repeat(Number(s.freezesEquipped) || 0);
+  const frozen = "·".repeat(
+    Math.max(0, (Number(s.freezesMax) || 0) - (Number(s.freezesEquipped) || 0)),
+  );
   const headline =
     s.current > 0
-      ? `${s.current} ${s.current === 1 ? "dia" : "dias"} de sequência`
+      ? `${escapeHtml(s.current)} ${s.current === 1 ? "dia" : "dias"} de sequência`
       : "Quebre o gelo hoje";
   const sub =
     s.current > 0
-      ? `Recorde: ${s.longest}. Passe um gate para manter o fogo.`
+      ? `Recorde: ${escapeHtml(s.longest)}. Passe um gate para manter o fogo.`
       : "Passe um gate executável para acender a sequência.";
   return `
     <section class="card streak-card" aria-label="Sequência">
@@ -60,7 +62,7 @@ function streakCard(s: TodaySnapshot["streak"]): string {
       <div class="streak-body">
         <p class="streak-current">${headline}</p>
         <p class="streak-sub">${sub}</p>
-        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${s.freezesMax})">
+        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
           Freezes <span class="freeze-pips">${freezes}<span class="freeze-empty">${frozen}</span></span>
         </p>
       </div>
@@ -167,14 +169,15 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
 }
 
 function progressCard(s: TodaySnapshot): string {
-  const pct = s.totalUnits > 0 ? Math.round((s.masteredCount / s.totalUnits) * 100) : 0;
+  const pct =
+    s.totalUnits > 0 ? Math.round((Number(s.masteredCount) / Number(s.totalUnits)) * 100) : 0;
   return `
     <section class="card progress-card" aria-label="Progresso verificado">
       <div class="progress-row">
-        <span><strong>${s.masteredCount}</strong>/${s.totalUnits} dominadas</span>
+        <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas</span>
         <span class="muted">verificadas por gate</span>
       </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
     </section>`;
 }
 

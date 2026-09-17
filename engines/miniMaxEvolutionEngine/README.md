@@ -101,8 +101,8 @@ and explicit learner/evidence pauses; they do not certify cross-phase autonomy o
 | --- | --- |
 | `CLAUDE.md` | The authoritative orchestrator doc (phases, gate, subagents, commands, model routing). |
 | `AGENTS.md` | Terse "where to look" + conventions + anti-patterns. |
-| `.claude/agents/*.md` | 17 subagent definitions. |
-| `.claude/commands/devschool/*.md` | 18 `/devschool-*` slash commands + a `tests/` subdir. |
+| `.claude/agents/*.md` | 25 subagent definitions: 15 protocol + 2 arena extras (ADR-005) + 8 thin wrappers over the canonical Ágora personas (`engines/minimaxDojo/prompts/per_agent/`). |
+| `.claude/commands/devschool/*.md` | 20 `/devschool-*` slash commands + a `tests/` subdir. |
 | `.claude/skills/agora-continuum/SKILL.md` | The learning-gate protocol skill. |
 | `.claude/hooks/briefing.sh` | SessionStart hook (injects pipeline + gate state). |
 | `supervisor/` | One-shot decision, outbox, lease, ledger, autonomous spec adapter, and foreground poll. |

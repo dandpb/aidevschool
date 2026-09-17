@@ -3,7 +3,7 @@
 # (número preciso, data, citação nominal) para a extração de anexo.
 # Validada por curriculum/ai-literacy/tools/validate.py contra schemas/lesson.schema.json.
 id: l26
-version: 1
+version: 2
 moduleId: mod-07
 title: "Confira o que a IA extraiu"
 objective: "Diante de uma extração feita de um documento anexado, conferir os campos críticos contra o trecho original e corrigir divergências antes de usar a saída."
@@ -15,7 +15,7 @@ activities:
   - id: l26-a1
     type: output_comparison
     skillId: avaliar
-    instruction: "VOCÊ ANEXOU A ATA DA REUNIÃO E PEDIU UM RESUMO PARA A DIRETORIA. COMPARE AS DUAS SAÍDAS E ESCOLHA A MELHOR PARA USAR."
+    instruction: "Você anexou a ata da reunião e pediu um resumo para a diretoria. Compare as duas saídas e escolha a melhor para usar."
     data:
       scenario: "Você anexou a ata da reunião e pediu um resumo para a diretoria. Trecho visível da ata: 'orçamento aprovado: R$ 48.500 · prazo: 15 de março · responsável: equipe de suporte'. Na sua ferramenta real você anexaria o arquivo; aqui você decide por controles rotulados."
       outputs:
@@ -50,7 +50,7 @@ activities:
   - id: l26-a2
     type: choice
     skillId: avaliar
-    instruction: "A IA EXTRAIU ESTES CAMPOS DA ATA. QUAIS VOCÊ CONFERE NO DOCUMENTO ORIGINAL ANTES DE USAR?"
+    instruction: "A IA extraiu estes campos da ata. Quais você confere no documento original antes de usar?"
     data:
       multiSelect: true
       options:
@@ -85,7 +85,7 @@ activities:
   - id: l26-a3
     type: sort
     skillId: aplicar
-    instruction: "DO DOCUMENTO ANEXADO ATÉ O USO. ORDENE O FLUXO DE TRABALHO COMPLETO."
+    instruction: "Do documento anexado até o uso. Ordene o fluxo de trabalho completo."
     data:
       items:
         - id: passo-proteger-anexo

@@ -83,7 +83,7 @@ keeps each engine in its own runtime and exposes one bounded interaction:
 | `literacyDojo` | Run the no-code micro-lesson loop and inspect its raw evidence boundary. |
 | `miniTown` | Explore the Level 0 hypothesis, explicitly outside assessed learning. |
 | `dojoToday` | Inspect the read-only daily projection produced from the learner substrate. |
-| `voxelDojo` | Choose any of the 16 game packages; evidence-enabled games return raw attempts to the Hub. |
+| `voxelDojo` | Choose any of the 17 game packages; evidence-enabled games return raw attempts to the Hub. |
 
 The browser engines use these optional production URLs:
 
@@ -99,7 +99,7 @@ VITE_VOXELDOJO_URLS='{"game-02-warehouse":"https://warehouse.example.test/","gam
 
 `VITE_VOXELDOJO_URL` is the compatibility URL for HASH RING;
 `VITE_VOXELDOJO_URLS` maps any catalog game ID to its deployed origin.
-Development falls back to `5175`, `5176`, `5178`, `5179`, `5180`, and the 16 fixed voxel catalog ports;
+Development falls back to `5175`, `5176`, `5178`, `5179`, `5180`, and the 17 fixed voxel catalog ports;
 run `pnpm run dev:catalog` from `../voxelDojo` to start them together.
 
 The local Vite bridge exposes three fixed, read-only Python actions. It is

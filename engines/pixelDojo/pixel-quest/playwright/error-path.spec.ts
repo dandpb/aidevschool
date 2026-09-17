@@ -37,7 +37,7 @@ test("failing an encounter cleanly emits FAIL evidence with zero runtime errors"
   }
 
   // O FAIL é comunicado como evidência, não como erro de runtime.
-  await expect(page.getByText("Evidencia FAIL emitida")).toBeVisible()
+  await expect(page.getByText("Evidência FAIL emitida")).toBeVisible()
   const evidence = await page.evaluate(
     () => window.__pixelQuestEvidence?.at(-1) as PixelQuestEvidenceRecord | undefined,
   )

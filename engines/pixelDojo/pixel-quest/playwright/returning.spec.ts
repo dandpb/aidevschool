@@ -36,7 +36,7 @@ async function playRateLimiterEncounter(page: Page): Promise<PixelQuestEvidenceR
   for (const action of rateLimiterActions) {
     await page.keyboard.press(action)
   }
-  await expect(page.getByText("Evidencia PASS emitida")).toBeVisible()
+  await expect(page.getByText("Evidência PASS emitida")).toBeVisible()
   const evidence = await page.evaluate(
     () => window.__pixelQuestEvidence?.at(-1) as PixelQuestEvidenceRecord | undefined,
   )

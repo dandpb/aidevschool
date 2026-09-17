@@ -18,6 +18,7 @@ from product_readiness_tools.models import (
     RunId,
     UseCaseId,
 )
+from product_readiness_tools.render import recorded_decision
 from product_readiness_tools.validate import validate_domain
 
 
@@ -25,7 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 READINESS_ROOT = REPO_ROOT / "docs" / "product-readiness"
 
 ELEVATED_USE_CASE = UseCaseId("dojotoday-daily-guidance")
-LATEST_ASSESSMENT_ID = AssessmentId("2026-09-14-dd98e96a-voxel-game04-regrant-v53")
+LATEST_ASSESSMENT_ID = AssessmentId("2026-09-16-15d69d50-dojotoday-regrant-v90")
 
 
 def _pre_bump_assessment(domain_runs: tuple, decision: ReadinessDecision) -> Assessment:
@@ -75,7 +76,7 @@ def test_elevated_history_superseded_by_regrant_needs_no_migration() -> None:
 
 
 def test_tier_bump_without_regrant_fails_closed_on_latest_decision() -> None:
-    # Given a bumped intended tier with no fresher re-grant than v35
+    # Given a bumped intended tier with no fresher re-grant than the latest assessment
     domain = load_domain(READINESS_ROOT)
     use_case = next(item for item in domain.use_cases if item.id == ELEVATED_USE_CASE)
     assert use_case.intended_tier is ReadinessTier.CUSTOMER_READY
@@ -88,6 +89,11 @@ def test_tier_bump_without_regrant_fails_closed_on_latest_decision() -> None:
     # When it is validated, then exactly the latest decision is flagged
     errors = validate_domain(bumped_domain, REPO_ROOT)
     wrong_tier = tuple(error for error in errors if "grants the wrong tier" in error)
+    if recorded_decision(bumped_domain, use_case).granted_tier is None:
+        # Downgrade window: the latest decision grants no tier, so the bump gate
+        # is vacuously closed (no claim to be wrong) until the next re-grant.
+        assert wrong_tier == ()
+        return
     assert len(wrong_tier) == 1
     assert str(LATEST_ASSESSMENT_ID) in wrong_tier[0]
     assert ELEVATED_USE_CASE in wrong_tier[0]

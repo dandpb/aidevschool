@@ -140,6 +140,9 @@ encadeia. Default de implementação é **só `dev-node`**. Os 3 `dev-*` em para
 | `optimizer` | opus | Fase 5 — gargalos → otimização → re-medição → `evolution_report.md` |
 | `verifier` | opus | Portão adversarial: re-deriva a correção de qualquer fase do **zero**. Não modifica código — só julga (PASS/FAIL com evidência) |
 | `verifier-haiku` | haiku | Verifier cross-model para auditoria amostral (`audit_sample_rate` do plan.yaml, default 0.2). Mesmo contrato que `verifier`, tier diferente. Discordância com o `verifier` padrão escapa a Sêneca. |
+| `arena-narrator` | opus | Arena poliglota (ADR-005): narrativa pedagógica do `arena_report.md` após benchmark + review — disparado por `/devschool-arena` |
+| `fairness-auditor` | opus | Arena poliglota (ADR-005): julga, antes do benchmark, se as 3 implementações (go/rust/node) tiveram esforço equivalente — disparado por `/devschool-arena` |
+| 8 wrappers Ágora: `maestro` (opus), `atena` (sonnet), `galileu` (opus), `mestre-conteudo` (sonnet), `cartografo` (opus), `critico` (opus), `ouroboros` (opus), `prometor` (opus) | sonnet/opus | Wrappers finos das personas canônicas de `engines/minimaxDojo/prompts/per_agent/` (o corpo canônico não é duplicado aqui). Superfície Ágora além do ciclo de 5 fases: `cartografo` via `/devschool-trail`, `ouroboros` via `/devschool-evolve` |
 
 Roteamento de modelo (de [docs/00 §6.5](docs/PROMPTS/IDEIAS/codexDojo/00_ecosystem_architecture.md)): raciocínio profundo
 (curator/reviewer/optimizer/verifier) → **opus**; geração/execução de alto volume
@@ -168,6 +171,10 @@ para diversidade tipo cross-model.
 | `/devschool-verify` | Roda o `verifier` numa fase/artefato específico |
 | `/devschool-audit` | Auditoria amostral cross-model — dispara `verifier-haiku` numa fração `audit_sample_rate` das fases já completadas |
 | `/devschool-next` | Fecha o ciclo: feedback do optimizer → curator escolhe o próximo projeto do catálogo |
+| `/devschool-trail` | (Re)desenha a trilha de robustez via `cartografo` — lê o diagnóstico da `sonda` e calcula a próxima unidade por pré-req comprovado |
+| `/devschool-evolve` | Loop de auto-melhoria pós-ciclo via `ouroboros` (reflect→critique→revise) — tropeços viram pegadinhas (`mneme`), acertos viram Skills |
+| `/devschool-arena` | Arena de comparação poliglota (ADR-005): 3 impls + fairness audit + benchmark + narrativa + verifier → `arena_report.md` |
+| `/devschool-phaserunner` | Protocolo interno `run_phase(spec)` — costura read-state → check-gate → dispatch producer → dispatch verifier → update status → retry; não invocado diretamente |
 
 ---
 
