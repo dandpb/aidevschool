@@ -38,12 +38,14 @@ case "$id" in
       echo "resolve: PAPERCLIP_API_URL/PAPERCLIP_API_TOKEN not configured (set them to resolve ${id})" >&2
       exit 4
     }
-    # -L: the board URL may answer http->https with a 301 (same-host redirect
-    # keeps the Authorization header); without it every lookup is a "transport
-    # error". rc 6/7/28 (resolve/connect/timeout) land in the default case.
+    # Normalize to https: the board redirects http->https and curl drops the
+    # Authorization header across that redirect (origin change), which would
+    # turn every lookup into a spurious 401. -L stays as a backstop.
+    local url="${PAPERCLIP_API_URL%/}"
+    case "$url" in http://*) url="https://${url#http://}" ;; esac
     code="$(curl -sL -o /dev/null -w '%{http_code}' -m 20 \
       -H "Authorization: Bearer ${PAPERCLIP_API_TOKEN}" \
-      "${PAPERCLIP_API_URL%/}/api/issues/${id}" 2>/dev/null)"
+      "${url}/api/issues/${id}" 2>/dev/null)"
     case "$code" in
       200) exit 0 ;;
       404) echo "resolve: Paperclip issue ${id} not found" >&2; exit 1 ;;
