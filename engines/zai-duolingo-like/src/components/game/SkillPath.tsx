@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Lock, Star, Check, Crown, ChevronLeft, ChevronRight, RotateCw, Search, X, PlayCircle } from "lucide-react";
 import { useGame } from "./store";
@@ -44,7 +44,18 @@ const ACCENT_MAP = {
 export function SkillPath() {
   const curriculum = useGame((s) => s.curriculum);
   const setView = useGame((s) => s.setView);
+  const refreshCurriculum = useGame((s) => s.refreshCurriculum);
   const [query, setQuery] = useState("");
+
+  // self-heal a boot-time curriculum fetch failure instead of showing
+  // "Carregando trilha..." forever: retry every 2s until it lands
+  useEffect(() => {
+    if (curriculum) return;
+    const iv = setInterval(() => {
+      refreshCurriculum().catch(() => {});
+    }, 2000);
+    return () => clearInterval(iv);
+  }, [curriculum, refreshCurriculum]);
 
   // filter modules/lessons by search query
   const filtered = useMemo(() => {
