@@ -2,8 +2,9 @@
 
 Covers config parsing (host-port overrides + defaults), result paths, the
 docker/k6 command builders, the analyzer-shape bridge, a mocked live
-``run_benchmark`` (no docker/k6 needed), and a regression check that the
-extracted parsers reproduce project 01's committed ``aggregated.json``.
+``run_benchmark`` (no docker/k6 needed), and fixture-based regression checks
+that the extracted parsers and the aggregate bridge behave reproducibly
+without depending on gitignored local benchmark artifacts.
 """
 
 import json
@@ -177,23 +178,29 @@ class TestBridge(unittest.TestCase):
             report = BenchmarkAnalyzer().analyze_raw_samples("tmp", raw)
             self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
 
-    def test_aggregate_builds_report_from_committed_files(self):
-        # End-to-end bridge over real project-01 result files (N=1). The raw
-        # results/ tree is gitignored machine-local scratch output (see
-        # TestParserFaithfulness above), so a fresh checkout legitimately has
-        # none — skip instead of failing, per the substrate skipTest precedent.
-        if not R.result_path(PROJ01, "go", "baseline", 1).exists():
-            self.skipTest(
-                "project-01 benchmarks/results/ absent on this checkout "
-                "(gitignored local live-run artifacts)"
-            )
+    def test_aggregate_builds_report_from_result_files(self):
+        # aggregate() end-to-end over synthetic result files (N=1) in a temp
+        # project dir. The real results/ tree is gitignored machine-local
+        # scratch output (see TestParserFaithfulness), so keying this test off
+        # it made the outcome depend on checkout state and test order (AID-2132:
+        # skip on fresh checkouts, fail in isolation when stale artifacts lack
+        # latency points). benchmark.yaml — the only committed input — stays
+        # real: it is project 01's actual config.
         cfg = R.load_benchmark_config(PROJ01 / "benchmark.yaml")
-        report = R.aggregate(PROJ01, cfg, "01_rate_limiter", n=1)
-        self.assertEqual(report.project_id, "01_rate_limiter")
-        self.assertEqual(set(report.scenarios), set(cfg.scenarios))
-        self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
-        # N=1 committed data cannot pass the N>=3 gate; the report still builds.
-        self.assertFalse(report.all_pass)
+        with tempfile.TemporaryDirectory() as d:
+            proj = Path(d)
+            for lang in R.LANGS:
+                for sc in cfg.scenarios:
+                    p = R.result_path(proj, lang, sc, 1)
+                    p.parent.mkdir(parents=True, exist_ok=True)
+                    p.write_text(K6_FIXTURE)
+                    R.result_path(proj, lang, sc, 1, "_stats.json").write_text(STATS_FIXTURE)
+            report = R.aggregate(proj, cfg, "01_rate_limiter", n=1)
+            self.assertEqual(report.project_id, "01_rate_limiter")
+            self.assertEqual(set(report.scenarios), set(cfg.scenarios))
+            self.assertIn("p99", report.scenarios["baseline"]["go"].metrics)
+            # N=1 data cannot pass the N>=3 gate; the report still builds.
+            self.assertFalse(report.all_pass)
 
 
 class TestRunBenchmarkMocked(unittest.TestCase):
