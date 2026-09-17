@@ -41,7 +41,7 @@ case "$id" in
     # Normalize to https: the board redirects http->https and curl drops the
     # Authorization header across that redirect (origin change), which would
     # turn every lookup into a spurious 401. -L stays as a backstop.
-    local url="${PAPERCLIP_API_URL%/}"
+    url="${PAPERCLIP_API_URL%/}"
     case "$url" in http://*) url="https://${url#http://}" ;; esac
     code="$(curl -sL -o /dev/null -w '%{http_code}' -m 20 \
       -H "Authorization: Bearer ${PAPERCLIP_API_TOKEN}" \
