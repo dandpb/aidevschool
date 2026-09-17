@@ -1,6 +1,6 @@
 # Plan: fábrica de re-grant emite proposta observation-complete (AID-2203)
 
-Change-id: AID-2203-regrant-observation-complete · From: intent/AID-2203-regrant-observation-complete/spec.md · Status: draft (aguardando gate — confirmação nesta issue)
+Change-id: AID-2203-regrant-observation-complete · From: intent/AID-2203-regrant-observation-complete/spec.md · Status: accepted (GO CEO AID-2229 recibo 5df8dc86; aceite formal por delegação AID-2305 → AID-2306, 2026-09-17; doc gateado `plan` rev 6bf5ef39 inalterado)
 
 ## Files that change
 

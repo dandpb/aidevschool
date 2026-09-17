@@ -1,6 +1,6 @@
 # Spec: fábrica de re-grant emite proposta observation-complete (AID-2203)
 
-Change-id: AID-2203-regrant-observation-complete · From: intent/AID-2203-regrant-observation-complete/intent.md · Status: draft
+Change-id: AID-2203-regrant-observation-complete · From: intent/AID-2203-regrant-observation-complete/intent.md · Status: accepted (GO CEO AID-2229; aceite formal por delegação AID-2305 → AID-2306, 2026-09-17)
 
 ## Requirements
 

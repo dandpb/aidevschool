@@ -284,7 +284,12 @@ for an issue in this repository, for either trailer. The issue must record
 the actual owner acceptance and the authorized scope; creating an issue
 alone does not grant approval. The trailer is only the audit hook — the cited
 AID or GitHub issue must record the actual owner acceptance, and the reviewer/QA verifies that before
-merging. This is the same trust model as the live env-var overrides (an
+merging. When the trailer-authorized diff also touches specs/`sourcePaths`
+covered by published readiness claims, the same merge batch must carry an
+observation-complete re-grant (AID-2202) — see
+[`../product-readiness/REGRANT-RUNBOOK.md`](../product-readiness/REGRANT-RUNBOOK.md)
+(rule from PR #462, closed-by-supersede; gate delivered by AID-2203).
+This is the same trust model as the live env-var overrides (an
 undisciplined session could export those too); the trailer just makes the
 exception visible in git history. Credential findings have no override, and
 the force-push rule remains runtime-intercepted because a diff cannot prove

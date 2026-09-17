@@ -2,7 +2,7 @@
 
 Author: Paperclip AID-2203 (dispatch DRE AID-2202; auditoria AID-2200 instância #70; owner FPE
 fa8130d5 — owner da fábrica AID-1357) · Change-id: AID-2203-regrant-observation-complete ·
-Status: draft (aguardando plan gate)
+Status: accepted (GO CEO AID-2229; aceite formal por delegação AID-2305 → AID-2306, 2026-09-17)
 
 > One source of truth: AID-2202 (corpo + description), comentário #70 da AID-2200 e recibo
 > AID-2192. Este arquivo cita; não reescreve.
