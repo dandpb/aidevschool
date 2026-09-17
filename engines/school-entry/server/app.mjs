@@ -230,6 +230,8 @@ export function createApp({
               "Descreva seu objetivo usando de 1 a 2000 caracteres.",
             );
         }
+        if (requests >= 8)
+          throw fail(429, "BUSY", "Tente novamente mais tarde.");
         requests++;
         try {
           const engines = await eligible();

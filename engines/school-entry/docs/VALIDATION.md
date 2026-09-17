@@ -40,4 +40,8 @@ Intentional, documented differences: manual catalog action was included as an ac
 
 Probe success proves a configured initial control, not the whole learning journey. Wrong selectors can be too permissive; configure and review per engine. Public probes accept only final URLs and same-origin read-only resources. Authenticated or incompatible engines fail closed. Single server instance, persistent disk, TLS ingress and production credentials are deployment obligations. Shared-proxy rate-limit behavior is documented in README. SQLite in Node22 is experimental. External model examples are a smoke test, not a calibrated quality guarantee.
 
-Independent verifier report is separate and must account for checklist C01–C26 before final completion is claimed.
+## Independent-review corrections
+
+The independent pass found two defects and a proof gap. The launch-revocation regression first failed because stale options remained after409; the UI now refreshes the eligible catalog and announces the change. A delayed-body concurrent-request regression first reproduced nine simultaneous inferences against a bound of eight; admission is rechecked after body parsing with no asynchronous gap before slot reservation. A browser proof now opens and submits through `entry.test`, resolved locally for the test, using the shared runtime assembly; this goes beyond a synthetic Origin header and is not a deployment.
+
+These changes add one server regression and two browser proofs (seven browser tests passed after the fixes). The final batched counts and check-by-check verdict are in the separate independent report `.checks/engine-entry-recommender.verify.md`.
