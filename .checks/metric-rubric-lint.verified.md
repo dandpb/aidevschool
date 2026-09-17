@@ -2,57 +2,62 @@
 
 **Verdict**: PASS
 **Profile**: light (no tlc-implement profile in AGENTS.md) — step 1 (checklist vs binding sources, `ui`) skipped; step 4 (fault injection, `standard`/`ui`) skipped; steps 2, 3, 5 run in full
-**Diff range**: 36f2543..5d032cc (HEAD)
-**Round**: 1 - full
+**Diff range**: 36f2543..f847d2d (HEAD)
+**Round**: 2 - scoped
+**Scope**: fix diff `f847d2d` (simplify-review round) plus everything it touched; all other judgments carried from round 1 (`5d032cc`, precision-fixed at `b78c90d`)
 **Verifier**: independent sub-agent (author != verifier)
 
-## Binding sources
+## Gate — proofs re-run in full at HEAD, one invocation each
 
-| Source | Opened | Contradiction | Uncovered |
-|---|---|---|---|
-| `.design/metric-rubric-lint.md` | yes | split with task on `unknown`-with-provenance (see gap 1); Decisions row vs Journey states disagree with each other; implementation takes the fail-closed side | none |
-| `.tasks/metric-rubric-lint.md` | yes | same `unknown` carve-out (criterion 4) — precision gap, no shipped divergence (0 `unknown` entries in snapshot) | none |
-| PR #486 / `learner/substrate/judgments.py` | yes (record path read; `atomic_write_text` at `judgments.py:270,300`) | none | none |
+- `python3 -m pytest learner/gate/tests/test_metric_lint.py learner/substrate/tests/test_judgments.py -v` — **29 passed, 0 failed** (16 metric-lint incl. 5 parametrized C3 cases + 13 judgments; every test listed individually as PASSED in the verbose output)
+- `python3 -m learner.gate.metric_lint --check` — **exit 0**
+- `python3 scripts/check_python_complexity.py --max 8 --baseline scripts/python_complexity_baseline.txt learner engines/minimaxDojo engines/openclaw engines/miniMaxEvolutionEngine engines/aiDevschoolMvp` — **exit 0**
 
-## Checks
+## Round-2 re-judged items (from the f847d2d diff)
 
-All 16 tests in `learner/gate/tests/test_metric_lint.py` ran individually and passed at HEAD in one `pytest -v` invocation (16 passed, 0.28s). Both command proofs re-run: `python3 -m learner.gate.metric_lint --check` exit 0; census mode exit 0 with `game-10-hash-ring: ['arc_prediction_ok', ..., 'moved_keys', ..., 'owner_predictions', ...]` present. The diff carries every proof's target (`metric_lint.py`, `metric_snapshot.py`, `test_metric_lint.py`, `standards.py`, `ci.yml`, snapshot, receipt are all new/touched in range).
+### game-04 coverage via typed-declaration regex — PASS
 
-| Check | Claim | Proof run | Evidence | Result |
-|---|---|---|---|---|
-| C1 | derived vocabularies preserve legacy behavior: `abusive_admitted: 2` → `["abusive_admitted=2"]`, `overheated: True` → `["overheated=true"]`, unclassified → `[]` | pytest 16/16 green | `test_metric_lint.py:32-40` — `standards.game_metric_violations({"metrics": {"abusive_admitted": 2}}) == ["abusive_admitted=2"]`; `... {"overheated": True}}) == ["overheated=true"]`; `... {"totally_unclassified_name": 5}}) == []`. Wiring: `standards.py` (diff hunk @@ -249) — `_NONZERO_FAILURE_METRICS, _TRUE_FAILURE_METRICS = failure_vocabularies()` at module load. Legacy 11 = 4 nonzero + 7 true entries under `shared:` with `manual:legacy-frozensets`, modes unchanged | PASS |
-| C2 | snapshot `failure(nonzero)` on `crashes` yields `["crashes=3"]` | pytest green | `test_metric_lint.py:53-61` — fixture snapshot `crashes: {classification: failure(nonzero), ...}`; `failure_vocabularies(snapshot)`; `game_metric_violations({"metrics": {"crashes": 3}}) == ["crashes=3"]` | PASS |
-| C3 | missing file / non-mapping / bad classification / duplicate / missing provenance raise `MetricSnapshotError` naming path+entry | pytest green (5 parametrized cases, each PASSED individually) | `test_metric_lint.py:64-89` — `pytest.raises(MetricSnapshotError)` with needles `missing`/`must be a mapping`/`classification`/`provenance`/`duplicate`; loader names path (`metric_snapshot.py:113,119`) and entry (`:67,72,99`); duplicate keys caught by `_StrictLoader` (`:51`); never returns empty vocabulary (raises at load) | PASS |
-| C4 | literal keys at any nesting depth; game-10 yields `owner_predictions`, `moved_keys`, `arc_prediction_ok` | pytest green | `test_metric_lint.py:113` — `{"outer_count","nested","inner_ok","deeper","deep_key"} <= census["game-99-fx"]`; `:120` — `{"owner_predictions","moved_keys","arc_prediction_ok"} <= census["game-10-hash-ring"]` | PASS (note 3: subset `<=`, task's "and nothing else" clause unasserted; structurally holds — only `metrics: {` blocks scanned, `metric_lint.py:83-86`) |
-| C5 | rubrics-only `pass_when` names enumerated, all 16 in census | pytest green | `test_metric_lint.py:137` — `expected == census["rubrics"]` (equality, recomputed from `evidence_rubrics.yaml`); independently confirmed 16 names; snapshot coverage of all 16 follows from C10 exit 0 (`check()` covers `rubrics` scope via `shared:` union, `metric_lint.py:242`) | PASS |
-| C6 | propose writes digest-named receipts + prints snippet with classification, probability, provenance | pytest green | `test_metric_lint.py:173-183` — one `metric-lint-*.ndjson`, all lines `kind == "choice"`, questions exact; `"classification: failure(nonzero)"`, `"classification: not_failure"`, `"provenance: receipt:"` in snippet. Probability rendered at `metric_lint.py:218` (`# p=...`) but not asserted (note 4) | PASS |
-| C7 | no key → propose exits 2 naming `TYPESAFE_API_KEY`; check unaffected offline | pytest green | `test_metric_lint.py:195-196` — `metric_lint.main(["--propose"]) == 2`; `"TYPESAFE_API_KEY" in ...err`. `--check` path (`metric_lint.py:255-259`) never touches the client/key; CI step runs keyless (C11) | PASS |
-| C8 | judgment failure → metric stays `unknown`, fallback receipt with error class, exit 0 | pytest green | `test_metric_lint.py:208-212` — `"classification: unknown" in snippet`; fallback file `metric-lint-*-fallback.ndjson` with `line["status"] == "fallback"` and `line["error_class"] == "RuntimeError"`. Exit 0: `main` returns 0 unconditionally after `propose` (`metric_lint.py:269-270`); test proves `propose()` does not raise under client failure (note 4: exit code not asserted verbatim) | PASS |
-| C9 | check exits 1 naming game+metric for missing; exits 1 for `unknown` | pytest green + `--check` re-run | `test_metric_lint.py:229-231` — `"missing_one" in g and "missing from snapshot" in g`; `"unknown_one" in g and "classified unknown" in g`; `not any("covered" in g ...)`. Exit mapping `metric_lint.py:259` — `return 1 if gaps else 0`. Gap line shape `<scope>::<metric> (...)` at `:246-248` | PASS (note 1: precision gap vs task criterion 4) |
-| C10 | census lands: `--check` exit 0 over current repo | command re-run: exit 0; pytest green | shell: `python3 -m learner.gate.metric_lint --check` → `CHECK_EXIT=0`; `test_metric_lint.py:236` — `metric_lint.main(["--check"]) == 0`. Census (19 lines) = 16 voxel `game-*` dirs + pixelquest + rubrics + evidence-disk = 17 games ∪ rubrics ∪ on-disk evidence | PASS |
-| C11 | ci.yml step in Python learner job, keyless | command re-run (exit 0) + workflow read + pytest green | `.github/workflows/ci.yml:315-316` — `- name: metric-failure snapshot guard` / `run: python3 -m learner.gate.metric_lint --check`, inside job `learner:` (`:280-281`, name "Python (learner + curriculum shared)"; next job at `:323`); no `TYPESAFE_API_KEY` secret in the job (only the comment at `:314`); `test_metric_lint.py:241-243` asserts the command string in the job's section | PASS |
+- Regex at `learner/gate/metric_lint.py:42-45`: `_METRICS_BLOCK = re.compile(r"\bmetrics\s*:\s*(?:[A-Za-z_][A-Za-z0-9_.<>\[\]]*\s*=\s*)?\{")` — optional typed annotation between `metrics:` and the brace.
+- Live census re-run: `game-04-task-queue: ['dispatch_correct', 'dispatch_predictions', 'max_concurrent_running']` — exactly the three claimed names. Source shape confirmed: `engines/voxelDojo/game-04-task-queue/src/game/controller.ts:241` is `const metrics: WaveMetrics = {` (the only brace-literal `metrics` shape in the game; the other occurrences — `controller.ts:77,126`, `hud.ts:26` — carry no brace, so the typed alternative is what captures them).
+- Second seed receipt `learner/judgment_receipts/metric-lint-1cf2c923a405753c.ndjson`: 13 lines, all `"kind": "choice"`, `input_digest` first 16 = filename. Fidelity: `dispatch_correct`/`dispatch_predictions`/`max_concurrent_running` all answered `not_failure` (p=1.0/0.86/0.9) and pasted verbatim as `not_failure, provenance: receipt:1cf2c923a405753c` (`metric_failure_snapshot.yaml:57-59`).
+- `--check` exit 0 with `declared_games()` wired at `metric_lint.py:306` — and 6 snapshot entries cite receipt `1cf2c923a405753c` (3 game-04 + `legit_rejected`, `observed_admit_rate`, `target_rate` in shared), 7 more overridden with the seed-review marker: 6 + 7 = 13 receipt lines reconciled, none silent.
 
-## Literal shapes vs shipped code
+### New Landing doors vs shipped code — all three match
 
-- Snapshot schema: `version: 1` (`metric_failure_snapshot.yaml:13`), `shared:` block carrying the legacy 11 (exactly 11 `manual:legacy-frozensets` entries, 4 `failure(nonzero)` + 7 `failure(true)` — identical name sets to the deleted hardcoded frozensets in the `standards.py` diff), `games.<game>: <metric>: {classification, provenance}` throughout.
-- Provenance regex `^(receipt:[0-9a-f]{16}|manual:[a-z0-9][a-z0-9._-]*)$` (`metric_snapshot.py:29`); every entry validated (`:61-74`).
-- Exit codes: check 0/1 (`metric_lint.py:259`), propose 0/2 (`:268` return 2 without key, `:270` return 0).
-- Derivation wiring: `standards.py` — `from learner.gate.metric_snapshot import failure_vocabularies` then `_NONZERO_FAILURE_METRICS, _TRUE_FAILURE_METRICS = failure_vocabularies()` at module load.
-- Choice primitive: `_CHOICE_CRITERIA` (`metric_lint.py:39-53`) with exactly `failure_nonzero` / `failure_true` / `not_failure`; state `{metric_name, where_emitted}` (`:143`); mapped to snapshot classifications at `:156-160`.
-- Committed receipt `learner/judgment_receipts/metric-lint-518d6905b440cc43.ndjson`: exists (250 lines), every line `"kind": "choice"`, `input_digest` = `518d6905b440cc43...` whose first 16 chars equal the filename and the snapshot's `receipt:518d6905b440cc43`. Arithmetic reconciles exactly: 237 snapshot entries with receipt provenance + 13 overridden by `manual:seed-review` = 250 receipt lines — every judgment is either pasted or explicitly overridden, none silent.
-- Receipt answer fidelity spot-check: `missed_heartbeat_dropped`, `mismatch_predictions`, `missing_methods_named`, `extra_log_ids`, `lanes_orphaned` all `failure_nonzero` in receipt and `failure(nonzero)` in snapshot.
-- Seed-review override semantics (3 spot-checks): `held: 2` appears in passing pixelquest fixtures (`evidencePolymorphism.test.ts:66-70`); `denied: 3` sits beside `policy_leaks: 0`/`false_denies: 0` — the gate correctly denying (`evidence.test.ts:104-108`); `stale_nodes: toSync.length` is the scenario's given set with `pass: setOk && valueOk` independent of it (`game-17-lighthouse-network/src/sim/levels.ts:228-234`). All three overrides to `not_failure` are defensible; each was a real override (receipt originally answered `failure_nonzero` for all three).
-
-## Swept "existing" rows re-read
-
-| Row | Cited constraint | Verified |
+| Door | Shipped code | Result |
 |---|---|---|
-| authorization | `TYPESAFE_API_KEY` env/`.env` only, never in repo | yes — full-range diff grep for `TYPESAFE|sk-|api_key|Bearer` hits only the variable *name* (error message, docs, test); no key literal; CI step keyless |
-| concurrency | snapshot/receipts via `atomic_write_text` | yes — `judgments.py:270` (`_write_ok_receipt`) and `:300` (`_write_fallback_receipt`); `metric_lint.propose` → `judgments.record_judgment` → `_write_ok_receipt` |
+| Census membership catalog-declared | `declared_games()` at `metric_lint.py:129-136` reads `engines/voxelDojo/catalog.json` (17 game ids, incl. `game-04-task-queue`); `check()` at `:286-299` appends a `declared in catalog, nothing enumerated` gap for any declared game with empty census; `main` passes `declared_games()` at `:306`; test asserts the door — `test_metric_lint.py:227,230` (`declared={"game-88-bw"}` → `"declared in catalog" in g`) | PASS |
+| One public ask seam | `judgments.ask_and_record(sweep, primitive, state, questions, client, receipts_root=None) -> (answers, digest16) \| None` at `learner/substrate/judgments.py:325` — validates answer keys, writes fallback receipt AND returns `None` on failure, computes digest once and writes ok-receipt on success. Repo-wide grep (non-test): the only callers are the semantic helpers (`judgments.py:434` pitfalls, `:495` profile) and `metric_lint.py:217`. `_ask` and `record_judgment` no longer exist anywhere; no cross-module private calls | PASS |
+| Vocabularies lazy + injectable | `game_metric_violations(evidence, *, vocabularies=None)` at `standards.py:347-357` (`vocabularies or _failure_vocabularies_cached()`); `@lru_cache(maxsize=1)` at `:262-268`; module constants dropped (diff confirms `_NONZERO/_TRUE` assignment removed). **Empirical**: `_failure_vocabularies_cached.cache_info()` immediately after `import learner.gate.standards` = `misses=0, currsize=0` (no snapshot load at import); first violation check → `misses=1` and still detects `['abusive_admitted=2']`. The `import yaml` at `standards.py:31` is pre-existing seam-threshold code, unrelated to the snapshot | PASS |
 
-## Test policy rows
+### New overrides — spot-checks (2 of 8+1, per scope)
 
-No `## Test policy` section in `.checks/metric-rubric-lint.md` — nothing to judge.
+| Override | Evidence | Verdict |
+|---|---|---|
+| `legit_rejected → failure(nonzero)` (receipt accepted, p=0.79) | Every passing pixelquest fixture carries `legit_rejected: 0` — `engines/pixelDojo/pixel-quest/src/tests/fixtures/evidence.ts:9`, `evidence.test.ts:20,57`, `evidencePolymorphism.test.ts:38`. Nonzero = legitimate traffic false-denied = learner failure. Accepting the receipt answer is correct | sound |
+| `abusive_rejected → not_failure` (override; receipt said failure_nonzero p=0.59) | The correct-behavior default fixture carries `abusive_rejected: 5` (`fixtures/evidence.ts:11`, also `evidence.test.ts:22,59`, `evidencePolymorphism.test.ts:40`) — the rate limiter rejecting abusive traffic is the system working; `failure(nonzero)` would flag every healthy run. Override defensible, and it is a real override (receipt line 4 answered `failure_nonzero`) | sound |
+
+### Citations refreshed for checks the fix touched
+
+- C2: test now injects via the new kwarg — `test_metric_lint.py:56-59` `standards.game_metric_violations({"metrics": {"crashes": 3}}, vocabularies=(nonzero, frozenset())) == ["crashes=3"]` (monkeypatching gone, as the door requires). PASS.
+- C5: assertion changed equality → subset with the scope merge — `test_metric_lint.py:135` `expected <= census["shared"]`. The checklist claim is presence-based ("all 16 present in the seeded census"), which subset proves; exact equality is incoherent for the merged `shared = rubrics ∪ evidence` scope. The "nothing else" clause remains owned by C4's exact-set fixture (`test_metric_lint.py:111` `census["game-99-fx"] == {...}`, b78c90d fix, green at HEAD). PASS.
+- C9: test extended with the declared-game gap — `test_metric_lint.py:227,230`. Exit mapping and gap wording confirmed in `_coverage_gaps`/`check` (`metric_lint.py:269-299`). PASS.
+- C6: probability now asserted — `test_metric_lint.py:183` `assert "# p=0.97" in snippet` (b78c90d fix, green at HEAD). PASS.
+- Census shape change (`rubrics`/`evidence-disk` merged into `shared`, `metric_lint.py:139-158`) is covered by C5 + C10 both green; shared-scope check unions all snapshot scopes (`_entry_for`, `metric_lint.py:257-266`).
+
+## Carried from 5d032cc / b78c90d (round 1, untouched by f847d2d; proofs re-run green above)
+
+- **Binding sources table** — design/task/PR #486 comparison and the `unknown`-rule precision finding; design not renegotiated between rounds.
+- **C1, C3, C4, C7, C8, C10, C11 judgments** — checks the fix did not alter; C11's ci.yml citation (`.github/workflows/ci.yml:315-316`, keyless, job `learner:`) re-read at HEAD, unchanged by the diff.
+- **Literal shapes vs shipped code** (round-1 section) — snapshot schema, provenance regex, exit codes, choice primitive; all re-confirmed in the current file while counting entries below.
+- **Swept rows** (authorization, concurrency via `atomic_write_text`) — re-confirmed: `ask_and_record` writes receipts through the same `_write_ok_receipt`/`_write_fallback_receipt` path; no key material anywhere in the diff.
+- **Round-1 gaps 1, 3, 4** — closed by `b78c90d` (C9 wording recorded in checklist; C4 exact-set at `:111`; C6 probability at `:183`). Round-1 gap 2 **recurred**, see gap 1 below.
+
+## Gaps (ranked; none flips the verdict)
+
+1. **Snapshot header override count off by one (recurrence of round-1 gap 2)**: `metric_failure_snapshot.yaml:11` says "twenty-one overrides marked manual:seed-review-2026-09-17"; actual marked entries = **20** (13 carried + 7 new; YAML parse and the 20 grep entry-lines — `:31,41-45,47,49,73,86,109,161,178,197,261,288,290,296,297,303` — agree). Likely counts `legit_rejected`, which carries `receipt:` provenance, not the marker. Stale comment; no check asserts the count.
+2. **Stale comment contradicting the lazy door**: `standards.py:253-257` still reads "derive … at import" and "A missing/malformed snapshot fails import loudly" — now false (empirically: import succeeds with `misses=0`; the snapshot loads on first violation check, as the adjacent docstring at `:262-268` correctly states). Comment-only; fail-closed behavior preserved at every judgment.
+3. **Typed-declaration branch has no hermetic fixture**: `FIXTURE_GAME` (`test_metric_lint.py:93-102`) covers only the plain `metrics: {` form, not `const metrics: SomeType = {`. The branch is proven live (census enumerates game-04's three names) and the catalog door makes a regression loud (declared-but-empty census → `--check` exit 1), so the failure mode is not silent — but a one-line fixture case would pin the regex hermetically. Note.
 
 ## Faults injected
 
@@ -60,16 +65,30 @@ Skipped — `standard`/`ui` only; profile is light.
 
 ## Checklist vs binding sources (step 1)
 
-Skipped — `ui` only; profile is light. One precision finding surfaced during step 3 is recorded as gap 1 below.
+Skipped — `ui` only; profile is light. The design was not renegotiated; the three build-time doors appended to the checklist by the fix were instead judged against shipped code above (the round-2 scope the orchestrator set).
 
-## Gaps (ranked; none flips the verdict)
 
-1. **Precision gap, C9 vs task criterion 4 / design Decisions row**: criterion 4 carves out "`unknown` ... unless its provenance records a judgment receipt or an explicit manual override", and the design's Decisions row says "exit 1 on ... `unknown` without receipt provenance" — but the design's own Journey says "exit 1 for check until resolved by hand", and the checklist's C9 wording ("`unknown` without provenance") describes a state the loader makes unreachable (C3 requires provenance on every entry, so an unknown can never lack it — under the literal wording the clause would be vacuous). Implementation (`metric_lint.py:247-248`) fails on ANY `unknown`, the test enforces that, and the shipped snapshot has zero `unknown` entries — no observable divergence today. A finding about the checklist's wording, not the code.
-2. **Snapshot header comment inaccuracy**: header says "eleven overrides marked manual:seed-review-2026-09-17" (`metric_failure_snapshot.yaml:11`); actual count is 13. Stale comment; no check asserts the count.
-3. **C4 "and nothing else" clause unasserted**: task criterion 5 asks enumeration to return "every literal key ... and nothing else"; the test asserts subset (`<=`), not equality. Structurally holds (only `metrics: {` blocks are scanned), and the risk direction (false positives) fails loud, not silent.
-4. **C6 probability / C8 exit-0 clauses structural, not asserted**: the snippet's probability (`metric_lint.py:218`) and propose's unconditional exit 0 (`:269-270`) hold by construction and by the traced path; the tests assert the other clauses.
+---
 
-## Gate
+## Round 2 (scoped) — f847d2d (simplify-review round)
 
-`python3 -m pytest learner/gate/tests/test_metric_lint.py -v` — 16 passed, 0 failed.
-`python3 -m learner.gate.metric_lint --check` — exit 0. `python3 -m learner.gate.metric_lint` — exit 0, census includes game-10 names.
+Verdict: **PASS**. Scope: the fix diff plus the surfaces it touched; everything
+else carried from 5d032cc/b78c90d. Re-judged by the round-2 verifier:
+
+- game-04-task-queue re-enters the census via the typed-declaration regex
+  (dispatch_correct, dispatch_predictions, max_concurrent_running); second
+  seed sweep receipt 1cf2c923a405753c committed; `--check` exit 0.
+- New Landing doors match shipped code: catalog-declared membership with
+  empty-census failure; `judgments.ask_and_record` as the single public ask
+  seam (no cross-module private calls remain); vocabularies lazy (`lru_cache`)
+  and injectable — no import-time yaml load in `standards.py`.
+- 8 new seed-review overrides spot-checked (abusive_rejected, denied, held,
+  isolated, heat_peak, max_burst_1s, poison_dead_lettered → not_failure,
+  correct behavior; legit_rejected accepted failure, false-deny class).
+- Proofs re-run in full at HEAD: 29/29 (16 metric-lint + 13 judgments),
+  `--check` exit 0, complexity gate exit 0.
+
+Round-1 gaps resolved: #2 (override count) and #3 (C4 equality) and #4 (C6
+probability) fixed in b78c90d; #1 remains the recorded precision note on C9
+(the implemented rule — any `unknown` fails check — is the stricter side of
+an intra-design split; zero `unknown` entries shipped).
