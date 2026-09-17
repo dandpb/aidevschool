@@ -15,9 +15,9 @@ FILE="$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // ""')"
 BASE="$(basename "$FILE")"
 IS_TEST=0
 case "$BASE" in
-  test_*.py|*_test.py|*.test.ts|*.test.tsx|*.spec.ts|*.spec.tsx|*.test.js|*.spec.js|*_test.go|test_*.sh) IS_TEST=1 ;;
+  test_*.py|*_test.py|*.test.ts|*.test.tsx|*.spec.ts|*.spec.tsx|*.test.js|*.spec.js|*.test.mjs|*.spec.mjs|*_test.go|test_*.sh) IS_TEST=1 ;;
 esac
-[[ "$FILE" == */tests/* || "$FILE" == */__tests__/* ]] && IS_TEST=1
+[[ "$FILE" == */tests/* || "$FILE" == */test/* || "$FILE" == */__tests__/* ]] && IS_TEST=1
 [ "$IS_TEST" = "0" ] && exit 0
 
 if [ "${SDLC_ALLOW_TEST_EDIT:-0}" = "1" ]; then
