@@ -25,10 +25,18 @@ name: Readiness re-grant observation completeness
 # AID-1669). Retrofit: proposals without a manifest (pre-AID-2203) are gated
 # by the same check; a red gate adds the pending label unless the manifest
 # declares status "written".
+#
+# AID-2314 (countersign AID-2310 nota LOW): `opened` is required BEFORE this
+# check becomes a required check — a PR opened without any later push fires
+# neither synchronize nor reopened, leaving the check "expected — waiting for
+# status" and blocking ordinary merges. The job-level `if:` below still skips
+# non-regrant heads, and a skipped job reports "Success" (GitHub
+# about-status-checks), so common PRs stay mergeable. Gate semantics for
+# regrant/auto-* proposals are unchanged.
 
 on:
   pull_request:
-    types: [synchronize, reopened]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
     inputs:
       pr:

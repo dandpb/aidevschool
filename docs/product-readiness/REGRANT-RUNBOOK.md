@@ -190,7 +190,9 @@ o buraco com sinal máquina fail-closed:
 - **Check required nomeado (R3)**: workflow
   `readiness-regrant-complete.yml` → job **`regrant observation
   completeness`** = `cli.py check --require-current` no **merge-ref**
-  (`refs/pull/N/merge`; eventos `pull_request [synchronize, reopened]` com
+  (`refs/pull/N/merge`; eventos `pull_request [opened, synchronize,
+  reopened]` — `opened` desde AID-2314, para PR comum aberto sem push
+  posterior não ficar "expected" quando o check virar required — com
   head `regrant/auto-*` + drill `workflow_dispatch` input `pr`). Vermelho =
   re-grant incompleto na árvore que aterraria na main; verde = troca para
   `regrant-observation-complete` + recibo idempotente no PR (marcador
