@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AI DevSchool — encontre seu caminho</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="AI DevSchool — início"><span>AI</span> DevSchool</a>
+    <a class="admin-link" href="/admin/engines">Administração</a>
+  </header>
+  <main id="main">
+    <section class="intro" aria-labelledby="entry-title">
+      <h1 id="entry-title">Por onde você quer começar?</h1>
+      <p>Conte seu objetivo. Encontre uma experiência para colocar em prática.</p>
+    </section>
+    <form id="recommend-form">
+      <label for="description">O que você quer aprender ou fazer?</label>
+      <textarea id="description" name="description" required maxlength="2000" rows="4" placeholder="Por exemplo: quero aprender a usar IA no trabalho, com atividades práticas." aria-describedby="privacy-help"></textarea>
+      <div class="form-actions">
+        <p id="privacy-help">Não inclua dados pessoais ou informações confidenciais.</p>
+        <button class="primary" id="recommend-submit" type="submit">Encontrar meu caminho</button>
+      </div>
+    </form>
+    <div class="catalog-action"><button type="button" class="text-button" id="show-catalog">Ver experiências disponíveis</button></div>
+    <p id="request-status" class="status" role="status" aria-live="polite"></p>
+    <section id="results" aria-labelledby="results-title" hidden>
+      <h2 id="results-title"></h2>
+      <p id="results-message" class="section-description"></p>
+      <div id="engine-cards" class="engine-grid"></div>
+    </section>
+  </main>
+  <footer>Cada experiência mantém seu próprio progresso.</footer>
+</body>
+</html>

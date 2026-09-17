@@ -18,6 +18,7 @@ changes; it is the contract agents read before any UI work in that engine.
 
 | Engine | File | Identity |
 | --- | --- | --- |
+| school-entry | `engines/school-entry/DESIGN.md` | Independent entry: white, ink typography, teal actions, restrained recommendation cards |
 | codexDojo (dashboard) | `engines/codexDojo/DESIGN.md` | Warm developer ops console: brass-lit workbench, dark canvas, instructional density |
 | codexdojo-os-prototype | `engines/codexdojo-os-prototype/DESIGN.md` | Educational Linux workstation at night: deep navy windows, coral/violet/cyan signals, live app windows |
 | literacyDojo | `engines/literacyDojo/DESIGN.md` | Warm friendly learning: paper bg, violet primary, mint/sun/coral pastels, chunky radii + playful shadows |
