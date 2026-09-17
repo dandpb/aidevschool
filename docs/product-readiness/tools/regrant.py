@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .enforcement import unsupported_candidate_reasons
@@ -91,3 +93,54 @@ def classify_proposal(
     if checklist:
         return PendingObservation(tuple(checklist))
     return Written()
+
+
+def _current_branch(repo_root: Path) -> str:
+    completed = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=repo_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return completed.stdout.strip()
+
+
+def write_proposal_state(
+    outcome: Written | PendingObservation,
+    proposal: AssessmentProposal,
+    path: Path,
+    repo_root: Path | None = None,
+) -> Path:
+    """Serialize the proposal state machine for the observation gate (AID-2203 R1).
+
+    Emits a stable JSON manifest next to the proposal: `pending-observation`
+    carries the per-use-case checklist the independent observer must clear;
+    `written` documents why there is no observation phase (empty checklist —
+    an independent report was already in the tree). Called on the exit-3 path
+    before the checklist is printed and on the exit-0 path before any
+    assessment/view writes; the defect (1) and guard/usage (2) paths never
+    reach this function, so no manifest exists for them.
+    """
+    root = repo_root if repo_root is not None else Path(__file__).resolve().parents[3]
+    if isinstance(outcome, PendingObservation):
+        status = "pending-observation"
+        use_cases = [
+            {"id": use_case_id, "pending": list(pending)}
+            for use_case_id, pending in outcome.checklist
+        ]
+    else:
+        status = "written"
+        use_cases = []
+    payload = {
+        "schemaVersion": 1,
+        "status": status,
+        "assessmentId": str(proposal.request.assessment_id),
+        "gitSha": str(proposal.request.git_sha),
+        "branch": _current_branch(root),
+        "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "useCases": use_cases,
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
