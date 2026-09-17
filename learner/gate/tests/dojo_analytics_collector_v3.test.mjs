@@ -20,18 +20,19 @@ import {
 // "pixelquest", events:[…]}) para o funil das superfícies programador
 // (dojoToday/voxelDojo/PixelQuest). A emissão canônica vive em
 // engines/shared/teaching-evidence/funnelTelemetry.ts; este teste trava o
-// comportamento do lado recebedor E a paridade de vocabulário com o lado
-// emissor (fail-closed em drift).
+// comportamento do recebedor e sua paridade com vocabularies/surfaces.json.
+// funnelCollectorContract.test.ts compara os exports reais dos dois lados.
 
 const FIXED_NOW = new Date("2026-09-07T12:00:00.000Z");
 const SESSION = "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d";
 const REPO_ROOT = join(import.meta.dirname, "..", "..", "..");
-const CANONICAL_EMITTER = join(
+const CANONICAL_VOCABULARY = join(
   REPO_ROOT,
   "engines",
   "shared",
   "teaching-evidence",
-  "funnelTelemetry.ts",
+  "vocabularies",
+  "surfaces.json",
 );
 
 function surfaceEvent(overrides = {}) {
@@ -157,45 +158,10 @@ test("cross-site continua proibido para o envelope v3", async (t) => {
   assert.equal(response.status, 403);
 });
 
-test("paridade de vocabulário com o emissor canônico (funnelTelemetry.ts)", async () => {
-  const canonical = await readFile(CANONICAL_EMITTER, "utf8");
-  const extractList = (name) => {
-    const match = canonical.match(new RegExp(`${name}[^=]*=\\s*\\[([^\\]]+)\\]`));
-    assert.ok(match !== null, `${name} não encontrado no emissor canônico`);
-    return match[1]
-      .split(",")
-      .map((item) => item.trim().replace(/^"|"$/g, ""))
-      .filter((item) => item.length > 0);
-  };
-  assert.deepEqual(
-    extractList("export const FUNNEL_SOURCES"),
-    [...SURFACE_SOURCES],
-    "fontes divergem entre emissor e coletor",
-  );
-  assert.deepEqual(
-    extractList("export const FUNNEL_EVENT_NAMES"),
-    [...SURFACE_EVENT_NAMES],
-    "nomes de evento divergem entre emissor e coletor",
-  );
-  assert.deepEqual(
-    extractList("export const FUNNEL_RESULT_VALUES"),
-    [...SURFACE_RESULT_VALUES],
-    "valores de result divergem entre emissor e coletor",
-  );
-  // Props por evento: extrai o objeto FUNNEL_EVENT_PROPS literal do emissor.
-  const propsBlock = canonical.match(/export const FUNNEL_EVENT_PROPS[^{]*(\{[\s\S]*?\n\})/);
-  assert.ok(propsBlock !== null, "FUNNEL_EVENT_PROPS não encontrado no emissor canônico");
-  for (const name of SURFACE_EVENT_NAMES) {
-    const entry = propsBlock[1].match(new RegExp(`"${name}":\\s*\\[([^\\]]*)\\]`));
-    assert.ok(entry !== null, `props de ${name} ausentes no emissor canônico`);
-    const emitterProps = entry[1]
-      .split(",")
-      .map((item) => item.trim().replace(/^"|"$/g, ""))
-      .filter((item) => item.length > 0);
-    assert.deepEqual(
-      emitterProps,
-      [...SURFACE_EVENT_PROPS[name]],
-      `props de ${name} divergem entre emissor e coletor`,
-    );
-  }
+test("paridade total de vocabulário com a fonte canônica surfaces.json", async () => {
+  const vocabulary = JSON.parse(await readFile(CANONICAL_VOCABULARY, "utf8"));
+  assert.deepEqual([...SURFACE_SOURCES], vocabulary.sources);
+  assert.deepEqual([...SURFACE_EVENT_NAMES], vocabulary.eventNames);
+  assert.deepEqual([...SURFACE_RESULT_VALUES], vocabulary.resultValues);
+  assert.deepEqual(SURFACE_EVENT_PROPS, vocabulary.eventProps);
 });

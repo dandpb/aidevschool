@@ -15,7 +15,9 @@
  * same-origin quando um endpoint é configurado (ativação AID-913).
  */
 import { recordHasOnlyKeys } from "../../../shared/teaching-evidence/funnelCore";
-import literacyVocabulary from "../../../shared/teaching-evidence/vocabularies/literacy.json" with { type: "json" };
+import literacyVocabulary from "../../../shared/teaching-evidence/vocabularies/literacy.json" with {
+  type: "json",
+};
 
 export const ANALYTICS_SCHEMA_VERSION = 2;
 export const ANALYTICS_SOURCE = "literacydojo";
@@ -97,10 +99,12 @@ const EVENT_NAMES: readonly ProductAnalyticsEventName[] = vocabulary.eventNames;
  * literacy.json; o coletor deriva as mesmas tabelas do mesmo JSON (paridade
  * estrutural, não copiada à mão).
  */
-const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = vocabulary.eventProps;
+const EVENT_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> =
+  vocabulary.eventProps;
 
 /** Props opcionais (presentes ou ausentes; nunca com outro nome). */
-const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> = vocabulary.optionalProps;
+const OPTIONAL_PROPS: Readonly<Record<ProductAnalyticsEventName, readonly string[]>> =
+  vocabulary.optionalProps;
 
 const UUID_KEYS: readonly (keyof ProductAnalyticsEvent)[] = ["eventId", "sessionId"];
 
@@ -262,7 +266,11 @@ export function buildLessonBriefViewedEvent(
  */
 export function buildActivityPresentedEvent(
   identity: IdentityInput,
-  input: { lessonId: string; activityType: AnalyticsActivityType; activityIndex: number },
+  input: {
+    lessonId: string;
+    activityType: AnalyticsActivityType;
+    activityIndex: number;
+  },
   timing: TimingInput,
 ): ProductAnalyticsEvent {
   return buildEvent({
@@ -302,7 +310,11 @@ export function buildLessonStartedEvent(
  */
 export function buildActivityAttemptedEvent(
   identity: IdentityInput,
-  input: { lessonId: string; activityType: AnalyticsActivityType; passed: boolean },
+  input: {
+    lessonId: string;
+    activityType: AnalyticsActivityType;
+    passed: boolean;
+  },
   timing: TimingInput,
 ): ProductAnalyticsEvent {
   return buildEvent({
@@ -393,7 +405,11 @@ export type ProductAnalyticsBatch = {
 };
 
 export function buildAnalyticsBatch(events: ProductAnalyticsEvent[]): ProductAnalyticsBatch {
-  return { schemaVersion: ANALYTICS_SCHEMA_VERSION, source: ANALYTICS_SOURCE, events };
+  return {
+    schemaVersion: ANALYTICS_SCHEMA_VERSION,
+    source: ANALYTICS_SOURCE,
+    events,
+  };
 }
 
 export function isValidAnalyticsBatch(value: unknown): value is ProductAnalyticsBatch {

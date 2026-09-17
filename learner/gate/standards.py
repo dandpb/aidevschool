@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import math
+import operator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping, TypeGuard
@@ -61,6 +62,14 @@ def load_thresholds(config_path: Path | str | None = None) -> Thresholds:
     threshold is missing or outside ``[0, 1]``.
     """
     path = Path(config_path) if config_path else DEFAULT_SEAM_PATH
+    gates = _load_threshold_gates(path)
+    return Thresholds(
+        mutation_min=_threshold_value(gates, "mutation_score_min", path),
+        coverage_min=_threshold_value(gates, "cobertura_nucleo_min", path),
+    )
+
+
+def _load_threshold_gates(path: Path) -> dict[str, Any]:
     try:
         text = path.read_text(encoding="utf-8")
     except FileNotFoundError as exc:
@@ -80,26 +89,23 @@ def load_thresholds(config_path: Path | str | None = None) -> Thresholds:
         raise ThresholdSeamError(
             f"threshold seam {path} must be a YAML mapping with a 'gates' block"
         )
-    gates: dict[str, Any] = doc["gates"]
-    values: dict[str, float] = {}
-    for key, attr in (
-        ("mutation_score_min", "mutation_min"),
-        ("cobertura_nucleo_min", "coverage_min"),
-    ):
-        raw = gates.get(key)
-        try:
-            value = float(raw)
-        except (TypeError, ValueError):
-            raise ThresholdSeamError(
-                f"threshold seam {path}: gates.{key} must be a number in "
-                f"[0, 1], got {raw!r}"
-            ) from None
-        if not 0.0 <= value <= 1.0:
-            raise ThresholdSeamError(
-                f"threshold seam {path}: gates.{key}={value} is outside [0, 1]"
-            )
-        values[attr] = value
-    return Thresholds(**values)
+    return doc["gates"]
+
+
+def _threshold_value(gates: dict[str, Any], key: str, path: Path) -> float:
+    raw = gates.get(key)
+    try:
+        value = float(raw)
+    except (TypeError, ValueError):
+        raise ThresholdSeamError(
+            f"threshold seam {path}: gates.{key} must be a number in "
+            f"[0, 1], got {raw!r}"
+        ) from None
+    if not 0.0 <= value <= 1.0:
+        raise ThresholdSeamError(
+            f"threshold seam {path}: gates.{key}={value} is outside [0, 1]"
+        )
+    return value
 
 
 def effective_thresholds(
@@ -266,17 +272,17 @@ def _eval_predicate(predicate: dict[str, Any], evidence: dict[str, Any]) -> bool
         return False
     numeric_value = float(value)
     target = predicate["value"]
-    if op == "eq":
-        return numeric_value == target
-    if op == "gt":
-        return numeric_value > target
-    if op == "gte":
-        return numeric_value >= target
-    if op == "lt":
-        return numeric_value < target
-    if op == "lte":
-        return numeric_value <= target
-    raise ValueError(f"unknown rubric predicate op: {op!r}")
+    comparisons = {
+        "eq": operator.eq,
+        "gt": operator.gt,
+        "gte": operator.ge,
+        "lt": operator.lt,
+        "lte": operator.le,
+    }
+    compare = comparisons.get(op)
+    if compare is None:
+        raise ValueError(f"unknown rubric predicate op: {op!r}")
+    return compare(numeric_value, target)
 
 
 def _match_selector(selector: dict[str, Any], evidence: dict[str, Any]) -> bool:
@@ -322,12 +328,42 @@ def game_metric_violations(evidence: dict[str, Any]) -> list[str]:
     violations: list[str] = []
     for source in sources:
         for name, value in source.items():
-            if name in _NONZERO_FAILURE_METRICS or name.endswith("_violations"):
-                if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0:
-                    violations.append(f"{name}={value}")
-            elif name in _TRUE_FAILURE_METRICS and value is True:
-                violations.append(f"{name}=true")
+            violation = _metric_violation(name, value)
+            if violation is not None:
+                violations.append(violation)
     return violations
+
+
+def _metric_violation(name: str, value: Any) -> str | None:
+    if name in _NONZERO_FAILURE_METRICS or name.endswith("_violations"):
+        if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0:
+            return f"{name}={value}"
+    elif name in _TRUE_FAILURE_METRICS and value is True:
+        return f"{name}=true"
+    return None
+
+
+def _verifier_result(verifier: dict[str, Any]) -> tuple[bool | None, list[str]]:
+    verdict = verifier.get("verdict")
+    if verdict == "FAIL":
+        return False, ["independent verifier verdict is 'FAIL', not PASS"]
+    if verdict != "PASS":
+        return None, ["independent verifier verdict must be PASS or FAIL"]
+    strict_verdict = VerifierVerdict(
+        mutation_score=verifier.get("mutation_score"),
+        coverage_core=verifier.get("coverage_core"),
+        context_isolated=verifier.get("context_isolated"),
+        verdict="PASS",
+        source=str(verifier.get("source", "")),
+    )
+    if strict_verdict.verified_pass:
+        return True, []
+    errors = ["independent verifier PASS lacks complete gate metrics or thresholds"]
+    for blocker in verdict_blockers(strict_verdict):
+        if blocker == "verifier not context-isolated":
+            blocker = "context_isolated is not true"
+        errors.append(blocker)
+    return None, errors
 
 
 def independently_verified_pass(
@@ -345,36 +381,7 @@ def independently_verified_pass(
     """
     verifier = evidence.get("verifier")
     if isinstance(verifier, dict):
-        verdict = verifier.get("verdict")
-        if verdict == "PASS":
-            mutation = verifier.get("mutation_score")
-            coverage = verifier.get("coverage_core")
-            isolated = verifier.get("context_isolated")
-            strict_verdict = VerifierVerdict(
-                mutation_score=mutation,
-                coverage_core=coverage,
-                context_isolated=isolated,
-                verdict="PASS",
-                source=str(verifier.get("source", "")),
-            )
-            if strict_verdict.verified_pass:
-                return True, []
-            th = load_thresholds()
-            errors = ["independent verifier PASS lacks complete gate metrics or thresholds"]
-            if not _is_finite_number(mutation):
-                errors.append("mutation_score must be a finite number")
-            elif mutation < th.mutation_min:
-                errors.append(f"mutation_score {mutation} < {th.mutation_min}")
-            if not _is_finite_number(coverage):
-                errors.append("coverage_core must be a finite number")
-            elif coverage < th.coverage_min:
-                errors.append(f"coverage_core {coverage} < {th.coverage_min}")
-            if isolated is not True:
-                errors.append("context_isolated is not true")
-            return None, errors
-        if verdict == "FAIL":
-            return False, ["independent verifier verdict is 'FAIL', not PASS"]
-        return None, ["independent verifier verdict must be PASS or FAIL"]
+        return _verifier_result(verifier)
 
     rubric = _rubric_for_evidence(evidence)
     if rubric is not None:
@@ -429,9 +436,14 @@ def check_evidence(
             f"{prefix} is not parseable JSON ({evidence_path!r}): "
             f"{exc.msg} at line {exc.lineno}"
         ]
+    return _evidence_shape_errors(raw, evidence_path, prefix)
+
+
+def _evidence_shape_errors(
+    raw: Any, evidence_path: str | Path, prefix: str
+) -> list[str]:
     if not isinstance(raw, dict):
         return [f"{prefix} is valid JSON but not an object: {evidence_path!r}"]
-
     if "verifier" not in raw and "pass" not in raw:
         return [
             f"{prefix} has no 'verifier' block or 'pass' field ({evidence_path!r})"
@@ -441,27 +453,35 @@ def check_evidence(
             f"{prefix} embeds a producer-controlled 'verifier' block; "
             f"use a separate verifier receipt ({evidence_path!r})"
         ]
+    return _verification_errors(raw, evidence_path, prefix)
 
+
+def _verification_errors(
+    raw: dict[str, Any], evidence_path: str | Path, prefix: str
+) -> list[str]:
     verified_pass, verification_errors = independently_verified_pass(raw)
     if verified_pass is True:
         return []
-    if verification_errors:
+    details = _failed_evidence_details(raw, verified_pass, verification_errors)
+    return [f"{prefix} {detail} ({evidence_path!r})" for detail in details]
+
+
+def _failed_evidence_details(
+    raw: dict[str, Any], verified_pass: bool | None, errors: list[str]
+) -> list[str]:
+    if errors:
         if raw.get("pass") is True:
-            verification_errors.extend(
+            errors.extend(
                 "claimed-versus-verified disagreement: " + detail
                 for detail in game_metric_violations(raw)
             )
-        return [f"{prefix} {detail} ({evidence_path!r})" for detail in verification_errors]
+        return errors
     if raw.get("pass") is True:
         disagreements = game_metric_violations(raw) or ["empirical rubric did not pass"]
-        return [
-            f"{prefix} claimed-versus-verified disagreement: {detail} "
-            f"({evidence_path!r})"
-            for detail in disagreements
-        ]
+        return ["claimed-versus-verified disagreement: " + detail for detail in disagreements]
     if verified_pass is False:
-        return [f"{prefix} independently verified evidence did not pass ({evidence_path!r})"]
-    return [f"{prefix} evidence pass=false ({evidence_path!r})"]
+        return ["independently verified evidence did not pass"]
+    return ["evidence pass=false"]
 
 
 def passes_gate(

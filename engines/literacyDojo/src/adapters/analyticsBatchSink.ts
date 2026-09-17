@@ -1,18 +1,18 @@
-import type { AnalyticsSink } from "../application/ports";
-import {
-  type ProductAnalyticsBatch,
-  type ProductAnalyticsEvent,
-  ANALYTICS_SCHEMA_VERSION,
-  ANALYTICS_SOURCE,
-  buildAnalyticsBatch,
-  isValidAnalyticsEvent,
-} from "../domain/analytics";
 import {
   type FunnelCoreFlushReason,
   type FunnelCoreScheduler,
   type FunnelCoreTransport,
   createFunnelClient,
 } from "../../../shared/teaching-evidence/funnelCore";
+import type { AnalyticsSink } from "../application/ports";
+import {
+  ANALYTICS_SCHEMA_VERSION,
+  ANALYTICS_SOURCE,
+  type ProductAnalyticsBatch,
+  type ProductAnalyticsEvent,
+  buildAnalyticsBatch,
+  isValidAnalyticsEvent,
+} from "../domain/analytics";
 
 /**
  * Batch sink de analytics (ADR-0009, emenda AID-913 — ativação O1).
@@ -106,7 +106,10 @@ export function createBatchAnalyticsSink(options: BatchAnalyticsSinkOptions): An
       const literacyBatch: ProductAnalyticsBatch = buildAnalyticsBatch([...batch.events]);
       const body = JSON.stringify(literacyBatch);
       try {
-        if (reason === "pagehide" && beacon(endpoint, new Blob([body], { type: "application/json" }))) {
+        if (
+          reason === "pagehide" &&
+          beacon(endpoint, new Blob([body], { type: "application/json" }))
+        ) {
           return;
         }
         void fetcher(endpoint, {
@@ -133,7 +136,9 @@ export function createBatchAnalyticsSink(options: BatchAnalyticsSinkOptions): An
       scheduler,
     },
     pageTarget:
-      typeof window !== "undefined" && typeof window.addEventListener === "function" ? window : null,
+      typeof window !== "undefined" && typeof window.addEventListener === "function"
+        ? window
+        : null,
     transport,
   });
 

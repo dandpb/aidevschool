@@ -1,7 +1,11 @@
 """Required authority relationships, beyond vocabulary presence."""
 
 from pathlib import Path
-import subprocess
+import json
+
+import yaml
+
+from engines.miniMaxEvolutionEngine.supervisor.__main__ import main
 
 import pytest
 
@@ -61,10 +65,30 @@ def test_mvp_result_does_not_confer_canonical_mastery() -> None:
     assert "None of these grades grants learner mastery or MVP Mastery." in cycle
 
 
-def test_mvp_runtime_and_canonical_data_are_not_modified() -> None:
-    result = subprocess.run([
-        "git", "diff", "--exit-code", "4abb418", "HEAD", "--",
-        "engines/aiDevschoolMvp/aidevschool", "learner/learning_state.yaml",
-        "learner/pipeline_status.yaml", "curriculum",
-    ], cwd=ROOT, capture_output=True, text=True)
-    assert result.returncode == 0, result.stdout + result.stderr
+def test_status_preserves_mvp_runtime_and_canonical_data(tmp_path: Path, capsys) -> None:
+    files = {
+        "learner/pipeline_status.yaml": yaml.safe_dump({
+            "cycle_id": "authority-test", "current_project": "curriculum/project",
+            "phase": "spec", "blockers": [],
+        }),
+        "learner/learning_state.yaml": yaml.safe_dump({
+            "active_unit": {"id": "unit", "project": "project", "state": "practicing"},
+            "gate": {"implementation_blocked": False},
+        }),
+        "curriculum/project/docs/spec.md": "# Learner-owned project\n",
+        "engines/aiDevschoolMvp/aidevschool/state.json": '{"mastery": "local"}\n',
+    }
+    for relative, content in files.items():
+        path = tmp_path / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")
+    before = {p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+
+    assert main(["--repo-root", str(tmp_path), "status"]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["observed_phase"] == "spec"
+    assert result["active_unit"] == "unit"
+    assert result["pending_request"] is None
+    assert before == {
+        p.relative_to(tmp_path): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()
+    }

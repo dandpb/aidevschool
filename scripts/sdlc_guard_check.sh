@@ -27,10 +27,10 @@
 #
 # Owner-approved overrides (same trust model as the live env-var overrides):
 # a commit in the range carrying a trailer
-#     SDLC-ALLOW-TEST-EDIT: AID-<n>
-#     SDLC-ALLOW-DERIVED-EDIT: AID-<n>
+#     SDLC-ALLOW-TEST-EDIT: AID-<n> (or GH-<n> for this GitHub repository)
+#     SDLC-ALLOW-DERIVED-EDIT: AID-<n> (or GH-<n>)
 # suppresses the corresponding check for that range. The trailer is only the
-# audit hook — the cited AID issue must record the actual owner acceptance,
+# audit hook — the cited AID/GitHub issue must record the actual owner acceptance,
 # and the reviewer verifies that. The credential rule has NO override.
 #
 # Usage:
@@ -96,13 +96,13 @@ run_checks() {
   # Owner-approved override trailers present anywhere in the commit range.
   local range_bodies allow_test=0 allow_derived=0
   range_bodies="$(git -C "$REPO_ROOT" log --format='%B' "$mbase..$head_ref")" || return 2
-  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-TEST-EDIT: AID-[0-9]+'; then
+  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-TEST-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$'; then
     allow_test=1
-    echo "::notice::SDLC-ALLOW-TEST-EDIT trailer found in commit range — owner-approved test edit (verify the cited AID issue records the acceptance)"
+    echo "::notice::SDLC-ALLOW-TEST-EDIT trailer found in commit range — owner-approved test edit (verify the cited AID/GitHub issue records the acceptance)"
   fi
-  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-DERIVED-EDIT: AID-[0-9]+'; then
+  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-DERIVED-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$'; then
     allow_derived=1
-    echo "::notice::SDLC-ALLOW-DERIVED-EDIT trailer found in commit range — owner-approved derived-path edit (verify the cited AID issue records the acceptance)"
+    echo "::notice::SDLC-ALLOW-DERIVED-EDIT trailer found in commit range — owner-approved derived-path edit (verify the cited AID/GitHub issue records the acceptance)"
   fi
 
   local mirror
@@ -280,6 +280,23 @@ SDLC-ALLOW-TEST-EDIT: AID-9001" -- \
 
 SDLC-ALLOW-DERIVED-EDIT: AID-9002" -- \
     "printf 'regenerated\n' > .loops/memory.md"
+
+  scenario "owner-approved GitHub test edit"         0 "fix test
+
+SDLC-ALLOW-TEST-EDIT: GH-9003" -- \
+    "printf 'def test_a():\n    assert 1 == 1\n' > tests/unit/test_a.py"
+  scenario "owner-approved GitHub derived edit"      0 "regen loops
+
+SDLC-ALLOW-DERIVED-EDIT: GH-9004" -- \
+    "printf 'regenerated\n' > .loops/memory.md"
+  scenario "malformed GitHub approval is rejected"   1 "invalid approval
+
+SDLC-ALLOW-TEST-EDIT: GH-9003-not-an-issue" -- \
+    "printf 'def test_a():\n    assert False\n' > tests/unit/test_a.py"
+  scenario "GitHub test approval does not allow credentials" 1 "invalid scope
+
+SDLC-ALLOW-TEST-EDIT: GH-9003" -- \
+    "mkdir -p config && printf 'SECRET=1\n' > config/.env"
 
   # AID-1272 regression: PR head has MERGED an advanced base, then edits a
   # test the base added after the branch point. With the CURRENT base tip the

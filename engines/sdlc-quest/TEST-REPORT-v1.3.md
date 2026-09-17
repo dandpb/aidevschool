@@ -64,7 +64,7 @@ Logs de tentativas iniciais e um recibo interrompido permanecem em `evidence-v1.
 
 Chromium 144.0.7559.96, com `Playwright.set_content`. Perfis de 1440 e 390 px; estados adicionais em 320 e 768 px. Os novos testes amostraram 21 estados no perfil desktop e 21 no móvel, incluindo repetições dos tamanhos adicionais. Verificam overflow, limites do diálogo e amostras de contraste de texto; não são certificação WCAG. Screenshots do início, falhas, verificação, pacote, invalidação e budget estão em `evidence-v1.3/harness/`.
 
-A navegação `file://` foi tentada e negada com `ERR_BLOCKED_BY_ADMINISTRATOR`. O erro está em `evidence-v1.3/environment-probe.json`. As jornadas usam um double explícito de armazenamento em memória. O caminho nativo de armazenamento indisponível também funciona nos testes.
+A navegação `file://` foi tentada e negada com `ERR_BLOCKED_BY_ADMINISTRATOR`. O erro está em `evidence-v1.3/browser-probe.json`. As jornadas usam um double explícito de armazenamento em memória. O caminho nativo de armazenamento indisponível também funciona nos testes.
 
 Não validados: abertura por duplo clique no Mac, persistência nativa entre sessões, Safari, Firefox, celulares físicos, leitores de tela reais, eficácia pedagógica com participantes, revisão independente e integração autenticada com o repositório solicitado.
 
