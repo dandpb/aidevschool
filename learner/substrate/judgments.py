@@ -322,6 +322,81 @@ def _journal_entries(journal_path: Path) -> dict[str, dict[str, str]]:
     return entries
 
 
+def _ask(
+    sweep: str,
+    primitive: str,
+    state: dict[str, Any],
+    questions: dict[str, Any],
+    client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]],
+    receipts_root: Path,
+) -> dict[str, Any] | None:
+    """Call the client and validate the answer keys, or write the fallback
+    receipt and return ``None`` — the single home of the "enrichment never
+    breaks a sync, every failure is auditable" contract.
+    """
+    try:
+        answers = client(state, questions)
+        if not isinstance(answers, dict) or set(answers) != set(questions):
+            raise JudgmentError("judgment answers do not match asked questions")
+        return answers
+    except JudgmentError as exc:
+        _write_fallback_receipt(
+            sweep, primitive, state, questions, exc.error_class, receipts_root
+        )
+    except Exception as exc:  # defensive: enrichment must never break a sync
+        _write_fallback_receipt(
+            sweep, primitive, state, questions, type(exc).__name__, receipts_root
+        )
+    return None
+
+
+def _pitfall_questions(
+    pitfalls: list[dict[str, Any]], entries: dict[str, dict[str, str]]
+) -> dict[str, Any]:
+    """One Noul per (pitfall, journal entry): does this entry revisit the trap?"""
+    questions: dict[str, Any] = {}
+    for pitfall in pitfalls:
+        pid = pitfall.get("id", "P-000")
+        for entry_id in entries:
+            questions[f"{pid}__{entry_id}"] = {
+                "type": "noul",
+                "instructions": (
+                    f"Does `entries.{entry_id}` describe the learner repeating, "
+                    "suffering from, or explicitly guarding against the same "
+                    "mistake as any entry in `known_pitfalls` (claiming mastery "
+                    "or levels from non-executable work such as documentation, "
+                    "dashboards, contract review, or ungated backfill "
+                    "artifacts)? Mentioning the theme in passing without it "
+                    "affecting the work does not count."
+                ),
+                "criteria": {
+                    "true": "The entry's work was affected by, corrected for, or repeated this mistake",
+                    "false": "The entry does not involve this mistake",
+                },
+            }
+    return questions
+
+
+def _apply_pitfall_answers(
+    pitfalls: list[dict[str, Any]],
+    entries: dict[str, dict[str, str]],
+    answers: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Replace each pitfall's occurrences with its semantic hit count."""
+    enriched: list[dict[str, Any]] = []
+    for pitfall in pitfalls:
+        pid = pitfall.get("id", "P-000")
+        hits = sum(
+            1
+            for entry_id in entries
+            if _noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
+        )
+        updated = dict(pitfall)
+        updated["occurrences"] = max(MIN_OCCURRENCES, hits)
+        enriched.append(updated)
+    return enriched
+
+
 def semantic_pitfall_occurrences(
     pitfalls: list[dict[str, Any]],
     pitfalls_path: Path,
@@ -345,53 +420,15 @@ def semantic_pitfall_occurrences(
             "pitfalls", "noul", {"note": "source read failed"}, {}, type(exc).__name__, receipts_root
         )
         return pitfalls
-    questions: dict[str, Any] = {}
-    for pitfall in pitfalls:
-        pid = pitfall.get("id", "P-000")
-        for entry_id in entries:
-            questions[f"{pid}__{entry_id}"] = {
-                "type": "noul",
-                "instructions": (
-                    f"Does `entries.{entry_id}` describe the learner repeating, "
-                    "suffering from, or explicitly guarding against the same "
-                    "mistake as any entry in `known_pitfalls` (claiming mastery "
-                    "or levels from non-executable work such as documentation, "
-                    "dashboards, contract review, or ungated backfill "
-                    "artifacts)? Mentioning the theme in passing without it "
-                    "affecting the work does not count."
-                ),
-                "criteria": {
-                    "true": "The entry's work was affected by, corrected for, or repeated this mistake",
-                    "false": "The entry does not involve this mistake",
-                },
-            }
+    questions = _pitfall_questions(pitfalls, entries)
     if not questions:
         return pitfalls
-    try:
-        answers = client(state, questions)
-        if not isinstance(answers, dict) or set(answers) != set(questions):
-            raise JudgmentError("judgment answers do not match asked questions")
-        enriched: list[dict[str, Any]] = []
-        for pitfall in pitfalls:
-            pid = pitfall.get("id", "P-000")
-            hits = sum(
-                1
-                for entry_id in entries
-                if _noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
-            )
-            updated = dict(pitfall)
-            updated["occurrences"] = max(MIN_OCCURRENCES, hits)
-            enriched.append(updated)
-        _write_ok_receipt("pitfalls", state, questions, answers, receipts_root)
-        return enriched
-    except JudgmentError as exc:
-        _write_fallback_receipt("pitfalls", "noul", state, questions, exc.error_class, receipts_root)
+    answers = _ask("pitfalls", "noul", state, questions, client, receipts_root)
+    if answers is None:
         return pitfalls
-    except Exception as exc:  # defensive: enrichment must never break a sync
-        _write_fallback_receipt(
-            "pitfalls", "noul", state, questions, type(exc).__name__, receipts_root
-        )
-        return pitfalls
+    enriched = _apply_pitfall_answers(pitfalls, entries, answers)
+    _write_ok_receipt("pitfalls", state, questions, answers, receipts_root)
+    return enriched
 
 
 def _noul_value(answer: Any) -> float:
@@ -448,22 +485,19 @@ def semantic_profile_levels(
             "criteria": BLOOM_LEVELS,
         },
     }
+    answers = _ask("profile", "choice", state, questions, client, receipts_root)
+    if answers is None:
+        return current
     try:
-        answers = client(state, questions)
-        if not isinstance(answers, dict) or set(answers) != set(questions):
-            raise JudgmentError("judgment answers do not match asked questions")
         dreyfus = _choice_value(answers.get("dreyfus_overall"), DREYFUS_STAGES)
         bloom = _choice_value(answers.get("bloom_overall"), BLOOM_LEVELS)
-        _write_ok_receipt("profile", state, questions, answers, receipts_root)
-        return {"dreyfus": dreyfus, "bloom": bloom}
     except JudgmentError as exc:
-        _write_fallback_receipt("profile", "choice", state, questions, exc.error_class, receipts_root)
-        return current
-    except Exception as exc:  # defensive: enrichment must never break a sync
         _write_fallback_receipt(
-            "profile", "choice", state, questions, type(exc).__name__, receipts_root
+            "profile", "choice", state, questions, exc.error_class, receipts_root
         )
         return current
+    _write_ok_receipt("profile", state, questions, answers, receipts_root)
+    return {"dreyfus": dreyfus, "bloom": bloom}
 
 
 def _choice_value(answer: Any, vocabulary: dict[str, str]) -> str:
