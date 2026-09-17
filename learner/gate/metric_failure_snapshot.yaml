@@ -8,7 +8,7 @@
 # Seed (2026-09-17): legacy frozenset names carry manual:legacy-frozensets;
 # every other name was classified by a live judgment sweep (receipt
 # 518d6905b440cc43 — see learner/judgment_receipts/) and hand-reviewed:
-# thirteen overrides marked manual:seed-review-2026-09-17 correct metrics that
+# twenty-one overrides marked manual:seed-review-2026-09-17 correct metrics that
 # describe correct behavior or scenario composition, not learner failure.
 version: 1
 shared:
@@ -38,7 +38,22 @@ shared:
   policy_leaks: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
   processed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
   routed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  abusive_rejected: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  denied: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  heat_peak: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  held: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  isolated: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  legit_rejected: {classification: failure(nonzero), provenance: receipt:1cf2c923a405753c}
+  max_burst_1s: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  observed_admit_rate: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+  poison_dead_lettered: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  target_rate: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+
 games:
+  game-04-task-queue:
+    dispatch_correct: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+    dispatch_predictions: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+    max_concurrent_running: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
   game-02-warehouse:
     crud_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
     crud_probes: {classification: not_failure, provenance: receipt:518d6905b440cc43}

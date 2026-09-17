@@ -113,8 +113,6 @@ def load_metric_snapshot(path: Path | None = None) -> dict[str, dict[str, dict[s
         raise MetricSnapshotError(f"metric snapshot missing: {snapshot_path}")
     try:
         raw = yaml.load(snapshot_path.read_text(encoding="utf-8"), Loader=_StrictLoader)
-    except MetricSnapshotError:
-        raise
     except (OSError, yaml.YAMLError) as exc:
         raise MetricSnapshotError(f"metric snapshot unreadable: {snapshot_path}: {exc}") from exc
     if not isinstance(raw, dict) or "version" not in raw:
