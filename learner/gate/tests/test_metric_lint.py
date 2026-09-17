@@ -40,9 +40,7 @@ def test_frozensets_derived_preserve_legacy_behavior() -> None:
     ) == []
 
 
-def test_snapshot_failure_nonzero_detected(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_snapshot_failure_nonzero_detected(tmp_path: Path) -> None:
     """C2: a snapshot failure(nonzero) entry drives game_metric_violations."""
     snap_path = tmp_path / "snapshot.yaml"
     snap_path.write_text(
@@ -56,9 +54,9 @@ def test_snapshot_failure_nonzero_detected(
     snapshot = load_metric_snapshot(snap_path)
     nonzero, _ = failure_vocabularies(snapshot)
     assert "crashes" in nonzero
-    monkeypatch.setattr(standards, "_NONZERO_FAILURE_METRICS", nonzero)
-    monkeypatch.setattr(standards, "_TRUE_FAILURE_METRICS", frozenset())
-    assert standards.game_metric_violations({"metrics": {"crashes": 3}}) == ["crashes=3"]
+    assert standards.game_metric_violations(
+        {"metrics": {"crashes": 3}}, vocabularies=(nonzero, frozenset())
+    ) == ["crashes=3"]
 
 
 @pytest.mark.parametrize(
@@ -134,7 +132,7 @@ def test_rubrics_only_metrics_enumerated() -> None:
         for p in r["pass_when"]
         if str(p["field"]).startswith("metrics.")
     }
-    assert expected == census["rubrics"]
+    assert expected <= census["shared"]  # rubrics merge into the shared scope
 
 
 # --- S3: propose ----------------------------------------------------------------
@@ -226,9 +224,10 @@ def test_check_fails_closed_on_gaps() -> None:
             "unknown_one": {"classification": "unknown", "provenance": "manual:t"},
         },
     }
-    gaps = metric_lint.check(census, snapshot)
+    gaps = metric_lint.check(census, snapshot, declared={"game-88-bw"})
     assert any("missing_one" in g and "missing from snapshot" in g for g in gaps)
     assert any("unknown_one" in g and "classified unknown" in g for g in gaps)
+    assert any("game-88-bw" in g and "declared in catalog" in g for g in gaps)
     assert not any("covered" in g for g in gaps)
 
 

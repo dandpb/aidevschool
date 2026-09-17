@@ -26,6 +26,14 @@ Adds `learner/gate/metric_lint.py` (enumerate / --propose / --check) and `learne
 
 - Nothing else in this change is hard to reverse.
 
+Build-time doors discovered while applying the simplify review (additive):
+
+| One-way door | Literal shape | Alternative rejected |
+| --- | --- | --- |
+| Census membership is catalog-declared, not scan-discovered | game ids from `engines/voxelDojo/catalog.json`; `--check` fails on any declared game with an empty census + scanner accepts `const metrics: SomeType = {` annotations | extending only the regex again - re-couples to the next TS emission shape (game-04 already evaded the first regex) |
+| One public ask seam | `judgments.ask_and_record(sweep, primitive, state, questions, client, receipts_root) -> (answers, digest16) \| None` — validates, writes fallback on failure AND ok-receipt on success; used by both semantic helpers and metric_lint | private `_ask` + separate `record_judgment` - half-public seam, digest computed twice |
+| Vocabularies lazy + injectable (amends the design's "derive at module load") | `game_metric_violations(evidence, *, vocabularies=None)` with `lru_cache`d default; module constants dropped | import-time derivation - violates `learner/gate/__init__.py`'s documented "import is intentionally cheap" and forces monkeypatched tests |
+
 ## Checks
 
 ### S1 - Snapshot + runtime derivation · 3 files · ~20 KB · ~5k
