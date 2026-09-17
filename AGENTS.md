@@ -1,7 +1,7 @@
 # PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-09-16
-**Source baseline:** c256a96
+**Updated:** 2026-09-17
+**Source baseline:** 3c5629c
 **Branch:** main
 
 ## OVERVIEW
@@ -25,8 +25,10 @@ aidevschool/
 │   ├── miniMaxEvolutionEngine/ # Claude Code motor: .claude agents/commands/skills
 │   ├── openclaw/              # file-based checklist runner for the simulate-grade 5-phase cycle
 │   ├── pixelDojo/             # 8-bit teaching-game engine with Playwright evidence contract (arcadeAcademy merged here 2026-06-21)
+│   ├── sdlc-quest/            # local-complete SDLC Quest v1.3 teaching-game package in pt-BR (Node ≥22, native modules only; landed 2026-09-17, commit 9f2f487e)
 │   ├── shared/                # cross-engine teaching-evidence primitives
-│   └── voxelDojo/             # pnpm catalog of Three.js teaching simulations
+│   ├── voxelDojo/             # pnpm catalog of Three.js teaching simulations
+│   └── zai-duolingo-like/     # cozy-cyberpunk AI-literacy game "Duolingo de IA" (Next.js + Prisma/SQLite + Zustand; re-added with real content 2026-09-17, commit 9f2f487e)
 ├── docs/design/polyglot-arena/ # demoted design archive (proposal-stage; was engines/polyglotEvolutionArena/)
 ├── curriculum/                # shared coding challenges and executable evidence
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
@@ -57,6 +59,8 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | See the programmer's daily lesson | `engines/dojoToday/` | Read-only "lesson for today" (FSRS due reviews, streak, active unit); read model generated via `python3 -m learner.substrate` in prebuild. |
 | Run the AI-literacy chat-tutor MVP | `engines/aiDevschoolMvp/` | SKILL.md-based tutor; bundled scripts own gates/scoring; tests via repo-root `make test`. |
 | Validate the 2D game workspace | `engines/pixelDojo/` | Install once, then use the root `lint`, `test`, `typecheck`, `build`, and `smoke` scripts; use `pnpm --filter pixel-quest dev` for the app. |
+| Run the SDLC teaching quest locally | `engines/sdlc-quest/` | Self-contained pt-BR package (Node ≥22, no `npm install` needed): `npm start` serves 127.0.0.1:8080; `npm test` runs `node tools/test.cjs`; `npm run gate` runs the quest gate. Start with `README.md` / `LEIA-ME-PRIMEIRO.txt`. |
+| Validate the AI-literacy cozy game | `engines/zai-duolingo-like/` | Cozy-cyberpunk "Duolingo de IA" game: Next.js + Prisma (SQLite) + Zustand, single-page with store view routing. Engine contract is `QWEN.md`; full gate is `npm run verify` (vitest + eslint + `tsc --noEmit`); E2E via `npm run test:e2e` requires `npm run build` first. |
 | Run the catalog-wide threejs-dojo coverage sweep | `.claude/skills/threejs-dojo-coverage/SKILL.md`, `docs/loops/threejs-dojo-coverage/` | Read the loop memory first (tracked at `docs/loops/threejs-dojo-coverage/memory.md`); run artifacts land under `.loops/threejs-dojo-coverage/output/<run-id>/` (untracked). |
 | Validate the 3D game workspace | `engines/voxelDojo/` | Run catalog-wide scripts across `game-*`; use `game-10-hash-ring` as the reference package. Engine rules: `engines/voxelDojo/AGENTS.md`; cross-engine contract: `docs/design/teaching-game-contract.md`. |
 | Update product-facing contracts | `engines/codexDojo/ecosystem/` | Keep `MANIFEST.md` mapped to concrete files. |
@@ -170,7 +174,14 @@ python3 -m unittest discover -s learner/substrate/tests
   they are the learning-gate audit trail.
 - Use LSP/codegraph when exposed; `.codegraph` is a generated reference, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
-- `engines/zai-duolingo-like/` was a dangling submodule gitlink (no `.gitmodules` entry, no content in this repo), removed by c604d2ec on 2026-09-07; its stale map references were cleaned on 2026-09-16 (AID-2117). Do not re-add the entry unless real engine content lands in the repo.
+- `engines/zai-duolingo-like/` history: was a dangling submodule gitlink (no `.gitmodules` entry, no
+  content), removed by c604d2ec on 2026-09-07, stale map references cleaned 2026-09-16 (AID-2117);
+  **re-added 2026-09-17 with real engine content** (209 files, commit 9f2f487e, PR #471 merge
+  3c5629c0) — the "real content" condition of the old note is satisfied per the fresh-context QA
+  countersign (AID-2281, verdict CONFORME COM RESSALVA 2026-09-17T14:00Z; retrofit-accept ratified
+  by CEO AID-2282). `engines/sdlc-quest/` (220 files, same commit) is a new engine from the same
+  diff. Neither engine has by-name CI coverage yet — hardens tracked as children of AID-2282
+  (AID-2286 CI by-name incl. gate `.mjs`; AID-2287 overlay floor).
 - Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
   runs under `docs/product-readiness/evidence/` (wayfinder rejected 2026-08-22; the
   `2026-08-22-de49bc9-literacy-revalidation` run was superseded by upstream assessments
