@@ -25,6 +25,19 @@
 #                     operation and cannot be checked after the fact; it stays
 #                     a runtime/owner concern.
 #
+# Countersign gate (AID-2318, CEO gate AID-2316 c): in PR context, a diff that
+# touches process-authority paths requires a citation of the verdict that
+# authorizes the merge, on its own line in the PR body or any PR comment:
+#     Countersign: <AID-ID> verdict <ref>
+# <ref> points at the verdict record (Paperclip comment id or SHA). The cited
+# AID must resolve via $SDLC_GUARD_AID_RESOLVER (CI wires it to
+# scripts/sdlc_aid_resolve.sh: GitHub for GH-<n>, Paperclip for AID-<n>).
+# "Verdict posted BEFORE merge" is enforced by the check itself: this job is a
+# required context on the PR head, so the merge can only be enabled after a
+# valid citation was posted. Fail-closed in every ambiguity (no citation text
+# source, no resolver, unresolvable id) — same direction as the rest of this
+# script (AID-2292).
+#
 # Owner-approved overrides (same trust model as the live env-var overrides):
 # a commit in the range carrying a trailer
 #     SDLC-ALLOW-TEST-EDIT: AID-<n> (or GH-<n> for this GitHub repository)
@@ -198,6 +211,85 @@ run_checks() {
       fi
     fi
   done < <(git -C "$REPO_ROOT" diff --diff-filter=AM -U0 "$mbase" "$head_ref" | grep '^+' | grep -v '^+++')
+
+  # Process-authority paths (AID-2318): changing these changes how the process
+  # itself is enforced, so the verdict chain must be cited on the PR.
+  is_process_authority() { # $1=path
+    case "$1" in
+      scripts/sdlc_guard_check.sh|scripts/sdlc_aid_resolve.sh|intent/README.md) return 0 ;;
+      docs/sdlc/*|.github/workflows/*) return 0 ;;
+      *) return 1 ;;
+    esac
+  }
+
+  # PR context: pull_request event or a PR ref. Push runs of main (post-merge)
+  # are NOT PR context — the gate already ran pre-merge as a required context.
+  pr_context() {
+    case "${GITHUB_EVENT_NAME:-}" in pull_request|pull_request_target) return 0 ;; esac
+    case "${GITHUB_REF:-}" in refs/pull/*/merge|refs/pull/*/head) return 0 ;; esac
+    return 1
+  }
+
+  # PR body + comment bodies (the citation sources). Explicit file first
+  # (SDLC_COUNTERSIGN_FILE — deterministic, hermetic); else derive the PR
+  # number from GITHUB_REF / the event payload and ask gh. rc 1 = no source.
+  pr_citation_text() {
+    if [ -n "${SDLC_COUNTERSIGN_FILE:-}" ] && [ -f "${SDLC_COUNTERSIGN_FILE}" ]; then
+      cat "${SDLC_COUNTERSIGN_FILE}"
+      return 0
+    fi
+    command -v gh >/dev/null 2>&1 || return 1
+    local prn=""
+    case "${GITHUB_REF:-}" in
+      refs/pull/*/merge|refs/pull/*/head) prn="${GITHUB_REF#refs/pull/}"; prn="${prn%%/*}" ;;
+    esac
+    if [ -z "$prn" ] && [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
+      prn="$(jq -r '.number // empty' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
+    fi
+    [ -n "$prn" ] || return 1
+    gh pr view "$prn" --json body,comments --jq '.body, (.comments[].body)' 2>/dev/null || return 1
+  }
+
+  # 4. Countersign citation gate (AID-2318 Stage 1). PR context + diff touching
+  #    process-authority paths => a 'Countersign: <AID-ID> verdict <ref>' line
+  #    must exist in the PR body/comments AND the cited AID must resolve.
+  #    First fully-resolving citation wins; anything else is a violation.
+  if pr_context; then
+    local -a authority_paths=()
+    for f in "${added[@]}" "${modified[@]}" "${deleted[@]}"; do
+      [ -n "$f" ] || continue
+      is_process_authority "$f" && authority_paths+=("$f")
+    done
+    if [ "${#authority_paths[@]}" -gt 0 ]; then
+      local cs_text="" cs_src=1 cs_ok=0 cs_bad="" cs_aid=""
+      local resolver="${SDLC_GUARD_AID_RESOLVER:-}"
+      cs_text="$(pr_citation_text 2>/dev/null)" && cs_src=0
+      printf '%s\n' "$cs_text" > "$mirror/pr_citation_text"
+      local citation_re='^Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*[[:space:]]*$'
+      local cs_line
+      while IFS= read -r cs_line; do
+        cs_aid="$(printf '%s' "$cs_line" | sed -E 's/^Countersign: ((AID|GH)-[1-9][0-9]*) verdict .*$/\1/')"
+        if [ -n "$resolver" ] && bash "$resolver" "$cs_aid" >/dev/null 2>&1; then
+          cs_ok=1
+          echo "::notice::countersign citation accepted (AID-2318 gate): $cs_line"
+          break
+        fi
+        cs_bad="$cs_line"
+      done < <(grep -E "$citation_re" "$mirror/pr_citation_text" || true)
+      if [ "$cs_ok" -ne 1 ]; then
+        local cs_scope="${#authority_paths[@]} process-authority path(s): ${authority_paths[0]}"
+        if [ -n "$cs_bad" ] && [ -z "$resolver" ]; then
+          violations+=("countersign: $cs_scope :: citation found but SDLC_GUARD_AID_RESOLVER is not configured — cannot verify '$cs_bad' (AID-2318)")
+        elif [ -n "$cs_bad" ]; then
+          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad' — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
+        elif [ "$cs_src" -eq 1 ]; then
+          violations+=("countersign: $cs_scope :: no PR body/comment source available (SDLC_COUNTERSIGN_FILE or gh pr view) — cannot verify (AID-2318)")
+        else
+          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref>' line in PR body/comments — post the countersign verdict citation first (AID-2318)")
+        fi
+      fi
+    fi
+  fi
 
   # Report.
   local total=$(( ${#added[@]} + ${#modified[@]} + ${#deleted[@]} ))
@@ -414,6 +506,55 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD st-stale-base >/dev/null
+
+  # AID-2318 (CEO gate AID-2316 c): countersign citation for process-authority
+  # paths in PR context. A stub resolver keeps AID-existence hermetic (no
+  # network): AID-9006 resolves, anything else does not. PR context is
+  # simulated with GITHUB_EVENT_NAME=pull_request + SDLC_COUNTERSIGN_FILE
+  # (the deterministic citation source used by CI-wired runs alike).
+  local stub="$T/aid_resolver_stub.sh"
+  printf '#!/usr/bin/env bash\ncase "$1" in AID-9006) exit 0 ;; *) exit 1 ;; esac\n' > "$stub"
+  chmod +x "$stub"
+  : > "$T/cs_none"
+  printf 'Countersign: AID-9006 verdict 679cf9d3\n' > "$T/cs_valid"
+  printf 'Countersign: AID-9999 verdict deadbeef\n' > "$T/cs_ghost"
+  pr_scenario() { # scenario + PR-context gate env, scrubbed afterwards
+    export GITHUB_EVENT_NAME=pull_request SDLC_GUARD_AID_RESOLVER="$stub"
+    scenario "$@"
+    unset GITHUB_EVENT_NAME SDLC_GUARD_AID_RESOLVER SDLC_COUNTERSIGN_FILE
+  }
+
+  # (i) process-authority PR WITHOUT a citation -> fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_none" pr_scenario \
+    "process PR without countersign citation fails (AID-2318)" 1 "edit sdlc doc" -- \
+    "mkdir -p docs/sdlc && printf '# amended\n' > docs/sdlc/README.md"
+
+  # (iii) citation citing a nonexistent AID -> fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_ghost" pr_scenario \
+    "process PR citing nonexistent AID fails (AID-2318)" 1 "edit guard script" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
+
+  # (ii) process-authority PR WITH a valid, resolvable citation -> pass AND
+  # emit the audit notice (checked directly, mirroring the SIGPIPE-notice
+  # assertion above).
+  local cs_br="st-countersign-$$" cs_out cs_rc
+  $GITC checkout -q -b "$cs_br" "$base_sha"
+  mkdir -p "$R/docs/sdlc"
+  printf '# amended\n' > "$R/docs/sdlc/README.md"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "edit sdlc doc with citation"
+  cs_out="$(GITHUB_EVENT_NAME=pull_request SDLC_COUNTERSIGN_FILE="$T/cs_valid" SDLC_GUARD_AID_RESOLVER="$stub" \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$cs_br" 2>&1)"; cs_rc=$?
+  if [ "$cs_rc" -eq 0 ] && printf '%s' "$cs_out" | grep -q '^::notice::countersign citation accepted'; then
+    echo "PASS [process PR with valid citation passes + notice (AID-2318)] rc=$cs_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [process PR with valid citation passes + notice (AID-2318)] rc=$cs_rc (expected 0)"
+    printf '%s\n' "$cs_out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD "$cs_br" >/dev/null
 
   rm -rf "$T"
   echo "self-test: $pass passed, $fail failed"

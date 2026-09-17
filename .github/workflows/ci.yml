@@ -24,6 +24,11 @@ jobs:
   # being detected. Overrides: owner-approved commit trailers
   # SDLC-ALLOW-TEST-EDIT / SDLC-ALLOW-DERIVED-EDIT (see docs/sdlc/README.md
   # §Guardrails; AID-<n> or GH-<n>); the credential rule has no override.
+  # AID-2318 additionally gates PRs touching process-authority paths
+  # (scripts/sdlc_guard_check.sh, scripts/sdlc_aid_resolve.sh, docs/sdlc/**,
+  # .github/workflows/**, intent/README.md) on a cited, resolvable
+  # 'Countersign:' verdict line — see docs/sdlc/README.md §Merge protocol
+  # item 5.
   sdlc-guards:
     name: SDLC guardrails (diff)
     runs-on: ubuntu-latest
@@ -53,6 +58,17 @@ jobs:
       - name: guardrail self-test (synthetic violations must fail)
         run: scripts/sdlc_guard_check.sh --self-test
       - name: guardrail check (changed files vs base)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # AID-2318 (CEO gate AID-2316 c): PR-context countersign gate. The
+          # guard needs (a) the PR body/comments via gh and (b) an AID
+          # existence resolver: GH-<n> via gh (token above), AID-<n> via the
+          # Paperclip board (read-only board API key in secrets). Fork PRs get
+          # no secrets: an AID- citation there fails closed, which is the
+          # intended direction for process-authority diffs.
+          SDLC_GUARD_AID_RESOLVER: scripts/sdlc_aid_resolve.sh
+          PAPERCLIP_API_URL: ${{ secrets.PAPERCLIP_API_URL }}
+          PAPERCLIP_API_TOKEN: ${{ secrets.PAPERCLIP_API_TOKEN }}
         run: |
           if [ -n "$SDLC_BASE" ]; then
             scripts/sdlc_guard_check.sh --base "$SDLC_BASE"

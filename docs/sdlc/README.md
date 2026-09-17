@@ -229,9 +229,33 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
    - **registro do produtor commitado** em `intent/<change-id>/` (ou short
      plan block no task record), no branch do PR ou em main, com timestamp
      anterior ao merge.
-   Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
-   verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
-   segue a adaptação da própria seção AID-1515).
+    Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
+    verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
+    segue a adaptação da própria seção AID-1515).
+5. **Countersign mecânico p/ paths de autoridade de processo + citação no
+   merge commit (AID-2316 gate c → AID-2318, 2026-09-17).** Binding para TODO
+   merge-writer (inclui founder-direct), após a 2ª ocorrência da classe
+   AID-2219 (merge sem veredito pré-merge: #460/AID-2201 → #478/AID-2292):
+   - **(1) Merge-writer set** — merges executados por CEO single-writer ou
+     single-writer explicitamente delegado e registrado no carrier ANTES do
+     merge. O produtor do diff NUNCA executa merge do próprio PR sem veredito
+     independente postado (producer ≠ verifier ≠ merger; AID-2219 item 3,
+     AID-1515 §3).
+   - **(2) Citação de countersign no merge commit** — toda mensagem de merge
+     (squash title/body) cita o veredito que autorizou, linha canônica
+     `Countersign: <AID-ID> verdict <commentId-ou-SHA>`; ausência é achado de
+     auditoria SM (grep-able em `git log`).
+   - **Enforcement mecânico (Stage 1)** — o check `SDLC guardrails (diff)`
+     exige no PR (body ou comentário) uma linha `Countersign: <AID-ID> verdict
+     <ref>` com AID resolvível quando o diff toca paths de autoridade de
+     processo (`scripts/sdlc_guard_check.sh`, `scripts/sdlc_aid_resolve.sh`,
+     `docs/sdlc/**`, `.github/workflows/**`, `intent/README.md`) — sem
+     citação válida o guard fica VERMELHO (fail-closed); com citação emite
+     `::notice` auditável. Como o check é required context no head, a citação
+     só pode ficar verde ANTES do merge — o gate verifica a **citação**, não
+     o conteúdo do veredito: o veredito first-hand FPE/QA continua exigido
+     (AID-1515 §3; CI verde ≠ gate completo). Stage 2 (estender a todo PR de
+     bot/agent): decidir após Stage 1 observado (AID-2318).
 
 ## Guardrails (what is enforced, and how)
 
