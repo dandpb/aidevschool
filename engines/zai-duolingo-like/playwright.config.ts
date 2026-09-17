@@ -16,7 +16,11 @@ export default defineConfig({
   testDir: "./e2e",
   workers: 1,
   fullyParallel: false,
-  retries: 0,
+  // One retry on CI only: absorbs one-off runner transients (a 60s timeout
+  // on a single run). Systemic failures still fail the job — a retried
+  // deterministic bug fails twice. Local runs stay at 0 retries so flakes
+  // surface immediately during development.
+  retries: process.env.CI ? 1 : 0,
   timeout: 60_000,
   expect: { timeout: 15_000 }, // dev server JIT-compiles pages on first hit
   reporter: [["list"]],
