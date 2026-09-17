@@ -53,7 +53,7 @@ Neither engine has by-name CI coverage yet (hardens AID-2286/AID-2287, children 
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
 | Continuous runner tracer bullet | `openclaw/` | Python filesystem checklist scheduler; no Hermes bus or semantic verification. |
 | Teaching-game engine rules | `pixelDojo/` | Parent rules; app-local rules are in `pixel-quest/AGENTS.md`. |
-| SDLC teaching quest (local package) | `sdlc-quest/` | Self-contained pt-BR package: `npm start` serves 127.0.0.1:8080 (no install); `npm test` = `node tools/test.cjs`; gate via `npm run gate`. Start with `README.md`. |
+| SDLC teaching quest (local package) | `sdlc-quest/` | Self-contained pt-BR package: `npm start` serves 127.0.0.1:8080 (no install); `npm test` = `node tools/test.cjs`; gate via `npm run gate`. Start with `README.md`. Manifest `SHA256SUMS.txt` 219/219 OK. |
 | AI-literacy cozy game | `zai-duolingo-like/` | Next.js + Prisma (SQLite) + Zustand single-page game; contract in `QWEN.md` (Vertical Protocol); full gate `npm run verify`, E2E `npm run test:e2e` after `npm run build`. |
 | 3D engine rules | `voxelDojo/` | Parent rules cover the uniform `game-*` packages. |
 | Polyglot arena design (read-only) | `docs/design/polyglot-arena/` | Archived proposal material. |

@@ -180,8 +180,9 @@ python3 -m unittest discover -s learner/substrate/tests
   3c5629c0) — the "real content" condition of the old note is satisfied per the fresh-context QA
   countersign (AID-2281, verdict CONFORME COM RESSALVA 2026-09-17T14:00Z; retrofit-accept ratified
   by CEO AID-2282). `engines/sdlc-quest/` (220 files, same commit) is a new engine from the same
-  diff. Neither engine has by-name CI coverage yet — hardens tracked as children of AID-2282
-  (AID-2286 CI by-name incl. gate `.mjs`; AID-2287 overlay floor).
+  diff. Its `SHA256SUMS.txt` manifest re-verifies 219/219 OK on main `3c5629c0` (QA AID-2281;
+  re-checked 2026-09-17). Neither engine has by-name CI coverage yet — hardens tracked as children
+  of AID-2282 (AID-2286 CI by-name incl. gate `.mjs`; AID-2287 overlay floor).
 - Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
   runs under `docs/product-readiness/evidence/` (wayfinder rejected 2026-08-22; the
   `2026-08-22-de49bc9-literacy-revalidation` run was superseded by upstream assessments
