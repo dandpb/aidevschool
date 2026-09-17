@@ -25,7 +25,9 @@ id="${1:-}"
 case "$id" in
   GH-[1-9][0-9]*)
     command -v gh >/dev/null 2>&1 || { echo "resolve: gh CLI not available" >&2; exit 2; }
-    code="$(gh api -i "repos/dandpb/aidevschool/issues/${id#GH-}" 2>/dev/null | head -1 | tr -dc '0-9')"
+    # gh api -i prints the raw HTTP status line first (e.g. "HTTP/2.0 200 OK"):
+    # take the status CODE (2nd field), not every digit on the line.
+    code="$(gh api -i "repos/dandpb/aidevschool/issues/${id#GH-}" 2>/dev/null | head -1 | awk '{print $2}')"
     case "$code" in
       200) exit 0 ;;
       404) echo "resolve: GitHub issue ${id} not found" >&2; exit 1 ;;

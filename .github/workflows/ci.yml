@@ -32,6 +32,13 @@ jobs:
   sdlc-guards:
     name: SDLC guardrails (diff)
     runs-on: ubuntu-latest
+    # AID-2318: explicit least-privilege token scopes so the countersign gate
+    # can read the PR conversation (gh pr view) and resolve GH-<n> citations
+    # (gh api) regardless of the repo-default workflow permissions.
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
     steps:
       - uses: actions/checkout@v4
         with:

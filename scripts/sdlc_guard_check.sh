@@ -266,13 +266,17 @@ run_checks() {
       cs_text="$(pr_citation_text 2>/dev/null)" && cs_src=0
       printf '%s\n' "$cs_text" > "$mirror/pr_citation_text"
       local citation_re='^Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*[[:space:]]*$'
-      local cs_line
+      local cs_line cs_err=""
       while IFS= read -r cs_line; do
         cs_aid="$(printf '%s' "$cs_line" | sed -E 's/^Countersign: ((AID|GH)-[1-9][0-9]*) verdict .*$/\1/')"
-        if [ -n "$resolver" ] && bash "$resolver" "$cs_aid" >/dev/null 2>&1; then
-          cs_ok=1
-          echo "::notice::countersign citation accepted (AID-2318 gate): $cs_line"
-          break
+        cs_err=""
+        if [ -n "$resolver" ]; then
+          if cs_err="$(bash "$resolver" "$cs_aid" 2>&1 >/dev/null)"; then
+            cs_ok=1
+            echo "::notice::countersign citation accepted (AID-2318 gate): $cs_line"
+            break
+          fi
+          cs_err="${cs_err%%$'\n'*}"
         fi
         cs_bad="$cs_line"
       done < <(grep -E "$citation_re" "$mirror/pr_citation_text" || true)
@@ -281,7 +285,9 @@ run_checks() {
         if [ -n "$cs_bad" ] && [ -z "$resolver" ]; then
           violations+=("countersign: $cs_scope :: citation found but SDLC_GUARD_AID_RESOLVER is not configured — cannot verify '$cs_bad' (AID-2318)")
         elif [ -n "$cs_bad" ]; then
-          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad' — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
+          local cs_why=""
+          [ -n "$cs_err" ] && cs_why=" — resolver: $cs_err"
+          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
         elif [ "$cs_src" -eq 1 ]; then
           violations+=("countersign: $cs_scope :: no PR body/comment source available (SDLC_COUNTERSIGN_FILE or gh pr view) — cannot verify (AID-2318)")
         else

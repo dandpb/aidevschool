@@ -229,9 +229,9 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
    - **registro do produtor commitado** em `intent/<change-id>/` (ou short
      plan block no task record), no branch do PR ou em main, com timestamp
      anterior ao merge.
-    Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
-    verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
-    segue a adaptação da própria seção AID-1515).
+   Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
+   verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
+   segue a adaptação da própria seção AID-1515).
 5. **Countersign mecânico p/ paths de autoridade de processo + citação no
    merge commit (AID-2316 gate c → AID-2318, 2026-09-17).** Binding para TODO
    merge-writer (inclui founder-direct), após a 2ª ocorrência da classe
