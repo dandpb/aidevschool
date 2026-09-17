@@ -204,7 +204,7 @@ def _prune_receipts(receipts_root: Path) -> None:
 
 
 def _write_ok_receipt(
-    kind: str,
+    sweep: str,
     state: dict[str, Any],
     questions: dict[str, Any],
     answers: dict[str, Any],
@@ -212,17 +212,19 @@ def _write_ok_receipt(
     receipts_root: Path,
 ) -> None:
     # Digest-named file: a re-sweep of identical inputs overwrites in place
-    # instead of duplicating, so receipts map 1:1 to distinct sweeps.
+    # instead of duplicating, so receipts map 1:1 to distinct sweeps. The
+    # sweep name lives in the filename; each line's `kind` is the primitive
+    # (noul|choice) per the binding receipt record.
     digest = _input_digest(state, questions)
     now = _utc_stamp()
-    name = f"{kind}-{digest[:16]}.ndjson"
+    name = f"{sweep}-{digest[:16]}.ndjson"
     lines = []
     for question_id, question in questions.items():
         answer = answers.get(question_id, {})
         lines.append(
             json.dumps(
                 {
-                    "kind": kind,
+                    "kind": question.get("type", sweep),
                     "question": question_id,
                     "answer": answer.get("choice", answer.get("noul")),
                     "probabilities": answer.get("probabilities"),
@@ -241,7 +243,8 @@ def _write_ok_receipt(
 
 
 def _write_fallback_receipt(
-    kind: str,
+    sweep: str,
+    primitive: str,
     state: dict[str, Any],
     questions: dict[str, Any],
     error_class: str,
@@ -252,7 +255,7 @@ def _write_fallback_receipt(
     digest = _input_digest(state, questions)
     line = json.dumps(
         {
-            "kind": kind,
+            "kind": primitive,
             "question": None,
             "answer": None,
             "probabilities": None,
@@ -266,7 +269,7 @@ def _write_fallback_receipt(
         ensure_ascii=False,
     )
     atomic_write_text(
-        receipts_root / f"{kind}-{digest[:16]}-fallback.ndjson", line + "\n"
+        receipts_root / f"{sweep}-{digest[:16]}-fallback.ndjson", line + "\n"
     )
     _prune_receipts(receipts_root)
 
@@ -310,7 +313,7 @@ def semantic_pitfall_occurrences(
         state = {"known_pitfalls": known, "entries": entries}
     except Exception as exc:  # reading sources failed: nothing to judge
         _write_fallback_receipt(
-            "pitfalls", {"note": "source read failed"}, {}, type(exc).__name__, receipts_root
+            "pitfalls", "noul", {"note": "source read failed"}, {}, type(exc).__name__, receipts_root
         )
         return pitfalls
     questions: dict[str, Any] = {}
@@ -353,11 +356,11 @@ def semantic_pitfall_occurrences(
         _write_ok_receipt("pitfalls", state, questions, answers, {}, receipts_root)
         return enriched
     except JudgmentError as exc:
-        _write_fallback_receipt("pitfalls", state, questions, exc.error_class, receipts_root)
+        _write_fallback_receipt("pitfalls", "noul", state, questions, exc.error_class, receipts_root)
         return pitfalls
     except Exception as exc:  # defensive: enrichment must never break a sync
         _write_fallback_receipt(
-            "pitfalls", state, questions, type(exc).__name__, receipts_root
+            "pitfalls", "noul", state, questions, type(exc).__name__, receipts_root
         )
         return pitfalls
 
@@ -388,7 +391,7 @@ def semantic_profile_levels(
         )
     except Exception as exc:  # reading the profile failed: nothing to judge
         _write_fallback_receipt(
-            "profile", {"note": "source read failed"}, {}, type(exc).__name__, receipts_root
+            "profile", "choice", {"note": "source read failed"}, {}, type(exc).__name__, receipts_root
         )
         return current
     state = {
@@ -425,11 +428,11 @@ def semantic_profile_levels(
         _write_ok_receipt("profile", state, questions, answers, {}, receipts_root)
         return {"dreyfus": dreyfus, "bloom": bloom}
     except JudgmentError as exc:
-        _write_fallback_receipt("profile", state, questions, exc.error_class, receipts_root)
+        _write_fallback_receipt("profile", "choice", state, questions, exc.error_class, receipts_root)
         return current
     except Exception as exc:  # defensive: enrichment must never break a sync
         _write_fallback_receipt(
-            "profile", state, questions, type(exc).__name__, receipts_root
+            "profile", "choice", state, questions, type(exc).__name__, receipts_root
         )
         return current
 

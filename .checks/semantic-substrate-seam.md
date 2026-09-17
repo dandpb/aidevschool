@@ -31,7 +31,7 @@ Adds `learner/substrate/judgments.py` (runner + receipts, injected client) and `
 
 ### S1 - Semantic runner with receipts and fallback · 5 files · ~60 KB · ~15k
 
-**C1** - A key-present sync run with a working client writes `learner/judgment_receipts/<UTC-stamp>.ndjson` with one JSON object per asked question, each carrying `question`, `kind`, `answer`, `probabilities`, `model`, `usage`, `input_digest` (64-char lowercase hex), `timestamp`, `status: "ok"`
+**C1** - A key-present sync run with a working client writes `learner/judgment_receipts/<sweep>-<input_digest[:16]>.ndjson` with one JSON object per asked question, each carrying `question`, `kind` (`noul`|`choice` — the primitive; the sweep name lives in the filename), `answer`, `probabilities`, `model`, `usage`, `input_digest` (64-char lowercase hex), `timestamp`, `status: "ok"`
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_receipt_written_on_success"`
 
 **C2** - With no client (key unset at the sync entry), no new file appears under the receipts root, and the snapshot is byte-identical (sorted-key JSON equality) to the deterministic golden for the same fixture tree and injected `today` (golden regenerated after the task-decided `masteredCount` re-source — that change is unconditional, not key-gated, and C11 covers it)
@@ -59,7 +59,7 @@ Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_live_
 
 ### S3 - Profile levels from the matrix · 3 files · ~14 KB · ~4k
 
-**C9** - Canned Choices `dreyfus_overall -> competent (0.99)`, `bloom_overall -> analyze (0.97)` give `profile.dreyfus == "competent"`, `profile.bloom == "analyze"`; no client gives `bloom == "apply"`
+**C9** - Canned Choices `dreyfus_overall -> competent (0.99)`, `bloom_overall -> evaluate (0.95)` give `profile.dreyfus == "competent"`, `profile.bloom == "evaluate"`; no client keeps the parser values (`dreyfus == "proficient"`, `bloom == "analyze"` per the golden — the task's original `bloom == "apply"` literal was written against a wrong parser assumption and is corrected here)
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_profile_choice_overrides"`
 
 **C10** - On a Portuguese-only matrix fixture (`Avançado (Proficiente)`, no English keyword), no client keeps the parser default `"competent"`; canned `dreyfus_overall -> proficient` yields `"proficient"`

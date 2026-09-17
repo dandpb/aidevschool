@@ -104,8 +104,11 @@ def test_receipt_written_on_success(tmp_path: Path) -> None:
     assert len(files) == 2, f"expected pitfalls+profile receipts, got {files}"
     ok_lines = [line for line in receipt_lines(receipts) if line["status"] == "ok"]
     assert ok_lines, "no ok receipt lines written"
+    import re as _re
+    for path in files:
+        assert _re.match(r"^(pitfalls|profile)-[0-9a-f]{16}\.ndjson$", path.name), path.name
     for line in ok_lines:
-        assert line["kind"] in {"pitfalls", "profile"}
+        assert line["kind"] in {"noul", "choice"}
         assert isinstance(line["question"], str)
         assert "answer" in line and "probabilities" in line
         assert line["model"]
@@ -238,14 +241,23 @@ def test_live_smoke_occurrences(tmp_path: Path) -> None:
 
 
 def test_profile_choice_overrides(tmp_path: Path) -> None:
-    """C9: canned Choices override; no client keeps the parser values."""
+    """C9: canned Choices override BOTH axes; no client keeps parser values."""
     root = write_fixture_tree(tmp_path / "src")
-    enriched = build(root, tmp_path / "receipts", FakeClient())
+    # Both canned values differ from the parser baseline (proficient/analyze)
+    # so the override is proven for dreyfus AND bloom, each against a
+    # differing deterministic value.
+    canned = FakeClient(choices={
+        "dreyfus_overall": {"type": "choice", "choice": "competent",
+                            "probabilities": {"competent": 0.99}, "confidence": 0.99},
+        "bloom_overall": {"type": "choice", "choice": "evaluate",
+                          "probabilities": {"evaluate": 0.95}, "confidence": 0.95},
+    })
+    enriched = build(root, tmp_path / "receipts", canned)
     assert enriched["profile"]["dreyfus"] == "competent"
-    assert enriched["profile"]["bloom"] == "analyze"
+    assert enriched["profile"]["bloom"] == "evaluate"
     plain = build(root, tmp_path / "r2")
-    golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
-    assert plain["profile"] == golden["profile"]  # parser values (proficient/analyze)
+    assert plain["profile"]["dreyfus"] == "proficient"  # parser (golden)
+    assert plain["profile"]["bloom"] == "analyze"  # parser (golden)
 
 
 def test_profile_portuguese_only_cells(tmp_path: Path) -> None:

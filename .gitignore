@@ -172,3 +172,6 @@ engines/codexdojo-os-prototype/netlify/functions/
 
 
 .loops/
+
+# Runtime-only judgment receipts (contain learner journal content)
+learner/judgment_receipts/
