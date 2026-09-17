@@ -1,0 +1,39 @@
+%% Diagram: Vertical Protocol — como o sistema funciona (runtime)
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#1f6feb', 'primaryTextColor': '#e6edf3',
+  'primaryBorderColor': '#388bfd', 'lineColor': '#64748b',
+  'secondaryColor': '#238636', 'tertiaryColor': '#9e6a03',
+  'background': '#0d1117', 'mainBkg': '#161b22',
+  'nodeBorder': '#30363d', 'clusterBkg': '#10151d',
+  'clusterBorder': '#30363d', 'titleColor': '#e6edf3',
+  'edgeLabelBackground': '#0d1117', 'textColor': '#e6edf3'
+}}}%%
+flowchart TB
+    subgraph browser["Browser — SPA em / (Zustand faz o roteamento de views)"]
+        views["Views: Home · SkillPath · Lesson · Playground<br/>Leaderboard · Profile · Shop"]
+        store["Store: bootstrap, fluxo de lição,<br/>streak/corações/config"]
+    end
+
+    subgraph app["Next.js 16 — App Router"]
+        routes["18 rotas API<br/>allowlist de entrada · respostas { ok }"]
+        read["Seam de LEITURA<br/>game-state/snapshot()"]
+        write["Seam de ESCRITA<br/>lesson-completion (1 transação)"]
+        chat["/api/chat — tutor Bip<br/>persona · histórico 10 msgs"]
+    end
+
+    db[("SQLite via Prisma<br/>learner · curriculum · streak · league")]
+    llm["z.ai · GLM (default)<br/>troca de modelo só por env"]
+
+    subgraph quality["Padrão de qualidade — npm run verify"]
+        tests["vitest 125 · eslint · tsc"]
+        e2e["Playwright E2E 29/29"]
+    end
+
+    views <--> store
+    store -->|"JSON / REST"| routes
+    routes --> read
+    routes --> write
+    read --> db
+    write --> db
+    chat -->|"OpenAI-compatible"| llm
+    quality -.->|"verifica todas as camadas"| app

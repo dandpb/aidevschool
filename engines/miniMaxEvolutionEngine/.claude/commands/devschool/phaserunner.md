@@ -35,9 +35,15 @@ this interface and applying it to the phase-specific `spec` provided by each sla
 
 1. **Filesystem is source of truth.** Read `learner/pipeline_status.yaml` when present (Markdown only cold-start fallback); write machine fields only with `engines.openclaw.runner.pipeline_status.save_status`, which updates YAML without clobbering Markdown narrative. Read `learner/learning_state.yaml` directly.
 2. **Verifier never shares producer context.** Dispatch the verifier as a fresh Task with no hand-off from the producer except the artefact files themselves.
-3. **Status advances only on PASS.** Never write YAML machine state before the verifier returns PASS.
+3. **Status advances only on PASS — and carries provenance.** Never write YAML machine state before the verifier returns PASS. On PASS, stamp `grade="verified"` and `advanced_by="/devschool-<command>"` before `save_status` (the supervisor's autonomous advance stamps `advanced_by="mme-supervisor"`). `grade: simulate` transitions (openclaw checklist truth, ADR-0002) are legal state but **do not authorize work that requires `verified`** — a consumer that needs verifier-backed phase reads `grade` and treats `simulate` as not-yet-verified.
 4. **Gate is respected.** When `learning_gate_check: true`, a blocked gate halts the phase and suggests `/devschool-diagnose`.
 5. **Failures are concrete.** Every FAIL includes file:line evidence and actionable feedback to the producer.
+
+Regra de consumo: simulate e unspecified não substituem verified quando uma
+fase exige comprovação independente. O orquestrador confirma o PASS antes de
+registrar a procedência; a produção do artefato sozinha não autoriza o avanço.
+`advanced_by` identifica o último executor, não autentica um verificador.
+Ao registrar apenas blockers, preserve grade/advanced_by da fase atual.
 
 ### Steps
 
@@ -50,7 +56,7 @@ this interface and applying it to the phase-specific `spec` provided by each sla
    - If `parallel: false`, send one producer Task and wait for it.
 6. **Dispatch verifier.** After all producers finish, run the `verifier` subagent with phase `verifier_phase`.
 7. **Apply verdict.**
-   - **PASS**: update the status object, then call `save_status(status, Path("learner/pipeline_status.yaml"))` → `next_status`; never overwrite Markdown narrative.
+   - **PASS**: update the status object with the next phase, `grade="verified"`, `advanced_by="/devschool-<command>"`, then call `save_status(status, Path("learner/pipeline_status.yaml"))` → `next_status`; never overwrite Markdown narrative.
    - **FAIL**: send the feedback to the producer(s) and retry from step 5, counting failures. Halt after `retry_limit` consecutive failures and record a blocker.
 8. **Report.** Present the verdict, the updated status, and the next recommended command.
 

@@ -1,0 +1,21 @@
+{
+  "name": "sdlc-quest",
+  "version": "1.3.0",
+  "private": true,
+  "description": "Jogo didático offline de engenharia de software com IA",
+  "scripts": {
+    "start": "node tools/serve.cjs",
+    "dev": "node tools/serve.cjs",
+    "preview": "node tools/serve.cjs",
+    "build": "node tools/build.cjs",
+    "test": "node tools/test.cjs",
+    "setup:tests": "node tools/setup-tests.cjs",
+    "gate": "node tools/quest-gate.cjs",
+    "gate:release": "node tools/quest-gate.cjs --require-release",
+    "check:package": "node tools/check-package.cjs"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}

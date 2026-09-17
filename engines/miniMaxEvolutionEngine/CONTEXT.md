@@ -14,6 +14,16 @@ _Avoid_: sprint, iteration (those are calendar processes), learning attempt
 A stage of the cycle: spec-done → impl-done → review-done → benchmark-done → cycle-complete.
 _Avoid_: Learning State, gate state, Kanban column
 
+**Transition Grade (`grade`)**:
+The basis of the recorded phase advance: `simulate` means checklist evidence,
+`verified` means an independent verifier passed, and `unspecified` means no
+recorded provenance. Only `verified` satisfies a verifier-backed prerequisite.
+None of these grades grants learner mastery or MVP Mastery.
+
+**Advancing Actor (`advanced_by`)**:
+The executor or command responsible for the last recorded advance. It describes
+provenance, not authentication or a history of all previous transitions.
+
 **Artifact**:
 A phase output under a Project (specification, language implementation, review, benchmark
 results, evolution report).

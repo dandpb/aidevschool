@@ -1,0 +1,31 @@
+{
+  "simulation": true,
+  "source": "SDLC Quest — tribunal didático; não é saída do script oficial",
+  "round": 1,
+  "language": "pt-BR",
+  "verdict": "REQUEST_CHANGES",
+  "carryover": {
+    "blocker": 0,
+    "shouldFix": 0
+  },
+  "summary": "F1 expõe token sintético no novo log. Não autorizar merge enquanto o achado permanecer aberto.",
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "blocker",
+      "path": "src/retry.ts",
+      "line": 4,
+      "evidence": [
+        {
+          "type": "internal",
+          "ref": "src/retry.ts:4 (fixture fictícia)"
+        },
+        {
+          "type": "repro",
+          "ref": "Cenário fornecido: cabeçalho sintético aparece no log capturado."
+        }
+      ]
+    }
+  ],
+  "publication": "Nenhuma review publicada. Nenhum acesso ao GitHub."
+}

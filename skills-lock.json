@@ -31,6 +31,12 @@
       "skillPath": "skills/tend/SKILL.md",
       "computedHash": "2469047e5da43ecceeca152d5bf90a17799836d3b406b23172c6cb3eae944172"
     },
+    "typesafe-ai": {
+      "source": "typesafe-ai/skills",
+      "sourceType": "github",
+      "skillPath": "skills/typesafe-ai/SKILL.md",
+      "computedHash": "9cd84c5e535dec8dec59917c110f9c00b4a61faadb86b432ec7e41051170af12"
+    },
     "weed": {
       "source": "juxt/allium",
       "sourceType": "github",

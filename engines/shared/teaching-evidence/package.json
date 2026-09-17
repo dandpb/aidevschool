@@ -16,6 +16,14 @@
     "./funnel-telemetry": {
       "types": "./funnelTelemetry.ts",
       "import": "./funnelTelemetry.ts"
+    },
+    "./funnel-core": {
+      "types": "./funnelCore.ts",
+      "import": "./funnelCore.ts"
+    },
+    "./vocabularies": {
+      "types": "./vocabularies.ts",
+      "import": "./vocabularies.ts"
     }
   }
 }

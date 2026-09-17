@@ -1,0 +1,7 @@
+$ python3 tools/build.py
+
+STDOUT
+Built sdlc-quest.html: 277,313 bytes. No runtime network dependencies.
+
+STDERR
+

@@ -15,7 +15,7 @@ from learner.substrate.adapters.whiteboard import (
     render_profile_yaml,
     render_trail_md,
 )
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 from learner.substrate.generated_views import check_views, write_views
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -435,13 +435,14 @@ def _validate_attempt_files(state: dict[str, Any], root: Path = ROOT) -> list[st
 def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[str]:
     """Assert that units with a gate review have evidence that passes the gate.
 
-    Delegates to ``curriculum._shared.evidence.check_evidence``, which is
+    Delegates to ``learner.gate.standards.check_evidence``, which is
     shape-detecting: game evidence requires a recognized empirical rubric or a
     gate review bound to a separate verifier receipt. Bound reviews recheck the
     canonical producer-evidence digest and reject embedded verifier blocks.
     Curriculum evidence (a verifier-owned ``verifier`` block) must satisfy
-    ``verdict == "PASS"``, ``mutation_score >= 0.65``, ``coverage_core >= 0.80``,
-    and ``context_isolated is True``. Missing/unparseable files yield a labelled
+    ``verdict == "PASS"`` with both scores at or above the seam thresholds
+    (``learner.gate.standards.load_thresholds``) and
+    ``context_isolated is True``. Missing/unparseable files yield a labelled
     error. The same call replaces the former bare ``json.loads`` parseability
     check and adds the semantic gate that was previously missing (audit gap:
     the validator proved the path was readable but never checked the verdict).
@@ -450,7 +451,7 @@ def _validate_evidence_files(state: dict[str, Any], root: Path = ROOT) -> list[s
     same vocabulary used by ``_validate_units_log`` via
     ``RATING_FROM_GATE``) — pure ``presented`` events don't need evidence.
     """
-    from curriculum._shared.evidence import check_evidence
+    from learner.gate.standards import check_evidence
     from learner.gate.evidence_io import bound_evidence_violations
     from learner.substrate.scheduling import RATING_FROM_GATE
 

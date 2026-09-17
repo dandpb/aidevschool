@@ -34,12 +34,12 @@ aidevschool/
 ├── dev-workflow-claude/       # tested AI dev workflow library + teaching page (course support)
 ├── wiki/                      # research wiki: dated syntheses and sources (readiness, drift, privacy)
 ├── miro-tour/                 # architect-career Miro board extraction + learning trails (reference)
-└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .serena/ .compozy/ # platform/tool state
+└── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .compozy/ # platform/tool state
 ```
 
 Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 `project_proposal.md -> curriculum/catalog.md`, and `learning_journal.md -> learner/journal.md`.
-`.codegraph` points at OMO's generated codegraph cache; `graphify-out/` is derived output.
+`.codegraph` points at OMO's generated codegraph cache.
 
 ## WHERE TO LOOK
 
@@ -116,8 +116,11 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   non-authoritative and never mark mastery.
 - Numeric tutor thresholds live in `engines/minimaxDojo/config/learner.yaml`; prompts/docs use the
   `⟨config: path⟩` marker instead of hardcoding values.
-- In Codex shell sessions, prefix commands with `rtk`; for library/framework/SDK docs lookup, use
-  the `ctx7` CLI before answering.
+- All agent shell sessions (Codex, Claude Code, omp, OpenCode, Gemini, Copilot) prefix
+  commands with `rtk` for token-compact output; integrations are user-global per agent
+  (`rtk init -g`, `--codex -g`, `--agent omp -g`, `--opencode -g`, `--gemini -g`,
+  `--copilot -g`). For library/framework/SDK docs lookup, use the `ctx7` CLI before
+  answering.
 
 ## ANTI-PATTERNS
 
@@ -161,11 +164,11 @@ python3 -m unittest discover -s learner/substrate/tests
 ## NOTES
 
 - Broad scans should exclude `node_modules/`, `.opencode/node_modules`, `dist/`, `target/`,
-  coverage output, `.codegraph/`, and `graphify-out/`.
+  coverage output, and `.codegraph/`.
 - Smoke screenshots and `**/test-results/` are generated outputs; keep them out of source control,
   but keep tracked evidence files (`evidence.json`, `evidence.ndjson`, `live-evidence*`) because
   they are the learning-gate audit trail.
-- Use LSP/codegraph when exposed; `.codegraph` and `graphify-out/` are generated references, not source.
+- Use LSP/codegraph when exposed; `.codegraph` is a generated reference, not source.
 - `engines/polyglotEvolutionArena/` was demoted to `docs/design/polyglot-arena/` on 2026-06-21 (proposal-only material); the loop itself lives in `engines/miniMaxEvolutionEngine/`.
 - `engines/zai-duolingo-like/` was a dangling submodule gitlink (no `.gitmodules` entry, no content in this repo), removed by c604d2ec on 2026-09-07; its stale map references were cleaned on 2026-09-16 (AID-2117). Do not re-add the entry unless real engine content lands in the repo.
 - Untracked additions awaiting a tracking decision (2026-08-22): the readiness evidence
@@ -178,7 +181,7 @@ python3 -m unittest discover -s learner/substrate/tests
 
 - `.mavis/` is the canonical derived runtime view; `learner/substrate/` regenerates it.
 - `.loops/` is untracked runtime state for loop runs (output artifacts under `.loops/<loop>/output/`); the append-only loop memory itself is tracked at `docs/loops/<loop>/memory.md` — read it before rerunning a loop and append to it after the run (policy: `docs/loops/README.md`, decision AID-1528/achado A AID-1522).
-- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.serena/`, `.commandcode/`, and `.compozy/` are
+- `.codex/`, `.omo/`, `.opencode/`, `.playwright-mcp/`, `.commandcode/`, and `.compozy/` are
   platform/session state unless a tracked file says otherwise.
 - Durable shared state belongs in `.mavis/`, `learner/`, or `curriculum/`. Codex-specific runbooks
   belong in `.codex/napkin.md` or the global `napkin` skill. Document new `.X/` roots here first.

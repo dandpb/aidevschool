@@ -17,7 +17,7 @@ from typing import Any, Callable
 
 import yaml
 
-from engines.openclaw.runner.pipeline_status import Phase, load_status, save_status
+from engines.openclaw.runner.pipeline_status import Grade, Phase, dump_status, load_status, save_status
 
 from .config import AutonomousConfig, load_config
 from .executor import ProcessResult, run_process
@@ -193,24 +193,20 @@ def _event(request: dict[str, Any], role: str, context: str, **extra: Any) -> di
 
 
 def _status_bytes(status: Any) -> bytes:
-    return yaml.safe_dump(
-        {
-            "cycle_id": status.cycle_id,
-            "current_project": status.current_project,
-            "complexity_level": status.complexity_level,
-            "phase": status.phase.value,
-            "awaiting": status.awaiting,
-            "blockers": list(status.blockers),
-        },
-        sort_keys=False,
-        allow_unicode=True,
-    ).encode("utf-8")
+    """Serialize a (planned) status via the ONE pipeline serialization.
+
+    Byte-exact contract: this must equal what ``save_status`` writes, so both
+    sides share ``dump_status`` — a field-list here would drift silently.
+    """
+    return dump_status(status).encode("utf-8")
 
 
 def _planned_pipeline_digest(paths: SupervisorPaths, request: dict[str, Any]) -> str:
     status = load_status(paths.pipeline.with_suffix(".md"))
     status.phase = Phase(request["intended_phase"])
     status.awaiting = NEXT_AWAITING[PHASE_PLANS[request["observed_phase"]].observed_phase]
+    status.grade = Grade.VERIFIED
+    status.advanced_by = "mme-supervisor"
     return hashlib.sha256(_status_bytes(status)).hexdigest()
 
 
@@ -233,6 +229,8 @@ def _compare_and_advance(paths: SupervisorPaths, request: dict[str, Any], baseli
     status = load_status(status_path)
     status.phase = Phase(request["intended_phase"])
     status.awaiting = NEXT_AWAITING[current.phase]
+    status.grade = Grade.VERIFIED
+    status.advanced_by = "mme-supervisor"
     save_status(status, status_path)
     advanced, unchanged = load_canonical(paths.pipeline, paths.learner, paths.curriculum)
     if advanced.phase.value != request["intended_phase"] or _digest(paths.pipeline) != expected_result_digest or _digest(paths.learner) != baseline[1]:

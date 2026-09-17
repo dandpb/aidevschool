@@ -1,0 +1,82 @@
+PASS 1 old campaign starts unchanged
+PASS 2 TLC expansion starts unchanged
+PASS 3 keyboard opens lab
+PASS 4 initial document fits width
+PASS 5 initial dialog content fits width
+PASS 6 initial dialog inside viewport
+PASS 7 initial sampled text contrast
+PASS 8 real integration pending disclosed
+PASS 9 provided repository reference exact
+PASS 10 repo source link safe new tab
+PASS 11 package download disabled before checks
+PASS 12 forged enabled button cannot export missing package
+PASS 13 skip package records block
+PASS 14 skip no receipts
+PASS 15 self declaration rejected
+PASS 16 claim no receipts
+PASS 17 incomplete intent fails
+PASS 18 input intent keeps focus
+PASS 19 complete intent executed
+PASS 20 discover document fits width
+PASS 21 discover dialog content fits width
+PASS 22 discover dialog inside viewport
+PASS 23 discover sampled text contrast
+PASS 24 incomplete plan fails
+PASS 25 input plan keeps focus
+PASS 26 complete plan executed
+PASS 27 original materialized without pretending verification
+PASS 28 input suite keeps focus
+PASS 29 buggy candidate rejected by tests
+PASS 30 all fifteen checks executed for buggy candidate
+PASS 31 failure is real cross tenant result
+PASS 32 failed-tests document fits width
+PASS 33 failed-tests dialog content fits width
+PASS 34 failed-tests dialog inside viewport
+PASS 35 failed-tests sampled text contrast
+PASS 36 input patch keeps focus
+PASS 37 code edit invalidates implementation
+PASS 38 correct candidate passes complete proof
+PASS 39 baseline and mutant fail as required
+PASS 40 verified-tests document fits width
+PASS 41 verified-tests dialog content fits width
+PASS 42 verified-tests dialog inside viewport
+PASS 43 verified-tests sampled text contrast
+PASS 44 input review keeps focus
+PASS 45 stale review rejected
+PASS 46 input review keeps focus
+PASS 47 current simulated review accepted locally
+PASS 48 review not presented as independent agent
+PASS 49 package requires and has six current receipts
+PASS 50 validated package button unlocked
+PASS 51 local-package document fits width
+PASS 52 local-package dialog content fits width
+PASS 53 local-package dialog inside viewport
+PASS 54 local-package sampled text contrast
+PASS 55 package.json has bytes
+PASS 56 export contains executed checks
+PASS 57 export never claims toolkit executed
+PASS 58 export never claims production authorization
+PASS 59 export never claims independent reviewer
+PASS 60 export marks own schema
+PASS 61 export marks source access missing
+PASS 62 production denied even after six gates
+PASS 63 Escape closes lab
+PASS 64 keyboard focus returns to launch
+PASS 65 reopening same page preserves current execution
+PASS 66 editing after green keeps only two earlier receipts
+PASS 67 editing disables previously valid package download
+PASS 68 verification explicitly stale
+PASS 69 invalidated document fits width
+PASS 70 invalidated dialog content fits width
+PASS 71 invalidated dialog inside viewport
+PASS 72 invalidated sampled text contrast
+PASS 73 cannot rerun package with stale evidence
+PASS 74 input patch keeps focus
+PASS 75 revalidation restores package
+PASS 76 six training goals actually earned
+PASS 77 guide.md has bytes
+PASS 78 guide contains real integration gap
+PASS 79 backup.json has bytes
+PASS 80 backup stores harness inputs only
+PASS 81 new run requires explicit confirmation
+PASS 82 cancel keeps receipts

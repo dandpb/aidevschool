@@ -279,8 +279,11 @@ base), so a violation fails the PR regardless of which runtime produced it:
 The declarative override remains owner-gated, now with an auditable trailer:
 a commit in the PR range carrying `SDLC-ALLOW-TEST-EDIT: AID-<n>` or
 `SDLC-ALLOW-DERIVED-EDIT: AID-<n>` suppresses the corresponding CI check for
-that range. The trailer is only the audit hook — the cited AID issue must
-record the actual owner acceptance, and the reviewer/QA verifies that before
+that range. Work conducted directly on GitHub may instead use `GH-<n>`
+for an issue in this repository, for either trailer. The issue must record
+the actual owner acceptance and the authorized scope; creating an issue
+alone does not grant approval. The trailer is only the audit hook — the cited
+AID or GitHub issue must record the actual owner acceptance, and the reviewer/QA verifies that before
 merging. This is the same trust model as the live env-var overrides (an
 undisciplined session could export those too); the trailer just makes the
 exception visible in git history. Credential findings have no override, and

@@ -1,0 +1,70 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+_____________ test_no_code_success_names_its_evidence_class[False] _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-12/test_no_code_success_names_its0')
+legacy_gate = False
+
+    @pytest.mark.parametrize("legacy_gate", [False, True])
+    def test_no_code_success_names_its_evidence_class(tmp_path: Path, legacy_gate: bool) -> None:
+        env = make_no_code_root(tmp_path)
+        if legacy_gate:
+            env["state"]["active_unit"]["empirical_gate"] = {
+                "require_executable_evidence": True,
+                "min_coverage": 0.0,
+                "mutation_min": 0.0,
+            }
+            env["state_path"].write_text(yaml.safe_dump(env["state"]), encoding="utf-8")
+
+        decision = verify_and_gate_no_code(
+            tmp_path, env["evidence_path"], receipt_path=env["receipt_path"], today=TODAY,
+        )
+        assert decision.ok, decision.errors
+        assert decision.passed
+        state = load_canonical(env["state_path"])
+>       assert state["active_unit"]["empirical_gate"] == {"require_executable_evidence": False}
+E       AssertionError: assert {'min_coverag...idence': True} == {'require_exe...dence': False}
+E
+E         Differing items:
+E         {'require_executable_evidence': True} != {'require_executable_evidence': False}
+E         Left contains 2 more items:
+E         {'min_coverage': 0.0, 'mutation_min': 0.0}
+E         Use -v to get more diff
+
+learner/substrate/tests/test_gate_evidence_class.py:33: AssertionError
+_____________ test_no_code_success_names_its_evidence_class[True] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-dani/pytest-12/test_no_code_success_names_its1')
+legacy_gate = True
+
+    @pytest.mark.parametrize("legacy_gate", [False, True])
+    def test_no_code_success_names_its_evidence_class(tmp_path: Path, legacy_gate: bool) -> None:
+        env = make_no_code_root(tmp_path)
+        if legacy_gate:
+            env["state"]["active_unit"]["empirical_gate"] = {
+                "require_executable_evidence": True,
+                "min_coverage": 0.0,
+                "mutation_min": 0.0,
+            }
+            env["state_path"].write_text(yaml.safe_dump(env["state"]), encoding="utf-8")
+
+        decision = verify_and_gate_no_code(
+            tmp_path, env["evidence_path"], receipt_path=env["receipt_path"], today=TODAY,
+        )
+        assert decision.ok, decision.errors
+        assert decision.passed
+        state = load_canonical(env["state_path"])
+>       assert state["active_unit"]["empirical_gate"] == {"require_executable_evidence": False}
+E       AssertionError: assert {'min_coverag...idence': True} == {'require_exe...dence': False}
+E
+E         Differing items:
+E         {'require_executable_evidence': True} != {'require_executable_evidence': False}
+E         Left contains 2 more items:
+E         {'min_coverage': 0.0, 'mutation_min': 0.0}
+E         Use -v to get more diff
+
+learner/substrate/tests/test_gate_evidence_class.py:33: AssertionError
+=========================== short test summary info ============================
+FAILED learner/substrate/tests/test_gate_evidence_class.py::test_no_code_success_names_its_evidence_class[False]
+FAILED learner/substrate/tests/test_gate_evidence_class.py::test_no_code_success_names_its_evidence_class[True]
+2 failed, 1 passed in 2.61s

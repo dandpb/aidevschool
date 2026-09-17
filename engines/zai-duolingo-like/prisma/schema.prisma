@@ -1,0 +1,161 @@
+// Vertical Protocol — Prisma schema
+// Cozy cyberpunk AI-literacy learning platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// A local learner profile (no external auth — single-device cozy experience)
+model Learner {
+  id            String   @id @default(cuid())
+  name          String   @default("Recruta")
+  avatar        String   @default("bip")
+  // chosen narrative path: "neon-syntax" | "silicon-shrine"
+  path          String   @default("neon-syntax")
+  xp            Int      @default(0)
+  hearts        Int      @default(5)
+  maxHearts     Int      @default(5)
+  // when hearts last changed — the heart-regen baseline. updatedAt can't serve
+  // here: any unrelated write (gems, settings) would delay regen.
+  heartsUpdatedAt DateTime @default(now())
+  gems          Int      @default(20)
+  // league: "bronze" | "silver" | "gold" | "platinum" | "diamond"
+  league        String   @default("bronze")
+  leagueXp      Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  progress      LessonProgress[]
+  activity      ActivityLog[]
+  streak        Streak?
+  settings      Settings?
+  achievements  Achievement[]
+  chatThreads   ChatThread[]
+  dailyChallenge DailyChallenge?
+}
+
+// Daily challenge: a specific lesson highlighted each day for bonus gems.
+// One row per learner, rotated when a new calendar day begins.
+model DailyChallenge {
+  id           String   @id @default(cuid())
+  learnerId    String   @unique
+  learner      Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  lessonId     String   // the highlighted lesson
+  assignedAt   DateTime @default(now()) // when this challenge was assigned
+  completed    Boolean  @default(false)
+  completedAt  DateTime?
+  // the day key (YYYY-MM-DD) this challenge belongs to
+  dayKey       String   @default("")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String
+  description String
+  icon        String   // art asset key
+  accent      String   // tailwind-ish accent key: amber | teal | magenta | rose
+  order       Int
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  moduleId    String
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String
+  narrative   String   // short cozy story beat
+  tip         String   // the teachable 3-minute pílula
+  order       Int
+  xpReward    Int      @default(15)
+  // exercises stored as JSON array string
+  exercises   String
+  progress    LessonProgress[]
+}
+
+model LessonProgress {
+  id          String   @id @default(cuid())
+  learnerId   String
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  lessonId    String
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  completed   Boolean  @default(false)
+  stars       Int      @default(0) // 0..3
+  bestScore   Int      @default(0)
+  attempts    Int      @default(0)
+  lastPlayed  DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([learnerId, lessonId])
+}
+
+model Streak {
+  id           String   @id @default(cuid())
+  learnerId    String   @unique
+  learner      Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  current      Int      @default(0)
+  longest      Int      @default(0)
+  lastTouch    DateTime?
+  // weekly goal tracking
+  weeklyXp     Int      @default(0)
+  weeklyGoal   Int      @default(50)
+  // owned streak-freeze items (consumed automatically to prevent a streak break)
+  freezes      Int      @default(0)
+  // last time the weekly league reset was applied (for promote/demote logic)
+  lastLeagueReset DateTime?
+  updatedAt    DateTime @updatedAt
+}
+
+model ActivityLog {
+  id          String   @id @default(cuid())
+  learnerId   String
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  type        String   // "lesson_complete" | "streak_touch" | "heart_lost" | "heart_refill" | "league_up"
+  detail      String?
+  xpDelta     Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Settings {
+  id          String   @id @default(cuid())
+  learnerId   String   @unique
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  sound       Boolean  @default(true)
+  rain        Boolean  @default(true)
+  reducedMotion Boolean @default(false)
+  language    String   @default("pt-BR")
+  updatedAt   DateTime @updatedAt
+}
+
+// Unlocked achievements (one row per achievement per learner)
+model Achievement {
+  id          String   @id @default(cuid())
+  learnerId   String
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  slug        String   // achievement identifier
+  unlockedAt  DateTime @default(now())
+
+  @@unique([learnerId, slug])
+}
+
+// Saved AI Playground prompt threads (lightweight chat history)
+model ChatThread {
+  id          String   @id @default(cuid())
+  learnerId   String
+  learner     Learner  @relation(fields: [learnerId], references: [id], onDelete: Cascade)
+  title       String   @default("Nova conversa")
+  messages    String   // JSON array of {role, content}
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

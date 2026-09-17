@@ -1,5 +1,13 @@
+import {
+  type FunnelCoreFlushReason,
+  type FunnelCoreScheduler,
+  type FunnelCoreTransport,
+  createFunnelClient,
+} from "../../../shared/teaching-evidence/funnelCore";
 import type { AnalyticsSink } from "../application/ports";
 import {
+  ANALYTICS_SCHEMA_VERSION,
+  ANALYTICS_SOURCE,
   type ProductAnalyticsBatch,
   type ProductAnalyticsEvent,
   buildAnalyticsBatch,
@@ -13,6 +21,12 @@ import {
  * lote; beacon no pagehide quando disponível). Erros de rede são engolidos —
  * analytics nunca bloqueia nem atrasa a lição. O lote respeita o teto do
  * coletor (100 eventos; ADR-0010) e nada sai sem o endpoint configurado.
+ *
+ * Consolidação 2026-09-13: o mecanismo de buffer/flush/capacidade/intervalo
+ * vive no core compartilhado (funnelCore.ts) — este adapter só fornece a
+ * política do literacy: validador do domínio (vocabulário literacy.json),
+ * flush por capacidade/intervalo, envelope v2 com contentVersion, transporte
+ * fire-and-forget que engole falhas.
  */
 
 export const ANALYTICS_BATCH_MAX_EVENTS = 100;
@@ -51,7 +65,21 @@ function defaultBeacon(url: string, data: Blob): boolean {
 
 const defaultTimers: TimerScheduler = {
   setTimeout: (handler, timeoutMs) => setTimeout(handler, timeoutMs),
-  clearTimeout: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
+  clearTimeout: (handle) => clearTimeout(handle as number),
+};
+
+const CORE_FLUSH_REASON: Record<AnalyticsFlushReason, FunnelCoreFlushReason> = {
+  capacity: "size",
+  interval: "interval",
+  pagehide: "page-hide",
+  dispose: "manual",
+};
+
+const SINK_FLUSH_REASON: Record<FunnelCoreFlushReason, AnalyticsFlushReason> = {
+  size: "capacity",
+  interval: "interval",
+  "page-hide": "pagehide",
+  manual: "dispose",
 };
 
 export function createBatchAnalyticsSink(options: BatchAnalyticsSinkOptions): AnalyticsSink & {
@@ -59,81 +87,70 @@ export function createBatchAnalyticsSink(options: BatchAnalyticsSinkOptions): An
   /** Apenas testes: esvazia o buffer sem rede. */
   discardBufferedForTests(): number;
 } {
-  const endpoint = options.endpoint;
   const maxBufferedEvents = Math.min(
     Math.max(1, options.maxBufferedEvents ?? DEFAULT_MAX_BUFFERED_EVENTS),
     ANALYTICS_BATCH_MAX_EVENTS,
   );
   const flushIntervalMs = Math.max(0, options.flushIntervalMs ?? DEFAULT_FLUSH_INTERVAL_MS);
+  const endpoint = options.endpoint;
   const fetcher = options.fetcher ?? defaultFetcher;
   const beacon = options.beacon ?? defaultBeacon;
   const timers = options.timers ?? defaultTimers;
 
-  let buffer: ProductAnalyticsEvent[] = [];
-  let timerHandle: unknown = null;
-
-  const send = (events: ProductAnalyticsEvent[], reason: AnalyticsFlushReason): void => {
-    if (events.length === 0) return;
-    const batch: ProductAnalyticsBatch = buildAnalyticsBatch(events);
-    const body = JSON.stringify(batch);
-    try {
-      if (
-        reason === "pagehide" &&
-        beacon(endpoint, new Blob([body], { type: "application/json" }))
-      ) {
-        return;
+  // Política de transporte do literacy: beacon no pagehide, fetch keepalive
+  // como fallback, falhas sempre engolidas (fire-and-forget).
+  const transport: FunnelCoreTransport<ProductAnalyticsEvent> = {
+    send(batch, coreReason) {
+      if (batch.events.length === 0) return;
+      const reason = SINK_FLUSH_REASON[coreReason];
+      const literacyBatch: ProductAnalyticsBatch = buildAnalyticsBatch([...batch.events]);
+      const body = JSON.stringify(literacyBatch);
+      try {
+        if (
+          reason === "pagehide" &&
+          beacon(endpoint, new Blob([body], { type: "application/json" }))
+        ) {
+          return;
+        }
+        void fetcher(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body,
+          keepalive: reason === "pagehide",
+        }).catch(() => undefined);
+      } catch {
+        // fire-and-forget: nunca propagar
       }
-      void fetcher(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-        keepalive: reason === "pagehide",
-      }).catch(() => undefined);
-    } catch {
-      // fire-and-forget: nunca propagar
-    }
+    },
   };
 
-  const flush = (reason: AnalyticsFlushReason = "capacity"): void => {
-    if (timerHandle !== null) {
-      timers.clearTimeout(timerHandle);
-      timerHandle = null;
-    }
-    const events = buffer;
-    buffer = [];
-    while (events.length > 0) {
-      const chunk = events.splice(0, ANALYTICS_BATCH_MAX_EVENTS);
-      send(chunk, reason);
-    }
-  };
-
-  const schedule = (): void => {
-    if (timerHandle !== null || flushIntervalMs === 0) return;
-    timerHandle = timers.setTimeout(() => {
-      timerHandle = null;
-      flush("interval");
-    }, flushIntervalMs);
-  };
-
-  if (typeof window !== "undefined" && typeof window.addEventListener === "function") {
-    window.addEventListener("pagehide", () => flush("pagehide"));
-  }
+  const scheduler: FunnelCoreScheduler = timers;
+  const client = createFunnelClient<ProductAnalyticsEvent>({
+    schemaVersion: ANALYTICS_SCHEMA_VERSION,
+    source: ANALYTICS_SOURCE,
+    validate: isValidAnalyticsEvent,
+    batch: {
+      maxPerBatch: ANALYTICS_BATCH_MAX_EVENTS,
+      flushAtEvents: maxBufferedEvents,
+      intervalMs: flushIntervalMs,
+      scheduler,
+    },
+    pageTarget:
+      typeof window !== "undefined" && typeof window.addEventListener === "function"
+        ? window
+        : null,
+    transport,
+  });
 
   return {
     track(event): void {
-      if (!isValidAnalyticsEvent(event)) return;
-      buffer.push(event);
-      if (buffer.length >= maxBufferedEvents) {
-        flush("capacity");
-        return;
-      }
-      schedule();
+      client.enqueue(event);
     },
-    flush,
+    flush(reason: AnalyticsFlushReason = "capacity"): void {
+      client.flush(CORE_FLUSH_REASON[reason]);
+    },
     discardBufferedForTests(): number {
-      const count = buffer.length;
-      buffer = [];
-      return count;
+      return client.discard();
     },
   };
 }

@@ -1,5 +1,9 @@
 """Unit tests for the curriculum evidence contract (curriculum/_shared/evidence.py).
 
+Discovery and identity only — the judgment tests (passes_gate / check_evidence,
+threshold binding) moved to ``learner/gate/tests/test_standards.py`` with the
+judgment itself (2026-09-13).
+
 Uses ``tempfile.TemporaryDirectory`` (stdlib) matching the substrate test convention
 (learner/substrate/tests/test_save_canonical.py), NOT pytest ``tmp_path``.
 Tests are discovered by ``make test`` / ``python3 -m pytest``.
@@ -16,14 +20,13 @@ from curriculum._shared.evidence import (
     ChallengeEvidence,
     Phase,
     VerifierVerdict,
-    check_evidence,
     commit,
     inspect,
-    passes_gate,
     record_verdict,
     statuses,
 )
-from engines.openclaw.errors import StateCorruptionError
+from learner.gate import standards
+from shared.errors import StateCorruptionError
 
 
 def _make_challenge(
@@ -59,6 +62,28 @@ def _make_challenge(
         ev_dir.mkdir(parents=True, exist_ok=True)
         (ev_dir / "evidence.ndjson").write_text(evidence_ndjson, encoding="utf-8")
     return challenge
+
+
+class _SeamFixtureMixin(unittest.TestCase):
+    """Pin the empirical bar to a fixture so tests do not read the repo seam."""
+
+    def setUp(self) -> None:
+        import yaml as _yaml
+
+        self._tmp = tempfile.TemporaryDirectory()
+        seam = Path(self._tmp.name) / "learner.yaml"
+        seam.write_text(
+            _yaml.safe_dump(
+                {"gates": {"mutation_score_min": 0.65, "cobertura_nucleo_min": 0.80}}
+            ),
+            encoding="utf-8",
+        )
+        self._original = standards.DEFAULT_SEAM_PATH
+        standards.DEFAULT_SEAM_PATH = seam
+
+    def tearDown(self) -> None:
+        standards.DEFAULT_SEAM_PATH = self._original
+        self._tmp.cleanup()
 
 
 class TestInspect(unittest.TestCase):
@@ -143,8 +168,8 @@ class TestInspect(unittest.TestCase):
                 inspect("01_test_project", root=tmp)
 
 
-class TestGateReadyAndBlockers(unittest.TestCase):
-    """Tests for ChallengeEvidence.gate_ready and gate_blockers."""
+class TestGateReadyAndBlockers(_SeamFixtureMixin):
+    """Tests for ChallengeEvidence.gate_ready / gate_blockers (delegation)."""
 
     def _make_evidence(
         self,
@@ -211,160 +236,6 @@ class TestGateReadyAndBlockers(unittest.TestCase):
 
                 self.assertFalse(ev.gate_ready)
                 self.assertTrue(any("mutation_score" in b for b in ev.gate_blockers))
-
-
-class TestPassesGate(unittest.TestCase):
-    """Tests for passes_gate / check_evidence — shape-detecting wrappers."""
-
-    def test_passes_gate_curriculum_verifier_block_pass(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({
-                "verifier": {
-                    "verdict": "PASS",
-                    "mutation_score": 0.71,
-                    "coverage_core": 0.92,
-                    "context_isolated": True,
-                }
-            }), encoding="utf-8")
-            self.assertTrue(passes_gate(ev_file, root=tmp))
-            self.assertEqual(check_evidence(ev_file, root=tmp), [])
-
-    def test_passes_gate_curriculum_fails_low_mutation(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({
-                "verifier": {
-                    "verdict": "PASS",
-                    "mutation_score": 0.42,
-                    "coverage_core": 0.92,
-                    "context_isolated": True,
-                }
-            }), encoding="utf-8")
-            self.assertFalse(passes_gate(ev_file, root=tmp))
-            errors = check_evidence(ev_file, root=tmp)
-            self.assertTrue(any("mutation_score" in e for e in errors))
-
-    def test_passes_gate_curriculum_fails_bad_verdict(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({
-                "verifier": {
-                    "verdict": "FAIL",
-                    "mutation_score": 0.71,
-                    "coverage_core": 0.92,
-                    "context_isolated": True,
-                }
-            }), encoding="utf-8")
-            errors = check_evidence(ev_file, root=tmp)
-            self.assertTrue(any("FAIL" in e for e in errors))
-
-    def test_passes_gate_curriculum_requires_well_typed_finite_metrics(self) -> None:
-        invalid_fields = (
-            ("mutation_score", None),
-            ("mutation_score", True),
-            ("mutation_score", "0.71"),
-            ("mutation_score", float("nan")),
-            ("coverage_core", None),
-            ("coverage_core", False),
-            ("coverage_core", "0.92"),
-            ("coverage_core", float("nan")),
-            ("context_isolated", 1),
-        )
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            for field, value in invalid_fields:
-                with self.subTest(field=field, value=value):
-                    verifier = {
-                        "verdict": "PASS",
-                        "mutation_score": 0.71,
-                        "coverage_core": 0.92,
-                        "context_isolated": True,
-                    }
-                    if value is None:
-                        del verifier[field]
-                    else:
-                        verifier[field] = value
-                    ev_file.write_text(
-                        json.dumps({"verifier": verifier}), encoding="utf-8"
-                    )
-
-                    errors = check_evidence(ev_file, root=tmp)
-
-                    self.assertTrue(any(field in error for error in errors), errors)
-                    self.assertFalse(passes_gate(ev_file, root=tmp))
-
-    def test_check_evidence_rejects_relative_and_absolute_root_escapes(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp) / "root"
-            root.mkdir()
-            outside = Path(tmp) / "outside.json"
-            outside.write_text(json.dumps({"pass": True}), encoding="utf-8")
-
-            for evidence_path in (Path("../outside.json"), outside):
-                with self.subTest(evidence_path=evidence_path):
-                    errors = check_evidence(evidence_path, root=root)
-
-                    self.assertTrue(any("escapes root" in error for error in errors))
-                    self.assertFalse(passes_gate(evidence_path, root=root))
-
-    def test_passes_gate_rejects_bare_game_pass(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({"pass": True}), encoding="utf-8")
-            errors = check_evidence(ev_file, root=tmp)
-            self.assertFalse(passes_gate(ev_file, root=tmp))
-            self.assertTrue(any("independent verifier" in error for error in errors))
-
-    def test_passes_gate_game_shape_false(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({"pass": False}), encoding="utf-8")
-            self.assertFalse(passes_gate(ev_file, root=tmp))
-
-    def test_passes_gate_missing_file_is_fail(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            missing = Path(tmp) / "nope.json"
-            errors = check_evidence(missing, root=tmp)
-            self.assertTrue(any("missing" in e for e in errors))
-            self.assertFalse(passes_gate(missing, root=tmp))
-
-    def test_check_evidence_unparseable_json(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text("{ not valid json", encoding="utf-8")
-            errors = check_evidence(ev_file, root=tmp)
-            self.assertTrue(any("not parseable JSON" in e for e in errors))
-
-    def test_check_evidence_unknown_shape(self) -> None:
-        """A JSON file with neither 'verifier' nor 'pass' is rejected."""
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(json.dumps({"foo": "bar"}), encoding="utf-8")
-            errors = check_evidence(ev_file, root=tmp)
-            self.assertTrue(any("no 'verifier'" in e for e in errors))
-
-    def test_game_pass_claim_is_rejected_when_metrics_report_a_violation(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            ev_file = Path(tmp) / "evidence.json"
-            ev_file.write_text(
-                json.dumps(
-                    {
-                        "unit_id": "U-16_mini_message_queue",
-                        "project": "16_mini_message_queue",
-                        "game": "MESSAGE QUEUE",
-                        "ts": "2026-07-11T00:00:00Z",
-                        "pass": True,
-                        "metrics": {"ordering_violations": 1},
-                    }
-                ),
-                encoding="utf-8",
-            )
-
-            errors = check_evidence(ev_file, root=tmp)
-
-            self.assertTrue(any("claimed-versus-verified disagreement" in e for e in errors))
-            self.assertFalse(passes_gate(ev_file, root=tmp))
 
 
 class TestCommit(unittest.TestCase):

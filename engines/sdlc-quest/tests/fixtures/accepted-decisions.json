@@ -1,0 +1,20 @@
+{
+  "intent": ["pain", "outcome", "scope", "question"],
+  "risk": {"copy":"fast", "list":"standard", "tenant":"critical"},
+  "intent-gate": "resolve",
+  "contracts": ["tenant", "concurrency", "redaction", "duplicates"],
+  "pillars": {"claude":"instruction", "ci":"evidence", "iam":"authority", "skill":"instruction"},
+  "secrets": ["identity", "fs", "network"],
+  "diff": ["controller", "service", "tests"],
+  "redgreen": ["red", "fix", "green", "simplify", "again"],
+  "delegation": {"implement":"builder", "verify":"verifier", "release":"release"},
+  "patch": "scoped",
+  "evidence": "current",
+  "evals": {"double":"app", "honest":"agent", "attack":"agent", "timeout":"app"},
+  "review": {"race":"bugs", "log":"security", "retention":"compliance"},
+  "gate": {"evidence":"current", "approval":"external", "identity":"scoped", "policy":"trusted"},
+  "guardrail": "isolate",
+  "bands": "diagnose",
+  "incident": {"phase":"complete", "actions":1},
+  "loop": ["record", "intent", "spec", "deliver", "observe"]
+}

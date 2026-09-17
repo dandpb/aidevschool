@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "changeId": "QUEST-013",
+  "title": "Laboratório local de execução com gates e referência ao harness-toolkit",
+  "risk": "standard-local-only",
+  "sourceRepository": {
+    "url": "https://github.com/dandpb/harness-toolkit",
+    "inspected": false,
+    "commit": null,
+    "adapterStatus": "pending-source-access"
+  },
+  "nonGoals": ["Executar ou instalar o toolkit sem inspecioná-lo", "Acessar GitHub autenticado", "Executar skills ou subagentes reais", "Autorizar produção", "Tratar JSON local como evidência assinada"],
+  "acceptance": [
+    {"id":"H01","behavior":"Nenhuma etapa posterior avança sem recibos atuais das anteriores.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H02","behavior":"Declarações de conclusão, falhas e ausência de resultados não criam aprovação.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H03","behavior":"Código, plano, suíte ou parecer alterados invalidam os dependentes.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H04","behavior":"Verificação completa executa 15 asserções locais e exige baseline/mutante reprovados.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H05","behavior":"Três falhas de uma etapa interrompem a execução; editar inputs não remove esse estado.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H06","behavior":"Backup preserva entradas e progresso anterior, mas não reconstitui validações do laboratório.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H07","behavior":"Integração do toolkit, revisão independente e produção nunca são afirmadas como executadas.","tests":["tests/harness.test.cjs","tests/harness-browser.py"]},
+    {"id":"H08","behavior":"Teclado, mobile e exports funcionam nos perfis de navegador exercitados.","tests":["tests/harness-browser.py"]},
+    {"id":"H09","behavior":"Campanha original e oficina TLC continuam passando suas jornadas.","tests":["tests/playtest.py","tests/tlc-browser.py"]},
+    {"id":"H10","behavior":"Runner real recusa falhas, timeouts, parâmetros desconhecidos e liberação de produção não configurada.","tests":["tests/quest-gate.test.cjs"]}
+  ]
+}

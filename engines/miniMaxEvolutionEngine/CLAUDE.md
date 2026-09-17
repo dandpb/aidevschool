@@ -81,6 +81,12 @@ correção do zero (não confia no produtor). Só atualize o status do pipeline 
 **depois** que o verificador retornar PASS. Em FAIL, "acorde" o produtor com o feedback concreto
 (retry, respeitando `retry_limit`).
 
+O orquestrador registra `grade=verified` e `advanced_by=/devschool-<command>`
+após esse PASS; o supervisor autônomo registra `advanced_by=mme-supervisor`.
+Avanços OpenClaw `simulate` e arquivos legados `unspecified` não comprovam uma
+fase que exige `verified`. Produtores entregam artefatos; não avançam o pipeline
+por conta própria. Esse carimbo não concede mastery do aprendiz.
+
 Nomes de arquivo canônicos (alinhados ao `.mavis/plans/plan.yaml` e `docs/PROMPTS/IDEIAS/codexDojo/01_agent_definitions.md`):
 `spec.md`, `code_review.md`, `learning_notes.md`, `quiz.md`, `benchmark_results.md`,
 `evolution_report.md`, `diagnostic.md`, `deliverable-*.md`. Globais na raiz:

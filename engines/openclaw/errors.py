@@ -1,24 +1,17 @@
 """Exception hierarchy for the OpenClaw runner.
 
-Deliberately small — OpenClaw is a tracer bullet. Callers only need to
+Deliberately small — OpenClaw is a tracer bullet. ``StateCorruptionError``
+moved to the neutral ``shared/errors.py`` home (2026-09-13) because three
+contexts raise it; engine-specific errors stay here. Callers only need to
 distinguish "state on disk is corrupt, a human must look at it" from other
-runner failures, so we define one base class and two specific subclasses
-instead of a taxonomy.
+runner failures.
 """
 
+
 class OpenclawError(Exception):
-    """Base class for all OpenClaw runner errors.
+    """Base class for OpenClaw-specific runner errors.
 
     Catch this at the CLI boundary to print a clean message instead of a
-    traceback.
-    """
-
-
-class StateCorruptionError(OpenclawError):
-    """A state or event file on disk is unreadable or malformed.
-
-    Raised for corrupted ``scheduler_state.json``, malformed
-    ``pipeline_status.md`` / ``learning_state.yaml``, and broken Hermes event
-    files. The message always names the offending file and what to do about
-    it (usually: inspect, fix, or delete the file and re-run).
+    traceback. Cross-context corrupt-state errors are
+    ``shared.errors.StateCorruptionError``, caught alongside this class.
     """

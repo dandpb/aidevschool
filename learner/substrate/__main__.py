@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sys
 
+from learner.analytics import capture_event
 from learner.substrate import ROOT, check, load_canonical, sync, validate
 
 
@@ -34,6 +35,13 @@ def main(args: list[str] | None = None) -> int:
         print(f"unknown arguments: {' '.join(arguments)}", file=sys.stderr)
         return 2
     sync()
+    state = load_canonical()
+    learner_id = str(state.get("learner", {}).get("id") or "learner_substrate")
+    capture_event(
+        learner_id,
+        "substrate_sync_completed",
+        {"command": "sync"},
+    )
     print("Derived views regenerated from canonical sources.")
     return 0
 

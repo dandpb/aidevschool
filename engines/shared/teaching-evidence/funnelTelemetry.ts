@@ -17,11 +17,15 @@
 //     pattern — local/dev builds without the env stay silent no-ops).
 //   - Best effort: transport failures are silently dropped; telemetry must
 //     never break a game or a lesson (analytics is not evidence either).
-//
-// Canonical closed vocabularies live HERE; the collector mirrors them and
-// CI locks parity (learner/gate/tests/dojo_analytics_collector_v3.test.mjs).
+// Canonical closed vocabularies live in vocabularies/surfaces.json (loaded
+// through ./vocabularies — the single cross-runtime authority); the collector
+// derives its tables from the same JSON and CI locks total equality
+// (learner/gate/tests/dojo_analytics_vocabularies.test.mjs).
 
+import { createFunnelClient, type FunnelClient } from "./funnelCore";
+import { SURFACES_VOCABULARY } from "./vocabularies";
 export type FunnelSource = "dojotoday" | "voxeldojo" | "pixelquest";
+
 
 export type FunnelEventName =
   | "daily-view-open"
@@ -35,28 +39,17 @@ export type FunnelProps = Readonly<Record<string, FunnelScalar>>;
 
 export const FUNNEL_BATCH_SCHEMA_VERSION = 3;
 
-export const FUNNEL_SOURCES: readonly FunnelSource[] = [
-  "dojotoday",
-  "voxeldojo",
-  "pixelquest",
-];
+export const FUNNEL_SOURCES: readonly FunnelSource[] =
+  SURFACES_VOCABULARY.sources as readonly FunnelSource[];
 
-export const FUNNEL_EVENT_NAMES: readonly FunnelEventName[] = [
-  "daily-view-open",
-  "voxel-loop-complete",
-  "pixelquest-encounter-complete",
-  "evidence-handoff",
-];
+export const FUNNEL_EVENT_NAMES: readonly FunnelEventName[] =
+  SURFACES_VOCABULARY.eventNames as readonly FunnelEventName[];
 
 /** Closed per-event prop vocabularies — exactly the keys the collector accepts. */
-export const FUNNEL_EVENT_PROPS: Readonly<Record<FunnelEventName, readonly string[]>> = {
-  "daily-view-open": [],
-  "voxel-loop-complete": ["unitId", "result"],
-  "pixelquest-encounter-complete": ["unitId", "result"],
-  "evidence-handoff": ["unitId"],
-};
+export const FUNNEL_EVENT_PROPS: Readonly<Record<FunnelEventName, readonly string[]>> =
+  SURFACES_VOCABULARY.eventProps as Readonly<Record<FunnelEventName, readonly string[]>>;
 
-export const FUNNEL_RESULT_VALUES: readonly string[] = ["completed", "failed"];
+export const FUNNEL_RESULT_VALUES: readonly string[] = SURFACES_VOCABULARY.resultValues;
 
 /** Mirror of the collector's ANALYTICS_BATCH_MAX_EVENTS (batch guard). */
 export const FUNNEL_BATCH_MAX_EVENTS = 100;
@@ -175,53 +168,44 @@ export function funnelEventIsValid(value: unknown): value is FunnelEvent {
 }
 
 export class FunnelBatcher {
-  private readonly queue: FunnelEvent[] = [];
-  private readonly sessionId: string;
-  private readonly createId: () => string;
-  private readonly clock: () => Date;
+  private readonly client: FunnelClient<FunnelEvent>;
 
   constructor(
-    private readonly source: FunnelSource,
-    private readonly transport: FunnelTransport,
+    source: FunnelSource,
+    transport: FunnelTransport,
     options: {
       readonly createId?: () => string;
       readonly clock?: () => Date;
     } = {},
   ) {
-    this.createId = options.createId ?? randomUuid;
-    this.clock = options.clock ?? (() => new Date());
-    this.sessionId = this.createId();
+    const createId = options.createId ?? randomUuid;
+    this.client = createFunnelClient<FunnelEvent>({
+      schemaVersion: FUNNEL_BATCH_SCHEMA_VERSION,
+      source,
+      validate: funnelEventIsValid,
+      identity: { sessionUuid: createId, eventUuid: createId },
+      clock: options.clock ?? (() => new Date()),
+      batch: { maxPerBatch: FUNNEL_BATCH_MAX_EVENTS, flushAtEvents: FUNNEL_BATCH_MAX_EVENTS },
+      // Adapter: the core batch is minted at this client's schemaVersion 3;
+      // "interval" never occurs here (no interval configured) and maps to
+      // "manual" only to satisfy the surfaces flush-reason union.
+      transport: {
+        send: (batch, reason) =>
+          transport.send(batch as unknown as FunnelBatch, reason === "interval" ? "manual" : reason),
+      },
+    });
   }
 
   emit(event: FunnelEventName, props: FunnelProps = {}): boolean {
-    const candidate: FunnelEvent = {
-      schemaVersion: FUNNEL_BATCH_SCHEMA_VERSION,
-      source: this.source,
-      event,
-      eventId: this.createId(),
-      sessionId: this.sessionId,
-      occurredAt: this.clock().toISOString(),
-      props,
-    };
-    if (!funnelEventIsValid(candidate)) return false;
-    this.queue.push(candidate);
-    if (this.queue.length >= FUNNEL_BATCH_MAX_EVENTS) this.flush("size");
-    return true;
+    return this.client.emit(event, props);
   }
 
   flush(reason: FunnelFlushReason): void {
-    if (this.queue.length === 0) return;
-    const batch: FunnelBatch = {
-      schemaVersion: FUNNEL_BATCH_SCHEMA_VERSION,
-      source: this.source,
-      events: [...this.queue],
-    };
-    this.queue.length = 0;
-    this.transport.send(batch, reason);
+    this.client.flush(reason);
   }
 
   get pending(): number {
-    return this.queue.length;
+    return this.client.pending;
   }
 }
 

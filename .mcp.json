@@ -26,10 +26,11 @@
       "directTools": true
     },
     "chrome-devtools": {
-      "command": "/Users/danielbarreto/.nvm/versions/node/v20.14.0/bin/npx",
+      "type": "stdio",
+      "command": "sh",
       "args": [
-        "-y",
-        "chrome-devtools-mcp@latest"
+        "-lc",
+        "exec npx -y chrome-devtools-mcp@latest"
       ],
       "disabled": false,
       "alwaysAllow": [],

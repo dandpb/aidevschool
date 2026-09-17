@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from curriculum._shared.evidence import COVERAGE_MIN, MUTATION_MIN
+from learner.gate.standards import Thresholds, load_thresholds
 from learner.gate.evidence_io import canonical_evidence_digest
 from learner.gate.security import GateSecurityError
 
@@ -41,22 +41,25 @@ def load_verifier_receipt(path: str | Path, root: Path) -> VerifierReceipt:
 
 
 def receipt_violations(
-    receipt: VerifierReceipt, evidence: dict[str, Any]
+    receipt: VerifierReceipt,
+    evidence: dict[str, Any],
+    thresholds: Thresholds | None = None,
 ) -> list[str]:
     errors: list[str] = []
+    th = thresholds if thresholds is not None else load_thresholds()
     expected_digest = canonical_evidence_digest(evidence)
     if receipt.evidence_digest != expected_digest:
         errors.append(
             "verifier receipt evidence_digest does not match canonical producer evidence"
         )
     if receipt.verdict == "PASS":
-        if receipt.mutation_score < MUTATION_MIN:
+        if receipt.mutation_score < th.mutation_min:
             errors.append(
-                f"verifier receipt mutation_score {receipt.mutation_score} < {MUTATION_MIN}"
+                f"verifier receipt mutation_score {receipt.mutation_score} < {th.mutation_min}"
             )
-        if receipt.coverage_core < COVERAGE_MIN:
+        if receipt.coverage_core < th.coverage_min:
             errors.append(
-                f"verifier receipt coverage_core {receipt.coverage_core} < {COVERAGE_MIN}"
+                f"verifier receipt coverage_core {receipt.coverage_core} < {th.coverage_min}"
             )
     if receipt.context_isolated is not True:
         errors.append("verifier receipt context_isolated is not true")

@@ -14,7 +14,7 @@ import yaml
 import learner.substrate as substrate
 from learner.substrate import _AGENT_OWNERSHIP_ROLES, commit_canonical, is_repo_canonical_path, save_canonical, validate
 from learner.substrate.catalog import CatalogFormatError
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 
 
 def _mastered_state(

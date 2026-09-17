@@ -60,3 +60,8 @@ Para cada declaração, invoque `run_phase(spec)`.
 
 Pare entre fases se um quality gate falhar 2x seguidas (registre o bloqueio no YAML por `save_status`, preservando a narrativa Markdown).
 Não rode benchmarks pesados sem confirmar ambiente isolado.
+
+Procedência do avanço: o orquestrador registra `grade=verified` e
+`advanced_by=/devschool-<command>` somente após PASS independente, conforme
+[PhaseRunner](phaserunner.md). Ao alterar apenas blockers, preserve a procedência
+da fase atual; um blocker não é um novo avanço.

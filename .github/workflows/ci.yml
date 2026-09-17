@@ -23,7 +23,7 @@ jobs:
   # change. The self-test step fails the job if synthetic violations ever stop
   # being detected. Overrides: owner-approved commit trailers
   # SDLC-ALLOW-TEST-EDIT / SDLC-ALLOW-DERIVED-EDIT (see docs/sdlc/README.md
-  # §Guardrails); the credential rule has no override.
+  # §Guardrails; AID-<n> or GH-<n>); the credential rule has no override.
   sdlc-guards:
     name: SDLC guardrails (diff)
     runs-on: ubuntu-latest

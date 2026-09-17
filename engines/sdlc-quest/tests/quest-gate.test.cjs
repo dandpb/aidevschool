@@ -1,0 +1,12 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict'),path=require('node:path');
+const G=require('../tools/quest-gate.cjs'),ROOT=path.resolve(__dirname,'..');
+test('runner: exit 0 with actual output passes',()=>{const r=G.command(process.execPath,['-e','console.log("executed")'],ROOT,5000);assert.equal(r.passed,true);assert.equal(r.exitCode,0);assert.ok(r.stdout.includes('executed'));});
+test('runner: exit 1 is failure, not a completed step',()=>{const r=G.command(process.execPath,['-e','process.exitCode=1'],ROOT,5000);assert.equal(r.passed,false);assert.equal(r.exitCode,1);});
+test('runner: exception is failure',()=>{const r=G.command(process.execPath,['-e','throw Error("fixture failure")'],ROOT,5000);assert.equal(r.passed,false);assert.ok(r.stderr.includes('fixture failure'));});
+test('runner: timeout is not success',()=>{const r=G.command(process.execPath,['-e','setInterval(()=>{},1000)'],ROOT,100);assert.equal(r.passed,false);assert.equal(r.error.code,'ETIMEDOUT');assert.notEqual(r.exitCode,0);});
+test('runner: missing executable is failure',()=>{const r=G.command('quest-deliberately-missing-executable',[],ROOT,1000);assert.equal(r.passed,false);assert.equal(r.error.code,'ENOENT');});
+test('runner: no skip-tests or injected CLI commands',()=>{assert.throws(()=>G.parseArgs(['--skip-tests']));assert.throws(()=>G.parseArgs(['--command=echo passed']));assert.throws(()=>G.parseArgs([';echo bypass']));});
+test('runner: release remains blocked even when local checks pass',()=>{assert.equal(G.releaseExitCode(true,true),2);assert.equal(G.releaseExitCode(false,true),1);assert.equal(G.releaseExitCode(true,false),0);});
+test('runner: ten acceptance criteria reference existing tests; actual integration unverified',()=>{const r=G.validateContract(ROOT);assert.equal(r.checks,10);});
+test('runner: source snapshot deterministic without using output files',()=>{const a=G.snapshot(ROOT),b=G.snapshot(ROOT);assert.equal(a.sha256,b.sha256);assert.equal(a.sha256.length,64);assert.ok(a.files.some(f=>f.path==='src/harness-core.js'));assert.equal(a.files.some(f=>f.path.startsWith('evidence')),false);});

@@ -1,0 +1,47 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.7, pytest-8.4.2, pluggy-1.6.0 -- /mnt/mac/aidevschool/.venv-linux/bin/python
+cachedir: .pytest_cache
+rootdir: /mnt/mac/aidevschool/.scratch/worktrees/context-authority
+configfile: pyproject.toml
+collecting ... collected 38 items
+
+engines/openclaw/tests/test_provenance.py::test_legacy_provenance_is_read_only PASSED [  2%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-spec-done-impl] PASSED [  5%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[spec-done-impl-done-review] PASSED [  7%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[impl-done-review-done-benchmark] PASSED [ 10%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[review-done-benchmark-done-optimize] PASSED [ 13%]
+engines/openclaw/tests/test_provenance.py::test_checklist_advances_with_provenance[benchmark-done-cycle-complete-cycle-complete] PASSED [ 15%]
+engines/openclaw/tests/test_provenance.py::test_cli_override_reports_simulated_provenance PASSED [ 18%]
+engines/openclaw/tests/test_provenance.py::test_sequential_writers_preserve_latest_provenance PASSED [ 21%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[trusted-agent] PASSED [ 23%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[None-agent] PASSED [ 26%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[7-agent] PASSED [ 28%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[simulate-] PASSED [ 31%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-  ] PASSED [ 34%]
+engines/openclaw/tests/test_provenance.py::test_invalid_provenance_is_rejected[verified-None] PASSED [ 36%]
+engines/openclaw/tests/test_provenance.py::test_cli_preview_preserves_provenance PASSED [ 39%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_pass_stamps_authorized_bytes PASSED [ 42%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_supervisor_fail_keeps_provenance PASSED [ 44%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[simulate-openclaw-checklist] PASSED [ 47%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[verified-mme-supervisor] PASSED [ 50%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_briefing_exposes_provenance_read_only[unspecified-] PASSED [ 52%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_phase_runner_provenance_contract PASSED [ 55%]
+engines/miniMaxEvolutionEngine/tests/test_context_authority.py::test_mvp_authority_documented PASSED [ 57%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[curator-spec] PASSED [ 60%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[dev-go-implement] PASSED [ 63%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[dev-rust-implement] PASSED [ 65%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[dev-node-implement] PASSED [ 68%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[reviewer-review] PASSED [ 71%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[benchmarker-benchmark] PASSED [ 73%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_producer_cannot_advance_without_orchestrator_and_independent_pass[optimizer-optimize] PASSED [ 76%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[spec] PASSED [ 78%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[implement] PASSED [ 81%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[review] PASSED [ 84%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[benchmark] PASSED [ 86%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[optimize] PASSED [ 89%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_command_stamps_only_after_independent_pass[cycle] PASSED [ 92%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_phase_runner_requires_independent_verifier_before_stamping PASSED [ 94%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_mvp_result_does_not_confer_canonical_mastery PASSED [ 97%]
+engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py::test_mvp_runtime_and_canonical_data_are_not_modified PASSED [100%]
+
+============================== 38 passed in 3.46s ==============================

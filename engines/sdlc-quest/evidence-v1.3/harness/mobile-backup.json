@@ -1,0 +1,97 @@
+{
+  "format": "sdlc-quest-backup",
+  "backupVersion": 1,
+  "appVersion": "1.3.0",
+  "createdAt": "2026-09-16T20:57:06.937Z",
+  "state": {
+    "version": 1,
+    "tlc": {
+      "version": 1,
+      "done": {},
+      "attempts": {
+        "tlc-situation": 0,
+        "tlc-verdict": 0,
+        "tlc-design": 0,
+        "tlc-success": 0,
+        "tlc-slice": 0,
+        "tlc-sweep": 0,
+        "tlc-criteria": 0,
+        "tlc-task-pr": 0,
+        "tlc-profile": 0,
+        "tlc-proof-lab": 0,
+        "tlc-verifier": 0,
+        "tlc-handoff": 0,
+        "tlc-review": 0,
+        "tlc-severity": 0,
+        "tlc-carryover": 0,
+        "tlc-converge": 0
+      },
+      "drafts": {},
+      "selected": 0
+    },
+    "harness": {
+      "version": 1,
+      "inputs": {
+        "intent": "complete",
+        "plan": "traceable",
+        "patch": "scoped",
+        "suite": "contract",
+        "runner": "normal",
+        "review": "current"
+      },
+      "selected": 5
+    },
+    "done": {},
+    "attempts": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "hints": {
+      "intent": 0,
+      "risk": 0,
+      "intent-gate": 0,
+      "contracts": 0,
+      "pillars": 0,
+      "secrets": 0,
+      "diff": 0,
+      "redgreen": 0,
+      "delegation": 0,
+      "patch": 0,
+      "evidence": 0,
+      "evals": 0,
+      "review": 0,
+      "gate": 0,
+      "guardrail": 0,
+      "bands": 0,
+      "incident": 0,
+      "loop": 0
+    },
+    "drafts": {},
+    "transfer": {
+      "intent": "",
+      "evidence": "",
+      "authority": "",
+      "stop": ""
+    },
+    "sound": false,
+    "motion": false,
+    "selected": 0,
+    "startedAt": "2026-09-16T20:57:01.141Z"
+  }
+}

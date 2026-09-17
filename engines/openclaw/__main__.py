@@ -10,8 +10,9 @@ from typing import assert_never
 
 from engines.openclaw import config as cfg
 from engines.openclaw.errors import OpenclawError
+from shared.errors import StateCorruptionError
 from engines.openclaw.runner.checklist import evaluate
-from engines.openclaw.runner.pipeline_status import Phase, yaml_path_for
+from engines.openclaw.runner.pipeline_status import Grade, Phase, yaml_path_for
 from engines.openclaw.runner.scheduler import Scheduler
 
 
@@ -73,7 +74,7 @@ def preview_checklist(scheduler: Scheduler) -> ChecklistPreview:
             assert_never(unreachable)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, *, root: Path | None = None) -> int:
     parser = argparse.ArgumentParser(description="OpenClaw checklist runner (simulate)")
     parser.add_argument(
         "--project",
@@ -105,7 +106,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    root = Path(__file__).resolve().parent.parent.parent
+    root = root or Path(__file__).resolve().parent.parent.parent
     scheduler = Scheduler(root=root)
 
     if args.preview:
@@ -125,6 +126,8 @@ def main(argv: list[str] | None = None) -> int:
             status.phase = Phase(args.phase)
             status.current_project = args.project
             status.blockers = []
+            status.grade = Grade.SIMULATE
+            status.advanced_by = "openclaw-cli-override"
             scheduler.write_status(status)
 
         status = scheduler.read_status()
@@ -134,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
         print()
 
         results = scheduler.run(max_events=args.max_events)
-    except OpenclawError as exc:
+    except (OpenclawError, StateCorruptionError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
@@ -150,6 +153,9 @@ def main(argv: list[str] | None = None) -> int:
     final_status = scheduler.read_status()
     print()
     print(f"Final phase: {final_status.phase.value}")
+    print(
+        f"Provenance: grade={final_status.grade.value} advanced_by={final_status.advanced_by or '-'}"
+    )
     if final_status.phase.value == "cycle-complete":
         print("Checklist completed successfully.")
         return 0

@@ -1,0 +1,14 @@
+{
+  "origin": "educational-simulation",
+  "productionVerified": false,
+  "changeId": "WEBHOOK-042",
+  "candidate": "illustrative-8d0fa42",
+  "policyRevision": "illustrative-p4",
+  "realCiRun": null,
+  "realChecks": [],
+  "limitations": [
+    "O jogo não executa a API, infraestrutura ou pipeline de um projeto real.",
+    "Os microtestes de busca por tenant rodam localmente no navegador.",
+    "Uma resposta correta no jogo não é evidência de prontidão para produção."
+  ]
+}

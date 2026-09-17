@@ -1,0 +1,12 @@
+{
+  "method": "HTTP local nativo com Chromium, sem alterar políticas do navegador",
+  "status": "blocked",
+  "checks": [
+    "Servidor iniciado via CLI e GET / retornou o HTML correto"
+  ],
+  "errors": [],
+  "url": "http://127.0.0.1:44723",
+  "browser": "144.0.7559.96",
+  "navigationError": "Page.goto: net::ERR_BLOCKED_BY_ADMINISTRATOR at http://127.0.0.1:44723/\nCall log:\n  - navigating to \"http://127.0.0.1:44723/\", waiting until \"load\"\n",
+  "serverLog": "\nSDLC Quest v1.3 — servidor local\n\n  http://127.0.0.1:44723\n\nSem instalação de pacotes. Ctrl+C para encerrar.\n\n"
+}

@@ -1,14 +1,39 @@
-export const ANALYTICS_EVENT_NAMES = [
-  'onboarding.started', 'onboarding.completed', 'journey.returned',
-  'mission.started', 'mission.completed', 'structured_attempt.submitted',
-  'structured_attempt.passed', 'hint.requested', 'retry.requested',
-  'review.started', 'verification.state_changed', 'renderer.degraded',
-  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
-  // de exposição de missões hospedadas, reemitidos pelo MissionShell a
-  // partir dos mission-events da engine.
-  'mission.brief_viewed', 'activity.presented',
-] as const
-export type AnalyticsEventName = (typeof ANALYTICS_EVENT_NAMES)[number]
+import osVocabulary from '../../../shared/teaching-evidence/vocabularies/os.json' with { type: 'json' }
+import {
+  isBoundedFunnelScalar,
+  recordHasOnlyKeys,
+  valueMatchesVocabulary,
+} from '../../../shared/teaching-evidence/funnelCore'
+
+// Vocabulary single-sourcing (2026-09-13 emitter consolidation): the tables
+// below derive from engines/shared/teaching-evidence/vocabularies/os.json —
+// the same JSON behind the collector's GENERATED tables (total equality
+// locked by learner/gate/tests/dojo_analytics_vocabularies.test.mjs). The
+// literal types are the compile-time projection of that JSON.
+export type AnalyticsEventName =
+  | 'onboarding.started'
+  | 'onboarding.completed'
+  | 'journey.returned'
+  | 'mission.started'
+  | 'mission.completed'
+  | 'structured_attempt.submitted'
+  | 'structured_attempt.passed'
+  | 'hint.requested'
+  | 'retry.requested'
+  | 'review.started'
+  | 'verification.state_changed'
+  | 'renderer.degraded'
+  | 'mission.brief_viewed'
+  | 'activity.presented'
+
+const vocabulary = osVocabulary as unknown as {
+  readonly eventNames: readonly AnalyticsEventName[]
+  readonly eventVocabularies: Readonly<Record<AnalyticsEventName, EventVocabularies>>
+  readonly contextKeys: readonly string[]
+  readonly contextVocabularies: Readonly<Record<string, readonly string[] | undefined>>
+}
+
+export const ANALYTICS_EVENT_NAMES: readonly AnalyticsEventName[] = vocabulary.eventNames
 export type AnalyticsScalar = string | number | boolean
 export type AnalyticsDimensions = Readonly<Record<string, AnalyticsScalar>>
 export type AnalyticsContext = {
@@ -48,46 +73,13 @@ type EventPolicy = {
 
 type NamedEventRecord = Record<string, unknown> & { readonly name: AnalyticsEventName }
 
-const ACTIVITY_TYPES: readonly AnalyticsScalar[] = [
-  'choice', 'sort', 'missing_context', 'safety_classification', 'prompt_builder',
-  'output_comparison', 'rubric_review',
-]
-
 // As dimensões permitidas de cada evento são exatamente as chaves do seu vocabulário.
 // Exported for the collector parity test: the staged same-origin collector
-// (learner/gate/netlify-functions/dojo-analytics-collector.mjs) must keep an
-// identical closed vocabulary on the receiving side (AID-470 F1).
-export const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabularies>> = {
-  'onboarding.started': {},
-  'onboarding.completed': { recommendationChanged: [true, false] },
-  'journey.returned': {},
-  'mission.started': { mode: ['initial', 'review', 'retry', 'targeted-practice'] },
-  'mission.completed': { result: ['completed', 'failed'] },
-  'structured_attempt.submitted': { activityType: ACTIVITY_TYPES },
-  'structured_attempt.passed': { activityType: ACTIVITY_TYPES },
-  'hint.requested': {
-    mode: ['question', 'explain', 'hint'],
-    source: ['provider', 'fallback', 'policy'],
-    outcome: ['answered', 'attempt-required', 'quota-exhausted', 'unavailable'],
-  },
-  'retry.requested': {
-    reason: ['retry', 'targeted-practice', 'verification-unavailable', 'engine-retry'],
-  },
-  'review.started': { reason: ['canonical-review', 'due', 'overdue'] },
-  'verification.state_changed': {
-    state: ['validating', 'pending', 'verified', 'rejected', 'gateway-unavailable'],
-    verdict: ['PASS', 'FAIL', 'INVALID'],
-  },
-  'renderer.degraded': {
-    reason: [
-      'unsupported', 'creation-failed', 'context-lost', 'restore-failed', 'load-timeout',
-      'reduced-motion',
-    ],
-    fallback: ['canvas2d', 'dom', 'none'],
-  },
-  'mission.brief_viewed': {},
-  'activity.presented': { activityType: ACTIVITY_TYPES },
-}
+// (learner/gate/netlify-functions/dojo-analytics-collector.mjs) derives its
+// tables from the same os.json (AID-470 F1; equality locked by
+// learner/gate/tests/dojo_analytics_vocabularies.test.mjs).
+export const EVENT_VOCABULARIES: Readonly<Record<AnalyticsEventName, EventVocabularies>> =
+  vocabulary.eventVocabularies
 
 const EVENT_POLICIES: Readonly<Record<AnalyticsEventName, EventPolicy>> = (() => {
   const policies = {} as Record<AnalyticsEventName, EventPolicy>
@@ -98,20 +90,9 @@ const EVENT_POLICIES: Readonly<Record<AnalyticsEventName, EventPolicy>> = (() =>
   return policies
 })()
 
-export const CONTEXT_KEYS: readonly string[] = [
-  'trackId',
-  'missionId',
-  'missionRunId',
-  'engineId',
-  'engineVersion',
-  'contentVersion',
-  'rendererMode',
-]
-export const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly string[] | undefined>> = {
-  trackId: ['ai-pratica', 'dev'],
-  engineId: ['literacyDojo', 'voxelDojo'],
-  rendererMode: ['webgl', 'canvas2d', 'dom', 'none'],
-}
+export const CONTEXT_KEYS: readonly string[] = vocabulary.contextKeys
+export const CONTEXT_VOCABULARIES: Readonly<Record<string, readonly string[] | undefined>> =
+  vocabulary.contextVocabularies
 const ENRICHED_KEYS: readonly string[] = ['installationId', 'sessionId', ...CONTEXT_KEYS]
 const EVENT_NAMES = new Set<string>(ANALYTICS_EVENT_NAMES)
 const SAFE_IDENTIFIER = /^[A-Za-z0-9][A-Za-z0-9._:@/-]{0,127}$/
@@ -120,16 +101,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
 }
 
-function hasOnlyKeys(value: Record<string, unknown>, allowed: readonly string[]): boolean {
-  const allowedKeys = new Set(allowed)
-  return Object.keys(value).every((key) => allowedKeys.has(key))
-}
-
-function isBoundedScalar(value: unknown): value is AnalyticsScalar {
-  if (typeof value === 'boolean') return true
-  if (typeof value === 'number') return Number.isFinite(value)
-  return typeof value === 'string' && value.length > 0 && value.length <= 128
-}
+// hasOnlyKeys/isBoundedScalar/value-policy vivem no core compartilhado
+// (funnelCore) desde a consolidação; as versões locais foram removidas.
 
 function dimensionsAreValid(
   value: unknown,
@@ -137,9 +110,9 @@ function dimensionsAreValid(
   required: readonly string[] = [],
 ): value is Record<string, AnalyticsScalar> {
   if (!isRecord(value)) return false
-  if (!hasOnlyKeys(value, allowed)) return false
+  if (!recordHasOnlyKeys(value, allowed)) return false
   if (!required.every((key) => key in value)) return false
-  return Object.values(value).every(isBoundedScalar)
+  return Object.values(value).every((entry) => isBoundedFunnelScalar(entry))
 }
 
 function contextValueIsValid(key: string, value: unknown): boolean {
@@ -151,7 +124,7 @@ function contextValueIsValid(key: string, value: unknown): boolean {
 
 function contextIsValid(value: unknown): value is AnalyticsContext {
   if (!isRecord(value)) return false
-  if (!hasOnlyKeys(value, CONTEXT_KEYS)) return false
+  if (!recordHasOnlyKeys(value, CONTEXT_KEYS)) return false
   return Object.entries(value).every(([key, item]) => contextValueIsValid(key, item))
 }
 
@@ -167,10 +140,9 @@ function enrichedIdentityIsValid(dimensions: AnalyticsDimensions): boolean {
 }
 
 function valuesMatchPolicy(policy: EventPolicy, dimensions: AnalyticsDimensions): boolean {
-  return Object.entries(dimensions).every(([key, value]) => {
-    const vocabulary = policy.vocabularies[key]
-    return vocabulary === undefined || vocabulary.includes(value)
-  })
+  return Object.entries(dimensions).every(
+    ([key, value]) => valueMatchesVocabulary(key, value, policy.vocabularies),
+  )
 }
 
 function isAnalyticsEventName(value: unknown): value is AnalyticsEventName {
@@ -194,7 +166,7 @@ function eventTimingIsValid(value: Record<string, unknown>): boolean {
 
 export function analyticsEventInputIsValid(value: unknown): value is AnalyticsEventInput {
   if (!isRecord(value)) return false
-  if (!hasOnlyKeys(value, ['name', 'dimensions', 'context'])) return false
+  if (!recordHasOnlyKeys(value, ['name', 'dimensions', 'context'])) return false
   const name = value.name
   if (!isAnalyticsEventName(name)) return false
   const dimensions = value.dimensions ?? {}
@@ -206,7 +178,7 @@ export function analyticsEventInputIsValid(value: unknown): value is AnalyticsEv
 
 export function analyticsEventIsValid(value: unknown): value is AnalyticsEvent {
   if (!isRecord(value)) return false
-  if (!hasOnlyKeys(value, ['schemaVersion', 'eventId', 'name', 'occurredAt', 'sequence', 'dimensions'])) return false
+  if (!recordHasOnlyKeys(value, ['schemaVersion', 'eventId', 'name', 'occurredAt', 'sequence', 'dimensions'])) return false
   if (!eventEnvelopeFieldsAreValid(value)) return false
   if (!eventTimingIsValid(value)) return false
   const policy = EVENT_POLICIES[value.name]

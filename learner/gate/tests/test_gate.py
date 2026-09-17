@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 import learner.gate as gate
-from curriculum._shared.evidence import independently_verified_pass
+from learner.gate.standards import independently_verified_pass
 from learner.gate import (
     _check_evidence,
     _decide,
@@ -1148,7 +1148,7 @@ class TestCli:
 # --- Rubric catalog contract test --------------------------------------------
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-RUBRIC_CATALOG_PATH = REPO_ROOT / "curriculum" / "_shared" / "evidence_rubrics.yaml"
+RUBRIC_CATALOG_PATH = REPO_ROOT / "learner" / "gate" / "evidence_rubrics.yaml"
 
 
 def _load_rubric_catalog() -> dict[str, Any]:

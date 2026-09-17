@@ -3,8 +3,13 @@
 // Canonical parity projection of:
 //   - engines/codexdojo-os-prototype/src/analytics/events.ts        (OS v1)
 //   - engines/literacyDojo/src/domain/analytics.ts                  (literacy v2)
+//   - engines/shared/teaching-evidence/funnelTelemetry.ts           (surfaces v3)
 // The TS modules stay canonical for emission; this function is the receiving
-// trust boundary. Parity tests fail CI on drift between vocabularies.
+// trust boundary. All three vocabulary tables are GENERATED from the single
+// JSON authority engines/shared/teaching-evidence/vocabularies/*.json (see
+// the GENERATED blocks below; refresh: learner/gate/analytics/
+// refresh_vocabularies.mjs), and total JSON↔tables equality is locked by
+// learner/gate/tests/dojo_analytics_vocabularies.test.mjs.
 //
 // AID-913 activation: accepts BOTH envelopes — OS batches
 // {schemaVersion:1, events:[…]} and literacy batches
@@ -55,55 +60,152 @@ async function nodeFs() {
 }
 
 // --- OS envelope validation (parity with src/analytics/events.ts) ---
+//
+// The vocabulary tables below are GENERATED from the single JSON authority
+// engines/shared/teaching-evidence/vocabularies/os.json (the deployed
+// function cannot import outside this directory — see refresh_vocabularies.mjs).
+// Total JSON↔tables equality is locked by
+// learner/gate/tests/dojo_analytics_vocabularies.test.mjs.
 
+// >>> BEGIN GENERATED VOCABULARIES:os — do not edit by hand.
+// GENERATED from engines/shared/teaching-evidence/vocabularies/os.json —
+// refresh: node learner/gate/analytics/refresh_vocabularies.mjs
 export const ANALYTICS_EVENT_NAMES = [
-  "onboarding.started", "onboarding.completed", "journey.returned",
-  "mission.started", "mission.completed", "structured_attempt.submitted",
-  "structured_attempt.passed", "hint.requested", "retry.requested",
-  "review.started", "verification.state_changed", "renderer.degraded",
-  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
-  // de exposição de missões hospedadas (vocabulário aditivo retro-compat).
-  "mission.brief_viewed", "activity.presented",
+  "onboarding.started",
+  "onboarding.completed",
+  "journey.returned",
+  "mission.started",
+  "mission.completed",
+  "structured_attempt.submitted",
+  "structured_attempt.passed",
+  "hint.requested",
+  "retry.requested",
+  "review.started",
+  "verification.state_changed",
+  "renderer.degraded",
+  "mission.brief_viewed",
+  "activity.presented"
 ];
-
-const ACTIVITY_TYPES = [
-  "choice", "sort", "missing_context", "safety_classification", "prompt_builder",
-  "output_comparison", "rubric_review",
-];
-
-// As dimensões permitidas de cada evento são exatamente as chaves do seu vocabulário.
 export const EVENT_VOCABULARIES = {
   "onboarding.started": {},
-  "onboarding.completed": { recommendationChanged: [true, false] },
+  "onboarding.completed": {
+    "recommendationChanged": [
+      true,
+      false
+    ]
+  },
   "journey.returned": {},
-  "mission.started": { mode: ["initial", "review", "retry", "targeted-practice"] },
-  "mission.completed": { result: ["completed", "failed"] },
-  "structured_attempt.submitted": { activityType: ACTIVITY_TYPES },
-  "structured_attempt.passed": { activityType: ACTIVITY_TYPES },
+  "mission.started": {
+    "mode": [
+      "initial",
+      "review",
+      "retry",
+      "targeted-practice"
+    ]
+  },
+  "mission.completed": {
+    "result": [
+      "completed",
+      "failed"
+    ]
+  },
+  "structured_attempt.submitted": {
+    "activityType": [
+      "choice",
+      "sort",
+      "missing_context",
+      "safety_classification",
+      "prompt_builder",
+      "output_comparison",
+      "rubric_review"
+    ]
+  },
+  "structured_attempt.passed": {
+    "activityType": [
+      "choice",
+      "sort",
+      "missing_context",
+      "safety_classification",
+      "prompt_builder",
+      "output_comparison",
+      "rubric_review"
+    ]
+  },
   "hint.requested": {
-    mode: ["question", "explain", "hint"],
-    source: ["provider", "fallback", "policy"],
-    outcome: ["answered", "attempt-required", "quota-exhausted", "unavailable"],
+    "mode": [
+      "question",
+      "explain",
+      "hint"
+    ],
+    "source": [
+      "provider",
+      "fallback",
+      "policy"
+    ],
+    "outcome": [
+      "answered",
+      "attempt-required",
+      "quota-exhausted",
+      "unavailable"
+    ]
   },
   "retry.requested": {
-    reason: ["retry", "targeted-practice", "verification-unavailable", "engine-retry"],
+    "reason": [
+      "retry",
+      "targeted-practice",
+      "verification-unavailable",
+      "engine-retry"
+    ]
   },
-  "review.started": { reason: ["canonical-review", "due", "overdue"] },
+  "review.started": {
+    "reason": [
+      "canonical-review",
+      "due",
+      "overdue"
+    ]
+  },
   "verification.state_changed": {
-    state: ["validating", "pending", "verified", "rejected", "gateway-unavailable"],
-    verdict: ["PASS", "FAIL", "INVALID"],
+    "state": [
+      "validating",
+      "pending",
+      "verified",
+      "rejected",
+      "gateway-unavailable"
+    ],
+    "verdict": [
+      "PASS",
+      "FAIL",
+      "INVALID"
+    ]
   },
   "renderer.degraded": {
-    reason: [
-      "unsupported", "creation-failed", "context-lost", "restore-failed", "load-timeout",
-      "reduced-motion",
+    "reason": [
+      "unsupported",
+      "creation-failed",
+      "context-lost",
+      "restore-failed",
+      "load-timeout",
+      "reduced-motion"
     ],
-    fallback: ["canvas2d", "dom", "none"],
+    "fallback": [
+      "canvas2d",
+      "dom",
+      "none"
+    ]
   },
   "mission.brief_viewed": {},
-  "activity.presented": { activityType: ACTIVITY_TYPES },
+  "activity.presented": {
+    "activityType": [
+      "choice",
+      "sort",
+      "missing_context",
+      "safety_classification",
+      "prompt_builder",
+      "output_comparison",
+      "rubric_review"
+    ]
+  }
 };
-
 export const CONTEXT_KEYS = [
   "trackId",
   "missionId",
@@ -111,14 +213,25 @@ export const CONTEXT_KEYS = [
   "engineId",
   "engineVersion",
   "contentVersion",
-  "rendererMode",
+  "rendererMode"
 ];
-
 export const CONTEXT_VOCABULARIES = {
-  trackId: ["ai-pratica", "dev"],
-  engineId: ["literacyDojo", "voxelDojo"],
-  rendererMode: ["webgl", "canvas2d", "dom", "none"],
+  "trackId": [
+    "ai-pratica",
+    "dev"
+  ],
+  "engineId": [
+    "literacyDojo",
+    "voxelDojo"
+  ],
+  "rendererMode": [
+    "webgl",
+    "canvas2d",
+    "dom",
+    "none"
+  ]
 };
+// <<< END GENERATED VOCABULARIES:os
 
 const ENRICHED_KEYS = ["installationId", "sessionId", ...CONTEXT_KEYS];
 const EVENT_NAMES = new Set(ANALYTICS_EVENT_NAMES);
@@ -214,6 +327,9 @@ export function isAnalyticsBatch(value) {
 
 // --- literacy envelope validation (parity with src/domain/analytics.ts v2) ---
 
+// >>> BEGIN GENERATED VOCABULARIES:literacy — do not edit by hand.
+// GENERATED from engines/shared/teaching-evidence/vocabularies/literacy.json —
+// refresh: node learner/gate/analytics/refresh_vocabularies.mjs
 export const LITERACY_EVENT_NAMES = [
   "entry_viewed",
   "mapa_inicial_done",
@@ -221,18 +337,91 @@ export const LITERACY_EVENT_NAMES = [
   "lesson_started",
   "activity_attempted",
   "lesson_completed",
-  // Corredor literacy (spec AID-915 §4.3, emenda ADR-0009): revisão espaçada.
   "review_started",
   "review_completed",
-  // F2 `2026-09-10-entry-brief-instrumentation` (emenda ADR-0009): eventos
-  // de exposição (brief renderizado; atividade visível pela 1ª vez).
   "lesson_brief_viewed",
-  "activity_presented",
+  "activity_presented"
 ];
-
-export const LITERACY_ENTRY_ROUTES = ["home", "lesson-resume", "onboarding"];
-
-export const LITERACY_ACTIVITY_TYPES = ACTIVITY_TYPES;
+export const LITERACY_ENTRY_ROUTES = [
+  "home",
+  "lesson-resume",
+  "onboarding"
+];
+export const LITERACY_ACTIVITY_TYPES = [
+  "choice",
+  "sort",
+  "missing_context",
+  "safety_classification",
+  "prompt_builder",
+  "output_comparison",
+  "rubric_review"
+];
+export const LITERACY_EVENT_PROPS = {
+  "entry_viewed": [
+    "entry"
+  ],
+  "mapa_inicial_done": [
+    "lessonId",
+    "lessonVersion",
+    "score",
+    "durationSeconds"
+  ],
+  "route_chosen": [
+    "route"
+  ],
+  "lesson_started": [
+    "lessonId",
+    "lessonVersion"
+  ],
+  "activity_attempted": [
+    "lessonId",
+    "activityType",
+    "passed"
+  ],
+  "lesson_completed": [
+    "lessonId",
+    "lessonVersion",
+    "score",
+    "durationSeconds"
+  ],
+  "review_started": [
+    "lessonId",
+    "intervalDays",
+    "stage"
+  ],
+  "review_completed": [
+    "lessonId",
+    "score"
+  ],
+  "lesson_brief_viewed": [
+    "lessonId",
+    "lessonVersion"
+  ],
+  "activity_presented": [
+    "lessonId",
+    "activityType",
+    "activityIndex"
+  ]
+};
+export const LITERACY_OPTIONAL_PROPS = {
+  "entry_viewed": [
+    "entry"
+  ],
+  "mapa_inicial_done": [
+    "durationSeconds"
+  ],
+  "route_chosen": [],
+  "lesson_started": [],
+  "activity_attempted": [],
+  "lesson_completed": [
+    "durationSeconds"
+  ],
+  "review_started": [],
+  "review_completed": [],
+  "lesson_brief_viewed": [],
+  "activity_presented": []
+};
+// <<< END GENERATED VOCABULARIES:literacy
 
 const LITERACY_EVENT_NAMES_SET = new Set(LITERACY_EVENT_NAMES);
 const LITERACY_UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -240,32 +429,6 @@ const LITERACY_MAX_PROP_STRING = 120;
 const LITERACY_MAX_PROP_KEY = 40;
 const LITERACY_PROP_KEY_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 
-// Props permitidas por evento — conjunto EXATO; paridade 1:1 com
-// EVENT_PROPS/OPTIONAL_PROPS de engines/literacyDojo/src/domain/analytics.ts.
-const LITERACY_EVENT_PROPS = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  route_chosen: ["route"],
-  lesson_started: ["lessonId", "lessonVersion"],
-  activity_attempted: ["lessonId", "activityType", "passed"],
-  lesson_completed: ["lessonId", "lessonVersion", "score", "durationSeconds"],
-  review_started: ["lessonId", "intervalDays", "stage"],
-  review_completed: ["lessonId", "score"],
-  lesson_brief_viewed: ["lessonId", "lessonVersion"],
-  activity_presented: ["lessonId", "activityType", "activityIndex"],
-};
-const LITERACY_OPTIONAL_PROPS = {
-  entry_viewed: ["entry"],
-  mapa_inicial_done: ["durationSeconds"],
-  route_chosen: [],
-  lesson_started: [],
-  activity_attempted: [],
-  lesson_completed: ["durationSeconds"],
-  review_started: [],
-  review_completed: [],
-  lesson_brief_viewed: [],
-  activity_presented: [],
-};
 
 function literacyPropsAreValid(eventName, props) {
   if (!isRecord(props)) return false;
@@ -360,30 +523,47 @@ export function isLiteracyBatch(value) {
 // --- surfaces envelope validation (AID-987/T1b: dojoToday, voxelDojo, PixelQuest) ---
 //
 // Canonical emission vocabularies live in
-// engines/shared/teaching-evidence/funnelTelemetry.ts; this function is the
-// receiving trust boundary and CI locks parity
-// (learner/gate/tests/dojo_analytics_collector_v3.test.mjs). Same privacy
+// engines/shared/teaching-evidence/vocabularies/surfaces.json (mirrored by
+// funnelTelemetry.ts); this function is the receiving trust boundary and CI
+// locks the JSON↔tables binding
+// (learner/gate/tests/dojo_analytics_vocabularies.test.mjs). Same privacy
 // contract as the other envelopes: closed vocabularies, bounded scalars, no
 // free text, no learner identity — sessionId is a per-page-load random UUID.
 
 export const SURFACE_BATCH_SCHEMA_VERSION = 3;
-export const SURFACE_SOURCES = ["dojotoday", "voxeldojo", "pixelquest"];
-
+// >>> BEGIN GENERATED VOCABULARIES:surfaces — do not edit by hand.
+// GENERATED from engines/shared/teaching-evidence/vocabularies/surfaces.json —
+// refresh: node learner/gate/analytics/refresh_vocabularies.mjs
+export const SURFACE_SOURCES = [
+  "dojotoday",
+  "voxeldojo",
+  "pixelquest"
+];
 export const SURFACE_EVENT_NAMES = [
   "daily-view-open",
   "voxel-loop-complete",
   "pixelquest-encounter-complete",
-  "evidence-handoff",
+  "evidence-handoff"
 ];
-
 export const SURFACE_EVENT_PROPS = {
   "daily-view-open": [],
-  "voxel-loop-complete": ["unitId", "result"],
-  "pixelquest-encounter-complete": ["unitId", "result"],
-  "evidence-handoff": ["unitId"],
+  "voxel-loop-complete": [
+    "unitId",
+    "result"
+  ],
+  "pixelquest-encounter-complete": [
+    "unitId",
+    "result"
+  ],
+  "evidence-handoff": [
+    "unitId"
+  ]
 };
-
-export const SURFACE_RESULT_VALUES = ["completed", "failed"];
+export const SURFACE_RESULT_VALUES = [
+  "completed",
+  "failed"
+];
+// <<< END GENERATED VOCABULARIES:surfaces
 
 const SURFACE_EVENT_NAMES_SET = new Set(SURFACE_EVENT_NAMES);
 const SURFACE_SOURCES_SET = new Set(SURFACE_SOURCES);

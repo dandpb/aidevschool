@@ -7,8 +7,9 @@ from typing import Any
 
 import yaml
 
-from engines.openclaw.errors import OpenclawError, StateCorruptionError
-from learner.substrate.fsio import atomic_write_text as _atomic_write_text
+from engines.openclaw.errors import OpenclawError
+from shared.errors import StateCorruptionError
+from shared.fsio import atomic_write_text as _atomic_write_text
 
 
 def atomic_write_text(path: Path, text: str) -> None:

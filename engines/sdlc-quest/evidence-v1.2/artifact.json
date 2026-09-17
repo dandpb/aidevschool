@@ -1,0 +1,10 @@
+{
+  "appVersion": "1.2.0",
+  "htmlBytes": 233455,
+  "sha256": "bc4809ae66052ce957541f426df3cc400db53d4e04d17899c4b8a46c3c818e11",
+  "reproducibleBuild": true,
+  "node": "v22.16.0",
+  "browser": "144.0.7559.96",
+  "sourcesChecked": "2026-09-16",
+  "independentReviewer": false
+}

@@ -1,0 +1,24 @@
+%% Diagram: pipeline de conclusão de lição — o coração do jogo (módulo profundo)
+%%{init: {'theme': 'base', 'themeVariables': {
+  'primaryColor': '#1f6feb', 'primaryTextColor': '#e6edf3',
+  'primaryBorderColor': '#388bfd', 'lineColor': '#64748b',
+  'secondaryColor': '#238636', 'tertiaryColor': '#9e6a03',
+  'background': '#0d1117', 'mainBkg': '#161b22',
+  'nodeBorder': '#30363d', 'clusterBkg': '#10151d',
+  'clusterBorder': '#30363d', 'titleColor': '#e6edf3',
+  'edgeLabelBackground': '#0d1117', 'textColor': '#e6edf3'
+}}}%%
+flowchart LR
+    answers["Tentativa submetida<br/>POST /api/lesson/[id]/complete<br/>com clock injetado (now)"] --> grade["grader.ts<br/>igualdade estrita por tipo de exercício"]
+    grade --> tx
+
+    subgraph tx["Uma única transação Prisma"]
+        xp["XP + gemas<br/>corações debitados"]
+        streak["streak: touch,<br/>freeze auto, marcos"]
+        league["leagueXp + reset<br/>semanal automático"]
+        ach["sync de conquistas<br/>(12 selos)"]
+        log["activity log"]
+    end
+
+    tx --> snap["snapshot() reflete<br/>o novo estado"]
+    snap --> ui["UI atualiza: streak · meta semanal<br/>liga · corações com regen"]

@@ -82,6 +82,83 @@ class TestThresholdDrift(unittest.TestCase):
             ),
         )
 
+def _threshold_literal_violations(root: Path) -> list[str]:
+    """Scan production .py files for hardcoded mutation/coverage thresholds.
+
+    Excludes ``tests`` directories (fixtures legitimately carry scores) and
+    vendored/generated trees (``node_modules``, ``__pycache__``, ``dist``,
+    ``target``, virtualenvs). The live bar is read from the seam at judgment
+    time by ``learner/gate/standards.load_thresholds``; any literal here is drift.
+    """
+    import os
+    import re
+
+    skip_dirs = {"tests", "__pycache__", "node_modules", "dist", "target", ".venv", ".venv-linux", "venv"}
+    pattern = re.compile(
+        r"(mutation(?:_score)?(?:_min)?|cobertura|coverage(?:_core)?(?:_min)?)"
+        r"[^\n]{0,40}(?:=|:|<|>|≥)\s*0\.[6-9][0-9]",
+        re.IGNORECASE,
+    )
+    findings: list[str] = []
+    for area in ("learner", "curriculum"):
+        for dirpath, dirnames, filenames in os.walk(root / area):
+            dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+            for filename in filenames:
+                if not filename.endswith(".py"):
+                    continue
+                path = Path(dirpath) / filename
+                try:
+                    text = path.read_text(encoding="utf-8")
+                except OSError:
+                    continue
+                for lineno, line in enumerate(text.splitlines(), start=1):
+                    if pattern.search(line):
+                        findings.append(f"{path.relative_to(root)}:{lineno}: {line.strip()}")
+    return findings
+
+
+class TestThresholdLiterals(unittest.TestCase):
+    """Cerca estendida (H2): nenhum literal de threshold fora do seam."""
+
+    def test_no_hardcoded_threshold_literals(self) -> None:
+        findings = _threshold_literal_violations(REPO_ROOT)
+        self.assertEqual(
+            findings,
+            [],
+            msg=(
+                "Hardcoded threshold literal(s) found; the enforced bar lives in "
+ f"{CONFIG_PATH} (read at judgment time by learner.gate.standards). "
+                f"Offenders: {findings}"
+            ),
+        )
+
+    def test_fence_discriminates(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            good = root / "learner" / "pkg"
+            good.mkdir(parents=True)
+            (good / "clean.py").write_text(
+                'THRESH = load_thresholds()\n', encoding="utf-8"
+            )
+            self.assertEqual(_threshold_literal_violations(root), [])
+
+            (good / "dirty.py").write_text(
+                "MUTATION_MIN = 0.65\n", encoding="utf-8"
+            )
+            findings = _threshold_literal_violations(root)
+            self.assertEqual(len(findings), 1)
+            self.assertIn("dirty.py", findings[0])
+
+            # Test fixtures are exempt by design.
+            fixture = root / "learner" / "pkg" / "tests"
+            fixture.mkdir()
+            (fixture / "test_fixture.py").write_text(
+                'verifier = {"mutation_score": 0.64}\n', encoding="utf-8"
+            )
+            self.assertEqual(len(_threshold_literal_violations(root)), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

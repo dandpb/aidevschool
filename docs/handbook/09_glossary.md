@@ -23,7 +23,8 @@ English. This glossary maps the terms you'll meet.
 | **AIDI / `ai_dependency_index`** | A metric tracking how dependent the learner is on the AI; lower is better. |
 | **FSRS** | Free Spaced Repetition Scheduler — the spaced-repetition algorithm; ratings come only from gate outcomes. |
 | **CURR** | Current-user Retention Rate proxy (7-day window). Explicitly unvalidated; drives no automated decision. |
-| **Streak / freeze** | Consecutive days with a passing gate; equipped freezes absorb missed days up to canonical `streak.freezes.max`. |
+| **Verified learning streak / freeze** | Consecutive days with a passing gate; equipped freezes absorb missed days up to canonical `streak.freezes.max`. Stored as `streak` in Learner Journey. |
+| **Local engagement streak** | LiteracyDojo's consecutive local dates of activity attempts, including unsuccessful attempts; stored as local `streak`, without canonical freeze or mastery authority. |
 | **Dreyfus × Bloom** | The two-axis model used to classify the learner's level per concept (skill acquisition × cognitive depth). |
 
 ## State-machine values

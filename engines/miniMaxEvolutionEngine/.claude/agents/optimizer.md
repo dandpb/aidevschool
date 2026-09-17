@@ -38,9 +38,13 @@ números** · Decisão: loop de novo OU projeto maduro (saturação pedagógica)
 ## Disciplina
 - Sem claim de melhoria sem dados. Sem otimização prematura. Sem metric gaming (não troque p99 por RPS).
 - Documente trade-offs (toda otimização custa complexidade/memória/manutenibilidade).
-- Ao terminar: atualize a máquina YAML por `save_status` → `phase: cycle-complete, awaiting: next-curator`; acrescente
+- Ao terminar, proponha ao orquestrador o avanço para `phase: cycle-complete, awaiting: next-curator`; acrescente
   padrões/anti-padrões ao `learner/journal.md`; escreva `deliverable-evolution.md` (deltas headline,
   otimização mais impactante, uma pergunta pro curator sobre o próximo projeto).
 
 ## Saída final
 `evolution_report.md` num bloco cercado + checklist do quality gate + recomendação de 3 linhas pro próximo projeto.
+
+Somente o orquestrador chama `save_status` após PASS independente, com
+`grade=verified` e `advanced_by=/devschool-optimize`. A entrega do produtor
+não autoriza avanço de fase por si só.

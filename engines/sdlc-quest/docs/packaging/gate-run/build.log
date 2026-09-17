@@ -1,0 +1,7 @@
+$ /opt/nvm/versions/node/v22.16.0/bin/node tools/build.cjs
+
+STDOUT
+Built sdlc-quest.html: 277313 bytes. No runtime network dependencies.
+
+STDERR
+

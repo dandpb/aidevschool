@@ -1,0 +1,97 @@
+{
+  "eventNames": [
+    "onboarding.started",
+    "onboarding.completed",
+    "journey.returned",
+    "mission.started",
+    "mission.completed",
+    "structured_attempt.submitted",
+    "structured_attempt.passed",
+    "hint.requested",
+    "retry.requested",
+    "review.started",
+    "verification.state_changed",
+    "renderer.degraded",
+    "mission.brief_viewed",
+    "activity.presented"
+  ],
+  "eventVocabularies": {
+    "onboarding.started": {},
+    "onboarding.completed": { "recommendationChanged": [true, false] },
+    "journey.returned": {},
+    "mission.started": { "mode": ["initial", "review", "retry", "targeted-practice"] },
+    "mission.completed": { "result": ["completed", "failed"] },
+    "structured_attempt.submitted": {
+      "activityType": [
+        "choice",
+        "sort",
+        "missing_context",
+        "safety_classification",
+        "prompt_builder",
+        "output_comparison",
+        "rubric_review"
+      ]
+    },
+    "structured_attempt.passed": {
+      "activityType": [
+        "choice",
+        "sort",
+        "missing_context",
+        "safety_classification",
+        "prompt_builder",
+        "output_comparison",
+        "rubric_review"
+      ]
+    },
+    "hint.requested": {
+      "mode": ["question", "explain", "hint"],
+      "source": ["provider", "fallback", "policy"],
+      "outcome": ["answered", "attempt-required", "quota-exhausted", "unavailable"]
+    },
+    "retry.requested": {
+      "reason": ["retry", "targeted-practice", "verification-unavailable", "engine-retry"]
+    },
+    "review.started": { "reason": ["canonical-review", "due", "overdue"] },
+    "verification.state_changed": {
+      "state": ["validating", "pending", "verified", "rejected", "gateway-unavailable"],
+      "verdict": ["PASS", "FAIL", "INVALID"]
+    },
+    "renderer.degraded": {
+      "reason": [
+        "unsupported",
+        "creation-failed",
+        "context-lost",
+        "restore-failed",
+        "load-timeout",
+        "reduced-motion"
+      ],
+      "fallback": ["canvas2d", "dom", "none"]
+    },
+    "mission.brief_viewed": {},
+    "activity.presented": {
+      "activityType": [
+        "choice",
+        "sort",
+        "missing_context",
+        "safety_classification",
+        "prompt_builder",
+        "output_comparison",
+        "rubric_review"
+      ]
+    }
+  },
+  "contextKeys": [
+    "trackId",
+    "missionId",
+    "missionRunId",
+    "engineId",
+    "engineVersion",
+    "contentVersion",
+    "rendererMode"
+  ],
+  "contextVocabularies": {
+    "trackId": ["ai-pratica", "dev"],
+    "engineId": ["literacyDojo", "voxelDojo"],
+    "rendererMode": ["webgl", "canvas2d", "dom", "none"]
+  }
+}

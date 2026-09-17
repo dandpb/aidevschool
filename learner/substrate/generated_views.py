@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Mapping
 
-from learner.substrate.fsio import atomic_write_text
+from shared.fsio import atomic_write_text
 
 
 def check_views(views: Mapping[Path, str]) -> list[Path]:

@@ -8,7 +8,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from curriculum._shared.evidence import (
+from learner.gate.standards import (
     independently_verified_pass as independently_verified_pass,
 )
 from learner.gate.evidence_io import (

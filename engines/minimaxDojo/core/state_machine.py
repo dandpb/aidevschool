@@ -8,12 +8,12 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from curriculum._shared.time import utc_now_iso
+from shared.time import utc_now_iso
 
 from .config import max_retries as _config_max_retries
 
 
-# Canonical timestamp helper lives in ``curriculum._shared.time`` (audit ref:
+# Canonical timestamp helper lives in ``shared.time`` (audit ref:
 # docs/TECH_DEBT_AUDIT_2026-07-08.md item 20). The previous private one-liner
 # was removed in favour of the shared module so format drift can only happen
 # in one place.

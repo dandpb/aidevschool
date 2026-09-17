@@ -1,0 +1,1822 @@
+$ /opt/nvm/versions/node/v22.16.0/bin/node --test tests/audit.test.cjs tests/core.test.cjs tests/golden.test.cjs tests/harness.test.cjs tests/quest-gate.test.cjs tests/tlc.test.cjs
+
+STDOUT
+TAP version 13
+# Subtest: F03 intent: empty submission is not a learning attempt
+ok 1 - F03 intent: empty submission is not a learning attempt
+  ---
+  duration_ms: 3.826478
+  type: 'test'
+  ...
+# Subtest: F03 risk: empty submission is not a learning attempt
+ok 2 - F03 risk: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.416043
+  type: 'test'
+  ...
+# Subtest: F03 intent-gate: empty submission is not a learning attempt
+ok 3 - F03 intent-gate: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.202499
+  type: 'test'
+  ...
+# Subtest: F03 contracts: empty submission is not a learning attempt
+ok 4 - F03 contracts: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.184481
+  type: 'test'
+  ...
+# Subtest: F03 pillars: empty submission is not a learning attempt
+ok 5 - F03 pillars: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.441417
+  type: 'test'
+  ...
+# Subtest: F03 secrets: empty submission is not a learning attempt
+ok 6 - F03 secrets: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.175988
+  type: 'test'
+  ...
+# Subtest: F03 diff: empty submission is not a learning attempt
+ok 7 - F03 diff: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.558333
+  type: 'test'
+  ...
+# Subtest: F03 redgreen: empty submission is not a learning attempt
+ok 8 - F03 redgreen: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.204594
+  type: 'test'
+  ...
+# Subtest: F03 delegation: empty submission is not a learning attempt
+ok 9 - F03 delegation: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.877827
+  type: 'test'
+  ...
+# Subtest: F03 patch: empty submission is not a learning attempt
+ok 10 - F03 patch: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.922134
+  type: 'test'
+  ...
+# Subtest: F03 evidence: empty submission is not a learning attempt
+ok 11 - F03 evidence: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.344698
+  type: 'test'
+  ...
+# Subtest: F03 evals: empty submission is not a learning attempt
+ok 12 - F03 evals: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.136733
+  type: 'test'
+  ...
+# Subtest: F03 review: empty submission is not a learning attempt
+ok 13 - F03 review: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.189824
+  type: 'test'
+  ...
+# Subtest: F03 gate: empty submission is not a learning attempt
+ok 14 - F03 gate: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.207017
+  type: 'test'
+  ...
+# Subtest: F03 guardrail: empty submission is not a learning attempt
+ok 15 - F03 guardrail: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.122283
+  type: 'test'
+  ...
+# Subtest: F03 bands: empty submission is not a learning attempt
+ok 16 - F03 bands: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.154299
+  type: 'test'
+  ...
+# Subtest: F03 loop: empty submission is not a learning attempt
+ok 17 - F03 loop: empty submission is not a learning attempt
+  ---
+  duration_ms: 0.111212
+  type: 'test'
+  ...
+# Subtest: F03 partial genuine answer remains evaluable
+ok 18 - F03 partial genuine answer remains evaluable
+  ---
+  duration_ms: 0.219311
+  type: 'test'
+  ...
+# Subtest: F06 incident roundtrip preserves one-action budget and history
+ok 19 - F06 incident roundtrip preserves one-action budget and history
+  ---
+  duration_ms: 6.153288
+  type: 'test'
+  ...
+# Subtest: F06 imported incident rebuilds history, never trusts supplied log or burn
+ok 20 - F06 imported incident rebuilds history, never trusts supplied log or burn
+  ---
+  duration_ms: 0.804568
+  type: 'test'
+  ...
+# Subtest: F06 invalid incident phase safely resets
+ok 21 - F06 invalid incident phase safely resets
+  ---
+  duration_ms: 0.231619
+  type: 'test'
+  ...
+# Subtest: F07 portable backup preserves legitimate progress
+ok 22 - F07 portable backup preserves legitimate progress
+  ---
+  duration_ms: 1.719248
+  type: 'test'
+  ...
+# Subtest: F07 rejects malformed backup {broken
+ok 23 - F07 rejects malformed backup {broken
+  ---
+  duration_ms: 1.253968
+  type: 'test'
+  ...
+# Subtest: F07 rejects malformed backup null
+ok 24 - F07 rejects malformed backup null
+  ---
+  duration_ms: 0.262265
+  type: 'test'
+  ...
+# Subtest: F07 rejects malformed backup []
+ok 25 - F07 rejects malformed backup []
+  ---
+  duration_ms: 0.152896
+  type: 'test'
+  ...
+# Subtest: F07 rejects malformed backup {"format":"other"}
+ok 26 - F07 rejects malformed backup {"format":"other"}
+  ---
+  duration_ms: 0.154384
+  type: 'test'
+  ...
+# Subtest: F07 rejects malformed backup {"format":"sdlc-quest-backup","backupVersion":99}
+ok 27 - F07 rejects malformed backup {"format":"sdlc-quest-backup","backupVersion":99}
+  ---
+  duration_ms: 0.16343
+  type: 'test'
+  ...
+# Subtest: F07 oversized backup rejected
+ok 28 - F07 oversized backup rejected
+  ---
+  duration_ms: 0.293044
+  type: 'test'
+  ...
+# Subtest: F07 completion flags outside contiguous progress are still rejected
+ok 29 - F07 completion flags outside contiguous progress are still rejected
+  ---
+  duration_ms: 0.582505
+  type: 'test'
+  ...
+# Subtest: F09 reflection fields bounded and unknown fields stripped
+ok 30 - F09 reflection fields bounded and unknown fields stripped
+  ---
+  duration_ms: 0.556002
+  type: 'test'
+  ...
+# Subtest: F05 every task has free concept and concrete example
+ok 31 - F05 every task has free concept and concrete example
+  ---
+  duration_ms: 0.275956
+  type: 'test'
+  ...
+# Subtest: F08 distractor feedback explains selected error
+ok 32 - F08 distractor feedback explains selected error
+  ---
+  duration_ms: 1.322458
+  type: 'test'
+  ...
+# Subtest: six missions, eighteen unique tasks, five bosses, six artifacts
+ok 33 - six missions, eighteen unique tasks, five bosses, six artifacts
+  ---
+  duration_ms: 3.735192
+  type: 'test'
+  ...
+# Subtest: intent: intended solution accepted
+ok 34 - intent: intended solution accepted
+  ---
+  duration_ms: 0.835106
+  type: 'test'
+  ...
+# Subtest: intent: empty answer rejected
+ok 35 - intent: empty answer rejected
+  ---
+  duration_ms: 0.387174
+  type: 'test'
+  ...
+# Subtest: risk: intended solution accepted
+ok 36 - risk: intended solution accepted
+  ---
+  duration_ms: 0.271821
+  type: 'test'
+  ...
+# Subtest: risk: empty answer rejected
+ok 37 - risk: empty answer rejected
+  ---
+  duration_ms: 0.356781
+  type: 'test'
+  ...
+# Subtest: intent-gate: intended solution accepted
+ok 38 - intent-gate: intended solution accepted
+  ---
+  duration_ms: 0.198902
+  type: 'test'
+  ...
+# Subtest: intent-gate: empty answer rejected
+ok 39 - intent-gate: empty answer rejected
+  ---
+  duration_ms: 0.236162
+  type: 'test'
+  ...
+# Subtest: contracts: intended solution accepted
+ok 40 - contracts: intended solution accepted
+  ---
+  duration_ms: 0.266964
+  type: 'test'
+  ...
+# Subtest: contracts: empty answer rejected
+ok 41 - contracts: empty answer rejected
+  ---
+  duration_ms: 1.531592
+  type: 'test'
+  ...
+# Subtest: pillars: intended solution accepted
+ok 42 - pillars: intended solution accepted
+  ---
+  duration_ms: 1.0167
+  type: 'test'
+  ...
+# Subtest: pillars: empty answer rejected
+ok 43 - pillars: empty answer rejected
+  ---
+  duration_ms: 0.356355
+  type: 'test'
+  ...
+# Subtest: secrets: intended solution accepted
+ok 44 - secrets: intended solution accepted
+  ---
+  duration_ms: 0.183159
+  type: 'test'
+  ...
+# Subtest: secrets: empty answer rejected
+ok 45 - secrets: empty answer rejected
+  ---
+  duration_ms: 0.120194
+  type: 'test'
+  ...
+# Subtest: diff: intended solution accepted
+ok 46 - diff: intended solution accepted
+  ---
+  duration_ms: 0.283592
+  type: 'test'
+  ...
+# Subtest: diff: empty answer rejected
+ok 47 - diff: empty answer rejected
+  ---
+  duration_ms: 0.118685
+  type: 'test'
+  ...
+# Subtest: redgreen: intended solution accepted
+ok 48 - redgreen: intended solution accepted
+  ---
+  duration_ms: 0.195767
+  type: 'test'
+  ...
+# Subtest: redgreen: empty answer rejected
+ok 49 - redgreen: empty answer rejected
+  ---
+  duration_ms: 5.170669
+  type: 'test'
+  ...
+# Subtest: delegation: intended solution accepted
+ok 50 - delegation: intended solution accepted
+  ---
+  duration_ms: 0.241884
+  type: 'test'
+  ...
+# Subtest: delegation: empty answer rejected
+ok 51 - delegation: empty answer rejected
+  ---
+  duration_ms: 0.134965
+  type: 'test'
+  ...
+# Subtest: patch: intended solution accepted
+ok 52 - patch: intended solution accepted
+  ---
+  duration_ms: 0.782876
+  type: 'test'
+  ...
+# Subtest: patch: empty answer rejected
+ok 53 - patch: empty answer rejected
+  ---
+  duration_ms: 0.28114
+  type: 'test'
+  ...
+# Subtest: evidence: intended solution accepted
+ok 54 - evidence: intended solution accepted
+  ---
+  duration_ms: 0.142687
+  type: 'test'
+  ...
+# Subtest: evidence: empty answer rejected
+ok 55 - evidence: empty answer rejected
+  ---
+  duration_ms: 0.174067
+  type: 'test'
+  ...
+# Subtest: evals: intended solution accepted
+ok 56 - evals: intended solution accepted
+  ---
+  duration_ms: 0.363939
+  type: 'test'
+  ...
+# Subtest: evals: empty answer rejected
+ok 57 - evals: empty answer rejected
+  ---
+  duration_ms: 0.248147
+  type: 'test'
+  ...
+# Subtest: review: intended solution accepted
+ok 58 - review: intended solution accepted
+  ---
+  duration_ms: 0.12927
+  type: 'test'
+  ...
+# Subtest: review: empty answer rejected
+ok 59 - review: empty answer rejected
+  ---
+  duration_ms: 0.316513
+  type: 'test'
+  ...
+# Subtest: gate: intended solution accepted
+ok 60 - gate: intended solution accepted
+  ---
+  duration_ms: 0.447418
+  type: 'test'
+  ...
+# Subtest: gate: empty answer rejected
+ok 61 - gate: empty answer rejected
+  ---
+  duration_ms: 0.394322
+  type: 'test'
+  ...
+# Subtest: guardrail: intended solution accepted
+ok 62 - guardrail: intended solution accepted
+  ---
+  duration_ms: 0.465967
+  type: 'test'
+  ...
+# Subtest: guardrail: empty answer rejected
+ok 63 - guardrail: empty answer rejected
+  ---
+  duration_ms: 0.263058
+  type: 'test'
+  ...
+# Subtest: bands: intended solution accepted
+ok 64 - bands: intended solution accepted
+  ---
+  duration_ms: 0.175433
+  type: 'test'
+  ...
+# Subtest: bands: empty answer rejected
+ok 65 - bands: empty answer rejected
+  ---
+  duration_ms: 0.17294
+  type: 'test'
+  ...
+# Subtest: incident: intended solution accepted
+ok 66 - incident: intended solution accepted
+  ---
+  duration_ms: 0.163059
+  type: 'test'
+  ...
+# Subtest: incident: empty answer rejected
+ok 67 - incident: empty answer rejected
+  ---
+  duration_ms: 0.256593
+  type: 'test'
+  ...
+# Subtest: loop: intended solution accepted
+ok 68 - loop: intended solution accepted
+  ---
+  duration_ms: 3.287582
+  type: 'test'
+  ...
+# Subtest: loop: empty answer rejected
+ok 69 - loop: empty answer rejected
+  ---
+  duration_ms: 0.266812
+  type: 'test'
+  ...
+# Subtest: intent: duplicate selection rejected
+ok 70 - intent: duplicate selection rejected
+  ---
+  duration_ms: 0.275837
+  type: 'test'
+  ...
+# Subtest: intent: missing required card rejected
+ok 71 - intent: missing required card rejected
+  ---
+  duration_ms: 0.543827
+  type: 'test'
+  ...
+# Subtest: intent: selecting all cards rejected
+ok 72 - intent: selecting all cards rejected
+  ---
+  duration_ms: 0.411381
+  type: 'test'
+  ...
+# Subtest: contracts: duplicate selection rejected
+ok 73 - contracts: duplicate selection rejected
+  ---
+  duration_ms: 0.221583
+  type: 'test'
+  ...
+# Subtest: contracts: missing required card rejected
+ok 74 - contracts: missing required card rejected
+  ---
+  duration_ms: 0.123796
+  type: 'test'
+  ...
+# Subtest: contracts: selecting all cards rejected
+ok 75 - contracts: selecting all cards rejected
+  ---
+  duration_ms: 0.160963
+  type: 'test'
+  ...
+# Subtest: secrets: duplicate selection rejected
+ok 76 - secrets: duplicate selection rejected
+  ---
+  duration_ms: 0.141009
+  type: 'test'
+  ...
+# Subtest: secrets: missing required card rejected
+ok 77 - secrets: missing required card rejected
+  ---
+  duration_ms: 0.120717
+  type: 'test'
+  ...
+# Subtest: secrets: selecting all cards rejected
+ok 78 - secrets: selecting all cards rejected
+  ---
+  duration_ms: 0.11885
+  type: 'test'
+  ...
+# Subtest: diff: duplicate selection rejected
+ok 79 - diff: duplicate selection rejected
+  ---
+  duration_ms: 0.1406
+  type: 'test'
+  ...
+# Subtest: diff: missing required card rejected
+ok 80 - diff: missing required card rejected
+  ---
+  duration_ms: 0.119424
+  type: 'test'
+  ...
+# Subtest: diff: selecting all cards rejected
+ok 81 - diff: selecting all cards rejected
+  ---
+  duration_ms: 0.185555
+  type: 'test'
+  ...
+# Subtest: intent-gate: distractor file rejected
+ok 82 - intent-gate: distractor file rejected
+  ---
+  duration_ms: 0.25544
+  type: 'test'
+  ...
+# Subtest: intent-gate: distractor guess rejected
+ok 83 - intent-gate: distractor guess rejected
+  ---
+  duration_ms: 0.112805
+  type: 'test'
+  ...
+# Subtest: evidence: distractor claim rejected
+ok 84 - evidence: distractor claim rejected
+  ---
+  duration_ms: 0.231377
+  type: 'test'
+  ...
+# Subtest: evidence: distractor old rejected
+ok 85 - evidence: distractor old rejected
+  ---
+  duration_ms: 0.237717
+  type: 'test'
+  ...
+# Subtest: evidence: distractor review rejected
+ok 86 - evidence: distractor review rejected
+  ---
+  duration_ms: 0.276764
+  type: 'test'
+  ...
+# Subtest: guardrail: distractor merge rejected
+ok 87 - guardrail: distractor merge rejected
+  ---
+  duration_ms: 0.24233
+  type: 'test'
+  ...
+# Subtest: guardrail: distractor freeze rejected
+ok 88 - guardrail: distractor freeze rejected
+  ---
+  duration_ms: 0.265216
+  type: 'test'
+  ...
+# Subtest: bands: distractor rollback rejected
+ok 89 - bands: distractor rollback rejected
+  ---
+  duration_ms: 0.203435
+  type: 'test'
+  ...
+# Subtest: bands: distractor silence rejected
+ok 90 - bands: distractor silence rejected
+  ---
+  duration_ms: 0.310688
+  type: 'test'
+  ...
+# Subtest: redgreen: reverse ordering rejected
+ok 91 - redgreen: reverse ordering rejected
+  ---
+  duration_ms: 0.403695
+  type: 'test'
+  ...
+# Subtest: loop: reverse ordering rejected
+ok 92 - loop: reverse ordering rejected
+  ---
+  duration_ms: 0.204588
+  type: 'test'
+  ...
+# Subtest: scoped patch passes four immutable fixture checks
+ok 93 - scoped patch passes four immutable fixture checks
+  ---
+  duration_ms: 0.502375
+  type: 'test'
+  ...
+# Subtest: original: cannot conceal cross-tenant defect
+ok 94 - original: cannot conceal cross-tenant defect
+  ---
+  duration_ms: 0.494206
+  type: 'test'
+  ...
+# Subtest: skip: cannot conceal cross-tenant defect
+ok 95 - skip: cannot conceal cross-tenant defect
+  ---
+  duration_ms: 0.345902
+  type: 'test'
+  ...
+# Subtest: expect: cannot conceal cross-tenant defect
+ok 96 - expect: cannot conceal cross-tenant defect
+  ---
+  duration_ms: 0.31709
+  type: 'test'
+  ...
+# Subtest: unrecognized: cannot conceal cross-tenant defect
+ok 97 - unrecognized: cannot conceal cross-tenant defect
+  ---
+  duration_ms: 0.292981
+  type: 'test'
+  ...
+# Subtest: release gate: incorrect evidence blocks
+ok 98 - release gate: incorrect evidence blocks
+  ---
+  duration_ms: 0.449547
+  type: 'test'
+  ...
+# Subtest: release gate: incorrect approval blocks
+ok 99 - release gate: incorrect approval blocks
+  ---
+  duration_ms: 0.314746
+  type: 'test'
+  ...
+# Subtest: release gate: incorrect identity blocks
+ok 100 - release gate: incorrect identity blocks
+  ---
+  duration_ms: 0.822824
+  type: 'test'
+  ...
+# Subtest: release gate: incorrect policy blocks
+ok 101 - release gate: incorrect policy blocks
+  ---
+  duration_ms: 0.304867
+  type: 'test'
+  ...
+# Subtest: initial state only allows first station
+ok 102 - initial state only allows first station
+  ---
+  duration_ms: 4.488591
+  type: 'test'
+  ...
+# Subtest: cannot complete a future station
+ok 103 - cannot complete a future station
+  ---
+  duration_ms: 0.842786
+  type: 'test'
+  ...
+# Subtest: cannot jump past earlier tasks in current station
+ok 104 - cannot jump past earlier tasks in current station
+  ---
+  duration_ms: 0.461399
+  type: 'test'
+  ...
+# Subtest: normal full progression awards 1800 XP and five bosses
+ok 105 - normal full progression awards 1800 XP and five bosses
+  ---
+  duration_ms: 4.721909
+  type: 'test'
+  ...
+# Subtest: replay never farms XP
+ok 106 - replay never farms XP
+  ---
+  duration_ms: 0.887862
+  type: 'test'
+  ...
+# Subtest: score deducts 15 per error and 20 once for hint, floor 40
+ok 107 - score deducts 15 per error and 20 once for hint, floor 40
+  ---
+  duration_ms: 0.296242
+  type: 'test'
+  ...
+# Subtest: normalization rejects malformed version and bounds settings
+ok 108 - normalization rejects malformed version and bounds settings
+  ---
+  duration_ms: 2.498932
+  type: 'test'
+  ...
+# Subtest: normalization strips unknown and noncontiguous completion
+ok 109 - normalization strips unknown and noncontiguous completion
+  ---
+  duration_ms: 0.454572
+  type: 'test'
+  ...
+# Subtest: save restores legal drafts only
+ok 110 - save restores legal drafts only
+  ---
+  duration_ms: 0.637802
+  type: 'test'
+  ...
+# Subtest: save roundtrip retains progression and penalty
+ok 111 - save roundtrip retains progression and penalty
+  ---
+  duration_ms: 1.320106
+  type: 'test'
+  ...
+# Subtest: shuffle is deterministic, preserves every option and does not mutate original
+ok 112 - shuffle is deterministic, preserves every option and does not mutate original
+  ---
+  duration_ms: 0.755459
+  type: 'test'
+  ...
+# Subtest: incident rollback never authorized by bare alert
+ok 113 - incident rollback never authorized by bare alert
+  ---
+  duration_ms: 0.635345
+  type: 'test'
+  ...
+# Subtest: incident requires diagnosis before mitigation
+ok 114 - incident requires diagnosis before mitigation
+  ---
+  duration_ms: 0.318455
+  type: 'test'
+  ...
+# Subtest: incident allows one mitigation and rejects repetition
+ok 115 - incident allows one mitigation and rejects repetition
+  ---
+  duration_ms: 0.396386
+  type: 'test'
+  ...
+# Subtest: incident cannot report completion after mitigation alone
+ok 116 - incident cannot report completion after mitigation alone
+  ---
+  duration_ms: 0.497886
+  type: 'test'
+  ...
+# Subtest: full bounded incident ends escalated and recorded, not recovered
+ok 117 - full bounded incident ends escalated and recorded, not recovered
+  ---
+  duration_ms: 0.774156
+  type: 'test'
+  ...
+# Subtest: operational artifacts are labeled simulated and unverified
+ok 118 - operational artifacts are labeled simulated and unverified
+  ---
+  duration_ms: 0.441463
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: intent
+ok 119 - fixed acceptance: intent
+  ---
+  duration_ms: 2.938097
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: risk
+ok 120 - fixed acceptance: risk
+  ---
+  duration_ms: 0.358241
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: intent-gate
+ok 121 - fixed acceptance: intent-gate
+  ---
+  duration_ms: 0.189291
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: contracts
+ok 122 - fixed acceptance: contracts
+  ---
+  duration_ms: 0.215158
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: pillars
+ok 123 - fixed acceptance: pillars
+  ---
+  duration_ms: 0.418994
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: secrets
+ok 124 - fixed acceptance: secrets
+  ---
+  duration_ms: 0.190725
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: diff
+ok 125 - fixed acceptance: diff
+  ---
+  duration_ms: 0.351773
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: redgreen
+ok 126 - fixed acceptance: redgreen
+  ---
+  duration_ms: 0.164833
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: delegation
+ok 127 - fixed acceptance: delegation
+  ---
+  duration_ms: 1.780439
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: patch
+ok 128 - fixed acceptance: patch
+  ---
+  duration_ms: 1.176865
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: evidence
+ok 129 - fixed acceptance: evidence
+  ---
+  duration_ms: 0.432983
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: evals
+ok 130 - fixed acceptance: evals
+  ---
+  duration_ms: 0.48552
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: review
+ok 131 - fixed acceptance: review
+  ---
+  duration_ms: 0.161116
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: gate
+ok 132 - fixed acceptance: gate
+  ---
+  duration_ms: 0.300797
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: guardrail
+ok 133 - fixed acceptance: guardrail
+  ---
+  duration_ms: 0.102687
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: bands
+ok 134 - fixed acceptance: bands
+  ---
+  duration_ms: 0.06439
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: incident
+ok 135 - fixed acceptance: incident
+  ---
+  duration_ms: 0.062438
+  type: 'test'
+  ...
+# Subtest: fixed acceptance: loop
+ok 136 - fixed acceptance: loop
+  ---
+  duration_ms: 0.158743
+  type: 'test'
+  ...
+# Subtest: fixed acceptance covers all campaign tasks
+ok 137 - fixed acceptance covers all campaign tasks
+  ---
+  duration_ms: 1.280495
+  type: 'test'
+  ...
+# Subtest: fixed answers complete a 1800 XP campaign
+ok 138 - fixed answers complete a 1800 XP campaign
+  ---
+  duration_ms: 3.726358
+  type: 'test'
+  ...
+# Subtest: oracle catches an intentionally weakened intent answer
+ok 139 - oracle catches an intentionally weakened intent answer
+  ---
+  duration_ms: 0.657546
+  type: 'test'
+  ...
+# Subtest: oracle catches an intentionally self-authorizing gate answer
+ok 140 - oracle catches an intentionally self-authorizing gate answer
+  ---
+  duration_ms: 0.523246
+  type: 'test'
+  ...
+# Subtest: harness: initial state has no current receipts or authorization
+ok 141 - harness: initial state has no current receipts or authorization
+  ---
+  duration_ms: 6.755405
+  type: 'test'
+  ...
+# Subtest: harness: plan cannot skip its predecessors
+ok 142 - harness: plan cannot skip its predecessors
+  ---
+  duration_ms: 1.302383
+  type: 'test'
+  ...
+# Subtest: harness: implement cannot skip its predecessors
+ok 143 - harness: implement cannot skip its predecessors
+  ---
+  duration_ms: 1.060786
+  type: 'test'
+  ...
+# Subtest: harness: verify cannot skip its predecessors
+ok 144 - harness: verify cannot skip its predecessors
+  ---
+  duration_ms: 0.283329
+  type: 'test'
+  ...
+# Subtest: harness: judge cannot skip its predecessors
+ok 145 - harness: judge cannot skip its predecessors
+  ---
+  duration_ms: 0.502316
+  type: 'test'
+  ...
+# Subtest: harness: package cannot skip its predecessors
+ok 146 - harness: package cannot skip its predecessors
+  ---
+  duration_ms: 0.603918
+  type: 'test'
+  ...
+# Subtest: harness: declare does not create a successful receipt
+ok 147 - harness: declare does not create a successful receipt
+  ---
+  duration_ms: 0.612927
+  type: 'test'
+  ...
+# Subtest: harness: production does not create a successful receipt
+ok 148 - harness: production does not create a successful receipt
+  ---
+  duration_ms: 0.284291
+  type: 'test'
+  ...
+# Subtest: harness: made-up does not create a successful receipt
+ok 149 - harness: made-up does not create a successful receipt
+  ---
+  duration_ms: 0.865766
+  type: 'test'
+  ...
+# Subtest: harness: declaring done cannot overwrite a failed result
+ok 150 - harness: declaring done cannot overwrite a failed result
+  ---
+  duration_ms: 3.401112
+  type: 'test'
+  ...
+# Subtest: harness: correct pipeline creates six current step-bound receipts
+ok 151 - harness: correct pipeline creates six current step-bound receipts
+  ---
+  duration_ms: 5.947247
+  type: 'test'
+  ...
+# Subtest: harness: input handlers and execution do not mutate previous state
+ok 152 - harness: input handlers and execution do not mutate previous state
+  ---
+  duration_ms: 0.548924
+  type: 'test'
+  ...
+# Subtest: harness: done=true fixture does not satisfy discovery content
+ok 153 - harness: done=true fixture does not satisfy discovery content
+  ---
+  duration_ms: 0.554168
+  type: 'test'
+  ...
+# Subtest: harness: plan omitting negative tests fails independently of file existence
+ok 154 - harness: plan omitting negative tests fails independently of file existence
+  ---
+  duration_ms: 1.821351
+  type: 'test'
+  ...
+# Subtest: harness: materializing original is not verification
+ok 155 - harness: materializing original is not verification
+  ---
+  duration_ms: 0.704151
+  type: 'test'
+  ...
+# Subtest: harness: materializing scoped is not verification
+ok 156 - harness: materializing scoped is not verification
+  ---
+  duration_ms: 0.631852
+  type: 'test'
+  ...
+# Subtest: harness: materializing denyAll is not verification
+ok 157 - harness: materializing denyAll is not verification
+  ---
+  duration_ms: 0.724365
+  type: 'test'
+  ...
+# Subtest: harness: full contract executes 15 actual assertions across three versions
+ok 158 - harness: full contract executes 15 actual assertions across three versions
+  ---
+  duration_ms: 0.89643
+  type: 'test'
+  ...
+# Subtest: harness: candidate original cannot pass the complete verifier
+ok 159 - harness: candidate original cannot pass the complete verifier
+  ---
+  duration_ms: 1.688686
+  type: 'test'
+  ...
+# Subtest: harness: candidate denyAll cannot pass the complete verifier
+ok 160 - harness: candidate denyAll cannot pass the complete verifier
+  ---
+  duration_ms: 1.298638
+  type: 'test'
+  ...
+# Subtest: harness: all-green insufficient suite happy rejected
+ok 161 - harness: all-green insufficient suite happy rejected
+  ---
+  duration_ms: 1.931593
+  type: 'test'
+  ...
+# Subtest: harness: all-green insufficient suite placebo rejected
+ok 162 - harness: all-green insufficient suite placebo rejected
+  ---
+  duration_ms: 1.800616
+  type: 'test'
+  ...
+# Subtest: harness: crash cannot turn zero results into success
+ok 163 - harness: crash cannot turn zero results into success
+  ---
+  duration_ms: 1.731555
+  type: 'test'
+  ...
+# Subtest: harness: unavailable cannot turn zero results into success
+ok 164 - harness: unavailable cannot turn zero results into success
+  ---
+  duration_ms: 2.951052
+  type: 'test'
+  ...
+# Subtest: harness: rejects self review
+ok 165 - harness: rejects self review
+  ---
+  duration_ms: 2.305949
+  type: 'test'
+  ...
+# Subtest: harness: rejects stale review
+ok 166 - harness: rejects stale review
+  ---
+  duration_ms: 5.313434
+  type: 'test'
+  ...
+# Subtest: harness: rejects blocker review
+ok 167 - harness: rejects blocker review
+  ---
+  duration_ms: 2.07682
+  type: 'test'
+  ...
+# Subtest: harness: accepted review is explicitly a simulation, not an independent agent
+ok 168 - harness: accepted review is explicitly a simulation, not an independent agent
+  ---
+  duration_ms: 0.677574
+  type: 'test'
+  ...
+# Subtest: harness: changing intent invalidates only dependent steps
+ok 169 - harness: changing intent invalidates only dependent steps
+  ---
+  duration_ms: 1.375922
+  type: 'test'
+  ...
+# Subtest: harness: changing plan invalidates only dependent steps
+ok 170 - harness: changing plan invalidates only dependent steps
+  ---
+  duration_ms: 2.813307
+  type: 'test'
+  ...
+# Subtest: harness: changing patch invalidates only dependent steps
+ok 171 - harness: changing patch invalidates only dependent steps
+  ---
+  duration_ms: 3.287274
+  type: 'test'
+  ...
+# Subtest: harness: changing suite invalidates only dependent steps
+ok 172 - harness: changing suite invalidates only dependent steps
+  ---
+  duration_ms: 4.721512
+  type: 'test'
+  ...
+# Subtest: harness: changing runner invalidates only dependent steps
+ok 173 - harness: changing runner invalidates only dependent steps
+  ---
+  duration_ms: 3.344425
+  type: 'test'
+  ...
+# Subtest: harness: changing review invalidates only dependent steps
+ok 174 - harness: changing review invalidates only dependent steps
+  ---
+  duration_ms: 1.567842
+  type: 'test'
+  ...
+# Subtest: harness: reverting code still requires new receipts for a new revision
+ok 175 - harness: reverting code still requires new receipts for a new revision
+  ---
+  duration_ms: 3.221922
+  type: 'test'
+  ...
+# Subtest: harness: editing a field to its current value retains valid receipts
+ok 176 - harness: editing a field to its current value retains valid receipts
+  ---
+  duration_ms: 2.419016
+  type: 'test'
+  ...
+# Subtest: harness: reexecuting discover supersedes downstream receipts
+ok 177 - harness: reexecuting discover supersedes downstream receipts
+  ---
+  duration_ms: 2.004906
+  type: 'test'
+  ...
+# Subtest: harness: reexecuting plan supersedes downstream receipts
+ok 178 - harness: reexecuting plan supersedes downstream receipts
+  ---
+  duration_ms: 1.691868
+  type: 'test'
+  ...
+# Subtest: harness: reexecuting implement supersedes downstream receipts
+ok 179 - harness: reexecuting implement supersedes downstream receipts
+  ---
+  duration_ms: 1.656689
+  type: 'test'
+  ...
+# Subtest: harness: reexecuting verify supersedes downstream receipts
+ok 180 - harness: reexecuting verify supersedes downstream receipts
+  ---
+  duration_ms: 1.446496
+  type: 'test'
+  ...
+# Subtest: harness: reexecuting judge supersedes downstream receipts
+ok 181 - harness: reexecuting judge supersedes downstream receipts
+  ---
+  duration_ms: 1.916908
+  type: 'test'
+  ...
+# Subtest: harness: three failed executions halt; editing cannot bypass budget
+ok 182 - harness: three failed executions halt; editing cannot bypass budget
+  ---
+  duration_ms: 1.154928
+  type: 'test'
+  ...
+# Subtest: harness: new run retains inputs but no passed receipts, budgets or goals
+ok 183 - harness: new run retains inputs but no passed receipts, budgets or goals
+  ---
+  duration_ms: 1.640282
+  type: 'test'
+  ...
+# Subtest: harness: exported report is untrusted local diagnostics, not a release approval
+ok 184 - harness: exported report is untrusted local diagnostics, not a release approval
+  ---
+  duration_ms: 2.560171
+  type: 'test'
+  ...
+# Subtest: harness: production still denied after six passes
+ok 185 - harness: production still denied after six passes
+  ---
+  duration_ms: 2.117853
+  type: 'test'
+  ...
+# Subtest: harness: runtime timeline has monotonic sequence and records denied actions
+ok 186 - harness: runtime timeline has monotonic sequence and records denied actions
+  ---
+  duration_ms: 1.813547
+  type: 'test'
+  ...
+# Subtest: harness: journal bounded without reusing sequence IDs
+ok 187 - harness: journal bounded without reusing sequence IDs
+  ---
+  duration_ms: 44.187001
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content null
+ok 188 - harness: draft parser rejects unsupported content null
+  ---
+  duration_ms: 0.201156
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content []
+ok 189 - harness: draft parser rejects unsupported content []
+  ---
+  duration_ms: 0.168391
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content {}
+ok 190 - harness: draft parser rejects unsupported content {}
+  ---
+  duration_ms: 0.113711
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content "x"
+ok 191 - harness: draft parser rejects unsupported content "x"
+  ---
+  duration_ms: 0.11336
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content {"version":0,"inputs":{"intent":"complete","plan":"traceable
+ok 192 - harness: draft parser rejects unsupported content {"version":0,"inputs":{"intent":"complete","plan":"traceable
+  ---
+  duration_ms: 0.108402
+  type: 'test'
+  ...
+# Subtest: harness: draft parser rejects unsupported content {"version":1,"inputs":{"patch":"<img src=x onerror=alert(1)>
+ok 193 - harness: draft parser rejects unsupported content {"version":1,"inputs":{"patch":"<img src=x onerror=alert(1)>
+  ---
+  duration_ms: 0.158703
+  type: 'test'
+  ...
+# Subtest: harness: ignores injected input __proto__=polluted
+ok 194 - harness: ignores injected input __proto__=polluted
+  ---
+  duration_ms: 0.684067
+  type: 'test'
+  ...
+# Subtest: harness: ignores injected input patch=<script>
+ok 195 - harness: ignores injected input patch=<script>
+  ---
+  duration_ms: 0.190774
+  type: 'test'
+  ...
+# Subtest: harness: ignores injected input review=official-approved
+ok 196 - harness: ignores injected input review=official-approved
+  ---
+  duration_ms: 0.168996
+  type: 'test'
+  ...
+# Subtest: harness: ignores injected input runner=null
+ok 197 - harness: ignores injected input runner=null
+  ---
+  duration_ms: 0.224596
+  type: 'test'
+  ...
+# Subtest: harness: draft import never restores fabricated receipts or production authority
+ok 198 - harness: draft import never restores fabricated receipts or production authority
+  ---
+  duration_ms: 2.644493
+  type: 'test'
+  ...
+# Subtest: harness: combined backup carries old progress and harness inputs, not receipts
+ok 199 - harness: combined backup carries old progress and harness inputs, not receipts
+  ---
+  duration_ms: 3.418701
+  type: 'test'
+  ...
+# Subtest: harness: v1.2 and v1.1 backups start new lab without loss of their formats
+ok 200 - harness: v1.2 and v1.1 backups start new lab without loss of their formats
+  ---
+  duration_ms: 0.535586
+  type: 'test'
+  ...
+# Subtest: harness: report has no references to actual external runs
+ok 201 - harness: report has no references to actual external runs
+  ---
+  duration_ms: 1.53688
+  type: 'test'
+  ...
+# Subtest: runner: exit 0 with actual output passes
+ok 202 - runner: exit 0 with actual output passes
+  ---
+  duration_ms: 244.971326
+  type: 'test'
+  ...
+# Subtest: runner: exit 1 is failure, not a completed step
+ok 203 - runner: exit 1 is failure, not a completed step
+  ---
+  duration_ms: 153.485762
+  type: 'test'
+  ...
+# Subtest: runner: exception is failure
+ok 204 - runner: exception is failure
+  ---
+  duration_ms: 174.734086
+  type: 'test'
+  ...
+# Subtest: runner: timeout is not success
+ok 205 - runner: timeout is not success
+  ---
+  duration_ms: 109.706671
+  type: 'test'
+  ...
+# Subtest: runner: missing executable is failure
+ok 206 - runner: missing executable is failure
+  ---
+  duration_ms: 12.648554
+  type: 'test'
+  ...
+# Subtest: runner: no skip-tests or injected CLI commands
+ok 207 - runner: no skip-tests or injected CLI commands
+  ---
+  duration_ms: 0.97672
+  type: 'test'
+  ...
+# Subtest: runner: release remains blocked even when local checks pass
+ok 208 - runner: release remains blocked even when local checks pass
+  ---
+  duration_ms: 0.325857
+  type: 'test'
+  ...
+# Subtest: runner: ten acceptance criteria reference existing tests; actual integration unverified
+ok 209 - runner: ten acceptance criteria reference existing tests; actual integration unverified
+  ---
+  duration_ms: 2.422716
+  type: 'test'
+  ...
+# Subtest: runner: source snapshot deterministic without using output files
+ok 210 - runner: source snapshot deterministic without using output files
+  ---
+  duration_ms: 43.983847
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-situation
+ok 211 - TLC fixed acceptance: tlc-situation
+  ---
+  duration_ms: 4.937977
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-situation
+ok 212 - TLC empty is not an attempt: tlc-situation
+  ---
+  duration_ms: 5.501517
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-situation
+ok 213 - TLC has free teaching and source: tlc-situation
+  ---
+  duration_ms: 0.463051
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-situation:stack
+ok 214 - TLC rejects distractor tlc-situation:stack
+  ---
+  duration_ms: 0.328811
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-situation:zero
+ok 215 - TLC rejects distractor tlc-situation:zero
+  ---
+  duration_ms: 4.186058
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-verdict
+ok 216 - TLC fixed acceptance: tlc-verdict
+  ---
+  duration_ms: 0.738501
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-verdict
+ok 217 - TLC empty is not an attempt: tlc-verdict
+  ---
+  duration_ms: 0.818502
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-verdict
+ok 218 - TLC has free teaching and source: tlc-verdict
+  ---
+  duration_ms: 0.113816
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-design
+ok 219 - TLC fixed acceptance: tlc-design
+  ---
+  duration_ms: 0.507393
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-design
+ok 220 - TLC empty is not an attempt: tlc-design
+  ---
+  duration_ms: 0.968693
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-design
+ok 221 - TLC has free teaching and source: tlc-design
+  ---
+  duration_ms: 0.244288
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-success
+ok 222 - TLC fixed acceptance: tlc-success
+  ---
+  duration_ms: 0.492969
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-success
+ok 223 - TLC empty is not an attempt: tlc-success
+  ---
+  duration_ms: 0.752329
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-success
+ok 224 - TLC has free teaching and source: tlc-success
+  ---
+  duration_ms: 0.129982
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-success:shipped
+ok 225 - TLC rejects distractor tlc-success:shipped
+  ---
+  duration_ms: 0.105558
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-success:unit
+ok 226 - TLC rejects distractor tlc-success:unit
+  ---
+  duration_ms: 0.063368
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-slice
+ok 227 - TLC fixed acceptance: tlc-slice
+  ---
+  duration_ms: 0.054201
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-slice
+ok 228 - TLC empty is not an attempt: tlc-slice
+  ---
+  duration_ms: 0.231103
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-slice
+ok 229 - TLC has free teaching and source: tlc-slice
+  ---
+  duration_ms: 0.066452
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-slice:schema
+ok 230 - TLC rejects distractor tlc-slice:schema
+  ---
+  duration_ms: 0.056255
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-slice:ui
+ok 231 - TLC rejects distractor tlc-slice:ui
+  ---
+  duration_ms: 0.053666
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-sweep
+ok 232 - TLC fixed acceptance: tlc-sweep
+  ---
+  duration_ms: 0.055352
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-sweep
+ok 233 - TLC empty is not an attempt: tlc-sweep
+  ---
+  duration_ms: 0.3236
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-sweep
+ok 234 - TLC has free teaching and source: tlc-sweep
+  ---
+  duration_ms: 0.073901
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-criteria
+ok 235 - TLC fixed acceptance: tlc-criteria
+  ---
+  duration_ms: 0.063241
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-criteria
+ok 236 - TLC empty is not an attempt: tlc-criteria
+  ---
+  duration_ms: 0.323493
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-criteria
+ok 237 - TLC has free teaching and source: tlc-criteria
+  ---
+  duration_ms: 0.175608
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-task-pr
+ok 238 - TLC fixed acceptance: tlc-task-pr
+  ---
+  duration_ms: 0.106865
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-task-pr
+ok 239 - TLC empty is not an attempt: tlc-task-pr
+  ---
+  duration_ms: 0.273937
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-task-pr
+ok 240 - TLC has free teaching and source: tlc-task-pr
+  ---
+  duration_ms: 0.231267
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-task-pr:layers
+ok 241 - TLC rejects distractor tlc-task-pr:layers
+  ---
+  duration_ms: 0.086107
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-task-pr:always
+ok 242 - TLC rejects distractor tlc-task-pr:always
+  ---
+  duration_ms: 0.252843
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-profile
+ok 243 - TLC fixed acceptance: tlc-profile
+  ---
+  duration_ms: 0.170131
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-profile
+ok 244 - TLC empty is not an attempt: tlc-profile
+  ---
+  duration_ms: 3.315336
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-profile
+ok 245 - TLC has free teaching and source: tlc-profile
+  ---
+  duration_ms: 0.150474
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-proof-lab
+ok 246 - TLC fixed acceptance: tlc-proof-lab
+  ---
+  duration_ms: 0.208997
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-proof-lab
+ok 247 - TLC empty is not an attempt: tlc-proof-lab
+  ---
+  duration_ms: 0.495405
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-proof-lab
+ok 248 - TLC has free teaching and source: tlc-proof-lab
+  ---
+  duration_ms: 0.229188
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-verifier
+ok 249 - TLC fixed acceptance: tlc-verifier
+  ---
+  duration_ms: 0.152092
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-verifier
+ok 250 - TLC empty is not an attempt: tlc-verifier
+  ---
+  duration_ms: 0.489814
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-verifier
+ok 251 - TLC has free teaching and source: tlc-verifier
+  ---
+  duration_ms: 0.130433
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-verifier:author
+ok 252 - TLC rejects distractor tlc-verifier:author
+  ---
+  duration_ms: 0.138965
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-verifier:fake
+ok 253 - TLC rejects distractor tlc-verifier:fake
+  ---
+  duration_ms: 0.13464
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-handoff
+ok 254 - TLC fixed acceptance: tlc-handoff
+  ---
+  duration_ms: 0.355262
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-handoff
+ok 255 - TLC empty is not an attempt: tlc-handoff
+  ---
+  duration_ms: 0.724521
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-handoff
+ok 256 - TLC has free teaching and source: tlc-handoff
+  ---
+  duration_ms: 0.365086
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-review
+ok 257 - TLC fixed acceptance: tlc-review
+  ---
+  duration_ms: 0.301347
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-review
+ok 258 - TLC empty is not an attempt: tlc-review
+  ---
+  duration_ms: 0.546311
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-review
+ok 259 - TLC has free teaching and source: tlc-review
+  ---
+  duration_ms: 0.314687
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-severity
+ok 260 - TLC fixed acceptance: tlc-severity
+  ---
+  duration_ms: 0.126286
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-severity
+ok 261 - TLC empty is not an attempt: tlc-severity
+  ---
+  duration_ms: 0.385986
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-severity
+ok 262 - TLC has free teaching and source: tlc-severity
+  ---
+  duration_ms: 0.185466
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-carryover
+ok 263 - TLC fixed acceptance: tlc-carryover
+  ---
+  duration_ms: 0.13867
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-carryover
+ok 264 - TLC empty is not an attempt: tlc-carryover
+  ---
+  duration_ms: 0.453139
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-carryover
+ok 265 - TLC has free teaching and source: tlc-carryover
+  ---
+  duration_ms: 0.354976
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-carryover:approve
+ok 266 - TLC rejects distractor tlc-carryover:approve
+  ---
+  duration_ms: 0.191664
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-carryover:new
+ok 267 - TLC rejects distractor tlc-carryover:new
+  ---
+  duration_ms: 0.143043
+  type: 'test'
+  ...
+# Subtest: TLC fixed acceptance: tlc-converge
+ok 268 - TLC fixed acceptance: tlc-converge
+  ---
+  duration_ms: 0.179172
+  type: 'test'
+  ...
+# Subtest: TLC empty is not an attempt: tlc-converge
+ok 269 - TLC empty is not an attempt: tlc-converge
+  ---
+  duration_ms: 0.589604
+  type: 'test'
+  ...
+# Subtest: TLC has free teaching and source: tlc-converge
+ok 270 - TLC has free teaching and source: tlc-converge
+  ---
+  duration_ms: 0.160282
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-converge:inflate
+ok 271 - TLC rejects distractor tlc-converge:inflate
+  ---
+  duration_ms: 0.135235
+  type: 'test'
+  ...
+# Subtest: TLC rejects distractor tlc-converge:endless
+ok 272 - TLC rejects distractor tlc-converge:endless
+  ---
+  duration_ms: 0.130731
+  type: 'test'
+  ...
+# Subtest: TLC exactly 16 tasks in 4 modules, fixed oracle covers all
+ok 273 - TLC exactly 16 tasks in 4 modules, fixed oracle covers all
+  ---
+  duration_ms: 2.779294
+  type: 'test'
+  ...
+# Subtest: TLC complete without unlocking base campaign
+ok 274 - TLC complete without unlocking base campaign
+  ---
+  duration_ms: 0.958888
+  type: 'test'
+  ...
+# Subtest: TLC modules independent; later task within module is not
+ok 275 - TLC modules independent; later task within module is not
+  ---
+  duration_ms: 0.409885
+  type: 'test'
+  ...
+# Subtest: TLC replay cannot farm XP, mistakes on replay cannot lower it
+ok 276 - TLC replay cannot farm XP, mistakes on replay cannot lower it
+  ---
+  duration_ms: 0.451528
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix happy/original
+ok 277 - TLC lab matrix happy/original
+  ---
+  duration_ms: 0.213303
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix happy/scoped
+ok 278 - TLC lab matrix happy/scoped
+  ---
+  duration_ms: 0.078484
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix happy/denyAll
+ok 279 - TLC lab matrix happy/denyAll
+  ---
+  duration_ms: 0.060661
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix placebo/original
+ok 280 - TLC lab matrix placebo/original
+  ---
+  duration_ms: 0.081151
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix placebo/scoped
+ok 281 - TLC lab matrix placebo/scoped
+  ---
+  duration_ms: 0.101917
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix placebo/denyAll
+ok 282 - TLC lab matrix placebo/denyAll
+  ---
+  duration_ms: 0.095647
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix contract/original
+ok 283 - TLC lab matrix contract/original
+  ---
+  duration_ms: 0.06579
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix contract/scoped
+ok 284 - TLC lab matrix contract/scoped
+  ---
+  duration_ms: 0.197216
+  type: 'test'
+  ...
+# Subtest: TLC lab matrix contract/denyAll
+ok 285 - TLC lab matrix contract/denyAll
+  ---
+  duration_ms: 0.072013
+  type: 'test'
+  ...
+# Subtest: TLC strong lab executes fifteen assertions: red green red
+ok 286 - TLC strong lab executes fifteen assertions: red green red
+  ---
+  duration_ms: 0.386516
+  type: 'test'
+  ...
+# Subtest: TLC happy path suite cannot see the old defect
+ok 287 - TLC happy path suite cannot see the old defect
+  ---
+  duration_ms: 0.218464
+  type: 'test'
+  ...
+# Subtest: TLC placebo passes the mutant and is rejected
+ok 288 - TLC placebo passes the mutant and is rejected
+  ---
+  duration_ms: 0.283084
+  type: 'test'
+  ...
+# Subtest: TLC lab invalid input ["evil","scoped"]
+ok 289 - TLC lab invalid input ["evil","scoped"]
+  ---
+  duration_ms: 0.173427
+  type: 'test'
+  ...
+# Subtest: TLC lab invalid input ["contract","constructor"]
+ok 290 - TLC lab invalid input ["contract","constructor"]
+  ---
+  duration_ms: 0.094217
+  type: 'test'
+  ...
+# Subtest: TLC lab invalid input ["contract","__proto__"]
+ok 291 - TLC lab invalid input ["contract","__proto__"]
+  ---
+  duration_ms: 0.535593
+  type: 'test'
+  ...
+# Subtest: TLC lab invalid input [null,null]
+ok 292 - TLC lab invalid input [null,null]
+  ---
+  duration_ms: 0.080886
+  type: 'test'
+  ...
+# Subtest: TLC review rejects unsupported finding and wrong verdict
+ok 293 - TLC review rejects unsupported finding and wrong verdict
+  ---
+  duration_ms: 0.158417
+  type: 'test'
+  ...
+# Subtest: TLC verdict reflects prior blockers even without new findings
+ok 294 - TLC verdict reflects prior blockers even without new findings
+  ---
+  duration_ms: 0.13246
+  type: 'test'
+  ...
+# Subtest: TLC normalized local progress is contiguous per module
+ok 295 - TLC normalized local progress is contiguous per module
+  ---
+  duration_ms: 0.50042
+  type: 'test'
+  ...
+# Subtest: TLC sanitized drafts ignore unknown/prototype fields and duplicates
+ok 296 - TLC sanitized drafts ignore unknown/prototype fields and duplicates
+  ---
+  duration_ms: 0.215322
+  type: 'test'
+  ...
+# Subtest: TLC unknown version becomes blank, input not mutated
+ok 297 - TLC unknown version becomes blank, input not mutated
+  ---
+  duration_ms: 0.158857
+  type: 'test'
+  ...
+# Subtest: TLC backup roundtrip preserves old 1800XP and new 1600XP
+ok 298 - TLC backup roundtrip preserves old 1800XP and new 1600XP
+  ---
+  duration_ms: 15.047128
+  type: 'test'
+  ...
+# Subtest: TLC old v1.1 backup migrates without taking away achievements
+ok 299 - TLC old v1.1 backup migrates without taking away achievements
+  ---
+  duration_ms: 0.881887
+  type: 'test'
+  ...
+# Subtest: TLC persisted proof results cannot be forged
+ok 300 - TLC persisted proof results cannot be forged
+  ---
+  duration_ms: 0.217257
+  type: 'test'
+  ...
+# Subtest: TLC attribution and no pretending installation or official gate output
+ok 301 - TLC attribution and no pretending installation or official gate output
+  ---
+  duration_ms: 0.699075
+  type: 'test'
+  ...
+1..301
+# tests 301
+# suites 0
+# pass 301
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1490.822154
+
+STDERR
+

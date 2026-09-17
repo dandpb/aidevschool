@@ -23,6 +23,8 @@ from typing import Any
 
 import yaml
 
+from learner.analytics import capture_event, identify_learner
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = REPO_ROOT / "learner" / "learning_state.yaml"
@@ -69,7 +71,7 @@ def create_instance(name: str, learner_id: str, language: str = "TypeScript",
     backup = state_path.parent / f"learning_state.{_utc_stamp()}.yaml.bak"
     if state_path.is_file():
         shutil.copy2(state_path, backup)
-    from learner.substrate.fsio import atomic_write_text
+    from shared.fsio import atomic_write_text
 
     # This file is the ecosystem's source of truth: a crash mid-write must leave
     # the previous state intact. Not save_canonical() — validate() requires an
@@ -104,6 +106,19 @@ def main(argv: list[str] | None = None) -> int:
         from learner.substrate import sync
         sync()
         print("[new-instance] derived views regenerated")
+
+    identify_learner(
+        args.id,
+        {"name": args.name, "active_language": args.lang, "level": "beginner"},
+    )
+    capture_event(
+        args.id,
+        "learner_instance_created",
+        {
+            "active_language": args.lang,
+            "derived_views_synced": not args.no_sync,
+        },
+    )
 
     print(f"\n[new-instance] Done. {args.name} is ready to start learning.")
     print("Next: open the LiteracyDojo link or run next_step.py for the first lesson.")

@@ -1,0 +1,9 @@
+.......F                                                                 [100%]
+=================================== FAILURES ===================================
+_ test_authority_manifest_links_contracts_and_proofs[engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py] _
+engines/miniMaxEvolutionEngine/tests/test_authority_manifest_coverage.py:21: in test_authority_manifest_links_contracts_and_proofs
+    assert f"`{reference}`" in manifest
+E   AssertionError: assert '`engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py`' in '# codexDojo Ecosystem Manifest\n\n## Purpose\n\nAI DevSchool democratizes AI knowledge and application through short,....\n7. Update memory and roadmap.\n8. Repeat the cycle through explicit OpenClaw checklist runs without hidden state.\n'
+=========================== short test summary info ============================
+FAILED engines/miniMaxEvolutionEngine/tests/test_authority_manifest_coverage.py::test_authority_manifest_links_contracts_and_proofs[engines/miniMaxEvolutionEngine/tests/test_authority_contract_semantics.py]
+1 failed, 7 passed in 2.05s
