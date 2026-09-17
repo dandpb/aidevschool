@@ -19,7 +19,8 @@ Adds `learner/substrate/judgments.py` (runner + receipts, injected client) and `
 | One-way door | Literal shape | Alternative rejected |
 | --- | --- | --- |
 | Judgment provider dependency | TypeSafe HTTP API `POST https://api.typesafe.ai/v1/systemone`, model `jev-latest`, stdlib `urllib` only (no new package dep), `Authorization: Bearer $TYPESAFE_API_KEY` | self-hosted model - no offline/key-policy constraint exists |
-| Receipt record + home | `learner/judgment_receipts/<UTC-stamp>.ndjson`, one JSON object per question: `question`, `kind` (noul/choice), `answer`, `probabilities`, `model`, `usage`, `input_digest` (sha256 of canonical state+questions), `timestamp`, `status` (ok/fallback) | `learner/verifier_receipts/` - the gate-evidence dir stays gate-only |
+| Receipt record + home | `learner/judgment_receipts/<kind>-<input_digest[:16]>.ndjson` (fallback lines: `...-fallback.ndjson`), one JSON object per question: `question`, `kind` (noul/choice), `answer`, `probabilities`, `model`, `usage`, `input_digest` (sha256 of canonical state+questions), `timestamp`, `status` (ok/fallback). Build-time amendment: digest names replace `<UTC-stamp>-<kind>` so a re-sweep of identical inputs overwrites instead of duplicating — receipts map 1:1 to distinct sweeps. | `learner/verifier_receipts/` - the gate-evidence dir stays gate-only |
+| One sweep per sync | `default_client()` returns `memoized(http_client(key))` caching answers by input digest for the client's lifetime — a sync's four snapshot-building views reuse one consistent sweep | per-view independent sweeps - 4x API cost and possibly inconsistent enriched values across views in one sync |
 | Enrichment is injection-only; env detection solely at the sync entry | `build_snapshot(..., judgment_client=None)` never reads env and never calls the API; the sync entry constructs the real client from `TYPESAFE_API_KEY` and passes it down | auto-detect inside `build_snapshot` - existing tests call `build_snapshot()` directly and would silently hit the live API whenever a key is exported, breaking hermeticity (AID-2132 lesson) |
 | Scheduling boundary (forced) | runner exposes no rating; `derive_next_reviews(units_log, pitfalls, today)` signature and inputs unchanged | none - forced by the spaced-repetition ADR |
 | `masteredCount` source | `sum(1 for u in units_log if u.get("mastered"))`, both `source_root` branches | catalog status prefix - conflates engine implementation with learner mastery |
@@ -33,7 +34,7 @@ Adds `learner/substrate/judgments.py` (runner + receipts, injected client) and `
 **C1** - A key-present sync run with a working client writes `learner/judgment_receipts/<UTC-stamp>.ndjson` with one JSON object per asked question, each carrying `question`, `kind`, `answer`, `probabilities`, `model`, `usage`, `input_digest` (64-char lowercase hex), `timestamp`, `status: "ok"`
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_receipt_written_on_success"`
 
-**C2** - With no client (key unset at the sync entry), no new file appears under the receipts root, and the snapshot is byte-identical (sorted-key JSON equality) to the pre-change golden for the same fixture tree and injected `today`
+**C2** - With no client (key unset at the sync entry), no new file appears under the receipts root, and the snapshot is byte-identical (sorted-key JSON equality) to the deterministic golden for the same fixture tree and injected `today` (golden regenerated after the task-decided `masteredCount` re-source — that change is unconditional, not key-gated, and C11 covers it)
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_no_client_is_byte_identical_to_golden"`
 
 **C3** - If the client raises (HTTP error, timeout, network) or returns answers whose keys do not match the asked questions, the snapshot equals the deterministic fallback values and one receipt line with `status: "fallback"` and the error class is written
@@ -50,7 +51,7 @@ Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_next_
 **C6** - With canned Nouls assigning >= 0.5 to the 21 recorded-hit entries of the 51-entry fixture, `topPitfalls[0].occurrences == 21` with `id` and `lastSeen` unchanged from parser output
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_occurrences_count_semantic_hits"`
 
-**C7** - A new fixture journal entry repeating the trap (canned noul 0.8) raises `occurrences` by 1 and writes one more receipt file; canned 0.2 does not
+**C7** - A new fixture journal entry repeating the trap (canned noul 0.8) raises `occurrences` by 1 and writes one more receipt file (the changed pitfalls sweep's digest-named file; the unchanged profile sweep overwrites its own); canned 0.2 does not
 Proof: `python3 -m pytest "learner/substrate/tests/test_judgments.py::test_new_recurrence_updates_count_and_receipt"`
 
 **C8** - Live (skipped without `TYPESAFE_API_KEY`): one real-API run over the repo's actual journal yields `topPitfalls[0].occurrences >= 15`
