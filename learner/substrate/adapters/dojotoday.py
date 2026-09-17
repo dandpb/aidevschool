@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from learner.substrate.dashboard_snapshot import build_snapshot
+from learner.substrate.snapshot_sources import count_mastered
 from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import derive_next_reviews
 
@@ -169,7 +170,7 @@ def derive_today_snapshot(
         "curr": snapshot["curr"],
         "activeUnit": active_view,
         "reviews": reviews,
-        "masteredCount": sum(1 for unit in units_log if unit.get("mastered")),
+        "masteredCount": count_mastered(units_log),
         "totalUnits": len(units_log),
         "nextProjectNum": next_num,
         "track": track,

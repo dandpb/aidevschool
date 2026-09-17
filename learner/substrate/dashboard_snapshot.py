@@ -32,6 +32,7 @@ from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
 from learner.substrate.catalog import load_catalog
 from learner.substrate.snapshot_sources import (
+    count_mastered,
     counts_from_backlog,
     pitfalls_from_markdown,
     profile_matrix,
@@ -121,15 +122,13 @@ def build_snapshot(
 
     pitfalls = pitfalls_from_markdown(pitfalls_path, journal_path)
     if judgment_client is not None:
-        from learner.substrate import judgments as _judgments
-
         pitfalls = _judgments.semantic_pitfall_occurrences(
             pitfalls, pitfalls_path, journal_path, judgment_client,
             receipts_root=judgment_receipts_root,
         )
     # Mastery claims need evidence: count mastered units from units_log, not
     # from catalog implementation statuses (golden rule 3).
-    mastered = sum(1 for unit in (state.get("units_log") or []) if unit.get("mastered"))
+    mastered = count_mastered(state.get("units_log"))
     if source_root is None:
         _, scaffolded = counts_from_backlog(BACKLOG)
         predictions_path = PREDICTIONS

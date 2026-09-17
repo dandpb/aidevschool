@@ -23,14 +23,14 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 import re
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from shared.fsio import atomic_write_text
 
@@ -103,8 +103,8 @@ def http_client(
         body = json.dumps(
             {"state": state, "model": model, "questions": questions}
         ).encode("utf-8")
-        last_error: urllib.error.HTTPError | None = None
-        for attempt in range(_MAX_ATTEMPTS):
+        attempt = 0
+        while True:
             request = urllib.request.Request(
                 api_url,
                 data=body,
@@ -118,21 +118,16 @@ def http_client(
                     payload = json.load(response)
                 break
             except urllib.error.HTTPError as exc:
-                if exc.code in _RETRYABLE_STATUSES and attempt < _MAX_ATTEMPTS - 1:
-                    time.sleep(2**attempt)
-                    last_error = exc
-                    continue
-                raise JudgmentError(
-                    f"judgment API HTTP {exc.code}", error_class="HTTPError"
-                ) from exc
+                if exc.code not in _RETRYABLE_STATUSES or attempt == _MAX_ATTEMPTS - 1:
+                    raise JudgmentError(
+                        f"judgment API HTTP {exc.code}", error_class="HTTPError"
+                    ) from exc
+                time.sleep(2**attempt)
+                attempt += 1
             except (urllib.error.URLError, TimeoutError) as exc:
                 raise JudgmentError(
                     f"judgment API unreachable: {exc}", error_class="URLError"
                 ) from exc
-        else:  # pragma: no cover - every retryable attempt raised
-            raise JudgmentError(
-                f"judgment API exhausted retries: {last_error}", error_class="HTTPError"
-            )
         answers = payload.get("answers")
         if not isinstance(answers, dict) or set(answers) != set(questions):
             raise JudgmentError("judgment API answers do not match asked questions")
@@ -161,16 +156,51 @@ def memoized(
     return wrapped
 
 
-def default_client() -> Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None:
-    """The client for the sync entry: real client when a key is configured."""
-    try:
-        from dotenv import load_dotenv
+def replay_cached(
+    client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]],
+    receipts_root: Path | None = None,
+) -> Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]]:
+    """Replay recorded answers for unchanged inputs before judging live.
 
-        load_dotenv(ROOT / ".env")
-    except ImportError:  # pragma: no cover - dotenv is an existing dependency
-        pass
-    api_key = os.getenv("TYPESAFE_API_KEY")
-    return memoized(http_client(api_key)) if api_key else None
+    Receipts are the audit log AND the replay store: when a sweep's exact
+    (state, questions) was judged before (same ``input_digest``, all lines
+    ok), the recorded answers are reused instead of calling the API. This
+    keeps sync/check deterministic for unchanged sources — committed
+    generated views and the receipts that produced them stay in lockstep —
+    while any source change produces a new digest and re-judges.
+    """
+    root = receipts_root or DEFAULT_RECEIPTS_ROOT
+
+    def wrapped(state: dict[str, Any], questions: dict[str, Any]) -> dict[str, Any]:
+        digest = _input_digest(state, questions)
+        if root.is_dir():
+            for path in root.glob("*.ndjson"):
+                if not path.is_file():
+                    continue
+                lines = [
+                    json.loads(line)
+                    for line in path.read_text(encoding="utf-8").splitlines()
+                    if line.strip()
+                ]
+                if not lines or lines[0].get("input_digest") != digest:
+                    continue
+                if any(line.get("status") != "ok" for line in lines):
+                    continue
+                answers: dict[str, Any] = {}
+                for line in lines:
+                    if line["kind"] == "noul":
+                        answers[line["question"]] = {"type": "noul", "noul": line["answer"]}
+                    else:
+                        answers[line["question"]] = {
+                            "type": "choice",
+                            "choice": line["answer"],
+                            "probabilities": line.get("probabilities"),
+                        }
+                if set(answers) == set(questions):
+                    return answers
+        return client(state, questions)
+
+    return wrapped
 
 
 # ---------------------------------------------------------------------------
@@ -208,7 +238,6 @@ def _write_ok_receipt(
     state: dict[str, Any],
     questions: dict[str, Any],
     answers: dict[str, Any],
-    payload_meta: dict[str, Any],
     receipts_root: Path,
 ) -> None:
     # Digest-named file: a re-sweep of identical inputs overwrites in place
@@ -228,8 +257,8 @@ def _write_ok_receipt(
                     "question": question_id,
                     "answer": answer.get("choice", answer.get("noul")),
                     "probabilities": answer.get("probabilities"),
-                    "model": payload_meta.get("model", MODEL),
-                    "usage": payload_meta.get("usage", {}),
+                    "model": MODEL,
+                    "usage": {},
                     "input_digest": digest,
                     "timestamp": now,
                     "status": "ok",
@@ -353,7 +382,7 @@ def semantic_pitfall_occurrences(
             updated = dict(pitfall)
             updated["occurrences"] = max(MIN_OCCURRENCES, hits)
             enriched.append(updated)
-        _write_ok_receipt("pitfalls", state, questions, answers, {}, receipts_root)
+        _write_ok_receipt("pitfalls", state, questions, answers, receipts_root)
         return enriched
     except JudgmentError as exc:
         _write_fallback_receipt("pitfalls", "noul", state, questions, exc.error_class, receipts_root)
@@ -425,7 +454,7 @@ def semantic_profile_levels(
             raise JudgmentError("judgment answers do not match asked questions")
         dreyfus = _choice_value(answers.get("dreyfus_overall"), DREYFUS_STAGES)
         bloom = _choice_value(answers.get("bloom_overall"), BLOOM_LEVELS)
-        _write_ok_receipt("profile", state, questions, answers, {}, receipts_root)
+        _write_ok_receipt("profile", state, questions, answers, receipts_root)
         return {"dreyfus": dreyfus, "bloom": bloom}
     except JudgmentError as exc:
         _write_fallback_receipt("profile", "choice", state, questions, exc.error_class, receipts_root)

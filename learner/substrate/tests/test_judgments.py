@@ -293,3 +293,35 @@ def test_mastered_count_from_units_log(tmp_path: Path) -> None:
     )
     after = build(root, tmp_path / "r2")
     assert after["masteredCount"] == 2
+
+
+def test_replay_cached_reuses_recorded_answers(tmp_path: Path) -> None:
+    """Replay-by-digest: an identical (state, questions) pair reuses the
+    committed receipt and never calls the live client; a changed question
+    set misses and falls through."""
+    from learner.substrate.judgments import _input_digest, replay_cached
+
+    state = {"known": "x"}
+    questions = {"q1": {"type": "noul", "instructions": "i", "criteria": {}}}
+    receipts = tmp_path / "receipts"
+    receipts.mkdir()
+    digest = _input_digest(state, questions)
+    line = json.dumps(
+        {
+            "kind": "noul", "question": "q1", "answer": 0.9,
+            "probabilities": None, "model": "jev-latest", "usage": {},
+            "input_digest": digest, "timestamp": "2026-09-17T00:00:00Z",
+            "status": "ok",
+        }
+    )
+    (receipts / "pitfalls-seed.ndjson").write_text(line + "\n", encoding="utf-8")
+
+    def explode(s: dict, q: dict) -> dict:
+        raise AssertionError("live client must not be called on a replay hit")
+
+    replayed = replay_cached(explode, receipts)
+    assert replayed(state, questions) == {"q1": {"type": "noul", "noul": 0.9}}
+
+    other_questions = {"q2": {"type": "noul", "instructions": "i", "criteria": {}}}
+    miss = replay_cached(lambda s, q: {"q2": {"type": "noul", "noul": 0.1}}, receipts)
+    assert miss(state, other_questions) == {"q2": {"type": "noul", "noul": 0.1}}
