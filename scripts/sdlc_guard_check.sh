@@ -94,13 +94,24 @@ run_checks() {
   [ -n "$mbase" ] || { echo "ERROR: empty merge-base" >&2; return 2; }
 
   # Owner-approved override trailers present anywhere in the commit range.
+  # AID-2292: never use `printf ... | grep -q` here. grep -q exits on the
+  # first match; when the bodies exceed the pipe buffer (Linux 64KiB, up to
+  # 1MiB) the writer dies with SIGPIPE and pipefail turns rc 0 into 141, so
+  # the `if` reads the trailer as ABSENT (fail-closed, env-dependent). The
+  # count_matches helper scans the whole input via grep -c (no early exit,
+  # no writer race) and is deterministic in any bash/pipe-buffer size.
+  count_matches() { # $1=ERE, $2=text -> prints match count, rc always 0
+    local n
+    n="$(printf '%s' "$2" | grep -cE "$1")" || true
+    printf '%s' "${n:-0}"
+  }
   local range_bodies allow_test=0 allow_derived=0
   range_bodies="$(git -C "$REPO_ROOT" log --format='%B' "$mbase..$head_ref")" || return 2
-  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-TEST-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$'; then
+  if [ "$(count_matches '^SDLC-ALLOW-TEST-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$' "$range_bodies")" -gt 0 ]; then
     allow_test=1
     echo "::notice::SDLC-ALLOW-TEST-EDIT trailer found in commit range — owner-approved test edit (verify the cited AID/GitHub issue records the acceptance)"
   fi
-  if printf '%s' "$range_bodies" | grep -qE '^SDLC-ALLOW-DERIVED-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$'; then
+  if [ "$(count_matches '^SDLC-ALLOW-DERIVED-EDIT: (AID|GH)-[1-9][0-9]*[[:space:]]*$' "$range_bodies")" -gt 0 ]; then
     allow_derived=1
     echo "::notice::SDLC-ALLOW-DERIVED-EDIT trailer found in commit range — owner-approved derived-path edit (verify the cited AID/GitHub issue records the acceptance)"
   fi
@@ -181,7 +192,7 @@ run_checks() {
   local line
   while IFS= read -r line; do
     [ -n "$line" ] || continue
-    if printf '%s' "$line" | grep -qE 'gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]+'; then
+    if [ "$(count_matches 'gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]+' "$line")" -gt 0 ]; then
       feed_command_hook "$line"
       if [ "$hook_rc" -eq 2 ]; then violations+=("guard-commands: added diff line :: committed secret token (no override)")
       fi
@@ -230,6 +241,9 @@ self_test() {
   base_sha=$($GITC rev-parse HEAD)
 
   # scenario <name> <expected-rc> <commit-message> -- <setup-cmds...>
+  # The message goes through a file (git commit -F): -m cannot carry the
+  # >1MiB regression bodies below (single-arg kernel limit), and real
+  # large bodies reach git the same way (editor/-F).
   scenario() {
     local name="$1" expected="$2" msg="$3"; shift 3; [ "${1:-}" = "--" ] && shift
     local br="st-$RANDOM"
@@ -237,7 +251,8 @@ self_test() {
     local c
     for c in "$@"; do ( cd "$R" && eval "$c" ); done
     $GITC add -A >/dev/null
-    $GITC commit -qm "$msg"
+    printf '%s\n' "$msg" > "$T/commit-msg"
+    $GITC commit -qF "$T/commit-msg"
     local out rc
     out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$br" 2>&1)"; rc=$?
     if [ "$rc" -eq "$expected" ]; then
@@ -297,6 +312,47 @@ SDLC-ALLOW-TEST-EDIT: GH-9003-not-an-issue" -- \
 
 SDLC-ALLOW-TEST-EDIT: GH-9003" -- \
     "mkdir -p config && printf 'SECRET=1\n' > config/.env"
+
+  # AID-2292 regression: `printf | grep -q` under pipefail lost early
+  # trailers in large range bodies (SIGPIPE rc=141 read as "absent",
+  # fail-closed, env/pipe-buffer dependent). Build a commit body whose
+  # trailer sits EARLY and is followed by >1MiB of filler (> Linux max
+  # pipe buffer), so the old code fails deterministically in any bash;
+  # the count_matches fix must see the trailer every time.
+  local big_filler early_trailer_msg
+  big_filler="$(printf 'large commit body filler line %05d aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' {1..12000})"
+  early_trailer_msg="fix test, trailer early in a very large body
+
+SDLC-ALLOW-TEST-EDIT: AID-9005
+
+$big_filler"
+  printf '%s\n' "$early_trailer_msg" > "$T/early-msg"
+  local big_len
+  big_len="$(wc -c < "$T/early-msg")"
+  [ "$big_len" -gt 1048576 ] || { echo "FAIL [large-body scenario setup: filler ${big_len}B <= 1MiB pipe-buffer max]"; fail=$((fail+1)); }
+  scenario "early trailer in >1MiB body still overrides (AID-2292 SIGPIPE)" 0 "$early_trailer_msg" -- \
+    "printf 'def test_a():\n    assert 1 == 1\n' > tests/unit/test_a.py"
+
+  # AID-2292, second half of the failure mode: the ::notice itself must be
+  # emitted (the PR #471 incident showed rc=1 + 11 false violations + no
+  # notice when SIGPIPE ate the trailer). sig_out is tiny (< pipe buffer),
+  # so a plain pipe grep is safe here.
+  local sig_br="st-sigpipe-$$" sig_out sig_rc
+  $GITC checkout -q -b "$sig_br" "$base_sha"
+  printf 'def test_a():\n    assert 1 == 1\n' > "$R/tests/unit/test_a.py"
+  $GITC add -A >/dev/null
+  $GITC commit -qF "$T/early-msg"
+  sig_out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$sig_br" 2>&1)"; sig_rc=$?
+  if [ "$sig_rc" -eq 0 ] && printf '%s' "$sig_out" | grep -q '^::notice::SDLC-ALLOW-TEST-EDIT'; then
+    echo "PASS [large-body early trailer emits the override notice] rc=$sig_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [large-body early trailer emits the override notice] rc=$sig_rc (expected 0)"
+    printf '%s\n' "$sig_out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD "$sig_br" >/dev/null
 
   # AID-1272 regression: PR head has MERGED an advanced base, then edits a
   # test the base added after the branch point. With the CURRENT base tip the
