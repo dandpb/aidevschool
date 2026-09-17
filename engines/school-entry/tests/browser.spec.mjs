@@ -3,6 +3,10 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 import { once } from "node:events";
 import { createServer } from "node:http";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createRuntime } from "../server/runtime.mjs";
 import { createApp } from "../server/app.mjs";
 import { createStore } from "../server/store.mjs";
 import { hashPassword } from "../server/auth.mjs";
@@ -195,4 +199,85 @@ test("C24 newest student request owns displayed results", async (t) => {
     0,
   );
   assert.equal(await page.locator("[data-engine-card]").count(), 4);
+});
+
+test("launch revocation refreshes available choices", async (t) => {
+  const { page, base, store, selected } = await fixture(t);
+  await ask(page, base);
+  const revoked = store.list().find((engine) => engine.id === selected[0].id);
+  store.setEnabled(revoked.id, false, revoked.version);
+  await page
+    .locator("[data-engine-card]")
+    .first()
+    .getByRole("button", { name: "Começar" })
+    .click();
+  await page.locator('[data-result-mode="catalog"]').waitFor();
+  assert.equal(
+    await page.locator(`[data-engine-id="${revoked.id}"]`).count(),
+    0,
+  );
+  assert.equal(await page.locator("[data-engine-card]").count(), 3);
+  assert.match(
+    await page.locator("#request-status").textContent(),
+    /indisponível/,
+  );
+  assert.equal(new URL(page.url()).origin, base);
+});
+
+test("C17 browser submits through configured non-localhost origin", async (t) => {
+  const reservation = createServer();
+  reservation.listen(0, "127.0.0.1");
+  await once(reservation, "listening");
+  const port = reservation.address().port;
+  await new Promise((resolve) => reservation.close(resolve));
+  const base = `http://entry.test:${port}`;
+  const dir = mkdtempSync(join(tmpdir(), "entry-origin-"));
+  const store = createStore(":memory:");
+  const selected = CATALOG[0];
+  store.setEnabled(selected.id, true, 0);
+  const app = createRuntime(
+    {
+      NODE_ENV: "test",
+      PORT: String(port),
+      HOST: "127.0.0.1",
+      BASE_URL: base,
+      DATA_DIR: dir,
+    },
+    {
+      store,
+      targets: {
+        [selected.id]: { url: "https://example.org", readySelector: "button" },
+      },
+      checker: async () => true,
+      ranker: async () => ({ anyFit: 1, scores: { [selected.id]: 3 } }),
+    },
+  );
+  app.listen(port, "127.0.0.1");
+  await once(app, "listening");
+  const mappedBrowser = await chromium.launch({
+    args: [
+      "--host-resolver-rules=MAP entry.test 127.0.0.1",
+      "--no-proxy-server",
+    ],
+  });
+  t.after(async () => {
+    await mappedBrowser.close();
+    await new Promise((resolve) => app.close(resolve));
+    await app.closeResources();
+    rmSync(dir, { recursive: true, force: true });
+  });
+  const page = await mappedBrowser.newPage();
+  await ask(page, base);
+  assert.equal(new URL(page.url()).origin, base);
+  assert.equal(
+    await page.locator('[data-result-mode="recommended"]').count(),
+    1,
+  );
+  assert.equal(
+    await page
+      .locator("[data-engine-card]")
+      .first()
+      .getAttribute("data-engine-id"),
+    selected.id,
+  );
 });

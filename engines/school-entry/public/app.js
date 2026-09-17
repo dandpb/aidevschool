@@ -72,6 +72,12 @@ function render(data) {
           throw new Error("Destino indisponível.");
         window.location.assign(destination.href);
       } catch (error) {
+        if (error.status === 409) {
+          await load("/api/engines");
+          status.textContent =
+            "Essa experiência ficou indisponível. Consulte as opções atuais.";
+          return;
+        }
         feedback.textContent = error.message;
         button.disabled = false;
       }
