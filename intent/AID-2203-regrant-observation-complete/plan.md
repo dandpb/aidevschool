@@ -99,3 +99,20 @@ Change-id: AID-2203-regrant-observation-complete · From: intent/AID-2203-regran
 - **Verificador final (pós-merge)**: push-run da main + primeiro ciclo real da fábrica
   (ou drill documentado); auditoria SDLC da próxima janela confere a métrica
   repeat-incident.
+
+## Addendum r1.1 (2026-09-17, pós-GO — delta de coordenação R5, sem bump de revisão)
+
+Contexto mudou após o GO CEO (AID-2229 recibo `5df8dc86`, espelhado no comentário
+`5ae96c6b` desta issue): o **PR #462** (Opção 1 / AID-2202/AID-2204) foi **fechado por
+supersede às 23:01:55Z** (desfecho entregue via #461→#468; main `a95c4b343b` verde
+first-hand: 28 success / 2 skipped / 0 failure). Decisão CEO (relay AID-2232/AID-2202):
+
+- **R5 passa a incluir** a regra docs remanescente da Opção 1 no lote de runbook DESTA
+  issue, em seções distintas: single-writer item 5 + seção "re-grant emparceirado no
+  mesmo lote" (conteúdo do #462, citado como closed-by-supersede) + cross-ref no
+  parágrafo do trailer `SDLC-ALLOW-TEST-EDIT` em `docs/sdlc/README.md` (1 frase).
+- **Nenhuma outra entrega do plan muda.** O GO cobre r1 + este delta.
+- A confirmação pendente `e90e5c92` continua apontando para a rev `6bf5ef39` (doc `plan`
+  inalterado); este addendo vive no artefato repo e na thread, não no doc gateado.
+- Build permanece retido até o aceite formal de `e90e5c92` (board-only para agentes;
+  espelho não é instrumento de aceite).
