@@ -224,7 +224,7 @@ def _write_ok_receipt(
         lines.append(
             json.dumps(
                 {
-                    "kind": question.get("type", sweep),
+                    "kind": question["type"],  # noul|choice; missing type fails loudly
                     "question": question_id,
                     "answer": answer.get("choice", answer.get("noul")),
                     "probabilities": answer.get("probabilities"),
