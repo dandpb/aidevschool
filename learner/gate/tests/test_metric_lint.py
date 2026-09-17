@@ -101,14 +101,20 @@ FIXTURE_GAME = (
     "}\n"
 )
 
+#: Typed-declaration emission shape (game-04 style: const metrics: WaveMetrics = {).
+FIXTURE_TYPED = "const metrics: WaveMetrics = { typed_key: 1 }\n"
+
 
 def test_enumeration_extracts_literal_keys(tmp_path: Path) -> None:
     """C4a: literal keys extracted at any nesting depth, computed keys skipped."""
     game_src = tmp_path / "engines" / "voxelDojo" / "game-99-fx" / "src" / "sim"
     game_src.mkdir(parents=True)
     (game_src / "levels.ts").write_text(FIXTURE_GAME, encoding="utf-8")
+    (game_src / "controller.ts").write_text(FIXTURE_TYPED, encoding="utf-8")
     census = metric_lint.enumerate_metrics(tmp_path)
-    assert census["game-99-fx"] == {"outer_count", "nested", "inner_ok", "deeper", "deep_key"}
+    assert census["game-99-fx"] == {
+        "outer_count", "nested", "inner_ok", "deeper", "deep_key", "typed_key"
+    }
 
 
 def test_enumeration_game10_live() -> None:

@@ -8,7 +8,7 @@
 # Seed (2026-09-17): legacy frozenset names carry manual:legacy-frozensets;
 # every other name was classified by a live judgment sweep (receipt
 # 518d6905b440cc43 — see learner/judgment_receipts/) and hand-reviewed:
-# twenty-one overrides marked manual:seed-review-2026-09-17 correct metrics that
+# twenty overrides marked manual:seed-review-2026-09-17 correct metrics that
 # describe correct behavior or scenario composition, not learner failure.
 version: 1
 shared:

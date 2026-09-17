@@ -224,11 +224,12 @@ def challenge_gate_blockers(
 # ---------------------------------------------------------------------------
 
 #: Failure-metric vocabularies derive from the committed snapshot
-#: (``learner/gate/metric_failure_snapshot.yaml``) at import — the declared
-#: seam discipline of ``load_thresholds``: nothing hardcodes failure metric
-#: names. A missing/malformed snapshot fails import loudly via
-#: :class:`MetricSnapshotError` rather than yielding an empty vocabulary.
-#: Seeded and maintained by ``python3 -m learner.gate.metric_lint``.
+#: (``learner/gate/metric_failure_snapshot.yaml``) — nothing hardcodes
+#: failure metric names. Derivation is lazy (first violation check), keeping
+#: package import cheap; a missing/malformed snapshot still fails loudly via
+#: :class:`MetricSnapshotError` at every judgment rather than yielding an
+#: empty vocabulary. Seeded and maintained by
+#: ``python3 -m learner.gate.metric_lint``.
 from learner.gate.metric_snapshot import failure_vocabularies  # noqa: E402
 
 
