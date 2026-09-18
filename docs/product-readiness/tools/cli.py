@@ -44,6 +44,7 @@ from product_readiness_tools.regrant import (  # noqa: E402
     RegrantBranchError,
     classify_proposal,
     require_regrant_branch,
+    write_proposal_state,
 )
 from product_readiness_tools.render import drift, expected_views, live_deviations, write_views  # noqa: E402
 from product_readiness_tools.reports import (  # noqa: E402
@@ -82,11 +83,14 @@ def _print_usage() -> None:
         "aggregate --reports DIR... [--observations DIR...] --output FILE [--assessment-id ID] "
         "[--verified-at ISO] [--revalidate-by DATE]|producer-report --engine DIR --output DIR "
         "[--scenarios ID...]|"
-        "assess --input REPORT [--dry-run]|regrant --propose --input REPORT}\n"
+        "assess --input REPORT [--dry-run]|regrant --propose --input REPORT "
+        "[--proposal-state PATH]}\n"
         "  regrant exits: 0 written (assessment + rendered views), "
         "1 invalid report or blocked-for-non-producer reasons, "
         "2 bad usage or write-branch guard (main/detached HEAD), "
-        "3 pending independent observation (no writes)",
+        "3 pending independent observation (no writes); "
+        "--proposal-state serializes the proposal state (pending-observation|written) "
+        "as a JSON manifest for the observation gate (AID-2203)",
         file=sys.stderr,
     )
 
@@ -101,7 +105,17 @@ def main(args: list[str] | None = None) -> int:
     if domain is None:
         return 1
     if arguments[:1] == ["regrant"]:
-        if len(arguments) != 4 or arguments[1] != "--propose" or arguments[2] != "--input":
+        proposal_state: Path | None = None
+        if len(arguments) == 4 and arguments[1] == "--propose" and arguments[2] == "--input":
+            pass
+        elif (
+            len(arguments) == 6
+            and arguments[1] == "--propose"
+            and arguments[2] == "--input"
+            and arguments[4] == "--proposal-state"
+        ):
+            proposal_state = Path(arguments[5])
+        else:
             _print_usage()
             return 2
         try:
@@ -121,12 +135,16 @@ def main(args: list[str] | None = None) -> int:
                 print(f"INVALID: {reason}", file=sys.stderr)
             return 1
         if isinstance(outcome, PendingObservation):
+            if proposal_state is not None:
+                write_proposal_state(outcome, proposal, proposal_state, REPO_ROOT)
             print("REGRANT PENDING: awaiting independent observation")
             for use_case_id, pending in outcome.checklist:
                 print(f"- {use_case_id}:")
                 for reason in pending:
                     print(f"  - [ ] {reason}")
             return 3
+        if proposal_state is not None:
+            write_proposal_state(outcome, proposal, proposal_state, REPO_ROOT)
         results_path, assessment_path = write_assessment(proposal, READINESS_ROOT)
         print(f"Wrote {results_path.relative_to(REPO_ROOT)}")
         print(f"Wrote {assessment_path.relative_to(REPO_ROOT)}")
