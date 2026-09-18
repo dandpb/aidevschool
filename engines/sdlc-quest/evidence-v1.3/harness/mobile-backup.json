@@ -2,7 +2,7 @@
   "format": "sdlc-quest-backup",
   "backupVersion": 1,
   "appVersion": "1.3.0",
-  "createdAt": "2026-09-18T17:52:42.444Z",
+  "createdAt": "2026-09-18T17:58:56.606Z",
   "state": {
     "version": 1,
     "tlc": {
@@ -92,6 +92,6 @@
     "sound": false,
     "motion": false,
     "selected": 0,
-    "startedAt": "2026-09-18T17:52:39.849Z"
+    "startedAt": "2026-09-18T17:58:54.141Z"
   }
 }
