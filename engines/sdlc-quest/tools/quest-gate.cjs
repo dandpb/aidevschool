@@ -10,8 +10,8 @@ const {resolvePython}=require('./python-runtime.cjs');
 const ROOT=path.resolve(__dirname,'..');
 const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
 const STRINGS={
-pt:{usage:'Uso: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Executa contrato local → build → regras → jornadas original/TLC/harness (desktop e mobile).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\n--lang muda o idioma do console; pt é o padrão.\nNão é um comando do harness-toolkit.',receipt:'Recibo:',done:'Verificações locais concluídas.',incomplete:'Verificações locais incompletas; etapas dependentes não executadas.',toolkit:'Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.'},
-en:{usage:'Usage: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Runs the local contract → build → rules → original/TLC/harness journeys (desktop and mobile).\nNo external services, installs or agent calls. A failure stops the chain.\n--require-release returns 2 after the checks: external authorization is not configured.\n--lang changes the console language; pt is the default.\nNot a harness-toolkit command.',receipt:'Receipt:',done:'Local checks completed.',incomplete:'Local checks incomplete; dependent steps did not run.',toolkit:'Real toolkit: not executed. Independent review: not executed. Production: not authorized.'}
+pt:{usage:'Uso: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Executa contrato local → build → regras → jornadas original/TLC/harness (desktop e mobile) e a jornada de idiomas i18n (desktop).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\n--lang muda o idioma do console; pt é o padrão.\nNão é um comando do harness-toolkit.',receipt:'Recibo:',done:'Verificações locais concluídas.',incomplete:'Verificações locais incompletas; etapas dependentes não executadas.',toolkit:'Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.'},
+en:{usage:'Usage: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Runs the local contract → build → rules → original/TLC/harness journeys (desktop and mobile) and the i18n language journey (desktop).\nNo external services, installs or agent calls. A failure stops the chain.\n--require-release returns 2 after the checks: external authorization is not configured.\n--lang changes the console language; pt is the default.\nNot a harness-toolkit command.',receipt:'Receipt:',done:'Local checks completed.',incomplete:'Local checks incomplete; dependent steps did not run.',toolkit:'Real toolkit: not executed. Independent review: not executed. Production: not authorized.'}
 };
 function parseArgs(args){
  const valid=new Set(['--help','--require-release']);
@@ -77,7 +77,8 @@ function main(args){
    ['tlc-desktop',python.executable,[...python.args,'tests/tlc-browser.py','desktop']],
    ['tlc-mobile',python.executable,[...python.args,'tests/tlc-browser.py','mobile']],
    ['harness-desktop',python.executable,[...python.args,'tests/harness-browser.py','desktop']],
-   ['harness-mobile',python.executable,[...python.args,'tests/harness-browser.py','mobile']]
+   ['harness-mobile',python.executable,[...python.args,'tests/harness-browser.py','mobile']],
+   ['i18n',python.executable,[...python.args,'tests/i18n-browser.py','desktop']]
   ];
   for(const [id,cmd,argv] of steps){
    const startedAt=new Date().toISOString(),entry={id,status:'running',startedAt,command:[cmd,...argv]};receipt.steps.push(entry);save();console.log('RUN',id);
