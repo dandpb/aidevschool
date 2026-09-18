@@ -322,32 +322,40 @@ def _journal_entries(journal_path: Path) -> dict[str, dict[str, str]]:
     return entries
 
 
-def _ask(
+def ask_and_record(
     sweep: str,
     primitive: str,
     state: dict[str, Any],
     questions: dict[str, Any],
     client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]],
-    receipts_root: Path,
-) -> dict[str, Any] | None:
-    """Call the client and validate the answer keys, or write the fallback
-    receipt and return ``None`` — the single home of the "enrichment never
-    breaks a sync, every failure is auditable" contract.
+    receipts_root: Path | None = None,
+) -> tuple[dict[str, Any], str] | None:
+    """Ask, validate, record — the one public seam for judgment consumers.
+
+    Returns ``(answers, digest16)`` on success (ok-receipt written) and
+    ``None`` on any failure (fallback receipt written): the single home of
+    the "enrichment never breaks a sync, every failure is auditable"
+    contract, shared by the semantic helpers and outside consumers such as
+    ``learner.gate.metric_lint``.
     """
+    root = receipts_root or DEFAULT_RECEIPTS_ROOT
     try:
         answers = client(state, questions)
         if not isinstance(answers, dict) or set(answers) != set(questions):
             raise JudgmentError("judgment answers do not match asked questions")
-        return answers
     except JudgmentError as exc:
         _write_fallback_receipt(
-            sweep, primitive, state, questions, exc.error_class, receipts_root
+            sweep, primitive, state, questions, exc.error_class, root
         )
+        return None
     except Exception as exc:  # defensive: enrichment must never break a sync
         _write_fallback_receipt(
-            sweep, primitive, state, questions, type(exc).__name__, receipts_root
+            sweep, primitive, state, questions, type(exc).__name__, root
         )
-    return None
+        return None
+    digest = _input_digest(state, questions)[:16]
+    _write_ok_receipt(sweep, state, questions, answers, root)
+    return answers, digest
 
 
 def _pitfall_questions(
@@ -423,12 +431,11 @@ def semantic_pitfall_occurrences(
     questions = _pitfall_questions(pitfalls, entries)
     if not questions:
         return pitfalls
-    answers = _ask("pitfalls", "noul", state, questions, client, receipts_root)
-    if answers is None:
+    result = ask_and_record("pitfalls", "noul", state, questions, client, receipts_root)
+    if result is None:
         return pitfalls
-    enriched = _apply_pitfall_answers(pitfalls, entries, answers)
-    _write_ok_receipt("pitfalls", state, questions, answers, receipts_root)
-    return enriched
+    answers, _ = result
+    return _apply_pitfall_answers(pitfalls, entries, answers)
 
 
 def _noul_value(answer: Any) -> float:
@@ -485,9 +492,10 @@ def semantic_profile_levels(
             "criteria": BLOOM_LEVELS,
         },
     }
-    answers = _ask("profile", "choice", state, questions, client, receipts_root)
-    if answers is None:
+    result = ask_and_record("profile", "choice", state, questions, client, receipts_root)
+    if result is None:
         return current
+    answers, _ = result
     try:
         dreyfus = _choice_value(answers.get("dreyfus_overall"), DREYFUS_STAGES)
         bloom = _choice_value(answers.get("bloom_overall"), BLOOM_LEVELS)
@@ -496,7 +504,6 @@ def semantic_profile_levels(
             "profile", "choice", state, questions, exc.error_class, receipts_root
         )
         return current
-    _write_ok_receipt("profile", state, questions, answers, receipts_root)
     return {"dreyfus": dreyfus, "bloom": bloom}
 
 
