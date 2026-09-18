@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-import type { EvaluationResult } from "../../src/domain/evaluation";
+import type { ActivityAnswer, EvaluationResult } from "../../src/domain/evaluation";
 import { buildEvidenceRecord } from "../../src/domain/evidence";
-import type { ActivityAnswer } from "../../src/domain/evaluation";
 
 function evaluation(): EvaluationResult {
   return {
