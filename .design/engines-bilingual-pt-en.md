@@ -44,7 +44,7 @@ Cheaper paths considered: tradução automática do navegador no runtime — qua
 ## Success
 
 - Worked if: um visitante sem português clona, roda e **completa o sdlc-quest inteiro em EN** — missões, UI e `npm run gate --lang en` passando — sem precisar de PT. By: fechamento do piloto.
-- Early signal (dias): primeiras missões jogáveis em EN **sem vazamento de PT** — `tests/i18n-parity.test.cjs` passando desde o primeiro dia de tradução. Aposta indo errado: manutenção dupla travando a evolução do conteúdo PT do quest.
+- Early signal (dias): primeiras missões jogáveis em EN **sem vazamento de PT** — `tests/i18n.test.cjs` passando desde o primeiro dia de tradução. Aposta indo errado: manutenção dupla travando a evolução do conteúdo PT do quest.
 - Review: ao fechar o piloto, **antes** de abrir a engine #2 do rollout — quem olha: Daniel. Se o custo dual já doer no piloto, cada engine seguinte pode descer para a forma leve sem reabrir esta decisão.
 
 ## Boundary
@@ -70,7 +70,7 @@ Aposta: bilíngue por sufixo nos registros de dados existentes + um helper de id
 - Parâmetro `lang` (default `'pt'`) nas funções user-facing dos módulos core (`validate`, `stepIncident`, `importBackup`, …) para as mensagens de feedback.
 - `tests/i18n-browser.py` — jornada EN (desktop) na cadeia do gate.
 - Campos sufixados `_en` em todo campo string exibível dos registros de `src/data.js` e `src/tlc-data.js`.
-- `tests/i18n-parity.test.cjs` — caminha recursivamente os registros e falha para todo campo PT sem `_en` correspondente (exclusões explícitas: `id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`).
+- `tests/i18n.test.cjs` — caminha recursivamente os registros e falha para todo campo PT sem `_en` correspondente (exclusões explícitas: `id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`).
 - `--lang pt|en` nas tools (`quest-gate.cjs`, `check-package.cjs`, `test.cjs`, `serve.cjs`).
 - `lang-btn` no HUD (ao lado de `book-btn`) e `README.pt-BR.md`.
 
@@ -112,7 +112,7 @@ Also in the field, por perspectiva e não como candidatas: tradução automátic
 | Mecanismo de strings de UI | `src/lang.js` autocontido + tabela `STRINGS` por módulo + `t(key)`; zero deps, copiável | Contrato local-complete proíbe dependência; helper de ~50 linhas serve | Catálogos JSON + runtime i18n compartilhado em `engines/shared/` — venceria com ≥2 engines consumindo no mesmo período | reversible |
 | Dados bilíngues | Sufixo `_en` em todo campo exibível de `data.js`/`tlc-data.js`; decorativo `en` → `tag` | Aditivo, grep-ável, teste de paridade caminha chaves genericamente | Registro aninhado `{pt,en}` — venceria se a estrutura passasse a divergir por idioma | reversible |
 | Preferência de idioma | `localStorage['sdlc-quest:lang']`, default `pt`, toggle no HUD, troca mid-run sem tocar progresso | Público doméstico é default; experiência determinística para testes | `navigator.language` auto-detect — venceria se analytics mostrassem visitantes EN dominando (inmedível hoje) | reversible |
-| Fallback runtime | String sem `_en` renderiza PT; `tests/i18n-parity.test.cjs` falha o gate (entra via enumeração automática de `tools/test.cjs`) | Fallback silencioso é o modo de falha clássico; teste antes da tradução | Warning não-bloqueante — venceria só se o volume de strings tornasse a paridade inviável | reversible |
+| Fallback runtime | String sem `_en` renderiza PT; `tests/i18n.test.cjs` falha o gate (entra via enumeração automática de `tools/test.cjs`) | Fallback silencioso é o modo de falha clássico; teste antes da tradução | Warning não-bloqueante — venceria só se o volume de strings tornasse a paridade inviável | reversible |
 | Saída das tools | `--lang pt|en`, default `pt`, em `quest-gate.cjs`/`check-package.cjs`/`test.cjs`/`serve.cjs` | Determinismo para os testes; visitante usa a flag explícita | Default EN portfolio-first — venceria se a maioria dos runners do gate fosse esperada não-PT | reversible |
 | Docs do pacote | `README.md` EN-primary + link PT; PT integral em `README.pt-BR.md`; `LEIA-ME-PRIMEIRO.txt` permanece PT | README é a porta GitHub; LEIA-ME é o first-run do aprendiz PT | README único bilíngue — venceria se o PT não coubesse em arquivo separado linkado | reversible |
 

@@ -24,7 +24,7 @@ A mudança: o pacote ganha chaveamento pt/en — helper `src/lang.js`, campos `_
 
 ### Paridade anti-drift
 
-6. Quando um campo exibível perde o `_en` (ex.: `brief_en` removido de `missions[0]`), então `node --test tests/i18n-parity.test.cjs` falha com mensagem contendo o `id` do registro e o nome do campo faltante.
+6. Quando um campo exibível perde o `_en` (ex.: `brief_en` removido de `missions[0]`), então `node --test tests/i18n.test.cjs` falha com mensagem contendo o `id` do registro e o nome do campo faltante.
 7. Sempre, o teste de paridade caminha os registros exibíveis de `src/data.js` (`missions`, `tasks`, `options`, `primers`, `glossary`, `sources`) e `src/tlc-data.js`, com a lista de exclusões declarada como literal no topo do teste (`id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`).
 
 ### Conteúdo didático em EN
@@ -44,7 +44,7 @@ A mudança: o pacote ganha chaveamento pt/en — helper `src/lang.js`, campos `_
 
 12. Quando o visitante abre `README.md`, então o corpo está em inglês com linha inicial "Leia em português" cujo link resolve para `README.pt-BR.md` contendo o README pt-BR atual integral.
 13. Quando o visitante abre `TLC-GUIDE.md` e `HARNESS-GUIDE.md`, então cada um está integralmente em inglês — mesma sequência de títulos/seções da versão pt-BR atual — com linha inicial apontando para `TLC-GUIDE.pt-BR.md`/`HARNESS-GUIDE.pt-BR.md`, que contêm o texto pt-BR atual integral (decidido por Daniel, 2026-09-18: traduções integrais).
-14. Depois das edições, quando `node tools/check-package.cjs` roda, então exit 0 com zero entradas `(alterado)`/`(ausente)` e o `SHA256SUMS.txt` lista os arquivos novos (`src/lang.js`, `tests/i18n-parity.test.cjs`, `tests/i18n-browser.py`, `README.pt-BR.md`, `TLC-GUIDE.pt-BR.md`, `HARNESS-GUIDE.pt-BR.md`).
+14. Depois das edições, quando `node tools/check-package.cjs` roda, então exit 0 com zero entradas `(alterado)`/`(ausente)` e o `SHA256SUMS.txt` lista os arquivos novos (`src/lang.js`, `tests/i18n.test.cjs`, `tests/i18n-browser.py`, `README.pt-BR.md`, `TLC-GUIDE.pt-BR.md`, `HARNESS-GUIDE.pt-BR.md`).
 15. Sempre, `package-lock.json` permanece sem dependências declaradas e nenhum `<script src>`/`<link>` externo ao pacote é adicionado — o contrato local-complete (zero `npm install`) vale para o mecanismo inteiro.
 
 ### Jornada EN no gate
@@ -103,10 +103,10 @@ A mudança: o pacote ganha chaveamento pt/en — helper `src/lang.js`, campos `_
 
 | Decision | Shape | Alternative rejected |
 |---|---|---|
-| Convenção bilíngue de dados | sufixo `_en` em todo campo exibível; exclusões como literal no topo de `tests/i18n-parity.test.cjs` (lista do critério 7); decorativo `en` renomeado `tag` | catálogos JSON por locale + runtime compartilhado — vencedor só com ≥2 engines de stacks diferentes no mesmo período; viola o local-complete deste pacote |
+| Convenção bilíngue de dados | sufixo `_en` em todo campo exibível; exclusões como literal no topo de `tests/i18n.test.cjs` (lista do critério 7); decorativo `en` renomeado `tag` | catálogos JSON por locale + runtime compartilhado — vencedor só com ≥2 engines de stacks diferentes no mesmo período; viola o local-complete deste pacote |
 | Persistência da preferência | `localStorage['sdlc-quest:lang']` com valores `'pt'\|'en'`, ausência = pt | `navigator.language` — não determinístico para journeys e testes |
 | Contrato dos módulos core | funções user-facing (`validate`, `stepIncident`, `importBackup`, `complete`) aceitam `lang` opcional, default `'pt'`; testes node e journeys Python seguem verdes sem edição | códigos de erro mapeados no app — quebraria os regexes dos testes contra `message` e duplicaria a tabela |
-| Jornada EN no gate | etapa `i18n` = `tests/i18n-browser.py` desktop-only na cadeia do `quest-gate.cjs` (receipt passa de 8 para 9 steps) | desktop+mobile — dobra o custo do gate sobre a mesma superfície de strings |
+| Jornada EN no gate | etapa `i18n` = `tests/i18n-browser.py` desktop-only na cadeia do `quest-gate.cjs` (cadeia de execução 8→9 steps; receipt total 9→10 com `contract-shape`) | desktop+mobile — dobra o custo do gate sobre a mesma superfície de strings |
 
 ## Surface
 
