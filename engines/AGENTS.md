@@ -20,16 +20,22 @@ engines/
 ├── miniTown/               # cozy town-sim: level-0 entry surface for the non-technical audience (AD-004)
 ├── openclaw/               # file-based runner/scheduler tracer bullet
 ├── pixelDojo/              # 2D teaching-game engine; pixel-quest/ is the runnable app
+├── sdlc-quest/             # local-complete SDLC Quest v1.3 teaching-game package (pt-BR, Node ≥22, native modules only; landed 2026-09-17, commit 9f2f487e)
 ├── shared/                 # cross-engine teaching-evidence primitives
-└── voxelDojo/              # catalog of 3D teaching-simulation packages
+├── voxelDojo/              # catalog of 3D teaching-simulation packages
+└── zai-duolingo-like/      # cozy-cyberpunk AI-literacy game "Duolingo de IA" (Next.js + Prisma/SQLite + Zustand; re-added with real content 2026-09-17, commit 9f2f487e)
 ```
 
 The polyglot evolution arena design material is archived at `docs/design/polyglot-arena/`
 (proposal-stage; was `engines/polyglotEvolutionArena/` until 2026-06-21).
 
-`zai-duolingo-like/` was a dangling submodule gitlink (no `.gitmodules` entry, no content),
-removed by c604d2ec on 2026-09-07; its stale references here were cleaned on 2026-09-16
-(AID-2117). Do not re-add the entry unless real engine content lands in the repo.
+`zai-duolingo-like/` history: was a dangling submodule gitlink (no `.gitmodules` entry, no
+content), removed by c604d2ec on 2026-09-07, stale references here cleaned 2026-09-16 (AID-2117);
+**re-added 2026-09-17 with real engine content** (209 files, commit 9f2f487e, PR #471 merge
+3c5629c0) — the "real content" condition of the old note is satisfied per the fresh-context QA
+countersign (AID-2281, verdict CONFORME COM RESSALVA 2026-09-17T14:00Z; retrofit-accept ratified
+by CEO AID-2282). `sdlc-quest/` (220 files, same commit) is a new engine from the same diff.
+Neither engine has by-name CI coverage yet (hardens AID-2286/AID-2287, children of AID-2282).
 
 ## WHERE TO LOOK
 
@@ -48,6 +54,8 @@ removed by c604d2ec on 2026-09-07; its stale references here were cleaned on 202
 | Claude Code orchestration | `miniMaxEvolutionEngine/` | Local `CLAUDE.md` is the engine contract. |
 | Continuous runner tracer bullet | `openclaw/` | Python filesystem checklist scheduler; no Hermes bus or semantic verification. |
 | Teaching-game engine rules | `pixelDojo/` | Parent rules; app-local rules are in `pixel-quest/AGENTS.md`. |
+| SDLC teaching quest (local package) | `sdlc-quest/` | Self-contained pt-BR package: `npm start` serves 127.0.0.1:8080 (no install); `npm test` = `node tools/test.cjs`; gate via `npm run gate`. Start with `README.md`. Manifest `SHA256SUMS.txt` 219/219 OK. |
+| AI-literacy cozy game | `zai-duolingo-like/` | Next.js + Prisma (SQLite) + Zustand single-page game; contract in `QWEN.md` (Vertical Protocol); full gate `npm run verify`, E2E `npm run test:e2e` after `npm run build`. |
 | 3D engine rules | `voxelDojo/` | Parent rules cover the uniform `game-*` packages. |
 | Polyglot arena design (read-only) | `docs/design/polyglot-arena/` | Archived proposal material. |
 

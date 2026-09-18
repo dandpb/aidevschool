@@ -68,6 +68,7 @@ export function createApp({
         throw fail(429, "RATE_LIMIT", "Tente novamente mais tarde.");
     }
     async function body() {
+      req.setEncoding("utf8");
       let raw = "";
       for await (const chunk of req) {
         raw += chunk;
@@ -250,13 +251,11 @@ export function createApp({
               validateJudgments(result, engines);
               mode = result.anyFit < 0.5 ? "no-match" : "recommended";
               if (mode === "recommended")
-                selected = [...engines]
-                  .sort(
-                    (a, b) =>
-                      result.scores[b.id] - result.scores[a.id] ||
-                      a.id.localeCompare(b.id),
-                  )
-                  .slice(0, 3);
+                selected = [...engines].sort(
+                  (a, b) =>
+                    result.scores[b.id] - result.scores[a.id] ||
+                    a.id.localeCompare(b.id),
+                );
             } catch {
               mode = "fallback";
               logger({ event: "fallback", category: "provider" });
@@ -268,6 +267,7 @@ export function createApp({
               .map((e) => e.id),
           );
           selected = selected.filter((e) => enabled.has(e.id));
+          if (mode === "recommended") selected = selected.slice(0, 3);
           if (!selected.length) mode = "empty";
           return send(200, {
             mode,

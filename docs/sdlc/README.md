@@ -232,6 +232,44 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
    Qualquer "não" = não merge, mesmo com founder-merge aceito no GitHub e CI
    verde. Vale para todo merge-writer (hoje CEO single-writer; founder-direct
    segue a adaptação da própria seção AID-1515).
+5. **Countersign mecânico p/ paths de autoridade de processo + citação no
+   merge commit (AID-2316 gate c → AID-2318, 2026-09-17).** Binding para TODO
+   merge-writer (inclui founder-direct), após a 2ª ocorrência da classe
+   AID-2219 (merge sem veredito pré-merge: #460/AID-2201 → #478/AID-2292):
+   - **(1) Merge-writer set** — merges executados por CEO single-writer ou
+     single-writer explicitamente delegado e registrado no carrier ANTES do
+     merge. O produtor do diff NUNCA executa merge do próprio PR sem veredito
+     independente postado (producer ≠ verifier ≠ merger; AID-2219 item 3,
+     AID-1515 §3).
+   - **(2) Citação de countersign no merge commit** — toda mensagem de merge
+     (squash title/body) cita o veredito que autorizou, linha canônica
+     `Countersign: <AID-ID> verdict <commentId-ou-SHA>`; ausência é achado de
+     auditoria SM (grep-able em `git log`).
+   - **Enforcement mecânico (Stage 1)** — o check `SDLC guardrails (diff)`
+     exige no PR (body ou comentário) uma linha `Countersign: <AID-ID> verdict
+     <ref>` com AID resolvível quando o diff toca paths de autoridade de
+     processo (`scripts/sdlc_guard_check.sh`, `scripts/sdlc_aid_resolve.sh`,
+     `docs/sdlc/**`, `.github/workflows/**`, `intent/README.md`) — sem
+     citação válida o guard fica VERMELHO (fail-closed); com citação emite
+     `::notice` auditável. Como o check é required context no head, a citação
+     só pode ficar verde ANTES do merge — o gate verifica a **citação**, não
+     o conteúdo do veredito: o veredito first-hand FPE/QA continua exigido
+      (AID-1515 §3; CI verde ≠ gate completo).
+
+   **Emenda Stage-2 (AID-2428, GO CEO AID-2426/D3, 2026-09-18).** Após o
+   1º merge de bot pós-Stage-1 (#495/`ccd42d6f`, 11:40:31Z) descumprir a
+   citação — merge-msg com 0 linhas `Countersign:`, 3ª ocorrência da classe
+   sem-linha-canônica (#481→#491→#495) — o gate mecânico passou a exigir a
+   citação canônica resolvível de **TODO PR de bot/agent (qualquer diff, sem
+   isenção "engine-only"**; precedente #483/AID-2333: producer ≠ verifier
+   nunca é dispensado), mantendo a regra Stage-1 por paths de autoridade
+   para qualquer autor, e passou a verificar a **ordenação**: o veredito
+   citado deve estar postado **antes do merge** — em PR já mergeado só
+   contam citações em comentário com `createdAt < merged_at` (citação
+   pós-merge é inválida; trailer de body em PR mergeado é fail-closed por
+   não ter timestamp verificável). PRs de humano/founder sem paths de
+   autoridade seguem fora do gate nesta etapa (comportamento documentado no
+   self-test iv). Registro: `intent/AID-2428-countersign-gate-stage2/`.
 
 ## Guardrails (what is enforced, and how)
 
@@ -284,7 +322,12 @@ for an issue in this repository, for either trailer. The issue must record
 the actual owner acceptance and the authorized scope; creating an issue
 alone does not grant approval. The trailer is only the audit hook — the cited
 AID or GitHub issue must record the actual owner acceptance, and the reviewer/QA verifies that before
-merging. This is the same trust model as the live env-var overrides (an
+merging. When the trailer-authorized diff also touches specs/`sourcePaths`
+covered by published readiness claims, the same merge batch must carry an
+observation-complete re-grant (AID-2202) — see
+[`../product-readiness/REGRANT-RUNBOOK.md`](../product-readiness/REGRANT-RUNBOOK.md)
+(rule from PR #462, closed-by-supersede; gate delivered by AID-2203).
+This is the same trust model as the live env-var overrides (an
 undisciplined session could export those too); the trailer just makes the
 exception visible in git history. Credential findings have no override, and
 the force-push rule remains runtime-intercepted because a diff cannot prove

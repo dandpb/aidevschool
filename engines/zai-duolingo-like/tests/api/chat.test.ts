@@ -30,6 +30,41 @@ describe("POST /api/chat", () => {
     expect((await res.json()).error).toBe("llm-not-configured");
   });
 
+  it("HTTP base URL is rejected for security", async () => {
+    process.env.LLM_API_KEY = "test-key";
+    process.env.LLM_BASE_URL = "http://api.z.ai/api";
+    const res = await POST(postJson({ message: "olá" }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toContain("Segurança");
+  });
+
+  it("localhost HTTP base URL is allowed", async () => {
+    process.env.LLM_API_KEY = "test-key";
+    process.env.LLM_BASE_URL = "http://localhost:11434";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            choices: [{ message: { content: "resposta local" } }],
+          }),
+          { status: 200 }
+        )
+      )
+    );
+    const res = await POST(postJson({ message: "oi" }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).reply).toBe("resposta local");
+  });
+
+  it("invalid URL is rejected", async () => {
+    process.env.LLM_API_KEY = "test-key";
+    process.env.LLM_BASE_URL = "not-a-url";
+    const res = await POST(postJson({ message: "olá" }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toBe("URL base inválida.");
+  });
+
   it("happy path: forwards system prompt + history, returns the reply", async () => {
     process.env.LLM_API_KEY = "test-key";
     process.env.LLM_MODEL = "modelo-teste";

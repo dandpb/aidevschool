@@ -25,6 +25,25 @@
 #                     operation and cannot be checked after the fact; it stays
 #                     a runtime/owner concern.
 #
+# Countersign gate (AID-2318 Stage 1 + AID-2428 Stage 2, CEO gate AID-2316 c):
+# in PR context, a citation of the verdict that authorizes the merge is
+# required on its own line in the PR body or any PR comment
+#     Countersign: <AID-ID> verdict <ref>
+# when the diff touches process-authority paths (Stage 1, any author) OR the
+# PR author is a bot/agent account (Stage 2, ANY diff — no engine-only
+# exemption: producer ≠ verifier is never waived, precedent #483/AID-2333;
+# the 1st post-Stage-1 bot merge #495/ccd42d6f shipped with zero canonical
+# lines). <ref> points at the verdict record (Paperclip comment id or SHA);
+# the cited AID must resolve via $SDLC_GUARD_AID_RESOLVER (CI wires it to
+# scripts/sdlc_aid_resolve.sh: GitHub for GH-<n>, Paperclip for AID-<n>).
+# Stage 2 ordering: the verdict must be posted strictly BEFORE the merge —
+# on a merged PR only comment citations with createdAt < mergedAt count, and
+# a body-trailer citation there has no verifiable posting time (fail-closed;
+# the API does not expose body-edit timestamps). Pre-merge runs accept body
+# or comment lines: anything visible now is, by construction, pre-merge.
+# Fail-closed in every ambiguity (no citation source, no resolver,
+# unresolvable id) — same direction as the rest of this script (AID-2292).
+#
 # Owner-approved overrides (same trust model as the live env-var overrides):
 # a commit in the range carrying a trailer
 #     SDLC-ALLOW-TEST-EDIT: AID-<n> (or GH-<n> for this GitHub repository)
@@ -198,6 +217,145 @@ run_checks() {
       fi
     fi
   done < <(git -C "$REPO_ROOT" diff --diff-filter=AM -U0 "$mbase" "$head_ref" | grep '^+' | grep -v '^+++')
+
+  # Process-authority paths (AID-2318): changing these changes how the process
+  # itself is enforced, so the verdict chain must be cited on the PR.
+  is_process_authority() { # $1=path
+    case "$1" in
+      scripts/sdlc_guard_check.sh|scripts/sdlc_aid_resolve.sh|intent/README.md) return 0 ;;
+      docs/sdlc/*|.github/workflows/*) return 0 ;;
+      *) return 1 ;;
+    esac
+  }
+
+  # PR context: pull_request event or a PR ref. Push runs of main (post-merge)
+  # are NOT PR context — the gate already ran pre-merge as a required context.
+  pr_context() {
+    case "${GITHUB_EVENT_NAME:-}" in pull_request|pull_request_target) return 0 ;; esac
+    case "${GITHUB_REF:-}" in refs/pull/*/merge|refs/pull/*/head) return 0 ;; esac
+    return 1
+  }
+
+  # PR conversation context (AID-2318 Stage 1 + AID-2428 Stage 2): one JSON
+  # document with everything the gate needs — author (bot detection), body +
+  # comments (citation sources), mergedAt + per-comment createdAt (ordering).
+  # Canonical source: gh pr view --json author,body,comments,mergedAt.
+  # Deterministic/hermetic overrides, first match wins:
+  #   SDLC_PR_CONTEXT_FILE   full JSON in that same shape (Stage 2)
+  #   SDLC_COUNTERSIGN_FILE  Stage 1 flat text — read as an unmerged,
+  #                          human-attributed body (no ordering/author data;
+  #                          authority-path scenarios only)
+  pr_context_json() {
+    if [ -n "${SDLC_PR_CONTEXT_FILE:-}" ] && [ -f "${SDLC_PR_CONTEXT_FILE}" ]; then
+      cat "${SDLC_PR_CONTEXT_FILE}"
+      return 0
+    fi
+    if [ -n "${SDLC_COUNTERSIGN_FILE:-}" ] && [ -f "${SDLC_COUNTERSIGN_FILE}" ]; then
+      jq -nc --rawfile b "${SDLC_COUNTERSIGN_FILE}" \
+        '{author:{__typename:"User",login:"sdlc-countersign-file"},body:$b,mergedAt:null,comments:[]}'
+      return 0
+    fi
+    command -v gh >/dev/null 2>&1 || return 1
+    local prn=""
+    case "${GITHUB_REF:-}" in
+      refs/pull/*/merge|refs/pull/*/head) prn="${GITHUB_REF#refs/pull/}"; prn="${prn%%/*}" ;;
+    esac
+    if [ -z "$prn" ] && [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
+      prn="$(jq -r '.number // empty' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
+    fi
+    [ -n "$prn" ] || return 1
+    gh pr view "$prn" --json author,body,comments,mergedAt 2>/dev/null || return 1
+  }
+
+  # 4. Countersign citation gate (AID-2318 Stage 1 + AID-2428 Stage 2). In PR
+  #    context the citation 'Countersign: <AID-ID> verdict <ref>' is required
+  #    when the diff touches process-authority paths (any author) OR the PR
+  #    author is a bot/agent account (any diff). The citation must resolve AND
+  #    be posted strictly BEFORE the merge (see header). First valid citation
+  #    wins; anything else is a violation.
+  if pr_context; then
+    local -a authority_paths=()
+    for f in "${added[@]}" "${modified[@]}" "${deleted[@]}"; do
+      [ -n "$f" ] || continue
+      is_process_authority "$f" && authority_paths+=("$f")
+    done
+    local ctx="" ctx_rc=0
+    ctx="$(pr_context_json 2>/dev/null)" || ctx_rc=1
+    local pr_author_type="Unknown" pr_author_login="" pr_merged_at=""
+    if [ "$ctx_rc" -eq 0 ]; then
+      pr_author_type="$(printf '%s' "$ctx" | jq -r '.author.__typename // "Unknown"')"
+      pr_author_login="$(printf '%s' "$ctx" | jq -r '.author.login // ""')"
+      pr_merged_at="$(printf '%s' "$ctx" | jq -r '.mergedAt // ""')"
+    elif [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
+      # No conversation source (gh missing/failed), but the event payload
+      # still names the author — enough to trigger, not to verify.
+      pr_author_type="$(jq -r '.pull_request.user.type // "Unknown"' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
+      pr_author_login="$(jq -r '.pull_request.user.login // ""' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
+    fi
+    local is_bot=0
+    case "$pr_author_type" in Bot) is_bot=1 ;; esac
+    case "$pr_author_login" in *"[bot]") is_bot=1 ;; esac
+    if [ "${#authority_paths[@]}" -gt 0 ] || [ "$is_bot" -eq 1 ]; then
+      local cs_scope
+      if [ "${#authority_paths[@]}" -gt 0 ]; then
+        cs_scope="${#authority_paths[@]} process-authority path(s): ${authority_paths[0]}"
+      else
+        cs_scope="bot/agent PR author '${pr_author_login:-unknown}' (Stage 2: any diff)"
+      fi
+      local cs_ok=0 cs_bad="" cs_aid="" cs_err="" cs_ord_rej=0 cs_body_merged=0
+      local resolver="${SDLC_GUARD_AID_RESOLVER:-}"
+      local citation_re='Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*[[:space:]]*$'
+      local TAB
+      TAB="$(printf '\t')"
+      if [ "$ctx_rc" -ne 0 ]; then
+        : > "$mirror/pr_citations"
+      else
+        # TSV "<when>\t<citation line>": when = comment createdAt, or "body".
+        printf '%s' "$ctx" | jq -r '
+          (.body // "" | split("\n")[] | select(test("^Countersign:")) | "body\t" + .),
+          (.comments[]? | .createdAt as $t | (.body // "" | split("\n")[]? | select(test("^Countersign:")) | $t + "\t" + .))' \
+          > "$mirror/pr_citations" 2>/dev/null || : > "$mirror/pr_citations"
+        local cs_t cs_line
+        while IFS="$TAB" read -r cs_t cs_line; do
+          [ -n "$cs_line" ] || continue
+          cs_aid="$(printf '%s' "$cs_line" | sed -E 's/^Countersign: ((AID|GH)-[1-9][0-9]*) verdict .*$/\1/')"
+          cs_bad="$cs_line"
+          cs_err=""
+          # Ordering (AID-2428): verdict posted strictly before the merge.
+          # ISO-8601 Z timestamps compare lexicographically == chronologically.
+          if [ -n "$pr_merged_at" ]; then
+            if [ "$cs_t" = "body" ]; then cs_body_merged=1; continue; fi
+            if [ ! "$cs_t" \< "$pr_merged_at" ]; then cs_ord_rej=1; continue; fi
+          fi
+          if [ -n "$resolver" ]; then
+            if cs_err="$(bash "$resolver" "$cs_aid" 2>&1 >/dev/null)"; then
+              cs_ok=1
+              echo "::notice::countersign citation accepted (AID-2318/AID-2428 gate): $cs_line (posted: $cs_t)"
+              break
+            fi
+            cs_err="${cs_err%%$'\n'*}"
+          fi
+        done < <(grep -E "^[^${TAB}]*${TAB}${citation_re}" "$mirror/pr_citations" || true)
+      fi
+      if [ "$cs_ok" -ne 1 ]; then
+        if [ "$ctx_rc" -ne 0 ]; then
+          violations+=("countersign: $cs_scope :: no PR context source available (SDLC_PR_CONTEXT_FILE, SDLC_COUNTERSIGN_FILE or gh pr view) — cannot verify (AID-2318/AID-2428)")
+        elif [ "$cs_ord_rej" -eq 1 ]; then
+          violations+=("countersign: $cs_scope :: citation posted at/after merge (merged_at $pr_merged_at) '$cs_bad' — the verdict must be posted BEFORE the merge (AID-2428)")
+        elif [ "$cs_body_merged" -eq 1 ]; then
+          violations+=("countersign: $cs_scope :: body-trailer citation on a merged PR has no verifiable posting time '$cs_bad' — cite a pre-merge PR comment instead (AID-2428)")
+        elif [ -n "$cs_bad" ] && [ -z "$resolver" ]; then
+          violations+=("countersign: $cs_scope :: citation found but SDLC_GUARD_AID_RESOLVER is not configured — cannot verify '$cs_bad' (AID-2318)")
+        elif [ -n "$cs_bad" ]; then
+          local cs_why=""
+          [ -n "$cs_err" ] && cs_why=" — resolver: $cs_err"
+          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
+        else
+          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref>' line in PR body/comments — post the countersign verdict citation first (AID-2318)")
+        fi
+      fi
+    fi
+  fi
 
   # Report.
   local total=$(( ${#added[@]} + ${#modified[@]} + ${#deleted[@]} ))
@@ -414,6 +572,131 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD st-stale-base >/dev/null
+
+  # AID-2318 (CEO gate AID-2316 c): countersign citation for process-authority
+  # paths in PR context. A stub resolver keeps AID-existence hermetic (no
+  # network): AID-9006 resolves, anything else does not. PR context is
+  # simulated with GITHUB_EVENT_NAME=pull_request + SDLC_COUNTERSIGN_FILE
+  # (the deterministic citation source used by CI-wired runs alike).
+  local stub="$T/aid_resolver_stub.sh"
+  printf '#!/usr/bin/env bash\ncase "$1" in AID-9006) exit 0 ;; *) exit 1 ;; esac\n' > "$stub"
+  chmod +x "$stub"
+  : > "$T/cs_none"
+  printf 'Countersign: AID-9006 verdict 679cf9d3\n' > "$T/cs_valid"
+  printf 'Countersign: AID-9999 verdict deadbeef\n' > "$T/cs_ghost"
+  pr_scenario() { # scenario + PR-context gate env, scrubbed afterwards
+    export GITHUB_EVENT_NAME=pull_request SDLC_GUARD_AID_RESOLVER="$stub"
+    scenario "$@"
+    unset GITHUB_EVENT_NAME SDLC_GUARD_AID_RESOLVER SDLC_COUNTERSIGN_FILE
+  }
+
+  # (i) process-authority PR WITHOUT a citation -> fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_none" pr_scenario \
+    "process PR without countersign citation fails (AID-2318)" 1 "edit sdlc doc" -- \
+    "mkdir -p docs/sdlc && printf '# amended\n' > docs/sdlc/README.md"
+
+  # (iii) citation citing a nonexistent AID -> fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_ghost" pr_scenario \
+    "process PR citing nonexistent AID fails (AID-2318)" 1 "edit guard script" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
+
+  # (ii) process-authority PR WITH a valid, resolvable citation -> pass AND
+  # emit the audit notice (checked directly, mirroring the SIGPIPE-notice
+  # assertion above).
+  local cs_br="st-countersign-$$" cs_out cs_rc
+  $GITC checkout -q -b "$cs_br" "$base_sha"
+  mkdir -p "$R/docs/sdlc"
+  printf '# amended\n' > "$R/docs/sdlc/README.md"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "edit sdlc doc with citation"
+  cs_out="$(GITHUB_EVENT_NAME=pull_request SDLC_COUNTERSIGN_FILE="$T/cs_valid" SDLC_GUARD_AID_RESOLVER="$stub" \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$cs_br" 2>&1)"; cs_rc=$?
+  if [ "$cs_rc" -eq 0 ] && printf '%s' "$cs_out" | grep -q '^::notice::countersign citation accepted'; then
+    echo "PASS [process PR with valid citation passes + notice (AID-2318)] rc=$cs_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [process PR with valid citation passes + notice (AID-2318)] rc=$cs_rc (expected 0)"
+    printf '%s\n' "$cs_out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD "$cs_br" >/dev/null
+
+  # AID-2428 (Stage 2): citation required for EVERY bot/agent-authored PR
+  # (any diff — no engine-only exemption) and the verdict must be posted
+  # strictly BEFORE the merge. SDLC_PR_CONTEXT_FILE supplies the full PR
+  # context JSON — the same shape `gh pr view --json author,body,comments,
+  # mergedAt` returns — so author, comment createdAt and mergedAt are all
+  # hermetic. The stub resolver (AID-9006 only) is reused.
+  mk_ctx() { # $1=author-type $2=login $3=mergedAt(""=null) $4=body-file $5=comments-json
+    jq -nc --arg t "$1" --arg l "$2" --arg m "$3" --rawfile b "$4" --argjson c "$5" \
+      '{author:{__typename:$t,login:$l},body:$b,mergedAt:($m|if .=="" then null else . end),comments:$c}'
+  }
+  pr2_scenario() { # $1=ctx-file; remaining args = scenario args
+    local ctxf="$1"; shift
+    export GITHUB_EVENT_NAME=pull_request SDLC_GUARD_AID_RESOLVER="$stub" SDLC_PR_CONTEXT_FILE="$ctxf"
+    scenario "$@"
+    unset GITHUB_EVENT_NAME SDLC_GUARD_AID_RESOLVER SDLC_PR_CONTEXT_FILE
+  }
+  local T2="$T/stage2"
+  mkdir -p "$T2"
+  : > "$T2/empty"
+  mk_ctx Bot "codex[bot]" "" "$T2/empty" '[]' > "$T2/bot_open"
+  mk_ctx Bot "codex[bot]" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T07:00:00Z","body":"QA verdict posted\nCountersign: AID-9006 verdict 679cf9d3"}]' > "$T2/bot_cited_premerge"
+  mk_ctx Bot "codex[bot]" "2026-09-18T08:00:00Z" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T09:00:00Z","body":"Countersign: AID-9006 verdict retrofitted"}]' > "$T2/bot_cited_postmerge"
+  mk_ctx User "dandpb" "" "$T2/empty" '[]' > "$T2/human_open"
+  mk_ctx User "dandpb" "2026-09-18T08:00:00Z" "$T/cs_valid" '[]' > "$T2/human_body_merged"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T07:30:00Z","body":"Countersign: AID-9006 verdict 679cf9d3"}]' > "$T2/human_authority_cited"
+
+  # (i) bot/agent PR, engine-only diff, NO citation -> fail (Stage 2 trigger).
+  pr2_scenario "$T2/bot_open" "bot PR without countersign citation fails (AID-2428)" 1 "bot engine change" -- \
+    "printf 'bot change\n' >> src/app.py"
+
+  # (iii) citation resolvable but posted AFTER mergedAt -> fail (ordering).
+  pr2_scenario "$T2/bot_cited_postmerge" "post-merge citation fails ordering (AID-2428)" 1 "merged then cited" -- \
+    "printf 'bot change\n' >> src/app.py"
+
+  # (iv) human PR, engine-only diff, no citation -> documented: NOT gated
+  # (Stage 2 does not expand to human/founder PRs absent authority paths).
+  pr2_scenario "$T2/human_open" "human PR without citation stays ungated (documented)" 0 "human engine change" -- \
+    "printf 'human change\n' >> src/app.py"
+
+  # (v) merged PR whose only citation is a body trailer -> ordering
+  # unverifiable (API exposes no body-edit time) -> fail-closed. Trigger is
+  # the authority path (human author), pinning the Stage-1 rule on the
+  # Stage-2 source.
+  pr2_scenario "$T2/human_body_merged" "body-trailer citation on merged PR fails (unverifiable order, AID-2428)" 1 "merged body cite" -- \
+    "mkdir -p docs/sdlc && printf '# touched\n' > docs/sdlc/README.md"
+
+  # (vi) authority-path PR with a pre-merge comment citation (JSON source) ->
+  # pass (Stage-1 semantics preserved on the Stage-2 source).
+  pr2_scenario "$T2/human_authority_cited" "authority PR with pre-merge comment citation passes" 0 "doc change cited" -- \
+    "mkdir -p docs/sdlc && printf '# touched2\n' > docs/sdlc/README.md"
+
+  # (ii) bot/agent PR with a valid citation posted pre-merge (open PR,
+  # comment createdAt visible) -> pass AND emit the audit notice — checked
+  # directly, mirroring the Stage-1 notice assertion above.
+  local cs2_br="st-countersign2-$$" cs2_out cs2_rc
+  $GITC checkout -q -b "$cs2_br" "$base_sha"
+  printf 'bot change\n' >> "$R/src/app.py"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "bot engine change with pre-merge citation"
+  cs2_out="$(GITHUB_EVENT_NAME=pull_request SDLC_PR_CONTEXT_FILE="$T2/bot_cited_premerge" SDLC_GUARD_AID_RESOLVER="$stub" \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$cs2_br" 2>&1)"; cs2_rc=$?
+  if [ "$cs2_rc" -eq 0 ] && printf '%s' "$cs2_out" | grep -q '^::notice::countersign citation accepted' \
+    && printf '%s' "$cs2_out" | grep -q '(posted: 2026-09-18T07:00:00Z)'; then
+    echo "PASS [bot PR with pre-merge citation passes + notice (AID-2428)] rc=$cs2_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [bot PR with pre-merge citation passes + notice (AID-2428)] rc=$cs2_rc (expected 0)"
+    printf '%s\n' "$cs2_out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD "$cs2_br" >/dev/null
 
   rm -rf "$T"
   echo "self-test: $pass passed, $fail failed"
