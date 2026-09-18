@@ -267,9 +267,39 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
    citado deve estar postado **antes do merge** — em PR já mergeado só
    contam citações em comentário com `createdAt < merged_at` (citação
    pós-merge é inválida; trailer de body em PR mergeado é fail-closed por
-   não ter timestamp verificável). PRs de humano/founder sem paths de
-   autoridade seguem fora do gate nesta etapa (comportamento documentado no
-   self-test iv). Registro: `intent/AID-2428-countersign-gate-stage2/`.
+    não ter timestamp verificável). PRs de humano/founder sem paths de
+    autoridade seguem fora do gate nesta etapa (comportamento documentado no
+    self-test iv). Registro: `intent/AID-2428-countersign-gate-stage2/`.
+6. **Trailer de proveniência por agente em comentários de processo
+   (AID-2493, 2026-09-18).** Binding para TODO agente que posta comentário de
+   processo no GitHub (veredito, citação countersign, registro de produtor,
+   relay de verificação). A credencial GitHub única `dandpb` não distingue
+   produtor/verificador/lanes — a adjudicação do incidente do PR #503
+   (AID-2490: veredito+citação da lane NÃO-designada AID-2486 às 22:43Z)
+   exigiu forense de logs de heartbeat-runs. A partir daqui todo comentário de
+   processo postado por agente carrega o trailer canônico, linha única:
+   ```
+   Provenance: agent=<slug> task=<AID-ID|GH-n> run=<runId> session=<sessionId>
+   ```
+   - `agent` = slug do papel no board (`qa-lead`, `platform-ci`, …);
+     `task` = carrier Paperclip (ou `GH-<n>`); `run`/`session` = heartbeat-run
+     e sessão que executaram — exatamente os campos que a forense AID-2490
+     teve que reconstruir;
+   - **Suporte mecânico (advisory)**: o check `SDLC guardrails (diff)` faz
+     parse do trailer quando presente (emite `::notice` auditável com os
+     campos) e emite `::notice` de ausência/malformação em comentário de
+     processo sem trailer válido (detecção: linha `Countersign:` ou heading
+     de veredito `#…Veredito/Verdict`). **Notice-only deliberado nesta
+     fase**: é a mitigação imediata enquanto a solução completa (credenciais
+     por agente, secret founder **AID-2423**) está pendente; a escalada para
+     fail-closed é decisão registrada posterior, não desta mudança;
+   - templates canônicos com o trailer: `docs/sdlc/templates/verdict.md`;
+   - **Regra de conduta do relay (V3 da AID-2490, binding)**: existindo
+     despacho de verificação, relay do produtor é **pointer-only** (aponta a
+     issue designada, nunca endereça novo pedido de verificação ao
+     verificador); sem despacho existente, o relay pode solicitar verificação
+     **citando que é a primeira lane**. Registro:
+     `intent/AID-2493-provenance-trailer/`.
 
 ## Guardrails (what is enforced, and how)
 
@@ -281,6 +311,7 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
 | No force-push / history rewrite | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) — guards a live git operation; cannot be re-checked post-hoc from a diff, so it stays a runtime + repo-owner concern |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
+| Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; never reddens (mitigation phase, see §Merge protocol item 6) |
 | SDLC loop itself | advisory (skill) | `.claude/skills/ai-native-sdlc/SKILL.md` |
 
 A skill makes violations rare; a hook makes them close to impossible. Policies
