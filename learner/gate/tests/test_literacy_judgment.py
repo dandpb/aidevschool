@@ -200,8 +200,6 @@ def _cli_exit(
         json.dumps(make_evidence(values, pass_claim=True)), encoding="utf-8"
     )
     receipts = tmp_path / f"receipts-{noul}"
-    queue_dir = queue.parent
-    queue_dir.mkdir(parents=True, exist_ok=True)
     real_default = learner.substrate.default_judgment_client
 
     def fake_default():
@@ -210,7 +208,13 @@ def _cli_exit(
     learner.substrate.default_judgment_client = fake_default
     lv.ESCALATIONS_PATH = queue
     try:
-        return lv.main(["--evidence", str(evidence_path), "--root", str(REPO)])
+        return lv.main(
+            [
+                "--evidence", str(evidence_path),
+                "--root", str(REPO),
+                "--judgment-receipts-root", str(receipts),
+            ]
+        )
     finally:
         learner.substrate.default_judgment_client = real_default
 
@@ -283,7 +287,8 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
     evidence = make_evidence(PARAPHRASED_VALUES)
 
     escalated = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue
+        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue,
+        judgment_receipts_root=tmp_path / "receipts",
     )
     assert escalated.verdict == "ESCALATE"
     assert len(queue.read_text().splitlines()) == 1
@@ -294,7 +299,8 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
     assert code == 0
 
     after = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue
+        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue,
+        judgment_receipts_root=tmp_path / "receipts",
     )
     assert after.verdict == "PASS" and after.mastery_eligible is True
     assert after.resolution == "manual"
@@ -319,7 +325,8 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     recovered = verify_literacy_evidence(
-        fail_evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=queue
+        fail_evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=queue,
+        judgment_receipts_root=tmp_path / "receipts",
     )
     assert recovered.verdict == "PASS" and recovered.resolution == "manual"
 
@@ -342,10 +349,12 @@ def test_replay_determinism(tmp_path: Path) -> None:
     queue = tmp_path / "escalations.ndjson"
     evidence = make_evidence(PARAPHRASED_VALUES)
     first = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.9), escalations_path=queue
+        evidence, root=REPO, judgment_client=FakeClient(0.9), escalations_path=queue,
+        judgment_receipts_root=tmp_path / "receipts",
     )
     second = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.9), escalations_path=queue
+        evidence, root=REPO, judgment_client=FakeClient(0.9), escalations_path=queue,
+        judgment_receipts_root=tmp_path / "receipts",
     )
     assert first.to_receipt_dict() == second.to_receipt_dict()
 

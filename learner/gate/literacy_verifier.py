@@ -345,19 +345,17 @@ def resolve_escalation(
     return 0, f"escalation {attempt_id!r} resolved: {entry['resolution']}"
 
 
-def _run_verify(args: argparse.Namespace, root: Path) -> int:
-    evidence_path = Path(args.evidence)
+def _load_evidence_or_fail(evidence_path: Path, root: Path) -> tuple[dict[str, Any] | None, int]:
+    """Load the evidence record, printing the fail-closed receipt on error."""
     if not evidence_path.is_absolute():
         evidence_path = root / evidence_path
-
     if not evidence_path.exists():
         print(f"FAIL CLOSED — evidence file not found: {evidence_path}")
         missing = verify_literacy_evidence(None)
         print(json.dumps(missing.to_receipt_dict(), indent=2, sort_keys=True))
-        return 1
-
+        return None, 1
     try:
-        evidence = load_literacy_evidence(evidence_path)
+        return load_literacy_evidence(evidence_path), 0
     except EvidenceParseError as exc:
         print(f"FAIL CLOSED — {exc}")
         print(
@@ -372,12 +370,26 @@ def _run_verify(args: argparse.Namespace, root: Path) -> int:
                 indent=2,
             )
         )
-        return 1
+        return None, 1
+
+
+def _run_verify(args: argparse.Namespace, root: Path) -> int:
+    evidence, code = _load_evidence_or_fail(Path(args.evidence), root)
+    if evidence is None:
+        return code
 
     from learner.substrate import default_judgment_client
 
+    receipts_root = (
+        Path(args.judgment_receipts_root)
+        if args.judgment_receipts_root
+        else None
+    )
     verdict = verify_literacy_evidence(
-        evidence, root=root, judgment_client=default_judgment_client()
+        evidence,
+        root=root,
+        judgment_client=default_judgment_client(),
+        judgment_receipts_root=receipts_root,
     )
     print(json.dumps(verdict.to_receipt_dict(), indent=2, sort_keys=True))
 
@@ -425,6 +437,12 @@ def main(argv: list[str] | None = None) -> int:
         "--root",
         default=".",
         help="ecosystem root (default: cwd); used only to resolve relative paths",
+    )
+    parser.add_argument(
+        "--judgment-receipts-root",
+        default=None,
+        help="optional directory for judgment receipts (default: the committed "
+        "learner/judgment_receipts/)",
     )
     parser.add_argument(
         "--resolve",
