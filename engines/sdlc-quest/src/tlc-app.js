@@ -33,6 +33,7 @@ en:{
 const T=(k,...args)=>{const v=(QL.get()==='en'?STRINGS.en[k]:undefined)??STRINGS.pt[k];return typeof v==='function'?v(...args):v;};
 const SN=k=>(QL.get()==='en'?STRINGS.en[k]:undefined)??STRINGS.pt[k];
 const F=(r,n)=>QL.field(r,n,QL.get());
+const tupleLabel=t=>QL.get()==='en'&&t.length>2?t[2]:t[1];
 let state=B.read(),moduleIndex=0,taskIndex=0,answer=null,opener=null,view='hub',lastLab=null;
 function save(){B.write(state);state=B.read();}
 function notify(text){B.toast(text);}
@@ -86,7 +87,7 @@ function optionsHTML(t){
 }
 function exercise(t){
  if(t.type==='choice'||t.type==='select')return `<p class="instruction">${t.type==='select'?T('instrSelect',t.answer.length):T('instrChoice')}</p>${optionsHTML(t)}`;
- if(t.type==='classify')return `<p class="instruction">${T('instrClassify')}</p><div class="classify-list tlc-classify">${t.items.map(i=>`<div class="classify-row"><label for="tlc-field-${i.id}">${esc(F(i,'text'))}</label><select id="tlc-field-${i.id}" data-tlc-field="${i.id}"><option value="">${T('choose')}</option>${t.groups.map(([v,l])=>`<option value="${v}" ${answer[i.id]===v?'selected':''}>${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>`;
+ if(t.type==='classify')return `<p class="instruction">${T('instrClassify')}</p><div class="classify-list tlc-classify">${t.items.map(i=>`<div class="classify-row"><label for="tlc-field-${i.id}">${esc(F(i,'text'))}</label><select id="tlc-field-${i.id}" data-tlc-field="${i.id}"><option value="">${T('choose')}</option>${t.groups.map(g=>`<option value="${g[0]}" ${answer[i.id]===g[0]?'selected':''}>${esc(tupleLabel(g))}</option>`).join('')}</select></div>`).join('')}</div>`;
  if(t.type==='prooflab')return `<div class="tlc-lab-intro"><span class="tlc-label">${T('labLabel')}</span><p>${T('labGoal')}</p></div><div class="tlc-lab-config">
  <label for="tlc-suite">${T('labSuite')}<select id="tlc-suite" data-tlc-field="suite"><option value="">${T('labSuiteEmpty')}</option>${['happy','placebo','contract'].map(v=>`<option value="${v}" ${answer.suite===v?'selected':''}>${SN('labSuites')[v]}</option>`).join('')}</select></label>
  <label for="tlc-patch">${T('labPatch')}<select id="tlc-patch" data-tlc-field="patch"><option value="">${T('labPatchEmpty')}</option>${['original','denyAll','scoped'].map(v=>`<option value="${v}" ${answer.patch===v?'selected':''}>${SN('labPatches')[v]}</option>`).join('')}</select></label></div>
@@ -125,8 +126,8 @@ function showKit(onlyModule=false){
  view='kit';const modules=onlyModule?[D.modules[moduleIndex]]:D.modules;
  frame(T('kitTitle'),T('kitKicker'),`
  <p class="tlc-lead">${T('kitLead')}</p><div class="tlc-install"><span class="tlc-label">${T('installLabel')}</span><pre class="tlc-code" id="tlc-install-command" tabindex="0">${esc(D.install)}</pre><button class="secondary" data-tlc="copy-install">${T('copyInstall')}</button><p>${T('installNote')}</p></div>
- <div class="tlc-prompt-list">${modules.map(m=>`<section class="tlc-prompt-card"><h3><span aria-hidden="true">${m.glyph}</span> <code>${m.skill}</code></h3><dl><div><dt>${T('dlInput')}</dt><dd>${esc(F(m,'input'))}</dd></div><div><dt>${T('dlOutput')}</dt><dd>${esc(F(m,'output'))}</dd></div><div><dt>${T('dlStage')}</dt><dd>${esc(F(m,'stage'))}</dd></div></dl><pre class="tlc-code" tabindex="0">${esc(m.prompt)}</pre><div class="tlc-footer-actions"><button class="secondary" data-tlc-copy="${m.id}">${T('copyPrompt')}</button><button class="text-button" data-tlc-module="${D.modules.indexOf(m)}">${T('practice')}</button><a href="${esc(m.source)}" target="_blank" rel="noopener noreferrer">${T('originalSkill')}</a></div></section>`).join('')}</div>
- <section class="tlc-source-notes"><h3>${T('notesTitle')}</h3><p>${T('noteArtifacts')}</p><p>${T('noteVerify')}</p><p>${T('noteReview')}</p><p>${T('noteScope')}</p><p>${esc(D.notice)}</p><p><a href="${esc(D.flow)}" target="_blank" rel="noopener noreferrer">TLC AI Dev Flow ↗</a> · <a href="${esc(D.license)}" target="_blank" rel="noopener noreferrer">CC BY 4.0 ↗</a></p></section><div class="tlc-footer-actions"><button class="primary" data-tlc="guide">${T('exportGuide')}</button><button class="secondary" data-tlc="backup">${T('backupAll')}</button></div>`);
+ <div class="tlc-prompt-list">${modules.map(m=>`<section class="tlc-prompt-card"><h3><span aria-hidden="true">${m.glyph}</span> <code>${m.skill}</code></h3><dl><div><dt>${T('dlInput')}</dt><dd>${esc(F(m,'input'))}</dd></div><div><dt>${T('dlOutput')}</dt><dd>${esc(F(m,'output'))}</dd></div><div><dt>${T('dlStage')}</dt><dd>${esc(F(m,'stage'))}</dd></div></dl><pre class="tlc-code" tabindex="0">${esc(F(m,'prompt'))}</pre><div class="tlc-footer-actions"><button class="secondary" data-tlc-copy="${m.id}">${T('copyPrompt')}</button><button class="text-button" data-tlc-module="${D.modules.indexOf(m)}">${T('practice')}</button><a href="${esc(m.source)}" target="_blank" rel="noopener noreferrer">${T('originalSkill')}</a></div></section>`).join('')}</div>
+ <section class="tlc-source-notes"><h3>${T('notesTitle')}</h3><p>${T('noteArtifacts')}</p><p>${T('noteVerify')}</p><p>${T('noteReview')}</p><p>${T('noteScope')}</p><p>${esc(F(D,'notice'))}</p><p><a href="${esc(D.flow)}" target="_blank" rel="noopener noreferrer">TLC AI Dev Flow ↗</a> · <a href="${esc(D.license)}" target="_blank" rel="noopener noreferrer">CC BY 4.0 ↗</a></p></section><div class="tlc-footer-actions"><button class="primary" data-tlc="guide">${T('exportGuide')}</button><button class="secondary" data-tlc="backup">${T('backupAll')}</button></div>`);
 }
 async function copy(text){
  try{if(!navigator.clipboard?.writeText)throw new Error('unavailable');await navigator.clipboard.writeText(text);notify(T('copied'));}
@@ -141,7 +142,7 @@ content.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b||b.disabled)return;
  if(b.dataset.tlcModule!==undefined){showModule(Number(b.dataset.tlcModule));return;}
  if(b.dataset.tlcTask!==undefined){showTask(Number(b.dataset.tlcTask));return;}
- if(b.dataset.tlcCopy){copy(D.modules.find(m=>m.id===b.dataset.tlcCopy).prompt);return;}
+ if(b.dataset.tlcCopy){copy(F(D.modules.find(m=>m.id===b.dataset.tlcCopy),'prompt'));return;}
  if(b.dataset.tlcOption){const t=D.modules[moduleIndex].tasks[taskIndex],id=b.dataset.tlcOption;if(t.type==='choice')answer=id;else {const arr=t.type==='reviewlab'?answer.findings:answer;const at=arr.indexOf(id);if(at<0)arr.push(id);else arr.splice(at,1);}paintOptions(t);clearResult();remember();return;}
  switch(b.dataset.tlc){
   case 'close':dialog.close();break;
@@ -162,12 +163,12 @@ content.addEventListener('change',e=>{if(!e.target.dataset.tlcField)return;answe
 dialog.addEventListener('close',()=>{modalSync();if(opener?.isConnected)opener.focus({preventScroll:true});else $('#tlc-launch')?.focus({preventScroll:true});});
 dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();});
 QuestData.glossary.push(
- ['TLC AI Dev Flow','Núcleo de quatro skills: tlc-discover, tlc-plan, tlc-implement e the-judge. A oficina adicional pratica seu uso; não as executa. Fontes e instalação estão no painel Skills TLC.'],
- ['tlc-discover','Investiga o problema e decisões abertas; produz veredito e design quando aplicável. Compromissos já tomados não precisam de um novo gate encenado.'],
- ['tlc-plan','Converte decisões em tarefas com resultados observáveis, faz o surface walk e a varredura de nove dimensões. Uma lacuna vira pergunta, não requisito inventado.'],
- ['tlc-implement','Extrai checks com provas, implementa e exige verificação por um executor novo. Os perfis light, standard e ui explicitam a profundidade e as limitações.'],
- ['the-judge','Revisor de PR com evidências e vereditos APPROVE, COMMENT ou REQUEST_CHANGES. Não dá nota de perfeição, não implementa a correção e não autoriza deploy.'],
- ['Carryover e convergência','Pendências de rodadas anteriores continuam contando no veredito. O the-judge limita a revisão do mesmo conjunto de achados a três rodadas; divergências restantes são resolvidas, acordadas ou escaladas.']
+ ['TLC AI Dev Flow','Núcleo de quatro skills: tlc-discover, tlc-plan, tlc-implement e the-judge. A oficina adicional pratica seu uso; não as executa. Fontes e instalação estão no painel Skills TLC.','TLC AI Dev Flow','A core of four skills: tlc-discover, tlc-plan, tlc-implement and the-judge. The extra workshop practices using them; it does not run them. Sources and installation are in the TLC skills panel.'],
+ ['tlc-discover','Investiga o problema e decisões abertas; produz veredito e design quando aplicável. Compromissos já tomados não precisam de um novo gate encenado.','tlc-discover','Investigates the problem and open decisions; produces a verdict and design when applicable. Commitments already made need no staged new gate.'],
+ ['tlc-plan','Converte decisões em tarefas com resultados observáveis, faz o surface walk e a varredura de nove dimensões. Uma lacuna vira pergunta, não requisito inventado.','tlc-plan','Turns decisions into tasks with observable outcomes, does the surface walk and the nine-dimension sweep. A gap becomes a question, not an invented requirement.'],
+ ['tlc-implement','Extrai checks com provas, implementa e exige verificação por um executor novo. Os perfis light, standard e ui explicitam a profundidade e as limitações.','tlc-implement','Extracts checks with proofs, implements and requires verification by a fresh executor. The light, standard and ui profiles make depth and limitations explicit.'],
+ ['the-judge','Revisor de PR com evidências e vereditos APPROVE, COMMENT ou REQUEST_CHANGES. Não dá nota de perfeição, não implementa a correção e não autoriza deploy.','the-judge','A PR reviewer with evidence and APPROVE, COMMENT or REQUEST_CHANGES verdicts. It gives no perfection grade, implements no fix and authorizes no deploy.'],
+ ['Carryover e convergência','Pendências de rodadas anteriores continuam contando no veredito. O the-judge limita a revisão do mesmo conjunto de achados a três rodadas; divergências restantes são resolvidas, acordadas ou escaladas.','Carryover and convergence','Pending items from previous rounds still count in the verdict. the-judge caps review of the same finding set at three rounds; remaining disagreements are resolved, agreed or escalated.']
 );
 document.addEventListener('quest-state-changed',banner);
 document.addEventListener('quest-lang-changed',banner);

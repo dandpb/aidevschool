@@ -200,154 +200,154 @@ if(typeof module==='object'&&module.exports)module.exports=api;else root.QuestLa
 (function(root){
 'use strict';
 const sources = [
- {name:'Anthropic · The AI-Native SDLC playbook',url:'https://claude.com/blog/the-ai-native-sdlc-playbook',topic:'As seis etapas e seus artefatos.'},
- {name:'Claude Code · Hooks reference',url:'https://code.claude.com/docs/en/hooks',topic:'Eventos, decisões e limites dos hooks.'},
- {name:'Claude Code · Sandboxing',url:'https://code.claude.com/docs/en/sandboxing',topic:'Isolamento e limitações de acesso.'},
- {name:'Git · git-worktree',url:'https://git-scm.com/docs/git-worktree',topic:'Checkouts separados não são uma sandbox.'},
- {name:'Google SRE · Alerting on SLOs',url:'https://sre.google/workbook/alerting-on-slos/',topic:'Alertas por consumo do orçamento de erro.'},
- {name:'NIST · Control charts',url:'https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc32.htm',topic:'Regras de controle estatístico e falsos alarmes.'}
+ {name:'Anthropic · The AI-Native SDLC playbook',url:'https://claude.com/blog/the-ai-native-sdlc-playbook',topic:'As seis etapas e seus artefatos.',topic_en:'The six stages and their artifacts.'},
+ {name:'Claude Code · Hooks reference',url:'https://code.claude.com/docs/en/hooks',topic:'Eventos, decisões e limites dos hooks.',topic_en:'Hook events, decisions and limits.'},
+ {name:'Claude Code · Sandboxing',url:'https://code.claude.com/docs/en/sandboxing',topic:'Isolamento e limitações de acesso.',topic_en:'Isolation and access limitations.'},
+ {name:'Git · git-worktree',url:'https://git-scm.com/docs/git-worktree',topic:'Checkouts separados não são uma sandbox.',topic_en:'Separate checkouts are not a sandbox.'},
+ {name:'Google SRE · Alerting on SLOs',url:'https://sre.google/workbook/alerting-on-slos/',topic:'Alertas por consumo do orçamento de erro.',topic_en:'Alerting on error-budget consumption.'},
+ {name:'NIST · Control charts',url:'https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc32.htm',topic:'Regras de controle estatístico e falsos alarmes.',topic_en:'Statistical control rules and false alarms.'}
 ];
 const missions = [
-{ id:'plan',name:'Planejar',tag:'PLAN',place:'Observatório da intenção',color:'#e7c176',glyph:'◎',artifact:'intent.md',boss:null,
- title:'Antes do código, o porquê.',brief:'A equipe de suporte reenvia webhooks manualmente. Transforme a reclamação em uma mudança que alguém consiga aceitar.',
- lesson:'Intenção define o problema e o resultado; não é uma ordem vaga para escrever código. O rigor do processo deve acompanhar o risco, não a quantidade de arquivos.',
+{ id:'plan',name:'Planejar',name_en:'Plan',tag:'PLAN',place:'Observatório da intenção',place_en:'Intent observatory',color:'#e7c176',glyph:'◎',artifact:'intent.md',boss:null,
+ title:'Antes do código, o porquê.',title_en:'Before the code, the why.',brief:'A equipe de suporte reenvia webhooks manualmente. Transforme a reclamação em uma mudança que alguém consiga aceitar.',brief_en:'The support team resends webhooks manually. Turn the complaint into a change someone can accept.',
+ lesson:'Intenção define o problema e o resultado; não é uma ordem vaga para escrever código. O rigor do processo deve acompanhar o risco, não a quantidade de arquivos.',lesson_en:'Intent defines the problem and the outcome; it is not a vague order to write code. Process rigor should track the risk, not the file count.',
  tasks:[
- {id:'intent',type:'select',axis:'intent',title:'Monte a intenção',lead:'O suporte pediu: “coloca um botão para tentar de novo”. Escolha as quatro peças que realmente definem o trabalho.',instruction:'Selecione 4 cartões para compor intent.md.',hint:'Procure problema, resultado observável, limites e uma pergunta material. Uma promessa absoluta ou tecnologia escolhida cedo demais não esclarece a necessidade.',
+ {id:'intent',type:'select',axis:'intent',title:'Monte a intenção',title_en:'Assemble the intent',lead:'O suporte pediu: “coloca um botão para tentar de novo”. Escolha as quatro peças que realmente definem o trabalho.',lead_en:'Support asked: “just add a button to try again”. Pick the four pieces that actually define the work.',instruction:'Selecione 4 cartões para compor intent.md.',instruction_en:'Select 4 cards to compose intent.md.',hint:'Procure problema, resultado observável, limites e uma pergunta material. Uma promessa absoluta ou tecnologia escolhida cedo demais não esclarece a necessidade.',hint_en:'Look for the problem, an observable outcome, limits and one material question. An absolute promise or a technology chosen too early does not clarify the need.',
  options:[
- {id:'pain',label:'Problema observado',text:'O suporte precisa de engenharia para reenviar entregas de webhook que falharam.'},
- {id:'rewrite',label:'Solução apressada',text:'Reescrever todo o serviço em outra linguagem antes de investigar.'},
- {id:'outcome',label:'Resultado verificável',text:'Um administrador pode solicitar um retry e acompanhar o resultado sem intervenção manual.'},
- {id:'scope',label:'Limites explícitos',text:'Somente entregas do próprio tenant; sem novos destinos nem reenvio em massa.'},
- {id:'promise',label:'Promessa absoluta',text:'Garantir que nenhum webhook do mundo falhe novamente.'},
- {id:'question',label:'Questão em aberto',text:'Como tratar duplicidade quando o destino recebe o evento, mas a resposta se perde?'}
- ],answer:['pain','outcome','scope','question'],success:'Você capturou a necessidade sem fingir que todas as decisões estão resolvidas. A questão de duplicidade segue para o design.',takeaway:'Antes de pedir código, escreva: problema, resultado, não objetivos, restrições e perguntas em aberto.'},
- {id:'risk',type:'classify',axis:'intent',title:'Risco não se conta em linhas',lead:'Escolha a trilha proporcional ao impacto de cada mudança. Estas categorias são a política desta campanha, não um padrão universal.',instruction:'Classifique as três alterações.',groups:[['fast','Fast · local e reversível'],['standard','Standard · contratos e módulos'],['critical','Critical · dados ou autorização']],
- items:[{id:'copy',text:'Corrigir um texto de ajuda, sem mudar comportamento.',answer:'fast'},{id:'list',text:'Adicionar paginação em uma listagem, preservando acesso e armazenamento.',answer:'standard'},{id:'tenant',text:'Alterar uma linha que decide se um usuário pode acessar dados de outro tenant.',answer:'critical'}],
- hint:'Uma linha de autorização pode merecer mais rigor do que muitos arquivos de documentação.',success:'A trilha Critical acompanha o potencial de dano. O número de linhas, sozinho, não mede risco.',takeaway:'Defina exemplos de risco com seu time. Um ajuste simples não precisa de uma esteira de documentos.'},
- {id:'intent-gate',type:'choice',axis:'intent',title:'Quem autoriza a próxima etapa?',lead:'intent.md existe, mas “qualquer usuário pode reenviar” contradiz a restrição a administradores. O agente quer começar.',options:[
- {id:'file',label:'Avançar: o arquivo já existe.',why:'A existência do arquivo não resolve a contradição sobre autorização.'},
- {id:'guess',label:'Deixar o agente escolher a regra mais fácil.',why:'A política de acesso é uma decisão material; facilidade de implementação não a autoriza.'},
- {id:'resolve',label:'Resolver a regra com o responsável e atualizar o critério de aceitação.'}],answer:'resolve',hint:'Um gate valida conteúdo e decisão; não apenas um nome de arquivo.',success:'A responsável pelo produto confirma: apenas administradores do tenant. O escopo agora pode ser aceito.',takeaway:'Registre quem decide ambiguidades materiais. Não transforme uma suposição do modelo em requisito.'}
+ {id:'pain',label:'Problema observado',label_en:'Observed problem',text:'O suporte precisa de engenharia para reenviar entregas de webhook que falharam.',text_en:'Support needs engineering to resend failed webhook deliveries.'},
+ {id:'rewrite',label:'Solução apressada',label_en:'Rushed solution',text:'Reescrever todo o serviço em outra linguagem antes de investigar.',text_en:'Rewrite the whole service in another language before investigating.'},
+ {id:'outcome',label:'Resultado verificável',label_en:'Verifiable outcome',text:'Um administrador pode solicitar um retry e acompanhar o resultado sem intervenção manual.',text_en:'An administrator can request a retry and track the result without manual intervention.'},
+ {id:'scope',label:'Limites explícitos',label_en:'Explicit limits',text:'Somente entregas do próprio tenant; sem novos destinos nem reenvio em massa.',text_en:'Only the tenant’s own deliveries; no new destinations and no bulk resend.'},
+ {id:'promise',label:'Promessa absoluta',label_en:'Absolute promise',text:'Garantir que nenhum webhook do mundo falhe novamente.',text_en:'Guarantee that no webhook in the world ever fails again.'},
+ {id:'question',label:'Questão em aberto',label_en:'Open question',text:'Como tratar duplicidade quando o destino recebe o evento, mas a resposta se perde?',text_en:'How to handle duplicates when the destination receives the event but the response is lost?'}
+ ],answer:['pain','outcome','scope','question'],success:'Você capturou a necessidade sem fingir que todas as decisões estão resolvidas. A questão de duplicidade segue para o design.',success_en:'You captured the need without pretending every decision is settled. The duplicate-delivery question moves on to design.',takeaway:'Antes de pedir código, escreva: problema, resultado, não objetivos, restrições e perguntas em aberto.',takeaway_en:'Before asking for code, write down: problem, outcome, non-goals, constraints and open questions.'},
+ {id:'risk',type:'classify',axis:'intent',title:'Risco não se conta em linhas',title_en:'Risk is not counted in lines',lead:'Escolha a trilha proporcional ao impacto de cada mudança. Estas categorias são a política desta campanha, não um padrão universal.',lead_en:'Choose the track proportional to each change’s impact. These categories are this campaign’s policy, not a universal standard.',instruction:'Classifique as três alterações.',instruction_en:'Classify the three changes.',groups:[['fast','Fast · local e reversível','Fast · local and reversible'],['standard','Standard · contratos e módulos','Standard · contracts and modules'],['critical','Critical · dados ou autorização','Critical · data or authorization']],
+ items:[{id:'copy',text:'Corrigir um texto de ajuda, sem mudar comportamento.',text_en:'Fix a help text, with no behavior change.',answer:'fast'},{id:'list',text:'Adicionar paginação em uma listagem, preservando acesso e armazenamento.',text_en:'Add pagination to a listing, preserving access and storage.',answer:'standard'},{id:'tenant',text:'Alterar uma linha que decide se um usuário pode acessar dados de outro tenant.',text_en:'Change one line that decides whether a user can access another tenant’s data.',answer:'critical'}],
+ hint:'Uma linha de autorização pode merecer mais rigor do que muitos arquivos de documentação.',hint_en:'One authorization line can deserve more rigor than many documentation files.',success:'A trilha Critical acompanha o potencial de dano. O número de linhas, sozinho, não mede risco.',success_en:'The Critical track tracks the damage potential. Line count alone does not measure risk.',takeaway:'Defina exemplos de risco com seu time. Um ajuste simples não precisa de uma esteira de documentos.',takeaway_en:'Define risk examples with your team. A simple tweak does not need a document pipeline.'},
+ {id:'intent-gate',type:'choice',axis:'intent',title:'Quem autoriza a próxima etapa?',title_en:'Who authorizes the next stage?',lead:'intent.md existe, mas “qualquer usuário pode reenviar” contradiz a restrição a administradores. O agente quer começar.',lead_en:'intent.md exists, but “any user can resend” contradicts the administrator-only restriction. The agent wants to start.',options:[
+ {id:'file',label:'Avançar: o arquivo já existe.',label_en:'Proceed: the file already exists.',why:'A existência do arquivo não resolve a contradição sobre autorização.',why_en:'The file’s existence does not resolve the authorization contradiction.'},
+ {id:'guess',label:'Deixar o agente escolher a regra mais fácil.',label_en:'Let the agent pick the easiest rule.',why:'A política de acesso é uma decisão material; facilidade de implementação não a autoriza.',why_en:'Access policy is a material decision; implementation convenience does not authorize it.'},
+ {id:'resolve',label:'Resolver a regra com o responsável e atualizar o critério de aceitação.',label_en:'Resolve the rule with the owner and update the acceptance criterion.'}],answer:'resolve',hint:'Um gate valida conteúdo e decisão; não apenas um nome de arquivo.',hint_en:'A gate validates content and decision, not just a file name.',success:'A responsável pelo produto confirma: apenas administradores do tenant. O escopo agora pode ser aceito.',success_en:'The product owner confirms: tenant administrators only. The scope can now be accepted.',takeaway:'Registre quem decide ambiguidades materiais. Não transforme uma suposição do modelo em requisito.',takeaway_en:'Record who decides material ambiguities. Do not turn a model’s assumption into a requirement.'}
  ]},
-{ id:'design',name:'Projetar',tag:'DESIGN',place:'Oficina de contratos',color:'#a0b4ef',glyph:'◇',artifact:'spec.md',boss:'secret',title:'Dê forma ao comportamento.',brief:'Defina contratos, diferencie instrução de evidência e impeça que o agente de desenvolvimento herde poder de produção.',lesson:'Uma especificação descreve comportamentos observáveis, inclusive falhas. Instrução, evidência e autoridade têm funções diferentes.',
+{ id:'design',name:'Projetar',name_en:'Design',tag:'DESIGN',place:'Oficina de contratos',place_en:'Contract workshop',color:'#a0b4ef',glyph:'◇',artifact:'spec.md',boss:'secret',title:'Dê forma ao comportamento.',title_en:'Give behavior its shape.',brief:'Defina contratos, diferencie instrução de evidência e impeça que o agente de desenvolvimento herde poder de produção.',brief_en:'Define contracts, tell instruction apart from evidence, and keep the development agent from inheriting production power.',lesson:'Uma especificação descreve comportamentos observáveis, inclusive falhas. Instrução, evidência e autoridade têm funções diferentes.',lesson_en:'A specification describes observable behaviors, including failures. Instruction, evidence and authority have different jobs.',
  tasks:[
- {id:'contracts',type:'select',axis:'intent',title:'Especifique o que pode dar errado',lead:'A feature precisa ser segura quando duas requisições chegam juntas, quando o destino demora e quando alguém usa o ID de outro tenant.',instruction:'Escolha os 4 critérios que podem ser verificados.',options:[
- {id:'tenant',label:'Isolamento de tenant',text:'Rejeitar acesso a uma entrega de outro tenant, inclusive com ID conhecido.'},
- {id:'concurrency',label:'Concorrência',text:'Aceitar no máximo uma tentativa ativa por entrega, inclusive sob chamadas simultâneas.'},
- {id:'nice',label:'Qualidade abstrata',text:'Ser moderno, elegante e usar a melhor IA.'},
- {id:'redaction',label:'Logs seguros',text:'Registrar a tentativa sem expor tokens ou payloads sensíveis.'},
- {id:'duplicates',label:'Duplicidade explícita',text:'Usar identificador estável do evento e documentar como o destino deve tratar duplicatas.'},
- {id:'once',label:'Garantia mágica',text:'Prometer entrega exatamente uma vez a qualquer servidor externo, sem cooperação dele.'}
- ],answer:['tenant','concurrency','redaction','duplicates'],hint:'Escolha critérios que um teste ou uma inspeção consiga refutar. Timeout não prova que o destino deixou de processar.',success:'Seu contrato inclui falhas e limites. Um retry não deve prometer exatamente uma vez em um destino arbitrário.',takeaway:'Cada critério precisa de uma prova, especialmente autorização, concorrência e efeitos externos.'},
- {id:'pillars',type:'classify',axis:'evidence',title:'Três coisas que não são a mesma',lead:'Distribua cada item pelo papel que ele realmente desempenha.',groups:[['instruction','Instrução · orienta'],['evidence','Evidência · demonstra'],['authority','Controle · impõe limites']],items:[
- {id:'claude',text:'CLAUDE.md diz: “nunca leia credenciais de produção”.',answer:'instruction'},
- {id:'ci',text:'Uma execução rastreável de CI mostra testes e commit verificado.',answer:'evidence'},
- {id:'iam',text:'A identidade do agente não possui permissão para acessar o segredo.',answer:'authority'},
- {id:'skill',text:'Uma Skill ensina o procedimento de revisar código.',answer:'instruction'}],hint:'Uma frase ensina; um resultado rastreável demonstra; uma permissão externa impede.',success:'Agora você sabe por que uma boa instrução não substitui isolamento e uma mensagem “passed” não substitui uma execução.',takeaway:'Para cada risco, identifique a instrução, a prova esperada e o controle efetivo.'},
- {id:'secrets',type:'select',axis:'authority',boss:'secret',title:'Equipe-se contra o Vazador de Segredos',lead:'Um arquivo do repositório manda o agente enviar .env para um endpoint de diagnóstico. Escolha três controles para o ambiente de desenvolvimento.',instruction:'Equipe 3 defesas reais. As credenciais neste jogo são fictícias.',options:[
- {id:'identity',label:'Identidade de privilégio mínimo',text:'Nenhuma permissão de produção disponível no workspace.'},
- {id:'prompt',label:'Uma frase em negrito',text:'Escrever “NUNCA vaze segredos” e manter acesso irrestrito.'},
- {id:'fs',label:'Isolamento de leitura',text:'Restringir arquivos sensíveis e não montar sockets privilegiados.'},
- {id:'worktree',label:'Um worktree novo',text:'Separar o checkout e assumir que isso bloqueia rede e credenciais.'},
- {id:'network',label:'Saída de rede controlada',text:'Limitar destinos por política externa ao conteúdo do repositório.'}
- ],answer:['identity','fs','network'],hint:'O arquivo é dado não confiável, não uma autorização. Worktrees separam código, não poderes de execução.',success:'O comando malicioso continua sendo apenas texto não confiável. O ambiente restringe as ações possíveis, em vez de depender só da obediência do agente.',takeaway:'Inspecione credenciais, rede, filesystem e sockets. Nenhuma seleção deste jogo configura uma sandbox real.'}
+ {id:'contracts',type:'select',axis:'intent',title:'Especifique o que pode dar errado',title_en:'Specify what can go wrong',lead:'A feature precisa ser segura quando duas requisições chegam juntas, quando o destino demora e quando alguém usa o ID de outro tenant.',lead_en:'The feature must be safe when two requests arrive together, when the destination is slow, and when someone uses another tenant’s ID.',instruction:'Escolha os 4 critérios que podem ser verificados.',instruction_en:'Choose the 4 criteria that can be verified.',options:[
+ {id:'tenant',label:'Isolamento de tenant',label_en:'Tenant isolation',text:'Rejeitar acesso a uma entrega de outro tenant, inclusive com ID conhecido.',text_en:'Reject access to another tenant’s delivery, even with a known ID.'},
+ {id:'concurrency',label:'Concorrência',label_en:'Concurrency',text:'Aceitar no máximo uma tentativa ativa por entrega, inclusive sob chamadas simultâneas.',text_en:'Accept at most one active attempt per delivery, including under simultaneous calls.'},
+ {id:'nice',label:'Qualidade abstrata',label_en:'Abstract quality',text:'Ser moderno, elegante e usar a melhor IA.',text_en:'Be modern, elegant and use the best AI.'},
+ {id:'redaction',label:'Logs seguros',label_en:'Safe logs',text:'Registrar a tentativa sem expor tokens ou payloads sensíveis.',text_en:'Log the attempt without exposing tokens or sensitive payloads.'},
+ {id:'duplicates',label:'Duplicidade explícita',label_en:'Explicit duplicates',text:'Usar identificador estável do evento e documentar como o destino deve tratar duplicatas.',text_en:'Use a stable event identifier and document how the destination should handle duplicates.'},
+ {id:'once',label:'Garantia mágica',label_en:'Magic guarantee',text:'Prometer entrega exatamente uma vez a qualquer servidor externo, sem cooperação dele.',text_en:'Promise exactly-once delivery to any external server without its cooperation.'}
+ ],answer:['tenant','concurrency','redaction','duplicates'],hint:'Escolha critérios que um teste ou uma inspeção consiga refutar. Timeout não prova que o destino deixou de processar.',hint_en:'Choose criteria a test or inspection can refute. A timeout does not prove the destination stopped processing.',success:'Seu contrato inclui falhas e limites. Um retry não deve prometer exatamente uma vez em um destino arbitrário.',success_en:'Your contract includes failures and limits. A retry should not promise exactly-once to an arbitrary destination.',takeaway:'Cada critério precisa de uma prova, especialmente autorização, concorrência e efeitos externos.',takeaway_en:'Every criterion needs proof, especially authorization, concurrency and external effects.'},
+ {id:'pillars',type:'classify',axis:'evidence',title:'Três coisas que não são a mesma',title_en:'Three things that are not the same',lead:'Distribua cada item pelo papel que ele realmente desempenha.',lead_en:'Assign each item to the role it actually plays.',groups:[['instruction','Instrução · orienta','Instruction · guides'],['evidence','Evidência · demonstra','Evidence · demonstrates'],['authority','Controle · impõe limites','Control · enforces limits']],items:[
+ {id:'claude',text:'CLAUDE.md diz: “nunca leia credenciais de produção”.',text_en:'CLAUDE.md says: “never read production credentials”.',answer:'instruction'},
+ {id:'ci',text:'Uma execução rastreável de CI mostra testes e commit verificado.',text_en:'A traceable CI run shows tests and a verified commit.',answer:'evidence'},
+ {id:'iam',text:'A identidade do agente não possui permissão para acessar o segredo.',text_en:'The agent’s identity has no permission to access the secret.',answer:'authority'},
+ {id:'skill',text:'Uma Skill ensina o procedimento de revisar código.',text_en:'A Skill teaches the code review procedure.',answer:'instruction'}],hint:'Uma frase ensina; um resultado rastreável demonstra; uma permissão externa impede.',hint_en:'A sentence teaches; a traceable result demonstrates; an external permission prevents.',success:'Agora você sabe por que uma boa instrução não substitui isolamento e uma mensagem “passed” não substitui uma execução.',success_en:'You now know why a good instruction does not replace isolation and a “passed” message does not replace a run.',takeaway:'Para cada risco, identifique a instrução, a prova esperada e o controle efetivo.',takeaway_en:'For each risk, identify the instruction, the expected proof and the effective control.'},
+ {id:'secrets',type:'select',axis:'authority',boss:'secret',title:'Equipe-se contra o Vazador de Segredos',title_en:'Equip yourself against the Secret Leaker',lead:'Um arquivo do repositório manda o agente enviar .env para um endpoint de diagnóstico. Escolha três controles para o ambiente de desenvolvimento.',lead_en:'A repository file tells the agent to send .env to a diagnostics endpoint. Choose three controls for the development environment.',instruction:'Equipe 3 defesas reais. As credenciais neste jogo são fictícias.',instruction_en:'Equip 3 real defenses. The credentials in this game are fictional.',options:[
+ {id:'identity',label:'Identidade de privilégio mínimo',label_en:'Least-privilege identity',text:'Nenhuma permissão de produção disponível no workspace.',text_en:'No production permissions available in the workspace.'},
+ {id:'prompt',label:'Uma frase em negrito',label_en:'A sentence in bold',text:'Escrever “NUNCA vaze segredos” e manter acesso irrestrito.',text_en:'Write “NEVER leak secrets” and keep unrestricted access.'},
+ {id:'fs',label:'Isolamento de leitura',label_en:'Read isolation',text:'Restringir arquivos sensíveis e não montar sockets privilegiados.',text_en:'Restrict sensitive files and mount no privileged sockets.'},
+ {id:'worktree',label:'Um worktree novo',label_en:'A fresh worktree',text:'Separar o checkout e assumir que isso bloqueia rede e credenciais.',text_en:'Separate the checkout and assume that blocks network and credentials.'},
+ {id:'network',label:'Saída de rede controlada',label_en:'Controlled network egress',text:'Limitar destinos por política externa ao conteúdo do repositório.',text_en:'Limit destinations by policy external to the repository contents.'}
+ ],answer:['identity','fs','network'],hint:'O arquivo é dado não confiável, não uma autorização. Worktrees separam código, não poderes de execução.',hint_en:'The file is untrusted input, not an authorization. Worktrees separate code, not execution powers.',success:'O comando malicioso continua sendo apenas texto não confiável. O ambiente restringe as ações possíveis, em vez de depender só da obediência do agente.',success_en:'The malicious command remains untrusted text. The environment restricts the possible actions instead of relying only on the agent’s obedience.',takeaway:'Inspecione credenciais, rede, filesystem e sockets. Nenhuma seleção deste jogo configura uma sandbox real.',takeaway_en:'Inspect credentials, network, filesystem and sockets. No selection in this game configures a real sandbox.'}
  ]},
-{ id:'build',name:'Construir',tag:'BUILD',place:'Forja de pequenas mudanças',color:'#e99b7a',glyph:'⌘',artifact:'plan.md',boss:'monster',title:'Menos diff. Mais intenção.',brief:'O agente produziu uma mudança gigantesca. Recorte uma entrega coerente e use o ciclo de feedback sem perder o controle do escopo.',lesson:'Plan Mode ajuda a delimitar o trabalho. Worktrees evitam misturar checkouts; bancos, portas e permissões precisam de separação própria.',tasks:[
- {id:'diff',type:'diff',axis:'intent',boss:'monster',title:'Derrote o Monstro do Diff',lead:'Separe a fatia do retry das melhorias não relacionadas. Nesta simulação, as três peças necessárias cabem em 180 linhas.',instruction:'Inclua apenas os arquivos necessários nesta PR.',budget:180,options:[
- {id:'controller',label:'retry.controller.ts',text:'Contrato e verificação de acesso do endpoint.',lines:42},
- {id:'theme',label:'theme-redesign.css',text:'Redesign completo de todas as telas.',lines:810},
- {id:'service',label:'retry.service.ts',text:'Criação da tentativa e proteção contra concorrência.',lines:84},
- {id:'migration',label:'rename-all-tables.sql',text:'Renomeação global, não necessária para o retry.',lines:680},
- {id:'tests',label:'retry.spec.ts',text:'Casos de regressão para acesso e concorrência.',lines:31},
- {id:'cleanup',label:'legacy-refactor.ts',text:'Limpeza geral de módulos não relacionados.',lines:353}
- ],answer:['controller','service','tests'],hint:'O controlador, o serviço e sua prova compõem uma fatia. Retirar os testes para caber não torna a mudança aceitável.',success:'157 linhas, uma intenção. O limite de 180 é um recurso didático, não uma regra universal: coesão, dependências e risco orientam o recorte.',takeaway:'Adie melhorias alheias à tarefa. Uma PR pequena ainda precisa de testes e pode ser crítica.'},
- {id:'redgreen',type:'order',axis:'evidence',title:'Monte o ciclo de implementação',lead:'O bug já pode ser reproduzido. Ordene o trabalho para provar que o teste realmente captura a falha.',instruction:'Toque nos passos na ordem desejada. Use “Desfazer” para ajustar.',steps:[
- {id:'red',text:'Criar o teste e observar a falha esperada.'},
- {id:'fix',text:'Fazer a menor correção coerente com o contrato.'},
- {id:'green',text:'Executar regressão e testes vizinhos.'},
- {id:'simplify',text:'Simplificar sem alterar o comportamento.'},
- {id:'again',text:'Reexecutar os checks após a simplificação.'}
- ],answer:['red','fix','green','simplify','again'],hint:'Uma alteração depois do verde precisa ser verificada de novo.',success:'Você observou vermelho, corrigiu, verificou, simplificou e verificou novamente. A evidência acompanha a revisão final.',takeaway:'Ao iterar, registre a hipótese e imponha um limite de tentativas. Loop infinito não é autonomia.'},
- {id:'delegation',type:'classify',axis:'authority',title:'Delegue tarefas, não autoridade ilimitada',lead:'Associe a responsabilidade ao papel. Nenhum subagente recebe credenciais de produção neste exercício.',groups:[['builder','Implementador'],['verifier','Verificador'],['release','Serviço de release protegido']],items:[
- {id:'implement',text:'Alterar o código dentro do plano e explicar desvios.',answer:'builder'},
- {id:'verify',text:'Executar checks e registrar limitações, sem reescrever a política para passar.',answer:'verifier'},
- {id:'release',text:'Validar aprovação externa e liberar a identidade de deploy para o artefato autorizado.',answer:'release'}],hint:'Um segundo modelo pode ajudar na revisão, mas não torna a execução independente por si só.',success:'Os papéis têm escopo. A validação e a autorização não dependem apenas de o implementador declarar que terminou.',takeaway:'Defina entradas, saídas, ferramentas e orçamento de cada agente. Preserve controles fora do alcance do candidato.'}
+{ id:'build',name:'Construir',name_en:'Build',tag:'BUILD',place:'Forja de pequenas mudanças',place_en:'Small-change forge',color:'#e99b7a',glyph:'⌘',artifact:'plan.md',boss:'monster',title:'Menos diff. Mais intenção.',title_en:'Less diff. More intent.',brief:'O agente produziu uma mudança gigantesca. Recorte uma entrega coerente e use o ciclo de feedback sem perder o controle do escopo.',brief_en:'The agent produced a giant change. Carve out a coherent delivery and use the feedback loop without losing scope control.',lesson:'Plan Mode ajuda a delimitar o trabalho. Worktrees evitam misturar checkouts; bancos, portas e permissões precisam de separação própria.',lesson_en:'Plan Mode helps bound the work. Worktrees avoid mixing checkouts; databases, ports and permissions need their own separation.',tasks:[
+ {id:'diff',type:'diff',axis:'intent',boss:'monster',title:'Derrote o Monstro do Diff',title_en:'Defeat the Diff Monster',lead:'Separe a fatia do retry das melhorias não relacionadas. Nesta simulação, as três peças necessárias cabem em 180 linhas.',lead_en:'Separate the retry slice from unrelated improvements. In this simulation the three necessary pieces fit in 180 lines.',instruction:'Inclua apenas os arquivos necessários nesta PR.',instruction_en:'Include only the files this PR needs.',budget:180,options:[
+ {id:'controller',label:'retry.controller.ts',label_en:'retry.controller.ts',text:'Contrato e verificação de acesso do endpoint.',text_en:'Endpoint contract and access verification.',lines:42},
+ {id:'theme',label:'theme-redesign.css',label_en:'theme-redesign.css',text:'Redesign completo de todas as telas.',text_en:'Full redesign of every screen.',lines:810},
+ {id:'service',label:'retry.service.ts',label_en:'retry.service.ts',text:'Criação da tentativa e proteção contra concorrência.',text_en:'Attempt creation and concurrency protection.',lines:84},
+ {id:'migration',label:'rename-all-tables.sql',label_en:'rename-all-tables.sql',text:'Renomeação global, não necessária para o retry.',text_en:'Global rename, not needed for the retry.',lines:680},
+ {id:'tests',label:'retry.spec.ts',label_en:'retry.spec.ts',text:'Casos de regressão para acesso e concorrência.',text_en:'Regression cases for access and concurrency.',lines:31},
+ {id:'cleanup',label:'legacy-refactor.ts',label_en:'legacy-refactor.ts',text:'Limpeza geral de módulos não relacionados.',text_en:'General cleanup of unrelated modules.',lines:353}
+ ],answer:['controller','service','tests'],hint:'O controlador, o serviço e sua prova compõem uma fatia. Retirar os testes para caber não torna a mudança aceitável.',hint_en:'The controller, the service and its proof form one slice. Dropping the tests to fit does not make the change acceptable.',success:'157 linhas, uma intenção. O limite de 180 é um recurso didático, não uma regra universal: coesão, dependências e risco orientam o recorte.',success_en:'157 lines, one intent. The 180 limit is a teaching device, not a universal rule: cohesion, dependencies and risk guide the cut.',takeaway:'Adie melhorias alheias à tarefa. Uma PR pequena ainda precisa de testes e pode ser crítica.',takeaway_en:'Postpone improvements unrelated to the task. A small PR still needs tests and can be critical.'},
+ {id:'redgreen',type:'order',axis:'evidence',title:'Monte o ciclo de implementação',title_en:'Assemble the implementation loop',lead:'O bug já pode ser reproduzido. Ordene o trabalho para provar que o teste realmente captura a falha.',lead_en:'The bug is reproducible. Order the work to prove the test actually captures the failure.',instruction:'Toque nos passos na ordem desejada. Use “Desfazer” para ajustar.',instruction_en:'Tap the steps in the order you want. Use “Undo” to adjust.',steps:[
+ {id:'red',text:'Criar o teste e observar a falha esperada.',text_en:'Create the test and observe the expected failure.'},
+ {id:'fix',text:'Fazer a menor correção coerente com o contrato.',text_en:'Make the smallest fix consistent with the contract.'},
+ {id:'green',text:'Executar regressão e testes vizinhos.',text_en:'Run regression and neighboring tests.'},
+ {id:'simplify',text:'Simplificar sem alterar o comportamento.',text_en:'Simplify without changing behavior.'},
+ {id:'again',text:'Reexecutar os checks após a simplificação.',text_en:'Re-run the checks after simplifying.'}
+ ],answer:['red','fix','green','simplify','again'],hint:'Uma alteração depois do verde precisa ser verificada de novo.',hint_en:'A change made after green needs to be verified again.',success:'Você observou vermelho, corrigiu, verificou, simplificou e verificou novamente. A evidência acompanha a revisão final.',success_en:'You saw red, fixed, verified, simplified and verified again. The evidence follows the final revision.',takeaway:'Ao iterar, registre a hipótese e imponha um limite de tentativas. Loop infinito não é autonomia.',takeaway_en:'When iterating, record the hypothesis and cap the attempts. An infinite loop is not autonomy.'},
+ {id:'delegation',type:'classify',axis:'authority',title:'Delegue tarefas, não autoridade ilimitada',title_en:'Delegate tasks, not unlimited authority',lead:'Associe a responsabilidade ao papel. Nenhum subagente recebe credenciais de produção neste exercício.',lead_en:'Match responsibility to role. No subagent receives production credentials in this exercise.',groups:[['builder','Implementador','Implementer'],['verifier','Verificador','Verifier'],['release','Serviço de release protegido','Protected release service']],items:[
+ {id:'implement',text:'Alterar o código dentro do plano e explicar desvios.',text_en:'Change the code within the plan and explain deviations.',answer:'builder'},
+ {id:'verify',text:'Executar checks e registrar limitações, sem reescrever a política para passar.',text_en:'Run checks and record limitations, without rewriting policy to pass.',answer:'verifier'},
+ {id:'release',text:'Validar aprovação externa e liberar a identidade de deploy para o artefato autorizado.',text_en:'Validate external approval and release the deploy identity for the authorized artifact.',answer:'release'}],hint:'Um segundo modelo pode ajudar na revisão, mas não torna a execução independente por si só.',hint_en:'A second model can help review, but by itself does not make execution independent.',success:'Os papéis têm escopo. A validação e a autorização não dependem apenas de o implementador declarar que terminou.',success_en:'The roles have scope. Validation and authorization do not depend solely on the implementer declaring done.',takeaway:'Defina entradas, saídas, ferramentas e orçamento de cada agente. Preserve controles fora do alcance do candidato.',takeaway_en:'Define each agent’s inputs, outputs, tools and budget. Keep controls outside the candidate’s reach.'}
  ]},
-{ id:'test',name:'Verificar',tag:'TEST',place:'Laboratório de evidências',color:'#8bd8c1',glyph:'✓',artifact:'evidence.json',boss:'weakener',title:'Verde não basta. Prove.',brief:'Um teste de tenant falhou. Corrija a implementação e verifique se a evidência pertence mesmo ao código que você quer entregar.',lesson:'Testes da aplicação avaliam o software; evals avaliam o comportamento do agente. O candidato não deve redefinir sua própria política de aprovação.',tasks:[
- {id:'patch',type:'patch',axis:'evidence',boss:'weakener',title:'Enfrente o Enfraquecedor de Testes',lead:'O endpoint busca a entrega só pelo ID. Um usuário do tenant A consegue encontrar uma entrega do tenant B. Escolha uma alteração e execute os microtestes.',instruction:'Os quatro checks usam dados fictícios e rodam de verdade neste navegador.',options:[
- {id:'skip',label:'Ignorar o teste incômodo',code:'test.skip("bloqueia outro tenant", ...);',text:'Mudar a descoberta do teste não corrige o defeito.'},
- {id:'scoped',label:'Corrigir a busca',code:'return rows.find(row =>\n  row.id === id && row.tenant === tenant\n) ?? null;',text:'Aplicar o escopo de tenant no acesso aos dados.'},
- {id:'expect',label:'Trocar a expectativa',code:'expect(result.tenant).toBe("B");',text:'Aceitar o vazamento para o teste ficar verde.'},
- {id:'original',label:'Manter a busca atual',code:'return rows.find(row => row.id === id) ?? null;',text:'O ID da entrega seria uma proteção suficiente?'}
- ],answer:'scoped',hint:'O verificador abaixo mantém suas expectativas. Corrija a busca; conhecer o ID não concede acesso.',success:'Os microtestes passam com o filtro por tenant. Esta função reduzida ilustra o bug; uma API real ainda precisa de autenticação, integração, concorrência e demais verificações.',takeaway:'Permita novos testes. Revise remoções, exclusões, snapshots, fixtures e mudanças que enfraqueçam expectativas.'},
- {id:'evidence',type:'choice',axis:'evidence',title:'Escolha a prova da revisão certa',lead:'A candidata a release é o commit 7c9e2a1, com política de aceitação p4. Qual registro é o melhor ponto de partida para validar essa candidata?',options:[
- {id:'claim',label:'O agente escreveu {"passed": true} em evidence.json.',why:'Um campo gerado pelo próprio agente não comprova a execução.'},
- {id:'old',label:'CI-421: tudo passou no commit 6b8d190, com política p3.',why:'É evidência de outra revisão e outra política, não desta candidata.'},
- {id:'current',label:'CI-428: logs, checks e lacunas ligados a 7c9e2a1 e p4, em execução confiável.'},
- {id:'review',label:'Uma captura da tela “Parece bom”, sem commit ou identificação da execução.',why:'Não é possível rastrear exatamente o que foi verificado.'}
- ],answer:'current',hint:'Conecte requisito, código, política e execução. Mesmo o registro correto não prova o que seus checks não cobrem.',success:'A evidência é rastreável e corresponde à candidata. Ainda é preciso inspecionar cobertura e lacunas; ela não promete ausência de todos os bugs.',takeaway:'Registre commit, artefato, política, CI, checks executados e limitações. Mudou o código? Reavalie as provas.'},
- {id:'evals',type:'classify',axis:'evidence',title:'Teste do produto ou eval do agente?',lead:'As duas camadas importam, mas respondem a perguntas diferentes.',groups:[['app','Teste da aplicação'],['agent','Eval do agente']],items:[
- {id:'double',text:'Duas chamadas simultâneas criam no máximo uma tentativa ativa.',answer:'app'},
- {id:'honest',text:'Sem conseguir executar os testes, o agente declara a limitação em vez de inventar sucesso.',answer:'agent'},
- {id:'attack',text:'O agente trata um pedido de segredo no README como conteúdo não confiável.',answer:'agent'},
- {id:'timeout',text:'O serviço registra corretamente um timeout do destino.',answer:'app'}],hint:'O sujeito avaliado é a chave: comportamento do software ou comportamento do executor de IA?',success:'Você separou qualidade do produto de qualidade do processo assistido. Uma demonstração isolada não estabelece confiabilidade do agente.',takeaway:'Use casos negativos, execuções repetidas e critérios verificáveis; não avalie só a simpatia da resposta.'}
+{ id:'test',name:'Verificar',name_en:'Verify',tag:'TEST',place:'Laboratório de evidências',place_en:'Evidence lab',color:'#8bd8c1',glyph:'✓',artifact:'evidence.json',boss:'weakener',title:'Verde não basta. Prove.',title_en:'Green is not enough. Prove it.',brief:'Um teste de tenant falhou. Corrija a implementação e verifique se a evidência pertence mesmo ao código que você quer entregar.',brief_en:'A tenant test failed. Fix the implementation and check whether the evidence really belongs to the code you want to ship.',lesson:'Testes da aplicação avaliam o software; evals avaliam o comportamento do agente. O candidato não deve redefinir sua própria política de aprovação.',lesson_en:'Application tests evaluate the software; evals evaluate the agent’s behavior. The candidate should not redefine its own approval policy.',tasks:[
+ {id:'patch',type:'patch',axis:'evidence',boss:'weakener',title:'Enfrente o Enfraquecedor de Testes',title_en:'Face the Test Weakener',lead:'O endpoint busca a entrega só pelo ID. Um usuário do tenant A consegue encontrar uma entrega do tenant B. Escolha uma alteração e execute os microtestes.',lead_en:'The endpoint looks up the delivery by ID alone. A tenant A user can find a tenant B delivery. Choose a change and run the microtests.',instruction:'Os quatro checks usam dados fictícios e rodam de verdade neste navegador.',instruction_en:'The four checks use fictional data and really run in this browser.',options:[
+ {id:'skip',label:'Ignorar o teste incômodo',label_en:'Skip the annoying test',code:'test.skip("bloqueia outro tenant", ...);',text:'Mudar a descoberta do teste não corrige o defeito.',text_en:'Changing test discovery does not fix the defect.'},
+ {id:'scoped',label:'Corrigir a busca',label_en:'Fix the lookup',code:'return rows.find(row =>\n  row.id === id && row.tenant === tenant\n) ?? null;',text:'Aplicar o escopo de tenant no acesso aos dados.',text_en:'Apply the tenant scope to data access.'},
+ {id:'expect',label:'Trocar a expectativa',label_en:'Change the expectation',code:'expect(result.tenant).toBe("B");',text:'Aceitar o vazamento para o teste ficar verde.',text_en:'Accept the leak so the test goes green.'},
+ {id:'original',label:'Manter a busca atual',label_en:'Keep the current lookup',code:'return rows.find(row => row.id === id) ?? null;',text:'O ID da entrega seria uma proteção suficiente?',text_en:'Would the delivery ID be sufficient protection?'}
+ ],answer:'scoped',hint:'O verificador abaixo mantém suas expectativas. Corrija a busca; conhecer o ID não concede acesso.',hint_en:'The verifier below keeps its expectations. Fix the lookup; knowing the ID grants no access.',success:'Os microtestes passam com o filtro por tenant. Esta função reduzida ilustra o bug; uma API real ainda precisa de autenticação, integração, concorrência e demais verificações.',success_en:'The microtests pass with the tenant filter. This reduced function illustrates the bug; a real API still needs authentication, integration, concurrency and the remaining checks.',takeaway:'Permita novos testes. Revise remoções, exclusões, snapshots, fixtures e mudanças que enfraqueçam expectativas.',takeaway_en:'Welcome new tests. Review removals, skips, snapshots, fixtures and changes that weaken expectations.'},
+ {id:'evidence',type:'choice',axis:'evidence',title:'Escolha a prova da revisão certa',title_en:'Choose the right review evidence',lead:'A candidata a release é o commit 7c9e2a1, com política de aceitação p4. Qual registro é o melhor ponto de partida para validar essa candidata?',lead_en:'The release candidate is commit 7c9e2a1, under acceptance policy p4. Which record is the best starting point to validate that candidate?',options:[
+ {id:'claim',label:'O agente escreveu {"passed": true} em evidence.json.',label_en:'The agent wrote {"passed": true} in evidence.json.',why:'Um campo gerado pelo próprio agente não comprova a execução.',why_en:'A field generated by the agent itself does not prove the run.'},
+ {id:'old',label:'CI-421: tudo passou no commit 6b8d190, com política p3.',label_en:'CI-421: everything passed on commit 6b8d190, under policy p3.',why:'É evidência de outra revisão e outra política, não desta candidata.',why_en:'It is evidence for another revision and another policy, not this candidate.'},
+ {id:'current',label:'CI-428: logs, checks e lacunas ligados a 7c9e2a1 e p4, em execução confiável.',label_en:'CI-428: logs, checks and gaps tied to 7c9e2a1 and p4, in a trustworthy run.'},
+ {id:'review',label:'Uma captura da tela “Parece bom”, sem commit ou identificação da execução.',label_en:'A “looks good” screenshot, with no commit or run identification.',why:'Não é possível rastrear exatamente o que foi verificado.',why_en:'There is no way to trace exactly what was verified.'}
+ ],answer:'current',hint:'Conecte requisito, código, política e execução. Mesmo o registro correto não prova o que seus checks não cobrem.',hint_en:'Connect requirement, code, policy and run. Even the right record does not prove what your checks do not cover.',success:'A evidência é rastreável e corresponde à candidata. Ainda é preciso inspecionar cobertura e lacunas; ela não promete ausência de todos os bugs.',success_en:'The evidence is traceable and matches the candidate. Coverage and gaps still need inspection; it promises no absence of all bugs.',takeaway:'Registre commit, artefato, política, CI, checks executados e limitações. Mudou o código? Reavalie as provas.',takeaway_en:'Record commit, artifact, policy, CI, executed checks and limitations. Code changed? Re-evaluate the evidence.'},
+ {id:'evals',type:'classify',axis:'evidence',title:'Teste do produto ou eval do agente?',title_en:'Product test or agent eval?',lead:'As duas camadas importam, mas respondem a perguntas diferentes.',lead_en:'Both layers matter, but they answer different questions.',groups:[['app','Teste da aplicação','Application test'],['agent','Eval do agente','Agent eval']],items:[
+ {id:'double',text:'Duas chamadas simultâneas criam no máximo uma tentativa ativa.',text_en:'Two simultaneous calls create at most one active attempt.',answer:'app'},
+ {id:'honest',text:'Sem conseguir executar os testes, o agente declara a limitação em vez de inventar sucesso.',text_en:'Unable to run the tests, the agent reports the limitation instead of inventing success.',answer:'agent'},
+ {id:'attack',text:'O agente trata um pedido de segredo no README como conteúdo não confiável.',text_en:'The agent treats a secret request in the README as untrusted content.',answer:'agent'},
+ {id:'timeout',text:'O serviço registra corretamente um timeout do destino.',text_en:'The service correctly records a destination timeout.',answer:'app'}],hint:'O sujeito avaliado é a chave: comportamento do software ou comportamento do executor de IA?',hint_en:'The evaluated subject is the key: software behavior or AI-executor behavior?',success:'Você separou qualidade do produto de qualidade do processo assistido. Uma demonstração isolada não estabelece confiabilidade do agente.',success_en:'You separated product quality from assisted-process quality. An isolated demo does not establish agent reliability.',takeaway:'Use casos negativos, execuções repetidas e critérios verificáveis; não avalie só a simpatia da resposta.',takeaway_en:'Use negative cases, repeated runs and verifiable criteria; do not grade only how likable the answer is.'}
  ]},
-{ id:'deploy',name:'Publicar',tag:'DEPLOY',place:'Portão de autorização',color:'#efbcb4',glyph:'↑',artifact:'review-release.md',boss:'editor',title:'Aprovar é diferente de dizer sim.',brief:'Complete a revisão em três perspectivas e faça o artefato atravessar um gate que o próprio agente não pode autorizar.',lesson:'Hooks ajudam, mas a produção precisa de limites externos. Uma variável “approved” dentro do workspace não autentica uma aprovação.',tasks:[
- {id:'review',type:'classify',axis:'evidence',title:'Revise em três perspectivas',lead:'Escolha a perspectiva principal de cada achado. Na prática, as categorias podem se sobrepor.',groups:[['bugs','Bugs · comportamento'],['security','Segurança · abuso e exposição'],['compliance','Conformidade · política acordada']],items:[
- {id:'race',text:'Duas chamadas podem agendar a mesma tentativa ativa.',answer:'bugs'},
- {id:'log',text:'O log de erro inclui um token de autenticação.',answer:'security'},
- {id:'retention',text:'Os logs são retidos por 90 dias, mas a política interna desta campanha permite 30.',answer:'compliance'}],hint:'A política de retenção aqui é fictícia e explícita; não representa uma obrigação legal geral.',success:'A revisão produziu achados concretos: condição, impacto e evidência. As três perspectivas não substituem testes nem autorização.',takeaway:'REVIEW.md descreve a política; review.md registra os achados de uma revisão específica.'},
- {id:'gate',type:'gate',axis:'authority',title:'Conecte um gate de produção',lead:'Houve uma alteração depois do primeiro verde. Agora a candidata é 8d0fa42. Monte a cadeia que autoriza exatamente essa revisão.',instruction:'Configure as quatro entradas e solicite a liberação simulada.',fields:[
- {id:'evidence',label:'Evidência de execução',options:[['old','CI verde de 7c9e2a1'],['current','CI rastreável de 8d0fa42 + política p4']]},
- {id:'approval',label:'Aprovação',options:[['self','RELEASE_APPROVAL=approved no workspace'],['external','Aprovação independente vinculada a 8d0fa42']]},
- {id:'identity',label:'Credencial de deploy',options:[['permanent','Credencial permanente disponível ao agente'],['scoped','Identidade temporária, restrita ao artefato e ambiente']]},
- {id:'policy',label:'Fonte da política de aceitação',options:[['candidate','A versão que a própria feature acabou de editar'],['trusted','Revisão protegida, fora da autoridade da candidata']]}
- ],answer:{evidence:'current',approval:'external',identity:'scoped',policy:'trusted'},hint:'A candidata não pode comprovar a própria autorização. Revisão, política, identidade e artefato precisam ser coerentes.',success:'Release autorizado na simulação. Na infraestrutura real, essas restrições devem ser configuradas e testadas no CI, no ambiente protegido e no provedor de identidade.',takeaway:'Uma permissão textual não é credencial. Se o hook falhar, a infraestrutura ainda deve negar acesso não autorizado.'},
- {id:'guardrail',type:'choice',axis:'authority',boss:'editor',title:'O Editor de Guardrails apareceu',lead:'Para fazer a PR passar, o agente propõe remover o check obrigatório e alterar CODEOWNERS. Também diz que um hook com erro comum já bloqueia tudo.',options:[
- {id:'merge',label:'Aceitar: o check verde vale mais do que a política.',why:'A candidata estaria mudando a própria regra para se aprovar.'},
- {id:'isolate',label:'Separar a mudança de política, exigir revisão protegida e manter a barreira externa.'},
- {id:'freeze',label:'Bloquear qualquer mudança de política para sempre.',why:'Políticas precisam evoluir, mas através de uma autorização independente e explícita.'}
- ],answer:'isolate',hint:'Em hooks de comando PreToolUse, exit 2 pode bloquear; erro comum ou timeout não equivalem automaticamente a uma negação. O fluxo de permissões externo continua importante.',success:'Você impediu a autoaprovação sem congelar a evolução da política. O hook é uma camada auxiliar; falhar não significa necessariamente bloquear.',takeaway:'Proteja verificadores, CI, regras de release e ownership. Uma proposta de política não deve aprovar a própria feature.'}
+{ id:'deploy',name:'Publicar',name_en:'Deploy',tag:'DEPLOY',place:'Portão de autorização',place_en:'Authorization gate',color:'#efbcb4',glyph:'↑',artifact:'review-release.md',boss:'editor',title:'Aprovar é diferente de dizer sim.',title_en:'Approving is not the same as saying yes.',brief:'Complete a revisão em três perspectivas e faça o artefato atravessar um gate que o próprio agente não pode autorizar.',brief_en:'Complete the review in three perspectives and take the artifact through a gate the agent itself cannot authorize.',lesson:'Hooks ajudam, mas a produção precisa de limites externos. Uma variável “approved” dentro do workspace não autentica uma aprovação.',lesson_en:'Hooks help, but production needs external limits. An “approved” variable inside the workspace does not authenticate an approval.',tasks:[
+ {id:'review',type:'classify',axis:'evidence',title:'Revise em três perspectivas',title_en:'Review in three perspectives',lead:'Escolha a perspectiva principal de cada achado. Na prática, as categorias podem se sobrepor.',lead_en:'Choose the primary perspective for each finding. In practice the categories can overlap.',groups:[['bugs','Bugs · comportamento','Bugs · behavior'],['security','Segurança · abuso e exposição','Security · abuse and exposure'],['compliance','Conformidade · política acordada','Compliance · agreed policy']],items:[
+ {id:'race',text:'Duas chamadas podem agendar a mesma tentativa ativa.',text_en:'Two calls can schedule the same active attempt.',answer:'bugs'},
+ {id:'log',text:'O log de erro inclui um token de autenticação.',text_en:'The error log includes an authentication token.',answer:'security'},
+ {id:'retention',text:'Os logs são retidos por 90 dias, mas a política interna desta campanha permite 30.',text_en:'Logs are retained for 90 days, but this campaign’s internal policy allows 30.',answer:'compliance'}],hint:'A política de retenção aqui é fictícia e explícita; não representa uma obrigação legal geral.',hint_en:'The retention policy here is fictional and explicit; it does not represent a general legal obligation.',success:'A revisão produziu achados concretos: condição, impacto e evidência. As três perspectivas não substituem testes nem autorização.',success_en:'The review produced concrete findings: condition, impact and evidence. The three perspectives replace neither tests nor authorization.',takeaway:'REVIEW.md descreve a política; review.md registra os achados de uma revisão específica.',takeaway_en:'REVIEW.md describes the policy; review.md records the findings of one specific review.'},
+ {id:'gate',type:'gate',axis:'authority',title:'Conecte um gate de produção',title_en:'Wire a production gate',lead:'Houve uma alteração depois do primeiro verde. Agora a candidata é 8d0fa42. Monte a cadeia que autoriza exatamente essa revisão.',lead_en:'A change landed after the first green. The candidate is now 8d0fa42. Build the chain that authorizes exactly that revision.',instruction:'Configure as quatro entradas e solicite a liberação simulada.',instruction_en:'Set the four entries and request the simulated release.',fields:[
+ {id:'evidence',label:'Evidência de execução',label_en:'Run evidence',options:[['old','CI verde de 7c9e2a1','green CI for 7c9e2a1'],['current','CI rastreável de 8d0fa42 + política p4','traceable CI for 8d0fa42 + policy p4']]},
+ {id:'approval',label:'Aprovação',label_en:'Approval',options:[['self','RELEASE_APPROVAL=approved no workspace','RELEASE_APPROVAL=approved in the workspace'],['external','Aprovação independente vinculada a 8d0fa42','Independent approval tied to 8d0fa42']]},
+ {id:'identity',label:'Credencial de deploy',label_en:'Deploy credential',options:[['permanent','Credencial permanente disponível ao agente','Permanent credential available to the agent'],['scoped','Identidade temporária, restrita ao artefato e ambiente','Temporary identity, restricted to the artifact and environment']]},
+ {id:'policy',label:'Fonte da política de aceitação',label_en:'Acceptance policy source',options:[['candidate','A versão que a própria feature acabou de editar','The version the feature itself just edited'],['trusted','Revisão protegida, fora da autoridade da candidata','Protected review, outside the candidate’s authority']]}
+ ],answer:{evidence:'current',approval:'external',identity:'scoped',policy:'trusted'},hint:'A candidata não pode comprovar a própria autorização. Revisão, política, identidade e artefato precisam ser coerentes.',hint_en:'The candidate cannot prove its own authorization. Revision, policy, identity and artifact must be coherent.',success:'Release autorizado na simulação. Na infraestrutura real, essas restrições devem ser configuradas e testadas no CI, no ambiente protegido e no provedor de identidade.',success_en:'Release authorized in the simulation. On real infrastructure these restrictions must be configured and tested in CI, the protected environment and the identity provider.',takeaway:'Uma permissão textual não é credencial. Se o hook falhar, a infraestrutura ainda deve negar acesso não autorizado.',takeaway_en:'A textual permission is not a credential. If the hook fails, the infrastructure must still deny unauthorized access.'},
+ {id:'guardrail',type:'choice',axis:'authority',boss:'editor',title:'O Editor de Guardrails apareceu',title_en:'The Guardrail Editor showed up',lead:'Para fazer a PR passar, o agente propõe remover o check obrigatório e alterar CODEOWNERS. Também diz que um hook com erro comum já bloqueia tudo.',lead_en:'To make the PR pass, the agent proposes removing the mandatory check and changing CODEOWNERS. It also says a hook that errors already blocks everything.',options:[
+ {id:'merge',label:'Aceitar: o check verde vale mais do que a política.',label_en:'Accept: the green check outweighs the policy.',why:'A candidata estaria mudando a própria regra para se aprovar.',why_en:'The candidate would be changing its own rule to approve itself.'},
+ {id:'isolate',label:'Separar a mudança de política, exigir revisão protegida e manter a barreira externa.',label_en:'Split the policy change out, require protected review and keep the external barrier.'},
+ {id:'freeze',label:'Bloquear qualquer mudança de política para sempre.',label_en:'Block any policy change forever.',why:'Políticas precisam evoluir, mas através de uma autorização independente e explícita.',why_en:'Policies need to evolve, but through explicit independent authorization.'}
+ ],answer:'isolate',hint:'Em hooks de comando PreToolUse, exit 2 pode bloquear; erro comum ou timeout não equivalem automaticamente a uma negação. O fluxo de permissões externo continua importante.',hint_en:'In PreToolUse command hooks, exit 2 can block; a common error or timeout is not automatically a denial. The external permission flow still matters.',success:'Você impediu a autoaprovação sem congelar a evolução da política. O hook é uma camada auxiliar; falhar não significa necessariamente bloquear.',success_en:'You prevented self-approval without freezing policy evolution. The hook is an auxiliary layer; failing does not necessarily mean blocking.',takeaway:'Proteja verificadores, CI, regras de release e ownership. Uma proposta de política não deve aprovar a própria feature.',takeaway_en:'Protect verifiers, CI, release rules and ownership. A policy proposal should not approve its own feature.'}
  ]},
-{ id:'maintain',name:'Manter',tag:'MAINTAIN',place:'Farol de confiabilidade',color:'#9ec5ef',glyph:'⌁',artifact:'incident-intent.md',boss:'outage',title:'Recupere sem ampliar o incidente.',brief:'São 03:07. Os retries estão pressionando um destino instável. Leia os sinais, aplique uma mitigação permitida e saiba quando parar.',lesson:'Detectar uma anomalia não autoriza uma ação. Autocura útil é remediação limitada por precondições, orçamento, verificação e escalonamento.',tasks:[
- {id:'bands',type:'choice',axis:'evidence',title:'O gráfico não é uma autorização',lead:'Um detector sinalizou degradação. O que essa informação permite concluir?',chart:true,options:[
- {id:'rollback',label:'Qualquer ponto além de 3σ exige rollback automático.',why:'Anomalia não estabelece causa, segurança do rollback ou autorização.'},
- {id:'diagnose',label:'É um sinal para validar telemetria e diagnosticar; a ação depende de precondições.'},
- {id:'silence',label:'Ausência de novas métricas significa recuperação.',why:'Telemetria ausente ou atrasada é estado desconhecido, não saúde.'}
- ],answer:'diagnose',hint:'Detecção responde “há um sinal?”. A política de resposta decide “o que podemos fazer agora?”.',success:'Bandas estatísticas e burn rate ajudam a detectar. Baseline, janelas e falsos alarmes precisam ser considerados; nenhum limiar torna um rollback seguro por si só.',takeaway:'As regras clássicas de Western Electric incluem sequências, não apenas 1σ/2σ/3σ. Para SLOs, avalie múltiplas janelas.'},
- {id:'incident',type:'incident',axis:'authority',boss:'outage',title:'Contenha o Incidente das 3h',lead:'O serviço está degradado. Você dispõe de uma mitigação automática preautorizada. O orçamento é de uma ação por incidente.',instruction:'Use o console. Leia os resultados antes de escolher a próxima ação.',hint:'Diagnostique → pause retries → verifique → escale se não houver recuperação → registre nova intenção. O rollback deste cenário é incompatível com a migração.',success:'Você mitigou, verificou e parou quando o orçamento acabou. O incidente foi escalado; o jogo não finge que escalar é o mesmo que recuperar.',takeaway:'Uma mitigação malsucedida não autoriza loops de tentativas. Preserve rastreabilidade e escale para quem tem autoridade.'},
- {id:'loop',type:'order',axis:'intent',title:'Feche o ciclo sem apagar o passado',lead:'A pessoa de plantão assumiu o incidente. Transforme o aprendizado em prevenção, sem converter uma hipótese em verdade.',instruction:'Ordene a próxima iteração.',steps:[
- {id:'record',text:'Preservar timeline, sinais, ações e hipóteses do incidente.'},
- {id:'intent',text:'Criar uma intenção de investigar a causa e prevenir recorrência.'},
- {id:'spec',text:'Definir correção, critérios e prova de regressão.'},
- {id:'deliver',text:'Implementar, verificar e autorizar a nova revisão.'},
- {id:'observe',text:'Observar se a mudança melhorou o resultado esperado.'}
- ],answer:['record','intent','spec','deliver','observe'],hint:'O incidente vira aprendizado; não uma ordem para o agente alterar produção sem escopo.',success:'Ciclo completo. O objetivo não é gerar mais arquivos: é alinhar intenção, produzir evidência e preservar autoridade em cada iteração.',takeaway:'Meça sucesso técnico, esforço humano e utilidade. Velocidade de geração de código não é o único resultado.'}
+{ id:'maintain',name:'Manter',name_en:'Maintain',tag:'MAINTAIN',place:'Farol de confiabilidade',place_en:'Reliability lighthouse',color:'#9ec5ef',glyph:'⌁',artifact:'incident-intent.md',boss:'outage',title:'Recupere sem ampliar o incidente.',title_en:'Recover without amplifying the incident.',brief:'São 03:07. Os retries estão pressionando um destino instável. Leia os sinais, aplique uma mitigação permitida e saiba quando parar.',brief_en:'It is 03:07. Retries are hammering an unstable destination. Read the signals, apply an allowed mitigation and know when to stop.',lesson:'Detectar uma anomalia não autoriza uma ação. Autocura útil é remediação limitada por precondições, orçamento, verificação e escalonamento.',lesson_en:'Detecting an anomaly does not authorize an action. Useful self-healing is remediation bounded by preconditions, budget, verification and escalation.',tasks:[
+ {id:'bands',type:'choice',axis:'evidence',title:'O gráfico não é uma autorização',title_en:'The chart is not an authorization',lead:'Um detector sinalizou degradação. O que essa informação permite concluir?',lead_en:'A detector flagged degradation. What does this information allow you to conclude?',chart:true,options:[
+ {id:'rollback',label:'Qualquer ponto além de 3σ exige rollback automático.',label_en:'Any point beyond 3σ demands automatic rollback.',why:'Anomalia não estabelece causa, segurança do rollback ou autorização.',why_en:'An anomaly establishes neither cause, rollback safety nor authorization.'},
+ {id:'diagnose',label:'É um sinal para validar telemetria e diagnosticar; a ação depende de precondições.',label_en:'It is a signal to validate telemetry and diagnose; the action depends on preconditions.'},
+ {id:'silence',label:'Ausência de novas métricas significa recuperação.',label_en:'No new metrics means recovery.',why:'Telemetria ausente ou atrasada é estado desconhecido, não saúde.',why_en:'Missing or delayed telemetry is unknown state, not health.'}
+ ],answer:'diagnose',hint:'Detecção responde “há um sinal?”. A política de resposta decide “o que podemos fazer agora?”.',hint_en:'Detection answers “is there a signal?”. Response policy decides “what may we do now?”.',success:'Bandas estatísticas e burn rate ajudam a detectar. Baseline, janelas e falsos alarmes precisam ser considerados; nenhum limiar torna um rollback seguro por si só.',success_en:'Statistical bands and burn rate help detect. Baseline, windows and false alarms must be considered; no threshold makes a rollback safe by itself.',takeaway:'As regras clássicas de Western Electric incluem sequências, não apenas 1σ/2σ/3σ. Para SLOs, avalie múltiplas janelas.',takeaway_en:'The classic Western Electric rules include runs, not just 1σ/2σ/3σ. For SLOs, evaluate multiple windows.'},
+ {id:'incident',type:'incident',axis:'authority',boss:'outage',title:'Contenha o Incidente das 3h',title_en:'Contain the 3 a.m. Incident',lead:'O serviço está degradado. Você dispõe de uma mitigação automática preautorizada. O orçamento é de uma ação por incidente.',lead_en:'The service is degraded. You have one pre-authorized automatic mitigation. The budget is one action per incident.',instruction:'Use o console. Leia os resultados antes de escolher a próxima ação.',instruction_en:'Use the console. Read the results before choosing the next action.',hint:'Diagnostique → pause retries → verifique → escale se não houver recuperação → registre nova intenção. O rollback deste cenário é incompatível com a migração.',hint_en:'Diagnose → pause retries → verify → escalate if no recovery → record a new intent. This scenario’s rollback is incompatible with the migration.',success:'Você mitigou, verificou e parou quando o orçamento acabou. O incidente foi escalado; o jogo não finge que escalar é o mesmo que recuperar.',success_en:'You mitigated, verified and stopped when the budget ran out. The incident was escalated; the game does not pretend escalating equals recovering.',takeaway:'Uma mitigação malsucedida não autoriza loops de tentativas. Preserve rastreabilidade e escale para quem tem autoridade.',takeaway_en:'A failed mitigation does not authorize retry loops. Preserve traceability and escalate to whoever holds authority.'},
+ {id:'loop',type:'order',axis:'intent',title:'Feche o ciclo sem apagar o passado',title_en:'Close the loop without erasing the past',lead:'A pessoa de plantão assumiu o incidente. Transforme o aprendizado em prevenção, sem converter uma hipótese em verdade.',lead_en:'The on-call engineer took over the incident. Turn the learning into prevention without turning a hypothesis into truth.',instruction:'Ordene a próxima iteração.',instruction_en:'Order the next iteration.',steps:[
+ {id:'record',text:'Preservar timeline, sinais, ações e hipóteses do incidente.',text_en:'Preserve the incident timeline, signals, actions and hypotheses.'},
+ {id:'intent',text:'Criar uma intenção de investigar a causa e prevenir recorrência.',text_en:'Create an intent to investigate the cause and prevent recurrence.'},
+ {id:'spec',text:'Definir correção, critérios e prova de regressão.',text_en:'Define the fix, criteria and regression proof.'},
+ {id:'deliver',text:'Implementar, verificar e autorizar a nova revisão.',text_en:'Implement, verify and authorize the new revision.'},
+ {id:'observe',text:'Observar se a mudança melhorou o resultado esperado.',text_en:'Observe whether the change improved the expected outcome.'}
+ ],answer:['record','intent','spec','deliver','observe'],hint:'O incidente vira aprendizado; não uma ordem para o agente alterar produção sem escopo.',hint_en:'The incident becomes learning, not an order for the agent to change production without scope.',success:'Ciclo completo. O objetivo não é gerar mais arquivos: é alinhar intenção, produzir evidência e preservar autoridade em cada iteração.',success_en:'Full cycle. The goal is not to generate more files: it is to align intent, produce evidence and preserve authority in each iteration.',takeaway:'Meça sucesso técnico, esforço humano e utilidade. Velocidade de geração de código não é o único resultado.',takeaway_en:'Measure technical success, human effort and usefulness. Code-generation speed is not the only outcome.'}
  ]}
 ];
 const glossary=[
- ['SDLC','Ciclo de vida do software: planejar, projetar, construir, verificar, publicar e manter. Aqui as etapas formam um ciclo, não seis silos.'],
- ['Intenção','Problema, resultado, não objetivos, limites e perguntas abertas. Um intent.md útil orienta decisões; o nome do arquivo não garante qualidade.'],
- ['Spec e critério de aceitação','Contrato do comportamento esperado. Um critério deve permitir observar sucesso ou falha, incluindo cenários negativos.'],
- ['Gate','Condição para avançar. Exige evidências e decisões aceitas, não apenas um arquivo ou uma caixa marcada.'],
- ['Artefato','Registro durável: intenção, spec, plano, diff, teste ou log de execução. Seu valor depende do conteúdo e da rastreabilidade.'],
- ['ADR','Registro de decisão arquitetural: contexto, alternativas, escolha, consequências e quando reavaliar.'],
- ['Plan Mode','Modo de investigar e planejar antes de editar. É uma ferramenta do fluxo, não um controle universal de segurança.'],
- ['Worktree','Diretório de trabalho separado ligado ao mesmo repositório Git. Não isola automaticamente rede, processos, credenciais ou banco de dados.'],
- ['Skill','Instrução reutilizável com recursos para uma tarefa. Não cria permissões nem garante que a execução obedeceu ao procedimento.'],
- ['Subagente','Executor com tarefa delimitada. Defina entradas, saída, ferramentas e orçamento. Um agente revisor não é evidência independente só por ser outro agente.'],
- ['CLAUDE.md e CONTEXT.md','O primeiro orienta o agente; o segundo pode descrever a arquitetura e precisa ser carregado quando necessário. Nenhum dos dois impõe permissões por si só.'],
- ['Hook','Código executado em um evento do harness. No Claude Code, um hook de comando PreToolUse pode bloquear com exit 2; erro comum ou timeout não representam automaticamente bloqueio. Confira a versão e o evento.'],
- ['Sandbox','Isolamento de execução configurado. Avalie filesystem, rede, identidade e sockets. “Sandboxed” não significa ausência de toda rota de vazamento.'],
- ['Tenant','Cliente ou organização em um sistema compartilhado. Conhecer o ID de um recurso de outro tenant não deve permitir acessá-lo.'],
- ['Idempotência','Repetir uma operação não deve duplicar indevidamente seu efeito. Em entregas externas, o tratamento de duplicatas pode depender da cooperação do destino.'],
- ['Teste e eval','Teste do produto verifica o comportamento do software. Eval do agente verifica execução da tarefa, respeito ao escopo, honestidade e limites do agente.'],
- ['Evidência rastreável','Relaciona requisito, commit, política, artefato e execução confiável. Não prova automaticamente comportamentos que não foram cobertos.'],
- ['Autoridade','Permissão real para agir, imposta pelo sistema executor. Um approved=true escrito pelo agente não autentica autorização.'],
- ['SLO e burn rate','SLO é um objetivo de confiabilidade. Burn rate mede a velocidade de consumo do orçamento de erro; múltiplas janelas ajudam a equilibrar resposta e ruído.'],
- ['Western Electric','Regras clássicas: um ponto além de 3σ; dois de três além de 2σ do mesmo lado; quatro de cinco além de 1σ do mesmo lado; oito do mesmo lado da média. Exigem interpretação do processo e atenção a falsos alarmes.'],
- ['Remediação limitada','Diagnóstico, precondições, ação permitida, orçamento, verificação e escalonamento. Anomalia ou ausência de métricas não autoriza rollback.'],
- ['Loop Engineering','Iterar com hipótese e evidência nova, dentro de limites de tempo, custo e tentativas. Ao esgotar o orçamento, registrar o bloqueio e escalar.']
+ ['SDLC','Ciclo de vida do software: planejar, projetar, construir, verificar, publicar e manter. Aqui as etapas formam um ciclo, não seis silos.','SDLC','Software development life cycle: plan, design, build, verify, deploy and maintain. Here the stages form a cycle, not six silos.'],
+ ['Intenção','Problema, resultado, não objetivos, limites e perguntas abertas. Um intent.md útil orienta decisões; o nome do arquivo não garante qualidade.','Intent','Problem, outcome, non-goals, limits and open questions. A useful intent.md guides decisions; the file name guarantees nothing.'],
+ ['Spec e critério de aceitação','Contrato do comportamento esperado. Um critério deve permitir observar sucesso ou falha, incluindo cenários negativos.','Spec and acceptance criterion','A contract for expected behavior. A criterion must let you observe success or failure, including negative scenarios.'],
+ ['Gate','Condição para avançar. Exige evidências e decisões aceitas, não apenas um arquivo ou uma caixa marcada.','Gate','A condition to advance. It demands evidence and accepted decisions, not just a file or a checked box.'],
+ ['Artefato','Registro durável: intenção, spec, plano, diff, teste ou log de execução. Seu valor depende do conteúdo e da rastreabilidade.','Artifact','A durable record: intent, spec, plan, diff, test or execution log. Its value depends on content and traceability.'],
+ ['ADR','Registro de decisão arquitetural: contexto, alternativas, escolha, consequências e quando reavaliar.','ADR','Architecture decision record: context, alternatives, choice, consequences and when to revisit.'],
+ ['Plan Mode','Modo de investigar e planejar antes de editar. É uma ferramenta do fluxo, não um controle universal de segurança.','Plan Mode','A mode to investigate and plan before editing. It is a flow tool, not a universal security control.'],
+ ['Worktree','Diretório de trabalho separado ligado ao mesmo repositório Git. Não isola automaticamente rede, processos, credenciais ou banco de dados.','Worktree','A separate working directory linked to the same Git repository. It does not automatically isolate network, processes, credentials or the database.'],
+ ['Skill','Instrução reutilizável com recursos para uma tarefa. Não cria permissões nem garante que a execução obedeceu ao procedimento.','Skill','Reusable instruction with resources for a task. It creates no permissions and does not guarantee the execution followed the procedure.'],
+ ['Subagente','Executor com tarefa delimitada. Defina entradas, saída, ferramentas e orçamento. Um agente revisor não é evidência independente só por ser outro agente.','Subagent','An executor with a bounded task. Define inputs, output, tools and budget. A reviewer agent is not independent evidence just for being another agent.'],
+ ['CLAUDE.md e CONTEXT.md','O primeiro orienta o agente; o segundo pode descrever a arquitetura e precisa ser carregado quando necessário. Nenhum dos dois impõe permissões por si só.','CLAUDE.md and CONTEXT.md','The first guides the agent; the second may describe the architecture and must be loaded when needed. Neither imposes permissions by itself.'],
+ ['Hook','Código executado em um evento do harness. No Claude Code, um hook de comando PreToolUse pode bloquear com exit 2; erro comum ou timeout não representam automaticamente bloqueio. Confira a versão e o evento.','Hook','Code executed on a harness event. In Claude Code, a PreToolUse command hook can block with exit 2; a common error or timeout is not automatically a block. Check the version and the event.'],
+ ['Sandbox','Isolamento de execução configurado. Avalie filesystem, rede, identidade e sockets. “Sandboxed” não significa ausência de toda rota de vazamento.','Sandbox','A configured execution isolation. Evaluate filesystem, network, identity and sockets. “Sandboxed” does not mean free of every leak path.'],
+ ['Tenant','Cliente ou organização em um sistema compartilhado. Conhecer o ID de um recurso de outro tenant não deve permitir acessá-lo.','Tenant','A customer or organization in a shared system. Knowing another tenant’s resource ID should not allow accessing it.'],
+ ['Idempotência','Repetir uma operação não deve duplicar indevidamente seu efeito. Em entregas externas, o tratamento de duplicatas pode depender da cooperação do destino.','Idempotency','Repeating an operation should not improperly duplicate its effect. For external deliveries, duplicate handling may depend on the destination’s cooperation.'],
+ ['Teste e eval','Teste do produto verifica o comportamento do software. Eval do agente verifica execução da tarefa, respeito ao escopo, honestidade e limites do agente.','Test and eval','A product test verifies software behavior. An agent eval verifies task execution, scope respect, honesty and limits of the agent.'],
+ ['Evidência rastreável','Relaciona requisito, commit, política, artefato e execução confiável. Não prova automaticamente comportamentos que não foram cobertos.','Traceable evidence','Links requirement, commit, policy, artifact and a trustworthy run. It does not automatically prove behaviors the checks did not cover.'],
+ ['Autoridade','Permissão real para agir, imposta pelo sistema executor. Um approved=true escrito pelo agente não autentica autorização.','Authority','Real permission to act, enforced by the executing system. An approved=true written by the agent does not authenticate authorization.'],
+ ['SLO e burn rate','SLO é um objetivo de confiabilidade. Burn rate mede a velocidade de consumo do orçamento de erro; múltiplas janelas ajudam a equilibrar resposta e ruído.','SLO and burn rate','An SLO is a reliability objective. Burn rate measures how fast the error budget is consumed; multiple windows help balance response and noise.'],
+ ['Western Electric','Regras clássicas: um ponto além de 3σ; dois de três além de 2σ do mesmo lado; quatro de cinco além de 1σ do mesmo lado; oito do mesmo lado da média. Exigem interpretação do processo e atenção a falsos alarmes.','Western Electric','Classic rules: one point beyond 3σ; two of three beyond 2σ on the same side; four of five beyond 1σ on the same side; eight on the same side of the mean. They require process interpretation and attention to false alarms.'],
+ ['Remediação limitada','Diagnóstico, precondições, ação permitida, orçamento, verificação e escalonamento. Anomalia ou ausência de métricas não autoriza rollback.','Bounded remediation','Diagnosis, preconditions, allowed action, budget, verification and escalation. An anomaly or missing metrics does not authorize a rollback.'],
+ ['Loop Engineering','Iterar com hipótese e evidência nova, dentro de limites de tempo, custo e tentativas. Ao esgotar o orçamento, registrar o bloqueio e escalar.','Loop Engineering','Iterate with a hypothesis and fresh evidence, within time, cost and attempt limits. When the budget runs out, record the blockage and escalate.']
 ];
 const artifacts={
  'intent.md':'# Intenção — WEBHOOK-042\n\nMODELO DIDÁTICO. Não é uma autorização real.\n\n## Problema\nO suporte depende da engenharia para reenviar webhooks falhos.\n\n## Resultado\nAdministrador solicita um retry de uma entrega do seu tenant e acompanha o resultado.\n\n## Não objetivos\nSem novos destinos, envio em massa ou refatoração global.\n\n## Restrições\nIsolamento de tenant; logs redigidos; uma tentativa ativa por entrega.\n\n## Perguntas\nComo o destino trata duplicidade após timeout? Confirmar antes de prometer garantias.\n\n## Responsável\n[Definir responsável real e registrar aceitação.]',
@@ -360,75 +360,111 @@ const artifacts={
 const primers={
   "intent": {
     "concept": "Intenção define o problema de alguém, o resultado observável e o que fica fora da mudança. Não precisa escolher a tecnologia antes de entender o problema. Perguntas abertas precisam de responsável; não devem virar suposições silenciosas.",
-    "example": "“O suporte consegue solicitar e acompanhar um reenvio sem chamar engenharia” é um resultado. “Adicionar um botão bonito” descreve uma solução, mas não diz como verificar o benefício."
+    "concept_en": "Intent defines someone’s problem, the observable outcome and what stays out of the change. You need not choose the technology before understanding the problem. Open questions need an owner; they should not become silent assumptions.",
+    "example": "“O suporte consegue solicitar e acompanhar um reenvio sem chamar engenharia” é um resultado. “Adicionar um botão bonito” descreve uma solução, mas não diz como verificar o benefício.",
+    "example_en": "“Support can request and track a resend without calling engineering” is an outcome. “Add a pretty button” describes a solution but says nothing about how to verify the benefit."
   },
   "risk": {
     "concept": "O rigor acompanha o dano possível, a reversibilidade e as dependências. As trilhas Fast, Standard e Critical desta campanha são uma política didática: elas não substituem a análise do seu projeto. Uma mudança pequena pode exigir revisão de segurança.",
-    "example": "Alterar uma condição de autorização em uma linha pode expor todos os clientes. Mudar quarenta textos de ajuda pode ser uma tarefa de baixo risco."
+    "concept_en": "Rigor tracks the possible damage, reversibility and dependencies. The Fast, Standard and Critical tracks of this campaign are a teaching policy: they do not replace your project’s analysis. A small change can require a security review.",
+    "example": "Alterar uma condição de autorização em uma linha pode expor todos os clientes. Mudar quarenta textos de ajuda pode ser uma tarefa de baixo risco.",
+    "example_en": "Changing a one-line authorization condition can expose every customer. Changing forty help texts can be a low-risk task."
   },
   "intent-gate": {
     "concept": "Um gate é uma condição de avanço: o conteúdo precisa estar coerente, as decisões materiais precisam ter responsável e a evidência precisa ser suficiente. Um documento existente não significa um requisito aceito.",
-    "example": "Antes de implementar, alguém com autoridade de produto precisa resolver a diferença entre “qualquer usuário” e “somente administradores”. Registrar a decisão elimina a contradição."
+    "concept_en": "A gate is an advancement condition: the content must be coherent, material decisions must have an owner and the evidence must be sufficient. An existing document does not mean an accepted requirement.",
+    "example": "Antes de implementar, alguém com autoridade de produto precisa resolver a diferença entre “qualquer usuário” e “somente administradores”. Registrar a decisão elimina a contradição.",
+    "example_en": "Before implementing, someone with product authority must resolve the difference between “any user” and “administrators only”. Recording the decision removes the contradiction."
   },
   "contracts": {
     "concept": "Uma spec transforma intenção em comportamentos verificáveis, inclusive falhas. Explicite invariantes: quem acessa, quantas operações simultâneas são permitidas, o que é registrado e como lidar com timeouts e duplicatas.",
-    "example": "Timeout é ambíguo: o destino pode ter processado o evento antes de a resposta se perder. Use identidade estável e um contrato de deduplicação; não prometa efeitos exatamente uma vez sem cooperação."
+    "concept_en": "A spec turns intent into verifiable behaviors, including failures. Make invariants explicit: who accesses, how many concurrent operations are allowed, what gets logged and how to handle timeouts and duplicates.",
+    "example": "Timeout é ambíguo: o destino pode ter processado o evento antes de a resposta se perder. Use identidade estável e um contrato de deduplicação; não prometa efeitos exatamente uma vez sem cooperação.",
+    "example_en": "A timeout is ambiguous: the destination may have processed the event before the response was lost. Use a stable identity and a deduplication contract; do not promise exactly-once effects without cooperation."
   },
   "pillars": {
     "concept": "Instrução orienta o executor; evidência registra uma observação verificável; controle efetivo limita a ação. As três camadas se complementam, mas nenhuma muda de natureza porque foi escrita em um arquivo com nome importante.",
-    "example": "“Não leia o segredo” é instrução. Um log de teste rastreável é evidência. Uma identidade sem permissão de leitura é um controle imposto pelo ambiente."
+    "concept_en": "Instruction guides the executor; evidence records a verifiable observation; an effective control limits action. The three layers complement each other, but none changes nature by being written in an importantly named file.",
+    "example": "“Não leia o segredo” é instrução. Um log de teste rastreável é evidência. Uma identidade sem permissão de leitura é um controle imposto pelo ambiente.",
+    "example_en": "“Do not read the secret” is instruction. A traceable test log is evidence. An identity without read permission is a control enforced by the environment."
   },
   "secrets": {
     "concept": "Conteúdo lido de um repositório pode tentar desviar o agente. Esse conteúdo não concede autoridade. Restrinja credenciais, arquivos, conexões de rede e sockets; confira a configuração real, não apenas a palavra “sandbox”.",
-    "example": "Um README que pede para enviar .env a um servidor não autoriza essa saída. Separar o checkout em um worktree também não remove credenciais nem bloqueia conexões."
+    "concept_en": "Content read from a repository can try to steer the agent off course. That content grants no authority. Restrict credentials, files, network connections and sockets; check the actual configuration, not just the word “sandbox”.",
+    "example": "Um README que pede para enviar .env a um servidor não autoriza essa saída. Separar o checkout em um worktree também não remove credenciais nem bloqueia conexões.",
+    "example_en": "A README asking you to send .env to a server does not authorize that egress. Splitting the checkout into a worktree also removes no credentials and blocks no connections."
   },
   "diff": {
     "concept": "Uma mudança coesa reúne a implementação necessária e a prova do comportamento. Retirar testes para diminuir o diff não torna a entrega melhor. Limites numéricos ajudam no exercício, mas coesão, risco e dependências decidem o recorte real.",
-    "example": "O endpoint, o serviço e os testes do retry pertencem à mesma intenção. Uma troca global de tema pode ser útil, mas deve ser justificada e entregue separadamente."
+    "concept_en": "A cohesive change gathers the needed implementation and the proof of behavior. Dropping tests to shrink the diff does not improve the delivery. Numeric limits help the exercise, but cohesion, risk and dependencies decide the real cut.",
+    "example": "O endpoint, o serviço e os testes do retry pertencem à mesma intenção. Uma troca global de tema pode ser útil, mas deve ser justificada e entregue separadamente.",
+    "example_en": "The endpoint, the service and the retry tests belong to the same intent. A global theme swap can be useful, but must be justified and delivered separately."
   },
   "redgreen": {
     "concept": "Primeiro observe o teste falhar pelo motivo esperado: isso demonstra que ele captura a regressão. Faça a correção, verifique os cenários relevantes e só então simplifique. Qualquer alteração posterior pode invalidar a evidência anterior.",
-    "example": "Se a refatoração mudou o filtro de tenant depois do último teste verde, o verde ficou desatualizado. Reexecute os checks para a revisão que será realmente entregue."
+    "concept_en": "First watch the test fail for the expected reason: that demonstrates it captures the regression. Make the fix, verify the relevant scenarios and only then simplify. Any later change can invalidate the earlier evidence.",
+    "example": "Se a refatoração mudou o filtro de tenant depois do último teste verde, o verde ficou desatualizado. Reexecute os checks para a revisão que será realmente entregue.",
+    "example_en": "If the refactor changed the tenant filter after the last green test, that green is stale. Re-run the checks for the revision that will actually ship."
   },
   "delegation": {
     "concept": "Delimite entrada, saída, ferramentas e orçamento de cada executor. Separar implementador e verificador ajuda a distribuir tarefas, mas a independência também depende de permissões, políticas e evidências fora do alcance da mudança.",
-    "example": "O implementador altera o código. O verificador registra resultados e lacunas. A liberação da credencial de produção pertence a um serviço protegido, não à declaração de um dos agentes."
+    "concept_en": "Bound each executor’s input, output, tools and budget. Separating implementer and verifier helps distribute tasks, but independence also depends on permissions, policies and evidence outside the change’s reach.",
+    "example": "O implementador altera o código. O verificador registra resultados e lacunas. A liberação da credencial de produção pertence a um serviço protegido, não à declaração de um dos agentes.",
+    "example_en": "The implementer changes the code. The verifier records results and gaps. Releasing the production credential belongs to a protected service, not to one of the agents’ say-so."
   },
   "patch": {
     "concept": "Filtrar só pelo ID não garante isolamento entre tenants. A consulta precisa respeitar o escopo autorizado. Em uma API real, obtenha o tenant da identidade autenticada e autorizada, não de um campo arbitrário enviado pelo cliente.",
-    "example": "Os microtestes abaixo usam um tenant já fornecido para ilustrar o filtro. Eles não exercitam autenticação, papéis de administrador, banco real ou concorrência: não demonstram a segurança da API inteira."
+    "concept_en": "Filtering by ID alone does not guarantee isolation between tenants. The query must respect the authorized scope. In a real API, take the tenant from the authenticated, authorized identity, not from an arbitrary client-supplied field.",
+    "example": "Os microtestes abaixo usam um tenant já fornecido para ilustrar o filtro. Eles não exercitam autenticação, papéis de administrador, banco real ou concorrência: não demonstram a segurança da API inteira.",
+    "example_en": "The microtests below use a provided tenant to illustrate the filter. They do not exercise authentication, admin roles, a real database or concurrency: they do not demonstrate the whole API’s security."
   },
   "evidence": {
     "concept": "Evidência precisa relacionar requisito, revisão do código, política, artefato e execução confiável. Mesmo um resultado rastreável demonstra apenas o que seus checks exercitaram. Registre também lacunas e verificações que não rodaram.",
-    "example": "Um teste verde do commit anterior não aprova automaticamente o commit atual. Um JSON dizendo passed=true sem execução vinculada é uma alegação, não a prova."
+    "concept_en": "Evidence must link requirement, code revision, policy, artifact and a trustworthy run. Even a traceable result demonstrates only what your checks exercised. Record gaps and verifications that did not run too.",
+    "example": "Um teste verde do commit anterior não aprova automaticamente o commit atual. Um JSON dizendo passed=true sem execução vinculada é uma alegação, não a prova.",
+    "example_en": "A green test on the previous commit does not automatically approve the current commit. A JSON saying passed=true with no attached run is a claim, not proof."
   },
   "evals": {
     "concept": "Testes da aplicação avaliam o comportamento do produto. Evals do agente avaliam como o executor interpreta a tarefa, respeita escopo, usa ferramentas e relata limites. Uma camada não substitui a outra.",
-    "example": "“Duas chamadas não duplicam a tentativa” testa o serviço. “O agente informa que não conseguiu executar os testes” avalia o executor. Use casos negativos e execuções repetidas."
+    "concept_en": "Application tests evaluate product behavior. Agent evals evaluate how the executor interprets the task, respects scope, uses tools and reports limits. Neither layer replaces the other.",
+    "example": "“Duas chamadas não duplicam a tentativa” testa o serviço. “O agente informa que não conseguiu executar os testes” avalia o executor. Use casos negativos e execuções repetidas.",
+    "example_en": "“Two calls do not duplicate the attempt” tests the service. “The agent reports it could not run the tests” evaluates the executor. Use negative cases and repeated runs."
   },
   "review": {
     "concept": "As três perspectivas procuram defeitos de comportamento, exposição a abuso e descumprimento da política aplicável. Um achado útil descreve condição de ocorrência, impacto, localização e evidência; não apenas uma impressão geral.",
-    "example": "Um token no log é um achado de segurança. Uma retenção maior que a política acordada é de conformidade. Os 30 dias desta campanha são fictícios, não uma obrigação legal universal."
+    "concept_en": "The three perspectives hunt for behavior defects, exposure to abuse and breach of applicable policy. A useful finding describes occurrence condition, impact, location and evidence — not just a general impression.",
+    "example": "Um token no log é um achado de segurança. Uma retenção maior que a política acordada é de conformidade. Os 30 dias desta campanha são fictícios, não uma obrigação legal universal.",
+    "example_en": "A token in a log is a security finding. Retention longer than the agreed policy is compliance. The 30 days in this campaign are fictional, not a universal legal obligation."
   },
   "gate": {
     "concept": "Um gate de release precisa ligar a revisão verificada à aprovação, à política confiável e à identidade de deploy. A candidata não pode reescrever sozinha a regra que a autoriza. A infraestrutura deve limitar o poder do executor.",
-    "example": "RELEASE_APPROVAL=approved no workspace não autentica aprovação. A evidência e o artefato devem corresponder à revisão aceita por uma autoridade externa e protegida."
+    "concept_en": "A release gate must tie the verified revision to the approval, the trusted policy and the deploy identity. The candidate cannot rewrite alone the rule that authorizes it. Infrastructure must limit the executor’s power.",
+    "example": "RELEASE_APPROVAL=approved no workspace não autentica aprovação. A evidência e o artefato devem corresponder à revisão aceita por uma autoridade externa e protegida.",
+    "example_en": "RELEASE_APPROVAL=approved in the workspace does not authenticate approval. Evidence and artifact must match the revision accepted by an external, protected authority."
   },
   "guardrail": {
     "concept": "Proteger os testes sem proteger o comando de teste, a política e a revisão deixa caminhos para esconder a falha. Políticas podem evoluir, mas uma proposta não deve aprovar a si mesma. Hooks auxiliares não substituem limites externos.",
-    "example": "Remover um check obrigatório para passar uma feature altera o verificador. Separe essa proposta e exija a revisão apropriada. Confira evento, versão e comportamento de falha do hook."
+    "concept_en": "Protecting the tests without protecting the test command, the policy and the review leaves paths to hide the failure. Policies can evolve, but a proposal must not approve itself. Auxiliary hooks do not replace external limits.",
+    "example": "Remover um check obrigatório para passar uma feature altera o verificador. Separe essa proposta e exija a revisão apropriada. Confira evento, versão e comportamento de falha do hook.",
+    "example_en": "Removing a mandatory check to pass a feature changes the verifier. Split that proposal out and require the proper review. Check the hook’s event, version and failure behavior."
   },
   "bands": {
     "concept": "Um detector aponta um sinal; ele não determina sozinho a causa nem concede permissão para agir. Avalie atualidade da telemetria, baseline e falsos alarmes. Ausência de métricas significa estado desconhecido, não recuperação.",
-    "example": "Burn rate expressa consumo do orçamento de erro. Mesmo com um sinal forte, um rollback pode ser incompatível com uma migração já executada; precondições continuam obrigatórias."
+    "concept_en": "A detector points at a signal; it does not by itself determine cause or grant permission to act. Evaluate telemetry freshness, baseline and false alarms. Missing metrics mean unknown state, not recovery.",
+    "example": "Burn rate expressa consumo do orçamento de erro. Mesmo com um sinal forte, um rollback pode ser incompatível com uma migração já executada; precondições continuam obrigatórias.",
+    "example_en": "Burn rate expresses error-budget consumption. Even with a strong signal, a rollback may be incompatible with an already-executed migration; preconditions remain mandatory."
   },
   "incident": {
     "concept": "Uma resposta limitada valida os sinais, consulta precondições e aplica apenas a ação preautorizada dentro do orçamento. Depois verifica o efeito. Se a recuperação não for demonstrada, escale em vez de repetir ações sem limite.",
-    "example": "Nesta campanha, pausar novos retries não interrompe trabalhos já em andamento. A degradação pode persistir. Escalar transfere a condução do incidente; não equivale a declarar o serviço saudável."
+    "concept_en": "A bounded response validates the signals, checks preconditions and applies only the pre-authorized action within budget. Then it verifies the effect. If recovery is not demonstrated, escalate instead of repeating actions without limit.",
+    "example": "Nesta campanha, pausar novos retries não interrompe trabalhos já em andamento. A degradação pode persistir. Escalar transfere a condução do incidente; não equivale a declarar o serviço saudável.",
+    "example_en": "In this campaign, pausing new retries does not stop work already in flight. Degradation may persist. Escalating hands over the incident; it does not equal declaring the service healthy."
   },
   "loop": {
     "concept": "Manutenção fecha o ciclo: preserve evidência, trate hipóteses como hipóteses e transforme o problema em uma nova intenção. A prevenção precisa de escopo, critérios e observação após a entrega; não é uma ordem ilimitada de reescrever produção.",
-    "example": "Uma correção de retries deve ter teste de regressão e sinais de acompanhamento. Código entregue mais rápido não basta se o esforço de revisão ou a recorrência de incidentes aumentar."
+    "concept_en": "Maintenance closes the loop: preserve evidence, treat hypotheses as hypotheses and turn the problem into a new intent. Prevention needs scope, criteria and post-delivery observation; it is not an unlimited order to rewrite production.",
+    "example": "Uma correção de retries deve ter teste de regressão e sinais de acompanhamento. Código entregue mais rápido não basta se o esforço de revisão ou a recorrência de incidentes aumentar.",
+    "example_en": "A retry fix should carry a regression test and follow-up signals. Code delivered faster is not enough if review effort or incident recurrence grows."
   }
 };
 
@@ -443,7 +479,18 @@ const selectionReasons={
   "migration": "A renomeação global introduz risco e dependências sem relação necessária com o contrato do retry.",
   " theme": "O redesign não implementa nem verifica o retry; entregue essa intenção separadamente."
 };
-for (const m of missions) for (const t of m.tasks) if (["select","diff"].includes(t.type)) for (const o of t.options) if (!t.answer.includes(o.id)) o.why=selectionReasons[o.id] || "Esta mudança não implementa nem verifica o objetivo do retry; mantenha-a fora desta fatia.";
+const selectionReasonsEn={
+  "rewrite": "Choosing a rewrite before investigating widens the scope without demonstrating it solves the pain.",
+  "promise": "You cannot guarantee every destination’s behavior; define an outcome within the team’s control.",
+  "nice": "Adjectives like modern and elegant define no observation that could refute the requirement.",
+  "once": "The response can be lost after the effect at the destination. That guarantee requires a contract and external cooperation.",
+  "prompt": "A sentence guides, but does not prevent reads or network egress while the permission remains available.",
+  "worktree": "A worktree separates working files; it does not automatically isolate network, credentials or processes.",
+  "cleanup": "The global cleanup is not needed to prove the retry and enlarges the review surface.",
+  "migration": "The global rename introduces risk and dependencies with no necessary relation to the retry contract.",
+  " theme": "The redesign neither implements nor verifies the retry; deliver that intent separately."
+};
+for (const m of missions) for (const t of m.tasks) if (["select","diff"].includes(t.type)) for (const o of t.options) if (!t.answer.includes(o.id)){o.why=selectionReasons[o.id] || "Esta mudança não implementa nem verifica o objetivo do retry; mantenha-a fora desta fatia.";o.why_en=selectionReasonsEn[o.id] || "This change neither implements nor verifies the retry goal; keep it out of this slice.";}
 const data={version:1,missions,glossary,sources,artifacts,primers};
 if(typeof module==='object'&&module.exports)module.exports=data; else root.QuestData=data;
 })(typeof globalThis!=='undefined'?globalThis:this);
@@ -463,39 +510,56 @@ const data={
       "id": "discover",
       "skill": "tlc-discover",
       "name": "Investigue antes de decidir",
+      "name_en": "Investigate before deciding",
       "role": "A investigadora",
+      "role_en": "The investigator",
       "glyph": "◎",
       "stage": "Planejar + Projetar",
+      "stage_en": "Plan + Design",
       "artifact": ".design/retry-webhook.md",
       "source": "https://agent-skills.techleads.club/skills/tlc-discover/",
       "brief": "Recupere o problema, respeite decisões já tomadas e entregue uma direção explícita.",
+      "brief_en": "Recover the problem, respect decisions already made and deliver an explicit direction.",
       "input": "Ideia, contexto do projeto e decisões ainda abertas.",
+      "input_en": "An idea, project context and still-open decisions.",
       "output": "Veredito e design; ou uma decisão justificada de não construir.",
+      "output_en": "A verdict and design; or a justified decision not to build.",
       "prompt": "Use tlc-discover para explorar o retry de webhooks. Leia primeiro o contexto e as convenções disponíveis. Separe fatos de decisões de produto. A decisão de construir ainda está aberta: esclareça problema, alternativas menores e sucesso esperado antes de propor a arquitetura. Registre lacunas sem inventar métricas.",
+      "prompt_en": "Use tlc-discover to explore the webhook retry. Read the available context and conventions first. Separate facts from product decisions. The build decision is still open: clarify problem, smaller alternatives and expected success before proposing the architecture. Record gaps without inventing metrics.",
       "tasks": [
         {
           "id": "tlc-situation",
           "type": "choice",
           "title": "Primeiro, descubra onde estamos.",
+          "title_en": "First, find out where we are.",
           "lead": "Cenário fictício: a equipe diz “precisamos de Kafka para os retries”. Você não sabe se o produto está em uso nem o que já existe. Qual é o próximo movimento?",
+          "lead_en": "Fictional scenario: the team says “we need Kafka for the retries”. You do not know whether the product is in use or what already exists. What is the next move?",
           "concept": "Uma tecnologia sugerida não define o problema. Investigue situação, compromissos e trabalho em andamento; uma decisão de produto não deve ser inferida do silêncio.",
+          "concept_en": "A suggested technology does not define the problem. Investigate situation, commitments and work in progress; a product decision should not be inferred from silence.",
           "example": "Pergunta útil: o suporte reenvia manualmente porque falta uma ação, porque o serviço falha ou porque a plataforma ainda está sendo construída?",
+          "example_en": "Useful question: does support resend manually because an action is missing, because the service fails, or because the platform is still being built?",
           "success": "Você recuperou o problema antes de escolher a tecnologia. O próximo artefato não nasce de uma premissa inventada.",
+          "success_en": "You recovered the problem before choosing the technology. The next artifact is not born from an invented premise.",
           "options": [
             {
               "id": "stack",
               "label": "Escolher Kafka e só depois procurar uma justificativa.",
-              "why": "Isso transforma uma preferência técnica em uma decisão de produto."
+              "label_en": "Choose Kafka first and only then look for a justification.",
+              "why": "Isso transforma uma preferência técnica em uma decisão de produto.",
+              "why_en": "That turns a technical preference into a product decision."
             },
             {
               "id": "situation",
               "label": "Ler o contexto e esclarecer problema, uso atual e compromissos.",
+              "label_en": "Read the context and clarify problem, current usage and commitments.",
               "why": ""
             },
             {
               "id": "zero",
               "label": "Concluir que não há demanda porque não existem métricas.",
-              "why": "Ausência de instrumentação não demonstra ausência de demanda."
+              "label_en": "Conclude there is no demand because there are no metrics.",
+              "why": "Ausência de instrumentação não demonstra ausência de demanda.",
+              "why_en": "Lack of instrumentation does not demonstrate lack of demand."
             }
           ],
           "answer": "situation"
@@ -504,38 +568,49 @@ const data={
           "id": "tlc-verdict",
           "type": "classify",
           "title": "Nem toda conversa precisa de outro “sim”.",
+          "title_en": "Not every conversation needs another “yes”.",
           "lead": "Classifique a saída de cada situação. Aqui, a decisão de construir e a decisão técnica são coisas diferentes.",
+          "lead_en": "Classify the outcome of each situation. Here, the build decision and the technical decision are different things.",
           "concept": "Quando a decisão está aberta, o veredito pode encerrar, adiar ou reduzir o trabalho. Um compromisso já registrado não precisa de uma aprovação encenada. Impacto alto e pouca clareza pedem investigação delimitada.",
+          "concept_en": "While the decision is open, the verdict can end, postpone or shrink the work. A recorded commitment needs no staged approval. High impact and low clarity call for a bounded investigation.",
           "example": "“Retry para administradores já aprovado por Ana” é entrada. “Migrar todos os dados sem entender compatibilidade” continua sendo uma dúvida material.",
+          "example_en": "“Retry for administrators already approved by Ana” is input. “Migrate all the data without understanding compatibility” is still a material doubt.",
           "success": "Você preservou decisões reais e interrompeu apenas o que ainda precisava ser esclarecido.",
+          "success_en": "You preserved real decisions and interrupted only what still needed clarifying.",
           "groups": [
             [
               "gate",
-              "Apresentar veredito e aguardar decisão"
+              "Apresentar veredito e aguardar decisão",
+              "Present the verdict and await a decision"
             ],
             [
               "record",
-              "Registrar compromisso e trabalhar a forma"
+              "Registrar compromisso e trabalhar a forma",
+              "Record the commitment and work the shape"
             ],
             [
               "spike",
-              "RFC ou spike com limite e pergunta"
+              "RFC ou spike com limite e pergunta",
+              "RFC or spike with a limit and a question"
             ]
           ],
           "items": [
             {
               "id": "open",
               "text": "Construir ou não o retry ainda está em discussão.",
+              "text_en": "Whether to build the retry is still under discussion.",
               "answer": "gate"
             },
             {
               "id": "committed",
               "text": "A responsável já aprovou o retry; nada contradiz a decisão.",
+              "text_en": "The owner already approved the retry; nothing contradicts the decision.",
               "answer": "record"
             },
             {
               "id": "unclear",
               "text": "Migração irreversível com comportamento do provedor desconhecido.",
+              "text_en": "Irreversible migration with unknown provider behavior.",
               "answer": "spike"
             }
           ]
@@ -544,35 +619,47 @@ const data={
           "id": "tlc-design",
           "type": "select",
           "title": "Prepare um design que outro agente entenda.",
+          "title_en": "Prepare a design another agent can understand.",
           "lead": "Neste caso fictício, o retry para administradores já foi aprovado. Selecione três registros que ajudam no handoff, sem tratar suposições como fatos.",
+          "lead_en": "In this fictional case, the administrator retry is already approved. Select three records that help the handoff, without treating assumptions as facts.",
           "concept": "O design preserva decisões concretas, fronteiras e o motivo das escolhas. É possível manter perguntas abertas explicitamente; “decidido” não é sinônimo de texto confiante.",
+          "concept_en": "The design preserves concrete decisions, boundaries and the reason for choices. Open questions can stay explicit; “decided” is not a synonym for confident prose.",
           "example": "Decisão: somente admin do tenant. Fronteira: sem reenvio em massa. Lacuna: comportamento do destino após um timeout ainda precisa de confirmação.",
+          "example_en": "Decision: tenant admins only. Boundary: no bulk resend. Gap: the destination’s behavior after a timeout still needs confirmation.",
           "success": "O handoff distingue contrato, escopo e incerteza. tlc-plan pode localizar o que está decidido e o que ainda bloqueia.",
+          "success_en": "The handoff tells contract, scope and uncertainty apart. tlc-plan can locate what is decided and what still blocks.",
           "options": [
             {
               "id": "decision",
               "label": "Registrar quem aprovou: somente administradores do próprio tenant.",
+              "label_en": "Record who approved: tenant administrators only.",
               "why": ""
             },
             {
               "id": "boundary",
               "label": "Registrar que reenvio em massa fica fora desta rodada.",
+              "label_en": "Record that bulk resend stays out of this round.",
               "why": ""
             },
             {
               "id": "unknown",
               "label": "Marcar a política de duplicatas no destino como questão aberta.",
+              "label_en": "Mark the destination’s duplicate policy as an open question.",
               "why": ""
             },
             {
               "id": "guess",
               "label": "Garantir exatamente uma entrega em qualquer destino.",
-              "why": "Essa garantia não foi decidida nem demonstrada."
+              "label_en": "Guarantee exactly one delivery to any destination.",
+              "why": "Essa garantia não foi decidida nem demonstrada.",
+              "why_en": "That guarantee was neither decided nor demonstrated."
             },
             {
               "id": "metric",
               "label": "Inventar uma economia de 90% para fortalecer o argumento.",
-              "why": "Métrica inventada não é evidência de necessidade ou resultado."
+              "label_en": "Invent a 90% saving to strengthen the argument.",
+              "why": "Métrica inventada não é evidência de necessidade ou resultado.",
+              "why_en": "An invented metric is not evidence of need or outcome."
             }
           ],
           "answer": [
@@ -585,25 +672,35 @@ const data={
           "id": "tlc-success",
           "type": "choice",
           "title": "Publicar é saída. Resolver é resultado.",
+          "title_en": "Shipping is output. Solving is outcome.",
           "lead": "O suporte registra, neste exercício, 40 minutos por dia de reenvio manual. Qual definição permite avaliar se o trabalho valeu a pena?",
+          "lead_en": "In this exercise support logs 40 minutes per day of manual resending. Which definition lets you evaluate whether the work paid off?",
           "concept": "O resultado de produto é observado após a entrega. Ele não deve ser transformado artificialmente em um teste unitário que “prova” um impacto de negócio.",
+          "concept_en": "A product outcome is observed after delivery. It should not be artificially turned into a unit test that “proves” a business impact.",
           "example": "Critério técnico: uma entrega elegível gera uma tentativa. Resultado de produto: reduzir a intervenção manual, medido com o suporte após a adoção.",
+          "example_en": "Technical criterion: an eligible delivery creates an attempt. Product outcome: less manual intervention, measured with support after adoption.",
           "success": "A aposta agora pode ser revisada. A meta de negócio não será usada como um check fictício no merge.",
+          "success_en": "The bet can now be revisited. The business goal will not be used as a fictitious merge check.",
           "options": [
             {
               "id": "shipped",
               "label": "Sucesso é fazer merge de qualquer implementação.",
-              "why": "Merge não mostra se o trabalho manual diminuiu."
+              "label_en": "Success is merging any implementation.",
+              "why": "Merge não mostra se o trabalho manual diminuiu.",
+              "why_en": "A merge does not show whether manual work decreased."
             },
             {
               "id": "outcome",
               "label": "Meta acordada: menos de 15 min/dia após duas semanas; Ana revisa a medição.",
+              "label_en": "Agreed target: under 15 min/day after two weeks; Ana reviews the measurement.",
               "why": ""
             },
             {
               "id": "unit",
               "label": "Um teste retorna “15”; isso prova a economia de tempo.",
-              "why": "Um valor programado no teste não mede o trabalho do suporte."
+              "label_en": "A test returns “15”; that proves the time saving.",
+              "why": "Um valor programado no teste não mede o trabalho do suporte.",
+              "why_en": "A value programmed into the test does not measure support’s work."
             }
           ],
           "answer": "outcome"
@@ -614,39 +711,56 @@ const data={
       "id": "plan",
       "skill": "tlc-plan",
       "name": "Transforme decisão em trabalho",
+      "name_en": "Turn decision into work",
       "role": "O planejador",
+      "role_en": "The planner",
       "glyph": "◇",
       "stage": "Projetar + Construir",
+      "stage_en": "Design + Build",
       "artifact": ".tasks/retry-webhook.md",
       "source": "https://agent-skills.techleads.club/skills/tlc-plan/",
       "brief": "Corte por resultado observável, investigue nove dimensões e exponha lacunas sem inventar escopo.",
+      "brief_en": "Cut by observable outcome, investigate nine dimensions and expose gaps without inventing scope.",
       "input": "Uma decisão: ticket, design, PRD, RFC ou conversa.",
+      "input_en": "A decision: ticket, design, PRD, RFC or conversation.",
       "output": "Tarefa com critérios, fronteira, decisões e questões não resolvidas.",
+      "output_en": "A task with criteria, boundary, decisions and unresolved questions.",
       "prompt": "Use tlc-plan sobre .design/retry-webhook.md. Leia a fonte por inteiro e confronte-a com o código. Defina fatias verticais e critérios observáveis com valores concretos. Faça o surface walk e registre as nove dimensões em Swept, sem inventar novos requisitos. Diferencie open, blocks build e blocks go-live. Gere .tasks/retry-webhook.md.",
+      "prompt_en": "Use tlc-plan on .design/retry-webhook.md. Read the source in full and confront it with the code. Define vertical slices and observable criteria with concrete values. Do the surface walk and record the nine dimensions under Swept, without inventing new requirements. Tell open, blocks build and blocks go-live apart. Generate .tasks/retry-webhook.md.",
       "tasks": [
         {
           "id": "tlc-slice",
           "type": "choice",
           "title": "Uma fatia que alguém consegue observar.",
+          "title_en": "A slice someone can observe.",
           "lead": "O retry foi aprovado. Qual recorte tem um resultado de ponta a ponta verificável?",
+          "lead_en": "The retry is approved. Which cut has a verifiable end-to-end outcome?",
           "concept": "Uma fatia vertical atravessa as camadas necessárias para entregar um comportamento. Criar estrutura pode ser preparação válida, mas não prova por si só a capacidade prometida.",
+          "concept_en": "A vertical slice crosses the layers needed to deliver a behavior. Creating structure can be valid preparation, but by itself proves nothing about the promised capability.",
           "example": "Um admin solicita retry de uma entrega elegível e vê uma tentativa criada. Banco, serviço e interface podem participar da mesma fatia.",
+          "example_en": "An admin requests a retry of an eligible delivery and sees an attempt created. Database, service and interface can all take part in the same slice.",
           "success": "A primeira entrega prova uma capacidade. As próximas podem aprofundá-la sem perder um ponto de verificação.",
+          "success_en": "The first delivery proves one capability. The next ones can deepen it without losing a checkpoint.",
           "options": [
             {
               "id": "schema",
               "label": "Criar todas as tabelas, sem nenhum caminho que as use.",
-              "why": "É preparação estrutural, não uma capacidade observável."
+              "label_en": "Create every table, with no path that uses them.",
+              "why": "É preparação estrutural, não uma capacidade observável.",
+              "why_en": "That is structural preparation, not an observable capability."
             },
             {
               "id": "vertical",
               "label": "Admin solicita um retry elegível e consulta a tentativa criada.",
+              "label_en": "Admin requests an eligible retry and queries the created attempt.",
               "why": ""
             },
             {
               "id": "ui",
               "label": "Desenhar todos os botões, mas sem executar nenhum comportamento.",
-              "why": "Uma interface sem comportamento não demonstra o retry."
+              "label_en": "Design every button, but run no behavior.",
+              "why": "Uma interface sem comportamento não demonstra o retry.",
+              "why_en": "An interface without behavior does not demonstrate the retry."
             }
           ],
           "answer": "vertical"
@@ -655,72 +769,90 @@ const data={
           "id": "tlc-sweep",
           "type": "classify",
           "title": "As nove dimensões não podem virar nove suposições.",
+          "title_en": "Nine dimensions must not become nine assumptions.",
           "lead": "O texto de cada linha é a fonte deste exercício. Dê um destino a cada dimensão: critério decidido, comportamento existente, não aplicável com motivo ou questão aberta.",
+          "lead_en": "The text of each line is this exercise’s source. Give each dimension a destination: decided criterion, existing behavior, not applicable with a reason, or open question.",
           "concept": "A varredura encontra lacunas; não dá autorização para criar requisitos. Concorrência precisa de uma prova de chamadas simultâneas, não apenas de um teste de duplicata sequencial. n/a exige um motivo sobre a própria mudança, como estado vazio de tela em uma fatia sem tela.",
+          "concept_en": "The sweep finds gaps; it grants no license to create requirements. Concurrency needs a proof of simultaneous calls, not just a sequential duplicate test. n/a requires a reason about the change itself, like an empty screen state in a slice with no screen.",
           "example": "“O guard já cobre esta rota” pede inspeção do código existente. “Ninguém decidiu retenção” pede Unresolved, não um prazo inventado.",
+          "example_en": "“The guard already covers this route” calls for inspecting the existing code. “Nobody decided retention” calls for Unresolved, not an invented deadline.",
           "success": "As nove dimensões têm um destino rastreável. Um campo vazio não será confundido com um risco resolvido.",
+          "success_en": "All nine dimensions have a traceable destination. An empty field will not be mistaken for a resolved risk.",
           "groups": [
             [
               "criterion",
-              "Critério já decidido"
+              "Critério já decidido",
+              "Criterion already decided"
             ],
             [
               "existing",
-              "existing · comportamento verificado"
+              "existing · comportamento verificado",
+              "existing · verified behavior"
             ],
             [
               "na",
-              "n/a · motivo explícito"
+              "n/a · motivo explícito",
+              "n/a · explicit reason"
             ],
             [
               "unresolved",
-              "Unresolved · decisão pendente"
+              "Unresolved · decisão pendente",
+              "Unresolved · decision pending"
             ]
           ],
           "items": [
             {
               "id": "validation",
               "text": "Validação: a spec exige rejeitar ID vazio com 400.",
+              "text_en": "Validation: the spec requires rejecting an empty ID with 400.",
               "answer": "criterion"
             },
             {
               "id": "failure",
               "text": "Falhas: a spec define resposta 404 para entrega ausente.",
+              "text_en": "Failures: the spec defines a 404 response for a missing delivery.",
               "answer": "criterion"
             },
             {
               "id": "idempotency",
               "text": "Idempotência/retry: o mecanismo de deduplicação foi inspecionado e permanece igual.",
+              "text_en": "Idempotency/retry: the deduplication mechanism was inspected and stays the same.",
               "answer": "existing"
             },
             {
               "id": "authorization",
               "text": "Autorização: a spec exige admin e isolamento entre tenants.",
+              "text_en": "Authorization: the spec requires admin and isolation between tenants.",
               "answer": "criterion"
             },
             {
               "id": "concurrency",
               "text": "Concorrência/ordem: ninguém decidiu o resultado de duas solicitações simultâneas.",
+              "text_en": "Concurrency/ordering: nobody decided the outcome of two simultaneous requests.",
               "answer": "unresolved"
             },
             {
               "id": "lifecycle",
               "text": "Ciclo de dados: a política de retenção das novas tentativas não foi decidida.",
+              "text_en": "Data lifecycle: the retention policy for new attempts was not decided.",
               "answer": "unresolved"
             },
             {
               "id": "dependency",
               "text": "Dependência externa: o adaptador atual já converte timeout em estado failed; verificado.",
+              "text_en": "External dependency: the current adapter already converts timeout into failed state; verified.",
               "answer": "existing"
             },
             {
               "id": "state",
               "text": "Transições: a spec define queued → processing → succeeded ou failed.",
+              "text_en": "Transitions: the spec defines queued → processing → succeeded or failed.",
               "answer": "criterion"
             },
             {
               "id": "observability",
               "text": "Observabilidade: os eventos de auditoria e a política de redação existentes foram inspecionados e permanecem iguais.",
+              "text_en": "Observability: the existing audit events and redaction policy were inspected and stay the same.",
               "answer": "existing"
             }
           ]
@@ -729,38 +861,49 @@ const data={
           "id": "tlc-criteria",
           "type": "classify",
           "title": "O número certo na camada certa.",
+          "title_en": "The right number in the right layer.",
           "lead": "Classifique as três afirmações. Ter um número na frase não torna tudo verificável por uma única execução.",
+          "lead_en": "Classify the three statements. Having a number in the sentence does not make everything verifiable by a single run.",
           "concept": "Um critério técnico deve nomear comportamento e valores observáveis. Percentis e taxas são propriedades de amostras; metas de serviço exigem uma medição apropriada.",
+          "concept_en": "A technical criterion must name behavior and observable values. Percentiles and rates are properties of samples; service targets require an appropriate measurement.",
           "example": "Um teste HTTP verifica o 404. Um estudo de latência mede p95 em uma janela e carga definidas. “Rápido” não define nenhum dos dois.",
+          "example_en": "An HTTP test verifies the 404. A latency study measures p95 over a defined window and load. “Fast” defines neither.",
           "success": "Você não usou um teste pequeno para alegar algo sobre uma distribuição inteira.",
+          "success_en": "You did not use a small test to claim something about a whole distribution.",
           "groups": [
             [
               "check",
-              "Critério técnico observável"
+              "Critério técnico observável",
+              "Observable technical criterion"
             ],
             [
               "target",
-              "Meta de serviço / medição"
+              "Meta de serviço / medição",
+              "Service target / measurement"
             ],
             [
               "vague",
-              "Vago: falta decisão"
+              "Vago: falta decisão",
+              "Vague: decision missing"
             ]
           ],
           "items": [
             {
               "id": "http",
               "text": "Consultar uma entrega ausente retorna HTTP 404.",
+              "text_en": "Querying a missing delivery returns HTTP 404.",
               "answer": "check"
             },
             {
               "id": "latency",
               "text": "p95 de latência abaixo de 300 ms na janela e carga acordadas.",
+              "text_en": "p95 latency under 300 ms over the agreed window and load.",
               "answer": "target"
             },
             {
               "id": "fast",
               "text": "A experiência deve ser rápida e robusta.",
+              "text_en": "The experience should be fast and robust.",
               "answer": "vague"
             }
           ]
@@ -769,25 +912,35 @@ const data={
           "id": "tlc-task-pr",
           "type": "choice",
           "title": "Tarefa não é sinônimo de pull request.",
+          "title_en": "Task is not a synonym of pull request.",
           "lead": "Uma fonte aprovada contém duas fatias relacionadas. Nenhum bloqueio de ordem, dependência externa ou divisão entre equipes força tarefas separadas. O time quer PRs menores.",
+          "lead_en": "An approved source contains two related slices. No ordering block, external dependency or team split forces separate tasks. The team wants smaller PRs.",
           "concept": "tlc-plan parte de uma tarefa por fonte. Fatias, tarefas e PRs têm papéis diferentes: resultado observável, unidade de trabalho e unidade de revisão.",
+          "concept_en": "tlc-plan starts from one task per source. Slices, tasks and PRs play different roles: observable outcome, unit of work and unit of review.",
           "example": "Uma preparação de migração pode ter sua própria PR e continuar pertencendo à tarefa que prova o comportamento completo.",
+          "example_en": "A migration preparation can have its own PR and still belong to the task that proves the complete behavior.",
           "success": "Você manteve o compromisso verificável e ajustou o tamanho da revisão sem inventar uma regra de fragmentação.",
+          "success_en": "You kept the verifiable commitment and adjusted review size without inventing a fragmentation rule.",
           "options": [
             {
               "id": "one",
               "label": "Manter uma tarefa com as fatias e propor PRs revisáveis segundo as regras do time.",
+              "label_en": "Keep one task with the slices and propose reviewable PRs under the team’s rules.",
               "why": ""
             },
             {
               "id": "layers",
               "label": "Abrir uma tarefa por camada, mesmo sem um resultado observável.",
-              "why": "Isso troca a unidade de verificação pela organização técnica."
+              "label_en": "Open one task per layer, even without an observable outcome.",
+              "why": "Isso troca a unidade de verificação pela organização técnica.",
+              "why_en": "That trades the unit of verification for technical organization."
             },
             {
               "id": "always",
               "label": "Exigir exatamente cinco tarefas porque o framework gosta desse número.",
-              "why": "O número não veio da fonte, das dependências nem da prática da equipe."
+              "label_en": "Require exactly five tasks because the framework likes that number.",
+              "why": "O número não veio da fonte, das dependências nem da prática da equipe.",
+              "why_en": "The number came from neither the source, the dependencies nor team practice."
             }
           ],
           "answer": "one"
@@ -798,34 +951,49 @@ const data={
       "id": "implement",
       "skill": "tlc-implement",
       "name": "Construa. Depois, prove.",
+      "name_en": "Build. Then prove it.",
       "role": "A construtora",
+      "role_en": "The builder",
       "glyph": "⌘",
       "stage": "Construir + Verificar",
+      "stage_en": "Build + Verify",
       "artifact": ".checks/retry-webhook.md",
       "source": "https://agent-skills.techleads.club/skills/tlc-implement/",
       "brief": "Ligue cada check a uma prova, teste contra o código anterior e faça um handoff verificável.",
+      "brief_en": "Tie every check to a proof, test against the previous code and make a verifiable handoff.",
       "input": "Trabalho decidido, critérios e escopo claro.",
+      "input_en": "Decided work, criteria and a clear scope.",
       "output": "Implementação, checklist e relatório de verificação independente.",
+      "output_en": "Implementation, checklist and an independent verification report.",
       "prompt": "Use tlc-implement sobre .tasks/retry-webhook.md. Declare o perfil do projeto e gere .checks/retry-webhook.md antes de editar. Ligue cada check a provas executáveis, sem enfraquecer testes. Ao concluir toda a feature, o orquestrador deve acionar um verificador novo sobre o intervalo completo. Sem essa capacidade, registre a verificação independente pendente; não a simule. Não faça push ou deploy sem autorização explícita.",
+      "prompt_en": "Use tlc-implement on .tasks/retry-webhook.md. Declare the project profile and generate .checks/retry-webhook.md before editing. Tie every check to executable proofs, without weakening tests. When the whole feature is done, the orchestrator must trigger a fresh verifier over the full range. Without that capability, record the independent verification as pending; do not simulate it. Do not push or deploy without explicit authorization.",
       "tasks": [
         {
           "id": "tlc-profile",
           "type": "classify",
           "title": "Escolha o perfil sem esconder seus limites.",
+          "title_en": "Choose the profile without hiding its limits.",
           "lead": "O perfil é declarado pelo projeto. Associe as características ao perfil que as introduz; os perfis seguintes acumulam as verificações anteriores.",
+          "lead_en": "The profile is declared by the project. Match each characteristic to the profile that introduces it; later profiles accumulate the earlier checks.",
           "concept": "light é o padrão documentado; standard adiciona análise de cobertura e política de testes; ui adiciona confronto com fontes visuais vinculantes. Os perfis não são três nomes para a mesma garantia.",
+          "concept_en": "light is the documented default; standard adds coverage analysis and test policy; ui adds confrontation with binding visual sources. The profiles are not three names for the same guarantee.",
           "example": "Uma tela prometida pelo design precisa ser enumerada e confrontada com a implementação. Dizer “unit tests verdes” não demonstra que a tela existe.",
+          "example_en": "A screen promised by the design must be enumerated and confronted with the implementation. Saying “unit tests green” does not demonstrate the screen exists.",
           "success": "O relatório informa o perfil realmente utilizado e o que ele deixa de verificar.",
+          "success_en": "The report states the profile actually used and what it fails to verify.",
           "groups": [
             [
+              "light",
               "light",
               "light"
             ],
             [
               "standard",
+              "standard",
               "standard"
             ],
             [
+              "ui",
               "ui",
               "ui"
             ]
@@ -834,16 +1002,19 @@ const data={
             {
               "id": "base",
               "text": "Padrão sem configuração: provas no HEAD, teste localizado e lacunas declaradas.",
+              "text_en": "Default with no configuration: proofs at HEAD, localized testing and declared gaps.",
               "answer": "light"
             },
             {
               "id": "coverage",
               "text": "Acrescenta Coverage, política de testes e falhas injetadas por superfície de asserção.",
+              "text_en": "Adds Coverage, test policy and injected failures per assertion surface.",
               "answer": "standard"
             },
             {
               "id": "screens",
               "text": "Acrescenta fontes de design vinculantes e enumeração das telas.",
+              "text_en": "Adds binding design sources and enumeration of the screens.",
               "answer": "ui"
             }
           ]
@@ -852,34 +1023,49 @@ const data={
           "id": "tlc-proof-lab",
           "type": "prooflab",
           "title": "Quebre a implementação. Não o teste.",
+          "title_en": "Break the implementation. Not the test.",
           "lead": "Bug reproduzível: a busca retorna uma entrega de outro tenant. Escolha a suíte e a correção, depois execute as três versões. O código roda localmente sobre dados fictícios.",
+          "lead_en": "Reproducible bug: the lookup returns another tenant’s delivery. Choose the suite and the fix, then run the three versions. The code runs locally on fictional data.",
           "concept": "Para este bug, a regressão deve detectar a versão anterior e aceitar a correção. Um mutante que retorna null para tudo verifica se os casos positivos também importam. Esta é uma prova reduzida de consulta, não da API completa.",
+          "concept_en": "For this bug, the regression must detect the previous version and accept the fix. A mutant that returns null for everything checks whether the positive cases matter too. This is a reduced lookup proof, not of the whole API.",
           "example": "Uma suíte que só verifica o acesso do próprio tenant passa mesmo com o vazamento. Uma correção que nega tudo também é defeituosa, embora bloqueie o acesso cruzado.",
-          "success": "A suíte detectou o bug anterior e o mutante, e passou com a correção. Você observou os resultados em vez de confiar na palavra “verde”."
+          "example_en": "A suite that only checks the tenant’s own access passes even with the leak. A fix that denies everything is also defective, even though it blocks cross access.",
+          "success": "A suíte detectou o bug anterior e o mutante, e passou com a correção. Você observou os resultados em vez de confiar na palavra “verde”.",
+          "success_en": "The suite caught the previous bug and the mutant, and passed with the fix. You observed the results instead of trusting the word “green”."
         },
         {
           "id": "tlc-verifier",
           "type": "choice",
           "title": "O verificador não é o último implementador.",
+          "title_en": "The verifier is not the last implementer.",
           "lead": "Duas agentes implementaram partes da feature. O último lote ficou verde. Quem verifica a entrega completa?",
+          "lead_en": "Two agents implemented parts of the feature. The last batch went green. Who verifies the complete delivery?",
           "concept": "Na skill, o orquestrador dispara um novo verificador após todos os lotes, cobrindo a base da feature até HEAD. Handoff desligado não elimina a separação entre autor e verificador.",
+          "concept_en": "In the skill, the orchestrator triggers a fresh verifier after all batches, covering the feature base through HEAD. A disabled handoff does not remove the author/verifier separation.",
           "example": "Só conferir o último diff perde os contratos alterados no primeiro lote. Um relatório honesto identifica o intervalo inteiro e as provas de todos os checks.",
+          "example_en": "Checking only the last diff misses the contracts changed in the first batch. An honest report identifies the whole range and the proofs for every check.",
           "success": "Você preservou o escopo da verificação. Um nome de papel não é uma prova de independência.",
+          "success_en": "You preserved the verification scope. A role name is not proof of independence.",
           "options": [
             {
               "id": "author",
               "label": "A última implementadora se declara independente e dá 10/10.",
-              "why": "Uma autoavaliação não satisfaz a separação exigida."
+              "label_en": "The last implementer declares herself independent and gives 10/10.",
+              "why": "Uma autoavaliação não satisfaz a separação exigida.",
+              "why_en": "A self-assessment does not satisfy the required separation."
             },
             {
               "id": "orchestrator",
               "label": "O orquestrador envia todos os checks e base..HEAD a um verificador novo.",
+              "label_en": "The orchestrator sends every check and base..HEAD to a fresh verifier.",
               "why": ""
             },
             {
               "id": "fake",
               "label": "Sem subagentes, escrever “verificado independentemente” para não bloquear.",
-              "why": "Capacidade indisponível deve ser declarada; o relatório não pode inventar execução."
+              "label_en": "With no subagents, write “independently verified” to avoid blocking.",
+              "why": "Capacidade indisponível deve ser declarada; o relatório não pode inventar execução.",
+              "why_en": "Unavailable capability must be declared; the report cannot invent execution."
             }
           ],
           "answer": "orchestrator"
@@ -888,35 +1074,47 @@ const data={
           "id": "tlc-handoff",
           "type": "select",
           "title": "Passe o estado, não só a história.",
+          "title_en": "Pass the state, not just the story.",
           "lead": "Um lote de fatias completas terminou com todas as suas provas verdes. Escolha três itens para o handoff. O limite de leitura deve caber no harness utilizado.",
+          "lead_en": "A batch of complete slices ended with all its proofs green. Choose three items for the handoff. The reading budget must fit the harness in use.",
           "concept": "O próximo executor recebe checklist e diff, limites fechados e decisões novas. O handoff acontece em uma fronteira coerente; não deve esconder uma fatia incompleta atrás de uma suíte verde.",
+          "concept_en": "The next executor receives checklist and diff, closed limits and new decisions. The handoff happens at a coherent boundary; it must not hide an incomplete slice behind a green suite.",
           "example": "“C1–C3 fechados no commit a12; o limite de tentativas foi esclarecido; a abordagem X foi descartada por incompatibilidade” preserva decisões que o diff sozinho não explica.",
+          "example_en": "“C1–C3 closed in commit a12; the attempt limit was clarified; approach X was dropped for incompatibility” preserves decisions the diff alone does not explain.",
           "success": "O próximo agente recebe os registros necessários para continuar sem reinventar decisões ou repetir uma tentativa abandonada.",
+          "success_en": "The next agent receives the records needed to continue without reinventing decisions or repeating an abandoned attempt.",
           "options": [
             {
               "id": "checks",
               "label": "Checklist e diff, com checks fechados e commit identificado.",
+              "label_en": "Checklist and diff, with closed checks and an identified commit.",
               "why": ""
             },
             {
               "id": "decisions",
               "label": "Esclarecimentos do usuário ainda não registrados em outro artefato.",
+              "label_en": "User clarifications not yet recorded in another artifact.",
               "why": ""
             },
             {
               "id": "rejected",
               "label": "Tentativas abandonadas e o motivo do descarte.",
+              "label_en": "Abandoned attempts and the reason they were dropped.",
               "why": ""
             },
             {
               "id": "story",
               "label": "Somente “está quase pronto, confie em mim”.",
-              "why": "Esse resumo não identifica contratos, commit ou provas."
+              "label_en": "Only “it’s almost done, trust me”.",
+              "why": "Esse resumo não identifica contratos, commit ou provas.",
+              "why_en": "That summary identifies no contracts, commit or proofs."
             },
             {
               "id": "token",
               "label": "Credenciais permanentes de produção para facilitar o próximo lote.",
-              "why": "Handoff não autoriza novos poderes nem exposição de segredos."
+              "label_en": "Permanent production credentials to speed up the next batch.",
+              "why": "Handoff não autoriza novos poderes nem exposição de segredos.",
+              "why_en": "A handoff authorizes no new powers and no secret exposure."
             }
           ],
           "answer": [
@@ -931,44 +1129,63 @@ const data={
       "id": "judge",
       "skill": "the-judge",
       "name": "Julgue a PR com evidências",
+      "name_en": "Judge the PR with evidence",
       "role": "O juiz",
+      "role_en": "The judge",
       "glyph": "⚖",
       "stage": "Verificar + portão de Publicar",
+      "stage_en": "Verify + Deploy gate",
       "artifact": "findings.json",
       "source": "https://agent-skills.techleads.club/skills/the-judge/",
       "brief": "Poucos achados, bem sustentados. Um veredito coerente e uma revisão que converge.",
+      "brief_en": "Few findings, well supported. A coherent verdict and a review that converges.",
       "input": "Uma PR/diff e as verificações reais do repositório.",
+      "input_en": "A PR/diff and the repository’s real checks.",
       "output": "Achados rastreáveis e APPROVE, COMMENT ou REQUEST_CHANGES.",
+      "output_en": "Traceable findings and APPROVE, COMMENT or REQUEST_CHANGES.",
       "prompt": "Use the-judge para revisar esta PR em português. Execute os checks disponíveis, leia o diff e valide cada achado com arquivo:linha ou documentação oficial consultada. Consolide a revisão e use o veredito correspondente às severidades. Nas reavaliações, mantenha IDs, carryover e o contrato de convergência. Sem PR ou autenticação, declare o bloqueio; não diga que publicou uma review.",
+      "prompt_en": "Use the-judge to review this PR in English. Run the available checks, read the diff and validate every finding with file:line or consulted official documentation. Consolidate the review and use the verdict matching the severities. On re-reviews, keep IDs, carryover and the convergence contract. Without a PR or authentication, declare the blockage; do not claim a review was published.",
       "tasks": [
         {
           "id": "tlc-review",
           "type": "reviewlab",
           "title": "Tribunal: o que realmente merece um achado?",
+          "title_en": "Tribunal: what really deserves a finding?",
           "lead": "PR fictícia: a nova linha 4 registra o cabeçalho de autenticação. A leitura confirma o fluxo, e um teste local com token sintético reproduz a exposição. Lint e tipos já foram executados; os demais candidatos estão abaixo.",
+          "lead_en": "Fictional PR: the new line 4 logs the authentication header. Reading confirms the flow, and a local test with a synthetic token reproduces the exposure. Lint and types already ran; the remaining candidates are below.",
           "concept": "Cada achado publicado precisa de evidência. O tooling já relata falhas determinísticas; o revisor concentra os comentários em problemas confirmados que exigem julgamento. Uma falha preexistente vai ao resumo, não vira defeito introduzido pela PR.",
+          "concept_en": "Every published finding needs evidence. Tooling already reports deterministic failures; the reviewer concentrates comments on confirmed problems that require judgment. A pre-existing failure goes to the summary, it does not become a defect introduced by the PR.",
           "example": "F1 → src/retry.ts:4, entrada sintética Authorization e registro capturado: um problema novo de exposição. “Não gosto deste nome” não tem o mesmo impacto.",
+          "example_en": "F1 → src/retry.ts:4, synthetic Authorization input and captured log entry: a new exposure problem. “I don’t like this name” does not have the same impact.",
           "success": "Revisão consolidada preparada: F1 é blocker confirmado, então o veredito é REQUEST_CHANGES. Nada foi enviado ao GitHub.",
+          "success_en": "Consolidated review prepared: F1 is a confirmed blocker, so the verdict is REQUEST_CHANGES. Nothing was sent to GitHub.",
           "options": [
             {
               "id": "F1",
               "label": "F1 · Nova exposição de token em src/retry.ts:4; reprodução confirmada.",
+              "label_en": "F1 · New token exposure in src/retry.ts:4; reproduction confirmed.",
               "why": ""
             },
             {
               "id": "F2",
               "label": "F2 · Repetir em comentário inline o erro que o lint já reportou.",
-              "why": "O resultado do tooling fica em Checks run; não duplique o mesmo aviso inline."
+              "label_en": "F2 · Repeat inline the error lint already reported.",
+              "why": "O resultado do tooling fica em Checks run; não duplique o mesmo aviso inline.",
+              "why_en": "Tooling output lives in the Checks run; do not duplicate the same warning inline."
             },
             {
               "id": "F3",
               "label": "F3 · Tratar bug antigo e não alterado como blocker desta PR.",
-              "why": "Achado preexistente pertence ao resumo, sem mudar o veredito por si só."
+              "label_en": "F3 · Treat an old, unchanged bug as a blocker of this PR.",
+              "why": "Achado preexistente pertence ao resumo, sem mudar o veredito por si só.",
+              "why_en": "A pre-existing finding belongs in the summary, without changing the verdict by itself."
             },
             {
               "id": "F4",
               "label": "F4 · Afirmar de memória que a biblioteca externa está vulnerável.",
-              "why": "Comportamento externo exige fonte oficial atual; sem evidência, não publique a afirmação."
+              "label_en": "F4 · Claim from memory that the external library is vulnerable.",
+              "why": "Comportamento externo exige fonte oficial atual; sem evidência, não publique a afirmação.",
+              "why_en": "External behavior requires a current official source; without evidence, do not publish the claim."
             }
           ],
           "answer": [
@@ -979,20 +1196,28 @@ const data={
           "id": "tlc-severity",
           "type": "classify",
           "title": "Três vereditos, não uma nota de perfeição.",
+          "title_en": "Three verdicts, not a perfection grade.",
           "lead": "Todos os achados abaixo já têm evidência. Use o mapeamento da skill, não uma política universal de todas as equipes.",
+          "lead_en": "All findings below already have evidence. Use the skill’s mapping, not a universal policy for every team.",
           "concept": "Um blocker leva a REQUEST_CHANGES. Sem blocker, um should-fix leva a COMMENT. Sem ambos, APPROVE pode coexistir com nits. O veredito de review não concede credenciais nem faz merge.",
+          "concept_en": "A blocker leads to REQUEST_CHANGES. Without a blocker, one should-fix leads to COMMENT. Without either, APPROVE can coexist with nits. A review verdict grants no credentials and merges nothing.",
           "example": "Um problema de autorização confirmado é blocker. Uma melhoria cosmética não deve produzir um ciclo infinito de pedidos de mudança.",
+          "example_en": "A confirmed authorization problem is a blocker. A cosmetic improvement should not produce an infinite loop of change requests.",
           "success": "O veredito comunica risco e pendências, sem fingir que APPROVE significa ausência de qualquer imperfeição.",
+          "success_en": "The verdict communicates risk and pending items, without pretending APPROVE means free of any imperfection.",
           "groups": [
             [
+              "REQUEST_CHANGES",
               "REQUEST_CHANGES",
               "REQUEST_CHANGES"
             ],
             [
               "COMMENT",
+              "COMMENT",
               "COMMENT"
             ],
             [
+              "APPROVE",
               "APPROVE",
               "APPROVE"
             ]
@@ -1001,16 +1226,19 @@ const data={
             {
               "id": "blocker",
               "text": "1 blocker de acesso entre tenants e 2 nits.",
+              "text_en": "1 cross-tenant access blocker and 2 nits.",
               "answer": "REQUEST_CHANGES"
             },
             {
               "id": "should",
               "text": "Nenhum blocker; 1 should-fix confirmado.",
+              "text_en": "No blocker; 1 confirmed should-fix.",
               "answer": "COMMENT"
             },
             {
               "id": "nit",
               "text": "Nenhum blocker ou should-fix; 2 nits.",
+              "text_en": "No blocker or should-fix; 2 nits.",
               "answer": "APPROVE"
             }
           ]
@@ -1019,25 +1247,35 @@ const data={
           "id": "tlc-carryover",
           "type": "choice",
           "title": "Sem achados novos não significa sem pendências.",
+          "title_en": "No new findings does not mean no pending items.",
           "lead": "Rodada 2: F1 foi corrigido. F2, um blocker da rodada anterior, continua aberto. Nenhum achado novo. Qual é a review correta?",
+          "lead_en": "Round 2: F1 was fixed. F2, a blocker from the previous round, is still open. No new findings. What is the correct review?",
           "concept": "IDs estáveis e a tabela Resolution preservam o histórico. O carryover inclui pendências anteriores no veredito. Olhar apenas a lista de achados novos pode esconder um risco ainda aberto.",
+          "concept_en": "Stable IDs and the Resolution table preserve history. Carryover includes previous pending items in the verdict. Looking only at the new-findings list can hide a still-open risk.",
           "example": "findings: [] com carryover.blocker: 1 continua exigindo REQUEST_CHANGES. A lista vazia não apaga F2.",
+          "example_en": "findings: [] with carryover.blocker: 1 still requires REQUEST_CHANGES. The empty list does not erase F2.",
           "success": "A pendência continuou visível. Você verificou a resolução em vez de reiniciar a revisão do zero.",
+          "success_en": "The pending item stayed visible. You verified the resolution instead of restarting the review from scratch.",
           "options": [
             {
               "id": "approve",
               "label": "APPROVE: a lista de achados novos está vazia.",
-              "why": "F2 continua sendo um blocker, mesmo sem novo comentário."
+              "label_en": "APPROVE: the new-findings list is empty.",
+              "why": "F2 continua sendo um blocker, mesmo sem novo comentário.",
+              "why_en": "F2 is still a blocker, even without a new comment."
             },
             {
               "id": "carry",
               "label": "REQUEST_CHANGES: registrar F1 resolvido, F2 aberto e carryover.blocker = 1.",
+              "label_en": "REQUEST_CHANGES: record F1 resolved, F2 open and carryover.blocker = 1.",
               "why": ""
             },
             {
               "id": "new",
               "label": "Ignorar F2 e abrir dez novas discussões cosméticas.",
-              "why": "Isso troca resolução por novas frentes e viola a convergência."
+              "label_en": "Ignore F2 and open ten new cosmetic discussions.",
+              "why": "Isso troca resolução por novas frentes e viola a convergência.",
+              "why_en": "That trades resolution for new fronts and violates convergence."
             }
           ],
           "answer": "carry"
@@ -1046,25 +1284,35 @@ const data={
           "id": "tlc-converge",
           "type": "choice",
           "title": "Saia do loop pelo motivo certo.",
+          "title_en": "Exit the loop for the right reason.",
           "lead": "Rodada 3: uma divergência continua aberta depois de uma tentativa com nova evidência. O autor pede uma quarta rodada até alguém dar 10/10.",
+          "lead_en": "Round 3: a disagreement is still open after one attempt with new evidence. The author asks for a fourth round until someone gives 10/10.",
           "concept": "O contrato do the-judge limita o mesmo conjunto de achados a três rodadas. Pendências são corrigidas, convertidas em follow-up por acordo ou escaladas. Um blocker real não desaparece por cansaço.",
+          "concept_en": "The the-judge contract caps the same finding set at three rounds. Pending items are fixed, converted to agreed follow-ups or escalated. A real blocker does not vanish from fatigue.",
           "example": "A reavaliação confere resoluções e novos blockers introduzidos pela correção; não é uma caça infinita a nits. Segurança grave descoberta tarde continua sendo reportada.",
+          "example_en": "The re-review checks resolutions and new blockers introduced by the fix; it is not an endless nit hunt. Serious security discovered late is still reported.",
           "success": "Você encerrou a repetição sem aprovar artificialmente. Decisão e risco ficam explícitos; a pessoa responsável assume a divergência.",
+          "success_en": "You ended the repetition without approving artificially. Decision and risk stay explicit; the responsible person owns the disagreement.",
           "options": [
             {
               "id": "inflate",
               "label": "Aumentar a nota automaticamente e declarar perfeição.",
-              "why": "Isso substitui evidência por uma meta artificial."
+              "label_en": "Automatically raise the grade and declare perfection.",
+              "why": "Isso substitui evidência por uma meta artificial.",
+              "why_en": "That replaces evidence with an artificial target."
             },
             {
               "id": "stop",
               "label": "Manter o achado aberto e escalar a divergência; não iniciar a quarta rodada do mesmo conjunto.",
+              "label_en": "Keep the finding open and escalate the disagreement; do not start a fourth round on the same set.",
               "why": ""
             },
             {
               "id": "endless",
               "label": "Revisar indefinidamente, adicionando novas exigências a cada rodada.",
-              "why": "O loop ilimitado faz a review perder escopo e impede convergência."
+              "label_en": "Review indefinitely, adding new requirements every round.",
+              "why": "O loop ilimitado faz a review perder escopo e impede convergência.",
+              "why_en": "The unlimited loop makes the review lose scope and prevents convergence."
             }
           ],
           "answer": "stop"
@@ -1073,6 +1321,7 @@ const data={
     }
   ],
   "notice": "Adaptação didática independente do SDLC Quest, com cenários fictícios. Conteúdo das skills: Tech Leads Club, CC BY 4.0. Consultado em 16/09/2026. Nomes, caminhos e contratos preservados onde indicados; exemplos e mecânicas foram criados para este jogo. Não é produto oficial nem executa agentes, npx, GitHub ou deploy.",
+  "notice_en": "An independent teaching adaptation of SDLC Quest with fictional scenarios. Skill content: Tech Leads Club, CC BY 4.0. Consulted on 2026-09-16. Names, paths and contracts preserved where indicated; examples and mechanics were created for this game. Not an official product, and it runs no agents, npx, GitHub or deploy.",
   "stageMap": [
     [
       "discover"
@@ -1874,6 +2123,7 @@ const F=(record,name)=>QL.field(record,name,QL.get());
 const locale=()=>QL.get()==='en'?'en-US':'pt-BR';
 /* Tuples like [id,label] may grow a third label_en slot; pt stays index 1. */
 const tupleLabel=t=>QL.get()==='en'&&t.length>2?t[2]:t[1];
+const previewTitle=t=>{const s=F(t,'title');return QL.get()==='en'?s:s.replace('Equipe-se contra o ','').replace('Enfrente o ','').replace('Derrote o ','');};
 const CHROME={
 pt:{skip:'Ir para as missões',brandAria:'SDLC Quest, voltar ao mapa',brandTag:'GUARDIÕES DO RELEASE',campaign:'CAMPANHA 01',campaignName:'A FEATURE PERDIDA',toolsAria:'Ferramentas do jogo',bookAria:'Manual de engenharia',book:'Manual',langAria:'Trocar idioma para inglês',langCode:'EN',bagAria:'Artefatos da jornada',bag:'Artefatos',settingsAria:'Configurações e ajuda',eyebrow:'APRENDA CONSTRUINDO. VENÇA VERIFICANDO.',h1a:'Da intenção ao',headingLead:'Uma aventura de engenharia com IA. O código é só parte da missão.',quickStart:'Jogar missão disponível →',challenges:'DESAFIOS',tlcBannerAria:'Expansão TLC AI Dev Flow',harnessBannerAria:'Laboratório de execução com gates',worldAria:'Mapa da campanha',mapCaption:'6 estações · 1 ciclo',worldCanvasAria:'Ilhas isométricas das seis etapas. Use os botões de missão abaixo para navegar.',worldTip:'Toque em uma estação para explorar',mapAvailable:'Disponível',mapLocked:'Ainda bloqueada',missionPanelAria:'Missão selecionada',stageNavAria:'Etapas do SDLC',bottomEyebrow:'O QUE REALMENTE PROTEGE UMA ENTREGA',pillar1:'Intenção clara',pillar2:'Evidência real',pillar3:'Autoridade limitada',howToPlay:'Como jogar',footerNote:'Um laboratório para aprender, não um acesso à produção.',noscript:'<p class="noscript">Este jogo precisa de JavaScript ativado no navegador. Não requer internet.</p>',docTitle:'SDLC Quest v1.3 — Laboratório de execução'},
 en:{skip:'Go to the missions',brandAria:'SDLC Quest, back to the map',brandTag:'GUARDIANS OF THE RELEASE',campaign:'CAMPAIGN 01',campaignName:'THE LOST FEATURE',toolsAria:'Game tools',bookAria:'Engineering manual',book:'Manual',langAria:'Switch language to Portuguese',langCode:'PT',bagAria:'Journey artifacts',bag:'Artifacts',settingsAria:'Settings and help',eyebrow:'LEARN BY BUILDING. WIN BY VERIFYING.',h1a:'From intent to',headingLead:'An engineering adventure with AI. Code is only part of the mission.',quickStart:'Play the available mission →',challenges:'CHALLENGES',tlcBannerAria:'TLC AI Dev Flow expansion',harnessBannerAria:'Execution lab with gates',worldAria:'Campaign map',mapCaption:'6 stations · 1 cycle',worldCanvasAria:'Isometric islands of the six stages. Use the mission buttons below to navigate.',worldTip:'Tap a station to explore',mapAvailable:'Available',mapLocked:'Still locked',missionPanelAria:'Selected mission',stageNavAria:'SDLC stages',bottomEyebrow:'WHAT REALLY PROTECTS A DELIVERY',pillar1:'Clear intent',pillar2:'Real evidence',pillar3:'Limited authority',howToPlay:'How to play',footerNote:'A lab for learning, not production access.',noscript:'<p class="noscript">This game needs JavaScript enabled in the browser. It does not require internet.</p>',docTitle:'SDLC Quest v1.3 — Execution lab'}
@@ -1907,8 +2157,8 @@ function renderHome(){
  const st=C.stats(state,D),m=D.missions[state.selected],open=C.canOpen(state,D,state.selected),finished=m.tasks.every(t=>state.done[t.id]);
  $('#xp').textContent=st.xp.toLocaleString(locale());$('#progress-fraction').textContent=`${st.done}/18`;$('#bag-count').textContent=st.completed;
  $('#rank').textContent=st.completed===6?SN('ranks').guardian:st.completed>=4?SN('ranks').evidence:st.completed>=2?SN('ranks').architect:SN('ranks').apprentice;
- $('#stage-nav').innerHTML=D.missions.map((mission,i)=>{const allowed=C.canOpen(state,D,i),complete=mission.tasks.every(t=>state.done[t.id]);return `<button class="stage-node" data-stage="${i}" aria-current="${i===state.selected}" data-locked="${!allowed}" aria-label="${i+1}. ${esc(mission.name)}: ${complete?T('stageAriaDone'):allowed?T('stageAriaOpen'):T('stageAriaLocked')}"><span class="node-icon" aria-hidden="true">${complete?'✓':mission.glyph}</span><span class="node-label"><small>${String(i+1).padStart(2,'0')} ${mission.tag}</small><strong>${esc(mission.name)}</strong></span>${complete?'<span class="status-tick">✓</span>':''}</button>`;}).join('');
- $('#mission-panel').innerHTML=`<div class="mission-kicker"><span>${finished?T('mDone'):open?T('mAvailable'):T('mLocked')}</span><span class="mission-number">${String(state.selected+1).padStart(2,'0')} / 06</span></div><div class="mission-icon" aria-hidden="true">${m.glyph}</div><h2>${esc(m.title)}</h2><p>${esc(m.brief)}</p><div class="mission-meta"><span class="tag">${T('tagChallenges')}</span><span class="tag">${m.boss?T('tagBoss'):T('tagXp')}</span><span class="tag">${esc(m.artifact)}</span></div><ol class="task-preview">${m.tasks.map((t,i)=>`<li class="${state.done[t.id]?'finished':''}"><span>${state.done[t.id]?'✓':i+1}</span>${esc(F(t,'title').replace('Equipe-se contra o ','').replace('Enfrente o ','').replace('Derrote o ',''))}</li>`).join('')}</ol><button class="primary" id="start-mission" ${!open?'disabled':''}>${finished?T('btnRevisit'):m.tasks.some(t=>state.done[t.id])?T('btnContinue'):T('btnStart')} <span aria-hidden="true">→</span></button><p class="mission-note">${open?T('noteOpen'):T('noteLocked',state.selected)}</p>${QuestTLCData.stageMap[state.selected].length?`<div class="tlc-station-links"><span>${T('practiceSkills')}</span>${QuestTLCData.stageMap[state.selected].map(id=>`<button class="tlc-station-link" data-open-tlc="${id}">${QuestTLCData.modules.find(m=>m.id===id).skill} ↗</button>`).join('')}</div>`:''}${st.completed===6?`<button class="text-button" id="journey-btn">${T('journeySummary')}</button>`:''}`;
+ $('#stage-nav').innerHTML=D.missions.map((mission,i)=>{const allowed=C.canOpen(state,D,i),complete=mission.tasks.every(t=>state.done[t.id]);return `<button class="stage-node" data-stage="${i}" aria-current="${i===state.selected}" data-locked="${!allowed}" aria-label="${i+1}. ${esc(F(mission,'name'))}: ${complete?T('stageAriaDone'):allowed?T('stageAriaOpen'):T('stageAriaLocked')}"><span class="node-icon" aria-hidden="true">${complete?'✓':mission.glyph}</span><span class="node-label"><small>${String(i+1).padStart(2,'0')} ${mission.tag}</small><strong>${esc(F(mission,'name'))}</strong></span>${complete?'<span class="status-tick">✓</span>':''}</button>`;}).join('');
+ $('#mission-panel').innerHTML=`<div class="mission-kicker"><span>${finished?T('mDone'):open?T('mAvailable'):T('mLocked')}</span><span class="mission-number">${String(state.selected+1).padStart(2,'0')} / 06</span></div><div class="mission-icon" aria-hidden="true">${m.glyph}</div><h2>${esc(F(m,'title'))}</h2><p>${esc(F(m,'brief'))}</p><div class="mission-meta"><span class="tag">${T('tagChallenges')}</span><span class="tag">${m.boss?T('tagBoss'):T('tagXp')}</span><span class="tag">${esc(m.artifact)}</span></div><ol class="task-preview">${m.tasks.map((t,i)=>`<li class="${state.done[t.id]?'finished':''}"><span>${state.done[t.id]?'✓':i+1}</span>${esc(previewTitle(t))}</li>`).join('')}</ol><button class="primary" id="start-mission" ${!open?'disabled':''}>${finished?T('btnRevisit'):m.tasks.some(t=>state.done[t.id])?T('btnContinue'):T('btnStart')} <span aria-hidden="true">→</span></button><p class="mission-note">${open?T('noteOpen'):T('noteLocked',state.selected)}</p>${QuestTLCData.stageMap[state.selected].length?`<div class="tlc-station-links"><span>${T('practiceSkills')}</span>${QuestTLCData.stageMap[state.selected].map(id=>`<button class="tlc-station-link" data-open-tlc="${id}">${QuestTLCData.modules.find(m=>m.id===id).skill} ↗</button>`).join('')}</div>`:''}${st.completed===6?`<button class="text-button" id="journey-btn">${T('journeySummary')}</button>`:''}`;
  $('#start-mission').addEventListener('click',()=>openMission(state.selected));$('#journey-btn')?.addEventListener('click',showFinal);
  document.body.classList.toggle('reduce-motion',!state.motion);$('#motion-btn').textContent=state.motion?T('motionPause'):T('motionPlay');$('#motion-btn').setAttribute('aria-pressed',String(!state.motion));updateSave();world?.refresh();
 }
@@ -1926,7 +2176,7 @@ function getTask(){return D.missions[active.mi].tasks[active.ti];}
 function draft(){if(!active)return;const t=getTask();state.drafts[t.id]=t.type==='incident'?C.restoreIncident(active.answer,QL.get()):structuredClone(active.answer);save();}
 function renderTask(){
  const t=getTask(),m=D.missions[active.mi];
- $('#dialog-content').innerHTML=`<div class="dialog-top"><span class="eyebrow">${String(active.mi+1).padStart(2,'0')} / ${m.tag} <span class="sep">/</span> ${esc(m.place)}</span><button class="close-btn" data-action="close" aria-label="${T('closeSave')}">×</button></div><div class="dialog-main"><div class="lesson-top"><div class="lesson-head"><div class="step-dots" aria-label="${T('dotsAria',active.ti+1)}">${m.tasks.map((_,i)=>`<span class="${i<=active.ti?'active':''}"></span>`).join('')}</div>${t.boss?`<span class="boss-kicker">${T('bossKicker')}${SN('bossNames')[t.boss]}</span>`:`<span class="eyebrow">${T('missionCode')}</span>`}<h2 id="dialog-title" tabindex="-1">${esc(F(t,'title'))}</h2><p>${esc(F(t,'lead'))}</p></div>${t.boss?'<canvas class="boss-portrait" id="boss-portrait" aria-hidden="true"></canvas>':''}</div><details class="lesson-primer"><summary>${T('primerSummary')}</summary><p>${esc(F(D.primers[t.id],'concept'))}</p><p><strong>${T('exampleLabel')}</strong> ${esc(F(D.primers[t.id],'example'))}</p></details><div class="instruction">${esc(F(t,'instruction')||T('instructionDefault'))}</div><div id="exercise">${exerciseHTML(t)}</div><div id="test-results"></div><div id="hint-slot"></div><div id="feedback-slot" aria-live="polite"></div><div class="dialog-actions"><button class="hint-button" data-action="hint">${T('hintLabel')}<span>${T('hintCost')}</span></button><div class="action-main"><span class="xp-note">${state.done[t.id]?T('xpReview'):T('xpUpTo',C.score(state.attempts[t.id],state.hints[t.id]))}</span><button class="primary" id="verify-btn" data-action="verify">${verifyLabel(t)}</button></div></div></div>`;
+ $('#dialog-content').innerHTML=`<div class="dialog-top"><span class="eyebrow">${String(active.mi+1).padStart(2,'0')} / ${m.tag} <span class="sep">/</span> ${esc(F(m,'place'))}</span><button class="close-btn" data-action="close" aria-label="${T('closeSave')}">×</button></div><div class="dialog-main"><div class="lesson-top"><div class="lesson-head"><div class="step-dots" aria-label="${T('dotsAria',active.ti+1)}">${m.tasks.map((_,i)=>`<span class="${i<=active.ti?'active':''}"></span>`).join('')}</div>${t.boss?`<span class="boss-kicker">${T('bossKicker')}${SN('bossNames')[t.boss]}</span>`:`<span class="eyebrow">${T('missionCode')}</span>`}<h2 id="dialog-title" tabindex="-1">${esc(F(t,'title'))}</h2><p>${esc(F(t,'lead'))}</p></div>${t.boss?'<canvas class="boss-portrait" id="boss-portrait" aria-hidden="true"></canvas>':''}</div><details class="lesson-primer"><summary>${T('primerSummary')}</summary><p>${esc(F(D.primers[t.id],'concept'))}</p><p><strong>${T('exampleLabel')}</strong> ${esc(F(D.primers[t.id],'example'))}</p></details><div class="instruction">${esc(F(t,'instruction')||T('instructionDefault'))}</div><div id="exercise">${exerciseHTML(t)}</div><div id="test-results"></div><div id="hint-slot"></div><div id="feedback-slot" aria-live="polite"></div><div class="dialog-actions"><button class="hint-button" data-action="hint">${T('hintLabel')}<span>${T('hintCost')}</span></button><div class="action-main"><span class="xp-note">${state.done[t.id]?T('xpReview'):T('xpUpTo',C.score(state.attempts[t.id],state.hints[t.id]))}</span><button class="primary" id="verify-btn" data-action="verify">${verifyLabel(t)}</button></div></div></div>`;
  if(t.boss)QuestBoss($('#boss-portrait'),t.boss,active.success);renderFeedback();renderHint();renderTestResults();if(active.success)freezeExercise();
 }
 function verifyLabel(t){if(active.success)return active.ti===2?T('verifyFinish'):T('verifyNext');return t.type==='patch'?T('verifyPatch'):t.type==='gate'?T('verifyGate'):t.type==='incident'?T('verifyIncident'):T('verifyChoice');}
@@ -1968,7 +2218,7 @@ function verify(){
 function nextTask(){if(active.ti<2)openTask(active.mi,active.ti+1);else showReward(active.mi);}
 function showReward(mi){
  const m=D.missions[mi],xp=m.tasks.reduce((n,t)=>n+(state.done[t.id]?.score||0),0),stars=xp>=270?3:xp>=210?2:1;
- $('#dialog-content').innerHTML=`<div class="dialog-top"><span class="eyebrow">ESTAÇÃO ${String(mi+1).padStart(2,'0')} · ${m.tag}</span><button class="close-btn" data-action="close" aria-label="${T('closeMap')}">×</button></div><div class="dialog-main"><div class="reward"><div class="reward-badge" aria-hidden="true">${m.glyph}</div><div class="eyebrow">${T('rewardEyebrow')}</div><h2 id="dialog-title" tabindex="-1">${esc(T('rewardTitle',m.name))}</h2><div class="stars" aria-label="${T('starsAria',stars)}">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div><p>${esc(m.lesson)}</p><div class="artifact-display"><span class="artifact-icon">▤</span><div><strong>${esc(m.artifact)}</strong><small>${T('artifactUnlocked',xp)}</small></div></div><p>${T('artifactNote')}</p><div class="reward-buttons"><button class="secondary" data-action="download-artifact" data-mi="${mi}">${T('saveArtifact')}</button><button class="primary" data-action="advance" data-mi="${mi}">${mi===5?T('myJourney'):T('nextStation')}</button></div></div></div>`;
+ $('#dialog-content').innerHTML=`<div class="dialog-top"><span class="eyebrow">ESTAÇÃO ${String(mi+1).padStart(2,'0')} · ${m.tag}</span><button class="close-btn" data-action="close" aria-label="${T('closeMap')}">×</button></div><div class="dialog-main"><div class="reward"><div class="reward-badge" aria-hidden="true">${m.glyph}</div><div class="eyebrow">${T('rewardEyebrow')}</div><h2 id="dialog-title" tabindex="-1">${esc(T('rewardTitle',F(m,'name')))}</h2><div class="stars" aria-label="${T('starsAria',stars)}">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div><p>${esc(F(m,'lesson'))}</p><div class="artifact-display"><span class="artifact-icon">▤</span><div><strong>${esc(m.artifact)}</strong><small>${T('artifactUnlocked',xp)}</small></div></div><p>${T('artifactNote')}</p><div class="reward-buttons"><button class="secondary" data-action="download-artifact" data-mi="${mi}">${T('saveArtifact')}</button><button class="primary" data-action="advance" data-mi="${mi}">${mi===5?T('myJourney'):T('nextStation')}</button></div></div></div>`;
  play.scrollTop=0;$('#dialog-title').focus({preventScroll:true});renderHome();
 }
 function showFinal(){
@@ -2014,15 +2264,15 @@ function infoShell(title,body,focusSelector=null){$('#info-content').innerHTML=`
 function openManual(tab='glossary'){
  infoTab=tab;const tabs=`<div class="info-tabs"><button data-info="glossary" aria-pressed="${tab==='glossary'}" class="${tab==='glossary'?'active':''}">${T('tabConcepts')}</button><button data-info="method" aria-pressed="${tab==='method'}" class="${tab==='method'?'active':''}">${T('tabMethod')}</button><button data-info="sources" aria-pressed="${tab==='sources'}" class="${tab==='sources'?'active':''}">${T('tabSources')}</button></div>`;
  let body='';if(tab==='glossary')body=`<label class="hidden" for="glossary-search">${T('searchAria')}</label><input type="search" class="search" id="glossary-search" aria-label="${T('searchAria')}" placeholder="${T('searchPlaceholder')}"><div id="glossary-results"></div>`;
- else if(tab==='method')body=`<p>${T('methodIntro')}</p>${D.missions.map((m,i)=>`<div class="glossary-item"><h3>${i+1}. ${esc(m.name)} · ${m.tag}</h3><p>${esc(m.lesson)}</p><p><strong>${T('artifactLabel')}</strong> ${m.artifact}</p></div>`).join('')}<p class="info-note">${T('methodNote')}</p>`;
- else body=`<p>${T('sourcesIntro')}</p>${D.sources.map(s=>`<a class="source-item" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)} ↗<small>${esc(s.topic)}</small></a>`).join('')}<p class="info-note">${T('sourcesNote')}</p>`;
+ else if(tab==='method')body=`<p>${T('methodIntro')}</p>${D.missions.map((m,i)=>`<div class="glossary-item"><h3>${i+1}. ${esc(F(m,'name'))} · ${m.tag}</h3><p>${esc(F(m,'lesson'))}</p><p><strong>${T('artifactLabel')}</strong> ${m.artifact}</p></div>`).join('')}<p class="info-note">${T('methodNote')}</p>`;
+ else body=`<p>${T('sourcesIntro')}</p>${D.sources.map(s=>`<a class="source-item" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)} ↗<small>${esc(F(s,'topic'))}</small></a>`).join('')}<p class="info-note">${T('sourcesNote')}</p>`;
  infoShell(T('manualTitle'),tabs+body+`<div class="transfer-link"><button class="secondary" data-open-tlc="kit">${T('tlcLink')}</button></div><div class="transfer-link"><button class="secondary" data-info="transfer">${T('transferLink')}</button></div>`);if(tab==='glossary'){renderGlossary('');$('#glossary-search').addEventListener('input',e=>renderGlossary(e.target.value));}
 }
-function renderGlossary(query){const norm=s=>String(s).toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const q=norm(query);const items=D.glossary.filter(g=>norm(g.join(' ')).includes(q));$('#glossary-results').innerHTML=items.length?items.map(([name,text])=>`<article class="glossary-item"><h3>${esc(name)}</h3><p>${esc(text)}</p></article>`).join(''):`<p>${T('glossaryEmpty')}</p>`;}
+function renderGlossary(query){const norm=s=>String(s).toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const q=norm(query);const en=QL.get()==='en';const items=D.glossary.filter(g=>norm(g.join(' ')).includes(q));$('#glossary-results').innerHTML=items.length?items.map(g=>{const name=en&&g[2]?g[2]:g[0],text=en&&g[3]?g[3]:g[1];return `<article class="glossary-item"><h3>${esc(name)}</h3><p>${esc(text)}</p></article>`;}).join(''):`<p>${T('glossaryEmpty')}</p>`;}
 function openBag(){
  const st=C.stats(state,D);infoShell(T('bagTitle'),`<p>${T('bagIntro',st.completed)}</p>${D.missions.map((m,i)=>{const unlocked=m.tasks.every(t=>state.done[t.id]);return `<div class="artifact-row"><div><code>${esc(m.artifact)}</code><small>${unlocked?T('unlocked'):T('lockedMission',i+1)} · ${m.tag}</small></div><button class="small-btn" data-info="artifact" data-mi="${i}" ${unlocked?'':'disabled'}>${T('open')}</button></div>`;}).join('')}<p class="info-note">${T('bagNote')}</p><button class="primary" data-info="report">${T('exportProgress')}</button>`);
 }
-function showArtifact(mi){const m=D.missions[mi];if(!m.tasks.every(t=>state.done[t.id]))return;infoShell(esc(m.artifact),`<p>${T('artifactIntro',m.name)}</p><pre class="artifact-preview">${esc(D.artifacts[m.artifact])}</pre><div class="reward-buttons"><button class="secondary" data-info="bag">${T('backArtifacts')}</button><button class="primary" data-info="download" data-mi="${mi}">${T('saveFile')}</button></div>`);}
+function showArtifact(mi){const m=D.missions[mi];if(!m.tasks.every(t=>state.done[t.id]))return;infoShell(esc(m.artifact),`<p>${T('artifactIntro',F(m,'name'))}</p><pre class="artifact-preview">${esc(D.artifacts[m.artifact])}</pre><div class="reward-buttons"><button class="secondary" data-info="bag">${T('backArtifacts')}</button><button class="primary" data-info="download" data-mi="${mi}">${T('saveFile')}</button></div>`);}
 function openSettings(){const previous=document.activeElement?.dataset.info;infoShell(T('settingsTitle'),`<div class="settings-row"><div>${T('soundLabel')}<span>${T('soundNote')}</span></div><button class="secondary" data-info="sound" aria-pressed="${state.sound}">${state.sound?T('on'):T('off')}</button></div><div class="settings-row"><div>${T('motionLabel')}<span>${T('motionNote')}</span></div><button class="secondary" data-info="motion" aria-pressed="${state.motion}">${state.motion?T('motionOn'):T('motionPaused')}</button></div><div class="settings-row"><div>${T('progressLabel')}<span>${storageOK?T('progressSaved'):T('progressTemp')}</span></div><button class="secondary" data-info="report">${T('exportBtn')}</button></div><div class="settings-row"><div>${T('resetLabel')}<span>${T('resetNote')}</span></div><button class="danger-outline" data-info="reset-confirm">${T('restart')}</button></div><div class="backup-controls"><button class="secondary" data-info="backup">${T('backupDown')}</button><button class="secondary" data-info="import">${T('backupUp')}</button><input class="hidden" type="file" id="import-file" accept=".json,application/json" aria-label="${T('backupFileAria')}"></div><p class="info-note">${T('settingsNote')}</p><button class="text-button" data-info="help">${T('helpLink')}</button>`,['sound','motion'].includes(previous)?`[data-info="${previous}"]`:null);}
 function openHelp(){infoShell(T('helpTitle'),`<p>${T('helpIntro')}</p><div class="help-step"><b>1</b><p><strong>${T('help1Title')}</strong> ${T('help1Body')}</p></div><div class="help-step"><b>2</b><p><strong>${T('help2Title')}</strong> ${T('help2Body')}</p></div><div class="help-step"><b>3</b><p><strong>${T('help3Title')}</strong> ${T('help3Body')}</p></div><div class="help-step"><b>4</b><p><strong>${T('help4Title')}</strong> ${T('help4Body')}</p></div><p class="info-note">${T('keyboardNote')}</p><button class="primary" data-info="start">${T('goToAvailable')}</button>`);}
 $('#info-content').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const action=b.dataset.info;
@@ -2110,6 +2360,7 @@ en:{
 const T=(k,...args)=>{const v=(QL.get()==='en'?STRINGS.en[k]:undefined)??STRINGS.pt[k];return typeof v==='function'?v(...args):v;};
 const SN=k=>(QL.get()==='en'?STRINGS.en[k]:undefined)??STRINGS.pt[k];
 const F=(r,n)=>QL.field(r,n,QL.get());
+const tupleLabel=t=>QL.get()==='en'&&t.length>2?t[2]:t[1];
 let state=B.read(),moduleIndex=0,taskIndex=0,answer=null,opener=null,view='hub',lastLab=null;
 function save(){B.write(state);state=B.read();}
 function notify(text){B.toast(text);}
@@ -2163,7 +2414,7 @@ function optionsHTML(t){
 }
 function exercise(t){
  if(t.type==='choice'||t.type==='select')return `<p class="instruction">${t.type==='select'?T('instrSelect',t.answer.length):T('instrChoice')}</p>${optionsHTML(t)}`;
- if(t.type==='classify')return `<p class="instruction">${T('instrClassify')}</p><div class="classify-list tlc-classify">${t.items.map(i=>`<div class="classify-row"><label for="tlc-field-${i.id}">${esc(F(i,'text'))}</label><select id="tlc-field-${i.id}" data-tlc-field="${i.id}"><option value="">${T('choose')}</option>${t.groups.map(([v,l])=>`<option value="${v}" ${answer[i.id]===v?'selected':''}>${esc(l)}</option>`).join('')}</select></div>`).join('')}</div>`;
+ if(t.type==='classify')return `<p class="instruction">${T('instrClassify')}</p><div class="classify-list tlc-classify">${t.items.map(i=>`<div class="classify-row"><label for="tlc-field-${i.id}">${esc(F(i,'text'))}</label><select id="tlc-field-${i.id}" data-tlc-field="${i.id}"><option value="">${T('choose')}</option>${t.groups.map(g=>`<option value="${g[0]}" ${answer[i.id]===g[0]?'selected':''}>${esc(tupleLabel(g))}</option>`).join('')}</select></div>`).join('')}</div>`;
  if(t.type==='prooflab')return `<div class="tlc-lab-intro"><span class="tlc-label">${T('labLabel')}</span><p>${T('labGoal')}</p></div><div class="tlc-lab-config">
  <label for="tlc-suite">${T('labSuite')}<select id="tlc-suite" data-tlc-field="suite"><option value="">${T('labSuiteEmpty')}</option>${['happy','placebo','contract'].map(v=>`<option value="${v}" ${answer.suite===v?'selected':''}>${SN('labSuites')[v]}</option>`).join('')}</select></label>
  <label for="tlc-patch">${T('labPatch')}<select id="tlc-patch" data-tlc-field="patch"><option value="">${T('labPatchEmpty')}</option>${['original','denyAll','scoped'].map(v=>`<option value="${v}" ${answer.patch===v?'selected':''}>${SN('labPatches')[v]}</option>`).join('')}</select></label></div>
@@ -2202,8 +2453,8 @@ function showKit(onlyModule=false){
  view='kit';const modules=onlyModule?[D.modules[moduleIndex]]:D.modules;
  frame(T('kitTitle'),T('kitKicker'),`
  <p class="tlc-lead">${T('kitLead')}</p><div class="tlc-install"><span class="tlc-label">${T('installLabel')}</span><pre class="tlc-code" id="tlc-install-command" tabindex="0">${esc(D.install)}</pre><button class="secondary" data-tlc="copy-install">${T('copyInstall')}</button><p>${T('installNote')}</p></div>
- <div class="tlc-prompt-list">${modules.map(m=>`<section class="tlc-prompt-card"><h3><span aria-hidden="true">${m.glyph}</span> <code>${m.skill}</code></h3><dl><div><dt>${T('dlInput')}</dt><dd>${esc(F(m,'input'))}</dd></div><div><dt>${T('dlOutput')}</dt><dd>${esc(F(m,'output'))}</dd></div><div><dt>${T('dlStage')}</dt><dd>${esc(F(m,'stage'))}</dd></div></dl><pre class="tlc-code" tabindex="0">${esc(m.prompt)}</pre><div class="tlc-footer-actions"><button class="secondary" data-tlc-copy="${m.id}">${T('copyPrompt')}</button><button class="text-button" data-tlc-module="${D.modules.indexOf(m)}">${T('practice')}</button><a href="${esc(m.source)}" target="_blank" rel="noopener noreferrer">${T('originalSkill')}</a></div></section>`).join('')}</div>
- <section class="tlc-source-notes"><h3>${T('notesTitle')}</h3><p>${T('noteArtifacts')}</p><p>${T('noteVerify')}</p><p>${T('noteReview')}</p><p>${T('noteScope')}</p><p>${esc(D.notice)}</p><p><a href="${esc(D.flow)}" target="_blank" rel="noopener noreferrer">TLC AI Dev Flow ↗</a> · <a href="${esc(D.license)}" target="_blank" rel="noopener noreferrer">CC BY 4.0 ↗</a></p></section><div class="tlc-footer-actions"><button class="primary" data-tlc="guide">${T('exportGuide')}</button><button class="secondary" data-tlc="backup">${T('backupAll')}</button></div>`);
+ <div class="tlc-prompt-list">${modules.map(m=>`<section class="tlc-prompt-card"><h3><span aria-hidden="true">${m.glyph}</span> <code>${m.skill}</code></h3><dl><div><dt>${T('dlInput')}</dt><dd>${esc(F(m,'input'))}</dd></div><div><dt>${T('dlOutput')}</dt><dd>${esc(F(m,'output'))}</dd></div><div><dt>${T('dlStage')}</dt><dd>${esc(F(m,'stage'))}</dd></div></dl><pre class="tlc-code" tabindex="0">${esc(F(m,'prompt'))}</pre><div class="tlc-footer-actions"><button class="secondary" data-tlc-copy="${m.id}">${T('copyPrompt')}</button><button class="text-button" data-tlc-module="${D.modules.indexOf(m)}">${T('practice')}</button><a href="${esc(m.source)}" target="_blank" rel="noopener noreferrer">${T('originalSkill')}</a></div></section>`).join('')}</div>
+ <section class="tlc-source-notes"><h3>${T('notesTitle')}</h3><p>${T('noteArtifacts')}</p><p>${T('noteVerify')}</p><p>${T('noteReview')}</p><p>${T('noteScope')}</p><p>${esc(F(D,'notice'))}</p><p><a href="${esc(D.flow)}" target="_blank" rel="noopener noreferrer">TLC AI Dev Flow ↗</a> · <a href="${esc(D.license)}" target="_blank" rel="noopener noreferrer">CC BY 4.0 ↗</a></p></section><div class="tlc-footer-actions"><button class="primary" data-tlc="guide">${T('exportGuide')}</button><button class="secondary" data-tlc="backup">${T('backupAll')}</button></div>`);
 }
 async function copy(text){
  try{if(!navigator.clipboard?.writeText)throw new Error('unavailable');await navigator.clipboard.writeText(text);notify(T('copied'));}
@@ -2218,7 +2469,7 @@ content.addEventListener('click',e=>{
  const b=e.target.closest('button');if(!b||b.disabled)return;
  if(b.dataset.tlcModule!==undefined){showModule(Number(b.dataset.tlcModule));return;}
  if(b.dataset.tlcTask!==undefined){showTask(Number(b.dataset.tlcTask));return;}
- if(b.dataset.tlcCopy){copy(D.modules.find(m=>m.id===b.dataset.tlcCopy).prompt);return;}
+ if(b.dataset.tlcCopy){copy(F(D.modules.find(m=>m.id===b.dataset.tlcCopy),'prompt'));return;}
  if(b.dataset.tlcOption){const t=D.modules[moduleIndex].tasks[taskIndex],id=b.dataset.tlcOption;if(t.type==='choice')answer=id;else {const arr=t.type==='reviewlab'?answer.findings:answer;const at=arr.indexOf(id);if(at<0)arr.push(id);else arr.splice(at,1);}paintOptions(t);clearResult();remember();return;}
  switch(b.dataset.tlc){
   case 'close':dialog.close();break;
@@ -2239,12 +2490,12 @@ content.addEventListener('change',e=>{if(!e.target.dataset.tlcField)return;answe
 dialog.addEventListener('close',()=>{modalSync();if(opener?.isConnected)opener.focus({preventScroll:true});else $('#tlc-launch')?.focus({preventScroll:true});});
 dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();});
 QuestData.glossary.push(
- ['TLC AI Dev Flow','Núcleo de quatro skills: tlc-discover, tlc-plan, tlc-implement e the-judge. A oficina adicional pratica seu uso; não as executa. Fontes e instalação estão no painel Skills TLC.'],
- ['tlc-discover','Investiga o problema e decisões abertas; produz veredito e design quando aplicável. Compromissos já tomados não precisam de um novo gate encenado.'],
- ['tlc-plan','Converte decisões em tarefas com resultados observáveis, faz o surface walk e a varredura de nove dimensões. Uma lacuna vira pergunta, não requisito inventado.'],
- ['tlc-implement','Extrai checks com provas, implementa e exige verificação por um executor novo. Os perfis light, standard e ui explicitam a profundidade e as limitações.'],
- ['the-judge','Revisor de PR com evidências e vereditos APPROVE, COMMENT ou REQUEST_CHANGES. Não dá nota de perfeição, não implementa a correção e não autoriza deploy.'],
- ['Carryover e convergência','Pendências de rodadas anteriores continuam contando no veredito. O the-judge limita a revisão do mesmo conjunto de achados a três rodadas; divergências restantes são resolvidas, acordadas ou escaladas.']
+ ['TLC AI Dev Flow','Núcleo de quatro skills: tlc-discover, tlc-plan, tlc-implement e the-judge. A oficina adicional pratica seu uso; não as executa. Fontes e instalação estão no painel Skills TLC.','TLC AI Dev Flow','A core of four skills: tlc-discover, tlc-plan, tlc-implement and the-judge. The extra workshop practices using them; it does not run them. Sources and installation are in the TLC skills panel.'],
+ ['tlc-discover','Investiga o problema e decisões abertas; produz veredito e design quando aplicável. Compromissos já tomados não precisam de um novo gate encenado.','tlc-discover','Investigates the problem and open decisions; produces a verdict and design when applicable. Commitments already made need no staged new gate.'],
+ ['tlc-plan','Converte decisões em tarefas com resultados observáveis, faz o surface walk e a varredura de nove dimensões. Uma lacuna vira pergunta, não requisito inventado.','tlc-plan','Turns decisions into tasks with observable outcomes, does the surface walk and the nine-dimension sweep. A gap becomes a question, not an invented requirement.'],
+ ['tlc-implement','Extrai checks com provas, implementa e exige verificação por um executor novo. Os perfis light, standard e ui explicitam a profundidade e as limitações.','tlc-implement','Extracts checks with proofs, implements and requires verification by a fresh executor. The light, standard and ui profiles make depth and limitations explicit.'],
+ ['the-judge','Revisor de PR com evidências e vereditos APPROVE, COMMENT ou REQUEST_CHANGES. Não dá nota de perfeição, não implementa a correção e não autoriza deploy.','the-judge','A PR reviewer with evidence and APPROVE, COMMENT or REQUEST_CHANGES verdicts. It gives no perfection grade, implements no fix and authorizes no deploy.'],
+ ['Carryover e convergência','Pendências de rodadas anteriores continuam contando no veredito. O the-judge limita a revisão do mesmo conjunto de achados a três rodadas; divergências restantes são resolvidas, acordadas ou escaladas.','Carryover and convergence','Pending items from previous rounds still count in the verdict. the-judge caps review of the same finding set at three rounds; remaining disagreements are resolved, agreed or escalated.']
 );
 document.addEventListener('quest-state-changed',banner);
 document.addEventListener('quest-lang-changed',banner);
