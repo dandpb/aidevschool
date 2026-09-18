@@ -28,7 +28,7 @@ function parseArgs(args, env = process.env) {
   let rawPort = env.PORT || '8080';
   let open = false;
   let help = false;
-  let lang; // reported only when --lang is passed; callers default to pt
+  let lang = 'pt';
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--port') {
       if (i + 1 === args.length) throw new Error('--port precisa de um número.');
@@ -44,9 +44,7 @@ function parseArgs(args, env = process.env) {
   if (!/^\d+$/.test(String(rawPort)) || Number(rawPort) < 1 || Number(rawPort) > 65535) {
     throw new Error('Porta inválida. Use um número de 1 a 65535.');
   }
-  const opts = { port: Number(rawPort), open, help };
-  if (lang !== undefined) opts.lang = lang;
-  return opts;
+  return { port: Number(rawPort), open, help, lang };
 }
 function createServer(root = ROOT) {
   const base = fs.realpathSync(root);
@@ -103,7 +101,7 @@ function main() {
   let opts;
   try { opts = parseArgs(process.argv.slice(2)); }
   catch (error) { console.error(error.message); process.exitCode = 64; return; }
-  const strings = STRINGS[opts.lang || 'pt'];
+  const strings = STRINGS[opts.lang];
   if (opts.help) {
     console.log(strings.usage);
     return;
