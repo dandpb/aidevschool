@@ -70,7 +70,7 @@ Aposta: bilíngue por sufixo nos registros de dados existentes + um helper de id
 - Parâmetro `lang` (default `'pt'`) nas funções user-facing dos módulos core (`validate`, `stepIncident`, `importBackup`, …) para as mensagens de feedback.
 - `tests/i18n-browser.py` — jornada EN (desktop) na cadeia do gate.
 - Campos sufixados `_en` em todo campo string exibível dos registros de `src/data.js` e `src/tlc-data.js`.
-- `tests/i18n-parity.test.cjs` — caminha recursivamente os registros e falha para todo campo PT sem `_en` correspondente (exclusões explícitas: `id`, `url`, `color`, `glyph`, `artifact`).
+- `tests/i18n-parity.test.cjs` — caminha recursivamente os registros e falha para todo campo PT sem `_en` correspondente (exclusões explícitas: `id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`).
 - `--lang pt|en` nas tools (`quest-gate.cjs`, `check-package.cjs`, `test.cjs`, `serve.cjs`).
 - `lang-btn` no HUD (ao lado de `book-btn`) e `README.pt-BR.md`.
 

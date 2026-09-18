@@ -2,6 +2,12 @@
 (function(root){
 'use strict';
 const palettes={cream:'#e9e8d4',mint:'#a8dfc4',deep:'#101d28',line:'#34515a'};
+/* Map captions resolve through the QuestLang chrome resolver (t) so the world
+ * follows the active language; pt-BR remains the fallback table. */
+const CAPTIONS={
+ pt:{stationDone:'ESTAÇÃO CONCLUÍDA',stationNext:'SUA PRÓXIMA MISSÃO',stationLocked:'EXPLORE APÓS A ANTERIOR'},
+ en:{stationDone:'STATION COMPLETE',stationNext:'YOUR NEXT MISSION',stationLocked:'EXPLORE AFTER THE PREVIOUS ONE'}
+};
 function polygon(c,points,fill,stroke){c.beginPath();points.forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.closePath();if(fill){c.fillStyle=fill;c.fill();}if(stroke){c.strokeStyle=stroke;c.lineWidth=1;c.stroke();}}
 function box(c,x,y,w,d,h,top='#517767',left='#2a4745',right='#375953'){
  const p=[[x,y-h-d/2],[x+w/2,y-h],[x,y-h+d/2],[x-w/2,y-h]];
@@ -124,12 +130,16 @@ class World{
     line(c,[[x-21,y-30],[x-13,y-34],[x-7,y-23],[x+1,y-37],[x+11,y-30]],'#bce7cb',2.5);break;
    }
   }
-  c.restore();
-  // Mission nameplates beneath each station.
-  const ly=y+77,txt=m.name.toUpperCase();const tagW=txt.length*7+40;
-  c.fillStyle=selected?'#29483e':'#152c32';c.beginPath();c.roundRect(x-tagW/2,ly-12,tagW,25,6);c.fill();
-  label(c,`${done?'✓':String(index+1).padStart(2,'0')} ${txt}`,x,ly,done?'#b1debb':(open?'#d3dfc3':'#89a398'),10);
-  if(selected){label(c,done?'ESTAÇÃO CONCLUÍDA':open?'SUA PRÓXIMA MISSÃO':'EXPLORE APÓS A ANTERIOR',x,ly+25,open?'#9dbf93':'#6e8c82',7);}
+   c.restore();
+   // Mission nameplates beneath each station: labels follow the active language
+   // (QuestLang), with pt-BR names as the fallback, like the app modules.
+   const QL=root.QuestLang,lang=QL?QL.get():'pt';
+   const name=QL&&QL.field(m,'name',lang)?QL.field(m,'name',lang):m.name;
+   const caption=key=>QL?String(QL.t(CAPTIONS,key,lang)):CAPTIONS.pt[key];
+   const ly=y+77,txt=name.toUpperCase();const tagW=txt.length*7+40;
+   c.fillStyle=selected?'#29483e':'#152c32';c.beginPath();c.roundRect(x-tagW/2,ly-12,tagW,25,6);c.fill();
+   label(c,`${done?'✓':String(index+1).padStart(2,'0')} ${txt}`,x,ly,done?'#b1debb':(open?'#d3dfc3':'#89a398'),10);
+   if(selected){label(c,done?caption('stationDone'):open?caption('stationNext'):caption('stationLocked'),x,ly+25,open?'#9dbf93':'#6e8c82',7);}
  }
 }
 root.QuestWorld=World;root.QuestBoss=drawBoss;

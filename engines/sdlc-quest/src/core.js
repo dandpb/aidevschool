@@ -243,6 +243,6 @@ function shuffled(array,seed){
  for(let i=a.length-1;i>0;i--){h=(Math.imul(h,1664525)+1013904223)>>>0;const j=h%(i+1);[a[i],a[j]]=[a[j],a[i]];}
  return a;
 }
-const core={VERSION,key,empty,hasAnswer,restoreIncident,makeBackup,importBackup,transferKeys,equalSet,score,validate,runPatch,freshIncident,stepIncident,normalize,stats,canOpen,complete,shuffled};
+const core={VERSION,key,empty,hasAnswer,restoreIncident,makeBackup,importBackup,transferKeys,equalSet,score,validate,runPatch,freshIncident,stepIncident,normalize,stats,canOpen,complete,shuffled,message:M};
 if(typeof module==='object'&&module.exports)module.exports=core;else root.QuestCore=core;
 })(typeof globalThis!=='undefined'?globalThis:this);

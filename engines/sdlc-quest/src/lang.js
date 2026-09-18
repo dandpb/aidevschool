@@ -1,6 +1,6 @@
 /* Language helper: pt-BR by default, optional English. Self-contained, zero dependencies.
  * Preference lives in localStorage['sdlc-quest:lang'] ('pt'|'en'); absence means pt.
- * Resolution always falls back to the pt-BR text, never to a raw key or an empty string. */
+/* Resolution always falls back to the pt-BR text, never to a raw key or undefined. */
 (function(root){
 'use strict';
 const KEY='sdlc-quest:lang';
@@ -25,12 +25,14 @@ function set(lang){
  return active;
 }
 function toggle(){return set(active==='pt'?'en':'pt');}
-/* Chrome tables: t(STRINGS,key) with STRINGS={pt:{...},en:{...}}. */
-function t(table,key,lang){
- const en=normalize(lang)==='en'?table&&table.en&&table.en[key]:undefined;
- if(typeof en==='string')return en;
- const pt=table&&table.pt&&table.pt[key];
- return typeof pt==='string'?pt:'';
+/* Chrome tables: t(STRINGS,key,lang,...args) with STRINGS={pt:{...},en:{...}}.
+ * Superset resolver for the bilingual chrome: string entries resolve directly, function
+ * entries are called with the extra args (T() pattern), sub-table entries resolve raw for
+ * the caller to index (SN() pattern); missing entries fall back to pt-BR, then to ''. */
+function t(table,key,lang,...args){
+ const entry=(normalize(lang)==='en'?table&&table.en&&table.en[key]:undefined)??(table&&table.pt&&table.pt[key]);
+ if(typeof entry==='function')return entry(...args);
+ return entry===undefined?'':entry;
 }
 /* Data records: field(record,'brief') reads brief_en in English and falls back to brief. */
 function field(record,name,lang){
