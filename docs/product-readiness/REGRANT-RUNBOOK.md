@@ -186,7 +186,13 @@ o buraco com sinal máquina fail-closed:
 - **Labels (R2)**: `regrant-pending-observation` (`d93f0b` — observation
   incomplete; NOT countersignable; merging heals nothing) aplicada ao nascer o
   PR exit 3; `regrant-observation-complete` (`0e8a16`) no exit 0. O corpo do PR
-  nasce com a linha "fast path BLOQUEADO enquanto pending".
+  nasce com a linha "fast path BLOQUEADO enquanto pending". **O gate
+  auto-garante as labels** (AID-2384): o passo "ensure observation labels
+  exist" do `readiness-regrant-complete.yml` cria as duas idempotentemente
+  antes de gravar o estado no PR (o bootstrap da fábrica é condicionado a
+  propor — dedupe pula — e drills/retrofit podem chegar ao gate com as labels
+  ausentes; recorrência run 35300417695); o comentário de observação é postado
+  ANTES de qualquer mutação de label para nunca se perder numa falha de label.
 - **Check required nomeado (R3)**: workflow
   `readiness-regrant-complete.yml` → job **`regrant observation
   completeness`** = `cli.py check --require-current` no **merge-ref**
