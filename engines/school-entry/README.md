@@ -16,10 +16,11 @@ npm start
 
 Abra `http://127.0.0.1:5185`. Sem configuração, o catálogo começa com as 13 engines bloqueadas. A ausência de senha de operador não cria acesso administrativo padrão. A ausência de chave TypeSafe preserva o catálogo disponível como fallback.
 
-Configure variáveis no ambiente do processo ou use o suporte nativo do Node: `node --env-file=.env server/main.mjs`. `.env` não é versionado. `.env.example` lista os campos para implantação; não contém credenciais nem destinos ficticiamente funcionais.
+Configure as variáveis da tabela abaixo no ambiente do processo ou use o suporte nativo do Node: `node --env-file=.env server/main.mjs`. Arquivos `.env` e `.env.*` ficam fora do Git e da imagem Docker. O repositório não versiona arquivos com esse formato de nome, inclusive exemplos; os campos de implantação estão documentados aqui.
 
 | Variável | Uso |
 |---|---|
+| `NODE_ENV` | Use `production` na implantação pública; ativa a exigência de origem HTTPS e configuração administrativa. |
 | `HOST`, `PORT` | Bind local; padrões `127.0.0.1` e `5185`. |
 | `BASE_URL` | Origem externa exata, sem caminho ou barra final. Em produção, obrigatoriamente HTTPS. |
 | `ADMIN_PASSWORD_HASH` | Hash scrypt do único operador configurado. Não é a senha em texto. |
