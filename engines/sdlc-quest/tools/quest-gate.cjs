@@ -9,10 +9,22 @@ const {spawnSync}=require('node:child_process');
 const {resolvePython}=require('./python-runtime.cjs');
 const ROOT=path.resolve(__dirname,'..');
 const sha=s=>crypto.createHash('sha256').update(s).digest('hex');
+const STRINGS={
+pt:{usage:'Uso: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Executa contrato local → build → regras → jornadas original/TLC/harness (desktop e mobile).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\n--lang muda o idioma do console; pt é o padrão.\nNão é um comando do harness-toolkit.',receipt:'Recibo:',done:'Verificações locais concluídas.',incomplete:'Verificações locais incompletas; etapas dependentes não executadas.',toolkit:'Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.'},
+en:{usage:'Usage: node tools/quest-gate.cjs [--require-release] [--lang pt|en]',help:'Runs the local contract → build → rules → original/TLC/harness journeys (desktop and mobile).\nNo external services, installs or agent calls. A failure stops the chain.\n--require-release returns 2 after the checks: external authorization is not configured.\n--lang changes the console language; pt is the default.\nNot a harness-toolkit command.',receipt:'Receipt:',done:'Local checks completed.',incomplete:'Local checks incomplete; dependent steps did not run.',toolkit:'Real toolkit: not executed. Independent review: not executed. Production: not authorized.'}
+};
 function parseArgs(args){
  const valid=new Set(['--help','--require-release']);
- for(const a of args)if(!valid.has(a))throw new Error('Argumento não suportado: '+a+'. Não há opção para pular verificações.');
- return {help:args.includes('--help'),requireRelease:args.includes('--require-release')};
+ let lang='pt';
+ for(let i=0;i<args.length;i++){
+  const a=args[i];
+  if(a==='--lang'){
+   const v=args[i+1];
+   if(v!=='pt'&&v!=='en')throw new Error('Argumento não suportado: --lang '+(v===undefined?'':v)+'. Use --lang pt ou --lang en.');
+   lang=v;i+=1;
+  }else if(!valid.has(a))throw new Error('Argumento não suportado: '+a+'. Não há opção para pular verificações.');
+ }
+ return {help:args.includes('--help'),requireRelease:args.includes('--require-release'),lang};
 }
 function command(command,args,cwd,timeoutMs=180000){
  const start=Date.now();
@@ -44,7 +56,8 @@ function validateContract(root){
 function releaseExitCode(checksPassed,requireRelease){return !checksPassed?1:requireRelease?2:0;}
 function main(args){
  let flags;try{flags=parseArgs(args);}catch(e){console.error(e.message);return 64;}
- if(flags.help){console.log('Uso: node tools/quest-gate.cjs [--require-release]\nExecuta contrato local → build → regras → jornadas original/TLC/harness (desktop e mobile).\nSem serviços externos, instalação ou chamada de agentes. Falha interrompe a cadeia.\n--require-release retorna 2 depois dos checks: autorização externa não configurada.\nNão é um comando do harness-toolkit.');return 0;}
+ const S=STRINGS[flags.lang];
+ if(flags.help){console.log(S.usage+'\n'+S.help);return 0;}
  const runId='local-'+new Date().toISOString().replace(/[:.]/g,'-')+'-'+process.pid;
  const dir=path.join(ROOT,'evidence-v1.3','runs',runId);fs.mkdirSync(dir,{recursive:true});
  const receipt={schema:'quest-local-gate/v1',runId,startedAt:new Date().toISOString(),origin:'SDLC Quest own runner',sourceRepository:{url:'https://github.com/dandpb/harness-toolkit',inspected:false,adapterExecuted:false},trust:'local-unattested',steps:[],localChecksCompleted:false,independentReview:'not-executed',productionAuthorized:false,releaseGate:'not-configured',limitations:['O candidato e o runner estão no mesmo ambiente editável.','Hashes detectam divergências; não autenticam um executor confiável.','Jornadas usam set_content e localStorage em memória; não validam file:// nativo.']};
@@ -79,9 +92,9 @@ function main(args){
   const candidate=path.join(ROOT,'sdlc-quest.html');if(fs.existsSync(candidate))receipt.candidate={file:'sdlc-quest.html',sha256:sha(fs.readFileSync(candidate)),bytes:fs.statSync(candidate).size};
  }catch(e){ok=false;receipt.errors=[e.message];}
  receipt.localChecksCompleted=ok;receipt.finishedAt=new Date().toISOString();receipt.requestedRelease=flags.requireRelease;receipt.exitCode=releaseExitCode(ok,flags.requireRelease);save();
- console.log('Receipt:',path.relative(ROOT,path.join(dir,'run.json')));
- console.log(ok?'Verificações locais concluídas.':'Verificações locais incompletas; etapas dependentes não executadas.');
- console.log('Toolkit real: não executado. Revisão independente: não executada. Produção: não autorizada.');
+ console.log(S.receipt,path.relative(ROOT,path.join(dir,'run.json')));
+ console.log(ok?S.done:S.incomplete);
+ console.log(S.toolkit);
  return receipt.exitCode;
 }
 if(require.main===module)process.exitCode=main(process.argv.slice(2));
