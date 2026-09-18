@@ -1,42 +1,44 @@
-# SDLC Quest v1.3 — execução, gates e evidências
+Leia em português: [HARNESS-GUIDE.pt-BR.md](HARNESS-GUIDE.pt-BR.md)
 
-## Estado da integração
+# SDLC Quest v1.3 — execution, gates and evidence
 
-Referência fornecida: https://github.com/dandpb/harness-toolkit
-O repositório não pôde ser lido nesta revisão. Nenhuma API, comando, licença, formato ou garantia do harness-toolkit foi verificada. O HTML e o runner são implementações próprias do Quest, não uma integração real confirmada.
+## Integration status
 
-## Uso no jogo
+Provided reference: https://github.com/dandpb/harness-toolkit
+The repository could not be read in this revision. No API, command, license, format or guarantee of harness-toolkit was verified. The HTML and the runner are the Quest's own implementations, not a confirmed real integration.
 
-1. Abra a central de execução.
-2. Experimente pular direto para o pacote ou declarar tudo pronto: o motor deve recusar.
-3. Descobrir: selecione problema, resultado, escopo e questão aberta; execute o gate.
-4. Planejar: selecione os cinco critérios, incluindo os negativos; execute.
-5. Implementar: materialize uma candidata. A versão original contém um bug de tenant.
-6. Verificar: execute a suíte completa. Inspecione baseline, candidata e mutante.
-7. Corrija a candidata para busca por ID e tenant; reexecute implementação e verificação.
-8. Revisar: selecione o parecer didático atual, sem blocker; execute.
-9. Validar pacote: os cinco recibos anteriores devem ser atuais. Exporte o JSON.
-10. Altere o código após o verde e observe os recibos desatualizados. Produção continua negada.
+## In-game use
 
-## O que realmente executa
+1. Open the execution hub.
+2. Try to jump straight to packaging or declare everything ready: the engine must refuse.
+3. Discover: pick problem, outcome, scope and open question; run the gate.
+4. Plan: pick the five criteria, including the negative ones; run it.
+5. Implement: materialize a candidate. The original version contains a tenant bug.
+6. Verify: run the full suite. Inspect baseline, candidate and mutant.
+7. Fix the candidate for ID-and-tenant lookup; rerun implementation and verification.
+8. Review: pick the current teaching opinion, with no blocker; run it.
+9. Validate package: the five previous receipts must be current. Export the JSON.
+10. Change the code after green and watch the receipts go stale. Production stays denied.
 
-O HTML roda funções JavaScript locais sobre dados fictícios. A suíte completa produz 15 asserções em três versões. Ela deve reprovar a baseline e o mutante, mas aprovar a candidata correta. Não chama agentes, GitHub, npm, CI ou o toolkit.
+## What actually runs
 
-No pacote-fonte, execute: `node tools/quest-gate.cjs`. Esse runner próprio reconstrói o HTML, executa testes de regras e jornadas de navegador e grava logs, hashes e códigos de saída. Requer Node, Python, Playwright e Chromium; dependências faltantes são falhas, não aprovações. Nenhuma instalação é feita automaticamente.
+The HTML runs local JavaScript functions over fictional data. The full suite produces 15 assertions across three versions. It must fail the baseline and the mutant, and approve the correct candidate. It calls no agents, GitHub, npm, CI or the toolkit.
 
-## Mapeamento proposto; não é API do toolkit
+In the source package, run: `node tools/quest-gate.cjs`. This own runner rebuilds the HTML, runs rules tests and browser journeys, and records logs, hashes and exit codes. It requires Node, Python, Playwright and Chromium; missing dependencies are failures, not approvals. Nothing is installed automatically.
 
-- tlc-discover → intenção/decisões → validação das entradas.
-- tlc-plan → critérios/checks → validação da matriz.
-- tlc-implement → revisão candidata → execução do verificador.
-- the-judge → achados/parecer → pendências e vínculo com a revisão.
-- Runner externo → logs/exit codes/identidade → evidência de execução rastreável.
-- Infra protegida → identidade/aprovação independente → autorização de merge/release.
+## Proposed mapping; not a toolkit API
 
-## Para concluir a integração real
+- tlc-discover → intent/decisions → input validation.
+- tlc-plan → criteria/checks → matrix validation.
+- tlc-implement → candidate review → verifier execution.
+- the-judge → findings/opinion → pendings and the review link.
+- External runner → logs/exit codes/identity → traceable execution evidence.
+- Protected infra → identity/independent approval → merge/release authorization.
 
-Verificar README, commit, licença, executável, estados, formatos de entrada/saída e testes do repositório. Depois implementar um adaptador sobre a interface efetivamente encontrada, sem inferir comandos. Validar falta de etapa, falha/timeout, evidência antiga, alteração da política, budget e indisponibilidade do executor. Conferir as permissões fora do workspace.
+## To complete the real integration
 
-## Limites
+Verify the repository's README, commit, license, executable, states, input/output formats and tests. Then implement an adapter over the interface actually found, without inferring commands. Validate missing step, failure/timeout, stale evidence, policy change, budget and executor unavailability. Check permissions outside the workspace.
 
-Completar etapas não prova a correção de todos os requisitos. JSON local pode ser alterado. O backup restaura entradas, não execução. Não houve revisão independente. Não há autorização de produção. O runner local não é uma sandbox nem controla um atacante com acesso aos seus arquivos.
+## Limits
+
+Completing steps does not prove the correctness of every requirement. Local JSON can be edited. The backup restores entries, not execution. There was no independent review. There is no production authorization. The local runner is not a sandbox and does not control an attacker with access to your files.
