@@ -6,6 +6,8 @@
     "pt wrong answer keeps pt core text",
     "toggle-en-chrome",
     "chrome-en",
+    "mission-plan-en",
+    "intent options render label_en and text_en",
     "progress-preserved-through-toggle",
     "wrong-answer-feedback-en",
     "intent completes in english",
@@ -16,12 +18,12 @@
   ],
   "errors": [],
   "requests": [],
-  "started": "2026-09-18T16:32:20Z",
+  "started": "2026-09-18T17:17:58Z",
   "limitations": [
     "Native file:// navigation blocked by administrative policy.",
     "No native localStorage persistence, Safari or Firefox test.",
-    "Data-record _en fields (option labels, why texts) arrive in batch B2; core-module strings are covered here.",
+    "Data-record _en parity beyond the C8 spot-checks is enforced by the walker in tests/i18n.test.cjs, not by this browser run.",
     "Exported documents (playbook, TLC guide, harness guide) remain pt-BR by design."
   ],
-  "passed": 12
+  "passed": 14
 }
