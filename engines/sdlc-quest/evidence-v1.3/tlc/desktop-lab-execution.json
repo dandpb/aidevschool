@@ -2,7 +2,7 @@
   "simulation": true,
   "scope": "Funções de consulta em memória; não é CI, HTTP, autenticação ou um verificador independente.",
   "appVersion": "1.2.0",
-  "exportedAt": "2026-09-16T20:56:11.673Z",
+  "exportedAt": "2026-09-18T17:58:36.060Z",
   "ok": true,
   "suite": "contract",
   "patch": "scoped",

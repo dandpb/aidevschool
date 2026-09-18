@@ -1,6 +1,6 @@
 # SDLC Quest — Meu playbook de aprendizagem
 
-Gerado em: 2026-09-16T20:55:39.644Z
+Gerado em: 2026-09-18T17:58:18.488Z
 
 ## Limite desta evidência
 Este é um registro local de uma simulação didática. Não comprova a execução de uma API, pipeline ou infraestrutura real. Não é certificado profissional nem autorização de release. O save é local e editável.
