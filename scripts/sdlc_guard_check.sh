@@ -376,7 +376,9 @@ run_checks() {
 # ---------------------------------------------------------------------------
 # Self-test: synthetic repositories exercising every mapped rule, including
 # the owner-override trailers. Runs the REAL hooks (copied into the scratch
-# repo) so the check proves the enforcement path end to end.
+# repo) so the check proves the enforcement path end to end. Every scenario
+# runs the guard hermetically: the runner's own CI PR environment must not
+# leak into fixtures (AID-2473).
 # ---------------------------------------------------------------------------
 self_test() {
   local T R pass=0 fail=0
@@ -407,6 +409,19 @@ self_test() {
   # The message goes through a file (git commit -F): -m cannot carry the
   # >1MiB regression bodies below (single-arg kernel limit), and real
   # large bodies reach git the same way (editor/-F).
+  #
+  # AID-2473: the guard child runs hermetic. The self-test itself executes
+  # on a PR in CI, where GITHUB_EVENT_NAME/GITHUB_EVENT_PATH/GITHUB_REF
+  # name the runner's OWN PR (on a bot PR the event payload carries the bot
+  # author). Those ambient channels used to leak into every fixture:
+  # scenarios without their own PR context flipped into PR context, the
+  # payload's bot author tripped Stage 2 ("enough to trigger, not to
+  # verify"), and the fixture — no PR context source — failed closed: 9
+  # scenarios red on bot PR #501, killing the job (set -e) before the real
+  # scan ever ran. Scrub the three ambient channels; scenarios that DO mean
+  # PR context re-inject GITHUB_EVENT_NAME via SCENARIO_EVENT_NAME
+  # (pr_scenario/pr2_scenario below) and carry deterministic SDLC_* context
+  # files, so they stay hermetic by construction.
   scenario() {
     local name="$1" expected="$2" msg="$3"; shift 3; [ "${1:-}" = "--" ] && shift
     local br="st-$RANDOM"
@@ -417,7 +432,11 @@ self_test() {
     printf '%s\n' "$msg" > "$T/commit-msg"
     $GITC commit -qF "$T/commit-msg"
     local out rc
-    out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$br" 2>&1)"; rc=$?
+    local -a guard_env=(env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_REF)
+    if [ -n "${SCENARIO_EVENT_NAME:-}" ]; then
+      guard_env+=("GITHUB_EVENT_NAME=$SCENARIO_EVENT_NAME")
+    fi
+    out="$("${guard_env[@]}" bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$br" 2>&1)"; rc=$?
     if [ "$rc" -eq "$expected" ]; then
       echo "PASS [$name] rc=$rc (expected $expected)"
       pass=$((pass+1))
@@ -518,7 +537,8 @@ $big_filler"
   printf 'def test_a():\n    assert 1 == 1\n' > "$R/tests/unit/test_a.py"
   $GITC add -A >/dev/null
   $GITC commit -qF "$T/early-msg"
-  sig_out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$sig_br" 2>&1)"; sig_rc=$?
+  sig_out="$(env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_REF \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$sig_br" 2>&1)"; sig_rc=$?
   if [ "$sig_rc" -eq 0 ] && printf '%s' "$sig_out" | grep -q '^::notice::SDLC-ALLOW-TEST-EDIT'; then
     echo "PASS [large-body early trailer emits the override notice] rc=$sig_rc"
     pass=$((pass+1))
@@ -552,7 +572,8 @@ $big_filler"
   $GITC add -A >/dev/null
   $GITC commit -qm "edit main-added test without trailer"
   local out_rc
-  out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$advanced_sha" --head st-stale-base 2>&1)"; out_rc=$?
+  out="$(env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_REF \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$advanced_sha" --head st-stale-base 2>&1)"; out_rc=$?
   if [ "$out_rc" -eq 1 ]; then
     echo "PASS [merged-advance: current base blocks edit of main-added test] rc=$out_rc"
     pass=$((pass+1))
@@ -561,7 +582,8 @@ $big_filler"
     printf '%s\n' "$out" | sed 's/^/    | /'
     fail=$((fail+1))
   fi
-  out="$(bash "$SCRIPT_PATH" --repo "$R" --base "$stale_sha" --head st-stale-base 2>&1)"; out_rc=$?
+  out="$(env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_REF \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$stale_sha" --head st-stale-base 2>&1)"; out_rc=$?
   if [ "$out_rc" -eq 0 ]; then
     echo "PASS [stale PR-creation base downgrades M->A (documented hazard; caller must pass the current tip)] rc=$out_rc"
     pass=$((pass+1))
@@ -585,9 +607,9 @@ $big_filler"
   printf 'Countersign: AID-9006 verdict 679cf9d3\n' > "$T/cs_valid"
   printf 'Countersign: AID-9999 verdict deadbeef\n' > "$T/cs_ghost"
   pr_scenario() { # scenario + PR-context gate env, scrubbed afterwards
-    export GITHUB_EVENT_NAME=pull_request SDLC_GUARD_AID_RESOLVER="$stub"
+    export SDLC_GUARD_AID_RESOLVER="$stub" SCENARIO_EVENT_NAME=pull_request
     scenario "$@"
-    unset GITHUB_EVENT_NAME SDLC_GUARD_AID_RESOLVER SDLC_COUNTERSIGN_FILE
+    unset SDLC_GUARD_AID_RESOLVER SDLC_COUNTERSIGN_FILE SCENARIO_EVENT_NAME
   }
 
   # (i) process-authority PR WITHOUT a citation -> fail-closed.
@@ -634,9 +656,9 @@ $big_filler"
   }
   pr2_scenario() { # $1=ctx-file; remaining args = scenario args
     local ctxf="$1"; shift
-    export GITHUB_EVENT_NAME=pull_request SDLC_GUARD_AID_RESOLVER="$stub" SDLC_PR_CONTEXT_FILE="$ctxf"
+    export SDLC_GUARD_AID_RESOLVER="$stub" SDLC_PR_CONTEXT_FILE="$ctxf" SCENARIO_EVENT_NAME=pull_request
     scenario "$@"
-    unset GITHUB_EVENT_NAME SDLC_GUARD_AID_RESOLVER SDLC_PR_CONTEXT_FILE
+    unset SDLC_GUARD_AID_RESOLVER SDLC_PR_CONTEXT_FILE SCENARIO_EVENT_NAME
   }
   local T2="$T/stage2"
   mkdir -p "$T2"
@@ -697,6 +719,23 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD "$cs2_br" >/dev/null
+
+  # AID-2473 regression: the CI runner executes the self-test step on the
+  # PR itself, so GITHUB_EVENT_NAME/GITHUB_EVENT_PATH/GITHUB_REF name the
+  # real — possibly bot-authored — PR (on PR #501 the leaked payload author
+  # 'github-actions[bot]' tripped Stage 2 in 9 context-less fixtures and
+  # killed the job before the real scan). The scenario runner scrubs those
+  # channels (see scenario()); this scenario re-leaks them on purpose — a
+  # bot event payload plus a PR ref, exactly the runner's own CI state —
+  # and asserts a clean engine-only fixture stays ungated. If the scrub
+  # ever regresses, the payload's bot author trips Stage 2 with no context
+  # source in the fixture and the scenario fails closed.
+  local bot_event="$T/bot_event.json"
+  jq -nc '{number:501, pull_request:{user:{login:"github-actions[bot]", type:"Bot"}}}' > "$bot_event"
+  export GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$bot_event" GITHUB_REF="refs/pull/501/merge"
+  scenario "ambient CI bot-PR env does not leak into fixtures (AID-2473)" 0 "clean add under bot PR env" -- \
+    "printf 'clean under ambient bot PR ci state\n' > src/clean_bot_ci.py"
+  unset GITHUB_EVENT_NAME GITHUB_EVENT_PATH GITHUB_REF
 
   rm -rf "$T"
   echo "self-test: $pass passed, $fail failed"
