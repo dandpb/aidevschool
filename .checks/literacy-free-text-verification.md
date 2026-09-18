@@ -29,6 +29,12 @@ Adds `learner/gate/literacy_judgment.py` (per-field Noul construction + mean agg
 
 - Nothing else in this change is hard to reverse.
 
+Build-time door (additive):
+
+| One-way door | Literal shape | Alternative rejected |
+| --- | --- | --- |
+| Receipt retention removed | `judgments._prune_receipts` and `RECEIPT_RETENTION` deleted — receipts are append-only committed provenance | keeping the 30-file retention - it would delete exactly the receipts the metric-lint snapshot and literacy verifications cite as provenance (the check-replay decision supersedes the task's Unresolved-1 default) |
+
 ## Checks
 
 ### S1 - Answer transport · 4 files · ~18 KB · ~5k

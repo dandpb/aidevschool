@@ -103,64 +103,120 @@
       "const": true
     },
     "answer": {
-      "description": "Bounded structured answer used by the independent verifier. Free-text activity answers are never included.",
+      "description": "Bounded structured answer used by the independent verifier. Free-text (prompt_builder) answers travel as per-field values, bounded per field (1-2000 chars); nothing else carries free text.",
       "oneOf": [
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["optionIds"],
+          "required": [
+            "optionIds"
+          ],
           "properties": {
-            "optionIds": { "$ref": "#/$defs/idArray" }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["orderedIds"],
-          "properties": {
-            "orderedIds": { "$ref": "#/$defs/idArray" }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["contextIds"],
-          "properties": {
-            "contextIds": { "$ref": "#/$defs/idArray" }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["criterionIds"],
-          "properties": {
-            "outputId": { "$ref": "#/$defs/id" },
-            "criterionIds": { "$ref": "#/$defs/idArray" }
-          }
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "required": ["labels"],
-          "properties": {
-            "labels": {
-              "type": "object",
-              "maxProperties": 50,
-              "propertyNames": { "$ref": "#/$defs/id" },
-              "additionalProperties": { "enum": ["safe", "sensitive"] }
+            "optionIds": {
+              "$ref": "#/$defs/idArray"
             }
           }
         },
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["verdicts"],
+          "required": [
+            "orderedIds"
+          ],
+          "properties": {
+            "orderedIds": {
+              "$ref": "#/$defs/idArray"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contextIds"
+          ],
+          "properties": {
+            "contextIds": {
+              "$ref": "#/$defs/idArray"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "criterionIds"
+          ],
+          "properties": {
+            "outputId": {
+              "$ref": "#/$defs/id"
+            },
+            "criterionIds": {
+              "$ref": "#/$defs/idArray"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "labels"
+          ],
+          "properties": {
+            "labels": {
+              "type": "object",
+              "maxProperties": 50,
+              "propertyNames": {
+                "$ref": "#/$defs/id"
+              },
+              "additionalProperties": {
+                "enum": [
+                  "safe",
+                  "sensitive"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "verdicts"
+          ],
           "properties": {
             "verdicts": {
               "type": "object",
               "maxProperties": 50,
-              "propertyNames": { "$ref": "#/$defs/id" },
-              "additionalProperties": { "enum": ["met", "partial", "not_met"] }
+              "propertyNames": {
+                "$ref": "#/$defs/id"
+              },
+              "additionalProperties": {
+                "enum": [
+                  "met",
+                  "partial",
+                  "not_met"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "values"
+          ],
+          "properties": {
+            "values": {
+              "type": "object",
+              "maxProperties": 12,
+              "additionalProperties": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "minProperties": 1
             }
           }
         }
@@ -182,7 +238,9 @@
     "idArray": {
       "type": "array",
       "maxItems": 50,
-      "items": { "$ref": "#/$defs/id" }
+      "items": {
+        "$ref": "#/$defs/id"
+      }
     }
   }
 }

@@ -45,7 +45,8 @@ export type StructuredEvidenceAnswer =
   | { readonly contextIds: readonly string[] }
   | { readonly outputId?: string; readonly criterionIds: readonly string[] }
   | { readonly labels: Readonly<Record<string, "safe" | "sensitive">> }
-  | { readonly verdicts: Readonly<Record<string, "met" | "partial" | "not_met">> };
+  | { readonly verdicts: Readonly<Record<string, "met" | "partial" | "not_met">> }
+  | { readonly values: Readonly<Record<string, string>> };
 
 export type LiteracyEvidenceRecord = {
   schemaVersion: 1;
@@ -118,6 +119,7 @@ function structuredAnswer(
   }
   if ("labels" in answer) return { answer: { labels: { ...answer.labels } } };
   if ("verdicts" in answer) return { answer: { verdicts: { ...answer.verdicts } } };
+  if ("values" in answer) return { answer: { values: { ...answer.values } } };
   return {};
 }
 
