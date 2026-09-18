@@ -18,7 +18,7 @@
   ],
   "errors": [],
   "requests": [],
-  "started": "2026-09-18T17:52:46Z",
+  "started": "2026-09-18T17:59:00Z",
   "limitations": [
     "Native file:// navigation blocked by administrative policy.",
     "No native localStorage persistence, Safari or Firefox test.",
