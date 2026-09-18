@@ -314,7 +314,7 @@ def test_replay_cached_reuses_recorded_answers(tmp_path: Path) -> None:
             "status": "ok",
         }
     )
-    (receipts / "pitfalls-seed.ndjson").write_text(line + "\n", encoding="utf-8")
+    (receipts / f"pitfalls-{digest[:16]}.ndjson").write_text(line + "\n", encoding="utf-8")
 
     def explode(s: dict, q: dict) -> dict:
         raise AssertionError("live client must not be called on a replay hit")

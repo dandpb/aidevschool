@@ -1472,7 +1472,16 @@ function evaluateLiteracyActivity(activity, answer) {
   let checks = [];
 
   if (activityType === "prompt_builder") {
-    throw new Error("prompt_builder cannot be independently re-evaluated without free text");
+    // Mirrors the canonical Python verifier's fail-closed order: the values
+    // transport shape first, then the judgment-client requirement (this
+    // deterministic bridge never carries one, so prompt_builder always fails
+    // closed here — receipt parity with the Python entry, AID-449).
+    if (!isObject(answer) || !("values" in answer)) {
+      throw new Error("prompt_builder answer must carry {values: {<fieldId>: text}}");
+    }
+    throw new Error(
+      "prompt_builder verification requires TYPESAFE_API_KEY at the verifier entry (judgment-verified per the accepted RFC); fail closed without it"
+    );
   }
   if (activityType === "choice") {
     const selected = new Set(answerObject(answer, "optionIds").optionIds);

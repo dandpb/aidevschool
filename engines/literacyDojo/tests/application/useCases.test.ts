@@ -195,7 +195,10 @@ describe("submitActivityAttempt", () => {
     expect(services.evidence.records[1].answer).toEqual(RIGHT_ANSWER);
   });
 
-  it("prompt builder não persiste resposta de texto livre", async () => {
+  it("prompt builder persiste os valores por campo para verificação independente", async () => {
+    // Transporte (RFC aceito 2026-09-17 / task C2): o texto livre viaja
+    // limitado (1-2000/campo) para o verificador julgar contra a rubric —
+    // o contrato antigo "never included" foi o que a verificação substituiu.
     const promptActivity = promptLesson.activities[0];
     const answer = {
       values: {
@@ -210,8 +213,7 @@ describe("submitActivityAttempt", () => {
       activityId: promptActivity.id,
       answer,
     });
-    expect(result.record.answer).toBeUndefined();
-    expect(JSON.stringify(result.record)).not.toContain(answer.values.contexto);
+    expect(result.record.answer).toEqual(answer);
   });
 
   it("feedback determinístico vem do conteúdo (onFailure + perCheck)", async () => {

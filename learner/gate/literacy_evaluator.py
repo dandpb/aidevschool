@@ -57,10 +57,6 @@ def _evaluate(activity: dict[str, Any], answer: Any) -> dict[str, Any]:
     evaluation = activity["evaluation"]
     checks: list[tuple[str, bool, bool | int]] = []
 
-    if activity_type == "prompt_builder":
-        raise LiteracyEvaluationError(
-            "prompt_builder cannot be independently re-evaluated without free text"
-        )
     if activity_type == "choice":
         selected = set(_answer_object(answer, "optionIds")["optionIds"])
         correct = set(evaluation["correctOptionIds"])
@@ -149,8 +145,38 @@ def _evaluate(activity: dict[str, Any], answer: Any) -> dict[str, Any]:
     }
 
 
+def _recompute_prompt_builder(
+    activity: dict[str, Any],
+    answer: Any,
+    judgment_client: Any,
+    receipts_root: Path | None,
+) -> dict[str, Any]:
+    """Judge the free text (RFC-accepted); no client fails closed."""
+    from learner.gate.literacy_judgment import LiteracyJudgmentError, verify_prompt_builder
+
+    if not isinstance(answer, dict) or "values" not in answer:
+        raise LiteracyEvaluationError(
+            "prompt_builder answer must carry {values: {<fieldId>: text}}"
+        )
+    if judgment_client is None:
+        raise LiteracyEvaluationError(
+            "prompt_builder verification requires TYPESAFE_API_KEY at the "
+            "verifier entry (judgment-verified per the accepted RFC); "
+            "fail closed without it"
+        )
+    try:
+        return verify_prompt_builder(
+            activity, answer["values"], judgment_client, receipts_root
+        )
+    except LiteracyJudgmentError as exc:
+        raise LiteracyEvaluationError(str(exc)) from exc
+
+
 def recompute_literacy_evidence(
-    evidence: dict[str, Any], root: Path
+    evidence: dict[str, Any],
+    root: Path,
+    judgment_client: Any = None,
+    judgment_receipts_root: Path | None = None,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     errors: list[str] = []
     try:
@@ -175,6 +201,14 @@ def recompute_literacy_evidence(
             raise LiteracyEvaluationError(
                 "activityType does not match canonical activity"
             )
+        if activity["type"] == "prompt_builder":
+            # RFC-accepted judgment path: the producer's deterministic claim
+            # is advisory metadata — the judgment verdict is the independent
+            # truth, so the equality loop below does not apply here.
+            return _recompute_prompt_builder(
+                activity, evidence.get("answer"), judgment_client,
+                judgment_receipts_root,
+            ), []
         recomputed = _evaluate(activity, evidence.get("answer"))
     except (
         KeyError,

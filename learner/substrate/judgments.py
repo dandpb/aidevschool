@@ -52,8 +52,10 @@ RECURRENCE_THRESHOLD = 0.5
 #: never falls below this (mirrors the parser's ``1 + ...`` semantics).
 MIN_OCCURRENCES = 1
 
-#: Receipt files kept after each write (task Unresolved 1 default).
-RECEIPT_RETENTION = 30
+#: Receipts are committed provenance (the check-replay decision, 2026-09-17):
+#: nothing prunes them. Digest-named files already deduplicate re-runs, and
+#: the old 30-file retention would delete exactly the receipts the metric
+#: snapshot and literacy verifications cite as provenance.
 
 _RETRYABLE_STATUSES = frozenset({429, 529})
 _MAX_ATTEMPTS = 4
@@ -174,17 +176,19 @@ def replay_cached(
     def wrapped(state: dict[str, Any], questions: dict[str, Any]) -> dict[str, Any]:
         digest = _input_digest(state, questions)
         if root.is_dir():
-            for path in root.glob("*.ndjson"):
-                if not path.is_file():
+            # Receipts are digest-named (<sweep>-<digest16>.ndjson): a direct
+            # filename lookup instead of a full-directory scan, so the replay
+            # store can grow without slowing every ask. Fallback files end
+            # ``-fallback.ndjson`` and never collide with this pattern.
+            for path in root.glob(f"*-{digest[:16]}.ndjson"):
+                if not path.is_file() or path.name.endswith("-fallback.ndjson"):
                     continue
                 lines = [
                     json.loads(line)
                     for line in path.read_text(encoding="utf-8").splitlines()
                     if line.strip()
                 ]
-                if not lines or lines[0].get("input_digest") != digest:
-                    continue
-                if any(line.get("status") != "ok" for line in lines):
+                if not lines or any(line.get("status") != "ok" for line in lines):
                     continue
                 answers: dict[str, Any] = {}
                 for line in lines:
@@ -223,16 +227,6 @@ def _input_digest(state: dict[str, Any], questions: dict[str, Any]) -> str:
     return hashlib.sha256(canonical).hexdigest()
 
 
-def _prune_receipts(receipts_root: Path) -> None:
-    # Digest names are not time-sortable: keep the newest by mtime.
-    receipts = sorted(
-        (p for p in receipts_root.glob("*.ndjson") if p.is_file()),
-        key=lambda p: p.stat().st_mtime,
-    )
-    for stale in receipts[:-RECEIPT_RETENTION]:
-        stale.unlink()
-
-
 def _write_ok_receipt(
     sweep: str,
     state: dict[str, Any],
@@ -268,7 +262,6 @@ def _write_ok_receipt(
         )
     receipts_root.mkdir(parents=True, exist_ok=True)
     atomic_write_text(receipts_root / name, "\n".join(lines) + "\n")
-    _prune_receipts(receipts_root)
 
 
 def _write_fallback_receipt(
@@ -300,7 +293,6 @@ def _write_fallback_receipt(
     atomic_write_text(
         receipts_root / f"{sweep}-{digest[:16]}-fallback.ndjson", line + "\n"
     )
-    _prune_receipts(receipts_root)
 
 
 # ---------------------------------------------------------------------------
@@ -397,7 +389,7 @@ def _apply_pitfall_answers(
         hits = sum(
             1
             for entry_id in entries
-            if _noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
+            if noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
         )
         updated = dict(pitfall)
         updated["occurrences"] = max(MIN_OCCURRENCES, hits)
@@ -438,7 +430,8 @@ def semantic_pitfall_occurrences(
     return _apply_pitfall_answers(pitfalls, entries, answers)
 
 
-def _noul_value(answer: Any) -> float:
+def noul_value(answer: Any) -> float:
+    """The noul probability of an answer object, 0.0 when absent/invalid."""
     if isinstance(answer, dict):
         value = answer.get("noul")
         if isinstance(value, (int, float)) and not isinstance(value, bool):

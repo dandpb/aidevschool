@@ -147,7 +147,10 @@ def test_prompt_builder_fails_closed_without_persisting_free_text():
     verdict = verify_literacy_evidence(record)
     assert verdict.verdict == "FAIL"
     assert verdict.mastery_eligible is False
-    assert any("free text" in error for error in verdict.errors)
+    # Transport contract (literacy-free-text task): the answer must carry
+    # {values: ...} — absence of the free text fails closed. Both the shape
+    # error and the no-key error name prompt_builder.
+    assert any("prompt_builder" in error for error in verdict.errors)
 
 
 def test_free_text_in_checks_fails_closed():
