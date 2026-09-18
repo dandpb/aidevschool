@@ -3,9 +3,9 @@
 
 C1/C2/C3 (default, toggle, persistence, progress preserved) plus the C9 single-file
 marker probe and the C10 English wrong-answer core text. The C10 assertion targets the
-CORE-module strings (gate feedback + missing-pieces message): option labels and the
-selectionReasons `why` texts are data fields whose `_en` variants land in batch B2, so
-the pt-BR why may legitimately coexist in an otherwise-English panel here.
+CORE-module strings (gate feedback + missing-pieces message); the data-record _en
+fields are spot-checked by the C8 checks below, with full parity enforced by the
+walker in tests/i18n.test.cjs rather than by this browser run.
 Same sandbox pattern as the other journeys: Playwright set_content with an explicit
 in-memory localStorage double; a "reload" is a new page seeded with the previous double
 contents. We do not claim to have tested native file:// navigation or native storage.
@@ -19,7 +19,7 @@ H=(R/'sdlc-quest.html').read_text(encoding='utf-8')
 GOLDEN=json.loads((R/'tests/fixtures/accepted-decisions.json').read_text())
 PT_MARKER='Progresso salvo neste navegador';EN_MARKER='Progress saved in this browser'
 report={'method':'Chromium / Playwright set_content / explicit in-memory localStorage double','checks':[],'errors':[],'requests':[],'started':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
-        'limitations':['Native file:// navigation blocked by administrative policy.','No native localStorage persistence, Safari or Firefox test.','Data-record _en fields (option labels, why texts) arrive in batch B2; core-module strings are covered here.','Exported documents (playbook, TLC guide, harness guide) remain pt-BR by design.']}
+        'limitations':['Native file:// navigation blocked by administrative policy.','No native localStorage persistence, Safari or Firefox test.','Data-record _en parity beyond the C8 spot-checks is enforced by the walker in tests/i18n.test.cjs, not by this browser run.','Exported documents (playbook, TLC guide, harness guide) remain pt-BR by design.']}
 def check(name,result=True):
  if not result:raise AssertionError(name)
  report['checks'].append(name)
@@ -68,6 +68,22 @@ try:
         and 'GUARDIÕES DO RELEASE' not in body(p)
         and PT_MARKER not in body(p))
   p.screenshot(path=str(O/'en-home.png'))
+
+  # C8: EN mission dialog renders the *_en data fields of the page's own QuestData
+  # (compare the DOM against the injected object; cards are shuffled, so match by id).
+  p.locator('[data-stage="0"]').click()
+  qd=p.evaluate('QuestData.missions[0]')
+  check('mission-plan-en',
+        p.locator('#mission-panel h2').inner_text()==qd['title_en']
+        and p.locator('#mission-panel p').first.inner_text()==qd['brief_en'])
+  p.locator('#start-mission').click()
+  opts=p.evaluate('''()=>{const t=QuestData.missions[0].tasks.find(x=>x.id==='intent');
+    return t.options.map(o=>({id:o.id,label:o.label_en,text:o.text_en}));}''')
+  cards={c.get_attribute('data-option'):c for c in p.locator('#exercise [data-option]').all()}
+  check('intent options render label_en and text_en', len(cards)==len(opts) and all(
+        cards[o['id']].locator('strong').inner_text()==o['label'] and
+        cards[o['id']].locator('p').inner_text()==o['text'] for o in opts))
+  p.keyboard.press('Escape')
   # C3a: toggling back and forth never rewrites the campaign save.
   before=p.evaluate("window.__store['sdlc-quest-save-v1']");xp_before=p.locator('#xp').inner_text()
   p.locator('#lang-btn').click()
