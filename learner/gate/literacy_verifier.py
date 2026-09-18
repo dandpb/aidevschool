@@ -164,52 +164,16 @@ def _append_queue(path: Path, entry: dict[str, Any]) -> None:
         handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
-def _escalation_outcome(
-    path: Path, evidence_digest: str
-) -> str | None:
-    """The latest resolved outcome for this digest: "approve" | "reject" | None."""
-    outcome: str | None = None
-    for entry in _load_queue(path):
+def _approved_manual(evidence_digest: str, queue_path: Path) -> str | None:
+    """"manual" if the owner approved this digest's escalation, else None."""
+    for entry in _load_queue(queue_path):
         if (
             entry.get("evidence_digest") == evidence_digest
             and entry.get("status") == "resolved"
+            and entry.get("resolution") == "approve"
         ):
-            outcome = entry.get("resolution")
-    return outcome
-
-
-def _approved_resolution(
-    evidence_digest: str, escalations_path: Path | None
-) -> str | None:
-    """The manual resolution for this digest, if the owner approved it."""
-    outcome = _escalation_outcome(escalations_path or ESCALATIONS_PATH, evidence_digest)
-    return "manual" if outcome == "approve" else None
-
-
-def _recomputed_flags(
-    recomputed: dict[str, Any] | None, judgment_errors: list[str]
-) -> tuple[bool, bool]:
-    """(pass, escalate) from the recomputation, error-free only."""
-    ok = not judgment_errors and recomputed is not None
-    return ok and bool(recomputed["pass"]), ok and bool(recomputed.get("escalate"))
-
-
-def _resolve_outcome(
-    recomputed: dict[str, Any] | None,
-    judgment_errors: list[str],
-    evidence_digest: str,
-    escalations_path: Path | None,
-) -> tuple[bool, bool, str | None]:
-    """(independent_pass, escalate, resolution): approved escalations turn a
-    non-passing digest into PASS with manual provenance — the ESCALATE band
-    included, which is the normal escalation path."""
-    independent_pass, escalate = _recomputed_flags(recomputed, judgment_errors)
-    resolution: str | None = None
-    if not independent_pass:
-        resolution = _approved_resolution(evidence_digest, escalations_path)
-        if resolution is not None:
-            independent_pass = True
-    return independent_pass, escalate, resolution
+            return "manual"
+    return None
 
 
 def _queue_escalation(
@@ -220,7 +184,7 @@ def _queue_escalation(
     judgment_digest: str | None,
     resolution: str | None,
 ) -> None:
-    if escalations_path is None or resolution is not None:
+    if resolution is not None:
         return  # already resolved by the owner: no further queue entries
     _append_queue(
         escalations_path,
@@ -236,10 +200,43 @@ def _queue_escalation(
     )
 
 
-def _verdict_word(independent_pass: bool, escalate: bool) -> str:
+def _envelope_verdict(evidence: Any) -> LiteracyVerdict | None:
+    """A failed verdict for missing/invalid envelopes, else None."""
+    if evidence is None:
+        return _failed_verdict(None, ("missing evidence",))
+    if not isinstance(evidence, dict):
+        return _failed_verdict(None, ("evidence must be a JSON object",))
+    errors = validate_literacy_evidence_structure(evidence)
+    if errors:
+        return _failed_verdict(evidence, tuple(errors))
+    return None
+
+
+def _judgment_outcome(
+    evidence: dict[str, Any],
+    root: Path,
+    judgment_client: Any,
+    receipts_root: Path | None,
+) -> tuple[dict[str, Any] | None, list[str], bool, bool]:
+    """(recomputed, errors, independent_pass, escalate) from the recomputation."""
+    recomputed, judgment_errors = recompute_literacy_evidence(
+        evidence, root, judgment_client, receipts_root
+    )
+    ok = not judgment_errors and recomputed is not None
+    return recomputed, judgment_errors, ok and bool(recomputed["pass"]), ok and bool(
+        recomputed.get("escalate")
+    )
+
+
+def _with_approval(
+    independent_pass: bool, evidence_digest: str, queue_path: Path
+) -> tuple[bool, str | None]:
+    """Approved escalations turn ANY non-passing digest into PASS(manual) —
+    the ESCALATE band included, which is the normal escalation path."""
     if independent_pass:
-        return "PASS"
-    return "ESCALATE" if escalate else "FAIL"
+        return independent_pass, None
+    resolution = _approved_manual(evidence_digest, queue_path)
+    return resolution is not None, resolution
 
 
 def verify_literacy_evidence(
@@ -248,6 +245,7 @@ def verify_literacy_evidence(
     root: Path = REPO_ROOT,
     judgment_client: Any = None,
     escalations_path: Path | None = None,
+    judgment_receipts_root: Path | None = None,
 ) -> LiteracyVerdict:
     """Independently verify one LiteracyEvidenceRecord-shaped dict.
 
@@ -259,28 +257,27 @@ def verify_literacy_evidence(
     ``mastery_eligible`` is true only for independent PASS (judgment or
     approved escalation). The producer surface never writes ``mastered``.
     """
-    if evidence is None:
-        return _failed_verdict(None, ("missing evidence",))
-    if not isinstance(evidence, dict):
-        return _failed_verdict(None, ("evidence must be a JSON object",))
-    envelope_errors = validate_literacy_evidence_structure(evidence)
-    if envelope_errors:
-        return _failed_verdict(evidence, tuple(envelope_errors))
+    # Normalized once: None means the committed queue — verification is an
+    # entry point, so reading and writing the real queue is the default.
+    queue_path = escalations_path or ESCALATIONS_PATH
+    failed = _envelope_verdict(evidence)
+    if failed is not None:
+        return failed
 
-    recomputed, judgment_errors = recompute_literacy_evidence(
-        evidence, root, judgment_client
+    recomputed, judgment_errors, independent_pass, escalate = _judgment_outcome(
+        evidence, root, judgment_client, judgment_receipts_root
     )
     evidence_digest = literacy_evidence_digest(evidence)
     judgment_digest = (recomputed or {}).get("judgment", {}).get("receipt_digest")
-    independent_pass, escalate, resolution = _resolve_outcome(
-        recomputed, judgment_errors, evidence_digest, escalations_path
+    independent_pass, resolution = _with_approval(
+        independent_pass, evidence_digest, queue_path
     )
     if escalate:
         _queue_escalation(
-            escalations_path, evidence, evidence_digest, recomputed,
+            queue_path, evidence, evidence_digest, recomputed,
             judgment_digest, resolution,
         )
-    verdict = _verdict_word(independent_pass, escalate)
+    verdict = "PASS" if independent_pass else ("ESCALATE" if escalate else "FAIL")
     return LiteracyVerdict(
         verdict=verdict,
         context_isolated=True,

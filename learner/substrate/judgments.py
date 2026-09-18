@@ -176,17 +176,19 @@ def replay_cached(
     def wrapped(state: dict[str, Any], questions: dict[str, Any]) -> dict[str, Any]:
         digest = _input_digest(state, questions)
         if root.is_dir():
-            for path in root.glob("*.ndjson"):
-                if not path.is_file():
+            # Receipts are digest-named (<sweep>-<digest16>.ndjson): a direct
+            # filename lookup instead of a full-directory scan, so the replay
+            # store can grow without slowing every ask. Fallback files end
+            # ``-fallback.ndjson`` and never collide with this pattern.
+            for path in root.glob(f"*-{digest[:16]}.ndjson"):
+                if not path.is_file() or path.name.endswith("-fallback.ndjson"):
                     continue
                 lines = [
                     json.loads(line)
                     for line in path.read_text(encoding="utf-8").splitlines()
                     if line.strip()
                 ]
-                if not lines or lines[0].get("input_digest") != digest:
-                    continue
-                if any(line.get("status") != "ok" for line in lines):
+                if not lines or any(line.get("status") != "ok" for line in lines):
                     continue
                 answers: dict[str, Any] = {}
                 for line in lines:
@@ -387,7 +389,7 @@ def _apply_pitfall_answers(
         hits = sum(
             1
             for entry_id in entries
-            if _noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
+            if noul_value(answers.get(f"{pid}__{entry_id}")) >= RECURRENCE_THRESHOLD
         )
         updated = dict(pitfall)
         updated["occurrences"] = max(MIN_OCCURRENCES, hits)
@@ -428,7 +430,8 @@ def semantic_pitfall_occurrences(
     return _apply_pitfall_answers(pitfalls, entries, answers)
 
 
-def _noul_value(answer: Any) -> float:
+def noul_value(answer: Any) -> float:
+    """The noul probability of an answer object, 0.0 when absent/invalid."""
     if isinstance(answer, dict):
         value = answer.get("noul")
         if isinstance(value, (int, float)) and not isinstance(value, bool):

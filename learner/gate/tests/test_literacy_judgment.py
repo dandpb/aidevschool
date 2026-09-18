@@ -81,13 +81,13 @@ def test_values_answer_transport() -> None:
         {**evidence, "answer": {"values": {"tarefa": ""}}},  # empty
         {**evidence, "answer": {"values": {"tarefa": 3}}},  # non-string
         {**evidence, "answer": {"values": {"tarefa": "x" * 2001}}},  # oversized
-        {**evidence, "answer": {"values": {}, **{}}},  # no fields -> judged below
+        {**evidence, "answer": {"values": {}}},  # no fields
         {**evidence, "answer": {"optionIds": ["a"], "values": {"tarefa": "x"}}},  # mixed
     ]
     for bad in bad_shapes[:4]:
         assert validate_literacy_evidence_structure(bad) != []
-    empty_ok = validate_literacy_evidence_structure(bad_shapes[4])
-    assert any("cannot combine" in e for e in empty_ok)
+    mixed = validate_literacy_evidence_structure(bad_shapes[4])
+    assert any("cannot combine" in e for e in mixed)
 
     # undeclared field ids fail at recomputation (activity binding)
     with_undeclared = make_evidence({**PARAPHRASED_VALUES, "campo_inexistente": "x"})
@@ -104,31 +104,29 @@ def test_judgment_pass_path(tmp_path: Path) -> None:
     """C3: all fields >= 0.75 -> pass with a judgment block."""
     evidence = make_evidence(PARAPHRASED_VALUES)
     recomputed, errors = recompute_literacy_evidence(
-        evidence, REPO, judgment_client=FakeClient(0.9)
+        evidence, REPO, judgment_client=FakeClient(0.9),
+        judgment_receipts_root=tmp_path / "receipts",
     )
     assert errors == []
     assert recomputed is not None and recomputed["pass"] is True
     assert recomputed["score"] == pytest.approx(0.9)
     assert set(recomputed["judgment"]["field_scores"]) == set(L18_FIELDS)
     assert len(recomputed["judgment"]["receipt_digest"]) == 16
-    receipts = list((tmp_path.parent / "x").glob("*.ndjson"))  # receipts went to default root
-    # (receipt default root is the committed dir; the digest is asserted above)
 
 
 def test_judgment_bands(tmp_path: Path) -> None:
     """C4: mean < 0.4 fails without escalation; 0.4-0.75 escalates."""
     low = make_evidence(PARAPHRASED_VALUES)
-    _, errors_low = recompute_literacy_evidence(
-        low, REPO, judgment_client=FakeClient(0.2)
-    )
     recomputed_low = recompute_literacy_evidence(
-        low, REPO, judgment_client=FakeClient(0.2)
+        low, REPO, judgment_client=FakeClient(0.2),
+        judgment_receipts_root=tmp_path / "receipts",
     )[0]
     assert recomputed_low["pass"] is False and not recomputed_low["escalate"]
 
     mid = make_evidence(PARAPHRASED_VALUES)
     recomputed_mid = recompute_literacy_evidence(
-        mid, REPO, judgment_client=FakeClient(0.6)
+        mid, REPO, judgment_client=FakeClient(0.6),
+        judgment_receipts_root=tmp_path / "receipts",
     )[0]
     assert recomputed_mid["pass"] is False and recomputed_mid["escalate"] is True
 
@@ -150,7 +148,10 @@ def test_live_paraphrase_semantics(tmp_path: Path) -> None:
         assert keyword not in rubric, keyword
 
     client = http_client(os.environ["TYPESAFE_API_KEY"])
-    recomputed, errors = recompute_literacy_evidence(evidence, REPO, judgment_client=client)
+    recomputed, errors = recompute_literacy_evidence(
+        evidence, REPO, judgment_client=client,
+        judgment_receipts_root=tmp_path / "receipts",
+    )
     assert errors == []
     assert recomputed is not None and recomputed["score"] >= 0.75
 
@@ -178,6 +179,7 @@ def test_cli_exit_codes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
         make_evidence(PARAPHRASED_VALUES),
         root=REPO,
         judgment_client=FakeClient(0.9),
+        judgment_receipts_root=tmp_path / "receipts",
         escalations_path=queue,
     )
     assert (passing.verdict, passing.mastery_eligible) == ("PASS", True)
@@ -191,24 +193,26 @@ def _cli_exit(
     tmp_path: Path, values: dict[str, str], noul: float, queue: Path
 ) -> int:
     import learner.gate.literacy_verifier as lv
+    import learner.substrate
 
     evidence_path = tmp_path / f"ev-{noul}.json"
     evidence_path.write_text(
         json.dumps(make_evidence(values, pass_claim=True)), encoding="utf-8"
     )
-    monkeypatched_client = FakeClient(noul)
-    original = lv.verify_literacy_evidence
+    receipts = tmp_path / f"receipts-{noul}"
+    queue_dir = queue.parent
+    queue_dir.mkdir(parents=True, exist_ok=True)
+    real_default = learner.substrate.default_judgment_client
 
-    def patched(evidence, **kwargs):
-        kwargs["judgment_client"] = monkeypatched_client
-        kwargs.setdefault("escalations_path", queue)
-        return original(evidence, **kwargs)
+    def fake_default():
+        return lambda state, questions: FakeClient(noul)(state, questions)
 
-    lv.verify_literacy_evidence = patched
+    learner.substrate.default_judgment_client = fake_default
+    lv.ESCALATIONS_PATH = queue
     try:
         return lv.main(["--evidence", str(evidence_path), "--root", str(REPO)])
     finally:
-        lv.verify_literacy_evidence = original
+        learner.substrate.default_judgment_client = real_default
 
 
 def test_producer_claim_advisory(tmp_path: Path) -> None:
@@ -218,6 +222,7 @@ def test_producer_claim_advisory(tmp_path: Path) -> None:
         evidence,
         root=REPO,
         judgment_client=FakeClient(0.2),
+        judgment_receipts_root=tmp_path / "receipts",
         escalations_path=tmp_path / "escalations.ndjson",
     )
     assert verdict.verdict == "FAIL"
@@ -235,6 +240,7 @@ def test_escalation_appends_queue(tmp_path: Path) -> None:
         make_evidence(PARAPHRASED_VALUES),
         root=REPO,
         judgment_client=FakeClient(0.6),
+        judgment_receipts_root=tmp_path / "receipts",
         escalations_path=queue,
     )
     assert verdict.verdict == "ESCALATE"
@@ -244,7 +250,7 @@ def test_escalation_appends_queue(tmp_path: Path) -> None:
     assert entry["status"] == "open" and entry["attempt_id"] == L18_ATTEMPT
     assert entry["evidence_digest"] == verdict.evidence_digest
     assert set(entry["field_scores"]) == set(L18_FIELDS)
-    receipts = list(Path(REPO / "learner" / "judgment_receipts").glob("literacy-*.ndjson"))
+    receipts = list((tmp_path / "receipts").glob("literacy-*.ndjson"))
     assert any(
         verdict.judgment_receipt_digest in r.name for r in receipts
     ), "digest-named judgment receipt must exist"
@@ -304,7 +310,7 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
         json.dumps(
             {
                 "attempt_id": L18_ATTEMPT,
-                "evidence_digest": literacy_evidence_digest_of(fail_evidence),
+                "evidence_digest": literacy_evidence_digest_of(fail_evidence, tmp_path),
                 "status": "resolved",
                 "resolution": "approve",
             }
@@ -318,11 +324,12 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
     assert recovered.verdict == "PASS" and recovered.resolution == "manual"
 
 
-def literacy_evidence_digest_of(evidence: dict) -> str:
+def literacy_evidence_digest_of(evidence: dict, tmp_path: Path) -> str:
     from learner.gate.literacy_verifier import verify_literacy_evidence
 
     verdict = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=None
+        evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=None,
+        judgment_receipts_root=tmp_path / "digest-helper-receipts",
     )
     return verdict.evidence_digest
 
@@ -348,7 +355,7 @@ def test_changed_answer_rejudges(tmp_path: Path) -> None:
     changed = dict(PARAPHRASED_VALUES)
     changed["formato"] = "Outra coisa completamente diferente e curta"
     evidence = make_evidence(changed)
-    first = recompute_literacy_evidence(evidence, REPO, judgment_client=FakeClient(0.5))[0]
+    first = recompute_literacy_evidence(evidence, REPO, judgment_client=FakeClient(0.5), judgment_receipts_root=tmp_path / "receipts")[0]
     other = make_evidence(PARAPHRASED_VALUES)
-    second = recompute_literacy_evidence(other, REPO, judgment_client=FakeClient(0.5))[0]
+    second = recompute_literacy_evidence(other, REPO, judgment_client=FakeClient(0.5), judgment_receipts_root=tmp_path / "receipts")[0]
     assert first["judgment"]["receipt_digest"] != second["judgment"]["receipt_digest"]

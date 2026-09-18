@@ -160,7 +160,14 @@ class LiteracyVerifier:
         # nothing — this verifier never writes learner state.
         del dry_run, verifier_receipt_path
         evidence = load_literacy_evidence(evidence_path)
-        literacy_verdict = verify_literacy_evidence(evidence)
+        # Entry point: construct the judgment client from env here (the
+        # injection-only convention) so prompt_builder verifies when a key
+        # is configured.
+        from learner.substrate import default_judgment_client
+
+        literacy_verdict = verify_literacy_evidence(
+            evidence, judgment_client=default_judgment_client()
+        )
         return Verdict(
             passed=literacy_verdict.passed,
             errors=literacy_verdict.errors,

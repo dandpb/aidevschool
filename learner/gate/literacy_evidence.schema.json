@@ -108,9 +108,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "optionIds"
-          ],
+          "required": "optionIds",
           "properties": {
             "optionIds": {
               "$ref": "#/$defs/idArray"
@@ -120,9 +118,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "orderedIds"
-          ],
+          "required": "orderedIds",
           "properties": {
             "orderedIds": {
               "$ref": "#/$defs/idArray"
@@ -132,9 +128,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "contextIds"
-          ],
+          "required": "contextIds",
           "properties": {
             "contextIds": {
               "$ref": "#/$defs/idArray"
@@ -144,9 +138,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "criterionIds"
-          ],
+          "required": "criterionIds",
           "properties": {
             "outputId": {
               "$ref": "#/$defs/id"
@@ -159,9 +151,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "labels"
-          ],
+          "required": "labels",
           "properties": {
             "labels": {
               "type": "object",
@@ -181,9 +171,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "verdicts"
-          ],
+          "required": "verdicts",
           "properties": {
             "verdicts": {
               "type": "object",
@@ -204,9 +192,7 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "values"
-          ],
+          "required": "values",
           "properties": {
             "values": {
               "type": "object",
