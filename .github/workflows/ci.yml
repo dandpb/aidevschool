@@ -28,7 +28,11 @@ jobs:
   # (scripts/sdlc_guard_check.sh, scripts/sdlc_aid_resolve.sh, docs/sdlc/**,
   # .github/workflows/**, intent/README.md) on a cited, resolvable
   # 'Countersign:' verdict line — see docs/sdlc/README.md §Merge protocol
-  # item 5.
+  # item 5. AID-2428 Stage 2 extends the same gate to EVERY bot/agent-
+  # authored PR (any diff, no engine-only exemption) and adds ordering: the
+  # cited verdict must be posted strictly BEFORE the merge (on a merged PR
+  # only comment citations with createdAt < mergedAt count; body-trailer
+  # citations there fail closed — the API exposes no body-edit time).
   sdlc-guards:
     name: SDLC guardrails (diff)
     runs-on: ubuntu-latest

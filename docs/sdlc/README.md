@@ -254,8 +254,22 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      `::notice` auditável. Como o check é required context no head, a citação
      só pode ficar verde ANTES do merge — o gate verifica a **citação**, não
      o conteúdo do veredito: o veredito first-hand FPE/QA continua exigido
-     (AID-1515 §3; CI verde ≠ gate completo). Stage 2 (estender a todo PR de
-     bot/agent): decidir após Stage 1 observado (AID-2318).
+      (AID-1515 §3; CI verde ≠ gate completo).
+
+   **Emenda Stage-2 (AID-2428, GO CEO AID-2426/D3, 2026-09-18).** Após o
+   1º merge de bot pós-Stage-1 (#495/`ccd42d6f`, 11:40:31Z) descumprir a
+   citação — merge-msg com 0 linhas `Countersign:`, 3ª ocorrência da classe
+   sem-linha-canônica (#481→#491→#495) — o gate mecânico passou a exigir a
+   citação canônica resolvível de **TODO PR de bot/agent (qualquer diff, sem
+   isenção "engine-only"**; precedente #483/AID-2333: producer ≠ verifier
+   nunca é dispensado), mantendo a regra Stage-1 por paths de autoridade
+   para qualquer autor, e passou a verificar a **ordenação**: o veredito
+   citado deve estar postado **antes do merge** — em PR já mergeado só
+   contam citações em comentário com `createdAt < merged_at` (citação
+   pós-merge é inválida; trailer de body em PR mergeado é fail-closed por
+   não ter timestamp verificável). PRs de humano/founder sem paths de
+   autoridade seguem fora do gate nesta etapa (comportamento documentado no
+   self-test iv). Registro: `intent/AID-2428-countersign-gate-stage2/`.
 
 ## Guardrails (what is enforced, and how)
 
