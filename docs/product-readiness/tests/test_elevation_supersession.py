@@ -26,7 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 READINESS_ROOT = REPO_ROOT / "docs" / "product-readiness"
 
 ELEVATED_USE_CASE = UseCaseId("dojotoday-daily-guidance")
-LATEST_ASSESSMENT_ID = AssessmentId("2026-09-18-3aca4d5d-claims-regrant-v92")
+LATEST_ASSESSMENT_ID = AssessmentId("2026-09-18-7c044984-dojotoday-regrant-v93")
 
 
 def _pre_bump_assessment(domain_runs: tuple, decision: ReadinessDecision) -> Assessment:

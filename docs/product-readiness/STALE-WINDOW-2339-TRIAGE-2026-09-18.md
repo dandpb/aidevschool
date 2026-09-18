@@ -61,3 +61,27 @@ A fábrica poderia re-propor quando o anchor da proposta aberta envelhecer para
 algum grupo coberto (diff anchor..main nos sourcePaths) — fecha e re-abre em vez
 de segurar a dedupe até o stale eterno. Escalar ao dono da fábrica
 (Platform & CI / FPE) como melhoria; não é bloqueio deste re-grant.
+
+## Addendum — re-anchor v93 (AID-2396, ordem QA AID-2393 NO-GO `db5a93ce`, 2026-09-18 04:48Z)
+
+Entre o anchor v92 (`3aca4d5d`) e o countersign QA, a main andou em path coberto:
+PR #494 (merge `60ae2179`, 04:42:56Z) tocou `learner/substrate/judgments.py`
+(+25/-18 — refactor `_ask`→`ask_and_record`, seam público p/
+`learner/gate/metric_lint`; diff lido first-hand, sem novo caminho de escrita de
+estado do aprendiz). Merge sim `60ae2179`+`6ce16467` → `check --require-current`
+rc=1 exatamente `STALE-WINDOW: dojotoday-daily-guidance` (3 cenários); demais 5
+grupos v92 current. Veredito QA: NO-GO para merge as-is (runbook §Regra de merge
+itens 2–3); a fábrica não re-propõe sozinha (dedupe segura no PR #489 aberto —
+lacuna estrutural §Follow-up acima).
+
+Re-anchor executado na branch do PR #489 (producer: Docs & Readiness, AID-2396):
+merge `7c044984` = v92 `6ce16467` + main `60ae2179` → observação independente
+dos 3 cenários dojotoday re-ancorada first-hand (bundle
+`evidence/observations/2026-09-18-7c044984-dojotoday-regrant-v93/`: substrate
+214 passed/1 skipped, selfcheck OK, playwright 25 passed; sourceFingerprint
+`fe30fdb9…` novo @ `7c044984`) → `aggregate --observations` + `regrant --propose`
+exit 0 → assessment `2026-09-18-7c044984-dojotoday-regrant-v93` (apenas o grupo
+dojotoday; os outros 5 seguem cobertos pelo v92, fingerprints inalterados) →
+`check` e `check --require-current` rc=0; testes do cli 50 passed/2 skipped
+(pin `LATEST_ASSESSMENT_ID` atualizado). Pendente: CI verde no head novo →
+re-countersign QA (AID-2393) → merge single-writer FPE citando o verdict GO.
