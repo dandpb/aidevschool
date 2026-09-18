@@ -49,7 +49,7 @@ Cheaper paths considered at RFC time: status-quo fail-closed (free-text literacy
 ## Boundary
 
 In: the prompt_builder branch of `literacy_evaluator` (judgment via injected client), `literacy_verifier` (ESCALATE verdict, exit codes, `--resolve` CLI, escalations NDJSON), receipts/replay via the substrate judgment seam.
-Out: deterministic activity types (unchanged, offline); the canonical rubric YAML and schema (untouched — judgment consumes them read-only); literacyDojo TS (untouched); new activity types (fail-closed rule stays).
+Out: deterministic activity types (unchanged, offline); the canonical rubric YAML (untouched — judgment consumes it read-only); new activity types (fail-closed rule stays). literacyDojo TS: only the `structuredAnswer` whitelist entry for `values` — no other producer change; the evidence schema gains the answer variant (in scope via the transport amendment).
 
 ## Shape
 
@@ -64,12 +64,13 @@ The verifier's prompt_builder branch stops raising and asks one Noul per field �
 
 ### Changes
 
+- **Answer transport (tlc-plan grounding amendment)**: the producer strips prompt_builder answers today (`structuredAnswer` in `engines/literacyDojo/src/domain/evidence.ts` whitelists structured shapes only; the schema says "free-text never included") — the free text never reaches the verifier. The evidence schema's `answer` oneOf gains a `{values: {<fieldId>: bounded string}}` variant, the structure validator accepts it, and the TS whitelist emits it. Without this the judgment has nothing to judge; the original "literacyDojo TS untouched" was wrong and is amended here
 - `literacy_evaluator._evaluate` prompt_builder branch → judgment path; `recompute_literacy_evidence(..., judgment_client=None)` (injection-only; the verifier entry constructs the client from env)
 - `LiteracyVerdict` — gains the judgment receipt digest + escalation fields; for prompt_builder the producer's deterministic claim becomes advisory metadata (the judgment verdict is the independent truth; disagreement is the expected upgrade path, not an error)
 
 ### Leaves
 
-- `ACTIVITY_PASS_THRESHOLD = 0.75` (reused as the pass mark); deterministic activity types; the canonical lesson YAML/schema; literacyDojo TS
+- `ACTIVITY_PASS_THRESHOLD = 0.75` (reused as the pass mark); deterministic activity types; the canonical lesson YAML; literacyDojo TS beyond the one whitelist entry
 
 ## Roadmap
 
