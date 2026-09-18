@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Administração — AI DevSchool</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/admin.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/"><span>AI</span> DevSchool</a><a href="/">Voltar à entrada</a></header>
+  <main class="admin-main">
+    <section class="admin-intro"><h1>Engines disponíveis</h1><p>Libere experiências para todos os alunos. A checagem automática confirma se a entrada está utilizável.</p></section>
+    <p id="admin-status" class="status" role="status" aria-live="polite"></p>
+    <section id="login-section" class="login-panel" hidden>
+      <h2>Acesso do operador</h2>
+      <form id="login-form">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required autocomplete="current-password" maxlength="1024">
+        <button type="submit" class="primary">Entrar</button>
+      </form>
+    </section>
+    <section id="admin-section" hidden aria-label="Liberação global de engines">
+      <div class="admin-toolbar"><p>A liberação vale para todos. Uma engine sem destino ou com falha na checagem não será oferecida.</p><button type="button" class="secondary" id="logout">Sair</button></div>
+      <div id="admin-engines" class="admin-list"></div>
+    </section>
+  </main>
+  <footer>Disponibilidade operacional não altera progresso ou domínio de aprendizagem.</footer>
+</body>
+</html>

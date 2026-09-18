@@ -14,6 +14,8 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 | Surface | Role |
 | --- | --- |
 | `docs/VISION.md` | Canonical product intention: two audiences, one short-lesson mechanic. It does not prove implementation status. |
+| `.design/engine-entry-recommender.md` · `.tasks/engine-entry-recommender.md` | Discovery and task for the independent AI DevSchool entry: TypeSafe top-three engine recommendations, global operator release control, automatic availability checks, and full available-catalog fallback. Implementation is tracked by `.checks/engine-entry-recommender.md`; publication remains separate. |
+| `engines/school-entry/` | Independent public-ready entry with TypeSafe ranking, operator-controlled SQLite release state, browser availability checks, no-match and provider-failure catalog fallback. It never grants mastery; no deployment is implied. |
 | `docs/design/micro-lesson-contract.md` | Cross-surface pedagogical lifecycle. It does not merge bounded-context evidence schemas. |
 | `docs/design/product-readiness.md` | Cross-product readiness authority: tiers, evidence freshness, severity treatment, ownership, and the boundary from learner state. |
 | `docs/product-readiness/` | Canonical readiness policy, inventory, scenarios, promoted evidence, assessments, generated matrix, and audience routes. It never mutates learner state or grants mastery. |
