@@ -1,0 +1,41 @@
+
+> dojotoday@0.1.0 test:readiness
+> npm run selfcheck && playwright test && READINESS_TEST_RUN=passed node scripts/readiness-report.mjs
+
+
+> dojotoday@0.1.0 selfcheck
+> python3 tools/selfcheck.py
+
+OK: dojotoday self-check passed (track + game_dir).
+
+Running 25 tests using 1 worker
+
+  ✓   1 playwright/a11y-w0.spec.ts:21:1 › w0-1: navegação por teclado mostra foco visível (outline 3px, offset 2px) em todos os controles (705ms)
+  ✓   2 playwright/a11y-w0.spec.ts:53:1 › w0-2: --muted atinge contraste AA (>=4.5:1) nos textos auditados (AID-914 §1.4) (358ms)
+  ✓   3 playwright/a11y-w1.spec.ts:18:1 › w1-1: .is-mastered .track-glyph atinge contraste AA (>=4.5:1) — AID-914/W1 (295ms)
+  ✓   4 playwright/a11y-w2.spec.ts:26:1 › w2-1: :focus-visible dos controles usa a alias --ads-focus (>=2px + offset >=2px) (402ms)
+  ✓   5 playwright/a11y-w2.spec.ts:62:1 › w2-2: :disabled tem aparência própria + cursor:not-allowed (não só opacity) (418ms)
+  ✓   6 playwright/a11y-w2.spec.ts:98:1 › w2-3: :hover e :active (:not(:disabled)) existem nos controles do loop (403ms)
+  ✓   7 playwright/a11y-w2.spec.ts:139:1 › w2-4: loading assíncrono — botão disable + aria-busy e reply é role=status com aria-live/atomic (476ms)
+  ✓   8 playwright/a11y-w2.spec.ts:186:1 › w2-5: feedback de erro comunica estado por cor + borda + texto (nunca só cor) (444ms)
+  ✓   9 playwright/a11y-w3.spec.ts:26:1 › w3-1: papéis canônicos do loop — feedback-panel e submit-attempt (327ms)
+  ✓  10 playwright/a11y-w3.spec.ts:37:1 › w3-2: forced-colors — erro distinguível sem cor (borda dashed) e foco sobrevive (415ms)
+  ✓  11 playwright/a11y-w3.spec.ts:86:1 › w3-3: re-tentativa pelo mesmo controle com o mesmo rótulo (verificar de novo) (501ms)
+  ✓  12 playwright/continuity.spec.ts:14:1 › readiness dojotoday-returning-next-day: schedule updates across days without stale carryover (603ms)
+  ✓  13 playwright/hosted-os.spec.ts:21:1 › unit: renderLocalSuggestion escapa title/detail hostis no sink innerHTML (3ms)
+  ✓  14 playwright/hosted-os.spec.ts:37:1 › unit: renderLocalSuggestion mantém a fronteira de autoridade da vista hosted (1ms)
+  ✓  15 playwright/hosted-os.spec.ts:48:1 › unit: projectLocalSuggestion sem progresso válido cai no fallback (3ms)
+  ✓  16 playwright/hosted-os.spec.ts:57:1 › unit: projectLocalSuggestion segue a missão dev ativa do dispositivo (1ms)
+  ✓  17 playwright/hosted-os.spec.ts:72:1 › unit: sem missão ativa, sugere a próxima missão incompleta do trilho (0ms)
+  ✓  18 playwright/hosted-os.spec.ts:81:1 › unit: trilho dev concluído sugere o catálogo do Engine Hub (1ms)
+  ✓  19 playwright/hosted-os.spec.ts:94:1 › unit: progresso hostil do OS nunca vaza title/detail crus (1ms)
+  ✓  20 playwright/hosted-os.spec.ts:105:1 › unit: loadHostLocalToday degrada para fallback sem IndexedDB (0ms)
+  ✓  21 playwright/hosted-os.spec.ts:113:1 › e2e: rota hosted ?host=os renderiza a sugestão local, não a vista canônica (287ms)
+  ✓  22 playwright/hosted-os.spec.ts:128:1 › e2e: rota hosted com progresso hostil do OS não executa nem exibe payload (273ms)
+  ✓  23 playwright/numeric-fields-escape.spec.ts:20:1 › guard: campos numéricos hostis renderizam escapados, sem handler injetado e sem pageerror (386ms)
+  ✓  24 playwright/numeric-fields-escape.spec.ts:92:1 › guard: recorde hostil com streak acesa renderiza como texto literal, não como elemento (345ms)
+  ✓  25 playwright/readiness.spec.ts:3:1 › readiness dojotoday-active-unit-guidance: shows schedule, active unit, and authority boundary (323ms)
+
+  25 passed (9.9s)
+Reported engines/dojoToday/test-results/readiness/dojotoday-active-unit-guidance.json
+Reported engines/dojoToday/test-results/readiness/dojotoday-returning-next-day.json

@@ -1,0 +1,57 @@
+first-hand mechanical checks — dojotoday re-anchor v93 (AID-2396) @ 7c044984
+tree: merge 7c044984 = docs/aid-2339-claims-regrant-v92 (6ce16467) + main (60ae2179)
+executor: Docs & Readiness Engineer (agent 7b5e31ea), 2026-09-18 ~04:55Z
+
+[PASS] stale signature on merged tree (pre re-anchor):
+  python3 docs/product-readiness/tools/cli.py check --require-current -> rc=1
+  STALE-WINDOW: dojotoday-daily-guidance: recorded pass/customer-ready vs current
+  stale/None; reasons = 3 scenarios 'source fingerprint is stale'
+  (exactly the QA sim signature from AID-2393 verdict db5a93ce; the other 5
+  groups promoted by v92 remain current on this tree — single STALE-WINDOW line)
+
+[PASS] drift cause read first-hand (git diff 3aca4d5d..7c044984 -- learner/substrate/):
+  only learner/substrate/judgments.py (+25/-18), from PR #494 (merge 60ae2179,
+  Countersign: AID-2394 verdict GO @1468d133); commits 9494bb75 + 4ba56960.
+  Refactor: _ask -> public ask_and_record (returns (answers, digest16), ok-receipt
+  moved inline from callers, receipts_root optional -> DEFAULT_RECEIPTS_ROOT) so
+  learner/gate/metric_lint can consume the seam. No new learner-state write path:
+  receipts remain audit artifacts under learner/judgment_receipts/; fallback
+  contract ("enrichment never breaks a sync, every failure is auditable") intact.
+
+[PASS] student-guide.md:233-239 — 'Read today's guidance in dojoToday' section:
+  'It is not canonical FSRS and does not write learner/learning_state.yaml' present.
+[PASS] student-guide.md:241-244 — bounded exit: 'ask a facilitator to regenerate
+  the shared projection. Stop if the canonical state is unavailable; don't use an
+  old view as proof of current progress.'
+[PASS] facilitator-guide.md:307 — 'Regenerate the shared learner projection before
+  dojoToday sessions'.
+[PASS] facilitator-guide.md:318-319 — 'guidance is read-only, game output is raw
+  evidence, and only a separate verifier can accept evidence or grant mastery'.
+[PASS] facilitator-guide.md:328-330 — observe due reviews / active unit / next
+  action as reading, not verdict.
+[PASS] facilitator-guide.md:337 — recovery row 'dojoToday view is stale or missing
+  | Regenerate the canonical projection, reload, and retain the read-only boundary'
+  + escalation 'Canonical learner state cannot be read...'.
+[PASS] engines/dojoToday/src/main.ts:78-79 — 'O jogo emite evidência bruta; um
+  verificador independente decide o gate.' rendered in-view.
+[PASS] learner/substrate/adapters/dojotoday.py:111-131 — derive_today_snapshot
+  still read+derive only; judgment_client optional, default None; docstring
+  'without deciding mastery or writing back to the canonical state' lineage kept
+  (delegates to build_snapshot for the same scheduling truth).
+
+[PASS] guides unchanged since v92 anchor: git log 3aca4d5d..7c044984 -- \
+  docs/product-readiness/student-guide.md docs/product-readiness/facilitator-guide.md
+  -> empty. manualFingerprint unchanged (029ce8f5...) — matches producer reports.
+
+[PASS] substrate suite first-hand: python3 -m pytest learner/substrate/tests -q
+  -> 214 passed, 1 skipped in 10.85s (logs/substrate-pytest.txt)
+[PASS] selfcheck first-hand: python3 engines/dojoToday/tools/selfcheck.py
+  -> 'OK: dojotoday self-check passed (track + game_dir).' (logs/selfcheck.txt;
+  also re-run inside npm run test:readiness)
+[PASS] playwright first-hand @ 7c044984: npm run test:readiness
+  -> 25 passed (9.9s) incl. readiness.spec.ts (schedule/active unit/authority
+  boundary), continuity.spec.ts (returning next day), hosted-os.spec.ts,
+  numeric-fields-escape.spec.ts guards (logs/dojotoday-test-readiness.txt)
+[PASS] producer reports @ 7c044984 emitted: sourceFingerprint fe30fdb9bb52...
+  (was 05a9e391144c... @ 3aca4d5d — the expected drift), manualFingerprint
+  029ce8f5006b... unchanged, gitSha 7c044984, executor automated, outcome pass.
