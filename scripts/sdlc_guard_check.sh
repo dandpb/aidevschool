@@ -281,20 +281,32 @@ run_checks() {
     done
     local ctx="" ctx_rc=0
     ctx="$(pr_context_json 2>/dev/null)" || ctx_rc=1
-    local pr_author_type="Unknown" pr_author_login="" pr_merged_at=""
+    # AID-2481: bot detection is a UNION of every signal the known author
+    # shapes expose, so a shape change on any single source can never again
+    # silently un-bot an author (fail-closed). Signals:
+    #   __typename == "Bot"   classic gh pr view / GraphQL shape
+    #   is_bot == true        new gh pr view --json author shape
+    #                         ({is_bot:true, login:"app/<slug>"})
+    #   login suffix "[bot]"  classic Bot API logins (github-actions[bot])
+    #   login prefix "app/"   app-slug logins of the new shape; '/' cannot
+    #                         appear in a human GitHub login
+    local pr_author_type="Unknown" pr_author_login="" pr_author_is_bot="false" pr_merged_at=""
     if [ "$ctx_rc" -eq 0 ]; then
       pr_author_type="$(printf '%s' "$ctx" | jq -r '.author.__typename // "Unknown"')"
       pr_author_login="$(printf '%s' "$ctx" | jq -r '.author.login // ""')"
+      pr_author_is_bot="$(printf '%s' "$ctx" | jq -r '.author.is_bot // false')"
       pr_merged_at="$(printf '%s' "$ctx" | jq -r '.mergedAt // ""')"
     elif [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
       # No conversation source (gh missing/failed), but the event payload
       # still names the author — enough to trigger, not to verify.
       pr_author_type="$(jq -r '.pull_request.user.type // "Unknown"' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
       pr_author_login="$(jq -r '.pull_request.user.login // ""' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
+      pr_author_is_bot="$(jq -r '.pull_request.user.is_bot // false' "${GITHUB_EVENT_PATH}" 2>/dev/null)"
     fi
     local is_bot=0
     case "$pr_author_type" in Bot) is_bot=1 ;; esac
-    case "$pr_author_login" in *"[bot]") is_bot=1 ;; esac
+    case "$pr_author_login" in *"[bot]"|"app/"*) is_bot=1 ;; esac
+    case "$pr_author_is_bot" in true|True) is_bot=1 ;; esac
     if [ "${#authority_paths[@]}" -gt 0 ] || [ "$is_bot" -eq 1 ]; then
       local cs_scope
       if [ "${#authority_paths[@]}" -gt 0 ]; then
@@ -673,6 +685,20 @@ $big_filler"
   mk_ctx User "dandpb" "" "$T2/empty" \
     '[{"createdAt":"2026-09-18T07:30:00Z","body":"Countersign: AID-9006 verdict 679cf9d3"}]' > "$T2/human_authority_cited"
 
+  # AID-2481 regression: `gh pr view --json author` changed shape — bot
+  # authors now come back as {"is_bot":true,"login":"app/<slug>"} with NO
+  # __typename and NO '[bot]' suffix (observed live on PR #501, gh 2.46),
+  # which silently bypassed Stage 2 on real scans. Fixtures pin that exact
+  # new shape; the union detection (is_bot flag + app/<slug> login) must
+  # re-trip the gate.
+  mk_ctx_ghbot() { # $1=mergedAt(""=null) $2=body-file $3=comments-json — new gh author shape
+    jq -nc --arg m "$1" --rawfile b "$2" --argjson c "$3" \
+      '{author:{is_bot:true,login:"app/github-actions"},body:$b,mergedAt:($m|if .=="" then null else . end),comments:$c}'
+  }
+  mk_ctx_ghbot "" "$T2/empty" '[]' > "$T2/ghbot_open"
+  mk_ctx_ghbot "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T07:10:00Z","body":"QA verdict posted\nCountersign: AID-9006 verdict 679cf9d3"}]' > "$T2/ghbot_cited_premerge"
+
   # (i) bot/agent PR, engine-only diff, NO citation -> fail (Stage 2 trigger).
   pr2_scenario "$T2/bot_open" "bot PR without countersign citation fails (AID-2428)" 1 "bot engine change" -- \
     "printf 'bot change\n' >> src/app.py"
@@ -719,6 +745,34 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD "$cs2_br" >/dev/null
+
+  # AID-2481 (vii): new-shape gh bot PR (is_bot:true, app/<slug> login, no
+  # __typename, no [bot] suffix), engine-only diff, NO citation -> must FAIL
+  # (Stage 2 re-triggers via the union detection; this exact fixture was the
+  # live bypass on PR #501).
+  pr2_scenario "$T2/ghbot_open" "new gh-shape bot PR without citation fails (AID-2481)" 1 "gh-shape bot engine change" -- \
+    "printf 'ghbot change\n' >> src/app.py"
+
+  # AID-2481 (viii): same new-shape bot author with a valid pre-merge comment
+  # citation -> pass AND emit the audit notice with the posting time.
+  local cs3_br="st-countersign3-$$" cs3_out cs3_rc
+  $GITC checkout -q -b "$cs3_br" "$base_sha"
+  printf 'ghbot change\n' >> "$R/src/app.py"
+  $GITC add -A >/dev/null
+  $GITC commit -qm "gh-shape bot engine change with pre-merge citation"
+  cs3_out="$(GITHUB_EVENT_NAME=pull_request SDLC_PR_CONTEXT_FILE="$T2/ghbot_cited_premerge" SDLC_GUARD_AID_RESOLVER="$stub" \
+    bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$cs3_br" 2>&1)"; cs3_rc=$?
+  if [ "$cs3_rc" -eq 0 ] && printf '%s' "$cs3_out" | grep -q '^::notice::countersign citation accepted' \
+    && printf '%s' "$cs3_out" | grep -q '(posted: 2026-09-18T07:10:00Z)'; then
+    echo "PASS [new gh-shape bot PR with pre-merge citation passes + notice (AID-2481)] rc=$cs3_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [new gh-shape bot PR with pre-merge citation passes + notice (AID-2481)] rc=$cs3_rc (expected 0)"
+    printf '%s\n' "$cs3_out" | sed 's/^/    | /'
+    fail=$((fail+1))
+  fi
+  $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+  $GITC branch -qD "$cs3_br" >/dev/null
 
   # AID-2473 regression: the CI runner executes the self-test step on the
   # PR itself, so GITHUB_EVENT_NAME/GITHUB_EVENT_PATH/GITHUB_REF name the
