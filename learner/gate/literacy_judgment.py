@@ -40,10 +40,13 @@ def _field_questions(
     declared = {field.get("id"): field for field in data.get("fields") or []}
     entries: dict[str, Any] = {}
     questions: dict[str, Any] = {}
+    unknown = set(values) - set(declared)
+    if unknown:
+        raise LiteracyJudgmentError(
+            f"answer values carry undeclared field ids: {sorted(unknown)}"
+        )
     for field_id, text in values.items():
-        field = declared.get(field_id)
-        if field is None:
-            continue  # unknown field ids are rejected by the caller (binding)
+        field = declared[field_id]
         qid = f"{activity.get('id', 'activity')}::{field_id}"
         entries[qid] = {
             "scenario": data.get("scenario", ""),
@@ -99,13 +102,10 @@ def verify_prompt_builder(
             "(set TYPESAFE_API_KEY); see the fallback receipt for the failure"
         )
     answers, digest = result
-    field_scores: dict[str, float] = {}
-    for qid in questions:
-        answer = answers.get(qid) or {}
-        noul = answer.get("noul")
-        field_scores[qid.split("::", 1)[1]] = (
-            float(noul) if isinstance(noul, (int, float)) and not isinstance(noul, bool) else 0.0
-        )
+    field_scores = {
+        qid.split("::", 1)[1]: judgments.noul_value(answers.get(qid))
+        for qid in questions
+    }
     score = sum(field_scores.values()) / len(field_scores)
     return {
         "deterministicChecks": {k: round(v, 2) for k, v in field_scores.items()},

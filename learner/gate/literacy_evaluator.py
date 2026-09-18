@@ -149,6 +149,7 @@ def _recompute_prompt_builder(
     activity: dict[str, Any],
     answer: Any,
     judgment_client: Any,
+    receipts_root: Path | None,
 ) -> dict[str, Any]:
     """Judge the free text (RFC-accepted); no client fails closed."""
     from learner.gate.literacy_judgment import LiteracyJudgmentError, verify_prompt_builder
@@ -157,13 +158,6 @@ def _recompute_prompt_builder(
         raise LiteracyEvaluationError(
             "prompt_builder answer must carry {values: {<fieldId>: text}}"
         )
-    values = answer["values"]
-    declared = {field.get("id") for field in activity["data"].get("fields") or []}
-    unknown = set(values) - declared
-    if unknown:
-        raise LiteracyEvaluationError(
-            f"answer values carry undeclared field ids: {sorted(unknown)}"
-        )
     if judgment_client is None:
         raise LiteracyEvaluationError(
             "prompt_builder verification requires TYPESAFE_API_KEY at the "
@@ -171,7 +165,9 @@ def _recompute_prompt_builder(
             "fail closed without it"
         )
     try:
-        return verify_prompt_builder(activity, values, judgment_client)
+        return verify_prompt_builder(
+            activity, answer["values"], judgment_client, receipts_root
+        )
     except LiteracyJudgmentError as exc:
         raise LiteracyEvaluationError(str(exc)) from exc
 
@@ -180,6 +176,7 @@ def recompute_literacy_evidence(
     evidence: dict[str, Any],
     root: Path,
     judgment_client: Any = None,
+    judgment_receipts_root: Path | None = None,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     errors: list[str] = []
     try:
@@ -209,7 +206,8 @@ def recompute_literacy_evidence(
             # is advisory metadata — the judgment verdict is the independent
             # truth, so the equality loop below does not apply here.
             return _recompute_prompt_builder(
-                activity, evidence.get("answer"), judgment_client
+                activity, evidence.get("answer"), judgment_client,
+                judgment_receipts_root,
             ), []
         recomputed = _evaluate(activity, evidence.get("answer"))
     except (

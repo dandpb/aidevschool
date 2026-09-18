@@ -16,7 +16,15 @@ from learner.gate.literacy_verifier import verify_literacy_evidence
 
 
 def verify_stream(input_stream: TextIO, output_stream: TextIO) -> int:
-    verdict = verify_literacy_evidence(read_bounded_evidence(input_stream))
+    # This bridge is an entry point (isolated stdin/stdout verifier): the
+    # judgment client is constructed HERE from env, per the injection-only
+    # convention — prompt_builder verification needs it.
+    from learner.substrate import default_judgment_client
+
+    verdict = verify_literacy_evidence(
+        read_bounded_evidence(input_stream),
+        judgment_client=default_judgment_client(),
+    )
     output_stream.write(
         json.dumps(verdict.to_receipt_dict(), sort_keys=True, separators=(",", ":"))
         + "\n"
