@@ -233,6 +233,16 @@ jobs:
         run: |
           gh label create readiness-regrant --color 0e8a16 --description "automated readiness re-grant proposal" || true
           gh label create bot --color b60205 --description "opened by automation; never merged by automation" || true
+      # AID-2203 R2: observation-state labels — the PR surface must distinguish
+      # a producer-only proposal (pending observation) from a completed
+      # re-grant. Exit 3 proposals are green on CI (AID-1890 PR-lane
+      # determinism) yet merging them heals nothing (AID-2202), so the pending
+      # label is an explicit NOT-countersignable signal for the single-writer.
+      - name: ensure proposal labels exist
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          gh label create regrant-pending-observation --color d93f0b --description "observation incomplete; NOT countersignable; merging heals nothing (AID-2202)" || true
+          gh label create regrant-observation-complete --color 0e8a16 --description "re-grant carried out with independent observation; countersignable fast path" || true
       - name: create the re-grant branch
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
         run: |
@@ -243,6 +253,9 @@ jobs:
       # CI-only candidate: the bot never writes. Exit 0 means an independent
       # report was already in the tree (full write). Anything else aborts
       # without a PR (§recusa: wrong PRs are not opened).
+      # AID-2203 R1: --proposal-state serializes the machine-readable state
+      # manifest alongside the snapshot (pending-observation checklist or
+      # written); it is committed with the producer evidence below.
       - name: propose the re-grant
         id: propose
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
@@ -250,6 +263,7 @@ jobs:
           set +e
           python3 docs/product-readiness/tools/cli.py regrant \
             --propose --input artifacts/product-readiness/product-readiness-report.json \
+            --proposal-state "docs/product-readiness/evidence/producers/$ASSESSMENT_ID/regrant-proposal.json" \
             > propose-output.txt 2>&1
           code=$?
           set -e
@@ -271,6 +285,11 @@ jobs:
               echo
             fi
             echo "## Auto re-grant proposal (readiness re-grant factory, AID-1357)"
+            echo
+            echo "**Fast path BLOQUEADO enquanto o label \`regrant-pending-observation\` estiver presente** —"
+            echo "merging a producer-only snapshot heals nothing (AID-2202); the required check"
+            echo "\`regrant observation completeness\` must be green (\`check --require-current\` on the"
+            echo "merge ref) before any countersign."
             echo
             echo "The CI run for main push \`${SHA}\` failed the readiness gate."
             echo "This PR carries the producer snapshot so the re-grant can be"
@@ -353,3 +372,15 @@ jobs:
           done
           echo "gh pr create failed after 3 attempts" >&2
           exit 1
+      # AID-2203 R2: label the proposal surface with its observation state —
+      # exit 3 → pending (NOT countersignable), exit 0 → complete. The label
+      # is a necessary signal, never sufficient: countersign QA pré-merge and
+      # single-writer CEO merge remain the acceptance path.
+      - name: label the proposal
+        if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'
+        run: |
+          if [ "${{ steps.propose.outputs.code }}" = "3" ]; then
+            gh pr edit "regrant/auto-$TODAY-$SHA8" --add-label regrant-pending-observation
+          else
+            gh pr edit "regrant/auto-$TODAY-$SHA8" --add-label regrant-observation-complete
+          fi

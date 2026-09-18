@@ -1,0 +1,308 @@
+# Metric-failure snapshot: which metric names emitted by the teaching games
+# are failure indicators. Source of truth for standards.game_metric_violations
+# (derived at import) and guarded by `python3 -m learner.gate.metric_lint --check` in CI.
+#
+# classifications: failure(nonzero) | failure(true) | not_failure | unknown
+# provenance:      receipt:<digest16> (a committed judgment receipt) | manual:<who>
+#
+# Seed (2026-09-17): legacy frozenset names carry manual:legacy-frozensets;
+# every other name was classified by a live judgment sweep (receipt
+# 518d6905b440cc43 — see learner/judgment_receipts/) and hand-reviewed:
+# twenty overrides marked manual:seed-review-2026-09-17 correct metrics that
+# describe correct behavior or scenario composition, not learner failure.
+version: 1
+shared:
+  abusive_admitted: {classification: failure(nonzero), provenance: manual:legacy-frozensets}
+  guards_missed: {classification: failure(nonzero), provenance: manual:legacy-frozensets}
+  misroutes: {classification: failure(nonzero), provenance: manual:legacy-frozensets}
+  skipped_required: {classification: failure(nonzero), provenance: manual:legacy-frozensets}
+  corrupt_load: {classification: failure(true), provenance: manual:legacy-frozensets}
+  latency_over: {classification: failure(true), provenance: manual:legacy-frozensets}
+  overflow: {classification: failure(true), provenance: manual:legacy-frozensets}
+  overflowed: {classification: failure(true), provenance: manual:legacy-frozensets}
+  overheated: {classification: failure(true), provenance: manual:legacy-frozensets}
+  queue_overflowed: {classification: failure(true), provenance: manual:legacy-frozensets}
+  reactor_overloaded: {classification: failure(true), provenance: manual:legacy-frozensets}
+  kind: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  shelf_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  shelf_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  advanced: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  allowed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  backpressure_peak: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  bad_routes: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+  false_denies: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+  good_admits: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  good_rejected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  legit_retried: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  poison_retried: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+  policy_leaks: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+  processed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  routed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  abusive_rejected: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  denied: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  heat_peak: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  held: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  isolated: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  legit_rejected: {classification: failure(nonzero), provenance: receipt:1cf2c923a405753c}
+  max_burst_1s: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  observed_admit_rate: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+  poison_dead_lettered: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  target_rate: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+
+games:
+  game-04-task-queue:
+    dispatch_correct: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+    dispatch_predictions: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+    max_concurrent_running: {classification: not_failure, provenance: receipt:1cf2c923a405753c}
+  game-02-warehouse:
+    crud_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    crud_probes: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    expired_swept: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    hash_strength: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    load_skew: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    shelf_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    shelf_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    swept_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    ttl_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    ttl_probes: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-03-wormhole:
+    code_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    code_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    collision_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    collision_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    collisions_present: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    redirect_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    redirect_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    redirect_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    resolution_chosen: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    resolved_code: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    resolved_unique: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-05-relay-station:
+    delivered_after: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    kind: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    missed_heartbeat_dropped: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    rejoined_fanout: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    target_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    was_dropped: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+  game-06-pipeline-plant:
+    bounded_actual: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    bounded_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    capacity: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    chunk_fits: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    chunk_size: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    delivered: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    mode: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    peak_actual: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    peak_mem: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    peak_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    size: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-07-checkpoint-city:
+    correct_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    error: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    given_order: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    player_order: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    probe_answer: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    probe_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    reached_handler: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    rejected_at: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    reorder_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    target_order: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-08-timeline-tower:
+    append_order_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    append_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    checkpoint_index: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    events_folded: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    final_status_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    order_status_view_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_status_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    replay_deterministic: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    same_log_two_views: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    shipment_list_view_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    status_after_replay_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    status_at_checkpoint_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    views_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-09-docking-bay:
+    capabilities_granted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    contracts_checked: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    dock_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    dock_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    granted_count: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    least_privilege: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    mismatch_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    mismatch_predictions: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    missing_methods_named: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    no_overgrant: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    required_calls_covered: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    required_count: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    sandbox_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    sandbox_probes: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-10-hash-ring:
+    arc_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    load_skew: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    modulo_contrast_stated: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    modulo_mode: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    moved_keys: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    moved_ratio: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    owner_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    owner_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    theoretical_kn: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    vnodes_used: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-11-air-traffic:
+    correct_policy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    policy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    probe_fired: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    recovered_pad_reentered: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-12-mission-control:
+    actual_leader: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    blocked_attempts: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    first_term: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    jobs_completed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    jobs_total: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    killed_leader: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    leader_killed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    leader_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_leader: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    resumed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    successor: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    successor_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    successor_term: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    term: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    term_increased: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    topo_valid: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-13-breaker-grid:
+    actual_final: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    actual_rejected: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    actual_state: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    actual_still_serving: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    breaker_state_after: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cap: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cascade_prevented: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    failing_district: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    failures_injected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_final: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_rejected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_state: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_still_serving: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    probe_outcome: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    probe_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    rejection_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    requests: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    still_serving_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    threshold: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    total_served: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    total_short_circuited: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    tripped_district_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-14-river-delta:
+    dyed_sources_actual: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    dyed_sources_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    extra_log_ids: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    filter_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    filter_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    inject_source_valid: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    missing_log_ids: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    source_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    source_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    source_set_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    trace_events: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    trace_exact: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    trace_log_ids_actual: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    trace_log_ids_collected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-15-observatory:
+    actual_bucket: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    alert_actually_firing: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    alert_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    bucket_prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    bucket_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    observed_percentile: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    percentile_bucket_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    percentile_value: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_bucket: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_firing: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    slo_set: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    slo_set_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    slo_target: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    watched_percentile: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-16-freight-yard:
+    assignment_valid: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cars_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cars_replayed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    crews_served: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    crews_total: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    lane: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    lanes_assigned: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    lanes_orphaned: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    lanes_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    lanes_total: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    offsets_preserved: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_all_lanes: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    prediction_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    replay_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    replay_exact: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    rewind_to: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    route_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    route_predictions: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-17-lighthouse-network:
+    acks_given: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cluster_size: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    committed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    committed_value_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    left_can_commit: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    left_size: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    majority_predicted_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    quorum: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    quorum_predicted_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    quorum_required: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    right_can_commit: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    right_size: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    stale_nodes: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    sync_set_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    synced_nodes: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    watcher_set_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    watchers_actual: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    watchers_predicted: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    watchers_total: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  game-18-stacks:
+    actual_order: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    actual_top: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cards_correct: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    cards_total: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    filing_accuracy: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    matches_returned: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    position_matches: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_order: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    predicted_top: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    query: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    rank_order_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    top_has_both_terms: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    top_k: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    top_prediction_ok: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    top_score: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+  pixelquest:
+    abusive_rejected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    advanced: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    allowed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    backpressure_peak: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    bad_routes: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    denied: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    false_denies: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    foo: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    good_admits: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    good_rejected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    heat_peak: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    held: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    isolated: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    kind: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    legit_rejected: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    legit_retried: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    max_burst_1s: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    observed_admit_rate: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    poison_dead_lettered: {classification: not_failure, provenance: manual:seed-review-2026-09-17}
+    poison_retried: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    policy_leaks: {classification: failure(nonzero), provenance: receipt:518d6905b440cc43}
+    processed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    routed: {classification: not_failure, provenance: receipt:518d6905b440cc43}
+    target_rate: {classification: not_failure, provenance: receipt:518d6905b440cc43}

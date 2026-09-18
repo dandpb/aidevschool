@@ -1,0 +1,173 @@
+name: Readiness re-grant observation completeness
+
+# AID-2203 R3: the required, named check `regrant observation completeness`
+# makes a producer-only re-grant proposal distinguishable from a completed
+# re-grant on the PR surface. Today both are green (AID-1890 made the PR-lane
+# `check` deterministic vs recorded decisions; `enforce` filters producer-only
+# reasons), so #458/#459-style proposals merged as "heal" while the main
+# claims stayed stale (AID-2202). This gate re-runs the fail-closed
+# `check --require-current` on the merge ref:
+#   red  = the re-grant is incomplete in the tree that would land on main;
+#   green = the re-grant is complete → swap labels + idempotent receipt.
+#
+# Completeness is DERIVED FROM THE TREE, not asserted by any actor: the same
+# fingerprints/decisions the main push lane consumes decide here. The bot never
+# writes assessments and never merges (single-writer CEO + countersign QA
+# remain the acceptance path; the label is a necessary, not sufficient,
+# signal).
+#
+# B1 (AID-1359): pull_request events for `regrant/auto-*` branches only fire
+# when the push comes from an agent credential — the watchdog close+reopen
+# (reopened) and the QA-phase commits (synchronize). The factory's own
+# GITHUB_TOKEN push emits no events, so the check reports once the watchdog
+# reopens the PR; until then the state is the same as pre-AID-2203 (no
+# signal), never worse. `workflow_dispatch` drills the exact path (pattern
+# AID-1669). Retrofit: proposals without a manifest (pre-AID-2203) are gated
+# by the same check; a red gate adds the pending label unless the manifest
+# declares status "written".
+#
+# AID-2314 (countersign AID-2310 nota LOW): `opened` is required BEFORE this
+# check becomes a required check — a PR opened without any later push fires
+# neither synchronize nor reopened, leaving the check "expected — waiting for
+# status" and blocking ordinary merges. The job-level `if:` below still skips
+# non-regrant heads, and a skipped job reports "Success" (GitHub
+# about-status-checks), so common PRs stay mergeable. Gate semantics for
+# regrant/auto-* proposals are unchanged.
+#
+# AID-2384 (hardening, found in drill AID-2380 item 2 / run 35300417695):
+# this gate must SELF-GUARANTEE the observation labels. The factory's
+# "ensure proposal labels exist" step is conditioned on actually proposing
+# (needed=true && dedupe.skip!=true), so drills/retrofit PRs can reach this
+# workflow with the labels absent — `gh pr edit --add-label` then dies with
+# "'regrant-pending-observation' not found" and the observation comment (the
+# diagnostic) is lost. The gate now creates both labels idempotently before
+# recording state, and posts the comment BEFORE any label mutation: the
+# comment carries the gate output and must never be lost to a label failure.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: PR number of a regrant/auto-* proposal to gate (drill).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: regrant-complete-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: false
+
+jobs:
+  regrant-observation-completeness:
+    name: regrant observation completeness
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.event.pull_request.head.ref, 'regrant/auto-')
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: resolve the proposal PR
+        id: pr
+        run: |
+          set -eu
+          pr='${{ github.event.pull_request.number || inputs.pr }}'
+          head=$(gh pr view "$pr" --json headRefName --jq '.headRefName')
+          if ! printf '%s' "$head" | grep -q '^regrant/auto-'; then
+            echo "refusing: PR $pr head branch '$head' is not a regrant/auto-* proposal" >&2
+            exit 1
+          fi
+          echo "number=$pr" >> "$GITHUB_OUTPUT"
+      # The merge ref is the tree that would land on main if merged now
+      # (runbook §Regra de merge, rule 3). If main moved, the gate stays red
+      # until re-run — fail-closed, no new window introduced.
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ steps.pr.outputs.number }}/merge
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      # Red = claims stale/DRIFT in the PR tree = re-grant incomplete. This is
+      # the same fail-closed consumer as the main push lane; a revalidateBy
+      # past date also reddens here and demands a re-grant — it is not a false
+      # positive of this check (spec flagged concern 3).
+      - name: gate the re-grant completeness (check --require-current)
+        id: gate
+        continue-on-error: true
+        run: >-
+          python3 docs/product-readiness/tools/cli.py check
+          --require-current 2>&1 | tee gate-output.txt;
+          test ${PIPESTATUS[0]} -eq 0
+      # AID-2384: idempotent label bootstrap, mirroring the factory's step
+      # (same colors/descriptions as readiness-regrant.yml). GITHUB_TOKEN with
+      # pull-requests:write is authorized for label create (first-hand:
+      # factory run 35224606938 "ensure factory labels" → 422 "already
+      # exists", not 403). `|| true` = label may already exist. `if: always()`
+      # matches the record step it precedes.
+      - name: ensure observation labels exist
+        if: always()
+        run: |
+          gh label create regrant-pending-observation --color d93f0b --description "observation incomplete; NOT countersignable; merging heals nothing (AID-2202)" || true
+          gh label create regrant-observation-complete --color 0e8a16 --description "re-grant carried out with independent observation; countersignable fast path" || true
+      - name: record the observation state on the PR
+        if: always()
+        run: |
+          set -eu
+          pr='${{ steps.pr.outputs.number }}'
+          merge_sha=$(git rev-parse HEAD)
+          if [ "${{ steps.gate.outcome }}" = "success" ]; then
+            if ! gh pr view "$pr" --json comments --jq '.[].body' | grep -q 'regrant-observation-receipt'; then
+              {
+                echo "### regrant-observation-receipt (AID-2203)"
+                echo
+                echo "- merge ref: \`${merge_sha}\`"
+                echo "- gate \`regrant observation completeness\`: **green** (\`cli.py check --require-current\`)"
+                echo "- label: \`regrant-observation-complete\` (fast path countersignable; label is a necessary, not sufficient, signal)"
+                echo
+                echo '```'
+                cat gate-output.txt
+                echo '```'
+              } | gh pr comment "$pr" --body-file -
+            fi
+            gh pr edit "$pr" --remove-label regrant-pending-observation || true
+            # Receipt first, labels after (AID-2384): a transient label
+            # failure must not lose the receipt. A failed add-label here
+            # still fails the step → named check red → fail-closed (a green
+            # check without the complete label would reopen the AID-2202
+            # ambiguity).
+            gh pr edit "$pr" --add-label regrant-observation-complete
+          else
+            # Comment BEFORE the label mutation (AID-2384): the incomplete
+            # comment carries the gate output and must not be lost to a
+            # label failure (recurrence: run 35300417695 lost it to
+            # 'regrant-pending-observation' not found).
+            {
+              echo "### regrant observation incomplete (AID-2203)"
+              echo
+              echo "- merge ref: \`${merge_sha}\`"
+              echo "- gate \`regrant observation completeness\`: **red** — merging this PR heals nothing (AID-2202)"
+              echo
+              echo '```'
+              cat gate-output.txt 2>/dev/null || echo "(gate output unavailable)"
+              echo '```'
+            } | gh pr comment "$pr" --body-file - || true
+            # Retrofit: a proposal whose tree is incomplete gets the pending
+            # label unless its manifest already declares a written re-grant
+            # (written + red = the tree went stale AFTER completion; keep the
+            # complete label, the red named check is the blocker). Label add
+            # is best-effort: the red named check is the fail-closed signal;
+            # its absence does not weaken the gate.
+            written=$(find docs/product-readiness/evidence/producers -name regrant-proposal.json -print0 2>/dev/null \
+              | xargs -0 -r grep -l '"status": "written"' | head -n1 || true)
+            if [ -z "$written" ]; then
+              gh pr edit "$pr" --add-label regrant-pending-observation || true
+            fi
+            exit 1
+          fi
