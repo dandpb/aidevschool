@@ -68,7 +68,7 @@ test('local: source entrypoint is served intact', () => withServer(async request
 test('local: all HTML source references resolve with correct bytes', () => withServer(async request => {
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   const refs = [...html.matchAll(/(?:src|href)="(src\/[^"#]+)"/g)].map(m => m[1]);
-  assert.equal(refs.length, 12);
+  assert.equal(refs.length, 13);
   for (const ref of refs) {
     const response = await request('/' + ref);
     assert.equal(response.status, 200, ref);
