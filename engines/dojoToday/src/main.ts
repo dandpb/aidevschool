@@ -190,15 +190,18 @@ function trackSection(nodes: readonly TrackNode[], nextNum: string | null): stri
     .map((n) => {
       const isNext = n.num === nextNum && n.status === "active";
       const cls = `track-node is-${n.status}${isNext ? " is-next" : ""}`;
+      const stateText =
+        n.status === "mastered" ? "concluída" : n.status === "active" ? "ativa" : "disponível";
+      const ariaLabel = `Lição ${n.num}: ${n.title} (${stateText})`;
       const play =
         isNext && n.gameDir
           ? `<details class="play-how track-play"><summary>Jogar agora</summary><code>cd ${escapeHtml(n.gameDir)} &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></details>`
           : "";
       return `
-        <li class="${cls}">
+        <li class="${cls}" aria-label="${escapeHtml(ariaLabel)}">
           <span class="track-glyph" aria-hidden="true">${statusGlyph(n.status)}</span>
-          <span class="track-num">${escapeHtml(n.num)}</span>
-          <span class="track-title">${escapeHtml(n.title)}</span>
+          <span class="track-num" aria-hidden="true">${escapeHtml(n.num)}</span>
+          <span class="track-title" aria-hidden="true">${escapeHtml(n.title)}</span>
           ${play}
         </li>`;
     })

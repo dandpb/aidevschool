@@ -1,0 +1,83 @@
+{
+ "activeUnit": {
+  "id": "U2-key-value-store",
+  "project": "02_key_value_store",
+  "retryCount": 0,
+  "retryLimit": 3,
+  "state": "mastered",
+  "title": "KV WAREHOUSE"
+ },
+ "aidi": {
+  "current": 0.34,
+  "measurementSource": "self_reported",
+  "thresholdAmber": 0.6,
+  "thresholdRed": 0.75,
+  "trend": []
+ },
+ "challenges": [],
+ "curr": 0.0,
+ "gate": {
+  "implementationBlocked": false,
+  "unblockCondition": "learner_attempt_evaluated"
+ },
+ "masteredCount": 2,
+ "nextReviews": [
+  {
+   "dueIn": "overdue 70d",
+   "reason": "overdue",
+   "title": "GATEKEEPER: token-bucket robustness",
+   "unitId": "U0-sonda-rate-limiter-robustness"
+  },
+  {
+   "dueIn": "overdue 31d",
+   "reason": "overdue",
+   "title": "KV WAREHOUSE: CRUD with TTL",
+   "unitId": "U2-key-value-store"
+  },
+  {
+   "dueIn": "today",
+   "reason": "recurring-trap",
+   "title": "Reivindicar dominio a partir de trabalho de documentacao/dashboard",
+   "unitId": "P-001"
+  }
+ ],
+ "predictions": {
+  "byMetric": {
+   "latency": {
+    "correct": 0,
+    "total": 0
+   },
+   "memory": {
+    "correct": 0,
+    "total": 0
+   },
+   "throughput": {
+    "correct": 0,
+    "total": 0
+   }
+  },
+  "count": 0
+ },
+ "profile": {
+  "activeLanguage": "TypeScript",
+  "bloom": "analyze",
+  "dreyfus": "proficient",
+  "weeklyTimeHours": 5
+ },
+ "scaffoldedCount": 1,
+ "streak": {
+  "current": 0,
+  "freezesEquipped": 0,
+  "freezesMax": 2,
+  "lastGateDate": "2026-08-13",
+  "longest": 2
+ },
+ "topPitfalls": [
+  {
+   "description": "Reivindicar dominio a partir de trabalho de documentacao/dashboard",
+   "id": "P-001",
+   "lastSeen": "2026-06-18",
+   "occurrences": 1
+  }
+ ]
+}

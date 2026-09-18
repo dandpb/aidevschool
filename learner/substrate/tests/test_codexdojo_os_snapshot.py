@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from unittest import mock
 from unittest.mock import patch
 
 import learner.substrate as substrate
@@ -172,7 +173,9 @@ class TestCodexDojoOsSnapshot(unittest.TestCase):
         ):
             assert substrate.regenerate_dashboard() == {dashboard_path: "dashboard"}
 
-        build_views.assert_called_once_with(substrate.SOURCE_ROOT, substrate.ROOT, {})
+        build_views.assert_called_once_with(
+            substrate.SOURCE_ROOT, substrate.ROOT, {}, judgment_client=mock.ANY
+        )
         write_views.assert_called_once_with({dashboard_path: "dashboard"})
 
     def test_mission_catalog_can_regenerate_without_other_view_side_effects(self) -> None:

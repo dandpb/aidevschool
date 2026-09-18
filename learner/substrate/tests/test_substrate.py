@@ -759,7 +759,9 @@ class TestDashboardSnapshotEdgeCases(unittest.TestCase):
 
     def test_zero_projects_in_backlog(self):
         """A minimal BACKLOG_STATUS.md with only the vocabulary table and no
-        project rows must yield masteredCount == 0 and scaffoldedCount == 0.
+        project rows must yield scaffoldedCount == 0; masteredCount counts
+        units_log mastered units (golden rule 3: mastery needs evidence, not
+        implementation status), so a state with no units_log yields 0.
         """
         minimal_backlog = (
             "# Curriculum Backlog Status\n\n"
@@ -773,7 +775,18 @@ class TestDashboardSnapshotEdgeCases(unittest.TestCase):
             minimal_backlog, encoding="utf-8"
         )
         snapshot = build_snapshot()
-        self.assertEqual(snapshot["masteredCount"], 0)
+        # masteredCount follows the canonical units_log (build_snapshot with a
+        # default canonical path loads the repo's real learning_state.yaml),
+        # never the backlog: zero backlog rows cannot zero out learner mastery.
+        real_state = yaml.safe_load(
+            (self._ds_mod.ROOT / "learner" / "learning_state.yaml").read_text(
+                encoding="utf-8"
+            )
+        )
+        expected_mastered = sum(
+            1 for unit in real_state.get("units_log") or [] if unit.get("mastered")
+        )
+        self.assertEqual(snapshot["masteredCount"], expected_mastered)
         self.assertEqual(snapshot["scaffoldedCount"], 0)
 
     def test_missing_profile_matrix_uses_defaults(self):

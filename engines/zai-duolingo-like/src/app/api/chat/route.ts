@@ -55,6 +55,26 @@ export async function POST(req: NextRequest) {
   ).replace(/\/$/, "");
   const model = process.env.LLM_MODEL ?? "glm-5.3";
 
+  // Security: enforce HTTPS for BYOK endpoints to prevent API key exposure over plaintext
+  try {
+    const urlObj = new URL(baseUrl);
+    if (
+      urlObj.protocol !== "https:" &&
+      urlObj.hostname !== "localhost" &&
+      urlObj.hostname !== "127.0.0.1"
+    ) {
+      return NextResponse.json(
+        { ok: false, error: "Segurança: O endpoint deve usar HTTPS (exceto localhost)." },
+        { status: 400 }
+      );
+    }
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "URL base inválida." },
+      { status: 400 }
+    );
+  }
+
   try {
     const res = await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",

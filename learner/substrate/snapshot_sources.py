@@ -97,3 +97,13 @@ def counts_from_backlog(backlog_path: Path) -> tuple[int, int]:
         elif status == "scaffolded":
             scaffolded += 1
     return implemented, scaffolded
+
+
+def count_mastered(units_log: list[dict[str, Any]] | None) -> int:
+    """Mastered units from the evidence-backed units_log (golden rule 3).
+
+    Mastery claims follow gate evidence, never catalog implementation status;
+    single-sourced here because both the dashboard snapshot and the dojoToday
+    adapter derive ``masteredCount`` from this rule.
+    """
+    return sum(1 for unit in units_log or [] if unit.get("mastered"))
