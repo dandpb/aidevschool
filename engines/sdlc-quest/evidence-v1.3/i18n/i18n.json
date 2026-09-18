@@ -1,0 +1,27 @@
+{
+  "method": "Chromium / Playwright set_content / explicit in-memory localStorage double",
+  "checks": [
+    "default-pt",
+    "mission zero opens intent",
+    "pt wrong answer keeps pt core text",
+    "toggle-en-chrome",
+    "chrome-en",
+    "progress-preserved-through-toggle",
+    "wrong-answer-feedback-en",
+    "intent completes in english",
+    "lang-persisted-after-reload",
+    "singlefile-both-langs",
+    "no page errors",
+    "no runtime HTTP requests"
+  ],
+  "errors": [],
+  "requests": [],
+  "started": "2026-09-18T16:32:20Z",
+  "limitations": [
+    "Native file:// navigation blocked by administrative policy.",
+    "No native localStorage persistence, Safari or Firefox test.",
+    "Data-record _en fields (option labels, why texts) arrive in batch B2; core-module strings are covered here.",
+    "Exported documents (playbook, TLC guide, harness guide) remain pt-BR by design."
+  ],
+  "passed": 12
+}
