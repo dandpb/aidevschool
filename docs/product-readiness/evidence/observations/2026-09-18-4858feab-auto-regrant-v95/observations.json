@@ -1,0 +1,170 @@
+{
+ "gitSha": "4858feab059bbce996d2b4b7fa249845efb1a60b",
+ "observedAt": "2026-09-18T20:48:00Z",
+ "observerContext": "independent-readiness-observer",
+ "scenarios": [
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-can-name-next-action",
+     "notes": "Proveniencia da observacao original: walk FPE @89040bec (bundle v50, PR #407 + main 7b5ddaf2): l01 concluida -> resultado 'VILA LUME · MISSÃO CONCLUÍDA', XP conquistado, habilidade praticada — proxima acao nomeavel sem conhecimento de repositorio (walk-log-lit407b.json resultNextAction; screenshot qa1797b-litobs-03-result-next.png); re-conferencias v83/v84/v88/v92 com cadeia de re-anchors (analytics vocab migration 028382b4 etc.). Re-verificacao first-hand nesta arvore 4858feab: ResultScreen.tsx:77 'VILA LUME · MISSÃO CONCLUÍDA' e LessonScreen.tsx:435 'Tentar novamente' presentes (leitura direta); student-guide.md §Próxima ação:145-147 ('Continue pela próxima lição do bairro, faça o Desafio do Módulo...') — acao seguinte nomeavel na superficie, sem vocabulario de repositorio. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-happy-path"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-retry",
+     "notes": "Proveniencia: walk v50 @89040bec: retry de atividade sem explicacao do facilitador e sem linguagem interna (walk-log-lit407b.json retryNoFacilitator); re-anchors v83-v92. Re-verificacao first-hand nesta arvore 4858feab: LessonScreen.tsx:435 'Tentar novamente' (rotulo de retry orientado ao aprendiz, sem jargao interno); feedback de erro sem termos de repositorio; producer receipt literacy-retry.json @97a50adf pass (logs/ci-run-35390639787/). [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-retry"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-device-boundary",
+     "notes": "Proveniencia: walk v50 @89040bec: rodape do welcome declara a fronteira de dispositivo; re-anchors v83-v92 (noopener #407 suporte link). Re-verificacao first-hand nesta arvore 4858feab: OnboardingScreen.tsx:189 'Piloto gratuito para maiores de 18 anos. Seu progresso fica somente neste navegador...' (fronteira local declarada na superficie real); App.tsx (src/app/App.tsx):378 'Pedir suporte' com sr-only '(abre em nova aba)'. IndexedDB (indexedDbProgressRepository.ts) continua o unico repositorio local — perda por limpeza de dados é a consequencia declarada ao aprendiz. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-resume"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-names-next-action-after-cp-03",
+     "notes": "Proveniencia: observacao original v84/v88 (walk + re-anchors); re-verificacao first-hand nesta arvore 4858feab: apos cp-03 o aprendiz nomeia a proxima acao na superficie: HomeScreen.tsx:77 'Continuar: Desafio do Módulo {n}' e CheckpointScreen.tsx:246-251 botao primario de proxima acao pos-checkpoint aprovado; student-guide.md:145-147 §Próxima ação ('Continue pela próxima lição do bairro, faça o Desafio do Módulo quando ele abrir, ou complete a revisão do dia'); facilitator-guide.md:198-202 §Observar. Sem vocabulario de repositorio. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-corridor-happy-path"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-retry-without-internal-language",
+     "notes": "Proveniencia: observacao original v84/v88; re-verificacao first-hand nesta arvore 4858feab: CheckpointScreen.tsx:239-243 card de falha 'Quase lá!' com linguagem encorajadora e sem pena/punicao ('Não foi dessa vez...'); student-guide.md:135 (Desafio do Módulo) e facilitator-guide.md:201 ('se uma atividade do desafio falhar, observe se a pessoa lê o feedback, pede dica e tenta de novo sem pedir ajuda') — retry livre de punicao, sem termos internos. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-corridor-gate-retry"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-distinguishes-review-from-new-content",
+     "notes": "Proveniencia: observacao original v84/v88; re-verificacao first-hand nesta arvore 4858feab: HomeScreen.tsx:163 'Revisão pendente' distingue revisao de conteudo novo; student-guide.md:137-139 §Por que as revisões voltam ('Concluir uma lição agenda uma revisão para o dia seguinte, depois em 7 dias e depois em 21 dias'); facilitator-guide.md:202. A revisao e apresentada como categoria propria, separada de licao nova. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` merge PR #500 + snapshot de fabrica AID-1357, base do PR #501 == tip main) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 'judgment-verified prompt_builder free-text' (`c23edd12` + `bcfb54a3`, merge `97a50adf`) toca `engines/literacyDojo/src/domain/evidence.ts` (+4/-4 lidos first-hand: union StructuredEvidenceAnswer ganha variante {values: Record<string,string>} + passthrough deep-copy em structuredAnswer — transporte ADITIVO de resposta free-text do prompt_builder; nenhuma variante existente removida, nenhum arquivo citado nesta nota mudou). Diff 3aca4d5d..97a50adf em engines/literacyDojo/: apenas evidence.ts + tests (domain/evidence.test.ts, application/useCases.test.ts) — screens/guias citados inalterados (git log vazio; re-conferencia mecanica arquivo:linha nesta arvore). Producer evidence desta arvore: artefatos do CI push run 35390639787 @97a50adf (jobs by-name verdes: literacyDojo (TS + content), codexdojo-os (TS), Python (learner + curriculum shared), SDLC guardrails (diff); unico vermelho = product readiness (claims), o stale-window que este re-grant cura); receipts por cenário arquivados em logs/ci-run-35390639787/ e identidade de digests 13/13 provada (producer-report regenerado neste HEAD identico ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "literacy-corridor-review-window"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-can-state-result-and-next-action",
+     "notes": "Proveniencia: observacao original v84/v88 (revisao documental + walk); re-verificacao first-hand nesta arvore 4858feab: Onboarding.tsx:49 'Leva menos de um minuto. Escolha IA Prática ou Dev. Sem conta; o progresso fica neste dispositivo.'; Hub.tsx:137 next-mission-card (missao seguinte visivel com resultado); student-guide.md:60 (oferta pronta para cliente, endereco fixo do facilitador); facilitator-guide.md:268-269 ('State that host completion is local, raw evidence requires a verifier...'). Resultado e proxima acao explicaveis na superficie. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 toca `engines/literacyDojo/src/` (evidence.ts, diff lido first-hand — variante aditiva {values} de resposta free-text no transporte de evidencia; sem mudanca nos seams do OS). Diff 3aca4d5d..97a50adf em engines/codexdojo-os-prototype/{src,tests,tests-pilot}/: VAZIO (git log first-hand) — o drift do grupo os-literacy vem exclusivamente do sourcePath compartilhado engines/literacyDojo/src/. Citacoes file:linha desta nota re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'codexdojo-os (TS)' verde by-name; receipts os-literacy-hosted-mission/os-verification-recovery/os-literacy-returning-device arquivados em logs/ci-run-35390639787/ (byte-identicos ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "os-literacy-hosted-mission"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "facilitator-can-recover-without-repository-intervention",
+     "notes": "Proveniencia: observacao original v84 (AID-2174); re-verificacao first-hand nesta arvore 4858feab: Hub.tsx:116 'Verificação indisponível no momento. Seu progresso local continua salvo.' (role=status); facilitator-guide.md:290 §Recover and escalate ('Keep the visible state as not submitted or rejected; preserve raw evidence and point to the on-screen email..., 1 business day'); student-guide.md:205-206 ('If verification is unavailable, leave the status as not submitted and continue only when the guide presents a safe next action'). Recuperacao por UI/e-mail, sem intervencao de repositorio. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 toca `engines/literacyDojo/src/` (evidence.ts, diff lido first-hand — variante aditiva {values} de resposta free-text no transporte de evidencia; sem mudanca nos seams do OS). Diff 3aca4d5d..97a50adf em engines/codexdojo-os-prototype/{src,tests,tests-pilot}/: VAZIO (git log first-hand) — o drift do grupo os-literacy vem exclusivamente do sourcePath compartilhado engines/literacyDojo/src/. Citacoes file:linha desta nota re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'codexdojo-os (TS)' verde by-name; receipts os-literacy-hosted-mission/os-verification-recovery/os-literacy-returning-device arquivados em logs/ci-run-35390639787/ (byte-identicos ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "os-verification-recovery"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-literacy-continuity-boundary",
+     "notes": "Proveniencia: observacao original v84/v88; re-verificacao first-hand nesta arvore 4858feab: student-guide.md:84 ('O retorno funciona só no mesmo navegador...'); indexedDbProgressRepository.ts:10 (indexedDB.open — continuidade local limitada ao perfil do navegador). O aprendiz consegue explicar que a continuidade do Literacy hospedado e limitada ao mesmo perfil de navegador. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v92 (`3aca4d5d`): PR #500 toca `engines/literacyDojo/src/` (evidence.ts, diff lido first-hand — variante aditiva {values} de resposta free-text no transporte de evidencia; sem mudanca nos seams do OS). Diff 3aca4d5d..97a50adf em engines/codexdojo-os-prototype/{src,tests,tests-pilot}/: VAZIO (git log first-hand) — o drift do grupo os-literacy vem exclusivamente do sourcePath compartilhado engines/literacyDojo/src/. Citacoes file:linha desta nota re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'codexdojo-os (TS)' verde by-name; receipts os-literacy-hosted-mission/os-verification-recovery/os-literacy-returning-device arquivados em logs/ci-run-35390639787/ (byte-identicos ao snapshot de fabrica).]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "os-literacy-returning-device"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-guidance-only",
+     "notes": "Proveniencia: observacao original v90 (AID-2206) + re-anchors v92/v93; re-verificacao first-hand nesta arvore 4858feab: student-guide.md:233-239 §Read today's guidance in dojoToday ('shows a sugestão neste dispositivo from local OS progress... It is not canonical FSRS and does not write learner/learning_state.yaml' — guia, nao avaliacao); facilitator-guide.md:318-319 ('guidance is read-only, game output is raw evidence, and only a separate verifier can accept evidence or grant mastery'); main.ts:78-79 ('O jogo emite evidência bruta; um verificador independente decide o gate'); tools/selfcheck.py:15-18 delega ao _self_check read-only do substrate (executado agora: OK). [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v93 (`7c044984`): PR #500 (`c23edd12`+`bcfb54a3`, merge `97a50adf`) toca `learner/substrate/judgments.py` (+35/-22 lidos first-hand: _prune_receipts removido — receipts sao provenance comprometida append-only; replay_cached usa lookup direto por nome-digest em vez de scan full-dir; nenhuma semantica de escrita de estado do aprendiz adicionada). Diff 7c044984..97a50adf em engines/dojoToday/: VAZIO (git log first-hand) — o drift vem exclusivamente do sourcePath learner/substrate/. derive_today_snapshot permanece leitura+derivacao (docstring 'derived from the canonical state'; judgment_client opcional default None). Executaveis first-hand nesta arvore: pytest learner/substrate/tests 214 passed/1 skipped; python3 engines/dojoToday/tools/selfcheck.py OK (track + game_dir). Citacoes file:linha re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'dojoToday (TS + substrate)' verde by-name; receipts arquivados em logs/ci-run-35390639787/.]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "dojotoday-active-unit-guidance"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "document-review",
+     "id": "regeneration-preserves-read-only-boundary",
+     "notes": "Proveniencia: document-review original v90 + re-anchors v92/v93; re-verificacao first-hand nesta arvore 4858feab: a projecao e regenerada por python3 -m learner.substrate (prebuild) sem escrita de estado do aprendiz — derive_today_snapshot (adapters/dojotoday.py:111) e leitura+derivacao pura (docstring; judgment_client opcional); selfcheck.py:15-18 valida sem writes (executado agora: OK); student-guide.md:235-239 e facilitator-guide.md:307 ('Regenerate the shared learner projection before dojoToday sessions...'); logs/substrate-pytest.txt 214 passed/1 skipped (inclui testes de fronteira read-only do adapter). A regeneracao preserva o boundary read-only: nenhuma API de escrita de estado canônico e chamada pelo dojoToday (grep first-hand: sem writes em learner/learning_state.yaml fora do substrate). [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v93 (`7c044984`): PR #500 (`c23edd12`+`bcfb54a3`, merge `97a50adf`) toca `learner/substrate/judgments.py` (+35/-22 lidos first-hand: _prune_receipts removido — receipts sao provenance comprometida append-only; replay_cached usa lookup direto por nome-digest em vez de scan full-dir; nenhuma semantica de escrita de estado do aprendiz adicionada). Diff 7c044984..97a50adf em engines/dojoToday/: VAZIO (git log first-hand) — o drift vem exclusivamente do sourcePath learner/substrate/. derive_today_snapshot permanece leitura+derivacao (docstring 'derived from the canonical state'; judgment_client opcional default None). Executaveis first-hand nesta arvore: pytest learner/substrate/tests 214 passed/1 skipped; python3 engines/dojoToday/tools/selfcheck.py OK (track + game_dir). Citacoes file:linha re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'dojoToday (TS + substrate)' verde by-name; receipts arquivados em logs/ci-run-35390639787/.]",
+     "outcome": "pass"
+    },
+    {
+     "evidence": "observation",
+     "id": "stale-guidance-has-bounded-exit",
+     "notes": "Proveniencia: document-review original v90 + re-anchors v92/v93; re-verificacao first-hand nesta arvore 4858feab: a projecao e regenerada por python3 -m learner.substrate (prebuild) sem escrita de estado do aprendiz — derive_today_snapshot (adapters/dojotoday.py:111) e leitura+derivacao pura (docstring; judgment_client opcional); selfcheck.py:15-18 valida sem writes (executado agora: OK); student-guide.md:235-239 e facilitator-guide.md:307 ('Regenerate the shared learner projection before dojoToday sessions...'); logs/substrate-pytest.txt 214 passed/1 skipped (inclui testes de fronteira read-only do adapter). A regeneracao preserva o boundary read-only: nenhuma API de escrita de estado canônico e chamada pelo dojoToday (grep first-hand: sem writes em learner/learning_state.yaml fora do substrate). [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v93 (`7c044984`): PR #500 (`c23edd12`+`bcfb54a3`, merge `97a50adf`) toca `learner/substrate/judgments.py` (+35/-22 lidos first-hand: _prune_receipts removido — receipts sao provenance comprometida append-only; replay_cached usa lookup direto por nome-digest em vez de scan full-dir; nenhuma semantica de escrita de estado do aprendiz adicionada). Diff 7c044984..97a50adf em engines/dojoToday/: VAZIO (git log first-hand) — o drift vem exclusivamente do sourcePath learner/substrate/. derive_today_snapshot permanece leitura+derivacao (docstring 'derived from the canonical state'; judgment_client opcional default None). Executaveis first-hand nesta arvore: pytest learner/substrate/tests 214 passed/1 skipped; python3 engines/dojoToday/tools/selfcheck.py OK (track + game_dir). Citacoes file:linha re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'dojoToday (TS + substrate)' verde by-name; receipts arquivados em logs/ci-run-35390639787/.]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "dojotoday-read-only-boundary"
+  },
+  {
+   "assertions": [
+    {
+     "evidence": "observation",
+     "id": "learner-understands-no-eval-carryover",
+     "notes": "Proveniencia: observacao original v90 + re-anchors v92/v93; re-verificacao first-hand nesta arvore 4858feab: student-guide.md:235-244 ('returning does not evaluate work... the view only shows the regenerated scheduler projection'; 'Stop if the canonical state is unavailable; don't use an old view as proof of current progress'); facilitator-guide.md:318-319 + :337 ('dojoToday view is stale or missing | Regenerate the canonical projection, reload, and retain the read-only boundary'); main.ts:78-79 (evidencia bruta, verificador independente decide gate); producer receipt dojotoday-returning-next-day.json @97a50adf pass (continuity.spec). Retornar nao avalia nem marca dominio. [Re-anchor v95 (AID-2471, QA Lead ca6a3f95, countersign pre-merge PR #501): observacao re-ancorada first-hand na arvore `4858feab` (= main push `97a50adf` + snapshot de fabrica) em 2026-09-18T20:4xZ. Causa do drift do fingerprint desde o anchor v93 (`7c044984`): PR #500 (`c23edd12`+`bcfb54a3`, merge `97a50adf`) toca `learner/substrate/judgments.py` (+35/-22 lidos first-hand: _prune_receipts removido — receipts sao provenance comprometida append-only; replay_cached usa lookup direto por nome-digest em vez de scan full-dir; nenhuma semantica de escrita de estado do aprendiz adicionada). Diff 7c044984..97a50adf em engines/dojoToday/: VAZIO (git log first-hand) — o drift vem exclusivamente do sourcePath learner/substrate/. derive_today_snapshot permanece leitura+derivacao (docstring 'derived from the canonical state'; judgment_client opcional default None). Executaveis first-hand nesta arvore: pytest learner/substrate/tests 214 passed/1 skipped; python3 engines/dojoToday/tools/selfcheck.py OK (track + game_dir). Citacoes file:linha re-conferidas mecanicamente nesta arvore. Producer evidence: CI push run 35390639787 @97a50adf, job 'dojoToday (TS + substrate)' verde by-name; receipts arquivados em logs/ci-run-35390639787/.]",
+     "outcome": "pass"
+    }
+   ],
+   "gaps": [],
+   "outcome": "pass",
+   "scenarioId": "dojotoday-returning-next-day"
+  }
+ ],
+ "schemaVersion": 1
+}
