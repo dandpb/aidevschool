@@ -269,18 +269,42 @@ def test_resolve_cli(tmp_path: Path) -> None:
 
 
 def test_approved_escalation_passes(tmp_path: Path) -> None:
-    """C11: approved digest re-verifies as PASS with resolution manual."""
+    """C11: approved digest re-verifies as PASS with resolution manual —
+    through the real production sequence: ESCALATE band (0.6) queues an open
+    entry, the owner resolves it approve, re-verification returns PASS with
+    manual provenance and queues no duplicate entry."""
     queue = tmp_path / "escalations.ndjson"
     evidence = make_evidence(PARAPHRASED_VALUES)
-    verdict = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=queue
+
+    escalated = verify_literacy_evidence(
+        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue
     )
-    assert verdict.verdict == "FAIL"
+    assert escalated.verdict == "ESCALATE"
+    assert len(queue.read_text().splitlines()) == 1
+
+    import learner.gate.literacy_verifier as lv
+
+    code, _ = lv.resolve_escalation(L18_ATTEMPT, approve=True, path=queue)
+    assert code == 0
+
+    after = verify_literacy_evidence(
+        evidence, root=REPO, judgment_client=FakeClient(0.6), escalations_path=queue
+    )
+    assert after.verdict == "PASS" and after.mastery_eligible is True
+    assert after.resolution == "manual"
+    # resolved digests queue no further entries
+    assert len(queue.read_text().splitlines()) == 1
+
+    # the FAIL band follows the same approved-resolution path (regression
+    # guard for the original unrepresentative-proof gap)
+    fail_evidence = make_evidence(
+        {k: v + " diferente" for k, v in PARAPHRASED_VALUES.items()}
+    )
     queue.write_text(
         json.dumps(
             {
                 "attempt_id": L18_ATTEMPT,
-                "evidence_digest": verdict.evidence_digest,
+                "evidence_digest": literacy_evidence_digest_of(fail_evidence),
                 "status": "resolved",
                 "resolution": "approve",
             }
@@ -288,11 +312,19 @@ def test_approved_escalation_passes(tmp_path: Path) -> None:
         + "\n",
         encoding="utf-8",
     )
-    after = verify_literacy_evidence(
-        evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=queue
+    recovered = verify_literacy_evidence(
+        fail_evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=queue
     )
-    assert after.verdict == "PASS" and after.mastery_eligible is True
-    assert after.resolution == "manual"
+    assert recovered.verdict == "PASS" and recovered.resolution == "manual"
+
+
+def literacy_evidence_digest_of(evidence: dict) -> str:
+    from learner.gate.literacy_verifier import verify_literacy_evidence
+
+    verdict = verify_literacy_evidence(
+        evidence, root=REPO, judgment_client=FakeClient(0.2), escalations_path=None
+    )
+    return verdict.evidence_digest
 
 
 # --- S5: replay determinism -----------------------------------------------------

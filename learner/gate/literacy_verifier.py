@@ -201,10 +201,11 @@ def _resolve_outcome(
     escalations_path: Path | None,
 ) -> tuple[bool, bool, str | None]:
     """(independent_pass, escalate, resolution): approved escalations turn a
-    failing digest into PASS with manual provenance."""
+    non-passing digest into PASS with manual provenance — the ESCALATE band
+    included, which is the normal escalation path."""
     independent_pass, escalate = _recomputed_flags(recomputed, judgment_errors)
     resolution: str | None = None
-    if judgment_errors or (not independent_pass and not escalate):
+    if not independent_pass:
         resolution = _approved_resolution(evidence_digest, escalations_path)
         if resolution is not None:
             independent_pass = True
@@ -217,9 +218,10 @@ def _queue_escalation(
     evidence_digest: str,
     recomputed: dict[str, Any] | None,
     judgment_digest: str | None,
+    resolution: str | None,
 ) -> None:
-    if escalations_path is None:
-        return
+    if escalations_path is None or resolution is not None:
+        return  # already resolved by the owner: no further queue entries
     _append_queue(
         escalations_path,
         {
@@ -275,7 +277,8 @@ def verify_literacy_evidence(
     )
     if escalate:
         _queue_escalation(
-            escalations_path, evidence, evidence_digest, recomputed, judgment_digest
+            escalations_path, evidence, evidence_digest, recomputed,
+            judgment_digest, resolution,
         )
     verdict = _verdict_word(independent_pass, escalate)
     return LiteracyVerdict(
