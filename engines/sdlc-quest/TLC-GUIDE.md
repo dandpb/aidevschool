@@ -1,125 +1,127 @@
-# SDLC Quest v1.2 — Guia da Oficina TLC
+Leia em português: [TLC-GUIDE.pt-BR.md](TLC-GUIDE.pt-BR.md)
 
-Expansão independente: 16 desafios em quatro módulos, além dos 18 originais. Não contém notas nem progresso do usuário.
+# SDLC Quest v1.2 — TLC Workshop Guide
 
-## Começar
-Abra o HTML autocontido e escolha **Entrar na oficina**. A ordem sugerida é Discover → Plan → Implement → Judge; cada módulo também pode ser estudado isoladamente.
+Independent expansion: 16 challenges across four modules, beyond the original 18. It contains no user notes or progress.
 
-## Preservar o progresso da v1.1
-Na v1.1, abra Configurações e baixe o backup JSON. Na v1.2, use Configurações → Restaurar backup e confira a prévia antes de confirmar. Abrir um arquivo de nome ou caminho diferente pode não reutilizar o armazenamento anterior. A importação substitui o progresso atual, não combina dois arquivos.
+## Getting started
+Open the self-contained HTML and choose **Enter the workshop**. The suggested order is Discover → Plan → Implement → Judge; each module can also be studied on its own.
 
-## Instalar fora do navegador
-O jogo não executa comandos. No terminal do seu projeto, após conferir a origem e as opções do instalador:
+## Preserving v1.1 progress
+In v1.1, open Settings and download the JSON backup. In v1.2, use Settings → Restore backup and review the preview before confirming. Opening a file with a different name or path may not reuse the previous storage. Importing replaces the current progress; it does not merge two saves.
+
+## Installing outside the browser
+The game runs no commands. In your project's terminal, after checking the origin and the installer options:
 
 ```sh
 npx @tech-leads-club/agent-skills install --skill tlc-discover tlc-plan tlc-implement the-judge
 ```
 
-O comando é o publicado na página consultada em 16/09/2026. A instalação não foi executada nem validada nesta entrega.
+This is the command published on the page consulted on 2026-09-16. The installation was not executed or validated in this delivery.
 
 ## tlc-discover
 
-**Entrada:** Ideia, contexto do projeto e decisões ainda abertas.
+**Input:** An idea, project context and decisions still open.
 
-**Saída:** Veredito e design; ou uma decisão justificada de não construir.
+**Output:** A verdict and a design; or a justified decision not to build.
 
-**Onde se encaixa:** Planejar + Projetar. Artefato associado: `.design/retry-webhook.md`.
+**Where it fits:** Plan + Design. Associated artifact: `.design/retry-webhook.md`.
 
-**Prompt sugerido:**
+**Suggested prompt:**
 
 ```text
-Use tlc-discover para explorar o retry de webhooks. Leia primeiro o contexto e as convenções disponíveis. Separe fatos de decisões de produto. A decisão de construir ainda está aberta: esclareça problema, alternativas menores e sucesso esperado antes de propor a arquitetura. Registre lacunas sem inventar métricas.
+Use tlc-discover to explore the webhook retry. Read the available context and conventions first. Separate facts from product decisions. The build decision is still open: clarify problem, smaller alternatives and expected success before proposing the architecture. Record gaps without inventing metrics.
 ```
 
-**O que você pratica:**
+**What you practice:**
 
-- Primeiro, descubra onde estamos. Uma tecnologia sugerida não define o problema. Investigue situação, compromissos e trabalho em andamento; uma decisão de produto não deve ser inferida do silêncio.
-- Nem toda conversa precisa de outro “sim”. Quando a decisão está aberta, o veredito pode encerrar, adiar ou reduzir o trabalho. Um compromisso já registrado não precisa de uma aprovação encenada. Impacto alto e pouca clareza pedem investigação delimitada.
-- Prepare um design que outro agente entenda. O design preserva decisões concretas, fronteiras e o motivo das escolhas. É possível manter perguntas abertas explicitamente; “decidido” não é sinônimo de texto confiante.
-- Publicar é saída. Resolver é resultado. O resultado de produto é observado após a entrega. Ele não deve ser transformado artificialmente em um teste unitário que “prova” um impacto de negócio.
+- First, find out where we are. A suggested technology does not define the problem. Investigate the situation, commitments and work in progress; a product decision must not be inferred from silence.
+- Not every conversation needs another "yes". While the decision is open, the verdict can end, postpone or shrink the work. A recorded commitment does not need a staged approval. High impact and low clarity call for a bounded investigation.
+- Prepare a design another agent can understand. The design preserves concrete decisions, boundaries and the reasoning behind choices. Open questions can stay explicit; "decided" is not a synonym for confident text.
+- Publishing is output. Solving is outcome. The product outcome is observed after delivery. It should not be artificially turned into a unit test that "proves" a business impact.
 
-Fonte: https://agent-skills.techleads.club/skills/tlc-discover/
+Source: https://agent-skills.techleads.club/skills/tlc-discover/
 
 ## tlc-plan
 
-**Entrada:** Uma decisão: ticket, design, PRD, RFC ou conversa.
+**Input:** A decision: ticket, design, PRD, RFC or conversation.
 
-**Saída:** Tarefa com critérios, fronteira, decisões e questões não resolvidas.
+**Output:** A task with criteria, boundary, decisions and unresolved questions.
 
-**Onde se encaixa:** Projetar + Construir. Artefato associado: `.tasks/retry-webhook.md`.
+**Where it fits:** Design + Build. Associated artifact: `.tasks/retry-webhook.md`.
 
-**Prompt sugerido:**
+**Suggested prompt:**
 
 ```text
-Use tlc-plan sobre .design/retry-webhook.md. Leia a fonte por inteiro e confronte-a com o código. Defina fatias verticais e critérios observáveis com valores concretos. Faça o surface walk e registre as nove dimensões em Swept, sem inventar novos requisitos. Diferencie open, blocks build e blocks go-live. Gere .tasks/retry-webhook.md.
+Use tlc-plan on .design/retry-webhook.md. Read the source in full and confront it with the code. Define vertical slices and observable criteria with concrete values. Run the surface walk and record the nine dimensions in Swept, without inventing new requirements. Tell apart open, blocks build and blocks go-live. Generate .tasks/retry-webhook.md.
 ```
 
-**O que você pratica:**
+**What you practice:**
 
-- Uma fatia que alguém consegue observar. Uma fatia vertical atravessa as camadas necessárias para entregar um comportamento. Criar estrutura pode ser preparação válida, mas não prova por si só a capacidade prometida.
-- As nove dimensões não podem virar nove suposições. A varredura encontra lacunas; não dá autorização para criar requisitos. Concorrência precisa de uma prova de chamadas simultâneas, não apenas de um teste de duplicata sequencial. n/a exige um motivo sobre a própria mudança, como estado vazio de tela em uma fatia sem tela.
-- O número certo na camada certa. Um critério técnico deve nomear comportamento e valores observáveis. Percentis e taxas são propriedades de amostras; metas de serviço exigem uma medição apropriada.
-- Tarefa não é sinônimo de pull request. tlc-plan parte de uma tarefa por fonte. Fatias, tarefas e PRs têm papéis diferentes: resultado observável, unidade de trabalho e unidade de revisão.
+- A slice someone can observe. A vertical slice crosses the layers needed to deliver a behavior. Creating structure can be valid preparation, but does not by itself prove the promised capability.
+- The nine dimensions cannot become nine assumptions. The sweep finds gaps; it does not authorize creating requirements. Concurrency needs proof of simultaneous calls, not just a sequential duplicate test. n/a requires a reason about the change itself, such as an empty-screen state on a slice with no screen.
+- The right number in the right layer. A technical criterion must name behavior and observable values. Percentiles and rates are properties of samples; service targets require an appropriate measurement.
+- Task is not a synonym for pull request. tlc-plan starts from one task per source. Slices, tasks and PRs have different roles: observable outcome, unit of work and unit of review.
 
-Fonte: https://agent-skills.techleads.club/skills/tlc-plan/
+Source: https://agent-skills.techleads.club/skills/tlc-plan/
 
 ## tlc-implement
 
-**Entrada:** Trabalho decidido, critérios e escopo claro.
+**Input:** Decided work, criteria and a clear scope.
 
-**Saída:** Implementação, checklist e relatório de verificação independente.
+**Output:** Implementation, checklist and an independent verification report.
 
-**Onde se encaixa:** Construir + Verificar. Artefato associado: `.checks/retry-webhook.md`.
+**Where it fits:** Build + Verify. Associated artifact: `.checks/retry-webhook.md`.
 
-**Prompt sugerido:**
+**Suggested prompt:**
 
 ```text
-Use tlc-implement sobre .tasks/retry-webhook.md. Declare o perfil do projeto e gere .checks/retry-webhook.md antes de editar. Ligue cada check a provas executáveis, sem enfraquecer testes. Ao concluir toda a feature, o orquestrador deve acionar um verificador novo sobre o intervalo completo. Sem essa capacidade, registre a verificação independente pendente; não a simule. Não faça push ou deploy sem autorização explícita.
+Use tlc-implement on .tasks/retry-webhook.md. Declare the project profile and generate .checks/retry-webhook.md before editing. Tie each check to executable proofs, without weakening tests. When the whole feature is done, the orchestrator must trigger a fresh verifier over the full range. Without that capability, record the independent verification as pending; do not simulate it. Do not push or deploy without explicit authorization.
 ```
 
-**O que você pratica:**
+**What you practice:**
 
-- Escolha o perfil sem esconder seus limites. light é o padrão documentado; standard adiciona análise de cobertura e política de testes; ui adiciona confronto com fontes visuais vinculantes. Os perfis não são três nomes para a mesma garantia.
-- Quebre a implementação. Não o teste. Para este bug, a regressão deve detectar a versão anterior e aceitar a correção. Um mutante que retorna null para tudo verifica se os casos positivos também importam. Esta é uma prova reduzida de consulta, não da API completa.
-- O verificador não é o último implementador. Na skill, o orquestrador dispara um novo verificador após todos os lotes, cobrindo a base da feature até HEAD. Handoff desligado não elimina a separação entre autor e verificador.
-- Passe o estado, não só a história. O próximo executor recebe checklist e diff, limites fechados e decisões novas. O handoff acontece em uma fronteira coerente; não deve esconder uma fatia incompleta atrás de uma suíte verde.
+- Choose the profile without hiding its limits. light is the documented default; standard adds coverage analysis and test policy; ui adds confrontation with binding visual sources. The profiles are not three names for the same guarantee.
+- Break the implementation, not the test. For this bug, the regression must detect the previous version and accept the fix. A mutant that returns null for everything checks whether the positive cases also matter. This is a reduced query proof, not of the full API.
+- The verifier is not the last implementer. In the skill, the orchestrator triggers a fresh verifier after all batches, covering the feature base up to HEAD. A disabled handoff does not remove the separation between author and verifier.
+- Pass the state, not just the story. The next executor receives checklist and diff, closed limits and new decisions. The handoff happens at a coherent boundary; it must not hide an unfinished slice behind a green suite.
 
-Fonte: https://agent-skills.techleads.club/skills/tlc-implement/
+Source: https://agent-skills.techleads.club/skills/tlc-implement/
 
 ## the-judge
 
-**Entrada:** Uma PR/diff e as verificações reais do repositório.
+**Input:** A PR/diff and the repository's real checks.
 
-**Saída:** Achados rastreáveis e APPROVE, COMMENT ou REQUEST_CHANGES.
+**Output:** Traceable findings and APPROVE, COMMENT or REQUEST_CHANGES.
 
-**Onde se encaixa:** Verificar + portão de Publicar. Artefato associado: `findings.json`.
+**Where it fits:** Verify + the Publish gate. Associated artifact: `findings.json`.
 
-**Prompt sugerido:**
+**Suggested prompt:**
 
 ```text
-Use the-judge para revisar esta PR em português. Execute os checks disponíveis, leia o diff e valide cada achado com arquivo:linha ou documentação oficial consultada. Consolide a revisão e use o veredito correspondente às severidades. Nas reavaliações, mantenha IDs, carryover e o contrato de convergência. Sem PR ou autenticação, declare o bloqueio; não diga que publicou uma review.
+Use the-judge to review this PR in English. Run the available checks, read the diff and validate each finding with file:line or consulted official documentation. Consolidate the review and use the verdict matching the severities. In re-reviews, keep IDs, carryover and the convergence contract. Without a PR or authentication, state the blockage; do not say you published a review.
 ```
 
-**O que você pratica:**
+**What you practice:**
 
-- Tribunal: o que realmente merece um achado? Cada achado publicado precisa de evidência. O tooling já relata falhas determinísticas; o revisor concentra os comentários em problemas confirmados que exigem julgamento. Uma falha preexistente vai ao resumo, não vira defeito introduzido pela PR.
-- Três vereditos, não uma nota de perfeição. Um blocker leva a REQUEST_CHANGES. Sem blocker, um should-fix leva a COMMENT. Sem ambos, APPROVE pode coexistir com nits. O veredito de review não concede credenciais nem faz merge.
-- Sem achados novos não significa sem pendências. IDs estáveis e a tabela Resolution preservam o histórico. O carryover inclui pendências anteriores no veredito. Olhar apenas a lista de achados novos pode esconder um risco ainda aberto.
-- Saia do loop pelo motivo certo. O contrato do the-judge limita o mesmo conjunto de achados a três rodadas. Pendências são corrigidas, convertidas em follow-up por acordo ou escaladas. Um blocker real não desaparece por cansaço.
+- Tribunal: what really deserves a finding? Every published finding needs evidence. Tooling already reports deterministic failures; the reviewer concentrates comments on confirmed problems that require judgment. A pre-existing failure goes to the summary; it does not become a defect introduced by the PR.
+- Three verdicts, not a perfection grade. A blocker leads to REQUEST_CHANGES. Without a blocker, one should-fix leads to COMMENT. Without either, APPROVE can coexist with nits. A review verdict grants no credentials and performs no merge.
+- No new findings does not mean no pendings. Stable IDs and the Resolution table preserve history. Carryover includes previous pendings in the verdict. Looking only at the new-findings list can hide a still-open risk.
+- Exit the loop for the right reason. the-judge's contract limits the same finding set to three rounds. Pendings are fixed, converted to follow-up by agreement, or escalated. A real blocker does not disappear through fatigue.
 
-Fonte: https://agent-skills.techleads.club/skills/the-judge/
+Source: https://agent-skills.techleads.club/skills/the-judge/
 
-## Os dois laboratórios
+## The two labs
 
-**Provas:** cinco asserções em três versões da consulta. O arquivo de execução contém os resultados locais. Os exemplos .checks descrevem os critérios, mas não atestam execução.
+**Proofs:** five assertions over three versions of the query. The execution file holds the local results. The .checks examples describe the criteria but attest no execution.
 
-**Review:** seleção de achados e veredito sobre um diff fictício. findings.json é explicitamente simulado; nenhum script oficial foi rodado e nenhuma review foi publicada.
+**Review:** a selection of findings and a verdict over a fictional diff. findings.json is explicitly simulated; no official script was run and no review was published.
 
-## Limites que continuam valendo
+## Limits that still hold
 
-O the-judge não substitui verificação independente nem infraestrutura de autorização. APPROVE não é uma nota de perfeição, merge ou deploy. O limite de três rodadas exige resolução, acordo ou escalonamento, não aprovação forçada. A campanha original continua ensinando release e manutenção.
+the-judge does not replace independent verification or authorization infrastructure. APPROVE is not a perfection grade, merge or deploy. The three-round limit demands resolution, agreement or escalation, not forced approval. The original campaign keeps teaching release and maintenance.
 
-## Atribuição
+## Attribution
 
-Adaptação didática independente do SDLC Quest, com cenários fictícios. Conteúdo das skills: Tech Leads Club, CC BY 4.0. Consultado em 16/09/2026. Nomes, caminhos e contratos preservados onde indicados; exemplos e mecânicas foram criados para este jogo. Não é produto oficial nem executa agentes, npx, GitHub ou deploy.
+Independent educational adaptation of SDLC Quest, with fictional scenarios. Skill content: Tech Leads Club, CC BY 4.0. Consulted on 2026-09-16. Names, paths and contracts preserved where indicated; examples and mechanics were created for this game. This is not an official product and it runs no agents, npx, GitHub or deploys.
 https://creativecommons.org/licenses/by/4.0/

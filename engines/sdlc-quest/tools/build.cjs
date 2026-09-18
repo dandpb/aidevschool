@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const ROOT = path.resolve(__dirname, '..');
 const STYLES = ['style', 'tlc-style', 'harness-style'];
-const SCRIPTS = ['data', 'tlc-data', 'tlc-core', 'harness-core', 'core', 'world', 'app', 'tlc-app', 'harness-app'];
+const SCRIPTS = ['lang', 'data', 'tlc-data', 'tlc-core', 'harness-core', 'core', 'world', 'app', 'tlc-app', 'harness-app'];
 function buildHtml(root = ROOT) {
   const read = file => fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n');
   let html = read('index.html');

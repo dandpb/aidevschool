@@ -9,29 +9,29 @@
 <link rel="stylesheet" href="src/harness-style.css">
 </head>
 <body>
-<a class="skip" href="#stage-nav">Ir para as missões</a>
+<a class="skip" href="#stage-nav" data-i18n="skip">Ir para as missões</a>
 <div class="shell">
 <header class="topbar">
- <a class="brand" href="#" aria-label="SDLC Quest, voltar ao mapa"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>SDLC<span class="brand-thin">QUEST</span><small>GUARDIÕES DO RELEASE</small></span></a>
- <div class="campaign-label"><span class="signal"></span> CAMPANHA 01 <span class="sep">/</span> A FEATURE PERDIDA</div>
- <nav class="top-actions" aria-label="Ferramentas do jogo"><button class="quiet" id="book-btn" aria-label="Manual de engenharia" title="Manual de engenharia"><span aria-hidden="true">▤</span> <span>Manual</span></button><button class="quiet" id="bag-btn" aria-label="Artefatos da jornada" title="Artefatos da jornada"><span aria-hidden="true">▣</span> <span>Artefatos <b id="bag-count">0</b></span></button><button class="icon-button" id="settings-btn" aria-label="Configurações e ajuda">⚙</button></nav>
+ <a class="brand" href="#" data-i18n-aria="brandAria" aria-label="SDLC Quest, voltar ao mapa"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>SDLC<span class="brand-thin">QUEST</span><small data-i18n="brandTag">GUARDIÕES DO RELEASE</small></span></a>
+ <div class="campaign-label"><span class="signal"></span> <span data-i18n="campaign">CAMPANHA 01</span> <span class="sep">/</span> <span data-i18n="campaignName">A FEATURE PERDIDA</span></div>
+ <nav class="top-actions" data-i18n-aria="toolsAria" aria-label="Ferramentas do jogo"><button class="quiet" id="book-btn" data-i18n-aria="bookAria" aria-label="Manual de engenharia" title="Manual de engenharia"><span aria-hidden="true">▤</span> <span data-i18n="book">Manual</span></button><button class="quiet" id="lang-btn" data-i18n-aria="langAria" aria-label="Trocar idioma para inglês" title="Trocar idioma para inglês"><span aria-hidden="true">⇄</span> <span data-i18n="langCode">EN</span></button><button class="quiet" id="bag-btn" data-i18n-aria="bagAria" aria-label="Artefatos da jornada" title="Artefatos da jornada"><span aria-hidden="true">▣</span> <span><span data-i18n="bag">Artefatos</span> <b id="bag-count">0</b></span></button><button class="icon-button" id="settings-btn" data-i18n-aria="settingsAria" aria-label="Configurações e ajuda">⚙</button></nav>
 </header>
 <main>
- <div class="heading"><div><div class="eyebrow">APRENDA CONSTRUINDO. VENÇA VERIFICANDO.</div><h1>Da intenção ao <em>release.</em></h1><p>Uma aventura de engenharia com IA. O código é só parte da missão.</p><button class="text-button mission-shortcut" id="quick-start">Jogar missão disponível →</button></div><div class="player"><span class="avatar" aria-hidden="true"><i></i></span><div><span id="rank">APRENDIZ DE ENGENHARIA</span><strong><span id="xp">0</span> <small>XP</small></strong></div><div class="mini-progress"><span id="progress-fraction">0/18</span><small>DESAFIOS</small></div></div></div>
- <section id="tlc-banner" class="tlc-banner" aria-label="Expansão TLC AI Dev Flow"></section>
- <section id="harness-banner" class="harness-strip" aria-label="Laboratório de execução com gates"></section>
+ <div class="heading"><div><div class="eyebrow" data-i18n="eyebrow">APRENDA CONSTRUINDO. VENÇA VERIFICANDO.</div><h1><span data-i18n="h1a">Da intenção ao</span> <em>release.</em></h1><p data-i18n="headingLead">Uma aventura de engenharia com IA. O código é só parte da missão.</p><button class="text-button mission-shortcut" id="quick-start" data-i18n="quickStart">Jogar missão disponível →</button></div><div class="player"><span class="avatar" aria-hidden="true"><i></i></span><div><span id="rank">APRENDIZ DE ENGENHARIA</span><strong><span id="xp">0</span> <small>XP</small></strong></div><div class="mini-progress"><span id="progress-fraction">0/18</span><small data-i18n="challenges">DESAFIOS</small></div></div></div>
+ <section id="tlc-banner" class="tlc-banner" data-i18n-aria="tlcBannerAria" aria-label="Expansão TLC AI Dev Flow"></section>
+ <section id="harness-banner" class="harness-strip" data-i18n-aria="harnessBannerAria" aria-label="Laboratório de execução com gates"></section>
  <div class="game-layout">
-  <section class="world-panel" aria-label="Mapa da campanha">
-   <div class="map-hud"><span><i class="signal"></i> RELEASE ISLAND</span><span class="map-caption">6 estações · 1 ciclo</span></div>
-   <div class="canvas-wrap"><canvas id="world" width="1100" height="690" aria-label="Ilhas isométricas das seis etapas. Use os botões de missão abaixo para navegar."></canvas><div id="world-tip" class="world-tip"><span class="keycap">↗</span> Toque em uma estação para explorar</div></div>
-   <div class="map-footer"><span><i class="dot mint"></i> Disponível <i class="dot dim"></i> Ainda bloqueada</span><button id="motion-btn" class="map-btn" aria-pressed="false">Ⅱ Pausar cenário</button></div>
+  <section class="world-panel" data-i18n-aria="worldAria" aria-label="Mapa da campanha">
+   <div class="map-hud"><span><i class="signal"></i> RELEASE ISLAND</span><span class="map-caption" data-i18n="mapCaption">6 estações · 1 ciclo</span></div>
+   <div class="canvas-wrap"><canvas id="world" width="1100" height="690" data-i18n-aria="worldCanvasAria" aria-label="Ilhas isométricas das seis etapas. Use os botões de missão abaixo para navegar."></canvas><div id="world-tip" class="world-tip"><span class="keycap">↗</span> <span data-i18n="worldTip">Toque em uma estação para explorar</span></div></div>
+   <div class="map-footer"><span><i class="dot mint"></i> <span data-i18n="mapAvailable">Disponível</span> <i class="dot dim"></i> <span data-i18n="mapLocked">Ainda bloqueada</span></span><button id="motion-btn" class="map-btn" aria-pressed="false">Ⅱ Pausar cenário</button></div>
   </section>
-  <aside class="mission-panel" id="mission-panel" aria-label="Missão selecionada"></aside>
+  <aside class="mission-panel" id="mission-panel" data-i18n-aria="missionPanelAria" aria-label="Missão selecionada"></aside>
  </div>
- <nav tabindex="-1" class="stage-nav" id="stage-nav" aria-label="Etapas do SDLC"></nav>
- <section class="bottom-strip"><div><span class="eyebrow">O QUE REALMENTE PROTEGE UMA ENTREGA</span><div class="pillars"><span><b>01</b> Intenção clara</span><i>→</i><span><b>02</b> Evidência real</span><i>→</i><span><b>03</b> Autoridade limitada</span></div></div><button class="text-button" id="how-btn">Como jogar <span aria-hidden="true">↗</span></button></section>
+ <nav tabindex="-1" class="stage-nav" id="stage-nav" data-i18n-aria="stageNavAria" aria-label="Etapas do SDLC"></nav>
+ <section class="bottom-strip"><div><span class="eyebrow" data-i18n="bottomEyebrow">O QUE REALMENTE PROTEGE UMA ENTREGA</span><div class="pillars"><span><b>01</b> <span data-i18n="pillar1">Intenção clara</span></span><i>→</i><span><b>02</b> <span data-i18n="pillar2">Evidência real</span></span><i>→</i><span><b>03</b> <span data-i18n="pillar3">Autoridade limitada</span></span></div></div><button class="text-button" id="how-btn"><span data-i18n="howToPlay">Como jogar</span> <span aria-hidden="true">↗</span></button></section>
 </main>
-<footer class="footer"><span>Um laboratório para aprender, não um acesso à produção.</span><span id="save-status" role="status">Progresso salvo neste navegador</span></footer>
+<footer class="footer"><span data-i18n="footerNote">Um laboratório para aprender, não um acesso à produção.</span><span id="save-status" role="status">Progresso salvo neste navegador</span></footer>
 </div>
 <dialog id="play-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
 <dialog id="info-dialog" aria-labelledby="info-title"><div id="info-content"></div></dialog>
@@ -39,5 +39,5 @@
 <dialog id="harness-dialog" aria-labelledby="harness-title"><div id="harness-content"></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <noscript><p class="noscript">Este jogo precisa de JavaScript ativado no navegador. Não requer internet.</p></noscript>
-<script src="src/data.js"></script><script src="src/tlc-data.js"></script><script src="src/tlc-core.js"></script><script src="src/harness-core.js"></script><script src="src/core.js"></script><script src="src/world.js"></script><script src="src/app.js"></script><script src="src/tlc-app.js"></script><script src="src/harness-app.js"></script>
+<script src="src/lang.js"></script><script src="src/data.js"></script><script src="src/tlc-data.js"></script><script src="src/tlc-core.js"></script><script src="src/harness-core.js"></script><script src="src/core.js"></script><script src="src/world.js"></script><script src="src/app.js"></script><script src="src/tlc-app.js"></script><script src="src/harness-app.js"></script>
 </body></html>
