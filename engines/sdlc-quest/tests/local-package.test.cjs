@@ -45,10 +45,10 @@ test('local: npm commands do not require third-party JS packages', () => {
   for (const command of ['start', 'build', 'test', 'gate', 'setup:tests']) assert.ok(pkg.scripts[command].startsWith('node tools/'));
 });
 test('local: server default is stable and never opens a browser implicitly', () => {
-  assert.deepEqual(parseArgs([], {}), { port: 8080, open: false, help: false });
+  assert.deepEqual(parseArgs([], {}), { port: 8080, open: false, help: false, lang: 'pt' });
 });
 test('local: custom port and explicit browser launch parse correctly', () => {
-  assert.deepEqual(parseArgs(['--port', '8081', '--open'], {}), { port: 8081, open: true, help: false });
+  assert.deepEqual(parseArgs(['--port', '8081', '--open'], {}), { port: 8081, open: true, help: false, lang: 'pt' });
   assert.equal(parseArgs([], { PORT: '9000' }).port, 9000);
 });
 for (const input of ['0', '65536', 'abc', '-1', '80;echo x', '']) {

@@ -30,6 +30,7 @@ test('--lang en accepted', () => {
   assert.equal(checkPackage.parseArgs([]).lang, 'pt');
   assert.equal(serve.parseArgs(['--lang', 'en'], {}).lang, 'en');
   assert.equal(serve.parseArgs(['--lang', 'pt'], {}).lang, 'pt');
+  assert.equal(serve.parseArgs([], {}).lang, 'pt');
 });
 
 test('--lang xx rejected exit 64', () => {
