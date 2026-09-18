@@ -368,3 +368,23 @@ def test_changed_answer_rejudges(tmp_path: Path) -> None:
     other = make_evidence(PARAPHRASED_VALUES)
     second = recompute_literacy_evidence(other, REPO, judgment_client=FakeClient(0.5), judgment_receipts_root=tmp_path / "receipts")[0]
     assert first["judgment"]["receipt_digest"] != second["judgment"]["receipt_digest"]
+
+
+def test_evidence_schema_oneof_structurally_valid() -> None:
+    """F1 blind-spot guard (verifier rounds 3-5): the python envelope
+    validator never descends into the answer oneOf, and a malformed member
+    (e.g. `required` as a bare string) broke only the TS producer. Assert the
+    oneOf's structural contract from the python side too."""
+    from learner.gate.evidence_schema import LITERACY_EVIDENCE_SCHEMA
+
+    one_of = LITERACY_EVIDENCE_SCHEMA["properties"]["answer"]["oneOf"]
+    assert len(one_of) == 7
+    for variant in one_of:
+        required = variant.get("required")
+        assert isinstance(required, list) and required and all(
+            isinstance(r, str) for r in required
+        ), f"required must be a non-empty list of strings: {required!r}"
+        properties = variant.get("properties")
+        assert isinstance(properties, dict) and set(required) <= set(properties)
+        assert variant.get("additionalProperties") is False
+        assert variant.get("type") == "object"

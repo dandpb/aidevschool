@@ -43,7 +43,7 @@ Build-time door (additive):
 Proof: `python3 -m pytest "learner/gate/tests/test_literacy_judgment.py::test_values_answer_transport"`
 
 **C2** - The TS producer emits the free text: `structuredAnswer` returns `{answer: {values: {...}}}` for prompt_builder answers and is byte-identical to today's output for every structured shape
-Proof: `cd engines/literacyDojo && npx vitest run src/domain/evidence.test.ts` (new file)
+Proof: `cd engines/literacyDojo && NODE_ENV=development npx vitest run tests/domain/evidence.test.ts` (new file)
 
 ### S2 - Judgment verification path · 3 files · ~14 KB · ~4k
 
