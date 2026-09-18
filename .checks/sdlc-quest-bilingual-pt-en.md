@@ -20,7 +20,7 @@ Toca o pacote `engines/sdlc-quest/` inteiro: `src/lang.js` novo (helper copiáve
 
 | One-way door | Literal shape | Alternative rejected |
 | --- | --- | --- |
-| Convenção bilíngue de dados | sufixo `_en` em todo campo exibível; exclusões como literal no topo do teste de paridade (`id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`) | catálogos JSON por locale - vencedor só com ≥2 engines simultâneas; viola local-complete |
+| Convenção bilíngue de dados | sufixo `_en` em todo campo exibível; exclusões como literal no topo do teste de paridade (`id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`; `code` é código-como-conteúdo e pode carregar PT dentro do snippet, por design) | catálogos JSON por locale - vencedor só com ≥2 engines simultâneas; viola local-complete |
 | Persistência da preferência | `localStorage['sdlc-quest:lang']`, valores `'pt'\|'en'`, ausência = pt | `navigator.language` - não determinístico para journeys |
 | Contrato dos módulos core | funções user-facing (`validate`, `stepIncident`, `importBackup`, `complete`) aceitam `lang` opcional, default `'pt'`; testes node e journeys PT seguem verdes sem edição | códigos de erro mapeados no app - quebraria os regexes dos testes contra `message` |
 | Cadeia do gate | etapa `i18n` (`tests/i18n-browser.py`, desktop-only) entre `harness-mobile` e o snapshot final; cadeia de execução passa de 8 para 9 steps (receipt total 9→10 com `contract-shape`) | desktop+mobile - dobra o custo do gate sobre a mesma superfície de strings |

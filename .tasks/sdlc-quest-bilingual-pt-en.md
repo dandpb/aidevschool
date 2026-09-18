@@ -25,7 +25,7 @@ A mudança: o pacote ganha chaveamento pt/en — helper `src/lang.js`, campos `_
 ### Paridade anti-drift
 
 6. Quando um campo exibível perde o `_en` (ex.: `brief_en` removido de `missions[0]`), então `node --test tests/i18n-parity.test.cjs` falha com mensagem contendo o `id` do registro e o nome do campo faltante.
-7. Sempre, o teste de paridade caminha os registros exibíveis de `src/data.js` (`missions`, `tasks`, `options`, `primers`, `glossary`, `sources`) e `src/tlc-data.js`, com a lista de exclusões declarada como literal no topo do teste (`id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`).
+7. Sempre, o teste de paridade caminha os registros exibíveis de `src/data.js` (`missions`, `tasks`, `options`, `primers`, `glossary`, `sources`) e `src/tlc-data.js`, com a lista de exclusões declarada como literal no topo do teste (`id`, `url`, `color`, `glyph`, `artifact`, `answer`, `type`, `boss`, `lines`, `budget`, `tag`, `version`, `checkedAt`, `install`, `flow`, `license`, `code`, `axis`, `skill`, `source`; `code` é código-como-conteúdo e pode carregar PT dentro do snippet, por design).
 
 ### Conteúdo didático em EN
 
