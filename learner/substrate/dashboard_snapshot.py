@@ -17,7 +17,7 @@ change the shape, update BOTH this script and the render code together.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -32,6 +32,7 @@ from learner.substrate.projection_clock import projection_today
 from learner.substrate.scheduling import compute_curr, derive_next_reviews, reconcile_streak
 from learner.substrate.catalog import load_catalog
 from learner.substrate.snapshot_sources import (
+    count_mastered,
     counts_from_backlog,
     pitfalls_from_markdown,
     profile_matrix,
@@ -86,6 +87,8 @@ def build_snapshot(
     source_root: Path | None = None,
     catalog: Sequence[Any] | None = None,
     today: date | None = None,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
+    judgment_receipts_root: Path | None = None,
 ) -> dict[str, Any]:
     if state is None:
         state = load_canonical(canonical_path)
@@ -97,6 +100,16 @@ def build_snapshot(
     pitfalls_path = PITFALLS if source_root is None else source_root / "learner" / "pitfalls.md"
     journal_path = JOURNAL if source_root is None else source_root / "learner" / "journal.md"
     profile_levels = profile_matrix(profile_path)
+    if judgment_client is not None:
+        # Semantic override of the parser outputs; any failure inside keeps
+        # the deterministic values (see judgments.py). Injection-only: this
+        # module never reads the environment for the API key.
+        from learner.substrate import judgments as _judgments
+
+        profile_levels = _judgments.semantic_profile_levels(
+            profile_path, profile_levels, judgment_client,
+            receipts_root=judgment_receipts_root,
+        )
 
     aidi_history = [
         {
@@ -108,14 +121,21 @@ def build_snapshot(
     ]
 
     pitfalls = pitfalls_from_markdown(pitfalls_path, journal_path)
+    if judgment_client is not None:
+        pitfalls = _judgments.semantic_pitfall_occurrences(
+            pitfalls, pitfalls_path, journal_path, judgment_client,
+            receipts_root=judgment_receipts_root,
+        )
+    # Mastery claims need evidence: count mastered units from units_log, not
+    # from catalog implementation statuses (golden rule 3).
+    mastered = count_mastered(state.get("units_log"))
     if source_root is None:
-        mastered, scaffolded = counts_from_backlog(BACKLOG)
+        _, scaffolded = counts_from_backlog(BACKLOG)
         predictions_path = PREDICTIONS
         challenge_root = ROOT
     else:
         if catalog is None:
             catalog = load_catalog(source_root / "curriculum" / "catalog.md")
-        mastered = sum(project.status.startswith("implemented") for project in catalog)
         scaffolded = sum(project.status == "scaffolded" for project in catalog)
         predictions_path = source_root / "learner" / "predictions.yaml"
         challenge_root = source_root

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -33,6 +34,8 @@ def _snapshot(
     source_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> tuple[Any, dict[str, Any]]:
     from learner.substrate.dashboard_snapshot import build_snapshot
 
@@ -43,6 +46,7 @@ def _snapshot(
         source_root=source_root,
         catalog=catalog,
         today=today,
+        judgment_client=judgment_client,
     )
     return catalog, snapshot
 
@@ -78,8 +82,10 @@ def build_dashboard_views(
     output_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[Path, str]:
-    catalog, snapshot = _snapshot(source_root, state, today)
+    catalog, snapshot = _snapshot(source_root, state, today, judgment_client=judgment_client)
     dashboard_data = load_dashboard_data(
         source_root / "engines" / "minimaxDojo" / "config" / "dashboard.yaml"
     )
@@ -97,8 +103,10 @@ def build_learner_snapshot_views(
     output_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[Path, str]:
-    _, snapshot = _snapshot(source_root, state, today)
+    _, snapshot = _snapshot(source_root, state, today, judgment_client=judgment_client)
     return {
         output_root / "engines" / "codexdojo-os-prototype" / "src" / "data" / "learner.ts": render_codexdojo_os_ts(snapshot),
     }
@@ -129,6 +137,8 @@ def build_game_review_views(
     output_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[Path, str]:
     from learner.substrate.dashboard_snapshot import (
         VOXEL_GAME_UNIT_IDS,
@@ -136,7 +146,7 @@ def build_game_review_views(
         build_voxel_per_game_review_slices,
     )
 
-    _, snapshot = _snapshot(source_root, state, today)
+    _, snapshot = _snapshot(source_root, state, today, judgment_client=judgment_client)
     review_slice = build_pixel_review_slice(snapshot)
     voxel_per_game = build_voxel_per_game_review_slices(snapshot)
     views: dict[Path, str] = {
@@ -165,8 +175,10 @@ def build_dojotoday_views(
     output_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[Path, str]:
-    snapshot = derive_today_snapshot(source_root, state, today)
+    snapshot = derive_today_snapshot(source_root, state, today, judgment_client=judgment_client)
     return {
         output_root / "engines" / "dojoToday" / "src" / "data" / "today.ts": render_today_ts(
             snapshot
@@ -179,16 +191,27 @@ def build_generated_views(
     output_root: Path,
     state: dict[str, Any],
     today: date | None = None,
+    *,
+    judgment_client: Callable[[dict[str, Any], dict[str, Any]], dict[str, Any]] | None = None,
 ) -> dict[Path, str]:
     views: dict[Path, str] = {}
-    for builder in (
-        build_dashboard_views,
-        build_mavis_views,
-        build_whiteboard_views,
-        build_learner_snapshot_views,
-        build_mission_catalog_views,
-        build_game_review_views,
-        build_dojotoday_views,
-    ):
+    # Builders stay independent generators (each builds its own snapshot via
+    # _snapshot). Duplicate judgment sweeps within one sync are avoided at the
+    # client level: the sync entry passes one memoized client, so identical
+    # (state, questions) reuse the first sweep's answers.
+    views.update(
+        build_dashboard_views(source_root, output_root, state, today, judgment_client=judgment_client)
+    )
+    for builder in (build_mavis_views, build_whiteboard_views):
         views.update(builder(source_root, output_root, state, today))
+    views.update(
+        build_learner_snapshot_views(source_root, output_root, state, today, judgment_client=judgment_client)
+    )
+    views.update(build_mission_catalog_views(source_root, output_root, state, today))
+    views.update(
+        build_game_review_views(source_root, output_root, state, today, judgment_client=judgment_client)
+    )
+    views.update(
+        build_dojotoday_views(source_root, output_root, state, today, judgment_client=judgment_client)
+    )
     return views

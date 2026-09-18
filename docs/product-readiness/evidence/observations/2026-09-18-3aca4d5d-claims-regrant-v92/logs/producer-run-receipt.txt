@@ -1,0 +1,3 @@
+producer receipts @ 3aca4d5d: CI run 35275355476 (push main, only 'product readiness (claims)' red)
+artifacts: literacydojo-readiness-3aca4d5d* (id 10520611306), codexdojo-os-readiness-3aca4d5d* (id 10520541832), dojotoday-readiness-3aca4d5d* (id 10519838180), voxeldojo-readiness-3aca4d5d* (id 10519978452; voxel-standalone-* EXCLUDED from this re-anchor per runbook filtering rule)
+jobs green: literacyDojo (TS + content), codexdojo-os (TS), dojoToday (TS + substrate) @ run 35275355476

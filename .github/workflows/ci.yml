@@ -329,6 +329,14 @@ jobs:
       - name: python complexity gate (max 8, ratchet vs frozen baseline)
         run: python3 scripts/check_python_complexity.py --max 8 --baseline scripts/python_complexity_baseline.txt learner engines/minimaxDojo engines/openclaw engines/miniMaxEvolutionEngine engines/aiDevschoolMvp
       - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
+      # Metric-failure snapshot guard (metric-rubric-lint, 2026-09-17): the
+      # gate's claimed-vs-verified disagreement check is only as good as its
+      # failure-metric vocabulary. Offline and fail-closed — a game metric
+      # missing from learner/gate/metric_failure_snapshot.yaml (or classified
+      # unknown) fails here; classify new metrics with
+      # `python3 -m learner.gate.metric_lint --propose` (TYPESAFE_API_KEY).
+      - name: metric-failure snapshot guard
+        run: python3 -m learner.gate.metric_lint --check
       # AID-2286 (R4 companion step): run the gate's node:test suites in the
       # same job that owns the learner/ directory. Local evidence at landing:
       # 119 pass / 0 fail / 1 skipped across the 18 *.test.mjs files.

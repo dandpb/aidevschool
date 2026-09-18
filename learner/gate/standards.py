@@ -24,6 +24,7 @@ import json
 import math
 import operator
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Mapping, TypeGuard
 
@@ -249,25 +250,23 @@ def challenge_gate_blockers(
 # Game rubrics and metric violations
 # ---------------------------------------------------------------------------
 
-_NONZERO_FAILURE_METRICS = frozenset(
-    {
-        "abusive_admitted",
-        "guards_missed",
-        "misroutes",
-        "skipped_required",
-    }
-)
-_TRUE_FAILURE_METRICS = frozenset(
-    {
-        "corrupt_load",
-        "latency_over",
-        "overflow",
-        "overflowed",
-        "overheated",
-        "queue_overflowed",
-        "reactor_overloaded",
-    }
-)
+#: Failure-metric vocabularies derive from the committed snapshot
+#: (``learner/gate/metric_failure_snapshot.yaml``) — nothing hardcodes
+#: failure metric names. Derivation is lazy (first violation check), keeping
+#: package import cheap; a missing/malformed snapshot still fails loudly via
+#: :class:`MetricSnapshotError` at every judgment rather than yielding an
+#: empty vocabulary. Seeded and maintained by
+#: ``python3 -m learner.gate.metric_lint``.
+from learner.gate.metric_snapshot import failure_vocabularies  # noqa: E402
+
+
+@lru_cache(maxsize=1)
+def _failure_vocabularies_cached() -> tuple[frozenset[str], frozenset[str]]:
+    """Lazy memoized derivation: importing this package stays cheap (the
+    documented discipline at the top of ``learner/gate/__init__.py``); the
+    snapshot is loaded on first violation check instead, still fail-closed
+    via :class:`MetricSnapshotError` at every judgment."""
+    return failure_vocabularies()
 
 
 def _is_finite_number(value: Any) -> TypeGuard[float]:
@@ -346,7 +345,18 @@ def _rubric_pass(rubric: dict[str, Any], evidence: dict[str, Any]) -> bool:
     return True
 
 
-def game_metric_violations(evidence: dict[str, Any]) -> list[str]:
+def game_metric_violations(
+    evidence: dict[str, Any],
+    *,
+    vocabularies: tuple[frozenset[str], frozenset[str]] | None = None,
+) -> list[str]:
+    """Failure-metric violations in ``evidence``.
+
+    ``vocabularies`` injects the (nonzero, true) name sets — tests and
+    tooling pass their own; the default derives lazily from the committed
+    metric-failure snapshot.
+    """
+    nonzero, true = vocabularies or _failure_vocabularies_cached()
     metrics = evidence.get("metrics")
     sources = [evidence]
     if isinstance(metrics, dict):
@@ -355,17 +365,19 @@ def game_metric_violations(evidence: dict[str, Any]) -> list[str]:
     violations: list[str] = []
     for source in sources:
         for name, value in source.items():
-            violation = _metric_violation(name, value)
+            violation = _metric_violation(name, value, nonzero, true)
             if violation is not None:
                 violations.append(violation)
     return violations
 
 
-def _metric_violation(name: str, value: Any) -> str | None:
-    if name in _NONZERO_FAILURE_METRICS or name.endswith("_violations"):
+def _metric_violation(
+    name: str, value: Any, nonzero: frozenset[str], true: frozenset[str]
+) -> str | None:
+    if name in nonzero or name.endswith("_violations"):
         if isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0:
             return f"{name}={value}"
-    elif name in _TRUE_FAILURE_METRICS and value is True:
+    elif name in true and value is True:
         return f"{name}=true"
     return None
 

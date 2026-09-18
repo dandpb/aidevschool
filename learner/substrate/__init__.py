@@ -1,5 +1,6 @@
 """Learner-state substrate: single source of truth and derived-view adapters."""
 
+import os
 import re
 from datetime import date
 from pathlib import Path
@@ -748,14 +749,41 @@ def load_and_validate(path: str | Path = "learner/learning_state.yaml") -> dict[
     return state
 
 
+def default_judgment_client() -> Any | None:
+    """The judgment client for substrate entry points: env access lives HERE.
+
+    Keeping dotenv/env reads out of ``judgments.py`` makes the library
+    structurally injection-only — ``build_snapshot`` cannot reach the
+    environment even by accident.
+    """
+    from learner.substrate.judgments import DEFAULT_RECEIPTS_ROOT, http_client, memoized, replay_cached
+
+    try:
+        from dotenv import load_dotenv
+
+        load_dotenv(ROOT / ".env")
+    except ImportError:  # pragma: no cover - dotenv is an existing dependency
+        pass
+    api_key = os.getenv("TYPESAFE_API_KEY")
+    if not api_key:
+        return None
+    # Disk replay before in-memory memo before live API: committed receipts
+    # win for unchanged sources, so sync/check stay deterministic.
+    return replay_cached(memoized(http_client(api_key)), DEFAULT_RECEIPTS_ROOT)
+
+
 def _regenerate_views(
     builder: Any,
     state: dict[str, Any] | None,
     *,
     write: bool,
+    enrich: bool = False,
 ) -> dict[Path, str]:
     current = state if state is not None else load_and_validate()
-    views = builder(SOURCE_ROOT, ROOT, current)
+    if enrich:
+        views = builder(SOURCE_ROOT, ROOT, current, judgment_client=default_judgment_client())
+    else:
+        views = builder(SOURCE_ROOT, ROOT, current)
     if write:
         write_views(views)
     return views
@@ -788,7 +816,7 @@ def regenerate_dashboard(
 ) -> dict[Path, str]:
     from learner.substrate.projections import build_dashboard_views
 
-    return _regenerate_views(build_dashboard_views, state, write=write)
+    return _regenerate_views(build_dashboard_views, state, write=write, enrich=True)
 
 
 def regenerate_learner_snapshot(
@@ -798,7 +826,7 @@ def regenerate_learner_snapshot(
 ) -> dict[Path, str]:
     from learner.substrate.projections import build_learner_snapshot_views
 
-    return _regenerate_views(build_learner_snapshot_views, state, write=write)
+    return _regenerate_views(build_learner_snapshot_views, state, write=write, enrich=True)
 
 
 def regenerate_mission_catalog(
@@ -818,7 +846,7 @@ def regenerate_game_reviews(
 ) -> dict[Path, str]:
     from learner.substrate.projections import build_game_review_views
 
-    return _regenerate_views(build_game_review_views, state, write=write)
+    return _regenerate_views(build_game_review_views, state, write=write, enrich=True)
 
 
 def regenerate_dojotoday(
@@ -828,7 +856,7 @@ def regenerate_dojotoday(
 ) -> dict[Path, str]:
     from learner.substrate.projections import build_dojotoday_views
 
-    return _regenerate_views(build_dojotoday_views, state, write=write)
+    return _regenerate_views(build_dojotoday_views, state, write=write, enrich=True)
 
 
 def sync() -> None:
@@ -846,7 +874,9 @@ def sync() -> None:
     from learner.substrate.projections import build_generated_views
 
     state = load_and_validate()
-    views = build_generated_views(SOURCE_ROOT, ROOT, state)
+    views = build_generated_views(
+        SOURCE_ROOT, ROOT, state, judgment_client=default_judgment_client()
+    )
     write_views(views)
     print(f"Generated projections regenerated: {len(views)}")
 
@@ -855,4 +885,8 @@ def check(state: dict[str, Any] | None = None) -> list[Path]:
     from learner.substrate.projections import build_generated_views
 
     current = state if state is not None else load_and_validate()
-    return check_views(build_generated_views(SOURCE_ROOT, ROOT, current))
+    return check_views(
+        build_generated_views(
+            SOURCE_ROOT, ROOT, current, judgment_client=default_judgment_client()
+        )
+    )
