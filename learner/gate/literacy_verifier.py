@@ -15,6 +15,7 @@ import hashlib
 import json
 import sys
 from dataclasses import asdict, dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -27,9 +28,14 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 VERIFIER_SOURCE = "independent-literacy-verifier"
 
+#: Append-only owner queue for the 0.4–0.75 escalation band (RFC ACCEPTED).
+ESCALATIONS_PATH = (
+    REPO_ROOT / "learner" / "verifier_receipts" / "literacy-escalations.ndjson"
+)
+
 __all__ = tuple(
     "LiteracyVerdict VERIFIER_SOURCE main verify_literacy_evidence "
-    "load_literacy_evidence write_literacy_receipt".split()
+    "load_literacy_evidence write_literacy_receipt ESCALATIONS_PATH".split()
 )
 
 
@@ -37,7 +43,7 @@ __all__ = tuple(
 class LiteracyVerdict:
     """Structured independent verdict for one LiteracyEvidenceRecord."""
 
-    verdict: str  # PASS | FAIL
+    verdict: str  # PASS | FAIL | ESCALATE
     context_isolated: bool
     source: str
     evidence_digest: str
@@ -50,6 +56,8 @@ class LiteracyVerdict:
     independent_pass: bool
     mastery_eligible: bool
     errors: tuple[str, ...] = field(default_factory=tuple)
+    judgment_receipt_digest: str | None = None
+    resolution: str | None = None  # "manual" when an approved escalation turned the digest into PASS
 
     @property
     def passed(self) -> bool:
@@ -139,45 +147,153 @@ def _failed_verdict(
     )
 
 
+def _load_queue(path: Path) -> list[dict[str, Any]]:
+    if not path.is_file():
+        return []
+    entries = [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    return entries
+
+
+def _append_queue(path: Path, entry: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def _escalation_outcome(
+    path: Path, evidence_digest: str
+) -> str | None:
+    """The latest resolved outcome for this digest: "approve" | "reject" | None."""
+    outcome: str | None = None
+    for entry in _load_queue(path):
+        if (
+            entry.get("evidence_digest") == evidence_digest
+            and entry.get("status") == "resolved"
+        ):
+            outcome = entry.get("resolution")
+    return outcome
+
+
+def _approved_resolution(
+    evidence_digest: str, escalations_path: Path | None
+) -> str | None:
+    """The manual resolution for this digest, if the owner approved it."""
+    outcome = _escalation_outcome(escalations_path or ESCALATIONS_PATH, evidence_digest)
+    return "manual" if outcome == "approve" else None
+
+
+def _recomputed_flags(
+    recomputed: dict[str, Any] | None, judgment_errors: list[str]
+) -> tuple[bool, bool]:
+    """(pass, escalate) from the recomputation, error-free only."""
+    ok = not judgment_errors and recomputed is not None
+    return ok and bool(recomputed["pass"]), ok and bool(recomputed.get("escalate"))
+
+
+def _resolve_outcome(
+    recomputed: dict[str, Any] | None,
+    judgment_errors: list[str],
+    evidence_digest: str,
+    escalations_path: Path | None,
+) -> tuple[bool, bool, str | None]:
+    """(independent_pass, escalate, resolution): approved escalations turn a
+    failing digest into PASS with manual provenance."""
+    independent_pass, escalate = _recomputed_flags(recomputed, judgment_errors)
+    resolution: str | None = None
+    if judgment_errors or (not independent_pass and not escalate):
+        resolution = _approved_resolution(evidence_digest, escalations_path)
+        if resolution is not None:
+            independent_pass = True
+    return independent_pass, escalate, resolution
+
+
+def _queue_escalation(
+    escalations_path: Path | None,
+    evidence: dict[str, Any],
+    evidence_digest: str,
+    recomputed: dict[str, Any] | None,
+    judgment_digest: str | None,
+) -> None:
+    if escalations_path is None:
+        return
+    _append_queue(
+        escalations_path,
+        {
+            "attempt_id": str(evidence["attemptId"]),
+            "evidence_digest": evidence_digest,
+            "field_scores": (recomputed or {}).get("judgment", {}).get(
+                "field_scores", {}
+            ),
+            "judgment_receipt_digest": judgment_digest,
+            "status": "open",
+        },
+    )
+
+
+def _verdict_word(independent_pass: bool, escalate: bool) -> str:
+    if independent_pass:
+        return "PASS"
+    return "ESCALATE" if escalate else "FAIL"
+
+
 def verify_literacy_evidence(
-    evidence: dict[str, Any] | None, *, root: Path = REPO_ROOT
+    evidence: dict[str, Any] | None,
+    *,
+    root: Path = REPO_ROOT,
+    judgment_client: Any = None,
+    escalations_path: Path | None = None,
 ) -> LiteracyVerdict:
     """Independently verify one LiteracyEvidenceRecord-shaped dict.
 
-    Missing evidence (``None``) and invalid envelopes fail closed with verdict FAIL.
-    ``mastery_eligible`` is true only for deterministic activities with independent PASS.
-    The producer surface is never authorized to write ``mastered``.
+    Missing evidence (``None``) and invalid envelopes fail closed with verdict
+    FAIL. prompt_builder answers verify via the injected judgment client
+    (RFC-accepted); the 0.4–0.75 band appends to the escalations queue (when
+    ``escalations_path`` is given) and returns ESCALATE; a digest with an
+    approved escalation re-verifies as PASS with ``resolution: "manual"``.
+    ``mastery_eligible`` is true only for independent PASS (judgment or
+    approved escalation). The producer surface never writes ``mastered``.
     """
     if evidence is None:
         return _failed_verdict(None, ("missing evidence",))
-
     if not isinstance(evidence, dict):
         return _failed_verdict(None, ("evidence must be a JSON object",))
+    envelope_errors = validate_literacy_evidence_structure(evidence)
+    if envelope_errors:
+        return _failed_verdict(evidence, tuple(envelope_errors))
 
-    structural = validate_literacy_evidence_structure(evidence)
-    if structural:
-        return _failed_verdict(evidence, tuple(structural))
-
-    recomputed, judgment_errors = recompute_literacy_evidence(evidence, root)
-    activity_type = str(evidence["activityType"])
-    independent_pass = bool(recomputed and recomputed["pass"] and not judgment_errors)
-    mastery_eligible = independent_pass
-    verdict = "PASS" if independent_pass else "FAIL"
-
+    recomputed, judgment_errors = recompute_literacy_evidence(
+        evidence, root, judgment_client
+    )
+    evidence_digest = literacy_evidence_digest(evidence)
+    judgment_digest = (recomputed or {}).get("judgment", {}).get("receipt_digest")
+    independent_pass, escalate, resolution = _resolve_outcome(
+        recomputed, judgment_errors, evidence_digest, escalations_path
+    )
+    if escalate:
+        _queue_escalation(
+            escalations_path, evidence, evidence_digest, recomputed, judgment_digest
+        )
+    verdict = _verdict_word(independent_pass, escalate)
     return LiteracyVerdict(
         verdict=verdict,
         context_isolated=True,
         source=VERIFIER_SOURCE,
-        evidence_digest=literacy_evidence_digest(evidence),
+        evidence_digest=evidence_digest,
         lesson_id=str(evidence["lessonId"]),
         activity_id=str(evidence["activityId"]),
         attempt_id=str(evidence["attemptId"]),
-        activity_type=activity_type,
+        activity_type=str(evidence["activityType"]),
         score=float(recomputed["score"]) if recomputed else float(evidence["score"]),
         producer_pass_claim=bool(evidence["pass"]),
         independent_pass=independent_pass,
-        mastery_eligible=mastery_eligible,
+        mastery_eligible=independent_pass,
         errors=tuple(judgment_errors),
+        judgment_receipt_digest=judgment_digest,
+        resolution=resolution,
     )
 
 
@@ -198,25 +314,38 @@ def write_literacy_receipt(verdict: LiteracyVerdict, path: str | Path) -> Path:
     return out
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="learner-gate-literacy", description=__doc__)
-    parser.add_argument(
-        "--evidence",
-        required=True,
-        help="path to a LiteracyEvidenceRecord JSON object",
+def resolve_escalation(
+    attempt_id: str, *, approve: bool, path: Path | None = None
+) -> tuple[int, str]:
+    """Resolve the latest open escalation for ``attempt_id`` (owner action).
+
+    Rewrites the queue entry with the resolution and manual provenance;
+    returns ``(exit_code, message)``. Unknown or non-open attempts exit 1.
+    """
+    queue_path = path or ESCALATIONS_PATH
+    entries = _load_queue(queue_path)
+    matches = [e for e in entries if e.get("attempt_id") == attempt_id]
+    if not matches:
+        return 1, f"no escalation entry for attempt {attempt_id!r}"
+    entry = matches[-1]
+    if entry.get("status") != "open":
+        return 1, f"escalation {attempt_id!r} is {entry.get('status')!r}, not open"
+    entry.update(
+        {
+            "status": "resolved",
+            "resolution": "approve" if approve else "reject",
+            "resolved_by": "owner",
+            "resolved_at": datetime.now(timezone.utc).isoformat(),
+        }
     )
-    parser.add_argument(
-        "--write-receipt",
-        default=None,
-        help="optional path for the independent receipt JSON",
+    atomic_write_text(
+        queue_path,
+        "\n".join(json.dumps(e, ensure_ascii=False) for e in entries) + "\n",
     )
-    parser.add_argument(
-        "--root",
-        default=".",
-        help="ecosystem root (default: cwd); used only to resolve relative paths",
-    )
-    args = parser.parse_args(argv)
-    root = Path(args.root)
+    return 0, f"escalation {attempt_id!r} resolved: {entry['resolution']}"
+
+
+def _run_verify(args: argparse.Namespace, root: Path) -> int:
     evidence_path = Path(args.evidence)
     if not evidence_path.is_absolute():
         evidence_path = root / evidence_path
@@ -245,9 +374,12 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 1
 
-    verdict = verify_literacy_evidence(evidence, root=root)
-    receipt = verdict.to_receipt_dict()
-    print(json.dumps(receipt, indent=2, sort_keys=True))
+    from learner.substrate import default_judgment_client
+
+    verdict = verify_literacy_evidence(
+        evidence, root=root, judgment_client=default_judgment_client()
+    )
+    print(json.dumps(verdict.to_receipt_dict(), indent=2, sort_keys=True))
 
     if args.write_receipt:
         receipt_path = Path(args.write_receipt)
@@ -263,12 +395,57 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 0
-
+    if verdict.verdict == "ESCALATE":
+        print(
+            f"LITERACY VERDICT ESCALATE — queued for owner review "
+            f"(--resolve {verdict.attempt_id} --approve|--reject)",
+            file=sys.stderr,
+        )
+        return 3
     print(
         f"LITERACY VERDICT FAIL — errors={list(verdict.errors)}; mastery_eligible=false",
         file=sys.stderr,
     )
     return 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="learner-gate-literacy", description=__doc__)
+    parser.add_argument(
+        "--evidence",
+        default=None,
+        help="path to a LiteracyEvidenceRecord JSON object",
+    )
+    parser.add_argument(
+        "--write-receipt",
+        default=None,
+        help="optional path for the independent receipt JSON",
+    )
+    parser.add_argument(
+        "--root",
+        default=".",
+        help="ecosystem root (default: cwd); used only to resolve relative paths",
+    )
+    parser.add_argument(
+        "--resolve",
+        default=None,
+        help="attempt id of an open escalation entry to resolve",
+    )
+    parser.add_argument("--approve", action="store_true", help="approve the escalation")
+    parser.add_argument("--reject", action="store_true", help="reject the escalation")
+    args = parser.parse_args(argv)
+
+    if args.resolve is not None:
+        if args.approve == args.reject:
+            print("exactly one of --approve / --reject is required", file=sys.stderr)
+            return 1
+        code, message = resolve_escalation(args.resolve, approve=args.approve)
+        print(message, file=sys.stderr)
+        return code
+
+    if args.evidence is None:
+        parser.error("--evidence is required unless --resolve is used")
+    return _run_verify(args, Path(args.root))
 
 
 if __name__ == "__main__":

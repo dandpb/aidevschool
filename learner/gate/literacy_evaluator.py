@@ -57,10 +57,6 @@ def _evaluate(activity: dict[str, Any], answer: Any) -> dict[str, Any]:
     evaluation = activity["evaluation"]
     checks: list[tuple[str, bool, bool | int]] = []
 
-    if activity_type == "prompt_builder":
-        raise LiteracyEvaluationError(
-            "prompt_builder cannot be independently re-evaluated without free text"
-        )
     if activity_type == "choice":
         selected = set(_answer_object(answer, "optionIds")["optionIds"])
         correct = set(evaluation["correctOptionIds"])
@@ -149,8 +145,41 @@ def _evaluate(activity: dict[str, Any], answer: Any) -> dict[str, Any]:
     }
 
 
+def _recompute_prompt_builder(
+    activity: dict[str, Any],
+    answer: Any,
+    judgment_client: Any,
+) -> dict[str, Any]:
+    """Judge the free text (RFC-accepted); no client fails closed."""
+    from learner.gate.literacy_judgment import LiteracyJudgmentError, verify_prompt_builder
+
+    if not isinstance(answer, dict) or "values" not in answer:
+        raise LiteracyEvaluationError(
+            "prompt_builder answer must carry {values: {<fieldId>: text}}"
+        )
+    values = answer["values"]
+    declared = {field.get("id") for field in activity["data"].get("fields") or []}
+    unknown = set(values) - declared
+    if unknown:
+        raise LiteracyEvaluationError(
+            f"answer values carry undeclared field ids: {sorted(unknown)}"
+        )
+    if judgment_client is None:
+        raise LiteracyEvaluationError(
+            "prompt_builder verification requires TYPESAFE_API_KEY at the "
+            "verifier entry (judgment-verified per the accepted RFC); "
+            "fail closed without it"
+        )
+    try:
+        return verify_prompt_builder(activity, values, judgment_client)
+    except LiteracyJudgmentError as exc:
+        raise LiteracyEvaluationError(str(exc)) from exc
+
+
 def recompute_literacy_evidence(
-    evidence: dict[str, Any], root: Path
+    evidence: dict[str, Any],
+    root: Path,
+    judgment_client: Any = None,
 ) -> tuple[dict[str, Any] | None, list[str]]:
     errors: list[str] = []
     try:
@@ -175,6 +204,13 @@ def recompute_literacy_evidence(
             raise LiteracyEvaluationError(
                 "activityType does not match canonical activity"
             )
+        if activity["type"] == "prompt_builder":
+            # RFC-accepted judgment path: the producer's deterministic claim
+            # is advisory metadata — the judgment verdict is the independent
+            # truth, so the equality loop below does not apply here.
+            return _recompute_prompt_builder(
+                activity, evidence.get("answer"), judgment_client
+            ), []
         recomputed = _evaluate(activity, evidence.get("answer"))
     except (
         KeyError,

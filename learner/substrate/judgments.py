@@ -52,8 +52,10 @@ RECURRENCE_THRESHOLD = 0.5
 #: never falls below this (mirrors the parser's ``1 + ...`` semantics).
 MIN_OCCURRENCES = 1
 
-#: Receipt files kept after each write (task Unresolved 1 default).
-RECEIPT_RETENTION = 30
+#: Receipts are committed provenance (the check-replay decision, 2026-09-17):
+#: nothing prunes them. Digest-named files already deduplicate re-runs, and
+#: the old 30-file retention would delete exactly the receipts the metric
+#: snapshot and literacy verifications cite as provenance.
 
 _RETRYABLE_STATUSES = frozenset({429, 529})
 _MAX_ATTEMPTS = 4
@@ -223,16 +225,6 @@ def _input_digest(state: dict[str, Any], questions: dict[str, Any]) -> str:
     return hashlib.sha256(canonical).hexdigest()
 
 
-def _prune_receipts(receipts_root: Path) -> None:
-    # Digest names are not time-sortable: keep the newest by mtime.
-    receipts = sorted(
-        (p for p in receipts_root.glob("*.ndjson") if p.is_file()),
-        key=lambda p: p.stat().st_mtime,
-    )
-    for stale in receipts[:-RECEIPT_RETENTION]:
-        stale.unlink()
-
-
 def _write_ok_receipt(
     sweep: str,
     state: dict[str, Any],
@@ -268,7 +260,6 @@ def _write_ok_receipt(
         )
     receipts_root.mkdir(parents=True, exist_ok=True)
     atomic_write_text(receipts_root / name, "\n".join(lines) + "\n")
-    _prune_receipts(receipts_root)
 
 
 def _write_fallback_receipt(
@@ -300,7 +291,6 @@ def _write_fallback_receipt(
     atomic_write_text(
         receipts_root / f"{sweep}-{digest[:16]}-fallback.ndjson", line + "\n"
     )
-    _prune_receipts(receipts_root)
 
 
 # ---------------------------------------------------------------------------

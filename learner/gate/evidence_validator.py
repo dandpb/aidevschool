@@ -200,6 +200,25 @@ def _validate_structured_answer(answer: Any) -> list[str]:
         "verdicts": "verdicts",
     }
     present = [key for key in variants if key in answer]
+    if "values" in answer:
+        # prompt_builder free-text transport: per-field bounded strings.
+        if present:
+            return ["values cannot combine with a structured discriminator"]
+        if set(answer) != {"values"}:
+            return ["contains unknown fields"]
+        field_values = answer["values"]
+        if not isinstance(field_values, dict) or not 1 <= len(field_values) <= 12:
+            return ["values must be an object of 1-12 fields"]
+        for field_id, text in field_values.items():
+            if not isinstance(field_id, str) or not 1 <= len(field_id) <= 120:
+                return ["values keys must be bounded non-empty field ids"]
+            if (
+                not isinstance(text, str)
+                or not 1 <= len(text) <= 2000
+                or not text.strip()
+            ):
+                return [f"values[{field_id!r}] must be a non-empty string of 1-2000 chars"]
+        return []
     if len(present) != 1:
         return ["must have exactly one structured answer discriminator"]
     discriminator = present[0]
