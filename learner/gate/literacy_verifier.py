@@ -64,11 +64,20 @@ class LiteracyVerdict:
         return self.verdict == "PASS"
 
     def to_receipt_dict(self) -> dict[str, Any]:
-        """JSON-serializable receipt (never claims UI wrote mastery)."""
+        """JSON-serializable receipt (never claims UI wrote mastery).
+
+        The judgment fields appear only when set: deterministic-activity
+        receipts stay byte-identical to the pre-judge shape, which the staged
+        verifier parity check (AID-449) relies on.
+        """
         payload = asdict(self)
         payload["errors"] = list(self.errors)
         payload["producer_writes_mastered"] = False
         payload["max_producer_claim"] = "completed"
+        if payload.get("judgment_receipt_digest") is None:
+            del payload["judgment_receipt_digest"]
+        if payload.get("resolution") is None:
+            del payload["resolution"]
         return payload
 
 
