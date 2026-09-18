@@ -44,6 +44,21 @@
 # Fail-closed in every ambiguity (no citation source, no resolver,
 # unresolvable id) — same direction as the rest of this script (AID-2292).
 #
+# Provenance trailer (AID-2493, advisory — notice-only): the GitHub
+# credential is shared by every agent session, so a process comment (verdict,
+# countersign citation, producer registry) is not attributable from the GitHub
+# side alone (AID-2490 forensics needed heartbeat-run logs). Every
+# agent-posted process comment on a PR therefore carries the canonical
+# trailer line
+#     Provenance: agent=<slug> task=<AID-ID|GH-n> run=<runId> session=<sessionId>
+# In PR context the guard parses the trailer whenever present (auditable
+# ::notice with the parsed fields) and notices its absence/malformation in
+# process comments — a comment containing a 'Countersign:' line or a verdict
+# heading ('# … Veredito/Verdict'). Deliberately NOT a violation: this is the
+# immediate mitigation while per-agent credentials are pending (secret
+# founder AID-2423 is the complete solution); escalating to fail-closed is a
+# recorded later decision, not this change.
+#
 # Owner-approved overrides (same trust model as the live env-var overrides):
 # a commit in the range carrying a trailer
 #     SDLC-ALLOW-TEST-EDIT: AID-<n> (or GH-<n> for this GitHub repository)
@@ -367,6 +382,48 @@ run_checks() {
         fi
       fi
     fi
+  fi
+
+  # 5. Provenance trailer (AID-2493, advisory/notice-only — see header).
+  #    Runs in PR context whenever a conversation source resolved, regardless
+  #    of the check-4 trigger: it can never redden a build, so scope is the
+  #    whole conversation. Accepted trailers emit the parsed fields; process
+  #    comments without a valid trailer get a notice; malformed trailers are
+  #    named (the line is shown so the author can fix the exact keys).
+  if pr_context && [ "$ctx_rc" -eq 0 ]; then
+    local prov_re='Provenance: agent=[A-Za-z0-9_][A-Za-z0-9._-]* task=(AID|GH)-[1-9][0-9]* run=[A-Za-z0-9_][A-Za-z0-9._:-]{3,} session=[A-Za-z0-9_][A-Za-z0-9._:-]*[[:space:]]*$'
+    local TAB
+    TAB="$(printf '\t')"
+    # Pass A: every valid trailer line, TSV "<when>\t<line>".
+    printf '%s' "$ctx" | jq -r '
+      (.body // "" | split("\n")[]? | select(test("^Provenance:")) | select(test("'"$prov_re"'")) | "body\t" + .),
+      (.comments[]? | .createdAt as $t | (.body // "" | split("\n")[]? | select(test("^Provenance:")) | select(test("'"$prov_re"'")) | ($t // "comment") + "\t" + .))' \
+      2>/dev/null | while IFS="$TAB" read -r pv_t pv_line; do
+        [ -n "$pv_line" ] || continue
+        echo "::notice::provenance trailer accepted (AID-2493): ${pv_line#Provenance: } (posted: $pv_t)"
+      done
+    # Pass B: per body/comment flags — is it a process comment (Countersign
+    # line or verdict heading), does it hold a valid trailer, does it hold
+    # any Provenance-shaped line. TSV fields: when, proc, valid, any, line.
+    printf '%s' "$ctx" | jq -r '
+      [ {when: "body", body: (.body // "")} ] +
+      [ .comments[]? | {when: (.createdAt // "comment"), body: (.body // "")} ] |
+      map((.body | split("\n")) as $ls | {
+        when: .when,
+        proc: ((($ls | map(select(test("^Countersign:"))) | length) > 0) or ((($ls | map(select(test("^#+[[:space:]]+.*(eredito|erdict)"))) | length) > 0))),
+        valid: ((($ls | map(select(test("'"$prov_re"'"))) | length) > 0)),
+        any: ((($ls | map(select(test("^Provenance:"))) | length) > 0)),
+        line: (($ls | map(select(test("^Provenance:"))) | .[0]) // ($ls | map(select(. != "")) | .[0]) // "")
+      } | select(.proc and (.valid | not)) |
+        [(.when // "-"), "P", (if .valid then "V" else "-" end), (if .any then "M" else "-" end), .line] | @tsv)[]' \
+      2>/dev/null | while IFS="$TAB" read -r pv_t _pv_p _pv_v pv_any pv_line; do
+        [ -n "$pv_line" ] || continue
+        if [ "$pv_any" = "M" ]; then
+          echo "::notice::provenance trailer malformed in process comment (AID-2493): '$pv_line' (posted: $pv_t) — expected keys agent= task= run= session= on one 'Provenance:' line"
+        else
+          echo "::notice::provenance trailer missing in process comment (AID-2493): '${pv_line:0:60}' (posted: $pv_t) — add 'Provenance: agent=<slug> task=<AID-ID> run=<runId> session=<sessionId>'"
+        fi
+      done
   fi
 
   # Report.
@@ -745,6 +802,64 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD "$cs2_br" >/dev/null
+
+  # AID-2493 (provenance trailer, advisory/notice-only): process comments
+  # with a canonical trailer emit an accepted notice carrying the parsed
+  # fields; process comments without one (or with a malformed trailer) emit
+  # missing/malformed notices; plain comments are never flagged; rc stays 0
+  # in every case (mitigation phase — nothing reddens). Same hermetic
+  # SDLC_PR_CONTEXT_FILE source as Stage 2; human author + engine-only diff
+  # keeps check 4 out of the picture.
+  local T3="$T/prov"
+  mkdir -p "$T3"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T23:00:00Z","body":"Countersign: AID-9006 verdict 679cf9d3\nProvenance: agent=qa-lead task=AID-9006 run=519e2558 session=ses_f4953cf0"}]' > "$T3/ok"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T23:01:00Z","body":"## Veredito QA countersign fresh-context (PRÉ-merge): CONFORME\n\nHead pinado, gates no placar."}]' > "$T3/missing"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T23:02:00Z","body":"Countersign: AID-9006 verdict 679cf9d3\nProvenance: agent=qa-lead run=519e2558"}]' > "$T3/malformed"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T23:03:00Z","body":"## Verdict QA countersign fresh-context: PASS\n\nProvenance: agent=platform-ci task=GH-42 run=01875640 session=_default"}]' > "$T3/ok_en"
+  mk_ctx User "dandpb" "" "$T2/empty" \
+    '[{"createdAt":"2026-09-18T23:04:00Z","body":"drive-by comment, no process content here"}]' > "$T3/plain"
+  prov_scenario() { # $1=ctx-file $2=name $3=must-contain|NOT:must-not-contain
+    local ctxf="$1" name="$2" needle="$3" want_absent=0
+    case "$needle" in NOT:*) want_absent=1; needle="${needle#NOT:}" ;; esac
+    local br="st-prov-$RANDOM" out rc ok=0
+    $GITC checkout -q -b "$br" "$base_sha"
+    printf 'prov fixture change\n' >> "$R/src/app.py"
+    $GITC add -A >/dev/null
+    $GITC commit -qm "provenance fixture"
+    out="$(GITHUB_EVENT_NAME=pull_request SDLC_PR_CONTEXT_FILE="$ctxf" \
+      bash "$SCRIPT_PATH" --repo "$R" --base "$base_sha" --head "$br" 2>&1)"; rc=$?
+    if [ "$rc" -eq 0 ]; then
+      if [ "$want_absent" -eq 1 ]; then
+        printf '%s' "$out" | grep -q "$needle" || ok=1
+      else
+        printf '%s' "$out" | grep -q "$needle" && ok=1
+      fi
+    fi
+    if [ "$ok" -eq 1 ]; then
+      echo "PASS [$name] rc=$rc"
+      pass=$((pass+1))
+    else
+      echo "FAIL [$name] rc=$rc (expected 0; needle${want_absent:+ NOT} '$needle')"
+      printf '%s\n' "$out" | sed 's/^/    | /'
+      fail=$((fail+1))
+    fi
+    $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
+    $GITC branch -qD "$br" >/dev/null
+  }
+  prov_scenario "$T3/ok"        "citation comment with valid trailer -> accepted notice (AID-2493)" \
+    "provenance trailer accepted (AID-2493): agent=qa-lead task=AID-9006 run=519e2558 session=ses_f4953cf0 (posted: 2026-09-18T23:00:00Z)"
+  prov_scenario "$T3/ok_en"     "EN verdict heading with valid trailer -> accepted notice (AID-2493)" \
+    "provenance trailer accepted (AID-2493): agent=platform-ci task=GH-42 run=01875640 session=_default"
+  prov_scenario "$T3/missing"   "verdict comment without trailer -> missing notice, rc stays 0 (AID-2493)" \
+    "provenance trailer missing in process comment (AID-2493)"
+  prov_scenario "$T3/malformed" "citation with malformed trailer -> malformed notice, rc stays 0 (AID-2493)" \
+    "provenance trailer malformed in process comment (AID-2493): 'Provenance: agent=qa-lead run=519e2558'"
+  prov_scenario "$T3/plain"     "plain comment without trailer -> no provenance notice (AID-2493)" \
+    "NOT:provenance trailer"
 
   # AID-2481 (vii): new-shape gh bot PR (is_bot:true, app/<slug> login, no
   # __typename, no [bot] suffix), engine-only diff, NO citation -> must FAIL
