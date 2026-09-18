@@ -281,11 +281,14 @@ run_checks() {
     done
     local ctx="" ctx_rc=0
     ctx="$(pr_context_json 2>/dev/null)" || ctx_rc=1
-    local pr_author_type="Unknown" pr_author_login="" pr_merged_at=""
+    local pr_author_type="Unknown" pr_author_login="" pr_merged_at="" pr_author_is_bot="false"
     if [ "$ctx_rc" -eq 0 ]; then
       pr_author_type="$(printf '%s' "$ctx" | jq -r '.author.__typename // "Unknown"')"
       pr_author_login="$(printf '%s' "$ctx" | jq -r '.author.login // ""')"
       pr_merged_at="$(printf '%s' "$ctx" | jq -r '.mergedAt // ""')"
+      # gh CLI shape (gh pr view --json author, 2.4x+): the author renders as
+      # {"is_bot":true,"login":"app/<slug>"} — no __typename, no [bot] suffix.
+      pr_author_is_bot="$(printf '%s' "$ctx" | jq -r '.author.is_bot // false')"
     elif [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "${GITHUB_EVENT_PATH}" ]; then
       # No conversation source (gh missing/failed), but the event payload
       # still names the author — enough to trigger, not to verify.
@@ -294,7 +297,14 @@ run_checks() {
     fi
     local is_bot=0
     case "$pr_author_type" in Bot) is_bot=1 ;; esac
-    case "$pr_author_login" in *"[bot]") is_bot=1 ;; esac
+    case "$pr_author_login" in
+      # GitHub app/bot logins end in [bot] (REST/event payload); the gh CLI
+      # renders app actors as app/<slug> — a human login can never contain
+      # '/', so the prefix is unambiguous (AID-2488: the gh shape alone used
+      # to read as Unknown/app-... and Stage 2 failed OPEN on real bot PRs).
+      *"[bot]"|app/*) is_bot=1 ;;
+    esac
+    [ "$pr_author_is_bot" = "true" ] && is_bot=1
     if [ "${#authority_paths[@]}" -gt 0 ] || [ "$is_bot" -eq 1 ]; then
       local cs_scope
       if [ "${#authority_paths[@]}" -gt 0 ]; then
@@ -673,6 +683,14 @@ $big_filler"
   mk_ctx User "dandpb" "" "$T2/empty" \
     '[{"createdAt":"2026-09-18T07:30:00Z","body":"Countersign: AID-9006 verdict 679cf9d3"}]' > "$T2/human_authority_cited"
 
+  # AID-2488 regression: the REAL gh CLI renders app authors as
+  # {"is_bot":true,"login":"app/<slug>"} — no __typename, no [bot] suffix
+  # (verified first-hand: gh 2.46 on PR #501 returned exactly that, and
+  # Stage 2 failed OPEN — the gate skipped the countersign requirement on
+  # the one real bot PR that reached the scan). Both shapes must trip.
+  jq -nc '{author:{is_bot:true,login:"app/github-actions"},body:"",mergedAt:null,comments:[]}' > "$T2/bot_gh_open"
+  jq -nc '{author:{is_bot:true,login:"app/github-actions"},body:"",mergedAt:null,comments:[{createdAt:"2026-09-18T22:24:51Z","body":"Countersign: AID-9006 verdict 679cf9d3"}]}' > "$T2/bot_gh_cited_premerge"
+
   # (i) bot/agent PR, engine-only diff, NO citation -> fail (Stage 2 trigger).
   pr2_scenario "$T2/bot_open" "bot PR without countersign citation fails (AID-2428)" 1 "bot engine change" -- \
     "printf 'bot change\n' >> src/app.py"
@@ -680,6 +698,14 @@ $big_filler"
   # (iii) citation resolvable but posted AFTER mergedAt -> fail (ordering).
   pr2_scenario "$T2/bot_cited_postmerge" "post-merge citation fails ordering (AID-2428)" 1 "merged then cited" -- \
     "printf 'bot change\n' >> src/app.py"
+
+  # AID-2488: gh-shape author ({"is_bot":true,"login":"app/<slug>"}) must
+  # trip Stage 2 — trigger without a citation fails closed, and the same
+  # shape with a valid pre-merge citation passes.
+  pr2_scenario "$T2/bot_gh_open" "gh-shape bot author triggers Stage 2 without citation (AID-2488)" 1 "gh bot change" -- \
+    "printf 'gh bot change\n' >> src/app.py"
+  pr2_scenario "$T2/bot_gh_cited_premerge" "gh-shape bot author with pre-merge citation passes (AID-2488)" 0 "gh bot cited" -- \
+    "printf 'gh bot change\n' >> src/app.py"
 
   # (iv) human PR, engine-only diff, no citation -> documented: NOT gated
   # (Stage 2 does not expand to human/founder PRs absent authority paths).
