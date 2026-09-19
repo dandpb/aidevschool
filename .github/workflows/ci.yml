@@ -948,3 +948,33 @@ jobs:
             fi
             echo "::endgroup::"
           done
+
+  # AID-2592 (follow-up QA AID-2591, PR #511): the vendored harness-eval skill
+  # is hot-fixed ahead of upstream (@tech-leads-club/agent-skills still ships
+  # the pre-fix Track A checker; .agents/.skill-lock.json records the upstream
+  # contentHash). A future `npx @tech-leads-club/agent-skills update` would
+  # silently overwrite the six fixes and resurrect ~41 false BROKEN findings
+  # with no gate failing. This job is that gate:
+  #   1. integrity/provenance — vendored copies byte-identical and matching the
+  #      pinned hash in scripts/skill_vendored_pins.json (source=local) or the
+  #      lock contentHash (source=registry);
+  #   2. Track A fixture regression — the planted-defect fixture in
+  #      scripts/harness-eval-guard-fixture/ must yield EXACTLY the four
+  #      planted defects (loses fixes -> false positives; over-prunes -> lost
+  #      true positives).
+  # The self-test step fails the job if synthetic violations ever stop being
+  # detected (same convention as the complexity gate below).
+  # To consciously re-vendor (e.g. once the upstream fix is released), update
+  # the pin in the same PR: python3 scripts/skill_vendored_guard.py --update-pins
+  skill-vendored-guard:
+    name: Vendored skills guard (skill-lock overwrite canary)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: guard self-test (synthetic violations must fail)
+        run: python3 scripts/skill_vendored_guard.py --self-test
+      - name: vendored skill integrity + Track A fixture regression
+        run: python3 scripts/skill_vendored_guard.py

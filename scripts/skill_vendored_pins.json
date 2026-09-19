@@ -1,0 +1,4 @@
+{
+  "_comment": "Pinned content hashes for skills vendored with source=local in .agents/.skill-lock.json (AID-2592). Algorithm matches @tech-leads-club/skills-catalog computeSkillHash: sha256 over sorted (relative path, bytes) pairs of the skill tree, skipping dotfiles/dotdirs and __pycache__. If this guard fails without a deliberate re-vendor, an `agent-skills update` overwrote local hot-fixes (the catalog still ships the pre-fix checker) - restore the tree from git history. After the upstream fix is released and you consciously re-vendor, update the pin in the same PR via: python3 scripts/skill_vendored_guard.py --update-pins",
+  "harness-eval": "2640a371f597737cd7f5cf2740b930e7dd637fdd623f3522319f17260b8681a0"
+}

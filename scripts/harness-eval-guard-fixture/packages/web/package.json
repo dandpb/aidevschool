@@ -1,0 +1,6 @@
+{
+  "name": "web",
+  "scripts": {
+    "lint": "echo lint"
+  }
+}
