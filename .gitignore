@@ -176,3 +176,7 @@ engines/codexdojo-os-prototype/netlify/functions/
 # Judgment receipts are COMMITTED (owner decision 2026-09-17): they hold only
 # question ids, numbers and digests — no learner prose — and check() replays
 # them to stay deterministic against the enriched generated views.
+.tlc/harness/state/
+.cursor/hooks.json
+.claude/settings.json
+.harness-eval/
