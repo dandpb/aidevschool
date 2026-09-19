@@ -1,0 +1,2 @@
+STALE-WINDOW: os-voxel-guided-missions: recorded pass/customer-ready vs current stale/None; reasons=scenario os-voxel-hosted-missions source fingerprint is stale; scenario os-renderer-accessibility-recovery source fingerprint is stale; scenario os-voxel-returning-device source fingerprint is stale
+##[error]Process completed with exit code 1.

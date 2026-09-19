@@ -1,0 +1,33 @@
+# Producer run receipt — re-grant v98 (AID-2584, Docs & Readiness Engineer)
+# Stale window being cured (fail-closed main lane, verifiable first-hand):
+#
+# CI push run 35470259289 (https://github.com/dandpb/aidevschool/actions/runs/35470259289)
+#   head_sha 0e54d88dd59b3f6fc979dc8618268e4240f49786 (main tip after PR #509 merge 21:23:16Z)
+#   started 2026-09-19T21:23:18Z · job `product readiness (claims)` (id 105970356424)
+#   started 21:27:27Z · finished 21:27:51Z · conclusion FAILURE
+#   gate output: logs/claims-job-35470259289-red-gate.txt
+#     STALE-WINDOW: os-voxel-guided-missions: recorded pass/customer-ready vs current
+#     stale/None; reasons=scenario os-voxel-hosted-missions source fingerprint is stale;
+#     scenario os-renderer-accessibility-recovery source fingerprint is stale;
+#     scenario os-voxel-returning-device source fingerprint is stale (exit 1)
+#
+# Same stale signature first fired on the #507 push run 35466308275 @13f22ef4 (20:05Z)
+# and was re-detected on the #509 push (this run) because PR #509 is docs-only and did
+# NOT rotate the group fingerprint: sourceFingerprint of the group at 13f22ef4 (factory
+# PR #508 reports) == ecfc01ef…02988 == current tree (mechanically recomputed at HEAD,
+# see logs/first-hand-checks.log). The only fingerprint-rotating commit in
+# 3aca4d5d..0e54d88d on the group sourcePaths is 114b9f09 (PR #507), touching exactly
+# engines/voxelDojo/game-14-river-delta/src/sim/levels.ts (+9/−2).
+#
+# Fresh producer receipts for the 3 stale scenarios at main tip 0e54d88d, downloaded
+# from the SAME red run's `codexdojo-os-readiness-0e54d88d…` artifact (id 10592013553):
+#   logs/ci-run-35470259289/os-voxel-hosted-missions.json            pass (playwright assertion)
+#   logs/ci-run-35470259289/os-renderer-accessibility-recovery.json  pass (playwright assertion)
+#   logs/ci-run-35470259289/os-voxel-returning-device.json           pass (playwright assertion)
+# All three carry sourceFingerprint ecfc01ef…02988 == current tree; artifact digests
+# verified against the working tree in logs/first-hand-checks.log (7/7 match).
+#
+# Factory proposal PR #508 (AID-1357, v97 @13f22ef4, head 77f043ad) is producer-only
+# (regrant-proposal.json status=pending-observation; label regrant-pending-observation;
+# required check `regrant observation completeness` RED) — merging it heals nothing
+# (AID-2202). This bundle completes the independent observation and SUPERSEDES #508.
