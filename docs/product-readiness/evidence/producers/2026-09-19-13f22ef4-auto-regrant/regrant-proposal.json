@@ -1,0 +1,80 @@
+{
+  "assessmentId": "2026-09-19-13f22ef4-auto-regrant",
+  "branch": "regrant/auto-20260919-13f22ef4",
+  "generatedAt": "2026-09-19T20:11:16.206184+00:00",
+  "gitSha": "13f22ef4926997bd97a78de9eee1f1d164dde21b",
+  "schemaVersion": 1,
+  "status": "pending-observation",
+  "useCases": [
+    {
+      "id": "literacy-standalone-first-lesson",
+      "pending": [
+        "scenario literacy-happy-path lacks independent evidence",
+        "scenario literacy-retry lacks independent evidence",
+        "scenario literacy-resume lacks independent evidence"
+      ]
+    },
+    {
+      "id": "literacy-standalone-corridor-mod01-03",
+      "pending": [
+        "scenario literacy-corridor-happy-path lacks independent evidence",
+        "scenario literacy-corridor-gate-retry lacks independent evidence",
+        "scenario literacy-corridor-review-window lacks independent evidence"
+      ]
+    },
+    {
+      "id": "os-literacy-guided-mission",
+      "pending": [
+        "scenario os-literacy-hosted-mission lacks independent evidence",
+        "scenario os-verification-recovery lacks independent evidence",
+        "scenario os-literacy-returning-device lacks independent evidence"
+      ]
+    },
+    {
+      "id": "os-voxel-guided-missions",
+      "pending": [
+        "scenario os-voxel-hosted-missions lacks independent evidence",
+        "scenario os-renderer-accessibility-recovery lacks independent evidence",
+        "scenario os-voxel-returning-device lacks independent evidence"
+      ]
+    },
+    {
+      "id": "os-returning-learner",
+      "pending": [
+        "scenario os-onboarding-track-choice lacks independent evidence",
+        "scenario os-returning-recovery lacks independent evidence",
+        "scenario os-returning-device lacks independent evidence"
+      ]
+    },
+    {
+      "id": "dojotoday-daily-guidance",
+      "pending": [
+        "scenario dojotoday-active-unit-guidance lacks independent evidence",
+        "missing promoted result for dojotoday-read-only-boundary",
+        "scenario dojotoday-returning-next-day lacks independent evidence"
+      ]
+    },
+    {
+      "id": "pixelquest-evidence-encounter",
+      "pending": [
+        "scenario pixelquest-encounter-evidence lacks independent evidence",
+        "missing promoted result for pixelquest-evidence-recovery",
+        "scenario pixelquest-returning-evidence-handoff lacks independent evidence"
+      ]
+    },
+    {
+      "id": "voxel-standalone-learning-loop",
+      "pending": [
+        "scenario voxel-standalone-loop lacks independent evidence",
+        "missing promoted result for voxel-accessible-renderer",
+        "scenario voxel-standalone-return-reentry lacks independent evidence"
+      ]
+    },
+    {
+      "id": "minitown-explore-only",
+      "pending": [
+        "scenario minitown-explore-only lacks independent evidence"
+      ]
+    }
+  ]
+}
