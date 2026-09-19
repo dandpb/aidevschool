@@ -486,7 +486,7 @@ def _iter_subpackage_manifests(root: Path, max_depth: int = 3):
             if e.name in MANIFEST_FILES:
                 yield e, e.name
             elif (
-                depth < max_depth - 1
+                depth < max_depth
                 and e.is_dir()
                 and not e.name.startswith(".")
                 and e.name not in _SKIP_DIRS
