@@ -235,8 +235,15 @@ export function evaluateTrace(args: {
   const trace = collectTrace(args.events, args.traceId)
   const truthIds = new Set(trace.map((e) => e.logId))
   const collected = new Set(args.collectedLogIds)
-  const missing = [...truthIds].filter((id) => !collected.has(id)).length
-  const extra = [...collected].filter((id) => !truthIds.has(id)).length
+  // Optimization: avoid array allocation from [...set].filter().length
+  let missing = 0
+  for (const id of truthIds) {
+    if (!collected.has(id)) missing++
+  }
+  let extra = 0
+  for (const id of collected) {
+    if (!truthIds.has(id)) extra++
+  }
   const exact = truthIds.size === collected.size && missing === 0 && extra === 0
   return {
     pass: exact,
