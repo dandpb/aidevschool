@@ -1,0 +1,17 @@
+producer receipts @ 4858feab (branch regrant/auto-20260918-97a50adf = main push 97a50adf + factory snapshot commit):
+- CI push run 35390639787 @ 97a50adf (2026-09-18T20:17:31Z): 42 check-runs = 40 success / 1 skipped / 1 failure
+  (only 'product readiness (claims)' red — the stale-window this re-grant cures). Jobs green by-name first-hand
+  via check-runs API: 'SDLC guardrails (diff)', 'Python (learner + curriculum shared)', 'literacyDojo (TS + content)',
+  'codexdojo-os (TS)', 'dojoToday (TS + substrate)', 'curriculum Node (18 projects)'.
+- Readiness artifacts downloaded from run 35390639787 (byte-identical to the factory snapshot in this PR):
+  literacydojo-readiness-97a50adf* (artifact id 10565227475), dojotoday-readiness-97a50adf* (id 10565561951),
+  codexdojo-os-readiness-97a50adf* (id 10565877373). Scenario receipts archived in this directory.
+- Digest-identity proof: producer reports regenerated at HEAD 4858feab via
+  `cli.py producer-report` for the 13 playwright-bearing scenarios of the 4 stale groups are identical to the
+  factory snapshot (13/13: artifact sha256 sets, sourceFingerprint, assertion ids) — covered paths are
+  byte-identical between the green CI tree 97a50adf and this branch tree.
+- QA-phase executables (first-hand, this tree): `pytest learner/substrate/tests` = 214 passed, 1 skipped (10.9s);
+  `python3 engines/dojoToday/tools/selfcheck.py` = OK (track + game_dir).
+- CI on this PR head had NOT fired at observation time: PR opened with GITHUB_TOKEN (GitHub recursion guard),
+  0 check-runs at 2026-09-18T20:4xZ — documented first-hand; this push (synchronize) is the CI trigger per
+  runbook lifecycle step 4.

@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/codexdojo-os-prototype/tests-pilot/pilot-build.smoke.spec.ts",
+      "sha256": "18c931e0f3a91818abb8e1339fb7b19baaccd862ba78d46b05db2671dfe236dd"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "unavailable-verifier-is-not-completion",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-18T20:46:54Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "4858feab059bbce996d2b4b7fa249845efb1a60b",
+  "manualFingerprint": "a064c2e45011c6ed9aee11bd9f4e4e8e2404a38c798303389c9431801f68cd4c",
+  "outcome": "pass",
+  "runId": "2026-09-18T20:46:54Z-os-verification-recovery-4858feab",
+  "scenarioId": "os-verification-recovery",
+  "schemaVersion": 1,
+  "sourceFingerprint": "6f04bfc33ab4be4f7ed61e7709f1ef69e5575315c9e72f5f7484cb66baaae102"
+}
