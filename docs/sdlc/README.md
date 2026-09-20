@@ -426,3 +426,5 @@ evals on agent-config changes (eval suite gating `CLAUDE.md`/skills/hook
 edits), deterministic control bands writing monitoring findings back as
 `intent.md`, and scheduled security scans with findings routed through the
 same review gate.
+
+<!-- AID-2423 live-citation probe (2026-09-20): PR used solely to validate the countersign resolver end-to-end; discarded after validation, never merged. -->
