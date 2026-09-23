@@ -19,3 +19,7 @@
 ## 2026-09-15 - Explicit ARIA Context for Navigation and Filters
 **Learning:** In codexDojo, main navigation sections and filter buttons use generic text like 'Painel' or 'Todos'. These terms lack semantic context when announced by screen readers out of the visual flow, leading to confusion.
 **Action:** When creating navigation links or filtering buttons with generic names, compute a fully contextual `aria-label` (e.g., 'Ir para Painel' or 'Filtrar por Todos'), provide a matching `title` tooltip, and wrap the visible inner text in `<span aria-hidden="true">`. Update corresponding test assertions that strictly assert the old string format.
+
+## 2025-02-19 - Using .sr-only for links opening in new tabs
+**Learning:** When warning screen reader users about a context switch for external links (`target="_blank"`), replacing the link content with `aria-hidden` and applying `aria-label` to the parent anchor triggers Biome's `a11y/useAnchorContent` linter error (because the anchor conceptually loses its text content).
+**Action:** The preferred robust approach is to natively append a screen-reader-only span inside the anchor (e.g., `<span class="sr-only">(abre em nova aba)</span>`) alongside the visible text, leaving standard attributes alone. This satisfies linters, translation tools, and screen readers simultaneously.
