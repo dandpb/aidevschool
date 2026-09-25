@@ -47,7 +47,13 @@ export function makePool(workerCount: number): WorkerPool {
 }
 
 export function runningCount(pool: WorkerPool): number {
-  return pool.slots.filter((s) => s.taskId !== null).length
+  // Optimization: avoid array allocation from .filter().length
+  let count = 0
+  for (let i = 0; i < pool.slots.length; i++) {
+    const s = pool.slots[i]
+    if (s && s.taskId !== null) count++
+  }
+  return count
 }
 
 /** Is the task grabbable right now? scheduled_for gates eligibility (RF-008). */
