@@ -28,7 +28,12 @@
 # Countersign gate (AID-2318 Stage 1 + AID-2428 Stage 2, CEO gate AID-2316 c):
 # in PR context, a citation of the verdict that authorizes the merge is
 # required on its own line in the PR body or any PR comment
-#     Countersign: <AID-ID> verdict <ref>
+#     Countersign: <AID-ID> verdict <ref> [head=<40-hex>]
+# The optional 'head=<40-hex>' suffix is the canonical countersign-gate block
+# (AID-2768 §1/§3): before AID-2815 the grammar here demanded end-of-line
+# right after <ref>, so the canonical block reddened this required check and
+# locked the merge door (fail-closed availability hit, QA AID-2798). Both
+# forms are accepted now: ref-at-end-of-line and ref + head pin.
 # when the diff touches process-authority paths (Stage 1, any author) OR the
 # PR author is a bot/agent account (Stage 2, ANY diff — no engine-only
 # exemption: producer ≠ verifier is never waived, precedent #483/AID-2333;
@@ -287,7 +292,9 @@ run_checks() {
   }
 
   # 4. Countersign citation gate (AID-2318 Stage 1 + AID-2428 Stage 2). In PR
-  #    context the citation 'Countersign: <AID-ID> verdict <ref>' is required
+  #    context the citation 'Countersign: <AID-ID> verdict <ref> [head=<40-hex>]'
+  #    is required (AID-2815: the optional head pin suffix of the canonical
+  #    countersign-gate block, AID-2768, is accepted — both forms parse)
   #    when the diff touches process-authority paths (any author) OR the PR
   #    author is a bot/agent account (any diff). The citation must resolve AND
   #    be posted strictly BEFORE the merge (see header). First valid citation
@@ -335,7 +342,13 @@ run_checks() {
       fi
       local cs_ok=0 cs_bad="" cs_aid="" cs_err="" cs_ord_rej=0 cs_body_merged=0
       local resolver="${SDLC_GUARD_AID_RESOLVER:-}"
-      local citation_re='Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*[[:space:]]*$'
+      # AID-2815: optional 'head=<40-hex>' suffix (canonical countersign-gate
+      # block, AID-2768 — same grammar as countersign_gate_check.py CITATION_RE:
+      # spaces around '=' allowed, 40 hex chars case-insensitive, then EOL).
+      # Ref-at-end-of-line stays valid (dual-compatible). A malformed suffix
+      # (short/long sha, non-hex) can never match the group and the ref
+      # charset cannot absorb it -> the line stops matching -> fail-closed.
+      local citation_re='Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*([[:space:]]+head[[:space:]]*=[[:space:]]*[0-9a-fA-F]{40})?[[:space:]]*$'
       local TAB
       TAB="$(printf '\t')"
       if [ "$ctx_rc" -ne 0 ]; then
@@ -380,9 +393,9 @@ run_checks() {
         elif [ -n "$cs_bad" ]; then
           local cs_why=""
           [ -n "$cs_err" ] && cs_why=" — resolver: $cs_err"
-          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
+          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA> [head=<40-hex>]' (AID-2318)")
         else
-          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref>' line in PR body/comments — post the countersign verdict citation first (AID-2318)")
+          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref> [head=<40-hex>]' line in PR body/comments — post the countersign verdict citation first (AID-2318; head suffix optional, AID-2815)")
         fi
       fi
     fi
@@ -707,6 +720,13 @@ $big_filler"
   : > "$T/cs_none"
   printf 'Countersign: AID-9006 verdict 679cf9d3\n' > "$T/cs_valid"
   printf 'Countersign: AID-9999 verdict deadbeef\n' > "$T/cs_ghost"
+  # AID-2815: canonical countersign-gate block (AID-2768) — optional
+  # 'head=<40-hex>' pin suffix on the citation line.
+  local HEADPIN="3970523ac9ccdb19124aa480c48a9dbd15f8da7c"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=%s\n' "$HEADPIN" > "$T/cs_valid_head"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head = 81AFD2A40EEE0000000000000000000000000000\n' > "$T/cs_valid_head_spaced"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=3970523\n' > "$T/cs_bad_head_short"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=%s0\n' "$HEADPIN" > "$T/cs_bad_head_long"
   pr_scenario() { # scenario + PR-context gate env, scrubbed afterwards
     export SDLC_GUARD_AID_RESOLVER="$stub" SCENARIO_EVENT_NAME=pull_request
     scenario "$@"
@@ -744,6 +764,28 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD "$cs_br" >/dev/null
+
+  # AID-2815: the canonical countersign-gate block (AID-2768, PR #545) puts
+  # the 'head=' pin ON the citation line; until this fix the guard demanded
+  # end-of-line right after <ref>, so every canonical countersign reddened
+  # this required check and locked the merge door (QA AID-2798, PR #545
+  # check-run 108353922550). Both forms parse now; a malformed pin (short,
+  # long, non-hex) can never match and stays fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_valid_head" pr_scenario \
+    "process PR with canonical head= citation passes (AID-2815)" 0 "edit sdlc doc canonical cite" -- \
+    "mkdir -p docs/sdlc && printf '# amended headpin\n' > docs/sdlc/README.md"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_valid_head_spaced" pr_scenario \
+    "head= with spaced '=' and uppercase hex passes (AID-2815)" 0 "edit sdlc doc spaced headpin" -- \
+    "mkdir -p docs/sdlc && printf '# amended spaced\n' > docs/sdlc/README.md"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_bad_head_short" pr_scenario \
+    "short-hex head= suffix is not a valid citation (AID-2815)" 1 "edit guard bad head short" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_bad_head_long" pr_scenario \
+    "long-hex head= suffix is not a valid citation (AID-2815)" 1 "edit guard bad head long" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
 
   # AID-2428 (Stage 2): citation required for EVERY bot/agent-authored PR
   # (any diff — no engine-only exemption) and the verdict must be posted
