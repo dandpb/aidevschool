@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 
@@ -34,20 +34,36 @@ def _git(repo: Path, *args: str, check: bool = True) -> subprocess.CompletedProc
 class TreeState:
     sha: str
     untracked: list[str]
+    # AID-2822 (F6): rastreados com estado ≠ HEAD (modificado/staged/
+    # deletado/renomeado). Default vazio mantém snapshots legados líveis.
+    dirty: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
-        return {"sha": self.sha, "untracked": sorted(self.untracked)}
+        return {
+            "sha": self.sha,
+            "untracked": sorted(self.untracked),
+            "dirty": sorted(self.dirty),
+        }
 
 
 def capture_tree_state(worktree: Path) -> TreeState:
+    """Fotografa TODA linha do porcelain (AID-2822 F6).
+
+    `??` → untracked; qualquer outra linha (índice/worktree ≠ HEAD) → dirty.
+    O snapshot `??`-only tornava rastreado modificado invisível ao gate —
+    a prova podia examinar árvore diferente da árvore do commit promovido.
+    """
     sha = _git(worktree, "rev-parse", "HEAD").stdout.strip()
     status = _git(worktree, "status", "--porcelain").stdout
-    untracked = [
-        line[3:].strip().strip('"')
-        for line in status.splitlines()
-        if line.startswith("??")
-    ]
-    return TreeState(sha=sha, untracked=untracked)
+    untracked: list[str] = []
+    dirty: list[str] = []
+    for line in status.splitlines():
+        path = line[3:].strip().strip('"')
+        if line.startswith("??"):
+            untracked.append(path)
+        else:
+            dirty.append(path)
+    return TreeState(sha=sha, untracked=untracked, dirty=dirty)
 
 
 def _worktree_registered(repo: Path, worktree_path: Path) -> bool:
@@ -98,7 +114,9 @@ def tree_drift(before: TreeState, after: TreeState) -> list[str]:
     """Drift relevante entre dois snapshots (P4).
 
     - mesmo SHA exigido;
-    - arquivo não-rastreado novo entre build e verify = drift.
+    - arquivo não-rastreado novo entre build e verify = drift;
+    - AID-2822 (F6): rastreado modificado no snapshot do verify = drift —
+      prova sobre árvore suja é evidência ≠ commit.
     """
     reasons: list[str] = []
     if before.sha != after.sha:
@@ -106,6 +124,10 @@ def tree_drift(before: TreeState, after: TreeState) -> list[str]:
     new_untracked = sorted(set(after.untracked) - set(before.untracked))
     if new_untracked:
         reasons.append(f"P4: untracked files changed after build: {new_untracked}")
+    if after.dirty:
+        reasons.append(
+            f"P4: tracked files modified between build and verify: {sorted(after.dirty)}"
+        )
     return reasons
 
 
@@ -135,8 +157,9 @@ def meaningful_untracked(untracked: list[str]) -> list[str]:
 def post_check_drift(before: TreeState, after: TreeState) -> list[str]:
     """Drift DURANTE a execução dos checks (TOCTOU da mesma raiz — AID-2716).
 
-    Snapshot re-capturado após os checks: SHA movido (commit/reset concorrente)
-    ou arquivo não-rastreado novo (mutação da árvore provada) é drift
+    Snapshot re-capturado após os checks: SHA movido (commit/reset concorrente),
+    arquivo não-rastreado novo (mutação da árvore provada) ou rastreado
+    modificado (AID-2822 F6 — `??`-only não via esta mutação) é drift
     bloqueante; artefatos gerados pelas ferramentas não são.
     """
     reasons: list[str] = []
@@ -152,5 +175,10 @@ def post_check_drift(before: TreeState, after: TreeState) -> list[str]:
     if new_untracked:
         reasons.append(
             f"P4: tree mutated while checks ran (new untracked): {new_untracked}"
+        )
+    if after.dirty:
+        reasons.append(
+            "P4: tree mutated while checks ran (tracked files modified): "
+            f"{sorted(after.dirty)}"
         )
     return reasons
