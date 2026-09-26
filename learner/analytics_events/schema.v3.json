@@ -1,0 +1,23 @@
+{
+  "schema_version": "3",
+  "deprecated_events": ["session_heartbeat"],
+  "dojo_enum": ["literacyDojo", "codexDojo"],
+  "entry_enum": ["hub", "deeplink", "resume", "push"],
+  "mode_enum": ["practice", "assessment"],
+  "verdict_enum": ["pass", "fail", "retry"],
+  "evidence_kind_enum": ["verifier_receipt", "artifact", "none"],
+  "export_scope_enum": ["board_export", "local_only"],
+  "experiment_arm_enum": ["control", "treatment-o1"],
+  "optional_numeric": ["engagement_ms"],
+  "optional_enum": {"experiment_arm": "experiment_arm_enum"},
+  "anon_id_field": "subject_anon_id",
+  "event_types": {
+    "objective_viewed":         {"payload": ["objective_id", "entry"]},
+    "attempt_started":          {"payload": ["objective_id", "attempt_id", "mode"]},
+    "attempt_feedback_shown":   {"payload": ["attempt_id", "verdict", "latency_ms"]},
+    "evidence_recorded":        {"payload": ["attempt_id", "evidence_kind", "digest_sha256"]},
+    "export_consented":         {"payload": ["scope", "granted"]}
+  },
+  "required_envelope": ["event_id", "event_type", "occurred_at", "subject_anon_id", "dojo", "module", "payload"],
+  "pii_forbidden_keys": ["email", "full_name", "ip_addr", "api_token", "password"]
+}

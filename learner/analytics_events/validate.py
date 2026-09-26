@@ -26,8 +26,12 @@ def validate_event(ev: dict, schema: dict) -> list[str]:
             errs.append(f"{f} not uuid4: {v!r}")
     if not (isinstance(ev.get("occurred_at"), str) and ISO_RE.match(ev["occurred_at"])):
         errs.append("occurred_at not ISO-8601 UTC")
-    if not (isinstance(ev.get("learner_anon_id"), str) and UUID_RE.match(ev["learner_anon_id"])):
-        errs.append("learner_anon_id not uuid4")
+    anon_field = schema.get("anon_id_field", "learner_anon_id")
+    if not (isinstance(ev.get(anon_field), str) and UUID_RE.match(ev[anon_field])):
+        errs.append(f"{anon_field} not uuid4")
+    for dep in schema.get("deprecated_events", []):
+        if et == dep:
+            errs.append(f"event_type {et!r} is deprecated in this schema version")
     if ev.get("dojo") not in schema["dojo_enum"]:
         errs.append(f"dojo not in enum: {ev.get('dojo')!r}")
     m = ev.get("module")
