@@ -18,3 +18,9 @@
 **Vulnerability:** External links opening in new tabs (`target="_blank"`) without the `noopener` attribute can expose the application to reverse tabnabbing attacks in older browsers, where the malicious site can change the `window.opener.location` to a phishing page.
 **Learning:** While `rel="noreferrer"` implicitly provides `noopener` behavior in modern browsers (Chrome >= 88), explicitly stating `noopener noreferrer` ensures broader protection across all environments and satisfies strict security linters.
 **Prevention:** Always add `rel="noopener noreferrer"` to all `target="_blank"` external links in React applications (like `literacyDojo` and `codexdojo-os-prototype`) to enforce defense in depth.
+
+## 2026-09-26 - Hardcoded JWT Secret Default Verification
+
+**Vulnerability:** Hardcoded JWT Secret Default reported in non-existent Go implementation file `curriculum/07_rest_api_auth/go-impl/internal/authapi/app.go`.
+**Learning:** Always verify the existence of files and paths reported in vulnerability tasks before attempting code modifications, while ensuring associated implementations in other languages are reviewed.
+**Prevention:** Use robust environment-variable-based configurations with safe fallbacks for local dev or explicit fail-fast mechanisms in production.
