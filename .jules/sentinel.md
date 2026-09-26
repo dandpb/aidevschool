@@ -18,3 +18,8 @@
 **Vulnerability:** External links opening in new tabs (`target="_blank"`) without the `noopener` attribute can expose the application to reverse tabnabbing attacks in older browsers, where the malicious site can change the `window.opener.location` to a phishing page.
 **Learning:** While `rel="noreferrer"` implicitly provides `noopener` behavior in modern browsers (Chrome >= 88), explicitly stating `noopener noreferrer` ensures broader protection across all environments and satisfies strict security linters.
 **Prevention:** Always add `rel="noopener noreferrer"` to all `target="_blank"` external links in React applications (like `literacyDojo` and `codexdojo-os-prototype`) to enforce defense in depth.
+
+## 2026-09-26 - Non-existent legacy rust-impl CORS report
+**Vulnerability:** Audit alert reported `CorsLayer::permissive()` in `curriculum/15_metrics_collector/rust-impl/src/lib.rs`.
+**Learning:** The legacy `rust-impl` directory was deleted in AID-1671 as part of standardizing on Node/TS across curriculum projects. The current `node-impl` in `curriculum/15_metrics_collector/node-impl/src/server.ts` does not enable CORS or use permissive origins.
+**Prevention:** When investigating legacy implementation vulnerability reports, verify if the implementation track was removed or superseded by curriculum policy changes.
