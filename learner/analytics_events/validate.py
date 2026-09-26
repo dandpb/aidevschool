@@ -66,6 +66,15 @@ def validate_event(ev: dict, schema: dict) -> list[str]:
             errs.append("scope not in enum")
         if not isinstance(pay.get("granted"), bool):
             errs.append("granted must be bool")
+    # v2 optional fields (rules come from the schema itself)
+    for f in schema.get("optional_numeric", []):
+        if f in ev:
+            v = ev[f]
+            if not (isinstance(v, int) and v >= 0):
+                errs.append(f"{f} must be int>=0")
+    for f, enum_key in schema.get("optional_enum", {}).items():
+        if f in ev and ev[f] not in schema[enum_key]:
+            errs.append(f"{f} not in enum {enum_key}")
     for k in ev.keys() | pay.keys():
         for bad in schema["pii_forbidden_keys"]:
             if k == bad:
