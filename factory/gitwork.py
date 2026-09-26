@@ -107,3 +107,50 @@ def tree_drift(before: TreeState, after: TreeState) -> list[str]:
     if new_untracked:
         reasons.append(f"P4: untracked files changed after build: {new_untracked}")
     return reasons
+
+
+# Artefatos gerados pelas próprias ferramentas de check (bytecode, caches).
+# Não podem alterar a semântica de importação/execução dos checks e são
+# excluídos da contabilidade de drift pós-checks (AID-2716/AID-2730).
+GENERATED_ARTIFACT_DIRS = frozenset({"__pycache__", ".pytest_cache"})
+GENERATED_ARTIFACT_SUFFIXES = frozenset({".pyc", ".pyo"})
+GENERATED_ARTIFACT_NAMES = frozenset({".coverage"})
+
+
+def is_generated_artifact(path: str) -> bool:
+    clean = path.strip().strip('"')
+    parts = Path(clean).parts
+    if any(part in GENERATED_ARTIFACT_DIRS for part in parts):
+        return True
+    if clean in GENERATED_ARTIFACT_NAMES or parts[-1] in GENERATED_ARTIFACT_NAMES:
+        return True
+    return Path(clean).suffix in GENERATED_ARTIFACT_SUFFIXES
+
+
+def meaningful_untracked(untracked: list[str]) -> list[str]:
+    """Não-rastreados que importam para a prova (exclui artefatos gerados)."""
+    return sorted(p for p in untracked if not is_generated_artifact(p))
+
+
+def post_check_drift(before: TreeState, after: TreeState) -> list[str]:
+    """Drift DURANTE a execução dos checks (TOCTOU da mesma raiz — AID-2716).
+
+    Snapshot re-capturado após os checks: SHA movido (commit/reset concorrente)
+    ou arquivo não-rastreado novo (mutação da árvore provada) é drift
+    bloqueante; artefatos gerados pelas ferramentas não são.
+    """
+    reasons: list[str] = []
+    if before.sha != after.sha:
+        reasons.append(
+            f"P4: sha drifted while checks ran — {before.sha} -> {after.sha}"
+        )
+    new_untracked = sorted(
+        p
+        for p in set(after.untracked) - set(before.untracked)
+        if not is_generated_artifact(p)
+    )
+    if new_untracked:
+        reasons.append(
+            f"P4: tree mutated while checks ran (new untracked): {new_untracked}"
+        )
+    return reasons
