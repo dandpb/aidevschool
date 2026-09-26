@@ -10,7 +10,7 @@ from __future__ import annotations
 import datetime as _dt
 import hashlib
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict, fields
 from pathlib import Path
 from typing import Optional
 
@@ -85,7 +85,12 @@ class Check:
 
 @dataclass
 class Proof:
-    """Resultado executável de um check, ligado a um SHA pelo recibo."""
+    """Resultado executável de um check, ligado a um SHA pelo recibo.
+
+    `examined_sha` (AID-2719) é o SHA da árvore que o verificador examinou
+    ao produzir a prova; provas legadas (campo ausente → None) não têm como
+    provar contra qual commit correram e o gate exige re-prova.
+    """
 
     check_id: str
     cmd: str
@@ -95,6 +100,7 @@ class Proof:
     finished_at: str
     context_id: str
     output_path: str
+    examined_sha: Optional[str] = None
 
     @property
     def passed(self) -> bool:
@@ -104,12 +110,17 @@ class Proof:
 def proof_evidence(proof: Proof) -> dict:
     """Âncora mínima de uma prova (AID-2715): o que o recibo `verified`
     sela no ledger encadeado. Tudo o que ficar só no runtime (gitignored)
-    é auto-atestável e não conta como evidência."""
+    é auto-atestável e não conta como evidência.
+
+    AID-2719: `examined_sha` entra na âncora — o digest selado amarra a
+    prova ao commit examinado, não só ao output.
+    """
     return {
         "check_id": proof.check_id,
         "cmd_sha256": sha256_text(proof.cmd),
         "exit_code": proof.exit_code,
         "output_sha256": proof.output_sha256,
+        "examined_sha": proof.examined_sha,
     }
 
 
@@ -123,6 +134,9 @@ class Lease:
 
     `epoch` é o fencing token: começa em 1 e só cresce em takeover pós-expiração.
     Writers com época velha são recusados pelas estações (AID-2718/AID-2721).
+    `released_at` marca devolução explícita (AID-2728 S7): o release persiste
+    uma representação que o próprio modelo lê — lease liberado é fail-closed,
+    não re-claimável sem re-intake.
     """
 
     event_id: str
@@ -131,13 +145,21 @@ class Lease:
     heartbeat_at: str = field(default_factory=utcnow)
     ttl_seconds: int = 3600
     epoch: int = 1
+    released_at: Optional[str] = None
 
     def to_json(self) -> str:
         return canonical_json(asdict(self))
 
+    @property
+    def released(self) -> bool:
+        return self.released_at is not None
+
     @classmethod
     def from_json(cls, text: str) -> "Lease":
-        return cls(**json.loads(text))
+        # Leitura tolerante (AID-2762): chaves desconhecidas são ignoradas em
+        # vez de envenenar `lease_of`/`claim`/`lease_expired` com TypeError.
+        known = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in json.loads(text).items() if k in known})
 
 
 @dataclass

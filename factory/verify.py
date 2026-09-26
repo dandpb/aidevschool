@@ -6,6 +6,11 @@ contexto verificador (não pelo autor) e revalida os digests dos outputs.
 
 P3 — autor e Verifier são contextos distintos; o gate recusa veredito do
 mesmo contexto que assinou o build.
+
+P4 (AID-2716/AID-2730) — os checks rodam em clean-room (worktree nova no
+`build_sha`), nunca na worktree suja do autor; o estado da árvore é
+capturado ANTES e RE-CAPTURADO DEPOIS dos checks para fechar o TOCTOU da
+mesma raiz (mutação durante a execução = drift bloqueante).
 """
 
 from __future__ import annotations
@@ -24,6 +29,8 @@ class VerifyResult:
     sha: str
     untracked: list[str] = field(default_factory=list)
     proofs: list[Proof] = field(default_factory=list)
+    drift_reasons: list[str] = field(default_factory=list)
+    generated_untracked: list[str] = field(default_factory=list)
 
     @property
     def all_passed(self) -> bool:
@@ -39,12 +46,16 @@ def run_checks(
     context_id: str,
     outputs_dir: Path,
 ) -> VerifyResult:
-    """Executa cada check do contrato no worktree e grava a prova em disco."""
-    from .gitwork import capture_tree_state
+    """Executa cada check do contrato no worktree e grava a prova em disco.
+
+    O worktree deve ser a clean-room do verificador (criada no `build_sha`).
+    A árvore é fotografada antes e depois dos checks; mutação relevante no
+    intervalo vira `drift_reasons` (bloqueante na estação Provar).
+    """
+    from .gitwork import capture_tree_state, meaningful_untracked, post_check_drift
 
     outputs_dir.mkdir(parents=True, exist_ok=True)
-    tree = capture_tree_state(worktree)
-    sha, untracked = tree.sha, tree.untracked
+    before = capture_tree_state(worktree)
     proofs: list[Proof] = []
     for check in contract.checks:
         started = utcnow()
@@ -69,9 +80,22 @@ def run_checks(
                 finished_at=finished,
                 context_id=context_id,
                 output_path=str((outputs_dir / out_name)),
+                examined_sha=before.sha,  # AID-2719: a prova carrega o SHA examinado (renome p/ refactor clean-room AID-2730)
             )
         )
-    return VerifyResult(context_id=context_id, sha=sha, untracked=untracked, proofs=proofs)
+    after = capture_tree_state(worktree)
+    drift = post_check_drift(before, after)
+    meaningful = meaningful_untracked(after.untracked)
+    return VerifyResult(
+        context_id=context_id,
+        sha=before.sha,
+        untracked=meaningful,
+        proofs=proofs,
+        drift_reasons=drift,
+        generated_untracked=sorted(
+            p for p in after.untracked if p not in set(meaningful)
+        ),
+    )
 
 
 def revalidate_proofs(result: VerifyResult) -> list[str]:

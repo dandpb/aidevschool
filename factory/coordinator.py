@@ -31,7 +31,7 @@ import subprocess
 from pathlib import Path
 
 from . import gitwork
-from .contract import Contract, load_from_registry
+from .contract import Contract, ContractError, load_from_registry
 from .gate import GateDecision, evaluate
 from .ledger import RunLedger
 from .model import (
@@ -91,6 +91,14 @@ class Coordinator:
             raise CoordinatorError(
                 f"P1 fence: run {run_id} cannot transition — {exc}"
             ) from exc
+        if lease.released:
+            # AID-2728 S7: lease devolvido fecha a run — sem transição, sem
+            # resurrect por heartbeat; fail-closed com motivo estruturado.
+            raise CoordinatorError(
+                f"P1 fence: lease for {event_id} was released at "
+                f"{lease.released_at} by {lease.holder} — run {run_id} "
+                "cannot transition on a released lease"
+            )
         if self.queue.lease_expired(event_id):
             raise CoordinatorError(
                 f"P1 fence: lease for {event_id} expired (holder {lease.holder})"
@@ -150,7 +158,18 @@ class Coordinator:
             context_id=context_id,
             **extra,
         )
-        return ledger.append(receipt)
+        receipt = ledger.append(receipt)
+        # AID-2719 (X6) — âncora externa do head: o hash do último recibo é
+        # persistido FORA do ledger, no state da run. `_append` roda sempre
+        # depois do `_save_state` da estação (write-order S1), então o
+        # read-modify-write aqui não perde campos da estação. Truncagem de
+        # sufixo do ledger passa a ser detectável no gate e no `--verify`.
+        if self._state_path(run_id).exists():
+            state = self._load_state(run_id)
+            state["ledger_head"] = receipt.hash
+            state["ledger_seq"] = receipt.seq
+            self._save_state(run_id, state)
+        return receipt
 
     def freeze(self, run_id: str, change_id: str, context_id: str,
                base_sha: str | None = None) -> Contract:
@@ -187,6 +206,12 @@ class Coordinator:
         base = (base_sha if base_sha is not None else (prior or {}).get("base_sha")) \
             or gitwork._git(self.repo, "rev-parse", "HEAD").stdout.strip()
         contract = load_from_registry(self.registry, change_id, base)
+        # AID-2719 (X5): o risco do evento viaja no state — o gate usa para a
+        # política de perfil mínimo (all-cheap ≥ medium exige revisão).
+        try:
+            event_risk = self.queue.get(run_id.removeprefix("run-")).risk
+        except Exception:  # noqa: BLE001 - fila indisponível → fail-closed no gate
+            event_risk = None
         run_dir = self._run_dir(run_id)
         state = {
             "run_id": run_id,
@@ -195,6 +220,7 @@ class Coordinator:
             "station": "freezing",
             "base_sha": base,
             "contract_digest": contract.digest,
+            "risk": event_risk,
             "lease_holder": lease.holder,
             "lease_epoch": lease.epoch,
             "author_context": None,
@@ -260,16 +286,78 @@ class Coordinator:
         return state
 
     def prove(self, run_id: str, verifier_context: str) -> VerifyResult:
+        """Estação Provar em clean-room (AID-2716/AID-2730).
+
+        Os checks NUNCA rodam na worktree do autor: primeiro a árvore do autor
+        é auditada (SHA pinado no recibo de build + sem não-rastreados);
+        fail-closed bloqueia a run antes de qualquer transição `verified`.
+        Aprovada a auditoria, os checks rodam em worktree NOVA criada
+        exatamente no `build_sha`, com o estado da árvore re-capturado após
+        os checks (mutação durante a execução = drift bloqueante).
+        """
         state = self._load_state(run_id)
         if state["station"] != "built":
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not built")
         self._fence(run_id, state)
         contract = Contract.load_frozen(self._run_dir(run_id))
-        worktree = Path(state["worktree"])
-        result = run_checks(contract, worktree, verifier_context, self._run_dir(run_id) / "proofs")
+        author_worktree = Path(state["worktree"])
+        author_tree = gitwork.capture_tree_state(author_worktree)
+        blockers: list[str] = []
+        if author_tree.sha != state["build_sha"]:
+            blockers.append(
+                "P4 clean-room: author worktree moved to "
+                f"{author_tree.sha}, build receipt pinned {state['build_sha']}"
+            )
+        meaningful = gitwork.meaningful_untracked(author_tree.untracked)
+        if meaningful:
+            blockers.append(
+                "P4 clean-room: author worktree has untracked files at prove "
+                f"time: {meaningful}"
+            )
+        if blockers:
+            state.update(
+                station="blocked", prove_blockers=blockers, updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=author_tree.sha, contract_digest=contract.digest,
+                detail={"reasons": blockers, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (clean-room policy) for {run_id}: "
+                + "; ".join(blockers)
+            )
+        cleanroom = self.home / "worktrees" / f"{run_id}-cleanroom"
+        if cleanroom.exists():
+            gitwork.remove_worktree(self.repo, cleanroom)
+        gitwork.create_worktree(self.repo, state["build_sha"], cleanroom)
+        result = run_checks(
+            contract, cleanroom, verifier_context, self._run_dir(run_id) / "proofs"
+        )
         self.persist_proofs_meta(run_id, result)
+        if result.drift_reasons:
+            state.update(
+                station="blocked", prove_blockers=result.drift_reasons,
+                verify_worktree=str(cleanroom), updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=result.sha, contract_digest=contract.digest,
+                proof_refs=[p.check_id for p in result.proofs],
+                detail={"reasons": result.drift_reasons, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (tree mutated while checks ran) for {run_id}: "
+                + "; ".join(result.drift_reasons)
+            )
         state.update(station="verified", verifier_context=verifier_context,
                      verify_sha=result.sha, verify_untracked=result.untracked,
+                     verify_worktree=str(cleanroom),
+                     verify_generated_untracked=result.generated_untracked,
                      updated_at=utcnow())
         self._save_state(run_id, state)
         # AID-2715 — a âncora da prova (check, cmd, exit, digest do output)
@@ -298,7 +386,29 @@ class Coordinator:
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
         self._fence(run_id, state)
-        frozen = Contract.load_frozen(self._run_dir(run_id))
+        # Run bloqueada na estação Provar (política clean-room, AID-2716/AID-2730):
+        # não existe estado verificado a promover — fail-closed com os motivos.
+        if state["station"] == "blocked" and "verify_sha" not in state:
+            reasons = [
+                "P4 clean-room: run blocked at prove — no verified evidence to promote"
+            ] + list(state.get("prove_blockers", []))
+            decision = GateDecision(verdict="block", reasons=reasons)
+            self._append(
+                run_id, station_from="blocked", station_to="blocked",
+                actor_role="coordinator", context_id=context_id,
+                sha=state.get("build_sha"), contract_digest=state.get("contract_digest"),
+                detail={"reasons": reasons},
+            )
+            self._write_receipt_summary(run_id, decision)
+            return decision
+        # AID-2728 S6a: contrato congelado ilegível/adulterado é um VEREDITO
+        # block (P4), não um crash — simétrico ao caminho do registro
+        # versionado ("contract digest drifted"). Fail-closed com recibo.
+        frozen_contract_error: str | None = None
+        try:
+            frozen = Contract.load_frozen(self._run_dir(run_id))
+        except ContractError as exc:
+            frozen_contract_error = str(exc)
         # O registro versionado é a autoridade: se mudou após o congelamento,
         # a run está velha e a promoção fica bloqueada (P4).
         try:
@@ -308,21 +418,29 @@ class Coordinator:
             registry_digest = registry_contract.digest
         except Exception as exc:  # noqa: BLE001 - fail-closed com motivo
             registry_digest = f"unreadable:{exc}"
-        build = gitwork.TreeState(sha=state["build_sha"], untracked=state.get("build_untracked", []))
-        verify = VerifyResult(
-            context_id=state["verifier_context"], sha=state["verify_sha"],
-            untracked=state.get("verify_untracked", []),
-            proofs=self._load_proofs(run_id),
-        )
-        decision = evaluate(
-            contract=frozen,
-            frozen_digest=registry_digest,
-            build=build,
-            verify=verify,
-            author_context=state["author_context"],
-            pr_head_sha=pr_head_sha,
-            anchored_evidence=self._proof_anchor(run_id),
-        )
+        if frozen_contract_error is not None:
+            decision = GateDecision(verdict="block", reasons=[f"P4: {frozen_contract_error}"])
+        else:
+            build = gitwork.TreeState(sha=state["build_sha"], untracked=state.get("build_untracked", []))
+            verify = VerifyResult(
+                context_id=state["verifier_context"], sha=state["verify_sha"],
+                untracked=state.get("verify_untracked", []),
+                proofs=self._load_proofs(run_id),
+            )
+            ledger_receipts = self._ledger(run_id).read()
+            decision = evaluate(
+                contract=frozen,
+                frozen_digest=registry_digest,
+                build=build,
+                verify=verify,
+                author_context=state["author_context"],
+                pr_head_sha=pr_head_sha,
+                anchored_evidence=self._proof_anchor(run_id),
+                state=state,
+                ledger_receipts=ledger_receipts,
+                event_risk=state.get("risk"),
+                human_review=state.get("human_review"),
+            )
         station_to = "promoted" if decision.ok else "blocked"
         # S1d (AID-2726) write-order: resumo antes da transição — kill entre
         # resumo e state deixa `verified` com resumo (retry re-avalia e
@@ -337,6 +455,35 @@ class Coordinator:
             detail={"reasons": decision.reasons} if decision.reasons else {"pr_head": pr_head_sha},
         )
         return decision
+
+    def record_review(self, run_id: str, reviewer_context: str) -> dict:
+        """AID-2719 (X5) — revisão humana explícita e registrada.
+
+        Contrato sem nenhum check `profile=standard` não promove sozinho
+        quando o risco do evento é ≥ medium: exige este recibo de revisão
+        (ator `human`, revisor distinto de autor e verificador), gravado no
+        ledger encadeado e no state antes de o gate re-avaliar.
+        """
+        state = self._load_state(run_id)
+        if state["station"] not in ("verified", "blocked"):
+            raise CoordinatorError(
+                f"run {run_id} is at {state['station']}, review expects verified/blocked"
+            )
+        self._fence(run_id, state, acting_context=reviewer_context)
+        review = {"approved": True, "reviewer_context": reviewer_context,
+                  "at": utcnow()}
+        state["human_review"] = review
+        state["updated_at"] = utcnow()
+        self._save_state(run_id, state)
+        # station_to="reviewed": marcador próprio — não colide com os filtros
+        # de estação (`verified`/`built`) do gate nem reescreve história.
+        self._append(
+            run_id, station_from=state["station"], station_to="reviewed",
+            actor_role="human", context_id=reviewer_context,
+            sha=state.get("verify_sha"), contract_digest=state.get("contract_digest"),
+            detail={"human_review": review},
+        )
+        return state
 
     def _resume_promoted(self, run_id: str, state: dict, context_id: str) -> GateDecision:
         """S1d (AID-2726): reentrada idempotente do gate em run promoted."""
@@ -390,7 +537,10 @@ class Coordinator:
         Falha fechado: sem recibo, ou com detalhe/digests inconsistentes,
         devolve None e o gate recusa provas auto-atestadas.
         """
-        receipts = self._ledger(run_id).find("verified")
+        receipts = [
+            r for r in self._ledger(run_id).find("verified")
+            if r.detail.get("proof_evidence")
+        ]
         if not receipts:
             return None
         receipt = receipts[-1]
@@ -412,6 +562,11 @@ class Coordinator:
             "author_context": state.get("author_context"),
             "verifier_context": state.get("verifier_context"),
             "proof_anchor": self._proof_anchor(run_id),
+            # AID-2719 (X6) — âncora do head pré-transição: reflui ao registro
+            # versionado via copy_receipt_into_registry; truncagem de sufixo
+            # do ledger depois da promoção é detectável contra ela.
+            "ledger_head": state.get("ledger_head"),
+            "ledger_seq": state.get("ledger_seq"),
             "generated_at": utcnow(),
         }
         (self._run_dir(run_id) / "receipt.summary.json").write_text(

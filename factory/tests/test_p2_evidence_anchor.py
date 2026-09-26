@@ -116,9 +116,15 @@ class TestAnchorSealing:
         coord, repo, run_id = _setup(tmp_path)
         receipts = coord._ledger(run_id).find("verified")
         assert receipts and receipts[0].proof_digests
+        # AID-2719: `examined_sha` entra na âncora selada (prova amarrada ao
+        # commit examinado, não só ao output).
         assert receipts[0].detail["proof_evidence"][0].keys() == {
             "check_id", "cmd_sha256", "exit_code", "output_sha256",
+            "examined_sha",
         }
+        verify_sha = coord._load_state(run_id)["verify_sha"]
+        assert all(e["examined_sha"] == verify_sha
+                   for e in receipts[0].detail["proof_evidence"])
         for e, d in zip(receipts[0].detail["proof_evidence"], receipts[0].proof_digests):
             assert evidence_digest(e) == d
 
