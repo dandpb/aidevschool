@@ -68,6 +68,14 @@ jobs:
           fi
       - name: guardrail self-test (synthetic violations must fail)
         run: scripts/sdlc_guard_check.sh --self-test
+      # AID-2824 (finding AID-2818): §3's check-run extraction must keep
+      # reading the REAL endpoint shape — gh api …/check-runs returns an
+      # OBJECT {"total_count":N,"check_runs":[…]} per page, and the pre-fix
+      # expression read it as an array, aborted jq, and spuriously refused a
+      # green PR. The self-test pins the shape (object/concatenated pages),
+      # pending-null and malformed inputs (never "success").
+      - name: merge door self-test (§3 extraction vs the real endpoint shape)
+        run: bash scripts/merge_pr.sh --self-test
       - name: guardrail check (changed files vs base)
         env:
           GH_TOKEN: ${{ github.token }}
@@ -831,6 +839,25 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest engines/miniMaxEvolutionEngine/tests -q
+
+  # AID-2732 (B5, sources AID-2683/#10 + AID-2684/#3+#17 + AID-2686/#5): no
+  # CI job executed the agentic factory suite — the registry contract was
+  # only exercised by synthetic fixtures in the own-line format, which is how
+  # the canonical main registry (mid-line `· Status: approved` template
+  # header) shipped unloadable (freeze/load_from_registry raised
+  # ContractError). This job runs the P1–P5 suite including the registry
+  # smoke over every intent/*/ with checks.md, so an unloadable factory
+  # registry fails the PR instead of the first real freeze.
+  factory:
+    name: factory (contract+registry)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest factory/tests -q
 
   # AID-2286 (verdict AID-2281 ressalva R1, countersign 1835c128): the two
   # engines landed by PR #471 shipped with zero CI coverage — no job executed
