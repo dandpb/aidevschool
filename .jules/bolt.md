@@ -44,3 +44,7 @@
 ## 2025-02-18 - Optimize array shifts in simulation pathfinding
 **Learning:** In simulation hot loops like BFS pathfinding, using `Array.prototype.splice` to extract elements from a bucket modifies the array in-place, shifting all subsequent elements. This causes O(N) operations and heavy garbage collection overhead, particularly detrimental when running thousands of times per second.
 **Action:** Replace `splice` with a O(1) swap-and-pop technique (`const last = arr.pop(); if (idx < arr.length) arr[idx] = last;`) when removing elements from an unordered array or bucket where element order doesn't matter (e.g., identical cost tiers in pathfinding).
+
+## 2025-02-18 - Avoid array allocations for game state derivations
+**Learning:** Using chained array methods (`.filter().length`, `.reduce()`, `.flatMap().filter().map()`) to compute aggregated metrics in core state evaluation functions (like `stats`) allocates many intermediate arrays, increasing GC pressure and slowing down rendering logic.
+**Action:** Replace chained array derivations with a single-pass O(N) loop when computing multiple related metrics (like `completed`, `done`, `xp`, `axes`, and `bosses`) simultaneously from the same data structure.
