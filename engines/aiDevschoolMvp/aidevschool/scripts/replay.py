@@ -94,8 +94,10 @@ def replay(ledger: list[dict[str, Any]], curriculum: list[dict[str, Any]], skill
                 c["scaffold_level"] = None
                 if frm == "REVIEW_DUE":
                     c["target_days_effective"] = min(2 * (c["target_days_effective"] or 1), 365)
+                    c["next_review_ts"] = None  # mirror t_verdict_pass (AID-2687)
             elif to == "IN_PROGRESS" and frm == "REVIEW_DUE":
                 c["target_days_effective"] = by_id[cid]["target_retention_days"]
+                c["next_review_ts"] = None  # mirror t_verdict_fail (AID-2687)
         elif t == "review_scheduled":
             c["target_days_effective"] = p.get("target_days_effective", c["target_days_effective"])
             c["next_review_ts"] = p.get("next_review_ts")
