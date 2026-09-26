@@ -67,6 +67,7 @@ auditável junto ao trabalho que a gerou e impedir que um resumo substitua a fon
 | --- | --- | --- |
 | Orientação rápida do repositório | [README raiz](../README.md) | Entrada para pessoas e execução local. |
 | Ideia central e públicos | [Visão do produto](VISION.md) | Intenção canônica; não substitui status operacional. |
+| Escopo do release v0.1 | [Escopo do release](RELEASE_SCOPE.md) | Decisão aprovada e congelada: front door, seis missões, local-first e growth freeze prevalecem para `v0.1.0-rc.1`. |
 | Ciclo de uma lição curta | [Contrato de microlição](design/micro-lesson-contract.md) | Objetivo, tentativa, feedback, retry, evidência, progresso, revisão e verificação. |
 | Arquitetura, onboarding e superfícies | [Handbook](handbook/README.md) | Guia de navegação do ecossistema. |
 | Jornada do estudante por objetivo | [Guia do estudante](product-readiness/student-guide.md) | Entrada, ações, resultado visível, limites de estado, recuperação e próxima ação. |
