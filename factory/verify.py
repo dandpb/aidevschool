@@ -69,6 +69,7 @@ def run_checks(
                 finished_at=finished,
                 context_id=context_id,
                 output_path=str((outputs_dir / out_name)),
+                examined_sha=sha,  # AID-2719: a prova carrega o SHA examinado
             )
         )
     return VerifyResult(context_id=context_id, sha=sha, untracked=untracked, proofs=proofs)

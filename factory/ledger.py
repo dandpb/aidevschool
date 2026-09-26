@@ -71,11 +71,20 @@ class RunLedger:
                     receipts.append(_parse_receipt_line(line_no, line))
         return receipts
 
-    def verify_report(self) -> dict:
+    def verify_report(self, expected_head: str | None = None) -> dict:
         """Veredito estruturado da cadeia — nunca derruba exceção por linha
         malformada (AID-2728 S5b): qualquer problema vira
-        ``{"chain_ok": false, "error": {"line", "reason"}}``."""
-        report: dict = {"entries": 0, "hashes_ok": True, "chain_ok": True, "error": None}
+        ``{"chain_ok": false, "error": {"line", "reason"}}``.
+
+        AID-2719 (X6): `expected_head` é a âncora externa do head (persistida
+        em `state.json`/`receipt.summary.json`, fora do ledger). Cadeia
+        internamente íntegra mas com head ≠ âncora = sufixo truncado ou
+        reescrito → `chain_ok=false` com motivo de âncora.
+        """
+        report: dict = {
+            "entries": 0, "hashes_ok": True, "chain_ok": True, "error": None,
+            "head": None, "anchored_head": expected_head,
+        }
         prev_hash = None
         prev_seq = 0
         with self.path.open("r", encoding="utf-8") as fh:
@@ -105,12 +114,23 @@ class RunLedger:
                     report["error"] = {"line": line_no, "reason": "prev_hash does not chain"}
                     return report
                 prev_seq, prev_hash = r.seq, r.hash
+        report["head"] = prev_hash
+        if report["chain_ok"] and expected_head is not None and prev_hash != expected_head:
+            report["chain_ok"] = False
+            report["error"] = {
+                "line": report["entries"],
+                "reason": (
+                    f"ledger head {prev_hash} != external anchor {expected_head} "
+                    "(suffix truncated or rewritten)"
+                ),
+            }
         return report
 
-    def verify_chain(self) -> bool:
+    def verify_chain(self, expected_head: str | None = None) -> bool:
         """Recomputa a cadeia; retorna False em qualquer divergência,
-        inclusive linha ilegível (AID-2728 S5b — sem exceção)."""
-        return self.verify_report()["chain_ok"]
+        inclusive linha ilegível (AID-2728 S5b — sem exceção) e head divergente
+        da âncora externa, quando informada (AID-2719 X6)."""
+        return self.verify_report(expected_head=expected_head)["chain_ok"]
 
     def last(self) -> Receipt | None:
         entries = self.read()
