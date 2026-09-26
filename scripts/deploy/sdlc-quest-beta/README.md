@@ -8,6 +8,7 @@ URL pública (beta, `noindex`): **https://aidevschool-sdlcquest.netlify.app**
 | Site Netlify (free tier, conta founder) | `aidevschool-sdlcquest` · id `caa23a84-68dc-4c8d-87fe-e0e21566fa4f` |
 | Deploy inicial | `6ab723bfcd6907b88fe9a6cb` (2026-09-26) · main `4461841f` |
 | Re-publicação canônica (via `publish.sh`) | `6ab72452cdaaa08bd1c5f621` (2026-09-26) · main `4461841f` · pins SHA256SUMS verificados |
+| Re-publicação com headers (fix AID-2704/F1) | `6ab72b7a2cf8dc2c3fae9b1e` (2026-09-26) · main `2d9928f2` · headers noindex/nosniff/no-referrer/CSP verificados ao vivo por curl (gate pós-deploy do próprio script) |
 | Superfície publicada | `index.html`, `sdlc-quest.html`, `src/*.{js,css}` — idêntica ao que `tools/serve.cjs` expõe localmente |
 | Registro/intent | `intent/AID-2674-sdlc-quest-beta-url/` · task record AID-2674 |
 
@@ -46,9 +47,9 @@ Não existe estado de dados: reversão é só conteúdo estático.
 
 ```bash
 cd scripts/deploy/sdlc-quest-beta/smoke
-npm install --no-fund --no-audit   # @playwright/test 1.63.0 (pin em package.json)
-npx playwright install chromium    # navegador (primeira vez)
-npx playwright test                # QUEST_URL opcional; default = URL pública
+npm install --include=dev --no-fund --no-audit   # @playwright/test 1.63.0 (pin em package.json; --include=dev cobre .npmrc com omit=dev)
+npx playwright install chromium                  # navegador (primeira vez)
+npx playwright test                              # QUEST_URL opcional; default = URL pública
 ```
 
 Joga a campanha inteira até o gate de produção (missões 1–5, 15/18) e falha
