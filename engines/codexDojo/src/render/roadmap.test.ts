@@ -56,6 +56,9 @@ describe("renderRoadmap", () => {
     const html = renderRoadmap(stateWith({ projectFilter: "all" }))
 
     const firstProject = projects[0]
+    expect(firstProject).toBeDefined()
+    if (!firstProject) return
+
     expect(html).toContain(`<span>${escapeHtml(firstProject.id.toUpperCase())}</span>`)
     expect(html).toContain(`<span>Nível ${escapeHtml(firstProject.level)}</span>`)
     expect(html).toContain(`<dd>${escapeHtml(firstProject.language)}</dd>`)
