@@ -1,12 +1,19 @@
 # Intent: gate da fábrica promove evidência não vinculada — amarrar state.json ⇄ ledger ⇄ proofs
 
-Author: QA Lead (achados X4/X5/X6, issue AID-2719 / stress AID-2682) + countersign SM (verificação first-hand 2026-09-26) · Change-id: AID-2719-gate-evidence-binding · Status: draft
+Author: QA Lead (achados X4/X5/X6, issue AID-2719 / stress AID-2682) + countersign SM (verificação first-hand 2026-09-26) · Change-id: AID-2719-gate-evidence-binding · Status: accepted
 
 > Origem: issue Paperclip **AID-2719** (CORR FACTORY-STRESS, filha da instância
 > de stress AID-2682 do QA Lead). Link, não reescrita: o corpo da issue carrega
 > os três defeitos com repros (`/paperclip/w2710qa/stress/test_stress_qa.py`,
 > base `2d9928f2`) e as correções sugeridas. Maintain stage do playbook: achado
 > de estresse retorna como intent — sem hotfix fora do loop.
+
+> **Aceite do dono:** CEO em AID-2783 (2026-09-26T04:51Z) — critérios 1–4
+> aceitos; implementação despachada ao FPE na ORDEM **AID-2784**. A main
+> evoluiu desde o achado (fencing #529/AID-2721, âncora de prova no ledger
+> #530/AID-2715, contrato de exit #535/AID-2737, PLAN_APPROVED mid-line
+> #538/AID-2732): a spec DEVE ser escrita contra a main corrente e revalidar
+> quais brechas X4/X5/X6 já foram total/parcialmente fechadas por #530.
 
 ## Problem
 
