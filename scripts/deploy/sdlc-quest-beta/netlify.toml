@@ -1,0 +1,33 @@
+# AID-2674 — SDLC Quest beta surface (static, free tier, noindex).
+# Source of truth for the publish flow: scripts/deploy/sdlc-quest-beta/README.md
+# in dandpb/aidevschool. Site aidevschool-sdlcquest (Netlify free tier,
+# founder account). No build step: files are copied verbatim from
+# engines/sdlc-quest at a main revision pinned by SHA256SUMS.txt.
+
+[build]
+  publish = "."
+
+# Mirror the posture of the package's own loopback server (tools/serve.cjs):
+# nosniff + no-referrer. Beta test surface => not indexed (same call as the
+# beta-hub page): X-Robots-Tag keeps index.html byte-identical to the engine
+# package instead of injecting a robots meta tag.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Robots-Tag = "noindex, follow"
+
+# The game is dependency-free client-side JS/CSS with no network calls
+# (verified: no fetch/XHR/Image in src/*, only localStorage). Strict CSP
+# scoped to the multi-file entry; the offline single-file sdlc-quest.html
+# is inline by design and only carries the baseline headers above.
+[[headers]]
+  for = "/"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"

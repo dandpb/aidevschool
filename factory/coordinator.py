@@ -4,6 +4,11 @@ Recebe o evento, reserva o item (lease), congela o contrato, abre worktree,
 aciona autor e Verifier distintos, registra transições no ledger e retoma
 após interrupção (`resume`). Uma tarefa em voo por vez no piloto.
 
+Retomada idempotente por estação (AID-2726): o state é gravado ANTES dos
+efeitos de cada estação (`freezing` como write-ahead), o build reclama worktree
+de tentativa morta e o gate grava o resumo antes da transição final — kill
+físico em qualquer janela deixa a run convergente via retry da estação.
+
 Runtime home (fora do Git): `.scratch/factory/`::
 
     .scratch/factory/
@@ -21,6 +26,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -28,7 +34,14 @@ from . import gitwork
 from .contract import Contract, load_from_registry
 from .gate import GateDecision, evaluate
 from .ledger import RunLedger
-from .model import Receipt, WorkEvent, digest_obj, utcnow
+from .model import (
+    Receipt,
+    WorkEvent,
+    digest_obj,
+    evidence_digest,
+    proof_evidence,
+    utcnow,
+)
 from .queue import EventQueue, FactoryError, LeaseHeldError, Lease
 from .verify import VerifyResult, run_checks
 
@@ -141,27 +154,62 @@ class Coordinator:
 
     def freeze(self, run_id: str, change_id: str, context_id: str,
                base_sha: str | None = None) -> Contract:
-        event_id = run_id.removeprefix("run-")
-        lease = self._fence(run_id, acting_context=context_id)
+        """Estação Congelar — write-ahead e reentrada idempotente (S1a, AID-2726).
+
+        O state (`station="freezing"`) é gravado ANTES dos efeitos: um kill no
+        meio da estação deixa a run retomável. Reentradas: `freezing` recongela
+        (reclaim de contract dir parcial/órfão); `contracted` devolve o contrato
+        e completa recibo pendente; contract dir órfão sem state (ordem antiga
+        de escritas) é reclamado e recongelado."""
         station_from = "queued"
-        base = base_sha or gitwork._git(self.repo, "rev-parse", "HEAD").stdout.strip()
+        prior: dict | None = None
+        if self._state_path(run_id).exists():
+            prior = self._load_state(run_id)
+            if prior["station"] == "contracted":
+                if prior["change_id"] != change_id:
+                    raise CoordinatorError(
+                        f"run {run_id} is already contracted for {prior['change_id']}"
+                    )
+                self._fence(run_id, prior, acting_context=context_id)
+                contract = Contract.load_frozen(self._run_dir(run_id))
+                self._backfill_receipt(
+                    run_id, station_from="freezing", station_to="contracted",
+                    actor_role="coordinator", context_id=context_id,
+                    sha=prior["base_sha"], contract_digest=prior["contract_digest"],
+                )
+                return contract
+            if prior["station"] != "freezing":
+                raise CoordinatorError(
+                    f"run {run_id} is at {prior['station']}, cannot freeze"
+                )
+            station_from = "freezing"
+        lease = self._fence(run_id, prior, acting_context=context_id)
+        base = (base_sha if base_sha is not None else (prior or {}).get("base_sha")) \
+            or gitwork._git(self.repo, "rev-parse", "HEAD").stdout.strip()
         contract = load_from_registry(self.registry, change_id, base)
         run_dir = self._run_dir(run_id)
-        contract.freeze(run_dir)
         state = {
             "run_id": run_id,
-            "event_id": event_id,
+            "event_id": run_id.removeprefix("run-"),
             "change_id": change_id,
-            "station": "contracted",
+            "station": "freezing",
             "base_sha": base,
             "contract_digest": contract.digest,
             "lease_holder": lease.holder,
             "lease_epoch": lease.epoch,
             "author_context": None,
             "verifier_context": None,
-            "attempts": 1,
+            "attempts": (prior["attempts"] + 1) if prior else 1,
             "updated_at": utcnow(),
         }
+        self._save_state(run_id, state)
+        contract_dir = run_dir / "contract"
+        if contract_dir.exists():
+            # Diretório parcial (kill durante o freeze) ou órfão sem state
+            # (ordem antiga de escritas): reclaim e recongela.
+            shutil.rmtree(contract_dir)
+        contract.freeze(run_dir)
+        state.update(station="contracted", updated_at=utcnow())
         self._save_state(run_id, state)
         self._append(
             run_id, station_from=station_from, station_to="contracted",
@@ -224,16 +272,29 @@ class Coordinator:
                      verify_sha=result.sha, verify_untracked=result.untracked,
                      updated_at=utcnow())
         self._save_state(run_id, state)
+        # AID-2715 — a âncora da prova (check, cmd, exit, digest do output)
+        # viaja DENTRO do recibo selado; digests no runtime são só cache.
+        evidence = [proof_evidence(p) for p in result.proofs]
         self._append(
             run_id, station_from="built", station_to="verified",
             actor_role="verifier", context_id=verifier_context, sha=result.sha,
             contract_digest=contract.digest,
             proof_refs=[p.check_id for p in result.proofs],
+            proof_digests=[evidence_digest(e) for e in evidence],
+            detail={"proof_evidence": evidence},
         )
         return result
 
     def gate(self, run_id: str, context_id: str, pr_head_sha: str | None = None) -> GateDecision:
+        """Estação Gate — write-order e reentrada idempotente (S1d, AID-2726).
+
+        O resumo é gravado ANTES da transição visível para `promoted`; run
+        `promoted` sem resumo (kill antigo/legado) regenera a partir do recibo
+        de promoção, sem re-avaliar e sem duplicar recibos."""
         state = self._load_state(run_id)
+        if state["station"] == "promoted":
+            self._fence(run_id, state)
+            return self._resume_promoted(run_id, state, context_id)
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
         self._fence(run_id, state)
@@ -260,8 +321,13 @@ class Coordinator:
             verify=verify,
             author_context=state["author_context"],
             pr_head_sha=pr_head_sha,
+            anchored_evidence=self._proof_anchor(run_id),
         )
         station_to = "promoted" if decision.ok else "blocked"
+        # S1d (AID-2726) write-order: resumo antes da transição — kill entre
+        # resumo e state deixa `verified` com resumo (retry re-avalia e
+        # regrava); kill pós-state encontra o resumo já presente.
+        self._write_receipt_summary(run_id, decision)
         state.update(station=station_to, updated_at=utcnow())
         self._save_state(run_id, state)
         self._append(
@@ -270,8 +336,45 @@ class Coordinator:
             contract_digest=registry_digest,
             detail={"reasons": decision.reasons} if decision.reasons else {"pr_head": pr_head_sha},
         )
-        self._write_receipt_summary(run_id, decision)
         return decision
+
+    def _resume_promoted(self, run_id: str, state: dict, context_id: str) -> GateDecision:
+        """S1d (AID-2726): reentrada idempotente do gate em run promoted."""
+        summary_path = self._run_dir(run_id) / "receipt.summary.json"
+        if summary_path.exists():
+            data = json.loads(summary_path.read_text(encoding="utf-8"))
+            return GateDecision(verdict=data["verdict"], reasons=data["reasons"])
+        promo = next(
+            (r for r in self._ledger(run_id).read() if r.station_to == "promoted"), None
+        )
+        if promo is None:
+            raise CoordinatorError(
+                f"run {run_id} is promoted but has no promotion receipt to "
+                "rebuild the summary from"
+            )
+        decision = GateDecision(verdict="promote",
+                                reasons=list(promo.detail.get("reasons", [])))
+        self._write_receipt_summary(run_id, decision)
+        self._backfill_receipt(
+            run_id, station_from="verified", station_to="promoted",
+            actor_role="coordinator", context_id=context_id,
+            sha=state.get("verify_sha"), contract_digest=promo.contract_digest,
+        )
+        return decision
+
+    def _backfill_receipt(self, run_id: str, *, station_from: str, station_to: str,
+                          actor_role: str, context_id: str, sha: str | None = None,
+                          contract_digest: str | None = None) -> None:
+        """S1a/S1d (AID-2726): completa recibo de transição que um kill deixou
+        pendente. Idempotente — não acrescenta se a transição já está no
+        ledger; backfills são acréscimos marcados, jamais reescritas."""
+        if self._ledger(run_id).find(station_to):
+            return
+        self._append(
+            run_id, station_from=station_from, station_to=station_to,
+            actor_role=actor_role, context_id=context_id, sha=sha,
+            contract_digest=contract_digest, detail={"backfill": True},
+        )
 
     def _load_proofs(self, run_id: str) -> list:
         from .model import Proof
@@ -280,6 +383,21 @@ class Coordinator:
             (self._run_dir(run_id) / "proofs" / "proofs.json").read_text(encoding="utf-8")
         )
         return [Proof(**item) for item in meta]
+
+    def _proof_anchor(self, run_id: str) -> dict[str, str] | None:
+        """Âncora de evidência do último recibo `verified` (AID-2715).
+
+        Falha fechado: sem recibo, ou com detalhe/digests inconsistentes,
+        devolve None e o gate recusa provas auto-atestadas.
+        """
+        receipts = self._ledger(run_id).find("verified")
+        if not receipts:
+            return None
+        receipt = receipts[-1]
+        evidence = receipt.detail.get("proof_evidence") or []
+        if len(evidence) != len(receipt.proof_digests):
+            return None
+        return {e["check_id"]: d for e, d in zip(evidence, receipt.proof_digests)}
 
     def _write_receipt_summary(self, run_id: str, decision: GateDecision) -> None:
         state = self._load_state(run_id)
@@ -293,6 +411,7 @@ class Coordinator:
             "contract_digest": state["contract_digest"],
             "author_context": state.get("author_context"),
             "verifier_context": state.get("verifier_context"),
+            "proof_anchor": self._proof_anchor(run_id),
             "generated_at": utcnow(),
         }
         (self._run_dir(run_id) / "receipt.summary.json").write_text(

@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 
 from .contract import Contract
 from .gitwork import TreeState, tree_drift
+from .model import evidence_digest, proof_evidence
 from .verify import VerifyResult, revalidate_proofs, standard_profile_gaps
 
 
@@ -24,6 +25,35 @@ class GateDecision:
         return self.verdict == "promote"
 
 
+def evidence_anchor_gaps(
+    verify: VerifyResult, anchored: dict[str, str] | None
+) -> list[str]:
+    """AID-2715 — prova auto-atestada não é evidência.
+
+    Os digests recalculados a partir do runtime (proofs.json + outputs) têm
+    que bater com a âncora selada no recibo `verified` do ledger (cadeia de
+    hashes). Sem âncora, ou com divergência, bloqueia — fail-closed.
+    """
+    if anchored is None:
+        return ["P2: proof evidence has no ledger anchor (self-attested proofs refused)"]
+    reasons: list[str] = []
+    current: dict[str, str] = {}
+    for proof in verify.proofs:
+        digest = evidence_digest(proof_evidence(proof))
+        current[proof.check_id] = digest
+        if proof.check_id not in anchored:
+            reasons.append(f"P2: {proof.check_id}: proof missing from ledger anchor")
+        elif anchored[proof.check_id] != digest:
+            reasons.append(
+                f"P2: {proof.check_id}: proof evidence diverges from ledger anchor "
+                "(tampered output and/or forged proofs.json)"
+            )
+    for check_id in anchored:
+        if check_id not in current:
+            reasons.append(f"P2: {check_id}: anchored proof missing from runtime proofs")
+    return reasons
+
+
 def evaluate(
     *,
     contract: Contract,
@@ -32,6 +62,7 @@ def evaluate(
     verify: VerifyResult,
     author_context: str,
     pr_head_sha: str | None = None,
+    anchored_evidence: dict[str, str] | None = None,
 ) -> GateDecision:
     reasons: list[str] = []
 
@@ -63,6 +94,7 @@ def evaluate(
             reasons.append(f"P2: check {proof.check_id} failed (exit={proof.exit_code})")
     reasons.extend(revalidate_proofs(verify))
     reasons.extend(standard_profile_gaps(contract, verify))
+    reasons.extend(evidence_anchor_gaps(verify, anchored_evidence))
 
     # P5 — PR e CI concordam sobre o head: o head do PR é exatamente o SHA provado.
     if pr_head_sha is not None and pr_head_sha != verify.sha:
