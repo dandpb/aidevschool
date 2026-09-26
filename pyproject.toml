@@ -50,6 +50,8 @@ testpaths = [
   "curriculum/ai-literacy/tools/tests",
   # Product-readiness canonical-source, validation, and generated-view checks.
   "docs/product-readiness/tests",
+  # Agentic factory POC exit criteria (P1-P5, negative cases included).
+  "factory/tests",
 ]
 python_files = ["test_*.py"]
 
