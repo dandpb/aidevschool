@@ -110,7 +110,7 @@ snapshot horário; o pre-restore-backup preserva o estado anterior sobrescrito.
 
 | Data (UTC) | Snapshot | Resultado | Receipt |
 |---|---|---|---|
-| 2026-09-26 | (primeira execução — ver issue AID-2885) | — | — |
+| 2026-09-26T11:55:14Z | `20260926T115514Z` (content_id `71204999c12f`) | **PASS** — verify, tamper-detection, restore, byte-diff 0 diffs | `drills/DRILL-20260926T115514Z.log` (+ issue AID-2885) |
 
 > Producer never verifies: este runbook preserva bytes e reporta integridade;
 > nunca marca domínio/mastery. Storage dá receipt, não veredito.
