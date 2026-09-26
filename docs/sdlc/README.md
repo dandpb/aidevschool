@@ -358,6 +358,10 @@ CEO: AID-2763. Desde AID-2768 a classe F é **mecanicamente impossível**:
   cadeia live na hora do merge, exige o check verde no head, recusa `--admin`,
   e cita o countersign operativo na merge message. `gh pr merge` cruza é
   bloqueado em runtimes Claude pelo hook `guard-commands.sh` (regra 3).
+  §3 resolve o slug via `gh repo view` (fallback com strip explícito de
+  `.git` — POSIX ERE não tem lazy; AID-2836) e falha de transporte no
+  `gh api` vira `REFUSED` **distinguível**, nunca `absent` enganoso com CI
+  verde.
 
 ### Contrato de aceite (fail-closed em toda ambiguidade)
 

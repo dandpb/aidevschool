@@ -52,6 +52,19 @@ check_state() { # $1=checks-json $2=check name -> prints conclusion or "absent"
     '[ .[] | .check_runs[]? | select(.name==$n) ][0].conclusion // "absent"'
 }
 
+# repo_slug (AID-2836): owner/repo from an origin remote URL. POSIX ERE has
+# NO lazy quantifier: the pre-fix 's#.*[:/]([^/:]+/[^/]+?)(\.git)?$#\1#'
+# matched greedy, the optional (\.git)? group stayed empty, and remotes
+# ending in '.git' yielded 'owner/repo.git' → gh api 404 → stderr discarded
+# → both checks read 'absent' while CI was green (SM AID-2799 §4, w2812
+# repro; first real §3 exercise refused PR #545's merge). Strip the '.git'
+# suffix EXPLICITLY, then reduce to the last two path segments. Runtime §3
+# prefers the authoritative 'gh repo view'; this parser is the offline
+# fallback and what the self-test pins for BOTH remote forms.
+repo_slug() { # $1=origin remote URL -> owner/repo ('.git' stripped)
+  printf '%s' "$1" | sed -E -e 's#[/ ]+$##' -e 's#\.git$##' -e 's#^.*[:/]([^/:]+/[^/]+)$#\1#'
+}
+
 PR=""
 METHOD="--merge"
 SUBJECT=""
@@ -92,6 +105,15 @@ if [ $SELF_TEST -eq 1 ]; then
   st_check "empty check_runs reads absent"          "absent"  "$(check_state "$empty_obj" "countersign-gate")"
   fail_page="$(mk_page "countersign-gate" "failure" "t3")"
   st_check "red conclusion survives extraction"     "failure" "$(check_state "$fail_page" "countersign-gate")"
+  # AID-2836: slug extraction must handle BOTH remote forms — with '.git'
+  # (the 404-on-gh-api latent defect: the pre-fix ERE kept the suffix) and
+  # bare — across https/scp/ssh URL shapes.
+  st_check "slug https remote with .git"   "dandpb/aidevschool" "$(repo_slug "https://github.com/dandpb/aidevschool.git")"
+  st_check "slug https remote bare"        "dandpb/aidevschool" "$(repo_slug "https://github.com/dandpb/aidevschool")"
+  st_check "slug scp remote with .git"     "dandpb/aidevschool" "$(repo_slug "git@github.com:dandpb/aidevschool.git")"
+  st_check "slug scp remote bare"          "dandpb/aidevschool" "$(repo_slug "git@github.com:dandpb/aidevschool")"
+  st_check "slug ssh remote with .git"     "dandpb/aidevschool" "$(repo_slug "ssh://git@github.com/dandpb/aidevschool.git")"
+  st_check "slug trailing slash tolerated" "dandpb/aidevschool" "$(repo_slug "https://github.com/dandpb/aidevschool/")"
   echo "merge_pr self-test (§3 extraction): $pass passed, $fail failed"
   [ $fail -eq 0 ] || exit 1
   exit 0
@@ -119,10 +141,30 @@ if ! python3 "$GATE" --pr "$PR"; then
 fi
 
 # --- 3. required check-runs present AND success on the head -----------------
-# (extraction via check_state, defined near the header — AID-2818)
+# (extraction via check_state, defined near the header — AID-2818;
+#  slug + transport visibility — AID-2836)
 HEAD_SHA="$(gh pr view "$PR" --json headRefOid -q .headRefOid)"
-SLUG="$(git remote get-url origin | sed -E 's#.*[:/]([^/:]+/[^/]+?)(\.git)?$#\1#')"
-checks_json="$(gh api "repos/$SLUG/commits/$HEAD_SHA/check-runs" --paginate 2>/dev/null)"
+[ -n "$HEAD_SHA" ] || { echo "REFUSED: §3 cannot resolve PR head (gh pr view headRefOid empty)." >&2; exit 1; }
+# Authoritative slug first (gh repo view resolves canonical owner/repo for
+# either remote form); explicit '.git'-stripping parser as offline fallback
+# (repo_slug above). Pre-fix, a remote ending in '.git' kept the suffix in
+# the slug and §3 404'd on every call.
+SLUG="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)"
+[ -n "$SLUG" ] || SLUG="$(repo_slug "$(git remote get-url origin)")"
+[ -n "$SLUG" ] || { echo "REFUSED: §3 cannot resolve repository slug (gh repo view and remote parse both empty)." >&2; exit 1; }
+# Transport failures must be distinguishable from 'absent' (AID-2836): the
+# pre-fix '2>/dev/null' turned a 404 into empty json, check_state read
+# 'absent' for both checks, and the door fail-closed REFUSING a green PR
+# with a misleading reason. Now the gh api stderr is captured and reported.
+api_err="$(mktemp)"
+checks_json="$(gh api "repos/$SLUG/commits/$HEAD_SHA/check-runs" --paginate 2>"$api_err")"; api_rc=$?
+if [ "$api_rc" -ne 0 ]; then
+  echo "REFUSED: §3 gh api check-runs TRANSPORT FAILURE (rc=$api_rc, slug=$SLUG, head=$HEAD_SHA) — NOT 'absent': fix the transport and re-run the door." >&2
+  sed 's/^/  | /' "$api_err" >&2
+  rm -f "$api_err"
+  exit 1
+fi
+rm -f "$api_err"
 gate_state="$(check_state "$checks_json" "countersign-gate")"
 guard_state="$(check_state "$checks_json" "SDLC guardrails (diff)")"
 if [ "$gate_state" != "success" ] || [ "$guard_state" != "success" ]; then
