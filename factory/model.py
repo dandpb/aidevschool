@@ -100,13 +100,18 @@ class Proof:
 
 @dataclass
 class Lease:
-    """Reserva exclusiva do item (P1: dois agentes não assumem o mesmo item)."""
+    """Reserva exclusiva do item (P1: dois agentes não assumem o mesmo item).
+
+    `epoch` é o fencing token: começa em 1 e só cresce em takeover pós-expiração.
+    Writers com época velha são recusados pelas estações (AID-2718/AID-2721).
+    """
 
     event_id: str
     holder: str
     acquired_at: str = field(default_factory=utcnow)
     heartbeat_at: str = field(default_factory=utcnow)
     ttl_seconds: int = 3600
+    epoch: int = 1
 
     def to_json(self) -> str:
         return canonical_json(asdict(self))
