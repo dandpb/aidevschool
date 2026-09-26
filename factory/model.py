@@ -10,7 +10,7 @@ from __future__ import annotations
 import datetime as _dt
 import hashlib
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import dataclass, field, asdict, fields
 from pathlib import Path
 from typing import Optional
 
@@ -156,7 +156,10 @@ class Lease:
 
     @classmethod
     def from_json(cls, text: str) -> "Lease":
-        return cls(**json.loads(text))
+        # Leitura tolerante (AID-2762): chaves desconhecidas são ignoradas em
+        # vez de envenenar `lease_of`/`claim`/`lease_expired` com TypeError.
+        known = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in json.loads(text).items() if k in known})
 
 
 @dataclass

@@ -81,11 +81,32 @@ runs promoted sem resumo. Reentrada em `contracted`/`promoted` é idempotente e
 completa recibos pendentes com `detail.backfill` (acrécimo no ledger, jamais
 reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
 
+## Liberação de lease: túmulo legível (AID-2762)
+
+`release(event_id)` com `holder_enforcement=True` (default) NÃO remove o
+arquivo do lease: regrava atomicamente (tmp + replace) preenchendo o campo
+`released_at` — um **túmulo legível**. A semântica de release é
+**fail-closed conforme AID-2728 S7 (autoritativa, PR #535)** — o takeover
+pós-túmulo originalmente proposto aqui foi retirado no update-branch:
+
+- `Lease.released_at` é campo first-class; `Lease.from_json` ignora chaves
+  desconhecidas (leitura tolerante — arquivos de lease nunca envenenam
+  `lease_of`/`claim`/`lease_expired` com `TypeError`).
+- Item liberado NÃO volta para `pending()` (o túmulo ocupa o slot) e NÃO é
+  re-claimável — nem após expiração: `claim` → `LeaseHeldError`
+  "re-intake required"; `heartbeat` e estações recusam (fence). Retomar o
+  item exige re-intake pela fila.
+- Takeover com época incrementada + recibo no ledger existe SOMENTE para
+  lease VIVO expirado (AID-2721; regressão
+  `factory/tests/test_exit_contract_2728.py::test_takeover_after_expiry_still_works`).
+- `release(event_id, holder_enforcement=False)` remove o arquivo (caminho
+  interno do takeover em `claim`): sem túmulo, o item volta à fila.
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |
 | --- | --- | --- |
-| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake atômico create-if-absent (tmp por escritor + `os.link`, divergência concorrente/sequencial → `FactoryError`, AID-2727/AID-2731); fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
+| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake atômico create-if-absent (tmp por escritor + `os.link`, divergência concorrente/sequencial → `FactoryError`, AID-2727/AID-2731); fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721); takeover atômico (lockfile por evento + swap único `os.replace`) e perdedor de claim sempre com erro tipado (AID-2725) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
 | P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256, examined_sha}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715; `examined_sha` AID-2719) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P2/P3+ | Contrato sem nenhum check `standard` não promove sozinho com risco ≥ medium: exige revisão humana explícita registrada (recibo `actor_role=human`, revisor ≠ autor ≠ verificador); risco ausente = desconhecido, fail-closed (AID-2719 X5) | `gate.minimum_profile_gaps` + `coordinator.record_review` + CLI `review` |
