@@ -21,14 +21,19 @@ interface ZoneSnapshot {
   readonly blockId: string | null
 }
 
-function snapshotZones(grid: Grid): ReadonlyMap<string, ZoneSnapshot> {
-  const map = new Map<string, ZoneSnapshot>()
-  grid.forEach((cell, x, y) => {
-    if (cell.kind === "zone") {
-      map.set(`${x},${y}`, { type: cell.type, blockId: cell.blockId })
+function snapshotZonesFlat(grid: Grid): ReadonlyArray<ZoneSnapshot | null> {
+  const arr = new Array<ZoneSnapshot | null>(grid.width * grid.height).fill(null)
+
+  // Optimization: Use traditional loop instead of grid.forEach to avoid closure allocation
+  for (let y = 0; y < grid.height; y++) {
+    for (let x = 0; x < grid.width; x++) {
+      const cell = grid.cellAt(x, y)
+      if (cell && cell.kind === "zone") {
+        arr[y * grid.width + x] = { type: cell.type, blockId: cell.blockId }
+      }
     }
-  })
-  return map
+  }
+  return arr
 }
 
 /**
@@ -37,11 +42,10 @@ function snapshotZones(grid: Grid): ReadonlyMap<string, ZoneSnapshot> {
  * converted *to* road (useful for tests and HUD counts).
  */
 export function recomputeRoads(grid: Grid): number {
-  const zones = snapshotZones(grid)
-  const shouldBeRoad: boolean[][] = []
-  for (let y = 0; y < grid.height; y++) {
-    shouldBeRoad.push(new Array(grid.width).fill(false))
-  }
+  const zones = snapshotZonesFlat(grid)
+
+  // Optimization: Flatten shouldBeRoad to a 1D array to improve memory locality and avoid 2D array allocations
+  const shouldBeRoad = new Uint8Array(grid.width * grid.height)
 
   for (let y = 0; y < grid.height; y++) {
     for (let x = 0; x < grid.width; x++) {
@@ -50,15 +54,22 @@ export function recomputeRoads(grid: Grid): number {
 
       // Rule (a) — direct adjacency to an exposed zone.
       let matched = false
-      for (const [dx, dy] of ROAD_NEIGHBOR_OFFSETS) {
-        const nx = x + dx
-        const ny = y + dy
+      // Optimization: Unroll for...of to avoid iterator allocation in this hot loop
+      for (let i = 0; i < ROAD_NEIGHBOR_OFFSETS.length; i++) {
+        const offset = ROAD_NEIGHBOR_OFFSETS[i]
+        if (!offset) continue
+        const nx = x + offset[0]
+        const ny = y + offset[1]
+
+        // Inline bounds check to skip grid.cellAt if possible
+        if (nx < 0 || ny < 0 || nx >= grid.width || ny >= grid.height) continue
         const neighbor = grid.cellAt(nx, ny)
         if (neighbor?.kind !== "zone") continue
-        const zone = zones.get(`${nx},${ny}`)
+
+        const zone = zones[ny * grid.width + nx]
         if (!zone) continue
-        const row = shouldBeRoad[y]
-        if (row) row[x] = true
+
+        shouldBeRoad[y * grid.width + x] = 1
         matched = true
         break
       }
@@ -69,20 +80,23 @@ export function recomputeRoads(grid: Grid): number {
       // direct neighbours when two zones share a road edge.
       let hasRoadNeighbor = false
       let hasExposedZone = false
-      for (const [dx, dy] of ROAD_NEIGHBOR_OFFSETS) {
-        const nx = x + dx
-        const ny = y + dy
+      for (let i = 0; i < ROAD_NEIGHBOR_OFFSETS.length; i++) {
+        const offset = ROAD_NEIGHBOR_OFFSETS[i]
+        if (!offset) continue
+        const nx = x + offset[0]
+        const ny = y + offset[1]
+
+        if (nx < 0 || ny < 0 || nx >= grid.width || ny >= grid.height) continue
         const neighbor = grid.cellAt(nx, ny)
         if (!neighbor) continue
         if (neighbor.kind === "road") hasRoadNeighbor = true
         if (neighbor.kind === "zone") {
-          const zone = zones.get(`${nx},${ny}`)
+          const zone = zones[ny * grid.width + nx]
           if (zone) hasExposedZone = true
         }
       }
       if (hasRoadNeighbor && hasExposedZone) {
-        const row = shouldBeRoad[y]
-        if (row) row[x] = true
+        shouldBeRoad[y * grid.width + x] = 1
       }
     }
   }
@@ -93,7 +107,7 @@ export function recomputeRoads(grid: Grid): number {
     for (let x = 0; x < grid.width; x++) {
       const cell = grid.cellAt(x, y)
       if (!cell || cell.kind === "zone") continue
-      const wantRoad = shouldBeRoad[y]?.[x] === true
+      const wantRoad = shouldBeRoad[y * grid.width + x] === 1
       if (wantRoad) {
         if (cell.kind !== "road") {
           grid.setCell(x, y, { kind: "road" })
