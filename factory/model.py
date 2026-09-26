@@ -85,7 +85,12 @@ class Check:
 
 @dataclass
 class Proof:
-    """Resultado executável de um check, ligado a um SHA pelo recibo."""
+    """Resultado executável de um check, ligado a um SHA pelo recibo.
+
+    `examined_sha` (AID-2719) é o SHA da árvore que o verificador examinou
+    ao produzir a prova; provas legadas (campo ausente → None) não têm como
+    provar contra qual commit correram e o gate exige re-prova.
+    """
 
     check_id: str
     cmd: str
@@ -95,6 +100,7 @@ class Proof:
     finished_at: str
     context_id: str
     output_path: str
+    examined_sha: Optional[str] = None
 
     @property
     def passed(self) -> bool:
@@ -104,12 +110,17 @@ class Proof:
 def proof_evidence(proof: Proof) -> dict:
     """Âncora mínima de uma prova (AID-2715): o que o recibo `verified`
     sela no ledger encadeado. Tudo o que ficar só no runtime (gitignored)
-    é auto-atestável e não conta como evidência."""
+    é auto-atestável e não conta como evidência.
+
+    AID-2719: `examined_sha` entra na âncora — o digest selado amarra a
+    prova ao commit examinado, não só ao output.
+    """
     return {
         "check_id": proof.check_id,
         "cmd_sha256": sha256_text(proof.cmd),
         "exit_code": proof.exit_code,
         "output_sha256": proof.output_sha256,
+        "examined_sha": proof.examined_sha,
     }
 
 

@@ -102,11 +102,31 @@ def cmd_ledger(args: argparse.Namespace) -> int:
     if args.verify:
         # AID-2728 S5b: veredito estruturado — linha malformada vira
         # {"chain_ok": false, "error": {"line", "reason"}} + exit 2.
-        report = RunLedger(path).verify_report()
+        # AID-2719 (X6): a âncora externa do head (state.ledger_head) entra
+        # na verificação — truncagem de sufixo reprova mesmo com cadeia de
+        # prefixo íntegra.
+        state_path = home / "runs" / f"run-{args.event_id}" / "state.json"
+        expected_head = None
+        if state_path.exists():
+            try:
+                expected_head = json.loads(
+                    state_path.read_text(encoding="utf-8")
+                ).get("ledger_head")
+            except (json.JSONDecodeError, OSError):
+                expected_head = None  # state ilegível → só a cadeia interna
+        report = RunLedger(path).verify_report(expected_head=expected_head)
         print(json.dumps(report))
         return 0 if (report["hashes_ok"] and report["chain_ok"]) else 2
     for e in load_raw(path):
         print(json.dumps(e))
+    return 0
+
+
+def cmd_review(args: argparse.Namespace) -> int:
+    coord = _coord(args)
+    state = coord.record_review(f"run-{args.event_id}", args.context)
+    print(json.dumps({"station": state["station"],
+                      "human_review": state.get("human_review")}))
     return 0
 
 
@@ -151,6 +171,11 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--context", required=True)
     p.add_argument("--pr-head", default=None)
     p.set_defaults(func=cmd_gate)
+
+    p = sub.add_parser("review", help="revisão humana explícita (all-cheap ≥ medium; AID-2719)")
+    p.add_argument("event_id")
+    p.add_argument("--context", required=True)
+    p.set_defaults(func=cmd_review)
 
     p = sub.add_parser("status", help="estado da run + ledger")
     p.add_argument("event_id")
