@@ -46,20 +46,74 @@ python3 -m factory freeze FE-1 --change-id AID-2676-agentic-factory-poc --contex
 python3 -m factory build FE-1 --context agent-author --cmd "<comando que produz o commit>"
 python3 -m factory prove FE-1 --context agent-verifier    # contexto distinto (P3)
 python3 -m factory gate  FE-1 --context coordinator [--pr-head <sha>]
-python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
+python3 -m factory review FE-1 --context agent-reviewer  # revisão explícita all-cheap ≥ medium (AID-2719)
+python3 -m factory ledger FE-1 --verify                   # revalida a cadeia + âncora externa do head
 ```
 
 `FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
+
+### Contrato de saída do CLI (AID-2728)
+
+- **Exit 0** só em sucesso/veredito promote; **exit 2** é o código único de
+  recusa (block, fence, exceção do domínio). Exceções do domínio
+  (`ContractError`, `CoordinatorError`, `LedgerError`, `FactoryError`) nunca
+  derrubam traceback: viram `{"error": "<tipo>", "reason": "..."}` na stderr +
+  exit 2.
+- `ledger --verify` sempre imprime veredito estruturado — linha truncada ou
+  não-JSON devolve `{"chain_ok": false, "error": {"line", "reason"}}` + exit 2.
+  A âncora externa do head (`state.ledger_head`) entra na verificação: sufixo
+  truncado/rewrite reprova mesmo com a cadeia de prefixo íntegra (AID-2719).
+- `gate` com contrato congelado adulterado devolve veredito `block` (motivo
+  P4) + exit 2, como o caminho do registro versionado.
+- Lease liberado (`release`) é legível pelo modelo (`released_at`) e
+  fail-closed: `heartbeat`/`claim`/estações recusam com motivo estruturado —
+  re-claim exige re-intake; takeover só pós-expiração (AID-2721).
+
+## Retomada idempotente por estação (AID-2726)
+
+Kill físico em qualquer janela de estação não trava a run — o retry converge
+sem intervenção manual: `freeze` grava o state (`station: freezing`) ANTES dos
+efeitos e recongela contract dir parcial/órfão (inclusive o estado legado
+"contract dir sem state.json"); `build` reclama worktree de tentativa morta
+(remove registro + diretório) antes de recriar no SHA da base; `gate` grava o
+`receipt.summary.json` ANTES da transição `promoted` e regenera o resumo de
+runs promoted sem resumo. Reentrada em `contracted`/`promoted` é idempotente e
+completa recibos pendentes com `detail.backfill` (acrécimo no ledger, jamais
+reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
+
+## Liberação de lease: túmulo legível (AID-2762)
+
+`release(event_id)` com `holder_enforcement=True` (default) NÃO remove o
+arquivo do lease: regrava atomicamente (tmp + replace) preenchendo o campo
+`released_at` — um **túmulo legível**. A semântica de release é
+**fail-closed conforme AID-2728 S7 (autoritativa, PR #535)** — o takeover
+pós-túmulo originalmente proposto aqui foi retirado no update-branch:
+
+- `Lease.released_at` é campo first-class; `Lease.from_json` ignora chaves
+  desconhecidas (leitura tolerante — arquivos de lease nunca envenenam
+  `lease_of`/`claim`/`lease_expired` com `TypeError`).
+- Item liberado NÃO volta para `pending()` (o túmulo ocupa o slot) e NÃO é
+  re-claimável — nem após expiração: `claim` → `LeaseHeldError`
+  "re-intake required"; `heartbeat` e estações recusam (fence). Retomar o
+  item exige re-intake pela fila.
+- Takeover com época incrementada + recibo no ledger existe SOMENTE para
+  lease VIVO expirado (AID-2721; regressão
+  `factory/tests/test_exit_contract_2728.py::test_takeover_after_expiry_still_works`).
+- `release(event_id, holder_enforcement=False)` remove o arquivo (caminho
+  interno do takeover em `claim`): sem túmulo, o item volta à fila.
 
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |
 | --- | --- | --- |
-| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake atômico create-if-absent (tmp por escritor + `os.link`, divergência concorrente/sequencial → `FactoryError`, AID-2727/AID-2731); fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
+| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake atômico create-if-absent (tmp por escritor + `os.link`, divergência concorrente/sequencial → `FactoryError`, AID-2727/AID-2731); fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721); takeover atômico (lockfile por evento + swap único `os.replace`) e perdedor de claim sempre com erro tipado (AID-2725) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
-| P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
+| P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256, examined_sha}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715; `examined_sha` AID-2719) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
+| P2/P3+ | Contrato sem nenhum check `standard` não promove sozinho com risco ≥ medium: exige revisão humana explícita registrada (recibo `actor_role=human`, revisor ≠ autor ≠ verificador); risco ausente = desconhecido, fail-closed (AID-2719 X5) | `gate.minimum_profile_gaps` + `coordinator.record_review` + CLI `review` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
 | P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados; prove roda em **clean-room** (worktree nova no `build_sha`): árvore do autor com untracked ≠ ∅ ou SHA não-pinado bloqueia antes dos checks; `capture_tree_state` re-capturado após os checks fecha o TOCTOU da mesma raiz (AID-2716/AID-2730) |
+| P4+ | `state.json` não é autoridade: `build_sha`/`verify_sha`/`contract_digest` têm que bater com o último recibo `built`/`verified` do ledger encadeado; provas carregam `examined_sha` e o gate compara com state e ledger; prova sem `examined_sha` (legada) exige re-prova (AID-2719 X4) | `gate.state_ledger_binding_gaps` + `gate.proof_sha_binding_gaps` |
+| P4++ | Head do ledger ancorado FORA dele: `state.ledger_head`/`ledger_seq` atualizados a cada append + `receipt.summary.json` (reflui ao registro versionado); gate bloqueia head ≠ âncora e `ledger --verify` reprova sufixo truncado/rewrite mesmo com cadeia de prefixo íntegra (AID-2719 X6) | `coordinator._append` + `gate.ledger_head_anchor_gaps` + `RunLedger.verify_report(expected_head=...)` |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
 
 O teste negativo é parte do aceite: `factory/tests/` cobre cada bloqueio.

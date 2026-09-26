@@ -17,7 +17,7 @@
   --surface-3:#183050;
   --text:#e9f2ff;
   --muted:#9db2cc;
-  --faint:#6d84a0;
+  --faint:#8399b4;
   --line:rgba(157,178,204,.16);
   --line-2:rgba(157,178,204,.30);
   --blue:#5fc4ff;
@@ -54,10 +54,15 @@ body{
 main{display:block}
 a{color:var(--blue);text-decoration:none}
 a:hover{text-decoration:underline}
+a:focus-visible,summary:focus-visible,.button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px;border-radius:4px}
 strong{color:#fff;font-weight:650}
 ::selection{background:rgba(95,196,255,.30)}
 .skip-link{position:absolute;left:-999px;top:0;background:var(--blue);color:#04121f;padding:8px 14px;z-index:99}
 .skip-link:focus{left:12px;top:12px}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important;animation-iteration-count:1 !important}
+}
 /* ============================================================
    HERO
    ============================================================ */

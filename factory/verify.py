@@ -80,6 +80,7 @@ def run_checks(
                 finished_at=finished,
                 context_id=context_id,
                 output_path=str((outputs_dir / out_name)),
+                examined_sha=before.sha,  # AID-2719: a prova carrega o SHA examinado (renome p/ refactor clean-room AID-2730)
             )
         )
     after = capture_tree_state(worktree)
