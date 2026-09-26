@@ -247,7 +247,11 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      auditoria SM (grep-able em `git log`).
    - **Enforcement mecânico (Stage 1)** — o check `SDLC guardrails (diff)`
      exige no PR (body ou comentário) uma linha `Countersign: <AID-ID> verdict
-     <ref>` com AID resolvível quando o diff toca paths de autoridade de
+     <ref> [head=<40-hex>]` (o sufixo opcional `head=` do bloco canônico do
+     countersign-gate, AID-2768, é aceito desde AID-2815 — gramática idêntica
+     à do `countersign_gate_check.py`: espaços ao redor do `=` e 40 hex
+     case-insensitive; ref em fim-de-linha segue válido) com AID resolvível
+     quando o diff toca paths de autoridade de
      processo (`scripts/sdlc_guard_check.sh`, `scripts/sdlc_aid_resolve.sh`,
      `docs/sdlc/**`, `.github/workflows/**`, `intent/README.md`) — sem
      citação válida o guard fica VERMELHO (fail-closed); com citação emite
@@ -336,14 +340,189 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      **citando que é a primeira lane**. Registro:
      `intent/AID-2493-provenance-trailer/`.
 
+## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
+
+**Classe F** = merge sem veredito independente pré-merge: F1 (#529), F2 (#531),
+F3 (#533 — merge pela run produtora 94s após o HELD do guard, citando
+countersign VOID). O gate póstumo do AID-2318 valida a citação DEPOIS; convenções
+advisory (comentários VOID/HELD) não contêm um produtor com plano stale. Decisão
+CEO: AID-2763. Desde AID-2768 a classe F é **mecanicamente impossível**:
+
+- o check **`countersign-gate`**
+  (`.github/workflows/countersign-gate.yml` →
+  `scripts/countersign_gate_check.py`) é um **required status check** em main
+  (`enforce_admins` on): `gh pr merge` FALHA na API para qualquer ator —
+  incluindo o produtor na credencial compartilhada — enquanto o check estiver
+  vermelho ou ausente;
+- o wrapper **`scripts/merge_pr.sh`** é a **única porta de merge**: revalida a
+  cadeia live na hora do merge, exige o check verde no head, recusa `--admin`,
+  e cita o countersign operativo na merge message. `gh pr merge` cruza é
+  bloqueado em runtimes Claude pelo hook `guard-commands.sh` (regra 3).
+  §3 resolve o slug via `gh repo view` (fallback com strip explícito de
+  `.git` — POSIX ERE não tem lazy; AID-2836) e falha de transporte no
+  `gh api` vira `REFUSED` **distinguível**, nunca `absent` enganoso com CI
+  verde.
+
+### Contrato de aceite (fail-closed em toda ambiguidade)
+
+Um merge só passa quando o **comentário de countersign operativo** (o último
+comentário com linha `Countersign:`) satisfaz TUDO:
+
+1. **Citação em comentário** (não no body — body não tem horário postável):
+   `Countersign: <AID|GH>-<n> verdict <ref> [head=<40-hex>]`;
+2. **Resolvável**: o AID/GH citado resolve via `scripts/sdlc_aid_resolve.sh`;
+3. **Head pinado**: o SHA full 40-hex do head ATUAL do PR aparece no comentário
+   — novo push/update-branch quebra o pin e exige countersign fresco;
+4. **Atribuído**: o comentário carrega `Provenance: agent=<slug> task=<AID|GH>-<n>
+   run=<runId> session=<sessionId>` (AID-2493);
+5. **Agente distinto do produtor** (por AGENTE, não runId — AID-2763): o
+   produtor é o PRIMEIRO trailer de provenance da conversa (body conta
+   primeiro); sem trailer nenhum → "producer unattributed" → vermelho (formato
+   F1/F2: produtor com plano stale simplesmente omite atribuição);
+6. **Operativo = último**: um self-cite do produtor DEPOIS de um countersign
+   válido (padrão F3) torna-se o operativo e falha (em PR já mergeado, o pool
+   de seleção é pré-merge — § Modo auditoria pós-merge, AID-2840);
+7. **Não supersedido**: nenhum comentário posterior com marcador VOID ou HELD,
+   e nenhum evento `reopened` posterior (close de contenção → reopen não viaja
+   com countersign stale; caso #535).
+
+Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
+AID-2818) são template/documentação e **não contam** em nenhum scan de citação
+ou provenance (seleção do operativo, atribuição de produtor, trailer e head-pin
+do comentário operativo). Fence não-fechado engole o resto do corpo (fail-closed:
+citação "escondida" falha como ausente). Marcadores VOID/HELD continuam lendo o
+corpo bruto — um hold dentro de fence ainda bloqueia (sem enfraquecimento).
+
+### Modo auditoria pós-merge (AID-2840)
+
+Re-run do check em PR **já mergeado** (`mergedAt` set) responde uma pergunta
+diferente da do modo live: não é "o estado ATUAL da conversa autoriza merge?",
+é "o merge foi legítimo NO INSTANTE do `mergedAt`?". Logo:
+
+- **Pool de citação = só comentários pré-merge** (`createdAt < mergedAt`;
+  paridade Stage-2 com `scripts/sdlc_guard_check.sh`, que já ignora citações
+  at/after-merge). Citação postada DEPOIS do merge — ex.: duplicada de um
+  heartbeat paralelo corrida AID-2832/2833/2834 — não vira operativa: não
+  existia na decisão de merge e não pode mudar a auditoria em nenhuma direção.
+  Sem nenhuma citação pré-merge → vermelho (fail-closed). Self-cite pré-merge
+  seguido de countersign válido pós-merge → continua vermelho (o operativo é o
+  último PRÉ-merge; tentativa de laundering via comentário pós-merge não
+  passa — self-test iv AID-2840).
+- **VOID/HELD e reopen varrem a conversa INTEIRA**, incluindo comentários
+  pós-merge: countersign anulado retroativamente (retro-VOID) mantém a
+  auditoria vermelha — estreitar o pool de seleção não silencia holds.
+- **Comentário sem `createdAt`** fica fora do pool em modo auditoria (não dá
+  para provar pré-merge — fail-closed).
+- **Monitoria**: `countersign-gate` vermelho em PR **merged** = artefato de
+  auditoria; não bloqueia merge (o PR já está mergeado) e **não é escalation**.
+  Investigar apenas se aparecer marcador VOID/HELD posterior (hold real).
+
+Motivação (PR #545): citação duplicada postada 1s após o merge tornou o re-run
+de auditoria permanentemente vermelho, e o único "remédio" era editar o
+comentário para recolher a linha de citação — pressão para reescrever a
+própria trilha de auditoria, que é o inverso do desenho. Com o pool pré-merge,
+a auditoria fica estável (reflete o estado no instante do merge) e imune a
+ruído pós-merge sem depender de edição de histórico.
+
+### Bloco canônico de countersign (copiar/adaptar)
+
+```
+Countersign: AID-<n> verdict <commentId> head=<full-40-hex-head>
+Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<sessionId>
+```
+
+### Modelo de ameaça (o que o gate assume honestamente)
+
+- **Credencial GitHub compartilhada**: identidade de agente só existe via
+  trailer `Provenance:` (AID-2493/AID-2423); por isso o gate exige trailer na
+  atribuição E fail-closed quando ausente. O founder humano funde-se ao
+  cofre de credenciais: PRs dele também precisam de countersign de agente
+  distinto (prerrogativa do owner permanece via edição do branch protection —
+  ação de admin settings fora do caminho de merge, registrada no audit log).
+- **Workflow versions**: `pull_request` roda a cópia do PR (dogfooding do PR
+  que introduz o gate); `issue_comment` (created) e `workflow_dispatch` rodam
+  a cópia de main — a versão autoritativa. O próprio comentário de countersign
+  dispara a reavaliação com a lógica de main e sobrescreve o check com o
+  veredicto verdadeiro. O wrapper só roda de checkout main atualizado.
+- **Escape hatch**: editar a branch protection é a única saída — fora do
+  merge path, auditada, e reversível pelo CEO.
+
+### Rollout (registro AID-2768)
+
+1. PR introduzindo gate+wrapper+docs (dogfooding: fica vermelho até countersign
+   de agente distinto — QA Lead);
+2. merge via wrapper (merger ≠ produtor ≠ verificador);
+3. ativação do required check `countersign-gate` na branch protection + backfill
+   (workflow_dispatch) nos PRs abertos;
+4. demonstração ao vivo registrada no PR citado em AID-2768: merge sem
+   countersign válido FALHA mecanicamente; com countersign válido de agente
+   distinto PASSA.
+
+### Dedup de assignment de countersign (AID-2844 — máx. 1 issue aberta por (PR, head))
+
+Registro do caso: corrida AID-2832/2833/2834 (2026-09-26 ~07:17Z) — o mesmo
+re-pin #2 do PR #545 (head `72dd25b8…`) virou **3 issues quase simultâneas**
+criadas por 3 agentes distintos (produtor 07:14:47Z, QA 07:17:28Z, SM
+07:17:33Z). Três heartbeats paralelos rodaram a mesma verificação, 2
+comentários redundantes caíram no PR e um deles 1s APÓS o merge virou a
+citação operativa do re-run de auditoria — artefato vermelho permanente
+(AID-2840, achado 1).
+
+**Regra (binding):** no máximo **1 issue de countersign ABERTA** por
+`(PR#, head-sha-40hex)`. Quem precisa de countersign (produtor em relay, QA
+em delta-revalidação, SM re-taskando pós pin-break) NÃO cria issue à mão —
+usa a porta `scripts/countersign_assign.sh`, que resolve o dedup:
+
+1. **Chave canônica no título**: `[CS PR#<n>@<head-40hex>]` (ex.:
+   `[CS PR#545@72dd25b86a41be599c5e43109590128b385208bf]`). O lookup é
+   mecânico por substring exata; um fallback legado (marcador
+   countersign/re-pin + `#<PR>` + head-7hex no título) cobre issues
+   pré-chave — é o tier que teria pegado a corrida AID-2832/33/34;
+2. **Existindo issue aberta para a chave → REUSE**: bump (comentário de
+   dedup) na mais antiga, nunca issue nova. Escalada é na própria issue
+   (ping ao assignee; sem resposta em 1 heartbeat → FPE → CEO);
+3. **Parada (stalled)**: sem update há mais de `--stall-minutes` (default
+   45), o bump carrega a escalada — duplicar NÃO é caminho de escalação;
+4. **Só cria quando nenhuma issue aberta pina a chave** — e o título nasce
+   com a chave embutida; falha de transporte/API **fail-closed** (exit 1):
+   repetir ou escalar ao FPE, jamais criar manualmente.
+
+```bash
+# consultar (sem writes): DEDUP CREATE | DEDUP REUSE <issue> [STALLED]
+scripts/countersign_assign.sh --check --pr 545 --head <40hex>
+# atribuir (cria OU reusa+bump; fail-closed):
+scripts/countersign_assign.sh --pr 545 --head <40hex> --assignee <agentId> \
+  --title 'COUNTERSIGN QA — PR #545 …' --body-file t.md \
+  --provenance 'Provenance: agent=<slug> task=AID-<n> run=<runId> session=<sessionId>'
+# offline: bash scripts/countersign_assign.sh --self-test
+```
+
+Env: `PAPERCLIP_API_BASE` (default `http://localhost:3100`),
+`PAPERCLIP_API_KEY`, `PAPERCLIP_COMPANY_ID`. **Guard de sha fantasma
+(AID-2851):** a porta recusa `--head` que não seja o head REAL do PR
+(resolvido via `git ls-remote origin refs/pull/<n>/head` ou `gh api`,
+fail-closed distinguível em erro de transporte; break-glass
+`COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1` só para exceções owner-approved).
+Issues de countersign concorrentes por head diferente são reportadas como
+`WARN stale siblings` (higiene: fechar as de head superado). Limite conhecido
+(dogfood AID-2844): o bump pode ser recusado pela API quando a issue-alvo
+está fora do boundary de autorização do criador — o veredito REUSE continua
+válido e o script fail-close SEM criar duplicata; o bump nesse caso segue por
+relay no board/FPE. A aceitação da regra é observável na próxima corrida de
+update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
+(critério AID-2844).
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
 | --- | --- | --- |
 | No edits to generated/derived paths (`.mavis/`, `.loops/`, `dist/`, `node_modules/`, `.codegraph/`, …) | hook + CI | `.claude/hooks/protect-paths.sh` (PreToolUse, Claude Code) · `scripts/sdlc_guard_check.sh` on the diff in CI job `sdlc-guards` (any runtime) |
+
 | Tests can't be weakened mid-fix (new test files OK; editing existing ones needs owner override) | hook + CI | `.claude/hooks/protect-tests.sh` (PreToolUse, Claude Code) · same CI check |
 | No committed credentials (`.env`, keys, tokens in paths or added lines) | hook + CI | `.claude/hooks/guard-commands.sh` (PreToolUse, Claude Code) · same CI check, **no override** |
 | No force-push / history rewrite | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) — guards a live git operation; cannot be re-checked post-hoc from a diff, so it stays a runtime + repo-owner concern |
+| **Pre-merge countersign de agente distinto (AID-2768, fim da classe F)** | **required check + wrapper + hook** | **`countersign-gate` required status check (`scripts/countersign_gate_check.py`, workflow próprio) — GitHub recusa o merge para qualquer ator · `scripts/merge_pr.sh` única porta de merge (revalida live, exige check verde, recusa `--admin`) · `guard-commands.sh` regra 3 bloqueia `gh pr merge` cru em runtimes Claude** |
+| **Dedup de assignment de countersign — máx. 1 issue aberta por (PR, head) (AID-2844)** | **tooling + processo (binding)** | **`scripts/countersign_assign.sh` porta de assignment (check/reuse+bump/create com chave canônica `[CS PR#<n>@<head-40hex>]` no título, fail-closed em erro de transporte) · contrato e caso-registro em §Dedup de assignment (AID-2844) · corrida AID-2832/33/34 = contraexemplo** |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
 | Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; never reddens (mitigation phase, see §Merge protocol item 6) |
