@@ -100,7 +100,8 @@ class TestSemanticBranches(unittest.TestCase):
         validator.errors = []
         validator.lesson_index = {"lesson": {}}
         validator.check_catalog()
-        self.assertEqual(9, len(validator.errors))
+        # 9 erros de lições + 3 de _check_module_shape (módulo "known" sem slug/title/order).
+        self.assertEqual(12, len(validator.errors))
 
     def test_catalog_comparison_and_cycle_edges(self):
         errors = []
