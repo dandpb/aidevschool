@@ -22,7 +22,11 @@ class ContractError(RuntimeError):
     pass
 
 
-PLAN_APPROVED = re.compile(r"^\s*Status:\s*approved\b", re.MULTILINE)
+# O template canônico (`docs/sdlc/templates/plan.md`) renderiza o header de
+# aprovação inline, separado por "·" (ex.: `Change-id: … · From: … ·
+# Status: approved`); o formato legado `Status: approved` em início de linha
+# continua válido. `draft` e ausência de marcador seguem bloqueando (AID-2734).
+PLAN_APPROVED = re.compile(r"(?:^|·)\s*Status:\s*approved\b", re.MULTILINE)
 
 
 def parse_checks_md(text: str) -> list[Check]:

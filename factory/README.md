@@ -51,6 +51,16 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 
 `FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
 
+## Header de aprovação do plan.md (AID-2734)
+
+O freeze exige `Status: approved` no plan.md nos dois formatos emitidos pelo
+SDLC: o canônico do template `docs/sdlc/templates/plan.md` — inline no
+header, separado por `·` (ex.: `Change-id: … · From: … · Status: approved`)
+— e o legado em início de linha. `Status: draft`, outros valores e ausência
+de marcador continuam bloqueando o build (fail-closed). O teste de contrato
+mútuo `factory/tests/test_f0_plan_status.py` renderiza o template real e
+ trava drift futuro entre template e parser.
+
 ## Retomada idempotente por estação (AID-2726)
 
 Kill físico em qualquer janela de estação não trava a run — o retry converge
