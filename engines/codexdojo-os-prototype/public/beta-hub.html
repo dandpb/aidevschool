@@ -57,7 +57,8 @@
   <p class="sub">Todas as engines em um link só: URLs ao vivo, status verificado e como rodar o resto no seu computador.</p>
   <p class="meta">
     Verificado em <strong>2026-09-26 01:29 UTC</strong> · 22 URLs públicas com HTTP 200 ·
-    main <code>4461841f</code> · pilot bundle <code>b6a0ea1b</code> · CI verde nos 15 checks por engine
+    main <code>4461841f</code> · pilot bundle <code>b6a0ea1b</code> · CI verde nos 15 checks por engine ·
+    +1 beta público school-entry (HTTP 200 em 2026-09-26 16:57 UTC)
   </p>
 
   <h2>Comece por aqui</h2>
@@ -186,6 +187,17 @@
     </a>
   </div>
 
+  <h2>Beta público (sem tier)</h2>
+  <div class="grid">
+    <a class="card" href="https://reaction-bizrate-soviet-patient.trycloudflare.com">
+      <span class="badge b-live">no ar</span><span class="badge b-notier">sem tier · beta público</span>
+      <span class="name">school-entry — entrada sem login</span>
+      <span class="url">reaction-bizrate-soviet-patient.trycloudflare.com</span>
+      <span class="desc">Descreva seu objetivo e receba uma recomendação de engine. Catálogo inicia 100% locked — o operador libera engines no painel <code>/admin/engines</code>. Recomendação em modo fallback (sem API paga). URL de quick tunnel: muda a cada restart; se não abrir, confirmar a URL vigente com o operador.</span>
+    </a>
+  </div>
+  <p class="unit">Roda local: <code>cd engines/school-entry &amp;&amp; npm start</code> (Node 22) · server-side na mesma infra do beta público (túnel + edge + supervisor).</p>
+
   <h2>Roda no seu computador (sem deploy público)</h2>
   <table>
     <tr><th>Engine</th><th>O que é</th><th>Status</th><th>Como rodar</th></tr>
@@ -212,12 +224,6 @@
       <td>Dashboard/console do ecossistema.</td>
       <td><span class="badge b-notier">interna</span></td>
       <td><code>cd engines/codexDojo &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></td>
-    </tr>
-    <tr>
-      <td><strong>school-entry</strong></td>
-      <td>Entrada sem login que recomenda engines (não publicada).</td>
-      <td><span class="badge b-notier">pré-publicação</span></td>
-      <td><code>cd engines/school-entry &amp;&amp; npm start</code> (Node 22)</td>
     </tr>
     <tr>
       <td><strong>aiDevschoolMvp</strong></td>
@@ -262,7 +268,8 @@
     Mastery real já demonstrado: U0 via PixelQuest e U2 via Warehouse (evidência NDJSON).
     Fontes: matriz <code>docs/product-readiness/README.md</code> · pilot-bundle-manifest ao vivo (<code>b6a0ea1b</code>, sha256 por superfície) ·
     check-runs do main <code>4461841f</code> (GitHub Actions, 2026-09-26) · verificação HTTP 200 das 22 URLs em 2026-09-26 01:29 UTC.
-    Página mantida pelo Growth Web Engineer (AID-2669); sem indexação em buscadores.
+    school-entry: publish receipt AID-2910 (comment 81ab4837) · HTTP 200 em 2026-09-26 16:57 UTC · URL vigente do túnel em <code>school-entry-tunnel/public-url.txt</code> (re-sync 15s).
+    Página mantida pelo Growth Web Engineer (AID-2669 · registro do beta AID-2957); sem indexação em buscadores.
   </p>
 </main>
 </body>
