@@ -78,6 +78,27 @@ runs promoted sem resumo. Reentrada em `contracted`/`promoted` é idempotente e
 completa recibos pendentes com `detail.backfill` (acrécimo no ledger, jamais
 reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
 
+## Liberação de lease: túmulo legível (AID-2762)
+
+`release(event_id)` com `holder_enforcement=True` (default) NÃO remove o
+arquivo do lease: regrava atomicamente (tmp + replace) preenchendo o campo
+`released_at` — um **túmulo legível**. A semântica de release é
+**fail-closed conforme AID-2728 S7 (autoritativa, PR #535)** — o takeover
+pós-túmulo originalmente proposto aqui foi retirado no update-branch:
+
+- `Lease.released_at` é campo first-class; `Lease.from_json` ignora chaves
+  desconhecidas (leitura tolerante — arquivos de lease nunca envenenam
+  `lease_of`/`claim`/`lease_expired` com `TypeError`).
+- Item liberado NÃO volta para `pending()` (o túmulo ocupa o slot) e NÃO é
+  re-claimável — nem após expiração: `claim` → `LeaseHeldError`
+  "re-intake required"; `heartbeat` e estações recusam (fence). Retomar o
+  item exige re-intake pela fila.
+- Takeover com época incrementada + recibo no ledger existe SOMENTE para
+  lease VIVO expirado (AID-2721; regressão
+  `factory/tests/test_exit_contract_2728.py::test_takeover_after_expiry_still_works`).
+- `release(event_id, holder_enforcement=False)` remove o arquivo (caminho
+  interno do takeover em `claim`): sem túmulo, o item volta à fila.
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |
