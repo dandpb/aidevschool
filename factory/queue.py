@@ -1,6 +1,10 @@
 """Fila de eventos + lease exclusivo (P1).
 
-Intake cria o evento (ID, origem, risco). `claim` reserva o item com criação
+Intake cria o evento (ID, origem, risco) de forma atômica: tmp único por
+escritor + `os.link` create-if-absent (semântica O_CREAT|O_EXCL) — o arquivo
+da fila só fica visível com o payload completo, reenvio idêntico é idempotente
+e payload divergente (concorrente OU sequencial) levanta `FactoryError`
+(AID-2727/AID-2731). `claim` reserva o item com criação
 atômica (O_CREAT|O_EXCL): um segundo agente que tente assumir o mesmo item
 recebe `LeaseHeldError` — dois agentes nunca assumem o mesmo item. Reenvio do
 mesmo evento não duplica execução: o evento é idempotente por ID e o lease é
@@ -13,6 +17,7 @@ from __future__ import annotations
 
 import errno
 import os
+import uuid
 from pathlib import Path
 
 from .ledger import RunLedger
@@ -39,19 +44,29 @@ class EventQueue:
 
     def submit(self, event: WorkEvent) -> WorkEvent:
         path = self.queue_dir / f"{event.id}.json"
-        if path.exists():
-            existing = WorkEvent.from_json(path.read_text(encoding="utf-8"))
-            existing_created = existing.created_at
-            existing.created_at = event.created_at  # campo volátil: fora da igualdade
-            same = existing.to_json() == event.to_json()
-            existing.created_at = existing_created
-            if same:
-                return existing  # reenvio idempotente (mesma identidade)
-            raise FactoryError(f"event id {event.id} already exists with different payload")
-        tmp = path.with_suffix(".tmp")
-        tmp.write_text(event.to_json(), encoding="utf-8")
-        os.replace(tmp, path)
-        return event
+        # Intake atômico (AID-2727/AID-2731): publica create-if-absent. O tmp é
+        # único por escritor (<id>.<pid>.<uuid>.tmp) e `os.link` é atômico — o
+        # arquivo da fila só fica visível já com o payload completo (semântica
+        # O_EXCL sem janela de leitura parcial), então um perdedor concorrente
+        # sempre relê um evento íntegro para decidir idempotência/divergência.
+        tmp = self.queue_dir / f"{event.id}.{os.getpid()}.{uuid.uuid4().hex[:8]}.tmp"
+        try:
+            with open(tmp, "w", encoding="utf-8") as fh:
+                fh.write(event.to_json())
+            try:
+                os.link(tmp, path)
+            except FileExistsError:
+                existing = WorkEvent.from_json(path.read_text(encoding="utf-8"))
+                existing_created = existing.created_at
+                existing.created_at = event.created_at  # campo volátil: fora da igualdade
+                same = existing.to_json() == event.to_json()
+                existing.created_at = existing_created
+                if same:
+                    return existing  # reenvio idempotente (mesma identidade)
+                raise FactoryError(f"event id {event.id} already exists with different payload")
+            return event
+        finally:
+            tmp.unlink(missing_ok=True)
 
     def get(self, event_id: str) -> WorkEvent:
         path = self.queue_dir / f"{event_id}.json"
