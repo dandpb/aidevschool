@@ -12,7 +12,6 @@ encadeado e invalida writers da época anterior (AID-2718/AID-2721).
 from __future__ import annotations
 
 import errno
-import json
 import os
 from pathlib import Path
 
@@ -86,6 +85,15 @@ class EventQueue:
             try:
                 fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
             except FileExistsError as exc:
+                existing = self.lease_of(event_id)
+                if existing.released:
+                    # AID-2728 S7: lease devolvido não é re-claimável — item
+                    # precisa re-entrar pela fila (re-intake). Fail-closed.
+                    raise LeaseHeldError(
+                        f"event {event_id} lease was released at "
+                        f"{existing.released_at} by {existing.holder} — "
+                        "re-intake required, released leases are not re-claimable"
+                    ) from exc
                 if self.lease_expired(event_id):
                     takeover_from = self.lease_of(event_id)
                     self.release(event_id, holder_enforcement=False)
@@ -141,6 +149,12 @@ class EventQueue:
 
     def heartbeat(self, event_id: str) -> Lease:
         lease = self.lease_of(event_id)
+        if lease.released:
+            # AID-2728 S7: lease devolvido não volta à vida por heartbeat.
+            raise FactoryError(
+                f"lease for {event_id} was released at {lease.released_at} "
+                f"by {lease.holder} — heartbeat on a released lease is refused"
+            )
         lease.heartbeat_at = utcnow()
         tmp = self._lease_path(event_id).with_suffix(".tmp")
         tmp.write_text(lease.to_json(), encoding="utf-8")
@@ -151,10 +165,13 @@ class EventQueue:
         path = self._lease_path(event_id)
         if path.exists():
             if holder_enforcement:
-                # only rewrite-to-released; physical removal keeps history simple
+                # only rewrite-to-released; physical removal keeps history simple.
+                # AID-2728 S7: grava a representação legível pelo próprio modelo
+                # (Lease.released_at) — Lease.from_json volta a funcionar.
                 lease = self.lease_of(event_id)
-                data = json.loads(lease.to_json())
-                data["released_at"] = utcnow()
-                path.write_text(json.dumps(data, sort_keys=True), encoding="utf-8")
+                lease.released_at = utcnow()
+                tmp = path.with_suffix(".tmp")
+                tmp.write_text(lease.to_json(), encoding="utf-8")
+                os.replace(tmp, path)
                 return
             path.unlink(missing_ok=True)

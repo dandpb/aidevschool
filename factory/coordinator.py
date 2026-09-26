@@ -25,7 +25,7 @@ import subprocess
 from pathlib import Path
 
 from . import gitwork
-from .contract import Contract, load_from_registry
+from .contract import Contract, ContractError, load_from_registry
 from .gate import GateDecision, evaluate
 from .ledger import RunLedger
 from .model import Receipt, WorkEvent, digest_obj, utcnow
@@ -78,6 +78,14 @@ class Coordinator:
             raise CoordinatorError(
                 f"P1 fence: run {run_id} cannot transition — {exc}"
             ) from exc
+        if lease.released:
+            # AID-2728 S7: lease devolvido fecha a run — sem transição, sem
+            # resurrect por heartbeat; fail-closed com motivo estruturado.
+            raise CoordinatorError(
+                f"P1 fence: lease for {event_id} was released at "
+                f"{lease.released_at} by {lease.holder} — run {run_id} "
+                "cannot transition on a released lease"
+            )
         if self.queue.lease_expired(event_id):
             raise CoordinatorError(
                 f"P1 fence: lease for {event_id} expired (holder {lease.holder})"
@@ -237,7 +245,14 @@ class Coordinator:
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
         self._fence(run_id, state)
-        frozen = Contract.load_frozen(self._run_dir(run_id))
+        # AID-2728 S6a: contrato congelado ilegível/adulterado é um VEREDITO
+        # block (P4), não um crash — simétrico ao caminho do registro
+        # versionado ("contract digest drifted"). Fail-closed com recibo.
+        frozen_contract_error: str | None = None
+        try:
+            frozen = Contract.load_frozen(self._run_dir(run_id))
+        except ContractError as exc:
+            frozen_contract_error = str(exc)
         # O registro versionado é a autoridade: se mudou após o congelamento,
         # a run está velha e a promoção fica bloqueada (P4).
         try:
@@ -247,20 +262,23 @@ class Coordinator:
             registry_digest = registry_contract.digest
         except Exception as exc:  # noqa: BLE001 - fail-closed com motivo
             registry_digest = f"unreadable:{exc}"
-        build = gitwork.TreeState(sha=state["build_sha"], untracked=state.get("build_untracked", []))
-        verify = VerifyResult(
-            context_id=state["verifier_context"], sha=state["verify_sha"],
-            untracked=state.get("verify_untracked", []),
-            proofs=self._load_proofs(run_id),
-        )
-        decision = evaluate(
-            contract=frozen,
-            frozen_digest=registry_digest,
-            build=build,
-            verify=verify,
-            author_context=state["author_context"],
-            pr_head_sha=pr_head_sha,
-        )
+        if frozen_contract_error is not None:
+            decision = GateDecision(verdict="block", reasons=[f"P4: {frozen_contract_error}"])
+        else:
+            build = gitwork.TreeState(sha=state["build_sha"], untracked=state.get("build_untracked", []))
+            verify = VerifyResult(
+                context_id=state["verifier_context"], sha=state["verify_sha"],
+                untracked=state.get("verify_untracked", []),
+                proofs=self._load_proofs(run_id),
+            )
+            decision = evaluate(
+                contract=frozen,
+                frozen_digest=registry_digest,
+                build=build,
+                verify=verify,
+                author_context=state["author_context"],
+                pr_head_sha=pr_head_sha,
+            )
         station_to = "promoted" if decision.ok else "blocked"
         state.update(station=station_to, updated_at=utcnow())
         self._save_state(run_id, state)

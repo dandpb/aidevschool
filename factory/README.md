@@ -51,6 +51,21 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 
 `FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
 
+### Contrato de saída do CLI (AID-2728)
+
+- **Exit 0** só em sucesso/veredito promote; **exit 2** é o código único de
+  recusa (block, fence, exceção do domínio). Exceções do domínio
+  (`ContractError`, `CoordinatorError`, `LedgerError`, `FactoryError`) nunca
+  derrubam traceback: viram `{"error": "<tipo>", "reason": "..."}` na stderr +
+  exit 2.
+- `ledger --verify` sempre imprime veredito estruturado — linha truncada ou
+  não-JSON devolve `{"chain_ok": false, "error": {"line", "reason"}}` + exit 2.
+- `gate` com contrato congelado adulterado devolve veredito `block` (motivo
+  P4) + exit 2, como o caminho do registro versionado.
+- Lease liberado (`release`) é legível pelo modelo (`released_at`) e
+  fail-closed: `heartbeat`/`claim`/estações recusam com motivo estruturado —
+  re-claim exige re-intake; takeover só pós-expiração (AID-2721).
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |

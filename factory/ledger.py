@@ -19,6 +19,28 @@ class LedgerError(RuntimeError):
     pass
 
 
+class LedgerCorruptError(LedgerError):
+    """Linha ilegível/divergente no ledger — fail-closed com localização.
+
+    Contrato de saída (AID-2728/AID-2737): nada de traceback cru; o motivo
+    carrega nº de linha e razão para o veredito estruturado do CLI.
+    """
+
+    def __init__(self, line_no: int, reason: str) -> None:
+        self.line_no = line_no
+        self.reason = reason
+        super().__init__(f"ledger line {line_no}: {reason}")
+
+
+def _parse_receipt_line(line_no: int, line: str) -> Receipt:
+    try:
+        return Receipt.from_json(line)
+    except json.JSONDecodeError as exc:
+        raise LedgerCorruptError(line_no, f"invalid JSON: {exc}") from exc
+    except (TypeError, ValueError) as exc:
+        raise LedgerCorruptError(line_no, f"invalid receipt: {exc}") from exc
+
+
 class RunLedger:
     def __init__(self, path: Path) -> None:
         self.path = Path(path)
@@ -43,25 +65,52 @@ class RunLedger:
     def read(self) -> list[Receipt]:
         receipts: list[Receipt] = []
         with self.path.open("r", encoding="utf-8") as fh:
-            for line in fh:
+            for line_no, line in enumerate(fh, 1):
                 line = line.strip()
                 if line:
-                    receipts.append(Receipt.from_json(line))
+                    receipts.append(_parse_receipt_line(line_no, line))
         return receipts
 
-    def verify_chain(self) -> bool:
-        """Recomputa a cadeia; retorna False em qualquer divergência."""
+    def verify_report(self) -> dict:
+        """Veredito estruturado da cadeia — nunca derruba exceção por linha
+        malformada (AID-2728 S5b): qualquer problema vira
+        ``{"chain_ok": false, "error": {"line", "reason"}}``."""
+        report: dict = {"entries": 0, "hashes_ok": True, "chain_ok": True, "error": None}
         prev_hash = None
         prev_seq = 0
-        for r in self.read():
-            if r.seq != prev_seq + 1:
-                return False
-            if r.prev_hash != prev_hash:
-                return False
-            if r.hash != r.compute_hash():
-                return False
-            prev_seq, prev_hash = r.seq, r.hash
-        return True
+        with self.path.open("r", encoding="utf-8") as fh:
+            for line_no, raw in enumerate(fh, 1):
+                line = raw.strip()
+                if not line:
+                    continue
+                report["entries"] += 1
+                try:
+                    r = _parse_receipt_line(line_no, line)
+                except LedgerCorruptError as exc:
+                    report["chain_ok"] = False
+                    report["hashes_ok"] = False
+                    report["error"] = {"line": exc.line_no, "reason": exc.reason}
+                    return report
+                if r.hash != r.compute_hash():
+                    report["hashes_ok"] = False
+                    report["chain_ok"] = False
+                    report["error"] = {"line": line_no, "reason": "receipt hash mismatch"}
+                    return report
+                if r.seq != prev_seq + 1:
+                    report["chain_ok"] = False
+                    report["error"] = {"line": line_no, "reason": f"seq {r.seq} != {prev_seq + 1}"}
+                    return report
+                if r.prev_hash != prev_hash:
+                    report["chain_ok"] = False
+                    report["error"] = {"line": line_no, "reason": "prev_hash does not chain"}
+                    return report
+                prev_seq, prev_hash = r.seq, r.hash
+        return report
+
+    def verify_chain(self) -> bool:
+        """Recomputa a cadeia; retorna False em qualquer divergência,
+        inclusive linha ilegível (AID-2728 S5b — sem exceção)."""
+        return self.verify_report()["chain_ok"]
 
     def last(self) -> Receipt | None:
         entries = self.read()
@@ -71,21 +120,31 @@ class RunLedger:
         return [r for r in self.read() if r.station_to == station_to]
 
     def snapshot(self) -> dict:
-        entries = self.read()
-        if not entries:
+        report = self.verify_report()
+        if report["error"] is not None:
+            return {
+                "station": "unreadable",
+                "entries": report["entries"],
+                "chain_ok": False,
+                "error": report["error"],
+            }
+        if not report["entries"]:
             return {"station": None, "entries": 0, "chain_ok": True}
         return {
-            "station": entries[-1].station_to,
-            "entries": len(entries),
-            "chain_ok": self.verify_chain(),
+            "station": self.read()[-1].station_to,
+            "entries": report["entries"],
+            "chain_ok": report["chain_ok"],
         }
 
 
 def load_raw(path: Path) -> list[dict]:
     out = []
     with Path(path).open("r", encoding="utf-8") as fh:
-        for line in fh:
+        for line_no, line in enumerate(fh, 1):
             line = line.strip()
             if line:
-                out.append(json.loads(line))
+                try:
+                    out.append(json.loads(line))
+                except json.JSONDecodeError as exc:
+                    raise LedgerCorruptError(line_no, f"invalid JSON: {exc}") from exc
     return out
