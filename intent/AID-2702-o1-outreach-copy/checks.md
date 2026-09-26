@@ -1,0 +1,5 @@
+# Checks — AID-2702-o1-outreach-copy
+
+C1 | profile=standard | python3 -c "import pathlib,sys; t=pathlib.Path('work-products/AID-2702_O1_OUTREACH_COPY_PTBR_2026-09-26.md').read_text(encoding='utf-8'); req=['## Mensagem — DM WhatsApp','## Mensagem — LinkedIn','## Mensagem — comunidade Discord','## Hero (proposta)','## Guardrails']; ok=all(r in t for r in req); print('sections_ok',ok,'len',len(t)); sys.exit(0 if ok and 500 < len(t) < 8000 else 1)"
+C2 | profile=cheap | python3 -c "import pathlib,re,sys; t=pathlib.Path('work-products/AID-2702_O1_OUTREACH_COPY_PTBR_2026-09-26.md').read_text(encoding='utf-8'); bad=re.search(r'[\w.+-]+@[\w-]+\.[\w.]+', t) or re.search(r'\+?\d{2,3}[ -]?\d{4,5}[ -]\d{4}', t); print('pii_found', bool(bad)); sys.exit(1 if bad else 0)"
+C3 | profile=cheap | python3 -c "import pathlib,sys; t=pathlib.Path('work-products/AID-2702_O1_OUTREACH_COPY_PTBR_2026-09-26.md').read_text(encoding='utf-8').lower(); bad=[w for w in ['bônus','bonus','cupom','vale-presente','remunerad','vale refeição'] if w in t]; print('incentive_words', bad); sys.exit(1 if bad else 0)"
