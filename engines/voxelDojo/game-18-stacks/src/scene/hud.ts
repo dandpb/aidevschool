@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 
 /** DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands. */
@@ -120,7 +121,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       state.level.id === "L4"
         ? state.predictedOrder.includes(doc.id)
         : state.predictedTop === doc.id
-    row.innerHTML = `<span class="docid">${doc.id}</span> <span class="rule">${truncate(doc.text, 40)}${isPicked ? " ✓" : ""}</span>`
+    row.innerHTML = `<span class="docid">${escapeHtml(doc.id)}</span> <span class="rule">${escapeHtml(truncate(doc.text, 40))}${isPicked ? " ✓" : ""}</span>`
     row.addEventListener("click", () => {
       if (state.level.id === "L2" || state.level.id === "L3") game.predictTop(doc.id)
       if (state.level.id === "L4") game.predictRank(doc.id)
