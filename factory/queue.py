@@ -23,7 +23,6 @@ do arquivo de lease toleram a janela transitória vazio/ausente com retry curto
 from __future__ import annotations
 
 import errno
-import json
 import os
 import time
 import uuid
@@ -166,7 +165,7 @@ class EventQueue:
                           ttl_seconds=ttl_seconds, epoch=1)
             try:
                 fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
-            except FileExistsError:
+            except FileExistsError as exc:
                 with self._claim_lock(event_id):
                     held = self._read_lease(path)
                     if held is None:
@@ -174,13 +173,22 @@ class EventQueue:
                             # fail-closed tipado: lease ilegível não autoriza takeover
                             raise LeaseHeldError(
                                 f"event {event_id} lease is unreadable — takeover refused"
-                            )
+                            ) from exc
                         continue  # lease sumiu na disputa: volta a tentar criar
+                    if held.released:
+                        # AID-2728 S7: lease devolvido não é re-claimável — item
+                        # precisa re-entrar pela fila (re-intake). Fail-closed,
+                        # mesmo se expirado: takeover jamais herda lease devolvido.
+                        raise LeaseHeldError(
+                            f"event {event_id} lease was released at "
+                            f"{held.released_at} by {held.holder} — "
+                            "re-intake required, released leases are not re-claimable"
+                        ) from exc
                     if not self._is_expired(held):
                         raise LeaseHeldError(
                             f"event {event_id} is leased by {held.holder} "
                             f"since {held.acquired_at}"
-                        )
+                        ) from exc
                     # Takeover atômico (AID-2725 S3b): decisão+swap sob o lock —
                     # exatamente um vencedor; não existe mais unlink+recria.
                     takeover = Lease(event_id=event_id, holder=holder,
@@ -245,6 +253,12 @@ class EventQueue:
         # defasado poderia reverter um takeover recém-trocado via os.replace.
         with self._claim_lock(event_id):
             lease = self.lease_of(event_id)
+            if lease.released:
+                # AID-2728 S7: lease devolvido não volta à vida por heartbeat.
+                raise FactoryError(
+                    f"lease for {event_id} was released at {lease.released_at} "
+                    f"by {lease.holder} — heartbeat on a released lease is refused"
+                )
             lease.heartbeat_at = utcnow()
             tmp = self._lease_path(event_id).with_suffix(".tmp")
             tmp.write_text(lease.to_json(), encoding="utf-8")
@@ -256,15 +270,17 @@ class EventQueue:
         if not path.exists():
             return
         if holder_enforcement:
-            # only rewrite-to-released; physical removal keeps history simple
+            # only rewrite-to-released; physical removal keeps history simple.
+            # AID-2728 S7: grava a representação legível pelo próprio modelo
+            # (Lease.released_at) — Lease.from_json volta a funcionar — e
+            # AID-2725: swap único os.replace sob o claim lock.
             with self._claim_lock(event_id):
                 lease = self._read_lease(path)
                 if lease is None:
                     raise FactoryError(f"lease for {event_id} is unreadable")
-                data = json.loads(lease.to_json())
-                data["released_at"] = utcnow()
+                lease.released_at = utcnow()
                 tmp = path.with_suffix(".released.tmp")
-                tmp.write_text(json.dumps(data, sort_keys=True), encoding="utf-8")
+                tmp.write_text(lease.to_json(), encoding="utf-8")
                 os.replace(tmp, path)
             return
         path.unlink(missing_ok=True)

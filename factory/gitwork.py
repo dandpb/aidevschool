@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -49,10 +50,36 @@ def capture_tree_state(worktree: Path) -> TreeState:
     return TreeState(sha=sha, untracked=untracked)
 
 
+def _worktree_registered(repo: Path, worktree_path: Path) -> bool:
+    out = _git(repo, "worktree", "list", "--porcelain").stdout
+    target = Path(worktree_path).resolve()
+    return any(
+        line.startswith("worktree ") and Path(line.split(" ", 1)[1]).resolve() == target
+        for line in out.splitlines()
+    )
+
+
+def reclaim_worktree(repo: Path, worktree_path: Path) -> None:
+    """S1b (AID-2726): devolve o worktree de uma tentativa morta ao estado
+    neutro — remove o registro (`worktree remove --force` + `prune`) e o
+    diretório — para que recriar no mesmo caminho seja idempotente. Nunca é
+    passo manual do operador."""
+    _git(repo, "worktree", "remove", "--force", str(worktree_path), check=False)
+    _git(repo, "worktree", "prune", check=False)
+    if worktree_path.exists():
+        shutil.rmtree(worktree_path, ignore_errors=True)
+
+
 def create_worktree(repo: Path, base_sha: str, worktree_path: Path) -> Path:
-    """Cria worktree isolado exatamente no SHA da base acordada."""
+    """Cria worktree isolado exatamente no SHA da base acordada.
+
+    S1b (AID-2726): idempotente por estação — worktree existente (diretório
+    ou registro stale) de tentativa morta é reclamado antes de recriar; kill
+    durante o build não deixa órfão que trave o retry com GitError."""
     _git(repo, "cat-file", "-e", f"{base_sha}^{{commit}}")
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
+    if worktree_path.exists() or _worktree_registered(repo, worktree_path):
+        reclaim_worktree(repo, worktree_path)
     _git(repo, "worktree", "add", "--detach", str(worktree_path), base_sha)
     return worktree_path
 
