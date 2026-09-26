@@ -28,7 +28,14 @@ from . import gitwork
 from .contract import Contract, load_from_registry
 from .gate import GateDecision, evaluate
 from .ledger import RunLedger
-from .model import Receipt, WorkEvent, digest_obj, utcnow
+from .model import (
+    Receipt,
+    WorkEvent,
+    digest_obj,
+    evidence_digest,
+    proof_evidence,
+    utcnow,
+)
 from .queue import EventQueue, FactoryError, LeaseHeldError, Lease
 from .verify import VerifyResult, run_checks
 
@@ -286,11 +293,16 @@ class Coordinator:
                      verify_generated_untracked=result.generated_untracked,
                      updated_at=utcnow())
         self._save_state(run_id, state)
+        # AID-2715 — a âncora da prova (check, cmd, exit, digest do output)
+        # viaja DENTRO do recibo selado; digests no runtime são só cache.
+        evidence = [proof_evidence(p) for p in result.proofs]
         self._append(
             run_id, station_from="built", station_to="verified",
             actor_role="verifier", context_id=verifier_context, sha=result.sha,
             contract_digest=contract.digest,
             proof_refs=[p.check_id for p in result.proofs],
+            proof_digests=[evidence_digest(e) for e in evidence],
+            detail={"proof_evidence": evidence},
         )
         return result
 
@@ -337,6 +349,7 @@ class Coordinator:
             verify=verify,
             author_context=state["author_context"],
             pr_head_sha=pr_head_sha,
+            anchored_evidence=self._proof_anchor(run_id),
         )
         station_to = "promoted" if decision.ok else "blocked"
         state.update(station=station_to, updated_at=utcnow())
@@ -358,6 +371,21 @@ class Coordinator:
         )
         return [Proof(**item) for item in meta]
 
+    def _proof_anchor(self, run_id: str) -> dict[str, str] | None:
+        """Âncora de evidência do último recibo `verified` (AID-2715).
+
+        Falha fechado: sem recibo, ou com detalhe/digests inconsistentes,
+        devolve None e o gate recusa provas auto-atestadas.
+        """
+        receipts = self._ledger(run_id).find("verified")
+        if not receipts:
+            return None
+        receipt = receipts[-1]
+        evidence = receipt.detail.get("proof_evidence") or []
+        if len(evidence) != len(receipt.proof_digests):
+            return None
+        return {e["check_id"]: d for e, d in zip(evidence, receipt.proof_digests)}
+
     def _write_receipt_summary(self, run_id: str, decision: GateDecision) -> None:
         state = self._load_state(run_id)
         summary = {
@@ -370,6 +398,7 @@ class Coordinator:
             "contract_digest": state["contract_digest"],
             "author_context": state.get("author_context"),
             "verifier_context": state.get("verifier_context"),
+            "proof_anchor": self._proof_anchor(run_id),
             "generated_at": utcnow(),
         }
         (self._run_dir(run_id) / "receipt.summary.json").write_text(
