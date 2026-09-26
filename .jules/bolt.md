@@ -44,3 +44,6 @@
 ## 2025-02-18 - Optimize array shifts in simulation pathfinding
 **Learning:** In simulation hot loops like BFS pathfinding, using `Array.prototype.splice` to extract elements from a bucket modifies the array in-place, shifting all subsequent elements. This causes O(N) operations and heavy garbage collection overhead, particularly detrimental when running thousands of times per second.
 **Action:** Replace `splice` with a O(1) swap-and-pop technique (`const last = arr.pop(); if (idx < arr.length) arr[idx] = last;`) when removing elements from an unordered array or bucket where element order doesn't matter (e.g., identical cost tiers in pathfinding).
+## 2025-02-19 - Avoid GC pressure from .filter().length
+**Learning:** In simulation code like `engines/voxelDojo/game-04-task-queue`, calculating active counts with `.filter(...).length` creates unnecessary intermediate array allocations, increasing garbage collection (GC) overhead during frequent calls.
+**Action:** Replace `.filter(...).length` with standard indexed `for` loops and a counter variable to prevent intermediate array creation and reduce GC pressure.
