@@ -76,14 +76,14 @@ import tempfile
 
 CITATION_RE = re.compile(
     r"^Countersign:[ \t]+((?:AID|GH)-[1-9][0-9]*)[ \t]+verdict[ \t]+"
-    r"([A-Za-z0-9][A-Za-z0-9._:-]*)[ \t]*(?:head[ \t]*=[ \t]*([0-9a-fA-F]{40}))?[ \t]*$",
+    r"([A-Za-z0-9][A-Za-z0-9._:-]*)[ \t]*(?:head[ \t]*=[ \t]*([0-9a-fA-F]{40}))?[ \t\r]*$",
     re.MULTILINE,
 )
 PROVENANCE_RE = re.compile(
     r"^Provenance:[ \t]+agent=(?P<agent>[A-Za-z0-9_][A-Za-z0-9._-]*)[ \t]+"
     r"task=(?P<task>(?:AID|GH)-[1-9][0-9]*)[ \t]+"
     r"run=(?P<run>[A-Za-z0-9_][A-Za-z0-9._:-]{3,})[ \t]+"
-    r"session=(?P<session>[A-Za-z0-9_][A-Za-z0-9._:-]*)[ \t]*$",
+    r"session=(?P<session>[A-Za-z0-9_][A-Za-z0-9._:-]*)[ \t\r]*$",
     re.MULTILINE,
 )
 SHA40_RE = re.compile(r"\b[0-9a-fA-F]{40}\b")
