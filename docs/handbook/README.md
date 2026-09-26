@@ -88,6 +88,7 @@ replace engine-local setup or grant learner mastery.
 | 7 | [Curriculum](07_curriculum.md) | Understand Level 0, the programming track, the AI Literacy track, and their evidence boundaries. |
 | 8 | [Learner substrate](08_learner_substrate.md) | Understand the learner state schema, the gates, FSRS spaced repetition, and the read/write contract. |
 | 9 | [Glossary](09_glossary.md) | Look up a term (especially the Portuguese agent names and state values). |
+| 14 | [Factory docs loop](14_factory_docs_loop.md) | Run a documentation change through the agentic factory (intake, contract, build, prove, gate) with deterministic, verifier-owned doc checks. |
 
 > **Non-integrated prototype:** `engines/zai-duolingo-like/` ("Vertical Protocol" — a
 > cyberpunk-Tokyo "Duolingo for AI" in Next.js) is a future engine to integrate and a candidate
