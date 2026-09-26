@@ -380,10 +380,42 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    primeiro); sem trailer nenhum → "producer unattributed" → vermelho (formato
    F1/F2: produtor com plano stale simplesmente omite atribuição);
 6. **Operativo = último**: um self-cite do produtor DEPOIS de um countersign
-   válido (padrão F3) torna-se o operativo e falha;
+   válido (padrão F3) torna-se o operativo e falha (em PR já mergeado, o pool
+   de seleção é pré-merge — § Modo auditoria pós-merge, AID-2840);
 7. **Não supersedido**: nenhum comentário posterior com marcador VOID ou HELD,
    e nenhum evento `reopened` posterior (close de contenção → reopen não viaja
    com countersign stale; caso #535).
+
+### Modo auditoria pós-merge (AID-2840)
+
+Re-run do check em PR **já mergeado** (`mergedAt` set) responde uma pergunta
+diferente da do modo live: não é "o estado ATUAL da conversa autoriza merge?",
+é "o merge foi legítimo NO INSTANTE do `mergedAt`?". Logo:
+
+- **Pool de citação = só comentários pré-merge** (`createdAt < mergedAt`;
+  paridade Stage-2 com `scripts/sdlc_guard_check.sh`, que já ignora citações
+  at/after-merge). Citação postada DEPOIS do merge — ex.: duplicada de um
+  heartbeat paralelo corrida AID-2832/2833/2834 — não vira operativa: não
+  existia na decisão de merge e não pode mudar a auditoria em nenhuma direção.
+  Sem nenhuma citação pré-merge → vermelho (fail-closed). Self-cite pré-merge
+  seguido de countersign válido pós-merge → continua vermelho (o operativo é o
+  último PRÉ-merge; tentativa de laundering via comentário pós-merge não
+  passa — self-test iv AID-2840).
+- **VOID/HELD e reopen varrem a conversa INTEIRA**, incluindo comentários
+  pós-merge: countersign anulado retroativamente (retro-VOID) mantém a
+  auditoria vermelha — estreitar o pool de seleção não silencia holds.
+- **Comentário sem `createdAt`** fica fora do pool em modo auditoria (não dá
+  para provar pré-merge — fail-closed).
+- **Monitoria**: `countersign-gate` vermelho em PR **merged** = artefato de
+  auditoria; não bloqueia merge (o PR já está mergeado) e **não é escalation**.
+  Investigar apenas se aparecer marcador VOID/HELD posterior (hold real).
+
+Motivação (PR #545): citação duplicada postada 1s após o merge tornou o re-run
+de auditoria permanentemente vermelho, e o único "remédio" era editar o
+comentário para recolher a linha de citação — pressão para reescrever a
+própria trilha de auditoria, que é o inverso do desenho. Com o pool pré-merge,
+a auditoria fica estável (reflete o estado no instante do merge) e imune a
+ruído pós-merge sem depender de edição de histórico.
 
 ### Bloco canônico de countersign (copiar/adaptar)
 

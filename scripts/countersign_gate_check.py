@@ -20,8 +20,9 @@ ACCEPTANCE CONTRACT (all must hold; fail-closed in every ambiguity):
   1. CITATION — a PR COMMENT (line-start) matches
          Countersign: (AID|GH)-<n> verdict <ref> [head=<40-hex>]
      Body citations never count for the live gate (no posting time); on a
-     merged PR (audit mode) the comment createdAt must be < mergedAt
-     (same Stage-2 ordering rule as scripts/sdlc_guard_check.sh).
+     merged PR (audit mode) only comments with createdAt < mergedAt are in
+     the citation pool (same Stage-2 ordering rule as
+     scripts/sdlc_guard_check.sh, which skips at/after-mergedAt citations).
   2. RESOLVABLE — the cited AID/GH resolves via $SDLC_GUARD_AID_RESOLVER
      (exit 0 = exists), same contract as the SDLC guard.
   3. HEAD PIN — the full 40-hex SHA of the CURRENT PR head appears in the
@@ -39,12 +40,19 @@ ACCEPTANCE CONTRACT (all must hold; fail-closed in every ambiguity):
   6. OPERATIVE = LAST — only the chronologically LAST citation comment is
      evaluated. A producer self-cite posted after a valid QA countersign
      (the F3 pattern) makes that self-cite operative -> red until a fresh
-     independent countersign supersedes it.
+     independent countersign supersedes it. In audit mode (mergedAt set)
+     the pool is PRE-MERGE comments only (createdAt < mergedAt): a citation
+     posted after the merge — e.g. a duplicate from a parallel heartbeat
+     (AID-2840) — did not exist at the merge decision and cannot become
+     operative, in either direction. No pre-merge citation at all -> red.
   7. NOT SUPERSEDED — no comment AFTER the operative citation contains an
      uppercase word-bounded VOID or HELD marker (guard-hold pattern: F3
      merged 94s after a HELD), and no 'reopened' timeline event is newer
      than the operative citation (containment close -> reopen must not
-     ride a stale countersign; case #535).
+     ride a stale countersign; case #535). This scan covers the WHOLE
+     conversation including post-merge comments: a countersign later found
+     bogus (retro-VOID) must keep the audit red even though the citation
+     pool itself is pre-merge only.
 
 Live data comes from gh (GH_TOKEN); hermetic mode (--context/--timeline)
 runs the same core on fixture JSON so the self-test needs no network.
@@ -170,21 +178,46 @@ def evaluate(ctx, timeline, head, resolver):
     # Operative citation = chronologically LAST comment with a line-start
     # 'Countersign:' citation (F3: a later producer self-cite supersedes and
     # must itself be valid; body-only citations are not orderable pre-merge).
+    # Audit mode (AID-2840): on a merged PR the pool is restricted to comments
+    # posted strictly BEFORE mergedAt — Stage-2 parity (sdlc_guard_check.sh
+    # skips at/after-mergedAt citations). A duplicate citation posted after
+    # the merge (parallel heartbeats racing the same re-pin) did not exist at
+    # the merge decision and cannot become operative; comments without a
+    # timestamp are also excluded (cannot prove pre-merge — fail-closed).
+    # The audit question is "was the merge legitimate AT mergedAt?", so this
+    # only narrows the SELECTION pool: §7 VOID/HELD and reopen checks below
+    # still scan the whole conversation, so a retro-VOID keeps the audit red.
     body_cited = None
     operative = None
-    for c in comments:
+    pool = comments
+    if merged_at:
+        pool = [
+            c for c in comments
+            if c.get("createdAt") and c.get("createdAt") < merged_at
+        ]
+    for c in pool:
         if CITATION_RE.search(c.get("body") or ""):
             operative = c
     if operative is None:
         if CITATION_RE.search(body):
             body_cited = "body"
-        where = (
-            "the only 'Countersign:' citation is in the PR BODY, which has no "
-            "verifiable posting time — post it as a PR comment (AID-2768 §1)"
-            if body_cited
-            else "no 'Countersign: <AID|GH>-<n> verdict <ref>' line found in any "
-            "PR comment (AID-2768 §1)"
-        )
+        if merged_at:
+            where = (
+                "no 'Countersign: <AID|GH>-<n> verdict <ref>' line found in any "
+                "PR comment posted BEFORE mergedAt (%s) — on a merged PR the "
+                "audit evaluates only pre-merge comments (AID-2768 §1/§6, "
+                "AID-2840)" % merged_at
+            )
+        elif body_cited:
+            where = (
+                "the only 'Countersign:' citation is in the PR BODY, which has no "
+                "verifiable posting time — post it as a PR comment (AID-2768 §1)"
+            )
+        else:
+            where = (
+                "no 'Countersign: <AID|GH>-<n> verdict <ref>' line found in any "
+                "PR comment (AID-2768 §1)"
+            )
         raise Violation(where)
 
     cbody = operative.get("body") or ""
@@ -533,6 +566,45 @@ def self_test():
     cases.append(scenario(
         "head pinned in comment body passes", 0,
         _ctx("producer body\n" + prod_trailer, [_comment(T, naked_cite)]),
+    ))
+    # 21. AID-2840: duplicate citation posted AFTER the merge (parallel
+    # heartbeat racing the same re-pin) must NOT become operative in audit
+    # mode — the pre-merge citation is what gated the merge.
+    cases.append(scenario(
+        "post-merge duplicate citation ignored (audit, AID-2840)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + qa_trailer),
+              _comment("2026-09-26T06:00:00Z", cite_line + "\n" + qa_trailer)]),
+        merged_at="2026-09-26T05:30:00Z",
+    ))
+    # 22. AID-2840: citation posted only after the merge -> nothing pre-merge
+    # to audit -> fail-closed.
+    cases.append(scenario(
+        "post-merge-only citation fails (audit, AID-2840)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment("2026-09-26T06:00:00Z", cite_line + "\n" + qa_trailer)]),
+        merged_at="2026-09-26T05:30:00Z",
+    ))
+    # 23. AID-2840: VOID posted after the merge still reddens the audit —
+    # narrowing the citation pool must not silence retro-voids (§7 whole
+    # conversation).
+    cases.append(scenario(
+        "post-merge VOID still reddens audit (AID-2840)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + qa_trailer),
+              _comment("2026-09-26T06:00:00Z",
+                       "GUARD: countersign posteriormente anulado — VOID, merge HELD.")]),
+        merged_at="2026-09-26T05:30:00Z",
+    ))
+    # 24. AID-2840: laundering attempt — producer self-cite pre-merge (F3),
+    # valid independent citation only AFTER the merge: the operative stays
+    # the last PRE-merge citation, so the audit stays red.
+    cases.append(scenario(
+        "pre-merge self-cite stays operative despite post-merge fix", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + prod_trailer),
+              _comment("2026-09-26T06:00:00Z", cite_line + "\n" + qa_trailer)]),
+        merged_at="2026-09-26T05:30:00Z",
     ))
 
     passed = sum(cases)
