@@ -27,7 +27,7 @@ factory/
 ├── ledger.py         # recibos append-only encadeados por hash
 ├── contract.py       # registro versionado intent/<change-id>/ → contrato congelado
 ├── gitwork.py        # worktree isolado, SHA, estado da árvore (P4)
-├── verify.py         # Verifier separado executa checks e grava provas (P2/P3)
+├── verify.py         # Verifier separado: checks em clean-room no build_sha + provas (P2/P3/P4)
 ├── gate.py           # promoção fail-closed (P1–P5)
 ├── coordinator.py    # MOTOR: orquestra estações, retomável
 └── tests/            # critérios de saída P1–P5 (casos negativos inclusos)
@@ -111,7 +111,7 @@ pós-túmulo originalmente proposto aqui foi retirado no update-branch:
 | P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256, examined_sha}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715; `examined_sha` AID-2719) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P2/P3+ | Contrato sem nenhum check `standard` não promove sozinho com risco ≥ medium: exige revisão humana explícita registrada (recibo `actor_role=human`, revisor ≠ autor ≠ verificador); risco ausente = desconhecido, fail-closed (AID-2719 X5) | `gate.minimum_profile_gaps` + `coordinator.record_review` + CLI `review` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
-| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados |
+| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados; prove roda em **clean-room** (worktree nova no `build_sha`): árvore do autor com untracked ≠ ∅ ou SHA não-pinado bloqueia antes dos checks; `capture_tree_state` re-capturado após os checks fecha o TOCTOU da mesma raiz (AID-2716/AID-2730) |
 | P4+ | `state.json` não é autoridade: `build_sha`/`verify_sha`/`contract_digest` têm que bater com o último recibo `built`/`verified` do ledger encadeado; provas carregam `examined_sha` e o gate compara com state e ledger; prova sem `examined_sha` (legada) exige re-prova (AID-2719 X4) | `gate.state_ledger_binding_gaps` + `gate.proof_sha_binding_gaps` |
 | P4++ | Head do ledger ancorado FORA dele: `state.ledger_head`/`ledger_seq` atualizados a cada append + `receipt.summary.json` (reflui ao registro versionado); gate bloqueia head ≠ âncora e `ledger --verify` reprova sufixo truncado/rewrite mesmo com cadeia de prefixo íntegra (AID-2719 X6) | `coordinator._append` + `gate.ledger_head_anchor_gaps` + `RunLedger.verify_report(expected_head=...)` |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
