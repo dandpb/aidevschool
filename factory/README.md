@@ -66,6 +66,18 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
   fail-closed: `heartbeat`/`claim`/estações recusam com motivo estruturado —
   re-claim exige re-intake; takeover só pós-expiração (AID-2721).
 
+## Retomada idempotente por estação (AID-2726)
+
+Kill físico em qualquer janela de estação não trava a run — o retry converge
+sem intervenção manual: `freeze` grava o state (`station: freezing`) ANTES dos
+efeitos e recongela contract dir parcial/órfão (inclusive o estado legado
+"contract dir sem state.json"); `build` reclama worktree de tentativa morta
+(remove registro + diretório) antes de recriar no SHA da base; `gate` grava o
+`receipt.summary.json` ANTES da transição `promoted` e regenera o resumo de
+runs promoted sem resumo. Reentrada em `contracted`/`promoted` é idempotente e
+completa recibos pendentes com `detail.backfill` (acrécimo no ledger, jamais
+reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |

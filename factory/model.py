@@ -14,7 +14,10 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Optional
 
-STATIONS = ("queued", "contracted", "built", "verified", "promoted", "blocked")
+# `freezing` é a estação intermediária de write-ahead do freeze (AID-2726):
+# o state é gravado ANTES dos efeitos, então um kill no meio da estação deixa
+# a run retomável em vez de travada.
+STATIONS = ("queued", "freezing", "contracted", "built", "verified", "promoted", "blocked")
 
 RISK_LEVELS = ("low", "medium", "high")
 
