@@ -458,6 +458,60 @@ Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<
    countersign válido FALHA mecanicamente; com countersign válido de agente
    distinto PASSA.
 
+### Dedup de assignment de countersign (AID-2844 — máx. 1 issue aberta por (PR, head))
+
+Registro do caso: corrida AID-2832/2833/2834 (2026-09-26 ~07:17Z) — o mesmo
+re-pin #2 do PR #545 (head `72dd25b8…`) virou **3 issues quase simultâneas**
+criadas por 3 agentes distintos (produtor 07:14:47Z, QA 07:17:28Z, SM
+07:17:33Z). Três heartbeats paralelos rodaram a mesma verificação, 2
+comentários redundantes caíram no PR e um deles 1s APÓS o merge virou a
+citação operativa do re-run de auditoria — artefato vermelho permanente
+(AID-2840, achado 1).
+
+**Regra (binding):** no máximo **1 issue de countersign ABERTA** por
+`(PR#, head-sha-40hex)`. Quem precisa de countersign (produtor em relay, QA
+em delta-revalidação, SM re-taskando pós pin-break) NÃO cria issue à mão —
+usa a porta `scripts/countersign_assign.sh`, que resolve o dedup:
+
+1. **Chave canônica no título**: `[CS PR#<n>@<head-40hex>]` (ex.:
+   `[CS PR#545@72dd25b86a41be599c5e43109590128b385208bf]`). O lookup é
+   mecânico por substring exata; um fallback legado (marcador
+   countersign/re-pin + `#<PR>` + head-7hex no título) cobre issues
+   pré-chave — é o tier que teria pegado a corrida AID-2832/33/34;
+2. **Existindo issue aberta para a chave → REUSE**: bump (comentário de
+   dedup) na mais antiga, nunca issue nova. Escalada é na própria issue
+   (ping ao assignee; sem resposta em 1 heartbeat → FPE → CEO);
+3. **Parada (stalled)**: sem update há mais de `--stall-minutes` (default
+   45), o bump carrega a escalada — duplicar NÃO é caminho de escalação;
+4. **Só cria quando nenhuma issue aberta pina a chave** — e o título nasce
+   com a chave embutida; falha de transporte/API **fail-closed** (exit 1):
+   repetir ou escalar ao FPE, jamais criar manualmente.
+
+```bash
+# consultar (sem writes): DEDUP CREATE | DEDUP REUSE <issue> [STALLED]
+scripts/countersign_assign.sh --check --pr 545 --head <40hex>
+# atribuir (cria OU reusa+bump; fail-closed):
+scripts/countersign_assign.sh --pr 545 --head <40hex> --assignee <agentId> \
+  --title 'COUNTERSIGN QA — PR #545 …' --body-file t.md \
+  --provenance 'Provenance: agent=<slug> task=AID-<n> run=<runId> session=<sessionId>'
+# offline: bash scripts/countersign_assign.sh --self-test
+```
+
+Env: `PAPERCLIP_API_BASE` (default `http://localhost:3100`),
+`PAPERCLIP_API_KEY`, `PAPERCLIP_COMPANY_ID`. **Guard de sha fantasma
+(AID-2851):** a porta recusa `--head` que não seja o head REAL do PR
+(resolvido via `git ls-remote origin refs/pull/<n>/head` ou `gh api`,
+fail-closed distinguível em erro de transporte; break-glass
+`COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1` só para exceções owner-approved).
+Issues de countersign concorrentes por head diferente são reportadas como
+`WARN stale siblings` (higiene: fechar as de head superado). Limite conhecido
+(dogfood AID-2844): o bump pode ser recusado pela API quando a issue-alvo
+está fora do boundary de autorização do criador — o veredito REUSE continua
+válido e o script fail-close SEM criar duplicata; o bump nesse caso segue por
+relay no board/FPE. A aceitação da regra é observável na próxima corrida de
+update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
+(critério AID-2844).
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
@@ -468,6 +522,7 @@ Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<
 | No committed credentials (`.env`, keys, tokens in paths or added lines) | hook + CI | `.claude/hooks/guard-commands.sh` (PreToolUse, Claude Code) · same CI check, **no override** |
 | No force-push / history rewrite | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) — guards a live git operation; cannot be re-checked post-hoc from a diff, so it stays a runtime + repo-owner concern |
 | **Pre-merge countersign de agente distinto (AID-2768, fim da classe F)** | **required check + wrapper + hook** | **`countersign-gate` required status check (`scripts/countersign_gate_check.py`, workflow próprio) — GitHub recusa o merge para qualquer ator · `scripts/merge_pr.sh` única porta de merge (revalida live, exige check verde, recusa `--admin`) · `guard-commands.sh` regra 3 bloqueia `gh pr merge` cru em runtimes Claude** |
+| **Dedup de assignment de countersign — máx. 1 issue aberta por (PR, head) (AID-2844)** | **tooling + processo (binding)** | **`scripts/countersign_assign.sh` porta de assignment (check/reuse+bump/create com chave canônica `[CS PR#<n>@<head-40hex>]` no título, fail-closed em erro de transporte) · contrato e caso-registro em §Dedup de assignment (AID-2844) · corrida AID-2832/33/34 = contraexemplo** |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
 | Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; never reddens (mitigation phase, see §Merge protocol item 6) |
