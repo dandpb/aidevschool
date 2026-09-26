@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beta Hub — AI DevSchool</title>
+  <meta name="description" content="Página única do beta: todas as engines do AI DevSchool com URLs ao vivo e status verificado.">
+  <meta name="robots" content="noindex, follow">
+  <meta property="og:title" content="Beta Hub — AI DevSchool">
+  <meta property="og:description" content="Todas as engines, URLs ao vivo e status verificado — um link só.">
+  <meta property="og:type" content="website">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 2rem 1.25rem 3rem;
+      background: #0d1117; color: #e6edf3;
+      font: 16px/1.55 ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    main { max-width: 62rem; margin: 0 auto; }
+    h1 { font-size: 1.9rem; margin: 0 0 .35rem; letter-spacing: -.02em; }
+    h2 { font-size: 1.2rem; margin: 2.4rem 0 .9rem; color: #7ee787; letter-spacing: .02em; text-transform: uppercase; }
+    .sub { color: #9198a1; margin: 0 0 1rem; }
+    .meta { color: #9198a1; font-size: .82rem; border-left: 3px solid #30363d; padding-left: .75rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: .8rem; }
+    a.card, .card {
+      display: block; background: #161b22; border: 1px solid #30363d; border-radius: 10px;
+      padding: .85rem .95rem; text-decoration: none; color: inherit;
+    }
+    a.card:hover, a.card:focus-visible { border-color: #7ee787; }
+    a:focus-visible { outline: 2px solid #7ee787; outline-offset: 2px; }
+    .card .name { font-weight: 650; font-size: 1rem; }
+    .card .url { color: #79c0ff; font-size: .8rem; word-break: break-all; display: block; margin: .15rem 0 .3rem; }
+    .card .desc { color: #9198a1; font-size: .84rem; }
+    .badge {
+      display: inline-block; font-size: .7rem; font-weight: 600; border-radius: 999px;
+      padding: .1rem .55rem; margin-right: .3rem; vertical-align: middle; letter-spacing: .02em;
+    }
+    .b-ready { background: #12261e; color: #7ee787; border: 1px solid #238636; }
+    .b-exp   { background: #2d2200; color: #e3b341; border: 1px solid #9e6a03; }
+    .b-notier{ background: #1f2428; color: #9198a1; border: 1px solid #30363d; }
+    .b-live  { background: #0c2d6b; color: #79c0ff; border: 1px solid #1f6feb; }
+    .unit { color: #9198a1; font-size: .74rem; }
+    table { border-collapse: collapse; width: 100%; font-size: .88rem; }
+    th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid #21262d; vertical-align: top; }
+    th { color: #9198a1; font-weight: 600; font-size: .78rem; text-transform: uppercase; }
+    code { background: #1f2428; border: 1px solid #30363d; border-radius: 5px; padding: .08rem .35rem; font-size: .8rem; color: #ffa657; word-break: break-all; }
+    .foot { margin-top: 2.5rem; color: #9198a1; font-size: .8rem; border-top: 1px solid #30363d; padding-top: 1rem; }
+    .foot a { color: #79c0ff; }
+    .lead { background: #0e2d1a; border: 1px solid #238636; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Beta Hub — AI DevSchool</h1>
+  <p class="sub">Todas as engines em um link só: URLs ao vivo, status verificado e como rodar o resto no seu computador.</p>
+  <p class="meta">
+    Verificado em <strong>2026-09-26 01:29 UTC</strong> · 22 URLs públicas com HTTP 200 ·
+    main <code>4461841f</code> · pilot bundle <code>b6a0ea1b</code> · CI verde nos 15 checks por engine ·
+    +1 beta público school-entry (HTTP 200 em 2026-09-26 16:57 UTC)
+  </p>
+
+  <h2>Comece por aqui</h2>
+  <div class="grid">
+    <a class="card lead" href="https://aidevschool-codexdojo-os.netlify.app/?track=dev">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready ×3</span>
+      <span class="name">CodexDojo OS — trilha Dev</span>
+      <span class="url">aidevschool-codexdojo-os.netlify.app/?track=dev</span>
+      <span class="desc">Desktop educacional com terminal, navegador de arquivos e mentor local. Hospeda as missões literacy e os jogos voxel abaixo.</span>
+    </a>
+    <a class="card lead" href="https://aidevschool-codexdojo-os.netlify.app/?track=literacy">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready ×3</span>
+      <span class="name">CodexDojo OS — trilha Literacy</span>
+      <span class="url">aidevschool-codexdojo-os.netlify.app/?track=literacy</span>
+      <span class="desc">Mesma experiência, foco em quem quer usar IA sem programar.</span>
+    </a>
+    <a class="card lead" href="https://aidevschool-literacydojo.netlify.app/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready ×2</span>
+      <span class="name">LiteracyDojo (site próprio)</span>
+      <span class="url">aidevschool-literacydojo.netlify.app</span>
+      <span class="desc">Microlearning de IA em 14 missões (módulos 1–3 avaliados). PWA, mundo voxel, ritmo Duolingo.</span>
+    </a>
+  </div>
+
+  <h2>Jogos e missões hospedados no OS (pilot bundle)</h2>
+  <p class="sub">Cada jogo ensina uma unidade do currículo Dev. Tier concedido ao loop standalone do voxelDojo (não jogo-a-jogo).</p>
+  <div class="grid">
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/literacydojo/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready ×2</span>
+      <span class="name">LiteracyDojo (missão hospedada)</span>
+      <span class="url">…/apps/literacydojo/</span>
+      <span class="desc">A missão de literacy dentro do OS.</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/pixelquest/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready</span>
+      <span class="name">PixelQuest (RPG 8-bit)</span>
+      <span class="url">…/apps/pixelquest/</span>
+      <span class="desc">Cada lab é um conceito do currículo; nível limpo emite evidência NDJSON.</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/dojotoday/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">customer-ready</span>
+      <span class="name">dojoToday (a lição de hoje)</span>
+      <span class="url">…/apps/dojotoday/</span>
+      <span class="desc">Streak FSRS, revisões vencidas e unidade ativa — só leitura.</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/warehouse/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Warehouse <span class="unit">· game-02 · U2 key-value store</span></span>
+      <span class="url">…/apps/warehouse/</span>
+      <span class="desc">Armazém KV — jogo de referência do catálogo voxel.</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/wormhole/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Wormhole <span class="unit">· game-03 · U3 url-shortener</span></span>
+      <span class="url">…/apps/wormhole/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/relay-station/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Relay Station <span class="unit">· game-05 · U5 websocket-chat</span></span>
+      <span class="url">…/apps/relay-station/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/pipeline-plant/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Pipeline Plant <span class="unit">· game-06 · U6 file-upload</span></span>
+      <span class="url">…/apps/pipeline-plant/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/checkpoint-city/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Checkpoint City <span class="unit">· game-07 · U7 rest-api-auth</span></span>
+      <span class="url">…/apps/checkpoint-city/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/timeline-tower/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Timeline Tower <span class="unit">· game-08 · U8 event-driven</span></span>
+      <span class="url">…/apps/timeline-tower/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/docking-bay/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Docking Bay <span class="unit">· game-09 · U9 plugin-system</span></span>
+      <span class="url">…/apps/docking-bay/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/hash-ring/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Hash Ring <span class="unit">· game-10 · U10 distributed-cache</span></span>
+      <span class="url">…/apps/hash-ring/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/air-traffic/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Air Traffic <span class="unit">· game-11 · U11 load-balancer</span></span>
+      <span class="url">…/apps/air-traffic/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/mission-control/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Mission Control <span class="unit">· game-12 · U12 job-scheduler</span></span>
+      <span class="url">…/apps/mission-control/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/breaker-grid/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Breaker Grid <span class="unit">· game-13 · U13 circuit-breaker</span></span>
+      <span class="url">…/apps/breaker-grid/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/river-delta/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">River Delta <span class="unit">· game-14 · U14 log-aggregator</span></span>
+      <span class="url">…/apps/river-delta/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/observatory/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Observatory <span class="unit">· game-15 · U15 metrics-collector</span></span>
+      <span class="url">…/apps/observatory/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/freight-yard/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Freight Yard <span class="unit">· game-16 · U16 message-queue</span></span>
+      <span class="url">…/apps/freight-yard/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/lighthouse-network/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Lighthouse Network <span class="unit">· game-17 · U17 config-service</span></span>
+      <span class="url">…/apps/lighthouse-network/</span>
+    </a>
+    <a class="card" href="https://aidevschool-codexdojo-os.netlify.app/apps/stacks/">
+      <span class="badge b-live">no ar</span><span class="badge b-ready">loop voxel</span>
+      <span class="name">Stacks <span class="unit">· game-18 · U18 search-engine</span></span>
+      <span class="url">…/apps/stacks/</span>
+    </a>
+  </div>
+
+  <h2>Beta público (sem tier)</h2>
+  <div class="grid">
+    <a class="card" href="https://reaction-bizrate-soviet-patient.trycloudflare.com">
+      <span class="badge b-live">no ar</span><span class="badge b-notier">sem tier · beta público</span>
+      <span class="name">school-entry — entrada sem login</span>
+      <span class="url">reaction-bizrate-soviet-patient.trycloudflare.com</span>
+      <span class="desc">Descreva seu objetivo e receba uma recomendação de engine. Catálogo inicia 100% locked — o operador libera engines no painel <code>/admin/engines</code>. Recomendação em modo fallback (sem API paga). URL de quick tunnel: muda a cada restart; se não abrir, confirmar a URL vigente com o operador.</span>
+    </a>
+  </div>
+  <p class="unit">Roda local: <code>cd engines/school-entry &amp;&amp; npm start</code> (Node 22) · server-side na mesma infra do beta público (túnel + edge + supervisor).</p>
+
+  <h2>Roda no seu computador (sem deploy público)</h2>
+  <table>
+    <tr><th>Engine</th><th>O que é</th><th>Status</th><th>Como rodar</th></tr>
+    <tr>
+      <td><strong>miniTown</strong></td>
+      <td>Cidade cozy explore-only, Nível 0.</td>
+      <td><span class="badge b-exp">experimental por design</span></td>
+      <td><code>cd engines/miniTown &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></td>
+    </tr>
+    <tr>
+      <td><strong>zai-duolingo-like</strong></td>
+      <td>“Duolingo de IA” single-page, Next.js + Prisma.</td>
+      <td><span class="badge b-notier">sem tier</span></td>
+      <td><code>cd engines/zai-duolingo-like &amp;&amp; npm run dev</code> (porta 3000)</td>
+    </tr>
+    <tr>
+      <td><strong>sdlc-quest</strong></td>
+      <td>Quest didática de SDLC em pt-BR, autossuficiente.</td>
+      <td><span class="badge b-notier">sem tier</span></td>
+      <td><code>cd engines/sdlc-quest &amp;&amp; npm start</code> (:8080, sem npm install)</td>
+    </tr>
+    <tr>
+      <td><strong>codexDojo</strong></td>
+      <td>Dashboard/console do ecossistema.</td>
+      <td><span class="badge b-notier">interna</span></td>
+      <td><code>cd engines/codexDojo &amp;&amp; pnpm install &amp;&amp; pnpm run dev</code></td>
+    </tr>
+    <tr>
+      <td><strong>aiDevschoolMvp</strong></td>
+      <td>Chat-tutor das 24 lições de AI Fluency (sem web).</td>
+      <td><span class="badge b-notier">sem superfície web</span></td>
+      <td>via skill <code>SKILL.md</code> · testes: <code>make test</code> na raiz</td>
+    </tr>
+  </table>
+
+  <h2>Motores internos (não são superfície de teste)</h2>
+  <table>
+    <tr><th>Motor</th><th>Função</th></tr>
+    <tr><td><strong>voxelDojo</strong></td>
+      <td>Catálogo de 18 jogos Three.js — os 16 publicados estão no grid acima, hospedados no OS.</td></tr>
+    <tr><td><strong>pixelDojo</strong></td>
+      <td>Motor dos jogos 8-bit — PixelQuest publicado acima é a superfície canon.</td></tr>
+    <tr><td><strong>minimaxDojo</strong></td>
+      <td>Núcleo do tutor (14 agentes) e thresholds canônicos.</td></tr>
+    <tr><td><strong>miniMaxEvolutionEngine</strong></td>
+      <td>Loop de 5 fases Spec→Optimize dos agentes de engenharia.</td></tr>
+    <tr><td><strong>openclaw</strong></td>
+      <td>Runner file-based do checklist de 5 fases.</td></tr>
+    <tr><td><strong>shared</strong></td>
+      <td>Primitivas de teaching-evidence compartilhadas entre engines.</td></tr>
+  </table>
+
+  <h2>O que cada selo significa</h2>
+  <table>
+    <tr><th>Selo</th><th>Fonte</th></tr>
+    <tr><td><span class="badge b-ready">customer-ready</span></td>
+      <td>Tier concedido na matriz oficial de readiness (<code>docs/product-readiness/README.md</code>), com revalidação até 2026-10-16/19. LiteracyDojo ×2, OS ×3, dojoToday, PixelQuest, voxelDojo (loop).</td></tr>
+    <tr><td><span class="badge b-exp">experimental</span></td>
+      <td>Funciona, mas sem promessa de progressão/persistência/mastery (miniTown, por design).</td></tr>
+    <tr><td><span class="badge b-notier">sem tier</span></td>
+      <td>Sem caso customer na matriz: nenhum compromisso de prontidão foi avaliado ainda.</td></tr>
+    <tr><td><span class="badge b-live">no ar</span></td>
+      <td>URL pública verificada com HTTP 200 na data/hora do topo desta página.</td></tr>
+  </table>
+
+  <p class="foot">
+    <strong>Regra de ouro:</strong> certeza de conclusão nunca vive no LLM — verificadores determinísticos e evidência independente decidem.
+    Mastery real já demonstrado: U0 via PixelQuest e U2 via Warehouse (evidência NDJSON).
+    Fontes: matriz <code>docs/product-readiness/README.md</code> · pilot-bundle-manifest ao vivo (<code>b6a0ea1b</code>, sha256 por superfície) ·
+    check-runs do main <code>4461841f</code> (GitHub Actions, 2026-09-26) · verificação HTTP 200 das 22 URLs em 2026-09-26 01:29 UTC.
+    school-entry: publish receipt AID-2910 (comment 81ab4837) · HTTP 200 em 2026-09-26 16:57 UTC · URL vigente do túnel em <code>school-entry-tunnel/public-url.txt</code> (re-sync 15s).
+    Página mantida pelo Growth Web Engineer (AID-2669 · registro do beta AID-2957); sem indexação em buscadores.
+  </p>
+</main>
+</body>
+</html>
