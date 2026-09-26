@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 
 /** DOM HUD — briefing, controls per level, metrics. Reads sim state; dispatches controller commands. */
@@ -152,4 +151,20 @@ function button(parent: HTMLElement, testId: string, label: string, onClick: () 
 
 function truncate(s: string, n: number): string {
   return s.length > n ? `${s.slice(0, n)}…` : s
+}
+
+const HTML_ESCAPES: Record<string, string> = {
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&#39;",
+}
+const HTML_SPECIAL_CHARS = /[&<>"']/
+const HTML_SPECIAL_CHARS_GLOBAL = /[&<>"']/g
+
+function escapeHtml(value: unknown): string {
+  const str = String(value ?? "")
+  if (!HTML_SPECIAL_CHARS.test(str)) return str
+  return str.replace(HTML_SPECIAL_CHARS_GLOBAL, (ch) => HTML_ESCAPES[ch] ?? ch)
 }

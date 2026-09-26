@@ -22,4 +22,4 @@
 ## 2026-09-26 - Prevent XSS in voxelDojo HUD innerHTML Render Path
 **Vulnerability:** Untrusted string interpolation directly into `innerHTML` without escaping in `engines/voxelDojo/game-*/src/scene/hud.ts` files.
 **Learning:** Like dojoToday, voxelDojo games use vanilla JS template strings for UI rendering. When dynamic properties (like `doc.id` and `doc.text`) are directly injected into `innerHTML`, it creates a DOM-based XSS vulnerability if those properties contain malicious payloads.
-**Prevention:** Coerce and escape all dynamically interpolated text strings using a shared `escapeHtml` utility whenever updating `innerHTML`.
+**Prevention:** Coerce and escape all dynamically interpolated text strings using an `escapeHtml` utility whenever updating `innerHTML`. Be careful not to create cross-boundary imports in the monorepo; add local utils if necessary.
