@@ -102,6 +102,30 @@ pós-túmulo originalmente proposto aqui foi retirado no update-branch:
 - `release(event_id, holder_enforcement=False)` remove o arquivo (caminho
   interno do takeover em `claim`): sem túmulo, o item volta à fila.
 
+## Árvore limpa fail-closed + retry com risco herdado (AID-2822)
+
+Dois enfraquecimentos do gate encontrados no stress AID-2700, fechados sobre
+a ponta do clean-room (AID-2716/AID-2730):
+
+- **F6 — prova examina árvore suja (evidência ≠ commit).**
+  `capture_tree_state` era `??`-only: rastreado modificado entre o commit do
+  build e o prove não movia o SHA nem criava untracked — invisível ao gate.
+  Agora o porcelain INTEIRO é fotografado (`TreeState.dirty` para
+  modificado/staged/deletado/renomeado): a auditoria da worktree do autor em
+  `prove` exige árvore LIMPA (SHA pinado + sem untracked significativo +
+  sem rastreado modificado — fail-closed com recibo `clean_room`),
+  `post_check_drift` bloqueia mutação rastreada DURANTE os checks na
+  clean-room (a prova sela `examined_sha` do snapshot anterior) e
+  `tree_drift` reporta dirty no snapshot do verify. O `dirty` tem default
+  `[]` — snapshots e estados legados continuam líveis.
+- **F2 — retry resetava `risk="low"`.** O evento de retry de run bloqueada
+  herda o risco da decisão de origem (`state["risk"]`, congelado no freeze a
+  partir do evento — AID-2719 X5; fallback: relê o evento da fila). Risco
+  indeterminável (run legada sem `risk` e sem evento na fila) é fail-closed:
+  `resume()` recusa SEM spawnar retry e SEM persistir o incremento de
+  `attempts` — spawnar `low` por default é exatamente o bypass de X5.
+  Regressões: `factory/tests/test_p4_tree_integrity_2822.py`.
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |
@@ -111,7 +135,7 @@ pós-túmulo originalmente proposto aqui foi retirado no update-branch:
 | P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256, examined_sha}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715; `examined_sha` AID-2719) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P2/P3+ | Contrato sem nenhum check `standard` não promove sozinho com risco ≥ medium: exige revisão humana explícita registrada (recibo `actor_role=human`, revisor ≠ autor ≠ verificador); risco ausente = desconhecido, fail-closed (AID-2719 X5) | `gate.minimum_profile_gaps` + `coordinator.record_review` + CLI `review` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
-| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados; prove roda em **clean-room** (worktree nova no `build_sha`): árvore do autor com untracked ≠ ∅ ou SHA não-pinado bloqueia antes dos checks; `capture_tree_state` re-capturado após os checks fecha o TOCTOU da mesma raiz (AID-2716/AID-2730) |
+| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados; prove roda em **clean-room** (worktree nova no `build_sha`): árvore do autor com untracked ≠ ∅, SHA não-pinado ou **rastreado modificado** bloqueia antes dos checks; `capture_tree_state` re-capturado após os checks fecha o TOCTOU da mesma raiz, inclusive mutação rastreada (AID-2716/AID-2730; AID-2822 F6) |
 | P4+ | `state.json` não é autoridade: `build_sha`/`verify_sha`/`contract_digest` têm que bater com o último recibo `built`/`verified` do ledger encadeado; provas carregam `examined_sha` e o gate compara com state e ledger; prova sem `examined_sha` (legada) exige re-prova (AID-2719 X4) | `gate.state_ledger_binding_gaps` + `gate.proof_sha_binding_gaps` |
 | P4++ | Head do ledger ancorado FORA dele: `state.ledger_head`/`ledger_seq` atualizados a cada append + `receipt.summary.json` (reflui ao registro versionado); gate bloqueia head ≠ âncora e `ledger --verify` reprova sufixo truncado/rewrite mesmo com cadeia de prefixo íntegra (AID-2719 X6) | `coordinator._append` + `gate.ledger_head_anchor_gaps` + `RunLedger.verify_report(expected_head=...)` |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
