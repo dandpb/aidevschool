@@ -100,7 +100,11 @@ class TestCleanRoomExecution:
         assert decision_ok(coord)
 
     def test_tracked_dirty_author_tree_cannot_mask_regression(self, tmp_path):
-        """S3b (AID-2683): conserto local NÃO commitado não engana a proof."""
+        """S3b (AID-2683) / F6 (AID-2822): conserto local NÃO commitado não
+        engana a proof — desde AID-2822 a auditoria de prove é fail-closed:
+        rastreado modificado na worktree do autor bloqueia ANTES de qualquer
+        check (antes o check rodava na clean-room via `??`-only cego ao dirty;
+        agora a run nem chega a `verified`)."""
         coord, repo, home = setup_cleanroom_run(
             tmp_path, change_id="s3b-1", checks_cmd='test "$(cat app.txt)" = v2',
         )
@@ -111,14 +115,14 @@ class TestCleanRoomExecution:
             GIT_ENV + "echo v2-broken > app.txt && git add -A && git commit -qm feat "
             "&& echo v2 > app.txt",
         )
-        result = coord.prove("run-FE-S6", VERIFIER)
-        # O check rodou na clean-room no build_sha e viu a regressão commitada.
-        proof = result.proof_of("C1")
-        assert proof is not None and proof.exit_code != 0
-        assert not result.all_passed
+        with pytest.raises(CoordinatorError, match="tracked modifications at prove time"):
+            coord.prove("run-FE-S6", VERIFIER)
+        # Fail-closed: sem transição verified no ledger, sem promote.
+        assert coord._load_state("run-FE-S6")["station"] == "blocked"
+        assert not coord._ledger("run-FE-S6").find("verified")
         decision = coord.gate("run-FE-S6", "ctx-coordinator")
         assert decision.verdict == "block"
-        assert any("P2: check C1 failed" in r for r in decision.reasons)
+        assert any("tracked modifications at prove time" in r for r in decision.reasons)
 
 
 class TestToctouDuringChecks:
