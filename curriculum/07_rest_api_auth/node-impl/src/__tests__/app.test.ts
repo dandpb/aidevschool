@@ -64,6 +64,8 @@ describe('REST API auth Node implementation', () => {
     expect(missing.statusCode).toBe(401);
     const malformed = await app.inject({ method: 'GET', url: '/v1/users', headers: { authorization: 'Bearer not-a-jwt' } });
     expect(malformed.statusCode).toBe(401);
+    expect(bodyOf<Failure>(malformed).error.code).toBe('UNAUTHENTICATED');
+    expect(store.audits.map((entry) => entry.action)).toContain('token_verify_failed');
     const denied = await app.inject({ method: 'GET', url: '/v1/users', headers: { authorization: `Bearer ${tokens.access_token}` } });
     expect(denied.statusCode).toBe(403);
     const self = await app.inject({ method: 'PUT', url: `/v1/users/${user.id}`, headers: { authorization: `Bearer ${tokens.access_token}` }, payload: { display_name: 'Ada L.' } });
