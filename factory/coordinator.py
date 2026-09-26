@@ -212,16 +212,78 @@ class Coordinator:
         return state
 
     def prove(self, run_id: str, verifier_context: str) -> VerifyResult:
+        """Estação Provar em clean-room (AID-2716/AID-2730).
+
+        Os checks NUNCA rodam na worktree do autor: primeiro a árvore do autor
+        é auditada (SHA pinado no recibo de build + sem não-rastreados);
+        fail-closed bloqueia a run antes de qualquer transição `verified`.
+        Aprovada a auditoria, os checks rodam em worktree NOVA criada
+        exatamente no `build_sha`, com o estado da árvore re-capturado após
+        os checks (mutação durante a execução = drift bloqueante).
+        """
         state = self._load_state(run_id)
         if state["station"] != "built":
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not built")
         self._fence(run_id, state)
         contract = Contract.load_frozen(self._run_dir(run_id))
-        worktree = Path(state["worktree"])
-        result = run_checks(contract, worktree, verifier_context, self._run_dir(run_id) / "proofs")
+        author_worktree = Path(state["worktree"])
+        author_tree = gitwork.capture_tree_state(author_worktree)
+        blockers: list[str] = []
+        if author_tree.sha != state["build_sha"]:
+            blockers.append(
+                "P4 clean-room: author worktree moved to "
+                f"{author_tree.sha}, build receipt pinned {state['build_sha']}"
+            )
+        meaningful = gitwork.meaningful_untracked(author_tree.untracked)
+        if meaningful:
+            blockers.append(
+                "P4 clean-room: author worktree has untracked files at prove "
+                f"time: {meaningful}"
+            )
+        if blockers:
+            state.update(
+                station="blocked", prove_blockers=blockers, updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=author_tree.sha, contract_digest=contract.digest,
+                detail={"reasons": blockers, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (clean-room policy) for {run_id}: "
+                + "; ".join(blockers)
+            )
+        cleanroom = self.home / "worktrees" / f"{run_id}-cleanroom"
+        if cleanroom.exists():
+            gitwork.remove_worktree(self.repo, cleanroom)
+        gitwork.create_worktree(self.repo, state["build_sha"], cleanroom)
+        result = run_checks(
+            contract, cleanroom, verifier_context, self._run_dir(run_id) / "proofs"
+        )
         self.persist_proofs_meta(run_id, result)
+        if result.drift_reasons:
+            state.update(
+                station="blocked", prove_blockers=result.drift_reasons,
+                verify_worktree=str(cleanroom), updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=result.sha, contract_digest=contract.digest,
+                proof_refs=[p.check_id for p in result.proofs],
+                detail={"reasons": result.drift_reasons, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (tree mutated while checks ran) for {run_id}: "
+                + "; ".join(result.drift_reasons)
+            )
         state.update(station="verified", verifier_context=verifier_context,
                      verify_sha=result.sha, verify_untracked=result.untracked,
+                     verify_worktree=str(cleanroom),
+                     verify_generated_untracked=result.generated_untracked,
                      updated_at=utcnow())
         self._save_state(run_id, state)
         self._append(
@@ -237,6 +299,21 @@ class Coordinator:
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
         self._fence(run_id, state)
+        # Run bloqueada na estação Provar (política clean-room, AID-2716/AID-2730):
+        # não existe estado verificado a promover — fail-closed com os motivos.
+        if state["station"] == "blocked" and "verify_sha" not in state:
+            reasons = [
+                "P4 clean-room: run blocked at prove — no verified evidence to promote"
+            ] + list(state.get("prove_blockers", []))
+            decision = GateDecision(verdict="block", reasons=reasons)
+            self._append(
+                run_id, station_from="blocked", station_to="blocked",
+                actor_role="coordinator", context_id=context_id,
+                sha=state.get("build_sha"), contract_digest=state.get("contract_digest"),
+                detail={"reasons": reasons},
+            )
+            self._write_receipt_summary(run_id, decision)
+            return decision
         frozen = Contract.load_frozen(self._run_dir(run_id))
         # O registro versionado é a autoridade: se mudou após o congelamento,
         # a run está velha e a promoção fica bloqueada (P4).

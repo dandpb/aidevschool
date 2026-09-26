@@ -27,7 +27,7 @@ factory/
 ├── ledger.py         # recibos append-only encadeados por hash
 ├── contract.py       # registro versionado intent/<change-id>/ → contrato congelado
 ├── gitwork.py        # worktree isolado, SHA, estado da árvore (P4)
-├── verify.py         # Verifier separado executa checks e grava provas (P2/P3)
+├── verify.py         # Verifier separado: checks em clean-room no build_sha + provas (P2/P3/P4)
 ├── gate.py           # promoção fail-closed (P1–P5)
 ├── coordinator.py    # MOTOR: orquestra estações, retomável
 └── tests/            # critérios de saída P1–P5 (casos negativos inclusos)
@@ -58,7 +58,7 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 | P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID; fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
-| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados |
+| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados; prove roda em **clean-room** (worktree nova no `build_sha`): árvore do autor com untracked ≠ ∅ ou SHA não-pinado bloqueia antes dos checks; `capture_tree_state` re-capturado após os checks fecha o TOCTOU da mesma raiz (AID-2716/AID-2730) |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
 
 O teste negativo é parte do aceite: `factory/tests/` cobre cada bloqueio.
