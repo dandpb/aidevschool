@@ -29,7 +29,7 @@ from .contract import Contract, load_from_registry
 from .gate import GateDecision, evaluate
 from .ledger import RunLedger
 from .model import Receipt, WorkEvent, digest_obj, utcnow
-from .queue import EventQueue, LeaseHeldError
+from .queue import EventQueue, FactoryError, LeaseHeldError, Lease
 from .verify import VerifyResult, run_checks
 
 DEFAULT_HOME = ".scratch/factory"
@@ -64,6 +64,46 @@ class Coordinator:
 
     def _run_dir(self, run_id: str) -> Path:
         return self.home / "runs" / run_id
+
+    def _fence(self, run_id: str, state: dict | None = None,
+               acting_context: str | None = None) -> Lease:
+        """P1 fencing (AID-2718/AID-2721): nenhuma estação transiciona uma run
+        cujo lease esteja ausente, expirado, nas mãos de outro holder ou em
+        época posterior à do congelamento. Fail-closed: `CoordinatorError`
+        antes de qualquer mutação de state ou ledger."""
+        event_id = run_id.removeprefix("run-")
+        try:
+            lease = self.queue.lease_of(event_id)
+        except FactoryError as exc:
+            raise CoordinatorError(
+                f"P1 fence: run {run_id} cannot transition — {exc}"
+            ) from exc
+        if self.queue.lease_expired(event_id):
+            raise CoordinatorError(
+                f"P1 fence: lease for {event_id} expired (holder {lease.holder})"
+            )
+        expected_holder = (state or {}).get("lease_holder")
+        if state is not None and not expected_holder:
+            # run congelada sem holder registrado (estado legado/pré-fencing):
+            # não atribuível a nenhum lease — fail-closed (AID-2721 O2).
+            raise CoordinatorError(
+                f"P1 fence: run {run_id} state has no lease_holder — "
+                "unattributable run cannot transition"
+            )
+        if expected_holder is None:
+            expected_holder = acting_context  # freeze: primeira estação pós-claim
+        if expected_holder is not None and lease.holder != expected_holder:
+            raise CoordinatorError(
+                f"P1 fence: lease for {event_id} is held by {lease.holder}, "
+                f"expected {expected_holder} — obsolete writers are fenced"
+            )
+        expected_epoch = (state or {}).get("lease_epoch")
+        if expected_epoch is not None and lease.epoch != expected_epoch:
+            raise CoordinatorError(
+                f"P1 fence: lease epoch for {event_id} moved to {lease.epoch} "
+                f"(run froze epoch {expected_epoch}) — obsolete writers are fenced"
+            )
+        return lease
 
     def _ledger(self, run_id: str) -> RunLedger:
         return RunLedger(self.home / "ledger" / f"{run_id}.jsonl")
@@ -102,6 +142,7 @@ class Coordinator:
     def freeze(self, run_id: str, change_id: str, context_id: str,
                base_sha: str | None = None) -> Contract:
         event_id = run_id.removeprefix("run-")
+        lease = self._fence(run_id, acting_context=context_id)
         station_from = "queued"
         base = base_sha or gitwork._git(self.repo, "rev-parse", "HEAD").stdout.strip()
         contract = load_from_registry(self.registry, change_id, base)
@@ -114,6 +155,8 @@ class Coordinator:
             "station": "contracted",
             "base_sha": base,
             "contract_digest": contract.digest,
+            "lease_holder": lease.holder,
+            "lease_epoch": lease.epoch,
             "author_context": None,
             "verifier_context": None,
             "attempts": 1,
@@ -131,6 +174,7 @@ class Coordinator:
         state = self._load_state(run_id)
         if state["station"] != "contracted":
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not contracted")
+        self._fence(run_id, state, acting_context=author_context)
         contract = Contract.load_frozen(self._run_dir(run_id))
         worktree = self.home / "worktrees" / run_id
         gitwork.create_worktree(self.repo, contract.base_sha, worktree)
@@ -171,6 +215,7 @@ class Coordinator:
         state = self._load_state(run_id)
         if state["station"] != "built":
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not built")
+        self._fence(run_id, state)
         contract = Contract.load_frozen(self._run_dir(run_id))
         worktree = Path(state["worktree"])
         result = run_checks(contract, worktree, verifier_context, self._run_dir(run_id) / "proofs")
@@ -191,6 +236,7 @@ class Coordinator:
         state = self._load_state(run_id)
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
+        self._fence(run_id, state)
         frozen = Contract.load_frozen(self._run_dir(run_id))
         # O registro versionado é a autoridade: se mudou após o congelamento,
         # a run está velha e a promoção fica bloqueada (P4).
