@@ -336,14 +336,91 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      **citando que é a primeira lane**. Registro:
      `intent/AID-2493-provenance-trailer/`.
 
+## GATE pré-merge mecânico `countersign-gate` (AID-2768 — fim da classe F)
+
+**Classe F** = merge sem veredito independente pré-merge: F1 (#529), F2 (#531),
+F3 (#533 — merge pela run produtora 94s após o HELD do guard, citando
+countersign VOID). O gate póstumo do AID-2318 valida a citação DEPOIS; convenções
+advisory (comentários VOID/HELD) não contêm um produtor com plano stale. Decisão
+CEO: AID-2763. Desde AID-2768 a classe F é **mecanicamente impossível**:
+
+- o check **`countersign-gate`**
+  (`.github/workflows/countersign-gate.yml` →
+  `scripts/countersign_gate_check.py`) é um **required status check** em main
+  (`enforce_admins` on): `gh pr merge` FALHA na API para qualquer ator —
+  incluindo o produtor na credencial compartilhada — enquanto o check estiver
+  vermelho ou ausente;
+- o wrapper **`scripts/merge_pr.sh`** é a **única porta de merge**: revalida a
+  cadeia live na hora do merge, exige o check verde no head, recusa `--admin`,
+  e cita o countersign operativo na merge message. `gh pr merge` cruza é
+  bloqueado em runtimes Claude pelo hook `guard-commands.sh` (regra 3).
+
+### Contrato de aceite (fail-closed em toda ambiguidade)
+
+Um merge só passa quando o **comentário de countersign operativo** (o último
+comentário com linha `Countersign:`) satisfaz TUDO:
+
+1. **Citação em comentário** (não no body — body não tem horário postável):
+   `Countersign: <AID|GH>-<n> verdict <ref> [head=<40-hex>]`;
+2. **Resolvável**: o AID/GH citado resolve via `scripts/sdlc_aid_resolve.sh`;
+3. **Head pinado**: o SHA full 40-hex do head ATUAL do PR aparece no comentário
+   — novo push/update-branch quebra o pin e exige countersign fresco;
+4. **Atribuído**: o comentário carrega `Provenance: agent=<slug> task=<AID|GH>-<n>
+   run=<runId> session=<sessionId>` (AID-2493);
+5. **Agente distinto do produtor** (por AGENTE, não runId — AID-2763): o
+   produtor é o PRIMEIRO trailer de provenance da conversa (body conta
+   primeiro); sem trailer nenhum → "producer unattributed" → vermelho (formato
+   F1/F2: produtor com plano stale simplesmente omite atribuição);
+6. **Operativo = último**: um self-cite do produtor DEPOIS de um countersign
+   válido (padrão F3) torna-se o operativo e falha;
+7. **Não supersedido**: nenhum comentário posterior com marcador VOID ou HELD,
+   e nenhum evento `reopened` posterior (close de contenção → reopen não viaja
+   com countersign stale; caso #535).
+
+### Bloco canônico de countersign (copiar/adaptar)
+
+```
+Countersign: AID-<n> verdict <commentId> head=<full-40-hex-head>
+Provenance: agent=<slug-distinto-do-produtor> task=AID-<n> run=<runId> session=<sessionId>
+```
+
+### Modelo de ameaça (o que o gate assume honestamente)
+
+- **Credencial GitHub compartilhada**: identidade de agente só existe via
+  trailer `Provenance:` (AID-2493/AID-2423); por isso o gate exige trailer na
+  atribuição E fail-closed quando ausente. O founder humano funde-se ao
+  cofre de credenciais: PRs dele também precisam de countersign de agente
+  distinto (prerrogativa do owner permanece via edição do branch protection —
+  ação de admin settings fora do caminho de merge, registrada no audit log).
+- **Workflow versions**: `pull_request` roda a cópia do PR (dogfooding do PR
+  que introduz o gate); `issue_comment` (created) e `workflow_dispatch` rodam
+  a cópia de main — a versão autoritativa. O próprio comentário de countersign
+  dispara a reavaliação com a lógica de main e sobrescreve o check com o
+  veredicto verdadeiro. O wrapper só roda de checkout main atualizado.
+- **Escape hatch**: editar a branch protection é a única saída — fora do
+  merge path, auditada, e reversível pelo CEO.
+
+### Rollout (registro AID-2768)
+
+1. PR introduzindo gate+wrapper+docs (dogfooding: fica vermelho até countersign
+   de agente distinto — QA Lead);
+2. merge via wrapper (merger ≠ produtor ≠ verificador);
+3. ativação do required check `countersign-gate` na branch protection + backfill
+   (workflow_dispatch) nos PRs abertos;
+4. demonstração ao vivo registrada no PR citado em AID-2768: merge sem
+   countersign válido FALHA mecanicamente; com countersign válido de agente
+   distinto PASSA.
+
 ## Guardrails (what is enforced, and how)
 
 | Control | Type | Enforcement |
 | --- | --- | --- |
 | No edits to generated/derived paths (`.mavis/`, `.loops/`, `dist/`, `node_modules/`, `.codegraph/`, …) | hook + CI | `.claude/hooks/protect-paths.sh` (PreToolUse, Claude Code) · `scripts/sdlc_guard_check.sh` on the diff in CI job `sdlc-guards` (any runtime) |
+
 | Tests can't be weakened mid-fix (new test files OK; editing existing ones needs owner override) | hook + CI | `.claude/hooks/protect-tests.sh` (PreToolUse, Claude Code) · same CI check |
 | No committed credentials (`.env`, keys, tokens in paths or added lines) | hook + CI | `.claude/hooks/guard-commands.sh` (PreToolUse, Claude Code) · same CI check, **no override** |
 | No force-push / history rewrite | hook | `.claude/hooks/guard-commands.sh` (PreToolUse) — guards a live git operation; cannot be re-checked post-hoc from a diff, so it stays a runtime + repo-owner concern |
+| **Pre-merge countersign de agente distinto (AID-2768, fim da classe F)** | **required check + wrapper + hook** | **`countersign-gate` required status check (`scripts/countersign_gate_check.py`, workflow próprio) — GitHub recusa o merge para qualquer ator · `scripts/merge_pr.sh` única porta de merge (revalida live, exige check verde, recusa `--admin`) · `guard-commands.sh` regra 3 bloqueia `gh pr merge` cru em runtimes Claude** |
 | Verify-your-work reminder per touched surface | hook | `.claude/hooks/verify-nudge.sh` (PostToolUse, advisory) |
 | Review passes + severities | advisory | `REVIEW.md` (repo root) |
 | Provenance trailer per agent in process comments (AID-2493) | advisory (notice) | `scripts/sdlc_guard_check.sh` check 5 in PR context — parses `Provenance: agent=… task=… run=… session=…`, notices absence/malformation in process comments; never reddens (mitigation phase, see §Merge protocol item 6) |
