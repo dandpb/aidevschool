@@ -270,6 +270,36 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
     não ter timestamp verificável). PRs de humano/founder sem paths de
     autoridade seguem fora do gate nesta etapa (comportamento documentado no
     self-test iv). Registro: `intent/AID-2428-countersign-gate-stage2/`.
+
+   **Emenda merge-message canônica (AID-2655, decisão do dono/merge-writer,
+   2026-09-26).** 4ª ocorrência da classe sem-linha-canônica (#481 → #491 →
+   #495 → #514/`f680490f`: veredito citado apenas inline no título, sem a
+   linha grep-ável do item 5(2)). O dono decide pela alternativa (a): a
+   linha canônica **na mensagem de merge** permanece a superfície canônica
+   binding de auditoria — a citação em comentário de PR pré-merge
+   (enforcement Stage-1/Stage-2) é gate ANTES do merge e **não a substitui**
+   (a alternativa (b) — comentário do PR como superfície canônica — foi
+   considerada e rejeitada: não é grep-ável em `git log`, não sobrevive
+   fora do GitHub e não deixa trilha no clone; #514 mostrou que as duas
+   superfícies divergem exatamente quando a disciplina falha). As duas
+   superfícies passam a ser exigidas em conjunto (defesa em profundidade:
+   gate pré-merge no PR + trilha de auditoria pós-merge no commit). #514
+   fica registrado como achado MÉDIA — mitigações íntegras (citações
+   canônicas `Countersign: AID-2321 verdict …` + trailer `Provenance:` em
+   2 comentários pré-merge < merged_at; CI verde 41✓/2skip no head
+   `8a293d6e`; producer ≠ verifier ≠ merger) — sem ação retroativa.
+   Checklist binding do merge-writer a partir do merge train #515–#522:
+   1. ANTES de executar o merge, montar a mensagem contendo a linha
+      canônica em linha própria (template: título `Merge PR #N:
+      <type>(<scope>): AID-XXXX — <resumo> @ <headSHA>`, contexto/decisões
+      inline, e `Countersign: <AID-ID> verdict <commentId-ou-SHA>` no
+      corpo — nunca só inline/parêntese no título);
+   2. confirmar que o veredito citado está postado first-hand no carrier
+      ANTES do merge (ordenação Stage-2);
+   3. APÓS o merge, auto-verificar `git log -1 --grep '^Countersign: '
+      <merge-sha>`; ausência = self-report imediato no carrier (achado
+      declarado pelo próprio merge-writer, não esperando a auditoria SM).
+   Registro: `intent/AID-2655-merge-msg-canonical-line/`.
 6. **Trailer de proveniência por agente em comentários de processo
    (AID-2493, 2026-09-18).** Binding para TODO agente que posta comentário de
    processo no GitHub (veredito, citação countersign, registro de produtor,
