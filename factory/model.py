@@ -98,6 +98,22 @@ class Proof:
         return self.exit_code == 0
 
 
+def proof_evidence(proof: Proof) -> dict:
+    """Âncora mínima de uma prova (AID-2715): o que o recibo `verified`
+    sela no ledger encadeado. Tudo o que ficar só no runtime (gitignored)
+    é auto-atestável e não conta como evidência."""
+    return {
+        "check_id": proof.check_id,
+        "cmd_sha256": sha256_text(proof.cmd),
+        "exit_code": proof.exit_code,
+        "output_sha256": proof.output_sha256,
+    }
+
+
+def evidence_digest(evidence: dict) -> str:
+    return digest_obj(evidence)
+
+
 @dataclass
 class Lease:
     """Reserva exclusiva do item (P1: dois agentes não assumem o mesmo item).
@@ -135,6 +151,7 @@ class Receipt:
     sha: Optional[str] = None
     contract_digest: Optional[str] = None
     proof_refs: list = field(default_factory=list)
+    proof_digests: list = field(default_factory=list)
     detail: dict = field(default_factory=dict)
     prev_hash: Optional[str] = None
     hash: Optional[str] = None
@@ -142,6 +159,11 @@ class Receipt:
     def payload(self) -> dict:
         d = asdict(self)
         d.pop("hash")
+        # Compat AID-2715: recibos pré-âncora (campo vazio) continuam com o
+        # mesmo payload/hash de quando foram selados — `verify_chain` de
+        # ledgers antigos não pode quebrar por causa do campo novo.
+        if not d.get("proof_digests"):
+            d.pop("proof_digests")
         return d
 
     def compute_hash(self) -> str:
