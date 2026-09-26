@@ -76,6 +76,8 @@ jobs:
           esac
       - name: countersign gate self-test (synthetic violations must fail)
         run: python3 scripts/countersign_gate_check.py --self-test
+      - name: merge door self-test (§3 extraction vs the real endpoint shape)
+        run: bash scripts/merge_pr.sh --self-test
       - name: countersign gate (live, at the current PR head)
         env:
           GH_TOKEN: ${{ github.token }}

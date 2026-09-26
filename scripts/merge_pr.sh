@@ -92,6 +92,15 @@ if [ $SELF_TEST -eq 1 ]; then
   st_check "empty check_runs reads absent"          "absent"  "$(check_state "$empty_obj" "countersign-gate")"
   fail_page="$(mk_page "countersign-gate" "failure" "t3")"
   st_check "red conclusion survives extraction"     "failure" "$(check_state "$fail_page" "countersign-gate")"
+  # AID-2824 hardening: pending / malformed / legacy shapes must never read
+  # "success" — every ambiguity stays on the refuse side (fail-closed).
+  pending_page='{"total_count":1,"check_runs":[{"name":"countersign-gate","conclusion":null,"started_at":"t4"}]}'
+  st_check "pending (conclusion null) reads absent" "absent" "$(check_state "$pending_page" "countersign-gate")"
+  st_check "malformed JSON reads empty, never success" "" "$(check_state 'not json {' "countersign-gate" 2>/dev/null)"
+  legacy_array='[{"name":"countersign-gate","conclusion":"success","started_at":"t5"}]'
+  st_check "legacy array shape reads empty, never success" "" "$(check_state "$legacy_array" "countersign-gate" 2>/dev/null)"
+  rev_pages="$(mk_page "SDLC guardrails (diff)" "success" "t6")$(mk_page "countersign-gate" "success" "t7")"
+  st_check "check in the SECOND page is still extracted" "success" "$(check_state "$rev_pages" "countersign-gate")"
   echo "merge_pr self-test (§3 extraction): $pass passed, $fail failed"
   [ $fail -eq 0 ] || exit 1
   exit 0

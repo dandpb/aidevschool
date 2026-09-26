@@ -377,6 +377,13 @@ comentário com linha `Countersign:`) satisfaz TUDO:
    e nenhum evento `reopened` posterior (close de contenção → reopen não viaja
    com countersign stale; caso #535).
 
+Linhas dentro de **code fences** (blocos cercados por ```/~~~, AID-2824 — achado
+AID-2818) são template/documentação e **não contam** em nenhum scan de citação
+ou provenance (seleção do operativo, atribuição de produtor, trailer e head-pin
+do comentário operativo). Fence não-fechado engole o resto do corpo (fail-closed:
+citação "escondida" falha como ausente). Marcadores VOID/HELD continuam lendo o
+corpo bruto — um hold dentro de fence ainda bloqueia (sem enfraquecimento).
+
 ### Bloco canônico de countersign (copiar/adaptar)
 
 ```

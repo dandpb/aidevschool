@@ -81,6 +81,39 @@ PROVENANCE_RE = re.compile(
 SHA40_RE = re.compile(r"\b[0-9a-fA-F]{40}\b")
 VOID_HELD_RE = re.compile(r"\b(VOID|HELD)\b")
 
+# Code-fence stripping (AID-2824, finding AID-2818): producer templates quote
+# the citation/provenance format inside ```-fenced blocks, and a fenced line is
+# documentation, never an operative citation — the producer template comment
+# (GH 5843912536) became the "operative" citation for being the LAST comment
+# with a 'Countersign:' line, surviving only by verbatim coincidence. All
+# citation/provenance scans run on fence-stripped bodies. VOID/HELD markers
+# keep scanning the RAW body (a hold inside a fence must still block — no
+# weakening of fail-closed behavior).
+_FENCE_LINE_RE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+
+
+def strip_code_fences(text):
+    """Drop fenced code blocks (CommonMark ```/~~~ fences, incl. language tags).
+
+    An unclosed fence swallows the rest of the body — fail-closed: a citation
+    hidden that way is not seen, which reddens like a missing citation.
+    """
+    if not text:
+        return ""
+    out = []
+    fence_char = None  # inside a block: the fence character ("`" or "~")
+    for line in text.split("\n"):
+        m = _FENCE_LINE_RE.match(line)
+        if fence_char is None:
+            if m:  # opening fence (info string allowed after ```/~~~)
+                fence_char = m.group(1)[0]
+            else:
+                out.append(line)
+        elif m and m.group(1)[0] == fence_char and not m.group(2).strip():
+            fence_char = None  # closing fence (no trailing content allowed)
+        # lines inside a fenced block are dropped
+    return "\n".join(out)
+
 
 class Violation(Exception):
     """One failed acceptance condition (message is human-readable)."""
@@ -144,6 +177,11 @@ def evaluate(ctx, timeline, head, resolver):
         [c for c in (ctx.get("comments") or []) if c.get("body")],
         key=lambda c: c.get("createdAt") or "",
     )
+    # Fence-aware scanning (AID-2824): citation/provenance lines inside code
+    # fences are templates/documentation and never count. VOID/HELD markers
+    # below still scan the raw body (no fail-closed weakening).
+    body = strip_code_fences(body)
+    scanned = [(c, strip_code_fences(c.get("body") or "")) for c in comments]
 
     # Producer attribution: earliest provenance trailer, body counts first
     # (sort key 0 = body, 1 = comment createdAt — a timestamp string would
@@ -152,8 +190,8 @@ def evaluate(ctx, timeline, head, resolver):
     m = PROVENANCE_RE.search(body)
     if m:
         earliest = ((0, ""), m.group("agent"))
-    for c in comments:
-        m = PROVENANCE_RE.search(c.get("body") or "")
+    for c, sbody in scanned:
+        m = PROVENANCE_RE.search(sbody)
         if m:
             key = (1, c.get("createdAt") or "")
             if earliest is None or key < earliest[0]:
@@ -172,8 +210,8 @@ def evaluate(ctx, timeline, head, resolver):
     # must itself be valid; body-only citations are not orderable pre-merge).
     body_cited = None
     operative = None
-    for c in comments:
-        if CITATION_RE.search(c.get("body") or ""):
+    for c, sbody in scanned:
+        if CITATION_RE.search(sbody):
             operative = c
     if operative is None:
         if CITATION_RE.search(body):
@@ -187,7 +225,9 @@ def evaluate(ctx, timeline, head, resolver):
         )
         raise Violation(where)
 
-    cbody = operative.get("body") or ""
+    # Fence-stripped: a citation/trailer/head-pin inside a code fence is
+    # template documentation, not operative content (AID-2824).
+    cbody = strip_code_fences(operative.get("body") or "")
     when = operative.get("createdAt") or ""
     cite = CITATION_RE.search(cbody)
     aid, ref = cite.group(1), cite.group(2)
@@ -316,7 +356,7 @@ def run_gate(args):
         print("countersign-gate: FAIL — %s" % exc)
         return 1
 
-    cite = CITATION_RE.search(operative.get("body") or "")
+    cite = CITATION_RE.search(strip_code_fences(operative.get("body") or ""))
     if args.print_citation:
         print("%s (agent=%s, distinct from producer agent=%s, head=%s pinned, posted %s)"
               % (cite.group(0).strip(), countersigner, producer, head,
@@ -533,6 +573,58 @@ def self_test():
     cases.append(scenario(
         "head pinned in comment body passes", 0,
         _ctx("producer body\n" + prod_trailer, [_comment(T, naked_cite)]),
+    ))
+    # 21–26. fence-aware citation scan (AID-2824, finding AID-2818): lines
+    # inside ```-fenced blocks are templates/documentation — the producer
+    # template comment became the "operative" citation for being the LAST
+    # comment with a 'Countersign:' line.
+    fenced_template = (
+        "Countersign template for the producer (copy/adapt):\n"
+        "```\n"
+        "Countersign: AID-9006 verdict 5843894601 head=" + HEAD + "\n"
+        + prod_trailer + "\n"
+        "```\n"
+    )
+    # 21. fenced template AFTER a valid countersign does not supersede it
+    cases.append(scenario(
+        "fenced template after countersign does not supersede (AID-2818)", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, cite_line + "\n" + qa_trailer),
+              _comment("2026-09-26T05:03:00Z", fenced_template)]),
+    ))
+    # 22. fenced template BEFORE the countersign does not become operative
+    cases.append(scenario(
+        "fenced template before countersign stays inert", 0,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment("2026-09-26T04:55:00Z", fenced_template),
+              _comment(T, cite_line + "\n" + qa_trailer)]),
+    ))
+    # 23. citation ONLY inside a fence -> no operative citation -> fail
+    cases.append(scenario(
+        "citation only inside a fence fails", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, "how to countersign:\n```\n" + cite_line + "\n"
+                        + qa_trailer + "\n```")]),
+    ))
+    # 24. head pinned only inside a fence does not satisfy the pin
+    cases.append(scenario(
+        "head pinned only inside a fence fails", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, "Countersign: AID-9006 verdict 5843026877\n"
+                        + "```\nexample head=" + HEAD + "\n```\n"
+                        + qa_trailer)]),
+    ))
+    # 25. fenced provenance trailer does not attribute the producer
+    cases.append(scenario(
+        "fenced provenance trailer does not attribute producer", 1,
+        _ctx("producer body quoting the format:\n```\n" + prod_trailer + "\n```",
+             [_comment(T, cite_line + "\n" + qa_trailer)]),
+    ))
+    # 26. unclosed fence swallows the rest — a citation "inside" it fails
+    cases.append(scenario(
+        "citation after an unclosed fence fails (fail-closed)", 1,
+        _ctx("producer body\n" + prod_trailer,
+             [_comment(T, "scratchpad:\n```\n" + cite_line + "\n" + qa_trailer)]),
     ))
 
     passed = sum(cases)
