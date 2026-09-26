@@ -16,7 +16,6 @@ encadeado e invalida writers da época anterior (AID-2718/AID-2721).
 from __future__ import annotations
 
 import errno
-import json
 import os
 import uuid
 from pathlib import Path
@@ -166,10 +165,14 @@ class EventQueue:
         path = self._lease_path(event_id)
         if path.exists():
             if holder_enforcement:
-                # only rewrite-to-released; physical removal keeps history simple
+                # rewrite-to-released; physical removal keeps history simple.
+                # Túmulo legível (AID-2762): `released_at` é campo do Lease e a
+                # regravação é atômica (tmp + replace, como `heartbeat`) — o
+                # arquivo continua desserializável por `Lease.from_json`.
                 lease = self.lease_of(event_id)
-                data = json.loads(lease.to_json())
-                data["released_at"] = utcnow()
-                path.write_text(json.dumps(data, sort_keys=True), encoding="utf-8")
+                lease.released_at = utcnow()
+                tmp = path.with_suffix(".tmp")
+                tmp.write_text(lease.to_json(), encoding="utf-8")
+                os.replace(tmp, path)
                 return
             path.unlink(missing_ok=True)
