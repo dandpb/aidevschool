@@ -1,8 +1,16 @@
 # ADR — Pipeline de mídia das micro-lessons (Git LFS vs object storage S3-compatível + CDN) — AID-2886
 
-**Status:** PROPOSTA — decisão de provisionamento é do founder/CEO (não decidida aqui)
+**Status:** **ACEITA (2026-09-26)** — Opção 2 (Cloudflare R2 + CDN) aprovada pelo founder/CEO
 **Data:** 2026-09-26 · **Owner:** Storage Engineer · **Plano aprovado:** AID-2876 rev `f5f4bbc3`, prioridades 4 e 5
 **Teto orçamentário:** US$25/mês (`budgetMonthlyCents` 2500) sem aprovação expressa do CEO
+
+> **Registro da decisão** — Interação `request_confirmation` AID-2886 id
+> `26fa5fa2-40c9-4300-b000-340c9af5f0bf` **aceita** em 2026-09-26 pelo founder
+> (resolvedByUserId `W4VteLICaS4CdmYf0hXsMqadjsBjSOhX`): aprovar Opção 2
+> (R2 + CDN, ~US$0,15–1,50/mês, egress zero). Provisionamento (bucket, lifecycle
+> de órfãos >90d, alerta de orçamento em US$10/mês, runbook de restore mídia +
+> backup `learner/`) abre como follow-up; migração incremental, sem history
+> rewrite.
 
 ---
 
