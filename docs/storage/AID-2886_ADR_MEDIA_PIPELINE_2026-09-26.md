@@ -14,7 +14,7 @@ Mídia binária já é o maior consumidor de peso do repo (medido em `origin/mai
 | Medição | Valor |
 | --- | --- |
 | PNGs rastreados | **619 arquivos, 170 351 692 B (~162 MiB)** |
-| — dos quais screenshots de evidência em `docs/product-readiness/` | 456 arquivos, ~135,5 MiB |
+| — dos quais screenshots de evidência em `docs/product-readiness/` | 456 arquivos, 135 552 668 B (~129,3 MiB) |
 | JPGs / SVGs / PPTX | 25 (~2,1 MiB) / 6 (0,3 MiB) / 1 (0,1 MiB) |
 | `.git` (pack) | **237 MiB** |
 | Site implantado (Netlify) | enxuto — 0 PNGs em caminhos de build (`src/`, `public/`) |

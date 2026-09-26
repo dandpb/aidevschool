@@ -132,7 +132,7 @@ Runtime (não comprometido, medido no workspace local):
 
 | Área | Arquivos | Bytes |
 | --- | --- | --- |
-| `.scratch/factory` (E4) | 468 | 10 414 104 (~9,9 MiB) — **4,9% da cota de 2 GiB** |
+| `.scratch/factory` (E4) | 468 | 10 414 104 (~9,9 MiB) — **0,49% da cota de 2 GiB** (10 414 104 / 2 147 483 648 B) |
 | `engines/pixelDojo/pixel-quest/.logs` (E3) | 3 | 6 742 — **0,006% da cota de 100 MiB** |
 
 Veredicto: corpus E1 a **3,3%** da cota (25 MiB); E3 e E4 folgados. Sem ação de
