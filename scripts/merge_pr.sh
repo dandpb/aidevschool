@@ -40,10 +40,23 @@ SELF="$SCRIPT_DIR/merge_pr.sh"
 
 usage() { sed -n '2,35p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
 
+# check_state (AID-2818): gh api …/check-runs returns an OBJECT
+# {"total_count":N,"check_runs":[…]} (one object per page under --paginate).
+# The extraction must flatten .check_runs[] across pages and treat "no such
+# check" as "absent" (absence is also a failure state, AID-1618 item 2).
+# Iterating the object's values ([.[]]) indexes the total_count NUMBER with
+# "name" and aborts jq — which read as empty states and spuriously REFUSED
+# PR #545's merge with both checks green (SM AID-2799 §4, 06:44Z).
+check_state() { # $1=checks-json $2=check name -> prints conclusion or "absent"
+  printf '%s' "$1" | jq -rs --arg n "$2" \
+    '[ .[] | .check_runs[]? | select(.name==$n) ][0].conclusion // "absent"'
+}
+
 PR=""
 METHOD="--merge"
 SUBJECT=""
 EXTRA_BODY=""
+SELF_TEST=0
 while [ $# -gt 0 ]; do
   case "$1" in
     [0-9]*) PR="$1"; shift ;;
@@ -51,10 +64,38 @@ while [ $# -gt 0 ]; do
     --admin|--force) echo "REFUSED: '$1' — the countersign gate has no bypass (AID-2768)." >&2; exit 1 ;;
     --subject) SUBJECT="${2:?}"; shift 2 ;;
     --extra-body) EXTRA_BODY="${2:?}"; shift 2 ;;
+    --self-test) SELF_TEST=1; shift ;;
     -h|--help) usage ;;
     *) echo "unknown argument: $1" >&2; usage ;;
   esac
 done
+
+# Self-test (AID-2818): §3's extraction against the REAL endpoint shape —
+# an object {"total_count":N,"check_runs":[…]} per page (gh --paginate
+# concatenates them) — plus the absent case. The pre-fix expression ([.[] |
+# select(…)]) indexed the total_count NUMBER with "name" and aborted jq,
+# which read as empty states and spuriously refused a green PR.
+if [ $SELF_TEST -eq 1 ]; then
+  pass=0; fail=0
+  mk_page() { # $1=name,$2=conclusion,$3=started -> one check-runs page object
+    printf '{"total_count":1,"check_runs":[{"name":"%s","conclusion":"%s","started_at":"%s"}]}' "$1" "$2" "$3"
+  }
+  st_check() { # $1=label $2=expected $3=actual
+    if [ "$2" = "$3" ]; then echo "PASS [$1] '$3'"; pass=$((pass+1))
+    else echo "FAIL [$1] expected '$2' got '$3'"; fail=$((fail+1)); fi
+  }
+  two_pages="$(mk_page "countersign-gate" "success" "t1")$(mk_page "SDLC guardrails (diff)" "success" "t2")"
+  st_check "object shape extracts countersign-gate" "success" "$(check_state "$two_pages" "countersign-gate")"
+  st_check "object shape extracts guardrails"       "success" "$(check_state "$two_pages" "SDLC guardrails (diff)")"
+  st_check "missing check reads absent"             "absent"  "$(check_state "$two_pages" "no-such-check")"
+  empty_obj='{"total_count":0,"check_runs":[]}'
+  st_check "empty check_runs reads absent"          "absent"  "$(check_state "$empty_obj" "countersign-gate")"
+  fail_page="$(mk_page "countersign-gate" "failure" "t3")"
+  st_check "red conclusion survives extraction"     "failure" "$(check_state "$fail_page" "countersign-gate")"
+  echo "merge_pr self-test (§3 extraction): $pass passed, $fail failed"
+  [ $fail -eq 0 ] || exit 1
+  exit 0
+fi
 [ -n "$PR" ] || usage
 command -v gh >/dev/null 2>&1 || { echo "ERROR: gh CLI required" >&2; exit 2; }
 [ -f "$GATE" ] || { echo "ERROR: gate script missing: $GATE" >&2; exit 2; }
@@ -78,11 +119,12 @@ if ! python3 "$GATE" --pr "$PR"; then
 fi
 
 # --- 3. required check-runs present AND success on the head -----------------
+# (extraction via check_state, defined near the header — AID-2818)
 HEAD_SHA="$(gh pr view "$PR" --json headRefOid -q .headRefOid)"
 SLUG="$(git remote get-url origin | sed -E 's#.*[:/]([^/:]+/[^/]+?)(\.git)?$#\1#')"
 checks_json="$(gh api "repos/$SLUG/commits/$HEAD_SHA/check-runs" --paginate 2>/dev/null)"
-gate_state="$(printf '%s' "$checks_json" | jq -r '[.[] | select(.name=="countersign-gate")][0].conclusion // "absent"')"
-guard_state="$(printf '%s' "$checks_json" | jq -r '[.[] | select(.name=="SDLC guardrails (diff)")][0].conclusion // "absent"')"
+gate_state="$(check_state "$checks_json" "countersign-gate")"
+guard_state="$(check_state "$checks_json" "SDLC guardrails (diff)")"
 if [ "$gate_state" != "success" ] || [ "$guard_state" != "success" ]; then
   echo "REFUSED: required checks on head $HEAD_SHA — countersign-gate=$gate_state, SDLC guardrails (diff)=$guard_state." >&2
   echo "Absence is also a failure state (AID-1618 item 2). Wait for CI / re-run the gate." >&2
