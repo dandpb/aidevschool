@@ -49,7 +49,7 @@ def load_backup(path: Path) -> dict:
     version = doc.get("schemaVersion")
     if version not in SCHEMA_VERSIONS_MIGRABLE:
         raise ValueError(
-            f"schemaVersion {version!r} (esperado um de {sorted(SCHEMA_VERSIONS_MIGRABLES)})"
+            f"schemaVersion {version!r} (esperado um de {sorted(SCHEMA_VERSIONS_MIGRABLE)})"
         )
     for field in ("lessonStatus", "skills", "streak"):
         if not isinstance(doc.get(field), dict):
