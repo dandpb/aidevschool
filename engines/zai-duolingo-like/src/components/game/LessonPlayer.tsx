@@ -348,8 +348,10 @@ export function LessonPlayer() {
                   goPrev();
                 }}
                 className="rounded-2xl border border-border bg-card/60 px-5 py-3.5 text-sm font-semibold transition hover:border-primary/50"
+                aria-label="Questão anterior"
+                title="Questão anterior"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               </button>
             )}
             <button
