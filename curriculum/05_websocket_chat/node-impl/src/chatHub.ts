@@ -367,4 +367,4 @@ export class ChatHub extends EventEmitter {
   }
 }
 
-// Provenance: agent=jules task=GH-566 run=run-36246873703 session=7660681200736845421
+// Provenance: agent=jules task=GH-566 run=run-36247237726 session=7660681200736845421
