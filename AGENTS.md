@@ -108,6 +108,11 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   before AI work is marked `mastered`. Programming units require executable evidence; Level 0
   no-code units use the falsifiable verification checklist defined by ADR-0004.
 - A producer does not verify its own work. Keep producer and verifier contexts separate.
+- **Merges go ONLY through `scripts/merge_pr.sh`** (single merge door, AID-2768): the required
+  `countersign-gate` check mechanically blocks any merge without a pre-merge countersign from a
+  DISTINCT agent pinning the current head (raw `gh pr merge` fails on the GitHub side and is
+  hook-blocked in Claude runtimes). Contract and canonical countersign block:
+  `docs/sdlc/README.md` §GATE pré-merge mecânico.
 - When changing prompts, roadmap, gates, memory contracts, or deliverable coverage, update
   `engines/codexDojo/ecosystem/MANIFEST.md` in the same change.
 - Repo-root `make` targets are only for the shared Python surfaces (`minimaxDojo`, `openclaw`,
