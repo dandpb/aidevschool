@@ -14,7 +14,10 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Optional
 
-STATIONS = ("queued", "contracted", "built", "verified", "promoted", "blocked")
+# `freezing` é a estação intermediária de write-ahead do freeze (AID-2726):
+# o state é gravado ANTES dos efeitos, então um kill no meio da estação deixa
+# a run retomável em vez de travada.
+STATIONS = ("queued", "freezing", "contracted", "built", "verified", "promoted", "blocked")
 
 RISK_LEVELS = ("low", "medium", "high")
 
@@ -98,18 +101,47 @@ class Proof:
         return self.exit_code == 0
 
 
+def proof_evidence(proof: Proof) -> dict:
+    """Âncora mínima de uma prova (AID-2715): o que o recibo `verified`
+    sela no ledger encadeado. Tudo o que ficar só no runtime (gitignored)
+    é auto-atestável e não conta como evidência."""
+    return {
+        "check_id": proof.check_id,
+        "cmd_sha256": sha256_text(proof.cmd),
+        "exit_code": proof.exit_code,
+        "output_sha256": proof.output_sha256,
+    }
+
+
+def evidence_digest(evidence: dict) -> str:
+    return digest_obj(evidence)
+
+
 @dataclass
 class Lease:
-    """Reserva exclusiva do item (P1: dois agentes não assumem o mesmo item)."""
+    """Reserva exclusiva do item (P1: dois agentes não assumem o mesmo item).
+
+    `epoch` é o fencing token: começa em 1 e só cresce em takeover pós-expiração.
+    Writers com época velha são recusados pelas estações (AID-2718/AID-2721).
+    `released_at` marca devolução explícita (AID-2728 S7): o release persiste
+    uma representação que o próprio modelo lê — lease liberado é fail-closed,
+    não re-claimável sem re-intake.
+    """
 
     event_id: str
     holder: str
     acquired_at: str = field(default_factory=utcnow)
     heartbeat_at: str = field(default_factory=utcnow)
     ttl_seconds: int = 3600
+    epoch: int = 1
+    released_at: Optional[str] = None
 
     def to_json(self) -> str:
         return canonical_json(asdict(self))
+
+    @property
+    def released(self) -> bool:
+        return self.released_at is not None
 
     @classmethod
     def from_json(cls, text: str) -> "Lease":
@@ -130,6 +162,7 @@ class Receipt:
     sha: Optional[str] = None
     contract_digest: Optional[str] = None
     proof_refs: list = field(default_factory=list)
+    proof_digests: list = field(default_factory=list)
     detail: dict = field(default_factory=dict)
     prev_hash: Optional[str] = None
     hash: Optional[str] = None
@@ -137,6 +170,11 @@ class Receipt:
     def payload(self) -> dict:
         d = asdict(self)
         d.pop("hash")
+        # Compat AID-2715: recibos pré-âncora (campo vazio) continuam com o
+        # mesmo payload/hash de quando foram selados — `verify_chain` de
+        # ledgers antigos não pode quebrar por causa do campo novo.
+        if not d.get("proof_digests"):
+            d.pop("proof_digests")
         return d
 
     def compute_hash(self) -> str:
