@@ -51,6 +51,21 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 
 `FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
 
+### Contrato de saída do CLI (AID-2728)
+
+- **Exit 0** só em sucesso/veredito promote; **exit 2** é o código único de
+  recusa (block, fence, exceção do domínio). Exceções do domínio
+  (`ContractError`, `CoordinatorError`, `LedgerError`, `FactoryError`) nunca
+  derrubam traceback: viram `{"error": "<tipo>", "reason": "..."}` na stderr +
+  exit 2.
+- `ledger --verify` sempre imprime veredito estruturado — linha truncada ou
+  não-JSON devolve `{"chain_ok": false, "error": {"line", "reason"}}` + exit 2.
+- `gate` com contrato congelado adulterado devolve veredito `block` (motivo
+  P4) + exit 2, como o caminho do registro versionado.
+- Lease liberado (`release`) é legível pelo modelo (`released_at`) e
+  fail-closed: `heartbeat`/`claim`/estações recusam com motivo estruturado —
+  re-claim exige re-intake; takeover só pós-expiração (AID-2721).
+
 ## Retomada idempotente por estação (AID-2726)
 
 Kill físico em qualquer janela de estação não trava a run — o retry converge
@@ -67,14 +82,20 @@ reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
 
 `release(event_id)` com `holder_enforcement=True` (default) NÃO remove o
 arquivo do lease: regrava atomicamente (tmp + replace) preenchendo o campo
-`released_at` — um **túmulo legível**. Semântica:
+`released_at` — um **túmulo legível**. A semântica de release é
+**fail-closed conforme AID-2728 S7 (autoritativa, PR #535)** — o takeover
+pós-túmulo originalmente proposto aqui foi retirado no update-branch:
 
 - `Lease.released_at` é campo first-class; `Lease.from_json` ignora chaves
   desconhecidas (leitura tolerante — arquivos de lease nunca envenenam
   `lease_of`/`claim`/`lease_expired` com `TypeError`).
-- Item liberado NÃO volta para `pending()` (o túmulo ocupa o slot);
-  `claim` dentro do TTL → `LeaseHeldError`; após expiração → takeover
-  legítimo (época incrementa, recibo no ledger).
+- Item liberado NÃO volta para `pending()` (o túmulo ocupa o slot) e NÃO é
+  re-claimável — nem após expiração: `claim` → `LeaseHeldError`
+  "re-intake required"; `heartbeat` e estações recusam (fence). Retomar o
+  item exige re-intake pela fila.
+- Takeover com época incrementada + recibo no ledger existe SOMENTE para
+  lease VIVO expirado (AID-2721; regressão
+  `factory/tests/test_exit_contract_2728.py::test_takeover_after_expiry_still_works`).
 - `release(event_id, holder_enforcement=False)` remove o arquivo (caminho
   interno do takeover em `claim`): sem túmulo, o item volta à fila.
 

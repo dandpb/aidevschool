@@ -6,10 +6,14 @@ lease acrescentando a chave `released_at` fora do schema; `Lease.from_json`
 fazia `cls(**json.loads(text))` e levantava `TypeError` em toda leitura
 posterior (`lease_of`/`claim`/`lease_expired`). Correção: `released_at` é
 campo first-class do `Lease` e `from_json` ignora chaves desconhecidas
-(leitura tolerante). Semântica documentada no factory/README.md: lease
-liberado vira túmulo legível — o item NÃO volta para `pending()`; novo
-`claim` dentro do TTL → `LeaseHeldError`; após expiração → takeover com
-época incrementada e recibo no ledger.
+(leitura tolerante).
+
+Semântica de release (fail-closed, AID-2728 S7 — autoritativa, merged no PR
+#535): lease liberado vira túmulo legível — o item NÃO volta para `pending()`
+e NÃO é re-claimável, nem após expiração (`LeaseHeldError` "re-intake
+required"); heartbeat é recusado. Takeover com época incrementada só existe
+para lease VIVO expirado (AID-2721, coberto em
+factory/tests/test_exit_contract_2728.py:294).
 """
 
 from __future__ import annotations
@@ -21,7 +25,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from factory.ledger import RunLedger
 from factory.model import Lease, WorkEvent
 from factory.queue import EventQueue, LeaseHeldError
 
@@ -43,7 +46,8 @@ class TestReleasedLeaseIsReadableTombstone:
         q.submit(WorkEvent(id="E1", origin="t", scope="t", risk="low"))
         q.claim("E1", "holder-a")
         q.release("E1")  # holder_enforcement=True (default)
-        with pytest.raises(LeaseHeldError, match="leased by holder-a"):
+        # S7 (AID-2728): mensagem fail-closed nomeia o release e exige re-intake.
+        with pytest.raises(LeaseHeldError, match=r"lease was released.*by holder-a.*re-intake"):
             q.claim("E1", "holder-b")  # antes do fix: TypeError (released_at)
 
     def test_lease_of_reads_tombstone_with_released_at(self, tmp_path):
@@ -64,24 +68,22 @@ class TestReleasedLeaseIsReadableTombstone:
         assert [e.id for e in q.pending()] == []  # túmulo mantém item fora da fila
 
 
-class TestTakeoverOnExpiredTombstone:
-    """Túmulo expirado segue o caminho de takeover (época incrementa, recibo)."""
+class TestReleasedTombstoneIsFailClosed:
+    """Túmulo released NÃO é re-claimável, nem expirado (AID-2728 S7)."""
 
-    def test_claim_after_tombstone_expiry_takes_over_with_epoch(self, tmp_path):
+    def test_claim_after_tombstone_expiry_fails_closed_reintake(self, tmp_path):
         q = EventQueue(tmp_path)
         q.submit(WorkEvent(id="E9", origin="t", scope="t", risk="low"))
-        first = q.claim("E9", "holder-a")
+        q.claim("E9", "holder-a")
         q.release("E9")
         path = tmp_path / "leases" / "E9.json"
         path.write_text(_aged_tombstone_text(path), encoding="utf-8")
         assert q.lease_expired("E9")
-        second = q.claim("E9", "holder-b")  # antes do fix: TypeError no caminho
-        assert second.epoch == first.epoch + 1
-        assert second.holder == "holder-b"
-        assert second.released_at is None  # lease novo, sem túmulo
-        receipts = RunLedger(tmp_path / "ledger" / "run-E9.jsonl").read()
-        assert receipts and receipts[0].detail.get("takeover") is True
-        assert receipts[0].detail["previous_holder"] == "holder-a"
+        # S7: expiração não "lava" o túmulo — fail-closed com re-intake.
+        with pytest.raises(LeaseHeldError, match="re-intake"):
+            q.claim("E9", "holder-b")  # semântica antiga do PR: takeover época+1
+        # Nenhum recibo de takeover no ledger encadeado.
+        assert not (tmp_path / "ledger" / "run-E9.jsonl").exists()
 
 
 class TestTolerantFromJson:
