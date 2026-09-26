@@ -70,6 +70,45 @@ matches_legacy() {
 
 HEAD_RE='^[0-9a-fA-F]{40}$'
 
+# head_eq A B -> 0 iff the two 40-hex shas match case-insensitively
+head_eq() { [ "$(printf '%s' "$1" | tr 'A-F' 'a-f')" = "$(printf '%s' "$2" | tr 'A-F' 'a-f')" ]; }
+
+# verify_pr_head PR HEAD (AID-2851) — the phantom-sha guard: --head must equal
+# the REAL PR head. The AID-2849 key cited `beeee687a04b…` — format-valid
+# 40-hex that never existed (real head `beeee6873d26…`); the dedup held only
+# because the tier-2 prefix-7 happened to match. A typo INSIDE the first 7
+# chars would have produced a real duplicate. Resolution order: `git
+# ls-remote <origin> refs/pull/<n>/head` (no auth needed on the public repo,
+# authoritative on push; requires running inside a checkout with an origin
+# remote), then authed `gh api` as fallback. Fail-closed, distinguishable
+# REFUSED on every transport error (AID-2836 convention: a transport failure
+# is never read as "absent"/ok). Break-glass override for owner-approved
+# exceptions: COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1 (rare, justified in the
+# task record — same convention as SDLC_ALLOW_*).
+verify_pr_head() { # $1=pr $2=head -> 0 verified; else exit 1
+  local pr="$1" want="$2" origin_url="" slug="" real=""
+  if [ "${COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY:-}" = "1" ]; then
+    echo "WARN head verification SKIPPED (COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1 — owner-approved exceptions only, record it)" >&2
+    return 0
+  fi
+  command -v git >/dev/null 2>&1 || command -v gh >/dev/null 2>&1 \
+    || die_refused "neither git nor gh available — cannot verify --head against the real PR head (AID-2851); do NOT hand-type the sha"
+  origin_url="$(git remote get-url origin 2>/dev/null || true)"
+  if [ -n "$origin_url" ]; then
+    real="$(git ls-remote "$origin_url" "refs/pull/$pr/head" 2>/dev/null | awk '{print $1}')"
+  fi
+  if [ -z "$real" ] && command -v gh >/dev/null 2>&1; then
+    if slug="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null)"; then
+      real="$(gh api "repos/$slug/pulls/$pr" --jq .head.sha 2>/dev/null || true)"
+    fi
+  fi
+  [ -n "$real" ] \
+    || die_refused "cannot resolve the real head of PR #$pr (tried git ls-remote origin${origin_url:+ ($origin_url)} and gh api) — REFUSED (distinguishable), do NOT hand-type the sha"
+  head_eq "$want" "$real" \
+    || die_refused "--head $want is NOT the real head of PR #$pr (real: $real) — phantom sha refused (AID-2851); copy the real head (git ls-remote origin refs/pull/$pr/head)"
+}
+
+
 PR=""
 HEAD=""
 HEAD7=""
@@ -120,6 +159,9 @@ if [ $SELF_TEST -eq 1 ]; then
   st "legacy-miss-no-countersign" 1 "$(matches_legacy "FIX engine — PR #545 head 72dd25b8: bug" 545 "$H7"; echo $?)"
   st "head-valid" 0 "$(printf '%s' "$H40" | grep -Eq "$HEAD_RE"; echo $?)"
   st "head-invalid-short" 1 "$(printf '%s' "$H7" | grep -Eq "$HEAD_RE"; echo $?)"
+  st "head-eq-hit" 0 "$(head_eq "$H40" "$(printf '%s' "$H40" | tr 'a-f' 'A-F')"; echo $?)"
+  st "head-eq-miss-phantom" 1 "$(head_eq "beeee687a04b8a669b7808f9e2f9bf2f7cbcaf56" "beeee6873d26b6f2d17dcbd02dc1c23c8dd71569"; echo $?)"
+  st "verify-skip-override" 0 "$(COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1 verify_pr_head 557 "deadbeef$(printf '0%.0s' $(seq 1 32))"; echo $?)"
   echo "countersign_assign self-test: $pass passed, $fail failed"
   [ $fail -eq 0 ] || exit 1
   exit 0
@@ -130,6 +172,10 @@ fi
 printf '%s' "$PR" | grep -Eq '^[0-9]+$' || die_refused "--pr must be numeric (got '$PR')"
 printf '%s' "$HEAD" | grep -Eq "$HEAD_RE" || die_refused "--head must be a full 40-hex sha (got '$HEAD')"
 KEY="$(key_for "$PR" "$HEAD")"
+
+# Phantom-sha guard (AID-2851): the dedup key is only trustworthy if --head IS
+# the real PR head. Runs in BOTH modes before any scan/write.
+verify_pr_head "$PR" "$HEAD"
 
 if [ $CHECK -eq 0 ]; then
   [ -n "$ASSIGNEE" ] || die_refused "assign mode requires --assignee <agentId>"
@@ -152,6 +198,7 @@ api() { # $1=method $2=path $3=body-file(optional)
     || { printf '%s\n' "$out" >&2; return 1; }
   printf '%s' "$out"
 }
+
 
 # ------------------------------------------------------------------- scan --
 # OPEN = todo/in_progress/in_review/blocked. Transport failure fails CLOSED.

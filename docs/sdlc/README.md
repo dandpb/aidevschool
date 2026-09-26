@@ -455,13 +455,17 @@ scripts/countersign_assign.sh --pr 545 --head <40hex> --assignee <agentId> \
 ```
 
 Env: `PAPERCLIP_API_BASE` (default `http://localhost:3100`),
-`PAPERCLIP_API_KEY`, `PAPERCLIP_COMPANY_ID`. Issues de countersign
-concorrentes por head diferente são reportadas como `WARN stale siblings`
-(higiene: fechar as de head superado). Limite conhecido (dogfood AID-2844): o
-bump pode ser recusado pela API quando a issue-alvo está fora do boundary de
-autorização do criador — o veredito REUSE continua válido e o script
-fail-close SEM criar duplicata; o bump nesse caso segue por relay no
-board/FPE. A aceitação da regra é observável na próxima corrida de
+`PAPERCLIP_API_KEY`, `PAPERCLIP_COMPANY_ID`. **Guard de sha fantasma
+(AID-2851):** a porta recusa `--head` que não seja o head REAL do PR
+(resolvido via `git ls-remote origin refs/pull/<n>/head` ou `gh api`,
+fail-closed distinguível em erro de transporte; break-glass
+`COUNTERSIGN_ASSIGN_SKIP_HEAD_VERIFY=1` só para exceções owner-approved).
+Issues de countersign concorrentes por head diferente são reportadas como
+`WARN stale siblings` (higiene: fechar as de head superado). Limite conhecido
+(dogfood AID-2844): o bump pode ser recusado pela API quando a issue-alvo
+está fora do boundary de autorização do criador — o veredito REUSE continua
+válido e o script fail-close SEM criar duplicata; o bump nesse caso segue por
+relay no board/FPE. A aceitação da regra é observável na próxima corrida de
 update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
 (critério AID-2844).
 
