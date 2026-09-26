@@ -6,6 +6,9 @@
   repo to be customer ready (2026-08-21)
 - [[Research - Docs vs Code Drift]] — documentation that no longer matches the
   real code/config (2026-08-21)
+- [[Field Guide - Agentic Factory Stress 2026-09-26]] — what the factory
+  rail carries, what still bites, and field-tested recipes after the
+  22-POC stress program (2026-09-26)
 
 ## Concepts
 
