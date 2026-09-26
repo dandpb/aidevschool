@@ -247,7 +247,11 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
      auditoria SM (grep-able em `git log`).
    - **Enforcement mecânico (Stage 1)** — o check `SDLC guardrails (diff)`
      exige no PR (body ou comentário) uma linha `Countersign: <AID-ID> verdict
-     <ref>` com AID resolvível quando o diff toca paths de autoridade de
+     <ref> [head=<40-hex>]` (o sufixo opcional `head=` do bloco canônico do
+     countersign-gate, AID-2768, é aceito desde AID-2815 — gramática idêntica
+     à do `countersign_gate_check.py`: espaços ao redor do `=` e 40 hex
+     case-insensitive; ref em fim-de-linha segue válido) com AID resolvível
+     quando o diff toca paths de autoridade de
      processo (`scripts/sdlc_guard_check.sh`, `scripts/sdlc_aid_resolve.sh`,
      `docs/sdlc/**`, `.github/workflows/**`, `intent/README.md`) — sem
      citação válida o guard fica VERMELHO (fail-closed); com citação emite
