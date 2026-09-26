@@ -179,7 +179,11 @@ run_checks() {
 
   feed_command_hook() { # $1=command -> sets hook_rc/hook_out
     local input
-    input="$(jq -nc --arg c "$1" '{tool_input:{command:$c}}')"
+    # AID-2321: the command reaches jq via stdin, never as an argv element —
+    # execve caps one argument at MAX_ARG_STRLEN (128KiB), so a >128KiB added
+    # diff line made jq die E2BIG, the hook got an empty input (exit 0) and
+    # the secret-token violation was silently dropped.
+    input="$(printf '%s' "$1" | jq -Rs '{tool_input:{command:.}}')"
     hook_out="$(printf '%s' "$input" | bash "$HOOKS_DIR/guard-commands.sh" 2>&1)"; hook_rc=$?
   }
 
@@ -551,6 +555,17 @@ self_test() {
     "mkdir -p keys && printf 'bogus\n' > keys/id_rsa"
   scenario "commit secret token in content"           1 "oops token" -- \
     "printf 'token = %s\n' \"$FAKE_TOKEN\" > src/creds.py"
+  # AID-2321 regression (QA countersign PR #478 / AID-2315 finding E6): a
+  # token embedded in ONE minified line larger than MAX_ARG_STRLEN (128KiB)
+  # was silently dropped end-to-end — the wrapper fed the line to jq as an
+  # argv element (E2BIG -> empty hook input -> exit 0). The >1MiB line below
+  # pins the feed half; the direct hook probe further down pins the hook
+  # half (grep -q SIGPIPE). Canary built at runtime like FAKE_TOKEN above.
+  local big_x big_line
+  big_x="$(head -c 600000 /dev/zero | tr '\0' 'x')"
+  big_line="const bundle=\"${big_x}${FAKE_TOKEN}${big_x}\";"
+  scenario "commit secret token in >128KiB minified line (AID-2321)" 1 "oops big token" -- \
+    "printf '%s\n' '$big_line' > src/bigbundle.js"
   scenario "owner-approved test edit (trailer)"       0 "fix test
 
 SDLC-ALLOW-TEST-EDIT: AID-9001" -- \
@@ -576,6 +591,23 @@ SDLC-ALLOW-TEST-EDIT: GH-9003-not-an-issue" -- \
 
 SDLC-ALLOW-TEST-EDIT: GH-9003" -- \
     "mkdir -p config && printf 'SECRET=1\n' > config/.env"
+
+  # AID-2321, hook half: a multi-line command with the token on an early
+  # line and >64KiB following made the live hook's `printf | grep -q` die
+  # SIGPIPE under pipefail (flaky miss: 4/5 and 17/20 in manual runs here,
+  # 10/10 in QA's env). The full-scan cmd_matches helper must block
+  # deterministically. JSON built via --rawfile (file content, not argv).
+  local hg_rc
+  { printf 'echo %s\n' "$FAKE_TOKEN"; head -c 200000 /dev/zero | tr '\0' 'x' | fold -w 64; } > "$T/bigcmd.txt"
+  jq -nc --rawfile c "$T/bigcmd.txt" '{tool_input:{command:$c}}' > "$T/bigin.json"
+  bash "$R/.claude/hooks/guard-commands.sh" < "$T/bigin.json" >/dev/null 2>&1; hg_rc=$?
+  if [ "$hg_rc" -eq 2 ]; then
+    echo "PASS [>64KiB multi-line command with early token blocks deterministically] rc=$hg_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [>64KiB multi-line command with early token blocks deterministically] rc=$hg_rc (expected 2)"
+    fail=$((fail+1))
+  fi
 
   # AID-2292 regression: `printf | grep -q` under pipefail lost early
   # trailers in large range bodies (SIGPIPE rc=141 read as "absent",
