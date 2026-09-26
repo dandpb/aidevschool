@@ -172,6 +172,22 @@ class TestTakeoverEpochAndLedgerReceipt:
         assert coord._ledger("run-FE-1").verify_chain()
 
 
+class TestLegacyStateIsFenced:
+    """Estado congelado sem lease_holder (pré-fencing) é não-atribuível:
+    fail-closed em vez de pular a checagem (hardening O2 do veredito)."""
+
+    def test_state_without_lease_holder_refuses_to_transition(self, tmp_path):
+        coord, home = setup_fenced_run(tmp_path)
+        coord.prove("run-FE-1", VERIFIER)
+        sp = coord._run_dir("run-FE-1") / "state.json"
+        st = json.loads(sp.read_text(encoding="utf-8"))
+        del st["lease_holder"], st["lease_epoch"]
+        sp.write_text(json.dumps(st), encoding="utf-8")
+        with pytest.raises(CoordinatorError, match="no lease_holder"):
+            coord.gate("run-FE-1", "ctx-coordinator")
+        assert coord._load_state("run-FE-1")["station"] == "verified"
+
+
 class TestHappyPathWithFence:
     """Fence ativo não atrapalha a run legítima do holder vivo."""
 

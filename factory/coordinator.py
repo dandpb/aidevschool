@@ -82,7 +82,16 @@ class Coordinator:
             raise CoordinatorError(
                 f"P1 fence: lease for {event_id} expired (holder {lease.holder})"
             )
-        expected_holder = (state or {}).get("lease_holder") or acting_context
+        expected_holder = (state or {}).get("lease_holder")
+        if state is not None and not expected_holder:
+            # run congelada sem holder registrado (estado legado/pré-fencing):
+            # não atribuível a nenhum lease — fail-closed (AID-2721 O2).
+            raise CoordinatorError(
+                f"P1 fence: run {run_id} state has no lease_holder — "
+                "unattributable run cannot transition"
+            )
+        if expected_holder is None:
+            expected_holder = acting_context  # freeze: primeira estação pós-claim
         if expected_holder is not None and lease.holder != expected_holder:
             raise CoordinatorError(
                 f"P1 fence: lease for {event_id} is held by {lease.holder}, "
