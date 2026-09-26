@@ -366,3 +366,5 @@ export class ChatHub extends EventEmitter {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 }
+
+// Provenance: agent=jules task=GH-566 run=run-36246873703 session=7660681200736845421
