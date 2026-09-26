@@ -159,6 +159,30 @@ function writeProgress(page: Page, progress: ProgressDoc): Promise<void> {
 }
 
 /**
+ * Apaga a chave de progresso do IndexedDB — simula "limpar dados do site"
+ * (perda total) no drill de backup/restauração do storage (AID-2884).
+ * Manipulação de storage SOMENTE aqui — nunca em código de produção.
+ */
+export function deleteProgress(page: Page): Promise<void> {
+  return page.evaluate(
+    ({ name, store, key }) =>
+      new Promise<void>((resolve, reject) => {
+        const open = indexedDB.open(name);
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const request = open.result
+            .transaction(store, "readwrite")
+            .objectStore(store)
+            .delete(key);
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => resolve();
+        };
+      }),
+    IDB,
+  );
+}
+
+/**
  * Antecipa todas as revisões agendadas para o passado — é a única forma de
  * exercitar a revisão espaçada em e2e sem viajar no tempo do sistema.
  */
