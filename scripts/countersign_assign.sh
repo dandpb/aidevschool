@@ -226,7 +226,7 @@ if [ -n "$REUSE_ID" ]; then
       echo
     } | jq -Rs '{body: .}' > "$BUMP_FILE"
     api POST "/api/issues/$REUSE_UUID/comments" "$BUMP_FILE" >/dev/null \
-      || die_refused "reuse verdict ok ($REUSE_ID) but bump comment failed — do NOT create a new issue; retry the bump or escalate to FPE"
+      || die_refused "reuse verdict ok ($REUSE_ID) but bump comment failed (target issue may be outside this actor's authorization boundary) — do NOT create a new issue; relay the bump via the board/FPE or escalate"
     rm -f "$BUMP_FILE"
     report_reuse "BUMPED on $REUSE_ID"
   else

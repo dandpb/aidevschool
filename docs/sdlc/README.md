@@ -457,9 +457,13 @@ scripts/countersign_assign.sh --pr 545 --head <40hex> --assignee <agentId> \
 Env: `PAPERCLIP_API_BASE` (default `http://localhost:3100`),
 `PAPERCLIP_API_KEY`, `PAPERCLIP_COMPANY_ID`. Issues de countersign
 concorrentes por head diferente são reportadas como `WARN stale siblings`
-(higiene: fechar as de head superado). A aceitação da regra é observável na
-próxima corrida de update-branch/re-pin: exatamente 1 issue de countersign
-por (PR, head) (critério AID-2844).
+(higiene: fechar as de head superado). Limite conhecido (dogfood AID-2844): o
+bump pode ser recusado pela API quando a issue-alvo está fora do boundary de
+autorização do criador — o veredito REUSE continua válido e o script
+fail-close SEM criar duplicata; o bump nesse caso segue por relay no
+board/FPE. A aceitação da regra é observável na próxima corrida de
+update-branch/re-pin: exatamente 1 issue de countersign por (PR, head)
+(critério AID-2844).
 
 ## Guardrails (what is enforced, and how)
 
