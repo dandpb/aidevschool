@@ -64,7 +64,9 @@ describe("renderShell — targeted assertions", () => {
     expect(html).not.toContain("run-linux-lab")
     expect(html).toContain('data-codexdojo-os-launch="true"')
     expect(html).toContain('href="http://127.0.0.1:5174"')
-    expect(html).toContain('<span aria-hidden="true">Abrir codexDojo OS</span>')
+    expect(html).toContain(
+      '<span>Abrir codexDojo OS</span><span class="sr-only">(abre em nova aba)</span>',
+    )
     expect(html).toContain('target="_blank"')
     expect(html).toContain('rel="noopener noreferrer"')
   })
