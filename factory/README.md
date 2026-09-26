@@ -55,7 +55,7 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 
 | ID | Afirmação | Enforcement |
 | --- | --- | --- |
-| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID; fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
+| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID; fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721); takeover atômico (lockfile por evento + swap único `os.replace`) e perdedor de claim sempre com erro tipado (AID-2725) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
 | P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
