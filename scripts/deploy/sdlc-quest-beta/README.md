@@ -29,6 +29,11 @@ REV=<sha> NETLIFY_AUTH_TOKEN=... scripts/deploy/sdlc-quest-beta/publish.sh  # re
 O script **aborta** se qualquer arquivo divergir do `SHA256SUMS.txt` do
 engine na revisão de origem — nunca publique conteúdo sem pin. O pacote
 `engines/sdlc-quest/` não é alterado pela publicação (manifesto intocado).
+O deploy roda a partir do diretório de publicação temporário para que o CLI
+descubra o `netlify.toml` (headers) e, após publicar, o script **verifica por
+curl** que `noindex`/`nosniff`/`no-referrer` (+ CSP em `/` e `/index.html`)
+estão vivos na URL — deploy sem headers falha o pipeline (fix AID-2704/F1:
+antes o CLI rodava do repo root e publicava sem config nenhum).
 
 ## Reverter
 
@@ -41,7 +46,9 @@ Não existe estado de dados: reversão é só conteúdo estático.
 
 ```bash
 cd scripts/deploy/sdlc-quest-beta/smoke
-npx --yes @playwright/test@1.63.0 test   # QUEST_URL opcional; default = URL pública
+npm install --no-fund --no-audit   # @playwright/test 1.63.0 (pin em package.json)
+npx playwright install chromium    # navegador (primeira vez)
+npx playwright test                # QUEST_URL opcional; default = URL pública
 ```
 
 Joga a campanha inteira até o gate de produção (missões 1–5, 15/18) e falha

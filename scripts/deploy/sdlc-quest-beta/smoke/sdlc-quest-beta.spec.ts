@@ -1,16 +1,21 @@
 import { test, expect } from '@playwright/test';
 import { createRequire } from 'node:module';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /* AID-2674 — beta smoke: plays the full campaign (missions 1-5, the deploy
  * station included) through the production gate task on the live URL and
  * fails on any console/page error. Answers are derived from the engine's own
  * src/data.js at runtime, so content updates do not stale this spec.
- * Run: QUEST_URL=https://aidevschool-sdlcquest.netlify.app npx playwright test */
+ * AID-2704/F2: runs on a clean clone — @playwright/test pinned in
+ * smoke/package.json; __dirname derived ESM-safely (package is type:module);
+ * repo root is four levels up from smoke/, not three.
+ * Run (from this dir): npm install && npx playwright install chromium && npx playwright test */
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const require = createRequire(import.meta.url);
 const QUEST_URL = process.env.QUEST_URL || 'https://aidevschool-sdlcquest.netlify.app';
-const DATA = require(path.resolve(__dirname, '../../../engines/sdlc-quest/src/data.js'));
+const DATA = require(path.resolve(__dirname, '../../../../engines/sdlc-quest/src/data.js'));
 const missions = DATA.missions.map((m) => ({
   id: m.id,
   tasks: m.tasks.map((t) => ({ id: t.id, type: t.type, answer: t.answer, items: t.items })),

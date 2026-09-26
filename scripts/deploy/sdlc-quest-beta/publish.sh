@@ -37,5 +37,27 @@ done
 echo "==> all published files match SHA256SUMS.txt @ $REV"
 cp "$HERE/netlify.toml" "$WORK/netlify.toml"
 
-npx --yes netlify deploy --prod --dir "$WORK" --site "$SITE_ID"
+# AID-2704/F1: the CLI resolves netlify.toml from the working directory, not
+# from --dir. Deploy from $WORK so the copied config (headers) is discovered;
+# running from the repo root silently deployed without any headers.
+( cd "$WORK" && npx --yes netlify deploy --prod --dir . --site "$SITE_ID" )
 echo "==> published revision $REV ($REV_SHA) to site $SITE_ID"
+
+# AID-2704/F1: prove the security headers are live on the edge right after
+# publishing — a deploy that lost its config must fail the pipeline, not pass.
+BASE_URL="${BETA_URL:-https://aidevschool-sdlcquest.netlify.app}"
+sleep 3
+check_header() {
+  local path="$1" header="$2"
+  curl -fsSI --max-time 30 "${BASE_URL}${path}" | tr -d '\r' | grep -qi "^${header}" \
+    || { echo "FAIL: ${header%%:*} missing on ${BASE_URL}${path}" >&2; exit 1; }
+}
+for p in / /index.html /sdlc-quest.html; do
+  check_header "$p" 'X-Robots-Tag: noindex'
+  check_header "$p" 'X-Content-Type-Options: nosniff'
+  check_header "$p" 'Referrer-Policy: no-referrer'
+done
+for p in / /index.html; do
+  check_header "$p" 'Content-Security-Policy: '
+done
+echo "==> security headers verified live on $BASE_URL"
