@@ -72,6 +72,7 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 | --- | --- | --- |
 | P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID; fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
+| P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
 | P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
