@@ -24,7 +24,7 @@ fresh-context (child issue Paperclip) → veredito first-hand no carrier +
 comentário no PR com `Countersign: AID-XXXX verdict <ref>` + trailer
 `Provenance:` → re-run do check no head → CI verde → CEO single-writer merge
 com a mensagem no template novo, incluindo a linha canônica → auto-grep
-`git log -1 --grep '^Countersign: '` → recibo no carrier AID-2655 e
+`git show -s --format=%B <merge-sha> | grep '^Countersign: '` → recibo no carrier AID-2655 e
 disposição final.
 
 ## Risks / proof
@@ -35,6 +35,8 @@ disposição final.
 - Risco: merge train #515–#522 mergear sem a linha antes da emenda entrar —
   mitigado pelo checklist valer "a partir do merge train #515–#522" já na
   decisão, independentemente do merge desta emenda.
-- Proof: (1) `git log -1 --grep '^Countersign: ' <merge-sha>` retorna a
-  linha no merge desta própria emenda; (2) o texto da emenda contém o
+- Proof: (1) `git show -s --format=%B <merge-sha> | grep '^Countersign: '`
+  retorna a linha no merge desta própria emenda (verificação da mensagem do
+  commit em si — nunca `git log --grep` sem range, que casa ancestral;
+  achado QA AID-2658); (2) o texto da emenda contém o
   template e os 3 passos; (3) diff docs-only (sem código).

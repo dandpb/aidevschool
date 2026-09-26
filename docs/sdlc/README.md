@@ -296,9 +296,14 @@ todo writer (hoje o single-writer FPE; sob R1, quem mergar):
       corpo — nunca só inline/parêntese no título);
    2. confirmar que o veredito citado está postado first-hand no carrier
       ANTES do merge (ordenação Stage-2);
-   3. APÓS o merge, auto-verificar `git log -1 --grep '^Countersign: '
-      <merge-sha>`; ausência = self-report imediato no carrier (achado
-      declarado pelo próprio merge-writer, não esperando a auditoria SM).
+   3. APÓS o merge, auto-verificar a mensagem do PRÓPRIO merge commit:
+      `git show -s --format=%B <merge-sha> | grep '^Countersign: '`
+      (rc≠0 = ausência = self-report imediato no carrier, declarado pelo
+      próprio merge-writer, não esperando a auditoria SM). Nunca
+      `git log -N --grep … <merge-sha>` sem range pinado: caminha o
+      histórico e casa ANCESTRAL com a linha (falso PASS estrutural
+      pós-#507/`13f22ef4`, reprodutivo no próprio `f680490f` — achado QA
+      AID-2658).
    Registro: `intent/AID-2655-merge-msg-canonical-line/`.
 6. **Trailer de proveniência por agente em comentários de processo
    (AID-2493, 2026-09-18).** Binding para TODO agente que posta comentário de

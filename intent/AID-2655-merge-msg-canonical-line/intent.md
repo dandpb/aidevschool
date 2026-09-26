@@ -31,7 +31,8 @@ superfícies divergem exatamente quando a disciplina falha (a divergência É o
 sinal de slips). As duas superfícies passam a ser exigidas em conjunto —
 gate pré-merge no PR (Stage-1/Stage-2, já mecânico) + linha canônica na
 merge message (item 5(2), agora com checklist binding do merge-writer e
-auto-verificação pós-merge por `git log --grep`). #514 registrado como
+auto-verificação pós-merge da mensagem do próprio commit via
+`git show -s --format=%B | grep`). #514 registrado como
 achado MÉDIA (mitigações íntegras: citações canônicas pré-merge < merged_at
 + `Provenance:`; CI verde 41✓/2skip; producer ≠ verifier ≠ merger), sem
 ação retroativa — reconstruir merge messages seria rewrite de história.
