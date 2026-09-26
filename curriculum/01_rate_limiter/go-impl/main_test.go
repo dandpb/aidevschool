@@ -224,7 +224,7 @@ func TestStatusRecorder_CapturesStatus(t *testing.T) {
 // TestRun_GracefulShutdownOnContextCancel exercises the run() function
 // directly. We use an ephemeral port, cancel the context after the
 // listener is up, and assert that run() returns nil (clean shutdown).
-// This covers the parts of main() that were previously untestable.
+// This ensures graceful shutdown completes cleanly upon context cancellation.
 func TestRun_GracefulShutdownOnContextCancel(t *testing.T) {
 	// Pick a free port by binding and immediately releasing.
 	ln, err := net.Listen("tcp", "127.0.0.1:0")
