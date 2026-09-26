@@ -22,7 +22,14 @@ class ContractError(RuntimeError):
     pass
 
 
-PLAN_APPROVED = re.compile(r"^\s*Status:\s*approved\b", re.MULTILINE)
+# Dois formatos aprovados (AID-2732): o da POC (`Status: approved` em
+# início de linha) e o header canônico do template SDLC, que carrega o
+# status inline na linha `Change-id:` (`... · Status: approved`).
+PLAN_APPROVED = re.compile(
+    r"^\s*Status:\s*approved\b"
+    r"|^\s*Change-id:.*·\s*Status:\s*approved\b",
+    re.MULTILINE,
+)
 
 
 def parse_checks_md(text: str) -> list[Check]:
