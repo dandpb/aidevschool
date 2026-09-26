@@ -909,6 +909,46 @@ jobs:
           if-no-files-found: warn
 
 
+  # AID-2675 (BETA ACCESS prerequisite): engines/school-entry — the public
+  # no-login entry that recommends engines by goal plus the operator release
+  # panel — is on main with zero CI coverage (same gap class as AID-2286).
+  # This by-name job must be green BEFORE the surface is published; a
+  # regression in the recommender/release gate then fails the PR instead of
+  # the public entry. Runtime contract (engine README): Node >= 22.13
+  # (node:sqlite; Dockerfile runs node:22-bookworm-slim — CI mirrors the
+  # production major), Playwright Chromium for the browser checker suites.
+  school-entry:
+    name: school-entry (TS)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engines/school-entry
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: engines/school-entry/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      # Chromium must be present BEFORE `npm test`: the unit glob
+      # tests/*.test.mjs already includes health.test.mjs (C06), which
+      # launches the real checker browser. Verified first-hand — without the
+      # matching browser build C06 fails with a bare `false !== true`.
+      - run: npx playwright install --with-deps chromium
+      # Unit + contract suites (26 tests: catalog, durable release store,
+      # auth/CSRF, rate limits, provider contract, UTF-8 boundaries, target
+      # validation). No external credentials.
+      - run: npm test
+      # Browser end-to-end suite (7 specs) against the real server app.
+      - run: npm run test:browser
+      # Syntax gate for every shipped module (engine `check` script).
+      - run: npm run check
+      # NOTE: `npm run test:live` is intentionally NOT run here — it requires
+      # a real TYPESAFE_API_KEY and makes paid inference calls; every other
+      # suite is credential-free by design (engine README §Verificar).
+
+
   # DESIGN.md contract (2026-09-12): every frontend engine owns a DESIGN.md
   # (Stitch spec: YAML front matter tokens + prose) derived from its real CSS.
   # This job lints changed DESIGN.md files with the official linter so visual
