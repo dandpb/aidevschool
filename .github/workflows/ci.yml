@@ -832,6 +832,25 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: python -m pytest engines/miniMaxEvolutionEngine/tests -q
 
+  # AID-2732 (B5, sources AID-2683/#10 + AID-2684/#3+#17 + AID-2686/#5): no
+  # CI job executed the agentic factory suite — the registry contract was
+  # only exercised by synthetic fixtures in the own-line format, which is how
+  # the canonical main registry (mid-line `· Status: approved` template
+  # header) shipped unloadable (freeze/load_from_registry raised
+  # ContractError). This job runs the P1–P5 suite including the registry
+  # smoke over every intent/*/ with checks.md, so an unloadable factory
+  # registry fails the PR instead of the first real freeze.
+  factory:
+    name: factory (contract+registry)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: python -m pytest factory/tests -q
+
   # AID-2286 (verdict AID-2281 ressalva R1, countersign 1835c128): the two
   # engines landed by PR #471 shipped with zero CI coverage — no job executed
   # sdlc-quest or zai-duolingo-like anywhere. By-name jobs close the gap so
