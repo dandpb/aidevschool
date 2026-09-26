@@ -3,6 +3,10 @@
 Estações: intake → claim → freeze → build → prove → gate → (PR humano).
 Toda transição appenda recibo no ledger da run; `resume` retoma sem apagar
 histórico; `ledger --verify` revalida a cadeia de hashes.
+
+Contrato de saída (AID-2728/AID-2737): exceções do domínio nunca derrubam
+traceback — viram JSON com motivo na stderr + exit 2; vereditos estruturados
+(block / chain_ok:false) saem como JSON na stdout + exit 2.
 """
 
 from __future__ import annotations
@@ -12,10 +16,14 @@ import json
 import sys
 from pathlib import Path
 
+from .contract import ContractError
 from .coordinator import Coordinator, CoordinatorError, factory_home
-from .ledger import load_raw
+from .ledger import LedgerError, RunLedger, load_raw
 from .model import WorkEvent
-from .queue import LeaseHeldError
+from .queue import FactoryError, LeaseHeldError
+
+# Exceções que o CLI converte em JSON de motivo + exit 2 (AID-2728 S6a).
+DOMAIN_ERRORS = (ContractError, CoordinatorError, LedgerError, FactoryError)
 
 
 def _coord(args: argparse.Namespace) -> Coordinator:
@@ -91,17 +99,13 @@ def cmd_resume(args: argparse.Namespace) -> int:
 def cmd_ledger(args: argparse.Namespace) -> int:
     home = factory_home(Path(args.home) if args.home else None)
     path = home / "ledger" / f"run-{args.event_id}.jsonl"
-    entries = load_raw(path)
     if args.verify:
-        from .ledger import RunLedger
-        from .model import Receipt
-
-        receipts = [Receipt.from_json(json.dumps(e)) for e in entries]
-        hashes_ok = all(r.hash == r.compute_hash() for r in receipts)
-        chain_ok = RunLedger(path).verify_chain()
-        print(json.dumps({"entries": len(entries), "hashes_ok": hashes_ok, "chain_ok": chain_ok}))
-        return 0 if (hashes_ok and chain_ok) else 2
-    for e in entries:
+        # AID-2728 S5b: veredito estruturado — linha malformada vira
+        # {"chain_ok": false, "error": {"line", "reason"}} + exit 2.
+        report = RunLedger(path).verify_report()
+        print(json.dumps(report))
+        return 0 if (report["hashes_ok"] and report["chain_ok"]) else 2
+    for e in load_raw(path):
         print(json.dumps(e))
     return 0
 
@@ -162,7 +166,14 @@ def main(argv: list[str] | None = None) -> int:
     p.set_defaults(func=cmd_ledger)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    try:
+        return args.func(args)
+    except DOMAIN_ERRORS as exc:
+        # AID-2728 S6a: exceção de estação vira JSON com motivo + exit 2 —
+        # nunca traceback cru. (Claim/build já tratam seus blocks antes.)
+        print(json.dumps({"error": type(exc).__name__, "reason": str(exc)}),
+              file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

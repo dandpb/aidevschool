@@ -22,7 +22,24 @@ class ContractError(RuntimeError):
     pass
 
 
-PLAN_APPROVED = re.compile(r"^\s*Status:\s*approved\b", re.MULTILINE)
+# Formas canônicas de header com Status (docs/sdlc/templates/*.md,
+# intent/README.md): linha própria ("Status: approved") ou campo mid-line do
+# header template ("Change-id: <cid> · From: <path> · Status: approved").
+# A âncora `(?:^|·)` exige que `Status:` seja um campo de header de verdade
+# (início de linha ou após o separador `·`); `plan_is_approved` ainda restringe
+# a busca ao bloco de header (antes da primeira seção `## `), onde o template
+# posiciona os campos — menções incidentais em prosa/backticks/corpo do
+# documento não satisfazem a aprovação (AID-2732 / B5).
+PLAN_APPROVED = re.compile(r"(?:^|·)[ \t]*Status:[ \t]*approved\b", re.MULTILINE)
+
+_SECTION_HEADING = re.compile(r"^## ", re.MULTILINE)
+
+
+def plan_is_approved(text: str) -> bool:
+    """Aprovação vale só no bloco de header (título + campos, pré-`## `)."""
+    m = _SECTION_HEADING.search(text)
+    header = text[: m.start()] if m else text
+    return bool(PLAN_APPROVED.search(header))
 
 
 def parse_checks_md(text: str) -> list[Check]:
@@ -71,10 +88,11 @@ class Contract:
         self._require(files, "intent.md")
         self._require(files, "plan.md")
         plan = files["plan.md"]
-        if not PLAN_APPROVED.search(plan):
+        if not plan_is_approved(plan):
             raise ContractError(
-                "plan.md header must carry `Status: approved` before build (HTML §02: "
-                "plano aprovado libera build)"
+                "plan.md header must carry a `Status: approved` header field "
+                "(own line or `·`-separated mid-line field) before build "
+                "(HTML §02: plano aprovado libera build)"
             )
 
     @staticmethod

@@ -51,12 +51,40 @@ python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
 
 `FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
 
+### Contrato de saída do CLI (AID-2728)
+
+- **Exit 0** só em sucesso/veredito promote; **exit 2** é o código único de
+  recusa (block, fence, exceção do domínio). Exceções do domínio
+  (`ContractError`, `CoordinatorError`, `LedgerError`, `FactoryError`) nunca
+  derrubam traceback: viram `{"error": "<tipo>", "reason": "..."}` na stderr +
+  exit 2.
+- `ledger --verify` sempre imprime veredito estruturado — linha truncada ou
+  não-JSON devolve `{"chain_ok": false, "error": {"line", "reason"}}` + exit 2.
+- `gate` com contrato congelado adulterado devolve veredito `block` (motivo
+  P4) + exit 2, como o caminho do registro versionado.
+- Lease liberado (`release`) é legível pelo modelo (`released_at`) e
+  fail-closed: `heartbeat`/`claim`/estações recusam com motivo estruturado —
+  re-claim exige re-intake; takeover só pós-expiração (AID-2721).
+
+## Retomada idempotente por estação (AID-2726)
+
+Kill físico em qualquer janela de estação não trava a run — o retry converge
+sem intervenção manual: `freeze` grava o state (`station: freezing`) ANTES dos
+efeitos e recongela contract dir parcial/órfão (inclusive o estado legado
+"contract dir sem state.json"); `build` reclama worktree de tentativa morta
+(remove registro + diretório) antes de recriar no SHA da base; `gate` grava o
+`receipt.summary.json` ANTES da transição `promoted` e regenera o resumo de
+runs promoted sem resumo. Reentrada em `contracted`/`promoted` é idempotente e
+completa recibos pendentes com `detail.backfill` (acrécimo no ledger, jamais
+reescrita). Regressões: `factory/tests/test_s1_resumption.py`.
+
 ## Critérios de saída (HTML §04) e onde são garantidos
 
 | ID | Afirmação | Enforcement |
 | --- | --- | --- |
-| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID; fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
+| P1 | Um item gera uma execução ativa; reenvio não duplica; perda/tomada do lease inviabiliza o holder obsoleto | `queue.claim` O_CREAT\|O_EXCL; intake atômico create-if-absent (tmp por escritor + `os.link`, divergência concorrente/sequencial → `FactoryError`, AID-2727/AID-2731); fencing por `epoch` + recibo de takeover no ledger; estações revalidam holder/época (AID-2718/AID-2721) |
 | P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
+| P2+ | Prova não é auto-atestada: `{check_id, cmd_sha256, exit_code, output_sha256}` selado no recibo `verified` do ledger; gate compara runtime ↔ âncora e bloqueia divergência ou ausência de âncora (AID-2715) | `model.proof_evidence` + `gate.evidence_anchor_gaps` + `coordinator._proof_anchor`; âncora reflui em `receipt.summary.json` |
 | P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
 | P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados |
 | P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
