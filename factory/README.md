@@ -1,0 +1,83 @@
+# Agentic factory — POC (AID-2676)
+
+Implementação prática dos conceitos da proposta **"POC da fábrica agente"**
+(anexo `agentic-factory-poc-aidevschool.export.html`, issue AID-2676):
+um trabalho atravessa **entrada, contrato, construção, verificação e PR**
+com estado recuperável e evidência ligada ao mesmo commit.
+
+```
+Evento → Contrato → Construir → Provar → PR + CI → Direção (humano)
+ fila+lease  plano+checks   worktree    Verifier   mesmo SHA    merge
+```
+
+## Entregas (mapeamento HTML §05)
+
+| Entrega | HTML | Aqui |
+| --- | --- | --- |
+| 00 · BASE | caso fixado, contrato aceito, checks congelados antes do código | `intent/AID-2676-agentic-factory-poc/` (inclui `checks.md` do piloto) + `factory/contract.py` |
+| 01 · MOTOR | coordenador local: evento, lease, worktree, autor e Verifier distintos, retomada | `factory/coordinator.py` + fila/lease/ledger |
+| 02 · PR | provas baratas, gate no SHA, Judge/CI no mesmo head; humano decide | `factory/gate.py` (P5 aceita `--pr-head`) — o ciclo completo roda no PR desta própria mudança |
+
+## Layout
+
+```
+factory/
+├── model.py          # Evento, Check, Prova, Lease, Recibo
+├── queue.py          # fila + lease exclusivo (P1)
+├── ledger.py         # recibos append-only encadeados por hash
+├── contract.py       # registro versionado intent/<change-id>/ → contrato congelado
+├── gitwork.py        # worktree isolado, SHA, estado da árvore (P4)
+├── verify.py         # Verifier separado executa checks e grava provas (P2/P3)
+├── gate.py           # promoção fail-closed (P1–P5)
+├── coordinator.py    # MOTOR: orquestra estações, retomável
+└── tests/            # critérios de saída P1–P5 (casos negativos inclusos)
+```
+
+Runtime state (fora do Git): `.scratch/factory/` — `queue/`, `leases/`,
+`runs/<run-id>/{state.json,contract/,proofs/,receipt.summary.json}` e
+`ledger/<run-id>.jsonl`. O `.gitignore` do repo já cobre `.scratch/`.
+
+## Uso
+
+```bash
+python3 -m factory intake --event-id FE-1 --origin AID-2676 --scope "fix X" --risk low
+python3 -m factory claim FE-1 --context agent-author      # 2º claim → exit 2 (P1)
+python3 -m factory freeze FE-1 --change-id AID-2676-agentic-factory-poc --context agent-author
+python3 -m factory build FE-1 --context agent-author --cmd "<comando que produz o commit>"
+python3 -m factory prove FE-1 --context agent-verifier    # contexto distinto (P3)
+python3 -m factory gate  FE-1 --context coordinator [--pr-head <sha>]
+python3 -m factory ledger FE-1 --verify                   # revalida a cadeia
+```
+
+`FACTORY_HOME` reposiciona o runtime state (os testes usam tmp dirs).
+
+## Critérios de saída (HTML §04) e onde são garantidos
+
+| ID | Afirmação | Enforcement |
+| --- | --- | --- |
+| P1 | Um item gera uma execução ativa; reenvio não duplica | `queue.claim` O_CREAT\|O_EXCL; intake idempotente por ID |
+| P2 | Todo check aprovado tem prova; perfil `standard` pelo verificador | `verify.run_checks` + `revalidate_proofs` + `standard_profile_gaps` |
+| P3 | Autor e Verifier são contextos distintos | `gate.evaluate` recusa `author_context == verifier_context` |
+| P4 | Gate só promove evidência do commit e árvore examinados | digest do contrato + SHA build==verify + drift de não-rastreados |
+| P5 | PR e CI concordam sobre o head | `gate.evaluate(pr_head_sha=...)` recusa head ≠ SHA provado |
+
+O teste negativo é parte do aceite: `factory/tests/` cobre cada bloqueio.
+
+## Fronteiras (HTML §03)
+
+- Registro canônico único: `intent/<change-id>/` (não criar `.specs/`
+  concorrente). A compatibilidade de formato com os validadores do
+  `tlc-spec-lean` é um spike declarado, não resolvido por symlink.
+- Runtime state fora do Git (`.scratch/factory/`); só um resumo pequeno
+  (`receipt.summary.json`) pode voltar ao registro versionado.
+- Não avança `learner/`, `curriculum/` nem `.mavis/`; reutiliza os padrões
+  lease/outbox/ledger já provados no supervisor do
+  `engines/miniMaxEvolutionEngine`, sem estendê-lo.
+- Produção fica fora da primeira POC: o piloto termina em PR pronto para
+  decisão humana (HTML §06, recomendado).
+
+## Verificação
+
+```bash
+python3 -m pytest factory/tests/ -q
+```
