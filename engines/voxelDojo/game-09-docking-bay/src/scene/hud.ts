@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import { HOST_CONTRACT } from "../sim/levels"
 import { PALETTE } from "./dockingScene"
@@ -86,7 +85,8 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       const row = document.createElement("div")
       row.className = "pod-row"
       row.dataset.testid = `pod-${pod.id}`
-      row.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ${escapeHtml(pod.id)} · claims [${escapeHtml(pod.claimsContract.join(", "))}]`
+      const swatch = `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span>`
+      row.innerHTML = `${swatch} ${pod.id} · claims [${pod.claimsContract.join(", ")}]`
       const dock = document.createElement("button")
       dock.dataset.testid = `dock-yes-${pod.id}`
       dock.textContent = "✓ dock"
@@ -104,7 +104,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       const label = document.createElement("div")
       label.className = "pod-row"
       label.dataset.testid = `pod-${pod.id}`
-      label.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ${escapeHtml(pod.id)} · claims [${escapeHtml(pod.claimsContract.join(", "))}]`
+      label.innerHTML = `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span> ${pod.id} · claims [${pod.claimsContract.join(", ")}]`
       node.append(label)
       for (const m of [...HOST_CONTRACT, "none"] as const) {
         button(node, `missing-${pod.id}-${m}`, m, () => game.predictMissing(pod.id, m))
