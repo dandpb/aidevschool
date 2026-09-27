@@ -1,8 +1,14 @@
 import { buildApp } from './app';
 
+const jwtSecret = process.env.JWT_SECRET;
+if (!jwtSecret) {
+  process.stderr.write('JWT_SECRET is required and no default is provided. Generate one for local runs: export JWT_SECRET="$(openssl rand -hex 32)"\n');
+  process.exit(1);
+}
+
 const { app } = buildApp({
   config: {
-    jwtSecret: process.env.JWT_SECRET ?? 'dev-project-07-secret-change-me',
+    jwtSecret,
     issuer: process.env.JWT_ISSUER ?? 'ai-devschool-project-07',
     audience: process.env.JWT_AUDIENCE ?? 'project-07-learners',
     accessTokenSeconds: Number(process.env.ACCESS_TOKEN_SECONDS ?? '900'),

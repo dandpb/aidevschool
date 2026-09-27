@@ -71,12 +71,11 @@ class FixedClock implements Clock {
   now(): Date { return new Date(this.value); }
 }
 
-const defaultConfig: Config = {
+const defaultConfig: Omit<Config, 'jwtSecret'> = {
   issuer: 'ai-devschool-project-07',
   audience: 'project-07-learners',
   accessTokenSeconds: 900,
   refreshTokenSeconds: 604800,
-  jwtSecret: 'dev-project-07-secret-change-me',
   passwordIterations: 12000
 };
 
@@ -287,7 +286,11 @@ const sendError = (reply: FastifyReply, request: FastifyRequest, error: ApiError
 };
 
 export function buildApp(options: { config?: Partial<Config>; clock?: Clock; store?: InMemoryStore } = {}): { app: FastifyInstance; store: InMemoryStore } {
-  const config = { ...defaultConfig, ...options.config };
+  const base = { ...defaultConfig, ...options.config };
+  if (!base.jwtSecret) {
+    throw new Error('Config error: jwtSecret is required (set JWT_SECRET). Refusing to fall back to a hardcoded secret.');
+  }
+  const config: Config = { ...base, jwtSecret: base.jwtSecret };
   const clock = options.clock ?? new FixedClock();
   const store = options.store ?? new InMemoryStore();
   const logger = createLogger('silent' );
