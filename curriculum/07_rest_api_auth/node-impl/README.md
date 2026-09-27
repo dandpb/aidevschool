@@ -4,7 +4,10 @@ Project 07 implementation using Fastify, strict TypeScript, `jsonwebtoken`, in-m
 
 ## Run
 
+`JWT_SECRET` is required — the server refuses to start without it (no hardcoded default):
+
 ```sh
+export JWT_SECRET="$(openssl rand -hex 32)"
 npm install
 npm run build
 npm start

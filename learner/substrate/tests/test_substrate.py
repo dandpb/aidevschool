@@ -1165,6 +1165,62 @@ class TestScheduling(unittest.TestCase):
         with self.assertRaises(ValueError):
             apply_gate_review(Card(), "bogus", date(2026, 6, 1))
 
+    def test_apply_gate_review_all_ratings(self):
+        from datetime import datetime, timezone
+        from fsrs import Card, Rating, ReviewLog
+
+        from learner.substrate.scheduling import apply_gate_review
+
+        expected_ratings = {
+            "again": Rating.Again,
+            "hard": Rating.Hard,
+            "good": Rating.Good,
+            "easy": Rating.Easy,
+        }
+
+        for rating_name, expected_rating_enum in expected_ratings.items():
+            card, log = apply_gate_review(Card(), rating_name, date(2026, 6, 1))
+            self.assertIsInstance(card, Card)
+            self.assertIsInstance(log, ReviewLog)
+            self.assertEqual(log.rating, expected_rating_enum)
+
+    def test_apply_gate_review_date_types(self):
+        from datetime import datetime, timezone
+        from fsrs import Card
+
+        from learner.substrate.scheduling import apply_gate_review
+
+        # Test date object
+        card_date, _ = apply_gate_review(Card(), "good", date(2026, 6, 1))
+        # Test naive datetime object
+        card_naive, _ = apply_gate_review(Card(), "good", datetime(2026, 6, 1, 12, 0))
+        # Test UTC-aware datetime object
+        card_aware, _ = apply_gate_review(Card(), "good", datetime(2026, 6, 1, 12, 0, tzinfo=timezone.utc))
+
+        self.assertIsNotNone(card_date.due)
+        self.assertIsNotNone(card_naive.due)
+        self.assertIsNotNone(card_aware.due)
+
+    def test_apply_gate_review_sequential_reviews(self):
+        from fsrs import Card, State
+
+        from learner.substrate.scheduling import apply_gate_review
+
+        card = Card()
+        self.assertEqual(card.state, State.Learning)
+        self.assertIsNone(card.stability)
+
+        # First review: Good
+        card, log1 = apply_gate_review(card, "good", date(2026, 6, 1))
+        self.assertEqual(card.state, State.Learning)
+        self.assertIsNotNone(card.stability)
+        initial_stability = card.stability
+
+        # Second review: Easy
+        card, log2 = apply_gate_review(card, "easy", date(2026, 6, 10))
+        self.assertEqual(card.state, State.Review)
+        self.assertGreater(card.stability, initial_stability)
+
     def test_build_card_returns_none_without_gate_reviews(self):
         from learner.substrate.scheduling import build_card_from_reviews
 

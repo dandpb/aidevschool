@@ -49,6 +49,49 @@ describe("sequence flow encounter", () => {
       expect(metrics.guards_missed).toBeGreaterThan(0)
     }
   })
+
+  it("increments held counter when a guard step is correctly rejected", () => {
+    const encounter = keyValueEncounter()
+    let state = createSequenceState(encounter)
+    const now = new Date("2026-06-11T12:00:00.000Z")
+
+    // First two steps are advance steps
+    state = applySequenceAction(state, "admit", now)
+    state = applySequenceAction(state, "admit", now)
+    expect(state.advanced).toBe(2)
+    expect(state.held).toBe(0)
+
+    // Third step is guard step
+    state = applySequenceAction(state, "reject", now)
+    expect(state.held).toBe(1)
+    expect(state.guardsMissed).toBe(0)
+  })
+
+  it("increments skippedRequired and updates heatPeak when an advance step is incorrectly rejected", () => {
+    const encounter = keyValueEncounter()
+    let state = createSequenceState(encounter)
+    const now = new Date("2026-06-11T12:00:00.000Z")
+
+    // First step is an advance step, reject it
+    state = applySequenceAction(state, "reject", now)
+    expect(state.skippedRequired).toBe(1)
+    expect(state.heatPeak).toBe(18)
+  })
+
+  it("guards completed sequence encounter state from further actions", () => {
+    const encounter = keyValueEncounter()
+    let state = createSequenceState(encounter)
+    const now = new Date("2026-06-11T12:00:00.000Z")
+
+    for (const step of encounter.steps) {
+      state = applySequenceAction(state, step.type === "advance" ? "admit" : "reject", now)
+    }
+
+    expect(state.complete).toBe(true)
+    const completedState = state
+    const newState = applySequenceAction(state, "admit", now)
+    expect(newState).toBe(completedState)
+  })
 })
 
 function keyValueEncounter() {
