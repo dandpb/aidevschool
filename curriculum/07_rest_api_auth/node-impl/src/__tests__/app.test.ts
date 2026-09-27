@@ -10,7 +10,8 @@ interface Failure { error: { code: string; message: string; details: Array<{ fie
 interface LoginData { access_token: string; refresh_token: string; token_type: string; expires_in_seconds: number; refresh_expires_in_seconds: number; user: PublicUser }
 interface RefreshData { access_token: string; refresh_token: string }
 const bodyOf = <T>(response: { json: () => unknown }): T => response.json() as T;
-const testApp = () => buildApp({ config: { passwordIterations: 100 } });
+const testJwtSecret = 'project-07-test-fixture-secret-not-a-runtime-default';
+const testApp = () => buildApp({ config: { passwordIterations: 100, jwtSecret: testJwtSecret } });
 
 async function registered() {
   const built = testApp();
@@ -48,7 +49,7 @@ describe('REST API auth Node implementation', () => {
     const ok = await app.inject({ method: 'POST', url: '/v1/auth/login', payload: { email: 'ada@example.com', password: strong } });
     expect(ok.statusCode).toBe(200);
     const body = bodyOf<Success<LoginData>>(ok).data;
-    const decoded = jwt.verify(body.access_token, defaultConfig.jwtSecret, { issuer: defaultConfig.issuer, audience: defaultConfig.audience, clockTimestamp: Date.parse('2026-06-17T00:00:00.000Z') / 1000 }) as jwt.JwtPayload;
+    const decoded = jwt.verify(body.access_token, testJwtSecret, { issuer: defaultConfig.issuer, audience: defaultConfig.audience, clockTimestamp: Date.parse('2026-06-17T00:00:00.000Z') / 1000 }) as jwt.JwtPayload;
     expect(decoded.sub).toBeDefined();
     expect(decoded.roles).toEqual(['user']);
     expect(decoded.jti).toContain('jti_');
@@ -100,5 +101,9 @@ describe('REST API auth Node implementation', () => {
     const unsupported = await app.inject({ method: 'GET', url: '/v2/users' });
     expect(unsupported.statusCode).toBe(404);
     expect(bodyOf<Failure>(unsupported).error.code).toBe('UNSUPPORTED_API_VERSION');
+  });
+
+  it('refuses to build without an explicit jwtSecret (no hardcoded fallback)', () => {
+    expect(() => buildApp({ config: { passwordIterations: 100 } })).toThrow(/jwtSecret is required/);
   });
 });
