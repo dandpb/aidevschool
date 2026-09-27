@@ -19,6 +19,11 @@
 **Learning:** While `rel="noreferrer"` implicitly provides `noopener` behavior in modern browsers (Chrome >= 88), explicitly stating `noopener noreferrer` ensures broader protection across all environments and satisfies strict security linters.
 **Prevention:** Always add `rel="noopener noreferrer"` to all `target="_blank"` external links in React applications (like `literacyDojo` and `codexdojo-os-prototype`) to enforce defense in depth.
 
+## 2026-09-26 - Prevent XSS in voxelDojo HUD innerHTML Render Path
+**Vulnerability:** Untrusted string interpolation directly into `innerHTML` without escaping in `engines/voxelDojo/game-*/src/scene/hud.ts` files.
+**Learning:** Like dojoToday, voxelDojo games use vanilla JS template strings for UI rendering. When dynamic properties (like `doc.id` and `doc.text`) are directly injected into `innerHTML`, it creates a DOM-based XSS vulnerability if those properties contain malicious payloads.
+**Prevention:** Coerce and escape all dynamically interpolated text strings using an `escapeHtml` utility whenever updating `innerHTML`. Be careful not to create cross-boundary imports in the monorepo; add local utils if necessary.
+
 ## 2026-09-26 - Hardcoded JWT Secret Default Verification
 
 **Vulnerability:** Hardcoded JWT Secret Default reported in non-existent Go implementation file `curriculum/07_rest_api_auth/go-impl/internal/authapi/app.go`.
