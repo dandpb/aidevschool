@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import { PALETTE } from "./missionScene"
 
@@ -107,7 +106,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     const row = document.createElement("button")
     row.dataset.testid = `station-${s.id}`
     row.innerHTML =
-      `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ${escapeHtml(s.id)}` +
+      `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span> ${s.id}` +
       (isLeader ? ' · <span class="leader">LEADER</span>' : "")
     row.addEventListener("click", () => {
       const lvl = state.level.id
@@ -147,7 +146,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       row.dataset.testid = `job-${job.id}`
       const tag = completed ? "✓ done" : ready ? "● ready" : "✗ blocked"
       const depList = job.deps.length > 0 ? job.deps.join(",") : "—"
-      row.innerHTML = `${escapeHtml(job.id)} <span class="rule">[${escapeHtml(depList)}]</span> ${escapeHtml(tag)}`
+      row.innerHTML = `${job.id} <span class="rule">[${depList}]</span> ${tag}`
       row.addEventListener("click", () => game.launchJob(job.id))
       node.append(row)
     }
