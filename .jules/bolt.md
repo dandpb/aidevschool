@@ -51,3 +51,6 @@
 ## 2025-02-18 - Avoid array allocations for game state derivations
 **Learning:** Using chained array methods (`.filter().length`, `.reduce()`, `.flatMap().filter().map()`) to compute aggregated metrics in core state evaluation functions (like `stats`) allocates many intermediate arrays, increasing GC pressure and slowing down rendering logic.
 **Action:** Replace chained array derivations with a single-pass O(N) loop when computing multiple related metrics (like `completed`, `done`, `xp`, and `bosses`) simultaneously from the same data structure.
+## 2024-10-24 - Optimize O(N^2) Map building and allocations in simulation grids
+**Learning:** Building an intermediate Map using string concatenation (`${x},${y}`) and nested arrays in grid algorithms (like `recomputeRoads` in miniTown) creates massive GC pressure and execution overhead when run frequently (e.g., during placement waves or initialization). V8 struggles with the continuous allocations of Maps, arrays, and string keys.
+**Action:** Replace `Map`s indexed by grid coordinates with flat 1D arrays (`[y * width + x]`) and use typed arrays (`Uint8Array`) for binary grid states. Unroll `for...of` loops over small static arrays (like neighbor offsets) to standard indexed `for` loops to eliminate iterator closure allocation.
