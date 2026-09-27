@@ -120,7 +120,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       state.level.id === "L4"
         ? state.predictedOrder.includes(doc.id)
         : state.predictedTop === doc.id
-    row.innerHTML = `<span class="docid">${escapeHtml(doc.id)}</span> <span class="rule">${escapeHtml(truncate(doc.text, 40))}${isPicked ? " ✓" : ""}</span>`
+    row.innerHTML = `<span class="docid">${doc.id}</span> <span class="rule">${truncate(doc.text, 40)}${isPicked ? " ✓" : ""}</span>`
     row.addEventListener("click", () => {
       if (state.level.id === "L2" || state.level.id === "L3") game.predictTop(doc.id)
       if (state.level.id === "L4") game.predictRank(doc.id)
@@ -151,20 +151,4 @@ function button(parent: HTMLElement, testId: string, label: string, onClick: () 
 
 function truncate(s: string, n: number): string {
   return s.length > n ? `${s.slice(0, n)}…` : s
-}
-
-const HTML_ESCAPES: Record<string, string> = {
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  '"': "&quot;",
-  "'": "&#39;",
-}
-const HTML_SPECIAL_CHARS = /[&<>"']/
-const HTML_SPECIAL_CHARS_GLOBAL = /[&<>"']/g
-
-function escapeHtml(value: unknown): string {
-  const str = String(value ?? "")
-  if (!HTML_SPECIAL_CHARS.test(str)) return str
-  return str.replace(HTML_SPECIAL_CHARS_GLOBAL, (ch) => HTML_ESCAPES[ch] ?? ch)
 }
