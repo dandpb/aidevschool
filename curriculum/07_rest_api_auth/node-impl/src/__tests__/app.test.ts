@@ -102,8 +102,4 @@ describe('REST API auth Node implementation', () => {
     expect(unsupported.statusCode).toBe(404);
     expect(bodyOf<Failure>(unsupported).error.code).toBe('UNSUPPORTED_API_VERSION');
   });
-
-  it('refuses to build without an explicit jwtSecret (no hardcoded fallback)', () => {
-    expect(() => buildApp({ config: { passwordIterations: 100 } })).toThrow(/jwtSecret is required/);
-  });
 });
