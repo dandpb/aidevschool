@@ -13,7 +13,6 @@ The system is not a theory archive. Every cycle must create useful artifacts: co
 
 | Surface | Role |
 | --- | --- |
-| `docs/RELEASE_SCOPE.md` | Frozen v0.1 front door, two-audience six-mission scope, local-first limitation, growth freeze, engine classification, release ownership, and RC scorecard. |
 | `docs/VISION.md` | Canonical product intention: two audiences, one short-lesson mechanic. It does not prove implementation status. |
 | `.design/engine-entry-recommender.md` · `.tasks/engine-entry-recommender.md` | Discovery and task for the independent AI DevSchool entry: TypeSafe top-three engine recommendations, global operator release control, automatic availability checks, and full available-catalog fallback. Implementation is tracked by `.checks/engine-entry-recommender.md`; publication remains separate. |
 | `engines/school-entry/` | Independent public-ready entry with TypeSafe ranking, operator-controlled SQLite release state, browser availability checks, no-match and provider-failure catalog fallback. It never grants mastery; no deployment is implied. |
