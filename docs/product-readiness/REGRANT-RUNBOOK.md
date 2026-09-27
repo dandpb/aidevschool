@@ -133,6 +133,16 @@ garante que todo use case tem ≥1 cenário com assertion não-playwright — lo
 
 ### Lifecycle do PR bot (watchdog Paperclip do carrier AID-1357)
 
+0. **Produtor registrado na origem (AID-3127)**: o corpo do PR nasce com o
+   trailer canônico de produtor
+   `Provenance: agent=readiness-regrant-factory task=AID-1357 run=gha-<run_id> …`
+   (última linha do corpo, fora de code fences). O countersign-gate §5
+   (AID-2768) atribui o produtor pelo trailer mais antigo da conversa — corpo
+   do PR primeiro —, então o PR **nunca** nasce `producer unattributed`,
+   qualquer que seja o token que o abriu ou o que o watchdog faça (gap do
+   drill AID-3121/PR #597, que exigiu registro manual pela CEO — AID-3124).
+   O slug `readiness-regrant-factory` é automação dedicada e nunca
+   countersigna; o countersign do QA (`qa-lead`) é sempre de agente distinto.
 1. **PR sem issue-filha** → o watchdog cria dispatch QA com o checklist de
    observação do corpo do PR.
 2. **B1a — PR sem check runs**: PR aberto com `GITHUB_TOKEN` não emite eventos
@@ -141,6 +151,9 @@ garante que todo use case tem ≥1 cenário com assertion não-playwright — lo
    **close+reopen com a credencial de agente** (a mesma do push/merge);
    `pull_request[reopened]` dispara `ci.yml` (types default, sem filtro) e os
    checks reportam. O reopen leva comentário explicativo — não é §recusa.
+   (Desde AID-3127 esse close+reopen é **apenas** disparo de CI: o registro
+   de produtor para §5 já veio no corpo do PR e o comentário do watchdog não
+   é load-bearing para o gate.)
 3. **Regra do zumbi**: PR com label `readiness-regrant` e sem checks
    reportando **45 min** após a última atividade → **close com motivo**
    ("checks não reportaram; fábrica destravada para o próximo gatilho") para
