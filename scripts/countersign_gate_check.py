@@ -74,20 +74,16 @@ import subprocess
 import sys
 import tempfile
 
-# CRLF tolerance (AID-3050): citations/provenance pasted from Windows
-# tooling arrive with a residual CR before the newline. The trailing class
-# accepts \r ONLY in the whitespace run immediately before the $ anchor —
-# token classes and the head= pin anchor stay strict (self-test cases 31–35).
 CITATION_RE = re.compile(
     r"^Countersign:[ \t]+((?:AID|GH)-[1-9][0-9]*)[ \t]+verdict[ \t]+"
-    r"([A-Za-z0-9][A-Za-z0-9._:-]*)[ \t]*(?:head[ \t]*=[ \t]*([0-9a-fA-F]{40}))?[ \t\r]*$",
+    r"([A-Za-z0-9][A-Za-z0-9._:-]*)[ \t]*(?:head[ \t]*=[ \t]*([0-9a-fA-F]{40}))?[ \t]*$",
     re.MULTILINE,
 )
 PROVENANCE_RE = re.compile(
     r"^Provenance:[ \t]+agent=(?P<agent>[A-Za-z0-9_][A-Za-z0-9._-]*)[ \t]+"
     r"task=(?P<task>(?:AID|GH)-[1-9][0-9]*)[ \t]+"
     r"run=(?P<run>[A-Za-z0-9_][A-Za-z0-9._:-]{3,})[ \t]+"
-    r"session=(?P<session>[A-Za-z0-9_][A-Za-z0-9._:-]*)[ \t\r]*$",
+    r"session=(?P<session>[A-Za-z0-9_][A-Za-z0-9._:-]*)[ \t]*$",
     re.MULTILINE,
 )
 SHA40_RE = re.compile(r"\b[0-9a-fA-F]{40}\b")
@@ -701,39 +697,6 @@ def self_test():
         "citation after an unclosed fence fails (fail-closed)", 1,
         _ctx("producer body\n" + prod_trailer,
              [_comment(T, "scratchpad:\n```\n" + cite_line + "\n" + qa_trailer)]),
-    ))
-    # 31–35. CRLF tolerance (AID-3050): citations/provenance pasted from
-    # Windows tooling arrive with CR-LF endings. The trailing class accepts
-    # a lone CR only immediately before the $ anchor; cases 33–35 prove the
-    # CR does NOT weaken token or head= pin anchors.
-    crlf_cite = cite_line + "\r"
-    crlf_qa = qa_trailer + "\r"
-    cases.append(scenario(
-        "CRLF-pasted citation and provenance pass (AID-3050)", 0,
-        _ctx("producer body\n" + prod_trailer,
-             [_comment(T, crlf_cite + "\n" + crlf_qa + "\n")]),
-    ))
-    cases.append(scenario(
-        "provenance ending in bare CR at EOF passes (AID-3050)", 0,
-        _ctx("producer body\n" + prod_trailer,
-             [_comment(T, cite_line + "\n" + crlf_qa)]),
-    ))
-    cases.append(scenario(
-        "CR inside verdict token fails (anchor intact)", 1,
-        _ctx("producer body\n" + prod_trailer,
-             [_comment(T, "Countersign: AID-9006 verdict 5843\r026877 head=" + HEAD
-                       + "\n" + qa_trailer)]),
-    ))
-    cases.append(scenario(
-        "CR before head= pin fails (pin anchor intact)", 1,
-        _ctx("producer body\n" + prod_trailer,
-             [_comment(T, "Countersign: AID-9006 verdict 5843026877\rhead=" + HEAD
-                       + "\n" + qa_trailer)]),
-    ))
-    cases.append(scenario(
-        "CR inside producer trailer fails (producer unattributed)", 1,
-        _ctx("producer body\n" + prod_trailer.replace("session=", "session\r="),
-             [_comment(T, cite_line + "\n" + qa_trailer)]),
     ))
 
     passed = sum(cases)

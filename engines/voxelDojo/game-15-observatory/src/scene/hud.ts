@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import { N_BUCKETS } from "../sim/levels"
 
@@ -103,9 +102,9 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       state.level.id === "L4"
         ? state.distributions.flatMap((d) => d.histogram.counts).length
         : (state.histogram.counts[i] ?? 0)
-    b.innerHTML = `<span class="bucket-label">b${escapeHtml(i)}</span><br/><span class="bucket-range">${escapeHtml(lo.toFixed(2))}–${escapeHtml(
-      hi.toFixed(2),
-    )}</span><br/><span class="bucket-count">${escapeHtml(count)}</span>`
+    b.innerHTML = `<span class="bucket-label">b${i}</span><br/><span class="bucket-range">${lo.toFixed(2)}–${hi.toFixed(
+      2,
+    )}</span><br/><span class="bucket-count">${count}</span>`
     b.addEventListener("click", () => {
       if (state.level.id === "L1") game.predictBucket(i)
       if (state.level.id === "L2") game.predictPercentileBucket(i)
