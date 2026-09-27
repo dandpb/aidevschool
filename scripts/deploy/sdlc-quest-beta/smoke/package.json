@@ -1,8 +1,0 @@
-{
-  "name": "sdlc-quest-beta-smoke",
-  "private": true,
-  "type": "module",
-  "devDependencies": {
-    "@playwright/test": "1.63.0"
-  }
-}

@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 
 /** DOM HUD — briefing, per-level controls, metrics. Reads sim state; dispatches controller commands. */
@@ -139,7 +138,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     ]
       .filter(Boolean)
       .join(" ")
-    row.innerHTML = `${escapeHtml(id)} ${/* static-html */ tags}`
+    row.innerHTML = `${id} ${tags}`
     row.addEventListener("click", () => {
       if (state.level.id === "L1" || state.level.id === "L2") game.ackNode(id)
       if (state.level.id === "L2") game.togglePredictedWatcher(id)
