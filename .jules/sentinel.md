@@ -23,3 +23,8 @@
 **Vulnerability:** Untrusted string interpolation directly into `innerHTML` without escaping in `engines/voxelDojo/game-*/src/scene/hud.ts` files.
 **Learning:** Like dojoToday, voxelDojo games use vanilla JS template strings for UI rendering. When dynamic properties (like `doc.id` and `doc.text`) are directly injected into `innerHTML`, it creates a DOM-based XSS vulnerability if those properties contain malicious payloads.
 **Prevention:** Coerce and escape all dynamically interpolated text strings using an `escapeHtml` utility whenever updating `innerHTML`. Be careful not to create cross-boundary imports in the monorepo; add local utils if necessary.
+
+## 2026-09-26 - Non-existent legacy rust-impl CORS report
+**Vulnerability:** Audit alert reported `CorsLayer::permissive()` in `curriculum/15_metrics_collector/rust-impl/src/lib.rs`.
+**Learning:** The legacy `rust-impl` directory was deleted in AID-1671 as part of standardizing on Node/TS across curriculum projects. The current `node-impl` in `curriculum/15_metrics_collector/node-impl/src/server.ts` does not enable CORS or use permissive origins.
+**Prevention:** When investigating legacy implementation vulnerability reports, verify if the implementation track was removed or superseded by curriculum policy changes.
