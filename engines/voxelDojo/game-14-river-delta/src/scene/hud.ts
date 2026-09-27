@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import { PALETTE } from "./deltaScene"
 
@@ -115,7 +114,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     row.dataset.testid = `source-${s}`
     const isDyePredicted = state.predictedDyeSources.includes(s)
     const tag = state.injectSource === s ? " · DYE SRC" : isDyePredicted ? " · predicted" : ""
-    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ${escapeHtml(s)}${escapeHtml(tag)}`
+    row.innerHTML = `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span> ${s}${tag}`
     row.addEventListener("click", () => {
       if (state.level.id === "L1") game.predictSource(s)
       if (state.level.id === "L3") {
@@ -137,7 +136,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
       row.dataset.testid = `log-${log.logId}`
       const on = state.collectedLogIds.includes(log.logId)
       const dyed = log.correlationId === state.level.traceId
-      row.innerHTML = `${escapeHtml(log.logId)} <span class="rule">[${escapeHtml(log.source)}]</span>${/* static-html */ dyed ? ' <span class="dyed">dyed</span>' : ""}${escapeHtml(on ? " ✓" : "")}`
+      row.innerHTML = `${log.logId} <span class="rule">[${log.source}]</span>${dyed ? ' <span class="dyed">dyed</span>' : ""}${on ? " ✓" : ""}`
       row.addEventListener("click", () => game.toggleCollectedLog(log.logId))
       node.append(row)
     }
