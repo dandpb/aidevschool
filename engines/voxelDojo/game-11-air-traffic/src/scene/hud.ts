@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import type { Policy } from "../sim/balancer"
 import { PALETTE } from "./airScene"
@@ -96,7 +95,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     const revealed = state.revealed.has(b.id)
     const health = revealed ? b.health : "?"
     const color = PALETTE[i % PALETTE.length]
-    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(color)}"></span> ${escapeHtml(b.id)} · conn ${escapeHtml(b.connections)} · routed ${escapeHtml(b.routed)} · health ${escapeHtml(health)}`
+    row.innerHTML = `<span class="swatch" style="background:${color}"></span> ${b.id} · conn ${b.connections} · routed ${b.routed} · health ${health}`
     row.addEventListener("click", () => {
       if (state.phase === "predicting") game.predictPad(b.id)
     })

@@ -118,7 +118,7 @@ function missionCard(a: TodaySnapshot["activeUnit"]): string {
         ${playDetails(a.gameDir)}
         ${
           a.num
-            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}" aria-expanded="false" aria-controls="play-inline-wrap">▶ Jogar aqui (inline)</button></div>
+            ? `<div class="play-inline-row"><button id="play-inline-btn" type="button" class="link-btn" data-game="${escapeHtml(a.num)}">▶ Jogar aqui (inline)</button></div>
                <div id="play-inline-wrap" class="play-inline-wrap" hidden><iframe id="play-inline-frame" class="play-inline-frame" title="Jogo da missão"></iframe></div>`
             : ""
         }
@@ -348,12 +348,10 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
         }
         playWrap.hidden = false;
         playBtn.textContent = "▽ Recolher jogo";
-        playBtn.setAttribute("aria-expanded", "true");
       } else {
         playWrap.hidden = true;
         playFrame.setAttribute("src", "about:blank");
         playBtn.textContent = "▶ Jogar aqui (inline)";
-        playBtn.setAttribute("aria-expanded", "false");
       }
     });
   }

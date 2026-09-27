@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import { PALETTE } from "./freightScene"
 
@@ -100,7 +99,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     const owner = state.group.assignment.get(p)
     const crewIdx = state.group.consumers.findIndex((c) => c.id === owner)
     const swatch = PALETTE[crewIdx >= 0 ? crewIdx % PALETTE.length : p % PALETTE.length]
-    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(swatch)}"></span> lane ${escapeHtml(p)} · ${escapeHtml(tails[p] ?? 0)} cars${escapeHtml(owner ? " · owner " + owner : "")}`
+    row.innerHTML = `<span class="swatch" style="background:${swatch}"></span> lane ${p} · ${tails[p] ?? 0} cars${owner ? ` · owner ${owner}` : ""}`
     row.addEventListener("click", () => {
       if (state.level.id === "L1") game.predictRoute(p)
       // L2/L3 lane assignment is driven by the crew buttons below
@@ -112,7 +111,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     const crewIdx = state.group.consumers.findIndex((x) => x.id === c.id)
     const row = document.createElement("button")
     row.dataset.testid = `crew-${c.id}`
-    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[crewIdx % PALETTE.length])}"></span> ${escapeHtml(c.id)}`
+    row.innerHTML = `<span class="swatch" style="background:${PALETTE[crewIdx % PALETTE.length]}"></span> ${c.id}`
     row.addEventListener("click", () => {
       if (state.phase !== "predicting") return
       if (state.level.id === "L2") {
