@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/dojoToday/playwright/continuity.spec.ts",
+      "sha256": "972d5ab321bdaed35d42743ea7602048759a9f98f0e7158393c3921a854a2100"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "schedule-updates-across-days",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-27T05:58:31Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "8843c9202299ec7d0a0250758ab14ea3994b6cb3",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-27T05:58:31Z-dojotoday-returning-next-day-8843c920",
+  "scenarioId": "dojotoday-returning-next-day",
+  "schemaVersion": 1,
+  "sourceFingerprint": "1668503a2443e7edfe26ef1d11eee41d151f343720ada9a4a98e77187d9daf15"
+}
