@@ -102,7 +102,15 @@ function includesAny(text: string, alternatives: string[]): boolean {
 }
 
 function fractionPassed(checks: CheckResult[]): number {
-  return checks.length === 0 ? 0 : checks.filter((c) => c.passed).length / checks.length;
+  if (checks.length === 0) return 0;
+  let passedCount = 0;
+  for (let i = 0; i < checks.length; i++) {
+    const check = checks[i];
+    if (check?.passed) {
+      passedCount++;
+    }
+  }
+  return passedCount / checks.length;
 }
 
 function round2(value: number): number {
@@ -196,10 +204,18 @@ export function evaluateOutputComparison(
 
   // Score ponderado: a saída certa vale 2; critérios e "sem extras" valem 1.
   const weights = new Map<string, number>([["betterOutputId", 2]]);
-  const earned = checks
-    .filter((check) => check.passed)
-    .reduce((total, check) => total + (weights.get(check.id) ?? 1), 0);
-  const total = checks.reduce((sum, check) => sum + (weights.get(check.id) ?? 1), 0);
+  let earned = 0;
+  let total = 0;
+  for (let i = 0; i < checks.length; i++) {
+    const check = checks[i];
+    if (check) {
+      const weight = weights.get(check.id) ?? 1;
+      total += weight;
+      if (check.passed) {
+        earned += weight;
+      }
+    }
+  }
   const score = total === 0 ? 0 : earned / total;
 
   const pass =

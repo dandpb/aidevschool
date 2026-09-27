@@ -61,6 +61,19 @@ export class ChatHub extends EventEmitter {
     droppedSlowConsumers: 0
   };
 
+  private readonly handlers: Record<
+    string,
+    (client: ClientState, event: Record<string, unknown>, requestId: string | undefined, now: Date) => void
+  > = {
+    join: (client, event, requestId, now) => this.join(client, event, requestId, now),
+    leave: (client, event, requestId, now) => this.leave(client, event, requestId, now),
+    message: (client, event, requestId, now) => this.roomMessage(client, event, requestId, now),
+    private_message: (client, event, requestId, now) => this.privateMessage(client, event, requestId, now),
+    typing: (client, event, _requestId, now) => this.typing(client, event, now),
+    history: (client, event, requestId) => this.history(client, event, requestId),
+    pong: (client, event, requestId) => this.pong(client, event, requestId)
+  };
+
   constructor(config: Partial<ChatConfig> = {}, ids: IdGenerator = new CounterIdGenerator()) {
     super();
     this.config = { ...DEFAULT_CONFIG, ...config };
@@ -100,32 +113,11 @@ export class ChatHub extends EventEmitter {
     }
 
     const requestId = typeof event.requestId === 'string' ? event.requestId : undefined;
-    switch (event.type) {
-      case 'join':
-        this.join(client, event, requestId, now);
-        return;
-      case 'leave':
-        this.leave(client, event, requestId, now);
-        return;
-      case 'message':
-        this.roomMessage(client, event, requestId, now);
-        return;
-      case 'private_message':
-        this.privateMessage(client, event, requestId, now);
-        return;
-      case 'typing':
-        this.typing(client, event, now);
-        return;
-      case 'history':
-        this.history(client, event, requestId);
-        return;
-      case 'pong':
-        if (typeof event.heartbeatId !== 'string') {
-          this.reject(client, requestId, 'invalid_message_format', 'pong requires heartbeatId');
-        }
-        return;
-      default:
-        this.reject(client, requestId, 'invalid_message_format', `unknown event type: ${event.type}`);
+    const handler = this.handlers[event.type];
+    if (handler) {
+      handler(client, event, requestId, now);
+    } else {
+      this.reject(client, requestId, 'invalid_message_format', `unknown event type: ${event.type}`);
     }
   }
 
@@ -284,6 +276,12 @@ export class ChatHub extends EventEmitter {
     this.broadcast(room.roomId, { type: 'typing', roomId: room.roomId, clientId: client.clientId, isTyping: event.isTyping, at: now.toISOString() }, client.clientId);
   }
 
+  private pong(client: ClientState, event: Record<string, unknown>, requestId: string | undefined): void {
+    if (typeof event.heartbeatId !== 'string') {
+      this.reject(client, requestId, 'invalid_message_format', 'pong requires heartbeatId');
+    }
+  }
+
   private history(client: ClientState, event: Record<string, unknown>, requestId: string | undefined): void {
     if (!('roomId' in event) || !this.validRoomId(event.roomId)) {
       this.reject(client, requestId, 'invalid_message_format', 'history requires roomId');
@@ -368,3 +366,5 @@ export class ChatHub extends EventEmitter {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 }
+
+// Provenance: agent=jules task=GH-566 run=run-36247237726 session=7660681200736845421
