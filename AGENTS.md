@@ -34,6 +34,7 @@ aidevschool/
 ├── learner/                   # shared learner state, profile, pitfalls, journal, pipeline
 ├── docs/                      # ecosystem prompts, ideas, design reference, course, and legal drafts
 ├── dev-workflow-claude/       # tested AI dev workflow library + teaching page (course support)
+├── factory/                   # agentic factory POC (AID-2676): event→contract→build→verify→PR motor; runtime state in gitignored .scratch/factory/
 ├── wiki/                      # research wiki: dated syntheses and sources (readiness, drift, privacy)
 ├── miro-tour/                 # architect-career Miro board extraction + learning trails (reference)
 └── .mavis/ .codex/ .omo/ .opencode/ .playwright-mcp/ .compozy/ # platform/tool state
@@ -75,6 +76,7 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
 | Read the polyglot-arena design | `docs/design/polyglot-arena/` | Demoted from `engines/polyglotEvolutionArena/`; proposal-stage. |
 | Run the simple AI-workflow course | `docs/curso-simples/` | HTML course + completion ROADMAP with per-phase gates; teaching material for a real student, not learner state. |
 | Teach/review AI dev workflows | `dev-workflow-claude/` | Tested workflow library + Claude skills (`auditar-workflows`, `novo-workflow`, `verificar-workflow`) supporting the course. |
+| Run the agentic factory POC | `factory/README.md` | Station motor (AID-2676): queue+lease, frozen contract from `intent/<change-id>/`, isolated worktree build, independent verifier, fail-closed P1–P5 gates, hash-chained ledger; tests via `python3 -m pytest factory/tests/ -q`. |
 | Consult the research wiki | `wiki/index.md` | Dated research syntheses and sources; reference material, not canonical state. |
 | Browse the architect-roadmap extraction | `miro-tour/INDEX.md` | Miro board extraction and career learning trails; reference material. |
 | Draft legal docs for the pilot | `docs/legal/piloto/` | Privacy policy and terms drafts (LGPD, adults, local-first); pending legal review, do not publish as-is. |
@@ -106,6 +108,11 @@ Compatibility symlinks at root: `projects -> curriculum`, `.agora -> learner`,
   before AI work is marked `mastered`. Programming units require executable evidence; Level 0
   no-code units use the falsifiable verification checklist defined by ADR-0004.
 - A producer does not verify its own work. Keep producer and verifier contexts separate.
+- **Merges go ONLY through `scripts/merge_pr.sh`** (single merge door, AID-2768): the required
+  `countersign-gate` check mechanically blocks any merge without a pre-merge countersign from a
+  DISTINCT agent pinning the current head (raw `gh pr merge` fails on the GitHub side and is
+  hook-blocked in Claude runtimes). Contract and canonical countersign block:
+  `docs/sdlc/README.md` §GATE pré-merge mecânico.
 - When changing prompts, roadmap, gates, memory contracts, or deliverable coverage, update
   `engines/codexDojo/ecosystem/MANIFEST.md` in the same change.
 - Repo-root `make` targets are only for the shared Python surfaces (`minimaxDojo`, `openclaw`,
