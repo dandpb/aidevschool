@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import type { CircuitState } from "../sim/breaker"
 import { STATE_COLOR } from "./breakerScene"
@@ -135,9 +134,9 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     row.dataset.testid = `district-${d.id}`
     const selected = state.selectedDistrictId === d.id ? " ●" : ""
     row.innerHTML =
-      `<span class="swatch" style="background:${escapeHtml(swatch)}"></span>` +
-      `<span class="swatch" style="background:${escapeHtml(legendPalette(i))};opacity:.7"></span>` +
-      ` ${escapeHtml(d.id)} · ${escapeHtml(d.breaker.state)} · ${escapeHtml(d.inFlight)}/${escapeHtml(d.cap)} in-flight${escapeHtml(selected)}`
+      `<span class="swatch" style="background:${swatch}"></span>` +
+      `<span class="swatch" style="background:${legendPalette(i)};opacity:.7"></span>` +
+      ` ${d.id} · ${d.breaker.state} · ${d.inFlight}/${d.cap} in-flight${selected}`
     row.addEventListener("click", () => game.selectDistrict(d.id))
     node.append(row)
   })

@@ -1,4 +1,3 @@
-import { escapeHtml } from "../../../shared/escapeHtml"
 import { PALETTE } from "../../../shared/palette"
 import type { GameController, GameState } from "../game/controller"
 
@@ -124,7 +123,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   for (let s = 0; s < state.store.shelfCount; s++) {
     const row = document.createElement("button")
     row.dataset.testid = `station-shelf-${s}`
-    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[s % PALETTE.length])}"></span> prateleira ${escapeHtml(s)} · ${escapeHtml(loads[s] ?? 0)} caixas`
+    row.innerHTML = `<span class="swatch" style="background:${PALETTE[s % PALETTE.length]}"></span> prateleira ${s} · ${loads[s] ?? 0} caixas`
     row.addEventListener("click", () => {
       if (state.level.id === "L1" && state.phase === "predicting") game.predictShelf(s)
     })
