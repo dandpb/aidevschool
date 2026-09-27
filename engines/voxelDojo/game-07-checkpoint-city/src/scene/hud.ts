@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 import type { PredictionTarget } from "../sim/levels"
 import { PALETTE } from "./checkpointScene"
@@ -93,7 +94,7 @@ function renderControls(node: HTMLElement, state: GameState, game: GameControlle
     state.order.forEach((name, i) => {
       const row = document.createElement("p")
       row.dataset.testid = `order-${i}`
-      row.innerHTML = `<span class="swatch" style="background:${wallHex(name)}"></span>${i + 1}. ${name}`
+      row.innerHTML = `<span class="swatch" style="background:${escapeHtml(wallHex(name))}"></span>${escapeHtml(i + 1)}. ${escapeHtml(name)}`
       const up = document.createElement("button")
       up.dataset.testid = `move-${i}-up`
       up.textContent = "↑"
@@ -127,7 +128,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   for (const g of gates) {
     const b = document.createElement("button")
     b.dataset.testid = `gate-${g}`
-    b.innerHTML = `<span class="swatch" style="background:${gateHex(g)}"></span>${labelFor(g)}`
+    b.innerHTML = `<span class="swatch" style="background:${escapeHtml(gateHex(g))}"></span>${escapeHtml(labelFor(g))}`
     b.addEventListener("click", () => {
       if (state.level.id === "L4") {
         game.commitReorder(g)
