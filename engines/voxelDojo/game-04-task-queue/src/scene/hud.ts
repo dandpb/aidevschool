@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import type { GameController, GameState } from "../game/controller"
 
 /**
@@ -59,7 +60,7 @@ function renderStatus(node: HTMLElement, state: GameState): void {
   }
   if (state.inbound) {
     const dup = state.inbound.idempotencyKey.startsWith("sigil-") === false
-    node.innerHTML = `Empilhadeira <span class="code">${state.inbound.id}</span> (prio ${state.inbound.priority}${dup ? ", SIGILO DUPLICADO" : ""}) está ancorando — R rejeita (429).`
+    node.innerHTML = `Empilhadeira <span class="code">${escapeHtml(state.inbound.id)}</span> (prio ${escapeHtml(state.inbound.priority)}${escapeHtml(dup ? ", SIGILO DUPLICADO" : "")}) está ancorando — R rejeita (429).`
     return
   }
   node.textContent = state.status
@@ -110,10 +111,14 @@ function renderGauges(node: HTMLElement, state: GameState): void {
   }
   const waiting = state.queue.filter((t) => t.scheduledFor > state.now).length
   node.innerHTML = `
-    <p data-testid="gauge-queue">funil: ${state.queue.length}/${state.level.capacity}${state.queue.length >= state.level.capacity ? " (CHEIO — 429 na próxima)" : ""}</p>
-    <p data-testid="gauge-busy">braços: ${state.running.length}/${state.level.workerCount}${state.paused ? " (estacionados)" : ""}</p>
-    <p data-testid="gauge-rack">rack: ${waiting} aguardando backoff</p>
-    <p data-testid="gauge-out">sucesso: ${state.succeededIds.length} · DLQ: ${state.dlqIds.length}</p>
+    <p data-testid="gauge-queue">funil: ${escapeHtml(state.queue.length)}/${escapeHtml(state.level.capacity)}${escapeHtml(
+      state.queue.length >= state.level.capacity ? " (CHEIO — 429 na próxima)" : "",
+    )}</p>
+    <p data-testid="gauge-busy">braços: ${escapeHtml(state.running.length)}/${escapeHtml(state.level.workerCount)}${escapeHtml(
+      state.paused ? " (estacionados)" : "",
+    )}</p>
+    <p data-testid="gauge-rack">rack: ${escapeHtml(waiting)} aguardando backoff</p>
+    <p data-testid="gauge-out">sucesso: ${escapeHtml(state.succeededIds.length)} · DLQ: ${escapeHtml(state.dlqIds.length)}</p>
   `
 }
 

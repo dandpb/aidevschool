@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import { CONTRAST_OPTIONS, type GameController, type GameState } from "../game/controller"
 import { PALETTE } from "./ringScene"
 
@@ -102,7 +103,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   state.stations.forEach((s, i) => {
     const row = document.createElement("button")
     row.dataset.testid = `station-${s.id}`
-    row.innerHTML = `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span> ${s.id} · ${loads.get(s.id) ?? 0} keys`
+    row.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ${escapeHtml(s.id)} · ${escapeHtml(loads.get(s.id) ?? 0)} keys`
     row.addEventListener("click", () => {
       if (state.level.id === "L1") game.predictOwner(s.id)
       if (state.level.id === "L2") game.predictLoser(s.id)

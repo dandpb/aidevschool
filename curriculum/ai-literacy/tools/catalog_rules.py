@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import re
+
 VALID_STATUSES = ("planned", "ready")
 VALID_DURATIONS = (3, 4, 5)
 VALID_JOURNEYS = ("ia_pratica", "dev")
 PUBLIC_JOURNEY = "ia_pratica"
+
+MODULE_SLUG_RE = re.compile(r"[a-z0-9][a-z0-9-]*")
 
 
 def _check_catalog_shape(catalog, errors):
@@ -27,6 +31,45 @@ def _index_by_id(items, what, errors):
             errors.append("catalog.yaml: id de %s duplicado: %s" % (what, item_id))
         index[item_id] = item
     return index
+
+
+def _check_module_shape(module_index, errors):
+    """Campos de módulo exigidos pelo compilador do read model.
+
+    `slug`, `title` e `order` alimentam `_modules_payload` (compiler.py);
+    sem esta checagem o validador passa e `--compile` quebra com KeyError.
+    Slugs duplicados colidem no roteamento por slug das superfícies.
+    """
+    seen_slugs = {}
+    for module_id, module in module_index.items():
+        slug = module.get("slug")
+        if not slug:
+            errors.append(
+                "catalog.yaml: módulo %s sem campo obrigatório: slug" % module_id
+            )
+        elif not MODULE_SLUG_RE.fullmatch(slug):
+            errors.append(
+                "catalog.yaml: módulo %s com slug inválido: %r (esperado: "
+                "minúsculas, dígitos e hífen, iniciando por alfanumérico)"
+                % (module_id, slug)
+            )
+        elif slug in seen_slugs:
+            errors.append(
+                "catalog.yaml: slug de módulo duplicado: %s (módulos %s e %s)"
+                % (slug, seen_slugs[slug], module_id)
+            )
+        else:
+            seen_slugs[slug] = module_id
+        if not module.get("title"):
+            errors.append(
+                "catalog.yaml: módulo %s sem campo obrigatório: title" % module_id
+            )
+        order = module.get("order")
+        if not isinstance(order, int) or isinstance(order, bool):
+            errors.append(
+                "catalog.yaml: módulo %s com order inválido: %r (esperado: inteiro)"
+                % (module_id, order)
+            )
 
 
 def _journey_by_lesson(lesson_index, module_index):
