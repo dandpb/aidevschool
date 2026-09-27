@@ -28,7 +28,12 @@
 # Countersign gate (AID-2318 Stage 1 + AID-2428 Stage 2, CEO gate AID-2316 c):
 # in PR context, a citation of the verdict that authorizes the merge is
 # required on its own line in the PR body or any PR comment
-#     Countersign: <AID-ID> verdict <ref>
+#     Countersign: <AID-ID> verdict <ref> [head=<40-hex>]
+# The optional 'head=<40-hex>' suffix is the canonical countersign-gate block
+# (AID-2768 §1/§3): before AID-2815 the grammar here demanded end-of-line
+# right after <ref>, so the canonical block reddened this required check and
+# locked the merge door (fail-closed availability hit, QA AID-2798). Both
+# forms are accepted now: ref-at-end-of-line and ref + head pin.
 # when the diff touches process-authority paths (Stage 1, any author) OR the
 # PR author is a bot/agent account (Stage 2, ANY diff — no engine-only
 # exemption: producer ≠ verifier is never waived, precedent #483/AID-2333;
@@ -179,7 +184,11 @@ run_checks() {
 
   feed_command_hook() { # $1=command -> sets hook_rc/hook_out
     local input
-    input="$(jq -nc --arg c "$1" '{tool_input:{command:$c}}')"
+    # AID-2321: the command reaches jq via stdin, never as an argv element —
+    # execve caps one argument at MAX_ARG_STRLEN (128KiB), so a >128KiB added
+    # diff line made jq die E2BIG, the hook got an empty input (exit 0) and
+    # the secret-token violation was silently dropped.
+    input="$(printf '%s' "$1" | jq -Rs '{tool_input:{command:.}}')"
     hook_out="$(printf '%s' "$input" | bash "$HOOKS_DIR/guard-commands.sh" 2>&1)"; hook_rc=$?
   }
 
@@ -283,7 +292,9 @@ run_checks() {
   }
 
   # 4. Countersign citation gate (AID-2318 Stage 1 + AID-2428 Stage 2). In PR
-  #    context the citation 'Countersign: <AID-ID> verdict <ref>' is required
+  #    context the citation 'Countersign: <AID-ID> verdict <ref> [head=<40-hex>]'
+  #    is required (AID-2815: the optional head pin suffix of the canonical
+  #    countersign-gate block, AID-2768, is accepted — both forms parse)
   #    when the diff touches process-authority paths (any author) OR the PR
   #    author is a bot/agent account (any diff). The citation must resolve AND
   #    be posted strictly BEFORE the merge (see header). First valid citation
@@ -331,7 +342,13 @@ run_checks() {
       fi
       local cs_ok=0 cs_bad="" cs_aid="" cs_err="" cs_ord_rej=0 cs_body_merged=0
       local resolver="${SDLC_GUARD_AID_RESOLVER:-}"
-      local citation_re='Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*[[:space:]]*$'
+      # AID-2815: optional 'head=<40-hex>' suffix (canonical countersign-gate
+      # block, AID-2768 — same grammar as countersign_gate_check.py CITATION_RE:
+      # spaces around '=' allowed, 40 hex chars case-insensitive, then EOL).
+      # Ref-at-end-of-line stays valid (dual-compatible). A malformed suffix
+      # (short/long sha, non-hex) can never match the group and the ref
+      # charset cannot absorb it -> the line stops matching -> fail-closed.
+      local citation_re='Countersign: (AID|GH)-[1-9][0-9]* verdict [A-Za-z0-9][A-Za-z0-9._:-]*([[:space:]]+head[[:space:]]*=[[:space:]]*[0-9a-fA-F]{40})?[[:space:]]*$'
       local TAB
       TAB="$(printf '\t')"
       if [ "$ctx_rc" -ne 0 ]; then
@@ -376,9 +393,9 @@ run_checks() {
         elif [ -n "$cs_bad" ]; then
           local cs_why=""
           [ -n "$cs_err" ] && cs_why=" — resolver: $cs_err"
-          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA>' (AID-2318)")
+          violations+=("countersign: $cs_scope :: cited AID did not resolve '$cs_bad'$cs_why — cite an existing verdict carrier as 'Countersign: <AID-ID> verdict <commentId|SHA> [head=<40-hex>]' (AID-2318)")
         else
-          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref>' line in PR body/comments — post the countersign verdict citation first (AID-2318)")
+          violations+=("countersign: $cs_scope :: no 'Countersign: <AID-ID> verdict <ref> [head=<40-hex>]' line in PR body/comments — post the countersign verdict citation first (AID-2318; head suffix optional, AID-2815)")
         fi
       fi
     fi
@@ -551,6 +568,17 @@ self_test() {
     "mkdir -p keys && printf 'bogus\n' > keys/id_rsa"
   scenario "commit secret token in content"           1 "oops token" -- \
     "printf 'token = %s\n' \"$FAKE_TOKEN\" > src/creds.py"
+  # AID-2321 regression (QA countersign PR #478 / AID-2315 finding E6): a
+  # token embedded in ONE minified line larger than MAX_ARG_STRLEN (128KiB)
+  # was silently dropped end-to-end — the wrapper fed the line to jq as an
+  # argv element (E2BIG -> empty hook input -> exit 0). The >1MiB line below
+  # pins the feed half; the direct hook probe further down pins the hook
+  # half (grep -q SIGPIPE). Canary built at runtime like FAKE_TOKEN above.
+  local big_x big_line
+  big_x="$(head -c 600000 /dev/zero | tr '\0' 'x')"
+  big_line="const bundle=\"${big_x}${FAKE_TOKEN}${big_x}\";"
+  scenario "commit secret token in >128KiB minified line (AID-2321)" 1 "oops big token" -- \
+    "printf '%s\n' '$big_line' > src/bigbundle.js"
   scenario "owner-approved test edit (trailer)"       0 "fix test
 
 SDLC-ALLOW-TEST-EDIT: AID-9001" -- \
@@ -576,6 +604,23 @@ SDLC-ALLOW-TEST-EDIT: GH-9003-not-an-issue" -- \
 
 SDLC-ALLOW-TEST-EDIT: GH-9003" -- \
     "mkdir -p config && printf 'SECRET=1\n' > config/.env"
+
+  # AID-2321, hook half: a multi-line command with the token on an early
+  # line and >64KiB following made the live hook's `printf | grep -q` die
+  # SIGPIPE under pipefail (flaky miss: 4/5 and 17/20 in manual runs here,
+  # 10/10 in QA's env). The full-scan cmd_matches helper must block
+  # deterministically. JSON built via --rawfile (file content, not argv).
+  local hg_rc
+  { printf 'echo %s\n' "$FAKE_TOKEN"; head -c 200000 /dev/zero | tr '\0' 'x' | fold -w 64; } > "$T/bigcmd.txt"
+  jq -nc --rawfile c "$T/bigcmd.txt" '{tool_input:{command:$c}}' > "$T/bigin.json"
+  bash "$R/.claude/hooks/guard-commands.sh" < "$T/bigin.json" >/dev/null 2>&1; hg_rc=$?
+  if [ "$hg_rc" -eq 2 ]; then
+    echo "PASS [>64KiB multi-line command with early token blocks deterministically] rc=$hg_rc"
+    pass=$((pass+1))
+  else
+    echo "FAIL [>64KiB multi-line command with early token blocks deterministically] rc=$hg_rc (expected 2)"
+    fail=$((fail+1))
+  fi
 
   # AID-2292 regression: `printf | grep -q` under pipefail lost early
   # trailers in large range bodies (SIGPIPE rc=141 read as "absent",
@@ -675,6 +720,13 @@ $big_filler"
   : > "$T/cs_none"
   printf 'Countersign: AID-9006 verdict 679cf9d3\n' > "$T/cs_valid"
   printf 'Countersign: AID-9999 verdict deadbeef\n' > "$T/cs_ghost"
+  # AID-2815: canonical countersign-gate block (AID-2768) — optional
+  # 'head=<40-hex>' pin suffix on the citation line.
+  local HEADPIN="3970523ac9ccdb19124aa480c48a9dbd15f8da7c"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=%s\n' "$HEADPIN" > "$T/cs_valid_head"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head = 81AFD2A40EEE0000000000000000000000000000\n' > "$T/cs_valid_head_spaced"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=3970523\n' > "$T/cs_bad_head_short"
+  printf 'Countersign: AID-9006 verdict 679cf9d3 head=%s0\n' "$HEADPIN" > "$T/cs_bad_head_long"
   pr_scenario() { # scenario + PR-context gate env, scrubbed afterwards
     export SDLC_GUARD_AID_RESOLVER="$stub" SCENARIO_EVENT_NAME=pull_request
     scenario "$@"
@@ -712,6 +764,28 @@ $big_filler"
   fi
   $GITC checkout -q main 2>/dev/null || $GITC checkout -q master
   $GITC branch -qD "$cs_br" >/dev/null
+
+  # AID-2815: the canonical countersign-gate block (AID-2768, PR #545) puts
+  # the 'head=' pin ON the citation line; until this fix the guard demanded
+  # end-of-line right after <ref>, so every canonical countersign reddened
+  # this required check and locked the merge door (QA AID-2798, PR #545
+  # check-run 108353922550). Both forms parse now; a malformed pin (short,
+  # long, non-hex) can never match and stays fail-closed.
+  SDLC_COUNTERSIGN_FILE="$T/cs_valid_head" pr_scenario \
+    "process PR with canonical head= citation passes (AID-2815)" 0 "edit sdlc doc canonical cite" -- \
+    "mkdir -p docs/sdlc && printf '# amended headpin\n' > docs/sdlc/README.md"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_valid_head_spaced" pr_scenario \
+    "head= with spaced '=' and uppercase hex passes (AID-2815)" 0 "edit sdlc doc spaced headpin" -- \
+    "mkdir -p docs/sdlc && printf '# amended spaced\n' > docs/sdlc/README.md"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_bad_head_short" pr_scenario \
+    "short-hex head= suffix is not a valid citation (AID-2815)" 1 "edit guard bad head short" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
+
+  SDLC_COUNTERSIGN_FILE="$T/cs_bad_head_long" pr_scenario \
+    "long-hex head= suffix is not a valid citation (AID-2815)" 1 "edit guard bad head long" -- \
+    "printf '# touched\n' >> scripts/sdlc_guard_check.sh"
 
   # AID-2428 (Stage 2): citation required for EVERY bot/agent-authored PR
   # (any diff — no engine-only exemption) and the verdict must be posted

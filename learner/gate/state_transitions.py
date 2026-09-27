@@ -108,6 +108,11 @@ def t_verdict_pass(state, cid, *, gate_contract_complete: bool, review: bool):
             2 * (concept["target_days_effective"] or 1),
             365,
         )
+        # The stale due ts must not survive the verdict: schedule.py §5.3 step 1
+        # only (re)schedules MASTERED concepts whose next_review_ts is None, so
+        # leaving the consumed ts here would silently retire the concept from
+        # the review ladder (AID-2687).
+        concept["next_review_ts"] = None
         return ("moved", (REVIEW_DUE, MASTERED))
     if concept["status"] != ATTEMPTED:
         return ("reject", f"verdict_pass on {cid} in state {concept['status']}")
@@ -134,6 +139,9 @@ def t_verdict_fail(state, cid, *, review: bool, curriculum_target: int):
     concept["status"] = IN_PROGRESS
     if review:
         concept["target_days_effective"] = curriculum_target
+        # Same AID-2687 invariant as the pass path: a consumed review schedule
+        # must be cleared so the ladder reschedules from the next mastery pass.
+        concept["next_review_ts"] = None
         return ("moved", (REVIEW_DUE, IN_PROGRESS))
     return ("moved", (ATTEMPTED, IN_PROGRESS))
 
