@@ -47,3 +47,7 @@
 ## 2025-02-18 - Optimize nested loops and functional array mapping on hotpaths
 **Learning:** Functional methods `.filter()` and `.reduce()` combined cause allocations of intermediate arrays and repeated traversal across elements which places pressure on GC overhead.
 **Action:** Substitute multi-method chains over arrays with traditional `for` loops.
+
+## 2025-02-18 - Avoid array allocations for game state derivations
+**Learning:** Using chained array methods (`.filter().length`, `.reduce()`, `.flatMap().filter().map()`) to compute aggregated metrics in core state evaluation functions (like `stats`) allocates many intermediate arrays, increasing GC pressure and slowing down rendering logic.
+**Action:** Replace chained array derivations with a single-pass O(N) loop when computing multiple related metrics (like `completed`, `done`, `xp`, and `bosses`) simultaneously from the same data structure.
