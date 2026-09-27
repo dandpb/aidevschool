@@ -25,3 +25,7 @@
 ## 2025-02-19 - Using .sr-only for links opening in new tabs
 **Learning:** When warning screen reader users about a context switch for external links (`target="_blank"`), replacing the link content with `aria-hidden` and applying `aria-label` to the parent anchor triggers Biome's `a11y/useAnchorContent` linter error (because the anchor conceptually loses its text content).
 **Action:** The preferred robust approach is to natively append a screen-reader-only span inside the anchor (e.g., `<span class="sr-only">(abre em nova aba)</span>`) alongside the visible text, leaving standard attributes alone. This satisfies linters, translation tools, and screen readers simultaneously.
+
+## 2024-05-18 - Announcing Emoji-Based Visual Indicators
+**Learning:** Emojis used purely as visual indicators (like ❄️ for freezes or 🔥 for streaks) create highly repetitive and noisy announcements for screen readers (e.g. 'floco de neve floco de neve').
+**Action:** Wrap the emoji sequences in an `aria-hidden="true"` span to silence them, and provide a clear, semantic sentence summarizing their meaning in an adjacent `.sr-only` span.
