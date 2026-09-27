@@ -10,6 +10,7 @@ from .catalog_rules import (
     VALID_JOURNEYS,
     VALID_STATUSES,
     _check_catalog_shape,
+    _check_module_shape,
     _detect_prereq_cycles,
     _check_prereq_journeys,
     _index_by_id,
@@ -81,6 +82,7 @@ class _TrackValidator:
             self._check_catalog_refs(lesson_id, entry)
         _detect_prereq_cycles(self.lesson_index, self.errors)
         _check_prereq_journeys(self.lesson_index, self.module_index, self.errors)
+        _check_module_shape(self.module_index, self.errors)
 
     def _check_catalog_refs(self, lesson_id, entry):
         for skill_id in entry.get("skillIds") or []:
