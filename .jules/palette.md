@@ -19,3 +19,6 @@
 ## 2026-09-15 - Explicit ARIA Context for Navigation and Filters
 **Learning:** In codexDojo, main navigation sections and filter buttons use generic text like 'Painel' or 'Todos'. These terms lack semantic context when announced by screen readers out of the visual flow, leading to confusion.
 **Action:** When creating navigation links or filtering buttons with generic names, compute a fully contextual `aria-label` (e.g., 'Ir para Painel' or 'Filtrar por Todos'), provide a matching `title` tooltip, and wrap the visible inner text in `<span aria-hidden="true">`. Update corresponding test assertions that strictly assert the old string format.
+## 2026-09-26 - Accessible Toggles
+**Learning:** Buttons that toggle visibility of an element (like an iframe wrap) should use aria-expanded and aria-controls to properly announce their state to screen readers.
+**Action:** Ensure all custom toggles use these ARIA attributes rather than relying solely on visual text changes (like ▶ to ▽).
