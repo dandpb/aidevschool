@@ -58,12 +58,12 @@ function streakCard(s: TodaySnapshot["streak"]): string {
       : "Passe um gate executável para acender a sequência.";
   return `
     <section class="card streak-card" aria-label="Sequência">
-      <div class="streak-flame ${s.current > 0 ? "is-lit" : "is-out"}">${flames}</div>
+      <div class="streak-flame ${s.current > 0 ? "is-lit" : "is-out"}" aria-hidden="true">${flames}</div>
       <div class="streak-body">
         <p class="streak-current">${headline}</p>
         <p class="streak-sub">${sub}</p>
-        <p class="streak-freezes" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
-          Freezes <span class="freeze-pips">${freezes}<span class="freeze-empty">${frozen}</span></span>
+        <p class="streak-freezes" aria-label="Freezes: ${escapeHtml(s.freezesEquipped)} equipados de um máximo de ${escapeHtml(s.freezesMax)}" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
+          <span aria-hidden="true">Freezes</span> <span class="freeze-pips" aria-hidden="true">${freezes}<span class="freeze-empty">${frozen}</span></span>
         </p>
       </div>
     </section>`;
@@ -177,7 +177,7 @@ function progressCard(s: TodaySnapshot): string {
         <span><strong>${escapeHtml(s.masteredCount)}</strong>/${escapeHtml(s.totalUnits)} dominadas</span>
         <span class="muted">verificadas por gate</span>
       </div>
-      <div class="progress-track"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
+      <div class="progress-track" role="progressbar" aria-valuenow="${escapeHtml(pct)}" aria-valuemin="0" aria-valuemax="100" aria-valuetext="${escapeHtml(pct)}% concluído"><div class="progress-fill" style="width:${escapeHtml(pct)}%"></div></div>
     </section>`;
 }
 
