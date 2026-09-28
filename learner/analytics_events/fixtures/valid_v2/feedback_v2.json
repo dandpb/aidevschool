@@ -1,0 +1,1 @@
+{"event_id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee","event_type":"attempt_feedback_shown","occurred_at":"2026-09-26T07:30:00Z","learner_anon_id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee","dojo":"codexDojo","module":"mod-02-engines","engagement_ms":8800,"experiment_arm":"control","payload":{"attempt_id":"99999999-2222-4333-8444-555555555555","verdict":"pass","latency_ms":1200}}
