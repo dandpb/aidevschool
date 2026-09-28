@@ -332,7 +332,7 @@ jobs:
         run: python3 scripts/check_python_complexity.py --self-test
       - name: python complexity gate (max 8, ratchet vs frozen baseline)
         run: python3 scripts/check_python_complexity.py --max 8 --baseline scripts/python_complexity_baseline.txt learner engines/minimaxDojo engines/openclaw engines/miniMaxEvolutionEngine engines/aiDevschoolMvp
-      - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
+      - run: python -m pytest learner/substrate/tests learner/gate/tests learner/tests learner/analytics_events/tests curriculum/_shared/tests curriculum/ai-literacy/tools/tests engines/test_engine_contracts.py -q
       # Metric-failure snapshot guard (metric-rubric-lint, 2026-09-17): the
       # gate's claimed-vs-verified disagreement check is only as good as its
       # failure-metric vocabulary. Offline and fail-closed — a game metric
