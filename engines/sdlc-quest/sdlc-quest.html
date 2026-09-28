@@ -1893,13 +1893,25 @@ function normalize(raw,data){
  return s;
 }
 function stats(s,data){
- const completed=data.missions.filter(m=>m.tasks.every(t=>s.done[t.id])).length;
- const total=data.missions.reduce((n,m)=>n+m.tasks.length,0);
- const done=Object.keys(s.done).filter(id=>data.missions.some(m=>m.tasks.some(t=>t.id===id))).length;
- const xp=Object.values(s.done).reduce((sum,x)=>sum+x.score,0);
+ let completed=0,done=0,total=0,xp=0;
  const axes={intent:{done:0,total:0},evidence:{done:0,total:0},authority:{done:0,total:0}};
- for(const m of data.missions)for(const t of m.tasks){axes[t.axis].total++;if(s.done[t.id])axes[t.axis].done++;}
- const bosses=data.missions.flatMap(m=>m.tasks).filter(t=>t.boss&&s.done[t.id]).map(t=>t.boss);
+ const bosses=[];
+ for(let i=0;i<data.missions.length;i++){
+  const m=data.missions[i];
+  let mComplete=true;
+  for(let j=0;j<m.tasks.length;j++){
+   const t=m.tasks[j];
+   total++;
+   axes[t.axis].total++;
+   if(s.done[t.id]){
+    done++;
+    axes[t.axis].done++;
+    xp+=s.done[t.id].score;
+    if(t.boss)bosses.push(t.boss);
+   }else{mComplete=false;}
+  }
+  if(mComplete)completed++;
+ }
  return {completed,done,total,xp,axes,bosses};
 }
 function canOpen(s,data,index){return Number.isInteger(index)&&index>=0&&index<data.missions.length&&data.missions.slice(0,index).every(m=>m.tasks.every(t=>s.done[t.id]));}

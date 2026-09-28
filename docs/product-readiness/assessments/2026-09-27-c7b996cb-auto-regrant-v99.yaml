@@ -1,0 +1,79 @@
+schemaVersion: 1
+assessmentId: 2026-09-27-c7b996cb-auto-regrant-v99
+assessorContext: independent-readiness-review
+verifiedAt: '2026-09-27T16:10:00Z'
+revalidateBy: '2026-10-27'
+gitSha: c7b996cbbc84589922bcf4c09385e39399ef4f3e
+decisions:
+- useCaseId: literacy-standalone-first-lesson
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-literacy-happy-path-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-literacy-resume-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-literacy-retry-mixed-c7b996cb
+- useCaseId: literacy-standalone-corridor-mod01-03
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T15:52:23Z-literacy-corridor-grandfathered-return-c7b996cb
+  - 2026-09-27T15:52:23Z-literacy-corridor-resume-mid-module-c7b996cb
+  - 2026-09-27T16:05:00Z-literacy-corridor-gate-retry-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-literacy-corridor-happy-path-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-literacy-corridor-review-window-mixed-c7b996cb
+- useCaseId: os-literacy-guided-mission
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-os-literacy-hosted-mission-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-literacy-returning-device-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-verification-recovery-mixed-c7b996cb
+- useCaseId: os-voxel-guided-missions
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-os-renderer-accessibility-recovery-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-voxel-hosted-missions-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-voxel-returning-device-mixed-c7b996cb
+- useCaseId: os-returning-learner
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-os-onboarding-track-choice-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-returning-device-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-os-returning-recovery-mixed-c7b996cb
+- useCaseId: dojotoday-daily-guidance
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-dojotoday-active-unit-guidance-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-dojotoday-read-only-boundary-observed-c7b996cb
+  - 2026-09-27T16:05:00Z-dojotoday-returning-next-day-mixed-c7b996cb
+- useCaseId: pixelquest-evidence-encounter
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-pixelquest-encounter-evidence-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-pixelquest-evidence-recovery-observed-c7b996cb
+  - 2026-09-27T16:05:00Z-pixelquest-returning-evidence-handoff-mixed-c7b996cb
+- useCaseId: voxel-standalone-learning-loop
+  outcome: pass
+  grantedTier: customer-ready
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-voxel-accessible-renderer-observed-c7b996cb
+  - 2026-09-27T16:05:00Z-voxel-standalone-loop-mixed-c7b996cb
+  - 2026-09-27T16:05:00Z-voxel-standalone-return-reentry-mixed-c7b996cb
+- useCaseId: minitown-explore-only
+  outcome: pass
+  grantedTier: experimental
+  reasons: []
+  resultRunIds:
+  - 2026-09-27T16:05:00Z-minitown-explore-only-mixed-c7b996cb

@@ -56,4 +56,16 @@ if [ "$(cmd_matches 'git[[:space:]]+(add|commit)[^;|&]*(\./)?\.?env[^/[:space:]]
   exit 2
 fi
 
+# 3. Raw PR merge (AID-2768): merges go ONLY through scripts/merge_pr.sh —
+#    the single merge door, which re-validates the countersign chain live at
+#    merge time (distinct agent, head pin, no VOID/HELD/reopen supersession)
+#    and refuses bypass flags. Direct `gh pr merge` skips that re-validation
+#    (class F: F1 #529, F2 #531, F3 #533). The wrapper itself calls the merge
+#    API from inside a script, which this PreToolUse hook does not intercept.
+if [ "$(cmd_matches 'gh[[:space:]]+pr[[:space:]]+merge([[:space:]]|$)')" -gt 0 ]; then
+  >&2 echo "BLOCKED: raw 'gh pr merge' — merges go through scripts/merge_pr.sh only (single merge door, AID-2768)."
+  >&2 echo "The wrapper re-runs the countersign gate live at merge time and cites the operative countersign in the merge commit."
+  exit 2
+fi
+
 exit 0

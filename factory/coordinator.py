@@ -314,6 +314,14 @@ class Coordinator:
                 "P4 clean-room: author worktree has untracked files at prove "
                 f"time: {meaningful}"
             )
+        # AID-2822 (F6): árvore do autor tem que estar LIMPA — rastreado
+        # modificado entre o commit do build e o prove é evidência ≠ commit
+        # (o `??`-only não via esta mutação no stress AID-2700).
+        if author_tree.dirty:
+            blockers.append(
+                "P4 clean-room: author worktree has tracked modifications at "
+                f"prove time (evidence != commit): {sorted(author_tree.dirty)}"
+            )
         if blockers:
             state.update(
                 station="blocked", prove_blockers=blockers, updated_at=utcnow(),
@@ -590,20 +598,40 @@ class Coordinator:
 
     def resume(self, run_id: str) -> str:
         """Retoma após interrupção: retorna a estação corrente sem reexecutar
-        estações já registradas (falha e retry não apagam o histórico)."""
+        estações já registradas (falha e retry não apagam o histórico).
+
+        AID-2822 (F2): o evento de retry de uma run bloqueada HERDA o risco
+        da decisão de origem (`state["risk"]`, congelado no freeze a partir
+        do evento — AID-2719 X5); risco indeterminável é fail-closed —
+        spawnar `low` por default rebaixaria medium/high e destravaria a
+        mesma decisão sem a revisão humana exigida."""
         state = self._load_state(run_id)
         station = state["station"]
         if station in ("promoted",):
             return station
-        state["attempts"] = state.get("attempts", 1) + 1
-        state["updated_at"] = utcnow()
         if station == "blocked":
+            risk = state.get("risk")
+            if risk is None:
+                try:
+                    risk = self.queue.get(state["event_id"]).risk
+                except FactoryError:
+                    risk = None
+            if risk is None:
+                raise CoordinatorError(
+                    f"cannot spawn retry for {run_id}: risk of the original "
+                    f"decision ({state['event_id']}) is unknown — a low-risk "
+                    "retry would bypass the X5 review requirement "
+                    "(AID-2822 F2); re-intake with explicit risk instead"
+                )
             # Um resultado bloqueado volta ao início como novo trabalho (HTML §02);
             # o recibo anterior permanece.
             event = WorkEvent(
-                id=f"{state['event_id']}-retry{state['attempts'] - 1}",
-                origin=f"factory:{run_id}", scope="retry after blocked", risk="low",
+                id=f"{state['event_id']}-retry{state.get('attempts', 1)}",
+                origin=f"factory:{run_id}", scope="retry after blocked",
+                risk=risk,
             )
             self.intake(event)
+        state["attempts"] = state.get("attempts", 1) + 1
+        state["updated_at"] = utcnow()
         self._save_state(run_id, state)
         return station
