@@ -8,7 +8,7 @@ describe("SupportCta", () => {
     render(<SupportCta />);
     const whatsapp = screen.getByTestId("support-whatsapp");
     expect(whatsapp).toHaveAttribute("href", "https://wa.me/5511984363878");
-    expect(whatsapp).toHaveTextContent("WhatsApp");
+    expect(whatsapp).toHaveTextContent("WhatsApp (abre em nova aba)");
     const email = screen.getByTestId("support-email");
     expect(email).toHaveAttribute("href", expect.stringContaining(`mailto:${PILOT_SUPPORT_EMAIL}`));
     expect(email).toHaveTextContent(PILOT_SUPPORT_EMAIL);

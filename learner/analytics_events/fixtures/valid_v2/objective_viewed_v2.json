@@ -1,0 +1,1 @@
+{"event_id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee","event_type":"objective_viewed","occurred_at":"2026-09-26T07:30:00Z","learner_anon_id":"aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee","dojo":"literacyDojo","module":"mod-01-basics","engagement_ms":1500,"experiment_arm":"treatment-o1","payload":{"objective_id":"obj-funnel-o1","entry":"push"}}

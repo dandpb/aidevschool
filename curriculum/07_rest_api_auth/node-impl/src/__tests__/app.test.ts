@@ -10,7 +10,8 @@ interface Failure { error: { code: string; message: string; details: Array<{ fie
 interface LoginData { access_token: string; refresh_token: string; token_type: string; expires_in_seconds: number; refresh_expires_in_seconds: number; user: PublicUser }
 interface RefreshData { access_token: string; refresh_token: string }
 const bodyOf = <T>(response: { json: () => unknown }): T => response.json() as T;
-const testApp = () => buildApp({ config: { passwordIterations: 100 } });
+const testJwtSecret = 'project-07-test-fixture-secret-not-a-runtime-default';
+const testApp = () => buildApp({ config: { passwordIterations: 100, jwtSecret: testJwtSecret } });
 
 async function registered() {
   const built = testApp();
@@ -48,7 +49,7 @@ describe('REST API auth Node implementation', () => {
     const ok = await app.inject({ method: 'POST', url: '/v1/auth/login', payload: { email: 'ada@example.com', password: strong } });
     expect(ok.statusCode).toBe(200);
     const body = bodyOf<Success<LoginData>>(ok).data;
-    const decoded = jwt.verify(body.access_token, defaultConfig.jwtSecret, { issuer: defaultConfig.issuer, audience: defaultConfig.audience, clockTimestamp: Date.parse('2026-06-17T00:00:00.000Z') / 1000 }) as jwt.JwtPayload;
+    const decoded = jwt.verify(body.access_token, testJwtSecret, { issuer: defaultConfig.issuer, audience: defaultConfig.audience, clockTimestamp: Date.parse('2026-06-17T00:00:00.000Z') / 1000 }) as jwt.JwtPayload;
     expect(decoded.sub).toBeDefined();
     expect(decoded.roles).toEqual(['user']);
     expect(decoded.jti).toContain('jti_');
@@ -64,6 +65,8 @@ describe('REST API auth Node implementation', () => {
     expect(missing.statusCode).toBe(401);
     const malformed = await app.inject({ method: 'GET', url: '/v1/users', headers: { authorization: 'Bearer not-a-jwt' } });
     expect(malformed.statusCode).toBe(401);
+    expect(bodyOf<Failure>(malformed).error.code).toBe('UNAUTHENTICATED');
+    expect(store.audits.map((entry) => entry.action)).toContain('token_verify_failed');
     const denied = await app.inject({ method: 'GET', url: '/v1/users', headers: { authorization: `Bearer ${tokens.access_token}` } });
     expect(denied.statusCode).toBe(403);
     const self = await app.inject({ method: 'PUT', url: `/v1/users/${user.id}`, headers: { authorization: `Bearer ${tokens.access_token}` }, payload: { display_name: 'Ada L.' } });

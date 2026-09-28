@@ -1,0 +1,42 @@
+# Manifest sha256 — corpus de evidência NDJSON comprometido no git (gerado em 2026-09-26 a partir de dbb6d02c, AID-2886)
+# Verificar: sha256sum -c docs/storage/manifests/evidence-committed-2026-09-26.sha256
+# 39 arquivos, 867842 bytes
+e639f841b46d8b89e70ae6eae452d5b5ddd545e07ae92d295d867046a507bf31  docs/curso/workflow_lab/evidence/full-run-final/learning.ndjson
+681d9685a7dcbf9b596e53bc44dd663a8e77c990570f12f63c9d54d5d692b50d  docs/curso/workflow_lab/evidence/real-run-final/learning.ndjson
+98a27a07118f86f045dd61782fe2bc455b8546568d538f91db2becc74d61dce3  docs/product-readiness/evidence/results.ndjson
+ecbf1a9d31bf70c13d605734bc3b785fb0a68f454b48555ca7dcb223cbd6b437  docs/qa/flaky-ledger/flaky-ledger.ndjson
+1ae4c5947cacbb931c256438f1a47de6764be6d7608a4ab203f3d57853712fa1  engines/minimaxDojo/whiteboard/event_log/events-2025-W00.ndjson
+610ca260efbcf3914cd95bc723015ef4257a7eb5d1a1932f92ef4b9c3b12f20f  engines/voxelDojo/game-02-warehouse/.logs/evidence.ndjson
+8156e88c797b38fbff8e07f5c3bcba498cb2d1f0dafdaf23c61787e7b417c76e  learner/gate/tests/fixtures/analytics/drift-v2/events-2026-09-14.ndjson
+d200c6ae6ceb618655edc3bebeadb6e3a68aa4b6f330f7ffd259b242db4b04a7  learner/gate/tests/fixtures/analytics/drift-v3/events-2026-09-14.ndjson
+6368aecffb976dc799fc53784a861331e62ecbb31575c842243a6162cd1d4b17  learner/gate/tests/fixtures/analytics/drift/events-2026-08-05.ndjson
+bc4dab189430c2b9691a470913e15eaad309a0f89cf81948e48dd03d5c07d6c1  learner/gate/tests/fixtures/analytics/synthetic-v2/events-2026-09-14.ndjson
+0ade762461e2520f49839441ba625c674ced8f4e89907043b86aa5ffc27d5470  learner/gate/tests/fixtures/analytics/synthetic-v3/events-2026-09-14.ndjson
+c749d29688e31a708e2dd58bea7272a02db63ee9aaef5a4dd99eac0791e830af  learner/gate/tests/fixtures/analytics/synthetic-v4/events-2026-09-16.ndjson
+3a9b62556992c8a704f3fe44fdd46321ed7ad159a520e0a449799f6fe3a29535  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-13.ndjson
+6226575197e63d71d09bfe231884614393316f613e0bdd69799ac5c406c7229f  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-14.ndjson
+cb039195ea1a2f2f51b6f3ae6a2bfa5cb8cd0c6a6794c5324467106d48ec37a7  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-15.ndjson
+5b22dd2bf5a8c7879095bbac46c4f14654671c31c2c9ad86878eab2bd00e9337  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-16.ndjson
+37db671ec2c60e4e68d6797e05bc5b136d858ffeb3191585d2526db99750f4d3  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-17.ndjson
+d075cf05323df31247944b413cfcdfc83e52461c19fd248c83a426dbb2e99f5b  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-18.ndjson
+623549191c0d34720040726949418abbb3c6b4ed2ed499141f003fd14044c1d3  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-21.ndjson
+fbe785fced0d8813107c201ac4a9044956ad18b005dff571d34665b6d797f007  learner/gate/tests/fixtures/analytics/synthetic/events-2026-07-25.ndjson
+564c76ab3cebb689c52ed554a12037e8b09ea3142787cc9533b34977e746de1f  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-04.ndjson
+528c165faf5228d569393807f6387797acb3ae605ab32becaf57c10e95ac7d5c  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-08.ndjson
+18e148a16312afbf1830b6f7b214c74b10d4c3d4af0eb98adfc5a3098d92ca57  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-10.ndjson
+a5667740622d258b914aed3eff14fb263c146cd5c8bddbd73d6dbae1ff2002d5  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-11.ndjson
+6817107e70a897c3b8ed279eb52ac6a5da2f0ec0a68d79e341b0d7a3be0461bc  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-12.ndjson
+c6e31c8b975ffda27ec8f852b3ae9af6fb0db4fe972c6bdeff5402b2711f216a  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-20.ndjson
+beddbd3ff568e4c86bffeb66ff867d6ca5f45cdb023541c28e1c50ac14be3deb  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-24.ndjson
+2bc6580f78170b13e015227f78ca15c59c36757ffde67c2b2d945c151395ab94  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-25.ndjson
+7d31017448ba33bcf44e681d048af1dad556aee9843c425cf5ed9d51864260f3  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-26.ndjson
+acdd1035a2b2477b2a9f8c1f7b8baaa2c7375575ccfd744918a539094cf3c2e6  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-27.ndjson
+5995aff8a3a6ea3f6fa4ee9eb95bf213307c62ab902f011a6c4b2b1b23a6252d  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-28.ndjson
+ce8d5106b04b09b563466df3e4f8cea38fd679583e8e47c74805af9f1937adc3  learner/gate/tests/fixtures/analytics/synthetic/events-2026-08-31.ndjson
+4756943fcd0c4b74a95c661291de41abf3c4624f850cf9420f68e4970ce6afe6  learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-02.ndjson
+76c060c2e5cd631a1b1dea91f586fa9007454585f4cb8a1897818bdcbea3c78a  learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-08.ndjson
+7ef41a3a4679e955bfbcdd2a7c197157afaa769fef322c043de145eea485b5a7  learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-09.ndjson
+78364f0aa5d89125a7b9b0159a816e0af650d7277b7c6fbf31b9f008192587af  learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-11.ndjson
+337780a7f249e43f796f03ea17282ebf5ae1afa4302e5fdef6853f216090b498  learner/gate/tests/fixtures/analytics/synthetic/events-2026-09-17.ndjson
+a9bbb2b4bf64873eea5c8ffb7cf42be6f5b04730c7fbea62b2f435bff724a42c  learner/judgment_receipts/metric-lint-1cf2c923a405753c.ndjson
+6f881d1f3379edc29772d7079af7694ea5eb63212f4cb83142aa927a70a0bedc  learner/judgment_receipts/metric-lint-518d6905b440cc43.ndjson

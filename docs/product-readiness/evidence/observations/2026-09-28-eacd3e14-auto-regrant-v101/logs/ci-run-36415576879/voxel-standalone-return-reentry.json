@@ -1,0 +1,25 @@
+{
+  "artifacts": [
+    {
+      "path": "engines/voxelDojo/game-02-warehouse/playwright/warehouse.spec.ts",
+      "sha256": "c8161969f71428092ff0f4fd6b32bc10670d542a981857b7ef122444ce328c25"
+    }
+  ],
+  "assertions": [
+    {
+      "evidence": "playwright",
+      "id": "reentry-is-deterministic-and-uncorrupted",
+      "outcome": "pass"
+    }
+  ],
+  "executedAt": "2026-09-28T11:29:36Z",
+  "executor": "automated",
+  "gaps": [],
+  "gitSha": "ebb62ffc7a52e47b425abd25d00371845fcb24be",
+  "manualFingerprint": "029ce8f5006bfc657b7b635342ed4d59255061defeea510f48a55a107f3eba78",
+  "outcome": "pass",
+  "runId": "2026-09-28T11:29:36Z-voxel-standalone-return-reentry-ebb62ffc",
+  "scenarioId": "voxel-standalone-return-reentry",
+  "schemaVersion": 1,
+  "sourceFingerprint": "ba8c8554255fe938a8a97babde0a03b71f9f3743f7031d7e89abb693caebd01a"
+}

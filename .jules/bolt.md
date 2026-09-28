@@ -44,3 +44,16 @@
 ## 2025-02-18 - Optimize array shifts in simulation pathfinding
 **Learning:** In simulation hot loops like BFS pathfinding, using `Array.prototype.splice` to extract elements from a bucket modifies the array in-place, shifting all subsequent elements. This causes O(N) operations and heavy garbage collection overhead, particularly detrimental when running thousands of times per second.
 **Action:** Replace `splice` with a O(1) swap-and-pop technique (`const last = arr.pop(); if (idx < arr.length) arr[idx] = last;`) when removing elements from an unordered array or bucket where element order doesn't matter (e.g., identical cost tiers in pathfinding).
+## 2025-02-18 - Optimize nested loops and functional array mapping on hotpaths
+**Learning:** Functional methods `.filter()` and `.reduce()` combined cause allocations of intermediate arrays and repeated traversal across elements which places pressure on GC overhead.
+**Action:** Substitute multi-method chains over arrays with traditional `for` loops.
+
+## 2025-02-18 - Avoid array allocations for game state derivations
+**Learning:** Using chained array methods (`.filter().length`, `.reduce()`, `.flatMap().filter().map()`) to compute aggregated metrics in core state evaluation functions (like `stats`) allocates many intermediate arrays, increasing GC pressure and slowing down rendering logic.
+**Action:** Replace chained array derivations with a single-pass O(N) loop when computing multiple related metrics (like `completed`, `done`, `xp`, and `bosses`) simultaneously from the same data structure.
+## 2024-10-24 - Optimize O(N^2) Map building and allocations in simulation grids
+**Learning:** Building an intermediate Map using string concatenation (`${x},${y}`) and nested arrays in grid algorithms (like `recomputeRoads` in miniTown) creates massive GC pressure and execution overhead when run frequently (e.g., during placement waves or initialization). V8 struggles with the continuous allocations of Maps, arrays, and string keys.
+**Action:** Replace `Map`s indexed by grid coordinates with flat 1D arrays (`[y * width + x]`) and use typed arrays (`Uint8Array`) for binary grid states. Unroll `for...of` loops over small static arrays (like neighbor offsets) to standard indexed `for` loops to eliminate iterator closure allocation.
+## 2025-02-19 - Avoid GC pressure from .filter().length
+**Learning:** In simulation code like `engines/voxelDojo/game-04-task-queue`, calculating active counts with `.filter(...).length` creates unnecessary intermediate array allocations, increasing garbage collection (GC) overhead during frequent calls.
+**Action:** Replace `.filter(...).length` with standard indexed `for` loops and a counter variable to prevent intermediate array creation and reduce GC pressure.
