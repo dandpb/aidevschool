@@ -1544,6 +1544,83 @@ export const CURRICULUM: ModuleData[] = [
             "explanation": "Verdadeiro. O critério de parada era explícito: testes verdes e revisão aprovada. Foi ele que impediu o 'está bom o suficiente' de virar débito técnico. Critério de parada claro é o que separa entrega de adivinhação."
           }
         ]
+      },
+      {
+        "slug": "privacidade-dados",
+        "title": "Privacidade: o que você alimenta na máquina",
+        "order": 2,
+        "xpReward": 20,
+        "narrative": "A cerimônia de encerramento terminou, mas Bip segura você no portão de neon: 'Um último protocolo, recruta. A cidade inteira enxerga o que você digita — e o que você alimenta na máquina define o que pode vazar.'",
+        "tip": "Tudo que você cola num prompt de IA viaja para os servidores do provedor — e o que acontece lá depende da política de dados dele, não da sua boa intenção. Dado sensível (nome com CPF, senhas, chaves de API, dados de clientes e da equipe) não vai em prompt: remova, mascare ou anonimize antes de pedir ajuda. Credenciais vivem em cofres e variáveis de ambiente, nunca em conversas. Com agentes e MCP o alcance só aumenta — cada conexão nova é uma porta de dados, então entregue o mínimo necessário. E antes de repassar a resposta da IA para alguém, revise: o modelo pode devolver mais do que recebeu. Privacidade não é desconfiança da tecnologia; é o mesmo protocolo de sempre — saber exatamente o que sai da sua máquina.",
+        "exercises": [
+          {
+            "id": "m9l3e1",
+            "type": "multiple-choice",
+            "prompt": "Bip projeta o contrato de privacidade do distrito e pergunta na lata: qual destes NUNCA deve ir direto para um prompt de IA?",
+            "options": [
+              "Um rascunho público de post e ideias genéricas de campanha",
+              "Uma lista de clientes com nome e CPF, junto com senhas e chaves de API",
+              "Um trecho de código próprio, sem nenhum dado real embutido",
+              "Uma pergunta conceitual sobre como a LGPD funciona"
+            ],
+            "correctIndex": 1,
+            "explanation": "Dados pessoais identificáveis, senhas e credenciais são a combinação que nenhum prompt deve receber: eles identificam pessoas e abrem portas de acesso ao mesmo tempo. Rascunhos públicos, código sem dados reais e perguntas conceituais não carregam esse risco. Se o trabalho exige esses dados, use um ambiente autorizado com política de retenção clara — não o chat aberto."
+          },
+          {
+            "id": "m9l3e2",
+            "type": "order",
+            "prompt": "Um aprendiz recebeu uma planilha com dados reais de clientes e precisa da ajuda da IA. Bip liga o holograma: ordene o protocolo de privacidade, do primeiro passo até o último.",
+            "items": [
+              "Identificar o que é sensível na planilha",
+              "Remover ou mascarar os dados identificáveis",
+              "Anonimizar o exemplo que vai para o prompt",
+              "Verificar a política de dados do provedor",
+              "Enviar o pedido à IA com o mínimo necessário",
+              "Revisar a resposta antes de compartilhar com alguém"
+            ],
+            "correctOrder": [0, 1, 2, 3, 4, 5],
+            "explanation": "Primeiro você olha o que tem de sensível, depois limpa — remover, mascarar, anonimizar —, confirma para onde o texto vai (a política do provedor), só então envia o mínimo necessário e, no fim, revisa a resposta antes de repassar. Pular a limpeza porque 'é só uma perguntinha' é como atravessar a Decadência Lógica com o farol apagado."
+          },
+          {
+            "id": "m9l3e3",
+            "type": "true-false",
+            "prompt": "O letreiro de privacidade pisca em vermelho. Bip aponta para o seu navegador:",
+            "statement": "Enviar dados pessoais num chat de IA é seguro porque a conversa fica salva apenas no seu navegador.",
+            "isTrue": false,
+            "explanation": "Falso. O histórico aparecer no seu navegador não significa que o texto parou ali: ele viajou para os servidores do provedor, e retenção, treinamento e compartilhamento dependem da política de dados dele — que muda por produto e por plano. 'Ficou na minha tela' não é 'ficou na minha máquina'."
+          },
+          {
+            "id": "m9l3e4",
+            "type": "fill-blank",
+            "prompt": "Complete a frase que Bip gravou na placa do portão de neon:",
+            "template": "Tratar dado sensível antes do prompt não é responsabilidade do provedor: é {{0}} de quem usa a IA.",
+            "banks": [
+              { "label": "responsabilidade", "correctSlot": 0 },
+              { "label": "sorte", "correctSlot": null },
+              { "label": "obrigação técnica", "correctSlot": null },
+              { "label": "exigência do modelo", "correctSlot": null }
+            ],
+            "blanks": 1,
+            "explanation": "O provedor pode (ou não) proteger o que chega — mas a decisão do que sai da sua máquina é sua, e acontece antes do envio. Tratar responsabilidade como 'problema do outro' é o atalho mais curto para o vazamento; o protocolo de privacidade começa em quem digita."
+          },
+          {
+            "id": "m9l3e5",
+            "type": "swipe",
+            "prompt": "Último desafio do protocolo: Bip espalha fichas na mesa do café. Separe o que pode ir para o prompt do que fica fora dele.",
+            "swipeRightIf": "ai",
+            "rightLabel": "Pode ir pro prompt",
+            "leftLabel": "Fora do prompt",
+            "items": [
+              { "label": "Tutorial público de CSS", "detail": "Texto publicado na web, sem dado pessoal algum", "value": "ai" },
+              { "label": "Chave de API do trabalho", "detail": "Credencial de acesso: quem tem, entra", "value": "real" },
+              { "label": "Diálogo fictício para praticar inglês", "detail": "Invenção sua, sem pessoas reais", "value": "ai" },
+              { "label": "Print com e-mails de clientes", "detail": "Contém dados pessoais identificáveis de terceiros", "value": "real" },
+              { "label": "Pergunta sobre como funciona a LGPD", "detail": "Conceito da lei, sem dados de ninguém", "value": "ai" },
+              { "label": "Planilha de salários da equipe", "detail": "Dados pessoais e sensíveis de outras pessoas", "value": "real" }
+            ],
+            "explanation": "Pode ir: material público, invenção sua e conceitos — nada que identifique pessoas ou abra portas de acesso. Fica fora: credenciais e qualquer dado pessoal seu ou de terceiros, mesmo 'só para dar contexto'. Contexto bom é contexto limpo: se a IA não precisa daquele dado para te ajudar, ele não viaja."
+          }
+        ]
       }
     ]
   },
