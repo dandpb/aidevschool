@@ -180,14 +180,20 @@ export interface CollisionPrediction {
 /** L3 evaluate: every collision prediction must be correct (both directions). */
 export function evaluateCollisionPredictions(predictions: CollisionPrediction[]): WaveOutcome {
   const total = predictions.length
-  const correct = predictions.filter((p) => p.predictedCollision === p.actualCollision).length
+  let correct = 0
+  let collisionsPresent = 0
+  for (let i = 0; i < total; i++) {
+    const p = predictions[i]
+    if (p && p.predictedCollision === p.actualCollision) correct++
+    if (p?.actualCollision) collisionsPresent++
+  }
   const accuracy = total === 0 ? 0 : correct / total
   return {
     pass: accuracy >= 0.8,
     metrics: {
       collision_predictions: total,
       collision_prediction_accuracy: round2(accuracy),
-      collisions_present: predictions.filter((p) => p.actualCollision).length,
+      collisions_present: collisionsPresent,
     },
   }
 }
