@@ -286,16 +286,86 @@ class Coordinator:
         return state
 
     def prove(self, run_id: str, verifier_context: str) -> VerifyResult:
+        """Estação Provar em clean-room (AID-2716/AID-2730).
+
+        Os checks NUNCA rodam na worktree do autor: primeiro a árvore do autor
+        é auditada (SHA pinado no recibo de build + sem não-rastreados);
+        fail-closed bloqueia a run antes de qualquer transição `verified`.
+        Aprovada a auditoria, os checks rodam em worktree NOVA criada
+        exatamente no `build_sha`, com o estado da árvore re-capturado após
+        os checks (mutação durante a execução = drift bloqueante).
+        """
         state = self._load_state(run_id)
         if state["station"] != "built":
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not built")
         self._fence(run_id, state)
         contract = Contract.load_frozen(self._run_dir(run_id))
-        worktree = Path(state["worktree"])
-        result = run_checks(contract, worktree, verifier_context, self._run_dir(run_id) / "proofs")
+        author_worktree = Path(state["worktree"])
+        author_tree = gitwork.capture_tree_state(author_worktree)
+        blockers: list[str] = []
+        if author_tree.sha != state["build_sha"]:
+            blockers.append(
+                "P4 clean-room: author worktree moved to "
+                f"{author_tree.sha}, build receipt pinned {state['build_sha']}"
+            )
+        meaningful = gitwork.meaningful_untracked(author_tree.untracked)
+        if meaningful:
+            blockers.append(
+                "P4 clean-room: author worktree has untracked files at prove "
+                f"time: {meaningful}"
+            )
+        # AID-2822 (F6): árvore do autor tem que estar LIMPA — rastreado
+        # modificado entre o commit do build e o prove é evidência ≠ commit
+        # (o `??`-only não via esta mutação no stress AID-2700).
+        if author_tree.dirty:
+            blockers.append(
+                "P4 clean-room: author worktree has tracked modifications at "
+                f"prove time (evidence != commit): {sorted(author_tree.dirty)}"
+            )
+        if blockers:
+            state.update(
+                station="blocked", prove_blockers=blockers, updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=author_tree.sha, contract_digest=contract.digest,
+                detail={"reasons": blockers, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (clean-room policy) for {run_id}: "
+                + "; ".join(blockers)
+            )
+        cleanroom = self.home / "worktrees" / f"{run_id}-cleanroom"
+        if cleanroom.exists():
+            gitwork.remove_worktree(self.repo, cleanroom)
+        gitwork.create_worktree(self.repo, state["build_sha"], cleanroom)
+        result = run_checks(
+            contract, cleanroom, verifier_context, self._run_dir(run_id) / "proofs"
+        )
         self.persist_proofs_meta(run_id, result)
+        if result.drift_reasons:
+            state.update(
+                station="blocked", prove_blockers=result.drift_reasons,
+                verify_worktree=str(cleanroom), updated_at=utcnow(),
+            )
+            self._save_state(run_id, state)
+            self._append(
+                run_id, station_from="built", station_to="blocked",
+                actor_role="verifier", context_id=verifier_context,
+                sha=result.sha, contract_digest=contract.digest,
+                proof_refs=[p.check_id for p in result.proofs],
+                detail={"reasons": result.drift_reasons, "clean_room": True},
+            )
+            raise CoordinatorError(
+                f"prove blocked (tree mutated while checks ran) for {run_id}: "
+                + "; ".join(result.drift_reasons)
+            )
         state.update(station="verified", verifier_context=verifier_context,
                      verify_sha=result.sha, verify_untracked=result.untracked,
+                     verify_worktree=str(cleanroom),
+                     verify_generated_untracked=result.generated_untracked,
                      updated_at=utcnow())
         self._save_state(run_id, state)
         # AID-2715 — a âncora da prova (check, cmd, exit, digest do output)
@@ -324,6 +394,21 @@ class Coordinator:
         if state["station"] not in ("verified", "blocked"):
             raise CoordinatorError(f"run {run_id} is at {state['station']}, not verified")
         self._fence(run_id, state)
+        # Run bloqueada na estação Provar (política clean-room, AID-2716/AID-2730):
+        # não existe estado verificado a promover — fail-closed com os motivos.
+        if state["station"] == "blocked" and "verify_sha" not in state:
+            reasons = [
+                "P4 clean-room: run blocked at prove — no verified evidence to promote"
+            ] + list(state.get("prove_blockers", []))
+            decision = GateDecision(verdict="block", reasons=reasons)
+            self._append(
+                run_id, station_from="blocked", station_to="blocked",
+                actor_role="coordinator", context_id=context_id,
+                sha=state.get("build_sha"), contract_digest=state.get("contract_digest"),
+                detail={"reasons": reasons},
+            )
+            self._write_receipt_summary(run_id, decision)
+            return decision
         # AID-2728 S6a: contrato congelado ilegível/adulterado é um VEREDITO
         # block (P4), não um crash — simétrico ao caminho do registro
         # versionado ("contract digest drifted"). Fail-closed com recibo.
@@ -513,20 +598,40 @@ class Coordinator:
 
     def resume(self, run_id: str) -> str:
         """Retoma após interrupção: retorna a estação corrente sem reexecutar
-        estações já registradas (falha e retry não apagam o histórico)."""
+        estações já registradas (falha e retry não apagam o histórico).
+
+        AID-2822 (F2): o evento de retry de uma run bloqueada HERDA o risco
+        da decisão de origem (`state["risk"]`, congelado no freeze a partir
+        do evento — AID-2719 X5); risco indeterminável é fail-closed —
+        spawnar `low` por default rebaixaria medium/high e destravaria a
+        mesma decisão sem a revisão humana exigida."""
         state = self._load_state(run_id)
         station = state["station"]
         if station in ("promoted",):
             return station
-        state["attempts"] = state.get("attempts", 1) + 1
-        state["updated_at"] = utcnow()
         if station == "blocked":
+            risk = state.get("risk")
+            if risk is None:
+                try:
+                    risk = self.queue.get(state["event_id"]).risk
+                except FactoryError:
+                    risk = None
+            if risk is None:
+                raise CoordinatorError(
+                    f"cannot spawn retry for {run_id}: risk of the original "
+                    f"decision ({state['event_id']}) is unknown — a low-risk "
+                    "retry would bypass the X5 review requirement "
+                    "(AID-2822 F2); re-intake with explicit risk instead"
+                )
             # Um resultado bloqueado volta ao início como novo trabalho (HTML §02);
             # o recibo anterior permanece.
             event = WorkEvent(
-                id=f"{state['event_id']}-retry{state['attempts'] - 1}",
-                origin=f"factory:{run_id}", scope="retry after blocked", risk="low",
+                id=f"{state['event_id']}-retry{state.get('attempts', 1)}",
+                origin=f"factory:{run_id}", scope="retry after blocked",
+                risk=risk,
             )
             self.intake(event)
+        state["attempts"] = state.get("attempts", 1) + 1
+        state["updated_at"] = utcnow()
         self._save_state(run_id, state)
         return station

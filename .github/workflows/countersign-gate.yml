@@ -1,0 +1,87 @@
+name: countersign-gate
+
+# Mechanical pre-merge countersign gate (AID-2768; CEO decision AID-2763).
+#
+# Class F (merge without an independent pre-merge verdict — F1 #529, F2 #531,
+# F3 #533, merged 94s after a guard HELD citing a VOID countersign) survived
+# the post-hoc SDLC guard citation gate: conventions (VOID/HELD comments) do
+# not contain a producer with a stale plan. This check makes class F
+# mechanically impossible: wired as a REQUIRED status check on main, GitHub
+# itself refuses `gh pr merge` while it is red or missing — for every actor,
+# including the producer on the shared credential (enforce_admins is on).
+#
+# Acceptance contract (scripts/countersign_gate_check.py, fail-closed):
+#   1. a PR COMMENT line 'Countersign: <AID|GH>-<n> verdict <ref> [head=<40-hex>]'
+#      (body citations never count — no posting time);
+#   2. the cited AID/GH resolves (SDLC_GUARD_AID_RESOLVER contract);
+#   3. the comment pins the FULL 40-hex CURRENT PR head (update-branch/new
+#      push breaks the pin -> red until a fresh independent countersign);
+#   4. the comment carries 'Provenance: agent=… task=… run=… session=…';
+#   5. the countersign AGENT differs from the producer AGENT (earliest
+#      provenance trailer in the conversation; no trailer -> producer
+#      unattributed -> red — the F1/F2 shape);
+#   6. the operative citation is the chronologically LAST one (a producer
+#      self-cite after a valid QA countersign — the F3 pattern — is operative
+#      and fails);
+#   7. nothing supersedes it: no VOID/HELD marker in a later comment, no
+#      'reopened' event after it (containment close/reopen, case #535).
+#
+# Triggers — two authority tiers, same check-run name:
+#   pull_request (opened/synchronize/reopened/ready_for_review): runs the
+#     workflow FROM THE PR (needed for dogfooding the introducing PR). A PR
+#     could weaken this copy in its own branch, but…
+#   issue_comment (created, PRs only) + workflow_dispatch: run the workflow
+#     FROM MAIN — the authoritative version. The countersign comment itself
+#     is a comment, so every real acceptance re-evaluates the PR with main's
+#     logic and overwrites the check to its true verdict.
+#
+# Merges go through scripts/merge_pr.sh (the single merge door), which
+# re-runs this gate live at merge time and requires this check-run green on
+# the head; raw `gh pr merge` is blocked in Claude runtimes by
+# .claude/hooks/guard-commands.sh and blocked by GitHub for everyone while
+# this required check is red/missing.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number to gate (backfill for open PRs)"
+        required: true
+
+jobs:
+  countersign-gate:
+    name: countersign-gate
+    runs-on: ubuntu-latest
+    # issue_comment also fires on plain issues; only PR conversations count.
+    if: github.event_name != 'issue_comment' || github.event.issue.pull_request != null
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: resolve PR number
+        run: |
+          case "${{ github.event_name }}" in
+            pull_request)   echo "PR=${{ github.event.pull_request.number }}" >> "$GITHUB_ENV" ;;
+            issue_comment)  echo "PR=${{ github.event.issue.number }}" >> "$GITHUB_ENV" ;;
+            workflow_dispatch) echo "PR=${{ inputs.pr }}" >> "$GITHUB_ENV" ;;
+            *) echo "unsupported event ${{ github.event_name }}" >&2; exit 2 ;;
+          esac
+      - name: countersign gate self-test (synthetic violations must fail)
+        run: python3 scripts/countersign_gate_check.py --self-test
+      - name: merge door self-test (§3 extraction vs the real endpoint shape)
+        run: bash scripts/merge_pr.sh --self-test
+      - name: countersign gate (live, at the current PR head)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SDLC_GUARD_AID_RESOLVER: scripts/sdlc_aid_resolve.sh
+          PAPERCLIP_API_URL: ${{ secrets.PAPERCLIP_API_URL }}
+          PAPERCLIP_API_TOKEN: ${{ secrets.PAPERCLIP_API_TOKEN }}
+        run: python3 scripts/countersign_gate_check.py --pr "$PR"

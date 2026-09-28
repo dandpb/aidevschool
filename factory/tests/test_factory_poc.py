@@ -15,7 +15,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from factory.coordinator import Coordinator
+from factory.coordinator import Coordinator, CoordinatorError
 from factory.gate import evaluate
 from factory.gitwork import TreeState
 from factory.ledger import RunLedger
@@ -125,13 +125,20 @@ class TestP4ShaAndTree:
         coord.freeze(run_id, cid, AUTHOR)
         coord.build(run_id, AUTHOR, "echo hi > feature.txt; git add -A; git commit -qm feat")
         # Autor commita DEPOIS do recibo de build (worktree avança sozinho).
+        # Pós clean-room (AID-2716): a auditoria da árvore do autor em prove
+        # é fail-closed — checks jamais rodam numa árvore não pinada.
         state = coord._load_state(run_id)
         wt = Path(state["worktree"])
         _git(wt, "commit", "-q", "--allow-empty", "-m", "drift")
-        coord.prove(run_id, VERIFIER)
+        before = coord._ledger(run_id).read()
+        with pytest.raises(CoordinatorError, match="author worktree moved"):
+            coord.prove(run_id, VERIFIER)
+        assert coord._load_state(run_id)["station"] == "blocked"
+        assert not coord._ledger(run_id).find("verified")
+        assert len(coord._ledger(run_id).read()) == len(before) + 1
         decision = coord.gate(run_id, "ctx-coordinator")
         assert decision.verdict == "block"
-        assert any("P4: sha drifted" in r for r in decision.reasons)
+        assert any("author worktree moved" in r for r in decision.reasons)
 
     def test_untracked_file_appearing_after_build_blocks(self, tmp_path):
         coord, repo, run_id, cid = setup_run(tmp_path)
@@ -139,10 +146,15 @@ class TestP4ShaAndTree:
         coord.build(run_id, AUTHOR, "echo hi > feature.txt; git add -A; git commit -qm feat")
         state = coord._load_state(run_id)
         (Path(state["worktree"]) / "stray-artifact.txt").write_text("x", encoding="utf-8")
-        result = coord.prove(run_id, VERIFIER)
+        # Pós clean-room (AID-2716): untracked ≠ ∅ na árvore do autor em prove
+        # bloqueia ANTES de qualquer check — sem transição verified, sem promote.
+        with pytest.raises(CoordinatorError, match="untracked files at prove time"):
+            coord.prove(run_id, VERIFIER)
+        assert coord._load_state(run_id)["station"] == "blocked"
+        assert not coord._ledger(run_id).find("verified")
         decision = coord.gate(run_id, "ctx-coordinator")
         assert decision.verdict == "block"
-        assert any("untracked files changed" in r for r in decision.reasons)
+        assert any("untracked files at prove time" in r for r in decision.reasons)
 
     def test_contract_divergence_blocks(self, tmp_path):
         coord, repo, run_id, cid = setup_run(tmp_path)
