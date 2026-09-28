@@ -1,0 +1,27 @@
+sourceFingerprint drift v101 (01696f77) -> v103 factory snapshot (a02b1833):
+same   dojotoday-active-unit-guidance: b16f14f1665cf95f -> b16f14f1665cf95f
+same   dojotoday-returning-next-day: b16f14f1665cf95f -> b16f14f1665cf95f
+same   literacy-corridor-gate-retry: 41248b79765a69bf -> 41248b79765a69bf
+same   literacy-corridor-grandfathered-return: 41248b79765a69bf -> 41248b79765a69bf
+same   literacy-corridor-happy-path: 41248b79765a69bf -> 41248b79765a69bf
+same   literacy-corridor-resume-mid-module: 41248b79765a69bf -> 41248b79765a69bf
+same   literacy-corridor-review-window: 41248b79765a69bf -> 41248b79765a69bf
+same   literacy-happy-path: 84d63caaafaaa9c1 -> 84d63caaafaaa9c1
+same   literacy-resume: 84d63caaafaaa9c1 -> 84d63caaafaaa9c1
+same   literacy-retry: 84d63caaafaaa9c1 -> 84d63caaafaaa9c1
+same   minitown-explore-only: 436c149cc9844563 -> 436c149cc9844563
+same   os-literacy-hosted-mission: c38fd07224d6adfb -> c38fd07224d6adfb
+same   os-literacy-returning-device: c38fd07224d6adfb -> c38fd07224d6adfb
+same   os-onboarding-track-choice: 72d582d7e68dfe61 -> 72d582d7e68dfe61
+DRIFT  os-renderer-accessibility-recovery: eb952d1a0c88fd21 -> 86d2e84888050a5a
+same   os-returning-device: 72d582d7e68dfe61 -> 72d582d7e68dfe61
+same   os-returning-recovery: 72d582d7e68dfe61 -> 72d582d7e68dfe61
+same   os-verification-recovery: c38fd07224d6adfb -> c38fd07224d6adfb
+DRIFT  os-voxel-hosted-missions: eb952d1a0c88fd21 -> 86d2e84888050a5a
+DRIFT  os-voxel-returning-device: eb952d1a0c88fd21 -> 86d2e84888050a5a
+same   pixelquest-encounter-evidence: 12e16e92619498e2 -> 12e16e92619498e2
+same   pixelquest-returning-evidence-handoff: 12e16e92619498e2 -> 12e16e92619498e2
+same   voxel-standalone-loop: ba8c8554255fe938 -> ba8c8554255fe938
+same   voxel-standalone-return-reentry: ba8c8554255fe938 -> ba8c8554255fe938
+
+Total drifted: 3 (all in use case os-voxel-guided-missions; cause: merge #604 game-03-wormhole refactor)

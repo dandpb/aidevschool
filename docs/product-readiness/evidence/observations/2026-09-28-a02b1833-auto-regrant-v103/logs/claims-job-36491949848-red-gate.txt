@@ -1,0 +1,405 @@
+﻿2026-09-28T22:26:54.3382553Z Current runner version: '2.337.0'
+2026-09-28T22:26:54.3407594Z ##[group]Runner Image Provisioner
+2026-09-28T22:26:54.3408579Z Hosted Compute Agent
+2026-09-28T22:26:54.3409197Z Version: 20260828.587
+2026-09-28T22:26:54.3409897Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-28T22:26:54.3410668Z Build Date: 2026-08-28T16:44:25Z
+2026-09-28T22:26:54.3411392Z Worker ID: {6dbcca6a-eb37-49b2-9e49-d4410c3ca625}
+2026-09-28T22:26:54.3412228Z Azure Region: northcentralus
+2026-09-28T22:26:54.3412873Z ##[endgroup]
+2026-09-28T22:26:54.3414636Z ##[group]Operating System
+2026-09-28T22:26:54.3415306Z Ubuntu
+2026-09-28T22:26:54.3415858Z 24.04.5
+2026-09-28T22:26:54.3416484Z LTS
+2026-09-28T22:26:54.3417036Z ##[endgroup]
+2026-09-28T22:26:54.3417597Z ##[group]Runner Image
+2026-09-28T22:26:54.3418459Z Image: ubuntu-24.04
+2026-09-28T22:26:54.3419056Z Version: 20260920.314.1
+2026-09-28T22:26:54.3420439Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260920.314/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-28T22:26:54.3421960Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260920.314
+2026-09-28T22:26:54.3423212Z ##[endgroup]
+2026-09-28T22:26:54.3424465Z ##[group]GITHUB_TOKEN Permissions
+2026-09-28T22:26:54.3426725Z Contents: read
+2026-09-28T22:26:54.3427361Z Metadata: read
+2026-09-28T22:26:54.3428081Z Packages: read
+2026-09-28T22:26:54.3428663Z ##[endgroup]
+2026-09-28T22:26:54.3430718Z Secret source: Actions
+2026-09-28T22:26:54.3431767Z Cache mode: write
+2026-09-28T22:26:54.3432564Z Prepare workflow directory
+2026-09-28T22:26:54.3869547Z Prepare all required actions
+2026-09-28T22:26:54.3937279Z Getting action download info
+2026-09-28T22:26:54.6369920Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-09-28T22:26:54.7466379Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2026-09-28T22:26:54.8340789Z Download action repository 'actions/download-artifact@v4' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-09-28T22:26:55.1758091Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-09-28T22:26:55.3908554Z Complete job name: product readiness (claims)
+2026-09-28T22:26:55.4732259Z ##[group]Run actions/checkout@v4
+2026-09-28T22:26:55.4733648Z with:
+2026-09-28T22:26:55.4734230Z   repository: dandpb/aidevschool
+2026-09-28T22:26:55.4738308Z   token: ***
+2026-09-28T22:26:55.4738852Z   ssh-strict: true
+2026-09-28T22:26:55.4739398Z   ssh-user: git
+2026-09-28T22:26:55.4739949Z   persist-credentials: true
+2026-09-28T22:26:55.4740542Z   clean: true
+2026-09-28T22:26:55.4741090Z   sparse-checkout-cone-mode: true
+2026-09-28T22:26:55.4741747Z   fetch-depth: 1
+2026-09-28T22:26:55.4742302Z   fetch-tags: false
+2026-09-28T22:26:55.4742852Z   show-progress: true
+2026-09-28T22:26:55.4743591Z   lfs: false
+2026-09-28T22:26:55.4744117Z   submodules: false
+2026-09-28T22:26:55.4744667Z   set-safe-directory: true
+2026-09-28T22:26:55.4745293Z   allow-unsafe-pr-checkout: false
+2026-09-28T22:26:55.4746226Z ##[endgroup]
+2026-09-28T22:26:55.5786568Z Syncing repository: dandpb/aidevschool
+2026-09-28T22:26:55.5789186Z ##[group]Getting Git version info
+2026-09-28T22:26:55.5790699Z Working directory is '/home/runner/work/aidevschool/aidevschool'
+2026-09-28T22:26:55.5793082Z [command]/usr/bin/git version
+2026-09-28T22:26:55.5869905Z git version 2.55.0
+2026-09-28T22:26:55.5889522Z ##[endgroup]
+2026-09-28T22:26:55.5910135Z Temporarily overriding HOME='/home/runner/work/_temp/e286df18-335a-4bd4-a06b-1b10d820d37b' before making global git config changes
+2026-09-28T22:26:55.5914468Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T22:26:55.5919720Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:26:55.5972311Z Deleting the contents of '/home/runner/work/aidevschool/aidevschool'
+2026-09-28T22:26:55.5977800Z ##[group]Initializing the repository
+2026-09-28T22:26:55.5982403Z [command]/usr/bin/git init /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:26:55.6066811Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-28T22:26:55.6068606Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-28T22:26:55.6069668Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-28T22:26:55.6070485Z hint: call:
+2026-09-28T22:26:55.6070948Z hint:
+2026-09-28T22:26:55.6071533Z hint: 	git config --global init.defaultBranch <name>
+2026-09-28T22:26:55.6072216Z hint:
+2026-09-28T22:26:55.6072874Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-28T22:26:55.6074067Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-28T22:26:55.6074899Z hint:
+2026-09-28T22:26:55.6075387Z hint: 	git branch -m <name>
+2026-09-28T22:26:55.6075942Z hint:
+2026-09-28T22:26:55.6076643Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-28T22:26:55.6082775Z Initialized empty Git repository in /home/runner/work/aidevschool/aidevschool/.git/
+2026-09-28T22:26:55.6092705Z [command]/usr/bin/git remote add origin https://github.com/dandpb/aidevschool
+2026-09-28T22:26:55.6140152Z ##[endgroup]
+2026-09-28T22:26:55.6141576Z ##[group]Disabling automatic garbage collection
+2026-09-28T22:26:55.6144837Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-28T22:26:55.6267566Z ##[endgroup]
+2026-09-28T22:26:55.6268417Z ##[group]Setting up auth
+2026-09-28T22:26:55.6269352Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T22:26:55.6274341Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T22:26:55.6603661Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T22:26:55.6644250Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T22:26:55.6896373Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T22:26:55.6936377Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T22:26:55.7177856Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-28T22:26:55.7219842Z ##[endgroup]
+2026-09-28T22:26:55.7229148Z ##[group]Fetching the repository
+2026-09-28T22:26:55.7230925Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +a02b18334fda0336ceccfd4f9d2529fb3351752a:refs/remotes/origin/main
+2026-09-28T22:26:58.9525393Z From https://github.com/dandpb/aidevschool
+2026-09-28T22:26:58.9526411Z  * [new ref]         a02b18334fda0336ceccfd4f9d2529fb3351752a -> origin/main
+2026-09-28T22:26:58.9538784Z ##[endgroup]
+2026-09-28T22:26:58.9539367Z ##[group]Determining the checkout info
+2026-09-28T22:26:58.9539862Z ##[endgroup]
+2026-09-28T22:26:58.9540246Z [command]/usr/bin/git sparse-checkout disable
+2026-09-28T22:26:58.9596012Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-28T22:26:58.9630111Z ##[group]Checking out the ref
+2026-09-28T22:26:58.9642749Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-09-28T22:26:59.9584080Z Switched to a new branch 'main'
+2026-09-28T22:26:59.9605131Z branch 'main' set up to track 'origin/main'.
+2026-09-28T22:26:59.9630468Z ##[endgroup]
+2026-09-28T22:26:59.9681359Z [command]/usr/bin/git log -1 --format=%H
+2026-09-28T22:26:59.9711661Z a02b18334fda0336ceccfd4f9d2529fb3351752a
+2026-09-28T22:27:00.0007325Z ##[group]Run actions/setup-python@v5
+2026-09-28T22:27:00.0007673Z with:
+2026-09-28T22:27:00.0008136Z   python-version: 3.12
+2026-09-28T22:27:00.0008379Z   check-latest: false
+2026-09-28T22:27:00.0010773Z   token: ***
+2026-09-28T22:27:00.0011011Z   update-environment: true
+2026-09-28T22:27:00.0011270Z   allow-prereleases: false
+2026-09-28T22:27:00.0011507Z   freethreaded: false
+2026-09-28T22:27:00.0011739Z ##[endgroup]
+2026-09-28T22:27:00.1338620Z ##[group]Installed versions
+2026-09-28T22:27:00.1428998Z (node:2254) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-28T22:27:00.1430059Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-28T22:27:00.1430758Z Successfully set up CPython (3.12.14)
+2026-09-28T22:27:00.1431284Z ##[endgroup]
+2026-09-28T22:27:00.1602297Z ##[group]Run python -m pip install -e ".[dev]"
+2026-09-28T22:27:00.1602782Z [36;1mpython -m pip install -e ".[dev]"[0m
+2026-09-28T22:27:00.1895155Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:00.1895507Z env:
+2026-09-28T22:27:00.1895820Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:00.1896360Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:00.1896801Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:00.1897211Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:00.1897605Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:00.1897989Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:00.1898332Z ##[endgroup]
+2026-09-28T22:27:00.9236780Z Obtaining file:///home/runner/work/aidevschool/aidevschool
+2026-09-28T22:27:00.9254139Z   Installing build dependencies: started
+2026-09-28T22:27:01.6206111Z   Installing build dependencies: finished with status 'done'
+2026-09-28T22:27:01.6212247Z   Checking if build backend supports build_editable: started
+2026-09-28T22:27:01.9371804Z   Checking if build backend supports build_editable: finished with status 'done'
+2026-09-28T22:27:01.9380347Z   Getting requirements to build editable: started
+2026-09-28T22:27:02.2845854Z   Getting requirements to build editable: finished with status 'done'
+2026-09-28T22:27:02.2855359Z   Preparing editable metadata (pyproject.toml): started
+2026-09-28T22:27:02.4810870Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2026-09-28T22:27:02.5747871Z Collecting pyyaml<7,>=6 (from aidevschool==0.1.0)
+2026-09-28T22:27:02.6191617Z   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2026-09-28T22:27:02.6326989Z Collecting fsrs<7,>=6 (from aidevschool==0.1.0)
+2026-09-28T22:27:02.6365830Z   Downloading fsrs-6.3.2-py3-none-any.whl.metadata (14 kB)
+2026-09-28T22:27:02.6753274Z Collecting posthog<8,>=7 (from aidevschool==0.1.0)
+2026-09-28T22:27:02.6786935Z   Downloading posthog-7.60.1-py3-none-any.whl.metadata (5.6 kB)
+2026-09-28T22:27:02.6953881Z Collecting python-dotenv<2,>=1 (from aidevschool==0.1.0)
+2026-09-28T22:27:02.6987137Z   Downloading python_dotenv-1.2.3-py3-none-any.whl.metadata (29 kB)
+2026-09-28T22:27:02.7371723Z Collecting pytest<9,>=8 (from aidevschool==0.1.0)
+2026-09-28T22:27:02.7404192Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+2026-09-28T22:27:03.0928278Z Collecting coverage<8,>=7 (from coverage[toml]<8,>=7; extra == "dev"->aidevschool==0.1.0)
+2026-09-28T22:27:03.0964471Z   Downloading coverage-7.16.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.2 kB)
+2026-09-28T22:27:03.1105412Z Collecting radon<7,>=6 (from aidevschool==0.1.0)
+2026-09-28T22:27:03.1138069Z   Downloading radon-6.0.1-py2.py3-none-any.whl.metadata (8.2 kB)
+2026-09-28T22:27:03.1295288Z Collecting typing-extensions (from fsrs<7,>=6->aidevschool==0.1.0)
+2026-09-28T22:27:03.1327892Z   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+2026-09-28T22:27:03.1531043Z Collecting requests<3.0,>=2.7 (from posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.1563438Z   Downloading requests-2.34.2-py3-none-any.whl.metadata (4.8 kB)
+2026-09-28T22:27:03.1675506Z Collecting backoff>=1.10.0 (from posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.1717531Z   Downloading backoff-2.2.1-py3-none-any.whl.metadata (14 kB)
+2026-09-28T22:27:03.1837978Z Collecting distro>=1.5.0 (from posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.1870789Z   Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+2026-09-28T22:27:03.1986780Z Collecting iniconfig>=1 (from pytest<9,>=8->aidevschool==0.1.0)
+2026-09-28T22:27:03.2018629Z   Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+2026-09-28T22:27:03.2151593Z Collecting packaging>=20 (from pytest<9,>=8->aidevschool==0.1.0)
+2026-09-28T22:27:03.2183430Z   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+2026-09-28T22:27:03.2288492Z Collecting pluggy<2,>=1.5 (from pytest<9,>=8->aidevschool==0.1.0)
+2026-09-28T22:27:03.2504205Z   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+2026-09-28T22:27:03.2663599Z Collecting pygments>=2.7.2 (from pytest<9,>=8->aidevschool==0.1.0)
+2026-09-28T22:27:03.2694874Z   Downloading pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+2026-09-28T22:27:03.2820428Z Collecting mando<0.8,>=0.6 (from radon<7,>=6->aidevschool==0.1.0)
+2026-09-28T22:27:03.2892190Z   Downloading mando-0.7.1-py2.py3-none-any.whl.metadata (7.4 kB)
+2026-09-28T22:27:03.3026870Z Collecting colorama>=0.4.1 (from radon<7,>=6->aidevschool==0.1.0)
+2026-09-28T22:27:03.3059868Z   Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+2026-09-28T22:27:03.3183529Z Collecting six (from mando<0.8,>=0.6->radon<7,>=6->aidevschool==0.1.0)
+2026-09-28T22:27:03.3215332Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2026-09-28T22:27:03.4206574Z Collecting charset_normalizer<4,>=2 (from requests<3.0,>=2.7->posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.4243305Z   Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (45 kB)
+2026-09-28T22:27:03.4397109Z Collecting idna<4,>=2.5 (from requests<3.0,>=2.7->posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.4433687Z   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+2026-09-28T22:27:03.4620099Z Collecting urllib3<3,>=1.26 (from requests<3.0,>=2.7->posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.4654648Z   Downloading urllib3-2.8.0-py3-none-any.whl.metadata (7.4 kB)
+2026-09-28T22:27:03.4808889Z Collecting certifi>=2023.5.7 (from requests<3.0,>=2.7->posthog<8,>=7->aidevschool==0.1.0)
+2026-09-28T22:27:03.4841182Z   Downloading certifi-2026.7.22-py3-none-any.whl.metadata (2.5 kB)
+2026-09-28T22:27:03.4948126Z Downloading coverage-7.16.2-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (258 kB)
+2026-09-28T22:27:03.5041073Z Downloading fsrs-6.3.2-py3-none-any.whl (22 kB)
+2026-09-28T22:27:03.5096390Z Downloading posthog-7.60.1-py3-none-any.whl (805 kB)
+2026-09-28T22:27:03.5199168Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.0/806.0 kB 98.1 MB/s  0:00:00
+2026-09-28T22:27:03.5234156Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2026-09-28T22:27:03.5301298Z Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2026-09-28T22:27:03.5350795Z Downloading python_dotenv-1.2.3-py3-none-any.whl (22 kB)
+2026-09-28T22:27:03.5401031Z Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+2026-09-28T22:27:03.5476002Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 102.6 MB/s  0:00:00
+2026-09-28T22:27:03.5509911Z Downloading radon-6.0.1-py2.py3-none-any.whl (52 kB)
+2026-09-28T22:27:03.5561292Z Downloading mando-0.7.1-py2.py3-none-any.whl (28 kB)
+2026-09-28T22:27:03.5610430Z Downloading requests-2.34.2-py3-none-any.whl (73 kB)
+2026-09-28T22:27:03.5663770Z Downloading charset_normalizer-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (248 kB)
+2026-09-28T22:27:03.5717363Z Downloading idna-3.20-py3-none-any.whl (69 kB)
+2026-09-28T22:27:03.5768896Z Downloading urllib3-2.8.0-py3-none-any.whl (135 kB)
+2026-09-28T22:27:03.5820182Z Downloading backoff-2.2.1-py3-none-any.whl (15 kB)
+2026-09-28T22:27:03.5868894Z Downloading certifi-2026.7.22-py3-none-any.whl (136 kB)
+2026-09-28T22:27:03.5925414Z Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2026-09-28T22:27:03.5973304Z Downloading distro-1.9.0-py3-none-any.whl (20 kB)
+2026-09-28T22:27:03.6020123Z Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+2026-09-28T22:27:03.6067727Z Downloading packaging-26.3-py3-none-any.whl (129 kB)
+2026-09-28T22:27:03.6123747Z Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+2026-09-28T22:27:03.6217325Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 140.5 MB/s  0:00:00
+2026-09-28T22:27:03.6250058Z Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-09-28T22:27:03.6298805Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2026-09-28T22:27:03.6877563Z Building wheels for collected packages: aidevschool
+2026-09-28T22:27:03.6885867Z   Building editable for aidevschool (pyproject.toml): started
+2026-09-28T22:27:03.8946835Z   Building editable for aidevschool (pyproject.toml): finished with status 'done'
+2026-09-28T22:27:03.8952353Z   Created wheel for aidevschool: filename=aidevschool-0.1.0-0.editable-py3-none-any.whl size=3341 sha256=9b50330a8d104a53e9ad5c8b9b86d33a9a90a51641ecd74ab65c5c00e4a1be9b
+2026-09-28T22:27:03.8954292Z   Stored in directory: /tmp/pip-ephem-wheel-cache-qi3h4_er/wheels/7e/d6/20/c90c1d142806c5c531782d55007badf4c7c542813b3f38a97c
+2026-09-28T22:27:03.8969265Z Successfully built aidevschool
+2026-09-28T22:27:03.9414102Z Installing collected packages: urllib3, typing-extensions, six, pyyaml, python-dotenv, pygments, pluggy, packaging, iniconfig, idna, distro, coverage, colorama, charset_normalizer, certifi, backoff, requests, pytest, mando, fsrs, radon, posthog, aidevschool
+2026-09-28T22:27:06.9971149Z 
+2026-09-28T22:27:06.9995858Z Successfully installed aidevschool-0.1.0 backoff-2.2.1 certifi-2026.7.22 charset_normalizer-3.5.1 colorama-0.4.6 coverage-7.16.2 distro-1.9.0 fsrs-6.3.2 idna-3.20 iniconfig-2.3.0 mando-0.7.1 packaging-26.3 pluggy-1.6.0 posthog-7.60.1 pygments-2.21.0 pytest-8.4.2 python-dotenv-1.2.3 pyyaml-6.0.3 radon-6.0.1 requests-2.34.2 six-1.17.0 typing-extensions-4.16.0 urllib3-2.8.0
+2026-09-28T22:27:07.0898269Z ##[group]Run mkdir -p artifacts/product-readiness
+2026-09-28T22:27:07.0898716Z [36;1mmkdir -p artifacts/product-readiness[0m
+2026-09-28T22:27:07.0967961Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:07.0968229Z env:
+2026-09-28T22:27:07.0968509Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.0968965Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:07.0969404Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.0969792Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.0970169Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.0970549Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:07.0970888Z ##[endgroup]
+2026-09-28T22:27:07.1154082Z ##[group]Run actions/download-artifact@v4
+2026-09-28T22:27:07.1154390Z with:
+2026-09-28T22:27:07.1154684Z   pattern: *-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a
+2026-09-28T22:27:07.1155071Z   path: artifacts/product-readiness
+2026-09-28T22:27:07.1155344Z   merge-multiple: true
+2026-09-28T22:27:07.1155596Z   repository: dandpb/aidevschool
+2026-09-28T22:27:07.1155846Z   run-id: 36491949848
+2026-09-28T22:27:07.1156059Z env:
+2026-09-28T22:27:07.1156318Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.1156753Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:07.1157176Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.1157562Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.1157935Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.1158522Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:07.1158881Z ##[endgroup]
+2026-09-28T22:27:07.2754816Z (node:2323) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-28T22:27:07.2755689Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-28T22:27:07.3941493Z Found 7 artifact(s)
+2026-09-28T22:27:07.3942835Z Filtering artifacts by pattern '*-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a'
+2026-09-28T22:27:07.3984367Z Preparing to download the following artifacts:
+2026-09-28T22:27:07.3986242Z - dojotoday-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11002760100, Size: 1352, Expected Digest: sha256:ccadb8aa2ac8c4a16580a91fd8601eb9cf6539e9b4879d53288d10fd35ec5845)
+2026-09-28T22:27:07.3989198Z - codexdojo-os-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11002665676, Size: 6143, Expected Digest: sha256:637a469316dbcad57c802d432853a8ca1474c689846c08cba83f5a99aab801a2)
+2026-09-28T22:27:07.3991984Z - literacydojo-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11002560117, Size: 6670, Expected Digest: sha256:5f584ec471759b347221687b976d0a2e528022c32f92570b51a13dd05b2e462f)
+2026-09-28T22:27:07.3994860Z - minitown-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11002030400, Size: 629, Expected Digest: sha256:e6d2b53ed328e054eb267e852e9c638eeb32a9efe93cebe965be529a5fa681ab)
+2026-09-28T22:27:07.3997374Z - pixeldojo-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11001945324, Size: 1375, Expected Digest: sha256:6d145331e7b97dffa62f0262fcc03e75048fbc70a4964426ef1cc0d0fe105c00)
+2026-09-28T22:27:07.3999929Z - voxeldojo-readiness-a02b18334fda0336ceccfd4f9d2529fb3351752a (ID: 11001566456, Size: 1344, Expected Digest: sha256:1ff1e15c0d8db4c1c622e29516b03928c008b407b93902a79cb1e697c2504fef)
+2026-09-28T22:27:07.5430187Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-80d2823b-59a8-5cdc-a4aa-05ee0388b326/artifacts/f6d723d1167ad406cdd97cd649eda5eee07a2fabf3dac2b158ffd21327b1217b.zip
+2026-09-28T22:27:07.5432051Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.5918639Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-829336fd-30b8-5a4f-bd1c-cbd756715568/artifacts/d8c4b2cd5fcf075ac5e1de3954e4fe59be76943c76e83d7af3d06e778586e66a.zip
+2026-09-28T22:27:07.5920097Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.5995718Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-7a52937c-c724-55f3-b581-f542995cfabe/artifacts/95c76facf31215a940c236ee21da9c3f4dfce965a98d3a66259e025998548c04.zip
+2026-09-28T22:27:07.5997430Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.6043771Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-bd2674ce-98cd-5603-b61a-3ef1e34381c6/artifacts/b3e9a9dcbd4798c5bb3b5792bc899b5f870ddae0ed9e4839c0b628b1e18f689f.zip
+2026-09-28T22:27:07.6046422Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.6239048Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-7a0a800d-ab48-55bb-939e-e5e83a3d36b1/artifacts/c19e615a2307e335de7b7684191c3a7b310d553fc406cc3a7e6a47ca43dbbf2f.zip
+2026-09-28T22:27:07.6241120Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.6386219Z (node:2323) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-09-28T22:27:07.6426651Z SHA256 digest of downloaded artifact is ccadb8aa2ac8c4a16580a91fd8601eb9cf6539e9b4879d53288d10fd35ec5845
+2026-09-28T22:27:07.6427595Z Artifact download completed successfully.
+2026-09-28T22:27:07.6607937Z Redirecting to blob download url: https://productionresultssa14.blob.core.windows.net/actions-results/c807fdbe-98f0-46ae-9750-66c4eacd4d06/workflow-job-run-215b855a-c9e6-5b65-94cc-19fa2b1d786c/artifacts/47aedbf92edb3432c975b235e208d84f719ff27c29a25f987048c5142ff90c2b.zip
+2026-09-28T22:27:07.6610257Z Starting download of artifact to: /home/runner/work/aidevschool/aidevschool/artifacts/product-readiness
+2026-09-28T22:27:07.6737617Z SHA256 digest of downloaded artifact is e6d2b53ed328e054eb267e852e9c638eeb32a9efe93cebe965be529a5fa681ab
+2026-09-28T22:27:07.6738433Z Artifact download completed successfully.
+2026-09-28T22:27:07.6832002Z SHA256 digest of downloaded artifact is 5f584ec471759b347221687b976d0a2e528022c32f92570b51a13dd05b2e462f
+2026-09-28T22:27:07.6836486Z Artifact download completed successfully.
+2026-09-28T22:27:07.6864685Z SHA256 digest of downloaded artifact is 6d145331e7b97dffa62f0262fcc03e75048fbc70a4964426ef1cc0d0fe105c00
+2026-09-28T22:27:07.6992286Z Artifact download completed successfully.
+2026-09-28T22:27:07.6993424Z SHA256 digest of downloaded artifact is 1ff1e15c0d8db4c1c622e29516b03928c008b407b93902a79cb1e697c2504fef
+2026-09-28T22:27:07.6994019Z Artifact download completed successfully.
+2026-09-28T22:27:07.7391184Z SHA256 digest of downloaded artifact is 637a469316dbcad57c802d432853a8ca1474c689846c08cba83f5a99aab801a2
+2026-09-28T22:27:07.7392139Z Artifact download completed successfully.
+2026-09-28T22:27:07.7392699Z Total of 6 artifact(s) downloaded
+2026-09-28T22:27:07.7398066Z Download artifact has finished successfully
+2026-09-28T22:27:07.7527430Z ##[group]Run count=$(find artifacts/product-readiness -type f -name '*.json' ! -name 'product-readiness-report.json' | wc -l)
+2026-09-28T22:27:07.7528383Z [36;1mcount=$(find artifacts/product-readiness -type f -name '*.json' ! -name 'product-readiness-report.json' | wc -l)[0m
+2026-09-28T22:27:07.7528996Z [36;1mif [ "$count" -eq 0 ]; then[0m
+2026-09-28T22:27:07.7529312Z [36;1m  failed=""[0m
+2026-09-28T22:27:07.7529618Z [36;1m  for pair in "literacydojo=success" \[0m
+2026-09-28T22:27:07.7529982Z [36;1m              "codexdojo-os=success" \[0m
+2026-09-28T22:27:07.7530316Z [36;1m              "dojotoday=success" \[0m
+2026-09-28T22:27:07.7530657Z [36;1m              "pixeldojo=success" \[0m
+2026-09-28T22:27:07.7530976Z [36;1m              "voxeldojo=success" \[0m
+2026-09-28T22:27:07.7531314Z [36;1m              "minitown=success"; do[0m
+2026-09-28T22:27:07.7531681Z [36;1m    job="${pair%%=*}"; result="${pair##*=}"[0m
+2026-09-28T22:27:07.7532175Z [36;1m    if [ "$result" != "success" ]; then failed="$failed $job=$result"; fi[0m
+2026-09-28T22:27:07.7532600Z [36;1m  done[0m
+2026-09-28T22:27:07.7533773Z [36;1m  echo "::error title=PRODUCER-REPORTS-MISSING::zero producer readiness reports downloaded; non-success producer jobs:${failed:- none}. NOT a stale-claims window: the readiness re-grant factory must not propose for this run."[0m
+2026-09-28T22:27:07.7534699Z [36;1m  exit 1[0m
+2026-09-28T22:27:07.7534944Z [36;1mfi[0m
+2026-09-28T22:27:07.7535273Z [36;1mecho "producer readiness report files present: $count"[0m
+2026-09-28T22:27:07.7604208Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:07.7604510Z env:
+2026-09-28T22:27:07.7604837Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7605338Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:07.7605812Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7606239Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7606673Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7607269Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:07.7607648Z ##[endgroup]
+2026-09-28T22:27:07.7718297Z producer readiness report files present: 25
+2026-09-28T22:27:07.7746780Z ##[group]Run python3 docs/product-readiness/tools/cli.py aggregate --reports artifacts/product-readiness --output artifacts/product-readiness/product-readiness-report.json
+2026-09-28T22:27:07.7748016Z [36;1mpython3 docs/product-readiness/tools/cli.py aggregate --reports artifacts/product-readiness --output artifacts/product-readiness/product-readiness-report.json[0m
+2026-09-28T22:27:07.7809899Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:07.7810201Z env:
+2026-09-28T22:27:07.7810519Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7811007Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:07.7811488Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7811925Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7812372Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:07.7812832Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:07.7813493Z ##[endgroup]
+2026-09-28T22:27:10.3052722Z Aggregated 24 producer result(s) into artifacts/product-readiness/product-readiness-report.json.
+2026-09-28T22:27:10.3053930Z The aggregate contains facts only; an independent assessor must evaluate it.
+2026-09-28T22:27:10.3208398Z ##[group]Run python3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness
+2026-09-28T22:27:10.3209547Z [36;1mpython3 docs/product-readiness/tools/cli.py check --reports artifacts/product-readiness[0m
+2026-09-28T22:27:10.3284942Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:10.3285253Z env:
+2026-09-28T22:27:10.3285577Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:10.3286083Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:10.3286578Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:10.3287022Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:10.3287455Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:10.3287882Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:10.3288251Z ##[endgroup]
+2026-09-28T22:27:12.2383914Z Readiness candidate evaluated without writes:
+2026-09-28T22:27:12.2385700Z - dojotoday-daily-guidance: blocked; reasons=scenario dojotoday-active-unit-guidance lacks independent evidence; missing promoted result for dojotoday-read-only-boundary; scenario dojotoday-returning-next-day lacks independent evidence
+2026-09-28T22:27:12.2388586Z - literacy-standalone-corridor-mod01-03: blocked; reasons=scenario literacy-corridor-happy-path lacks independent evidence; scenario literacy-corridor-gate-retry lacks independent evidence; scenario literacy-corridor-review-window lacks independent evidence
+2026-09-28T22:27:12.2391305Z - literacy-standalone-first-lesson: blocked; reasons=scenario literacy-happy-path lacks independent evidence; scenario literacy-retry lacks independent evidence; scenario literacy-resume lacks independent evidence
+2026-09-28T22:27:12.2393174Z - minitown-explore-only: blocked; reasons=scenario minitown-explore-only lacks independent evidence
+2026-09-28T22:27:12.2395055Z - os-literacy-guided-mission: blocked; reasons=scenario os-literacy-hosted-mission lacks independent evidence; scenario os-verification-recovery lacks independent evidence; scenario os-literacy-returning-device lacks independent evidence
+2026-09-28T22:27:12.2397527Z - os-returning-learner: blocked; reasons=scenario os-onboarding-track-choice lacks independent evidence; scenario os-returning-recovery lacks independent evidence; scenario os-returning-device lacks independent evidence
+2026-09-28T22:27:12.2400053Z - os-voxel-guided-missions: blocked; reasons=scenario os-voxel-hosted-missions lacks independent evidence; scenario os-renderer-accessibility-recovery lacks independent evidence; scenario os-voxel-returning-device lacks independent evidence
+2026-09-28T22:27:12.2403659Z - pixelquest-evidence-encounter: blocked; reasons=scenario pixelquest-encounter-evidence lacks independent evidence; missing promoted result for pixelquest-evidence-recovery; scenario pixelquest-returning-evidence-handoff lacks independent evidence
+2026-09-28T22:27:12.2406810Z - voxel-standalone-learning-loop: blocked; reasons=scenario voxel-standalone-loop lacks independent evidence; missing promoted result for voxel-accessible-renderer; scenario voxel-standalone-return-reentry lacks independent evidence
+2026-09-28T22:27:12.2408740Z Product-readiness sources and generated matrix are valid and in sync.
+2026-09-28T22:27:12.2537395Z ##[group]Run python3 docs/product-readiness/tools/cli.py check --require-current
+2026-09-28T22:27:12.2538030Z [36;1mpython3 docs/product-readiness/tools/cli.py check --require-current[0m
+2026-09-28T22:27:12.2606267Z shell: /usr/bin/bash -e {0}
+2026-09-28T22:27:12.2606569Z env:
+2026-09-28T22:27:12.2606893Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:12.2607383Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:12.2607860Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:12.2608290Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:12.2608709Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:12.2609140Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:12.2609514Z ##[endgroup]
+2026-09-28T22:27:13.2321392Z STALE-WINDOW: os-voxel-guided-missions: recorded pass/customer-ready vs current stale/None; reasons=scenario os-voxel-hosted-missions source fingerprint is stale; scenario os-renderer-accessibility-recovery source fingerprint is stale; scenario os-voxel-returning-device source fingerprint is stale
+2026-09-28T22:27:13.2452431Z ##[error]Process completed with exit code 1.
+2026-09-28T22:27:13.2560511Z ##[group]Run actions/upload-artifact@v4
+2026-09-28T22:27:13.2560856Z with:
+2026-09-28T22:27:13.2561254Z   name: product-readiness-report-a02b18334fda0336ceccfd4f9d2529fb3351752a
+2026-09-28T22:27:13.2561843Z   path: artifacts/product-readiness/product-readiness-report.json
+2026-09-28T22:27:13.2562259Z   if-no-files-found: warn
+2026-09-28T22:27:13.2562544Z   compression-level: 6
+2026-09-28T22:27:13.2562809Z   overwrite: false
+2026-09-28T22:27:13.2563326Z   include-hidden-files: false
+2026-09-28T22:27:13.2563618Z env:
+2026-09-28T22:27:13.2563918Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:13.2564401Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-09-28T22:27:13.2564866Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:13.2565286Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:13.2565698Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-09-28T22:27:13.2566162Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-09-28T22:27:13.2566530Z ##[endgroup]
+2026-09-28T22:27:13.4228130Z (node:2353) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-09-28T22:27:13.4229082Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-09-28T22:27:13.4275078Z With the provided path, there will be 1 file uploaded
+2026-09-28T22:27:13.4280609Z Artifact name is valid!
+2026-09-28T22:27:13.4281335Z Root directory input is valid!
+2026-09-28T22:27:13.6580895Z Beginning upload of artifact content to blob storage
+2026-09-28T22:27:13.6765257Z (node:2353) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-09-28T22:27:13.7738766Z Uploaded bytes 4052
+2026-09-28T22:27:13.8046608Z Finished uploading artifact content to blob storage!
+2026-09-28T22:27:13.8047886Z SHA256 digest of uploaded artifact zip is 82d63ab5cfb6485425b8325cf08b8bf73bd545656c28d1c9a795d23683689832
+2026-09-28T22:27:13.8049141Z Finalizing artifact upload
+2026-09-28T22:27:13.9994473Z Artifact product-readiness-report-a02b18334fda0336ceccfd4f9d2529fb3351752a.zip successfully finalized. Artifact ID 11002710770
+2026-09-28T22:27:13.9995872Z Artifact product-readiness-report-a02b18334fda0336ceccfd4f9d2529fb3351752a has been successfully uploaded! Final size is 4052 bytes. Artifact ID is 11002710770
+2026-09-28T22:27:14.0001119Z Artifact download URL: https://github.com/dandpb/aidevschool/actions/runs/36491949848/artifacts/11002710770
+2026-09-28T22:27:14.0197132Z Post job cleanup.
+2026-09-28T22:27:14.1035871Z [command]/usr/bin/git version
+2026-09-28T22:27:14.1081896Z git version 2.55.0
+2026-09-28T22:27:14.1117953Z Temporarily overriding HOME='/home/runner/work/_temp/65370c62-bfee-43a9-af45-e090fe9db30e' before making global git config changes
+2026-09-28T22:27:14.1119407Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-28T22:27:14.1123527Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aidevschool/aidevschool
+2026-09-28T22:27:14.1162301Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-28T22:27:14.1197744Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-28T22:27:14.1468122Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-28T22:27:14.1497217Z http.https://github.com/.extraheader
+2026-09-28T22:27:14.1508810Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-09-28T22:27:14.1552054Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-28T22:27:14.1829059Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-28T22:27:14.1871940Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-28T22:27:14.2304975Z Cleaning up orphan processes
+2026-09-28T22:27:14.2586717Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/download-artifact@v4, actions/setup-python@v5, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
