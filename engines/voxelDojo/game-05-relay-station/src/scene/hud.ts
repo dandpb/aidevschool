@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import { PALETTE } from "../../../shared/palette"
 import type { GameController, GameState } from "../game/controller"
 
@@ -86,8 +87,8 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
     row.dataset.testid = `station-${s.id}`
     const tint = s.channel === state.broadcastChannel && connected ? "●" : connected ? "○" : "✕"
     row.innerHTML =
-      `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span> ` +
-      `${s.id} ${tint} ${s.channel || "—"}`
+      `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span> ` +
+      `${escapeHtml(s.id)} ${escapeHtml(tint)} ${escapeHtml(s.channel || "—")}`
     row.addEventListener("click", () => {
       if (state.level.id === "L4") {
         game.reconnect(s.id)
