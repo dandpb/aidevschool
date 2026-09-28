@@ -1,0 +1,37 @@
+# Producer run receipt — re-grant v101 QA phase (AID-3245, QA Lead ca6a3f95)
+# Stale window being cured (fail-closed main lane, verifiable first-hand):
+#
+# CI push run 36415576879 (https://github.com/dandpb/aidevschool/actions/runs/36415576879)
+#   head_sha ebb62ffc7a52e47b425abd25d00371845fcb24be (main tip at the time, merge #601)
+#   event push/main, conclusion FAILURE — job `product readiness (claims)` red:
+#   1 STALE-WINDOW group (dojotoday-daily-guidance, 3 scenarios fingerprint-stale;
+#   gate output first-hand reproduced at this branch tree in
+#   logs/claims-job-36415576879-red-gate.txt — check --require-current rc=1, identical reasons).
+#
+# Main-tip check-runs @eacd3e14 (current main tip at QA time, logs/main-tip-eacd3e14-check-runs.json):
+#   46 check-runs = 44 success / 1 skipped / 1 failure — only `product readiness (claims)` red.
+#
+# Readiness artifacts downloaded from run 36415576879 (7 artifacts, 6 engine + product-readiness-report):
+#   scenario receipts archived in logs/ci-run-36415576879/ (24 files) — byte/key-identical to the
+#   factory snapshot committed in this PR (24/24: scenarioId/runId/gitSha/executedAt/executor/
+#   outcome/fingerprints/assertions/artifacts/gaps all equal).
+#
+# Digest-identity proof: producer reports regenerated at branch HEAD 01696f77 via
+# `cli.py producer-report` for the 24 playwright-bearing scenarios are IDENTICAL to the CI
+# receipts (24/24 — logs/regen-identity.log). No scenario sourcePath file changed between
+# ebb62ffc and this branch tree (git diff ebb62ffc..HEAD over sourcePaths = empty): merges
+# #551 (zai), #550/#553 (docs), #602 (analytics) are all outside readiness fingerprints.
+#
+# Fingerprint drift cause since anchor v99 (c7b996cb, PR #597): commit 068287ff (PR #601
+# palette) — additive aria-hidden/aria-label/role=progressbar accessibility attributes in
+# engines/dojoToday/src/main.ts; boundary strings main.ts:79/277 unchanged verbatim
+# (logs/first-hand-checks.log).
+#
+# QA-phase executables (first-hand, this tree): `pytest learner/substrate/tests` =
+# 221 passed, 1 skipped; `python3 engines/dojoToday/tools/selfcheck.py` = OK —
+# logs/substrate-selfcheck.log.
+#
+# Factory proposal PR #603 (AID-1357, workflow run 36416320940; manifest pending-observation,
+# label regrant-pending-observation, born with Provenance trailer per AID-3127) is
+# producer-only — merging heals nothing (AID-2202); this bundle completes the independent
+# observation (25 scenarios / 28 non-playwright assertions, citations re-verified 53/53).
