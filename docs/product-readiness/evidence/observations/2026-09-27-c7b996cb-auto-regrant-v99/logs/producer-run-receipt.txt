@@ -1,0 +1,40 @@
+# Producer run receipt — re-grant v99 QA phase (AID-3121, QA Lead ca6a3f95)
+# Stale window being cured (fail-closed main lane, verifiable first-hand):
+#
+# CI push run 36325382572 (https://github.com/dandpb/aidevschool/actions/runs/36325382572)
+#   head_sha f9686b0b0a872037b76df5342ecd94912d2a9dc7 (main tip, merge #596)
+#   event push/main, started 2026-09-27T14:17:36Z, completed 14:23:05Z, conclusion FAILURE
+#   job `product readiness (claims)` FAILURE 14:22:43Z-14:23:0xZ (the stale window:
+#   9 use cases STALE-WINDOW, gate output first-hand reproduced at this branch tree in
+#   logs/claims-job-36325382572-red-gate.txt — check --require-current rc=1, identical reasons)
+#
+# Main-tip check-runs @f9686b0b (logs/main-tip-f9686b0b-check-runs.json): 30 check-runs
+#   = 27 success / 1 skipped / 2 failure — only `product readiness (claims)` red among the
+#   lane jobs (the countersign-gate failure stamped 15:39:05Z comes from the factory replay
+#   branch context, not the push run; previous main tip 734deeca already showed the claims
+#   red — window opened before #596, non-flap by design, QA verdict AID-3114 comment 4f78f872).
+#   Green by-name first-hand: 'Python (learner + curriculum shared)', 'literacyDojo (TS + content)',
+#   'codexdojo-os (TS)', 'dojoToday (TS + substrate)', 'curriculum Node (18 projects)'.
+#
+# Readiness artifacts downloaded from run 36325382572 (byte-fact-identical to the factory
+# snapshot committed in this PR, 24/24 — keys scenarioId/runId/gitSha/executedAt/executor/
+# outcome/fingerprints/assertions/artifacts/gaps all equal):
+#   literacydojo-readiness-f9686b0b… (artifact id 10933803719), dojotoday-readiness-… (10933981842),
+#   codexdojo-os-readiness-… (10933734060), minitown-readiness-… (10933644040),
+#   pixeldojo-readiness-… (10934200256), voxeldojo-readiness-… (10933269800).
+#   Scenario receipts archived in logs/ci-run-36325382572/ (24 files).
+#
+# Digest-identity proof: producer reports regenerated at branch HEAD c7b996cb via
+# `cli.py producer-report` for the 24 playwright-bearing scenarios are IDENTICAL to the CI
+# receipts (24/24: artifact sha256 sets, sourceFingerprint, manualFingerprint, assertion
+# ids/outcomes) — logs/regen-identity.log — covered paths are byte-identical between the
+# CI tree f9686b0b and this branch tree.
+#
+# QA-phase executables (first-hand, this tree): `pytest learner/substrate/tests` =
+# 221 passed, 1 skipped (11.4s); `python3 engines/dojoToday/tools/selfcheck.py` = OK
+# (track + game_dir) — logs/substrate-selfcheck.log.
+#
+# Factory proposal PR #597 (AID-1357 replay of run 36325382572, workflow_dispatch
+# 36330340984; manifest pending-observation, label regrant-pending-observation) is
+# producer-only — merging heals nothing (AID-2202); this bundle completes the independent
+# observation for the 9 stale groups (25 scenarios / 28 non-playwright assertions).

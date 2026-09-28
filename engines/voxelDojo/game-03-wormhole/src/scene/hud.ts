@@ -1,3 +1,4 @@
+import { escapeHtml } from "../../../shared/escapeHtml"
 import { PALETTE } from "../../../shared/palette"
 import { type GameController, type GameState, RESOLUTION_OPTIONS } from "../game/controller"
 
@@ -53,14 +54,14 @@ function renderStatus(node: HTMLElement, state: GameState): void {
     node.textContent = "Critério ainda não atendido; tente novamente."
   else if (state.level.id === "L1") {
     const url = state.urls[state.pendingIndex] ?? ""
-    node.innerHTML = `URL ${state.pendingIndex + 1} de ${state.urls.length}: <span class="code">${url}</span> — digite o código base62 e envie.`
+    node.innerHTML = `URL ${escapeHtml(state.pendingIndex + 1)} de ${escapeHtml(state.urls.length)}: <span class="code">${escapeHtml(url)}</span> — digite o código base62 e envie.`
   } else if (state.level.id === "L2") {
-    node.innerHTML = `Código ${state.redirectTotal + 1} de ${state.urls.length}: preveja em qual planeta ele sai.`
+    node.innerHTML = `Código ${escapeHtml(state.redirectTotal + 1)} de ${escapeHtml(state.urls.length)}: preveja em qual planeta ele sai.`
   } else if (state.level.id === "L3") {
     const url = state.urls[state.pendingIndex] ?? ""
-    node.innerHTML = `URL ${state.pendingIndex + 1} de ${state.urls.length}: <span class="code">${url}</span> — vai colidir com um código existente?`
+    node.innerHTML = `URL ${escapeHtml(state.pendingIndex + 1)} de ${escapeHtml(state.urls.length)}: <span class="code">${escapeHtml(url)}</span> — vai colidir com um código existente?`
   } else {
-    node.innerHTML = `Colisão no código <span class="code">${state.collisionCode ?? "----"}</span> — escolha a correção.`
+    node.innerHTML = `Colisão no código <span class="code">${escapeHtml(state.collisionCode ?? "----")}</span> — escolha a correção.`
   }
 }
 
@@ -144,7 +145,7 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   const palette = document.createElement("p")
   state.urls.slice(0, 6).forEach((url, i) => {
     const span = document.createElement("span")
-    span.innerHTML = `<span class="swatch" style="background:${PALETTE[i % PALETTE.length]}"></span>${url.slice(8, 28)} `
+    span.innerHTML = `<span class="swatch" style="background:${escapeHtml(PALETTE[i % PALETTE.length])}"></span>${escapeHtml(url.slice(8, 28))} `
     palette.append(span)
   })
   node.append(palette)

@@ -23,6 +23,14 @@ name: Readiness re-grant factory
 #   predate regrant.py.
 # The target run must be a push run of CI on main (failed for replay,
 # successful for fixture) and its SHA must carry the re-grant tooling.
+#
+# AID-3127 (producer at origin): the PR body ends with the canonical
+# producer trailer `Provenance: agent=readiness-regrant-factory …` OUTSIDE
+# code fences, so countersign-gate §5 (AID-2768) attributes the producer from
+# the body (earliest trailer, body first) the instant the PR exists — never
+# 'producer unattributed' (gap AID-3121/PR #597, manual unblock AID-3124).
+# §5 is textual: no agent credential is needed for attribution; the watchdog
+# close+reopen stays CI-trigger-only (B1), not load-bearing for §5.
 
 on:
   workflow_run:
@@ -319,6 +327,16 @@ jobs:
             echo "agent credential to fire \`pull_request[reopened]\` and let required checks"
             echo "report. If no checks report after 45 minutes, the watchdog closes it with a"
             echo "§recusa reason to free the dedupe label."
+            echo
+            echo "### Producer registration (AID-3127)"
+            echo
+            echo "The trailer below registers the PRODUCER agent at origin: countersign-gate"
+            echo "§5 (AID-2768) attributes the producer by the earliest 'Provenance:' trailer"
+            echo "in the conversation, PR body first — so a factory PR is never born"
+            echo "'producer unattributed' (gap AID-3121/PR #597, manual unblock AID-3124)."
+            echo "The QA countersign must come from a distinct agent (e.g. qa-lead)."
+            echo
+            echo "Provenance: agent=readiness-regrant-factory task=AID-1357 run=gha-${{ github.run_id }} session=gha-${{ github.run_id }}.attempt${{ github.run_attempt }}"
           } > pr-body.md
       - name: commit the producer snapshot
         if: steps.gate.outputs.needed == 'true' && steps.dedupe.outputs.skip != 'true'

@@ -23,7 +23,7 @@ export function SupportCta({ compact = false }: { compact?: boolean }) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              WhatsApp
+              WhatsApp <span className="sr-only">(abre em nova aba)</span>
             </a>
             {" · "}
           </>
