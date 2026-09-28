@@ -139,7 +139,12 @@ function renderLegend(node: HTMLElement, state: GameState, game: GameController)
   if (state.level.id === "L3" && state.phase === "predicting") {
     const hint = document.createElement("p")
     hint.dataset.testid = "collisions-so-far"
-    hint.textContent = `colisões detectadas: ${state.collisionPredictions.filter((p) => p.actualCollision).length}`
+    let count = 0
+    for (let i = 0; i < state.collisionPredictions.length; i++) {
+      const p = state.collisionPredictions[i]
+      if (p?.actualCollision) count++
+    }
+    hint.textContent = `colisões detectadas: ${count}`
     node.append(hint)
   }
   const palette = document.createElement("p")
