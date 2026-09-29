@@ -62,7 +62,7 @@ function streakCard(s: TodaySnapshot["streak"]): string {
       <div class="streak-body">
         <p class="streak-current">${headline}</p>
         <p class="streak-sub">${sub}</p>
-        <p class="streak-freezes" aria-label="Freezes: ${escapeHtml(s.freezesEquipped)} equipados de um máximo de ${escapeHtml(s.freezesMax)}" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
+        <p class="streak-freezes" role="group" aria-label="Freezes: ${escapeHtml(s.freezesEquipped)} equipados de um máximo de ${escapeHtml(s.freezesMax)}" title="Streak freezes absorvem dias perdidos (cap ${escapeHtml(s.freezesMax)})">
           <span aria-hidden="true">Freezes</span> <span class="freeze-pips" aria-hidden="true">${freezes}<span class="freeze-empty">${frozen}</span></span>
         </p>
       </div>
