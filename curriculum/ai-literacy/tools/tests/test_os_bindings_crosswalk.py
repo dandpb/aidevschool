@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 import unittest
 from collections import Counter
@@ -44,12 +45,9 @@ PIXEL_UNIT_ALIASES = {
     "01_rate_limiter": "U0-sonda-rate-limiter-robustness",
     "04_concurrent_task_queue": "U4-task-queue",
 }
-# Defaults de template `U-${project}` que NUNCA foram identidade canônica
-# (U4 é o caso documentado de drift L4: decisão CEO AID-1859 Option A).
-PIXEL_TEMPLATE_DEFAULTS_NEVER_CANONICAL = {
-    "U-01_rate_limiter",
-    "U-04_concurrent_task_queue",
-}
+# Defaults de template `U-${project}` NUNCA são identidade canônica (U4 é o caso
+# documentado de drift L4: decisão CEO AID-1859 Option A) — os sete pares missão->unit
+# do track voxel são pinados inteiros em VOXEL_MISSION_UNITS.
 
 
 def _load_yaml(path: Path):
@@ -170,34 +168,89 @@ class OsBindingsCrosswalkAuditTest(unittest.TestCase):
 
 
 class PixelPackUnitAliasAuditTest(unittest.TestCase):
-    """AID-3457 (complemento 696dc5d3): aliases de unit_id do pack Pixel congelados.
+    """AID-3457 (complemento 696dc5d3 + revisão final 499ec177): aliases congelados.
 
     curriculumPack.ts:666 não segue padrão uniforme (dois aliases explícitos +
-    template ``U-${project}``). O crosswalk de IDs só pode usar os aliases
-    declarados em PIXEL_UNIT_ALIASES; equivalência com nomes Voxel nunca é
-    inferida por semelhança. Regiões ``lab-<project>`` não são unit_ids.
+    template ``U-${project}``). O teste avalia o MAPEAMENTO COMPLETO emitido por
+    projeto: parseia a função ``unitId`` (branches ordenadas + fallback) e a lista
+    de módulos do fonte, computa o unit_id de cada projeto e compara com o mapa
+    explícito esperado — trocar branches U0/U4, editar strings ou mudar o
+    template muda o mapa emitido e falha. Regiões ``lab-<project>`` não são
+    unit_ids. Equivalência com nomes Voxel nunca é inferida por semelhança.
     """
+
+    # Mapa canônico voxel (missionId -> unitId); revisão 499ec177: pin dos
+    # SETE pares completos, não apenas exclusões — adotar um default de
+    # template Pixel (ex. U-02_key_value_store) como id canônico falha aqui.
+    VOXEL_MISSION_UNITS = {
+        "game-02-warehouse": ("02_key_value_store", "U2-key-value-store"),
+        "game-03-wormhole": ("03_url_shortener", "U3-url-shortener"),
+        "game-05-relay-station": ("05_websocket_chat", "U5-websocket-chat"),
+        "game-06-pipeline-plant": ("06_file_upload_pipeline", "U6-file-upload"),
+        "game-07-checkpoint-city": ("07_rest_api_auth", "U7-rest-api-auth"),
+        "game-08-timeline-tower": (
+            "08_event_driven_order_system",
+            "U8-event-driven",
+        ),
+        "game-09-docking-bay": ("09_plugin_system", "U9-plugin-system"),
+    }
+
+    UNIT_ID_BRANCH_RE = (
+        r'if \(module\.project === "([^"]+)"\) \{\s*\n\s*return "([^"]+)"\s*\n\s*\}'
+    )
+    MODULE_PROJECT_RE = re.compile(r'^\s{4}project: "([^"]+)",\s*$', re.MULTILINE)
 
     @classmethod
     def setUpClass(cls):
         cls.pack_source = PIXEL_PACK_PATH.read_text(encoding="utf-8")
         cls.learning_state = _load_yaml(LEARNING_STATE_PATH)
 
-    def test_pixel_pack_unit_id_branches_frozen(self):
-        for project, alias in PIXEL_UNIT_ALIASES.items():
-            self.assertIn(
-                'module.project === "{}"'.format(project),
-                self.pack_source,
-                "pixel pack branch for {} changed".format(project),
+    @classmethod
+    def _emitted_pixel_unit_map(cls):
+        """Computa o unit_id emitido por projeto, avaliando o fonte (fail-closed).
+
+        Parseia o corpo da função ``unitId`` (branches ordenadas + fallback de
+        template) e a lista de projetos dos módulos; qualquer mudança
+        estrutural na função que o parser não reconheça falha o teste.
+        """
+        start = cls.pack_source.index("function unitId(")
+        end = cls.pack_source.index("\n}", start)
+        body = cls.pack_source[start:end]
+        branches = re.findall(cls.UNIT_ID_BRANCH_RE, body)
+        if not branches:
+            cls.fail_test = "unitId branches not parseable — structure changed"
+            raise AssertionError(cls.fail_test)
+        fallback = body[body.rindex("return `"):]
+        match = re.match(r"return `U-\$\{module\.project\}`", fallback)
+        if match is None:
+            raise AssertionError(
+                "unitId fallback template changed or not parseable: "
+                + fallback.splitlines()[0]
             )
-            self.assertIn(
-                'return "{}"'.format(alias),
-                self.pack_source,
-                "pixel pack alias for {} changed".format(project),
-            )
-        self.assertIn(
-            "return `U-${module.project}`", self.pack_source,
-            "pixel pack template default changed",
+        projects = cls.MODULE_PROJECT_RE.findall(cls.pack_source)
+        if len(set(projects)) != len(projects) or not projects:
+            raise AssertionError("pixel pack module list not parseable")
+        emitted = {}
+        for project in projects:
+            for branch_project, alias in branches:
+                if project == branch_project:
+                    emitted[project] = alias
+                    break
+            else:
+                emitted[project] = "U-{}".format(project)
+        return emitted
+
+    def test_pixel_pack_emits_the_complete_unit_id_map(self):
+        emitted = self._emitted_pixel_unit_map()
+        expected = {
+            project: ("U-{}".format(project))
+            for project in emitted
+        }
+        expected.update(PIXEL_UNIT_ALIASES)
+        self.assertEqual(
+            emitted,
+            expected,
+            "pixel pack unitId mapping drifted from the frozen aliases/template",
         )
 
     def test_u0_alias_is_persisted_by_the_substrate(self):
@@ -207,17 +260,17 @@ class PixelPackUnitAliasAuditTest(unittest.TestCase):
             PIXEL_UNIT_ALIASES["01_rate_limiter"], unit_ids
         )
 
-    def test_voxel_bindings_use_canonical_ids_not_pixel_templates(self):
-        unit_ids = {
-            b["curriculum"]["unitId"]
-            for b in _load_yaml(BINDINGS_PATH)["bindings"]
+    def test_voxel_bindings_pin_all_seven_mission_unit_pairs(self):
+        bindings_doc = _load_yaml(BINDINGS_PATH)
+        actual = {
+            b["missionId"]: (
+                b["curriculum"]["projectId"],
+                b["curriculum"]["unitId"],
+            )
+            for b in bindings_doc["bindings"]
             if b["curriculum"]["kind"] == VOXEL_KIND
         }
-        self.assertTrue(unit_ids)
-        self.assertFalse(
-            unit_ids & PIXEL_TEMPLATE_DEFAULTS_NEVER_CANONICAL,
-            "a voxel binding adopted a Pixel template default as canonical id",
-        )
+        self.assertEqual(actual, self.VOXEL_MISSION_UNITS)
 
     def test_no_unit_id_is_region_shaped(self):
         bindings_doc = _load_yaml(BINDINGS_PATH)

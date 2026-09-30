@@ -263,8 +263,14 @@ as lições live:
 - `contentVersion` do track `ai-pratica` **e do track `dev`** e dos runtimes = catálogo canônico
   (⚠ pin `dev` é proteção **de teste** — o runtime hoje não exige igualdade no track dev; ver §2.4);
 - jogos voxel: 7, todos `dev`, `project-voxel-game` (prática opcional);
-- aliases do pack Pixel congelados (§2.7): fixture `PIXEL_UNIT_ALIASES`, branches do fonte,
-  U0 persistido no substrate, defaults de template nunca canônicos, unit_id nunca região-shaped.
+- aliases do pack Pixel (§2.7) avaliados como **mapeamento completo emitido por projeto**:
+  o teste parseia a função `unitId` (branches ordenadas + fallback) e a lista de módulos do
+  fonte, computa o unit_id de cada projeto e compara com o mapa explícito esperado
+  (`PIXEL_UNIT_ALIASES` + template) — trocar branches/strings/template muda o mapa e falha
+  (mutação executada na verificação, §6); U0 persistido no substrate; unit_id nunca região-shaped;
+- **sete pares completos missão→(projeto, unit)** do track voxel pinados (`VOXEL_MISSION_UNITS`)
+  — adotar default de template como id canônico (ex. `U-02_key_value_store`) falha (mutação
+  executada, §6); contraexemplos estáticos da revisão d5910962 eliminados.
 
 Pin negativo do comportamento atual do runtime (distinção revisão PR #611):
 `validate_tracks` **aceita** track `dev` com `contentVersion` divergente (gap documentado §2.4);
@@ -288,3 +294,22 @@ round-trip do read model, e update consciente dos pins de contagem.
   proveniência do produtor (AID-2493) na conversa do PR — corrigido adicionando o trailer
   canônico ao body do PR (identidade real do agente produtor; sem trailer fabricado); novo
   head informado para re-checagem.
+- **Mutações executadas (revisão final 499ec177, contraexemplos estáticos eliminados):**
+  (1) trocar o alias do branch `01_rate_limiter` em `curriculumPack.ts` →
+  `test_pixel_pack_emits_the_complete_unit_id_map` **falha**; (2) `unitId: U2-key-value-store` →
+  `U-02_key_value_store` em `mission-bindings.yaml` → `test_voxel_bindings_pin_all_seven_mission_unit_pairs`
+  **falha**. Ambas as mutações aplicadas e revertidas localmente na verificação (nunca commitadas;
+  worktree limpa em `engines/`).
+
+## 7. Candidatos r2 (consolidação AID-3462 — sem autorização de implementar)
+
+AID-3462 foi cancelada como duplicata recuperável desta frente (histórico preservado). Os
+requisitos CCE r2 (PR #610 @ `f31f21e3`, §12) chegam aqui como **candidatos dependentes** de
+revisão Content Designer + contratos compatíveis + QA — nenhuma implementação automática:
+
+- fontes Dev opcionais: workflows (02–11), curso-simples (M1–M9), SDLCQuest, projetos 01–18;
+- 10 jogos Voxel sem binding (além dos 7 vinculados em §3.3);
+- competency primária/apoio e estados bound/visible/guided/readiness (§2.6);
+- fixtures/SHA dos quizzes 01/02 antes de qualquer reuso.
+
+Delegações seguem pelo pai (AID-3453); sem merge/deploy; sem mudança de progresso do learner.
