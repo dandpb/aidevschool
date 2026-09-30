@@ -1838,7 +1838,8 @@
             "verdicts": {
               "c-deps": "met",
               "c-erros": "met",
-              "c-redact": "not_met",
+              "c-redact-runtime": "met",
+              "c-redact-shape": "not_met",
               "c-schema": "partial",
               "c-types": "partial"
             }
@@ -1848,7 +1849,8 @@
           "deterministicChecks": {
             "c-deps": false,
             "c-erros": false,
-            "c-redact": false,
+            "c-redact-runtime": false,
+            "c-redact-shape": false,
             "c-schema": false,
             "c-types": false
           },
@@ -1871,7 +1873,8 @@
             "verdicts": {
               "c-deps": "not_met",
               "c-erros": "not_met",
-              "c-redact": "partial",
+              "c-redact-runtime": "not_met",
+              "c-redact-shape": "met",
               "c-schema": "met",
               "c-types": "met"
             }
@@ -1881,7 +1884,8 @@
           "deterministicChecks": {
             "c-deps": true,
             "c-erros": true,
-            "c-redact": true,
+            "c-redact-runtime": true,
+            "c-redact-shape": true,
             "c-schema": true,
             "c-types": true
           },
