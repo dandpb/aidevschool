@@ -45,7 +45,11 @@ Change-id: `AID-3453-unify-school` · From: intent/AID-3453-unify-school/intent.
    - `bound` ≠ `visible` ≠ `guided` ≠ `readiness`: binding catálogo ≠
      exposição na jornada ≠ prática recomendada ≠ pronto-para-coorte. A fatia
      CPE introduz estes estados como campos explícitos (opcional, sem quebrar
-     schema v1).
+     schema v1) — **com defaults declarados no schema e testes negativos de
+     compatibilidade ANTES de qualquer consumidor ler os campos** (ex.: YAML
+     legado sem os campos continua válido e resolve para o default; teste
+     provando que consumidor antigo não quebra com arquivo novo e vice-versa)
+     (correção r1.2 da revisão).
    - Gate no-code **reusado, não reconstruído**: toda verificação de unidade
      no-code usa `learner/gate/no_code.py::verify_and_gate_no_code` (linha 66).
     - **Perigo ZAI seed (hard constraint):** `engines/zai-duolingo-like/prisma/seed.ts`

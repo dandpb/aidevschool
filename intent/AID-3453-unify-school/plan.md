@@ -70,7 +70,10 @@ Change-id: `AID-3453-unify-school` · From: intent/AID-3453-unify-school/spec.md
   - `python3 -m learner.substrate` → valida, views regeneradas sem erro
     (bindings existentes 39 preservados; nenhum binding novo sem decisão r2).
   - `python3 -m pytest learner/substrate/tests -q` → verde (inclui teste
-    novo dos campos `competency` P/S e estados de missão).
+    novo dos campos `competency` P/S e estados de missão, **com defaults de
+    schema + testes negativos de compatibilidade antes do consumo** — spec R8
+    r1.2: YAML legado sem os campos continua válido e resolve para defaults;
+    consumidor antigo não quebra com arquivo novo).
   - `cd engines/literacyDojo && npm run gen:content && npm run lint && npm run test && npm run build` → verde.
   - Validate do YAML canônico de `curriculum/ai-literacy/` → válido com
     campos novos.

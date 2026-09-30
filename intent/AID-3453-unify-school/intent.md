@@ -17,8 +17,11 @@ próprias, sem uma matriz única fonte→competência. O mesmo conceito aparece
 duplicado entre famílias (ex.: "IA não é fonte de verdade" existe na literacy
 l02, no MVP C11/C14 e na ZAI "O Lado Negro"), e o seam de unificação existente
 (`engines/codexdojo-os-prototype/config/mission-bindings.yaml` +
-`learner/substrate/mission_catalog.py`) cobre só 24 das 32 lições literacy e
-nenhuma fonte dev além dos 17 jogos voxel.
+`learner/substrate/mission_catalog.py`) cobre **39 bindings** — 23 `ai-pratica`
++ 16 `dev` (9 lições YAML do módulo 05 + 7 jogos voxel) — deixando 10 jogos
+voxel e as fontes dev não-voxel (workflows, curso-simples, sdlc-quest,
+projetos 01–18) sem binding. (Correção r1.2: a r1 dizia "24 das 32 lições +
+17 voxel" — baseline falsa; as 32 lições estão todas bound.)
 
 ## Proposed outcome
 

@@ -56,18 +56,6 @@ precede o exercício com dado real, para ambos os públicos.
 
 | Fonte (issue) | Verificado r2 | Comando/prova |
 | --- | --- | --- |
-<<<<<<< HEAD
-| 32 lições YAML | **8 módulos / 32 lições** [D] | `find curriculum/ai-literacy/modules -name '*.yaml' \| wc -l` → 32 |
-| 24 conceitos/49 textos MVP | **24 conceitos / 49 content_refs** [D] | `len(json.load(...curriculum.json))`=24; soma `content_refs`=49 |
-| 27 lições ZAI | **9 módulos / 27 lições (3 por módulo)** [D, corrigido r1.1 — P1 da revisão] | contagem estrutural (eval do array `CURRICULUM` em Node sobre `src/lib/curriculum-data.ts`, base `1975e2c7`) → módulos 9, lições 27; inclui `por-dentro-da-maquina`, `contexto-e-specs` e `o-protocolo-final`/`caso-real-feature-previsovel`. A contagem "7/19" da r1 era artefato de grep |
-| 9 módulos docs/curso + 10 ciclos workflow_lab | **M1–M9** [D] + workflows 02–11 + exemplo-pratico | `docs/curso-simples/ROADMAP.md`; `ls dev-workflow-claude/workflows/` → 10 dirs + exemplo |
-| 11 workflows Claude | **10 dirs + 1 exemplo pratico** [D] | idem (02-corrigir-bug … 11-aprender-com-a-sessao + release_notes) |
-| SDLCQuest 18 tarefas | **18 missões tipadas** [D] (5 classify, 4 choice, 3 select, 2 order, 1 diff, 1 patch, 1 gate, 1 incident) | histograma de `type:` em `engines/sdlc-quest/src/data.js` `missions` |
-| SDLCQuest 16 TLC | **16 módulos `tlc-*`** [D] | ids `tlc-` em `engines/sdlc-quest/src/tlc-data.js` |
-| SDLCQuest 6 gates | **6 estágios do ciclo Harness Lab** [D, verificado r1.2]: `discover`, `plan`, `implement`, `verify`, `judge`, `package` | `engines/sdlc-quest/src/harness-core.js:73–78` (6 entradas de estágio; `package` = "gate local do Quest"); runner CLI `tools/quest-gate.cjs` executa 10 steps locais (1 contract-shape + 9 comandos) — decomposições distintas, não conflito |
-| 18 projetos | **01–18 + 00_ai_in_practice** [D] | `ls curriculum/` |
-| Labs Pixel/Voxel | **voxel: 17 jogos (game-02…game-18)** [D]; pixel: 1 app pixel-quest | `ls -d engines/voxelDojo/game-*` |
-=======
 | 32 lições YAML | **8 módulos / 32 lições** [D] (mod-05 = l15–l17, l21–l23, l27–l29 · journey `dev`; 23 `ia_pratica` + 9 `dev` = 32) | parse de `curriculum/ai-literacy/catalog.yaml` (PyYAML) |
 | 24 conceitos/49 textos MVP | **24 conceitos / 49 content_refs** [D] | `python3 -c "import json;d=json.load(open('engines/aiDevschoolMvp/aidevschool/curriculum.json'));print(len(d),sum(len(c['content_refs']) for c in d))"` → `24 49` |
 | 27 lições ZAI | **9 módulos / 27 lições / 97 exercícios (3 lições por módulo)** [D] — divergência resolvida: o 27 estava certo | parse do array `CURRICULUM` (bracket-match + eval) em `engines/zai-duolingo-like/src/lib/curriculum-data.ts`, refs `1975e2c7` e `f9f18ed6` idênticos: o-que-e-ia(3), dominando-o-chat(3), o-lado-negro(3), imagens-e-criatividade(3), ia-na-pratica(3), por-dentro-da-maquina(3), contexto-e-specs(3), esquadrao-de-agentes(3), o-protocolo-final(3). Origem do erro r1: `grep -c 'xpReward:'` na árvore antiga `816e3c36` → 19 (18 lições + 1 linha da interface `LessonData`); no ref atual dá 28 (27 + interface) — contagem por linha de grep é método proibido |
@@ -78,7 +66,6 @@ precede o exercício com dado real, para ambos os públicos.
 | SDLCQuest 6 gates | **resolvido com arquivo:linha** [D — r2 CCE, convergente com r1.2]: `engines/sdlc-quest/src/harness-core.js:73-78` = `discover, plan, implement, verify, judge, package` | corroborado por `TEST-REPORT-v1.3.md:7` ("seis gates"), `src/harness-app.js:30` e r1.2; runner CLI `tools/quest-gate.cjs` executa 10 steps locais (1 contract-shape + 9 comandos) — decomposições distintas, não conflito |
 | 18 projetos | **01–18 + 00_ai_in_practice** [D] | `git ls-tree --name-only 1975e2c7 curriculum/` |
 | Labs Pixel/Voxel | **voxel: 17 jogos (game-02…game-18)**; pixel: 1 app pixel-quest [D] | `git ls-tree --name-only 1975e2c7 engines/voxelDojo/ \| grep -c game-` → 17 |
->>>>>>> d6fdd14f (docs(sdlc): AID-3456 — matriz r2 ratificada (ZAI 9m/27l por parse nos refs 1975e2c7/f9f18ed6; bindings 39=23ai+16dev com l15-l29 mod-05 no track dev; 6 gates harness-core.js:73-78; erratas e1-e5) + correções limitadas: gabarito vazado C14/C15 (exemplo de formato = planted), contrato de erro l16 c-erros, sobre-promessa de primeira resposta l16/l27, merge-sem-medo l28; YAMLs re-validados (32 OK, 46 tests) + MVP 48 tests)
 
 Seam atual [D — verificação CCE independente, convergente com r1.1]:
 `engines/codexdojo-os-prototype/config/mission-bindings.yaml` (idêntico nos refs) =
@@ -102,8 +89,9 @@ workflows, curso-simples, sdlc-quest, projetos 01–18 sem binding dev.**
 ## 2. Família: curriculum/ai-literacy (32 lições) — canônica de conceito
 
 Público: cotidiano (mod-05: dev). Prática: lesson + exercício do YAML.
-Evidência: literacy-evidence v1 + verificador independente (ADR-0004) — teto T1,
-capstones l14/caso-real aspiram T2/T3 (§0.1).
+Evidência: literacy-evidence v1 + verificador independente (ADR-0004) — teto T1;
+capstone cotidiano l14 aspira T2/T3 (§0.1). (r1.3: caso-real retirado daqui —
+é exercício DEV, ver §4.)
 
 | Unidades | Competência | Pré-req | Decisão r2 | Rastreabilidade |
 | --- | --- | --- | --- | --- |
@@ -142,7 +130,7 @@ graduados). Evidência: grader local (T1); NÃO é mastery.
 | por-dentro-da-maquina (tokens-contexto-ferramentas, o-harness, prompt-sem-ruido) | P: F1; S: D1 | **fundir preservando** — decisão r2 da CCE (pendência r1.1): é a única introdução cotidiana de tokens/harness; fica como ponte viva para mod-05 dev, conteúdo exclusivo não se perde na fusão [D] | ponte p/ l15 (D1) |
 | contexto-e-specs (context-engineering, prd-e-specs, plan-build-validate) | P: D2; S: F3 | **adiar p/ onda dev** (ratificado): conteúdo dev em engine cotidiano; candidato a prática guiada D2 quando a jornada dev ganhar bindings não-voxel [D] | ↔ curso-simples M1–M3 |
 | esquadrao-de-agentes | P: D6 (lite cotidiano) | **adiar**: única fonte cotidiana de "agentes"; volta na onda D6 [D] | sem equivalente literacy |
-| o-protocolo-final (o-workflow-permanente, caso-real-feature-previsivel, privacidade-dados) | P: F2; S: D4/D7-lite | **manter**; caso-real ratificado como capstone cotidiano candidato a tarefa inédita (R10); privacidade-dados alimenta `melhorar` l12 [D] | ↔ l12/l14 |
+| o-protocolo-final (o-workflow-permanente, caso-real-feature-previsivel, privacidade-dados) | P: F2; S: D4 (caso-real-feature-previsivel) | **manter** [D]; **correção r1.3 (2ª revisão CEO, sobrepõe rotulação r2 neste ponto): `caso-real-feature-previsivel` é exercício DEV de workflow de feature — não é capstone não-técnico nem "tarefa inédita"** (R10 exige tarefa NOVA; reusar exercício existente ≠ transferência inédita); candidato a prática guiada D4 quando a jornada dev ganhar bindings não-voxel; privacidade-dados alimenta `melhorar` l12 [D] | ↔ l12 (privacidade-dados); caso-real ↔ curso-simples M9 |
 
 **Hard constraint (spec R8/R9) [D]:** `engines/zai-duolingo-like/prisma/seed.ts`
 linhas 11–14 executam `deleteMany()` de lessonProgress/lesson/module — proibido em
@@ -182,15 +170,9 @@ não satisfazem RC-4 sozinhos para competências D.**
 
 | Unidades | Competência | Decisão r2 | Rastreabilidade |
 | --- | --- | --- | --- |
-<<<<<<< HEAD
-| 18 missões tipadas | P: D2–D4 por missão (r2 da CCE atribui primária por missão) | manter; **identidade visual da escola única = SDLCQuest v1.3** (decisão da issue) [D-issue] | data.js missions |
-| 16 módulos TLC | P: D2 (discover/design/slice) / D4 (review/severity/carryover/converge) / D6 (verifier/handoff); S: conforme módulo | manter [P] | tlc-data.js |
-| gates do harness | P: D2 (discover/plan) / D3 (implement) / D4 (verify/judge) / D4 (package: "pronto localmente não é deploy") — os **6 estágios do Harness Lab** (`harness-core.js:73–78`) | manter; citação r1.2 acima; **recibos do lab são didáticos/locais** (R10: não são autoridade de produção) [D] | HARNESS-GUIDE.pt-BR.md |
-=======
 | 18 missões tipadas | P: D2–D4 por missão (atribuição primária por missão fica na autoriação de conteúdo pós-r2, junto com `competency:` — gap CPE §12.3) | **manter**; identidade visual = SDLCQuest v1.3 (decisão AID-3453) [D-issue+D] | data.js missions |
 | 4 módulos TLC / 16 tarefas | P: D2 (discover/design/slice) / D4 (review/severity/carryover/converge) / D6 (verifier/handoff); S: conforme módulo | **manter** [D] | tlc-data.js |
 | 6 gates do harness | P: D2 (discover/plan) / D3 (implement) / D4 (verify/judge/package) | **manter** — arquivo:linha citado na §1 (harness-core.js:73-78); recibos do lab são didáticos/locais (R10) [D] | HARNESS-GUIDE.pt-BR.md |
->>>>>>> d6fdd14f (docs(sdlc): AID-3456 — matriz r2 ratificada (ZAI 9m/27l por parse nos refs 1975e2c7/f9f18ed6; bindings 39=23ai+16dev com l15-l29 mod-05 no track dev; 6 gates harness-core.js:73-78; erratas e1-e5) + correções limitadas: gabarito vazado C14/C15 (exemplo de formato = planted), contrato de erro l16 c-erros, sobre-promessa de primeira resposta l16/l27, merge-sem-medo l28; YAMLs re-validados (32 OK, 46 tests) + MVP 48 tests)
 
 ## 8. Família: projetos curriculum/01–18 + 00_ai_in_practice
 
@@ -217,21 +199,6 @@ Evidência: teaching-game-contract + evidence.ndjson.
 
 ## 10. Overlap de teoria F1–F4 — família canônica por conceito [D]
 
-<<<<<<< HEAD
-1. ~~Binding l25–l32 (ai-pratica)~~ **corrigido r1.1**: l25/l26/l30/l31/l32 já
-   estão bound; o gap real de bindings é **voxel game-04, game-10–game-18** —
-   dono CPE (fatia 1, com decisão CCE r2 sobre escopo).
-2. Bindings dev p/ workflows, curso-simples, sdlc-quest, projetos 01–18 — CPE.
-3. Campo `competency:` canônico em catalog.yaml/mission-bindings — CPE (fatia 1).
-4. Fonte cotidiana de agentes (só ZAI esquadrao) — adiado p/ onda D6.
-5. ~~Contagem "6 gates" sdlc-quest~~ **RESOLVIDO r1.2**: são os 6 estágios do
-   ciclo Harness Lab — `discover/plan/implement/verify/judge/package` —
-   `engines/sdlc-quest/src/harness-core.js:73–78` (runner CLI executa 10
-   steps locais: `tools/quest-gate.cjs` steps contract-shape + build/rules/
-   campaign×2/tlc×2/harness×2/i18n). Citação liberada para CPE/UX.
-   (~~origem do "27 ZAI"~~ **resolvido r1.1**: issue certa, 9 módulos/27
-   lições por contagem estrutural; erro era do grep da r1.)
-=======
 1. **Conceito canônico** = `curriculum/ai-literacy` YAML (fonte única de verdade).
 2. **Prática chat-tutor** = aiDevschoolMvp (C01–C24 consomem o canônico).
 3. **Prática jogo** = ZAI (exercícios graduados; teoria migra p/ read model gradualmente).
@@ -268,7 +235,6 @@ validadas" + 46 tests tools; `engines/aiDevschoolMvp`: 48 tests passed.
    inclui atribuição primária por missão sdlc-quest (§7) e por jogo voxel (§9).
 4. Fonte cotidiana de agentes (só ZAI esquadrao) — adiado p/ onda D6 [D].
 5. ~~Contagem "6 gates"~~ **RESOLVIDO r2** (convergente r1.2): harness-core.js:73-78 (§1).
->>>>>>> d6fdd14f (docs(sdlc): AID-3456 — matriz r2 ratificada (ZAI 9m/27l por parse nos refs 1975e2c7/f9f18ed6; bindings 39=23ai+16dev com l15-l29 mod-05 no track dev; 6 gates harness-core.js:73-78; erratas e1-e5) + correções limitadas: gabarito vazado C14/C15 (exemplo de formato = planted), contrato de erro l16 c-erros, sobre-promessa de primeira resposta l16/l27, merge-sem-medo l28; YAMLs re-validados (32 OK, 46 tests) + MVP 48 tests)
 6. Portão mecânico (CI) p/ contrato de release RC-1..RC-6 — follow-up QA.
 7. Estados de missão (`bound`≠`visible`≠`guided`≠`readiness`) como campos explícitos
    (sem sobrescrever schema v1) — dono CPE, revisão UX/QA.
