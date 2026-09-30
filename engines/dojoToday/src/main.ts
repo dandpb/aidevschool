@@ -343,7 +343,10 @@ function wireInteractions(a: TodaySnapshot["activeUnit"]): void {
   if (playBtn && playWrap && playFrame) {
     playBtn.addEventListener("click", () => {
       if (playWrap.hidden) {
-        if (!playFrame.getAttribute("src")) {
+        // AID-3530: fechar define src="about:blank" (truthy); sem tratar esse
+        // sentinela como "sem jogo", a guarda antiga nunca recarregava na reabertura.
+        const currentSrc = playFrame.getAttribute("src");
+        if (!currentSrc || currentSrc === "about:blank") {
           playFrame.setAttribute("src", `/games/${playBtn.dataset.game}/index.html`);
         }
         playWrap.hidden = false;
