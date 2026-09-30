@@ -308,4 +308,21 @@ export const projects: readonly DojoProject[] = [
       "Projects 13-15",
     ],
   },
+  {
+    id: "p19",
+    title: "Sequência Dev Guiada (práticas guiadas pg-*)",
+    phase: "aplicacao_ia",
+    level: 0,
+    language: "Go, Rust, Node",
+    architecture:
+      "Ciclo de debug com assistente (reproduza antes de perguntar), teste/regressão pelo motivo certo, revisão e decisão de aceite, spec planejada, dependências e agentes com controle — competências D1–D7 da jornada IA para Dev",
+    learningGoal:
+      "Executar as práticas guiadas `pg-*` (25–40 min cada) da jornada IA para Dev, ancoradas nas lições `l15–l29`, com fixture local sem rede e rubrica objetiva.",
+    evidence: [
+      "Sequência r1 versionada em `curriculum/sequencia-dev-guiada/SEQUENCIA.md` (ordem U01–U12 por objetivo/pré-requisito, classificação pronto/adaptação/lacuna) + primeira unidade `pg-d01-debug-reproduza/` (enunciado com lição-âncora l27, exemplo trabalhado citado, insumos/fixture Python puro com 5 testes, rubrica v1 com critérios c-*, guia de correção separado) — PR #620 @ `e01d9d42`, revisão Content Designer da AID-3510 approved 2026-09-30. Ids canônicos p/ bindings (AID-3535): projectId `19_sequencia_dev_guiada`; unitId por unidade no padrão `sequencia-dev-guiada:pg-dNN` (ex.: pg-d01 gera `sequencia-dev-guiada:pg-d01`), espelhando o padrão `ai-literacy:lNN`. Status planned: família com sequência r1 e 1/12 unidades autoradas; promove a scaffolded quando o pipeline de unidades rodar.",
+      "planned",
+      "sequencia-dev-guiada/",
+      "Lições `l15–l29` da trilha `dev` (curriculum/ai-literacy); projeto 00 é paralelo (dual-audience), não pré-requisito",
+    ],
+  },
 ]

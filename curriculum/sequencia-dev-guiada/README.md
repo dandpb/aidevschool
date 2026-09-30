@@ -1,8 +1,15 @@
 # curriculum/sequencia-dev-guiada — sequência Dev guiada (AID-3510)
 
 Pacote de conteúdo da sequência didática executável da jornada **IA para
-Dev** (D1–D7) da escola única (AID-3453). Não é um projeto numerado do
-`catalog.md` e não altera engine, runtime ou progresso.
+Dev** (D1–D7) da escola única (AID-3453). Desde a AID-3535 a família tem
+entrada canônica no `catalog.md` (projeto `19_sequencia_dev_guiada`, seção
+"Level 0 — Sequência Dev Guiada", status `planned`) para os bindings de
+missão do OS — o conteúdo canônico continua **aqui** (o catálogo referencia,
+não duplica). Ids canônicos por unidade: unitId `sequencia-dev-guiada:pg-dNN`
+(padrão `<família>:<unidade>`, espelhando `ai-literacy:lNN`; ex.
+`sequencia-dev-guiada:pg-d01`), `contentVersion` `<practiceId>@<sha256-12>`
+sobre os arquivos do pacote (paridade com a projeção do OS, AID-3534). Não
+altera engine, runtime ou progresso.
 
 ## Estrutura
 

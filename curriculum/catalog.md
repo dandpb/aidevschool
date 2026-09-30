@@ -4,7 +4,7 @@
 > MUST reference this file. Other documents that list projects (e.g. `docs/PROMPTS/IDEIAS/`,
 > `engines/codexDojo/ecosystem/ROADMAP.md`) are derived and must stay aligned with this catalog.
 >
-> **Status:** Canonical · **Total projects:** 19 (00–18) · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
+> **Status:** Canonical · **Total projects:** 20 (00–19; 00 e 19 são famílias de aplicação de IA, 01–18 são projetos de programação) · **Implemented:** 2 (Project 01, Project 02 — both Node.js-only certifications; the status and caveats below are authoritative)
 >
 > `BACKLOG_STATUS.md` is a generated projection of this catalog. Edit status here, then run
 > `python3 -m learner.substrate`; never edit the generated backlog directly.
@@ -18,6 +18,12 @@ AI-in-practice entry track (no-code gate, ADR-0004), and Levels 1–6 go from fu
 complex distributed systems. Each Level 1–6 project is implemented **polyglot**
 (Go, Rust, Node.js/TypeScript) to teach comparative engineering through real benchmarks,
 code reviews, and evolution reports.
+
+Level 0 also hosts, as a **parallel application family** (dual-audience AD-004/AD-005),
+the guided Dev journey `19_sequencia_dev-guiada` — guided practices `pg-*` anchored on the
+`dev`-track lessons (`l15–l29`) with local code fixtures. It is numbered after 00–18 to keep
+the parser's contiguous numbering, and documented in its own Level 0 section below; it is
+not a systems project and does not follow the polyglot lifecycle.
 
 Every project follows the same lifecycle:
 ```
@@ -327,6 +333,32 @@ gate de código. Superfície de exploração associada: `engines/miniTown/`.
 
 ---
 
+## Level 0 — Sequência Dev Guiada (família paralela de aplicação de IA)
+
+**Focus:** aplicar IA no fluxo de desenvolvimento com verificação honesta (debug, teste,
+revisão, spec) — contraparte técnica da aplicação de IA na visão dual-audience
+(AD-004/AD-005), com a mesma fase `aplicacao_ia` do projeto 00. Unidades `pg-*` são práticas
+guiadas que consomem as lições `l15–l29` da trilha `dev` (catálogo ai-literacy) com fixture
+local de código (Python puro, sem rede) e rubrica objetiva; **não** usam o gate no-code
+(AD-006 permanece escopo do projeto 00). Posicionada após os níveis 1–6 e numerada 19
+(contiguidade 00–19 do parser) porque é paralela aos níveis, não um degrau deles; não segue
+o ciclo polyglot dos projetos 01–18.
+
+### 19. Sequência Dev Guiada (práticas guiadas pg-*)
+
+| Field | Value |
+|-------|-------|
+| **Slug** | `19_sequencia_dev_guiada` |
+| **Status** | planned |
+| **Concepts** | Ciclo de debug com assistente (reproduza antes de perguntar), teste/regressão pelo motivo certo, revisão e decisão de aceite, spec planejada, dependências e agentes com controle — competências D1–D7 da jornada IA para Dev |
+| **Key question** | Um dev consegue conduzir o ciclo guia → tentativa → feedback por rubrica → retry → takeaway com IA e provar o resultado com evidência local determinística? |
+| **Learning goal** | Executar as práticas guiadas `pg-*` (25–40 min cada) da jornada IA para Dev, ancoradas nas lições `l15–l29`, com fixture local sem rede e rubrica objetiva. |
+| **Directory** | `sequencia-dev-guiada/` |
+| **Dependencies** | Lições `l15–l29` da trilha `dev` (curriculum/ai-literacy); projeto 00 é paralelo (dual-audience), não pré-requisito |
+| **Evidence** | Sequência r1 versionada em `curriculum/sequencia-dev-guiada/SEQUENCIA.md` (ordem U01–U12 por objetivo/pré-requisito, classificação pronto/adaptação/lacuna) + primeira unidade `pg-d01-debug-reproduza/` (enunciado com lição-âncora l27, exemplo trabalhado citado, insumos/fixture Python puro com 5 testes, rubrica v1 com critérios c-*, guia de correção separado) — PR #620 @ `e01d9d42`, revisão Content Designer da AID-3510 approved 2026-09-30. Ids canônicos p/ bindings (AID-3535): projectId `19_sequencia_dev_guiada`; unitId por unidade no padrão `sequencia-dev-guiada:pg-dNN` (ex.: pg-d01 gera `sequencia-dev-guiada:pg-d01`), espelhando o padrão `ai-literacy:lNN`. Status planned: família com sequência r1 e 1/12 unidades autoradas; promove a scaffolded quando o pipeline de unidades rodar. |
+
+---
+
 ## Concept Coverage Matrix
 
 | Project | Concurrency | Networking | Persistence | Architecture | Scalability | Resilience |
@@ -385,4 +417,4 @@ states otherwise.
 
 ---
 
-*This catalog is the canonical source of truth. Last updated: 2026-06-17.*
+*This catalog is the canonical source of truth. Last updated: 2026-09-30.*
