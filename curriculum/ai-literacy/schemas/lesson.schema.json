@@ -53,6 +53,11 @@
       "minItems": 1,
       "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
     },
+    "competency": {
+      "type": "string",
+      "pattern": "^[FD][0-9]+$",
+      "description": "Competência do framework unificado da escola (spec AID-3453 R6: F1-F4 jornada IA no cotidiano, D1-D7 jornada dev). OPCIONAL por design: ausência = 'não mapeada' (default real, registrado no doc AID-3457 §2.4.1) — o campo é scaffolding de schema, NÃO autorização de atribuição em lote; atribuição por lição é decisão da frente CCE (matriz r2) com revisão Content Designer + QA. Consumidores atuais ignoram o campo quando ausente e o compilador não o propaga para read models (propagação é fatia futura e dependente de contrato compatível)."
+    },
     "prerequisites": {
       "type": "array",
       "items": { "type": "string", "pattern": "^l[0-9]{2}$" }
