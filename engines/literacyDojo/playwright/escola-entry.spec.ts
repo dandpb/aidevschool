@@ -101,8 +101,12 @@ test("F1 regressão real: retornante SW-controlado raiz → /escola/ → offline
   expect(progress?.lessonStatus?.[mapInitial.id]).toBe("completed");
 
   // E a escola offline funciona pela PRÓPRIA chave de navegação (isolamento
-  // F1): HTML + subrecursos de caminho fixo vindos do cache.
+  // F1): HTML + subrecursos de caminho fixo vindos do cache. A variante com
+  // query (rodada 18:14Z) usa a MESMA chave normalizada (pathname): o
+  // documento em cache sobrevive ao reload offline com utm.
   await page.goto("/escola/");
+  await expect(page.getByRole("heading", { name: "Fundamentos de IA" })).toBeVisible();
+  await page.goto("/escola/?utm_source=test");
   await expect(page.getByRole("heading", { name: "Fundamentos de IA" })).toBeVisible();
 });
 

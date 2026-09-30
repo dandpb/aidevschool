@@ -6,9 +6,12 @@
 // com assets/contrato velhos indefinidamente. A navegação é network-first e
 // cada documento é gravado sob a PRÓPRIA chave — só o documento do escopo
 // renova o shell offline da raiz; /escola/ nunca sobrescreve o shell de "/".
+// policy fix (AID-3453 rodada 18:14Z): leitura e escrita usam a MESMA chave
+// normalizada (pathname) — /escola/?utm_source=test recarrega offline a
+// partir do documento /escola/ em cache.
 // ponytail: bump manual do CACHE ao mudar este arquivo — se um dia o cache
 // precisar de invalidação por deploy, gerar o nome no build.
-const CACHE = "literacydojo-v4";
+const CACHE = "literacydojo-v5";
 const SCOPE = new URL("./", self.location.href).pathname;
 const SHELL = [SCOPE, `${SCOPE}manifest.webmanifest`, `${SCOPE}icon-192.png`, `${SCOPE}icon-512.png`];
 
@@ -61,8 +64,10 @@ self.addEventListener("fetch", (event) => {
     // (o documento do escopo continua renovando o shell da raiz sob SCOPE).
     // Antes, toda navegação OK fazia keep(SCOPE, response) — visitar /escola/
     // sobrescrevia o shell offline de "/" com o HTML da escola, quebrando a
-    // raiz offline. Offline: serve a própria chave se existir; só o documento
-    // do escopo tem direito ao fallback do shell.
+    // raiz offline. Offline: a MESMA chave normalizada (pathname) decide o
+    // fallback — query strings não derrubam o documento em cache; só o
+    // documento do escopo tem direito ao shell.
+    const path = new URL(request.url).pathname;
     const documentKey = path === SCOPE ? SCOPE : path;
     event.respondWith(
       fetch(request)
@@ -72,8 +77,7 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() =>
           caches
-            .match(request, { cacheName: CACHE, ignoreVary: true })
-            .then((hit) => hit ?? (path === SCOPE ? caches.match(SCOPE, { cacheName: CACHE }) : undefined))
+            .match(documentKey, { cacheName: CACHE, ignoreVary: true })
             .then((hit) => hit ?? Response.error()),
         ),
     );
